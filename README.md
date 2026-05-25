@@ -68,6 +68,45 @@ The backend is selected by `ESPORTS_TYCOON_CONTENT_BACKEND` (`templated` |
 narration consumes the resolver's finished `WhyRecord`, never the other way
 round.
 
+## Play the slice (local web app + auto-recap)
+
+One playable week — **practice → match → fallout** — served as a local web app on
+`127.0.0.1`, with a screenshot-ready recap written every run. Templated (zero-API)
+mode by default, so it runs with no network, no keys, and no cost.
+
+```bash
+pip install -e .[web]            # Flask is an opt-in extra
+python -m esports_tycoon play    # serves http://127.0.0.1:8000
+# or: python -m esports_tycoon.web --port 8000 --opponent apex_foundry --seed 6
+```
+
+The app serves the **manager view** and the in-universe **Chirper feed** in one
+process. The week's decision surface is the founder-locked **MC + 2 open-text**:
+pick the practice focus (the multiple choice), then write a private pre-match team
+talk and a public post-match Chirper post — each capped at 120 characters.
+
+On completion the slice writes its artifact to `runs/<slice_id>/`:
+
+- **`recap.md`** — the week written up: fixture, your decisions, the match and its
+  key moments, morale fallout, the Chirper feed, and *what the room remembered*
+  (every cited memory resolved back to the canned log).
+- **`feed.snapshot.html`** — a standalone Chirper page, exactly what `/feed` serves.
+
+`slice_id` is content-addressed (a hash of the save, seed, and every decision), so
+**re-running with the same seed in templated mode reproduces a byte-identical
+recap**. The headless runner is the no-browser path (and how the determinism is
+checked in CI):
+
+```bash
+python -m esports_tycoon.runner --seed 6 --practice defaults \
+    --team-talk "no heroes. run the default." \
+    --fallout "week 6: held the line. on to week 7."
+```
+
+The web app is a thin shell over `esports_tycoon.runner`: the engine, the recap
+artifact, and the determinism contract all live in the runner and are tested with
+no web dependency.
+
 ## The render-time gate (grounding + safety + cost)
 
 Every generated piece flows through one gate, `esports_tycoon.gate.render`,
@@ -110,8 +149,7 @@ result = gate.render(
 per-slice **grounding-rate** and **drop-rate** (plus safety and cost lines) into
 `recap.md`.
 
-Later tickets add the Chirper feed model, the one-week slice runner, and the
-local web app that wires this gate into a full playthrough.
+Later tickets add the in-universe Chirper feed model that consumes this gate.
 
 ## The cast-lock gate
 

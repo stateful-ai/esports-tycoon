@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Team talk — Week {{ season.current_week }}{% endblock %}
+{% block content %}
+<h1>The team talk</h1>
+<p class="sub">The five are about to walk on. Say one thing to the room — or say nothing. (≤{{ OPEN_TEXT_MAX }} chars, stays private.)</p>
+
+<form method="post" action="{{ url_for('prematch') }}">
+  <textarea name="team_talk" maxlength="{{ OPEN_TEXT_MAX }}" placeholder="no heroes. run the default."
+            oninput="document.getElementById('count').textContent = (this.value.length + '/' + {{ OPEN_TEXT_MAX }})">{{ value }}</textarea>
+  <div class="counter"><span id="count">{{ value|length }}/{{ OPEN_TEXT_MAX }}</span></div>
+  <div class="actions">
+    <button class="btn" type="submit">To the match →</button>
+    <a class="btn secondary" href="{{ url_for('practice') }}">Back</a>
+  </div>
+</form>
+{% endblock %}

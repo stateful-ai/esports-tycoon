@@ -15,3 +15,7 @@ build/
 .env
 .env.*
 !.env.example
+
+# Per-slice recap artifacts (runs/<slice_id>/recap.md + feed.snapshot.html) are
+# regenerated on every play; they are screenshot/share outputs, not source.
+runs/

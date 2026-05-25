@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Practice — Week {{ season.current_week }}{% endblock %}
+{% block content %}
+<h1>Practice block</h1>
+<p class="sub">One week of prep before {{ opponent_name }} on {{ fixture_map }}. Pick what the team drills.</p>
+
+<form method="post" action="{{ url_for('practice') }}">
+  {% for value, label, blurb in choices %}
+    <label class="choice">
+      <input type="radio" name="practice_focus" value="{{ value }}" {{ "checked" if selected == value else "" }} required>
+      <strong>{{ label }}</strong>
+      <div class="blurb">{{ blurb }}</div>
+    </label>
+  {% endfor %}
+  <div class="actions">
+    <button class="btn" type="submit">Lock in practice</button>
+    <a class="btn secondary" href="{{ url_for('briefing') }}">Back</a>
+  </div>
+</form>
+{% endblock %}
