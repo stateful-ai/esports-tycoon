@@ -16,17 +16,27 @@ Direction of dependency matters and is one-way: the adapter imports the resolver
 *output* type (``WhyRecord``, via the context) but the resolver never imports the
 adapter — narration consumes a finished record; generation can't leak back into
 the deterministic sim.
+
+The default ``templated`` backend is imported eagerly (it is pure-stdlib, zero
+dependency). The opt-in ``vllm`` backend is imported **lazily**, inside the branch
+that selects it, so the no-install default never even loads the LLM module — the
+zero-API guarantee holds by construction, not by trusting the verbatim-vendored
+``game_llm`` to keep deferring its ``openai`` import.
 """
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from esports_tycoon.content import llm, templated
+from esports_tycoon.content import templated
 from esports_tycoon.content.config import ContentConfig, config_from_env
 from esports_tycoon.content.context import GenerationContext
-from esports_tycoon.content.llm import LLMClient
 from esports_tycoon.schema import GeneratedContent
+
+if TYPE_CHECKING:
+    # Type-only: the symbol is needed for the signature below but must not pull the
+    # opt-in backend into the always-imported path at runtime.
+    from esports_tycoon.content.llm import LLMClient
 
 __all__ = ["generate_content"]
 
@@ -36,7 +46,7 @@ def generate_content(
     ctx: GenerationContext,
     *,
     config: Optional[ContentConfig] = None,
-    client: Optional[LLMClient] = None,
+    client: Optional["LLMClient"] = None,
 ) -> GeneratedContent:
     """Render ``kind`` from ``ctx`` through the configured backend.
 
@@ -50,6 +60,10 @@ def generate_content(
     if config.backend == "templated":
         return templated.render(kind, ctx)
     if config.backend == "vllm":
+        # Imported here, not at module top: selecting vllm is what pulls in the
+        # gaming-pack client (and, only when a client is constructed, ``openai``).
+        from esports_tycoon.content import llm
+
         return llm.generate(kind, ctx, config, client=client)
     # ContentConfig validates the backend at construction, so this is unreachable;
     # kept as a loud guard against a future backend being added without a route.

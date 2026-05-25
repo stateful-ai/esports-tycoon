@@ -5,8 +5,11 @@ and the architectural invariant that the resolver never imports the adapter.
 """
 
 import ast
+import os
 import pathlib
+import subprocess
 import sys
+import textwrap
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
@@ -137,6 +140,73 @@ class TestResolverNeverImportsAdapter(unittest.TestCase):
         # dependency is on the data contract, not the sim.
         imports = self._imports(pathlib.Path(adapter.__file__))
         self.assertNotIn("esports_tycoon.resolver", imports)
+
+
+class TestZeroInstallDefault(unittest.TestCase):
+    """The no-install default: selecting nothing must not load the opt-in backend.
+
+    The ``vllm`` backend (and its ``openai`` dep, an opt-in ``[vllm]`` extra) must
+    stay off the always-imported path, so a clean install with the extra absent can
+    ``import esports_tycoon.content`` and render the templated default. We pin this
+    structurally (the adapter's *runtime* imports) and behaviourally (a clean
+    interpreter never imports the backend on the default path).
+    """
+
+    _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+    def _module_level_imports(self, module_path: pathlib.Path) -> set[str]:
+        """Imports executed when the module loads — top-level only.
+
+        Function-body imports (the lazy ``vllm`` route) and ``TYPE_CHECKING``-only
+        imports are deliberately excluded: neither runs on a plain import.
+        """
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+        names: set[str] = set()
+        for node in tree.body:  # not ast.walk: we want module load-time imports
+            if isinstance(node, ast.Import):
+                names.update(a.name for a in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                names.add(node.module)
+                names.update(f"{node.module}.{a.name}" for a in node.names)
+        return names
+
+    def test_adapter_does_not_import_the_opt_in_backend_at_module_level(self):
+        imports = self._module_level_imports(pathlib.Path(adapter.__file__))
+        for banned in ("openai", "esports_tycoon.content.llm", "esports_tycoon.content.game_llm"):
+            self.assertNotIn(
+                banned, imports, f"adapter loads {banned!r} eagerly; the vllm backend must be lazy"
+            )
+
+    def test_default_path_loads_no_llm_backend_in_a_clean_interpreter(self):
+        # A fresh process is the only honest test: this module imports `llm` at the
+        # top, so the backend is already in *this* interpreter's sys.modules.
+        probe = textwrap.dedent(
+            """
+            import sys
+            from esports_tycoon.canned import loader
+            from esports_tycoon import resolver
+            from esports_tycoon.schema import Decisions
+            from esports_tycoon.content import generate_content, GenerationContext
+
+            world = loader.load()
+            why = resolver.run(world, Decisions(opponent="northwind"), 7)
+            generate_content("chirper_post", GenerationContext(world=world, why=why, author="vex"))
+
+            leaked = [
+                m for m in ("openai", "esports_tycoon.content.llm", "esports_tycoon.content.game_llm")
+                if m in sys.modules
+            ]
+            assert not leaked, f"default path loaded opt-in modules: {leaked}"
+            print("ZERO_INSTALL_OK")
+            """
+        )
+        env = {**os.environ, "PYTHONPATH": str(self._REPO_ROOT)}
+        env.pop(BACKEND_ENV_VAR, None)  # prove the *unset* default, not an inherited flag
+        result = subprocess.run(
+            [sys.executable, "-c", probe], capture_output=True, text=True, env=env, cwd=str(self._REPO_ROOT)
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("ZERO_INSTALL_OK", result.stdout)
 
 
 if __name__ == "__main__":

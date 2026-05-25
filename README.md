@@ -47,7 +47,9 @@ picks the backend:
   the canned log, so grounding is always `ok`.
 - **`vllm`** — the gaming-pack `game_llm` client against any OpenAI-compatible
   endpoint (a local vLLM in dev, a cheap hosted Qwen in prod), configured by the
-  `GAME_LLM_*` env vars in `.env.example`. Opt-in: `pip install -e .[vllm]`.
+  `GAME_LLM_*` env vars in `.env.example`. Opt-in: `pip install -e .[vllm]`. The
+  backend is imported lazily, only when the flag selects it, so `import
+  esports_tycoon.content` and the templated default work with the extra absent.
 
 ```python
 from esports_tycoon.canned import loader
