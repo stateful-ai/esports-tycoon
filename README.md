@@ -171,21 +171,49 @@ server at `http://localhost:8000/v1` — the endpoint `.env.example` already poi
 at. `scripts/vllm_serve.sh` is the one-command bring-up: on a CUDA GPU host it
 `pip install`s vLLM if missing and runs `vllm serve Qwen/Qwen2.5-7B-Instruct`,
 which downloads the weights from the Hugging Face Hub on first boot (cached
-thereafter) and serves them under the model name `qwen2.5-7b-instruct` so it
-matches `GAME_LLM_MODEL`. Copy the env (`cp .env.example .env`), bring the server
-up, then smoke it with one structured round-trip through the game's own client —
-green means the endpoint is up, returns parseable JSON, and answers within a warm
-latency budget (default 5s), which is the prerequisite for the demo gate below.
+thereafter). Critically, it passes `--served-model-name qwen2.5-7b-instruct`, so
+clients (and the `curl` below) reach the model under that short name rather than
+the full `Qwen/Qwen2.5-7B-Instruct` repo id — which is why it matches
+`GAME_LLM_MODEL` out of the box. Override the repo or served name with
+`VLLM_MODEL` / `VLLM_SERVED_NAME` (keep the latter equal to `GAME_LLM_MODEL`).
+
+`vllm serve` is a long-running foreground process, so the bring-up spans **two
+terminals**: serve in one, smoke from another. Do the one-time setup first, then:
 
 ```bash
-cp .env.example .env                     # GAME_LLM_* already target localhost:8000
-scripts/vllm_serve.sh                     # GPU host: install (if needed) + serve
-pip install -e .[vllm]                    # the openai client the game/smoke use
-python -m esports_tycoon.vllm_demo smoke  # up + structured + warm under 5s? (exit 0 = yes)
+# One-time setup
+cp .env.example .env        # GAME_LLM_* already target localhost:8000
+pip install -e .[vllm]      # the openai client the game + smoke use
+
+# Terminal 1 — serve (stays running; first boot downloads the weights)
+scripts/vllm_serve.sh       # GPU host: installs vLLM if missing, then `vllm serve`
+                            # wait for: "Application startup complete"
+
+# Terminal 2 — smoke the live endpoint once it's up
+python -m esports_tycoon.vllm_demo smoke   # up + structured + warm under 5s? (exit 0 = yes)
+
 # raw equivalent of the smoke's round-trip:
 curl -s http://localhost:8000/v1/chat/completions \
   -H 'Content-Type: application/json' \
   -d '{"model":"qwen2.5-7b-instruct","messages":[{"role":"user","content":"reply with a short json object {\"ready\":true}"}],"max_tokens":64}'
+```
+
+A green smoke means the endpoint is up, returns parseable JSON, and answers
+within a warm latency budget (default 5s) — the prerequisite for the demo gate
+below. The check runs one structured round-trip through the game's own client and
+prints its verdict:
+
+```text
+======================================================================
+ vLLM ENDPOINT SMOKE TEST
+======================================================================
+ Model    : qwen2.5-7b-instruct
+ Warm-up  : 2.314s (untimed; absorbs first-request load)
+ Reachable: ✓
+ Structured: ✓ reply={'ready': True, 'note': 'up'}
+ Warm call: ✓ 0.412s (budget 5.000s)
+======================================================================
+✓ SMOKE PASSED — endpoint is up, structured, and warm under budget.
 ```
 
 ## The vLLM-mode demo gate
