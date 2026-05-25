@@ -3,9 +3,9 @@
     python -m esports_tycoon inspect            # load the canned save, print a summary
     python -m esports_tycoon resolve <cite-id>  # resolve a cite ID to its memory entry
 
-Both commands load ``saves/week6.yaml`` through the typed loader, so they double
-as a smoke test that the schema still matches the canned save. The cast-lock
-gate has its own CLI (``python -m esports_tycoon.cast_lock``).
+Both commands load the packaged canned save through the typed loader, so they
+double as a smoke test that the schema still matches the canned save. The
+cast-lock gate has its own CLI (``python -m esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations

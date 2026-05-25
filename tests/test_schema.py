@@ -26,7 +26,7 @@ from esports_tycoon.schema import (  # noqa: E402
     WorldState,
 )
 
-_SAVE = pathlib.Path(__file__).resolve().parents[1] / "saves" / "week6.yaml"
+_SAVE = spec.DEFAULT_SAVE_PATH
 
 
 def _raw():

@@ -1,14 +1,16 @@
 """Load the hand-authored canned save into a typed :class:`WorldState`.
 
-The single canonical save lives at ``saves/week6.yaml`` (the cast-lock gate
-points at the same file). ``load`` parses it and validates it into the typed
-schema; the resulting world enforces stable cite IDs and the no-dangling-cites
-grounding contract. ``to_save_dict`` / ``dumps`` are the inverse, used by the
-round-trip test to prove the schema is a lossless description of the save.
+The single canonical save ships as package data at
+``esports_tycoon/canned/data/week6.yaml`` (the cast-lock gate points at the same
+file). ``load`` parses it and validates it into the typed schema; the resulting
+world enforces stable cite IDs and the no-dangling-cites grounding contract.
+``to_save_dict`` / ``dumps`` are the inverse, used by the round-trip test to
+prove the schema is a lossless description of the save.
 """
 
 from __future__ import annotations
 
+from importlib import resources
 from pathlib import Path
 from typing import Any, Union
 
@@ -16,16 +18,18 @@ import yaml
 
 from esports_tycoon.schema import WorldState
 
-# esports_tycoon/canned/loader.py -> esports_tycoon/canned -> esports_tycoon -> <repo root>
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-
-#: The one canonical canned save for the M0 slice.
-DEFAULT_SAVE_PATH = _REPO_ROOT / "saves" / "week6.yaml"
+#: The one canonical canned save for the M0 slice. Resolved as package data so
+#: ``load`` works from an installed wheel, not only a source checkout.
+DEFAULT_SAVE_PATH = resources.files(__package__) / "data" / "week6.yaml"
 
 
 def load(path: Union[str, Path] = DEFAULT_SAVE_PATH) -> WorldState:
     """Parse a canned save YAML file into a validated :class:`WorldState`."""
-    data = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    # The default is an ``importlib.resources`` traversable (which exposes
+    # ``read_text`` directly and need not be a real filesystem path under a
+    # zipped install); a caller-supplied ``str`` goes through ``Path``.
+    text = path.read_text(encoding="utf-8") if hasattr(path, "read_text") else Path(path).read_text(encoding="utf-8")
+    data = yaml.safe_load(text)
     if not isinstance(data, dict):
         raise ValueError(f"{path}: expected a mapping at the top level")
     return WorldState.model_validate(data)

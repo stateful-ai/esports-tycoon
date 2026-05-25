@@ -18,5 +18,10 @@ dev = ["pytest>=7.0"]
 [tool.setuptools.packages.find]
 include = ["esports_tycoon*"]
 
+[tool.setuptools.package-data]
+# Ship the canonical canned save inside the wheel so the loader/CLI work when
+# installed, not only from a source checkout.
+"esports_tycoon.canned" = ["data/*.yaml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

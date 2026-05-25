@@ -2,8 +2,8 @@
 
 These are the runtime pydantic models the rest of the slice is built on. They
 mirror the schemas pinned in ``m0_technical_plan.md`` and are the typed twin of
-the hand-authored canned save in ``saves/week6.yaml`` (loaded by
-``esports_tycoon.canned.loader``).
+the hand-authored canned save in ``esports_tycoon/canned/data/week6.yaml``
+(loaded by ``esports_tycoon.canned.loader``).
 
 Two domain invariants are enforced here, not just by the (decoupled) cast-lock
 gate:
@@ -307,7 +307,7 @@ class LastWeek(_Model):
 
 
 class WorldState(_Model):
-    """The whole canned world: the typed result of loading ``saves/week6.yaml``.
+    """The whole canned world: the typed result of loading the canned save.
 
     Construction enforces the grounding contract — globally unique memory IDs and
     no dangling cites — so a successfully loaded ``WorldState`` is one whose

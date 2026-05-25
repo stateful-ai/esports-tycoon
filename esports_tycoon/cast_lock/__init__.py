@@ -3,9 +3,9 @@
 This package owns the *acceptance bar* for the hand-authored canned save and the
 founder's single batched approve/reject pass. It deliberately does NOT define the
 game's runtime schema (Player / MemoryEntry / WhyRecord / ...) — that is the
-separate schema ticket. Here we only validate that the draft in `saves/week6.yaml`
-plus the tone 1-pager are complete enough to lock, and we record one atomic
-decision over the whole batch.
+separate schema ticket. Here we only validate that the draft canned save (shipped
+as package data) plus the tone 1-pager are complete enough to lock, and we record
+one atomic decision over the whole batch.
 """
 
 from .spec import (
