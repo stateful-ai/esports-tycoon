@@ -1,9 +1,15 @@
 """CLI for the vLLM-mode demo gate.
 
+    python -m esports_tycoon.vllm_demo smoke [--budget <secs>]
     python -m esports_tycoon.vllm_demo preflight [fixture/decision flags]
     python -m esports_tycoon.vllm_demo status
     python -m esports_tycoon.vllm_demo sign-off --approver <founder> [--reason ...]
     python -m esports_tycoon.vllm_demo reject   --approver <founder>  --reason ...
+
+``smoke`` is the bring-up check: one structured round-trip to the live endpoint
+through the game's own client, asserting a parseable reply within a warm-latency
+budget (default 5s). Run it before ``preflight`` so a down/cold server isn't
+mistaken for a bad model.
 
 ``preflight`` talks to the live, env-configured local Qwen endpoint
 (``GAME_LLM_*``; needs ``pip install -e .[vllm]``), runs the whole slice through
@@ -37,6 +43,7 @@ from esports_tycoon.vllm_demo.preflight import (
     verify_artifacts,
     write_preflight,
 )
+from esports_tycoon.vllm_demo.smoke import DEFAULT_BUDGET_SECONDS, DEFAULT_PROMPT, run_smoke
 
 _OK = "✓"
 _NO = "✗"
@@ -44,6 +51,52 @@ _NO = "✗"
 
 def _secs(value: float) -> str:
     return f"{value:.3f}s"
+
+
+def _endpoint_hint() -> None:
+    print(
+        "    Check the local Qwen endpoint is up and GAME_LLM_* are set "
+        "(and `pip install -e .[vllm]`). Bring it up with scripts/vllm_serve.sh.",
+        file=sys.stderr,
+    )
+
+
+def _cmd_smoke(args) -> int:
+    result = run_smoke(
+        budget_seconds=args.budget,
+        warmup=not args.no_warmup,
+        prompt=args.prompt if args.prompt is not None else DEFAULT_PROMPT,
+    )
+    print("=" * 70)
+    print(" vLLM ENDPOINT SMOKE TEST")
+    print("=" * 70)
+    print(f" Model    : {result.model}")
+    if result.warmup_seconds is not None:
+        print(f" Warm-up  : {_secs(result.warmup_seconds)} (untimed; absorbs first-request load)")
+    if result.error is not None:
+        print(f" Reachable: {_NO} {result.error}")
+        print("=" * 70)
+        print(f"{_NO} SMOKE FAILED — the endpoint did not answer.")
+        _endpoint_hint()
+        return 1
+    print(f" Reachable: {_OK}")
+    struct_mark = _OK if result.structured_ok else _NO
+    print(f" Structured: {struct_mark} reply={result.reply}")
+    budget_mark = _OK if result.within_budget else _NO
+    print(
+        f" Warm call: {budget_mark} {_secs(result.latency_seconds)} "
+        f"(budget {_secs(result.budget_seconds)})"
+    )
+    print("=" * 70)
+    if result.ok:
+        print(f"{_OK} SMOKE PASSED — endpoint is up, structured, and warm under budget.")
+        return 0
+    if not result.structured_ok:
+        print(f"{_NO} SMOKE FAILED — endpoint answered but the reply did not parse as JSON.")
+    else:
+        print(f"{_NO} SMOKE FAILED — warm latency {_secs(result.latency_seconds)} exceeded the "
+              f"{_secs(result.budget_seconds)} budget.")
+    return 1
 
 
 def _cmd_preflight(args) -> int:
@@ -63,11 +116,7 @@ def _cmd_preflight(args) -> int:
         )
     except Exception as exc:  # noqa: BLE001 — surface endpoint/dep failures plainly
         print(f"{_NO} preflight could not run the slice in vllm mode: {exc}", file=sys.stderr)
-        print(
-            "    Check the local Qwen endpoint is up and GAME_LLM_* are set "
-            "(and `pip install -e .[vllm]`).",
-            file=sys.stderr,
-        )
+        _endpoint_hint()
         return 2
 
     paths = write_preflight(result, args.artifacts_dir)
@@ -169,6 +218,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--record", default=str(DEFAULT_RECORD_PATH), help="path to the sign-off record")
     sub = parser.add_subparsers(dest="command", required=True)
 
+    sm = sub.add_parser("smoke", help="bring-up check: one structured round-trip, warm latency under budget")
+    sm.add_argument(
+        "--budget", type=float, default=DEFAULT_BUDGET_SECONDS,
+        help=f"warm-latency budget in seconds (default: {DEFAULT_BUDGET_SECONDS})",
+    )
+    sm.add_argument("--no-warmup", action="store_true", help="skip the warm-up call (measure a cold call)")
+    sm.add_argument("--prompt", default=None, help="override the smoke prompt")
+
     pf = sub.add_parser("preflight", help="run + measure + screen the vllm-mode slice, write the bundle")
     pf.add_argument("--save", default=str(loader.DEFAULT_SAVE_PATH), help="path to the canned save YAML")
     pf.add_argument("--seed", type=int, default=6, help="match seed (default: 6)")
@@ -192,6 +249,8 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
+    if args.command == "smoke":
+        return _cmd_smoke(args)
     if args.command == "preflight":
         return _cmd_preflight(args)
     if args.command == "status":
