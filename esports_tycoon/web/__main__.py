@@ -11,6 +11,7 @@ Serves the manager view + Chirper feed on ``127.0.0.1`` in one process and write
 from __future__ import annotations
 
 import argparse
+import errno
 from typing import get_args
 
 from esports_tycoon.runner.model import SliceConfig
@@ -51,12 +52,16 @@ def main(argv: list[str] | None = None) -> int:
     print(f"esports-tycoon slice → http://{args.host}:{args.port}  (templated mode, runs in {args.runs_dir}/)")
     try:
         app.run(host=args.host, port=args.port, debug=args.debug)
-    except OSError as exc:  # e.g. [Errno 98] Address already in use
-        parser.error(
-            f"could not bind {args.host}:{args.port} ({exc}). "
-            f"Something is already using that port — re-run with a free one, "
-            f"e.g. --port {args.port + 1}."
-        )
+    except OSError as exc:
+        # Only the address-in-use case is a port collision; other bind failures
+        # (bad host, permission denied) need a different fix, so don't send the
+        # user to change --port for those.
+        if exc.errno == errno.EADDRINUSE:
+            parser.error(
+                f"port {args.port} on {args.host} is already in use — re-run with "
+                f"a free one, e.g. --port {args.port + 1}."
+            )
+        parser.error(f"could not bind {args.host}:{args.port}: {exc}")
     return 0
 
 
