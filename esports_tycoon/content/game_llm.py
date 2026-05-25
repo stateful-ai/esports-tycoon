@@ -30,7 +30,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import time
 from typing import TypeVar
 
@@ -53,14 +52,25 @@ def _env(key: str) -> str:
 
 
 def extract_json(text: str) -> dict | None:
-    """Best-effort: pull the first JSON object out of a model reply."""
-    m = re.search(r"\{.*\}", text or "", re.DOTALL)
-    if not m:
-        return None
-    try:
-        return json.loads(m.group(0))
-    except json.JSONDecodeError:
-        return None
+    """Best-effort: pull the first JSON object out of a model reply.
+
+    Scans each ``{`` and lets the decoder consume one complete object, so a valid
+    object is returned even when the reply trails it with prose, code fences, or a
+    second object — cases a greedy ``{.*}`` match would glue into an invalid blob.
+    """
+    decoder = json.JSONDecoder()
+    haystack = text or ""
+    start = haystack.find("{")
+    while start != -1:
+        try:
+            obj, _ = decoder.raw_decode(haystack, start)
+        except json.JSONDecodeError:
+            start = haystack.find("{", start + 1)
+            continue
+        if isinstance(obj, dict):
+            return obj
+        start = haystack.find("{", start + 1)
+    return None
 
 
 class GameLLM:

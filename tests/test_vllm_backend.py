@@ -64,6 +64,40 @@ class TestPackClientWiring(_Fixture):
         self.assertEqual(llm.MAX_TOKENS, {"chirper_post": 80, "narration": 320, "halftime_ack": 200})
 
 
+class TestExtractJson(unittest.TestCase):
+    """``extract_json`` returns the first complete object, ignoring trailing junk."""
+
+    def test_plain_object(self):
+        self.assertEqual(game_llm.extract_json('{"text": "hi", "cites": []}'), {"text": "hi", "cites": []})
+
+    def test_object_then_prose_is_not_glued_into_an_invalid_blob(self):
+        raw = '{"text": "hi", "cites": []}\n\nHope that helps!'
+        self.assertEqual(game_llm.extract_json(raw), {"text": "hi", "cites": []})
+
+    def test_trailing_second_object_is_ignored(self):
+        raw = '{"text": "first"}\n{"text": "second"}'
+        self.assertEqual(game_llm.extract_json(raw), {"text": "first"})
+
+    def test_code_fence_and_leading_prose(self):
+        raw = 'Sure:\n```json\n{"text": "hi"}\n```'
+        self.assertEqual(game_llm.extract_json(raw), {"text": "hi"})
+
+    def test_nested_object_is_kept_whole(self):
+        raw = 'noise {"a": {"b": 1}} more {"c": 2}'
+        self.assertEqual(game_llm.extract_json(raw), {"a": {"b": 1}})
+
+    def test_skips_a_broken_object_to_reach_a_valid_one(self):
+        raw = "{not json} then {\"text\": \"ok\"}"
+        self.assertEqual(game_llm.extract_json(raw), {"text": "ok"})
+
+    def test_no_object_returns_none(self):
+        self.assertIsNone(game_llm.extract_json("just prose, no json here"))
+        self.assertIsNone(game_llm.extract_json(""))
+
+    def test_non_dict_json_is_skipped(self):
+        self.assertIsNone(game_llm.extract_json("[1, 2, 3]"))
+
+
 class TestPromptConstruction(_Fixture):
     def test_chirper_sends_persona_and_budget_and_schema(self):
         client = _RecordingLLM()
