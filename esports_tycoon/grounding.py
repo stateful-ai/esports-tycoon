@@ -46,10 +46,16 @@ __all__ = [
     "ground",
 ]
 
-#: An *unanchored* twin of ``schema.MEMORY_ID_RE`` for pulling cite tokens out of
-#: free prose. The format is identical (``mem:<player>:<event_slug>``); the schema
-#: regex is anchored for validation, this one is for ``findall``.
-CITE_TOKEN_RE = re.compile(r"mem:[a-z0-9_]+:[a-z0-9]+(?:_[a-z0-9]+)*")
+#: A *boundary-anchored* twin of ``schema.MEMORY_ID_RE`` for pulling cite tokens
+#: out of free prose. The token body is identical (``mem:<player>:<event_slug>``);
+#: the schema regex anchors with ``^``/``$`` for whole-string validation, while this
+#: one brackets the body with non-identifier boundaries so ``findall`` can't carve a
+#: well-formed cite out of a malformed run — e.g. ``xmem:rook:scrim_w5_choke`` and
+#: ``mem:rook:scrim_w5_choke-extra`` must *not* yield a clean ``mem:rook:scrim_w5_choke``
+#: that then resolves, which would mask the malformed cite from the grounding guard.
+CITE_TOKEN_RE = re.compile(
+    r"(?<![A-Za-z0-9_:-])mem:[a-z0-9_]+:[a-z0-9]+(?:_[a-z0-9]+)*(?![A-Za-z0-9_:-])"
+)
 
 #: How many times a generation may be regenerated before its un-resolvable cites
 #: are dropped. Locked at 2 (``m0_plan_v2.md``); a high drop-rate at N=2 is a

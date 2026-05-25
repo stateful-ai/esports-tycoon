@@ -57,6 +57,22 @@ class TestParseCites(unittest.TestCase):
     def test_ignores_malformed_tokens(self):
         self.assertEqual(grounding.parse_cites("see mem:rook and memory_5"), [])
 
+    def test_does_not_carve_clean_cite_out_of_malformed_run(self):
+        # A well-formed cite must not be extracted from inside a larger malformed
+        # token; otherwise it would resolve and mask the malformed cite. A '-' is
+        # not a valid cite char, so the trailing run is garbage, not a longer cite.
+        self.assertEqual(grounding.parse_cites(f"x{REAL}"), [])
+        self.assertEqual(grounding.parse_cites(f"{REAL}-extra"), [])
+
+    def test_underscore_extension_is_a_distinct_well_formed_cite(self):
+        # '_more' extends the slug into a different but still well-formed token; it
+        # is parsed whole (and will simply fail to resolve), not carved at REAL.
+        self.assertEqual(grounding.parse_cites(f"{REAL}_more"), [f"{REAL}_more"])
+
+    def test_extracts_cite_next_to_non_identifier_punctuation(self):
+        # Sentence punctuation and brackets are valid boundaries, not part of the cite.
+        self.assertEqual(grounding.parse_cites(f"({REAL})."), [REAL])
+
     def test_empty_text(self):
         self.assertEqual(grounding.parse_cites(""), [])
 
