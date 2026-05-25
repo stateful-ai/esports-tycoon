@@ -2,10 +2,13 @@
 
 The app is a thin presentation shell over :mod:`esports_tycoon.runner`. It holds
 almost no state of its own: the only thing kept in the session is the player's
-small set of decisions (the practice MC and the two open-text lines). Everything
-shown on a page — the resolved match, the narration, the feed — is recomputed from
-``world + config + decisions`` by the deterministic engine on each request, so what
-the player sees always matches what gets written to ``runs/<slice_id>/``.
+small set of decisions (the practice MC and the two open-text lines). The mid-week
+pages — the resolved match and the narration — are recomputed from
+``world + config + decisions`` by the deterministic engine on each request. Once the
+week is finalized, ``/feed`` serves the written ``feed.snapshot.html`` byte-for-byte
+rather than re-running generation, so the in-app feed can never drift from the saved
+artifact (this matters under non-templated content backends, which are not
+guaranteed to regenerate identical text).
 
 The week is a short linear flow, one decision per step:
 
@@ -16,7 +19,8 @@ The week is a short linear flow, one decision per step:
     /fallout     open-text #2 — the public post-match Chirper post (<=120 chars)
                  → on submit, writes the recap artifact
     /recap       the written-up week + a pointer to the saved files
-    /feed        the week-6 Chirper feed (the same data the snapshot captures)
+    /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
+                 verbatim once the week is finalized, so it cannot drift from it
 
 Flask is imported here (lazily, via :func:`create_app`) and nowhere else, keeping
 the engine and its tests free of the web dependency.
@@ -30,7 +34,7 @@ from typing import Optional
 
 from esports_tycoon.canned import loader
 from esports_tycoon.content.config import ContentConfig
-from esports_tycoon.runner.engine import run_slice
+from esports_tycoon.runner.engine import run_slice, slice_id
 from esports_tycoon.runner.model import (
     OPEN_TEXT_MAX,
     PRACTICE_CHOICES,
@@ -248,9 +252,19 @@ def create_app(
         decisions = require_decisions()
         if decisions is None:
             return redirect(url_for("practice"))
+        # Once the week is finalized (the /fallout POST writes the artifact under
+        # the content-addressed slice_id), serve that saved snapshot verbatim. The
+        # slice_id is a pure hash of world + config + decisions, so we can locate
+        # the file without re-running generation — and serving the bytes is the only
+        # thing that *guarantees* the feed matches feed.snapshot.html for this
+        # slice_id, including under non-templated backends where regenerating the
+        # content could drift from what was written.
+        snapshot = output_root / slice_id(world, config, decisions) / FEED_FILENAME
+        if snapshot.is_file():
+            return snapshot.read_bytes()
+        # Not finalized yet (e.g. /feed before the post is submitted): render the
+        # live feed, byte-identical to the snapshot in templated mode.
         result = run_slice(world, config, decisions, content_config=content_config)
-        # The in-app feed view *is* the saved snapshot — same renderer, so what you
-        # see is exactly what is written to feed.snapshot.html.
         return render_feed_html(result, world)
 
     @app.get("/healthz")

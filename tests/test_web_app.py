@@ -74,6 +74,18 @@ class TestWebApp(unittest.TestCase):
         saved = (run_dir / "feed.snapshot.html").read_bytes()
         self.assertEqual(served, saved)
 
+    def test_feed_serves_saved_snapshot_not_a_rerun(self):
+        # Once the week is finalized, /feed must serve the written artifact, not
+        # re-run generation — otherwise a non-deterministic content backend could
+        # show a feed that no longer matches feed.snapshot.html for this slice_id.
+        # We prove the source by overwriting the saved file and checking /feed
+        # returns the override verbatim.
+        self._play_through()
+        snapshot = next(self.output_root.glob("wk6-*")) / "feed.snapshot.html"
+        sentinel = b"<!-- pinned snapshot, not a re-run -->"
+        snapshot.write_bytes(sentinel)
+        self.assertEqual(self.client.get("/feed").get_data(), sentinel)
+
     def test_over_120_char_post_is_rejected_not_500(self):
         self.client.post("/practice", data={"practice_focus": "defaults"})
         self.client.post("/prematch", data={"team_talk": "ok"})
