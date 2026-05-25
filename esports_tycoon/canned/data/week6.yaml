@@ -676,7 +676,6 @@ last_week:
       author: "@sablehold"
       day: 5
       text: "."
-      cites: []
       likes: 41200
       note: "his most-liked post of the split"
     - id: "chirp:w5:08"
@@ -706,5 +705,4 @@ last_week:
       author: "@overcast"
       day: 7
       text: "week 6: Helix. must-win. doors open at six. bring a coat."
-      cites: []
       likes: 5600
