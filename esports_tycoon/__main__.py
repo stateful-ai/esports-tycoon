@@ -20,6 +20,16 @@ from esports_tycoon.canned import loader
 from esports_tycoon.schema import WorldState
 
 
+def web_default_port() -> int:
+    """The web app's default bind port — single source of truth in the web module.
+
+    Imported lazily so this core CLI stays Flask-free for ``inspect``/``resolve``.
+    """
+    from esports_tycoon.web.__main__ import DEFAULT_PORT
+
+    return DEFAULT_PORT
+
+
 def _print_summary(world: WorldState) -> None:
     save = world.save
     standing = save.team.standing
@@ -53,7 +63,10 @@ def main(argv: list[str] | None = None) -> int:
     resolve.add_argument("cite", help="the memory ID to resolve")
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
-    play.add_argument("--port", type=int, default=8000, help="bind port (default: 8000)")
+    play.add_argument(
+        "--port", type=int, default=web_default_port(),
+        help=f"bind port (default: {web_default_port()})",
+    )
 
     args = parser.parse_args(argv)
 
