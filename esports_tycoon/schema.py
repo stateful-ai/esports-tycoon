@@ -315,9 +315,22 @@ class WorldState(_Model):
     Construction enforces the grounding contract — globally unique memory IDs and
     no dangling cites — so a successfully loaded ``WorldState`` is one whose
     history every cite can resolve against.
+
+    The save is the system of record for determinism, too: it carries its own RNG
+    :attr:`seed` (the *seed-in-save* contract, ``m0_0_canonical_contract.md`` §2/§6).
+    The seed is **required** — a save with no seed is not a valid save — so every
+    load yields a world that knows the generator its outcomes derive from, and the
+    seed survives the byte-identical round-trip like any other authored field. The
+    match resolver draws its randomness from this seed by default, which is what
+    anchors "same save ⇒ bit-reproducible match" in the save itself rather than in
+    whatever a caller happens to pass.
     """
 
     schema_version: int = Field(ge=0)
+    #: The save's RNG seed. Required (no default) so it is always present in the
+    #: save and always serialized; ``ge=0`` matches the house style for the save's
+    #: other integers and keeps authored seeds clean.
+    seed: int = Field(ge=0)
     save: SaveMeta
     players: list[Player]
     clash_pairs: list[ClashPair] = Field(default_factory=list)

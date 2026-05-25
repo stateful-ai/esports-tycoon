@@ -18,6 +18,11 @@
 
 schema_version: 0
 
+# RNG seed for this save (seed-in-save contract). The match resolver derives all
+# of its randomness from this seed by default, so the same save replays to the
+# same week — bit-reproducible — without anyone threading a seed in by hand.
+seed: 6
+
 save:
   id: week6
   title: "Overcast — Week 6 of 8"

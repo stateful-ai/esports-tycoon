@@ -1,4 +1,5 @@
 schema_version: 0
+seed: 6
 save:
   id: week6
   title: Overcast — Week 6 of 8
