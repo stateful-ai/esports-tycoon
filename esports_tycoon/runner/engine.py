@@ -205,7 +205,7 @@ def run_slice(
         client=client,
     )
 
-    half_score = halftime_scoreline(why, world.save.team.id)
+    half_score = halftime_scoreline(why, world.team.id)
     halftime = generate_content(
         "halftime_ack",
         GenerationContext(world=world, halftime_scoreline=half_score, second_half_stance=config.tactical_stance),

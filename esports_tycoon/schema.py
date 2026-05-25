@@ -345,6 +345,30 @@ class WorldState(_Model):
         return self
 
     @property
+    def team(self) -> Team:
+        """The org the founder manages — shorthand for ``save.team``.
+
+        Pairs with :attr:`roster`: together they are the canonical "managed team
+        and its players" the match resolver fields. Exposing them here lets a
+        consumer take the side straight off the loaded world instead of
+        re-assembling it from ``save.team`` plus the top-level player list.
+        """
+        return self.save.team
+
+    @property
+    def roster(self) -> list[Player]:
+        """The managed team's starters, in save order.
+
+        In M0 the top-level ``players`` list *is* :attr:`team`'s roster — rival
+        personnel live under ``rivals[].star``, never here — so this names that
+        relationship explicitly. The resolver fields its lineup from this roster
+        rather than reaching for the bare ``players`` list, which keeps its input
+        the canonical team/roster pair. Derived (not a stored field), so the
+        byte-identical save round-trip is unaffected.
+        """
+        return self.players
+
+    @property
     def cite_index(self) -> dict[str, MemoryEntry]:
         """Map every stable cite ID to its memory entry."""
         return {entry.id: entry for player in self.players for entry in player.memory_log}

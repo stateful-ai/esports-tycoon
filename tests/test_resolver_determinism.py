@@ -348,5 +348,48 @@ class TestLineupValidation(_WorldFixture):
             resolver.run(self.world, Decisions(opponent="northwind", lineup=["rook", "vex", "sable"]), 0)
 
 
+class TestConsumesCanonicalTeamRoster(_WorldFixture):
+    """Acceptance: the resolver fields a Team/roster loaded straight from
+    ``week6.yaml`` and returns a result the caller reads with no field remapping.
+
+    The canonical schema names the side the resolver operates on — ``world.team``
+    (the managed org) and ``world.roster`` (its starters) — so neither the
+    resolver nor its caller has to re-assemble that pair from ``save.team`` plus
+    the disconnected top-level ``players`` list.
+    """
+
+    def test_roster_is_the_managed_teams_players(self):
+        # The first-class accessors name the relationship the resolver depends on.
+        self.assertEqual([p.id for p in self.world.roster], [p.id for p in self.world.players])
+        self.assertIs(self.world.team, self.world.save.team)
+
+    def test_resolver_fields_the_whole_roster_by_default(self):
+        # No caller-side assembly: an empty lineup fields exactly the team's
+        # roster as loaded from the save.
+        rec = resolver.run(self.world, Decisions(opponent="northwind"), 0)
+        self.assertEqual(set(rec.morale_deltas), {p.id for p in self.world.roster})
+
+    def test_explicit_lineup_must_be_drawn_from_the_roster(self):
+        outsider = self.world.rivals[0].star.id  # a rival star is not on the roster
+        self.assertNotIn(outsider, {p.id for p in self.world.roster})
+        with self.assertRaises(ValueError):
+            resolver.run(
+                self.world,
+                Decisions(opponent="northwind", lineup=[*self.lineup_ids[:4], outsider]),
+                0,
+            )
+
+    def test_round_log_labels_winners_by_the_canonical_team_id(self):
+        # The result is self-consistent against world.team.id: round winners are
+        # exactly the managed team or the named opponent, and counting them by the
+        # canonical id reproduces the scoreline — no caller-side remapping.
+        rec = resolver.run(self.world, Decisions(opponent="northwind"), 3)
+        team_id = self.world.team.id
+        winners = [r.winner for r in rec.round_log]
+        self.assertTrue(set(winners) <= {team_id, "northwind"})
+        self.assertEqual(sum(w == team_id for w in winners), rec.scoreline[0])
+        self.assertEqual(sum(w == "northwind" for w in winners), rec.scoreline[1])
+
+
 if __name__ == "__main__":
     unittest.main()
