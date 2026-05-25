@@ -57,6 +57,9 @@ __all__ = [
     "ChirperPost",
     "LastWeek",
     "WorldState",
+    "PracticeFocus",
+    "TacticalStance",
+    "Decisions",
     "KeyMoment",
     "RoundResult",
     "WhyRecord",
@@ -358,6 +361,39 @@ class WorldState(_Model):
         to regenerate (then drop) LLM output rather than ship invented history.
         """
         return self.cite_index.get(cite)
+
+
+# --------------------------------------------------------------------------- #
+# Resolver input. Not part of the canned save; defined here so the slice runner
+# and the resolver share one contract. See m0_technical_plan.md.
+# --------------------------------------------------------------------------- #
+#: What the practice block drilled. Each focus lifts the roles it suits.
+PracticeFocus = Literal["aim", "comms", "defaults", "anti_strat", "rest"]
+
+#: How the team is told to play the match.
+TacticalStance = Literal["aggressive", "default", "disciplined"]
+
+
+class Decisions(_Model):
+    """The manager's inputs to one week's match resolution.
+
+    This is the *structured* half of the weekly decision surface — the part a
+    pure, headless resolver can act on. The open-text moments (capped, tone-
+    aligned) belong to the content layer, never here: interpreting free text
+    would require an LLM, and rule #1 of the architecture is that the LLM is
+    never inside the resolver.
+
+    ``opponent`` (a rival org id) and ``map`` are the week's fixture;
+    ``lineup``, ``practice_focus`` and ``tactical_stance`` are the controllables.
+    An empty ``lineup`` means "field the five canned starters" — the resolver
+    fills it in, so the common case needs only an opponent.
+    """
+
+    opponent: str
+    map: str = "Helix"
+    lineup: list[str] = Field(default_factory=list)
+    practice_focus: PracticeFocus = "defaults"
+    tactical_stance: TacticalStance = "default"
 
 
 # --------------------------------------------------------------------------- #
