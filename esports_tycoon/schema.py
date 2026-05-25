@@ -37,6 +37,7 @@ from pydantic import (
 )
 
 __all__ = [
+    "CURRENT_SCHEMA_VERSION",
     "MEMORY_ID_RE",
     "Role",
     "MemoryKind",
@@ -65,6 +66,15 @@ __all__ = [
     "WhyRecord",
     "GeneratedContent",
 ]
+
+#: The save-format version this build reads and writes. The save is
+#: self-describing (``m0_0_canonical_contract.md`` §3): every save carries a
+#: ``schema_version``, and the loader turns an older save into this version or
+#: refuses it with a clear message. Bump this when the on-disk shape changes
+#: incompatibly, and register the upgrade step in
+#: :mod:`esports_tycoon.canned.loader` so old saves migrate forward rather than
+#: being rejected.
+CURRENT_SCHEMA_VERSION = 0
 
 # `mem:<player_id>:<event_slug>` — lowercase ascii, dash-snake event slug.
 # Kept identical to esports_tycoon.cast_lock.spec.MEMORY_ID_RE; the two modules
@@ -326,6 +336,12 @@ class WorldState(_Model):
     whatever a caller happens to pass.
     """
 
+    #: The save-format version this document was written against. Carried so the
+    #: save is self-describing; the load-time gate in
+    #: :mod:`esports_tycoon.canned.loader` migrates an older value forward to
+    #: :data:`CURRENT_SCHEMA_VERSION` or refuses the save. The field itself only
+    #: constrains the shape (a non-negative int) — version *compatibility* is the
+    #: loader's job, not the schema's, so direct ``model_validate`` stays usable.
     schema_version: int = Field(ge=0)
     #: The save's RNG seed. Required (no default) so it is always present in the
     #: save and always serialized; ``ge=0`` matches the house style for the save's
