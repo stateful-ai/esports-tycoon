@@ -186,6 +186,25 @@ class TestGroundingOnReturn(_Fixture):
         self.assertIsNotNone(gc.raw_llm_output)
         self.assertIn("held. won.", gc.raw_llm_output)
 
+    def test_tokens_out_priced_off_completion_not_json_envelope(self):
+        # tokens_out must estimate the model's completion (its prose + cites it
+        # offered), not the serialized {text, cites} envelope. Pricing the
+        # envelope's JSON scaffolding would overstate output tokens and the cost
+        # the recap reports. The full envelope is still kept for the audit.
+        from esports_tycoon.cost import estimate_tokens
+
+        client = _RecordingLLM(text="we'll review the tape.", cites=["mem:rook:scrim_w5_choke"])
+        gc = llm.generate(
+            "chirper_post",
+            GenerationContext(world=self.world, why=self.why, author="rook"),
+            client=client,
+        )
+        completion = "we'll review the tape. mem:rook:scrim_w5_choke"
+        self.assertEqual(gc.tokens_out, estimate_tokens(completion))
+        # The envelope (with "text"/"cites" keys, quotes, brackets) is strictly
+        # larger, so estimating off it would have over-counted.
+        self.assertLess(gc.tokens_out, estimate_tokens(gc.raw_llm_output))
+
     def test_unsupported_kind_is_rejected(self):
         client = _RecordingLLM()
         with self.assertRaises(ValueError):
