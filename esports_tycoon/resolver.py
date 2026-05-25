@@ -229,12 +229,12 @@ def _opponent_strength(world: WorldState, opponent_id: str) -> float:
 def _resolve_lineup(world: WorldState, decisions: Decisions) -> list[Player]:
     """The five starters to field, validated.
 
-    An empty ``decisions.lineup`` defaults to the canned starters in save order;
-    anything else must be exactly five distinct, known starter ids.
+    An empty ``decisions.lineup`` defaults to the managed team's roster in save
+    order; anything else must be exactly five distinct ids drawn from that roster.
     """
-    by_id = {p.id: p for p in world.players}
+    by_id = {p.id: p for p in world.roster}
     if not decisions.lineup:
-        return list(world.players)
+        return list(world.roster)
 
     seen: set[str] = set()
     lineup: list[Player] = []
@@ -411,7 +411,7 @@ def run(state: WorldState, decisions: Decisions, seed: int) -> WhyRecord:
             if rng.random() < _CONSOLATION_PROB:
                 impact[_weighted_pick(rng, lineup_ids, weights)] += 1
 
-        winner = state.save.team.id if overcast_won else opponent_id
+        winner = state.team.id if overcast_won else opponent_id
         round_log.append(
             RoundResult(round=rnd, winner=winner, summary=f"{overcast}-{opponent}")
         )
