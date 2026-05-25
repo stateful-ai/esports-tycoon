@@ -31,6 +31,7 @@ from pydantic import BaseModel
 from esports_tycoon.content import game_llm
 from esports_tycoon.content.config import ContentConfig
 from esports_tycoon.content.context import GenerationContext
+from esports_tycoon.cost import estimate_tokens
 from esports_tycoon.schema import GeneratedContent, MemoryEntry, Player, WhyRecord
 
 __all__ = ["generate", "LLMClient", "MAX_TOKENS"]
@@ -214,13 +215,19 @@ def generate(
 
     cites, status = _ground(reply, ctx)
     author = _resolved_author(kind, ctx)
+    # Report token *usage* (the endpoints behind the pack client don't reliably
+    # surface a usage block, so estimate from the prompt and reply); the
+    # render-time cost meter prices these and gates on the per-slice ceiling.
+    raw_output = reply.model_dump_json()
     return GeneratedContent(
         kind=kind,  # type: ignore[arg-type]  # guarded against MAX_TOKENS above
         text=reply.text.strip(),
         grounding_status=status,
         author=author,
         cites=cites,
-        raw_llm_output=reply.model_dump_json(),
+        raw_llm_output=raw_output,
+        tokens_in=estimate_tokens(system + "\n" + user),
+        tokens_out=estimate_tokens(raw_output),
     )
 
 
