@@ -18,6 +18,10 @@ dev = ["pytest>=7.0"]
 # vendored gaming-pack client. The default (templated) backend needs none of
 # this, so the dependency is opt-in: `pip install -e .[vllm]`.
 vllm = ["openai>=1.0"]
+# The local slice web app (esports_tycoon.web). The headless runner, the recap
+# artifact, and the whole templated slice need none of this; only serving the
+# manager view + Chirper feed does, so Flask is opt-in: `pip install -e .[web]`.
+web = ["Flask>=3.0"]
 
 [tool.setuptools.packages.find]
 include = ["esports_tycoon*"]
@@ -26,6 +30,9 @@ include = ["esports_tycoon*"]
 # Ship the canonical canned save inside the wheel so the loader/CLI work when
 # installed, not only from a source checkout.
 "esports_tycoon.canned" = ["data/*.yaml"]
+# Ship the web app's Jinja2 templates so the slice app works from an installed
+# wheel, not only a source checkout.
+"esports_tycoon.web" = ["templates/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

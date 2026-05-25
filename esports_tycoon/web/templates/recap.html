@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Recap — Week {{ season.current_week }}{% endblock %}
+{% block content %}
+{% set ovc, opp = result.scoreline %}
+<h1>Week {{ season.current_week }}: {{ "win" if result.won else "loss" }}</h1>
+<p class="sub">{{ team.name }} {{ ovc }}–{{ opp }} {{ opponent_name }} on {{ fixture_map }} · slice <code>{{ result.slice_id }}</code> · seed {{ result.config.seed }}</p>
+
+<div class="card">{{ result.narration.text }}</div>
+
+<h2>What the room remembered</h2>
+<p class="sub">Every line this week is grounded in a real memory from the canned log — no invented history.</p>
+{% if cited %}
+  {% for cite, entry in cited %}
+    <div class="post">
+      <code>{{ cite }}</code>
+      <div class="muted">{{ entry.summary if entry else "(unresolved)" }}</div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p class="muted">No precedent was cited this week.</p>
+{% endif %}
+<p class="muted">Grounding: {{ result.grounded_ok }}/{{ result.grounded_total }} grounded lines resolved
+  ({{ (result.grounding_rate * 100) | round | int }}%).</p>
+
+<h2>The artifact</h2>
+<div class="card">
+  Written this run (screenshot-ready):
+  <div><code>{{ recap_path }}</code></div>
+  <div><code>{{ feed_path }}</code></div>
+</div>
+
+<div class="actions">
+  <a class="btn" href="{{ url_for('feed') }}">See the Chirper feed →</a>
+  <a class="btn secondary" href="{{ url_for('reset') }}">Play again</a>
+</div>
+{% endblock %}
