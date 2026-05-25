@@ -41,6 +41,14 @@ FEED_FILENAME = "feed.snapshot.html"
 _PRACTICE_LABELS = {value: label for value, label, _ in PRACTICE_CHOICES}
 _PRACTICE_BLURBS = {value: blurb for value, _, blurb in PRACTICE_CHOICES}
 
+#: How each content backend is described in the recap header. Only ``templated``
+#: is byte-deterministic and zero-API; a ``vllm`` recap must say so plainly rather
+#: than inherit the templated "zero-API" claim.
+_MODE_LABELS = {
+    "templated": "templated mode (zero-API)",
+    "vllm": "vllm mode (local Qwen 7B/8B)",
+}
+
 
 # --------------------------------------------------------------------------- #
 # Shared lookups.
@@ -97,8 +105,9 @@ def render_recap_md(result: SliceResult, world: WorldState) -> str:
     lines.append(
         f"_{save.title}. {save.season.league}, {save.season.division}._  "
     )
+    mode = _MODE_LABELS.get(result.content_backend, f"{result.content_backend} mode")
     lines.append(
-        f"_Slice `{result.slice_id}` · seed `{result.config.seed}` · templated mode (zero-API)._"
+        f"_Slice `{result.slice_id}` · seed `{result.config.seed}` · {mode}._"
     )
     lines.append("")
 

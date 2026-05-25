@@ -164,6 +164,32 @@ python -m esports_tycoon.cast_lock reject  --approver <you>  --reason ...
 A batch that fails validation cannot be approved; any edit to either file
 invalidates the recorded approval until the gate is re-run.
 
+## The vLLM-mode demo gate
+
+Before any **vLLM-mode** screenshot is taken or shared, it must clear one gate:
+the slice runs end-to-end through the adapter in `vllm` mode against the local
+Qwen endpoint, latency is measured and recorded, the adversarial-seed safety
+corpus passes, and the founder signs off in writing on the exact output.
+
+```bash
+# 1. Run the whole slice in vllm mode against the live local Qwen endpoint
+#    (GAME_LLM_* env; needs `pip install -e .[vllm]`). Measures latency, screens
+#    the adversarial corpus + the run's own output, writes the bundle.
+python -m esports_tycoon.vllm_demo preflight --seed 6 [--max-latency <secs>]
+# 2. The founder reviews artifacts/vllm_demo/{recap.md,feed.snapshot.html} and signs off.
+python -m esports_tycoon.vllm_demo sign-off --approver <founder> [--reason ...]
+python -m esports_tycoon.vllm_demo status      # may a screenshot be shared? (exit 0 = yes)
+```
+
+The preflight bundles its evidence into a content digest over the *exact* recap +
+feed the founder will screenshot. A preflight whose automated gate failed (a
+safety leak, unsafe generated output, or a blown `--max-latency` budget) **cannot
+be signed off**, and because vLLM output is non-deterministic, any re-generation
+produces a new digest that makes a prior sign-off `stale` — so an approval
+authorises one reviewed output, never a future one. Local vLLM is free, so cost
+is not gated here; latency is *measured and recorded*, and only fails the gate
+against a founder-supplied budget.
+
 ## Tests
 
 ```bash
