@@ -186,9 +186,11 @@ feed the founder will screenshot. A preflight whose automated gate failed (a
 safety leak, unsafe generated output, or a blown `--max-latency` budget) **cannot
 be signed off**, and because vLLM output is non-deterministic, any re-generation
 produces a new digest that makes a prior sign-off `stale` — so an approval
-authorises one reviewed output, never a future one. Local vLLM is free, so cost
-is not gated here; latency is *measured and recorded*, and only fails the gate
-against a founder-supplied budget.
+authorises one reviewed output, never a future one. The digest binds to the
+actual screenshot surface: `status` re-hashes the `recap.md`/`feed.snapshot.html`
+on disk, so editing either file out-of-band flips the gate back to `BLOCKED`.
+Local vLLM is free, so cost is not gated here; latency is *measured and
+recorded*, and only fails the gate against a founder-supplied budget.
 
 ## Tests
 

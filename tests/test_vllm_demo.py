@@ -36,6 +36,7 @@ from esports_tycoon.vllm_demo.preflight import (  # noqa: E402
     LatencyReport,
     run_preflight,
     screen_corpus,
+    verify_artifacts,
     write_preflight,
 )
 
@@ -226,6 +227,32 @@ class TestWriteAndLoadEvidence(_Fixture):
         with tempfile.TemporaryDirectory() as tmp:
             self.assertIsNone(preflight.load_evidence(tmp))
 
+    def test_verify_artifacts_holds_for_a_freshly_written_bundle(self):
+        result = self.preflight()
+        with tempfile.TemporaryDirectory() as tmp:
+            write_preflight(result, tmp)
+            evidence = preflight.load_evidence(tmp)
+            # The on-disk recap/feed re-hash to exactly the recorded digest.
+            self.assertTrue(verify_artifacts(evidence, tmp))
+
+    def test_verify_artifacts_fails_when_recap_edited_out_of_band(self):
+        result = self.preflight()
+        with tempfile.TemporaryDirectory() as tmp:
+            paths = write_preflight(result, tmp)
+            evidence = preflight.load_evidence(tmp)
+            # Tamper with the actual screenshot surface after the preflight.
+            paths["recap"].write_text(
+                paths["recap"].read_text(encoding="utf-8") + "\nsmuggled line\n",
+                encoding="utf-8",
+            )
+            self.assertFalse(verify_artifacts(evidence, tmp))
+
+    def test_verify_artifacts_fails_when_files_missing(self):
+        evidence = self.preflight().evidence()
+        with tempfile.TemporaryDirectory() as tmp:
+            # Evidence exists in memory but nothing was written to disk.
+            self.assertFalse(verify_artifacts(evidence, tmp))
+
     def test_evidence_is_json_serialisable(self):
         evidence = self.preflight().evidence()
         # Round-trips through JSON with no custom encoder.
@@ -332,6 +359,21 @@ class TestCLI(_Fixture):
 
         # status after sign-off: screenshots allowed.
         self.assertEqual(self._main(["status"]), 0)
+
+    def test_editing_recap_after_signoff_blocks_screenshots(self):
+        self.assertEqual(self._main(["preflight", "--seed", "6"]), 0)
+        self.assertEqual(self._main(["sign-off", "--approver", "founder@x.com"]), 0)
+        self.assertEqual(self._main(["status"]), 0)  # approved + artifacts verified
+        # Tamper with the recap the founder would screenshot, out-of-band.
+        recap = pathlib.Path(self.artifacts) / preflight.RECAP_FILENAME
+        recap.write_text(recap.read_text(encoding="utf-8") + "\nsmuggled\n", encoding="utf-8")
+        self.assertEqual(self._main(["status"]), 1)  # digest no longer matches the files
+
+    def test_cannot_sign_off_on_edited_artifacts(self):
+        self.assertEqual(self._main(["preflight", "--seed", "6"]), 0)
+        recap = pathlib.Path(self.artifacts) / preflight.RECAP_FILENAME
+        recap.write_text(recap.read_text(encoding="utf-8") + "\nsmuggled\n", encoding="utf-8")
+        self.assertEqual(self._main(["sign-off", "--approver", "founder@x.com"]), 1)
 
     def test_signoff_without_preflight_errors(self):
         self.assertEqual(self._main(["sign-off", "--approver", "founder@x.com"]), 2)

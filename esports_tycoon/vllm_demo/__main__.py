@@ -34,6 +34,7 @@ from esports_tycoon.vllm_demo.preflight import (
     DEFAULT_ARTIFACTS_DIR,
     load_evidence,
     run_preflight,
+    verify_artifacts,
     write_preflight,
 )
 
@@ -116,17 +117,21 @@ def _cmd_status(args) -> int:
     evidence = load_evidence(args.artifacts_dir)
     record = load_record(args.record)
     status = gate_status(evidence, record)
-    allowed = screenshot_allowed(evidence, record)
 
     if evidence is None:
         print(f"status        : {status['status']} (run `preflight` first)")
         return 1
+    # The recap/feed files on disk are the actual screenshot surface; require them
+    # to still hash to the approved digest, so an out-of-band edit can't ride it.
+    artifacts_ok = verify_artifacts(evidence, args.artifacts_dir)
+    allowed = screenshot_allowed(evidence, record) and artifacts_ok
     print(f"digest        : {str(evidence.get('digest'))[:16]}...")
     print(f"gate_ready    : {evidence.get('gate_ready')}")
     print(f"sign-off      : {status['status']}")
     for key in ("recorded_decision", "approver", "decided_at", "reason", "detail"):
         if status.get(key):
             print(f"{key:<14}: {status[key]}")
+    print(f"artifacts     : {'verified' if artifacts_ok else 'MISMATCH (recap/feed changed on disk)'}")
     print(f"screenshots   : {'ALLOWED' if allowed else 'BLOCKED'}")
     return 0 if allowed else 1
 
@@ -136,6 +141,13 @@ def _cmd_decide(args, decision: str) -> int:
     if evidence is None:
         print(f"{_NO} no preflight evidence at {args.artifacts_dir}; run `preflight` first", file=sys.stderr)
         return 2
+    if decision == "approve" and not verify_artifacts(evidence, args.artifacts_dir):
+        print(
+            f"{_NO} the recap/feed on disk no longer match the recorded digest; "
+            f"re-run `preflight` so you sign off on the exact output you reviewed",
+            file=sys.stderr,
+        )
+        return 1
     try:
         record = record_decision(
             evidence, decision=decision, approver=args.approver, reason=args.reason, record_path=args.record

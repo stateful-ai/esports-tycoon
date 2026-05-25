@@ -62,6 +62,7 @@ __all__ = [
     "run_preflight",
     "write_preflight",
     "load_evidence",
+    "verify_artifacts",
 ]
 
 #: The evidence file the preflight writes; the founder's sign-off reads its digest.
@@ -335,6 +336,37 @@ class PreflightResult:
         }
 
 
+def _digest_from_fields(
+    model: Optional[str],
+    config_fields: Mapping[str, object],
+    decisions_fields: Mapping[str, object],
+    safety_passed: bool,
+    recap_md: str,
+    feed_html: str,
+) -> str:
+    """Content-address the founder-facing demo output from its primitive fields.
+
+    Kept separate from :func:`_digest` so the *same* payload can be rebuilt two
+    ways: from a live run's typed objects (at preflight time) and from the written
+    evidence + on-disk recap/feed (at verify time, see :func:`verify_artifacts`).
+    Both must hash identically or the binding would be meaningless.
+    """
+    payload = json.dumps(
+        {
+            "model": model,
+            "config": dict(config_fields),
+            "decisions": dict(decisions_fields),
+            "safety_passed": safety_passed,
+            "recap_md": recap_md,
+            "feed_html": feed_html,
+        },
+        sort_keys=True,
+        ensure_ascii=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _digest(
     model: str,
     config: SliceConfig,
@@ -350,29 +382,23 @@ def _digest(
     what makes a sign-off bind to the one output the founder reviewed, and go stale
     on the next generation.
     """
-    payload = json.dumps(
+    return _digest_from_fields(
+        model,
         {
-            "model": model,
-            "config": {
-                "opponent": config.opponent,
-                "map": config.map,
-                "seed": config.seed,
-                "stance": config.tactical_stance,
-            },
-            "decisions": {
-                "practice_focus": decisions.practice_focus,
-                "team_talk": decisions.team_talk,
-                "fallout_post": decisions.fallout_post,
-            },
-            "safety_passed": safety_passed,
-            "recap_md": recap_md,
-            "feed_html": feed_html,
+            "opponent": config.opponent,
+            "map": config.map,
+            "seed": config.seed,
+            "stance": config.tactical_stance,
         },
-        sort_keys=True,
-        ensure_ascii=True,
-        separators=(",", ":"),
+        {
+            "practice_focus": decisions.practice_focus,
+            "team_talk": decisions.team_talk,
+            "fallout_post": decisions.fallout_post,
+        },
+        safety_passed,
+        recap_md,
+        feed_html,
     )
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def run_preflight(
@@ -467,3 +493,49 @@ def load_evidence(
         return None
     data = json.loads(path.read_text(encoding="utf-8"))
     return data if isinstance(data, dict) else None
+
+
+def verify_artifacts(
+    evidence: Mapping[str, object],
+    output_dir: Path | str = DEFAULT_ARTIFACTS_DIR,
+) -> bool:
+    """Re-derive the digest from the on-disk recap/feed and confirm it still matches.
+
+    The founder's sign-off binds to ``evidence["digest"]`` (recorded in
+    ``preflight.json``), but the thing actually screenshotted is the ``recap.md`` /
+    ``feed.snapshot.html`` *files*. This re-hashes those files together with the
+    evidence's own model/config/decisions/safety fields and checks the result
+    equals the recorded digest — so a file edited or regenerated out-of-band after
+    the preflight (i.e. not the byte-exact output the founder approved) cannot ride
+    a stale approval. ``False`` if either file is missing or anything differs.
+    """
+    expected = evidence.get("digest")
+    if not expected:
+        return False
+    out = Path(output_dir)
+    recap_path = out / RECAP_FILENAME
+    feed_path = out / FEED_FILENAME
+    if not recap_path.exists() or not feed_path.exists():
+        return False
+
+    config = evidence.get("config") or {}
+    decisions = evidence.get("decisions") or {}
+    safety = evidence.get("safety") or {}
+    redigest = _digest_from_fields(
+        evidence.get("model"),  # type: ignore[arg-type]
+        {
+            "opponent": config.get("opponent"),
+            "map": config.get("map"),
+            "seed": config.get("seed"),
+            "stance": config.get("stance"),
+        },
+        {
+            "practice_focus": decisions.get("practice_focus"),
+            "team_talk": decisions.get("team_talk"),
+            "fallout_post": decisions.get("fallout_post"),
+        },
+        bool(safety.get("passed")),
+        recap_path.read_text(encoding="utf-8"),
+        feed_path.read_text(encoding="utf-8"),
+    )
+    return redigest == expected

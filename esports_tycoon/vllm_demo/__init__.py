@@ -37,6 +37,7 @@ from esports_tycoon.vllm_demo.preflight import (
     run_preflight,
     screen_corpus,
     screen_output,
+    verify_artifacts,
     write_preflight,
 )
 
@@ -44,6 +45,7 @@ __all__ = [
     "run_preflight",
     "write_preflight",
     "load_evidence",
+    "verify_artifacts",
     "screen_corpus",
     "screen_output",
     "PreflightResult",
