@@ -193,6 +193,22 @@ class TestOutputScreening(_Fixture):
         self.assertIn("halftime", sources)
         self.assertTrue(any(s.startswith("feed:") for s in sources))
 
+    def test_unsafe_team_talk_is_flagged_and_blocks_the_gate(self):
+        # team_talk is manager CLI input rendered into recap.md but never
+        # generated, so a clean client alone won't catch an unsafe line there.
+        decisions = SliceDecisions(
+            practice_focus="defaults",
+            team_talk="kill yourself, you threw it.",
+            fallout_post="week 6: held the line.",
+        )
+        result = run_preflight(self.world, self.config, decisions, client=_StubLLM())
+        findings = result.safety.output_findings
+        self.assertIn("team_talk", {f.source for f in findings})
+        talk = next(f for f in findings if f.source == "team_talk")
+        self.assertIn("harassment", talk.categories)
+        self.assertFalse(result.safety.passed)
+        self.assertFalse(result.gate_ready)
+
 
 class TestDigestBinding(_Fixture):
     def test_same_output_yields_same_digest(self):

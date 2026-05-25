@@ -102,11 +102,13 @@ class CorpusResult:
 
 @dataclass(frozen=True)
 class OutputFinding:
-    """One piece of *generated* prose this run produced that the filter rejected.
+    """One line of this run's founder-reviewable surface that the filter rejected.
 
-    ``source`` locates it (``"narration"``, ``"halftime"``, or
+    ``source`` locates it (``"narration"``, ``"halftime"``, ``"team_talk"``, or
     ``"feed:<handle>"``); its presence means the demo output itself is unsafe and
-    the gate must not open.
+    the gate must not open. Most sources are *generated* prose, but ``team_talk``
+    is the manager's own open-text line — it is rendered in ``recap.md`` and so is
+    screened here too (unlike the ``fallout_post``, which already reaches the feed).
     """
 
     source: str
@@ -163,9 +165,12 @@ def screen_corpus(
 def screen_output(result: SliceResult) -> list[OutputFinding]:
     """Screen every rendered line of the slice; return any the filter rejects.
 
-    Covers the narration, the half-time ack, and every Chirper post (including the
-    manager's own open-text line — it, too, ends up in the screenshot). An empty
-    list means nothing the founder would see trips the safety filter.
+    Covers the narration, the half-time ack, the manager's pre-match ``team_talk``,
+    and every Chirper post (which already includes the manager's ``fallout_post``).
+    The two manager open-text lines come straight from CLI input — they are not
+    safety-prefiltered before this gate — yet ``recap.md`` renders ``team_talk``, so
+    it must be screened here or an unsafe line could pass the gate while being shown.
+    An empty list means nothing the founder would see trips the safety filter.
     """
     findings: list[OutputFinding] = []
 
@@ -176,6 +181,7 @@ def screen_output(result: SliceResult) -> list[OutputFinding]:
 
     check("narration", result.narration.text)
     check("halftime", result.halftime.text)
+    check("team_talk", result.decisions.team_talk)
     for post in result.feed:
         check(f"feed:{post.author_handle}", post.text)
     return findings
