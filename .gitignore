@@ -1,0 +1,16 @@
+# Added by CompanyOS so build artifacts/bytecode are never committed.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+node_modules/
+dist/
+build/
+.DS_Store
+*.log
+.env
+.env.*

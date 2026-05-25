@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esports-tycoon"
+version = "0.0.0"
+description = "A management sim where the soul of the game is persistent player personalities."
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+include = ["esports_tycoon*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
