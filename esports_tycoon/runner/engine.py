@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from esports_tycoon import resolver
 from esports_tycoon.content import GenerationContext, generate_content
@@ -38,6 +38,11 @@ from esports_tycoon.runner.model import (
     SliceResult,
 )
 from esports_tycoon.schema import GeneratedContent, WhyRecord, WorldState
+
+if TYPE_CHECKING:
+    # Type-only: naming the injected client must not pull the opt-in vllm backend
+    # (and its ``openai`` dep) onto the always-imported templated path.
+    from esports_tycoon.content.llm import LLMClient
 
 __all__ = ["run_slice", "slice_id", "halftime_scoreline"]
 
@@ -103,6 +108,7 @@ def _build_feed(
     decisions: SliceDecisions,
     why: WhyRecord,
     content_config: ContentConfig,
+    client: Optional["LLMClient"] = None,
 ) -> tuple[tuple[FeedPost, ...], list[GeneratedContent]]:
     """The week-6 Chirper feed, plus the grounded content pieces it generated.
 
@@ -131,6 +137,7 @@ def _build_feed(
             "chirper_post",
             GenerationContext(world=world, why=why, author=player.id),
             config=content_config,
+            client=client,
         )
         grounded.append(gc)
         posts.append(
@@ -147,6 +154,7 @@ def _build_feed(
         "chirper_post",
         GenerationContext(world=world, why=why, author=_CASTER_HANDLE),
         config=content_config,
+        client=client,
     )
     posts.append(FeedPost(_CASTER_HANDLE, _CASTER_NAME, caster.text, tuple(caster.cites), caster.grounding_status))
 
@@ -156,6 +164,7 @@ def _build_feed(
             "chirper_post",
             GenerationContext(world=world, why=why, author=rival.star.handle),
             config=content_config,
+            client=client,
         )
         posts.append(FeedPost(rival.star.handle, rival.star.name, star.text, tuple(star.cites), star.grounding_status))
 
@@ -168,12 +177,21 @@ def run_slice(
     decisions: SliceDecisions,
     *,
     content_config: Optional[ContentConfig] = None,
+    client: Optional["LLMClient"] = None,
 ) -> SliceResult:
     """Play one week and return the structured :class:`SliceResult`.
 
     Pure with respect to ``world`` (read, never mutated) and deterministic for a
     given ``config`` + ``decisions``. ``content_config`` defaults to the zero-API
     templated backend, the mode the whole slice is built to run in.
+
+    ``client`` is the optional LLM client the ``vllm`` backend should talk through;
+    it is threaded to every generation and ignored by the templated backend (which
+    makes no API call). The default (``None``) lets the ``vllm`` backend fall back
+    to its env-configured process default — and, in templated mode, nothing is ever
+    constructed. This is the injection seam the vLLM demo preflight uses to run the
+    whole slice against a chosen endpoint (and to time it) without reaching into
+    module globals.
     """
     content_config = content_config or ContentConfig()
     structured = decisions.structured(config)
@@ -184,6 +202,7 @@ def run_slice(
         "narration",
         GenerationContext(world=world, why=why, decisions=structured),
         config=content_config,
+        client=client,
     )
 
     half_score = halftime_scoreline(why, world.save.team.id)
@@ -191,9 +210,10 @@ def run_slice(
         "halftime_ack",
         GenerationContext(world=world, halftime_scoreline=half_score, second_half_stance=config.tactical_stance),
         config=content_config,
+        client=client,
     )
 
-    feed, feed_grounded = _build_feed(world, config, decisions, why, content_config)
+    feed, feed_grounded = _build_feed(world, config, decisions, why, content_config, client)
 
     # Grounding rate over the pieces that actually attempt to cite precedent:
     # the narration and the five starter reactions. Half-time acks and external
@@ -215,5 +235,6 @@ def run_slice(
         feed=feed,
         grounded_ok=grounded_ok,
         grounded_total=len(grounded_pieces),
+        content_backend=content_config.backend,
         cited_memories=cited_memories,
     )

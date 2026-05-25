@@ -178,6 +178,12 @@ class SliceResult:
     feed: tuple[FeedPost, ...]
     grounded_ok: int
     grounded_total: int
+    #: Which content backend produced this slice's prose — the value of
+    #: ``ContentConfig.backend`` (``templated`` | ``vllm``). Recorded so the recap
+    #: can label the run honestly (a ``vllm`` slice must not claim "zero-API"). A
+    #: plain ``str`` to keep this module free of any ``content`` import, per the
+    #: module's stated independence; it mirrors ``ContentConfig.backend`` verbatim.
+    content_backend: str = "templated"
     cited_memories: tuple[str, ...] = field(default_factory=tuple)
 
     @property
