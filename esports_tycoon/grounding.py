@@ -50,11 +50,18 @@ __all__ = [
 #: out of free prose. The token body is identical (``mem:<player>:<event_slug>``);
 #: the schema regex anchors with ``^``/``$`` for whole-string validation, while this
 #: one brackets the body with non-identifier boundaries so ``findall`` can't carve a
-#: well-formed cite out of a malformed run — e.g. ``xmem:rook:scrim_w5_choke`` and
-#: ``mem:rook:scrim_w5_choke-extra`` must *not* yield a clean ``mem:rook:scrim_w5_choke``
+#: well-formed cite out of a malformed run — e.g. ``xmem:rook:scrim_w5_choke``,
+#: ``mem:rook:scrim_w5_choke-extra``, ``mem:rook:scrim_w5_choke/extra`` and
+#: ``mem:rook:scrim_w5_choke.extra`` must *not* yield a clean ``mem:rook:scrim_w5_choke``
 #: that then resolves, which would mask the malformed cite from the grounding guard.
+#: The boundary classes therefore reject identifier chars, ``:``/``-`` and the path
+#: separator ``/`` on either side; a ``.`` is rejected only when it begins a
+#: ``.ext``-style run-on suffix, so a cite ending a sentence (``…choke.``) still parses.
 CITE_TOKEN_RE = re.compile(
-    r"(?<![A-Za-z0-9_:-])mem:[a-z0-9_]+:[a-z0-9]+(?:_[a-z0-9]+)*(?![A-Za-z0-9_:-])"
+    r"(?<![A-Za-z0-9_:./-])"
+    r"mem:[a-z0-9_]+:[a-z0-9]+(?:_[a-z0-9]+)*"
+    r"(?![A-Za-z0-9_:/-])"  # not run on by an identifier char, ':'/'-', or '/path'
+    r"(?!\.[A-Za-z0-9])"  # nor by a '.ext'-style suffix; a bare trailing '.' is fine
 )
 
 #: How many times a generation may be regenerated before its un-resolvable cites

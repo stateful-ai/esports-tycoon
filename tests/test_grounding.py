@@ -63,6 +63,15 @@ class TestParseCites(unittest.TestCase):
         # not a valid cite char, so the trailing run is garbage, not a longer cite.
         self.assertEqual(grounding.parse_cites(f"x{REAL}"), [])
         self.assertEqual(grounding.parse_cites(f"{REAL}-extra"), [])
+        # A '/' path suffix or a '.ext' dotted suffix are run-on garbage too: the
+        # cite must not be carved out and counted as resolved.
+        self.assertEqual(grounding.parse_cites(f"{REAL}/extra"), [])
+        self.assertEqual(grounding.parse_cites(f"{REAL}.extra"), [])
+        self.assertEqual(grounding.parse_cites(f"path/{REAL}"), [])
+
+    def test_trailing_sentence_period_still_parses(self):
+        # A bare '.' ending a sentence is a valid boundary, unlike a '.ext' run-on.
+        self.assertEqual(grounding.parse_cites(f"see {REAL}."), [REAL])
 
     def test_underscore_extension_is_a_distinct_well_formed_cite(self):
         # '_more' extends the slug into a different but still well-formed token; it

@@ -57,21 +57,31 @@ CATEGORIES: tuple[Category, ...] = ("slur", "impersonation", "harassment")
 # --------------------------------------------------------------------------- #
 # Normalisation. Adversaries obfuscate; we canonicalise before matching.
 # --------------------------------------------------------------------------- #
-#: Common leetspeak / homoglyph substitutions folded back to letters. Only the
-#: unambiguous ones — ``2``/``6`` are left alone to avoid mangling clean text.
-_LEET = str.maketrans(
-    {
-        "0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "8": "b",
-        "9": "g", "@": "a", "$": "s", "!": "i", "|": "l", "+": "t", "(": "c",
-    }
+#: Leetspeak / homoglyph substitutions, split by whether the source character
+#: also serves as a *separator*. Digit homoglyphs (``n1gg3r``) are unambiguous and
+#: always fold. Punctuation homoglyphs (``n!gger``, ``tr@nny``) are ambiguous — the
+#: same ``!`` that obfuscates a slur also separates words in ``go! die`` — so they
+#: are folded only in the second form ``_forms`` builds, never before tokenisation,
+#: lest a separator be turned into a letter and let a phrase slip the matcher.
+#: ``2``/``6`` are left alone to avoid mangling clean text.
+_LEET_ALNUM = str.maketrans(
+    {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "8": "b", "9": "g"}
+)
+_LEET_PUNCT = str.maketrans(
+    {"@": "a", "$": "s", "!": "i", "|": "l", "+": "t", "(": "c"}
 )
 
 
 def _canon(text: str) -> str:
-    """Lowercase, strip accents, and fold leetspeak — but keep separators."""
+    """Lowercase, strip accents, fold digit leetspeak — but keep all punctuation.
+
+    Punctuation is preserved here (not folded) so that :func:`_forms` can read it
+    as a word separator; the ambiguous punctuation homoglyphs are folded
+    separately, in the second form :func:`_forms` builds.
+    """
     decomposed = unicodedata.normalize("NFKD", text)
     no_accents = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
-    return no_accents.lower().translate(_LEET)
+    return no_accents.lower().translate(_LEET_ALNUM)
 
 
 def _join_single_letter_runs(spaced: str) -> str:
@@ -96,11 +106,29 @@ def _join_single_letter_runs(spaced: str) -> str:
     return " ".join(out)
 
 
-def _forms(text: str) -> tuple[str, str]:
-    """The two normalised forms the matcher searches: spaced and reconstructed."""
+def _forms(text: str) -> tuple[str, ...]:
+    """The normalised forms the matcher searches, de-duped in build order.
+
+    Punctuation that doubles as leetspeak (``!``, ``@``, ``$`` …) is genuinely
+    ambiguous: ``n!gger`` wants it folded to a letter, while ``go! die`` wants it
+    kept as a word separator. We can't pick one, so we build both readings and let
+    the matcher accept a hit in either:
+
+    * a *separator* reading, where every non-alphanumeric is a word boundary
+      (catches ``go! die`` -> ``go die`` and spaced ``n i g g e r``); and
+    * a *leet* reading, where punctuation homoglyphs are folded to letters first
+      (catches ``n!gger`` -> ``nigger`` and ``tr@nny`` -> ``tranny``).
+
+    Each reading also gets a form that rejoins single-letter runs, so
+    space/punctuation-split words are reconstructed.
+    """
     canon = _canon(text)
-    spaced = re.sub(r"[^a-z0-9]+", " ", canon).strip()
-    return spaced, _join_single_letter_runs(spaced)
+    forms: list[str] = []
+    for variant in (canon, canon.translate(_LEET_PUNCT)):
+        spaced = re.sub(r"[^a-z0-9]+", " ", variant).strip()
+        forms.append(spaced)
+        forms.append(_join_single_letter_runs(spaced))
+    return tuple(dict.fromkeys(forms))
 
 
 def _term_pattern(term: str) -> "re.Pattern[str]":
@@ -191,11 +219,11 @@ def screen(text: str) -> SafetyVerdict:
     post-filter (on generated output, before render). Deterministic and side
     effect free: the same text always yields the same verdict.
     """
-    spaced, reconstructed = _forms(text or "")
+    forms = _forms(text or "")
     categories: list[str] = []
     matches: list[str] = []
     for category, term, pattern in _COMPILED:
-        if pattern.search(spaced) or pattern.search(reconstructed):
+        if any(pattern.search(form) for form in forms):
             if category not in categories:
                 categories.append(category)
             matches.append(term)
@@ -233,6 +261,7 @@ ADVERSARIAL_SEED_CORPUS: dict[Category, list[str]] = {
         "kys loser",
         "k y s",
         "kill yourself, you threw the round",
+        "go! die already",  # punctuation between words must not split the phrase
         "go die already nobody loves you",
         "you should die for that whiff",
         "drink bleach",
