@@ -13,10 +13,16 @@ The gate that stands between a vLLM-mode slice run and a screenshot of it
   :func:`~esports_tycoon.vllm_demo.approval.screenshot_allowed` predicate the
   whole gate collapses to.
 
+    python -m esports_tycoon.vllm_demo smoke        # is the endpoint up + structured + warm-fast?
     python -m esports_tycoon.vllm_demo preflight   # run + measure + screen + write
     python -m esports_tycoon.vllm_demo status       # gate state for the latest preflight
     python -m esports_tycoon.vllm_demo sign-off --approver <founder> [--reason ...]
     python -m esports_tycoon.vllm_demo reject   --approver <founder>  --reason ...
+
+:mod:`~esports_tycoon.vllm_demo.smoke` is step zero of the bring-up: a single
+cheap call that proves the local endpoint is reachable, returns a structured
+reply, and answers within a warm-latency budget — run it before ``preflight`` so a
+down or cold server isn't mistaken for a bad model.
 """
 
 from esports_tycoon.vllm_demo.approval import (
@@ -25,6 +31,11 @@ from esports_tycoon.vllm_demo.approval import (
     load_record,
     record_decision,
     screenshot_allowed,
+)
+from esports_tycoon.vllm_demo.smoke import (
+    DEFAULT_BUDGET_SECONDS,
+    SmokeResult,
+    run_smoke,
 )
 from esports_tycoon.vllm_demo.preflight import (
     DEFAULT_ARTIFACTS_DIR,
@@ -59,4 +70,7 @@ __all__ = [
     "gate_status",
     "screenshot_allowed",
     "DEFAULT_RECORD_PATH",
+    "run_smoke",
+    "SmokeResult",
+    "DEFAULT_BUDGET_SECONDS",
 ]

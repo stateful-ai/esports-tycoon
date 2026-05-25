@@ -164,6 +164,30 @@ python -m esports_tycoon.cast_lock reject  --approver <you>  --reason ...
 A batch that fails validation cannot be approved; any edit to either file
 invalidates the recorded approval until the gate is re-run.
 
+## Run vLLM (local bring-up)
+
+To exercise `vllm` mode for real you need a local, OpenAI-compatible Qwen 7B/8B
+server at `http://localhost:8000/v1` — the endpoint `.env.example` already points
+at. `scripts/vllm_serve.sh` is the one-command bring-up: on a CUDA GPU host it
+`pip install`s vLLM if missing and runs `vllm serve Qwen/Qwen2.5-7B-Instruct`,
+which downloads the weights from the Hugging Face Hub on first boot (cached
+thereafter) and serves them under the model name `qwen2.5-7b-instruct` so it
+matches `GAME_LLM_MODEL`. Copy the env (`cp .env.example .env`), bring the server
+up, then smoke it with one structured round-trip through the game's own client —
+green means the endpoint is up, returns parseable JSON, and answers within a warm
+latency budget (default 5s), which is the prerequisite for the demo gate below.
+
+```bash
+cp .env.example .env                     # GAME_LLM_* already target localhost:8000
+scripts/vllm_serve.sh                     # GPU host: install (if needed) + serve
+pip install -e .[vllm]                    # the openai client the game/smoke use
+python -m esports_tycoon.vllm_demo smoke  # up + structured + warm under 5s? (exit 0 = yes)
+# raw equivalent of the smoke's round-trip:
+curl -s http://localhost:8000/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"qwen2.5-7b-instruct","messages":[{"role":"user","content":"reply with a short json object {\"ready\":true}"}],"max_tokens":64}'
+```
+
 ## The vLLM-mode demo gate
 
 Before any **vLLM-mode** screenshot is taken or shared, it must clear one gate:
