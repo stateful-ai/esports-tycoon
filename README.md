@@ -28,7 +28,8 @@ See `docs/scope-m0.md` (CompanyOS) for the full scope.
   no-dangling-cites grounding contract.
 - **`esports_tycoon/canned/loader.py`** — `loader.load()` → a validated
   `WorldState` from the packaged save. The save and the typed schema round-trip
-  losslessly.
+  losslessly, and the save carries its own RNG `seed` (the seed-in-save contract),
+  so the resolver replays it bit-for-bit by default.
 
 ```bash
 python -m esports_tycoon inspect             # load the canned save, print a summary
@@ -59,7 +60,8 @@ from esports_tycoon.content import generate_content, GenerationContext
 
 world = loader.load()
 decisions = Decisions(opponent="northwind", map="Helix")
-why = resolver.run(world, decisions, seed=7)
+why = resolver.run(world, decisions)          # seed defaults to the save's own seed
+# why = resolver.run(world, decisions, seed=7)  # ...or override it to explore the spread
 post = generate_content("chirper_post", GenerationContext(world=world, why=why, author="vex"))
 ```
 

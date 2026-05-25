@@ -2,12 +2,13 @@
 
 This is rule #1 of the architecture made literal. The resolver is **pure and
 headless**: it takes the already-loaded :class:`~esports_tycoon.schema.WorldState`,
-the manager's structured :class:`~esports_tycoon.schema.Decisions`, and an integer
-seed, and returns a structured :class:`~esports_tycoon.schema.WhyRecord` that the
-narrator consumes verbatim. The bridge between the scoreboard and the story is
-*data, not vibes* — there is no LLM, no clock, no entropy beyond the seed, no
-file or network I/O, and nothing under ``content/`` is imported. The only inputs
-are the three arguments; the only randomness is a local ``random.Random(seed)``.
+the manager's structured :class:`~esports_tycoon.schema.Decisions`, and a seed
+(defaulting to the save's own ``state.seed`` — the seed-in-save contract), and
+returns a structured :class:`~esports_tycoon.schema.WhyRecord` that the narrator
+consumes verbatim. The bridge between the scoreboard and the story is *data, not
+vibes* — there is no LLM, no clock, no entropy beyond the seed, no file or network
+I/O, and nothing under ``content/`` is imported. The only inputs are the three
+arguments; the only randomness is a local ``random.Random(seed)``.
 
 The result is also not arbitrary. A coin-flip resolver would be deterministic
 but tell no story. Outcomes here are *grounded in the canned world* so the drama
@@ -337,13 +338,22 @@ def _clash_tilt_by_player(world: WorldState, lineup: list[Player]) -> dict[str, 
 # --------------------------------------------------------------------------- #
 # The resolver.
 # --------------------------------------------------------------------------- #
-def run(state: WorldState, decisions: Decisions, seed: int) -> WhyRecord:
+def run(state: WorldState, decisions: Decisions, seed: Optional[int] = None) -> WhyRecord:
     """Resolve one match into a structured :class:`WhyRecord`.
 
     Pure and deterministic: identical ``state``/``decisions``/``seed`` always
     produce an identical record. ``state`` and ``decisions`` are read, never
     mutated.
+
+    ``seed`` defaults to the save's own ``state.seed`` (the seed-in-save
+    contract): with no explicit seed, the match's randomness is anchored in the
+    loaded save, so the same save always replays to the same week. Passing an
+    explicit ``seed`` overrides it to explore the distribution those inputs
+    define — the seed is still threaded into the one local generator and echoed
+    back on the record, so the result remains fully reproducible either way.
     """
+    if seed is None:
+        seed = state.seed
     rng = Random(seed)
 
     lineup = _resolve_lineup(state, decisions)
