@@ -2,10 +2,13 @@
 
     python -m esports_tycoon inspect            # load the canned save, print a summary
     python -m esports_tycoon resolve <cite-id>  # resolve a cite ID to its memory entry
+    python -m esports_tycoon play               # launch the local slice web app
 
-Both commands load the packaged canned save through the typed loader, so they
-double as a smoke test that the schema still matches the canned save. The
-cast-lock gate has its own CLI (``python -m esports_tycoon.cast_lock``).
+``inspect`` and ``resolve`` load the packaged canned save through the typed
+loader, so they double as a smoke test that the schema still matches the canned
+save. ``play`` starts the Flask slice app on ``127.0.0.1`` (the headless runner is
+``python -m esports_tycoon.runner``; the cast-lock gate is
+``python -m esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations
@@ -48,8 +51,19 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("inspect", help="load the canned save into a typed WorldState and print a summary")
     resolve = sub.add_parser("resolve", help="resolve a cite ID (mem:<player>:<event>) to its memory entry")
     resolve.add_argument("cite", help="the memory ID to resolve")
+    play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
+    play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
+    play.add_argument("--port", type=int, default=8000, help="bind port (default: 8000)")
 
     args = parser.parse_args(argv)
+
+    if args.command == "play":
+        # Lazy import: the web app pulls in Flask (an opt-in extra), so the core
+        # CLI stays importable without it.
+        from esports_tycoon.web.__main__ import main as web_main
+
+        return web_main(["--host", args.host, "--port", str(args.port)])
+
     world = loader.load(args.save)
 
     command = args.command or "inspect"

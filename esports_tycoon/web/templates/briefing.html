@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ team.name }} — must-win week</h1>
+<p class="sub">{{ save.title }}. {{ season.league }}, {{ season.division }}.</p>
+
+<div class="card">
+  <strong>Standing.</strong> {{ team.standing.wins }}–{{ team.standing.losses }},
+  {{ team.standing.place }} of {{ team.standing.of }} — the last playoff spot, on a two-loss skid.
+  Top {{ season.playoff_cutoff }} of {{ team.standing.of }} advance.
+  <div class="muted">{{ team.standing.note }}</div>
+</div>
+
+<div class="card">
+  <strong>This week.</strong> Host <strong>{{ opponent_name }}</strong>
+  {% if opponent_archetype %}({{ opponent_archetype }}){% endif %} on {{ fixture_map }}. Must win.
+</div>
+
+<h2>The room</h2>
+<table>
+  <thead><tr><th>Player</th><th>Role</th><th>Reads as</th></tr></thead>
+  <tbody>
+  {% for p in players %}
+    <tr>
+      <td><strong>{{ display_name(p.id) }}</strong> <span class="handle muted">{{ p.handle }}</span></td>
+      <td>{{ p.role.value }}</td>
+      <td class="muted">{{ p.traits | join(", ") }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2>Last week on Chirper</h2>
+<p class="sub">{{ last_week.headline }}</p>
+{% for post in last_week.chirper_feed %}
+  <div class="post">
+    <span class="who">{{ post.author }}</span>
+    <div>{{ post.text }}</div>
+    {% if post.note %}<div class="cite">{{ post.note }}</div>{% endif %}
+  </div>
+{% endfor %}
+
+<div class="actions">
+  <a class="btn" href="{{ url_for('practice') }}">{{ "Resume the week" if started else "Begin the week" }}</a>
+</div>
+{% endblock %}
