@@ -34,11 +34,19 @@ def load(path: Union[str, Path] = DEFAULT_SAVE_PATH) -> WorldState:
 def to_save_dict(world: WorldState) -> dict[str, Any]:
     """Render a :class:`WorldState` back to the plain save-shaped dict.
 
-    Uses the YAML aliases (``with`` not ``with_``) and drops absent optional
-    fields, so the result is byte-for-byte comparable to ``yaml.safe_load`` of
-    the original file.
+    Uses the YAML aliases (``with`` not ``with_``) and drops every field still
+    at its default, so the result is byte-for-byte comparable to
+    ``yaml.safe_load`` of the original file.
+
+    ``exclude_defaults`` (not ``exclude_none``) is deliberate. The canned save is
+    hand-authored in the natural style of omitting empty collections and absent
+    optionals rather than spelling them as ``[]``/``null``. ``exclude_none`` only
+    drops ``None``, so an omitted empty collection (e.g. a memory entry with no
+    ``tags``) would load to ``[]`` and then be *re-injected* on dump, silently
+    breaking the round-trip. ``exclude_defaults`` keeps the dump aligned with the
+    save's convention: a value omitted in the YAML stays omitted on the way out.
     """
-    return world.model_dump(mode="json", by_alias=True, exclude_none=True)
+    return world.model_dump(mode="json", by_alias=True, exclude_defaults=True)
 
 
 def dumps(world: WorldState) -> str:
