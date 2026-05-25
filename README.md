@@ -21,9 +21,20 @@ See `docs/scope-m0.md` (CompanyOS) for the full scope.
   single batched approve/reject gate.
 - **`saves/week6.approval.yaml`** — the recorded founder decision, bound to a
   content digest of the batch.
+- **`esports_tycoon/schema.py`** — the typed game schema (pydantic): `Player`,
+  `MemoryEntry`, `Relationship`, `WorldState`, plus the resolver/adapter outputs
+  `WhyRecord` and `GeneratedContent`. Enforces stable `mem:…` cite IDs and the
+  no-dangling-cites grounding contract.
+- **`esports_tycoon/canned/loader.py`** — `loader.load("saves/week6.yaml")` →
+  a validated `WorldState`. The save and the typed schema round-trip losslessly.
 
-Later tickets add the typed game schema, the deterministic match resolver, the
-LLM content adapter, grounded citation enforcement, and the local web app.
+```bash
+python -m esports_tycoon inspect             # load the canned save, print a summary
+python -m esports_tycoon resolve <cite-id>   # resolve a cite ID to its memory entry
+```
+
+Later tickets add the deterministic match resolver, the LLM content adapter,
+grounded citation enforcement, and the local web app.
 
 ## The cast-lock gate
 
