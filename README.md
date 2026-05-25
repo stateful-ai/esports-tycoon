@@ -107,8 +107,49 @@ The web app is a thin shell over `esports_tycoon.runner`: the engine, the recap
 artifact, and the determinism contract all live in the runner and are tested with
 no web dependency.
 
-Later tickets add the standalone grounding/regen loop, the Chirper feed model, and
-safety + cost gates.
+## The render-time gate (grounding + safety + cost)
+
+Every generated piece flows through one gate, `esports_tycoon.gate.render`,
+before it reaches the feed or the recap. It composes the three red-team rules
+into a single regen loop:
+
+- **Grounding** (`esports_tycoon.grounding`) — LLM cites are parsed as
+  `mem:<player>:<slug>`, resolved against the canned log, regenerated up to
+  `N=2`, then any still-unresolvable cites are **dropped** and the
+  `grounding_status` (`ok` | `regen` | `dropped`) is stamped. No hallucinated
+  history.
+- **Safety** (`esports_tycoon.safety`) — the same screener pre-filters the
+  manager's open-text (an unsafe input is rejected before it reaches the model)
+  and post-filters every completion; output that can't be made safe within the
+  regen budget is withheld. It blocks slurs, real-person impersonation / real-IP
+  leakage, and targeted harassment, and is obfuscation-resistant (leetspeak,
+  spacing, character-stretching). `ADVERSARIAL_SEED_CORPUS` is the seed corpus it
+  is held against.
+- **Cost** (`esports_tycoon.cost`) — one `CostMeter` per slice meters every
+  attempt (regens included); a per-slice ceiling breach raises
+  `CostCeilingExceeded`, which halts the run. The M0 local-vLLM model is free, so
+  a real slice spends `$0` well under the ceiling; the guard bites the moment a
+  paid model is configured behind the same adapter.
+
+```python
+from esports_tycoon import gate
+from esports_tycoon.cost import CostMeter
+from esports_tycoon.content import llm
+
+meter = CostMeter()  # one per slice run
+result = gate.render(
+    lambda: llm.generate("chirper_post", ctx, client=client),
+    world=world, meter=meter,
+)
+# result.content is final (safe, grounded, priced); result.grounding / .safety /
+# .cost carry the per-piece bookkeeping.
+```
+
+`esports_tycoon.recap` aggregates those results across a slice and writes the
+per-slice **grounding-rate** and **drop-rate** (plus safety and cost lines) into
+`recap.md`.
+
+Later tickets add the in-universe Chirper feed model that consumes this gate.
 
 ## The cast-lock gate
 

@@ -31,6 +31,7 @@ from pydantic import BaseModel
 from esports_tycoon.content import game_llm
 from esports_tycoon.content.config import ContentConfig
 from esports_tycoon.content.context import GenerationContext
+from esports_tycoon.cost import estimate_tokens
 from esports_tycoon.schema import GeneratedContent, MemoryEntry, Player, WhyRecord
 
 __all__ = ["generate", "LLMClient", "MAX_TOKENS"]
@@ -190,6 +191,19 @@ def _ground(reply: _LLMReply, ctx: GenerationContext) -> tuple[list[str], str]:
     return kept, ("dropped" if dropped else "ok")
 
 
+def _completion_text(reply: _LLMReply) -> str:
+    """The model's actual completion content, for the output-token estimate.
+
+    The prose the model wrote plus the cites it offered — *not* the serialized
+    ``{text, cites}`` JSON envelope. Pricing output tokens off the envelope would
+    bill the JSON scaffolding (keys, quotes, brackets) the model never weighed its
+    answer against, overstating ``tokens_out`` and the cost the recap reports. The
+    full envelope is still kept verbatim in ``raw_llm_output`` for the grounding
+    audit; only the token *estimate* is taken from the completion.
+    """
+    return " ".join([reply.text, *reply.cites]).strip()
+
+
 def generate(
     kind: str,
     ctx: GenerationContext,
@@ -214,13 +228,23 @@ def generate(
 
     cites, status = _ground(reply, ctx)
     author = _resolved_author(kind, ctx)
+    # Report token *usage* (the endpoints behind the pack client don't reliably
+    # surface a usage block, so estimate from the prompt and reply); the
+    # render-time cost meter prices these and gates on the per-slice ceiling.
+    # ``raw_llm_output`` keeps the full JSON envelope for the grounding audit, but
+    # the output-token estimate comes from the completion content (see
+    # ``_completion_text``), not the envelope, so the recap's cost isn't inflated
+    # by JSON scaffolding.
+    raw_output = reply.model_dump_json()
     return GeneratedContent(
         kind=kind,  # type: ignore[arg-type]  # guarded against MAX_TOKENS above
         text=reply.text.strip(),
         grounding_status=status,
         author=author,
         cites=cites,
-        raw_llm_output=reply.model_dump_json(),
+        raw_llm_output=raw_output,
+        tokens_in=estimate_tokens(system + "\n" + user),
+        tokens_out=estimate_tokens(_completion_text(reply)),
     )
 
 
