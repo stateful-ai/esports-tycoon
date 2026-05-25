@@ -201,7 +201,8 @@ curl -s http://localhost:8000/v1/chat/completions \
 A green smoke means the endpoint is up, returns parseable JSON, and answers
 within a warm latency budget (default 5s) — the prerequisite for the demo gate
 below. The check runs one structured round-trip through the game's own client and
-prints its verdict:
+prints its verdict (illustrative — the timings vary by host and load; the GPU run
+is the operational acceptance check, since CI has no GPU):
 
 ```text
 ======================================================================
