@@ -158,6 +158,51 @@ class TestDeterminism(_Fixture):
             self.assertEqual(r1.read_bytes(), r2.read_bytes())
             self.assertEqual(f1.read_bytes(), f2.read_bytes())
 
+    def test_artifacts_byte_identical_across_processes_and_hash_seeds(self):
+        """The stronger contract: identical bytes across *separate processes* with
+        different ``PYTHONHASHSEED`` values.
+
+        The same-process check above shares one per-process hash seed, so it cannot
+        catch set/dict iteration order leaking into the recap or — the classic
+        offender — the HTML feed snapshot. Two CLI runs under different
+        ``PYTHONHASHSEED`` values close that gap: if any entropy or hash-ordering
+        leaked into the output, the bytes would diverge here.
+        """
+        import os
+        import subprocess
+        import sys
+        import tempfile
+
+        repo_root = pathlib.Path(__file__).resolve().parents[1]
+        cli = [
+            sys.executable, "-m", "esports_tycoon.runner",
+            "--seed", "6", "--practice", "defaults",
+            "--team-talk", self.decisions.team_talk,
+            "--fallout", self.decisions.fallout_post,
+        ]
+
+        def run_under(hashseed: str, runs_dir: str) -> pathlib.Path:
+            env = {**os.environ, "PYTHONHASHSEED": hashseed}
+            subprocess.run(
+                [*cli, "--runs-dir", runs_dir],
+                cwd=repo_root, env=env, check=True,
+                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+            )
+            runs = list(pathlib.Path(runs_dir).glob("wk6-*"))
+            self.assertEqual(len(runs), 1, "exactly one slice folder should be written")
+            return runs[0]
+
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            dir_a = run_under("0", a)
+            dir_b = run_under("12345", b)
+            # Same content-addressed slice id from independent processes.
+            self.assertEqual(dir_a.name, dir_b.name)
+            for fname in (RECAP_FILENAME, FEED_FILENAME):
+                self.assertEqual(
+                    (dir_a / fname).read_bytes(), (dir_b / fname).read_bytes(),
+                    f"{fname} diverged across processes with different PYTHONHASHSEED",
+                )
+
     def test_slice_id_is_stable_and_input_sensitive(self):
         base = slice_id(self.world, self.config, self.decisions)
         self.assertEqual(base, slice_id(self.world, self.config, self.decisions))
