@@ -35,8 +35,41 @@ python -m esports_tycoon inspect             # load the canned save, print a sum
 python -m esports_tycoon resolve <cite-id>   # resolve a cite ID to its memory entry
 ```
 
-Later tickets add the deterministic match resolver, the LLM content adapter,
-grounded citation enforcement, and the local web app.
+## Content adapter (templated default + opt-in LLM)
+
+All rendered prose goes through one seam,
+`esports_tycoon.content.generate_content(kind, ctx) -> GeneratedContent`, for the
+three M0 kinds: `chirper_post`, `narration`, `halftime_ack`. A single config flag
+picks the backend:
+
+- **`templated`** — deterministic, zero-API. **The default**: the whole slice
+  runs with no network, no keys, and no cost. Every cite it emits is pulled from
+  the canned log, so grounding is always `ok`.
+- **`vllm`** — the gaming-pack `game_llm` client against any OpenAI-compatible
+  endpoint (a local vLLM in dev, a cheap hosted Qwen in prod), configured by the
+  `GAME_LLM_*` env vars in `.env.example`. Opt-in: `pip install -e .[vllm]`. The
+  backend is imported lazily, only when the flag selects it, so `import
+  esports_tycoon.content` and the templated default work with the extra absent.
+
+```python
+from esports_tycoon.canned import loader
+from esports_tycoon import resolver
+from esports_tycoon.schema import Decisions
+from esports_tycoon.content import generate_content, GenerationContext
+
+world = loader.load()
+decisions = Decisions(opponent="northwind", map="Helix")
+why = resolver.run(world, decisions, seed=7)
+post = generate_content("chirper_post", GenerationContext(world=world, why=why, author="vex"))
+```
+
+The backend is selected by `ESPORTS_TYCOON_CONTENT_BACKEND` (`templated` |
+`vllm`), defaulting to `templated`. The resolver never imports the adapter:
+narration consumes the resolver's finished `WhyRecord`, never the other way
+round.
+
+Later tickets add the standalone grounding/regen loop, the Chirper feed model,
+safety + cost gates, and the local web app.
 
 ## The cast-lock gate
 

@@ -14,6 +14,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
+# The vllm content backend talks to an OpenAI-compatible endpoint via the
+# vendored gaming-pack client. The default (templated) backend needs none of
+# this, so the dependency is opt-in: `pip install -e .[vllm]`.
+vllm = ["openai>=1.0"]
 
 [tool.setuptools.packages.find]
 include = ["esports_tycoon*"]
