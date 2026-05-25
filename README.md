@@ -76,9 +76,14 @@ mode by default, so it runs with no network, no keys, and no cost.
 
 ```bash
 pip install -e .[web]            # Flask is an opt-in extra
-python -m esports_tycoon play    # serves http://127.0.0.1:8000
-# or: python -m esports_tycoon.web --port 8000 --opponent apex_foundry --seed 6
+python -m esports_tycoon play    # serves http://127.0.0.1:8765
+# or: python -m esports_tycoon.web --port 8765 --opponent apex_foundry --seed 6
 ```
+
+The default port is **8765** (not 8000): a local `GAME_LLM_*` server, an LLM
+router, and a Stable Diffusion UI commonly hold 8000/8001/7860 on a dev box, so
+the slice would fail to bind there. Pass `--port` to override; if the chosen port
+is busy the app exits with a clear message rather than a raw traceback.
 
 The app serves the **manager view** and the in-universe **Chirper feed** in one
 process. The week's decision surface is the founder-locked **MC + 2 open-text**:
