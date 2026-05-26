@@ -2,30 +2,21 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T05:56:22Z'
-summary: Where the three agents agree
+updated: '2026-05-26T06:28:21Z'
+summary: 'Where we are.** M0.1 build plan is canonical in `m0_1_build_execution_plan.md`
+  (engineering_lead authored, infra_architect endorses verbatim). 24 of 55 tickets '
 ---
 
-### Where the three agents agree
-- **Milestone framing is locked.** M0.1 = founder plays templated zero-API slice (practice → match → fallout, 2 open-text inputs ≤120 chars) and screenshots ≥1 grounded "remembered me" moment within 2 evenings. Gate path is templated, not vLLM.
-- **Critical path is W0 → recall → bind → rebind → playtest.** Same 5-hop chain in all three responses.
-- **Three new code seams only:** `recall()` selector, precedent→render binding by cite ID, minimum-playable web/recap rebind. Everything else is reuse.
-- **Freeze list holds.** The 9 hardening tickets (byte-identity, serializer polish, CI gate, toolchain pin, bless script, negative fixtures, shared `SaveError`, WhyRecord digest, `make test`) stay frozen until the gate fires.
-- **Architecture invariant:** precedent recall is engine logic, not LLM logic. One pure deterministic selector ranks canned memories; templated copy pack binds them by cite ID through the existing grounding gate.
-- **Same 4 new candidates** emerged independently from Engineering Lead and Infra Architect — strong signal these are real gaps, not over-emission.
+**Where we are.** M0.1 build plan is canonical in `m0_1_build_execution_plan.md` (engineering_lead authored, infra_architect endorses verbatim). 24 of 55 tickets built; the critical path is W0 closeout → W1 `recall()` keystone → W2 bind+copy → W3 minimum-playable rebind → W4 the gate (founder screenshots a grounded "remembered me" moment in zero-API mode within 2 evenings).
 
-### Tensions / dissent
-- **Chief of Staff emitted zero new tasks**; EL + Infra both emitted the same 4. Not a real conflict — CoS was reconciling 3 newly-landed tickets (`slice_id`, dropped-precedent logging, clean-checkout dry-run) into existing waves and treated this as a refresh, not a re-plan. The 4 new candidates from EL+Infra are upstream of authoring (Waves 1–2) and downstream of binding (Waves 2 & 4); they don't conflict with CoS's wave assignments, they fill gaps inside them.
-- **Wave numbering:** EL/Infra use Waves 0–4; CoS uses Waves A–D in `m0_gate_build_execution_plan.md` v3. Substantively identical sequence. Pick one naming when committing.
+**Consensus across both leads:**
+- Gate path is **templated zero-API**, not vLLM. vLLM is a post-gate upgrade behind the same adapter.
+- Determinism floor stays narrow: golden round-trip + same-seed→same-WhyRecord + `recall()` purity + `recall()` golden fixture. Byte-identity, 100-run digest, CI/bless/negative fixtures stay **frozen until the gate fires**.
+- W2 templated copy can start the moment W1's planted-precedent shape is fixed (cite-ID grammar + k>1 rule).
+- The four new candidates (input contract, k>1 rule, E2E recap assertion, evidence-packet dir) are independently proposed and identical across both leads — high-signal.
 
-### Out of scope (do not touch this milestone)
-- vLLM beyond the demo-gate behind the adapter
-- Byte-identity normalization, schema-boundary CI, serializer polish beyond stable dump
-- `TrainingDecision` slice (held to M0.2)
-- Canonical WhyRecord digest (already rejected)
+**Dissent / tension.** CoS reported "no state change since [18]" and emitted zero candidates; engineering_lead and infra_architect both report state changed (8 candidates promoted to active last pass) and emit 4 new ones. The two builders are reconciling against the live ticket list visible in this input; CoS appears to be comparing against a stale snapshot. **Resolution: trust the builders' reconciliation** — the 4 candidates do not duplicate anything in the active queue. CoS's standing observation (BUILD re-fires on minimally-changed streams, seen x7) is still valid as a meta-signal about pre-phase guards, but does not block these 4 tasks.
 
-### Why the 4 new candidates matter
-- Without **`recall()` input contract**: Wave 1 planted-precedent author and the selector implementer guess at the same shape independently → drift.
-- Without **k>1 surfacing rule**: copy pack author and recap layout author re-decide the same question; recap golden has no stable expectation when `recall()` returns 2 or 3.
-- Without **end-to-end recap assertion**: tests stop at "ordered list" instead of "founder sees the line"; bind succeeds but the text silently never lands.
-- Without **playtest artifact directory**: gate evidence (recap, feed snapshot, screenshot, rubric card, debrief) scatters; the pass/fail note has nothing concrete to reference.
+**Out of scope until after the gate fires.** Resolver entropy rewrite, negative fixtures, toolchain pin, deterministic bless script, typed SaveError contract, run-log JSONL polish, local-model structured-output spike, `make test`+CI smoke, scope-m0.md default-path fix, `TrainingDecision` slice. All ticketed, all frozen.
+
+**Open seams to watch.** (1) `recall()` input contract must land before planted-precedent authoring or W1 ranks against a moving target. (2) k>1 surfacing rule must be decided before templated copy pack is authored. (3) E2E recap-text assertion is the bridge between "cite ID bound" (unit-tested) and "founder sees the line" (currently only manually verified). (4) Evidence-packet directory turns the gate decision into a citable bundle rather than scattered loose paths.
