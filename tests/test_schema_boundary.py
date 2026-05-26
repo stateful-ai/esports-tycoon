@@ -35,12 +35,12 @@ import unittest
 
 import pytest
 
-# M0 freeze (founder_brief.md): schema-boundary CI gate is deferred to
-# M1/post-gate — the canonical-six are not under refactor pressure until the
-# screenshot lands, so the AST-walk enforcement parks alongside the other
-# reproducibility infra.
+# M1 scope (docs/m0_gate_decision.md): schema-boundary CI gate is M1's to land
+# — the canonical-six were not under refactor pressure for the M0 screenshot,
+# so the AST-walk enforcement parks alongside the other reproducibility infra
+# under M1's name now that the gate has fired (PASS).
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: schema-boundary CI gate deferred to M1/post-gate"
+    reason="M1 scope: schema-boundary CI gate"
 )
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]

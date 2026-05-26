@@ -124,13 +124,13 @@ class TestPurity(unittest.TestCase):
 
 
 class TestDeterminism(_WorldFixture):
-    # M0 freeze (founder_brief.md): the 100-run/WhyRecord digest sweep is
-    # deferred to M1/post-gate. Same-seed byte-identity within a single run is
-    # still covered by the load+resolve golden in
+    # M1 scope (docs/m0_gate_decision.md): the 100-run WhyRecord digest sweep
+    # is M1's reproducibility-floor work. Same-seed byte-identity within a
+    # single run is still covered by the load+resolve golden in
     # ``test_golden_determinism.py``; the 100x repeat is the harder digest the
-    # gate does not need.
+    # M0 gate did not need.
     @unittest.skip(
-        "M0 freeze: 100-run WhyRecord digest deferred to M1/post-gate"
+        "M1 scope: 100-run WhyRecord digest"
     )
     def test_identical_across_100_runs(self):
         for seed in (0, 1, 7, 42, 99, 123456):

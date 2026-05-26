@@ -37,10 +37,11 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon.canned import loader  # noqa: E402
 from scripts import regen_golden  # noqa: E402
 
-# M0 freeze (founder_brief.md): the golden-bless script's fixed-point contract
-# rides on the byte-identity serializer freeze and is deferred to M1/post-gate.
+# M1 scope (docs/m0_gate_decision.md): the golden-bless script's fixed-point
+# contract rides on the byte-identity serializer — M1's reproducibility floor.
+# The M0 gate has fired (PASS); this stays parked under M1's name.
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: deterministic golden-bless script deferred to M1/post-gate"
+    reason="M1 scope: deterministic golden-bless script"
 )
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]

@@ -30,11 +30,11 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.schema import CURRENT_SCHEMA_VERSION  # noqa: E402
 
-# M0 freeze (founder_brief.md): the migration stub + schema_version gate
-# enforcement is deferred to M1/post-gate — M0 ships exactly one supported
-# version, so the gate has no version to migrate from until M1 cuts the next.
+# M1 scope (docs/m0_gate_decision.md): the migration stub + schema_version
+# gate enforcement is M1's to land — M0 shipped exactly one supported version,
+# so the gate has no version to migrate from until M1 cuts the next.
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: migration stub + schema_version gate deferred to M1/post-gate"
+    reason="M1 scope: migration stub + schema_version gate"
 )
 
 

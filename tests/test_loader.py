@@ -43,7 +43,7 @@ class TestLoader(unittest.TestCase):
         self.assertEqual(loader.to_save_dict(self.world), self.raw)
 
     @unittest.skip(
-        "M0 freeze: byte-identity serializer fixed-point deferred to M1/post-gate"
+        "M1 scope: byte-identity serializer fixed-point"
     )
     def test_yaml_round_trip_is_byte_identical(self):
         # The acceptance bar for the canonical serializer: load → dump → load →
