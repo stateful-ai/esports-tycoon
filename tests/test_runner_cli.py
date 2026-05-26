@@ -36,6 +36,7 @@ re-introduce a parallel/draft typing without a test going red:
 
 from __future__ import annotations
 
+import ast
 import pathlib
 import re
 import sys
@@ -239,38 +240,77 @@ class TestNoDraftFieldReferences(unittest.TestCase):
     """No surface (Python module or HTML template) references a draft-typed field.
 
     The rebind map calls for *removal* of draft-field references across surfaces,
-    not just for the canonical ones to also work. A grep-style guard here is the
-    cheapest way to keep that property: if anyone later writes ``world.draft_*``,
-    ``save.draft_*``, ``{{ draft_* }}`` or a class named ``Draft*``, this test
-    goes red and the rebind cannot be silently regressed.
+    not just for the canonical ones to also work. The check has two halves:
+
+    * Python modules are scanned via :mod:`ast`, not regex, so docstrings and
+      comments are excluded by construction (the parser drops them) and a draft
+      attribute access cannot hide behind, say, a same-line inline string. We
+      look at every ``Attribute`` access, every bare ``Name`` reference, and
+      every ``ClassDef``/``FunctionDef`` definition site.
+    * Jinja templates are scanned with a regex constrained to ``{{ ... }}`` and
+      ``{% ... %}`` expressions, so the same narrowing holds: only template
+      *code* is checked, not the surrounding HTML prose.
+
+    If anyone later writes ``world.draft_*``, ``{{ draft_* }}``, or defines a
+    class named ``Draft*``, this test goes red and the rebind cannot be silently
+    regressed.
     """
 
-    # ``draft_<word>`` or ``<word>_draft`` as a Python/HTML attribute access or
-    # template variable; deliberately narrow so prose mentioning "draft" in
-    # docstrings or comments (the doc files do) is not a false positive.
-    _DRAFT_ATTR = re.compile(r"\b(?:draft_[a-z][a-z_]*|[a-z][a-z_]*_draft)\b")
-    _DRAFT_CLASS = re.compile(r"\bclass\s+Draft[A-Z][A-Za-z0-9_]*\b")
+    # ``draft_<word>`` or ``<word>_draft`` as a Python identifier or as a Jinja
+    # template variable inside an expression block.
+    _DRAFT_IDENT = re.compile(r"\b(?:draft_[a-z][a-z_0-9]*|[a-z][a-z_0-9]*_draft)\b")
+    _DRAFT_CLASS_NAME = re.compile(r"^Draft[A-Z][A-Za-z0-9_]*$")
+    _JINJA_EXPR = re.compile(r"\{\{(.*?)\}\}|\{%(.*?)%\}", re.DOTALL)
 
-    def _surfaces(self) -> list[pathlib.Path]:
+    def _python_surfaces(self) -> list[pathlib.Path]:
         repo = pathlib.Path(__file__).resolve().parents[1] / "esports_tycoon"
-        return sorted(
-            p
-            for p in (*repo.rglob("*.py"), *repo.rglob("*.html"))
-            if "__pycache__" not in p.parts
-        )
+        return sorted(p for p in repo.rglob("*.py") if "__pycache__" not in p.parts)
 
-    def test_no_draft_attribute_references_on_any_surface(self):
+    def _template_surfaces(self) -> list[pathlib.Path]:
+        repo = pathlib.Path(__file__).resolve().parents[1] / "esports_tycoon"
+        return sorted(repo.rglob("*.html"))
+
+    def _python_offenders(self, path: pathlib.Path) -> list[str]:
+        # AST walk: attributes, plain name references, class & function defs.
+        # Strings (including docstrings) and comments are not ast nodes that
+        # carry identifiers, so they're excluded by construction.
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         offenders: list[str] = []
-        for path in self._surfaces():
-            text = path.read_text(encoding="utf-8")
-            for lineno, line in enumerate(text.splitlines(), start=1):
-                # Ignore prose in docstrings/comments — only flag code-shape uses.
-                stripped = line.lstrip()
-                if stripped.startswith("#") or stripped.startswith('"') or stripped.startswith("'"):
-                    continue
-                if self._DRAFT_ATTR.search(line) or self._DRAFT_CLASS.search(line):
-                    offenders.append(f"{path}:{lineno}: {line.rstrip()}")
-        self.assertEqual(offenders, [], "draft-typed references found on shipped surfaces")
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Attribute) and self._DRAFT_IDENT.fullmatch(node.attr):
+                offenders.append(f"{path}:{node.lineno}: attribute .{node.attr}")
+            elif isinstance(node, ast.Name) and self._DRAFT_IDENT.fullmatch(node.id):
+                offenders.append(f"{path}:{node.lineno}: name {node.id}")
+            elif isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                if self._DRAFT_CLASS_NAME.match(node.name) or self._DRAFT_IDENT.fullmatch(node.name):
+                    offenders.append(f"{path}:{node.lineno}: definition {node.name}")
+            elif isinstance(node, ast.arg) and self._DRAFT_IDENT.fullmatch(node.arg):
+                offenders.append(f"{path}:{node.lineno}: parameter {node.arg}")
+        return offenders
+
+    def _template_offenders(self, path: pathlib.Path) -> list[str]:
+        # Only look inside ``{{ ... }}`` and ``{% ... %}`` — the rest is HTML
+        # prose that the renderer never evaluates, so it cannot hold a binding.
+        text = path.read_text(encoding="utf-8")
+        offenders: list[str] = []
+        for match in self._JINJA_EXPR.finditer(text):
+            expr = match.group(1) or match.group(2) or ""
+            if self._DRAFT_IDENT.search(expr):
+                lineno = text.count("\n", 0, match.start()) + 1
+                offenders.append(f"{path}:{lineno}: jinja {expr.strip()}")
+        return offenders
+
+    def test_no_draft_references_in_python_modules(self):
+        offenders: list[str] = []
+        for path in self._python_surfaces():
+            offenders.extend(self._python_offenders(path))
+        self.assertEqual(offenders, [], "draft-typed references found in Python modules")
+
+    def test_no_draft_references_in_html_templates(self):
+        offenders: list[str] = []
+        for path in self._template_surfaces():
+            offenders.extend(self._template_offenders(path))
+        self.assertEqual(offenders, [], "draft-typed references found in HTML templates")
 
 
 if __name__ == "__main__":
