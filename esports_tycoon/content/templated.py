@@ -220,18 +220,25 @@ def _render_narration(ctx: GenerationContext) -> GeneratedContent:
         }
         colour = _pick(rng, _BEAT_TEMPLATES[lead_kind]).format(**slots)
         # The deterministic recall ranks every canned precedent against the
-        # whole match; prefer the highest-ranked entry whose actors overlap the
-        # named beat (so the cite reads like *this* round's echo), then fall
-        # back to the top recalled entry. ``recall`` is RNG-free, so the cite
+        # whole match; prefer the highest-ranked result whose underlying entry
+        # actors overlap the named beat (so the cite reads like *this* round's
+        # echo), then fall back to the top recalled result. ``recall`` returns
+        # the locked :class:`RecallResult` contract, so the cite is bound by
+        # ``cite_id`` and the wider entry (for the beat-actor filter) is
+        # resolved through the world. ``recall`` is RNG-free, so the cite
         # binds deterministically from the same scoring the recap reasons over.
         beat_actors = set(moment.actors)
         ranked = recall(why, ctx.world, k=_RECALL_DEPTH)
-        precedent = next(
-            (entry for entry in ranked if beat_actors & set(entry.actors)),
-            ranked[0] if ranked else None,
-        )
+        precedent = None
+        for result in ranked:
+            entry = ctx.world.resolve_cite(result.cite_id)
+            if entry is not None and beat_actors & set(entry.actors):
+                precedent = result
+                break
+        if precedent is None and ranked:
+            precedent = ranked[0]
         if precedent is not None:
-            cites.append(precedent.id)
+            cites.append(precedent.cite_id)
 
     # Who stood out / came apart.
     if won:

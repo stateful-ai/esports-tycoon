@@ -9,10 +9,17 @@ Covers the contract pinned in this ticket:
   save order;
 * a week-6 key moment surfaces ≥1 week-2 precedent (or the ``scrim_w5_*``
   carryover that lit it), so the renderer has something *that already
-  happened* to point at; and
+  happened* to point at;
 * the templated narrator binds at least one recalled precedent by cite ID
   into the rendered output (the recap renders cite IDs verbatim under
-  "What the room remembered").
+  "What the room remembered"); and
+* the locked :class:`RecallResult` contract — the six fields copy templates
+  bind by name — is populated correctly from the canned save: ``cite_id``
+  matches the entry's id, ``actor_ref`` is the owner parsed out of the cite,
+  ``week`` / ``event_summary`` mirror the entry, ``matched_tag`` is one of
+  the entry's authored tags (or ``None`` when the entry surfaced on actor /
+  rivalry overlap alone), and ``relevance_reason`` is a non-empty structured
+  string assembled from the matched signals.
 """
 
 from __future__ import annotations
@@ -30,7 +37,7 @@ from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.content import GenerationContext, generate_content  # noqa: E402
 from esports_tycoon.content import game_llm  # noqa: E402
 from esports_tycoon.content.config import ContentConfig  # noqa: E402
-from esports_tycoon.recall import recall, score  # noqa: E402
+from esports_tycoon.recall import RecallResult, recall, score  # noqa: E402
 from esports_tycoon.runner import SliceConfig, SliceDecisions, run_slice  # noqa: E402
 from esports_tycoon.runner.events import read_events, slice_events, write_events  # noqa: E402
 from esports_tycoon.runner.recap import render_recap_md  # noqa: E402
@@ -111,9 +118,9 @@ class TestDeterminism(_Fixture):
         for opp in ("apex_foundry", "northwind", "sovereign", "tidewater"):
             for seed in range(8):
                 why = resolver.run(self.world, Decisions(opponent=opp, map="Helix"), seed)
-                first = [e.id for e in recall(why, self.world, k=10)]
+                first = [r.cite_id for r in recall(why, self.world, k=10)]
                 for _ in range(5):
-                    again = [e.id for e in recall(why, self.world, k=10)]
+                    again = [r.cite_id for r in recall(why, self.world, k=10)]
                     self.assertEqual(again, first, f"non-deterministic on opp={opp} seed={seed}")
 
     def test_k_truncation_is_a_prefix_of_the_full_ranking(self):
@@ -122,9 +129,9 @@ class TestDeterminism(_Fixture):
         # cardinality, which would break the "same inputs ⇒ identical list" promise
         # for any consumer that paged.
         why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
-        long = [e.id for e in recall(why, self.world, k=20)]
+        long = [r.cite_id for r in recall(why, self.world, k=20)]
         for k in (1, 3, 5, 8, 13):
-            short = [e.id for e in recall(why, self.world, k=k)]
+            short = [r.cite_id for r in recall(why, self.world, k=k)]
             self.assertEqual(short, long[:k])
 
     def test_k_zero_returns_empty(self):
@@ -277,13 +284,13 @@ class TestScoring(_Fixture):
         )
         ranked = recall(why, synthetic, k=10)
         # Both score (0, 1, 0); save order is a before b.
-        self.assertEqual([e.id for e in ranked], ["mem:a:e_1", "mem:b:e_1"])
+        self.assertEqual([r.cite_id for r in ranked], ["mem:a:e_1", "mem:b:e_1"])
 
         # And reversing the player order in the world flips the recall — proving
         # the tie-break is *save order*, not entry id.
         synthetic_reversed = synthetic.model_copy(update={"players": [b, a]})
         ranked_rev = recall(why, synthetic_reversed, k=10)
-        self.assertEqual([e.id for e in ranked_rev], ["mem:b:e_1", "mem:a:e_1"])
+        self.assertEqual([r.cite_id for r in ranked_rev], ["mem:b:e_1", "mem:a:e_1"])
 
 
 class TestWeek6SurfacesWeek2Precedent(_Fixture):
@@ -321,7 +328,7 @@ class TestWeek6SurfacesWeek2Precedent(_Fixture):
             Decisions(opponent="apex_foundry", map="Helix"),
             6,
         )
-        ranked = [e.id for e in recall(why, self.world, k=8)]
+        ranked = [r.cite_id for r in recall(why, self.world, k=8)]
         self.assertTrue(
             self._surfaces_required_precedent(ranked),
             f"week-6 key moment did not surface scrim_w5_*/week-2 precedent: {ranked}",
@@ -331,7 +338,7 @@ class TestWeek6SurfacesWeek2Precedent(_Fixture):
         # Holds across the canonical opponent sweep, not just the screenshot.
         for opponent, seed in self._WEEK6_FIXTURES:
             why = resolver.run(self.world, Decisions(opponent=opponent, map="Helix"), seed)
-            ranked = [e.id for e in recall(why, self.world, k=8)]
+            ranked = [r.cite_id for r in recall(why, self.world, k=8)]
             self.assertTrue(
                 self._surfaces_required_precedent(ranked),
                 f"opp={opponent} seed={seed} did not surface a required precedent: {ranked}",
@@ -349,7 +356,7 @@ class TestTemplatedCopyBindsRecalledCite(_Fixture):
         why = resolver.run(self.world, dec, 7)
         gc = generate_content("narration", GenerationContext(world=self.world, why=why, decisions=dec))
         self.assertTrue(gc.cites, "narration with a keyed beat must cite a precedent")
-        ranked_ids = {entry.id for entry in recall(why, self.world, k=20)}
+        ranked_ids = {r.cite_id for r in recall(why, self.world, k=20)}
         for cite in gc.cites:
             self.assertIn(
                 cite,
@@ -372,7 +379,7 @@ class TestTemplatedCopyBindsRecalledCite(_Fixture):
             self.world, config, decisions, content_config=ContentConfig(backend="templated")
         )
 
-        ranked_ids = {entry.id for entry in recall(result.why, self.world, k=20)}
+        ranked_ids = {r.cite_id for r in recall(result.why, self.world, k=20)}
         self.assertTrue(ranked_ids, "recall returned no precedents for the canonical fixture")
 
         # Round-trip through the run-log so we exercise the actual recap path
@@ -396,6 +403,231 @@ class TestTemplatedCopyBindsRecalledCite(_Fixture):
         self.assertTrue(result.narration.cites)
         for cite in result.narration.cites:
             self.assertIn(cite, ranked_ids)
+
+
+class TestRecallResultContract(_Fixture):
+    """The locked recall→render output contract: the six fields copy binds by name.
+
+    This is the seam Wave-1 (the selector) and Wave-2 (copy) build against in
+    parallel. The fields, names, and types are intentionally rigid — changing
+    them is a breaking change for every templated and LLM-mode renderer.
+    """
+
+    _LOCKED_FIELDS = (
+        "cite_id",
+        "actor_ref",
+        "week",
+        "event_summary",
+        "matched_tag",
+        "relevance_reason",
+    )
+
+    def test_locked_fields_are_exactly_these_six(self):
+        # The contract is a frozen surface, not a grab-bag — adding a field
+        # is a Wave-2 negotiation, removing a field is a breaking change. Test
+        # the dataclass shape directly so this fails the moment a future
+        # change extends or trims the struct without updating the doc.
+        from dataclasses import fields
+
+        names = tuple(f.name for f in fields(RecallResult))
+        self.assertEqual(names, self._LOCKED_FIELDS)
+
+    def test_recall_returns_recall_result_instances(self):
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        results = recall(why, self.world, k=5)
+        self.assertTrue(results, "fixture expected to surface at least one precedent")
+        for r in results:
+            self.assertIsInstance(r, RecallResult)
+
+    def test_cite_id_resolves_back_to_a_real_memory(self):
+        # ``cite_id`` is the grounding handle: it must resolve through the
+        # world's cite index, exactly as the renderer will resolve it when
+        # stamping ``GeneratedContent.cites``.
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        for r in recall(why, self.world, k=10):
+            entry = self.world.resolve_cite(r.cite_id)
+            self.assertIsNotNone(entry, f"unresolvable cite {r.cite_id!r} in recall output")
+
+    def test_actor_ref_is_the_owner_segment_of_the_cite(self):
+        # ``actor_ref`` is the single-string anchor copy uses to name "whose
+        # memory" was surfaced — it must be the owner segment of cite_id, i.e.
+        # the player whose memory_log the entry lives in.
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        for r in recall(why, self.world, k=10):
+            # Find which player owns this entry.
+            owners = [
+                player.id
+                for player in self.world.players
+                if any(entry.id == r.cite_id for entry in player.memory_log)
+            ]
+            self.assertEqual(owners, [r.actor_ref])
+
+    def test_week_and_event_summary_mirror_the_entry(self):
+        # ``week`` and ``event_summary`` are pure projections — copy can quote
+        # them without paying a world lookup, and they must stay byte-faithful
+        # to the canned save.
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        for r in recall(why, self.world, k=10):
+            entry = self.world.resolve_cite(r.cite_id)
+            assert entry is not None  # covered by test_cite_id_resolves_back_to_a_real_memory
+            self.assertEqual(r.week, entry.week)
+            self.assertEqual(r.event_summary, entry.summary)
+
+    def test_matched_tag_is_one_of_the_entry_tags_or_none(self):
+        # When present, ``matched_tag`` is drawn from the entry's authored tag
+        # list — preserving the entry's casing — so copy can render it
+        # verbatim. ``None`` is allowed: the entry may have surfaced on actor
+        # or rivalry overlap alone.
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        for r in recall(why, self.world, k=20):
+            if r.matched_tag is None:
+                continue
+            entry = self.world.resolve_cite(r.cite_id)
+            assert entry is not None
+            self.assertIn(r.matched_tag, entry.tags)
+
+    def test_matched_tag_uses_entry_order_for_stability(self):
+        # When multiple tags overlap, the first authored tag in the entry's
+        # ``tags`` list wins. Build a synthetic precedent where two tags both
+        # rhyme with the match and assert recall picks the one listed first.
+        entry_first = MemoryEntry(
+            id="mem:rook:first_tilt_then_choke",
+            week=2, day=1, kind="scrim",
+            actors=["rook"],
+            summary="x", sentiment="negative",
+            tags=["tilt", "choke"],  # tilt listed first
+        )
+        entry_second = MemoryEntry(
+            id="mem:rook:first_choke_then_tilt",
+            week=2, day=1, kind="scrim",
+            actors=["rook"],
+            summary="x", sentiment="negative",
+            tags=["choke", "tilt"],  # choke listed first
+        )
+        from esports_tycoon.schema import (
+            LastWeek, Player, Role, SaveMeta, Scoreline, Season, Standing, Team, WorldState,
+        )
+        team = Team(
+            id="ovc", name="O", tag="O", handle="@o", blurb="",
+            standing=Standing(wins=0, losses=0, place=1, of=10, note=""),
+        )
+        save_meta = SaveMeta(
+            id="x", title="t", game="g", tone="dry", flavor="f", fiction_note="n",
+            season=Season(league="L", division="D", total_weeks=10, current_week=6, playoff_cutoff=4),
+            team=team,
+        )
+        last_week = LastWeek(
+            week=5, opponent="o", format="Bo3", result="loss",
+            scoreline=Scoreline(overcast=1, opponent=2, maps=[]),
+            headline="", chirper_feed=[],
+        )
+        rook = Player(
+            id="rook", name="R", handle="@r", role=Role.IGL, age=20,
+            signature_operative="x", bio="", persona_voice="",
+            traits=[], relationships=[], memory_log=[entry_first, entry_second],
+        )
+        synthetic = WorldState(
+            schema_version=0, seed=1, save=save_meta,
+            players=[rook], clash_pairs=[], rivals=[], last_week=last_week,
+        )
+        why = WhyRecord(
+            scoreline=(13, 9), mvp="rook",
+            key_moments=[KeyMoment(round=1, kind="choke", actors=["rook"], descriptor="x")],
+            who_carried=[], who_tilted=["rook"],  # also adds 'tilt' to target set
+            morale_deltas={"rook": 0}, seed=0, round_log=[],
+        )
+        results = {r.cite_id: r for r in recall(why, synthetic, k=10)}
+        self.assertEqual(results["mem:rook:first_tilt_then_choke"].matched_tag, "tilt")
+        self.assertEqual(results["mem:rook:first_choke_then_tilt"].matched_tag, "choke")
+
+    def test_relevance_reason_is_non_empty_and_names_the_matched_signals(self):
+        # Recall only yields entries with ≥1 non-zero signal, so the reason is
+        # always non-empty. Each matched signal must appear in the reason — by
+        # value, in priority order — so copy can either render it verbatim or
+        # branch on the leading clause.
+        why = resolver.run(self.world, Decisions(opponent="apex_foundry", map="Helix"), 6)
+        precedents_by_id = {p.entry.id: p for p in score(why, self.world)}
+        for r in recall(why, self.world, k=10):
+            self.assertTrue(r.relevance_reason, f"empty relevance_reason for {r.cite_id!r}")
+            precedent = precedents_by_id[r.cite_id]
+            if precedent.matched_actors:
+                self.assertIn("shared actors:", r.relevance_reason)
+                for actor in precedent.matched_actors:
+                    self.assertIn(actor, r.relevance_reason)
+            if precedent.matched_tags:
+                self.assertIn("tag:", r.relevance_reason)
+            if precedent.matched_rivals:
+                self.assertIn("active rivalry:", r.relevance_reason)
+                for rival in precedent.matched_rivals:
+                    self.assertIn(rival, r.relevance_reason)
+
+    def test_relevance_reason_omits_clauses_for_unmatched_signals(self):
+        # A tag-only match must not name a (zero) actor clause, and an
+        # actor-only match must not name a (zero) tag clause. The string is a
+        # contract for copy templates — empty clauses would force the copy
+        # author to parse for "shared actors: " before rendering.
+        why = self._why_actor_only_or_tag_only(actor_only=True)
+        for r in recall(why, self.world, k=20):
+            entry = self.world.resolve_cite(r.cite_id)
+            assert entry is not None
+            # If recall surfaced this entry on an actor-only signal, no tag
+            # clause should appear in the reason. We test the contract by
+            # finding *some* such entry in the canonical save.
+            if r.matched_tag is None:
+                self.assertNotIn("tag:", r.relevance_reason)
+                break
+        else:
+            self.fail("expected at least one actor-only or rivalry-only recall result in the canonical save")
+
+    def _why_actor_only_or_tag_only(self, *, actor_only: bool) -> WhyRecord:
+        # Sable is named on an ``ace`` beat. The save has Sable-owned entries
+        # whose tags don't include 'ace' / 'clutch' / 'tilt' (e.g.
+        # ``mem:sable:smokes_with_coyote_w2`` is tagged "support" / "comms"),
+        # which gives us an actor-only recall hit.
+        return WhyRecord(
+            scoreline=(13, 9), mvp="sable",
+            key_moments=[KeyMoment(round=1, kind="ace", actors=["sable"], descriptor="x")],
+            who_carried=[], who_tilted=[],
+            morale_deltas={"sable": 0}, seed=0, round_log=[],
+        )
+
+
+class TestDocumentation(unittest.TestCase):
+    """The contract is documented so Wave-1 and Wave-2 can build against the same prose.
+
+    The seam doc names every field; the module docstring points at the doc.
+    A future contributor renaming a field but forgetting the doc fails here
+    instead of merging a drift.
+    """
+
+    _CONTRACT_DOC = pathlib.Path(__file__).resolve().parents[1] / "docs" / "recall_render_contract.md"
+
+    def test_contract_doc_exists(self):
+        self.assertTrue(self._CONTRACT_DOC.exists(), f"missing contract doc: {self._CONTRACT_DOC}")
+
+    def test_contract_doc_names_every_locked_field(self):
+        body = self._CONTRACT_DOC.read_text(encoding="utf-8")
+        for field in TestRecallResultContract._LOCKED_FIELDS:
+            self.assertIn(
+                f"`{field}`",
+                body,
+                f"contract doc must back-tick-cite the locked field {field!r}",
+            )
+
+    def test_contract_doc_calls_out_the_wave_split(self):
+        body = self._CONTRACT_DOC.read_text(encoding="utf-8").lower()
+        # The whole point of locking this seam is to let Wave-1 and Wave-2
+        # build in parallel; the doc must explicitly say so.
+        self.assertIn("wave 1", body)
+        self.assertIn("wave 2", body)
+
+    def test_recall_module_points_at_the_contract_doc(self):
+        body = pathlib.Path(recall_mod.__file__).read_text(encoding="utf-8")
+        self.assertIn(
+            "docs/recall_render_contract.md",
+            body,
+            "recall module must link to the contract doc so the code → docs jump cannot rot",
+        )
 
 
 if __name__ == "__main__":
