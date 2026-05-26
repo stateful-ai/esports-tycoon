@@ -1,0 +1,1070 @@
+schema_version: 0
+seed: 6
+save:
+  id: week6
+  title: Overcast — Week 6 of 8
+  game: Vector Strike
+  tone: dry-mockumentary
+  flavor: valorant-flavored
+  fiction_note: No real esports IP, players, orgs, or games. Vector Strike is a fictional
+    5v5 tactical shooter; all names here are invented.
+  season:
+    league: Vector Strike Pro League
+    division: Atlantic Division — Spring Split
+    total_weeks: 8
+    current_week: 6
+    playoff_cutoff: 6
+  team:
+    id: overcast
+    name: Overcast
+    tag: OVC
+    handle: '@overcast'
+    blurb: A grey, unglamorous mid-table org named after the founder's hometown weather.
+      One playoff appearance, no titles. The documentary crew was cheaper than a second
+      coach.
+    standing:
+      wins: 2
+      losses: 3
+      place: 6
+      of: 8
+      note: Sixth and last playoff spot, on a two-loss skid. Win out (weeks 6–8) or
+        the season is a highlight reel of near-misses. Week 6 is must-win.
+players:
+- id: rook
+  name: Rook Tanaka
+  handle: '@rooktanaka'
+  role: IGL
+  age: 27
+  signature_operative: Atlas
+  bio: Captain and in-game leader. Twenty-seven, which in Vector Strike years is roughly
+    a retirement community. Calls a disciplined default and treats the camera crew
+    like a tax audit he's politely complying with.
+  persona_voice: Speaks in short, flat sentences and never raises his voice, which
+    somehow makes the disappointment worse. Talks about the team like a man reading
+    a will. Allergic to the word "vibes." Will deadpan a devastating line and then
+    ask if the camera got it.
+  traits:
+  - veteran
+  - control-freak
+  - deadpan
+  - structure-first
+  - aging-out
+  relationships:
+  - with: vex
+    kind: teammate
+    status: strained
+    note: His star duelist ignores his calls and is right just often enough to be
+      unbearable.
+  - with: coyote
+    kind: teammate
+    status: trusted
+    note: The only player who runs the default exactly as called. Rook's quiet favorite.
+  - with: pixie
+    kind: teammate
+    status: fond-exasperation
+    note: Muted him for one round in week 1 as a joke. Pixie still brings it up.
+  - with: echo
+    kind: rival
+    status: bitter
+    note: The wunderkind IGL the press keeps comparing him to. Unfavorably.
+  - with: ghost
+    kind: peer
+    status: wary
+    note: A fallen star his own age; a cautionary tale he doesn't like to look at.
+  memory_log:
+  - id: mem:rook:meridian_collapse_w0
+    week: 0
+    day: 1
+    kind: rumor
+    actors:
+    - rook
+    summary: His previous org, Meridian, folded mid-split; Rook was the last player
+      to clear out the practice room.
+    sentiment: negative
+    tags:
+    - backstory
+    - loyalty
+    - aging
+  - id: mem:rook:debut_w1_default
+    week: 1
+    day: 3
+    kind: match
+    actors:
+    - rook
+    - coyote
+    - sable
+    summary: First official as Overcast IGL; won on a textbook 4-second default with
+      zero hero plays.
+    sentiment: positive
+    tags:
+    - structure
+    - debut
+    - calm
+  - id: mem:rook:beat_apex_echo_w1
+    week: 1
+    day: 6
+    kind: match
+    actors:
+    - rook
+    - echo
+    summary: Out-called the wunderkind Echo in an upset of Apex Foundry; Echo didn't
+      shake his hand.
+    sentiment: positive
+    tags:
+    - rival
+    - echo
+    - clutch-call
+  - id: mem:rook:vex_overrides_call_w2
+    week: 2
+    day: 2
+    kind: scrim
+    actors:
+    - rook
+    - vex
+    summary: Called a save; Vex took the duel anyway and won it, and said nothing
+      afterward.
+    sentiment: negative
+    tags:
+    - tension
+    - comms
+    - vex
+    - freelance
+  - id: mem:rook:presser_aging_question_w3
+    week: 3
+    day: 4
+    kind: press
+    actors:
+    - rook
+    summary: A reporter asked if he'd 'aged out of the meta'; he said 'probably' and
+      let the silence sit.
+    sentiment: negative
+    tags:
+    - press
+    - aging
+    - deadpan
+  - id: mem:rook:1on1_with_manager_w4
+    week: 4
+    day: 1
+    kind: 1on1
+    actors:
+    - rook
+    summary: Told the manager he'd bench himself before the playoffs if his numbers
+      didn't turn.
+    sentiment: negative
+    tags:
+    - doubt
+    - captain
+    - sacrifice
+  - id: mem:rook:vex_apology_never_came_w4
+    week: 4
+    day: 5
+    kind: 1on1
+    actors:
+    - rook
+    - vex
+    summary: Waited a full week for an apology over the week-2 override. It never
+      arrived.
+    sentiment: negative
+    tags:
+    - vex
+    - tension
+    - unresolved
+  - id: mem:rook:echo_mind_games_w4
+    week: 4
+    day: 6
+    kind: press
+    actors:
+    - rook
+    - echo
+    summary: Echo told media that Rook 'calls like it's still last meta'; Rook printed
+      the quote and taped it to the team-room wall.
+    sentiment: negative
+    tags:
+    - echo
+    - apex
+    - press
+    - motivation
+  - id: mem:rook:scrim_w5_choke
+    week: 5
+    day: 2
+    kind: scrim
+    actors:
+    - rook
+    - vex
+    - sable
+    - pixie
+    - coyote
+    summary: Overcast threw a 9–3 scrim lead the day before the Northwind series;
+      Rook blamed comms, not aim.
+    sentiment: negative
+    tags:
+    - choke
+    - comms
+    - tilt
+    - foreshadow
+- id: vex
+  name: Mariana "Vex" Okonkwo
+  handle: '@vexstrike'
+  role: DUELIST
+  age: 19
+  signature_operative: Glide
+  bio: Nineteen-year-old entry fragger and the most-clipped player in the division.
+    Plays for the highlight, the lobby, and the Chirper quote-tweet, roughly in that
+    order. Mechanically the best on the team and the first to tell you.
+  persona_voice: Talks in confident, clipped soundbites built to be screenshotted.
+    Frames every win as proof and every loss as someone else's round. Tweets first,
+    thinks during the ratio. Genuinely funny when she forgets the camera is on.
+  traits:
+  - hotshot
+  - impulsive
+  - clout-chasing
+  - mechanically-gifted
+  - defensive
+  relationships:
+  - with: rook
+    kind: teammate
+    status: strained
+    note: Thinks his defaults are museum exhibits. Won't say it to his face. Will
+      imply it on Chirper.
+  - with: sable
+    kind: teammate
+    status: friction
+    note: Keeps taking credit for sites Sable held alone. Hasn't noticed Sable noticed.
+  - with: pixie
+    kind: teammate
+    status: blame
+    note: Got flashed into a death by Pixie in the week-5 loss and said so on stream.
+  - with: halo
+    kind: rival
+    status: beef
+    note: Open Chirper war with Sovereign's star duelist. The league's favorite sideshow.
+  - with: ghost
+    kind: idol
+    status: complicated
+    note: Grew up on Ghost's clips; now they're a warning she refuses to hear.
+  memory_log:
+  - id: mem:vex:ace_helix_w1
+    week: 1
+    day: 3
+    kind: match
+    actors:
+    - vex
+    summary: Aced on Helix to close her debut map; the clip cleared a million views
+      before the handshake line.
+    sentiment: positive
+    tags:
+    - ace
+    - clout
+    - highlight
+    - helix
+  - id: mem:vex:trashtalk_halo_w2
+    week: 2
+    day: 5
+    kind: social
+    actors:
+    - vex
+    - halo
+    summary: Called Sovereign's Halo 'a bot with a paycheck' on Chirper; it became
+      a copypasta.
+    sentiment: neutral
+    tags:
+    - rival
+    - halo
+    - chirper
+    - beef
+  - id: mem:vex:overrides_rook_w2
+    week: 2
+    day: 2
+    kind: scrim
+    actors:
+    - vex
+    - rook
+    summary: Freelanced off Rook's save call, won the duel, and never acknowledged
+      the call she broke.
+    sentiment: neutral
+    tags:
+    - tension
+    - rook
+    - freelance
+    - ego
+  - id: mem:vex:benched_w3
+    week: 3
+    day: 1
+    kind: rumor
+    actors:
+    - vex
+    - rook
+    summary: Benched for one map after a solo-queue greed death lost a closing round;
+      she watched from the booth, expressionless.
+    sentiment: negative
+    tags:
+    - benched
+    - discipline
+    - tilt
+  - id: mem:vex:goblins_upset_w3
+    week: 3
+    day: 6
+    kind: match
+    actors:
+    - vex
+    - grud
+    summary: Tilted off the server when the Goblins' off-meta troll comp beat Overcast;
+      missed three open kills in the last round.
+    sentiment: negative
+    tags:
+    - goblins
+    - upset
+    - tilt
+    - meme
+  - id: mem:vex:unbenched_w4
+    week: 4
+    day: 3
+    kind: match
+    actors:
+    - vex
+    summary: Back in the lineup, dropped 31 frags 'to make a point,' then pointed
+      at the scoreboard in the post-game.
+    sentiment: positive
+    tags:
+    - redemption
+    - ego
+    - proof
+  - id: mem:vex:claims_sable_site_w4
+    week: 4
+    day: 4
+    kind: press
+    actors:
+    - vex
+    - sable
+    summary: Took credit in a presser for a site hold that was Sable's solo retake;
+      Sable was sitting two chairs away.
+    sentiment: negative
+    tags:
+    - spotlight
+    - sable
+    - credit
+  - id: mem:vex:flashed_by_pixie_w5
+    week: 5
+    day: 5
+    kind: match
+    actors:
+    - vex
+    - pixie
+    summary: Pixie's flash caught her mid-entry on map 3; she died blind and called
+      it out on the post-match stream.
+    sentiment: negative
+    tags:
+    - comms
+    - pixie
+    - friendly-fire
+    - terminus
+- id: sable
+  name: Dmitri "Sable" Volkov
+  handle: '@sablehold'
+  role: SENTINEL
+  age: 24
+  signature_operative: Latch
+  bio: The anchor. Holds a site alone, on time, every round, and says less in a season
+    than Pixie says in a round. Quietly the soul of the defense and the least quotable
+    man in professional Vector Strike.
+  persona_voice: Answers in one to three words and means all of them. When he finally
+    uses a full sentence it lands like a verdict. Petty in small, silent ways — unfollows,
+    read receipts, a single period. Never explains.
+  traits:
+  - stoic
+  - anchor
+  - reliable
+  - quietly-petty
+  - low-ego
+  relationships:
+  - with: vex
+    kind: teammate
+    status: resentment
+    note: Says nothing when she takes his credit, then does something small and devastating.
+  - with: pixie
+    kind: teammate
+    status: friction
+    note: 'The only thing that makes him talk: Pixie flashing through his crosshair.'
+  - with: coyote
+    kind: teammate
+    status: respect
+    note: Two quiet players who hold opposite ends of the map and never need to talk
+      about it.
+  - with: marlow
+    kind: rival
+    status: mentor-ish
+    note: Quietly DMs Tidewater's rookie sentinel pointers. Would deny it under oath.
+  memory_log:
+  - id: mem:sable:1v3_clutch_terminus_w2
+    week: 2
+    day: 4
+    kind: match
+    actors:
+    - sable
+    summary: Won a 1v3 retake on Terminus to save the map; his celebration was a single
+      nod at the floor.
+    sentiment: positive
+    tags:
+    - clutch
+    - anchor
+    - quiet
+    - terminus
+  - id: mem:sable:smokes_with_coyote_w2
+    week: 2
+    day: 4
+    kind: match
+    actors:
+    - sable
+    - coyote
+    summary: He and Coyote ran a wordless A-hold for an entire half; neither said
+      a word on comms and it worked.
+    sentiment: positive
+    tags:
+    - coyote
+    - anchor
+    - chemistry
+  - id: mem:sable:one_word_interview_w3
+    week: 3
+    day: 2
+    kind: press
+    actors:
+    - sable
+    summary: 'His entire post-match interview was three words: ''Held. Won. Hungry.''
+      It trended for a day.'
+    sentiment: neutral
+    tags:
+    - press
+    - deadpan
+    - meme
+  - id: mem:sable:flash_argument_pixie_w3
+    week: 3
+    day: 5
+    kind: scrim
+    actors:
+    - sable
+    - pixie
+    summary: Told Pixie to stop flashing through his crosshair — the longest sentence
+      he'd said all split.
+    sentiment: negative
+    tags:
+    - pixie
+    - comms
+    - utility
+    - tension
+  - id: mem:sable:resents_vex_credit_w4
+    week: 4
+    day: 4
+    kind: social
+    actors:
+    - sable
+    - vex
+    summary: Said nothing after Vex took his credit in the presser, then quietly unfollowed
+      her on Chirper.
+    sentiment: negative
+    tags:
+    - vex
+    - resentment
+    - petty
+  - id: mem:sable:mentor_tidewater_rookie_w2
+    week: 2
+    day: 7
+    kind: social
+    actors:
+    - sable
+    - marlow
+    summary: Spotted DMing Tidewater's young sentinel crosshair placement tips; rare,
+      unprompted warmth.
+    sentiment: positive
+    tags:
+    - tidewater
+    - mentor
+    - wholesome
+  - id: mem:sable:solo_anchor_w5
+    week: 5
+    day: 5
+    kind: match
+    actors:
+    - sable
+    summary: Held A-site alone for all of map 2 while the team stacked B; got no thanks
+      and expected none.
+    sentiment: neutral
+    tags:
+    - anchor
+    - sacrifice
+    - foundry
+- id: pixie
+  name: Aurelie "Pixie" Nardini
+  handle: '@pixieflare'
+  role: INITIATOR
+  age: 21
+  signature_operative: Flare
+  bio: The info engine and the loudest comms in the league. Reads enemy defaults like
+    tarot and narrates every one of them, in real time, forever. Casters adore her.
+    Two teammates have requested a mute button.
+  persona_voice: Relentlessly upbeat and constitutionally incapable of silence; talks
+    in run-on enthusiasm with hashtags she says out loud. Sincere to a fault, which
+    reads as either heartwarming or insufferable depending on the round. Apologizes
+    a lot and changes nothing.
+  traits:
+  - motormouth
+  - optimist
+  - info-savant
+  - oversharer
+  - sincere
+  relationships:
+  - with: coyote
+    kind: teammate
+    status: friction
+    note: He needs three seconds of silence to hear a lurk; she has never managed
+      three seconds of silence.
+  - with: sable
+    kind: teammate
+    status: walking-on-eggshells
+    note: Made him use a full sentence in anger once and has been careful around his
+      crosshair since.
+  - with: vex
+    kind: teammate
+    status: guilt
+    note: Knows the week-5 flash got Vex killed; has apologized four times and counting.
+  - with: rook
+    kind: teammate
+    status: affectionate
+    note: Brings up the time he muted her for a round every single week.
+  - with: grud
+    kind: rival
+    status: friendly-troll
+    note: Trades wholesome bait with the Goblins' chaos initiator; the only rivalry
+      she finds fun.
+  memory_log:
+  - id: mem:pixie:overcomms_w1
+    week: 1
+    day: 3
+    kind: social
+    actors:
+    - pixie
+    - rook
+    summary: Hit an estimated 200 callouts in a single round; Rook muted her for one
+      round as a bit and she's never forgotten.
+    sentiment: neutral
+    tags:
+    - comms
+    - motormouth
+    - rook
+    - meme
+  - id: mem:pixie:caster_favorite_w1
+    week: 1
+    day: 6
+    kind: press
+    actors:
+    - pixie
+    summary: Casters called her mic'd-up comms 'the best watch in the league'; the
+      broadcast started miking her every map.
+    sentiment: positive
+    tags:
+    - press
+    - casters
+    - comms
+  - id: mem:pixie:perfect_recon_w2
+    week: 2
+    day: 4
+    kind: match
+    actors:
+    - pixie
+    summary: Read the enemy's entire default off one recon ping; the team won the
+      round before contact.
+    sentiment: positive
+    tags:
+    - info
+    - initiator
+    - clutch-info
+  - id: mem:pixie:wholesome_chirper_w3
+    week: 3
+    day: 3
+    kind: social
+    actors:
+    - pixie
+    summary: Posted a sincere fan-appreciation thread; got ratio'd into orbit by Goblins
+      fans for no reason.
+    sentiment: neutral
+    tags:
+    - chirper
+    - fans
+    - goblins
+    - sincere
+  - id: mem:pixie:coyote_silence_feud_w4
+    week: 4
+    day: 2
+    kind: scrim
+    actors:
+    - pixie
+    - coyote
+    summary: Coyote asked for three seconds of silence to hear a lurk; she filled
+      all three with an apology for talking.
+    sentiment: negative
+    tags:
+    - coyote
+    - comms
+    - lurk
+    - tension
+  - id: mem:pixie:flashed_vex_w5
+    week: 5
+    day: 5
+    kind: match
+    actors:
+    - pixie
+    - vex
+    summary: Her pop-flash caught Vex instead of the angle on map 3; she apologized
+      on comms mid-fight, which didn't help.
+    sentiment: negative
+    tags:
+    - friendly-fire
+    - vex
+    - comms
+    - terminus
+- id: coyote
+  name: '"Coyote" Park'
+  handle: '@coyotelurk'
+  role: CONTROLLER
+  age: 23
+  signature_operative: Murk
+  bio: The smokes and the lurk. Wins rounds nobody claps for from corners nobody watches.
+    Arrived from rival org Northwind on bad terms and has a revenge arc the whole
+    division is tracking whether he likes it or not.
+  persona_voice: Dry, economical, faintly amused at his own expense. Speaks like a
+    man who already knows how the round ends. Saves his sharpest line for the one
+    person who's earned it, then goes quiet again. Never tweets when angry; he waits.
+  traits:
+  - cynical
+  - patient
+  - lurker
+  - low-key
+  - grudge-holder
+  relationships:
+  - with: pixie
+    kind: teammate
+    status: friction
+    note: Her comms make his lurks impossible; he's raised it with the manager, not
+      with her.
+  - with: sable
+    kind: teammate
+    status: respect
+    note: Holds the other side of the map in total silence; mutual, unspoken.
+  - with: rook
+    kind: teammate
+    status: loyal
+    note: Runs the default exactly as called. Rook trusts him more than anyone on
+      the roster.
+  - with: bishop
+    kind: rival
+    status: grudge
+    note: Left Northwind over a falling-out with Bishop; the revenge match is the
+      season's subplot.
+  - with: ghost
+    kind: peer
+    status: shaken
+    note: Took a quiet, ominous warning from the fallen star and hasn't shaken it.
+  memory_log:
+  - id: mem:coyote:transfer_from_northwind_w0
+    week: 0
+    day: 2
+    kind: rumor
+    actors:
+    - coyote
+    - bishop
+    summary: Left Northwind in the offseason after a falling-out with Bishop; neither
+      side has said what happened.
+    sentiment: negative
+    tags:
+    - backstory
+    - transfer
+    - bishop
+    - northwind
+  - id: mem:coyote:lurk_winback_w1
+    week: 1
+    day: 6
+    kind: match
+    actors:
+    - coyote
+    summary: Won a 1v2 retake from a deep lurk while the team faked the other site;
+      nobody saw it live.
+    sentiment: positive
+    tags:
+    - lurk
+    - clutch
+    - smokes
+    - unsung
+  - id: mem:coyote:smokes_saved_w2
+    week: 2
+    day: 4
+    kind: match
+    actors:
+    - coyote
+    - sable
+    summary: A late one-way smoke turned a lost 2v4 into a held site; the smoke, not
+      the kills, won it.
+    sentiment: neutral
+    tags:
+    - smokes
+    - controller
+    - unsung
+  - id: mem:coyote:ghost_warning_w3
+    week: 3
+    day: 7
+    kind: 1on1
+    actors:
+    - coyote
+    - ghost
+    summary: Ghost told him 'this game eats lurkers last, but it eats them'; he's
+      quoted it twice since, both times to himself.
+    sentiment: negative
+    tags:
+    - ghost
+    - lastlight
+    - aging
+    - foreshadow
+  - id: mem:coyote:needs_silence_w4
+    week: 4
+    day: 1
+    kind: 1on1
+    actors:
+    - coyote
+    - pixie
+    summary: Told the manager, flatly, that Pixie's comms make his lurk timings impossible;
+      asked for nothing, just noted it.
+    sentiment: negative
+    tags:
+    - pixie
+    - comms
+    - lurk
+  - id: mem:coyote:cold_read_bishop_w5
+    week: 5
+    day: 5
+    kind: match
+    actors:
+    - coyote
+    - bishop
+    summary: Hard-read Bishop's lurk and killed him clean on map 3 — the only highlight
+      Coyote got from the loss.
+    sentiment: positive
+    tags:
+    - bishop
+    - northwind
+    - read
+    - terminus
+  - id: mem:coyote:revenge_match_loss_w5
+    week: 5
+    day: 5
+    kind: match
+    actors:
+    - coyote
+    - bishop
+    - rook
+    summary: His revenge series against Northwind ended 1–2 after Overcast lost map
+      3 from 9–3 up; Bishop taunted him on the way out.
+    sentiment: negative
+    tags:
+    - northwind
+    - bishop
+    - choke
+    - revenge
+    - terminus
+clash_pairs:
+- a: rook
+  b: vex
+  cross_team: false
+  axis: structure vs. freelance
+  summary: The captain calls a disciplined default; the star plays for the clip and
+    is right just often enough to poison the room.
+  seeded_by:
+  - mem:rook:vex_overrides_call_w2
+  - mem:vex:overrides_rook_w2
+  - mem:rook:vex_apology_never_came_w4
+- a: vex
+  b: sable
+  cross_team: false
+  axis: spotlight vs. anchor
+  summary: Vex keeps taking credit for sites Sable held alone; Sable retaliates in
+    periods and unfollows, never words.
+  seeded_by:
+  - mem:vex:claims_sable_site_w4
+  - mem:sable:resents_vex_credit_w4
+- a: pixie
+  b: coyote
+  cross_team: false
+  axis: noise vs. silence
+  summary: She can't stop talking; he can't lurk through the noise. A comms war fought
+    entirely in good faith.
+  seeded_by:
+  - mem:coyote:needs_silence_w4
+  - mem:pixie:coyote_silence_feud_w4
+- a: vex
+  b: pixie
+  cross_team: false
+  axis: blame vs. guilt
+  summary: Pixie's flash got Vex killed in the week-5 loss; one keeps apologizing,
+    the other keeps mentioning it on stream.
+  seeded_by:
+  - mem:pixie:flashed_vex_w5
+  - mem:vex:flashed_by_pixie_w5
+- a: sable
+  b: pixie
+  cross_team: false
+  axis: crosshair discipline
+  summary: The only thing that makes Sable use a full sentence is Pixie flashing through
+    his angle.
+  seeded_by:
+  - mem:sable:flash_argument_pixie_w3
+- a: coyote
+  b: bishop
+  cross_team: true
+  axis: ex-teammate grudge
+  summary: Coyote left Northwind over Bishop; the revenge match is the season's subplot
+    and last week it went the wrong way.
+  seeded_by:
+  - mem:coyote:transfer_from_northwind_w0
+  - mem:coyote:revenge_match_loss_w5
+  - mem:coyote:cold_read_bishop_w5
+  rival_org: northwind
+- a: rook
+  b: echo
+  cross_team: true
+  axis: veteran vs. wunderkind
+  summary: The press's favorite IGL comparison; Echo says Rook calls like it's last
+    meta, and Rook keeps the quote on the wall.
+  seeded_by:
+  - mem:rook:beat_apex_echo_w1
+  - mem:rook:echo_mind_games_w4
+  rival_org: apex_foundry
+- a: vex
+  b: halo
+  cross_team: true
+  axis: clout rivalry
+  summary: An open Chirper war with the dynasty's star duelist; the league's favorite,
+    lowest-stakes sideshow.
+  seeded_by:
+  - mem:vex:trashtalk_halo_w2
+  rival_org: sovereign
+rivals:
+- id: sovereign
+  name: Sovereign
+  tag: SOV
+  handle: '@sovereign'
+  archetype: The Dynasty
+  star:
+    id: halo
+    name: Halo
+    role: DUELIST
+    handle: '@halo'
+  bio: The reigning, sterile, corporate champions. Win everything, draw nobody's love.
+    Their star duelist Halo is the bar Vex measures herself against and the rival
+    she'll never admit she studies.
+  pressure_on_overcast: The ceiling. Beating them is the only thing that would make
+    the league take Overcast seriously.
+  seeded_by:
+  - mem:vex:trashtalk_halo_w2
+- id: northwind
+  name: Northwind
+  tag: NWD
+  handle: '@northwind'
+  archetype: The Ex-Teammate
+  star:
+    id: bishop
+    name: Bishop
+    role: SENTINEL
+    handle: '@bishop'
+  bio: Coyote's old org, and Bishop the reason he left. They handed Overcast last
+    week's loss and the season's most personal taunt. The grudge is the cleanest revenge
+    arc on the schedule.
+  pressure_on_overcast: Personal. Every Coyote round against them is a referendum
+    on the transfer.
+  seeded_by:
+  - mem:coyote:transfer_from_northwind_w0
+  - mem:coyote:revenge_match_loss_w5
+- id: apex_foundry
+  name: Apex Foundry
+  tag: APX
+  handle: '@apexfoundry'
+  archetype: The Wunderkind / Heir
+  star:
+    id: echo
+    name: Echo
+    role: IGL
+    handle: '@echo'
+  bio: Built around Echo, the prodigy IGL the media frames as everything Rook used
+    to be. Fast, fearless, and a little disrespectful. The mirror Rook can't stop
+    looking into.
+  pressure_on_overcast: Generational. A loss here is the story 'the old caller got
+    passed by.'
+  seeded_by:
+  - mem:rook:beat_apex_echo_w1
+  - mem:rook:echo_mind_games_w4
+- id: goblins
+  name: the Goblins
+  tag: GOB
+  handle: '@thegoblins'
+  archetype: The Chaos Agents
+  star:
+    id: grud
+    name: Grud
+    role: INITIATOR
+    handle: '@grud'
+  bio: A bottom-seed meme team that plays gloriously off-meta and is beloved by Chirper
+    for it. They already ended an Overcast week once with a troll comp nobody respects
+    and everybody quotes.
+  pressure_on_overcast: Humiliation risk. Losing to them is a clip that outlives the
+    season.
+  seeded_by:
+  - mem:vex:goblins_upset_w3
+  - mem:pixie:wholesome_chirper_w3
+- id: tidewater
+  name: Tidewater
+  tag: TDW
+  handle: '@tidewater'
+  archetype: The Rising Underdog
+  star:
+    id: marlow
+    name: Marlow
+    role: SENTINEL
+    handle: '@marlow'
+  bio: An honest, grinding org one rung below Overcast — exactly who Overcast used
+    to be. Sable quietly mentors their rookie sentinel. The 'you used to be us' foil.
+  pressure_on_overcast: Existential. They're proof the climb is real, and the warning
+    that it's also a fall.
+  seeded_by:
+  - mem:sable:mentor_tidewater_rookie_w2
+- id: last_light
+  name: Last Light
+  tag: LLT
+  handle: '@lastlight'
+  archetype: The Fallen Star
+  star:
+    id: ghost
+    name: Ghost
+    role: DUELIST
+    handle: '@ghost'
+  bio: A struggling org carrying Ghost, a former number-one player aging out in public.
+    The ghost of futures both Rook and Coyote are afraid of. Lost more than they win
+    now.
+  pressure_on_overcast: Mortal. Ghost is the cautionary tale; playing Last Light makes
+    the whole roster look at the clock.
+  seeded_by:
+  - mem:rook:1on1_with_manager_w4
+  - mem:coyote:ghost_warning_w3
+last_week:
+  week: 5
+  opponent: northwind
+  format: Bo3
+  result: loss
+  scoreline:
+    overcast: 1
+    opponent: 2
+    maps:
+    - map: Helix
+      overcast: 13
+      opponent: 9
+      result: win
+    - map: Foundry
+      overcast: 7
+      opponent: 13
+      result: loss
+    - map: Terminus
+      overcast: 12
+      opponent: 14
+      result: loss
+      note: lost from a 9–3 lead in overtime
+  headline: Overcast choke a 9–3 lead on Terminus and drop the revenge series to Northwind,
+    1–2.
+  chirper_feed:
+  - id: chirp:w5:01
+    author: '@overcast'
+    day: 5
+    text: gg @northwind. we'll review the tape. all of it. several times.
+    cites:
+    - mem:coyote:revenge_match_loss_w5
+    likes: 1840
+    author_id: overcast
+  - id: chirp:w5:02
+    author: '@bishop'
+    day: 5
+    text: some guys you trade away. some guys trade themselves. gg @coyotelurk 🐍
+    cites:
+    - mem:coyote:transfer_from_northwind_w0
+    likes: 9220
+    author_id: bishop
+  - id: chirp:w5:03
+    author: '@coyotelurk'
+    day: 5
+    text: you peeked the same corner twice tonight. enjoy week 8.
+    cites:
+    - mem:coyote:cold_read_bishop_w5
+    likes: 14100
+    author_id: coyote
+    reply_to: chirp:w5:02
+  - id: chirp:w5:04
+    author: '@gridcast'
+    day: 5
+    text: OVC up 9–3 on Terminus and lose 14–12. I have covered this league for six
+      years and I have never seen a man look as tired as Rook Tanaka in that final
+      timeout.
+    cites:
+    - mem:rook:scrim_w5_choke
+    likes: 6710
+  - id: chirp:w5:05
+    author: '@vexstrike'
+    day: 5
+    text: hard to entry when your own utility blinds you but sure. my fault. always
+      my fault.
+    cites:
+    - mem:vex:flashed_by_pixie_w5
+    likes: 3300
+    author_id: vex
+    note: deleted after 6 minutes; screenshotted in 2
+  - id: chirp:w5:06
+    author: '@pixieflare'
+    day: 5
+    text: 'that one''s on me, i''ll own it — but i love these five and we are SO bouncing
+      back week 6 🫶 #overcastfam #helixnext'
+    cites:
+    - mem:pixie:flashed_vex_w5
+    likes: 980
+    author_id: pixie
+    note: ratio'd by replies
+  - id: chirp:w5:07
+    author: '@sablehold'
+    day: 5
+    text: .
+    likes: 41200
+    author_id: sable
+    note: his most-liked post of the split
+  - id: chirp:w5:08
+    author: '@halo'
+    day: 5
+    text: imagine choking a 9–3 lead. couldn't be me
+    cites:
+    - mem:coyote:revenge_match_loss_w5
+    likes: 22500
+    author_id: halo
+  - id: chirp:w5:09
+    author: '@vexstrike'
+    day: 5
+    text: imagine winning a title nobody stayed up to watch
+    cites:
+    - mem:vex:trashtalk_halo_w2
+    likes: 31900
+    author_id: vex
+    reply_to: chirp:w5:08
+  - id: chirp:w5:10
+    author: '@grud'
+    day: 6
+    text: throwback to when we ended their whole week with a comp our coach drew on
+      a napkin 🐸 good times @overcast
+    cites:
+    - mem:vex:goblins_upset_w3
+    likes: 18700
+    author_id: grud
+  - id: chirp:w5:11
+    author: '@overcast'
+    day: 7
+    text: 'week 6: Helix. must-win. doors open at six. bring a coat.'
+    likes: 5600
+    author_id: overcast

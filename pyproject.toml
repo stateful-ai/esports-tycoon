@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esports-tycoon"
+version = "0.0.0"
+description = "A management sim where the soul of the game is persistent player personalities."
+# Python minor is pinned, not floor-bounded: the byte-identity contract for the
+# canonical save (``saves/SCHEMA.md`` → **Byte-identity normalization**) relies
+# on CPython's ``repr(float)`` and PyYAML's representer producing the same bytes
+# on every machine. Different Python minors can ship different ``float.__repr__``
+# behaviour and different stdlib quirks that the canonical serializer doesn't
+# normalize away; pinning to a single minor keeps the committed golden
+# (``tests/golden/week6_canonical.yaml``) reproducible from a clean checkout.
+# Bump alongside a reviewed regeneration of the goldens.
+requires-python = ">=3.12,<3.13"
+# Exact pins on the two libraries the canonical serializer routes through. A
+# minor bump of either can quietly re-shape the bytes the golden test pins
+# (PyYAML has re-padded scientific mantissas across point releases; pydantic
+# can re-order serialized fields across minors). The full transitive lock —
+# pydantic_core, typing_extensions, annotated-types, plus the dev + web
+# extras — lives in ``constraints.txt`` and is what ``make install`` consumes.
+dependencies = [
+    "PyYAML==6.0.1",
+    "pydantic==2.13.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+# The vllm content backend talks to an OpenAI-compatible endpoint via the
+# vendored gaming-pack client. The default (templated) backend needs none of
+# this, so the dependency is opt-in: `pip install -e .[vllm]`.
+vllm = ["openai>=1.0"]
+# The local slice web app (esports_tycoon.web). The headless runner, the recap
+# artifact, and the whole templated slice need none of this; only serving the
+# manager view + Chirper feed does, so Flask is opt-in: `pip install -e .[web]`.
+web = ["Flask>=3.0"]
+
+[tool.setuptools.packages.find]
+# ``saves`` is a one-file package whose only job is to ship the canonical
+# ``saves/week6.yaml`` inside the wheel so the loader/CLI work from an
+# installed wheel, not only from a source checkout. It is the single
+# documented save root — there is no ``esports_tycoon/canned/data`` split.
+include = ["esports_tycoon*", "saves"]
+
+[tool.setuptools.package-data]
+# Ship the canonical canned save inside the wheel so the loader/CLI work when
+# installed, not only from a source checkout. ``*.approval.yaml`` is the
+# founder's recorded decision (a dev-time artifact bound to the source tree)
+# and is deliberately not shipped.
+"saves" = ["week6.yaml"]
+# Ship the web app's Jinja2 templates so the slice app works from an installed
+# wheel, not only a source checkout.
+"esports_tycoon.web" = ["templates/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

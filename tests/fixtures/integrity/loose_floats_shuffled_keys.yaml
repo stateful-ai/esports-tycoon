@@ -1,0 +1,35 @@
+# Negative fixture: loose-form input that MUST normalize to canonical bytes.
+#
+# Unlike the three sibling fixtures in this directory — which fail closed on
+# a typed error — this one fails closed on *bytes*. The canonical serializer's
+# contract (``saves/SCHEMA.md`` § Byte-identity normalization) is that loose
+# inputs flow to one fixed-point byte form on the way out, regardless of how
+# the surface was spelled going in. That is what lets the golden trip on
+# serializer drift instead of waving it through.
+#
+# Two flavors of looseness are committed here in one file:
+#
+# * **Loose floats.** ``1.0`` (whole float), ``!!float 1e-5`` and
+#   ``!!float 1e+20`` (tagged so YAML 1.1's implicit-float resolver — which
+#   *requires* a dot in the mantissa — actually parses them as floats),
+#   ``-0.0`` (negative zero), and the YAML 1.1 specials ``.nan`` / ``.inf`` /
+#   ``-.inf``. The canonical representer rewrites every mantissa to a dotted,
+#   shortest-round-trip form and pins ``.nan`` / ``.inf`` tokens, so each of
+#   these has exactly one canonical spelling on the way out.
+# * **Shuffled keys.** The top-level keys are intentionally NOT in alphabetical
+#   order (``zebra`` before ``alpha``). The canonical dumper preserves the
+#   input dict's iteration order (``sort_keys=False``), so the same shuffled
+#   order survives the dump — a regression that re-sorted keys would re-write
+#   every committed save on every dump and would trip the companion test.
+#
+# The companion test loads this file with ``yaml.safe_load`` and asserts the
+# bytes produced by ``canonical.dumps`` match the canonical form pinned inline
+# in the test. A drift in the float representer, a regression to alphabetical
+# sort, a flow-style fallback, or a dropped trailing newline trips here.
+zebra: 1.0
+alpha: !!float 1e-5
+mike: !!float 1e+20
+nan_value: .nan
+inf_value: .inf
+neg_inf: -.inf
+neg_zero: -0.0
