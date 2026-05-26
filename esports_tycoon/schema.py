@@ -40,6 +40,7 @@ from pydantic import (
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
     "MEMORY_ID_RE",
+    "GroundingError",
     "Role",
     "MemoryKind",
     "Sentiment",
@@ -76,6 +77,26 @@ __all__ = [
 #: :mod:`esports_tycoon.canned.loader` so old saves migrate forward rather than
 #: being rejected.
 CURRENT_SCHEMA_VERSION = 0
+
+
+class GroundingError(ValueError):
+    """A :class:`WorldState` failed its grounding contract.
+
+    Raised from :meth:`WorldState._grounding_holds` when memory IDs collide or a
+    cite anywhere in the world (clash pairs, rivals, the Chirper feed) points
+    at no memory entry the save defines. Carries a structured ``field_path``
+    naming the offending location (e.g.
+    ``"clash_pairs[0].seeded_by[0]"``) so the loader can lift it into the
+    shared :class:`esports_tycoon.canned.loader.SaveError` contract without
+    parsing the message back out. A ``ValueError`` subclass so direct
+    ``WorldState.model_validate`` callers that catch ``ValueError`` on a bad
+    save keep working, and so pydantic preserves it as ``ctx['error']`` on the
+    resulting :class:`pydantic.ValidationError`.
+    """
+
+    def __init__(self, message: str, *, field_path: str) -> None:
+        super().__init__(message)
+        self.field_path = field_path
 
 # `mem:<player_id>:<event_slug>` — lowercase ascii, dash-snake event slug.
 # Kept identical to esports_tycoon.cast_lock.spec.MEMORY_ID_RE; the two modules
@@ -356,22 +377,78 @@ class WorldState(_Model):
 
     @model_validator(mode="after")
     def _grounding_holds(self) -> "WorldState":
-        ids: list[str] = [e.id for p in self.players for e in p.memory_log]
-        seen: set[str] = set()
-        duplicates = sorted({mem_id for mem_id in ids if mem_id in seen or seen.add(mem_id)})
+        # Globally unique memory IDs. Walk in save order, remember the first
+        # entry's path per id, and report each duplicate against the path it
+        # collides at — first-seen path goes in the message body, the
+        # *second* occurrence is the surfaced ``field_path`` so the author
+        # can take the message straight to the offending line they just added.
+        first_path: dict[str, str] = {}
+        duplicates: list[tuple[str, str, str]] = []  # (mem_id, first, second)
+        for pi, player in enumerate(self.players):
+            for mi, entry in enumerate(player.memory_log):
+                path = (
+                    f"players[{pi}={player.id}].memory_log[{mi}={entry.id}].id"
+                )
+                if entry.id in first_path:
+                    duplicates.append((entry.id, first_path[entry.id], path))
+                else:
+                    first_path[entry.id] = path
         if duplicates:
-            raise ValueError(f"memory IDs must be globally unique; duplicates: {duplicates}")
+            details = "; ".join(
+                f"{mem_id!r} appears at {first} and {second}"
+                for mem_id, first, second in duplicates
+            )
+            raise GroundingError(
+                f"memory IDs must be globally unique: {details}",
+                field_path=duplicates[0][2],
+            )
 
-        known = set(ids)
-        dangling: list[str] = []
-        for pair in self.clash_pairs:
-            dangling += [f"clash {pair.a}/{pair.b} -> {c}" for c in pair.seeded_by if c not in known]
-        for rival in self.rivals:
-            dangling += [f"rival {rival.id} -> {c}" for c in rival.seeded_by if c not in known]
-        for post in self.last_week.chirper_feed:
-            dangling += [f"chirp {post.id} -> {c}" for c in post.cites if c not in known]
+        known = set(first_path)
+        # Each dangling reference is reported with its structured field path
+        # *and* the entity descriptor (``clash a/b``, ``rival id``,
+        # ``chirp post-id``) so a human reader sees both the line to jump to
+        # and the actor context, while the loader can lift the first path
+        # into the shared ``SaveError.field_path`` without parsing the body.
+        dangling: list[tuple[str, str, str]] = []  # (path, descriptor, cite)
+        for ci, pair in enumerate(self.clash_pairs):
+            for cj, cite in enumerate(pair.seeded_by):
+                if cite not in known:
+                    dangling.append(
+                        (
+                            f"clash_pairs[{ci}].seeded_by[{cj}]",
+                            f"clash {pair.a}/{pair.b}",
+                            cite,
+                        )
+                    )
+        for ri, rival in enumerate(self.rivals):
+            for cj, cite in enumerate(rival.seeded_by):
+                if cite not in known:
+                    dangling.append(
+                        (
+                            f"rivals[{ri}={rival.id}].seeded_by[{cj}]",
+                            f"rival {rival.id}",
+                            cite,
+                        )
+                    )
+        for fi, post in enumerate(self.last_week.chirper_feed):
+            for cj, cite in enumerate(post.cites):
+                if cite not in known:
+                    dangling.append(
+                        (
+                            f"last_week.chirper_feed[{fi}={post.id}].cites[{cj}]",
+                            f"chirp {post.id}",
+                            cite,
+                        )
+                    )
         if dangling:
-            raise ValueError(f"cites must resolve to a real memory (no hallucinated history): {dangling}")
+            details = "; ".join(
+                f"{path} ({descriptor}) -> {cite}"
+                for path, descriptor, cite in dangling
+            )
+            raise GroundingError(
+                f"cites must resolve to a real memory (no hallucinated history): {details}",
+                field_path=dangling[0][0],
+            )
         return self
 
     @property

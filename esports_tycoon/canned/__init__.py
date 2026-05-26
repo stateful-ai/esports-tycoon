@@ -9,7 +9,10 @@ single typed entry point and a single documented location.
 from .loader import (
     DEFAULT_SAVE_PATH,
     RefIssue,
+    SaveError,
     SaveReferentialIntegrityError,
+    SaveSchemaError,
+    SaveYamlError,
     SchemaVersionError,
     check_referential_integrity,
     dumps,
@@ -21,7 +24,10 @@ from .loader import (
 __all__ = [
     "DEFAULT_SAVE_PATH",
     "RefIssue",
+    "SaveError",
     "SaveReferentialIntegrityError",
+    "SaveSchemaError",
+    "SaveYamlError",
     "SchemaVersionError",
     "check_referential_integrity",
     "load",
