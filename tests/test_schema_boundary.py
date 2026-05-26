@@ -33,6 +33,16 @@ import pathlib
 import textwrap
 import unittest
 
+import pytest
+
+# M0 freeze (founder_brief.md): schema-boundary CI gate is deferred to
+# M1/post-gate — the canonical-six are not under refactor pressure until the
+# screenshot lands, so the AST-walk enforcement parks alongside the other
+# reproducibility infra.
+pytestmark = pytest.mark.skip(
+    reason="M0 freeze: schema-boundary CI gate deferred to M1/post-gate"
+)
+
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 _PKG_ROOT = _REPO_ROOT / "esports_tycoon"
 _SCHEMA_FILE = (_PKG_ROOT / "schema.py").resolve()

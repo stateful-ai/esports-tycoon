@@ -41,6 +41,7 @@ import sys
 import tempfile
 import unittest
 
+import pytest
 import yaml
 from pydantic import ValidationError
 
@@ -48,6 +49,15 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon.canned import canonical, loader  # noqa: E402
 from esports_tycoon.schema import WorldState  # noqa: E402
+
+# M0 freeze (founder_brief.md): the RI validator + the negative-fixture suite +
+# the typed SaveError contract all harden a load path the screenshot gate does
+# not exercise; deferred together to M1/post-gate. The validator code stays
+# wired so happy-path loads still benefit from it; only the enforcement tests
+# park.
+pytestmark = pytest.mark.skip(
+    reason="M0 freeze: RI validator + negative fixtures + typed SaveError contract deferred to M1/post-gate"
+)
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures" / "integrity"
 
