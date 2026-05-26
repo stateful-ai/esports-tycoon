@@ -1,0 +1,174 @@
+"""Deterministic precedent-recall selector — pure, engine-side, zero RNG.
+
+The narrator never asks "what precedent feels right" — it asks
+:func:`recall`, which ranks every canned memory in the world by how strongly
+it rhymes with the match that just resolved. The ranking has three signals,
+in priority order:
+
+* **shared actors** — the count of overlap between the people the resolver
+  named (key-moment actors, the MVP, who carried, who came apart) and the
+  memory entry's actors. Memory is a social object; a precedent involving the
+  same people is the strongest possible match;
+* **tag overlap** — the count of overlap between the tags the resolver's beats
+  rhyme with (the choke/clutch/tilt-style vocabulary in
+  :data:`TARGET_TAGS_FOR_KIND`, plus an explicit ``"tilt"`` when this match
+  had tilters) and the memory entry's tags;
+* **active rivalry** — a flat ``+1`` if any actor in the beat has an
+  authored ``kind="rival"`` :class:`~esports_tycoon.schema.Relationship`
+  whose target appears in the memory entry (in its ``actors`` or its tags).
+
+Sort is by ``(-actor_score, -tag_score, -rivalry_score)`` and Python's
+``sorted`` is stable, so equal-scored entries fall back to save order
+(``world.players`` order, then each player's ``memory_log`` order). This is
+what makes the function fully deterministic: every key is a pure function of
+the inputs, ties are broken by save order, and **identical inputs always
+yield the identical ordered list** — no ``random.Random``, no LLM, no clock,
+no entropy of any kind. The function takes no seed and accepts no client.
+
+The templated narrator (:mod:`esports_tycoon.content.templated`) binds against
+this: it picks the recalled precedent for the beat it's narrating and stamps
+its cite ID into the generated content's ``cites``, which is what the recap's
+"What the room remembered" section quotes back. So a week-6 choke surfaces the
+week-5 scrim choke (or the unresolved week-2 override that lit it), and that
+precedent rides into the rendered output by ID rather than by RNG.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from esports_tycoon.schema import MemoryEntry, WhyRecord, WorldState
+
+__all__ = ["recall", "Precedent", "TARGET_TAGS_FOR_KIND"]
+
+
+#: How each resolver-emittable key-moment kind rhymes with the memory log's
+#: authored tag vocabulary. Kept compatible with the per-kind tag mapping in
+#: :mod:`esports_tycoon.content.templated` so the beat the narrator chooses and
+#: the precedent recall surfaces draw from the same vocabulary. ``"tilt"`` is
+#: added separately when :attr:`WhyRecord.who_tilted` is non-empty, so a tilted
+#: lineup pulls tilt-tagged precedents even on a beat that doesn't itself rhyme
+#: with tilt.
+TARGET_TAGS_FOR_KIND: dict[str, frozenset[str]] = {
+    "ace": frozenset({"ace"}),
+    "clutch": frozenset({"clutch"}),
+    "choke": frozenset({"choke", "tilt"}),
+    "comeback": frozenset({"clutch", "revenge"}),
+    "dominant": frozenset({"clutch"}),
+    "blowout": frozenset({"tilt", "choke"}),
+    "match_point": frozenset({"choke", "tilt"}),
+    "closeout": frozenset({"clutch"}),
+}
+
+
+@dataclass(frozen=True)
+class Precedent:
+    """A canned memory plus the per-signal scores it earned against a match.
+
+    Exposed (and exported) so callers can introspect *why* a precedent rose to
+    the top — useful for explanations in the recap and for tests that pin the
+    scoring contract rather than the final ordering.
+    """
+
+    entry: MemoryEntry
+    actor_score: int
+    tag_score: int
+    rivalry_score: int
+
+
+def _why_actors(why: WhyRecord) -> frozenset[str]:
+    """Every player the resolver named in this match.
+
+    The narrator may pick any one beat to lead with, but recall ranks against
+    the *whole* match: every key moment's actors, the MVP, who carried, and who
+    came apart. That keeps the signal strong on a match where one beat names
+    one starter and another names the rest.
+    """
+    actors: set[str] = set()
+    for moment in why.key_moments:
+        actors.update(moment.actors)
+    if why.mvp:
+        actors.add(why.mvp)
+    actors.update(why.who_carried)
+    actors.update(why.who_tilted)
+    return frozenset(actors)
+
+
+def _target_tags(why: WhyRecord) -> frozenset[str]:
+    """The memory-tag vocabulary this match rhymes with."""
+    tags: set[str] = set()
+    for moment in why.key_moments:
+        tags.update(TARGET_TAGS_FOR_KIND.get(moment.kind, frozenset()))
+    if why.who_tilted:
+        tags.add("tilt")
+    return frozenset(tags)
+
+
+def _active_rivals(world: WorldState, actors: frozenset[str]) -> frozenset[str]:
+    """Every party named in a ``kind="rival"`` relationship of an actor.
+
+    These are the rivalries the *fielded* roster carries into this match (Rook
+    has Echo, Vex has Halo, Coyote has Bishop). A memory that drags one of
+    those names back in — by including them as an actor or tagging them by name
+    — earns the rivalry bonus.
+    """
+    rivals: set[str] = set()
+    for player in world.players:
+        if player.id not in actors:
+            continue
+        for rel in player.relationships:
+            if rel.kind == "rival":
+                rivals.add(rel.with_)
+    return frozenset(rivals)
+
+
+def score(why: WhyRecord, world: WorldState) -> list[Precedent]:
+    """The full ranked candidate list, before truncation.
+
+    Exposed so callers (tests, the recap) can inspect the ranking without
+    paying the ``[:k]`` slice. Same ordering and same determinism contract as
+    :func:`recall`.
+    """
+    actors = _why_actors(why)
+    tags = _target_tags(why)
+    rivals = _active_rivals(world, actors)
+
+    candidates: list[Precedent] = []
+    for player in world.players:
+        for entry in player.memory_log:
+            entry_actors = set(entry.actors)
+            entry_tags = {t.lower() for t in entry.tags}
+            actor_score = len(actors & entry_actors)
+            tag_score = len(tags & entry_tags)
+            rivalry_score = 1 if rivals & (entry_actors | entry_tags) else 0
+            if actor_score == 0 and tag_score == 0 and rivalry_score == 0:
+                continue
+            candidates.append(
+                Precedent(
+                    entry=entry,
+                    actor_score=actor_score,
+                    tag_score=tag_score,
+                    rivalry_score=rivalry_score,
+                )
+            )
+    # Stable sort by descending score components: equal-scored entries fall
+    # back to save order, which is the order they were appended above.
+    candidates.sort(
+        key=lambda p: (-p.actor_score, -p.tag_score, -p.rivalry_score)
+    )
+    return candidates
+
+
+def recall(why: WhyRecord, world: WorldState, k: int) -> list[MemoryEntry]:
+    """Rank canned precedent against the match and return the top ``k``.
+
+    ``k`` must be non-negative; ``k == 0`` returns an empty list. The function
+    is pure: identical ``why`` + ``world`` always yields the identical ordered
+    list (Python's ``sorted`` is stable; ties fall back to save order). There
+    is no RNG, no model call, no I/O, no clock.
+    """
+    if k < 0:
+        raise ValueError("k must be non-negative")
+    if k == 0:
+        return []
+    return [precedent.entry for precedent in score(why, world)[:k]]
