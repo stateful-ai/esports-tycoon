@@ -10,6 +10,13 @@
 #   make install PIP_EXTRAS=".[dev,web,vllm]"
 PYTHON ?= python3
 PIP_EXTRAS ?= .[dev,web]
+# The byte-identity contract on the canonical save (``saves/SCHEMA.md``) requires
+# the same pydantic / PyYAML / transitive deps on every checkout. ``make install``
+# resolves every package through this file (``pip install -c …``), so a clean
+# clone on a contributor box, a second machine, or the CI image gets the exact
+# set of versions used to bless the committed goldens. Bump alongside a reviewed
+# regeneration of the goldens.
+CONSTRAINTS ?= constraints.txt
 
 # Empty PYTEST_ARGS lets `make test PYTEST_ARGS="-x -k golden"` drill in on a
 # failing run without editing this file.
@@ -22,7 +29,7 @@ help:  ## Show available targets
 
 install:  ## Install the package + dev/web extras (no API keys, no GPU needed)
 	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install -e "$(PIP_EXTRAS)"
+	$(PYTHON) -m pip install -c "$(CONSTRAINTS)" -e "$(PIP_EXTRAS)"
 
 # `make test` is what CI runs on every commit. It explicitly unsets
 # UPDATE_GOLDEN so a stray export in the developer's shell can never silently

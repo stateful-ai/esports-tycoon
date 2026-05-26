@@ -36,9 +36,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 3.10 is the floor declared in pyproject.toml; 3.12 is what the
-        # contributor box runs. Both must stay green.
-        python-version: ["3.10", "3.12"]
+        # Single minor by design: the byte-identity contract on the canonical
+        # save (``saves/SCHEMA.md`` → **Byte-identity normalization**) relies on
+        # CPython's ``repr(float)`` and PyYAML's representer producing the same
+        # bytes on every run, and CPython has shipped behaviour changes between
+        # minors that the canonical serializer doesn't normalize away. The pin
+        # mirrors ``requires-python = ">=3.12,<3.13"`` in pyproject.toml; bump
+        # both, and the constraints.txt lockfile, in the same change.
+        python-version: ["3.12"]
     env:
       # Belt-and-braces: `make test` already unsets this, but stripping it at
       # the job level means a future workflow change can't accidentally bless
@@ -58,9 +63,19 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: pyproject.toml
+          # Invalidate the pip cache when either the declared deps OR the
+          # pinned lock changes; otherwise a constraints.txt bump could miss
+          # the cache refresh and the install would silently resolve stale
+          # wheels.
+          cache-dependency-path: |
+            pyproject.toml
+            constraints.txt
 
-      - name: Install (no API keys, no GPU extras)
+      - name: Install from lock (no API keys, no GPU extras)
+        # ``make install`` invokes ``pip install -c constraints.txt -e .[dev,web]``,
+        # so the byte-identity-affecting pydantic / PyYAML / pydantic_core /
+        # typing_extensions / annotated-types versions are exactly the ones the
+        # committed goldens were blessed against.
         run: make install
 
       # The headline check: `make test` runs the full suite, which includes

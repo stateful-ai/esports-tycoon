@@ -6,10 +6,24 @@ build-backend = "setuptools.build_meta"
 name = "esports-tycoon"
 version = "0.0.0"
 description = "A management sim where the soul of the game is persistent player personalities."
-requires-python = ">=3.10"
+# Python minor is pinned, not floor-bounded: the byte-identity contract for the
+# canonical save (``saves/SCHEMA.md`` → **Byte-identity normalization**) relies
+# on CPython's ``repr(float)`` and PyYAML's representer producing the same bytes
+# on every machine. Different Python minors can ship different ``float.__repr__``
+# behaviour and different stdlib quirks that the canonical serializer doesn't
+# normalize away; pinning to a single minor keeps the committed golden
+# (``tests/golden/week6_canonical.yaml``) reproducible from a clean checkout.
+# Bump alongside a reviewed regeneration of the goldens.
+requires-python = ">=3.12,<3.13"
+# Exact pins on the two libraries the canonical serializer routes through. A
+# minor bump of either can quietly re-shape the bytes the golden test pins
+# (PyYAML has re-padded scientific mantissas across point releases; pydantic
+# can re-order serialized fields across minors). The full transitive lock —
+# pydantic_core, typing_extensions, annotated-types, plus the dev + web
+# extras — lives in ``constraints.txt`` and is what ``make install`` consumes.
 dependencies = [
-    "PyYAML>=6.0",
-    "pydantic>=2.0",
+    "PyYAML==6.0.1",
+    "pydantic==2.13.4",
 ]
 
 [project.optional-dependencies]
