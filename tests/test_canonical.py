@@ -20,12 +20,13 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon.canned import canonical  # noqa: E402
 
-# M0 freeze (founder_brief.md): byte-identity serializer + canonical YAML/float
-# formatting are deferred to M1/post-gate — they harden a contract the screenshot
-# gate does not depend on, and re-enforcing them now would burn cycles that
-# belong on the playable slice.
+# M1 scope (docs/m0_gate_decision.md): byte-identity serializer + canonical
+# YAML/float formatting are owned by M1's reproducibility-floor wedge. The M0
+# screenshot gate did not depend on them; the gate has fired (PASS), so the
+# pre-gate parking is lifted and these tests stay skipped under M1's name
+# until the M1 ticket that lands the contract.
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: byte-identity serializer + canonical YAML/float formatting deferred to M1/post-gate"
+    reason="M1 scope: byte-identity serializer + canonical YAML/float formatting"
 )
 
 

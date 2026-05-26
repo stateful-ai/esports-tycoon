@@ -50,13 +50,13 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon.canned import canonical, loader  # noqa: E402
 from esports_tycoon.schema import WorldState  # noqa: E402
 
-# M0 freeze (founder_brief.md): the RI validator + the negative-fixture suite +
-# the typed SaveError contract all harden a load path the screenshot gate does
-# not exercise; deferred together to M1/post-gate. The validator code stays
-# wired so happy-path loads still benefit from it; only the enforcement tests
-# park.
+# M1 scope (docs/m0_gate_decision.md): the RI validator + the negative-fixture
+# suite + the typed SaveError contract all harden a load path the M0 screenshot
+# gate did not exercise. The validator code stays wired so happy-path loads
+# still benefit from it; only the enforcement tests park under M1's name until
+# the M1 ticket that lands the contract.
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: RI validator + negative fixtures + typed SaveError contract deferred to M1/post-gate"
+    reason="M1 scope: RI validator + negative fixtures + typed SaveError contract"
 )
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures" / "integrity"

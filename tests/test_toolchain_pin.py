@@ -40,11 +40,11 @@ import pydantic
 import pytest
 import yaml
 
-# M0 freeze (founder_brief.md): pinned-toolchain enforcement is deferred to
-# M1/post-gate — it backs the byte-identity contract, which itself is parked
-# until the screenshot gate fires.
+# M1 scope (docs/m0_gate_decision.md): pinned-toolchain enforcement is M1's
+# to land — it backs the byte-identity contract, which itself is M1's
+# reproducibility-floor scope now that the M0 gate has fired (PASS).
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: pinned toolchain enforcement deferred to M1/post-gate"
+    reason="M1 scope: pinned toolchain enforcement"
 )
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]

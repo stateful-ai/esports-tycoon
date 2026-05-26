@@ -28,10 +28,12 @@ import unittest
 
 import pytest
 
-# M0 freeze (founder_brief.md): the make-test/CI plumbing contract is paired
-# with the byte-identity golden it protects; both are deferred to M1/post-gate.
+# M1 scope (docs/m0_gate_decision.md): the make-test / CI plumbing contract is
+# paired with the byte-identity golden it protects; both are M1's reproducibility
+# floor. The M0 gate has fired (PASS) — the freeze is lifted — and these stay
+# skipped under M1's name until the M1 ticket lands the canonical-byte contract.
 pytestmark = pytest.mark.skip(
-    reason="M0 freeze: make-test / CI golden-drift plumbing contract deferred to M1/post-gate"
+    reason="M1 scope: make-test / CI golden-drift plumbing contract"
 )
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
