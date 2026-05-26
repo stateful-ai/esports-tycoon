@@ -7,7 +7,10 @@ re-parsing the YAML themselves, keeping a single typed entry point.
 
 from .loader import (
     DEFAULT_SAVE_PATH,
+    RefIssue,
+    SaveReferentialIntegrityError,
     SchemaVersionError,
+    check_referential_integrity,
     dumps,
     load,
     migrate,
@@ -16,7 +19,10 @@ from .loader import (
 
 __all__ = [
     "DEFAULT_SAVE_PATH",
+    "RefIssue",
+    "SaveReferentialIntegrityError",
     "SchemaVersionError",
+    "check_referential_integrity",
     "load",
     "to_save_dict",
     "dumps",

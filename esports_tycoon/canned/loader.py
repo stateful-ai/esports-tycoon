@@ -22,6 +22,7 @@ supported version and no upgrade steps yet — but :func:`migrate` and
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
 from typing import Any, Callable, Union
@@ -58,6 +59,49 @@ class SchemaVersionError(ValueError):
     on a malformed save keep working, while the distinct type still lets a caller
     tell a version mismatch apart from other load failures.
     """
+
+
+@dataclass(frozen=True)
+class RefIssue:
+    """One unresolved id reference: where it lives, what was missing, what was allowed.
+
+    The fields are formatted into :class:`SaveReferentialIntegrityError`'s
+    message so the failure is actionable on its own — the author can take the
+    path straight to the offending line, see the id that didn't resolve, and the
+    categories of id that would have.
+    """
+
+    path: str
+    missing_id: str
+    expected: tuple[str, ...]
+
+
+class SaveReferentialIntegrityError(ValueError):
+    """A save references one or more ids that no entity in the save defines.
+
+    Distinct from :class:`SchemaVersionError` (a version this build can't read)
+    and from :class:`pydantic.ValidationError` (a shape this schema doesn't
+    accept): this is a save that *parsed and shape-validated* but whose internal
+    cross-references — a relationship pointing at no player, a clash citing an
+    unknown rival star, a Chirper post whose ``reply_to`` names no other post —
+    fail to resolve. A :class:`ValueError` subclass so callers that broadly
+    catch ``ValueError`` on a bad save keep working; the distinct type lets a
+    caller tell a referential failure apart from the other load failures and
+    inspect :attr:`issues` programmatically.
+    """
+
+    def __init__(self, source: object, issues: list[RefIssue]) -> None:
+        self.source = source
+        self.issues = tuple(issues)
+        bullets = "\n".join(
+            f"  - {issue.path}: id {issue.missing_id!r} is not defined "
+            f"(expected one of: {', '.join(issue.expected)})"
+            for issue in issues
+        )
+        super().__init__(
+            f"{source}: save references unknown ids "
+            f"({len(issues)} unresolved):\n{bullets}"
+        )
 
 
 #: A migration step: it takes a save dict at version ``n`` and returns one at
@@ -126,12 +170,156 @@ def _ensure_loadable_version(data: dict[str, Any], source: object) -> dict[str, 
     return migrate(data, version)
 
 
+def check_referential_integrity(
+    world: WorldState, source: object = "<world>"
+) -> None:
+    """Raise :class:`SaveReferentialIntegrityError` if any id reference dangles.
+
+    The typed schema enforces *shape* — that fields exist, are the right type,
+    and that memory cite IDs (``mem:<player>:<slug>``) all resolve. This pass
+    enforces the *cross-entity* contract the schema deliberately leaves open:
+    that every reference to a unit (player or rival star), a team or rival
+    org, or an in-feed Chirper post resolves to an entity actually defined in
+    the same save. Catches the typo a human author is most likely to make —
+    ``vexx`` for ``vex``, ``apex`` for ``apex_foundry`` — at load time, with a
+    sourced, actionable message, instead of letting it surface later as a
+    ``KeyError`` or, worse, silently wrong narration.
+
+    Run after :meth:`WorldState.model_validate`, so the world object is already
+    shape-valid. The checker collects *every* unresolved reference and raises
+    once, so an author sees the full picture in a single round-trip rather
+    than fixing typos one stack-trace at a time.
+    """
+    players = {p.id for p in world.players}
+    rival_orgs = {r.id for r in world.rivals}
+    rival_stars = {r.star.id for r in world.rivals}
+    team_id = world.save.team.id
+
+    units = players | rival_stars
+    entities = units | rival_orgs | {team_id}
+
+    issues: list[RefIssue] = []
+
+    # Id-space hygiene: a player and a rival org sharing an id would make every
+    # reference below ambiguous, so catch it before the per-reference checks
+    # produce confusing results. Empty in week6.
+    id_buckets: list[tuple[str, set[str]]] = [
+        ("team", {team_id}),
+        ("player", players),
+        ("rival_org", rival_orgs),
+        ("rival_star", rival_stars),
+    ]
+    bucket_of: dict[str, list[str]] = {}
+    for kind, ids in id_buckets:
+        for entity_id in ids:
+            bucket_of.setdefault(entity_id, []).append(kind)
+    for entity_id, kinds in sorted(bucket_of.items()):
+        if len(kinds) > 1:
+            issues.append(
+                RefIssue(
+                    path="<id-collision>",
+                    missing_id=entity_id,
+                    expected=tuple(
+                        [f"unique across {', '.join(sorted(kinds))}"]
+                    ),
+                )
+            )
+
+    unit_kinds = ("player", "rival_star")
+    entity_kinds = ("player", "rival_star", "team", "rival_org")
+
+    for pi, player in enumerate(world.players):
+        for ri, rel in enumerate(player.relationships):
+            if rel.with_ not in units:
+                issues.append(
+                    RefIssue(
+                        path=f"players[{pi}={player.id}].relationships[{ri}].with",
+                        missing_id=rel.with_,
+                        expected=unit_kinds,
+                    )
+                )
+        for mi, mem in enumerate(player.memory_log):
+            for ai, actor in enumerate(mem.actors):
+                if actor not in entities:
+                    issues.append(
+                        RefIssue(
+                            path=(
+                                f"players[{pi}={player.id}].memory_log[{mi}={mem.id}]"
+                                f".actors[{ai}]"
+                            ),
+                            missing_id=actor,
+                            expected=entity_kinds,
+                        )
+                    )
+
+    for ci, pair in enumerate(world.clash_pairs):
+        if pair.a not in units:
+            issues.append(
+                RefIssue(
+                    path=f"clash_pairs[{ci}].a",
+                    missing_id=pair.a,
+                    expected=unit_kinds,
+                )
+            )
+        if pair.b not in units:
+            issues.append(
+                RefIssue(
+                    path=f"clash_pairs[{ci}].b",
+                    missing_id=pair.b,
+                    expected=unit_kinds,
+                )
+            )
+        if pair.rival_org is not None and pair.rival_org not in rival_orgs:
+            issues.append(
+                RefIssue(
+                    path=f"clash_pairs[{ci}].rival_org",
+                    missing_id=pair.rival_org,
+                    expected=("rival_org",),
+                )
+            )
+
+    if world.last_week.opponent not in rival_orgs:
+        issues.append(
+            RefIssue(
+                path="last_week.opponent",
+                missing_id=world.last_week.opponent,
+                expected=("rival_org",),
+            )
+        )
+
+    feed_post_ids = {post.id for post in world.last_week.chirper_feed}
+    for fi, post in enumerate(world.last_week.chirper_feed):
+        if post.author_id is not None and post.author_id not in entities:
+            issues.append(
+                RefIssue(
+                    path=f"last_week.chirper_feed[{fi}={post.id}].author_id",
+                    missing_id=post.author_id,
+                    expected=entity_kinds,
+                )
+            )
+        if post.reply_to is not None and post.reply_to not in feed_post_ids:
+            issues.append(
+                RefIssue(
+                    path=f"last_week.chirper_feed[{fi}={post.id}].reply_to",
+                    missing_id=post.reply_to,
+                    expected=("chirper_feed.id",),
+                )
+            )
+
+    if issues:
+        raise SaveReferentialIntegrityError(source, issues)
+
+
 def load(path: Union[str, Path] = DEFAULT_SAVE_PATH) -> WorldState:
     """Parse a canned save YAML file into a validated :class:`WorldState`.
 
     Refuses a save whose ``schema_version`` this build cannot read — migrating an
     older one forward where a step is registered, or raising
-    :class:`SchemaVersionError` with a clear message otherwise.
+    :class:`SchemaVersionError` with a clear message otherwise. After shape
+    validation, the loader also runs :func:`check_referential_integrity`, so a
+    save that parses and matches the schema but references an unknown unit,
+    team, rival, or in-feed post id fails closed with a
+    :class:`SaveReferentialIntegrityError` naming each offender.
     """
     # The default is an ``importlib.resources`` traversable (which exposes
     # ``read_text`` directly and need not be a real filesystem path under a
@@ -141,7 +329,9 @@ def load(path: Union[str, Path] = DEFAULT_SAVE_PATH) -> WorldState:
     if not isinstance(data, dict):
         raise ValueError(f"{path}: expected a mapping at the top level")
     data = _ensure_loadable_version(data, path)
-    return WorldState.model_validate(data)
+    world = WorldState.model_validate(data)
+    check_referential_integrity(world, source=path)
+    return world
 
 
 def to_save_dict(world: WorldState) -> dict[str, Any]:

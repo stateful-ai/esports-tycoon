@@ -1,0 +1,44 @@
+# Negative fixture: a save claiming a schema_version this build does not speak.
+#
+# The body shape mirrors the canonical save just enough to prove the
+# version gate fires *before* the rest of the schema is touched: when
+# ``loader.load`` sees a version it cannot read, it raises
+# ``SchemaVersionError`` with a message naming the offending version and the
+# version this build supports — distinct from the corrupt-YAML failure (which
+# never reaches the gate) and from the referential-integrity failure (which
+# only fires after a successful shape-validate). The version chosen is one
+# arbitrarily far in the future so this fixture stays a future-version case
+# even after the supported version is bumped.
+schema_version: 9999
+seed: 0
+save:
+  id: week6
+  title: "Unknown version"
+  game: Vector Strike
+  tone: dry-mockumentary
+  flavor: valorant-flavored
+  fiction_note: "Negative fixture."
+  season:
+    league: x
+    division: y
+    total_weeks: 8
+    current_week: 6
+    playoff_cutoff: 6
+  team:
+    id: overcast
+    name: Overcast
+    tag: OVC
+    handle: "@overcast"
+    blurb: "blurb"
+    standing: { wins: 0, losses: 0, place: 1, of: 1, note: "" }
+players: []
+last_week:
+  week: 0
+  opponent: northwind
+  format: Bo3
+  result: loss
+  scoreline:
+    overcast: 0
+    opponent: 0
+    maps: []
+  headline: ""
