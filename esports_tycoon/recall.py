@@ -21,10 +21,18 @@ in priority order:
   score. There is no fallback to the open-form
   :attr:`~esports_tycoon.schema.MemoryEntry.tags` list: recall fails closed
   when the typed signal is absent, by design.
-* **active rivalry** — a flat ``+1`` if any actor in the beat has an
-  authored ``kind="rival"`` :class:`~esports_tycoon.schema.Relationship`
-  whose target appears in the memory entry (in its ``actors`` or its
-  ``recall_tags``).
+* **active rivalry** — a flat ``+1`` when any actor in the beat has an
+  authored ``kind="rival"`` :class:`~esports_tycoon.schema.Relationship` and
+  the memory entry rhymes with that rivalry. The entry rhymes by either
+  (a) *naming* the rival directly in its ``actors`` (the entry calls out
+  Halo, and Halo is the rival of someone on the beat); or (b) *opting
+  onto the rivalry plane* with ``"rivalry"`` in its
+  :attr:`~esports_tycoon.schema.MemoryEntry.recall_tags` *and* sharing an
+  actor with the beat (a Vex-owned rivalry-tagged memory surfaces when
+  Vex is on the line, but not when she's benched). The actor-overlap
+  guard on the tag route is deliberate — without it, every rivalry-
+  tagged memory in the save would surface for every beat carrying any
+  active rival, regardless of whose rivalry it documents.
 
 Sort is by ``(-actor_score, -tag_score, -rivalry_score)`` and Python's
 ``sorted`` is stable, so equal-scored entries fall back to save order
@@ -180,8 +188,10 @@ def _active_rivals(world: WorldState, actors: frozenset[str]) -> frozenset[str]:
 
     These are the rivalries the *fielded* roster carries into this match (Rook
     has Echo, Vex has Halo, Coyote has Bishop). A memory that drags one of
-    those names back in — by including them as an actor or marking ``rivalry``
-    in its recall tags — earns the rivalry bonus.
+    those names back in — either by naming the rival in its actors or by
+    opting onto the rivalry plane with ``"rivalry"`` in its recall tags —
+    earns the rivalry bonus. See :func:`score` for how the two routes are
+    matched.
     """
     rivals: set[str] = set()
     for player in world.players:
@@ -211,7 +221,30 @@ def score(why: WhyRecord, world: WorldState) -> list[Precedent]:
             entry_recall_tags = set(entry.recall_tags)
             matched_actors = frozenset(actors & entry_actors)
             matched_tags = frozenset(tags & entry_recall_tags)
-            matched_rivals = frozenset(rivals & (entry_actors | entry_recall_tags))
+            # Rivalry has two routes onto the recall plane and they live in
+            # disjoint value spaces — player IDs vs. the {choke,clutch,tilt,
+            # rivalry} enum — so a single intersection cannot express both.
+            #
+            # The named-actor route fires when the entry names a rival of
+            # someone on the beat (the rival appears in entry.actors). This is
+            # the strong, specific signal: "Vex once trash-talked Halo, and
+            # Halo is on the line today."
+            #
+            # The tag route fires when the entry opts onto the rivalry plane
+            # with ``"rivalry"`` in recall_tags AND one of its actors is on
+            # the beat AND that player has an active rival. The actor-overlap
+            # guard is what keeps "vex's rivalry-tagged memory" off of beats
+            # where Vex isn't fielded — without it, every rivalry-tagged
+            # memory in the save would surface on every beat with any active
+            # rival, regardless of whose rivalry it actually documents.
+            rivals_by_actor = rivals & entry_actors
+            rivalry_via_tag = (
+                "rivalry" in entry_recall_tags
+                and bool(entry_actors & actors)
+                and bool(rivals)
+            )
+            rivals_by_tag = rivals if rivalry_via_tag else frozenset()
+            matched_rivals = frozenset(rivals_by_actor | rivals_by_tag)
             actor_score = len(matched_actors)
             tag_score = len(matched_tags)
             rivalry_score = 1 if matched_rivals else 0

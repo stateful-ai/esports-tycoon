@@ -229,6 +229,108 @@ class TestScoring(_Fixture):
         # Sable's perspective — it simply doesn't appear in the candidate set.
         self.assertNotIn("mem:vex:trashtalk_halo_w2", by_sable)
 
+    def test_rivalry_recall_tag_lifts_an_entry_that_does_not_name_the_rival(self):
+        # The second rivalry route: an entry that *opts onto the rivalry plane*
+        # by tagging itself ``"rivalry"`` in recall_tags earns the bonus even
+        # when it does not name the rival in its actors. ``rivals`` is a set of
+        # player IDs and ``recall_tags`` is constrained to {choke, clutch,
+        # tilt, rivalry} — they share no values by construction, so this route
+        # cannot be implemented as a single intersection. Test it directly so a
+        # regression to ``rivals & (entry_actors | entry_recall_tags)`` (which
+        # silently turns the tag route off) fails loudly here.
+        from esports_tycoon.schema import (
+            LastWeek, Player, Role, SaveMeta, Scoreline, Season, Standing, Team, WorldState,
+        )
+
+        # Vex names Halo as a rival; the entry is *about Vex* (no Halo actor),
+        # only tagged ``rivalry`` on the recall plane.
+        entry = MemoryEntry(
+            id="mem:vex:rivalry_only_w2",
+            week=2, day=1, kind="social",
+            actors=["vex"],
+            summary="x", sentiment="neutral",
+            tags=["beef"],  # no rival-name colour tag
+            recall_tags=["rivalry"],
+        )
+        team = Team(
+            id="ovc", name="O", tag="O", handle="@o", blurb="",
+            standing=Standing(wins=0, losses=0, place=1, of=10, note=""),
+        )
+        save_meta = SaveMeta(
+            id="x", title="t", game="g", tone="dry", flavor="f", fiction_note="n",
+            season=Season(league="L", division="D", total_weeks=10, current_week=6, playoff_cutoff=4),
+            team=team,
+        )
+        last_week = LastWeek(
+            week=5, opponent="o", format="Bo3", result="loss",
+            scoreline=Scoreline(overcast=1, opponent=2, maps=[]),
+            headline="", chirper_feed=[],
+        )
+        vex = Player(
+            id="vex", name="V", handle="@v", role=Role.DUELIST, age=20,
+            signature_operative="x", bio="", persona_voice="",
+            traits=[],
+            relationships=[Relationship(**{"with": "halo", "kind": "rival", "status": "live", "note": "n"})],
+            memory_log=[entry],
+        )
+        synthetic = WorldState(
+            schema_version=0, seed=1, save=save_meta,
+            players=[vex], clash_pairs=[], rivals=[], last_week=last_week,
+        )
+
+        # An ``ace`` beat carries no recall tag (the kind has no analogue), so
+        # there is no actor- or tag-overlap pulling this entry in. The rivalry
+        # bonus is the only signal that can surface it.
+        why = WhyRecord(
+            scoreline=(13, 9), mvp="vex",
+            key_moments=[
+                KeyMoment(round=1, kind="ace", actors=["vex"], descriptor="5k", actor_ref="vex"),
+            ],
+            who_carried=[], who_tilted=[],
+            morale_deltas={"vex": 0}, seed=0, round_log=[],
+        )
+        ranked = {p.entry.id: p for p in score(why, synthetic)}
+        self.assertIn(
+            "mem:vex:rivalry_only_w2", ranked,
+            "rivalry-tagged entry must surface even when it does not name the rival",
+        )
+        precedent = ranked["mem:vex:rivalry_only_w2"]
+        self.assertEqual(precedent.rivalry_score, 1)
+        # The active rival is surfaced in ``matched_rivals`` so the relevance
+        # reason can name them — even though the entry itself doesn't.
+        self.assertIn("halo", precedent.matched_rivals)
+
+        # And the rendered relevance_reason names the rival.
+        results = {r.cite_id: r for r in recall(why, synthetic, k=5)}
+        self.assertIn("halo", results["mem:vex:rivalry_only_w2"].relevance_reason)
+        self.assertIn("active rivalry:", results["mem:vex:rivalry_only_w2"].relevance_reason)
+
+        # And the safety guard: if Vex is benched (not on the beat), her
+        # rivalry-tagged memory must NOT surface — without this guard every
+        # rivalry-tagged memory in the save would bleed onto every beat with
+        # any active rival, regardless of whose rivalry it actually documents.
+        # Build a second player on the synthetic world with no rivalries to
+        # field instead of Vex.
+        ghost = Player(
+            id="ghost", name="G", handle="@g", role=Role.SENTINEL, age=20,
+            signature_operative="x", bio="", persona_voice="",
+            traits=[], relationships=[], memory_log=[],
+        )
+        synthetic_two = synthetic.model_copy(update={"players": [vex, ghost]})
+        why_benched = WhyRecord(
+            scoreline=(13, 9), mvp="ghost",
+            key_moments=[
+                KeyMoment(round=1, kind="ace", actors=["ghost"], descriptor="5k", actor_ref="ghost"),
+            ],
+            who_carried=[], who_tilted=[],
+            morale_deltas={"ghost": 0}, seed=0, round_log=[],
+        )
+        ranked_benched = {p.entry.id: p for p in score(why_benched, synthetic_two)}
+        self.assertNotIn(
+            "mem:vex:rivalry_only_w2", ranked_benched,
+            "rivalry-tagged entry must not surface when its owner is benched",
+        )
+
     def test_stable_sort_breaks_ties_by_save_order(self):
         # Build a synthetic two-player world where two entries score identically.
         # The selector must return them in save order.
@@ -680,7 +782,12 @@ class TestRecallResultContract(_Fixture):
         )
         why = WhyRecord(
             scoreline=(13, 9), mvp="rook",
-            key_moments=[KeyMoment(round=1, kind="choke", actors=["rook"], descriptor="x")],
+            # The KeyMoment opts the beat onto the recall plane with the typed
+            # tag — recall reads ``KeyMoment.tag``, not ``kind``, so the choke
+            # signal has to be carried by ``tag="choke"``. ``who_tilted`` layers
+            # "tilt" on top, giving target_tags={"choke", "tilt"} so both entry
+            # orderings have something to match.
+            key_moments=[KeyMoment(round=1, kind="choke", actors=["rook"], descriptor="x", tag="choke")],
             who_carried=[], who_tilted=["rook"],  # also adds 'tilt' to target set
             morale_deltas={"rook": 0}, seed=0, round_log=[],
         )
