@@ -8,6 +8,11 @@ enforces stable cite IDs and the no-dangling-cites grounding contract.
 ``to_save_dict`` / ``dumps`` are the inverse, used by the round-trip test to
 prove the schema is a lossless description of the save.
 
+The save's on-disk shape — every field, with a one-line description — is
+documented in :data:`SCHEMA_DOC_PATH` (``saves/SCHEMA.md``). That page is the
+human-facing companion to the typed models in :mod:`esports_tycoon.schema`: if
+you are reaching for a field name, types, or default, that's the table to read.
+
 The save is self-describing (``m0_0_canonical_contract.md`` §3): it carries a
 ``schema_version``, and :func:`load` turns an older save into the current version
 or refuses it with a clear message. Migration is a *stub* in M0.0 — there is one
@@ -29,6 +34,21 @@ from esports_tycoon.schema import CURRENT_SCHEMA_VERSION, WorldState
 #: The one canonical canned save for the M0 slice. Resolved as package data so
 #: ``load`` works from an installed wheel, not only a source checkout.
 DEFAULT_SAVE_PATH = resources.files(__package__) / "data" / "week6.yaml"
+
+#: The human-facing save-schema reference (``saves/SCHEMA.md``): every field
+#: this loader accepts, with a one-line description and the load-time
+#: invariants. Pinned here so the loader is the single seam between the typed
+#: schema and the documentation about it — if SCHEMA.md ever moves, this
+#: pointer is the one place to update, and ``tests/test_schema_doc.py`` follows
+#: it. Lives in the repo (not as installed package data); resolved relative to
+#: the source file so it works in a source checkout, and is left ``None`` in
+#: contexts (e.g. a wheel install with no repo) where the file is absent.
+def _resolve_schema_doc_path() -> Path | None:
+    candidate = Path(__file__).resolve().parents[2] / "saves" / "SCHEMA.md"
+    return candidate if candidate.is_file() else None
+
+
+SCHEMA_DOC_PATH: Path | None = _resolve_schema_doc_path()
 
 
 class SchemaVersionError(ValueError):
