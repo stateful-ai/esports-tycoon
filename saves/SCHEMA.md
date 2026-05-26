@@ -280,6 +280,28 @@ review the resulting `diff` before committing.
 
 ---
 
+## Resolver entropy discipline
+
+The save's `seed` is the **only** entropy the match resolver is allowed to
+consume. `esports_tycoon.resolver.run` constructs exactly one local
+`random.Random(seed)` at the top of the function and threads it explicitly
+through every helper that needs a draw — nothing else. The resolver must
+never read process-global random state (`random.random()`, `random.choice()`,
+`random.SystemRandom()`, …), wall-clock time (`time.time`, `time.monotonic`,
+…), or generate UUIDs (`uuid.uuid4`, …). The seed-in-save contract on the
+top-level `seed` field leans on this: "same save ⇒ same match" can only be
+true if the resolver doesn't pick up anything ambient.
+
+The rule is guarded by
+`tests/test_resolver_determinism.py::TestResolverEntropyDiscipline`. The test
+poisons every public callable on the `random`, `time`, and `uuid` modules so
+each one raises on access, runs the resolver, and asserts the resulting
+`WhyRecord` is identical to one produced without the sabotage. Adding a new
+helper that needs a draw? Take the `Random` instance as an argument — don't
+import `random` (or `time`, or `uuid`) into `resolver.py`.
+
+---
+
 ## Versioning
 
 The save is self-describing. `schema_version` is the on-disk version the file

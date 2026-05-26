@@ -348,6 +348,92 @@ class TestLineupValidation(_WorldFixture):
             resolver.run(self.world, Decisions(opponent="northwind", lineup=["rook", "vex", "sable"]), 0)
 
 
+class TestResolverEntropyDiscipline(_WorldFixture):
+    """The resolver's *only* entropy source is its save-seeded local ``Random``.
+
+    Poison every public callable on the global ``random``, ``time``, and
+    ``uuid`` modules so that any reach for ambient process state would fail
+    loudly, then show the resolver still produces a ``WhyRecord`` that is
+    bit-identical to one produced without the sabotage. This locks the rule
+    documented in ``saves/SCHEMA.md`` — "same save ⇒ same match" can only hold
+    if the resolver doesn't pick up anything ambient.
+    """
+
+    def _poison(self, module):
+        """Replace every public callable on ``module`` with one that raises.
+
+        The cleanup is registered *before* any attribute is touched and shares
+        the ``original`` dict, so even a partial poisoning during teardown puts
+        the module back exactly as it was.
+        """
+        original: dict[str, object] = {}
+        self.addCleanup(self._restore, module, original)
+
+        def boom(*_args, _mod=module.__name__, **_kwargs):
+            raise AssertionError(
+                f"resolver reached for global {_mod} — entropy must be save-seeded"
+            )
+
+        for name in dir(module):
+            if name.startswith("_"):
+                continue
+            obj = getattr(module, name, None)
+            if not callable(obj):
+                continue
+            try:
+                setattr(module, name, boom)
+            except (AttributeError, TypeError):
+                continue  # read-only C-extension attribute; nothing to restore
+            original[name] = obj
+
+    @staticmethod
+    def _restore(module, original):
+        for name, obj in original.items():
+            setattr(module, name, obj)
+
+    def test_resolver_ignores_global_random_time_uuid(self):
+        import random as _random
+        import time as _time
+        import uuid as _uuid
+
+        decisions = Decisions(opponent="northwind")
+        # A second matchup with a different code path (the chaos jitter branch
+        # is only reached against The Chaos Agents) so the contract isn't only
+        # tested on one round-resolution shape.
+        chaos = Decisions(opponent="goblins")
+
+        reference_a = resolver.run(self.world, decisions, 12345)
+        reference_b = resolver.run(self.world, chaos, 7)
+
+        self._poison(_random)
+        self._poison(_time)
+        self._poison(_uuid)
+
+        sabotaged_a = resolver.run(self.world, decisions, 12345)
+        sabotaged_b = resolver.run(self.world, chaos, 7)
+
+        self.assertEqual(sabotaged_a, reference_a)
+        self.assertEqual(sabotaged_b, reference_b)
+
+    def test_poison_actually_bites(self):
+        """Self-check: the sabotage above really does break callers that touch
+        the globals — otherwise the discipline test would be a no-op."""
+        import random as _random
+        import time as _time
+        import uuid as _uuid
+
+        self._poison(_random)
+        self._poison(_time)
+        self._poison(_uuid)
+
+        with self.assertRaises(AssertionError):
+            _random.random()
+        with self.assertRaises(AssertionError):
+            _time.time()
+        with self.assertRaises(AssertionError):
+            _uuid.uuid4()
+
+
 class TestConsumesCanonicalTeamRoster(_WorldFixture):
     """Acceptance: the resolver fields a Team/roster loaded straight from
     ``week6.yaml`` and returns a result the caller reads with no field remapping.
