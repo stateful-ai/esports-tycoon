@@ -28,6 +28,7 @@ from esports_tycoon.runner import (  # noqa: E402
     SliceConfig,
     SliceDecisions,
     read_events,
+    render_feed_html,
     render_recap_md,
     run_slice,
     slice_events,
@@ -137,6 +138,17 @@ class TestRecapIsDerivedFromTheLog(_Fixture):
             self.assertEqual(
                 recap_path.read_text(encoding="utf-8"),
                 render_recap_md(read_events(events_path), self.world),
+            )
+
+    def test_written_feed_snapshot_is_the_projection_of_the_written_log(self):
+        # The feed snapshot is a view of the log too: feed.snapshot.html is exactly
+        # render_feed_html over the on-disk events, so neither artifact is authored
+        # independently of events.jsonl.
+        with tempfile.TemporaryDirectory() as tmp:
+            _, feed_path, events_path = write_artifacts(self.result(), self.world, tmp)
+            self.assertEqual(
+                feed_path.read_text(encoding="utf-8"),
+                render_feed_html(read_events(events_path), self.world),
             )
 
     def test_disk_roundtrip_yields_the_identical_recap(self):

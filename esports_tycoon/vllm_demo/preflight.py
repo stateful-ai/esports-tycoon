@@ -441,8 +441,9 @@ def run_preflight(
     latency = LatencyReport.measure(total_seconds, timing.durations, budget_seconds=latency_budget_seconds)
     report = SafetyReport(corpus=screen_corpus(), output_findings=screen_output(result))
 
-    recap_md = render_recap_md(slice_events(result, world), world)
-    feed_html = render_feed_html(result, world)
+    events = slice_events(result, world)
+    recap_md = render_recap_md(events, world)
+    feed_html = render_feed_html(events, world)
     digest = _digest(model, config, decisions, report.passed, recap_md, feed_html)
 
     return PreflightResult(

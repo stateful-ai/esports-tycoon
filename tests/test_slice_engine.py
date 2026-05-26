@@ -44,6 +44,11 @@ def recap_md(result, world):
     return render_recap_md(slice_events(result, world), world)
 
 
+def feed_html(result, world):
+    """The feed snapshot as the artifact path produces it — derived from the run-log."""
+    return render_feed_html(slice_events(result, world), world)
+
+
 class _Fixture(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -154,9 +159,9 @@ class TestDeterminism(_Fixture):
             self.assertEqual(again, first)
 
     def test_identical_feed_snapshot_on_rerun(self):
-        first = render_feed_html(run_slice(self.world, self.config, self.decisions), self.world)
+        first = feed_html(run_slice(self.world, self.config, self.decisions), self.world)
         for _ in range(5):
-            self.assertEqual(render_feed_html(run_slice(self.world, self.config, self.decisions), self.world), first)
+            self.assertEqual(feed_html(run_slice(self.world, self.config, self.decisions), self.world), first)
 
     def test_written_artifacts_are_byte_identical_across_runs(self):
         import tempfile
@@ -249,7 +254,7 @@ class TestGroundingAndSafety(_Fixture):
     def test_open_text_is_html_escaped_in_snapshot(self):
         nasty = '<script>alert(1)</script>'
         decisions = SliceDecisions(practice_focus="aim", fallout_post=nasty)
-        html = render_feed_html(run_slice(self.world, self.config, decisions), self.world)
+        html = feed_html(run_slice(self.world, self.config, decisions), self.world)
         self.assertNotIn("<script>alert(1)</script>", html)
         self.assertIn("&lt;script&gt;", html)
 
@@ -263,7 +268,7 @@ class TestGroundingAndSafety(_Fixture):
         try:
             result = run_slice(self.world, self.config, self.decisions)
             render_recap_md(slice_events(result, self.world), self.world)
-            render_feed_html(result, self.world)
+            render_feed_html(slice_events(result, self.world), self.world)
         finally:
             game_llm.get_llm = original
 

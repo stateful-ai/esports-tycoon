@@ -35,6 +35,7 @@ from typing import Optional
 from esports_tycoon.canned import loader
 from esports_tycoon.content.config import ContentConfig
 from esports_tycoon.runner.engine import run_slice, slice_id
+from esports_tycoon.runner.events import slice_events
 from esports_tycoon.runner.model import (
     OPEN_TEXT_MAX,
     PRACTICE_CHOICES,
@@ -263,9 +264,10 @@ def create_app(
         if snapshot.is_file():
             return snapshot.read_bytes()
         # Not finalized yet (e.g. /feed before the post is submitted): render the
-        # live feed, byte-identical to the snapshot in templated mode.
+        # live feed from the in-memory event stream, byte-identical to the snapshot
+        # in templated mode.
         result = run_slice(world, config, decisions, content_config=content_config)
-        return render_feed_html(result, world)
+        return render_feed_html(slice_events(result, world), world)
 
     @app.get("/healthz")
     def healthz():

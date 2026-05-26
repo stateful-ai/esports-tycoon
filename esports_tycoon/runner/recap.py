@@ -12,7 +12,9 @@ to ``runs/<slice_id>/`` for the founder to screenshot and share:
   week from the :class:`SliceResult`.
 * **``feed.snapshot.html``** — a standalone, self-contained Chirper page (inline
   CSS, no external assets) showing the week's feed exactly as the in-app feed view
-  renders it.
+  renders it. Like the recap, it is **a projection of the run-log**:
+  :func:`render_feed_html` reads the feed off the event stream, not off the
+  :class:`SliceResult`, so both artifacts are views over the same source.
 
 Keeping the recap a view over the run-log is the architecture principle here: the
 log is the system of record for what a run did, and the artifacts are derived
@@ -298,12 +300,21 @@ def _avatar_initial(name: str) -> str:
     return escape(cleaned[0].upper()) if cleaned else "?"
 
 
-def render_feed_html(result: SliceResult, world: WorldState) -> str:
-    """Render the standalone, self-contained Chirper snapshot for one slice run."""
+def render_feed_html(events: Sequence[SliceEvent], world: WorldState) -> str:
+    """Render the standalone, self-contained Chirper snapshot from a slice's run-log.
+
+    Like :func:`render_recap_md`, this is a **projection of the event stream**: the
+    posts, the scoreline, and the grounding tally are read out of events, with
+    ``world`` only resolving the opponent ID and the cite IDs each post references.
+    """
+    started = _one(events, SliceStarted)
+    match = _one(events, MatchResolved)
+    grounding = _one(events, GroundingSummary)
+
     save = world.save
-    opponent = _rival_name(world, result.config.opponent)
-    ovc, opp = result.scoreline
-    verdict = "win" if result.won else "loss"
+    opponent = _rival_name(world, started.opponent)
+    ovc, opp = match.scoreline
+    verdict = "win" if ovc > opp else "loss"
     title = f"Chirper — {save.team.name} Week {save.season.current_week}"
 
     parts: list[str] = []
@@ -321,11 +332,11 @@ def render_feed_html(result: SliceResult, world: WorldState) -> str:
     parts.append(f"<h1>Chirper · {escape(save.team.name)} Week {save.season.current_week}</h1>")
     parts.append(
         f"<p>{escape(save.team.name)} {ovc}–{opp} {escape(opponent)} "
-        f"on {escape(result.config.map)} ({escape(verdict)})</p>"
+        f"on {escape(started.map)} ({escape(verdict)})</p>"
     )
     parts.append("</header>")
 
-    for post in result.feed:
+    for post in _all(events, FeedPosted):
         parts.append('<article class="post">')
         parts.append(f'<div class="avatar">{_avatar_initial(post.author_name)}</div>')
         parts.append('<div class="body">')
@@ -347,8 +358,8 @@ def render_feed_html(result: SliceResult, world: WorldState) -> str:
 
     parts.append(
         f"<footer>Grounded in the canned memory log · "
-        f"{result.grounded_ok}/{result.grounded_total} lines resolved · "
-        f"slice {escape(result.slice_id)} · seed {result.config.seed}</footer>"
+        f"{grounding.grounded_ok}/{grounding.grounded_total} lines resolved · "
+        f"slice {escape(started.slice_id)} · seed {started.seed}</footer>"
     )
     parts.append("</main>")
     parts.append("</body>")
@@ -365,19 +376,21 @@ def write_artifacts(
     """Write ``events.jsonl`` + ``recap.md`` + ``feed.snapshot.html`` to
     ``<output_root>/<slice_id>/``.
 
-    The run-log is written first; the recap is then **derived from that persisted
-    log** (read back and projected), so the artifact is provably a view over
-    ``events.jsonl`` and never drifts from it. Returns the three written paths, in
-    ``(recap, feed, events)`` order. Files are written with UTF-8 and explicit
-    ``\\n`` newlines so they are byte-identical across platforms and re-runs.
+    The run-log is written first; **both** the recap and the feed snapshot are then
+    derived from that persisted log (read back and projected), so each artifact is
+    provably a view over ``events.jsonl`` and never drifts from it. Returns the
+    three written paths, in ``(recap, feed, events)`` order. Files are written with
+    UTF-8 and explicit ``\\n`` newlines so they are byte-identical across platforms
+    and re-runs.
     """
     run_dir = Path(output_root) / result.slice_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
     events_path = write_events(slice_events(result, world), run_dir / EVENTS_FILENAME)
+    events = read_events(events_path)
 
     recap_path = run_dir / RECAP_FILENAME
     feed_path = run_dir / FEED_FILENAME
-    recap_path.write_text(render_recap_md(read_events(events_path), world), encoding="utf-8", newline="\n")
-    feed_path.write_text(render_feed_html(result, world), encoding="utf-8", newline="\n")
+    recap_path.write_text(render_recap_md(events, world), encoding="utf-8", newline="\n")
+    feed_path.write_text(render_feed_html(events, world), encoding="utf-8", newline="\n")
     return recap_path, feed_path, events_path
