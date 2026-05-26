@@ -1,22 +1,28 @@
-"""The pre-playtest sign-off on the rendered "remembered me" line is durable.
+"""The pre-playtest review proposal for the rendered "remembered me" line is durable.
 
-This test pins the sign-off artifact ``docs/playtest_signoff_remembered_line.md``
+This test pins the proposal artifact ``docs/playtest_signoff_remembered_line.md``
 so the three things it carries cannot quietly drift apart from the test suite:
 
-1. The verdict itself — a ``GO`` decision recorded on the canonical Week-6
-   fixture's rendered ``Remembered:`` slot.
-2. The copy fix that was filed alongside the GO (so it does not get lost as
-   the next sharpening of the slot).
-3. The rendered shape the verdict was given against — if the slot's render
-   format changes, the sign-off must be re-given. The pin asserts the
-   slot still renders as ``> **Remembered:** {who}, week {N} — {summary}
-   (`{cite}`)`` against the canonical save, so a silent format change to
-   the line invalidates this test (and the doc that depends on it).
+1. The staged framing itself — the doc is explicitly an implementing-agent
+   proposal *awaiting* design's recorded GO, not a recorded GO. The
+   acceptance criterion the playtest evening hangs on is that **design**
+   confirms the line reads personal-not-coincidental, and only a design
+   reviewer can close that bar. The pin fails closed if the doc ever
+   self-issues a GO before that confirmation lands.
+2. The copy fix that was filed alongside the proposal (so it does not get
+   lost as the next sharpening of the slot — and so it remains the
+   recommended path if design returns NO-GO).
+3. The rendered shape the proposal was given against — if the slot's
+   render format changes, the proposal must be re-staged. The pin asserts
+   the slot still renders as ``> **Remembered:** {who}, week {N} —
+   {summary} (`{cite}`)`` against the canonical save, so a silent format
+   change to the line invalidates this test (and the doc that depends on
+   it).
 
-Together those three halves make the sign-off self-falsifying: a regression
-on the verdict text, the filed fix, or the rendered line each fails this
+Together those three halves make the proposal self-falsifying: a regression
+on the staged framing, the filed fix, or the rendered line each fails this
 test, which is the contract the doc itself promises in its "Where this
-decision is pinned" section.
+proposal is pinned" section.
 """
 
 from __future__ import annotations
@@ -44,7 +50,7 @@ from esports_tycoon.runner.recap import REMEMBERED_SLOT_LABEL  # noqa: E402
 
 
 class TestSignoffDoc(unittest.TestCase):
-    """The recorded sign-off is the durable proof the design review happened."""
+    """The staged proposal is the durable record of what design is being asked."""
 
     @classmethod
     def setUpClass(cls):
@@ -54,18 +60,58 @@ class TestSignoffDoc(unittest.TestCase):
         self.assertTrue(
             _SIGNOFF_DOC.exists(),
             "docs/playtest_signoff_remembered_line.md is the canonical "
-            "pre-playtest sign-off artifact for the bound precedent slot",
+            "pre-playtest review artifact for the bound precedent slot",
         )
 
-    def test_records_a_go_verdict(self):
-        # The acceptance criterion is asymmetric: GO greenlights the playtest
-        # evening, no-go opens a re-review. The doc must state which branch
-        # was taken, in unambiguous prose, so a reader can answer the question
-        # "was the slot signed off?" from this file alone.
+    def test_is_staged_for_design_not_self_issued(self):
+        # The acceptance criterion is that **design** confirms the line, and
+        # the implementing agent cannot stand in for that. The doc must mark
+        # itself as staged, carry an explicit confirmation block keyed for
+        # design to fill in, and must NOT have already filled it in. If the
+        # confirmation block ever loses its PENDING placeholders without a
+        # named reviewer + date taking their place, this test fails closed.
         self.assertRegex(
             self.text,
-            r"\*\*Verdict\.\*\*\s+\*\*GO\.\*\*",
-            "the sign-off doc must record a **Verdict.** **GO.** line",
+            r"\*\*Status\.\*\*\s+\*\*Staged for design\s*—\s*awaiting GO\.\*\*",
+            "the doc must mark itself **Staged for design — awaiting GO.** so "
+            "no reader mistakes it for a recorded sign-off",
+        )
+        self.assertIn(
+            "## Design confirmation",
+            self.text,
+            "the doc must carry a Design confirmation block for the reviewer "
+            "to record their verdict in",
+        )
+        # The PENDING placeholders are the unfilled state of the block. If a
+        # design reviewer fills the block in, they replace these verbatim; if
+        # they are missing AND no `**Design verdict.** **GO.**` / **NO-GO.**
+        # line has been recorded, the doc is in a broken halfway state and
+        # the test must fail.
+        has_pending = "_PENDING_" in self.text
+        has_recorded_verdict = bool(
+            re.search(
+                r"\*\*Design verdict\.\*\*\s+\*\*(GO|NO-GO)\.\*\*",
+                self.text,
+            )
+        )
+        self.assertTrue(
+            has_pending or has_recorded_verdict,
+            "the Design confirmation block must either still carry its "
+            "_PENDING_ placeholders (staged, awaiting design) or carry a "
+            "recorded `**Design verdict.** **GO.**` / **NO-GO.** line — "
+            "never neither",
+        )
+
+    def test_does_not_self_issue_a_verdict(self):
+        # Guard against regressing to the prior framing where the
+        # implementing agent recorded a `**Verdict.** **GO.**` line itself.
+        # Only `**Design verdict.** **GO.**` / **NO-GO.** is permitted, and
+        # only the design reviewer writes it.
+        self.assertNotRegex(
+            self.text,
+            r"(?<!Design )\*\*Verdict\.\*\*\s+\*\*GO\.\*\*",
+            "the doc must not carry a bare **Verdict.** **GO.** line — only "
+            "design records the verdict, under the **Design verdict.** label",
         )
 
     def test_names_the_slot_label_it_signed_off_on(self):
