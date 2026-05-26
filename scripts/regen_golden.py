@@ -22,9 +22,9 @@ The operation is idempotent: ``dumps(load(canonical_bytes)) == canonical_bytes``
 is a fixed point of the canonical serializer (see ``saves/SCHEMA.md`` §
 **Byte-identity normalization** and ``tests/test_golden_determinism.py``), so
 ``make regen-golden`` run twice in a row writes nothing the second time. CI
-guards the inverse — ``tests/test_week6_save_is_canonical.py`` asserts that
-the committed file is already at the fixed point, so a hand-edit that drifts
-from the canonical form fails the build with a pointer back to this script.
+guards the inverse — ``tests/test_regen_golden.py`` asserts that the committed
+file is already at the fixed point, so a hand-edit that drifts from the
+canonical form fails the build with a pointer back to this script.
 """
 
 from __future__ import annotations
