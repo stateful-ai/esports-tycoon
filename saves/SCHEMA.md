@@ -228,15 +228,44 @@ in.
 
 - **Lowercase, dash-snake ids** for players, orgs, and event slugs. The cite-id
   regex `mem:[a-z0-9_]+:[a-z0-9_]+` is enforced; mixed-case ids fail to load.
-- **Omit empty collections.** The save is hand-authored in the natural style of
-  omitting an empty `tags` / `seeded_by` / `cites` rather than spelling `[]`.
-  The round-trip uses `exclude_defaults` to keep dumps aligned with that
-  convention; an empty list re-injected into a file would silently break the
-  byte-identical round-trip.
+- **Omit empty collections.** Empty `tags` / `seeded_by` / `cites` are omitted
+  on the way out rather than spelled `[]`. The round-trip uses
+  `exclude_defaults` to keep dumps aligned with that convention; an empty list
+  re-injected into a file would silently break the byte-identical round-trip.
 - **`extra = "forbid"`.** Any key in the YAML that is not modelled here fails
   the load loudly. The schema is therefore a *faithful, total* description of
   the save — if you want a new field, add it to `schema.py` *and* to this page
   in the same change.
+
+## Regeneration & blessing
+
+`saves/week6.yaml` is a **generated artifact**, never hand-edited. The
+source-of-truth content is the typed [`WorldState`][WorldState] that the loader
+materializes from it; the on-disk bytes are whatever the canonical serializer
+(`esports_tycoon/canned/canonical.py`) emits for that world. The supported way
+to (re)write those bytes is:
+
+```sh
+make regen-golden        # rewrites saves/week6.yaml in place
+```
+
+This calls [`scripts/regen_golden.py`][regen_golden], which loads the save,
+validates it through the full loader (shape, cite-id, referential-integrity),
+and overwrites the file with the canonical serializer's output. The operation
+is a **fixed point of the canonical serializer**: running it twice in a row
+writes nothing the second time, so a no-op regen leaves the file (and its
+mtime) untouched. CI guards the inverse — `tests/test_regen_golden.py`
+asserts the committed file is already at the fixed point, so a hand-edit that
+drifts from canonical form (a re-folded scalar, an inserted comment, a
+re-ordered key, a flow-style list) fails the build with a pointer back to the
+script.
+
+A change to the save's *content* — a new player, an updated bio, a corrected
+memory log — flows through this script: edit the typed model or the YAML,
+re-run `make regen-golden`, and commit the canonical bytes. Do not commit a
+diff to `saves/week6.yaml` that the canonical serializer would not produce.
+
+[regen_golden]: ../scripts/regen_golden.py
 
 ## Byte-identity normalization
 
@@ -275,8 +304,9 @@ collection in the file is omitted on the way out so it isn't re-injected as
 `[]` and silently rewritten).
 
 When any of these rules has to change, regenerate the canonical golden with
-`UPDATE_GOLDEN=1 python -m pytest tests/test_golden_determinism.py` and
-review the resulting `diff` before committing.
+`UPDATE_GOLDEN=1 python -m pytest tests/test_golden_determinism.py`, re-bless
+the fixture with `make regen-golden`, and review the resulting `diff` before
+committing.
 
 ---
 
