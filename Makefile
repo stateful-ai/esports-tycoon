@@ -22,7 +22,7 @@ CONSTRAINTS ?= constraints.txt
 # failing run without editing this file.
 PYTEST_ARGS ?=
 
-.PHONY: help install test test-golden golden-update clean
+.PHONY: help install test test-golden golden-update regen-golden clean
 
 help:  ## Show available targets
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -45,6 +45,15 @@ test-golden:  ## Run only the golden + round-trip determinism tests
 # engine output; the diff must be reviewed before commit. Never invoked in CI.
 golden-update:  ## Rewrite committed goldens from current engine output (review the diff)
 	UPDATE_GOLDEN=1 $(PYTHON) -m pytest tests/test_golden_determinism.py $(PYTEST_ARGS)
+
+# Bless the canned save: re-emit ``saves/week6.yaml`` through the canonical
+# serializer so its bytes are a fixed point of dump(load(.)). The fixture is a
+# generated artifact (see ``saves/SCHEMA.md`` § *Regeneration & blessing*); the
+# script is idempotent — a second invocation against an already-canonical file
+# is a no-op and leaves the file (and its mtime) untouched. Review the diff
+# before committing.
+regen-golden:  ## Rewrite saves/week6.yaml through the canonical serializer (idempotent)
+	$(PYTHON) scripts/regen_golden.py
 
 clean:  ## Remove caches and build artifacts
 	rm -rf build dist *.egg-info .pytest_cache .mypy_cache .ruff_cache
