@@ -37,7 +37,15 @@ import tomllib
 import unittest
 
 import pydantic
+import pytest
 import yaml
+
+# M0 freeze (founder_brief.md): pinned-toolchain enforcement is deferred to
+# M1/post-gate — it backs the byte-identity contract, which itself is parked
+# until the screenshot gate fires.
+pytestmark = pytest.mark.skip(
+    reason="M0 freeze: pinned toolchain enforcement deferred to M1/post-gate"
+)
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 _PYPROJECT = _REPO_ROOT / "pyproject.toml"
