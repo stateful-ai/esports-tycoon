@@ -5,10 +5,14 @@
 # fails one rung *earlier* than ``missing_unit_ref.yaml``: the dangling cite is
 # caught inside ``WorldState._grounding_holds`` (a pydantic ``@model_validator``)
 # at schema-validation time, before ``check_referential_integrity`` ever runs.
-# The load surfaces as a ``pydantic.ValidationError`` whose message names both
-# the orphan cite id and the clash it lives in, so a hand-author can take the
-# message straight to the offending line — distinct from the referential-
-# integrity failure (which is a different typed error) and from the schema-
+# The loader lifts the underlying ``pydantic.ValidationError`` into the shared
+# ``loader.SaveError`` contract as a ``SaveSchemaError`` whose ``field_path``
+# is promoted off the typed ``GroundingError`` the validator raised (here
+# ``clash_pairs[0].seeded_by[0]``) and whose ``original``/``__cause__`` keeps
+# the per-field pydantic list one hop away — so a hand-author takes the field
+# path straight to the offending line, and a programmatic caller catches the
+# shared base instead of pydantic internals. Distinct from the referential-
+# integrity failure (a different ``SaveError`` subclass) and from the schema-
 # version gate (which fires before this one). The point of committing this as
 # a fixture is to prove the contract on a *real, on-disk* save, not just on a
 # programmatic mutation in a test.

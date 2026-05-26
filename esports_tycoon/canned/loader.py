@@ -31,9 +31,14 @@ from pathlib import Path
 from typing import Any, Callable, Union
 
 import yaml
+from pydantic import ValidationError
 
 from esports_tycoon.canned.canonical import dumps as _canonical_yaml_dumps
-from esports_tycoon.schema import CURRENT_SCHEMA_VERSION, WorldState
+from esports_tycoon.schema import (
+    CURRENT_SCHEMA_VERSION,
+    GroundingError,
+    WorldState,
+)
 
 #: The one canonical canned save for the M0 slice. Resolved as package data
 #: from the ``saves`` package so ``load`` works from an installed wheel, not
@@ -58,13 +63,95 @@ def _resolve_schema_doc_path() -> Path | None:
 SCHEMA_DOC_PATH: Path | None = _resolve_schema_doc_path()
 
 
-class SchemaVersionError(ValueError):
+class SaveError(ValueError):
+    """A save failed a load-time contract.
+
+    The shared typed error every load-path failure surfaces as: a YAML parse
+    failure, a top-level shape that is not a mapping, a ``schema_version`` this
+    build cannot read, a typed-schema rejection, or a cross-entity id reference
+    that does not resolve. Subclasses distinguish the contract that fired —
+    :class:`SaveYamlError`, :class:`SchemaVersionError`,
+    :class:`SaveSchemaError`, :class:`SaveReferentialIntegrityError` — but the
+    base type is what every :func:`load` failure raises, so callers can switch
+    on it once and read :attr:`field_path` and :attr:`source` uniformly. The
+    negative-fixture suite asserts on the shared type and the field path,
+    keeping the contract honest as new failure modes are added.
+    A :class:`ValueError` subclass so callers that catch ``ValueError`` on a
+    bad save keep working.
+
+    :attr:`field_path` always names *one* location in the save (the first /
+    most-actionable for multi-issue errors); errors that carry a full list of
+    issues (e.g. :class:`SaveReferentialIntegrityError`) expose the rest
+    through their own attribute so an author still gets every offender in one
+    round-trip.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        field_path: str,
+        source: object | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.field_path = field_path
+        self.source = source
+
+
+class SaveYamlError(SaveError):
+    """The save file is not a valid YAML document.
+
+    Wraps the underlying ``yaml.YAMLError`` as :attr:`__cause__` so the parser's
+    line / column hint stays one ``raise from`` away, while the shared
+    :class:`SaveError` contract — typed parent, ``field_path``, sourced
+    message — is what the negative-fixture suite asserts against.
+    """
+
+
+class SchemaVersionError(SaveError):
     """A save's ``schema_version`` cannot be loaded by this build.
 
-    A :class:`ValueError` subclass so callers that already catch ``ValueError``
-    on a malformed save keep working, while the distinct type still lets a caller
-    tell a version mismatch apart from other load failures.
+    A :class:`SaveError` subclass so callers that catch the shared type keep
+    working; the distinct subclass still lets a caller tell a version mismatch
+    apart from a shape or integrity failure. ``field_path`` is always
+    ``"schema_version"`` — the field the author needs to look at.
     """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        field_path: str = "schema_version",
+        source: object | None = None,
+    ) -> None:
+        super().__init__(message, field_path=field_path, source=source)
+
+
+class SaveSchemaError(SaveError):
+    """A save's typed-schema shape does not validate.
+
+    The loader catches the :class:`pydantic.ValidationError` raised out of
+    :meth:`WorldState.model_validate` and re-raises it as this typed
+    :class:`SaveError`, so a caller sees the shared contract instead of
+    pydantic internals. The original ``ValidationError`` is preserved on
+    :attr:`__cause__` (and on :attr:`original`) for callers that need the full
+    per-error list. :attr:`field_path` is derived from the first error's
+    location — and, when that location is the model root (a ``model_validator``
+    such as :meth:`WorldState._grounding_holds`), promoted from the typed
+    :class:`GroundingError` the validator raises, so the path always names a
+    concrete spot in the save.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        field_path: str,
+        source: object | None = None,
+        original: ValidationError | None = None,
+    ) -> None:
+        super().__init__(message, field_path=field_path, source=source)
+        self.original = original
 
 
 @dataclass(frozen=True)
@@ -82,22 +169,22 @@ class RefIssue:
     expected: tuple[str, ...]
 
 
-class SaveReferentialIntegrityError(ValueError):
+class SaveReferentialIntegrityError(SaveError):
     """A save references one or more ids that no entity in the save defines.
 
     Distinct from :class:`SchemaVersionError` (a version this build can't read)
-    and from :class:`pydantic.ValidationError` (a shape this schema doesn't
-    accept): this is a save that *parsed and shape-validated* but whose internal
+    and from :class:`SaveSchemaError` (a shape this schema doesn't accept):
+    this is a save that *parsed and shape-validated* but whose internal
     cross-references — a relationship pointing at no player, a clash citing an
     unknown rival star, a Chirper post whose ``reply_to`` names no other post —
-    fail to resolve. A :class:`ValueError` subclass so callers that broadly
-    catch ``ValueError`` on a bad save keep working; the distinct type lets a
-    caller tell a referential failure apart from the other load failures and
-    inspect :attr:`issues` programmatically.
+    fail to resolve. A :class:`SaveError` subclass so callers that catch the
+    shared contract keep working; the distinct subclass still lets a caller
+    tell a referential failure apart from the other load failures and inspect
+    :attr:`issues` programmatically. :attr:`field_path` is the first issue's
+    path; the full list lives on :attr:`issues`.
     """
 
     def __init__(self, source: object, issues: list[RefIssue]) -> None:
-        self.source = source
         self.issues = tuple(issues)
         bullets = "\n".join(
             f"  - {issue.path}: id {issue.missing_id!r} is not defined "
@@ -106,7 +193,9 @@ class SaveReferentialIntegrityError(ValueError):
         )
         super().__init__(
             f"{source}: save references unknown ids "
-            f"({len(issues)} unresolved):\n{bullets}"
+            f"({len(issues)} unresolved):\n{bullets}",
+            field_path=issues[0].path if issues else "<world>",
+            source=source,
         )
 
 
@@ -158,22 +247,71 @@ def _ensure_loadable_version(data: dict[str, Any], source: object) -> dict[str, 
     if "schema_version" not in data:
         raise SchemaVersionError(
             f"{source}: save has no schema_version (this build speaks "
-            f"{CURRENT_SCHEMA_VERSION}); it is too old or not an esports-tycoon save"
+            f"{CURRENT_SCHEMA_VERSION}); it is too old or not an esports-tycoon save",
+            source=source,
         )
     version = data["schema_version"]
     # ``bool`` is an ``int`` subclass; a stray ``true`` is not a version.
     if not isinstance(version, int) or isinstance(version, bool):
         raise SchemaVersionError(
-            f"{source}: schema_version must be an integer, got {version!r}"
+            f"{source}: schema_version must be an integer, got {version!r}",
+            source=source,
         )
     if version == CURRENT_SCHEMA_VERSION:
         return data
     if version > CURRENT_SCHEMA_VERSION:
         raise SchemaVersionError(
             f"{source}: save schema_version {version} is newer than this build "
-            f"supports (current {CURRENT_SCHEMA_VERSION}); upgrade esports-tycoon to load it"
+            f"supports (current {CURRENT_SCHEMA_VERSION}); upgrade esports-tycoon to load it",
+            source=source,
         )
     return migrate(data, version)
+
+
+def _loc_to_field_path(loc: tuple[Any, ...]) -> str:
+    """Render a pydantic error ``loc`` tuple as a save field path.
+
+    The model lives at the root, list elements are bracketed
+    (``players[0]``), and dict keys / field names are dot-joined
+    (``players[0].relationships[0].with``). An empty ``loc`` — the location
+    pydantic reports for ``model_validator`` failures, which run after every
+    field has already passed — collapses to ``<root>``; the loader still
+    promotes the path off a typed :class:`GroundingError` when one is in the
+    error's ``ctx``, so the surfaced :attr:`SaveError.field_path` names a
+    concrete spot in the save in practice.
+    """
+    if not loc:
+        return "<root>"
+    parts: list[str] = []
+    for segment in loc:
+        if isinstance(segment, int):
+            if parts:
+                parts[-1] = f"{parts[-1]}[{segment}]"
+            else:
+                parts.append(f"[{segment}]")
+        else:
+            parts.append(str(segment))
+    return ".".join(parts)
+
+
+def _field_path_from_validation_error(error: ValidationError) -> str:
+    """Pull the most actionable field path out of a pydantic ValidationError.
+
+    Walks the error list in order: a typed :class:`GroundingError` lifted out
+    of ``ctx`` wins (its ``field_path`` is the structured location the
+    grounding validator constructed); otherwise we fall back to the first
+    error's :func:`_loc_to_field_path`. Pydantic preserves the original
+    exception under ``ctx['error']`` in v2, which is the seam we rely on here
+    to keep the schema and the loader decoupled.
+    """
+    errors = error.errors()
+    if not errors:
+        return "<root>"
+    for entry in errors:
+        ctx_error = entry.get("ctx", {}).get("error") if entry.get("ctx") else None
+        if isinstance(ctx_error, GroundingError):
+            return ctx_error.field_path
+    return _loc_to_field_path(errors[0].get("loc", ()))
 
 
 def check_referential_integrity(
@@ -319,23 +457,47 @@ def check_referential_integrity(
 def load(path: Union[str, Path] = DEFAULT_SAVE_PATH) -> WorldState:
     """Parse a canned save YAML file into a validated :class:`WorldState`.
 
-    Refuses a save whose ``schema_version`` this build cannot read — migrating an
-    older one forward where a step is registered, or raising
-    :class:`SchemaVersionError` with a clear message otherwise. After shape
-    validation, the loader also runs :func:`check_referential_integrity`, so a
-    save that parses and matches the schema but references an unknown unit,
-    team, rival, or in-feed post id fails closed with a
-    :class:`SaveReferentialIntegrityError` naming each offender.
+    Every failure path surfaces as a :class:`SaveError` subclass: a YAML parse
+    failure as :class:`SaveYamlError`, a top-level non-mapping or a typed-schema
+    rejection as :class:`SaveSchemaError`, a ``schema_version`` this build
+    cannot read as :class:`SchemaVersionError`, and a dangling cross-entity id
+    reference as :class:`SaveReferentialIntegrityError`. The shared base type
+    carries :attr:`SaveError.field_path` naming the offending location in the
+    save, so a caller (or a hand-author of a failing fixture) can take the
+    message straight to the line at fault without knowing the subclass.
     """
     # The default is an ``importlib.resources`` traversable (which exposes
     # ``read_text`` directly and need not be a real filesystem path under a
     # zipped install); a caller-supplied ``str`` goes through ``Path``.
     text = path.read_text(encoding="utf-8") if hasattr(path, "read_text") else Path(path).read_text(encoding="utf-8")
-    data = yaml.safe_load(text)
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        # The yaml parser's own message names the line/column; keep it on the
+        # exception chain (``__cause__``) and surface the shared contract on
+        # top so the negative-fixture suite asserts on ``SaveError`` and
+        # ``field_path`` rather than on the parser's exception type.
+        raise SaveYamlError(
+            f"{path}: save is not a valid YAML document: {exc}",
+            field_path="<yaml>",
+            source=path,
+        ) from exc
     if not isinstance(data, dict):
-        raise ValueError(f"{path}: expected a mapping at the top level")
+        raise SaveSchemaError(
+            f"{path}: expected a mapping at the top level, got {type(data).__name__}",
+            field_path="<root>",
+            source=path,
+        )
     data = _ensure_loadable_version(data, path)
-    world = WorldState.model_validate(data)
+    try:
+        world = WorldState.model_validate(data)
+    except ValidationError as exc:
+        raise SaveSchemaError(
+            f"{path}: save does not match the typed schema: {exc}",
+            field_path=_field_path_from_validation_error(exc),
+            source=path,
+            original=exc,
+        ) from exc
     check_referential_integrity(world, source=path)
     return world
 
