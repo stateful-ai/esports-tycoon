@@ -30,6 +30,7 @@ from random import Random
 from typing import Optional
 
 from esports_tycoon.content.context import GenerationContext
+from esports_tycoon.recall import recall
 from esports_tycoon.schema import (
     GeneratedContent,
     MemoryEntry,
@@ -123,6 +124,12 @@ _MOMENT_TAGS: dict[str, frozenset[str]] = {
 #: Which key moment is most worth narrating, most colourful first.
 _MOMENT_PRIORITY = ("choke", "comeback", "ace", "blowout", "dominant", "clutch", "match_point", "closeout")
 
+#: How deep the narrator looks into the recalled ranking when binding a beat's
+#: cite. Eight is enough to step past memories owned by non-fielded characters
+#: (e.g. a rival star's authored history) and find one a beat's actors share —
+#: small enough that the search is bounded and predictable.
+_RECALL_DEPTH = 8
+
 #: Per-event-kind narrator beat templates. Every resolver-emittable kind has at
 #: least two tone-locked variations; never empty, never a placeholder. Templates
 #: use the slot vocabulary ``{actors}`` / ``{round}`` / ``{descriptor}`` /
@@ -212,12 +219,16 @@ def _render_narration(ctx: GenerationContext) -> GeneratedContent:
             "opp": opp,
         }
         colour = _pick(rng, _BEAT_TEMPLATES[lead_kind]).format(**slots)
-        # Prefer a precedent owned by the players in the beat (the same name the
-        # narration just used), then fall back to anyone fielded.
-        moment_tags = _MOMENT_TAGS.get(lead_kind, frozenset())
-        actors = [p for p in _fielded(ctx, why) if p.id in set(moment.actors)]
-        precedent = _pick_memory(rng, actors, tags=moment_tags) or _pick_memory(
-            rng, _fielded(ctx, why), tags=moment_tags
+        # The deterministic recall ranks every canned precedent against the
+        # whole match; prefer the highest-ranked entry whose actors overlap the
+        # named beat (so the cite reads like *this* round's echo), then fall
+        # back to the top recalled entry. ``recall`` is RNG-free, so the cite
+        # binds deterministically from the same scoring the recap reasons over.
+        beat_actors = set(moment.actors)
+        ranked = recall(why, ctx.world, k=_RECALL_DEPTH)
+        precedent = next(
+            (entry for entry in ranked if beat_actors & set(entry.actors)),
+            ranked[0] if ranked else None,
         )
         if precedent is not None:
             cites.append(precedent.id)
