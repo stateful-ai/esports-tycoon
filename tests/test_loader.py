@@ -42,10 +42,17 @@ class TestLoader(unittest.TestCase):
         # nothing invented. This is the round-trip the acceptance bar requires.
         self.assertEqual(loader.to_save_dict(self.world), self.raw)
 
-    def test_yaml_round_trip_reloads_equal(self):
-        # Dump back to YAML, reload, and the typed world is identical.
-        world2 = WorldState.model_validate(yaml.safe_load(loader.dumps(self.world)))
-        self.assertEqual(world2, self.world)
+    def test_yaml_round_trip_is_byte_identical(self):
+        # The acceptance bar for the canonical serializer: load → dump → load →
+        # dump produces the *identical bytes* on week6. Object-equality would
+        # tolerate a serializer that quietly re-formatted on every save (different
+        # quoting, different float padding); byte-equality does not. This is the
+        # property that makes the canonical bytes a fixed point and lets future
+        # save migrations diff with plain ``diff``.
+        first = loader.dumps(self.world)
+        reloaded = WorldState.model_validate(yaml.safe_load(first))
+        second = loader.dumps(reloaded)
+        self.assertEqual(first, second)
 
     def test_omitted_empty_collection_is_not_reinjected(self):
         # Regression: the save omits empty collections rather than spelling them
