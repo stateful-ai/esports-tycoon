@@ -1,0 +1,98 @@
+{
+  "feed": [
+    {
+      "author_handle": "@overcast",
+      "author_name": "Overcast",
+      "cites": [],
+      "grounding_status": "ok",
+      "text": "week 6: held the line. on to week 7."
+    },
+    {
+      "author_handle": "@rooktanaka",
+      "author_name": "Rook",
+      "cites": [
+        "mem:rook:echo_mind_games_w4"
+      ],
+      "grounding_status": "ok",
+      "text": "that's on me. we go again."
+    },
+    {
+      "author_handle": "@vexstrike",
+      "author_name": "Vex",
+      "cites": [
+        "mem:vex:claims_sable_site_w4"
+      ],
+      "grounding_status": "ok",
+      "text": "hard to win a round that's lost before i get there. but sure."
+    },
+    {
+      "author_handle": "@sablehold",
+      "author_name": "Sable",
+      "cites": [
+        "mem:sable:flash_argument_pixie_w3"
+      ],
+      "grounding_status": "ok",
+      "text": "next."
+    },
+    {
+      "author_handle": "@pixieflare",
+      "author_name": "Pixie",
+      "cites": [
+        "mem:pixie:coyote_silence_feud_w4"
+      ],
+      "grounding_status": "ok",
+      "text": "that one stings but i love this team, we go again \ud83e\udef6 #overcastfam"
+    },
+    {
+      "author_handle": "@coyotelurk",
+      "author_name": "Coyote",
+      "cites": [
+        "mem:coyote:needs_silence_w4"
+      ],
+      "grounding_status": "ok",
+      "text": "i'll remember this one. i remember all of them."
+    },
+    {
+      "author_handle": "@gridcast",
+      "author_name": "GridCast",
+      "cites": [],
+      "grounding_status": "ok",
+      "text": "and that's the map."
+    },
+    {
+      "author_handle": "@echo",
+      "author_name": "Echo",
+      "cites": [],
+      "grounding_status": "ok",
+      "text": "the scoreboard says it all."
+    }
+  ],
+  "halftime": {
+    "author": "@rooktanaka",
+    "cites": [],
+    "cost_usd": 0.0,
+    "grounding_status": "ok",
+    "kind": "halftime_ack",
+    "raw_llm_output": null,
+    "text": "Down 4. Reset. Run it back.",
+    "tokens_in": 0,
+    "tokens_out": 0
+  },
+  "halftime_scoreline": [
+    4,
+    8
+  ],
+  "narration": {
+    "author": null,
+    "cites": [
+      "mem:coyote:revenge_match_loss_w5"
+    ],
+    "cost_usd": 0.0,
+    "grounding_status": "ok",
+    "kind": "narration",
+    "raw_llm_output": null,
+    "text": "Apex Foundry beat Overcast 13\u20136. Helix. It was not close. Mariana and Aurelie came apart.",
+    "tokens_in": 0,
+    "tokens_out": 0
+  }
+}
