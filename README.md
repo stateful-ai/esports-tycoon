@@ -224,6 +224,51 @@ is the operational acceptance check, since CI has no GPU):
 ✓ SMOKE PASSED — endpoint is up, structured, and warm under budget.
 ```
 
+## Pick the local model (adherence spike)
+
+Which 7B/8B model do we run, and at what settings? `vllm` mode only works if the
+model reliably returns **schema-valid JSON for the adapter contract** — the
+`{text, cites}` reply, under each kind's token cap. The adherence spike answers
+that empirically. It runs **parallel to the spine** (imports the resolver and
+content backend read-only; never on the default templated path) and samples a
+candidate against the *exact* prompts the game would send: a fixed corpus of ten,
+built from the real `llm._build_request` for the real `_LLMReply` schema under the
+real `MAX_TOKENS` caps, spanning all three content kinds and all five personas.
+
+```bash
+# Sample the env-configured model (GAME_LLM_*; needs `pip install -e .[vllm]`).
+python -m esports_tycoon.model_spike
+
+# Or pin the settings under test — the spike doubles as a sweep: run it at a
+# couple of temperatures and adopt the model + settings that pass.
+python -m esports_tycoon.model_spike --model qwen3-8b --temperature 0.2
+```
+
+A pass is **≥9/10** schema-valid replies; exit 0 only when the candidate clears
+it. The output is the deliverable — the chosen model + settings (written to
+`artifacts/model_spike/adherence.json` with the per-sample verdicts behind it).
+Run the `smoke` above first, so a down/cold endpoint isn't mistaken for a
+non-adhering model.
+
+```text
+======================================================================
+ STRUCTURED-OUTPUT ADHERENCE SPIKE
+======================================================================
+ Model     : qwen2.5-7b-instruct
+ Settings  : temperature=0.2 max_retries=2 decode=prompted-json
+ Token caps: {'chirper_post': 80, 'narration': 320, 'halftime_ack': 200}
+----------------------------------------------------------------------
+  ✓ narration_apex_default           (cap 320) 3 tok out, 0.412s
+  ... (8 more) ...
+  ✓ halftime_even_default            (cap 200) 3 tok out, 0.231s
+----------------------------------------------------------------------
+ Adherence : ✓ 10/10 schema-valid (need 9/10 at threshold 0.9)
+======================================================================
+✓ CHOSEN MODEL : qwen2.5-7b-instruct
+   settings    : temperature=0.2, max_retries=2, decode=prompted-json, ...
+✓ SPIKE PASSED — this model + settings clears the adherence bar.
+```
+
 ## The vLLM-mode demo gate
 
 Before any **vLLM-mode** screenshot is taken or shared, it must clear one gate:
