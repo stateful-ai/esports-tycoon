@@ -2,24 +2,31 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T03:08:09Z'
+updated: '2026-05-26T03:53:47Z'
 summary: Cross-agent consensus
 ---
 
 ### Cross-agent consensus
-- **Milestone = the gate.** All three agents (eng_lead, infra_architect, chief_of_staff) treat M0.1's DoD as the founder playtest itself, not infra polish. Pass = screenshot of a grounded "remembered me" moment in zero-API templated mode within 2 evenings.
-- **Critical path is 5 hops:** M0.0 floor green → pure `recall(why_record, world_state, k)` → bind ≥1 precedent into templated render by cite ID through the existing grounding gate → minimum-playable 127.0.0.1 rebind (manager view + Chirper feed, 2 open-text inputs ≤120 chars, writes `recap.md` + `feed.snapshot.html`) → playtest.
-- **Architectural principle (raised by infra_architect, implicit in others):** memory recall/precedent selection is **engine logic, not LLM logic**. The model (M0.2) only narrates what the engine already chose. This is what makes "remembered me" possible in zero-API mode.
-- **Freeze holds.** Byte-identity, 100-run digest, negative fixtures, CI smoke, bless script, toolchain pin, golden-render extension, vLLM wiring, season runner — all parked until the gate fires.
-- **`TrainingDecision` stays in M0.2** (it mutates the locked schema).
-- **Same 4 new candidates surfaced independently by eng_lead and infra_architect**; chief_of_staff's "pass/fail card" is the same item as the "pre-registered playtest rubric" — merge.
+- **The milestone is the gate, not the code.** All three agents: M0.1 DoD = founder plays practice→match→fallout in zero-API mode and screenshots ≥1 grounded "remembered me" moment within 2 evenings, against a pre-registered rubric.
+- **Critical path is 5 hops, unchanged:** W0 M0.0 closeout → `recall()` selector (pure, deterministic, engine-side) → bind ≥1 precedent into templated render by cite ID → minimum-playable web/recap rebind → playtest.
+- **Freeze stands.** The 9 hardening tickets (byte-identity, CI bless script, negative fixtures, toolchain pin, shared `SaveError`, schema-boundary gate, etc.) stay parked until the gate fires. No agent wants to relitigate this.
+- **Parallelism opportunities:** Wave 2 copy authoring can start once Wave 1a's planted precedent shape is locked; Wave 3a two-input spec can land in parallel with Wave 1b selector code. Otherwise serial.
+- **Four prior candidates are now active tickets** (recall golden fixture, cite-ID grammar, two-input→WorldState spec, pre-registered rubric) — correctly dropped from candidate lists by all three agents.
 
-### Tensions / dissent
-- **None substantive.** Wave naming differs (eng_lead uses the prior doc's structure, infra_architect uses Waves 0–4, chief_of_staff uses Waves A–D) but the joins are identical: keystone before consumers; `recall()` contract + tag vocab before `week6.yaml` enrichment; `recall()` before recap rebind; pre-playtest sign-off before play; freeze honored throughout.
-- **Mild duplication risk:** chief_of_staff proposed a "pass/fail card" as new work; infra_architect already had it as "pre-registered playtest rubric." One ticket, not two.
+### Dissent / tensions
+- **None substantive.** Engineering Lead and Infra Architect propose different *new* candidates but they're additive, not conflicting. Chief of Staff emits zero new tasks and flags this as a phase-re-fire-without-state-change (seen x6) — worth noting as a recurring signal but not a blocker.
+- **Minor framing difference:** Engineering Lead frames the entry-gate as a `make`/`pytest` target gating Wave 1 start; Infra Architect treats W0 closeout as verification only. The smoke script makes the gating mechanical — recommend adopting it.
 
-### What stays out of scope (explicit non-goals)
-Byte-identity normalization, 100-run determinism digest, CI gate, bless script, negative fixtures, serializer toolchain pin, golden-render extension, LLM/vLLM mode wiring, season runner, `TrainingDecision` slice. All frozen behind the gate.
+### New work proposed this round (5 candidates, all gate-adjacent)
+1. **Wave 0 entry-gate smoke script** (eng_lead, ops/high) — mechanical gate before Wave 1 starts.
+2. **Recap layout convention for the bound precedent line** (eng_lead, design/high) — fixed scannable position + visual marker so the "remembered me" beat lands visually.
+3. **One-line founder-facing run command + README quickstart** (eng_lead, docs/medium) — `make play` so the gate doesn't fail on UX friction.
+4. **Playtest debrief template tied to R1/R2/R3** (eng_lead, docs/medium) — fills regardless of pass/fail, routes M0.2/M1 vs wedge revisit.
+5. **Zero-bind recap fallback spec** (infra_architect, eng/medium) — defines what the recap renders when `recall()` returns zero grounded precedents, prevents fallback from accidentally satisfying the gate.
 
-### Highest-risk seam
-The `recall()` → recap binding (Wave C in CoS framing / Wave 2 in infra). If the cite-ID grammar isn't pinned *before* the templated copy pack is authored, the copy gets rewritten. Lock grammar first.
+### Out of scope (do not touch)
+- vLLM mode, byte-identity normalization, CI bless script, schema-boundary gate, WhyRecord digest, toolchain pin, shared `SaveError`, golden-render extension, `TrainingDecision` slice — all frozen post-gate.
+
+### Risk watch
+- **Recurring phase-re-fire-without-state-change** (Chief of Staff, seen x6 across build/scope/plan). Worth the pre-phase short-circuit guard already in candidate queue, but not blocking.
+- **Zero-bind silent pass** — if `recall()` returns nothing and the recap renders a neutral line, the rubric must explicitly treat that as "no remembered-me moment fired" (not pass). Infra Architect's fallback spec closes this.
