@@ -4,7 +4,14 @@ The output is a deterministic byte form: dump → load → dump is a fixed point
 any save the schema accepts. The contract is what makes the round-trip golden
 test (``tests/test_golden_determinism.py``) trip on serializer drift, and it is
 what lets a future migration diff two saves with ``diff`` instead of a custom
-walker. Two properties keep the bytes stable:
+walker.
+
+The full, human-facing contract — key order, float repr, trailing newline,
+unicode, plus the block-style and ``exclude_defaults`` rules — lives in
+``saves/SCHEMA.md`` under the **Byte-identity normalization** section
+(:data:`CONTRACT_DOC_ANCHOR`). This module is the single seam that emits
+those bytes; if a rule changes, update SCHEMA.md and the canonical golden
+in the same diff. Two properties keep the bytes stable:
 
 * **Stable key order.** Keys are emitted in the order the input dict iterates
   them. For the canned save that is the Pydantic schema's field declaration
@@ -30,6 +37,13 @@ import math
 from typing import Any
 
 import yaml
+
+#: Anchor pointing at the human-facing byte-identity contract in
+#: ``saves/SCHEMA.md``. Pinned here so a test (and a future reader) can follow
+#: the code → docs jump without grepping; if the section heading ever moves,
+#: this constant and the golden test that references it are the single seam
+#: to update.
+CONTRACT_DOC_ANCHOR = "Byte-identity normalization"
 
 
 class _CanonicalDumper(yaml.SafeDumper):

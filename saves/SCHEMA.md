@@ -230,6 +230,48 @@ in.
   the save — if you want a new field, add it to `schema.py` *and* to this page
   in the same change.
 
+## Byte-identity normalization
+
+The save's on-disk shape is one half of the contract. The *bytes* a serializer
+emits for that shape are the other half — and they have to be a fixed point, so
+that `dump(load(week6.yaml))` always produces the same canonical bytes on every
+machine, every CPython, every PyYAML version. That guarantee is what lets a
+future migration diff two saves with plain `diff`, what makes the round-trip
+golden (`tests/test_golden_determinism.py`) trip on serializer drift, and what
+keeps committed saves reviewable.
+
+The canonical serializer (`esports_tycoon/canned/canonical.py`) emits exactly
+the form below; the golden test pins those bytes on the week-6 save:
+
+- **Key order is the input dict's iteration order.** No alphabetical sort. For
+  a `WorldState` reaching the dumper through Pydantic, that order is the
+  schema's field declaration order; for a plain `dict` it is insertion order.
+  Re-ordering keys would re-write every committed save on every dump.
+- **Floats use Python's shortest round-trip `repr`,** with `.0` spliced into
+  the mantissa when `repr` omits the dot (so `1e-05` → `1.0e-05` and `1e+20` →
+  `1.0e+20`) and the YAML 1.1 implicit-float resolver still matches without a
+  `!!float` tag. The specials are canonical tokens: `.nan`, `.inf`, `-.inf`.
+  `-0.0` is preserved as `-0.0`. There are no floats in week6 today, but the
+  rule still has to hold the moment one appears.
+- **The document ends with exactly one trailing newline** (`"…\n"`, never
+  `"…"` and never `"…\n\n"`), so committed saves are POSIX-clean text files.
+- **Unicode is emitted verbatim** (`allow_unicode=True`). The save carries
+  em-dashes (`—`) and accented names; `\uXXXX` escapes would defeat the
+  human-readable diff the canonical form promises.
+
+Two further document-shape rules follow from the same fixed-point goal and
+sit alongside the four above: **block style is forced** (no flow-style
+`[...]` / `{...}`, even on short scalar lists), and **defaults are omitted**
+on dump (the `exclude_defaults` rule in [Conventions](#conventions): an empty
+collection in the file is omitted on the way out so it isn't re-injected as
+`[]` and silently rewritten).
+
+When any of these rules has to change, regenerate the canonical golden with
+`UPDATE_GOLDEN=1 python -m pytest tests/test_golden_determinism.py` and
+review the resulting `diff` before committing.
+
+---
+
 ## Versioning
 
 The save is self-describing. `schema_version` is the on-disk version the file
