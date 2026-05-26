@@ -2,24 +2,30 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T08:05:05Z'
-summary: Consensus across all three agents
+updated: '2026-05-26T08:51:45Z'
+summary: Cross-agent consensus
 ---
 
-### Consensus across all three agents
-- **Single milestone, single gate.** Founder plays the templated zero-API slice (practice → match → fallout, 2 open-text inputs ≤120 chars) and screenshots ≥1 grounded "remembered me" moment within 2 evenings. The gate *is* the DoD.
-- **Architecture invariant.** Precedent recall is engine logic, not LLM logic. A pure deterministic `recall(why_record, world_state, k=3)` + templated copy pack bound by cite ID through the existing grounding gate. vLLM is post-gate.
-- **Critical path (5 hops).** Wave 0 smoke green → `recall()` selector → bind ≥1 precedent by cite ID → minimum-playable web/recap rebind → founder playtest. Wave 2 copy can parallelize with W1 once the planted-precedent shape is locked.
-- **Determinism floor is narrow.** Golden round-trip + same-seed → same-WhyRecord + `recall()` purity + `recall()` golden fixture under `LOCKED_SEED`. The 9 hardening tickets (byte-identity, 100-run digest, CI/bless/negative fixtures, toolchain pin) **stay frozen behind the screenshot**.
-- **Kill switch.** Wave time-tripwire ships a templated-baseline (single hard-coded precedent) if W1/W2 overrun — debrief must flag baseline mode.
+### Cross-agent consensus
+- **Milestone:** M0 gate — founder plays templated zero-API slice end-to-end and screenshots ≥1 grounded "remembered me" moment within 2 evenings.
+- **Architecture invariant:** memory recall is engine logic, not LLM logic. Templated mode binds precedents directly by cite ID; LLM mode is post-gate.
+- **Four-wave structure:** W0 closeout + freeze → W1 `recall()` + planted precedent + golden → W2 bind by cite-ID + templated copy → W3 minimum-playable rebind → W4 the gate (founder plays).
+- **Critical path:** Wave A/0 keystone (package scaffold + schemas + canned-save loader + `LOCKED_SEED`) → `recall()` selector (highest-risk seam) → bind → rebind → playtest.
+- **Determinism floor stays narrow:** golden round-trip + recall purity + recall golden fixture + recap snapshot. 9 hardening tickets stay frozen until the gate fires.
+- **3 newly-landed tickets slot cleanly:** fixture-edit safety check (Wave B), copy-pack cite-ID lint (Wave C), grounding-gate negative drop assertion (Wave C). No re-sequencing needed.
 
-### Dissent / tension to resolve
-- **Engineering & infra: 8 new candidates.** Engineering wants gate-adjacent safety nets — fixture-edit safety (does adding the planted precedent shift the WhyRecord digest?), templated copy-pack cite-ID lint at load time, a single frozen `recap.md.j2` owning layout + zero-bind + dropped-cite footer, and an explicit negative-drop assertion for un-resolvable cites. Infra wants reproducibility/audit/quality — git-SHA + Python + deps-hash embedded in every run-log, a Chirper feed content pack tied to the planted precedent, ambiguous-input routing fallback for the 2 open-text inputs, and an evidence-packet `manifest.yaml` + wall-clock budget.
-- **Chief of Staff: zero new tasks.** Argues v5 is canonical, nothing has changed since the last fire, the backlog already covers every implied ticket, and the right move is to *ship Wave A*, not write more reconciliation.
-- **My read.** CoS is right that the backlog is dense and Wave A is the bottleneck. But three of the 8 candidates are genuinely gate-protective and should land *before* the playtest: **fixture-edit safety** (silent WhyRecord drift would invalidate the golden), **copy-pack cite-ID lint** (silent unresolved cites would corrupt the screenshot), and **grounding-gate negative drop assertion** (proves the gate behaves as advertised). The other 5 are nice-to-have post-gate or already implicit in active tickets (e.g., evidence-manifest overlaps `gate.md` summary; git-SHA can be a one-liner inside the existing run-log schema ticket; Chirper content is design work, not a gate prerequisite).
+### Dissent / tension
+- **Engineering_lead + infra_architect both proposed 4 essentially identical new candidate tasks**, framing them as gaps the existing backlog does not cover:
+  1. Declared read-set contract for `recall()` (guards against silent coupling to non-canonical WorldState).
+  2. Full `recap.md` snapshot golden under `LOCKED_SEED` (current backlog only asserts the verbatim precedent line; this catches drift in layout, marker, dropped-cite footer, fallback).
+  3. Zero-outbound-network assertion (the "zero-API" claim is currently untested — only enforced by convention).
+  4. Evidence-packet `manifest.json` stamping `commit_sha`, `LOCKED_SEED`, `slice_id`, timestamp, per-file SHA-256 (makes the gate decision reproducible from the artifact alone).
+- **Chief_of_staff held the line: zero new tasks.** Their reasoning: the 3 newly-landed tickets already slot cleanly; backlog covers the critical path; resist re-fire churn (now ~10 tickets/re-fire landing).
+- **Reconciliation (mine):** the two independent leads converging on the same 4 gaps is signal, not noise. Each closes a "gate would not be reproducible / would not actually enforce zero-API" hole that the CoS hold-the-line note didn't address. Recommend approving all 4 and tagging them into the waves the leads already assigned.
 
-### Out of scope (explicitly frozen until the screenshot lands)
-Byte-identity normalization, negative fixtures, schema-boundary CI gate, toolchain pin, deterministic bless script, `make test` CI, golden-render extension to templated, WhyRecord canonical digest, M0.2 LLM-mode wiring + structured-output spike.
+### Out of scope (stay frozen until gate fires)
+- 100-run determinism digest, byte-identity contract (beyond the recap snapshot), serializer-pin, CI gate, negative-fixture suite, `TrainingDecision` slice, LLM-mode narration — all post-gate.
 
-### Approved-memory check
-No conflict with prior approved decisions. The "engine-side recall, templated default, vLLM post-gate" invariant is consistent with the seed-stage product principle that channels + persistent agents + approved memory must prove out before integrations.
+### Open risks
+- Wave A keystone (package scaffold + schemas + loader) is the single unbuilt blocker for everything downstream; if W0 entry smoke doesn't go green, the freeze doesn't record and W1 can't start.
+- The "remembered me" line *shape* needs founder pre-approval before W2 copy authoring — currently active but not done.
