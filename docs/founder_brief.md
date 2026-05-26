@@ -2,31 +2,26 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T16:37:59Z'
+updated: '2026-05-26T17:11:40Z'
 summary: Consensus across all three agents
 ---
 
 ### Consensus across all three agents
-- **Milestone:** M0.1 — The Thesis Test. Exit = founder gate (playtest screenshot).
-- **Keystone:** precedent recall is engine logic (pure deterministic `recall(why_record, world_state, k=3)`) bound into templated render by cite ID. Zero-API path is the gate; vLLM is a post-gate upgrade behind the same adapter.
-- **Sequencing:** Wave 0 (smoke + freeze) → 1a (contracts-only PR, no selector code) → 1b (selector + planted precedent + golden) → 2 (bind + copy pack + verbatim recap E2E) → 3 (web/recap rebind + `play` one-liner + snapshot + zero-network) → 4 (pre-registered rubric + playtest + evidence packet).
-- **Frozen post-gate:** byte-identity normalization, canonical YAML serializer pinning, CI/`make test`, 100-run digest, schema-boundary gate, deterministic bless script, typed SaveError, RI validator polish, TrainingDecision slice. All nine hardening tickets stay frozen until the gate fires.
-- **DoD floor:** `recall()` purity + golden, planted-precedent text verbatim in `recap.md` under LOCKED_SEED, zero-bind fallback exercised, snapshot golden green, zero-outbound-network assertion green, evidence packet self-sufficient.
+- v8 plan, sequencing, and DoD are stable. Critical path: W0 smoke green + freeze → W1 keystone (`recall()` + content + golden) → W2 (bind + copy) → W3 (rebind + recap snapshot + zero-network) → W4 (gate w/ manifest-stamped evidence).
+- DoD = the playtest: founder plays templated zero-API slice in 2 evenings via one-line `play` on a clean checkout; ≥1 grounded "remembered me" screenshot; pre-registered rubric recorded before play.
+- Architecture invariant unchanged: memory recall is engine logic, not LLM logic.
+- Hardening freeze holds; vLLM is post-gate.
 
-### Tension: new candidates this pass
-- **engineering_lead** proposes 4 new candidates.
-- **infra_architect** and **chief_of_staff** explicitly hold the line at zero new tasks (active backlog is already dense; adding to it is planning bloat against a 2-evening budget).
+### Tensions / dissent
+- **chief_of_staff said "no state change, zero new tasks"** — but engineering_lead and infra_architect each surfaced 4 legitimately new playtest-quality candidates not in the active ticket list. CoS was right about plan/sequencing/DoD; wrong that no new work surfaced. Resolution: accept the new candidates; the *plan* is stable but the *task surface* genuinely grew.
+- **Latency budgets at two scales** — eng proposes whole-slice (cold ≤5s, warm ≤2s/beat); infra proposes `recall()` p99 ≤50ms. Not in conflict — keep both, one guards selector perf, the other guards perceived UX.
+- **Input handling surfaced twice** — eng's normalization contract (NFC, whitespace, length cap) and infra's ambiguous/empty/over-length fallback spec are complementary, not duplicates. Merge into one task with both halves.
+- **Anchoring the founder** — eng wants a CI-enforced line-shape fixture+lint (replacing verbal sign-off); infra wants a README pre-play briefing paragraph. Different surfaces, both keep.
 
-**My adjudication.** Two of the four are genuinely new risk surfaces not covered by existing tickets and cheap to land:
-1. **In-process determinism guard** — same-process repeated invocation produces byte-identical output. Catches module-level state, lru_cache, import-order leakage that the load-once round-trip test won't. Real failure mode, cheap test.
-2. **Recall-side input snapshot fixture** — checks in `(why_record, world_state)` for the locked seed so recall-golden re-runs against a frozen fixture, not a live load. Cleanly separates upstream WorldState/WhyRecord drift from recall ordering drift when something breaks.
+### Out of scope (do not pick up)
+- Byte-identity normalization beyond W1 needs, 100-run digest, full bless script, schema-boundary CI gate, `TrainingDecision` slice — all frozen post-gate.
+- vLLM bring-up beyond the existing smoke — M0.2.
+- Any new architectural seam beyond the three already named (recall selector, precedent→render bind, minimum-playable rebind).
 
-The other two I'm dropping as polish:
-- **W0 entry-gate sentinel checklist** — duplicates the existing Wave 0 entry-gate smoke ticket; fold the assertion strings into that ticket's acceptance, don't mint a sibling.
-- **Single-source gate clock** — real but tiny; can land inside the `manifest.json` generator ticket. No need for its own row.
-
-### Out of scope until the gate fires
-Anything that doesn't move W0→W1a→W1b→W2→W3→W4. If a new idea isn't on the critical path, log it for M0.2.
-
-### Conflicts with approved decisions / memory
-None observed. Plan respects the freeze and the zero-API templated path as the gate.
+### Harness signal
+BUILD phase has now re-fired 8× on this stream with no state change. CoS already has the pre-phase short-circuit guard in the candidate queue — this is the single highest-value harness improvement before the next BUILD fire. Founder Ask below.
