@@ -28,11 +28,12 @@ import yaml
 # Repository root is three parents up from this file:
 # esports_tycoon/cast_lock/spec.py -> esports_tycoon -> <repo root>
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-# The canned save ships as package data; resolve it via the top-level package so
-# the gate finds the same bytes whether run from a checkout or an install. We
-# join onto the package directory rather than importing ``esports_tycoon.canned``
-# so this module keeps its zero coupling to the pydantic schema.
-DEFAULT_SAVE_PATH = resources.files("esports_tycoon") / "canned" / "data" / "week6.yaml"
+# The canned save ships as package data under the ``saves`` package (the single
+# documented save root — ``saves/week6.yaml``), so the gate finds the same bytes
+# whether run from a checkout or an install. Resolved through ``importlib.resources``
+# rather than importing ``esports_tycoon.canned`` so this module keeps its zero
+# coupling to the pydantic schema.
+DEFAULT_SAVE_PATH = resources.files("saves") / "week6.yaml"
 DEFAULT_DOC_PATH = _REPO_ROOT / "docs" / "tone_and_cast_lock.md"
 
 # Acceptance thresholds (from scope-m0.md and the M0.0 ticket).
