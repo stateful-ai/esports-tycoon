@@ -10,14 +10,17 @@ module, would let a draft copy of a type quietly drift back onto the load /
 resolve path; the contract relies on grep, not inspection, to keep that from
 happening.
 
-The second half of the gate is the "not-yet-built import" rule. A
-``from esports_tycoon.chirper import …`` typed against an unbuilt module would
-otherwise only surface at runtime — and only on a code path that actually
-executes the import. A static walk over the source tree catches the dangling
-import the moment it lands, so the CI failure is local to the offending file
-instead of leaking out as a confusing test-collection error several layers
-away. The completed resolver (and every other built submodule) imports
-cleanly; only references to modules that genuinely don't exist on disk fail.
+The second half of the gate is the dangling-import rule: every
+``from esports_tycoon.X import …`` (or ``import esports_tycoon.X``) must point
+at a module that actually exists on disk. The rule is deliberately
+existence-on-disk rather than a hardcoded deny-list — the module set grows
+over the build, and the invariant we care about is "the source tree contains
+no references to nonexistent submodules", not "these specific names must
+never be imported". A typo (``chirpr``), a stale reference left after a
+rename, or a forward reference to genuinely-unbuilt work (``chirper``) all
+fall under the same rule. The check runs as a static walk, so the CI failure
+is local to the offending file instead of leaking out as a confusing
+test-collection error several layers away.
 
 Both halves of the gate run as pure-Python AST walks over the repo's
 ``.py`` files — no imports of the code under test are performed here, so a
@@ -74,11 +77,41 @@ def _iter_py_files() -> list[pathlib.Path]:
     return sorted(files)
 
 
-def _resolve_submodule(dotted: str) -> pathlib.Path | None:
-    """Map an ``esports_tycoon.X[.Y]`` dotted module to its on-disk file.
+def _names_exported_by_init(init_path: pathlib.Path) -> frozenset[str]:
+    """Names a package's ``__init__.py`` defines or re-exports at module level.
 
-    Returns the file path if the module exists (either as ``X.py`` or
-    ``X/__init__.py``), or ``None`` if the dotted path doesn't resolve.
+    Just enough static analysis to recognize ``from .x import Y`` /
+    ``Y = …`` / ``class Y:`` / ``def Y(…)`` so that a dotted import like
+    ``from esports_tycoon.web.views import …`` resolves when ``views`` is a
+    name re-exported from ``web/__init__.py`` rather than a file on disk.
+    """
+    try:
+        tree = ast.parse(init_path.read_text(encoding="utf-8"), filename=str(init_path))
+    except (OSError, SyntaxError):
+        return frozenset()
+    names: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            names.add(node.name)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    names.add(target.id)
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names.add(node.target.id)
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            for alias in node.names:
+                names.add(alias.asname or alias.name.split(".")[0])
+    return frozenset(names)
+
+
+def _resolve_submodule(dotted: str) -> pathlib.Path | None:
+    """Map an ``esports_tycoon.X[.Y…]`` dotted import to its on-disk file.
+
+    Resolves either a file (``X.py``), a package (``X/__init__.py``), or — for
+    a trailing name re-exported by an intermediate package's ``__init__.py``
+    rather than written as its own file — the parent ``__init__.py``. Returns
+    ``None`` only when the path genuinely doesn't resolve.
     """
     parts = dotted.split(".")
     if parts[0] != "esports_tycoon" or len(parts) < 2:
@@ -90,6 +123,15 @@ def _resolve_submodule(dotted: str) -> pathlib.Path | None:
     module_file = base.with_suffix(".py")
     if module_file.exists():
         return module_file
+    # Trailing leaf may be a name re-exported from the parent package's
+    # __init__.py (``from esports_tycoon.X.Y import Z`` where Y is a name in
+    # X/__init__.py, not its own file).
+    if len(parts) >= 3:
+        parent = _REPO_ROOT.joinpath(*parts[:-1])
+        parent_init = parent / "__init__.py"
+        if parent.is_dir() and parent_init.exists():
+            if parts[-1] in _names_exported_by_init(parent_init):
+                return parent_init
     return None
 
 
@@ -248,12 +290,12 @@ class TestSchemaBoundaryOnRepo(unittest.TestCase):
 
     def test_no_imports_of_unbuilt_submodules(self):
         # Any ``from esports_tycoon.X import …`` (or ``import esports_tycoon.X``)
-        # whose target file doesn't exist on disk is, by definition, an import
-        # of a not-yet-built module. The completed resolver, content adapter,
-        # grounding and safety modules all resolve cleanly today; the rule
-        # exists so a future reference to (e.g.) ``esports_tycoon.chirper``
-        # fails the build the moment it's introduced rather than several
-        # imports deep at runtime.
+        # whose target file doesn't exist on disk is a dangling reference —
+        # either a typo, a stale reference left after a rename, or a forward
+        # reference to genuinely-unbuilt work. The gate fails the build the
+        # moment it lands rather than several imports deep at runtime. Whether
+        # any particular submodule happens to exist today is incidental; the
+        # invariant is "no dangling references", not a fixed deny-list.
         self.assertEqual(
             self.findings["missing_module_imports"],
             [],
@@ -322,6 +364,25 @@ class TestSchemaBoundaryScanner(unittest.TestCase):
         result = _scan(source, filename="esports_tycoon/draft.py")
         self.assertEqual(
             result["missing_module_imports"], [(1, "esports_tycoon.chirper")]
+        )
+
+    def test_dotted_import_targeting_init_reexport_resolves(self):
+        # ``content/__init__.py`` re-exports ``generate_content`` from
+        # ``content.adapter``. A dotted import targeting that name must not
+        # be flagged as missing just because there's no ``generate_content.py``
+        # file — Python (and the gate) follow re-exports.
+        source = "from esports_tycoon.content.generate_content import noop\n"
+        result = _scan(source, filename="esports_tycoon/draft.py")
+        self.assertEqual(result["missing_module_imports"], [])
+
+    def test_dotted_import_targeting_unknown_leaf_is_flagged(self):
+        # The re-export fallback must not silently accept arbitrary leaves —
+        # only names actually defined or re-exported by the parent's __init__.
+        source = "from esports_tycoon.content.nonexistent import noop\n"
+        result = _scan(source, filename="esports_tycoon/draft.py")
+        self.assertEqual(
+            result["missing_module_imports"],
+            [(1, "esports_tycoon.content.nonexistent")],
         )
 
     def test_existing_resolver_import_is_allowed(self):
