@@ -1,44 +1,54 @@
 {
   "key_moments": [
     {
+      "actor_ref": "sable",
       "actors": [
         "sable"
       ],
       "descriptor": "won it off the back foot",
       "kind": "clutch",
-      "round": 6
+      "round": 6,
+      "tag": "clutch"
     },
     {
+      "actor_ref": "rook",
       "actors": [
         "rook"
       ],
       "descriptor": "won it off the back foot",
       "kind": "clutch",
-      "round": 16
+      "round": 16,
+      "tag": "clutch"
     },
     {
+      "actor_ref": "sable",
       "actors": [
         "sable"
       ],
       "descriptor": "5k",
       "kind": "ace",
-      "round": 17
+      "round": 17,
+      "tag": null
     },
     {
+      "actor_ref": "coyote",
       "actors": [
         "coyote"
       ],
       "descriptor": "5k",
       "kind": "ace",
-      "round": 21
+      "round": 21,
+      "tag": null
     },
     {
+      "actor_ref": "coyote",
       "actors": [
         "coyote"
       ],
       "descriptor": "13-10",
       "kind": "closeout",
-      "round": 23
+      "round": 23,
+      "tag": "clutch"
     }
   ],
   "morale_deltas": {

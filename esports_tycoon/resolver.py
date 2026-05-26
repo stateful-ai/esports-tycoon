@@ -40,6 +40,7 @@ from esports_tycoon.schema import (
     KeyMoment,
     Player,
     PracticeFocus,
+    RecallTag,
     Role,
     RoundResult,
     TacticalStance,
@@ -47,7 +48,26 @@ from esports_tycoon.schema import (
     WorldState,
 )
 
-__all__ = ["run"]
+__all__ = ["run", "KIND_TO_RECALL_TAG"]
+
+
+#: Mapping from the resolver's narrator-facing :attr:`KeyMoment.kind` to the
+#: frozen recall vocabulary (:data:`~esports_tycoon.schema.RecallTag`). Kinds
+#: that do not rhyme with any recall tag (e.g. ``"ace"``) deliberately have no
+#: entry — the beat is still narrated, but it contributes no tag-overlap signal
+#: to the deterministic precedent recall (which is what "fails closed on
+#: off-vocabulary tags" means in practice). The mapping is *one-way*: the wider
+#: ``kind`` vocabulary stays unconstrained for the templated copy pack, while
+#: the recall plane stays small and typed.
+KIND_TO_RECALL_TAG: dict[str, RecallTag] = {
+    "choke": "choke",
+    "clutch": "clutch",
+    "comeback": "clutch",
+    "dominant": "clutch",
+    "closeout": "clutch",
+    "blowout": "tilt",
+    "match_point": "tilt",
+}
 
 # --------------------------------------------------------------------------- #
 # Tuning. All grounding lives in these tables, so the model is auditable at a
@@ -404,7 +424,14 @@ def run(state: WorldState, decisions: Decisions, seed: Optional[int] = None) -> 
             if rng.random() < _ACE_PROB:
                 impact[star] += 2
                 key_moments.append(
-                    KeyMoment(round=rnd, kind="ace", actors=[star], descriptor="5k")
+                    KeyMoment(
+                        round=rnd,
+                        kind="ace",
+                        actors=[star],
+                        descriptor="5k",
+                        tag=KIND_TO_RECALL_TAG.get("ace"),
+                        actor_ref=star,
+                    )
                 )
             elif (
                 len(recent_results) >= _BACK_FOOT_LOSSES
@@ -413,7 +440,14 @@ def run(state: WorldState, decisions: Decisions, seed: Optional[int] = None) -> 
             ):
                 impact[star] += 1
                 key_moments.append(
-                    KeyMoment(round=rnd, kind="clutch", actors=[star], descriptor="won it off the back foot")
+                    KeyMoment(
+                        round=rnd,
+                        kind="clutch",
+                        actors=[star],
+                        descriptor="won it off the back foot",
+                        tag=KIND_TO_RECALL_TAG.get("clutch"),
+                        actor_ref=star,
+                    )
                 )
         else:
             opponent += 1
@@ -475,30 +509,39 @@ def run(state: WorldState, decisions: Decisions, seed: Optional[int] = None) -> 
     # --- Macro key moments ------------------------------------------------- #
     closeout_star = star_by_round.get(final_round, mvp)
     if won_match and peak_opp_lead >= _SWING_THRESHOLD:
+        actors = who_carried or [mvp]
         key_moments.append(
             KeyMoment(
                 round=peak_opp_lead_round,
                 kind="comeback",
-                actors=who_carried or [mvp],
+                actors=actors,
                 descriptor=f"clawed back from {peak_opp_lead} down",
+                tag=KIND_TO_RECALL_TAG.get("comeback"),
+                actor_ref=actors[0],
             )
         )
     if (not won_match) and peak_ovc_lead >= _SWING_THRESHOLD:
+        choke_actor = _igl_id(lineup) or mvp
         key_moments.append(
             KeyMoment(
                 round=peak_ovc_lead_round,
                 kind="choke",
-                actors=[_igl_id(lineup) or mvp],
+                actors=[choke_actor],
                 descriptor=f"threw a {peak_ovc_lead}-round lead",
+                tag=KIND_TO_RECALL_TAG.get("choke"),
+                actor_ref=choke_actor,
             )
         )
     if abs(overcast - opponent) >= _BLOWOUT_MARGIN:
+        blowout_actors = who_carried or [mvp]
         key_moments.append(
             KeyMoment(
                 round=final_round,
                 kind="dominant" if won_match else "blowout",
-                actors=who_carried or [mvp],
+                actors=blowout_actors,
                 descriptor=f"{overcast}-{opponent}",
+                tag="clutch" if won_match else "tilt",
+                actor_ref=blowout_actors[0],
             )
         )
     # The decisive round is always worth narrating, so reserve it a slot and let
@@ -508,6 +551,8 @@ def run(state: WorldState, decisions: Decisions, seed: Optional[int] = None) -> 
         kind="closeout" if won_match else "match_point",
         actors=[closeout_star],
         descriptor=f"{overcast}-{opponent}",
+        tag="clutch" if won_match else "tilt",
+        actor_ref=closeout_star,
     )
     key_moments.sort(key=lambda m: (m.round, m.kind))
     key_moments = key_moments[: _MAX_KEY_MOMENTS - 1] + [closeout]

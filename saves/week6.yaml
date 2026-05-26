@@ -114,6 +114,9 @@ players:
     - rival
     - echo
     - clutch-call
+    recall_tags:
+    - clutch
+    - rivalry
   - id: mem:rook:vex_overrides_call_w2
     week: 2
     day: 2
@@ -202,6 +205,9 @@ players:
     - comms
     - tilt
     - foreshadow
+    recall_tags:
+    - choke
+    - tilt
 - id: vex
   name: Mariana "Vex" Okonkwo
   handle: '@vexstrike'
@@ -272,6 +278,8 @@ players:
     - halo
     - chirper
     - beef
+    recall_tags:
+    - rivalry
   - id: mem:vex:overrides_rook_w2
     week: 2
     day: 2
@@ -301,6 +309,8 @@ players:
     - benched
     - discipline
     - tilt
+    recall_tags:
+    - tilt
   - id: mem:vex:goblins_upset_w3
     week: 3
     day: 6
@@ -316,6 +326,8 @@ players:
     - upset
     - tilt
     - meme
+    recall_tags:
+    - tilt
   - id: mem:vex:unbenched_w4
     week: 4
     day: 3
@@ -409,6 +421,8 @@ players:
     - anchor
     - quiet
     - terminus
+    recall_tags:
+    - clutch
   - id: mem:sable:smokes_with_coyote_w2
     week: 2
     day: 4
@@ -577,6 +591,8 @@ players:
     - info
     - initiator
     - clutch-info
+    recall_tags:
+    - clutch
   - id: mem:pixie:wholesome_chirper_w3
     week: 3
     day: 3
@@ -679,6 +695,8 @@ players:
     - transfer
     - bishop
     - northwind
+    recall_tags:
+    - rivalry
   - id: mem:coyote:lurk_winback_w1
     week: 1
     day: 6
@@ -693,6 +711,8 @@ players:
     - clutch
     - smokes
     - unsung
+    recall_tags:
+    - clutch
   - id: mem:coyote:smokes_saved_w2
     week: 2
     day: 4
@@ -751,6 +771,8 @@ players:
     - northwind
     - read
     - terminus
+    recall_tags:
+    - rivalry
   - id: mem:coyote:revenge_match_loss_w5
     week: 5
     day: 5
@@ -768,6 +790,9 @@ players:
     - choke
     - revenge
     - terminus
+    recall_tags:
+    - choke
+    - rivalry
 clash_pairs:
 - a: rook
   b: vex
