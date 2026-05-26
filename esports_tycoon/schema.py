@@ -2,8 +2,9 @@
 
 These are the runtime pydantic models the rest of the slice is built on. They
 mirror the schemas pinned in ``m0_technical_plan.md`` and are the typed twin of
-the hand-authored canned save in ``esports_tycoon/canned/data/week6.yaml``
-(loaded by ``esports_tycoon.canned.loader``).
+the hand-authored canned save at the canonical save root, ``saves/week6.yaml``
+(loaded by ``esports_tycoon.canned.loader``; field reference in
+``saves/SCHEMA.md``).
 
 Two domain invariants are enforced here, not just by the (decoupled) cast-lock
 gate:

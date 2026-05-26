@@ -24,12 +24,18 @@ vllm = ["openai>=1.0"]
 web = ["Flask>=3.0"]
 
 [tool.setuptools.packages.find]
-include = ["esports_tycoon*"]
+# ``saves`` is a one-file package whose only job is to ship the canonical
+# ``saves/week6.yaml`` inside the wheel so the loader/CLI work from an
+# installed wheel, not only from a source checkout. It is the single
+# documented save root — there is no ``esports_tycoon/canned/data`` split.
+include = ["esports_tycoon*", "saves"]
 
 [tool.setuptools.package-data]
 # Ship the canonical canned save inside the wheel so the loader/CLI work when
-# installed, not only from a source checkout.
-"esports_tycoon.canned" = ["data/*.yaml"]
+# installed, not only from a source checkout. ``*.approval.yaml`` is the
+# founder's recorded decision (a dev-time artifact bound to the source tree)
+# and is deliberately not shipped.
+"saves" = ["week6.yaml"]
 # Ship the web app's Jinja2 templates so the slice app works from an installed
 # wheel, not only a source checkout.
 "esports_tycoon.web" = ["templates/*.html"]
