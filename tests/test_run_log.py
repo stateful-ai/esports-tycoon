@@ -236,6 +236,19 @@ class TestLogRoundTripAndDeterminism(_Fixture):
             with self.assertRaises(Exception):
                 read_events(path)
 
+    def test_read_events_rejects_schema_drift_on_a_known_event(self):
+        # extra="forbid" is what keeps the append-only log honest: a known event
+        # type carrying an unmodelled key is schema drift, and a drifted line must
+        # fail the read loudly rather than be silently truncated to its known fields.
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / EVENTS_FILENAME
+            path.write_text(
+                '{"type": "team_talk", "text": "run the default", "surprise": 1}\n',
+                encoding="utf-8",
+            )
+            with self.assertRaises(Exception):
+                read_events(path)
+
 
 if __name__ == "__main__":
     unittest.main()
