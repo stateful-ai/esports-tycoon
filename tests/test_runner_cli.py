@@ -6,7 +6,16 @@ canonical ``WorldState`` — and that both player-visible seams (the headless
 runner CLI and the local Flask shell) exercise that contract against the real,
 shipped ``week6.yaml``. The wiring landed across PRs #2, #3/#9, #6, #13, #14
 and #16/#17; this module pins it as a contract so a future change cannot quietly
-re-introduce a parallel/draft typing without a test going red:
+re-introduce a parallel/draft typing without a test going red.
+
+**Re-scope (2026-05-26).** ``docs/m0_1_minimum_playable_rescope.md`` narrows
+the rebind *ticket* to the minimum-playable carve-out: one default-flag command
+playing practice → match → fallout in templated (zero-API) mode. The broader
+convergence pins below (canonical types on every surface, draft-field removal,
+schema-version gating, byte-identity) are no longer ticket preconditions — but
+they have already landed and we keep them pinned here so a regression goes red.
+The narrowed contract lives in ``TestMinimumPlayable`` at the bottom of this
+file; the broader contract is the four classes above it:
 
 * :class:`TestRunnerCliEndToEnd` invokes ``python -m esports_tycoon.runner``'s
   ``main()`` against the packaged canned save, with no fixtures and no
@@ -36,6 +45,7 @@ re-introduce a parallel/draft typing without a test going red:
 
 from __future__ import annotations
 
+import json
 import pathlib
 import re
 import sys
@@ -48,6 +58,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.runner.__main__ import main as runner_main  # noqa: E402
+from esports_tycoon.runner.engine import run_slice  # noqa: E402
+from esports_tycoon.runner.model import SliceConfig, SliceDecisions  # noqa: E402
 from esports_tycoon.runner.recap import (  # noqa: E402
     EVENTS_FILENAME,
     FEED_FILENAME,
@@ -271,6 +283,127 @@ class TestNoDraftFieldReferences(unittest.TestCase):
                 if self._DRAFT_ATTR.search(line) or self._DRAFT_CLASS.search(line):
                     offenders.append(f"{path}:{lineno}: {line.rstrip()}")
         self.assertEqual(offenders, [], "draft-typed references found on shipped surfaces")
+
+
+class TestMinimumPlayable(unittest.TestCase):
+    """The narrowed rebind contract: one default-flags command is the playable slice.
+
+    Pinned against ``docs/m0_1_minimum_playable_rescope.md`` — the re-scope that
+    drops "full canonical-schema convergence" from the rebind ticket's
+    preconditions and replaces it with: one command, default canned save, plays
+    practice → match → fallout, renders Chirper feed + post-match narration, in
+    templated (zero-API) mode. The behaviours each test below checks are the
+    four bullets of that narrowed acceptance — kept here as a single cohesive
+    pin so a future change cannot quietly re-inflate the ticket.
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.runs_dir = pathlib.Path(self._tmp.name)
+
+    def _invoke_default(self) -> int:
+        # No flags beyond the sandbox: this is the founder's "one command".
+        # If the test ever needs to pass a behavioural flag to make this run
+        # work, the minimum-playable contract is broken — fix the runner's
+        # defaults, not the test.
+        return runner_main(["--runs-dir", str(self.runs_dir)])
+
+    def test_default_invocation_writes_recap_and_feed(self):
+        # The one command writes the two screenshot-ready artifacts the founder
+        # actually opens, in one ``runs/<slice_id>/`` folder.
+        self.assertEqual(self._invoke_default(), 0)
+        runs = list(self.runs_dir.glob("wk6-*"))
+        self.assertEqual(len(runs), 1, "expected exactly one runs/<slice_id>/ folder")
+        run_dir = runs[0]
+        self.assertTrue((run_dir / RECAP_FILENAME).is_file(), "recap.md missing")
+        self.assertTrue((run_dir / FEED_FILENAME).is_file(), "feed.snapshot.html missing")
+        # ``events.jsonl`` is the system-of-record the other two artifacts are
+        # derived from; if it is gone, "minimum playable" is decoration.
+        self.assertTrue((run_dir / EVENTS_FILENAME).is_file(), "events.jsonl missing")
+
+    def test_chirper_feed_snapshot_has_posts(self):
+        # The Chirper feed is one of the two named deliverables in the
+        # narrowed acceptance. A page with no ``<article class="post">`` is a
+        # blank Chirper — not a playable slice.
+        self.assertEqual(self._invoke_default(), 0)
+        run_dir = next(self.runs_dir.glob("wk6-*"))
+        feed = (run_dir / FEED_FILENAME).read_text(encoding="utf-8")
+        self.assertIn('<article class="post">', feed)
+        # The shape — standalone HTML doc, inline CSS, no external assets —
+        # is part of the contract: the screenshot has to work offline from the
+        # ``runs/`` folder, not via the running web shell.
+        self.assertIn("<!DOCTYPE html>", feed)
+        self.assertIn("<style>", feed)
+
+    def test_post_match_narration_is_rendered_in_recap(self):
+        # The other named deliverable: the resolver-grounded narration appears
+        # verbatim in ``recap.md`` under "## The match". Computed against the
+        # engine using the same default inputs the CLI uses, so this test
+        # follows the engine's contract rather than hard-coding the prose.
+        self.assertEqual(self._invoke_default(), 0)
+        run_dir = next(self.runs_dir.glob("wk6-*"))
+        recap = (run_dir / RECAP_FILENAME).read_text(encoding="utf-8")
+
+        world = loader.load()
+        # Mirror the CLI's defaults (``esports_tycoon.runner.__main__``) so the
+        # engine call resolves the same SliceResult the runner produced.
+        config = SliceConfig(opponent="apex_foundry", map="Helix", seed=6, tactical_stance="default")
+        decisions = SliceDecisions(practice_focus="defaults", team_talk="", fallout_post="")
+        expected = run_slice(world, config, decisions)
+
+        self.assertIn("## The match", recap)
+        self.assertIn(expected.narration.text, recap)
+        self.assertTrue(expected.narration.text.strip(), "narration was empty — not playable")
+
+    def test_default_run_is_in_templated_zero_api_mode(self):
+        # "Zero API calls" is the load-bearing property of the narrowed scope.
+        # Two checks pin it: the recap header advertises the templated banner,
+        # and the run-log records ``content_backend: templated`` on the first
+        # event — the projection the recap renderer reads. Anything else would
+        # mean the default route silently went through an LLM backend.
+        self.assertEqual(self._invoke_default(), 0)
+        run_dir = next(self.runs_dir.glob("wk6-*"))
+        recap = (run_dir / RECAP_FILENAME).read_text(encoding="utf-8")
+        self.assertIn("templated mode (zero-API)", recap)
+
+        events = (run_dir / EVENTS_FILENAME).read_text(encoding="utf-8").splitlines()
+        self.assertTrue(events, "events.jsonl was empty")
+        first = json.loads(events[0])
+        self.assertEqual(first.get("type"), "slice_started")
+        self.assertEqual(first.get("content_backend"), "templated")
+
+    def test_templated_default_does_not_route_through_llm_backend(self):
+        # The architectural guarantee: ``esports_tycoon.content.adapter`` only
+        # imports the LLM backend inside the ``vllm`` branch, so a default run
+        # never exercises ``content.llm.generate``. Pin it by trapping that
+        # symbol — if the templated default ever silently calls it, the trap
+        # fires and the test goes red. Done with a sentinel rather than a
+        # ``sys.modules`` membership check because earlier tests in the same
+        # process may have legitimately imported the module already.
+        import esports_tycoon.content.llm as llm_module
+
+        original = getattr(llm_module, "generate", None)
+        sentinel_calls: list[str] = []
+
+        def _trap(*_args, **_kwargs):
+            sentinel_calls.append("called")
+            raise AssertionError(
+                "templated default routed through the vllm backend: "
+                "content.llm.generate was invoked during a default run"
+            )
+
+        llm_module.generate = _trap  # type: ignore[assignment]
+        try:
+            self.assertEqual(self._invoke_default(), 0)
+        finally:
+            if original is None:
+                # The module had no ``generate`` before — leave it absent rather
+                # than leaking the trap.
+                delattr(llm_module, "generate")
+            else:
+                llm_module.generate = original  # type: ignore[assignment]
+        self.assertEqual(sentinel_calls, [], "LLM backend was invoked on the templated default")
 
 
 if __name__ == "__main__":
