@@ -3,9 +3,15 @@
 **Status.** Scope change to the existing rebind ticket. Recorded on 2026-05-26.
 Supersedes the broader "rebind every consumer to the canonical schema" framing
 that the ticket carried in `m0_0_canonical_contract.md` § *Rebind map* and in
-`m0_1_build_execution_plan.md` § *Wave 3 — Minimum-playable rebind*. Reuses
-`scope-m0.md` (the M0 slice) and the founder brief (`docs/founder_brief.md`)
-verbatim for the locked acceptance bar and the wedge-phase product principle.
+`m0_1_build_execution_plan.md` § *Wave 3 — Minimum-playable rebind* (both are
+CompanyOS-tracked specs referenced by name throughout this repo's source and
+test docstrings — see e.g. `esports_tycoon/schema.py`, `esports_tycoon/canned/
+loader.py`, and the test modules that cite `m0_0_canonical_contract.md`). For
+in-repo discoverability the same re-scope is also called out in the module
+docstring of `tests/test_runner_cli.py`, which holds both the original
+Rebind-map framing and the new `TestMinimumPlayable` pin. Reuses `scope-m0.md`
+(the M0 slice) and the founder brief (`docs/founder_brief.md`) verbatim for
+the locked acceptance bar and the wedge-phase product principle.
 
 ## What changed and why
 

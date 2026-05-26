@@ -6,7 +6,16 @@ canonical ``WorldState`` — and that both player-visible seams (the headless
 runner CLI and the local Flask shell) exercise that contract against the real,
 shipped ``week6.yaml``. The wiring landed across PRs #2, #3/#9, #6, #13, #14
 and #16/#17; this module pins it as a contract so a future change cannot quietly
-re-introduce a parallel/draft typing without a test going red:
+re-introduce a parallel/draft typing without a test going red.
+
+**Re-scope (2026-05-26).** ``docs/m0_1_minimum_playable_rescope.md`` narrows
+the rebind *ticket* to the minimum-playable carve-out: one default-flag command
+playing practice → match → fallout in templated (zero-API) mode. The broader
+convergence pins below (canonical types on every surface, draft-field removal,
+schema-version gating, byte-identity) are no longer ticket preconditions — but
+they have already landed and we keep them pinned here so a regression goes red.
+The narrowed contract lives in ``TestMinimumPlayable`` at the bottom of this
+file; the broader contract is the four classes above it:
 
 * :class:`TestRunnerCliEndToEnd` invokes ``python -m esports_tycoon.runner``'s
   ``main()`` against the packaged canned save, with no fixtures and no
