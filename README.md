@@ -319,4 +319,7 @@ python -m unittest discover -s tests     # stdlib runner (no extra deps)
 pytest
 ```
 
-Requires Python ≥ 3.10 and PyYAML.
+Requires Python 3.12 (pinned for byte-identity reproducibility — see
+`constraints.txt`) and the deps it locks (pydantic, PyYAML). `make install`
+installs from the lock; do the same on a fresh checkout to reproduce the
+committed `saves/week6.yaml` byte-for-byte.
