@@ -187,6 +187,8 @@ players:
     - apex
     - press
     - motivation
+    recall_tags:
+    - rivalry
   - id: mem:rook:scrim_w5_choke
     week: 5
     day: 2
@@ -370,6 +372,8 @@ players:
     - pixie
     - friendly-fire
     - terminus
+    recall_tags:
+    - tilt
 - id: sable
   name: Dmitri "Sable" Volkov
   handle: '@sablehold'
@@ -637,6 +641,8 @@ players:
     - vex
     - comms
     - terminus
+    recall_tags:
+    - tilt
 - id: coyote
   name: '"Coyote" Park'
   handle: '@coyotelurk'
