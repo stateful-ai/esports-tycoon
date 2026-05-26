@@ -10,6 +10,45 @@ proving the core taste-reaction: *the game remembered something.* Tone is dry
 mockumentary; the game is **Vector Strike**, a fictional Valorant-flavored 5v5.
 See `docs/scope-m0.md` (CompanyOS) for the full scope.
 
+## Zero-API quickstart
+
+Fresh clone, **no API key, no network, no GPU** — the slice is built to run that
+way by default. Two commands and you are playing the Week 6 (of 8) fixture:
+
+```bash
+pip install -e .[web]               # core deps + Flask for the local web app
+python -m esports_tycoon play       # serves http://127.0.0.1:8765
+```
+
+The web app picks practice → match → fallout for the Week-6 must-win, writes
+the screenshot-ready recap to `runs/<slice_id>/`, and never opens an outbound
+connection. The match resolver is seeded from the save (`seed: 6`), so the same
+inputs land in the same `runs/<slice_id>/` folder with byte-identical artifacts.
+
+Headless equivalent (no Flask, no browser — the same engine, same artifacts):
+
+```bash
+pip install -e .                                       # PyYAML + pydantic only
+python -m esports_tycoon.runner --opponent apex_foundry # week 6 fixture
+```
+
+To play through the remaining slate of Weeks 6 → 7 → 8, re-run the headless
+runner against the rivals in turn (their ids are listed in
+`esports_tycoon/canned/data/week6.yaml` under `rivals:`):
+
+```bash
+python -m esports_tycoon.runner --opponent apex_foundry --seed 6     # week 6
+python -m esports_tycoon.runner --opponent sovereign    --seed 7     # week 7
+python -m esports_tycoon.runner --opponent last_light   --seed 8     # week 8
+```
+
+The opt-in `vllm` backend (a local OpenAI-compatible Qwen server) is documented
+below — it is *never* required to play. The templated backend is the default
+because the whole slice runs end-to-end without it.
+
+The on-disk shape of the save is documented field-by-field in
+[`saves/SCHEMA.md`](saves/SCHEMA.md).
+
 ## What's here (M0.0 — tone + cast lock)
 
 - **`docs/tone_and_cast_lock.md`** — the 1-pager pinning the voice, the fiction,
@@ -30,6 +69,10 @@ See `docs/scope-m0.md` (CompanyOS) for the full scope.
   `WorldState` from the packaged save. The save and the typed schema round-trip
   losslessly, and the save carries its own RNG `seed` (the seed-in-save contract),
   so the resolver replays it bit-for-bit by default.
+- **`saves/SCHEMA.md`** — the human-facing field reference for the save format.
+  Every field accepted by the loader appears here with a one-line description
+  and the load-time invariants; the loader links it as the companion to the
+  typed schema.
 
 ```bash
 python -m esports_tycoon inspect             # load the canned save, print a summary
