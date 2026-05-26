@@ -51,12 +51,13 @@ from esports_tycoon.runner.events import (
     write_events,
 )
 from esports_tycoon.runner.model import PRACTICE_CHOICES, SliceResult
-from esports_tycoon.schema import WorldState
+from esports_tycoon.schema import MEMORY_ID_RE, WorldState
 
 __all__ = [
     "RECAP_FILENAME",
     "FEED_FILENAME",
     "EVENTS_FILENAME",
+    "REMEMBERED_SLOT_LABEL",
     "render_recap_md",
     "render_feed_html",
     "write_artifacts",
@@ -64,6 +65,13 @@ __all__ = [
 
 RECAP_FILENAME = "recap.md"
 FEED_FILENAME = "feed.snapshot.html"
+
+#: The label of the fixed scannable slot at the top of ``recap.md`` that
+#: surfaces the bound precedent (the narration's recalled cite). Rendered as a
+#: blockquote one-liner just below the slice header so the founder can scan it
+#: at the first glance of the screenshot; suppressed entirely when no precedent
+#: bound, so a "no recall" run is read as absence rather than as an empty slot.
+REMEMBERED_SLOT_LABEL = "Remembered"
 
 _PRACTICE_LABELS = {value: label for value, label, _ in PRACTICE_CHOICES}
 _PRACTICE_BLURBS = {value: blurb for value, _, blurb in PRACTICE_CHOICES}
@@ -111,6 +119,20 @@ def _name_list(world: WorldState, ids: list[str]) -> str:
     if len(names) == 1:
         return names[0]
     return f"{', '.join(names[:-1])} and {names[-1]}"
+
+
+def _cite_owner_id(cite: str) -> str:
+    """The owner segment parsed out of a ``mem:<owner>:<event_slug>`` cite.
+
+    The format is enforced at :class:`~esports_tycoon.schema.MemoryEntry`
+    construction time, so any cite that has reached an event log has already
+    been validated — a regex miss here would mean a hand-built event slipped
+    past the validator, which we surface loudly rather than swallow.
+    """
+    match = MEMORY_ID_RE.match(cite)
+    if match is None:
+        raise ValueError(f"malformed cite id reached the recap: {cite!r}")
+    return match.group(1)
 
 
 # --------------------------------------------------------------------------- #
@@ -173,6 +195,21 @@ def render_recap_md(events: Sequence[SliceEvent], world: WorldState) -> str:
         f"_Slice `{started.slice_id}` · seed `{started.seed}` · {mode}._"
     )
     lines.append("")
+
+    # The fixed scannable slot for the bound precedent — a one-line blockquote
+    # below the slice header so the "the room remembered me" beat reads first
+    # in the screenshot. Suppressed when no precedent bound; on the templated
+    # path under the canonical week-6 fixture this always fires.
+    bound_cite = match.cites[0] if match.cites else None
+    if bound_cite is not None:
+        entry = world.resolve_cite(bound_cite)
+        if entry is not None:
+            who = _display_name(world, _cite_owner_id(bound_cite))
+            lines.append(
+                f"> **{REMEMBERED_SLOT_LABEL}:** {who}, week {entry.week} — "
+                f"{entry.summary} (`{bound_cite}`)"
+            )
+            lines.append("")
 
     lines.append("## The fixture")
     lines.append("")
