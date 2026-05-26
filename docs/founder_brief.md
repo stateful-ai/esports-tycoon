@@ -2,30 +2,30 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T04:28:28Z'
-summary: Cross-agent consensus
+updated: '2026-05-26T05:56:22Z'
+summary: Where the three agents agree
 ---
 
-### Cross-agent consensus
-- **Milestone framing:** M0.1 = the founder gate. A byte-reproducible save nobody has played proves nothing.
-- **Architecture invariant:** `recall(why_record, world_state, k)` is pure engine logic, not LLM logic. Templated copy pack binds by cite ID. vLLM is a post-gate upgrade behind the same adapter.
-- **Critical path (5 hops):** verify M0.0 closeout green → `recall()` selector → bind ≥1 precedent via cite ID → minimum-playable web/recap rebind → founder playtest.
-- **Wave structure:** W0 entry-gate smoke + freeze → W1 `recall()` + vocab + planted precedent + golden fixture → W2 bind + templated copy + zero-bind fallback → W3 rebind 127.0.0.1 app + recap + run command → W4 sign-off + pre-registered rubric + playtest + debrief.
-- **Frozen behind the gate:** byte-identity, 100-run digest, negative fixtures, schema-boundary CI, toolchain pin, bless script, `make test`/CI, templated golden extension, shared `SaveError`, WhyRecord digest. 9 tickets; do not work them until the screenshot lands.
-- **DoD = the gate:** founder screenshots ≥1 grounded "remembered me" moment in ≤2 evenings, judged against a pass/fail rubric pre-registered *before* play.
+### Where the three agents agree
+- **Milestone framing is locked.** M0.1 = founder plays templated zero-API slice (practice → match → fallout, 2 open-text inputs ≤120 chars) and screenshots ≥1 grounded "remembered me" moment within 2 evenings. Gate path is templated, not vLLM.
+- **Critical path is W0 → recall → bind → rebind → playtest.** Same 5-hop chain in all three responses.
+- **Three new code seams only:** `recall()` selector, precedent→render binding by cite ID, minimum-playable web/recap rebind. Everything else is reuse.
+- **Freeze list holds.** The 9 hardening tickets (byte-identity, serializer polish, CI gate, toolchain pin, bless script, negative fixtures, shared `SaveError`, WhyRecord digest, `make test`) stay frozen until the gate fires.
+- **Architecture invariant:** precedent recall is engine logic, not LLM logic. One pure deterministic selector ranks canned memories; templated copy pack binds them by cite ID through the existing grounding gate.
+- **Same 4 new candidates** emerged independently from Engineering Lead and Infra Architect — strong signal these are real gaps, not over-emission.
 
-### Tensions / divergence
-- **Candidate-task volume.** Engineering Lead proposed 4 new (wave-gate script, status one-pager, founder-time tripwire, clean-checkout dry-run). Infra Architect proposed 2 (dropped-cite logging, deterministic `slice_id`). Chief of Staff (prior pass) proposed 0. No factual conflict — different thresholds for "genuinely new work."
-- **Resolution.** The two infra-architect candidates are product diagnostics (without them, a failed playtest has no forensics). The clean-checkout dry-run is the only engineering-lead candidate that's product-bearing — it catches a broken `play` command *before* the founder sits down. The other three (wave-gate enforcement script, status one-pager, time tripwire) are process scaffolding that overlaps with the already-live Wave 0 smoke ticket and debrief template; folding into a one-line "later" note rather than minting tickets.
+### Tensions / dissent
+- **Chief of Staff emitted zero new tasks**; EL + Infra both emitted the same 4. Not a real conflict — CoS was reconciling 3 newly-landed tickets (`slice_id`, dropped-precedent logging, clean-checkout dry-run) into existing waves and treated this as a refresh, not a re-plan. The 4 new candidates from EL+Infra are upstream of authoring (Waves 1–2) and downstream of binding (Waves 2 & 4); they don't conflict with CoS's wave assignments, they fill gaps inside them.
+- **Wave numbering:** EL/Infra use Waves 0–4; CoS uses Waves A–D in `m0_gate_build_execution_plan.md` v3. Substantively identical sequence. Pick one naming when committing.
 
-### Out of scope (explicit)
-- Anything that hardens the determinism floor beyond M0.0's existing golden round-trip.
-- vLLM bring-up beyond the existing smoke (already completed).
-- `TrainingDecision` slice (held to M0.2 by live ticket).
-- New product surface — copy pack must be authored against the *specific* recalled-precedent shape, not generalized.
+### Out of scope (do not touch this milestone)
+- vLLM beyond the demo-gate behind the adapter
+- Byte-identity normalization, schema-boundary CI, serializer polish beyond stable dump
+- `TrainingDecision` slice (held to M0.2)
+- Canonical WhyRecord digest (already rejected)
 
-### Risk register (single highest)
-**Wave B recall→render seam.** If `recall()` returns a precedent whose cite ID the templated pack can't bind (off-grammar / unresolved), the founder sees the zero-bind fallback and the thesis isn't actually proven by the screenshot. Mitigations already in flight: pin cite-ID grammar *before* copy pack (active ticket), zero-bind recap fallback spec (active ticket), grounding gate drops un-resolvable cites. The new dropped-cite logging task closes the diagnostics gap.
-
-### Later (do not mint as tickets now)
-Wave-gate enforcement script · M0.1 wave-status one-pager · founder-time tripwire on the 2-evening window. Revisit only if the gate slips.
+### Why the 4 new candidates matter
+- Without **`recall()` input contract**: Wave 1 planted-precedent author and the selector implementer guess at the same shape independently → drift.
+- Without **k>1 surfacing rule**: copy pack author and recap layout author re-decide the same question; recap golden has no stable expectation when `recall()` returns 2 or 3.
+- Without **end-to-end recap assertion**: tests stop at "ordered list" instead of "founder sees the line"; bind succeeds but the text silently never lands.
+- Without **playtest artifact directory**: gate evidence (recap, feed snapshot, screenshot, rubric card, debrief) scatters; the pass/fail note has nothing concrete to reference.
