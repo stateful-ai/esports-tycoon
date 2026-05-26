@@ -1,8 +1,9 @@
 """The canned-save layer: YAML on disk, typed :class:`WorldState` in memory.
 
-M0 ships one hand-authored save as package data
-(``esports_tycoon/canned/data/week6.yaml``). Tools import this loader rather than
-re-parsing the YAML themselves, keeping a single typed entry point.
+M0 ships one hand-authored save at the canonical save root
+(``saves/week6.yaml``, shipped as package data via the ``saves`` package).
+Tools import this loader rather than re-parsing the YAML themselves, keeping a
+single typed entry point and a single documented location.
 """
 
 from .loader import (

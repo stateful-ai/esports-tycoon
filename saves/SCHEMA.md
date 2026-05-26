@@ -7,6 +7,14 @@ file into the typed [`WorldState`][WorldState] and is the inverse of
 `loader.dumps(world)`. The save is the system of record — it carries its own
 `schema_version` and RNG `seed`, and the round-trip is byte-identical.
 
+This directory (`saves/`) is the **canonical, documented save root**: the
+canned Week-6-of-8 save lives at [`saves/week6.yaml`](week6.yaml), this page
+documents its shape, and the founder's lock record sits beside it at
+[`saves/week6.approval.yaml`](week6.approval.yaml). There is no
+`canned/`-vs-`saves/` split — every loader, CLI, and validator in the codebase
+resolves the save through `esports_tycoon.canned.loader.DEFAULT_SAVE_PATH`,
+which points here.
+
 If you are reading source: this document is linked from
 `esports_tycoon/canned/loader.py` (the loader's module docstring points here),
 and the test in `tests/test_schema_doc.py` guards that every schema field has an

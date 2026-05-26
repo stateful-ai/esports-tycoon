@@ -1,12 +1,15 @@
 """Load the hand-authored canned save into a typed :class:`WorldState`.
 
-The single canonical save ships as package data at
-``esports_tycoon/canned/data/week6.yaml`` (the cast-lock gate points at the same
-file). ``load`` parses it, checks its ``schema_version`` against the version this
-build speaks, and validates it into the typed schema; the resulting world
-enforces stable cite IDs and the no-dangling-cites grounding contract.
-``to_save_dict`` / ``dumps`` are the inverse, used by the round-trip test to
-prove the schema is a lossless description of the save.
+The single canonical save ships as package data at ``saves/week6.yaml`` — the
+one documented save root, with no ``canned/`` vs ``saves/`` split. The cast-lock
+gate (:mod:`esports_tycoon.cast_lock.spec`), the runner / web / vLLM-demo CLIs,
+and this loader all resolve the file through the same :func:`importlib.resources`
+handle, so a source checkout and an installed wheel read the same bytes.
+``load`` parses it, checks its ``schema_version`` against the version this build
+speaks, and validates it into the typed schema; the resulting world enforces
+stable cite IDs and the no-dangling-cites grounding contract. ``to_save_dict`` /
+``dumps`` are the inverse, used by the round-trip test to prove the schema is a
+lossless description of the save.
 
 The save's on-disk shape — every field, with a one-line description — is
 documented in :data:`SCHEMA_DOC_PATH` (``saves/SCHEMA.md``). That page is the
@@ -32,9 +35,12 @@ import yaml
 from esports_tycoon.canned.canonical import dumps as _canonical_yaml_dumps
 from esports_tycoon.schema import CURRENT_SCHEMA_VERSION, WorldState
 
-#: The one canonical canned save for the M0 slice. Resolved as package data so
-#: ``load`` works from an installed wheel, not only a source checkout.
-DEFAULT_SAVE_PATH = resources.files(__package__) / "data" / "week6.yaml"
+#: The one canonical canned save for the M0 slice. Resolved as package data
+#: from the ``saves`` package so ``load`` works from an installed wheel, not
+#: only a source checkout. This is the single documented save root; every CLI
+#: and validator in the codebase reads through this constant rather than
+#: rebuilding the path, so the location moves in one place if it ever moves.
+DEFAULT_SAVE_PATH = resources.files("saves") / "week6.yaml"
 
 #: The human-facing save-schema reference (``saves/SCHEMA.md``): every field
 #: this loader accepts, with a one-line description and the load-time

@@ -34,7 +34,7 @@ python -m esports_tycoon.runner --opponent apex_foundry # week 6 fixture
 
 To play through the remaining slate of Weeks 6 → 7 → 8, re-run the headless
 runner against the rivals in turn (their ids are listed in
-`esports_tycoon/canned/data/week6.yaml` under `rivals:`):
+`saves/week6.yaml` under `rivals:`):
 
 ```bash
 python -m esports_tycoon.runner --opponent apex_foundry --seed 6     # week 6
@@ -53,10 +53,10 @@ The on-disk shape of the save is documented field-by-field in
 
 - **`docs/tone_and_cast_lock.md`** — the 1-pager pinning the voice, the fiction,
   the 5-starter cast with explicit clash pairs, and the 6 rival archetypes.
-- **`esports_tycoon/canned/data/week6.yaml`** — the canned Week-6-of-8 save (shipped
-  as package data): 5 starters, 8 clash pairs, 6 rival archetypes, 37 precedent
-  memory entries with stable `mem:<player>:<event>` IDs, and last week's scoreline
-  + Chirper feed.
+- **`saves/week6.yaml`** — the canned Week-6-of-8 save (the canonical save
+  root, shipped as package data through the `saves` package): 5 starters, 8
+  clash pairs, 6 rival archetypes, 37 precedent memory entries with stable
+  `mem:<player>:<event>` IDs, and last week's scoreline + Chirper feed.
 - **`esports_tycoon/cast_lock/`** — the acceptance-bar validator and the founder's
   single batched approve/reject gate.
 - **`saves/week6.approval.yaml`** — the recorded founder decision, bound to a
