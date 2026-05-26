@@ -21,6 +21,7 @@ This suite is the acceptance gate for the locked-week-6 copy pack ticket:
   post in the slice's feed.
 """
 
+import ast
 import re
 import sys
 import pathlib
@@ -36,22 +37,36 @@ from esports_tycoon.runner import SliceConfig, SliceDecisions, run_slice  # noqa
 from esports_tycoon.schema import Decisions  # noqa: E402
 
 
-# The eight key-moment kinds the resolver constructs. Drawn from
-# esports_tycoon/resolver.py — kept literal here so this test is the contract
-# the resolver does not silently slip past (a new resolver kind without a beat
-# template should fail this list explicitly).
-_RESOLVER_EMITTABLE_KINDS: frozenset[str] = frozenset(
-    {
-        "ace",
-        "blowout",
-        "choke",
-        "clutch",
-        "closeout",
-        "comeback",
-        "dominant",
-        "match_point",
-    }
-)
+def _resolver_emittable_kinds() -> frozenset[str]:
+    """The set of ``kind=`` literals the resolver passes to ``KeyMoment(...)``.
+
+    Derived by AST from ``esports_tycoon/resolver.py`` rather than duplicated as
+    a literal here, so a new resolver kind cannot silently slip past the beat-
+    coverage check: it shows up in this set automatically and the assertion
+    against :data:`templated.BEAT_KINDS` will fail until a beat is authored.
+    Handles both literal strings (``kind="ace"``) and conditional expressions
+    (``kind="dominant" if won_match else "blowout"``).
+    """
+    src = pathlib.Path(resolver.__file__).read_text()
+    tree = ast.parse(src)
+    kinds: set[str] = set()
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == "KeyMoment"):
+            continue
+        for kw in node.keywords:
+            if kw.arg != "kind":
+                continue
+            for child in ast.walk(kw.value):
+                if isinstance(child, ast.Constant) and isinstance(child.value, str):
+                    kinds.add(child.value)
+    return frozenset(kinds)
+
+
+# The key-moment kinds the resolver constructs, derived from the source so the
+# test fails loudly when the resolver grows a new kind without a beat template.
+_RESOLVER_EMITTABLE_KINDS: frozenset[str] = _resolver_emittable_kinds()
 
 # Every cast member named in docs/tone_and_cast_lock.md. The five starters plus
 # the in-universe caster plus the six rival-org stars (one per rival).
