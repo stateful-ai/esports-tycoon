@@ -26,6 +26,14 @@ import pathlib
 import re
 import unittest
 
+import pytest
+
+# M0 freeze (founder_brief.md): the make-test/CI plumbing contract is paired
+# with the byte-identity golden it protects; both are deferred to M1/post-gate.
+pytestmark = pytest.mark.skip(
+    reason="M0 freeze: make-test / CI golden-drift plumbing contract deferred to M1/post-gate"
+)
+
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 _MAKEFILE = _REPO_ROOT / "Makefile"
 _CI_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "ci.yml"

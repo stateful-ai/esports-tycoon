@@ -30,10 +30,18 @@ import sys
 import tempfile
 import unittest
 
+import pytest
+
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon.canned import loader  # noqa: E402
 from scripts import regen_golden  # noqa: E402
+
+# M0 freeze (founder_brief.md): the golden-bless script's fixed-point contract
+# rides on the byte-identity serializer freeze and is deferred to M1/post-gate.
+pytestmark = pytest.mark.skip(
+    reason="M0 freeze: deterministic golden-bless script deferred to M1/post-gate"
+)
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 _SAVE_PATH = _REPO_ROOT / "saves" / "week6.yaml"

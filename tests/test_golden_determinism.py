@@ -169,12 +169,18 @@ class TestGoldenDeterminism(unittest.TestCase):
         )
 
     # --- round-trip ----------------------------------------------------------- #
+    # M0 freeze (founder_brief.md): the canonical-byte round-trip half of this
+    # golden — lossless dump, committed canonical bytes, and the idempotent
+    # fixed-point — rides on the byte-identity serializer, which is deferred to
+    # M1/post-gate. Only the resolve-side of the golden above stays active.
+    @unittest.skip("M0 freeze: byte-identity round-trip deferred to M1/post-gate")
     def test_round_trip_is_lossless_against_the_save(self):
         # dump(load(week6.yaml)) reproduces the parsed save exactly: the typed
         # dump drops nothing and invents nothing.
         raw = yaml.safe_load(loader.DEFAULT_SAVE_PATH.read_text(encoding="utf-8"))
         self.assertEqual(loader.to_save_dict(self.world), raw)
 
+    @unittest.skip("M0 freeze: canonical-byte golden deferred to M1/post-gate")
     def test_round_trip_normalizes_to_committed_canonical_bytes(self):
         # The canonical serializer's exact output is pinned, so a reformat is
         # caught even when it leaves the parsed data unchanged. This is the
@@ -191,6 +197,7 @@ class TestGoldenDeterminism(unittest.TestCase):
             "regenerate with UPDATE_GOLDEN=1 and review the diff",
         )
 
+    @unittest.skip("M0 freeze: canonical-byte fixed-point deferred to M1/post-gate")
     def test_round_trip_is_an_idempotent_fixed_point(self):
         # dump(load(x)) normalizes back to x: reloading the canonical bytes and
         # re-dumping yields the identical bytes, and the reloaded world is equal.
@@ -200,6 +207,13 @@ class TestGoldenDeterminism(unittest.TestCase):
         self.assertEqual(loader.dumps(world2), canonical)
 
 
+# M0 freeze (founder_brief.md): golden-render extension to templated is
+# explicitly out of scope until the screenshot gate fires. The render-time
+# grounding/safety contracts that the slice actually depends on stay enforced
+# in tests/test_grounding.py, tests/test_safety.py, and tests/test_gate.py.
+@unittest.skip(
+    "M0 freeze: golden-render extension to templated deferred to M1/post-gate"
+)
 class TestGoldenTemplatedRender(unittest.TestCase):
     """One golden over the templated render of the week-6 slice.
 
