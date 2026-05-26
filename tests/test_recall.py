@@ -680,7 +680,11 @@ class TestRecallResultContract(_Fixture):
         )
         why = WhyRecord(
             scoreline=(13, 9), mvp="rook",
-            key_moments=[KeyMoment(round=1, kind="choke", actors=["rook"], descriptor="x")],
+            # ``tag`` is the typed RecallTag opt-in recall actually scores on;
+            # ``kind`` alone never contributes (per _target_tags doctring). The
+            # earlier setup omitted ``tag`` so the target set was only {'tilt'}
+            # and entry_second could not match 'choke' — fixed here.
+            key_moments=[KeyMoment(round=1, kind="choke", tag="choke", actors=["rook"], descriptor="x")],
             who_carried=[], who_tilted=["rook"],  # also adds 'tilt' to target set
             morale_deltas={"rook": 0}, seed=0, round_log=[],
         )
