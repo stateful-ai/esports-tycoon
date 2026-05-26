@@ -1,0 +1,43 @@
+# Negative fixture: a structurally corrupt save.
+#
+# Parsing this with ``yaml.safe_load`` raises ``yaml.YAMLError`` whose message
+# names the line and column of the broken mapping, so ``loader.load`` cannot
+# even produce a dict to schema-check. The intent: prove that a file that is
+# not a valid YAML document fails with a different — and more localized —
+# message than the unknown-version and dangling-reference fixtures.
+schema_version: 0
+seed: 6
+save:
+  id: week6
+  title: "Corrupt"
+  game: Vector Strike
+  tone: dry-mockumentary
+  flavor: valorant-flavored
+  fiction_note: "Negative fixture."
+  season:
+    league: x
+    division: y
+    total_weeks: 8
+    current_week: 6
+    playoff_cutoff: 6
+  team:
+    id: overcast
+    name: Overcast
+    tag: OVC
+    handle: "@overcast"
+    blurb: "blurb"
+    standing: { wins: 0, losses: 0, place: 1, of: 1, note: "" }
+players:
+  - id: rook
+    name: Rook
+    handle: "@rook"
+    role: IGL
+    age: 27
+    signature_operative: Atlas
+    bio: "bio"
+    persona_voice: "voice"
+    traits: [veteran]
+    memory_log: [
+last_week:
+  week: 5
+  opponent: northwind

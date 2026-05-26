@@ -1,0 +1,83 @@
+# Negative fixture: shape-valid save with a single dangling unit reference.
+#
+# The body is the canonical week6 save, byte-for-byte, EXCEPT a clash pair
+# whose ``b`` names ``vexx`` (a typo of ``vex``) — a unit id no player or
+# rival star defines. ``loader.load`` parses the YAML and shape-validates the
+# typed schema cleanly, then ``check_referential_integrity`` raises
+# ``SaveReferentialIntegrityError`` with a message naming the path and the
+# missing id. The point of carrying this as a committed fixture (vs. a
+# programmatic mutation in the test) is to prove the failure on real,
+# shape-valid YAML — the same path a misedited save in the wild would take.
+schema_version: 0
+seed: 6
+save:
+  id: week6
+  title: "Overcast — Week 6 of 8"
+  game: Vector Strike
+  tone: dry-mockumentary
+  flavor: valorant-flavored
+  fiction_note: "Negative fixture for referential-integrity."
+  season:
+    league: Vector Strike Pro League
+    division: Atlantic Division — Spring Split
+    total_weeks: 8
+    current_week: 6
+    playoff_cutoff: 6
+  team:
+    id: overcast
+    name: Overcast
+    tag: OVC
+    handle: "@overcast"
+    blurb: "Negative fixture team."
+    standing: { wins: 2, losses: 3, place: 6, of: 8, note: "fixture standing" }
+players:
+  - id: rook
+    name: Rook
+    handle: "@rook"
+    role: IGL
+    age: 27
+    signature_operative: Atlas
+    bio: "fixture bio"
+    persona_voice: "fixture voice"
+    traits: [veteran]
+    memory_log:
+      - id: "mem:rook:debut"
+        week: 1
+        day: 3
+        kind: match
+        actors: [rook]
+        summary: "fixture memory"
+        sentiment: positive
+clash_pairs:
+  - a: rook
+    b: vexx   # <-- intentional typo of ``vex``; no such unit exists
+    cross_team: false
+    axis: structure vs. freelance
+    summary: "fixture clash that names an undefined unit"
+rivals:
+  - id: northwind
+    name: Northwind
+    tag: NWD
+    handle: "@northwind"
+    archetype: The Ex-Teammate
+    star: { id: bishop, name: "Bishop", role: SENTINEL, handle: "@bishop" }
+    bio: "fixture rival"
+    pressure_on_overcast: "fixture pressure"
+last_week:
+  week: 5
+  opponent: northwind
+  format: Bo3
+  result: loss
+  scoreline:
+    overcast: 1
+    opponent: 2
+    maps:
+      - { map: Helix, overcast: 13, opponent: 9, result: win }
+  headline: "fixture headline"
+  chirper_feed:
+    - id: "chirp:fx:01"
+      author: "@overcast"
+      author_id: overcast
+      day: 5
+      text: "fixture post"
+      likes: 1
