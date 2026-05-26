@@ -126,6 +126,17 @@ class TestBeatCoverage(unittest.TestCase):
     def test_every_emittable_kind_has_a_beat_template(self):
         self.assertEqual(_RESOLVER_EMITTABLE_KINDS, templated.BEAT_KINDS)
 
+    def test_moment_priority_is_a_subset_of_beat_templates(self):
+        # ``_render_narration`` does ``_BEAT_TEMPLATES[lead_kind]`` (not
+        # ``.get()``) on the priority-winning kind, so a kind in
+        # ``_MOMENT_PRIORITY`` without a beat template would ``KeyError`` at
+        # render time. Lock the invariant in CI rather than at runtime.
+        self.assertLessEqual(
+            set(templated._MOMENT_PRIORITY),
+            templated.BEAT_KINDS,
+            "kinds in _MOMENT_PRIORITY without a beat template would KeyError",
+        )
+
     def test_every_beat_template_has_at_least_two_variations(self):
         # Two variations is the minimum that lets the seeded RNG actually pick
         # — a single-line beat would always render identically across matches,
