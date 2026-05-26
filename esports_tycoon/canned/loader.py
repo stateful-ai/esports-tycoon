@@ -23,6 +23,7 @@ from typing import Any, Callable, Union
 
 import yaml
 
+from esports_tycoon.canned.canonical import dumps as _canonical_yaml_dumps
 from esports_tycoon.schema import CURRENT_SCHEMA_VERSION, WorldState
 
 #: The one canonical canned save for the M0 slice. Resolved as package data so
@@ -142,5 +143,10 @@ def to_save_dict(world: WorldState) -> dict[str, Any]:
 
 
 def dumps(world: WorldState) -> str:
-    """Serialize a :class:`WorldState` back to a YAML save document."""
-    return yaml.safe_dump(to_save_dict(world), sort_keys=False, allow_unicode=True)
+    """Serialize a :class:`WorldState` back to a canonical YAML save document.
+
+    Delegates to :func:`esports_tycoon.canned.canonical.dumps` so the bytes are a
+    fixed point: ``load(dumps(load(week6.yaml)))`` re-dumps to the identical
+    bytes (the round-trip golden in ``tests/test_golden_determinism.py``).
+    """
+    return _canonical_yaml_dumps(to_save_dict(world))
