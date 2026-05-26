@@ -1,35 +1,60 @@
-"""The auto-recap artifact: ``recap.md`` + ``feed.snapshot.html``.
+"""The auto-recap artifact: ``recap.md`` + ``feed.snapshot.html`` over the run-log.
 
-Every slice run, always on (never opt-in, per ``scope-m0.md``), emits two files to
-``runs/<slice_id>/`` for the founder to screenshot and share:
+Every slice run, always on (never opt-in, per ``scope-m0.md``), writes three files
+to ``runs/<slice_id>/`` for the founder to screenshot and share:
 
-* **``recap.md``** — a markdown write-up of the whole week: the fixture, the
-  decisions made, the match and its key moments, the morale fallout, the Chirper
-  feed, and — the thesis made visible — *what the room remembered*, every cited
-  memory resolved back to the canned log.
+* **``events.jsonl``** — the append-only, ordered, typed run-log (see
+  :mod:`esports_tycoon.runner.events`). This is the *source*, not a sidecar.
+* **``recap.md``** — a markdown write-up of the whole week (the fixture, the
+  decisions, the match and its key moments, the morale fallout, the Chirper feed,
+  and — the thesis made visible — *what the room remembered*), **derived from the
+  run-log**: :func:`render_recap_md` projects the events, it does not re-author the
+  week from the :class:`SliceResult`.
 * **``feed.snapshot.html``** — a standalone, self-contained Chirper page (inline
   CSS, no external assets) showing the week's feed exactly as the in-app feed view
   renders it.
 
-Both renderers are **pure and dependency-free** (stdlib only — no Jinja2, no
-Flask), so the artifact contract lives in the core and is tested headlessly. They
-are **deterministic**: built from the :class:`SliceResult` with no clock or entropy,
-escaped with :func:`html.escape`, and written with explicit ``\\n`` newlines and
-UTF-8, so the same seed + same decisions yields byte-identical files on re-run.
+Keeping the recap a view over the run-log is the architecture principle here: the
+log is the system of record for what a run did, and the artifacts are derived
+projections of it (company memory ``mem_20260525T191715Z_469386``). The renderers
+are **pure and dependency-free** (stdlib only — no Jinja2, no Flask) and
+**deterministic**: built from the event stream / :class:`SliceResult` with no clock
+or entropy, escaped with :func:`html.escape`, and written with explicit ``\\n``
+newlines and UTF-8, so the same seed + same decisions yields byte-identical files
+on re-run.
 """
 
 from __future__ import annotations
 
 from html import escape
 from pathlib import Path
-from typing import Union
+from typing import Sequence, TypeVar, Union
 
+from esports_tycoon.runner.events import (
+    EVENTS_FILENAME,
+    FeedPosted,
+    GroundingSummary,
+    HalftimeAck,
+    KeyMomentLogged,
+    MatchResolved,
+    MoraleDelta,
+    PracticeChosen,
+    RoomRemembered,
+    SliceEvent,
+    SliceStarted,
+    StandoutsLogged,
+    TeamTalk,
+    read_events,
+    slice_events,
+    write_events,
+)
 from esports_tycoon.runner.model import PRACTICE_CHOICES, SliceResult
 from esports_tycoon.schema import WorldState
 
 __all__ = [
     "RECAP_FILENAME",
     "FEED_FILENAME",
+    "EVENTS_FILENAME",
     "render_recap_md",
     "render_feed_html",
     "write_artifacts",
@@ -87,17 +112,53 @@ def _name_list(world: WorldState, ids: list[str]) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# recap.md
+# recap.md — derived from the run-log
 # --------------------------------------------------------------------------- #
-def render_recap_md(result: SliceResult, world: WorldState) -> str:
-    """Render the deterministic markdown recap for one slice run."""
+_E = TypeVar("_E", bound=SliceEvent)
+
+
+def _one(events: Sequence[SliceEvent], kind: type[_E]) -> _E:
+    """The single event of ``kind`` in the log, or a clear error if it is absent.
+
+    The recap's singleton beats (the run header, the resolved match, the grounding
+    tally, …) are emitted exactly once per run; a missing one means a malformed or
+    truncated log, which should fail loudly rather than render a half-recap.
+    """
+    for event in events:
+        if isinstance(event, kind):
+            return event
+    raise ValueError(f"run-log is missing a required {kind.__name__} event")
+
+
+def _all(events: Sequence[SliceEvent], kind: type[_E]) -> list[_E]:
+    """Every event of ``kind`` in the log, in logged order."""
+    return [event for event in events if isinstance(event, kind)]
+
+
+def render_recap_md(events: Sequence[SliceEvent], world: WorldState) -> str:
+    """Render the deterministic markdown recap from a slice's run-log.
+
+    The recap is a **projection of the event stream** (``events.jsonl``), not a
+    second authoring of the week: every fact rendered here is read out of an event,
+    with ``world`` used only to resolve the IDs those events reference — player IDs
+    to display names, opponent and cite IDs to their names and summaries.
+    """
+    started = _one(events, SliceStarted)
+    practice = _one(events, PracticeChosen)
+    team_talk_event = _one(events, TeamTalk)
+    match = _one(events, MatchResolved)
+    halftime = _one(events, HalftimeAck)
+    standouts = _one(events, StandoutsLogged)
+    remembered = _one(events, RoomRemembered)
+    grounding = _one(events, GroundingSummary)
+
     save = world.save
     standing = save.team.standing
-    opponent = _rival_name(world, result.config.opponent)
-    archetype = _rival_archetype(world, result.config.opponent)
-    ovc, opp = result.scoreline
-    h_ovc, h_opp = result.halftime_scoreline
-    verdict = "win" if result.won else "loss"
+    opponent = _rival_name(world, started.opponent)
+    archetype = _rival_archetype(world, started.opponent)
+    ovc, opp = match.scoreline
+    h_ovc, h_opp = match.halftime_scoreline
+    verdict = "win" if ovc > opp else "loss"
 
     lines: list[str] = []
     lines.append(f"# {save.team.name} — Week {save.season.current_week}: {verdict}")
@@ -105,9 +166,9 @@ def render_recap_md(result: SliceResult, world: WorldState) -> str:
     lines.append(
         f"_{save.title}. {save.season.league}, {save.season.division}._  "
     )
-    mode = _MODE_LABELS.get(result.content_backend, f"{result.content_backend} mode")
+    mode = _MODE_LABELS.get(started.content_backend, f"{started.content_backend} mode")
     lines.append(
-        f"_Slice `{result.slice_id}` · seed `{result.config.seed}` · {mode}._"
+        f"_Slice `{started.slice_id}` · seed `{started.seed}` · {mode}._"
     )
     lines.append("")
 
@@ -117,63 +178,61 @@ def render_recap_md(result: SliceResult, world: WorldState) -> str:
     lines.append(
         f"Must-win. {save.team.name} ({standing.wins}–{standing.losses}, "
         f"{standing.place} of {standing.of}; top {cutoff} make playoffs) "
-        f"host **{opponent}** ({archetype}) on {result.config.map}."
+        f"host **{opponent}** ({archetype}) on {started.map}."
     )
     lines.append("")
 
     lines.append("## The week")
     lines.append("")
-    focus = result.decisions.practice_focus
+    focus = practice.focus
     lines.append(
         f"- **Practice (your call):** {_PRACTICE_LABELS.get(focus, focus)} — {_PRACTICE_BLURBS.get(focus, '')}"
     )
-    team_talk = result.decisions.team_talk or "—"
+    team_talk = team_talk_event.text or "—"
     lines.append(f"- **Team talk:** “{team_talk}”")
     lines.append("")
 
     lines.append("## The match")
     lines.append("")
-    lines.append(result.narration.text)
+    lines.append(match.narration)
     lines.append("")
     lines.append(
         f"**Final:** {save.team.name} {ovc}–{opp} {opponent} "
         f"(_{verdict}_). Half: {h_ovc}–{h_opp}."
     )
     lines.append("")
-    half_author = result.halftime.author or "the bench"
-    lines.append(f"Half-time, {half_author}: “{result.halftime.text}”")
+    half_author = halftime.author or "the bench"
+    lines.append(f"Half-time, {half_author}: “{halftime.text}”")
     lines.append("")
 
     lines.append("### Key moments")
     lines.append("")
     lines.append("| Round | Beat | Who | Detail |")
     lines.append("| --- | --- | --- | --- |")
-    for moment in result.why.key_moments:
+    for moment in _all(events, KeyMomentLogged):
         who = _name_list(world, moment.actors)
         lines.append(f"| {moment.round} | {moment.kind} | {who} | {moment.descriptor} |")
     lines.append("")
 
     lines.append("### Standouts")
     lines.append("")
-    lines.append(f"- **MVP:** {_display_name(world, result.why.mvp)}")
-    lines.append(f"- **Carried:** {_name_list(world, result.why.who_carried)}")
-    lines.append(f"- **Came apart:** {_name_list(world, result.why.who_tilted)}")
+    lines.append(f"- **MVP:** {_display_name(world, standouts.mvp)}")
+    lines.append(f"- **Carried:** {_name_list(world, standouts.who_carried)}")
+    lines.append(f"- **Came apart:** {_name_list(world, standouts.who_tilted)}")
     lines.append("")
 
     lines.append("### Morale")
     lines.append("")
     lines.append("| Player | Change |")
     lines.append("| --- | --- |")
-    # Roster order keeps the table stable across runs.
-    for player in world.players:
-        if player.id in result.why.morale_deltas:
-            delta = result.why.morale_deltas[player.id]
-            lines.append(f"| {_display_name(world, player.id)} | {delta:+d} |")
+    # Morale events are logged in roster order, so the table stays stable.
+    for morale in _all(events, MoraleDelta):
+        lines.append(f"| {_display_name(world, morale.player)} | {morale.delta:+d} |")
     lines.append("")
 
     lines.append("## The fallout — Chirper")
     lines.append("")
-    for post in result.feed:
+    for post in _all(events, FeedPosted):
         cite_note = f"  _(cites: {', '.join(post.cites)})_" if post.cites else ""
         lines.append(f"- **{post.author_name}** ({post.author_handle}): “{post.text}”{cite_note}")
     lines.append("")
@@ -185,17 +244,18 @@ def render_recap_md(result: SliceResult, world: WorldState) -> str:
         "no invented history."
     )
     lines.append("")
-    if result.cited_memories:
-        for cite in result.cited_memories:
+    if remembered.cites:
+        for cite in remembered.cites:
             entry = world.resolve_cite(cite)
             summary = entry.summary if entry is not None else "(unresolved)"
             lines.append(f"- `{cite}` — {summary}")
     else:
         lines.append("- (no precedent was cited this week)")
     lines.append("")
-    pct = round(result.grounding_rate * 100)
+    rate = grounding.grounded_ok / grounding.grounded_total if grounding.grounded_total else 1.0
+    pct = round(rate * 100)
     lines.append(
-        f"_Grounding: {result.grounded_ok}/{result.grounded_total} grounded lines "
+        f"_Grounding: {grounding.grounded_ok}/{grounding.grounded_total} grounded lines "
         f"resolved ({pct}%)._"
     )
     lines.append("")
@@ -301,17 +361,23 @@ def render_feed_html(result: SliceResult, world: WorldState) -> str:
 # --------------------------------------------------------------------------- #
 def write_artifacts(
     result: SliceResult, world: WorldState, output_root: Union[str, Path]
-) -> tuple[Path, Path]:
-    """Write ``recap.md`` + ``feed.snapshot.html`` to ``<output_root>/<slice_id>/``.
+) -> tuple[Path, Path, Path]:
+    """Write ``events.jsonl`` + ``recap.md`` + ``feed.snapshot.html`` to
+    ``<output_root>/<slice_id>/``.
 
-    Returns the two written paths. Files are written with UTF-8 and explicit
+    The run-log is written first; the recap is then **derived from that persisted
+    log** (read back and projected), so the artifact is provably a view over
+    ``events.jsonl`` and never drifts from it. Returns the three written paths, in
+    ``(recap, feed, events)`` order. Files are written with UTF-8 and explicit
     ``\\n`` newlines so they are byte-identical across platforms and re-runs.
     """
     run_dir = Path(output_root) / result.slice_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
+    events_path = write_events(slice_events(result, world), run_dir / EVENTS_FILENAME)
+
     recap_path = run_dir / RECAP_FILENAME
     feed_path = run_dir / FEED_FILENAME
-    recap_path.write_text(render_recap_md(result, world), encoding="utf-8", newline="\n")
+    recap_path.write_text(render_recap_md(read_events(events_path), world), encoding="utf-8", newline="\n")
     feed_path.write_text(render_feed_html(result, world), encoding="utf-8", newline="\n")
-    return recap_path, feed_path
+    return recap_path, feed_path, events_path
