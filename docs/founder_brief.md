@@ -2,27 +2,28 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T06:54:36Z'
-summary: Cross-agent consensus
+updated: '2026-05-26T07:29:16Z'
+summary: Consensus across all three agents
 ---
 
-### Cross-agent consensus
-- **Plan is canonical** in `m0_1_build_execution_plan.md` / `m0_gate_build_execution_plan_v4.md`. All three agents reuse it verbatim — no re-planning needed.
-- **Critical path (5 hops):** W0 entry-gate smoke green → `recall()` selector → bind ≥1 precedent into templated render by cite ID → minimum-playable web/recap rebind → founder playtest (the gate).
-- **Architecture invariant unchanged:** memory recall is engine logic, not LLM logic. One pure deterministic `recall()` selector; templated copy binds by cite ID; vLLM is a post-gate upgrade behind the same adapter.
-- **Determinism floor is narrow:** golden round-trip + same-seed→same-WhyRecord + `recall()` purity + `recall()` golden fixture. The 9 hardening tickets stay **frozen until the gate fires**.
-- **DoD is the screenshot:** founder plays practice → match → fallout (2 open-text inputs ≤120 chars) in zero-API mode within 2 evenings and screenshots ≥1 grounded "remembered me" moment, judged against a pre-registered rubric.
+### Consensus across all three agents
+- **Milestone = the gate.** M0.1 ships when the founder plays practice → match → fallout in zero-API mode in ≤2 evenings and screenshots ≥1 grounded "remembered me" moment against a pre-registered rubric.
+- **Critical path is 5 hops.** Verify W0 (M0.0 closeout) → pure `recall()` selector → bind ≥1 precedent into templated render by cite ID → minimum-playable web/recap rebind → founder plays.
+- **Architecture invariant.** `recall()` is engine-side, pure, deterministic — *not* LLM logic. Zero-API templated is the gate path; vLLM is a post-gate upgrade behind the same adapter.
+- **Freeze holds.** Byte-identity, CI/bless, negative fixtures, toolchain pin, schema-boundary gate, typed `SaveError`, WhyRecord digest — all frozen until the gate fires.
+- **Wave shape.** W0 closeout → W1 contracts + selector + planted precedent → W2 bind + copy → W3 rebind + `play` one-liner → W4 gate. Engineering_lead and chief_of_staff use 4-wave numbering; infra_architect splits W1 into 1a (contracts) / 1b (selector + content) — same DAG, finer label.
 
-### Tensions / dissent
-- **Candidate volume.** Engineering proposed 4, infra proposed 6, CoS proposed 0. I read CoS as correct in spirit (don't bloat the queue) but too strict — several of these (LOCKED_SEED, run-log schema, line-shape pre-approval) materially de-risk the gate. Consolidated to 7 total under cap.
-- **Rubric outcomes.** Engineering's plan calls for pass/fail. Infra wants pass/fail/**ambiguous** with a pre-registered follow-up for the ambiguous case. I'm folding "ambiguous" into the existing pre-registered pass/fail card ticket as an amendment, not a new task.
-- **Schedule discipline.** Engineering added a Wave time-tripwire (W1+W2+W3 ≤ 1 evening → ship-templated-baseline kill switch). Infra didn't mention this. I'm keeping it — single-founder execution risk is real and the tripwire is cheap.
-- **Pre- vs post-render sign-off.** Infra distinguished founder pre-approval of line *shape* (before Wave 2 authoring) from post-render design sign-off (already a ticket). Engineering only had the post-render one. Keep both — they catch different failure modes.
+### Where they diverge
+- **New tasks vs. zero new tasks.** Chief_of_staff held the line: 7 newly-landed tickets already slot into existing waves; mint nothing. Engineering_lead and infra_architect each surfaced 4 candidates (8 total) — each removes a specific guess from the playtest the current backlog does not cover. My read: chief_of_staff's discipline is correct in spirit, but two of these candidates (Chirper content, reproducible answers fixture) are gate-blockers in disguise.
+- **Founder-visible bind indicator.** Engineering_lead wants a "N cited memory" chip in the live manager view in addition to the recap. The recap already places the bound-precedent line in a fixed scannable position with a marker — the chip is duplication. Drop.
+- **A/A baseline sanity.** Engineering_lead alone proposed this — running the same slice with `recall()` stubbed empty to prove the bind is visible work. Worth doing; cheap; protects against a false-positive gate.
 
-### Folded (not new tasks)
-- Chirper feed content → fold into existing templated copy pack ticket.
-- Git SHA + dep versions in evidence → fold into the existing designated evidence-packet directory ticket (amend acceptance).
-- Ambiguous rubric outcome → fold into the existing pre-registered pass/fail card ticket.
+### What stays out of scope
+- All 9 hardening tickets (byte-identity, CI, bless script, etc.) — frozen.
+- vLLM mode beyond what's already gated — post-gate.
+- `TrainingDecision` slice — held to M0.2.
+- Any new infra not tied to the gate decision.
 
-### Out of scope (frozen until gate fires)
-Byte-identity normalization, 100-run determinism digest, schema-boundary CI gate, toolchain pin, deterministic bless script, `make test` + CI smoke, golden render extension, shared typed `SaveError`, canonical WhyRecord digest, negative fixtures. All recorded. None move the screenshot.
+### Risk posture
+- Highest-risk seam: `recall()` → render binding. Wave-time tripwire + ship-templated-baseline kill switch guarantees a gate decision even if W2/W3 overrun.
+- Sanity floor: A/A baseline replay before founder plays, so the bound-precedent line is provably doing visible work.
