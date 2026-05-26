@@ -1,0 +1,79 @@
+# Negative fixture: shape-valid save with a dangling ``actors`` reference.
+#
+# Every cite resolves (so ``WorldState._grounding_holds`` passes), but the
+# memory entry ``mem:rook:debut`` lists ``phantom_unit`` among its ``actors``
+# — a unit id no player, team, rival org, or rival star defines. The load
+# parses, shape-validates, then fails at ``check_referential_integrity`` with
+# a ``SaveReferentialIntegrityError`` whose message names the exact field path
+# (``players[0=rook].memory_log[0=mem:rook:debut].actors[1]``) and the missing
+# id, so a hand-author can take the message straight to the offending line.
+# Distinct from the orphan-cite fixture (which fails *during* shape validation
+# inside ``_grounding_holds``) and from the unit-typo fixture (which trips on
+# a clash pair's ``b``).
+schema_version: 0
+seed: 6
+save:
+  id: week6
+  title: "Dangling actor fixture"
+  game: Vector Strike
+  tone: dry-mockumentary
+  flavor: valorant-flavored
+  fiction_note: "Negative fixture for dangling-actor fail-closed."
+  season:
+    league: Vector Strike Pro League
+    division: Atlantic Division — Spring Split
+    total_weeks: 8
+    current_week: 6
+    playoff_cutoff: 6
+  team:
+    id: overcast
+    name: Overcast
+    tag: OVC
+    handle: "@overcast"
+    blurb: "fixture team"
+    standing: { wins: 2, losses: 3, place: 6, of: 8, note: "fixture standing" }
+players:
+  - id: rook
+    name: Rook
+    handle: "@rook"
+    role: IGL
+    age: 27
+    signature_operative: Atlas
+    bio: "fixture bio"
+    persona_voice: "fixture voice"
+    traits: [veteran]
+    memory_log:
+      - id: "mem:rook:debut"
+        week: 1
+        day: 3
+        kind: match
+        actors: [rook, phantom_unit]   # <-- second actor is an unknown unit
+        summary: "fixture memory"
+        sentiment: positive
+rivals:
+  - id: northwind
+    name: Northwind
+    tag: NWD
+    handle: "@northwind"
+    archetype: The Ex-Teammate
+    star: { id: bishop, name: "Bishop", role: SENTINEL, handle: "@bishop" }
+    bio: "fixture rival"
+    pressure_on_overcast: "fixture pressure"
+last_week:
+  week: 5
+  opponent: northwind
+  format: Bo3
+  result: loss
+  scoreline:
+    overcast: 1
+    opponent: 2
+    maps:
+      - { map: Helix, overcast: 13, opponent: 9, result: win }
+  headline: "fixture headline"
+  chirper_feed:
+    - id: "chirp:fx:01"
+      author: "@overcast"
+      author_id: overcast
+      day: 5
+      text: "fixture post"
+      likes: 1
