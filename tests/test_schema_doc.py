@@ -17,7 +17,7 @@ import unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon import schema  # noqa: E402
-from esports_tycoon.canned import loader  # noqa: E402
+from esports_tycoon.canned import canonical, loader  # noqa: E402
 
 # Every pydantic model whose fields appear in a save document, in load order.
 # The resolver/content-adapter output types (``Decisions``, ``WhyRecord``,
@@ -105,6 +105,63 @@ class TestSchemaDoc(unittest.TestCase):
         expected_min = sum(len(_serialized_field_names(m)) for m in _SAVE_MODELS)
         self.assertGreaterEqual(seen, expected_min)
         self.assertFalse(thin, f"SCHEMA.md rows without a real description: {thin}")
+
+
+class TestByteIdentityContractDoc(unittest.TestCase):
+    """``saves/SCHEMA.md`` documents the byte-identity normalization contract.
+
+    The serializer and the round-trip golden both depend on a single written
+    rule for key order, float repr, trailing newline, and unicode. These
+    tests guard the documentation half of that contract: the section exists,
+    each of the four named rules has a backticked anchor (so the section
+    can't decay into prose that names the topic without spelling the rule),
+    and the code → docs jump from
+    :data:`esports_tycoon.canned.canonical.CONTRACT_DOC_ANCHOR` lands on a
+    real heading.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.doc_path = (
+            pathlib.Path(__file__).resolve().parents[1] / "saves" / "SCHEMA.md"
+        )
+        cls.text = cls.doc_path.read_text(encoding="utf-8")
+
+    def test_contract_section_heading_exists(self):
+        # The anchor pinned in the canonical module must land on a real
+        # ``## …`` heading in SCHEMA.md; the assertion is the bridge between
+        # the code-side seam and the docs-side seam.
+        heading = f"## {canonical.CONTRACT_DOC_ANCHOR}"
+        self.assertIn(heading, self.text, f"missing SCHEMA.md heading {heading!r}")
+
+    def test_contract_section_documents_each_named_rule(self):
+        # The four rules the acceptance bar names — key order, float repr,
+        # trailing newline, unicode — must each be called out in the
+        # contract section by a recognisable backticked token, so the
+        # section can't silently collapse to a stub.
+        heading = f"## {canonical.CONTRACT_DOC_ANCHOR}"
+        start = self.text.index(heading)
+        # Bound the search to this section; the next ``## `` (or EOF) ends it.
+        rest = self.text[start + len(heading):]
+        end = rest.find("\n## ")
+        section = rest if end < 0 else rest[:end]
+        section_lower = section.lower()
+        missing: list[str] = []
+        # Each rule is paired with at least one concrete token a reader can
+        # grep for, so a reword can't silently drop the rule itself.
+        rule_signals = {
+            "key order": ("key order", "iteration order"),
+            "float repr": ("repr", ".nan"),
+            "trailing newline": ("trailing newline",),
+            "unicode": ("unicode", "allow_unicode"),
+        }
+        for rule, tokens in rule_signals.items():
+            if not any(token.lower() in section_lower for token in tokens):
+                missing.append(rule)
+        self.assertFalse(
+            missing,
+            f"byte-identity contract section is missing rules: {missing}",
+        )
 
 
 class TestReadmeZeroApiQuickstart(unittest.TestCase):

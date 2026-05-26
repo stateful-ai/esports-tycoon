@@ -177,7 +177,11 @@ class TestGoldenDeterminism(unittest.TestCase):
 
     def test_round_trip_normalizes_to_committed_canonical_bytes(self):
         # The canonical serializer's exact output is pinned, so a reformat is
-        # caught even when it leaves the parsed data unchanged.
+        # caught even when it leaves the parsed data unchanged. This is the
+        # byte-identity assertion on ``dump(load(week6.yaml))`` that the
+        # ``saves/SCHEMA.md`` **Byte-identity normalization** contract calls
+        # for: a reordered key, a re-padded float mantissa, a dropped trailing
+        # newline, or an escaped unicode glyph would each flip these bytes.
         canonical = loader.dumps(self.world)
         golden = _read_or_write_golden(_CANONICAL_GOLDEN, canonical)
         self.assertEqual(
