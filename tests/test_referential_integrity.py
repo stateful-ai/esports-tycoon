@@ -32,10 +32,11 @@ import tempfile
 import unittest
 
 import yaml
+from pydantic import ValidationError
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from esports_tycoon.canned import loader  # noqa: E402
+from esports_tycoon.canned import canonical, loader  # noqa: E402
 from esports_tycoon.schema import WorldState  # noqa: E402
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures" / "integrity"
@@ -278,6 +279,149 @@ class TestCommittedFixturesProduceDistinctMessages(unittest.TestCase):
                 loader.load(FIXTURES / name)
             types.add(type(cm.exception))
         self.assertEqual(len(types), 3)
+
+
+class TestNegativeFixturesFailClosed(unittest.TestCase):
+    """The committed negative fixtures must each fail closed in the right way.
+
+    One fixture per failure category the load path is responsible for catching,
+    asserted against the file on disk so a regression in *either* the loader's
+    error type *or* its message format trips here. The happy week6 save is
+    re-asserted alongside so the suite cannot regress into "fixtures fail, but
+    so does the real save."
+    """
+
+    def test_happy_week6_still_loads(self) -> None:
+        # The shipped canonical save must keep loading clean while the negative
+        # fixtures around it grow — a regression that caught one of the bad
+        # paths by also rejecting the good save would still be a regression.
+        world = loader.load()
+        self.assertEqual(world.save.id, "week6")
+
+    def test_orphan_mem_cite_fixture_fails_in_grounding_validator(self) -> None:
+        # The shape-validator catches the dangling cite *before* the loader
+        # reaches ``check_referential_integrity``, so the typed error here is
+        # pydantic's ``ValidationError`` (raised out of
+        # ``WorldState._grounding_holds``), distinct from the integrity error.
+        # The field path the message owes the author is the clash that holds
+        # the orphan cite and the cite id itself.
+        path = FIXTURES / "orphan_mem_cite.yaml"
+        with self.assertRaises(ValidationError) as cm:
+            loader.load(path)
+        msg = str(cm.exception)
+        self.assertIn("cites must resolve to a real memory", msg)
+        self.assertIn("clash rook/vex", msg)
+        self.assertIn("mem:rook:never_happened", msg)
+
+    def test_dangling_actor_fixture_fails_in_referential_integrity(self) -> None:
+        # Shape-valid (every cite resolves) but an actor on a memory entry
+        # names a unit no entity defines. The integrity gate raises the typed
+        # error with the exact field path — players[N=id].memory_log[M=mem-id]
+        # .actors[K] — and the offending id.
+        path = FIXTURES / "dangling_actor.yaml"
+        with self.assertRaises(loader.SaveReferentialIntegrityError) as cm:
+            loader.load(path)
+        msg = str(cm.exception)
+        self.assertIn(str(path), msg)
+        self.assertIn(
+            "players[0=rook].memory_log[0=mem:rook:debut].actors[1]", msg
+        )
+        self.assertIn("'phantom_unit'", msg)
+        # The expected-id-kinds list belongs in the message too, so an author
+        # can see at a glance whether they meant a player or a rival.
+        self.assertIn("player", msg)
+        self.assertIn("rival_star", msg)
+        # And the typed-error contract: exactly one issue, on that path.
+        self.assertEqual(len(cm.exception.issues), 1)
+        issue = cm.exception.issues[0]
+        self.assertEqual(
+            issue.path,
+            "players[0=rook].memory_log[0=mem:rook:debut].actors[1]",
+        )
+        self.assertEqual(issue.missing_id, "phantom_unit")
+
+    def test_unknown_schema_version_major_fixture_fails_in_version_gate(self) -> None:
+        # A version higher than this build supports is "unknown major" and the
+        # version gate fires before any of the rest of the schema is touched.
+        # The typed error here is ``SchemaVersionError``, and the field path it
+        # owes the author is ``schema_version`` plus the offending value, so
+        # they can take the message straight to the offending line. This
+        # fixture pins the *next-major* case (current + 1), the realistic save
+        # an author would hand-write; sibling ``unknown_version.yaml`` pins
+        # the sky-high-future case so neither regression slips through.
+        path = FIXTURES / "unknown_schema_version_major.yaml"
+        with self.assertRaises(loader.SchemaVersionError) as cm:
+            loader.load(path)
+        msg = str(cm.exception)
+        self.assertIn(str(path), msg)
+        self.assertIn("schema_version", msg)
+        # The offending value (1) and the build's current version (0) both
+        # belong in the message so the author can see the gap at a glance.
+        self.assertIn("1", msg)
+        self.assertIn("newer", msg)
+
+    # --- bytes fail-closed ---------------------------------------------------- #
+    def test_loose_floats_shuffled_keys_fixture_normalizes_to_canonical_bytes(
+        self,
+    ) -> None:
+        # The fourth fail-closed category isn't a typed error: it is *bytes*.
+        # A loose-form input (loose float spellings + non-alphabetical key
+        # order) must flow through the canonical serializer to one fixed-point
+        # byte form. The expected canonical text is pinned inline so any drift
+        # — re-padded mantissa, alphabetized keys, dropped trailing newline,
+        # flow-style fallback — flips the assertion with a reviewable diff.
+        path = FIXTURES / "loose_floats_shuffled_keys.yaml"
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        produced = canonical.dumps(data)
+        expected = (
+            "zebra: 1.0\n"
+            "alpha: 1.0e-05\n"
+            "mike: 1.0e+20\n"
+            "nan_value: .nan\n"
+            "inf_value: .inf\n"
+            "neg_inf: -.inf\n"
+            "neg_zero: -0.0\n"
+        )
+        self.assertEqual(produced, expected)
+        # Idempotence: re-loading the canonical bytes and re-dumping yields
+        # the identical text. This is what "canonical bytes" means — the
+        # serializer is a fixed point, not just a one-shot rewrite.
+        self.assertEqual(canonical.dumps(yaml.safe_load(produced)), expected)
+
+    def test_loose_floats_shuffled_keys_fixture_preserves_input_key_order(
+        self,
+    ) -> None:
+        # The shuffled-key half of the contract: the canonical dumper preserves
+        # input dict iteration order (``sort_keys=False``). A regression that
+        # alphabetized would emit ``alpha`` first; we assert ``zebra`` does.
+        path = FIXTURES / "loose_floats_shuffled_keys.yaml"
+        produced = canonical.dumps(yaml.safe_load(path.read_text(encoding="utf-8")))
+        first_line = produced.splitlines()[0]
+        self.assertTrue(
+            first_line.startswith("zebra:"),
+            f"canonical dumper must preserve input key order; got first line {first_line!r}",
+        )
+
+    def test_negative_fixtures_surface_four_distinct_outcomes(self) -> None:
+        # The four negative fixtures must each fail closed *in their own way* —
+        # three distinct typed errors plus the bytes-equality assertion — so a
+        # caller (or a future maintainer) can tell which contract was breached
+        # by looking at the type alone, without parsing the message. A
+        # collapse where two fixtures started raising the same error would
+        # silently merge two contracts; this guard trips on that.
+        with self.assertRaises(ValidationError):
+            loader.load(FIXTURES / "orphan_mem_cite.yaml")
+        with self.assertRaises(loader.SaveReferentialIntegrityError):
+            loader.load(FIXTURES / "dangling_actor.yaml")
+        with self.assertRaises(loader.SchemaVersionError):
+            loader.load(FIXTURES / "unknown_schema_version_major.yaml")
+        # The fourth doesn't raise — it must normalize. Equality here proves
+        # that contract; a regression would either raise (wrong) or produce
+        # different bytes (also wrong).
+        path = FIXTURES / "loose_floats_shuffled_keys.yaml"
+        produced = canonical.dumps(yaml.safe_load(path.read_text(encoding="utf-8")))
+        self.assertTrue(produced.endswith("\n"))
+        self.assertFalse(produced.endswith("\n\n"))
 
 
 if __name__ == "__main__":
