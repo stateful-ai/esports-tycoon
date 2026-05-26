@@ -44,6 +44,8 @@ __all__ = [
     "Role",
     "MemoryKind",
     "Sentiment",
+    "RecallTag",
+    "RECALL_TAGS",
     "MemoryId",
     "Relationship",
     "MemoryEntry",
@@ -134,6 +136,27 @@ MemoryKind = Literal["match", "scrim", "social", "1on1", "press", "rumor"]
 #: A memory entry's emotional charge.
 Sentiment = Literal["positive", "neutral", "negative"]
 
+#: The **frozen shared vocabulary** the deterministic precedent-recall selector
+#: speaks on both sides of the join. The resolver tags each narratable beat with
+#: at most one :class:`KeyMoment.tag` drawn from this set; canned memory entries
+#: opt into the same vocabulary through :attr:`MemoryEntry.recall_tags`. Recall
+#: scores tag-overlap only across these four values — anything else is a colour
+#: tag and stays in the open :attr:`MemoryEntry.tags` list, ignored by the
+#: ranker. The vocabulary is deliberately small (four labels for the four
+#: dramatic shapes the room actually rhymes with): widening it is a schema
+#: change, not a copy change, so a stray "ace" or "revenge" cannot silently
+#: rejoin the recall plane. Pydantic ``Literal`` validation fails closed on any
+#: off-enum value at load time — there is no fallback path that quietly drops
+#: an unknown tag.
+RecallTag = Literal["choke", "clutch", "tilt", "rivalry"]
+
+#: Runtime mirror of :data:`RecallTag` for code that needs the set (vocabulary
+#: tests, off-enum guards, recall scoring). Kept in lockstep with the
+#: ``Literal`` above by the schema-level test that pins the two together; if a
+#: tag is added here it must be added in :data:`RecallTag` (and vice versa) or
+#: the typed and runtime sides of the vocabulary drift.
+RECALL_TAGS: frozenset[str] = frozenset({"choke", "clutch", "tilt", "rivalry"})
+
 
 class _Model(BaseModel):
     """Base config shared by every save model.
@@ -162,6 +185,20 @@ class MemoryEntry(_Model):
 
     Templates and LLM prompts are passed entries from this log (and never
     free-form simulation strings); the renderer resolves cites back to them.
+
+    Two tag fields, doing different jobs. :attr:`tags` is the open, free-form
+    colour list the canned save authors in human prose (``bishop``,
+    ``foreshadow``, ``northwind``…) — the templated narrator reads it for
+    keyword-style precedent picking, and that is all it is for.
+    :attr:`recall_tags` is the *typed* opt-in to the frozen recall vocabulary
+    (:data:`RecallTag`): an entry that carries ``"choke"`` here is a precedent
+    the deterministic recall selector will surface against a beat the resolver
+    tagged ``"choke"``. Authors curate :attr:`recall_tags` deliberately — only
+    entries the room is meant to rhyme with go on the recall plane. Pydantic
+    fails closed on any off-enum value at load time, so a typo in the save
+    surfaces as a :class:`pydantic.ValidationError` (lifted into
+    :class:`esports_tycoon.canned.loader.SaveSchemaError`) rather than silently
+    being dropped from the ranker.
     """
 
     id: MemoryId
@@ -172,6 +209,7 @@ class MemoryEntry(_Model):
     summary: str
     sentiment: Sentiment
     tags: list[str] = Field(default_factory=list)
+    recall_tags: list[RecallTag] = Field(default_factory=list)
 
 
 class Player(_Model):
@@ -532,12 +570,38 @@ class Decisions(_Model):
 # so every ticket shares one schema. See m0_technical_plan.md.
 # --------------------------------------------------------------------------- #
 class KeyMoment(_Model):
-    """A narratable beat the resolver surfaces from a match."""
+    """A narratable beat the resolver surfaces from a match.
+
+    Carries both the narrator-facing ``kind`` (the wider colour vocabulary the
+    templated copy pack reads — ``ace``, ``comeback``, ``closeout``, …) and the
+    recall-facing :attr:`tag` (the frozen :data:`RecallTag` vocabulary the
+    deterministic recall selector scores on). The two are separate by design:
+    the narrator needs more shades than recall does, and recall must reject the
+    extra shades to stay deterministic and small. A beat that does not rhyme
+    with any recall tag leaves :attr:`tag` ``None`` and contributes no tag
+    score — recall fails closed for it rather than reaching for the kind.
+
+    :attr:`actor_ref` names the single canonical actor the beat is *about*
+    (the one whose precedent should surface), as opposed to :attr:`actors`
+    which lists everyone involved. It must be one of :attr:`actors`; recall
+    treats it as a guaranteed-present anchor when present, and falls back to
+    :attr:`actors` when not.
+    """
 
     round: int = Field(ge=1)
     kind: str
     actors: list[str]
     descriptor: str
+    tag: Optional[RecallTag] = None
+    actor_ref: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _actor_ref_is_in_actors(self) -> "KeyMoment":
+        if self.actor_ref is not None and self.actor_ref not in self.actors:
+            raise ValueError(
+                f"actor_ref {self.actor_ref!r} is not in this beat's actors {self.actors!r}"
+            )
+        return self
 
 
 class RoundResult(_Model):

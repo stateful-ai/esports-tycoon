@@ -6,16 +6,25 @@ it rhymes with the match that just resolved. The ranking has three signals,
 in priority order:
 
 * **shared actors** — the count of overlap between the people the resolver
-  named (key-moment actors, the MVP, who carried, who came apart) and the
-  memory entry's actors. Memory is a social object; a precedent involving the
-  same people is the strongest possible match;
-* **tag overlap** — the count of overlap between the tags the resolver's beats
-  rhyme with (the choke/clutch/tilt-style vocabulary in
-  :data:`TARGET_TAGS_FOR_KIND`, plus an explicit ``"tilt"`` when this match
-  had tilters) and the memory entry's tags;
+  named (key-moment actors and actor_refs, the MVP, who carried, who came
+  apart) and the memory entry's actors. Memory is a social object; a precedent
+  involving the same people is the strongest possible match.
+* **tag overlap** — the count of overlap between the *frozen recall
+  vocabulary* the resolver tagged the beats with
+  (:data:`~esports_tycoon.schema.RECALL_TAGS` = ``{choke, clutch, tilt,
+  rivalry}``, populating :attr:`~esports_tycoon.schema.KeyMoment.tag` and
+  augmented with ``"tilt"`` when :attr:`~esports_tycoon.schema.WhyRecord.who_tilted`
+  is non-empty) and the memory entry's
+  :attr:`~esports_tycoon.schema.MemoryEntry.recall_tags`. Both sides of the
+  join speak the same typed enum — a beat the resolver could not tag, or a
+  memory the author did not opt onto the recall plane, contributes no tag
+  score. There is no fallback to the open-form
+  :attr:`~esports_tycoon.schema.MemoryEntry.tags` list: recall fails closed
+  when the typed signal is absent, by design.
 * **active rivalry** — a flat ``+1`` if any actor in the beat has an
   authored ``kind="rival"`` :class:`~esports_tycoon.schema.Relationship`
-  whose target appears in the memory entry (in its ``actors`` or its tags).
+  whose target appears in the memory entry (in its ``actors`` or its
+  ``recall_tags``).
 
 Sort is by ``(-actor_score, -tag_score, -rivalry_score)`` and Python's
 ``sorted`` is stable, so equal-scored entries fall back to save order
@@ -48,26 +57,7 @@ from typing import Optional
 
 from esports_tycoon.schema import MEMORY_ID_RE, MemoryEntry, WhyRecord, WorldState
 
-__all__ = ["recall", "score", "Precedent", "RecallResult", "TARGET_TAGS_FOR_KIND"]
-
-
-#: How each resolver-emittable key-moment kind rhymes with the memory log's
-#: authored tag vocabulary. Kept compatible with the per-kind tag mapping in
-#: :mod:`esports_tycoon.content.templated` so the beat the narrator chooses and
-#: the precedent recall surfaces draw from the same vocabulary. ``"tilt"`` is
-#: added separately when :attr:`WhyRecord.who_tilted` is non-empty, so a tilted
-#: lineup pulls tilt-tagged precedents even on a beat that doesn't itself rhyme
-#: with tilt.
-TARGET_TAGS_FOR_KIND: dict[str, frozenset[str]] = {
-    "ace": frozenset({"ace"}),
-    "clutch": frozenset({"clutch"}),
-    "choke": frozenset({"choke", "tilt"}),
-    "comeback": frozenset({"clutch", "revenge"}),
-    "dominant": frozenset({"clutch"}),
-    "blowout": frozenset({"tilt", "choke"}),
-    "match_point": frozenset({"choke", "tilt"}),
-    "closeout": frozenset({"clutch"}),
-}
+__all__ = ["recall", "score", "Precedent", "RecallResult"]
 
 
 @dataclass(frozen=True)
@@ -149,13 +139,16 @@ def _why_actors(why: WhyRecord) -> frozenset[str]:
     """Every player the resolver named in this match.
 
     The narrator may pick any one beat to lead with, but recall ranks against
-    the *whole* match: every key moment's actors, the MVP, who carried, and who
-    came apart. That keeps the signal strong on a match where one beat names
-    one starter and another names the rest.
+    the *whole* match: every key moment's actors and its (typed) actor_ref,
+    plus the MVP, who carried, and who came apart. That keeps the signal
+    strong on a match where one beat names one starter and another names the
+    rest.
     """
     actors: set[str] = set()
     for moment in why.key_moments:
         actors.update(moment.actors)
+        if moment.actor_ref is not None:
+            actors.add(moment.actor_ref)
     if why.mvp:
         actors.add(why.mvp)
     actors.update(why.who_carried)
@@ -164,10 +157,19 @@ def _why_actors(why: WhyRecord) -> frozenset[str]:
 
 
 def _target_tags(why: WhyRecord) -> frozenset[str]:
-    """The memory-tag vocabulary this match rhymes with."""
+    """The frozen recall vocabulary this match rhymes with.
+
+    Reads :attr:`KeyMoment.tag` (the typed
+    :data:`~esports_tycoon.schema.RecallTag` opt-in) directly — there is no
+    fallback to ``kind`` or any other open-form signal, so a beat the resolver
+    could not tag contributes nothing to tag-overlap. The ``"tilt"`` boost from
+    :attr:`WhyRecord.who_tilted` is layered on top: a tilted lineup pulls
+    tilt-tagged precedents even on a beat that does not itself rhyme with tilt.
+    """
     tags: set[str] = set()
     for moment in why.key_moments:
-        tags.update(TARGET_TAGS_FOR_KIND.get(moment.kind, frozenset()))
+        if moment.tag is not None:
+            tags.add(moment.tag)
     if why.who_tilted:
         tags.add("tilt")
     return frozenset(tags)
@@ -178,8 +180,8 @@ def _active_rivals(world: WorldState, actors: frozenset[str]) -> frozenset[str]:
 
     These are the rivalries the *fielded* roster carries into this match (Rook
     has Echo, Vex has Halo, Coyote has Bishop). A memory that drags one of
-    those names back in — by including them as an actor or tagging them by name
-    — earns the rivalry bonus.
+    those names back in — by including them as an actor or marking ``rivalry``
+    in its recall tags — earns the rivalry bonus.
     """
     rivals: set[str] = set()
     for player in world.players:
@@ -206,10 +208,10 @@ def score(why: WhyRecord, world: WorldState) -> list[Precedent]:
     for player in world.players:
         for entry in player.memory_log:
             entry_actors = set(entry.actors)
-            entry_tags_lower = {t.lower() for t in entry.tags}
+            entry_recall_tags = set(entry.recall_tags)
             matched_actors = frozenset(actors & entry_actors)
-            matched_tags = frozenset(tags & entry_tags_lower)
-            matched_rivals = frozenset(rivals & (entry_actors | entry_tags_lower))
+            matched_tags = frozenset(tags & entry_recall_tags)
+            matched_rivals = frozenset(rivals & (entry_actors | entry_recall_tags))
             actor_score = len(matched_actors)
             tag_score = len(matched_tags)
             rivalry_score = 1 if matched_rivals else 0

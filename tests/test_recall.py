@@ -46,10 +46,12 @@ from esports_tycoon.schema import (  # noqa: E402
     KeyMoment,
     MemoryEntry,
     Player,
+    RECALL_TAGS,
     Relationship,
     Role,
     WhyRecord,
 )
+from pydantic import ValidationError  # noqa: E402
 
 
 _RECALL_SRC = pathlib.Path(recall_mod.__file__)
@@ -150,11 +152,24 @@ class TestScoring(_Fixture):
     def _why(self, *, kind: str, actors: list[str], tilters: list[str] | None = None) -> WhyRecord:
         # A hand-crafted WhyRecord so the scoring contract is tested independently
         # of whatever the resolver happens to emit for a given seed. Round/seed
-        # values are arbitrary placeholders — recall doesn't look at them.
+        # values are arbitrary placeholders — recall doesn't look at them. We
+        # set ``tag`` directly via the resolver's kind→tag mapping so the typed
+        # vocabulary signal is in place when the kind has one; otherwise the
+        # beat carries no tag (which is the contract we want to test).
+        tag = resolver.KIND_TO_RECALL_TAG.get(kind)
         return WhyRecord(
             scoreline=(13, 9),
             mvp=actors[0] if actors else "rook",
-            key_moments=[KeyMoment(round=1, kind=kind, actors=actors, descriptor="x")],
+            key_moments=[
+                KeyMoment(
+                    round=1,
+                    kind=kind,
+                    actors=actors,
+                    descriptor="x",
+                    tag=tag,
+                    actor_ref=actors[0] if actors else None,
+                )
+            ],
             who_carried=[],
             who_tilted=list(tilters or []),
             morale_deltas={a: 0 for a in actors},
@@ -183,14 +198,17 @@ class TestScoring(_Fixture):
         ids = [p.entry.id for p in ranked]
         self.assertLess(ids.index(sable_actor_only.entry.id), ids.index(coyote_tag_only.entry.id))
 
-    def test_tag_overlap_includes_choke_clutch_tilt_vocabulary(self):
-        # The criteria call out "choke / clutch / tilt" as the target tag
-        # vocabulary; assert all three are reachable from emittable kinds.
-        every_target_tag: set[str] = set()
-        for kind, tags in recall_mod.TARGET_TAGS_FOR_KIND.items():
-            every_target_tag |= set(tags)
-        for required in ("choke", "clutch", "tilt"):
-            self.assertIn(required, every_target_tag, f"recall must rank by '{required}' overlap")
+    def test_recall_vocabulary_is_the_frozen_four(self):
+        # The frozen shared vocabulary is exactly {choke, clutch, tilt, rivalry}
+        # — anything else is a colour tag on the open ``MemoryEntry.tags`` list
+        # and stays off the recall plane. The set is small on purpose; widening
+        # it is a schema change, not a copy change.
+        self.assertEqual(RECALL_TAGS, frozenset({"choke", "clutch", "tilt", "rivalry"}))
+        # And the resolver's kind→tag map only emits values from this set
+        # (every value in the map is a valid recall tag; the map is partial
+        # because some kinds — ``ace`` — have no recall analogue).
+        for kind, tag in resolver.KIND_TO_RECALL_TAG.items():
+            self.assertIn(tag, RECALL_TAGS, f"kind={kind!r} maps to non-vocabulary tag {tag!r}")
 
     def test_active_rivalry_lifts_a_rival_tagged_memory(self):
         # Vex has an authored kind="rival" relationship with Halo. A memory
@@ -224,6 +242,7 @@ class TestScoring(_Fixture):
                 summary="x",
                 sentiment="neutral",
                 tags=[tag],
+                recall_tags=[tag] if tag in RECALL_TAGS else [],
             )
 
         from esports_tycoon.schema import SaveMeta, Standing, Team, Season, LastWeek, Scoreline
@@ -274,10 +293,13 @@ class TestScoring(_Fixture):
         )
         # MVP is a third party who owns no memory in this synthetic world, so
         # neither a nor b earns an actor-score from it; both score (0, 1, 0) and
-        # the only thing left to order them is save order.
+        # the only thing left to order them is save order. The KeyMoment carries
+        # the typed ``tag="clutch"`` so recall has a target tag to match against
+        # (without it, the beat would contribute no tag score — recall fails
+        # closed on tag-less beats by design).
         why = WhyRecord(
             scoreline=(13, 9), mvp="ghost",
-            key_moments=[KeyMoment(round=1, kind="clutch", actors=[], descriptor="x")],
+            key_moments=[KeyMoment(round=1, kind="clutch", actors=[], descriptor="x", tag="clutch")],
             who_carried=[], who_tilted=[],
             morale_deltas={"a": 0, "b": 0},
             seed=0, round_log=[],
@@ -405,6 +427,130 @@ class TestTemplatedCopyBindsRecalledCite(_Fixture):
             self.assertIn(cite, ranked_ids)
 
 
+class TestFrozenVocabulary(_Fixture):
+    """The frozen shared vocabulary on both sides of the recall join.
+
+    The deterministic recall selector speaks one typed enum across both inputs
+    it joins: the resolver's :attr:`KeyMoment.tag` and the canned save's
+    :attr:`MemoryEntry.recall_tags`. The enum is small (four labels) and the
+    load path fails closed on any off-vocabulary value — there is no fallback
+    that quietly drops a typo from the ranker.
+    """
+
+    def test_resolver_emits_key_moments_with_typed_tag_from_the_frozen_vocabulary(self):
+        # The acceptance bar: the resolver emits ``WhyRecord.key_moments[i].tag``
+        # drawn from the frozen :data:`RECALL_TAGS` set. Sweep the canonical
+        # opponents × seeds so every kind→tag branch fires.
+        for opp in ("apex_foundry", "northwind", "sovereign", "tidewater", "last_light"):
+            for seed in range(6):
+                why = resolver.run(self.world, Decisions(opponent=opp, map="Helix"), seed)
+                self.assertTrue(why.key_moments, f"opp={opp} seed={seed} emitted no key moments")
+                tagged = [m for m in why.key_moments if m.tag is not None]
+                self.assertTrue(
+                    tagged,
+                    f"opp={opp} seed={seed}: no key moment carries a recall tag",
+                )
+                for moment in tagged:
+                    self.assertIn(
+                        moment.tag,
+                        RECALL_TAGS,
+                        f"opp={opp} seed={seed} round={moment.round}: "
+                        f"tag {moment.tag!r} is not in the frozen vocabulary",
+                    )
+
+    def test_resolver_emits_actor_ref_that_lives_in_actors(self):
+        # actor_ref is the canonical single anchor. It must always be one of the
+        # beat's named actors so a downstream consumer can rely on it as a
+        # guaranteed-present pointer.
+        for opp in ("apex_foundry", "northwind"):
+            for seed in (0, 1, 6, 9):
+                why = resolver.run(self.world, Decisions(opponent=opp, map="Helix"), seed)
+                for moment in why.key_moments:
+                    if moment.actor_ref is not None:
+                        self.assertIn(
+                            moment.actor_ref,
+                            moment.actors,
+                            f"opp={opp} seed={seed} round={moment.round}: "
+                            f"actor_ref {moment.actor_ref!r} not in actors {moment.actors!r}",
+                        )
+
+    def test_loader_fails_closed_on_off_enum_recall_tag(self):
+        # An off-vocabulary recall tag on the canned save is rejected by the
+        # loader. The save is regenerated from a real load of the canonical
+        # world (so every other field is valid) and only one entry is corrupted.
+        bad_world = self.world.model_copy()
+        with self.assertRaises(ValidationError) as cm:
+            MemoryEntry(
+                id="mem:rook:offenum_w0",
+                week=0, day=1, kind="scrim", actors=["rook"],
+                summary="x", sentiment="neutral",
+                tags=["x"],
+                recall_tags=["ace"],  # "ace" is NOT in the frozen vocabulary
+            )
+        # Pydantic v2 reports the enum violation with the field path
+        # ``recall_tags.0`` so the author can take the message straight to the
+        # offending value.
+        msg = str(cm.exception)
+        self.assertIn("recall_tags", msg)
+
+    def test_off_enum_key_moment_tag_is_rejected(self):
+        # Same contract on the resolver side: a KeyMoment cannot be built with
+        # an off-vocabulary tag. This is what makes the resolver's emit path
+        # "fail closed" rather than silently quote a stray string into the
+        # recall plane.
+        with self.assertRaises(ValidationError):
+            KeyMoment(round=1, kind="ace", actors=["vex"], descriptor="5k", tag="ace")
+
+    def test_actor_ref_outside_actors_is_rejected(self):
+        with self.assertRaises(ValidationError):
+            KeyMoment(round=1, kind="clutch", actors=["rook"], descriptor="x", actor_ref="vex")
+
+    def test_recall_fails_closed_when_key_moments_have_no_tag(self):
+        # The "recall callback test fails closed if key-moment tags are
+        # absent": a WhyRecord whose beats carry no ``tag`` contributes no
+        # tag-overlap signal to the ranker. The expected behaviour is that
+        # every surfaced candidate has tag_score == 0 — recall does NOT fall
+        # back to ``kind`` or to the open ``tags`` list, so a beat the
+        # resolver could not tag stays off the recall plane by construction.
+        why = WhyRecord(
+            scoreline=(13, 9),
+            mvp="sable",
+            key_moments=[
+                KeyMoment(
+                    round=1, kind="clutch", actors=["sable"],
+                    descriptor="x", actor_ref="sable",
+                    # tag deliberately omitted — this is the failure mode
+                    # under test.
+                ),
+            ],
+            who_carried=["sable"], who_tilted=[],
+            morale_deltas={"sable": 0},
+            seed=0, round_log=[],
+        )
+        ranked = score(why, self.world)
+        # Some candidates still surface via shared actors (sable owns memory
+        # entries), but none of them earn a tag_score — recall did not invent
+        # one from the bare ``kind``.
+        self.assertTrue(ranked, "expected sable's actor-shared precedents to surface")
+        for precedent in ranked:
+            self.assertEqual(
+                precedent.tag_score, 0,
+                f"recall produced a tag_score for {precedent.entry.id!r} despite "
+                "no key_moment.tag being set — it must fail closed on absent tags",
+            )
+
+    def test_canned_save_recall_tags_are_all_in_the_frozen_vocabulary(self):
+        # Belt and braces: the loaded world's recall_tags only contain values
+        # from the frozen enum. Pydantic would have rejected the load if not,
+        # but this asserts the contract on the *loaded* artifact directly so a
+        # regression cannot hide behind a permissive type alias.
+        for player in self.world.players:
+            for entry in player.memory_log:
+                for tag in entry.recall_tags:
+                    self.assertIn(
+                        tag, RECALL_TAGS,
+                        f"{entry.id}: recall_tag {tag!r} is not in the frozen vocabulary",
+                    )
 class TestRecallResultContract(_Fixture):
     """The locked recall→render output contract: the six fields copy binds by name.
 
@@ -496,6 +642,7 @@ class TestRecallResultContract(_Fixture):
             actors=["rook"],
             summary="x", sentiment="negative",
             tags=["tilt", "choke"],  # tilt listed first
+            recall_tags=["tilt", "choke"],
         )
         entry_second = MemoryEntry(
             id="mem:rook:first_choke_then_tilt",
@@ -503,6 +650,7 @@ class TestRecallResultContract(_Fixture):
             actors=["rook"],
             summary="x", sentiment="negative",
             tags=["choke", "tilt"],  # choke listed first
+            recall_tags=["choke", "tilt"],
         )
         from esports_tycoon.schema import (
             LastWeek, Player, Role, SaveMeta, Scoreline, Season, Standing, Team, WorldState,

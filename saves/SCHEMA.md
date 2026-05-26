@@ -135,7 +135,8 @@ in.
 | `actors` | `list[str]` | Player ids involved (the owner and any others); used to filter what each player can plausibly cite. |
 | `summary` | `str` | One-sentence factual recap. The renderer hands this to templates and to LLM prompts verbatim — never free-form simulation text. |
 | `sentiment` | `Sentiment` enum | The entry's emotional charge: `positive`, `neutral`, or `negative`. |
-| `tags` | `list[str]` | Optional short tags for filtering and steering (e.g. `clutch`, `tilt`). Omitted when empty (the save never spells `[]`). |
+| `tags` | `list[str]` | Optional short colour tags for filtering and steering the templated narrator (e.g. `bishop`, `foreshadow`, `terminus`). Open vocabulary. Omitted when empty (the save never spells `[]`). |
+| `recall_tags` | `list[RecallTag]` | Opt-in to the frozen recall vocabulary: a typed subset of `{choke, clutch, tilt, rivalry}`. Both sides of the deterministic precedent recall — the resolver's `KeyMoment.tag` and this list — speak the same enum, so off-enum values fail closed at load time. Omitted when empty. |
 
 ---
 
@@ -228,10 +229,11 @@ in.
 
 - **Lowercase, dash-snake ids** for players, orgs, and event slugs. The cite-id
   regex `mem:[a-z0-9_]+:[a-z0-9_]+` is enforced; mixed-case ids fail to load.
-- **Omit empty collections.** Empty `tags` / `seeded_by` / `cites` are omitted
-  on the way out rather than spelled `[]`. The round-trip uses
-  `exclude_defaults` to keep dumps aligned with that convention; an empty list
-  re-injected into a file would silently break the byte-identical round-trip.
+- **Omit empty collections.** Empty `tags` / `recall_tags` / `seeded_by` /
+  `cites` are omitted on the way out rather than spelled `[]`. The round-trip
+  uses `exclude_defaults` to keep dumps aligned with that convention; an empty
+  list re-injected into a file would silently break the byte-identical
+  round-trip.
 - **`extra = "forbid"`.** Any key in the YAML that is not modelled here fails
   the load loudly. The schema is therefore a *faithful, total* description of
   the save — if you want a new field, add it to `schema.py` *and* to this page
