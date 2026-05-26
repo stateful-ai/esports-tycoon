@@ -35,6 +35,7 @@ from esports_tycoon.runner import (  # noqa: E402
     write_artifacts,
     write_events,
 )
+from esports_tycoon.runner.recap import REMEMBERED_SLOT_LABEL  # noqa: E402
 from esports_tycoon.runner.events import (  # noqa: E402
     FeedPosted,
     GroundingSummary,
@@ -178,6 +179,69 @@ class TestRecapIsDerivedFromTheLog(_Fixture):
         events = [e for e in slice_events(self.result(), self.world) if not isinstance(e, MatchResolved)]
         with self.assertRaises(ValueError):
             render_recap_md(events, self.world)
+
+
+class TestRecapSurfacesBoundPrecedent(_Fixture):
+    """The bound precedent is surfaced in a fixed scannable slot at the top.
+
+    Acceptance bar: when ≥1 precedent binds, ``recap.md`` renders the grounded
+    line in a fixed slot the founder can scan at a glance — and the test
+    asserts the line is present in the persisted artifact, not just in an
+    in-memory render. The canonical week-6 fixture always binds at least one
+    precedent on the templated path, so the slot is guaranteed to fire here.
+    """
+
+    def test_match_resolved_carries_the_narration_cites(self):
+        # The bound precedent is the narration's recalled cite; the log keeps
+        # it on ``match_resolved`` so the recap projection has it without
+        # re-running ``recall()``.
+        result = self.result()
+        self.assertTrue(
+            result.narration.cites,
+            "the canonical week-6 fixture should bind at least one precedent",
+        )
+        events = slice_events(result, self.world)
+        match = next(e for e in events if isinstance(e, MatchResolved))
+        self.assertEqual(list(match.cites), list(result.narration.cites))
+
+    def test_grounded_line_appears_in_written_recap(self):
+        # The acceptance assertion: the fixed-slot grounded line lands in the
+        # written ``recap.md``, not just an in-memory string. Use a temp dir so
+        # we exercise the full write_artifacts ⇒ read-back path.
+        result = self.result()
+        with tempfile.TemporaryDirectory() as tmp:
+            recap_path, _, _ = write_artifacts(result, self.world, tmp)
+            body = recap_path.read_text(encoding="utf-8")
+
+        bound = result.narration.cites[0]
+        entry = self.world.resolve_cite(bound)
+        self.assertIsNotNone(entry)
+        self.assertIn(f"**{REMEMBERED_SLOT_LABEL}:**", body)
+        self.assertIn(bound, body)
+        self.assertIn(entry.summary, body)
+        # The slot must sit *above* the fixture section so it's the first beat
+        # the founder reads — "scannable position" means top-of-page, not
+        # buried at the end alongside the grounding tally.
+        slot_idx = body.index(f"**{REMEMBERED_SLOT_LABEL}:**")
+        fixture_idx = body.index("## The fixture")
+        self.assertLess(slot_idx, fixture_idx)
+
+    def test_slot_is_suppressed_when_no_precedent_binds(self):
+        # No bound cite ⇒ no slot. A "no recall" run reads as absence rather
+        # than as an empty header, so the fixed slot is a positive signal when
+        # it does appear.
+        events = slice_events(self.result(), self.world)
+        edited = [
+            MatchResolved(
+                scoreline=e.scoreline,
+                halftime_scoreline=e.halftime_scoreline,
+                narration=e.narration,
+                cites=[],
+            ) if isinstance(e, MatchResolved) else e
+            for e in events
+        ]
+        md = render_recap_md(edited, self.world)
+        self.assertNotIn(f"**{REMEMBERED_SLOT_LABEL}:**", md)
 
 
 class TestLogStaysSeparateFromMemory(_Fixture):

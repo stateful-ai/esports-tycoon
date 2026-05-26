@@ -103,12 +103,19 @@ class TeamTalk(_Event):
 
 
 class MatchResolved(_Event):
-    """The resolved match: the final + half scorelines and the narration prose."""
+    """The resolved match: the final + half scorelines and the narration prose.
+
+    ``cites`` are the memory IDs the narration bound — the bound precedent the
+    recap surfaces in its fixed scannable slot. Stored as IDs (the renderer
+    resolves them at render time, the same way feed-post cites are handled), so
+    a memory's summary text never lands in the log.
+    """
 
     type: Literal["match_resolved"] = "match_resolved"
     scoreline: tuple[int, int]
     halftime_scoreline: tuple[int, int]
     narration: str
+    cites: list[str] = Field(default_factory=list)
 
 
 class HalftimeAck(_Event):
@@ -222,6 +229,7 @@ def slice_events(result: SliceResult, world: WorldState) -> list[SliceEvent]:
             scoreline=result.scoreline,
             halftime_scoreline=result.halftime_scoreline,
             narration=result.narration.text,
+            cites=list(result.narration.cites),
         ),
         HalftimeAck(author=result.halftime.author, text=result.halftime.text),
     ]
