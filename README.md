@@ -297,6 +297,22 @@ recorded*, and only fails the gate against a founder-supplied budget.
 
 ## Tests
 
+`make test` is the canonical entrypoint and is what CI runs from a clean clone
+on every push and pull request (`.github/workflows/ci.yml`). It needs no API
+key, no network, and no GPU — the whole suite runs against the templated
+zero-API backend, and the golden + round-trip tests
+(`tests/test_golden_determinism.py`) fail the build the moment the committed
+bytes under `tests/golden/` drift from what the engine produces.
+
+```bash
+make install        # one-time: pip install -e .[dev,web]
+make test           # full suite (golden + round-trip enforced)
+make test-golden    # just the determinism tests
+make golden-update  # intended-change escape hatch: re-emit committed goldens, review the diff
+```
+
+Direct invocations still work if you'd rather skip `make`:
+
 ```bash
 python -m unittest discover -s tests     # stdlib runner (no extra deps)
 # or, with pytest installed:
