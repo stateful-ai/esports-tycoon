@@ -23,17 +23,30 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.content import game_llm  # noqa: E402
 from esports_tycoon.runner import (  # noqa: E402
+    EVENTS_FILENAME,
     FEED_FILENAME,
     OPEN_TEXT_MAX,
     RECAP_FILENAME,
     SliceConfig,
     SliceDecisions,
+    read_events,
     render_feed_html,
     render_recap_md,
     run_slice,
+    slice_events,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
+
+
+def recap_md(result, world):
+    """The recap as the artifact path produces it — derived from the run-log."""
+    return render_recap_md(slice_events(result, world), world)
+
+
+def feed_html(result, world):
+    """The feed snapshot as the artifact path produces it — derived from the run-log."""
+    return render_feed_html(slice_events(result, world), world)
 
 
 class _Fixture(unittest.TestCase):
@@ -116,17 +129,18 @@ class TestArtifacts(_Fixture):
 
         with tempfile.TemporaryDirectory() as tmp:
             result = run_slice(self.world, self.config, self.decisions)
-            recap_path, feed_path = write_artifacts(result, self.world, tmp)
+            recap_path, feed_path, events_path = write_artifacts(result, self.world, tmp)
             self.assertEqual(recap_path.name, RECAP_FILENAME)
             self.assertEqual(feed_path.name, FEED_FILENAME)
+            self.assertEqual(events_path.name, EVENTS_FILENAME)
             self.assertEqual(recap_path.parent.name, result.slice_id)
-            self.assertTrue(recap_path.is_file() and feed_path.is_file())
+            self.assertTrue(recap_path.is_file() and feed_path.is_file() and events_path.is_file())
             self.assertIn("# Overcast — Week 6", recap_path.read_text(encoding="utf-8"))
             self.assertIn("<!DOCTYPE html>", feed_path.read_text(encoding="utf-8"))
 
     def test_recap_surfaces_remembered_memories(self):
         result = run_slice(self.world, self.config, self.decisions)
-        md = render_recap_md(result, self.world)
+        md = recap_md(result, self.world)
         self.assertIn("What the room remembered", md)
         # Every cited memory id appears with its resolved summary.
         self.assertTrue(result.cited_memories, "the week should cite at least one precedent")
@@ -139,24 +153,25 @@ class TestArtifacts(_Fixture):
 
 class TestDeterminism(_Fixture):
     def test_identical_recap_on_rerun_with_same_seed(self):
-        first = render_recap_md(run_slice(self.world, self.config, self.decisions), self.world)
+        first = recap_md(run_slice(self.world, self.config, self.decisions), self.world)
         for _ in range(5):
-            again = render_recap_md(run_slice(self.world, self.config, self.decisions), self.world)
+            again = recap_md(run_slice(self.world, self.config, self.decisions), self.world)
             self.assertEqual(again, first)
 
     def test_identical_feed_snapshot_on_rerun(self):
-        first = render_feed_html(run_slice(self.world, self.config, self.decisions), self.world)
+        first = feed_html(run_slice(self.world, self.config, self.decisions), self.world)
         for _ in range(5):
-            self.assertEqual(render_feed_html(run_slice(self.world, self.config, self.decisions), self.world), first)
+            self.assertEqual(feed_html(run_slice(self.world, self.config, self.decisions), self.world), first)
 
     def test_written_artifacts_are_byte_identical_across_runs(self):
         import tempfile
 
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
-            r1, f1 = write_artifacts(run_slice(self.world, self.config, self.decisions), self.world, a)
-            r2, f2 = write_artifacts(run_slice(self.world, self.config, self.decisions), self.world, b)
+            r1, f1, e1 = write_artifacts(run_slice(self.world, self.config, self.decisions), self.world, a)
+            r2, f2, e2 = write_artifacts(run_slice(self.world, self.config, self.decisions), self.world, b)
             self.assertEqual(r1.read_bytes(), r2.read_bytes())
             self.assertEqual(f1.read_bytes(), f2.read_bytes())
+            self.assertEqual(e1.read_bytes(), e2.read_bytes())
 
     def test_artifacts_byte_identical_across_processes_and_hash_seeds(self):
         """The stronger contract: identical bytes across *separate processes* with
@@ -197,7 +212,7 @@ class TestDeterminism(_Fixture):
             dir_b = run_under("12345", b)
             # Same content-addressed slice id from independent processes.
             self.assertEqual(dir_a.name, dir_b.name)
-            for fname in (RECAP_FILENAME, FEED_FILENAME):
+            for fname in (RECAP_FILENAME, FEED_FILENAME, EVENTS_FILENAME):
                 self.assertEqual(
                     (dir_a / fname).read_bytes(), (dir_b / fname).read_bytes(),
                     f"{fname} diverged across processes with different PYTHONHASHSEED",
@@ -218,7 +233,7 @@ class TestDeterminism(_Fixture):
 
     def test_different_seeds_can_differ(self):
         recaps = {
-            render_recap_md(run_slice(self.world, SliceConfig(opponent="apex_foundry", seed=s), self.decisions), self.world)
+            recap_md(run_slice(self.world, SliceConfig(opponent="apex_foundry", seed=s), self.decisions), self.world)
             for s in range(8)
         }
         self.assertGreater(len(recaps), 1, "different seeds should produce visibly different weeks")
@@ -239,7 +254,7 @@ class TestGroundingAndSafety(_Fixture):
     def test_open_text_is_html_escaped_in_snapshot(self):
         nasty = '<script>alert(1)</script>'
         decisions = SliceDecisions(practice_focus="aim", fallout_post=nasty)
-        html = render_feed_html(run_slice(self.world, self.config, decisions), self.world)
+        html = feed_html(run_slice(self.world, self.config, decisions), self.world)
         self.assertNotIn("<script>alert(1)</script>", html)
         self.assertIn("&lt;script&gt;", html)
 
@@ -252,8 +267,8 @@ class TestGroundingAndSafety(_Fixture):
         game_llm.get_llm = explode
         try:
             result = run_slice(self.world, self.config, self.decisions)
-            render_recap_md(result, self.world)
-            render_feed_html(result, self.world)
+            render_recap_md(slice_events(result, self.world), self.world)
+            render_feed_html(slice_events(result, self.world), self.world)
         finally:
             game_llm.get_llm = original
 

@@ -10,10 +10,17 @@ artifact, with no UI and no web dependency. The Flask app in
 
     world = loader.load()
     result = run_slice(world, SliceConfig(seed=6), SliceDecisions(practice_focus="defaults"))
-    recap_path, feed_path = write_artifacts(result, world, "runs")
+    recap_path, feed_path, events_path = write_artifacts(result, world, "runs")
 """
 
 from esports_tycoon.runner.engine import halftime_scoreline, run_slice, slice_id
+from esports_tycoon.runner.events import (
+    EVENTS_FILENAME,
+    SliceEvent,
+    read_events,
+    slice_events,
+    write_events,
+)
 from esports_tycoon.runner.model import (
     OPEN_TEXT_MAX,
     PRACTICE_CHOICES,
@@ -47,4 +54,9 @@ __all__ = [
     "write_artifacts",
     "RECAP_FILENAME",
     "FEED_FILENAME",
+    "EVENTS_FILENAME",
+    "SliceEvent",
+    "slice_events",
+    "read_events",
+    "write_events",
 ]

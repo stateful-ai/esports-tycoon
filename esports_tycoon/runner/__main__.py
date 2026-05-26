@@ -55,14 +55,15 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     result = run_slice(world, config, decisions)
-    recap_path, feed_path = write_artifacts(result, world, args.runs_dir)
+    recap_path, feed_path, events_path = write_artifacts(result, world, args.runs_dir)
 
     ovc, opp = result.scoreline
     opponent = next((r.name for r in world.rivals if r.id == config.opponent), config.opponent)
     verdict = "won" if result.won else "lost"
     print(f"slice {result.slice_id}: {world.save.team.name} {verdict} {ovc}–{opp} vs {opponent} on {config.map}")
-    print(f"  recap: {recap_path}")
-    print(f"  feed : {feed_path}")
+    print(f"  events: {events_path}")
+    print(f"  recap : {recap_path}")
+    print(f"  feed  : {feed_path}")
     return 0
 
 

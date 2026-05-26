@@ -63,7 +63,8 @@ class TestWebApp(unittest.TestCase):
         runs = list(self.output_root.glob("wk6-*"))
         self.assertEqual(len(runs), 1)
         names = sorted(p.name for p in runs[0].iterdir())
-        self.assertEqual(names, ["feed.snapshot.html", "recap.md"])
+        # Finalizing the week writes the run-log alongside the derived artifacts.
+        self.assertEqual(names, ["events.jsonl", "feed.snapshot.html", "recap.md"])
         # The manager's public post made it into the saved feed.
         self.assertIn(fallout, (runs[0] / "feed.snapshot.html").read_text(encoding="utf-8"))
 
