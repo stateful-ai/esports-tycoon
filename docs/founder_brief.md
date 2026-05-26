@@ -2,24 +2,31 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T15:59:32Z'
-summary: Cross-agent consensus
+updated: '2026-05-26T16:37:59Z'
+summary: Consensus across all three agents
 ---
 
-### Cross-agent consensus
-- **M0.1 is the gate.** Exit = founder plays the templated zero-API slice (practice→match→fallout, 2 open-text inputs ≤120 chars) and screenshots ≥1 grounded "remembered me" moment within 2 evenings. All three agents agree, verbatim.
-- **Five-hop critical path:** verify M0.0 closeout → `recall()` selector → bind ≥1 precedent into templated render by cite ID → minimum-playable web/recap rebind → founder playtest. Freeze runs concurrently, never on the critical path.
-- **Architecture invariant:** recall is engine logic, not LLM logic. Templated mode binds precedents directly. vLLM is M0.2, post-gate.
-- **Three new code seams only** — recall selector, precedent→render binding by cite ID, minimum-playable rebind. Everything else is reuse.
-- **Ticket reconciliation:** every prior pass's candidates are now active tickets. The 4 most recent landings (declared read-set contract, recap.md snapshot golden, zero-outbound-network assertion, evidence-packet `manifest.json` generator) all slot cleanly into existing waves.
+### Consensus across all three agents
+- **Milestone:** M0.1 — The Thesis Test. Exit = founder gate (playtest screenshot).
+- **Keystone:** precedent recall is engine logic (pure deterministic `recall(why_record, world_state, k=3)`) bound into templated render by cite ID. Zero-API path is the gate; vLLM is a post-gate upgrade behind the same adapter.
+- **Sequencing:** Wave 0 (smoke + freeze) → 1a (contracts-only PR, no selector code) → 1b (selector + planted precedent + golden) → 2 (bind + copy pack + verbatim recap E2E) → 3 (web/recap rebind + `play` one-liner + snapshot + zero-network) → 4 (pre-registered rubric + playtest + evidence packet).
+- **Frozen post-gate:** byte-identity normalization, canonical YAML serializer pinning, CI/`make test`, 100-run digest, schema-boundary gate, deterministic bless script, typed SaveError, RI validator polish, TrainingDecision slice. All nine hardening tickets stay frozen until the gate fires.
+- **DoD floor:** `recall()` purity + golden, planted-precedent text verbatim in `recap.md` under LOCKED_SEED, zero-bind fallback exercised, snapshot golden green, zero-outbound-network assertion green, evidence packet self-sufficient.
 
-### Dissent / tension
-- **Task minting discipline.** Engineering Lead proposed 4 new candidates; Infra Architect proposed 2; prior Chief of Staff held the line at 0. I'm siding closer to COS: most of Eng's proposals (process-boundary determinism stress test, gate-evidence tamper test) are theoretical guardrails against failure modes that don't apply to a founder-solo playtest. **Rejected** here, captured in Agent Memory.
-- **Infra's Wave-1a "contracts-only" PR gate** is the highest-leverage new idea — it forces a clean cut-line so W1b selector code and W2 copy authoring don't chase moving pins. Keeping it.
-- **Eng's wave-entry decision log** and **Infra's daily heartbeat** are both lightweight operational discipline tied to the 2-evening budget. Folding into one combined note.
+### Tension: new candidates this pass
+- **engineering_lead** proposes 4 new candidates.
+- **infra_architect** and **chief_of_staff** explicitly hold the line at zero new tasks (active backlog is already dense; adding to it is planning bloat against a 2-evening budget).
 
-### Out of scope (frozen, do not touch)
-Byte-identity normalization, CI gate, serializer pinning, deterministic bless script, shared `SaveError` contract, negative-fixture suite, 100-run digest, canonical YAML serializer polish. Parked in a dated freeze note; revisit only after the gate fires.
+**My adjudication.** Two of the four are genuinely new risk surfaces not covered by existing tickets and cheap to land:
+1. **In-process determinism guard** — same-process repeated invocation produces byte-identical output. Catches module-level state, lru_cache, import-order leakage that the load-once round-trip test won't. Real failure mode, cheap test.
+2. **Recall-side input snapshot fixture** — checks in `(why_record, world_state)` for the locked seed so recall-golden re-runs against a frozen fixture, not a live load. Cleanly separates upstream WorldState/WhyRecord drift from recall ordering drift when something breaks.
 
-### Conflict flags
-None vs. approved decisions. The "zero-API templated is the gate path; vLLM post-gate" invariant is honored across all three agents.
+The other two I'm dropping as polish:
+- **W0 entry-gate sentinel checklist** — duplicates the existing Wave 0 entry-gate smoke ticket; fold the assertion strings into that ticket's acceptance, don't mint a sibling.
+- **Single-source gate clock** — real but tiny; can land inside the `manifest.json` generator ticket. No need for its own row.
+
+### Out of scope until the gate fires
+Anything that doesn't move W0→W1a→W1b→W2→W3→W4. If a new idea isn't on the critical path, log it for M0.2.
+
+### Conflicts with approved decisions / memory
+None observed. Plan respects the freeze and the zero-API templated path as the gate.
