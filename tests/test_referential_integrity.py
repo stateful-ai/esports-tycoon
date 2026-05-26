@@ -345,14 +345,20 @@ class TestNegativeFixturesFailClosed(unittest.TestCase):
         # version gate fires before any of the rest of the schema is touched.
         # The typed error here is ``SchemaVersionError``, and the field path it
         # owes the author is ``schema_version`` plus the offending value, so
-        # they can take the message straight to the offending line.
-        path = FIXTURES / "unknown_version.yaml"
+        # they can take the message straight to the offending line. This
+        # fixture pins the *next-major* case (current + 1), the realistic save
+        # an author would hand-write; sibling ``unknown_version.yaml`` pins
+        # the sky-high-future case so neither regression slips through.
+        path = FIXTURES / "unknown_schema_version_major.yaml"
         with self.assertRaises(loader.SchemaVersionError) as cm:
             loader.load(path)
         msg = str(cm.exception)
         self.assertIn(str(path), msg)
         self.assertIn("schema_version", msg)
-        self.assertIn("9999", msg)
+        # The offending value (1) and the build's current version (0) both
+        # belong in the message so the author can see the gap at a glance.
+        self.assertIn("1", msg)
+        self.assertIn("newer", msg)
 
     # --- bytes fail-closed ---------------------------------------------------- #
     def test_loose_floats_shuffled_keys_fixture_normalizes_to_canonical_bytes(
@@ -408,7 +414,7 @@ class TestNegativeFixturesFailClosed(unittest.TestCase):
         with self.assertRaises(loader.SaveReferentialIntegrityError):
             loader.load(FIXTURES / "dangling_actor.yaml")
         with self.assertRaises(loader.SchemaVersionError):
-            loader.load(FIXTURES / "unknown_version.yaml")
+            loader.load(FIXTURES / "unknown_schema_version_major.yaml")
         # The fourth doesn't raise — it must normalize. Equality here proves
         # that contract; a regression would either raise (wrong) or produce
         # different bytes (also wrong).
