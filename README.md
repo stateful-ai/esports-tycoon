@@ -95,6 +95,14 @@ python -m esports_tycoon resolve <cite-id>   # resolve a cite ID to its memory e
 ## Content adapter (templated default + opt-in LLM)
 
 All rendered prose goes through one seam,
+## Project Layout
+
+- **esports_tycoon/** — main package
+- **docs/** — design notes
+- **tests/** — pytest suite
+- **scripts/** — operational scripts
+- **saves/** — saved game states
+- **runs/** — run telemetry
 `esports_tycoon.content.generate_content(kind, ctx) -> GeneratedContent`, for the
 three M0 kinds: `chirper_post`, `narration`, `halftime_ack`. A single config flag
 picks the backend:
