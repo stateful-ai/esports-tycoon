@@ -10,6 +10,14 @@ proving the core taste-reaction: *the game remembered something.* Tone is dry
 mockumentary; the game is **Vector Strike**, a fictional Valorant-flavored 5v5.
 See `docs/scope-m0.md` (CompanyOS) for the full scope.
 
+## Quick Start
+
+- `git clone` this repository and `cd esports-tycoon`.
+- `pip install -e .[dev,web]` — core deps plus the test + web extras (see `pyproject.toml`).
+- `make test` — runs the full suite (templated zero-API backend, no GPU).
+- `python -m esports_tycoon play` — serves the slice at http://127.0.0.1:8765.
+- See `docs/` for the founder briefs, scope, and design notes.
+
 ## Zero-API quickstart
 
 Fresh clone, **no API key, no network, no GPU** — the slice is built to run that
