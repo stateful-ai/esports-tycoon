@@ -24,7 +24,6 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.runner import (  # noqa: E402
     EVENTS_FILENAME,
-    RECAP_FILENAME,
     SliceConfig,
     SliceDecisions,
     read_events,
@@ -42,10 +41,8 @@ from esports_tycoon.runner.events import (  # noqa: E402
     KeyMomentLogged,
     MatchResolved,
     MoraleDelta,
-    PracticeChosen,
     RoomRemembered,
     SliceStarted,
-    StandoutsLogged,
     TeamTalk,
     serialize_event,
 )

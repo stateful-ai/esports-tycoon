@@ -47,7 +47,6 @@ from esports_tycoon.schema import (  # noqa: E402
     MemoryEntry,
     Player,
     RECALL_TAGS,
-    Relationship,
     Role,
     WhyRecord,
 )
