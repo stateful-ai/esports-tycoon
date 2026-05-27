@@ -1,20 +1,23 @@
 """Command line entry point for esports-tycoon.
 
-    python -m esports_tycoon inspect              # load the canned save, print a summary
-    python -m esports_tycoon resolve <cite-id>    # resolve a cite ID to its memory entry
-    python -m esports_tycoon validate-save <path> # schema-check a save; print 'OK' or the first error
-    python -m esports_tycoon roster show <save>   # print the current roster from a save
-    python -m esports_tycoon play                 # launch the local slice web app
+    python -m esports_tycoon inspect                # load the canned save, print a summary
+    python -m esports_tycoon resolve <cite-id>      # resolve a cite ID to its memory entry
+    python -m esports_tycoon validate-save <path>   # schema-check a save; print 'OK' or the first error
+    python -m esports_tycoon roster show <save>     # print the current roster from a save
+    python -m esports_tycoon roster export <save>   # emit the current roster as csv or json
+    python -m esports_tycoon play                   # launch the local slice web app
 
-``inspect``, ``resolve``, ``validate-save``, and ``roster show`` load a save
-through the typed loader, so they double as a smoke test that the schema still
-matches a given save. ``validate-save`` is the read-only "did I break it?"
-check authors of hand-edited saves reach for: it surfaces the first
-:class:`loader.SaveError` as a one-line ``<field_path>: <message>`` and exits
-non-zero, or prints ``OK`` and exits zero. ``roster show`` is the read-only
-roster printer: one row per starter on the managed team with id, role, name,
-handle, age, signature operative, and traits — no sim advance, no mutation.
-``play`` starts the Flask slice app on ``127.0.0.1`` (the headless runner is
+``inspect``, ``resolve``, ``validate-save``, ``roster show``, and ``roster
+export`` load a save through the typed loader, so they double as a smoke test
+that the schema still matches a given save. ``validate-save`` is the read-only
+"did I break it?" check authors of hand-edited saves reach for: it surfaces
+the first :class:`loader.SaveError` as a one-line ``<field_path>: <message>``
+and exits non-zero, or prints ``OK`` and exits zero. ``roster show`` is the
+human-facing roster printer (aligned columns, no sim advance). ``roster
+export`` is its machine-facing twin: the same starters in the same order,
+emitted as ``csv`` (default) or ``json`` to ``--out`` or stdout, for piping
+into a spreadsheet, a JSON-consuming tool, or a diff. ``play`` starts the
+Flask slice app on ``127.0.0.1`` (the headless runner is
 ``python -m esports_tycoon.runner``; the cast-lock gate is ``python -m
 esports_tycoon.cast_lock``).
 """
@@ -22,10 +25,40 @@ esports_tycoon.cast_lock``).
 from __future__ import annotations
 
 import argparse
+import csv
+import io
+import json
+from pathlib import Path
+from typing import Sequence
 
 from esports_tycoon import __version__
 from esports_tycoon.canned import loader
-from esports_tycoon.schema import WorldState
+from esports_tycoon.schema import Player, WorldState
+
+# Column order for ``roster export``. Pinned so the CSV header and the JSON
+# record key order match the schema's natural read — id first (the stable
+# handle a downstream tool joins on), then name/handle/role/age/signature
+# operative, then traits last (the variable-length attributes list). Kept in
+# one place so a future column addition lands in both formats together; the
+# human-facing ``roster show`` deliberately uses its own column order
+# (alignment first, then human-skim order), so the two surfaces can evolve
+# independently.
+_ROSTER_EXPORT_FIELDS: tuple[str, ...] = (
+    "id",
+    "name",
+    "handle",
+    "role",
+    "age",
+    "signature_operative",
+    "traits",
+)
+
+# CSV joiner for the ``traits`` list. ``,`` is reserved for CSV cell
+# separation, so a list-valued cell needs an unambiguous inner delimiter; ``|``
+# is the conventional choice (no canned-save trait contains one) and survives
+# a round-trip through ``str.split("|")`` cleanly. JSON keeps the list shape
+# native, so this only affects CSV output.
+_TRAITS_CSV_DELIM = "|"
 
 
 def web_default_port() -> int:
@@ -36,6 +69,66 @@ def web_default_port() -> int:
     from esports_tycoon.web.__main__ import DEFAULT_PORT
 
     return DEFAULT_PORT
+
+
+def _roster_record(player: Player) -> dict[str, object]:
+    """Project one :class:`Player` to the export's flat record shape.
+
+    Returns a dict keyed by :data:`_ROSTER_EXPORT_FIELDS` in order: native
+    types throughout (``traits`` stays a list, ``role`` becomes the enum's
+    string value), so the JSON writer can dump straight through and the CSV
+    writer only flattens the list field. Centralised so both formats and the
+    tests share one definition of "what a roster row contains" — adding a
+    column is a one-line edit here plus a tuple bump above, not a per-format
+    sync.
+    """
+    return {
+        "id": player.id,
+        "name": player.name,
+        "handle": player.handle,
+        "role": player.role.value,
+        "age": player.age,
+        "signature_operative": player.signature_operative,
+        "traits": list(player.traits),
+    }
+
+
+def _format_roster_csv(roster: Sequence[Player]) -> str:
+    """Render the roster as CSV with a header row.
+
+    ``traits`` is joined on :data:`_TRAITS_CSV_DELIM` so the cell stays a
+    single field even when the player has multiple traits. ``csv.writer``
+    handles quoting for any value that contains the dialect's delimiter or a
+    newline, so a name with a comma in it still round-trips through
+    ``csv.reader``. ``lineterminator="\\n"`` keeps the output platform-stable
+    (the same bytes on Linux, macOS, and Windows) so a golden-bytes test
+    stays honest.
+    """
+    buf = io.StringIO()
+    writer = csv.writer(buf, lineterminator="\n")
+    writer.writerow(_ROSTER_EXPORT_FIELDS)
+    for player in roster:
+        record = _roster_record(player)
+        traits_cell = _TRAITS_CSV_DELIM.join(record["traits"])  # type: ignore[arg-type]
+        row = [
+            traits_cell if field == "traits" else record[field]
+            for field in _ROSTER_EXPORT_FIELDS
+        ]
+        writer.writerow(row)
+    return buf.getvalue()
+
+
+def _format_roster_json(roster: Sequence[Player]) -> str:
+    """Render the roster as a pretty-printed JSON array of records.
+
+    ``indent=2`` plus a trailing newline matches the house convention (the
+    recap JSON artefacts use the same shape), so a downstream diff stays
+    readable and the file ends in a newline the way well-mannered POSIX
+    tools expect. ``traits`` stays a native list in JSON — the CSV-only
+    ``|`` join would be a lossy choice here.
+    """
+    records = [_roster_record(player) for player in roster]
+    return json.dumps(records, indent=2) + "\n"
 
 
 def _print_roster(world: WorldState) -> None:
@@ -133,6 +226,27 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="path to the save YAML (default: --save / the packaged canned save)",
     )
+    roster_export = roster_sub.add_parser(
+        "export",
+        help="emit the managed team's roster as csv (default) or json to --out or stdout",
+    )
+    roster_export.add_argument(
+        "save_path",
+        nargs="?",
+        default=None,
+        help="path to the save YAML (default: --save / the packaged canned save)",
+    )
+    roster_export.add_argument(
+        "--format",
+        choices=("csv", "json"),
+        default="csv",
+        help="output format (default: csv)",
+    )
+    roster_export.add_argument(
+        "--out",
+        default=None,
+        help="write to FILE instead of stdout",
+    )
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
     play.add_argument(
@@ -190,6 +304,33 @@ def main(argv: list[str] | None = None) -> int:
             target = args.save_path if args.save_path is not None else args.save
             world = loader.load(target)
             _print_roster(world)
+            return 0
+        if args.roster_command == "export":
+            # Same positional-wins-over-flag shape as ``roster show`` — the
+            # two verbs need to be interchangeable on the same save path or
+            # one will silently read a different file than the other. The
+            # format/out handling is what's new here: ``--format`` selects
+            # csv (default) or json; ``--out`` writes to a file rather than
+            # stdout, but the bytes are the same either way (see the
+            # ``newline=""`` note below for why).
+            target = args.save_path if args.save_path is not None else args.save
+            world = loader.load(target)
+            if args.format == "json":
+                output = _format_roster_json(world.roster)
+            else:
+                output = _format_roster_csv(world.roster)
+            if args.out is None:
+                # Stdout: the formatter already terminates with a single
+                # newline, so ``end=""`` keeps a piped ``> file`` writing
+                # the same bytes ``--out`` would.
+                print(output, end="")
+            else:
+                # ``newline=""`` so the CSV writer's own
+                # ``lineterminator="\n"`` is what hits disk — otherwise
+                # Python's universal-newlines translation would write
+                # ``\r\n`` on Windows and the file would drift from the
+                # stdout form. JSON is plain text either way.
+                Path(args.out).write_text(output, encoding="utf-8", newline="")
             return 0
         parser.error(f"unknown roster subcommand {args.roster_command!r}")
         return 2
