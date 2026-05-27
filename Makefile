@@ -22,7 +22,7 @@ CONSTRAINTS ?= constraints.txt
 # failing run without editing this file.
 PYTEST_ARGS ?=
 
-.PHONY: help install test test-golden golden-update regen-golden clean
+.PHONY: help install test test-fast test-golden golden-update regen-golden lint clean
 
 help:  ## Show available targets
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -37,6 +37,9 @@ install:  ## Install the package + dev/web extras (no API keys, no GPU needed)
 # don't match what the engine produces.
 test:  ## Run the full test suite (golden + round-trip enforced; no API key required)
 	UPDATE_GOLDEN= $(PYTHON) -m pytest $(PYTEST_ARGS)
+
+test-fast:  ## Stop at first failure, quiet output (fast dev iteration)
+	UPDATE_GOLDEN= $(PYTHON) -m pytest -x -q $(PYTEST_ARGS)
 
 test-golden:  ## Run only the golden + round-trip determinism tests
 	UPDATE_GOLDEN= $(PYTHON) -m pytest tests/test_golden_determinism.py $(PYTEST_ARGS)
@@ -54,6 +57,14 @@ golden-update:  ## Rewrite committed goldens from current engine output (review 
 # before committing.
 regen-golden:  ## Rewrite saves/week6.yaml through the canonical serializer (idempotent)
 	$(PYTHON) scripts/regen_golden.py
+
+lint:  ## Run ruff if installed; otherwise print install hint and pass
+	@if command -v ruff >/dev/null 2>&1; then \
+		ruff check .; \
+	else \
+		echo "ruff not installed; pip install ruff"; \
+		exit 0; \
+	fi
 
 clean:  ## Remove caches and build artifacts
 	rm -rf build dist *.egg-info .pytest_cache .mypy_cache .ruff_cache
