@@ -15,7 +15,6 @@ exercised too, so a regression to noise would fail.
 """
 
 import ast
-import copy
 import pathlib
 import sys
 import unittest
@@ -26,12 +25,10 @@ from esports_tycoon import resolver  # noqa: E402
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.schema import (  # noqa: E402
     Decisions,
-    KeyMoment,
     MemoryEntry,
     Player,
     Role,
     WhyRecord,
-    WorldState,
 )
 
 _RESOLVER_SRC = pathlib.Path(resolver.__file__)
