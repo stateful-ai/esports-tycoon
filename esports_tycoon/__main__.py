@@ -1,14 +1,17 @@
 """Command line entry point for esports-tycoon.
 
-    python -m esports_tycoon inspect            # load the canned save, print a summary
-    python -m esports_tycoon resolve <cite-id>  # resolve a cite ID to its memory entry
-    python -m esports_tycoon play               # launch the local slice web app
+    python -m esports_tycoon inspect              # load the canned save, print a summary
+    python -m esports_tycoon resolve <cite-id>    # resolve a cite ID to its memory entry
+    python -m esports_tycoon roster show <save>   # print the current roster from a save
+    python -m esports_tycoon play                 # launch the local slice web app
 
-``inspect`` and ``resolve`` load the packaged canned save through the typed
-loader, so they double as a smoke test that the schema still matches the canned
-save. ``play`` starts the Flask slice app on ``127.0.0.1`` (the headless runner is
-``python -m esports_tycoon.runner``; the cast-lock gate is
-``python -m esports_tycoon.cast_lock``).
+``inspect``, ``resolve``, and ``roster show`` load a save through the typed
+loader, so they double as a smoke test that the schema still matches the save.
+``roster show`` is the read-only roster printer: one row per starter on the
+managed team with id, role, name, handle, age, signature operative, and
+traits — no sim advance, no mutation. ``play`` starts the Flask slice app on
+``127.0.0.1`` (the headless runner is ``python -m esports_tycoon.runner``;
+the cast-lock gate is ``python -m esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations
@@ -28,6 +31,45 @@ def web_default_port() -> int:
     from esports_tycoon.web.__main__ import DEFAULT_PORT
 
     return DEFAULT_PORT
+
+
+def _print_roster(world: WorldState) -> None:
+    """Print one row per starter on the managed team.
+
+    Reads ``world.roster`` (the schema property that names the managed team's
+    starters in save order — see :class:`esports_tycoon.schema.WorldState`),
+    so this stays in lockstep with the resolver's "who is on the team" view
+    rather than reaching for the bare ``players`` list. No sim advance, no
+    mutation — purely a read of the loaded world.
+
+    Header names the managed team and the roster size; each row carries the
+    player id, role, name, handle, age, signature operative, and the
+    comma-joined traits — the fields a manager actually wants when checking a
+    save's current state. Column widths are computed from the roster so a
+    longer/shorter cast still aligns; an empty traits list renders as ``-`` so
+    the column is never blank without it being a load-time bug.
+    """
+    team = world.team
+    roster = world.roster
+    print(f"{team.name} ({team.tag}) — roster ({len(roster)}):")
+    if not roster:
+        return
+    id_w = max(len(p.id) for p in roster)
+    role_w = max(len(p.role.value) for p in roster)
+    name_w = max(len(p.name) for p in roster)
+    handle_w = max(len(p.handle) for p in roster)
+    sig_w = max(len(p.signature_operative) for p in roster)
+    for player in roster:
+        traits = ", ".join(player.traits) if player.traits else "-"
+        print(
+            f"  {player.id:<{id_w}}  "
+            f"{player.role.value:<{role_w}}  "
+            f"{player.name:<{name_w}}  "
+            f"{player.handle:<{handle_w}}  "
+            f"age {player.age:>2}  "
+            f"{player.signature_operative:<{sig_w}}  "
+            f"traits: {traits}"
+        )
 
 
 def _print_summary(world: WorldState) -> None:
@@ -61,6 +103,21 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("inspect", help="load the canned save into a typed WorldState and print a summary")
     resolve = sub.add_parser("resolve", help="resolve a cite ID (mem:<player>:<event>) to its memory entry")
     resolve.add_argument("cite", help="the memory ID to resolve")
+    roster = sub.add_parser(
+        "roster",
+        help="read-only roster queries against a save (no sim advance, no mutation)",
+    )
+    roster_sub = roster.add_subparsers(dest="roster_command")
+    roster_show = roster_sub.add_parser(
+        "show",
+        help="print the managed team's current roster (one row per starter)",
+    )
+    roster_show.add_argument(
+        "save_path",
+        nargs="?",
+        default=None,
+        help="path to the save YAML (default: --save / the packaged canned save)",
+    )
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
     play.add_argument(
@@ -76,6 +133,27 @@ def main(argv: list[str] | None = None) -> int:
         from esports_tycoon.web.__main__ import main as web_main
 
         return web_main(["--host", args.host, "--port", str(args.port)])
+
+    if args.command == "roster":
+        # The subcommand only makes sense with a verb attached; ``roster``
+        # alone is an authoring mistake, not a default action — print help
+        # and exit non-zero rather than silently doing nothing or running
+        # the default ``inspect`` against a misread args namespace.
+        if args.roster_command is None:
+            roster.print_help()
+            return 2
+        if args.roster_command == "show":
+            # The positional path wins over the shared ``--save`` flag so
+            # ``roster show my.yaml`` reads naturally; falling back to
+            # ``--save`` keeps the flag useful (and the packaged canned save
+            # — the default — exercised) for callers that already drive the
+            # CLI that way.
+            target = args.save_path if args.save_path is not None else args.save
+            world = loader.load(target)
+            _print_roster(world)
+            return 0
+        parser.error(f"unknown roster subcommand {args.roster_command!r}")
+        return 2
 
     world = loader.load(args.save)
 
