@@ -1,27 +1,119 @@
 """Command line entry point for esports-tycoon.
 
-    python -m esports_tycoon inspect              # load the canned save, print a summary
-    python -m esports_tycoon resolve <cite-id>    # resolve a cite ID to its memory entry
-    python -m esports_tycoon validate-save <path> # schema-check a save; print 'OK' or the first error
-    python -m esports_tycoon play                 # launch the local slice web app
+    python -m esports_tycoon inspect                       # load the canned save, print a summary
+    python -m esports_tycoon resolve <cite-id>             # resolve a cite ID to its memory entry
+    python -m esports_tycoon validate-save <path>          # schema-check a save; print 'OK' or the first error
+    python -m esports_tycoon roster export [<save>]        # emit the managed team's roster as csv or json
+    python -m esports_tycoon play                          # launch the local slice web app
 
-``inspect``, ``resolve``, and ``validate-save`` load a save through the typed
-loader, so they double as a smoke test that the schema still matches a given
-save. ``validate-save`` is the read-only "did I break it?" check authors of
-hand-edited saves reach for: it surfaces the first :class:`loader.SaveError`
-as a one-line ``<field_path>: <message>`` and exits non-zero, or prints ``OK``
-and exits zero. ``play`` starts the Flask slice app on ``127.0.0.1`` (the
-headless runner is ``python -m esports_tycoon.runner``; the cast-lock gate is
+``inspect``, ``resolve``, ``validate-save``, and ``roster export`` load a save
+through the typed loader, so they double as a smoke test that the schema still
+matches a given save. ``validate-save`` is the read-only "did I break it?"
+check authors of hand-edited saves reach for: it surfaces the first
+:class:`loader.SaveError` as a one-line ``<field_path>: <message>`` and exits
+non-zero, or prints ``OK`` and exits zero. ``roster export`` is the read-only
+roster dumper: one record per starter on the managed team (id, name, handle,
+role, age, signature operative, traits) — no sim advance, no mutation, written
+to ``--out`` or stdout in ``csv`` (default) or ``json`` format. ``play`` starts
+the Flask slice app on ``127.0.0.1`` (the headless runner is
+``python -m esports_tycoon.runner``; the cast-lock gate is
 ``python -m esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
+import io
+import json
+from pathlib import Path
+from typing import Sequence
 
 from esports_tycoon import __version__
 from esports_tycoon.canned import loader
-from esports_tycoon.schema import WorldState
+from esports_tycoon.schema import Player, WorldState
+
+# Column order for ``roster export``. Pinned so the CSV header and the JSON
+# record key order match the schema's natural read — id first (the stable
+# handle a downstream tool joins on), then name/handle/role/age/signature
+# operative, then traits last (the variable-length attributes list). Kept in
+# one place so a future column addition lands in both formats together.
+_ROSTER_EXPORT_FIELDS: tuple[str, ...] = (
+    "id",
+    "name",
+    "handle",
+    "role",
+    "age",
+    "signature_operative",
+    "traits",
+)
+
+# CSV joiner for the ``traits`` list. ``,`` is reserved for CSV cell
+# separation, so a list-valued cell needs an unambiguous inner delimiter; ``|``
+# is the conventional choice (no canned-save trait contains one) and survives
+# a round-trip through ``str.split("|")`` cleanly. JSON keeps the list shape
+# native, so this only affects CSV output.
+_TRAITS_CSV_DELIM = "|"
+
+
+def _roster_record(player: Player) -> dict[str, object]:
+    """Project one :class:`Player` to the export's flat record shape.
+
+    Returns a dict keyed by :data:`_ROSTER_EXPORT_FIELDS` in order: native
+    types throughout (``traits`` stays a list, ``role`` becomes the enum's
+    string value), so the JSON writer can dump straight through and the CSV
+    writer only flattens the list field. Centralised so both formats and the
+    tests share one definition of "what a roster row contains" — adding a
+    column is a one-line edit here plus a tuple bump above, not a per-format
+    sync.
+    """
+    return {
+        "id": player.id,
+        "name": player.name,
+        "handle": player.handle,
+        "role": player.role.value,
+        "age": player.age,
+        "signature_operative": player.signature_operative,
+        "traits": list(player.traits),
+    }
+
+
+def _format_roster_csv(roster: Sequence[Player]) -> str:
+    """Render the roster as CSV with a header row.
+
+    ``traits`` is joined on :data:`_TRAITS_CSV_DELIM` so the cell stays a
+    single field even when the player has multiple traits. ``csv.writer``
+    handles quoting for any value that contains the dialect's delimiter or a
+    newline, so a name with a comma in it still round-trips through
+    ``csv.reader``. ``lineterminator="\\n"`` keeps the output platform-stable
+    (the same bytes on Linux, macOS, and Windows) so a golden-bytes test stays
+    honest.
+    """
+    buf = io.StringIO()
+    writer = csv.writer(buf, lineterminator="\n")
+    writer.writerow(_ROSTER_EXPORT_FIELDS)
+    for player in roster:
+        record = _roster_record(player)
+        traits_cell = _TRAITS_CSV_DELIM.join(record["traits"])  # type: ignore[arg-type]
+        row = [
+            traits_cell if field == "traits" else record[field]
+            for field in _ROSTER_EXPORT_FIELDS
+        ]
+        writer.writerow(row)
+    return buf.getvalue()
+
+
+def _format_roster_json(roster: Sequence[Player]) -> str:
+    """Render the roster as a pretty-printed JSON array of records.
+
+    ``indent=2`` plus a trailing newline matches the house convention (the
+    recap JSON artefacts use the same shape), so a downstream diff stays
+    readable and the file ends in a newline the way well-mannered POSIX tools
+    expect. ``traits`` stays a native list in JSON — the CSV-only ``|`` join
+    would be a lossy choice here.
+    """
+    records = [_roster_record(player) for player in roster]
+    return json.dumps(records, indent=2) + "\n"
 
 
 def web_default_port() -> int:
