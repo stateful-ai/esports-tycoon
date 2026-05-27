@@ -1,5 +1,10 @@
 # esports-tycoon
 
+## Status
+
+- Phase: alpha
+- Stack: Python (>=3.12,<3.13)
+
 A management sim where the soul of the game is **persistent player
 personalities** — their memories of past matches, their relationships, and a
 public social feed where they react to everything that happens. You manage the
