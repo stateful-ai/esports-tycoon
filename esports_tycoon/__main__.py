@@ -3,6 +3,7 @@
     python -m esports_tycoon inspect              # load the canned save, print a summary
     python -m esports_tycoon resolve <cite-id>    # resolve a cite ID to its memory entry
     python -m esports_tycoon validate-save <path> # schema-check a save; print 'OK' or the first error
+    python -m esports_tycoon scenario template    # emit a minimal valid save YAML template
     python -m esports_tycoon play                 # launch the local slice web app
 
 ``inspect``, ``resolve``, and ``validate-save`` load a save through the typed
@@ -10,8 +11,12 @@ loader, so they double as a smoke test that the schema still matches a given
 save. ``validate-save`` is the read-only "did I break it?" check authors of
 hand-edited saves reach for: it surfaces the first :class:`loader.SaveError`
 as a one-line ``<field_path>: <message>`` and exits non-zero, or prints ``OK``
-and exits zero. ``play`` starts the Flask slice app on ``127.0.0.1`` (the
-headless runner is ``python -m esports_tycoon.runner``; the cast-lock gate is
+and exits zero. ``scenario template`` is the author-facing scaffold: it emits a
+minimal valid save (every required field, with placeholder values and inline
+comments) to stdout, or to ``--out FILE``. The natural workflow is
+``scenario template --out my.yaml`` → edit → ``validate-save my.yaml`` →
+load. ``play`` starts the Flask slice app on ``127.0.0.1`` (the headless
+runner is ``python -m esports_tycoon.runner``; the cast-lock gate is
 ``python -m esports_tycoon.cast_lock``).
 """
 
@@ -19,7 +24,7 @@ from __future__ import annotations
 
 import argparse
 
-from esports_tycoon import __version__
+from esports_tycoon import __version__, scenario
 from esports_tycoon.canned import loader
 from esports_tycoon.schema import WorldState
 
@@ -75,6 +80,24 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="path to the save YAML (default: --save / the packaged canned save)",
     )
+    scenario_cmd = sub.add_parser(
+        "scenario",
+        help="author-facing save scaffolding (subcommands: template)",
+    )
+    scenario_sub = scenario_cmd.add_subparsers(dest="scenario_command")
+    scenario_template = scenario_sub.add_parser(
+        "template",
+        help="emit a minimal valid save YAML template (to stdout, or --out FILE)",
+    )
+    scenario_template.add_argument(
+        "--out",
+        default=None,
+        help=(
+            "write the template to FILE instead of stdout; the parent directory "
+            "must exist"
+        ),
+    )
+
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
     play.add_argument(
@@ -83,6 +106,31 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     args = parser.parse_args(argv)
+
+    if args.command == "scenario":
+        # The ``scenario`` group needs a subcommand; bare ``scenario`` falls
+        # back to the help text rather than silently doing nothing — same
+        # shape as argparse's own behaviour for an empty group, but explicit
+        # so a typo'd subcommand exits non-zero with the available list.
+        if args.scenario_command != "template":
+            scenario_cmd.print_help()
+            return 2
+        text = scenario.template()
+        if args.out is None:
+            # End in exactly one newline (the template already does); print
+            # without ``print``'s extra ``\n`` so the bytes piped to a file
+            # match :data:`scenario.TEMPLATE` byte-for-byte.
+            import sys as _sys
+
+            _sys.stdout.write(text)
+            return 0
+        # ``Path.write_text`` overwrites; that's the right behaviour for a
+        # one-shot scaffolding command — the author asked for the file at
+        # that path, and any stale content there is their old draft.
+        from pathlib import Path as _Path
+
+        _Path(args.out).write_text(text, encoding="utf-8")
+        return 0
 
     if args.command == "play":
         # Lazy import: the web app pulls in Flask (an opt-in extra), so the core
