@@ -1,13 +1,17 @@
 """Command line entry point for esports-tycoon.
 
-    python -m esports_tycoon inspect            # load the canned save, print a summary
-    python -m esports_tycoon resolve <cite-id>  # resolve a cite ID to its memory entry
-    python -m esports_tycoon play               # launch the local slice web app
+    python -m esports_tycoon inspect              # load the canned save, print a summary
+    python -m esports_tycoon resolve <cite-id>    # resolve a cite ID to its memory entry
+    python -m esports_tycoon validate-save <path> # schema-check a save; print 'OK' or the first error
+    python -m esports_tycoon play                 # launch the local slice web app
 
-``inspect`` and ``resolve`` load the packaged canned save through the typed
-loader, so they double as a smoke test that the schema still matches the canned
-save. ``play`` starts the Flask slice app on ``127.0.0.1`` (the headless runner is
-``python -m esports_tycoon.runner``; the cast-lock gate is
+``inspect``, ``resolve``, and ``validate-save`` load a save through the typed
+loader, so they double as a smoke test that the schema still matches a given
+save. ``validate-save`` is the read-only "did I break it?" check authors of
+hand-edited saves reach for: it surfaces the first :class:`loader.SaveError`
+as a one-line ``<field_path>: <message>`` and exits non-zero, or prints ``OK``
+and exits zero. ``play`` starts the Flask slice app on ``127.0.0.1`` (the
+headless runner is ``python -m esports_tycoon.runner``; the cast-lock gate is
 ``python -m esports_tycoon.cast_lock``).
 """
 
@@ -61,6 +65,16 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("inspect", help="load the canned save into a typed WorldState and print a summary")
     resolve = sub.add_parser("resolve", help="resolve a cite ID (mem:<player>:<event>) to its memory entry")
     resolve.add_argument("cite", help="the memory ID to resolve")
+    validate = sub.add_parser(
+        "validate-save",
+        help="schema-check a save file; print 'OK' or '<field_path>: <message>' and exit non-zero",
+    )
+    validate.add_argument(
+        "save_path",
+        nargs="?",
+        default=None,
+        help="path to the save YAML (default: --save / the packaged canned save)",
+    )
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
     play.add_argument(
@@ -76,6 +90,30 @@ def main(argv: list[str] | None = None) -> int:
         from esports_tycoon.web.__main__ import main as web_main
 
         return web_main(["--host", args.host, "--port", str(args.port)])
+
+    if args.command == "validate-save":
+        # The positional argument wins over the shared ``--save`` flag so
+        # ``python -m esports_tycoon validate-save my.yaml`` reads naturally;
+        # falling back to ``--save`` keeps the flag useful (and the default
+        # path — the packaged canned save — exercised) for callers that already
+        # drive the CLI that way. The loader is the single source of schema
+        # truth; every typed ``SaveError`` carries a ``field_path`` plus a
+        # single message, which is exactly the one-line shape promised above.
+        target = args.save_path if args.save_path is not None else args.save
+        try:
+            loader.load(target)
+        except loader.SaveError as exc:
+            print(f"{exc.field_path}: {exc}")
+            return 1
+        except FileNotFoundError as exc:
+            # A typo'd path is the most common author mistake. The loader
+            # itself doesn't catch this (the file is read before the YAML
+            # parser sees a thing), so surface a clean one-liner with the same
+            # exit code as any other validation failure.
+            print(f"<path>: {exc}")
+            return 1
+        print("OK")
+        return 0
 
     world = loader.load(args.save)
 
