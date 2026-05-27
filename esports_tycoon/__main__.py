@@ -9,19 +9,27 @@
 ``inspect``, ``resolve``, ``validate-save``, and ``roster show`` load a save
 through the typed loader, so they double as a smoke test that the schema still
 matches a given save. ``validate-save`` is the read-only "did I break it?"
-check authors of hand-edited saves reach for: it surfaces the first
-:class:`loader.SaveError` as a one-line ``<field_path>: <message>`` and exits
-non-zero, or prints ``OK`` and exits zero. ``roster show`` is the read-only
-roster printer: one row per starter on the managed team with id, role, name,
-handle, age, signature operative, and traits — no sim advance, no mutation.
-``play`` starts the Flask slice app on ``127.0.0.1`` (the headless runner is
-``python -m esports_tycoon.runner``; the cast-lock gate is ``python -m
+check authors of hand-edited saves reach for: on success it prints ``OK`` and
+exits 0; on failure it prints a one-line ``<field_path>: <message>`` (the
+first typed :class:`loader.SaveError`) and exits 1. The default check covers
+YAML well-formedness, ``schema_version`` compatibility, and the typed schema.
+``--strict`` additionally runs the cross-entity referential-integrity gate —
+every relationship, clash, opponent and chirper reply must resolve to an
+entity defined in the same save. ``roster show`` is the read-only roster
+printer: one row per starter on the managed team with id, role, name, handle,
+age, signature operative, and traits — no sim advance, no mutation. ``play``
+starts the Flask slice app on ``127.0.0.1`` (the headless runner is ``python
+-m esports_tycoon.runner``; the cast-lock gate is ``python -m
 esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
+
+import yaml
+from pydantic import ValidationError
 
 from esports_tycoon import __version__
 from esports_tycoon.canned import loader
@@ -100,7 +108,47 @@ def _print_summary(world: WorldState) -> None:
     )
 
 
-def main(argv: list[str] | None = None) -> int:
+def _validate_save_path(path, *, strict: bool) -> WorldState:
+    """Run the same load-time contracts ``loader.load`` runs, gated by ``strict``.
+
+    Mirrors :func:`esports_tycoon.canned.loader.load` (YAML parse -> version
+    gate -> typed-schema validate) but only runs the cross-entity referential
+    integrity gate when ``strict`` is true, so the non-strict CLI mode is
+    strictly shape-only. Every failure still surfaces as the same typed
+    :class:`loader.SaveError` subclass the loader raises, so callers — and
+    the ``validate-save`` handler below — read one contract for both modes.
+    """
+    text = Path(path).read_text(encoding="utf-8")
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        raise loader.SaveYamlError(
+            f"{path}: save is not a valid YAML document: {exc}",
+            field_path="<yaml>",
+            source=path,
+        ) from exc
+    if not isinstance(data, dict):
+        raise loader.SaveSchemaError(
+            f"{path}: expected a mapping at the top level, got {type(data).__name__}",
+            field_path="<root>",
+            source=path,
+        )
+    data = loader._ensure_loadable_version(data, path)
+    try:
+        world = WorldState.model_validate(data)
+    except ValidationError as exc:
+        raise loader.SaveSchemaError(
+            f"{path}: save does not match the typed schema: {exc}",
+            field_path=loader._field_path_from_validation_error(exc),
+            source=path,
+            original=exc,
+        ) from exc
+    if strict:
+        loader.check_referential_integrity(world, source=path)
+    return world
+
+
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="esports_tycoon", description=__doc__)
     parser.add_argument("--version", action="version", version=f"esports-tycoon {__version__}")
     parser.add_argument("--save", default=str(loader.DEFAULT_SAVE_PATH), help="path to the canned save YAML")
@@ -117,6 +165,15 @@ def main(argv: list[str] | None = None) -> int:
         nargs="?",
         default=None,
         help="path to the save YAML (default: --save / the packaged canned save)",
+    )
+    validate.add_argument(
+        "--strict",
+        action="store_true",
+        help=(
+            "additionally enforce referential integrity: every relationship, "
+            "clash, opponent and chirper reply must resolve to an entity "
+            "defined in the same save"
+        ),
     )
     roster = sub.add_parser(
         "roster",
@@ -152,23 +209,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "validate-save":
         # The positional argument wins over the shared ``--save`` flag so
         # ``python -m esports_tycoon validate-save my.yaml`` reads naturally;
-        # falling back to ``--save`` keeps the flag useful (and the default
-        # path — the packaged canned save — exercised) for callers that already
-        # drive the CLI that way. The loader is the single source of schema
-        # truth; every typed ``SaveError`` carries a ``field_path`` plus a
-        # single message, which is exactly the one-line shape promised above.
+        # falling back to ``--save`` keeps the flag useful (and the packaged
+        # canned save — the default — exercised) for callers that already
+        # drive the CLI that way.
         target = args.save_path if args.save_path is not None else args.save
         try:
-            loader.load(target)
+            _validate_save_path(target, strict=args.strict)
+        except FileNotFoundError as exc:
+            # A typo'd path is the most common author mistake. Surface a
+            # clean one-liner with the same exit code as any other
+            # validation failure; the loader doesn't catch this itself (the
+            # file is read before the YAML parser sees a thing).
+            print(f"<path>: {exc}")
+            return 1
         except loader.SaveError as exc:
             print(f"{exc.field_path}: {exc}")
-            return 1
-        except FileNotFoundError as exc:
-            # A typo'd path is the most common author mistake. The loader
-            # itself doesn't catch this (the file is read before the YAML
-            # parser sees a thing), so surface a clean one-liner with the same
-            # exit code as any other validation failure.
-            print(f"<path>: {exc}")
             return 1
         print("OK")
         return 0
