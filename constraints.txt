@@ -17,7 +17,7 @@
 # — pip can't constrain the interpreter, only the packages it installs.
 
 # --- Serialization toolchain (byte-identity contract) ----------------------- #
-PyYAML==6.0.1
+PyYAML==6.0.3
 pydantic==2.13.4
 pydantic_core==2.46.4
 annotated-types==0.7.0
