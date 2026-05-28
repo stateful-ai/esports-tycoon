@@ -7,7 +7,7 @@ summary: Consensus across all three agents
 ---
 
 ### Consensus across all three agents
-- v8 plan, sequencing, and DoD are stable. Critical path: W0 smoke green + freeze → W1 keystone (`recall()` + content + golden) → W2 (bind + copy) → W3 (rebind + recap snapshot + zero-network) → W4 (gate w/ manifest-stamped evidence).
+- v8 plan, sequencing, and DoD are stable. Critical path: W0 smoke green + freeze → W1 keystone (`recall()` + content + golden — unblocked by M0.0-T1 pinned serialization toolchain and M0.0-T2 deterministic golden-bless script; see [`docs/m0_0_promoted_tickets.md`](m0_0_promoted_tickets.md)) → W2 (bind + copy) → W3 (rebind + recap snapshot + zero-network — unblocked by M0.0-T1 (snapshot bytes stable across machines) and M0.0-T3 shared typed `SaveError` contract (every consumer surfaces load failures the same way)) → W4 (gate w/ manifest-stamped evidence — manifest names the M0.0-T1 toolchain versions, the M0.0-T2 `make regen-golden` step, and the M0.0-T3 negative-fixture acceptance shape).
 - DoD = the playtest: founder plays templated zero-API slice in 2 evenings via one-line `play` on a clean checkout; ≥1 grounded "remembered me" screenshot; pre-registered rubric recorded before play.
 - Architecture invariant unchanged: memory recall is engine logic, not LLM logic.
 - Hardening freeze holds; vLLM is post-gate.
