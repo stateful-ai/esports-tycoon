@@ -25,9 +25,12 @@ a later ticket.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
+from collections.abc import Mapping
 from enum import Enum
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Any, Literal, Optional
 
 from pydantic import (
     AfterValidator,
@@ -69,6 +72,8 @@ __all__ = [
     "RoundResult",
     "WhyRecord",
     "GeneratedContent",
+    "canonical_why_record_bytes",
+    "why_record_digest",
 ]
 
 #: The save-format version this build reads and writes. The save is
@@ -646,3 +651,90 @@ class GeneratedContent(_Model):
     tokens_in: int = Field(default=0, ge=0)
     tokens_out: int = Field(default=0, ge=0)
     cost_usd: float = Field(default=0.0, ge=0.0)
+
+
+# --------------------------------------------------------------------------- #
+# Canonical WhyRecord serialization + digest.
+#
+# The byte-identity contract pinned in ``saves/SCHEMA.md`` (and implemented for
+# the canned save by :mod:`esports_tycoon.canned.canonical`) says: same
+# semantic data ⇒ same bytes on every machine. The canned save speaks YAML;
+# a resolved match speaks JSON — but the rules are the same shape:
+#
+#   * dict keys are emitted in a stable order (sorted here, schema-order in
+#     YAML — both choices are deterministic and independent of how CPython
+#     happens to hash strings under a given ``PYTHONHASHSEED``);
+#   * floats round-trip through Python's shortest ``repr`` (json's default
+#     since Python 3.1, identical to the convention canonical.py uses for
+#     YAML), so two CPython builds of the pinned minor emit the same digits;
+#   * set / frozenset values are sorted before emission, since their native
+#     iteration order is hash-seeded for string elements.
+#
+# The 100-run determinism check (``tests/test_resolver_determinism.py``) leans
+# on this digest rather than ``WhyRecord`` object equality: object equality is
+# structural and would still pass a regression that quietly re-ordered a
+# ``morale_deltas`` dict under a different ``PYTHONHASHSEED``, because pydantic
+# preserves whatever order the resolver inserted into. A digest over the
+# canonical bytes catches that drift — and any other byte-level drift — as a
+# one-line failure.
+# --------------------------------------------------------------------------- #
+
+
+def _canonicalize_for_digest(value: Any) -> Any:
+    """Recursively normalize a ``model_dump(mode="json")`` payload to a JSON-
+    serializable form whose iteration order is fully pinned.
+
+    Dicts get sorted keys (so a future field that the resolver builds in
+    hash-iteration order — ``dict.fromkeys(set(...))``, ``{**a, **b}`` over
+    sets — cannot leak ``PYTHONHASHSEED`` through). Sets and frozensets are
+    sorted into lists (``json.dumps`` would otherwise reject them, and emitting
+    them in native iteration order would defeat the whole exercise). Lists and
+    tuples preserve their authored order: those orderings are semantically
+    meaningful in a :class:`WhyRecord` (the round log, the key moments) and
+    must not be re-sorted.
+    """
+    if isinstance(value, Mapping):
+        return {key: _canonicalize_for_digest(value[key]) for key in sorted(value)}
+    if isinstance(value, (set, frozenset)):
+        return [_canonicalize_for_digest(item) for item in sorted(value)]
+    if isinstance(value, (list, tuple)):
+        return [_canonicalize_for_digest(item) for item in value]
+    return value
+
+
+def canonical_why_record_bytes(record: "WhyRecord") -> bytes:
+    """Canonical bytes for a :class:`WhyRecord` — the substrate of the digest.
+
+    The byte form is compact UTF-8 JSON: ``sort_keys=True`` so dict iteration
+    order cannot leak through (closing the ``PYTHONHASHSEED`` hole in
+    ``morale_deltas`` and in any future dict-valued field),
+    ``separators=(",", ":")`` so incidental whitespace cannot drift,
+    ``ensure_ascii=False`` so unicode survives verbatim (matches the
+    canonical-save convention in :mod:`esports_tycoon.canned.canonical`), and
+    ``allow_nan=False`` so a stray non-finite value fails loudly rather than
+    being emitted as the non-standard ``NaN`` / ``Infinity`` token that no
+    JSON parser accepts. Floats go through Python's shortest ``repr`` (json's
+    default since Python 3.1), the same shortest-round-trip convention the
+    YAML canonical serializer pins for the canned save.
+    """
+    payload = _canonicalize_for_digest(record.model_dump(mode="json"))
+    text = json.dumps(
+        payload,
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+    return text.encode("utf-8")
+
+
+def why_record_digest(record: "WhyRecord") -> str:
+    """SHA-256 hex digest of :func:`canonical_why_record_bytes`.
+
+    Comparing digests across runs (rather than the records themselves) is what
+    the 100-run determinism check actually wants to assert: any byte-level
+    drift between resolves — a reshuffled dict, a renamed field, a re-tuned
+    constant — surfaces as a single equality failure on a 64-character string,
+    no matter how large the record grows.
+    """
+    return hashlib.sha256(canonical_why_record_bytes(record)).hexdigest()
