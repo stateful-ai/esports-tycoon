@@ -5,6 +5,7 @@
     python -m esports_tycoon validate-save <path>   # schema-check a save; print 'OK' or the first error
     python -m esports_tycoon roster show <save>     # print the current roster from a save
     python -m esports_tycoon roster export <save>   # emit the current roster as csv or json
+    python -m esports_tycoon scenario template      # emit a minimal valid save YAML template
     python -m esports_tycoon play                   # launch the local slice web app
 
 ``inspect``, ``resolve``, ``validate-save``, ``roster show``, and ``roster
@@ -21,10 +22,13 @@ read-only roster printer: one row per starter on the managed team with id, role,
 name, handle, age, signature operative, and traits — no sim advance, no
 mutation. ``roster export`` is its machine-facing twin: the same starters in the
 same order, emitted as ``csv`` (default) or ``json`` to ``--out`` or stdout, for
-piping into a spreadsheet, a JSON-consuming tool, or a diff. ``play`` starts the
-Flask slice app on ``127.0.0.1`` (the headless runner is ``python -m
-esports_tycoon.runner``; the cast-lock gate is ``python -m
-esports_tycoon.cast_lock``).
+piping into a spreadsheet, a JSON-consuming tool, or a diff. ``scenario
+template`` is the author-facing scaffold: it emits a minimal valid save (every
+required field, with placeholder values and inline comments) to stdout, or to
+``--out FILE`` — the natural workflow is ``scenario template --out my.yaml`` →
+edit → ``validate-save my.yaml`` → load. ``play`` starts the Flask slice app on
+``127.0.0.1`` (the headless runner is ``python -m esports_tycoon.runner``; the
+cast-lock gate is ``python -m esports_tycoon.cast_lock``).
 """
 
 from __future__ import annotations
@@ -39,7 +43,7 @@ from typing import Sequence
 import yaml
 from pydantic import ValidationError
 
-from esports_tycoon import __version__
+from esports_tycoon import __version__, scenario
 from esports_tycoon.canned import loader
 from esports_tycoon.schema import Player, WorldState
 
@@ -304,6 +308,24 @@ def main(argv=None) -> int:
         default=None,
         help="write to FILE instead of stdout",
     )
+    scenario_cmd = sub.add_parser(
+        "scenario",
+        help="author-facing save scaffolding (subcommands: template)",
+    )
+    scenario_sub = scenario_cmd.add_subparsers(dest="scenario_command")
+    scenario_template = scenario_sub.add_parser(
+        "template",
+        help="emit a minimal valid save YAML template (to stdout, or --out FILE)",
+    )
+    scenario_template.add_argument(
+        "--out",
+        default=None,
+        help=(
+            "write the template to FILE instead of stdout; the parent directory "
+            "must exist"
+        ),
+    )
+
     play = sub.add_parser("play", help="launch the local slice web app on 127.0.0.1")
     play.add_argument("--host", default="127.0.0.1", help="bind host (default: 127.0.0.1)")
     play.add_argument(
@@ -312,6 +334,31 @@ def main(argv=None) -> int:
     )
 
     args = parser.parse_args(argv)
+
+    if args.command == "scenario":
+        # The ``scenario`` group needs a subcommand; bare ``scenario`` falls
+        # back to the help text rather than silently doing nothing — same
+        # shape as argparse's own behaviour for an empty group, but explicit
+        # so a typo'd subcommand exits non-zero with the available list.
+        if args.scenario_command != "template":
+            scenario_cmd.print_help()
+            return 2
+        text = scenario.template()
+        if args.out is None:
+            # End in exactly one newline (the template already does); print
+            # without ``print``'s extra ``\n`` so the bytes piped to a file
+            # match :data:`scenario.TEMPLATE` byte-for-byte.
+            import sys as _sys
+
+            _sys.stdout.write(text)
+            return 0
+        # ``Path.write_text`` overwrites; that's the right behaviour for a
+        # one-shot scaffolding command — the author asked for the file at
+        # that path, and any stale content there is their old draft.
+        from pathlib import Path as _Path
+
+        _Path(args.out).write_text(text, encoding="utf-8")
+        return 0
 
     if args.command == "play":
         # Lazy import: the web app pulls in Flask (an opt-in extra), so the core
