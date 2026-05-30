@@ -15,7 +15,6 @@ exercised too, so a regression to noise would fail.
 """
 
 import ast
-import copy
 import pathlib
 import sys
 import unittest
@@ -26,12 +25,12 @@ from esports_tycoon import resolver  # noqa: E402
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.schema import (  # noqa: E402
     Decisions,
-    KeyMoment,
     MemoryEntry,
     Player,
     Role,
     WhyRecord,
-    WorldState,
+    canonical_why_record_bytes,
+    why_record_digest,
 )
 
 _RESOLVER_SRC = pathlib.Path(resolver.__file__)
@@ -124,26 +123,48 @@ class TestPurity(unittest.TestCase):
 
 
 class TestDeterminism(_WorldFixture):
-    # M1 scope (docs/m0_gate_decision.md): the 100-run WhyRecord digest sweep
-    # is M1's reproducibility-floor work. Same-seed byte-identity within a
-    # single run is still covered by the load+resolve golden in
-    # ``test_golden_determinism.py``; the 100x repeat is the harder digest the
-    # M0 gate did not need.
-    @unittest.skip(
-        "M1 scope: 100-run WhyRecord digest"
-    )
-    def test_identical_across_100_runs(self):
-        for seed in (0, 1, 7, 42, 99, 123456):
+    # The W3 100-run determinism sweep. ``WhyRecord`` object equality would
+    # still pass a regression that quietly reshuffled ``morale_deltas`` under a
+    # different ``PYTHONHASHSEED`` (pydantic preserves whatever insertion order
+    # the resolver hands in), so this check asserts equality of the canonical
+    # *digest* — bytes whose iteration order is pinned by
+    # :func:`canonical_why_record_bytes`. The seed sweep covers the same fixed
+    # set of seeds the acceptance bar names.
+    _SEEDS = (0, 1, 7, 42, 99, 123456)
+
+    def test_digest_is_identical_across_100_runs(self):
+        for seed in self._SEEDS:
             with self.subTest(seed=seed):
                 first = resolver.run(self.world, Decisions(opponent="northwind"), seed)
+                first_digest = why_record_digest(first)
                 for _ in range(99):
                     again = resolver.run(self.world, Decisions(opponent="northwind"), seed)
-                    # The four fields the acceptance bar names, then the whole record.
-                    self.assertEqual(again.scoreline, first.scoreline)
-                    self.assertEqual(again.mvp, first.mvp)
-                    self.assertEqual(again.key_moments, first.key_moments)
-                    self.assertEqual(again.morale_deltas, first.morale_deltas)
-                    self.assertEqual(again, first)
+                    self.assertEqual(
+                        why_record_digest(again),
+                        first_digest,
+                        f"WhyRecord digest drifted within a same-seed sweep at seed={seed}",
+                    )
+
+    def test_perturbed_resolve_produces_a_different_digest(self):
+        # Sibling check: prove the digest *can* fail. If a regression moved the
+        # resolver's outputs, the same-seed digest would change — modelled here
+        # by resolving with one bit of the input perturbed (a different
+        # opponent against the same seed and decisions otherwise). Without this
+        # negative case the 100-run assertion above is a tautology: it would
+        # pass even if every record produced the same constant digest.
+        seed = self._SEEDS[0]
+        base = why_record_digest(
+            resolver.run(self.world, Decisions(opponent="northwind"), seed)
+        )
+        perturbed = why_record_digest(
+            resolver.run(self.world, Decisions(opponent="sovereign"), seed)
+        )
+        self.assertNotEqual(
+            base,
+            perturbed,
+            "perturbed resolve produced an identical digest — the determinism "
+            "check is insensitive to real drift",
+        )
 
     def test_seed_is_echoed(self):
         rec = resolver.run(self.world, Decisions(opponent="northwind"), 12345)

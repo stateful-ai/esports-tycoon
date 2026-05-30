@@ -72,7 +72,6 @@ def create_app(
     """
     from flask import (
         Flask,
-        abort,
         flash,
         redirect,
         render_template,

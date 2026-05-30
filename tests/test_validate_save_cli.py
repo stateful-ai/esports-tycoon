@@ -1,26 +1,21 @@
-"""``python -m esports_tycoon validate-save`` is the read-only schema-check CLI.
+"""End-to-end wiring for the ``validate-save`` CLI subcommand.
 
-The subcommand is a thin shell over :func:`esports_tycoon.canned.loader.load`:
-exit ``0`` and print ``OK`` for a save that loads, exit ``1`` and print one
-``<field_path>: <message>`` line for the first :class:`loader.SaveError` it
-raises (and the same shape for a missing file). The contract this module pins:
+The check authors of hand-edited saves reach for is ``python -m esports_tycoon
+validate-save <path>``. The handler in :mod:`esports_tycoon.__main__` is the
+one seam this test pins: it must
 
-* the packaged canned save validates — proves the wiring through ``--save``'s
-  default plus the loader is healthy, and that the happy-path bytes don't drift
-  underneath the CLI;
-* a positional argument wins over the shared ``--save`` flag — the subcommand's
-  natural shape ``validate-save my.yaml`` reads naturally and is the one a
-  hand-author of a save reaches for;
-* an off-version save trips :class:`loader.SchemaVersionError` and the CLI
-  surfaces it as ``schema_version: …`` with exit code ``1`` — the
-  ``field_path`` half of the contract;
-* a missing path returns exit code ``1`` and a one-line ``<path>: …`` — the
-  same exit code as a validation failure, since to the caller "I broke it"
-  and "I typo'd the path" are the same outcome.
+* exit 0 with ``OK`` on the packaged canonical save,
+* exit 1 with a one-line ``<field_path>: <message>`` for every typed
+  :class:`loader.SaveError` subclass (YAML parse failure, unknown
+  ``schema_version``, typed-schema rejection, *and* — when ``--strict`` is
+  set — a dangling cross-entity id reference),
+* be strictly shape-only by default: a save that passes the typed schema but
+  references an undefined unit must validate clean without ``--strict`` and
+  fail only when the flag is on.
 
-The tests are offline (no Slack/providers) and mutate a fresh deep copy of the
-shipped save written to a tmp file, the same pattern the existing runner CLI
-tests use; nothing here writes to the repo's ``saves/``.
+The negative-fixture suite (``tests/test_referential_integrity.py``) pins the
+loader's typed errors; this suite pins that the CLI surfaces them exactly the
+way the docstring of :mod:`esports_tycoon.__main__` promises.
 """
 
 from __future__ import annotations
@@ -28,101 +23,101 @@ from __future__ import annotations
 import io
 import pathlib
 import sys
-import tempfile
 import unittest
 from contextlib import redirect_stdout
 
-import yaml
-
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from esports_tycoon.__main__ import main as cli_main  # noqa: E402
-from esports_tycoon.canned import loader  # noqa: E402
-from esports_tycoon.schema import CURRENT_SCHEMA_VERSION  # noqa: E402
+from esports_tycoon.__main__ import main  # noqa: E402
+
+FIXTURES = pathlib.Path(__file__).resolve().parent / "fixtures" / "integrity"
+
+
+def _run(*argv: str):
+    """Invoke ``python -m esports_tycoon`` in-process and capture its stdout.
+
+    In-process so the test reads the same code path the entry point does — no
+    subprocess shells out to a possibly-different interpreter — and we get the
+    actual exit code and the printed line in one round-trip.
+    """
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        code = main(list(argv))
+    return code, buf.getvalue()
 
 
 class TestValidateSaveCli(unittest.TestCase):
-    """The subcommand's four contract points, pinned end-to-end through ``main``."""
+    """Pin the four user-facing contracts of ``validate-save``."""
 
-    def setUp(self) -> None:
-        # A tmpdir per test so a positional-vs-flag run can't accidentally read
-        # another test's leftover file.
-        self._tmp = tempfile.TemporaryDirectory()
-        self.addCleanup(self._tmp.cleanup)
-        self.tmp = pathlib.Path(self._tmp.name)
-
-    def _run(self, *argv: str) -> tuple[int, str]:
-        buf = io.StringIO()
-        with redirect_stdout(buf):
-            rc = cli_main(list(argv))
-        return rc, buf.getvalue()
-
-    def _write_save(self, **overrides) -> pathlib.Path:
-        # Take the packaged save by value, splice in the overrides, and write
-        # it to the tmpdir. Same shape the runner CLI test uses, so the trip
-        # point is exactly one field, not a hand-assembled half-save.
-        raw = yaml.safe_load(loader.DEFAULT_SAVE_PATH.read_text(encoding="utf-8"))
-        raw.update(overrides)
-        path = self.tmp / "save.yaml"
-        path.write_text(yaml.safe_dump(raw), encoding="utf-8")
-        return path
-
-    def test_default_save_validates_OK(self) -> None:
-        # No positional arg, no ``--save`` flag: the CLI falls back to
-        # ``loader.DEFAULT_SAVE_PATH`` (the packaged canned save). If the
-        # shipped bytes ever drift out of sync with the typed schema, this
-        # test goes red — which is exactly the smoke check the subcommand
-        # gives a hand-author of a save.
-        rc, out = self._run("validate-save")
-        self.assertEqual(rc, 0)
+    def test_canonical_save_validates_ok(self) -> None:
+        # No positional argument -> falls back to ``--save`` / the packaged
+        # canned save. That's the smoke test every CI run is implicitly doing,
+        # so a regression in the loader's wiring surfaces here first.
+        code, out = _run("validate-save")
+        self.assertEqual(code, 0, msg=out)
         self.assertEqual(out.strip(), "OK")
 
-    def test_positional_path_wins_over_save_flag(self) -> None:
-        # ``--save`` is the shared flag, but ``validate-save my.yaml`` is the
-        # subcommand's natural shape — and the only one discoverable from
-        # ``--help``. Pin both the precedence (positional wins) and the
-        # output: the loader's ``schema_version`` gate fires on the positional
-        # file, not on whatever ``--save`` points at.
-        bad = self._write_save(schema_version=CURRENT_SCHEMA_VERSION + 1)
-        rc, out = self._run("--save", str(loader.DEFAULT_SAVE_PATH), "validate-save", str(bad))
-        self.assertEqual(rc, 1)
-        # ``SchemaVersionError.field_path`` is always ``schema_version`` — the
-        # contract the loader docstring promises — and that's the one-line
-        # shape the CLI surfaces.
-        self.assertTrue(out.startswith("schema_version: "), out)
-        self.assertIn(str(bad), out)
-        self.assertIn(str(CURRENT_SCHEMA_VERSION + 1), out)
+    def test_canonical_save_validates_ok_strict(self) -> None:
+        # The canned save is integrity-clean (re-asserted in
+        # tests/test_referential_integrity.py) so ``--strict`` is no stricter
+        # in practice. Pinning this here guards against the strict path
+        # silently failing the good case — a regression that would otherwise
+        # only show up the next time someone added a hand-authored save.
+        code, out = _run("validate-save", "--strict")
+        self.assertEqual(code, 0, msg=out)
+        self.assertEqual(out.strip(), "OK")
 
-    def test_schema_error_prints_field_path_one_liner(self) -> None:
-        # A typed-schema failure (here: ``schema_version`` removed entirely)
-        # also surfaces as ``<field_path>: <message>``. The exact field is the
-        # loader's promise, not ours — but exit ``1`` and a one-line shape is
-        # the CLI's contract, and that's what we pin.
-        raw = yaml.safe_load(loader.DEFAULT_SAVE_PATH.read_text(encoding="utf-8"))
-        raw.pop("schema_version")
-        path = self.tmp / "noversion.yaml"
-        path.write_text(yaml.safe_dump(raw), encoding="utf-8")
-        rc, out = self._run("validate-save", str(path))
-        self.assertEqual(rc, 1)
-        # One terminal line, ``field_path:`` prefix, no Python traceback.
-        lines = [ln for ln in out.splitlines() if ln.strip()]
-        self.assertEqual(len(lines), 1, f"expected exactly one error line, got {out!r}")
-        self.assertIn(": ", lines[0])
-        self.assertNotIn("Traceback", out)
+    def test_corrupt_yaml_fixture_exits_nonzero_with_field_path(self) -> None:
+        # ``corrupt.yaml`` is the negative fixture for the YAML parse stage —
+        # the very first contract the loader enforces. The CLI must surface
+        # the typed ``SaveYamlError`` as a single line starting with the
+        # ``<yaml>`` field path the negative-fixture suite asserts on.
+        code, out = _run("validate-save", str(FIXTURES / "corrupt.yaml"))
+        self.assertEqual(code, 1)
+        first_line = out.splitlines()[0]
+        self.assertTrue(
+            first_line.startswith("<yaml>: "),
+            msg=f"expected '<yaml>: ...' header, got {first_line!r}",
+        )
 
-    def test_missing_file_exits_nonzero_with_one_line(self) -> None:
-        # The loader doesn't catch ``FileNotFoundError`` — the file is read
-        # before YAML parsing — so the CLI does, and it surfaces the same
-        # one-line shape as a validation failure with the same exit code. From
-        # the hand-author's seat, "I broke it" and "I typo'd the path" are the
-        # same outcome: ``$? != 0`` and a single readable line.
-        missing = self.tmp / "does_not_exist.yaml"
-        rc, out = self._run("validate-save", str(missing))
-        self.assertEqual(rc, 1)
-        lines = [ln for ln in out.splitlines() if ln.strip()]
-        self.assertEqual(len(lines), 1, f"expected exactly one error line, got {out!r}")
-        self.assertTrue(lines[0].startswith("<path>: "), lines[0])
-        self.assertIn(str(missing), lines[0])
+    def test_dangling_actor_passes_non_strict_fails_strict(self) -> None:
+        # The contract that gives ``--strict`` its reason to exist. The
+        # dangling-actor fixture is shape-valid (every cite resolves, every
+        # field has the right type) but names a unit no entity defines. The
+        # default mode must accept it; ``--strict`` must reject it with the
+        # path the referential-integrity checker reports.
+        path = str(FIXTURES / "dangling_actor.yaml")
+
+        ok_code, ok_out = _run("validate-save", path)
+        self.assertEqual(ok_code, 0, msg=ok_out)
+        self.assertEqual(ok_out.strip(), "OK")
+
+        bad_code, bad_out = _run("validate-save", "--strict", path)
+        self.assertEqual(bad_code, 1)
+        first_line = bad_out.splitlines()[0]
+        # The fixture's first unresolved reference is the second actor on
+        # rook's debut memory; the referential-integrity error's field path
+        # names exactly that location.
+        self.assertTrue(
+            first_line.startswith(
+                "players[0=rook].memory_log[0=mem:rook:debut].actors[1]: "
+            ),
+            msg=f"unexpected strict-mode header line: {first_line!r}",
+        )
+
+    def test_missing_path_exits_nonzero_with_clean_one_liner(self) -> None:
+        # A typo'd path is the most common authoring mistake. The handler
+        # catches ``FileNotFoundError`` so the user sees a one-line ``<path>:
+        # ...`` message and exit 1 — the same exit code every other validation
+        # failure uses — instead of a Python traceback.
+        bogus = pathlib.Path(__file__).resolve().parent / "fixtures" / "_does_not_exist.yaml"
+        code, out = _run("validate-save", str(bogus))
+        self.assertEqual(code, 1)
+        first_line = out.splitlines()[0]
+        self.assertTrue(
+            first_line.startswith("<path>: "),
+            msg=f"expected '<path>: ...' header, got {first_line!r}",
+        )
 
 
 if __name__ == "__main__":

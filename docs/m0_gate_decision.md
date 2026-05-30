@@ -54,7 +54,6 @@ suite via the (now renamed) `M1 scope: …` skip labels on:
 - `tests/test_referential_integrity.py` — RI validator + negative fixtures +
   typed `SaveError` contract.
 - `tests/test_regen_golden.py` — deterministic golden-bless script fixed-point.
-- `tests/test_resolver_determinism.py` — 100-run `WhyRecord` determinism digest.
 - `tests/test_schema_boundary.py` — schema-boundary CI gate.
 - `tests/test_schema_version.py` — migration stub + `schema_version` gate.
 - `tests/test_toolchain_pin.py` — pinned-toolchain enforcement.

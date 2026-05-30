@@ -2,26 +2,29 @@
 type: stream_doc
 title: founder_brief
 stream: esports-tycoon
-updated: '2026-05-26T17:11:40Z'
-summary: Consensus across all three agents
+updated: '2026-05-28T05:25:39Z'
+summary: Where we are
 ---
 
-### Consensus across all three agents
-- v8 plan, sequencing, and DoD are stable. Critical path: W0 smoke green + freeze → W1 keystone (`recall()` + content + golden) → W2 (bind + copy) → W3 (rebind + recap snapshot + zero-network) → W4 (gate w/ manifest-stamped evidence).
-- DoD = the playtest: founder plays templated zero-API slice in 2 evenings via one-line `play` on a clean checkout; ≥1 grounded "remembered me" screenshot; pre-registered rubric recorded before play.
-- Architecture invariant unchanged: memory recall is engine logic, not LLM logic.
-- Hardening freeze holds; vLLM is post-gate.
+### Where we are
+- 9th BUILD re-fire on esports-tycoon. Ticket state (32 tickets, 14 done / 18 active) is identical to v8. No new founder decision, no build signal since v8.
+- v8 remains canonical. engineering_lead's v9 is a re-issue under required headings + 4 enforcement-gap candidates; infra_architect reconciles to the same plan + 2 small gate-quality candidates; chief_of_staff held the line and minted no v-bump.
+
+### Cross-agent consensus
+- **Critical path:** Wave A foundation → Wave B-1a contracts-only PR (cut-line, founder-signed) → Wave B-1b selector against frozen contracts → Wave C bind/copy in parallel → Wave D founder playtest. Unanimous across all three agents.
+- **Architecture invariant:** recall is engine logic; templated mode binds precedents directly; M0.2 LLM mode only narrates what the engine already chose. Unanimous.
+- **DoD:** under `LOCKED_SEED`, golden + round-trip + recall + recap snapshot + zero-egress all green; ≥1 grounded "remembered me" screenshot at the fixed recap marker; self-describing evidence packet; founder plays in 2 evenings via one-line `play`; gate decision logged.
+- **Two-evening budget + kill switch + daily heartbeat note** stay as the forcing function.
 
 ### Tensions / dissent
-- **chief_of_staff said "no state change, zero new tasks"** — but engineering_lead and infra_architect each surfaced 4 legitimately new playtest-quality candidates not in the active ticket list. CoS was right about plan/sequencing/DoD; wrong that no new work surfaced. Resolution: accept the new candidates; the *plan* is stable but the *task surface* genuinely grew.
-- **Latency budgets at two scales** — eng proposes whole-slice (cold ≤5s, warm ≤2s/beat); infra proposes `recall()` p99 ≤50ms. Not in conflict — keep both, one guards selector perf, the other guards perceived UX.
-- **Input handling surfaced twice** — eng's normalization contract (NFC, whitespace, length cap) and infra's ambiguous/empty/over-length fallback spec are complementary, not duplicates. Merge into one task with both halves.
-- **Anchoring the founder** — eng wants a CI-enforced line-shape fixture+lint (replacing verbal sign-off); infra wants a README pre-play briefing paragraph. Different surfaces, both keep.
+- **None substantive.** engineering_lead and infra_architect both re-issue under the same critical path. chief_of_staff dissents only on *whether re-issuing is worth doing* — they argue v8 is canonical and v-bumping is itself bloat. That dissent is a process call, not a plan disagreement, and is best resolved by the pre-phase short-circuit harness fix (already logged as a recurring improvement signal, seen x9).
+- The 6 new candidates this round are non-overlapping enforcement seams, not duplicates — worth accepting all 6.
 
-### Out of scope (do not pick up)
-- Byte-identity normalization beyond W1 needs, 100-run digest, full bless script, schema-boundary CI gate, `TrainingDecision` slice — all frozen post-gate.
-- vLLM bring-up beyond the existing smoke — M0.2.
-- Any new architectural seam beyond the three already named (recall selector, precedent→render bind, minimum-playable rebind).
+### Out of scope for M0.1
+Multi-slice library, hosted-LLM swap, M1 memory-compounding scaffolding, vLLM safety re-validation, observability beyond the run-log, `TrainingDecision` (held to M0.2).
 
-### Harness signal
-BUILD phase has now re-fired 8× on this stream with no state change. CoS already has the pre-phase short-circuit guard in the candidate queue — this is the single highest-value harness improvement before the next BUILD fire. Founder Ask below.
+### What unblocks the next motion
+1. Wave-A foundation drop lands as a single PR.
+2. Wave-B-1a contracts-only PR merged + tagged `wave-b-contracts-frozen` + founder sign-off.
+3. Then Wave-B-1b selector + Wave-C copy authoring can run in parallel.
+4. Wave-D dry-run on clean checkout before the founder playtest.

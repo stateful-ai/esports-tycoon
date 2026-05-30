@@ -41,7 +41,12 @@ _M1_SCOPE_MODULES = (
     "test_loader.py",
     "test_referential_integrity.py",
     "test_regen_golden.py",
-    "test_resolver_determinism.py",
+    # ``test_resolver_determinism.py`` was on this roster until the W3 100-run
+    # ``WhyRecord`` digest landed (see :func:`schema.why_record_digest` and the
+    # ``Frozen items now owned by M1`` block in ``docs/m0_gate_decision.md``,
+    # which the unblocked ticket dropped in the same change). It now runs every
+    # commit alongside the rest of the resolver suite and no longer carries an
+    # M1-scope skip, so it falls off the parked-modules roster.
     "test_schema_boundary.py",
     "test_schema_version.py",
     "test_toolchain_pin.py",

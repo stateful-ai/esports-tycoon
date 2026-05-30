@@ -47,7 +47,6 @@ from esports_tycoon.schema import (  # noqa: E402
     MemoryEntry,
     Player,
     RECALL_TAGS,
-    Relationship,
     Role,
     WhyRecord,
 )
@@ -478,7 +477,7 @@ class TestFrozenVocabulary(_Fixture):
         # An off-vocabulary recall tag on the canned save is rejected by the
         # loader. The save is regenerated from a real load of the canonical
         # world (so every other field is valid) and only one entry is corrupted.
-        bad_world = self.world.model_copy()
+        self.world.model_copy()
         with self.assertRaises(ValidationError) as cm:
             MemoryEntry(
                 id="mem:rook:offenum_w0",

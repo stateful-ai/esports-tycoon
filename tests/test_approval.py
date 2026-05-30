@@ -59,7 +59,7 @@ class TestApproval(unittest.TestCase):
         batch = self.build()
         with self.assertRaises(ValueError):
             approval.record_decision(batch, "reject", approver="f", record_path=self.record)
-        rec = approval.record_decision(
+        approval.record_decision(
             batch, "reject", approver="f", reason="cast too pleasant", record_path=self.record
         )
         status = approval.approval_status(batch, approval.load_record(self.record))
