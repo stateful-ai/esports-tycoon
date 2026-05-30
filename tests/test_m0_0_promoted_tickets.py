@@ -3,15 +3,20 @@
 [`docs/m0_0_promoted_tickets.md`](../docs/m0_0_promoted_tickets.md) is the
 durable record of that promotion. This module is its regression net: it pins
 the *artifact* (the doc names three tickets with acceptance criteria), the
-*cross-reference* (`docs/founder_brief.md`'s W1/W3/W4 lines cite each ticket
-by id), and the *implementation seams* each ticket points to (the four
-toolchain-pin files, ``scripts/regen_golden.py``, and the shared
-:class:`~esports_tycoon.canned.loader.SaveError` contract).
+*implementation seams* each ticket points to (the four toolchain-pin files,
+``scripts/regen_golden.py``, and the shared
+:class:`~esports_tycoon.canned.loader.SaveError` contract), and the brief's
+*critical-path spine* (`docs/founder_brief.md`).
 
-A single module so the three halves move together: promoting a ticket without
-wiring it into the W-lines, or letting an implementation seam regress out from
-under a ticket's acceptance bar, leaves the doc claiming a contract the
-codebase no longer keeps. The pin trips before the contradiction lands.
+The brief has since moved from the original W0→W4 / per-ticket-citation
+decomposition to a **Wave A→D** framing (founder-endorsed), so the brief
+regression net now pins that current framing — see
+:class:`TestFounderBriefWaveCriticalPath` — while the promoted-tickets doc and
+its seams stay pinned independently (they are unchanged). A single module so the
+halves move together: letting an implementation seam regress out from under a
+ticket's acceptance bar, or dropping the brief's critical-path spine, leaves a
+doc claiming a contract the codebase no longer keeps. The pin trips before the
+contradiction lands.
 """
 
 from __future__ import annotations
@@ -130,90 +135,64 @@ class TestPromotedTicketsDoc(unittest.TestCase):
         return sections
 
 
-class TestFounderBriefCitesTicketsOnWLines(unittest.TestCase):
-    """``docs/founder_brief.md``'s W1/W3/W4 critical-path line cites each ticket."""
+class TestFounderBriefWaveCriticalPath(unittest.TestCase):
+    """``docs/founder_brief.md``'s critical-path line sequences the Wave plan.
+
+    The brief was rewritten from the old W0→W4 / M0.0-ticket decomposition to a
+    **Wave A→D** framing (founder-endorsed). This class pins the *current*
+    framing so the brief's spine still has a regression net: the critical-path
+    line must sequence Wave A → B → C → D, and name the contracts-frozen cut-line
+    that gates the parallel work. The M0.0 promoted tickets remain pinned by
+    :class:`TestPromotedTicketsDoc` + :class:`TestImplementationSeamsArePresent`
+    (their doc and seams are unchanged); the brief simply no longer cross-cites
+    them by id on its critical-path line.
+    """
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.text = _FOUNDER_BRIEF.read_text(encoding="utf-8")
 
+    def _critical_path_line(self) -> str:
+        return next(
+            line for line in self.text.splitlines() if "Critical path:" in line
+        )
+
     def test_critical_path_line_exists(self) -> None:
-        # The W0→W4 sequencing line is the spine the citations attach to; a
-        # rewrite that dropped it would leave the M0.0 tickets unanchored
-        # from the W-lines they're meant to unblock.
+        # The sequencing line is the brief's spine; a rewrite that dropped it
+        # would leave the Wave plan unanchored.
         self.assertRegex(
             self.text,
-            r"Critical path:.*W0.*W1.*W2.*W3.*W4",
-            "founder_brief.md must keep the W0→W4 critical-path line",
+            r"Critical path:",
+            "founder_brief.md must keep a 'Critical path:' line",
         )
 
-    def test_each_ticket_id_appears_on_the_critical_path_line(self) -> None:
-        # The acceptance is that each ticket is "referenced by the W1/W3/W4 DoD
-        # lines they unblock"; the simplest in-doc enforcement is that every
-        # ticket id shows up on the critical-path line itself, alongside the
-        # W-line(s) it unblocks. Restrict the search to that one line so a
-        # passing reference (say, in a later footnote) cannot spoof the bar.
-        critical_path_line = next(
-            line for line in self.text.splitlines() if "Critical path:" in line
-        )
-        for ticket_id, _, _ in _TICKETS:
-            with self.subTest(ticket=ticket_id):
-                self.assertIn(
-                    ticket_id,
-                    critical_path_line,
-                    f"founder_brief.md's critical-path line must cite {ticket_id} "
-                    f"by id — the W-line it unblocks should name the ticket",
-                )
-
-    def test_critical_path_line_pairs_each_ticket_with_its_w_lines(self) -> None:
-        # Sharper than mere presence: the ticket id must appear close to each
-        # W-line it unblocks (within the same parenthetical aside on the
-        # critical-path line). A future edit that named the ticket only under
-        # an unrelated W-line — orphaning the cross-reference — fails here.
-        critical_path_line = next(
-            line for line in self.text.splitlines() if "Critical path:" in line
-        )
-        # Carve the line into per-W segments: each segment owns the text from
-        # ``W<n>`` up to the next ``W<n+1>`` or the end of the line.
-        segments = self._segment_by_w_line(critical_path_line)
-        for ticket_id, _, w_lines in _TICKETS:
-            for w_line in sorted(w_lines):
-                with self.subTest(ticket=ticket_id, w=w_line):
-                    self.assertIn(
-                        ticket_id,
-                        segments[w_line],
-                        f"{w_line}'s segment of the critical-path line must "
-                        f"name {ticket_id}, the ticket it unblocks",
-                    )
-
-    def test_critical_path_line_links_to_the_promoted_tickets_doc(self) -> None:
-        # The W-line citation has to lead a reader to the doc that holds the
-        # acceptance criteria. A bare ``M0.0-T1`` text without a link would
-        # require the reader to guess the doc path; the link removes the guess.
-        critical_path_line = next(
-            line for line in self.text.splitlines() if "Critical path:" in line
-        )
-        self.assertIn("m0_0_promoted_tickets.md", critical_path_line)
-
-    def _segment_by_w_line(self, line: str) -> dict[str, str]:
-        markers: list[tuple[str, int]] = []
-        for w_line in ("W0", "W1", "W2", "W3", "W4"):
-            # Anchor to the first occurrence so a later mention of the same
-            # W-line (in a parenthetical citation) doesn't relocate the
-            # segment boundary.
-            position = line.find(w_line)
+    def test_critical_path_sequences_the_waves_in_order(self) -> None:
+        # Wave A → B → C → D must appear in order on the critical-path line, so
+        # a future edit that scrambled or dropped a phase trips here.
+        line = self._critical_path_line()
+        positions = []
+        for wave in ("Wave A", "Wave B", "Wave C", "Wave D"):
+            pos = line.find(wave)
             self.assertNotEqual(
-                position,
-                -1,
-                f"critical-path line missing the {w_line} marker",
+                pos, -1, f"critical-path line must name {wave}",
             )
-            markers.append((w_line, position))
-        markers.sort(key=lambda item: item[1])
-        markers.append(("__END__", len(line)))
-        segments: dict[str, str] = {}
-        for (name, start), (_, end) in zip(markers, markers[1:]):
-            segments[name] = line[start:end]
-        return segments
+            positions.append(pos)
+        self.assertEqual(
+            positions, sorted(positions),
+            "Waves must appear in A→B→C→D order on the critical-path line",
+        )
+
+    def test_critical_path_names_the_contracts_frozen_cutline(self) -> None:
+        # The load-bearing gate of the Wave plan: Wave B-1a is a contracts-only,
+        # founder-signed cut-line that the parallel Wave B-1b / Wave C work
+        # branches off. The brief must name that gate so it can't silently drop.
+        line = self._critical_path_line()
+        self.assertRegex(
+            line,
+            r"contracts-only|contracts[- ]frozen|cut-line",
+            "critical-path line must name the contracts-frozen cut-line "
+            "(the founder-signed gate the parallel Waves branch off)",
+        )
 
 
 class TestImplementationSeamsArePresent(unittest.TestCase):
