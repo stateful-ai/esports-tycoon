@@ -29,7 +29,6 @@ from esports_tycoon.runner import (  # noqa: E402
     RECAP_FILENAME,
     SliceConfig,
     SliceDecisions,
-    read_events,
     render_feed_html,
     render_recap_md,
     run_slice,

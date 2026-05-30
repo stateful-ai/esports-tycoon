@@ -1,0 +1,9 @@
+Esports Tycoon
+Copyright 2026 Aidan Kosik
+
+This project is a Stateful side-project — a tycoon-simulation game
+of running an esports organization. It lives under Stateful's
+gaming department (see docs/department.md).
+
+Licensed under the MIT License; see LICENSE (or pyproject.toml) for
+the full terms.

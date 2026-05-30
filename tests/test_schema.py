@@ -5,6 +5,7 @@ uniqueness, grounding, the runtime resolver/content types) so the schema is
 proven to be a real gate, not just a shape.
 """
 
+import json
 import pathlib
 import sys
 import unittest
@@ -22,8 +23,11 @@ from esports_tycoon.schema import (  # noqa: E402
     MemoryEntry,
     Player,
     Relationship,
+    RoundResult,
     WhyRecord,
     WorldState,
+    canonical_why_record_bytes,
+    why_record_digest,
 )
 
 _SAVE = spec.DEFAULT_SAVE_PATH
@@ -185,6 +189,125 @@ class TestRuntimeModels(unittest.TestCase):
             )
         with self.assertRaises(ValidationError):
             GeneratedContent(kind="chirper_post", text="x", grounding_status="maybe")
+
+
+def _why_record(**overrides) -> WhyRecord:
+    """A small WhyRecord with every shape the canonical digest cares about."""
+    base = dict(
+        scoreline=(13, 9),
+        mvp="sable",
+        key_moments=[
+            KeyMoment(round=24, kind="clutch", actors=["sable", "vex"], descriptor="1v3"),
+        ],
+        who_carried=["sable"],
+        who_tilted=["vex"],
+        morale_deltas={"sable": 2, "vex": -1, "rook": 0},
+        seed=42,
+        round_log=[RoundResult(round=1, winner="overcast", summary="1-0")],
+    )
+    base.update(overrides)
+    return WhyRecord(**base)
+
+
+class TestCanonicalWhyRecord(unittest.TestCase):
+    """The canonical bytes and digest implement the byte-identity contract.
+
+    These checks pin the properties the 100-run determinism sweep leans on:
+    dict iteration order can't leak through (``PYTHONHASHSEED`` immunity),
+    perturbing any field flips the digest, and the bytes are real UTF-8 JSON
+    so a diff is reviewable.
+    """
+
+    def test_digest_is_stable_under_dict_insertion_order(self):
+        # Same morale_deltas content, different insertion order. Pydantic
+        # preserves insertion order on dump, so without the sort step in
+        # _canonicalize_for_digest the bytes (and digest) would diverge.
+        forward = _why_record(morale_deltas={"sable": 2, "vex": -1, "rook": 0})
+        reversed_ = _why_record(morale_deltas={"rook": 0, "vex": -1, "sable": 2})
+        self.assertEqual(why_record_digest(forward), why_record_digest(reversed_))
+        self.assertEqual(
+            canonical_why_record_bytes(forward),
+            canonical_why_record_bytes(reversed_),
+        )
+
+    def test_digest_changes_when_any_field_changes(self):
+        # Every WhyRecord field that the resolver feeds the narrator must
+        # contribute to the digest — otherwise a regression in that field
+        # would sail past the determinism check.
+        base = _why_record()
+        base_digest = why_record_digest(base)
+        for tweak in (
+            _why_record(scoreline=(13, 10)),
+            _why_record(mvp="rook"),
+            _why_record(who_carried=["rook"]),
+            _why_record(who_tilted=["rook"]),
+            _why_record(morale_deltas={"sable": 3, "vex": -1, "rook": 0}),
+            _why_record(seed=43),
+            _why_record(
+                key_moments=[
+                    KeyMoment(round=24, kind="clutch", actors=["sable"], descriptor="1v3"),
+                ],
+            ),
+            _why_record(
+                round_log=[RoundResult(round=1, winner="overcast", summary="1-0")]
+                + [RoundResult(round=2, winner="overcast", summary="2-0")],
+            ),
+        ):
+            with self.subTest(tweak=tweak.model_dump()):
+                self.assertNotEqual(why_record_digest(tweak), base_digest)
+
+    def test_canonical_bytes_are_compact_sorted_utf8_json(self):
+        # The byte form must be parseable JSON whose top-level keys are sorted
+        # — that is the actual ``PYTHONHASHSEED``-immunity guarantee, stated
+        # in a way that fails if json.dumps's ``sort_keys`` is ever dropped.
+        record = _why_record()
+        text = canonical_why_record_bytes(record).decode("utf-8")
+        parsed = json.loads(text)
+        self.assertEqual(parsed["mvp"], "sable")
+        top_keys = [
+            line.lstrip().split('"', 2)[1]
+            for line in text.replace("{", "{\n").replace(",", ",\n").splitlines()
+            if line.lstrip().startswith('"')
+        ]
+        # The first occurrence of each top-level key, in the order they appear
+        # in the compact bytes, must be sorted. Nested keys (e.g. inside
+        # ``key_moments``) sort independently, so we only check first-seen
+        # order at the document root.
+        seen: list[str] = []
+        depth = 0
+        i = 0
+        while i < len(text):
+            ch = text[i]
+            if ch in "{[":
+                depth += 1
+            elif ch in "}]":
+                depth -= 1
+            elif ch == '"' and depth == 1:
+                end = text.index('"', i + 1)
+                key = text[i + 1 : end]
+                # A key is followed by ':'; a value-string by ',' or '}'.
+                if text[end + 1] == ":":
+                    if key not in seen:
+                        seen.append(key)
+                i = end
+            i += 1
+        self.assertEqual(seen, sorted(seen), f"top-level keys are not sorted: {seen}")
+        # Separators must be the compact form, with no incidental whitespace.
+        self.assertNotIn(", ", text)
+        self.assertNotIn(": ", text)
+
+    def test_perturbation_proves_the_digest_can_fail(self):
+        # Mirror of the resolver-side perturbation case: a deliberately
+        # tweaked record yields a different digest, so the equality assertion
+        # the 100-run sweep relies on is not vacuous.
+        base = _why_record()
+        perturbed = _why_record(seed=base.seed + 1)
+        self.assertNotEqual(why_record_digest(base), why_record_digest(perturbed))
+
+    def test_digest_is_64_hex_chars(self):
+        digest = why_record_digest(_why_record())
+        self.assertEqual(len(digest), 64)
+        int(digest, 16)  # no ValueError ⇒ it is hex
 
 
 if __name__ == "__main__":

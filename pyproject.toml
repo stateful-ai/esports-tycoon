@@ -22,7 +22,7 @@ requires-python = ">=3.12,<3.13"
 # pydantic_core, typing_extensions, annotated-types, plus the dev + web
 # extras — lives in ``constraints.txt`` and is what ``make install`` consumes.
 dependencies = [
-    "PyYAML==6.0.1",
+    "PyYAML==6.0.3",
     "pydantic==2.13.4",
 ]
 
