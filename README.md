@@ -196,8 +196,10 @@ choice. `/week10/prep` consumes the fallout response and writes
 scarce prep block, and carrying its prep effect into a `week10_scrim.json`
 handoff. `/week10/scrim` consumes that prep block and writes
 `week10_scrim.json`, testing one scrim protocol, recording map-read pressure,
-and handing off to `week10_match_plan.json` without creating standings,
-economy, sponsor, fan, or roster state.
+and handing off to `week10_match_plan.json`. `/week10/match` consumes the scrim
+artifact and writes `week10_match_plan.json`, locking one plan posture before
+result resolution without creating standings, economy, sponsor, fan, or roster
+state.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -249,6 +251,10 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   into a deterministic scrim protocol, readiness meters, lane-state pressure,
   scrim-effect deltas, and a `week10_match_plan.json` handoff without writing
   Week 10 match planning.
+- **`week10_match_plan.json`** — written by `/week10/match`, consuming Week 10
+  scrim into one of three deterministic match plans, carrying prep/scrim effects
+  and result constraints into a `week10_match_result.json` handoff without
+  resolving the result.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

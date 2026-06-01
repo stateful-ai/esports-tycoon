@@ -41,10 +41,16 @@ Week10ScrimOutcome = Literal[
     "comms_stabilized",
     "comms_turtled",
 ]
+Week10MatchPlanChoice = Literal[
+    "week10_plan_protect_pressure",
+    "week10_plan_trade_map",
+    "week10_plan_press_advantage",
+]
 
 WEEK10_PREP_FILENAME = "week10_prep.json"
 WEEK10_SCRIM_FILENAME = "week10_scrim.json"
 WEEK10_MATCH_PLAN_FILENAME = "week10_match_plan.json"
+WEEK10_MATCH_RESULT_FILENAME = "week10_match_result.json"
 WEEK10_FALLOUT_CHOICES: tuple[Week10FalloutChoice, ...] = (
     "steady_room",
     "raise_standards",
@@ -83,6 +89,11 @@ WEEK10_SCRIM_OUTCOMES: tuple[Week10ScrimOutcome, ...] = (
     "execution_frayed",
     "comms_stabilized",
     "comms_turtled",
+)
+WEEK10_MATCH_PLAN_CHOICES: tuple[Week10MatchPlanChoice, ...] = (
+    "week10_plan_protect_pressure",
+    "week10_plan_trade_map",
+    "week10_plan_press_advantage",
 )
 
 
@@ -301,6 +312,94 @@ class Week10ScrimLock:
     next_hook: str
 
 
+@dataclass(frozen=True)
+class Week10MatchPlanOption:
+    """One Week-10 match plan available after the scrim protocol."""
+
+    value: Week10MatchPlanChoice
+    label: str
+    payoff: str
+    cost: str
+    read_basis: str
+    commitment: str
+    result_constraint: str
+
+
+@dataclass(frozen=True)
+class Week10MatchPlanPreview:
+    """The read-only Week-10 match-plan preview before the plan is locked."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week9_outcome_id: Week9MatchOutcome
+    week9_result_tier: Week9MatchResultTier
+    week9_scoreline: str
+    fallout_outcome_id: Week10FalloutOutcome
+    prep_outcome_id: Week10PrepOutcome
+    scrim_outcome_id: Week10ScrimOutcome
+    selected_prep: Week10PrepChoice
+    selected_scrim: Week10ScrimChoice
+    prep_lane: str
+    prep_headline: str
+    scrim_headline: str
+    match_plan_pressure: str
+    scout_clarity: int
+    room_load: int
+    execution_confidence: int
+    synergy_delta: int
+    stress_delta: int
+    clarity_delta: int
+    lane_states: tuple[tuple[str, int, str], ...]
+    recommendation_basis: str
+    recommended_plan: Week10MatchPlanChoice
+    recommendation_reason: str
+    match_risk: str
+    options: tuple[Week10MatchPlanOption, ...]
+
+
+@dataclass(frozen=True)
+class Week10MatchPlanLock:
+    """The deterministic artifact produced by locking the Week-10 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week9_outcome_id: Week9MatchOutcome
+    week9_result_tier: Week9MatchResultTier
+    week9_scoreline: str
+    fallout_outcome_id: Week10FalloutOutcome
+    prep_outcome_id: Week10PrepOutcome
+    scrim_outcome_id: Week10ScrimOutcome
+    selected_prep: Week10PrepChoice
+    selected_scrim: Week10ScrimChoice
+    prep_lane: str
+    prep_headline: str
+    scrim_headline: str
+    match_plan_pressure: str
+    scout_clarity: int
+    room_load: int
+    execution_confidence: int
+    synergy_delta: int
+    stress_delta: int
+    clarity_delta: int
+    lane_states: tuple[tuple[str, int, str], ...]
+    recommendation_basis: str
+    recommended_plan: Week10MatchPlanChoice
+    available_choices: tuple[Week10MatchPlanChoice, ...]
+    selected_plan: Week10MatchPlanChoice
+    plan_outcome_id: str
+    plan_label: str
+    followed_recommendation: bool
+    commitment: str
+    risk_taken: str
+    thing_to_watch: str
+    match_risk: str
+    result_constraints: tuple[str, ...]
+    recommendation_reason: str
+    next_hook: str
+
+
 _FALLOUT_OPTIONS: tuple[Week10FalloutOption, ...] = (
     Week10FalloutOption(
         value="steady_room",
@@ -370,6 +469,36 @@ _SCRIM_PROTOCOLS: tuple[Week10ScrimProtocol, ...] = (
         axis="room",
         payoff="Spend the block on call discipline and shared language before the match plan.",
         risk="The team can leave safer, but with less new tactical signal.",
+    ),
+)
+
+_MATCH_PLAN_OPTIONS: tuple[Week10MatchPlanOption, ...] = (
+    Week10MatchPlanOption(
+        value="week10_plan_protect_pressure",
+        label="Protect pressure",
+        payoff="Protect the lane, meter, or pressure point most exposed by scrim and readiness signals.",
+        cost="Lower collapse risk can mean lower opening-map upside.",
+        read_basis="match_plan_pressure",
+        commitment="pressure_protection",
+        result_constraint="protected_pressure_must_not_collapse",
+    ),
+    Week10MatchPlanOption(
+        value="week10_plan_trade_map",
+        label="Trade map",
+        payoff="Avoid direct collision with the volatile point and win through rotations and map tradeoffs.",
+        cost="The plan may decline the clearest early advantage in exchange for stability.",
+        read_basis="lane_states",
+        commitment="map_trade",
+        result_constraint="map_trade_must_create_cross_pressure",
+    ),
+    Week10MatchPlanOption(
+        value="week10_plan_press_advantage",
+        label="Press advantage",
+        payoff="Commit resources to the clearest advantage from readiness, lane state, prep, or scrim effect.",
+        cost="Higher upside comes with a sharper punish window if the read is wrong.",
+        read_basis="scrim_effect",
+        commitment="advantage_press",
+        result_constraint="pressed_advantage_must_land_before_punish",
     ),
 )
 
@@ -1346,6 +1475,340 @@ def render_week10_scrim_json(lock: Week10ScrimLock) -> str:
             "next_hook": lock.next_hook,
             "stops_before": "week10_match_plan",
             "next_artifact": WEEK10_MATCH_PLAN_FILENAME,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+def _recommended_match_plan(scrim: Week10ScrimLock) -> tuple[Week10MatchPlanChoice, str, str]:
+    if scrim.stress_delta >= 2:
+        return (
+            "week10_plan_protect_pressure",
+            "stress_pressure",
+            "The scrim exposes enough stress that the plan must protect the loudest pressure point.",
+        )
+    if scrim.match_plan_pressure in {"counter_read_primary", "execution_primary"}:
+        return (
+            "week10_plan_press_advantage",
+            "primary_advantage",
+            "The scrim creates a primary advantage that can be pressed before the opponent resets.",
+        )
+    if scrim.match_plan_pressure.endswith("_secondary") or scrim.match_plan_pressure.endswith("_guardrail"):
+        return (
+            "week10_plan_trade_map",
+            "mixed_pressure",
+            "The scrim leaves a useful but unstable read, so the plan should trade map instead of colliding.",
+        )
+    if scrim.match_plan_pressure.startswith("room_stability"):
+        return (
+            "week10_plan_protect_pressure",
+            "room_stability",
+            "The scrim says the match plan should make the room's stability the protected pressure point.",
+        )
+    return (
+        "week10_plan_protect_pressure",
+        "conservative_tiebreak",
+        "No sharp edge dominates, so the conservative tie-break protects pressure first.",
+    )
+
+
+def _week10_match_risk(scrim: Week10ScrimLock, recommended_plan: Week10MatchPlanChoice) -> str:
+    if scrim.stress_delta >= 2:
+        return "high"
+    if recommended_plan == "week10_plan_protect_pressure" and scrim.stress_delta <= -1:
+        return "low"
+    if scrim.room_load >= 2 and recommended_plan != "week10_plan_protect_pressure":
+        return "high"
+    return "medium"
+
+
+def week10_match_plan_preview(scrim: Week10ScrimLock) -> Week10MatchPlanPreview:
+    """Build the deterministic Week-10 match-plan preview from the scrim artifact."""
+    recommended, basis, reason = _recommended_match_plan(scrim)
+    return Week10MatchPlanPreview(
+        source_branch=scrim.source_branch,
+        setup_branch=scrim.setup_branch,
+        chosen_focus=scrim.chosen_focus,
+        week9_outcome_id=scrim.week9_outcome_id,
+        week9_result_tier=scrim.week9_result_tier,
+        week9_scoreline=scrim.week9_scoreline,
+        fallout_outcome_id=scrim.fallout_outcome_id,
+        prep_outcome_id=scrim.prep_outcome_id,
+        scrim_outcome_id=scrim.outcome_id,
+        selected_prep=scrim.selected_prep,
+        selected_scrim=scrim.selected_scrim,
+        prep_lane=scrim.prep_lane,
+        prep_headline=scrim.prep_headline,
+        scrim_headline=scrim.scrim_headline,
+        match_plan_pressure=scrim.match_plan_pressure,
+        scout_clarity=scrim.scout_clarity,
+        room_load=scrim.room_load,
+        execution_confidence=scrim.execution_confidence,
+        synergy_delta=scrim.synergy_delta,
+        stress_delta=scrim.stress_delta,
+        clarity_delta=scrim.clarity_delta,
+        lane_states=scrim.lane_states,
+        recommendation_basis=basis,
+        recommended_plan=recommended,
+        recommendation_reason=reason,
+        match_risk=_week10_match_risk(scrim, recommended),
+        options=_MATCH_PLAN_OPTIONS,
+    )
+
+
+def resolve_week10_match_plan(
+    preview: Week10MatchPlanPreview,
+    selected_plan: str,
+) -> Week10MatchPlanLock:
+    """Resolve one Week-10 match plan into a deterministic artifact."""
+    if selected_plan not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError(
+            "selected_plan must be week10_plan_protect_pressure, "
+            "week10_plan_trade_map, or week10_plan_press_advantage"
+        )
+    plan: Week10MatchPlanChoice = selected_plan  # type: ignore[assignment]
+    selected = next(option for option in preview.options if option.value == plan)
+
+    if plan == "week10_plan_protect_pressure":
+        risk_taken = "the plan may lower its ceiling to keep the exposed point from collapsing"
+        thing_to_watch = "whether the protected pressure point stays proactive after first contact"
+        extra_constraints = ("protect_exposed_pressure", "do_not_turtle_after_contact")
+    elif plan == "week10_plan_trade_map":
+        risk_taken = "trading map can concede the direct advantage if rotations arrive late"
+        thing_to_watch = "whether the first rotation creates cross-pressure instead of avoidance"
+        extra_constraints = ("trade_volatile_point", "create_cross_pressure")
+    else:
+        risk_taken = "pressing the advantage can be punished if the scrim read was too optimistic"
+        thing_to_watch = "whether the advantage lands before the opponent's first punish window"
+        extra_constraints = ("press_clearest_advantage", "avoid_second_layer_overreach")
+
+    constraints = (
+        selected.result_constraint,
+        f"prep:{preview.prep_outcome_id}",
+        f"scrim:{preview.scrim_outcome_id}",
+        f"pressure:{preview.match_plan_pressure}",
+        *extra_constraints,
+    )
+    return Week10MatchPlanLock(
+        source_branch=preview.source_branch,
+        setup_branch=preview.setup_branch,
+        chosen_focus=preview.chosen_focus,
+        week9_outcome_id=preview.week9_outcome_id,
+        week9_result_tier=preview.week9_result_tier,
+        week9_scoreline=preview.week9_scoreline,
+        fallout_outcome_id=preview.fallout_outcome_id,
+        prep_outcome_id=preview.prep_outcome_id,
+        scrim_outcome_id=preview.scrim_outcome_id,
+        selected_prep=preview.selected_prep,
+        selected_scrim=preview.selected_scrim,
+        prep_lane=preview.prep_lane,
+        prep_headline=preview.prep_headline,
+        scrim_headline=preview.scrim_headline,
+        match_plan_pressure=preview.match_plan_pressure,
+        scout_clarity=preview.scout_clarity,
+        room_load=preview.room_load,
+        execution_confidence=preview.execution_confidence,
+        synergy_delta=preview.synergy_delta,
+        stress_delta=preview.stress_delta,
+        clarity_delta=preview.clarity_delta,
+        lane_states=preview.lane_states,
+        recommendation_basis=preview.recommendation_basis,
+        recommended_plan=preview.recommended_plan,
+        available_choices=WEEK10_MATCH_PLAN_CHOICES,
+        selected_plan=plan,
+        plan_outcome_id=f"week10_match_plan_{plan.removeprefix('week10_plan_')}",
+        plan_label=selected.label,
+        followed_recommendation=plan == preview.recommended_plan,
+        commitment=selected.commitment,
+        risk_taken=risk_taken,
+        thing_to_watch=thing_to_watch,
+        match_risk=preview.match_risk,
+        result_constraints=constraints,
+        recommendation_reason=preview.recommendation_reason,
+        next_hook=(
+            f"Week 10 result can test {selected.commitment} against "
+            f"{preview.match_plan_pressure}."
+        ),
+    )
+
+
+def week10_match_plan_from_json(text: str) -> Week10MatchPlanLock:
+    """Parse a written ``week10_match_plan.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week10_match_plan JSON is malformed") from exc
+    match_plan = data.get("week10_match_plan") if isinstance(data, dict) else None
+    if not isinstance(match_plan, dict):
+        raise ValueError("week10_match_plan JSON must contain a week10_match_plan object")
+    week9_outcome = match_plan.get("week9_outcome_id")
+    if week9_outcome not in WEEK9_MATCH_OUTCOMES:
+        raise ValueError("week10_match_plan week9_outcome_id must list a Week-9 outcome")
+    result_tier = match_plan.get("week9_result_tier")
+    if result_tier not in ("win", "loss"):
+        raise ValueError("week10_match_plan week9_result_tier must be win or loss")
+    fallout_outcome = match_plan.get("fallout_outcome_id")
+    if fallout_outcome not in WEEK10_FALLOUT_OUTCOMES:
+        raise ValueError("week10_match_plan fallout_outcome_id must list a Week-10 fallout outcome")
+    prep_outcome = match_plan.get("prep_outcome_id")
+    if prep_outcome not in WEEK10_PREP_OUTCOMES:
+        raise ValueError("week10_match_plan prep_outcome_id must list a Week-10 prep outcome")
+    scrim_outcome = match_plan.get("scrim_outcome_id")
+    if scrim_outcome not in WEEK10_SCRIM_OUTCOMES:
+        raise ValueError("week10_match_plan scrim_outcome_id must list a Week-10 scrim outcome")
+    selected_prep = match_plan.get("selected_prep")
+    if selected_prep not in WEEK10_PREP_CHOICES:
+        raise ValueError("week10_match_plan selected_prep must list a Week-10 prep choice")
+    selected_scrim = match_plan.get("selected_scrim")
+    if selected_scrim not in WEEK10_SCRIM_CHOICES:
+        raise ValueError("week10_match_plan selected_scrim must list a Week-10 scrim choice")
+    selected = match_plan.get("selected_plan")
+    if selected not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError("week10_match_plan selected_plan must list a Week-10 match plan")
+    recommended = match_plan.get("recommended_plan")
+    if recommended not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError("week10_match_plan recommended_plan must list a Week-10 match plan")
+    available = match_plan.get("available_choices")
+    if not isinstance(available, list) or any(choice not in WEEK10_MATCH_PLAN_CHOICES for choice in available):
+        raise ValueError("week10_match_plan available_choices must list Week-10 match plans")
+    prep_effect = match_plan.get("prep_effect")
+    if not isinstance(prep_effect, dict):
+        raise ValueError("week10_match_plan JSON must include prep_effect")
+    scrim_effect = match_plan.get("scrim_effect")
+    if not isinstance(scrim_effect, dict):
+        raise ValueError("week10_match_plan JSON must include scrim_effect")
+    lanes = match_plan.get("lane_states")
+    if not isinstance(lanes, list):
+        raise ValueError("week10_match_plan JSON must include lane_states")
+    constraints = match_plan.get("result_constraints")
+    if not isinstance(constraints, list):
+        raise ValueError("week10_match_plan JSON must include result_constraints")
+    if match_plan.get("next_artifact") != WEEK10_MATCH_RESULT_FILENAME:
+        raise ValueError("week10_match_plan next_artifact must be week10_match_result.json")
+    plan_lock = match_plan.get("plan_lock")
+    result_lock = match_plan.get("result_lock")
+    if not isinstance(plan_lock, dict):
+        raise ValueError("week10_match_plan JSON must include plan_lock")
+    if not isinstance(result_lock, dict):
+        raise ValueError("week10_match_plan JSON must include result_lock")
+    return Week10MatchPlanLock(
+        source_branch=str(match_plan.get("source_branch", "")),
+        setup_branch=str(match_plan.get("setup_branch", "")),
+        chosen_focus=str(match_plan.get("chosen_focus", "")),
+        week9_outcome_id=week9_outcome,
+        week9_result_tier=result_tier,
+        week9_scoreline=str(match_plan.get("week9_scoreline", "")),
+        fallout_outcome_id=fallout_outcome,
+        prep_outcome_id=prep_outcome,
+        scrim_outcome_id=scrim_outcome,
+        selected_prep=selected_prep,
+        selected_scrim=selected_scrim,
+        prep_lane=str(match_plan.get("prep_lane", "")),
+        prep_headline=str(match_plan.get("prep_headline", "")),
+        scrim_headline=str(match_plan.get("scrim_headline", "")),
+        match_plan_pressure=str(match_plan.get("match_plan_pressure", "")),
+        scout_clarity=int(prep_effect.get("scout_clarity", 0)),
+        room_load=int(prep_effect.get("room_load", 0)),
+        execution_confidence=int(prep_effect.get("execution_confidence", 0)),
+        synergy_delta=int(scrim_effect.get("synergy", 0)),
+        stress_delta=int(scrim_effect.get("stress", 0)),
+        clarity_delta=int(scrim_effect.get("clarity", 0)),
+        lane_states=tuple(
+            (str(item.get("id", "")), int(item.get("pressure", 0)), str(item.get("tone", "")))
+            for item in lanes
+            if isinstance(item, dict)
+        ),
+        recommendation_basis=str(match_plan.get("recommendation_basis", "")),
+        recommended_plan=recommended,
+        available_choices=tuple(available),  # type: ignore[arg-type]
+        selected_plan=selected,
+        plan_outcome_id=str(match_plan.get("plan_outcome_id", "")),
+        plan_label=str(match_plan.get("plan_label", "")),
+        followed_recommendation=bool(match_plan.get("followed_recommendation", selected == recommended)),
+        commitment=str(match_plan.get("commitment", "")),
+        risk_taken=str(match_plan.get("risk_taken", "")),
+        thing_to_watch=str(match_plan.get("thing_to_watch", "")),
+        match_risk=str(match_plan.get("match_risk", "")),
+        result_constraints=tuple(str(item) for item in constraints),
+        recommendation_reason=str(match_plan.get("recommendation_reason", "")),
+        next_hook=str(match_plan.get("next_hook", "")),
+    )
+
+
+def render_week10_match_plan_json(lock: Week10MatchPlanLock) -> str:
+    """Canonical JSON export for a locked Week-10 match plan."""
+    payload = {
+        "week10_match_plan": {
+            "artifact_type": "week10_match_plan",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week10_scrim": WEEK10_SCRIM_FILENAME,
+            },
+            "week": 10,
+            "route": "/week10/match",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week9_outcome_id": lock.week9_outcome_id,
+            "week9_result_tier": lock.week9_result_tier,
+            "week9_scoreline": lock.week9_scoreline,
+            "fallout_outcome_id": lock.fallout_outcome_id,
+            "prep_outcome_id": lock.prep_outcome_id,
+            "scrim_outcome_id": lock.scrim_outcome_id,
+            "selected_prep": lock.selected_prep,
+            "selected_scrim": lock.selected_scrim,
+            "prep_lane": lock.prep_lane,
+            "prep_headline": lock.prep_headline,
+            "scrim_headline": lock.scrim_headline,
+            "match_plan_pressure": lock.match_plan_pressure,
+            "prep_effect": {
+                "scout_clarity": lock.scout_clarity,
+                "room_load": lock.room_load,
+                "execution_confidence": lock.execution_confidence,
+            },
+            "scrim_effect": {
+                "synergy": lock.synergy_delta,
+                "stress": lock.stress_delta,
+                "clarity": lock.clarity_delta,
+            },
+            "lane_states": [
+                {"id": lane_id, "pressure": pressure, "tone": tone}
+                for lane_id, pressure, tone in lock.lane_states
+            ],
+            "recommendation_basis": lock.recommendation_basis,
+            "recommended_plan": lock.recommended_plan,
+            "recommended_plan_id": lock.recommended_plan,
+            "available_choices": list(lock.available_choices),
+            "choice_order": list(lock.available_choices),
+            "selected_plan": lock.selected_plan,
+            "selected_plan_id": lock.selected_plan,
+            "plan_outcome_id": lock.plan_outcome_id,
+            "plan_label": lock.plan_label,
+            "followed_recommendation": lock.followed_recommendation,
+            "commitment": lock.commitment,
+            "risk_taken": lock.risk_taken,
+            "thing_to_watch": lock.thing_to_watch,
+            "match_risk": lock.match_risk,
+            "result_constraints": list(lock.result_constraints),
+            "recommendation_reason": lock.recommendation_reason,
+            "plan_lock": {
+                "status": "locked",
+                "selected_at_route": "/week10/match",
+                "cannot_change_after_write": True,
+            },
+            "result_lock": {
+                "status": "not_resolved",
+                "reason": "week10_match_plan_only",
+                "next_artifact": WEEK10_MATCH_RESULT_FILENAME,
+            },
+            "match_plan_commitment": {
+                "commitment": lock.commitment,
+                "risk_taken": lock.risk_taken,
+                "thing_to_watch": lock.thing_to_watch,
+            },
+            "next_hook": lock.next_hook,
+            "stops_before": "week10_match_result",
+            "next_artifact": WEEK10_MATCH_RESULT_FILENAME,
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"

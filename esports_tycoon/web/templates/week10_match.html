@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}Week 10 match plan — {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1180px; }
+  .match-console {
+    color: #dfe2eb;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      #0d1117;
+    background-size: 20px 20px;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .match-console h1, .match-console h2, .match-console p { color: inherit; }
+  .console-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .console-title h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
+  .console-title .sub { color: #9ba3ad; margin: 0.2rem 0 0; }
+  .recap-strip, .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .recap-strip { justify-content: flex-end; }
+  .data-chip {
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #c4c7ca;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.stable { border-color: #3fb950; color: #9be9a8; }
+  .data-chip.watch { border-color: #f2cc60; color: #f2cc60; }
+  .data-chip.danger { border-color: #ff7b72; color: #ffb4ab; }
+  .console-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.1fr) minmax(300px, 0.95fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .console-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .panel-kicker {
+    color: #8e9194;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0;
+  }
+  .panel-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    align-items: baseline;
+    margin-bottom: 0.45rem;
+  }
+  .panel-title strong { font-size: 1.05rem; }
+  .readout {
+    color: #f0f6fc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .copy-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
+  .effect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .effect-box { border: 1px solid #30363d; padding: 0.6rem; background: #0d1117; }
+  .effect-box span { display: block; color: #8e9194; font-size: 0.78rem; }
+  .effect-box strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .lane-board {
+    position: relative;
+    border: 1px solid #30363d;
+    min-height: 292px;
+    padding: 1rem;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(240,246,252,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,246,252,0.055) 1px, transparent 1px),
+      #0d1117;
+    background-size: 20px 20px;
+  }
+  .lane-board::before {
+    content: "";
+    position: absolute;
+    inset: 14% 18%;
+    border: 1px solid #30363d;
+  }
+  .lane {
+    position: relative;
+    display: grid;
+    grid-template-columns: 54px 1fr 48px;
+    gap: 0.55rem;
+    align-items: center;
+    margin: 1.2rem 0;
+    z-index: 1;
+  }
+  .lane-name, .lane-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    color: #c4c7ca;
+    text-transform: uppercase;
+  }
+  .lane-line { height: 7px; border: 1px solid #30363d; background: #161b22; }
+  .lane-fill { display: block; width: var(--pressure); height: 100%; background: #f2cc60; }
+  .lane-fill.stable { background: #3fb950; }
+  .lane-fill.danger { background: #ff7b72; }
+  .choice-card {
+    display: block;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    padding: 0.8rem;
+    margin: 0.55rem 0;
+    cursor: pointer;
+  }
+  .choice-card:hover { border-color: #f0f6fc; }
+  .choice-card input { margin-right: 0.5rem; }
+  .choice-card .blurb { color: #9ba3ad; margin: 0.25rem 0 0 1.45rem; font-size: 0.9rem; }
+  .console-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .match-console .btn {
+    border-radius: 0;
+    background: #f0f6fc;
+    color: #0d1117;
+    border: 1px solid #f0f6fc;
+  }
+  .match-console .btn.secondary {
+    background: transparent;
+    color: #dfe2eb;
+    border-color: #30363d;
+  }
+  .locked-panel { margin-top: 1rem; }
+  @media (max-width: 980px) {
+    .console-top, .console-grid, .effect-grid { grid-template-columns: 1fr; }
+    .recap-strip { justify-content: flex-start; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 10 scrim required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week10_scrim') }}">Back to Week 10 scrim</a>
+  </div>
+</div>
+{% elif preview %}
+<div class="match-console">
+  <div class="console-top">
+    <div class="console-title">
+      <h1>Week 10 match plan</h1>
+      <p class="sub">Lock one plan before result resolution.</p>
+    </div>
+    <div class="recap-strip">
+      <span class="data-chip">score {{ preview.week9_scoreline }}</span>
+      <span class="data-chip">prep {{ preview.prep_outcome_id }}</span>
+      <span class="data-chip">scrim {{ preview.scrim_outcome_id }}</span>
+      <span class="data-chip">pressure {{ preview.match_plan_pressure }}</span>
+    </div>
+  </div>
+
+  <div class="console-grid">
+    <section class="console-panel">
+      <div class="panel-kicker">Strategic briefing</div>
+      <div class="panel-title">
+        <strong>{{ preview.recommended_plan }}</strong>
+        <span class="readout">{{ preview.match_risk }}</span>
+      </div>
+      <div class="copy-line">{{ preview.recommendation_reason }}</div>
+      <div class="chip-row">
+        <span class="data-chip">basis {{ preview.recommendation_basis }}</span>
+        <span class="data-chip">prep {{ preview.selected_prep }}</span>
+        <span class="data-chip">scrim {{ preview.selected_scrim }}</span>
+      </div>
+      <div class="effect-grid">
+        <div class="effect-box"><span>Scout</span><strong>{{ "%+d"|format(preview.scout_clarity) }}</strong></div>
+        <div class="effect-box"><span>Room</span><strong>{{ "%+d"|format(preview.room_load) }}</strong></div>
+        <div class="effect-box"><span>Exec</span><strong>{{ "%+d"|format(preview.execution_confidence) }}</strong></div>
+        <div class="effect-box"><span>Synergy</span><strong>{{ "%+d"|format(preview.synergy_delta) }}</strong></div>
+        <div class="effect-box"><span>Stress</span><strong>{{ "%+d"|format(preview.stress_delta) }}</strong></div>
+        <div class="effect-box"><span>Clarity</span><strong>{{ "%+d"|format(preview.clarity_delta) }}</strong></div>
+      </div>
+    </section>
+
+    <section class="console-panel">
+      <div class="panel-kicker">Lane-state tactical board</div>
+      <div class="panel-title">
+        <strong>{{ preview.scrim_headline }}</strong>
+        <span class="readout">{{ preview.match_plan_pressure }}</span>
+      </div>
+      <div class="lane-board">
+        {% for lane in preview.lane_states %}
+          <div class="lane">
+            <span class="lane-name">{{ lane[0] }}</span>
+            <span class="lane-line"><span class="lane-fill {{ lane[2] }}" style="--pressure: {{ lane[1] }}%;"></span></span>
+            <span class="lane-value">{{ lane[1] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <form method="post" action="{{ url_for('week10_match') }}" class="console-panel">
+      <div class="panel-kicker">Plan selection</div>
+      <div class="panel-title">
+        <strong>Commit plan</strong>
+        <span class="readout">{{ preview.recommended_plan }}</span>
+      </div>
+      {% for option in preview.options %}
+        <label class="choice-card">
+          <input type="radio" name="week10_match_plan" value="{{ option.value }}" required>
+          <strong>{{ option.label }}</strong>
+          <span class="data-chip">{{ option.commitment }}</span>
+          <div class="blurb">Gain: {{ option.payoff }}</div>
+          <div class="blurb">Risk: {{ option.cost }}</div>
+          <div class="blurb">Uses: {{ option.read_basis }}</div>
+        </label>
+      {% endfor %}
+
+      <div class="console-actions">
+        <button class="btn" type="submit">Lock match plan</button>
+        <a class="btn secondary" href="{{ url_for('week10_scrim') }}">Back to scrim</a>
+      </div>
+    </form>
+  </div>
+
+  {% if lock %}
+  <section class="console-panel locked-panel">
+    <div class="panel-kicker">Locked protocol</div>
+    <div class="panel-title">
+      <strong>{{ lock.plan_label }}</strong>
+      {% if lock.followed_recommendation %}
+        <span class="readout">followed read</span>
+      {% else %}
+        <span class="readout">against read</span>
+      {% endif %}
+    </div>
+    <div class="copy-line">{{ lock.next_hook }}</div>
+    <div class="chip-row">
+      <span class="data-chip">plan {{ lock.selected_plan }}</span>
+      <span class="data-chip">commitment {{ lock.commitment }}</span>
+      <span class="data-chip">risk {{ lock.match_risk }}</span>
+    </div>
+    <div class="copy-line">Risk: {{ lock.risk_taken }}</div>
+    <div class="copy-line">Watch: {{ lock.thing_to_watch }}</div>
+    <div class="chip-row">
+      {% for constraint in lock.result_constraints %}
+        <span class="data-chip">{{ constraint }}</span>
+      {% endfor %}
+    </div>
+    <div class="chip-row" style="margin-top: 0.8rem;">
+      <span class="data-chip">next week10_match_result.json</span>
+      {% if week10_match_plan_path %}
+        <span class="data-chip">{{ week10_match_plan_path }}</span>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
