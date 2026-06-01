@@ -171,7 +171,9 @@ focus receipts, resolves the Tuesday scrim pressure block, and writes
 public signal, and deltas. `/week8` then consumes all three Week-7 receipts and
 asks the manager to lock a prep response: patch the exposed break or double down
 on identity. That writes `week8_prep.json`, turning the pressure result into the
-next durable manager problem without simulating another match.
+next durable manager problem without simulating another match. `/week8/scrim`
+then consumes that prep response and writes `week8_scrim.json`, making the prep
+choice alter the next scrim modifier, opening state, and locked tactical call.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -188,6 +190,8 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   and focus receipts into a deterministic four-outcome pressure payoff.
 - **`week8_prep.json`** — written by `/week8`, recording the post-pressure
   management response, tradeoff deltas, exposed problem, and next hook.
+- **`week8_scrim.json`** — written by `/week8/scrim`, turning the prep response
+  into the next scrim setup and tactical call without resolving a full match.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

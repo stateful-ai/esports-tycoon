@@ -294,6 +294,52 @@ class TestWebApp(unittest.TestCase):
         run_dir = next(self.output_root.glob("wk6-*"))
         self.assertFalse((run_dir / "week8_prep.json").exists())
 
+    def test_week8_scrim_consumes_prep_and_writes_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+
+        page = self.client.get("/week8/scrim")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 8 scrim setup", page.data)
+        self.assertIn(b"trust_buffer", page.data)
+        self.assertIn(b"controlled_reset", page.data)
+        self.assertIn(b"Run the patched protocol", page.data)
+
+        locked = self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"patch_tested_early", locked.data)
+        self.assertIn(b"Week 8 match setup inherits a controlled pressure check.", locked.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        scrim_json = (run_dir / "week8_scrim.json").read_text(encoding="utf-8")
+        self.assertIn('"source_pressure_outcome": "heat_ignored_highlight_loss"', scrim_json)
+        self.assertIn('"selected_call": "cover_the_crack"', scrim_json)
+        self.assertIn('"scrim_modifier": "trust_buffer"', scrim_json)
+
+    def test_week8_scrim_requires_prep_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "pixie_flash_repair"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+
+        page = self.client.get("/week8/scrim")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 8 prep required", page.data)
+        self.assertIn(b"week8_prep.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week8_scrim.json").exists())
+
     def test_full_flow_writes_artifact(self):
         fallout = "week 6: held the line."
         self._play_through(fallout=fallout)
@@ -338,7 +384,17 @@ class TestWebApp(unittest.TestCase):
 
     def test_steps_require_the_mc_first(self):
         # Jumping ahead without the practice MC bounces back to /practice.
-        for path in ("/prematch", "/match", "/fallout", "/recap", "/week7", "/week7/result", "/week8", "/feed"):
+        for path in (
+            "/prematch",
+            "/match",
+            "/fallout",
+            "/recap",
+            "/week7",
+            "/week7/result",
+            "/week8",
+            "/week8/scrim",
+            "/feed",
+        ):
             resp = self.client.get(path)
             self.assertEqual(resp.status_code, 302)
             self.assertTrue(resp.headers["Location"].endswith("/practice"))

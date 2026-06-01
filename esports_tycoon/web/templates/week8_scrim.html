@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Week 8 scrim — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 8 scrim setup</h1>
+<p class="sub">The prep response now changes the next scrim’s opening condition.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 8 prep required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week8') }}">Back to Week 8 prep</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.setup_headline }}</strong>
+  <div>{{ plan.setup_body }}</div>
+  <div class="muted">Modifier: <code>{{ plan.scrim_modifier }}</code> · opening: <code>{{ plan.scrim_opening_state }}</code></div>
+  <div class="muted">Prep: <code>{{ plan.prep_choice }}</code> · exposed: <code>{{ plan.exposed_problem }}</code></div>
+</div>
+
+<h2>Opponent read</h2>
+<div class="card">
+  <div>{{ plan.opponent_read }}</div>
+  <div class="muted">{{ plan.reaction }}</div>
+</div>
+
+<form method="post" action="{{ url_for('week8_scrim') }}">
+  <h2>Scrim call</h2>
+  {% for option in plan.options %}
+    <label class="choice">
+      <input type="radio" name="week8_scrim" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Cost: {{ option.cost }}</div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock scrim call</button>
+    <a class="btn secondary" href="{{ url_for('week8') }}">Back to prep</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Scrim setup</h2>
+<div class="card">
+  <strong>{{ lock.call_label }}</strong>
+  <div>{{ lock.next_match_hook }}</div>
+  <div class="muted">Consequence: <code>{{ lock.visible_consequence }}</code></div>
+  <div class="muted">Readiness {{ "%+d"|format(lock.readiness_delta) }} · tempo {{ "%+d"|format(lock.tempo_delta) }} · tilt risk {{ "%+d"|format(lock.tilt_risk_delta) }}</div>
+</div>
+
+{% if scrim_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this scrim setup:
+  <div><code>{{ scrim_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

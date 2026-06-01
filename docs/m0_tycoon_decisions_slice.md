@@ -101,6 +101,11 @@ Foundation scope landed:
   exposed problem, and writes `week8_prep.json` when the player chooses either
   `patch_exposed_break` or `double_down_identity`. The slice stops at the prep
   fork rather than resolving a full Week-8 match.
+- The prep response now changes the next visible setup on `/week8/scrim`: it
+  consumes `week8_prep.json`, maps the response to a scrim modifier/opening
+  state, and writes `week8_scrim.json` after the player locks either
+  `play_to_prep` or `cover_the_crack`. This keeps compounding visible while
+  still deferring a full Week-8 match resolver.
 
 ## Why this was held
 

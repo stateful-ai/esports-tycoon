@@ -23,6 +23,7 @@ The week is a short linear flow, one decision per step:
     /week7/result
                  the locked focus becomes a deterministic pressure payoff
     /week8       the pressure payoff becomes a deterministic prep tradeoff
+    /week8/scrim the prep response becomes a deterministic scrim setup
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -71,11 +72,16 @@ from esports_tycoon.runner.week7 import (
 )
 from esports_tycoon.runner.week8 import (
     WEEK8_PREP_FILENAME,
+    WEEK8_SCRIM_FILENAME,
     pressure_payload_from_json,
     render_week8_prep_json,
+    render_week8_scrim_json,
     resolve_week8_prep,
+    resolve_week8_scrim,
     week8_prep_from_json,
     week8_prep_plan,
+    week8_scrim_from_json,
+    week8_scrim_plan,
 )
 from esports_tycoon.schema import WorldState
 
@@ -487,6 +493,75 @@ def create_app(
             plan=plan,
             lock=lock,
             prep_path=prep_written_path,
+        )
+
+    @app.route("/week8/scrim", methods=["GET", "POST"])
+    def week8_scrim():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 8 scrim setup unlocks after Week 8 prep.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        setup_path = run_dir / WEEK7_SETUP_FILENAME
+        focus_path = run_dir / WEEK7_FOCUS_FILENAME
+        pressure_path = run_dir / WEEK7_PRESSURE_FILENAME
+        prep_path = run_dir / WEEK8_PREP_FILENAME
+        scrim_path = run_dir / WEEK8_SCRIM_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK7_SETUP_FILENAME, setup_path),
+                (WEEK7_FOCUS_FILENAME, focus_path),
+                (WEEK7_PRESSURE_FILENAME, pressure_path),
+                (WEEK8_PREP_FILENAME, prep_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        lock = None
+        scrim_written_path = ""
+        if not missing:
+            try:
+                setup = setup_payload_from_json(setup_path.read_text(encoding="utf-8"))
+                focus = focus_payload_from_json(focus_path.read_text(encoding="utf-8"))
+                pressure = pressure_payload_from_json(pressure_path.read_text(encoding="utf-8"))
+                prep = week8_prep_from_json(prep_path.read_text(encoding="utf-8"))
+                plan = week8_scrim_plan(setup, focus, pressure, prep)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week8_scrim") or "").strip()
+                    try:
+                        lock = resolve_week8_scrim(plan, selected)
+                    except ValueError:
+                        flash("Choose a Week 8 scrim call.")
+                    else:
+                        scrim_path.write_text(
+                            render_week8_scrim_json(lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        scrim_written_path = str(scrim_path)
+                elif scrim_path.is_file():
+                    try:
+                        lock = week8_scrim_from_json(scrim_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        scrim_written_path = str(scrim_path)
+
+        return render_template(
+            "week8_scrim.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            lock=lock,
+            scrim_path=scrim_written_path,
         )
 
     @app.get("/feed")
