@@ -54,6 +54,12 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(feed.status_code, 200)
         self.assertIn(b"Chirper", feed.data)
 
+    def test_week10_ops_room_art_is_served(self):
+        resp = self.client.get("/static/art/week10-ops-room.webp")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.mimetype, "image/webp")
+        self.assertTrue(resp.data.startswith(b"RIFF"))
+
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
         self.assertEqual(resp.status_code, 200)
@@ -817,6 +823,7 @@ class TestWebApp(unittest.TestCase):
         page = self.client.get("/week10/prep")
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 10 analyst desk", page.data)
+        self.assertIn(b"/static/art/week10-ops-room.webp", page.data)
         self.assertIn(b"scout_counter", page.data)
         self.assertIn(b"staff_review", page.data)
         self.assertIn(b"roster_reps", page.data)
@@ -886,6 +893,7 @@ class TestWebApp(unittest.TestCase):
         page = self.client.get("/week10/scrim")
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 10 scrim lab", page.data)
+        self.assertIn(b"/static/art/week10-ops-room.webp", page.data)
         self.assertIn(b"validate_read", page.data)
         self.assertIn(b"stress_execution", page.data)
         self.assertIn(b"stabilize_comms", page.data)
@@ -956,6 +964,7 @@ class TestWebApp(unittest.TestCase):
         page = self.client.get("/week10/match")
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 10 match plan", page.data)
+        self.assertIn(b"/static/art/week10-ops-room.webp", page.data)
         self.assertIn(b"week10_plan_protect_pressure", page.data)
         self.assertIn(b"week10_plan_trade_map", page.data)
         self.assertIn(b"week10_plan_press_advantage", page.data)

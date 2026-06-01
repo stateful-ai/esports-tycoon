@@ -50,9 +50,9 @@ include = ["esports_tycoon*", "saves"]
 # founder's recorded decision (a dev-time artifact bound to the source tree)
 # and is deliberately not shipped.
 "saves" = ["week6.yaml"]
-# Ship the web app's Jinja2 templates so the slice app works from an installed
-# wheel, not only a source checkout.
-"esports_tycoon.web" = ["templates/*.html"]
+# Ship the web app's Jinja2 templates and static art so the slice app works
+# from an installed wheel, not only a source checkout.
+"esports_tycoon.web" = ["templates/*.html", "static/art/*.webp"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
