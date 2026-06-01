@@ -47,6 +47,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week9_scrim_json,
     render_week9_setup_json,
     render_week10_fallout_json,
+    render_week10_prep_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
@@ -60,6 +61,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week9_scrim,
     resolve_week9_setup,
     resolve_week10_fallout,
+    resolve_week10_prep,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
@@ -71,6 +73,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week9_scrim_plan,
     week9_setup_plan,
     week10_fallout_plan,
+    week10_prep_from_json,
+    week10_prep_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -1211,6 +1215,96 @@ class TestWeek10Fallout(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "selected_choice"):
             resolve_week10_fallout(result, plan, "sponsor_panic")
+
+
+class TestWeek10Prep(_Fixture):
+    def _prep_fallout_for(self, choice="raise_standards"):
+        result = TestWeek10Fallout._week9_results_by_outcome(self)["prep_converted"]
+        plan = week10_fallout_plan(result)
+        return resolve_week10_fallout(result, plan, choice)
+
+    def test_week10_prep_recommendation_uses_fallout_state(self):
+        cases = {
+            "system_adjusted": "scout_counter",
+            "room_overmanaged": "staff_review",
+            "standards_overfit": "staff_review",
+            "system_blurred": "staff_review",
+            "standards_locked": "roster_reps",
+            "room_recentered": "roster_reps",
+        }
+        result = TestWeek10Fallout._week9_results_by_outcome(self)["prep_converted"]
+        for fallout_choice in ("steady_room", "raise_standards", "adapt_system"):
+            with self.subTest(fallout_choice=fallout_choice):
+                fallout = resolve_week10_fallout(result, week10_fallout_plan(result), fallout_choice)
+                plan = week10_prep_plan(fallout)
+                self.assertEqual(plan.advisor_packet.recommended_prep, cases[fallout.outcome_id])
+
+    def test_week10_prep_choice_matrix_is_stable(self):
+        outcomes = {
+            ("room_recentered", "scout_counter"): "counter_read_overfit",
+            ("room_recentered", "staff_review"): "review_loop_locked",
+            ("room_recentered", "roster_reps"): "reps_translated",
+            ("room_overmanaged", "scout_counter"): "counter_read_overfit",
+            ("room_overmanaged", "staff_review"): "review_loop_locked",
+            ("room_overmanaged", "roster_reps"): "reps_burned",
+            ("standards_locked", "scout_counter"): "counter_read_overfit",
+            ("standards_locked", "staff_review"): "review_loop_drift",
+            ("standards_locked", "roster_reps"): "reps_translated",
+            ("standards_overfit", "scout_counter"): "counter_read_overfit",
+            ("standards_overfit", "staff_review"): "review_loop_locked",
+            ("standards_overfit", "roster_reps"): "reps_burned",
+            ("system_adjusted", "scout_counter"): "counter_read_ready",
+            ("system_adjusted", "staff_review"): "review_loop_drift",
+            ("system_adjusted", "roster_reps"): "reps_burned",
+            ("system_blurred", "scout_counter"): "counter_read_overfit",
+            ("system_blurred", "staff_review"): "review_loop_locked",
+            ("system_blurred", "roster_reps"): "reps_burned",
+        }
+        fallout_by_outcome = {}
+        for result in TestWeek10Fallout._week9_results_by_outcome(self).values():
+            for fallout_choice in ("steady_room", "raise_standards", "adapt_system"):
+                fallout = resolve_week10_fallout(result, week10_fallout_plan(result), fallout_choice)
+                fallout_by_outcome.setdefault(fallout.outcome_id, fallout)
+
+        for (fallout_outcome, prep_choice), expected in outcomes.items():
+            with self.subTest(fallout_outcome=fallout_outcome, prep_choice=prep_choice):
+                fallout = fallout_by_outcome[fallout_outcome]
+                plan = week10_prep_plan(fallout)
+                lock = resolve_week10_prep(fallout, plan, prep_choice)
+                self.assertEqual(lock.outcome_id, expected)
+
+    def test_week10_prep_artifact_sources_fallout_and_stops_before_scrim(self):
+        fallout = self._prep_fallout_for("raise_standards")
+        plan = week10_prep_plan(fallout)
+        lock = resolve_week10_prep(fallout, plan, "roster_reps")
+        payload = render_week10_prep_json(lock)
+
+        self.assertIn('"week10_fallout": "week10_fallout.json"', payload)
+        self.assertIn('"artifact_type": "week10_prep"', payload)
+        self.assertIn('"advisor_packet":', payload)
+        self.assertIn('"selected_choice": "roster_reps"', payload)
+        self.assertIn('"outcome_id": "reps_translated"', payload)
+        self.assertIn('"prep_effect":', payload)
+        self.assertIn('"stops_before": "week10_scrim"', payload)
+        self.assertIn('"next_artifact": "week10_scrim.json"', payload)
+        self.assertNotIn('"week10_scrim"', payload.split('"next_artifact"')[0])
+
+    def test_week10_prep_render_parse_round_trip_is_stable(self):
+        fallout = self._prep_fallout_for("raise_standards")
+        plan = week10_prep_plan(fallout)
+        lock = resolve_week10_prep(fallout, plan, "roster_reps")
+        payload = render_week10_prep_json(lock)
+        parsed = week10_prep_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week10_prep_json(parsed), payload)
+
+    def test_week10_prep_rejects_invalid_choice(self):
+        fallout = self._prep_fallout_for("raise_standards")
+        plan = week10_prep_plan(fallout)
+
+        with self.assertRaisesRegex(ValueError, "selected_choice"):
+            resolve_week10_prep(fallout, plan, "hire_psychologist")
 
 
 class TestDeterminism(_Fixture):

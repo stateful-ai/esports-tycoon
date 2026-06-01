@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% block title %}Week 10 prep — {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1120px; }
+  .analyst-desk {
+    color: #dfe2eb;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      #0d1117;
+    background-size: 24px 24px;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .analyst-desk h1, .analyst-desk h2, .analyst-desk p { color: inherit; }
+  .desk-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .desk-title h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
+  .desk-title .sub { color: #9ba3ad; margin: 0.2rem 0 0; }
+  .recap-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .desk-chip {
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #c4c7ca;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .desk-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 1rem;
+  }
+  .desk-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .panel-kicker {
+    color: #8e9194;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .panel-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    align-items: baseline;
+    margin-bottom: 0.45rem;
+  }
+  .panel-title strong { font-size: 1.05rem; }
+  .readout {
+    color: #f0f6fc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .advisor-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.65rem 0; }
+  .meter { margin-top: 0.7rem; }
+  .meter-label {
+    display: flex;
+    justify-content: space-between;
+    color: #c4c7ca;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    margin-bottom: 0.22rem;
+  }
+  .meter-track { height: 8px; background: #0d1117; border: 1px solid #30363d; }
+  .meter-fill { width: var(--meter); height: 100%; background: #f2cc60; }
+  .meter-fill.stable { background: #3fb950; }
+  .meter-fill.danger { background: #ff7b72; }
+  .tactical-map {
+    position: relative;
+    min-height: 136px;
+    margin-top: 1rem;
+    border: 1px solid #30363d;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 24% 58%, #3fb950 0 5px, transparent 6px),
+      radial-gradient(circle at 60% 34%, #f2cc60 0 5px, transparent 6px),
+      radial-gradient(circle at 78% 70%, #ff7b72 0 5px, transparent 6px),
+      linear-gradient(rgba(240,246,252,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,246,252,0.07) 1px, transparent 1px),
+      #0d1117;
+    background-size: auto, auto, auto, 20px 20px, 20px 20px, auto;
+  }
+  .tactical-map::before {
+    content: "";
+    position: absolute;
+    left: 18%;
+    top: 52%;
+    width: 58%;
+    height: 2px;
+    background: #f0f6fc;
+    transform: rotate(-12deg);
+  }
+  .choice-card {
+    display: block;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    padding: 0.8rem;
+    margin: 0.55rem 0;
+    cursor: pointer;
+  }
+  .choice-card:hover { border-color: #f0f6fc; }
+  .choice-card input { margin-right: 0.5rem; }
+  .choice-card .blurb { color: #9ba3ad; margin: 0.25rem 0 0 1.45rem; font-size: 0.9rem; }
+  .desk-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .analyst-desk .btn {
+    border-radius: 0;
+    background: #f0f6fc;
+    color: #0d1117;
+    border: 1px solid #f0f6fc;
+  }
+  .analyst-desk .btn.secondary {
+    background: transparent;
+    color: #dfe2eb;
+    border-color: #30363d;
+  }
+  .locked-panel { margin-top: 1rem; }
+  .effect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .effect-box { border: 1px solid #30363d; padding: 0.6rem; background: #0d1117; }
+  .effect-box span { display: block; color: #8e9194; font-size: 0.78rem; }
+  .effect-box strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  @media (max-width: 820px) {
+    .desk-top, .desk-grid, .effect-grid { grid-template-columns: 1fr; }
+    .recap-strip { justify-content: flex-start; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 10 fallout required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week10_fallout') }}">Back to Week 10 fallout</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="analyst-desk">
+  <div class="desk-top">
+    <div class="desk-title">
+      <h1>Week 10 analyst desk</h1>
+      <p class="sub">One prep block, one advisor packet, one path into the next scrim.</p>
+    </div>
+    <div class="recap-strip">
+      <span class="desk-chip">score {{ plan.week9_scoreline }}</span>
+      <span class="desk-chip">fallout {{ plan.fallout_outcome_id }}</span>
+      {% for constraint in plan.visible_constraints %}
+        {% if loop.index <= 3 %}<span class="desk-chip">{{ constraint }}</span>{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="desk-grid">
+    <section class="desk-panel">
+      <div class="panel-kicker">Advisor packet</div>
+      <div class="panel-title">
+        <strong>{{ plan.advisor_packet.recommended_prep }}</strong>
+        <span class="readout">{{ plan.advisor_packet.confidence }}</span>
+      </div>
+      <div class="advisor-line">{{ plan.advisor_packet.summary }}</div>
+      <div class="chip-row">
+        {% for fact in plan.advisor_packet.source_facts %}
+          <span class="desk-chip">{{ fact }}</span>
+        {% endfor %}
+      </div>
+      <div class="chip-row">
+        {% for flag in plan.advisor_packet.risk_flags %}
+          <span class="desk-chip">{{ flag }}</span>
+        {% endfor %}
+      </div>
+
+      {% for meter in plan.pressure_meters %}
+        <div class="meter">
+          <div class="meter-label">
+            <span>{{ meter[0]|replace("_", " ") }}</span>
+            <span>{{ meter[1] }}</span>
+          </div>
+          <div class="meter-track">
+            <div class="meter-fill {{ meter[2] }}" style="--meter: {{ meter[1] }}%;"></div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="tactical-map" aria-hidden="true"></div>
+    </section>
+
+    <form method="post" action="{{ url_for('week10_prep') }}" class="desk-panel">
+      <div class="panel-kicker">Prep allocation</div>
+      <div class="panel-title">
+        <strong>Spend 1 block</strong>
+        <span class="readout">available 1</span>
+      </div>
+      <div class="advisor-line">{{ plan.fallout_headline }}</div>
+      {% for option in plan.options %}
+        <label class="choice-card">
+          <input type="radio" name="week10_prep" value="{{ option.value }}" required>
+          <strong>{{ option.label }}</strong>
+          <span class="desk-chip">{{ option.lane }}</span>
+          <div class="blurb">Gain: {{ option.payoff }}</div>
+          <div class="blurb">Risk: {{ option.cost }}</div>
+        </label>
+      {% endfor %}
+
+      <div class="desk-actions">
+        <button class="btn" type="submit">Lock prep block</button>
+        <a class="btn secondary" href="{{ url_for('week10_fallout') }}">Back to fallout</a>
+      </div>
+    </form>
+  </div>
+
+  {% if lock %}
+  <section class="desk-panel locked-panel">
+    <div class="panel-kicker">Locked prep</div>
+    <div class="panel-title">
+      <strong>{{ lock.prep_headline }}</strong>
+      {% if lock.followed_recommendation %}
+        <span class="readout">followed read</span>
+      {% else %}
+        <span class="readout">against read</span>
+      {% endif %}
+    </div>
+    <div class="advisor-line">{{ lock.consequence }}</div>
+    <div class="chip-row">
+      <span class="desk-chip">outcome {{ lock.outcome_id }}</span>
+      <span class="desk-chip">choice {{ lock.selected_choice }}</span>
+      <span class="desk-chip">lane {{ lock.lane }}</span>
+    </div>
+    <div class="effect-grid">
+      <div class="effect-box"><span>Scout clarity</span><strong>{{ "%+d"|format(lock.scout_clarity) }}</strong></div>
+      <div class="effect-box"><span>Room load</span><strong>{{ "%+d"|format(lock.room_load) }}</strong></div>
+      <div class="effect-box"><span>Execution</span><strong>{{ "%+d"|format(lock.execution_confidence) }}</strong></div>
+    </div>
+    <div class="advisor-line">{{ lock.next_hook }}</div>
+    <div class="chip-row">
+      <span class="desk-chip">next week10_scrim.json</span>
+      {% if week10_prep_path %}
+        <span class="desk-chip">{{ week10_prep_path }}</span>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
