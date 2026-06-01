@@ -19,6 +19,9 @@ The week is a short linear flow, one decision per step:
     /fallout     open-text #2 — the public post-match Chirper post (<=120 chars)
                  → on submit, writes the recap artifact
     /recap       the written-up week + a pointer to the saved files
+    /week7       the exported hook becomes a deterministic next-focus choice
+    /week7/result
+                 the locked focus becomes a deterministic pressure payoff
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -37,16 +40,33 @@ from esports_tycoon.content.config import ContentConfig
 from esports_tycoon.runner.engine import run_slice, slice_id
 from esports_tycoon.runner.events import slice_events
 from esports_tycoon.runner.model import (
+    ANALYST_READS,
     OPEN_TEXT_MAX,
     PRACTICE_CHOICES,
+    TRAINING_DRILLS,
     SliceConfig,
     SliceDecisions,
     normalize_open_text,
+    training_decision_for_drill,
 )
 from esports_tycoon.runner.recap import (
     FEED_FILENAME,
     RECAP_FILENAME,
+    WEEK7_SETUP_FILENAME,
     render_feed_html,
+    render_week7_setup_json,
+)
+from esports_tycoon.runner.week7 import (
+    WEEK7_FOCUS_FILENAME,
+    WEEK7_PRESSURE_FILENAME,
+    focus_payload_from_json,
+    render_week7_focus_json,
+    render_week7_pressure_json,
+    resolve_week7_focus,
+    resolve_week7_pressure,
+    setup_payload_from_json,
+    setup_payload_from_week7_setup,
+    week7_focus_options,
 )
 from esports_tycoon.schema import WorldState
 
@@ -112,16 +132,36 @@ def create_app(
     def opponent_name() -> str:
         return rival_names.get(config.opponent, config.opponent)
 
+    def fallout_repair_unlocked() -> bool:
+        return any(
+            not clash.cross_team and {clash.a, clash.b} == {"vex", "pixie"}
+            for clash in world.clash_pairs
+        )
+
+    def available_training_drills():
+        if fallout_repair_unlocked():
+            return TRAINING_DRILLS
+        return tuple(drill for drill in TRAINING_DRILLS if drill.value != "pixie_flash_repair")
+
+    def available_training_values() -> frozenset[str]:
+        return frozenset(drill.value for drill in available_training_drills())
+
     def current_decisions() -> Optional[SliceDecisions]:
         """Build :class:`SliceDecisions` from the session, or ``None`` if the MC
         (the required first step) has not been made yet."""
         focus = session.get("practice_focus")
         if focus not in _PRACTICE_VALUES:
             return None
+        training_drill = session.get("training_drill", "none")
+        if training_drill not in available_training_values():
+            training_drill = "none"
+        training_points, decision_effects = training_decision_for_drill(training_drill)
         return SliceDecisions(
             practice_focus=focus,
             team_talk=session.get("team_talk", ""),
             fallout_post=session.get("fallout_post", ""),
+            training_points=training_points,
+            decision_effects=decision_effects,
         )
 
     def require_decisions():
@@ -130,6 +170,26 @@ def create_app(
             flash("Pick what the team drills in practice first.")
             return None
         return decisions
+
+    def training_effect_label(effect) -> str:
+        sign = "+" if effect.delta >= 0 else ""
+        return f"{display_name(effect.player)} {sign}{effect.delta} {effect.skill} ({effect.training_points} TP)"
+
+    def training_spent(decisions: SliceDecisions) -> int:
+        return sum(effect.training_points for effect in decisions.decision_effects)
+
+    def relationship_fallout_label(fallout) -> str:
+        a = display_name(fallout.a)
+        b = display_name(fallout.b)
+        if fallout.kind == "flashpoint":
+            verdict = "flared"
+        elif fallout.kind == "split":
+            verdict = "split the room"
+        elif fallout.kind == "repair":
+            verdict = "cooled down"
+        else:
+            verdict = "simmered"
+        return f"{a} ↔ {b} ({fallout.axis}) {verdict}: {fallout.summary}"
 
     # Make small helpers and shared context available to every template.
     @app.context_processor
@@ -144,6 +204,9 @@ def create_app(
             "display_name": display_name,
             "name_list": name_list,
             "OPEN_TEXT_MAX": OPEN_TEXT_MAX,
+            "training_effect_label": training_effect_label,
+            "training_spent": training_spent,
+            "relationship_fallout_label": relationship_fallout_label,
         }
 
     # ------------------------------------------------------------------ routes
@@ -168,12 +231,20 @@ def create_app(
             if focus not in _PRACTICE_VALUES:
                 flash("Choose one practice focus.")
                 return redirect(url_for("practice"))
+            training_drill = (request.form.get("training_drill") or "none").strip()
+            if training_drill not in available_training_values():
+                flash("Choose one focused training drill.")
+                return redirect(url_for("practice"))
             session["practice_focus"] = focus
+            session["training_drill"] = training_drill
             return redirect(url_for("prematch"))
         return render_template(
             "practice.html",
             choices=PRACTICE_CHOICES,
+            training_drills=available_training_drills(),
+            analyst_reads=ANALYST_READS if fallout_repair_unlocked() else (),
             selected=session.get("practice_focus"),
+            selected_training=session.get("training_drill", "none"),
         )
 
     @app.route("/prematch", methods=["GET", "POST"])
@@ -222,6 +293,8 @@ def create_app(
                 practice_focus=decisions.practice_focus,
                 team_talk=decisions.team_talk,
                 fallout_post=post,
+                training_points=decisions.training_points,
+                decision_effects=decisions.decision_effects,
             )
             from esports_tycoon.runner.recap import write_artifacts
 
@@ -244,7 +317,101 @@ def create_app(
             result=result,
             recap_path=str(run_dir / RECAP_FILENAME),
             feed_path=str(run_dir / FEED_FILENAME),
+            week7_setup_path=str(run_dir / WEEK7_SETUP_FILENAME),
             cited=cited,
+        )
+
+    @app.route("/week7", methods=["GET", "POST"])
+    def week7():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 7 focus unlocks after a repair-vs-reps focused rep.")
+            return redirect(url_for("practice"))
+
+        setup = setup_payload_from_week7_setup(result.week7_setup)
+        options = week7_focus_options(setup)
+        lock = None
+        focus_path = ""
+        if request.method == "POST":
+            selected = (request.form.get("week7_focus") or "").strip()
+            try:
+                lock = resolve_week7_focus(setup, selected)
+            except ValueError:
+                flash("Choose a Week 7 focus.")
+            else:
+                run_dir = output_root / result.slice_id
+                run_dir.mkdir(parents=True, exist_ok=True)
+                setup_target = run_dir / WEEK7_SETUP_FILENAME
+                if not setup_target.exists():
+                    setup_export = render_week7_setup_json(slice_events(result, world))
+                    if setup_export:
+                        setup_target.write_text(setup_export, encoding="utf-8", newline="\n")
+                target = run_dir / WEEK7_FOCUS_FILENAME
+                target.write_text(render_week7_focus_json(lock), encoding="utf-8", newline="\n")
+                focus_path = str(target)
+        return render_template(
+            "week7.html",
+            result=result,
+            setup=setup,
+            options=options,
+            lock=lock,
+            focus_path=focus_path,
+        )
+
+    @app.route("/week7/result", methods=["GET", "POST"])
+    def week7_result():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 7 pressure unlocks after a repair-vs-reps focused rep.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        setup_path = run_dir / WEEK7_SETUP_FILENAME
+        focus_path = run_dir / WEEK7_FOCUS_FILENAME
+        pressure_path = run_dir / WEEK7_PRESSURE_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK7_SETUP_FILENAME, setup_path),
+                (WEEK7_FOCUS_FILENAME, focus_path),
+            )
+            if not path.is_file()
+        ]
+        pressure = None
+        written_path = ""
+        if not missing:
+            try:
+                setup = setup_payload_from_json(setup_path.read_text(encoding="utf-8"))
+                focus = focus_payload_from_json(focus_path.read_text(encoding="utf-8"))
+                resolved = resolve_week7_pressure(setup, focus)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    run_dir.mkdir(parents=True, exist_ok=True)
+                    pressure_path.write_text(
+                        render_week7_pressure_json(resolved),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    written_path = str(pressure_path)
+                    pressure = resolved
+                elif pressure_path.is_file():
+                    written_path = str(pressure_path)
+                    pressure = resolved
+
+        return render_template(
+            "week7_result.html",
+            result=result,
+            missing=missing,
+            pressure=pressure,
+            pressure_path=written_path,
         )
 
     @app.get("/feed")

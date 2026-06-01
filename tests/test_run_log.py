@@ -22,6 +22,7 @@ import unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from esports_tycoon.canned import loader  # noqa: E402
+from esports_tycoon.schema import DecisionEffect  # noqa: E402
 from esports_tycoon.runner import (  # noqa: E402
     EVENTS_FILENAME,
     SliceConfig,
@@ -37,13 +38,19 @@ from esports_tycoon.runner import (  # noqa: E402
 from esports_tycoon.runner.recap import REMEMBERED_SLOT_LABEL  # noqa: E402
 from esports_tycoon.runner.events import (  # noqa: E402
     FeedPosted,
+    FollowupScrimLogged,
     GroundingSummary,
     KeyMomentLogged,
     MatchResolved,
     MoraleDelta,
+    PracticeChosen,
+    RelationshipFalloutLogged,
+    ReviewRoomTrustLogged,
     RoomRemembered,
     SliceStarted,
     TeamTalk,
+    TrainingConsequenceLogged,
+    Week7SetupLogged,
     serialize_event,
 )
 
@@ -57,6 +64,15 @@ class _Fixture(unittest.TestCase):
             practice_focus="defaults",
             team_talk="no heroes. run the default.",
             fallout_post="week 6: held the line. on to week 7.",
+        )
+        cls.training_decisions = SliceDecisions(
+            practice_focus="defaults",
+            team_talk="no heroes. run the default.",
+            fallout_post="week 6: held the line. on to week 7.",
+            training_points=4,
+            decision_effects=(
+                DecisionEffect(player="vex", skill="aim", delta=4, training_points=4),
+            ),
         )
 
     def result(self, **overrides):
@@ -73,7 +89,7 @@ class TestEventStreamIsOrderedAndTyped(_Fixture):
         self.assertIsInstance(events[-2], RoomRemembered)
 
     def test_section_order_matches_the_run(self):
-        events = slice_events(self.result(), self.world)
+        events = slice_events(self.result(decisions=self.training_decisions), self.world)
         tags = [e.type for e in events]
 
         def first(tag):
@@ -90,7 +106,12 @@ class TestEventStreamIsOrderedAndTyped(_Fixture):
         # Key moments precede the standouts; morale follows; the feed follows that.
         self.assertLess(last("key_moment"), first("standouts"))
         self.assertLess(first("standouts"), first("morale_delta"))
-        self.assertLess(last("morale_delta"), first("feed_post"))
+        self.assertLess(last("morale_delta"), first("training_consequence"))
+        self.assertLess(first("training_consequence"), first("review_room_trust"))
+        self.assertLess(first("review_room_trust"), first("followup_scrim"))
+        self.assertLess(first("followup_scrim"), first("week7_setup"))
+        self.assertLess(first("week7_setup"), first("relationship_fallout"))
+        self.assertLess(last("relationship_fallout"), first("feed_post"))
         self.assertLess(last("feed_post"), first("memories_remembered"))
 
     def test_repeated_events_match_their_sources_in_count_and_order(self):
@@ -110,6 +131,129 @@ class TestEventStreamIsOrderedAndTyped(_Fixture):
         roster_order = [p.id for p in self.world.players if p.id in result.why.morale_deltas]
         self.assertEqual([e.player for e in morale], roster_order)
 
+    def test_starter_feed_events_carry_author_local_outcome(self):
+        result = self.result()
+        events = slice_events(result, self.world)
+        feed = [e for e in events if isinstance(e, FeedPosted)]
+        by_player = {p.author_player_id: p for p in feed if p.author_player_id is not None}
+
+        self.assertEqual(set(by_player), {p.id for p in self.world.players})
+        self.assertEqual(by_player[result.why.mvp].local_outcome, "mvp")
+        for player_id in result.why.who_carried:
+            if player_id != result.why.mvp:
+                self.assertEqual(by_player[player_id].local_outcome, "carried")
+        for player_id in result.why.who_tilted:
+            self.assertEqual(by_player[player_id].local_outcome, "came_apart")
+
+    def test_practice_event_carries_training_effects(self):
+        decisions = SliceDecisions(
+            practice_focus="defaults",
+            training_points=4,
+            decision_effects=(
+                DecisionEffect(player="vex", skill="aim", delta=4, training_points=4),
+            ),
+        )
+        events = slice_events(self.result(decisions=decisions), self.world)
+        practice = next(e for e in events if isinstance(e, PracticeChosen))
+
+        self.assertEqual(practice.training_points, 4)
+        self.assertEqual(len(practice.decision_effects), 1)
+        self.assertEqual(practice.decision_effects[0].player, "vex")
+        self.assertEqual(practice.decision_effects[0].skill, "aim")
+
+    def test_relationship_fallout_event_carries_seeded_clash(self):
+        events = slice_events(self.result(decisions=self.training_decisions), self.world)
+        fallout = next(e for e in events if isinstance(e, RelationshipFalloutLogged))
+
+        self.assertEqual((fallout.a, fallout.b), ("vex", "pixie"))
+        self.assertEqual(fallout.axis, "blame vs. guilt")
+        self.assertEqual(fallout.kind, "split")
+        self.assertIn("mem:pixie:flashed_vex_w5", fallout.cites)
+        self.assertIn("mem:vex:flashed_by_pixie_w5", fallout.cites)
+
+    def test_training_consequence_event_carries_visible_tradeoff(self):
+        events = slice_events(self.result(decisions=self.training_decisions), self.world)
+        consequence = next(e for e in events if isinstance(e, TrainingConsequenceLogged))
+
+        self.assertEqual(consequence.kind, "vex_entry_reps")
+        self.assertEqual(consequence.label, "Entry reps")
+        self.assertIn("two calls at once", consequence.summary)
+        self.assertIn("first-contact power", consequence.benefit)
+        self.assertIn("unresolved Vex/Pixie", consequence.cost)
+        self.assertEqual(
+            consequence.cites,
+            ["mem:pixie:flashed_vex_w5", "mem:vex:flashed_by_pixie_w5"],
+        )
+
+    def test_week7_setup_events_carry_review_trust_and_hook(self):
+        events = slice_events(self.result(decisions=self.training_decisions), self.world)
+        trust = next(e for e in events if isinstance(e, ReviewRoomTrustLogged))
+        scrim = next(e for e in events if isinstance(e, FollowupScrimLogged))
+        setup = next(e for e in events if isinstance(e, Week7SetupLogged))
+
+        self.assertEqual((trust.start, trust.delta, trust.final), (2, -2, 0))
+        self.assertIn("Pixie absorbed the review blame", trust.reason)
+        self.assertEqual(scrim.label, "Late retake crack")
+        self.assertIn("retake stalled", scrim.summary)
+        self.assertEqual(setup.source_branch, "vex_aim")
+        self.assertEqual(setup.fallout_state, "blame vs. guilt")
+        self.assertEqual(setup.hook_id, "vex_pixie_review_room_heat")
+        self.assertEqual(setup.recommended_focus, "contain_fallout")
+
+    def test_no_training_omits_relationship_fallout_event(self):
+        events = slice_events(self.result(), self.world)
+
+        self.assertFalse(any(isinstance(e, RelationshipFalloutLogged) for e in events))
+        self.assertFalse(any(isinstance(e, ReviewRoomTrustLogged) for e in events))
+        self.assertFalse(any(isinstance(e, FollowupScrimLogged) for e in events))
+        self.assertFalse(any(isinstance(e, Week7SetupLogged) for e in events))
+
+    def test_relationship_fallout_feed_post_is_marked_and_grounded(self):
+        events = slice_events(self.result(decisions=self.training_decisions), self.world)
+        posts = [
+            e for e in events
+            if isinstance(e, FeedPosted) and e.role == "relationship_fallout"
+        ]
+
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0].author_player_id, "vex")
+        self.assertEqual(posts[0].local_outcome, "carried")
+        self.assertIn("entry reps helped", posts[0].text)
+        self.assertEqual(
+            posts[0].cites,
+            ["mem:pixie:flashed_vex_w5", "mem:vex:flashed_by_pixie_w5"],
+        )
+
+    def test_recap_renders_training_attribution_when_present(self):
+        decisions = SliceDecisions(
+            practice_focus="defaults",
+            training_points=4,
+            decision_effects=(
+                DecisionEffect(player="vex", skill="aim", delta=4, training_points=4),
+            ),
+        )
+        md = render_recap_md(slice_events(self.result(decisions=decisions), self.world), self.world)
+
+        self.assertIn("**Training:** Vex +4 aim (4 TP). Spent 4/4 TP.", md)
+
+    def test_recap_renders_relationship_fallout(self):
+        md = render_recap_md(
+            slice_events(self.result(decisions=self.training_decisions), self.world),
+            self.world,
+        )
+
+        self.assertIn("### Relationship fallout", md)
+        self.assertIn("**Vex ↔ Pixie** (blame vs. guilt) split the room", md)
+        self.assertIn("relationship fallout; carried", md)
+        self.assertIn("entry reps helped", md)
+        self.assertIn("`mem:pixie:flashed_vex_w5`", md)
+        self.assertIn("### Review-room trust", md)
+        self.assertIn("**Review-room trust:** 2 → 0 (-2)", md)
+        self.assertIn("### Follow-up scrim", md)
+        self.assertIn("Late retake crack", md)
+        self.assertIn("## Week 7 setup", md)
+        self.assertIn("Review room heat", md)
+
     def test_every_line_is_one_typed_json_object(self):
         result = self.result()
         with tempfile.TemporaryDirectory() as tmp:
@@ -119,7 +263,9 @@ class TestEventStreamIsOrderedAndTyped(_Fixture):
         known_types = {
             "slice_started", "practice_chosen", "team_talk", "match_resolved",
             "halftime_ack", "key_moment", "standouts", "morale_delta", "feed_post",
-            "memories_remembered", "grounding_summary",
+            "training_consequence", "review_room_trust", "followup_scrim",
+            "week7_setup", "relationship_fallout", "memories_remembered",
+            "grounding_summary",
         }
         for line in lines:
             obj = json.loads(line)  # one JSON object per line
@@ -176,6 +322,30 @@ class TestRecapIsDerivedFromTheLog(_Fixture):
         events = [e for e in slice_events(self.result(), self.world) if not isinstance(e, MatchResolved)]
         with self.assertRaises(ValueError):
             render_recap_md(events, self.world)
+
+    def test_recap_and_feed_snapshot_surface_local_outcome_labels(self):
+        # Local-outcome routing should be visible to the player, not only buried
+        # in event JSON. The canonical fixture yields an MVP plus came-apart
+        # players; a Northwind seed adds non-MVP carried players.
+        canonical_events = slice_events(self.result(), self.world)
+        recap = render_recap_md(canonical_events, self.world)
+        feed = render_feed_html(canonical_events, self.world)
+        self.assertIn("**Coyote** (@coyotelurk): _MVP._", recap)
+        self.assertIn("**Vex** (@vexstrike): _came apart._", recap)
+        self.assertIn('<span class="tag">MVP</span>', feed)
+        self.assertIn('<span class="tag">came apart</span>', feed)
+
+        carried = self.result(config=SliceConfig(opponent="northwind", map="Helix", seed=7))
+        carried_events = slice_events(carried, self.world)
+        carried_recap = render_recap_md(carried_events, self.world)
+        carried_feed = render_feed_html(carried_events, self.world)
+        self.assertIn("**Rook** (@rooktanaka): _carried._", carried_recap)
+        self.assertIn('<span class="tag">carried</span>', carried_feed)
+
+        training_events = slice_events(self.result(decisions=self.training_decisions), self.world)
+        training_feed = render_feed_html(training_events, self.world)
+        self.assertIn('<span class="tag">fallout</span>', training_feed)
+        self.assertIn("entry reps helped", training_feed)
 
 
 class TestRecapSurfacesBoundPrecedent(_Fixture):

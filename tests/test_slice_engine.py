@@ -27,12 +27,20 @@ from esports_tycoon.runner import (  # noqa: E402
     FEED_FILENAME,
     OPEN_TEXT_MAX,
     RECAP_FILENAME,
+    WEEK7_SETUP_FILENAME,
+    focus_payload_from_json,
     SliceConfig,
     SliceDecisions,
     render_feed_html,
     render_recap_md,
+    render_week7_focus_json,
+    render_week7_pressure_json,
     run_slice,
+    resolve_week7_focus,
+    resolve_week7_pressure,
+    setup_payload_from_week7_setup,
     slice_events,
+    training_decision_for_drill,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -99,6 +107,49 @@ class TestRunsEndToEnd(_Fixture):
         h_ovc, h_opp = result.halftime_scoreline
         self.assertEqual(h_ovc + h_opp, min(12, len(result.why.round_log)))
 
+    def test_relationship_fallout_surfaces_live_clash_pair(self):
+        training_points, effects = training_decision_for_drill("vex_aim")
+        result = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+
+        self.assertEqual(len(result.relationship_fallout), 1)
+        fallout = result.relationship_fallout[0]
+        self.assertEqual((fallout.a, fallout.b), ("vex", "pixie"))
+        self.assertEqual(fallout.axis, "blame vs. guilt")
+        self.assertEqual(fallout.kind, "split")
+        self.assertIn("mem:pixie:flashed_vex_w5", fallout.cites)
+        self.assertIn("mem:vex:flashed_by_pixie_w5", fallout.cites)
+
+    def test_relationship_fallout_adds_grounded_chirper_consequence(self):
+        training_points, effects = training_decision_for_drill("vex_aim")
+        result = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+
+        fallout_posts = [post for post in result.feed if post.role == "relationship_fallout"]
+        self.assertEqual(len(fallout_posts), 1)
+        post = fallout_posts[0]
+        self.assertEqual(post.author_player_id, "vex")
+        self.assertEqual(post.local_outcome, "carried")
+        self.assertIn("entry reps helped", post.text)
+        self.assertEqual(
+            post.cites,
+            ("mem:pixie:flashed_vex_w5", "mem:vex:flashed_by_pixie_w5"),
+        )
+
 
 class TestOpenTextCap(_Fixture):
     def test_rejects_over_120_chars(self):
@@ -122,6 +173,127 @@ class TestOpenTextCap(_Fixture):
             SliceDecisions(practice_focus="vibes")  # type: ignore[arg-type]
 
 
+class TestTrainingDrills(_Fixture):
+    def test_training_drill_builds_budgeted_effect(self):
+        training_points, effects = training_decision_for_drill("vex_aim")
+
+        self.assertEqual(training_points, 4)
+        self.assertEqual(len(effects), 1)
+        self.assertEqual(effects[0].player, "vex")
+        self.assertEqual(effects[0].skill, "aim")
+        self.assertEqual(effects[0].delta, 4)
+        self.assertEqual(effects[0].training_points, 4)
+        self.assertEqual(effects[0].source, "training")
+
+    def test_repair_drill_builds_budgeted_effect(self):
+        training_points, effects = training_decision_for_drill("pixie_flash_repair")
+
+        self.assertEqual(training_points, 4)
+        self.assertEqual(len(effects), 1)
+        self.assertEqual(effects[0].player, "pixie")
+        self.assertEqual(effects[0].skill, "coordination")
+        self.assertEqual(effects[0].delta, 4)
+        self.assertEqual(effects[0].training_points, 4)
+        self.assertEqual(effects[0].source, "pixie_flash_repair")
+
+    def test_training_drill_none_preserves_practice_only_surface(self):
+        training_points, effects = training_decision_for_drill("none")
+
+        self.assertEqual(training_points, 0)
+        self.assertEqual(effects, ())
+
+    def test_unknown_training_drill_fails_loudly(self):
+        with self.assertRaises(ValueError):
+            training_decision_for_drill("vibes")
+
+    def test_vex_aim_drill_changes_the_same_seed_visible_outcome(self):
+        base = run_slice(self.world, self.config, SliceDecisions(practice_focus="defaults"))
+        training_points, effects = training_decision_for_drill("vex_aim")
+        trained = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+
+        self.assertIn("vex", base.why.who_tilted)
+        self.assertNotIn("vex", base.why.who_carried)
+        self.assertIn("vex", trained.why.who_carried)
+        self.assertNotIn("vex", trained.why.who_tilted)
+        self.assertGreater(trained.why.morale_deltas["vex"], base.why.morale_deltas["vex"])
+        self.assertEqual(base.relationship_fallout, ())
+        self.assertEqual(trained.relationship_fallout[0].kind, "split")
+        self.assertEqual(trained.training_consequence.kind, "vex_entry_reps")
+        self.assertEqual(trained.week7_setup.review_room_trust.delta, -2)
+        self.assertEqual(trained.week7_setup.hook_id, "vex_pixie_review_room_heat")
+
+    def test_repair_vs_reps_branches_have_distinct_visible_consequences(self):
+        reps_points, reps_effects = training_decision_for_drill("vex_aim")
+        repair_points, repair_effects = training_decision_for_drill("pixie_flash_repair")
+        reps = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=reps_points,
+                decision_effects=reps_effects,
+            ),
+        )
+        repair = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=repair_points,
+                decision_effects=repair_effects,
+            ),
+        )
+
+        self.assertEqual(reps.training_consequence.kind, "vex_entry_reps")
+        self.assertIn("two calls at once", reps.training_consequence.summary)
+        self.assertEqual(reps.relationship_fallout[0].kind, "split")
+        self.assertIn("pixie", reps.why.who_tilted)
+        self.assertEqual(reps.week7_setup.source_branch, "vex_aim")
+        self.assertEqual(reps.week7_setup.review_room_trust.start, 2)
+        self.assertEqual(reps.week7_setup.review_room_trust.delta, -2)
+        self.assertEqual(reps.week7_setup.review_room_trust.final, 0)
+        self.assertIn("late retake stalled", reps.week7_setup.followup_scrim.summary)
+
+        self.assertEqual(repair.training_consequence.kind, "pixie_flash_repair")
+        self.assertIn("flash finally matched", repair.training_consequence.summary)
+        self.assertEqual(repair.relationship_fallout[0].kind, "repair")
+        self.assertEqual(repair.relationship_fallout[0].axis, "working review")
+        self.assertNotIn("pixie", repair.why.who_tilted)
+        self.assertIn("pixie", repair.why.who_carried)
+        self.assertEqual(repair.week7_setup.source_branch, "pixie_flash_repair")
+        self.assertEqual(repair.week7_setup.review_room_trust.start, 2)
+        self.assertEqual(repair.week7_setup.review_room_trust.delta, 2)
+        self.assertEqual(repair.week7_setup.review_room_trust.final, 4)
+        self.assertIn("converted the second contact", repair.week7_setup.followup_scrim.summary)
+
+        repair_posts = [post for post in repair.feed if post.role == "relationship_fallout"]
+        self.assertEqual(len(repair_posts), 1)
+        self.assertEqual(repair_posts[0].author_player_id, "pixie")
+        self.assertIn("flash review helped", repair_posts[0].text)
+
+        reps_recap = recap_md(reps, self.world)
+        repair_recap = recap_md(repair, self.world)
+        self.assertIn("### Practice consequence", reps_recap)
+        self.assertIn("### Review-room trust", reps_recap)
+        self.assertIn("### Follow-up scrim", reps_recap)
+        self.assertIn("## Week 7 setup", reps_recap)
+        self.assertIn("**Entry reps:** Vex looked sharper", reps_recap)
+        self.assertIn("Review room heat", reps_recap)
+        self.assertIn("split the room", reps_recap)
+        self.assertIn("**Flash review:** No highlight reel", repair_recap)
+        self.assertIn("Stable, not loud", repair_recap)
+        self.assertIn("cooled down", repair_recap)
+        self.assertIn("Vex did not get another raw aim bump", repair_recap)
+
+
 class TestArtifacts(_Fixture):
     def test_writes_recap_and_feed_snapshot(self):
         import tempfile
@@ -136,6 +308,157 @@ class TestArtifacts(_Fixture):
             self.assertTrue(recap_path.is_file() and feed_path.is_file() and events_path.is_file())
             self.assertIn("# Overcast — Week 6", recap_path.read_text(encoding="utf-8"))
             self.assertIn("<!DOCTYPE html>", feed_path.read_text(encoding="utf-8"))
+
+    def test_writes_week7_setup_export_for_training_fork(self):
+        import json
+        import tempfile
+
+        training_points, effects = training_decision_for_drill("pixie_flash_repair")
+        decisions = SliceDecisions(
+            practice_focus="defaults",
+            training_points=training_points,
+            decision_effects=effects,
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_slice(self.world, self.config, decisions)
+            recap_path, _, _ = write_artifacts(result, self.world, tmp)
+            setup_path = recap_path.parent / WEEK7_SETUP_FILENAME
+
+            self.assertTrue(setup_path.is_file())
+            payload = json.loads(setup_path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["week7_setup"]["source_branch"], "pixie_flash_repair")
+            self.assertEqual(payload["week7_setup"]["review_room_trust"]["delta"], 2)
+            self.assertEqual(
+                payload["week7_setup"]["next_week_hook"]["id"],
+                "pixie_stability_low_clip_value",
+            )
+
+
+class TestWeek7FocusLock(_Fixture):
+    def _setup_for(self, drill: str):
+        training_points, effects = training_decision_for_drill(drill)
+        result = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+        return setup_payload_from_week7_setup(result.week7_setup)
+
+    def test_vex_heat_setup_recommends_containment(self):
+        setup = self._setup_for("vex_aim")
+
+        self.assertEqual(setup.hook_id, "vex_pixie_review_room_heat")
+        self.assertEqual(setup.recommended_focus, "contain_fallout")
+        contained = resolve_week7_focus(setup, "contain_fallout")
+        greedy = resolve_week7_focus(setup, "prove_ceiling")
+
+        self.assertTrue(contained.followed_recommendation)
+        self.assertEqual(contained.review_room_trust_delta, 1)
+        self.assertIsNone(contained.consequence_id)
+        self.assertFalse(greedy.followed_recommendation)
+        self.assertEqual(greedy.consequence_id, "ignored_trust_fire")
+        self.assertIn("hot room", greedy.pressure_note)
+        self.assertIn('"chosen_focus": "prove_ceiling"', render_week7_focus_json(greedy))
+
+    def test_pixie_stable_setup_recommends_ceiling(self):
+        setup = self._setup_for("pixie_flash_repair")
+
+        self.assertEqual(setup.hook_id, "pixie_stability_low_clip_value")
+        self.assertEqual(setup.recommended_focus, "prove_ceiling")
+        ceiling = resolve_week7_focus(setup, "prove_ceiling")
+        cautious = resolve_week7_focus(setup, "contain_fallout")
+
+        self.assertTrue(ceiling.followed_recommendation)
+        self.assertEqual(ceiling.ceiling_signal_delta, 2)
+        self.assertIsNone(ceiling.consequence_id)
+        self.assertFalse(cautious.followed_recommendation)
+        self.assertEqual(cautious.consequence_id, "overcorrected_stability")
+        self.assertIn("stable moment", cautious.pressure_note)
+        self.assertIn('"ignored_recommendation"', render_week7_focus_json(cautious))
+
+
+class TestWeek7PressureResult(_Fixture):
+    def _pressure_for(self, drill: str, selected_focus: str):
+        training_points, effects = training_decision_for_drill(drill)
+        result = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+        setup = setup_payload_from_week7_setup(result.week7_setup)
+        focus_lock = resolve_week7_focus(setup, selected_focus)
+        focus = focus_payload_from_json(render_week7_focus_json(focus_lock))
+        return resolve_week7_pressure(setup, focus)
+
+    def test_resolves_all_week7_pressure_outcomes(self):
+        cases = (
+            (
+                "vex_aim",
+                "contain_fallout",
+                "heat_contained_scrappy_win",
+                "win_2_1",
+                2,
+                -1,
+                -2,
+                0,
+            ),
+            (
+                "vex_aim",
+                "prove_ceiling",
+                "heat_ignored_highlight_loss",
+                "loss_1_2",
+                -2,
+                2,
+                2,
+                1,
+            ),
+            (
+                "pixie_flash_repair",
+                "prove_ceiling",
+                "stability_unlocked_clean_2_0",
+                "win_2_0",
+                1,
+                3,
+                0,
+                2,
+            ),
+            (
+                "pixie_flash_repair",
+                "contain_fallout",
+                "stability_overmanaged_flat_win",
+                "win_2_1",
+                0,
+                -2,
+                -1,
+                -1,
+            ),
+        )
+        for drill, focus, outcome, scrim, trust, ceiling, heat, fan in cases:
+            with self.subTest(drill=drill, focus=focus):
+                pressure = self._pressure_for(drill, focus)
+                self.assertEqual(pressure.outcome_id, outcome)
+                self.assertEqual(pressure.scrim_result, scrim)
+                self.assertEqual(pressure.review_room_trust_delta, trust)
+                self.assertEqual(pressure.ceiling_signal_delta, ceiling)
+                self.assertEqual(pressure.relationship_heat_delta, heat)
+                self.assertEqual(pressure.fan_confidence_delta, fan)
+
+    def test_pressure_artifact_names_setup_and_focus_sources(self):
+        pressure = self._pressure_for("vex_aim", "prove_ceiling")
+        payload = render_week7_pressure_json(pressure)
+
+        self.assertIn('"source_setup_artifact": "week7_setup.json"', payload)
+        self.assertIn('"source_focus_artifact": "week7_focus.json"', payload)
+        self.assertIn('"outcome_id": "heat_ignored_highlight_loss"', payload)
+        self.assertIn('"visible_consequence": "ignored_trust_fire"', payload)
 
     def test_recap_surfaces_remembered_memories(self):
         result = run_slice(self.world, self.config, self.decisions)

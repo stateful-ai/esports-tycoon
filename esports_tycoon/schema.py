@@ -67,6 +67,7 @@ __all__ = [
     "WorldState",
     "PracticeFocus",
     "TacticalStance",
+    "DecisionEffect",
     "Decisions",
     "KeyMoment",
     "RoundResult",
@@ -229,6 +230,7 @@ class Player(_Model):
     bio: str
     persona_voice: str
     traits: list[str]
+    skills: dict[str, int] = Field(default_factory=dict)
     relationships: list[Relationship] = Field(default_factory=list)
     memory_log: list[MemoryEntry] = Field(default_factory=list)
 
@@ -548,6 +550,24 @@ PracticeFocus = Literal["aim", "comms", "defaults", "anti_strat", "rest"]
 TacticalStance = Literal["aggressive", "default", "disciplined"]
 
 
+class DecisionEffect(_Model):
+    """One budgeted training effect applied to a player for this resolve.
+
+    The table is intentionally tiny and typed: a manager spends
+    ``training_points`` on a named player's named skill, and the resolver reads
+    the resulting delta without interpreting prose. ``skill`` is open so the
+    design can add new trainable labels without a schema migration; unknown
+    skill labels validate but currently score as 0 until the resolver assigns
+    them weights.
+    """
+
+    player: str
+    skill: str
+    delta: int = Field(ge=-10, le=10)
+    training_points: int = Field(ge=0)
+    source: str = "training"
+
+
 class Decisions(_Model):
     """The manager's inputs to one week's match resolution.
 
@@ -568,6 +588,18 @@ class Decisions(_Model):
     lineup: list[str] = Field(default_factory=list)
     practice_focus: PracticeFocus = "defaults"
     tactical_stance: TacticalStance = "default"
+    training_points: int = Field(default=0, ge=0)
+    decision_effects: list[DecisionEffect] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _training_budget_covers_effects(self) -> "Decisions":
+        spent = sum(effect.training_points for effect in self.decision_effects)
+        if spent > self.training_points:
+            raise ValueError(
+                f"decision_effects spend {spent} training_points, "
+                f"but only {self.training_points} are available"
+            )
+        return self
 
 
 # --------------------------------------------------------------------------- #

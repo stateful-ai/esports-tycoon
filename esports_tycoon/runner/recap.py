@@ -1,7 +1,7 @@
 """The auto-recap artifact: ``recap.md`` + ``feed.snapshot.html`` over the run-log.
 
-Every slice run, always on (never opt-in, per ``scope-m0.md``), writes three files
-to ``runs/<slice_id>/`` for the founder to screenshot and share:
+Every slice run, always on (never opt-in, per ``scope-m0.md``), writes the core
+files to ``runs/<slice_id>/`` for the founder to screenshot and share:
 
 * **``events.jsonl``** — the append-only, ordered, typed run-log (see
   :mod:`esports_tycoon.runner.events`). This is the *source*, not a sidecar.
@@ -15,6 +15,8 @@ to ``runs/<slice_id>/`` for the founder to screenshot and share:
   renders it. Like the recap, it is **a projection of the run-log**:
   :func:`render_feed_html` reads the feed off the event stream, not off the
   :class:`SliceResult`, so both artifacts are views over the same source.
+* **``week7_setup.json``** — optional, written only when a focused fork produces
+  a next-week hook. It is also a projection of typed run-log events.
 
 Keeping the recap a view over the run-log is the architecture principle here: the
 log is the system of record for what a run did, and the artifacts are derived
@@ -28,6 +30,7 @@ on re-run.
 
 from __future__ import annotations
 
+import json
 from html import escape
 from pathlib import Path
 from typing import Sequence, TypeVar, Union
@@ -35,36 +38,44 @@ from typing import Sequence, TypeVar, Union
 from esports_tycoon.runner.events import (
     EVENTS_FILENAME,
     FeedPosted,
+    FollowupScrimLogged,
     GroundingSummary,
     HalftimeAck,
     KeyMomentLogged,
     MatchResolved,
     MoraleDelta,
     PracticeChosen,
+    RelationshipFalloutLogged,
+    ReviewRoomTrustLogged,
     RoomRemembered,
     SliceEvent,
     SliceStarted,
     StandoutsLogged,
     TeamTalk,
+    TrainingConsequenceLogged,
+    Week7SetupLogged,
     read_events,
     slice_events,
     write_events,
 )
 from esports_tycoon.runner.model import PRACTICE_CHOICES, SliceResult
-from esports_tycoon.schema import MEMORY_ID_RE, WorldState
+from esports_tycoon.schema import MEMORY_ID_RE, DecisionEffect, WorldState
 
 __all__ = [
     "RECAP_FILENAME",
     "FEED_FILENAME",
+    "WEEK7_SETUP_FILENAME",
     "EVENTS_FILENAME",
     "REMEMBERED_SLOT_LABEL",
     "render_recap_md",
     "render_feed_html",
+    "render_week7_setup_json",
     "write_artifacts",
 ]
 
 RECAP_FILENAME = "recap.md"
 FEED_FILENAME = "feed.snapshot.html"
+WEEK7_SETUP_FILENAME = "week7_setup.json"
 
 #: The label of the fixed scannable slot at the top of ``recap.md`` that
 #: surfaces the bound precedent (the narration's recalled cite). Rendered as a
@@ -133,6 +144,44 @@ def _cite_owner_id(cite: str) -> str:
     if match is None:
         raise ValueError(f"malformed cite id reached the recap: {cite!r}")
     return match.group(1)
+
+
+_LOCAL_OUTCOME_LABELS = {
+    "mvp": "MVP",
+    "carried": "carried",
+    "came_apart": "came apart",
+}
+
+
+def _local_outcome_label(value: str | None) -> str:
+    """Human label for a starter's local match outcome, or empty for neutral."""
+    return _LOCAL_OUTCOME_LABELS.get(value or "", "")
+
+
+def _training_effect_label(world: WorldState, effect: DecisionEffect) -> str:
+    """Compact recap label for one budgeted training effect."""
+    sign = "+" if effect.delta >= 0 else ""
+    points = f"{effect.training_points} TP"
+    return f"{_display_name(world, effect.player)} {sign}{effect.delta} {effect.skill} ({points})"
+
+
+def _relationship_fallout_label(world: WorldState, fallout: RelationshipFalloutLogged) -> str:
+    """One screenshotable line for a live authored clash."""
+    a = _display_name(world, fallout.a)
+    b = _display_name(world, fallout.b)
+    if fallout.kind == "flashpoint":
+        verdict = "flared"
+    elif fallout.kind == "split":
+        verdict = "split the room"
+    elif fallout.kind == "repair":
+        verdict = "cooled down"
+    else:
+        verdict = "simmered"
+    cite_note = f" Grounded by {', '.join(f'`{cite}`' for cite in fallout.cites)}." if fallout.cites else ""
+    return (
+        f"**{a} ↔ {b}** ({fallout.axis}) {verdict}: "
+        f"{fallout.summary}{cite_note}"
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -227,6 +276,12 @@ def render_recap_md(events: Sequence[SliceEvent], world: WorldState) -> str:
     lines.append(
         f"- **Practice (your call):** {_PRACTICE_LABELS.get(focus, focus)} — {_PRACTICE_BLURBS.get(focus, '')}"
     )
+    if practice.decision_effects:
+        spent = sum(effect.training_points for effect in practice.decision_effects)
+        effects = "; ".join(_training_effect_label(world, effect) for effect in practice.decision_effects)
+        lines.append(
+            f"- **Training:** {effects}. Spent {spent}/{practice.training_points} TP."
+        )
     team_talk = team_talk_event.text or "—"
     lines.append(f"- **Team talk:** “{team_talk}”")
     lines.append("")
@@ -269,11 +324,81 @@ def render_recap_md(events: Sequence[SliceEvent], world: WorldState) -> str:
         lines.append(f"| {_display_name(world, morale.player)} | {morale.delta:+d} |")
     lines.append("")
 
+    training_consequences = _all(events, TrainingConsequenceLogged)
+    if training_consequences:
+        lines.append("### Practice consequence")
+        lines.append("")
+        for consequence in training_consequences:
+            cite_note = f" _(cites: {', '.join(consequence.cites)})_" if consequence.cites else ""
+            lines.append(
+                f"- **{consequence.label}:** {consequence.summary} "
+                f"Benefit: {consequence.benefit} Cost: {consequence.cost}{cite_note}"
+            )
+        lines.append("")
+
+    trust_events = _all(events, ReviewRoomTrustLogged)
+    if trust_events:
+        lines.append("### Review-room trust")
+        lines.append("")
+        for trust in trust_events:
+            lines.append(
+                f"- **Review-room trust:** {trust.start} → {trust.final} "
+                f"({trust.delta:+d}). {trust.reason}"
+            )
+        lines.append("")
+
+    scrim_events = _all(events, FollowupScrimLogged)
+    if scrim_events:
+        lines.append("### Follow-up scrim")
+        lines.append("")
+        for scrim in scrim_events:
+            lines.append(
+                f"- **{scrim.label}:** {scrim.summary} "
+                f"Benefit: {scrim.benefit} Cost: {scrim.cost}"
+            )
+        lines.append("")
+
+    fallout_events = _all(events, RelationshipFalloutLogged)
+    if fallout_events:
+        lines.append("### Relationship fallout")
+        lines.append("")
+        for fallout in fallout_events:
+            lines.append(f"- {_relationship_fallout_label(world, fallout)}")
+        lines.append("")
+
+    setup_events = _all(events, Week7SetupLogged)
+    if setup_events:
+        lines.append("## Week 7 setup")
+        lines.append("")
+        for setup in setup_events:
+            lines.append(f"- **Branch:** `{setup.source_branch}`")
+            lines.append(f"- **Fallout state:** {setup.fallout_state}")
+            lines.append(
+                f"- **Review-room trust:** {setup.review_room_trust_start} → "
+                f"{setup.review_room_trust_final} ({setup.review_room_trust_delta:+d})"
+            )
+            lines.append(
+                f"- **Hook:** {setup.hook_title} (`{setup.hook_id}`) — "
+                f"{setup.hook_prompt}"
+            )
+            lines.append(f"- **Recommended focus:** `{setup.recommended_focus}`")
+        lines.append("")
+
     lines.append("## The fallout — Chirper")
     lines.append("")
     for post in _all(events, FeedPosted):
+        outcome = _local_outcome_label(post.local_outcome)
+        notes = []
+        if post.role == "relationship_fallout":
+            notes.append("relationship fallout")
+        if outcome:
+            notes.append(outcome)
+        outcome_note = f" _{'; '.join(notes)}._" if notes else ""
         cite_note = f"  _(cites: {', '.join(post.cites)})_" if post.cites else ""
-        lines.append(f"- **{post.author_name}** ({post.author_handle}): “{post.text}”{cite_note}")
+        lines.append(
+            f"- **{post.author_name}** ({post.author_handle}):"
+            f"{outcome_note} “{post.text}”{cite_note}"
+        )
     lines.append("")
 
     lines.append("## What the room remembered")
@@ -326,6 +451,12 @@ body {
 .post .body { min-width: 0; }
 .post .meta { color: #71767b; font-size: 0.9rem; }
 .post .meta .name { color: #e7e9ea; font-weight: 700; }
+.post .tag {
+  display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.35rem;
+  border: 1px solid #3a3f44; border-radius: 999px; color: #cfd9de;
+  font-size: 0.72rem; line-height: 1.3; text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
 .post .text { margin: 0.15rem 0 0; white-space: pre-wrap; word-wrap: break-word; }
 .post .cites { margin: 0.4rem 0 0; color: #71767b; font-size: 0.78rem; }
 .feed > footer { padding-top: 1rem; color: #71767b; font-size: 0.8rem; }
@@ -374,12 +505,19 @@ def render_feed_html(events: Sequence[SliceEvent], world: WorldState) -> str:
     parts.append("</header>")
 
     for post in _all(events, FeedPosted):
+        outcome = _local_outcome_label(post.local_outcome)
+        tags = []
+        if post.role == "relationship_fallout":
+            tags.append("fallout")
+        if outcome:
+            tags.append(outcome)
+        tag = "".join(f' <span class="tag">{escape(value)}</span>' for value in tags)
         parts.append('<article class="post">')
         parts.append(f'<div class="avatar">{_avatar_initial(post.author_name)}</div>')
         parts.append('<div class="body">')
         parts.append(
             f'<div class="meta"><span class="name">{escape(post.author_name)}</span> '
-            f"{escape(post.author_handle)}</div>"
+            f"{escape(post.author_handle)}{tag}</div>"
         )
         parts.append(f'<p class="text">{escape(post.text)}</p>')
         if post.cites:
@@ -402,6 +540,32 @@ def render_feed_html(events: Sequence[SliceEvent], world: WorldState) -> str:
     parts.append("</body>")
     parts.append("</html>")
     return "\n".join(parts) + "\n"
+
+
+def render_week7_setup_json(events: Sequence[SliceEvent]) -> str:
+    """Render the optional Week-7 setup export from typed run-log events."""
+    setup_events = _all(events, Week7SetupLogged)
+    if not setup_events:
+        return ""
+    setup = setup_events[0]
+    payload = {
+        "week7_setup": {
+            "source_branch": setup.source_branch,
+            "fallout_state": setup.fallout_state,
+            "review_room_trust": {
+                "start": setup.review_room_trust_start,
+                "delta": setup.review_room_trust_delta,
+                "final": setup.review_room_trust_final,
+            },
+            "next_week_hook": {
+                "id": setup.hook_id,
+                "title": setup.hook_title,
+                "prompt": setup.hook_prompt,
+            },
+            "recommended_focus": setup.recommended_focus,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
 
 
 # --------------------------------------------------------------------------- #
@@ -430,4 +594,7 @@ def write_artifacts(
     feed_path = run_dir / FEED_FILENAME
     recap_path.write_text(render_recap_md(events, world), encoding="utf-8", newline="\n")
     feed_path.write_text(render_feed_html(events, world), encoding="utf-8", newline="\n")
+    week7 = render_week7_setup_json(events)
+    if week7:
+        (run_dir / WEEK7_SETUP_FILENAME).write_text(week7, encoding="utf-8", newline="\n")
     return recap_path, feed_path, events_path

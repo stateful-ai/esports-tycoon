@@ -107,6 +107,7 @@ A file that fails either invariant fails to load.
 | `bio` | `str` | A one-paragraph editorial bio establishing who they are. |
 | `persona_voice` | `str` | The voice contract: how this player speaks. The templated adapter and the LLM prompt both consume this verbatim. |
 | `traits` | `list[str]` | Short, lowercase trait tags (e.g. `veteran`, `hotshot`); used as steering hints, not stats. |
+| `skills` | `dict[str, int]` | Optional first-class training ratings keyed by skill label; omitted while empty in the canonical Week-6 save. |
 | `relationships` | `list[Relationship]` | Outbound relationships from this player to teammates and rivals. |
 | `memory_log` | `list[MemoryEntry]` | The player's ordered precedent log — what the room remembers about them. |
 

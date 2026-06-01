@@ -112,6 +112,7 @@ class TestPromptConstruction(_Fixture):
         self.assertEqual(call["schema"].__name__, "_LLMReply")
         self.assertIn(rook.persona_voice.strip()[:20], call["system"])  # the player's voice contract
         self.assertIn("@rooktanaka", call["system"])
+        self.assertIn("Your local match outcome: carried.", call["prompt"])
         self.assertEqual(gc.author, rook.handle)
 
     def test_narration_uses_narrator_voice_and_offers_a_cite_menu(self):

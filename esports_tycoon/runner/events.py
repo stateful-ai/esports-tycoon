@@ -32,8 +32,14 @@ from typing import Annotated, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
-from esports_tycoon.runner.model import SliceResult
-from esports_tycoon.schema import PracticeFocus, WorldState
+from esports_tycoon.runner.model import (
+    FeedLocalOutcome,
+    FeedPostRole,
+    SliceResult,
+    TrainingConsequenceKind,
+    Week7SourceBranch,
+)
+from esports_tycoon.schema import DecisionEffect, PracticeFocus, WorldState
 
 __all__ = [
     "EVENTS_FILENAME",
@@ -45,6 +51,11 @@ __all__ = [
     "KeyMomentLogged",
     "StandoutsLogged",
     "MoraleDelta",
+    "TrainingConsequenceLogged",
+    "ReviewRoomTrustLogged",
+    "FollowupScrimLogged",
+    "Week7SetupLogged",
+    "RelationshipFalloutLogged",
     "FeedPosted",
     "RoomRemembered",
     "GroundingSummary",
@@ -89,10 +100,12 @@ class SliceStarted(_Event):
 
 
 class PracticeChosen(_Event):
-    """The MC decision: what the practice block drilled this week."""
+    """The MC decision plus any budgeted training effects for the week."""
 
     type: Literal["practice_chosen"] = "practice_chosen"
     focus: PracticeFocus
+    training_points: int = 0
+    decision_effects: list[DecisionEffect] = Field(default_factory=list)
 
 
 class TeamTalk(_Event):
@@ -153,6 +166,66 @@ class MoraleDelta(_Event):
     delta: int
 
 
+class TrainingConsequenceLogged(_Event):
+    """The visible benefit/cost of the selected focused training branch."""
+
+    type: Literal["training_consequence"] = "training_consequence"
+    kind: TrainingConsequenceKind
+    label: str
+    summary: str
+    benefit: str
+    cost: str
+    cites: list[str] = Field(default_factory=list)
+
+
+class ReviewRoomTrustLogged(_Event):
+    """The run-local review-room trust delta caused by this practice branch."""
+
+    type: Literal["review_room_trust"] = "review_room_trust"
+    start: int
+    delta: int
+    final: int
+    reason: str
+
+
+class FollowupScrimLogged(_Event):
+    """The later scrim receipt keyed by the review-room trust state."""
+
+    type: Literal["followup_scrim"] = "followup_scrim"
+    label: str
+    summary: str
+    benefit: str
+    cost: str
+
+
+class Week7SetupLogged(_Event):
+    """The next-week hook exported from this deterministic run."""
+
+    type: Literal["week7_setup"] = "week7_setup"
+    source_branch: Week7SourceBranch
+    fallout_state: str
+    review_room_trust_start: int
+    review_room_trust_delta: int
+    review_room_trust_final: int
+    hook_id: str
+    hook_title: str
+    hook_prompt: str
+    recommended_focus: str
+
+
+class RelationshipFalloutLogged(_Event):
+    """One authored clash pair that this week's result made live again."""
+
+    type: Literal["relationship_fallout"] = "relationship_fallout"
+    a: str
+    b: str
+    axis: str
+    summary: str
+    cites: list[str] = Field(default_factory=list)
+    kind: Literal["flashpoint", "split", "simmer", "repair"] = "simmer"
+    score: int = 0
+
+
 class FeedPosted(_Event):
     """One Chirper post, in feed order. ``cites`` are memory IDs the post grounded.
 
@@ -167,6 +240,9 @@ class FeedPosted(_Event):
     text: str
     cites: list[str] = Field(default_factory=list)
     grounding_status: str = "ok"
+    author_player_id: Optional[str] = None
+    local_outcome: Optional[FeedLocalOutcome] = None
+    role: FeedPostRole = "standard"
 
 
 class RoomRemembered(_Event):
@@ -196,6 +272,11 @@ SliceEvent = Annotated[
         KeyMomentLogged,
         StandoutsLogged,
         MoraleDelta,
+        TrainingConsequenceLogged,
+        ReviewRoomTrustLogged,
+        FollowupScrimLogged,
+        Week7SetupLogged,
+        RelationshipFalloutLogged,
         FeedPosted,
         RoomRemembered,
         GroundingSummary,
@@ -223,7 +304,11 @@ def slice_events(result: SliceResult, world: WorldState) -> list[SliceEvent]:
             opponent=result.config.opponent,
             map=result.config.map,
         ),
-        PracticeChosen(focus=result.decisions.practice_focus),
+        PracticeChosen(
+            focus=result.decisions.practice_focus,
+            training_points=result.decisions.training_points,
+            decision_effects=list(result.decisions.decision_effects),
+        ),
         TeamTalk(text=result.decisions.team_talk),
         MatchResolved(
             scoreline=result.scoreline,
@@ -258,6 +343,60 @@ def slice_events(result: SliceResult, world: WorldState) -> list[SliceEvent]:
         if player.id in result.why.morale_deltas:
             events.append(MoraleDelta(player=player.id, delta=result.why.morale_deltas[player.id]))
 
+    if result.training_consequence is not None:
+        events.append(
+            TrainingConsequenceLogged(
+                kind=result.training_consequence.kind,
+                label=result.training_consequence.label,
+                summary=result.training_consequence.summary,
+                benefit=result.training_consequence.benefit,
+                cost=result.training_consequence.cost,
+                cites=list(result.training_consequence.cites),
+            )
+        )
+
+    if result.week7_setup is not None:
+        events.extend(
+            [
+                ReviewRoomTrustLogged(
+                    start=result.week7_setup.review_room_trust.start,
+                    delta=result.week7_setup.review_room_trust.delta,
+                    final=result.week7_setup.review_room_trust.final,
+                    reason=result.week7_setup.review_room_trust.reason,
+                ),
+                FollowupScrimLogged(
+                    label=result.week7_setup.followup_scrim.label,
+                    summary=result.week7_setup.followup_scrim.summary,
+                    benefit=result.week7_setup.followup_scrim.benefit,
+                    cost=result.week7_setup.followup_scrim.cost,
+                ),
+                Week7SetupLogged(
+                    source_branch=result.week7_setup.source_branch,
+                    fallout_state=result.week7_setup.fallout_state,
+                    review_room_trust_start=result.week7_setup.review_room_trust.start,
+                    review_room_trust_delta=result.week7_setup.review_room_trust.delta,
+                    review_room_trust_final=result.week7_setup.review_room_trust.final,
+                    hook_id=result.week7_setup.hook_id,
+                    hook_title=result.week7_setup.hook_title,
+                    hook_prompt=result.week7_setup.hook_prompt,
+                    recommended_focus=result.week7_setup.recommended_focus,
+                ),
+            ]
+        )
+
+    for fallout in result.relationship_fallout:
+        events.append(
+            RelationshipFalloutLogged(
+                a=fallout.a,
+                b=fallout.b,
+                axis=fallout.axis,
+                summary=fallout.summary,
+                cites=list(fallout.cites),
+                kind=fallout.kind,
+                score=fallout.score,
+            )
+        )
+
     for post in result.feed:
         events.append(
             FeedPosted(
@@ -266,6 +405,9 @@ def slice_events(result: SliceResult, world: WorldState) -> list[SliceEvent]:
                 text=post.text,
                 cites=list(post.cites),
                 grounding_status=post.grounding_status,
+                author_player_id=post.author_player_id,
+                local_outcome=post.local_outcome,
+                role=post.role,
             )
         )
 

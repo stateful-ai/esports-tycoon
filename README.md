@@ -33,10 +33,11 @@ pip install -e .[web]               # core deps + Flask for the local web app
 python -m esports_tycoon play       # serves http://127.0.0.1:8765
 ```
 
-The web app picks practice → match → fallout for the Week-6 must-win, writes
-the screenshot-ready recap to `runs/<slice_id>/`, and never opens an outbound
-connection. The match resolver is seeded from the save (`seed: 6`), so the same
-inputs land in the same `runs/<slice_id>/` folder with byte-identical artifacts.
+The web app picks practice → match → fallout for the Week-6 must-win, including
+an optional focused training rep for one starter. It writes the screenshot-ready
+recap to `runs/<slice_id>/` and never opens an outbound connection. The match
+resolver is seeded from the save (`seed: 6`), so the same inputs land in the
+same `runs/<slice_id>/` folder with byte-identical artifacts.
 
 Headless equivalent (no Flask, no browser — the same engine, same artifacts):
 
@@ -144,9 +145,30 @@ the slice would fail to bind there. Pass `--port` to override; if the chosen por
 is busy the app exits with a clear message rather than a raw traceback.
 
 The app serves the **manager view** and the in-universe **Chirper feed** in one
-process. The week's decision surface is the founder-locked **MC + 2 open-text**:
-pick the practice focus (the multiple choice), then write a private pre-match team
-talk and a public post-match Chirper post — each capped at 120 characters.
+process. The week's decision surface is practice focus, an optional focused rep
+that spends a small training budget on one starter, then two open-text moments:
+a private pre-match team talk and a public post-match Chirper post — each capped
+at 120 characters.
+
+Focused reps are not just receipts. The canonical `vex_aim` rep changes Vex's
+same-seed local outcome from `came_apart` to `carried`, improves her morale, and
+surfaces a deterministic Vex ↔ Pixie relationship fallout line in `/match`,
+`/recap`, the saved recap artifact, and the Chirper feed. The follow-on fork is
+now playable too: `pixie_flash_repair` spends the same 4 TP on the seeded
+Vex/Pixie flash review, steadies Pixie, cools the relationship fallout to
+`working review`, and posts a distinct Pixie fallout receipt. The choice is a
+visible tradeoff between more carry power and repairing the system around it.
+That fork now carries forward into a run-local **review-room trust** resource:
+Vex reps drop trust and create a late-retake follow-up scrim problem, while
+flash repair raises trust and sets up a cleaner second-contact scrim. Branch
+runs also export `week7_setup.json` with the chosen branch, fallout state, trust
+delta, hook id, hook prompt, and recommended next focus. The `/week7` page then
+consumes that setup and asks the player to lock `contain_fallout` or
+`prove_ceiling`; following or ignoring the recommended focus writes a deterministic
+`week7_focus.json` pressure artifact. `/week7/result` now consumes the setup and
+focus receipts, resolves the Tuesday scrim pressure block, and writes
+`week7_pressure.json` with the outcome id, scrim result, review-room beat,
+public signal, and deltas.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -154,6 +176,13 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   key moments, morale fallout, the Chirper feed, and *what the room remembered*
   (every cited memory resolved back to the canned log).
 - **`feed.snapshot.html`** — a standalone Chirper page, exactly what `/feed` serves.
+- **`week7_setup.json`** — written only for the repair-vs-reps fork, exporting
+  the deterministic next-week hook without adding persistence.
+- **`week7_focus.json`** — written when `/week7` locks the next block focus,
+  including whether the choice followed the recommendation and any ignored-read
+  consequence.
+- **`week7_pressure.json`** — written by `/week7/result`, consuming the setup
+  and focus receipts into a deterministic four-outcome pressure payoff.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical
@@ -162,6 +191,7 @@ checked in CI):
 
 ```bash
 python -m esports_tycoon.runner --seed 6 --practice defaults \
+    --training-drill pixie_flash_repair \
     --team-talk "no heroes. run the default." \
     --fallout "week 6: held the line. on to week 7."
 ```
@@ -169,6 +199,33 @@ python -m esports_tycoon.runner --seed 6 --practice defaults \
 The web app is a thin shell over `esports_tycoon.runner`: the engine, the recap
 artifact, and the determinism contract all live in the runner and are tested with
 no web dependency.
+
+## Deploy the backend to Cloudflare Containers
+
+The repo includes a Cloudflare Containers wrapper for the Flask backend:
+
+- `Dockerfile` builds the Python 3.12 web app in templated mode.
+- `cloudflare/worker.ts` routes Worker requests to a single named container
+  Durable Object, keeping Flask session signing stable.
+- `wrangler.jsonc` binds that Durable Object and tells Wrangler to build the
+  container image from the local Dockerfile.
+
+```bash
+npm install
+npm run typecheck
+npm run cf:deploy
+```
+
+`wrangler deploy` builds the image locally with Docker, pushes it to the
+Cloudflare-managed registry, and deploys the Worker wrapper. Docker or a
+Docker-compatible engine must be running and accessible to the current user.
+After deploy:
+
+```bash
+npm run cf:containers
+npm run cf:images
+curl https://esports-tycoon-backend.<your-subdomain>.workers.dev/healthz
+```
 
 ## The render-time gate (grounding + safety + cost)
 

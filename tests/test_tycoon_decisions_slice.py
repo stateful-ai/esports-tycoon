@@ -1,23 +1,22 @@
-"""The TrainingDecision slice is held to M0.2 (post-gate); the hold is durable.
+"""The TrainingDecision M0.2 foundation is landed behind the playtest gate.
 
-This test pins the holding artifact ``docs/m0_tycoon_decisions_slice.md`` so
-the three things it carries cannot quietly drift apart from the test suite:
+This test pins the artifact ``docs/m0_tycoon_decisions_slice.md`` so the three
+things it carries cannot quietly drift apart from the test suite:
 
-1. The annotation itself — the slice is the M0.2 post-gate next milestone, the
-   ninth of the items the founder brief parked behind the playtest gate.
-2. The gate condition — no PR may add ``Player.skills`` / ``training_points``
-   / ``decision_effects`` until the M0.1 playtest pass/fail verdict is on
-   disk. The pin reads the verdict line from ``docs/playtest_m0_1.md`` at
-   test time, so a regression that strips the record re-arms the absence
-   check on the three field names.
+1. The annotation itself — the slice is the M0.2 post-gate milestone, the
+   ninth of the items the founder brief parked behind the playtest gate, and
+   its first foundation has landed.
+2. The gate condition — the M0.1 playtest pass/fail verdict must stay on disk
+   now that ``Player.skills`` / ``training_points`` / ``decision_effects`` have
+   landed.
 3. The regression bar — the golden round-trip (``test_golden_determinism.py
    :: TestGoldenDeterminism`` resolve half) and the same-seed→same-
    ``WhyRecord`` checks (``test_resolver_determinism.py :: TestDeterminism``
    and ``:: TestResolverEntropyDiscipline``) must stay green and un-skipped
    through the gate.
 
-A regression of any of those halves falsifies the hold — at which point a
-fresh review of the holding doc is owed before any further work on the slice.
+A regression of any of those halves falsifies the landing record — at which
+point a fresh review of the doc is owed before any further work on the slice.
 """
 
 from __future__ import annotations
@@ -39,10 +38,10 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 from esports_tycoon import schema  # noqa: E402
 
-# The three field names the slice will introduce together. Listed here as the
-# single source of truth so the doc, the gate condition, and the schema
-# absence check all reference the same roster.
-_DEFERRED_FIELDS = ("skills", "training_points", "decision_effects")
+# The three field names the slice introduces together. Listed here as the
+# single source of truth so the doc, the gate condition, and the landed-shape
+# check all reference the same roster.
+_SLICE_FIELDS = ("skills", "training_points", "decision_effects")
 
 # The M0.1 playtest verdict line shape. ``docs/playtest_m0_1.md`` records the
 # verdict as ``**Verdict: PASS …**`` or ``**Verdict: FAIL …**`` (the
@@ -62,17 +61,17 @@ def _playtest_verdict_recorded() -> bool:
     return bool(_VERDICT_LINE_RE.search(_PLAYTEST_DOC.read_text(encoding="utf-8")))
 
 
-class TestHoldDocArtifact(unittest.TestCase):
-    """The recorded hold is the durable proof the slice was parked, not lost."""
+class TestLandingDocArtifact(unittest.TestCase):
+    """The recorded artifact is the durable proof the slice landed intentionally."""
 
     @classmethod
     def setUpClass(cls):
         cls.text = _HOLD_DOC.read_text(encoding="utf-8")
 
-    def test_hold_doc_exists(self):
+    def test_landing_doc_exists(self):
         self.assertTrue(
             _HOLD_DOC.exists(),
-            "docs/m0_tycoon_decisions_slice.md is the canonical hold artifact "
+            "docs/m0_tycoon_decisions_slice.md is the canonical landing artifact "
             "for the TrainingDecision slice",
         )
 
@@ -84,24 +83,25 @@ class TestHoldDocArtifact(unittest.TestCase):
         self.assertRegex(
             self.text,
             r"(?i)post-?gate",
-            "the hold doc must annotate the slice as post-gate",
+            "the doc must annotate the slice as post-gate",
         )
         self.assertIn(
             "M0.2",
             self.text,
-            "the hold doc must name M0.2 as the milestone the slice lands in",
+            "the doc must name M0.2 as the milestone the slice lands in",
         )
         self.assertRegex(
             self.text,
-            r"\*\*Status\.\*\*\s+\*\*Held to M0\.2\.\*\*",
-            "the hold doc must record a **Status.** **Held to M0.2.** line so "
-            "a future reader can answer the hold question from the artifact alone",
+            r"\*\*Status\.\*\*\s+\*\*Landed in M0\.2 foundation\.\*\*",
+            "the doc must record a **Status.** **Landed in M0.2 foundation.** "
+            "line so a future reader can answer the landing question from "
+            "the artifact alone",
         )
 
     def test_cites_the_playtest_gate_and_decision_doc(self):
-        # The in-bound condition this hold rests on is the M0.1 playtest gate;
+        # The in-bound condition this landing rests on is the M0.1 playtest gate;
         # the doc must reference both the playtest record and the gate
-        # decision so a reader can trace hold → gate → verdict without
+        # decision so a reader can trace landing → gate → verdict without
         # external context.
         self.assertTrue(_PLAYTEST_DOC.exists(), "playtest record doc is missing")
         self.assertTrue(_GATE_DOC.exists(), "gate decision doc is missing")
@@ -110,7 +110,7 @@ class TestHoldDocArtifact(unittest.TestCase):
 
     def test_cites_the_founder_brief_freeze_list(self):
         # The slice is named in the founder brief's "Frozen post-gate" roster;
-        # the hold doc must reference that listing so the hold's lineage is
+        # the doc must reference that listing so the landing's lineage is
         # traceable from the artifact alone.
         self.assertTrue(_FOUNDER_DOC.exists(), "founder brief is missing")
         self.assertIn("founder_brief.md", self.text)
@@ -118,19 +118,19 @@ class TestHoldDocArtifact(unittest.TestCase):
             "TrainingDecision",
             _FOUNDER_DOC.read_text(encoding="utf-8"),
             "founder_brief.md must still name the TrainingDecision slice in "
-            "its freeze list — that is what this hold is routing",
+            "its freeze list — that is what this landing routed",
         )
 
-    def test_enumerates_the_three_deferred_field_names(self):
+    def test_enumerates_the_three_slice_field_names(self):
         # The slice's seam is the three field names landing together; the doc
         # must enumerate each one verbatim so a future PR that introduces them
         # is auditable against the same roster the test pin reads.
-        for field in _DEFERRED_FIELDS:
+        for field in _SLICE_FIELDS:
             with self.subTest(field=field):
                 self.assertIn(
                     field,
                     self.text,
-                    f"the hold doc must name the deferred field {field!r} "
+                    f"the doc must name the TrainingDecision field {field!r} "
                     "so the slice's seam is enumerated in one place",
                 )
         # The composite name ``Player.skills`` is the form the acceptance
@@ -151,9 +151,9 @@ class TestGateConditionEnforced(unittest.TestCase):
 
     def test_playtest_doc_records_a_verdict(self):
         # The current state — the doc records ``Verdict: PASS`` — is what
-        # makes the slice eligible to land. The pin asserts the verdict line
-        # exists at all; stripping it from the playtest doc re-arms the
-        # absence check below.
+        # made the slice eligible to land. The pin asserts the verdict line
+        # exists at all; stripping it from the playtest doc invalidates the
+        # landed fields below.
         self.assertTrue(
             _PLAYTEST_DOC.exists(),
             "docs/playtest_m0_1.md is the playtest record this hold gates on",
@@ -172,43 +172,40 @@ class TestGateConditionEnforced(unittest.TestCase):
         # test fails the schema half loudly so a half-applied regression is
         # caught.
         if _playtest_verdict_recorded():
-            # The verdict is on disk; the slice is eligible to land. The
-            # absence check lifts. We still pin that the slice has not landed
-            # silently — see ``test_player_does_not_yet_carry_the_slice_fields``
-            # below for the structural counterpart while no PR has landed it.
+            # The verdict is on disk; the slice is allowed to stay landed. The
+            # absence check lifts. The structural counterpart below pins the
+            # landed shape while the verdict remains recorded.
             self.skipTest(
                 "playtest verdict is recorded; the absence check lifts. The "
                 "structural counterpart runs in "
-                "test_player_does_not_yet_carry_the_slice_fields."
+                "test_training_decision_fields_have_landed_in_the_recorded_shape."
             )
-        player_field_names = set(schema.Player.model_fields.keys())
-        for field in _DEFERRED_FIELDS:
+        schema_text = _SCHEMA_SRC.read_text(encoding="utf-8")
+        for field in _SLICE_FIELDS:
             with self.subTest(field=field):
                 self.assertNotIn(
                     field,
-                    player_field_names,
-                    f"docs/playtest_m0_1.md no longer records a verdict, "
-                    f"but Player.{field} has landed — the hold contract in "
+                    schema_text,
+                    f"docs/playtest_m0_1.md no longer records a verdict, but "
+                    f"{field} has landed in schema.py — the gate contract in "
                     "docs/m0_tycoon_decisions_slice.md is broken",
                 )
 
-    def test_player_does_not_yet_carry_the_slice_fields(self):
-        # The slice has not been built yet (this hold doc is its parking
-        # marker). When a future PR lands the slice, this assertion is the
-        # deliberate edit the PR makes — flipping the check to "the slice has
-        # landed, in the shape the hold doc described" — alongside an update
-        # to ``docs/m0_tycoon_decisions_slice.md`` recording the landing.
-        # Until then, the absence is the contract.
+    def test_training_decision_fields_have_landed_in_the_recorded_shape(self):
+        # The gate verdict is on disk, so the first M0.2 foundation is allowed
+        # to exist. Pin the exact shape this landing chose: persistent player
+        # skills live on Player; weekly budget/effects live on Decisions.
         player_field_names = set(schema.Player.model_fields.keys())
-        for field in _DEFERRED_FIELDS:
-            with self.subTest(field=field):
-                self.assertNotIn(
-                    field,
-                    player_field_names,
-                    f"Player.{field} appears to have landed without an update "
-                    "to docs/m0_tycoon_decisions_slice.md — the hold doc "
-                    "should be edited to record the landing in the same PR",
-                )
+        decision_field_names = set(schema.Decisions.model_fields.keys())
+
+        self.assertIn("skills", player_field_names)
+        self.assertIn("training_points", decision_field_names)
+        self.assertIn("decision_effects", decision_field_names)
+        self.assertTrue(
+            {"player", "skill", "delta", "training_points"} <= set(schema.DecisionEffect.model_fields),
+            "DecisionEffect must keep the typed player/skill/delta/cost table "
+            "that the M0.2 landing record describes",
+        )
 
 
 class TestRegressionBarStaysGreen(unittest.TestCase):

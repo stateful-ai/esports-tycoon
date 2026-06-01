@@ -24,6 +24,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from esports_tycoon import resolver  # noqa: E402
 from esports_tycoon.canned import loader  # noqa: E402
 from esports_tycoon.schema import (  # noqa: E402
+    DecisionEffect,
     Decisions,
     MemoryEntry,
     Player,
@@ -47,6 +48,7 @@ def _player(pid: str, role: Role, traits, memories) -> Player:
         bio="b",
         persona_voice="v",
         traits=list(traits),
+        skills={},
         memory_log=list(memories),
     )
 
@@ -338,6 +340,42 @@ class TestDecisionsAffectOutcomes(_WorldFixture):
         aim = resolver._skill_for(vex, Decisions(opponent="northwind", practice_focus="aim"))
         defaults = resolver._skill_for(vex, Decisions(opponent="northwind", practice_focus="defaults"))
         self.assertEqual(aim - defaults, 2.0)  # "aim" boosts duelists; "defaults" does not
+
+    def test_player_skills_lift_the_role_they_suit(self):
+        vex = next(p for p in self.world.players if p.id == "vex")  # DUELIST
+        trained = vex.model_copy(update={"skills": {"aim": 5}})
+
+        base = resolver._skill_for(vex, Decisions(opponent="northwind", practice_focus="defaults"))
+        skilled = resolver._skill_for(trained, Decisions(opponent="northwind", practice_focus="defaults"))
+
+        self.assertAlmostEqual(skilled - base, 2.0)
+
+    def test_decision_effects_apply_budgeted_skill_deltas(self):
+        vex = next(p for p in self.world.players if p.id == "vex")  # DUELIST
+        trained = Decisions(
+            opponent="northwind",
+            practice_focus="defaults",
+            training_points=4,
+            decision_effects=[
+                DecisionEffect(player="vex", skill="aim", delta=4, training_points=4)
+            ],
+        )
+        base = Decisions(opponent="northwind", practice_focus="defaults")
+
+        self.assertAlmostEqual(
+            resolver._skill_for(vex, trained) - resolver._skill_for(vex, base),
+            1.6,
+        )
+
+    def test_decision_effects_are_budget_checked(self):
+        with self.assertRaises(ValueError):
+            Decisions(
+                opponent="northwind",
+                training_points=1,
+                decision_effects=[
+                    DecisionEffect(player="vex", skill="aim", delta=2, training_points=2)
+                ],
+            )
 
     def test_decisions_can_change_the_result(self):
         seed = 1

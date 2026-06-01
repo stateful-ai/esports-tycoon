@@ -5,6 +5,7 @@
 <p class="sub">One week of prep before {{ opponent_name }} on {{ fixture_map }}. Pick what the team drills.</p>
 
 <form method="post" action="{{ url_for('practice') }}">
+  <h2>Practice focus</h2>
   {% for value, label, blurb in choices %}
     <label class="choice">
       <input type="radio" name="practice_focus" value="{{ value }}" {{ "checked" if selected == value else "" }} required>
@@ -12,6 +13,28 @@
       <div class="blurb">{{ blurb }}</div>
     </label>
   {% endfor %}
+
+  <h2>Focused rep</h2>
+  <p class="sub">Optional individual work. A focused rep spends its listed training points and is logged into the week.</p>
+  {% for drill in training_drills %}
+    <label class="choice">
+      <input type="radio" name="training_drill" value="{{ drill.value }}" {{ "checked" if selected_training == drill.value else "" }}>
+      <strong>{{ drill.label }}</strong>
+      <div class="blurb">{{ drill.blurb }}</div>
+    </label>
+  {% endfor %}
+
+  {% if analyst_reads %}
+  <h2>Analyst read</h2>
+  {% for read in analyst_reads %}
+    <div class="card">
+      <strong>{{ read.recommendation }}</strong>
+      <div>Benefit: {{ read.benefit }}</div>
+      <div class="muted">Risk: {{ read.risk }}</div>
+    </div>
+  {% endfor %}
+  {% endif %}
+
   <div class="actions">
     <button class="btn" type="submit">Lock in practice</button>
     <a class="btn secondary" href="{{ url_for('briefing') }}">Back</a>

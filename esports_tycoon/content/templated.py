@@ -29,7 +29,7 @@ from __future__ import annotations
 from random import Random
 from typing import Optional
 
-from esports_tycoon.content.context import GenerationContext
+from esports_tycoon.content.context import GenerationContext, LocalOutcome, derive_local_outcome
 from esports_tycoon.recall import recall
 from esports_tycoon.schema import (
     GeneratedContent,
@@ -259,7 +259,7 @@ def _render_narration(ctx: GenerationContext) -> GeneratedContent:
 # chirper_post — an in-character reaction. Characters keep their authored voice;
 # they may use emoji in-character (the narrator may not).
 #
-# Lines are organized as a two-tier copy pack:
+# Lines are organized as a three-tier copy pack:
 #
 # 1. ``_CAST_VOICES`` — per-cast authored lines keyed by ``(beat, won)``. ``beat``
 #    is one of the resolver-emittable kinds (``ace`` / ``clutch`` / ``choke`` /
@@ -269,11 +269,16 @@ def _render_narration(ctx: GenerationContext) -> GeneratedContent:
 #    ``("default", True)`` and ``("default", False)`` so every match has *some*
 #    line to render in their register, with kind-specific lines layered on top
 #    where the character earns one.
-# 2. ``_CHIRPER_LINES`` — register-based lines keyed by ``(register, won)``,
+# 2. ``_CAST_LOCAL_OUTCOME_VOICES`` — per-cast lines keyed by the author's local
+#    match outcome (``mvp`` / ``carried`` / ``came_apart``). These override
+#    team-result copy so an MVP in a loss or a player who melted down in a win
+#    reacts to what happened to them, specifically.
+# 3. ``_CHIRPER_LINES`` — register-based lines keyed by ``(register, mood)``,
 #    used as a safety net when an author has no entry in ``_CAST_VOICES``. The
-#    canned cast all live in ``_CAST_VOICES``; this layer covers any future
-#    starter / cameo whose traits the renderer can recognize but whose voice has
-#    not been authored yet.
+#    mood is a local outcome when one fired, otherwise ``team_win`` or
+#    ``team_loss``. The canned cast all live in ``_CAST_VOICES``; this layer
+#    covers any future starter / cameo whose traits the renderer can recognize
+#    but whose voice has not been authored yet.
 # --------------------------------------------------------------------------- #
 def _register(player: Player) -> str:
     traits = set(player.traits)
@@ -733,21 +738,75 @@ _CAST_VOICES: dict[str, dict[tuple[str, bool], list[str]]] = {
     },
 }
 
-#: Per-register reaction lines, keyed (register, won). Safety-net fallback for
-#: any author who is not in the cast voice pack — every authored cast member is
-#: covered above, but a future starter or unscripted cameo will still render
-#: in-register via this layer.
-_CHIRPER_LINES: dict[tuple[str, bool], list[str]] = {
-    ("flat", True): ["we ran the default. it worked.", "good map. back to work.", "the plan, executed. moving on."],
-    ("flat", False): ["we had a plan. it was a good plan.", "we'll review the tape. all of it.", "that's on me. we go again."],
-    ("terse", True): ["held. won.", "held. won. hungry.", "good map."],
-    ("terse", False): [".", "next.", "we hold next time."],
-    ("boastful", True): ["told you. scoreboard doesn't lie.", "easy read. next.", "that's the tape. you're welcome."],
-    ("boastful", False): ["hard to win a round that's lost before i get there. but sure.", "not my round to lose. it got lost anyway.", "we'll be fine. i'll be fine."],
-    ("sincere", True): [f"that's the bounce-back i KNEW we had {_HEART_HANDS} #overcastfam", f"so proud of these five today, what a watch {_HEART_HANDS} #overcastfam", f"called it round one. love this team {_HEART_HANDS} #overcastfam"],
-    ("sincere", False): [f"that one stings but i love this team, we go again {_HEART_HANDS} #overcastfam", f"a little on me but we bounce back, promise {_HEART_HANDS} #overcastfam", f"chins up everyone, the week's not over {_HEART_HANDS} #overcastfam"],
-    ("dry", True): ["won the rounds nobody clapped for. as usual.", "quiet game. good game.", "someone has to hold the corner. you're welcome."],
-    ("dry", False): ["you peeked the same corner twice. i noticed.", "i'll remember this one. i remember all of them.", "we lost. i was watching."],
+#: Per-cast local-outcome lines. These fire before beat/team-result lines for
+#: starters only, because they are the most visible "this happened to me" layer.
+_CAST_LOCAL_OUTCOME_VOICES: dict[str, dict[LocalOutcome, list[str]]] = {
+    "rook": {
+        "mvp": ["kept the call clean. still work to do.", "good personal tape. team tape next."],
+        "carried": ["did my job. more next time.", "structure held where it held."],
+        "came_apart": ["bad calls. mine.", "that's my tape. all of it."],
+    },
+    "vex": {
+        "mvp": ["scoreboard checked my pulse. team meeting can wait.", "top frag is top frag. even here."],
+        "carried": ["i did my job. look left.", "entry found space. the rest is a meeting."],
+        "came_apart": ["bad map. don't clip it.", "rough one. algorithm gets nothing."],
+    },
+    "sable": {
+        "mvp": ["held.", "clean."],
+        "carried": ["held site.", "did job."],
+        "came_apart": ["missed.", "bad hold."],
+    },
+    "pixie": {
+        "mvp": [
+            f"mvp on a hard day, still proud of the fight {_HEART_HANDS} #overcastfam",
+            f"did everything i could and still love this team {_HEART_HANDS} #overcastfam",
+        ],
+        "carried": [
+            f"found some rounds for us, we'll find more {_HEART_HANDS} #overcastfam",
+            f"happy with the work, hungry for the close {_HEART_HANDS} #overcastfam",
+        ],
+        "came_apart": [
+            f"rough map from me, owning it and back to tape {_HEART_HANDS} #overcastfam",
+            f"that one was on my desk, i'll clean it up {_HEART_HANDS} #overcastfam",
+        ],
+    },
+    "coyote": {
+        "mvp": ["quiet top frag. loud room.", "i found rounds. not enough of them."],
+        "carried": ["did the quiet work. check the tape.", "corner held. map didn't."],
+        "came_apart": ["missed the timing. i noticed.", "bad lurk. i remember."],
+    },
+}
+
+#: Per-register reaction lines, keyed (register, mood). ``mood`` is one of the
+#: local outcomes (``mvp``, ``carried``, ``came_apart``) or the team fallback
+#: moods (``team_win``, ``team_loss``). Safety-net fallback for any author who is
+#: not in the cast voice pack.
+_CHIRPER_LINES: dict[tuple[str, str], list[str]] = {
+    ("flat", "team_win"): ["we ran the default. it worked.", "good map. back to work.", "the plan, executed. moving on."],
+    ("flat", "team_loss"): ["we had a plan. it was a good plan.", "we'll review the tape. all of it.", "that's on me. we go again."],
+    ("flat", "mvp"): ["good personal tape. team tape next.", "kept the plan alive."],
+    ("flat", "carried"): ["did my job. more next time.", "structure held where it held."],
+    ("flat", "came_apart"): ["bad calls. mine.", "that's my tape. all of it."],
+    ("terse", "team_win"): ["held. won.", "held. won. hungry.", "good map."],
+    ("terse", "team_loss"): [".", "next.", "we hold next time."],
+    ("terse", "mvp"): ["held.", "clean."],
+    ("terse", "carried"): ["held site.", "did job."],
+    ("terse", "came_apart"): ["missed.", "bad hold."],
+    ("boastful", "team_win"): ["told you. scoreboard doesn't lie.", "easy read. next.", "that's the tape. you're welcome."],
+    ("boastful", "team_loss"): ["hard to win a round that's lost before i get there. but sure.", "not my round to lose. it got lost anyway.", "we'll be fine. i'll be fine."],
+    ("boastful", "mvp"): ["top frag is top frag. even here.", "scoreboard checked my pulse."],
+    ("boastful", "carried"): ["i did my job. look left.", "entry found space. watch it back."],
+    ("boastful", "came_apart"): ["bad map. don't clip it.", "rough one. algorithm gets nothing."],
+    ("sincere", "team_win"): [f"that's the bounce-back i KNEW we had {_HEART_HANDS} #overcastfam", f"so proud of these five today, what a watch {_HEART_HANDS} #overcastfam", f"called it round one. love this team {_HEART_HANDS} #overcastfam"],
+    ("sincere", "team_loss"): [f"that one stings but i love this team, we go again {_HEART_HANDS} #overcastfam", f"a little on me but we bounce back, promise {_HEART_HANDS} #overcastfam", f"chins up everyone, the week's not over {_HEART_HANDS} #overcastfam"],
+    ("sincere", "mvp"): [f"mvp on a hard day, still proud of the fight {_HEART_HANDS} #overcastfam", f"did everything i could and still love this team {_HEART_HANDS} #overcastfam"],
+    ("sincere", "carried"): [f"found some rounds for us, we'll find more {_HEART_HANDS} #overcastfam", f"happy with the work, hungry for the close {_HEART_HANDS} #overcastfam"],
+    ("sincere", "came_apart"): [f"rough map from me, owning it and back to tape {_HEART_HANDS} #overcastfam", f"that one was on my desk, i'll clean it up {_HEART_HANDS} #overcastfam"],
+    ("dry", "team_win"): ["won the rounds nobody clapped for. as usual.", "quiet game. good game.", "someone has to hold the corner. you're welcome."],
+    ("dry", "team_loss"): ["you peeked the same corner twice. i noticed.", "i'll remember this one. i remember all of them.", "we lost. i was watching."],
+    ("dry", "mvp"): ["quiet top frag. loud room.", "i found rounds. not enough of them."],
+    ("dry", "carried"): ["did the quiet work. check the tape.", "corner held. map didn't."],
+    ("dry", "came_apart"): ["missed the timing. i noticed.", "bad lurk. i remember."],
 }
 
 #: Final fallback for an external author with no authored voice pack — keeps the
@@ -765,18 +824,41 @@ def _lead_kind(why: WhyRecord) -> Optional[str]:
     return next((k for k in _MOMENT_PRIORITY if k in moments), None)
 
 
+def _chirper_mood(local_outcome: LocalOutcome, won: bool) -> str:
+    """Register-copy key: personal outcome first, team mood for neutral players."""
+    if local_outcome == "neutral":
+        return "team_win" if won else "team_loss"
+    return local_outcome
+
+
+def _memory_sentiment(local_outcome: LocalOutcome, won: bool) -> str:
+    """Ground starter posts in a precedent matching the player's visible mood."""
+    if local_outcome in {"mvp", "carried"}:
+        return "positive"
+    if local_outcome == "came_apart":
+        return "negative"
+    return "positive" if won else "negative"
+
+
 def _cast_lookup(
     voice: dict[tuple[str, bool], list[str]],
     beat: Optional[str],
     won: bool,
+    *,
+    local_outcome: LocalOutcome = "neutral",
+    outcome_voice: Optional[dict[LocalOutcome, list[str]]] = None,
 ) -> list[str]:
-    """Resolve a cast voice + beat → the line list to draw from.
+    """Resolve a cast voice + local outcome + beat → the line list to draw from.
 
-    Priority is ``(beat, won)`` for the exact key moment, then the cast's
-    ``("default", won)``. Every cast voice in ``_CAST_VOICES`` ships a
-    ``("default", True)`` and ``("default", False)``, so this always returns a
-    non-empty list for an authored cast member.
+    Priority is the author's personal outcome, then ``(beat, won)`` for the
+    exact key moment, then the cast's ``("default", won)``. Every cast voice in
+    ``_CAST_VOICES`` ships a ``("default", True)`` and ``("default", False)``,
+    so this always returns a non-empty list for an authored cast member.
     """
+    if local_outcome != "neutral" and outcome_voice is not None:
+        lines = outcome_voice.get(local_outcome)
+        if lines:
+            return lines
     if beat is not None:
         lines = voice.get((beat, won))
         if lines:
@@ -793,10 +875,16 @@ def _render_chirper(ctx: GenerationContext) -> GeneratedContent:
     won = ovc > opp
     player = ctx.player(author)
     beat = _lead_kind(why)
+    local_outcome = ctx.local_outcome or (
+        derive_local_outcome(why, author) if player is not None else "neutral"
+    )
     # The beat is woven into the rng so a "choke" and a "blowout" loss read
     # differently for the same cast member, while two same-beat matches still
-    # render identically.
-    rng = _rng("chirper_post", author, why.seed, ovc, opp, beat or "no_beat")
+    # render identically. The local outcome is part of the seed because "MVP in
+    # a loss" should not draw from the same line slot as a neutral loss.
+    rng = _rng(
+        "chirper_post", author, why.seed, ovc, opp, beat or "no_beat", local_outcome
+    )
 
     if player is None:
         # External voice (caster / rival star): no persona-grounded memory log,
@@ -811,13 +899,22 @@ def _render_chirper(ctx: GenerationContext) -> GeneratedContent:
 
     voice = _CAST_VOICES.get(player.id)
     if voice is not None:
-        text = _pick(rng, _cast_lookup(voice, beat, won))
+        text = _pick(
+            rng,
+            _cast_lookup(
+                voice,
+                beat,
+                won,
+                local_outcome=local_outcome,
+                outcome_voice=_CAST_LOCAL_OUTCOME_VOICES.get(player.id),
+            ),
+        )
     else:
         register = _register(player)
-        text = _pick(rng, _CHIRPER_LINES[(register, won)])
+        text = _pick(rng, _CHIRPER_LINES[(register, _chirper_mood(local_outcome, won))])
 
     # Ground the post in one of the author's own memories matching the mood.
-    precedent = _pick_memory(rng, [player], sentiment="positive" if won else "negative")
+    precedent = _pick_memory(rng, [player], sentiment=_memory_sentiment(local_outcome, won))
     cites = [precedent.id] if precedent is not None else []
     return GeneratedContent(
         kind="chirper_post", text=text, grounding_status="ok", author=player.handle, cites=cites

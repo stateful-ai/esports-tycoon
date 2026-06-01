@@ -16,7 +16,7 @@ letting the three content kinds have genuinely different inputs.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Literal, Optional
 
 from esports_tycoon.schema import (
     Decisions,
@@ -27,7 +27,20 @@ from esports_tycoon.schema import (
     WorldState,
 )
 
-__all__ = ["GenerationContext"]
+LocalOutcome = Literal["mvp", "carried", "came_apart", "neutral"]
+
+__all__ = ["GenerationContext", "LocalOutcome", "derive_local_outcome"]
+
+
+def derive_local_outcome(why: WhyRecord, author: str) -> LocalOutcome:
+    """Return the author's personal match outcome from a resolved match."""
+    if author == why.mvp:
+        return "mvp"
+    if author in why.who_tilted:
+        return "came_apart"
+    if author in why.who_carried:
+        return "carried"
+    return "neutral"
 
 
 @dataclass(frozen=True)
@@ -39,7 +52,9 @@ class GenerationContext:
     * ``narration`` needs ``why`` and ``decisions`` (the resolved match plus the
       fixture it was played on — opponent and map).
     * ``chirper_post`` needs ``why`` and ``author`` (whose reaction this is);
-      ``decisions`` is used for colour if present.
+      ``local_outcome`` can override the renderer's derived per-author read
+      (``mvp`` / ``carried`` / ``came_apart`` / ``neutral``) when a caller has
+      already computed it.
     * ``halftime_ack`` needs ``halftime_scoreline`` and ``second_half_stance``;
       ``author`` defaults to the fielded in-game leader.
 
@@ -51,6 +66,7 @@ class GenerationContext:
     why: Optional[WhyRecord] = None
     decisions: Optional[Decisions] = None
     author: Optional[str] = None
+    local_outcome: Optional[LocalOutcome] = None
     halftime_scoreline: Optional[tuple[int, int]] = None
     second_half_stance: Optional[TacticalStance] = None
 

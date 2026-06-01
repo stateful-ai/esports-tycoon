@@ -6,6 +6,42 @@
 <p class="sub">{{ fixture_map }} · {{ "win" if result.won else "loss" }} · half {{ half_score }}</p>
 
 {% if team_talk %}<div class="card muted">You told the room: “{{ team_talk }}”</div>{% endif %}
+{% if result.decisions.decision_effects %}
+<div class="card">
+  <strong>Training:</strong>
+  {% for effect in result.decisions.decision_effects %}{{ training_effect_label(effect) }}{% if not loop.last %}; {% endif %}{% endfor %}
+  <span class="muted">Spent {{ training_spent(result.decisions) }}/{{ result.decisions.training_points }} TP.</span>
+</div>
+{% endif %}
+
+{% if result.training_consequence %}
+<h2>Practice consequence</h2>
+<div class="card">
+  <strong>{{ result.training_consequence.label }}:</strong>
+  {{ result.training_consequence.summary }}
+  <div class="muted">Benefit: {{ result.training_consequence.benefit }}</div>
+  <div class="muted">Cost: {{ result.training_consequence.cost }}</div>
+</div>
+{% endif %}
+
+{% if result.week7_setup %}
+<h2>Review-room trust</h2>
+<div class="card">
+  <strong>{{ result.week7_setup.review_room_trust.start }} → {{ result.week7_setup.review_room_trust.final }}</strong>
+  <span class="{{ 'pos' if result.week7_setup.review_room_trust.delta > 0 else 'neg' }}">
+    ({{ "%+d"|format(result.week7_setup.review_room_trust.delta) }})
+  </span>
+  <div class="muted">{{ result.week7_setup.review_room_trust.reason }}</div>
+</div>
+
+<h2>Follow-up scrim</h2>
+<div class="card">
+  <strong>{{ result.week7_setup.followup_scrim.label }}:</strong>
+  {{ result.week7_setup.followup_scrim.summary }}
+  <div class="muted">Benefit: {{ result.week7_setup.followup_scrim.benefit }}</div>
+  <div class="muted">Cost: {{ result.week7_setup.followup_scrim.cost }}</div>
+</div>
+{% endif %}
 
 <div class="card">{{ result.narration.text }}</div>
 
@@ -36,6 +72,16 @@
   {% endfor %}
   </tbody>
 </table>
+
+{% if result.relationship_fallout %}
+<h2>Relationship fallout</h2>
+{% for fallout in result.relationship_fallout %}
+  <div class="card">
+    {{ relationship_fallout_label(fallout) }}
+    {% if fallout.cites %}<div class="muted">Grounded by {{ fallout.cites | join(", ") }}</div>{% endif %}
+  </div>
+{% endfor %}
+{% endif %}
 
 <div class="actions">
   <a class="btn" href="{{ url_for('fallout') }}">React to the result →</a>

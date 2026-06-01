@@ -123,6 +123,32 @@ _PRACTICE_ROLES: dict[PracticeFocus, frozenset[Role]] = {
 }
 _PRACTICE_SKILL_BONUS = 2.0
 
+# First-class training ratings are small, role-weighted modifiers layered on top
+# of the existing authored traits/form/map model. Skill labels stay open in the
+# schema, so labels absent from this table simply score 0 until design gives them
+# resolver meaning.
+_TRAINING_SKILL_CLAMP = 10
+_TRAINING_SKILL_WEIGHTS: dict[str, dict[Role, float]] = {
+    "aim": {Role.DUELIST: 0.40, Role.INITIATOR: 0.12, Role.SENTINEL: 0.08},
+    "mechanics": {Role.DUELIST: 0.40, Role.INITIATOR: 0.12, Role.SENTINEL: 0.08},
+    "comms": {Role.IGL: 0.25, Role.INITIATOR: 0.25, Role.CONTROLLER: 0.10},
+    "coordination": {Role.IGL: 0.25, Role.INITIATOR: 0.25, Role.CONTROLLER: 0.10},
+    "defaults": {Role.IGL: 0.25, Role.CONTROLLER: 0.25, Role.SENTINEL: 0.10},
+    "structure": {Role.IGL: 0.25, Role.CONTROLLER: 0.25, Role.SENTINEL: 0.10},
+    "anti_strat": {Role.SENTINEL: 0.30, Role.CONTROLLER: 0.22, Role.IGL: 0.10},
+    "sitework": {Role.SENTINEL: 0.30, Role.CONTROLLER: 0.22, Role.IGL: 0.10},
+    "resilience": {role: 0.08 for role in Role},
+    "reset": {role: 0.08 for role in Role},
+}
+_TRAINING_TILT_WEIGHTS: dict[str, float] = {
+    "resilience": -0.25,
+    "reset": -0.25,
+    "comms": -0.10,
+    "coordination": -0.10,
+    "defaults": -0.10,
+    "structure": -0.10,
+}
+
 #: Per-player-equivalent strength of an opposing org, keyed by its archetype.
 #: The opponent has no canned roster in M0, so the archetype carries the weight.
 _ARCHETYPE_STRENGTH: dict[str, float] = {
@@ -219,12 +245,44 @@ def _map_affinity(player: Player, map_name: str) -> float:
     return float(max(-2, min(2, score)))
 
 
+def _training_ratings(player: Player, decisions: Decisions) -> dict[str, int]:
+    """Persistent player skills plus this week's budgeted decision deltas."""
+    ratings = {skill.strip().lower(): value for skill, value in player.skills.items()}
+    for effect in decisions.decision_effects:
+        if effect.player != player.id:
+            continue
+        skill = effect.skill.strip().lower()
+        ratings[skill] = ratings.get(skill, 0) + effect.delta
+    return {
+        skill: max(-_TRAINING_SKILL_CLAMP, min(_TRAINING_SKILL_CLAMP, value))
+        for skill, value in ratings.items()
+        if skill
+    }
+
+
+def _training_skill_bonus(player: Player, decisions: Decisions) -> float:
+    """Role-weighted skill lift from first-class training ratings."""
+    total = 0.0
+    for skill, value in _training_ratings(player, decisions).items():
+        total += value * _TRAINING_SKILL_WEIGHTS.get(skill, {}).get(player.role, 0.0)
+    return total
+
+
+def _training_tilt_modifier(player: Player, decisions: Decisions) -> float:
+    """Training ratings that steady or unsettle a player under pressure."""
+    total = 0.0
+    for skill, value in _training_ratings(player, decisions).items():
+        total += value * _TRAINING_TILT_WEIGHTS.get(skill, 0.0)
+    return total
+
+
 def _skill_for(player: Player, decisions: Decisions) -> float:
     """A player's effective per-round skill for this match (always ≥ 0.5)."""
     skill = _BASE_SKILL
     skill += sum(_SKILL_TRAITS.get(trait, 0.0) for trait in player.traits)
     skill += _form(player)
     skill += _map_affinity(player, decisions.map)
+    skill += _training_skill_bonus(player, decisions)
     if player.role in _PRACTICE_ROLES[decisions.practice_focus]:
         skill += _PRACTICE_SKILL_BONUS
     return max(0.5, skill)
@@ -328,6 +386,7 @@ def _tilt_for(
         tilt -= 1.0
     if decisions.practice_focus == "rest":
         tilt -= 1.0
+    tilt += _training_tilt_modifier(player, decisions)
     if lost_match:
         tilt += _LOSS_TILT
     if impact == 0:
