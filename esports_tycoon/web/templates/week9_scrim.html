@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Week 9 scrim — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 9 scrim</h1>
+<p class="sub">The prep lane now produces a read before match planning.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 9 prep required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week9_prep') }}">Back to Week 9 prep</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.week9_problem_id }}</strong>
+  <div>{{ plan.manager_problem }}</div>
+  <div class="muted">Response: <code>{{ plan.selected_response }}</code> · prep: <code>{{ plan.selected_prep }}</code> · bias: <code>{{ plan.selected_prep_bias }}</code></div>
+  <div class="muted">Combined risk {{ "%+d"|format(plan.combined_risk_delta) }} · confidence {{ "%+d"|format(plan.combined_confidence_delta) }} · external pressure {{ "%+d"|format(plan.combined_external_pressure_delta) }}</div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+  <strong><code>{{ plan.recommended_scrim_read }}</code></strong>
+  <div>{{ plan.recommendation_reason }}</div>
+  <div class="muted">Setup read: <code>{{ plan.setup_read_id }}</code> · prep read: <code>{{ plan.prep_read_id }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week9_scrim') }}">
+  <h2>Scrim read</h2>
+  {% for read in plan.reads %}
+    <label class="choice">
+      <input type="radio" name="week9_scrim" value="{{ read.value }}" required>
+      <strong>{{ read.label }}</strong>
+      <div class="blurb">{{ read.headline }}</div>
+      <div class="blurb">{{ read.interpretation }}</div>
+      <div class="muted">Status: <code>{{ read.status }}</code> · match-plan pressure: <code>{{ read.match_plan_pressure }}</code></div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock scrim read</button>
+    <a class="btn secondary" href="{{ url_for('week9_prep') }}">Back to prep</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked read</h2>
+<div class="card">
+  <strong>{{ lock.read_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Selected read: <code>{{ lock.selected_scrim_read }}</code> · pressure: <code>{{ lock.selected_match_plan_pressure }}</code></div>
+</div>
+
+{% if week9_scrim_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 9 scrim:
+  <div><code>{{ week9_scrim_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}
