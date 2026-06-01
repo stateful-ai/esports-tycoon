@@ -48,6 +48,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week9_setup_json,
     render_week10_fallout_json,
     render_week10_prep_json,
+    render_week10_scrim_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
@@ -62,6 +63,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week9_setup,
     resolve_week10_fallout,
     resolve_week10_prep,
+    resolve_week10_scrim,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
@@ -75,6 +77,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_fallout_plan,
     week10_prep_from_json,
     week10_prep_plan,
+    week10_scrim_from_json,
+    week10_scrim_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -1305,6 +1309,96 @@ class TestWeek10Prep(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "selected_choice"):
             resolve_week10_prep(fallout, plan, "hire_psychologist")
+
+
+class TestWeek10Scrim(_Fixture):
+    def _preps_by_outcome(self):
+        preps = {}
+        for result in TestWeek10Fallout._week9_results_by_outcome(self).values():
+            fallout_plan = week10_fallout_plan(result)
+            for fallout_choice in ("steady_room", "raise_standards", "adapt_system"):
+                fallout = resolve_week10_fallout(result, fallout_plan, fallout_choice)
+                prep_plan = week10_prep_plan(fallout)
+                for prep_choice in ("scout_counter", "staff_review", "roster_reps"):
+                    prep = resolve_week10_prep(fallout, prep_plan, prep_choice)
+                    preps.setdefault(prep.outcome_id, prep)
+        return preps
+
+    def test_week10_scrim_recommendation_uses_prep_effects(self):
+        cases = {
+            "counter_read_ready": "validate_read",
+            "counter_read_overfit": "stabilize_comms",
+            "review_loop_locked": "stabilize_comms",
+            "review_loop_drift": "stabilize_comms",
+            "reps_translated": "stress_execution",
+            "reps_burned": "stabilize_comms",
+        }
+
+        for prep_outcome, expected in cases.items():
+            with self.subTest(prep_outcome=prep_outcome):
+                plan = week10_scrim_plan(self._preps_by_outcome()[prep_outcome])
+                self.assertEqual(plan.recommended_scrim, expected)
+
+    def test_week10_scrim_choice_matrix_is_stable(self):
+        outcomes = {
+            ("counter_read_ready", "validate_read"): "read_validated",
+            ("counter_read_ready", "stress_execution"): "execution_frayed",
+            ("counter_read_ready", "stabilize_comms"): "comms_turtled",
+            ("counter_read_overfit", "validate_read"): "read_exposed",
+            ("counter_read_overfit", "stress_execution"): "execution_frayed",
+            ("counter_read_overfit", "stabilize_comms"): "comms_stabilized",
+            ("review_loop_locked", "validate_read"): "read_validated",
+            ("review_loop_locked", "stress_execution"): "execution_frayed",
+            ("review_loop_locked", "stabilize_comms"): "comms_stabilized",
+            ("review_loop_drift", "validate_read"): "read_exposed",
+            ("review_loop_drift", "stress_execution"): "execution_frayed",
+            ("review_loop_drift", "stabilize_comms"): "comms_stabilized",
+            ("reps_translated", "validate_read"): "read_exposed",
+            ("reps_translated", "stress_execution"): "execution_translated",
+            ("reps_translated", "stabilize_comms"): "comms_stabilized",
+            ("reps_burned", "validate_read"): "read_exposed",
+            ("reps_burned", "stress_execution"): "execution_frayed",
+            ("reps_burned", "stabilize_comms"): "comms_stabilized",
+        }
+        preps = self._preps_by_outcome()
+
+        for (prep_outcome, scrim_choice), expected in outcomes.items():
+            with self.subTest(prep_outcome=prep_outcome, scrim_choice=scrim_choice):
+                prep = preps[prep_outcome]
+                lock = resolve_week10_scrim(prep, week10_scrim_plan(prep), scrim_choice)
+                self.assertEqual(lock.outcome_id, expected)
+
+    def test_week10_scrim_artifact_sources_prep_and_stops_before_match_plan(self):
+        prep = self._preps_by_outcome()["reps_translated"]
+        plan = week10_scrim_plan(prep)
+        lock = resolve_week10_scrim(prep, plan, "stress_execution")
+        payload = render_week10_scrim_json(lock)
+
+        self.assertIn('"week10_prep": "week10_prep.json"', payload)
+        self.assertIn('"artifact_type": "week10_scrim"', payload)
+        self.assertIn('"selected_scrim": "stress_execution"', payload)
+        self.assertIn('"outcome_id": "execution_translated"', payload)
+        self.assertIn('"scrim_effect":', payload)
+        self.assertIn('"lane_states":', payload)
+        self.assertIn('"stops_before": "week10_match_plan"', payload)
+        self.assertIn('"next_artifact": "week10_match_plan.json"', payload)
+
+    def test_week10_scrim_render_parse_round_trip_is_stable(self):
+        prep = self._preps_by_outcome()["reps_translated"]
+        plan = week10_scrim_plan(prep)
+        lock = resolve_week10_scrim(prep, plan, "stress_execution")
+        payload = render_week10_scrim_json(lock)
+        parsed = week10_scrim_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week10_scrim_json(parsed), payload)
+
+    def test_week10_scrim_rejects_invalid_choice(self):
+        prep = self._preps_by_outcome()["reps_translated"]
+        plan = week10_scrim_plan(prep)
+
+        with self.assertRaisesRegex(ValueError, "selected_scrim"):
+            resolve_week10_scrim(prep, plan, "skip_scrims")
 
 
 class TestDeterminism(_Fixture):

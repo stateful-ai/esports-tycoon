@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block title %}Week 10 scrim — {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1180px; }
+  .scrim-lab {
+    color: #dfe2eb;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      #0d1117;
+    background-size: 20px 20px;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .scrim-lab h1, .scrim-lab h2, .scrim-lab p { color: inherit; }
+  .lab-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .lab-title h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
+  .lab-title .sub { color: #9ba3ad; margin: 0.2rem 0 0; }
+  .recap-strip, .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .recap-strip { justify-content: flex-end; }
+  .lab-chip {
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #c4c7ca;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .lab-chip.stable { border-color: #3fb950; color: #9be9a8; }
+  .lab-chip.watch { border-color: #f2cc60; color: #f2cc60; }
+  .lab-chip.danger { border-color: #ff7b72; color: #ffb4ab; }
+  .lab-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.1fr) minmax(300px, 0.95fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .lab-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .panel-kicker {
+    color: #8e9194;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0;
+  }
+  .panel-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    align-items: baseline;
+    margin-bottom: 0.45rem;
+  }
+  .panel-title strong { font-size: 1.05rem; }
+  .readout {
+    color: #f0f6fc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .copy-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
+  .meter { margin-top: 0.75rem; }
+  .meter-label {
+    display: flex;
+    justify-content: space-between;
+    color: #c4c7ca;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    margin-bottom: 0.22rem;
+  }
+  .meter-track { height: 9px; background: #0d1117; border: 1px solid #30363d; }
+  .meter-fill { width: var(--meter); height: 100%; background: #f2cc60; }
+  .meter-fill.stable { background: #3fb950; }
+  .meter-fill.danger { background: #ff7b72; }
+  .scrim-map {
+    position: relative;
+    border: 1px solid #30363d;
+    min-height: 294px;
+    padding: 1rem;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(240,246,252,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,246,252,0.055) 1px, transparent 1px),
+      #0d1117;
+    background-size: 20px 20px;
+  }
+  .scrim-map::before,
+  .scrim-map::after {
+    content: "";
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: #30363d;
+  }
+  .scrim-map::before { top: 35%; }
+  .scrim-map::after { bottom: 35%; }
+  .lane {
+    position: relative;
+    display: grid;
+    grid-template-columns: 54px 1fr 48px;
+    gap: 0.55rem;
+    align-items: center;
+    margin: 1.2rem 0;
+    z-index: 1;
+  }
+  .lane-name, .lane-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    color: #c4c7ca;
+    text-transform: uppercase;
+  }
+  .lane-line { height: 7px; border: 1px solid #30363d; background: #161b22; }
+  .lane-fill { display: block; width: var(--pressure); height: 100%; background: #f2cc60; }
+  .lane-fill.stable { background: #3fb950; }
+  .lane-fill.danger { background: #ff7b72; }
+  .choice-card {
+    display: block;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    padding: 0.8rem;
+    margin: 0.55rem 0;
+    cursor: pointer;
+  }
+  .choice-card:hover { border-color: #f0f6fc; }
+  .choice-card input { margin-right: 0.5rem; }
+  .choice-card .blurb { color: #9ba3ad; margin: 0.25rem 0 0 1.45rem; font-size: 0.9rem; }
+  .lab-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .scrim-lab .btn {
+    border-radius: 0;
+    background: #f0f6fc;
+    color: #0d1117;
+    border: 1px solid #f0f6fc;
+  }
+  .scrim-lab .btn.secondary {
+    background: transparent;
+    color: #dfe2eb;
+    border-color: #30363d;
+  }
+  .locked-panel { margin-top: 1rem; }
+  .effect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .effect-box { border: 1px solid #30363d; padding: 0.6rem; background: #0d1117; }
+  .effect-box span { display: block; color: #8e9194; font-size: 0.78rem; }
+  .effect-box strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  @media (max-width: 980px) {
+    .lab-top, .lab-grid, .effect-grid { grid-template-columns: 1fr; }
+    .recap-strip { justify-content: flex-start; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 10 prep required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week10_prep') }}">Back to Week 10 prep</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="scrim-lab">
+  <div class="lab-top">
+    <div class="lab-title">
+      <h1>Week 10 scrim lab</h1>
+      <p class="sub">Choose one protocol before match planning.</p>
+    </div>
+    <div class="recap-strip">
+      <span class="lab-chip">score {{ plan.week9_scoreline }}</span>
+      <span class="lab-chip">fallout {{ plan.fallout_outcome_id }}</span>
+      <span class="lab-chip">prep {{ plan.prep_outcome_id }}</span>
+      <span class="lab-chip">lane {{ plan.prep_lane }}</span>
+    </div>
+  </div>
+
+  <div class="lab-grid">
+    <section class="lab-panel">
+      <div class="panel-kicker">Operational readiness</div>
+      <div class="panel-title">
+        <strong>{{ plan.recommended_scrim }}</strong>
+        <span class="readout">{{ plan.prep_outcome_id }}</span>
+      </div>
+      <div class="copy-line">{{ plan.recommendation_reason }}</div>
+      {% for meter in plan.readiness_meters %}
+        <div class="meter">
+          <div class="meter-label">
+            <span>{{ meter[0]|replace("_", " ") }}</span>
+            <span>{{ meter[1] }}</span>
+          </div>
+          <div class="meter-track">
+            <div class="meter-fill {{ meter[2] }}" style="--meter: {{ meter[1] }}%;"></div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="chip-row" style="margin-top: 0.8rem;">
+        {% for constraint in plan.visible_constraints %}
+          {% if loop.index <= 3 %}<span class="lab-chip">{{ constraint }}</span>{% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="lab-panel">
+      <div class="panel-kicker">Tactical scrim map</div>
+      <div class="panel-title">
+        <strong>{{ plan.prep_headline }}</strong>
+        <span class="readout">{{ plan.carry_forward_tag }}</span>
+      </div>
+      <div class="scrim-map">
+        {% for lane in plan.lane_states %}
+          <div class="lane">
+            <span class="lane-name">{{ lane[0] }}</span>
+            <span class="lane-line"><span class="lane-fill {{ lane[2] }}" style="--pressure: {{ lane[1] }}%;"></span></span>
+            <span class="lane-value">{{ lane[1] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <form method="post" action="{{ url_for('week10_scrim') }}" class="lab-panel">
+      <div class="panel-kicker">Protocol selection</div>
+      <div class="panel-title">
+        <strong>Lock scrim</strong>
+        <span class="readout">{{ plan.recommended_scrim }}</span>
+      </div>
+      {% for protocol in plan.protocols %}
+        <label class="choice-card">
+          <input type="radio" name="week10_scrim" value="{{ protocol.value }}" required>
+          <strong>{{ protocol.label }}</strong>
+          <span class="lab-chip">{{ protocol.axis }}</span>
+          <div class="blurb">Gain: {{ protocol.payoff }}</div>
+          <div class="blurb">Risk: {{ protocol.risk }}</div>
+        </label>
+      {% endfor %}
+
+      <div class="lab-actions">
+        <button class="btn" type="submit">Lock scrim protocol</button>
+        <a class="btn secondary" href="{{ url_for('week10_prep') }}">Back to prep</a>
+      </div>
+    </form>
+  </div>
+
+  {% if lock %}
+  <section class="lab-panel locked-panel">
+    <div class="panel-kicker">Scrim forecast</div>
+    <div class="panel-title">
+      <strong>{{ lock.scrim_headline }}</strong>
+      {% if lock.followed_recommendation %}
+        <span class="readout">followed read</span>
+      {% else %}
+        <span class="readout">against read</span>
+      {% endif %}
+    </div>
+    <div class="copy-line">{{ lock.consequence }}</div>
+    <div class="chip-row">
+      <span class="lab-chip">outcome {{ lock.outcome_id }}</span>
+      <span class="lab-chip">protocol {{ lock.selected_scrim }}</span>
+      <span class="lab-chip">pressure {{ lock.match_plan_pressure }}</span>
+    </div>
+    <div class="effect-grid">
+      <div class="effect-box"><span>Synergy</span><strong>{{ "%+d"|format(lock.synergy_delta) }}</strong></div>
+      <div class="effect-box"><span>Stress</span><strong>{{ "%+d"|format(lock.stress_delta) }}</strong></div>
+      <div class="effect-box"><span>Clarity</span><strong>{{ "%+d"|format(lock.clarity_delta) }}</strong></div>
+    </div>
+    <div class="copy-line">{{ lock.next_hook }}</div>
+    <div class="chip-row">
+      <span class="lab-chip">next week10_match_plan.json</span>
+      {% if week10_scrim_path %}
+        <span class="lab-chip">{{ week10_scrim_path }}</span>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
