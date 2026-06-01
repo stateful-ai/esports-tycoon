@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Week 9 result — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 9 match result</h1>
+<p class="sub">The locked Week 9 match plan resolves into one deterministic result and a Week 10 fallout pointer.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 9 match plan required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week9_match') }}">Back to Week 9 match plan</a>
+  </div>
+</div>
+{% elif plan and not match_result %}
+<div class="card">
+  <strong>Result ready</strong>
+  <div class="muted">Plan: <code>{{ plan.selected_plan }}</code> · recommendation: <code>{{ plan.recommended_plan }}</code></div>
+  <div class="muted">Commitment: <code>{{ plan.commitment }}</code> · risk: <code>{{ plan.match_risk }}</code></div>
+  <form method="post" action="{{ url_for('week9_match_result') }}" class="actions">
+    <button class="btn" type="submit">Resolve Week 9 result</button>
+    <a class="btn secondary" href="{{ url_for('week9_match') }}">Back to match plan</a>
+  </form>
+</div>
+{% elif match_result %}
+<div class="card">
+  <strong>{{ match_result.result_tier|upper }} {{ match_result.scoreline }}</strong>
+  {% if match_result.matched_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div class="muted">Outcome: <code>{{ match_result.outcome_id }}</code> · plan: <code>{{ match_result.selected_plan }}</code></div>
+  <div class="muted">Commitment: <code>{{ match_result.commitment }}</code> · risk: <code>{{ match_result.match_risk }}</code></div>
+</div>
+
+<h2>Why it happened</h2>
+<div class="card">
+  <strong>{{ match_result.headline }}</strong>
+  <div>{{ match_result.player_read }}</div>
+</div>
+
+<h2>Recap</h2>
+<div class="card">
+  <div>{{ match_result.recap }}</div>
+</div>
+
+<h2>Consequences</h2>
+<div class="card">
+  {% for effect in match_result.visible_effects %}
+    <span class="tag">{{ effect.label }}</span>
+  {% endfor %}
+</div>
+
+<h2>Week 10 pointer</h2>
+<div class="card">
+  <div>{{ match_result.next_hook }}</div>
+  <div class="muted">Next artifact: <code>week10_fallout.json</code></div>
+</div>
+
+{% if week9_match_result_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 9 match result:
+  <div><code>{{ week9_match_result_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

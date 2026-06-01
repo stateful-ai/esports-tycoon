@@ -138,6 +138,13 @@ Foundation scope landed:
   `week9_match_plan.json` with result constraints for the future
   `week9_match_result.json` slice. The route records intent only and still does
   not resolve scoreline, winner, standings, media fallout, or roster changes.
+- The Week 9 match plan now pays off on `/week9/match/result`: it consumes
+  `week9_setup.json`, `week9_prep.json`, `week9_scrim.json`, and
+  `week9_match_plan.json`, maps the selected plan into one of six stable
+  outcome IDs, and writes `week9_match_result.json` with a scoreline, why
+  sentence, visible consequence chips, and `week10_fallout.json` handoff. The
+  slice still does not create Week 10 fallout, standings, sponsor, fan, or
+  roster state.
 
 ## Why this was held
 
