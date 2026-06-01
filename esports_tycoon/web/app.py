@@ -28,6 +28,7 @@ The week is a short linear flow, one decision per step:
     /week8/match/result
                  the match plan becomes a deterministic match result + Week-9 hook
     /week9       the Week-8 result becomes a deterministic Week-9 fallout setup
+    /week9/prep  the Week-9 setup response becomes a deterministic prep lane
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -97,9 +98,14 @@ from esports_tycoon.runner.week8 import (
     week8_scrim_plan,
 )
 from esports_tycoon.runner.week9 import (
+    WEEK9_PREP_FILENAME,
     WEEK9_SETUP_FILENAME,
+    render_week9_prep_json,
     render_week9_setup_json,
+    resolve_week9_prep,
     resolve_week9_setup,
+    week9_prep_from_json,
+    week9_prep_plan,
     week9_setup_from_json,
     week9_setup_plan,
 )
@@ -772,6 +778,66 @@ def create_app(
             plan=plan,
             lock=lock,
             week9_setup_path=week9_setup_written_path,
+        )
+
+    @app.route("/week9/prep", methods=["GET", "POST"])
+    def week9_prep():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 9 prep unlocks after the Week 9 setup response.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week9_setup_path = run_dir / WEEK9_SETUP_FILENAME
+        week9_prep_path = run_dir / WEEK9_PREP_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK9_SETUP_FILENAME, week9_setup_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        lock = None
+        week9_prep_written_path = ""
+        if not missing:
+            try:
+                setup = week9_setup_from_json(week9_setup_path.read_text(encoding="utf-8"))
+                plan = week9_prep_plan(setup)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week9_prep") or "").strip()
+                    try:
+                        lock = resolve_week9_prep(plan, selected)
+                    except ValueError:
+                        flash("Choose a Week 9 prep lane.")
+                    else:
+                        week9_prep_path.write_text(
+                            render_week9_prep_json(lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        week9_prep_written_path = str(week9_prep_path)
+                elif week9_prep_path.is_file():
+                    try:
+                        lock = week9_prep_from_json(week9_prep_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week9_prep_written_path = str(week9_prep_path)
+
+        return render_template(
+            "week9_prep.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            lock=lock,
+            week9_prep_path=week9_prep_written_path,
         )
 
     @app.get("/feed")

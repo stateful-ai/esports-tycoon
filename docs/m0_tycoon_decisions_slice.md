@@ -121,6 +121,11 @@ Foundation scope landed:
   into a Week 9 problem/recommendation, and writes `week9_setup.json` after the
   player locks one of three response postures. This proves result-to-next-choice
   causality without adding a Week 9 match, standings, sponsor, or roster system.
+- The Week 9 setup posture now turns into tactical preparation on `/week9/prep`:
+  it consumes `week9_setup.json`, shows the selected response posture and prep
+  bias, and writes `week9_prep.json` after the player locks one of three prep
+  lanes. The artifact points to `week9_scrim.json`, but scrim simulation remains
+  out of scope.
 
 ## Why this was held
 

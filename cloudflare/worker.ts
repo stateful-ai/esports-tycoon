@@ -1,11 +1,11 @@
 import { Container } from "@cloudflare/containers";
 
-const BACKEND_INSTANCE_NAME = "web-v15-week9";
+const BACKEND_INSTANCE_NAME = "web-v16-prep";
 const BACKEND_START_TIMEOUT_MS = 60000;
 
 export class EsportsTycoonBackend extends Container<Env> {
   defaultPort = 8765;
-  sleepAfter = "10m";
+  sleepAfter = "1h";
   pingEndpoint = "/healthz";
   enableInternet = false;
   envVars = { ESPORTS_TYCOON_CONTENT_BACKEND: "templated" };
