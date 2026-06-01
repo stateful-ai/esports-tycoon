@@ -180,7 +180,9 @@ and the final prep call before any full match resolver exists.
 `/week8/match/result` then consumes that plan and writes
 `week8_match_result.json`, resolving the plan into one deterministic result,
 public read, pressure beat, and Week 9 hook without adding a broader media,
-sponsor, or roster system.
+sponsor, or roster system. `/week9` consumes that result and writes
+`week9_setup.json`, turning the Week 8 fallout into the next manager response
+posture.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -205,6 +207,9 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
 - **`week8_match_result.json`** — written by `/week8/match/result`, resolving
   the match plan into a deterministic outcome, scoreline, fallout beat, and
   Week 9 hook.
+- **`week9_setup.json`** — written by `/week9`, consuming the Week 8 result into
+  a Week 9 problem, recommendation, selected response posture, and next prep
+  hook.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

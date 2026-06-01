@@ -101,6 +101,17 @@ from esports_tycoon.runner.week8 import (
     week8_scrim_from_json,
     week8_scrim_plan,
 )
+from esports_tycoon.runner.week9 import (
+    WEEK9_RESPONSE_CHOICES,
+    WEEK9_SETUP_FILENAME,
+    Week9SetupLock,
+    Week9SetupOption,
+    Week9SetupPlan,
+    render_week9_setup_json,
+    resolve_week9_setup,
+    week9_setup_from_json,
+    week9_setup_plan,
+)
 
 __all__ = [
     "run_slice",
@@ -183,4 +194,13 @@ __all__ = [
     "resolve_week8_match_result",
     "week8_match_result_from_json",
     "render_week8_match_result_json",
+    "WEEK9_SETUP_FILENAME",
+    "WEEK9_RESPONSE_CHOICES",
+    "Week9SetupOption",
+    "Week9SetupPlan",
+    "Week9SetupLock",
+    "week9_setup_plan",
+    "resolve_week9_setup",
+    "week9_setup_from_json",
+    "render_week9_setup_json",
 ]

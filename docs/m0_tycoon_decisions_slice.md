@@ -116,6 +116,11 @@ Foundation scope landed:
   read/pressure beat, and writes `week8_match_result.json` with a Week 9 hook.
   The slice deliberately keeps media, sponsor, roster, and Week 9 systems out of
   scope until the single-result consequence is proven.
+- The Week 8 result now becomes the next playable manager problem on `/week9`:
+  it consumes `week8_match_result.json`, maps the outcome and consequence axis
+  into a Week 9 problem/recommendation, and writes `week9_setup.json` after the
+  player locks one of three response postures. This proves result-to-next-choice
+  causality without adding a Week 9 match, standings, sponsor, or roster system.
 
 ## Why this was held
 
