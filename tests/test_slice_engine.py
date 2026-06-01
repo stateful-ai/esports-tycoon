@@ -37,14 +37,17 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week7_focus_json,
     render_week7_pressure_json,
     render_week8_prep_json,
+    render_week8_scrim_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
     resolve_week8_prep,
+    resolve_week8_scrim,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
     week8_prep_plan,
+    week8_scrim_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -466,7 +469,7 @@ class TestWeek7PressureResult(_Fixture):
 
 
 class TestWeek8PrepFork(_Fixture):
-    def _plan_for(self, drill: str, selected_focus: str):
+    def _receipts_for(self, drill: str, selected_focus: str):
         training_points, effects = training_decision_for_drill(drill)
         result = run_slice(
             self.world,
@@ -482,7 +485,10 @@ class TestWeek8PrepFork(_Fixture):
         focus = focus_payload_from_json(render_week7_focus_json(focus_lock))
         pressure = resolve_week7_pressure(setup, focus)
         pressure_payload = pressure_payload_from_json(render_week7_pressure_json(pressure))
-        return week8_prep_plan(setup, focus, pressure_payload)
+        return setup, focus, pressure_payload
+
+    def _plan_for(self, drill: str, selected_focus: str):
+        return week8_prep_plan(*self._receipts_for(drill, selected_focus))
 
     def test_maps_all_pressure_outcomes_to_week8_problems(self):
         cases = (
@@ -535,6 +541,48 @@ class TestWeek8PrepFork(_Fixture):
         self.assertIn('"source_pressure_outcome": "stability_unlocked_clean_2_0"', payload)
         self.assertIn('"selected_choice": "double_down_identity"', payload)
         self.assertIn('"week8_modifier": "higher_ceiling_higher_tilt"', payload)
+
+
+class TestWeek8ScrimSetup(_Fixture):
+    def _scrim_plan_for(self, drill: str, selected_focus: str, prep_choice: str):
+        setup, focus, pressure = TestWeek8PrepFork._receipts_for(self, drill, selected_focus)
+        prep_plan = week8_prep_plan(setup, focus, pressure)
+        prep = resolve_week8_prep(prep_plan, prep_choice)
+        return week8_scrim_plan(setup, focus, pressure, prep)
+
+    def test_week8_scrim_setup_changes_by_prep_branch(self):
+        patched = self._scrim_plan_for("vex_aim", "prove_ceiling", "patch_exposed_break")
+        doubled = self._scrim_plan_for("vex_aim", "prove_ceiling", "double_down_identity")
+
+        self.assertEqual(patched.scrim_modifier, "trust_buffer")
+        self.assertEqual(patched.scrim_opening_state, "controlled_reset")
+        self.assertEqual(doubled.scrim_modifier, "tempo_spike")
+        self.assertEqual(doubled.scrim_opening_state, "volatile_opener")
+        self.assertIn("vex_pixie_trust_fracture", patched.setup_body)
+        self.assertEqual(doubled.options[0].label, "Force the identity")
+
+    def test_week8_scrim_calls_create_different_setup_locks(self):
+        plan = self._scrim_plan_for("pixie_flash_repair", "prove_ceiling", "patch_exposed_break")
+
+        play = resolve_week8_scrim(plan, "play_to_prep")
+        cover = resolve_week8_scrim(plan, "cover_the_crack")
+
+        self.assertEqual(play.visible_consequence, "patched_protocol_held")
+        self.assertEqual(play.readiness_delta, 2)
+        self.assertEqual(play.tempo_delta, -1)
+        self.assertEqual(cover.visible_consequence, "patch_tested_early")
+        self.assertEqual(cover.tempo_delta, 1)
+        self.assertEqual(cover.tilt_risk_delta, -1)
+
+    def test_week8_scrim_artifact_names_sources(self):
+        plan = self._scrim_plan_for("pixie_flash_repair", "contain_fallout", "double_down_identity")
+        lock = resolve_week8_scrim(plan, "cover_the_crack")
+        payload = render_week8_scrim_json(lock)
+
+        self.assertIn('"week8_prep": "week8_prep.json"', payload)
+        self.assertIn('"scrim_modifier": "tempo_spike"', payload)
+        self.assertIn('"selected_call": "cover_the_crack"', payload)
+        self.assertIn('"visible_consequence": "identity_split_reps"', payload)
 
     def test_recap_surfaces_remembered_memories(self):
         result = run_slice(self.world, self.config, self.decisions)

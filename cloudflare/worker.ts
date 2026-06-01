@@ -1,6 +1,6 @@
 import { Container } from "@cloudflare/containers";
 
-const BACKEND_INSTANCE_NAME = "web-v11-week8";
+const BACKEND_INSTANCE_NAME = "web-v12-scrim";
 const BACKEND_START_TIMEOUT_MS = 60000;
 
 export class EsportsTycoonBackend extends Container<Env> {
