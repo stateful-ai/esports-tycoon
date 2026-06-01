@@ -28,6 +28,7 @@ from esports_tycoon.runner import (  # noqa: E402
     OPEN_TEXT_MAX,
     RECAP_FILENAME,
     WEEK7_SETUP_FILENAME,
+    pressure_payload_from_json,
     focus_payload_from_json,
     SliceConfig,
     SliceDecisions,
@@ -35,12 +36,15 @@ from esports_tycoon.runner import (  # noqa: E402
     render_recap_md,
     render_week7_focus_json,
     render_week7_pressure_json,
+    render_week8_prep_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
+    resolve_week8_prep,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
+    week8_prep_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -459,6 +463,78 @@ class TestWeek7PressureResult(_Fixture):
         self.assertIn('"source_focus_artifact": "week7_focus.json"', payload)
         self.assertIn('"outcome_id": "heat_ignored_highlight_loss"', payload)
         self.assertIn('"visible_consequence": "ignored_trust_fire"', payload)
+
+
+class TestWeek8PrepFork(_Fixture):
+    def _plan_for(self, drill: str, selected_focus: str):
+        training_points, effects = training_decision_for_drill(drill)
+        result = run_slice(
+            self.world,
+            self.config,
+            SliceDecisions(
+                practice_focus="defaults",
+                training_points=training_points,
+                decision_effects=effects,
+            ),
+        )
+        setup = setup_payload_from_week7_setup(result.week7_setup)
+        focus_lock = resolve_week7_focus(setup, selected_focus)
+        focus = focus_payload_from_json(render_week7_focus_json(focus_lock))
+        pressure = resolve_week7_pressure(setup, focus)
+        pressure_payload = pressure_payload_from_json(render_week7_pressure_json(pressure))
+        return week8_prep_plan(setup, focus, pressure_payload)
+
+    def test_maps_all_pressure_outcomes_to_week8_problems(self):
+        cases = (
+            ("vex_aim", "contain_fallout", "heat_contained_scrappy_win", "low_ceiling_after_reset"),
+            ("vex_aim", "prove_ceiling", "heat_ignored_highlight_loss", "vex_pixie_trust_fracture"),
+            (
+                "pixie_flash_repair",
+                "prove_ceiling",
+                "stability_unlocked_clean_2_0",
+                "identity_needs_second_layer",
+            ),
+            (
+                "pixie_flash_repair",
+                "contain_fallout",
+                "stability_overmanaged_flat_win",
+                "overmanaged_low_threat",
+            ),
+        )
+        for drill, focus, outcome, exposed in cases:
+            with self.subTest(drill=drill, focus=focus):
+                plan = self._plan_for(drill, focus)
+                self.assertEqual(plan.source_pressure_outcome, outcome)
+                self.assertEqual(plan.exposed_problem, exposed)
+                self.assertEqual(
+                    [option.value for option in plan.options],
+                    ["patch_exposed_break", "double_down_identity"],
+                )
+
+    def test_week8_prep_choices_create_different_tradeoffs(self):
+        plan = self._plan_for("vex_aim", "prove_ceiling")
+
+        patched = resolve_week8_prep(plan, "patch_exposed_break")
+        doubled = resolve_week8_prep(plan, "double_down_identity")
+
+        self.assertEqual(patched.week8_modifier, "lower_volatility")
+        self.assertEqual(patched.review_room_trust_delta, 1)
+        self.assertEqual(patched.competitive_edge_delta, -1)
+        self.assertEqual(doubled.week8_modifier, "higher_ceiling_higher_tilt")
+        self.assertEqual(doubled.review_room_trust_delta, -1)
+        self.assertEqual(doubled.competitive_edge_delta, 1)
+        self.assertEqual(patched.exposed_problem, "vex_pixie_trust_fracture")
+        self.assertIn("vex_pixie_trust_fracture", render_week8_prep_json(doubled))
+
+    def test_week8_prep_artifact_names_sources(self):
+        plan = self._plan_for("pixie_flash_repair", "prove_ceiling")
+        lock = resolve_week8_prep(plan, "double_down_identity")
+        payload = render_week8_prep_json(lock)
+
+        self.assertIn('"week7_pressure": "week7_pressure.json"', payload)
+        self.assertIn('"source_pressure_outcome": "stability_unlocked_clean_2_0"', payload)
+        self.assertIn('"selected_choice": "double_down_identity"', payload)
+        self.assertIn('"week8_modifier": "higher_ceiling_higher_tilt"', payload)
 
     def test_recap_surfaces_remembered_memories(self):
         result = run_slice(self.world, self.config, self.decisions)

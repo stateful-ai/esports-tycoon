@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Week 8 prep — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 8 prep</h1>
+<p class="sub">The Week 7 pressure result is now a management tradeoff, not a match sim.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 7 pressure required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week7_result') }}">Back to pressure result</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.pressure_headline }}</strong>
+  <div>{{ plan.manager_problem }}</div>
+  <div class="muted">Exposed problem: <code>{{ plan.exposed_problem }}</code> · spotlight: <code>{{ plan.spotlight_player }}</code></div>
+  <div class="muted">Pressure outcome: <code>{{ plan.source_pressure_outcome }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week8') }}">
+  <h2>Prep response</h2>
+  {% for option in plan.options %}
+    <label class="choice">
+      <input type="radio" name="week8_prep" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Cost: {{ option.cost }}</div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock Week 8 prep</button>
+    <a class="btn secondary" href="{{ url_for('week7_result') }}">Back to pressure</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Week 8 setup</h2>
+<div class="card">
+  <strong>{{ lock.choice_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Modifier: <code>{{ lock.week8_modifier }}</code></div>
+  <div class="muted">Review-room trust {{ "%+d"|format(lock.review_room_trust_delta) }} · competitive edge {{ "%+d"|format(lock.competitive_edge_delta) }} · volatility {{ "%+d"|format(lock.volatility_delta) }}</div>
+</div>
+
+<h2>Tradeoff</h2>
+<div class="card">
+  <strong>Gains</strong>
+  <div>{{ lock.gains|join(", ") }}</div>
+  <strong>Costs</strong>
+  <div>{{ lock.costs|join(", ") }}</div>
+</div>
+
+{% if prep_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this prep response:
+  <div><code>{{ prep_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}
