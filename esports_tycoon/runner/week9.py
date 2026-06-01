@@ -15,9 +15,11 @@ Week9ResponseChoice = Literal[
     "control_public_story",
 ]
 Week9PrepChoice = Literal["lean_into_bias", "balance_risk", "counter_read"]
+Week9ScrimReadChoice = Literal["room_read", "public_read", "tactical_read"]
 
 WEEK9_SETUP_FILENAME = "week9_setup.json"
 WEEK9_PREP_FILENAME = "week9_prep.json"
+WEEK9_SCRIM_FILENAME = "week9_scrim.json"
 WEEK9_RESPONSE_CHOICES: tuple[Week9ResponseChoice, ...] = (
     "stabilize_roster",
     "double_down_read",
@@ -27,6 +29,11 @@ WEEK9_PREP_CHOICES: tuple[Week9PrepChoice, ...] = (
     "lean_into_bias",
     "balance_risk",
     "counter_read",
+)
+WEEK9_SCRIM_CHOICES: tuple[Week9ScrimReadChoice, ...] = (
+    "room_read",
+    "public_read",
+    "tactical_read",
 )
 
 
@@ -175,6 +182,83 @@ class Week9PrepLock:
     combined_confidence_delta: int
     combined_external_pressure_delta: int
     match_read_alignment: str
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week9ScrimRead:
+    """One deterministic interpretation available after the Week-9 scrim."""
+
+    value: Week9ScrimReadChoice
+    label: str
+    status: str
+    headline: str
+    interpretation: str
+    recommendation: str
+    match_plan_pressure: str
+    source_refs: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class Week9ScrimPlan:
+    """The read-only Week-9 scrim read caused by setup + prep artifacts."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    week8_outcome_id: str
+    week8_match_result: str
+    week8_scoreline: str
+    selected_plan: str
+    week9_problem_id: str
+    manager_problem: str
+    selected_response: Week9ResponseChoice
+    response_label: str
+    selected_prep: Week9PrepChoice
+    prep_label: str
+    selected_prep_bias: str
+    match_read_alignment: str
+    combined_risk_delta: int
+    combined_confidence_delta: int
+    combined_external_pressure_delta: int
+    setup_read_id: Week9ScrimReadChoice
+    prep_read_id: Week9ScrimReadChoice
+    recommended_scrim_read: Week9ScrimReadChoice
+    recommendation_reason: str
+    reads: tuple[Week9ScrimRead, ...]
+
+
+@dataclass(frozen=True)
+class Week9ScrimLock:
+    """The deterministic artifact produced by locking a Week-9 scrim read."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    week8_outcome_id: str
+    week8_match_result: str
+    week8_scoreline: str
+    selected_plan: str
+    week9_problem_id: str
+    manager_problem: str
+    selected_response: Week9ResponseChoice
+    response_label: str
+    selected_prep: Week9PrepChoice
+    prep_label: str
+    selected_prep_bias: str
+    match_read_alignment: str
+    combined_risk_delta: int
+    combined_confidence_delta: int
+    combined_external_pressure_delta: int
+    setup_read_id: Week9ScrimReadChoice
+    prep_read_id: Week9ScrimReadChoice
+    available_choices: tuple[Week9ScrimReadChoice, ...]
+    recommended_scrim_read: Week9ScrimReadChoice
+    selected_scrim_read: Week9ScrimReadChoice
+    read_label: str
+    scrim_reads: tuple[Week9ScrimRead, ...]
+    selected_match_plan_pressure: str
+    recommendation_reason: str
     next_hook: str
 
 
@@ -652,6 +736,421 @@ def render_week9_prep_json(lock: Week9PrepLock) -> str:
             "match_read_alignment": lock.match_read_alignment,
             "next_hook": lock.next_hook,
             "next_artifact": "week9_scrim.json",
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_READ_LABELS: dict[Week9ScrimReadChoice, str] = {
+    "room_read": "Room read",
+    "public_read": "Public read",
+    "tactical_read": "Tactical read",
+}
+
+_MATCH_PLAN_PRESSURES: dict[Week9ScrimReadChoice, str] = {
+    "room_read": "room_confidence",
+    "public_read": "external_pressure",
+    "tactical_read": "tactical_proof",
+}
+
+_READ_HEADLINES: dict[Week9ScrimReadChoice, dict[str, str]] = {
+    "room_read": {
+        "reinforced": "The room heard one message twice",
+        "exposed": "The room is where the prep can crack",
+        "watch": "The room still owns the first pressure",
+        "secondary": "The room is steady enough to monitor",
+    },
+    "public_read": {
+        "reinforced": "The outside story is now the scrim story",
+        "exposed": "The public counter is the first stress point",
+        "watch": "The public read still frames the block",
+        "secondary": "The public noise stays outside the main test",
+    },
+    "tactical_read": {
+        "reinforced": "The tape and the prep point at the same test",
+        "exposed": "The tactical tell is what breaks first",
+        "watch": "The tactical question still has to be respected",
+        "secondary": "The tactical read is useful but not decisive yet",
+    },
+}
+
+_READ_INTERPRETATIONS: dict[Week9ScrimReadChoice, dict[str, str]] = {
+    "room_read": {
+        "reinforced": (
+            "Players repeated the same call language under pressure; the staff can treat "
+            "the room as a strength only if it holds through the next plan."
+        ),
+        "exposed": (
+            "The prep lane moved the stress back inside the room; the first missed protocol "
+            "will read like a confidence problem."
+        ),
+        "watch": (
+            "The setup response still sits in the room, but the prep lane is testing another "
+            "surface first."
+        ),
+        "secondary": (
+            "The room stayed playable through the scrim, but it was not the loudest signal "
+            "from the block."
+        ),
+    },
+    "public_read": {
+        "reinforced": (
+            "The scrim gave the staff enough evidence to keep shaping the outside story "
+            "before it shapes the team."
+        ),
+        "exposed": (
+            "The prep lane visibly reacted to the outside read; if Week 9 starts slow, the "
+            "story will look defensive."
+        ),
+        "watch": (
+            "The setup response still has public pressure attached, even though the prep "
+            "block searched elsewhere."
+        ),
+        "secondary": (
+            "The outside noise did not dominate the scrim, but the match plan still has to "
+            "leave fewer public questions."
+        ),
+    },
+    "tactical_read": {
+        "reinforced": (
+            "The scrim repeated the same tactical stress and found a usable first answer; "
+            "the next plan can be more specific."
+        ),
+        "exposed": (
+            "The prep lane created one clear tactical tell: opponents can force this look "
+            "before the room is fully settled."
+        ),
+        "watch": (
+            "The original response still carries a tactical question, but the prep lane "
+            "did not spend the whole block solving it."
+        ),
+        "secondary": (
+            "The staff has usable tape, but the tactical read is not strong enough to carry "
+            "the plan by itself."
+        ),
+    },
+}
+
+_READ_RECOMMENDATIONS: dict[Week9ScrimReadChoice, str] = {
+    "room_read": "Build the Week 9 plan around protecting room confidence at first contact.",
+    "public_read": "Build the Week 9 plan around reducing the outside pressure's cleanest angle.",
+    "tactical_read": "Build the Week 9 plan around the clearest tactical proof from the block.",
+}
+
+
+def _setup_read_id(setup: Week9SetupLock) -> Week9ScrimReadChoice:
+    if setup.selected_response == "stabilize_roster":
+        return "room_read"
+    if setup.selected_response == "control_public_story":
+        return "public_read"
+    return "tactical_read"
+
+
+def _prep_read_id(prep: Week9PrepLock) -> Week9ScrimReadChoice:
+    if prep.selected_prep == "counter_read" or prep.selected_prep_bias == "public_read_counter":
+        return "public_read"
+    if prep.selected_prep == "balance_risk" or prep.selected_prep_bias == "fundamentals":
+        return "tactical_read"
+    if prep.selected_prep_bias == "room_stability":
+        return "room_read"
+    if prep.selected_prep_bias == "external_pressure":
+        return "public_read"
+    return "tactical_read"
+
+
+def _read_status(
+    read_id: Week9ScrimReadChoice,
+    setup_read_id: Week9ScrimReadChoice,
+    prep_read_id: Week9ScrimReadChoice,
+) -> str:
+    if read_id == setup_read_id == prep_read_id:
+        return "reinforced"
+    if read_id == prep_read_id:
+        return "exposed"
+    if read_id == setup_read_id:
+        return "watch"
+    return "secondary"
+
+
+def _recommendation_reason(
+    setup: Week9SetupLock,
+    prep: Week9PrepLock,
+    setup_read_id: Week9ScrimReadChoice,
+    prep_read_id: Week9ScrimReadChoice,
+) -> str:
+    if setup_read_id == prep_read_id:
+        return (
+            f"{setup.selected_response} and {prep.selected_prep} both point at "
+            f"{_READ_LABELS[prep_read_id].lower()}."
+        )
+    return (
+        f"{prep.selected_prep} pulls the scrim toward {_READ_LABELS[prep_read_id].lower()} "
+        f"after {setup.selected_response} opened {_READ_LABELS[setup_read_id].lower()}."
+    )
+
+
+def _scrim_read_options(
+    setup: Week9SetupLock,
+    prep: Week9PrepLock,
+    setup_read_id: Week9ScrimReadChoice,
+    prep_read_id: Week9ScrimReadChoice,
+) -> tuple[Week9ScrimRead, ...]:
+    source_refs = (
+        f"setup:{setup.selected_response}",
+        f"prep:{prep.selected_prep}",
+    )
+    reads: list[Week9ScrimRead] = []
+    for read_id in WEEK9_SCRIM_CHOICES:
+        status = _read_status(read_id, setup_read_id, prep_read_id)
+        reads.append(
+            Week9ScrimRead(
+                value=read_id,
+                label=_READ_LABELS[read_id],
+                status=status,
+                headline=_READ_HEADLINES[read_id][status],
+                interpretation=_READ_INTERPRETATIONS[read_id][status],
+                recommendation=_READ_RECOMMENDATIONS[read_id],
+                match_plan_pressure=_MATCH_PLAN_PRESSURES[read_id],
+                source_refs=source_refs,
+            )
+        )
+    return tuple(reads)
+
+
+def week9_scrim_plan(setup: Week9SetupLock, prep: Week9PrepLock) -> Week9ScrimPlan:
+    """Build the deterministic Week-9 scrim read from setup + prep artifacts."""
+    if setup.source_branch != prep.source_branch or setup.setup_branch != prep.setup_branch:
+        raise ValueError("week9 scrim artifacts do not agree on source branch")
+    if setup.chosen_focus != prep.chosen_focus:
+        raise ValueError("week9 scrim artifacts do not agree on chosen focus")
+    if setup.week8_outcome_id != prep.week8_outcome_id:
+        raise ValueError("week9 scrim artifacts do not agree on Week-8 outcome")
+    if setup.selected_response != prep.selected_response:
+        raise ValueError("week9 scrim prep does not match setup response")
+    if setup.week9_problem_id != prep.week9_problem_id:
+        raise ValueError("week9 scrim prep does not match setup problem")
+
+    setup_read_id = _setup_read_id(setup)
+    prep_read_id = _prep_read_id(prep)
+    reads = _scrim_read_options(setup, prep, setup_read_id, prep_read_id)
+    return Week9ScrimPlan(
+        source_branch=setup.source_branch,
+        setup_branch=setup.setup_branch,
+        chosen_focus=setup.chosen_focus,
+        week8_outcome_id=setup.week8_outcome_id,
+        week8_match_result=setup.week8_match_result,
+        week8_scoreline=setup.week8_scoreline,
+        selected_plan=setup.selected_plan,
+        week9_problem_id=setup.week9_problem_id,
+        manager_problem=setup.manager_problem,
+        selected_response=setup.selected_response,
+        response_label=setup.response_label,
+        selected_prep=prep.selected_prep,
+        prep_label=prep.prep_label,
+        selected_prep_bias=prep.selected_prep_bias,
+        match_read_alignment=prep.match_read_alignment,
+        combined_risk_delta=prep.combined_risk_delta,
+        combined_confidence_delta=prep.combined_confidence_delta,
+        combined_external_pressure_delta=prep.combined_external_pressure_delta,
+        setup_read_id=setup_read_id,
+        prep_read_id=prep_read_id,
+        recommended_scrim_read=prep_read_id,
+        recommendation_reason=_recommendation_reason(setup, prep, setup_read_id, prep_read_id),
+        reads=reads,
+    )
+
+
+def resolve_week9_scrim(plan: Week9ScrimPlan, selected_read: str) -> Week9ScrimLock:
+    """Resolve one Week-9 scrim read into a deterministic artifact."""
+    if selected_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("selected_read must be room_read, public_read, or tactical_read")
+    read: Week9ScrimReadChoice = selected_read  # type: ignore[assignment]
+    selected = next(option for option in plan.reads if option.value == read)
+    return Week9ScrimLock(
+        source_branch=plan.source_branch,
+        setup_branch=plan.setup_branch,
+        chosen_focus=plan.chosen_focus,
+        week8_outcome_id=plan.week8_outcome_id,
+        week8_match_result=plan.week8_match_result,
+        week8_scoreline=plan.week8_scoreline,
+        selected_plan=plan.selected_plan,
+        week9_problem_id=plan.week9_problem_id,
+        manager_problem=plan.manager_problem,
+        selected_response=plan.selected_response,
+        response_label=plan.response_label,
+        selected_prep=plan.selected_prep,
+        prep_label=plan.prep_label,
+        selected_prep_bias=plan.selected_prep_bias,
+        match_read_alignment=plan.match_read_alignment,
+        combined_risk_delta=plan.combined_risk_delta,
+        combined_confidence_delta=plan.combined_confidence_delta,
+        combined_external_pressure_delta=plan.combined_external_pressure_delta,
+        setup_read_id=plan.setup_read_id,
+        prep_read_id=plan.prep_read_id,
+        available_choices=WEEK9_SCRIM_CHOICES,
+        recommended_scrim_read=plan.recommended_scrim_read,
+        selected_scrim_read=read,
+        read_label=selected.label,
+        scrim_reads=plan.reads,
+        selected_match_plan_pressure=selected.match_plan_pressure,
+        recommendation_reason=plan.recommendation_reason,
+        next_hook=(
+            f"Week 9 match planning inherits {selected.match_plan_pressure} "
+            f"from {read}."
+        ),
+    )
+
+
+def week9_scrim_from_json(text: str) -> Week9ScrimLock:
+    """Parse a written ``week9_scrim.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week9_scrim JSON is malformed") from exc
+    scrim = data.get("week9_scrim") if isinstance(data, dict) else None
+    if not isinstance(scrim, dict):
+        raise ValueError("week9_scrim JSON must contain a week9_scrim object")
+    selected = scrim.get("selected_scrim_read")
+    if selected not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_scrim selected_scrim_read must list a Week-9 scrim read")
+    recommended = scrim.get("recommended_scrim_read")
+    if recommended not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_scrim recommended_scrim_read must list a Week-9 scrim read")
+    setup_read = scrim.get("setup_read_id")
+    if setup_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_scrim setup_read_id must list a Week-9 scrim read")
+    prep_read = scrim.get("prep_read_id")
+    if prep_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_scrim prep_read_id must list a Week-9 scrim read")
+    response = scrim.get("selected_response")
+    if response not in WEEK9_RESPONSE_CHOICES:
+        raise ValueError("week9_scrim selected_response must list a Week-9 response choice")
+    prep_choice = scrim.get("selected_prep")
+    if prep_choice not in WEEK9_PREP_CHOICES:
+        raise ValueError("week9_scrim selected_prep must list a Week-9 prep choice")
+    available = scrim.get("available_choices")
+    if not isinstance(available, list) or any(choice not in WEEK9_SCRIM_CHOICES for choice in available):
+        raise ValueError("week9_scrim available_choices must list Week-9 scrim reads")
+    focus = scrim.get("chosen_focus")
+    if focus not in WEEK7_FOCI:
+        raise ValueError("week9_scrim chosen_focus must be contain_fallout or prove_ceiling")
+    combined = scrim.get("combined_effect")
+    if not isinstance(combined, dict):
+        raise ValueError("week9_scrim JSON must include combined_effect")
+    raw_reads = scrim.get("scrim_reads")
+    if not isinstance(raw_reads, list) or len(raw_reads) != len(WEEK9_SCRIM_CHOICES):
+        raise ValueError("week9_scrim scrim_reads must list exactly three reads")
+    reads: list[Week9ScrimRead] = []
+    for raw in raw_reads:
+        if not isinstance(raw, dict):
+            raise ValueError("week9_scrim scrim_reads entries must be objects")
+        read_id = raw.get("id")
+        if read_id not in WEEK9_SCRIM_CHOICES:
+            raise ValueError("week9_scrim scrim_reads ids must be Week-9 scrim reads")
+        source_refs = raw.get("source_refs")
+        if not isinstance(source_refs, list):
+            raise ValueError("week9_scrim scrim_reads entries must include source_refs")
+        reads.append(
+            Week9ScrimRead(
+                value=read_id,
+                label=str(raw.get("label", "")),
+                status=str(raw.get("status", "")),
+                headline=str(raw.get("headline", "")),
+                interpretation=str(raw.get("interpretation", "")),
+                recommendation=str(raw.get("recommendation", "")),
+                match_plan_pressure=str(raw.get("match_plan_pressure", "")),
+                source_refs=tuple(str(item) for item in source_refs),
+            )
+        )
+    if tuple(read.value for read in reads) != WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_scrim scrim_reads must use room/public/tactical order")
+    return Week9ScrimLock(
+        source_branch=str(scrim.get("source_branch", "")),
+        setup_branch=str(scrim.get("setup_branch", "")),
+        chosen_focus=focus,
+        week8_outcome_id=str(scrim.get("week8_outcome_id", "")),
+        week8_match_result=str(scrim.get("week8_match_result", "")),
+        week8_scoreline=str(scrim.get("week8_scoreline", "")),
+        selected_plan=str(scrim.get("selected_plan", "")),
+        week9_problem_id=str(scrim.get("week9_problem_id", "")),
+        manager_problem=str(scrim.get("manager_problem", "")),
+        selected_response=response,
+        response_label=str(scrim.get("response_label", "")),
+        selected_prep=prep_choice,
+        prep_label=str(scrim.get("prep_label", "")),
+        selected_prep_bias=str(scrim.get("selected_prep_bias", "")),
+        match_read_alignment=str(scrim.get("match_read_alignment", "")),
+        combined_risk_delta=int(combined.get("risk", 0)),
+        combined_confidence_delta=int(combined.get("confidence", 0)),
+        combined_external_pressure_delta=int(combined.get("external_pressure", 0)),
+        setup_read_id=setup_read,
+        prep_read_id=prep_read,
+        available_choices=tuple(available),  # type: ignore[arg-type]
+        recommended_scrim_read=recommended,
+        selected_scrim_read=selected,
+        read_label=str(scrim.get("read_label", "")),
+        scrim_reads=tuple(reads),
+        selected_match_plan_pressure=str(scrim.get("selected_match_plan_pressure", "")),
+        recommendation_reason=str(scrim.get("recommendation_reason", "")),
+        next_hook=str(scrim.get("next_hook", "")),
+    )
+
+
+def render_week9_scrim_json(lock: Week9ScrimLock) -> str:
+    """Canonical JSON export for a locked Week-9 scrim read."""
+    payload = {
+        "week9_scrim": {
+            "artifact_type": "week9_scrim",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week9_setup": "week9_setup.json",
+                "week9_prep": "week9_prep.json",
+            },
+            "week": 9,
+            "route": "/week9/scrim",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week8_outcome_id": lock.week8_outcome_id,
+            "week8_match_result": lock.week8_match_result,
+            "week8_scoreline": lock.week8_scoreline,
+            "selected_plan": lock.selected_plan,
+            "week9_problem_id": lock.week9_problem_id,
+            "manager_problem": lock.manager_problem,
+            "selected_response": lock.selected_response,
+            "response_label": lock.response_label,
+            "selected_prep": lock.selected_prep,
+            "prep_label": lock.prep_label,
+            "selected_prep_bias": lock.selected_prep_bias,
+            "match_read_alignment": lock.match_read_alignment,
+            "combined_effect": {
+                "risk": lock.combined_risk_delta,
+                "confidence": lock.combined_confidence_delta,
+                "external_pressure": lock.combined_external_pressure_delta,
+            },
+            "setup_read_id": lock.setup_read_id,
+            "prep_read_id": lock.prep_read_id,
+            "available_choices": list(lock.available_choices),
+            "recommended_scrim_read": lock.recommended_scrim_read,
+            "selected_scrim_read": lock.selected_scrim_read,
+            "read_label": lock.read_label,
+            "scrim_reads": [
+                {
+                    "id": read.value,
+                    "label": read.label,
+                    "status": read.status,
+                    "headline": read.headline,
+                    "interpretation": read.interpretation,
+                    "recommendation": read.recommendation,
+                    "match_plan_pressure": read.match_plan_pressure,
+                    "source_refs": list(read.source_refs),
+                }
+                for read in lock.scrim_reads
+            ],
+            "selected_match_plan_pressure": lock.selected_match_plan_pressure,
+            "recommendation_reason": lock.recommendation_reason,
+            "next_hook": lock.next_hook,
+            "next_artifact": "week9_match_plan.json",
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"

@@ -126,6 +126,12 @@ Foundation scope landed:
   bias, and writes `week9_prep.json` after the player locks one of three prep
   lanes. The artifact points to `week9_scrim.json`, but scrim simulation remains
   out of scope.
+- The Week 9 prep lane now turns into a deterministic consequence read on
+  `/week9/scrim`: it consumes `week9_setup.json` plus `week9_prep.json`, exposes
+  exactly `room_read`, `public_read`, and `tactical_read`, and writes
+  `week9_scrim.json` with a `week9_match_plan.json` handoff. Match planning,
+  match result resolution, standings, sponsor, fan, and roster systems remain
+  out of scope.
 
 ## Why this was held
 
