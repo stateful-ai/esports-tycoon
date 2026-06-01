@@ -45,6 +45,7 @@ the engine and its tests free of the web dependency.
 
 from __future__ import annotations
 
+import mimetypes
 import os
 from pathlib import Path
 from typing import Optional
@@ -157,6 +158,7 @@ from esports_tycoon.schema import WorldState
 __all__ = ["create_app"]
 
 _PRACTICE_VALUES = frozenset(value for value, _, _ in PRACTICE_CHOICES)
+mimetypes.add_type("image/webp", ".webp")
 
 
 def create_app(
