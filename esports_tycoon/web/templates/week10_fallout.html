@@ -68,6 +68,9 @@
 <div class="card">
   <div>{{ lock.next_hook }}</div>
   <div class="muted">Next artifact: <code>week10_prep.json</code></div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week10_prep') }}">Open Week 10 prep</a>
+  </div>
 </div>
 
 {% if week10_fallout_path %}
