@@ -25,6 +25,8 @@ The week is a short linear flow, one decision per step:
     /week8       the pressure payoff becomes a deterministic prep tradeoff
     /week8/scrim the prep response becomes a deterministic scrim setup
     /week8/match the scrim setup becomes a deterministic match-plan preview
+    /week8/match/result
+                 the match plan becomes a deterministic match result + Week-9 hook
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -73,17 +75,21 @@ from esports_tycoon.runner.week7 import (
 )
 from esports_tycoon.runner.week8 import (
     WEEK8_MATCH_PLAN_FILENAME,
+    WEEK8_MATCH_RESULT_FILENAME,
     WEEK8_PREP_FILENAME,
     WEEK8_SCRIM_FILENAME,
     pressure_payload_from_json,
     render_week8_match_plan_json,
+    render_week8_match_result_json,
     render_week8_prep_json,
     render_week8_scrim_json,
     resolve_week8_match_plan,
+    resolve_week8_match_result,
     resolve_week8_prep,
     resolve_week8_scrim,
     week8_match_plan_from_json,
     week8_match_preview,
+    week8_match_result_from_json,
     week8_prep_from_json,
     week8_prep_plan,
     week8_scrim_from_json,
@@ -640,6 +646,62 @@ def create_app(
             preview=preview,
             lock=lock,
             match_plan_path=match_plan_written_path,
+        )
+
+    @app.route("/week8/match/result", methods=["GET", "POST"])
+    def week8_match_result():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 8 match result unlocks after the Week 8 match plan.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        match_plan_path = run_dir / WEEK8_MATCH_PLAN_FILENAME
+        match_result_path = run_dir / WEEK8_MATCH_RESULT_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK8_MATCH_PLAN_FILENAME, match_plan_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        match_result = None
+        match_result_written_path = ""
+        if not missing:
+            try:
+                plan = week8_match_plan_from_json(match_plan_path.read_text(encoding="utf-8"))
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    match_result = resolve_week8_match_result(plan)
+                    match_result_path.write_text(
+                        render_week8_match_result_json(match_result),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    match_result_written_path = str(match_result_path)
+                elif match_result_path.is_file():
+                    try:
+                        match_result = week8_match_result_from_json(
+                            match_result_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        match_result_written_path = str(match_result_path)
+
+        return render_template(
+            "week8_match_result.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            match_result=match_result,
+            match_result_path=match_result_written_path,
         )
 
     @app.get("/feed")

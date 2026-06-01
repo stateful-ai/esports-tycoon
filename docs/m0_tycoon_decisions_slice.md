@@ -111,6 +111,11 @@ Foundation scope landed:
   edge, and the match risk, then writes `week8_match_plan.json` after the player
   locks either `patch_weakness` or `lean_into_edge`. This adds the match-week
   planning decision without simulating the match result yet.
+- The match plan now pays off on `/week8/match/result`: it consumes
+  `week8_match_plan.json`, resolves the plan into an outcome/scoreline/public
+  read/pressure beat, and writes `week8_match_result.json` with a Week 9 hook.
+  The slice deliberately keeps media, sponsor, roster, and Week 9 systems out of
+  scope until the single-result consequence is proven.
 
 ## Why this was held
 

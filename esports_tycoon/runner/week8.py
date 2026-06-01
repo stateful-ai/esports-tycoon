@@ -20,10 +20,13 @@ from esports_tycoon.runner.week7 import (
 Week8PrepChoice = Literal["patch_exposed_break", "double_down_identity"]
 Week8ScrimChoice = Literal["play_to_prep", "cover_the_crack"]
 Week8MatchPlanChoice = Literal["patch_weakness", "lean_into_edge"]
+Week8MatchOutcome = Literal["clean_win", "messy_win", "loss_with_signal"]
+Week8MatchResult = Literal["win", "loss"]
 
 WEEK8_PREP_FILENAME = "week8_prep.json"
 WEEK8_SCRIM_FILENAME = "week8_scrim.json"
 WEEK8_MATCH_PLAN_FILENAME = "week8_match_plan.json"
+WEEK8_MATCH_RESULT_FILENAME = "week8_match_result.json"
 WEEK8_PREP_CHOICES: tuple[Week8PrepChoice, ...] = (
     "patch_exposed_break",
     "double_down_identity",
@@ -221,6 +224,36 @@ class Week8MatchPlanLock:
     match_pressure: str
     next_problem: str
     next_hook: str
+
+
+@dataclass(frozen=True)
+class Week8MatchResultLock:
+    """The deterministic artifact produced by resolving the Week-8 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    source_pressure_outcome: str
+    pressure_headline: str
+    prep_choice: Week8PrepChoice
+    scrim_call: Week8ScrimChoice
+    selected_plan: Week8MatchPlanChoice
+    recommended_plan: Week8MatchPlanChoice
+    matched_recommendation: bool
+    match_risk: str
+    opponent_attack: str
+    team_edge: str
+    match_pressure: str
+    source_next_problem: str
+    outcome_id: Week8MatchOutcome
+    match_result: Week8MatchResult
+    scoreline: str
+    plan_effect: str
+    public_read: str
+    pressure: str
+    consequence_axis: str
+    consequence_delta: int
+    week9_hook: str
 
 
 def pressure_payload_from_json(text: str) -> Week7PressurePayload:
@@ -975,6 +1008,229 @@ def render_week8_match_plan_json(lock: Week8MatchPlanLock) -> str:
             "match_pressure": lock.match_pressure,
             "next_problem": lock.next_problem,
             "next_hook": lock.next_hook,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+def _match_outcome(lock: Week8MatchPlanLock) -> tuple[Week8MatchOutcome, Week8MatchResult, str]:
+    matched = lock.selected_plan == lock.recommended_plan
+    if matched and lock.match_risk == "low":
+        return "clean_win", "win", "2-0"
+    if matched:
+        return "messy_win", "win", "2-1"
+    if lock.match_risk == "low":
+        return "messy_win", "win", "2-1"
+    if lock.match_risk == "high":
+        return "loss_with_signal", "loss", "0-2"
+    return "loss_with_signal", "loss", "1-2"
+
+
+def _match_plan_effect(lock: Week8MatchPlanLock, outcome: Week8MatchOutcome) -> str:
+    if lock.selected_plan == "patch_weakness" and outcome != "loss_with_signal":
+        return (
+            f"The staff protected {lock.opponent_attack}; the team survived first contact "
+            f"even while {lock.team_edge} looked muted."
+        )
+    if lock.selected_plan == "patch_weakness":
+        return (
+            f"The team overprotected {lock.opponent_attack} and gave away the "
+            f"{lock.team_edge} edge the preview identified."
+        )
+    if outcome != "loss_with_signal":
+        return (
+            f"The team trusted {lock.team_edge}; Apex Foundry did not get enough time "
+            f"to punish {lock.opponent_attack}."
+        )
+    return (
+        f"Apex Foundry forced {lock.opponent_attack}; {lock.team_edge} never stabilized "
+        "long enough to become the match plan."
+    )
+
+
+def _match_public_read(
+    lock: Week8MatchPlanLock,
+    outcome: Week8MatchOutcome,
+    result: Week8MatchResult,
+) -> str:
+    if outcome == "clean_win":
+        return "The public read is prepared team, not lucky team."
+    if result == "win" and lock.selected_plan == "patch_weakness":
+        return "Fans saw the fix land, but the win looked narrow."
+    if result == "win":
+        return "Fans saw ceiling, with enough volatility to keep the next preview noisy."
+    if lock.selected_plan == "patch_weakness":
+        return "Coverage frames the loss as a staff plan that got too careful."
+    return "Coverage frames the loss as ignoring the scout read under pressure."
+
+
+def _match_pressure(lock: Week8MatchPlanLock, outcome: Week8MatchOutcome) -> tuple[str, str, int]:
+    if outcome == "clean_win":
+        return (
+            "Opponents now have a clean first-contact script to copy.",
+            "confidence",
+            2,
+        )
+    if outcome == "messy_win" and lock.selected_plan == "patch_weakness":
+        return (
+            "Sponsors like the correction but want a cleaner Week 9 showing.",
+            "coach_trust",
+            1,
+        )
+    if outcome == "messy_win":
+        return (
+            "The roster likes the freedom, but the staff inherits a louder volatility question.",
+            "player_pressure",
+            1,
+        )
+    if lock.selected_plan == "patch_weakness":
+        return (
+            "The room trusts the intention, but the meta read says the team lost threat.",
+            "meta_read",
+            -1,
+        )
+    return (
+        "The roster has to answer why the known attack got through untouched.",
+        "player_pressure",
+        -2,
+    )
+
+
+def _week9_hook(lock: Week8MatchPlanLock, outcome: Week8MatchOutcome) -> str:
+    if outcome == "loss_with_signal":
+        return (
+            f"Week 9 opens on {lock.next_problem}: rebuild the plan after Apex Foundry "
+            "proved the pressure read."
+        )
+    if lock.next_problem.endswith("_managed_but_edge_dulled"):
+        return f"Week 9 opens on {lock.next_problem}: restore threat without undoing the patch."
+    return f"Week 9 opens on {lock.next_problem}: prove the edge can survive a prepared counter."
+
+
+def resolve_week8_match_result(lock: Week8MatchPlanLock) -> Week8MatchResultLock:
+    """Resolve a locked Week-8 match plan into a deterministic match result."""
+    outcome, result, scoreline = _match_outcome(lock)
+    pressure, axis, delta = _match_pressure(lock, outcome)
+    return Week8MatchResultLock(
+        source_branch=lock.source_branch,
+        setup_branch=lock.setup_branch,
+        chosen_focus=lock.chosen_focus,
+        source_pressure_outcome=lock.source_pressure_outcome,
+        pressure_headline=lock.pressure_headline,
+        prep_choice=lock.prep_choice,
+        scrim_call=lock.scrim_call,
+        selected_plan=lock.selected_plan,
+        recommended_plan=lock.recommended_plan,
+        matched_recommendation=lock.selected_plan == lock.recommended_plan,
+        match_risk=lock.match_risk,
+        opponent_attack=lock.opponent_attack,
+        team_edge=lock.team_edge,
+        match_pressure=lock.match_pressure,
+        source_next_problem=lock.next_problem,
+        outcome_id=outcome,
+        match_result=result,
+        scoreline=scoreline,
+        plan_effect=_match_plan_effect(lock, outcome),
+        public_read=_match_public_read(lock, outcome, result),
+        pressure=pressure,
+        consequence_axis=axis,
+        consequence_delta=delta,
+        week9_hook=_week9_hook(lock, outcome),
+    )
+
+
+def week8_match_result_from_json(text: str) -> Week8MatchResultLock:
+    """Parse a written ``week8_match_result.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week8_match_result JSON is malformed") from exc
+    result = data.get("week8_match_result") if isinstance(data, dict) else None
+    if not isinstance(result, dict):
+        raise ValueError("week8_match_result JSON must contain a week8_match_result object")
+    selected = result.get("selected_plan")
+    if selected not in WEEK8_MATCH_PLAN_CHOICES:
+        raise ValueError("week8_match_result selected_plan must be patch_weakness or lean_into_edge")
+    recommended = result.get("recommended_plan")
+    if recommended not in WEEK8_MATCH_PLAN_CHOICES:
+        raise ValueError("week8_match_result recommended_plan must be patch_weakness or lean_into_edge")
+    prep_choice = result.get("prep_choice")
+    if prep_choice not in WEEK8_PREP_CHOICES:
+        raise ValueError("week8_match_result prep_choice must be patch_exposed_break or double_down_identity")
+    scrim_call = result.get("scrim_call")
+    if scrim_call not in WEEK8_SCRIM_CHOICES:
+        raise ValueError("week8_match_result scrim_call must be play_to_prep or cover_the_crack")
+    outcome = result.get("outcome_id")
+    if outcome not in ("clean_win", "messy_win", "loss_with_signal"):
+        raise ValueError("week8_match_result outcome_id must be clean_win, messy_win, or loss_with_signal")
+    match_result = result.get("match_result")
+    if match_result not in ("win", "loss"):
+        raise ValueError("week8_match_result match_result must be win or loss")
+    focus = result.get("chosen_focus")
+    if focus not in WEEK7_FOCI:
+        raise ValueError("week8_match_result chosen_focus must be contain_fallout or prove_ceiling")
+    return Week8MatchResultLock(
+        source_branch=str(result.get("source_branch", "")),
+        setup_branch=str(result.get("setup_branch", "")),
+        chosen_focus=focus,
+        source_pressure_outcome=str(result.get("source_pressure_outcome", "")),
+        pressure_headline=str(result.get("pressure_headline", "")),
+        prep_choice=prep_choice,
+        scrim_call=scrim_call,
+        selected_plan=selected,
+        recommended_plan=recommended,
+        matched_recommendation=bool(result.get("matched_recommendation", selected == recommended)),
+        match_risk=str(result.get("match_risk", "")),
+        opponent_attack=str(result.get("opponent_attack", "")),
+        team_edge=str(result.get("team_edge", "")),
+        match_pressure=str(result.get("match_pressure", "")),
+        source_next_problem=str(result.get("source_next_problem", "")),
+        outcome_id=outcome,
+        match_result=match_result,
+        scoreline=str(result.get("scoreline", "")),
+        plan_effect=str(result.get("plan_effect", "")),
+        public_read=str(result.get("public_read", "")),
+        pressure=str(result.get("pressure", "")),
+        consequence_axis=str(result.get("consequence_axis", "")),
+        consequence_delta=int(result.get("consequence_delta", 0)),
+        week9_hook=str(result.get("week9_hook", "")),
+    )
+
+
+def render_week8_match_result_json(lock: Week8MatchResultLock) -> str:
+    """Canonical JSON export for a resolved Week-8 match result."""
+    payload = {
+        "week8_match_result": {
+            "artifact_type": "week8_match_result",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week8_match_plan": "week8_match_plan.json",
+            },
+            "week": 8,
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "source_pressure_outcome": lock.source_pressure_outcome,
+            "pressure_headline": lock.pressure_headline,
+            "prep_choice": lock.prep_choice,
+            "scrim_call": lock.scrim_call,
+            "selected_plan": lock.selected_plan,
+            "recommended_plan": lock.recommended_plan,
+            "matched_recommendation": lock.matched_recommendation,
+            "match_risk": lock.match_risk,
+            "opponent_attack": lock.opponent_attack,
+            "team_edge": lock.team_edge,
+            "match_pressure": lock.match_pressure,
+            "source_next_problem": lock.source_next_problem,
+            "outcome_id": lock.outcome_id,
+            "match_result": lock.match_result,
+            "scoreline": lock.scoreline,
+            "plan_effect": lock.plan_effect,
+            "public_read": lock.public_read,
+            "pressure": lock.pressure,
+            "consequence_axis": lock.consequence_axis,
+            "consequence_delta": lock.consequence_delta,
+            "week9_hook": lock.week9_hook,
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"

@@ -37,12 +37,14 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week7_focus_json,
     render_week7_pressure_json,
     render_week8_match_plan_json,
+    render_week8_match_result_json,
     render_week8_prep_json,
     render_week8_scrim_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
     resolve_week8_match_plan,
+    resolve_week8_match_result,
     resolve_week8_prep,
     resolve_week8_scrim,
     setup_payload_from_week7_setup,
@@ -672,6 +674,75 @@ class TestWeek8MatchPreview(_Fixture):
         self.assertIn('"artifact_type": "week8_match_plan"', payload)
         self.assertIn('"selected_plan": "lean_into_edge"', payload)
         self.assertIn('"scrim_signal": "identity_split_reps"', payload)
+
+
+class TestWeek8MatchResult(_Fixture):
+    def _match_plan_for(
+        self,
+        drill: str,
+        selected_focus: str,
+        prep_choice: str,
+        scrim_call: str,
+        match_plan_choice: str,
+    ):
+        preview = TestWeek8MatchPreview._preview_for(
+            self,
+            drill,
+            selected_focus,
+            prep_choice,
+            scrim_call,
+        )
+        return resolve_week8_match_plan(preview, match_plan_choice)
+
+    def test_recommended_low_risk_plan_resolves_clean_win(self):
+        plan = self._match_plan_for(
+            "pixie_flash_repair",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "play_to_prep",
+            "lean_into_edge",
+        )
+
+        result = resolve_week8_match_result(plan)
+
+        self.assertEqual(result.outcome_id, "clean_win")
+        self.assertEqual(result.match_result, "win")
+        self.assertEqual(result.scoreline, "2-0")
+        self.assertTrue(result.matched_recommendation)
+        self.assertEqual(result.consequence_axis, "confidence")
+
+    def test_ignored_high_risk_recommendation_resolves_loss(self):
+        plan = self._match_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "double_down_identity",
+            "play_to_prep",
+            "lean_into_edge",
+        )
+
+        result = resolve_week8_match_result(plan)
+
+        self.assertEqual(result.outcome_id, "loss_with_signal")
+        self.assertEqual(result.match_result, "loss")
+        self.assertEqual(result.scoreline, "0-2")
+        self.assertFalse(result.matched_recommendation)
+        self.assertIn("retake_blame_pressure", result.plan_effect)
+
+    def test_week8_match_result_artifact_names_source_plan(self):
+        plan = self._match_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+        )
+        result = resolve_week8_match_result(plan)
+        payload = render_week8_match_result_json(result)
+
+        self.assertIn('"week8_match_plan": "week8_match_plan.json"', payload)
+        self.assertIn('"artifact_type": "week8_match_result"', payload)
+        self.assertIn('"outcome_id": "messy_win"', payload)
+        self.assertIn('"week9_hook":', payload)
 
 
 class TestDeterminism(_Fixture):

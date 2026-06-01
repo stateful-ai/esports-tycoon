@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Week 8 result — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 8 match result</h1>
+<p class="sub">The locked match plan now resolves into one deterministic result and Week 9 hook.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 8 match plan required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week8_match') }}">Back to Week 8 match plan</a>
+  </div>
+</div>
+{% elif plan and not match_result %}
+<div class="card">
+  <strong>Result ready</strong>
+  <div class="muted">Plan: <code>{{ plan.selected_plan }}</code> · recommendation: <code>{{ plan.recommended_plan }}</code></div>
+  <div class="muted">Risk: <code>{{ plan.match_risk }}</code> · pressure: <code>{{ plan.match_pressure }}</code></div>
+  <form method="post" action="{{ url_for('week8_match_result') }}" class="actions">
+    <button class="btn" type="submit">Resolve Week 8 result</button>
+    <a class="btn secondary" href="{{ url_for('week8_match') }}">Back to match plan</a>
+  </form>
+</div>
+{% elif match_result %}
+<div class="card">
+  <strong>{{ match_result.match_result|upper }} {{ match_result.scoreline }}</strong>
+  {% if match_result.matched_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div class="muted">Outcome: <code>{{ match_result.outcome_id }}</code> · risk: <code>{{ match_result.match_risk }}</code></div>
+  <div class="muted">Plan: <code>{{ match_result.selected_plan }}</code> · recommended: <code>{{ match_result.recommended_plan }}</code></div>
+</div>
+
+<h2>Why it happened</h2>
+<div class="card">
+  <strong>{{ match_result.match_pressure }}</strong>
+  <div>{{ match_result.plan_effect }}</div>
+</div>
+
+<h2>Fallout</h2>
+<div class="card">
+  <div>{{ match_result.public_read }}</div>
+  <div>{{ match_result.pressure }}</div>
+  <div class="muted">Axis: <code>{{ match_result.consequence_axis }}</code> · delta {{ "%+d"|format(match_result.consequence_delta) }}</div>
+</div>
+
+<h2>Week 9 hook</h2>
+<div class="card">
+  <div>{{ match_result.week9_hook }}</div>
+  <div class="muted">Source problem: <code>{{ match_result.source_next_problem }}</code></div>
+</div>
+
+{% if match_result_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this match result:
+  <div><code>{{ match_result_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
