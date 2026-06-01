@@ -47,6 +47,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week9_scrim_json,
     render_week9_setup_json,
     render_week10_fallout_json,
+    render_week10_match_plan_json,
     render_week10_prep_json,
     render_week10_scrim_json,
     run_slice,
@@ -62,6 +63,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week9_scrim,
     resolve_week9_setup,
     resolve_week10_fallout,
+    resolve_week10_match_plan,
     resolve_week10_prep,
     resolve_week10_scrim,
     setup_payload_from_week7_setup,
@@ -75,6 +77,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week9_scrim_plan,
     week9_setup_plan,
     week10_fallout_plan,
+    week10_match_plan_from_json,
+    week10_match_plan_preview,
     week10_prep_from_json,
     week10_prep_plan,
     week10_scrim_from_json,
@@ -1399,6 +1403,89 @@ class TestWeek10Scrim(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "selected_scrim"):
             resolve_week10_scrim(prep, plan, "skip_scrims")
+
+
+class TestWeek10MatchPlan(_Fixture):
+    def _scrims_by_outcome(self):
+        scrims = {}
+        for prep in TestWeek10Scrim._preps_by_outcome(self).values():
+            scrim_plan = week10_scrim_plan(prep)
+            for scrim_choice in ("validate_read", "stress_execution", "stabilize_comms"):
+                scrim = resolve_week10_scrim(prep, scrim_plan, scrim_choice)
+                scrims.setdefault(scrim.outcome_id, scrim)
+        return scrims
+
+    def test_week10_match_plan_recommendation_uses_scrim_pressure(self):
+        cases = {
+            "read_validated": "week10_plan_press_advantage",
+            "read_exposed": "week10_plan_protect_pressure",
+            "execution_translated": "week10_plan_press_advantage",
+            "execution_frayed": "week10_plan_protect_pressure",
+            "comms_stabilized": "week10_plan_protect_pressure",
+            "comms_turtled": "week10_plan_trade_map",
+        }
+
+        for scrim_outcome, expected in cases.items():
+            with self.subTest(scrim_outcome=scrim_outcome):
+                preview = week10_match_plan_preview(self._scrims_by_outcome()[scrim_outcome])
+                self.assertEqual(preview.recommended_plan, expected)
+
+    def test_week10_match_plan_lock_fields_are_stable(self):
+        cases = {
+            "week10_plan_protect_pressure": (
+                "Protect pressure",
+                "pressure_protection",
+                "protected_pressure_must_not_collapse",
+            ),
+            "week10_plan_trade_map": ("Trade map", "map_trade", "map_trade_must_create_cross_pressure"),
+            "week10_plan_press_advantage": (
+                "Press advantage",
+                "advantage_press",
+                "pressed_advantage_must_land_before_punish",
+            ),
+        }
+        scrim = self._scrims_by_outcome()["execution_translated"]
+        preview = week10_match_plan_preview(scrim)
+
+        for selected_plan, (label, commitment, constraint) in cases.items():
+            with self.subTest(selected_plan=selected_plan):
+                lock = resolve_week10_match_plan(preview, selected_plan)
+                self.assertEqual(lock.plan_label, label)
+                self.assertEqual(lock.commitment, commitment)
+                self.assertIn(constraint, lock.result_constraints)
+
+    def test_week10_match_plan_artifact_sources_scrim_and_stops_before_result(self):
+        scrim = self._scrims_by_outcome()["execution_translated"]
+        preview = week10_match_plan_preview(scrim)
+        lock = resolve_week10_match_plan(preview, "week10_plan_press_advantage")
+        payload = render_week10_match_plan_json(lock)
+
+        self.assertIn('"week10_scrim": "week10_scrim.json"', payload)
+        self.assertIn('"artifact_type": "week10_match_plan"', payload)
+        self.assertIn('"selected_plan": "week10_plan_press_advantage"', payload)
+        self.assertIn('"plan_lock":', payload)
+        self.assertIn('"result_lock":', payload)
+        self.assertIn('"scrim_effect":', payload)
+        self.assertIn('"result_constraints":', payload)
+        self.assertIn('"stops_before": "week10_match_result"', payload)
+        self.assertIn('"next_artifact": "week10_match_result.json"', payload)
+
+    def test_week10_match_plan_render_parse_round_trip_is_stable(self):
+        scrim = self._scrims_by_outcome()["execution_translated"]
+        preview = week10_match_plan_preview(scrim)
+        lock = resolve_week10_match_plan(preview, "week10_plan_press_advantage")
+        payload = render_week10_match_plan_json(lock)
+        parsed = week10_match_plan_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week10_match_plan_json(parsed), payload)
+
+    def test_week10_match_plan_rejects_invalid_choice(self):
+        scrim = self._scrims_by_outcome()["execution_translated"]
+        preview = week10_match_plan_preview(scrim)
+
+        with self.assertRaisesRegex(ValueError, "selected_plan"):
+            resolve_week10_match_plan(preview, "coinflip")
 
 
 class TestDeterminism(_Fixture):
