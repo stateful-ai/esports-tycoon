@@ -185,7 +185,8 @@ sponsor, or roster system. `/week9` consumes that result and writes
 posture. `/week9/prep` then consumes that posture and writes `week9_prep.json`,
 locking the first Week 9 tactical prep lane. `/week9/scrim` consumes that prep
 and writes `week9_scrim.json`, turning the lane into a room/public/tactical
-read while still deferring match planning and match resolution.
+read. `/week9/match` consumes that read and writes `week9_match_plan.json`,
+locking the match-week plan while still deferring match resolution.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -219,6 +220,9 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
 - **`week9_scrim.json`** — written by `/week9/scrim`, consuming setup + prep
   into exactly three deterministic scrim reads and a `week9_match_plan.json`
   handoff without creating the match plan or result.
+- **`week9_match_plan.json`** — written by `/week9/match`, consuming setup,
+  prep, and scrim reads into exactly three deterministic match-plan options and
+  a `week9_match_result.json` handoff without resolving the result.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

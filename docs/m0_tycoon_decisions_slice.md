@@ -132,6 +132,12 @@ Foundation scope landed:
   `week9_scrim.json` with a `week9_match_plan.json` handoff. Match planning,
   match result resolution, standings, sponsor, fan, and roster systems remain
   out of scope.
+- The Week 9 scrim read now becomes the match-week plan on `/week9/match`: it
+  consumes the Week 9 setup, prep, and scrim artifacts, exposes exactly
+  `protect_the_room`, `play_the_prep`, and `counter_the_read`, and writes
+  `week9_match_plan.json` with result constraints for the future
+  `week9_match_result.json` slice. The route records intent only and still does
+  not resolve scoreline, winner, standings, media fallout, or roster changes.
 
 ## Why this was held
 

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Week 9 match plan — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 9 match plan</h1>
+<p class="sub">The scrim read now becomes the match-week plan, without resolving the result.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 9 scrim required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week9_scrim') }}">Back to Week 9 scrim</a>
+  </div>
+</div>
+{% elif preview %}
+<div class="card">
+  <strong>{{ preview.week9_problem_id }}</strong>
+  <div>{{ preview.manager_problem }}</div>
+  <div class="muted">Response: <code>{{ preview.selected_response }}</code> · prep: <code>{{ preview.selected_prep }}</code> · scrim read: <code>{{ preview.selected_scrim_read }}</code></div>
+  <div class="muted">Plan pressure: <code>{{ preview.selected_match_plan_pressure }}</code> · match risk: <code>{{ preview.match_risk }}</code></div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+  <strong><code>{{ preview.recommended_plan }}</code></strong>
+  <div>{{ preview.recommendation_reason }}</div>
+  <div class="muted">Basis: <code>{{ preview.recommendation_basis }}</code> · setup read: <code>{{ preview.setup_read_id }}</code> · prep read: <code>{{ preview.prep_read_id }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week9_match') }}">
+  <h2>Match plan</h2>
+  {% for option in preview.options %}
+    <label class="choice">
+      <input type="radio" name="week9_match_plan" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Risk: {{ option.cost }}</div>
+      <div class="muted">Uses: <code>{{ option.read_basis }}</code> · commitment: <code>{{ option.commitment }}</code></div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock match plan</button>
+    <a class="btn secondary" href="{{ url_for('week9_scrim') }}">Back to scrim</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked plan</h2>
+<div class="card">
+  <strong>{{ lock.plan_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Commitment: <code>{{ lock.commitment }}</code> · risk: <code>{{ lock.risk_taken }}</code></div>
+  <div class="muted">Watch: {{ lock.thing_to_watch }}</div>
+</div>
+
+{% if week9_match_plan_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 9 match plan:
+  <div><code>{{ week9_match_plan_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}
