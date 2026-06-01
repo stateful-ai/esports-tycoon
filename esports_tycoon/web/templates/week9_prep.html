@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Week 9 prep — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 9 prep</h1>
+<p class="sub">The response posture now becomes a tactical prep lane.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 9 setup required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week9') }}">Back to Week 9 setup</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.week9_problem_id }}</strong>
+  <div>{{ plan.manager_problem }}</div>
+  <div class="muted">Response: <code>{{ plan.selected_response }}</code> · bias: <code>{{ plan.prep_bias }}</code></div>
+  <div class="muted">Starting risk {{ "%+d"|format(plan.starting_risk_delta) }} · confidence {{ "%+d"|format(plan.starting_confidence_delta) }} · external pressure {{ "%+d"|format(plan.starting_external_pressure_delta) }}</div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+  <strong><code>{{ plan.recommended_prep }}</code></strong>
+  <div>{{ plan.public_read }}</div>
+  <div class="muted">{{ plan.pressure }}</div>
+</div>
+
+<form method="post" action="{{ url_for('week9_prep') }}">
+  <h2>Prep lane</h2>
+  {% for option in plan.options %}
+    <label class="choice">
+      <input type="radio" name="week9_prep" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Cost: {{ option.cost }}</div>
+      <div class="muted">Bias: <code>{{ option.prep_bias }}</code> · alignment: <code>{{ option.match_read_alignment }}</code></div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock Week 9 prep</button>
+    <a class="btn secondary" href="{{ url_for('week9') }}">Back to setup</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked prep</h2>
+<div class="card">
+  <strong>{{ lock.prep_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Selected bias: <code>{{ lock.selected_prep_bias }}</code> · alignment: <code>{{ lock.match_read_alignment }}</code></div>
+  <div class="muted">Combined risk {{ "%+d"|format(lock.combined_risk_delta) }} · confidence {{ "%+d"|format(lock.combined_confidence_delta) }} · external pressure {{ "%+d"|format(lock.combined_external_pressure_delta) }}</div>
+</div>
+
+{% if week9_prep_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 9 prep:
+  <div><code>{{ week9_prep_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -182,7 +182,9 @@ and the final prep call before any full match resolver exists.
 public read, pressure beat, and Week 9 hook without adding a broader media,
 sponsor, or roster system. `/week9` consumes that result and writes
 `week9_setup.json`, turning the Week 8 fallout into the next manager response
-posture.
+posture. `/week9/prep` then consumes that posture and writes `week9_prep.json`,
+locking the first Week 9 tactical prep lane while deferring scrim and match
+resolution.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -210,6 +212,9 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
 - **`week9_setup.json`** — written by `/week9`, consuming the Week 8 result into
   a Week 9 problem, recommendation, selected response posture, and next prep
   hook.
+- **`week9_prep.json`** — written by `/week9/prep`, turning the response posture
+  into a deterministic prep lane, combined prep deltas, match-read alignment,
+  and `week9_scrim.json` hook.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

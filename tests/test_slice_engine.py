@@ -40,6 +40,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week8_match_result_json,
     render_week8_prep_json,
     render_week8_scrim_json,
+    render_week9_prep_json,
     render_week9_setup_json,
     run_slice,
     resolve_week7_focus,
@@ -48,6 +49,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week8_match_result,
     resolve_week8_prep,
     resolve_week8_scrim,
+    resolve_week9_prep,
     resolve_week9_setup,
     setup_payload_from_week7_setup,
     slice_events,
@@ -55,6 +57,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week8_match_preview,
     week8_prep_plan,
     week8_scrim_plan,
+    week9_prep_plan,
     week9_setup_plan,
     write_artifacts,
 )
@@ -833,6 +836,96 @@ class TestWeek9FalloutSetup(_Fixture):
         self.assertIn('"artifact_type": "week9_setup"', payload)
         self.assertIn('"selected_response": "double_down_read"', payload)
         self.assertIn('"next_artifact": "week9_prep.json"', payload)
+
+
+class TestWeek9PrepChoice(_Fixture):
+    def _prep_plan_for(
+        self,
+        drill: str,
+        selected_focus: str,
+        prep_choice: str,
+        scrim_call: str,
+        match_plan_choice: str,
+        response_choice: str,
+    ):
+        setup_plan = TestWeek9FalloutSetup._week9_plan_for(
+            self,
+            drill,
+            selected_focus,
+            prep_choice,
+            scrim_call,
+            match_plan_choice,
+        )
+        setup = resolve_week9_setup(setup_plan, response_choice)
+        return week9_prep_plan(setup)
+
+    def test_week9_prep_recommendation_changes_by_response_posture(self):
+        stabilize = self._prep_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+            "stabilize_roster",
+        )
+        double = self._prep_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+            "double_down_read",
+        )
+        story = self._prep_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+            "control_public_story",
+        )
+
+        self.assertEqual(stabilize.recommended_prep, "balance_risk")
+        self.assertEqual(double.recommended_prep, "lean_into_bias")
+        self.assertEqual(story.recommended_prep, "counter_read")
+
+    def test_week9_prep_choices_create_different_locks(self):
+        plan = self._prep_plan_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+            "control_public_story",
+        )
+
+        lean = resolve_week9_prep(plan, "lean_into_bias")
+        balance = resolve_week9_prep(plan, "balance_risk")
+        counter = resolve_week9_prep(plan, "counter_read")
+
+        self.assertEqual(lean.selected_prep_bias, "external_pressure")
+        self.assertEqual(lean.match_read_alignment, "follow_bias")
+        self.assertEqual(balance.selected_prep_bias, "fundamentals")
+        self.assertEqual(balance.combined_risk_delta, -2)
+        self.assertEqual(counter.selected_prep_bias, "public_read_counter")
+        self.assertEqual(counter.combined_external_pressure_delta, 0)
+
+    def test_week9_prep_artifact_names_source_setup(self):
+        plan = self._prep_plan_for(
+            "pixie_flash_repair",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "play_to_prep",
+            "lean_into_edge",
+            "double_down_read",
+        )
+        lock = resolve_week9_prep(plan, "lean_into_bias")
+        payload = render_week9_prep_json(lock)
+
+        self.assertIn('"week9_setup": "week9_setup.json"', payload)
+        self.assertIn('"artifact_type": "week9_prep"', payload)
+        self.assertIn('"selected_prep": "lean_into_bias"', payload)
+        self.assertIn('"next_artifact": "week9_scrim.json"', payload)
 
 
 class TestDeterminism(_Fixture):
