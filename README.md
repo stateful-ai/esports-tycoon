@@ -189,7 +189,9 @@ read. `/week9/match` consumes that read and writes `week9_match_plan.json`,
 locking the match-week plan. `/week9/match/result` consumes the four Week 9
 artifacts and writes `week9_match_result.json`, resolving the selected plan into
 one authored outcome, scoreline, visible consequence set, and
-`week10_fallout.json` handoff without creating Week 10 state.
+`week10_fallout.json` handoff. `/week10/fallout` consumes that result and writes
+`week10_fallout.json`, turning the Week 9 payoff into a first Week 10 pressure
+choice without creating prep, standings, economy, sponsor, fan, or roster state.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -230,6 +232,10 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   setup, prep, scrim, and match-plan artifacts into one deterministic outcome,
   scoreline, why sentence, visible consequence chips, and a
   `week10_fallout.json` handoff without writing Week 10 fallout.
+- **`week10_fallout.json`** — written by `/week10/fallout`, consuming the Week 9
+  match result into one of three authored fallout responses, a stable fallout
+  outcome, visible constraints, and a `week10_prep.json` handoff without writing
+  Week 10 prep.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

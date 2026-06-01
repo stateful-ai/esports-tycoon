@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Week 10 fallout — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 10 fallout</h1>
+<p class="sub">The Week 9 result becomes the first Week 10 management constraint.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 9 match result required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week9_match_result') }}">Back to Week 9 result</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.week9_headline }}</strong>
+  <div>{{ plan.week9_player_read }}</div>
+  <div class="muted">Week 9 outcome: <code>{{ plan.week9_outcome_id }}</code> · score: <code>{{ plan.week9_scoreline }}</code></div>
+</div>
+
+<h2>Week 10 pressure</h2>
+<div class="card">
+  <strong>{{ plan.pressure_prompt }}</strong>
+  <div>{{ plan.week9_recap }}</div>
+  <div class="muted">Recommended response: <code>{{ plan.recommended_choice }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week10_fallout') }}">
+  <h2>Fallout response</h2>
+  {% for option in plan.options %}
+    <label class="choice">
+      <input type="radio" name="week10_fallout" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Risk: {{ option.cost }}</div>
+      <div class="muted">Posture: <code>{{ option.posture }}</code></div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock Week 10 fallout</button>
+    <a class="btn secondary" href="{{ url_for('week9_match_result') }}">Back to result</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked fallout</h2>
+<div class="card">
+  <strong>{{ lock.fallout_headline }}</strong>
+  {% if lock.followed_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div>{{ lock.consequence }}</div>
+  <div class="muted">Outcome: <code>{{ lock.outcome_id }}</code> · choice: <code>{{ lock.selected_choice }}</code></div>
+</div>
+
+<h2>Constraints</h2>
+<div class="card">
+  {% for constraint in lock.visible_constraints %}
+    <span class="tag">{{ constraint }}</span>
+  {% endfor %}
+</div>
+
+<h2>Next</h2>
+<div class="card">
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Next artifact: <code>week10_prep.json</code></div>
+</div>
+
+{% if week10_fallout_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 10 fallout:
+  <div><code>{{ week10_fallout_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

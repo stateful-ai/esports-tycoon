@@ -46,6 +46,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week9_prep_json,
     render_week9_scrim_json,
     render_week9_setup_json,
+    render_week10_fallout_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
@@ -58,6 +59,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week9_prep,
     resolve_week9_scrim,
     resolve_week9_setup,
+    resolve_week10_fallout,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
@@ -68,6 +70,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week9_prep_plan,
     week9_scrim_plan,
     week9_setup_plan,
+    week10_fallout_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -1140,6 +1143,74 @@ class TestWeek9MatchResult(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "scrim read"):
             resolve_week9_match_result(setup, prep, scrim, mismatched)
+
+
+class TestWeek10Fallout(_Fixture):
+    def _week9_results_by_outcome(self):
+        cases = (
+            ("stabilize_roster", "lean_into_bias", "room_read", "protect_the_room"),
+            ("control_public_story", "counter_read", "public_read", "protect_the_room"),
+            ("control_public_story", "counter_read", "public_read", "play_the_prep"),
+            ("control_public_story", "counter_read", "tactical_read", "play_the_prep"),
+            ("control_public_story", "counter_read", "tactical_read", "counter_the_read"),
+            ("stabilize_roster", "lean_into_bias", "room_read", "counter_the_read"),
+        )
+        results = {}
+        for response, prep, scrim, plan in cases:
+            *_, result = TestWeek9MatchResult._match_result_for(self, response, prep, scrim, plan)
+            results[result.outcome_id] = result
+        return results
+
+    def test_week10_fallout_choice_matrix_is_stable(self):
+        expected = {
+            ("room_held", "steady_room"): "room_recentered",
+            ("room_held", "raise_standards"): "standards_locked",
+            ("room_held", "adapt_system"): "system_blurred",
+            ("room_cracked", "steady_room"): "room_recentered",
+            ("room_cracked", "raise_standards"): "standards_overfit",
+            ("room_cracked", "adapt_system"): "system_blurred",
+            ("prep_converted", "steady_room"): "room_overmanaged",
+            ("prep_converted", "raise_standards"): "standards_locked",
+            ("prep_converted", "adapt_system"): "system_adjusted",
+            ("prep_stalled", "steady_room"): "room_recentered",
+            ("prep_stalled", "raise_standards"): "standards_overfit",
+            ("prep_stalled", "adapt_system"): "system_adjusted",
+            ("read_punished", "steady_room"): "room_overmanaged",
+            ("read_punished", "raise_standards"): "standards_locked",
+            ("read_punished", "adapt_system"): "system_adjusted",
+            ("counter_overreached", "steady_room"): "room_recentered",
+            ("counter_overreached", "raise_standards"): "standards_overfit",
+            ("counter_overreached", "adapt_system"): "system_adjusted",
+        }
+        results = self._week9_results_by_outcome()
+
+        for (week9_outcome, choice), fallout_outcome in expected.items():
+            with self.subTest(week9_outcome=week9_outcome, choice=choice):
+                result = results[week9_outcome]
+                plan = week10_fallout_plan(result)
+                lock = resolve_week10_fallout(result, plan, choice)
+                self.assertEqual(lock.outcome_id, fallout_outcome)
+
+    def test_week10_fallout_artifact_sources_result_and_stops_before_prep(self):
+        result = self._week9_results_by_outcome()["prep_converted"]
+        plan = week10_fallout_plan(result)
+        lock = resolve_week10_fallout(result, plan, "raise_standards")
+        payload = render_week10_fallout_json(lock)
+
+        self.assertIn('"week9_match_result": "week9_match_result.json"', payload)
+        self.assertIn('"artifact_type": "week10_fallout"', payload)
+        self.assertIn('"selected_choice": "raise_standards"', payload)
+        self.assertIn('"outcome_id": "standards_locked"', payload)
+        self.assertIn('"stops_before": "week10_prep"', payload)
+        self.assertIn('"next_artifact": "week10_prep.json"', payload)
+        self.assertNotIn('"week10_prep"', payload.split('"next_artifact"')[0])
+
+    def test_week10_fallout_rejects_invalid_choice(self):
+        result = self._week9_results_by_outcome()["prep_converted"]
+        plan = week10_fallout_plan(result)
+
+        with self.assertRaisesRegex(ValueError, "selected_choice"):
+            resolve_week10_fallout(result, plan, "sponsor_panic")
 
 
 class TestDeterminism(_Fixture):

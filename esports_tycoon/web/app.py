@@ -32,6 +32,7 @@ The week is a short linear flow, one decision per step:
     /week9/scrim the Week-9 prep lane becomes a deterministic scrim read
     /week9/match the Week-9 scrim read becomes a deterministic match plan
     /week9/match/result the Week-9 match plan becomes a deterministic result
+    /week10/fallout the Week-9 result becomes a deterministic Week-10 fallout choice
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -125,6 +126,13 @@ from esports_tycoon.runner.week9 import (
     week9_scrim_plan,
     week9_setup_from_json,
     week9_setup_plan,
+)
+from esports_tycoon.runner.week10 import (
+    WEEK10_FALLOUT_FILENAME,
+    render_week10_fallout_json,
+    resolve_week10_fallout,
+    week10_fallout_from_json,
+    week10_fallout_plan,
 )
 from esports_tycoon.schema import WorldState
 
@@ -1049,6 +1057,68 @@ def create_app(
             plan=plan,
             match_result=match_result,
             week9_match_result_path=week9_match_result_written_path,
+        )
+
+    @app.route("/week10/fallout", methods=["GET", "POST"])
+    def week10_fallout():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 10 fallout unlocks after the Week 9 match result.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week9_match_result_path = run_dir / WEEK9_MATCH_RESULT_FILENAME
+        week10_fallout_path = run_dir / WEEK10_FALLOUT_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK9_MATCH_RESULT_FILENAME, week9_match_result_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        lock = None
+        week10_fallout_written_path = ""
+        if not missing:
+            try:
+                match_result = week9_match_result_from_json(
+                    week9_match_result_path.read_text(encoding="utf-8")
+                )
+                plan = week10_fallout_plan(match_result)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week10_fallout") or "").strip()
+                    try:
+                        lock = resolve_week10_fallout(match_result, plan, selected)
+                    except ValueError:
+                        flash("Choose a Week 10 fallout response.")
+                    else:
+                        week10_fallout_path.write_text(
+                            render_week10_fallout_json(lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        week10_fallout_written_path = str(week10_fallout_path)
+                elif week10_fallout_path.is_file():
+                    try:
+                        lock = week10_fallout_from_json(week10_fallout_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week10_fallout_written_path = str(week10_fallout_path)
+
+        return render_template(
+            "week10_fallout.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            lock=lock,
+            week10_fallout_path=week10_fallout_written_path,
         )
 
     @app.get("/feed")
