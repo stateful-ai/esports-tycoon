@@ -145,6 +145,13 @@ Foundation scope landed:
   sentence, visible consequence chips, and `week10_fallout.json` handoff. The
   slice still does not create Week 10 fallout, standings, sponsor, fan, or
   roster state.
+- The Week 9 result now becomes the first Week 10 pressure choice on
+  `/week10/fallout`: it consumes `week9_match_result.json`, exposes
+  `steady_room`, `raise_standards`, and `adapt_system`, and writes
+  `week10_fallout.json` with a stable authored fallout outcome and
+  `week10_prep.json` handoff. The route proves result-to-next-pressure
+  causality without creating Week 10 prep, standings, economy, sponsor, fan, or
+  roster state.
 
 ## Why this was held
 

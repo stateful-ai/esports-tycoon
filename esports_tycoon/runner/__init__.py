@@ -147,6 +147,18 @@ from esports_tycoon.runner.week9 import (
     week9_setup_from_json,
     week9_setup_plan,
 )
+from esports_tycoon.runner.week10 import (
+    WEEK10_FALLOUT_CHOICES,
+    WEEK10_FALLOUT_OUTCOMES,
+    WEEK10_PREP_FILENAME,
+    Week10FalloutLock,
+    Week10FalloutOption,
+    Week10FalloutPlan,
+    render_week10_fallout_json,
+    resolve_week10_fallout,
+    week10_fallout_from_json,
+    week10_fallout_plan,
+)
 
 __all__ = [
     "run_slice",
@@ -240,6 +252,9 @@ __all__ = [
     "WEEK9_MATCH_RESULT_FILENAME",
     "WEEK9_MATCH_OUTCOMES",
     "WEEK10_FALLOUT_FILENAME",
+    "WEEK10_PREP_FILENAME",
+    "WEEK10_FALLOUT_CHOICES",
+    "WEEK10_FALLOUT_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
     "Week9SetupLock",
@@ -273,4 +288,11 @@ __all__ = [
     "resolve_week9_match_result",
     "week9_match_result_from_json",
     "render_week9_match_result_json",
+    "Week10FalloutOption",
+    "Week10FalloutPlan",
+    "Week10FalloutLock",
+    "week10_fallout_plan",
+    "resolve_week10_fallout",
+    "week10_fallout_from_json",
+    "render_week10_fallout_json",
 ]

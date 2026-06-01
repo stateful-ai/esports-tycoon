@@ -729,6 +729,71 @@ class TestWebApp(unittest.TestCase):
         run_dir = next(self.output_root.glob("wk6-*"))
         self.assertFalse((run_dir / "week9_match_result.json").exists())
 
+    def test_week10_fallout_consumes_week9_result_and_writes_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+        self.client.post("/week9/match/result")
+
+        page = self.client.get("/week10/fallout")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 10 fallout", page.data)
+        self.assertIn(b"steady_room", page.data)
+        self.assertIn(b"raise_standards", page.data)
+        self.assertIn(b"adapt_system", page.data)
+
+        locked = self.client.post("/week10/fallout", data={"week10_fallout": "raise_standards"})
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"week10_fallout.json", locked.data)
+        self.assertIn(b"standards_locked", locked.data)
+        self.assertIn(b"week10_prep.json", locked.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        fallout_json = (run_dir / "week10_fallout.json").read_text(encoding="utf-8")
+        self.assertIn('"week9_match_result": "week9_match_result.json"', fallout_json)
+        self.assertIn('"selected_choice": "raise_standards"', fallout_json)
+        self.assertIn('"outcome_id": "standards_locked"', fallout_json)
+        self.assertIn('"next_artifact": "week10_prep.json"', fallout_json)
+        self.assertFalse((run_dir / "week10_prep.json").exists())
+
+    def test_week10_fallout_requires_week9_match_result_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+
+        page = self.client.get("/week10/fallout")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 9 match result required", page.data)
+        self.assertIn(b"week9_match_result.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week10_fallout.json").exists())
+
     def test_full_flow_writes_artifact(self):
         fallout = "week 6: held the line."
         self._play_through(fallout=fallout)
@@ -789,6 +854,7 @@ class TestWebApp(unittest.TestCase):
             "/week9/scrim",
             "/week9/match",
             "/week9/match/result",
+            "/week10/fallout",
             "/feed",
         ):
             resp = self.client.get(path)
