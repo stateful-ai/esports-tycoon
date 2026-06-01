@@ -25,6 +25,20 @@
   }
   .console-title h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
   .console-title .sub { color: #9ba3ad; margin: 0.2rem 0 0; }
+  .ops-room-art {
+    height: clamp(180px, 22vw, 260px);
+    margin: 0 0 1rem;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    overflow: hidden;
+  }
+  .ops-room-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+  }
   .recap-strip, .chip-row {
     display: flex;
     flex-wrap: wrap;
@@ -54,6 +68,7 @@
     background: #161b22;
     border: 1px solid #30363d;
     padding: 1rem;
+    min-width: 0;
   }
   .panel-kicker {
     color: #8e9194;
@@ -69,11 +84,14 @@
     gap: 0.7rem;
     align-items: baseline;
     margin-bottom: 0.45rem;
+    min-width: 0;
   }
-  .panel-title strong { font-size: 1.05rem; }
+  .panel-title strong { font-size: 1.05rem; min-width: 0; overflow-wrap: anywhere; }
   .readout {
     color: #f0f6fc;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .copy-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
   .effect-grid {
@@ -129,9 +147,11 @@
     padding: 0.8rem;
     margin: 0.55rem 0;
     cursor: pointer;
+    min-width: 0;
   }
   .choice-card:hover { border-color: #f0f6fc; }
   .choice-card input { margin-right: 0.5rem; }
+  .choice-card strong { overflow-wrap: anywhere; }
   .choice-card .blurb { color: #9ba3ad; margin: 0.25rem 0 0 1.45rem; font-size: 0.9rem; }
   .console-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
   .match-console .btn {
@@ -148,6 +168,8 @@
   .locked-panel { margin-top: 1rem; }
   @media (max-width: 980px) {
     .console-top, .console-grid, .effect-grid { grid-template-columns: 1fr; }
+    .panel-title { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
     .recap-strip { justify-content: flex-start; }
   }
 </style>
@@ -174,6 +196,10 @@
       <span class="data-chip">pressure {{ preview.match_plan_pressure }}</span>
     </div>
   </div>
+
+  <figure class="ops-room-art">
+    <img src="{{ url_for('static', filename='art/week10-ops-room.webp') }}" alt="Week 10 tactical operations room">
+  </figure>
 
   <div class="console-grid">
     <section class="console-panel">
