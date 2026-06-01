@@ -65,6 +65,19 @@ from esports_tycoon.runner.week7 import (
     setup_payload_from_week7_setup,
     week7_focus_options,
 )
+from esports_tycoon.runner.week8 import (
+    WEEK8_PREP_CHOICES,
+    WEEK8_PREP_FILENAME,
+    Week7PressurePayload,
+    Week8PrepLock,
+    Week8PrepOption,
+    Week8PrepPlan,
+    pressure_payload_from_json,
+    render_week8_prep_json,
+    resolve_week8_prep,
+    week8_prep_from_json,
+    week8_prep_plan,
+)
 
 __all__ = [
     "run_slice",
@@ -113,4 +126,15 @@ __all__ = [
     "render_week7_focus_json",
     "resolve_week7_pressure",
     "render_week7_pressure_json",
+    "WEEK8_PREP_FILENAME",
+    "WEEK8_PREP_CHOICES",
+    "Week7PressurePayload",
+    "Week8PrepOption",
+    "Week8PrepPlan",
+    "Week8PrepLock",
+    "pressure_payload_from_json",
+    "week8_prep_plan",
+    "resolve_week8_prep",
+    "week8_prep_from_json",
+    "render_week8_prep_json",
 ]

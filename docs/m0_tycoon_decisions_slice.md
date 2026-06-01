@@ -96,6 +96,11 @@ Foundation scope landed:
   Tuesday pressure outcomes, and writes `week7_pressure.json` with the scrim
   result, review-room beat, public signal, and deltas. This proves the locked
   Week-7 focus changes gameplay before adding any new choice or season layer.
+- That pressure receipt now becomes the next manager problem on `/week8`: the
+  route consumes the three Week-7 artifacts, maps each pressure outcome to an
+  exposed problem, and writes `week8_prep.json` when the player chooses either
+  `patch_exposed_break` or `double_down_identity`. The slice stops at the prep
+  fork rather than resolving a full Week-8 match.
 
 ## Why this was held
 
