@@ -30,7 +30,7 @@ from pydantic import BaseModel
 
 from esports_tycoon.content import game_llm
 from esports_tycoon.content.config import ContentConfig
-from esports_tycoon.content.context import GenerationContext
+from esports_tycoon.content.context import GenerationContext, derive_local_outcome
 from esports_tycoon.cost import estimate_tokens
 from esports_tycoon.schema import GeneratedContent, MemoryEntry, Player, WhyRecord
 
@@ -128,6 +128,10 @@ def _build_request(kind: str, ctx: GenerationContext) -> tuple[str, str]:
         assert why is not None and author is not None
         player = ctx.player(author)
         opponent = ctx.decisions.opponent if ctx.decisions else None
+        local_outcome = (
+            ctx.local_outcome
+            or (derive_local_outcome(why, author) if player is not None else "neutral")
+        )
         if player is not None:
             system = (
                 f"You are {player.name} ({player.handle}), posting on Chirper. "
@@ -142,6 +146,8 @@ def _build_request(kind: str, ctx: GenerationContext) -> tuple[str, str]:
             menu = _citable_menu([])
         user = (
             f"{_result_line(why, ctx, opponent)}\n"
+            f"Your local match outcome: {local_outcome}. "
+            f"Carried: {why.who_carried}. Tilted: {why.who_tilted}.\n"
             f"Write your reaction post. You may cite a prior event only by an ID "
             f"below, and only if you would really bring it up:\n{menu}"
         )

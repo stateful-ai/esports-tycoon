@@ -310,11 +310,7 @@ class PreflightResult:
                 "seed": self.config.seed,
                 "stance": self.config.tactical_stance,
             },
-            "decisions": {
-                "practice_focus": self.decisions.practice_focus,
-                "team_talk": self.decisions.team_talk,
-                "fallout_post": self.decisions.fallout_post,
-            },
+            "decisions": _decision_fields(self.decisions),
             "safety": {
                 "passed": self.safety.passed,
                 "corpus_total": self.safety.corpus.total,
@@ -374,6 +370,21 @@ def _digest_from_fields(
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _decision_fields(decisions: SliceDecisions) -> dict[str, object]:
+    """Primitive decision fields that bind a vLLM review digest."""
+    fields: dict[str, object] = {
+        "practice_focus": decisions.practice_focus,
+        "team_talk": decisions.team_talk,
+        "fallout_post": decisions.fallout_post,
+    }
+    if decisions.training_points or decisions.decision_effects:
+        fields["training_points"] = decisions.training_points
+        fields["decision_effects"] = [
+            effect.model_dump(mode="json") for effect in decisions.decision_effects
+        ]
+    return fields
+
+
 def _digest(
     model: str,
     config: SliceConfig,
@@ -397,11 +408,7 @@ def _digest(
             "seed": config.seed,
             "stance": config.tactical_stance,
         },
-        {
-            "practice_focus": decisions.practice_focus,
-            "team_talk": decisions.team_talk,
-            "fallout_post": decisions.fallout_post,
-        },
+        _decision_fields(decisions),
         safety_passed,
         recap_md,
         feed_html,
@@ -529,6 +536,15 @@ def verify_artifacts(
     config = evidence.get("config") or {}
     decisions = evidence.get("decisions") or {}
     safety = evidence.get("safety") or {}
+    decision_fields = {
+        "practice_focus": decisions.get("practice_focus"),
+        "team_talk": decisions.get("team_talk"),
+        "fallout_post": decisions.get("fallout_post"),
+    }
+    if "training_points" in decisions or "decision_effects" in decisions:
+        decision_fields["training_points"] = decisions.get("training_points")
+        decision_fields["decision_effects"] = decisions.get("decision_effects", [])
+
     redigest = _digest_from_fields(
         evidence.get("model"),  # type: ignore[arg-type]
         {
@@ -537,11 +553,7 @@ def verify_artifacts(
             "seed": config.get("seed"),
             "stance": config.get("stance"),
         },
-        {
-            "practice_focus": decisions.get("practice_focus"),
-            "team_talk": decisions.get("team_talk"),
-            "fallout_post": decisions.get("fallout_post"),
-        },
+        decision_fields,
         bool(safety.get("passed")),
         recap_path.read_text(encoding="utf-8"),
         feed_path.read_text(encoding="utf-8"),

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Week 7 pressure — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 7 pressure result</h1>
+<p class="sub">The locked focus resolves into Tuesday scrim tape, review-room movement, and public signal.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 7 focus required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week7') }}">Back to Week 7 focus</a>
+  </div>
+</div>
+{% elif not pressure %}
+<div class="card">
+  <strong>Pressure block ready</strong>
+  <div class="muted">Inputs found: <code>week7_setup.json</code> and <code>week7_focus.json</code></div>
+  <form method="post" action="{{ url_for('week7_result') }}" class="actions">
+    <button class="btn" type="submit">Run pressure result</button>
+    <a class="btn secondary" href="{{ url_for('week7') }}">Back to focus</a>
+  </form>
+</div>
+{% else %}
+<div class="card">
+  <strong>{{ pressure.headline }}</strong>
+  {% if pressure.matched_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div class="muted">Hook: {{ pressure.hook_title }}</div>
+  <div class="muted">Focus: <code>{{ pressure.chosen_focus }}</code> · recommended: <code>{{ pressure.recommended_focus }}</code></div>
+</div>
+
+<h2>Scrim tape</h2>
+<div class="card">
+  <strong>{{ pressure.scrim_result }}</strong>
+  <div>{{ pressure.review_room_beat }}</div>
+</div>
+
+<h2>Public signal</h2>
+<div class="card">
+  <div>{{ pressure.feed_beat }}</div>
+  <div class="muted">Visible consequence: <code>{{ pressure.visible_consequence }}</code></div>
+</div>
+
+<h2>Deltas</h2>
+<div class="card">
+  <table>
+    <tr><th>Signal</th><th>Delta</th></tr>
+    <tr><td>Review-room trust</td><td class="{{ 'pos' if pressure.review_room_trust_delta >= 0 else 'neg' }}">{{ "%+d"|format(pressure.review_room_trust_delta) }}</td></tr>
+    <tr><td>Ceiling signal</td><td class="{{ 'pos' if pressure.ceiling_signal_delta >= 0 else 'neg' }}">{{ "%+d"|format(pressure.ceiling_signal_delta) }}</td></tr>
+    <tr><td>Relationship heat</td><td class="{{ 'pos' if pressure.relationship_heat_delta <= 0 else 'neg' }}">{{ "%+d"|format(pressure.relationship_heat_delta) }}</td></tr>
+    <tr><td>Fan confidence</td><td class="{{ 'pos' if pressure.fan_confidence_delta >= 0 else 'neg' }}">{{ "%+d"|format(pressure.fan_confidence_delta) }}</td></tr>
+  </table>
+</div>
+
+<h2>The artifact</h2>
+<div class="card">
+  Written this pressure result:
+  <div><code>{{ pressure_path }}</code></div>
+  <div class="muted">Outcome: <code>{{ pressure.outcome_id }}</code></div>
+</div>
+{% endif %}
+{% endblock %}

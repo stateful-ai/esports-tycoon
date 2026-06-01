@@ -54,6 +54,186 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(feed.status_code, 200)
         self.assertIn(b"Chirper", feed.data)
 
+    def test_practice_page_offers_focused_training_reps(self):
+        resp = self.client.get("/practice")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(b"Focused rep", resp.data)
+        self.assertIn(b"Vex: entry mechanics", resp.data)
+        self.assertIn(b"Vex/Pixie: flash review", resp.data)
+        self.assertIn(b"Analyst read", resp.data)
+        self.assertIn(b"High upside, fragile room.", resp.data)
+        self.assertIn(b"Lower ceiling, stronger room.", resp.data)
+
+    def test_focused_training_rep_reaches_match_and_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+
+        match = self.client.get("/match")
+        self.assertEqual(match.status_code, 200)
+        self.assertIn(b"Training:", match.data)
+        self.assertIn(b"Vex +4 aim (4 TP)", match.data)
+        self.assertIn(b"Review-room trust", match.data)
+        self.assertIn(b"Late retake crack", match.data)
+        self.assertIn(b"Follow-up scrim", match.data)
+        self.assertIn(b"Relationship fallout", match.data)
+        self.assertIn(b"Vex", match.data)
+        self.assertIn(b"Pixie", match.data)
+
+        self.client.post("/prematch", data={"team_talk": "play for the entry."})
+        self.client.post("/fallout", data={"fallout_post": "spent the reps where they mattered."})
+        recap = self.client.get("/recap")
+        self.assertEqual(recap.status_code, 200)
+        self.assertIn(b"Vex +4 aim (4 TP)", recap.data)
+        self.assertIn(b"Relationship fallout", recap.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        recap_md = (run_dir / "recap.md").read_text(encoding="utf-8")
+        self.assertIn("**Training:** Vex +4 aim (4 TP). Spent 4/4 TP.", recap_md)
+        self.assertIn("### Relationship fallout", recap_md)
+        self.assertIn("### Review-room trust", recap_md)
+        self.assertIn("Review room heat", recap_md)
+        self.assertIn("**Vex ↔ Pixie** (blame vs. guilt) split the room", recap_md)
+        self.assertIn("entry reps helped. still not peeking through our own flash again.", recap_md)
+        week7_setup = (run_dir / "week7_setup.json").read_text(encoding="utf-8")
+        self.assertIn('"source_branch": "vex_aim"', week7_setup)
+        self.assertIn('"delta": -2', week7_setup)
+        feed_html = (run_dir / "feed.snapshot.html").read_text(encoding="utf-8")
+        self.assertIn('<span class="tag">fallout</span>', feed_html)
+        self.assertIn("entry reps helped. still not peeking through our own flash again.", feed_html)
+
+    def test_repair_practice_fork_reaches_match_feed_and_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "pixie_flash_repair"},
+        )
+
+        match = self.client.get("/match")
+        self.assertEqual(match.status_code, 200)
+        self.assertIn(b"Pixie +4 coordination (4 TP)", match.data)
+        self.assertIn(b"Practice consequence", match.data)
+        self.assertIn(b"Review-room trust", match.data)
+        self.assertIn(b"Clean second contact", match.data)
+        self.assertIn(b"Follow-up scrim", match.data)
+        self.assertIn(b"No highlight reel, but the entry call and flash finally matched.", match.data)
+        self.assertIn(b"Relationship fallout", match.data)
+        self.assertIn(b"working review", match.data)
+        self.assertIn(b"cooled down", match.data)
+
+        self.client.post("/prematch", data={"team_talk": "fix the flash timing."})
+        self.client.post("/fallout", data={"fallout_post": "review work showed up."})
+        recap = self.client.get("/recap")
+        self.assertEqual(recap.status_code, 200)
+        self.assertIn(b"Flash review", recap.data)
+        self.assertIn(b"Vex did not get another raw aim bump.", recap.data)
+        self.assertIn(b"Stable, not loud", recap.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        recap_md = (run_dir / "recap.md").read_text(encoding="utf-8")
+        self.assertIn("### Practice consequence", recap_md)
+        self.assertIn("### Review-room trust", recap_md)
+        self.assertIn("### Follow-up scrim", recap_md)
+        self.assertIn("## Week 7 setup", recap_md)
+        self.assertIn("**Flash review:** No highlight reel", recap_md)
+        self.assertIn("Stable, not loud", recap_md)
+        self.assertIn("**Vex \u2194 Pixie** (working review) cooled down", recap_md)
+        self.assertIn("flash review helped. less apology, more timing.", recap_md)
+        week7_setup = (run_dir / "week7_setup.json").read_text(encoding="utf-8")
+        self.assertIn('"source_branch": "pixie_flash_repair"', week7_setup)
+        self.assertIn('"delta": 2', week7_setup)
+        self.assertIn('"id": "pixie_stability_low_clip_value"', week7_setup)
+        feed_html = (run_dir / "feed.snapshot.html").read_text(encoding="utf-8")
+        self.assertIn('<span class="tag">fallout</span>', feed_html)
+        self.assertIn("flash review helped. less apology, more timing.", feed_html)
+
+    def test_week7_focus_surface_consumes_setup_and_writes_focus_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+
+        page = self.client.get("/week7")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 7 focus lock", page.data)
+        self.assertIn(b"Review room heat", page.data)
+        self.assertIn(b"contain_fallout", page.data)
+        self.assertIn(b"recommended", page.data)
+
+        locked = self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"against the read", locked.data)
+        self.assertIn(b"ignored_trust_fire", locked.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        focus_json = (run_dir / "week7_focus.json").read_text(encoding="utf-8")
+        self.assertIn('"chosen_focus": "prove_ceiling"', focus_json)
+        self.assertIn('"followed_recommendation": false', focus_json)
+        self.assertIn('"cost_tag": "ignored_trust_fire"', focus_json)
+
+    def test_week7_focus_recommended_path_omits_ignored_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "pixie_flash_repair"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+
+        page = self.client.get("/week7")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Stable, not loud", page.data)
+        self.assertIn(b"prove_ceiling", page.data)
+
+        locked = self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"followed the read", locked.data)
+        self.assertNotIn(b"Ignored recommendation", locked.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        focus_json = (run_dir / "week7_focus.json").read_text(encoding="utf-8")
+        self.assertIn('"chosen_focus": "prove_ceiling"', focus_json)
+        self.assertIn('"followed_recommendation": true', focus_json)
+        self.assertNotIn('"ignored_recommendation"', focus_json)
+
+    def test_week7_pressure_result_writes_artifact_after_focus_lock(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "contain_fallout"})
+
+        pressure = self.client.post("/week7/result")
+        self.assertEqual(pressure.status_code, 200)
+        self.assertIn(b"Week 7 pressure result", pressure.data)
+        self.assertIn(b"Ugly 2-1, room steadier", pressure.data)
+        self.assertIn(b"heat_contained_scrappy_win", pressure.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        pressure_json = (run_dir / "week7_pressure.json").read_text(encoding="utf-8")
+        self.assertIn('"source_setup_artifact": "week7_setup.json"', pressure_json)
+        self.assertIn('"source_focus_artifact": "week7_focus.json"', pressure_json)
+        self.assertIn('"outcome_id": "heat_contained_scrappy_win"', pressure_json)
+        self.assertIn('"review_room_trust": 2', pressure_json)
+
+    def test_week7_pressure_result_requires_focus_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "pixie_flash_repair"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+
+        page = self.client.get("/week7/result")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 7 focus required", page.data)
+        self.assertIn(b"week7_focus.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week7_pressure.json").exists())
+
     def test_full_flow_writes_artifact(self):
         fallout = "week 6: held the line."
         self._play_through(fallout=fallout)
@@ -98,7 +278,7 @@ class TestWebApp(unittest.TestCase):
 
     def test_steps_require_the_mc_first(self):
         # Jumping ahead without the practice MC bounces back to /practice.
-        for path in ("/prematch", "/match", "/fallout", "/recap", "/feed"):
+        for path in ("/prematch", "/match", "/fallout", "/recap", "/week7", "/week7/result", "/feed"):
             resp = self.client.get(path)
             self.assertEqual(resp.status_code, 302)
             self.assertTrue(resp.headers["Location"].endswith("/practice"))
@@ -107,6 +287,15 @@ class TestWebApp(unittest.TestCase):
         resp = self.client.post("/practice", data={"practice_focus": "vibes"}, follow_redirects=True)
         self.assertEqual(resp.status_code, 200)
         self.assertIn(b"Choose one practice focus", resp.data)
+
+    def test_invalid_training_drill_is_rejected(self):
+        resp = self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vibes"},
+            follow_redirects=True,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(b"Choose one focused training drill", resp.data)
 
     def test_reset_clears_the_week(self):
         self.client.post("/practice", data={"practice_focus": "comms"})

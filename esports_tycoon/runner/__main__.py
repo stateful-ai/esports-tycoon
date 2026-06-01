@@ -19,7 +19,7 @@ from typing import get_args
 
 from esports_tycoon.canned import loader
 from esports_tycoon.runner.engine import run_slice
-from esports_tycoon.runner.model import SliceConfig, SliceDecisions
+from esports_tycoon.runner.model import TRAINING_DRILLS, SliceConfig, SliceDecisions, training_decision_for_drill
 from esports_tycoon.runner.recap import write_artifacts
 from esports_tycoon.schema import PracticeFocus, TacticalStance
 
@@ -39,6 +39,12 @@ def main(argv: list[str] | None = None) -> int:
         default="defaults",
         help="the MC decision: what the practice block drills",
     )
+    parser.add_argument(
+        "--training-drill",
+        choices=[drill.value for drill in TRAINING_DRILLS],
+        default="none",
+        help="optional focused training drill to spend this week's training points",
+    )
     parser.add_argument("--team-talk", default="", help="open-text #1: private pre-match line (<=120 chars)")
     parser.add_argument("--fallout", default="", help="open-text #2: public post-match Chirper post (<=120 chars)")
     parser.add_argument("--runs-dir", default="runs", help="where to write runs/<slice_id>/ (default: runs)")
@@ -46,9 +52,14 @@ def main(argv: list[str] | None = None) -> int:
 
     world = loader.load(args.save)
     config = SliceConfig(opponent=args.opponent, map=args.map, seed=args.seed, tactical_stance=args.stance)
+    training_points, decision_effects = training_decision_for_drill(args.training_drill)
     try:
         decisions = SliceDecisions(
-            practice_focus=args.practice, team_talk=args.team_talk, fallout_post=args.fallout
+            practice_focus=args.practice,
+            team_talk=args.team_talk,
+            fallout_post=args.fallout,
+            training_points=training_points,
+            decision_effects=decision_effects,
         )
     except ValueError as exc:
         parser.error(str(exc))

@@ -119,6 +119,14 @@ class TestCastCoverage(unittest.TestCase):
                     f"{cast_id} has an empty ('default', {won}) line list",
                 )
 
+    def test_every_starter_ships_local_outcome_lines(self):
+        starters = {"rook", "vex", "sable", "pixie", "coyote"}
+        self.assertEqual(starters, set(templated._CAST_LOCAL_OUTCOME_VOICES))
+        for cast_id, voice in templated._CAST_LOCAL_OUTCOME_VOICES.items():
+            for outcome in ("mvp", "carried", "came_apart"):
+                self.assertIn(outcome, voice, f"{cast_id} missing {outcome} local-outcome lines")
+                self.assertTrue(voice[outcome], f"{cast_id} has empty {outcome} local-outcome lines")
+
 
 class TestBeatCoverage(unittest.TestCase):
     """Every resolver-emittable key-moment kind has an authored beat template."""
@@ -180,7 +188,11 @@ class TestToneLock(unittest.TestCase):
         # Calibration line: 'Held. Won. Hungry.' — three words is canon. Cap at
         # six to leave a little room for a future authored line without losing
         # the register.
-        for key, lines in templated._CAST_VOICES["sable"].items():
+        sources = [
+            *templated._CAST_VOICES["sable"].items(),
+            *templated._CAST_LOCAL_OUTCOME_VOICES["sable"].items(),
+        ]
+        for key, lines in sources:
             for line in lines:
                 self.assertLessEqual(
                     len(line.split()),
@@ -192,7 +204,11 @@ class TestToneLock(unittest.TestCase):
         # Calibration line: '\U0001faf6 #overcastfam' is Pixie's on-character
         # signoff. Every Pixie line should carry it; that emoji is allowed
         # in-character (the narrator may not use it).
-        for key, lines in templated._CAST_VOICES["pixie"].items():
+        sources = [
+            *templated._CAST_VOICES["pixie"].items(),
+            *templated._CAST_LOCAL_OUTCOME_VOICES["pixie"].items(),
+        ]
+        for key, lines in sources:
             for line in lines:
                 self.assertIn(
                     _HEART_HANDS,
@@ -209,8 +225,15 @@ class TestToneLock(unittest.TestCase):
         # extended-Latin range used by the rest of the copy, plus the en-dash
         # and the typographic quote glyphs the corpus already uses.
         allowed_non_ascii = {"–", "—", "‘", "’", "“", "”"}
-        for cast_id, voice in templated._CAST_VOICES.items():
-            for lines in voice.values():
+        voice_sources = {
+            cast_id: [
+                *voice.values(),
+                *templated._CAST_LOCAL_OUTCOME_VOICES.get(cast_id, {}).values(),
+            ]
+            for cast_id, voice in templated._CAST_VOICES.items()
+        }
+        for cast_id, line_groups in voice_sources.items():
+            for lines in line_groups:
                 for line in lines:
                     bad = [
                         ch for ch in line
@@ -289,10 +312,16 @@ class TestZeroPlaceholders(unittest.TestCase):
                     self._assert_no_placeholder(
                         f"cast[{cast_id}][{key}]", line
                     )
-        for (register, won), lines in templated._CHIRPER_LINES.items():
+        for cast_id, voice in templated._CAST_LOCAL_OUTCOME_VOICES.items():
+            for outcome, lines in voice.items():
+                for line in lines:
+                    self._assert_no_placeholder(
+                        f"cast_local[{cast_id}][{outcome}]", line
+                    )
+        for (register, mood), lines in templated._CHIRPER_LINES.items():
             for line in lines:
                 self._assert_no_placeholder(
-                    f"chirper[{register},{won}]", line
+                    f"chirper[{register},{mood}]", line
                 )
 
     def test_no_placeholder_in_a_rendered_slice(self):

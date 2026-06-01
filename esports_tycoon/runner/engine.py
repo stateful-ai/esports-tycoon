@@ -30,12 +30,19 @@ from typing import TYPE_CHECKING, Optional
 
 from esports_tycoon import resolver
 from esports_tycoon.content import GenerationContext, generate_content
+from esports_tycoon.content.context import derive_local_outcome
 from esports_tycoon.content.config import ContentConfig
 from esports_tycoon.runner.model import (
+    FeedLocalOutcome,
     FeedPost,
+    FollowupScrim,
+    RelationshipFallout,
+    ReviewRoomTrust,
     SliceConfig,
     SliceDecisions,
     SliceResult,
+    TrainingConsequence,
+    Week7Setup,
 )
 from esports_tycoon.schema import GeneratedContent, WhyRecord, WorldState
 
@@ -54,6 +61,8 @@ _HALFTIME_ROUND = 12
 #: cite), there for colour in the feed.
 _CASTER_HANDLE = "@gridcast"
 _CASTER_NAME = "GridCast"
+_MAX_RELATIONSHIP_FALLOUT = 1
+_REVIEW_ROOM_TRUST_START = 2
 
 
 def slice_id(world: WorldState, config: SliceConfig, decisions: SliceDecisions) -> str:
@@ -64,18 +73,24 @@ def slice_id(world: WorldState, config: SliceConfig, decisions: SliceDecisions) 
     the "identical recap on re-run with the same seed" contract. A different
     open-text line, opponent, or seed yields a different id and its own folder.
     """
+    payload_fields = {
+        "save": world.save.id,
+        "week": world.save.season.current_week,
+        "seed": config.seed,
+        "opponent": config.opponent,
+        "map": config.map,
+        "stance": config.tactical_stance,
+        "practice": decisions.practice_focus,
+        "team_talk": decisions.team_talk,
+        "fallout_post": decisions.fallout_post,
+    }
+    if decisions.training_points or decisions.decision_effects:
+        payload_fields["training_points"] = decisions.training_points
+        payload_fields["decision_effects"] = [
+            effect.model_dump(mode="json") for effect in decisions.decision_effects
+        ]
     payload = json.dumps(
-        {
-            "save": world.save.id,
-            "week": world.save.season.current_week,
-            "seed": config.seed,
-            "opponent": config.opponent,
-            "map": config.map,
-            "stance": config.tactical_stance,
-            "practice": decisions.practice_focus,
-            "team_talk": decisions.team_talk,
-            "fallout_post": decisions.fallout_post,
-        },
+        payload_fields,
         sort_keys=True,
         ensure_ascii=True,
         separators=(",", ":"),
@@ -102,12 +117,110 @@ def _first_name(name: str) -> str:
     return name.split()[0] if name.split() else name
 
 
+def _player_by_id(world: WorldState, player_id: str):
+    return next((player for player in world.players if player.id == player_id), None)
+
+
+def _effect_sources(decisions: SliceDecisions) -> frozenset[str]:
+    return frozenset(effect.source for effect in decisions.decision_effects)
+
+
+def _has_vex_entry_reps(decisions: SliceDecisions) -> bool:
+    return any(
+        effect.player == "vex" and effect.skill == "aim" and effect.delta > 0
+        for effect in decisions.decision_effects
+    )
+
+
+def _has_pixie_flash_repair(decisions: SliceDecisions) -> bool:
+    return "pixie_flash_repair" in _effect_sources(decisions)
+
+
+def _vex_pixie_clash(world: WorldState):
+    return next(
+        (
+            clash for clash in world.clash_pairs
+            if not clash.cross_team and {clash.a, clash.b} == {"vex", "pixie"}
+        ),
+        None,
+    )
+
+
+def _relationship_fallout_author(why: WhyRecord, fallout: RelationshipFallout) -> str:
+    """Pick the starter whose post best explains the relationship split."""
+    if fallout.kind == "repair" and {fallout.a, fallout.b} == {"vex", "pixie"}:
+        return "pixie"
+    carried = set(why.who_carried)
+    tilted = set(why.who_tilted)
+    if fallout.a == why.mvp or fallout.a in carried:
+        return fallout.a
+    if fallout.b == why.mvp or fallout.b in carried:
+        return fallout.b
+    if fallout.a in tilted and fallout.b not in tilted:
+        return fallout.a
+    if fallout.b in tilted and fallout.a not in tilted:
+        return fallout.b
+    return fallout.a
+
+
+def _relationship_fallout_text(
+    world: WorldState,
+    why: WhyRecord,
+    fallout: RelationshipFallout,
+    author: str,
+) -> str:
+    """Authored social-feed copy for the first fallout receipt.
+
+    The generic fallback stays deterministic, but the Vex/Pixie split gets a
+    hand-authored line because it is the canonical smoke path for this slice.
+    """
+    other = fallout.b if author == fallout.a else fallout.a
+    if {fallout.a, fallout.b} == {"vex", "pixie"} and fallout.kind == "split":
+        if author == "vex":
+            return "entry reps helped. still not peeking through our own flash again."
+        return "reps showed up. flash review is still on me."
+    if {fallout.a, fallout.b} == {"vex", "pixie"} and fallout.kind == "repair":
+        if author == "pixie":
+            return "flash review helped. less apology, more timing."
+        return "flash was clean. keep it like that."
+    author_name = _first_name(_player_by_id(world, author).name) if _player_by_id(world, author) else author
+    other_name = _first_name(_player_by_id(world, other).name) if _player_by_id(world, other) else other
+    if fallout.kind == "flashpoint":
+        return f"{author_name}/{other_name} tape is loud. we all heard it."
+    if fallout.kind == "split":
+        return f"{author_name}/{other_name} tape split the room. fair."
+    return f"{author_name}/{other_name} tape stays in the room."
+
+
+def _relationship_fallout_post(
+    world: WorldState,
+    why: WhyRecord,
+    fallout: RelationshipFallout,
+) -> Optional[FeedPost]:
+    author = _relationship_fallout_author(why, fallout)
+    player = _player_by_id(world, author)
+    if player is None:
+        return None
+    local_outcome: FeedLocalOutcome = derive_local_outcome(why, author)
+    return FeedPost(
+        author_handle=player.handle,
+        author_name=_first_name(player.name),
+        text=_relationship_fallout_text(world, why, fallout, author),
+        cites=fallout.cites,
+        grounding_status="ok",
+        author_player_id=author,
+        local_outcome=local_outcome,
+        role="relationship_fallout",
+    )
+
+
 def _build_feed(
     world: WorldState,
     config: SliceConfig,
     decisions: SliceDecisions,
     why: WhyRecord,
     content_config: ContentConfig,
+    relationship_fallout: tuple[RelationshipFallout, ...] = (),
     client: Optional["LLMClient"] = None,
 ) -> tuple[tuple[FeedPost, ...], list[GeneratedContent]]:
     """The week-6 Chirper feed, plus the grounded content pieces it generated.
@@ -133,9 +246,12 @@ def _build_feed(
     for player in world.players:
         if player.id not in fielded:
             continue
+        local_outcome = derive_local_outcome(why, player.id)
         gc = generate_content(
             "chirper_post",
-            GenerationContext(world=world, why=why, author=player.id),
+            GenerationContext(
+                world=world, why=why, author=player.id, local_outcome=local_outcome
+            ),
             config=content_config,
             client=client,
         )
@@ -147,8 +263,15 @@ def _build_feed(
                 text=gc.text,
                 cites=tuple(gc.cites),
                 grounding_status=gc.grounding_status,
+                author_player_id=player.id,
+                local_outcome=local_outcome,
             )
         )
+
+    if relationship_fallout:
+        fallout_post = _relationship_fallout_post(world, why, relationship_fallout[0])
+        if fallout_post is not None:
+            posts.append(fallout_post)
 
     caster = generate_content(
         "chirper_post",
@@ -169,6 +292,193 @@ def _build_feed(
         posts.append(FeedPost(rival.star.handle, rival.star.name, star.text, tuple(star.cites), star.grounding_status))
 
     return tuple(posts), grounded
+
+
+def _relationship_fallout(
+    world: WorldState,
+    decisions: SliceDecisions,
+    why: WhyRecord,
+) -> tuple[RelationshipFallout, ...]:
+    """The highest-pressure authored clash made visible by this week's result.
+
+    The resolver already uses live intra-team clashes as hidden tilt pressure.
+    This projection turns that invisible pressure into a screenshotable receipt:
+    the seeded pair whose morale/local-outcome contrast most explains what the
+    room will argue about after the match.
+    """
+    if not decisions.decision_effects:
+        return ()
+
+    if _has_pixie_flash_repair(decisions):
+        clash = _vex_pixie_clash(world)
+        if clash is not None:
+            return (
+                RelationshipFallout(
+                    a=clash.a,
+                    b=clash.b,
+                    axis="working review",
+                    summary=(
+                        "Pixie and Vex owned the week-5 flash review; the next entry "
+                        "call had one timing instead of two."
+                    ),
+                    cites=tuple(clash.seeded_by),
+                    kind="repair",
+                    score=12,
+                ),
+            )
+
+    morale = why.morale_deltas
+    tilted = set(why.who_tilted)
+    carried = set(why.who_carried)
+    trained = {effect.player for effect in decisions.decision_effects}
+    candidates: list[tuple[int, int, RelationshipFallout]] = []
+
+    for order, clash in enumerate(world.clash_pairs):
+        if clash.cross_team or clash.a not in morale or clash.b not in morale:
+            continue
+        pair = {clash.a, clash.b}
+        a_bad = clash.a in tilted or morale[clash.a] <= -4
+        b_bad = clash.b in tilted or morale[clash.b] <= -4
+        a_good = clash.a == why.mvp or clash.a in carried or morale[clash.a] > 0
+        b_good = clash.b == why.mvp or clash.b in carried or morale[clash.b] > 0
+
+        score = max(0, -morale[clash.a]) + max(0, -morale[clash.b])
+        score += 4 if clash.a in tilted else 0
+        score += 4 if clash.b in tilted else 0
+        if (a_good and b_bad) or (b_good and a_bad):
+            score += 3
+        if trained & pair:
+            score += 2
+        if score <= 0:
+            continue
+
+        if a_bad and b_bad:
+            kind = "flashpoint"
+        elif (a_good and b_bad) or (b_good and a_bad):
+            kind = "split"
+        else:
+            kind = "simmer"
+        candidates.append(
+            (
+                score,
+                order,
+                RelationshipFallout(
+                    a=clash.a,
+                    b=clash.b,
+                    axis=clash.axis,
+                    summary=clash.summary,
+                    cites=tuple(clash.seeded_by),
+                    kind=kind,
+                    score=score,
+                ),
+            )
+        )
+
+    candidates.sort(key=lambda item: (-item[0], item[1]))
+    return tuple(item for _, _, item in candidates[:_MAX_RELATIONSHIP_FALLOUT])
+
+
+def _training_consequence(
+    world: WorldState,
+    decisions: SliceDecisions,
+    relationship_fallout: tuple[RelationshipFallout, ...],
+) -> Optional[TrainingConsequence]:
+    """Authored payoff/cost copy for the fallout-aware focused-rep fork."""
+    clash = _vex_pixie_clash(world)
+    cites = tuple(clash.seeded_by) if clash is not None else ()
+    if _has_pixie_flash_repair(decisions):
+        return TrainingConsequence(
+            kind="pixie_flash_repair",
+            label="Flash review",
+            summary="No highlight reel, but the entry call and flash finally matched.",
+            benefit="Pixie steadied the timing and the Vex/Pixie review cooled down.",
+            cost="Vex did not get another raw aim bump.",
+            cites=cites,
+        )
+    if _has_vex_entry_reps(decisions) and any(
+        {fallout.a, fallout.b} == {"vex", "pixie"}
+        and fallout.kind in {"split", "flashpoint"}
+        for fallout in relationship_fallout
+    ):
+        return TrainingConsequence(
+            kind="vex_entry_reps",
+            label="Entry reps",
+            summary="Vex looked sharper, but the room still played like two calls at once.",
+            benefit="Vex gained more first-contact power.",
+            cost="The unresolved Vex/Pixie flash timing stayed public.",
+            cites=cites,
+        )
+    return None
+
+
+def _fallout_state(relationship_fallout: tuple[RelationshipFallout, ...]) -> str:
+    if not relationship_fallout:
+        return "none"
+    fallout = relationship_fallout[0]
+    if {fallout.a, fallout.b} == {"vex", "pixie"}:
+        return fallout.axis
+    return f"{fallout.a}:{fallout.b}:{fallout.axis}"
+
+
+def _week7_setup(
+    training_consequence: Optional[TrainingConsequence],
+    relationship_fallout: tuple[RelationshipFallout, ...],
+) -> Optional[Week7Setup]:
+    """Run-local setup state that makes this week's fork matter next week."""
+    fallout_state = _fallout_state(relationship_fallout)
+    if training_consequence is None:
+        return None
+    if training_consequence.kind == "vex_entry_reps":
+        trust = ReviewRoomTrust(
+            start=_REVIEW_ROOM_TRUST_START,
+            delta=-2,
+            final=_REVIEW_ROOM_TRUST_START - 2,
+            reason="Vex's entry block worked, but Pixie absorbed the review blame alone.",
+        )
+        return Week7Setup(
+            source_branch="vex_aim",
+            fallout_state=fallout_state,
+            review_room_trust=trust,
+            followup_scrim=FollowupScrim(
+                label="Late retake crack",
+                summary=(
+                    "Vex cracked the opener in the follow-up scrim, then the late "
+                    "retake stalled when the flash call split again."
+                ),
+                benefit="First-duel pressure stayed elite.",
+                cost="Low review-room trust made the trade call late.",
+            ),
+            hook_id="vex_pixie_review_room_heat",
+            hook_title="Review room heat",
+            hook_prompt="Vex has the highlight reel, but the room knows Pixie paid for it.",
+            recommended_focus="contain_fallout",
+        )
+    if training_consequence.kind == "pixie_flash_repair":
+        trust = ReviewRoomTrust(
+            start=_REVIEW_ROOM_TRUST_START,
+            delta=2,
+            final=_REVIEW_ROOM_TRUST_START + 2,
+            reason="Pixie and Vex spent the review together, so the room trusted the next call.",
+        )
+        return Week7Setup(
+            source_branch="pixie_flash_repair",
+            fallout_state=fallout_state,
+            review_room_trust=trust,
+            followup_scrim=FollowupScrim(
+                label="Clean second contact",
+                summary=(
+                    "Pixie's flash landed on the follow-up retake timing, and the "
+                    "room converted the second contact."
+                ),
+                benefit="High review-room trust made the execute cleaner.",
+                cost="No extra Vex aim block left the opener less explosive.",
+            ),
+            hook_id="pixie_stability_low_clip_value",
+            hook_title="Stable, not loud",
+            hook_prompt="Pixie steadied the map, but sponsors are asking who sells the next clip.",
+            recommended_focus="prove_ceiling",
+        )
+    return None
 
 
 def run_slice(
@@ -213,7 +523,18 @@ def run_slice(
         client=client,
     )
 
-    feed, feed_grounded = _build_feed(world, config, decisions, why, content_config, client)
+    relationship_fallout = _relationship_fallout(world, decisions, why)
+    training_consequence = _training_consequence(world, decisions, relationship_fallout)
+    week7_setup = _week7_setup(training_consequence, relationship_fallout)
+    feed, feed_grounded = _build_feed(
+        world,
+        config,
+        decisions,
+        why,
+        content_config,
+        relationship_fallout,
+        client,
+    )
 
     # Grounding rate over the pieces that actually attempt to cite precedent:
     # the narration and the five starter reactions. Half-time acks and external
@@ -233,6 +554,9 @@ def run_slice(
         halftime=halftime,
         halftime_scoreline=half_score,
         feed=feed,
+        relationship_fallout=relationship_fallout,
+        training_consequence=training_consequence,
+        week7_setup=week7_setup,
         grounded_ok=grounded_ok,
         grounded_total=len(grounded_pieces),
         content_backend=content_config.backend,

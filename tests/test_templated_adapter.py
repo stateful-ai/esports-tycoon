@@ -200,6 +200,34 @@ class TestGrounding(_Fixture):
         gc = generate_content("narration", GenerationContext(world=self.world, why=why, decisions=dec))
         self.assertTrue(gc.cites, "a narration with a keyed beat should cite a precedent")
 
+    def test_mvp_in_team_loss_gets_personal_outcome_post_and_positive_memory(self):
+        # Regression for the M0.1 playtest fix: a player who personally carries
+        # a loss should not be served the generic team-loss line.
+        why = resolver.run(self.world, Decisions(opponent="sovereign", map="Helix"), 18)
+        self.assertLess(why.scoreline[0], why.scoreline[1])
+        self.assertEqual(why.mvp, "pixie")
+
+        gc = generate_content("chirper_post", GenerationContext(world=self.world, why=why, author="pixie"))
+        self.assertIn(gc.text, templated._CAST_LOCAL_OUTCOME_VOICES["pixie"]["mvp"])
+        for cite in gc.cites:
+            entry = self.world.resolve_cite(cite)
+            self.assertIsNotNone(entry)
+            self.assertEqual(entry.sentiment, "positive")
+
+    def test_came_apart_in_team_win_gets_personal_outcome_post_and_negative_memory(self):
+        # The inverse case matters too: a player who melts down in a win should
+        # not sound like they simply rode the team win.
+        why = resolver.run(self.world, Decisions(opponent="sovereign", map="Helix"), 46)
+        self.assertGreater(why.scoreline[0], why.scoreline[1])
+        self.assertIn("pixie", why.who_tilted)
+
+        gc = generate_content("chirper_post", GenerationContext(world=self.world, why=why, author="pixie"))
+        self.assertIn(gc.text, templated._CAST_LOCAL_OUTCOME_VOICES["pixie"]["came_apart"])
+        for cite in gc.cites:
+            entry = self.world.resolve_cite(cite)
+            self.assertIsNotNone(entry)
+            self.assertEqual(entry.sentiment, "negative")
+
 
 class TestTone(_Fixture):
     """Narrator stays dry; characters keep their authored register."""

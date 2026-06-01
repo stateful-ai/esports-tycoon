@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Week 7 focus — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 7 focus lock</h1>
+<p class="sub">The Week 6 hook now drives the next block. Pick whether to follow the read or gamble against it.</p>
+
+<div class="card">
+  <strong>{{ setup.hook_title }}</strong>
+  <div>{{ setup.hook_prompt }}</div>
+  <div class="muted">Branch: <code>{{ setup.source_branch }}</code> · fallout: {{ setup.fallout_state }}</div>
+  <div class="muted">Review-room trust: {{ setup.review_room_trust_start }} → {{ setup.review_room_trust_final }} ({{ "%+d"|format(setup.review_room_trust_delta) }})</div>
+  <div class="muted">Recommended focus: <code>{{ setup.recommended_focus }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week7') }}">
+  <h2>Next block focus</h2>
+  {% for option in options %}
+    <label class="choice">
+      <input type="radio" name="week7_focus" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      {% if option.recommended %}<span class="pos">recommended</span>{% endif %}
+      <div class="blurb">Payoff: {{ option.payoff }}</div>
+      <div class="blurb">Risk: {{ option.risk }}</div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock focus</button>
+    <a class="btn secondary" href="{{ url_for('recap') }}">Back to recap</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Week 7 focus</h2>
+<div class="card">
+  <strong>{{ lock.chosen_focus }}</strong>
+  {% if lock.followed_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div>{{ lock.pressure_note }}</div>
+  <div class="muted">{{ lock.next_preview }}</div>
+  <div class="muted">Review-room trust {{ "%+d"|format(lock.review_room_trust_delta) }} · ceiling signal {{ "%+d"|format(lock.ceiling_signal_delta) }}</div>
+</div>
+
+{% if lock.consequence_id %}
+<h2>Ignored recommendation</h2>
+<div class="card">
+  <strong>{{ lock.consequence_id }}</strong>
+  <div>{{ lock.consequence_copy }}</div>
+</div>
+{% endif %}
+
+{% if focus_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this focus lock:
+  <div><code>{{ focus_path }}</code></div>
+  <form method="post" action="{{ url_for('week7_result') }}" class="actions">
+    <button class="btn" type="submit">Run pressure result</button>
+  </form>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
