@@ -389,6 +389,56 @@ class TestWebApp(unittest.TestCase):
         run_dir = next(self.output_root.glob("wk6-*"))
         self.assertFalse((run_dir / "week8_match_plan.json").exists())
 
+    def test_week8_match_result_consumes_plan_and_writes_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+
+        page = self.client.get("/week8/match/result")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 8 match result", page.data)
+        self.assertIn(b"Result ready", page.data)
+        self.assertIn(b"patch_weakness", page.data)
+
+        resolved = self.client.post("/week8/match/result")
+        self.assertEqual(resolved.status_code, 200)
+        self.assertIn(b"messy_win", resolved.data)
+        self.assertIn(b"Week 9 opens", resolved.data)
+        self.assertIn(b"week8_match_result.json", resolved.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        match_result_json = (run_dir / "week8_match_result.json").read_text(encoding="utf-8")
+        self.assertIn('"source_pressure_outcome": "heat_ignored_highlight_loss"', match_result_json)
+        self.assertIn('"selected_plan": "patch_weakness"', match_result_json)
+        self.assertIn('"week8_match_plan": "week8_match_plan.json"', match_result_json)
+
+    def test_week8_match_result_requires_match_plan_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "pixie_flash_repair"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+
+        page = self.client.get("/week8/match/result")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 8 match plan required", page.data)
+        self.assertIn(b"week8_match_plan.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week8_match_result.json").exists())
+
     def test_full_flow_writes_artifact(self):
         fallout = "week 6: held the line."
         self._play_through(fallout=fallout)
@@ -443,6 +493,7 @@ class TestWebApp(unittest.TestCase):
             "/week8",
             "/week8/scrim",
             "/week8/match",
+            "/week8/match/result",
             "/feed",
         ):
             resp = self.client.get(path)
