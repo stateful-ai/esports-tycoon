@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Week 9 setup — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 9 fallout setup</h1>
+<p class="sub">The Week 8 result now becomes the next management problem.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 8 match result required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week8_match_result') }}">Back to Week 8 result</a>
+  </div>
+</div>
+{% elif plan %}
+<div class="card">
+  <strong>{{ plan.week8_match_result|upper }} {{ plan.week8_scoreline }}</strong>
+  {% if plan.matched_recommendation %}
+    <span class="pos">followed the read</span>
+  {% else %}
+    <span class="neg">against the read</span>
+  {% endif %}
+  <div>{{ plan.manager_problem }}</div>
+  <div class="muted">Outcome: <code>{{ plan.week8_outcome_id }}</code> · problem: <code>{{ plan.week9_problem_id }}</code></div>
+  <div class="muted">Axis: <code>{{ plan.consequence_axis }}</code> · delta {{ "%+d"|format(plan.consequence_delta) }}</div>
+</div>
+
+<h2>Fallout</h2>
+<div class="card">
+  <div>{{ plan.fallout_summary }}</div>
+  <div class="muted">{{ plan.week9_hook }}</div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+  <strong><code>{{ plan.recommended_response }}</code></strong>
+  <div class="muted">Recommended from the Week 8 outcome and consequence axis.</div>
+</div>
+
+<form method="post" action="{{ url_for('week9') }}">
+  <h2>Week 9 response</h2>
+  {% for option in plan.options %}
+    <label class="choice">
+      <input type="radio" name="week9_response" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Cost: {{ option.cost }}</div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock Week 9 setup</button>
+    <a class="btn secondary" href="{{ url_for('week8_match_result') }}">Back to result</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked setup</h2>
+<div class="card">
+  <strong>{{ lock.response_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Bias: <code>{{ lock.prep_bias }}</code></div>
+  <div class="muted">Risk {{ "%+d"|format(lock.risk_delta) }} · confidence {{ "%+d"|format(lock.confidence_delta) }} · external pressure {{ "%+d"|format(lock.external_pressure_delta) }}</div>
+</div>
+
+{% if week9_setup_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this Week 9 setup:
+  <div><code>{{ week9_setup_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}
