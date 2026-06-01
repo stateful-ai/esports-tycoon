@@ -31,6 +31,7 @@ The week is a short linear flow, one decision per step:
     /week9/prep  the Week-9 setup response becomes a deterministic prep lane
     /week9/scrim the Week-9 prep lane becomes a deterministic scrim read
     /week9/match the Week-9 scrim read becomes a deterministic match plan
+    /week9/match/result the Week-9 match plan becomes a deterministic result
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -101,19 +102,23 @@ from esports_tycoon.runner.week8 import (
 )
 from esports_tycoon.runner.week9 import (
     WEEK9_MATCH_PLAN_FILENAME,
+    WEEK9_MATCH_RESULT_FILENAME,
     WEEK9_PREP_FILENAME,
     WEEK9_SCRIM_FILENAME,
     WEEK9_SETUP_FILENAME,
     render_week9_match_plan_json,
+    render_week9_match_result_json,
     render_week9_prep_json,
     render_week9_scrim_json,
     render_week9_setup_json,
     resolve_week9_match_plan,
+    resolve_week9_match_result,
     resolve_week9_prep,
     resolve_week9_scrim,
     resolve_week9_setup,
     week9_match_plan_from_json,
     week9_match_plan_preview,
+    week9_match_result_from_json,
     week9_prep_from_json,
     week9_prep_plan,
     week9_scrim_from_json,
@@ -979,6 +984,71 @@ def create_app(
             preview=preview,
             lock=lock,
             week9_match_plan_path=week9_match_plan_written_path,
+        )
+
+    @app.route("/week9/match/result", methods=["GET", "POST"])
+    def week9_match_result():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 9 match result unlocks after the Week 9 match plan.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week9_setup_path = run_dir / WEEK9_SETUP_FILENAME
+        week9_prep_path = run_dir / WEEK9_PREP_FILENAME
+        week9_scrim_path = run_dir / WEEK9_SCRIM_FILENAME
+        week9_match_plan_path = run_dir / WEEK9_MATCH_PLAN_FILENAME
+        week9_match_result_path = run_dir / WEEK9_MATCH_RESULT_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK9_SETUP_FILENAME, week9_setup_path),
+                (WEEK9_PREP_FILENAME, week9_prep_path),
+                (WEEK9_SCRIM_FILENAME, week9_scrim_path),
+                (WEEK9_MATCH_PLAN_FILENAME, week9_match_plan_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        match_result = None
+        week9_match_result_written_path = ""
+        if not missing:
+            try:
+                setup = week9_setup_from_json(week9_setup_path.read_text(encoding="utf-8"))
+                prep = week9_prep_from_json(week9_prep_path.read_text(encoding="utf-8"))
+                scrim = week9_scrim_from_json(week9_scrim_path.read_text(encoding="utf-8"))
+                plan = week9_match_plan_from_json(week9_match_plan_path.read_text(encoding="utf-8"))
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    match_result = resolve_week9_match_result(setup, prep, scrim, plan)
+                    week9_match_result_path.write_text(
+                        render_week9_match_result_json(match_result),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week9_match_result_written_path = str(week9_match_result_path)
+                elif week9_match_result_path.is_file():
+                    try:
+                        match_result = week9_match_result_from_json(
+                            week9_match_result_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week9_match_result_written_path = str(week9_match_result_path)
+
+        return render_template(
+            "week9_match_result.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            match_result=match_result,
+            week9_match_result_path=week9_match_result_written_path,
         )
 
     @app.get("/feed")

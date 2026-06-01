@@ -17,6 +17,7 @@ text is HTML-escaped in the snapshot, and the run touches no network/LLM.
 import pathlib
 import sys
 import unittest
+from dataclasses import replace
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
@@ -41,6 +42,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week8_prep_json,
     render_week8_scrim_json,
     render_week9_match_plan_json,
+    render_week9_match_result_json,
     render_week9_prep_json,
     render_week9_scrim_json,
     render_week9_setup_json,
@@ -52,6 +54,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week8_prep,
     resolve_week8_scrim,
     resolve_week9_match_plan,
+    resolve_week9_match_result,
     resolve_week9_prep,
     resolve_week9_scrim,
     resolve_week9_setup,
@@ -1060,6 +1063,83 @@ class TestWeek9MatchPlanChoice(_Fixture):
         self.assertIn('"next_artifact": "week9_match_result.json"', payload)
         self.assertNotIn('"week9_match_result"', payload)
         self.assertNotIn('"winner"', payload)
+
+
+class TestWeek9MatchResult(_Fixture):
+    def _match_result_for(
+        self,
+        response_choice: str,
+        prep_choice: str,
+        scrim_read: str,
+        selected_plan: str,
+    ):
+        setup_plan = TestWeek9FalloutSetup._week9_plan_for(
+            self,
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+        )
+        setup = resolve_week9_setup(setup_plan, response_choice)
+        prep = resolve_week9_prep(week9_prep_plan(setup), prep_choice)
+        scrim = resolve_week9_scrim(week9_scrim_plan(setup, prep), scrim_read)
+        preview = week9_match_plan_preview(setup, prep, scrim)
+        plan = resolve_week9_match_plan(preview, selected_plan)
+        return setup, prep, scrim, plan, resolve_week9_match_result(setup, prep, scrim, plan)
+
+    def test_week9_match_result_outcomes_cover_plan_success_and_failure(self):
+        cases = (
+            ("stabilize_roster", "lean_into_bias", "room_read", "protect_the_room", "room_held"),
+            ("control_public_story", "counter_read", "public_read", "protect_the_room", "room_cracked"),
+            ("control_public_story", "counter_read", "public_read", "play_the_prep", "prep_converted"),
+            ("control_public_story", "counter_read", "tactical_read", "play_the_prep", "prep_stalled"),
+            ("control_public_story", "counter_read", "tactical_read", "counter_the_read", "read_punished"),
+            (
+                "stabilize_roster",
+                "lean_into_bias",
+                "room_read",
+                "counter_the_read",
+                "counter_overreached",
+            ),
+        )
+
+        for response, prep, scrim, plan, expected in cases:
+            with self.subTest(plan=plan, expected=expected):
+                *_, result = self._match_result_for(response, prep, scrim, plan)
+                self.assertEqual(result.outcome_id, expected)
+
+    def test_week9_match_result_artifact_sources_all_inputs_and_stops_before_week10(self):
+        *_, result = self._match_result_for(
+            "control_public_story",
+            "counter_read",
+            "public_read",
+            "play_the_prep",
+        )
+        payload = render_week9_match_result_json(result)
+
+        self.assertIn('"week9_setup": "week9_setup.json"', payload)
+        self.assertIn('"week9_prep": "week9_prep.json"', payload)
+        self.assertIn('"week9_scrim": "week9_scrim.json"', payload)
+        self.assertIn('"week9_match_plan": "week9_match_plan.json"', payload)
+        self.assertIn('"artifact_type": "week9_match_result"', payload)
+        self.assertIn('"outcome_id": "prep_converted"', payload)
+        self.assertIn('"next_artifact": "week10_fallout.json"', payload)
+        self.assertIn('"stops_before": "week10_fallout"', payload)
+        self.assertNotIn('"week10_fallout"', payload.split('"next_artifact"')[0])
+        self.assertNotIn('"winner"', payload)
+
+    def test_week9_match_result_rejects_mismatched_plan_artifact(self):
+        setup, prep, scrim, plan, _ = self._match_result_for(
+            "control_public_story",
+            "counter_read",
+            "public_read",
+            "play_the_prep",
+        )
+        mismatched = replace(plan, selected_scrim_read="room_read")
+
+        with self.assertRaisesRegex(ValueError, "scrim read"):
+            resolve_week9_match_result(setup, prep, scrim, mismatched)
 
 
 class TestDeterminism(_Fixture):
