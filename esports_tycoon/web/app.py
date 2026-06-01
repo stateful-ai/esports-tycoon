@@ -24,6 +24,7 @@ The week is a short linear flow, one decision per step:
                  the locked focus becomes a deterministic pressure payoff
     /week8       the pressure payoff becomes a deterministic prep tradeoff
     /week8/scrim the prep response becomes a deterministic scrim setup
+    /week8/match the scrim setup becomes a deterministic match-plan preview
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -71,13 +72,18 @@ from esports_tycoon.runner.week7 import (
     week7_focus_options,
 )
 from esports_tycoon.runner.week8 import (
+    WEEK8_MATCH_PLAN_FILENAME,
     WEEK8_PREP_FILENAME,
     WEEK8_SCRIM_FILENAME,
     pressure_payload_from_json,
+    render_week8_match_plan_json,
     render_week8_prep_json,
     render_week8_scrim_json,
+    resolve_week8_match_plan,
     resolve_week8_prep,
     resolve_week8_scrim,
+    week8_match_plan_from_json,
+    week8_match_preview,
     week8_prep_from_json,
     week8_prep_plan,
     week8_scrim_from_json,
@@ -562,6 +568,78 @@ def create_app(
             plan=plan,
             lock=lock,
             scrim_path=scrim_written_path,
+        )
+
+    @app.route("/week8/match", methods=["GET", "POST"])
+    def week8_match():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 8 match preview unlocks after the Week 8 scrim.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        setup_path = run_dir / WEEK7_SETUP_FILENAME
+        focus_path = run_dir / WEEK7_FOCUS_FILENAME
+        pressure_path = run_dir / WEEK7_PRESSURE_FILENAME
+        prep_path = run_dir / WEEK8_PREP_FILENAME
+        scrim_path = run_dir / WEEK8_SCRIM_FILENAME
+        match_plan_path = run_dir / WEEK8_MATCH_PLAN_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK7_SETUP_FILENAME, setup_path),
+                (WEEK7_FOCUS_FILENAME, focus_path),
+                (WEEK7_PRESSURE_FILENAME, pressure_path),
+                (WEEK8_PREP_FILENAME, prep_path),
+                (WEEK8_SCRIM_FILENAME, scrim_path),
+            )
+            if not path.is_file()
+        ]
+        preview = None
+        lock = None
+        match_plan_written_path = ""
+        if not missing:
+            try:
+                setup = setup_payload_from_json(setup_path.read_text(encoding="utf-8"))
+                focus = focus_payload_from_json(focus_path.read_text(encoding="utf-8"))
+                pressure = pressure_payload_from_json(pressure_path.read_text(encoding="utf-8"))
+                prep = week8_prep_from_json(prep_path.read_text(encoding="utf-8"))
+                scrim = week8_scrim_from_json(scrim_path.read_text(encoding="utf-8"))
+                preview = week8_match_preview(setup, focus, pressure, prep, scrim)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week8_match_plan") or "").strip()
+                    try:
+                        lock = resolve_week8_match_plan(preview, selected)
+                    except ValueError:
+                        flash("Choose a Week 8 match plan.")
+                    else:
+                        match_plan_path.write_text(
+                            render_week8_match_plan_json(lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        match_plan_written_path = str(match_plan_path)
+                elif match_plan_path.is_file():
+                    try:
+                        lock = week8_match_plan_from_json(match_plan_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        match_plan_written_path = str(match_plan_path)
+
+        return render_template(
+            "week8_match.html",
+            result=result,
+            missing=missing,
+            preview=preview,
+            lock=lock,
+            match_plan_path=match_plan_written_path,
         )
 
     @app.get("/feed")

@@ -36,16 +36,19 @@ from esports_tycoon.runner import (  # noqa: E402
     render_recap_md,
     render_week7_focus_json,
     render_week7_pressure_json,
+    render_week8_match_plan_json,
     render_week8_prep_json,
     render_week8_scrim_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
+    resolve_week8_match_plan,
     resolve_week8_prep,
     resolve_week8_scrim,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
+    week8_match_preview,
     week8_prep_plan,
     week8_scrim_plan,
     write_artifacts,
@@ -595,6 +598,80 @@ class TestWeek8ScrimSetup(_Fixture):
             entry = self.world.resolve_cite(cite)
             self.assertIsNotNone(entry)
             self.assertIn(entry.summary, md)
+
+
+class TestWeek8MatchPreview(_Fixture):
+    def _preview_for(
+        self,
+        drill: str,
+        selected_focus: str,
+        prep_choice: str,
+        scrim_call: str,
+    ):
+        setup, focus, pressure = TestWeek8PrepFork._receipts_for(self, drill, selected_focus)
+        prep_plan = week8_prep_plan(setup, focus, pressure)
+        prep = resolve_week8_prep(prep_plan, prep_choice)
+        scrim_plan = week8_scrim_plan(setup, focus, pressure, prep)
+        scrim = resolve_week8_scrim(scrim_plan, scrim_call)
+        return week8_match_preview(setup, focus, pressure, prep, scrim)
+
+    def test_week8_match_preview_changes_by_scrim_signal(self):
+        protected = self._preview_for(
+            "pixie_flash_repair",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "play_to_prep",
+        )
+        forced = self._preview_for(
+            "vex_aim",
+            "prove_ceiling",
+            "double_down_identity",
+            "play_to_prep",
+        )
+
+        self.assertEqual(protected.scrim_signal, "patched_protocol_held")
+        self.assertEqual(protected.match_risk, "low")
+        self.assertEqual(protected.team_edge, "cleaner_first_contact")
+        self.assertEqual(protected.recommended_plan, "lean_into_edge")
+        self.assertEqual(forced.scrim_signal, "identity_forced")
+        self.assertEqual(forced.match_risk, "high")
+        self.assertEqual(forced.team_edge, "explosive_opening_tempo")
+        self.assertEqual(forced.recommended_plan, "patch_weakness")
+
+    def test_week8_match_plan_choices_create_different_locks(self):
+        preview = self._preview_for(
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+        )
+
+        patched = resolve_week8_match_plan(preview, "patch_weakness")
+        edge = resolve_week8_match_plan(preview, "lean_into_edge")
+
+        self.assertEqual(patched.match_pressure, "protected_opener")
+        self.assertEqual(patched.readiness_delta, 1)
+        self.assertEqual(patched.edge_delta, -1)
+        self.assertEqual(patched.risk_delta, -1)
+        self.assertEqual(edge.match_pressure, "edge_first_opener")
+        self.assertEqual(edge.edge_delta, 1)
+        self.assertEqual(edge.risk_delta, 1)
+        self.assertIn("carried_into_match", edge.next_problem)
+
+    def test_week8_match_plan_artifact_names_sources(self):
+        preview = self._preview_for(
+            "pixie_flash_repair",
+            "contain_fallout",
+            "double_down_identity",
+            "cover_the_crack",
+        )
+        lock = resolve_week8_match_plan(preview, "lean_into_edge")
+        payload = render_week8_match_plan_json(lock)
+
+        self.assertIn('"week8_scrim": "week8_scrim.json"', payload)
+        self.assertIn('"artifact_type": "week8_match_plan"', payload)
+        self.assertIn('"selected_plan": "lean_into_edge"', payload)
+        self.assertIn('"scrim_signal": "identity_split_reps"', payload)
 
 
 class TestDeterminism(_Fixture):
