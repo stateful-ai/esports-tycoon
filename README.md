@@ -174,6 +174,9 @@ on identity. That writes `week8_prep.json`, turning the pressure result into the
 next durable manager problem without simulating another match. `/week8/scrim`
 then consumes that prep response and writes `week8_scrim.json`, making the prep
 choice alter the next scrim modifier, opening state, and locked tactical call.
+`/week8/match` now consumes the scrim and writes `week8_match_plan.json`, a
+match-preview plan lock that names the opponent attack, team edge, risk level,
+and the final prep call before any full match resolver exists.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -192,6 +195,9 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   management response, tradeoff deltas, exposed problem, and next hook.
 - **`week8_scrim.json`** — written by `/week8/scrim`, turning the prep response
   into the next scrim setup and tactical call without resolving a full match.
+- **`week8_match_plan.json`** — written by `/week8/match`, consuming the scrim
+  setup into a deterministic opponent-read, team-edge, risk, and match-plan
+  lock while still deferring the match result.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Week 8 match preview — {{ team.name }}{% endblock %}
+{% block content %}
+<h1>Week 8 match preview</h1>
+<p class="sub">The scrim setup now becomes the match-week plan, without resolving the match yet.</p>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 8 scrim required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week8_scrim') }}">Back to Week 8 scrim</a>
+  </div>
+</div>
+{% elif preview %}
+<div class="card">
+  <strong>{{ preview.pressure_headline }}</strong>
+  <div>{{ preview.opponent_read }}</div>
+  <div class="muted">Opponent attack: <code>{{ preview.opponent_attack }}</code> · team edge: <code>{{ preview.team_edge }}</code></div>
+  <div class="muted">Scrim signal: <code>{{ preview.scrim_signal }}</code> · match risk: <code>{{ preview.match_risk }}</code></div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+  <strong><code>{{ preview.recommended_plan }}</code></strong>
+  <div>{{ preview.recommendation_reason }}</div>
+  <div class="muted">Exposed problem: <code>{{ preview.exposed_problem }}</code> · spotlight: <code>{{ preview.spotlight_player }}</code></div>
+</div>
+
+<form method="post" action="{{ url_for('week8_match') }}">
+  <h2>Match plan</h2>
+  {% for option in preview.options %}
+    <label class="choice">
+      <input type="radio" name="week8_match_plan" value="{{ option.value }}" required>
+      <strong>{{ option.label }}</strong>
+      <div class="blurb">Gain: {{ option.payoff }}</div>
+      <div class="blurb">Cost: {{ option.cost }}</div>
+    </label>
+  {% endfor %}
+
+  <div class="actions">
+    <button class="btn" type="submit">Lock match plan</button>
+    <a class="btn secondary" href="{{ url_for('week8_scrim') }}">Back to scrim</a>
+  </div>
+</form>
+
+{% if lock %}
+<h2>Locked plan</h2>
+<div class="card">
+  <strong>{{ lock.plan_label }}</strong>
+  <div>{{ lock.next_hook }}</div>
+  <div class="muted">Pressure: <code>{{ lock.match_pressure }}</code> · next problem: <code>{{ lock.next_problem }}</code></div>
+  <div class="muted">Readiness {{ "%+d"|format(lock.readiness_delta) }} · edge {{ "%+d"|format(lock.edge_delta) }} · risk {{ "%+d"|format(lock.risk_delta) }}</div>
+</div>
+
+{% if match_plan_path %}
+<h2>The artifact</h2>
+<div class="card">
+  Written this match plan:
+  <div><code>{{ match_plan_path }}</code></div>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

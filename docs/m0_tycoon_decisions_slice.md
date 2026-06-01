@@ -106,6 +106,11 @@ Foundation scope landed:
   state, and writes `week8_scrim.json` after the player locks either
   `play_to_prep` or `cover_the_crack`. This keeps compounding visible while
   still deferring a full Week-8 match resolver.
+- The scrim setup now compounds into `/week8/match`: it consumes
+  `week8_scrim.json`, previews the opponent's first attack, the team's current
+  edge, and the match risk, then writes `week8_match_plan.json` after the player
+  locks either `patch_weakness` or `lean_into_edge`. This adds the match-week
+  planning decision without simulating the match result yet.
 
 ## Why this was held
 

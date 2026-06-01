@@ -19,9 +19,11 @@ from esports_tycoon.runner.week7 import (
 
 Week8PrepChoice = Literal["patch_exposed_break", "double_down_identity"]
 Week8ScrimChoice = Literal["play_to_prep", "cover_the_crack"]
+Week8MatchPlanChoice = Literal["patch_weakness", "lean_into_edge"]
 
 WEEK8_PREP_FILENAME = "week8_prep.json"
 WEEK8_SCRIM_FILENAME = "week8_scrim.json"
+WEEK8_MATCH_PLAN_FILENAME = "week8_match_plan.json"
 WEEK8_PREP_CHOICES: tuple[Week8PrepChoice, ...] = (
     "patch_exposed_break",
     "double_down_identity",
@@ -29,6 +31,10 @@ WEEK8_PREP_CHOICES: tuple[Week8PrepChoice, ...] = (
 WEEK8_SCRIM_CHOICES: tuple[Week8ScrimChoice, ...] = (
     "play_to_prep",
     "cover_the_crack",
+)
+WEEK8_MATCH_PLAN_CHOICES: tuple[Week8MatchPlanChoice, ...] = (
+    "patch_weakness",
+    "lean_into_edge",
 )
 
 
@@ -153,6 +159,68 @@ class Week8ScrimLock:
     tilt_risk_delta: int
     visible_consequence: str
     next_match_hook: str
+
+
+@dataclass(frozen=True)
+class Week8MatchOption:
+    """One match-week plan available after the Week-8 scrim setup."""
+
+    value: Week8MatchPlanChoice
+    label: str
+    payoff: str
+    cost: str
+
+
+@dataclass(frozen=True)
+class Week8MatchPreview:
+    """The read-only Week-8 match preview caused by the scrim artifact."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    source_pressure_outcome: str
+    pressure_headline: str
+    prep_choice: Week8PrepChoice
+    scrim_call: Week8ScrimChoice
+    exposed_problem: str
+    spotlight_player: str
+    scrim_signal: str
+    opponent_attack: str
+    opponent_read: str
+    team_edge: str
+    match_risk: str
+    recommended_plan: Week8MatchPlanChoice
+    recommendation_reason: str
+    options: tuple[Week8MatchOption, ...]
+
+
+@dataclass(frozen=True)
+class Week8MatchPlanLock:
+    """The deterministic artifact produced by locking the Week-8 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    source_pressure_outcome: str
+    pressure_headline: str
+    prep_choice: Week8PrepChoice
+    scrim_call: Week8ScrimChoice
+    exposed_problem: str
+    spotlight_player: str
+    scrim_signal: str
+    opponent_attack: str
+    team_edge: str
+    match_risk: str
+    recommended_plan: Week8MatchPlanChoice
+    available_choices: tuple[Week8MatchPlanChoice, ...]
+    selected_plan: Week8MatchPlanChoice
+    plan_label: str
+    readiness_delta: int
+    edge_delta: int
+    risk_delta: int
+    match_pressure: str
+    next_problem: str
+    next_hook: str
 
 
 def pressure_payload_from_json(text: str) -> Week7PressurePayload:
@@ -648,6 +716,265 @@ def render_week8_scrim_json(lock: Week8ScrimLock) -> str:
             },
             "visible_consequence": lock.visible_consequence,
             "next_match_hook": lock.next_match_hook,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_OPPONENT_ATTACKS = {
+    "vex_pixie_trust_fracture": (
+        "retake_blame_pressure",
+        "Apex Foundry will force the first retake and make Vex/Pixie assign blame in public.",
+    ),
+    "low_ceiling_after_reset": (
+        "slow_opener_challenge",
+        "Apex Foundry can sit deep early and ask whether the calmer opener has a punish.",
+    ),
+    "identity_needs_second_layer": (
+        "default_crowd",
+        "Apex Foundry can crowd the repaired default and test whether the second call exists.",
+    ),
+    "overmanaged_low_threat": (
+        "passive_default_trap",
+        "Apex Foundry can give space, wait out the default, and make calm reps look harmless.",
+    ),
+}
+
+_TEAM_EDGES = {
+    "trust_buffer": "cleaner_first_contact",
+    "tempo_spike": "explosive_opening_tempo",
+}
+
+
+def week8_match_preview(
+    setup: Week7SetupPayload,
+    focus: Week7FocusPayload,
+    pressure: Week7PressurePayload,
+    prep: Week8PrepLock,
+    scrim: Week8ScrimLock,
+) -> Week8MatchPreview:
+    """Build the deterministic Week-8 match preview from prior receipts."""
+    if setup.hook_id != focus.hook_id or setup.hook_id != pressure.setup_branch:
+        raise ValueError("week8 match artifacts do not agree on setup branch")
+    if prep.setup_branch != setup.hook_id or scrim.setup_branch != setup.hook_id:
+        raise ValueError("week8 match artifacts do not agree on setup branch")
+    if focus.chosen_focus != pressure.chosen_focus or prep.chosen_focus != focus.chosen_focus:
+        raise ValueError("week8 match artifacts do not agree on chosen focus")
+    if scrim.chosen_focus != focus.chosen_focus:
+        raise ValueError("week8 match scrim does not match chosen focus")
+    if prep.source_pressure_outcome != pressure.outcome_id:
+        raise ValueError("week8 match prep does not match pressure outcome")
+    if scrim.source_pressure_outcome != pressure.outcome_id:
+        raise ValueError("week8 match scrim does not match pressure outcome")
+    if scrim.prep_choice != prep.selected_choice:
+        raise ValueError("week8 match scrim does not match prep choice")
+
+    opponent_attack, opponent_read = _OPPONENT_ATTACKS.get(
+        scrim.exposed_problem,
+        (
+            "unknown_attack",
+            f"Apex Foundry will test the unresolved {scrim.exposed_problem} problem first.",
+        ),
+    )
+    team_edge = _TEAM_EDGES.get(scrim.scrim_modifier, "unclear_match_edge")
+
+    if scrim.tilt_risk_delta >= 2:
+        match_risk = "high"
+    elif scrim.tilt_risk_delta <= -1 and scrim.readiness_delta >= 2:
+        match_risk = "low"
+    else:
+        match_risk = "medium"
+
+    if match_risk == "high" or scrim.visible_consequence in {
+        "patch_tested_early",
+        "identity_forced",
+    }:
+        recommended: Week8MatchPlanChoice = "patch_weakness"
+        recommendation_reason = "The scrim exposed the same problem the opponent can attack first."
+    else:
+        recommended = "lean_into_edge"
+        recommendation_reason = "The scrim left enough control to preserve the strongest match edge."
+
+    options = (
+        Week8MatchOption(
+            value="patch_weakness",
+            label="Patch the weakness",
+            payoff=f"Protect {scrim.exposed_problem} against {opponent_attack}.",
+            cost=f"Spend less time sharpening {team_edge}.",
+        ),
+        Week8MatchOption(
+            value="lean_into_edge",
+            label="Lean into the edge",
+            payoff=f"Center match prep on {team_edge}.",
+            cost=f"Carry {scrim.exposed_problem} into the opponent's first test.",
+        ),
+    )
+
+    return Week8MatchPreview(
+        source_branch=setup.source_branch,
+        setup_branch=setup.hook_id,
+        chosen_focus=focus.chosen_focus,
+        source_pressure_outcome=pressure.outcome_id,
+        pressure_headline=pressure.headline,
+        prep_choice=prep.selected_choice,
+        scrim_call=scrim.selected_call,
+        exposed_problem=scrim.exposed_problem,
+        spotlight_player=scrim.spotlight_player,
+        scrim_signal=scrim.visible_consequence,
+        opponent_attack=opponent_attack,
+        opponent_read=opponent_read,
+        team_edge=team_edge,
+        match_risk=match_risk,
+        recommended_plan=recommended,
+        recommendation_reason=recommendation_reason,
+        options=options,
+    )
+
+
+def resolve_week8_match_plan(
+    preview: Week8MatchPreview,
+    selected_plan: str,
+) -> Week8MatchPlanLock:
+    """Resolve one Week-8 match plan into a deterministic artifact."""
+    if selected_plan not in WEEK8_MATCH_PLAN_CHOICES:
+        raise ValueError("selected_plan must be patch_weakness or lean_into_edge")
+    plan: Week8MatchPlanChoice = selected_plan  # type: ignore[assignment]
+    selected = next(option for option in preview.options if option.value == plan)
+
+    if plan == "patch_weakness":
+        readiness_delta, edge_delta, risk_delta = 1, -1, -1
+        match_pressure = "protected_opener"
+        next_problem = f"{preview.exposed_problem}_managed_but_edge_dulled"
+        next_hook = "Week 8 match can now test whether the protected opener still wins first contact."
+    else:
+        readiness_delta, edge_delta, risk_delta = 0, 1, 1
+        match_pressure = "edge_first_opener"
+        next_problem = f"{preview.exposed_problem}_carried_into_match"
+        next_hook = "Week 8 match can now test whether the edge outruns the opponent's first attack."
+
+    return Week8MatchPlanLock(
+        source_branch=preview.source_branch,
+        setup_branch=preview.setup_branch,
+        chosen_focus=preview.chosen_focus,
+        source_pressure_outcome=preview.source_pressure_outcome,
+        pressure_headline=preview.pressure_headline,
+        prep_choice=preview.prep_choice,
+        scrim_call=preview.scrim_call,
+        exposed_problem=preview.exposed_problem,
+        spotlight_player=preview.spotlight_player,
+        scrim_signal=preview.scrim_signal,
+        opponent_attack=preview.opponent_attack,
+        team_edge=preview.team_edge,
+        match_risk=preview.match_risk,
+        recommended_plan=preview.recommended_plan,
+        available_choices=WEEK8_MATCH_PLAN_CHOICES,
+        selected_plan=plan,
+        plan_label=selected.label,
+        readiness_delta=readiness_delta,
+        edge_delta=edge_delta,
+        risk_delta=risk_delta,
+        match_pressure=match_pressure,
+        next_problem=next_problem,
+        next_hook=next_hook,
+    )
+
+
+def week8_match_plan_from_json(text: str) -> Week8MatchPlanLock:
+    """Parse a written ``week8_match_plan.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week8_match_plan JSON is malformed") from exc
+    match_plan = data.get("week8_match_plan") if isinstance(data, dict) else None
+    if not isinstance(match_plan, dict):
+        raise ValueError("week8_match_plan JSON must contain a week8_match_plan object")
+    selected = match_plan.get("selected_plan")
+    if selected not in WEEK8_MATCH_PLAN_CHOICES:
+        raise ValueError("week8_match_plan selected_plan must be patch_weakness or lean_into_edge")
+    recommended = match_plan.get("recommended_plan")
+    if recommended not in WEEK8_MATCH_PLAN_CHOICES:
+        raise ValueError("week8_match_plan recommended_plan must be patch_weakness or lean_into_edge")
+    prep_choice = match_plan.get("prep_choice")
+    if prep_choice not in WEEK8_PREP_CHOICES:
+        raise ValueError("week8_match_plan prep_choice must be patch_exposed_break or double_down_identity")
+    scrim_call = match_plan.get("scrim_call")
+    if scrim_call not in WEEK8_SCRIM_CHOICES:
+        raise ValueError("week8_match_plan scrim_call must be play_to_prep or cover_the_crack")
+    available = match_plan.get("available_choices")
+    if not isinstance(available, list) or any(choice not in WEEK8_MATCH_PLAN_CHOICES for choice in available):
+        raise ValueError("week8_match_plan available_choices must list Week-8 match plan choices")
+    focus = match_plan.get("chosen_focus")
+    if focus not in WEEK7_FOCI:
+        raise ValueError("week8_match_plan chosen_focus must be contain_fallout or prove_ceiling")
+    deltas = match_plan.get("deltas")
+    if not isinstance(deltas, dict):
+        raise ValueError("week8_match_plan JSON must include deltas")
+    return Week8MatchPlanLock(
+        source_branch=str(match_plan.get("source_branch", "")),
+        setup_branch=str(match_plan.get("setup_branch", "")),
+        chosen_focus=focus,
+        source_pressure_outcome=str(match_plan.get("source_pressure_outcome", "")),
+        pressure_headline=str(match_plan.get("pressure_headline", "")),
+        prep_choice=prep_choice,
+        scrim_call=scrim_call,
+        exposed_problem=str(match_plan.get("exposed_problem", "")),
+        spotlight_player=str(match_plan.get("spotlight_player", "")),
+        scrim_signal=str(match_plan.get("scrim_signal", "")),
+        opponent_attack=str(match_plan.get("opponent_attack", "")),
+        team_edge=str(match_plan.get("team_edge", "")),
+        match_risk=str(match_plan.get("match_risk", "")),
+        recommended_plan=recommended,
+        available_choices=tuple(available),  # type: ignore[arg-type]
+        selected_plan=selected,
+        plan_label=str(match_plan.get("plan_label", "")),
+        readiness_delta=int(deltas.get("readiness", 0)),
+        edge_delta=int(deltas.get("edge", 0)),
+        risk_delta=int(deltas.get("risk", 0)),
+        match_pressure=str(match_plan.get("match_pressure", "")),
+        next_problem=str(match_plan.get("next_problem", "")),
+        next_hook=str(match_plan.get("next_hook", "")),
+    )
+
+
+def render_week8_match_plan_json(lock: Week8MatchPlanLock) -> str:
+    """Canonical JSON export for a locked Week-8 match plan."""
+    payload = {
+        "week8_match_plan": {
+            "artifact_type": "week8_match_plan",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week7_setup": "week7_setup.json",
+                "week7_focus": "week7_focus.json",
+                "week7_pressure": "week7_pressure.json",
+                "week8_prep": "week8_prep.json",
+                "week8_scrim": "week8_scrim.json",
+            },
+            "week": 8,
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "source_pressure_outcome": lock.source_pressure_outcome,
+            "pressure_headline": lock.pressure_headline,
+            "prep_choice": lock.prep_choice,
+            "scrim_call": lock.scrim_call,
+            "exposed_problem": lock.exposed_problem,
+            "spotlight_player": lock.spotlight_player,
+            "scrim_signal": lock.scrim_signal,
+            "opponent_attack": lock.opponent_attack,
+            "team_edge": lock.team_edge,
+            "match_risk": lock.match_risk,
+            "recommended_plan": lock.recommended_plan,
+            "available_choices": list(lock.available_choices),
+            "selected_plan": lock.selected_plan,
+            "plan_label": lock.plan_label,
+            "deltas": {
+                "readiness": lock.readiness_delta,
+                "edge": lock.edge_delta,
+                "risk": lock.risk_delta,
+            },
+            "match_pressure": lock.match_pressure,
+            "next_problem": lock.next_problem,
+            "next_hook": lock.next_hook,
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
