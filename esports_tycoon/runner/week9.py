@@ -16,10 +16,12 @@ Week9ResponseChoice = Literal[
 ]
 Week9PrepChoice = Literal["lean_into_bias", "balance_risk", "counter_read"]
 Week9ScrimReadChoice = Literal["room_read", "public_read", "tactical_read"]
+Week9MatchPlanChoice = Literal["protect_the_room", "play_the_prep", "counter_the_read"]
 
 WEEK9_SETUP_FILENAME = "week9_setup.json"
 WEEK9_PREP_FILENAME = "week9_prep.json"
 WEEK9_SCRIM_FILENAME = "week9_scrim.json"
+WEEK9_MATCH_PLAN_FILENAME = "week9_match_plan.json"
 WEEK9_RESPONSE_CHOICES: tuple[Week9ResponseChoice, ...] = (
     "stabilize_roster",
     "double_down_read",
@@ -34,6 +36,11 @@ WEEK9_SCRIM_CHOICES: tuple[Week9ScrimReadChoice, ...] = (
     "room_read",
     "public_read",
     "tactical_read",
+)
+WEEK9_MATCH_PLAN_CHOICES: tuple[Week9MatchPlanChoice, ...] = (
+    "protect_the_room",
+    "play_the_prep",
+    "counter_the_read",
 )
 
 
@@ -258,6 +265,80 @@ class Week9ScrimLock:
     read_label: str
     scrim_reads: tuple[Week9ScrimRead, ...]
     selected_match_plan_pressure: str
+    recommendation_reason: str
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week9MatchPlanOption:
+    """One Week-9 match-week plan available after the scrim read."""
+
+    value: Week9MatchPlanChoice
+    label: str
+    payoff: str
+    cost: str
+    read_basis: str
+    commitment: str
+    result_constraint: str
+
+
+@dataclass(frozen=True)
+class Week9MatchPlanPreview:
+    """The read-only Week-9 match preview before the plan is locked."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    week8_outcome_id: str
+    week8_match_result: str
+    week8_scoreline: str
+    selected_week8_plan: str
+    week9_problem_id: str
+    manager_problem: str
+    selected_response: Week9ResponseChoice
+    selected_prep: Week9PrepChoice
+    selected_prep_bias: str
+    selected_scrim_read: Week9ScrimReadChoice
+    selected_match_plan_pressure: str
+    setup_read_id: Week9ScrimReadChoice
+    prep_read_id: Week9ScrimReadChoice
+    recommendation_basis: str
+    recommended_plan: Week9MatchPlanChoice
+    recommendation_reason: str
+    match_risk: str
+    options: tuple[Week9MatchPlanOption, ...]
+
+
+@dataclass(frozen=True)
+class Week9MatchPlanLock:
+    """The deterministic artifact produced by locking the Week-9 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: Week7Focus
+    week8_outcome_id: str
+    week8_match_result: str
+    week8_scoreline: str
+    selected_week8_plan: str
+    week9_problem_id: str
+    manager_problem: str
+    selected_response: Week9ResponseChoice
+    selected_prep: Week9PrepChoice
+    selected_prep_bias: str
+    selected_scrim_read: Week9ScrimReadChoice
+    selected_match_plan_pressure: str
+    setup_read_id: Week9ScrimReadChoice
+    prep_read_id: Week9ScrimReadChoice
+    recommendation_basis: str
+    recommended_plan: Week9MatchPlanChoice
+    available_choices: tuple[Week9MatchPlanChoice, ...]
+    selected_plan: Week9MatchPlanChoice
+    plan_label: str
+    commitment: str
+    risk_taken: str
+    thing_to_watch: str
+    match_risk: str
+    result_constraints: tuple[str, ...]
     recommendation_reason: str
     next_hook: str
 
@@ -1040,6 +1121,8 @@ def week9_scrim_from_json(text: str) -> Week9ScrimLock:
     raw_reads = scrim.get("scrim_reads")
     if not isinstance(raw_reads, list) or len(raw_reads) != len(WEEK9_SCRIM_CHOICES):
         raise ValueError("week9_scrim scrim_reads must list exactly three reads")
+    if scrim.get("next_artifact") not in {None, "week9_match_plan.json"}:
+        raise ValueError("week9_scrim next_artifact must be week9_match_plan.json")
     reads: list[Week9ScrimRead] = []
     for raw in raw_reads:
         if not isinstance(raw, dict):
@@ -1151,6 +1234,320 @@ def render_week9_scrim_json(lock: Week9ScrimLock) -> str:
             "recommendation_reason": lock.recommendation_reason,
             "next_hook": lock.next_hook,
             "next_artifact": "week9_match_plan.json",
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_MATCH_PLAN_OPTIONS: tuple[Week9MatchPlanOption, ...] = (
+    Week9MatchPlanOption(
+        value="protect_the_room",
+        label="Protect the room",
+        payoff="Keep roles and first-contact comms stable around the room read.",
+        cost="The team spends less match prep on surprise and pressure.",
+        read_basis="room_read",
+        commitment="stabilize",
+        result_constraint="room_confidence_must_hold",
+    ),
+    Week9MatchPlanOption(
+        value="play_the_prep",
+        label="Play the prep",
+        payoff="Commit the match plan to the prep lane the week already bought.",
+        cost="If the read is wrong, the team has less room to pivot mid-map.",
+        read_basis="prep_lane",
+        commitment="commit",
+        result_constraint="prep_lane_must_translate",
+    ),
+    Week9MatchPlanOption(
+        value="counter_the_read",
+        label="Counter the read",
+        payoff="Use the clearest scrim pressure as the first match-week adjustment.",
+        cost="The plan adds complexity after a week already shaped by fallout.",
+        read_basis="scrim_read",
+        commitment="counter",
+        result_constraint="counter_must_land_early",
+    ),
+)
+
+
+def _week9_match_recommendation(
+    setup: Week9SetupLock,
+    prep: Week9PrepLock,
+    scrim: Week9ScrimLock,
+) -> tuple[Week9MatchPlanChoice, str, str]:
+    if (
+        scrim.selected_scrim_read == "room_read"
+        or scrim.selected_match_plan_pressure == "room_confidence"
+        or setup.selected_response == "stabilize_roster"
+    ):
+        return (
+            "protect_the_room",
+            "room_instability",
+            "The setup or scrim read puts the room at the center of the Week 9 risk.",
+        )
+    if scrim.selected_scrim_read == scrim.prep_read_id:
+        return (
+            "play_the_prep",
+            "prep_scrim_alignment",
+            "The locked prep lane and selected scrim read point at the same match-week posture.",
+        )
+    if scrim.selected_scrim_read in {"public_read", "tactical_read"}:
+        return (
+            "counter_the_read",
+            "sharp_scrim_adjustment",
+            "The selected scrim read creates a concrete public or tactical adjustment.",
+        )
+    if prep.selected_prep == "counter_read":
+        return (
+            "counter_the_read",
+            "prep_counter_lane",
+            "The prep lane already asked the team to answer the outside read.",
+        )
+    return (
+        "play_the_prep",
+        "default_to_preparation",
+        "No single pressure dominates, so the cleanest plan is to trust the week's prep.",
+    )
+
+
+def _week9_match_risk(
+    prep: Week9PrepLock,
+    scrim: Week9ScrimLock,
+    recommended_plan: Week9MatchPlanChoice,
+) -> str:
+    if prep.combined_risk_delta >= 2 or scrim.selected_match_plan_pressure == "external_pressure":
+        return "high"
+    if prep.combined_risk_delta <= -1 and recommended_plan == "protect_the_room":
+        return "low"
+    return "medium"
+
+
+def week9_match_plan_preview(
+    setup: Week9SetupLock,
+    prep: Week9PrepLock,
+    scrim: Week9ScrimLock,
+) -> Week9MatchPlanPreview:
+    """Build the deterministic Week-9 match-plan preview from prior artifacts."""
+    if setup.source_branch != prep.source_branch or setup.source_branch != scrim.source_branch:
+        raise ValueError("week9 match artifacts do not agree on source branch")
+    if setup.setup_branch != prep.setup_branch or setup.setup_branch != scrim.setup_branch:
+        raise ValueError("week9 match artifacts do not agree on setup branch")
+    if setup.chosen_focus != prep.chosen_focus or setup.chosen_focus != scrim.chosen_focus:
+        raise ValueError("week9 match artifacts do not agree on chosen focus")
+    if setup.week8_outcome_id != prep.week8_outcome_id or setup.week8_outcome_id != scrim.week8_outcome_id:
+        raise ValueError("week9 match artifacts do not agree on Week-8 outcome")
+    if setup.selected_response != prep.selected_response or setup.selected_response != scrim.selected_response:
+        raise ValueError("week9 match artifacts do not agree on Week-9 response")
+    if prep.selected_prep != scrim.selected_prep:
+        raise ValueError("week9 match scrim does not match Week-9 prep")
+    if setup.week9_problem_id != prep.week9_problem_id or setup.week9_problem_id != scrim.week9_problem_id:
+        raise ValueError("week9 match artifacts do not agree on Week-9 problem")
+
+    recommended, basis, reason = _week9_match_recommendation(setup, prep, scrim)
+    return Week9MatchPlanPreview(
+        source_branch=setup.source_branch,
+        setup_branch=setup.setup_branch,
+        chosen_focus=setup.chosen_focus,
+        week8_outcome_id=setup.week8_outcome_id,
+        week8_match_result=setup.week8_match_result,
+        week8_scoreline=setup.week8_scoreline,
+        selected_week8_plan=setup.selected_plan,
+        week9_problem_id=setup.week9_problem_id,
+        manager_problem=setup.manager_problem,
+        selected_response=setup.selected_response,
+        selected_prep=prep.selected_prep,
+        selected_prep_bias=prep.selected_prep_bias,
+        selected_scrim_read=scrim.selected_scrim_read,
+        selected_match_plan_pressure=scrim.selected_match_plan_pressure,
+        setup_read_id=scrim.setup_read_id,
+        prep_read_id=scrim.prep_read_id,
+        recommendation_basis=basis,
+        recommended_plan=recommended,
+        recommendation_reason=reason,
+        match_risk=_week9_match_risk(prep, scrim, recommended),
+        options=_MATCH_PLAN_OPTIONS,
+    )
+
+
+def resolve_week9_match_plan(
+    preview: Week9MatchPlanPreview,
+    selected_plan: str,
+) -> Week9MatchPlanLock:
+    """Resolve one Week-9 match plan into a deterministic artifact."""
+    if selected_plan not in WEEK9_MATCH_PLAN_CHOICES:
+        raise ValueError("selected_plan must be protect_the_room, play_the_prep, or counter_the_read")
+    plan: Week9MatchPlanChoice = selected_plan  # type: ignore[assignment]
+    selected = next(option for option in preview.options if option.value == plan)
+
+    if plan == "protect_the_room":
+        risk_taken = "lower_ceiling_if_match_needs_a_fast_pivot"
+        thing_to_watch = "first-contact comms after the opening mistake"
+        extra_constraints = ("protect_room_first", "avoid_blame_spiral")
+    elif plan == "play_the_prep":
+        risk_taken = "the week becomes predictable if the prep read is off"
+        thing_to_watch = "whether the prep lane survives the first opponent answer"
+        extra_constraints = ("trust_prep_lane", "prove_week9_process")
+    else:
+        risk_taken = "complexity rises before the room has a match result"
+        thing_to_watch = "whether the counter lands before outside pressure grows"
+        extra_constraints = ("counter_selected_read", "win_first_adjustment")
+
+    constraints = (
+        selected.result_constraint,
+        f"setup:{preview.selected_response}",
+        f"prep:{preview.selected_prep}",
+        f"scrim:{preview.selected_scrim_read}",
+        *extra_constraints,
+    )
+    return Week9MatchPlanLock(
+        source_branch=preview.source_branch,
+        setup_branch=preview.setup_branch,
+        chosen_focus=preview.chosen_focus,
+        week8_outcome_id=preview.week8_outcome_id,
+        week8_match_result=preview.week8_match_result,
+        week8_scoreline=preview.week8_scoreline,
+        selected_week8_plan=preview.selected_week8_plan,
+        week9_problem_id=preview.week9_problem_id,
+        manager_problem=preview.manager_problem,
+        selected_response=preview.selected_response,
+        selected_prep=preview.selected_prep,
+        selected_prep_bias=preview.selected_prep_bias,
+        selected_scrim_read=preview.selected_scrim_read,
+        selected_match_plan_pressure=preview.selected_match_plan_pressure,
+        setup_read_id=preview.setup_read_id,
+        prep_read_id=preview.prep_read_id,
+        recommendation_basis=preview.recommendation_basis,
+        recommended_plan=preview.recommended_plan,
+        available_choices=WEEK9_MATCH_PLAN_CHOICES,
+        selected_plan=plan,
+        plan_label=selected.label,
+        commitment=selected.commitment,
+        risk_taken=risk_taken,
+        thing_to_watch=thing_to_watch,
+        match_risk=preview.match_risk,
+        result_constraints=constraints,
+        recommendation_reason=preview.recommendation_reason,
+        next_hook=(
+            f"Week 9 result can test {selected.commitment} against "
+            f"{preview.week9_problem_id}."
+        ),
+    )
+
+
+def week9_match_plan_from_json(text: str) -> Week9MatchPlanLock:
+    """Parse a written ``week9_match_plan.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week9_match_plan JSON is malformed") from exc
+    match_plan = data.get("week9_match_plan") if isinstance(data, dict) else None
+    if not isinstance(match_plan, dict):
+        raise ValueError("week9_match_plan JSON must contain a week9_match_plan object")
+    selected = match_plan.get("selected_plan")
+    if selected not in WEEK9_MATCH_PLAN_CHOICES:
+        raise ValueError("week9_match_plan selected_plan must list a Week-9 match plan")
+    recommended = match_plan.get("recommended_plan")
+    if recommended not in WEEK9_MATCH_PLAN_CHOICES:
+        raise ValueError("week9_match_plan recommended_plan must list a Week-9 match plan")
+    response = match_plan.get("selected_response")
+    if response not in WEEK9_RESPONSE_CHOICES:
+        raise ValueError("week9_match_plan selected_response must list a Week-9 response choice")
+    prep = match_plan.get("selected_prep")
+    if prep not in WEEK9_PREP_CHOICES:
+        raise ValueError("week9_match_plan selected_prep must list a Week-9 prep choice")
+    scrim_read = match_plan.get("selected_scrim_read")
+    if scrim_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_match_plan selected_scrim_read must list a Week-9 scrim read")
+    setup_read = match_plan.get("setup_read_id")
+    if setup_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_match_plan setup_read_id must list a Week-9 scrim read")
+    prep_read = match_plan.get("prep_read_id")
+    if prep_read not in WEEK9_SCRIM_CHOICES:
+        raise ValueError("week9_match_plan prep_read_id must list a Week-9 scrim read")
+    available = match_plan.get("available_choices")
+    if not isinstance(available, list) or any(choice not in WEEK9_MATCH_PLAN_CHOICES for choice in available):
+        raise ValueError("week9_match_plan available_choices must list Week-9 match plans")
+    focus = match_plan.get("chosen_focus")
+    if focus not in WEEK7_FOCI:
+        raise ValueError("week9_match_plan chosen_focus must be contain_fallout or prove_ceiling")
+    constraints = match_plan.get("result_constraints")
+    if not isinstance(constraints, list):
+        raise ValueError("week9_match_plan JSON must include result_constraints")
+    return Week9MatchPlanLock(
+        source_branch=str(match_plan.get("source_branch", "")),
+        setup_branch=str(match_plan.get("setup_branch", "")),
+        chosen_focus=focus,
+        week8_outcome_id=str(match_plan.get("week8_outcome_id", "")),
+        week8_match_result=str(match_plan.get("week8_match_result", "")),
+        week8_scoreline=str(match_plan.get("week8_scoreline", "")),
+        selected_week8_plan=str(match_plan.get("selected_week8_plan", "")),
+        week9_problem_id=str(match_plan.get("week9_problem_id", "")),
+        manager_problem=str(match_plan.get("manager_problem", "")),
+        selected_response=response,
+        selected_prep=prep,
+        selected_prep_bias=str(match_plan.get("selected_prep_bias", "")),
+        selected_scrim_read=scrim_read,
+        selected_match_plan_pressure=str(match_plan.get("selected_match_plan_pressure", "")),
+        setup_read_id=setup_read,
+        prep_read_id=prep_read,
+        recommendation_basis=str(match_plan.get("recommendation_basis", "")),
+        recommended_plan=recommended,
+        available_choices=tuple(available),  # type: ignore[arg-type]
+        selected_plan=selected,
+        plan_label=str(match_plan.get("plan_label", "")),
+        commitment=str(match_plan.get("commitment", "")),
+        risk_taken=str(match_plan.get("risk_taken", "")),
+        thing_to_watch=str(match_plan.get("thing_to_watch", "")),
+        match_risk=str(match_plan.get("match_risk", "")),
+        result_constraints=tuple(str(item) for item in constraints),
+        recommendation_reason=str(match_plan.get("recommendation_reason", "")),
+        next_hook=str(match_plan.get("next_hook", "")),
+    )
+
+
+def render_week9_match_plan_json(lock: Week9MatchPlanLock) -> str:
+    """Canonical JSON export for a locked Week-9 match plan."""
+    payload = {
+        "week9_match_plan": {
+            "artifact_type": "week9_match_plan",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week9_setup": "week9_setup.json",
+                "week9_prep": "week9_prep.json",
+                "week9_scrim": "week9_scrim.json",
+            },
+            "week": 9,
+            "route": "/week9/match",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week8_outcome_id": lock.week8_outcome_id,
+            "week8_match_result": lock.week8_match_result,
+            "week8_scoreline": lock.week8_scoreline,
+            "selected_week8_plan": lock.selected_week8_plan,
+            "week9_problem_id": lock.week9_problem_id,
+            "manager_problem": lock.manager_problem,
+            "selected_response": lock.selected_response,
+            "selected_prep": lock.selected_prep,
+            "selected_prep_bias": lock.selected_prep_bias,
+            "selected_scrim_read": lock.selected_scrim_read,
+            "selected_match_plan_pressure": lock.selected_match_plan_pressure,
+            "setup_read_id": lock.setup_read_id,
+            "prep_read_id": lock.prep_read_id,
+            "recommendation_basis": lock.recommendation_basis,
+            "recommended_plan": lock.recommended_plan,
+            "available_choices": list(lock.available_choices),
+            "selected_plan": lock.selected_plan,
+            "plan_label": lock.plan_label,
+            "commitment": lock.commitment,
+            "risk_taken": lock.risk_taken,
+            "thing_to_watch": lock.thing_to_watch,
+            "match_risk": lock.match_risk,
+            "result_constraints": list(lock.result_constraints),
+            "recommendation_reason": lock.recommendation_reason,
+            "next_hook": lock.next_hook,
+            "stops_before": "match_result",
+            "next_artifact": "week9_match_result.json",
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"

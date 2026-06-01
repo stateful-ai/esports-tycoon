@@ -40,6 +40,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week8_match_result_json,
     render_week8_prep_json,
     render_week8_scrim_json,
+    render_week9_match_plan_json,
     render_week9_prep_json,
     render_week9_scrim_json,
     render_week9_setup_json,
@@ -50,6 +51,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week8_match_result,
     resolve_week8_prep,
     resolve_week8_scrim,
+    resolve_week9_match_plan,
     resolve_week9_prep,
     resolve_week9_scrim,
     resolve_week9_setup,
@@ -59,6 +61,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week8_match_preview,
     week8_prep_plan,
     week8_scrim_plan,
+    week9_match_plan_preview,
     week9_prep_plan,
     week9_scrim_plan,
     week9_setup_plan,
@@ -993,6 +996,70 @@ class TestWeek9ScrimChoice(_Fixture):
         self.assertIn('"next_artifact": "week9_match_plan.json"', payload)
         self.assertNotIn('"selected_match_plan"', payload)
         self.assertNotIn('"match_result"', payload)
+
+
+class TestWeek9MatchPlanChoice(_Fixture):
+    def _match_preview_for(
+        self,
+        response_choice: str,
+        prep_choice: str,
+        scrim_read: str,
+    ):
+        prep_plan = TestWeek9PrepChoice._prep_plan_for(
+            self,
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+            response_choice,
+        )
+        setup_plan = TestWeek9FalloutSetup._week9_plan_for(
+            self,
+            "vex_aim",
+            "prove_ceiling",
+            "patch_exposed_break",
+            "cover_the_crack",
+            "patch_weakness",
+        )
+        setup = resolve_week9_setup(setup_plan, response_choice)
+        prep = resolve_week9_prep(prep_plan, prep_choice)
+        scrim_plan = week9_scrim_plan(setup, prep)
+        scrim = resolve_week9_scrim(scrim_plan, scrim_read)
+        return week9_match_plan_preview(setup, prep, scrim)
+
+    def test_week9_match_plan_options_are_fixed(self):
+        preview = self._match_preview_for("control_public_story", "counter_read", "public_read")
+
+        self.assertEqual(
+            tuple(option.value for option in preview.options),
+            ("protect_the_room", "play_the_prep", "counter_the_read"),
+        )
+
+    def test_week9_match_plan_recommendation_uses_room_alignment_and_counter_reads(self):
+        room = self._match_preview_for("stabilize_roster", "lean_into_bias", "room_read")
+        aligned = self._match_preview_for("control_public_story", "counter_read", "public_read")
+        counter = self._match_preview_for("control_public_story", "counter_read", "tactical_read")
+
+        self.assertEqual(room.recommended_plan, "protect_the_room")
+        self.assertEqual(aligned.recommended_plan, "play_the_prep")
+        self.assertEqual(counter.recommended_plan, "counter_the_read")
+
+    def test_week9_match_plan_artifact_sources_scrim_and_stops_before_result(self):
+        preview = self._match_preview_for("control_public_story", "counter_read", "public_read")
+        lock = resolve_week9_match_plan(preview, "play_the_prep")
+        payload = render_week9_match_plan_json(lock)
+
+        self.assertIn('"week9_setup": "week9_setup.json"', payload)
+        self.assertIn('"week9_prep": "week9_prep.json"', payload)
+        self.assertIn('"week9_scrim": "week9_scrim.json"', payload)
+        self.assertIn('"artifact_type": "week9_match_plan"', payload)
+        self.assertIn('"selected_plan": "play_the_prep"', payload)
+        self.assertIn('"result_constraints":', payload)
+        self.assertIn('"stops_before": "match_result"', payload)
+        self.assertIn('"next_artifact": "week9_match_result.json"', payload)
+        self.assertNotIn('"week9_match_result"', payload)
+        self.assertNotIn('"winner"', payload)
 
 
 class TestDeterminism(_Fixture):
