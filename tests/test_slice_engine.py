@@ -48,6 +48,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week9_setup_json,
     render_week10_fallout_json,
     render_week10_match_plan_json,
+    render_week10_match_result_json,
     render_week10_prep_json,
     render_week10_scrim_json,
     run_slice,
@@ -64,6 +65,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week9_setup,
     resolve_week10_fallout,
     resolve_week10_match_plan,
+    resolve_week10_match_result,
     resolve_week10_prep,
     resolve_week10_scrim,
     setup_payload_from_week7_setup,
@@ -79,6 +81,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_fallout_plan,
     week10_match_plan_from_json,
     week10_match_plan_preview,
+    week10_match_result_from_json,
     week10_prep_from_json,
     week10_prep_plan,
     week10_scrim_from_json,
@@ -1486,6 +1489,143 @@ class TestWeek10MatchPlan(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "selected_plan"):
             resolve_week10_match_plan(preview, "coinflip")
+
+
+class TestWeek10MatchResult(_Fixture):
+    def _plans_by_selection(self):
+        scrim = TestWeek10MatchPlan._scrims_by_outcome(self)["execution_translated"]
+        preview = week10_match_plan_preview(scrim)
+        return {
+            selected: resolve_week10_match_plan(preview, selected)
+            for selected in (
+                "week10_plan_protect_pressure",
+                "week10_plan_trade_map",
+                "week10_plan_press_advantage",
+            )
+        }
+
+    def _plan_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        week9_result = TestWeek10Fallout._week9_results_by_outcome(self)[week9_outcome]
+        fallout = resolve_week10_fallout(
+            week9_result,
+            week10_fallout_plan(week9_result),
+            fallout_choice,
+        )
+        prep = resolve_week10_prep(fallout, week10_prep_plan(fallout), prep_choice)
+        scrim = resolve_week10_scrim(prep, week10_scrim_plan(prep), scrim_choice)
+        return resolve_week10_match_plan(week10_match_plan_preview(scrim), selected_plan)
+
+    def test_week10_match_result_resolves_from_committed_plan(self):
+        plan = self._plans_by_selection()["week10_plan_press_advantage"]
+        result = resolve_week10_match_result(plan)
+
+        self.assertEqual(result.outcome_id, "advantage_converted")
+        self.assertEqual(result.result_tier, "win")
+        self.assertEqual(result.scoreline, "2-0")
+        self.assertEqual(result.selected_plan, "week10_plan_press_advantage")
+        self.assertEqual(result.commitment, "advantage_press")
+        self.assertIn("Match commitment: advantage press.", result.causal_chain)
+        self.assertIn("score:10", result.result_basis)
+
+    def test_week10_match_result_outcomes_follow_plan_family(self):
+        cases = {
+            "week10_plan_protect_pressure": "pressure_held",
+            "week10_plan_trade_map": "map_trade_paid",
+            "week10_plan_press_advantage": "advantage_converted",
+        }
+        for selected_plan, expected in cases.items():
+            with self.subTest(selected_plan=selected_plan):
+                result = resolve_week10_match_result(self._plans_by_selection()[selected_plan])
+                self.assertEqual(result.outcome_id, expected)
+
+    def test_week10_match_result_locks_all_six_outcomes_to_reachable_paths(self):
+        cases = {
+            "pressure_held": (
+                "room_held",
+                "steady_room",
+                "scout_counter",
+                "stabilize_comms",
+                "week10_plan_protect_pressure",
+                "win",
+            ),
+            "pressure_broke": (
+                "room_held",
+                "steady_room",
+                "scout_counter",
+                "validate_read",
+                "week10_plan_protect_pressure",
+                "loss",
+            ),
+            "map_trade_paid": (
+                "room_held",
+                "steady_room",
+                "roster_reps",
+                "stress_execution",
+                "week10_plan_trade_map",
+                "win",
+            ),
+            "map_trade_late": (
+                "room_held",
+                "steady_room",
+                "scout_counter",
+                "validate_read",
+                "week10_plan_trade_map",
+                "loss",
+            ),
+            "advantage_converted": (
+                "room_held",
+                "steady_room",
+                "staff_review",
+                "validate_read",
+                "week10_plan_press_advantage",
+                "win",
+            ),
+            "advantage_punished": (
+                "room_held",
+                "steady_room",
+                "scout_counter",
+                "validate_read",
+                "week10_plan_press_advantage",
+                "loss",
+            ),
+        }
+        for outcome_id, path in cases.items():
+            with self.subTest(outcome_id=outcome_id):
+                *plan_path, result_tier = path
+                result = resolve_week10_match_result(self._plan_for_path(*plan_path))
+
+                self.assertEqual(result.outcome_id, outcome_id)
+                self.assertEqual(result.result_tier, result_tier)
+
+    def test_week10_match_result_artifact_sources_plan_and_ends_slice(self):
+        plan = self._plans_by_selection()["week10_plan_press_advantage"]
+        result = resolve_week10_match_result(plan)
+        payload = render_week10_match_result_json(result)
+
+        self.assertIn('"week10_match_plan": "week10_match_plan.json"', payload)
+        self.assertIn('"artifact_type": "week10_match_result"', payload)
+        self.assertIn('"selected_plan": "week10_plan_press_advantage"', payload)
+        self.assertIn('"outcome_id": "advantage_converted"', payload)
+        self.assertIn('"visible_effects":', payload)
+        self.assertIn('"causal_chain":', payload)
+        self.assertIn('"stops_before": "week10_post_match_review"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week10_match_result_render_parse_round_trip_is_stable(self):
+        plan = self._plans_by_selection()["week10_plan_press_advantage"]
+        result = resolve_week10_match_result(plan)
+        payload = render_week10_match_result_json(result)
+        parsed = week10_match_result_from_json(payload)
+
+        self.assertEqual(parsed, result)
+        self.assertEqual(render_week10_match_result_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

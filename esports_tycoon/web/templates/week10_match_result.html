@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block title %}Week 10 result — {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1120px; }
+  .result-console {
+    color: #dfe2eb;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      #0d1117;
+    background-size: 20px 20px;
+    border: 1px solid #30363d;
+    padding: 1rem;
+  }
+  .result-console h1, .result-console h2, .result-console p { color: inherit; }
+  .console-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .console-title h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
+  .console-title .sub { color: #9ba3ad; margin: 0.2rem 0 0; }
+  .ops-room-art {
+    height: clamp(180px, 22vw, 260px);
+    margin: 0 0 1rem;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    overflow: hidden;
+  }
+  .ops-room-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+  }
+  .recap-strip, .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .recap-strip { justify-content: flex-end; }
+  .data-chip {
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #c4c7ca;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.positive { border-color: #3fb950; color: #9be9a8; }
+  .data-chip.watch { border-color: #f2cc60; color: #f2cc60; }
+  .data-chip.negative { border-color: #ff7b72; color: #ffb4ab; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .result-panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 1rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #8e9194;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0;
+  }
+  .panel-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    align-items: baseline;
+    margin-bottom: 0.45rem;
+    min-width: 0;
+  }
+  .panel-title strong { font-size: 1.1rem; min-width: 0; overflow-wrap: anywhere; }
+  .readout {
+    color: #f0f6fc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .scoreline {
+    font-size: 2.6rem;
+    line-height: 1;
+    margin: 0.4rem 0 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .copy-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
+  .effect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .effect-box { border: 1px solid #30363d; padding: 0.6rem; background: #0d1117; }
+  .effect-box span { display: block; color: #8e9194; font-size: 0.78rem; }
+  .effect-box strong { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .causal-list {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 0.65rem;
+  }
+  .causal-list span {
+    border-left: 2px solid #f2cc60;
+    background: #0d1117;
+    padding: 0.45rem 0.6rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+  }
+  .console-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .result-console .btn {
+    border-radius: 0;
+    background: #f0f6fc;
+    color: #0d1117;
+    border: 1px solid #f0f6fc;
+  }
+  .result-console .btn.secondary {
+    background: transparent;
+    color: #dfe2eb;
+    border-color: #30363d;
+  }
+  @media (max-width: 820px) {
+    .console-top, .result-grid, .effect-grid { grid-template-columns: 1fr; }
+    .panel-title { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+    .recap-strip { justify-content: flex-start; }
+    .scoreline { font-size: 2.1rem; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 10 match plan required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week10_match') }}">Back to Week 10 match plan</a>
+  </div>
+</div>
+{% elif plan and not match_result %}
+<div class="result-console">
+  <div class="console-top">
+    <div class="console-title">
+      <h1>Week 10 result lock</h1>
+      <p class="sub">Resolve the committed plan against the prep and scrim chain.</p>
+    </div>
+    <div class="recap-strip">
+      <span class="data-chip">plan {{ plan.selected_plan }}</span>
+      <span class="data-chip">commitment {{ plan.commitment }}</span>
+      <span class="data-chip">risk {{ plan.match_risk }}</span>
+    </div>
+  </div>
+
+  <figure class="ops-room-art">
+    <img src="{{ url_for('static', filename='art/week10-ops-room.webp') }}" alt="Week 10 tactical operations room">
+  </figure>
+
+  <section class="result-panel">
+    <div class="panel-kicker">Ready to resolve</div>
+    <div class="panel-title">
+      <strong>{{ plan.plan_label }}</strong>
+      {% if plan.followed_recommendation %}
+        <span class="readout">followed read</span>
+      {% else %}
+        <span class="readout">against read</span>
+      {% endif %}
+    </div>
+    <div class="copy-line">{{ plan.next_hook }}</div>
+    <div class="chip-row">
+      <span class="data-chip">prep {{ plan.prep_outcome_id }}</span>
+      <span class="data-chip">scrim {{ plan.scrim_outcome_id }}</span>
+      <span class="data-chip">pressure {{ plan.match_plan_pressure }}</span>
+    </div>
+    <form method="post" action="{{ url_for('week10_match_result') }}" class="console-actions">
+      <button class="btn" type="submit">Resolve Week 10 result</button>
+      <a class="btn secondary" href="{{ url_for('week10_match') }}">Back to match plan</a>
+    </form>
+  </section>
+</div>
+{% elif match_result %}
+<div class="result-console">
+  <div class="console-top">
+    <div class="console-title">
+      <h1>Week 10 match result</h1>
+      <p class="sub">{{ match_result.headline }}</p>
+    </div>
+    <div class="recap-strip">
+      <span class="data-chip">outcome {{ match_result.outcome_id }}</span>
+      <span class="data-chip">grade {{ match_result.result_grade }}</span>
+    </div>
+  </div>
+
+  <figure class="ops-room-art">
+    <img src="{{ url_for('static', filename='art/week10-ops-room.webp') }}" alt="Week 10 tactical operations room">
+  </figure>
+
+  <div class="result-grid">
+    <section class="result-panel">
+      <div class="panel-kicker">Result</div>
+      <div class="scoreline">{{ match_result.result_tier|upper }} {{ match_result.scoreline }}</div>
+      {% if match_result.matched_recommendation %}
+        <span class="data-chip positive">followed read</span>
+      {% else %}
+        <span class="data-chip negative">against read</span>
+      {% endif %}
+      <div class="copy-line">{{ match_result.player_read }}</div>
+      <div class="chip-row">
+        <span class="data-chip">plan {{ match_result.selected_plan }}</span>
+        <span class="data-chip">commitment {{ match_result.commitment }}</span>
+        <span class="data-chip">risk {{ match_result.match_risk }}</span>
+      </div>
+    </section>
+
+    <section class="result-panel">
+      <div class="panel-kicker">Causal chain</div>
+      <div class="panel-title">
+        <strong>Why it happened</strong>
+        <span class="readout">{{ match_result.result_grade }}</span>
+      </div>
+      <div class="causal-list">
+        {% for item in match_result.causal_chain %}
+          <span>{{ item }}</span>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <section class="result-panel" style="margin-top: 1rem;">
+    <div class="panel-kicker">Recap</div>
+    <div class="copy-line">{{ match_result.recap }}</div>
+    <div class="chip-row">
+      {% for effect in match_result.visible_effects %}
+        <span class="data-chip {{ effect.polarity }}">{{ effect.label }}</span>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="result-panel" style="margin-top: 1rem;">
+    <div class="panel-kicker">Artifact</div>
+    <div class="copy-line">{{ match_result.next_hook }}</div>
+    <div class="chip-row">
+      <span class="data-chip">week10_match_result.json</span>
+      {% if week10_match_result_path %}
+        <span class="data-chip">{{ week10_match_result_path }}</span>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endif %}
+{% endblock %}

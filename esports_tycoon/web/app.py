@@ -134,20 +134,24 @@ from esports_tycoon.runner.week9 import (
 from esports_tycoon.runner.week10 import (
     WEEK10_FALLOUT_FILENAME,
     WEEK10_MATCH_PLAN_FILENAME,
+    WEEK10_MATCH_RESULT_FILENAME,
     WEEK10_PREP_FILENAME,
     WEEK10_SCRIM_FILENAME,
     render_week10_fallout_json,
     render_week10_match_plan_json,
+    render_week10_match_result_json,
     render_week10_prep_json,
     render_week10_scrim_json,
     resolve_week10_fallout,
     resolve_week10_match_plan,
+    resolve_week10_match_result,
     resolve_week10_prep,
     resolve_week10_scrim,
     week10_fallout_from_json,
     week10_fallout_plan,
     week10_match_plan_from_json,
     week10_match_plan_preview,
+    week10_match_result_from_json,
     week10_prep_from_json,
     week10_prep_plan,
     week10_scrim_from_json,
@@ -1319,6 +1323,62 @@ def create_app(
             preview=preview,
             lock=lock,
             week10_match_plan_path=week10_match_plan_written_path,
+        )
+
+    @app.route("/week10/match/result", methods=["GET", "POST"])
+    def week10_match_result():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 10 match result unlocks after the Week 10 match plan.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week10_match_plan_path = run_dir / WEEK10_MATCH_PLAN_FILENAME
+        week10_match_result_path = run_dir / WEEK10_MATCH_RESULT_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK10_MATCH_PLAN_FILENAME, week10_match_plan_path),
+            )
+            if not path.is_file()
+        ]
+        plan = None
+        match_result = None
+        week10_match_result_written_path = ""
+        if not missing:
+            try:
+                plan = week10_match_plan_from_json(week10_match_plan_path.read_text(encoding="utf-8"))
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    match_result = resolve_week10_match_result(plan)
+                    week10_match_result_path.write_text(
+                        render_week10_match_result_json(match_result),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week10_match_result_written_path = str(week10_match_result_path)
+                elif week10_match_result_path.is_file():
+                    try:
+                        match_result = week10_match_result_from_json(
+                            week10_match_result_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week10_match_result_written_path = str(week10_match_result_path)
+
+        return render_template(
+            "week10_match_result.html",
+            result=result,
+            missing=missing,
+            plan=plan,
+            match_result=match_result,
+            week10_match_result_path=week10_match_result_written_path,
         )
 
     @app.get("/feed")
