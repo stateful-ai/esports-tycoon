@@ -209,6 +209,17 @@ class Week11SimFrame:
 
 
 @dataclass(frozen=True)
+class Week11SimActionCandidate:
+    """One legal or masked action candidate aligned to the replay action space."""
+
+    action: Week11SimAction
+    legal: bool
+    score: int
+    reason: str
+    mask_reason: str
+
+
+@dataclass(frozen=True)
 class Week11SimStep:
     """One RL-style step in the deterministic policy trace."""
 
@@ -224,6 +235,8 @@ class Week11SimStep:
     observation_features: dict[str, Any]
     action_context: dict[str, str]
     reward_components: dict[str, int]
+    action_mask: tuple[int, ...]
+    candidate_actions: tuple[Week11SimActionCandidate, ...]
 
 
 @dataclass(frozen=True)
@@ -291,6 +304,8 @@ class Week11TrainingSample:
     telemetry: Week11SimTelemetry
     observation_features: dict[str, Any]
     reward_components: dict[str, int]
+    action_mask: tuple[int, ...]
+    candidate_actions: tuple[Week11SimActionCandidate, ...]
     target_policy_id: str
     source_drill_id: str
 
@@ -753,6 +768,131 @@ def _reward_components(
     return components
 
 
+def _candidate_score(
+    *,
+    action: Week11SimAction,
+    selected_action: Week11SimAction,
+    observation_features: dict[str, Any],
+    reward: int,
+    legal: bool,
+) -> int:
+    if not legal:
+        return 0
+    score = 42
+    if action == selected_action:
+        score += 28 + max(0, reward) * 5
+    if action in {"scan_lane", "reset_shape", "rotate_call"}:
+        score += int(observation_features.get("utility_pressure", 0)) // 4
+    if action in {"entry_peek", "lurk_contact"}:
+        score += int(observation_features.get("space_control", 0)) // 5
+    if action == "anchor_trade":
+        score += int(observation_features.get("trade_window", 0)) // 3
+    if action == "objective_execute":
+        score += int(observation_features.get("objective_pressure", 0)) // 3
+    if int(observation_features.get("risk_index", 0)) >= 76 and action in {"entry_peek", "lurk_contact"}:
+        score -= 14
+    if action == "round_end":
+        score += 18 if selected_action == "round_end" else -10
+    return _clamp(score, 0, 100)
+
+
+def _legal_action_set(
+    *,
+    agent: Week11SimAgent,
+    selected_action: Week11SimAction,
+    observation_features: dict[str, Any],
+    tick: int,
+) -> set[Week11SimAction]:
+    local_tick = tick % 4
+    own_zone = str(observation_features.get("own_zone", ""))
+    target_zone = str(observation_features.get("target_zone", ""))
+    risk = int(observation_features.get("risk_index", 0))
+    objective_pressure = int(observation_features.get("objective_pressure", 0))
+    legal: set[Week11SimAction] = {selected_action, "reset_shape"}
+
+    if local_tick == 0 or own_zone == "spawn_lobby":
+        legal.update({"call_default", "scan_lane", "rotate_call"})
+    if target_zone in {"a_main", "b_main", "mid"}:
+        legal.update({"scan_lane", "entry_peek", "lurk_contact", "anchor_trade"})
+    if agent.role in {"IGL", "CONTROLLER", "INITIATOR"}:
+        legal.update({"call_default", "scan_lane", "rotate_call"})
+    if agent.role in {"DUELIST", "CONTROLLER"}:
+        legal.update({"entry_peek", "lurk_contact"})
+    if risk >= 70:
+        legal.update({"anchor_trade", "reset_shape"})
+    if objective_pressure >= 58 or selected_action == "objective_execute":
+        legal.add("objective_execute")
+    if local_tick == 3 or selected_action == "round_end":
+        legal.add("round_end")
+    return legal
+
+
+def _mask_reason(action: Week11SimAction, *, legal: bool, selected_action: Week11SimAction) -> str:
+    if legal and action == selected_action:
+        return "selected_by_policy"
+    if legal:
+        return "available_in_state"
+    if action == "objective_execute":
+        return "objective_pressure_gate"
+    if action == "round_end":
+        return "terminal_phase_only"
+    if action in {"entry_peek", "lurk_contact"}:
+        return "contact_or_role_gate"
+    return "masked_by_phase"
+
+
+def _candidate_reason(action: Week11SimAction, *, legal: bool, selected_action: Week11SimAction) -> str:
+    if action == selected_action:
+        return "Deterministic policy selected this branch for the saved trajectory."
+    if legal:
+        return "Legal alternative for counterfactual rollout or behavior cloning negatives."
+    return "Masked action kept in the contract so future policies share a stable action index."
+
+
+def _candidate_actions(
+    *,
+    agent: Week11SimAgent,
+    selected_action: Week11SimAction,
+    observation_features: dict[str, Any],
+    tick: int,
+    reward: int,
+) -> tuple[Week11SimActionCandidate, ...]:
+    legal_actions = _legal_action_set(
+        agent=agent,
+        selected_action=selected_action,
+        observation_features=observation_features,
+        tick=tick,
+    )
+    return tuple(
+        Week11SimActionCandidate(
+            action=action,
+            legal=action in legal_actions,
+            score=_candidate_score(
+                action=action,
+                selected_action=selected_action,
+                observation_features=observation_features,
+                reward=reward,
+                legal=action in legal_actions,
+            ),
+            reason=_candidate_reason(
+                action,
+                legal=action in legal_actions,
+                selected_action=selected_action,
+            ),
+            mask_reason=_mask_reason(
+                action,
+                legal=action in legal_actions,
+                selected_action=selected_action,
+            ),
+        )
+        for action in WEEK11_SIM_ACTION_SPACE
+    )
+
+
+def _action_mask(candidates: tuple[Week11SimActionCandidate, ...]) -> tuple[int, ...]:
+    return tuple(1 if candidate.legal else 0 for candidate in candidates)
+
+
 def _observation_features(
     *,
     result: Week11MatchResultLock,
@@ -841,6 +981,13 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
             action=action,
             reward=step_reward,
         )
+        candidate_actions = _candidate_actions(
+            agent=agent,
+            selected_action=action,
+            observation_features=observation_features,
+            tick=tick,
+            reward=step_reward,
+        )
         steps.append(
             Week11SimStep(
                 tick=tick,
@@ -865,6 +1012,8 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
                     trajectory_tag=trajectory_tag,
                     risk=int(observation_features["risk_index"]),
                 ),
+                action_mask=_action_mask(candidate_actions),
+                candidate_actions=candidate_actions,
             )
         )
     return tuple(steps)
@@ -1617,6 +1766,16 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     }
 
 
+def _action_candidate_to_dict(candidate: Week11SimActionCandidate) -> dict[str, Any]:
+    return {
+        "action": candidate.action,
+        "legal": candidate.legal,
+        "score": candidate.score,
+        "reason": candidate.reason,
+        "mask_reason": candidate.mask_reason,
+    }
+
+
 def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
     return {
         "tick": step.tick,
@@ -1631,6 +1790,10 @@ def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
         "observation_features": dict(step.observation_features),
         "action_context": dict(step.action_context),
         "reward_components": dict(step.reward_components),
+        "action_mask": list(step.action_mask),
+        "candidate_actions": [
+            _action_candidate_to_dict(candidate) for candidate in step.candidate_actions
+        ],
     }
 
 
@@ -1703,6 +1866,15 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "top_trait",
             ],
             "reward_component_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "action_mask_unit": "steps[].action_mask",
+            "action_mask_alignment": "WEEK11_SIM_ACTION_SPACE order",
+            "candidate_action_unit": "steps[].candidate_actions[]",
+            "candidate_action_fields": [
+                "action",
+                "legal",
+                "score",
+                "mask_reason",
+            ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
             "frame_event_unit": "frames[].events[]",
             "threat_arc_unit": "frames[].threat_arcs[]",
@@ -2005,6 +2177,8 @@ def resolve_week11_training_dataset(
                 telemetry=frame.telemetry,
                 observation_features=step.observation_features,
                 reward_components=step.reward_components,
+                action_mask=step.action_mask,
+                candidate_actions=step.candidate_actions,
                 target_policy_id=drill.target_policy_id if drill else step.policy_id,
                 source_drill_id=drill.drill_id if drill else "none",
             )
@@ -2048,6 +2222,10 @@ def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
         "telemetry": _telemetry_to_dict(sample.telemetry),
         "observation_features": dict(sample.observation_features),
         "reward_components": dict(sample.reward_components),
+        "action_mask": list(sample.action_mask),
+        "candidate_actions": [
+            _action_candidate_to_dict(candidate) for candidate in sample.candidate_actions
+        ],
         "target_policy_id": sample.target_policy_id,
         "source_drill_id": sample.source_drill_id,
     }
@@ -2091,6 +2269,9 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
             "reward_component_fields": [
                 "samples[].reward_components",
             ],
+            "action_mask_unit": "samples[].action_mask",
+            "action_mask_alignment": "WEEK11_SIM_ACTION_SPACE order",
+            "candidate_action_unit": "samples[].candidate_actions[]",
             "transition_unit": "samples[]",
             "policy_target_field": "samples[].target_policy_id",
         },
@@ -2140,7 +2321,11 @@ def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
             tick=int(sample.get("tick", 0)),
             round_id=int(sample.get("round_id", 0)),
             observation=tuple(str(item) for item in sample.get("observation", []) if isinstance(item, str)),
-            action=sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end",
+            action=(
+                parsed_sample_action := (
+                    sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
+                )
+            ),
             reward=int(sample.get("reward", 0)),
             next_observation=tuple(
                 str(item) for item in sample.get("next_observation", []) if isinstance(item, str)
@@ -2149,6 +2334,14 @@ def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
             telemetry=_telemetry_from_dict(sample.get("telemetry"), team_pressure=0),
             observation_features=_observation_features_from_any(sample.get("observation_features")),
             reward_components=_int_dict_from_any(sample.get("reward_components")),
+            action_mask=_action_mask_from_any(
+                sample.get("action_mask"),
+                selected_action=parsed_sample_action,
+            ),
+            candidate_actions=_candidate_actions_from_any(
+                sample.get("candidate_actions"),
+                selected_action=parsed_sample_action,
+            ),
             target_policy_id=str(sample.get("target_policy_id", "")),
             source_drill_id=str(sample.get("source_drill_id", "")),
         )
@@ -2222,6 +2415,47 @@ def _observation_features_from_any(data: Any) -> dict[str, Any]:
         if isinstance(value, (str, int)) and not isinstance(value, bool):
             values[str(key)] = value
     return values
+
+
+def _action_mask_from_any(data: Any, *, selected_action: Week11SimAction) -> tuple[int, ...]:
+    if isinstance(data, list) and len(data) == len(WEEK11_SIM_ACTION_SPACE):
+        return tuple(1 if item else 0 for item in data)
+    return tuple(1 if action == selected_action else 0 for action in WEEK11_SIM_ACTION_SPACE)
+
+
+def _candidate_actions_from_any(
+    data: Any,
+    *,
+    selected_action: Week11SimAction,
+) -> tuple[Week11SimActionCandidate, ...]:
+    candidates_by_action: dict[str, Week11SimActionCandidate] = {}
+    if isinstance(data, list):
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            action = item.get("action")
+            if action not in WEEK11_SIM_ACTION_SPACE:
+                continue
+            candidates_by_action[str(action)] = Week11SimActionCandidate(
+                action=action,
+                legal=bool(item.get("legal", action == selected_action)),
+                score=int(item.get("score", 0)),
+                reason=str(item.get("reason", "")),
+                mask_reason=str(item.get("mask_reason", "")),
+            )
+    return tuple(
+        candidates_by_action.get(
+            action,
+            Week11SimActionCandidate(
+                action=action,
+                legal=action == selected_action,
+                score=100 if action == selected_action else 0,
+                reason="Legacy artifact fallback candidate.",
+                mask_reason="selected_by_policy" if action == selected_action else "legacy_masked",
+            ),
+        )
+        for action in WEEK11_SIM_ACTION_SPACE
+    )
 
 
 def _events_from_any(data: Any) -> tuple[Week11SimEvent, ...]:
@@ -2397,7 +2631,11 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             round_id=int(step.get("round_id", 0)),
             agent_id=str(step.get("agent_id", "")),
             observation=tuple(str(item) for item in step.get("observation", []) if isinstance(item, str)),
-            action=step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end",
+            action=(
+                parsed_action := (
+                    step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
+                )
+            ),
             reward=int(step.get("reward", 0)),
             policy_id=str(step.get("policy_id", "")),
             reason=str(step.get("reason", "")),
@@ -2405,6 +2643,11 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             observation_features=_observation_features_from_any(step.get("observation_features")),
             action_context=_str_dict_from_any(step.get("action_context")),
             reward_components=_int_dict_from_any(step.get("reward_components")),
+            action_mask=_action_mask_from_any(step.get("action_mask"), selected_action=parsed_action),
+            candidate_actions=_candidate_actions_from_any(
+                step.get("candidate_actions"),
+                selected_action=parsed_action,
+            ),
         )
         for step in steps_raw
         if isinstance(step, dict)

@@ -2334,6 +2334,16 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(step.observation_features for step in replay.steps))
         self.assertTrue(all(step.action_context for step in replay.steps))
         self.assertTrue(all(step.reward_components for step in replay.steps))
+        self.assertTrue(all(len(step.action_mask) == len(step.candidate_actions) for step in replay.steps))
+        self.assertTrue(all(len(step.action_mask) == 9 for step in replay.steps))
+        self.assertTrue(
+            all(
+                step.action_mask[index] == 1
+                for step in replay.steps
+                for index, candidate in enumerate(step.candidate_actions)
+                if candidate.action == step.action
+            )
+        )
         self.assertEqual(len([agent for agent in replay.agents if agent.side == "overcast"]), 5)
         self.assertIn("entry_pressure_sprinter", {agent.policy_id for agent in replay.agents})
         self.assertIn("art/portraits/vex.webp", {agent.portrait_asset for agent in replay.agents})
@@ -2351,6 +2361,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"observation_features":', payload)
         self.assertIn('"action_context":', payload)
         self.assertIn('"reward_components":', payload)
+        self.assertIn('"action_mask":', payload)
+        self.assertIn('"candidate_actions":', payload)
         self.assertIn('"zone_control":', payload)
         self.assertIn('"events":', payload)
         self.assertIn('"threat_arcs":', payload)
@@ -2358,6 +2370,7 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"frame_event_unit": "frames[].events[]"', payload)
         self.assertIn('"threat_arc_unit": "frames[].threat_arcs[]"', payload)
         self.assertIn('"utility_zone_unit": "frames[].utility_zones[]"', payload)
+        self.assertIn('"action_mask_unit": "steps[].action_mask"', payload)
         self.assertIn('"space_control":', payload)
         self.assertIn('"risk_index":', payload)
         self.assertIn('"skill_epoch_proxy":', payload)
@@ -2432,6 +2445,15 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertEqual(len(dataset.policy_targets), len(plan.drills))
         self.assertTrue(all(sample.observation_features for sample in dataset.samples))
         self.assertTrue(all(sample.reward_components for sample in dataset.samples))
+        self.assertTrue(all(len(sample.action_mask) == 9 for sample in dataset.samples))
+        self.assertTrue(all(sample.candidate_actions for sample in dataset.samples))
+        self.assertTrue(
+            any(
+                not candidate.legal
+                for sample in dataset.samples
+                for candidate in sample.candidate_actions
+            )
+        )
         self.assertIn("offline_rl_transition_v1", payload)
         self.assertIn('"source_artifact": "week11_development_plan.json"', payload)
         self.assertIn('"week11_match_sim": "week11_match_sim.json"', payload)
@@ -2441,6 +2463,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"telemetry":', payload)
         self.assertIn('"observation_features":', payload)
         self.assertIn('"reward_components":', payload)
+        self.assertIn('"action_mask":', payload)
+        self.assertIn('"candidate_actions":', payload)
         self.assertIn('"stops_before": "week12_model_prep"', payload)
         self.assertIn('"next_artifact": "week12_model_prep.json"', payload)
         self.assertTrue(
