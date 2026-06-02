@@ -37,6 +37,7 @@ Week11SimAction = Literal[
     "reset_shape",
     "round_end",
 ]
+Week11DatasetSplit = Literal["train", "eval"]
 
 WEEK11_SIM_ACTION_SPACE: tuple[Week11SimAction, ...] = (
     "call_default",
@@ -457,10 +458,30 @@ class Week11DevelopmentPlan:
 
 
 @dataclass(frozen=True)
+class Week11TrainingEpisode:
+    """One replay round packaged as an offline RL episode."""
+
+    episode_id: str
+    round_id: int
+    split: Week11DatasetSplit
+    sample_ids: tuple[str, ...]
+    terminal_sample_id: str
+    step_count: int
+    reward_total: int
+    start_tick: int
+    end_tick: int
+    agent_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Week11TrainingSample:
     """One offline RL transition sample derived from the tactical replay."""
 
     sample_id: str
+    episode_id: str
+    episode_step: int
+    next_sample_id: str | None
+    split: Week11DatasetSplit
     agent_id: str
     tick: int
     round_id: int
@@ -486,6 +507,7 @@ class Week11TrainingDataset:
     selected_plan: str
     outcome_id: str
     result_tier: str
+    episodes: tuple[Week11TrainingEpisode, ...]
     samples: tuple[Week11TrainingSample, ...]
     policy_targets: tuple[dict[str, Any], ...]
     dataset_notes: tuple[str, ...]
@@ -3341,18 +3363,74 @@ def week11_development_plan_from_json(text: str) -> Week11DevelopmentPlan:
     )
 
 
-def _next_observation_for_step(
+def _episode_id_for_round(sim_id: str, round_id: int) -> str:
+    return f"{sim_id}_episode_r{round_id}"
+
+
+def _sample_id_for_step(sim_id: str, step: Week11SimStep) -> str:
+    return f"{sim_id}_t{step.tick}_{step.agent_id}"
+
+
+def _split_for_round(round_id: int, *, eval_round_id: int) -> Week11DatasetSplit:
+    return "eval" if round_id == eval_round_id else "train"
+
+
+def _done_observation(step: Week11SimStep) -> tuple[str, ...]:
+    return ("episode_done", f"round:{step.round_id}", f"agent:{step.agent_id}")
+
+
+def _next_transition_for_step(
     steps: tuple[Week11SimStep, ...],
     *,
     step_index: int,
-) -> tuple[tuple[str, ...], bool]:
+    sample_id_by_index: dict[int, str],
+) -> tuple[tuple[str, ...], bool, str | None]:
     current = steps[step_index]
     if current.action == "round_end":
-        return ("episode_done", f"round:{current.round_id}", f"agent:{current.agent_id}"), True
-    for next_step in steps[step_index + 1 :]:
+        return _done_observation(current), True, None
+    for next_index, next_step in enumerate(steps[step_index + 1 :], start=step_index + 1):
+        if next_step.round_id != current.round_id:
+            if next_step.round_id > current.round_id:
+                break
+            continue
         if next_step.agent_id == current.agent_id:
-            return next_step.observation, False
-    return ("episode_done", f"round:{current.round_id}", f"agent:{current.agent_id}"), True
+            return next_step.observation, False, sample_id_by_index[next_index]
+    return _done_observation(current), True, None
+
+
+def _episodes_from_samples(
+    samples: tuple[Week11TrainingSample, ...],
+    *,
+    sim_id: str,
+) -> tuple[Week11TrainingEpisode, ...]:
+    samples_by_round: dict[int, list[Week11TrainingSample]] = {}
+    for sample in samples:
+        samples_by_round.setdefault(sample.round_id, []).append(sample)
+
+    episodes: list[Week11TrainingEpisode] = []
+    for round_id in sorted(samples_by_round):
+        round_samples = tuple(sorted(samples_by_round[round_id], key=lambda item: item.tick))
+        if not round_samples:
+            continue
+        terminal_sample = next(
+            (sample for sample in reversed(round_samples) if sample.done),
+            round_samples[-1],
+        )
+        episodes.append(
+            Week11TrainingEpisode(
+                episode_id=round_samples[0].episode_id or _episode_id_for_round(sim_id, round_id),
+                round_id=round_id,
+                split=round_samples[0].split,
+                sample_ids=tuple(sample.sample_id for sample in round_samples),
+                terminal_sample_id=terminal_sample.sample_id,
+                step_count=len(round_samples),
+                reward_total=sum(sample.reward for sample in round_samples),
+                start_tick=round_samples[0].tick,
+                end_tick=round_samples[-1].tick,
+                agent_ids=tuple(sorted({sample.agent_id for sample in round_samples})),
+            )
+        )
+    return tuple(episodes)
 
 
 def resolve_week11_training_dataset(
@@ -3362,14 +3440,31 @@ def resolve_week11_training_dataset(
     """Build a deterministic offline RL dataset from replay transitions and policy targets."""
     frame_by_tick = {frame.tick: frame for frame in sim.frames}
     drill_by_agent = {drill.agent_id: drill for drill in development_plan.drills}
+    round_ids = tuple(sorted({step.round_id for step in sim.steps}))
+    eval_round_id = round_ids[-1] if round_ids else 0
+    sample_id_by_index = {
+        index: _sample_id_for_step(sim.sim_id, step) for index, step in enumerate(sim.steps)
+    }
+    episode_steps_by_round: dict[int, int] = {}
     samples = []
     for index, step in enumerate(sim.steps):
         drill = drill_by_agent.get(step.agent_id)
-        next_observation, done = _next_observation_for_step(sim.steps, step_index=index)
+        episode_step = episode_steps_by_round.get(step.round_id, 0)
+        episode_steps_by_round[step.round_id] = episode_step + 1
+        split = _split_for_round(step.round_id, eval_round_id=eval_round_id)
+        next_observation, done, next_sample_id = _next_transition_for_step(
+            sim.steps,
+            step_index=index,
+            sample_id_by_index=sample_id_by_index,
+        )
         frame = frame_by_tick[step.tick]
         samples.append(
             Week11TrainingSample(
-                sample_id=f"{sim.sim_id}_t{step.tick}_{step.agent_id}",
+                sample_id=sample_id_by_index[index],
+                episode_id=_episode_id_for_round(sim.sim_id, step.round_id),
+                episode_step=episode_step,
+                next_sample_id=next_sample_id,
+                split=split,
                 agent_id=step.agent_id,
                 tick=step.tick,
                 round_id=step.round_id,
@@ -3402,19 +3497,40 @@ def resolve_week11_training_dataset(
         selected_plan=sim.selected_plan,
         outcome_id=sim.outcome_id,
         result_tier=sim.result_tier,
+        episodes=_episodes_from_samples(tuple(samples), sim_id=sim.sim_id),
         samples=tuple(samples),
         policy_targets=policy_targets,
         dataset_notes=(
             "Offline samples pair deterministic observations/actions/rewards with replay telemetry.",
+            "Episodes are round-bounded and split into train/eval for future policy learning.",
             "target_policy_id maps each sample to the development plan's next player policy.",
             "Replace target_policy_id with Scenario model ids or learned policy ids when training exists.",
         ),
     )
 
 
+def _training_episode_to_dict(episode: Week11TrainingEpisode) -> dict[str, Any]:
+    return {
+        "episode_id": episode.episode_id,
+        "round_id": episode.round_id,
+        "split": episode.split,
+        "sample_ids": list(episode.sample_ids),
+        "terminal_sample_id": episode.terminal_sample_id,
+        "step_count": episode.step_count,
+        "reward_total": episode.reward_total,
+        "start_tick": episode.start_tick,
+        "end_tick": episode.end_tick,
+        "agent_ids": list(episode.agent_ids),
+    }
+
+
 def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
     return {
         "sample_id": sample.sample_id,
+        "episode_id": sample.episode_id,
+        "episode_step": sample.episode_step,
+        "next_sample_id": sample.next_sample_id,
+        "split": sample.split,
         "agent_id": sample.agent_id,
         "tick": sample.tick,
         "round_id": sample.round_id,
@@ -3437,10 +3553,14 @@ def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
 
 def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str, Any]:
     """Dictionary form used by JSON export and the web training dataset board."""
+    split_counts = {
+        "train": len([sample for sample in dataset.samples if sample.split == "train"]),
+        "eval": len([sample for sample in dataset.samples if sample.split == "eval"]),
+    }
     return {
         "artifact_type": "week11_training_dataset",
         "checkpoint": "week11_training_dataset",
-        "schema_version": 1,
+        "schema_version": 2,
         "source_artifact": WEEK11_DEVELOPMENT_PLAN_FILENAME,
         "source_artifacts": {
             "week11_match_sim": WEEK11_MATCH_SIM_FILENAME,
@@ -3452,11 +3572,15 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
         "selected_plan": dataset.selected_plan,
         "outcome_id": dataset.outcome_id,
         "result_tier": dataset.result_tier,
+        "episode_count": len(dataset.episodes),
         "sample_count": len(dataset.samples),
+        "split_counts": split_counts,
+        "episodes": [_training_episode_to_dict(episode) for episode in dataset.episodes],
         "samples": [_training_sample_to_dict(sample) for sample in dataset.samples],
         "policy_targets": list(dataset.policy_targets),
         "dataset_contract": {
             "format": "offline_rl_transition_v1",
+            "episode_format": "round_bounded_episode_v1",
             "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
             "action_space": list(WEEK11_SIM_ACTION_SPACE),
             "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
@@ -3477,6 +3601,14 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
             "action_mask_alignment": "WEEK11_SIM_ACTION_SPACE order",
             "candidate_action_unit": "samples[].candidate_actions[]",
             "transition_unit": "samples[]",
+            "episode_unit": "episodes[]",
+            "episode_id_field": "samples[].episode_id",
+            "episode_step_field": "samples[].episode_step",
+            "next_sample_id_field": "samples[].next_sample_id",
+            "split_field": "samples[].split",
+            "split_values": ["train", "eval"],
+            "training_split": "train",
+            "held_out_split": "eval",
             "policy_target_field": "samples[].target_policy_id",
         },
         "dataset_notes": list(dataset.dataset_notes),
@@ -3493,6 +3625,67 @@ def render_week11_training_dataset_json(dataset: Week11TrainingDataset) -> str:
         indent=2,
         ensure_ascii=True,
     ) + "\n"
+
+
+def _dataset_split_from_any(value: Any) -> Week11DatasetSplit:
+    return value if value in ("train", "eval") else "train"
+
+
+def _training_episode_from_dict(episode: dict[str, Any], *, sim_id: str) -> Week11TrainingEpisode:
+    round_id = int(episode.get("round_id", 0))
+    sample_ids = tuple(
+        str(item) for item in episode.get("sample_ids", []) if isinstance(item, str)
+    )
+    return Week11TrainingEpisode(
+        episode_id=str(episode.get("episode_id") or _episode_id_for_round(sim_id, round_id)),
+        round_id=round_id,
+        split=_dataset_split_from_any(episode.get("split")),
+        sample_ids=sample_ids,
+        terminal_sample_id=str(episode.get("terminal_sample_id", sample_ids[-1] if sample_ids else "")),
+        step_count=int(episode.get("step_count", len(sample_ids))),
+        reward_total=int(episode.get("reward_total", 0)),
+        start_tick=int(episode.get("start_tick", 0)),
+        end_tick=int(episode.get("end_tick", 0)),
+        agent_ids=tuple(str(item) for item in episode.get("agent_ids", []) if isinstance(item, str)),
+    )
+
+
+def _training_sample_from_dict(sample: dict[str, Any], *, sim_id: str) -> Week11TrainingSample:
+    round_id = int(sample.get("round_id", 0))
+    parsed_sample_action = (
+        sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
+    )
+    raw_next_sample_id = sample.get("next_sample_id")
+    return Week11TrainingSample(
+        sample_id=str(sample.get("sample_id", "")),
+        episode_id=str(sample.get("episode_id") or _episode_id_for_round(sim_id, round_id)),
+        episode_step=int(sample.get("episode_step", 0)),
+        next_sample_id=str(raw_next_sample_id) if isinstance(raw_next_sample_id, str) else None,
+        split=_dataset_split_from_any(sample.get("split")),
+        agent_id=str(sample.get("agent_id", "")),
+        tick=int(sample.get("tick", 0)),
+        round_id=round_id,
+        observation=tuple(str(item) for item in sample.get("observation", []) if isinstance(item, str)),
+        action=parsed_sample_action,
+        reward=int(sample.get("reward", 0)),
+        next_observation=tuple(
+            str(item) for item in sample.get("next_observation", []) if isinstance(item, str)
+        ),
+        done=bool(sample.get("done", False)),
+        telemetry=_telemetry_from_dict(sample.get("telemetry"), team_pressure=0),
+        observation_features=_observation_features_from_any(sample.get("observation_features")),
+        reward_components=_int_dict_from_any(sample.get("reward_components")),
+        action_mask=_action_mask_from_any(
+            sample.get("action_mask"),
+            selected_action=parsed_sample_action,
+        ),
+        candidate_actions=_candidate_actions_from_any(
+            sample.get("candidate_actions"),
+            selected_action=parsed_sample_action,
+        ),
+        target_policy_id=str(sample.get("target_policy_id", "")),
+        source_drill_id=str(sample.get("source_drill_id", "")),
+    )
 
 
 def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
@@ -3518,45 +3711,26 @@ def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
         raise ValueError("week11_training_dataset JSON must include policy_targets")
     if dataset.get("next_artifact") not in (None, WEEK12_MODEL_PREP_FILENAME):
         raise ValueError("week11_training_dataset next_artifact must be null or week12_model_prep.json")
+    sim_id = str(dataset.get("sim_id", ""))
     samples = tuple(
-        Week11TrainingSample(
-            sample_id=str(sample.get("sample_id", "")),
-            agent_id=str(sample.get("agent_id", "")),
-            tick=int(sample.get("tick", 0)),
-            round_id=int(sample.get("round_id", 0)),
-            observation=tuple(str(item) for item in sample.get("observation", []) if isinstance(item, str)),
-            action=(
-                parsed_sample_action := (
-                    sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
-                )
-            ),
-            reward=int(sample.get("reward", 0)),
-            next_observation=tuple(
-                str(item) for item in sample.get("next_observation", []) if isinstance(item, str)
-            ),
-            done=bool(sample.get("done", False)),
-            telemetry=_telemetry_from_dict(sample.get("telemetry"), team_pressure=0),
-            observation_features=_observation_features_from_any(sample.get("observation_features")),
-            reward_components=_int_dict_from_any(sample.get("reward_components")),
-            action_mask=_action_mask_from_any(
-                sample.get("action_mask"),
-                selected_action=parsed_sample_action,
-            ),
-            candidate_actions=_candidate_actions_from_any(
-                sample.get("candidate_actions"),
-                selected_action=parsed_sample_action,
-            ),
-            target_policy_id=str(sample.get("target_policy_id", "")),
-            source_drill_id=str(sample.get("source_drill_id", "")),
-        )
+        _training_sample_from_dict(sample, sim_id=sim_id)
         for sample in samples_raw
         if isinstance(sample, dict)
     )
+    episodes_raw = dataset.get("episodes", [])
+    episodes = tuple(
+        _training_episode_from_dict(episode, sim_id=sim_id)
+        for episode in episodes_raw
+        if isinstance(episode, dict)
+    )
+    if not episodes:
+        episodes = _episodes_from_samples(samples, sim_id=sim_id)
     return Week11TrainingDataset(
-        sim_id=str(dataset.get("sim_id", "")),
+        sim_id=sim_id,
         selected_plan=str(dataset.get("selected_plan", "")),
         outcome_id=str(dataset.get("outcome_id", "")),
         result_tier=str(dataset.get("result_tier", "")),
+        episodes=episodes,
         samples=samples,
         policy_targets=tuple(dict(item) for item in policy_targets_raw if isinstance(item, dict)),
         dataset_notes=tuple(str(item) for item in dataset.get("dataset_notes", []) if isinstance(item, str)),

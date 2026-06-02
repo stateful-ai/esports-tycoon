@@ -16,7 +16,7 @@
   .dataset-shell h1, .dataset-shell h2, .dataset-shell p { color: inherit; }
   .dataset-top {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 1fr;
     gap: 1rem;
     align-items: start;
     padding-bottom: 1rem;
@@ -31,7 +31,7 @@
     gap: 0.45rem;
     align-items: center;
   }
-  .chip-row { justify-content: flex-end; }
+  .chip-row { justify-content: flex-start; }
   .data-chip {
     border: 1px solid #34424b;
     background: #151b20;
@@ -62,6 +62,32 @@
     font-size: 0.72rem;
     text-transform: uppercase;
     margin-bottom: 0.35rem;
+  }
+  .episode-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .episode-row {
+    border: 1px solid #2d3841;
+    border-left: 3px solid #26d9c7;
+    background: #10171c;
+    padding: 0.65rem;
+    display: grid;
+    gap: 0.28rem;
+    min-width: 0;
+  }
+  .episode-row.eval { border-left-color: #f4c950; }
+  .episode-row strong {
+    color: #fff3d2;
+    overflow-wrap: anywhere;
+  }
+  .episode-row span {
+    color: #b9c4c9;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
   }
   .sample-list, .target-list {
     display: grid;
@@ -101,8 +127,7 @@
     border-color: #34424b;
   }
   @media (max-width: 920px) {
-    .dataset-top, .dataset-grid { grid-template-columns: 1fr; }
-    .chip-row { justify-content: flex-start; }
+    .dataset-top, .dataset-grid, .episode-strip { grid-template-columns: 1fr; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
 </style>
@@ -124,11 +149,25 @@
     </div>
     <div class="chip-row">
       <span class="data-chip good">{{ training_dataset.sample_count if training_dataset.sample_count is defined else training_dataset.samples|length }} samples</span>
+      <span class="data-chip">{{ training_dataset.episodes|length }} episodes</span>
+      <span class="data-chip">train {{ training_dataset.samples|selectattr("split", "equalto", "train")|list|length }}</span>
+      <span class="data-chip">eval {{ training_dataset.samples|selectattr("split", "equalto", "eval")|list|length }}</span>
       <span class="data-chip">sim {{ training_dataset.sim_id }}</span>
       <span class="data-chip warn">offline_rl_transition_v1</span>
       <span class="data-chip hot">policy_targets</span>
     </div>
   </div>
+
+  <section class="episode-strip" aria-label="RL episode splits">
+    {% for episode in training_dataset.episodes %}
+      <article class="episode-row {{ episode.split }}">
+        <strong>{{ episode.episode_id }}</strong>
+        <span>{{ episode.split }} · round {{ episode.round_id }} · {{ episode.step_count }} steps · reward {{ episode.reward_total }}</span>
+        <span>ticks {{ episode.start_tick }}-{{ episode.end_tick }} · terminal {{ episode.terminal_sample_id }}</span>
+        <span>{{ episode.agent_ids|join(", ") }}</span>
+      </article>
+    {% endfor %}
+  </section>
 
   <div class="dataset-grid">
     <section class="dataset-panel">
@@ -137,6 +176,7 @@
         {% for sample in training_dataset.samples %}
           <article class="sample-row">
             <strong>{{ sample.sample_id }}</strong>
+            <span>{{ sample.split }} · {{ sample.episode_id }} · step {{ sample.episode_step }} · next {{ sample.next_sample_id or "terminal" }}</span>
             <span>{{ sample.agent_id }} · tick {{ sample.tick }} · round {{ sample.round_id }} · {{ sample.action }} · reward {{ sample.reward }}</span>
             <span>target {{ sample.target_policy_id }}</span>
             <span>telemetry space {{ sample.telemetry.space_control }} · risk {{ sample.telemetry.risk_index }} · objective {{ sample.telemetry.objective_pressure }}</span>
