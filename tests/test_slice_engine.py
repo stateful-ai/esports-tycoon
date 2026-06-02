@@ -52,6 +52,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_post_match_review_json,
     render_week10_prep_json,
     render_week10_scrim_json,
+    render_week11_setup_json,
     run_slice,
     resolve_week7_focus,
     resolve_week7_pressure,
@@ -70,6 +71,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_post_match_review,
     resolve_week10_prep,
     resolve_week10_scrim,
+    resolve_week11_setup,
     setup_payload_from_week7_setup,
     slice_events,
     training_decision_for_drill,
@@ -90,6 +92,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_prep_plan,
     week10_scrim_from_json,
     week10_scrim_plan,
+    week11_setup_from_json,
+    week11_setup_plan,
     write_artifacts,
 )
 from esports_tycoon.runner.engine import halftime_scoreline, slice_id  # noqa: E402
@@ -1717,6 +1721,88 @@ class TestWeek10PostMatchReview(_Fixture):
     def test_week10_post_match_review_rejects_invalid_choice(self):
         with self.assertRaisesRegex(ValueError, "selected_review"):
             resolve_week10_post_match_review(self._clean_win_review_plan(), "skip_review")
+
+
+class TestWeek11Setup(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        return TestWeek10PostMatchReview._result_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+
+    def _advantage_review(self):
+        return resolve_week10_post_match_review(
+            TestWeek10PostMatchReview._clean_win_review_plan(self),
+            "bank_pattern",
+        )
+
+    def _watch_review(self):
+        return resolve_week10_post_match_review(
+            TestWeek10PostMatchReview._punished_loss_review_plan(self),
+            "bank_pattern",
+        )
+
+    def _constraint_review(self):
+        return resolve_week10_post_match_review(
+            TestWeek10PostMatchReview._punished_loss_review_plan(self),
+            "repair_break",
+        )
+
+    def test_week11_setup_recommendation_uses_carry_forward_type(self):
+        self.assertEqual(week11_setup_plan(self._advantage_review()).recommended_setup, "lean_into_carry")
+        self.assertEqual(week11_setup_plan(self._watch_review()).recommended_setup, "stress_test_carry")
+        self.assertEqual(week11_setup_plan(self._constraint_review()).recommended_setup, "protect_room")
+
+    def test_week11_setup_locks_all_six_outcomes(self):
+        cases = {
+            "edge_activated": (self._advantage_review(), "lean_into_carry", "edge_lane"),
+            "edge_overcalled": (self._watch_review(), "lean_into_carry", "overcalled_edge"),
+            "test_defined": (self._watch_review(), "stress_test_carry", "validation_lane"),
+            "test_scattered": (self._advantage_review(), "stress_test_carry", "scattered_validation"),
+            "room_stabilized": (self._constraint_review(), "protect_room", "stable_room"),
+            "room_passive": (self._advantage_review(), "protect_room", "passive_room"),
+        }
+        for outcome_id, (review, selected_setup, pressure) in cases.items():
+            with self.subTest(outcome_id=outcome_id):
+                lock = resolve_week11_setup(week11_setup_plan(review), selected_setup)
+
+                self.assertEqual(lock.setup_outcome_id, outcome_id)
+                self.assertEqual(lock.week11_pressure, pressure)
+
+    def test_week11_setup_artifact_sources_review_and_stops_before_prep(self):
+        lock = resolve_week11_setup(week11_setup_plan(self._advantage_review()), "lean_into_carry")
+        payload = render_week11_setup_json(lock)
+
+        self.assertIn('"week10_post_match_review": "week10_post_match_review.json"', payload)
+        self.assertIn('"artifact_type": "week11_setup"', payload)
+        self.assertIn('"selected_setup": "lean_into_carry"', payload)
+        self.assertIn('"setup_outcome_id": "edge_activated"', payload)
+        self.assertIn('"week11_pressure": "edge_lane"', payload)
+        self.assertIn('"stops_before": "week11_prep"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_setup_render_parse_round_trip_is_stable(self):
+        lock = resolve_week11_setup(week11_setup_plan(self._advantage_review()), "lean_into_carry")
+        payload = render_week11_setup_json(lock)
+        parsed = week11_setup_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week11_setup_json(parsed), payload)
+
+    def test_week11_setup_rejects_invalid_choice(self):
+        with self.assertRaisesRegex(ValueError, "selected_setup"):
+            resolve_week11_setup(week11_setup_plan(self._advantage_review()), "skip_setup")
 
 
 class TestDeterminism(_Fixture):
