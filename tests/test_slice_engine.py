@@ -57,6 +57,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week11_match_sim_json,
     render_week11_development_plan_json,
     render_week11_training_dataset_json,
+    render_week12_model_prep_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -83,6 +84,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week11_match_simulation,
     resolve_week11_development_plan,
     resolve_week11_training_dataset,
+    resolve_week12_model_prep,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -112,6 +114,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_match_sim_from_json,
     week11_development_plan_from_json,
     week11_training_dataset_from_json,
+    week12_model_prep_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2395,7 +2398,15 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"next_observation":', payload)
         self.assertIn('"target_policy_id":', payload)
         self.assertIn('"telemetry":', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week12_model_prep"', payload)
+        self.assertIn('"next_artifact": "week12_model_prep.json"', payload)
+        self.assertTrue(
+            all(
+                sample.next_observation[0] == "episode_done"
+                for sample in dataset.samples
+                if sample.done
+            )
+        )
 
     def test_week11_training_dataset_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2411,6 +2422,49 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, dataset)
         self.assertEqual(render_week11_training_dataset_json(parsed), payload)
+
+    def test_week12_model_prep_consumes_training_dataset(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        payload = render_week12_model_prep_json(prep)
+
+        self.assertEqual(prep.sim_id, dataset.sim_id)
+        self.assertEqual(prep.dataset_sample_count, len(dataset.samples))
+        self.assertEqual(len(prep.targets), len(dataset.policy_targets))
+        self.assertIn("vex", {target.agent_id for target in prep.targets})
+        self.assertTrue(all(0 <= target.risk_index <= 100 for target in prep.targets))
+        self.assertTrue(all(0 <= target.objective_pressure <= 100 for target in prep.targets))
+        self.assertIn('"source_artifact": "week11_training_dataset.json"', payload)
+        self.assertIn('"checkpoint": "week12_model_prep"', payload)
+        self.assertIn('"model_prep_batch_v1"', payload)
+        self.assertIn('"scenario_model_slot":', payload)
+        self.assertIn('"candidate_policy_id":', payload)
+        self.assertIn('"evaluation_gate":', payload)
+        self.assertIn('"stops_before": "week12_model_training"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week12_model_prep_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        payload = render_week12_model_prep_json(prep)
+        parsed = week12_model_prep_from_json(payload)
+
+        self.assertEqual(parsed, prep)
+        self.assertEqual(render_week12_model_prep_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

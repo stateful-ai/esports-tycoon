@@ -257,6 +257,7 @@ from esports_tycoon.runner.week11 import (
 from esports_tycoon.runner.week11_match_sim import (
     WEEK11_DEVELOPMENT_PLAN_FILENAME,
     WEEK11_TRAINING_DATASET_FILENAME,
+    WEEK12_MODEL_PREP_FILENAME,
     Week11DevelopmentDrill,
     Week11DevelopmentPlan,
     Week11MatchSimulation,
@@ -280,6 +281,14 @@ from esports_tycoon.runner.week11_match_sim import (
     week11_match_sim_to_dict,
     week11_training_dataset_from_json,
     week11_training_dataset_to_dict,
+)
+from esports_tycoon.runner.week12_model_prep import (
+    Week12ModelPrep,
+    Week12ModelPrepTarget,
+    render_week12_model_prep_json,
+    resolve_week12_model_prep,
+    week12_model_prep_from_json,
+    week12_model_prep_to_dict,
 )
 
 __all__ = [
@@ -404,6 +413,7 @@ __all__ = [
     "WEEK11_MATCH_SIM_FILENAME",
     "WEEK11_DEVELOPMENT_PLAN_FILENAME",
     "WEEK11_TRAINING_DATASET_FILENAME",
+    "WEEK12_MODEL_PREP_FILENAME",
     "WEEK11_MATCH_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
@@ -481,6 +491,8 @@ __all__ = [
     "Week11SimStep",
     "Week11SimTelemetry",
     "Week11SimTraitProfile",
+    "Week12ModelPrep",
+    "Week12ModelPrepTarget",
     "week10_fallout_plan",
     "resolve_week10_fallout",
     "week10_fallout_from_json",
@@ -532,6 +544,10 @@ __all__ = [
     "week11_training_dataset_from_json",
     "week11_training_dataset_to_dict",
     "render_week11_training_dataset_json",
+    "resolve_week12_model_prep",
+    "week12_model_prep_from_json",
+    "week12_model_prep_to_dict",
+    "render_week12_model_prep_json",
     "week11_match_sim_from_json",
     "week11_match_sim_to_dict",
     "render_week11_match_sim_json",

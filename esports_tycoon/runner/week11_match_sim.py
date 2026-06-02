@@ -23,6 +23,7 @@ from esports_tycoon.schema import Player
 
 WEEK11_DEVELOPMENT_PLAN_FILENAME = "week11_development_plan.json"
 WEEK11_TRAINING_DATASET_FILENAME = "week11_training_dataset.json"
+WEEK12_MODEL_PREP_FILENAME = "week12_model_prep.json"
 
 Week11SimSide = Literal["overcast", "opponent"]
 Week11SimAction = Literal[
@@ -1222,6 +1223,8 @@ def _next_observation_for_step(
     step_index: int,
 ) -> tuple[tuple[str, ...], bool]:
     current = steps[step_index]
+    if current.action == "round_end":
+        return ("episode_done", f"round:{current.round_id}", f"agent:{current.agent_id}"), True
     for next_step in steps[step_index + 1 :]:
         if next_step.agent_id == current.agent_id:
             return next_step.observation, False
@@ -1334,8 +1337,8 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
             "policy_target_field": "samples[].target_policy_id",
         },
         "dataset_notes": list(dataset.dataset_notes),
-        "stops_before": "week12_prep",
-        "next_artifact": None,
+        "stops_before": "week12_model_prep",
+        "next_artifact": WEEK12_MODEL_PREP_FILENAME,
     }
 
 
@@ -1370,8 +1373,8 @@ def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
         raise ValueError("week11_training_dataset JSON must include samples")
     if not isinstance(policy_targets_raw, list) or not policy_targets_raw:
         raise ValueError("week11_training_dataset JSON must include policy_targets")
-    if dataset.get("next_artifact") is not None:
-        raise ValueError("week11_training_dataset next_artifact must be null")
+    if dataset.get("next_artifact") not in (None, WEEK12_MODEL_PREP_FILENAME):
+        raise ValueError("week11_training_dataset next_artifact must be null or week12_model_prep.json")
     samples = tuple(
         Week11TrainingSample(
             sample_id=str(sample.get("sample_id", "")),

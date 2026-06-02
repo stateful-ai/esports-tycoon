@@ -202,6 +202,7 @@ from esports_tycoon.runner.week11 import (
 from esports_tycoon.runner.week11_match_sim import (
     WEEK11_DEVELOPMENT_PLAN_FILENAME,
     WEEK11_TRAINING_DATASET_FILENAME,
+    WEEK12_MODEL_PREP_FILENAME,
     render_week11_development_plan_json,
     render_week11_match_sim_json,
     render_week11_training_dataset_json,
@@ -211,6 +212,11 @@ from esports_tycoon.runner.week11_match_sim import (
     week11_development_plan_from_json,
     week11_match_sim_from_json,
     week11_training_dataset_from_json,
+)
+from esports_tycoon.runner.week12_model_prep import (
+    render_week12_model_prep_json,
+    resolve_week12_model_prep,
+    week12_model_prep_from_json,
 )
 from esports_tycoon.schema import WorldState
 
@@ -1999,6 +2005,70 @@ def create_app(
             training_dataset=training_dataset,
             training_dataset_json=training_dataset_json,
             week11_training_dataset_path=week11_training_dataset_written_path,
+        )
+
+    @app.route("/week12/model-prep", methods=["GET", "POST"])
+    def week12_model_prep():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 12 model prep unlocks after the Week 11 training dataset.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_training_dataset_path = run_dir / WEEK11_TRAINING_DATASET_FILENAME
+        week12_model_prep_path = run_dir / WEEK12_MODEL_PREP_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_TRAINING_DATASET_FILENAME, week11_training_dataset_path),
+            )
+            if not path.is_file()
+        ]
+        training_dataset = None
+        model_prep = None
+        model_prep_json = ""
+        week12_model_prep_written_path = ""
+        if not missing:
+            try:
+                training_dataset = week11_training_dataset_from_json(
+                    week11_training_dataset_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    model_prep = resolve_week12_model_prep(training_dataset)
+                    week12_model_prep_path.write_text(
+                        render_week12_model_prep_json(model_prep),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week12_model_prep_written_path = str(week12_model_prep_path)
+                elif week12_model_prep_path.is_file():
+                    try:
+                        model_prep = week12_model_prep_from_json(
+                            week12_model_prep_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week12_model_prep_written_path = str(week12_model_prep_path)
+                else:
+                    model_prep = resolve_week12_model_prep(training_dataset)
+                if model_prep:
+                    model_prep_json = render_week12_model_prep_json(model_prep)
+
+        return render_template(
+            "week12_model_prep.html",
+            result=result,
+            missing=missing,
+            training_dataset=training_dataset,
+            model_prep=model_prep,
+            model_prep_json=model_prep_json,
+            week12_model_prep_path=week12_model_prep_written_path,
         )
 
     @app.get("/feed")
