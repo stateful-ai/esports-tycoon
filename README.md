@@ -210,6 +210,8 @@ the carry-forward into one opening Week 11 posture while stopping before
 Week 11 prep. `/week11/prep` consumes the setup and writes `week11_prep.json`,
 turning the opening posture into one prep allocation and scrim seed while
 stopping before Week 11 scrim.
+The Week 11 prep screen uses dedicated prep-room environment art so the new
+week reads visually distinct from the Week 10 match-room flow.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
