@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Literal
 
 from esports_tycoon.runner.week11 import (
@@ -70,6 +70,7 @@ WEEK11_SIM_REWARD_FIELDS: tuple[str, ...] = (
     "overpeek_penalty",
     "default_integrity",
 )
+WEEK11_RETURN_DISCOUNT_X100 = 90
 
 
 @dataclass(frozen=True)
@@ -424,6 +425,7 @@ class Week11SimStep:
     observation: tuple[str, ...]
     action: Week11SimAction
     reward: int
+    return_to_go_x100: int
     policy_id: str
     reason: str
     trajectory_tag: str
@@ -515,6 +517,7 @@ class Week11TrainingSample:
     observation: tuple[str, ...]
     action: Week11SimAction
     reward: int
+    return_to_go_x100: int
     next_observation: tuple[str, ...]
     done: bool
     telemetry: Week11SimTelemetry
@@ -1438,6 +1441,27 @@ def _action_context(
     }
 
 
+def _discounted_return_x100(value_x100: int) -> int:
+    scaled = value_x100 * WEEK11_RETURN_DISCOUNT_X100
+    if scaled >= 0:
+        return (scaled + 50) // 100
+    return -((-scaled + 50) // 100)
+
+
+def _return_to_go_by_tick(steps: tuple[Week11SimStep, ...]) -> dict[int, int]:
+    """Discount future rewards inside each round without leaking into observations."""
+    returns_by_tick: dict[int, int] = {}
+    for round_id in sorted({step.round_id for step in steps}):
+        running_return_x100 = 0
+        round_steps = tuple(step for step in steps if step.round_id == round_id)
+        for step in reversed(round_steps):
+            running_return_x100 = (
+                step.reward * 100 + _discounted_return_x100(running_return_x100)
+            )
+            returns_by_tick[step.tick] = running_return_x100
+    return returns_by_tick
+
+
 def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent]) -> tuple[Week11SimStep, ...]:
     action_script: tuple[tuple[int, int, str, Week11SimAction, int, str, str], ...] = (
         (0, 1, "rook", "call_default", 0, "Rook opens the first episode from the selected match commitment.", "default_integrity"),
@@ -1497,6 +1521,7 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
                 observation=observation,
                 action=action,
                 reward=step_reward,
+                return_to_go_x100=step_reward * 100,
                 policy_id=agent.policy_id,
                 reason=reason,
                 trajectory_tag=trajectory_tag,
@@ -1523,7 +1548,12 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
                 ),
             )
         )
-    return tuple(steps)
+    steps_with_default_returns = tuple(steps)
+    return_by_tick = _return_to_go_by_tick(steps_with_default_returns)
+    return tuple(
+        replace(step, return_to_go_x100=return_by_tick.get(step.tick, step.reward * 100))
+        for step in steps_with_default_returns
+    )
 
 
 def _telemetry_for_step(
@@ -3067,6 +3097,7 @@ def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
         "observation": list(step.observation),
         "action": step.action,
         "reward": step.reward,
+        "return_to_go_x100": step.return_to_go_x100,
         "policy_id": step.policy_id,
         "reason": step.reason,
         "trajectory_tag": step.trajectory_tag,
@@ -3130,6 +3161,8 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
             "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
             "action_space": list(WEEK11_SIM_ACTION_SPACE),
             "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "value_target_field": "steps[].return_to_go_x100",
+            "discount_factor_x100": WEEK11_RETURN_DISCOUNT_X100,
             "telemetry_fields": [
                 "space_control",
                 "utility_pressure",
@@ -3657,6 +3690,7 @@ def resolve_week11_training_dataset(
                 observation=step.observation,
                 action=step.action,
                 reward=step.reward,
+                return_to_go_x100=step.return_to_go_x100,
                 next_observation=next_observation,
                 done=done or step.action == "round_end",
                 telemetry=frame.telemetry,
@@ -3723,6 +3757,7 @@ def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
         "observation": list(sample.observation),
         "action": sample.action,
         "reward": sample.reward,
+        "return_to_go_x100": sample.return_to_go_x100,
         "next_observation": list(sample.next_observation),
         "done": sample.done,
         "telemetry": _telemetry_to_dict(sample.telemetry),
@@ -3770,6 +3805,8 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
             "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
             "action_space": list(WEEK11_SIM_ACTION_SPACE),
             "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "value_target_field": "samples[].return_to_go_x100",
+            "discount_factor_x100": WEEK11_RETURN_DISCOUNT_X100,
             "telemetry_fields": [
                 "space_control",
                 "utility_pressure",
@@ -3841,6 +3878,7 @@ def _training_sample_from_dict(sample: dict[str, Any], *, sim_id: str) -> Week11
     parsed_sample_action = (
         sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
     )
+    reward = int(sample.get("reward", 0))
     raw_next_sample_id = sample.get("next_sample_id")
     return Week11TrainingSample(
         sample_id=str(sample.get("sample_id", "")),
@@ -3853,7 +3891,8 @@ def _training_sample_from_dict(sample: dict[str, Any], *, sim_id: str) -> Week11
         round_id=round_id,
         observation=tuple(str(item) for item in sample.get("observation", []) if isinstance(item, str)),
         action=parsed_sample_action,
-        reward=int(sample.get("reward", 0)),
+        reward=reward,
+        return_to_go_x100=int(sample.get("return_to_go_x100", reward * 100)),
         next_observation=tuple(
             str(item) for item in sample.get("next_observation", []) if isinstance(item, str)
         ),
@@ -4301,6 +4340,7 @@ def _step_from_dict(step: dict[str, Any]) -> Week11SimStep:
     parsed_action: Week11SimAction = (
         step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
     )
+    reward = int(step.get("reward", 0))
     observation_features = _observation_features_from_any(step.get("observation_features"))
     candidate_actions = _candidate_actions_from_any(
         step.get("candidate_actions"),
@@ -4313,7 +4353,8 @@ def _step_from_dict(step: dict[str, Any]) -> Week11SimStep:
         agent_id=str(step.get("agent_id", "")),
         observation=tuple(str(item) for item in step.get("observation", []) if isinstance(item, str)),
         action=parsed_action,
-        reward=int(step.get("reward", 0)),
+        reward=reward,
+        return_to_go_x100=int(step.get("return_to_go_x100", reward * 100)),
         policy_id=policy_id,
         reason=str(step.get("reason", "")),
         trajectory_tag=str(step.get("trajectory_tag", "")),
