@@ -2350,6 +2350,46 @@ class TestWeek11MatchSimulation(_Fixture):
         )
         self.assertTrue(any(frame.score_state.alive_opponent < 5 for frame in replay.frames))
         self.assertTrue(any(frame.score_state.momentum in {"overcast", "opponent"} for frame in replay.frames))
+        known_agent_ids = {agent.agent_id for agent in replay.agents}
+        self.assertTrue(all(frame.information_state for frame in replay.frames))
+        self.assertTrue(
+            all(
+                0 <= frame.information_state.contact_confidence <= 100
+                and 0 <= frame.information_state.fog_pressure <= 100
+                for frame in replay.frames
+            )
+        )
+        self.assertTrue(
+            all(
+                agent_id in known_agent_ids
+                for frame in replay.frames
+                for agent_id in (
+                    frame.information_state.visible_agent_ids
+                    + frame.information_state.occluded_agent_ids
+                )
+            )
+        )
+        self.assertTrue(
+            all(
+                position.agent_id in known_agent_ids and 0 <= position.confidence <= 100
+                for frame in replay.frames
+                for position in frame.information_state.last_known_positions
+            )
+        )
+        self.assertTrue(
+            all(
+                0 <= sightline.confidence <= 100
+                for frame in replay.frames
+                for sightline in frame.information_state.sightlines
+            )
+        )
+        self.assertTrue(
+            any(
+                sightline.blocked_by_cover_id or sightline.blocked_by_utility_zone_id
+                for frame in replay.frames
+                for sightline in frame.information_state.sightlines
+            )
+        )
         self.assertTrue(any(frame.combat_events for frame in replay.frames))
         self.assertTrue(
             all(
@@ -2446,6 +2486,12 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"score_state_unit": "frames[].score_state"', payload)
         self.assertIn('"win_probability":', payload)
         self.assertIn('"man_advantage":', payload)
+        self.assertIn('"information_state":', payload)
+        self.assertIn('"information_state_unit": "frames[].information_state"', payload)
+        self.assertIn('"contact_confidence":', payload)
+        self.assertIn('"fog_pressure":', payload)
+        self.assertIn('"sightlines":', payload)
+        self.assertIn('"last_known_positions":', payload)
         self.assertIn('"combat_events":', payload)
         self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)
