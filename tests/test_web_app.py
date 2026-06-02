@@ -1637,6 +1637,7 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(locked.status_code, 200)
         self.assertIn(b"Model prep locked", locked.data)
         self.assertIn(b"week12_model_prep.json", locked.data)
+        self.assertIn(b"Open shadow rollout", locked.data)
 
         prep_json = (run_dir / "week12_model_prep.json").read_text(encoding="utf-8")
         self.assertIn('"source_artifact": "week11_training_dataset.json"', prep_json)
@@ -1645,7 +1646,50 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"scenario_model_slot":', prep_json)
         self.assertIn('"candidate_policy_id":', prep_json)
         self.assertIn('"evaluation_gate":', prep_json)
-        self.assertIn('"next_artifact": null', prep_json)
+        self.assertIn('"stops_before": "week12_shadow_rollout"', prep_json)
+        self.assertIn('"next_artifact": "week12_shadow_rollout.json"', prep_json)
+
+    def test_week12_shadow_rollout_consumes_model_prep_and_writes_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+        self.client.post("/week11/match/training-dataset")
+        self.client.post("/week12/model-prep")
+
+        page = self.client.get("/week12/shadow-rollout")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 12 shadow rollout", page.data)
+        self.assertIn(b"shadow_rollout_batch_v1", page.data)
+        self.assertIn(b"promotion decisions", page.data)
+        self.assertIn(b"Lock shadow rollout", page.data)
+        self.assertIn(b"scenario://week12/", page.data)
+        self.assertFalse((run_dir / "week12_shadow_rollout.json").exists())
+
+        locked = self.client.post("/week12/shadow-rollout")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Shadow rollout locked", locked.data)
+        self.assertIn(b"week12_shadow_rollout.json", locked.data)
+
+        rollout_json = (run_dir / "week12_shadow_rollout.json").read_text(encoding="utf-8")
+        self.assertIn('"source_artifact": "week12_model_prep.json"', rollout_json)
+        self.assertIn('"checkpoint": "week12_shadow_rollout"', rollout_json)
+        self.assertIn('"shadow_rollout_batch_v1"', rollout_json)
+        self.assertIn('"candidate_reward":', rollout_json)
+        self.assertIn('"risk_delta":', rollout_json)
+        self.assertIn('"decision":', rollout_json)
+        self.assertIn('"next_artifact": null', rollout_json)
+
+    def test_week12_shadow_rollout_requires_model_prep_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+        self.client.post("/week11/match/training-dataset")
+
+        page = self.client.get("/week12/shadow-rollout")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 12 model prep required", page.data)
+        self.assertIn(b"week12_model_prep.json", page.data)
+        self.assertFalse((run_dir / "week12_shadow_rollout.json").exists())
 
     def test_week12_model_prep_requires_training_dataset_artifact(self):
         run_dir = self._play_to_week11_match_result()

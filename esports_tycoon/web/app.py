@@ -214,9 +214,15 @@ from esports_tycoon.runner.week11_match_sim import (
     week11_training_dataset_from_json,
 )
 from esports_tycoon.runner.week12_model_prep import (
+    WEEK12_SHADOW_ROLLOUT_FILENAME,
     render_week12_model_prep_json,
     resolve_week12_model_prep,
     week12_model_prep_from_json,
+)
+from esports_tycoon.runner.week12_shadow_rollout import (
+    render_week12_shadow_rollout_json,
+    resolve_week12_shadow_rollout,
+    week12_shadow_rollout_from_json,
 )
 from esports_tycoon.schema import WorldState
 
@@ -2069,6 +2075,70 @@ def create_app(
             model_prep=model_prep,
             model_prep_json=model_prep_json,
             week12_model_prep_path=week12_model_prep_written_path,
+        )
+
+    @app.route("/week12/shadow-rollout", methods=["GET", "POST"])
+    def week12_shadow_rollout():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 12 shadow rollout unlocks after model prep.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week12_model_prep_path = run_dir / WEEK12_MODEL_PREP_FILENAME
+        week12_shadow_rollout_path = run_dir / WEEK12_SHADOW_ROLLOUT_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK12_MODEL_PREP_FILENAME, week12_model_prep_path),
+            )
+            if not path.is_file()
+        ]
+        model_prep = None
+        shadow_rollout = None
+        shadow_rollout_json = ""
+        week12_shadow_rollout_written_path = ""
+        if not missing:
+            try:
+                model_prep = week12_model_prep_from_json(
+                    week12_model_prep_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    shadow_rollout = resolve_week12_shadow_rollout(model_prep)
+                    week12_shadow_rollout_path.write_text(
+                        render_week12_shadow_rollout_json(shadow_rollout),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week12_shadow_rollout_written_path = str(week12_shadow_rollout_path)
+                elif week12_shadow_rollout_path.is_file():
+                    try:
+                        shadow_rollout = week12_shadow_rollout_from_json(
+                            week12_shadow_rollout_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week12_shadow_rollout_written_path = str(week12_shadow_rollout_path)
+                else:
+                    shadow_rollout = resolve_week12_shadow_rollout(model_prep)
+                if shadow_rollout:
+                    shadow_rollout_json = render_week12_shadow_rollout_json(shadow_rollout)
+
+        return render_template(
+            "week12_shadow_rollout.html",
+            result=result,
+            missing=missing,
+            model_prep=model_prep,
+            shadow_rollout=shadow_rollout,
+            shadow_rollout_json=shadow_rollout_json,
+            week12_shadow_rollout_path=week12_shadow_rollout_written_path,
         )
 
     @app.get("/feed")
