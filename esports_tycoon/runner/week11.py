@@ -67,6 +67,7 @@ WEEK11_PREP_FILENAME = "week11_prep.json"
 WEEK11_SCRIM_FILENAME = "week11_scrim.json"
 WEEK11_MATCH_PLAN_FILENAME = "week11_match_plan.json"
 WEEK11_MATCH_RESULT_FILENAME = "week11_match_result.json"
+WEEK11_MATCH_SIM_FILENAME = "week11_match_sim.json"
 WEEK11_SETUP_CHOICES: tuple[Week11SetupChoice, ...] = (
     "lean_into_carry",
     "stress_test_carry",
@@ -2403,8 +2404,8 @@ def week11_match_result_from_json(text: str) -> Week11MatchResultLock:
         raise ValueError("week11_match_result JSON must include result_basis")
     if not isinstance(causal_chain, list):
         raise ValueError("week11_match_result JSON must include causal_chain")
-    if result.get("next_artifact") is not None:
-        raise ValueError("week11_match_result next_artifact must be null")
+    if result.get("next_artifact") not in (None, WEEK11_MATCH_SIM_FILENAME):
+        raise ValueError("week11_match_result next_artifact must be null or week11_match_sim.json")
     return Week11MatchResultLock(
         source_branch=str(result.get("source_branch", "")),
         setup_branch=str(result.get("setup_branch", "")),
@@ -2527,8 +2528,8 @@ def render_week11_match_result_json(lock: Week11MatchResultLock) -> str:
             "result_basis": list(lock.result_basis),
             "causal_chain": list(lock.causal_chain),
             "next_hook": lock.next_hook,
-            "stops_before": "week11_post_match_review",
-            "next_artifact": None,
+            "stops_before": "week11_match_sim",
+            "next_artifact": WEEK11_MATCH_SIM_FILENAME,
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"

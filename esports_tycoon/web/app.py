@@ -43,6 +43,7 @@ The week is a short linear flow, one decision per step:
     /week11/scrim the Week-11 prep allocation becomes a deterministic scrim protocol
     /week11/match the Week-11 scrim protocol becomes a deterministic match plan
     /week11/match/result the Week-11 match plan becomes a deterministic result
+    /week11/match/viewer the Week-11 result becomes a tactical replay artifact
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -172,6 +173,7 @@ from esports_tycoon.runner.week10 import (
 from esports_tycoon.runner.week11 import (
     WEEK11_MATCH_PLAN_FILENAME,
     WEEK11_MATCH_RESULT_FILENAME,
+    WEEK11_MATCH_SIM_FILENAME,
     WEEK11_PREP_FILENAME,
     WEEK11_SCRIM_FILENAME,
     WEEK11_SETUP_FILENAME,
@@ -194,6 +196,11 @@ from esports_tycoon.runner.week11 import (
     week11_scrim_plan,
     week11_setup_from_json,
     week11_setup_plan,
+)
+from esports_tycoon.runner.week11_match_sim import (
+    render_week11_match_sim_json,
+    resolve_week11_match_simulation,
+    week11_match_sim_from_json,
 )
 from esports_tycoon.schema import WorldState
 
@@ -1777,6 +1784,80 @@ def create_app(
             plan=plan,
             match_result=match_result,
             week11_match_result_path=week11_match_result_written_path,
+        )
+
+    @app.route("/week11/match/viewer", methods=["GET", "POST"])
+    def week11_match_viewer():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 11 match viewer unlocks after the Week 11 result.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_match_result_path = run_dir / WEEK11_MATCH_RESULT_FILENAME
+        week11_match_sim_path = run_dir / WEEK11_MATCH_SIM_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_MATCH_RESULT_FILENAME, week11_match_result_path),
+            )
+            if not path.is_file()
+        ]
+        match_result = None
+        replay = None
+        replay_json = ""
+        week11_match_sim_written_path = ""
+        if not missing:
+            try:
+                match_result = week11_match_result_from_json(
+                    week11_match_result_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    replay = resolve_week11_match_simulation(
+                        match_result,
+                        world.players,
+                        opponent_name=opponent_name(),
+                        map_name=config.map,
+                    )
+                    week11_match_sim_path.write_text(
+                        render_week11_match_sim_json(replay),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week11_match_sim_written_path = str(week11_match_sim_path)
+                elif week11_match_sim_path.is_file():
+                    try:
+                        replay = week11_match_sim_from_json(
+                            week11_match_sim_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week11_match_sim_written_path = str(week11_match_sim_path)
+                else:
+                    replay = resolve_week11_match_simulation(
+                        match_result,
+                        world.players,
+                        opponent_name=opponent_name(),
+                        map_name=config.map,
+                    )
+                if replay:
+                    replay_json = render_week11_match_sim_json(replay)
+
+        return render_template(
+            "week11_match_viewer.html",
+            result=result,
+            missing=missing,
+            match_result=match_result,
+            replay=replay,
+            replay_json=replay_json,
+            week11_match_sim_path=week11_match_sim_written_path,
         )
 
     @app.get("/feed")
