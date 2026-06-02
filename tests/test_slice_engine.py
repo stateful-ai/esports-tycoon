@@ -2415,6 +2415,23 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all("economy_pressure" in step.observation_features for step in replay.steps))
         self.assertTrue(all(step.action_context for step in replay.steps))
         self.assertTrue(all(step.reward_components for step in replay.steps))
+        self.assertTrue(all(step.policy_evaluation for step in replay.steps))
+        self.assertTrue(
+            all(
+                0 <= step.policy_evaluation.confidence <= 100
+                and 0 <= step.policy_evaluation.entropy <= 100
+                and 0 <= step.policy_evaluation.exploration_temperature <= 100
+                and 0 <= step.policy_evaluation.trait_alignment <= 100
+                for step in replay.steps
+            )
+        )
+        self.assertTrue(
+            all(
+                step.policy_evaluation.chosen_action == step.action
+                and step.policy_evaluation.top_priors
+                for step in replay.steps
+            )
+        )
         self.assertTrue(all(len(step.action_mask) == len(step.candidate_actions) for step in replay.steps))
         self.assertTrue(all(len(step.action_mask) == 9 for step in replay.steps))
         self.assertTrue(
@@ -2502,6 +2519,12 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"risk_delta":', payload)
         self.assertIn('"utility_delta":', payload)
         self.assertIn('"counterfactual_tag":', payload)
+        self.assertIn('"policy_evaluation":', payload)
+        self.assertIn('"policy_evaluation_unit": "steps[].policy_evaluation"', payload)
+        self.assertIn('"action_prior_unit": "steps[].policy_evaluation.top_priors[]"', payload)
+        self.assertIn('"top_priors":', payload)
+        self.assertIn('"exploration_temperature":', payload)
+        self.assertIn('"trait_alignment":', payload)
         self.assertIn('"zone_control":', payload)
         self.assertIn('"events":', payload)
         self.assertIn('"threat_arcs":', payload)
