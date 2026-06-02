@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a deterministic Week 10 post-match review screen and carry-forward artifact.
 - Added a deterministic Week 11 setup screen and opening-posture artifact.
 - Added a deterministic Week 11 prep screen and prep-allocation artifact.
+- Added dedicated Week 11 prep-room environment art for the Week 11 prep flow.
 
 ### Changed
 ### Fixed

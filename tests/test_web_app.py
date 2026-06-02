@@ -60,6 +60,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(resp.mimetype, "image/webp")
         self.assertTrue(resp.data.startswith(b"RIFF"))
 
+        week11_resp = self.client.get("/static/art/week11-prep-room.webp")
+        self.assertEqual(week11_resp.status_code, 200)
+        self.assertEqual(week11_resp.mimetype, "image/webp")
+        self.assertTrue(week11_resp.data.startswith(b"RIFF"))
+
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
         self.assertEqual(resp.status_code, 200)
@@ -1214,7 +1219,7 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"build_edge_lane", page.data)
         self.assertIn(b"scout_countermove", page.data)
         self.assertIn(b"stabilize_room", page.data)
-        self.assertIn(b"/static/art/week10-ops-room.webp", page.data)
+        self.assertIn(b"/static/art/week11-prep-room.webp", page.data)
 
         locked = self.client.post("/week11/prep", data={"week11_prep": "build_edge_lane"})
         self.assertEqual(locked.status_code, 200)
