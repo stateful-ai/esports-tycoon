@@ -302,12 +302,22 @@ from esports_tycoon.runner.week12_shadow_rollout import (
     week12_shadow_rollout_to_dict,
 )
 from esports_tycoon.runner.week12_training_queue import (
+    WEEK12_POLICY_FEEDBACK_FILENAME,
     Week12TrainingQueue,
     Week12TrainingQueueJob,
     render_week12_training_queue_json,
     resolve_week12_training_queue,
     week12_training_queue_from_json,
     week12_training_queue_to_dict,
+)
+from esports_tycoon.runner.week12_policy_feedback import (
+    Week12PolicyFeedback,
+    Week12PolicyFeedbackItem,
+    Week12ReplayAnnotation,
+    render_week12_policy_feedback_json,
+    resolve_week12_policy_feedback,
+    week12_policy_feedback_from_json,
+    week12_policy_feedback_to_dict,
 )
 
 __all__ = [
@@ -435,6 +445,7 @@ __all__ = [
     "WEEK12_MODEL_PREP_FILENAME",
     "WEEK12_SHADOW_ROLLOUT_FILENAME",
     "WEEK12_TRAINING_QUEUE_FILENAME",
+    "WEEK12_POLICY_FEEDBACK_FILENAME",
     "WEEK11_MATCH_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
@@ -519,6 +530,9 @@ __all__ = [
     "Week12ShadowTrial",
     "Week12TrainingQueue",
     "Week12TrainingQueueJob",
+    "Week12PolicyFeedback",
+    "Week12PolicyFeedbackItem",
+    "Week12ReplayAnnotation",
     "week10_fallout_plan",
     "resolve_week10_fallout",
     "week10_fallout_from_json",
@@ -582,6 +596,10 @@ __all__ = [
     "week12_training_queue_from_json",
     "week12_training_queue_to_dict",
     "render_week12_training_queue_json",
+    "resolve_week12_policy_feedback",
+    "week12_policy_feedback_from_json",
+    "week12_policy_feedback_to_dict",
+    "render_week12_policy_feedback_json",
     "week11_match_sim_from_json",
     "week11_match_sim_to_dict",
     "render_week11_match_sim_json",

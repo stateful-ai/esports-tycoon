@@ -299,6 +299,7 @@
           {% if week12_training_queue_path %}
             <span class="data-chip good">Training queue locked</span>
             <span class="data-chip">{{ week12_training_queue_path }}</span>
+            <a class="btn" href="{{ url_for('week12_policy_feedback') }}">Open policy feedback</a>
           {% else %}
             <form method="post" action="{{ url_for('week12_training_queue') }}">
               <button class="btn" type="submit">Lock training queue</button>
