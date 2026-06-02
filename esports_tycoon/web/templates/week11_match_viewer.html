@@ -386,6 +386,42 @@
     pointer-events: none;
     z-index: 4;
   }
+  .combat-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .combat-pulse {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: clamp(1.3rem, calc(var(--damage) * 0.08rem), 4rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 210, 122, 0.95);
+    background: radial-gradient(circle, rgba(255, 210, 122, 0.28), transparent 66%);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 24px rgba(255, 210, 122, 0.42);
+  }
+  .combat-pulse.negative {
+    border-color: rgba(255, 118, 102, 0.92);
+    background: radial-gradient(circle, rgba(255, 118, 102, 0.3), transparent 68%);
+    box-shadow: 0 0 24px rgba(255, 118, 102, 0.46);
+  }
+  .combat-pulse::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff4cc;
+    paint-order: stroke;
+    -webkit-text-stroke: 3px rgba(8, 16, 21, 0.9);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
   .event-pulse {
     position: absolute;
     left: calc(var(--x) * 1%);
@@ -422,6 +458,7 @@
   }
   .marker {
     --marker: #21d6b5;
+    --health: 100;
     position: absolute;
     left: calc(var(--x) * 1%);
     top: calc(var(--y) * 1%);
@@ -432,13 +469,15 @@
     place-items: center;
     transform: translate(-50%, -50%);
     border: 2px solid rgba(255, 255, 255, 0.82);
-    background: var(--marker);
+    background:
+      radial-gradient(circle, var(--marker) 0 55%, rgba(8, 16, 21, 0.92) 57% 65%, transparent 67%),
+      conic-gradient(#9ff2d8 calc(var(--health) * 1%), rgba(255, 118, 102, 0.48) 0);
     color: #081015;
     font-weight: 800;
     font-size: 0.72rem;
     box-shadow: 0 0 0 5px rgba(0,0,0,0.25), 0 0 24px color-mix(in srgb, var(--marker), transparent 40%);
     transition: left 260ms ease, top 260ms ease, opacity 180ms ease, transform 180ms ease;
-    z-index: 3;
+    z-index: 6;
   }
   .marker[data-side="opponent"] {
     --marker: #ff7666;
@@ -544,7 +583,7 @@
     padding: 0.65rem;
     margin-top: 0.7rem;
   }
-  .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes {
+  .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes {
     display: grid;
     gap: 0.45rem;
   }
@@ -559,6 +598,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
+  .combat-feed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
   .zone-control {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-top: 0.55rem;
@@ -571,7 +614,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
-  .cause-chip, .reward-component, .action-chip, .zone-card, .utility-chip, .duel-chip {
+  .cause-chip, .reward-component, .action-chip, .combat-chip, .zone-card, .utility-chip, .duel-chip {
     border: 1px solid rgba(187, 203, 205, 0.15);
     background: rgba(8, 13, 18, 0.82);
     padding: 0.42rem;
@@ -588,27 +631,34 @@
     border-color: rgba(255, 210, 122, 0.72);
     background: rgba(255, 210, 122, 0.08);
   }
-  .cause-chip span, .reward-component span, .action-chip span, .zone-card span, .utility-chip span, .duel-chip span {
+  .combat-chip.negative {
+    border-color: rgba(255, 118, 102, 0.38);
+    background: rgba(255, 118, 102, 0.06);
+  }
+  .combat-chip.elim {
+    border-color: rgba(255, 210, 122, 0.56);
+  }
+  .cause-chip span, .reward-component span, .action-chip span, .combat-chip span, .zone-card span, .utility-chip span, .duel-chip span {
     display: block;
     color: #95a3a5;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.66rem;
     text-transform: uppercase;
   }
-  .cause-chip strong, .reward-component strong, .action-chip strong, .zone-card strong, .utility-chip strong, .duel-chip strong {
+  .cause-chip strong, .reward-component strong, .action-chip strong, .combat-chip strong, .zone-card strong, .utility-chip strong, .duel-chip strong {
     display: block;
     color: #eef4f2;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.82rem;
     overflow-wrap: anywhere;
   }
-  .component-bar, .action-bar, .zone-bar, .utility-bar, .duel-bar {
+  .component-bar, .action-bar, .combat-bar, .zone-bar, .utility-bar, .duel-bar {
     height: 0.34rem;
     margin-top: 0.28rem;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(187, 203, 205, 0.12);
   }
-  .component-bar span, .action-bar span, .zone-bar span, .utility-bar span, .duel-bar span {
+  .component-bar span, .action-bar span, .combat-bar span, .zone-bar span, .utility-bar span, .duel-bar span {
     display: block;
     height: 100%;
     width: calc(var(--v) * 1%);
@@ -616,6 +666,9 @@
   }
   .action-bar.masked span {
     background: linear-gradient(90deg, #4a5358, #6a7277);
+  }
+  .combat-bar.negative span {
+    background: linear-gradient(90deg, #ff7666, #f4c950);
   }
   .component-bar.negative span {
     background: linear-gradient(90deg, #ff7666, #f4c950);
@@ -870,7 +923,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -880,7 +933,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
-    .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -945,6 +998,7 @@
         <div class="utility-layer" id="utility-layer" aria-hidden="true"></div>
         <svg class="trail-layer" id="trail-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <svg class="threat-layer" id="threat-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="combat-layer" id="combat-layer" aria-hidden="true"></div>
         <div class="event-layer" id="event-layer" aria-hidden="true"></div>
         {% for state in replay.frames[0].states %}
           <span
@@ -973,6 +1027,7 @@
         <div class="causality-grid" id="observation-features"></div>
         <div class="reward-components" id="reward-components"></div>
         <div class="action-mask" id="action-mask"></div>
+        <div class="combat-feed" id="combat-feed"></div>
         <div class="zone-control" id="zone-control"></div>
         <div class="utility-stack" id="utility-stack"></div>
         <div class="duel-lanes" id="duel-lanes"></div>
@@ -1184,10 +1239,12 @@
   const utilityLayer = document.getElementById("utility-layer");
   const trailLayer = document.getElementById("trail-layer");
   const threatLayer = document.getElementById("threat-layer");
+  const combatLayer = document.getElementById("combat-layer");
   const eventLayer = document.getElementById("event-layer");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
   const actionMask = document.getElementById("action-mask");
+  const combatFeed = document.getElementById("combat-feed");
   const zoneControl = document.getElementById("zone-control");
   const utilityStack = document.getElementById("utility-stack");
   const duelLanes = document.getElementById("duel-lanes");
@@ -1356,11 +1413,52 @@
     });
   }
 
+  function recentCombatEvents() {
+    return frames
+      .slice(0, index + 1)
+      .flatMap((frame) => (frame.combat_events || []).map((event) => ({ tick: frame.tick, event })))
+      .slice(-4)
+      .reverse();
+  }
+
+  function renderCombat(frame) {
+    combatLayer.innerHTML = "";
+    combatFeed.innerHTML = "";
+    const events = frame.combat_events || [];
+    events.forEach((event) => {
+      const pulse = document.createElement("div");
+      pulse.className = `combat-pulse ${event.polarity || "watch"}`;
+      pulse.dataset.label = event.eliminated ? "KO" : `-${event.damage || 0}`;
+      pulse.title = event.label || "combat event";
+      pulse.style.setProperty("--x", event.x || 50);
+      pulse.style.setProperty("--y", event.y || 50);
+      pulse.style.setProperty("--damage", event.damage || 20);
+      combatLayer.appendChild(pulse);
+    });
+    recentCombatEvents().forEach(({ tick, event }) => {
+      const damage = Math.max(0, Math.min(100, Number(event.damage) || 0));
+      const chip = document.createElement("div");
+      chip.className = `combat-chip ${event.polarity || "watch"} ${event.eliminated ? "elim" : ""}`;
+      chip.innerHTML = `
+        <span>t${tick} · ${labelFor(event.event_type || "combat")} · ${event.trait_signal || "trait"}</span>
+        <strong>${event.source_agent_id}->${event.target_agent_id} · ${event.eliminated ? "eliminated" : `${event.target_health} hp`}</strong>
+        <div class="combat-bar ${event.polarity === "negative" ? "negative" : ""}"><span style="--v: ${damage};"></span></div>
+      `;
+      combatFeed.appendChild(chip);
+    });
+    if (!combatFeed.children.length) {
+      const chip = document.createElement("div");
+      chip.className = "combat-chip";
+      chip.innerHTML = "<span>combat</span><strong>no contact yet</strong><div class=\"combat-bar\"><span style=\"--v: 0;\"></span></div>";
+      combatFeed.appendChild(chip);
+    }
+  }
+
   function renderCausality(frame, currentStep) {
     const features = currentStep?.observation_features || {};
     const actionContext = currentStep?.action_context || {};
     const components = currentStep?.reward_components || {};
-    const featureKeys = ["own_zone", "target_zone", "team_pressure", "risk_index", "objective_pressure", "top_trait"];
+    const featureKeys = ["own_zone", "target_zone", "team_pressure", "risk_index", "objective_pressure", "combat_window", "top_trait"];
     observationFeatures.innerHTML = "";
     featureKeys.forEach((key) => {
       const chip = document.createElement("div");
@@ -1492,6 +1590,7 @@
     renderTrails();
     renderUtilityZones(frame);
     renderThreatArcs(frame);
+    renderCombat(frame);
     renderEvents(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     renderCausality(frame, currentStep);
@@ -1501,13 +1600,14 @@
       if (!state || !agent) return;
       marker.style.setProperty("--x", state.x);
       marker.style.setProperty("--y", state.y);
+      marker.style.setProperty("--health", state.health ?? (state.alive ? 100 : 0));
       marker.dataset.side = agent.side;
       marker.dataset.stance = state.stance;
       marker.dataset.intent = state.intent;
       marker.textContent = agent.name.slice(0, 1).toUpperCase();
       marker.classList.toggle("down", !state.alive);
       marker.classList.toggle("focus", state.agent_id === frame.focus_agent);
-      marker.title = `${agent.name} - ${state.stance} - ${state.intent}`;
+      marker.title = `${agent.name} - ${state.stance} - ${state.intent} - ${state.health ?? 0} hp`;
     });
     renderAgent(agents[frame.focus_agent]);
     renderSteps(frame.tick);

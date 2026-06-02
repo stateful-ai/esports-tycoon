@@ -2318,12 +2318,26 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertEqual(len(replay.map_layout.lanes), 4)
         self.assertTrue(any(cover.blocks_sight for cover in replay.map_layout.covers))
         self.assertTrue(all(lane.points for lane in replay.map_layout.lanes))
+        self.assertTrue(
+            all(0 <= state.health <= 100 for frame in replay.frames for state in frame.states)
+        )
+        self.assertTrue(
+            any(state.health == 0 for frame in replay.frames for state in frame.states)
+        )
         self.assertTrue(all(frame.telemetry.space_control >= 0 for frame in replay.frames))
         self.assertTrue(all(frame.telemetry.risk_index <= 100 for frame in replay.frames))
         self.assertTrue(all(frame.zone_control for frame in replay.frames))
         self.assertTrue(all(frame.events for frame in replay.frames))
         self.assertTrue(all(frame.threat_arcs for frame in replay.frames))
         self.assertTrue(all(frame.utility_zones for frame in replay.frames))
+        self.assertTrue(any(frame.combat_events for frame in replay.frames))
+        self.assertTrue(
+            all(
+                0 <= event.damage <= 100 and 0 <= event.target_health <= 100
+                for frame in replay.frames
+                for event in frame.combat_events
+            )
+        )
         self.assertTrue(
             all(0 <= arc.threat_level <= 100 for frame in replay.frames for arc in frame.threat_arcs)
         )
@@ -2371,6 +2385,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"map_layout_unit": "map_layout"', payload)
         self.assertIn('"map_cover_unit": "map_layout.covers[]"', payload)
         self.assertIn('"map_lane_unit": "map_layout.lanes[]"', payload)
+        self.assertIn('"health":', payload)
+        self.assertIn('"combat_window":', payload)
+        self.assertIn('"combat_events":', payload)
+        self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)
         self.assertIn('"candidate_actions":', payload)
         self.assertIn('"zone_control":', payload)
