@@ -60,27 +60,44 @@
     margin-top: 1rem;
     align-items: start;
   }
-  .lineup-hero {
+  .roster-rail {
     position: relative;
-    min-height: clamp(170px, 25vw, 320px);
-    margin-top: 1rem;
     overflow: hidden;
     border: 1px solid rgba(187, 203, 205, 0.18);
     background: #0a0d12;
+    margin-bottom: 0.8rem;
   }
-  .lineup-hero img {
+  .roster-rail img {
     display: block;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 16 / 7;
     object-fit: cover;
     object-position: center 42%;
   }
-  .lineup-hero::after {
+  .roster-rail::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(8, 16, 21, 0.62), transparent 28%, transparent 72%, rgba(8, 16, 21, 0.52));
+    background: linear-gradient(180deg, transparent 24%, rgba(8, 16, 21, 0.88));
     pointer-events: none;
+  }
+  .roster-strip {
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    z-index: 2;
+  }
+  .roster-strip span {
+    border: 1px solid rgba(187, 203, 205, 0.26);
+    background: rgba(8, 16, 21, 0.78);
+    color: #dce7e8;
+    padding: 0.1rem 0.32rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
   }
   .arena-panel, .hud-panel, .agent-panel, .rl-panel {
     border: 1px solid rgba(187, 203, 205, 0.18);
@@ -124,7 +141,7 @@
     background:
       linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-      url("{{ url_for('static', filename='art/week11-broadcast-arena.webp') }}");
+      url("{{ url_for('static', filename='art/week11-match-arena.webp') }}");
     background-size: 28px 28px, 28px 28px, cover;
     background-position: center;
   }
@@ -183,6 +200,20 @@
     --marker: #ff7666;
     color: #190807;
   }
+  .marker[data-stance="set"] {
+    border-radius: 0.28rem;
+  }
+  .marker[data-stance="contact"] {
+    border-radius: 50% 50% 40% 40%;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .marker[data-stance="trade"] {
+    outline: 2px solid rgba(255, 210, 122, 0.72);
+    outline-offset: 3px;
+  }
+  .marker[data-stance="resolve"] {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
   .marker.down {
     opacity: 0.34;
     transform: translate(-50%, -50%) scale(0.76);
@@ -205,6 +236,12 @@
   }
   .event-title { font-weight: 800; overflow-wrap: anywhere; }
   .event-detail { color: #afbcbd; font-size: 0.92rem; overflow-wrap: anywhere; }
+  .action-readout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
   .pressure {
     width: min(16rem, 100%);
     height: 0.65rem;
@@ -353,6 +390,20 @@
     border: 1px solid rgba(187, 203, 205, 0.18);
     padding: 0.1rem 0.35rem;
     color: #c9d3d4;
+    font-size: 0.72rem;
+  }
+  .trait-signal-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.7rem;
+  }
+  .trait-signal-row span {
+    border: 1px solid rgba(255, 210, 122, 0.38);
+    background: rgba(255, 210, 122, 0.08);
+    color: #ffe3a1;
+    padding: 0.12rem 0.38rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.72rem;
   }
   .rl-layout {
@@ -504,10 +555,6 @@
     </div>
   </div>
 
-  <figure class="lineup-hero">
-    <img src="{{ url_for('static', filename='art/portraits/overcast-lineup.webp') }}" alt="Overcast team portrait lineup">
-  </figure>
-
   <div class="viewer-grid">
     <section class="arena-panel">
       <div class="broadcast-rail" aria-label="Broadcast overlay">
@@ -532,7 +579,13 @@
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
         {% for state in replay.frames[0].states %}
-          <span class="marker" data-agent="{{ state.agent_id }}" style="--x: {{ state.x }}; --y: {{ state.y }};">{{ state.agent_id|first|upper }}</span>
+          <span
+            class="marker"
+            data-agent="{{ state.agent_id }}"
+            data-stance="{{ state.stance }}"
+            data-intent="{{ state.intent }}"
+            style="--x: {{ state.x }}; --y: {{ state.y }};"
+          >{{ state.agent_id|first|upper }}</span>
         {% endfor %}
       </div>
       <div class="event-strip">
@@ -540,6 +593,10 @@
         <div>
           <div class="event-title" id="frame-title">{{ replay.frames[0].event_title }}</div>
           <div class="event-detail" id="frame-detail">{{ replay.frames[0].event_detail }}</div>
+          <div class="action-readout">
+            <span class="data-chip warn" id="current-action">action pending</span>
+            <span class="data-chip" id="current-reward">reward 0</span>
+          </div>
         </div>
         <div class="pressure" aria-label="team pressure"><span id="pressure-bar" style="--pressure: {{ replay.frames[0].team_pressure }};"></span></div>
       </div>
@@ -592,6 +649,14 @@
     </section>
 
     <aside class="hud-panel">
+      <div class="roster-rail">
+        <img src="{{ url_for('static', filename='art/portraits/overcast-lineup.webp') }}" alt="Overcast team portrait lineup">
+        <div class="roster-strip">
+          {% for agent in replay.agents if agent.side == "overcast" %}
+            <span>{{ agent.name }} · {{ agent.role }}</span>
+          {% endfor %}
+        </div>
+      </div>
       <div class="panel-kicker">Focused agent</div>
       <div class="focus-portrait">
         <img id="agent-portrait" src="{{ url_for('static', filename=replay.agents[0].portrait_asset) }}" alt="Focused player portrait">
@@ -604,8 +669,10 @@
         <div class="metric"><span>Tempo</span><div class="bar"><span id="metric-tempo" style="--v: {{ replay.agents[0].trait_profile.tempo }};"></span></div><span id="value-tempo">{{ replay.agents[0].trait_profile.tempo }}</span></div>
         <div class="metric"><span>Utility</span><div class="bar"><span id="metric-utility" style="--v: {{ replay.agents[0].trait_profile.utility }};"></span></div><span id="value-utility">{{ replay.agents[0].trait_profile.utility }}</span></div>
         <div class="metric"><span>Clutch</span><div class="bar"><span id="metric-clutch" style="--v: {{ replay.agents[0].trait_profile.clutch }};"></span></div><span id="value-clutch">{{ replay.agents[0].trait_profile.clutch }}</span></div>
+        <div class="metric"><span>Comms</span><div class="bar"><span id="metric-comms" style="--v: {{ replay.agents[0].trait_profile.comms }};"></span></div><span id="value-comms">{{ replay.agents[0].trait_profile.comms }}</span></div>
         <div class="metric"><span>Risk</span><div class="bar"><span id="metric-risk" style="--v: {{ replay.agents[0].trait_profile.risk }};"></span></div><span id="value-risk">{{ replay.agents[0].trait_profile.risk }}</span></div>
       </div>
+      <div class="trait-signal-row" id="top-traits"></div>
       <div class="viewer-chips" style="justify-content: flex-start; margin-top: 0.8rem;">
         <span class="data-chip" id="agent-role">{{ replay.agents[0].role }}</span>
         <span class="data-chip warn" id="agent-epoch">epoch {{ replay.agents[0].skill_epoch_proxy }}</span>
@@ -707,6 +774,7 @@
 <script>
 (() => {
   const payload = JSON.parse(document.getElementById("replay-data").textContent).week11_match_sim;
+  const staticBase = "{{ url_for('static', filename='') }}";
   const agents = Object.fromEntries(payload.agents.map((agent) => [agent.agent_id, agent]));
   const frames = payload.frames;
   const steps = payload.steps;
@@ -727,6 +795,9 @@
   const agentEpoch = document.getElementById("agent-epoch");
   const agentScenario = document.getElementById("agent-scenario");
   const agentPortrait = document.getElementById("agent-portrait");
+  const topTraits = document.getElementById("top-traits");
+  const currentAction = document.getElementById("current-action");
+  const currentReward = document.getElementById("current-reward");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
   const telemetryIds = {
@@ -756,7 +827,7 @@
     agentEpoch.textContent = `epoch ${agent.skill_epoch_proxy}`;
     agentScenario.textContent = agent.scenario_archetype;
     if (agent.portrait_asset) {
-      agentPortrait.src = `/static/${agent.portrait_asset}`;
+      agentPortrait.src = `${staticBase}${agent.portrait_asset}`;
       agentPortrait.alt = `${agent.name} portrait`;
     }
     setMetric("aim", agent.trait_profile.aim);
@@ -764,7 +835,23 @@
     setMetric("tempo", agent.trait_profile.tempo);
     setMetric("utility", agent.trait_profile.utility);
     setMetric("clutch", agent.trait_profile.clutch);
+    setMetric("comms", agent.trait_profile.comms);
     setMetric("risk", agent.trait_profile.risk);
+    topTraits.innerHTML = "";
+    Object.entries(agent.trait_profile)
+      .sort((left, right) => right[1] - left[1])
+      .slice(0, 3)
+      .forEach(([name, value]) => {
+        const chip = document.createElement("span");
+        chip.textContent = `${name} ${value}`;
+        topTraits.appendChild(chip);
+      });
+  }
+
+  function stepForFrame(frame) {
+    return steps.find((step) => step.tick === frame.tick && step.agent_id === frame.focus_agent)
+      || steps.find((step) => step.tick === frame.tick)
+      || null;
   }
 
   function renderSteps(tick) {
@@ -805,6 +892,9 @@
     broadcastFocus.textContent = focusAgent ? focusAgent.name : frame.focus_agent;
     aliveCount.textContent = aliveSummary(frame);
     pressure.style.setProperty("--pressure", frame.team_pressure);
+    const currentStep = stepForFrame(frame);
+    currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
+    currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     document.querySelectorAll(".marker").forEach((marker) => {
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
@@ -813,10 +903,12 @@
       marker.style.setProperty("--x", state.x);
       marker.style.setProperty("--y", state.y);
       marker.dataset.side = agent.side;
+      marker.dataset.stance = state.stance;
+      marker.dataset.intent = state.intent;
       marker.textContent = agent.name.slice(0, 1).toUpperCase();
       marker.classList.toggle("down", !state.alive);
       marker.classList.toggle("focus", state.agent_id === frame.focus_agent);
-      marker.title = `${agent.name} - ${state.intent}`;
+      marker.title = `${agent.name} - ${state.stance} - ${state.intent}`;
     });
     renderAgent(agents[frame.focus_agent]);
     renderSteps(frame.tick);

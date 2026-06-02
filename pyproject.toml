@@ -52,7 +52,7 @@ include = ["esports_tycoon*", "saves"]
 "saves" = ["week6.yaml"]
 # Ship the web app's Jinja2 templates and static art so the slice app works
 # from an installed wheel, not only a source checkout.
-"esports_tycoon.web" = ["templates/*.html", "static/art/*.webp"]
+"esports_tycoon.web" = ["templates/*.html", "static/art/*.webp", "static/art/portraits/*.webp"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
