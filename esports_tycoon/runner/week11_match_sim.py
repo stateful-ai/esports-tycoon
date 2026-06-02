@@ -126,6 +126,17 @@ class Week11SimAgentState:
 
 
 @dataclass(frozen=True)
+class Week11SimTelemetry:
+    """Frame-level numeric tactical signals for viewer HUDs and model training."""
+
+    space_control: int
+    utility_pressure: int
+    trade_window: int
+    risk_index: int
+    objective_pressure: int
+
+
+@dataclass(frozen=True)
 class Week11SimFrame:
     """One replay frame for the match viewer."""
 
@@ -138,6 +149,7 @@ class Week11SimFrame:
     event_detail: str
     reward_delta: int
     team_pressure: int
+    telemetry: Week11SimTelemetry
     states: tuple[Week11SimAgentState, ...]
 
 
@@ -587,6 +599,38 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
     return tuple(steps)
 
 
+def _telemetry_for_step(
+    step: Week11SimStep,
+    round_: Week11SimRound,
+    *,
+    pressure: int,
+    local_tick: int,
+) -> Week11SimTelemetry:
+    """Translate deterministic replay state into numeric model-friendly telemetry."""
+    action_modifiers: dict[Week11SimAction, tuple[int, int, int, int, int]] = {
+        "call_default": (4, 2, 5, -6, 4),
+        "scan_lane": (3, 14, 6, -4, 5),
+        "entry_peek": (16, 4, 10, 18, 12),
+        "lurk_contact": (10, 2, 8, 12, 8),
+        "rotate_call": (6, 7, 12, -2, 10),
+        "anchor_trade": (8, 4, 20, 2, 9),
+        "objective_execute": (18, 8, 14, 8, 22),
+        "reset_shape": (-2, 4, 7, -12, -3),
+        "round_end": (0, 0, 0, 0, 0),
+    }
+    space_delta, utility_delta, trade_delta, risk_delta, objective_delta = action_modifiers[step.action]
+    reward_push = step.reward * 4
+    round_push = round_.reward_total * 2
+    phase_push = local_tick * 3
+    return Week11SimTelemetry(
+        space_control=_clamp(46 + space_delta + reward_push + round_push, 0, 100),
+        utility_pressure=_clamp(42 + utility_delta + phase_push + max(step.reward, 0) * 3, 0, 100),
+        trade_window=_clamp(38 + trade_delta + reward_push + (8 if round_.winner == "overcast" else -4), 0, 100),
+        risk_index=_clamp(44 + risk_delta - reward_push + (8 if step.reward < 0 else 0), 0, 100),
+        objective_pressure=_clamp(pressure + objective_delta + phase_push, 0, 100),
+    )
+
+
 def _frames(
     result: Week11MatchResultLock,
     agents: tuple[Week11SimAgent, ...],
@@ -624,6 +668,7 @@ def _frames(
         local_tick = tick % 4
         states = tuple(_state_for_agent(agent, result, tick, round_.round_id) for agent in agents)
         pressure = 50 + sum(s.reward for s in steps[: tick + 1])
+        telemetry = _telemetry_for_step(step, round_, pressure=pressure, local_tick=local_tick)
         frames.append(
             Week11SimFrame(
                 tick=tick,
@@ -635,6 +680,7 @@ def _frames(
                 event_detail=f"{round_.objective_lane} - {plan_detail} {step.reason}",
                 reward_delta=step.reward,
                 team_pressure=_clamp(pressure, 0, 100),
+                telemetry=telemetry,
                 states=states,
             )
         )
@@ -804,6 +850,16 @@ def _state_to_dict(state: Week11SimAgentState) -> dict[str, Any]:
     }
 
 
+def _telemetry_to_dict(telemetry: Week11SimTelemetry) -> dict[str, int]:
+    return {
+        "space_control": telemetry.space_control,
+        "utility_pressure": telemetry.utility_pressure,
+        "trade_window": telemetry.trade_window,
+        "risk_index": telemetry.risk_index,
+        "objective_pressure": telemetry.objective_pressure,
+    }
+
+
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
@@ -815,6 +871,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "event_detail": frame.event_detail,
         "reward_delta": frame.reward_delta,
         "team_pressure": frame.team_pressure,
+        "telemetry": _telemetry_to_dict(frame.telemetry),
         "states": [_state_to_dict(state) for state in frame.states],
     }
 
@@ -881,8 +938,16 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
             "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
             "action_space": list(WEEK11_SIM_ACTION_SPACE),
             "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "telemetry_fields": [
+                "space_control",
+                "utility_pressure",
+                "trade_window",
+                "risk_index",
+                "objective_pressure",
+            ],
             "policy_hook": "agent.policy_id + scenario_archetype + skill_epoch_proxy",
             "epoch_proxy_field": "agents[].skill_epoch_proxy",
+            "telemetry_unit": "frames[].telemetry",
             "training_signal_unit": "training_signals[]",
             "trajectory_unit": "steps[]",
         },
@@ -1131,6 +1196,24 @@ def _profile_from_dict(data: dict[str, Any]) -> Week11SimTraitProfile:
     )
 
 
+def _telemetry_from_dict(data: Any, *, team_pressure: int) -> Week11SimTelemetry:
+    if not isinstance(data, dict):
+        return Week11SimTelemetry(
+            space_control=team_pressure,
+            utility_pressure=team_pressure,
+            trade_window=team_pressure,
+            risk_index=_clamp(100 - team_pressure, 0, 100),
+            objective_pressure=team_pressure,
+        )
+    return Week11SimTelemetry(
+        space_control=int(data.get("space_control", team_pressure)),
+        utility_pressure=int(data.get("utility_pressure", team_pressure)),
+        trade_window=int(data.get("trade_window", team_pressure)),
+        risk_index=int(data.get("risk_index", _clamp(100 - team_pressure, 0, 100))),
+        objective_pressure=int(data.get("objective_pressure", team_pressure)),
+    )
+
+
 def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     """Parse a written ``week11_match_sim.json`` artifact."""
     try:
@@ -1210,6 +1293,10 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             event_detail=str(frame.get("event_detail", "")),
             reward_delta=int(frame.get("reward_delta", 0)),
             team_pressure=int(frame.get("team_pressure", 0)),
+            telemetry=_telemetry_from_dict(
+                frame.get("telemetry"),
+                team_pressure=int(frame.get("team_pressure", 0)),
+            ),
             states=tuple(
                 Week11SimAgentState(
                     agent_id=str(state.get("agent_id", "")),
