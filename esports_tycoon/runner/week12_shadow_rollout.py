@@ -42,6 +42,7 @@ class Week12ShadowTrial:
     evaluation_result: Week12EvaluationResult
     decision: Week12ShadowDecision
     decision_reason: str
+    promotion_blockers: tuple[str, ...]
     next_training_hook: str
 
 
@@ -117,6 +118,19 @@ def _decision(
     )
 
 
+def _promotion_blockers(target: Week12ModelPrepTarget) -> tuple[str, ...]:
+    blockers: list[str] = []
+    if target.risk_spike_count:
+        blockers.append(f"{target.risk_spike_count} risk spike(s)")
+    if target.dominant_failure_mode and target.dominant_failure_mode != "none":
+        blockers.append(target.dominant_failure_mode)
+    if target.objective_pressure < 60:
+        blockers.append("objective_pressure below gate")
+    if target.component_totals.get("overpeek_penalty", 0) < 0:
+        blockers.append("overpeek penalty present")
+    return tuple(dict.fromkeys(blockers))
+
+
 def _trial_for_target(target: Week12ModelPrepTarget) -> Week12ShadowTrial:
     objective_delta = _objective_delta(target)
     risk_delta = _risk_delta(target)
@@ -151,6 +165,7 @@ def _trial_for_target(target: Week12ModelPrepTarget) -> Week12ShadowTrial:
         evaluation_result=evaluation_result,
         decision=decision,
         decision_reason=decision_reason,
+        promotion_blockers=_promotion_blockers(target),
         next_training_hook=(
             f"{target.agent_id}:{decision}:{target.candidate_policy_id}:"
             f"episodes={max(2, target.sample_count + target.epoch_delta)}"
@@ -194,6 +209,7 @@ def _shadow_trial_to_dict(trial: Week12ShadowTrial) -> dict[str, Any]:
         "evaluation_result": trial.evaluation_result,
         "decision": trial.decision,
         "decision_reason": trial.decision_reason,
+        "promotion_blockers": list(trial.promotion_blockers),
         "next_training_hook": trial.next_training_hook,
     }
 
@@ -291,6 +307,9 @@ def week12_shadow_rollout_from_json(text: str) -> Week12ShadowRollout:
                 else "shadow_again"
             ),
             decision_reason=str(trial.get("decision_reason", "")),
+            promotion_blockers=tuple(
+                str(item) for item in trial.get("promotion_blockers", []) if isinstance(item, str)
+            ),
             next_training_hook=str(trial.get("next_training_hook", "")),
         )
         for trial in trials_raw
