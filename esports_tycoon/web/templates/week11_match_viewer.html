@@ -283,9 +283,11 @@
     background:
       linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-      url("{{ url_for('static', filename='art/week11-match-arena-v2.webp') }}");
+      url("{{ url_for('static', filename='art/week11-match-arena-cinematic.webp') }}");
     background-size: 28px 28px, 28px 28px, cover;
     background-position: center;
+    isolation: isolate;
+    transition: border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease;
   }
   .arena::before {
     content: "";
@@ -295,6 +297,7 @@
       linear-gradient(115deg, rgba(33, 214, 181, 0.12), transparent 32%),
       linear-gradient(290deg, rgba(255, 118, 102, 0.12), transparent 34%);
     pointer-events: none;
+    z-index: 8;
   }
   .arena::after {
     content: "";
@@ -307,6 +310,143 @@
     mix-blend-mode: screen;
     opacity: 0.32;
     pointer-events: none;
+    z-index: 9;
+  }
+  .arena.impact-hot {
+    border-color: rgba(255, 210, 122, 0.62);
+    box-shadow: 0 0 0 1px rgba(255, 210, 122, 0.18), 0 0 34px rgba(255, 210, 122, 0.16);
+  }
+  .arena.impact-negative {
+    border-color: rgba(255, 118, 102, 0.72);
+    box-shadow: 0 0 0 1px rgba(255, 118, 102, 0.22), 0 0 36px rgba(255, 118, 102, 0.22);
+  }
+  .arena.impact-positive {
+    border-color: rgba(38, 217, 199, 0.56);
+    box-shadow: 0 0 0 1px rgba(38, 217, 199, 0.18), 0 0 32px rgba(38, 217, 199, 0.18);
+  }
+  .cinematic-letterbox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: clamp(1.35rem, 4.4vw, 3rem);
+    z-index: 11;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(33, 214, 181, 0.16), transparent 28%, transparent 72%, rgba(255, 118, 102, 0.16)),
+      rgba(4, 7, 10, 0.76);
+    border: 0 solid rgba(239, 244, 242, 0.12);
+  }
+  .cinematic-letterbox.top {
+    top: 0;
+    border-bottom-width: 1px;
+  }
+  .cinematic-letterbox.bottom {
+    bottom: 0;
+    border-top-width: 1px;
+  }
+  .camera-frame {
+    position: absolute;
+    inset: clamp(0.5rem, 1.3vw, 1rem);
+    z-index: 12;
+    pointer-events: none;
+    border: 1px solid rgba(232, 251, 255, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(8, 16, 21, 0.45);
+  }
+  .camera-frame::before,
+  .camera-frame::after {
+    content: "";
+    position: absolute;
+    width: clamp(2rem, 7vw, 4.8rem);
+    height: clamp(1.4rem, 4vw, 3rem);
+    border-color: rgba(255, 210, 122, 0.82);
+    border-style: solid;
+    pointer-events: none;
+  }
+  .camera-frame::before {
+    left: -1px;
+    top: -1px;
+    border-width: 2px 0 0 2px;
+  }
+  .camera-frame::after {
+    right: -1px;
+    bottom: -1px;
+    border-width: 0 2px 2px 0;
+  }
+  .camera-rec {
+    position: absolute;
+    top: clamp(0.6rem, 1.6vw, 1rem);
+    left: clamp(0.75rem, 2vw, 1.35rem);
+    z-index: 13;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    color: #ffc0ba;
+    background: rgba(8, 16, 21, 0.72);
+    border: 1px solid rgba(255, 118, 102, 0.36);
+    padding: 0.16rem 0.42rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.58rem, 1vw, 0.72rem);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .camera-rec::before {
+    content: "";
+    width: 0.46rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #ff7666;
+    box-shadow: 0 0 10px rgba(255, 118, 102, 0.82);
+  }
+  .director-lower-third {
+    position: absolute;
+    left: clamp(0.75rem, 2vw, 1.35rem);
+    right: clamp(0.75rem, 2vw, 1.35rem);
+    bottom: clamp(0.65rem, 1.8vw, 1.1rem);
+    z-index: 13;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: end;
+    padding: clamp(0.45rem, 1.3vw, 0.75rem);
+    border: 1px solid rgba(239, 244, 242, 0.18);
+    background:
+      linear-gradient(90deg, rgba(8, 16, 21, 0.94), rgba(8, 16, 21, 0.7) 64%, rgba(255, 118, 102, 0.12)),
+      rgba(8, 16, 21, 0.82);
+    pointer-events: none;
+  }
+  .director-kicker,
+  .director-detail,
+  .director-metrics span {
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.55rem, 1vw, 0.68rem);
+    text-transform: uppercase;
+  }
+  .director-headline {
+    display: block;
+    color: #eef4f2;
+    font-size: clamp(0.88rem, 1.7vw, 1.18rem);
+    line-height: 1.08;
+    margin: 0.12rem 0;
+    overflow-wrap: anywhere;
+  }
+  .director-detail {
+    display: block;
+    text-transform: none;
+    overflow-wrap: anywhere;
+  }
+  .director-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(3.2rem, auto));
+    gap: 0.35rem;
+    justify-content: end;
+  }
+  .director-metrics span {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(255, 255, 255, 0.05);
+    color: #dce7e8;
+    padding: 0.14rem 0.34rem;
+    white-space: nowrap;
   }
   .map-geometry-layer,
   .map-lane-layer {
@@ -752,6 +892,38 @@
     box-shadow: 0 0 0 5px rgba(0,0,0,0.25), 0 0 24px color-mix(in srgb, var(--marker), transparent 40%);
     transition: left 260ms ease, top 260ms ease, opacity 180ms ease, transform 180ms ease;
     z-index: 7;
+  }
+  .marker-health-ring {
+    position: absolute;
+    inset: -0.32rem;
+    border-radius: inherit;
+    background: conic-gradient(#9ff2d8 calc(var(--health) * 1%), rgba(255, 118, 102, 0.54) 0);
+    opacity: 0.78;
+    -webkit-mask: radial-gradient(circle, transparent 57%, #000 60%);
+    mask: radial-gradient(circle, transparent 57%, #000 60%);
+    pointer-events: none;
+  }
+  .marker-glyph {
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+  }
+  .marker-nameplate {
+    position: absolute;
+    left: 50%;
+    bottom: calc(-1 * clamp(1.15rem, 1.8vw, 1.35rem));
+    transform: translateX(-50%);
+    max-width: 6rem;
+    color: #e8fbff;
+    background: rgba(4, 8, 12, 0.84);
+    border: 1px solid color-mix(in srgb, var(--marker), transparent 42%);
+    padding: 0.04rem 0.22rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.46rem, 0.75vw, 0.58rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
   }
   .marker[data-side="opponent"] {
     --marker: #ff7666;
@@ -1389,19 +1561,54 @@
     border-color: rgba(187, 203, 205, 0.32);
   }
   .timeline-row { margin-top: 0.7rem; }
+  .timeline-filmstrip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(3.4rem, 1fr));
+    gap: 0.35rem;
+    align-items: stretch;
+  }
   .tick-button {
-    width: 2.2rem;
-    height: 2rem;
+    min-width: 0;
+    min-height: 2.75rem;
     border: 1px solid rgba(187, 203, 205, 0.2);
     background: rgba(255,255,255,0.04);
     color: #e6eeee;
     cursor: pointer;
-    font: inherit;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.14rem;
+    align-content: center;
+    padding: 0.28rem 0.34rem;
+    font: 0.68rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    overflow: hidden;
   }
   .tick-button.active {
     border-color: #ffd27a;
     color: #ffd27a;
     background: rgba(255, 210, 122, 0.12);
+  }
+  .tick-spark {
+    display: block;
+    height: 0.22rem;
+    background: linear-gradient(90deg, rgba(38, 217, 199, 0.84), rgba(255, 210, 122, 0.76));
+    transform-origin: left;
+    transform: scaleX(var(--spark, 0.18));
+  }
+  .tick-phase,
+  .tick-label {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tick-phase {
+    color: #95a3a5;
+    text-transform: uppercase;
+    font-size: 0.58rem;
+  }
+  .tick-label {
+    color: #eef4f2;
+    font-weight: 700;
   }
   .tick-button[data-risk="high"] {
     border-color: rgba(255, 118, 102, 0.55);
@@ -1423,6 +1630,8 @@
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes, .policy-priors, .branch-comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip, .objective-strip, .loadout-strip { grid-template-columns: 1fr; }
+    .director-lower-third { grid-template-columns: 1fr; }
+    .director-metrics { justify-content: stretch; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .loadout-bars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -1436,6 +1645,30 @@
     .loadout-bars { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
+    .cinematic-letterbox { height: 1rem; }
+    .camera-rec { display: none; }
+    .director-lower-third {
+      left: 0.45rem;
+      right: 0.45rem;
+      bottom: 0.45rem;
+      padding: 0.4rem;
+    }
+    .director-detail { display: none; }
+    .director-metrics { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .arena,
+    .marker,
+    .fog-layer,
+    .vision-layer {
+      transition: none;
+    }
+    .arena.impact-hot,
+    .arena.impact-negative,
+    .arena.impact-positive {
+      filter: none;
+      box-shadow: 0 0 0 1px rgba(239, 244, 242, 0.18);
+    }
   }
 </style>
 
@@ -1523,6 +1756,10 @@
         <button type="button" id="policy-vision-toggle" data-mode="policy">Policy vision</button>
       </div>
       <div class="arena" id="arena">
+        <div class="cinematic-letterbox top" aria-hidden="true"></div>
+        <div class="cinematic-letterbox bottom" aria-hidden="true"></div>
+        <div class="camera-rec" aria-hidden="true">Live</div>
+        <div class="camera-frame" aria-hidden="true"></div>
         <div class="map-geometry-layer" id="map-geometry-layer" aria-hidden="true"></div>
         <svg class="map-lane-layer" id="map-lane-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <svg class="affordance-layer" id="affordance-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -1542,8 +1779,24 @@
             data-stance="{{ state.stance }}"
             data-intent="{{ state.intent }}"
             style="--x: {{ state.x }}; --y: {{ state.y }};"
-          >{{ state.agent_id|first|upper }}</span>
+          >
+            <span class="marker-health-ring" aria-hidden="true"></span>
+            <span class="marker-glyph">{{ state.agent_id|first|upper }}</span>
+            <span class="marker-nameplate">{{ state.agent_id }}</span>
+          </span>
         {% endfor %}
+        <div class="director-lower-third" id="director-lower-third" aria-live="polite">
+          <div>
+            <span class="director-kicker" id="director-kicker">Director feed</span>
+            <strong class="director-headline" id="director-headline">{{ replay.frames[0].event_title }}</strong>
+            <span class="director-detail" id="director-detail">{{ replay.frames[0].event_detail }}</span>
+          </div>
+          <div class="director-metrics" aria-label="Director telemetry">
+            <span id="director-action">action pending</span>
+            <span id="director-reward">reward 0</span>
+            <span id="director-risk">risk {{ replay.frames[0].telemetry.risk_index }}</span>
+          </div>
+        </div>
       </div>
       <div class="event-strip">
         <div class="clock" id="frame-clock">{{ replay.frames[0].clock }}</div>
@@ -1663,9 +1916,13 @@
           </form>
         {% endif %}
       </div>
-      <div class="timeline-row" id="timeline">
+      <div class="timeline-row timeline-filmstrip" id="timeline" aria-label="Replay timeline">
         {% for frame in replay.frames %}
-          <button class="tick-button{% if loop.first %} active{% endif %}" type="button" data-tick="{{ loop.index0 }}">{{ frame.tick }}</button>
+          <button class="tick-button{% if loop.first %} active{% endif %}" type="button" data-tick="{{ loop.index0 }}" style="--spark: {{ frame.telemetry.risk_index / 100 }};">
+            <span class="tick-spark" aria-hidden="true"></span>
+            <span class="tick-label">{{ frame.tick }}</span>
+            <span class="tick-phase">{{ frame.phase }}</span>
+          </button>
         {% endfor %}
       </div>
     </section>
@@ -1887,6 +2144,12 @@
   const policyPriors = document.getElementById("policy-priors");
   const branchComparison = document.getElementById("branch-comparison");
   const policyReason = document.getElementById("policy-reason");
+  const directorKicker = document.getElementById("director-kicker");
+  const directorHeadline = document.getElementById("director-headline");
+  const directorDetail = document.getElementById("director-detail");
+  const directorAction = document.getElementById("director-action");
+  const directorReward = document.getElementById("director-reward");
+  const directorRisk = document.getElementById("director-risk");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
   const telemetryIds = {
@@ -1915,6 +2178,39 @@
 
   function clampPercent(value) {
     return Math.max(0, Math.min(100, Number(value) || 0));
+  }
+
+  function arenaImpact(frame, currentStep) {
+    const risk = Number(frame.telemetry?.risk_index) || 0;
+    const reward = Number(currentStep?.reward) || 0;
+    const negativeCombat = (frame.combat_events || []).some((event) => event.polarity === "negative");
+    const positiveCombat = (frame.combat_events || []).some((event) => event.polarity === "positive" || event.eliminated);
+    if (reward < 0 || negativeCombat) return "negative";
+    if (risk >= 72 || (frame.events || []).length || positiveCombat) return "hot";
+    if (reward > 0) return "positive";
+    return "neutral";
+  }
+
+  function renderCinematicState(frame, currentStep) {
+    const impact = arenaImpact(frame, currentStep);
+    arena.classList.toggle("impact-hot", impact === "hot");
+    arena.classList.toggle("impact-negative", impact === "negative");
+    arena.classList.toggle("impact-positive", impact === "positive");
+  }
+
+  function renderDirectorOverlay(frame, currentStep, focusAgent) {
+    const phase = labelFor(frame.phase || "phase");
+    const focus = focusAgent?.name || frame.focus_agent;
+    const risk = clampPercent(frame.telemetry?.risk_index);
+    const reward = Number(currentStep?.reward) || 0;
+    directorKicker.textContent = `R${frame.round_id} · ${phase} · ${focus}`;
+    directorHeadline.textContent = frame.event_title || "Tactical beat";
+    directorDetail.textContent = frame.event_detail || "Replay state pending";
+    directorAction.textContent = currentStep
+      ? labelFor(currentStep.action || "action")
+      : "action pending";
+    directorReward.textContent = `reward ${signed(reward)}`;
+    directorRisk.textContent = `risk ${risk}`;
   }
 
   function renderMapGeometry() {
@@ -2448,6 +2744,22 @@
     });
   }
 
+  function renderMarkerChrome(marker, agent, state, frame) {
+    const glyph = marker.querySelector(".marker-glyph");
+    const nameplate = marker.querySelector(".marker-nameplate");
+    marker.style.setProperty("--x", state.x);
+    marker.style.setProperty("--y", state.y);
+    marker.style.setProperty("--health", state.health ?? (state.alive ? 100 : 0));
+    marker.dataset.side = agent.side;
+    marker.dataset.stance = state.stance;
+    marker.dataset.intent = state.intent;
+    if (glyph) glyph.textContent = agent.name.slice(0, 1).toUpperCase();
+    if (nameplate) nameplate.textContent = `${agent.name.split(" ")[0]} ${state.health ?? 0}`;
+    marker.classList.toggle("down", !state.alive);
+    marker.classList.toggle("focus", state.agent_id === frame.focus_agent);
+    marker.title = `${agent.name} - ${state.stance} - ${state.intent} - ${state.health ?? 0} hp`;
+  }
+
   function renderFrame(nextIndex) {
     index = (nextIndex + frames.length) % frames.length;
     const frame = frames[index];
@@ -2464,6 +2776,8 @@
     selectedBranchAction = currentStep?.action || null;
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
     currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
+    renderCinematicState(frame, currentStep);
+    renderDirectorOverlay(frame, currentStep, focusAgent);
     renderTrails();
     renderUtilityZones(frame);
     renderThreatArcs(frame);
@@ -2478,16 +2792,7 @@
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
       const agent = agents[marker.dataset.agent];
       if (!state || !agent) return;
-      marker.style.setProperty("--x", state.x);
-      marker.style.setProperty("--y", state.y);
-      marker.style.setProperty("--health", state.health ?? (state.alive ? 100 : 0));
-      marker.dataset.side = agent.side;
-      marker.dataset.stance = state.stance;
-      marker.dataset.intent = state.intent;
-      marker.textContent = agent.name.slice(0, 1).toUpperCase();
-      marker.classList.toggle("down", !state.alive);
-      marker.classList.toggle("focus", state.agent_id === frame.focus_agent);
-      marker.title = `${agent.name} - ${state.stance} - ${state.intent} - ${state.health ?? 0} hp`;
+      renderMarkerChrome(marker, agent, state, frame);
     });
     renderInformationState(frame);
     renderAgent(agents[frame.focus_agent]);
@@ -2531,6 +2836,7 @@
     if (frame) {
       button.dataset.reward = frame.reward_delta > 0 ? "positive" : frame.reward_delta < 0 ? "negative" : "neutral";
       button.dataset.risk = frame.telemetry?.risk_index >= 60 ? "high" : "normal";
+      button.style.setProperty("--spark", clampPercent(frame.telemetry?.risk_index) / 100);
     }
     button.addEventListener("click", () => {
       stop();
