@@ -217,6 +217,46 @@
     width: calc(var(--pressure) * 1%);
     background: linear-gradient(90deg, #21d6b5, #ffd27a, #ff7666);
   }
+  .telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 0.65rem;
+  }
+  .telemetry-card {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(15, 21, 25, 0.82);
+    padding: 0.5rem;
+    min-width: 0;
+  }
+  .telemetry-card span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+  .telemetry-card strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1rem;
+    margin: 0.15rem 0 0.35rem;
+  }
+  .telemetry-bar {
+    height: 0.38rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(187, 203, 205, 0.14);
+  }
+  .telemetry-bar span {
+    display: block;
+    height: 100%;
+    width: calc(var(--v) * 1%);
+    background: linear-gradient(90deg, #26d9c7, #f4c950);
+  }
+  .telemetry-card.risk .telemetry-bar span {
+    background: linear-gradient(90deg, #f4c950, #ff7666);
+  }
   .hud-panel { padding: 0.85rem; }
   .panel-kicker {
     color: #95a3a5;
@@ -426,6 +466,7 @@
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -434,6 +475,7 @@
     .agent-grid { grid-template-columns: 1fr; }
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
+    .telemetry-grid { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -500,6 +542,33 @@
           <div class="event-detail" id="frame-detail">{{ replay.frames[0].event_detail }}</div>
         </div>
         <div class="pressure" aria-label="team pressure"><span id="pressure-bar" style="--pressure: {{ replay.frames[0].team_pressure }};"></span></div>
+      </div>
+      <div class="telemetry-grid" aria-label="Tactical telemetry">
+        <div class="telemetry-card">
+          <span>Space</span>
+          <strong id="telemetry-space-control">{{ replay.frames[0].telemetry.space_control }}</strong>
+          <div class="telemetry-bar"><span id="telemetry-space-control-bar" style="--v: {{ replay.frames[0].telemetry.space_control }};"></span></div>
+        </div>
+        <div class="telemetry-card">
+          <span>Utility</span>
+          <strong id="telemetry-utility-pressure">{{ replay.frames[0].telemetry.utility_pressure }}</strong>
+          <div class="telemetry-bar"><span id="telemetry-utility-pressure-bar" style="--v: {{ replay.frames[0].telemetry.utility_pressure }};"></span></div>
+        </div>
+        <div class="telemetry-card">
+          <span>Trade</span>
+          <strong id="telemetry-trade-window">{{ replay.frames[0].telemetry.trade_window }}</strong>
+          <div class="telemetry-bar"><span id="telemetry-trade-window-bar" style="--v: {{ replay.frames[0].telemetry.trade_window }};"></span></div>
+        </div>
+        <div class="telemetry-card risk">
+          <span>Risk</span>
+          <strong id="telemetry-risk-index">{{ replay.frames[0].telemetry.risk_index }}</strong>
+          <div class="telemetry-bar"><span id="telemetry-risk-index-bar" style="--v: {{ replay.frames[0].telemetry.risk_index }};"></span></div>
+        </div>
+        <div class="telemetry-card">
+          <span>Objective</span>
+          <strong id="telemetry-objective-pressure">{{ replay.frames[0].telemetry.objective_pressure }}</strong>
+          <div class="telemetry-bar"><span id="telemetry-objective-pressure-bar" style="--v: {{ replay.frames[0].telemetry.objective_pressure }};"></span></div>
+        </div>
       </div>
       <div class="control-row">
         <button class="btn secondary" type="button" id="prev-frame">Prev</button>
@@ -660,10 +729,24 @@
   const agentPortrait = document.getElementById("agent-portrait");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
+  const telemetryIds = {
+    space_control: "space-control",
+    utility_pressure: "utility-pressure",
+    trade_window: "trade-window",
+    risk_index: "risk-index",
+    objective_pressure: "objective-pressure",
+  };
 
   function setMetric(name, value) {
     document.getElementById(`metric-${name}`).style.setProperty("--v", value);
     document.getElementById(`value-${name}`).textContent = value;
+  }
+
+  function setTelemetry(name, value) {
+    const id = telemetryIds[name];
+    if (!id) return;
+    document.getElementById(`telemetry-${id}`).textContent = value;
+    document.getElementById(`telemetry-${id}-bar`).style.setProperty("--v", value);
   }
 
   function renderAgent(agent) {
@@ -722,6 +805,7 @@
     broadcastFocus.textContent = focusAgent ? focusAgent.name : frame.focus_agent;
     aliveCount.textContent = aliveSummary(frame);
     pressure.style.setProperty("--pressure", frame.team_pressure);
+    Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     document.querySelectorAll(".marker").forEach((marker) => {
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
       const agent = agents[marker.dataset.agent];
