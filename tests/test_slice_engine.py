@@ -2335,6 +2335,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(
             any(frame.objective_state.status in {"secured", "lost"} for frame in replay.frames)
         )
+        self.assertTrue(all(frame.loadout_state for frame in replay.frames))
+        self.assertTrue(all(1400 <= frame.loadout_state.team_credits <= 9000 for frame in replay.frames))
+        self.assertTrue(all(0 <= frame.loadout_state.economy_pressure <= 100 for frame in replay.frames))
+        self.assertTrue(any(frame.loadout_state.advantage in {"overcast", "opponent"} for frame in replay.frames))
         self.assertTrue(any(frame.combat_events for frame in replay.frames))
         self.assertTrue(
             all(
@@ -2357,6 +2361,7 @@ class TestWeek11MatchSimulation(_Fixture):
             any(zone.blocks_sight for frame in replay.frames for zone in frame.utility_zones)
         )
         self.assertTrue(all(step.observation_features for step in replay.steps))
+        self.assertTrue(all("economy_pressure" in step.observation_features for step in replay.steps))
         self.assertTrue(all(step.action_context for step in replay.steps))
         self.assertTrue(all(step.reward_components for step in replay.steps))
         self.assertTrue(all(len(step.action_mask) == len(step.candidate_actions) for step in replay.steps))
@@ -2395,6 +2400,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"objective_state":', payload)
         self.assertIn('"objective_state_unit": "frames[].objective_state"', payload)
         self.assertIn('"post_plant_seconds":', payload)
+        self.assertIn('"loadout_state":', payload)
+        self.assertIn('"loadout_state_unit": "frames[].loadout_state"', payload)
+        self.assertIn('"economy_pressure":', payload)
+        self.assertIn('"team_credits":', payload)
         self.assertIn('"combat_events":', payload)
         self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)

@@ -589,6 +589,72 @@
   .objective-meta {
     justify-content: flex-start;
   }
+  .loadout-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr) auto;
+    gap: 0.55rem;
+    align-items: center;
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background:
+      linear-gradient(90deg, rgba(38, 217, 199, 0.06), transparent 34%),
+      rgba(8, 13, 18, 0.84);
+    padding: 0.55rem 0.65rem;
+    margin-top: 0.55rem;
+  }
+  .loadout-strip.overcast {
+    border-color: rgba(38, 217, 199, 0.38);
+  }
+  .loadout-strip.opponent,
+  .loadout-strip.hot {
+    border-color: rgba(255, 118, 102, 0.42);
+    background:
+      linear-gradient(90deg, rgba(255, 118, 102, 0.07), transparent 38%),
+      rgba(8, 13, 18, 0.84);
+  }
+  .loadout-summary span, .loadout-meter span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+  .loadout-summary strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88rem;
+    overflow-wrap: anywhere;
+  }
+  .loadout-bars {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+  .loadout-meter {
+    min-width: 0;
+  }
+  .loadout-meter i {
+    display: block;
+    height: 0.42rem;
+    margin-top: 0.18rem;
+    border: 1px solid rgba(187, 203, 205, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .loadout-meter i::before {
+    content: "";
+    display: block;
+    width: calc(var(--v) * 1%);
+    height: 100%;
+    background: linear-gradient(90deg, #26d9c7, #f4c950);
+  }
+  .loadout-meter.pressure i::before {
+    background: linear-gradient(90deg, #f4c950, #ff7666);
+  }
+  .loadout-meta {
+    justify-content: flex-start;
+  }
   .telemetry-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -976,7 +1042,8 @@
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .event-strip, .objective-strip { grid-template-columns: 1fr; }
+    .event-strip, .objective-strip, .loadout-strip { grid-template-columns: 1fr; }
+    .loadout-bars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
   }
@@ -986,6 +1053,7 @@
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
     .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
+    .loadout-bars { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -1086,6 +1154,35 @@
           <span class="data-chip" id="objective-carrier">{{ replay.frames[0].objective_state.carrier_agent_id }} · {{ replay.frames[0].objective_state.site_id }}</span>
           <span class="data-chip warn" id="objective-defender">def {{ replay.frames[0].objective_state.defender_pressure }}</span>
           <span class="data-chip good" id="objective-timer">{{ replay.frames[0].objective_state.post_plant_seconds }}s</span>
+        </div>
+      </div>
+      <div class="loadout-strip" id="loadout-strip">
+        <div class="loadout-summary">
+          <span>Economy</span>
+          <strong id="loadout-label">{{ replay.frames[0].loadout_state.label }}</strong>
+        </div>
+        <div class="loadout-bars" aria-label="Loadout state">
+          <div class="loadout-meter">
+            <span>Credits</span>
+            <i id="loadout-team-credits-bar" style="--v: {{ replay.frames[0].loadout_state.team_credits // 90 }};"></i>
+          </div>
+          <div class="loadout-meter">
+            <span>Armor</span>
+            <i id="loadout-armor-bar" style="--v: {{ replay.frames[0].loadout_state.armor_level }};"></i>
+          </div>
+          <div class="loadout-meter">
+            <span>Utility</span>
+            <i id="loadout-utility-bar" style="--v: {{ replay.frames[0].loadout_state.utility_remaining }};"></i>
+          </div>
+          <div class="loadout-meter pressure">
+            <span>Pressure</span>
+            <i id="loadout-pressure-bar" style="--v: {{ replay.frames[0].loadout_state.economy_pressure }};"></i>
+          </div>
+        </div>
+        <div class="viewer-chips loadout-meta">
+          <span class="data-chip" id="loadout-team-credits">${{ replay.frames[0].loadout_state.team_credits }}</span>
+          <span class="data-chip warn" id="loadout-opponent-credits">opp ${{ replay.frames[0].loadout_state.opponent_credits }}</span>
+          <span class="data-chip hot" id="loadout-pressure">econ {{ replay.frames[0].loadout_state.economy_pressure }}</span>
         </div>
       </div>
       <div class="causality-panel" id="causality-panel">
@@ -1313,6 +1410,15 @@
   const objectiveCarrier = document.getElementById("objective-carrier");
   const objectiveDefender = document.getElementById("objective-defender");
   const objectiveTimer = document.getElementById("objective-timer");
+  const loadoutStrip = document.getElementById("loadout-strip");
+  const loadoutLabel = document.getElementById("loadout-label");
+  const loadoutTeamCredits = document.getElementById("loadout-team-credits");
+  const loadoutOpponentCredits = document.getElementById("loadout-opponent-credits");
+  const loadoutPressure = document.getElementById("loadout-pressure");
+  const loadoutTeamCreditsBar = document.getElementById("loadout-team-credits-bar");
+  const loadoutArmorBar = document.getElementById("loadout-armor-bar");
+  const loadoutUtilityBar = document.getElementById("loadout-utility-bar");
+  const loadoutPressureBar = document.getElementById("loadout-pressure-bar");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
   const actionMask = document.getElementById("action-mask");
@@ -1345,6 +1451,10 @@
 
   function labelFor(name) {
     return name.replaceAll("_", " ");
+  }
+
+  function clampPercent(value) {
+    return Math.max(0, Math.min(100, Number(value) || 0));
   }
 
   function renderMapGeometry() {
@@ -1528,7 +1638,7 @@
 
   function renderObjective(frame) {
     const objective = frame.objective_state || {};
-    const progress = Math.max(0, Math.min(100, Number(objective.progress) || 0));
+    const progress = clampPercent(objective.progress);
     const status = objective.status || "setup";
     objectiveStrip.className = `objective-strip ${status} ${objective.contested ? "contested" : ""}`;
     objectiveStatus.textContent = `${objective.label || "objective"} · ${progress}%`;
@@ -1540,11 +1650,28 @@
       : objective.contested ? "contested" : "clear";
   }
 
+  function renderLoadout(frame) {
+    const loadout = frame.loadout_state || {};
+    const teamCredits = Math.max(0, Number(loadout.team_credits) || 0);
+    const opponentCredits = Math.max(0, Number(loadout.opponent_credits) || 0);
+    const pressureValue = clampPercent(loadout.economy_pressure);
+    const advantage = loadout.advantage || "even";
+    loadoutStrip.className = `loadout-strip ${advantage} ${pressureValue >= 70 ? "hot" : ""}`;
+    loadoutLabel.textContent = loadout.label || `${loadout.buy_class || "loadout"} - ${loadout.weapon_tier || "kit"}`;
+    loadoutTeamCredits.textContent = `$${teamCredits}`;
+    loadoutOpponentCredits.textContent = `opp $${opponentCredits}`;
+    loadoutPressure.textContent = `econ ${pressureValue}`;
+    loadoutTeamCreditsBar.style.setProperty("--v", clampPercent(teamCredits / 90));
+    loadoutArmorBar.style.setProperty("--v", clampPercent(loadout.armor_level));
+    loadoutUtilityBar.style.setProperty("--v", clampPercent(loadout.utility_remaining));
+    loadoutPressureBar.style.setProperty("--v", pressureValue);
+  }
+
   function renderCausality(frame, currentStep) {
     const features = currentStep?.observation_features || {};
     const actionContext = currentStep?.action_context || {};
     const components = currentStep?.reward_components || {};
-    const featureKeys = ["own_zone", "target_zone", "team_pressure", "risk_index", "objective_pressure", "combat_window", "top_trait"];
+    const featureKeys = ["own_zone", "target_zone", "team_pressure", "risk_index", "objective_pressure", "combat_window", "economy_pressure", "top_trait"];
     observationFeatures.innerHTML = "";
     featureKeys.forEach((key) => {
       const chip = document.createElement("div");
@@ -1679,6 +1806,7 @@
     renderCombat(frame);
     renderEvents(frame);
     renderObjective(frame);
+    renderLoadout(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     renderCausality(frame, currentStep);
     document.querySelectorAll(".marker").forEach((marker) => {
