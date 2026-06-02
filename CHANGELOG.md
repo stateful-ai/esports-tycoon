@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a deterministic Week 11 prep screen and prep-allocation artifact.
 - Added dedicated Week 11 prep-room environment art for the Week 11 prep flow.
 - Added a deterministic Week 11 scrim screen and prep-to-scrim protocol artifact.
+- Added dedicated Week 11 scrim-room environment art for the Week 11 scrim flow.
 
 ### Changed
 ### Fixed
