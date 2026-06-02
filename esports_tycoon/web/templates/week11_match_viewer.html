@@ -466,7 +466,7 @@
     padding: 0.65rem;
     margin-top: 0.7rem;
   }
-  .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes {
+  .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes {
     display: grid;
     gap: 0.45rem;
   }
@@ -475,6 +475,10 @@
   }
   .reward-components {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
+  .action-mask {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
   .zone-control {
@@ -489,37 +493,51 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
-  .cause-chip, .reward-component, .zone-card, .utility-chip, .duel-chip {
+  .cause-chip, .reward-component, .action-chip, .zone-card, .utility-chip, .duel-chip {
     border: 1px solid rgba(187, 203, 205, 0.15);
     background: rgba(8, 13, 18, 0.82);
     padding: 0.42rem;
     min-width: 0;
   }
-  .cause-chip span, .reward-component span, .zone-card span, .utility-chip span, .duel-chip span {
+  .action-chip {
+    opacity: 0.48;
+  }
+  .action-chip.legal {
+    opacity: 1;
+    border-color: rgba(38, 217, 199, 0.34);
+  }
+  .action-chip.selected {
+    border-color: rgba(255, 210, 122, 0.72);
+    background: rgba(255, 210, 122, 0.08);
+  }
+  .cause-chip span, .reward-component span, .action-chip span, .zone-card span, .utility-chip span, .duel-chip span {
     display: block;
     color: #95a3a5;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.66rem;
     text-transform: uppercase;
   }
-  .cause-chip strong, .reward-component strong, .zone-card strong, .utility-chip strong, .duel-chip strong {
+  .cause-chip strong, .reward-component strong, .action-chip strong, .zone-card strong, .utility-chip strong, .duel-chip strong {
     display: block;
     color: #eef4f2;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.82rem;
     overflow-wrap: anywhere;
   }
-  .component-bar, .zone-bar, .utility-bar, .duel-bar {
+  .component-bar, .action-bar, .zone-bar, .utility-bar, .duel-bar {
     height: 0.34rem;
     margin-top: 0.28rem;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(187, 203, 205, 0.12);
   }
-  .component-bar span, .zone-bar span, .utility-bar span, .duel-bar span {
+  .component-bar span, .action-bar span, .zone-bar span, .utility-bar span, .duel-bar span {
     display: block;
     height: 100%;
     width: calc(var(--v) * 1%);
     background: linear-gradient(90deg, #26d9c7, #f4c950);
+  }
+  .action-bar.masked span {
+    background: linear-gradient(90deg, #4a5358, #6a7277);
   }
   .component-bar.negative span {
     background: linear-gradient(90deg, #ff7666, #f4c950);
@@ -774,7 +792,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -784,7 +802,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
-    .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .action-mask, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -874,6 +892,7 @@
         <div class="panel-kicker">Causality</div>
         <div class="causality-grid" id="observation-features"></div>
         <div class="reward-components" id="reward-components"></div>
+        <div class="action-mask" id="action-mask"></div>
         <div class="zone-control" id="zone-control"></div>
         <div class="utility-stack" id="utility-stack"></div>
         <div class="duel-lanes" id="duel-lanes"></div>
@@ -1085,6 +1104,7 @@
   const eventLayer = document.getElementById("event-layer");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
+  const actionMask = document.getElementById("action-mask");
   const zoneControl = document.getElementById("zone-control");
   const utilityStack = document.getElementById("utility-stack");
   const duelLanes = document.getElementById("duel-lanes");
@@ -1194,6 +1214,23 @@
     });
   }
 
+  function renderActionMask(currentStep) {
+    actionMask.innerHTML = "";
+    const candidates = currentStep?.candidate_actions || [];
+    candidates.forEach((candidate) => {
+      const score = Math.max(0, Math.min(100, Number(candidate.score) || 0));
+      const chip = document.createElement("div");
+      chip.className = `action-chip ${candidate.legal ? "legal" : "masked"} ${candidate.action === currentStep?.action ? "selected" : ""}`;
+      chip.title = `${candidate.reason || "candidate action"} · ${candidate.mask_reason || "mask"}`;
+      chip.innerHTML = `
+        <span>${candidate.legal ? "legal" : "masked"} · ${candidate.mask_reason || "mask"}</span>
+        <strong>${labelFor(candidate.action || "action")}</strong>
+        <div class="action-bar ${candidate.legal ? "" : "masked"}"><span style="--v: ${score};"></span></div>
+      `;
+      actionMask.appendChild(chip);
+    });
+  }
+
   function renderCausality(frame, currentStep) {
     const features = currentStep?.observation_features || {};
     const actionContext = currentStep?.action_context || {};
@@ -1219,6 +1256,7 @@
       `;
       rewardComponents.appendChild(item);
     });
+    renderActionMask(currentStep);
 
     zoneControl.innerHTML = "";
     Object.entries(frame.zone_control || {}).forEach(([key, value]) => {
