@@ -44,6 +44,43 @@ class TestWebApp(unittest.TestCase):
         self.client.post("/prematch", data={"team_talk": team_talk})
         self.client.post("/fallout", data={"fallout_post": fallout})
 
+    def _play_to_week11_match_result(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+        self.client.post("/week9/match/result")
+        self.client.post("/week10/fallout", data={"week10_fallout": "raise_standards"})
+        self.client.post("/week10/prep", data={"week10_prep": "roster_reps"})
+        self.client.post("/week10/scrim", data={"week10_scrim": "stress_execution"})
+        self.client.post(
+            "/week10/match",
+            data={"week10_match_plan": "week10_plan_press_advantage"},
+        )
+        self.client.post("/week10/match/result")
+        self.client.post(
+            "/week10/post-match-review",
+            data={"week10_post_match_review": "bank_pattern"},
+        )
+        self.client.post("/week11/setup", data={"week11_setup": "lean_into_carry"})
+        self.client.post("/week11/prep", data={"week11_prep": "build_edge_lane"})
+        self.client.post("/week11/scrim", data={"week11_scrim": "repeat_edge"})
+        self.client.post("/week11/match", data={"week11_match_plan": "trust_the_read"})
+        self.client.post("/week11/match/result")
+        return next(self.output_root.glob("wk6-*"))
+
     def test_manager_view_and_feed_served_by_one_app(self):
         briefing = self.client.get("/")
         self.assertEqual(briefing.status_code, 200)
@@ -74,6 +111,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_match_resp.status_code, 200)
         self.assertEqual(week11_match_resp.mimetype, "image/webp")
         self.assertTrue(week11_match_resp.data.startswith(b"RIFF"))
+
+        week11_arena_resp = self.client.get("/static/art/week11-match-arena.webp")
+        self.assertEqual(week11_arena_resp.status_code, 200)
+        self.assertEqual(week11_arena_resp.mimetype, "image/webp")
+        self.assertTrue(week11_arena_resp.data.startswith(b"RIFF"))
 
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
@@ -1441,8 +1483,85 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"scoreline": "2-0"', result_json)
         self.assertIn('"result_basis":', result_json)
         self.assertIn('"causal_chain":', result_json)
-        self.assertIn('"stops_before": "week11_post_match_review"', result_json)
-        self.assertIn('"next_artifact": null', result_json)
+        self.assertIn('"stops_before": "week11_match_sim"', result_json)
+        self.assertIn('"next_artifact": "week11_match_sim.json"', result_json)
+
+    def test_week11_match_viewer_consumes_result_and_writes_replay(self):
+        run_dir = self._play_to_week11_match_result()
+
+        page = self.client.get("/week11/match/viewer")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 tactical sim", page.data)
+        self.assertIn(b"/static/art/week11-match-arena.webp", page.data)
+        self.assertIn(b"Generate replay artifact", page.data)
+        self.assertIn(b"entry_pressure_sprinter", page.data)
+        self.assertIn(b"structured_default_caller", page.data)
+        self.assertIn(b"skill_epoch_proxy", page.data)
+        self.assertIn(b"observation_space", page.data)
+        self.assertFalse((run_dir / "week11_match_sim.json").exists())
+
+        locked = self.client.post("/week11/match/viewer")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Replay artifact locked", locked.data)
+        self.assertIn(b"week11_match_sim.json", locked.data)
+        self.assertIn(b"scenario_style_vex_high_tempo_entry", locked.data)
+
+        replay_json = (run_dir / "week11_match_sim.json").read_text(encoding="utf-8")
+        self.assertIn('"week11_match_result": "week11_match_result.json"', replay_json)
+        self.assertIn('"source_artifact": "week11_match_result.json"', replay_json)
+        self.assertIn('"checkpoint": "week11_match_sim"', replay_json)
+        self.assertIn('"selected_plan": "trust_the_read"', replay_json)
+        self.assertIn('"outcome_id": "read_trusted"', replay_json)
+        self.assertIn('"agents":', replay_json)
+        self.assertIn('"frames":', replay_json)
+        self.assertIn('"steps":', replay_json)
+        self.assertIn('"rl_contract":', replay_json)
+        self.assertIn('"action_space":', replay_json)
+        self.assertIn('"reward_fields":', replay_json)
+        self.assertIn('"skill_epoch_proxy":', replay_json)
+        self.assertIn('"next_artifact": null', replay_json)
+
+    def test_week11_match_viewer_requires_result_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+        self.client.post("/week9/match/result")
+        self.client.post("/week10/fallout", data={"week10_fallout": "raise_standards"})
+        self.client.post("/week10/prep", data={"week10_prep": "roster_reps"})
+        self.client.post("/week10/scrim", data={"week10_scrim": "stress_execution"})
+        self.client.post(
+            "/week10/match",
+            data={"week10_match_plan": "week10_plan_press_advantage"},
+        )
+        self.client.post("/week10/match/result")
+        self.client.post(
+            "/week10/post-match-review",
+            data={"week10_post_match_review": "bank_pattern"},
+        )
+        self.client.post("/week11/setup", data={"week11_setup": "lean_into_carry"})
+        self.client.post("/week11/prep", data={"week11_prep": "build_edge_lane"})
+        self.client.post("/week11/scrim", data={"week11_scrim": "repeat_edge"})
+        self.client.post("/week11/match", data={"week11_match_plan": "trust_the_read"})
+
+        page = self.client.get("/week11/match/viewer")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 match result required", page.data)
+        self.assertIn(b"week11_match_result.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week11_match_sim.json").exists())
 
     def test_week11_match_result_requires_match_plan_artifact(self):
         self.client.post(

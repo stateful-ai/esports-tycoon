@@ -215,6 +215,7 @@ from esports_tycoon.runner.week11 import (
     WEEK11_MATCH_PLAN_CHOICES,
     WEEK11_MATCH_PLAN_FILENAME,
     WEEK11_MATCH_RESULT_FILENAME,
+    WEEK11_MATCH_SIM_FILENAME,
     WEEK11_MATCH_OUTCOMES,
     WEEK11_SETUP_CHOICES,
     WEEK11_SETUP_FILENAME,
@@ -252,6 +253,18 @@ from esports_tycoon.runner.week11 import (
     week11_scrim_plan,
     week11_setup_from_json,
     week11_setup_plan,
+)
+from esports_tycoon.runner.week11_match_sim import (
+    Week11MatchSimulation,
+    Week11SimAgent,
+    Week11SimAgentState,
+    Week11SimFrame,
+    Week11SimStep,
+    Week11SimTraitProfile,
+    render_week11_match_sim_json,
+    resolve_week11_match_simulation,
+    week11_match_sim_from_json,
+    week11_match_sim_to_dict,
 )
 
 __all__ = [
@@ -373,6 +386,7 @@ __all__ = [
     "WEEK11_MATCH_PLAN_FILENAME",
     "WEEK11_MATCH_PLAN_CHOICES",
     "WEEK11_MATCH_RESULT_FILENAME",
+    "WEEK11_MATCH_SIM_FILENAME",
     "WEEK11_MATCH_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
@@ -439,6 +453,12 @@ __all__ = [
     "Week11MatchPlanPreview",
     "Week11MatchPlanLock",
     "Week11MatchResultLock",
+    "Week11MatchSimulation",
+    "Week11SimAgent",
+    "Week11SimAgentState",
+    "Week11SimFrame",
+    "Week11SimStep",
+    "Week11SimTraitProfile",
     "week10_fallout_plan",
     "resolve_week10_fallout",
     "week10_fallout_from_json",
@@ -481,4 +501,8 @@ __all__ = [
     "resolve_week11_match_result",
     "week11_match_result_from_json",
     "render_week11_match_result_json",
+    "resolve_week11_match_simulation",
+    "week11_match_sim_from_json",
+    "week11_match_sim_to_dict",
+    "render_week11_match_sim_json",
 ]

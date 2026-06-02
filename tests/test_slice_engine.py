@@ -54,6 +54,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_scrim_json,
     render_week11_match_plan_json,
     render_week11_match_result_json,
+    render_week11_match_sim_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -77,6 +78,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_scrim,
     resolve_week11_match_plan,
     resolve_week11_match_result,
+    resolve_week11_match_simulation,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -103,6 +105,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_match_plan_from_json,
     week11_match_plan_preview,
     week11_match_result_from_json,
+    week11_match_sim_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2229,7 +2232,7 @@ class TestWeek11MatchResult(_Fixture):
 
                 self.assertEqual(result.outcome_id, outcome_id)
 
-    def test_week11_match_result_artifact_sources_plan_and_ends_slice(self):
+    def test_week11_match_result_artifact_sources_plan_and_hands_off_to_sim(self):
         result = resolve_week11_match_result(self._plans_by_selection()["trust_the_read"])
         payload = render_week11_match_result_json(result)
 
@@ -2241,8 +2244,8 @@ class TestWeek11MatchResult(_Fixture):
         self.assertIn('"outcome_id": "read_trusted"', payload)
         self.assertIn('"result_basis":', payload)
         self.assertIn('"causal_chain":', payload)
-        self.assertIn('"stops_before": "week11_post_match_review"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week11_match_sim"', payload)
+        self.assertIn('"next_artifact": "week11_match_sim.json"', payload)
 
     def test_week11_match_result_render_parse_round_trip_is_stable(self):
         result = resolve_week11_match_result(self._plans_by_selection()["trust_the_read"])
@@ -2251,6 +2254,65 @@ class TestWeek11MatchResult(_Fixture):
 
         self.assertEqual(parsed, result)
         self.assertEqual(render_week11_match_result_json(parsed), payload)
+
+
+class TestWeek11MatchSimulation(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        return TestWeek11MatchPlan._result_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+
+    def _result(self):
+        plan = TestWeek11MatchResult._plans_by_selection(self)["trust_the_read"]
+        return resolve_week11_match_result(plan)
+
+    def test_week11_match_simulation_exports_rl_shaped_replay(self):
+        result = self._result()
+        replay = resolve_week11_match_simulation(
+            result,
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        payload = render_week11_match_sim_json(replay)
+
+        self.assertEqual(replay.selected_plan, "trust_the_read")
+        self.assertEqual(replay.outcome_id, "read_trusted")
+        self.assertEqual(len(replay.frames), 8)
+        self.assertEqual(len(replay.steps), 8)
+        self.assertEqual(len([agent for agent in replay.agents if agent.side == "overcast"]), 5)
+        self.assertIn("entry_pressure_sprinter", {agent.policy_id for agent in replay.agents})
+        self.assertIn('"week11_match_result": "week11_match_result.json"', payload)
+        self.assertIn('"checkpoint": "week11_match_sim"', payload)
+        self.assertIn('"observation_space":', payload)
+        self.assertIn('"action_space":', payload)
+        self.assertIn('"reward_fields":', payload)
+        self.assertIn('"skill_epoch_proxy":', payload)
+
+    def test_week11_match_simulation_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        payload = render_week11_match_sim_json(replay)
+        parsed = week11_match_sim_from_json(payload)
+
+        self.assertEqual(parsed, replay)
+        self.assertEqual(render_week11_match_sim_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

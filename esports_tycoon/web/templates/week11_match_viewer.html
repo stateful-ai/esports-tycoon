@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+{% block title %}Week 11 match viewer - {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1280px; }
+  .viewer-shell {
+    color: #eef4f2;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(31, 214, 181, 0.16), transparent 24rem),
+      linear-gradient(135deg, #0d1117 0%, #15120f 52%, #10161a 100%);
+    border: 1px solid #31404a;
+    padding: clamp(0.8rem, 1.5vw, 1.25rem);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+  }
+  .viewer-shell h1, .viewer-shell h2, .viewer-shell p { color: inherit; }
+  .viewer-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(187, 203, 205, 0.18);
+  }
+  .viewer-title h1 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.4vw, 2.15rem);
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+  .viewer-title .sub {
+    margin: 0.35rem 0 0;
+    color: #a7b4b5;
+    max-width: 70ch;
+  }
+  .viewer-chips, .control-row, .contract-grid, .timeline-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .viewer-chips { justify-content: flex-end; }
+  .data-chip {
+    border: 1px solid rgba(187, 203, 205, 0.22);
+    background: rgba(13, 17, 23, 0.7);
+    color: #d5dcdd;
+    padding: 0.2rem 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #28d6a0; color: #9ff2d8; }
+  .data-chip.warn { border-color: #e1b355; color: #ffd27a; }
+  .data-chip.hot { border-color: #ff7666; color: #ffc0ba; }
+  .viewer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: start;
+  }
+  .arena-panel, .hud-panel, .agent-panel, .rl-panel {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(10, 13, 18, 0.68);
+    min-width: 0;
+  }
+  .arena-panel { padding: 0.75rem; }
+  .arena {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid rgba(239, 244, 242, 0.16);
+    background:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+      url("{{ url_for('static', filename='art/week11-match-arena.webp') }}");
+    background-size: 28px 28px, 28px 28px, cover;
+    background-position: center;
+  }
+  .arena::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(115deg, rgba(33, 214, 181, 0.12), transparent 32%),
+      linear-gradient(290deg, rgba(255, 118, 102, 0.12), transparent 34%);
+    pointer-events: none;
+  }
+  .site-ring {
+    position: absolute;
+    width: 18%;
+    aspect-ratio: 1;
+    border: 2px solid rgba(255, 210, 122, 0.75);
+    transform: rotate(45deg);
+    background: rgba(255, 210, 122, 0.06);
+  }
+  .site-ring.a { left: 60%; top: 26%; }
+  .site-ring.b { left: 38%; top: 58%; border-color: rgba(33, 214, 181, 0.72); }
+  .marker {
+    --marker: #21d6b5;
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: clamp(1.35rem, 2.1vw, 1.75rem);
+    height: clamp(1.35rem, 2.1vw, 1.75rem);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.82);
+    background: var(--marker);
+    color: #081015;
+    font-weight: 800;
+    font-size: 0.72rem;
+    box-shadow: 0 0 0 5px rgba(0,0,0,0.25), 0 0 24px color-mix(in srgb, var(--marker), transparent 40%);
+    transition: left 260ms ease, top 260ms ease, opacity 180ms ease, transform 180ms ease;
+    z-index: 3;
+  }
+  .marker[data-side="opponent"] {
+    --marker: #ff7666;
+    color: #190807;
+  }
+  .marker.down {
+    opacity: 0.34;
+    transform: translate(-50%, -50%) scale(0.76);
+    filter: grayscale(0.65);
+  }
+  .marker.focus {
+    box-shadow: 0 0 0 5px rgba(255, 210, 122, 0.35), 0 0 30px rgba(255, 210, 122, 0.6);
+  }
+  .event-strip {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.8rem 0 0.15rem;
+  }
+  .clock {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.45rem;
+    color: #ffd27a;
+  }
+  .event-title { font-weight: 800; overflow-wrap: anywhere; }
+  .event-detail { color: #afbcbd; font-size: 0.92rem; overflow-wrap: anywhere; }
+  .pressure {
+    width: min(16rem, 100%);
+    height: 0.65rem;
+    border: 1px solid rgba(187, 203, 205, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .pressure span {
+    display: block;
+    height: 100%;
+    width: calc(var(--pressure) * 1%);
+    background: linear-gradient(90deg, #21d6b5, #ffd27a, #ff7666);
+  }
+  .hud-panel { padding: 0.85rem; }
+  .panel-kicker {
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom: 0.35rem;
+  }
+  .metric-stack {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .metric {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr) 2.5rem;
+    gap: 0.5rem;
+    align-items: center;
+    color: #dce7e8;
+    font-size: 0.88rem;
+  }
+  .bar {
+    height: 0.5rem;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(187, 203, 205, 0.15);
+  }
+  .bar span {
+    display: block;
+    width: calc(var(--v) * 1%);
+    height: 100%;
+    background: #21d6b5;
+  }
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+  .agent-panel { padding: 0.75rem; }
+  .agent-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+  }
+  .agent-head strong { overflow-wrap: anywhere; }
+  .agent-role {
+    color: #ffd27a;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+  }
+  .agent-policy {
+    color: #a7b4b5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.76rem;
+    overflow-wrap: anywhere;
+  }
+  .trait-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.55rem;
+  }
+  .trait-tags span {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    padding: 0.1rem 0.35rem;
+    color: #c9d3d4;
+    font-size: 0.72rem;
+  }
+  .rl-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .rl-panel { padding: 0.85rem; }
+  .step-list {
+    display: grid;
+    gap: 0.45rem;
+    max-height: 18rem;
+    overflow: auto;
+    padding-right: 0.25rem;
+  }
+  .step-row {
+    display: grid;
+    grid-template-columns: 2.2rem 6.5rem minmax(0, 1fr) 3rem;
+    gap: 0.5rem;
+    align-items: start;
+    color: #cedadb;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+  .step-row span { overflow-wrap: anywhere; }
+  .control-row { margin-top: 0.65rem; }
+  .viewer-shell .btn {
+    border-radius: 0;
+    background: #eef4f2;
+    color: #081015;
+    border: 1px solid #eef4f2;
+  }
+  .viewer-shell .btn.secondary {
+    background: transparent;
+    color: #eef4f2;
+    border-color: rgba(187, 203, 205, 0.32);
+  }
+  .timeline-row { margin-top: 0.7rem; }
+  .tick-button {
+    width: 2.2rem;
+    height: 2rem;
+    border: 1px solid rgba(187, 203, 205, 0.2);
+    background: rgba(255,255,255,0.04);
+    color: #e6eeee;
+    cursor: pointer;
+    font: inherit;
+  }
+  .tick-button.active {
+    border-color: #ffd27a;
+    color: #ffd27a;
+    background: rgba(255, 210, 122, 0.12);
+  }
+  @media (max-width: 980px) {
+    .viewer-top, .viewer-grid, .rl-layout { grid-template-columns: 1fr; }
+    .viewer-chips { justify-content: flex-start; }
+    .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .event-strip { grid-template-columns: 1fr; }
+    .pressure { width: 100%; }
+    .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .agent-grid { grid-template-columns: 1fr; }
+    .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 11 match result required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week11_match_result') }}">Back to Week 11 result</a>
+  </div>
+</div>
+{% elif replay and match_result %}
+<div class="viewer-shell">
+  <div class="viewer-top">
+    <div class="viewer-title">
+      <h1>Week 11 tactical sim</h1>
+      <p class="sub">{{ replay.viewer_summary[0] }}</p>
+    </div>
+    <div class="viewer-chips">
+      <span class="data-chip good">{{ replay.result_tier }} {{ replay.scoreline }}</span>
+      <span class="data-chip">plan {{ replay.selected_plan }}</span>
+      <span class="data-chip warn">seed {{ replay.seed }}</span>
+      <span class="data-chip hot">{{ replay.sim_mode }}</span>
+    </div>
+  </div>
+
+  <div class="viewer-grid">
+    <section class="arena-panel">
+      <div class="arena" id="arena">
+        <div class="site-ring a"></div>
+        <div class="site-ring b"></div>
+        {% for state in replay.frames[0].states %}
+          <span class="marker" data-agent="{{ state.agent_id }}" style="--x: {{ state.x }}; --y: {{ state.y }};">{{ state.agent_id|first|upper }}</span>
+        {% endfor %}
+      </div>
+      <div class="event-strip">
+        <div class="clock" id="frame-clock">{{ replay.frames[0].clock }}</div>
+        <div>
+          <div class="event-title" id="frame-title">{{ replay.frames[0].event_title }}</div>
+          <div class="event-detail" id="frame-detail">{{ replay.frames[0].event_detail }}</div>
+        </div>
+        <div class="pressure" aria-label="team pressure"><span id="pressure-bar" style="--pressure: {{ replay.frames[0].team_pressure }};"></span></div>
+      </div>
+      <div class="control-row">
+        <button class="btn secondary" type="button" id="prev-frame">Prev</button>
+        <button class="btn" type="button" id="play-frame">Play</button>
+        <button class="btn secondary" type="button" id="next-frame">Next</button>
+        {% if week11_match_sim_path %}
+          <span class="data-chip good">Replay artifact locked</span>
+          <span class="data-chip">{{ week11_match_sim_path }}</span>
+        {% else %}
+          <form method="post" action="{{ url_for('week11_match_viewer') }}">
+            <button class="btn" type="submit">Generate replay artifact</button>
+          </form>
+        {% endif %}
+      </div>
+      <div class="timeline-row" id="timeline">
+        {% for frame in replay.frames %}
+          <button class="tick-button{% if loop.first %} active{% endif %}" type="button" data-tick="{{ loop.index0 }}">{{ frame.tick }}</button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <aside class="hud-panel">
+      <div class="panel-kicker">Focused agent</div>
+      <h2 id="agent-name" style="margin: 0 0 0.2rem; border: 0; padding: 0;">{{ replay.agents[0].name }}</h2>
+      <div class="agent-policy" id="agent-policy">{{ replay.agents[0].policy_id }}</div>
+      <div class="metric-stack" style="margin-top: 0.8rem;">
+        <div class="metric"><span>Aim</span><div class="bar"><span id="metric-aim" style="--v: {{ replay.agents[0].trait_profile.aim }};"></span></div><span id="value-aim">{{ replay.agents[0].trait_profile.aim }}</span></div>
+        <div class="metric"><span>Discipline</span><div class="bar"><span id="metric-discipline" style="--v: {{ replay.agents[0].trait_profile.discipline }};"></span></div><span id="value-discipline">{{ replay.agents[0].trait_profile.discipline }}</span></div>
+        <div class="metric"><span>Tempo</span><div class="bar"><span id="metric-tempo" style="--v: {{ replay.agents[0].trait_profile.tempo }};"></span></div><span id="value-tempo">{{ replay.agents[0].trait_profile.tempo }}</span></div>
+        <div class="metric"><span>Utility</span><div class="bar"><span id="metric-utility" style="--v: {{ replay.agents[0].trait_profile.utility }};"></span></div><span id="value-utility">{{ replay.agents[0].trait_profile.utility }}</span></div>
+        <div class="metric"><span>Clutch</span><div class="bar"><span id="metric-clutch" style="--v: {{ replay.agents[0].trait_profile.clutch }};"></span></div><span id="value-clutch">{{ replay.agents[0].trait_profile.clutch }}</span></div>
+        <div class="metric"><span>Risk</span><div class="bar"><span id="metric-risk" style="--v: {{ replay.agents[0].trait_profile.risk }};"></span></div><span id="value-risk">{{ replay.agents[0].trait_profile.risk }}</span></div>
+      </div>
+      <div class="viewer-chips" style="justify-content: flex-start; margin-top: 0.8rem;">
+        <span class="data-chip" id="agent-role">{{ replay.agents[0].role }}</span>
+        <span class="data-chip warn" id="agent-epoch">epoch {{ replay.agents[0].skill_epoch_proxy }}</span>
+        <span class="data-chip" id="agent-scenario">{{ replay.agents[0].scenario_archetype }}</span>
+      </div>
+    </aside>
+  </div>
+
+  <div class="agent-grid">
+    {% for agent in replay.agents if agent.side == "overcast" %}
+      <section class="agent-panel">
+        <div class="agent-head">
+          <strong>{{ agent.name }}</strong>
+          <span class="agent-role">{{ agent.role }}</span>
+        </div>
+        <div class="agent-policy">{{ agent.policy_id }}</div>
+        <div class="viewer-chips" style="justify-content: flex-start; margin-top: 0.5rem;">
+          <span class="data-chip">epoch {{ agent.skill_epoch_proxy }}</span>
+          <span class="data-chip">{{ agent.scenario_archetype }}</span>
+        </div>
+        <div class="trait-tags">
+          {% for trait in agent.traits %}
+            {% if loop.index <= 4 %}<span>{{ trait }}</span>{% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  <div class="rl-layout">
+    <section class="rl-panel">
+      <div class="panel-kicker">RL trajectory</div>
+      <div class="step-list" id="step-list">
+        {% for step in replay.steps %}
+          <div class="step-row">
+            <span>{{ step.tick }}</span>
+            <span>{{ step.agent_id }}</span>
+            <span>{{ step.action }}</span>
+            <span>{{ step.reward }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="rl-panel">
+      <div class="panel-kicker">Training contract</div>
+      <div class="contract-grid">
+        <span class="data-chip">observation_space</span>
+        <span class="data-chip">action_space</span>
+        <span class="data-chip">reward_fields</span>
+        <span class="data-chip">policy_hook</span>
+        <span class="data-chip warn">skill_epoch_proxy</span>
+      </div>
+      <div class="step-list" style="margin-top: 0.8rem;">
+        {% for note in replay.training_notes %}
+          <div class="step-row" style="grid-template-columns: 1fr;"><span>{{ note }}</span></div>
+        {% endfor %}
+      </div>
+      <div class="control-row">
+        <a class="btn secondary" href="{{ url_for('week11_match_result') }}">Back to result</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script type="application/json" id="replay-data">{{ replay_json|safe }}</script>
+<script>
+(() => {
+  const payload = JSON.parse(document.getElementById("replay-data").textContent).week11_match_sim;
+  const agents = Object.fromEntries(payload.agents.map((agent) => [agent.agent_id, agent]));
+  const frames = payload.frames;
+  const steps = payload.steps;
+  let index = 0;
+  let timer = null;
+
+  const title = document.getElementById("frame-title");
+  const detail = document.getElementById("frame-detail");
+  const clock = document.getElementById("frame-clock");
+  const pressure = document.getElementById("pressure-bar");
+  const agentName = document.getElementById("agent-name");
+  const agentPolicy = document.getElementById("agent-policy");
+  const agentRole = document.getElementById("agent-role");
+  const agentEpoch = document.getElementById("agent-epoch");
+  const agentScenario = document.getElementById("agent-scenario");
+  const stepList = document.getElementById("step-list");
+  const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
+
+  function setMetric(name, value) {
+    document.getElementById(`metric-${name}`).style.setProperty("--v", value);
+    document.getElementById(`value-${name}`).textContent = value;
+  }
+
+  function renderAgent(agent) {
+    agentName.textContent = agent.name;
+    agentPolicy.textContent = agent.policy_id;
+    agentRole.textContent = agent.role;
+    agentEpoch.textContent = `epoch ${agent.skill_epoch_proxy}`;
+    agentScenario.textContent = agent.scenario_archetype;
+    setMetric("aim", agent.trait_profile.aim);
+    setMetric("discipline", agent.trait_profile.discipline);
+    setMetric("tempo", agent.trait_profile.tempo);
+    setMetric("utility", agent.trait_profile.utility);
+    setMetric("clutch", agent.trait_profile.clutch);
+    setMetric("risk", agent.trait_profile.risk);
+  }
+
+  function renderSteps(tick) {
+    stepList.innerHTML = "";
+    steps
+      .filter((step) => step.tick <= tick)
+      .forEach((step) => {
+        const row = document.createElement("div");
+        row.className = "step-row";
+        row.innerHTML = `<span>${step.tick}</span><span>${step.agent_id}</span><span>${step.action}</span><span>${step.reward}</span>`;
+        stepList.appendChild(row);
+      });
+  }
+
+  function renderFrame(nextIndex) {
+    index = (nextIndex + frames.length) % frames.length;
+    const frame = frames[index];
+    title.textContent = frame.event_title;
+    detail.textContent = frame.event_detail;
+    clock.textContent = frame.clock;
+    pressure.style.setProperty("--pressure", frame.team_pressure);
+    document.querySelectorAll(".marker").forEach((marker) => {
+      const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
+      const agent = agents[marker.dataset.agent];
+      if (!state || !agent) return;
+      marker.style.setProperty("--x", state.x);
+      marker.style.setProperty("--y", state.y);
+      marker.dataset.side = agent.side;
+      marker.textContent = agent.name.slice(0, 1).toUpperCase();
+      marker.classList.toggle("down", !state.alive);
+      marker.classList.toggle("focus", state.agent_id === frame.focus_agent);
+      marker.title = `${agent.name} - ${state.intent}`;
+    });
+    renderAgent(agents[frame.focus_agent]);
+    renderSteps(frame.tick);
+    tickButtons.forEach((button) => button.classList.toggle("active", Number(button.dataset.tick) === index));
+  }
+
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    document.getElementById("play-frame").textContent = "Play";
+  }
+
+  document.getElementById("prev-frame").addEventListener("click", () => {
+    stop();
+    renderFrame(index - 1);
+  });
+  document.getElementById("next-frame").addEventListener("click", () => {
+    stop();
+    renderFrame(index + 1);
+  });
+  document.getElementById("play-frame").addEventListener("click", (event) => {
+    if (timer) {
+      stop();
+      return;
+    }
+    event.currentTarget.textContent = "Pause";
+    timer = setInterval(() => renderFrame(index + 1), 900);
+  });
+  tickButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      stop();
+      renderFrame(Number(button.dataset.tick));
+    });
+  });
+  renderFrame(0);
+})();
+</script>
+{% endif %}
+{% endblock %}
