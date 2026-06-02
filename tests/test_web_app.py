@@ -117,6 +117,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_arena_resp.mimetype, "image/webp")
         self.assertTrue(week11_arena_resp.data.startswith(b"RIFF"))
 
+        week11_broadcast_arena_resp = self.client.get("/static/art/week11-broadcast-arena.webp")
+        self.assertEqual(week11_broadcast_arena_resp.status_code, 200)
+        self.assertEqual(week11_broadcast_arena_resp.mimetype, "image/webp")
+        self.assertTrue(week11_broadcast_arena_resp.data.startswith(b"RIFF"))
+
         for portrait in ("rook", "vex", "sable", "pixie", "coyote", "overcast-lineup"):
             with self.subTest(portrait=portrait):
                 resp = self.client.get(f"/static/art/portraits/{portrait}.webp")
@@ -1499,7 +1504,9 @@ class TestWebApp(unittest.TestCase):
         page = self.client.get("/week11/match/viewer")
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 11 tactical sim", page.data)
-        self.assertIn(b"/static/art/week11-match-arena.webp", page.data)
+        self.assertIn(b"/static/art/week11-broadcast-arena.webp", page.data)
+        self.assertIn(b"Broadcast overlay", page.data)
+        self.assertIn(b"alive-count", page.data)
         self.assertIn(b"/static/art/portraits/overcast-lineup.webp", page.data)
         self.assertIn(b"/static/art/portraits/vex.webp", page.data)
         self.assertIn(b"Generate replay artifact", page.data)
