@@ -153,6 +153,24 @@ class Week11SimEvent:
 
 
 @dataclass(frozen=True)
+class Week11SimThreatArc:
+    """One line-of-sight or trade-cover lane visible in the match viewer."""
+
+    arc_type: str
+    source_agent_id: str
+    target_agent_id: str
+    lane_id: str
+    x1: int
+    y1: int
+    x2: int
+    y2: int
+    threat_level: int
+    advantage: str
+    label: str
+    polarity: str
+
+
+@dataclass(frozen=True)
 class Week11SimFrame:
     """One replay frame for the match viewer."""
 
@@ -169,6 +187,7 @@ class Week11SimFrame:
     states: tuple[Week11SimAgentState, ...]
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
+    threat_arcs: tuple[Week11SimThreatArc, ...]
 
 
 @dataclass(frozen=True)
@@ -864,6 +883,137 @@ def _event_type(action: Week11SimAction) -> str:
     }[action]
 
 
+def _agent_state(
+    states: tuple[Week11SimAgentState, ...],
+    agent_id: str,
+) -> Week11SimAgentState | None:
+    return next((state for state in states if state.agent_id == agent_id), None)
+
+
+def _distance_score(left: Week11SimAgentState, right: Week11SimAgentState) -> int:
+    return abs(left.x - right.x) + abs(left.y - right.y)
+
+
+def _nearest_opponent_state(
+    *,
+    focus_state: Week11SimAgentState,
+    states: tuple[Week11SimAgentState, ...],
+    agent_lookup: dict[str, Week11SimAgent],
+) -> Week11SimAgentState | None:
+    focus_agent = agent_lookup.get(focus_state.agent_id)
+    if focus_agent is None:
+        return None
+    candidates = [
+        state
+        for state in states
+        if state.alive
+        and agent_lookup.get(state.agent_id) is not None
+        and agent_lookup[state.agent_id].side != focus_agent.side
+    ]
+    if not candidates:
+        return None
+    return min(candidates, key=lambda state: _distance_score(focus_state, state))
+
+
+def _arc_advantage(*, step: Week11SimStep, telemetry: Week11SimTelemetry) -> str:
+    if step.reward > 0 and telemetry.risk_index < 58:
+        return "overcast"
+    if step.reward < 0 or telemetry.risk_index >= 72:
+        return "opponent"
+    return "contested"
+
+
+def _arc_polarity(advantage: str) -> str:
+    if advantage == "overcast":
+        return "positive"
+    if advantage == "opponent":
+        return "negative"
+    return "watch"
+
+
+def _duel_threat_level(step: Week11SimStep, telemetry: Week11SimTelemetry) -> int:
+    reward_modifier = -10 if step.reward > 0 else 10 if step.reward < 0 else 0
+    return _clamp(
+        (telemetry.risk_index * 2 + max(0, 100 - telemetry.trade_window) + reward_modifier) // 3,
+        0,
+        100,
+    )
+
+
+def _threat_arc(
+    *,
+    arc_type: str,
+    source: Week11SimAgentState,
+    target: Week11SimAgentState,
+    threat_level: int,
+    advantage: str,
+    label: str,
+) -> Week11SimThreatArc:
+    lane_id = f"{_zone_id(source.x, source.y)}->{_zone_id(target.x, target.y)}"
+    return Week11SimThreatArc(
+        arc_type=arc_type,
+        source_agent_id=source.agent_id,
+        target_agent_id=target.agent_id,
+        lane_id=lane_id,
+        x1=source.x,
+        y1=source.y,
+        x2=target.x,
+        y2=target.y,
+        threat_level=threat_level,
+        advantage=advantage,
+        label=label,
+        polarity=_arc_polarity(advantage),
+    )
+
+
+def _frame_threat_arcs(
+    *,
+    step: Week11SimStep,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+    agent_lookup: dict[str, Week11SimAgent],
+) -> tuple[Week11SimThreatArc, ...]:
+    focus_state = _agent_state(states, step.agent_id)
+    if focus_state is None or not focus_state.alive:
+        return ()
+    arcs: list[Week11SimThreatArc] = []
+    opponent_state = _nearest_opponent_state(
+        focus_state=focus_state,
+        states=states,
+        agent_lookup=agent_lookup,
+    )
+    if opponent_state is not None:
+        advantage = _arc_advantage(step=step, telemetry=telemetry)
+        arcs.append(
+            _threat_arc(
+                arc_type="duel_pressure",
+                source=focus_state,
+                target=opponent_state,
+                threat_level=_duel_threat_level(step, telemetry),
+                advantage=advantage,
+                label=f"{step.action.replace('_', ' ')} sightline",
+            )
+        )
+    trade_partner_id = step.action_context.get("trade_partner", "")
+    trade_state = _agent_state(states, trade_partner_id)
+    if (
+        trade_state is not None
+        and trade_state.alive
+        and trade_state.agent_id != focus_state.agent_id
+    ):
+        arcs.append(
+            _threat_arc(
+                arc_type="trade_cover",
+                source=trade_state,
+                target=focus_state,
+                threat_level=_clamp(telemetry.trade_window, 0, 100),
+                advantage="overcast" if telemetry.trade_window >= 54 else "contested",
+                label=f"{trade_partner_id} cover window",
+            )
+        )
+    return tuple(arcs)
+
+
 def _frame_events(
     *,
     step: Week11SimStep,
@@ -916,6 +1066,7 @@ def _frames(
     )
     clocks = ("1:40", "1:18", "0:44", "0:00")
     round_lookup = {round_.round_id: round_ for round_ in rounds}
+    agent_lookup = {agent.agent_id: agent for agent in agents}
     frames = []
     step_by_tick = {step.tick: step for step in steps}
     for tick in range(12):
@@ -926,6 +1077,12 @@ def _frames(
         pressure = 50 + sum(s.reward for s in steps[: tick + 1])
         telemetry = _telemetry_for_step(step, round_, pressure=pressure, local_tick=local_tick)
         events = _frame_events(step=step, states=states, telemetry=telemetry)
+        threat_arcs = _frame_threat_arcs(
+            step=step,
+            states=states,
+            telemetry=telemetry,
+            agent_lookup=agent_lookup,
+        )
         frames.append(
             Week11SimFrame(
                 tick=tick,
@@ -941,6 +1098,7 @@ def _frames(
                 states=states,
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
+                threat_arcs=threat_arcs,
             )
         )
     return tuple(frames)
@@ -1132,6 +1290,23 @@ def _event_to_dict(event: Week11SimEvent) -> dict[str, Any]:
     }
 
 
+def _threat_arc_to_dict(arc: Week11SimThreatArc) -> dict[str, Any]:
+    return {
+        "arc_type": arc.arc_type,
+        "source_agent_id": arc.source_agent_id,
+        "target_agent_id": arc.target_agent_id,
+        "lane_id": arc.lane_id,
+        "x1": arc.x1,
+        "y1": arc.y1,
+        "x2": arc.x2,
+        "y2": arc.y2,
+        "threat_level": arc.threat_level,
+        "advantage": arc.advantage,
+        "label": arc.label,
+        "polarity": arc.polarity,
+    }
+
+
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
@@ -1147,6 +1322,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "states": [_state_to_dict(state) for state in frame.states],
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
+        "threat_arcs": [_threat_arc_to_dict(arc) for arc in frame.threat_arcs],
     }
 
 
@@ -1238,6 +1414,16 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
             "reward_component_fields": list(WEEK11_SIM_REWARD_FIELDS),
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
             "frame_event_unit": "frames[].events[]",
+            "threat_arc_unit": "frames[].threat_arcs[]",
+            "threat_arc_fields": [
+                "arc_type",
+                "source_agent_id",
+                "target_agent_id",
+                "lane_id",
+                "threat_level",
+                "advantage",
+                "polarity",
+            ],
             "policy_hook": "agent.policy_id + scenario_archetype + skill_epoch_proxy",
             "epoch_proxy_field": "agents[].skill_epoch_proxy",
             "telemetry_unit": "frames[].telemetry",
@@ -1755,6 +1941,29 @@ def _events_from_any(data: Any) -> tuple[Week11SimEvent, ...]:
     )
 
 
+def _threat_arcs_from_any(data: Any) -> tuple[Week11SimThreatArc, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimThreatArc(
+            arc_type=str(arc.get("arc_type", "")),
+            source_agent_id=str(arc.get("source_agent_id", "")),
+            target_agent_id=str(arc.get("target_agent_id", "")),
+            lane_id=str(arc.get("lane_id", "")),
+            x1=int(arc.get("x1", 0)),
+            y1=int(arc.get("y1", 0)),
+            x2=int(arc.get("x2", 0)),
+            y2=int(arc.get("y2", 0)),
+            threat_level=int(arc.get("threat_level", 0)),
+            advantage=str(arc.get("advantage", "")),
+            label=str(arc.get("label", "")),
+            polarity=str(arc.get("polarity", "")),
+        )
+        for arc in data
+        if isinstance(arc, dict)
+    )
+
+
 def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     """Parse a written ``week11_match_sim.json`` artifact."""
     try:
@@ -1852,6 +2061,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             ),
             zone_control=_int_dict_from_any(frame.get("zone_control")),
             events=_events_from_any(frame.get("events")),
+            threat_arcs=_threat_arcs_from_any(frame.get("threat_arcs")),
         )
         for frame in frames_raw
         if isinstance(frame, dict)

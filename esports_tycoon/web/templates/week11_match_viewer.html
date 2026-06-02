@@ -107,7 +107,7 @@
   .arena-panel { padding: 0.75rem; }
   .broadcast-rail {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.55rem;
     margin-bottom: 0.65rem;
   }
@@ -195,6 +195,35 @@
   .trail-polyline.opponent {
     stroke: rgba(255, 118, 102, 0.62);
     filter: drop-shadow(0 0 3px rgba(255, 118, 102, 0.35));
+  }
+  .threat-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: screen;
+  }
+  .threat-line {
+    stroke: rgba(255, 210, 122, 0.8);
+    stroke-width: 0.72;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px rgba(255, 210, 122, 0.42));
+  }
+  .threat-line.positive { stroke: rgba(38, 217, 199, 0.82); }
+  .threat-line.negative { stroke: rgba(255, 118, 102, 0.86); }
+  .threat-line.trade_cover {
+    stroke-dasharray: 2.4 2.4;
+    stroke-width: 0.55;
+  }
+  .threat-label {
+    fill: #fff4cc;
+    paint-order: stroke;
+    stroke: rgba(8, 16, 21, 0.95);
+    stroke-width: 0.9;
+    font: 2.2px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-anchor: middle;
   }
   .event-layer {
     position: absolute;
@@ -360,7 +389,7 @@
     padding: 0.65rem;
     margin-top: 0.7rem;
   }
-  .causality-grid, .reward-components, .zone-control {
+  .causality-grid, .reward-components, .zone-control, .duel-lanes {
     display: grid;
     gap: 0.45rem;
   }
@@ -375,33 +404,37 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
-  .cause-chip, .reward-component, .zone-card {
+  .duel-lanes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
+  .cause-chip, .reward-component, .zone-card, .duel-chip {
     border: 1px solid rgba(187, 203, 205, 0.15);
     background: rgba(8, 13, 18, 0.82);
     padding: 0.42rem;
     min-width: 0;
   }
-  .cause-chip span, .reward-component span, .zone-card span {
+  .cause-chip span, .reward-component span, .zone-card span, .duel-chip span {
     display: block;
     color: #95a3a5;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.66rem;
     text-transform: uppercase;
   }
-  .cause-chip strong, .reward-component strong, .zone-card strong {
+  .cause-chip strong, .reward-component strong, .zone-card strong, .duel-chip strong {
     display: block;
     color: #eef4f2;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.82rem;
     overflow-wrap: anywhere;
   }
-  .component-bar, .zone-bar {
+  .component-bar, .zone-bar, .duel-bar {
     height: 0.34rem;
     margin-top: 0.28rem;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(187, 203, 205, 0.12);
   }
-  .component-bar span, .zone-bar span {
+  .component-bar span, .zone-bar span, .duel-bar span {
     display: block;
     height: 100%;
     width: calc(var(--v) * 1%);
@@ -649,7 +682,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .causality-grid, .reward-components, .zone-control { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .zone-control, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -659,7 +692,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
-    .causality-grid, .reward-components, .zone-control { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .zone-control, .duel-lanes { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -707,11 +740,16 @@
           <span>Alive</span>
           <strong id="alive-count">5 / 5</strong>
         </div>
+        <div class="broadcast-stat warn">
+          <span>Duel</span>
+          <strong id="duel-pressure">clear</strong>
+        </div>
       </div>
       <div class="arena" id="arena">
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
         <svg class="trail-layer" id="trail-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <svg class="threat-layer" id="threat-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div class="event-layer" id="event-layer" aria-hidden="true"></div>
         {% for state in replay.frames[0].states %}
           <span
@@ -740,6 +778,7 @@
         <div class="causality-grid" id="observation-features"></div>
         <div class="reward-components" id="reward-components"></div>
         <div class="zone-control" id="zone-control"></div>
+        <div class="duel-lanes" id="duel-lanes"></div>
         <div class="policy-reason" id="policy-reason"></div>
       </div>
       <div class="telemetry-grid" aria-label="Tactical telemetry">
@@ -931,6 +970,7 @@
   const framePhase = document.getElementById("frame-phase");
   const broadcastFocus = document.getElementById("broadcast-focus");
   const aliveCount = document.getElementById("alive-count");
+  const duelPressure = document.getElementById("duel-pressure");
   const agentName = document.getElementById("agent-name");
   const agentPolicy = document.getElementById("agent-policy");
   const agentRole = document.getElementById("agent-role");
@@ -941,10 +981,12 @@
   const currentAction = document.getElementById("current-action");
   const currentReward = document.getElementById("current-reward");
   const trailLayer = document.getElementById("trail-layer");
+  const threatLayer = document.getElementById("threat-layer");
   const eventLayer = document.getElementById("event-layer");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
   const zoneControl = document.getElementById("zone-control");
+  const duelLanes = document.getElementById("duel-lanes");
   const policyReason = document.getElementById("policy-reason");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
@@ -982,6 +1024,41 @@
       pulse.style.setProperty("--y", event.y || 50);
       pulse.style.setProperty("--r", event.radius || 10);
       eventLayer.appendChild(pulse);
+    });
+  }
+
+  function renderThreatArcs(frame) {
+    threatLayer.innerHTML = "";
+    duelLanes.innerHTML = "";
+    const arcs = frame.threat_arcs || [];
+    const primary = arcs.find((arc) => arc.arc_type === "duel_pressure") || arcs[0];
+    duelPressure.textContent = primary
+      ? `${primary.threat_level} ${primary.advantage}`
+      : "clear";
+    arcs.forEach((arc) => {
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", arc.x1 || 50);
+      line.setAttribute("y1", arc.y1 || 50);
+      line.setAttribute("x2", arc.x2 || 50);
+      line.setAttribute("y2", arc.y2 || 50);
+      line.setAttribute("class", `threat-line ${arc.polarity || "watch"} ${arc.arc_type || ""}`);
+      threatLayer.appendChild(line);
+
+      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("x", ((Number(arc.x1) || 50) + (Number(arc.x2) || 50)) / 2);
+      label.setAttribute("y", ((Number(arc.y1) || 50) + (Number(arc.y2) || 50)) / 2 - 1.8);
+      label.setAttribute("class", "threat-label");
+      label.textContent = `${arc.threat_level} ${arc.advantage}`;
+      threatLayer.appendChild(label);
+
+      const chip = document.createElement("div");
+      chip.className = "duel-chip";
+      chip.innerHTML = `
+        <span>${labelFor(arc.arc_type || "threat")} · ${arc.lane_id || "lane"}</span>
+        <strong>${arc.source_agent_id}->${arc.target_agent_id} · ${arc.advantage}</strong>
+        <div class="duel-bar"><span style="--v: ${arc.threat_level || 0};"></span></div>
+      `;
+      duelLanes.appendChild(chip);
     });
   }
 
@@ -1118,6 +1195,7 @@
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
     currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
     renderTrails();
+    renderThreatArcs(frame);
     renderEvents(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     renderCausality(frame, currentStep);
