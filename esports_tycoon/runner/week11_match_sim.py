@@ -88,11 +88,27 @@ class Week11SimAgent:
     name: str
     role: str
     signature_operative: str
+    portrait_asset: str
     traits: tuple[str, ...]
     trait_profile: Week11SimTraitProfile
     policy_id: str
     scenario_archetype: str
     skill_epoch_proxy: int
+
+
+@dataclass(frozen=True)
+class Week11SimRound:
+    """One tactical training episode inside the match simulation."""
+
+    round_id: int
+    side_phase: str
+    objective_lane: str
+    opening_plan: str
+    pressure_test: str
+    terminal_condition: str
+    winner: Week11SimSide
+    reward_total: int
+    frame_ticks: tuple[int, ...]
 
 
 @dataclass(frozen=True)
@@ -112,6 +128,7 @@ class Week11SimFrame:
     """One replay frame for the match viewer."""
 
     tick: int
+    round_id: int
     clock: str
     phase: str
     focus_agent: str
@@ -127,6 +144,7 @@ class Week11SimStep:
     """One RL-style step in the deterministic policy trace."""
 
     tick: int
+    round_id: int
     agent_id: str
     observation: tuple[str, ...]
     action: Week11SimAction
@@ -153,6 +171,7 @@ class Week11MatchSimulation:
     opponent_name: str
     sim_mode: str
     agents: tuple[Week11SimAgent, ...]
+    rounds: tuple[Week11SimRound, ...]
     frames: tuple[Week11SimFrame, ...]
     steps: tuple[Week11SimStep, ...]
     viewer_summary: tuple[str, ...]
@@ -271,12 +290,14 @@ def _agent_for_player(player: Player, result: Week11MatchResultLock) -> Week11Si
     profile = _profile_for_player(player)
     policy_id, scenario_archetype = _policy_for_player(player)
     role = str(player.role.value if hasattr(player.role, "value") else player.role)
+    portrait_asset = f"art/portraits/{player.id}.webp" if player.id in {"rook", "vex", "sable", "pixie", "coyote"} else ""
     return Week11SimAgent(
         agent_id=player.id,
         side="overcast",
         name=_display_name(player),
         role=role,
         signature_operative=player.signature_operative,
+        portrait_asset=portrait_asset,
         traits=tuple(player.traits),
         trait_profile=profile,
         policy_id=policy_id,
@@ -312,6 +333,7 @@ def _opponent_agents(opponent_name: str, result: Week11MatchResultLock) -> tuple
                 name=f"{opponent_name} {label}",
                 role=role,
                 signature_operative="rival-kit",
+                portrait_asset="",
                 traits=("rival", label),
                 trait_profile=profile,
                 policy_id=f"rival_{label}_baseline",
@@ -355,33 +377,40 @@ _OPPONENT_PATHS: dict[str, tuple[tuple[int, int], ...]] = {
 }
 
 
-def _state_for_agent(agent: Week11SimAgent, result: Week11MatchResultLock, tick: int) -> Week11SimAgentState:
+def _state_for_agent(
+    agent: Week11SimAgent,
+    result: Week11MatchResultLock,
+    tick: int,
+    round_id: int,
+) -> Week11SimAgentState:
+    local_tick = tick % 4
+    path_tick = min((round_id - 1) * 2 + local_tick, 7)
     if agent.side == "overcast":
         path = _PATHS[result.selected_plan].get(agent.agent_id, _PATHS[result.selected_plan]["rook"])
         if result.result_tier == "loss":
-            death_tick = {"vex": 3, "pixie": 5, "rook": 6}.get(agent.agent_id, 99)
+            death_tick = {"vex": 3, "pixie": 6, "rook": 9}.get(agent.agent_id, 99)
         else:
-            death_tick = {"vex": 7 if result.result_grade == "thin" else 99}.get(agent.agent_id, 99)
+            death_tick = {"vex": 10 if result.result_grade == "thin" else 99}.get(agent.agent_id, 99)
         alive = tick < death_tick
     else:
         path = _OPPONENT_PATHS.get(agent.agent_id, _OPPONENT_PATHS["opp_igl"])
         if result.result_tier == "win":
-            death_tick = {"opp_entry": 3, "opp_info": 5, "opp_igl": 6, "opp_anchor": 7}.get(agent.agent_id, 99)
+            death_tick = {"opp_entry": 3, "opp_info": 7, "opp_igl": 10, "opp_anchor": 11}.get(agent.agent_id, 99)
         else:
-            death_tick = {"opp_entry": 7}.get(agent.agent_id, 99)
+            death_tick = {"opp_entry": 11}.get(agent.agent_id, 99)
         alive = tick < death_tick
 
-    x, y = path[min(tick, len(path) - 1)]
+    x, y = path[path_tick]
     if not alive:
         stance = "down"
         intent = "out"
-    elif tick <= 1:
+    elif local_tick == 0:
         stance = "set"
         intent = "default"
-    elif tick <= 3:
+    elif local_tick == 1:
         stance = "contact"
         intent = "take space"
-    elif tick <= 5:
+    elif local_tick == 2:
         stance = "trade"
         intent = "convert"
     else:
@@ -403,28 +432,87 @@ def _reward(result: Week11MatchResultLock, tick: int, default: int) -> int:
     return -default if default > 0 and tick >= 2 else default
 
 
+def _round_winner(result: Week11MatchResultLock, round_id: int) -> Week11SimSide:
+    if result.result_tier == "win":
+        if result.scoreline == "2-1" and round_id == 2:
+            return "opponent"
+        return "overcast"
+    if result.scoreline == "1-2" and round_id == 1:
+        return "overcast"
+    return "opponent"
+
+
+def _rounds(result: Week11MatchResultLock) -> tuple[Week11SimRound, ...]:
+    if result.selected_plan == "trust_the_read":
+        objectives = (
+            ("attack", "A main", "prove the read before second layer", "read timing"),
+            ("defense", "mid pinch", "hold the confirmed rotate call", "counter timing"),
+            ("attack", "B split", "convert the analyst read into objective pressure", "late fight setup"),
+        )
+    elif result.selected_plan == "attack_the_gap":
+        objectives = (
+            ("attack", "mid gap", "hit the exposed branch early", "branch punish"),
+            ("attack", "A elbow", "stay narrow after first contact", "over-chase check"),
+            ("defense", "B retake", "deny the hidden counter branch", "trade discipline"),
+        )
+    else:
+        objectives = (
+            ("defense", "B default", "keep the first-contact shell intact", "default integrity"),
+            ("attack", "mid default", "turn stability into proactive pressure", "tempo ceiling"),
+            ("defense", "A retake", "stabilize without giving away the map", "late action trigger"),
+        )
+
+    rounds = []
+    for index, (side_phase, lane, opening, pressure) in enumerate(objectives, start=1):
+        winner = _round_winner(result, index)
+        reward_total = 8 if winner == "overcast" else -5
+        terminal = "objective secured" if winner == "overcast" else "pressure window lost"
+        if index == 2 and result.result_grade in {"thin", "punished"}:
+            terminal = "trade window contested"
+        rounds.append(
+            Week11SimRound(
+                round_id=index,
+                side_phase=side_phase,
+                objective_lane=lane,
+                opening_plan=opening,
+                pressure_test=pressure,
+                terminal_condition=terminal,
+                winner=winner,
+                reward_total=reward_total,
+                frame_ticks=tuple(range((index - 1) * 4, index * 4)),
+            )
+        )
+    return tuple(rounds)
+
+
 def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent]) -> tuple[Week11SimStep, ...]:
-    action_script: tuple[tuple[int, str, Week11SimAction, int, str, str], ...] = (
-        (0, "rook", "call_default", 0, "Rook opens from the selected match commitment.", "default_integrity"),
-        (1, "pixie", "scan_lane", 1, "Pixie spends utility to reveal the first contact lane.", "utility_timing"),
-        (2, "vex", "entry_peek", 2, "Vex turns the read into pressure before the second layer arrives.", "space_gained"),
-        (3, "coyote", "lurk_contact", 1, "Coyote checks whether the branch is real or bait.", "trade_quality"),
-        (4, "rook", "rotate_call", 1, "The IGL chooses between staying narrow and resetting shape.", "default_integrity"),
-        (5, "sable", "anchor_trade", 2, "Sable holds the trade window while the room commits.", "trade_quality"),
+    action_script: tuple[tuple[int, int, str, Week11SimAction, int, str, str], ...] = (
+        (0, 1, "rook", "call_default", 0, "Rook opens the first episode from the selected match commitment.", "default_integrity"),
+        (1, 1, "pixie", "scan_lane", 1, "Pixie spends utility to reveal the first contact lane.", "utility_timing"),
+        (2, 1, "vex", "entry_peek", 2, "Vex turns the read into pressure before the second layer arrives.", "space_gained"),
+        (3, 1, "sable", "round_end", 4, "Sable holds the terminal trade for the first episode.", "round_win"),
+        (4, 2, "coyote", "lurk_contact", 1, "Coyote checks whether the branch is real or bait.", "trade_quality"),
+        (5, 2, "rook", "rotate_call", 1, "The IGL chooses between staying narrow and resetting shape.", "default_integrity"),
+        (6, 2, "pixie", "scan_lane", 1, "Pixie refreshes information before the opponent counter arrives.", "utility_timing"),
+        (7, 2, "sable", "anchor_trade", 2, "Sable holds the trade window while the room commits.", "trade_quality"),
+        (8, 3, "rook", "reset_shape", 1, "Rook compresses the call sheet for the final episode.", "default_integrity"),
+        (9, 3, "coyote", "lurk_contact", 2, "Coyote finds the late contact that decides whether the plan scales.", "space_gained"),
         (
-            6,
+            10,
+            3,
             "vex" if result.selected_plan != "stabilize_defaults" else "sable",
             "objective_execute" if result.result_tier == "win" else "reset_shape",
             3,
             "The final site action follows the plan's reward condition.",
             "round_win",
         ),
-        (7, "rook", "round_end", 4, "Round terminal reward records the map outcome.", "round_win"),
+        (11, 3, "rook", "round_end", 4, "Terminal reward records the simulated match outcome.", "round_win"),
     )
     steps = []
-    for tick, agent_id, action, reward, reason, trajectory_tag in action_script:
+    for tick, round_id, agent_id, action, reward, reason, trajectory_tag in action_script:
         agent = agent_lookup[agent_id]
         observation = (
+            f"round:{round_id}",
             f"role:{agent.role}",
             f"protocol_signal:{result.protocol_signal}",
             f"analyst_read_class:{result.analyst_read_class}",
@@ -434,6 +522,7 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
         steps.append(
             Week11SimStep(
                 tick=tick,
+                round_id=round_id,
                 agent_id=agent_id,
                 observation=observation,
                 action=action,
@@ -449,6 +538,7 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
 def _frames(
     result: Week11MatchResultLock,
     agents: tuple[Week11SimAgent, ...],
+    rounds: tuple[Week11SimRound, ...],
     steps: tuple[Week11SimStep, ...],
 ) -> tuple[Week11SimFrame, ...]:
     details = {
@@ -467,30 +557,30 @@ def _frames(
     }
     title_prefix, plan_detail = details[result.selected_plan]
     phase_names = (
-        "buy freeze",
-        "default",
-        "first contact",
-        "branch check",
-        "mid-round",
-        "trade window",
-        "objective",
+        "round setup",
+        "first utility",
+        "contact",
         "terminal",
     )
-    clocks = ("1:40", "1:28", "1:15", "1:02", "0:49", "0:35", "0:18", "0:00")
+    clocks = ("1:40", "1:18", "0:44", "0:00")
+    round_lookup = {round_.round_id: round_ for round_ in rounds}
     frames = []
     step_by_tick = {step.tick: step for step in steps}
-    for tick in range(8):
+    for tick in range(12):
         step = step_by_tick[tick]
-        states = tuple(_state_for_agent(agent, result, tick) for agent in agents)
+        round_ = round_lookup[step.round_id]
+        local_tick = tick % 4
+        states = tuple(_state_for_agent(agent, result, tick, round_.round_id) for agent in agents)
         pressure = 50 + sum(s.reward for s in steps[: tick + 1])
         frames.append(
             Week11SimFrame(
                 tick=tick,
-                clock=clocks[tick],
-                phase=phase_names[tick],
+                round_id=round_.round_id,
+                clock=clocks[local_tick],
+                phase=phase_names[local_tick],
                 focus_agent=step.agent_id,
-                event_title=f"{title_prefix}: {step.action.replace('_', ' ')}",
-                event_detail=f"{plan_detail} {step.reason}",
+                event_title=f"R{round_.round_id} {title_prefix}: {step.action.replace('_', ' ')}",
+                event_detail=f"{round_.objective_lane} - {plan_detail} {step.reason}",
                 reward_delta=step.reward,
                 team_pressure=_clamp(pressure, 0, 100),
                 states=states,
@@ -510,8 +600,9 @@ def resolve_week11_match_simulation(
     overcast_agents = tuple(_agent_for_player(player, result) for player in players)
     agents = overcast_agents + _opponent_agents(opponent_name, result)
     agent_lookup = {agent.agent_id: agent for agent in agents}
+    rounds = _rounds(result)
     steps = _steps(result, agent_lookup)
-    frames = _frames(result, agents, steps)
+    frames = _frames(result, agents, rounds, steps)
     sim_id = f"w11-{result.selected_plan}-{result.outcome_id}-{result.match_plan_seed}"
     viewer_summary = (
         f"{result.selected_plan} replay on {map_name}",
@@ -537,6 +628,7 @@ def resolve_week11_match_simulation(
         opponent_name=opponent_name,
         sim_mode="deterministic_policy_trace_v1",
         agents=agents,
+        rounds=rounds,
         frames=frames,
         steps=steps,
         viewer_summary=viewer_summary,
@@ -563,11 +655,26 @@ def _agent_to_dict(agent: Week11SimAgent) -> dict[str, Any]:
         "name": agent.name,
         "role": agent.role,
         "signature_operative": agent.signature_operative,
+        "portrait_asset": agent.portrait_asset,
         "traits": list(agent.traits),
         "trait_profile": _profile_to_dict(agent.trait_profile),
         "policy_id": agent.policy_id,
         "scenario_archetype": agent.scenario_archetype,
         "skill_epoch_proxy": agent.skill_epoch_proxy,
+    }
+
+
+def _round_to_dict(round_: Week11SimRound) -> dict[str, Any]:
+    return {
+        "round_id": round_.round_id,
+        "side_phase": round_.side_phase,
+        "objective_lane": round_.objective_lane,
+        "opening_plan": round_.opening_plan,
+        "pressure_test": round_.pressure_test,
+        "terminal_condition": round_.terminal_condition,
+        "winner": round_.winner,
+        "reward_total": round_.reward_total,
+        "frame_ticks": list(round_.frame_ticks),
     }
 
 
@@ -585,6 +692,7 @@ def _state_to_dict(state: Week11SimAgentState) -> dict[str, Any]:
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
+        "round_id": frame.round_id,
         "clock": frame.clock,
         "phase": frame.phase,
         "focus_agent": frame.focus_agent,
@@ -599,6 +707,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
 def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
     return {
         "tick": step.tick,
+        "round_id": step.round_id,
         "agent_id": step.agent_id,
         "observation": list(step.observation),
         "action": step.action,
@@ -634,6 +743,7 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
         "opponent_name": sim.opponent_name,
         "sim_mode": sim.sim_mode,
         "agents": [_agent_to_dict(agent) for agent in sim.agents],
+        "rounds": [_round_to_dict(round_) for round_ in sim.rounds],
         "frames": [_frame_to_dict(frame) for frame in sim.frames],
         "steps": [_step_to_dict(step) for step in sim.steps],
         "rl_contract": {
@@ -689,11 +799,14 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     if sim.get("outcome_id") not in WEEK11_MATCH_OUTCOMES:
         raise ValueError("week11_match_sim outcome_id must list a Week-11 match outcome")
     agents_raw = sim.get("agents")
+    rounds_raw = sim.get("rounds")
     frames_raw = sim.get("frames")
     steps_raw = sim.get("steps")
     rl_contract = sim.get("rl_contract")
     if not isinstance(agents_raw, list) or not agents_raw:
         raise ValueError("week11_match_sim JSON must include agents")
+    if not isinstance(rounds_raw, list) or not rounds_raw:
+        raise ValueError("week11_match_sim JSON must include rounds")
     if not isinstance(frames_raw, list) or not frames_raw:
         raise ValueError("week11_match_sim JSON must include frames")
     if not isinstance(steps_raw, list) or not steps_raw:
@@ -710,6 +823,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             name=str(agent.get("name", "")),
             role=str(agent.get("role", "")),
             signature_operative=str(agent.get("signature_operative", "")),
+            portrait_asset=str(agent.get("portrait_asset", "")),
             traits=tuple(str(item) for item in agent.get("traits", []) if isinstance(item, str)),
             trait_profile=_profile_from_dict(agent.get("trait_profile", {})),
             policy_id=str(agent.get("policy_id", "")),
@@ -719,9 +833,25 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         for agent in agents_raw
         if isinstance(agent, dict)
     )
+    rounds = tuple(
+        Week11SimRound(
+            round_id=int(round_.get("round_id", 0)),
+            side_phase=str(round_.get("side_phase", "")),
+            objective_lane=str(round_.get("objective_lane", "")),
+            opening_plan=str(round_.get("opening_plan", "")),
+            pressure_test=str(round_.get("pressure_test", "")),
+            terminal_condition=str(round_.get("terminal_condition", "")),
+            winner="opponent" if round_.get("winner") == "opponent" else "overcast",
+            reward_total=int(round_.get("reward_total", 0)),
+            frame_ticks=tuple(int(item) for item in round_.get("frame_ticks", []) if isinstance(item, int)),
+        )
+        for round_ in rounds_raw
+        if isinstance(round_, dict)
+    )
     frames = tuple(
         Week11SimFrame(
             tick=int(frame.get("tick", 0)),
+            round_id=int(frame.get("round_id", 0)),
             clock=str(frame.get("clock", "")),
             phase=str(frame.get("phase", "")),
             focus_agent=str(frame.get("focus_agent", "")),
@@ -748,6 +878,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     steps = tuple(
         Week11SimStep(
             tick=int(step.get("tick", 0)),
+            round_id=int(step.get("round_id", 0)),
             agent_id=str(step.get("agent_id", "")),
             observation=tuple(str(item) for item in step.get("observation", []) if isinstance(item, str)),
             action=step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end",
@@ -773,6 +904,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         opponent_name=str(sim.get("opponent_name", "")),
         sim_mode=str(sim.get("sim_mode", "")),
         agents=agents,
+        rounds=rounds,
         frames=frames,
         steps=steps,
         viewer_summary=tuple(str(item) for item in sim.get("viewer_summary", []) if isinstance(item, str)),
