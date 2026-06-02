@@ -335,6 +335,44 @@
     stroke: rgba(255, 210, 122, 0.42);
     stroke-width: 0.85;
   }
+  .affordance-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    mix-blend-mode: screen;
+  }
+  .affordance-route {
+    stroke: rgba(255, 210, 122, 0.92);
+    stroke-width: 1.05;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 5px rgba(255, 210, 122, 0.52));
+  }
+  .affordance-route.ghost {
+    stroke: rgba(159, 242, 216, 0.62);
+    stroke-width: 0.72;
+    stroke-dasharray: 2.8 2.6;
+    filter: drop-shadow(0 0 3px rgba(38, 217, 199, 0.32));
+  }
+  .affordance-point {
+    fill: rgba(255, 210, 122, 0.92);
+    stroke: rgba(8, 16, 21, 0.88);
+    stroke-width: 0.55;
+  }
+  .affordance-point.ghost {
+    fill: rgba(159, 242, 216, 0.75);
+  }
+  .affordance-label {
+    fill: #fff4cc;
+    paint-order: stroke;
+    stroke: rgba(8, 16, 21, 0.95);
+    stroke-width: 0.9;
+    font: 2.15px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-anchor: middle;
+    text-transform: uppercase;
+  }
   .site-ring {
     position: absolute;
     width: 14%;
@@ -840,6 +878,24 @@
     border-color: rgba(255, 210, 122, 0.72);
     background: rgba(255, 210, 122, 0.08);
   }
+  .action-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.24rem;
+    margin-top: 0.3rem;
+  }
+  .action-meta em {
+    border: 1px solid rgba(187, 203, 205, 0.12);
+    color: #a7b4b5;
+    background: rgba(255, 255, 255, 0.035);
+    padding: 0.08rem 0.22rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.58rem;
+    font-style: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .combat-chip.negative {
     border-color: rgba(255, 118, 102, 0.38);
     background: rgba(255, 118, 102, 0.06);
@@ -1225,6 +1281,7 @@
       <div class="arena" id="arena">
         <div class="map-geometry-layer" id="map-geometry-layer" aria-hidden="true"></div>
         <svg class="map-lane-layer" id="map-lane-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <svg class="affordance-layer" id="affordance-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
         <div class="utility-layer" id="utility-layer" aria-hidden="true"></div>
@@ -1520,6 +1577,7 @@
   const currentReward = document.getElementById("current-reward");
   const mapGeometryLayer = document.getElementById("map-geometry-layer");
   const mapLaneLayer = document.getElementById("map-lane-layer");
+  const affordanceLayer = document.getElementById("affordance-layer");
   const utilityLayer = document.getElementById("utility-layer");
   const trailLayer = document.getElementById("trail-layer");
   const threatLayer = document.getElementById("threat-layer");
@@ -1708,12 +1766,66 @@
       chip.className = `action-chip ${candidate.legal ? "legal" : "masked"} ${candidate.action === currentStep?.action ? "selected" : ""}`;
       chip.title = `${candidate.reason || "candidate action"} · ${candidate.mask_reason || "mask"}`;
       chip.innerHTML = `
-        <span>${candidate.legal ? "legal" : "masked"} · ${candidate.mask_reason || "mask"}</span>
+        <span>${candidate.legal ? "legal" : "masked"} · ${candidate.lane_id || candidate.mask_reason || "lane"}</span>
         <strong>${labelFor(candidate.action || "action")}</strong>
+        <div class="action-meta">
+          <em>ev ${signed(candidate.expected_delta)}</em>
+          <em>risk ${signed(candidate.risk_delta)}</em>
+          <em>util ${signed(candidate.utility_delta)}</em>
+          <em>${candidate.target_zone || "zone"}</em>
+        </div>
         <div class="action-bar ${candidate.legal ? "" : "masked"}"><span style="--v: ${score};"></span></div>
       `;
       actionMask.appendChild(chip);
     });
+  }
+
+  function signed(value) {
+    const number = Number(value) || 0;
+    return number > 0 ? `+${number}` : `${number}`;
+  }
+
+  function drawAffordanceRoute(source, candidate, kind) {
+    const targetX = Number(candidate.target_x) || source.x;
+    const targetY = Number(candidate.target_y) || source.y;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", source.x);
+    line.setAttribute("y1", source.y);
+    line.setAttribute("x2", targetX);
+    line.setAttribute("y2", targetY);
+    line.setAttribute("class", `affordance-route ${kind}`);
+    affordanceLayer.appendChild(line);
+
+    const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    point.setAttribute("cx", targetX);
+    point.setAttribute("cy", targetY);
+    point.setAttribute("r", kind === "selected" ? 1.35 : 1);
+    point.setAttribute("class", `affordance-point ${kind}`);
+    affordanceLayer.appendChild(point);
+
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", (Number(source.x) + targetX) / 2);
+    label.setAttribute("y", (Number(source.y) + targetY) / 2 - 2);
+    label.setAttribute("class", "affordance-label");
+    label.textContent = `${labelFor(candidate.action || "action")} ${signed(candidate.expected_delta)}`;
+    affordanceLayer.appendChild(label);
+  }
+
+  function renderActionAffordances(frame, currentStep) {
+    affordanceLayer.innerHTML = "";
+    if (!currentStep) return;
+    const source = frame.states.find((state) => state.agent_id === currentStep.agent_id);
+    if (!source || !source.alive) return;
+    const candidates = currentStep.candidate_actions || [];
+    const selected = candidates.find((candidate) => candidate.action === currentStep.action);
+    if (selected && selected.legal) {
+      drawAffordanceRoute(source, selected, "selected");
+    }
+    candidates
+      .filter((candidate) => candidate.legal && candidate.action !== currentStep.action)
+      .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0))
+      .slice(0, 2)
+      .forEach((candidate) => drawAffordanceRoute(source, candidate, "ghost"));
   }
 
   function recentCombatEvents() {
@@ -1949,6 +2061,7 @@
     renderLoadout(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     renderCausality(frame, currentStep);
+    renderActionAffordances(frame, currentStep);
     document.querySelectorAll(".marker").forEach((marker) => {
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
       const agent = agents[marker.dataset.agent];

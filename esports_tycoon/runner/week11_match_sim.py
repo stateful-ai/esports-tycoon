@@ -336,6 +336,14 @@ class Week11SimActionCandidate:
     score: int
     reason: str
     mask_reason: str
+    target_zone: str
+    target_x: int
+    target_y: int
+    expected_delta: int
+    risk_delta: int
+    utility_delta: int
+    lane_id: str
+    counterfactual_tag: str
 
 
 @dataclass(frozen=True)
@@ -809,12 +817,12 @@ def _target_zone(round_id: int, action: Week11SimAction) -> str:
 
 def _zone_anchor(zone_id: str) -> tuple[int, int]:
     return {
-        "a_site": (70, 34),
-        "b_site": (39, 68),
-        "mid": (53, 52),
-        "spawn_lobby": (50, 77),
-        "a_main": (58, 46),
-        "b_main": (36, 58),
+        "a_site": (83, 43),
+        "b_site": (16, 45),
+        "mid": (53, 48),
+        "spawn_lobby": (36, 76),
+        "a_main": (67, 45),
+        "b_main": (28, 52),
     }.get(zone_id, (50, 50))
 
 
@@ -1048,11 +1056,64 @@ def _candidate_reason(action: Week11SimAction, *, legal: bool, selected_action: 
     return "Masked action kept in the contract so future policies share a stable action index."
 
 
+def _bounded_delta(value: int, *, low: int = -100, high: int = 100) -> int:
+    return max(low, min(high, value))
+
+
+def _candidate_lane_id(source_zone: str, target_zone: str, action: Week11SimAction) -> str:
+    if action == "round_end":
+        return "terminal"
+    if target_zone in {"a_main", "a_site"}:
+        return "a_main_execute"
+    if target_zone in {"b_main", "b_site"}:
+        return "b_split_lurk"
+    if target_zone == "mid":
+        return "mid_rotate" if source_zone != "mid" else "a_b_crossfire"
+    return f"{source_zone}->{target_zone}"
+
+
+def _risk_delta(action: Week11SimAction, observation_features: dict[str, Any]) -> int:
+    baseline = int(observation_features.get("risk_index", 50))
+    bias = {
+        "call_default": -10,
+        "scan_lane": -8,
+        "entry_peek": 18,
+        "lurk_contact": 14,
+        "rotate_call": -6,
+        "anchor_trade": 4,
+        "objective_execute": 10,
+        "reset_shape": -14,
+        "round_end": 0,
+    }[action]
+    if baseline >= 74 and action in {"entry_peek", "lurk_contact", "objective_execute"}:
+        bias += 6
+    return _bounded_delta(bias, low=-50, high=50)
+
+
+def _utility_delta(action: Week11SimAction, observation_features: dict[str, Any]) -> int:
+    utility_pressure = int(observation_features.get("utility_pressure", 50))
+    bias = {
+        "call_default": 4,
+        "scan_lane": 16,
+        "entry_peek": -8,
+        "lurk_contact": -6,
+        "rotate_call": 8,
+        "anchor_trade": 2,
+        "objective_execute": -18,
+        "reset_shape": 10,
+        "round_end": 0,
+    }[action]
+    if utility_pressure >= 66 and action in {"scan_lane", "reset_shape", "rotate_call"}:
+        bias += 5
+    return _bounded_delta(bias, low=-50, high=50)
+
+
 def _candidate_actions(
     *,
     agent: Week11SimAgent,
     selected_action: Week11SimAction,
     observation_features: dict[str, Any],
+    round_id: int,
     tick: int,
     reward: int,
 ) -> tuple[Week11SimActionCandidate, ...]:
@@ -1062,30 +1123,54 @@ def _candidate_actions(
         observation_features=observation_features,
         tick=tick,
     )
-    return tuple(
-        Week11SimActionCandidate(
-            action=action,
-            legal=action in legal_actions,
-            score=_candidate_score(
-                action=action,
-                selected_action=selected_action,
-                observation_features=observation_features,
-                reward=reward,
-                legal=action in legal_actions,
-            ),
-            reason=_candidate_reason(
-                action,
-                legal=action in legal_actions,
-                selected_action=selected_action,
-            ),
-            mask_reason=_mask_reason(
-                action,
-                legal=action in legal_actions,
-                selected_action=selected_action,
-            ),
-        )
-        for action in WEEK11_SIM_ACTION_SPACE
+    source_zone = str(observation_features.get("own_zone", "spawn_lobby"))
+    selected_score = _candidate_score(
+        action=selected_action,
+        selected_action=selected_action,
+        observation_features=observation_features,
+        reward=reward,
+        legal=True,
     )
+    candidates = []
+    for action in WEEK11_SIM_ACTION_SPACE:
+        legal = action in legal_actions
+        score = _candidate_score(
+            action=action,
+            selected_action=selected_action,
+            observation_features=observation_features,
+            reward=reward,
+            legal=legal,
+        )
+        target_zone = _target_zone(round_id, action)
+        target_x, target_y = _zone_anchor(target_zone)
+        candidates.append(
+            Week11SimActionCandidate(
+                action=action,
+                legal=legal,
+                score=score,
+                reason=_candidate_reason(
+                    action,
+                    legal=legal,
+                    selected_action=selected_action,
+                ),
+                mask_reason=_mask_reason(
+                    action,
+                    legal=legal,
+                    selected_action=selected_action,
+                ),
+                target_zone=target_zone,
+                target_x=target_x,
+                target_y=target_y,
+                expected_delta=_bounded_delta(score - selected_score),
+                risk_delta=_risk_delta(action, observation_features),
+                utility_delta=_utility_delta(action, observation_features),
+                lane_id=_candidate_lane_id(source_zone, target_zone, action),
+                counterfactual_tag="selected_policy_path"
+                if action == selected_action
+                else _counterfactual(action),
+            )
+        )
+    return tuple(candidates)
 
 
 def _action_mask(candidates: tuple[Week11SimActionCandidate, ...]) -> tuple[int, ...]:
@@ -1202,6 +1287,7 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
             agent=agent,
             selected_action=action,
             observation_features=observation_features,
+            round_id=round_id,
             tick=tick,
             reward=step_reward,
         )
@@ -2495,6 +2581,14 @@ def _action_candidate_to_dict(candidate: Week11SimActionCandidate) -> dict[str, 
         "score": candidate.score,
         "reason": candidate.reason,
         "mask_reason": candidate.mask_reason,
+        "target_zone": candidate.target_zone,
+        "target_x": candidate.target_x,
+        "target_y": candidate.target_y,
+        "expected_delta": candidate.expected_delta,
+        "risk_delta": candidate.risk_delta,
+        "utility_delta": candidate.utility_delta,
+        "lane_id": candidate.lane_id,
+        "counterfactual_tag": candidate.counterfactual_tag,
     }
 
 
@@ -2599,6 +2693,14 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "legal",
                 "score",
                 "mask_reason",
+                "target_zone",
+                "target_x",
+                "target_y",
+                "expected_delta",
+                "risk_delta",
+                "utility_delta",
+                "lane_id",
+                "counterfactual_tag",
             ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
             "objective_state_unit": "frames[].objective_state",
@@ -3328,12 +3430,22 @@ def _candidate_actions_from_any(
             action = item.get("action")
             if action not in WEEK11_SIM_ACTION_SPACE:
                 continue
+            target_zone = str(item.get("target_zone", _target_zone(1, action)))
+            target_x, target_y = _zone_anchor(target_zone)
             candidates_by_action[str(action)] = Week11SimActionCandidate(
                 action=action,
                 legal=bool(item.get("legal", action == selected_action)),
                 score=int(item.get("score", 0)),
                 reason=str(item.get("reason", "")),
                 mask_reason=str(item.get("mask_reason", "")),
+                target_zone=target_zone,
+                target_x=int(item.get("target_x", target_x)),
+                target_y=int(item.get("target_y", target_y)),
+                expected_delta=int(item.get("expected_delta", 0)),
+                risk_delta=int(item.get("risk_delta", 0)),
+                utility_delta=int(item.get("utility_delta", 0)),
+                lane_id=str(item.get("lane_id", _candidate_lane_id("spawn_lobby", target_zone, action))),
+                counterfactual_tag=str(item.get("counterfactual_tag", _counterfactual(action))),
             )
     return tuple(
         candidates_by_action.get(
@@ -3344,6 +3456,14 @@ def _candidate_actions_from_any(
                 score=100 if action == selected_action else 0,
                 reason="Legacy artifact fallback candidate.",
                 mask_reason="selected_by_policy" if action == selected_action else "legacy_masked",
+                target_zone=_target_zone(1, action),
+                target_x=_zone_anchor(_target_zone(1, action))[0],
+                target_y=_zone_anchor(_target_zone(1, action))[1],
+                expected_delta=0,
+                risk_delta=0,
+                utility_delta=0,
+                lane_id=_candidate_lane_id("spawn_lobby", _target_zone(1, action), action),
+                counterfactual_tag="selected_policy_path" if action == selected_action else _counterfactual(action),
             ),
         )
         for action in WEEK11_SIM_ACTION_SPACE
