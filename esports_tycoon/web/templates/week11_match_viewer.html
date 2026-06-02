@@ -107,7 +107,7 @@
   .arena-panel { padding: 0.75rem; }
   .broadcast-rail {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 0.55rem;
     margin-bottom: 0.65rem;
   }
@@ -195,6 +195,83 @@
   .trail-polyline.opponent {
     stroke: rgba(255, 118, 102, 0.62);
     filter: drop-shadow(0 0 3px rgba(255, 118, 102, 0.35));
+  }
+  .utility-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: screen;
+  }
+  .utility-zone {
+    --zone-color: #26d9c7;
+    --zone-border: rgba(38, 217, 199, 0.78);
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: var(--d);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid var(--zone-border);
+    background:
+      radial-gradient(circle, color-mix(in srgb, var(--zone-color), transparent 58%) 0%, transparent 68%),
+      radial-gradient(circle, color-mix(in srgb, var(--zone-color), transparent 72%) 0%, transparent 42%);
+    opacity: var(--opacity);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--zone-color), transparent 72%);
+  }
+  .utility-zone::before {
+    content: "";
+    position: absolute;
+    inset: 16%;
+    border: 1px solid color-mix(in srgb, var(--zone-color), transparent 42%);
+    border-radius: inherit;
+  }
+  .utility-zone[data-blocks="true"]::before {
+    inset: 12%;
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--zone-color), transparent 76%) 0 2px,
+      transparent 2px 6px
+    );
+  }
+  .utility-zone::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    bottom: -0.9rem;
+    transform: translateX(-50%);
+    max-width: 8rem;
+    color: #e8fbff;
+    background: rgba(8, 16, 21, 0.78);
+    border: 1px solid color-mix(in srgb, var(--zone-color), transparent 54%);
+    padding: 0.05rem 0.22rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.56rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .utility-zone.flash,
+  .utility-zone.terminal_zone {
+    --zone-color: #ffd27a;
+    --zone-border: rgba(255, 210, 122, 0.8);
+  }
+  .utility-zone.smoke,
+  .utility-zone.default_shell {
+    --zone-color: #b7c3c8;
+    --zone-border: rgba(183, 195, 200, 0.58);
+  }
+  .utility-zone.execute,
+  .utility-zone.post_plant_anchor,
+  .utility-zone.crossfire,
+  .utility-zone.trade_anchor {
+    --zone-color: #9ff2d8;
+    --zone-border: rgba(159, 242, 216, 0.72);
+  }
+  .utility-zone.negative {
+    --zone-color: #ff7666;
+    --zone-border: rgba(255, 118, 102, 0.84);
   }
   .threat-layer {
     position: absolute;
@@ -389,7 +466,7 @@
     padding: 0.65rem;
     margin-top: 0.7rem;
   }
-  .causality-grid, .reward-components, .zone-control, .duel-lanes {
+  .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes {
     display: grid;
     gap: 0.45rem;
   }
@@ -404,37 +481,41 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
+  .utility-stack {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
   .duel-lanes {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
-  .cause-chip, .reward-component, .zone-card, .duel-chip {
+  .cause-chip, .reward-component, .zone-card, .utility-chip, .duel-chip {
     border: 1px solid rgba(187, 203, 205, 0.15);
     background: rgba(8, 13, 18, 0.82);
     padding: 0.42rem;
     min-width: 0;
   }
-  .cause-chip span, .reward-component span, .zone-card span, .duel-chip span {
+  .cause-chip span, .reward-component span, .zone-card span, .utility-chip span, .duel-chip span {
     display: block;
     color: #95a3a5;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.66rem;
     text-transform: uppercase;
   }
-  .cause-chip strong, .reward-component strong, .zone-card strong, .duel-chip strong {
+  .cause-chip strong, .reward-component strong, .zone-card strong, .utility-chip strong, .duel-chip strong {
     display: block;
     color: #eef4f2;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.82rem;
     overflow-wrap: anywhere;
   }
-  .component-bar, .zone-bar, .duel-bar {
+  .component-bar, .zone-bar, .utility-bar, .duel-bar {
     height: 0.34rem;
     margin-top: 0.28rem;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(187, 203, 205, 0.12);
   }
-  .component-bar span, .zone-bar span, .duel-bar span {
+  .component-bar span, .zone-bar span, .utility-bar span, .duel-bar span {
     display: block;
     height: 100%;
     width: calc(var(--v) * 1%);
@@ -502,6 +583,17 @@
     margin-top: 1rem;
   }
   .agent-panel { padding: 0.75rem; }
+  .agent-panel .viewer-chips {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+  .agent-panel .data-chip {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
   .agent-portrait {
     aspect-ratio: 1;
     overflow: hidden;
@@ -682,7 +774,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .causality-grid, .reward-components, .zone-control, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -692,7 +784,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
-    .causality-grid, .reward-components, .zone-control, .duel-lanes { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -740,6 +832,10 @@
           <span>Alive</span>
           <strong id="alive-count">5 / 5</strong>
         </div>
+        <div class="broadcast-stat good">
+          <span>Utility</span>
+          <strong id="utility-count">ready</strong>
+        </div>
         <div class="broadcast-stat warn">
           <span>Duel</span>
           <strong id="duel-pressure">clear</strong>
@@ -748,6 +844,7 @@
       <div class="arena" id="arena">
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
+        <div class="utility-layer" id="utility-layer" aria-hidden="true"></div>
         <svg class="trail-layer" id="trail-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <svg class="threat-layer" id="threat-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div class="event-layer" id="event-layer" aria-hidden="true"></div>
@@ -778,6 +875,7 @@
         <div class="causality-grid" id="observation-features"></div>
         <div class="reward-components" id="reward-components"></div>
         <div class="zone-control" id="zone-control"></div>
+        <div class="utility-stack" id="utility-stack"></div>
         <div class="duel-lanes" id="duel-lanes"></div>
         <div class="policy-reason" id="policy-reason"></div>
       </div>
@@ -970,6 +1068,7 @@
   const framePhase = document.getElementById("frame-phase");
   const broadcastFocus = document.getElementById("broadcast-focus");
   const aliveCount = document.getElementById("alive-count");
+  const utilityCount = document.getElementById("utility-count");
   const duelPressure = document.getElementById("duel-pressure");
   const agentName = document.getElementById("agent-name");
   const agentPolicy = document.getElementById("agent-policy");
@@ -980,12 +1079,14 @@
   const topTraits = document.getElementById("top-traits");
   const currentAction = document.getElementById("current-action");
   const currentReward = document.getElementById("current-reward");
+  const utilityLayer = document.getElementById("utility-layer");
   const trailLayer = document.getElementById("trail-layer");
   const threatLayer = document.getElementById("threat-layer");
   const eventLayer = document.getElementById("event-layer");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
   const zoneControl = document.getElementById("zone-control");
+  const utilityStack = document.getElementById("utility-stack");
   const duelLanes = document.getElementById("duel-lanes");
   const policyReason = document.getElementById("policy-reason");
   const stepList = document.getElementById("step-list");
@@ -1024,6 +1125,37 @@
       pulse.style.setProperty("--y", event.y || 50);
       pulse.style.setProperty("--r", event.radius || 10);
       eventLayer.appendChild(pulse);
+    });
+  }
+
+  function renderUtilityZones(frame) {
+    utilityLayer.innerHTML = "";
+    utilityStack.innerHTML = "";
+    const zones = frame.utility_zones || [];
+    utilityCount.textContent = zones.length
+      ? `${zones.length} active`
+      : "clear";
+    zones.forEach((zone) => {
+      const marker = document.createElement("div");
+      const strength = Math.max(0, Math.min(100, Number(zone.effect_strength) || 0));
+      const radius = Math.max(6, Number(zone.radius) || 8);
+      marker.className = `utility-zone ${zone.utility_type || ""} ${zone.polarity || "watch"}`;
+      marker.dataset.label = zone.label || labelFor(zone.utility_type || "utility");
+      marker.dataset.blocks = zone.blocks_sight ? "true" : "false";
+      marker.style.setProperty("--x", zone.x || 50);
+      marker.style.setProperty("--y", zone.y || 50);
+      marker.style.setProperty("--d", `${radius * 2}%`);
+      marker.style.setProperty("--opacity", String(0.34 + strength / 180));
+      utilityLayer.appendChild(marker);
+
+      const chip = document.createElement("div");
+      chip.className = "utility-chip";
+      chip.innerHTML = `
+        <span>${labelFor(zone.utility_type || "utility")} · ${zone.zone_id || "zone"}</span>
+        <strong>${zone.agent_id} · ${zone.blocks_sight ? "blocks sight" : "info/control"}</strong>
+        <div class="utility-bar"><span style="--v: ${strength};"></span></div>
+      `;
+      utilityStack.appendChild(chip);
     });
   }
 
@@ -1195,6 +1327,7 @@
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
     currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
     renderTrails();
+    renderUtilityZones(frame);
     renderThreatArcs(frame);
     renderEvents(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));

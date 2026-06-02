@@ -171,6 +171,23 @@ class Week11SimThreatArc:
 
 
 @dataclass(frozen=True)
+class Week11SimUtilityZone:
+    """One deployable utility area emitted for replay rendering and RL state."""
+
+    utility_type: str
+    agent_id: str
+    zone_id: str
+    x: int
+    y: int
+    radius: int
+    duration_ticks: int
+    effect_strength: int
+    blocks_sight: bool
+    label: str
+    polarity: str
+
+
+@dataclass(frozen=True)
 class Week11SimFrame:
     """One replay frame for the match viewer."""
 
@@ -188,6 +205,7 @@ class Week11SimFrame:
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
     threat_arcs: tuple[Week11SimThreatArc, ...]
+    utility_zones: tuple[Week11SimUtilityZone, ...]
 
 
 @dataclass(frozen=True)
@@ -648,6 +666,31 @@ def _target_zone(round_id: int, action: Week11SimAction) -> str:
     return "spawn_lobby"
 
 
+def _zone_anchor(zone_id: str) -> tuple[int, int]:
+    return {
+        "a_site": (70, 34),
+        "b_site": (39, 68),
+        "mid": (53, 52),
+        "spawn_lobby": (50, 77),
+        "a_main": (58, 46),
+        "b_main": (36, 58),
+    }.get(zone_id, (50, 50))
+
+
+def _toward_zone(
+    state: Week11SimAgentState,
+    zone_id: str,
+    *,
+    weight: int,
+) -> tuple[int, int]:
+    anchor_x, anchor_y = _zone_anchor(zone_id)
+    inverse = 100 - weight
+    return (
+        _clamp((state.x * inverse + anchor_x * weight) // 100, 0, 100),
+        _clamp((state.y * inverse + anchor_y * weight) // 100, 0, 100),
+    )
+
+
 def _top_trait(agent: Week11SimAgent) -> str:
     profile = _profile_to_dict(agent.trait_profile)
     return max(profile, key=lambda name: profile[name])
@@ -665,14 +708,16 @@ def _trade_partner(agent_id: str) -> str:
 
 def _utility_kind(action: Week11SimAction) -> str:
     return {
+        "call_default": "default_shell",
         "scan_lane": "reveal",
-        "rotate_call": "call",
+        "rotate_call": "rotate_ping",
         "reset_shape": "smoke",
         "anchor_trade": "crossfire",
         "objective_execute": "execute",
         "entry_peek": "flash",
         "lurk_contact": "silent_contact",
-    }.get(action, "none")
+        "round_end": "terminal_zone",
+    }[action]
 
 
 def _counterfactual(action: Week11SimAction) -> str:
@@ -1014,6 +1059,229 @@ def _frame_threat_arcs(
     return tuple(arcs)
 
 
+def _utility_zone(
+    *,
+    utility_type: str,
+    agent_id: str,
+    x: int,
+    y: int,
+    radius: int,
+    duration_ticks: int,
+    effect_strength: int,
+    blocks_sight: bool,
+    label: str,
+    polarity: str,
+) -> Week11SimUtilityZone:
+    return Week11SimUtilityZone(
+        utility_type=utility_type,
+        agent_id=agent_id,
+        zone_id=_zone_id(x, y),
+        x=_clamp(x, 0, 100),
+        y=_clamp(y, 0, 100),
+        radius=_clamp(radius, 6, 24),
+        duration_ticks=_clamp(duration_ticks, 1, 4),
+        effect_strength=_clamp(effect_strength, 0, 100),
+        blocks_sight=blocks_sight,
+        label=label,
+        polarity=polarity,
+    )
+
+
+def _utility_polarity(*, step: Week11SimStep, telemetry: Week11SimTelemetry) -> str:
+    if step.reward > 0 and telemetry.utility_pressure >= 50:
+        return "positive"
+    if step.reward < 0 or telemetry.risk_index >= 78:
+        return "negative"
+    return "watch"
+
+
+def _frame_utility_zones(
+    *,
+    step: Week11SimStep,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+) -> tuple[Week11SimUtilityZone, ...]:
+    focus_state = _agent_state(states, step.agent_id)
+    if focus_state is None or not focus_state.alive:
+        return ()
+    utility_kind = step.action_context.get("utility_kind", _utility_kind(step.action))
+    target_zone = step.action_context.get("target_zone", _target_zone(step.round_id, step.action))
+    target_x, target_y = _zone_anchor(target_zone)
+    strength = _clamp(
+        telemetry.utility_pressure + max(step.reward, 0) * 6 - max(0, telemetry.risk_index - 72) // 2,
+        0,
+        100,
+    )
+    polarity = _utility_polarity(step=step, telemetry=telemetry)
+
+    if utility_kind == "default_shell":
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=focus_state.x,
+                y=focus_state.y,
+                radius=13,
+                duration_ticks=3,
+                effect_strength=_clamp(44 + telemetry.trade_window // 2, 0, 100),
+                blocks_sight=False,
+                label="default shell",
+                polarity="watch",
+            ),
+        )
+    if utility_kind == "reveal":
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=target_x,
+                y=target_y,
+                radius=15,
+                duration_ticks=2,
+                effect_strength=strength,
+                blocks_sight=False,
+                label="reveal sweep",
+                polarity=polarity,
+            ),
+        )
+    if utility_kind == "flash":
+        x, y = _toward_zone(focus_state, target_zone, weight=62)
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=x,
+                y=y,
+                radius=10,
+                duration_ticks=1,
+                effect_strength=_clamp(strength + 8, 0, 100),
+                blocks_sight=False,
+                label="entry flash",
+                polarity=polarity,
+            ),
+        )
+    if utility_kind == "silent_contact":
+        x, y = _toward_zone(focus_state, target_zone, weight=38)
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=x,
+                y=y,
+                radius=8,
+                duration_ticks=2,
+                effect_strength=_clamp(telemetry.risk_index + telemetry.space_control // 4, 0, 100),
+                blocks_sight=False,
+                label="silent contact",
+                polarity=polarity,
+            ),
+        )
+    if utility_kind == "rotate_ping":
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=target_x,
+                y=target_y,
+                radius=11,
+                duration_ticks=2,
+                effect_strength=_clamp(strength + telemetry.objective_pressure // 5, 0, 100),
+                blocks_sight=False,
+                label="rotate ping",
+                polarity="positive" if step.reward >= 0 else "watch",
+            ),
+        )
+    if utility_kind == "crossfire":
+        trade_state = _agent_state(states, step.action_context.get("trade_partner", ""))
+        zones = [
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=focus_state.x,
+                y=focus_state.y,
+                radius=12,
+                duration_ticks=2,
+                effect_strength=_clamp(telemetry.trade_window + 18, 0, 100),
+                blocks_sight=False,
+                label="crossfire hold",
+                polarity=polarity,
+            )
+        ]
+        if trade_state is not None and trade_state.alive:
+            zones.append(
+                _utility_zone(
+                    utility_type="trade_anchor",
+                    agent_id=trade_state.agent_id,
+                    x=trade_state.x,
+                    y=trade_state.y,
+                    radius=10,
+                    duration_ticks=2,
+                    effect_strength=_clamp(telemetry.trade_window + 10, 0, 100),
+                    blocks_sight=False,
+                    label="trade anchor",
+                    polarity="positive" if telemetry.trade_window >= 54 else "watch",
+                )
+            )
+        return tuple(zones)
+    if utility_kind == "smoke":
+        x, y = _toward_zone(focus_state, target_zone, weight=52)
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=x,
+                y=y,
+                radius=17,
+                duration_ticks=3,
+                effect_strength=_clamp(strength + 4, 0, 100),
+                blocks_sight=True,
+                label="reset smoke",
+                polarity=polarity,
+            ),
+        )
+    if utility_kind == "execute":
+        return (
+            _utility_zone(
+                utility_type=utility_kind,
+                agent_id=step.agent_id,
+                x=target_x,
+                y=target_y,
+                radius=20,
+                duration_ticks=3,
+                effect_strength=_clamp(strength + telemetry.objective_pressure // 4, 0, 100),
+                blocks_sight=True,
+                label="execute package",
+                polarity=polarity,
+            ),
+            _utility_zone(
+                utility_type="post_plant_anchor",
+                agent_id=step.agent_id,
+                x=focus_state.x,
+                y=focus_state.y,
+                radius=9,
+                duration_ticks=2,
+                effect_strength=_clamp(telemetry.trade_window + 8, 0, 100),
+                blocks_sight=False,
+                label="post plant anchor",
+                polarity="positive",
+            ),
+        )
+    return (
+        _utility_zone(
+            utility_type=utility_kind,
+            agent_id=step.agent_id,
+            x=target_x,
+            y=target_y,
+            radius=14,
+            duration_ticks=2,
+            effect_strength=_clamp(strength + 6, 0, 100),
+            blocks_sight=False,
+            label="terminal zone",
+            polarity="positive" if step.reward >= 0 else "negative",
+        ),
+    )
+
+
 def _frame_events(
     *,
     step: Week11SimStep,
@@ -1083,6 +1351,11 @@ def _frames(
             telemetry=telemetry,
             agent_lookup=agent_lookup,
         )
+        utility_zones = _frame_utility_zones(
+            step=step,
+            states=states,
+            telemetry=telemetry,
+        )
         frames.append(
             Week11SimFrame(
                 tick=tick,
@@ -1099,6 +1372,7 @@ def _frames(
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
                 threat_arcs=threat_arcs,
+                utility_zones=utility_zones,
             )
         )
     return tuple(frames)
@@ -1307,6 +1581,22 @@ def _threat_arc_to_dict(arc: Week11SimThreatArc) -> dict[str, Any]:
     }
 
 
+def _utility_zone_to_dict(zone: Week11SimUtilityZone) -> dict[str, Any]:
+    return {
+        "utility_type": zone.utility_type,
+        "agent_id": zone.agent_id,
+        "zone_id": zone.zone_id,
+        "x": zone.x,
+        "y": zone.y,
+        "radius": zone.radius,
+        "duration_ticks": zone.duration_ticks,
+        "effect_strength": zone.effect_strength,
+        "blocks_sight": zone.blocks_sight,
+        "label": zone.label,
+        "polarity": zone.polarity,
+    }
+
+
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
@@ -1323,6 +1613,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
         "threat_arcs": [_threat_arc_to_dict(arc) for arc in frame.threat_arcs],
+        "utility_zones": [_utility_zone_to_dict(zone) for zone in frame.utility_zones],
     }
 
 
@@ -1422,6 +1713,17 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "lane_id",
                 "threat_level",
                 "advantage",
+                "polarity",
+            ],
+            "utility_zone_unit": "frames[].utility_zones[]",
+            "utility_zone_fields": [
+                "utility_type",
+                "agent_id",
+                "zone_id",
+                "radius",
+                "duration_ticks",
+                "effect_strength",
+                "blocks_sight",
                 "polarity",
             ],
             "policy_hook": "agent.policy_id + scenario_archetype + skill_epoch_proxy",
@@ -1964,6 +2266,28 @@ def _threat_arcs_from_any(data: Any) -> tuple[Week11SimThreatArc, ...]:
     )
 
 
+def _utility_zones_from_any(data: Any) -> tuple[Week11SimUtilityZone, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimUtilityZone(
+            utility_type=str(zone.get("utility_type", "")),
+            agent_id=str(zone.get("agent_id", "")),
+            zone_id=str(zone.get("zone_id", "")),
+            x=int(zone.get("x", 0)),
+            y=int(zone.get("y", 0)),
+            radius=int(zone.get("radius", 0)),
+            duration_ticks=int(zone.get("duration_ticks", 0)),
+            effect_strength=int(zone.get("effect_strength", 0)),
+            blocks_sight=bool(zone.get("blocks_sight", False)),
+            label=str(zone.get("label", "")),
+            polarity=str(zone.get("polarity", "")),
+        )
+        for zone in data
+        if isinstance(zone, dict)
+    )
+
+
 def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     """Parse a written ``week11_match_sim.json`` artifact."""
     try:
@@ -2062,6 +2386,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             zone_control=_int_dict_from_any(frame.get("zone_control")),
             events=_events_from_any(frame.get("events")),
             threat_arcs=_threat_arcs_from_any(frame.get("threat_arcs")),
+            utility_zones=_utility_zones_from_any(frame.get("utility_zones")),
         )
         for frame in frames_raw
         if isinstance(frame, dict)
