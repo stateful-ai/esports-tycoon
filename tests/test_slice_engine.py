@@ -2339,6 +2339,17 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(1400 <= frame.loadout_state.team_credits <= 9000 for frame in replay.frames))
         self.assertTrue(all(0 <= frame.loadout_state.economy_pressure <= 100 for frame in replay.frames))
         self.assertTrue(any(frame.loadout_state.advantage in {"overcast", "opponent"} for frame in replay.frames))
+        self.assertTrue(all(frame.score_state for frame in replay.frames))
+        self.assertTrue(all(0 <= frame.score_state.win_probability <= 100 for frame in replay.frames))
+        self.assertTrue(
+            all(
+                frame.score_state.alive_overcast - frame.score_state.alive_opponent
+                == frame.score_state.man_advantage
+                for frame in replay.frames
+            )
+        )
+        self.assertTrue(any(frame.score_state.alive_opponent < 5 for frame in replay.frames))
+        self.assertTrue(any(frame.score_state.momentum in {"overcast", "opponent"} for frame in replay.frames))
         self.assertTrue(any(frame.combat_events for frame in replay.frames))
         self.assertTrue(
             all(
@@ -2404,6 +2415,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"loadout_state_unit": "frames[].loadout_state"', payload)
         self.assertIn('"economy_pressure":', payload)
         self.assertIn('"team_credits":', payload)
+        self.assertIn('"score_state":', payload)
+        self.assertIn('"score_state_unit": "frames[].score_state"', payload)
+        self.assertIn('"win_probability":', payload)
+        self.assertIn('"man_advantage":', payload)
         self.assertIn('"combat_events":', payload)
         self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)

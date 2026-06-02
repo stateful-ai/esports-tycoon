@@ -133,6 +133,97 @@
   }
   .broadcast-stat.hot strong { color: #ffaaa1; }
   .broadcast-stat.good strong { color: #9ff2d8; }
+  .scoreboard-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 0.86fr) minmax(0, 1fr);
+    gap: 0.55rem;
+    margin-bottom: 0.65rem;
+    align-items: stretch;
+  }
+  .score-side, .score-core {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(11, 16, 20, 0.92);
+    min-width: 0;
+  }
+  .score-side {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    align-items: center;
+  }
+  .score-side.overcast { border-color: rgba(33, 214, 181, 0.35); }
+  .score-side.opponent { border-color: rgba(255, 118, 102, 0.35); }
+  .score-side span, .score-core span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+  .score-side strong {
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 2rem;
+    line-height: 1;
+  }
+  .alive-pips {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.24rem;
+  }
+  .alive-pips i {
+    border: 1px solid rgba(187, 203, 205, 0.22);
+    color: #d5dcdd;
+    background: rgba(255, 255, 255, 0.04);
+    min-height: 1.15rem;
+    padding: 0.1rem 0.15rem;
+    text-align: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.58rem;
+    font-style: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .alive-pips i.down {
+    color: #7f8b8d;
+    border-color: rgba(255, 118, 102, 0.28);
+    background: rgba(255, 118, 102, 0.08);
+    text-decoration: line-through;
+  }
+  .score-core {
+    display: grid;
+    align-content: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .win-prob-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .win-prob-row strong {
+    color: #ffd27a;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1rem;
+  }
+  .win-prob-track {
+    height: 0.45rem;
+    border: 1px solid rgba(187, 203, 205, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+  .win-prob-track span {
+    display: block;
+    width: calc(var(--v) * 1%);
+    height: 100%;
+    background: linear-gradient(90deg, #21d6b5, #ffd27a);
+  }
+  .scoreboard-strip.opponent .win-prob-track span {
+    background: linear-gradient(90deg, #ff7666, #ffd27a);
+  }
   .arena {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -1036,6 +1127,7 @@
   @media (max-width: 980px) {
     .viewer-top, .viewer-grid, .rl-layout { grid-template-columns: 1fr; }
     .broadcast-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .scoreboard-strip { grid-template-columns: 1fr; }
     .viewer-chips { justify-content: flex-start; }
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .round-grid { grid-template-columns: 1fr; }
@@ -1108,6 +1200,26 @@
         <div class="broadcast-stat warn">
           <span>Duel</span>
           <strong id="duel-pressure">clear</strong>
+        </div>
+      </div>
+      <div class="scoreboard-strip {{ replay.frames[0].score_state.momentum }}" id="scoreboard-strip">
+        <div class="score-side overcast">
+          <span>Overcast</span>
+          <strong id="score-overcast">{{ replay.frames[0].score_state.overcast_rounds }}</strong>
+          <div class="alive-pips" id="alive-overcast-pips" aria-label="Overcast alive state"></div>
+        </div>
+        <div class="score-core">
+          <div class="win-prob-row">
+            <span id="score-momentum">{{ replay.frames[0].score_state.momentum }}</span>
+            <strong id="win-probability">{{ replay.frames[0].score_state.win_probability }}%</strong>
+          </div>
+          <div class="win-prob-track"><span id="win-probability-bar" style="--v: {{ replay.frames[0].score_state.win_probability }};"></span></div>
+          <span id="swing-reason">{{ replay.frames[0].score_state.swing_reason }}</span>
+        </div>
+        <div class="score-side opponent">
+          <span>{{ replay.opponent_name }}</span>
+          <strong id="score-opponent">{{ replay.frames[0].score_state.opponent_rounds }}</strong>
+          <div class="alive-pips" id="alive-opponent-pips" aria-label="Opponent alive state"></div>
         </div>
       </div>
       <div class="arena" id="arena">
@@ -1388,6 +1500,15 @@
   const aliveCount = document.getElementById("alive-count");
   const utilityCount = document.getElementById("utility-count");
   const duelPressure = document.getElementById("duel-pressure");
+  const scoreboardStrip = document.getElementById("scoreboard-strip");
+  const scoreOvercast = document.getElementById("score-overcast");
+  const scoreOpponent = document.getElementById("score-opponent");
+  const scoreMomentum = document.getElementById("score-momentum");
+  const swingReason = document.getElementById("swing-reason");
+  const winProbability = document.getElementById("win-probability");
+  const winProbabilityBar = document.getElementById("win-probability-bar");
+  const aliveOvercastPips = document.getElementById("alive-overcast-pips");
+  const aliveOpponentPips = document.getElementById("alive-opponent-pips");
   const agentName = document.getElementById("agent-name");
   const agentPolicy = document.getElementById("agent-policy");
   const agentRole = document.getElementById("agent-role");
@@ -1667,6 +1788,39 @@
     loadoutPressureBar.style.setProperty("--v", pressureValue);
   }
 
+  function renderAlivePips(container, frame, side) {
+    container.innerHTML = "";
+    frame.states
+      .filter((state) => agents[state.agent_id]?.side === side)
+      .forEach((state) => {
+        const agent = agents[state.agent_id];
+        const pip = document.createElement("i");
+        pip.className = state.alive ? "alive" : "down";
+        const label = side === "opponent"
+          ? (agent?.role || state.agent_id.replace("opp_", "")).slice(0, 2)
+          : (agent?.name || state.agent_id).slice(0, 2);
+        pip.textContent = label.toUpperCase();
+        pip.title = `${agent?.name || state.agent_id} - ${state.alive ? `${state.health} hp` : "down"}`;
+        container.appendChild(pip);
+      });
+  }
+
+  function renderScoreboard(frame) {
+    const score = frame.score_state || {};
+    const momentum = score.momentum || "even";
+    const probability = clampPercent(score.win_probability ?? 50);
+    scoreboardStrip.className = `scoreboard-strip ${momentum}`;
+    scoreOvercast.textContent = score.overcast_rounds ?? 0;
+    scoreOpponent.textContent = score.opponent_rounds ?? 0;
+    scoreMomentum.textContent = `${momentum} momentum`;
+    swingReason.textContent = score.swing_reason || "score state pending";
+    winProbability.textContent = `${probability}%`;
+    winProbabilityBar.style.setProperty("--v", probability);
+    aliveCount.textContent = `${score.alive_overcast ?? 5} / ${score.alive_opponent ?? 5}`;
+    renderAlivePips(aliveOvercastPips, frame, "overcast");
+    renderAlivePips(aliveOpponentPips, frame, "opponent");
+  }
+
   function renderCausality(frame, currentStep) {
     const features = currentStep?.observation_features || {};
     const actionContext = currentStep?.action_context || {};
@@ -1754,20 +1908,6 @@
       });
   }
 
-  function aliveSummary(frame) {
-    const totals = frame.states.reduce((summary, state) => {
-      const agent = agents[state.agent_id];
-      if (!agent) return summary;
-      if (agent.side === "overcast") {
-        summary.overcast += state.alive ? 1 : 0;
-      } else {
-        summary.opponent += state.alive ? 1 : 0;
-      }
-      return summary;
-    }, { overcast: 0, opponent: 0 });
-    return `${totals.overcast} / ${totals.opponent}`;
-  }
-
   function renderTrails() {
     trailLayer.innerHTML = "";
     Object.values(agents).forEach((agent) => {
@@ -1795,7 +1935,7 @@
     frameRound.textContent = `R${frame.round_id}`;
     framePhase.textContent = frame.phase;
     broadcastFocus.textContent = focusAgent ? focusAgent.name : frame.focus_agent;
-    aliveCount.textContent = aliveSummary(frame);
+    renderScoreboard(frame);
     pressure.style.setProperty("--pressure", frame.team_pressure);
     const currentStep = stepForFrame(frame);
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";

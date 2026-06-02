@@ -170,6 +170,20 @@ class Week11SimLoadoutState:
 
 
 @dataclass(frozen=True)
+class Week11SimScoreState:
+    """Frame-level score, casualty, and win-probability state for broadcast/RL."""
+
+    overcast_rounds: int
+    opponent_rounds: int
+    alive_overcast: int
+    alive_opponent: int
+    man_advantage: int
+    win_probability: int
+    momentum: str
+    swing_reason: str
+
+
+@dataclass(frozen=True)
 class Week11SimEvent:
     """One tactical overlay event rendered on top of the replay map."""
 
@@ -304,6 +318,7 @@ class Week11SimFrame:
     telemetry: Week11SimTelemetry
     objective_state: Week11SimObjectiveState
     loadout_state: Week11SimLoadoutState
+    score_state: Week11SimScoreState
     states: tuple[Week11SimAgentState, ...]
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
@@ -1438,6 +1453,67 @@ def _loadout_state(
     )
 
 
+def _score_state(
+    *,
+    rounds: tuple[Week11SimRound, ...],
+    round_: Week11SimRound,
+    local_tick: int,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+) -> Week11SimScoreState:
+    overcast_rounds = 0
+    opponent_rounds = 0
+    for candidate in rounds:
+        if candidate.round_id < round_.round_id or (
+            candidate.round_id == round_.round_id and local_tick == 3
+        ):
+            if candidate.winner == "overcast":
+                overcast_rounds += 1
+            else:
+                opponent_rounds += 1
+    overcast_ids = {"rook", "vex", "sable", "pixie", "coyote"}
+    alive_overcast = sum(1 for state in states if state.agent_id in overcast_ids and state.alive)
+    alive_opponent = sum(1 for state in states if state.agent_id.startswith("opp_") and state.alive)
+    man_advantage = alive_overcast - alive_opponent
+    score_edge = overcast_rounds - opponent_rounds
+    win_probability = _clamp(
+        50
+        + score_edge * 11
+        + man_advantage * 7
+        + (telemetry.space_control - 50) // 3
+        + (telemetry.objective_pressure - 50) // 4
+        - (telemetry.risk_index - 50) // 5,
+        5,
+        95,
+    )
+    if win_probability >= 60:
+        momentum = "overcast"
+    elif win_probability <= 40:
+        momentum = "opponent"
+    else:
+        momentum = "even"
+    if man_advantage > 0:
+        body_read = f"man +{man_advantage}"
+    elif man_advantage < 0:
+        body_read = f"man {man_advantage}"
+    else:
+        body_read = "man even"
+    swing_reason = (
+        f"{body_read} | score {overcast_rounds}-{opponent_rounds} | "
+        f"objective {telemetry.objective_pressure} | risk {telemetry.risk_index}"
+    )
+    return Week11SimScoreState(
+        overcast_rounds=overcast_rounds,
+        opponent_rounds=opponent_rounds,
+        alive_overcast=alive_overcast,
+        alive_opponent=alive_opponent,
+        man_advantage=man_advantage,
+        win_probability=win_probability,
+        momentum=momentum,
+        swing_reason=swing_reason,
+    )
+
+
 def _event_type(action: Week11SimAction) -> str:
     return {
         "call_default": "call",
@@ -2006,11 +2082,18 @@ def _frames(
             local_tick=local_tick,
         )
         loadout_state = _loadout_state(
-        step=step,
-        round_=round_,
-        telemetry=telemetry,
-        local_tick=local_tick,
-    )
+            step=step,
+            round_=round_,
+            telemetry=telemetry,
+            local_tick=local_tick,
+        )
+        score_state = _score_state(
+            rounds=rounds,
+            round_=round_,
+            local_tick=local_tick,
+            states=states,
+            telemetry=telemetry,
+        )
         events = _frame_events(step=step, states=states, telemetry=telemetry)
         threat_arcs = _frame_threat_arcs(
             step=step,
@@ -2043,6 +2126,7 @@ def _frames(
                 telemetry=telemetry,
                 objective_state=objective_state,
                 loadout_state=loadout_state,
+                score_state=score_state,
                 states=states,
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
@@ -2256,6 +2340,19 @@ def _loadout_state_to_dict(loadout: Week11SimLoadoutState) -> dict[str, Any]:
     }
 
 
+def _score_state_to_dict(score: Week11SimScoreState) -> dict[str, Any]:
+    return {
+        "overcast_rounds": score.overcast_rounds,
+        "opponent_rounds": score.opponent_rounds,
+        "alive_overcast": score.alive_overcast,
+        "alive_opponent": score.alive_opponent,
+        "man_advantage": score.man_advantage,
+        "win_probability": score.win_probability,
+        "momentum": score.momentum,
+        "swing_reason": score.swing_reason,
+    }
+
+
 def _event_to_dict(event: Week11SimEvent) -> dict[str, Any]:
     return {
         "event_type": event.event_type,
@@ -2381,6 +2478,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "telemetry": _telemetry_to_dict(frame.telemetry),
         "objective_state": _objective_state_to_dict(frame.objective_state),
         "loadout_state": _loadout_state_to_dict(frame.loadout_state),
+        "score_state": _score_state_to_dict(frame.score_state),
         "states": [_state_to_dict(state) for state in frame.states],
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
@@ -2523,6 +2621,17 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "opponent_credits",
                 "economy_pressure",
                 "advantage",
+            ],
+            "score_state_unit": "frames[].score_state",
+            "score_state_fields": [
+                "overcast_rounds",
+                "opponent_rounds",
+                "alive_overcast",
+                "alive_opponent",
+                "man_advantage",
+                "win_probability",
+                "momentum",
+                "swing_reason",
             ],
             "agent_state_unit": "frames[].states[]",
             "agent_state_fields": [
@@ -3141,6 +3250,37 @@ def _loadout_state_from_any(data: Any, *, team_pressure: int) -> Week11SimLoadou
     )
 
 
+def _score_state_from_any(data: Any, *, team_pressure: int) -> Week11SimScoreState:
+    if isinstance(data, dict):
+        return Week11SimScoreState(
+            overcast_rounds=int(data.get("overcast_rounds", 0)),
+            opponent_rounds=int(data.get("opponent_rounds", 0)),
+            alive_overcast=int(data.get("alive_overcast", 5)),
+            alive_opponent=int(data.get("alive_opponent", 5)),
+            man_advantage=int(data.get("man_advantage", 0)),
+            win_probability=int(data.get("win_probability", team_pressure)),
+            momentum=str(data.get("momentum", "even")),
+            swing_reason=str(data.get("swing_reason", "")),
+        )
+    win_probability = _clamp(team_pressure, 5, 95)
+    if win_probability >= 60:
+        momentum = "overcast"
+    elif win_probability <= 40:
+        momentum = "opponent"
+    else:
+        momentum = "even"
+    return Week11SimScoreState(
+        overcast_rounds=0,
+        opponent_rounds=0,
+        alive_overcast=5,
+        alive_opponent=5,
+        man_advantage=0,
+        win_probability=win_probability,
+        momentum=momentum,
+        swing_reason="legacy score state",
+    )
+
+
 def _int_dict_from_any(data: Any) -> dict[str, int]:
     if not isinstance(data, dict):
         return {}
@@ -3476,6 +3616,10 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             ),
             loadout_state=_loadout_state_from_any(
                 frame.get("loadout_state"),
+                team_pressure=int(frame.get("team_pressure", 0)),
+            ),
+            score_state=_score_state_from_any(
+                frame.get("score_state"),
                 team_pressure=int(frame.get("team_pressure", 0)),
             ),
             states=tuple(
