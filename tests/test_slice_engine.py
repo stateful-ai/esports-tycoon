@@ -2379,6 +2379,33 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(len(step.action_mask) == 9 for step in replay.steps))
         self.assertTrue(
             all(
+                0 <= candidate.target_x <= 100
+                and 0 <= candidate.target_y <= 100
+                and -100 <= candidate.expected_delta <= 100
+                and -50 <= candidate.risk_delta <= 50
+                and -50 <= candidate.utility_delta <= 50
+                for step in replay.steps
+                for candidate in step.candidate_actions
+            )
+        )
+        self.assertTrue(
+            all(candidate.target_zone for step in replay.steps for candidate in step.candidate_actions if candidate.legal)
+        )
+        self.assertTrue(
+            any(
+                len(
+                    {
+                        (candidate.lane_id, candidate.target_zone)
+                        for candidate in step.candidate_actions
+                        if candidate.legal
+                    }
+                )
+                >= 2
+                for step in replay.steps
+            )
+        )
+        self.assertTrue(
+            all(
                 step.action_mask[index] == 1
                 for step in replay.steps
                 for index, candidate in enumerate(step.candidate_actions)
@@ -2423,6 +2450,12 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)
         self.assertIn('"candidate_actions":', payload)
+        self.assertIn('"target_zone":', payload)
+        self.assertIn('"target_x":', payload)
+        self.assertIn('"expected_delta":', payload)
+        self.assertIn('"risk_delta":', payload)
+        self.assertIn('"utility_delta":', payload)
+        self.assertIn('"counterfactual_tag":', payload)
         self.assertIn('"zone_control":', payload)
         self.assertIn('"events":', payload)
         self.assertIn('"threat_arcs":', payload)
@@ -2508,6 +2541,13 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(len(sample.action_mask) == 9 for sample in dataset.samples))
         self.assertTrue(all(sample.candidate_actions for sample in dataset.samples))
         self.assertTrue(
+            all(
+                candidate.lane_id and candidate.counterfactual_tag
+                for sample in dataset.samples
+                for candidate in sample.candidate_actions
+            )
+        )
+        self.assertTrue(
             any(
                 not candidate.legal
                 for sample in dataset.samples
@@ -2525,6 +2565,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"reward_components":', payload)
         self.assertIn('"action_mask":', payload)
         self.assertIn('"candidate_actions":', payload)
+        self.assertIn('"lane_id":', payload)
+        self.assertIn('"expected_delta":', payload)
         self.assertIn('"stops_before": "week12_model_prep"', payload)
         self.assertIn('"next_artifact": "week12_model_prep.json"', payload)
         self.assertTrue(
