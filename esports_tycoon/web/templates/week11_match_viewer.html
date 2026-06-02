@@ -58,6 +58,28 @@
     margin-top: 1rem;
     align-items: start;
   }
+  .lineup-hero {
+    position: relative;
+    min-height: clamp(170px, 25vw, 320px);
+    margin-top: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: #0a0d12;
+  }
+  .lineup-hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+  }
+  .lineup-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(8, 16, 21, 0.62), transparent 28%, transparent 72%, rgba(8, 16, 21, 0.52));
+    pointer-events: none;
+  }
   .arena-panel, .hud-panel, .agent-panel, .rl-panel {
     border: 1px solid rgba(187, 203, 205, 0.18);
     background: rgba(10, 13, 18, 0.68);
@@ -162,6 +184,20 @@
     letter-spacing: 0;
     margin-bottom: 0.35rem;
   }
+  .focus-portrait {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid rgba(187, 203, 205, 0.2);
+    background: #10161a;
+    margin-bottom: 0.8rem;
+  }
+  .focus-portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+  }
   .metric-stack {
     display: grid;
     gap: 0.55rem;
@@ -192,6 +228,20 @@
     margin-top: 1rem;
   }
   .agent-panel { padding: 0.75rem; }
+  .agent-portrait {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid rgba(187, 203, 205, 0.15);
+    margin-bottom: 0.65rem;
+    background: #11171c;
+  }
+  .agent-portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+  }
   .agent-head {
     display: flex;
     justify-content: space-between;
@@ -228,6 +278,27 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 1rem;
     margin-top: 1rem;
+  }
+  .round-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.8rem;
+  }
+  .round-card {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(255,255,255,0.04);
+    padding: 0.65rem;
+  }
+  .round-card strong {
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .round-card span {
+    display: block;
+    color: #a7b4b5;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
   }
   .rl-panel { padding: 0.85rem; }
   .step-list {
@@ -278,6 +349,7 @@
     .viewer-top, .viewer-grid, .rl-layout { grid-template-columns: 1fr; }
     .viewer-chips { justify-content: flex-start; }
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .round-grid { grid-template-columns: 1fr; }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -311,6 +383,10 @@
       <span class="data-chip hot">{{ replay.sim_mode }}</span>
     </div>
   </div>
+
+  <figure class="lineup-hero">
+    <img src="{{ url_for('static', filename='art/portraits/overcast-lineup.webp') }}" alt="Overcast team portrait lineup">
+  </figure>
 
   <div class="viewer-grid">
     <section class="arena-panel">
@@ -351,6 +427,9 @@
 
     <aside class="hud-panel">
       <div class="panel-kicker">Focused agent</div>
+      <div class="focus-portrait">
+        <img id="agent-portrait" src="{{ url_for('static', filename=replay.agents[0].portrait_asset) }}" alt="Focused player portrait">
+      </div>
       <h2 id="agent-name" style="margin: 0 0 0.2rem; border: 0; padding: 0;">{{ replay.agents[0].name }}</h2>
       <div class="agent-policy" id="agent-policy">{{ replay.agents[0].policy_id }}</div>
       <div class="metric-stack" style="margin-top: 0.8rem;">
@@ -366,12 +445,25 @@
         <span class="data-chip warn" id="agent-epoch">epoch {{ replay.agents[0].skill_epoch_proxy }}</span>
         <span class="data-chip" id="agent-scenario">{{ replay.agents[0].scenario_archetype }}</span>
       </div>
+      <div class="round-grid">
+        {% for round in replay.rounds %}
+          <div class="round-card">
+            <strong>R{{ round.round_id }} {{ round.side_phase }} · {{ round.objective_lane }}</strong>
+            <span>{{ round.opening_plan }}</span>
+            <span>{{ round.pressure_test }} · {{ round.terminal_condition }}</span>
+            <span>winner {{ round.winner }} · reward {{ round.reward_total }}</span>
+          </div>
+        {% endfor %}
+      </div>
     </aside>
   </div>
 
   <div class="agent-grid">
     {% for agent in replay.agents if agent.side == "overcast" %}
       <section class="agent-panel">
+        <div class="agent-portrait">
+          <img src="{{ url_for('static', filename=agent.portrait_asset) }}" alt="{{ agent.name }} portrait">
+        </div>
         <div class="agent-head">
           <strong>{{ agent.name }}</strong>
           <span class="agent-role">{{ agent.role }}</span>
@@ -444,6 +536,7 @@
   const agentRole = document.getElementById("agent-role");
   const agentEpoch = document.getElementById("agent-epoch");
   const agentScenario = document.getElementById("agent-scenario");
+  const agentPortrait = document.getElementById("agent-portrait");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
 
@@ -458,6 +551,10 @@
     agentRole.textContent = agent.role;
     agentEpoch.textContent = `epoch ${agent.skill_epoch_proxy}`;
     agentScenario.textContent = agent.scenario_archetype;
+    if (agent.portrait_asset) {
+      agentPortrait.src = `/static/${agent.portrait_asset}`;
+      agentPortrait.alt = `${agent.name} portrait`;
+    }
     setMetric("aim", agent.trait_profile.aim);
     setMetric("discipline", agent.trait_profile.discipline);
     setMetric("tempo", agent.trait_profile.tempo);

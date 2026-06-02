@@ -117,6 +117,13 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_arena_resp.mimetype, "image/webp")
         self.assertTrue(week11_arena_resp.data.startswith(b"RIFF"))
 
+        for portrait in ("rook", "vex", "sable", "pixie", "coyote", "overcast-lineup"):
+            with self.subTest(portrait=portrait):
+                resp = self.client.get(f"/static/art/portraits/{portrait}.webp")
+                self.assertEqual(resp.status_code, 200)
+                self.assertEqual(resp.mimetype, "image/webp")
+                self.assertTrue(resp.data.startswith(b"RIFF"))
+
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
         self.assertEqual(resp.status_code, 200)
@@ -1493,11 +1500,14 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 11 tactical sim", page.data)
         self.assertIn(b"/static/art/week11-match-arena.webp", page.data)
+        self.assertIn(b"/static/art/portraits/overcast-lineup.webp", page.data)
+        self.assertIn(b"/static/art/portraits/vex.webp", page.data)
         self.assertIn(b"Generate replay artifact", page.data)
         self.assertIn(b"entry_pressure_sprinter", page.data)
         self.assertIn(b"structured_default_caller", page.data)
         self.assertIn(b"skill_epoch_proxy", page.data)
         self.assertIn(b"observation_space", page.data)
+        self.assertIn(b"R1 attack", page.data)
         self.assertFalse((run_dir / "week11_match_sim.json").exists())
 
         locked = self.client.post("/week11/match/viewer")
@@ -1513,12 +1523,15 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"selected_plan": "trust_the_read"', replay_json)
         self.assertIn('"outcome_id": "read_trusted"', replay_json)
         self.assertIn('"agents":', replay_json)
+        self.assertIn('"rounds":', replay_json)
         self.assertIn('"frames":', replay_json)
         self.assertIn('"steps":', replay_json)
         self.assertIn('"rl_contract":', replay_json)
         self.assertIn('"action_space":', replay_json)
         self.assertIn('"reward_fields":', replay_json)
         self.assertIn('"skill_epoch_proxy":', replay_json)
+        self.assertIn('"portrait_asset": "art/portraits/vex.webp"', replay_json)
+        self.assertIn('"round_id": 1', replay_json)
         self.assertIn('"next_artifact": null', replay_json)
 
     def test_week11_match_viewer_requires_result_artifact(self):
