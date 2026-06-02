@@ -1577,7 +1577,46 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"policy_targets":', development_json)
         self.assertIn('"development_contract":', development_json)
         self.assertIn('"target_policy_id":', development_json)
-        self.assertIn('"next_artifact": null', development_json)
+        self.assertIn('"stops_before": "week11_training_dataset"', development_json)
+        self.assertIn('"next_artifact": "week11_training_dataset.json"', development_json)
+
+    def test_week11_training_dataset_consumes_development_plan_and_writes_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+
+        page = self.client.get("/week11/match/training-dataset")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 training dataset", page.data)
+        self.assertIn(b"offline_rl_transition_v1", page.data)
+        self.assertIn(b"policy_targets", page.data)
+        self.assertIn(b"Lock training dataset", page.data)
+        self.assertIn(b"telemetry", page.data)
+        self.assertFalse((run_dir / "week11_training_dataset.json").exists())
+
+        locked = self.client.post("/week11/match/training-dataset")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Training dataset locked", locked.data)
+        self.assertIn(b"week11_training_dataset.json", locked.data)
+
+        dataset_json = (run_dir / "week11_training_dataset.json").read_text(encoding="utf-8")
+        self.assertIn('"source_artifact": "week11_development_plan.json"', dataset_json)
+        self.assertIn('"checkpoint": "week11_training_dataset"', dataset_json)
+        self.assertIn('"samples":', dataset_json)
+        self.assertIn('"next_observation":', dataset_json)
+        self.assertIn('"target_policy_id":', dataset_json)
+        self.assertIn('"dataset_contract":', dataset_json)
+        self.assertIn('"next_artifact": null', dataset_json)
+
+    def test_week11_training_dataset_requires_development_plan_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+
+        page = self.client.get("/week11/match/training-dataset")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 development plan required", page.data)
+        self.assertIn(b"week11_development_plan.json", page.data)
+        self.assertFalse((run_dir / "week11_training_dataset.json").exists())
 
     def test_week11_match_development_requires_replay_artifact(self):
         run_dir = self._play_to_week11_match_result()
