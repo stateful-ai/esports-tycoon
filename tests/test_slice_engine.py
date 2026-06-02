@@ -2415,6 +2415,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all("economy_pressure" in step.observation_features for step in replay.steps))
         self.assertTrue(all(step.action_context for step in replay.steps))
         self.assertTrue(all(step.reward_components for step in replay.steps))
+        self.assertEqual(
+            [step.return_to_go_x100 for step in replay.steps if step.round_id == 1],
+            [544, 604, 560, 400],
+        )
         self.assertTrue(all(step.policy_evaluation for step in replay.steps))
         self.assertTrue(
             all(
@@ -2486,6 +2490,9 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"observation_features":', payload)
         self.assertIn('"action_context":', payload)
         self.assertIn('"reward_components":', payload)
+        self.assertIn('"return_to_go_x100":', payload)
+        self.assertIn('"value_target_field": "steps[].return_to_go_x100"', payload)
+        self.assertIn('"discount_factor_x100": 90', payload)
         self.assertIn('"map_layout":', payload)
         self.assertIn('"map_layout_unit": "map_layout"', payload)
         self.assertIn('"map_cover_unit": "map_layout.covers[]"', payload)
@@ -2620,6 +2627,27 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(sample.split == "eval" for sample in dataset.samples if sample.round_id == 3))
         self.assertTrue(all(sample.observation_features for sample in dataset.samples))
         self.assertTrue(all(sample.reward_components for sample in dataset.samples))
+        self.assertTrue(all(isinstance(sample.return_to_go_x100, int) for sample in dataset.samples))
+        step_by_transition = {
+            (step.round_id, step.tick, step.agent_id): step for step in replay.steps
+        }
+        self.assertTrue(
+            all(
+                sample.return_to_go_x100
+                == step_by_transition[
+                    (sample.round_id, sample.tick, sample.agent_id)
+                ].return_to_go_x100
+                for sample in dataset.samples
+            )
+        )
+        terminal_sample_ids = {episode.terminal_sample_id for episode in dataset.episodes}
+        self.assertTrue(
+            all(
+                sample.return_to_go_x100 == sample.reward * 100
+                for sample in dataset.samples
+                if sample.sample_id in terminal_sample_ids
+            )
+        )
         self.assertTrue(all(len(sample.action_mask) == 9 for sample in dataset.samples))
         self.assertTrue(all(sample.candidate_actions for sample in dataset.samples))
         self.assertTrue(
@@ -2652,6 +2680,9 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"telemetry":', payload)
         self.assertIn('"observation_features":', payload)
         self.assertIn('"reward_components":', payload)
+        self.assertIn('"return_to_go_x100":', payload)
+        self.assertIn('"value_target_field": "samples[].return_to_go_x100"', payload)
+        self.assertIn('"discount_factor_x100": 90', payload)
         self.assertIn('"action_mask":', payload)
         self.assertIn('"candidate_actions":', payload)
         self.assertIn('"lane_id":', payload)
@@ -2720,6 +2751,12 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(any(target.eval_sample_count > 0 for target in prep.targets))
         self.assertTrue(all(0 <= target.risk_index <= 100 for target in prep.targets))
         self.assertTrue(all(0 <= target.objective_pressure <= 100 for target in prep.targets))
+        self.assertTrue(
+            all(isinstance(target.return_to_go_mean_x100, int) for target in prep.targets)
+        )
+        self.assertTrue(
+            any(target.eval_return_to_go_mean_x100 > 0 for target in prep.targets)
+        )
         self.assertTrue(all(target.component_totals for target in prep.targets))
         self.assertTrue(all(target.dominant_failure_mode for target in prep.targets))
         self.assertIn('"source_artifact": "week11_training_dataset.json"', payload)
@@ -2730,6 +2767,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"train_sample_count":', payload)
         self.assertIn('"eval_sample_count":', payload)
         self.assertIn('"eval_reward_mean_x100":', payload)
+        self.assertIn('"return_to_go_mean_x100":', payload)
+        self.assertIn('"eval_return_to_go_mean_x100":', payload)
         self.assertIn('"held_out_split": "eval"', payload)
         self.assertIn('"component_totals":', payload)
         self.assertIn('"dominant_failure_mode":', payload)

@@ -40,6 +40,8 @@ class Week12ModelPrepTarget:
     reward_total: int
     reward_mean_x100: int
     eval_reward_mean_x100: int
+    return_to_go_mean_x100: int
+    eval_return_to_go_mean_x100: int
     risk_index: int
     eval_risk_index: int
     objective_pressure: int
@@ -201,6 +203,8 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
             samples = samples_by_agent.get(agent_id, [])
         rewards = [sample.reward for sample in samples]
         eval_rewards = [sample.reward for sample in eval_samples]
+        return_targets = [sample.return_to_go_x100 for sample in samples]
+        eval_return_targets = [sample.return_to_go_x100 for sample in eval_samples]
         risk_values = [sample.telemetry.risk_index for sample in samples]
         eval_risk_values = [sample.telemetry.risk_index for sample in eval_samples]
         objective_values = [sample.telemetry.objective_pressure for sample in samples]
@@ -208,6 +212,8 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
         epoch_delta = int(target.get("epoch_delta", 0))
         reward_mean_x100 = _mean_x100(rewards)
         eval_reward_mean_x100 = _mean_x100(eval_rewards)
+        return_to_go_mean_x100 = _mean_int(return_targets)
+        eval_return_to_go_mean_x100 = _mean_int(eval_return_targets)
         risk_index = _mean_int(risk_values)
         eval_risk_index = _mean_int(eval_risk_values)
         objective_pressure = _mean_int(objective_values)
@@ -249,6 +255,8 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
                 reward_total=sum(rewards),
                 reward_mean_x100=reward_mean_x100,
                 eval_reward_mean_x100=eval_reward_mean_x100,
+                return_to_go_mean_x100=return_to_go_mean_x100,
+                eval_return_to_go_mean_x100=eval_return_to_go_mean_x100,
                 risk_index=risk_index,
                 eval_risk_index=eval_risk_index,
                 objective_pressure=objective_pressure,
@@ -302,6 +310,8 @@ def _model_prep_target_to_dict(target: Week12ModelPrepTarget) -> dict[str, Any]:
         "reward_total": target.reward_total,
         "reward_mean_x100": target.reward_mean_x100,
         "eval_reward_mean_x100": target.eval_reward_mean_x100,
+        "return_to_go_mean_x100": target.return_to_go_mean_x100,
+        "eval_return_to_go_mean_x100": target.eval_return_to_go_mean_x100,
         "risk_index": target.risk_index,
         "eval_risk_index": target.eval_risk_index,
         "objective_pressure": target.objective_pressure,
@@ -363,6 +373,8 @@ def week12_model_prep_to_dict(prep: Week12ModelPrep) -> dict[str, Any]:
                 "eval_sample_count",
                 "reward_mean_x100",
                 "eval_reward_mean_x100",
+                "return_to_go_mean_x100",
+                "eval_return_to_go_mean_x100",
                 "risk_index",
                 "eval_risk_index",
                 "objective_pressure",
@@ -419,6 +431,12 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
             reward_total=int(target.get("reward_total", 0)),
             reward_mean_x100=int(target.get("reward_mean_x100", 0)),
             eval_reward_mean_x100=int(target.get("eval_reward_mean_x100", 0)),
+            return_to_go_mean_x100=int(
+                target.get("return_to_go_mean_x100", target.get("reward_mean_x100", 0))
+            ),
+            eval_return_to_go_mean_x100=int(
+                target.get("eval_return_to_go_mean_x100", target.get("eval_reward_mean_x100", 0))
+            ),
             risk_index=int(target.get("risk_index", 0)),
             eval_risk_index=int(target.get("eval_risk_index", 0)),
             objective_pressure=int(target.get("objective_pressure", 0)),
