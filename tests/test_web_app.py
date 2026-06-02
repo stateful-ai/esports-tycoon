@@ -1233,7 +1233,68 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"selected_prep": "build_edge_lane"', prep_json)
         self.assertIn('"prep_outcome_id": "edge_lane_drilled"', prep_json)
         self.assertIn('"stops_before": "week11_scrim"', prep_json)
-        self.assertIn('"next_artifact": null', prep_json)
+        self.assertIn('"next_artifact": "week11_scrim.json"', prep_json)
+
+    def test_week11_scrim_consumes_prep_and_writes_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+        self.client.post("/week9/match/result")
+        self.client.post("/week10/fallout", data={"week10_fallout": "raise_standards"})
+        self.client.post("/week10/prep", data={"week10_prep": "roster_reps"})
+        self.client.post("/week10/scrim", data={"week10_scrim": "stress_execution"})
+        self.client.post(
+            "/week10/match",
+            data={"week10_match_plan": "week10_plan_press_advantage"},
+        )
+        self.client.post("/week10/match/result")
+        self.client.post(
+            "/week10/post-match-review",
+            data={"week10_post_match_review": "bank_pattern"},
+        )
+        self.client.post("/week11/setup", data={"week11_setup": "lean_into_carry"})
+        self.client.post("/week11/prep", data={"week11_prep": "build_edge_lane"})
+
+        page = self.client.get("/week11/scrim")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 scrim", page.data)
+        self.assertIn(b"repeat_edge", page.data)
+        self.assertIn(b"show_countermove", page.data)
+        self.assertIn(b"steady_first_contact", page.data)
+        self.assertIn(b"/static/art/week11-prep-room.webp", page.data)
+
+        locked = self.client.post("/week11/scrim", data={"week11_scrim": "repeat_edge"})
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Week 11 scrim locked", locked.data)
+        self.assertIn(b"edge_repeated_under_pressure", locked.data)
+        self.assertIn(b"week11_scrim.json", locked.data)
+
+        run_dir = next(self.output_root.glob("wk6-*"))
+        scrim_json = (run_dir / "week11_scrim.json").read_text(encoding="utf-8")
+        self.assertIn('"week11_prep": "week11_prep.json"', scrim_json)
+        self.assertIn('"source_artifact": "week11_prep.json"', scrim_json)
+        self.assertIn('"checkpoint": "week11_scrim"', scrim_json)
+        self.assertIn('"selected_scrim": "repeat_edge"', scrim_json)
+        self.assertIn('"scrim_outcome_id": "edge_repeated_under_pressure"', scrim_json)
+        self.assertIn('"scrim_protocol": "repeat_edge_pressure_reps"', scrim_json)
+        self.assertIn('"analyst_read_id": "edge_lane_survives_contact"', scrim_json)
+        self.assertIn('"recommendation_reason":', scrim_json)
+        self.assertIn('"match_plan_seed": "edge_pressure_plan"', scrim_json)
+        self.assertIn('"stops_before": "week11_match_plan"', scrim_json)
+        self.assertIn('"next_artifact": null', scrim_json)
 
     def test_week11_prep_requires_setup_artifact(self):
         self.client.post(
@@ -1272,6 +1333,45 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"week11_setup.json", page.data)
         run_dir = next(self.output_root.glob("wk6-*"))
         self.assertFalse((run_dir / "week11_prep.json").exists())
+
+    def test_week11_scrim_requires_prep_artifact(self):
+        self.client.post(
+            "/practice",
+            data={"practice_focus": "defaults", "training_drill": "vex_aim"},
+        )
+        self.client.post("/prematch", data={"team_talk": "trust the review."})
+        self.client.post("/fallout", data={"fallout_post": "review receipts logged."})
+        self.client.post("/week7", data={"week7_focus": "prove_ceiling"})
+        self.client.post("/week7/result")
+        self.client.post("/week8", data={"week8_prep": "patch_exposed_break"})
+        self.client.post("/week8/scrim", data={"week8_scrim": "cover_the_crack"})
+        self.client.post("/week8/match", data={"week8_match_plan": "patch_weakness"})
+        self.client.post("/week8/match/result")
+        self.client.post("/week9", data={"week9_response": "control_public_story"})
+        self.client.post("/week9/prep", data={"week9_prep": "counter_read"})
+        self.client.post("/week9/scrim", data={"week9_scrim": "public_read"})
+        self.client.post("/week9/match", data={"week9_match_plan": "play_the_prep"})
+        self.client.post("/week9/match/result")
+        self.client.post("/week10/fallout", data={"week10_fallout": "raise_standards"})
+        self.client.post("/week10/prep", data={"week10_prep": "roster_reps"})
+        self.client.post("/week10/scrim", data={"week10_scrim": "stress_execution"})
+        self.client.post(
+            "/week10/match",
+            data={"week10_match_plan": "week10_plan_press_advantage"},
+        )
+        self.client.post("/week10/match/result")
+        self.client.post(
+            "/week10/post-match-review",
+            data={"week10_post_match_review": "bank_pattern"},
+        )
+        self.client.post("/week11/setup", data={"week11_setup": "lean_into_carry"})
+
+        page = self.client.get("/week11/scrim")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 prep required", page.data)
+        self.assertIn(b"week11_prep.json", page.data)
+        run_dir = next(self.output_root.glob("wk6-*"))
+        self.assertFalse((run_dir / "week11_scrim.json").exists())
 
     def test_week11_setup_requires_review_artifact(self):
         self.client.post(

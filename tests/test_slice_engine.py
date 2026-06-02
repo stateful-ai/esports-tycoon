@@ -53,6 +53,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_prep_json,
     render_week10_scrim_json,
     render_week11_prep_json,
+    render_week11_scrim_json,
     render_week11_setup_json,
     run_slice,
     resolve_week7_focus,
@@ -73,6 +74,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_prep,
     resolve_week10_scrim,
     resolve_week11_prep,
+    resolve_week11_scrim,
     resolve_week11_setup,
     setup_payload_from_week7_setup,
     slice_events,
@@ -96,6 +98,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_scrim_plan,
     week11_prep_from_json,
     week11_prep_plan,
+    week11_scrim_from_json,
+    week11_scrim_plan,
     week11_setup_from_json,
     week11_setup_plan,
     write_artifacts,
@@ -1870,7 +1874,7 @@ class TestWeek11Prep(_Fixture):
         self.assertIn('"prep_outcome_id": "edge_lane_drilled"', payload)
         self.assertIn('"scrim_seed": "edge_lane_reps"', payload)
         self.assertIn('"stops_before": "week11_scrim"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"next_artifact": "week11_scrim.json"', payload)
 
     def test_week11_prep_render_parse_round_trip_is_stable(self):
         lock = resolve_week11_prep(week11_prep_plan(self._advantage_setup()), "build_edge_lane")
@@ -1883,6 +1887,132 @@ class TestWeek11Prep(_Fixture):
     def test_week11_prep_rejects_invalid_choice(self):
         with self.assertRaisesRegex(ValueError, "selected_prep"):
             resolve_week11_prep(week11_prep_plan(self._advantage_setup()), "skip_prep")
+
+
+class TestWeek11Scrim(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        return TestWeek11Prep._result_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+
+    def _advantage_prep(self):
+        setup = TestWeek11Prep._advantage_setup(self)
+        return resolve_week11_prep(week11_prep_plan(setup), "build_edge_lane")
+
+    def _watch_prep(self):
+        setup = TestWeek11Prep._watch_setup(self)
+        return resolve_week11_prep(week11_prep_plan(setup), "scout_countermove")
+
+    def _constraint_prep(self):
+        setup = TestWeek11Prep._constraint_setup(self)
+        return resolve_week11_prep(week11_prep_plan(setup), "stabilize_room")
+
+    def _preps_by_outcome(self):
+        cases = {
+            "edge_lane_drilled": (TestWeek11Prep._advantage_setup(self), "build_edge_lane"),
+            "edge_lane_forced": (TestWeek11Prep._constraint_setup(self), "build_edge_lane"),
+            "countermove_ready": (TestWeek11Prep._watch_setup(self), "scout_countermove"),
+            "countermove_noisy": (TestWeek11Prep._advantage_setup(self), "scout_countermove"),
+            "room_prepped": (TestWeek11Prep._constraint_setup(self), "stabilize_room"),
+            "room_tentative": (TestWeek11Prep._advantage_setup(self), "stabilize_room"),
+        }
+        return {
+            outcome_id: resolve_week11_prep(week11_prep_plan(setup), selected_prep)
+            for outcome_id, (setup, selected_prep) in cases.items()
+        }
+
+    def test_week11_scrim_recommendation_uses_prep_outcome(self):
+        cases = {
+            "edge_lane_drilled": "repeat_edge",
+            "edge_lane_forced": "show_countermove",
+            "countermove_ready": "show_countermove",
+            "countermove_noisy": "show_countermove",
+            "room_prepped": "steady_first_contact",
+            "room_tentative": "repeat_edge",
+        }
+        preps = self._preps_by_outcome()
+        for prep_outcome, expected in cases.items():
+            with self.subTest(prep_outcome=prep_outcome):
+                plan = week11_scrim_plan(preps[prep_outcome])
+
+                self.assertEqual(plan.recommended_scrim, expected)
+                self.assertTrue(plan.recommendation_reason)
+
+    def test_week11_scrim_choice_matrix_is_stable(self):
+        outcomes = {
+            ("edge_lane_drilled", "repeat_edge"): "edge_repeated_under_pressure",
+            ("edge_lane_drilled", "show_countermove"): "edge_counter_scouted",
+            ("edge_lane_drilled", "steady_first_contact"): "edge_tempo_dulled",
+            ("edge_lane_forced", "repeat_edge"): "forced_edge_punished",
+            ("edge_lane_forced", "show_countermove"): "forced_edge_exposed",
+            ("edge_lane_forced", "steady_first_contact"): "forced_edge_depressurized",
+            ("countermove_ready", "repeat_edge"): "counter_read_ignored",
+            ("countermove_ready", "show_countermove"): "countermove_confirmed",
+            ("countermove_ready", "steady_first_contact"): "counter_timing_delayed",
+            ("countermove_noisy", "repeat_edge"): "noise_hardened_into_call",
+            ("countermove_noisy", "show_countermove"): "read_narrowed",
+            ("countermove_noisy", "steady_first_contact"): "read_noise_depressurized",
+            ("room_prepped", "repeat_edge"): "stable_room_underused",
+            ("room_prepped", "show_countermove"): "room_overloaded_by_scout",
+            ("room_prepped", "steady_first_contact"): "first_contact_stabilized",
+            ("room_tentative", "repeat_edge"): "tentative_room_given_task",
+            ("room_tentative", "show_countermove"): "tentative_room_overloaded",
+            ("room_tentative", "steady_first_contact"): "room_stays_tentative",
+        }
+        preps = self._preps_by_outcome()
+        seen_outcomes = set()
+        for (prep_outcome, scrim_choice), expected in outcomes.items():
+            with self.subTest(prep_outcome=prep_outcome, scrim_choice=scrim_choice):
+                lock = resolve_week11_scrim(week11_scrim_plan(preps[prep_outcome]), scrim_choice)
+
+                self.assertEqual(lock.scrim_outcome_id, expected)
+                self.assertTrue(lock.scrim_protocol)
+                self.assertTrue(lock.analyst_read_id)
+                seen_outcomes.add(lock.scrim_outcome_id)
+        self.assertEqual(seen_outcomes, set(outcomes.values()))
+
+    def test_week11_scrim_artifact_sources_prep_and_stops_before_match_plan(self):
+        lock = resolve_week11_scrim(week11_scrim_plan(self._advantage_prep()), "repeat_edge")
+        payload = render_week11_scrim_json(lock)
+
+        self.assertIn('"week11_prep": "week11_prep.json"', payload)
+        self.assertIn('"source_artifact": "week11_prep.json"', payload)
+        self.assertIn('"checkpoint": "week11_scrim"', payload)
+        self.assertIn('"artifact_type": "week11_scrim"', payload)
+        self.assertIn('"selected_scrim": "repeat_edge"', payload)
+        self.assertIn('"scrim_outcome_id": "edge_repeated_under_pressure"', payload)
+        self.assertIn('"scrim_protocol": "repeat_edge_pressure_reps"', payload)
+        self.assertIn('"analyst_read_id": "edge_lane_survives_contact"', payload)
+        self.assertIn('"recommendation_reason":', payload)
+        self.assertIn('"recommended_prep": "build_edge_lane"', payload)
+        self.assertIn('"prep_priority":', payload)
+        self.assertIn('"match_plan_seed": "edge_pressure_plan"', payload)
+        self.assertIn('"stops_before": "week11_match_plan"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_scrim_render_parse_round_trip_is_stable(self):
+        lock = resolve_week11_scrim(week11_scrim_plan(self._advantage_prep()), "repeat_edge")
+        payload = render_week11_scrim_json(lock)
+        parsed = week11_scrim_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week11_scrim_json(parsed), payload)
+
+    def test_week11_scrim_rejects_invalid_choice(self):
+        with self.assertRaisesRegex(ValueError, "selected_scrim"):
+            resolve_week11_scrim(week11_scrim_plan(self._advantage_prep()), "skip_scrim")
 
 
 class TestDeterminism(_Fixture):

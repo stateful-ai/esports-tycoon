@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Week 11 prep — {{ team.name }}{% endblock %}
+{% block title %}Week 11 scrim — {{ team.name }}{% endblock %}
 {% block content %}
 <style>
   main { max-width: 1120px; }
-  .prep-console {
+  .scrim-console {
     color: #dfe2eb;
     background:
       linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
@@ -13,7 +13,7 @@
     border: 1px solid #30363d;
     padding: 1rem;
   }
-  .prep-console h1, .prep-console h2, .prep-console p { color: inherit; }
+  .scrim-console h1, .scrim-console h2, .scrim-console p { color: inherit; }
   .console-top {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -58,13 +58,13 @@
   .data-chip.positive { border-color: #3fb950; color: #9be9a8; }
   .data-chip.watch { border-color: #f2cc60; color: #f2cc60; }
   .data-chip.negative { border-color: #ff7b72; color: #ffb4ab; }
-  .prep-grid {
+  .scrim-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     gap: 1rem;
     align-items: start;
   }
-  .prep-panel {
+  .scrim-panel {
     background: #161b22;
     border: 1px solid #30363d;
     padding: 1rem;
@@ -92,12 +92,12 @@
     overflow-wrap: anywhere;
   }
   .copy-line { color: #c4c7ca; margin: 0.45rem 0 0.85rem; }
-  .prep-options {
+  .scrim-options {
     display: grid;
     gap: 0.65rem;
     margin-top: 0.85rem;
   }
-  .prep-option {
+  .scrim-option {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.65rem;
@@ -107,26 +107,26 @@
     padding: 0.75rem;
     cursor: pointer;
   }
-  .prep-option input {
+  .scrim-option input {
     margin-top: 0.25rem;
     accent-color: #f2cc60;
   }
-  .prep-option strong { display: block; color: #f0f6fc; margin-bottom: 0.25rem; }
-  .prep-option span { display: block; color: #9ba3ad; font-size: 0.9rem; }
+  .scrim-option strong { display: block; color: #f0f6fc; margin-bottom: 0.25rem; }
+  .scrim-option span { display: block; color: #9ba3ad; font-size: 0.9rem; }
   .console-actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
-  .prep-console .btn {
+  .scrim-console .btn {
     border-radius: 0;
     background: #f0f6fc;
     color: #0d1117;
     border: 1px solid #f0f6fc;
   }
-  .prep-console .btn.secondary {
+  .scrim-console .btn.secondary {
     background: transparent;
     color: #dfe2eb;
     border-color: #30363d;
   }
   @media (max-width: 820px) {
-    .console-top, .prep-grid { grid-template-columns: 1fr; }
+    .console-top, .scrim-grid { grid-template-columns: 1fr; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
     .recap-strip { justify-content: flex-start; }
   }
@@ -134,55 +134,57 @@
 
 {% if missing %}
 <div class="card">
-  <strong>Week 11 setup required</strong>
+  <strong>Week 11 prep required</strong>
   <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
   <div class="actions">
-    <a class="btn" href="{{ url_for('week11_setup') }}">Back to Week 11 setup</a>
+    <a class="btn" href="{{ url_for('week11_prep') }}">Back to Week 11 prep</a>
   </div>
 </div>
-{% elif prep_plan and not prep_lock %}
-<div class="prep-console">
+{% elif scrim_plan and not scrim_lock %}
+<div class="scrim-console">
   <div class="console-top">
     <div class="console-title">
-      <h1>Week 11 prep</h1>
-      <p class="sub">{{ prep_plan.prep_prompt }}</p>
+      <h1>Week 11 scrim</h1>
+      <p class="sub">{{ scrim_plan.scrim_prompt }}</p>
     </div>
     <div class="recap-strip">
-      <span class="data-chip">pressure {{ prep_plan.week11_pressure }}</span>
-      <span class="data-chip {{ prep_plan.carry_forward_polarity }}">{{ prep_plan.carry_forward_tag }}</span>
-      <span class="data-chip">recommended {{ prep_plan.recommended_prep }}</span>
+      <span class="data-chip">seed {{ scrim_plan.scrim_seed }}</span>
+      <span class="data-chip {{ scrim_plan.carry_forward_polarity }}">{{ scrim_plan.carry_forward_tag }}</span>
+      <span class="data-chip">recommended {{ scrim_plan.recommended_scrim }}</span>
     </div>
   </div>
 
   <figure class="ops-room-art">
-    <img src="{{ url_for('static', filename='art/week11-prep-room.webp') }}" alt="Week 11 prep operations room">
+    <img src="{{ url_for('static', filename='art/week11-prep-room.webp') }}" alt="Week 11 scrim preparation room">
   </figure>
 
-  <div class="prep-grid">
-    <section class="prep-panel">
-      <div class="panel-kicker">Setup pressure</div>
+  <div class="scrim-grid">
+    <section class="scrim-panel">
+      <div class="panel-kicker">Prep seed</div>
       <div class="panel-title">
-        <strong>{{ prep_plan.opening_priority }}</strong>
-        <span class="readout">{{ prep_plan.setup_outcome_id }}</span>
+        <strong>{{ scrim_plan.prep_priority }}</strong>
+        <span class="readout">{{ scrim_plan.prep_outcome_id }}</span>
       </div>
+      <div class="copy-line">Scrim seed: {{ scrim_plan.scrim_seed }}</div>
+      <div class="copy-line">{{ scrim_plan.recommendation_reason }}</div>
       <div class="chip-row">
-        {% for effect in prep_plan.visible_effects %}
+        {% for effect in scrim_plan.visible_effects %}
           <span class="data-chip {{ effect.polarity }}">{{ effect.label }}</span>
         {% endfor %}
       </div>
     </section>
 
-    <section class="prep-panel">
-      <div class="panel-kicker">Prep allocation</div>
-      <form method="post" action="{{ url_for('week11_prep') }}">
-        <div class="prep-options">
-          {% for option in prep_plan.options %}
-            <label class="prep-option">
+    <section class="scrim-panel">
+      <div class="panel-kicker">Scrim protocol</div>
+      <form method="post" action="{{ url_for('week11_scrim') }}">
+        <div class="scrim-options">
+          {% for option in scrim_plan.options %}
+            <label class="scrim-option">
               <input
                 type="radio"
-                name="week11_prep"
+                name="week11_scrim"
                 value="{{ option.value }}"
-                {% if option.value == prep_plan.recommended_prep %}checked{% endif %}
+                {% if option.value == scrim_plan.recommended_scrim %}checked{% endif %}
               >
               <span>
                 <strong>{{ option.label }}</strong>
@@ -193,72 +195,70 @@
           {% endfor %}
         </div>
         <div class="console-actions">
-          <button class="btn" type="submit">Lock Week 11 prep</button>
-          <a class="btn secondary" href="{{ url_for('week11_setup') }}">Back to setup</a>
+          <button class="btn" type="submit">Lock Week 11 scrim</button>
+          <a class="btn secondary" href="{{ url_for('week11_prep') }}">Back to prep</a>
         </div>
       </form>
     </section>
   </div>
 </div>
-{% elif prep_lock %}
-<div class="prep-console">
+{% elif scrim_lock %}
+<div class="scrim-console">
   <div class="console-top">
     <div class="console-title">
-      <h1>Week 11 prep locked</h1>
-      <p class="sub">{{ prep_lock.prep_priority }}</p>
+      <h1>Week 11 scrim locked</h1>
+      <p class="sub">{{ scrim_lock.scrim_priority }}</p>
     </div>
     <div class="recap-strip">
-      <span class="data-chip">prep {{ prep_lock.prep_outcome_id }}</span>
-      <span class="data-chip">scrim {{ prep_lock.scrim_seed }}</span>
-      <span class="data-chip {{ prep_lock.carry_forward_polarity }}">{{ prep_lock.carry_forward_tag }}</span>
+      <span class="data-chip">scrim {{ scrim_lock.scrim_outcome_id }}</span>
+      <span class="data-chip">match seed {{ scrim_lock.match_plan_seed }}</span>
+      <span class="data-chip {{ scrim_lock.carry_forward_polarity }}">{{ scrim_lock.carry_forward_tag }}</span>
     </div>
   </div>
 
   <figure class="ops-room-art">
-    <img src="{{ url_for('static', filename='art/week11-prep-room.webp') }}" alt="Week 11 prep operations room">
+    <img src="{{ url_for('static', filename='art/week11-prep-room.webp') }}" alt="Week 11 scrim preparation room">
   </figure>
 
-  <div class="prep-grid">
-    <section class="prep-panel">
-      <div class="panel-kicker">Prep block</div>
+  <div class="scrim-grid">
+    <section class="scrim-panel">
+      <div class="panel-kicker">Protocol result</div>
       <div class="panel-title">
-        <strong>{{ prep_lock.prep_label }}</strong>
-        {% if prep_lock.followed_recommendation %}
+        <strong>{{ scrim_lock.scrim_label }}</strong>
+        {% if scrim_lock.followed_recommendation %}
           <span class="readout">followed read</span>
         {% else %}
           <span class="readout">against read</span>
         {% endif %}
       </div>
-      <div class="copy-line">{{ prep_lock.next_hook }}</div>
+      <div class="copy-line">{{ scrim_lock.next_hook }}</div>
       <div class="chip-row">
-        <span class="data-chip">selected {{ prep_lock.selected_prep }}</span>
-        <span class="data-chip">recommended {{ prep_lock.recommended_prep }}</span>
+        <span class="data-chip">selected {{ scrim_lock.selected_scrim }}</span>
+        <span class="data-chip">recommended {{ scrim_lock.recommended_scrim }}</span>
+        <span class="data-chip">protocol {{ scrim_lock.scrim_protocol }}</span>
       </div>
     </section>
 
-    <section class="prep-panel">
-      <div class="panel-kicker">Visible prep effects</div>
+    <section class="scrim-panel">
+      <div class="panel-kicker">Visible scrim effects</div>
       <div class="chip-row">
-        {% for effect in prep_lock.visible_effects %}
+        {% for effect in scrim_lock.visible_effects %}
           <span class="data-chip {{ effect.polarity }}">{{ effect.label }}</span>
         {% endfor %}
       </div>
-      <div class="copy-line">Scrim seed: {{ prep_lock.scrim_seed }}</div>
+      <div class="copy-line">Match-plan seed: {{ scrim_lock.match_plan_seed }}</div>
+      <div class="copy-line">Analyst read: {{ scrim_lock.analyst_read_id }}</div>
     </section>
   </div>
 
-  <section class="prep-panel" style="margin-top: 1rem;">
+  <section class="scrim-panel" style="margin-top: 1rem;">
     <div class="panel-kicker">Artifact</div>
-    <div class="copy-line">This prep block stops before Week 11 scrim.</div>
+    <div class="copy-line">This scrim protocol stops before Week 11 match planning.</div>
     <div class="chip-row">
-      <span class="data-chip">week11_prep.json</span>
-      <span class="data-chip">next week11_scrim.json</span>
-      {% if week11_prep_path %}
-        <span class="data-chip">{{ week11_prep_path }}</span>
+      <span class="data-chip">week11_scrim.json</span>
+      {% if week11_scrim_path %}
+        <span class="data-chip">{{ week11_scrim_path }}</span>
       {% endif %}
-    </div>
-    <div class="console-actions">
-      <a class="btn" href="{{ url_for('week11_scrim') }}">Open Week 11 scrim</a>
     </div>
   </section>
 </div>
