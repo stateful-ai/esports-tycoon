@@ -39,6 +39,9 @@ class Week12ModelPrepTarget:
     reward_mean_x100: int
     risk_index: int
     objective_pressure: int
+    component_totals: dict[str, int]
+    dominant_failure_mode: str
+    risk_spike_count: int
     epoch_delta: int
     priority_score: int
     training_mode: Week12TrainingMode
@@ -136,6 +139,39 @@ def _prompt_seed(agent_id: str, mode: Week12TrainingMode) -> str:
     )
 
 
+def _component_totals(samples: list[Week11TrainingSample]) -> dict[str, int]:
+    totals = {
+        "round_win": 0,
+        "trade_quality": 0,
+        "utility_timing": 0,
+        "space_gained": 0,
+        "overpeek_penalty": 0,
+        "default_integrity": 0,
+    }
+    for sample in samples:
+        for key in totals:
+            totals[key] += int(sample.reward_components.get(key, 0))
+    return totals
+
+
+def _dominant_failure_mode(
+    *,
+    component_totals: dict[str, int],
+    risk_spike_count: int,
+    objective_pressure: int,
+) -> str:
+    if component_totals.get("overpeek_penalty", 0) < 0:
+        return "overpeek_penalty"
+    if risk_spike_count:
+        return "risk_spike"
+    if objective_pressure < 60:
+        return "objective_pressure"
+    weakest = min(component_totals, key=lambda key: component_totals[key])
+    if component_totals[weakest] <= 0:
+        return weakest
+    return "none"
+
+
 def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep:
     """Aggregate the offline RL dataset into model-prep targets for Week 12."""
     samples_by_agent: dict[str, list[Week11TrainingSample]] = defaultdict(list)
@@ -153,6 +189,13 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
         reward_mean_x100 = _mean_x100(rewards)
         risk_index = _mean_int(risk_values)
         objective_pressure = _mean_int(objective_values)
+        component_totals = _component_totals(samples)
+        risk_spike_count = len([sample for sample in samples if sample.telemetry.risk_index >= 58])
+        dominant_failure_mode = _dominant_failure_mode(
+            component_totals=component_totals,
+            risk_spike_count=risk_spike_count,
+            objective_pressure=objective_pressure,
+        )
         mode = _training_mode(
             reward_mean_x100=reward_mean_x100,
             risk_index=risk_index,
@@ -182,6 +225,9 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
                 reward_mean_x100=reward_mean_x100,
                 risk_index=risk_index,
                 objective_pressure=objective_pressure,
+                component_totals=component_totals,
+                dominant_failure_mode=dominant_failure_mode,
+                risk_spike_count=risk_spike_count,
                 epoch_delta=epoch_delta,
                 priority_score=priority_score,
                 training_mode=mode,
@@ -220,6 +266,9 @@ def _model_prep_target_to_dict(target: Week12ModelPrepTarget) -> dict[str, Any]:
         "reward_mean_x100": target.reward_mean_x100,
         "risk_index": target.risk_index,
         "objective_pressure": target.objective_pressure,
+        "component_totals": dict(target.component_totals),
+        "dominant_failure_mode": target.dominant_failure_mode,
+        "risk_spike_count": target.risk_spike_count,
         "epoch_delta": target.epoch_delta,
         "priority_score": target.priority_score,
         "training_mode": target.training_mode,
@@ -268,6 +317,9 @@ def week12_model_prep_to_dict(prep: Week12ModelPrep) -> dict[str, Any]:
                 "reward_mean_x100",
                 "risk_index",
                 "objective_pressure",
+                "component_totals",
+                "dominant_failure_mode",
+                "risk_spike_count",
                 "evaluation_gate",
             ],
         },
@@ -315,6 +367,15 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
             reward_mean_x100=int(target.get("reward_mean_x100", 0)),
             risk_index=int(target.get("risk_index", 0)),
             objective_pressure=int(target.get("objective_pressure", 0)),
+            component_totals={
+                str(key): int(value)
+                for key, value in target.get("component_totals", {}).items()
+                if isinstance(key, str) and isinstance(value, int)
+            }
+            if isinstance(target.get("component_totals"), dict)
+            else {},
+            dominant_failure_mode=str(target.get("dominant_failure_mode", "")),
+            risk_spike_count=int(target.get("risk_spike_count", 0)),
             epoch_delta=int(target.get("epoch_delta", 0)),
             priority_score=int(target.get("priority_score", 0)),
             training_mode=(

@@ -196,6 +196,46 @@
     stroke: rgba(255, 118, 102, 0.62);
     filter: drop-shadow(0 0 3px rgba(255, 118, 102, 0.35));
   }
+  .event-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .event-pulse {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: calc(var(--r) * 1%);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 210, 122, 0.9);
+    background: rgba(255, 210, 122, 0.1);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 24px rgba(255, 210, 122, 0.26);
+  }
+  .event-pulse.negative {
+    border-color: rgba(255, 118, 102, 0.9);
+    background: rgba(255, 118, 102, 0.12);
+    box-shadow: 0 0 24px rgba(255, 118, 102, 0.3);
+  }
+  .event-pulse::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    top: -1.4rem;
+    transform: translateX(-50%);
+    max-width: 9rem;
+    color: #fff4cc;
+    background: rgba(8, 16, 21, 0.82);
+    border: 1px solid rgba(255, 210, 122, 0.32);
+    padding: 0.08rem 0.28rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .marker {
     --marker: #21d6b5;
     position: absolute;
@@ -313,6 +353,68 @@
   }
   .telemetry-card.risk .telemetry-bar span {
     background: linear-gradient(90deg, #f4c950, #ff7666);
+  }
+  .causality-panel {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(15, 21, 25, 0.72);
+    padding: 0.65rem;
+    margin-top: 0.7rem;
+  }
+  .causality-grid, .reward-components, .zone-control {
+    display: grid;
+    gap: 0.45rem;
+  }
+  .causality-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .reward-components {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
+  .zone-control {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 0.55rem;
+  }
+  .cause-chip, .reward-component, .zone-card {
+    border: 1px solid rgba(187, 203, 205, 0.15);
+    background: rgba(8, 13, 18, 0.82);
+    padding: 0.42rem;
+    min-width: 0;
+  }
+  .cause-chip span, .reward-component span, .zone-card span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+  .cause-chip strong, .reward-component strong, .zone-card strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+  }
+  .component-bar, .zone-bar {
+    height: 0.34rem;
+    margin-top: 0.28rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(187, 203, 205, 0.12);
+  }
+  .component-bar span, .zone-bar span {
+    display: block;
+    height: 100%;
+    width: calc(var(--v) * 1%);
+    background: linear-gradient(90deg, #26d9c7, #f4c950);
+  }
+  .component-bar.negative span {
+    background: linear-gradient(90deg, #ff7666, #f4c950);
+  }
+  .policy-reason {
+    color: #c5d3d4;
+    font-size: 0.86rem;
+    margin-top: 0.55rem;
+    overflow-wrap: anywhere;
   }
   .hud-panel { padding: 0.85rem; }
   .panel-kicker {
@@ -530,6 +632,15 @@
     color: #ffd27a;
     background: rgba(255, 210, 122, 0.12);
   }
+  .tick-button[data-risk="high"] {
+    border-color: rgba(255, 118, 102, 0.55);
+  }
+  .tick-button[data-reward="positive"] {
+    box-shadow: inset 0 -3px 0 rgba(38, 217, 199, 0.7);
+  }
+  .tick-button[data-reward="negative"] {
+    box-shadow: inset 0 -3px 0 rgba(255, 118, 102, 0.7);
+  }
   @media (max-width: 980px) {
     .viewer-top, .viewer-grid, .rl-layout { grid-template-columns: 1fr; }
     .broadcast-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -538,6 +649,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .zone-control { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
@@ -547,6 +659,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .zone-control { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -599,6 +712,7 @@
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
         <svg class="trail-layer" id="trail-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="event-layer" id="event-layer" aria-hidden="true"></div>
         {% for state in replay.frames[0].states %}
           <span
             class="marker"
@@ -620,6 +734,13 @@
           </div>
         </div>
         <div class="pressure" aria-label="team pressure"><span id="pressure-bar" style="--pressure: {{ replay.frames[0].team_pressure }};"></span></div>
+      </div>
+      <div class="causality-panel" id="causality-panel">
+        <div class="panel-kicker">Causality</div>
+        <div class="causality-grid" id="observation-features"></div>
+        <div class="reward-components" id="reward-components"></div>
+        <div class="zone-control" id="zone-control"></div>
+        <div class="policy-reason" id="policy-reason"></div>
       </div>
       <div class="telemetry-grid" aria-label="Tactical telemetry">
         <div class="telemetry-card">
@@ -820,6 +941,11 @@
   const currentAction = document.getElementById("current-action");
   const currentReward = document.getElementById("current-reward");
   const trailLayer = document.getElementById("trail-layer");
+  const eventLayer = document.getElementById("event-layer");
+  const observationFeatures = document.getElementById("observation-features");
+  const rewardComponents = document.getElementById("reward-components");
+  const zoneControl = document.getElementById("zone-control");
+  const policyReason = document.getElementById("policy-reason");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
   const telemetryIds = {
@@ -840,6 +966,63 @@
     if (!id) return;
     document.getElementById(`telemetry-${id}`).textContent = value;
     document.getElementById(`telemetry-${id}-bar`).style.setProperty("--v", value);
+  }
+
+  function labelFor(name) {
+    return name.replaceAll("_", " ");
+  }
+
+  function renderEvents(frame) {
+    eventLayer.innerHTML = "";
+    (frame.events || []).forEach((event) => {
+      const pulse = document.createElement("div");
+      pulse.className = `event-pulse ${event.polarity || "positive"}`;
+      pulse.dataset.label = event.label || event.event_type || "event";
+      pulse.style.setProperty("--x", event.x || 50);
+      pulse.style.setProperty("--y", event.y || 50);
+      pulse.style.setProperty("--r", event.radius || 10);
+      eventLayer.appendChild(pulse);
+    });
+  }
+
+  function renderCausality(frame, currentStep) {
+    const features = currentStep?.observation_features || {};
+    const actionContext = currentStep?.action_context || {};
+    const components = currentStep?.reward_components || {};
+    const featureKeys = ["own_zone", "target_zone", "team_pressure", "risk_index", "objective_pressure", "top_trait"];
+    observationFeatures.innerHTML = "";
+    featureKeys.forEach((key) => {
+      const chip = document.createElement("div");
+      chip.className = "cause-chip";
+      chip.innerHTML = `<span>${labelFor(key)}</span><strong>${features[key] ?? "n/a"}</strong>`;
+      observationFeatures.appendChild(chip);
+    });
+
+    rewardComponents.innerHTML = "";
+    Object.entries(components).forEach(([key, value]) => {
+      const item = document.createElement("div");
+      const magnitude = Math.min(100, Math.abs(Number(value)) * 22);
+      item.className = "reward-component";
+      item.innerHTML = `
+        <span>${labelFor(key)}</span>
+        <strong>${value}</strong>
+        <div class="component-bar ${Number(value) < 0 ? "negative" : ""}"><span style="--v: ${magnitude};"></span></div>
+      `;
+      rewardComponents.appendChild(item);
+    });
+
+    zoneControl.innerHTML = "";
+    Object.entries(frame.zone_control || {}).forEach(([key, value]) => {
+      const item = document.createElement("div");
+      item.className = "zone-card";
+      item.innerHTML = `
+        <span>${labelFor(key)}</span>
+        <strong>${value}</strong>
+        <div class="zone-bar"><span style="--v: ${value};"></span></div>
+      `;
+      zoneControl.appendChild(item);
+    });
+    policyReason.textContent = `${actionContext.policy_reason || "policy reason pending"} · counterfactual ${actionContext.counterfactual || "n/a"}`;
   }
 
   function renderAgent(agent) {
@@ -935,7 +1118,9 @@
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
     currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
     renderTrails();
+    renderEvents(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
+    renderCausality(frame, currentStep);
     document.querySelectorAll(".marker").forEach((marker) => {
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
       const agent = agents[marker.dataset.agent];
@@ -978,6 +1163,11 @@
     timer = setInterval(() => renderFrame(index + 1), 900);
   });
   tickButtons.forEach((button) => {
+    const frame = frames[Number(button.dataset.tick)];
+    if (frame) {
+      button.dataset.reward = frame.reward_delta > 0 ? "positive" : frame.reward_delta < 0 ? "negative" : "neutral";
+      button.dataset.risk = frame.telemetry?.risk_index >= 60 ? "high" : "normal";
+    }
     button.addEventListener("click", () => {
       stop();
       renderFrame(Number(button.dataset.tick));

@@ -139,6 +139,20 @@ class Week11SimTelemetry:
 
 
 @dataclass(frozen=True)
+class Week11SimEvent:
+    """One tactical overlay event rendered on top of the replay map."""
+
+    event_type: str
+    agent_id: str
+    zone_id: str
+    x: int
+    y: int
+    radius: int
+    label: str
+    polarity: str
+
+
+@dataclass(frozen=True)
 class Week11SimFrame:
     """One replay frame for the match viewer."""
 
@@ -153,6 +167,8 @@ class Week11SimFrame:
     team_pressure: int
     telemetry: Week11SimTelemetry
     states: tuple[Week11SimAgentState, ...]
+    zone_control: dict[str, int]
+    events: tuple[Week11SimEvent, ...]
 
 
 @dataclass(frozen=True)
@@ -168,6 +184,9 @@ class Week11SimStep:
     policy_id: str
     reason: str
     trajectory_tag: str
+    observation_features: dict[str, Any]
+    action_context: dict[str, str]
+    reward_components: dict[str, int]
 
 
 @dataclass(frozen=True)
@@ -233,6 +252,8 @@ class Week11TrainingSample:
     next_observation: tuple[str, ...]
     done: bool
     telemetry: Week11SimTelemetry
+    observation_features: dict[str, Any]
+    reward_components: dict[str, int]
     target_policy_id: str
     source_drill_id: str
 
@@ -582,6 +603,137 @@ def _rounds(result: Week11MatchResultLock) -> tuple[Week11SimRound, ...]:
     return tuple(rounds)
 
 
+def _zone_id(x: int, y: int) -> str:
+    if y >= 70:
+        return "spawn_lobby"
+    if x >= 62 and y <= 48:
+        return "a_site"
+    if x <= 46 and y >= 58:
+        return "b_site"
+    if 45 <= x <= 62 and 42 <= y <= 62:
+        return "mid"
+    if x < 45:
+        return "b_main"
+    return "a_main"
+
+
+def _target_zone(round_id: int, action: Week11SimAction) -> str:
+    if action in {"objective_execute", "round_end"}:
+        return "a_site" if round_id in (1, 3) else "mid"
+    if action in {"scan_lane", "entry_peek"}:
+        return "a_main"
+    if action == "lurk_contact":
+        return "b_main"
+    if action == "anchor_trade":
+        return "mid"
+    return "spawn_lobby"
+
+
+def _top_trait(agent: Week11SimAgent) -> str:
+    profile = _profile_to_dict(agent.trait_profile)
+    return max(profile, key=lambda name: profile[name])
+
+
+def _trade_partner(agent_id: str) -> str:
+    return {
+        "rook": "pixie",
+        "vex": "sable",
+        "sable": "vex",
+        "pixie": "rook",
+        "coyote": "rook",
+    }.get(agent_id, "team")
+
+
+def _utility_kind(action: Week11SimAction) -> str:
+    return {
+        "scan_lane": "reveal",
+        "rotate_call": "call",
+        "reset_shape": "smoke",
+        "anchor_trade": "crossfire",
+        "objective_execute": "execute",
+        "entry_peek": "flash",
+        "lurk_contact": "silent_contact",
+    }.get(action, "none")
+
+
+def _counterfactual(action: Week11SimAction) -> str:
+    return {
+        "call_default": "force_fast_hit",
+        "scan_lane": "hold_utility",
+        "entry_peek": "reset_shape",
+        "lurk_contact": "group_contact",
+        "rotate_call": "stay_default",
+        "anchor_trade": "late_retrade",
+        "objective_execute": "delay_execute",
+        "reset_shape": "keep_pressure",
+        "round_end": "earlier_trade",
+    }[action]
+
+
+def _reward_components(
+    *,
+    action: Week11SimAction,
+    reward: int,
+    trajectory_tag: str,
+    risk: int,
+) -> dict[str, int]:
+    components = {field: 0 for field in WEEK11_SIM_REWARD_FIELDS}
+    if trajectory_tag in components:
+        components[trajectory_tag] = reward
+    if action in {"entry_peek", "lurk_contact"} and risk >= 78:
+        components["overpeek_penalty"] -= 1
+    if action in {"call_default", "rotate_call", "reset_shape"} and reward >= 0:
+        components["default_integrity"] += 1
+    if action == "objective_execute" and reward > 0:
+        components["round_win"] += 1
+    return components
+
+
+def _observation_features(
+    *,
+    result: Week11MatchResultLock,
+    agent: Week11SimAgent,
+    tick: int,
+    round_id: int,
+    action: Week11SimAction,
+    reward: int,
+) -> dict[str, Any]:
+    path = _PATHS[result.selected_plan].get(agent.agent_id, _PATHS[result.selected_plan]["rook"])
+    x, y = path[min((round_id - 1) * 2 + tick % 4, 7)]
+    risk_index = _clamp(agent.trait_profile.risk + (8 if action in {"entry_peek", "lurk_contact"} else -4), 0, 100)
+    objective_pressure = _clamp(48 + round_id * 7 + max(0, reward) * 5, 0, 100)
+    return {
+        "alive_overcast": 5,
+        "alive_opponent": 5,
+        "own_zone": _zone_id(x, y),
+        "target_zone": _target_zone(round_id, action),
+        "team_pressure": _clamp(50 + tick + reward * 3, 0, 100),
+        "space_control": _clamp(45 + tick * 2 + max(0, reward) * 4, 0, 100),
+        "utility_pressure": _clamp(42 + (12 if action == "scan_lane" else 0) + tick, 0, 100),
+        "trade_window": _clamp(40 + (12 if action == "anchor_trade" else 0) + reward * 3, 0, 100),
+        "risk_index": risk_index,
+        "objective_pressure": objective_pressure,
+        "top_trait": _top_trait(agent),
+    }
+
+
+def _action_context(
+    *,
+    agent: Week11SimAgent,
+    action: Week11SimAction,
+    round_id: int,
+    reason: str,
+) -> dict[str, str]:
+    top_trait = _top_trait(agent)
+    return {
+        "target_zone": _target_zone(round_id, action),
+        "trade_partner": _trade_partner(agent.agent_id),
+        "utility_kind": _utility_kind(action),
+        "policy_reason": f"{top_trait} trait bias: {reason}",
+        "counterfactual": _counterfactual(action),
+    }
+
+
 def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent]) -> tuple[Week11SimStep, ...]:
     action_script: tuple[tuple[int, int, str, Week11SimAction, int, str, str], ...] = (
         (0, 1, "rook", "call_default", 0, "Rook opens the first episode from the selected match commitment.", "default_integrity"),
@@ -616,6 +768,15 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
             f"commitment:{result.commitment}",
             f"outcome:{result.outcome_id}",
         )
+        step_reward = _reward(result, tick, reward)
+        observation_features = _observation_features(
+            result=result,
+            agent=agent,
+            tick=tick,
+            round_id=round_id,
+            action=action,
+            reward=step_reward,
+        )
         steps.append(
             Week11SimStep(
                 tick=tick,
@@ -623,10 +784,23 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
                 agent_id=agent_id,
                 observation=observation,
                 action=action,
-                reward=_reward(result, tick, reward),
+                reward=step_reward,
                 policy_id=agent.policy_id,
                 reason=reason,
                 trajectory_tag=trajectory_tag,
+                observation_features=observation_features,
+                action_context=_action_context(
+                    agent=agent,
+                    action=action,
+                    round_id=round_id,
+                    reason=reason,
+                ),
+                reward_components=_reward_components(
+                    action=action,
+                    reward=step_reward,
+                    trajectory_tag=trajectory_tag,
+                    risk=int(observation_features["risk_index"]),
+                ),
             )
         )
     return tuple(steps)
@@ -661,6 +835,55 @@ def _telemetry_for_step(
         trade_window=_clamp(38 + trade_delta + reward_push + (8 if round_.winner == "overcast" else -4), 0, 100),
         risk_index=_clamp(44 + risk_delta - reward_push + (8 if step.reward < 0 else 0), 0, 100),
         objective_pressure=_clamp(pressure + objective_delta + phase_push, 0, 100),
+    )
+
+
+def _zone_control(telemetry: Week11SimTelemetry, round_: Week11SimRound) -> dict[str, int]:
+    a_bias = 10 if round_.objective_lane.lower().startswith("a") else 0
+    b_bias = 10 if round_.objective_lane.lower().startswith("b") else 0
+    mid_bias = 10 if "mid" in round_.objective_lane.lower() else 0
+    return {
+        "a_site": _clamp(telemetry.objective_pressure + a_bias - 8, 0, 100),
+        "b_site": _clamp(telemetry.space_control + b_bias - 10, 0, 100),
+        "mid": _clamp(telemetry.trade_window + mid_bias, 0, 100),
+        "spawn_lobby": _clamp(100 - telemetry.risk_index + 22, 0, 100),
+    }
+
+
+def _event_type(action: Week11SimAction) -> str:
+    return {
+        "call_default": "call",
+        "scan_lane": "utility",
+        "entry_peek": "risk",
+        "lurk_contact": "contact",
+        "rotate_call": "call",
+        "anchor_trade": "trade",
+        "objective_execute": "objective",
+        "reset_shape": "reset",
+        "round_end": "terminal",
+    }[action]
+
+
+def _frame_events(
+    *,
+    step: Week11SimStep,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+) -> tuple[Week11SimEvent, ...]:
+    state = next((item for item in states if item.agent_id == step.agent_id), None)
+    if state is None:
+        return ()
+    return (
+        Week11SimEvent(
+            event_type=_event_type(step.action),
+            agent_id=step.agent_id,
+            zone_id=_zone_id(state.x, state.y),
+            x=state.x,
+            y=state.y,
+            radius=_clamp(8 + telemetry.utility_pressure // 12, 8, 18),
+            label=step.action.replace("_", " "),
+            polarity="negative" if step.reward < 0 else "positive",
+        ),
     )
 
 
@@ -702,6 +925,7 @@ def _frames(
         states = tuple(_state_for_agent(agent, result, tick, round_.round_id) for agent in agents)
         pressure = 50 + sum(s.reward for s in steps[: tick + 1])
         telemetry = _telemetry_for_step(step, round_, pressure=pressure, local_tick=local_tick)
+        events = _frame_events(step=step, states=states, telemetry=telemetry)
         frames.append(
             Week11SimFrame(
                 tick=tick,
@@ -715,6 +939,8 @@ def _frames(
                 team_pressure=_clamp(pressure, 0, 100),
                 telemetry=telemetry,
                 states=states,
+                zone_control=_zone_control(telemetry, round_),
+                events=events,
             )
         )
     return tuple(frames)
@@ -893,6 +1119,19 @@ def _telemetry_to_dict(telemetry: Week11SimTelemetry) -> dict[str, int]:
     }
 
 
+def _event_to_dict(event: Week11SimEvent) -> dict[str, Any]:
+    return {
+        "event_type": event.event_type,
+        "agent_id": event.agent_id,
+        "zone_id": event.zone_id,
+        "x": event.x,
+        "y": event.y,
+        "radius": event.radius,
+        "label": event.label,
+        "polarity": event.polarity,
+    }
+
+
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
@@ -906,6 +1145,8 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "team_pressure": frame.team_pressure,
         "telemetry": _telemetry_to_dict(frame.telemetry),
         "states": [_state_to_dict(state) for state in frame.states],
+        "zone_control": dict(frame.zone_control),
+        "events": [_event_to_dict(event) for event in frame.events],
     }
 
 
@@ -920,6 +1161,9 @@ def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
         "policy_id": step.policy_id,
         "reason": step.reason,
         "trajectory_tag": step.trajectory_tag,
+        "observation_features": dict(step.observation_features),
+        "action_context": dict(step.action_context),
+        "reward_components": dict(step.reward_components),
     }
 
 
@@ -978,6 +1222,22 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "risk_index",
                 "objective_pressure",
             ],
+            "observation_feature_fields": [
+                "alive_overcast",
+                "alive_opponent",
+                "own_zone",
+                "target_zone",
+                "team_pressure",
+                "space_control",
+                "utility_pressure",
+                "trade_window",
+                "risk_index",
+                "objective_pressure",
+                "top_trait",
+            ],
+            "reward_component_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
+            "frame_event_unit": "frames[].events[]",
             "policy_hook": "agent.policy_id + scenario_archetype + skill_epoch_proxy",
             "epoch_proxy_field": "agents[].skill_epoch_proxy",
             "telemetry_unit": "frames[].telemetry",
@@ -1255,6 +1515,8 @@ def resolve_week11_training_dataset(
                 next_observation=next_observation,
                 done=done or step.action == "round_end",
                 telemetry=frame.telemetry,
+                observation_features=step.observation_features,
+                reward_components=step.reward_components,
                 target_policy_id=drill.target_policy_id if drill else step.policy_id,
                 source_drill_id=drill.drill_id if drill else "none",
             )
@@ -1296,6 +1558,8 @@ def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
         "next_observation": list(sample.next_observation),
         "done": sample.done,
         "telemetry": _telemetry_to_dict(sample.telemetry),
+        "observation_features": dict(sample.observation_features),
+        "reward_components": dict(sample.reward_components),
         "target_policy_id": sample.target_policy_id,
         "source_drill_id": sample.source_drill_id,
     }
@@ -1332,6 +1596,12 @@ def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str,
                 "trade_window",
                 "risk_index",
                 "objective_pressure",
+            ],
+            "observation_feature_fields": [
+                "samples[].observation_features",
+            ],
+            "reward_component_fields": [
+                "samples[].reward_components",
             ],
             "transition_unit": "samples[]",
             "policy_target_field": "samples[].target_policy_id",
@@ -1389,6 +1659,8 @@ def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
             ),
             done=bool(sample.get("done", False)),
             telemetry=_telemetry_from_dict(sample.get("telemetry"), team_pressure=0),
+            observation_features=_observation_features_from_any(sample.get("observation_features")),
+            reward_components=_int_dict_from_any(sample.get("reward_components")),
             target_policy_id=str(sample.get("target_policy_id", "")),
             source_drill_id=str(sample.get("source_drill_id", "")),
         )
@@ -1433,6 +1705,53 @@ def _telemetry_from_dict(data: Any, *, team_pressure: int) -> Week11SimTelemetry
         trade_window=int(data.get("trade_window", team_pressure)),
         risk_index=int(data.get("risk_index", _clamp(100 - team_pressure, 0, 100))),
         objective_pressure=int(data.get("objective_pressure", team_pressure)),
+    )
+
+
+def _int_dict_from_any(data: Any) -> dict[str, int]:
+    if not isinstance(data, dict):
+        return {}
+    values: dict[str, int] = {}
+    for key, value in data.items():
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, int):
+            values[str(key)] = value
+    return values
+
+
+def _str_dict_from_any(data: Any) -> dict[str, str]:
+    if not isinstance(data, dict):
+        return {}
+    return {str(key): str(value) for key, value in data.items()}
+
+
+def _observation_features_from_any(data: Any) -> dict[str, Any]:
+    if not isinstance(data, dict):
+        return {}
+    values: dict[str, Any] = {}
+    for key, value in data.items():
+        if isinstance(value, (str, int)) and not isinstance(value, bool):
+            values[str(key)] = value
+    return values
+
+
+def _events_from_any(data: Any) -> tuple[Week11SimEvent, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimEvent(
+            event_type=str(event.get("event_type", "")),
+            agent_id=str(event.get("agent_id", "")),
+            zone_id=str(event.get("zone_id", "")),
+            x=int(event.get("x", 0)),
+            y=int(event.get("y", 0)),
+            radius=int(event.get("radius", 0)),
+            label=str(event.get("label", "")),
+            polarity=str(event.get("polarity", "")),
+        )
+        for event in data
+        if isinstance(event, dict)
     )
 
 
@@ -1531,6 +1850,8 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
                 for state in frame.get("states", [])
                 if isinstance(state, dict)
             ),
+            zone_control=_int_dict_from_any(frame.get("zone_control")),
+            events=_events_from_any(frame.get("events")),
         )
         for frame in frames_raw
         if isinstance(frame, dict)
@@ -1546,6 +1867,9 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             policy_id=str(step.get("policy_id", "")),
             reason=str(step.get("reason", "")),
             trajectory_tag=str(step.get("trajectory_tag", "")),
+            observation_features=_observation_features_from_any(step.get("observation_features")),
+            action_context=_str_dict_from_any(step.get("action_context")),
+            reward_components=_int_dict_from_any(step.get("reward_components")),
         )
         for step in steps_raw
         if isinstance(step, dict)
