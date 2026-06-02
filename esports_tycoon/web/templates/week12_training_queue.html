@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+{% block title %}Week 12 training ops - {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1280px; }
+  .training-ops {
+    color: #edf4f4;
+    background: #080d10;
+    border: 1px solid #2d3b45;
+  }
+  .training-ops h1, .training-ops h2, .training-ops p { color: inherit; }
+  .ops-hero {
+    position: relative;
+    min-height: clamp(18rem, 38vw, 28rem);
+    padding: clamp(1rem, 2.4vw, 1.6rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: end;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(5, 9, 12, 0.88) 0%, rgba(5, 9, 12, 0.42) 48%, rgba(5, 9, 12, 0.78) 100%),
+      linear-gradient(0deg, rgba(5, 9, 12, 0.94) 0%, rgba(5, 9, 12, 0.08) 54%),
+      url("{{ url_for('static', filename='art/week11-broadcast-arena.webp') }}") center / cover no-repeat;
+  }
+  .ops-hero h1 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3.4vw, 2.65rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.82);
+  }
+  .ops-hero .sub {
+    margin: 0.35rem 0 0;
+    max-width: 68ch;
+    color: #cad7da;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.78);
+  }
+  .ops-hero-copy { max-width: 760px; }
+  .ops-chip-row, .ops-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .ops-chip-row {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    justify-content: flex-end;
+    max-width: min(40rem, calc(100% - 2rem));
+  }
+  .data-chip {
+    border: 1px solid #344854;
+    background: rgba(8, 13, 16, 0.88);
+    color: #dce8e8;
+    padding: 0.18rem 0.46rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #25d8c2; color: #9af3e8; }
+  .data-chip.warn { border-color: #f4c950; color: #ffe08a; }
+  .data-chip.hot { border-color: #ff665a; color: #ffb3ad; }
+  .ops-map {
+    position: absolute;
+    inset: 5rem 4% 3.5rem;
+    pointer-events: none;
+  }
+  .job-marker {
+    position: absolute;
+    width: clamp(2.2rem, 4vw, 3.2rem);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(237, 244, 244, 0.88);
+    background: rgba(8, 13, 16, 0.72);
+    color: #edf4f4;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.72rem, 1.2vw, 0.9rem);
+    box-shadow: 0 0 0 3px rgba(37, 216, 194, 0.16), 0 0 22px rgba(37, 216, 194, 0.28);
+  }
+  .job-marker.ready_for_scrim { box-shadow: 0 0 0 3px rgba(37, 216, 194, 0.22), 0 0 22px rgba(37, 216, 194, 0.38); }
+  .job-marker.queued_for_training { box-shadow: 0 0 0 3px rgba(244, 201, 80, 0.2), 0 0 22px rgba(244, 201, 80, 0.3); }
+  .job-marker.blocked_by_review, .job-marker.needs_replay { box-shadow: 0 0 0 3px rgba(255, 102, 90, 0.18), 0 0 22px rgba(255, 102, 90, 0.28); }
+  .job-marker:nth-child(1) { left: 14%; top: 55%; }
+  .job-marker:nth-child(2) { left: 30%; top: 37%; }
+  .job-marker:nth-child(3) { left: 47%; top: 50%; }
+  .job-marker:nth-child(4) { left: 64%; top: 36%; }
+  .job-marker:nth-child(5) { left: 80%; top: 55%; }
+  .ops-body {
+    padding: clamp(0.85rem, 1.8vw, 1.2rem);
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(135deg, #080d10 0%, #111820 58%, #0d1014 100%);
+    background-size: 24px 24px, 24px 24px, auto;
+  }
+  .ops-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .ops-panel {
+    border: 1px solid rgba(169, 190, 196, 0.2);
+    background: rgba(14, 20, 25, 0.84);
+    padding: 0.9rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #8fa2a8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+  .job-stack, .summary-stack {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .job-stack {
+    max-height: 43rem;
+    overflow: auto;
+    padding-right: 0.25rem;
+  }
+  .job-card {
+    border: 1px solid #293943;
+    border-left: 3px solid #25d8c2;
+    background: #10171c;
+    padding: 0.72rem;
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+  .job-card.queued_for_training { border-left-color: #f4c950; }
+  .job-card.blocked_by_review, .job-card.needs_replay { border-left-color: #ff665a; }
+  .job-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+    align-items: start;
+  }
+  .job-head strong {
+    color: #fff4cc;
+    overflow-wrap: anywhere;
+  }
+  .job-head span, .metric span, .policy-line {
+    color: #b7c6ca;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .metric {
+    border: 1px solid #283842;
+    background: #0c1116;
+    padding: 0.45rem;
+    min-width: 0;
+  }
+  .metric strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .weight-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+  .weight {
+    min-height: 0.42rem;
+    background: #0c1116;
+    border: 1px solid #283842;
+    position: relative;
+  }
+  .weight span {
+    display: block;
+    height: 0.42rem;
+    background: linear-gradient(90deg, #25d8c2, #f4c950);
+    max-width: 100%;
+  }
+  .summary-line {
+    border-left: 2px solid #f4c950;
+    background: #10171c;
+    color: #c8d7d9;
+    padding: 0.6rem 0.7rem;
+  }
+  .gate {
+    border: 1px solid #283842;
+    background: #0c1116;
+    padding: 0.65rem;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .gate strong { color: #fff4cc; overflow-wrap: anywhere; }
+  .gate span {
+    color: #b7c6ca;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+  .ops-actions { margin-top: 1rem; }
+  .training-ops .btn {
+    border-radius: 0;
+    background: #edf4f4;
+    color: #090d10;
+    border: 1px solid #edf4f4;
+  }
+  .training-ops .btn.secondary {
+    background: transparent;
+    color: #edf4f4;
+    border-color: #344854;
+  }
+  @media (max-width: 940px) {
+    .ops-grid, .job-head, .metric-grid, .weight-strip { grid-template-columns: 1fr; }
+    .ops-chip-row {
+      position: static;
+      justify-content: flex-start;
+      margin-bottom: 1rem;
+      max-width: none;
+    }
+    .ops-hero {
+      align-items: end;
+      min-height: 22rem;
+    }
+    .ops-map { inset: 5.2rem 2% 5rem; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 12 shadow rollout required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week12_shadow_rollout') }}">Back to shadow rollout</a>
+  </div>
+</div>
+{% elif training_queue %}
+<div class="training-ops">
+  <section class="ops-hero">
+    <div class="ops-chip-row">
+      <span class="data-chip good">{{ training_queue.jobs|length }} jobs</span>
+      <span class="data-chip warn">training_queue_batch_v1</span>
+      <span class="data-chip hot">RL-ready weights</span>
+    </div>
+    <div class="ops-map" aria-hidden="true">
+      {% for job in training_queue.jobs %}
+        <div class="job-marker {{ job.queue_status }}">{{ job.agent_id[:2]|upper }}</div>
+      {% endfor %}
+    </div>
+    <div class="ops-hero-copy">
+      <h1>Week 12 training ops</h1>
+      <p class="sub">{{ training_queue.queue_summary[0] }}</p>
+    </div>
+  </section>
+
+  <div class="ops-body">
+    <div class="ops-grid">
+      <section class="ops-panel">
+        <div class="panel-kicker">Training queue</div>
+        <div class="job-stack">
+          {% for job in training_queue.jobs %}
+            <article class="job-card {{ job.queue_status }}">
+              <div class="job-head">
+                <div>
+                  <strong>{{ job.agent_id }} -> {{ job.candidate_policy_id }}</strong>
+                  <span>{{ job.learning_phase }} · {{ job.queue_status }}</span>
+                </div>
+                <span class="data-chip {% if job.queue_status == 'ready_for_scrim' %}good{% elif job.queue_status == 'queued_for_training' %}warn{% else %}hot{% endif %}">
+                  priority {{ job.priority_score }}
+                </span>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><span>epochs</span><strong>{{ job.epoch_budget }}</strong></div>
+                <div class="metric"><span>rollouts</span><strong>{{ job.rollout_episode_budget }}</strong></div>
+                <div class="metric"><span>replay target</span><strong>{{ job.replay_batch_target }}</strong></div>
+                <div class="metric"><span>explore x100</span><strong>{{ job.exploration_rate_x100 }}</strong></div>
+              </div>
+              <div class="weight-strip" aria-label="RL weights">
+                <div class="weight"><span style="width: {{ job.reward_weight_x100 if job.reward_weight_x100 < 150 else 150 }}%;"></span></div>
+                <div class="weight"><span style="width: {{ job.risk_penalty_x100 if job.risk_penalty_x100 < 150 else 150 }}%;"></span></div>
+                <div class="weight"><span style="width: {{ job.objective_weight_x100 if job.objective_weight_x100 < 150 else 150 }}%;"></span></div>
+                <div class="weight"><span style="width: {{ job.exploration_rate_x100 if job.exploration_rate_x100 < 100 else 100 }}%;"></span></div>
+              </div>
+              <div class="policy-line">{{ job.queue_action }} from {{ job.source_decision }}</div>
+              <div class="policy-line">{{ job.scenario_model_slot }}</div>
+              <div class="policy-line">{{ job.scenario_asset_slot }}</div>
+              <div class="policy-line">{{ job.coach_note }}</div>
+            </article>
+          {% endfor %}
+        </div>
+        <div class="ops-actions">
+          {% if week12_training_queue_path %}
+            <span class="data-chip good">Training queue locked</span>
+            <span class="data-chip">{{ week12_training_queue_path }}</span>
+          {% else %}
+            <form method="post" action="{{ url_for('week12_training_queue') }}">
+              <button class="btn" type="submit">Lock training queue</button>
+            </form>
+          {% endif %}
+          <a class="btn secondary" href="{{ url_for('week12_shadow_rollout') }}">Back to shadow rollout</a>
+        </div>
+      </section>
+
+      <aside class="ops-panel">
+        <div class="panel-kicker">Queue summary</div>
+        <div class="summary-stack">
+          {% for line in training_queue.queue_summary %}
+            <div class="summary-line">{{ line }}</div>
+          {% endfor %}
+          <div class="summary-line">{{ training_queue.next_hook }}</div>
+        </div>
+        <h2>Gates</h2>
+        <div class="summary-stack">
+          {% for job in training_queue.jobs %}
+            <div class="gate">
+              <strong>{{ job.agent_id }} · {{ job.queue_action }}</strong>
+              <span>{{ job.approval_gate }}</span>
+              <span>{{ job.stop_condition }}</span>
+              <span>{{ job.job_id }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="training-queue-data">{{ training_queue_json|safe }}</script>
+{% endif %}
+{% endblock %}

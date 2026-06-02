@@ -292,12 +292,21 @@ from esports_tycoon.runner.week12_model_prep import (
     week12_model_prep_to_dict,
 )
 from esports_tycoon.runner.week12_shadow_rollout import (
+    WEEK12_TRAINING_QUEUE_FILENAME,
     Week12ShadowRollout,
     Week12ShadowTrial,
     render_week12_shadow_rollout_json,
     resolve_week12_shadow_rollout,
     week12_shadow_rollout_from_json,
     week12_shadow_rollout_to_dict,
+)
+from esports_tycoon.runner.week12_training_queue import (
+    Week12TrainingQueue,
+    Week12TrainingQueueJob,
+    render_week12_training_queue_json,
+    resolve_week12_training_queue,
+    week12_training_queue_from_json,
+    week12_training_queue_to_dict,
 )
 
 __all__ = [
@@ -424,6 +433,7 @@ __all__ = [
     "WEEK11_TRAINING_DATASET_FILENAME",
     "WEEK12_MODEL_PREP_FILENAME",
     "WEEK12_SHADOW_ROLLOUT_FILENAME",
+    "WEEK12_TRAINING_QUEUE_FILENAME",
     "WEEK11_MATCH_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
@@ -505,6 +515,8 @@ __all__ = [
     "Week12ModelPrepTarget",
     "Week12ShadowRollout",
     "Week12ShadowTrial",
+    "Week12TrainingQueue",
+    "Week12TrainingQueueJob",
     "week10_fallout_plan",
     "resolve_week10_fallout",
     "week10_fallout_from_json",
@@ -564,6 +576,10 @@ __all__ = [
     "week12_shadow_rollout_from_json",
     "week12_shadow_rollout_to_dict",
     "render_week12_shadow_rollout_json",
+    "resolve_week12_training_queue",
+    "week12_training_queue_from_json",
+    "week12_training_queue_to_dict",
+    "render_week12_training_queue_json",
     "week11_match_sim_from_json",
     "week11_match_sim_to_dict",
     "render_week11_match_sim_json",

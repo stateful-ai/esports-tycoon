@@ -59,6 +59,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week11_training_dataset_json,
     render_week12_model_prep_json,
     render_week12_shadow_rollout_json,
+    render_week12_training_queue_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -87,6 +88,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week11_training_dataset,
     resolve_week12_model_prep,
     resolve_week12_shadow_rollout,
+    resolve_week12_training_queue,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -118,6 +120,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_training_dataset_from_json,
     week12_model_prep_from_json,
     week12_shadow_rollout_from_json,
+    week12_training_queue_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2493,7 +2496,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"candidate_reward":', payload)
         self.assertIn('"risk_delta":', payload)
         self.assertIn('"decision":', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week12_training_queue"', payload)
+        self.assertIn('"next_artifact": "week12_training_queue.json"', payload)
 
     def test_week12_shadow_rollout_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2511,6 +2515,55 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, rollout)
         self.assertEqual(render_week12_shadow_rollout_json(parsed), payload)
+
+    def test_week12_training_queue_consumes_shadow_rollout(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        queue = resolve_week12_training_queue(rollout)
+        payload = render_week12_training_queue_json(queue)
+
+        self.assertEqual(queue.sim_id, rollout.sim_id)
+        self.assertEqual(len(queue.jobs), len(rollout.trials))
+        self.assertIn("vex", {job.agent_id for job in queue.jobs})
+        self.assertTrue(all(job.job_id.startswith("week12:") for job in queue.jobs))
+        self.assertTrue(all(job.scenario_model_slot for job in queue.jobs))
+        self.assertTrue(all(job.reward_weight_x100 > 0 for job in queue.jobs))
+        self.assertTrue(all(job.risk_penalty_x100 > 0 for job in queue.jobs))
+        self.assertIn('"source_artifact": "week12_shadow_rollout.json"', payload)
+        self.assertIn('"checkpoint": "week12_training_queue"', payload)
+        self.assertIn('"training_queue_batch_v1"', payload)
+        self.assertIn('"queue_action":', payload)
+        self.assertIn('"epoch_budget":', payload)
+        self.assertIn('"reward_weight_x100":', payload)
+        self.assertIn('"scenario_asset_slot":', payload)
+        self.assertIn('"stops_before": "week12_rl_runner"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week12_training_queue_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        queue = resolve_week12_training_queue(rollout)
+        payload = render_week12_training_queue_json(queue)
+        parsed = week12_training_queue_from_json(payload)
+
+        self.assertEqual(parsed, queue)
+        self.assertEqual(render_week12_training_queue_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):
