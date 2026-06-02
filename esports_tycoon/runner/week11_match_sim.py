@@ -21,6 +21,8 @@ from esports_tycoon.runner.week11 import (
 )
 from esports_tycoon.schema import Player
 
+WEEK11_DEVELOPMENT_PLAN_FILENAME = "week11_development_plan.json"
+
 Week11SimSide = Literal["overcast", "opponent"]
 Week11SimAction = Literal[
     "call_default",
@@ -168,6 +170,39 @@ class Week11TrainingSignal:
     epoch_delta: int
     current_policy_id: str
     next_policy_id: str
+
+
+@dataclass(frozen=True)
+class Week11DevelopmentDrill:
+    """One actionable training block derived from replay training signals."""
+
+    drill_id: str
+    agent_id: str
+    category: str
+    focus: str
+    priority: str
+    source_signal: str
+    source_rounds: tuple[int, ...]
+    training_minutes: int
+    epoch_delta: int
+    current_policy_id: str
+    target_policy_id: str
+    success_metric: str
+
+
+@dataclass(frozen=True)
+class Week11DevelopmentPlan:
+    """Post-match development artifact produced from the tactical replay."""
+
+    sim_id: str
+    selected_plan: str
+    outcome_id: str
+    result_tier: str
+    training_budget_minutes: int
+    drills: tuple[Week11DevelopmentDrill, ...]
+    coaching_summary: tuple[str, ...]
+    rl_notes: tuple[str, ...]
+    next_hook: str
 
 
 @dataclass(frozen=True)
@@ -853,8 +888,8 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
         },
         "viewer_summary": list(sim.viewer_summary),
         "training_notes": list(sim.training_notes),
-        "stops_before": "week11_post_match_review",
-        "next_artifact": None,
+        "stops_before": "week11_development_plan",
+        "next_artifact": WEEK11_DEVELOPMENT_PLAN_FILENAME,
     }
 
 
@@ -866,6 +901,222 @@ def render_week11_match_sim_json(sim: Week11MatchSimulation) -> str:
         indent=2,
         ensure_ascii=True,
     ) + "\n"
+
+
+_DEVELOPMENT_PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
+
+
+def _development_minutes(signal: Week11TrainingSignal) -> int:
+    if signal.priority == "high":
+        return 45
+    if signal.priority == "medium":
+        return 35
+    return 25
+
+
+def _development_success_metric(signal: Week11TrainingSignal) -> str:
+    metrics = {
+        "rook": "two clean rotate calls before first terminal contact",
+        "vex": "entry contact produces trade cover within one replay tick",
+        "sable": "anchor trade keeps default_integrity positive in two source rounds",
+        "pixie": "info utility creates a timing call without comm overload",
+        "coyote": "lurk contact starts after the confirmed branch call",
+    }
+    return metrics.get(signal.agent_id, "role action improves reward total in source rounds")
+
+
+def _development_focus(signal: Week11TrainingSignal) -> str:
+    focus = {
+        "calling": "compress match calls into one default branch and one punish branch",
+        "entry discipline": "run entry reps that require visible trade cover before the second peek",
+        "trade discipline": "pair anchor timing with immediate refrag windows",
+        "utility timing": "sequence recon and stall utility around caller-confirmed timing",
+        "lurk timing": "hold late contact until rotate evidence appears in the observation",
+    }
+    return focus.get(signal.category, signal.label)
+
+
+def _development_drill(signal: Week11TrainingSignal) -> Week11DevelopmentDrill:
+    return Week11DevelopmentDrill(
+        drill_id=f"w11_dev_{signal.agent_id}_{signal.category.replace(' ', '_')}",
+        agent_id=signal.agent_id,
+        category=signal.category,
+        focus=_development_focus(signal),
+        priority=signal.priority,
+        source_signal=signal.label,
+        source_rounds=signal.source_rounds,
+        training_minutes=_development_minutes(signal),
+        epoch_delta=signal.epoch_delta,
+        current_policy_id=signal.current_policy_id,
+        target_policy_id=signal.next_policy_id,
+        success_metric=_development_success_metric(signal),
+    )
+
+
+def resolve_week11_development_plan(sim: Week11MatchSimulation) -> Week11DevelopmentPlan:
+    """Turn replay training signals into a deterministic player-development plan."""
+    drills = tuple(
+        sorted(
+            (_development_drill(signal) for signal in sim.training_signals),
+            key=lambda drill: (
+                _DEVELOPMENT_PRIORITY_ORDER.get(drill.priority, 3),
+                drill.agent_id,
+                drill.drill_id,
+            ),
+        )
+    )
+    training_budget = sum(drill.training_minutes for drill in drills)
+    high_count = sum(1 for drill in drills if drill.priority == "high")
+    coaching_summary = (
+        f"{len(drills)} player drills from {len(sim.training_signals)} replay signals",
+        f"{training_budget} minutes allocated with {high_count} high-priority intervention(s)",
+        f"{sim.result_tier} {sim.scoreline} on {sim.map_name} stays tied to policy replay {sim.sim_id}",
+    )
+    rl_notes = (
+        "Each drill maps one training_signal to a policy target without changing the saved replay.",
+        "epoch_delta is still a proxy; future Scenario or RL models can replace target_policy_id with a trained model id.",
+        "source_rounds preserve the replay windows needed for offline imitation and reward regression checks.",
+    )
+    return Week11DevelopmentPlan(
+        sim_id=sim.sim_id,
+        selected_plan=sim.selected_plan,
+        outcome_id=sim.outcome_id,
+        result_tier=sim.result_tier,
+        training_budget_minutes=training_budget,
+        drills=drills,
+        coaching_summary=coaching_summary,
+        rl_notes=rl_notes,
+        next_hook="Feed development outputs into Week 12 prep and future learned policy selection.",
+    )
+
+
+def _development_drill_to_dict(drill: Week11DevelopmentDrill) -> dict[str, Any]:
+    return {
+        "drill_id": drill.drill_id,
+        "agent_id": drill.agent_id,
+        "category": drill.category,
+        "focus": drill.focus,
+        "priority": drill.priority,
+        "source_signal": drill.source_signal,
+        "source_rounds": list(drill.source_rounds),
+        "training_minutes": drill.training_minutes,
+        "epoch_delta": drill.epoch_delta,
+        "current_policy_id": drill.current_policy_id,
+        "target_policy_id": drill.target_policy_id,
+        "success_metric": drill.success_metric,
+    }
+
+
+def week11_development_plan_to_dict(plan: Week11DevelopmentPlan) -> dict[str, Any]:
+    """Dictionary form used by JSON export and the web development board."""
+    drills = [_development_drill_to_dict(drill) for drill in plan.drills]
+    return {
+        "artifact_type": "week11_development_plan",
+        "checkpoint": "week11_development_plan",
+        "schema_version": 1,
+        "source_artifact": WEEK11_MATCH_SIM_FILENAME,
+        "source_artifacts": {
+            "week11_match_sim": WEEK11_MATCH_SIM_FILENAME,
+        },
+        "week": 11,
+        "route": "/week11/match/development",
+        "sim_id": plan.sim_id,
+        "selected_plan": plan.selected_plan,
+        "outcome_id": plan.outcome_id,
+        "result_tier": plan.result_tier,
+        "training_budget_minutes": plan.training_budget_minutes,
+        "drills": drills,
+        "policy_targets": [
+            {
+                "agent_id": drill["agent_id"],
+                "from_policy_id": drill["current_policy_id"],
+                "to_policy_id": drill["target_policy_id"],
+                "epoch_delta": drill["epoch_delta"],
+                "training_minutes": drill["training_minutes"],
+                "source_rounds": drill["source_rounds"],
+            }
+            for drill in drills
+        ],
+        "development_contract": {
+            "input_unit": "week11_match_sim.training_signals[]",
+            "output_unit": "drills[] + policy_targets[]",
+            "policy_target_field": "policy_targets[].to_policy_id",
+            "epoch_proxy_field": "policy_targets[].epoch_delta",
+            "rl_source_window": "drills[].source_rounds",
+        },
+        "coaching_summary": list(plan.coaching_summary),
+        "rl_notes": list(plan.rl_notes),
+        "next_hook": plan.next_hook,
+        "stops_before": "week12_prep",
+        "next_artifact": None,
+    }
+
+
+def render_week11_development_plan_json(plan: Week11DevelopmentPlan) -> str:
+    """Canonical JSON export for the Week-11 replay-derived development plan."""
+    return json.dumps(
+        {"week11_development_plan": week11_development_plan_to_dict(plan)},
+        sort_keys=True,
+        indent=2,
+        ensure_ascii=True,
+    ) + "\n"
+
+
+def week11_development_plan_from_json(text: str) -> Week11DevelopmentPlan:
+    """Parse a written ``week11_development_plan.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week11_development_plan JSON is malformed") from exc
+    plan = data.get("week11_development_plan") if isinstance(data, dict) else None
+    if not isinstance(plan, dict):
+        raise ValueError("week11_development_plan JSON must contain a week11_development_plan object")
+    if plan.get("source_artifact") != WEEK11_MATCH_SIM_FILENAME:
+        raise ValueError("week11_development_plan source_artifact must be week11_match_sim.json")
+    if plan.get("selected_plan") not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_development_plan selected_plan must list a Week-11 match plan")
+    if plan.get("outcome_id") not in WEEK11_MATCH_OUTCOMES:
+        raise ValueError("week11_development_plan outcome_id must list a Week-11 match outcome")
+    drills_raw = plan.get("drills")
+    policy_targets = plan.get("policy_targets")
+    if not isinstance(drills_raw, list) or not drills_raw:
+        raise ValueError("week11_development_plan JSON must include drills")
+    if not isinstance(policy_targets, list) or not policy_targets:
+        raise ValueError("week11_development_plan JSON must include policy_targets")
+    if plan.get("next_artifact") is not None:
+        raise ValueError("week11_development_plan next_artifact must be null")
+
+    drills = tuple(
+        Week11DevelopmentDrill(
+            drill_id=str(drill.get("drill_id", "")),
+            agent_id=str(drill.get("agent_id", "")),
+            category=str(drill.get("category", "")),
+            focus=str(drill.get("focus", "")),
+            priority=str(drill.get("priority", "")),
+            source_signal=str(drill.get("source_signal", "")),
+            source_rounds=tuple(
+                int(item) for item in drill.get("source_rounds", []) if isinstance(item, int)
+            ),
+            training_minutes=int(drill.get("training_minutes", 0)),
+            epoch_delta=int(drill.get("epoch_delta", 0)),
+            current_policy_id=str(drill.get("current_policy_id", "")),
+            target_policy_id=str(drill.get("target_policy_id", "")),
+            success_metric=str(drill.get("success_metric", "")),
+        )
+        for drill in drills_raw
+        if isinstance(drill, dict)
+    )
+    return Week11DevelopmentPlan(
+        sim_id=str(plan.get("sim_id", "")),
+        selected_plan=str(plan.get("selected_plan", "")),
+        outcome_id=str(plan.get("outcome_id", "")),
+        result_tier=str(plan.get("result_tier", "")),
+        training_budget_minutes=int(plan.get("training_budget_minutes", 0)),
+        drills=drills,
+        coaching_summary=tuple(str(item) for item in plan.get("coaching_summary", []) if isinstance(item, str)),
+        rl_notes=tuple(str(item) for item in plan.get("rl_notes", []) if isinstance(item, str)),
+        next_hook=str(plan.get("next_hook", "")),
+    )
 
 
 def _profile_from_dict(data: dict[str, Any]) -> Week11SimTraitProfile:
@@ -913,8 +1164,8 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         raise ValueError("week11_match_sim JSON must include training_signals")
     if not isinstance(rl_contract, dict):
         raise ValueError("week11_match_sim JSON must include rl_contract")
-    if sim.get("next_artifact") is not None:
-        raise ValueError("week11_match_sim next_artifact must be null")
+    if sim.get("next_artifact") not in (None, WEEK11_DEVELOPMENT_PLAN_FILENAME):
+        raise ValueError("week11_match_sim next_artifact must be null or week11_development_plan.json")
 
     agents = tuple(
         Week11SimAgent(

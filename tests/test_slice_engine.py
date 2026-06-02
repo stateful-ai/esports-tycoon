@@ -55,6 +55,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week11_match_plan_json,
     render_week11_match_result_json,
     render_week11_match_sim_json,
+    render_week11_development_plan_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -79,6 +80,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week11_match_plan,
     resolve_week11_match_result,
     resolve_week11_match_simulation,
+    resolve_week11_development_plan,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -106,6 +108,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_match_plan_preview,
     week11_match_result_from_json,
     week11_match_sim_from_json,
+    week11_development_plan_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2307,6 +2310,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"action_space":', payload)
         self.assertIn('"reward_fields":', payload)
         self.assertIn('"skill_epoch_proxy":', payload)
+        self.assertIn('"stops_before": "week11_development_plan"', payload)
+        self.assertIn('"next_artifact": "week11_development_plan.json"', payload)
 
     def test_week11_match_simulation_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2320,6 +2325,44 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, replay)
         self.assertEqual(render_week11_match_sim_json(parsed), payload)
+
+    def test_week11_development_plan_exports_policy_targets(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        payload = render_week11_development_plan_json(plan)
+
+        self.assertEqual(plan.sim_id, replay.sim_id)
+        self.assertEqual(plan.selected_plan, "trust_the_read")
+        self.assertEqual(len(plan.drills), 5)
+        self.assertGreater(plan.training_budget_minutes, 0)
+        self.assertIn("vex", {drill.agent_id for drill in plan.drills})
+        self.assertIn('"source_artifact": "week11_match_sim.json"', payload)
+        self.assertIn('"checkpoint": "week11_development_plan"', payload)
+        self.assertIn('"drills":', payload)
+        self.assertIn('"policy_targets":', payload)
+        self.assertIn('"development_contract":', payload)
+        self.assertIn('"target_policy_id":', payload)
+        self.assertIn('"source_rounds":', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_development_plan_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        payload = render_week11_development_plan_json(plan)
+        parsed = week11_development_plan_from_json(payload)
+
+        self.assertEqual(parsed, plan)
+        self.assertEqual(render_week11_development_plan_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

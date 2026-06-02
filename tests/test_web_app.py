@@ -1536,7 +1536,45 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"skill_epoch_proxy":', replay_json)
         self.assertIn('"portrait_asset": "art/portraits/vex.webp"', replay_json)
         self.assertIn('"round_id": 1', replay_json)
-        self.assertIn('"next_artifact": null', replay_json)
+        self.assertIn('"stops_before": "week11_development_plan"', replay_json)
+        self.assertIn('"next_artifact": "week11_development_plan.json"', replay_json)
+
+    def test_week11_match_development_consumes_replay_and_writes_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+
+        page = self.client.get("/week11/match/development")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 development plan", page.data)
+        self.assertIn(b"training_signals", page.data)
+        self.assertIn(b"policy_targets", page.data)
+        self.assertIn(b"next_policy_id", page.data)
+        self.assertIn(b"vex", page.data)
+        self.assertIn(b"Lock development plan", page.data)
+        self.assertFalse((run_dir / "week11_development_plan.json").exists())
+
+        locked = self.client.post("/week11/match/development")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Development artifact locked", locked.data)
+        self.assertIn(b"week11_development_plan.json", locked.data)
+
+        development_json = (run_dir / "week11_development_plan.json").read_text(encoding="utf-8")
+        self.assertIn('"source_artifact": "week11_match_sim.json"', development_json)
+        self.assertIn('"checkpoint": "week11_development_plan"', development_json)
+        self.assertIn('"drills":', development_json)
+        self.assertIn('"policy_targets":', development_json)
+        self.assertIn('"development_contract":', development_json)
+        self.assertIn('"target_policy_id":', development_json)
+        self.assertIn('"next_artifact": null', development_json)
+
+    def test_week11_match_development_requires_replay_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+
+        page = self.client.get("/week11/match/development")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 match sim required", page.data)
+        self.assertIn(b"week11_match_sim.json", page.data)
+        self.assertFalse((run_dir / "week11_development_plan.json").exists())
 
     def test_week11_match_viewer_requires_result_artifact(self):
         self.client.post(

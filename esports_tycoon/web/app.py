@@ -44,6 +44,7 @@ The week is a short linear flow, one decision per step:
     /week11/match the Week-11 scrim protocol becomes a deterministic match plan
     /week11/match/result the Week-11 match plan becomes a deterministic result
     /week11/match/viewer the Week-11 result becomes a tactical replay artifact
+    /week11/match/development the tactical replay becomes player-development targets
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -198,8 +199,12 @@ from esports_tycoon.runner.week11 import (
     week11_setup_plan,
 )
 from esports_tycoon.runner.week11_match_sim import (
+    WEEK11_DEVELOPMENT_PLAN_FILENAME,
+    render_week11_development_plan_json,
     render_week11_match_sim_json,
+    resolve_week11_development_plan,
     resolve_week11_match_simulation,
+    week11_development_plan_from_json,
     week11_match_sim_from_json,
 )
 from esports_tycoon.schema import WorldState
@@ -1858,6 +1863,68 @@ def create_app(
             replay=replay,
             replay_json=replay_json,
             week11_match_sim_path=week11_match_sim_written_path,
+        )
+
+    @app.route("/week11/match/development", methods=["GET", "POST"])
+    def week11_match_development():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 11 development plan unlocks after the match replay.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_match_sim_path = run_dir / WEEK11_MATCH_SIM_FILENAME
+        week11_development_plan_path = run_dir / WEEK11_DEVELOPMENT_PLAN_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_MATCH_SIM_FILENAME, week11_match_sim_path),
+            )
+            if not path.is_file()
+        ]
+        replay = None
+        development_plan = None
+        development_plan_json = ""
+        week11_development_plan_written_path = ""
+        if not missing:
+            try:
+                replay = week11_match_sim_from_json(week11_match_sim_path.read_text(encoding="utf-8"))
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    development_plan = resolve_week11_development_plan(replay)
+                    week11_development_plan_path.write_text(
+                        render_week11_development_plan_json(development_plan),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week11_development_plan_written_path = str(week11_development_plan_path)
+                elif week11_development_plan_path.is_file():
+                    try:
+                        development_plan = week11_development_plan_from_json(
+                            week11_development_plan_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week11_development_plan_written_path = str(week11_development_plan_path)
+                else:
+                    development_plan = resolve_week11_development_plan(replay)
+                if development_plan:
+                    development_plan_json = render_week11_development_plan_json(development_plan)
+
+        return render_template(
+            "week11_match_development.html",
+            result=result,
+            missing=missing,
+            replay=replay,
+            development_plan=development_plan,
+            development_plan_json=development_plan_json,
+            week11_development_plan_path=week11_development_plan_written_path,
         )
 
     @app.get("/feed")

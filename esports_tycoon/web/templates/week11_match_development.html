@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block title %}Week 11 development — {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1180px; }
+  .dev-shell {
+    color: #edf2f4;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      #0b1014;
+    background-size: 22px 22px;
+    border: 1px solid #2d3841;
+    padding: 1rem;
+  }
+  .dev-shell h1, .dev-shell h2, .dev-shell p { color: inherit; }
+  .dev-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2d3841;
+    margin-bottom: 1rem;
+  }
+  .dev-top h1 {
+    margin: 0;
+    font-size: 1.55rem;
+    letter-spacing: 0;
+  }
+  .sub { color: #aab6bd; margin: 0.25rem 0 0; }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: flex-end;
+  }
+  .data-chip {
+    border: 1px solid #34424b;
+    background: #151b20;
+    color: #d8e0e7;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #64d47e; color: #aaf0ba; }
+  .data-chip.hot { border-color: #ff4d4d; color: #ffabab; }
+  .data-chip.warn { border-color: #f4c950; color: #f4dc89; }
+  .lineup-strip {
+    height: clamp(150px, 18vw, 220px);
+    border: 1px solid #2d3841;
+    background: #151b20;
+    margin: 0 0 1rem;
+    overflow: hidden;
+  }
+  .lineup-strip img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center 45%;
+  }
+  .dev-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .dev-panel {
+    background: #151b20;
+    border: 1px solid #2d3841;
+    padding: 1rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #88959c;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0;
+  }
+  .drill-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+  .drill-card {
+    border: 1px solid #34424b;
+    background: #0f1519;
+    padding: 0.8rem;
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+  .drill-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.65rem;
+    align-items: baseline;
+  }
+  .drill-head strong { color: #fff3d2; overflow-wrap: anywhere; }
+  .priority {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #ffabab;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+  .drill-card span, .target-row span, .summary-list span {
+    color: #b9c4c9;
+    overflow-wrap: anywhere;
+  }
+  .drill-card code {
+    color: #26d9c7;
+    background: rgba(38,217,199,0.08);
+    padding: 0.12rem 0.25rem;
+  }
+  .target-list, .summary-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .target-row {
+    display: grid;
+    gap: 0.25rem;
+    border-left: 2px solid #26d9c7;
+    background: #0f1519;
+    padding: 0.55rem 0.65rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+  }
+  .summary-list span {
+    border-left: 2px solid #f4c950;
+    background: #0f1519;
+    padding: 0.5rem 0.65rem;
+  }
+  .console-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .dev-shell .btn {
+    border-radius: 0;
+    background: #edf2f4;
+    color: #0b1014;
+    border: 1px solid #edf2f4;
+  }
+  .dev-shell .btn.secondary {
+    background: transparent;
+    color: #edf2f4;
+    border-color: #34424b;
+  }
+  @media (max-width: 920px) {
+    .dev-top, .dev-grid, .drill-grid { grid-template-columns: 1fr; }
+    .chip-row { justify-content: flex-start; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 11 match sim required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week11_match_viewer') }}">Back to match viewer</a>
+  </div>
+</div>
+{% elif development_plan and replay %}
+<div class="dev-shell">
+  <div class="dev-top">
+    <div>
+      <h1>Week 11 development plan</h1>
+      <p class="sub">{{ development_plan.coaching_summary[0] }}</p>
+    </div>
+    <div class="chip-row">
+      <span class="data-chip good">{{ development_plan.result_tier }}</span>
+      <span class="data-chip">sim {{ development_plan.sim_id }}</span>
+      <span class="data-chip warn">{{ development_plan.training_budget_minutes }} minutes</span>
+      <span class="data-chip hot">training_signals</span>
+    </div>
+  </div>
+
+  <figure class="lineup-strip">
+    <img src="{{ url_for('static', filename='art/portraits/overcast-lineup.webp') }}" alt="Overcast team lineup">
+  </figure>
+
+  <div class="dev-grid">
+    <section class="dev-panel">
+      <div class="panel-kicker">Drill board</div>
+      <div class="drill-grid">
+        {% for drill in development_plan.drills %}
+          <article class="drill-card">
+            <div class="drill-head">
+              <strong>{{ drill.agent_id }} · {{ drill.category }}</strong>
+              <span class="priority">{{ drill.priority }}</span>
+            </div>
+            <span>{{ drill.focus }}</span>
+            <span>signal: {{ drill.source_signal }}</span>
+            <span>rounds {{ drill.source_rounds|join(", ") }} · {{ drill.training_minutes }} min · epoch +{{ drill.epoch_delta }}</span>
+            <span>metric: {{ drill.success_metric }}</span>
+            <code>{{ drill.target_policy_id }}</code>
+          </article>
+        {% endfor %}
+      </div>
+
+      <div class="console-actions">
+        {% if week11_development_plan_path %}
+          <span class="data-chip good">Development artifact locked</span>
+          <span class="data-chip">{{ week11_development_plan_path }}</span>
+        {% else %}
+          <form method="post" action="{{ url_for('week11_match_development') }}">
+            <button class="btn" type="submit">Lock development plan</button>
+          </form>
+        {% endif %}
+        <a class="btn secondary" href="{{ url_for('week11_match_viewer') }}">Back to viewer</a>
+      </div>
+    </section>
+
+    <aside class="dev-panel">
+      <div class="panel-kicker">Policy targets</div>
+      <div class="target-list">
+        {% for drill in development_plan.drills %}
+          <div class="target-row">
+            <strong>{{ drill.agent_id }} target</strong>
+            <span>{{ drill.current_policy_id }}</span>
+            <span>{{ drill.target_policy_id }}</span>
+            <span>source_rounds {{ drill.source_rounds|join(", ") }} · next_policy_id</span>
+          </div>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
+
+  <div class="dev-grid" style="margin-top: 1rem;">
+    <section class="dev-panel">
+      <div class="panel-kicker">Coaching summary</div>
+      <div class="summary-list">
+        {% for item in development_plan.coaching_summary %}
+          <span>{{ item }}</span>
+        {% endfor %}
+        <span>{{ development_plan.next_hook }}</span>
+      </div>
+    </section>
+    <section class="dev-panel">
+      <div class="panel-kicker">RL contract</div>
+      <div class="summary-list">
+        {% for note in development_plan.rl_notes %}
+          <span>{{ note }}</span>
+        {% endfor %}
+        <span>policy_targets · epoch_delta · source_rounds</span>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script type="application/json" id="development-plan-data">{{ development_plan_json|safe }}</script>
+{% endif %}
+{% endblock %}
