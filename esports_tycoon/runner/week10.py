@@ -55,11 +55,21 @@ Week10MatchOutcome = Literal[
     "advantage_punished",
 ]
 Week10MatchResultTier = Literal["win", "loss"]
+Week10PostMatchReviewChoice = Literal["bank_pattern", "repair_break", "steady_review"]
+Week10PostMatchReviewOutcome = Literal[
+    "pattern_banked",
+    "pattern_overfit",
+    "break_repaired",
+    "repair_overcorrected",
+    "standard_reset",
+    "standard_blurred",
+]
 
 WEEK10_PREP_FILENAME = "week10_prep.json"
 WEEK10_SCRIM_FILENAME = "week10_scrim.json"
 WEEK10_MATCH_PLAN_FILENAME = "week10_match_plan.json"
 WEEK10_MATCH_RESULT_FILENAME = "week10_match_result.json"
+WEEK10_POST_MATCH_REVIEW_FILENAME = "week10_post_match_review.json"
 WEEK10_FALLOUT_CHOICES: tuple[Week10FalloutChoice, ...] = (
     "steady_room",
     "raise_standards",
@@ -111,6 +121,19 @@ WEEK10_MATCH_OUTCOMES: tuple[Week10MatchOutcome, ...] = (
     "map_trade_late",
     "advantage_converted",
     "advantage_punished",
+)
+WEEK10_POST_MATCH_REVIEW_CHOICES: tuple[Week10PostMatchReviewChoice, ...] = (
+    "bank_pattern",
+    "repair_break",
+    "steady_review",
+)
+WEEK10_POST_MATCH_REVIEW_OUTCOMES: tuple[Week10PostMatchReviewOutcome, ...] = (
+    "pattern_banked",
+    "pattern_overfit",
+    "break_repaired",
+    "repair_overcorrected",
+    "standard_reset",
+    "standard_blurred",
 )
 
 
@@ -460,6 +483,67 @@ class Week10MatchResultLock:
     visible_effects: tuple[Week10VisibleEffect, ...]
     result_basis: tuple[str, ...]
     causal_chain: tuple[str, ...]
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week10PostMatchReviewOption:
+    """One post-match review posture available after the Week-10 result."""
+
+    value: Week10PostMatchReviewChoice
+    label: str
+    posture: str
+    payoff: str
+    cost: str
+
+
+@dataclass(frozen=True)
+class Week10PostMatchReviewPlan:
+    """The read-only post-match review prompt before the lesson is locked."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week10_outcome_id: Week10MatchOutcome
+    result_tier: Week10MatchResultTier
+    scoreline: str
+    result_grade: str
+    headline: str
+    recap: str
+    player_read: str
+    selected_plan: Week10MatchPlanChoice
+    visible_effects: tuple[Week10VisibleEffect, ...]
+    causal_chain: tuple[str, ...]
+    review_prompt: str
+    recommended_review: Week10PostMatchReviewChoice
+    options: tuple[Week10PostMatchReviewOption, ...]
+
+
+@dataclass(frozen=True)
+class Week10PostMatchReviewLock:
+    """The deterministic artifact produced by locking the post-match review."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week10_outcome_id: Week10MatchOutcome
+    result_tier: Week10MatchResultTier
+    scoreline: str
+    result_grade: str
+    selected_plan: Week10MatchPlanChoice
+    selected_review: Week10PostMatchReviewChoice
+    recommended_review: Week10PostMatchReviewChoice
+    followed_recommendation: bool
+    review_outcome_id: Week10PostMatchReviewOutcome
+    review_label: str
+    review_posture: str
+    lesson: str
+    carry_forward_tag: str
+    carry_forward_type: str
+    carry_forward_polarity: str
+    visible_effects: tuple[Week10VisibleEffect, ...]
+    reviewed_causal_chain: tuple[str, ...]
+    result_basis: tuple[str, ...]
     next_hook: str
 
 
@@ -2153,8 +2237,8 @@ def week10_match_result_from_json(text: str) -> Week10MatchResultLock:
     causal_chain = result.get("causal_chain")
     if not isinstance(causal_chain, list):
         raise ValueError("week10_match_result JSON must include causal_chain")
-    if result.get("next_artifact") is not None:
-        raise ValueError("week10_match_result next_artifact must be null")
+    if result.get("next_artifact") not in (None, WEEK10_POST_MATCH_REVIEW_FILENAME):
+        raise ValueError("week10_match_result next_artifact must be null or week10_post_match_review.json")
     return Week10MatchResultLock(
         source_branch=str(result.get("source_branch", "")),
         setup_branch=str(result.get("setup_branch", "")),
@@ -2250,6 +2334,309 @@ def render_week10_match_result_json(lock: Week10MatchResultLock) -> str:
             "causal_chain": list(lock.causal_chain),
             "next_hook": lock.next_hook,
             "stops_before": "week10_post_match_review",
+            "next_artifact": WEEK10_POST_MATCH_REVIEW_FILENAME,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_POST_MATCH_REVIEW_OPTIONS: tuple[Week10PostMatchReviewOption, ...] = (
+    Week10PostMatchReviewOption(
+        value="bank_pattern",
+        label="Bank the pattern",
+        posture="validated edge",
+        payoff="Turn the result into one repeatable team principle.",
+        cost="Risks overfitting if the win hid a fragile tradeoff.",
+    ),
+    Week10PostMatchReviewOption(
+        value="repair_break",
+        label="Repair the break",
+        posture="exposed failure",
+        payoff="Make the review name the failure mode before it repeats.",
+        cost="Can spend a good result like a loss if the room overcorrects.",
+    ),
+    Week10PostMatchReviewOption(
+        value="steady_review",
+        label="Steady the review",
+        posture="shared standard",
+        payoff="Convert the match into a calm review standard for the room.",
+        cost="May blur the sharpest lesson if the review avoids the hard edge.",
+    ),
+)
+
+_POST_MATCH_OUTCOME_COPY: dict[Week10PostMatchReviewOutcome, dict[str, str]] = {
+    "pattern_banked": {
+        "lesson": "The staff names the repeatable pattern and asks the room to prove it again before expanding it.",
+        "carry_forward_tag": "repeatable_edge",
+        "carry_forward_type": "advantage",
+        "carry_forward_polarity": "positive",
+        "effect_label": "Repeatable edge banked",
+        "next_hook": "Week 11 setup can inherit a validated edge when that slice exists.",
+    },
+    "pattern_overfit": {
+        "lesson": "The review banks the result too quickly and treats a fragile signal like a stable identity.",
+        "carry_forward_tag": "overfit_to_result",
+        "carry_forward_type": "watch",
+        "carry_forward_polarity": "watch",
+        "effect_label": "Overfit watch created",
+        "next_hook": "Week 11 setup should challenge whether this pattern is real before leaning on it.",
+    },
+    "break_repaired": {
+        "lesson": "The room agrees on the exposed break and turns it into the first repair priority.",
+        "carry_forward_tag": "repair_priority",
+        "carry_forward_type": "constraint",
+        "carry_forward_polarity": "positive",
+        "effect_label": "Repair priority named",
+        "next_hook": "Week 11 setup can start with a concrete repair priority when that slice exists.",
+    },
+    "repair_overcorrected": {
+        "lesson": "The review chases a break the match did not actually prove, adding avoidable drag to the room.",
+        "carry_forward_tag": "overcorrected_review",
+        "carry_forward_type": "watch",
+        "carry_forward_polarity": "watch",
+        "effect_label": "Overcorrection watch",
+        "next_hook": "Week 11 setup should test whether the repair is real work or anxiety work.",
+    },
+    "standard_reset": {
+        "lesson": "The review keeps the room honest without turning the result into either mythology or blame.",
+        "carry_forward_tag": "shared_review_standard",
+        "carry_forward_type": "advantage",
+        "carry_forward_polarity": "positive",
+        "effect_label": "Review standard reset",
+        "next_hook": "Week 11 setup can inherit a steadier review standard when that slice exists.",
+    },
+    "standard_blurred": {
+        "lesson": "The room leaves with calmer language, but the actual lesson is still too soft to carry forward cleanly.",
+        "carry_forward_tag": "unclear_review_standard",
+        "carry_forward_type": "constraint",
+        "carry_forward_polarity": "negative",
+        "effect_label": "Review standard blurred",
+        "next_hook": "Week 11 setup should force the room to name the lesson before adding new pressure.",
+    },
+}
+
+
+def _week10_post_match_review_prompt(result: Week10MatchResultLock) -> str:
+    if result.result_tier == "win":
+        return "The room needs to decide what part of the win becomes repeatable."
+    return "The room needs to decide what part of the loss becomes repairable."
+
+
+def _recommended_post_match_review(result: Week10MatchResultLock) -> Week10PostMatchReviewChoice:
+    has_negative_effect = any(effect.polarity == "negative" for effect in result.visible_effects)
+    if result.result_tier == "win" and result.result_grade in {"clean", "earned"}:
+        return "bank_pattern"
+    if result.result_tier == "loss" or has_negative_effect:
+        return "repair_break"
+    return "steady_review"
+
+
+def week10_post_match_review_plan(result: Week10MatchResultLock) -> Week10PostMatchReviewPlan:
+    """Build the read-only post-match review prompt from the Week-10 result."""
+    return Week10PostMatchReviewPlan(
+        source_branch=result.source_branch,
+        setup_branch=result.setup_branch,
+        chosen_focus=result.chosen_focus,
+        week10_outcome_id=result.outcome_id,
+        result_tier=result.result_tier,
+        scoreline=result.scoreline,
+        result_grade=result.result_grade,
+        headline=result.headline,
+        recap=result.recap,
+        player_read=result.player_read,
+        selected_plan=result.selected_plan,
+        visible_effects=result.visible_effects,
+        causal_chain=result.causal_chain,
+        review_prompt=_week10_post_match_review_prompt(result),
+        recommended_review=_recommended_post_match_review(result),
+        options=_POST_MATCH_REVIEW_OPTIONS,
+    )
+
+
+def _week10_post_match_review_outcome(
+    plan: Week10PostMatchReviewPlan,
+    selected_review: Week10PostMatchReviewChoice,
+) -> Week10PostMatchReviewOutcome:
+    has_negative_effect = any(effect.polarity == "negative" for effect in plan.visible_effects)
+    if selected_review == "bank_pattern":
+        if plan.result_tier == "win" and plan.result_grade in {"clean", "earned"}:
+            return "pattern_banked"
+        return "pattern_overfit"
+    if selected_review == "repair_break":
+        if plan.result_tier == "loss" or has_negative_effect:
+            return "break_repaired"
+        return "repair_overcorrected"
+    if plan.result_grade in {"clean", "earned", "thin"}:
+        return "standard_reset"
+    return "standard_blurred"
+
+
+def _post_match_option(selected_review: Week10PostMatchReviewChoice) -> Week10PostMatchReviewOption:
+    return next(option for option in _POST_MATCH_REVIEW_OPTIONS if option.value == selected_review)
+
+
+def resolve_week10_post_match_review(
+    plan: Week10PostMatchReviewPlan,
+    selected_review: str,
+) -> Week10PostMatchReviewLock:
+    """Resolve the selected post-match posture into a durable review lesson."""
+    if selected_review not in WEEK10_POST_MATCH_REVIEW_CHOICES:
+        raise ValueError("selected_review must list a Week-10 post-match review choice")
+    selected = selected_review
+    outcome_id = _week10_post_match_review_outcome(plan, selected)
+    option = _post_match_option(selected)
+    copy = _POST_MATCH_OUTCOME_COPY[outcome_id]
+    carry_effect = Week10VisibleEffect(
+        value=copy["carry_forward_tag"],
+        label=copy["effect_label"],
+        polarity=copy["carry_forward_polarity"],
+    )
+    return Week10PostMatchReviewLock(
+        source_branch=plan.source_branch,
+        setup_branch=plan.setup_branch,
+        chosen_focus=plan.chosen_focus,
+        week10_outcome_id=plan.week10_outcome_id,
+        result_tier=plan.result_tier,
+        scoreline=plan.scoreline,
+        result_grade=plan.result_grade,
+        selected_plan=plan.selected_plan,
+        selected_review=selected,
+        recommended_review=plan.recommended_review,
+        followed_recommendation=selected == plan.recommended_review,
+        review_outcome_id=outcome_id,
+        review_label=option.label,
+        review_posture=option.posture,
+        lesson=copy["lesson"],
+        carry_forward_tag=copy["carry_forward_tag"],
+        carry_forward_type=copy["carry_forward_type"],
+        carry_forward_polarity=copy["carry_forward_polarity"],
+        visible_effects=(carry_effect, *plan.visible_effects),
+        reviewed_causal_chain=plan.causal_chain,
+        result_basis=(
+            f"result:{plan.week10_outcome_id}",
+            f"tier:{plan.result_tier}",
+            f"grade:{plan.result_grade}",
+            f"selected_review:{selected}",
+            f"recommended_review:{plan.recommended_review}",
+            f"review_outcome:{outcome_id}",
+        ),
+        next_hook=copy["next_hook"],
+    )
+
+
+def week10_post_match_review_from_json(text: str) -> Week10PostMatchReviewLock:
+    """Parse a written ``week10_post_match_review.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week10_post_match_review JSON is malformed") from exc
+    review = data.get("week10_post_match_review") if isinstance(data, dict) else None
+    if not isinstance(review, dict):
+        raise ValueError("week10_post_match_review JSON must contain a week10_post_match_review object")
+    week10_outcome = review.get("week10_outcome_id")
+    if week10_outcome not in WEEK10_MATCH_OUTCOMES:
+        raise ValueError("week10_post_match_review week10_outcome_id must list a Week-10 result")
+    result_tier = review.get("result_tier")
+    if result_tier not in ("win", "loss"):
+        raise ValueError("week10_post_match_review result_tier must be win or loss")
+    selected_plan = review.get("selected_plan")
+    if selected_plan not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError("week10_post_match_review selected_plan must list a Week-10 match plan")
+    selected_review = review.get("selected_review")
+    if selected_review not in WEEK10_POST_MATCH_REVIEW_CHOICES:
+        raise ValueError("week10_post_match_review selected_review must list a review choice")
+    recommended_review = review.get("recommended_review")
+    if recommended_review not in WEEK10_POST_MATCH_REVIEW_CHOICES:
+        raise ValueError("week10_post_match_review recommended_review must list a review choice")
+    review_outcome = review.get("review_outcome_id")
+    if review_outcome not in WEEK10_POST_MATCH_REVIEW_OUTCOMES:
+        raise ValueError("week10_post_match_review review_outcome_id must list a review outcome")
+    effects = review.get("visible_effects")
+    if not isinstance(effects, list):
+        raise ValueError("week10_post_match_review JSON must include visible_effects")
+    causal_chain = review.get("reviewed_causal_chain")
+    if not isinstance(causal_chain, list):
+        raise ValueError("week10_post_match_review JSON must include reviewed_causal_chain")
+    basis = review.get("result_basis")
+    if not isinstance(basis, list):
+        raise ValueError("week10_post_match_review JSON must include result_basis")
+    if review.get("next_artifact") is not None:
+        raise ValueError("week10_post_match_review next_artifact must be null")
+    return Week10PostMatchReviewLock(
+        source_branch=str(review.get("source_branch", "")),
+        setup_branch=str(review.get("setup_branch", "")),
+        chosen_focus=str(review.get("chosen_focus", "")),
+        week10_outcome_id=week10_outcome,
+        result_tier=result_tier,
+        scoreline=str(review.get("scoreline", "")),
+        result_grade=str(review.get("result_grade", "")),
+        selected_plan=selected_plan,
+        selected_review=selected_review,
+        recommended_review=recommended_review,
+        followed_recommendation=bool(review.get("followed_recommendation", selected_review == recommended_review)),
+        review_outcome_id=review_outcome,
+        review_label=str(review.get("review_label", "")),
+        review_posture=str(review.get("review_posture", "")),
+        lesson=str(review.get("lesson", "")),
+        carry_forward_tag=str(review.get("carry_forward_tag", "")),
+        carry_forward_type=str(review.get("carry_forward_type", "")),
+        carry_forward_polarity=str(review.get("carry_forward_polarity", "")),
+        visible_effects=tuple(
+            Week10VisibleEffect(
+                value=str(effect.get("id", "")),
+                label=str(effect.get("label", "")),
+                polarity=str(effect.get("polarity", "")),
+            )
+            for effect in effects
+            if isinstance(effect, dict)
+        ),
+        reviewed_causal_chain=tuple(str(item) for item in causal_chain),
+        result_basis=tuple(str(item) for item in basis),
+        next_hook=str(review.get("next_hook", "")),
+    )
+
+
+def render_week10_post_match_review_json(lock: Week10PostMatchReviewLock) -> str:
+    """Canonical JSON export for a locked Week-10 post-match review."""
+    payload = {
+        "week10_post_match_review": {
+            "artifact_type": "week10_post_match_review",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week10_match_result": WEEK10_MATCH_RESULT_FILENAME,
+            },
+            "week": 10,
+            "route": "/week10/post-match-review",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week10_outcome_id": lock.week10_outcome_id,
+            "result_tier": lock.result_tier,
+            "scoreline": lock.scoreline,
+            "result_grade": lock.result_grade,
+            "selected_plan": lock.selected_plan,
+            "selected_review": lock.selected_review,
+            "recommended_review": lock.recommended_review,
+            "followed_recommendation": lock.followed_recommendation,
+            "review_outcome_id": lock.review_outcome_id,
+            "review_label": lock.review_label,
+            "review_posture": lock.review_posture,
+            "lesson": lock.lesson,
+            "carry_forward_tag": lock.carry_forward_tag,
+            "carry_forward_type": lock.carry_forward_type,
+            "carry_forward_polarity": lock.carry_forward_polarity,
+            "visible_effects": [
+                {
+                    "id": effect.value,
+                    "label": effect.label,
+                    "polarity": effect.polarity,
+                }
+                for effect in lock.visible_effects
+            ],
+            "reviewed_causal_chain": list(lock.reviewed_causal_chain),
+            "result_basis": list(lock.result_basis),
+            "next_hook": lock.next_hook,
+            "stops_before": "week11_setup",
             "next_artifact": None,
         }
     }

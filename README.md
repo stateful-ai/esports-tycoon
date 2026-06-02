@@ -200,8 +200,11 @@ and handing off to `week10_match_plan.json`. `/week10/match` consumes the scrim
 artifact and writes `week10_match_plan.json`, locking one plan posture before
 result resolution. `/week10/match/result` consumes that plan and writes
 `week10_match_result.json`, resolving the selected posture into a deterministic
-outcome, scoreline, visible effect set, and `week10_post_match_review` boundary
-without creating standings, economy, sponsor, fan, or roster state.
+outcome, scoreline, visible effect set, and `week10_post_match_review.json`
+handoff. `/week10/post-match-review` consumes the result and writes
+`week10_post_match_review.json`, turning the win or loss into one carry-forward
+advantage, constraint, or watch without creating standings, economy, sponsor,
+fan, roster, or Week 11 setup state.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -259,8 +262,12 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   resolving the result.
 - **`week10_match_result.json`** — written by `/week10/match/result`, consuming
   the Week 10 match plan into one deterministic outcome, scoreline, visible
-  effect set, player-readable causal chain, and terminal
-  `week10_post_match_review` boundary without writing the post-match review.
+  effect set, player-readable causal chain, and
+  `week10_post_match_review.json` handoff without writing the post-match review.
+- **`week10_post_match_review.json`** — written by `/week10/post-match-review`,
+  consuming the Week 10 result into one review posture, durable carry-forward
+  tag, visible review effect set, and terminal `week11_setup` boundary without
+  writing Week 11 setup.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical
