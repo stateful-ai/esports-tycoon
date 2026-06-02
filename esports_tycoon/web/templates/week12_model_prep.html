@@ -174,6 +174,8 @@
     <div class="chip-row">
       <span class="data-chip good">{{ model_prep.targets|length }} targets</span>
       <span class="data-chip">{{ model_prep.dataset_sample_count }} samples</span>
+      <span class="data-chip">train {{ model_prep.train_sample_count }}</span>
+      <span class="data-chip">eval {{ model_prep.eval_sample_count }}</span>
       <span class="data-chip warn">model_prep_batch_v1</span>
       <span class="data-chip hot">Scenario slots</span>
     </div>
@@ -195,10 +197,14 @@
               </span>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span>samples</span><strong>{{ target.sample_count }}</strong></div>
+              <div class="metric"><span>train</span><strong>{{ target.train_sample_count }}</strong></div>
+              <div class="metric"><span>eval</span><strong>{{ target.eval_sample_count }}</strong></div>
               <div class="metric"><span>reward x100</span><strong>{{ target.reward_mean_x100 }}</strong></div>
               <div class="metric"><span>risk</span><strong>{{ target.risk_index }}</strong></div>
               <div class="metric"><span>objective</span><strong>{{ target.objective_pressure }}</strong></div>
+              <div class="metric"><span>eval reward</span><strong>{{ target.eval_reward_mean_x100 }}</strong></div>
+              <div class="metric"><span>eval risk</span><strong>{{ target.eval_risk_index }}</strong></div>
+              <div class="metric"><span>eval objective</span><strong>{{ target.eval_objective_pressure }}</strong></div>
             </div>
             <div class="policy-line">{{ target.from_policy_id }} -> {{ target.candidate_policy_id }}</div>
             <div class="policy-line">{{ target.scenario_model_slot }}</div>
@@ -227,6 +233,7 @@
           <div class="gate">
             <strong>{{ target.agent_id }} · {{ target.rl_objective }}</strong>
             <span>{{ target.evaluation_gate }}</span>
+            <span>{{ target.evaluation_gate_basis }}</span>
             <span>{{ target.source_drill_id }} · epoch +{{ target.epoch_delta }}</span>
           </div>
         {% endfor %}

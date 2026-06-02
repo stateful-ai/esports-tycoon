@@ -2580,8 +2580,21 @@ class TestWeek11MatchSimulation(_Fixture):
         payload = render_week11_training_dataset_json(dataset)
 
         self.assertEqual(dataset.sim_id, replay.sim_id)
+        self.assertEqual(len(dataset.episodes), 3)
         self.assertEqual(len(dataset.samples), len(replay.steps))
         self.assertEqual(len(dataset.policy_targets), len(plan.drills))
+        self.assertEqual(
+            len([sample for sample in dataset.samples if sample.split == "train"]),
+            8,
+        )
+        self.assertEqual(
+            len([sample for sample in dataset.samples if sample.split == "eval"]),
+            4,
+        )
+        self.assertTrue(all(sample.episode_id for sample in dataset.samples))
+        self.assertTrue(all(sample.episode_step >= 0 for sample in dataset.samples))
+        self.assertTrue(all(sample.split == "train" for sample in dataset.samples if sample.round_id in (1, 2)))
+        self.assertTrue(all(sample.split == "eval" for sample in dataset.samples if sample.round_id == 3))
         self.assertTrue(all(sample.observation_features for sample in dataset.samples))
         self.assertTrue(all(sample.reward_components for sample in dataset.samples))
         self.assertTrue(all(len(sample.action_mask) == 9 for sample in dataset.samples))
@@ -2603,6 +2616,13 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn("offline_rl_transition_v1", payload)
         self.assertIn('"source_artifact": "week11_development_plan.json"', payload)
         self.assertIn('"week11_match_sim": "week11_match_sim.json"', payload)
+        self.assertIn('"episodes":', payload)
+        self.assertIn('"episode_format": "round_bounded_episode_v1"', payload)
+        self.assertIn('"episode_id":', payload)
+        self.assertIn('"episode_step":', payload)
+        self.assertIn('"next_sample_id":', payload)
+        self.assertIn('"split": "eval"', payload)
+        self.assertIn('"split_counts":', payload)
         self.assertIn('"samples":', payload)
         self.assertIn('"next_observation":', payload)
         self.assertIn('"target_policy_id":', payload)
@@ -2622,6 +2642,17 @@ class TestWeek11MatchSimulation(_Fixture):
                 if sample.done
             )
         )
+        sample_by_id = {sample.sample_id: sample for sample in dataset.samples}
+        linked_samples = [sample for sample in dataset.samples if sample.next_sample_id]
+        self.assertTrue(linked_samples)
+        self.assertTrue(
+            all(
+                sample_by_id[sample.next_sample_id].episode_id == sample.episode_id
+                and sample_by_id[sample.next_sample_id].round_id == sample.round_id
+                for sample in linked_samples
+            )
+        )
+        self.assertTrue(all(sample.next_sample_id is None for sample in dataset.samples if sample.done))
 
     def test_week11_training_dataset_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2652,8 +2683,18 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(prep.sim_id, dataset.sim_id)
         self.assertEqual(prep.dataset_sample_count, len(dataset.samples))
+        self.assertEqual(
+            prep.train_sample_count,
+            len([sample for sample in dataset.samples if sample.split == "train"]),
+        )
+        self.assertEqual(
+            prep.eval_sample_count,
+            len([sample for sample in dataset.samples if sample.split == "eval"]),
+        )
         self.assertEqual(len(prep.targets), len(dataset.policy_targets))
         self.assertIn("vex", {target.agent_id for target in prep.targets})
+        self.assertTrue(all(target.sample_count == target.train_sample_count for target in prep.targets))
+        self.assertTrue(any(target.eval_sample_count > 0 for target in prep.targets))
         self.assertTrue(all(0 <= target.risk_index <= 100 for target in prep.targets))
         self.assertTrue(all(0 <= target.objective_pressure <= 100 for target in prep.targets))
         self.assertTrue(all(target.component_totals for target in prep.targets))
@@ -2663,10 +2704,15 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"model_prep_batch_v1"', payload)
         self.assertIn('"scenario_model_slot":', payload)
         self.assertIn('"candidate_policy_id":', payload)
+        self.assertIn('"train_sample_count":', payload)
+        self.assertIn('"eval_sample_count":', payload)
+        self.assertIn('"eval_reward_mean_x100":', payload)
+        self.assertIn('"held_out_split": "eval"', payload)
         self.assertIn('"component_totals":', payload)
         self.assertIn('"dominant_failure_mode":', payload)
         self.assertIn('"risk_spike_count":', payload)
         self.assertIn('"evaluation_gate":', payload)
+        self.assertIn('"evaluation_gate_basis":', payload)
         self.assertIn('"stops_before": "week12_shadow_rollout"', payload)
         self.assertIn('"next_artifact": "week12_shadow_rollout.json"', payload)
 

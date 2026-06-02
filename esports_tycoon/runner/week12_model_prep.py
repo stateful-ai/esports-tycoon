@@ -35,10 +35,15 @@ class Week12ModelPrepTarget:
     candidate_policy_id: str
     source_drill_id: str
     sample_count: int
+    train_sample_count: int
+    eval_sample_count: int
     reward_total: int
     reward_mean_x100: int
+    eval_reward_mean_x100: int
     risk_index: int
+    eval_risk_index: int
     objective_pressure: int
+    eval_objective_pressure: int
     component_totals: dict[str, int]
     dominant_failure_mode: str
     risk_spike_count: int
@@ -49,6 +54,7 @@ class Week12ModelPrepTarget:
     scenario_model_slot: str
     rl_objective: str
     evaluation_gate: str
+    evaluation_gate_basis: str
     prompt_seed: str
 
 
@@ -61,6 +67,8 @@ class Week12ModelPrep:
     outcome_id: str
     result_tier: str
     dataset_sample_count: int
+    train_sample_count: int
+    eval_sample_count: int
     targets: tuple[Week12ModelPrepTarget, ...]
     prep_notes: tuple[str, ...]
     next_hook: str
@@ -175,20 +183,35 @@ def _dominant_failure_mode(
 def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep:
     """Aggregate the offline RL dataset into model-prep targets for Week 12."""
     samples_by_agent: dict[str, list[Week11TrainingSample]] = defaultdict(list)
+    train_samples_by_agent: dict[str, list[Week11TrainingSample]] = defaultdict(list)
+    eval_samples_by_agent: dict[str, list[Week11TrainingSample]] = defaultdict(list)
     for sample in dataset.samples:
         samples_by_agent[sample.agent_id].append(sample)
+        if sample.split == "eval":
+            eval_samples_by_agent[sample.agent_id].append(sample)
+        else:
+            train_samples_by_agent[sample.agent_id].append(sample)
 
     targets: list[Week12ModelPrepTarget] = []
     for target in dataset.policy_targets:
         agent_id = str(target.get("agent_id", ""))
-        samples = samples_by_agent.get(agent_id, [])
+        samples = train_samples_by_agent.get(agent_id, [])
+        eval_samples = eval_samples_by_agent.get(agent_id, [])
+        if not samples:
+            samples = samples_by_agent.get(agent_id, [])
         rewards = [sample.reward for sample in samples]
+        eval_rewards = [sample.reward for sample in eval_samples]
         risk_values = [sample.telemetry.risk_index for sample in samples]
+        eval_risk_values = [sample.telemetry.risk_index for sample in eval_samples]
         objective_values = [sample.telemetry.objective_pressure for sample in samples]
+        eval_objective_values = [sample.telemetry.objective_pressure for sample in eval_samples]
         epoch_delta = int(target.get("epoch_delta", 0))
         reward_mean_x100 = _mean_x100(rewards)
+        eval_reward_mean_x100 = _mean_x100(eval_rewards)
         risk_index = _mean_int(risk_values)
+        eval_risk_index = _mean_int(eval_risk_values)
         objective_pressure = _mean_int(objective_values)
+        eval_objective_pressure = _mean_int(eval_objective_values)
         component_totals = _component_totals(samples)
         risk_spike_count = len([sample for sample in samples if sample.telemetry.risk_index >= 58])
         dominant_failure_mode = _dominant_failure_mode(
@@ -221,10 +244,15 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
                 candidate_policy_id=candidate_policy_id,
                 source_drill_id=str(target.get("source_drill_id", "")),
                 sample_count=len(samples),
+                train_sample_count=len(samples),
+                eval_sample_count=len(eval_samples),
                 reward_total=sum(rewards),
                 reward_mean_x100=reward_mean_x100,
+                eval_reward_mean_x100=eval_reward_mean_x100,
                 risk_index=risk_index,
+                eval_risk_index=eval_risk_index,
                 objective_pressure=objective_pressure,
+                eval_objective_pressure=eval_objective_pressure,
                 component_totals=component_totals,
                 dominant_failure_mode=dominant_failure_mode,
                 risk_spike_count=risk_spike_count,
@@ -235,6 +263,10 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
                 scenario_model_slot=f"scenario://week12/{agent_id}/{candidate_policy_id}",
                 rl_objective=_rl_objective(mode),
                 evaluation_gate=_evaluation_gate(mode),
+                evaluation_gate_basis=(
+                    f"train_samples={len(samples)} eval_samples={len(eval_samples)} "
+                    "training_split=train held_out_split=eval"
+                ),
                 prompt_seed=_prompt_seed(agent_id, mode),
             )
         )
@@ -245,9 +277,12 @@ def resolve_week12_model_prep(dataset: Week11TrainingDataset) -> Week12ModelPrep
         outcome_id=dataset.outcome_id,
         result_tier=dataset.result_tier,
         dataset_sample_count=len(dataset.samples),
+        train_sample_count=len([sample for sample in dataset.samples if sample.split == "train"]),
+        eval_sample_count=len([sample for sample in dataset.samples if sample.split == "eval"]),
         targets=tuple(sorted(targets, key=lambda item: (-item.priority_score, item.agent_id))),
         prep_notes=(
-            "Model prep aggregates offline RL samples into trainable player-policy targets.",
+            "Model prep aggregates train-split RL samples into trainable player-policy targets.",
+            "Eval-split samples stay held out for future shadow gates and model comparison.",
             "scenario_model_slot is a placeholder until Scenario-authenticated model ids are attached.",
             "Epoch delta remains a skill proxy; future learned policies can replace candidate_policy_id.",
         ),
@@ -262,10 +297,15 @@ def _model_prep_target_to_dict(target: Week12ModelPrepTarget) -> dict[str, Any]:
         "candidate_policy_id": target.candidate_policy_id,
         "source_drill_id": target.source_drill_id,
         "sample_count": target.sample_count,
+        "train_sample_count": target.train_sample_count,
+        "eval_sample_count": target.eval_sample_count,
         "reward_total": target.reward_total,
         "reward_mean_x100": target.reward_mean_x100,
+        "eval_reward_mean_x100": target.eval_reward_mean_x100,
         "risk_index": target.risk_index,
+        "eval_risk_index": target.eval_risk_index,
         "objective_pressure": target.objective_pressure,
+        "eval_objective_pressure": target.eval_objective_pressure,
         "component_totals": dict(target.component_totals),
         "dominant_failure_mode": target.dominant_failure_mode,
         "risk_spike_count": target.risk_spike_count,
@@ -276,6 +316,7 @@ def _model_prep_target_to_dict(target: Week12ModelPrepTarget) -> dict[str, Any]:
         "scenario_model_slot": target.scenario_model_slot,
         "rl_objective": target.rl_objective,
         "evaluation_gate": target.evaluation_gate,
+        "evaluation_gate_basis": target.evaluation_gate_basis,
         "prompt_seed": target.prompt_seed,
     }
 
@@ -297,11 +338,15 @@ def week12_model_prep_to_dict(prep: Week12ModelPrep) -> dict[str, Any]:
         "outcome_id": prep.outcome_id,
         "result_tier": prep.result_tier,
         "dataset_sample_count": prep.dataset_sample_count,
+        "train_sample_count": prep.train_sample_count,
+        "eval_sample_count": prep.eval_sample_count,
         "target_count": len(prep.targets),
         "targets": [_model_prep_target_to_dict(target) for target in prep.targets],
         "prep_contract": {
             "format": "model_prep_batch_v1",
             "source_dataset_format": "offline_rl_transition_v1",
+            "training_split": "train",
+            "held_out_split": "eval",
             "target_unit": "targets[]",
             "model_reference_field": "targets[].scenario_model_slot",
             "candidate_policy_field": "targets[].candidate_policy_id",
@@ -314,13 +359,19 @@ def week12_model_prep_to_dict(prep: Week12ModelPrep) -> dict[str, Any]:
             ],
             "evaluation_fields": [
                 "sample_count",
+                "train_sample_count",
+                "eval_sample_count",
                 "reward_mean_x100",
+                "eval_reward_mean_x100",
                 "risk_index",
+                "eval_risk_index",
                 "objective_pressure",
+                "eval_objective_pressure",
                 "component_totals",
                 "dominant_failure_mode",
                 "risk_spike_count",
                 "evaluation_gate",
+                "evaluation_gate_basis",
             ],
         },
         "prep_notes": list(prep.prep_notes),
@@ -363,10 +414,15 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
             candidate_policy_id=str(target.get("candidate_policy_id", "")),
             source_drill_id=str(target.get("source_drill_id", "")),
             sample_count=int(target.get("sample_count", 0)),
+            train_sample_count=int(target.get("train_sample_count", target.get("sample_count", 0))),
+            eval_sample_count=int(target.get("eval_sample_count", 0)),
             reward_total=int(target.get("reward_total", 0)),
             reward_mean_x100=int(target.get("reward_mean_x100", 0)),
+            eval_reward_mean_x100=int(target.get("eval_reward_mean_x100", 0)),
             risk_index=int(target.get("risk_index", 0)),
+            eval_risk_index=int(target.get("eval_risk_index", 0)),
             objective_pressure=int(target.get("objective_pressure", 0)),
+            eval_objective_pressure=int(target.get("eval_objective_pressure", 0)),
             component_totals={
                 str(key): int(value)
                 for key, value in target.get("component_totals", {}).items()
@@ -399,6 +455,7 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
             scenario_model_slot=str(target.get("scenario_model_slot", "")),
             rl_objective=str(target.get("rl_objective", "")),
             evaluation_gate=str(target.get("evaluation_gate", "")),
+            evaluation_gate_basis=str(target.get("evaluation_gate_basis", "")),
             prompt_seed=str(target.get("prompt_seed", "")),
         )
         for target in targets_raw
@@ -410,6 +467,8 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
         outcome_id=str(prep.get("outcome_id", "")),
         result_tier=str(prep.get("result_tier", "")),
         dataset_sample_count=int(prep.get("dataset_sample_count", 0)),
+        train_sample_count=int(prep.get("train_sample_count", prep.get("dataset_sample_count", 0))),
+        eval_sample_count=int(prep.get("eval_sample_count", 0)),
         targets=targets,
         prep_notes=tuple(str(item) for item in prep.get("prep_notes", []) if isinstance(item, str)),
         next_hook=str(prep.get("next_hook", "")),
