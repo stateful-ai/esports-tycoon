@@ -155,6 +155,22 @@ class Week11SimStep:
 
 
 @dataclass(frozen=True)
+class Week11TrainingSignal:
+    """One player-development signal derived from the replay trajectory."""
+
+    agent_id: str
+    category: str
+    priority: str
+    label: str
+    evidence: str
+    source_rounds: tuple[int, ...]
+    reward_total: int
+    epoch_delta: int
+    current_policy_id: str
+    next_policy_id: str
+
+
+@dataclass(frozen=True)
 class Week11MatchSimulation:
     """A deterministic tactical replay artifact for Week 11."""
 
@@ -174,6 +190,7 @@ class Week11MatchSimulation:
     rounds: tuple[Week11SimRound, ...]
     frames: tuple[Week11SimFrame, ...]
     steps: tuple[Week11SimStep, ...]
+    training_signals: tuple[Week11TrainingSignal, ...]
     viewer_summary: tuple[str, ...]
     training_notes: tuple[str, ...]
 
@@ -589,6 +606,67 @@ def _frames(
     return tuple(frames)
 
 
+def _signal_template(agent: Week11SimAgent) -> tuple[str, str]:
+    templates = {
+        "rook": ("calling", "compress the call tree before terminal pressure"),
+        "vex": ("entry discipline", "convert space without extending past trade cover"),
+        "sable": ("trade discipline", "anchor the terminal trade window with lower variance"),
+        "pixie": ("utility timing", "refresh information without flooding the comm channel"),
+        "coyote": ("lurk timing", "delay contact until the branch is confirmed"),
+    }
+    return templates.get(agent.agent_id, ("role execution", "stabilize role baseline under match pressure"))
+
+
+def _training_signals(
+    result: Week11MatchResultLock,
+    agents: tuple[Week11SimAgent, ...],
+    steps: tuple[Week11SimStep, ...],
+) -> tuple[Week11TrainingSignal, ...]:
+    overcast_agents = [agent for agent in agents if agent.side == "overcast"]
+    signals = []
+    for agent in overcast_agents:
+        agent_steps = [step for step in steps if step.agent_id == agent.agent_id]
+        reward_total = sum(step.reward for step in agent_steps)
+        source_rounds = tuple(sorted({step.round_id for step in agent_steps}))
+        category, label = _signal_template(agent)
+        if reward_total <= 0 or result.result_grade == "punished":
+            priority = "high"
+            epoch_delta = 18
+        elif reward_total <= 2 or result.result_grade == "thin":
+            priority = "medium"
+            epoch_delta = 28
+        else:
+            priority = "low"
+            epoch_delta = 40
+        if agent.agent_id == "vex" and agent.trait_profile.risk >= 85:
+            priority = "high" if result.result_grade in {"thin", "punished"} else "medium"
+            label = "turn entry speed into traded pressure, not isolated pressure"
+        elif agent.agent_id == "pixie" and agent.trait_profile.comms >= 90:
+            label = "convert info volume into two clean timing calls"
+        elif agent.agent_id == "rook" and result.selected_plan == "stabilize_defaults":
+            label = "make the stable default proactive before the first rotate"
+
+        evidence = (
+            f"{len(agent_steps)} steps, reward {reward_total}, "
+            f"rounds {','.join(str(round_id) for round_id in source_rounds) or 'none'}"
+        )
+        signals.append(
+            Week11TrainingSignal(
+                agent_id=agent.agent_id,
+                category=category,
+                priority=priority,
+                label=label,
+                evidence=evidence,
+                source_rounds=source_rounds,
+                reward_total=reward_total,
+                epoch_delta=epoch_delta,
+                current_policy_id=agent.policy_id,
+                next_policy_id=f"{agent.policy_id}_epoch_{agent.skill_epoch_proxy + epoch_delta}",
+            )
+        )
+    return tuple(signals)
+
+
 def resolve_week11_match_simulation(
     result: Week11MatchResultLock,
     players: Sequence[Player],
@@ -603,11 +681,12 @@ def resolve_week11_match_simulation(
     rounds = _rounds(result)
     steps = _steps(result, agent_lookup)
     frames = _frames(result, agents, rounds, steps)
+    training_signals = _training_signals(result, agents, steps)
     sim_id = f"w11-{result.selected_plan}-{result.outcome_id}-{result.match_plan_seed}"
     viewer_summary = (
         f"{result.selected_plan} replay on {map_name}",
         f"{result.result_tier} {result.scoreline} with {result.result_grade} grade",
-        f"policy trace uses {len(overcast_agents)} Overcast agents and {len(steps)} reward steps",
+        f"policy trace uses {len(overcast_agents)} Overcast agents, {len(rounds)} rounds, and {len(training_signals)} training signals",
     )
     training_notes = (
         "Replace policy_id dispatch with learned model inference when RL policies exist.",
@@ -631,6 +710,7 @@ def resolve_week11_match_simulation(
         rounds=rounds,
         frames=frames,
         steps=steps,
+        training_signals=training_signals,
         viewer_summary=viewer_summary,
         training_notes=training_notes,
     )
@@ -718,6 +798,21 @@ def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
     }
 
 
+def _training_signal_to_dict(signal: Week11TrainingSignal) -> dict[str, Any]:
+    return {
+        "agent_id": signal.agent_id,
+        "category": signal.category,
+        "priority": signal.priority,
+        "label": signal.label,
+        "evidence": signal.evidence,
+        "source_rounds": list(signal.source_rounds),
+        "reward_total": signal.reward_total,
+        "epoch_delta": signal.epoch_delta,
+        "current_policy_id": signal.current_policy_id,
+        "next_policy_id": signal.next_policy_id,
+    }
+
+
 def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
     """Dictionary form used by JSON export and the web viewer."""
     return {
@@ -746,12 +841,14 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
         "rounds": [_round_to_dict(round_) for round_ in sim.rounds],
         "frames": [_frame_to_dict(frame) for frame in sim.frames],
         "steps": [_step_to_dict(step) for step in sim.steps],
+        "training_signals": [_training_signal_to_dict(signal) for signal in sim.training_signals],
         "rl_contract": {
             "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
             "action_space": list(WEEK11_SIM_ACTION_SPACE),
             "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
             "policy_hook": "agent.policy_id + scenario_archetype + skill_epoch_proxy",
             "epoch_proxy_field": "agents[].skill_epoch_proxy",
+            "training_signal_unit": "training_signals[]",
             "trajectory_unit": "steps[]",
         },
         "viewer_summary": list(sim.viewer_summary),
@@ -802,6 +899,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     rounds_raw = sim.get("rounds")
     frames_raw = sim.get("frames")
     steps_raw = sim.get("steps")
+    training_signals_raw = sim.get("training_signals")
     rl_contract = sim.get("rl_contract")
     if not isinstance(agents_raw, list) or not agents_raw:
         raise ValueError("week11_match_sim JSON must include agents")
@@ -811,6 +909,8 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         raise ValueError("week11_match_sim JSON must include frames")
     if not isinstance(steps_raw, list) or not steps_raw:
         raise ValueError("week11_match_sim JSON must include steps")
+    if not isinstance(training_signals_raw, list) or not training_signals_raw:
+        raise ValueError("week11_match_sim JSON must include training_signals")
     if not isinstance(rl_contract, dict):
         raise ValueError("week11_match_sim JSON must include rl_contract")
     if sim.get("next_artifact") is not None:
@@ -890,6 +990,24 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         for step in steps_raw
         if isinstance(step, dict)
     )
+    training_signals = tuple(
+        Week11TrainingSignal(
+            agent_id=str(signal.get("agent_id", "")),
+            category=str(signal.get("category", "")),
+            priority=str(signal.get("priority", "")),
+            label=str(signal.get("label", "")),
+            evidence=str(signal.get("evidence", "")),
+            source_rounds=tuple(
+                int(item) for item in signal.get("source_rounds", []) if isinstance(item, int)
+            ),
+            reward_total=int(signal.get("reward_total", 0)),
+            epoch_delta=int(signal.get("epoch_delta", 0)),
+            current_policy_id=str(signal.get("current_policy_id", "")),
+            next_policy_id=str(signal.get("next_policy_id", "")),
+        )
+        for signal in training_signals_raw
+        if isinstance(signal, dict)
+    )
     return Week11MatchSimulation(
         sim_id=str(sim.get("sim_id", "")),
         source_branch=str(sim.get("source_branch", "")),
@@ -907,6 +1025,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         rounds=rounds,
         frames=frames,
         steps=steps,
+        training_signals=training_signals,
         viewer_summary=tuple(str(item) for item in sim.get("viewer_summary", []) if isinstance(item, str)),
         training_notes=tuple(str(item) for item in sim.get("training_notes", []) if isinstance(item, str)),
     )
