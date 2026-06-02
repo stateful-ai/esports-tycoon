@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Week 12 shadow rollout - {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1220px; }
+  .shadow-lab {
+    color: #edf4f4;
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(135deg, #090d10 0%, #111820 58%, #0d1014 100%);
+    background-size: 24px 24px, 24px 24px, auto;
+    border: 1px solid #2d3b45;
+    padding: clamp(0.85rem, 1.6vw, 1.2rem);
+  }
+  .shadow-lab h1, .shadow-lab h2, .shadow-lab p { color: inherit; }
+  .shadow-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(169, 190, 196, 0.2);
+    margin-bottom: 1rem;
+  }
+  .shadow-top h1 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+  .shadow-top .sub { color: #a5b4b8; margin: 0.3rem 0 0; max-width: 72ch; }
+  .chip-row, .shadow-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .chip-row { justify-content: flex-end; }
+  .data-chip {
+    border: 1px solid #344854;
+    background: rgba(15, 23, 28, 0.88);
+    color: #dce8e8;
+    padding: 0.18rem 0.46rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #26d9c7; color: #9af3e8; }
+  .data-chip.warn { border-color: #f4c950; color: #ffe08a; }
+  .data-chip.hot { border-color: #ff665a; color: #ffb3ad; }
+  .shadow-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .shadow-panel {
+    border: 1px solid rgba(169, 190, 196, 0.2);
+    background: rgba(14, 20, 25, 0.82);
+    padding: 0.9rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #8fa2a8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+  .trial-stack, .summary-stack {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .trial-stack {
+    max-height: 36rem;
+    overflow: auto;
+    padding-right: 0.25rem;
+  }
+  .trial-card {
+    border: 1px solid #293943;
+    border-left: 3px solid #26d9c7;
+    background: #10171c;
+    padding: 0.72rem;
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+  .trial-card.watch { border-left-color: #f4c950; }
+  .trial-card.fail { border-left-color: #ff665a; }
+  .trial-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+    align-items: start;
+  }
+  .trial-head strong {
+    color: #fff4cc;
+    overflow-wrap: anywhere;
+  }
+  .trial-head span, .metric span, .policy-line {
+    color: #b7c6ca;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .metric {
+    border: 1px solid #283842;
+    background: #0c1116;
+    padding: 0.45rem;
+    min-width: 0;
+  }
+  .metric strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .summary-line {
+    border-left: 2px solid #f4c950;
+    background: #10171c;
+    color: #c8d7d9;
+    padding: 0.6rem 0.7rem;
+  }
+  .shadow-actions { margin-top: 1rem; }
+  .shadow-lab .btn {
+    border-radius: 0;
+    background: #edf4f4;
+    color: #090d10;
+    border: 1px solid #edf4f4;
+  }
+  .shadow-lab .btn.secondary {
+    background: transparent;
+    color: #edf4f4;
+    border-color: #344854;
+  }
+  @media (max-width: 920px) {
+    .shadow-top, .shadow-grid, .trial-head, .metric-grid { grid-template-columns: 1fr; }
+    .chip-row { justify-content: flex-start; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 12 model prep required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week12_model_prep') }}">Back to model lab</a>
+  </div>
+</div>
+{% elif shadow_rollout %}
+<div class="shadow-lab">
+  <div class="shadow-top">
+    <div>
+      <h1>Week 12 shadow rollout</h1>
+      <p class="sub">{{ shadow_rollout.rollout_summary[0] }}</p>
+    </div>
+    <div class="chip-row">
+      <span class="data-chip good">{{ shadow_rollout.trials|length }} trials</span>
+      <span class="data-chip warn">shadow_rollout_batch_v1</span>
+      <span class="data-chip hot">promotion decisions</span>
+    </div>
+  </div>
+
+  <div class="shadow-grid">
+    <section class="shadow-panel">
+      <div class="panel-kicker">Candidate policy trials</div>
+      <div class="trial-stack">
+        {% for trial in shadow_rollout.trials %}
+          <article class="trial-card {{ trial.evaluation_result }}">
+            <div class="trial-head">
+              <div>
+                <strong>{{ trial.agent_id }} -> {{ trial.candidate_policy_id }}</strong>
+                <span>{{ trial.training_mode }} · {{ trial.readiness_band }}</span>
+              </div>
+              <span class="data-chip {% if trial.evaluation_result == 'pass' %}good{% elif trial.evaluation_result == 'watch' %}warn{% else %}hot{% endif %}">
+                {{ trial.decision }}
+              </span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span>episodes</span><strong>{{ trial.episodes }}</strong></div>
+              <div class="metric"><span>baseline</span><strong>{{ trial.baseline_reward }}</strong></div>
+              <div class="metric"><span>candidate</span><strong>{{ trial.candidate_reward }}</strong></div>
+              <div class="metric"><span>reward</span><strong>{{ trial.reward_delta }}</strong></div>
+              <div class="metric"><span>risk</span><strong>{{ trial.risk_delta }}</strong></div>
+            </div>
+            <div class="policy-line">{{ trial.scenario_model_slot }}</div>
+            <div class="policy-line">{{ trial.decision_reason }}</div>
+            <div class="policy-line">{{ trial.next_training_hook }}</div>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="shadow-actions">
+        {% if week12_shadow_rollout_path %}
+          <span class="data-chip good">Shadow rollout locked</span>
+          <span class="data-chip">{{ week12_shadow_rollout_path }}</span>
+        {% else %}
+          <form method="post" action="{{ url_for('week12_shadow_rollout') }}">
+            <button class="btn" type="submit">Lock shadow rollout</button>
+          </form>
+        {% endif %}
+        <a class="btn secondary" href="{{ url_for('week12_model_prep') }}">Back to model lab</a>
+      </div>
+    </section>
+
+    <aside class="shadow-panel">
+      <div class="panel-kicker">Rollout summary</div>
+      <div class="summary-stack">
+        {% for line in shadow_rollout.rollout_summary %}
+          <div class="summary-line">{{ line }}</div>
+        {% endfor %}
+        <div class="summary-line">{{ shadow_rollout.next_hook }}</div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script type="application/json" id="shadow-rollout-data">{{ shadow_rollout_json|safe }}</script>
+{% endif %}
+{% endblock %}

@@ -58,6 +58,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week11_development_plan_json,
     render_week11_training_dataset_json,
     render_week12_model_prep_json,
+    render_week12_shadow_rollout_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -85,6 +86,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week11_development_plan,
     resolve_week11_training_dataset,
     resolve_week12_model_prep,
+    resolve_week12_shadow_rollout,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -115,6 +117,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_development_plan_from_json,
     week11_training_dataset_from_json,
     week12_model_prep_from_json,
+    week12_shadow_rollout_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2447,8 +2450,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"scenario_model_slot":', payload)
         self.assertIn('"candidate_policy_id":', payload)
         self.assertIn('"evaluation_gate":', payload)
-        self.assertIn('"stops_before": "week12_model_training"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week12_shadow_rollout"', payload)
+        self.assertIn('"next_artifact": "week12_shadow_rollout.json"', payload)
 
     def test_week12_model_prep_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2465,6 +2468,49 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, prep)
         self.assertEqual(render_week12_model_prep_json(parsed), payload)
+
+    def test_week12_shadow_rollout_consumes_model_prep(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        payload = render_week12_shadow_rollout_json(rollout)
+
+        self.assertEqual(rollout.sim_id, prep.sim_id)
+        self.assertEqual(len(rollout.trials), len(prep.targets))
+        self.assertIn("vex", {trial.agent_id for trial in rollout.trials})
+        self.assertTrue(all(trial.episodes >= 2 for trial in rollout.trials))
+        self.assertTrue(all(trial.candidate_policy_id for trial in rollout.trials))
+        self.assertIn('"source_artifact": "week12_model_prep.json"', payload)
+        self.assertIn('"checkpoint": "week12_shadow_rollout"', payload)
+        self.assertIn('"shadow_rollout_batch_v1"', payload)
+        self.assertIn('"candidate_reward":', payload)
+        self.assertIn('"risk_delta":', payload)
+        self.assertIn('"decision":', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week12_shadow_rollout_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        payload = render_week12_shadow_rollout_json(rollout)
+        parsed = week12_shadow_rollout_from_json(payload)
+
+        self.assertEqual(parsed, rollout)
+        self.assertEqual(render_week12_shadow_rollout_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

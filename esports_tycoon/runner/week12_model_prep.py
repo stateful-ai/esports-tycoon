@@ -14,6 +14,7 @@ from esports_tycoon.runner.week11_match_sim import (
 )
 
 WEEK12_MODEL_PREP_FILENAME = "week12_model_prep.json"
+WEEK12_SHADOW_ROLLOUT_FILENAME = "week12_shadow_rollout.json"
 
 Week12TrainingMode = Literal[
     "behavior_clone_warm_start",
@@ -272,8 +273,8 @@ def week12_model_prep_to_dict(prep: Week12ModelPrep) -> dict[str, Any]:
         },
         "prep_notes": list(prep.prep_notes),
         "next_hook": prep.next_hook,
-        "stops_before": "week12_model_training",
-        "next_artifact": None,
+        "stops_before": "week12_shadow_rollout",
+        "next_artifact": WEEK12_SHADOW_ROLLOUT_FILENAME,
     }
 
 
@@ -301,8 +302,8 @@ def week12_model_prep_from_json(text: str) -> Week12ModelPrep:
     targets_raw = prep.get("targets")
     if not isinstance(targets_raw, list) or not targets_raw:
         raise ValueError("week12_model_prep JSON must include targets")
-    if prep.get("next_artifact") is not None:
-        raise ValueError("week12_model_prep next_artifact must be null")
+    if prep.get("next_artifact") not in (None, WEEK12_SHADOW_ROLLOUT_FILENAME):
+        raise ValueError("week12_model_prep next_artifact must be null or week12_shadow_rollout.json")
     targets = tuple(
         Week12ModelPrepTarget(
             agent_id=str(target.get("agent_id", "")),
