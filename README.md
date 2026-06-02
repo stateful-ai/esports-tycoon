@@ -213,8 +213,9 @@ stopping before Week 11 scrim. `/week11/scrim` consumes that prep artifact and
 writes `week11_scrim.json`, turning the prep seed into one explicit scrim
 protocol, analyst read, and match-plan seed while stopping before Week 11 match
 planning.
-The Week 11 prep screen uses dedicated prep-room environment art so the new
-week reads visually distinct from the Week 10 match-room flow.
+The Week 11 prep and scrim screens use dedicated environment art so the new
+week reads visually distinct from the Week 10 match-room flow and the scrim
+checkpoint feels like a live room instead of another prep desk.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 

@@ -65,6 +65,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_resp.mimetype, "image/webp")
         self.assertTrue(week11_resp.data.startswith(b"RIFF"))
 
+        week11_scrim_resp = self.client.get("/static/art/week11-scrim-room.webp")
+        self.assertEqual(week11_scrim_resp.status_code, 200)
+        self.assertEqual(week11_scrim_resp.mimetype, "image/webp")
+        self.assertTrue(week11_scrim_resp.data.startswith(b"RIFF"))
+
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
         self.assertEqual(resp.status_code, 200)
@@ -1274,7 +1279,7 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"repeat_edge", page.data)
         self.assertIn(b"show_countermove", page.data)
         self.assertIn(b"steady_first_contact", page.data)
-        self.assertIn(b"/static/art/week11-prep-room.webp", page.data)
+        self.assertIn(b"/static/art/week11-scrim-room.webp", page.data)
 
         locked = self.client.post("/week11/scrim", data={"week11_scrim": "repeat_edge"})
         self.assertEqual(locked.status_code, 200)
