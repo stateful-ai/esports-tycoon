@@ -2317,8 +2317,19 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(frame.zone_control for frame in replay.frames))
         self.assertTrue(all(frame.events for frame in replay.frames))
         self.assertTrue(all(frame.threat_arcs for frame in replay.frames))
+        self.assertTrue(all(frame.utility_zones for frame in replay.frames))
         self.assertTrue(
             all(0 <= arc.threat_level <= 100 for frame in replay.frames for arc in frame.threat_arcs)
+        )
+        self.assertTrue(
+            all(
+                0 <= zone.effect_strength <= 100
+                for frame in replay.frames
+                for zone in frame.utility_zones
+            )
+        )
+        self.assertTrue(
+            any(zone.blocks_sight for frame in replay.frames for zone in frame.utility_zones)
         )
         self.assertTrue(all(step.observation_features for step in replay.steps))
         self.assertTrue(all(step.action_context for step in replay.steps))
@@ -2343,8 +2354,10 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"zone_control":', payload)
         self.assertIn('"events":', payload)
         self.assertIn('"threat_arcs":', payload)
+        self.assertIn('"utility_zones":', payload)
         self.assertIn('"frame_event_unit": "frames[].events[]"', payload)
         self.assertIn('"threat_arc_unit": "frames[].threat_arcs[]"', payload)
+        self.assertIn('"utility_zone_unit": "frames[].utility_zones[]"', payload)
         self.assertIn('"space_control":', payload)
         self.assertIn('"risk_index":', payload)
         self.assertIn('"skill_epoch_proxy":', payload)
