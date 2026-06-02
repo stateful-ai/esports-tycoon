@@ -1347,6 +1347,10 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"attack_the_gap", page.data)
         self.assertIn(b"stabilize_defaults", page.data)
         self.assertIn(b"/static/art/week11-match-plan-room.webp", page.data)
+        self.assertIn(b"outcome confirming", page.data)
+        self.assertIn(b"signal high_signal", page.data)
+        self.assertIn(b"read trust_read", page.data)
+        self.assertIn(b"emphasis early_objective", page.data)
 
         locked = self.client.post(
             "/week11/match",
@@ -1356,6 +1360,7 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"week11_match_plan.json", locked.data)
         self.assertIn(b"trust_the_read", locked.data)
         self.assertIn(b"read_trust", locked.data)
+        self.assertIn(b"emphasis early_objective", locked.data)
 
         run_dir = next(self.output_root.glob("wk6-*"))
         plan_json = (run_dir / "week11_match_plan.json").read_text(encoding="utf-8")

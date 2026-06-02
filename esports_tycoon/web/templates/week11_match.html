@@ -171,6 +171,12 @@
         <span class="data-chip">protocol {{ preview.scrim_protocol }}</span>
         <span class="data-chip">risk {{ preview.match_risk }}</span>
       </div>
+      <div class="chip-row" style="margin-top: 0.55rem;">
+        <span class="data-chip">outcome {{ preview.outcome_class }}</span>
+        <span class="data-chip">signal {{ preview.protocol_signal }}</span>
+        <span class="data-chip">read {{ preview.analyst_read_class }}</span>
+        <span class="data-chip">emphasis {{ preview.seeded_emphasis }}</span>
+      </div>
       <div class="chip-row" style="margin-top: 0.8rem;">
         {% for effect in preview.visible_effects %}
           <span class="data-chip {{ effect.polarity }}">{{ effect.label }}</span>
@@ -222,6 +228,12 @@
       <span class="data-chip">plan {{ lock.selected_plan }}</span>
       <span class="data-chip">commitment {{ lock.commitment }}</span>
       <span class="data-chip">risk {{ lock.match_risk }}</span>
+    </div>
+    <div class="chip-row" style="margin-top: 0.55rem;">
+      <span class="data-chip">outcome {{ lock.outcome_class }}</span>
+      <span class="data-chip">signal {{ lock.protocol_signal }}</span>
+      <span class="data-chip">read {{ lock.analyst_read_class }}</span>
+      <span class="data-chip">emphasis {{ lock.seeded_emphasis }}</span>
     </div>
     <div class="copy-line">Risk: {{ lock.risk_taken }}</div>
     <div class="copy-line">Watch: {{ lock.thing_to_watch }}</div>
