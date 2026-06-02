@@ -300,6 +300,38 @@
     font-size: 0.82rem;
     overflow-wrap: anywhere;
   }
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+  .signal-card {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(10, 13, 18, 0.68);
+    padding: 0.75rem;
+    min-width: 0;
+  }
+  .signal-card strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    overflow-wrap: anywhere;
+  }
+  .signal-card span {
+    display: block;
+    color: #a7b4b5;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+  .priority {
+    display: inline-block;
+    border: 1px solid rgba(255, 210, 122, 0.4);
+    color: #ffd27a;
+    padding: 0.08rem 0.32rem;
+    margin-bottom: 0.4rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+  }
   .rl-panel { padding: 0.85rem; }
   .step-list {
     display: grid;
@@ -350,12 +382,14 @@
     .viewer-chips { justify-content: flex-start; }
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .round-grid { grid-template-columns: 1fr; }
+    .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
   }
   @media (max-width: 560px) {
     .agent-grid { grid-template-columns: 1fr; }
+    .signal-grid { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
   }
@@ -482,6 +516,22 @@
     {% endfor %}
   </div>
 
+  <section class="rl-panel" style="margin-top: 1rem;">
+    <div class="panel-kicker">Development board</div>
+    <div class="signal-grid">
+      {% for signal in replay.training_signals %}
+        <div class="signal-card">
+          <span class="priority">{{ signal.priority }}</span>
+          <strong>{{ signal.agent_id }} · {{ signal.category }}</strong>
+          <span>{{ signal.label }}</span>
+          <span>{{ signal.evidence }}</span>
+          <span>epoch +{{ signal.epoch_delta }}</span>
+          <span>{{ signal.next_policy_id }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
   <div class="rl-layout">
     <section class="rl-panel">
       <div class="panel-kicker">RL trajectory</div>
@@ -504,6 +554,7 @@
         <span class="data-chip">reward_fields</span>
         <span class="data-chip">policy_hook</span>
         <span class="data-chip warn">skill_epoch_proxy</span>
+        <span class="data-chip warn">training_signals</span>
       </div>
       <div class="step-list" style="margin-top: 0.8rem;">
         {% for note in replay.training_notes %}
