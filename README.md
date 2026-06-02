@@ -209,7 +209,10 @@ fan, roster, or Week 11 setup state.
 the carry-forward into one opening Week 11 posture while stopping before
 Week 11 prep. `/week11/prep` consumes the setup and writes `week11_prep.json`,
 turning the opening posture into one prep allocation and scrim seed while
-stopping before Week 11 scrim.
+stopping before Week 11 scrim. `/week11/scrim` consumes that prep artifact and
+writes `week11_scrim.json`, turning the prep seed into one explicit scrim
+protocol, analyst read, and match-plan seed while stopping before Week 11 match
+planning.
 The Week 11 prep screen uses dedicated prep-room environment art so the new
 week reads visually distinct from the Week 10 match-room flow.
 
@@ -279,8 +282,12 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   review carry-forward into one opening posture, visible setup pressure, and
   `week11_prep.json` handoff without writing Week 11 prep.
 - **`week11_prep.json`** — written by `/week11/prep`, consuming Week 11 setup
-  into one prep allocation, visible prep effects, and terminal `week11_scrim`
-  boundary without writing Week 11 scrim.
+  into one prep allocation, visible prep effects, and `week11_scrim.json`
+  handoff without writing Week 11 scrim.
+- **`week11_scrim.json`** — written by `/week11/scrim`, consuming Week 11 prep
+  into one of three scrim protocols, an explicit 18-cell prep-to-scrim outcome,
+  visible scrim effects, analyst read, and terminal `week11_match_plan` boundary
+  without writing Week 11 match planning.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical
