@@ -55,6 +55,7 @@ WEEK11_SIM_OBSERVATION_SPACE: tuple[str, ...] = (
     "alive_teammates",
     "visible_contact_lane",
     "utility_window",
+    "economy_pressure",
     "objective_pressure",
     "protocol_signal",
     "analyst_read_class",
@@ -150,6 +151,21 @@ class Week11SimObjectiveState:
     contested: bool
     defender_pressure: int
     post_plant_seconds: int
+    label: str
+
+
+@dataclass(frozen=True)
+class Week11SimLoadoutState:
+    """Frame-level economy and equipment state for tactical replay policies."""
+
+    buy_class: str
+    weapon_tier: str
+    armor_level: int
+    utility_remaining: int
+    team_credits: int
+    opponent_credits: int
+    economy_pressure: int
+    advantage: str
     label: str
 
 
@@ -287,6 +303,7 @@ class Week11SimFrame:
     team_pressure: int
     telemetry: Week11SimTelemetry
     objective_state: Week11SimObjectiveState
+    loadout_state: Week11SimLoadoutState
     states: tuple[Week11SimAgentState, ...]
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
@@ -949,6 +966,13 @@ def _candidate_score(
         score += int(observation_features.get("trade_window", 0)) // 3
     if action == "objective_execute":
         score += int(observation_features.get("objective_pressure", 0)) // 3
+    economy_pressure = int(observation_features.get("economy_pressure", 0))
+    if economy_pressure >= 68 and action in {"scan_lane", "reset_shape", "rotate_call"}:
+        score += 8
+    if economy_pressure >= 70 and action in {"entry_peek", "lurk_contact"}:
+        score -= 12
+    if economy_pressure >= 76 and action == "objective_execute":
+        score -= 6
     if int(observation_features.get("risk_index", 0)) >= 76 and action in {"entry_peek", "lurk_contact"}:
         score -= 14
     if action == "round_end":
@@ -1072,6 +1096,16 @@ def _observation_features(
         0,
         100,
     )
+    economy_pressure = _clamp(
+        34
+        + (tick % 4) * 9
+        + (round_id - 1) * 4
+        + (12 if action in {"entry_peek", "lurk_contact", "objective_execute"} else -4)
+        + max(0, risk_index - 62) // 2
+        - max(0, reward) * 3,
+        0,
+        100,
+    )
     return {
         "alive_overcast": 5,
         "alive_opponent": 5,
@@ -1084,6 +1118,7 @@ def _observation_features(
         "risk_index": risk_index,
         "objective_pressure": objective_pressure,
         "combat_window": combat_window,
+        "economy_pressure": economy_pressure,
         "top_trait": _top_trait(agent),
     }
 
@@ -1300,6 +1335,106 @@ def _objective_state(
         defender_pressure=defender_pressure,
         post_plant_seconds=post_plant_seconds,
         label=f"{site_id.replace('_', ' ')} {status}",
+    )
+
+
+def _buy_class(team_credits: int, armor_level: int, utility_remaining: int) -> str:
+    if team_credits >= 5200 and armor_level >= 70 and utility_remaining >= 45:
+        return "full_buy"
+    if team_credits >= 4200 and armor_level >= 55:
+        return "balanced_buy"
+    if team_credits >= 3000:
+        return "force_buy"
+    return "eco"
+
+
+def _weapon_tier(buy_class: str, *, step: Week11SimStep, round_: Week11SimRound) -> str:
+    if step.agent_id == "coyote" and step.action == "lurk_contact" and buy_class in {"full_buy", "balanced_buy"}:
+        return "operator"
+    if buy_class in {"full_buy", "balanced_buy"}:
+        return "rifle"
+    if buy_class == "force_buy":
+        return "smg"
+    if round_.side_phase == "defense":
+        return "sidearm"
+    return "light"
+
+
+def _loadout_state(
+    *,
+    step: Week11SimStep,
+    round_: Week11SimRound,
+    telemetry: Week11SimTelemetry,
+    local_tick: int,
+) -> Week11SimLoadoutState:
+    action_spend = {
+        "call_default": 120,
+        "scan_lane": 340,
+        "entry_peek": 520,
+        "lurk_contact": 430,
+        "rotate_call": 180,
+        "anchor_trade": 360,
+        "objective_execute": 680,
+        "reset_shape": 410,
+        "round_end": 0,
+    }[step.action]
+    result_bonus = 560 if round_.winner == "overcast" else -460
+    team_credits = _clamp(
+        4800
+        + round_.round_id * 360
+        + max(step.reward, 0) * 260
+        + result_bonus
+        - local_tick * 320
+        - action_spend,
+        1400,
+        9000,
+    )
+    opponent_credits = _clamp(
+        4650
+        + round_.round_id * 280
+        + (520 if round_.winner == "opponent" else 0)
+        + telemetry.risk_index * 4
+        - max(step.reward, 0) * 160,
+        1400,
+        9000,
+    )
+    armor_level = _clamp(
+        74 + round_.round_id * 4 + step.reward * 4 - local_tick * 5 - max(0, telemetry.risk_index - 66) // 2,
+        0,
+        100,
+    )
+    utility_remaining = _clamp(
+        72
+        - local_tick * 14
+        + (12 if step.action in {"call_default", "scan_lane", "rotate_call", "reset_shape"} else 0)
+        - (18 if step.action == "objective_execute" else 0)
+        + step.reward * 3,
+        0,
+        100,
+    )
+    economy_pressure = _clamp(
+        int(step.observation_features.get("economy_pressure", 0)),
+        0,
+        100,
+    )
+    buy_class = _buy_class(team_credits, armor_level, utility_remaining)
+    weapon_tier = _weapon_tier(buy_class, step=step, round_=round_)
+    if team_credits >= opponent_credits + 500 and economy_pressure < 62:
+        advantage = "overcast"
+    elif opponent_credits >= team_credits + 500 or economy_pressure >= 68:
+        advantage = "opponent"
+    else:
+        advantage = "even"
+    return Week11SimLoadoutState(
+        buy_class=buy_class,
+        weapon_tier=weapon_tier,
+        armor_level=armor_level,
+        utility_remaining=utility_remaining,
+        team_credits=team_credits,
+        opponent_credits=opponent_credits,
+        economy_pressure=economy_pressure,
+        advantage=advantage,
+        label=f"{buy_class.replace('_', ' ')} - {weapon_tier}",
     )
 
 
@@ -1870,6 +2005,12 @@ def _frames(
             telemetry=telemetry,
             local_tick=local_tick,
         )
+        loadout_state = _loadout_state(
+        step=step,
+        round_=round_,
+        telemetry=telemetry,
+        local_tick=local_tick,
+    )
         events = _frame_events(step=step, states=states, telemetry=telemetry)
         threat_arcs = _frame_threat_arcs(
             step=step,
@@ -1901,6 +2042,7 @@ def _frames(
                 team_pressure=_clamp(pressure, 0, 100),
                 telemetry=telemetry,
                 objective_state=objective_state,
+                loadout_state=loadout_state,
                 states=states,
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
@@ -2100,6 +2242,20 @@ def _objective_state_to_dict(objective: Week11SimObjectiveState) -> dict[str, An
     }
 
 
+def _loadout_state_to_dict(loadout: Week11SimLoadoutState) -> dict[str, Any]:
+    return {
+        "buy_class": loadout.buy_class,
+        "weapon_tier": loadout.weapon_tier,
+        "armor_level": loadout.armor_level,
+        "utility_remaining": loadout.utility_remaining,
+        "team_credits": loadout.team_credits,
+        "opponent_credits": loadout.opponent_credits,
+        "economy_pressure": loadout.economy_pressure,
+        "advantage": loadout.advantage,
+        "label": loadout.label,
+    }
+
+
 def _event_to_dict(event: Week11SimEvent) -> dict[str, Any]:
     return {
         "event_type": event.event_type,
@@ -2224,6 +2380,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "team_pressure": frame.team_pressure,
         "telemetry": _telemetry_to_dict(frame.telemetry),
         "objective_state": _objective_state_to_dict(frame.objective_state),
+        "loadout_state": _loadout_state_to_dict(frame.loadout_state),
         "states": [_state_to_dict(state) for state in frame.states],
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
@@ -2332,6 +2489,7 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "risk_index",
                 "objective_pressure",
                 "combat_window",
+                "economy_pressure",
                 "top_trait",
             ],
             "reward_component_fields": list(WEEK11_SIM_REWARD_FIELDS),
@@ -2354,6 +2512,17 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "contested",
                 "defender_pressure",
                 "post_plant_seconds",
+            ],
+            "loadout_state_unit": "frames[].loadout_state",
+            "loadout_state_fields": [
+                "buy_class",
+                "weapon_tier",
+                "armor_level",
+                "utility_remaining",
+                "team_credits",
+                "opponent_credits",
+                "economy_pressure",
+                "advantage",
             ],
             "agent_state_unit": "frames[].states[]",
             "agent_state_fields": [
@@ -2945,6 +3114,33 @@ def _objective_state_from_any(data: Any, *, round_id: int, team_pressure: int) -
     )
 
 
+def _loadout_state_from_any(data: Any, *, team_pressure: int) -> Week11SimLoadoutState:
+    if isinstance(data, dict):
+        return Week11SimLoadoutState(
+            buy_class=str(data.get("buy_class", "")),
+            weapon_tier=str(data.get("weapon_tier", "")),
+            armor_level=int(data.get("armor_level", 0)),
+            utility_remaining=int(data.get("utility_remaining", 0)),
+            team_credits=int(data.get("team_credits", 0)),
+            opponent_credits=int(data.get("opponent_credits", 0)),
+            economy_pressure=int(data.get("economy_pressure", 0)),
+            advantage=str(data.get("advantage", "")),
+            label=str(data.get("label", "")),
+        )
+    pressure = _clamp(100 - team_pressure, 0, 100)
+    return Week11SimLoadoutState(
+        buy_class="legacy",
+        weapon_tier="unknown",
+        armor_level=team_pressure,
+        utility_remaining=team_pressure,
+        team_credits=4000,
+        opponent_credits=4000,
+        economy_pressure=pressure,
+        advantage="even",
+        label="legacy loadout",
+    )
+
+
 def _int_dict_from_any(data: Any) -> dict[str, int]:
     if not isinstance(data, dict):
         return {}
@@ -3276,6 +3472,10 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             objective_state=_objective_state_from_any(
                 frame.get("objective_state"),
                 round_id=int(frame.get("round_id", 0)),
+                team_pressure=int(frame.get("team_pressure", 0)),
+            ),
+            loadout_state=_loadout_state_from_any(
+                frame.get("loadout_state"),
                 team_pressure=int(frame.get("team_pressure", 0)),
             ),
             states=tuple(
