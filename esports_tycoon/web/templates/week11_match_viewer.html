@@ -407,6 +407,12 @@
     stroke-dasharray: 2.8 2.6;
     filter: drop-shadow(0 0 3px rgba(38, 217, 199, 0.32));
   }
+  .affordance-route.branch {
+    stroke: rgba(255, 255, 255, 0.9);
+    stroke-width: 0.95;
+    stroke-dasharray: 1.3 1.4;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.42));
+  }
   .affordance-point {
     fill: rgba(255, 210, 122, 0.92);
     stroke: rgba(8, 16, 21, 0.88);
@@ -414,6 +420,9 @@
   }
   .affordance-point.ghost {
     fill: rgba(159, 242, 216, 0.75);
+  }
+  .affordance-point.branch {
+    fill: rgba(255, 255, 255, 0.9);
   }
   .affordance-label {
     fill: #fff4cc;
@@ -971,7 +980,7 @@
     padding: 0.65rem;
     margin-top: 0.7rem;
   }
-  .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes {
+  .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes, .policy-priors {
     display: grid;
     gap: 0.45rem;
   }
@@ -1002,6 +1011,74 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 0.55rem;
   }
+  .policy-coach {
+    border: 1px solid rgba(255, 210, 122, 0.22);
+    background: rgba(255, 210, 122, 0.055);
+    padding: 0.62rem;
+    margin-top: 0.55rem;
+  }
+  .policy-coach-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: start;
+  }
+  .policy-coach-head strong {
+    color: #fff4cc;
+    overflow-wrap: anywhere;
+  }
+  .policy-coach-head span, .branch-comparison span {
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+  .policy-priors {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 0.52rem;
+  }
+  .policy-prior {
+    border: 1px solid rgba(187, 203, 205, 0.14);
+    background: rgba(8, 13, 18, 0.78);
+    padding: 0.42rem;
+  }
+  .policy-prior.selected {
+    border-color: rgba(255, 210, 122, 0.64);
+    background: rgba(255, 210, 122, 0.09);
+  }
+  .policy-prior strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+  .branch-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 0.55rem;
+  }
+  .branch-card {
+    border: 1px solid rgba(187, 203, 205, 0.14);
+    background: rgba(8, 13, 18, 0.82);
+    padding: 0.48rem;
+    min-width: 0;
+  }
+  .branch-card.alt {
+    border-color: rgba(38, 217, 199, 0.34);
+  }
+  .branch-card.masked {
+    border-color: rgba(255, 118, 102, 0.34);
+    opacity: 0.78;
+  }
+  .branch-card strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+  }
   .cause-chip, .reward-component, .action-chip, .combat-chip, .zone-card, .utility-chip, .duel-chip {
     border: 1px solid rgba(187, 203, 205, 0.15);
     background: rgba(8, 13, 18, 0.82);
@@ -1018,6 +1095,20 @@
   .action-chip.selected {
     border-color: rgba(255, 210, 122, 0.72);
     background: rgba(255, 210, 122, 0.08);
+  }
+  .action-chip.branch-selected {
+    outline: 2px solid rgba(38, 217, 199, 0.68);
+    outline-offset: 2px;
+  }
+  .action-chip button {
+    all: unset;
+    display: grid;
+    gap: 0.2rem;
+    width: 100%;
+    cursor: pointer;
+  }
+  .action-chip.masked button {
+    cursor: not-allowed;
   }
   .action-meta {
     display: grid;
@@ -1330,7 +1421,7 @@
     .round-grid { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes, .policy-priors, .branch-comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .event-strip, .objective-strip, .loadout-strip { grid-template-columns: 1fr; }
     .loadout-bars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .pressure { width: 100%; }
@@ -1341,7 +1432,7 @@
     .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .telemetry-grid { grid-template-columns: 1fr; }
-    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: 1fr; }
+    .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes, .policy-priors, .branch-comparison { grid-template-columns: 1fr; }
     .loadout-bars { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
@@ -1518,6 +1609,17 @@
         <div class="zone-control" id="zone-control"></div>
         <div class="utility-stack" id="utility-stack"></div>
         <div class="duel-lanes" id="duel-lanes"></div>
+        <div class="policy-coach" id="policy-coach">
+          <div class="policy-coach-head">
+            <div>
+              <span>Policy coach</span>
+              <strong id="policy-coach-title">waiting for action prior</strong>
+            </div>
+            <span class="data-chip warn" id="policy-confidence">conf 0</span>
+          </div>
+          <div class="policy-priors" id="policy-priors"></div>
+          <div class="branch-comparison" id="branch-comparison"></div>
+        </div>
         <div class="policy-reason" id="policy-reason"></div>
       </div>
       <div class="telemetry-grid" aria-label="Tactical telemetry">
@@ -1714,6 +1816,7 @@
   let index = 0;
   let timer = null;
   let visionMode = "broadcast";
+  let selectedBranchAction = null;
 
   const arena = document.getElementById("arena");
   const title = document.getElementById("frame-title");
@@ -1779,6 +1882,10 @@
   const zoneControl = document.getElementById("zone-control");
   const utilityStack = document.getElementById("utility-stack");
   const duelLanes = document.getElementById("duel-lanes");
+  const policyCoachTitle = document.getElementById("policy-coach-title");
+  const policyConfidence = document.getElementById("policy-confidence");
+  const policyPriors = document.getElementById("policy-priors");
+  const branchComparison = document.getElementById("branch-comparison");
   const policyReason = document.getElementById("policy-reason");
   const stepList = document.getElementById("step-list");
   const tickButtons = Array.from(document.querySelectorAll(".tick-button"));
@@ -1937,19 +2044,28 @@
     candidates.forEach((candidate) => {
       const score = Math.max(0, Math.min(100, Number(candidate.score) || 0));
       const chip = document.createElement("div");
-      chip.className = `action-chip ${candidate.legal ? "legal" : "masked"} ${candidate.action === currentStep?.action ? "selected" : ""}`;
+      const branchSelected = candidate.action === selectedBranchAction;
+      chip.className = `action-chip ${candidate.legal ? "legal" : "masked"} ${candidate.action === currentStep?.action ? "selected" : ""} ${branchSelected ? "branch-selected" : ""}`;
       chip.title = `${candidate.reason || "candidate action"} · ${candidate.mask_reason || "mask"}`;
       chip.innerHTML = `
-        <span>${candidate.legal ? "legal" : "masked"} · ${candidate.lane_id || candidate.mask_reason || "lane"}</span>
-        <strong>${labelFor(candidate.action || "action")}</strong>
-        <div class="action-meta">
-          <em>ev ${signed(candidate.expected_delta)}</em>
-          <em>risk ${signed(candidate.risk_delta)}</em>
-          <em>util ${signed(candidate.utility_delta)}</em>
-          <em>${candidate.target_zone || "zone"}</em>
-        </div>
-        <div class="action-bar ${candidate.legal ? "" : "masked"}"><span style="--v: ${score};"></span></div>
+        <button type="button" data-branch-action="${candidate.action}" ${candidate.legal ? "" : "aria-disabled=\"true\""}>
+          <span>${candidate.legal ? "legal" : "masked"} · ${candidate.lane_id || candidate.mask_reason || "lane"}</span>
+          <strong>${labelFor(candidate.action || "action")}</strong>
+          <div class="action-meta">
+            <em>ev ${signed(candidate.expected_delta)}</em>
+            <em>risk ${signed(candidate.risk_delta)}</em>
+            <em>util ${signed(candidate.utility_delta)}</em>
+            <em>${candidate.target_zone || "zone"}</em>
+          </div>
+          <div class="action-bar ${candidate.legal ? "" : "masked"}"><span style="--v: ${score};"></span></div>
+        </button>
       `;
+      chip.querySelector("button").addEventListener("click", () => {
+        if (!candidate.legal) return;
+        selectedBranchAction = candidate.action;
+        renderCausality(frames[index], currentStep);
+        renderActionAffordances(frames[index], currentStep);
+      });
       actionMask.appendChild(chip);
     });
   }
@@ -1967,14 +2083,14 @@
     line.setAttribute("y1", source.y);
     line.setAttribute("x2", targetX);
     line.setAttribute("y2", targetY);
-    line.setAttribute("class", `affordance-route ${kind}`);
+    line.setAttribute("class", `affordance-route ${kind} ${kind === "branch" ? "selected-branch-route" : ""}`);
     affordanceLayer.appendChild(line);
 
     const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     point.setAttribute("cx", targetX);
     point.setAttribute("cy", targetY);
     point.setAttribute("r", kind === "selected" ? 1.35 : 1);
-    point.setAttribute("class", `affordance-point ${kind}`);
+    point.setAttribute("class", `affordance-point ${kind} ${kind === "branch" ? "selected-branch-point" : ""}`);
     affordanceLayer.appendChild(point);
 
     const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -1983,6 +2099,48 @@
     label.setAttribute("class", "affordance-label");
     label.textContent = `${labelFor(candidate.action || "action")} ${signed(candidate.expected_delta)}`;
     affordanceLayer.appendChild(label);
+  }
+
+  function candidateByAction(currentStep, action) {
+    return (currentStep?.candidate_actions || []).find((candidate) => candidate.action === action) || null;
+  }
+
+  function renderBranchCard(label, candidate, className) {
+    const item = document.createElement("div");
+    item.className = `branch-card ${className || ""} ${candidate?.legal ? "" : "masked"}`;
+    if (!candidate) {
+      item.innerHTML = `<span>${label}</span><strong>no branch</strong>`;
+      return item;
+    }
+    item.innerHTML = `
+      <span>${label} · ${candidate.legal ? "legal" : candidate.mask_reason || "masked"}</span>
+      <strong>${labelFor(candidate.action || "action")} -> ${candidate.target_zone || "zone"}</strong>
+      <span>ev ${signed(candidate.expected_delta)} · risk ${signed(candidate.risk_delta)} · util ${signed(candidate.utility_delta)}</span>
+      <span>${candidate.counterfactual_tag || "counterfactual"}</span>
+    `;
+    return item;
+  }
+
+  function renderPolicyCoach(currentStep) {
+    const evaluation = currentStep?.policy_evaluation || {};
+    const selected = candidateByAction(currentStep, currentStep?.action);
+    const branch = candidateByAction(currentStep, selectedBranchAction) || selected;
+    policyCoachTitle.textContent = `${labelFor(evaluation.playstyle_label || "policy")} · ${labelFor(evaluation.pressure_response || "response")}`;
+    policyConfidence.textContent = `conf ${evaluation.confidence ?? 0} · ent ${evaluation.entropy ?? 0}`;
+    policyPriors.innerHTML = "";
+    (evaluation.top_priors || []).forEach((prior) => {
+      const item = document.createElement("div");
+      item.className = `policy-prior ${prior.action === currentStep?.action ? "selected" : ""}`;
+      item.innerHTML = `
+        <span>${prior.legal ? "prior" : "masked"} · fit ${prior.trait_fit ?? 0}</span>
+        <strong>${labelFor(prior.action || "action")} ${prior.probability ?? 0}%</strong>
+        <div class="action-bar ${prior.legal ? "" : "masked"}"><span style="--v: ${clampPercent(prior.probability)};"></span></div>
+      `;
+      policyPriors.appendChild(item);
+    });
+    branchComparison.innerHTML = "";
+    branchComparison.appendChild(renderBranchCard("deterministic", selected, "selected"));
+    branchComparison.appendChild(renderBranchCard(branch?.action === currentStep?.action ? "selected branch" : "counterfactual", branch, "alt"));
   }
 
   function renderActionAffordances(frame, currentStep) {
@@ -1995,8 +2153,12 @@
     if (selected && selected.legal) {
       drawAffordanceRoute(source, selected, "selected");
     }
+    const branch = candidateByAction(currentStep, selectedBranchAction);
+    if (branch && branch.legal && branch.action !== currentStep.action) {
+      drawAffordanceRoute(source, branch, "branch");
+    }
     candidates
-      .filter((candidate) => candidate.legal && candidate.action !== currentStep.action)
+      .filter((candidate) => candidate.legal && candidate.action !== currentStep.action && candidate.action !== selectedBranchAction)
       .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0))
       .slice(0, 2)
       .forEach((candidate) => drawAffordanceRoute(source, candidate, "ghost"));
@@ -2207,6 +2369,7 @@
       rewardComponents.appendChild(item);
     });
     renderActionMask(currentStep);
+    renderPolicyCoach(currentStep);
 
     zoneControl.innerHTML = "";
     Object.entries(frame.zone_control || {}).forEach(([key, value]) => {
@@ -2298,6 +2461,7 @@
     renderScoreboard(frame);
     pressure.style.setProperty("--pressure", frame.team_pressure);
     const currentStep = stepForFrame(frame);
+    selectedBranchAction = currentStep?.action || null;
     currentAction.textContent = currentStep ? `${currentStep.agent_id} · ${currentStep.action}` : "action pending";
     currentReward.textContent = currentStep ? `reward ${currentStep.reward}` : "reward 0";
     renderTrails();

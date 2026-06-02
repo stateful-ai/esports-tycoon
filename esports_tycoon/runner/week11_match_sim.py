@@ -389,6 +389,32 @@ class Week11SimActionCandidate:
 
 
 @dataclass(frozen=True)
+class Week11SimActionPrior:
+    """One policy prior for a candidate action before the deterministic action is chosen."""
+
+    action: Week11SimAction
+    probability: int
+    legal: bool
+    score: int
+    trait_fit: int
+
+
+@dataclass(frozen=True)
+class Week11SimPolicyEvaluation:
+    """Trait-aware policy readout for future learned player models."""
+
+    policy_id: str
+    chosen_action: Week11SimAction
+    confidence: int
+    entropy: int
+    exploration_temperature: int
+    playstyle_label: str
+    trait_alignment: int
+    pressure_response: str
+    top_priors: tuple[Week11SimActionPrior, ...]
+
+
+@dataclass(frozen=True)
 class Week11SimStep:
     """One RL-style step in the deterministic policy trace."""
 
@@ -406,6 +432,7 @@ class Week11SimStep:
     reward_components: dict[str, int]
     action_mask: tuple[int, ...]
     candidate_actions: tuple[Week11SimActionCandidate, ...]
+    policy_evaluation: Week11SimPolicyEvaluation
 
 
 @dataclass(frozen=True)
@@ -1240,6 +1267,114 @@ def _action_mask(candidates: tuple[Week11SimActionCandidate, ...]) -> tuple[int,
     return tuple(1 if candidate.legal else 0 for candidate in candidates)
 
 
+def _action_trait_fit(agent: Week11SimAgent, action: Week11SimAction) -> int:
+    profile = agent.trait_profile
+    fits = {
+        "call_default": (profile.comms + profile.discipline + profile.utility) // 3,
+        "scan_lane": (profile.utility + profile.comms + profile.discipline) // 3,
+        "entry_peek": (profile.aim + profile.tempo + profile.risk) // 3,
+        "lurk_contact": (profile.discipline + profile.risk + profile.clutch) // 3,
+        "rotate_call": (profile.comms + profile.discipline + profile.tempo) // 3,
+        "anchor_trade": (profile.discipline + profile.clutch + profile.aim) // 3,
+        "objective_execute": (profile.tempo + profile.utility + profile.clutch) // 3,
+        "reset_shape": (profile.discipline + profile.comms + profile.utility) // 3,
+        "round_end": (profile.clutch + profile.discipline + profile.comms) // 3,
+    }
+    return _clamp(fits[action], 0, 100)
+
+
+def _pressure_response(action: Week11SimAction, observation_features: dict[str, Any]) -> str:
+    risk = int(observation_features.get("risk_index", 50))
+    objective = int(observation_features.get("objective_pressure", 50))
+    if action in {"scan_lane", "rotate_call"}:
+        return "information_reset" if risk >= 56 else "information_gain"
+    if action in {"call_default", "reset_shape"}:
+        return "stabilize_default"
+    if action in {"entry_peek", "lurk_contact"}:
+        return "pressure_contact" if objective >= 62 else "space_probe"
+    if action == "anchor_trade":
+        return "trade_hold"
+    if action == "objective_execute":
+        return "objective_commit"
+    return "terminal_reward"
+
+
+def _playstyle_label(agent: Week11SimAgent, action: Week11SimAction) -> str:
+    if action in {"entry_peek", "objective_execute"} and agent.trait_profile.tempo >= 68:
+        return "high_tempo_space"
+    if action in {"scan_lane", "rotate_call"} and agent.trait_profile.utility >= 64:
+        return "info_utility"
+    if action in {"call_default", "reset_shape"} and agent.trait_profile.comms >= 64:
+        return "structured_default"
+    if action in {"lurk_contact"}:
+        return "patient_lurk" if agent.trait_profile.discipline >= 62 else "risk_probe"
+    if action == "anchor_trade":
+        return "trade_anchor"
+    return f"{agent.role}_policy"
+
+
+def _policy_evaluation(
+    *,
+    agent: Week11SimAgent,
+    selected_action: Week11SimAction,
+    observation_features: dict[str, Any],
+    candidate_actions: tuple[Week11SimActionCandidate, ...],
+) -> Week11SimPolicyEvaluation:
+    legal_priors: list[tuple[Week11SimActionCandidate, int, int]] = []
+    for candidate in candidate_actions:
+        trait_fit = _action_trait_fit(agent, candidate.action)
+        if candidate.legal:
+            pressure_bonus = max(0, int(observation_features.get("objective_pressure", 50)) - 55) // 3
+            risk_penalty = max(0, int(observation_features.get("risk_index", 50)) - 66) // 2
+            weight = max(1, candidate.score + trait_fit // 3 + pressure_bonus - risk_penalty)
+        else:
+            weight = 0
+        legal_priors.append((candidate, trait_fit, weight))
+
+    total_weight = sum(weight for _, _, weight in legal_priors) or 1
+    priors = tuple(
+        Week11SimActionPrior(
+            action=candidate.action,
+            probability=(weight * 100 + total_weight // 2) // total_weight if candidate.legal else 0,
+            legal=candidate.legal,
+            score=candidate.score,
+            trait_fit=trait_fit,
+        )
+        for candidate, trait_fit, weight in legal_priors
+    )
+    selected_prior = next((prior for prior in priors if prior.action == selected_action), priors[0])
+    top_priors = tuple(
+        sorted(
+            priors,
+            key=lambda prior: (prior.probability, prior.legal, prior.score),
+            reverse=True,
+        )[:4]
+    )
+    legal_count = len([prior for prior in priors if prior.legal])
+    top_probability = top_priors[0].probability if top_priors else 0
+    entropy = _clamp(100 - top_probability + legal_count * 4, 0, 100)
+    exploration_temperature = _clamp(
+        30
+        + int(observation_features.get("risk_index", 50)) // 4
+        + max(0, 70 - agent.trait_profile.discipline) // 3
+        - selected_prior.probability // 6,
+        0,
+        100,
+    )
+    trait_alignment = _clamp((selected_prior.trait_fit + selected_prior.score) // 2, 0, 100)
+    return Week11SimPolicyEvaluation(
+        policy_id=agent.policy_id,
+        chosen_action=selected_action,
+        confidence=selected_prior.probability,
+        entropy=entropy,
+        exploration_temperature=exploration_temperature,
+        playstyle_label=_playstyle_label(agent, selected_action),
+        trait_alignment=trait_alignment,
+        pressure_response=_pressure_response(selected_action, observation_features),
+        top_priors=top_priors,
+    )
+
+
 def _observation_features(
     *,
     result: Week11MatchResultLock,
@@ -1380,6 +1515,12 @@ def _steps(result: Week11MatchResultLock, agent_lookup: dict[str, Week11SimAgent
                 ),
                 action_mask=_action_mask(candidate_actions),
                 candidate_actions=candidate_actions,
+                policy_evaluation=_policy_evaluation(
+                    agent=agent,
+                    selected_action=action,
+                    observation_features=observation_features,
+                    candidate_actions=candidate_actions,
+                ),
             )
         )
     return tuple(steps)
@@ -2894,6 +3035,30 @@ def _action_candidate_to_dict(candidate: Week11SimActionCandidate) -> dict[str, 
     }
 
 
+def _action_prior_to_dict(prior: Week11SimActionPrior) -> dict[str, Any]:
+    return {
+        "action": prior.action,
+        "probability": prior.probability,
+        "legal": prior.legal,
+        "score": prior.score,
+        "trait_fit": prior.trait_fit,
+    }
+
+
+def _policy_evaluation_to_dict(evaluation: Week11SimPolicyEvaluation) -> dict[str, Any]:
+    return {
+        "policy_id": evaluation.policy_id,
+        "chosen_action": evaluation.chosen_action,
+        "confidence": evaluation.confidence,
+        "entropy": evaluation.entropy,
+        "exploration_temperature": evaluation.exploration_temperature,
+        "playstyle_label": evaluation.playstyle_label,
+        "trait_alignment": evaluation.trait_alignment,
+        "pressure_response": evaluation.pressure_response,
+        "top_priors": [_action_prior_to_dict(prior) for prior in evaluation.top_priors],
+    }
+
+
 def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
     return {
         "tick": step.tick,
@@ -2912,6 +3077,7 @@ def _step_to_dict(step: Week11SimStep) -> dict[str, Any]:
         "candidate_actions": [
             _action_candidate_to_dict(candidate) for candidate in step.candidate_actions
         ],
+        "policy_evaluation": _policy_evaluation_to_dict(step.policy_evaluation),
     }
 
 
@@ -3003,6 +3169,26 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "utility_delta",
                 "lane_id",
                 "counterfactual_tag",
+            ],
+            "policy_evaluation_unit": "steps[].policy_evaluation",
+            "policy_evaluation_fields": [
+                "policy_id",
+                "chosen_action",
+                "confidence",
+                "entropy",
+                "exploration_temperature",
+                "playstyle_label",
+                "trait_alignment",
+                "pressure_response",
+                "top_priors",
+            ],
+            "action_prior_unit": "steps[].policy_evaluation.top_priors[]",
+            "action_prior_fields": [
+                "action",
+                "probability",
+                "legal",
+                "score",
+                "trait_fit",
             ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
             "objective_state_unit": "frames[].objective_state",
@@ -4021,6 +4207,131 @@ def _candidate_actions_from_any(
     )
 
 
+def _action_priors_from_any(
+    data: Any,
+    *,
+    candidates: tuple[Week11SimActionCandidate, ...],
+    selected_action: Week11SimAction,
+) -> tuple[Week11SimActionPrior, ...]:
+    priors: list[Week11SimActionPrior] = []
+    if isinstance(data, list):
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            action = item.get("action")
+            if action not in WEEK11_SIM_ACTION_SPACE:
+                continue
+            priors.append(
+                Week11SimActionPrior(
+                    action=action,
+                    probability=_clamp(int(item.get("probability", 0)), 0, 100),
+                    legal=bool(item.get("legal", action == selected_action)),
+                    score=int(item.get("score", 0)),
+                    trait_fit=_clamp(int(item.get("trait_fit", 0)), 0, 100),
+                )
+            )
+    if priors:
+        return tuple(priors)
+    legal_candidates = [candidate for candidate in candidates if candidate.legal]
+    total_score = sum(max(1, candidate.score) for candidate in legal_candidates) or 1
+    return tuple(
+        Week11SimActionPrior(
+            action=candidate.action,
+            probability=(
+                (max(1, candidate.score) * 100 + total_score // 2) // total_score
+                if candidate.legal
+                else 0
+            ),
+            legal=candidate.legal,
+            score=candidate.score,
+            trait_fit=candidate.score if candidate.legal else 0,
+        )
+        for candidate in sorted(
+            candidates,
+            key=lambda item: (item.legal, item.score, item.action == selected_action),
+            reverse=True,
+        )[:4]
+    )
+
+
+def _policy_evaluation_from_any(
+    data: Any,
+    *,
+    policy_id: str,
+    selected_action: Week11SimAction,
+    candidates: tuple[Week11SimActionCandidate, ...],
+    observation_features: dict[str, Any],
+) -> Week11SimPolicyEvaluation:
+    evaluation = data if isinstance(data, dict) else {}
+    top_priors = _action_priors_from_any(
+        evaluation.get("top_priors"),
+        candidates=candidates,
+        selected_action=selected_action,
+    )
+    selected_prior = next(
+        (prior for prior in top_priors if prior.action == selected_action),
+        top_priors[0],
+    )
+    top_probability = top_priors[0].probability if top_priors else selected_prior.probability
+    entropy = _clamp(int(evaluation.get("entropy", 100 - top_probability)), 0, 100)
+    return Week11SimPolicyEvaluation(
+        policy_id=str(evaluation.get("policy_id", policy_id)),
+        chosen_action=(
+            evaluation.get("chosen_action")
+            if evaluation.get("chosen_action") in WEEK11_SIM_ACTION_SPACE
+            else selected_action
+        ),
+        confidence=_clamp(int(evaluation.get("confidence", selected_prior.probability)), 0, 100),
+        entropy=entropy,
+        exploration_temperature=_clamp(
+            int(evaluation.get("exploration_temperature", entropy // 2)),
+            0,
+            100,
+        ),
+        playstyle_label=str(evaluation.get("playstyle_label", "legacy_policy")),
+        trait_alignment=_clamp(int(evaluation.get("trait_alignment", selected_prior.trait_fit)), 0, 100),
+        pressure_response=str(
+            evaluation.get("pressure_response", _pressure_response(selected_action, observation_features))
+        ),
+        top_priors=top_priors,
+    )
+
+
+def _step_from_dict(step: dict[str, Any]) -> Week11SimStep:
+    parsed_action: Week11SimAction = (
+        step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
+    )
+    observation_features = _observation_features_from_any(step.get("observation_features"))
+    candidate_actions = _candidate_actions_from_any(
+        step.get("candidate_actions"),
+        selected_action=parsed_action,
+    )
+    policy_id = str(step.get("policy_id", ""))
+    return Week11SimStep(
+        tick=int(step.get("tick", 0)),
+        round_id=int(step.get("round_id", 0)),
+        agent_id=str(step.get("agent_id", "")),
+        observation=tuple(str(item) for item in step.get("observation", []) if isinstance(item, str)),
+        action=parsed_action,
+        reward=int(step.get("reward", 0)),
+        policy_id=policy_id,
+        reason=str(step.get("reason", "")),
+        trajectory_tag=str(step.get("trajectory_tag", "")),
+        observation_features=observation_features,
+        action_context=_str_dict_from_any(step.get("action_context")),
+        reward_components=_int_dict_from_any(step.get("reward_components")),
+        action_mask=_action_mask_from_any(step.get("action_mask"), selected_action=parsed_action),
+        candidate_actions=candidate_actions,
+        policy_evaluation=_policy_evaluation_from_any(
+            step.get("policy_evaluation"),
+            policy_id=policy_id,
+            selected_action=parsed_action,
+            candidates=candidate_actions,
+            observation_features=observation_features,
+        ),
+    )
+
+
 def _events_from_any(data: Any) -> tuple[Week11SimEvent, ...]:
     if not isinstance(data, list):
         return ()
@@ -4326,29 +4637,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         if isinstance(frame, dict)
     )
     steps = tuple(
-        Week11SimStep(
-            tick=int(step.get("tick", 0)),
-            round_id=int(step.get("round_id", 0)),
-            agent_id=str(step.get("agent_id", "")),
-            observation=tuple(str(item) for item in step.get("observation", []) if isinstance(item, str)),
-            action=(
-                parsed_action := (
-                    step.get("action") if step.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end"
-                )
-            ),
-            reward=int(step.get("reward", 0)),
-            policy_id=str(step.get("policy_id", "")),
-            reason=str(step.get("reason", "")),
-            trajectory_tag=str(step.get("trajectory_tag", "")),
-            observation_features=_observation_features_from_any(step.get("observation_features")),
-            action_context=_str_dict_from_any(step.get("action_context")),
-            reward_components=_int_dict_from_any(step.get("reward_components")),
-            action_mask=_action_mask_from_any(step.get("action_mask"), selected_action=parsed_action),
-            candidate_actions=_candidate_actions_from_any(
-                step.get("candidate_actions"),
-                selected_action=parsed_action,
-            ),
-        )
+        _step_from_dict(step)
         for step in steps_raw
         if isinstance(step, dict)
     )
