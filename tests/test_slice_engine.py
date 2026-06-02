@@ -49,6 +49,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_fallout_json,
     render_week10_match_plan_json,
     render_week10_match_result_json,
+    render_week10_post_match_review_json,
     render_week10_prep_json,
     render_week10_scrim_json,
     run_slice,
@@ -66,6 +67,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_fallout,
     resolve_week10_match_plan,
     resolve_week10_match_result,
+    resolve_week10_post_match_review,
     resolve_week10_prep,
     resolve_week10_scrim,
     setup_payload_from_week7_setup,
@@ -82,6 +84,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_match_plan_from_json,
     week10_match_plan_preview,
     week10_match_result_from_json,
+    week10_post_match_review_from_json,
+    week10_post_match_review_plan,
     week10_prep_from_json,
     week10_prep_plan,
     week10_scrim_from_json,
@@ -1616,7 +1620,7 @@ class TestWeek10MatchResult(_Fixture):
         self.assertIn('"visible_effects":', payload)
         self.assertIn('"causal_chain":', payload)
         self.assertIn('"stops_before": "week10_post_match_review"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"next_artifact": "week10_post_match_review.json"', payload)
 
     def test_week10_match_result_render_parse_round_trip_is_stable(self):
         plan = self._plans_by_selection()["week10_plan_press_advantage"]
@@ -1626,6 +1630,93 @@ class TestWeek10MatchResult(_Fixture):
 
         self.assertEqual(parsed, result)
         self.assertEqual(render_week10_match_result_json(parsed), payload)
+
+
+class TestWeek10PostMatchReview(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        plan = TestWeek10MatchResult._plan_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+        return resolve_week10_match_result(plan)
+
+    def _clean_win_review_plan(self):
+        return week10_post_match_review_plan(
+            self._result_for_path(
+                "room_held",
+                "steady_room",
+                "staff_review",
+                "validate_read",
+                "week10_plan_press_advantage",
+            )
+        )
+
+    def _punished_loss_review_plan(self):
+        return week10_post_match_review_plan(
+            self._result_for_path(
+                "room_held",
+                "steady_room",
+                "scout_counter",
+                "validate_read",
+                "week10_plan_protect_pressure",
+            )
+        )
+
+    def test_week10_post_match_review_recommends_from_result_quality(self):
+        self.assertEqual(self._clean_win_review_plan().recommended_review, "bank_pattern")
+        self.assertEqual(self._punished_loss_review_plan().recommended_review, "repair_break")
+
+    def test_week10_post_match_review_locks_all_six_review_outcomes(self):
+        cases = {
+            "pattern_banked": (self._clean_win_review_plan(), "bank_pattern", "advantage"),
+            "pattern_overfit": (self._punished_loss_review_plan(), "bank_pattern", "watch"),
+            "break_repaired": (self._punished_loss_review_plan(), "repair_break", "constraint"),
+            "repair_overcorrected": (self._clean_win_review_plan(), "repair_break", "watch"),
+            "standard_reset": (self._clean_win_review_plan(), "steady_review", "advantage"),
+            "standard_blurred": (self._punished_loss_review_plan(), "steady_review", "constraint"),
+        }
+        for outcome_id, (plan, selected_review, carry_type) in cases.items():
+            with self.subTest(outcome_id=outcome_id):
+                lock = resolve_week10_post_match_review(plan, selected_review)
+
+                self.assertEqual(lock.review_outcome_id, outcome_id)
+                self.assertEqual(lock.carry_forward_type, carry_type)
+
+    def test_week10_post_match_review_artifact_sources_result_and_stops_before_week11(self):
+        lock = resolve_week10_post_match_review(self._clean_win_review_plan(), "bank_pattern")
+        payload = render_week10_post_match_review_json(lock)
+
+        self.assertIn('"week10_match_result": "week10_match_result.json"', payload)
+        self.assertIn('"artifact_type": "week10_post_match_review"', payload)
+        self.assertIn('"selected_review": "bank_pattern"', payload)
+        self.assertIn('"review_outcome_id": "pattern_banked"', payload)
+        self.assertIn('"carry_forward_tag": "repeatable_edge"', payload)
+        self.assertIn('"reviewed_causal_chain":', payload)
+        self.assertIn('"stops_before": "week11_setup"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week10_post_match_review_render_parse_round_trip_is_stable(self):
+        lock = resolve_week10_post_match_review(self._clean_win_review_plan(), "bank_pattern")
+        payload = render_week10_post_match_review_json(lock)
+        parsed = week10_post_match_review_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week10_post_match_review_json(parsed), payload)
+
+    def test_week10_post_match_review_rejects_invalid_choice(self):
+        with self.assertRaisesRegex(ValueError, "selected_review"):
+            resolve_week10_post_match_review(self._clean_win_review_plan(), "skip_review")
 
 
 class TestDeterminism(_Fixture):

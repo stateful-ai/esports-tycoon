@@ -36,6 +36,8 @@ The week is a short linear flow, one decision per step:
     /week10/prep the Week-10 fallout response becomes an analyst-desk prep block
     /week10/scrim the Week-10 prep block becomes a deterministic scrim protocol
     /week10/match the Week-10 scrim protocol becomes a deterministic match plan
+    /week10/match/result the Week-10 match plan becomes a deterministic result
+    /week10/post-match-review the Week-10 result becomes a durable review lesson
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -135,16 +137,19 @@ from esports_tycoon.runner.week10 import (
     WEEK10_FALLOUT_FILENAME,
     WEEK10_MATCH_PLAN_FILENAME,
     WEEK10_MATCH_RESULT_FILENAME,
+    WEEK10_POST_MATCH_REVIEW_FILENAME,
     WEEK10_PREP_FILENAME,
     WEEK10_SCRIM_FILENAME,
     render_week10_fallout_json,
     render_week10_match_plan_json,
     render_week10_match_result_json,
+    render_week10_post_match_review_json,
     render_week10_prep_json,
     render_week10_scrim_json,
     resolve_week10_fallout,
     resolve_week10_match_plan,
     resolve_week10_match_result,
+    resolve_week10_post_match_review,
     resolve_week10_prep,
     resolve_week10_scrim,
     week10_fallout_from_json,
@@ -152,6 +157,8 @@ from esports_tycoon.runner.week10 import (
     week10_match_plan_from_json,
     week10_match_plan_preview,
     week10_match_result_from_json,
+    week10_post_match_review_from_json,
+    week10_post_match_review_plan,
     week10_prep_from_json,
     week10_prep_plan,
     week10_scrim_from_json,
@@ -1379,6 +1386,70 @@ def create_app(
             plan=plan,
             match_result=match_result,
             week10_match_result_path=week10_match_result_written_path,
+        )
+
+    @app.route("/week10/post-match-review", methods=["GET", "POST"])
+    def week10_post_match_review():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 10 post-match review unlocks after the Week 10 result.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week10_match_result_path = run_dir / WEEK10_MATCH_RESULT_FILENAME
+        week10_review_path = run_dir / WEEK10_POST_MATCH_REVIEW_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK10_MATCH_RESULT_FILENAME, week10_match_result_path),
+            )
+            if not path.is_file()
+        ]
+        review_plan = None
+        review_lock = None
+        week10_review_written_path = ""
+        if not missing:
+            try:
+                match_result = week10_match_result_from_json(
+                    week10_match_result_path.read_text(encoding="utf-8")
+                )
+                review_plan = week10_post_match_review_plan(match_result)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week10_post_match_review") or "").strip()
+                    try:
+                        review_lock = resolve_week10_post_match_review(review_plan, selected)
+                    except ValueError:
+                        flash("Choose a Week 10 post-match review.")
+                    else:
+                        week10_review_path.write_text(
+                            render_week10_post_match_review_json(review_lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        week10_review_written_path = str(week10_review_path)
+                elif week10_review_path.is_file():
+                    try:
+                        review_lock = week10_post_match_review_from_json(
+                            week10_review_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week10_review_written_path = str(week10_review_path)
+
+        return render_template(
+            "week10_post_match_review.html",
+            result=result,
+            missing=missing,
+            review_plan=review_plan,
+            review_lock=review_lock,
+            week10_review_path=week10_review_written_path,
         )
 
     @app.get("/feed")
