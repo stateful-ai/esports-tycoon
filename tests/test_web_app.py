@@ -1672,6 +1672,7 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(locked.status_code, 200)
         self.assertIn(b"Shadow rollout locked", locked.data)
         self.assertIn(b"week12_shadow_rollout.json", locked.data)
+        self.assertIn(b"Open training queue", locked.data)
 
         rollout_json = (run_dir / "week12_shadow_rollout.json").read_text(encoding="utf-8")
         self.assertIn('"source_artifact": "week12_model_prep.json"', rollout_json)
@@ -1680,7 +1681,54 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"candidate_reward":', rollout_json)
         self.assertIn('"risk_delta":', rollout_json)
         self.assertIn('"decision":', rollout_json)
-        self.assertIn('"next_artifact": null', rollout_json)
+        self.assertIn('"stops_before": "week12_training_queue"', rollout_json)
+        self.assertIn('"next_artifact": "week12_training_queue.json"', rollout_json)
+
+    def test_week12_training_queue_consumes_shadow_rollout_and_writes_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+        self.client.post("/week11/match/training-dataset")
+        self.client.post("/week12/model-prep")
+        self.client.post("/week12/shadow-rollout")
+
+        page = self.client.get("/week12/training-queue")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 12 training ops", page.data)
+        self.assertIn(b"training_queue_batch_v1", page.data)
+        self.assertIn(b"RL-ready weights", page.data)
+        self.assertIn(b"Lock training queue", page.data)
+        self.assertIn(b"scenario://week12/", page.data)
+        self.assertIn(b"week11-broadcast-arena.webp", page.data)
+        self.assertFalse((run_dir / "week12_training_queue.json").exists())
+
+        locked = self.client.post("/week12/training-queue")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Training queue locked", locked.data)
+        self.assertIn(b"week12_training_queue.json", locked.data)
+
+        queue_json = (run_dir / "week12_training_queue.json").read_text(encoding="utf-8")
+        self.assertIn('"source_artifact": "week12_shadow_rollout.json"', queue_json)
+        self.assertIn('"checkpoint": "week12_training_queue"', queue_json)
+        self.assertIn('"training_queue_batch_v1"', queue_json)
+        self.assertIn('"queue_action":', queue_json)
+        self.assertIn('"epoch_budget":', queue_json)
+        self.assertIn('"reward_weight_x100":', queue_json)
+        self.assertIn('"scenario_asset_slot":', queue_json)
+        self.assertIn('"next_artifact": null', queue_json)
+
+    def test_week12_training_queue_requires_shadow_rollout_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+        self.client.post("/week11/match/training-dataset")
+        self.client.post("/week12/model-prep")
+
+        page = self.client.get("/week12/training-queue")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 12 shadow rollout required", page.data)
+        self.assertIn(b"week12_shadow_rollout.json", page.data)
+        self.assertFalse((run_dir / "week12_training_queue.json").exists())
 
     def test_week12_shadow_rollout_requires_model_prep_artifact(self):
         run_dir = self._play_to_week11_match_result()

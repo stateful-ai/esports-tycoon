@@ -13,6 +13,7 @@ from esports_tycoon.runner.week12_model_prep import (
 )
 
 WEEK12_SHADOW_ROLLOUT_FILENAME = "week12_shadow_rollout.json"
+WEEK12_TRAINING_QUEUE_FILENAME = "week12_training_queue.json"
 
 Week12ShadowDecision = Literal[
     "promote_to_scrim",
@@ -232,8 +233,8 @@ def week12_shadow_rollout_to_dict(rollout: Week12ShadowRollout) -> dict[str, Any
         },
         "rollout_summary": list(rollout.rollout_summary),
         "next_hook": rollout.next_hook,
-        "stops_before": "week12_model_training",
-        "next_artifact": None,
+        "stops_before": "week12_training_queue",
+        "next_artifact": WEEK12_TRAINING_QUEUE_FILENAME,
     }
 
 
@@ -261,8 +262,10 @@ def week12_shadow_rollout_from_json(text: str) -> Week12ShadowRollout:
     trials_raw = rollout.get("trials")
     if not isinstance(trials_raw, list) or not trials_raw:
         raise ValueError("week12_shadow_rollout JSON must include trials")
-    if rollout.get("next_artifact") is not None:
-        raise ValueError("week12_shadow_rollout next_artifact must be null")
+    if rollout.get("next_artifact") not in (None, WEEK12_TRAINING_QUEUE_FILENAME):
+        raise ValueError(
+            "week12_shadow_rollout next_artifact must be null or week12_training_queue.json"
+        )
     trials = tuple(
         Week12ShadowTrial(
             agent_id=str(trial.get("agent_id", "")),

@@ -200,6 +200,7 @@
         {% if week12_shadow_rollout_path %}
           <span class="data-chip good">Shadow rollout locked</span>
           <span class="data-chip">{{ week12_shadow_rollout_path }}</span>
+          <a class="btn" href="{{ url_for('week12_training_queue') }}">Open training queue</a>
         {% else %}
           <form method="post" action="{{ url_for('week12_shadow_rollout') }}">
             <button class="btn" type="submit">Lock shadow rollout</button>

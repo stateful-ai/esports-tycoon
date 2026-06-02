@@ -224,6 +224,12 @@ from esports_tycoon.runner.week12_shadow_rollout import (
     resolve_week12_shadow_rollout,
     week12_shadow_rollout_from_json,
 )
+from esports_tycoon.runner.week12_training_queue import (
+    WEEK12_TRAINING_QUEUE_FILENAME,
+    render_week12_training_queue_json,
+    resolve_week12_training_queue,
+    week12_training_queue_from_json,
+)
 from esports_tycoon.schema import WorldState
 
 __all__ = ["create_app"]
@@ -2139,6 +2145,70 @@ def create_app(
             shadow_rollout=shadow_rollout,
             shadow_rollout_json=shadow_rollout_json,
             week12_shadow_rollout_path=week12_shadow_rollout_written_path,
+        )
+
+    @app.route("/week12/training-queue", methods=["GET", "POST"])
+    def week12_training_queue():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 12 training queue unlocks after shadow rollout.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week12_shadow_rollout_path = run_dir / WEEK12_SHADOW_ROLLOUT_FILENAME
+        week12_training_queue_path = run_dir / WEEK12_TRAINING_QUEUE_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK12_SHADOW_ROLLOUT_FILENAME, week12_shadow_rollout_path),
+            )
+            if not path.is_file()
+        ]
+        shadow_rollout = None
+        training_queue = None
+        training_queue_json = ""
+        week12_training_queue_written_path = ""
+        if not missing:
+            try:
+                shadow_rollout = week12_shadow_rollout_from_json(
+                    week12_shadow_rollout_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    training_queue = resolve_week12_training_queue(shadow_rollout)
+                    week12_training_queue_path.write_text(
+                        render_week12_training_queue_json(training_queue),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week12_training_queue_written_path = str(week12_training_queue_path)
+                elif week12_training_queue_path.is_file():
+                    try:
+                        training_queue = week12_training_queue_from_json(
+                            week12_training_queue_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week12_training_queue_written_path = str(week12_training_queue_path)
+                else:
+                    training_queue = resolve_week12_training_queue(shadow_rollout)
+                if training_queue:
+                    training_queue_json = render_week12_training_queue_json(training_queue)
+
+        return render_template(
+            "week12_training_queue.html",
+            result=result,
+            missing=missing,
+            shadow_rollout=shadow_rollout,
+            training_queue=training_queue,
+            training_queue_json=training_queue_json,
+            week12_training_queue_path=week12_training_queue_written_path,
         )
 
     @app.get("/feed")
