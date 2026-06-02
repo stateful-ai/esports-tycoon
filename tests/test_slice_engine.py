@@ -2330,6 +2330,11 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertTrue(all(frame.events for frame in replay.frames))
         self.assertTrue(all(frame.threat_arcs for frame in replay.frames))
         self.assertTrue(all(frame.utility_zones for frame in replay.frames))
+        self.assertTrue(all(frame.objective_state for frame in replay.frames))
+        self.assertTrue(all(0 <= frame.objective_state.progress <= 100 for frame in replay.frames))
+        self.assertTrue(
+            any(frame.objective_state.status in {"secured", "lost"} for frame in replay.frames)
+        )
         self.assertTrue(any(frame.combat_events for frame in replay.frames))
         self.assertTrue(
             all(
@@ -2387,6 +2392,9 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"map_lane_unit": "map_layout.lanes[]"', payload)
         self.assertIn('"health":', payload)
         self.assertIn('"combat_window":', payload)
+        self.assertIn('"objective_state":', payload)
+        self.assertIn('"objective_state_unit": "frames[].objective_state"', payload)
+        self.assertIn('"post_plant_seconds":', payload)
         self.assertIn('"combat_events":', payload)
         self.assertIn('"combat_event_unit": "frames[].combat_events[]"', payload)
         self.assertIn('"action_mask":', payload)

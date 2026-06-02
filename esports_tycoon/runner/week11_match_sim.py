@@ -140,6 +140,20 @@ class Week11SimTelemetry:
 
 
 @dataclass(frozen=True)
+class Week11SimObjectiveState:
+    """Frame-level objective progress for plant, retake, or site-control logic."""
+
+    site_id: str
+    status: str
+    progress: int
+    carrier_agent_id: str
+    contested: bool
+    defender_pressure: int
+    post_plant_seconds: int
+    label: str
+
+
+@dataclass(frozen=True)
 class Week11SimEvent:
     """One tactical overlay event rendered on top of the replay map."""
 
@@ -272,6 +286,7 @@ class Week11SimFrame:
     reward_delta: int
     team_pressure: int
     telemetry: Week11SimTelemetry
+    objective_state: Week11SimObjectiveState
     states: tuple[Week11SimAgentState, ...]
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
@@ -1215,6 +1230,79 @@ def _zone_control(telemetry: Week11SimTelemetry, round_: Week11SimRound) -> dict
     }
 
 
+def _objective_site(round_: Week11SimRound) -> str:
+    lane = round_.objective_lane.lower()
+    if lane.startswith("a") or " a " in f" {lane} ":
+        return "a_site"
+    if lane.startswith("b") or " b " in f" {lane} ":
+        return "b_site"
+    if "mid" in lane:
+        return "mid"
+    return "a_site" if round_.round_id in (1, 3) else "b_site"
+
+
+def _objective_carrier(step: Week11SimStep, round_: Week11SimRound) -> str:
+    if step.action in {"objective_execute", "round_end"}:
+        return step.agent_id
+    if round_.side_phase == "attack":
+        return "vex" if round_.round_id == 1 else "coyote"
+    return "sable" if "retake" in round_.objective_lane.lower() else "rook"
+
+
+def _objective_status(
+    *,
+    step: Week11SimStep,
+    round_: Week11SimRound,
+    local_tick: int,
+) -> str:
+    if local_tick == 0:
+        return "setup"
+    if step.action in {"entry_peek", "lurk_contact", "anchor_trade"}:
+        return "contested"
+    if step.action == "objective_execute":
+        return "planting" if round_.side_phase == "attack" else "retaking"
+    if step.action == "round_end":
+        return "secured" if round_.winner == "overcast" else "lost"
+    return "pressure"
+
+
+def _objective_state(
+    *,
+    step: Week11SimStep,
+    round_: Week11SimRound,
+    telemetry: Week11SimTelemetry,
+    local_tick: int,
+) -> Week11SimObjectiveState:
+    status = _objective_status(step=step, round_=round_, local_tick=local_tick)
+    progress_push = max(0, step.reward) * 7
+    if status == "secured":
+        progress = 100
+    elif status == "lost":
+        progress = _clamp(telemetry.objective_pressure - 24, 0, 100)
+    elif status in {"planting", "retaking"}:
+        progress = _clamp(64 + progress_push, 0, 100)
+    else:
+        progress = _clamp(18 + local_tick * 18 + progress_push, 0, 100)
+    defender_pressure = _clamp(
+        100 - telemetry.objective_pressure + (14 if round_.winner == "opponent" else 0),
+        0,
+        100,
+    )
+    contested = status in {"contested", "planting", "retaking"} or telemetry.risk_index >= 66
+    post_plant_seconds = 35 if status == "secured" and round_.side_phase == "attack" else 0
+    site_id = _objective_site(round_)
+    return Week11SimObjectiveState(
+        site_id=site_id,
+        status=status,
+        progress=progress,
+        carrier_agent_id=_objective_carrier(step, round_),
+        contested=contested,
+        defender_pressure=defender_pressure,
+        post_plant_seconds=post_plant_seconds,
+        label=f"{site_id.replace('_', ' ')} {status}",
+    )
+
+
 def _event_type(action: Week11SimAction) -> str:
     return {
         "call_default": "call",
@@ -1776,6 +1864,12 @@ def _frames(
         states = tuple(_state_for_agent(agent, result, tick, round_.round_id) for agent in agents)
         pressure = 50 + sum(s.reward for s in steps[: tick + 1])
         telemetry = _telemetry_for_step(step, round_, pressure=pressure, local_tick=local_tick)
+        objective_state = _objective_state(
+            step=step,
+            round_=round_,
+            telemetry=telemetry,
+            local_tick=local_tick,
+        )
         events = _frame_events(step=step, states=states, telemetry=telemetry)
         threat_arcs = _frame_threat_arcs(
             step=step,
@@ -1806,6 +1900,7 @@ def _frames(
                 reward_delta=step.reward,
                 team_pressure=_clamp(pressure, 0, 100),
                 telemetry=telemetry,
+                objective_state=objective_state,
                 states=states,
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
@@ -1992,6 +2087,19 @@ def _telemetry_to_dict(telemetry: Week11SimTelemetry) -> dict[str, int]:
     }
 
 
+def _objective_state_to_dict(objective: Week11SimObjectiveState) -> dict[str, Any]:
+    return {
+        "site_id": objective.site_id,
+        "status": objective.status,
+        "progress": objective.progress,
+        "carrier_agent_id": objective.carrier_agent_id,
+        "contested": objective.contested,
+        "defender_pressure": objective.defender_pressure,
+        "post_plant_seconds": objective.post_plant_seconds,
+        "label": objective.label,
+    }
+
+
 def _event_to_dict(event: Week11SimEvent) -> dict[str, Any]:
     return {
         "event_type": event.event_type,
@@ -2115,6 +2223,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "reward_delta": frame.reward_delta,
         "team_pressure": frame.team_pressure,
         "telemetry": _telemetry_to_dict(frame.telemetry),
+        "objective_state": _objective_state_to_dict(frame.objective_state),
         "states": [_state_to_dict(state) for state in frame.states],
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
@@ -2236,6 +2345,16 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "mask_reason",
             ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
+            "objective_state_unit": "frames[].objective_state",
+            "objective_state_fields": [
+                "site_id",
+                "status",
+                "progress",
+                "carrier_agent_id",
+                "contested",
+                "defender_pressure",
+                "post_plant_seconds",
+            ],
             "agent_state_unit": "frames[].states[]",
             "agent_state_fields": [
                 "agent_id",
@@ -2801,6 +2920,31 @@ def _telemetry_from_dict(data: Any, *, team_pressure: int) -> Week11SimTelemetry
     )
 
 
+def _objective_state_from_any(data: Any, *, round_id: int, team_pressure: int) -> Week11SimObjectiveState:
+    if isinstance(data, dict):
+        return Week11SimObjectiveState(
+            site_id=str(data.get("site_id", "")),
+            status=str(data.get("status", "")),
+            progress=int(data.get("progress", 0)),
+            carrier_agent_id=str(data.get("carrier_agent_id", "")),
+            contested=bool(data.get("contested", False)),
+            defender_pressure=int(data.get("defender_pressure", 0)),
+            post_plant_seconds=int(data.get("post_plant_seconds", 0)),
+            label=str(data.get("label", "")),
+        )
+    site_id = "a_site" if round_id in (1, 3) else "b_site"
+    return Week11SimObjectiveState(
+        site_id=site_id,
+        status="legacy",
+        progress=_clamp(team_pressure, 0, 100),
+        carrier_agent_id="rook",
+        contested=False,
+        defender_pressure=_clamp(100 - team_pressure, 0, 100),
+        post_plant_seconds=0,
+        label=f"{site_id.replace('_', ' ')} legacy",
+    )
+
+
 def _int_dict_from_any(data: Any) -> dict[str, int]:
     if not isinstance(data, dict):
         return {}
@@ -3127,6 +3271,11 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             team_pressure=int(frame.get("team_pressure", 0)),
             telemetry=_telemetry_from_dict(
                 frame.get("telemetry"),
+                team_pressure=int(frame.get("team_pressure", 0)),
+            ),
+            objective_state=_objective_state_from_any(
+                frame.get("objective_state"),
+                round_id=int(frame.get("round_id", 0)),
                 team_pressure=int(frame.get("team_pressure", 0)),
             ),
             states=tuple(

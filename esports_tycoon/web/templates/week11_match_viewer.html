@@ -537,6 +537,58 @@
     width: calc(var(--pressure) * 1%);
     background: linear-gradient(90deg, #21d6b5, #ffd27a, #ff7666);
   }
+  .objective-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(9rem, 0.65fr) auto;
+    gap: 0.55rem;
+    align-items: center;
+    border: 1px solid rgba(187, 203, 205, 0.2);
+    background: rgba(15, 21, 25, 0.78);
+    padding: 0.55rem 0.65rem;
+    margin-top: 0.65rem;
+  }
+  .objective-strip.contested,
+  .objective-strip.planting,
+  .objective-strip.retaking {
+    border-color: rgba(255, 210, 122, 0.45);
+    background: rgba(255, 210, 122, 0.075);
+  }
+  .objective-strip.secured {
+    border-color: rgba(38, 217, 199, 0.42);
+    background: rgba(38, 217, 199, 0.065);
+  }
+  .objective-strip.lost {
+    border-color: rgba(255, 118, 102, 0.45);
+    background: rgba(255, 118, 102, 0.06);
+  }
+  .objective-summary span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+  .objective-summary strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+  .objective-meter {
+    height: 0.62rem;
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .objective-meter span {
+    display: block;
+    height: 100%;
+    width: calc(var(--v) * 1%);
+    background: linear-gradient(90deg, #26d9c7, #f4c950, #ff7666);
+  }
+  .objective-meta {
+    justify-content: flex-start;
+  }
   .telemetry-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -924,7 +976,7 @@
     .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .causality-grid, .reward-components, .action-mask, .combat-feed, .zone-control, .utility-stack, .duel-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .event-strip { grid-template-columns: 1fr; }
+    .event-strip, .objective-strip { grid-template-columns: 1fr; }
     .pressure { width: 100%; }
     .step-row { grid-template-columns: 2rem minmax(0, 1fr); }
   }
@@ -1021,6 +1073,20 @@
           </div>
         </div>
         <div class="pressure" aria-label="team pressure"><span id="pressure-bar" style="--pressure: {{ replay.frames[0].team_pressure }};"></span></div>
+      </div>
+      <div class="objective-strip" id="objective-strip">
+        <div class="objective-summary">
+          <span>Objective</span>
+          <strong id="objective-status">{{ replay.frames[0].objective_state.label }} · {{ replay.frames[0].objective_state.progress }}%</strong>
+        </div>
+        <div class="objective-meter" aria-label="objective progress">
+          <span id="objective-progress" style="--v: {{ replay.frames[0].objective_state.progress }};"></span>
+        </div>
+        <div class="viewer-chips objective-meta">
+          <span class="data-chip" id="objective-carrier">{{ replay.frames[0].objective_state.carrier_agent_id }} · {{ replay.frames[0].objective_state.site_id }}</span>
+          <span class="data-chip warn" id="objective-defender">def {{ replay.frames[0].objective_state.defender_pressure }}</span>
+          <span class="data-chip good" id="objective-timer">{{ replay.frames[0].objective_state.post_plant_seconds }}s</span>
+        </div>
       </div>
       <div class="causality-panel" id="causality-panel">
         <div class="panel-kicker">Causality</div>
@@ -1241,6 +1307,12 @@
   const threatLayer = document.getElementById("threat-layer");
   const combatLayer = document.getElementById("combat-layer");
   const eventLayer = document.getElementById("event-layer");
+  const objectiveStrip = document.getElementById("objective-strip");
+  const objectiveStatus = document.getElementById("objective-status");
+  const objectiveProgress = document.getElementById("objective-progress");
+  const objectiveCarrier = document.getElementById("objective-carrier");
+  const objectiveDefender = document.getElementById("objective-defender");
+  const objectiveTimer = document.getElementById("objective-timer");
   const observationFeatures = document.getElementById("observation-features");
   const rewardComponents = document.getElementById("reward-components");
   const actionMask = document.getElementById("action-mask");
@@ -1454,6 +1526,20 @@
     }
   }
 
+  function renderObjective(frame) {
+    const objective = frame.objective_state || {};
+    const progress = Math.max(0, Math.min(100, Number(objective.progress) || 0));
+    const status = objective.status || "setup";
+    objectiveStrip.className = `objective-strip ${status} ${objective.contested ? "contested" : ""}`;
+    objectiveStatus.textContent = `${objective.label || "objective"} · ${progress}%`;
+    objectiveProgress.style.setProperty("--v", progress);
+    objectiveCarrier.textContent = `${objective.carrier_agent_id || "carrier"} · ${objective.site_id || "site"}`;
+    objectiveDefender.textContent = `def ${objective.defender_pressure ?? 0}`;
+    objectiveTimer.textContent = objective.post_plant_seconds
+      ? `${objective.post_plant_seconds}s post`
+      : objective.contested ? "contested" : "clear";
+  }
+
   function renderCausality(frame, currentStep) {
     const features = currentStep?.observation_features || {};
     const actionContext = currentStep?.action_context || {};
@@ -1592,6 +1678,7 @@
     renderThreatArcs(frame);
     renderCombat(frame);
     renderEvents(frame);
+    renderObjective(frame);
     Object.entries(frame.telemetry || {}).forEach(([name, value]) => setTelemetry(name, value));
     renderCausality(frame, currentStep);
     document.querySelectorAll(".marker").forEach((marker) => {
