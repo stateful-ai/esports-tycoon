@@ -166,6 +166,84 @@
     opacity: 0.32;
     pointer-events: none;
   }
+  .map-geometry-layer,
+  .map-lane-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .map-geometry-layer {
+    z-index: 0;
+  }
+  .map-lane-layer {
+    z-index: 1;
+    mix-blend-mode: screen;
+  }
+  .map-region {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: calc(var(--w) * 1%);
+    height: calc(var(--h) * 1%);
+    border: 1px solid rgba(187, 203, 205, 0.17);
+    background: rgba(7, 12, 16, 0.28);
+    box-shadow: inset 0 0 24px rgba(38, 217, 199, 0.04);
+  }
+  .map-region::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.28rem;
+    bottom: 0.18rem;
+    max-width: calc(100% - 0.56rem);
+    color: rgba(230, 238, 238, 0.58);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.56rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .map-region[data-priority="high"] {
+    border-color: rgba(255, 210, 122, 0.32);
+    background: rgba(255, 210, 122, 0.055);
+  }
+  .cover-block {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    width: calc(var(--w) * 1%);
+    height: calc(var(--h) * 1%);
+    transform: rotate(calc(var(--rot) * 1deg));
+    transform-origin: center;
+    border: 1px solid rgba(232, 251, 255, 0.28);
+    background:
+      linear-gradient(135deg, rgba(232, 251, 255, 0.16), rgba(232, 251, 255, 0.04)),
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+  }
+  .cover-block.soft {
+    border-color: rgba(159, 242, 216, 0.28);
+    background:
+      linear-gradient(135deg, rgba(159, 242, 216, 0.13), rgba(159, 242, 216, 0.04)),
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0 2px, transparent 2px 7px);
+  }
+  .cover-block[data-blocks="false"] {
+    opacity: 0.62;
+  }
+  .map-lane {
+    fill: none;
+    stroke: rgba(159, 242, 216, 0.32);
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 2.2 2.6;
+  }
+  .map-lane.high {
+    stroke: rgba(255, 210, 122, 0.42);
+    stroke-width: 0.85;
+  }
   .site-ring {
     position: absolute;
     width: 18%;
@@ -860,6 +938,8 @@
         </div>
       </div>
       <div class="arena" id="arena">
+        <div class="map-geometry-layer" id="map-geometry-layer" aria-hidden="true"></div>
+        <svg class="map-lane-layer" id="map-lane-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
         <div class="utility-layer" id="utility-layer" aria-hidden="true"></div>
@@ -1049,6 +1129,7 @@
         <span class="data-chip">observation_space</span>
         <span class="data-chip">action_space</span>
         <span class="data-chip">reward_fields</span>
+        <span class="data-chip">map_layout</span>
         <span class="data-chip">policy_hook</span>
         <span class="data-chip warn">skill_epoch_proxy</span>
         <span class="data-chip warn">training_signals</span>
@@ -1098,6 +1179,8 @@
   const topTraits = document.getElementById("top-traits");
   const currentAction = document.getElementById("current-action");
   const currentReward = document.getElementById("current-reward");
+  const mapGeometryLayer = document.getElementById("map-geometry-layer");
+  const mapLaneLayer = document.getElementById("map-lane-layer");
   const utilityLayer = document.getElementById("utility-layer");
   const trailLayer = document.getElementById("trail-layer");
   const threatLayer = document.getElementById("threat-layer");
@@ -1133,6 +1216,48 @@
 
   function labelFor(name) {
     return name.replaceAll("_", " ");
+  }
+
+  function renderMapGeometry() {
+    const layout = payload.map_layout || {};
+    mapGeometryLayer.innerHTML = "";
+    mapLaneLayer.innerHTML = "";
+    (layout.regions || []).forEach((region) => {
+      const item = document.createElement("div");
+      item.className = `map-region ${region.region_id || ""}`;
+      item.dataset.label = region.label || labelFor(region.region_id || "region");
+      item.dataset.priority = Number(region.priority) >= 70 ? "high" : "normal";
+      item.title = `${region.label || region.region_id} · ${region.tactical_role || "region"}`;
+      item.style.setProperty("--x", region.x || 0);
+      item.style.setProperty("--y", region.y || 0);
+      item.style.setProperty("--w", region.width || 10);
+      item.style.setProperty("--h", region.height || 10);
+      mapGeometryLayer.appendChild(item);
+    });
+    (layout.covers || []).forEach((cover) => {
+      const item = document.createElement("div");
+      item.className = `cover-block ${cover.cover_type || "hard"}`;
+      item.dataset.blocks = cover.blocks_sight ? "true" : "false";
+      item.title = `${cover.cover_id || "cover"} · ${cover.zone_id || "zone"}`;
+      item.style.setProperty("--x", cover.x || 0);
+      item.style.setProperty("--y", cover.y || 0);
+      item.style.setProperty("--w", cover.width || 4);
+      item.style.setProperty("--h", cover.height || 4);
+      item.style.setProperty("--rot", cover.rotation || 0);
+      mapGeometryLayer.appendChild(item);
+    });
+    (layout.lanes || []).forEach((lane) => {
+      const points = (lane.points || [])
+        .filter((point) => Array.isArray(point) && point.length === 2)
+        .map((point) => `${point[0]},${point[1]}`)
+        .join(" ");
+      if (!points.includes(" ")) return;
+      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polyline.setAttribute("points", points);
+      polyline.setAttribute("class", `map-lane ${Number(lane.tempo_bias) >= 62 ? "high" : "normal"}`);
+      polyline.setAttribute("aria-label", lane.lane_id || "map lane");
+      mapLaneLayer.appendChild(polyline);
+    });
   }
 
   function renderEvents(frame) {
@@ -1422,6 +1547,7 @@
       renderFrame(Number(button.dataset.tick));
     });
   });
+  renderMapGeometry();
   renderFrame(0);
 })();
 </script>
