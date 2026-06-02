@@ -123,6 +123,7 @@ class Week11SimAgentState:
     x: int
     y: int
     alive: bool
+    health: int
     stance: str
     intent: str
 
@@ -183,6 +184,24 @@ class Week11SimUtilityZone:
     duration_ticks: int
     effect_strength: int
     blocks_sight: bool
+    label: str
+    polarity: str
+
+
+@dataclass(frozen=True)
+class Week11SimCombatEvent:
+    """One damage, elimination, or trade event for replay and model state."""
+
+    event_type: str
+    source_agent_id: str
+    target_agent_id: str
+    damage: int
+    target_health: int
+    eliminated: bool
+    trade_window: int
+    trait_signal: str
+    x: int
+    y: int
     label: str
     polarity: str
 
@@ -258,6 +277,7 @@ class Week11SimFrame:
     events: tuple[Week11SimEvent, ...]
     threat_arcs: tuple[Week11SimThreatArc, ...]
     utility_zones: tuple[Week11SimUtilityZone, ...]
+    combat_events: tuple[Week11SimCombatEvent, ...]
 
 
 @dataclass(frozen=True)
@@ -627,23 +647,29 @@ def _state_for_agent(
     if not alive:
         stance = "down"
         intent = "out"
+        health = 0
     elif local_tick == 0:
         stance = "set"
         intent = "default"
+        health = max(1, min(100, 100 - (round_id - 1) * 3))
     elif local_tick == 1:
         stance = "contact"
         intent = "take space"
+        health = max(1, min(100, 88 - (round_id - 1) * 4))
     elif local_tick == 2:
         stance = "trade"
         intent = "convert"
+        health = max(1, min(100, 74 - (round_id - 1) * 5))
     else:
         stance = "resolve"
         intent = "close round"
+        health = max(1, min(100, 62 - (round_id - 1) * 6))
     return Week11SimAgentState(
         agent_id=agent.agent_id,
         x=x,
         y=y,
         alive=alive,
+        health=health,
         stance=stance,
         intent=intent,
     )
@@ -1025,6 +1051,12 @@ def _observation_features(
     x, y = path[min((round_id - 1) * 2 + tick % 4, 7)]
     risk_index = _clamp(agent.trait_profile.risk + (8 if action in {"entry_peek", "lurk_contact"} else -4), 0, 100)
     objective_pressure = _clamp(48 + round_id * 7 + max(0, reward) * 5, 0, 100)
+    combat_window = _clamp(
+        (risk_index + objective_pressure) // 2
+        + (12 if action in _combat_actions() else -8),
+        0,
+        100,
+    )
     return {
         "alive_overcast": 5,
         "alive_opponent": 5,
@@ -1036,6 +1068,7 @@ def _observation_features(
         "trade_window": _clamp(40 + (12 if action == "anchor_trade" else 0) + reward * 3, 0, 100),
         "risk_index": risk_index,
         "objective_pressure": objective_pressure,
+        "combat_window": combat_window,
         "top_trait": _top_trait(agent),
     }
 
@@ -1550,6 +1583,137 @@ def _frame_utility_zones(
     )
 
 
+def _combat_actions() -> set[Week11SimAction]:
+    return {
+        "entry_peek",
+        "lurk_contact",
+        "anchor_trade",
+        "objective_execute",
+        "round_end",
+    }
+
+
+def _combat_damage(
+    *,
+    step: Week11SimStep,
+    source: Week11SimAgent,
+    telemetry: Week11SimTelemetry,
+) -> int:
+    action_bonus = {
+        "entry_peek": 16,
+        "lurk_contact": 10,
+        "anchor_trade": 12,
+        "objective_execute": 22,
+        "round_end": 8,
+    }.get(step.action, 0)
+    trait_push = source.trait_profile.aim // 8 + source.trait_profile.clutch // 12
+    reward_push = max(step.reward, 0) * 8
+    risk_drag = max(0, telemetry.risk_index - 68) // 3
+    return _clamp(18 + action_bonus + trait_push + reward_push - risk_drag, 0, 100)
+
+
+def _combat_polarity(*, source: Week11SimAgent, target: Week11SimAgent, eliminated: bool) -> str:
+    if source.side == "overcast" and eliminated:
+        return "positive"
+    if target.side == "overcast" and eliminated:
+        return "negative"
+    if source.side == "overcast":
+        return "positive"
+    if target.side == "overcast":
+        return "negative"
+    return "watch"
+
+
+def _combat_event(
+    *,
+    step: Week11SimStep,
+    source_state: Week11SimAgentState,
+    target_state: Week11SimAgentState,
+    source_agent: Week11SimAgent,
+    target_agent: Week11SimAgent,
+    telemetry: Week11SimTelemetry,
+) -> Week11SimCombatEvent:
+    damage = _combat_damage(step=step, source=source_agent, telemetry=telemetry)
+    target_health = max(0, target_state.health - damage)
+    eliminated = (not target_state.alive) or target_health <= 0 or step.action == "round_end"
+    event_type = "elimination" if eliminated else "damage"
+    if step.action == "anchor_trade":
+        event_type = "trade" if not eliminated else "trade_elimination"
+    x = (source_state.x + target_state.x) // 2
+    y = (source_state.y + target_state.y) // 2
+    trait_signal = _top_trait(source_agent)
+    return Week11SimCombatEvent(
+        event_type=event_type,
+        source_agent_id=source_state.agent_id,
+        target_agent_id=target_state.agent_id,
+        damage=damage,
+        target_health=target_health,
+        eliminated=eliminated,
+        trade_window=_clamp(telemetry.trade_window, 0, 100),
+        trait_signal=trait_signal,
+        x=_clamp(x, 0, 100),
+        y=_clamp(y, 0, 100),
+        label=f"{source_agent.name} {event_type.replace('_', ' ')} via {trait_signal}",
+        polarity=_combat_polarity(
+            source=source_agent,
+            target=target_agent,
+            eliminated=eliminated,
+        ),
+    )
+
+
+def _frame_combat_events(
+    *,
+    step: Week11SimStep,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+    agent_lookup: dict[str, Week11SimAgent],
+) -> tuple[Week11SimCombatEvent, ...]:
+    if step.action not in _combat_actions():
+        return ()
+    focus_state = _agent_state(states, step.agent_id)
+    if focus_state is None or not focus_state.alive:
+        return ()
+    focus_agent = agent_lookup.get(focus_state.agent_id)
+    if focus_agent is None:
+        return ()
+    target_state = _nearest_opponent_state(
+        focus_state=focus_state,
+        states=states,
+        agent_lookup=agent_lookup,
+    )
+    if target_state is None:
+        return ()
+    target_agent = agent_lookup.get(target_state.agent_id)
+    if target_agent is None:
+        return ()
+
+    primary = _combat_event(
+        step=step,
+        source_state=focus_state,
+        target_state=target_state,
+        source_agent=focus_agent,
+        target_agent=target_agent,
+        telemetry=telemetry,
+    )
+    events = [primary]
+    if step.action == "anchor_trade" and telemetry.trade_window >= 58:
+        trade_state = _agent_state(states, step.action_context.get("trade_partner", ""))
+        trade_agent = agent_lookup.get(trade_state.agent_id) if trade_state is not None else None
+        if trade_state is not None and trade_state.alive and trade_agent is not None:
+            events.append(
+                _combat_event(
+                    step=step,
+                    source_state=trade_state,
+                    target_state=target_state,
+                    source_agent=trade_agent,
+                    target_agent=target_agent,
+                    telemetry=telemetry,
+                )
+            )
+    return tuple(events)
+
+
 def _frame_events(
     *,
     step: Week11SimStep,
@@ -1624,6 +1788,12 @@ def _frames(
             states=states,
             telemetry=telemetry,
         )
+        combat_events = _frame_combat_events(
+            step=step,
+            states=states,
+            telemetry=telemetry,
+            agent_lookup=agent_lookup,
+        )
         frames.append(
             Week11SimFrame(
                 tick=tick,
@@ -1641,6 +1811,7 @@ def _frames(
                 events=events,
                 threat_arcs=threat_arcs,
                 utility_zones=utility_zones,
+                combat_events=combat_events,
             )
         )
     return tuple(frames)
@@ -1805,6 +1976,7 @@ def _state_to_dict(state: Week11SimAgentState) -> dict[str, Any]:
         "x": state.x,
         "y": state.y,
         "alive": state.alive,
+        "health": state.health,
         "stance": state.stance,
         "intent": state.intent,
     }
@@ -1863,6 +2035,23 @@ def _utility_zone_to_dict(zone: Week11SimUtilityZone) -> dict[str, Any]:
         "blocks_sight": zone.blocks_sight,
         "label": zone.label,
         "polarity": zone.polarity,
+    }
+
+
+def _combat_event_to_dict(event: Week11SimCombatEvent) -> dict[str, Any]:
+    return {
+        "event_type": event.event_type,
+        "source_agent_id": event.source_agent_id,
+        "target_agent_id": event.target_agent_id,
+        "damage": event.damage,
+        "target_health": event.target_health,
+        "eliminated": event.eliminated,
+        "trade_window": event.trade_window,
+        "trait_signal": event.trait_signal,
+        "x": event.x,
+        "y": event.y,
+        "label": event.label,
+        "polarity": event.polarity,
     }
 
 
@@ -1931,6 +2120,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "events": [_event_to_dict(event) for event in frame.events],
         "threat_arcs": [_threat_arc_to_dict(arc) for arc in frame.threat_arcs],
         "utility_zones": [_utility_zone_to_dict(zone) for zone in frame.utility_zones],
+        "combat_events": [_combat_event_to_dict(event) for event in frame.combat_events],
     }
 
 
@@ -2032,6 +2222,7 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "trade_window",
                 "risk_index",
                 "objective_pressure",
+                "combat_window",
                 "top_trait",
             ],
             "reward_component_fields": list(WEEK11_SIM_REWARD_FIELDS),
@@ -2045,6 +2236,16 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "mask_reason",
             ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
+            "agent_state_unit": "frames[].states[]",
+            "agent_state_fields": [
+                "agent_id",
+                "x",
+                "y",
+                "alive",
+                "health",
+                "stance",
+                "intent",
+            ],
             "map_layout_unit": "map_layout",
             "map_region_unit": "map_layout.regions[]",
             "map_region_fields": [
@@ -2076,6 +2277,18 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "trait_bias",
             ],
             "frame_event_unit": "frames[].events[]",
+            "combat_event_unit": "frames[].combat_events[]",
+            "combat_event_fields": [
+                "event_type",
+                "source_agent_id",
+                "target_agent_id",
+                "damage",
+                "target_health",
+                "eliminated",
+                "trade_window",
+                "trait_signal",
+                "polarity",
+            ],
             "threat_arc_unit": "frames[].threat_arcs[]",
             "threat_arc_fields": [
                 "arc_type",
@@ -2721,6 +2934,29 @@ def _utility_zones_from_any(data: Any) -> tuple[Week11SimUtilityZone, ...]:
     )
 
 
+def _combat_events_from_any(data: Any) -> tuple[Week11SimCombatEvent, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimCombatEvent(
+            event_type=str(event.get("event_type", "")),
+            source_agent_id=str(event.get("source_agent_id", "")),
+            target_agent_id=str(event.get("target_agent_id", "")),
+            damage=int(event.get("damage", 0)),
+            target_health=int(event.get("target_health", 0)),
+            eliminated=bool(event.get("eliminated", False)),
+            trade_window=int(event.get("trade_window", 0)),
+            trait_signal=str(event.get("trait_signal", "")),
+            x=int(event.get("x", 0)),
+            y=int(event.get("y", 0)),
+            label=str(event.get("label", "")),
+            polarity=str(event.get("polarity", "")),
+        )
+        for event in data
+        if isinstance(event, dict)
+    )
+
+
 def _map_regions_from_any(data: Any) -> tuple[Week11SimMapRegion, ...]:
     if not isinstance(data, list):
         return ()
@@ -2899,6 +3135,12 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
                     x=int(state.get("x", 0)),
                     y=int(state.get("y", 0)),
                     alive=bool(state.get("alive", False)),
+                    health=int(
+                        state.get(
+                            "health",
+                            100 if bool(state.get("alive", False)) else 0,
+                        )
+                    ),
                     stance=str(state.get("stance", "")),
                     intent=str(state.get("intent", "")),
                 )
@@ -2909,6 +3151,7 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             events=_events_from_any(frame.get("events")),
             threat_arcs=_threat_arcs_from_any(frame.get("threat_arcs")),
             utility_zones=_utility_zones_from_any(frame.get("utility_zones")),
+            combat_events=_combat_events_from_any(frame.get("combat_events")),
         )
         for frame in frames_raw
         if isinstance(frame, dict)
