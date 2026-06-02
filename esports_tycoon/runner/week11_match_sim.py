@@ -188,6 +188,58 @@ class Week11SimUtilityZone:
 
 
 @dataclass(frozen=True)
+class Week11SimMapRegion:
+    """One named tactical region in the replay map."""
+
+    region_id: str
+    label: str
+    x: int
+    y: int
+    width: int
+    height: int
+    tactical_role: str
+    priority: int
+
+
+@dataclass(frozen=True)
+class Week11SimMapCover:
+    """One piece of map cover or blocking geometry."""
+
+    cover_id: str
+    zone_id: str
+    x: int
+    y: int
+    width: int
+    height: int
+    rotation: int
+    cover_type: str
+    blocks_sight: bool
+
+
+@dataclass(frozen=True)
+class Week11SimMapLane:
+    """One traversable lane polyline for replay and future navigation policies."""
+
+    lane_id: str
+    from_zone: str
+    to_zone: str
+    points: tuple[tuple[int, int], ...]
+    tempo_bias: int
+    trait_bias: str
+
+
+@dataclass(frozen=True)
+class Week11SimMapLayout:
+    """The deterministic tactical map layout shared by viewer and RL contract."""
+
+    map_id: str
+    theme: str
+    regions: tuple[Week11SimMapRegion, ...]
+    covers: tuple[Week11SimMapCover, ...]
+    lanes: tuple[Week11SimMapLane, ...]
+
+
+@dataclass(frozen=True)
 class Week11SimFrame:
     """One replay frame for the match viewer."""
 
@@ -337,6 +389,7 @@ class Week11MatchSimulation:
     result_grade: str
     seed: str
     map_name: str
+    map_layout: Week11SimMapLayout
     opponent_name: str
     sim_mode: str
     agents: tuple[Week11SimAgent, ...]
@@ -690,6 +743,72 @@ def _zone_anchor(zone_id: str) -> tuple[int, int]:
         "a_main": (58, 46),
         "b_main": (36, 58),
     }.get(zone_id, (50, 50))
+
+
+def _map_id(map_name: str) -> str:
+    slug = "_".join(part.lower() for part in map_name.split() if part)
+    return slug or "helix"
+
+
+def _map_layout(map_name: str) -> Week11SimMapLayout:
+    """Return a stable tactical layout for the current simulated map."""
+    regions = (
+        Week11SimMapRegion("spawn_lobby", "Spawn lobby", 15, 66, 32, 25, "reset shell", 36),
+        Week11SimMapRegion("b_main", "B main", 24, 48, 24, 28, "late lurk lane", 54),
+        Week11SimMapRegion("mid", "Mid hinge", 43, 39, 24, 24, "rotate and trade hinge", 72),
+        Week11SimMapRegion("a_main", "A main", 55, 33, 20, 24, "entry contact lane", 68),
+        Week11SimMapRegion("a_site", "A site", 63, 20, 25, 25, "execute target", 82),
+        Week11SimMapRegion("b_site", "B site", 33, 58, 24, 25, "split target", 74),
+    )
+    covers = (
+        Week11SimMapCover("a_heaven_pillar", "a_site", 68, 24, 11, 4, 0, "hard", True),
+        Week11SimMapCover("a_elbow_box", "a_main", 59, 41, 9, 6, 12, "soft", True),
+        Week11SimMapCover("mid_arch", "mid", 49, 50, 13, 5, -8, "hard", True),
+        Week11SimMapCover("b_stack", "b_site", 38, 63, 8, 9, 0, "hard", True),
+        Week11SimMapCover("b_lurk_crate", "b_main", 27, 54, 7, 7, 18, "soft", True),
+        Week11SimMapCover("spawn_call_wall", "spawn_lobby", 44, 73, 15, 5, 0, "soft", False),
+    )
+    lanes = (
+        Week11SimMapLane(
+            "a_main_execute",
+            "spawn_lobby",
+            "a_site",
+            ((23, 72), (39, 61), (58, 46), (70, 34)),
+            70,
+            "tempo",
+        ),
+        Week11SimMapLane(
+            "mid_rotate",
+            "spawn_lobby",
+            "mid",
+            ((31, 70), (42, 63), (51, 55), (57, 48)),
+            58,
+            "comms",
+        ),
+        Week11SimMapLane(
+            "b_split_lurk",
+            "spawn_lobby",
+            "b_site",
+            ((34, 78), (41, 72), (47, 66), (39, 68)),
+            50,
+            "discipline",
+        ),
+        Week11SimMapLane(
+            "a_b_crossfire",
+            "mid",
+            "b_site",
+            ((55, 52), (50, 58), (45, 64), (39, 68)),
+            62,
+            "trade_window",
+        ),
+    )
+    return Week11SimMapLayout(
+        map_id=_map_id(map_name),
+        theme="two-site tactical board with mid hinge and late lurk lane",
+        regions=regions,
+        covers=covers,
+        lanes=lanes,
+    )
 
 
 def _toward_zone(
@@ -1625,6 +1744,7 @@ def resolve_week11_match_simulation(
         result_grade=result.result_grade,
         seed=result.match_plan_seed,
         map_name=map_name,
+        map_layout=_map_layout(map_name),
         opponent_name=opponent_name,
         sim_mode="deterministic_policy_trace_v1",
         agents=agents,
@@ -1746,6 +1866,54 @@ def _utility_zone_to_dict(zone: Week11SimUtilityZone) -> dict[str, Any]:
     }
 
 
+def _map_region_to_dict(region: Week11SimMapRegion) -> dict[str, Any]:
+    return {
+        "region_id": region.region_id,
+        "label": region.label,
+        "x": region.x,
+        "y": region.y,
+        "width": region.width,
+        "height": region.height,
+        "tactical_role": region.tactical_role,
+        "priority": region.priority,
+    }
+
+
+def _map_cover_to_dict(cover: Week11SimMapCover) -> dict[str, Any]:
+    return {
+        "cover_id": cover.cover_id,
+        "zone_id": cover.zone_id,
+        "x": cover.x,
+        "y": cover.y,
+        "width": cover.width,
+        "height": cover.height,
+        "rotation": cover.rotation,
+        "cover_type": cover.cover_type,
+        "blocks_sight": cover.blocks_sight,
+    }
+
+
+def _map_lane_to_dict(lane: Week11SimMapLane) -> dict[str, Any]:
+    return {
+        "lane_id": lane.lane_id,
+        "from_zone": lane.from_zone,
+        "to_zone": lane.to_zone,
+        "points": [[x, y] for x, y in lane.points],
+        "tempo_bias": lane.tempo_bias,
+        "trait_bias": lane.trait_bias,
+    }
+
+
+def _map_layout_to_dict(layout: Week11SimMapLayout) -> dict[str, Any]:
+    return {
+        "map_id": layout.map_id,
+        "theme": layout.theme,
+        "regions": [_map_region_to_dict(region) for region in layout.regions],
+        "covers": [_map_cover_to_dict(cover) for cover in layout.covers],
+        "lanes": [_map_lane_to_dict(lane) for lane in layout.lanes],
+    }
+
+
 def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
     return {
         "tick": frame.tick,
@@ -1834,6 +2002,7 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
         "result_grade": sim.result_grade,
         "seed": sim.seed,
         "map_name": sim.map_name,
+        "map_layout": _map_layout_to_dict(sim.map_layout),
         "opponent_name": sim.opponent_name,
         "sim_mode": sim.sim_mode,
         "agents": [_agent_to_dict(agent) for agent in sim.agents],
@@ -1876,6 +2045,36 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "mask_reason",
             ],
             "zone_control_fields": ["a_site", "b_site", "mid", "spawn_lobby"],
+            "map_layout_unit": "map_layout",
+            "map_region_unit": "map_layout.regions[]",
+            "map_region_fields": [
+                "region_id",
+                "x",
+                "y",
+                "width",
+                "height",
+                "tactical_role",
+                "priority",
+            ],
+            "map_cover_unit": "map_layout.covers[]",
+            "map_cover_fields": [
+                "cover_id",
+                "zone_id",
+                "x",
+                "y",
+                "width",
+                "height",
+                "blocks_sight",
+            ],
+            "map_lane_unit": "map_layout.lanes[]",
+            "map_lane_fields": [
+                "lane_id",
+                "from_zone",
+                "to_zone",
+                "points",
+                "tempo_bias",
+                "trait_bias",
+            ],
             "frame_event_unit": "frames[].events[]",
             "threat_arc_unit": "frames[].threat_arcs[]",
             "threat_arc_fields": [
@@ -2522,6 +2721,95 @@ def _utility_zones_from_any(data: Any) -> tuple[Week11SimUtilityZone, ...]:
     )
 
 
+def _map_regions_from_any(data: Any) -> tuple[Week11SimMapRegion, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimMapRegion(
+            region_id=str(region.get("region_id", "")),
+            label=str(region.get("label", "")),
+            x=int(region.get("x", 0)),
+            y=int(region.get("y", 0)),
+            width=int(region.get("width", 0)),
+            height=int(region.get("height", 0)),
+            tactical_role=str(region.get("tactical_role", "")),
+            priority=int(region.get("priority", 0)),
+        )
+        for region in data
+        if isinstance(region, dict)
+    )
+
+
+def _map_covers_from_any(data: Any) -> tuple[Week11SimMapCover, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimMapCover(
+            cover_id=str(cover.get("cover_id", "")),
+            zone_id=str(cover.get("zone_id", "")),
+            x=int(cover.get("x", 0)),
+            y=int(cover.get("y", 0)),
+            width=int(cover.get("width", 0)),
+            height=int(cover.get("height", 0)),
+            rotation=int(cover.get("rotation", 0)),
+            cover_type=str(cover.get("cover_type", "")),
+            blocks_sight=bool(cover.get("blocks_sight", False)),
+        )
+        for cover in data
+        if isinstance(cover, dict)
+    )
+
+
+def _map_lane_points_from_any(data: Any) -> tuple[tuple[int, int], ...]:
+    if not isinstance(data, list):
+        return ()
+    points: list[tuple[int, int]] = []
+    for point in data:
+        if (
+            isinstance(point, list)
+            and len(point) == 2
+            and isinstance(point[0], int)
+            and isinstance(point[1], int)
+        ):
+            points.append((point[0], point[1]))
+    return tuple(points)
+
+
+def _map_lanes_from_any(data: Any) -> tuple[Week11SimMapLane, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimMapLane(
+            lane_id=str(lane.get("lane_id", "")),
+            from_zone=str(lane.get("from_zone", "")),
+            to_zone=str(lane.get("to_zone", "")),
+            points=_map_lane_points_from_any(lane.get("points")),
+            tempo_bias=int(lane.get("tempo_bias", 0)),
+            trait_bias=str(lane.get("trait_bias", "")),
+        )
+        for lane in data
+        if isinstance(lane, dict)
+    )
+
+
+def _map_layout_from_any(data: Any, *, map_name: str) -> Week11SimMapLayout:
+    fallback = _map_layout(map_name)
+    if not isinstance(data, dict):
+        return fallback
+    regions = _map_regions_from_any(data.get("regions"))
+    covers = _map_covers_from_any(data.get("covers"))
+    lanes = _map_lanes_from_any(data.get("lanes"))
+    if not regions or not covers or not lanes:
+        return fallback
+    return Week11SimMapLayout(
+        map_id=str(data.get("map_id", fallback.map_id)),
+        theme=str(data.get("theme", fallback.theme)),
+        regions=regions,
+        covers=covers,
+        lanes=lanes,
+    )
+
+
 def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
     """Parse a written ``week11_match_sim.json`` artifact."""
     try:
@@ -2681,6 +2969,10 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
         result_grade=str(sim.get("result_grade", "")),
         seed=str(sim.get("seed", "")),
         map_name=str(sim.get("map_name", "")),
+        map_layout=_map_layout_from_any(
+            sim.get("map_layout"),
+            map_name=str(sim.get("map_name", "")),
+        ),
         opponent_name=str(sim.get("opponent_name", "")),
         sim_mode=str(sim.get("sim_mode", "")),
         agents=agents,
