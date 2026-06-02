@@ -46,6 +46,15 @@ Week10MatchPlanChoice = Literal[
     "week10_plan_trade_map",
     "week10_plan_press_advantage",
 ]
+Week10MatchOutcome = Literal[
+    "pressure_held",
+    "pressure_broke",
+    "map_trade_paid",
+    "map_trade_late",
+    "advantage_converted",
+    "advantage_punished",
+]
+Week10MatchResultTier = Literal["win", "loss"]
 
 WEEK10_PREP_FILENAME = "week10_prep.json"
 WEEK10_SCRIM_FILENAME = "week10_scrim.json"
@@ -94,6 +103,14 @@ WEEK10_MATCH_PLAN_CHOICES: tuple[Week10MatchPlanChoice, ...] = (
     "week10_plan_protect_pressure",
     "week10_plan_trade_map",
     "week10_plan_press_advantage",
+)
+WEEK10_MATCH_OUTCOMES: tuple[Week10MatchOutcome, ...] = (
+    "pressure_held",
+    "pressure_broke",
+    "map_trade_paid",
+    "map_trade_late",
+    "advantage_converted",
+    "advantage_punished",
 )
 
 
@@ -397,6 +414,52 @@ class Week10MatchPlanLock:
     match_risk: str
     result_constraints: tuple[str, ...]
     recommendation_reason: str
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week10VisibleEffect:
+    """One visible consequence chip rendered on the Week-10 result page."""
+
+    value: str
+    label: str
+    polarity: str
+
+
+@dataclass(frozen=True)
+class Week10MatchResultLock:
+    """The deterministic artifact produced by resolving the Week-10 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week9_outcome_id: Week9MatchOutcome
+    week9_result_tier: Week9MatchResultTier
+    week9_scoreline: str
+    fallout_outcome_id: Week10FalloutOutcome
+    prep_outcome_id: Week10PrepOutcome
+    scrim_outcome_id: Week10ScrimOutcome
+    selected_prep: Week10PrepChoice
+    selected_scrim: Week10ScrimChoice
+    selected_plan: Week10MatchPlanChoice
+    recommended_plan: Week10MatchPlanChoice
+    matched_recommendation: bool
+    commitment: str
+    match_risk: str
+    match_plan_pressure: str
+    outcome_id: Week10MatchOutcome
+    result_tier: Week10MatchResultTier
+    team_maps: int
+    opponent_maps: int
+    scoreline: str
+    result_score: int
+    result_grade: str
+    headline: str
+    recap: str
+    player_read: str
+    visible_effects: tuple[Week10VisibleEffect, ...]
+    result_basis: tuple[str, ...]
+    causal_chain: tuple[str, ...]
     next_hook: str
 
 
@@ -1809,6 +1872,385 @@ def render_week10_match_plan_json(lock: Week10MatchPlanLock) -> str:
             "next_hook": lock.next_hook,
             "stops_before": "week10_match_result",
             "next_artifact": WEEK10_MATCH_RESULT_FILENAME,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_WEEK10_RESULT_COPY: dict[Week10MatchOutcome, dict[str, str]] = {
+    "pressure_held": {
+        "headline": "The protected pressure point holds.",
+        "recap": (
+            "The match never became clean, but the first pressure point stayed live. "
+            "The team lost less tempo than the opponent expected and closed through steadier second contact."
+        ),
+        "player_read": "Protecting pressure worked because the plan turned stress into a boundary instead of a panic button.",
+    },
+    "pressure_broke": {
+        "headline": "The protected point becomes a bunker.",
+        "recap": (
+            "The plan protected the right danger, but the team stopped contesting around it. "
+            "By the time the second adjustment arrived, the map had already narrowed."
+        ),
+        "player_read": "The protection call was understandable, but it made the room play not to lose the pressure point.",
+    },
+    "map_trade_paid": {
+        "headline": "The map trade creates the winning cross-pressure.",
+        "recap": (
+            "The team conceded the noisy contact and kept the rotation timing clean. "
+            "The opponent won space, but Overcast bought the map back on its own terms."
+        ),
+        "player_read": "Trading map worked because the lane-state read created pressure somewhere else before the opponent reset.",
+    },
+    "map_trade_late": {
+        "headline": "The trade arrives one beat late.",
+        "recap": (
+            "The idea was correct on paper, but the first rotation landed after the opponent had already cashed the open lane. "
+            "The late map trade gave the team decisions without leverage."
+        ),
+        "player_read": "The trade plan needed cleaner timing than the prep and scrim chain had proved.",
+    },
+    "advantage_converted": {
+        "headline": "The first-half advantage becomes the match.",
+        "recap": (
+            "The team pressed the clearest edge before the opponent could add a second layer. "
+            "The result looked earned rather than lucky because the same prep signal kept reappearing."
+        ),
+        "player_read": "Pressing the advantage worked because execution, synergy, and the scrim read all pointed in the same direction.",
+    },
+    "advantage_punished": {
+        "headline": "The advantage gets punished before it compounds.",
+        "recap": (
+            "The opening call found the right door, but the second layer was slower than the opponent's punish. "
+            "The plan asked for a sharper conversion than the current room could support."
+        ),
+        "player_read": "The team had an edge, but the commitment spent it before the room could stabilize the follow-up.",
+    },
+}
+
+_WEEK10_VISIBLE_EFFECTS: dict[Week10MatchOutcome, tuple[Week10VisibleEffect, ...]] = {
+    "pressure_held": (
+        Week10VisibleEffect("pressure_boundary_held", "Pressure boundary held", "positive"),
+        Week10VisibleEffect("tempo_ceiling_watch", "Tempo ceiling watch", "watch"),
+        Week10VisibleEffect("room_trust_bank", "Room trust banked", "positive"),
+    ),
+    "pressure_broke": (
+        Week10VisibleEffect("pressure_became_bunker", "Pressure became bunker", "negative"),
+        Week10VisibleEffect("proactivity_lost", "Proactivity lost", "negative"),
+        Week10VisibleEffect("review_simplify", "Simplify review", "watch"),
+    ),
+    "map_trade_paid": (
+        Week10VisibleEffect("cross_pressure_created", "Cross-pressure created", "positive"),
+        Week10VisibleEffect("rotation_timing_validated", "Rotation timing validated", "positive"),
+        Week10VisibleEffect("direct_edge_declined", "Direct edge declined", "watch"),
+    ),
+    "map_trade_late": (
+        Week10VisibleEffect("rotation_late", "Rotation late", "negative"),
+        Week10VisibleEffect("lane_leverage_lost", "Lane leverage lost", "negative"),
+        Week10VisibleEffect("map_trade_reteach", "Map trade reteach", "watch"),
+    ),
+    "advantage_converted": (
+        Week10VisibleEffect("advantage_landed", "Advantage landed", "positive"),
+        Week10VisibleEffect("prep_signal_validated", "Prep signal validated", "positive"),
+        Week10VisibleEffect("punish_window_closed", "Punish window closed", "positive"),
+    ),
+    "advantage_punished": (
+        Week10VisibleEffect("punish_window_open", "Punish window open", "negative"),
+        Week10VisibleEffect("second_layer_slow", "Second layer slow", "negative"),
+        Week10VisibleEffect("edge_not_repeatable", "Edge not repeatable", "watch"),
+    ),
+}
+
+
+def _week10_lane_spread(plan: Week10MatchPlanLock) -> int:
+    pressures = [pressure for _lane_id, pressure, _tone in plan.lane_states]
+    if not pressures:
+        return 0
+    return max(pressures) - min(pressures)
+
+
+def _week10_result_score(plan: Week10MatchPlanLock) -> int:
+    score = 2 if plan.followed_recommendation else -1
+    score += plan.scout_clarity + plan.execution_confidence + plan.synergy_delta + plan.clarity_delta
+    score -= max(plan.room_load, 0) + max(plan.stress_delta, 0)
+
+    if plan.match_risk == "low":
+        score += 1
+    elif plan.match_risk == "high":
+        score -= 1
+
+    if plan.selected_plan == "week10_plan_protect_pressure":
+        if plan.stress_delta >= 1:
+            score += 1
+        if plan.match_risk != "high":
+            score += 1
+        if plan.match_plan_pressure.startswith("room_stability"):
+            score += 1
+    elif plan.selected_plan == "week10_plan_trade_map":
+        score += 1 if _week10_lane_spread(plan) >= 18 else -1
+        score += plan.clarity_delta
+        if plan.match_risk == "high":
+            score -= 1
+    else:
+        if plan.match_plan_pressure in {"counter_read_primary", "execution_primary"}:
+            score += 1
+        score += plan.execution_confidence + plan.synergy_delta
+        if plan.stress_delta >= 2:
+            score -= 2
+    return score
+
+
+def _week10_match_succeeded(plan: Week10MatchPlanLock, score: int) -> bool:
+    if plan.selected_plan == "week10_plan_protect_pressure":
+        return score >= 3 and not (plan.match_risk == "high" and plan.stress_delta >= 2)
+    if plan.selected_plan == "week10_plan_trade_map":
+        return score >= 4 and _week10_lane_spread(plan) >= 12
+    return score >= 5 and plan.stress_delta < 2
+
+
+def _week10_outcome_id(plan: Week10MatchPlanLock, score: int) -> Week10MatchOutcome:
+    succeeded = _week10_match_succeeded(plan, score)
+    if plan.selected_plan == "week10_plan_protect_pressure":
+        return "pressure_held" if succeeded else "pressure_broke"
+    if plan.selected_plan == "week10_plan_trade_map":
+        return "map_trade_paid" if succeeded else "map_trade_late"
+    return "advantage_converted" if succeeded else "advantage_punished"
+
+
+def _week10_scoreline(outcome_id: Week10MatchOutcome, score: int) -> tuple[Week10MatchResultTier, int, int]:
+    if outcome_id in {"pressure_held", "map_trade_paid", "advantage_converted"}:
+        if outcome_id == "advantage_converted" and score >= 8:
+            return "win", 2, 0
+        return "win", 2, 1
+    if score <= 0 or outcome_id == "advantage_punished":
+        return "loss", 0, 2
+    return "loss", 1, 2
+
+
+def _week10_result_grade(score: int) -> str:
+    if score >= 8:
+        return "clean"
+    if score >= 4:
+        return "earned"
+    if score >= 2:
+        return "thin"
+    return "punished"
+
+
+def _week10_result_basis(plan: Week10MatchPlanLock, score: int) -> tuple[str, ...]:
+    return (
+        f"plan:{plan.selected_plan}",
+        f"recommended:{plan.recommended_plan}",
+        f"matched:{plan.followed_recommendation}",
+        f"prep:{plan.prep_outcome_id}",
+        f"scrim:{plan.scrim_outcome_id}",
+        f"risk:{plan.match_risk}",
+        f"pressure:{plan.match_plan_pressure}",
+        f"lane_spread:{_week10_lane_spread(plan)}",
+        f"score:{score}",
+    )
+
+
+def resolve_week10_match_result(plan: Week10MatchPlanLock) -> Week10MatchResultLock:
+    """Resolve a locked Week-10 match plan into a deterministic result artifact."""
+    score = _week10_result_score(plan)
+    outcome_id = _week10_outcome_id(plan, score)
+    result_tier, team_maps, opponent_maps = _week10_scoreline(outcome_id, score)
+    copy = _WEEK10_RESULT_COPY[outcome_id]
+    causal_chain = (
+        f"Week 9 fallout left the room with {plan.fallout_outcome_id.replace('_', ' ')}.",
+        f"Prep signal: {plan.prep_headline}",
+        f"Scrim signal: {plan.scrim_headline}",
+        f"Match commitment: {plan.commitment.replace('_', ' ')}.",
+        f"Watch point: {plan.thing_to_watch}",
+    )
+    return Week10MatchResultLock(
+        source_branch=plan.source_branch,
+        setup_branch=plan.setup_branch,
+        chosen_focus=plan.chosen_focus,
+        week9_outcome_id=plan.week9_outcome_id,
+        week9_result_tier=plan.week9_result_tier,
+        week9_scoreline=plan.week9_scoreline,
+        fallout_outcome_id=plan.fallout_outcome_id,
+        prep_outcome_id=plan.prep_outcome_id,
+        scrim_outcome_id=plan.scrim_outcome_id,
+        selected_prep=plan.selected_prep,
+        selected_scrim=plan.selected_scrim,
+        selected_plan=plan.selected_plan,
+        recommended_plan=plan.recommended_plan,
+        matched_recommendation=plan.followed_recommendation,
+        commitment=plan.commitment,
+        match_risk=plan.match_risk,
+        match_plan_pressure=plan.match_plan_pressure,
+        outcome_id=outcome_id,
+        result_tier=result_tier,
+        team_maps=team_maps,
+        opponent_maps=opponent_maps,
+        scoreline=f"{team_maps}-{opponent_maps}",
+        result_score=score,
+        result_grade=_week10_result_grade(score),
+        headline=copy["headline"],
+        recap=copy["recap"],
+        player_read=copy["player_read"],
+        visible_effects=_WEEK10_VISIBLE_EFFECTS[outcome_id],
+        result_basis=_week10_result_basis(plan, score),
+        causal_chain=causal_chain,
+        next_hook=f"Week 10 post-match review can start from {outcome_id}.",
+    )
+
+
+def week10_match_result_from_json(text: str) -> Week10MatchResultLock:
+    """Parse a written ``week10_match_result.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week10_match_result JSON is malformed") from exc
+    result = data.get("week10_match_result") if isinstance(data, dict) else None
+    if not isinstance(result, dict):
+        raise ValueError("week10_match_result JSON must contain a week10_match_result object")
+    week9_outcome = result.get("week9_outcome_id")
+    if week9_outcome not in WEEK9_MATCH_OUTCOMES:
+        raise ValueError("week10_match_result week9_outcome_id must list a Week-9 outcome")
+    week9_tier = result.get("week9_result_tier")
+    if week9_tier not in ("win", "loss"):
+        raise ValueError("week10_match_result week9_result_tier must be win or loss")
+    fallout_outcome = result.get("fallout_outcome_id")
+    if fallout_outcome not in WEEK10_FALLOUT_OUTCOMES:
+        raise ValueError("week10_match_result fallout_outcome_id must list a Week-10 fallout outcome")
+    prep_outcome = result.get("prep_outcome_id")
+    if prep_outcome not in WEEK10_PREP_OUTCOMES:
+        raise ValueError("week10_match_result prep_outcome_id must list a Week-10 prep outcome")
+    scrim_outcome = result.get("scrim_outcome_id")
+    if scrim_outcome not in WEEK10_SCRIM_OUTCOMES:
+        raise ValueError("week10_match_result scrim_outcome_id must list a Week-10 scrim outcome")
+    selected_prep = result.get("selected_prep")
+    if selected_prep not in WEEK10_PREP_CHOICES:
+        raise ValueError("week10_match_result selected_prep must list a Week-10 prep choice")
+    selected_scrim = result.get("selected_scrim")
+    if selected_scrim not in WEEK10_SCRIM_CHOICES:
+        raise ValueError("week10_match_result selected_scrim must list a Week-10 scrim choice")
+    selected_plan = result.get("selected_plan")
+    if selected_plan not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError("week10_match_result selected_plan must list a Week-10 match plan")
+    recommended_plan = result.get("recommended_plan")
+    if recommended_plan not in WEEK10_MATCH_PLAN_CHOICES:
+        raise ValueError("week10_match_result recommended_plan must list a Week-10 match plan")
+    outcome_id = result.get("outcome_id")
+    if outcome_id not in WEEK10_MATCH_OUTCOMES:
+        raise ValueError("week10_match_result outcome_id must list a Week-10 outcome")
+    result_tier = result.get("result_tier")
+    if result_tier not in ("win", "loss"):
+        raise ValueError("week10_match_result result_tier must be win or loss")
+    scoreline = result.get("scoreline")
+    if not isinstance(scoreline, dict):
+        raise ValueError("week10_match_result JSON must include scoreline")
+    effects = result.get("visible_effects")
+    if not isinstance(effects, list):
+        raise ValueError("week10_match_result JSON must include visible_effects")
+    basis = result.get("result_basis")
+    if not isinstance(basis, list):
+        raise ValueError("week10_match_result JSON must include result_basis")
+    causal_chain = result.get("causal_chain")
+    if not isinstance(causal_chain, list):
+        raise ValueError("week10_match_result JSON must include causal_chain")
+    if result.get("next_artifact") is not None:
+        raise ValueError("week10_match_result next_artifact must be null")
+    return Week10MatchResultLock(
+        source_branch=str(result.get("source_branch", "")),
+        setup_branch=str(result.get("setup_branch", "")),
+        chosen_focus=str(result.get("chosen_focus", "")),
+        week9_outcome_id=week9_outcome,
+        week9_result_tier=week9_tier,
+        week9_scoreline=str(result.get("week9_scoreline", "")),
+        fallout_outcome_id=fallout_outcome,
+        prep_outcome_id=prep_outcome,
+        scrim_outcome_id=scrim_outcome,
+        selected_prep=selected_prep,
+        selected_scrim=selected_scrim,
+        selected_plan=selected_plan,
+        recommended_plan=recommended_plan,
+        matched_recommendation=bool(result.get("matched_recommendation", selected_plan == recommended_plan)),
+        commitment=str(result.get("commitment", "")),
+        match_risk=str(result.get("match_risk", "")),
+        match_plan_pressure=str(result.get("match_plan_pressure", "")),
+        outcome_id=outcome_id,
+        result_tier=result_tier,
+        team_maps=int(scoreline.get("team_maps", 0)),
+        opponent_maps=int(scoreline.get("opponent_maps", 0)),
+        scoreline=str(scoreline.get("display", "")),
+        result_score=int(result.get("result_score", 0)),
+        result_grade=str(result.get("result_grade", "")),
+        headline=str(result.get("headline", "")),
+        recap=str(result.get("recap", "")),
+        player_read=str(result.get("player_read", "")),
+        visible_effects=tuple(
+            Week10VisibleEffect(
+                value=str(effect.get("id", "")),
+                label=str(effect.get("label", "")),
+                polarity=str(effect.get("polarity", "")),
+            )
+            for effect in effects
+            if isinstance(effect, dict)
+        ),
+        result_basis=tuple(str(item) for item in basis),
+        causal_chain=tuple(str(item) for item in causal_chain),
+        next_hook=str(result.get("next_hook", "")),
+    )
+
+
+def render_week10_match_result_json(lock: Week10MatchResultLock) -> str:
+    """Canonical JSON export for a resolved Week-10 match result."""
+    payload = {
+        "week10_match_result": {
+            "artifact_type": "week10_match_result",
+            "schema_version": 1,
+            "source_artifacts": {
+                "week10_match_plan": WEEK10_MATCH_PLAN_FILENAME,
+            },
+            "week": 10,
+            "route": "/week10/match/result",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week9_outcome_id": lock.week9_outcome_id,
+            "week9_result_tier": lock.week9_result_tier,
+            "week9_scoreline": lock.week9_scoreline,
+            "fallout_outcome_id": lock.fallout_outcome_id,
+            "prep_outcome_id": lock.prep_outcome_id,
+            "scrim_outcome_id": lock.scrim_outcome_id,
+            "selected_prep": lock.selected_prep,
+            "selected_scrim": lock.selected_scrim,
+            "selected_plan": lock.selected_plan,
+            "recommended_plan": lock.recommended_plan,
+            "matched_recommendation": lock.matched_recommendation,
+            "commitment": lock.commitment,
+            "match_risk": lock.match_risk,
+            "match_plan_pressure": lock.match_plan_pressure,
+            "outcome_id": lock.outcome_id,
+            "result_tier": lock.result_tier,
+            "scoreline": {
+                "team_maps": lock.team_maps,
+                "opponent_maps": lock.opponent_maps,
+                "display": lock.scoreline,
+            },
+            "result_score": lock.result_score,
+            "result_grade": lock.result_grade,
+            "headline": lock.headline,
+            "recap": lock.recap,
+            "player_read": lock.player_read,
+            "visible_effects": [
+                {
+                    "id": effect.value,
+                    "label": effect.label,
+                    "polarity": effect.polarity,
+                }
+                for effect in lock.visible_effects
+            ],
+            "result_basis": list(lock.result_basis),
+            "causal_chain": list(lock.causal_chain),
+            "next_hook": lock.next_hook,
+            "stops_before": "week10_post_match_review",
+            "next_artifact": None,
         }
     }
     return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
