@@ -207,7 +207,9 @@ advantage, constraint, or watch without creating standings, economy, sponsor,
 fan, roster, or Week 11 setup state.
 `/week11/setup` consumes that review and writes `week11_setup.json`, converting
 the carry-forward into one opening Week 11 posture while stopping before
-Week 11 prep.
+Week 11 prep. `/week11/prep` consumes the setup and writes `week11_prep.json`,
+turning the opening posture into one prep allocation and scrim seed while
+stopping before Week 11 scrim.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -273,7 +275,10 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   writing Week 11 setup.
 - **`week11_setup.json`** — written by `/week11/setup`, consuming the Week 10
   review carry-forward into one opening posture, visible setup pressure, and
-  terminal `week11_prep` boundary without writing Week 11 prep.
+  `week11_prep.json` handoff without writing Week 11 prep.
+- **`week11_prep.json`** — written by `/week11/prep`, consuming Week 11 setup
+  into one prep allocation, visible prep effects, and terminal `week11_scrim`
+  boundary without writing Week 11 scrim.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

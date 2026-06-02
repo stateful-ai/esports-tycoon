@@ -39,6 +39,7 @@ The week is a short linear flow, one decision per step:
     /week10/match/result the Week-10 match plan becomes a deterministic result
     /week10/post-match-review the Week-10 result becomes a durable review lesson
     /week11/setup the Week-10 review carry-forward becomes a Week-11 opening posture
+    /week11/prep the Week-11 setup becomes a deterministic prep allocation
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -166,9 +167,14 @@ from esports_tycoon.runner.week10 import (
     week10_scrim_plan,
 )
 from esports_tycoon.runner.week11 import (
+    WEEK11_PREP_FILENAME,
     WEEK11_SETUP_FILENAME,
+    render_week11_prep_json,
     render_week11_setup_json,
+    resolve_week11_prep,
     resolve_week11_setup,
+    week11_prep_from_json,
+    week11_prep_plan,
     week11_setup_from_json,
     week11_setup_plan,
 )
@@ -1518,6 +1524,66 @@ def create_app(
             setup_plan=setup_plan,
             setup_lock=setup_lock,
             week11_setup_path=week11_setup_written_path,
+        )
+
+    @app.route("/week11/prep", methods=["GET", "POST"])
+    def week11_prep():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 11 prep unlocks after Week 11 setup.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_setup_path = run_dir / WEEK11_SETUP_FILENAME
+        week11_prep_path = run_dir / WEEK11_PREP_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_SETUP_FILENAME, week11_setup_path),
+            )
+            if not path.is_file()
+        ]
+        prep_plan = None
+        prep_lock = None
+        week11_prep_written_path = ""
+        if not missing:
+            try:
+                setup = week11_setup_from_json(week11_setup_path.read_text(encoding="utf-8"))
+                prep_plan = week11_prep_plan(setup)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week11_prep") or "").strip()
+                    try:
+                        prep_lock = resolve_week11_prep(prep_plan, selected)
+                    except ValueError:
+                        flash("Choose a Week 11 prep allocation.")
+                    else:
+                        week11_prep_path.write_text(
+                            render_week11_prep_json(prep_lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        week11_prep_written_path = str(week11_prep_path)
+                elif week11_prep_path.is_file():
+                    try:
+                        prep_lock = week11_prep_from_json(week11_prep_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week11_prep_written_path = str(week11_prep_path)
+
+        return render_template(
+            "week11_prep.html",
+            result=result,
+            missing=missing,
+            prep_plan=prep_plan,
+            prep_lock=prep_lock,
+            week11_prep_path=week11_prep_written_path,
         )
 
     @app.get("/feed")
