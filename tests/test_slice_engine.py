@@ -52,6 +52,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_post_match_review_json,
     render_week10_prep_json,
     render_week10_scrim_json,
+    render_week11_match_plan_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -73,6 +74,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_post_match_review,
     resolve_week10_prep,
     resolve_week10_scrim,
+    resolve_week11_match_plan,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -96,6 +98,8 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_prep_plan,
     week10_scrim_from_json,
     week10_scrim_plan,
+    week11_match_plan_from_json,
+    week11_match_plan_preview,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2000,7 +2004,7 @@ class TestWeek11Scrim(_Fixture):
         self.assertIn('"prep_priority":', payload)
         self.assertIn('"match_plan_seed": "edge_pressure_plan"', payload)
         self.assertIn('"stops_before": "week11_match_plan"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"next_artifact": "week11_match_plan.json"', payload)
 
     def test_week11_scrim_render_parse_round_trip_is_stable(self):
         lock = resolve_week11_scrim(week11_scrim_plan(self._advantage_prep()), "repeat_edge")
@@ -2013,6 +2017,163 @@ class TestWeek11Scrim(_Fixture):
     def test_week11_scrim_rejects_invalid_choice(self):
         with self.assertRaisesRegex(ValueError, "selected_scrim"):
             resolve_week11_scrim(week11_scrim_plan(self._advantage_prep()), "skip_scrim")
+
+
+class TestWeek11MatchPlan(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        return TestWeek11Scrim._result_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+
+    def _scrims_by_outcome(self):
+        scrims = {}
+        for prep in TestWeek11Scrim._preps_by_outcome(self).values():
+            scrim_plan = week11_scrim_plan(prep)
+            for scrim_choice in ("repeat_edge", "show_countermove", "steady_first_contact"):
+                scrim = resolve_week11_scrim(scrim_plan, scrim_choice)
+                scrims.setdefault(scrim.scrim_outcome_id, scrim)
+        return scrims
+
+    def test_week11_match_plan_recommendation_uses_scrim_outcome(self):
+        cases = {
+            "edge_repeated_under_pressure": "trust_the_read",
+            "edge_counter_scouted": "attack_the_gap",
+            "edge_tempo_dulled": "stabilize_defaults",
+            "forced_edge_punished": "stabilize_defaults",
+            "forced_edge_exposed": "attack_the_gap",
+            "forced_edge_depressurized": "stabilize_defaults",
+            "counter_read_ignored": "attack_the_gap",
+            "countermove_confirmed": "attack_the_gap",
+            "counter_timing_delayed": "stabilize_defaults",
+            "noise_hardened_into_call": "attack_the_gap",
+            "read_narrowed": "attack_the_gap",
+            "read_noise_depressurized": "stabilize_defaults",
+            "stable_room_underused": "attack_the_gap",
+            "room_overloaded_by_scout": "stabilize_defaults",
+            "first_contact_stabilized": "trust_the_read",
+            "tentative_room_given_task": "trust_the_read",
+            "tentative_room_overloaded": "stabilize_defaults",
+            "room_stays_tentative": "stabilize_defaults",
+        }
+        scrims = self._scrims_by_outcome()
+        for scrim_outcome, expected in cases.items():
+            with self.subTest(scrim_outcome=scrim_outcome):
+                preview = week11_match_plan_preview(scrims[scrim_outcome])
+
+                self.assertEqual(preview.recommended_plan, expected)
+                self.assertTrue(preview.recommendation_reason)
+                self.assertTrue(preview.recommendation_basis)
+                self.assertTrue(preview.outcome_class)
+                self.assertTrue(preview.protocol_signal)
+                self.assertTrue(preview.analyst_read_class)
+                self.assertIn(preview.seeded_emphasis, ("early_objective", "midgame_trade", "late_fight_setup"))
+
+    def test_week11_match_plan_recommendation_uses_scrim_fields(self):
+        scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
+        base = week11_match_plan_preview(scrim)
+        outcome_changed = week11_match_plan_preview(
+            replace(scrim, scrim_outcome_id="forced_edge_punished")
+        )
+        protocol_changed = week11_match_plan_preview(
+            replace(scrim, scrim_protocol="first_contact_reset_on_edge")
+        )
+        analyst_changed = week11_match_plan_preview(
+            replace(scrim, analyst_read_id="edge_counter_named")
+        )
+        seed_changed = week11_match_plan_preview(
+            replace(scrim, match_plan_seed="edge_counter_plan")
+        )
+
+        self.assertEqual(base.recommended_plan, "trust_the_read")
+        self.assertEqual(outcome_changed.recommended_plan, "stabilize_defaults")
+        self.assertEqual(protocol_changed.recommended_plan, "stabilize_defaults")
+        self.assertEqual(analyst_changed.recommended_plan, "attack_the_gap")
+        self.assertEqual(seed_changed.recommended_plan, base.recommended_plan)
+        self.assertNotEqual(seed_changed.seeded_emphasis, base.seeded_emphasis)
+
+    def test_week11_match_plan_lock_fields_are_stable(self):
+        scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
+        preview = week11_match_plan_preview(scrim)
+        cases = {
+            "trust_the_read": (
+                "Trust the read",
+                "read_trust",
+                "trusted_read_must_show_before_second_layer",
+            ),
+            "attack_the_gap": (
+                "Attack the gap",
+                "gap_attack",
+                "gap_attack_must_not_chase_hidden_branches",
+            ),
+            "stabilize_defaults": (
+                "Stabilize defaults",
+                "default_stability",
+                "defaults_must_stay_proactive",
+            ),
+        }
+
+        for selected_plan, (label, commitment, constraint) in cases.items():
+            with self.subTest(selected_plan=selected_plan):
+                lock = resolve_week11_match_plan(preview, selected_plan)
+
+                self.assertEqual(lock.plan_label, label)
+                self.assertEqual(lock.commitment, commitment)
+                self.assertIn(constraint, lock.result_constraints)
+
+    def test_week11_match_plan_artifact_sources_scrim_and_stops_before_result(self):
+        scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
+        preview = week11_match_plan_preview(scrim)
+        lock = resolve_week11_match_plan(preview, "trust_the_read")
+        payload = render_week11_match_plan_json(lock)
+
+        self.assertIn('"week11_scrim": "week11_scrim.json"', payload)
+        self.assertIn('"source_artifact": "week11_scrim.json"', payload)
+        self.assertIn('"checkpoint": "week11_match_plan"', payload)
+        self.assertIn('"artifact_type": "week11_match_plan"', payload)
+        self.assertIn('"selected_plan": "trust_the_read"', payload)
+        self.assertIn('"available_match_plan_ids":', payload)
+        self.assertIn('"recommendation_inputs":', payload)
+        self.assertIn('"recommendation_context":', payload)
+        self.assertIn('"outcome_class": "confirming"', payload)
+        self.assertIn('"protocol_signal": "high_signal"', payload)
+        self.assertIn('"analyst_read_class": "trust_read"', payload)
+        self.assertIn('"scrim_protocol": "repeat_edge_pressure_reps"', payload)
+        self.assertIn('"analyst_read_id": "edge_lane_survives_contact"', payload)
+        self.assertIn('"match_plan_seed": "edge_pressure_plan"', payload)
+        self.assertIn('"plan_lock":', payload)
+        self.assertIn('"result_lock":', payload)
+        self.assertIn('"result_constraints":', payload)
+        self.assertIn('"stops_before": "week11_match_result"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_match_plan_render_parse_round_trip_is_stable(self):
+        scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
+        preview = week11_match_plan_preview(scrim)
+        lock = resolve_week11_match_plan(preview, "trust_the_read")
+        payload = render_week11_match_plan_json(lock)
+        parsed = week11_match_plan_from_json(payload)
+
+        self.assertEqual(parsed, lock)
+        self.assertEqual(render_week11_match_plan_json(parsed), payload)
+
+    def test_week11_match_plan_rejects_invalid_choice(self):
+        scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
+        preview = week11_match_plan_preview(scrim)
+
+        with self.assertRaisesRegex(ValueError, "selected_plan"):
+            resolve_week11_match_plan(preview, "coinflip")
 
 
 class TestDeterminism(_Fixture):

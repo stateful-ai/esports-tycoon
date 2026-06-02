@@ -31,6 +31,7 @@ Week11PrepOutcome = Literal[
     "room_tentative",
 ]
 Week11ScrimChoice = Literal["repeat_edge", "show_countermove", "steady_first_contact"]
+Week11MatchPlanChoice = Literal["trust_the_read", "attack_the_gap", "stabilize_defaults"]
 Week11ScrimOutcome = Literal[
     "edge_repeated_under_pressure",
     "edge_counter_scouted",
@@ -55,6 +56,7 @@ Week11ScrimOutcome = Literal[
 WEEK11_SETUP_FILENAME = "week11_setup.json"
 WEEK11_PREP_FILENAME = "week11_prep.json"
 WEEK11_SCRIM_FILENAME = "week11_scrim.json"
+WEEK11_MATCH_PLAN_FILENAME = "week11_match_plan.json"
 WEEK11_SETUP_CHOICES: tuple[Week11SetupChoice, ...] = (
     "lean_into_carry",
     "stress_test_carry",
@@ -85,6 +87,11 @@ WEEK11_SCRIM_CHOICES: tuple[Week11ScrimChoice, ...] = (
     "repeat_edge",
     "show_countermove",
     "steady_first_contact",
+)
+WEEK11_MATCH_PLAN_CHOICES: tuple[Week11MatchPlanChoice, ...] = (
+    "trust_the_read",
+    "attack_the_gap",
+    "stabilize_defaults",
 )
 WEEK11_SCRIM_OUTCOMES: tuple[Week11ScrimOutcome, ...] = (
     "edge_repeated_under_pressure",
@@ -318,6 +325,107 @@ class Week11ScrimLock:
     match_plan_seed: str
     visible_effects: tuple[Week11SetupEffect, ...]
     result_basis: tuple[str, ...]
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week11MatchPlanOption:
+    """One Week-11 match plan available after the scrim protocol."""
+
+    value: Week11MatchPlanChoice
+    label: str
+    payoff: str
+    risk: str
+    commitment: str
+    result_constraint: str
+
+
+@dataclass(frozen=True)
+class Week11MatchPlanPreview:
+    """The read-only Week-11 match-plan preview before the plan is locked."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week10_outcome_id: str
+    week10_result_tier: str
+    week10_result_grade: str
+    carry_forward_tag: str
+    carry_forward_type: str
+    carry_forward_polarity: str
+    selected_setup: Week11SetupChoice
+    setup_outcome_id: Week11SetupOutcome
+    week11_pressure: str
+    selected_prep: Week11PrepChoice
+    recommended_prep: Week11PrepChoice
+    prep_outcome_id: Week11PrepOutcome
+    prep_lane: str
+    selected_scrim: Week11ScrimChoice
+    recommended_scrim: Week11ScrimChoice
+    scrim_outcome_id: Week11ScrimOutcome
+    scrim_protocol: str
+    analyst_read_id: str
+    match_plan_seed: str
+    outcome_class: str
+    protocol_signal: str
+    analyst_read_class: str
+    seed_bucket: int
+    seeded_emphasis: str
+    scrim_priority: str
+    visible_effects: tuple[Week11SetupEffect, ...]
+    recommendation_basis: str
+    recommended_plan: Week11MatchPlanChoice
+    recommendation_reason: str
+    match_risk: str
+    options: tuple[Week11MatchPlanOption, ...]
+
+
+@dataclass(frozen=True)
+class Week11MatchPlanLock:
+    """The deterministic artifact produced by locking the Week-11 match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week10_outcome_id: str
+    week10_result_tier: str
+    week10_result_grade: str
+    carry_forward_tag: str
+    carry_forward_type: str
+    carry_forward_polarity: str
+    selected_setup: Week11SetupChoice
+    setup_outcome_id: Week11SetupOutcome
+    week11_pressure: str
+    selected_prep: Week11PrepChoice
+    recommended_prep: Week11PrepChoice
+    prep_outcome_id: Week11PrepOutcome
+    prep_lane: str
+    selected_scrim: Week11ScrimChoice
+    recommended_scrim: Week11ScrimChoice
+    scrim_outcome_id: Week11ScrimOutcome
+    scrim_protocol: str
+    analyst_read_id: str
+    match_plan_seed: str
+    outcome_class: str
+    protocol_signal: str
+    analyst_read_class: str
+    seed_bucket: int
+    seeded_emphasis: str
+    scrim_priority: str
+    visible_effects: tuple[Week11SetupEffect, ...]
+    recommendation_basis: str
+    recommended_plan: Week11MatchPlanChoice
+    available_choices: tuple[Week11MatchPlanChoice, ...]
+    selected_plan: Week11MatchPlanChoice
+    plan_outcome_id: str
+    plan_label: str
+    followed_recommendation: bool
+    commitment: str
+    risk_taken: str
+    thing_to_watch: str
+    match_risk: str
+    result_constraints: tuple[str, ...]
+    recommendation_reason: str
     next_hook: str
 
 
@@ -1350,8 +1458,8 @@ def week11_scrim_from_json(text: str) -> Week11ScrimLock:
     basis = scrim.get("result_basis")
     if not isinstance(basis, list):
         raise ValueError("week11_scrim JSON must include result_basis")
-    if scrim.get("next_artifact") is not None:
-        raise ValueError("week11_scrim next_artifact must be null")
+    if scrim.get("next_artifact") not in (None, WEEK11_MATCH_PLAN_FILENAME):
+        raise ValueError("week11_scrim next_artifact must be null or week11_match_plan.json")
     return Week11ScrimLock(
         source_branch=str(scrim.get("source_branch", "")),
         setup_branch=str(scrim.get("setup_branch", "")),
@@ -1451,6 +1559,504 @@ def render_week11_scrim_json(lock: Week11ScrimLock) -> str:
             "result_basis": list(lock.result_basis),
             "next_hook": lock.next_hook,
             "stops_before": "week11_match_plan",
+            "next_artifact": WEEK11_MATCH_PLAN_FILENAME,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_WEEK11_MATCH_PLAN_OPTIONS: tuple[Week11MatchPlanOption, ...] = (
+    Week11MatchPlanOption(
+        value="trust_the_read",
+        label="Trust the read",
+        payoff="Convert the analyst and scrim confirmation into the match plan.",
+        risk="Can overtrust the read if the opponent hides the first answer.",
+        commitment="read_trust",
+        result_constraint="trusted_read_must_show_before_second_layer",
+    ),
+    Week11MatchPlanOption(
+        value="attack_the_gap",
+        label="Attack the gap",
+        payoff="Adapt around the weakness or timing window exposed by the scrim.",
+        risk="Can chase the exposed branch if the match starts from a different shape.",
+        commitment="gap_attack",
+        result_constraint="gap_attack_must_not_chase_hidden_branches",
+    ),
+    Week11MatchPlanOption(
+        value="stabilize_defaults",
+        label="Stabilize defaults",
+        payoff="Reduce variance and cover the weakness exposed by the scrim.",
+        risk="Can give away tempo if stability becomes the whole plan.",
+        commitment="default_stability",
+        result_constraint="defaults_must_stay_proactive",
+    ),
+)
+
+_WEEK11_MATCH_OUTCOME_CLASSES: dict[Week11ScrimOutcome, str] = {
+    "edge_repeated_under_pressure": "confirming",
+    "edge_counter_scouted": "exposing",
+    "edge_tempo_dulled": "failing",
+    "forced_edge_punished": "failing",
+    "forced_edge_exposed": "exposing",
+    "forced_edge_depressurized": "failing",
+    "counter_read_ignored": "exposing",
+    "countermove_confirmed": "confirming",
+    "counter_timing_delayed": "failing",
+    "noise_hardened_into_call": "confirming",
+    "read_narrowed": "exposing",
+    "read_noise_depressurized": "failing",
+    "stable_room_underused": "exposing",
+    "room_overloaded_by_scout": "failing",
+    "first_contact_stabilized": "confirming",
+    "tentative_room_given_task": "confirming",
+    "tentative_room_overloaded": "failing",
+    "room_stays_tentative": "failing",
+}
+
+_WEEK11_MATCH_PROTOCOL_SIGNALS: dict[str, str] = {
+    "repeat_edge_pressure_reps": "high_signal",
+    "counter_reveal_on_edge": "high_signal",
+    "first_contact_reset_on_edge": "low_signal",
+    "repeat_forced_edge": "low_signal",
+    "counter_reveal_on_forced_edge": "medium_signal",
+    "first_contact_reset_for_forced_edge": "low_signal",
+    "repeat_edge_over_counter_read": "medium_signal",
+    "confirm_countermove": "high_signal",
+    "first_contact_reset_before_counter": "low_signal",
+    "repeat_edge_to_reduce_noise": "high_signal",
+    "counter_reveal_to_narrow_noise": "high_signal",
+    "first_contact_reset_on_noisy_read": "low_signal",
+    "repeat_edge_from_stable_room": "medium_signal",
+    "counter_reveal_to_stable_room": "low_signal",
+    "stabilize_first_contact": "high_signal",
+    "repeat_edge_for_tentative_room": "high_signal",
+    "counter_reveal_to_tentative_room": "low_signal",
+    "first_contact_reset_for_tentative_room": "low_signal",
+}
+
+_WEEK11_MATCH_ANALYST_READ_CLASSES: dict[str, str] = {
+    "edge_lane_survives_contact": "trust_read",
+    "edge_counter_named": "exploit_gap",
+    "edge_loses_tempo": "stabilize_execution",
+    "forced_edge_breaks": "stabilize_execution",
+    "forced_edge_counter_visible": "exploit_gap",
+    "forced_edge_needs_guardrails": "stabilize_execution",
+    "prepared_counter_unproven": "exploit_gap",
+    "countermove_response_ready": "exploit_gap",
+    "counter_timing_unproven": "stabilize_execution",
+    "noise_becomes_call": "trust_read",
+    "noisy_read_narrowed": "exploit_gap",
+    "noise_calmed_not_solved": "stabilize_execution",
+    "stable_room_needs_task": "exploit_gap",
+    "stable_room_overloaded": "stabilize_execution",
+    "first_contact_protocol_ready": "trust_read",
+    "tentative_room_has_task": "trust_read",
+    "tentative_room_overloaded": "stabilize_execution",
+    "tentative_room_still_passive": "stabilize_execution",
+}
+
+_WEEK11_MATCH_SEEDED_EMPHASES = ("early_objective", "midgame_trade", "late_fight_setup")
+
+
+def _week11_seed_context(match_plan_seed: str) -> tuple[int, str]:
+    bucket = sum(ord(char) for char in match_plan_seed) % len(_WEEK11_MATCH_SEEDED_EMPHASES)
+    return bucket, _WEEK11_MATCH_SEEDED_EMPHASES[bucket]
+
+
+def _week11_match_recommendation(
+    scrim: Week11ScrimLock,
+    outcome_class: str,
+    protocol_signal: str,
+    analyst_read_class: str,
+) -> tuple[Week11MatchPlanChoice, str, str]:
+    if (
+        outcome_class == "failing"
+        or protocol_signal == "low_signal"
+        or analyst_read_class == "stabilize_execution"
+    ):
+        return (
+            "stabilize_defaults",
+            "stability_required",
+            "The scrim evidence flags execution risk, so the match plan should stabilize defaults before adding layers.",
+        )
+    if (
+        scrim.selected_scrim == scrim.recommended_scrim
+        and outcome_class == "confirming"
+        and analyst_read_class == "trust_read"
+    ):
+        return (
+            "trust_the_read",
+            "confirming_trust_read",
+            "The selected scrim matched the recommended block and confirmed the analyst read, so the match plan can trust it.",
+        )
+    return (
+        "attack_the_gap",
+        "gap_visible",
+        "The scrim exposes a usable opponent branch or timing window, so the match plan should attack that gap.",
+    )
+
+
+def _week11_match_risk(scrim: Week11ScrimLock, recommended_plan: Week11MatchPlanChoice) -> str:
+    if any(effect.polarity == "negative" for effect in scrim.visible_effects):
+        return "high"
+    if any(effect.polarity == "watch" for effect in scrim.visible_effects[:2]):
+        return "high" if recommended_plan != "stabilize_defaults" else "medium"
+    if recommended_plan == "trust_the_read" and scrim.followed_recommendation:
+        return "low"
+    return "medium"
+
+
+def week11_match_plan_preview(scrim: Week11ScrimLock) -> Week11MatchPlanPreview:
+    """Build the deterministic Week-11 match-plan preview from the scrim artifact."""
+    outcome_class = _WEEK11_MATCH_OUTCOME_CLASSES[scrim.scrim_outcome_id]
+    protocol_signal = _WEEK11_MATCH_PROTOCOL_SIGNALS[scrim.scrim_protocol]
+    analyst_read_class = _WEEK11_MATCH_ANALYST_READ_CLASSES[scrim.analyst_read_id]
+    seed_bucket, seeded_emphasis = _week11_seed_context(scrim.match_plan_seed)
+    recommended, basis, reason = _week11_match_recommendation(
+        scrim,
+        outcome_class,
+        protocol_signal,
+        analyst_read_class,
+    )
+    return Week11MatchPlanPreview(
+        source_branch=scrim.source_branch,
+        setup_branch=scrim.setup_branch,
+        chosen_focus=scrim.chosen_focus,
+        week10_outcome_id=scrim.week10_outcome_id,
+        week10_result_tier=scrim.week10_result_tier,
+        week10_result_grade=scrim.week10_result_grade,
+        carry_forward_tag=scrim.carry_forward_tag,
+        carry_forward_type=scrim.carry_forward_type,
+        carry_forward_polarity=scrim.carry_forward_polarity,
+        selected_setup=scrim.selected_setup,
+        setup_outcome_id=scrim.setup_outcome_id,
+        week11_pressure=scrim.week11_pressure,
+        selected_prep=scrim.selected_prep,
+        recommended_prep=scrim.recommended_prep,
+        prep_outcome_id=scrim.prep_outcome_id,
+        prep_lane=scrim.prep_lane,
+        selected_scrim=scrim.selected_scrim,
+        recommended_scrim=scrim.recommended_scrim,
+        scrim_outcome_id=scrim.scrim_outcome_id,
+        scrim_protocol=scrim.scrim_protocol,
+        analyst_read_id=scrim.analyst_read_id,
+        match_plan_seed=scrim.match_plan_seed,
+        outcome_class=outcome_class,
+        protocol_signal=protocol_signal,
+        analyst_read_class=analyst_read_class,
+        seed_bucket=seed_bucket,
+        seeded_emphasis=seeded_emphasis,
+        scrim_priority=scrim.scrim_priority,
+        visible_effects=scrim.visible_effects,
+        recommendation_basis=basis,
+        recommended_plan=recommended,
+        recommendation_reason=reason,
+        match_risk=_week11_match_risk(scrim, recommended),
+        options=_WEEK11_MATCH_PLAN_OPTIONS,
+    )
+
+
+def resolve_week11_match_plan(
+    preview: Week11MatchPlanPreview,
+    selected_plan: str,
+) -> Week11MatchPlanLock:
+    """Resolve one Week-11 match plan into a deterministic artifact."""
+    if selected_plan not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("selected_plan must list a Week-11 match plan")
+    plan: Week11MatchPlanChoice = selected_plan  # type: ignore[assignment]
+    selected = next(option for option in preview.options if option.value == plan)
+
+    if plan == "trust_the_read":
+        risk_taken = "trusting the read can be punished if the opponent hides the first answer"
+        thing_to_watch = "whether the read appears before the second layer is called"
+        extra_constraints = ("trust_analyst_read", "avoid_second_layer_overreach")
+    elif plan == "attack_the_gap":
+        risk_taken = "attacking the gap can become reactive if the opponent refuses the branch"
+        thing_to_watch = "whether the exposed gap appears on the first timing window"
+        extra_constraints = ("attack_visible_gap", "do_not_chase_hidden_branches")
+    else:
+        risk_taken = "stabilizing defaults can give away tempo if the read was already live"
+        thing_to_watch = "whether the default stays proactive after first contact"
+        extra_constraints = ("protect_default_shape", "keep_default_proactive")
+
+    constraints = (
+        selected.result_constraint,
+        f"scrim_outcome:{preview.scrim_outcome_id}",
+        f"protocol:{preview.scrim_protocol}",
+        f"analyst_read:{preview.analyst_read_id}",
+        f"match_seed:{preview.match_plan_seed}",
+        f"seeded_emphasis:{preview.seeded_emphasis}",
+        *extra_constraints,
+    )
+    return Week11MatchPlanLock(
+        source_branch=preview.source_branch,
+        setup_branch=preview.setup_branch,
+        chosen_focus=preview.chosen_focus,
+        week10_outcome_id=preview.week10_outcome_id,
+        week10_result_tier=preview.week10_result_tier,
+        week10_result_grade=preview.week10_result_grade,
+        carry_forward_tag=preview.carry_forward_tag,
+        carry_forward_type=preview.carry_forward_type,
+        carry_forward_polarity=preview.carry_forward_polarity,
+        selected_setup=preview.selected_setup,
+        setup_outcome_id=preview.setup_outcome_id,
+        week11_pressure=preview.week11_pressure,
+        selected_prep=preview.selected_prep,
+        recommended_prep=preview.recommended_prep,
+        prep_outcome_id=preview.prep_outcome_id,
+        prep_lane=preview.prep_lane,
+        selected_scrim=preview.selected_scrim,
+        recommended_scrim=preview.recommended_scrim,
+        scrim_outcome_id=preview.scrim_outcome_id,
+        scrim_protocol=preview.scrim_protocol,
+        analyst_read_id=preview.analyst_read_id,
+        match_plan_seed=preview.match_plan_seed,
+        outcome_class=preview.outcome_class,
+        protocol_signal=preview.protocol_signal,
+        analyst_read_class=preview.analyst_read_class,
+        seed_bucket=preview.seed_bucket,
+        seeded_emphasis=preview.seeded_emphasis,
+        scrim_priority=preview.scrim_priority,
+        visible_effects=preview.visible_effects,
+        recommendation_basis=preview.recommendation_basis,
+        recommended_plan=preview.recommended_plan,
+        available_choices=WEEK11_MATCH_PLAN_CHOICES,
+        selected_plan=plan,
+        plan_outcome_id=f"week11_match_plan_{plan}",
+        plan_label=selected.label,
+        followed_recommendation=plan == preview.recommended_plan,
+        commitment=selected.commitment,
+        risk_taken=risk_taken,
+        thing_to_watch=thing_to_watch,
+        match_risk=preview.match_risk,
+        result_constraints=constraints,
+        recommendation_reason=preview.recommendation_reason,
+        next_hook=(
+            f"Week 11 result can test {selected.commitment} against "
+            f"{preview.match_plan_seed}."
+        ),
+    )
+
+
+def week11_match_plan_from_json(text: str) -> Week11MatchPlanLock:
+    """Parse a written ``week11_match_plan.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week11_match_plan JSON is malformed") from exc
+    match_plan = data.get("week11_match_plan") if isinstance(data, dict) else None
+    if not isinstance(match_plan, dict):
+        raise ValueError("week11_match_plan JSON must contain a week11_match_plan object")
+    selected_setup = match_plan.get("selected_setup")
+    if selected_setup not in WEEK11_SETUP_CHOICES:
+        raise ValueError("week11_match_plan selected_setup must list a Week-11 setup choice")
+    setup_outcome = match_plan.get("setup_outcome_id")
+    if setup_outcome not in WEEK11_SETUP_OUTCOMES:
+        raise ValueError("week11_match_plan setup_outcome_id must list a Week-11 setup outcome")
+    selected_prep = match_plan.get("selected_prep")
+    if selected_prep not in WEEK11_PREP_CHOICES:
+        raise ValueError("week11_match_plan selected_prep must list a Week-11 prep choice")
+    recommended_prep = match_plan.get("recommended_prep")
+    if recommended_prep not in WEEK11_PREP_CHOICES:
+        raise ValueError("week11_match_plan recommended_prep must list a Week-11 prep choice")
+    prep_outcome = match_plan.get("prep_outcome_id")
+    if prep_outcome not in WEEK11_PREP_OUTCOMES:
+        raise ValueError("week11_match_plan prep_outcome_id must list a Week-11 prep outcome")
+    selected_scrim = match_plan.get("selected_scrim")
+    if selected_scrim not in WEEK11_SCRIM_CHOICES:
+        raise ValueError("week11_match_plan selected_scrim must list a Week-11 scrim choice")
+    recommended_scrim = match_plan.get("recommended_scrim")
+    if recommended_scrim not in WEEK11_SCRIM_CHOICES:
+        raise ValueError("week11_match_plan recommended_scrim must list a Week-11 scrim choice")
+    scrim_outcome = match_plan.get("scrim_outcome_id")
+    if scrim_outcome not in WEEK11_SCRIM_OUTCOMES:
+        raise ValueError("week11_match_plan scrim_outcome_id must list a Week-11 scrim outcome")
+    selected = match_plan.get("selected_plan")
+    if selected not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_match_plan selected_plan must list a Week-11 match plan")
+    recommended = match_plan.get("recommended_plan")
+    if recommended not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_match_plan recommended_plan must list a Week-11 match plan")
+    available = match_plan.get("available_choices")
+    if not isinstance(available, list) or any(choice not in WEEK11_MATCH_PLAN_CHOICES for choice in available):
+        raise ValueError("week11_match_plan available_choices must list Week-11 match plans")
+    effects = match_plan.get("visible_effects")
+    if not isinstance(effects, list):
+        raise ValueError("week11_match_plan JSON must include visible_effects")
+    constraints = match_plan.get("result_constraints")
+    if not isinstance(constraints, list):
+        raise ValueError("week11_match_plan JSON must include result_constraints")
+    if match_plan.get("next_artifact") is not None:
+        raise ValueError("week11_match_plan next_artifact must be null")
+    plan_lock = match_plan.get("plan_lock")
+    result_lock = match_plan.get("result_lock")
+    if not isinstance(plan_lock, dict):
+        raise ValueError("week11_match_plan JSON must include plan_lock")
+    if not isinstance(result_lock, dict):
+        raise ValueError("week11_match_plan JSON must include result_lock")
+    recommendation_context = match_plan.get("recommendation_context")
+    if not isinstance(recommendation_context, dict):
+        raise ValueError("week11_match_plan JSON must include recommendation_context")
+    seed_bucket = recommendation_context.get("seed_bucket")
+    if not isinstance(seed_bucket, int):
+        raise ValueError("week11_match_plan recommendation_context must include seed_bucket")
+    return Week11MatchPlanLock(
+        source_branch=str(match_plan.get("source_branch", "")),
+        setup_branch=str(match_plan.get("setup_branch", "")),
+        chosen_focus=str(match_plan.get("chosen_focus", "")),
+        week10_outcome_id=str(match_plan.get("week10_outcome_id", "")),
+        week10_result_tier=str(match_plan.get("week10_result_tier", "")),
+        week10_result_grade=str(match_plan.get("week10_result_grade", "")),
+        carry_forward_tag=str(match_plan.get("carry_forward_tag", "")),
+        carry_forward_type=str(match_plan.get("carry_forward_type", "")),
+        carry_forward_polarity=str(match_plan.get("carry_forward_polarity", "")),
+        selected_setup=selected_setup,
+        setup_outcome_id=setup_outcome,
+        week11_pressure=str(match_plan.get("week11_pressure", "")),
+        selected_prep=selected_prep,
+        recommended_prep=recommended_prep,
+        prep_outcome_id=prep_outcome,
+        prep_lane=str(match_plan.get("prep_lane", "")),
+        selected_scrim=selected_scrim,
+        recommended_scrim=recommended_scrim,
+        scrim_outcome_id=scrim_outcome,
+        scrim_protocol=str(match_plan.get("scrim_protocol", "")),
+        analyst_read_id=str(match_plan.get("analyst_read_id", "")),
+        match_plan_seed=str(match_plan.get("match_plan_seed", "")),
+        outcome_class=str(recommendation_context.get("outcome_class", "")),
+        protocol_signal=str(recommendation_context.get("protocol_signal", "")),
+        analyst_read_class=str(recommendation_context.get("analyst_read_class", "")),
+        seed_bucket=seed_bucket,
+        seeded_emphasis=str(recommendation_context.get("seeded_emphasis", "")),
+        scrim_priority=str(match_plan.get("scrim_priority", "")),
+        visible_effects=tuple(
+            Week11SetupEffect(
+                value=str(effect.get("id", "")),
+                label=str(effect.get("label", "")),
+                polarity=str(effect.get("polarity", "")),
+            )
+            for effect in effects
+            if isinstance(effect, dict)
+        ),
+        recommendation_basis=str(match_plan.get("recommendation_basis", "")),
+        recommended_plan=recommended,
+        available_choices=tuple(available),  # type: ignore[arg-type]
+        selected_plan=selected,
+        plan_outcome_id=str(match_plan.get("plan_outcome_id", "")),
+        plan_label=str(match_plan.get("plan_label", "")),
+        followed_recommendation=bool(match_plan.get("followed_recommendation", selected == recommended)),
+        commitment=str(match_plan.get("commitment", "")),
+        risk_taken=str(match_plan.get("risk_taken", "")),
+        thing_to_watch=str(match_plan.get("thing_to_watch", "")),
+        match_risk=str(match_plan.get("match_risk", "")),
+        result_constraints=tuple(str(item) for item in constraints),
+        recommendation_reason=str(match_plan.get("recommendation_reason", "")),
+        next_hook=str(match_plan.get("next_hook", "")),
+    )
+
+
+def render_week11_match_plan_json(lock: Week11MatchPlanLock) -> str:
+    """Canonical JSON export for a locked Week-11 match plan."""
+    payload = {
+        "week11_match_plan": {
+            "artifact_type": "week11_match_plan",
+            "checkpoint": "week11_match_plan",
+            "schema_version": 1,
+            "source_artifact": WEEK11_SCRIM_FILENAME,
+            "source_artifacts": {
+                "week11_scrim": WEEK11_SCRIM_FILENAME,
+            },
+            "week": 11,
+            "route": "/week11/match",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week10_outcome_id": lock.week10_outcome_id,
+            "week10_result_tier": lock.week10_result_tier,
+            "week10_result_grade": lock.week10_result_grade,
+            "carry_forward_tag": lock.carry_forward_tag,
+            "carry_forward_type": lock.carry_forward_type,
+            "carry_forward_polarity": lock.carry_forward_polarity,
+            "selected_setup": lock.selected_setup,
+            "setup_outcome_id": lock.setup_outcome_id,
+            "week11_pressure": lock.week11_pressure,
+            "selected_prep": lock.selected_prep,
+            "recommended_prep": lock.recommended_prep,
+            "prep_outcome_id": lock.prep_outcome_id,
+            "prep_lane": lock.prep_lane,
+            "selected_scrim": lock.selected_scrim,
+            "recommended_scrim": lock.recommended_scrim,
+            "scrim_outcome_id": lock.scrim_outcome_id,
+            "scrim_protocol": lock.scrim_protocol,
+            "analyst_read_id": lock.analyst_read_id,
+            "match_plan_seed": lock.match_plan_seed,
+            "outcome_class": lock.outcome_class,
+            "protocol_signal": lock.protocol_signal,
+            "analyst_read_class": lock.analyst_read_class,
+            "seed_bucket": lock.seed_bucket,
+            "seeded_emphasis": lock.seeded_emphasis,
+            "scrim_priority": lock.scrim_priority,
+            "visible_effects": [
+                {
+                    "id": effect.value,
+                    "label": effect.label,
+                    "polarity": effect.polarity,
+                }
+                for effect in lock.visible_effects
+            ],
+            "recommendation_inputs": {
+                "selected_scrim_id": lock.selected_scrim,
+                "recommended_scrim_id": lock.recommended_scrim,
+                "scrim_outcome_id": lock.scrim_outcome_id,
+                "scrim_protocol": lock.scrim_protocol,
+                "analyst_read_id": lock.analyst_read_id,
+                "match_plan_seed": lock.match_plan_seed,
+            },
+            "recommendation_context": {
+                "outcome_class": lock.outcome_class,
+                "protocol_signal": lock.protocol_signal,
+                "analyst_read_class": lock.analyst_read_class,
+                "seed_bucket": lock.seed_bucket,
+                "seeded_emphasis": lock.seeded_emphasis,
+            },
+            "recommendation_basis": lock.recommendation_basis,
+            "recommendation_reason_id": lock.recommendation_basis,
+            "recommended_plan": lock.recommended_plan,
+            "recommended_plan_id": lock.recommended_plan,
+            "recommended_match_plan_id": lock.recommended_plan,
+            "available_choices": list(lock.available_choices),
+            "available_match_plan_ids": list(lock.available_choices),
+            "choice_order": list(lock.available_choices),
+            "selected_plan": lock.selected_plan,
+            "selected_plan_id": lock.selected_plan,
+            "selected_match_plan_id": lock.selected_plan,
+            "plan_outcome_id": lock.plan_outcome_id,
+            "plan_label": lock.plan_label,
+            "followed_recommendation": lock.followed_recommendation,
+            "selected_is_recommended": lock.followed_recommendation,
+            "commitment": lock.commitment,
+            "risk_taken": lock.risk_taken,
+            "thing_to_watch": lock.thing_to_watch,
+            "match_risk": lock.match_risk,
+            "result_constraints": list(lock.result_constraints),
+            "recommendation_reason": lock.recommendation_reason,
+            "plan_lock": {
+                "status": "locked",
+                "selected_at_route": "/week11/match",
+                "cannot_change_after_write": True,
+            },
+            "result_lock": {
+                "status": "not_resolved",
+                "reason": "week11_match_plan_only",
+                "next_artifact": None,
+            },
+            "match_plan_commitment": {
+                "commitment": lock.commitment,
+                "risk_taken": lock.risk_taken,
+                "thing_to_watch": lock.thing_to_watch,
+            },
+            "next_hook": lock.next_hook,
+            "stops_before": "week11_match_result",
             "next_artifact": None,
         }
     }

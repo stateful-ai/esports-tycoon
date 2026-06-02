@@ -41,6 +41,7 @@ The week is a short linear flow, one decision per step:
     /week11/setup the Week-10 review carry-forward becomes a Week-11 opening posture
     /week11/prep the Week-11 setup becomes a deterministic prep allocation
     /week11/scrim the Week-11 prep allocation becomes a deterministic scrim protocol
+    /week11/match the Week-11 scrim protocol becomes a deterministic match plan
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -168,15 +169,20 @@ from esports_tycoon.runner.week10 import (
     week10_scrim_plan,
 )
 from esports_tycoon.runner.week11 import (
+    WEEK11_MATCH_PLAN_FILENAME,
     WEEK11_PREP_FILENAME,
     WEEK11_SCRIM_FILENAME,
     WEEK11_SETUP_FILENAME,
+    render_week11_match_plan_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
+    resolve_week11_match_plan,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
+    week11_match_plan_from_json,
+    week11_match_plan_preview,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -1650,6 +1656,66 @@ def create_app(
             scrim_plan=scrim_plan,
             scrim_lock=scrim_lock,
             week11_scrim_path=week11_scrim_written_path,
+        )
+
+    @app.route("/week11/match", methods=["GET", "POST"])
+    def week11_match():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 11 match planning unlocks after the Week 11 scrim.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_scrim_path = run_dir / WEEK11_SCRIM_FILENAME
+        week11_match_plan_path = run_dir / WEEK11_MATCH_PLAN_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_SCRIM_FILENAME, week11_scrim_path),
+            )
+            if not path.is_file()
+        ]
+        preview = None
+        lock = None
+        week11_match_plan_written_path = ""
+        if not missing:
+            try:
+                scrim = week11_scrim_from_json(week11_scrim_path.read_text(encoding="utf-8"))
+                preview = week11_match_plan_preview(scrim)
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    selected = (request.form.get("week11_match_plan") or "").strip()
+                    try:
+                        lock = resolve_week11_match_plan(preview, selected)
+                    except ValueError:
+                        flash("Choose a Week 11 match plan.")
+                    else:
+                        week11_match_plan_path.write_text(
+                            render_week11_match_plan_json(lock),
+                            encoding="utf-8",
+                            newline="\n",
+                        )
+                        week11_match_plan_written_path = str(week11_match_plan_path)
+                elif week11_match_plan_path.is_file():
+                    try:
+                        lock = week11_match_plan_from_json(week11_match_plan_path.read_text(encoding="utf-8"))
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week11_match_plan_written_path = str(week11_match_plan_path)
+
+        return render_template(
+            "week11_match.html",
+            result=result,
+            missing=missing,
+            preview=preview,
+            lock=lock,
+            week11_match_plan_path=week11_match_plan_written_path,
         )
 
     @app.get("/feed")

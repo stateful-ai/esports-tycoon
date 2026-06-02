@@ -253,12 +253,16 @@
 
   <section class="scrim-panel" style="margin-top: 1rem;">
     <div class="panel-kicker">Artifact</div>
-    <div class="copy-line">This scrim protocol stops before Week 11 match planning.</div>
+    <div class="copy-line">This scrim protocol hands off to Week 11 match planning.</div>
     <div class="chip-row">
       <span class="data-chip">week11_scrim.json</span>
+      <span class="data-chip">next week11_match_plan.json</span>
       {% if week11_scrim_path %}
         <span class="data-chip">{{ week11_scrim_path }}</span>
       {% endif %}
+    </div>
+    <div class="console-actions">
+      <a class="btn" href="{{ url_for('week11_match') }}">Open Week 11 match plan</a>
     </div>
   </section>
 </div>
