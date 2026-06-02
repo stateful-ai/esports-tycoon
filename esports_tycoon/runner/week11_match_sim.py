@@ -184,6 +184,46 @@ class Week11SimScoreState:
 
 
 @dataclass(frozen=True)
+class Week11SimLastKnownPosition:
+    """One partial-observation position estimate for policy vision."""
+
+    agent_id: str
+    x: int
+    y: int
+    tick: int
+    confidence: int
+
+
+@dataclass(frozen=True)
+class Week11SimSightline:
+    """One visible, inferred, or blocked policy-vision ray."""
+
+    source_agent_id: str
+    target_agent_id: str
+    blocked_by_cover_id: str
+    blocked_by_utility_zone_id: str
+    confidence: int
+    visibility: str
+    label: str
+
+
+@dataclass(frozen=True)
+class Week11SimInformationState:
+    """Frame-level partial-observation state for policy vision and RL."""
+
+    observer_agent_id: str
+    visible_agent_ids: tuple[str, ...]
+    occluded_agent_ids: tuple[str, ...]
+    last_known_positions: tuple[Week11SimLastKnownPosition, ...]
+    visible_zone_ids: tuple[str, ...]
+    occluded_zone_ids: tuple[str, ...]
+    sightlines: tuple[Week11SimSightline, ...]
+    contact_confidence: int
+    fog_pressure: int
+    information_advantage: str
+
+
+@dataclass(frozen=True)
 class Week11SimEvent:
     """One tactical overlay event rendered on top of the replay map."""
 
@@ -319,6 +359,7 @@ class Week11SimFrame:
     objective_state: Week11SimObjectiveState
     loadout_state: Week11SimLoadoutState
     score_state: Week11SimScoreState
+    information_state: Week11SimInformationState
     states: tuple[Week11SimAgentState, ...]
     zone_control: dict[str, int]
     events: tuple[Week11SimEvent, ...]
@@ -1646,6 +1687,194 @@ def _nearest_opponent_state(
     return min(candidates, key=lambda state: _distance_score(focus_state, state))
 
 
+def _line_samples(
+    source: Week11SimAgentState,
+    target: Week11SimAgentState,
+    *,
+    steps: int = 12,
+) -> tuple[tuple[float, float], ...]:
+    return tuple(
+        (
+            source.x + (target.x - source.x) * index / steps,
+            source.y + (target.y - source.y) * index / steps,
+        )
+        for index in range(1, steps)
+    )
+
+
+def _line_blocking_cover(
+    source: Week11SimAgentState,
+    target: Week11SimAgentState,
+    covers: tuple[Week11SimMapCover, ...],
+) -> str:
+    for cover in covers:
+        if not cover.blocks_sight:
+            continue
+        left = cover.x
+        right = cover.x + cover.width
+        top = cover.y
+        bottom = cover.y + cover.height
+        for sample_x, sample_y in _line_samples(source, target):
+            if left <= sample_x <= right and top <= sample_y <= bottom:
+                return cover.cover_id
+    return ""
+
+
+def _line_blocking_utility(
+    source: Week11SimAgentState,
+    target: Week11SimAgentState,
+    utility_zones: tuple[Week11SimUtilityZone, ...],
+) -> str:
+    for zone in utility_zones:
+        if not zone.blocks_sight:
+            continue
+        radius_sq = zone.radius * zone.radius
+        for sample_x, sample_y in _line_samples(source, target):
+            dx = sample_x - zone.x
+            dy = sample_y - zone.y
+            if dx * dx + dy * dy <= radius_sq:
+                return zone.zone_id
+    return ""
+
+
+def _sightline_confidence(
+    *,
+    step: Week11SimStep,
+    telemetry: Week11SimTelemetry,
+    distance: int,
+    blocked_by_cover_id: str,
+    blocked_by_utility_zone_id: str,
+) -> int:
+    confidence = (
+        95
+        - distance
+        + telemetry.utility_pressure // 4
+        + (16 if step.action == "scan_lane" else 0)
+        + (8 if step.action in {"entry_peek", "lurk_contact"} else 0)
+    )
+    if blocked_by_cover_id:
+        confidence -= 24
+    if blocked_by_utility_zone_id:
+        confidence -= 34
+    return _clamp(confidence, 0, 100)
+
+
+def _information_state(
+    *,
+    step: Week11SimStep,
+    states: tuple[Week11SimAgentState, ...],
+    telemetry: Week11SimTelemetry,
+    utility_zones: tuple[Week11SimUtilityZone, ...],
+    map_layout: Week11SimMapLayout,
+    agent_lookup: dict[str, Week11SimAgent],
+) -> Week11SimInformationState:
+    observer_state = _agent_state(states, step.agent_id)
+    observer_agent = agent_lookup.get(step.agent_id)
+    if observer_state is None or observer_agent is None or not observer_state.alive:
+        return Week11SimInformationState(
+            observer_agent_id=step.agent_id,
+            visible_agent_ids=(),
+            occluded_agent_ids=(),
+            last_known_positions=(),
+            visible_zone_ids=(),
+            occluded_zone_ids=(),
+            sightlines=(),
+            contact_confidence=0,
+            fog_pressure=100,
+            information_advantage="opponent",
+        )
+
+    visible_ids: list[str] = []
+    occluded_ids: list[str] = []
+    last_known_positions: list[Week11SimLastKnownPosition] = []
+    sightlines: list[Week11SimSightline] = []
+    visible_zones = {
+        _zone_id(observer_state.x, observer_state.y),
+        step.action_context.get("target_zone", _target_zone(step.round_id, step.action)),
+    }
+    occluded_zones: set[str] = set()
+
+    enemy_states = [
+        state
+        for state in states
+        if state.alive
+        and agent_lookup.get(state.agent_id) is not None
+        and agent_lookup[state.agent_id].side != observer_agent.side
+    ]
+    for enemy_state in enemy_states:
+        blocked_by_cover_id = _line_blocking_cover(observer_state, enemy_state, map_layout.covers)
+        blocked_by_utility_zone_id = _line_blocking_utility(observer_state, enemy_state, utility_zones)
+        distance = _distance_score(observer_state, enemy_state)
+        confidence = _sightline_confidence(
+            step=step,
+            telemetry=telemetry,
+            distance=distance,
+            blocked_by_cover_id=blocked_by_cover_id,
+            blocked_by_utility_zone_id=blocked_by_utility_zone_id,
+        )
+        if confidence >= 60 and not blocked_by_utility_zone_id:
+            visibility = "visible"
+            visible_ids.append(enemy_state.agent_id)
+            visible_zones.add(_zone_id(enemy_state.x, enemy_state.y))
+        elif confidence >= 35:
+            visibility = "inferred"
+            occluded_ids.append(enemy_state.agent_id)
+            occluded_zones.add(_zone_id(enemy_state.x, enemy_state.y))
+        else:
+            visibility = "hidden"
+            occluded_ids.append(enemy_state.agent_id)
+            occluded_zones.add(_zone_id(enemy_state.x, enemy_state.y))
+
+        last_known_positions.append(
+            Week11SimLastKnownPosition(
+                agent_id=enemy_state.agent_id,
+                x=enemy_state.x,
+                y=enemy_state.y,
+                tick=step.tick,
+                confidence=confidence,
+            )
+        )
+        blockers = []
+        if blocked_by_cover_id:
+            blockers.append(blocked_by_cover_id)
+        if blocked_by_utility_zone_id:
+            blockers.append(blocked_by_utility_zone_id)
+        block_label = ", ".join(blockers) if blockers else "clear"
+        sightlines.append(
+            Week11SimSightline(
+                source_agent_id=observer_state.agent_id,
+                target_agent_id=enemy_state.agent_id,
+                blocked_by_cover_id=blocked_by_cover_id,
+                blocked_by_utility_zone_id=blocked_by_utility_zone_id,
+                confidence=confidence,
+                visibility=visibility,
+                label=f"{visibility} contact via {block_label}",
+            )
+        )
+
+    contact_confidence = max((line.confidence for line in sightlines), default=0)
+    fog_pressure = _clamp(100 - contact_confidence + len(occluded_ids) * 5, 0, 100)
+    if len(visible_ids) >= 2 or contact_confidence >= 68:
+        information_advantage = "overcast"
+    elif fog_pressure >= 68:
+        information_advantage = "opponent"
+    else:
+        information_advantage = "even"
+
+    return Week11SimInformationState(
+        observer_agent_id=observer_state.agent_id,
+        visible_agent_ids=tuple(visible_ids),
+        occluded_agent_ids=tuple(occluded_ids),
+        last_known_positions=tuple(last_known_positions),
+        visible_zone_ids=tuple(sorted(zone for zone in visible_zones if zone)),
+        occluded_zone_ids=tuple(sorted(zone for zone in occluded_zones if zone)),
+        sightlines=tuple(sightlines),
+        contact_confidence=contact_confidence,
+        fog_pressure=fog_pressure,
+        information_advantage=information_advantage,
+    )
+
+
 def _arc_advantage(*, step: Week11SimStep, telemetry: Week11SimTelemetry) -> str:
     if step.reward > 0 and telemetry.risk_index < 58:
         return "overcast"
@@ -2127,6 +2356,7 @@ def _frames(
     agents: tuple[Week11SimAgent, ...],
     rounds: tuple[Week11SimRound, ...],
     steps: tuple[Week11SimStep, ...],
+    map_layout: Week11SimMapLayout,
 ) -> tuple[Week11SimFrame, ...]:
     details = {
         "trust_the_read": (
@@ -2192,6 +2422,14 @@ def _frames(
             states=states,
             telemetry=telemetry,
         )
+        information_state = _information_state(
+            step=step,
+            states=states,
+            telemetry=telemetry,
+            utility_zones=utility_zones,
+            map_layout=map_layout,
+            agent_lookup=agent_lookup,
+        )
         combat_events = _frame_combat_events(
             step=step,
             states=states,
@@ -2213,6 +2451,7 @@ def _frames(
                 objective_state=objective_state,
                 loadout_state=loadout_state,
                 score_state=score_state,
+                information_state=information_state,
                 states=states,
                 zone_control=_zone_control(telemetry, round_),
                 events=events,
@@ -2298,7 +2537,8 @@ def resolve_week11_match_simulation(
     agent_lookup = {agent.agent_id: agent for agent in agents}
     rounds = _rounds(result)
     steps = _steps(result, agent_lookup)
-    frames = _frames(result, agents, rounds, steps)
+    map_layout = _map_layout(map_name)
+    frames = _frames(result, agents, rounds, steps, map_layout)
     training_signals = _training_signals(result, agents, steps)
     sim_id = f"w11-{result.selected_plan}-{result.outcome_id}-{result.match_plan_seed}"
     viewer_summary = (
@@ -2322,7 +2562,7 @@ def resolve_week11_match_simulation(
         result_grade=result.result_grade,
         seed=result.match_plan_seed,
         map_name=map_name,
-        map_layout=_map_layout(map_name),
+        map_layout=map_layout,
         opponent_name=opponent_name,
         sim_mode="deterministic_policy_trace_v1",
         agents=agents,
@@ -2436,6 +2676,45 @@ def _score_state_to_dict(score: Week11SimScoreState) -> dict[str, Any]:
         "win_probability": score.win_probability,
         "momentum": score.momentum,
         "swing_reason": score.swing_reason,
+    }
+
+
+def _last_known_position_to_dict(position: Week11SimLastKnownPosition) -> dict[str, Any]:
+    return {
+        "agent_id": position.agent_id,
+        "x": position.x,
+        "y": position.y,
+        "tick": position.tick,
+        "confidence": position.confidence,
+    }
+
+
+def _sightline_to_dict(sightline: Week11SimSightline) -> dict[str, Any]:
+    return {
+        "source_agent_id": sightline.source_agent_id,
+        "target_agent_id": sightline.target_agent_id,
+        "blocked_by_cover_id": sightline.blocked_by_cover_id,
+        "blocked_by_utility_zone_id": sightline.blocked_by_utility_zone_id,
+        "confidence": sightline.confidence,
+        "visibility": sightline.visibility,
+        "label": sightline.label,
+    }
+
+
+def _information_state_to_dict(info: Week11SimInformationState) -> dict[str, Any]:
+    return {
+        "observer_agent_id": info.observer_agent_id,
+        "visible_agent_ids": list(info.visible_agent_ids),
+        "occluded_agent_ids": list(info.occluded_agent_ids),
+        "last_known_positions": [
+            _last_known_position_to_dict(position) for position in info.last_known_positions
+        ],
+        "visible_zone_ids": list(info.visible_zone_ids),
+        "occluded_zone_ids": list(info.occluded_zone_ids),
+        "sightlines": [_sightline_to_dict(sightline) for sightline in info.sightlines],
+        "contact_confidence": info.contact_confidence,
+        "fog_pressure": info.fog_pressure,
+        "information_advantage": info.information_advantage,
     }
 
 
@@ -2565,6 +2844,7 @@ def _frame_to_dict(frame: Week11SimFrame) -> dict[str, Any]:
         "objective_state": _objective_state_to_dict(frame.objective_state),
         "loadout_state": _loadout_state_to_dict(frame.loadout_state),
         "score_state": _score_state_to_dict(frame.score_state),
+        "information_state": _information_state_to_dict(frame.information_state),
         "states": [_state_to_dict(state) for state in frame.states],
         "zone_control": dict(frame.zone_control),
         "events": [_event_to_dict(event) for event in frame.events],
@@ -2734,6 +3014,19 @@ def week11_match_sim_to_dict(sim: Week11MatchSimulation) -> dict[str, Any]:
                 "win_probability",
                 "momentum",
                 "swing_reason",
+            ],
+            "information_state_unit": "frames[].information_state",
+            "information_state_fields": [
+                "observer_agent_id",
+                "visible_agent_ids",
+                "occluded_agent_ids",
+                "last_known_positions",
+                "visible_zone_ids",
+                "occluded_zone_ids",
+                "sightlines",
+                "contact_confidence",
+                "fog_pressure",
+                "information_advantage",
             ],
             "agent_state_unit": "frames[].states[]",
             "agent_state_fields": [
@@ -3383,6 +3676,90 @@ def _score_state_from_any(data: Any, *, team_pressure: int) -> Week11SimScoreSta
     )
 
 
+def _last_known_positions_from_any(data: Any) -> tuple[Week11SimLastKnownPosition, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimLastKnownPosition(
+            agent_id=str(position.get("agent_id", "")),
+            x=int(position.get("x", 0)),
+            y=int(position.get("y", 0)),
+            tick=int(position.get("tick", 0)),
+            confidence=int(position.get("confidence", 0)),
+        )
+        for position in data
+        if isinstance(position, dict)
+    )
+
+
+def _sightlines_from_any(data: Any) -> tuple[Week11SimSightline, ...]:
+    if not isinstance(data, list):
+        return ()
+    return tuple(
+        Week11SimSightline(
+            source_agent_id=str(sightline.get("source_agent_id", "")),
+            target_agent_id=str(sightline.get("target_agent_id", "")),
+            blocked_by_cover_id=str(sightline.get("blocked_by_cover_id", "")),
+            blocked_by_utility_zone_id=str(sightline.get("blocked_by_utility_zone_id", "")),
+            confidence=int(sightline.get("confidence", 0)),
+            visibility=str(sightline.get("visibility", "hidden")),
+            label=str(sightline.get("label", "")),
+        )
+        for sightline in data
+        if isinstance(sightline, dict)
+    )
+
+
+def _information_state_from_any(
+    data: Any,
+    *,
+    focus_agent: str,
+    team_pressure: int,
+) -> Week11SimInformationState:
+    if isinstance(data, dict):
+        return Week11SimInformationState(
+            observer_agent_id=str(data.get("observer_agent_id", focus_agent)),
+            visible_agent_ids=tuple(
+                str(agent_id)
+                for agent_id in data.get("visible_agent_ids", [])
+                if isinstance(agent_id, str)
+            ),
+            occluded_agent_ids=tuple(
+                str(agent_id)
+                for agent_id in data.get("occluded_agent_ids", [])
+                if isinstance(agent_id, str)
+            ),
+            last_known_positions=_last_known_positions_from_any(data.get("last_known_positions")),
+            visible_zone_ids=tuple(
+                str(zone_id)
+                for zone_id in data.get("visible_zone_ids", [])
+                if isinstance(zone_id, str)
+            ),
+            occluded_zone_ids=tuple(
+                str(zone_id)
+                for zone_id in data.get("occluded_zone_ids", [])
+                if isinstance(zone_id, str)
+            ),
+            sightlines=_sightlines_from_any(data.get("sightlines")),
+            contact_confidence=int(data.get("contact_confidence", team_pressure)),
+            fog_pressure=int(data.get("fog_pressure", _clamp(100 - team_pressure, 0, 100))),
+            information_advantage=str(data.get("information_advantage", "even")),
+        )
+    contact_confidence = _clamp(team_pressure, 0, 100)
+    return Week11SimInformationState(
+        observer_agent_id=focus_agent,
+        visible_agent_ids=(),
+        occluded_agent_ids=(),
+        last_known_positions=(),
+        visible_zone_ids=(),
+        occluded_zone_ids=(),
+        sightlines=(),
+        contact_confidence=contact_confidence,
+        fog_pressure=_clamp(100 - contact_confidence, 0, 100),
+        information_advantage="even",
+    )
+
+
 def _int_dict_from_any(data: Any) -> dict[str, int]:
     if not isinstance(data, dict):
         return {}
@@ -3740,6 +4117,11 @@ def week11_match_sim_from_json(text: str) -> Week11MatchSimulation:
             ),
             score_state=_score_state_from_any(
                 frame.get("score_state"),
+                team_pressure=int(frame.get("team_pressure", 0)),
+            ),
+            information_state=_information_state_from_any(
+                frame.get("information_state"),
+                focus_agent=str(frame.get("focus_agent", "")),
                 team_pressure=int(frame.get("team_pressure", 0)),
             ),
             states=tuple(
