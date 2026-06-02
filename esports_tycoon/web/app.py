@@ -225,10 +225,16 @@ from esports_tycoon.runner.week12_shadow_rollout import (
     week12_shadow_rollout_from_json,
 )
 from esports_tycoon.runner.week12_training_queue import (
+    WEEK12_POLICY_FEEDBACK_FILENAME,
     WEEK12_TRAINING_QUEUE_FILENAME,
     render_week12_training_queue_json,
     resolve_week12_training_queue,
     week12_training_queue_from_json,
+)
+from esports_tycoon.runner.week12_policy_feedback import (
+    render_week12_policy_feedback_json,
+    resolve_week12_policy_feedback,
+    week12_policy_feedback_from_json,
 )
 from esports_tycoon.schema import WorldState
 
@@ -2209,6 +2215,83 @@ def create_app(
             training_queue=training_queue,
             training_queue_json=training_queue_json,
             week12_training_queue_path=week12_training_queue_written_path,
+        )
+
+    @app.route("/week12/policy-feedback", methods=["GET", "POST"])
+    def week12_policy_feedback():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 12 policy feedback unlocks after training queue.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week12_training_queue_path = run_dir / WEEK12_TRAINING_QUEUE_FILENAME
+        week11_training_dataset_path = run_dir / WEEK11_TRAINING_DATASET_FILENAME
+        week12_policy_feedback_path = run_dir / WEEK12_POLICY_FEEDBACK_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK12_TRAINING_QUEUE_FILENAME, week12_training_queue_path),
+                (WEEK11_TRAINING_DATASET_FILENAME, week11_training_dataset_path),
+            )
+            if not path.is_file()
+        ]
+        training_queue = None
+        training_dataset = None
+        policy_feedback = None
+        policy_feedback_json = ""
+        week12_policy_feedback_written_path = ""
+        if not missing:
+            try:
+                training_queue = week12_training_queue_from_json(
+                    week12_training_queue_path.read_text(encoding="utf-8")
+                )
+                training_dataset = week11_training_dataset_from_json(
+                    week11_training_dataset_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    policy_feedback = resolve_week12_policy_feedback(
+                        training_queue,
+                        training_dataset,
+                    )
+                    week12_policy_feedback_path.write_text(
+                        render_week12_policy_feedback_json(policy_feedback),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week12_policy_feedback_written_path = str(week12_policy_feedback_path)
+                elif week12_policy_feedback_path.is_file():
+                    try:
+                        policy_feedback = week12_policy_feedback_from_json(
+                            week12_policy_feedback_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week12_policy_feedback_written_path = str(week12_policy_feedback_path)
+                else:
+                    policy_feedback = resolve_week12_policy_feedback(
+                        training_queue,
+                        training_dataset,
+                    )
+                if policy_feedback:
+                    policy_feedback_json = render_week12_policy_feedback_json(policy_feedback)
+
+        return render_template(
+            "week12_policy_feedback.html",
+            result=result,
+            missing=missing,
+            training_queue=training_queue,
+            training_dataset=training_dataset,
+            policy_feedback=policy_feedback,
+            policy_feedback_json=policy_feedback_json,
+            week12_policy_feedback_path=week12_policy_feedback_written_path,
         )
 
     @app.get("/feed")

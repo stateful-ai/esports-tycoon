@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+{% block title %}Week 12 policy feedback - {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1320px; }
+  .feedback-room {
+    color: #eef4f2;
+    background: #070a0c;
+    border: 1px solid #263740;
+  }
+  .feedback-room h1, .feedback-room h2, .feedback-room p { color: inherit; }
+  .feedback-hero {
+    position: relative;
+    min-height: clamp(20rem, 40vw, 31rem);
+    padding: clamp(1rem, 2.4vw, 1.6rem);
+    overflow: hidden;
+    display: grid;
+    align-items: end;
+    background:
+      linear-gradient(90deg, rgba(5, 8, 10, 0.9) 0%, rgba(5, 8, 10, 0.35) 48%, rgba(5, 8, 10, 0.78) 100%),
+      linear-gradient(0deg, rgba(5, 8, 10, 0.96) 0%, rgba(5, 8, 10, 0.12) 58%),
+      url("{{ url_for('static', filename='art/week11-match-arena.webp') }}") center / cover no-repeat;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 4.5rem 3% 4.4rem;
+    z-index: 1;
+    border: 1px solid rgba(238, 244, 242, 0.2);
+    background:
+      linear-gradient(rgba(238,244,242,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238,244,242,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+  .feedback-pin {
+    position: absolute;
+    width: clamp(2.4rem, 4.4vw, 3.4rem);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border: 1px solid #eef4f2;
+    background: rgba(7, 10, 12, 0.74);
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.72rem, 1.15vw, 0.9rem);
+    box-shadow: 0 0 0 3px rgba(45, 214, 190, 0.18), 0 0 28px rgba(45, 214, 190, 0.24);
+  }
+  .feedback-pin.positive { box-shadow: 0 0 0 3px rgba(45, 214, 190, 0.22), 0 0 28px rgba(45, 214, 190, 0.34); }
+  .feedback-pin.watch { box-shadow: 0 0 0 3px rgba(247, 203, 83, 0.2), 0 0 28px rgba(247, 203, 83, 0.28); }
+  .feedback-pin.negative { box-shadow: 0 0 0 3px rgba(255, 101, 91, 0.2), 0 0 28px rgba(255, 101, 91, 0.28); }
+  .feedback-pin:nth-child(1) { left: 11%; top: 57%; }
+  .feedback-pin:nth-child(2) { left: 26%; top: 34%; }
+  .feedback-pin:nth-child(3) { left: 45%; top: 52%; }
+  .feedback-pin:nth-child(4) { left: 63%; top: 32%; }
+  .feedback-pin:nth-child(5) { left: 80%; top: 55%; }
+  .feedback-chip-row {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+    max-width: min(44rem, calc(100% - 2rem));
+  }
+  .feedback-copy { position: relative; max-width: 800px; z-index: 2; }
+  .feedback-copy h1 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.4vw, 2.8rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.84);
+  }
+  .feedback-copy .sub {
+    max-width: 72ch;
+    margin: 0.4rem 0 0;
+    color: #c7d4d5;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  }
+  .data-chip {
+    border: 1px solid #354852;
+    background: rgba(7, 10, 12, 0.86);
+    color: #deeaeb;
+    padding: 0.18rem 0.48rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #2dd6be; color: #9af4e8; }
+  .data-chip.warn { border-color: #f7cb53; color: #ffe49a; }
+  .data-chip.hot { border-color: #ff655b; color: #ffbbb5; }
+  .feedback-body {
+    padding: clamp(0.85rem, 1.8vw, 1.25rem);
+    background:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(135deg, #070a0c 0%, #0d1518 56%, #101218 100%);
+    background-size: 24px 24px, 24px 24px, auto;
+  }
+  .feedback-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.34fr) minmax(320px, 0.66fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .feedback-panel {
+    border: 1px solid rgba(177, 197, 200, 0.22);
+    background: rgba(12, 18, 22, 0.86);
+    padding: 0.9rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #95a8ad;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .feedback-stack, .summary-stack, .annotation-stack {
+    display: grid;
+    gap: 0.65rem;
+  }
+  .feedback-card {
+    border: 1px solid #273942;
+    border-left: 3px solid #2dd6be;
+    background: #0d1418;
+    padding: 0.74rem;
+    display: grid;
+    gap: 0.62rem;
+    min-width: 0;
+  }
+  .feedback-card.queued_for_training { border-left-color: #f7cb53; }
+  .feedback-card.blocked_by_review, .feedback-card.needs_replay { border-left-color: #ff655b; }
+  .feedback-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem;
+    align-items: start;
+  }
+  .feedback-head strong {
+    color: #fff4cf;
+    overflow-wrap: anywhere;
+  }
+  .feedback-head span, .mono-line, .component span, .annotation span {
+    color: #b8c8cc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+  .feedback-metrics, .component-grid, .weight-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .metric, .component, .weight-cell {
+    border: 1px solid #283a42;
+    background: #090e12;
+    min-width: 0;
+    padding: 0.45rem;
+  }
+  .metric strong, .component strong {
+    display: block;
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.94rem;
+  }
+  .component strong.negative { color: #ffbbb5; }
+  .component strong.positive { color: #9af4e8; }
+  .weight-bar {
+    height: 0.45rem;
+    border: 1px solid #283a42;
+    background: #070a0c;
+  }
+  .weight-bar span {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    background: linear-gradient(90deg, #2dd6be, #f7cb53);
+  }
+  .annotation {
+    border: 1px solid #283a42;
+    background: #090e12;
+    padding: 0.55rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.55rem;
+    align-items: center;
+  }
+  .annotation strong { color: #fff4cf; }
+  .annotation.positive { border-left: 3px solid #2dd6be; }
+  .annotation.watch { border-left: 3px solid #f7cb53; }
+  .annotation.negative { border-left: 3px solid #ff655b; }
+  .summary-line {
+    border-left: 2px solid #f7cb53;
+    background: #0d1418;
+    color: #c8d7d8;
+    padding: 0.6rem 0.7rem;
+  }
+  .feedback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .feedback-room .btn {
+    border-radius: 0;
+    background: #eef4f2;
+    color: #070a0c;
+    border: 1px solid #eef4f2;
+  }
+  .feedback-room .btn.secondary {
+    background: transparent;
+    color: #eef4f2;
+    border-color: #354852;
+  }
+  @media (max-width: 960px) {
+    .feedback-layout, .feedback-head, .feedback-metrics, .component-grid, .weight-grid, .annotation {
+      grid-template-columns: 1fr;
+    }
+    .feedback-chip-row {
+      position: relative;
+      z-index: 3;
+      justify-content: flex-start;
+      max-width: none;
+      margin-bottom: 1rem;
+    }
+    .feedback-hero { min-height: 24rem; }
+    .hero-grid { inset: 5.2rem 2% 5rem; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 12 policy feedback required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week12_training_queue') }}">Back to training queue</a>
+  </div>
+</div>
+{% elif policy_feedback %}
+<div class="feedback-room">
+  <section class="feedback-hero">
+    <div class="feedback-chip-row">
+      <span class="data-chip good">{{ policy_feedback.items|length }} feedback items</span>
+      <span class="data-chip warn">policy_feedback_batch_v1</span>
+      <span class="data-chip hot">replay-tick coaching</span>
+    </div>
+    <div class="hero-grid" aria-hidden="true">
+      {% for item in policy_feedback.items %}
+        <div class="feedback-pin {% if item.replay_annotations and item.replay_annotations[0].polarity %}{{ item.replay_annotations[0].polarity }}{% else %}watch{% endif %}">
+          {{ item.agent_id[:2]|upper }}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="feedback-copy">
+      <h1>Week 12 policy feedback</h1>
+      <p class="sub">{{ policy_feedback.feedback_summary[1] }}</p>
+    </div>
+  </section>
+
+  <div class="feedback-body">
+    <div class="feedback-layout">
+      <section class="feedback-panel">
+        <div class="panel-kicker">Coach review batch</div>
+        <div class="feedback-stack">
+          {% for item in policy_feedback.items %}
+            <article class="feedback-card {{ item.queue_status }}">
+              <div class="feedback-head">
+                <div>
+                  <strong>{{ item.agent_id }} -> {{ item.candidate_policy_id }}</strong>
+                  <span>{{ item.queue_action }} · {{ item.focus_component }}</span>
+                </div>
+                <span class="data-chip {% if item.queue_status == 'ready_for_scrim' %}good{% elif item.queue_status == 'queued_for_training' %}warn{% else %}hot{% endif %}">
+                  {{ item.queue_status }}
+                </span>
+              </div>
+
+              <div class="feedback-metrics">
+                <div class="metric"><span>samples</span><strong>{{ item.sample_count }}</strong></div>
+                <div class="metric"><span>reward</span><strong>{{ item.reward_total }}</strong></div>
+                <div class="metric"><span>risk peak</span><strong>{{ item.risk_peak }}</strong></div>
+                <div class="metric"><span>objective</span><strong>{{ item.objective_mean }}</strong></div>
+              </div>
+
+              <div class="component-grid" aria-label="Reward components">
+                {% for name, value in item.component_totals.items() %}
+                  <div class="component">
+                    <span>{{ name }}</span>
+                    <strong class="{% if value < 0 %}negative{% elif value > 0 %}positive{% endif %}">{{ value }}</strong>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="weight-grid" aria-label="Policy weights">
+                {% for name, value in item.policy_weight_snapshot.items() %}
+                  <div class="weight-cell">
+                    <span class="mono-line">{{ name }}</span>
+                    <div class="weight-bar"><span style="width: {{ value if value < 150 else 150 }}%;"></span></div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="mono-line">{{ item.coach_action }}</div>
+              <div class="mono-line">{{ item.player_feedback }}</div>
+              {% if item.evidence_clip.status == "attached" %}
+                <div class="mono-line">
+                  Evidence clip t{{ item.evidence_clip.tick }} r{{ item.evidence_clip.round_id }} · {{ item.evidence_clip.selection_reason }} · {{ item.evidence_clip.source_sample_id }}
+                </div>
+              {% else %}
+                <div class="mono-line">Evidence clip missing · {{ item.evidence_clip.desired_sample_profile }}</div>
+              {% endif %}
+              {% if item.sample_warning %}
+                <div class="data-chip hot">{{ item.sample_warning }}</div>
+              {% endif %}
+              {% if item.missing_evidence_reason %}
+                <div class="data-chip hot">{{ item.missing_evidence_reason }}</div>
+              {% endif %}
+              <div class="mono-line">{{ item.next_drill_hook }}</div>
+              <div class="mono-line">{{ item.scenario_asset_slot }}</div>
+
+              <div class="annotation-stack">
+                {% for annotation in item.replay_annotations %}
+                  <div class="annotation {{ annotation.polarity }}">
+                    <strong>t{{ annotation.tick }}</strong>
+                    <span>r{{ annotation.round_id }} · {{ annotation.action }} · {{ annotation.target_zone }} · {{ annotation.label }}</span>
+                    <span>risk {{ annotation.risk_index }} / reward {{ annotation.reward }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+        <div class="feedback-actions">
+          {% if week12_policy_feedback_path %}
+            <span class="data-chip good">Policy feedback locked</span>
+            <span class="data-chip">{{ week12_policy_feedback_path }}</span>
+          {% else %}
+            <form method="post" action="{{ url_for('week12_policy_feedback') }}">
+              <button class="btn" type="submit">Lock policy feedback</button>
+            </form>
+          {% endif %}
+          <a class="btn secondary" href="{{ url_for('week12_training_queue') }}">Back to training queue</a>
+        </div>
+      </section>
+
+      <aside class="feedback-panel">
+        <div class="panel-kicker">Feedback summary</div>
+        <div class="summary-stack">
+          {% for line in policy_feedback.feedback_summary %}
+            <div class="summary-line">{{ line }}</div>
+          {% endfor %}
+          <div class="summary-line">{{ policy_feedback.next_hook }}</div>
+        </div>
+        <h2>Traceability</h2>
+        <div class="summary-stack">
+          {% for item in policy_feedback.items %}
+            <div class="summary-line">
+              {{ item.agent_id }} · ticks {{ item.matched_ticks|join(", ") }} · samples {{ item.sample_credit_assignment.source_sample_ids|length }}
+            </div>
+          {% endfor %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="policy-feedback-data">{{ policy_feedback_json|safe }}</script>
+{% endif %}
+{% endblock %}

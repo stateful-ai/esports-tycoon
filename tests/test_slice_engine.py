@@ -60,6 +60,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week12_model_prep_json,
     render_week12_shadow_rollout_json,
     render_week12_training_queue_json,
+    render_week12_policy_feedback_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -89,6 +90,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week12_model_prep,
     resolve_week12_shadow_rollout,
     resolve_week12_training_queue,
+    resolve_week12_policy_feedback,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -121,6 +123,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week12_model_prep_from_json,
     week12_shadow_rollout_from_json,
     week12_training_queue_from_json,
+    week12_policy_feedback_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2566,8 +2569,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"epoch_budget":', payload)
         self.assertIn('"reward_weight_x100":', payload)
         self.assertIn('"scenario_asset_slot":', payload)
-        self.assertIn('"stops_before": "week12_rl_runner"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week12_policy_feedback"', payload)
+        self.assertIn('"next_artifact": "week12_policy_feedback.json"', payload)
 
     def test_week12_training_queue_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2586,6 +2589,72 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, queue)
         self.assertEqual(render_week12_training_queue_json(parsed), payload)
+
+    def test_week12_policy_feedback_consumes_queue_and_dataset(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        queue = resolve_week12_training_queue(rollout)
+        feedback = resolve_week12_policy_feedback(queue, dataset)
+        payload = render_week12_policy_feedback_json(feedback)
+
+        self.assertEqual(feedback.sim_id, queue.sim_id)
+        self.assertEqual(len(feedback.items), len(queue.jobs))
+        self.assertIn("vex", {item.agent_id for item in feedback.items})
+        self.assertTrue(all(item.policy_weight_snapshot for item in feedback.items))
+        self.assertTrue(all(item.component_totals for item in feedback.items))
+        self.assertTrue(all(item.evidence_clip for item in feedback.items))
+        self.assertTrue(all(item.sample_credit_assignment for item in feedback.items))
+        self.assertTrue(all(item.coach_action for item in feedback.items))
+        self.assertTrue(all(item.player_feedback for item in feedback.items))
+        self.assertTrue(any(item.replay_annotations for item in feedback.items))
+        sample_ids = {sample.sample_id for sample in dataset.samples}
+        for item in feedback.items:
+            credit_ids = item.sample_credit_assignment["source_sample_ids"]
+            self.assertTrue(all(sample_id in sample_ids for sample_id in credit_ids))
+            self.assertEqual(item.sample_credit_assignment["source_job_id"], item.source_job_id)
+            self.assertEqual(
+                set(item.sample_credit_assignment["reward_component_deltas"]),
+                set(item.component_totals),
+            )
+        self.assertIn('"source_artifact": "week12_training_queue.json"', payload)
+        self.assertIn('"week11_training_dataset": "week11_training_dataset.json"', payload)
+        self.assertIn('"checkpoint": "week12_policy_feedback"', payload)
+        self.assertIn('"policy_feedback_batch_v1"', payload)
+        self.assertIn('"evidence_clip":', payload)
+        self.assertIn('"sample_credit_assignment":', payload)
+        self.assertIn('"replay_annotations":', payload)
+        self.assertIn('"policy_weight_snapshot":', payload)
+        self.assertIn('"transition_ids":', payload)
+        self.assertIn('"scenario_asset_slot":', payload)
+        self.assertIn('"stops_before": "week12_rl_runner"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week12_policy_feedback_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        prep = resolve_week12_model_prep(dataset)
+        rollout = resolve_week12_shadow_rollout(prep)
+        queue = resolve_week12_training_queue(rollout)
+        feedback = resolve_week12_policy_feedback(queue, dataset)
+        payload = render_week12_policy_feedback_json(feedback)
+        parsed = week12_policy_feedback_from_json(payload)
+
+        self.assertEqual(parsed, feedback)
+        self.assertEqual(render_week12_policy_feedback_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

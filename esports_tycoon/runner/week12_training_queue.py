@@ -13,6 +13,8 @@ from esports_tycoon.runner.week12_shadow_rollout import (
     Week12ShadowTrial,
 )
 
+WEEK12_POLICY_FEEDBACK_FILENAME = "week12_policy_feedback.json"
+
 Week12QueueAction = Literal[
     "promote_scrim_policy",
     "train_shadow_candidate",
@@ -330,8 +332,8 @@ def week12_training_queue_to_dict(queue: Week12TrainingQueue) -> dict[str, Any]:
         },
         "queue_summary": list(queue.queue_summary),
         "next_hook": queue.next_hook,
-        "stops_before": "week12_rl_runner",
-        "next_artifact": None,
+        "stops_before": "week12_policy_feedback",
+        "next_artifact": WEEK12_POLICY_FEEDBACK_FILENAME,
     }
 
 
@@ -359,8 +361,10 @@ def week12_training_queue_from_json(text: str) -> Week12TrainingQueue:
     jobs_raw = queue.get("jobs")
     if not isinstance(jobs_raw, list) or not jobs_raw:
         raise ValueError("week12_training_queue JSON must include jobs")
-    if queue.get("next_artifact") is not None:
-        raise ValueError("week12_training_queue next_artifact must be null")
+    if queue.get("next_artifact") not in (None, WEEK12_POLICY_FEEDBACK_FILENAME):
+        raise ValueError(
+            "week12_training_queue next_artifact must be null or week12_policy_feedback.json"
+        )
     jobs = tuple(
         Week12TrainingQueueJob(
             job_id=str(job.get("job_id", "")),
