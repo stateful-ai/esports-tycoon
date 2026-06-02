@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Week 11 training dataset - {{ team.name }}{% endblock %}
+{% block content %}
+<style>
+  main { max-width: 1180px; }
+  .dataset-shell {
+    color: #edf2f4;
+    background:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+      #0b1014;
+    background-size: 22px 22px, 22px 22px, auto;
+    border: 1px solid #2d3841;
+    padding: 1rem;
+  }
+  .dataset-shell h1, .dataset-shell h2, .dataset-shell p { color: inherit; }
+  .dataset-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2d3841;
+    margin-bottom: 1rem;
+  }
+  .dataset-top h1 { margin: 0; font-size: 1.5rem; letter-spacing: 0; }
+  .sub { color: #aab6bd; margin: 0.25rem 0 0; }
+  .chip-row, .console-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .chip-row { justify-content: flex-end; }
+  .data-chip {
+    border: 1px solid #34424b;
+    background: #151b20;
+    color: #d8e0e7;
+    padding: 0.18rem 0.45rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .data-chip.good { border-color: #64d47e; color: #aaf0ba; }
+  .data-chip.warn { border-color: #f4c950; color: #f4dc89; }
+  .data-chip.hot { border-color: #ff4d4d; color: #ffabab; }
+  .dataset-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .dataset-panel {
+    background: #151b20;
+    border: 1px solid #2d3841;
+    padding: 1rem;
+    min-width: 0;
+  }
+  .panel-kicker {
+    color: #88959c;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .sample-list, .target-list {
+    display: grid;
+    gap: 0.55rem;
+    max-height: 28rem;
+    overflow: auto;
+    padding-right: 0.25rem;
+  }
+  .sample-row, .target-row {
+    border-left: 2px solid #26d9c7;
+    background: #0f1519;
+    padding: 0.6rem 0.7rem;
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .sample-row strong, .target-row strong {
+    color: #fff3d2;
+    overflow-wrap: anywhere;
+  }
+  .sample-row span, .target-row span {
+    color: #b9c4c9;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+  .console-actions { margin-top: 1rem; }
+  .dataset-shell .btn {
+    border-radius: 0;
+    background: #edf2f4;
+    color: #0b1014;
+    border: 1px solid #edf2f4;
+  }
+  .dataset-shell .btn.secondary {
+    background: transparent;
+    color: #edf2f4;
+    border-color: #34424b;
+  }
+  @media (max-width: 920px) {
+    .dataset-top, .dataset-grid { grid-template-columns: 1fr; }
+    .chip-row { justify-content: flex-start; }
+    .data-chip { white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+{% if missing %}
+<div class="card">
+  <strong>Week 11 development plan required</strong>
+  <div class="muted">Missing artifact{% if missing|length > 1 %}s{% endif %}: {{ missing|join(", ") }}</div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('week11_match_development') }}">Back to development plan</a>
+  </div>
+</div>
+{% elif training_dataset %}
+<div class="dataset-shell">
+  <div class="dataset-top">
+    <div>
+      <h1>Week 11 training dataset</h1>
+      <p class="sub">{{ training_dataset.dataset_notes[0] }}</p>
+    </div>
+    <div class="chip-row">
+      <span class="data-chip good">{{ training_dataset.sample_count if training_dataset.sample_count is defined else training_dataset.samples|length }} samples</span>
+      <span class="data-chip">sim {{ training_dataset.sim_id }}</span>
+      <span class="data-chip warn">offline_rl_transition_v1</span>
+      <span class="data-chip hot">policy_targets</span>
+    </div>
+  </div>
+
+  <div class="dataset-grid">
+    <section class="dataset-panel">
+      <div class="panel-kicker">Transition samples</div>
+      <div class="sample-list">
+        {% for sample in training_dataset.samples %}
+          <article class="sample-row">
+            <strong>{{ sample.sample_id }}</strong>
+            <span>{{ sample.agent_id }} · tick {{ sample.tick }} · round {{ sample.round_id }} · {{ sample.action }} · reward {{ sample.reward }}</span>
+            <span>target {{ sample.target_policy_id }}</span>
+            <span>telemetry space {{ sample.telemetry.space_control }} · risk {{ sample.telemetry.risk_index }} · objective {{ sample.telemetry.objective_pressure }}</span>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="console-actions">
+        {% if week11_training_dataset_path %}
+          <span class="data-chip good">Training dataset locked</span>
+          <span class="data-chip">{{ week11_training_dataset_path }}</span>
+        {% else %}
+          <form method="post" action="{{ url_for('week11_match_training_dataset') }}">
+            <button class="btn" type="submit">Lock training dataset</button>
+          </form>
+        {% endif %}
+        <a class="btn secondary" href="{{ url_for('week11_match_development') }}">Back to development</a>
+      </div>
+    </section>
+
+    <aside class="dataset-panel">
+      <div class="panel-kicker">Policy targets</div>
+      <div class="target-list">
+        {% for target in training_dataset.policy_targets %}
+          <div class="target-row">
+            <strong>{{ target.agent_id if target.agent_id is defined else target["agent_id"] }}</strong>
+            <span>{{ target.from_policy_id if target.from_policy_id is defined else target["from_policy_id"] }}</span>
+            <span>{{ target.to_policy_id if target.to_policy_id is defined else target["to_policy_id"] }}</span>
+            <span>epoch +{{ target.epoch_delta if target.epoch_delta is defined else target["epoch_delta"] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script type="application/json" id="training-dataset-data">{{ training_dataset_json|safe }}</script>
+{% endif %}
+{% endblock %}

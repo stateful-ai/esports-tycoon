@@ -56,6 +56,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week11_match_result_json,
     render_week11_match_sim_json,
     render_week11_development_plan_json,
+    render_week11_training_dataset_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -81,6 +82,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week11_match_result,
     resolve_week11_match_simulation,
     resolve_week11_development_plan,
+    resolve_week11_training_dataset,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -109,6 +111,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week11_match_result_from_json,
     week11_match_sim_from_json,
     week11_development_plan_from_json,
+    week11_training_dataset_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2354,7 +2357,8 @@ class TestWeek11MatchSimulation(_Fixture):
         self.assertIn('"development_contract":', payload)
         self.assertIn('"target_policy_id":', payload)
         self.assertIn('"source_rounds":', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"stops_before": "week11_training_dataset"', payload)
+        self.assertIn('"next_artifact": "week11_training_dataset.json"', payload)
 
     def test_week11_development_plan_render_parse_round_trip_is_stable(self):
         replay = resolve_week11_match_simulation(
@@ -2369,6 +2373,44 @@ class TestWeek11MatchSimulation(_Fixture):
 
         self.assertEqual(parsed, plan)
         self.assertEqual(render_week11_development_plan_json(parsed), payload)
+
+    def test_week11_training_dataset_exports_offline_rl_samples(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        payload = render_week11_training_dataset_json(dataset)
+
+        self.assertEqual(dataset.sim_id, replay.sim_id)
+        self.assertEqual(len(dataset.samples), len(replay.steps))
+        self.assertEqual(len(dataset.policy_targets), len(plan.drills))
+        self.assertIn("offline_rl_transition_v1", payload)
+        self.assertIn('"source_artifact": "week11_development_plan.json"', payload)
+        self.assertIn('"week11_match_sim": "week11_match_sim.json"', payload)
+        self.assertIn('"samples":', payload)
+        self.assertIn('"next_observation":', payload)
+        self.assertIn('"target_policy_id":', payload)
+        self.assertIn('"telemetry":', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_training_dataset_render_parse_round_trip_is_stable(self):
+        replay = resolve_week11_match_simulation(
+            self._result(),
+            self.world.players,
+            opponent_name="Apex Foundry",
+            map_name="Helix",
+        )
+        plan = resolve_week11_development_plan(replay)
+        dataset = resolve_week11_training_dataset(replay, plan)
+        payload = render_week11_training_dataset_json(dataset)
+        parsed = week11_training_dataset_from_json(payload)
+
+        self.assertEqual(parsed, dataset)
+        self.assertEqual(render_week11_training_dataset_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

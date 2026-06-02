@@ -45,6 +45,7 @@ The week is a short linear flow, one decision per step:
     /week11/match/result the Week-11 match plan becomes a deterministic result
     /week11/match/viewer the Week-11 result becomes a tactical replay artifact
     /week11/match/development the tactical replay becomes player-development targets
+    /week11/match/training-dataset the replay and targets become offline RL samples
     /feed        the week-6 Chirper feed — serves the saved feed.snapshot.html
                  verbatim once the week is finalized, so it cannot drift from it
 
@@ -200,12 +201,16 @@ from esports_tycoon.runner.week11 import (
 )
 from esports_tycoon.runner.week11_match_sim import (
     WEEK11_DEVELOPMENT_PLAN_FILENAME,
+    WEEK11_TRAINING_DATASET_FILENAME,
     render_week11_development_plan_json,
     render_week11_match_sim_json,
+    render_week11_training_dataset_json,
     resolve_week11_development_plan,
     resolve_week11_match_simulation,
+    resolve_week11_training_dataset,
     week11_development_plan_from_json,
     week11_match_sim_from_json,
+    week11_training_dataset_from_json,
 )
 from esports_tycoon.schema import WorldState
 
@@ -1925,6 +1930,75 @@ def create_app(
             development_plan=development_plan,
             development_plan_json=development_plan_json,
             week11_development_plan_path=week11_development_plan_written_path,
+        )
+
+    @app.route("/week11/match/training-dataset", methods=["GET", "POST"])
+    def week11_match_training_dataset():
+        decisions = require_decisions()
+        if decisions is None:
+            return redirect(url_for("practice"))
+        result = run_slice(world, config, decisions, content_config=content_config)
+        if result.week7_setup is None:
+            flash("Week 11 training dataset unlocks after the development plan.")
+            return redirect(url_for("practice"))
+
+        run_dir = output_root / result.slice_id
+        week11_match_sim_path = run_dir / WEEK11_MATCH_SIM_FILENAME
+        week11_development_plan_path = run_dir / WEEK11_DEVELOPMENT_PLAN_FILENAME
+        week11_training_dataset_path = run_dir / WEEK11_TRAINING_DATASET_FILENAME
+        missing = [
+            name
+            for name, path in (
+                (WEEK11_MATCH_SIM_FILENAME, week11_match_sim_path),
+                (WEEK11_DEVELOPMENT_PLAN_FILENAME, week11_development_plan_path),
+            )
+            if not path.is_file()
+        ]
+        replay = None
+        development_plan = None
+        training_dataset = None
+        training_dataset_json = ""
+        week11_training_dataset_written_path = ""
+        if not missing:
+            try:
+                replay = week11_match_sim_from_json(week11_match_sim_path.read_text(encoding="utf-8"))
+                development_plan = week11_development_plan_from_json(
+                    week11_development_plan_path.read_text(encoding="utf-8")
+                )
+            except ValueError as exc:
+                flash(str(exc))
+            else:
+                if request.method == "POST":
+                    training_dataset = resolve_week11_training_dataset(replay, development_plan)
+                    week11_training_dataset_path.write_text(
+                        render_week11_training_dataset_json(training_dataset),
+                        encoding="utf-8",
+                        newline="\n",
+                    )
+                    week11_training_dataset_written_path = str(week11_training_dataset_path)
+                elif week11_training_dataset_path.is_file():
+                    try:
+                        training_dataset = week11_training_dataset_from_json(
+                            week11_training_dataset_path.read_text(encoding="utf-8")
+                        )
+                    except ValueError as exc:
+                        flash(str(exc))
+                    else:
+                        week11_training_dataset_written_path = str(week11_training_dataset_path)
+                else:
+                    training_dataset = resolve_week11_training_dataset(replay, development_plan)
+                if training_dataset:
+                    training_dataset_json = render_week11_training_dataset_json(training_dataset)
+
+        return render_template(
+            "week11_match_training_dataset.html",
+            result=result,
+            missing=missing,
+            replay=replay,
+            development_plan=development_plan,
+            training_dataset=training_dataset,
+            training_dataset_json=training_dataset_json,
+            week11_training_dataset_path=week11_training_dataset_written_path,
         )
 
     @app.get("/feed")

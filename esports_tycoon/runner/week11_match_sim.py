@@ -22,6 +22,7 @@ from esports_tycoon.runner.week11 import (
 from esports_tycoon.schema import Player
 
 WEEK11_DEVELOPMENT_PLAN_FILENAME = "week11_development_plan.json"
+WEEK11_TRAINING_DATASET_FILENAME = "week11_training_dataset.json"
 
 Week11SimSide = Literal["overcast", "opponent"]
 Week11SimAction = Literal[
@@ -215,6 +216,37 @@ class Week11DevelopmentPlan:
     coaching_summary: tuple[str, ...]
     rl_notes: tuple[str, ...]
     next_hook: str
+
+
+@dataclass(frozen=True)
+class Week11TrainingSample:
+    """One offline RL transition sample derived from the tactical replay."""
+
+    sample_id: str
+    agent_id: str
+    tick: int
+    round_id: int
+    observation: tuple[str, ...]
+    action: Week11SimAction
+    reward: int
+    next_observation: tuple[str, ...]
+    done: bool
+    telemetry: Week11SimTelemetry
+    target_policy_id: str
+    source_drill_id: str
+
+
+@dataclass(frozen=True)
+class Week11TrainingDataset:
+    """Model-ready offline RL dataset derived from replay + development targets."""
+
+    sim_id: str
+    selected_plan: str
+    outcome_id: str
+    result_tier: str
+    samples: tuple[Week11TrainingSample, ...]
+    policy_targets: tuple[dict[str, Any], ...]
+    dataset_notes: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -1112,8 +1144,8 @@ def week11_development_plan_to_dict(plan: Week11DevelopmentPlan) -> dict[str, An
         "coaching_summary": list(plan.coaching_summary),
         "rl_notes": list(plan.rl_notes),
         "next_hook": plan.next_hook,
-        "stops_before": "week12_prep",
-        "next_artifact": None,
+        "stops_before": "week11_training_dataset",
+        "next_artifact": WEEK11_TRAINING_DATASET_FILENAME,
     }
 
 
@@ -1148,8 +1180,8 @@ def week11_development_plan_from_json(text: str) -> Week11DevelopmentPlan:
         raise ValueError("week11_development_plan JSON must include drills")
     if not isinstance(policy_targets, list) or not policy_targets:
         raise ValueError("week11_development_plan JSON must include policy_targets")
-    if plan.get("next_artifact") is not None:
-        raise ValueError("week11_development_plan next_artifact must be null")
+    if plan.get("next_artifact") not in (None, WEEK11_TRAINING_DATASET_FILENAME):
+        raise ValueError("week11_development_plan next_artifact must be null or week11_training_dataset.json")
 
     drills = tuple(
         Week11DevelopmentDrill(
@@ -1181,6 +1213,193 @@ def week11_development_plan_from_json(text: str) -> Week11DevelopmentPlan:
         coaching_summary=tuple(str(item) for item in plan.get("coaching_summary", []) if isinstance(item, str)),
         rl_notes=tuple(str(item) for item in plan.get("rl_notes", []) if isinstance(item, str)),
         next_hook=str(plan.get("next_hook", "")),
+    )
+
+
+def _next_observation_for_step(
+    steps: tuple[Week11SimStep, ...],
+    *,
+    step_index: int,
+) -> tuple[tuple[str, ...], bool]:
+    current = steps[step_index]
+    for next_step in steps[step_index + 1 :]:
+        if next_step.agent_id == current.agent_id:
+            return next_step.observation, False
+    return ("episode_done", f"round:{current.round_id}", f"agent:{current.agent_id}"), True
+
+
+def resolve_week11_training_dataset(
+    sim: Week11MatchSimulation,
+    development_plan: Week11DevelopmentPlan,
+) -> Week11TrainingDataset:
+    """Build a deterministic offline RL dataset from replay transitions and policy targets."""
+    frame_by_tick = {frame.tick: frame for frame in sim.frames}
+    drill_by_agent = {drill.agent_id: drill for drill in development_plan.drills}
+    samples = []
+    for index, step in enumerate(sim.steps):
+        drill = drill_by_agent.get(step.agent_id)
+        next_observation, done = _next_observation_for_step(sim.steps, step_index=index)
+        frame = frame_by_tick[step.tick]
+        samples.append(
+            Week11TrainingSample(
+                sample_id=f"{sim.sim_id}_t{step.tick}_{step.agent_id}",
+                agent_id=step.agent_id,
+                tick=step.tick,
+                round_id=step.round_id,
+                observation=step.observation,
+                action=step.action,
+                reward=step.reward,
+                next_observation=next_observation,
+                done=done or step.action == "round_end",
+                telemetry=frame.telemetry,
+                target_policy_id=drill.target_policy_id if drill else step.policy_id,
+                source_drill_id=drill.drill_id if drill else "none",
+            )
+        )
+    policy_targets = tuple(
+        {
+            "agent_id": drill.agent_id,
+            "from_policy_id": drill.current_policy_id,
+            "to_policy_id": drill.target_policy_id,
+            "epoch_delta": drill.epoch_delta,
+            "source_drill_id": drill.drill_id,
+        }
+        for drill in development_plan.drills
+    )
+    return Week11TrainingDataset(
+        sim_id=sim.sim_id,
+        selected_plan=sim.selected_plan,
+        outcome_id=sim.outcome_id,
+        result_tier=sim.result_tier,
+        samples=tuple(samples),
+        policy_targets=policy_targets,
+        dataset_notes=(
+            "Offline samples pair deterministic observations/actions/rewards with replay telemetry.",
+            "target_policy_id maps each sample to the development plan's next player policy.",
+            "Replace target_policy_id with Scenario model ids or learned policy ids when training exists.",
+        ),
+    )
+
+
+def _training_sample_to_dict(sample: Week11TrainingSample) -> dict[str, Any]:
+    return {
+        "sample_id": sample.sample_id,
+        "agent_id": sample.agent_id,
+        "tick": sample.tick,
+        "round_id": sample.round_id,
+        "observation": list(sample.observation),
+        "action": sample.action,
+        "reward": sample.reward,
+        "next_observation": list(sample.next_observation),
+        "done": sample.done,
+        "telemetry": _telemetry_to_dict(sample.telemetry),
+        "target_policy_id": sample.target_policy_id,
+        "source_drill_id": sample.source_drill_id,
+    }
+
+
+def week11_training_dataset_to_dict(dataset: Week11TrainingDataset) -> dict[str, Any]:
+    """Dictionary form used by JSON export and the web training dataset board."""
+    return {
+        "artifact_type": "week11_training_dataset",
+        "checkpoint": "week11_training_dataset",
+        "schema_version": 1,
+        "source_artifact": WEEK11_DEVELOPMENT_PLAN_FILENAME,
+        "source_artifacts": {
+            "week11_match_sim": WEEK11_MATCH_SIM_FILENAME,
+            "week11_development_plan": WEEK11_DEVELOPMENT_PLAN_FILENAME,
+        },
+        "week": 11,
+        "route": "/week11/match/training-dataset",
+        "sim_id": dataset.sim_id,
+        "selected_plan": dataset.selected_plan,
+        "outcome_id": dataset.outcome_id,
+        "result_tier": dataset.result_tier,
+        "sample_count": len(dataset.samples),
+        "samples": [_training_sample_to_dict(sample) for sample in dataset.samples],
+        "policy_targets": list(dataset.policy_targets),
+        "dataset_contract": {
+            "format": "offline_rl_transition_v1",
+            "observation_space": list(WEEK11_SIM_OBSERVATION_SPACE),
+            "action_space": list(WEEK11_SIM_ACTION_SPACE),
+            "reward_fields": list(WEEK11_SIM_REWARD_FIELDS),
+            "telemetry_fields": [
+                "space_control",
+                "utility_pressure",
+                "trade_window",
+                "risk_index",
+                "objective_pressure",
+            ],
+            "transition_unit": "samples[]",
+            "policy_target_field": "samples[].target_policy_id",
+        },
+        "dataset_notes": list(dataset.dataset_notes),
+        "stops_before": "week12_prep",
+        "next_artifact": None,
+    }
+
+
+def render_week11_training_dataset_json(dataset: Week11TrainingDataset) -> str:
+    """Canonical JSON export for the Week-11 offline RL dataset."""
+    return json.dumps(
+        {"week11_training_dataset": week11_training_dataset_to_dict(dataset)},
+        sort_keys=True,
+        indent=2,
+        ensure_ascii=True,
+    ) + "\n"
+
+
+def week11_training_dataset_from_json(text: str) -> Week11TrainingDataset:
+    """Parse a written ``week11_training_dataset.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week11_training_dataset JSON is malformed") from exc
+    dataset = data.get("week11_training_dataset") if isinstance(data, dict) else None
+    if not isinstance(dataset, dict):
+        raise ValueError("week11_training_dataset JSON must contain a week11_training_dataset object")
+    if dataset.get("source_artifact") != WEEK11_DEVELOPMENT_PLAN_FILENAME:
+        raise ValueError("week11_training_dataset source_artifact must be week11_development_plan.json")
+    if dataset.get("selected_plan") not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_training_dataset selected_plan must list a Week-11 match plan")
+    if dataset.get("outcome_id") not in WEEK11_MATCH_OUTCOMES:
+        raise ValueError("week11_training_dataset outcome_id must list a Week-11 match outcome")
+    samples_raw = dataset.get("samples")
+    policy_targets_raw = dataset.get("policy_targets")
+    if not isinstance(samples_raw, list) or not samples_raw:
+        raise ValueError("week11_training_dataset JSON must include samples")
+    if not isinstance(policy_targets_raw, list) or not policy_targets_raw:
+        raise ValueError("week11_training_dataset JSON must include policy_targets")
+    if dataset.get("next_artifact") is not None:
+        raise ValueError("week11_training_dataset next_artifact must be null")
+    samples = tuple(
+        Week11TrainingSample(
+            sample_id=str(sample.get("sample_id", "")),
+            agent_id=str(sample.get("agent_id", "")),
+            tick=int(sample.get("tick", 0)),
+            round_id=int(sample.get("round_id", 0)),
+            observation=tuple(str(item) for item in sample.get("observation", []) if isinstance(item, str)),
+            action=sample.get("action") if sample.get("action") in WEEK11_SIM_ACTION_SPACE else "round_end",
+            reward=int(sample.get("reward", 0)),
+            next_observation=tuple(
+                str(item) for item in sample.get("next_observation", []) if isinstance(item, str)
+            ),
+            done=bool(sample.get("done", False)),
+            telemetry=_telemetry_from_dict(sample.get("telemetry"), team_pressure=0),
+            target_policy_id=str(sample.get("target_policy_id", "")),
+            source_drill_id=str(sample.get("source_drill_id", "")),
+        )
+        for sample in samples_raw
+        if isinstance(sample, dict)
+    )
+    return Week11TrainingDataset(
+        sim_id=str(dataset.get("sim_id", "")),
+        selected_plan=str(dataset.get("selected_plan", "")),
+        outcome_id=str(dataset.get("outcome_id", "")),
+        result_tier=str(dataset.get("result_tier", "")),
+        samples=samples,
+        policy_targets=tuple(dict(item) for item in policy_targets_raw if isinstance(item, dict)),
+        dataset_notes=tuple(str(item) for item in dataset.get("dataset_notes", []) if isinstance(item, str)),
     )
 
 
