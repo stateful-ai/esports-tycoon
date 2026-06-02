@@ -70,6 +70,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_scrim_resp.mimetype, "image/webp")
         self.assertTrue(week11_scrim_resp.data.startswith(b"RIFF"))
 
+        week11_match_resp = self.client.get("/static/art/week11-match-plan-room.webp")
+        self.assertEqual(week11_match_resp.status_code, 200)
+        self.assertEqual(week11_match_resp.mimetype, "image/webp")
+        self.assertTrue(week11_match_resp.data.startswith(b"RIFF"))
+
     def test_practice_page_offers_focused_training_reps(self):
         resp = self.client.get("/practice")
         self.assertEqual(resp.status_code, 200)
@@ -1341,7 +1346,7 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"trust_the_read", page.data)
         self.assertIn(b"attack_the_gap", page.data)
         self.assertIn(b"stabilize_defaults", page.data)
-        self.assertIn(b"/static/art/week11-scrim-room.webp", page.data)
+        self.assertIn(b"/static/art/week11-match-plan-room.webp", page.data)
 
         locked = self.client.post(
             "/week11/match",

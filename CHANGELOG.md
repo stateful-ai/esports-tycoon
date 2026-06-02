@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a deterministic Week 11 scrim screen and prep-to-scrim protocol artifact.
 - Added dedicated Week 11 scrim-room environment art for the Week 11 scrim flow.
 - Added a deterministic Week 11 match-plan screen and scrim-to-plan artifact.
+- Added dedicated Week 11 match-planning room art for the Week 11 match-plan flow.
 
 ### Changed
 ### Fixed
