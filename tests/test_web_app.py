@@ -117,6 +117,11 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(week11_arena_resp.mimetype, "image/webp")
         self.assertTrue(week11_arena_resp.data.startswith(b"RIFF"))
 
+        week11_arena_v2_resp = self.client.get("/static/art/week11-match-arena-v2.webp")
+        self.assertEqual(week11_arena_v2_resp.status_code, 200)
+        self.assertEqual(week11_arena_v2_resp.mimetype, "image/webp")
+        self.assertTrue(week11_arena_v2_resp.data.startswith(b"RIFF"))
+
         week11_broadcast_arena_resp = self.client.get("/static/art/week11-broadcast-arena.webp")
         self.assertEqual(week11_broadcast_arena_resp.status_code, 200)
         self.assertEqual(week11_broadcast_arena_resp.mimetype, "image/webp")
@@ -1506,7 +1511,7 @@ class TestWebApp(unittest.TestCase):
         page = self.client.get("/week11/match/viewer")
         self.assertEqual(page.status_code, 200)
         self.assertIn(b"Week 11 tactical sim", page.data)
-        self.assertIn(b"/static/art/week11-match-arena.webp", page.data)
+        self.assertIn(b"/static/art/week11-match-arena-v2.webp", page.data)
         self.assertIn(b"Broadcast overlay", page.data)
         self.assertIn(b"Tactical telemetry", page.data)
         self.assertIn(b"alive-count", page.data)
@@ -1802,7 +1807,7 @@ class TestWebApp(unittest.TestCase):
         self.assertIn(b"Lock policy feedback", page.data)
         self.assertIn(b"Evidence clip", page.data)
         self.assertIn(b"scenario://week12/", page.data)
-        self.assertIn(b"week11-match-arena.webp", page.data)
+        self.assertIn(b"week11-match-arena-v2.webp", page.data)
         self.assertFalse((run_dir / "week12_policy_feedback.json").exists())
 
         locked = self.client.post("/week12/policy-feedback")
