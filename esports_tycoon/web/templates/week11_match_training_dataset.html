@@ -147,6 +147,7 @@
         {% if week11_training_dataset_path %}
           <span class="data-chip good">Training dataset locked</span>
           <span class="data-chip">{{ week11_training_dataset_path }}</span>
+          <a class="btn" href="{{ url_for('week12_model_prep') }}">Open Week 12 model lab</a>
         {% else %}
           <form method="post" action="{{ url_for('week11_match_training_dataset') }}">
             <button class="btn" type="submit">Lock training dataset</button>

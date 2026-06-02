@@ -1598,6 +1598,7 @@ class TestWebApp(unittest.TestCase):
         self.assertEqual(locked.status_code, 200)
         self.assertIn(b"Training dataset locked", locked.data)
         self.assertIn(b"week11_training_dataset.json", locked.data)
+        self.assertIn(b"Open Week 12 model lab", locked.data)
 
         dataset_json = (run_dir / "week11_training_dataset.json").read_text(encoding="utf-8")
         self.assertIn('"source_artifact": "week11_development_plan.json"', dataset_json)
@@ -1606,7 +1607,48 @@ class TestWebApp(unittest.TestCase):
         self.assertIn('"next_observation":', dataset_json)
         self.assertIn('"target_policy_id":', dataset_json)
         self.assertIn('"dataset_contract":', dataset_json)
-        self.assertIn('"next_artifact": null', dataset_json)
+        self.assertIn('"stops_before": "week12_model_prep"', dataset_json)
+        self.assertIn('"next_artifact": "week12_model_prep.json"', dataset_json)
+
+    def test_week12_model_prep_consumes_training_dataset_and_writes_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+        self.client.post("/week11/match/training-dataset")
+
+        page = self.client.get("/week12/model-prep")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 12 model lab", page.data)
+        self.assertIn(b"model_prep_batch_v1", page.data)
+        self.assertIn(b"Scenario slots", page.data)
+        self.assertIn(b"Lock model prep", page.data)
+        self.assertIn(b"scenario://week12/", page.data)
+        self.assertFalse((run_dir / "week12_model_prep.json").exists())
+
+        locked = self.client.post("/week12/model-prep")
+        self.assertEqual(locked.status_code, 200)
+        self.assertIn(b"Model prep locked", locked.data)
+        self.assertIn(b"week12_model_prep.json", locked.data)
+
+        prep_json = (run_dir / "week12_model_prep.json").read_text(encoding="utf-8")
+        self.assertIn('"source_artifact": "week11_training_dataset.json"', prep_json)
+        self.assertIn('"checkpoint": "week12_model_prep"', prep_json)
+        self.assertIn('"model_prep_batch_v1"', prep_json)
+        self.assertIn('"scenario_model_slot":', prep_json)
+        self.assertIn('"candidate_policy_id":', prep_json)
+        self.assertIn('"evaluation_gate":', prep_json)
+        self.assertIn('"next_artifact": null', prep_json)
+
+    def test_week12_model_prep_requires_training_dataset_artifact(self):
+        run_dir = self._play_to_week11_match_result()
+        self.client.post("/week11/match/viewer")
+        self.client.post("/week11/match/development")
+
+        page = self.client.get("/week12/model-prep")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Week 11 training dataset required", page.data)
+        self.assertIn(b"week11_training_dataset.json", page.data)
+        self.assertFalse((run_dir / "week12_model_prep.json").exists())
 
     def test_week11_training_dataset_requires_development_plan_artifact(self):
         run_dir = self._play_to_week11_match_result()
