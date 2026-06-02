@@ -205,6 +205,9 @@ handoff. `/week10/post-match-review` consumes the result and writes
 `week10_post_match_review.json`, turning the win or loss into one carry-forward
 advantage, constraint, or watch without creating standings, economy, sponsor,
 fan, roster, or Week 11 setup state.
+`/week11/setup` consumes that review and writes `week11_setup.json`, converting
+the carry-forward into one opening Week 11 posture while stopping before
+Week 11 prep.
 
 On completion the slice writes its artifact to `runs/<slice_id>/`:
 
@@ -268,6 +271,9 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
   consuming the Week 10 result into one review posture, durable carry-forward
   tag, visible review effect set, and terminal `week11_setup` boundary without
   writing Week 11 setup.
+- **`week11_setup.json`** — written by `/week11/setup`, consuming the Week 10
+  review carry-forward into one opening posture, visible setup pressure, and
+  terminal `week11_prep` boundary without writing Week 11 prep.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

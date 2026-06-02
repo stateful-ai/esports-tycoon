@@ -205,6 +205,19 @@ from esports_tycoon.runner.week10 import (
     week10_scrim_from_json,
     week10_scrim_plan,
 )
+from esports_tycoon.runner.week11 import (
+    WEEK11_SETUP_CHOICES,
+    WEEK11_SETUP_FILENAME,
+    WEEK11_SETUP_OUTCOMES,
+    Week11SetupEffect,
+    Week11SetupLock,
+    Week11SetupOption,
+    Week11SetupPlan,
+    render_week11_setup_json,
+    resolve_week11_setup,
+    week11_setup_from_json,
+    week11_setup_plan,
+)
 
 __all__ = [
     "run_slice",
@@ -313,6 +326,9 @@ __all__ = [
     "WEEK10_POST_MATCH_REVIEW_FILENAME",
     "WEEK10_POST_MATCH_REVIEW_CHOICES",
     "WEEK10_POST_MATCH_REVIEW_OUTCOMES",
+    "WEEK11_SETUP_FILENAME",
+    "WEEK11_SETUP_CHOICES",
+    "WEEK11_SETUP_OUTCOMES",
     "Week9SetupOption",
     "Week9SetupPlan",
     "Week9SetupLock",
@@ -364,6 +380,10 @@ __all__ = [
     "Week10PostMatchReviewOption",
     "Week10PostMatchReviewPlan",
     "Week10PostMatchReviewLock",
+    "Week11SetupOption",
+    "Week11SetupEffect",
+    "Week11SetupPlan",
+    "Week11SetupLock",
     "week10_fallout_plan",
     "resolve_week10_fallout",
     "week10_fallout_from_json",
@@ -387,4 +407,8 @@ __all__ = [
     "resolve_week10_post_match_review",
     "week10_post_match_review_from_json",
     "render_week10_post_match_review_json",
+    "week11_setup_plan",
+    "resolve_week11_setup",
+    "week11_setup_from_json",
+    "render_week11_setup_json",
 ]
