@@ -6,8 +6,10 @@
   .viewer-shell {
     color: #eef4f2;
     background:
-      radial-gradient(circle at 20% 10%, rgba(31, 214, 181, 0.16), transparent 24rem),
-      linear-gradient(135deg, #0d1117 0%, #15120f 52%, #10161a 100%);
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(135deg, #0b1014 0%, #151b20 52%, #10161a 100%);
+    background-size: 22px 22px, 22px 22px, auto;
     border: 1px solid #31404a;
     padding: clamp(0.8rem, 1.5vw, 1.25rem);
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
@@ -86,6 +88,34 @@
     min-width: 0;
   }
   .arena-panel { padding: 0.75rem; }
+  .broadcast-rail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-bottom: 0.65rem;
+  }
+  .broadcast-stat {
+    border: 1px solid rgba(187, 203, 205, 0.18);
+    background: rgba(15, 21, 25, 0.92);
+    padding: 0.55rem 0.65rem;
+    min-width: 0;
+  }
+  .broadcast-stat span {
+    display: block;
+    color: #95a3a5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 0.12rem;
+  }
+  .broadcast-stat strong {
+    color: #eef4f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+  }
+  .broadcast-stat.hot strong { color: #ffaaa1; }
+  .broadcast-stat.good strong { color: #9ff2d8; }
   .arena {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -94,7 +124,7 @@
     background:
       linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-      url("{{ url_for('static', filename='art/week11-match-arena.webp') }}");
+      url("{{ url_for('static', filename='art/week11-broadcast-arena.webp') }}");
     background-size: 28px 28px, 28px 28px, cover;
     background-position: center;
   }
@@ -105,6 +135,18 @@
     background:
       linear-gradient(115deg, rgba(33, 214, 181, 0.12), transparent 32%),
       linear-gradient(290deg, rgba(255, 118, 102, 0.12), transparent 34%);
+    pointer-events: none;
+  }
+  .arena::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(255,255,255,0.05), transparent 1px),
+      linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.16) 74%, rgba(0,0,0,0.42) 100%);
+    background-size: 100% 9px, auto;
+    mix-blend-mode: screen;
+    opacity: 0.32;
     pointer-events: none;
   }
   .site-ring {
@@ -379,6 +421,7 @@
   }
   @media (max-width: 980px) {
     .viewer-top, .viewer-grid, .rl-layout { grid-template-columns: 1fr; }
+    .broadcast-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .viewer-chips { justify-content: flex-start; }
     .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .round-grid { grid-template-columns: 1fr; }
@@ -389,6 +432,7 @@
   }
   @media (max-width: 560px) {
     .agent-grid { grid-template-columns: 1fr; }
+    .broadcast-rail { grid-template-columns: 1fr; }
     .signal-grid { grid-template-columns: 1fr; }
     .metric { grid-template-columns: 5.5rem minmax(0, 1fr) 2rem; }
     .data-chip { white-space: normal; overflow-wrap: anywhere; }
@@ -424,6 +468,24 @@
 
   <div class="viewer-grid">
     <section class="arena-panel">
+      <div class="broadcast-rail" aria-label="Broadcast overlay">
+        <div class="broadcast-stat">
+          <span>Map</span>
+          <strong>{{ replay.map_name }}</strong>
+        </div>
+        <div class="broadcast-stat good">
+          <span>Round</span>
+          <strong><span id="frame-round">R{{ replay.frames[0].round_id }}</span> · <span id="frame-phase">{{ replay.frames[0].phase }}</span></strong>
+        </div>
+        <div class="broadcast-stat hot">
+          <span>Focus</span>
+          <strong id="broadcast-focus">{{ replay.frames[0].focus_agent }}</strong>
+        </div>
+        <div class="broadcast-stat">
+          <span>Alive</span>
+          <strong id="alive-count">5 / 5</strong>
+        </div>
+      </div>
       <div class="arena" id="arena">
         <div class="site-ring a"></div>
         <div class="site-ring b"></div>
@@ -586,6 +648,10 @@
   const detail = document.getElementById("frame-detail");
   const clock = document.getElementById("frame-clock");
   const pressure = document.getElementById("pressure-bar");
+  const frameRound = document.getElementById("frame-round");
+  const framePhase = document.getElementById("frame-phase");
+  const broadcastFocus = document.getElementById("broadcast-focus");
+  const aliveCount = document.getElementById("alive-count");
   const agentName = document.getElementById("agent-name");
   const agentPolicy = document.getElementById("agent-policy");
   const agentRole = document.getElementById("agent-role");
@@ -630,12 +696,31 @@
       });
   }
 
+  function aliveSummary(frame) {
+    const totals = frame.states.reduce((summary, state) => {
+      const agent = agents[state.agent_id];
+      if (!agent) return summary;
+      if (agent.side === "overcast") {
+        summary.overcast += state.alive ? 1 : 0;
+      } else {
+        summary.opponent += state.alive ? 1 : 0;
+      }
+      return summary;
+    }, { overcast: 0, opponent: 0 });
+    return `${totals.overcast} / ${totals.opponent}`;
+  }
+
   function renderFrame(nextIndex) {
     index = (nextIndex + frames.length) % frames.length;
     const frame = frames[index];
+    const focusAgent = agents[frame.focus_agent];
     title.textContent = frame.event_title;
     detail.textContent = frame.event_detail;
     clock.textContent = frame.clock;
+    frameRound.textContent = `R${frame.round_id}`;
+    framePhase.textContent = frame.phase;
+    broadcastFocus.textContent = focusAgent ? focusAgent.name : frame.focus_agent;
+    aliveCount.textContent = aliveSummary(frame);
     pressure.style.setProperty("--pressure", frame.team_pressure);
     document.querySelectorAll(".marker").forEach((marker) => {
       const state = frame.states.find((item) => item.agent_id === marker.dataset.agent);
