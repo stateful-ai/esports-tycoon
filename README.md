@@ -214,7 +214,9 @@ writes `week11_scrim.json`, turning the prep seed into one explicit scrim
 protocol, analyst read, and match-plan seed while stopping before Week 11 match
 planning. `/week11/match` consumes that scrim artifact and writes
 `week11_match_plan.json`, locking one match-plan commitment while stopping
-before Week 11 result resolution.
+before Week 11 result resolution. `/week11/match/result` consumes the locked
+match plan and writes `week11_match_result.json`, resolving the first Week 11
+match result while stopping before post-match review.
 The Week 11 prep, scrim, and match-plan screens use dedicated environment art
 so the new week reads visually distinct from the Week 10 match-room flow and
 each checkpoint feels like a different staff room rather than another prep
@@ -295,7 +297,10 @@ On completion the slice writes its artifact to `runs/<slice_id>/`:
 - **`week11_match_plan.json`** — written by `/week11/match`, consuming Week 11
   scrim into one of three match-plan commitments, carrying the scrim protocol,
   analyst read, match-plan seed, and result constraints into a terminal
-  `week11_match_result` boundary without resolving the result.
+  `week11_match_result` boundary and `week11_match_result.json` handoff.
+- **`week11_match_result.json`** — written by `/week11/match/result`, consuming
+  Week 11 match plan into a deterministic result, scoreline, visible result
+  effects, and causal chain while stopping before Week 11 post-match review.
 
 `slice_id` is content-addressed (a hash of the save, seed, and every decision), so
 **re-running with the same seed in templated mode reproduces a byte-identical

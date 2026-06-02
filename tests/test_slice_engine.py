@@ -53,6 +53,7 @@ from esports_tycoon.runner import (  # noqa: E402
     render_week10_prep_json,
     render_week10_scrim_json,
     render_week11_match_plan_json,
+    render_week11_match_result_json,
     render_week11_prep_json,
     render_week11_scrim_json,
     render_week11_setup_json,
@@ -75,6 +76,7 @@ from esports_tycoon.runner import (  # noqa: E402
     resolve_week10_prep,
     resolve_week10_scrim,
     resolve_week11_match_plan,
+    resolve_week11_match_result,
     resolve_week11_prep,
     resolve_week11_scrim,
     resolve_week11_setup,
@@ -100,6 +102,7 @@ from esports_tycoon.runner import (  # noqa: E402
     week10_scrim_plan,
     week11_match_plan_from_json,
     week11_match_plan_preview,
+    week11_match_result_from_json,
     week11_prep_from_json,
     week11_prep_plan,
     week11_scrim_from_json,
@@ -2156,7 +2159,7 @@ class TestWeek11MatchPlan(_Fixture):
         self.assertIn('"result_lock":', payload)
         self.assertIn('"result_constraints":', payload)
         self.assertIn('"stops_before": "week11_match_result"', payload)
-        self.assertIn('"next_artifact": null', payload)
+        self.assertIn('"next_artifact": "week11_match_result.json"', payload)
 
     def test_week11_match_plan_render_parse_round_trip_is_stable(self):
         scrim = self._scrims_by_outcome()["edge_repeated_under_pressure"]
@@ -2174,6 +2177,80 @@ class TestWeek11MatchPlan(_Fixture):
 
         with self.assertRaisesRegex(ValueError, "selected_plan"):
             resolve_week11_match_plan(preview, "coinflip")
+
+
+class TestWeek11MatchResult(_Fixture):
+    def _result_for_path(
+        self,
+        week9_outcome,
+        fallout_choice,
+        prep_choice,
+        scrim_choice,
+        selected_plan,
+    ):
+        return TestWeek11MatchPlan._result_for_path(
+            self,
+            week9_outcome,
+            fallout_choice,
+            prep_choice,
+            scrim_choice,
+            selected_plan,
+        )
+
+    def _plans_by_selection(self):
+        scrim = TestWeek11MatchPlan._scrims_by_outcome(self)["edge_repeated_under_pressure"]
+        preview = week11_match_plan_preview(scrim)
+        return {
+            selected: resolve_week11_match_plan(preview, selected)
+            for selected in ("trust_the_read", "attack_the_gap", "stabilize_defaults")
+        }
+
+    def test_week11_match_result_resolves_from_committed_plan(self):
+        plan = self._plans_by_selection()["trust_the_read"]
+        result = resolve_week11_match_result(plan)
+
+        self.assertEqual(result.selected_plan, "trust_the_read")
+        self.assertEqual(result.outcome_id, "read_trusted")
+        self.assertEqual(result.result_tier, "win")
+        self.assertEqual(result.scoreline, "2-0")
+        self.assertIn("plan:trust_the_read", result.result_basis)
+        self.assertIn("emphasis:early_objective", result.result_basis)
+        self.assertTrue(result.causal_chain)
+
+    def test_week11_match_result_outcomes_follow_plan_family(self):
+        expected = {
+            "trust_the_read": "read_trusted",
+            "attack_the_gap": "gap_chased",
+            "stabilize_defaults": "defaults_too_slow",
+        }
+        for selected_plan, outcome_id in expected.items():
+            with self.subTest(selected_plan=selected_plan):
+                result = resolve_week11_match_result(self._plans_by_selection()[selected_plan])
+
+                self.assertEqual(result.outcome_id, outcome_id)
+
+    def test_week11_match_result_artifact_sources_plan_and_ends_slice(self):
+        result = resolve_week11_match_result(self._plans_by_selection()["trust_the_read"])
+        payload = render_week11_match_result_json(result)
+
+        self.assertIn('"week11_match_plan": "week11_match_plan.json"', payload)
+        self.assertIn('"source_artifact": "week11_match_plan.json"', payload)
+        self.assertIn('"checkpoint": "week11_match_result"', payload)
+        self.assertIn('"artifact_type": "week11_match_result"', payload)
+        self.assertIn('"selected_plan": "trust_the_read"', payload)
+        self.assertIn('"outcome_id": "read_trusted"', payload)
+        self.assertIn('"result_basis":', payload)
+        self.assertIn('"causal_chain":', payload)
+        self.assertIn('"stops_before": "week11_post_match_review"', payload)
+        self.assertIn('"next_artifact": null', payload)
+
+    def test_week11_match_result_render_parse_round_trip_is_stable(self):
+        result = resolve_week11_match_result(self._plans_by_selection()["trust_the_read"])
+        payload = render_week11_match_result_json(result)
+        parsed = week11_match_result_from_json(payload)
+
+        self.assertEqual(parsed, result)
+        self.assertEqual(render_week11_match_result_json(parsed), payload)
 
 
 class TestDeterminism(_Fixture):

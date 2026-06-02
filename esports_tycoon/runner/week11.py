@@ -32,6 +32,7 @@ Week11PrepOutcome = Literal[
 ]
 Week11ScrimChoice = Literal["repeat_edge", "show_countermove", "steady_first_contact"]
 Week11MatchPlanChoice = Literal["trust_the_read", "attack_the_gap", "stabilize_defaults"]
+Week11MatchResultTier = Literal["win", "loss"]
 Week11ScrimOutcome = Literal[
     "edge_repeated_under_pressure",
     "edge_counter_scouted",
@@ -52,11 +53,20 @@ Week11ScrimOutcome = Literal[
     "tentative_room_overloaded",
     "room_stays_tentative",
 ]
+Week11MatchOutcome = Literal[
+    "read_trusted",
+    "read_overtrusted",
+    "gap_attacked",
+    "gap_chased",
+    "defaults_stabilized",
+    "defaults_too_slow",
+]
 
 WEEK11_SETUP_FILENAME = "week11_setup.json"
 WEEK11_PREP_FILENAME = "week11_prep.json"
 WEEK11_SCRIM_FILENAME = "week11_scrim.json"
 WEEK11_MATCH_PLAN_FILENAME = "week11_match_plan.json"
+WEEK11_MATCH_RESULT_FILENAME = "week11_match_result.json"
 WEEK11_SETUP_CHOICES: tuple[Week11SetupChoice, ...] = (
     "lean_into_carry",
     "stress_test_carry",
@@ -112,6 +122,14 @@ WEEK11_SCRIM_OUTCOMES: tuple[Week11ScrimOutcome, ...] = (
     "tentative_room_given_task",
     "tentative_room_overloaded",
     "room_stays_tentative",
+)
+WEEK11_MATCH_OUTCOMES: tuple[Week11MatchOutcome, ...] = (
+    "read_trusted",
+    "read_overtrusted",
+    "gap_attacked",
+    "gap_chased",
+    "defaults_stabilized",
+    "defaults_too_slow",
 )
 
 
@@ -426,6 +444,57 @@ class Week11MatchPlanLock:
     match_risk: str
     result_constraints: tuple[str, ...]
     recommendation_reason: str
+    next_hook: str
+
+
+@dataclass(frozen=True)
+class Week11MatchResultLock:
+    """The deterministic Week-11 result produced from the locked match plan."""
+
+    source_branch: str
+    setup_branch: str
+    chosen_focus: str
+    week10_outcome_id: str
+    week10_result_tier: str
+    week10_result_grade: str
+    carry_forward_tag: str
+    carry_forward_type: str
+    carry_forward_polarity: str
+    selected_setup: Week11SetupChoice
+    setup_outcome_id: Week11SetupOutcome
+    week11_pressure: str
+    selected_prep: Week11PrepChoice
+    recommended_prep: Week11PrepChoice
+    prep_outcome_id: Week11PrepOutcome
+    prep_lane: str
+    selected_scrim: Week11ScrimChoice
+    recommended_scrim: Week11ScrimChoice
+    scrim_outcome_id: Week11ScrimOutcome
+    scrim_protocol: str
+    analyst_read_id: str
+    match_plan_seed: str
+    outcome_class: str
+    protocol_signal: str
+    analyst_read_class: str
+    seeded_emphasis: str
+    selected_plan: Week11MatchPlanChoice
+    recommended_plan: Week11MatchPlanChoice
+    matched_recommendation: bool
+    commitment: str
+    match_risk: str
+    outcome_id: Week11MatchOutcome
+    result_tier: Week11MatchResultTier
+    team_maps: int
+    opponent_maps: int
+    scoreline: str
+    result_score: int
+    result_grade: str
+    headline: str
+    recap: str
+    player_read: str
+    visible_effects: tuple[Week11SetupEffect, ...]
+    result_basis: tuple[str, ...]
+    causal_chain: tuple[str, ...]
     next_hook: str
 
 
@@ -1886,8 +1955,8 @@ def week11_match_plan_from_json(text: str) -> Week11MatchPlanLock:
     constraints = match_plan.get("result_constraints")
     if not isinstance(constraints, list):
         raise ValueError("week11_match_plan JSON must include result_constraints")
-    if match_plan.get("next_artifact") is not None:
-        raise ValueError("week11_match_plan next_artifact must be null")
+    if match_plan.get("next_artifact") not in (None, WEEK11_MATCH_RESULT_FILENAME):
+        raise ValueError("week11_match_plan next_artifact must be null or week11_match_result.json")
     plan_lock = match_plan.get("plan_lock")
     result_lock = match_plan.get("result_lock")
     if not isinstance(plan_lock, dict):
@@ -2048,7 +2117,7 @@ def render_week11_match_plan_json(lock: Week11MatchPlanLock) -> str:
             "result_lock": {
                 "status": "not_resolved",
                 "reason": "week11_match_plan_only",
-                "next_artifact": None,
+                "next_artifact": WEEK11_MATCH_RESULT_FILENAME,
             },
             "match_plan_commitment": {
                 "commitment": lock.commitment,
@@ -2057,6 +2126,408 @@ def render_week11_match_plan_json(lock: Week11MatchPlanLock) -> str:
             },
             "next_hook": lock.next_hook,
             "stops_before": "week11_match_result",
+            "next_artifact": WEEK11_MATCH_RESULT_FILENAME,
+        }
+    }
+    return json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
+
+
+_WEEK11_RESULT_COPY: dict[Week11MatchOutcome, dict[str, str]] = {
+    "read_trusted": {
+        "headline": "The read becomes the match.",
+        "recap": (
+            "Overcast opened from the same signal the scrim confirmed. The opponent found contact, "
+            "but the first answer arrived too late to move the team off its plan."
+        ),
+        "player_read": "Trusting the read worked because the analyst signal, scrim outcome, and match commitment all pointed at one lane.",
+    },
+    "read_overtrusted": {
+        "headline": "The read gets one layer too comfortable.",
+        "recap": (
+            "The opening call found value, then stalled when the opponent changed the first answer. "
+            "The plan trusted the scrim longer than the match state justified."
+        ),
+        "player_read": "The read was real, but the team treated it as a script instead of a live condition.",
+    },
+    "gap_attacked": {
+        "headline": "The exposed gap gets punished.",
+        "recap": (
+            "The match plan turned the scrim's exposed branch into a clean timing window. "
+            "Overcast did not need the whole tree; the first gap created enough leverage."
+        ),
+        "player_read": "Attacking the gap worked because the plan stayed narrow and did not chase every possible counter.",
+    },
+    "gap_chased": {
+        "headline": "The gap turns into a chase.",
+        "recap": (
+            "The plan saw the right branch, but the room kept adding answers after first contact. "
+            "By the second adjustment, the opponent had made the exposed gap expensive."
+        ),
+        "player_read": "The match plan needed one punish window; chasing the rest of the branch spent the advantage.",
+    },
+    "defaults_stabilized": {
+        "headline": "The defaults hold the room together.",
+        "recap": (
+            "The match stayed tense, but the team refused to let first contact widen the call sheet. "
+            "The stabilized defaults bought enough time for the second half to become playable."
+        ),
+        "player_read": "Stabilizing defaults worked because the scrim evidence had already warned that more layers would overload the room.",
+    },
+    "defaults_too_slow": {
+        "headline": "The defaults arrive a beat slow.",
+        "recap": (
+            "The plan prevented a collapse, but it also left the first pressure window uncontested. "
+            "The opponent won the map before Overcast's stable shape could turn into pressure."
+        ),
+        "player_read": "The defaults protected the room, but the match needed action sooner than the plan allowed.",
+    },
+}
+
+_WEEK11_RESULT_VISIBLE_EFFECTS: dict[Week11MatchOutcome, tuple[Week11SetupEffect, ...]] = {
+    "read_trusted": (
+        Week11SetupEffect("read_converted", "Read converted", "positive"),
+        Week11SetupEffect("counter_window_closed", "Counter window closed", "positive"),
+        Week11SetupEffect("review_confirm_read", "Confirm read in review", "watch"),
+    ),
+    "read_overtrusted": (
+        Week11SetupEffect("read_overheld", "Read overheld", "negative"),
+        Week11SetupEffect("second_answer_late", "Second answer late", "negative"),
+        Week11SetupEffect("review_live_condition", "Review live condition", "watch"),
+    ),
+    "gap_attacked": (
+        Week11SetupEffect("gap_punished", "Gap punished", "positive"),
+        Week11SetupEffect("branch_kept_narrow", "Branch kept narrow", "positive"),
+        Week11SetupEffect("next_counter_scout", "Next counter scout", "watch"),
+    ),
+    "gap_chased": (
+        Week11SetupEffect("branch_chased", "Branch chased", "negative"),
+        Week11SetupEffect("punish_window_expired", "Punish window expired", "negative"),
+        Week11SetupEffect("simplify_answer_tree", "Simplify answer tree", "watch"),
+    ),
+    "defaults_stabilized": (
+        Week11SetupEffect("defaults_held", "Defaults held", "positive"),
+        Week11SetupEffect("first_contact_narrow", "First contact narrow", "positive"),
+        Week11SetupEffect("tempo_ceiling_watch", "Tempo ceiling watch", "watch"),
+    ),
+    "defaults_too_slow": (
+        Week11SetupEffect("tempo_given", "Tempo given", "negative"),
+        Week11SetupEffect("pressure_window_missed", "Pressure window missed", "negative"),
+        Week11SetupEffect("review_action_trigger", "Review action trigger", "watch"),
+    ),
+}
+
+
+def _week11_result_score(plan: Week11MatchPlanLock) -> int:
+    score = 2 if plan.followed_recommendation else -1
+    score += {"confirming": 2, "exposing": 1, "failing": -1}[plan.outcome_class]
+    score += {"high_signal": 1, "medium_signal": 0, "low_signal": -1}[plan.protocol_signal]
+    score += 1 if plan.match_risk == "low" else -1 if plan.match_risk == "high" else 0
+
+    if plan.selected_plan == "trust_the_read":
+        score += 2 if plan.analyst_read_class == "trust_read" else -1
+        score += 1 if plan.protocol_signal == "high_signal" else -1
+        score += 1 if plan.outcome_class == "confirming" else -1
+    elif plan.selected_plan == "attack_the_gap":
+        score += 2 if plan.analyst_read_class == "exploit_gap" else -1
+        score += 1 if plan.outcome_class == "exposing" else 0
+        score -= 1 if plan.protocol_signal == "low_signal" else 0
+    else:
+        score += 2 if plan.analyst_read_class == "stabilize_execution" else 0
+        score += 1 if plan.protocol_signal == "low_signal" else 0
+        score += 1 if plan.outcome_class == "failing" else -1
+        score += 1 if plan.match_risk == "high" else 0
+    return score
+
+
+def _week11_match_succeeded(plan: Week11MatchPlanLock, score: int) -> bool:
+    if plan.selected_plan == "trust_the_read":
+        return score >= 5 and plan.protocol_signal != "low_signal"
+    if plan.selected_plan == "attack_the_gap":
+        return score >= 4 and plan.analyst_read_class == "exploit_gap"
+    return score >= 3 and plan.match_risk != "low"
+
+
+def _week11_outcome_id(plan: Week11MatchPlanLock, score: int) -> Week11MatchOutcome:
+    succeeded = _week11_match_succeeded(plan, score)
+    if plan.selected_plan == "trust_the_read":
+        return "read_trusted" if succeeded else "read_overtrusted"
+    if plan.selected_plan == "attack_the_gap":
+        return "gap_attacked" if succeeded else "gap_chased"
+    return "defaults_stabilized" if succeeded else "defaults_too_slow"
+
+
+def _week11_scoreline(outcome_id: Week11MatchOutcome, score: int) -> tuple[Week11MatchResultTier, int, int]:
+    if outcome_id in {"read_trusted", "gap_attacked", "defaults_stabilized"}:
+        return ("win", 2, 0) if score >= 7 else ("win", 2, 1)
+    return ("loss", 1, 2) if score >= 2 else ("loss", 0, 2)
+
+
+def _week11_result_grade(score: int) -> str:
+    if score >= 7:
+        return "clean"
+    if score >= 4:
+        return "earned"
+    if score >= 2:
+        return "thin"
+    return "punished"
+
+
+def _week11_result_basis(plan: Week11MatchPlanLock, score: int) -> tuple[str, ...]:
+    return (
+        f"plan:{plan.selected_plan}",
+        f"recommended:{plan.recommended_plan}",
+        f"matched:{plan.followed_recommendation}",
+        f"scrim:{plan.scrim_outcome_id}",
+        f"outcome_class:{plan.outcome_class}",
+        f"protocol_signal:{plan.protocol_signal}",
+        f"analyst_read_class:{plan.analyst_read_class}",
+        f"emphasis:{plan.seeded_emphasis}",
+        f"risk:{plan.match_risk}",
+        f"score:{score}",
+    )
+
+
+def resolve_week11_match_result(plan: Week11MatchPlanLock) -> Week11MatchResultLock:
+    """Resolve a locked Week-11 match plan into a deterministic result artifact."""
+    score = _week11_result_score(plan)
+    outcome_id = _week11_outcome_id(plan, score)
+    result_tier, team_maps, opponent_maps = _week11_scoreline(outcome_id, score)
+    copy = _WEEK11_RESULT_COPY[outcome_id]
+    causal_chain = (
+        f"Week 11 pressure started as {plan.week11_pressure.replace('_', ' ')}.",
+        f"Prep signal: {plan.prep_outcome_id.replace('_', ' ')}.",
+        f"Scrim signal: {plan.scrim_outcome_id.replace('_', ' ')}.",
+        f"Match commitment: {plan.commitment.replace('_', ' ')}.",
+        f"Seeded emphasis: {plan.seeded_emphasis.replace('_', ' ')}.",
+    )
+    return Week11MatchResultLock(
+        source_branch=plan.source_branch,
+        setup_branch=plan.setup_branch,
+        chosen_focus=plan.chosen_focus,
+        week10_outcome_id=plan.week10_outcome_id,
+        week10_result_tier=plan.week10_result_tier,
+        week10_result_grade=plan.week10_result_grade,
+        carry_forward_tag=plan.carry_forward_tag,
+        carry_forward_type=plan.carry_forward_type,
+        carry_forward_polarity=plan.carry_forward_polarity,
+        selected_setup=plan.selected_setup,
+        setup_outcome_id=plan.setup_outcome_id,
+        week11_pressure=plan.week11_pressure,
+        selected_prep=plan.selected_prep,
+        recommended_prep=plan.recommended_prep,
+        prep_outcome_id=plan.prep_outcome_id,
+        prep_lane=plan.prep_lane,
+        selected_scrim=plan.selected_scrim,
+        recommended_scrim=plan.recommended_scrim,
+        scrim_outcome_id=plan.scrim_outcome_id,
+        scrim_protocol=plan.scrim_protocol,
+        analyst_read_id=plan.analyst_read_id,
+        match_plan_seed=plan.match_plan_seed,
+        outcome_class=plan.outcome_class,
+        protocol_signal=plan.protocol_signal,
+        analyst_read_class=plan.analyst_read_class,
+        seeded_emphasis=plan.seeded_emphasis,
+        selected_plan=plan.selected_plan,
+        recommended_plan=plan.recommended_plan,
+        matched_recommendation=plan.followed_recommendation,
+        commitment=plan.commitment,
+        match_risk=plan.match_risk,
+        outcome_id=outcome_id,
+        result_tier=result_tier,
+        team_maps=team_maps,
+        opponent_maps=opponent_maps,
+        scoreline=f"{team_maps}-{opponent_maps}",
+        result_score=score,
+        result_grade=_week11_result_grade(score),
+        headline=copy["headline"],
+        recap=copy["recap"],
+        player_read=copy["player_read"],
+        visible_effects=_WEEK11_RESULT_VISIBLE_EFFECTS[outcome_id],
+        result_basis=_week11_result_basis(plan, score),
+        causal_chain=causal_chain,
+        next_hook="Week 11 post-match review can turn this result into the next carry-forward constraint.",
+    )
+
+
+def week11_match_result_from_json(text: str) -> Week11MatchResultLock:
+    """Parse a written ``week11_match_result.json`` artifact."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("week11_match_result JSON is malformed") from exc
+    result = data.get("week11_match_result") if isinstance(data, dict) else None
+    if not isinstance(result, dict):
+        raise ValueError("week11_match_result JSON must contain a week11_match_result object")
+    selected_setup = result.get("selected_setup")
+    if selected_setup not in WEEK11_SETUP_CHOICES:
+        raise ValueError("week11_match_result selected_setup must list a Week-11 setup choice")
+    setup_outcome = result.get("setup_outcome_id")
+    if setup_outcome not in WEEK11_SETUP_OUTCOMES:
+        raise ValueError("week11_match_result setup_outcome_id must list a Week-11 setup outcome")
+    selected_prep = result.get("selected_prep")
+    if selected_prep not in WEEK11_PREP_CHOICES:
+        raise ValueError("week11_match_result selected_prep must list a Week-11 prep choice")
+    recommended_prep = result.get("recommended_prep")
+    if recommended_prep not in WEEK11_PREP_CHOICES:
+        raise ValueError("week11_match_result recommended_prep must list a Week-11 prep choice")
+    prep_outcome = result.get("prep_outcome_id")
+    if prep_outcome not in WEEK11_PREP_OUTCOMES:
+        raise ValueError("week11_match_result prep_outcome_id must list a Week-11 prep outcome")
+    selected_scrim = result.get("selected_scrim")
+    if selected_scrim not in WEEK11_SCRIM_CHOICES:
+        raise ValueError("week11_match_result selected_scrim must list a Week-11 scrim choice")
+    recommended_scrim = result.get("recommended_scrim")
+    if recommended_scrim not in WEEK11_SCRIM_CHOICES:
+        raise ValueError("week11_match_result recommended_scrim must list a Week-11 scrim choice")
+    scrim_outcome = result.get("scrim_outcome_id")
+    if scrim_outcome not in WEEK11_SCRIM_OUTCOMES:
+        raise ValueError("week11_match_result scrim_outcome_id must list a Week-11 scrim outcome")
+    selected_plan = result.get("selected_plan")
+    if selected_plan not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_match_result selected_plan must list a Week-11 match plan")
+    recommended_plan = result.get("recommended_plan")
+    if recommended_plan not in WEEK11_MATCH_PLAN_CHOICES:
+        raise ValueError("week11_match_result recommended_plan must list a Week-11 match plan")
+    outcome_id = result.get("outcome_id")
+    if outcome_id not in WEEK11_MATCH_OUTCOMES:
+        raise ValueError("week11_match_result outcome_id must list a Week-11 match outcome")
+    result_tier = result.get("result_tier")
+    if result_tier not in ("win", "loss"):
+        raise ValueError("week11_match_result result_tier must be win or loss")
+    effects = result.get("visible_effects")
+    basis = result.get("result_basis")
+    causal_chain = result.get("causal_chain")
+    if not isinstance(effects, list):
+        raise ValueError("week11_match_result JSON must include visible_effects")
+    if not isinstance(basis, list):
+        raise ValueError("week11_match_result JSON must include result_basis")
+    if not isinstance(causal_chain, list):
+        raise ValueError("week11_match_result JSON must include causal_chain")
+    if result.get("next_artifact") is not None:
+        raise ValueError("week11_match_result next_artifact must be null")
+    return Week11MatchResultLock(
+        source_branch=str(result.get("source_branch", "")),
+        setup_branch=str(result.get("setup_branch", "")),
+        chosen_focus=str(result.get("chosen_focus", "")),
+        week10_outcome_id=str(result.get("week10_outcome_id", "")),
+        week10_result_tier=str(result.get("week10_result_tier", "")),
+        week10_result_grade=str(result.get("week10_result_grade", "")),
+        carry_forward_tag=str(result.get("carry_forward_tag", "")),
+        carry_forward_type=str(result.get("carry_forward_type", "")),
+        carry_forward_polarity=str(result.get("carry_forward_polarity", "")),
+        selected_setup=selected_setup,
+        setup_outcome_id=setup_outcome,
+        week11_pressure=str(result.get("week11_pressure", "")),
+        selected_prep=selected_prep,
+        recommended_prep=recommended_prep,
+        prep_outcome_id=prep_outcome,
+        prep_lane=str(result.get("prep_lane", "")),
+        selected_scrim=selected_scrim,
+        recommended_scrim=recommended_scrim,
+        scrim_outcome_id=scrim_outcome,
+        scrim_protocol=str(result.get("scrim_protocol", "")),
+        analyst_read_id=str(result.get("analyst_read_id", "")),
+        match_plan_seed=str(result.get("match_plan_seed", "")),
+        outcome_class=str(result.get("outcome_class", "")),
+        protocol_signal=str(result.get("protocol_signal", "")),
+        analyst_read_class=str(result.get("analyst_read_class", "")),
+        seeded_emphasis=str(result.get("seeded_emphasis", "")),
+        selected_plan=selected_plan,
+        recommended_plan=recommended_plan,
+        matched_recommendation=bool(result.get("matched_recommendation", selected_plan == recommended_plan)),
+        commitment=str(result.get("commitment", "")),
+        match_risk=str(result.get("match_risk", "")),
+        outcome_id=outcome_id,
+        result_tier=result_tier,  # type: ignore[arg-type]
+        team_maps=int(result.get("team_maps", 0)),
+        opponent_maps=int(result.get("opponent_maps", 0)),
+        scoreline=str(result.get("scoreline", "")),
+        result_score=int(result.get("result_score", 0)),
+        result_grade=str(result.get("result_grade", "")),
+        headline=str(result.get("headline", "")),
+        recap=str(result.get("recap", "")),
+        player_read=str(result.get("player_read", "")),
+        visible_effects=tuple(
+            Week11SetupEffect(
+                value=str(effect.get("id", "")),
+                label=str(effect.get("label", "")),
+                polarity=str(effect.get("polarity", "")),
+            )
+            for effect in effects
+            if isinstance(effect, dict)
+        ),
+        result_basis=tuple(str(item) for item in basis),
+        causal_chain=tuple(str(item) for item in causal_chain),
+        next_hook=str(result.get("next_hook", "")),
+    )
+
+
+def render_week11_match_result_json(lock: Week11MatchResultLock) -> str:
+    """Canonical JSON export for a resolved Week-11 match result."""
+    payload = {
+        "week11_match_result": {
+            "artifact_type": "week11_match_result",
+            "checkpoint": "week11_match_result",
+            "schema_version": 1,
+            "source_artifact": WEEK11_MATCH_PLAN_FILENAME,
+            "source_artifacts": {
+                "week11_match_plan": WEEK11_MATCH_PLAN_FILENAME,
+            },
+            "week": 11,
+            "route": "/week11/match/result",
+            "source_branch": lock.source_branch,
+            "setup_branch": lock.setup_branch,
+            "chosen_focus": lock.chosen_focus,
+            "week10_outcome_id": lock.week10_outcome_id,
+            "week10_result_tier": lock.week10_result_tier,
+            "week10_result_grade": lock.week10_result_grade,
+            "carry_forward_tag": lock.carry_forward_tag,
+            "carry_forward_type": lock.carry_forward_type,
+            "carry_forward_polarity": lock.carry_forward_polarity,
+            "selected_setup": lock.selected_setup,
+            "setup_outcome_id": lock.setup_outcome_id,
+            "week11_pressure": lock.week11_pressure,
+            "selected_prep": lock.selected_prep,
+            "recommended_prep": lock.recommended_prep,
+            "prep_outcome_id": lock.prep_outcome_id,
+            "prep_lane": lock.prep_lane,
+            "selected_scrim": lock.selected_scrim,
+            "recommended_scrim": lock.recommended_scrim,
+            "scrim_outcome_id": lock.scrim_outcome_id,
+            "scrim_protocol": lock.scrim_protocol,
+            "analyst_read_id": lock.analyst_read_id,
+            "match_plan_seed": lock.match_plan_seed,
+            "outcome_class": lock.outcome_class,
+            "protocol_signal": lock.protocol_signal,
+            "analyst_read_class": lock.analyst_read_class,
+            "seeded_emphasis": lock.seeded_emphasis,
+            "selected_plan": lock.selected_plan,
+            "recommended_plan": lock.recommended_plan,
+            "matched_recommendation": lock.matched_recommendation,
+            "commitment": lock.commitment,
+            "match_risk": lock.match_risk,
+            "outcome_id": lock.outcome_id,
+            "result_tier": lock.result_tier,
+            "team_maps": lock.team_maps,
+            "opponent_maps": lock.opponent_maps,
+            "scoreline": lock.scoreline,
+            "result_score": lock.result_score,
+            "result_grade": lock.result_grade,
+            "headline": lock.headline,
+            "recap": lock.recap,
+            "player_read": lock.player_read,
+            "visible_effects": [
+                {
+                    "id": effect.value,
+                    "label": effect.label,
+                    "polarity": effect.polarity,
+                }
+                for effect in lock.visible_effects
+            ],
+            "result_basis": list(lock.result_basis),
+            "causal_chain": list(lock.causal_chain),
+            "next_hook": lock.next_hook,
+            "stops_before": "week11_post_match_review",
             "next_artifact": None,
         }
     }
