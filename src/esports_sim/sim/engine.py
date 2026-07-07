@@ -144,16 +144,24 @@ class _MatchSim:
             for sl in self.map.sightlines
         }
 
-        # Floor geometry (optional): physical distances between rooms so
-        # duels are fought at a range and weapons care about it. Maps
-        # without geometry fall back to a neutral mid-range.
+        # Floor geometry (optional): physical distances, elevation, cover,
+        # and line-of-sight detail. Maps without geometry fall back to a
+        # neutral mid-range with no height/cover/blocking effects.
         geo = load_geometry(map_id)
         self._range: dict[frozenset[str], float] = {}
+        self._z: dict[str, float] = {}
+        self._cover: dict[str, int] = {}
+        self._blocked: set[frozenset[str]] = set()
         if geo is not None:
             for key in self._sight:
                 pair = sorted(key)
                 if len(pair) == 2:
                     self._range[key] = geo.sight_distance(pair[0], pair[1])
+                    if geo.sight_blocked(pair[0], pair[1]):
+                        self._blocked.add(key)
+            for rid, region in geo.regions.items():
+                self._z[rid] = region.z
+                self._cover[rid] = geo.cover_count(rid)
 
         # Day form: correlated per-match noise. Without it, ~100 independent
         # duel rolls per match let the stronger roster win almost every time;
@@ -1200,6 +1208,7 @@ class _MatchSim:
         n_alive_own: int,
         n_alive_opp: int,
         duel_range: float = 20.0,
+        height_delta: float = 0.0,
     ) -> float:
         ps = self.p[pid]
         pl = self._player(pid)
@@ -1222,6 +1231,14 @@ class _MatchSim:
         # Range replaces the old flat same-room operator malus: every
         # weapon class now cares where the fight happens.
         s += self._range_mod(weapon, duel_range)
+        # High ground: only the higher player collects it.
+        if height_delta > 0:
+            s += min(C.HEIGHT_CAP, height_delta * C.HEIGHT_PER_Z)
+        # Cover: anchored holders shoot over the boxes in their room
+        # (irrelevant point-blank — nobody hides behind a crate in a
+        # knife-range fight).
+        if holder and not same_callout:
+            s += min(C.COVER_CAP, self._cover.get(ps.callout, 0) * C.COVER_PER_PROP)
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
         if holder and not same_callout:
@@ -1268,6 +1285,10 @@ class _MatchSim:
                     continue
                 same = pa.callout == pd.callout
                 p_engage = C.ENGAGE_PROB_SAME_CALLOUT if same else C.ENGAGE_PROB
+                sight_key = frozenset((pa.callout, pd.callout))
+                angle_broken = not same and sight_key in self._blocked
+                if angle_broken:
+                    p_engage *= C.SIGHT_BLOCK_ENGAGE_FACTOR
                 # Pre-commit poking is rare; committed pushes force fights.
                 a_committed = pa.move_eta >= 0 or pa.bonus_until >= tick
                 d_committed = pd.move_eta >= 0
@@ -1304,20 +1325,19 @@ class _MatchSim:
                     adv_d = d_holder and not a_holder
                 if self._smoke_until >= tick:
                     adv_a = adv_d = False  # utility neutralizes angles
+                if angle_broken:
+                    adv_a = adv_d = False  # can't hold an angle through a box
                 duel_range = (
-                    C.RANGE_POINT_BLANK
-                    if same
-                    else self._range.get(
-                        frozenset((pa.callout, pd.callout)), 20.0
-                    )
+                    C.RANGE_POINT_BLANK if same else self._range.get(sight_key, 20.0)
                 )
+                dz = self._z.get(pa.callout, 0.0) - self._z.get(pd.callout, 0.0)
                 sa = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
-                    len(alive_atk), len(alive_dfn), duel_range,
+                    len(alive_atk), len(alive_dfn), duel_range, dz,
                 )
                 sd = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
-                    len(alive_dfn), len(alive_atk), duel_range,
+                    len(alive_dfn), len(alive_atk), duel_range, -dz,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:

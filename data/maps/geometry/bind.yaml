@@ -38,3 +38,30 @@ corridors:
   # B Hall mirrors U-Hall on the defender side.
   - between: [b_hall, defender_spawn]
     via: [[80.0, 80.0]]
+
+# Detail layer: Bind has no verticality in the real map (no mid, no heaven
+# boxes — its gimmick is the teleporters), so no room gets elevation here.
+# Plant-cover crates sit in each site plus the primary long lane per side
+# (A Short, B Long). Each site also gets its signature pillar: a
+# full-height column that blocks the longest sightline into that site,
+# mirroring Bind's real A Site and B Site pillars.
+#
+# a_site pillar breaks a_short -> a_site (the long diagonal from Short).
+# b_site pillar breaks b_long -> b_site (the long diagonal from B Long).
+# Both were `advantaged_side: defense`; breaking them removes defense's
+# ranged pick from those angles and forces a closer, angle-less fight —
+# faithful to how the pillars are used to deny long holds in the real map.
+props:
+  # -- A site cover + pillar ------------------------------------------------
+  - { region: a_site, x: 14.0, y: 50.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 15.0, y: 60.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 26.0, y: 62.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 24.0, y: 50.0, w: 4.0, h: 4.0, height: full }
+  # -- B site cover + pillar ------------------------------------------------
+  - { region: b_site, x: 68.0, y: 50.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 69.0, y: 60.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 80.0, y: 62.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 78.0, y: 49.0, w: 4.0, h: 4.0, height: full }
+  # -- Long lane cover --------------------------------------------------------
+  - { region: a_short, x: 30.0, y: 34.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_long, x: 80.0, y: 32.0, w: 3.0, h: 3.0, height: half }

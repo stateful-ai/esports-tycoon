@@ -11,7 +11,7 @@ regions:
   a_main: { x: 12.0, y: 14.0, w: 16.0, h: 32.0 }
   a_ramps: { x: 24.0, y: 29.0, w: 14.0, h: 14.0 }
   a_site: { x: 8.0, y: 45.0, w: 20.0, h: 20.0 }
-  a_heaven: { x: 7.0, y: 61.0, w: 14.0, h: 14.0 }
+  a_heaven: { x: 7.0, y: 61.0, w: 14.0, h: 14.0, z: 5.0 }
   a_screens: { x: 17.0, y: 63.0, w: 14.0, h: 18.0 }
 
   # -- Mid (tall, narrow spine) -----------------------------------------------
@@ -24,7 +24,7 @@ regions:
   b_garden: { x: 62.0, y: 29.0, w: 14.0, h: 14.0 }
   b_site: { x: 72.0, y: 45.0, w: 20.0, h: 20.0 }
   b_elbow: { x: 79.0, y: 61.0, w: 14.0, h: 14.0 }
-  b_rafters: { x: 69.0, y: 63.0, w: 14.0, h: 18.0 }
+  b_rafters: { x: 69.0, y: 63.0, w: 14.0, h: 18.0, z: 5.0 }
 
 corridors:
   # Heaven and Elbow are defender-side perches that loop back to spawn.
@@ -32,3 +32,25 @@ corridors:
     via: [[18.0, 80.0]]
   - between: [defender_spawn, b_elbow]
     via: [[82.0, 80.0]]
+
+# Detail layer: plant-cover crates in each site plus one in each main lane
+# room. A Heaven and B Rafters are Split's two heaven-style perches over
+# the plants. A Screens gets a full-height "screen" prop — the room is
+# named for the tarp/mesh structure that obscures vision into A Site in
+# the real map — which intentionally breaks the (defense-advantaged)
+# a_screens -> a_site sightline; it does not cross the a_main, a_ramps, or
+# a_heaven lines into site, which stay open.
+props:
+  # -- A site cover -------------------------------------------------------
+  - { region: a_site, x: 10.0, y: 47.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 18.0, y: 49.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 12.0, y: 57.0, w: 3.0, h: 3.0, height: half }
+  # -- B site cover -------------------------------------------------------
+  - { region: b_site, x: 74.0, y: 47.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 82.0, y: 49.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 76.0, y: 57.0, w: 3.0, h: 3.0, height: half }
+  # -- Main lane cover ------------------------------------------------------
+  - { region: a_main, x: 14.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_main, x: 76.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  # -- Screens (sight blocker) -----------------------------------------------
+  - { region: a_screens, x: 21.0, y: 68.0, w: 4.0, h: 4.0, height: full }

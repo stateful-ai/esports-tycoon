@@ -12,7 +12,7 @@ regions:
   a_long: { x: 5.0, y: 15.0, w: 9.0, h: 26.0 }
   a_short: { x: 14.0, y: 28.0, w: 16.0, h: 16.0 }
   a_site: { x: 12.0, y: 40.0, w: 18.0, h: 18.0 }
-  a_heaven: { x: 10.0, y: 58.0, w: 13.0, h: 13.0 }
+  a_heaven: { x: 10.0, y: 58.0, w: 13.0, h: 13.0, z: 5.0 }
   a_sewer: { x: 23.0, y: 56.0, w: 13.0, h: 13.0 }
 
   # -- B lane ---------------------------------------------------------------
@@ -49,3 +49,24 @@ corridors:
   # Mid Window overlooks B Main from across a gap.
   - between: [b_main, mid_window]
     via: [[59.0, 39.0]]
+
+# Detail layer: plant-cover crates in each site plus one in each long lane
+# room. A Heaven is the only elevated perch on Haven — no map-defining
+# full-height sight blocker here, so no `full` props are placed.
+props:
+  # -- A site cover -------------------------------------------------------
+  - { region: a_site, x: 14.0, y: 42.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 22.0, y: 44.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 16.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  # -- B site cover -------------------------------------------------------
+  - { region: b_site, x: 44.0, y: 51.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 50.0, y: 53.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 46.0, y: 58.0, w: 3.0, h: 3.0, height: half }
+  # -- C site cover -------------------------------------------------------
+  - { region: c_site, x: 72.0, y: 43.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 80.0, y: 45.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 74.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  # -- Long lane cover (one anchor box per lane room) ----------------------
+  - { region: a_long, x: 7.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_main, x: 48.0, y: 24.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_long, x: 86.0, y: 25.0, w: 3.0, h: 3.0, height: half }

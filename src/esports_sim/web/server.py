@@ -610,10 +610,11 @@ def map_geometry(map_id: str) -> dict:
                 paths[f"{a}|{b}"] = [[round(px, 2), round(py, 2)] for px, py in geo.path(a, b)]
         floor = {
             "regions": {
-                rid: {"x": r.x, "y": r.y, "w": r.w, "h": r.h}
+                rid: {"x": r.x, "y": r.y, "w": r.w, "h": r.h, "z": r.z}
                 for rid, r in geo.regions.items()
             },
             "paths": paths,
+            "props": [p.model_dump() for p in geo.props],
         }
     return {
         "floor": floor,

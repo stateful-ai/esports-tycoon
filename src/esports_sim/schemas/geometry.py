@@ -25,7 +25,9 @@ PORTAL_GAP_TOLERANCE = 4.0
 
 
 class Region(BaseModel):
-    """Axis-aligned room for one callout. (x, y) is the min corner."""
+    """Axis-aligned room for one callout. (x, y) is the min corner.
+    `z` is the floor elevation — heaven boxes sit above the site they
+    overlook, and the sim pays a high-ground bonus across the gap."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -33,6 +35,7 @@ class Region(BaseModel):
     y: float
     w: float
     h: float
+    z: float = 0.0
 
     @property
     def cx(self) -> float:
@@ -58,12 +61,32 @@ class Corridor(BaseModel):
     via: list[tuple[float, float]] = Field(default_factory=list)
 
 
+class Prop(BaseModel):
+    """A box/crate/wall segment inside a room.
+
+    half-height: cover — a stationary holder shoots over it and is harder
+    to hit from other rooms. full-height: blocks sight — a cross-room
+    sightline whose line crosses it is broken (engagements become rare
+    repositioning skirmishes and nobody holds an angle through a box).
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    region: str
+    x: float
+    y: float
+    w: float
+    h: float
+    height: str = "half"  # half | full
+
+
 class MapGeometry(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     map_id: str
     regions: dict[str, Region]
     corridors: list[Corridor] = Field(default_factory=list)
+    props: list[Prop] = Field(default_factory=list)
 
     # -- portals -------------------------------------------------------------
 
@@ -122,3 +145,63 @@ class MapGeometry(BaseModel):
         if ra is None or rb is None:
             return 0.0
         return ((ra.cx - rb.cx) ** 2 + (ra.cy - rb.cy) ** 2) ** 0.5
+
+    # -- detail: cover, elevation, line of sight -----------------------------
+
+    def cover_count(self, region_id: str) -> int:
+        """Half-height props in a room — each one is somewhere for a
+        holder to anchor behind."""
+        return sum(
+            1 for p in self.props if p.region == region_id and p.height == "half"
+        )
+
+    def height_delta(self, a: str, b: str) -> float:
+        """Floor elevation of `a` minus `b` (positive = a stands higher)."""
+        ra, rb = self.regions.get(a), self.regions.get(b)
+        if ra is None or rb is None:
+            return 0.0
+        return ra.z - rb.z
+
+    def sight_blocked(self, a: str, b: str) -> bool:
+        """True when a full-height prop crosses the center-to-center line
+        between two rooms — the angle can't actually be held."""
+        ra, rb = self.regions.get(a), self.regions.get(b)
+        if ra is None or rb is None:
+            return False
+        for p in self.props:
+            if p.height != "full":
+                continue
+            if _segment_hits_rect(
+                ra.cx, ra.cy, rb.cx, rb.cy, p.x, p.y, p.w, p.h
+            ):
+                return True
+        return False
+
+
+def _segment_hits_rect(
+    x1: float, y1: float, x2: float, y2: float,
+    rx: float, ry: float, rw: float, rh: float,
+) -> bool:
+    """Liang-Barsky segment/AABB intersection (pure, deterministic)."""
+    dx, dy = x2 - x1, y2 - y1
+    t0, t1 = 0.0, 1.0
+    for p, q in (
+        (-dx, x1 - rx),
+        (dx, rx + rw - x1),
+        (-dy, y1 - ry),
+        (dy, ry + rh - y1),
+    ):
+        if p == 0:
+            if q < 0:
+                return False
+            continue
+        r = q / p
+        if p < 0:
+            if r > t1:
+                return False
+            t0 = max(t0, r)
+        else:
+            if r < t0:
+                return False
+            t1 = min(t1, r)
+    return t0 <= t1

@@ -24,7 +24,7 @@ regions:
   b_diamond: { x: 52.0, y: 17.0, w: 14.0, h: 17.0 }
   b_site: { x: 40.0, y: 50.0, w: 20.0, h: 20.0 }
   b_link: { x: 40.0, y: 65.0, w: 14.0, h: 16.0 }
-  b_tower: { x: 48.0, y: 67.0, w: 14.0, h: 14.0 }
+  b_tower: { x: 48.0, y: 67.0, w: 14.0, h: 14.0, z: 5.0 }
 
   # -- C site -----------------------------------------------------------
   c_main: { x: 85.0, y: 16.0, w: 9.0, h: 30.0 }
@@ -51,3 +51,26 @@ corridors:
   # Tree is a defender-side flank back to spawn.
   - between: [defender_spawn, a_tree]
     via: [[20.0, 80.0]]
+
+# Detail layer: plant-cover crates in each site plus one in each main lane
+# room. B Tower is Lotus's one elevated perch, overlooking B Site — its
+# real-map equivalent is a raised platform rather than a box, so no
+# full-height sight blocker is placed on this map: the moving-door gimmick
+# it's known for doesn't have a faithful static-prop analog.
+props:
+  # -- A site cover -------------------------------------------------------
+  - { region: a_site, x: 10.0, y: 46.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 18.0, y: 48.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 12.0, y: 56.0, w: 3.0, h: 3.0, height: half }
+  # -- B site cover -------------------------------------------------------
+  - { region: b_site, x: 42.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 50.0, y: 54.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 44.0, y: 62.0, w: 3.0, h: 3.0, height: half }
+  # -- C site cover -------------------------------------------------------
+  - { region: c_site, x: 74.0, y: 46.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 82.0, y: 48.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 76.0, y: 56.0, w: 3.0, h: 3.0, height: half }
+  # -- Main lane cover ------------------------------------------------------
+  - { region: a_main, x: 8.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_main, x: 47.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_main, x: 87.0, y: 25.0, w: 3.0, h: 3.0, height: half }

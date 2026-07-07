@@ -44,6 +44,28 @@ def test_geometry_covers_map(game_data: GameData, map_id: str) -> None:
         assert -5 <= r.y and r.y + r.h <= 105, f"{map_id}: {cid} off-grid y"
 
 
+@pytest.mark.parametrize("map_id", ["haven", "ascent", "bind", "lotus", "split"])
+def test_detail_layer_sane(game_data: GameData, map_id: str) -> None:
+    """Props sit inside their rooms, elevations stay walkable, and no room
+    is walled off behind full-height boxes."""
+    geo = load_geometry(map_id)
+    assert geo is not None
+    for p in geo.props:
+        assert p.region in geo.regions, f"{map_id}: prop in unknown room {p.region}"
+        r = geo.regions[p.region]
+        assert (
+            r.x - 2 <= p.x and p.x + p.w <= r.x + r.w + 2
+            and r.y - 2 <= p.y and p.y + p.h <= r.y + r.h + 2
+        ), f"{map_id}: prop sticks out of {p.region}"
+        assert p.height in ("half", "full")
+        if p.height == "full":
+            assert p.w * p.h <= 0.45 * r.w * r.h, (
+                f"{map_id}: full-height prop nearly fills {p.region}"
+            )
+    for rid, r in geo.regions.items():
+        assert 0 <= r.z <= 10, f"{map_id}: {rid} elevation {r.z} out of range"
+
+
 def test_hop_and_sight_distances_positive(game_data: GameData) -> None:
     geo = load_geometry("haven")
     assert geo is not None

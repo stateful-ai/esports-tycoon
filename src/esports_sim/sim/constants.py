@@ -98,6 +98,19 @@ RANGE_CQC_PIVOT = 14.0  # smg/pistol break-even
 RANGE_CQC_SLOPE = 0.30
 RANGE_CQC_CAP = 5.0
 
+# Map detail (props + elevation, from floor geometry):
+# High ground: duel bonus per unit of floor-height difference, capped.
+HEIGHT_PER_Z = 1.0
+HEIGHT_CAP = 6.0
+# Cover: a stationary holder anchored in a room with half-height props is
+# harder to kill from other rooms. Per-prop, capped.
+COVER_PER_PROP = 1.5
+COVER_CAP = 4.5
+# A full-height prop across a sightline breaks the angle: engagements on
+# that line become rare repositioning skirmishes and neither side holds
+# an advantage through a box.
+SIGHT_BLOCK_ENGAGE_FACTOR = 0.45
+
 # Trade window: teammates nearby can punish the killer.
 TRADE_BASE_PROB = 0.35
 

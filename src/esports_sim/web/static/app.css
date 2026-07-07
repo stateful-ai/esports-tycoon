@@ -237,6 +237,20 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
   stroke-linejoin: round;
   opacity: .8;
 }
+.floor-raised {
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 70%, #fff 30%);
+}
+.prop-half {
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 60%, #b9925a 40%);
+  stroke: var(--es-color-border-primary, #262a35);
+  stroke-width: .3;
+}
+.prop-full {
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 55%, #6c7383 45%);
+  stroke: var(--es-color-border-primary, #262a35);
+  stroke-width: .3;
+}
+.prop-side { filter: brightness(.62); stroke: none; }
 svg.iso .callout-label { font-size: 3.4px; }
 svg.iso .site-label { font-size: 7px; }
 svg.iso .plabel { font-size: 3.4px; }

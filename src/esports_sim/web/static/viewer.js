@@ -80,16 +80,27 @@ const PP = (pt) => P(pt[0], pt[1]);
 // Marker/dot sizes read smaller on the iso viewBox (it's ~2x wider) — scale.
 const S = (v) => (V.iso ? v * 1.6 : v);
 
-const pos = (cid) => PP(world(cid));
+// Floor elevation of a room (0 when no geometry). Applied as an upward
+// screen shift in iso mode so heaven visibly floats above its site.
+const zOf = (cid) => (V.iso && V.floor?.regions?.[cid]?.z) || 0;
 
-// Projected floor rect corners for a region (grid coords, y-flip applied),
-// ordered around the parallelogram.
+const pos = (cid) => {
+  const p = PP(world(cid));
+  return [p[0], p[1] - zOf(cid)];
+};
+
+// Projected floor rect corners for a region (grid coords, y-flip applied,
+// elevation shift included), ordered around the parallelogram.
 function regionCorners(rid) {
   const r = V.floor.regions[rid];
+  const z = V.iso ? (r.z || 0) : 0;
   const g = [
     [r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h],
   ];
-  return g.map(([x, y]) => P(x, 100 - y));
+  return g.map(([x, y]) => {
+    const p = P(x, 100 - y);
+    return [p[0], p[1] - z];
+  });
 }
 
 // Movement polyline for one hop, projected. Falls back to a straight line
@@ -136,7 +147,12 @@ function playerMoveInfo(round, pid, t) {
       const pts = hopPath(m.from, m.to);
       const p = pointAlong(pts, f);
       const back = pointAlong(pts, Math.max(0, f - TRAIL_SPAN));
-      return { pos: p, moving: true, from: back, f };
+      // Ramp between floor heights while crossing rooms.
+      const z = zOf(m.from) + (zOf(m.to) - zOf(m.from)) * f;
+      return {
+        pos: [p[0], p[1] - z], moving: true,
+        from: [back[0], back[1] - z], f,
+      };
     } else break;
   }
   return at ? { pos: pos(at), moving: false } : null;
@@ -258,22 +274,25 @@ function drawFloor(svg) {
     const c = V.map.callouts[rid];
     const corners = regionCorners(rid);
     const isSite = c && c.zone === "site";
+    const z = V.iso ? (V.floor.regions[rid].z || 0) : 0;
     if (V.iso) {
       // Extrude the two edges adjacent to the nearest corner downward —
-      // a cheap wall face that sells the depth.
+      // a cheap wall face that sells the depth. Elevated rooms drop all
+      // the way to ground level.
+      const drop = WALL_DROP + z;
       const nearest = corners.reduce((m, p, i) => (p[1] > corners[m][1] ? i : m), 0);
       for (const j of [(nearest + 3) % 4, nearest]) {
         const p1 = corners[j], p2 = corners[(j + 1) % 4];
         svg.appendChild(svgEl("polygon", {
           points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ` +
-            `${p2[0]},${p2[1] + WALL_DROP} ${p1[0]},${p1[1] + WALL_DROP}`,
+            `${p2[0]},${p2[1] + drop} ${p1[0]},${p1[1] + drop}`,
           class: "floor-wall",
         }));
       }
     }
     svg.appendChild(svgEl("polygon", {
       points: corners.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
-      class: "floor" + (isSite ? " floor-site" : ""),
+      class: "floor" + (isSite ? " floor-site" : "") + (z > 0 ? " floor-raised" : ""),
     }));
     if (c) {
       const [lx, ly] = pos(rid);
@@ -281,6 +300,43 @@ function drawFloor(svg) {
       label.textContent = c.name;
       svg.appendChild(label);
     }
+  }
+
+  // Props: crates (half) and sight-blocking walls/boxes (full), drawn as
+  // little iso boxes after the floors, back to front.
+  const props = (V.floor.props ?? []).slice().sort((a, b) => {
+    const ay = P(a.x + a.w / 2, 100 - (a.y + a.h / 2))[1];
+    const by = P(b.x + b.w / 2, 100 - (b.y + b.h / 2))[1];
+    return ay - by;
+  });
+  for (const p of props) {
+    const zr = V.iso ? (V.floor.regions[p.region]?.z || 0) : 0;
+    const hgt = V.iso ? (p.height === "full" ? 3.2 : 1.5) : 0;
+    const g = [
+      [p.x, p.y], [p.x + p.w, p.y],
+      [p.x + p.w, p.y + p.h], [p.x, p.y + p.h],
+    ];
+    const base = g.map(([x, y]) => {
+      const q = P(x, 100 - y);
+      return [q[0], q[1] - zr];
+    });
+    const top = base.map(([x, y]) => [x, y - hgt]);
+    const cls = p.height === "full" ? "prop-full" : "prop-half";
+    if (V.iso) {
+      const nearest = top.reduce((m, q, i) => (q[1] > top[m][1] ? i : m), 0);
+      for (const j of [(nearest + 3) % 4, nearest]) {
+        const p1 = top[j], p2 = top[(j + 1) % 4];
+        svg.appendChild(svgEl("polygon", {
+          points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ` +
+            `${p2[0]},${p2[1] + hgt} ${p1[0]},${p1[1] + hgt}`,
+          class: cls + " prop-side",
+        }));
+      }
+    }
+    svg.appendChild(svgEl("polygon", {
+      points: top.map((q) => `${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(" "),
+      class: cls,
+    }));
   }
   // Corridors with authored waypoints get a subtle walkway line.
   for (const [key, raw] of Object.entries(V.floor.paths ?? {})) {
