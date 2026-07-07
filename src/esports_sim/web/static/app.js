@@ -104,7 +104,7 @@ function dashboard(v) {
   const g = el("div", "grid2");
 
   const team = el("div", "card");
-  team.innerHTML = `<h2>${s.user_team.name}</h2>
+  team.innerHTML = `<h2><img class="logo" src="${s.user_team.logo}" alt="">${s.user_team.name}</h2>
     <table><tbody>
       <tr><td>World rank</td><td class="num">#${s.user_team.world_rank ?? "—"}</td></tr>
       <tr><td>Record</td><td class="num">${s.user_team.record ? s.user_team.record.wins + "–" + s.user_team.record.losses : "—"}</td></tr>
@@ -207,7 +207,7 @@ async function roster(v) {
          <button class="btn btn-sm" data-act="release">Release</button>`
       : "";
     const tr = el("tr", "", `
-      <td><b>${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
       <td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
@@ -266,7 +266,7 @@ async function standings(v) {
   const tb = el("tbody");
   data.rows.forEach((r, i) => {
     const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
-      <td>${i + 1}</td><td><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
+      <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
       <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
       <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
       <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
@@ -342,7 +342,7 @@ async function market(v) {
   const tb = el("tbody");
   for (const p of data.free_agents) {
     const tr = el("tr", "", `
-      <td><b>${p.handle}</b></td><td>${stylePill(p)}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b></td><td>${stylePill(p)}</td>
       <td class="num">${p.age}</td><td class="num">${p.overall}</td>
       <td class="num">${money(p.asking_salary)}/wk</td>
       <td><button class="btn btn-sm" ${p.can_sign ? "" : "disabled"}

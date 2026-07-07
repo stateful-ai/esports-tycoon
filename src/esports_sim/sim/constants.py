@@ -59,14 +59,24 @@ ENGAGE_PROB = 0.28
 ENGAGE_PROB_SAME_CALLOUT = 1.0
 # Chance a duel resolves with no kill (both disengage).
 DUEL_FIZZLE_PROB = 0.10
-# Elo-style scale: a 35-point effective-skill gap ≈ 72% duel win. Softer
-# than raw attribute gaps suggest — upsets keep matches alive.
-DUEL_ELO_SCALE = 35.0
+# Elo-style scale: a 90-point effective-skill gap ≈ 72% duel win. Duels
+# must stay close to coin flips even between mismatched teams — man
+# advantage, trades, and economy already compound every small edge over
+# a 5v5 round, so a 20-pt attribute gap should mean ~57% per duel, not
+# 70%+. Blowout scorelines killed the league before this was softened
+# (see scripts/snowball_report.py).
+DUEL_ELO_SCALE = 90.0
 # Flat bonus for holding a defense-advantaged sightline (negated by smokes).
-HOLD_ADVANTAGE = 8.0
+# Sized against DUEL_ELO_SCALE: at scale 90 this is ~57% for the holder —
+# the angle matters, structure beats raw aim, but it's not a free kill.
+HOLD_ADVANTAGE = 14.0
+# A stationary player duelling someone mid-move is pre-aimed. Applies both
+# ways (defenders on sites pre-plant, attackers in post-plant positions),
+# is not negated by smokes, and stacks with HOLD_ADVANTAGE.
+HOLDER_BONUS = 6.0
 # Attacker bonus when entering behind good utility (scaled by util power).
 # Short window: utility opens the door, it doesn't win the whole fight.
-ENTRY_BONUS_MAX = 10.0
+ENTRY_BONUS_MAX = 8.0
 ENTRY_BONUS_TICKS = 14
 # Flash debuff on the defender caught by an entry flash.
 FLASH_DEBUFF = 15.0

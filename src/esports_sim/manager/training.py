@@ -41,6 +41,13 @@ def apply_training(
     focus: str,
     rng: np.random.Generator,
 ) -> None:
+    # Weekly regression to the mean: streaks fade unless re-earned.
+    # Without this, form/morale lock at 100 for winners and the league
+    # snowballs into 13-0 blowouts by season 3.
+    for p in roster:
+        p.form = round(p.form + (52.0 - p.form) * 0.06, 1)
+        p.morale = round(p.morale + (60.0 - p.morale) * 0.04, 1)
+
     if focus == "rest":
         for p in roster:
             p.stamina = min(100.0, p.stamina + 18.0)

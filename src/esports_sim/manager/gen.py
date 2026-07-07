@@ -184,8 +184,10 @@ def generate_league_teams(
     for i, name_idx in enumerate(name_order):
         name, tag = _TEAM_NAMES[int(name_idx)]
         slug = "team_" + name.lower().replace(" ", "_")
-        # Quality ladder from ~72 down to ~52.
-        team_q = 72.0 - i * (20.0 / max(n_teams - 1, 1))
+        # Quality ladder from ~74 down to ~58. Kept narrow on purpose:
+        # with per-duel edges compounding over rounds, a 20+ point team
+        # gap makes the league a foregone conclusion.
+        team_q = 74.0 - i * (16.0 / max(n_teams - 1, 1))
         roster_ids: list[str] = []
         captain_id: str | None = None
         for j, (style, role) in enumerate(_ROSTER_SLOTS):

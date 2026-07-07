@@ -95,6 +95,17 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 .bar.bad > i { background: var(--es-color-text-danger, #e5484d); }
 .bar.good > i { background: var(--es-color-text-success, #46a758); }
 
+.logo {
+  width: 22px; height: 22px; border-radius: 4px; object-fit: cover;
+  vertical-align: middle; margin-right: 6px;
+}
+.logo.lg { width: 34px; height: 34px; }
+.portrait {
+  width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
+  vertical-align: middle; margin-right: 8px;
+  border: 1px solid var(--es-color-border-primary, #262a35);
+}
+
 .pill {
   display: inline-block; padding: 1px 7px; border-radius: var(--es-radius-full, 99px);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;

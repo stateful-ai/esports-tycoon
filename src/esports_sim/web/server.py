@@ -11,6 +11,7 @@ Run: python -m esports_sim --web
 
 from __future__ import annotations
 
+import hashlib
 import random
 import threading
 from pathlib import Path
@@ -64,6 +65,23 @@ app = FastAPI(title="esports-sim", docs_url=None, redoc_url=None)
 # View serializers
 
 
+N_LOGOS = 8
+PORTRAITS_PER_ROLE = 2
+
+
+def _stable_idx(key: str, n: int) -> int:
+    """Deterministic id->index (python's hash() is salted per process)."""
+    return int(hashlib.blake2b(key.encode(), digest_size=4).hexdigest(), 16) % n
+
+
+def _logo_url(team_id: str) -> str:
+    return f"/assets/logos/logo_{_stable_idx(team_id, N_LOGOS)}.webp"
+
+
+def _portrait_url(pid: str, role: str) -> str:
+    return f"/assets/portraits/{role}_{_stable_idx(pid, PORTRAITS_PER_ROLE)}.webp"
+
+
 def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -> float:
     """Scout-noised attribute. Deterministic per (campaign, player, attr):
     the same fog level always shows the same guess — reports don't jitter."""
@@ -105,6 +123,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "personality": p.personality_tags if fog <= 0 else ["?"],
         "is_free_agent": p.id in gs.free_agent_ids,
         "asking_salary": market.asking_salary(p),
+        "portrait": _portrait_url(p.id, str(p.role)),
     }
 
 
@@ -114,6 +133,7 @@ def _team_view(t: Team, gs: GameState) -> dict:
         "id": t.id,
         "name": t.name,
         "tag": t.tag,
+        "logo": _logo_url(t.id),
         "region": str(t.region),
         "balance": t.balance,
         "reputation": t.reputation,
@@ -532,7 +552,8 @@ def replay(fixture_id: str, map_index: int) -> dict:
         }
 
 
-# Static frontend + design system (mounted last so /api wins).
+# Static frontend + design system + art (mounted last so /api wins).
+app.mount("/assets", StaticFiles(directory=str(_REPO_ROOT / "assets")), name="assets")
 app.mount("/ds", StaticFiles(directory=str(DS_DIR)), name="ds")
 app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
 

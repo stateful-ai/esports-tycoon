@@ -150,13 +150,13 @@ class _MatchSim:
         df_rng = self.rng_tree.derive("match", self.match_id, "day_form")
         self.day_form: dict[str, float] = {}
         for pid in sorted(self.p):
-            sigma = 9.0 - self._player(pid).attr("composure") / 20.0
+            sigma = 12.0 - self._player(pid).attr("composure") / 20.0
             self.day_form[pid] = float(
-                np.clip(df_rng.normal(0.0, max(sigma, 1.5)), -15.0, 15.0)
+                np.clip(df_rng.normal(0.0, max(sigma, 2.5)), -18.0, 18.0)
             )
         self.tactic_form: dict[str, float] = {
-            team_a: float(df_rng.normal(0.0, 5.0)),
-            team_b: float(df_rng.normal(0.0, 5.0)),
+            team_a: float(df_rng.normal(0.0, 6.5)),
+            team_b: float(df_rng.normal(0.0, 6.5)),
         }
 
         # Round-scoped scratch, reset in _play_round.
@@ -232,12 +232,13 @@ class _MatchSim:
         return self.gd.players[pid]
 
     def _condition(self, pl: Player) -> float:
-        """Form/morale/stamina folded into one additive term (±~10)."""
-        return (
-            (pl.form - 50.0) / 5.0
-            + (pl.morale - 50.0) / 10.0
-            + (pl.stamina - 100.0) / 10.0
-        )
+        """Form/morale/stamina folded into one additive term. Clamped
+        tight: unchecked, hot teams' condition compounded into 13-0
+        snowballs (winners gain form/morale, which wins more)."""
+        form = max(-5.0, min(5.0, (pl.form - 50.0) / 8.0))
+        morale = max(-3.0, min(3.0, (pl.morale - 50.0) / 12.0))
+        stamina = (pl.stamina - 100.0) / 10.0
+        return form + morale + stamina
 
     def _emit(self, ev: Event) -> None:
         self.log.append(ev)
@@ -478,6 +479,7 @@ class _MatchSim:
         recon_done = False
         went = False
         committed = False
+        aborted = False
         lean_done = False
         rotate_at: dict[str, int] = {}
         post_plant_spots: dict[str, str] = {}
@@ -569,6 +571,22 @@ class _MatchSim:
                 site_cs = self._site_callouts(target_site)
                 for i, q in enumerate(alive_atk):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
+
+            # -- abort a failed hit ------------------------------------------------------
+            # Down two bodies in the entry fight with no plant: real teams
+            # pull out, regroup, and re-hit late instead of feeding the
+            # rest of the roster into a crossfire one at a time.
+            if went and not spike_planted and not aborted:
+                atk_dead = 5 - len(alive_atk)
+                dfn_dead = 5 - len(alive_dfn)
+                if atk_dead - dfn_dead >= 2 and alive_atk:
+                    aborted = True
+                    went = False
+                    go_tick = min(tick + 50, C.FORCE_GO_TICK + 30)
+                    for q in alive_atk:
+                        self.p[q].bonus_until = -1
+                    for i, q in enumerate(alive_atk):
+                        self._order(q, f"goto:{entries[i % len(entries)]}")
 
             # -- movement arrivals -----------------------------------------------------
             for pid in sorted(self.p):
@@ -684,7 +702,10 @@ class _MatchSim:
                     )
 
             # -- rotations ---------------------------------------------------------------------------------
-            if committed and not spike_planted:
+            # Defenders react to the *execute* (utility popping is loud),
+            # not to first blood — waiting for a site kill meant rotators
+            # always arrived post-plant and the defense never held.
+            if went and not spike_planted:
                 self._schedule_rotations(tick, defenders, defender_site, target_site, rotate_at)
 
         # -- round end --------------------------------------------------------------
@@ -1150,6 +1171,8 @@ class _MatchSim:
                 s -= C.OPERATOR_CLOSE_MALUS
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
+        if holder and not same_callout:
+            s += C.HOLDER_BONUS  # pre-aimed vs someone mid-move
         if ps.flash_until >= tick:
             s -= C.FLASH_DEBUFF
         if ps.bonus_until >= tick:
