@@ -177,6 +177,9 @@ class GameState(BaseModel):
     scout_target: str | None = None
     scout_progress: dict[str, float] = Field(default_factory=dict)
 
+    # Talk module: one 1:1 per week. Holds "s{season}w{week}" once used.
+    talked_week: str = ""
+
     # -- helpers -------------------------------------------------------------
 
     def roster(self, team_id: str) -> list[Player]:

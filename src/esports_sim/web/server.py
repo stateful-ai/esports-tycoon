@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import market
+from esports_sim.manager import market, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -413,6 +413,41 @@ def set_training(body: TrainingBody) -> dict:
         return {"ok": True, "focus": body.focus}
 
 
+@app.get("/api/talk/{player_id}")
+def talk_topic(player_id: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, why = talk.can_talk(gs, player_id)
+        if not ok:
+            return {"available": False, "reason": why}
+        t = talk.topic_for(gs, player_id)
+        return {
+            "available": True,
+            "topic": {"id": t.id, "text": t.text},
+            "options": [{"id": o.id, "label": o.label} for o in t.options],
+        }
+
+
+class TalkBody(BaseModel):
+    player_id: str
+    option_id: str
+
+
+@app.post("/api/actions/talk")
+def talk_resolve(body: TalkBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg, effects = talk.resolve(gs, body.player_id, body.option_id)
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg, "effects": effects}
+
+
 class ScoutBody(BaseModel):
     team_id: str
 
@@ -541,13 +576,26 @@ def replay(fixture_id: str, map_index: int) -> dict:
                 p = gs.players.get(pid)
                 if p:
                     players[pid] = {"handle": p.handle, "team_id": tid}
-        # Players may have been transferred since; backfill from events.
+        # Ability flags so the viewer can render utility (smoke vs flash…).
+        abilities = {
+            ab.id: {
+                "name": ab.name,
+                "smoke": ab.blocks_sight,
+                "flash": ab.flashes,
+                "damage": ab.damages,
+                "info": ab.info,
+                "ult": str(ab.type) == "ultimate",
+            }
+            for agent in S.gd.agents.values()
+            for ab in agent.abilities
+        }
         return {
             "fixture": _fixture_view(fixture, gs),
             "map": map_geometry(map_id),
             "team_a": fixture.team_a,
             "team_b": fixture.team_b,
             "players": players,
+            "abilities": abilities,
             "events": [e.model_dump() for e in events],
         }
 

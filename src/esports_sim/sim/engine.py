@@ -697,9 +697,16 @@ class _MatchSim:
                     and self._callout_site(self.p[q].callout) == target_site
                 ]
                 if on_site_dfn:
-                    self._execute_utility(
+                    stall_power = self._execute_utility(
                         on_site_dfn, tick, seed_path, flash_side="attack"
                     )
+                    # Defensive util STALLS the hit: mollies and setups
+                    # make attackers path around, buying rotation time.
+                    stall = min(C.STALL_TICKS_MAX, int(round(2.5 * stall_power)))
+                    if stall > 0:
+                        for q in alive_atk:
+                            if self.p[q].move_eta >= 0:
+                                self.p[q].move_eta += stall
 
             # -- rotations ---------------------------------------------------------------------------------
             # Defenders react to the *execute* (utility popping is loud),
@@ -974,7 +981,7 @@ class _MatchSim:
         tick: int,
         seed_path: tuple[str, ...],
         flash_side: str,
-    ) -> None:
+    ) -> float:
         """Coarse execute/retake: everyone throws their best util; total
         power becomes a temporary duel bonus. Charged ults pop for extra."""
         power = 0.0
@@ -1024,6 +1031,7 @@ class _MatchSim:
         if flashed:
             self._flashed = True
             self._flash_side = flash_side
+        return power
 
     def _recon_recall(
         self,
@@ -1215,6 +1223,10 @@ class _MatchSim:
                 a_committed = pa.move_eta >= 0 or pa.bonus_until >= tick
                 d_committed = pd.move_eta >= 0
                 if not same and not a_committed and not d_committed:
+                    # Pre-commit pokes stay rare on purpose: raising this
+                    # was tried and RAISED attack rates — symmetric
+                    # attrition favors whichever side has more bodies to
+                    # spend, i.e. the attackers pre-hit.
                     p_engage *= 0.05
                 if rng.random() >= p_engage:
                     continue

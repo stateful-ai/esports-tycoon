@@ -106,3 +106,7 @@ UTIL_POWER_INFO = 1.0
 UTIL_POWER_ULT = 2.0
 # Chance per unit of post-plant damage-util power to kill the first defuser.
 POST_PLANT_DENIAL_PROB = 0.12
+# Max ticks a site's defensive utility can delay incoming attackers when a
+# hit commits (scaled by util power). Stalls buy rotation time — the main
+# lever against the 5-versus-few numbers math on executes.
+STALL_TICKS_MAX = 10

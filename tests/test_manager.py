@@ -130,3 +130,23 @@ def test_veto_bo3_deterministic_and_valid() -> None:
     assert log1[0] == "AAA ban bind"
     assert log1[1] == "BBB ban ascent"
     assert order1 == ["haven", "lotus", "split"]
+
+
+def test_talk_once_per_week_and_deterministic(campaign: GameState) -> None:
+    from esports_sim.manager import talk
+
+    pid = campaign.teams[campaign.user_team_id].player_ids[0]
+    ok, _ = talk.can_talk(campaign, pid)
+    assert ok
+    topic = talk.topic_for(campaign, pid)
+    assert len(topic.options) == 3
+
+    before = campaign.players[pid].morale
+    ok, msg, effects = talk.resolve(campaign, pid, topic.options[0].id)
+    assert ok and msg
+    assert campaign.players[pid].morale == round(
+        min(100.0, max(0.0, before + effects["morale"])), 1
+    )
+    # Second talk the same week is refused.
+    ok, why = talk.can_talk(campaign, pid)
+    assert not ok and "already" in why

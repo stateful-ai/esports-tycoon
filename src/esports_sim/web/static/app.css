@@ -117,6 +117,24 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 
 .newsline { padding: 3px 0; border-bottom: 1px dotted var(--es-color-border-secondary, #1c202b); }
 
+/* -- playoff bracket ---------------------------------------------------------- */
+
+.bracket { display: flex; gap: 28px; align-items: center; }
+.bracket-col { display: flex; flex-direction: column; gap: 18px; }
+.bracket-node {
+  min-width: 240px; border: 1px solid var(--es-color-border-primary, #262a35);
+  border-radius: var(--es-radius-md, 6px); overflow: hidden;
+}
+.bracket-team {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 6px 10px; background: var(--es-color-bg-elevated, #1c202b);
+}
+.bracket-team + .bracket-team { border-top: 1px solid var(--es-color-border-secondary, #1c202b); }
+.bracket-team.w {
+  background: color-mix(in srgb, var(--es-color-text-success, #46a758) 14%, var(--es-color-bg-elevated, #1c202b));
+  font-weight: 600;
+}
+
 /* -- overlays ---------------------------------------------------------------- */
 
 .overlay {
@@ -175,6 +193,20 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 .v-feed { flex: 1; overflow-y: auto; font-size: var(--es-text-xs, 11px); }
 .v-feed .k { padding: 2px 0; border-bottom: 1px dotted var(--es-color-border-secondary, #1c202b); }
 .v-feed .k .hs { color: var(--es-color-brand, #ff4655); font-weight: 700; }
+.v-feed .u {
+  padding: 1px 0; color: var(--es-color-text-tertiary, #6c7383);
+  border-bottom: 1px dotted var(--es-color-border-secondary, #1c202b);
+}
+.u-chip {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  margin-right: 5px; vertical-align: middle;
+}
+.u-chip.u-smoke { background: var(--es-color-role-flex, #9ba3af); }
+.u-chip.u-flash { background: #fff; box-shadow: 0 0 0 1px var(--es-color-border-primary, #262a35) inset; }
+.u-chip.u-damage { background: var(--es-color-side-attack, #d06142); }
+.u-chip.u-info { background: var(--es-viz-3, #3fb59b); }
+.u-chip.u-ult { background: var(--es-color-brand, #ff4655); }
+.u-chip.u-generic { background: var(--es-color-text-tertiary, #6c7383); }
 .viewer-controls {
   display: flex; gap: 8px; align-items: center;
   padding: 10px 14px; border-top: 1px solid var(--es-color-border-primary, #262a35);
@@ -182,6 +214,7 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 .viewer-controls input[type=range] { flex: 1; }
 .speeds { display: flex; gap: 4px; }
 .speed.active { border-color: var(--es-color-brand, #ff4655); }
+#v-clock.post-plant { color: var(--es-color-text-warning, #e5a53a); font-weight: 700; }
 
 /* SVG map pieces */
 .edge { stroke: var(--es-color-border-primary, #262a35); stroke-width: .6; }
@@ -189,9 +222,57 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 .callout-site { fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 18%, var(--es-color-bg-elevated, #1c202b)); }
 .callout-label { font-size: 2.6px; fill: var(--es-color-text-tertiary, #6c7383); text-anchor: middle; }
 .site-label { font-size: 5px; font-weight: 700; fill: var(--es-color-text-secondary, #9aa3b5); text-anchor: middle; }
-.pdot { stroke: #000; stroke-width: .35; }
+
+/* Player dots + labels are persistent elements (updated in place, not
+   recreated each frame) so this transition actually smooths movement
+   between interpolation segments, round changes and scrub jumps. */
+.pdot {
+  stroke: #000; stroke-width: .35;
+  transition: cx var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    cy var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
 .pdot.a { fill: var(--es-color-side-attack, #ff8f4d); }
 .pdot.b { fill: var(--es-color-side-defense, #52a9ff); }
 .pdot.dead { opacity: .28; }
-.plabel { font-size: 2.4px; fill: var(--es-color-text-primary, #e6e9f0); text-anchor: middle; pointer-events: none; }
-.spike { fill: var(--es-color-text-warning, #e5a53a); }
+.plabel {
+  font-size: 2.4px; fill: var(--es-color-text-primary, #e6e9f0); text-anchor: middle; pointer-events: none;
+  transition: x var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    y var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+
+/* Motion trail: short fading line drawn behind a mid-move player dot. */
+.ptrail { stroke-width: 1; stroke-linecap: round; pointer-events: none; }
+.ptrail.a { stroke: var(--es-color-side-attack, #ff8f4d); }
+.ptrail.b { stroke: var(--es-color-side-defense, #52a9ff); }
+
+/* Spike — a persistent element (not recreated per frame), so the CSS pulse
+   keeps looping smoothly instead of restarting every draw. */
+.spike {
+  fill: var(--es-color-text-warning, #e5a53a);
+  animation: spike-pulse 1.3s var(--es-ease-in-out, ease-in-out) infinite;
+}
+.spike-ring {
+  fill: none; stroke: var(--es-color-text-warning, #e5a53a); stroke-width: .4;
+  transform-box: fill-box; transform-origin: 50% 50%;
+  animation: spike-ring-pulse 1.3s var(--es-ease-out, ease-out) infinite;
+}
+@keyframes spike-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+@keyframes spike-ring-pulse {
+  0% { transform: scale(.6); opacity: .45; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* Utility markers — deterministic per-tick fade/pulse computed in JS, so
+   these are plain static styles (color, shape) rather than animations. */
+.util-marker { pointer-events: none; }
+.util-smoke { fill: var(--es-color-role-flex, #9ba3af); }
+.util-flash { fill: #fff; stroke: var(--es-color-bg-sunken, #0b0d12); stroke-width: .3; }
+.util-damage { fill: none; stroke: var(--es-color-side-attack, #d06142); stroke-width: .6; stroke-linecap: round; }
+.util-info { fill: none; stroke: var(--es-viz-3, #3fb59b); stroke-width: .5; }
+.util-ult { fill: none; stroke: var(--es-color-brand, #ff4655); stroke-width: .6; }
+.util-generic { fill: var(--es-color-text-tertiary, #6c7383); }
+
+.kill-flash { fill: none; stroke: var(--es-color-text-danger, #e5484d); stroke-width: .6; pointer-events: none; }

@@ -203,7 +203,8 @@ async function roster(v) {
     const fogged = p.fog > 0;
     const ovr = fogged ? `~${Math.round(p.overall)}` : p.overall;
     const actions = data.is_user_team
-      ? `<button class="btn btn-sm" data-act="renew">Renew</button>
+      ? `<button class="btn btn-sm" data-act="talk">Talk</button>
+         <button class="btn btn-sm" data-act="renew">Renew</button>
          <button class="btn btn-sm" data-act="release">Release</button>`
       : "";
     const tr = el("tr", "", `
@@ -216,6 +217,10 @@ async function roster(v) {
       <td class="num">${p.contract_weeks_left}w</td>
       <td>${actions}</td>`);
     if (data.is_user_team) {
+      tr.querySelector('[data-act="talk"]').onclick = (e) => {
+        e.stopPropagation();
+        openTalk(p);
+      };
       tr.querySelector('[data-act="renew"]').onclick = async (e) => {
         e.stopPropagation();
         const r = await api("/api/actions/renew", { player_id: p.id });
@@ -287,8 +292,45 @@ async function standings(v) {
   v.appendChild(card);
 }
 
+function bracketCard(fixtures) {
+  const semis = fixtures.filter((f) => f.stage === "semi");
+  const final = fixtures.find((f) => f.stage === "final");
+  if (!semis.length) return null;
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Playoff bracket</h2>`;
+  const wrap = el("div", "bracket");
+  const col1 = el("div", "bracket-col");
+  const col2 = el("div", "bracket-col");
+  const node = (f) => {
+    if (!f) return el("div", "bracket-node muted", "TBD");
+    const line = (tid, name) => {
+      const winner = f.played && f.winner_id === tid;
+      const score = f.played
+        ? (tid === f.team_a ? f.map_score[0] : f.map_score[1])
+        : "";
+      return `<div class="bracket-team ${winner ? "w" : ""}">
+        <span>${name}</span><b class="mono">${score}</b></div>`;
+    };
+    const n = el("div", "bracket-node",
+      line(f.team_a, f.team_a_name) + line(f.team_b, f.team_b_name));
+    if (f.played) {
+      n.style.cursor = "pointer";
+      n.title = "see schedule for maps";
+    }
+    return n;
+  };
+  for (const s of semis) col1.appendChild(node(s));
+  col2.appendChild(node(final));
+  wrap.appendChild(col1);
+  wrap.appendChild(col2);
+  card.appendChild(wrap);
+  return card;
+}
+
 async function schedule(v) {
   const data = await api("/api/schedule");
+  const bracket = bracketCard(data.fixtures);
+  if (bracket) v.appendChild(bracket);
   const byWeek = new Map();
   for (const f of data.fixtures) {
     if (!byWeek.has(f.week)) byWeek.set(f.week, []);
@@ -369,6 +411,15 @@ async function market(v) {
 async function stats(v) {
   const data = await api("/api/stats");
 
+  const champs = App.state.champions ?? [];
+  if (champs.length) {
+    const hc = el("div", "card");
+    hc.innerHTML = `<h2>Champions</h2>` + [...champs].reverse()
+      .map((c) => `<div class="newsline"><span class="pill">S${c.season}</span> <b>${c.team_name}</b></div>`)
+      .join("");
+    v.appendChild(hc);
+  }
+
   if (data.awards.length) {
     const aw = el("div", "card");
     aw.innerHTML = `<h2>Awards</h2>` + data.awards
@@ -435,6 +486,39 @@ async function finances(v) {
     </tbody></table>
     <p class="muted" style="margin-top:8px">Income = sponsors (reputation + fans) + prize money. Expenses = payroll + facilities.</p>`;
   v.appendChild(card);
+}
+
+/* -- talk 1:1 ---------------------------------------------------------------------- */
+
+async function openTalk(p) {
+  const data = await api(`/api/talk/${p.id}`);
+  if (!data.available) {
+    toast(data.reason);
+    return;
+  }
+  $("#talk-title").textContent = `1:1 — ${p.handle}`;
+  $("#talk-text").textContent = data.topic.text;
+  const box = $("#talk-options");
+  box.innerHTML = "";
+  for (const o of data.options) {
+    const b = el("button", "btn", o.label);
+    b.onclick = async () => {
+      const r = await api("/api/actions/talk", { player_id: p.id, option_id: o.id });
+      closeTalk();
+      const fx = Object.entries(r.effects)
+        .filter(([, v]) => v !== 0)
+        .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
+        .join(", ");
+      toast(`${r.message}${fx ? " (" + fx + ")" : ""}`);
+      render();
+    };
+    box.appendChild(b);
+  }
+  $("#talk").classList.remove("hidden");
+}
+
+function closeTalk() {
+  $("#talk").classList.add("hidden");
 }
 
 /* -- advance week ------------------------------------------------------------------ */
