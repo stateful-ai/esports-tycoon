@@ -62,6 +62,154 @@ def _star_line(stats_list) -> tuple[str, float, int] | None:
     return best
 
 
+# ---------------------------------------------------------------------------
+# Head-to-head history (this season only — past seasons' fixtures are
+# discarded at rollover, see campaign._run_offseason).
+
+
+def _reigning_champion_id(gs: GameState) -> str | None:
+    """The team_id of the most recently crowned champion, or None if no
+    season has finished yet. `gs.champions` only ever records winners (never
+    runners-up or past finals), so this is the one piece of cross-season
+    history grounding can lean on."""
+    return gs.champions[-1].team_id if gs.champions else None
+
+
+def _ordinal(n: int) -> str:
+    """Small-int ordinal words for streak callbacks ("third straight loss").
+    Falls back to a numeric ordinal (11th, 23rd, ...) past the named range —
+    real seasons rarely see a streak beyond a handful of meetings, but this
+    keeps the function total instead of raising."""
+    words = {
+        1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth",
+        6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth",
+    }
+    if n in words:
+        return words[n]
+    if 10 <= n % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
+def head_to_head(gs: GameState, team_a: str, team_b: str) -> dict:
+    """Pure summary of every played meeting between `team_a` and `team_b`
+    this season, plus the one cross-season fact grounding allows (the
+    reigning champion's id). No RNG, no ordering dependency on which side of
+    a Fixture each team landed on — meetings are found by set membership and
+    sorted by week so the result is stable regardless of call order.
+
+    Only `gs.fixtures` is consulted: past seasons' fixtures are replaced
+    wholesale at rollover (`build_regular_season` overwrites the list), so
+    every played fixture found here is from the current season by
+    construction — there is nothing to invent and nothing older to filter
+    out.
+
+    Returns a dict with:
+      meetings: number of played fixtures between the two teams so far.
+      wins_a / wins_b: series wins for each side among those meetings.
+      last_meeting_week / last_winner_id: the most recent meeting.
+      streak_winner_id / streak_len: the team on a current unbroken run of
+        wins against the other, and how long that run is (0 / None if the
+        two haven't met, or if the last two meetings split).
+      revenge / revenge_week: True + the earlier week if the most recent
+        meeting's winner differs from the one before it — i.e. the last
+        result flipped the previous one.
+      reigning_champion_id: latest ChampionRecord.team_id, or None.
+    """
+    meetings = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None
+            and {f.team_a, f.team_b} == {team_a, team_b}
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+
+    wins_a = sum(1 for f in meetings if f.winner_id == team_a)
+    wins_b = sum(1 for f in meetings if f.winner_id == team_b)
+
+    last_meeting_week = meetings[-1].week if meetings else None
+    last_winner_id = meetings[-1].winner_id if meetings else None
+
+    streak_winner_id: str | None = None
+    streak_len = 0
+    for f in reversed(meetings):
+        if streak_winner_id is None:
+            streak_winner_id = f.winner_id
+            streak_len = 1
+        elif f.winner_id == streak_winner_id:
+            streak_len += 1
+        else:
+            break
+
+    revenge = False
+    revenge_week: int | None = None
+    if len(meetings) >= 2:
+        prev = meetings[-2]
+        if prev.winner_id != last_winner_id:
+            revenge = True
+            revenge_week = prev.week
+
+    return {
+        "meetings": len(meetings),
+        "wins_a": wins_a,
+        "wins_b": wins_b,
+        "last_meeting_week": last_meeting_week,
+        "last_winner_id": last_winner_id,
+        "streak_winner_id": streak_winner_id,
+        "streak_len": streak_len,
+        "revenge": revenge,
+        "revenge_week": revenge_week,
+        "reigning_champion_id": _reigning_champion_id(gs),
+    }
+
+
+def _h2h_callback(
+    rng: random.Random, h2h: dict, user_team_id: str, opp_id: str, opp: str, won: bool
+) -> str:
+    """One optional trailing sentence grounded in `h2h`, chosen by priority:
+    a live streak (>= 2) beats revenge beats a reigning-champions upset.
+    Returns "" when nothing is notable — silence beats filler."""
+    if h2h["streak_len"] >= 2 and h2h["streak_winner_id"] == opp_id:
+        return " " + _pick(
+            rng,
+            [
+                "That's the {n} straight loss to {opp} this season.",
+                "{opp} have {n} straight over them now.",
+            ],
+            n=_ordinal(h2h["streak_len"]), opp=opp,
+        )
+    if h2h["streak_len"] >= 2 and h2h["streak_winner_id"] == user_team_id:
+        return " " + _pick(
+            rng,
+            [
+                "That's the {n} straight win over {opp} this season.",
+                "{n} straight over {opp} now.",
+            ],
+            n=_ordinal(h2h["streak_len"]), opp=opp,
+        )
+    if h2h["revenge"]:
+        return " " + _pick(
+            rng,
+            [
+                "Flips the result from week {w}.",
+                "That reverses the week {w} meeting.",
+            ],
+            w=h2h["revenge_week"],
+        )
+    if won and h2h["reigning_champion_id"] == opp_id:
+        return " " + _pick(
+            rng,
+            [
+                "And it came against the reigning champions.",
+                "That's a scalp against the reigning champions, too.",
+            ],
+        )
+    return ""
+
+
 def _user_recap(gs: GameState, f, stats_list) -> None:
     won = f.winner_id == gs.user_team_id
     opp_id = f.team_b if f.team_a == gs.user_team_id else f.team_a
@@ -106,6 +254,8 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
             ],
             score=score, opp=opp, maps=maps_txt, star=star_txt,
         )
+    h2h = head_to_head(gs, gs.user_team_id, opp_id)
+    msg += _h2h_callback(rng, h2h, gs.user_team_id, opp_id, opp, won)
     if f.stage != "regular":
         msg = f"[{f.stage.upper()}] " + msg
     gs.push_news(msg)
@@ -134,6 +284,14 @@ def _league_line(gs: GameState, f, stats_list) -> None:
             ],
             w=w.name, l=l.name, wr=w.world_rank, lr=l.world_rank, score=score,
         )
+        if _reigning_champion_id(gs) == l.id:
+            msg += " " + _pick(
+                rng,
+                [
+                    "Beat the reigning champions, too.",
+                    "The reigning champions, no less.",
+                ],
+            )
     else:
         msg = f"[{f.stage.upper()}] {w.name} beat {l.name}, {score}."
     gs.push_news(msg)

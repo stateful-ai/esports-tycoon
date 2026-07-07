@@ -134,6 +134,20 @@ class TeamSeasonStats(BaseModel):
     pistols_won: int = 0
 
 
+class StaffMember(BaseModel):
+    """Backroom staff. Quality (1-99) scales the slot's effect:
+    coach → training growth, analyst → scouting speed, physio → stamina
+    recovery. User team only; AI orgs' staff stay abstract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    name: str
+    role: str  # coach | analyst | physio
+    quality: float
+    salary: int  # per week
+
+
 class SponsorDeal(BaseModel):
     """A named sponsorship: weekly cash, optional per-win bonus, finite
     term. The user team holds at most one active deal plus one pending
@@ -198,6 +212,11 @@ class GameState(BaseModel):
     # Sponsorship (user team only; AI org finances stay background).
     sponsor: SponsorDeal | None = None
     sponsor_offer: SponsorDeal | None = None
+
+    # Backroom staff: hired members by role + the current candidate market
+    # (refreshed each offseason).
+    staff: dict[str, StaffMember] = Field(default_factory=dict)
+    staff_candidates: dict[str, list[StaffMember]] = Field(default_factory=dict)
 
     # -- helpers -------------------------------------------------------------
 

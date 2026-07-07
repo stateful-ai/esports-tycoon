@@ -40,6 +40,7 @@ def apply_training(
     roster: list[Player],
     focus: str,
     rng: np.random.Generator,
+    growth_mult: float = 1.0,  # coaching staff boost (user team)
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -62,7 +63,7 @@ def apply_training(
         # Train the weakest attribute in the category hardest.
         by_value = sorted(attrs, key=lambda a: p.attr(a))
         for i, attr_id in enumerate(by_value):
-            gain = rate * fatigue_mult * (1.0 if i == 0 else 0.5)
+            gain = rate * fatigue_mult * growth_mult * (1.0 if i == 0 else 0.5)
             gain *= float(rng.uniform(0.6, 1.4))
             cur = p.attr(attr_id)
             # Diminishing returns near the ceiling.

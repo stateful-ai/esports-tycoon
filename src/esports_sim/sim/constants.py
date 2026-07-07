@@ -110,3 +110,12 @@ POST_PLANT_DENIAL_PROB = 0.12
 # hit commits (scaled by util power). Stalls buy rotation time — the main
 # lever against the 5-versus-few numbers math on executes.
 STALL_TICKS_MAX = 10
+
+# Defender fallback: outnumbered site defenders break contact instead of
+# dying in place — the asymmetric piece the attack/defense balance needs
+# (symmetric levers all failed; see git history). Falling back grants a
+# short no-engage grace (off-angle repositioning), defenders rally toward
+# spawn, and the existing post-plant grouped retake arrives with numbers.
+FALLBACK_OUTNUMBER = 2  # attackers minus on-site defenders to trigger rolls
+FALLBACK_BASE_PROB = 0.45  # + game_sense scaling; heroes sometimes stay
+FALLBACK_GRACE_TICKS = 8  # covers the retreat hop out of the crossfire

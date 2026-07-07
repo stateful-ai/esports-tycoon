@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from esports_sim.manager import market, narrative, sponsors, training
+from esports_sim.manager import market, narrative, sponsors, staff, training
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
@@ -94,6 +94,7 @@ def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> G
         f"Season 1 begins — {len(teams)} teams, "
         f"{regular_season_weeks(len(teams))} weeks of league play, then playoffs."
     )
+    staff.refresh_candidates(gs)
     _update_world_ranks(gs)
     return gs
 
@@ -151,14 +152,25 @@ def advance_week(
         roster = gs.roster(tid)
         if tid == gs.user_team_id:
             focus = gs.training_focus.get(tid, "tactical")
+            mult = staff.coach_multiplier(gs)
         else:
             focus = training.ai_pick_focus(roster, week_rng)
             gs.training_focus[tid] = focus
-        training.apply_training(gs.teams[tid], roster, focus, week_rng)
+            mult = 1.0
+        training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
+
+    # 2b. Physio: extra recovery for the user roster.
+    recovery = staff.physio_recovery(gs)
+    if recovery > 0:
+        for p in gs.roster(gs.user_team_id):
+            p.stamina = round(min(100.0, p.stamina + recovery), 1)
 
     # 3. Finances.
     for tid in sorted(gs.teams):
-        income, expenses = apply_weekly_finance(gs.teams[tid], gs.roster(tid))
+        cost = staff.weekly_cost(gs) if tid == gs.user_team_id else 0
+        income, expenses = apply_weekly_finance(
+            gs.teams[tid], gs.roster(tid), staff_cost=cost
+        )
         if tid == gs.user_team_id:
             report.user_income, report.user_expenses = income, expenses
 
@@ -427,7 +439,8 @@ SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full knowledge
 def _tick_scouting(gs: GameState) -> None:
     if gs.scout_target and gs.scout_target in gs.teams:
         cur = gs.scout_progress.get(gs.scout_target, 0.0)
-        after = min(1.0, round(cur + SCOUT_WEEKLY_GAIN, 2))
+        gain = SCOUT_WEEKLY_GAIN * staff.scout_multiplier(gs)
+        after = min(1.0, round(cur + gain, 2))
         gs.scout_progress[gs.scout_target] = after
         if after >= 1.0 and cur < 1.0:
             gs.push_news(
@@ -473,9 +486,11 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     for _ in range(5):
         market._generate_rookie(gs, gd, rng)
 
-    # New season. Scouting knowledge goes stale over the break.
+    # New season. Scouting knowledge goes stale over the break; the staff
+    # candidate market refreshes.
     gs.scout_progress = {}
     gs.season += 1
+    staff.refresh_candidates(gs)
     gs.week = 1
     gs.phase = "regular"
     gs.fixtures = build_regular_season(sorted(gs.teams), sorted(gd.maps), gs.season)

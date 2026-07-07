@@ -247,6 +247,42 @@ async function roster(v) {
   t.appendChild(tb);
   card.appendChild(t);
   v.appendChild(card);
+
+  if (data.is_user_team) await staffCard(v);
+}
+
+async function staffCard(v) {
+  const data = await api("/api/staff");
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Backroom staff — ${money(data.weekly_cost)}/wk</h2>`;
+  for (const role of data.roles) {
+    const row = el("div", "row", "");
+    const hired = data.hired[role];
+    const head = `<span style="min-width:280px"><span class="pill">${role}</span> `;
+    if (hired) {
+      row.innerHTML = `${head}<b>${hired.name}</b>
+        <span class="muted">q${Math.round(hired.quality)} · ${money(hired.salary)}/wk — boosts ${data.blurbs[role]}</span></span>`;
+      const rel = el("button", "btn btn-sm", "Release");
+      rel.onclick = async () => {
+        const r = await api("/api/actions/release_staff", { role });
+        toast(r.message); render();
+      };
+      row.appendChild(rel);
+    } else {
+      row.innerHTML = `${head}<span class="muted">vacant — ${data.blurbs[role]}</span></span>`;
+      for (const c of data.candidates[role] ?? []) {
+        const b = el("button", "btn btn-sm",
+          `${c.name} (q${Math.round(c.quality)}, ${money(c.salary)}/wk)`);
+        b.onclick = async () => {
+          const r = await api("/api/actions/hire_staff", { candidate_id: c.id });
+          toast(r.message); refresh(); render();
+        };
+        row.appendChild(b);
+      }
+    }
+    card.appendChild(row);
+  }
+  v.appendChild(card);
 }
 
 function attrDetail(p) {

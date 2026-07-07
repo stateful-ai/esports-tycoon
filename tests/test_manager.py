@@ -174,3 +174,23 @@ def test_sponsor_deal_lifecycle(campaign: GameState) -> None:
     got = sponsors.weekly_tick(campaign, user_won_this_week=False)
     assert got == 5_000
     assert campaign.sponsor is None  # 2 weeks elapsed -> expired
+
+
+def test_staff_hire_and_effects(campaign: GameState) -> None:
+    from esports_sim.manager import staff
+
+    assert campaign.staff_candidates, "candidate market seeded at campaign start"
+    coach = campaign.staff_candidates["coach"][0]
+    ok, _ = staff.hire(campaign, coach.id)
+    assert ok
+    assert campaign.staff["coach"].id == coach.id
+    assert staff.coach_multiplier(campaign) > 1.0
+    assert staff.weekly_cost(campaign) == coach.salary
+    # Hiring a replacement returns the old coach to the market.
+    other = campaign.staff_candidates["coach"][0]
+    ok, _ = staff.hire(campaign, other.id)
+    assert ok
+    assert campaign.staff["coach"].id == other.id
+    assert any(c.id == coach.id for c in campaign.staff_candidates["coach"])
+    ok, _ = staff.release(campaign, "coach")
+    assert ok and "coach" not in campaign.staff

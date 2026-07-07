@@ -21,10 +21,12 @@ def weekly_sponsor_income(team: Team) -> int:
     return int(8_000 + team.reputation * 550 + fans_component)
 
 
-def apply_weekly_finance(team: Team, roster: list[Player]) -> tuple[int, int]:
+def apply_weekly_finance(
+    team: Team, roster: list[Player], staff_cost: int = 0
+) -> tuple[int, int]:
     """Returns (income, expenses) after applying them to the balance."""
     income = weekly_sponsor_income(team)
-    expenses = sum(p.salary for p in roster)
+    expenses = sum(p.salary for p in roster) + staff_cost
     team.balance += income - expenses
     return income, expenses
 

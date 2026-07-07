@@ -15,7 +15,24 @@
   <div class="spacer"></div>
   <div id="balance" class="balance mono"></div>
   <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+  <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
 </header>
+
+<!-- help -->
+<div id="help" class="overlay hidden">
+  <div class="panel">
+    <h1>How to play</h1>
+    <p class="muted">You run the org. Each week:</p>
+    <div class="newsline"><b>Roster</b> — watch form/morale/stamina, renew expiring contracts, hold your weekly 1:1 (Talk), hire backroom staff (coach, analyst, physio).</div>
+    <div class="newsline"><b>Dashboard</b> — set the training focus (rest when the team is gassed).</div>
+    <div class="newsline"><b>Standings</b> — click a rival to see their roster; assign your scout to sharpen their numbers over ~3 weeks.</div>
+    <div class="newsline"><b>Market</b> — sign free agents (roster is 5; release first, severance applies).</div>
+    <div class="newsline"><b>Finances</b> — sponsorship offers expire after one week; pick the shape that fits your season.</div>
+    <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
+    <p class="muted" style="margin-top:10px">Same campaign seed + same decisions = the same season, every time.</p>
+    <button class="btn btn-primary" onclick="document.getElementById('help').classList.add('hidden')">Got it</button>
+  </div>
+</div>
 
 <nav id="tabs">
   <button data-tab="dashboard" class="tab active">Dashboard</button>

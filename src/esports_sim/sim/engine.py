@@ -85,6 +85,7 @@ class _PState:
     flash_until: int = -1
     bonus_until: int = -1
     bonus: float = 0.0
+    no_engage_until: int = -1  # disengage grace while falling back
     has_spike: bool = False
     charges: dict[str, int] = field(default_factory=dict)
 
@@ -422,6 +423,7 @@ class _MatchSim:
             ps.flash_until = -1
             ps.bonus_until = -1
             ps.bonus = 0.0
+            ps.no_engage_until = -1
             ps.has_spike = False
 
         attackers = self.roster[atk]
@@ -707,6 +709,24 @@ class _MatchSim:
                         for q in alive_atk:
                             if self.p[q].move_eta >= 0:
                                 self.p[q].move_eta += stall
+                    # Fallback: badly outnumbered site defenders break
+                    # contact and rally instead of dying in the crossfire.
+                    # The post-plant grouped retake then arrives with
+                    # numbers — that's the asymmetry that keeps defense
+                    # in the round.
+                    if len(alive_atk) - len(on_site_dfn) >= C.FALLBACK_OUTNUMBER:
+                        for q in on_site_dfn:
+                            pl = self._player(q)
+                            p_fall = (
+                                C.FALLBACK_BASE_PROB
+                                + (pl.attr("game_sense") - 50.0) / 150.0
+                            )
+                            if rng.random() < p_fall:
+                                qs = self.p[q]
+                                qs.no_engage_until = tick + C.FALLBACK_GRACE_TICKS
+                                qs.planting_until = -1
+                                qs.defusing_until = -1
+                                self._order(q, f"goto:{self.map.defender_spawn}")
 
             # -- rotations ---------------------------------------------------------------------------------
             # Defenders react to the *execute* (utility popping is loud),
@@ -858,11 +878,13 @@ class _MatchSim:
                 else:
                     self._order(q, f"goto:{planted_at}")
         else:
-            site_cs = self._site_callouts(target_site)
+            # Pre-plant rotators rally toward spawn rather than trickling
+            # into the site fight one at a time; the post-plant grouped
+            # retake is where the numbers get spent.
             for q in alive_dfn:
                 due = rotate_at.get(q)
                 if due is not None and tick >= due:
-                    self._order(q, f"goto:{site_cs[0]}")
+                    self._order(q, f"goto:{self.map.defender_spawn}")
 
     def _legal_actions(
         self,
@@ -1213,6 +1235,10 @@ class _MatchSim:
                 if not (pa.alive and pd.alive):
                     continue
                 if a_pid in engaged or d_pid in engaged:
+                    continue
+                # Disengage grace: a player falling back has broken
+                # contact — neither side gets the duel.
+                if pa.no_engage_until >= tick or pd.no_engage_until >= tick:
                     continue
                 visible, adv = self._sightline(pa.callout, pd.callout)
                 if not visible:

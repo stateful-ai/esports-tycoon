@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import market, sponsors, talk
+from esports_sim.manager import market, sponsors, staff as staff_mod, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -431,6 +431,57 @@ def set_training(body: TrainingBody) -> dict:
         gs.training_focus[gs.user_team_id] = body.focus
         S.save()
         return {"ok": True, "focus": body.focus}
+
+
+@app.get("/api/staff")
+def staff_view() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if not gs.staff_candidates:
+            # Saves from before the staff feature: build the market lazily
+            # (deterministic from seed+season, so no drift).
+            staff_mod.refresh_candidates(gs)
+            S.save()
+        return {
+            "hired": {r: m.model_dump() for r, m in sorted(gs.staff.items())},
+            "candidates": {
+                r: [m.model_dump() for m in pool]
+                for r, pool in sorted(gs.staff_candidates.items())
+            },
+            "roles": staff_mod.ROLES,
+            "blurbs": staff_mod.ROLE_BLURB,
+            "weekly_cost": staff_mod.weekly_cost(gs),
+        }
+
+
+class HireBody(BaseModel):
+    candidate_id: str
+
+
+@app.post("/api/actions/hire_staff")
+def hire_staff(body: HireBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = staff_mod.hire(gs, body.candidate_id)
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg}
+
+
+class ReleaseStaffBody(BaseModel):
+    role: str
+
+
+@app.post("/api/actions/release_staff")
+def release_staff(body: ReleaseStaffBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = staff_mod.release(gs, body.role)
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg}
 
 
 @app.get("/api/talk/{player_id}")
