@@ -139,7 +139,7 @@ Three parallel tracks. **Not sequential.** Once the MVP is real, pick the track 
 Explicit non-goals. Calling these out so we don't drift.
 
 - Real Valorant pro names or their real statistical profiles (legal + fictional roster works fine)
-- 3D match rendering (callout-graph + 2D is the whole thesis)
+- ~~3D match rendering (callout-graph + 2D is the whole thesis)~~ **Amended 2026-07-07 (owner call):** the sim keeps the callout graph as its decision vocabulary, but maps now carry floor-plan geometry (`data/maps/geometry/`) rendered as an isometric viewer, and the engine consumes physical distances (range-aware duels). True 3D remains out of scope.
 - Multiplayer / network play
 - Mobile port
 - Steam / commercial release

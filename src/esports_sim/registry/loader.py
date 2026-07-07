@@ -66,6 +66,19 @@ def load_map(map_id: str, data_dir: Path | None = None) -> Map:
     return Map(**raw)
 
 
+def load_geometry(map_id: str, data_dir: Path | None = None):
+    """Floor-plan geometry for a map, or None when not authored yet
+    (viewer falls back to the plain graph view)."""
+    from esports_sim.schemas.geometry import MapGeometry
+
+    data_dir = data_dir or DEFAULT_DATA_DIR
+    path = data_dir / "maps" / "geometry" / f"{map_id}.yaml"
+    if not path.exists():
+        return None
+    raw = _load_yaml(path)
+    return MapGeometry(**raw)
+
+
 def load_team(team_id: str, data_dir: Path | None = None) -> tuple[Team, list[Player]]:
     """Load a team plus its players. Teams bundle player data inline for MVP."""
     data_dir = data_dir or DEFAULT_DATA_DIR

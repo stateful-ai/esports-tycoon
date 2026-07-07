@@ -22,7 +22,7 @@ import numpy as np
 from esports_sim.events.log import EventLog
 from esports_sim.policy.base import Action, ActionType
 from esports_sim.policy.heuristic import HeuristicPolicy
-from esports_sim.registry.loader import GameData
+from esports_sim.registry.loader import GameData, load_geometry
 from esports_sim.schemas import (
     Ability,
     BuyEvent,
@@ -143,6 +143,17 @@ class _MatchSim:
             frozenset((sl.from_callout, sl.to_callout)): sl.advantaged_side
             for sl in self.map.sightlines
         }
+
+        # Floor geometry (optional): physical distances between rooms so
+        # duels are fought at a range and weapons care about it. Maps
+        # without geometry fall back to a neutral mid-range.
+        geo = load_geometry(map_id)
+        self._range: dict[frozenset[str], float] = {}
+        if geo is not None:
+            for key in self._sight:
+                pair = sorted(key)
+                if len(pair) == 2:
+                    self._range[key] = geo.sight_distance(pair[0], pair[1])
 
         # Day form: correlated per-match noise. Without it, ~100 independent
         # duel rolls per match let the stronger roster win almost every time;
@@ -1168,6 +1179,17 @@ class _MatchSim:
             return True, self._sight[key]
         return False, None
 
+    def _range_mod(self, weapon, dist: float) -> float:
+        """Additive duel-score term from engagement range."""
+        wc = str(weapon.weapon_class)
+        if wc == "sniper":
+            raw = (dist - C.RANGE_SNIPER_PIVOT) * C.RANGE_SNIPER_SLOPE
+            return max(-C.RANGE_SNIPER_CAP, min(C.RANGE_SNIPER_CAP, raw))
+        if wc in ("smg", "pistol", "shotgun"):
+            raw = (C.RANGE_CQC_PIVOT - dist) * C.RANGE_CQC_SLOPE
+            return max(-C.RANGE_CQC_CAP, min(C.RANGE_CQC_CAP, raw))
+        return 0.0  # rifles shoot flat everywhere
+
     def _duel_score(
         self,
         pid: str,
@@ -1177,6 +1199,7 @@ class _MatchSim:
         tick: int,
         n_alive_own: int,
         n_alive_opp: int,
+        duel_range: float = 20.0,
     ) -> float:
         ps = self.p[pid]
         pl = self._player(pid)
@@ -1194,11 +1217,11 @@ class _MatchSim:
             if m.map_id == self.map.id:
                 s += (m.mastery - 50.0) / 25.0
                 break
-        if ps.weapon == "operator":
-            if holder and advantaged:
-                s += C.OPERATOR_HOLD_BONUS
-            if same_callout:
-                s -= C.OPERATOR_CLOSE_MALUS
+        if ps.weapon == "operator" and holder and advantaged:
+            s += C.OPERATOR_HOLD_BONUS
+        # Range replaces the old flat same-room operator malus: every
+        # weapon class now cares where the fight happens.
+        s += self._range_mod(weapon, duel_range)
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
         if holder and not same_callout:
@@ -1281,13 +1304,20 @@ class _MatchSim:
                     adv_d = d_holder and not a_holder
                 if self._smoke_until >= tick:
                     adv_a = adv_d = False  # utility neutralizes angles
+                duel_range = (
+                    C.RANGE_POINT_BLANK
+                    if same
+                    else self._range.get(
+                        frozenset((pa.callout, pd.callout)), 20.0
+                    )
+                )
                 sa = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
-                    len(alive_atk), len(alive_dfn),
+                    len(alive_atk), len(alive_dfn), duel_range,
                 )
                 sd = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
-                    len(alive_dfn), len(alive_atk),
+                    len(alive_dfn), len(alive_atk), duel_range,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:

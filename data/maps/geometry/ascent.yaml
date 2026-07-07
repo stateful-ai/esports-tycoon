@@ -1,0 +1,42 @@
+# Hand-tuned geometry — Ascent's two sites flanking an open mid. A Site
+# and B Site are the biggest rooms; Catwalk/Mid Courtyard/Market form the
+# open mid lane that both sides fight over.
+map_id: ascent
+regions:
+  # -- Spawns (wide, shallow) -------------------------------------------
+  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+
+  # -- A side -------------------------------------------------------------
+  a_lobby: { x: 12.0, y: 14.0, w: 18.0, h: 16.0 }
+  a_main: { x: 6.0, y: 30.0, w: 18.0, h: 16.0 }
+  a_site: { x: 10.0, y: 46.0, w: 20.0, h: 20.0 }
+  a_heaven: { x: 16.0, y: 66.0, w: 15.0, h: 15.0 }
+  a_garden: { x: 27.0, y: 60.0, w: 15.0, h: 15.0 }
+
+  # -- Mid ------------------------------------------------------------------
+  catwalk: { x: 31.0, y: 33.0, w: 15.0, h: 16.0 }
+  mid_courtyard: { x: 44.0, y: 38.0, w: 14.0, h: 14.0 }
+  mid_market: { x: 56.0, y: 50.0, w: 16.0, h: 16.0 }
+
+  # -- B side ---------------------------------------------------------------
+  b_lobby: { x: 70.0, y: 14.0, w: 18.0, h: 16.0 }
+  b_main: { x: 70.0, y: 32.0, w: 18.0, h: 19.0 }
+  b_site: { x: 70.0, y: 54.0, w: 18.0, h: 18.0 }
+  b_back: { x: 66.0, y: 68.0, w: 15.0, h: 15.0 }
+
+corridors:
+  # Mid Courtyard is a long open run down from spawn.
+  - between: [attacker_spawn, mid_courtyard]
+    via: [[50.0, 25.0]]
+  # Garden loops around the back of A Site to reach Catwalk and spawn.
+  - between: [a_garden, catwalk]
+    via: [[36.0, 55.0]]
+  - between: [a_garden, defender_spawn]
+    via: [[38.0, 80.0]]
+  # Courtyard peeks across the open mid into B Main.
+  - between: [mid_courtyard, b_main]
+    via: [[64.0, 42.0]]
+  # Market runs down the back wall into defender spawn.
+  - between: [mid_market, defender_spawn]
+    via: [[64.0, 78.0]]

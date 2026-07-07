@@ -85,6 +85,19 @@ FLASH_TICKS = 6
 OPERATOR_HOLD_BONUS = 8.0
 OPERATOR_CLOSE_MALUS = 6.0
 
+# Range model (needs map floor geometry; neutral without it). Duels are
+# fought at the straight-line distance between the two rooms' centers
+# (same room = point blank). Snipers want long, SMGs/pistols want close,
+# rifles are flat. Additive duel-score terms, capped small — range colors
+# a duel, it doesn't decide it.
+RANGE_POINT_BLANK = 4.0  # assumed distance for same-room fights
+RANGE_SNIPER_PIVOT = 18.0  # ops break even here, gain beyond, lose inside
+RANGE_SNIPER_SLOPE = 0.35
+RANGE_SNIPER_CAP = 7.0
+RANGE_CQC_PIVOT = 14.0  # smg/pistol break-even
+RANGE_CQC_SLOPE = 0.30
+RANGE_CQC_CAP = 5.0
+
 # Trade window: teammates nearby can punish the killer.
 TRADE_BASE_PROB = 0.35
 

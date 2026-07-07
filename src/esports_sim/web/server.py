@@ -24,7 +24,7 @@ from esports_sim.manager import market, sponsors, staff as staff_mod, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
-from esports_sim.registry.loader import GameData, load_all
+from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.schemas import Event, Player, Team
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -601,7 +601,22 @@ def map_geometry(map_id: str) -> dict:
     if map_id not in S.gd.maps:
         raise HTTPException(404, "unknown map")
     m = S.gd.maps[map_id]
+    geo = load_geometry(map_id)
+    floor = None
+    if geo is not None:
+        paths: dict[str, list[list[float]]] = {}
+        for a, nbrs in m.adjacency.items():
+            for b in nbrs:
+                paths[f"{a}|{b}"] = [[round(px, 2), round(py, 2)] for px, py in geo.path(a, b)]
+        floor = {
+            "regions": {
+                rid: {"x": r.x, "y": r.y, "w": r.w, "h": r.h}
+                for rid, r in geo.regions.items()
+            },
+            "paths": paths,
+        }
     return {
+        "floor": floor,
         "id": m.id,
         "display_name": m.display_name,
         "sites": [str(s) for s in m.sites],

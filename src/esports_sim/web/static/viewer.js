@@ -63,23 +63,80 @@ function parseReplay(data) {
 
 /* -- geometry ----------------------------------------------------------------- */
 
-const pos = (cid) => {
+// World space: the map's 0-100 grid with y flipped so defenders sit at the
+// top of the screen. Screen space: world, or a 2:1 isometric projection of
+// it. The projection is AFFINE, so interpolation can happen after it —
+// every downstream consumer (trails, markers, midpoints) works unchanged.
+const world = (cid) => {
   const c = V.map.callouts[cid];
   return c ? [c.x, 100 - c.y] : [50, 50];
 };
 
+function P(x, y) {
+  if (!V.iso) return [x, y];
+  return [x - y, (x + y) / 2];
+}
+const PP = (pt) => P(pt[0], pt[1]);
+// Marker/dot sizes read smaller on the iso viewBox (it's ~2x wider) — scale.
+const S = (v) => (V.iso ? v * 1.6 : v);
+
+const pos = (cid) => PP(world(cid));
+
+// Projected floor rect corners for a region (grid coords, y-flip applied),
+// ordered around the parallelogram.
+function regionCorners(rid) {
+  const r = V.floor.regions[rid];
+  const g = [
+    [r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h],
+  ];
+  return g.map(([x, y]) => P(x, 100 - y));
+}
+
+// Movement polyline for one hop, projected. Falls back to a straight line
+// when the map has no floor geometry (or the pair has no authored path).
+function hopPath(a, b) {
+  const raw = V.floor?.paths?.[`${a}|${b}`];
+  if (raw && raw.length >= 2) return raw.map(([x, y]) => P(x, 100 - y));
+  return [pos(a), pos(b)];
+}
+
+function pointAlong(pts, f) {
+  const lens = [];
+  let total = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    lens.push(d);
+    total += d;
+  }
+  if (total === 0) return pts[0];
+  let target = f * total;
+  for (let i = 0; i < lens.length; i++) {
+    if (target <= lens[i] || i === lens.length - 1) {
+      const g = lens[i] === 0 ? 0 : target / lens[i];
+      return [
+        pts[i][0] + (pts[i + 1][0] - pts[i][0]) * g,
+        pts[i][1] + (pts[i + 1][1] - pts[i][1]) * g,
+      ];
+    }
+    target -= lens[i];
+  }
+  return pts[pts.length - 1];
+}
+
 // Richer variant of playerPos: also reports whether the player is mid-move
-// and where the current segment started, so callers (motion trail) can
-// draw a short fading line without re-deriving the interpolation math.
+// and a trail-start point, so callers can draw a short fading line without
+// re-deriving the interpolation math.
 function playerMoveInfo(round, pid, t) {
   let at = round.placements[pid] ?? null;
   const moves = round.moves[pid] ?? [];
   for (const m of moves) {
     if (m.tick <= t) { at = m.to; }
     else if (m.tick - MOVE_TICKS <= t) {
-      const [x1, y1] = pos(m.from), [x2, y2] = pos(m.to);
       const f = (t - (m.tick - MOVE_TICKS)) / MOVE_TICKS;
-      return { pos: [x1 + (x2 - x1) * f, y1 + (y2 - y1) * f], moving: true, from: [x1, y1], f };
+      const pts = hopPath(m.from, m.to);
+      const p = pointAlong(pts, f);
+      const back = pointAlong(pts, Math.max(0, f - TRAIL_SPAN));
+      return { pos: p, moving: true, from: back, f };
     } else break;
   }
   return at ? { pos: pos(at), moving: false } : null;
@@ -133,38 +190,40 @@ function drawUtilityMarkers(round, t) {
     switch (kind) {
       case "smoke":
         V.dyn.appendChild(svgEl("circle", {
-          cx: x, cy: y, r: 3, class: "util-marker util-smoke",
+          cx: x, cy: y, r: S(3), class: "util-marker util-smoke",
           opacity: (fade * 0.5).toFixed(2),
         }));
         break;
       case "flash": {
-        const r = 1.7;
+        const r = S(1.7);
         const d = `M${x} ${y - r} L${x + r * .4} ${y - r * .4} L${x + r} ${y} L${x + r * .4} ${y + r * .4} ` +
           `L${x} ${y + r} L${x - r * .4} ${y + r * .4} L${x - r} ${y} L${x - r * .4} ${y - r * .4} Z`;
         V.dyn.appendChild(svgEl("path", { d, class: "util-marker util-flash", opacity: fade.toFixed(2) }));
         break;
       }
-      case "damage":
+      case "damage": {
+        const d = S(1.8);
         V.dyn.appendChild(svgEl("path", {
-          d: `M${x - 1.8} ${y} L${x + 1.8} ${y} M${x} ${y - 1.8} L${x} ${y + 1.8}`,
+          d: `M${x - d} ${y} L${x + d} ${y} M${x} ${y - d} L${x} ${y + d}`,
           class: "util-marker util-damage", opacity: fade.toFixed(2),
         }));
         break;
+      }
       case "info":
         V.dyn.appendChild(svgEl("circle", {
-          cx: x, cy: y, r: (1.4 + age * 0.35).toFixed(2),
+          cx: x, cy: y, r: S(1.4 + age * 0.35).toFixed(2),
           class: "util-marker util-info", opacity: (fade * 0.9).toFixed(2),
         }));
         break;
       case "ult":
         V.dyn.appendChild(svgEl("circle", {
-          cx: x, cy: y, r: (4 + Math.sin(age * 1.3) * 0.7).toFixed(2),
+          cx: x, cy: y, r: S(4 + Math.sin(age * 1.3) * 0.7).toFixed(2),
           class: "util-marker util-ult", opacity: (fade * 0.7).toFixed(2),
         }));
         break;
       default:
         V.dyn.appendChild(svgEl("circle", {
-          cx: x, cy: y, r: 1.6, class: "util-marker util-generic", opacity: (fade * 0.5).toFixed(2),
+          cx: x, cy: y, r: S(1.6), class: "util-marker util-generic", opacity: (fade * 0.5).toFixed(2),
         }));
     }
   }
@@ -180,15 +239,75 @@ function drawKillFlashes(round, t) {
     const [x, y] = pos(cid);
     const fade = 1 - age / KILL_FLASH_TICKS;
     V.dyn.appendChild(svgEl("circle", {
-      cx: x, cy: y, r: (2 + age * 1.4).toFixed(2),
+      cx: x, cy: y, r: S(2 + age * 1.4).toFixed(2),
       class: "kill-flash", opacity: (fade * 0.85).toFixed(2),
     }));
   }
 }
 
-function drawStatic() {
-  const svg = document.getElementById("v-map");
-  svg.innerHTML = "";
+const WALL_DROP = 3.2; // fake extrusion depth for iso walls (screen units)
+
+function drawFloor(svg) {
+  // Painter's algorithm: farthest rooms first (smallest max screen-y).
+  const order = Object.keys(V.floor.regions).sort((a, b) => {
+    const ay = Math.max(...regionCorners(a).map((p) => p[1]));
+    const by = Math.max(...regionCorners(b).map((p) => p[1]));
+    return ay - by;
+  });
+  for (const rid of order) {
+    const c = V.map.callouts[rid];
+    const corners = regionCorners(rid);
+    const isSite = c && c.zone === "site";
+    if (V.iso) {
+      // Extrude the two edges adjacent to the nearest corner downward —
+      // a cheap wall face that sells the depth.
+      const nearest = corners.reduce((m, p, i) => (p[1] > corners[m][1] ? i : m), 0);
+      for (const j of [(nearest + 3) % 4, nearest]) {
+        const p1 = corners[j], p2 = corners[(j + 1) % 4];
+        svg.appendChild(svgEl("polygon", {
+          points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ` +
+            `${p2[0]},${p2[1] + WALL_DROP} ${p1[0]},${p1[1] + WALL_DROP}`,
+          class: "floor-wall",
+        }));
+      }
+    }
+    svg.appendChild(svgEl("polygon", {
+      points: corners.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
+      class: "floor" + (isSite ? " floor-site" : ""),
+    }));
+    if (c) {
+      const [lx, ly] = pos(rid);
+      const label = svgEl("text", { x: lx, y: ly + S(1.2), class: "callout-label" });
+      label.textContent = c.name;
+      svg.appendChild(label);
+    }
+  }
+  // Corridors with authored waypoints get a subtle walkway line.
+  for (const [key, raw] of Object.entries(V.floor.paths ?? {})) {
+    if (raw.length <= 2) continue;
+    const [a, b] = key.split("|");
+    if (a > b) continue; // draw each undirected corridor once
+    const pts = raw.map(([x, y]) => P(x, 100 - y));
+    svg.appendChild(svgEl("polyline", {
+      points: pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
+      class: "corridor",
+    }));
+  }
+  // Site letters above their rooms.
+  const siteAgg = {};
+  for (const [cid, c] of Object.entries(V.map.callouts)) {
+    if (c.zone === "site") (siteAgg[c.site] ??= []).push(pos(cid));
+  }
+  for (const [site, pts] of Object.entries(siteAgg)) {
+    const x = pts.reduce((s, p) => s + p[0], 0) / pts.length;
+    const y = pts.reduce((s, p) => s + p[1], 0) / pts.length - S(5.5);
+    const t = svgEl("text", { x, y, class: "site-label" });
+    t.textContent = site.toUpperCase();
+    svg.appendChild(t);
+  }
+}
+
+function drawGraph(svg) {
   for (const [a, b] of V.map.edges) {
     const [x1, y1] = pos(a), [x2, y2] = pos(b);
     svg.appendChild(svgEl("line", { x1, y1, x2, y2, class: "edge" }));
@@ -198,23 +317,35 @@ function drawStatic() {
     const [x, y] = pos(cid);
     const isSite = c.zone === "site";
     svg.appendChild(svgEl("circle", {
-      cx: x, cy: y, r: isSite ? 3.4 : 2.2,
+      cx: x, cy: y, r: S(isSite ? 3.4 : 2.2),
       class: "callout-dot" + (isSite ? " callout-site" : ""),
     }));
-    const label = svgEl("text", { x, y: y + 4.6, class: "callout-label" });
+    const label = svgEl("text", { x, y: y + S(4.6), class: "callout-label" });
     label.textContent = c.name;
     svg.appendChild(label);
-    if (isSite) {
-      (siteAgg[c.site] ??= []).push([x, y]);
-    }
+    if (isSite) (siteAgg[c.site] ??= []).push([x, y]);
   }
   for (const [site, pts] of Object.entries(siteAgg)) {
     const x = pts.reduce((s, p) => s + p[0], 0) / pts.length;
-    const y = pts.reduce((s, p) => s + p[1], 0) / pts.length - 4.5;
+    const y = pts.reduce((s, p) => s + p[1], 0) / pts.length - S(4.5);
     const t = svgEl("text", { x, y, class: "site-label" });
     t.textContent = site.toUpperCase();
     svg.appendChild(t);
   }
+}
+
+function drawStatic() {
+  const svg = document.getElementById("v-map");
+  svg.innerHTML = "";
+  svg.setAttribute(
+    "viewBox",
+    V.iso ? "-110 -12 220 128" : "-6 -6 112 112"
+  );
+  svg.classList.toggle("iso", !!V.iso);
+
+  if (V.floor) drawFloor(svg);
+  else drawGraph(svg);
+
   // V.dyn: transient layer, fully cleared + rebuilt every frame (markers,
   // kill flashes, motion trails, death marks).
   V.dyn = svgEl("g", {});
@@ -225,9 +356,9 @@ function drawStatic() {
   V.persist = svgEl("g", {});
   svg.appendChild(V.persist);
   V.playerEls = {};
-  V.spikeEl = svgEl("rect", { width: 2.8, height: 2.8, class: "spike" });
+  V.spikeEl = svgEl("rect", { width: S(2.8), height: S(2.8), class: "spike" });
   V.spikeEl.style.display = "none";
-  V.spikeRingEl = svgEl("circle", { r: 2.2, class: "spike-ring" });
+  V.spikeRingEl = svgEl("circle", { r: S(2.2), class: "spike-ring" });
   V.spikeRingEl.style.display = "none";
   V.persist.appendChild(V.spikeRingEl);
   V.persist.appendChild(V.spikeEl);
@@ -241,7 +372,7 @@ function hidePlayerEl(pid) {
 function getPlayerEls(pid) {
   let e = V.playerEls[pid];
   if (!e) {
-    const circle = svgEl("circle", { r: 1.7, class: "pdot" });
+    const circle = svgEl("circle", { r: S(1.7), class: "pdot" });
     const label = svgEl("text", { class: "plabel" });
     V.persist.appendChild(circle);
     V.persist.appendChild(label);
@@ -265,8 +396,8 @@ function drawFrame() {
   const planted = round.plant && round.plant.tick <= t;
   if (planted) {
     const [x, y] = pos(round.plant.callout_id);
-    V.spikeEl.setAttribute("x", x - 1.4);
-    V.spikeEl.setAttribute("y", y - 1.4);
+    V.spikeEl.setAttribute("x", x - S(1.4));
+    V.spikeEl.setAttribute("y", y - S(1.4));
     V.spikeEl.setAttribute("transform", `rotate(45 ${x} ${y})`);
     V.spikeEl.style.display = "";
     V.spikeRingEl.setAttribute("cx", x);
@@ -287,9 +418,10 @@ function drawFrame() {
       hidePlayerEl(pid);
       const p = pos(death.callout_id ?? round.placements[pid]);
       if (p) {
+        const r = S(1.2);
         V.dyn.appendChild(svgEl("path", {
-          d: `M${p[0] - 1.2} ${p[1] - 1.2} L${p[0] + 1.2} ${p[1] + 1.2} M${p[0] - 1.2} ${p[1] + 1.2} L${p[0] + 1.2} ${p[1] - 1.2}`,
-          stroke: "currentColor", class: "pdot " + teamCls + " dead", "stroke-width": .7,
+          d: `M${p[0] - r} ${p[1] - r} L${p[0] + r} ${p[1] + r} M${p[0] - r} ${p[1] + r} L${p[0] + r} ${p[1] - r}`,
+          stroke: "currentColor", class: "pdot " + teamCls + " dead", "stroke-width": S(.7),
         }));
       }
       continue;
@@ -308,10 +440,9 @@ function drawFrame() {
     label.textContent = info.handle;
 
     // Short fading motion trail while mid-move, so heading reads clearly.
+    // move.from is already the trail-start point along the actual path.
     if (move.moving) {
-      const [fx, fy] = move.from;
-      const f0 = Math.max(0, move.f - TRAIL_SPAN);
-      const sx = fx + (x - fx) * f0, sy = fy + (y - fy) * f0;
+      const [sx, sy] = move.from;
       V.dyn.appendChild(svgEl("line", {
         x1: sx.toFixed(2), y1: sy.toFixed(2), x2: x.toFixed(2), y2: y.toFixed(2),
         class: "ptrail " + teamCls, opacity: Math.min(1, move.f * 2).toFixed(2),
@@ -418,6 +549,8 @@ async function openReplay(fixtureId, mapIndex) {
   names[data.team_b] = data.fixture.team_b_name;
   V = {
     map: data.map,
+    floor: data.map.floor || null,
+    iso: !!data.map.floor, // isometric by default when geometry exists
     players: data.players,
     teamA: data.team_a,
     teamB: data.team_b,
@@ -430,6 +563,9 @@ async function openReplay(fixtureId, mapIndex) {
     speed: 1,
     lastTs: null,
   };
+  const isoBtn = document.getElementById("v-view");
+  isoBtn.style.display = V.floor ? "" : "none";
+  isoBtn.textContent = V.iso ? "2D" : "ISO";
   document.getElementById("v-title").innerHTML =
     `<b>${names[data.team_a]}</b> vs <b>${names[data.team_b]}</b> · ${data.map.display_name}`;
   drawStatic();
@@ -451,6 +587,13 @@ document.getElementById("v-play").onclick = () => {
   V.lastTs = null;
   updatePlayBtn();
   if (V.playing) requestAnimationFrame(loop);
+};
+document.getElementById("v-view").onclick = () => {
+  if (!V || !V.floor) return;
+  V.iso = !V.iso;
+  document.getElementById("v-view").textContent = V.iso ? "2D" : "ISO";
+  drawStatic(); // rebuilds persist/dyn layers for the new projection
+  drawFrame();
 };
 document.getElementById("v-prev").onclick = () => V && setRound(V.roundIdx - 1);
 document.getElementById("v-next").onclick = () => V && setRound(V.roundIdx + 1);

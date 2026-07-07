@@ -217,6 +217,30 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 #v-clock.post-plant { color: var(--es-color-text-warning, #e5a53a); font-weight: 700; }
 
 /* SVG map pieces */
+.floor {
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 88%, #fff 12%);
+  stroke: var(--es-color-border-primary, #262a35);
+  stroke-width: .5;
+}
+.floor-site {
+  fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 16%, var(--es-color-bg-elevated, #1c202b));
+}
+.floor-wall {
+  fill: color-mix(in srgb, var(--es-color-bg-sunken, #0b0d12) 75%, #000 25%);
+  stroke: none;
+}
+.corridor {
+  fill: none;
+  stroke: var(--es-color-border-secondary, #1c202b);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .8;
+}
+svg.iso .callout-label { font-size: 3.4px; }
+svg.iso .site-label { font-size: 7px; }
+svg.iso .plabel { font-size: 3.4px; }
+
 .edge { stroke: var(--es-color-border-primary, #262a35); stroke-width: .6; }
 .callout-dot { fill: var(--es-color-bg-elevated, #1c202b); stroke: var(--es-color-border-primary, #262a35); stroke-width: .4; }
 .callout-site { fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 18%, var(--es-color-bg-elevated, #1c202b)); }

@@ -1,0 +1,53 @@
+# Hand-tuned geometry — Lotus's three sites. B sits close under spawn
+# (Main/Diamond fork), A and C are long lanes on the flanks, and a
+# compact Mid (Tree/Center/Alley) forks off toward both A Link and C.
+map_id: lotus
+regions:
+  # -- Spawns (wide, shallow) -------------------------------------------
+  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+
+  # -- A site -----------------------------------------------------------
+  a_main: { x: 6.0, y: 16.0, w: 9.0, h: 30.0 }
+  a_link: { x: 20.0, y: 31.0, w: 14.0, h: 14.0 }
+  a_site: { x: 8.0, y: 44.0, w: 20.0, h: 20.0 }
+  a_tree: { x: 8.0, y: 62.0, w: 14.0, h: 14.0 }
+  a_dock: { x: 16.0, y: 65.0, w: 14.0, h: 16.0 }
+
+  # -- Mid ------------------------------------------------------------------
+  mid_tree: { x: 25.0, y: 33.0, w: 14.0, h: 14.0 }
+  mid_center: { x: 32.0, y: 39.0, w: 14.0, h: 14.0 }
+  alley: { x: 60.0, y: 35.0, w: 14.0, h: 14.0 }
+
+  # -- B site -----------------------------------------------------------
+  b_main: { x: 45.0, y: 16.0, w: 10.0, h: 34.0 }
+  b_diamond: { x: 52.0, y: 17.0, w: 14.0, h: 17.0 }
+  b_site: { x: 40.0, y: 50.0, w: 20.0, h: 20.0 }
+  b_link: { x: 40.0, y: 65.0, w: 14.0, h: 16.0 }
+  b_tower: { x: 48.0, y: 67.0, w: 14.0, h: 14.0 }
+
+  # -- C site -----------------------------------------------------------
+  c_main: { x: 85.0, y: 16.0, w: 9.0, h: 30.0 }
+  c_alley: { x: 66.0, y: 31.0, w: 14.0, h: 14.0 }
+  c_site: { x: 72.0, y: 44.0, w: 20.0, h: 20.0 }
+  c_tunnel: { x: 71.0, y: 63.0, w: 14.0, h: 18.0 }
+  c_dock: { x: 70.0, y: 65.0, w: 14.0, h: 16.0 }
+
+corridors:
+  # A Main and C Main are the two long flank lanes off spawn.
+  - between: [attacker_spawn, a_main]
+    via: [[15.0, 12.0]]
+  - between: [attacker_spawn, c_main]
+    via: [[85.0, 12.0]]
+  # Mid Center is a straight run down the middle of spawn.
+  - between: [attacker_spawn, mid_center]
+    via: [[50.0, 25.0]]
+  # Alley forks off Mid toward C.
+  - between: [mid_center, alley]
+    via: [[54.0, 44.0]]
+  # Diamond loops around B Main to reach the back of site.
+  - between: [b_diamond, b_site]
+    via: [[58.0, 42.0]]
+  # Tree is a defender-side flank back to spawn.
+  - between: [defender_spawn, a_tree]
+    via: [[20.0, 80.0]]

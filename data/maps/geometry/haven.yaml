@@ -1,0 +1,51 @@
+# Hand-tuned geometry — Haven's three lanes (A/B/C) fanning out from a
+# shared attacker spawn down to a shared defender spawn, with a Mid
+# cluster (courtyard/doors/window) bridging A and B.
+map_id: haven
+regions:
+  # -- Spawns (wide, shallow) -------------------------------------------
+  attacker_spawn: { x: 26.0, y: 0.0, w: 48.0, h: 17.0 }
+  defender_spawn: { x: 30.0, y: 81.0, w: 40.0, h: 19.0 }
+
+  # -- A lane -------------------------------------------------------------
+  a_lobby: { x: 6.0, y: 9.0, w: 18.0, h: 16.0 }
+  a_long: { x: 5.0, y: 15.0, w: 9.0, h: 26.0 }
+  a_short: { x: 14.0, y: 28.0, w: 16.0, h: 16.0 }
+  a_site: { x: 12.0, y: 40.0, w: 18.0, h: 18.0 }
+  a_heaven: { x: 10.0, y: 58.0, w: 13.0, h: 13.0 }
+  a_sewer: { x: 23.0, y: 56.0, w: 13.0, h: 13.0 }
+
+  # -- B lane ---------------------------------------------------------------
+  b_main: { x: 42.0, y: 17.0, w: 16.0, h: 18.0 }
+  b_garage: { x: 42.0, y: 35.0, w: 16.0, h: 14.0 }
+  b_site: { x: 42.0, y: 49.0, w: 17.0, h: 16.0 }
+  b_back: { x: 44.0, y: 65.0, w: 16.0, h: 16.0 }
+
+  # -- C lane -----------------------------------------------------------
+  c_lobby: { x: 74.0, y: 9.0, w: 18.0, h: 16.0 }
+  c_long: { x: 84.0, y: 15.0, w: 9.0, h: 26.0 }
+  c_site: { x: 70.0, y: 41.0, w: 18.0, h: 18.0 }
+  c_cubby: { x: 62.0, y: 44.0, w: 12.0, h: 12.0 }
+  c_link: { x: 62.0, y: 54.0, w: 16.0, h: 14.0 }
+
+  # -- Mid cluster --------------------------------------------------------
+  mid_doors: { x: 26.0, y: 41.0, w: 14.0, h: 15.0 }
+  mid_courtyard: { x: 40.0, y: 44.0, w: 14.0, h: 14.0 }
+  mid_window: { x: 54.0, y: 44.0, w: 14.0, h: 14.0 }
+
+corridors:
+  # Attacker spawn's two long lanes are literal hallways, not open doors.
+  - between: [attacker_spawn, a_long]
+    via: [[15.0, 14.0]]
+  - between: [attacker_spawn, c_long]
+    via: [[85.0, 14.0]]
+  # Defender spawn fans out to the back of each site.
+  - between: [defender_spawn, a_heaven]
+    via: [[25.0, 75.0]]
+  - between: [defender_spawn, a_sewer]
+    via: [[35.0, 74.0]]
+  - between: [defender_spawn, c_link]
+    via: [[68.0, 76.0]]
+  # Mid Window overlooks B Main from across a gap.
+  - between: [b_main, mid_window]
+    via: [[59.0, 39.0]]

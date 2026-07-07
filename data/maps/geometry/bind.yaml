@@ -1,0 +1,40 @@
+# Hand-tuned geometry — Bind's two domes with no mid; A and B are mirrored
+# lanes that each end in a wide site and a defender-side hall back to spawn.
+map_id: bind
+regions:
+  # -- Spawns (wide, shallow) -------------------------------------------
+  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+
+  # -- A side --------------------------------------------------------------
+  a_lobby: { x: 14.0, y: 12.0, w: 20.0, h: 17.0 }
+  a_showers: { x: 4.0, y: 32.0, w: 18.0, h: 16.0 }
+  a_short: { x: 26.0, y: 30.0, w: 16.0, h: 16.0 }
+  a_site: { x: 12.0, y: 48.0, w: 20.0, h: 20.0 }
+  a_lamps: { x: 24.0, y: 66.0, w: 16.0, h: 16.0 }
+  a_uhall: { x: 6.0, y: 68.0, w: 16.0, h: 16.0 }
+
+  # -- B side -----------------------------------------------------------------
+  b_fountain: { x: 66.0, y: 12.0, w: 20.0, h: 17.0 }
+  b_window: { x: 58.0, y: 30.0, w: 16.0, h: 16.0 }
+  b_long: { x: 76.0, y: 28.0, w: 18.0, h: 18.0 }
+  b_site: { x: 66.0, y: 48.0, w: 20.0, h: 20.0 }
+  b_elbow: { x: 60.0, y: 68.0, w: 16.0, h: 16.0 }
+  b_hall: { x: 76.0, y: 68.0, w: 16.0, h: 16.0 }
+
+corridors:
+  # B Long is its own hallway straight off spawn.
+  - between: [attacker_spawn, b_long]
+    via: [[80.0, 14.0]]
+  # A Short cuts across to Lamps behind the back of A Site.
+  - between: [a_short, a_lamps]
+    via: [[28.0, 58.0]]
+  # U-Hall is the defender-side corridor back to spawn.
+  - between: [a_uhall, defender_spawn]
+    via: [[20.0, 80.0]]
+  # B Long runs down the outside wall to Elbow.
+  - between: [b_long, b_elbow]
+    via: [[80.0, 60.0]]
+  # B Hall mirrors U-Hall on the defender side.
+  - between: [b_hall, defender_spawn]
+    via: [[80.0, 80.0]]
