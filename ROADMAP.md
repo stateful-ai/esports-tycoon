@@ -18,12 +18,19 @@ Three outcomes the whole project is aiming at. Everything on the roadmap should 
 
 ## Now (active, 0-2 weeks)
 
+**→ Sprint 2 — "See the game": [docs/sprints/sprint-02.md](docs/sprints/sprint-02.md)**
+Web UI on the design system, 2D match viewer (adds MoveEvent to the engine),
+narrative v0 from the salvage patterns, season analytics, veto + scouting fog,
+2 maps + 4 agents + Ludo art.
+
+Previously in Now — all done:
+
 | # | Item | Status | Notes |
 |---|---|---|---|
 | 1 | **Sprint 0** — schemas, RNG tree, event log, data files, tests | ✅ Done | 18 passing + 1 xfail north-star test |
 | 2 | **Design system v0** — tokens, components, showcase | ✅ Done | `ui/design-system/` |
 | 3 | **Engineering guardrails** — skill enforcing determinism / typed-boundary / data-driven rules | ✅ Done | `skills/esports-sim-guardrails` |
-| 4 | **Heuristic player policy v0** | Not started | Attribute-weighted decision function fulfilling `PlayerPolicy` contract. Seeds the match engine. |
+| 4 | **Heuristic player policy v0** | ✅ Done | `policy/heuristic.py` — order-following baseline behind the engine |
 
 ---
 
@@ -144,4 +151,5 @@ Explicit non-goals. Calling these out so we don't drift.
 
 ## Changelog
 
+- **2026-07-07** — MVP built in one push: Phase 1 (match engine, determinism gate strict-passing), Phase 3 (tycoon loop: league/training/economy/market/save-load), and the headless half of Phase 5 (`--auto` CLI) are done; 33 tests, CI live. Repo published to github.com/stateful-ai/esports-tycoon (old prototype preserved on `legacy-tycoon`; salvage in `docs/salvage/`). Phases 2 + 4 fold into **Sprint 2 — "See the game"** (`docs/sprints/sprint-02.md`) alongside analytics, veto, scouting fog, and content.
 - **2026-04-22** — First roadmap. Sprint 0 scaffold, design system v0, and engineering guardrails skill marked Done. Heuristic policy v0 is the next active item.
