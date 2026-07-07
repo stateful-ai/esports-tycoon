@@ -9,7 +9,7 @@ import pytest
 
 from esports_sim.manager import advance_week, new_campaign
 from esports_sim.manager.market import release_player, sign_player
-from esports_sim.manager.schedule import regular_season_weeks
+from esports_sim.manager.schedule import regular_season_weeks, veto_bo3
 from esports_sim.manager.state import GameState
 from esports_sim.registry import GameData
 
@@ -115,3 +115,18 @@ def test_forfeit_when_roster_empty(campaign: GameState, game_data: GameData) -> 
     mine = next(f for f in report.fixtures if tid in (f.team_a, f.team_b))
     assert mine.played
     assert mine.winner_id != tid
+
+
+def test_veto_bo3_deterministic_and_valid() -> None:
+    maps = ["ascent", "bind", "haven", "lotus", "split"]
+    ma = {"ascent": 80.0, "bind": 40.0, "haven": 60.0, "lotus": 55.0, "split": 50.0}
+    mb = {"ascent": 45.0, "bind": 70.0, "haven": 50.0, "lotus": 65.0, "split": 55.0}
+    order1, log1 = veto_bo3(maps, ma, mb, "AAA", "BBB")
+    order2, log2 = veto_bo3(maps, ma, mb, "AAA", "BBB")
+    assert (order1, log1) == (order2, log2)
+    assert len(order1) == 3 and len(set(order1)) == 3
+    assert all(m in maps for m in order1)
+    # A dumps its worst map, B dumps its worst matchup, picks follow strength.
+    assert log1[0] == "AAA ban bind"
+    assert log1[1] == "BBB ban ascent"
+    assert order1 == ["haven", "lotus", "split"]

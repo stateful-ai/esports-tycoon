@@ -22,6 +22,7 @@ from esports_sim.manager.schedule import (
     build_regular_season,
     build_semifinals,
     regular_season_weeks,
+    veto_bo3,
 )
 from esports_sim.manager.state import (
     ChampionRecord,
@@ -161,19 +162,29 @@ def advance_week(
         if tid == gs.user_team_id:
             report.user_income, report.user_expenses = income, expenses
 
-    # 4. Contracts + AI roster upkeep.
+    # 4. Contracts + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
+    _tick_scouting(gs)
 
     _update_world_ranks(gs)
 
     # 5. Phase transitions.
+    def veto_for(a: str, b: str) -> tuple[list[str], list[str]]:
+        return veto_bo3(
+            sorted(gd.maps),
+            _team_map_mastery(gs, a, sorted(gd.maps)),
+            _team_map_mastery(gs, b, sorted(gd.maps)),
+            gs.teams[a].tag,
+            gs.teams[b].tag,
+        )
+
     n_weeks = regular_season_weeks(len(gs.teams))
     if gs.phase == "regular" and gs.week == n_weeks:
         pay_regular_season_prizes(gs)
         order = gs.standings_order()
         gs.fixtures.extend(
-            build_semifinals(order, sorted(gd.maps), gs.season, gs.week + 1)
+            build_semifinals(order, gs.season, gs.week + 1, veto_for)
         )
         gs.phase = "playoffs"
         top4 = ", ".join(gs.teams[t].name for t in order[:4])
@@ -185,7 +196,7 @@ def advance_week(
         if all(f.played for f in semis) and final is None:
             winners = [f.winner_id for f in semis if f.winner_id]
             gs.fixtures.append(
-                build_final(winners, sorted(gd.maps), gs.season, gs.week + 1)
+                build_final(winners, gs.season, gs.week + 1, veto_for)
             )
             report.notes.append("Grand final next week.")
         elif final is not None and final.played:
@@ -386,6 +397,35 @@ def _apply_match_effects(gs: GameState, f: Fixture) -> None:
             team.fan_count = int(team.fan_count * 1.01) + 500
 
 
+def _team_map_mastery(
+    gs: GameState, tid: str, map_ids: list[str]
+) -> dict[str, float]:
+    """Roster-average per-map mastery, defaulting to 50 for unknown maps."""
+    roster = gs.roster(tid)
+    out: dict[str, float] = {}
+    for m in map_ids:
+        vals = [
+            next((mp.mastery for mp in p.map_pool if mp.map_id == m), 50.0)
+            for p in roster
+        ]
+        out[m] = sum(vals) / len(vals) if vals else 50.0
+    return out
+
+
+SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full knowledge
+
+
+def _tick_scouting(gs: GameState) -> None:
+    if gs.scout_target and gs.scout_target in gs.teams:
+        cur = gs.scout_progress.get(gs.scout_target, 0.0)
+        after = min(1.0, round(cur + SCOUT_WEEKLY_GAIN, 2))
+        gs.scout_progress[gs.scout_target] = after
+        if after >= 1.0 and cur < 1.0:
+            gs.push_news(
+                f"Scouting report on {gs.teams[gs.scout_target].name} complete."
+            )
+
+
 def _update_world_ranks(gs: GameState) -> None:
     def key(tid: str) -> tuple:
         r = gs.standings.get(tid, TeamRecord())
@@ -424,7 +464,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     for _ in range(5):
         market._generate_rookie(gs, gd, rng)
 
-    # New season.
+    # New season. Scouting knowledge goes stale over the break.
+    gs.scout_progress = {}
     gs.season += 1
     gs.week = 1
     gs.phase = "regular"

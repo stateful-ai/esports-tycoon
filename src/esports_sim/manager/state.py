@@ -58,6 +58,8 @@ class Fixture(BaseModel):
     team_a: str
     team_b: str
     maps: list[str] = Field(default_factory=list)  # planned map order
+    # Human-readable veto log for BO3s, e.g. "NXS ban bind".
+    veto: list[str] = Field(default_factory=list)
     played: bool = False
     results: list[MapResult] = Field(default_factory=list)
     winner_id: str | None = None
@@ -169,6 +171,11 @@ class GameState(BaseModel):
     player_stats: dict[str, PlayerSeasonStats] = Field(default_factory=dict)
     team_stats: dict[str, TeamSeasonStats] = Field(default_factory=dict)
     awards: list[AwardRecord] = Field(default_factory=list)
+
+    # Scouting: which rival the user's scout watches, and how much of each
+    # team's true attributes are known (0..1; own team is always 1.0).
+    scout_target: str | None = None
+    scout_progress: dict[str, float] = Field(default_factory=dict)
 
     # -- helpers -------------------------------------------------------------
 

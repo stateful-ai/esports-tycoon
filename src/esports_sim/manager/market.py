@@ -107,15 +107,30 @@ def renew_contract(
 # Weekly market upkeep (contracts tick, AI roster management)
 
 
+CONTRACT_PRESSURE_WEEKS = 8
+
+
 def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
     """Contracts count down weekly. AI teams renew their good players
-    before expiry; anyone hitting zero walks to free agency."""
+    before expiry; anyone hitting zero walks to free agency. User players
+    in form want an early extension — ignoring them costs morale weekly."""
     for tid in sorted(gs.teams):
         team = gs.teams[tid]
         is_ai = tid != gs.user_team_id
         for pid in list(team.player_ids):
             p = gs.players[pid]
             p.contract_weeks_left = max(0, p.contract_weeks_left - 1)
+            if (
+                not is_ai
+                and 0 < p.contract_weeks_left <= CONTRACT_PRESSURE_WEEKS
+                and p.form >= 55
+            ):
+                if p.contract_weeks_left == CONTRACT_PRESSURE_WEEKS:
+                    gs.push_news(
+                        f"{p.handle} wants a new deal ({p.contract_weeks_left} "
+                        f"weeks left) — morale suffers until renewed."
+                    )
+                p.morale = max(0.0, round(p.morale - 2.0, 1))
             if is_ai and 0 < p.contract_weeks_left <= 6:
                 affordable = team.balance > p.salary * 20
                 wants = player_quality(p) >= 52 or len(team.player_ids) <= ROSTER_SIZE

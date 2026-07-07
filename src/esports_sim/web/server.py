@@ -11,6 +11,7 @@ Run: python -m esports_sim --web
 
 from __future__ import annotations
 
+import random
 import threading
 from pathlib import Path
 
@@ -63,7 +64,24 @@ app = FastAPI(title="esports-sim", docs_url=None, redoc_url=None)
 # View serializers
 
 
-def _player_view(p: Player, gs: GameState) -> dict:
+def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -> float:
+    """Scout-noised attribute. Deterministic per (campaign, player, attr):
+    the same fog level always shows the same guess — reports don't jitter."""
+    if sigma <= 0:
+        return true_val
+    r = random.Random(f"{gs.seed}|{pid}|{attr}")
+    return float(min(99.0, max(1.0, round(true_val + r.uniform(-1, 1) * sigma))))
+
+
+def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
+    attrs = {
+        k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
+    }
+    overall = (
+        round(sum(attrs.values()) / len(attrs), 1)
+        if attrs
+        else round(market.player_quality(p), 1)
+    )
     return {
         "id": p.id,
         "handle": p.handle,
@@ -74,16 +92,17 @@ def _player_view(p: Player, gs: GameState) -> dict:
         "region": str(p.region),
         "salary": p.salary,
         "contract_weeks_left": p.contract_weeks_left,
-        "morale": p.morale,
-        "stamina": p.stamina,
-        "form": p.form,
-        "attributes": p.attributes,
-        "overall": round(market.player_quality(p), 1),
+        "morale": _fogged(gs, p.id, "morale", p.morale, fog),
+        "stamina": _fogged(gs, p.id, "stamina", p.stamina, fog),
+        "form": _fogged(gs, p.id, "form", p.form, fog),
+        "attributes": attrs,
+        "overall": overall,
+        "fog": round(fog, 1),
         "agents": [
             {"agent_id": m.agent_id, "mastery": m.mastery}
             for m in sorted(p.agent_pool, key=lambda m: -m.mastery)
         ],
-        "personality": p.personality_tags,
+        "personality": p.personality_tags if fog <= 0 else ["?"],
         "is_free_agent": p.id in gs.free_agent_ids,
         "asking_salary": market.asking_salary(p),
     }
@@ -120,6 +139,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "team_a_name": gs.teams[f.team_a].name,
         "team_b_name": gs.teams[f.team_b].name,
         "maps": f.maps,
+        "veto": f.veto,
         "played": f.played,
         "winner_id": f.winner_id,
         "map_score": list(f.map_score),
@@ -192,6 +212,13 @@ def state() -> dict:
             "training_focus": gs.training_focus.get(gs.user_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
+            "scout": {
+                "target": gs.scout_target,
+                "target_name": gs.teams[gs.scout_target].name
+                if gs.scout_target in gs.teams
+                else None,
+                "progress": gs.scout_progress.get(gs.scout_target or "", 0.0),
+            },
             "standings_top": [
                 {"team_id": tid, "name": gs.teams[tid].name, **gs.standings[tid].model_dump()}
                 for tid in order[:4]
@@ -200,16 +227,29 @@ def state() -> dict:
         }
 
 
+FOG_BASE_SIGMA = 12.0
+
+
+def _team_fog(gs: GameState, team_id: str) -> float:
+    if team_id == gs.user_team_id:
+        return 0.0
+    return FOG_BASE_SIGMA * (1.0 - gs.scout_progress.get(team_id, 0.0))
+
+
 @app.get("/api/roster/{team_id}")
 def roster(team_id: str) -> dict:
     with S.lock:
         gs = S.require_gs()
         if team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
+        fog = _team_fog(gs, team_id)
         return {
             "team": _team_view(gs.teams[team_id], gs),
-            "players": [_player_view(p, gs) for p in gs.roster(team_id)],
+            "players": [_player_view(p, gs, fog) for p in gs.roster(team_id)],
             "is_user_team": team_id == gs.user_team_id,
+            "fog": round(fog, 1),
+            "scouting_this": gs.scout_target == team_id,
+            "scout_progress": gs.scout_progress.get(team_id, 0.0),
         }
 
 
@@ -351,6 +391,23 @@ def set_training(body: TrainingBody) -> dict:
         gs.training_focus[gs.user_team_id] = body.focus
         S.save()
         return {"ok": True, "focus": body.focus}
+
+
+class ScoutBody(BaseModel):
+    team_id: str
+
+
+@app.post("/api/actions/scout")
+def scout(body: ScoutBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.team_id not in gs.teams:
+            raise HTTPException(404, "unknown team")
+        if body.team_id == gs.user_team_id:
+            raise HTTPException(422, "you already know your own team")
+        gs.scout_target = body.team_id
+        S.save()
+        return {"ok": True, "message": f"scout assigned to {gs.teams[body.team_id].name}"}
 
 
 class PlayerBody(BaseModel):

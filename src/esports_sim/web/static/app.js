@@ -138,6 +138,11 @@ function dashboard(v) {
   };
   focus.appendChild(sel);
   next.appendChild(focus);
+  if (s.scout && s.scout.target) {
+    next.appendChild(el("p", "muted",
+      `Scouting ${s.scout.target_name}: ${Math.round(s.scout.progress * 100)}% ` +
+      `(assign from a rival's roster page)`));
+  }
   g.appendChild(next);
   v.appendChild(g);
 
@@ -162,9 +167,32 @@ function dashboard(v) {
 }
 
 async function roster(v) {
-  const data = await api(`/api/roster/${App.state.user_team.id}`);
+  const teamId = App.rosterTeam ?? App.state.user_team.id;
+  const data = await api(`/api/roster/${teamId}`);
   const card = el("div", "card");
-  card.innerHTML = `<h2>Roster — ${data.team.name} (${data.players.length}/5)</h2>`;
+  const fogNote = data.fog > 0
+    ? ` <span class="muted">— scouted estimates ±${data.fog}</span>`
+    : "";
+  card.innerHTML = `<h2>Roster — ${data.team.name} (${data.players.length}/5)${fogNote}</h2>`;
+  if (!data.is_user_team) {
+    const row = el("div", "row");
+    const back = el("button", "btn btn-sm", "← My team");
+    back.onclick = () => { App.rosterTeam = null; render(); };
+    row.appendChild(back);
+    const scout = el(
+      "button", "btn btn-sm",
+      data.scouting_this
+        ? `Scouting… ${Math.round(data.scout_progress * 100)}%`
+        : "Assign scout"
+    );
+    scout.disabled = data.scouting_this && data.scout_progress >= 1;
+    scout.onclick = async () => {
+      const r = await api("/api/actions/scout", { team_id: teamId });
+      toast(r.message); render();
+    };
+    row.appendChild(scout);
+    card.appendChild(row);
+  }
   const t = el("table");
   t.innerHTML = `<thead><tr>
     <th>Player</th><th>Role</th><th class="num">Age</th><th class="num">OVR</th>
@@ -172,29 +200,34 @@ async function roster(v) {
     <th class="num">Salary</th><th class="num">Contract</th><th></th></tr></thead>`;
   const tb = el("tbody");
   for (const p of data.players) {
+    const fogged = p.fog > 0;
+    const ovr = fogged ? `~${Math.round(p.overall)}` : p.overall;
+    const actions = data.is_user_team
+      ? `<button class="btn btn-sm" data-act="renew">Renew</button>
+         <button class="btn btn-sm" data-act="release">Release</button>`
+      : "";
     const tr = el("tr", "", `
       <td><b>${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
       <td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
-      <td class="num">${p.overall}</td>
+      <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
       <td>${bar(p.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>
-      <td>
-        <button class="btn btn-sm" data-act="renew">Renew</button>
-        <button class="btn btn-sm" data-act="release">Release</button>
-      </td>`);
-    tr.querySelector('[data-act="renew"]').onclick = async (e) => {
-      e.stopPropagation();
-      const r = await api("/api/actions/renew", { player_id: p.id });
-      toast(r.message); refresh(); render();
-    };
-    tr.querySelector('[data-act="release"]').onclick = async (e) => {
-      e.stopPropagation();
-      if (!confirm(`Release ${p.handle}? Severance = 6 weeks salary.`)) return;
-      const r = await api("/api/actions/release", { player_id: p.id });
-      toast(r.message); refresh(); render();
-    };
+      <td>${actions}</td>`);
+    if (data.is_user_team) {
+      tr.querySelector('[data-act="renew"]').onclick = async (e) => {
+        e.stopPropagation();
+        const r = await api("/api/actions/renew", { player_id: p.id });
+        toast(r.message); refresh(); render();
+      };
+      tr.querySelector('[data-act="release"]').onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm(`Release ${p.handle}? Severance = 6 weeks salary.`)) return;
+        const r = await api("/api/actions/release", { player_id: p.id });
+        toast(r.message); refresh(); render();
+      };
+    }
     tr.style.cursor = "pointer";
     let detail = null;
     tr.onclick = () => {
@@ -232,12 +265,22 @@ async function standings(v) {
     <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
   const tb = el("tbody");
   data.rows.forEach((r, i) => {
-    tb.appendChild(el("tr", r.id === App.state.user_team.id ? "me" : "", `
+    const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
       <td>${i + 1}</td><td><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
       <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
       <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
       <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
-      <td class="num">${r.reputation}</td>`));
+      <td class="num">${r.reputation}</td>`);
+    tr.style.cursor = "pointer";
+    tr.title = "view roster";
+    tr.onclick = () => {
+      App.rosterTeam = r.id === App.state.user_team.id ? null : r.id;
+      document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+      document.querySelector('[data-tab="roster"]').classList.add("active");
+      App.tab = "roster";
+      render();
+    };
+    tb.appendChild(tr);
   });
   t.appendChild(tb);
   card.appendChild(t);
@@ -280,6 +323,10 @@ async function schedule(v) {
         line.appendChild(b);
       }
       card.appendChild(line);
+      if (f.veto.length) {
+        card.appendChild(el("div", "muted",
+          `<small>veto: ${f.veto.join(" · ")}</small>`));
+      }
     }
     v.appendChild(card);
   }

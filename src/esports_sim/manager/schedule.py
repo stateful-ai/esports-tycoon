@@ -54,31 +54,83 @@ def regular_season_weeks(n_teams: int) -> int:
     return 2 * (n_teams - 1)
 
 
+def veto_bo3(
+    map_ids: list[str],
+    mastery_a: dict[str, float],
+    mastery_b: dict[str, float],
+    tag_a: str,
+    tag_b: str,
+) -> tuple[list[str], list[str]]:
+    """Deterministic BO3 veto: A ban, B ban, A pick, B pick, remainder is
+    the decider. Teams ban where they're weakest relative to the opponent
+    and pick where they're strongest. Ties break on map id.
+
+    Returns (map order, human-readable veto log).
+    """
+    pool = sorted(map_ids)
+    log: list[str] = []
+
+    def score(m: str, own: dict, opp: dict) -> float:
+        return own.get(m, 50.0) - 0.5 * opp.get(m, 50.0)
+
+    def ban(own: dict, opp: dict, tag: str) -> None:
+        m = min(pool, key=lambda m: (score(m, own, opp), m))
+        pool.remove(m)
+        log.append(f"{tag} ban {m}")
+
+    def pick(own: dict, opp: dict, tag: str) -> str:
+        m = max(pool, key=lambda m: (score(m, own, opp), m))
+        pool.remove(m)
+        log.append(f"{tag} pick {m}")
+        return m
+
+    # With a 5-map pool this leaves exactly one decider; with fewer maps,
+    # degrade gracefully by skipping bans.
+    bans = max(0, len(pool) - 3)
+    if bans >= 1:
+        ban(mastery_a, mastery_b, tag_a)
+    if bans >= 2:
+        ban(mastery_b, mastery_a, tag_b)
+    for _ in range(max(0, len(pool) - 3)):
+        ban(mastery_a, mastery_b, tag_a)
+
+    m1 = pick(mastery_a, mastery_b, tag_a)
+    m2 = pick(mastery_b, mastery_a, tag_b)
+    decider = pool[0]
+    log.append(f"decider {decider}")
+    return [m1, m2, decider], log
+
+
 def build_semifinals(
-    standings_order: list[str], map_ids: list[str], season: int, week: int
+    standings_order: list[str],
+    season: int,
+    week: int,
+    veto_for,
 ) -> list[Fixture]:
-    """1v4 and 2v3, BO3 across the map pool."""
-    maps = sorted(map_ids)
+    """1v4 and 2v3, BO3. `veto_for(a, b)` returns (maps, veto_log) — the
+    campaign supplies it with live roster map masteries."""
     top = standings_order[:4]
     pairs = [(top[0], top[3]), (top[1], top[2])]
-    return [
-        Fixture(
-            id=f"s{season}semi{i}",
-            week=week,
-            stage="semi",
-            best_of=3,
-            team_a=a,
-            team_b=b,
-            maps=maps[:3],
+    out = []
+    for i, (a, b) in enumerate(pairs):
+        maps, veto = veto_for(a, b)
+        out.append(
+            Fixture(
+                id=f"s{season}semi{i}",
+                week=week,
+                stage="semi",
+                best_of=3,
+                team_a=a,
+                team_b=b,
+                maps=maps,
+                veto=veto,
+            )
         )
-        for i, (a, b) in enumerate(pairs)
-    ]
+    return out
 
 
-def build_final(
-    winners: list[str], map_ids: list[str], season: int, week: int
-) -> Fixture:
-    maps = sorted(map_ids)
+def build_final(winners: list[str], season: int, week: int, veto_for) -> Fixture:
+    maps, veto = veto_for(winners[0], winners[1])
     return Fixture(
         id=f"s{season}final",
         week=week,
@@ -86,5 +138,6 @@ def build_final(
         best_of=3,
         team_a=winners[0],
         team_b=winners[1],
-        maps=maps[:3],
+        maps=maps,
+        veto=veto,
     )
