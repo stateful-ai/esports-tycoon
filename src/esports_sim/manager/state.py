@@ -90,6 +90,59 @@ class ChampionRecord(BaseModel):
     team_name: str
 
 
+class PlayerSeasonStats(BaseModel):
+    """Season-long aggregates, summed from per-map MatchStats at sim time.
+    Reset (after awards) at season rollover."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    maps: int = 0
+    rounds: int = 0
+    kills: int = 0
+    deaths: int = 0
+    first_kills: int = 0
+    trade_kills: int = 0
+    headshots: int = 0
+    plants: int = 0
+    defuses: int = 0
+    rating_sum: float = 0.0
+
+    @property
+    def rating(self) -> float:
+        return self.rating_sum / max(self.maps, 1)
+
+    @property
+    def kd(self) -> float:
+        return self.kills / max(self.deaths, 1)
+
+    @property
+    def hs_pct(self) -> float:
+        return 100.0 * self.headshots / max(self.kills, 1)
+
+
+class TeamSeasonStats(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    maps: int = 0
+    atk_rounds: int = 0
+    atk_won: int = 0
+    def_rounds: int = 0
+    def_won: int = 0
+    pistols: int = 0
+    pistols_won: int = 0
+
+
+class AwardRecord(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    award: str
+    player_id: str
+    handle: str
+    team_name: str
+    value: str  # display string, e.g. "1.24 rating over 18 maps"
+
+
 class GameState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -111,6 +164,11 @@ class GameState(BaseModel):
     news: list[str] = Field(default_factory=list)
     champions: list[ChampionRecord] = Field(default_factory=list)
     fa_counter: int = 0  # monotonic id counter for generated free agents
+
+    # Season analytics (reset at rollover, after awards are handed out).
+    player_stats: dict[str, PlayerSeasonStats] = Field(default_factory=dict)
+    team_stats: dict[str, TeamSeasonStats] = Field(default_factory=dict)
+    awards: list[AwardRecord] = Field(default_factory=list)
 
     # -- helpers -------------------------------------------------------------
 

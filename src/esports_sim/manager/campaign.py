@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from esports_sim.manager import market, training
+from esports_sim.manager import market, narrative, training
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
@@ -29,7 +29,9 @@ from esports_sim.manager.state import (
     GameState,
     MapResult,
     PlayerLineSnap,
+    PlayerSeasonStats,
     TeamRecord,
+    TeamSeasonStats,
 )
 from esports_sim.registry.loader import GameData
 from esports_sim.rng.tree import RngTree
@@ -134,11 +136,14 @@ def advance_week(
 
     # 1. Matches.
     week_fixtures = gs.fixtures_for_week()
+    week_kills: dict[str, int] = {}
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f, collector=report.match_stats, events_out=events_out
         )
         report.fixtures.append(f)
+        for stats in report.match_stats.get(f.id, []):
+            _aggregate_stats(gs, f, stats, week_kills)
 
     # 2. Training (user focus is whatever they set; AI picks its own).
     for tid in sorted(gs.teams):
@@ -204,8 +209,49 @@ def advance_week(
                 f"{champ.name} win the title. Offseason next week."
             )
 
+    # 6. News (before the week label moves on).
+    narrative.weekly_news(gs, report, week_kills)
+
     gs.week += 1
     return report
+
+
+def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None:
+    """Fold one map's MatchStats into the season aggregates."""
+    n_rounds = len(stats.rounds)
+    rosters = {tid: set(gs.teams[tid].player_ids) for tid in (f.team_a, f.team_b)}
+
+    for tid in (f.team_a, f.team_b):
+        ts = gs.team_stats.setdefault(tid, TeamSeasonStats())
+        ts.maps += 1
+        for i, r in enumerate(stats.rounds):
+            attacking = r.attacking_team_id == tid
+            won = r.winner_id == tid
+            if attacking:
+                ts.atk_rounds += 1
+                ts.atk_won += int(won)
+            else:
+                ts.def_rounds += 1
+                ts.def_won += int(won)
+            if r.round_num in (1, 13):
+                ts.pistols += 1
+                ts.pistols_won += int(won)
+        for pid in sorted(rosters[tid]):
+            ps = gs.player_stats.setdefault(pid, PlayerSeasonStats())
+            ps.maps += 1
+            ps.rounds += n_rounds
+            line = stats.lines.get(pid)
+            if line is None:
+                continue
+            ps.kills += line.kills
+            ps.deaths += line.deaths
+            ps.first_kills += line.first_kills
+            ps.trade_kills += line.trade_kills
+            ps.headshots += line.headshots
+            ps.plants += line.plants
+            ps.defuses += line.defuses
+            ps.rating_sum += line.rating
+            week_kills[pid] = week_kills.get(pid, 0) + line.kills
 
 
 # ---------------------------------------------------------------------------
@@ -357,6 +403,12 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
     rng = tree.derive("season", gs.season, "offseason")
+
+    # Awards first — they read the season aggregates being retired.
+    for a in narrative.season_awards(gs):
+        report.notes.append(f"{a.award}: {a.handle} ({a.team_name}) — {a.value}")
+    gs.player_stats = {}
+    gs.team_stats = {}
 
     for pid in sorted(gs.players):
         training.apply_offseason_aging(gs.players[pid], rng)

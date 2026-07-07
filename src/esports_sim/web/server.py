@@ -257,6 +257,68 @@ def market_view() -> dict:
         return {"free_agents": out, "roster_size": market.ROSTER_SIZE}
 
 
+@app.get("/api/stats")
+def stats_view() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+
+        def team_of(pid: str) -> str:
+            return next(
+                (t.name for t in gs.teams.values() if pid in t.player_ids), "FA"
+            )
+
+        players = []
+        for pid in sorted(gs.player_stats):
+            st = gs.player_stats[pid]
+            p = gs.players.get(pid)
+            if p is None or st.maps == 0:
+                continue
+            players.append(
+                {
+                    "player_id": pid,
+                    "handle": p.handle,
+                    "team": team_of(pid),
+                    "maps": st.maps,
+                    "kills": st.kills,
+                    "deaths": st.deaths,
+                    "kd": round(st.kd, 2),
+                    "rating": round(st.rating, 2),
+                    "first_kills": st.first_kills,
+                    "trade_kills": st.trade_kills,
+                    "hs_pct": round(st.hs_pct, 1),
+                    "plants": st.plants,
+                    "defuses": st.defuses,
+                    "is_user": pid in gs.teams[gs.user_team_id].player_ids,
+                }
+            )
+        players.sort(key=lambda r: (-r["rating"], -r["kills"]))
+
+        teams = []
+        for tid in gs.standings_order():
+            ts = gs.team_stats.get(tid)
+            if ts is None or ts.maps == 0:
+                continue
+            teams.append(
+                {
+                    "team_id": tid,
+                    "name": gs.teams[tid].name,
+                    "maps": ts.maps,
+                    "atk_pct": round(100 * ts.atk_won / max(ts.atk_rounds, 1), 1),
+                    "def_pct": round(100 * ts.def_won / max(ts.def_rounds, 1), 1),
+                    "pistol_pct": round(
+                        100 * ts.pistols_won / max(ts.pistols, 1), 1
+                    ),
+                    "is_user": tid == gs.user_team_id,
+                }
+            )
+
+        return {
+            "players": players,
+            "teams": teams,
+            "awards": [a.model_dump() for a in reversed(gs.awards)],
+        }
+
+
 @app.get("/api/finances")
 def finances() -> dict:
     with S.lock:

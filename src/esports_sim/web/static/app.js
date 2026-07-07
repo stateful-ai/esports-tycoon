@@ -81,7 +81,7 @@ function render() {
   if (!App.state) return;
   const v = $("#view");
   v.innerHTML = "";
-  ({ dashboard, roster, standings, schedule, market, finances })[App.tab](v);
+  ({ dashboard, roster, standings, schedule, market, stats, finances })[App.tab](v);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -317,6 +317,63 @@ async function market(v) {
   t.appendChild(tb);
   card.appendChild(t);
   v.appendChild(card);
+}
+
+async function stats(v) {
+  const data = await api("/api/stats");
+
+  if (data.awards.length) {
+    const aw = el("div", "card");
+    aw.innerHTML = `<h2>Awards</h2>` + data.awards
+      .map((a) => `<div class="newsline"><span class="pill">S${a.season}</span>
+        <b>${a.award}</b> — ${a.handle} (${a.team_name}), ${a.value}</div>`)
+      .join("");
+    v.appendChild(aw);
+  }
+
+  const lead = el("div", "card");
+  lead.innerHTML = `<h2>League leaders — season ${App.state.season}</h2>`;
+  if (!data.players.length) {
+    lead.innerHTML += `<p class="muted">No maps played yet this season.</p>`;
+  } else {
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>
+      <th class="num">Maps</th><th class="num">Rating</th><th class="num">K</th>
+      <th class="num">D</th><th class="num">K/D</th><th class="num">FK</th>
+      <th class="num">HS%</th><th class="num">Plants</th><th class="num">Defuses</th></tr></thead>`;
+    const tb = el("tbody");
+    data.players.slice(0, 25).forEach((r, i) => {
+      tb.appendChild(el("tr", r.is_user ? "me" : "", `
+        <td>${i + 1}</td><td><b>${r.handle}</b></td><td class="muted">${r.team}</td>
+        <td class="num">${r.maps}</td><td class="num"><b>${r.rating.toFixed(2)}</b></td>
+        <td class="num">${r.kills}</td><td class="num">${r.deaths}</td>
+        <td class="num">${r.kd.toFixed(2)}</td><td class="num">${r.first_kills}</td>
+        <td class="num">${r.hs_pct}</td><td class="num">${r.plants}</td>
+        <td class="num">${r.defuses}</td>`));
+    });
+    t.appendChild(tb);
+    lead.appendChild(t);
+  }
+  v.appendChild(lead);
+
+  if (data.teams.length) {
+    const tc = el("div", "card");
+    tc.innerHTML = `<h2>Team tendencies</h2>`;
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Team</th><th class="num">Maps</th>
+      <th class="num">ATK round %</th><th class="num">DEF round %</th>
+      <th class="num">Pistol %</th></tr></thead>`;
+    const tb = el("tbody");
+    for (const r of data.teams) {
+      tb.appendChild(el("tr", r.is_user ? "me" : "", `
+        <td><b>${r.name}</b></td><td class="num">${r.maps}</td>
+        <td class="num">${r.atk_pct}</td><td class="num">${r.def_pct}</td>
+        <td class="num">${r.pistol_pct}</td>`));
+    }
+    t.appendChild(tb);
+    tc.appendChild(t);
+    v.appendChild(tc);
+  }
 }
 
 async function finances(v) {
