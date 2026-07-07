@@ -114,7 +114,16 @@ def runtime_gamedata(gs: GameState, gd: GameData) -> GameData:
 # Weekly tick
 
 
-def advance_week(gs: GameState, gd: GameData) -> WeekReport:
+def advance_week(
+    gs: GameState,
+    gd: GameData,
+    events_out: dict[str, list[list]] | None = None,
+) -> WeekReport:
+    """`events_out` (fixture id -> one event list per map) captures full
+    match logs at sim time for replay viewers. Like WeekReport.match_stats
+    it is transient: rosters move on (training/aging) immediately after,
+    so a later re-sim from the stored seed would not reproduce these logs.
+    """
     if gs.phase == "offseason":
         return _run_offseason(gs, gd)
 
@@ -126,7 +135,9 @@ def advance_week(gs: GameState, gd: GameData) -> WeekReport:
     # 1. Matches.
     week_fixtures = gs.fixtures_for_week()
     for f in sorted(week_fixtures, key=lambda x: x.id):
-        _sim_fixture(gs, rt_gd, tree, f, collector=report.match_stats)
+        _sim_fixture(
+            gs, rt_gd, tree, f, collector=report.match_stats, events_out=events_out
+        )
         report.fixtures.append(f)
 
     # 2. Training (user focus is whatever they set; AI picks its own).
@@ -207,6 +218,7 @@ def _sim_fixture(
     tree: RngTree,
     f: Fixture,
     collector: dict[str, list] | None = None,
+    events_out: dict[str, list[list]] | None = None,
 ) -> None:
     need = f.best_of // 2 + 1
 
@@ -253,6 +265,8 @@ def _sim_fixture(
         stats = compute_match_stats(res.events)
         if collector is not None:
             collector.setdefault(f.id, []).append(stats)
+        if events_out is not None:
+            events_out.setdefault(f.id, []).append(res.events)
         lines = [
             PlayerLineSnap(
                 player_id=pid,

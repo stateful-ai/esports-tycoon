@@ -1,0 +1,157 @@
+# Split — two sites split by a tall, contested mid. Loosely inspired by
+# Valorant's Split: Mid Vent feeds A Ramps, Mid Sewer feeds B Garden, and
+# both sites have a heaven-style perch overlooking the plant.
+
+id: split
+display_name: Split
+sites:
+  - a
+  - b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+
+callouts:
+  # -- Spawns ----------------------------------------------------------
+  attacker_spawn:
+    id: attacker_spawn
+    display_name: Attacker Spawn
+    site: none
+    zone: attacker_spawn
+    x: 50
+    y: 8
+  defender_spawn:
+    id: defender_spawn
+    display_name: Defender Spawn
+    site: none
+    zone: defender_spawn
+    x: 50
+    y: 92
+
+  # -- A site -------------------------------------------------------------
+  a_main:
+    id: a_main
+    display_name: A Main
+    site: a
+    zone: attacker_side
+    x: 20
+    y: 24
+  a_ramps:
+    id: a_ramps
+    display_name: A Ramps
+    site: a
+    zone: attacker_side
+    x: 30
+    y: 36
+  a_site:
+    id: a_site
+    display_name: A Site
+    site: a
+    zone: site
+    x: 18
+    y: 55
+  a_heaven:
+    id: a_heaven
+    display_name: A Heaven
+    site: a
+    zone: defender_side
+    x: 14
+    y: 68
+  a_screens:
+    id: a_screens
+    display_name: Screens
+    site: a
+    zone: defender_side
+    x: 24
+    y: 70
+
+  # -- Mid ------------------------------------------------------------------
+  mid_top:
+    id: mid_top
+    display_name: Mid Top
+    site: mid
+    zone: mid
+    x: 50
+    y: 30
+  mid_vent:
+    id: mid_vent
+    display_name: Mid Vent
+    site: mid
+    zone: mid
+    x: 40
+    y: 44
+  mid_sewer:
+    id: mid_sewer
+    display_name: Mid Sewer
+    site: mid
+    zone: mid
+    x: 60
+    y: 44
+
+  # -- B site ---------------------------------------------------------------
+  b_main:
+    id: b_main
+    display_name: B Main
+    site: b
+    zone: attacker_side
+    x: 80
+    y: 24
+  b_garden:
+    id: b_garden
+    display_name: B Garden
+    site: b
+    zone: attacker_side
+    x: 70
+    y: 36
+  b_site:
+    id: b_site
+    display_name: B Site
+    site: b
+    zone: site
+    x: 82
+    y: 55
+  b_elbow:
+    id: b_elbow
+    display_name: Elbow
+    site: b
+    zone: defender_side
+    x: 86
+    y: 68
+  b_rafters:
+    id: b_rafters
+    display_name: Rafters
+    site: b
+    zone: defender_side
+    x: 76
+    y: 70
+
+adjacency:
+  attacker_spawn: [a_main, mid_top, b_main]
+  a_main: [attacker_spawn, a_site]
+  a_ramps: [mid_vent, a_site]
+  a_site: [a_main, a_ramps, a_heaven, a_screens]
+  a_heaven: [a_site, a_screens, defender_spawn]
+  a_screens: [a_site, a_heaven, defender_spawn]
+
+  mid_top: [attacker_spawn, mid_vent, mid_sewer]
+  mid_vent: [mid_top, a_ramps]
+  mid_sewer: [mid_top, b_garden]
+
+  b_main: [attacker_spawn, b_site]
+  b_garden: [mid_sewer, b_site]
+  b_site: [b_main, b_garden, b_elbow, b_rafters]
+  b_elbow: [b_site, b_rafters, defender_spawn]
+  b_rafters: [b_site, b_elbow, defender_spawn]
+
+  defender_spawn: [a_heaven, a_screens, b_elbow, b_rafters]
+
+sightlines:
+  - { from_callout: a_main, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_ramps, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_heaven, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_screens, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: b_main, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_garden, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_elbow, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_rafters, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: mid_vent, to_callout: a_ramps }
+  - { from_callout: mid_sewer, to_callout: b_garden }

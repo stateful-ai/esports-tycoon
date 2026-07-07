@@ -115,6 +115,19 @@ class UtilityUsedEvent(Event):
     target_callout: str | None = None
 
 
+class MoveEvent(Event):
+    """Player placement or arrival at a callout. `from_callout is None`
+    marks round-start placement. Arrival-only: departures are implied
+    (arrival tick minus MOVE_TICKS_PER_EDGE), and a player killed mid-move
+    never arrives — their last event keeps them at the old callout.
+    """
+
+    type: Literal["round.move"] = "round.move"
+    player_id: str
+    from_callout: str | None = None
+    to_callout: str
+
+
 # ---------------------------------------------------------------------------
 # Discriminated union for parsing from JSONL
 
@@ -130,6 +143,7 @@ EventUnion = Annotated[
         SpikePlantEvent,
         SpikeDefuseEvent,
         UtilityUsedEvent,
+        MoveEvent,
     ],
     Field(discriminator="type"),
 ]

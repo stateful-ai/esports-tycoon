@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": ".venv-win\\Scripts\\python.exe",
+      "runtimeArgs": ["-m", "esports_sim", "--web", "--no-browser"],
+      "port": 8420
+    }
+  ]
+}

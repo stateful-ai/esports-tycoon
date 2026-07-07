@@ -20,6 +20,7 @@ from esports_sim.schemas.events import (
     SpikeDefuseEvent,
     BuyEvent,
     UtilityUsedEvent,
+    MoveEvent,
     EventUnion,
 )
 
@@ -58,5 +59,6 @@ __all__ = [
     "SpikeDefuseEvent",
     "BuyEvent",
     "UtilityUsedEvent",
+    "MoveEvent",
     "EventUnion",
 ]

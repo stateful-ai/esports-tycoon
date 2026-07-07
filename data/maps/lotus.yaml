@@ -1,0 +1,210 @@
+# Lotus — three sites around a compact mid. Loosely inspired by Valorant's
+# Lotus: A Main/Link with a tree for cover, a Mid that forks toward C via
+# Alley, and a B site fed by two close flanks. The "rotating doors" flavor
+# of the real map is just ordinary adjacency here.
+
+id: lotus
+display_name: Lotus
+sites:
+  - a
+  - b
+  - c
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+
+callouts:
+  # -- Spawns ----------------------------------------------------------
+  attacker_spawn:
+    id: attacker_spawn
+    display_name: Attacker Spawn
+    site: none
+    zone: attacker_spawn
+    x: 50
+    y: 8
+  defender_spawn:
+    id: defender_spawn
+    display_name: Defender Spawn
+    site: none
+    zone: defender_spawn
+    x: 50
+    y: 92
+
+  # -- A site -----------------------------------------------------------
+  a_main:
+    id: a_main
+    display_name: A Main
+    site: a
+    zone: attacker_side
+    x: 15
+    y: 25
+  a_link:
+    id: a_link
+    display_name: A Link
+    site: a
+    zone: attacker_side
+    x: 28
+    y: 38
+  a_site:
+    id: a_site
+    display_name: A Site
+    site: a
+    zone: site
+    x: 18
+    y: 55
+  a_tree:
+    id: a_tree
+    display_name: Tree
+    site: a
+    zone: defender_side
+    x: 15
+    y: 68
+  a_dock:
+    id: a_dock
+    display_name: Dock
+    site: a
+    zone: defender_side
+    x: 22
+    y: 72
+
+  # -- Mid ----------------------------------------------------------------
+  mid_tree:
+    id: mid_tree
+    display_name: Mid Tree
+    site: mid
+    zone: mid
+    x: 32
+    y: 40
+  mid_center:
+    id: mid_center
+    display_name: Mid
+    site: mid
+    zone: mid
+    x: 50
+    y: 46
+  alley:
+    id: alley
+    display_name: Alley
+    site: mid
+    zone: mid
+    x: 68
+    y: 42
+
+  # -- B site -----------------------------------------------------------
+  b_main:
+    id: b_main
+    display_name: B Main
+    site: b
+    zone: attacker_side
+    x: 50
+    y: 28
+  b_diamond:
+    id: b_diamond
+    display_name: Diamond
+    site: b
+    zone: attacker_side
+    x: 58
+    y: 30
+  b_site:
+    id: b_site
+    display_name: B Site
+    site: b
+    zone: site
+    x: 50
+    y: 60
+  b_link:
+    id: b_link
+    display_name: B Link
+    site: b
+    zone: defender_side
+    x: 48
+    y: 72
+  b_tower:
+    id: b_tower
+    display_name: Tower
+    site: b
+    zone: defender_side
+    x: 54
+    y: 74
+
+  # -- C site -----------------------------------------------------------
+  c_main:
+    id: c_main
+    display_name: C Main
+    site: c
+    zone: attacker_side
+    x: 82
+    y: 25
+  c_alley:
+    id: c_alley
+    display_name: C Alley
+    site: c
+    zone: attacker_side
+    x: 72
+    y: 38
+  c_site:
+    id: c_site
+    display_name: C Site
+    site: c
+    zone: site
+    x: 80
+    y: 58
+  c_tunnel:
+    id: c_tunnel
+    display_name: Tunnel
+    site: c
+    zone: defender_side
+    x: 78
+    y: 70
+  c_dock:
+    id: c_dock
+    display_name: C Dock
+    site: c
+    zone: defender_side
+    x: 84
+    y: 72
+
+# Directed adjacency. Symmetric by default (both sides can traverse).
+adjacency:
+  attacker_spawn: [a_main, mid_center, b_main, b_diamond, c_main]
+  defender_spawn: [a_tree, a_dock, b_link, b_tower, c_tunnel, c_dock]
+
+  a_main: [attacker_spawn, a_site]
+  a_link: [mid_tree, a_site]
+  a_site: [a_main, a_link, a_tree, a_dock]
+  a_tree: [a_site, a_dock, defender_spawn]
+  a_dock: [a_site, a_tree, defender_spawn]
+
+  mid_tree: [a_link, mid_center]
+  mid_center: [attacker_spawn, mid_tree, alley, b_main]
+  alley: [mid_center, c_alley]
+
+  b_main: [attacker_spawn, mid_center, b_site]
+  b_diamond: [attacker_spawn, b_site]
+  b_site: [b_main, b_diamond, b_link, b_tower]
+  b_link: [b_site, b_tower, defender_spawn]
+  b_tower: [b_site, b_link, defender_spawn]
+
+  c_main: [attacker_spawn, c_site]
+  c_alley: [alley, c_site]
+  c_site: [c_main, c_alley, c_tunnel, c_dock]
+  c_tunnel: [c_site, c_dock, defender_spawn]
+  c_dock: [c_site, c_tunnel, defender_spawn]
+
+# Sightlines — which callouts can see into which. advantaged_side is a
+# *default*; smokes/utility can flip it in-round.
+sightlines:
+  - { from_callout: a_main, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_link, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_tree, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_dock, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: b_main, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_diamond, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_link, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_tower, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: c_main, to_callout: c_site, advantaged_side: defense }
+  - { from_callout: c_alley, to_callout: c_site, advantaged_side: defense }
+  - { from_callout: c_tunnel, to_callout: c_site, advantaged_side: defense }
+  - { from_callout: c_dock, to_callout: c_site, advantaged_side: defense }
+  - { from_callout: mid_tree, to_callout: a_link }
+  - { from_callout: mid_center, to_callout: b_main }
+  - { from_callout: alley, to_callout: c_alley }

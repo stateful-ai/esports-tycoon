@@ -22,6 +22,10 @@ dev = [
   "pytest>=8.0",
   "pytest-xdist>=3.5",
 ]
+web = [
+  "fastapi>=0.111",
+  "uvicorn>=0.30",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/esports_sim"]

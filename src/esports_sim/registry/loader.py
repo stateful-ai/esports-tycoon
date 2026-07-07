@@ -99,7 +99,7 @@ def load_all(
     data_dir: Path | None = None,
 ) -> GameData:
     data_dir = data_dir or DEFAULT_DATA_DIR
-    map_ids = map_ids or ["haven", "ascent", "bind"]
+    map_ids = map_ids or ["haven", "ascent", "bind", "lotus", "split"]
     team_ids = team_ids or ["team_nexus", "team_vanguard"]
 
     attributes = load_attributes(data_dir)

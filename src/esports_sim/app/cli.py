@@ -501,7 +501,16 @@ def main() -> None:
     parser.add_argument("--auto", type=int, default=0, help="headless: play N weeks")
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")
+    parser.add_argument("--web", action="store_true", help="launch the browser UI")
+    parser.add_argument("--port", type=int, default=8420)
+    parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
+
+    if args.web:
+        from esports_sim.web.server import run  # deferred: needs [web] extras
+
+        run(port=args.port, open_browser=not args.no_browser)
+        return
 
     gd = load_all()
     if args.auto > 0:

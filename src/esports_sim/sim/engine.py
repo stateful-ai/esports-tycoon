@@ -31,6 +31,7 @@ from esports_sim.schemas import (
     Map,
     MatchEndEvent,
     MatchStartEvent,
+    MoveEvent,
     Player,
     PlayerObservation,
     PlayerRoundState,
@@ -452,6 +453,17 @@ class _MatchSim:
             self.p[pid].callout = spot
         defender_site = {pid: self._callout_site(assignment[pid]) for pid in defenders}
 
+        # Round-start placements for the replay viewer (from_callout=None).
+        for pid in sorted(self.p):
+            self._emit(
+                MoveEvent(
+                    seed_path=seed_path,
+                    player_id=pid,
+                    from_callout=None,
+                    to_callout=self.p[pid].callout,
+                )
+            )
+
         # -- attacker staging ---------------------------------------------------------
         entries = self._entry_callouts(target_site)
         for i, pid in enumerate(attackers):
@@ -562,10 +574,21 @@ class _MatchSim:
             for pid in sorted(self.p):
                 ps = self.p[pid]
                 if ps.alive and ps.move_eta == tick:
+                    prev = ps.callout
                     ps.callout = ps.move_dest or ps.callout
                     ps.move_dest = None
                     ps.move_eta = -1
                     ps.order_dirty = True
+                    if ps.callout != prev:
+                        self._emit(
+                            MoveEvent(
+                                tick=tick,
+                                seed_path=seed_path,
+                                player_id=pid,
+                                from_callout=prev,
+                                to_callout=ps.callout,
+                            )
+                        )
 
             # -- dropped-spike pickup ------------------------------------------------------
             if self._spike_dropped_at is not None and not spike_planted:

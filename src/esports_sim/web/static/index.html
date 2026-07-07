@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>esports-sim</title>
+<link rel="stylesheet" href="/ds/tokens.css">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">ESPORTS<span>SIM</span></div>
+  <div id="context" class="context"></div>
+  <div class="spacer"></div>
+  <div id="balance" class="balance mono"></div>
+  <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+</header>
+
+<nav id="tabs">
+  <button data-tab="dashboard" class="tab active">Dashboard</button>
+  <button data-tab="roster" class="tab">Roster</button>
+  <button data-tab="standings" class="tab">Standings</button>
+  <button data-tab="schedule" class="tab">Schedule</button>
+  <button data-tab="market" class="tab">Market</button>
+  <button data-tab="finances" class="tab">Finances</button>
+</nav>
+
+<main id="view"></main>
+
+<!-- new game overlay -->
+<div id="newgame" class="overlay hidden">
+  <div class="panel">
+    <h1>New Campaign</h1>
+    <p class="muted">Pick your organisation. Seed controls the generated league.</p>
+    <div class="row">
+      <label>Seed <input id="ng-seed" class="mono" type="number" value="2026"></label>
+    </div>
+    <div id="ng-teams" class="team-grid"></div>
+  </div>
+</div>
+
+<!-- week report modal -->
+<div id="report" class="overlay hidden">
+  <div class="panel">
+    <h1 id="report-title"></h1>
+    <div id="report-body"></div>
+    <button class="btn btn-primary" onclick="closeReport()">Continue</button>
+  </div>
+</div>
+
+<!-- match viewer -->
+<div id="viewer" class="overlay hidden">
+  <div class="viewer-shell">
+    <div class="viewer-head">
+      <div id="v-title"></div>
+      <div id="v-score" class="mono"></div>
+      <button class="btn" onclick="closeViewer()">✕ Close</button>
+    </div>
+    <div class="viewer-main">
+      <svg id="v-map" viewBox="-6 -6 112 112" preserveAspectRatio="xMidYMid meet"></svg>
+      <aside class="viewer-side">
+        <div id="v-round" class="v-round mono"></div>
+        <div id="v-banner" class="v-banner"></div>
+        <div id="v-feed" class="v-feed"></div>
+      </aside>
+    </div>
+    <div class="viewer-controls">
+      <button class="btn" id="v-prev">⏮</button>
+      <button class="btn" id="v-play">▶</button>
+      <button class="btn" id="v-next">⏭</button>
+      <div class="speeds">
+        <button class="btn speed active" data-speed="1">1×</button>
+        <button class="btn speed" data-speed="4">4×</button>
+        <button class="btn speed" data-speed="16">16×</button>
+        <button class="btn speed" data-speed="inst">▸▸</button>
+      </div>
+      <input id="v-scrub" type="range" min="0" max="200" value="0">
+      <span id="v-clock" class="mono"></span>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/viewer.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Valorant agents — nine agents covering every role at least twice.
+# Valorant agents — thirteen agents covering every role at least twice.
 # Abilities carry names + mechanical flags; the match engine consumes the
 # flags through its coarse utility model.
 
@@ -277,3 +277,127 @@ agents:
         type: ultimate
         ult_points: 6
         info: true
+
+  - id: chamber
+    display_name: Chamber
+    role: sentinel
+    description: >-
+      Custom gunsmith. Trademark warns the flank, Headhunter wins the duel,
+      Rendezvous resets the angle — a sentinel who plays like a duelist.
+    abilities:
+      - id: chamber_trademark
+        name: Trademark
+        type: basic
+        charges: 1
+        cost: 200
+        info: true
+      - id: chamber_headhunter
+        name: Headhunter
+        type: basic
+        charges: 2
+        cost: 150
+        damages: true
+      - id: chamber_rendezvous
+        name: Rendezvous
+        type: signature
+        charges: 1
+        cost: 0
+      - id: chamber_tour_de_force
+        name: Tour De Force
+        type: ultimate
+        ult_points: 8
+        damages: true
+
+  - id: skye
+    display_name: Skye
+    role: initiator
+    description: >-
+      Aussie support initiator. Tiger scouts and trades, hawk flashes
+      through doorways, Regrowth keeps the entry alive long enough to
+      trade.
+    abilities:
+      - id: skye_trailblazer
+        name: Trailblazer
+        type: basic
+        charges: 1
+        cost: 250
+        info: true
+        damages: true
+      - id: skye_guiding_light
+        name: Guiding Light
+        type: basic
+        charges: 2
+        cost: 150
+        flashes: true
+      - id: skye_regrowth
+        name: Regrowth
+        type: signature
+        charges: 1
+        cost: 0
+      - id: skye_seekers
+        name: Seekers
+        type: ultimate
+        ult_points: 7
+        info: true
+
+  - id: clove
+    display_name: Clove
+    role: controller
+    description: >-
+      Immortal controller. Pick-Me-Up patches health mid-fight, Meddle
+      rattles a site with decoy chatter, Ruse drops a smoke on a moment's
+      notice.
+    abilities:
+      - id: clove_pick_me_up
+        name: Pick-Me-Up
+        type: basic
+        charges: 1
+        cost: 100
+      - id: clove_meddle
+        name: Meddle
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: clove_ruse
+        name: Ruse
+        type: signature
+        charges: 1
+        cost: 0
+        blocks_sight: true
+      - id: clove_not_dead_yet
+        name: Not Dead Yet
+        type: ultimate
+        ult_points: 7
+
+  - id: phoenix
+    display_name: Phoenix
+    role: duelist
+    description: >-
+      Fire duelist who heals off his own flames. Curveball blinds the peek,
+      Hot Hands zones a corner, Run It Back turns a bad duel into a
+      mulligan.
+    abilities:
+      - id: phoenix_blaze
+        name: Blaze
+        type: basic
+        charges: 1
+        cost: 200
+        blocks_sight: true
+        damages: true
+      - id: phoenix_curveball
+        name: Curveball
+        type: basic
+        charges: 2
+        cost: 200
+        flashes: true
+      - id: phoenix_hot_hands
+        name: Hot Hands
+        type: signature
+        charges: 1
+        cost: 0
+        damages: true
+      - id: phoenix_run_it_back
+        name: Run It Back
+        type: ultimate
+        ult_points: 6
