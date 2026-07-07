@@ -1,0 +1,82 @@
+# Player attribute registry.
+# Adding a new attribute here flows through the UI and the sim without code
+# changes. Ids are stable; display_name can change freely.
+#
+# Scale: 1-99 (FM-style). Humans read better on this scale than 0-1 floats.
+
+attributes:
+  # -- Mechanical --------------------------------------------------------
+  - id: aim_precision
+    display_name: Aim Precision
+    category: mechanical
+    description: >-
+      How tight the crosshair placement is at range. Dominates first-bullet
+      accuracy on rifles and long-range Op duels.
+
+  - id: aim_reactivity
+    display_name: Aim Reactivity
+    category: mechanical
+    description: >-
+      Reaction speed + flick repeatability. Matters for peek duels, clutch
+      flicks, re-fragging teammates who die mid-trade.
+
+  - id: movement
+    display_name: Movement
+    category: mechanical
+    description: >-
+      Counter-strafing, jiggle peeks, bunny-hop defusing. Higher movement
+      reduces the accuracy penalty of strafe-shots and helps first-peek timing.
+
+  # -- Tactical ----------------------------------------------------------
+  - id: game_sense
+    display_name: Game Sense
+    category: tactical
+    description: >-
+      Reads the enemy mid-round. Higher game_sense shortens the latency
+      between a teammate dying and correctly repositioning.
+
+  - id: utility_usage
+    display_name: Utility Usage
+    category: tactical
+    description: >-
+      Precision of smokes, molly placements, recon dart lineups. Scales the
+      *effect* of utility, not just whether it's thrown.
+
+  - id: positioning
+    display_name: Positioning
+    category: tactical
+    description: >-
+      How often the player is in the right angle for the situation. Reduces
+      the chance of dying to crossfires and increases the odds of an anchor
+      holding a site 1vN.
+
+  # -- Mental ------------------------------------------------------------
+  - id: clutch_factor
+    display_name: Clutch Factor
+    category: mental
+    description: >-
+      Performance uplift in 1vX and late-round situations. Stacks on top of
+      raw aim; two players with identical mechanics can have wildly different
+      clutch win rates.
+
+  - id: tilt_resistance
+    display_name: Tilt Resistance
+    category: mental
+    description: >-
+      How much performance degrades after losing rounds / pistols / duels.
+      Low tilt_resistance is a volatility multiplier on a match.
+
+  - id: composure
+    display_name: Composure
+    category: mental
+    description: >-
+      Steadiness under ult-heavy rounds, match points, final maps. Modulates
+      how well the player executes *planned* strats under pressure.
+
+  # -- Team --------------------------------------------------------------
+  - id: comms_quality
+    display_name: Comms Quality
+    category: team
+    description: >-
+      Signal-to-noise of callouts. High comms_quality improves teammates'
+      observation fidelity — they "see" enemies earlier via calls.

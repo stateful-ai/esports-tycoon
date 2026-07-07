@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "esports-sim"
+version = "0.0.1"
+description = "Valorant-inspired esports tycoon with a tick-level match sim, built for LLM playtesting, multi-agent RL, and world-model training."
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "rich>=13.7",
+  "numpy>=1.26",
+]
+
+[project.scripts]
+esports-sim = "esports_sim.app.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-xdist>=3.5",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/esports_sim"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = [
+  "error",
+  "ignore::DeprecationWarning",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true

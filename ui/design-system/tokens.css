@@ -1,0 +1,349 @@
+/* ------------------------------------------------------------------ *
+ * esports-sim design tokens
+ *
+ * Single source of truth for color, type, space, radius, motion.
+ * Consumed by components.css and any future UI framework (React,
+ * NiceGUI, vanilla templates, the 2D match viewer).
+ *
+ * Philosophy:
+ *  - FM-density: information-first, tight spacing, mono numerics
+ *  - Valorant-accent: red-orange brand, used sparingly for emphasis
+ *  - Linear-polish: monochrome ladder, color carries meaning not chrome
+ *  - Dark-first: esports users live in dark mode; light mode fully works
+ *
+ * Don't ship hex codes in components. Every color reference goes
+ * through a --es-* variable so re-theming is a one-file edit.
+ * ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ============================================================== *
+   * Typography
+   * ============================================================== */
+
+  --es-font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  --es-font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --es-font-display: var(--es-font-sans);
+
+  /* Scale — 1.125 ratio, floor at 10px (badges, kill feed, stat labels). */
+  --es-text-2xs: 10px;   /* labels on stat bars, kill-feed meta */
+  --es-text-xs: 11px;    /* secondary / meta */
+  --es-text-sm: 12px;    /* body-small, KPI values */
+  --es-text-md: 13px;    /* body default */
+  --es-text-lg: 15px;    /* subheads */
+  --es-text-xl: 18px;    /* section titles */
+  --es-text-2xl: 22px;   /* page titles */
+  --es-text-3xl: 28px;   /* hero numerals: OVR, score */
+  --es-text-4xl: 40px;   /* match scoreline */
+
+  --es-weight-regular: 400;
+  --es-weight-medium: 500;
+  --es-weight-semibold: 600;
+  --es-weight-bold: 700;
+
+  --es-leading-tight: 1.15;
+  --es-leading-normal: 1.45;
+  --es-leading-loose: 1.7;
+
+  --es-tracking-tight: -0.01em;
+  --es-tracking-normal: 0;
+  --es-tracking-wide: 0.04em;    /* uppercase labels */
+  --es-tracking-wider: 0.08em;   /* tiny uppercase labels */
+
+  /* ============================================================== *
+   * Spacing (4px grid)
+   * ============================================================== */
+
+  --es-space-0: 0;
+  --es-space-1: 2px;
+  --es-space-2: 4px;
+  --es-space-3: 6px;
+  --es-space-4: 8px;
+  --es-space-5: 12px;
+  --es-space-6: 16px;
+  --es-space-7: 20px;
+  --es-space-8: 24px;
+  --es-space-9: 32px;
+  --es-space-10: 48px;
+  --es-space-11: 64px;
+  --es-space-12: 96px;
+
+  /* ============================================================== *
+   * Radius, borders, shadows, z
+   * ============================================================== */
+
+  --es-radius-none: 0;
+  --es-radius-xs: 2px;
+  --es-radius-sm: 4px;
+  --es-radius-md: 6px;
+  --es-radius-lg: 8px;
+  --es-radius-xl: 12px;
+  --es-radius-full: 999px;
+
+  --es-border-thin: 0.5px;
+  --es-border-normal: 1px;
+  --es-border-thick: 2px;
+
+  --es-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --es-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12);
+  --es-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --es-shadow-focus: 0 0 0 2px var(--es-color-accent-ring);
+
+  --es-z-base: 0;
+  --es-z-overlay: 10;
+  --es-z-dropdown: 100;
+  --es-z-modal: 1000;
+  --es-z-toast: 2000;
+
+  /* ============================================================== *
+   * Motion
+   * ============================================================== */
+
+  --es-duration-instant: 60ms;
+  --es-duration-quick: 120ms;
+  --es-duration-base: 180ms;
+  --es-duration-slow: 300ms;
+  --es-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --es-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ============================================================== *
+   * Color — role + side + agent + team accents
+   *
+   * These are mode-invariant (same hex in light + dark).
+   * Semantic colors below get remapped per mode.
+   * ============================================================== */
+
+  /* Valorant brand accent — used sparingly. Don't chrome the UI with this. */
+  --es-color-brand: #E24B4A;
+  --es-color-brand-hover: #F15E5D;
+  --es-color-brand-dim: #B83A39;
+
+  /* Role colors — Duelist/Controller/Initiator/Sentinel/Flex.
+     Chosen to span the hue wheel so roster grids stay distinguishable. */
+  --es-color-role-duelist: #E24B4A;     /* red — aggression */
+  --es-color-role-controller: #8A6BE0;  /* purple — smoke / shadow */
+  --es-color-role-initiator: #D9A441;   /* amber — info / reveal */
+  --es-color-role-sentinel: #3FB59B;    /* teal — lockdown */
+  --es-color-role-flex: #9BA3AF;        /* neutral gray */
+
+  /* Playstyle chip colors (from the original Team HQ mock, kept for continuity) */
+  --es-color-playstyle-igl: #185FA5;
+  --es-color-playstyle-entry: #993C1D;
+  --es-color-playstyle-support: #0F6E56;
+  --es-color-playstyle-awper: #534AB7;
+  --es-color-playstyle-lurker: #854F0B;
+  --es-color-playstyle-anchor: #3FB59B;
+
+  /* Side colors — attack vs defense. Keep these semantically distinct
+     from the brand red; the match viewer uses them heavily. */
+  --es-color-side-attack: #D06142;     /* warm — attack pushes */
+  --es-color-side-defense: #3C7CC9;    /* cool — defense holds */
+
+  /* Categorical data viz palette (6 colors, colorblind-conscious) */
+  --es-viz-1: #3C7CC9;
+  --es-viz-2: #D06142;
+  --es-viz-3: #3FB59B;
+  --es-viz-4: #8A6BE0;
+  --es-viz-5: #D9A441;
+  --es-viz-6: #E87BA1;
+
+  /* ============================================================== *
+   * Color — light mode (default)
+   * ============================================================== */
+
+  /* Background ladder: page -> surface -> elevated -> hover */
+  --es-color-bg-page: #FAFAF8;
+  --es-color-bg-surface: #FFFFFF;
+  --es-color-bg-elevated: #FFFFFF;
+  --es-color-bg-sunken: #F3F3F0;
+  --es-color-bg-hover: #EFEFEB;
+  --es-color-bg-active: #E6E6E1;
+
+  /* Text ladder */
+  --es-color-text-primary: #1A1A1A;
+  --es-color-text-secondary: #55584F;
+  --es-color-text-tertiary: #8A8D82;
+  --es-color-text-inverse: #FAFAF8;
+  --es-color-text-link: #2B6BBF;
+  --es-color-text-success: #1F7A4A;
+  --es-color-text-warning: #9A6B0A;
+  --es-color-text-danger: #B83A39;
+  --es-color-text-info: #2B6BBF;
+
+  /* Borders */
+  --es-color-border-primary: #D4D4CE;
+  --es-color-border-secondary: #E5E5DF;
+  --es-color-border-tertiary: #EEEEE8;
+  --es-color-border-focus: #2B6BBF;
+
+  /* Semantic fills (badges, callouts, banners) */
+  --es-color-fill-success: #E6F5EC;
+  --es-color-fill-success-strong: #3FBF7F;
+  --es-color-fill-warning: #FBF1DB;
+  --es-color-fill-warning-strong: #D9A441;
+  --es-color-fill-danger: #FAECE7;
+  --es-color-fill-danger-strong: #E24B4A;
+  --es-color-fill-info: #E6F1FB;
+  --es-color-fill-info-strong: #3C7CC9;
+
+  /* Focus ring */
+  --es-color-accent-ring: rgba(43, 107, 191, 0.35);
+
+  /* Stat bar fill — monochrome by default; tint via role class */
+  --es-color-stat-track: #E8E8E2;
+  --es-color-stat-fill: #1A1A1A;
+  --es-color-stat-fill-warn: #D9A441;
+  --es-color-stat-fill-danger: #E24B4A;
+
+  /* Match viewer — map surfaces */
+  --es-color-map-bg: #F3F3F0;
+  --es-color-map-grid: #E5E5DF;
+  --es-color-map-site: rgba(59, 124, 201, 0.08);
+  --es-color-map-callout-stroke: #C2C2BA;
+}
+
+/* ================================================================== *
+ * Dark mode
+ *
+ * Remap the *semantic* tokens only. Roles, sides, brand, and viz
+ * palette stay the same across modes.
+ * ================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --es-color-bg-page: #0E0F12;
+    --es-color-bg-surface: #15171B;
+    --es-color-bg-elevated: #1B1E23;
+    --es-color-bg-sunken: #0A0B0E;
+    --es-color-bg-hover: #20232A;
+    --es-color-bg-active: #272B33;
+
+    --es-color-text-primary: #EEEFEC;
+    --es-color-text-secondary: #A8ABA3;
+    --es-color-text-tertiary: #6E7169;
+    --es-color-text-inverse: #0E0F12;
+    --es-color-text-link: #7DB0EF;
+    --es-color-text-success: #5DCAA5;
+    --es-color-text-warning: #E8B94F;
+    --es-color-text-danger: #F0716F;
+    --es-color-text-info: #7DB0EF;
+
+    --es-color-border-primary: #2A2D34;
+    --es-color-border-secondary: #22252B;
+    --es-color-border-tertiary: #1B1E23;
+    --es-color-border-focus: #7DB0EF;
+
+    --es-color-fill-success: #0F3A2A;
+    --es-color-fill-success-strong: #3FBF7F;
+    --es-color-fill-warning: #3A2C0F;
+    --es-color-fill-warning-strong: #D9A441;
+    --es-color-fill-danger: #3A1614;
+    --es-color-fill-danger-strong: #E24B4A;
+    --es-color-fill-info: #132B47;
+    --es-color-fill-info-strong: #3C7CC9;
+
+    --es-color-accent-ring: rgba(125, 176, 239, 0.35);
+
+    --es-color-stat-track: #272B33;
+    --es-color-stat-fill: #EEEFEC;
+    --es-color-stat-fill-warn: #E8B94F;
+    --es-color-stat-fill-danger: #F0716F;
+
+    --es-color-map-bg: #0A0B0E;
+    --es-color-map-grid: #1B1E23;
+    --es-color-map-site: rgba(125, 176, 239, 0.06);
+    --es-color-map-callout-stroke: #2A2D34;
+
+    --es-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --es-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --es-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Manual override — `data-theme="dark"` or "light" wins over media query. */
+[data-theme="dark"] {
+  --es-color-bg-page: #0E0F12;
+  --es-color-bg-surface: #15171B;
+  --es-color-bg-elevated: #1B1E23;
+  --es-color-bg-sunken: #0A0B0E;
+  --es-color-bg-hover: #20232A;
+  --es-color-bg-active: #272B33;
+
+  --es-color-text-primary: #EEEFEC;
+  --es-color-text-secondary: #A8ABA3;
+  --es-color-text-tertiary: #6E7169;
+  --es-color-text-inverse: #0E0F12;
+  --es-color-text-link: #7DB0EF;
+  --es-color-text-success: #5DCAA5;
+  --es-color-text-warning: #E8B94F;
+  --es-color-text-danger: #F0716F;
+  --es-color-text-info: #7DB0EF;
+
+  --es-color-border-primary: #2A2D34;
+  --es-color-border-secondary: #22252B;
+  --es-color-border-tertiary: #1B1E23;
+  --es-color-border-focus: #7DB0EF;
+
+  --es-color-fill-success: #0F3A2A;
+  --es-color-fill-warning: #3A2C0F;
+  --es-color-fill-danger: #3A1614;
+  --es-color-fill-info: #132B47;
+
+  --es-color-accent-ring: rgba(125, 176, 239, 0.35);
+
+  --es-color-stat-track: #272B33;
+  --es-color-stat-fill: #EEEFEC;
+  --es-color-stat-fill-warn: #E8B94F;
+  --es-color-stat-fill-danger: #F0716F;
+
+  --es-color-map-bg: #0A0B0E;
+  --es-color-map-grid: #1B1E23;
+  --es-color-map-site: rgba(125, 176, 239, 0.06);
+  --es-color-map-callout-stroke: #2A2D34;
+
+  --es-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --es-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --es-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] {
+  --es-color-bg-page: #FAFAF8;
+  --es-color-bg-surface: #FFFFFF;
+  --es-color-bg-elevated: #FFFFFF;
+  --es-color-bg-sunken: #F3F3F0;
+  --es-color-bg-hover: #EFEFEB;
+  --es-color-bg-active: #E6E6E1;
+
+  --es-color-text-primary: #1A1A1A;
+  --es-color-text-secondary: #55584F;
+  --es-color-text-tertiary: #8A8D82;
+  --es-color-text-inverse: #FAFAF8;
+  --es-color-text-link: #2B6BBF;
+  --es-color-text-success: #1F7A4A;
+  --es-color-text-warning: #9A6B0A;
+  --es-color-text-danger: #B83A39;
+  --es-color-text-info: #2B6BBF;
+
+  --es-color-border-primary: #D4D4CE;
+  --es-color-border-secondary: #E5E5DF;
+  --es-color-border-tertiary: #EEEEE8;
+  --es-color-border-focus: #2B6BBF;
+
+  --es-color-fill-success: #E6F5EC;
+  --es-color-fill-warning: #FBF1DB;
+  --es-color-fill-danger: #FAECE7;
+  --es-color-fill-info: #E6F1FB;
+
+  --es-color-stat-track: #E8E8E2;
+  --es-color-stat-fill: #1A1A1A;
+  --es-color-stat-fill-warn: #D9A441;
+  --es-color-stat-fill-danger: #E24B4A;
+
+  --es-color-map-bg: #F3F3F0;
+  --es-color-map-grid: #E5E5DF;
+  --es-color-map-site: rgba(59, 124, 201, 0.08);
+  --es-color-map-callout-stroke: #C2C2BA;
+}

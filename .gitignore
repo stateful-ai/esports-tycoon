@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+.venv/
+.venv-win/
+venv/
+dist/
+build/
+
+# Pytest / tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Secrets / machine-local
+.env
+.claude/settings.local.json
+
+# Sim artifacts
+runs/
+events/*.jsonl
+replays/
+saves/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,162 @@
+# Team Nexus — the "your team" archetype. Mid-tier org, ~#12 world rank.
+# Roster chosen to cover every role with stylistic variety.
+
+id: team_nexus
+name: Team Nexus
+tag: NXS
+region: americas
+balance: 487320
+reputation: 58
+fan_count: 284000
+world_rank: 12
+chemistry: 82
+captain_id: apex
+
+players:
+  - id: apex
+    handle: Apex
+    real_name: Carlos Reyes
+    region: americas
+    age: 26
+    role: controller
+    playstyle: igl
+    salary: 8000
+    contract_weeks_left: 3
+    morale: 74
+    stamina: 79
+    form: 62
+    personality_tags: [calm, veteran, shotcaller]
+    attributes:
+      aim_precision: 62
+      aim_reactivity: 60
+      movement: 58
+      game_sense: 94
+      utility_usage: 88
+      positioning: 82
+      clutch_factor: 74
+      tilt_resistance: 85
+      composure: 88
+      comms_quality: 92
+    agent_pool:
+      - { agent_id: omen, mastery: 92 }
+      - { agent_id: sova, mastery: 65 }
+    map_pool:
+      - { map_id: haven, mastery: 88 }
+
+  - id: phantom
+    handle: Phantom
+    real_name: Mateo Silva
+    region: americas
+    age: 20
+    role: duelist
+    playstyle: entry
+    salary: 6500
+    contract_weeks_left: 18
+    morale: 70
+    stamina: 84
+    form: 68
+    personality_tags: [hot_head, mechanical, streamer]
+    attributes:
+      aim_precision: 91
+      aim_reactivity: 93
+      movement: 86
+      game_sense: 54
+      utility_usage: 48
+      positioning: 62
+      clutch_factor: 70
+      tilt_resistance: 42
+      composure: 55
+      comms_quality: 50
+    agent_pool:
+      - { agent_id: raze, mastery: 88 }
+      - { agent_id: jett, mastery: 70 }
+    map_pool:
+      - { map_id: haven, mastery: 75 }
+
+  - id: echo
+    handle: Echo
+    real_name: Noa Fischer
+    region: americas
+    age: 23
+    role: sentinel
+    playstyle: anchor
+    salary: 5500
+    contract_weeks_left: 30
+    morale: 82
+    stamina: 88
+    form: 74
+    personality_tags: [team_player, quiet, reliable]
+    attributes:
+      aim_precision: 68
+      aim_reactivity: 64
+      movement: 58
+      game_sense: 76
+      utility_usage: 82
+      positioning: 86
+      clutch_factor: 65
+      tilt_resistance: 88
+      composure: 90
+      comms_quality: 78
+    agent_pool:
+      - { agent_id: killjoy, mastery: 90 }
+    map_pool:
+      - { map_id: haven, mastery: 80 }
+
+  - id: vortex
+    handle: Vortex
+    real_name: Ji-hoon Park
+    region: americas
+    age: 22
+    role: duelist
+    playstyle: awper
+    salary: 7000
+    contract_weeks_left: 8
+    morale: 55
+    stamina: 32  # burnt out — see dashboard warning
+    form: 78
+    personality_tags: [star_player, volatile, perfectionist]
+    attributes:
+      aim_precision: 95
+      aim_reactivity: 92
+      movement: 87
+      game_sense: 72
+      utility_usage: 59
+      positioning: 78
+      clutch_factor: 89
+      tilt_resistance: 48
+      composure: 70
+      comms_quality: 55
+    agent_pool:
+      - { agent_id: jett, mastery: 94 }
+      - { agent_id: raze, mastery: 62 }
+    map_pool:
+      - { map_id: haven, mastery: 82 }
+
+  - id: ghost
+    handle: Ghost
+    real_name: Emmanuel Okafor
+    region: americas
+    age: 19
+    role: initiator
+    playstyle: lurker
+    salary: 4500
+    contract_weeks_left: 44
+    morale: 78
+    stamina: 92
+    form: 72
+    personality_tags: [rookie, underrated, independent]
+    attributes:
+      aim_precision: 74
+      aim_reactivity: 76
+      movement: 72
+      game_sense: 85
+      utility_usage: 80
+      positioning: 82
+      clutch_factor: 80
+      tilt_resistance: 72
+      composure: 74
+      comms_quality: 60
+    agent_pool:
+      - { agent_id: sova, mastery: 82 }
+    map_pool:
+      - { map_id: haven, mastery: 70 }

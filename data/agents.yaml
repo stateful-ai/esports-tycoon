@@ -1,0 +1,279 @@
+# Valorant agents — nine agents covering every role at least twice.
+# Abilities carry names + mechanical flags; the match engine consumes the
+# flags through its coarse utility model.
+
+agents:
+  - id: jett
+    display_name: Jett
+    role: duelist
+    description: >-
+      Mobility duelist with dash and updraft. Operator main's best friend —
+      disengage out of a peek after the shot.
+    abilities:
+      - id: jett_cloudburst
+        name: Cloudburst
+        type: basic
+        charges: 2
+        cost: 200
+        blocks_sight: true
+      - id: jett_updraft
+        name: Updraft
+        type: basic
+        charges: 2
+        cost: 150
+      - id: jett_tailwind
+        name: Tailwind
+        type: signature
+        charges: 1
+        cost: 0
+      - id: jett_bladestorm
+        name: Blade Storm
+        type: ultimate
+        ult_points: 7
+        damages: true
+
+  - id: raze
+    display_name: Raze
+    role: duelist
+    description: >-
+      Aggression-first duelist. Blast pack for movement, Paint Shells for
+      site clearing, Showstopper rocket for execs.
+    abilities:
+      - id: raze_boom_bot
+        name: Boom Bot
+        type: basic
+        charges: 1
+        cost: 300
+        info: true
+        damages: true
+      - id: raze_blast_pack
+        name: Blast Pack
+        type: basic
+        charges: 2
+        cost: 200
+        damages: true
+      - id: raze_paint_shells
+        name: Paint Shells
+        type: signature
+        charges: 1
+        cost: 0
+        damages: true
+      - id: raze_showstopper
+        name: Showstopper
+        type: ultimate
+        ult_points: 8
+        damages: true
+
+  - id: omen
+    display_name: Omen
+    role: controller
+    description: >-
+      Shadow controller. Two smokes, a near-blind, and a teleport. The
+      standard MVP IGL's agent: cheap, flexible, high util value.
+    abilities:
+      - id: omen_shrouded_step
+        name: Shrouded Step
+        type: basic
+        charges: 1
+        cost: 100
+      - id: omen_paranoia
+        name: Paranoia
+        type: basic
+        charges: 1
+        cost: 400
+        flashes: true
+      - id: omen_dark_cover
+        name: Dark Cover
+        type: signature
+        charges: 2
+        cost: 0
+        blocks_sight: true
+      - id: omen_from_the_shadows
+        name: From the Shadows
+        type: ultimate
+        ult_points: 7
+
+  - id: sova
+    display_name: Sova
+    role: initiator
+    description: >-
+      Info king. Recon dart reveals, shock dart zones, drone scouts. A good
+      Sova dart turns a 5-man hold into a 5-man rotation.
+    abilities:
+      - id: sova_owl_drone
+        name: Owl Drone
+        type: basic
+        charges: 1
+        cost: 400
+        info: true
+      - id: sova_shock_bolt
+        name: Shock Bolt
+        type: basic
+        charges: 2
+        cost: 150
+        damages: true
+      - id: sova_recon_bolt
+        name: Recon Bolt
+        type: signature
+        charges: 1
+        cost: 0
+        info: true
+      - id: sova_hunters_fury
+        name: Hunter's Fury
+        type: ultimate
+        ult_points: 8
+        damages: true
+        info: true
+
+  - id: killjoy
+    display_name: Killjoy
+    role: sentinel
+    description: >-
+      German-engineered site lockdown. Turret + alarmbot for info, nanoswarms
+      for post-plants, Lockdown to clear sites on attack.
+    abilities:
+      - id: killjoy_nanoswarm
+        name: Nanoswarm
+        type: basic
+        charges: 2
+        cost: 200
+        damages: true
+      - id: killjoy_alarmbot
+        name: Alarmbot
+        type: basic
+        charges: 1
+        cost: 200
+        info: true
+      - id: killjoy_turret
+        name: Turret
+        type: signature
+        charges: 1
+        cost: 0
+        info: true
+        damages: true
+      - id: killjoy_lockdown
+        name: Lockdown
+        type: ultimate
+        ult_points: 8
+
+  - id: reyna
+    display_name: Reyna
+    role: duelist
+    description: >-
+      Selfish carry. Leer blinds through walls, kills fuel heals and
+      dismisses. Feast or famine — exactly like the players who main her.
+    abilities:
+      - id: reyna_leer
+        name: Leer
+        type: basic
+        charges: 2
+        cost: 250
+        flashes: true
+      - id: reyna_devour
+        name: Devour
+        type: basic
+        charges: 1
+        cost: 200
+      - id: reyna_dismiss
+        name: Dismiss
+        type: signature
+        charges: 1
+        cost: 0
+      - id: reyna_empress
+        name: Empress
+        type: ultimate
+        ult_points: 6
+
+  - id: viper
+    display_name: Viper
+    role: controller
+    description: >-
+      Attrition controller. Wall + orb split sites in half; her pit turns
+      post-plants into her house.
+    abilities:
+      - id: viper_snake_bite
+        name: Snake Bite
+        type: basic
+        charges: 2
+        cost: 200
+        damages: true
+      - id: viper_poison_cloud
+        name: Poison Cloud
+        type: basic
+        charges: 1
+        cost: 200
+        blocks_sight: true
+      - id: viper_toxic_screen
+        name: Toxic Screen
+        type: signature
+        charges: 1
+        cost: 0
+        blocks_sight: true
+      - id: viper_vipers_pit
+        name: Viper's Pit
+        type: ultimate
+        ult_points: 8
+        blocks_sight: true
+
+  - id: breach
+    display_name: Breach
+    role: initiator
+    description: >-
+      Through-the-wall initiation. Flash, stun, quake — the site entry
+      happens before anyone peeks.
+    abilities:
+      - id: breach_aftershock
+        name: Aftershock
+        type: basic
+        charges: 1
+        cost: 200
+        damages: true
+      - id: breach_flashpoint
+        name: Flashpoint
+        type: basic
+        charges: 2
+        cost: 250
+        flashes: true
+      - id: breach_fault_line
+        name: Fault Line
+        type: signature
+        charges: 1
+        cost: 0
+        flashes: true
+      - id: breach_rolling_thunder
+        name: Rolling Thunder
+        type: ultimate
+        ult_points: 9
+        damages: true
+        flashes: true
+
+  - id: cypher
+    display_name: Cypher
+    role: sentinel
+    description: >-
+      Information sentinel. Trips and cam turn a site into a spider web;
+      nobody flanks a good Cypher twice.
+    abilities:
+      - id: cypher_trapwire
+        name: Trapwire
+        type: basic
+        charges: 2
+        cost: 200
+        info: true
+      - id: cypher_cyber_cage
+        name: Cyber Cage
+        type: basic
+        charges: 2
+        cost: 100
+        blocks_sight: true
+      - id: cypher_spycam
+        name: Spycam
+        type: signature
+        charges: 1
+        cost: 0
+        info: true
+      - id: cypher_neural_theft
+        name: Neural Theft
+        type: ultimate
+        ult_points: 6
+        info: true

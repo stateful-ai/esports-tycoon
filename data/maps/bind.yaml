@@ -1,0 +1,140 @@
+# Bind — two sites, no mid. Rotations run through spawn hubs, which makes
+# commits punishing and fakes strong.
+
+id: bind
+display_name: Bind
+sites:
+  - a
+  - b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+
+callouts:
+  attacker_spawn:
+    id: attacker_spawn
+    display_name: Attacker Spawn
+    site: none
+    zone: attacker_spawn
+    x: 50
+    y: 8
+  defender_spawn:
+    id: defender_spawn
+    display_name: Defender Spawn
+    site: none
+    zone: defender_spawn
+    x: 50
+    y: 92
+
+  # -- A side --------------------------------------------------------------
+  a_lobby:
+    id: a_lobby
+    display_name: A Lobby
+    site: a
+    zone: attacker_side
+    x: 24
+    y: 20
+  a_showers:
+    id: a_showers
+    display_name: Showers
+    site: a
+    zone: attacker_side
+    x: 14
+    y: 40
+  a_short:
+    id: a_short
+    display_name: A Short
+    site: a
+    zone: attacker_side
+    x: 30
+    y: 42
+  a_site:
+    id: a_site
+    display_name: A Site
+    site: a
+    zone: site
+    x: 22
+    y: 62
+  a_lamps:
+    id: a_lamps
+    display_name: Lamps
+    site: a
+    zone: defender_side
+    x: 32
+    y: 74
+  a_uhall:
+    id: a_uhall
+    display_name: U-Hall
+    site: a
+    zone: defender_side
+    x: 16
+    y: 76
+
+  # -- B side -----------------------------------------------------------------
+  b_fountain:
+    id: b_fountain
+    display_name: Fountain
+    site: b
+    zone: attacker_side
+    x: 70
+    y: 20
+  b_window:
+    id: b_window
+    display_name: Hookah
+    site: b
+    zone: attacker_side
+    x: 66
+    y: 42
+  b_long:
+    id: b_long
+    display_name: B Long
+    site: b
+    zone: attacker_side
+    x: 84
+    y: 38
+  b_site:
+    id: b_site
+    display_name: B Site
+    site: b
+    zone: site
+    x: 76
+    y: 62
+  b_elbow:
+    id: b_elbow
+    display_name: Elbow
+    site: b
+    zone: defender_side
+    x: 68
+    y: 76
+  b_hall:
+    id: b_hall
+    display_name: B Hall
+    site: b
+    zone: defender_side
+    x: 84
+    y: 76
+
+adjacency:
+  attacker_spawn: [a_lobby, b_fountain, b_long]
+  a_lobby: [attacker_spawn, a_showers, a_short]
+  a_showers: [a_lobby, a_site]
+  a_short: [a_lobby, a_site, a_lamps]
+  a_site: [a_showers, a_short, a_lamps, a_uhall]
+  a_lamps: [a_short, a_site, defender_spawn]
+  a_uhall: [a_site, defender_spawn]
+  b_fountain: [attacker_spawn, b_window]
+  b_window: [b_fountain, b_site]
+  b_long: [attacker_spawn, b_site, b_elbow]
+  b_site: [b_window, b_long, b_elbow, b_hall]
+  b_elbow: [b_long, b_site, defender_spawn]
+  b_hall: [b_site, defender_spawn]
+  defender_spawn: [a_lamps, a_uhall, b_elbow, b_hall]
+
+sightlines:
+  - { from_callout: a_showers, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_short, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_lamps, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: a_uhall, to_callout: a_site, advantaged_side: defense }
+  - { from_callout: b_window, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_long, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_elbow, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: b_hall, to_callout: b_site, advantaged_side: defense }

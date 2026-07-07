@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>esports-sim · design system · v0</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* Page scaffolding — not part of the component library. */
+  body { margin: 0; }
+  main { max-width: 1200px; margin: 0 auto; padding: var(--es-space-9) var(--es-space-8); }
+  section { margin-bottom: var(--es-space-11); }
+
+  .ds-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--es-space-6);
+    margin-bottom: var(--es-space-9);
+    padding-bottom: var(--es-space-5);
+    border-bottom: var(--es-border-thin) solid var(--es-color-border-tertiary);
+  }
+  .ds-title {
+    font-size: var(--es-text-2xl);
+    font-weight: var(--es-weight-medium);
+    margin: 0 0 var(--es-space-2);
+    letter-spacing: var(--es-tracking-tight);
+  }
+  .ds-sub { color: var(--es-color-text-secondary); font-size: var(--es-text-md); margin: 0; }
+
+  h2 {
+    font-size: var(--es-text-xl);
+    font-weight: var(--es-weight-medium);
+    margin: 0 0 var(--es-space-3);
+  }
+  h3 {
+    font-size: var(--es-text-md);
+    font-weight: var(--es-weight-medium);
+    margin: var(--es-space-6) 0 var(--es-space-3);
+    color: var(--es-color-text-secondary);
+  }
+  .ds-section-meta {
+    font-size: var(--es-text-sm);
+    color: var(--es-color-text-secondary);
+    margin: 0 0 var(--es-space-6);
+    max-width: 72ch;
+  }
+
+  .ds-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--es-space-3);
+  }
+  .ds-swatch {
+    border-radius: var(--es-radius-md);
+    overflow: hidden;
+    border: var(--es-border-thin) solid var(--es-color-border-tertiary);
+    background: var(--es-color-bg-surface);
+  }
+  .ds-swatch__color {
+    height: 56px;
+    border-bottom: var(--es-border-thin) solid var(--es-color-border-tertiary);
+  }
+  .ds-swatch__meta {
+    padding: var(--es-space-3) var(--es-space-4);
+    font-family: var(--es-font-mono);
+    font-size: var(--es-text-2xs);
+  }
+  .ds-swatch__name {
+    color: var(--es-color-text-primary);
+    font-weight: var(--es-weight-semibold);
+    margin-bottom: 2px;
+  }
+  .ds-swatch__var { color: var(--es-color-text-tertiary); }
+
+  .ds-type-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--es-space-6);
+    padding: var(--es-space-4) 0;
+    border-bottom: var(--es-border-thin) solid var(--es-color-border-tertiary);
+  }
+  .ds-type-row__label {
+    width: 140px;
+    flex-shrink: 0;
+    font-family: var(--es-font-mono);
+    font-size: var(--es-text-2xs);
+    color: var(--es-color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--es-tracking-wide);
+  }
+
+  .ds-spacing-row {
+    display: flex;
+    align-items: center;
+    gap: var(--es-space-4);
+    padding: var(--es-space-3) 0;
+    font-family: var(--es-font-mono);
+    font-size: var(--es-text-xs);
+  }
+  .ds-spacing-bar {
+    background: var(--es-color-text-secondary);
+    height: 8px;
+    border-radius: var(--es-radius-xs);
+  }
+
+  .ds-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--es-space-6); }
+  .ds-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--es-space-5); }
+  .ds-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--es-space-5); }
+  .ds-grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--es-space-5); }
+
+  .ds-inline { display: flex; gap: var(--es-space-3); flex-wrap: wrap; align-items: center; }
+
+  .ds-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--es-space-3);
+    padding: var(--es-space-3) var(--es-space-5);
+    background: var(--es-color-bg-surface);
+    border: var(--es-border-thin) solid var(--es-color-border-primary);
+    border-radius: var(--es-radius-md);
+    cursor: pointer;
+    font-size: var(--es-text-sm);
+    font-weight: var(--es-weight-medium);
+    color: var(--es-color-text-primary);
+    font-family: var(--es-font-sans);
+  }
+  .ds-toggle:hover { background: var(--es-color-bg-hover); }
+
+  /* 2D map viewer canvas for the showcase sample */
+  .ds-map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--es-color-map-bg);
+    border: var(--es-border-thin) solid var(--es-color-border-tertiary);
+    border-radius: var(--es-radius-lg);
+    background-image:
+      linear-gradient(var(--es-color-map-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--es-color-map-grid) 1px, transparent 1px);
+    background-size: 5% 6.666%;
+  }
+
+  .ds-map-site {
+    position: absolute;
+    background: var(--es-color-map-site);
+    border: 1px dashed var(--es-color-border-primary);
+    border-radius: var(--es-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--es-font-mono);
+    font-size: var(--es-text-xl);
+    font-weight: var(--es-weight-bold);
+    color: var(--es-color-text-info);
+    letter-spacing: var(--es-tracking-wider);
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body class="es-app">
+<main>
+
+  <!-- ============================================================== -->
+  <header class="ds-header">
+    <div>
+      <h1 class="ds-title">esports-sim design system</h1>
+      <p class="ds-sub">v0 · Valorant-inspired tycoon · FM-density, dark-first, dark-light dual</p>
+    </div>
+    <button class="ds-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <span id="theme-label">Toggle theme</span>
+      <span class="es-kbd">T</span>
+    </button>
+  </header>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Foundations</h2>
+    <p class="ds-section-meta">
+      Two ladders drive the interface: a neutral background/text ladder that switches between
+      light and dark, and a fixed-hue role/side/brand palette that's mode-invariant.
+      Components should reference tokens by semantic name — never hex.
+    </p>
+
+    <h3>Background ladder</h3>
+    <div class="ds-palette">
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-page)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">page</div><div class="ds-swatch__var">--es-color-bg-page</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-surface)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">surface</div><div class="ds-swatch__var">--es-color-bg-surface</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-elevated)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">elevated</div><div class="ds-swatch__var">--es-color-bg-elevated</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-sunken)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">sunken</div><div class="ds-swatch__var">--es-color-bg-sunken</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-hover)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">hover</div><div class="ds-swatch__var">--es-color-bg-hover</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-bg-active)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">active</div><div class="ds-swatch__var">--es-color-bg-active</div></div></div>
+    </div>
+
+    <h3>Text ladder</h3>
+    <div class="es-surface">
+      <div class="es-surface-body" style="display:flex; flex-direction:column; gap: var(--es-space-3)">
+        <div style="color: var(--es-color-text-primary); font-size: var(--es-text-lg)">Primary — section headers, player handles, KPI values</div>
+        <div style="color: var(--es-color-text-secondary); font-size: var(--es-text-md)">Secondary — body copy, row labels, descriptions</div>
+        <div style="color: var(--es-color-text-tertiary); font-size: var(--es-text-sm)">Tertiary — metadata, hints, captions, kill-feed chrome</div>
+        <div style="color: var(--es-color-text-success); font-size: var(--es-text-md)">Success — positive deltas, wins, profitable weeks</div>
+        <div style="color: var(--es-color-text-warning); font-size: var(--es-text-md)">Warning — burnout risk, contract expiry, low stamina</div>
+        <div style="color: var(--es-color-text-danger); font-size: var(--es-text-md)">Danger — losses, injuries, bankruptcy approach</div>
+        <div style="color: var(--es-color-text-info); font-size: var(--es-text-md)">Info — links, neutral highlights</div>
+      </div>
+    </div>
+
+    <h3>Role palette (mode-invariant)</h3>
+    <div class="ds-palette">
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-role-duelist)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Duelist</div><div class="ds-swatch__var">--es-color-role-duelist</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-role-controller)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Controller</div><div class="ds-swatch__var">--es-color-role-controller</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-role-initiator)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Initiator</div><div class="ds-swatch__var">--es-color-role-initiator</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-role-sentinel)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Sentinel</div><div class="ds-swatch__var">--es-color-role-sentinel</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-role-flex)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Flex</div><div class="ds-swatch__var">--es-color-role-flex</div></div></div>
+    </div>
+
+    <h3>Side palette</h3>
+    <div class="ds-palette">
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-side-attack)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Attack</div><div class="ds-swatch__var">--es-color-side-attack</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-side-defense)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Defense</div><div class="ds-swatch__var">--es-color-side-defense</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch__color" style="background: var(--es-color-brand)"></div><div class="ds-swatch__meta"><div class="ds-swatch__name">Brand</div><div class="ds-swatch__var">--es-color-brand</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Type scale</h2>
+    <p class="ds-section-meta">
+      Sans-serif for body, monospace for every numeric readout (credits, OVR, scores, stats,
+      timestamps) to keep columns aligned. Display and body share the same family; weight and
+      size do the work.
+    </p>
+
+    <div class="es-surface">
+      <div class="es-surface-body">
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">4xl · 40</div>
+          <div style="font-size: var(--es-text-4xl); font-weight: var(--es-weight-medium); font-family: var(--es-font-mono);">13 — 7</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">3xl · 28</div>
+          <div style="font-size: var(--es-text-3xl); font-weight: var(--es-weight-medium); font-family: var(--es-font-mono);">81</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">2xl · 22</div>
+          <div style="font-size: var(--es-text-2xl); font-weight: var(--es-weight-medium);">Team Nexus</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">xl · 18</div>
+          <div style="font-size: var(--es-text-xl); font-weight: var(--es-weight-medium);">Season 3 · Week 14</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">lg · 15</div>
+          <div style="font-size: var(--es-text-lg);">Regional Major in 6 days</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">md · 13</div>
+          <div style="font-size: var(--es-text-md);">Phantom has amazing mechanics but low game IQ.</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">sm · 12</div>
+          <div style="font-size: var(--es-text-sm);">$8,000 / wk · 3 wks left</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">xs · 11</div>
+          <div style="font-size: var(--es-text-xs); color: var(--es-color-text-secondary);">Contract renewal — Apex · Expires in 3 weeks</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-row__label">2xs · 10</div>
+          <div class="es-label">Upcoming events · kill feed meta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Spacing &amp; radius</h2>
+    <p class="ds-section-meta">
+      4-px grid. Components default to snug information density — reach for larger steps only
+      for hero sections and page margins.
+    </p>
+
+    <div class="es-surface">
+      <div class="es-surface-body">
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-1 · 2</div><div class="ds-spacing-bar" style="width: 2px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-2 · 4</div><div class="ds-spacing-bar" style="width: 4px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-3 · 6</div><div class="ds-spacing-bar" style="width: 6px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-4 · 8</div><div class="ds-spacing-bar" style="width: 8px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-5 · 12</div><div class="ds-spacing-bar" style="width: 12px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-6 · 16</div><div class="ds-spacing-bar" style="width: 16px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-7 · 20</div><div class="ds-spacing-bar" style="width: 20px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-8 · 24</div><div class="ds-spacing-bar" style="width: 24px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-9 · 32</div><div class="ds-spacing-bar" style="width: 32px;"></div></div>
+        <div class="ds-spacing-row"><div class="ds-type-row__label">space-10 · 48</div><div class="ds-spacing-bar" style="width: 48px;"></div></div>
+      </div>
+    </div>
+
+    <h3>Radii</h3>
+    <div class="ds-inline">
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-xs);"></div>
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-sm);"></div>
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-md);"></div>
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-lg);"></div>
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-xl);"></div>
+      <div style="width:64px;height:64px;background:var(--es-color-bg-sunken);border:var(--es-border-thin) solid var(--es-color-border-primary);border-radius:var(--es-radius-full);"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Badges &amp; chips</h2>
+    <p class="ds-section-meta">
+      Roles, playstyles, and statuses. Role color is the primary identifier on a player card.
+      Playstyle is a secondary descriptor when relevant.
+    </p>
+
+    <h3>Role badges</h3>
+    <div class="ds-inline">
+      <span class="es-badge es-badge--role-duelist">Duelist</span>
+      <span class="es-badge es-badge--role-controller">Controller</span>
+      <span class="es-badge es-badge--role-initiator">Initiator</span>
+      <span class="es-badge es-badge--role-sentinel">Sentinel</span>
+      <span class="es-badge es-badge--role-flex">Flex</span>
+    </div>
+
+    <h3>Playstyle badges</h3>
+    <div class="ds-inline">
+      <span class="es-badge es-badge--play-igl">IGL</span>
+      <span class="es-badge es-badge--play-entry">Entry</span>
+      <span class="es-badge es-badge--play-anchor">Anchor</span>
+      <span class="es-badge es-badge--play-awper">Awper</span>
+      <span class="es-badge es-badge--play-lurker">Lurker</span>
+      <span class="es-badge es-badge--play-support">Support</span>
+    </div>
+
+    <h3>Status badges</h3>
+    <div class="ds-inline">
+      <span class="es-badge es-badge--success">Won</span>
+      <span class="es-badge es-badge--warning">At risk</span>
+      <span class="es-badge es-badge--danger">Burnout</span>
+      <span class="es-badge es-badge--info">Scouting</span>
+      <span class="es-badge es-badge--subtle">Subbed out</span>
+    </div>
+
+    <h3>Team chip</h3>
+    <div class="ds-inline">
+      <span class="es-team-chip"><span class="es-team-chip__tag">NXS</span><span class="es-team-chip__name">Team Nexus</span><span class="es-team-chip__rank">#12</span></span>
+      <span class="es-team-chip"><span class="es-team-chip__tag">VGD</span><span class="es-team-chip__name">Team Vanguard</span><span class="es-team-chip__rank">#4</span></span>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Player card</h2>
+    <p class="ds-section-meta">
+      Primary unit of the roster grid. Handle + role badge + playstyle badge + OVR +
+      stat bars. Stat bars default monochrome; burnout stamina tints red.
+    </p>
+
+    <div class="ds-grid-5">
+
+      <!-- Apex -->
+      <div class="es-player-card">
+        <div class="es-player-card__top">
+          <div class="es-player-card__identity">
+            <div class="es-player-card__handle">Apex</div>
+            <div class="es-player-card__badges">
+              <span class="es-badge es-badge--role-controller">Controller</span>
+              <span class="es-badge es-badge--play-igl">IGL</span>
+            </div>
+          </div>
+          <div>
+            <div class="es-player-card__ovr">81</div>
+            <div class="es-player-card__ovr-sub">OVR</div>
+          </div>
+        </div>
+        <div class="es-stat"><span class="es-stat__key">AIM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 62%"></div></div><span class="es-stat__val">62</span></div>
+        <div class="es-stat"><span class="es-stat__key">IQ</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 94%"></div></div><span class="es-stat__val">94</span></div>
+        <div class="es-stat"><span class="es-stat__key">UTL</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 88%"></div></div><span class="es-stat__val">88</span></div>
+        <div class="es-stat"><span class="es-stat__key">CLT</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 74%"></div></div><span class="es-stat__val">74</span></div>
+        <div class="es-stat"><span class="es-stat__key">STM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 79%"></div></div><span class="es-stat__val">79</span></div>
+        <div class="es-player-card__footer"><span>$8,000 / wk</span><span>3 wks left</span></div>
+      </div>
+
+      <!-- Phantom -->
+      <div class="es-player-card">
+        <div class="es-player-card__top">
+          <div class="es-player-card__identity">
+            <div class="es-player-card__handle">Phantom</div>
+            <div class="es-player-card__badges">
+              <span class="es-badge es-badge--role-duelist">Duelist</span>
+              <span class="es-badge es-badge--play-entry">Entry</span>
+            </div>
+          </div>
+          <div>
+            <div class="es-player-card__ovr">77</div>
+            <div class="es-player-card__ovr-sub">OVR</div>
+          </div>
+        </div>
+        <div class="es-stat"><span class="es-stat__key">AIM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 91%"></div></div><span class="es-stat__val">91</span></div>
+        <div class="es-stat"><span class="es-stat__key">IQ</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 54%"></div></div><span class="es-stat__val">54</span></div>
+        <div class="es-stat"><span class="es-stat__key">UTL</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 48%"></div></div><span class="es-stat__val">48</span></div>
+        <div class="es-stat"><span class="es-stat__key">CLT</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 70%"></div></div><span class="es-stat__val">70</span></div>
+        <div class="es-stat"><span class="es-stat__key">STM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 84%"></div></div><span class="es-stat__val">84</span></div>
+        <div class="es-player-card__footer"><span>$6,500 / wk</span><span>18 wks left</span></div>
+      </div>
+
+      <!-- Echo -->
+      <div class="es-player-card">
+        <div class="es-player-card__top">
+          <div class="es-player-card__identity">
+            <div class="es-player-card__handle">Echo</div>
+            <div class="es-player-card__badges">
+              <span class="es-badge es-badge--role-sentinel">Sentinel</span>
+              <span class="es-badge es-badge--play-anchor">Anchor</span>
+            </div>
+          </div>
+          <div>
+            <div class="es-player-card__ovr">74</div>
+            <div class="es-player-card__ovr-sub">OVR</div>
+          </div>
+        </div>
+        <div class="es-stat"><span class="es-stat__key">AIM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 68%"></div></div><span class="es-stat__val">68</span></div>
+        <div class="es-stat"><span class="es-stat__key">IQ</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 76%"></div></div><span class="es-stat__val">76</span></div>
+        <div class="es-stat"><span class="es-stat__key">UTL</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 82%"></div></div><span class="es-stat__val">82</span></div>
+        <div class="es-stat"><span class="es-stat__key">CLT</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 65%"></div></div><span class="es-stat__val">65</span></div>
+        <div class="es-stat"><span class="es-stat__key">STM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 88%"></div></div><span class="es-stat__val">88</span></div>
+        <div class="es-player-card__footer"><span>$5,500 / wk</span><span>30 wks left</span></div>
+      </div>
+
+      <!-- Vortex — burnout -->
+      <div class="es-player-card">
+        <div class="es-player-card__top">
+          <div class="es-player-card__identity">
+            <div class="es-player-card__handle">Vortex</div>
+            <div class="es-player-card__badges">
+              <span class="es-badge es-badge--role-duelist">Duelist</span>
+              <span class="es-badge es-badge--play-awper">Awper</span>
+            </div>
+          </div>
+          <div>
+            <div class="es-player-card__ovr">79</div>
+            <div class="es-player-card__ovr-sub">OVR</div>
+          </div>
+        </div>
+        <div class="es-stat"><span class="es-stat__key">AIM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 95%"></div></div><span class="es-stat__val">95</span></div>
+        <div class="es-stat"><span class="es-stat__key">IQ</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 72%"></div></div><span class="es-stat__val">72</span></div>
+        <div class="es-stat"><span class="es-stat__key">UTL</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 59%"></div></div><span class="es-stat__val">59</span></div>
+        <div class="es-stat"><span class="es-stat__key">CLT</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 89%"></div></div><span class="es-stat__val">89</span></div>
+        <div class="es-stat"><span class="es-stat__key">STM</span><div class="es-stat__track"><div class="es-stat__fill es-stat__fill--danger" style="width: 32%"></div></div><span class="es-stat__val es-stat__val--danger">32</span></div>
+        <div class="es-player-card__footer"><span>$7,000 / wk</span><span>8 wks left</span></div>
+      </div>
+
+      <!-- Ghost -->
+      <div class="es-player-card">
+        <div class="es-player-card__top">
+          <div class="es-player-card__identity">
+            <div class="es-player-card__handle">Ghost</div>
+            <div class="es-player-card__badges">
+              <span class="es-badge es-badge--role-initiator">Initiator</span>
+              <span class="es-badge es-badge--play-lurker">Lurker</span>
+            </div>
+          </div>
+          <div>
+            <div class="es-player-card__ovr">72</div>
+            <div class="es-player-card__ovr-sub">OVR</div>
+          </div>
+        </div>
+        <div class="es-stat"><span class="es-stat__key">AIM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 74%"></div></div><span class="es-stat__val">74</span></div>
+        <div class="es-stat"><span class="es-stat__key">IQ</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 85%"></div></div><span class="es-stat__val">85</span></div>
+        <div class="es-stat"><span class="es-stat__key">UTL</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 80%"></div></div><span class="es-stat__val">80</span></div>
+        <div class="es-stat"><span class="es-stat__key">CLT</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 80%"></div></div><span class="es-stat__val">80</span></div>
+        <div class="es-stat"><span class="es-stat__key">STM</span><div class="es-stat__track"><div class="es-stat__fill" style="width: 92%"></div></div><span class="es-stat__val">92</span></div>
+        <div class="es-player-card__footer"><span>$4,500 / wk</span><span>44 wks left</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Dashboard — Team HQ</h2>
+    <p class="ds-section-meta">
+      Tycoon surface reskinned onto the new tokens. Notice how the Vortex burnout warning
+      leans on <code>--es-color-text-warning</code> and how every numeric readout is mono.
+    </p>
+
+    <div class="es-surface">
+      <div class="es-surface-header">
+        <div style="display:flex; align-items:center; gap: var(--es-space-5);">
+          <span class="es-team-chip"><span class="es-team-chip__tag">NXS</span><span class="es-team-chip__name">Team Nexus</span></span>
+          <span style="font-size: var(--es-text-xs); color: var(--es-color-text-secondary); font-family: var(--es-font-mono);">Season 3 · Week 14 of 52</span>
+        </div>
+        <div style="display: flex; gap: var(--es-space-7);">
+          <div style="text-align: right"><div class="es-label">Balance</div><div style="font-size: var(--es-text-md); font-weight: var(--es-weight-semibold); color: var(--es-color-text-success); font-family: var(--es-font-mono)">$487,320</div></div>
+          <div style="text-align: right"><div class="es-label">Weekly net</div><div style="font-size: var(--es-text-md); font-weight: var(--es-weight-semibold); color: var(--es-color-text-success); font-family: var(--es-font-mono)">+$6,500</div></div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr;">
+
+        <div style="padding: var(--es-space-6); border-right: var(--es-border-thin) solid var(--es-color-border-tertiary);">
+          <div class="es-label" style="margin-bottom: var(--es-space-3)">Season stats</div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Record</span><span class="es-kpi-row__value">8W — 3L</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">World ranking</span><span class="es-kpi-row__value">#12</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Fan base</span><span class="es-kpi-row__value">284,000</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Avg player OVR</span><span class="es-kpi-row__value">76.6</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Team chemistry</span><span class="es-kpi-row__value">82 / 100</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Sponsor income</span><span class="es-kpi-row__value es-kpi-row__value--pos">+$38,000 / wk</span></div>
+          <div class="es-kpi-row"><span class="es-kpi-row__label">Payroll</span><span class="es-kpi-row__value es-kpi-row__value--neg">−$31,500 / wk</span></div>
+        </div>
+
+        <div style="padding: var(--es-space-6);">
+          <div class="es-label" style="margin-bottom: var(--es-space-3)">Upcoming</div>
+          <div class="es-event"><div class="es-event__title">Regional Major</div><div class="es-event__meta">In 6 days · Prize $50,000 · 16 teams</div></div>
+          <div class="es-event"><div class="es-event__title">Contract renewal — Apex</div><div class="es-event__meta">Expires in 3 weeks · Current $8,000/wk</div></div>
+          <div class="es-event"><div class="es-event__title">Sponsor offer — TechCore</div><div class="es-event__meta">$12,000/wk · 6-month deal · 2 days left</div></div>
+          <div class="es-event"><div class="es-event__title es-event__title--danger">Vortex burnout warning</div><div class="es-event__meta">Stamina 32/100 · Recommend rest week</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>KPI tiles</h3>
+    <div class="ds-grid-4">
+      <div class="es-kpi"><div class="es-kpi__label">Roster size</div><div class="es-kpi__value">5</div></div>
+      <div class="es-kpi"><div class="es-kpi__label">Season week</div><div class="es-kpi__value">14 / 52</div></div>
+      <div class="es-kpi"><div class="es-kpi__label">World rank</div><div class="es-kpi__value">#12</div><div class="es-kpi__delta es-kpi__delta--pos">▲ 3 this month</div></div>
+      <div class="es-kpi"><div class="es-kpi__label">Balance</div><div class="es-kpi__value">$487k</div><div class="es-kpi__delta es-kpi__delta--pos">+$6,500 / wk</div></div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Match surfaces</h2>
+    <p class="ds-section-meta">
+      Components that live on the match screen. The viewer will assemble these with a 2D
+      callout map, kill feed, scoreline, and per-team economy strip.
+    </p>
+
+    <h3>Scoreline</h3>
+    <div class="es-scoreline">
+      <div class="es-scoreline__team">
+        <div class="es-scoreline__tag">NXS</div>
+        <div class="es-scoreline__side es-scoreline__side--attack">Attack</div>
+      </div>
+      <div class="es-scoreline__score">
+        <span>7</span>
+        <span class="es-scoreline__dash">—</span>
+        <span>5</span>
+      </div>
+      <div class="es-scoreline__team es-scoreline__team--right">
+        <div class="es-scoreline__tag">VGD</div>
+        <div class="es-scoreline__side es-scoreline__side--defense">Defense</div>
+      </div>
+    </div>
+
+    <h3>Kill feed</h3>
+    <div class="es-killfeed" style="max-width: 480px;">
+      <div class="es-killfeed__row es-killfeed__row--defense">
+        <span class="es-killfeed__killer">warden</span>
+        <span class="es-killfeed__weapon">[vandal]</span>
+        <span class="es-killfeed__victim">phantom</span>
+        <span class="es-killfeed__hs">HS</span>
+        <span class="es-killfeed__callout">a_long</span>
+      </div>
+      <div class="es-killfeed__row es-killfeed__row--attack">
+        <span class="es-killfeed__killer">vortex</span>
+        <span class="es-killfeed__weapon">[operator]</span>
+        <span class="es-killfeed__victim">slice</span>
+        <span class="es-killfeed__callout">a_heaven</span>
+      </div>
+      <div class="es-killfeed__row es-killfeed__row--attack">
+        <span class="es-killfeed__killer">phantom</span>
+        <span class="es-killfeed__weapon">[phantom]</span>
+        <span class="es-killfeed__victim">warden</span>
+        <span class="es-killfeed__callout">a_site</span>
+      </div>
+      <div class="es-killfeed__row es-killfeed__row--defense">
+        <span class="es-killfeed__killer">shade</span>
+        <span class="es-killfeed__weapon">[sheriff]</span>
+        <span class="es-killfeed__victim">ghost</span>
+        <span class="es-killfeed__hs">HS</span>
+        <span class="es-killfeed__callout">mid_doors</span>
+      </div>
+    </div>
+
+    <h3>Economy strip</h3>
+    <div class="ds-inline">
+      <div class="es-economy es-economy--full"><span class="es-economy__creds">$4,200</span><span class="es-economy__loadout">Full buy</span></div>
+      <div class="es-economy es-economy--force"><span class="es-economy__creds">$2,100</span><span class="es-economy__loadout">Force · spectre</span></div>
+      <div class="es-economy es-economy--eco"><span class="es-economy__creds">$600</span><span class="es-economy__loadout">Eco · classic</span></div>
+    </div>
+
+    <h3>2D map · Haven</h3>
+    <div class="ds-section-meta" style="margin-top: calc(-1 * var(--es-space-4));">
+      Low-fidelity sketch. Sites are translucent boxes; callouts are pill labels; player dots
+      are colored by side. This is the substrate the real match viewer will animate over.
+    </div>
+    <div class="ds-map">
+      <!-- Sites -->
+      <div class="ds-map-site" style="left: 5%; top: 38%; width: 22%; height: 22%;">A</div>
+      <div class="ds-map-site" style="left: 38%; top: 42%; width: 22%; height: 22%;">B</div>
+      <div class="ds-map-site" style="left: 70%; top: 38%; width: 22%; height: 22%;">C</div>
+
+      <!-- Callouts -->
+      <div class="es-callout" style="left: 10%; top: 20%;">A Long</div>
+      <div class="es-callout" style="left: 20%; top: 32%;">A Short</div>
+      <div class="es-callout es-callout--site" style="left: 16%; top: 50%;">A Site</div>
+      <div class="es-callout" style="left: 22%; top: 65%;">A Heaven</div>
+      <div class="es-callout" style="left: 49%; top: 28%;">B Main</div>
+      <div class="es-callout" style="left: 47%; top: 44%;">Garage</div>
+      <div class="es-callout es-callout--site" style="left: 49%; top: 56%;">B Site</div>
+      <div class="es-callout" style="left: 52%; top: 68%;">B Back</div>
+      <div class="es-callout" style="left: 82%; top: 22%;">C Long</div>
+      <div class="es-callout es-callout--site" style="left: 80%; top: 54%;">C Site</div>
+      <div class="es-callout" style="left: 72%; top: 62%;">C Link</div>
+      <div class="es-callout" style="left: 50%; top: 50%;">Mid</div>
+
+      <!-- Player dots — attackers on A push, defenders spread -->
+      <div class="es-player-dot es-player-dot--attack"  style="left: 14%; top: 45%;" title="phantom"></div>
+      <div class="es-player-dot es-player-dot--attack"  style="left: 18%; top: 50%;" title="vortex"></div>
+      <div class="es-player-dot es-player-dot--attack"  style="left: 21%; top: 33%;" title="apex"></div>
+      <div class="es-player-dot es-player-dot--attack es-player-dot--dead" style="left: 11%; top: 22%;" title="ghost (dead)"></div>
+      <div class="es-player-dot es-player-dot--attack"  style="left: 48%; top: 48%;" title="echo"></div>
+
+      <div class="es-player-dot es-player-dot--defense" style="left: 22%; top: 64%;" title="warden"></div>
+      <div class="es-player-dot es-player-dot--defense" style="left: 52%; top: 65%;" title="zenith"></div>
+      <div class="es-player-dot es-player-dot--defense" style="left: 72%; top: 62%;" title="shade"></div>
+      <div class="es-player-dot es-player-dot--defense" style="left: 80%; top: 58%;" title="slice"></div>
+      <div class="es-player-dot es-player-dot--defense" style="left: 22%; top: 50%;" title="pulse"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <section>
+    <h2>Principles</h2>
+    <div class="es-surface">
+      <div class="es-surface-body" style="display:flex; flex-direction:column; gap: var(--es-space-4); font-size: var(--es-text-md); color: var(--es-color-text-secondary);">
+        <div><strong style="color: var(--es-color-text-primary);">Information first.</strong> Reach for density before whitespace. FM users scan tables of tiny numbers for hours — this is a feature, not a flaw.</div>
+        <div><strong style="color: var(--es-color-text-primary);">Mono for numerics.</strong> Any number the user compares across rows (OVR, credits, stats, salary, rank) uses the mono stack and tabular figures. Sans for prose.</div>
+        <div><strong style="color: var(--es-color-text-primary);">Color carries meaning.</strong> Brand red is reserved. Role color identifies. Side color sets context on the match screen. Semantic colors signal state. Don't decorate.</div>
+        <div><strong style="color: var(--es-color-text-primary);">Tokens, not hex.</strong> If you find yourself typing a color literal in a component, stop and add a token.</div>
+        <div><strong style="color: var(--es-color-text-primary);">Dark works in daylight.</strong> Light mode isn't a second-class citizen — author against both simultaneously.</div>
+        <div><strong style="color: var(--es-color-text-primary);">Accessibility is table-stakes.</strong> 4.5:1 contrast on text, 3:1 on non-text. Dot color is never the sole signifier — add a tooltip or label.</div>
+      </div>
+    </div>
+  </section>
+
+  <div style="color: var(--es-color-text-tertiary); font-size: var(--es-text-xs); margin-top: var(--es-space-11); text-align: center; font-family: var(--es-font-mono);">
+    esports-sim · design system v0 · Haven · press T to toggle theme
+  </div>
+
+</main>
+
+<script>
+  // Theme toggle — manual override wins over system.
+  const toggle = document.getElementById('theme-toggle');
+  const label = document.getElementById('theme-label');
+  const root = document.documentElement;
+
+  function currentTheme() {
+    return root.dataset.theme
+      || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  }
+  function paintLabel() {
+    const t = currentTheme();
+    label.textContent = t === 'dark' ? 'Dark mode' : 'Light mode';
+  }
+  function flip() {
+    root.dataset.theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    paintLabel();
+  }
+
+  toggle.addEventListener('click', flip);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 't' || e.key === 'T') flip();
+  });
+  paintLabel();
+</script>
+</body>
+</html>

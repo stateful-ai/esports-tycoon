@@ -1,0 +1,160 @@
+# Team Vanguard — tier-1 rival, upper table. Stylistically disciplined,
+# built around Slice's Op and Zenith's shot-calling.
+
+id: team_vanguard
+name: Team Vanguard
+tag: VGD
+region: americas
+balance: 920000
+reputation: 78
+fan_count: 710000
+world_rank: 4
+chemistry: 91
+captain_id: zenith
+
+players:
+  - id: zenith
+    handle: Zenith
+    real_name: Alex Morgan
+    region: americas
+    age: 27
+    role: controller
+    playstyle: igl
+    salary: 14000
+    contract_weeks_left: 56
+    morale: 85
+    stamina: 82
+    form: 80
+    personality_tags: [leader, cerebral, veteran]
+    attributes:
+      aim_precision: 70
+      aim_reactivity: 68
+      movement: 66
+      game_sense: 97
+      utility_usage: 95
+      positioning: 90
+      clutch_factor: 78
+      tilt_resistance: 92
+      composure: 94
+      comms_quality: 96
+    agent_pool:
+      - { agent_id: omen, mastery: 95 }
+    map_pool:
+      - { map_id: haven, mastery: 92 }
+
+  - id: pulse
+    handle: Pulse
+    real_name: Thiago Costa
+    region: americas
+    age: 21
+    role: duelist
+    playstyle: entry
+    salary: 11000
+    contract_weeks_left: 32
+    morale: 80
+    stamina: 86
+    form: 82
+    personality_tags: [consistent, mature]
+    attributes:
+      aim_precision: 90
+      aim_reactivity: 91
+      movement: 88
+      game_sense: 76
+      utility_usage: 74
+      positioning: 80
+      clutch_factor: 82
+      tilt_resistance: 78
+      composure: 80
+      comms_quality: 76
+    agent_pool:
+      - { agent_id: raze, mastery: 93 }
+      - { agent_id: jett, mastery: 74 }
+    map_pool:
+      - { map_id: haven, mastery: 85 }
+
+  - id: warden
+    handle: Warden
+    real_name: Linnea Holm
+    region: americas
+    age: 24
+    role: sentinel
+    playstyle: anchor
+    salary: 9500
+    contract_weeks_left: 44
+    morale: 84
+    stamina: 90
+    form: 76
+    personality_tags: [stoic, anchor]
+    attributes:
+      aim_precision: 80
+      aim_reactivity: 75
+      movement: 68
+      game_sense: 88
+      utility_usage: 92
+      positioning: 94
+      clutch_factor: 78
+      tilt_resistance: 88
+      composure: 92
+      comms_quality: 84
+    agent_pool:
+      - { agent_id: killjoy, mastery: 95 }
+    map_pool:
+      - { map_id: haven, mastery: 90 }
+
+  - id: slice
+    handle: Slice
+    real_name: Kenji Tanaka
+    region: americas
+    age: 23
+    role: duelist
+    playstyle: awper
+    salary: 13000
+    contract_weeks_left: 22
+    morale: 78
+    stamina: 84
+    form: 88
+    personality_tags: [star_player, confident, media_favorite]
+    attributes:
+      aim_precision: 97
+      aim_reactivity: 94
+      movement: 90
+      game_sense: 78
+      utility_usage: 65
+      positioning: 84
+      clutch_factor: 93
+      tilt_resistance: 70
+      composure: 82
+      comms_quality: 68
+    agent_pool:
+      - { agent_id: jett, mastery: 96 }
+    map_pool:
+      - { map_id: haven, mastery: 88 }
+
+  - id: shade
+    handle: Shade
+    real_name: Petra Vuković
+    region: americas
+    age: 22
+    role: initiator
+    playstyle: lurker
+    salary: 10000
+    contract_weeks_left: 40
+    morale: 82
+    stamina: 88
+    form: 78
+    personality_tags: [patient, analytical]
+    attributes:
+      aim_precision: 82
+      aim_reactivity: 82
+      movement: 78
+      game_sense: 92
+      utility_usage: 90
+      positioning: 89
+      clutch_factor: 84
+      tilt_resistance: 84
+      composure: 86
+      comms_quality: 80
+    agent_pool:
+      - { agent_id: sova, mastery: 93 }
+    map_pool:
+      - { map_id: haven, mastery: 86 }

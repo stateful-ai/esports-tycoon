@@ -1,0 +1,80 @@
+# Weapons — MVP economy uses 7 weapons + one armor tier.
+# Damage values are coarse; the match engine will refine range/armor scaling.
+
+weapons:
+  - id: classic
+    display_name: Classic
+    weapon_class: pistol
+    price: 0
+    dmg_head: 78
+    dmg_body: 26
+    dmg_leg: 22
+    accuracy_base: 0.45
+    movement_penalty: 0.4
+    kill_reward: 200
+
+  - id: ghost
+    display_name: Ghost
+    weapon_class: pistol
+    price: 500
+    dmg_head: 105
+    dmg_body: 30
+    dmg_leg: 26
+    accuracy_base: 0.55
+    movement_penalty: 0.5
+    kill_reward: 200
+
+  - id: sheriff
+    display_name: Sheriff
+    weapon_class: pistol
+    price: 800
+    dmg_head: 159
+    dmg_body: 55
+    dmg_leg: 47
+    accuracy_base: 0.5
+    movement_penalty: 0.65
+    kill_reward: 200
+
+  - id: spectre
+    display_name: Spectre
+    weapon_class: smg
+    price: 1600
+    dmg_head: 78
+    dmg_body: 26
+    dmg_leg: 22
+    accuracy_base: 0.55
+    movement_penalty: 0.25
+    kill_reward: 200
+
+  - id: phantom
+    display_name: Phantom
+    weapon_class: rifle
+    price: 2900
+    dmg_head: 156
+    dmg_body: 39
+    dmg_leg: 33
+    accuracy_base: 0.7
+    movement_penalty: 0.7
+    kill_reward: 200
+
+  - id: vandal
+    display_name: Vandal
+    weapon_class: rifle
+    price: 2900
+    dmg_head: 160
+    dmg_body: 40
+    dmg_leg: 34
+    accuracy_base: 0.68
+    movement_penalty: 0.7
+    kill_reward: 200
+
+  - id: operator
+    display_name: Operator
+    weapon_class: sniper
+    price: 4700
+    dmg_head: 255
+    dmg_body: 255
+    dmg_leg: 120
+    accuracy_base: 0.95
+    movement_penalty: 0.95
+    kill_reward: 200
