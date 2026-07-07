@@ -1,5 +1,11 @@
 # Sprint 2 — "See the game"
 
+> **STATUS: COMPLETE (2026-07-07).** All six workstreams shipped in four
+> slices; stretch items and the attack-side round-rate tuning item carry
+> to Sprint 3. Bonus work: a league-balance overhaul (blowouts 60-77% →
+> ~35%, see `scripts/snowball_report.py`) after multi-season sims showed
+> condition snowballing.
+
 **Window:** ~2 weeks from 2026-07-07 · **Prerequisite state:** working terminal
 MVP (engine + campaign + CLI, 33 tests green, repo live on GitHub with CI).
 
