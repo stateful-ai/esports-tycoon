@@ -134,6 +134,21 @@ class TeamSeasonStats(BaseModel):
     pistols_won: int = 0
 
 
+class SponsorDeal(BaseModel):
+    """A named sponsorship: weekly cash, optional per-win bonus, finite
+    term. The user team holds at most one active deal plus one pending
+    offer (offers expire after a week on the table)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    kind: str  # upfront | steady | performance
+    signing_bonus: int = 0
+    weekly: int = 0
+    per_win: int = 0
+    weeks_left: int = 0
+
+
 class AwardRecord(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -179,6 +194,10 @@ class GameState(BaseModel):
 
     # Talk module: one 1:1 per week. Holds "s{season}w{week}" once used.
     talked_week: str = ""
+
+    # Sponsorship (user team only; AI org finances stay background).
+    sponsor: SponsorDeal | None = None
+    sponsor_offer: SponsorDeal | None = None
 
     # -- helpers -------------------------------------------------------------
 

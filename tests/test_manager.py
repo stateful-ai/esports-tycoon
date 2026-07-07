@@ -150,3 +150,27 @@ def test_talk_once_per_week_and_deterministic(campaign: GameState) -> None:
     # Second talk the same week is refused.
     ok, why = talk.can_talk(campaign, pid)
     assert not ok and "already" in why
+
+
+def test_sponsor_deal_lifecycle(campaign: GameState) -> None:
+    from esports_sim.manager import sponsors
+    from esports_sim.manager.state import SponsorDeal
+
+    team = campaign.teams[campaign.user_team_id]
+    campaign.sponsor_offer = SponsorDeal(
+        name="Testcorp", kind="performance",
+        signing_bonus=100_000, weekly=5_000, per_win=8_000, weeks_left=2,
+    )
+    before = team.balance
+    ok, _ = sponsors.accept_offer(campaign)
+    assert ok
+    assert team.balance == before + 100_000
+    assert campaign.sponsor is not None and campaign.sponsor_offer is None
+
+    # Winning week pays weekly + per-win; deal counts down and expires.
+    before = team.balance
+    got = sponsors.weekly_tick(campaign, user_won_this_week=True)
+    assert got == 13_000 and team.balance == before + 13_000
+    got = sponsors.weekly_tick(campaign, user_won_this_week=False)
+    assert got == 5_000
+    assert campaign.sponsor is None  # 2 weeks elapsed -> expired

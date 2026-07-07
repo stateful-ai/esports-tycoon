@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import market, talk
+from esports_sim.manager import market, sponsors, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -391,7 +391,27 @@ def finances() -> dict:
             "weekly_payroll": payroll,
             "last_week_income": rep.user_income if rep else None,
             "last_week_expenses": rep.user_expenses if rep else None,
+            "sponsor": gs.sponsor.model_dump() if gs.sponsor else None,
+            "sponsor_offer": gs.sponsor_offer.model_dump()
+            if gs.sponsor_offer
+            else None,
         }
+
+
+class SponsorBody(BaseModel):
+    accept: bool
+
+
+@app.post("/api/actions/sponsor")
+def sponsor_action(body: SponsorBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        fn = sponsors.accept_offer if body.accept else sponsors.decline_offer
+        ok, msg = fn(gs)
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg}
 
 
 # ---------------------------------------------------------------------------

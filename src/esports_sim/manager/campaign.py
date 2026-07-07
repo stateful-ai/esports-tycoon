@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from esports_sim.manager import market, narrative, training
+from esports_sim.manager import market, narrative, sponsors, training
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
@@ -161,6 +161,15 @@ def advance_week(
         income, expenses = apply_weekly_finance(gs.teams[tid], gs.roster(tid))
         if tid == gs.user_team_id:
             report.user_income, report.user_expenses = income, expenses
+
+    # 3b. Sponsorship (user org only): pay the active deal, roll offers.
+    user_fixture = next(
+        (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
+        None,
+    )
+    user_won = bool(user_fixture and user_fixture.winner_id == gs.user_team_id)
+    report.user_income += sponsors.weekly_tick(gs, user_won)
+    sponsors.maybe_offer(gs, week_rng)
 
     # 4. Contracts + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)

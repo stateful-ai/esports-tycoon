@@ -79,9 +79,11 @@ document.querySelectorAll(".tab").forEach((b) => {
 
 function render() {
   if (!App.state) return;
-  const v = $("#view");
-  v.innerHTML = "";
-  ({ dashboard, roster, standings, schedule, market, stats, finances })[App.tab](v);
+  // Each render gets a fresh container; a slower, superseded async render
+  // finishes into a detached node instead of double-appending.
+  const container = el("div");
+  $("#view").replaceChildren(container);
+  ({ dashboard, roster, standings, schedule, market, stats, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -474,6 +476,14 @@ async function stats(v) {
   }
 }
 
+function dealLine(d) {
+  const bits = [];
+  if (d.signing_bonus) bits.push(`${money(d.signing_bonus)} up front`);
+  if (d.weekly) bits.push(`${money(d.weekly)}/wk`);
+  if (d.per_win) bits.push(`${money(d.per_win)} per win`);
+  return `${bits.join(" · ")} — ${d.weeks_left} weeks`;
+}
+
 async function finances(v) {
   const data = await api("/api/finances");
   const card = el("div", "card");
@@ -484,8 +494,37 @@ async function finances(v) {
       <tr><td>Last week income</td><td class="num">${money(data.last_week_income)}</td></tr>
       <tr><td>Last week expenses</td><td class="num">${money(data.last_week_expenses)}</td></tr>
     </tbody></table>
-    <p class="muted" style="margin-top:8px">Income = sponsors (reputation + fans) + prize money. Expenses = payroll + facilities.</p>`;
+    <p class="muted" style="margin-top:8px">Income = base sponsorship (reputation + fans) + deal money + prize money. Expenses = payroll + severance.</p>`;
   v.appendChild(card);
+
+  const sp = el("div", "card");
+  sp.innerHTML = `<h2>Sponsorship</h2>`;
+  if (data.sponsor) {
+    sp.appendChild(el("p", "", `<b>${data.sponsor.name}</b> <span class="pill">${data.sponsor.kind}</span><br>
+      <span class="muted">${dealLine(data.sponsor)}</span>`));
+  } else {
+    sp.appendChild(el("p", "muted", "No active deal — running on base sponsorship only."));
+  }
+  if (data.sponsor_offer) {
+    const o = data.sponsor_offer;
+    const box = el("div", "row");
+    box.innerHTML = `<span><b>Offer: ${o.name}</b> <span class="pill">${o.kind}</span><br>
+      <span class="muted">${dealLine(o)} — expires if unanswered this week</span></span>`;
+    const yes = el("button", "btn btn-primary btn-sm", "Accept");
+    yes.onclick = async () => {
+      const r = await api("/api/actions/sponsor", { accept: true });
+      toast(r.message); refresh(); render();
+    };
+    const no = el("button", "btn btn-sm", "Decline");
+    no.onclick = async () => {
+      const r = await api("/api/actions/sponsor", { accept: false });
+      toast(r.message); render();
+    };
+    box.appendChild(yes);
+    box.appendChild(no);
+    sp.appendChild(box);
+  }
+  v.appendChild(sp);
 }
 
 /* -- talk 1:1 ---------------------------------------------------------------------- */
