@@ -23,9 +23,13 @@ regions:
   b_hall: { x: 76.0, y: 68.0, w: 16.0, h: 16.0 }
 
 corridors:
-  # B Long is its own hallway straight off spawn.
+  # A Lobby is a doglegged hallway off spawn, not a straight shot.
+  - between: [attacker_spawn, a_lobby]
+    via: [[45.3, 31.6]]
+  # B Long is its own hallway straight off spawn, looping wide before it
+  # doors into the room.
   - between: [attacker_spawn, b_long]
-    via: [[80.0, 14.0]]
+    via: [[87.0, -1.0]]
   # A Short cuts across to Lamps behind the back of A Site.
   - between: [a_short, a_lamps]
     via: [[28.0, 58.0]]

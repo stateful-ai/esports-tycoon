@@ -5,7 +5,7 @@ map_id: split
 regions:
   # -- Spawns (wide, shallow) -------------------------------------------
   attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 72.0, w: 40.0, h: 14.0 }
 
   # -- A site -------------------------------------------------------------
   a_main: { x: 12.0, y: 14.0, w: 16.0, h: 32.0 }
@@ -27,11 +27,21 @@ regions:
   b_rafters: { x: 69.0, y: 63.0, w: 14.0, h: 18.0, z: 5.0 }
 
 corridors:
-  # Heaven and Elbow are defender-side perches that loop back to spawn.
+  # A Main is a doglegged hallway off spawn, not a straight shot.
+  - between: [attacker_spawn, a_main]
+    via: [[53.2, 43.9]]
+  # Mid Top loops wide off spawn before it doors down into the spine.
+  - between: [attacker_spawn, mid_top]
+    via: [[65.8, 18.5]]
+  # Sewer doglegs into Garden instead of a straight shot.
+  - between: [mid_sewer, b_garden]
+    via: [[71.8, 48.2]]
+  # Heaven and Elbow are defender-side perches that loop back to spawn —
+  # short, direct interior lines now that spawn sits close behind them.
   - between: [defender_spawn, a_heaven]
-    via: [[18.0, 80.0]]
+    via: [[32.0, 73.5]]
   - between: [defender_spawn, b_elbow]
-    via: [[82.0, 80.0]]
+    via: [[68.0, 73.5]]
 
 # Detail layer: plant-cover crates in each site plus one in each main lane
 # room. A Heaven and B Rafters are Split's two heaven-style perches over

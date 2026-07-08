@@ -5,10 +5,10 @@ map_id: lotus
 regions:
   # -- Spawns (wide, shallow) -------------------------------------------
   attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 76.0, w: 40.0, h: 14.0 }
 
   # -- A site -----------------------------------------------------------
-  a_main: { x: 6.0, y: 16.0, w: 9.0, h: 30.0 }
+  a_main: { x: 8.0, y: 26.0, w: 9.0, h: 22.0 }
   a_link: { x: 20.0, y: 31.0, w: 14.0, h: 14.0 }
   a_site: { x: 8.0, y: 44.0, w: 20.0, h: 20.0 }
   a_tree: { x: 8.0, y: 62.0, w: 14.0, h: 14.0 }
@@ -34,9 +34,10 @@ regions:
   c_dock: { x: 70.0, y: 65.0, w: 14.0, h: 16.0 }
 
 corridors:
-  # A Main and C Main are the two long flank lanes off spawn.
+  # A Main is a doglegged flank lane off spawn (kept off the direct line
+  # so the A stage doesn't collapse to the straight-line minimum).
   - between: [attacker_spawn, a_main]
-    via: [[15.0, 12.0]]
+    via: [[31.3, 22.5]]
   - between: [attacker_spawn, c_main]
     via: [[85.0, 12.0]]
   # Mid Center is a straight run down the middle of spawn.
@@ -45,12 +46,17 @@ corridors:
   # Alley forks off Mid toward C.
   - between: [mid_center, alley]
     via: [[54.0, 44.0]]
+  # Diamond loops wide off spawn before doubling back to the room, instead
+  # of a straight shot in.
+  - between: [attacker_spawn, b_diamond]
+    via: [[84.4, 1.4]]
   # Diamond loops around B Main to reach the back of site.
   - between: [b_diamond, b_site]
     via: [[58.0, 42.0]]
-  # Tree is a defender-side flank back to spawn.
+  # Tree is a defender-side flank back to spawn — short and direct now
+  # that spawn sits close behind the site backs.
   - between: [defender_spawn, a_tree]
-    via: [[20.0, 80.0]]
+    via: [[32.5, 76.0]]
 
 # Detail layer: plant-cover crates in each site plus one in each main lane
 # room. B Tower is Lotus's one elevated perch, overlooking B Site — its

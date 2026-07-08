@@ -5,7 +5,7 @@ map_id: haven
 regions:
   # -- Spawns (wide, shallow) -------------------------------------------
   attacker_spawn: { x: 26.0, y: 0.0, w: 48.0, h: 17.0 }
-  defender_spawn: { x: 30.0, y: 81.0, w: 40.0, h: 19.0 }
+  defender_spawn: { x: 30.0, y: 70.0, w: 40.0, h: 16.0 }
 
   # -- A lane -------------------------------------------------------------
   a_lobby: { x: 6.0, y: 9.0, w: 18.0, h: 16.0 }
@@ -34,18 +34,23 @@ regions:
   mid_window: { x: 54.0, y: 44.0, w: 14.0, h: 14.0 }
 
 corridors:
-  # Attacker spawn's two long lanes are literal hallways, not open doors.
+  # Attacker spawn's two long lanes loop wide before their doors — literal
+  # hallways, not open doors.
   - between: [attacker_spawn, a_long]
-    via: [[15.0, 14.0]]
+    via: [[18.8, -4.4]]
   - between: [attacker_spawn, c_long]
-    via: [[85.0, 14.0]]
-  # Defender spawn fans out to the back of each site.
+    via: [[80.9, -4.7]]
+  # B Main is its own hallway off spawn, looped out to the side.
+  - between: [attacker_spawn, b_main]
+    via: [[25.9, 17.3]]
+  # Defender spawn fans out to the back of each site — short, direct
+  # interior lines (the defenders' compensation for a blind rotate).
   - between: [defender_spawn, a_heaven]
-    via: [[25.0, 75.0]]
+    via: [[33.3, 71.3]]
   - between: [defender_spawn, a_sewer]
-    via: [[35.0, 74.0]]
+    via: [[39.8, 70.3]]
   - between: [defender_spawn, c_link]
-    via: [[68.0, 76.0]]
+    via: [[60.0, 69.5]]
   # Mid Window overlooks B Main from across a gap.
   - between: [b_main, mid_window]
     via: [[59.0, 39.0]]

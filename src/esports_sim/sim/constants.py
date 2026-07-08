@@ -25,6 +25,34 @@ MIN_MOVE_TICKS = 2
 # them and the shooter is simply harder to kill.
 COVER_BONUS = 4.0
 
+# ---------------------------------------------------------------------------
+# Micro combat
+
+# Watch directions: a stationary player is pre-aimed toward what they're
+# watching (usually the enemy-spawn side). The holder bonus only pays out
+# when the threat comes from that cone; a shot from behind is a flank.
+PREAIM_FACING_COS = 0.4  # cos threshold: inside the watched cone
+FLANK_FACING_COS = -0.2  # behind this: caught from the back
+FLANK_MALUS = 8.0
+
+# Peeking: an aggressive player on a stalemated angle briefly swings it.
+# The peeker trades their holder status for initiative, and bails out of
+# losing fights more often (jiggle bait).
+PEEK_PROB = 0.02  # per tick baseline; playstyle/reactivity add to it
+PEEK_PROB_AGGRO = 0.03  # extra for entry/awper playstyles
+PEEK_INITIATIVE = 5.0
+PEEK_FIZZLE_MULT = 2.0
+PEEK_FLASH_PROB = 0.5  # chance a peeker with a flash charge pops it
+
+# Micro-repositioning: after a fizzled duel (and often after a kill) the
+# survivor shifts a few units — to cover when there is some.
+MICRO_MOVE_RADIUS = 7.0
+MICRO_MOVE_MIN = 2.0
+KILLER_REPOSITION_PROB = 0.5
+
+# Rotation info: an initiator burns an info charge to call the hit early.
+INFO_ROTATE_BONUS = 4  # ticks shaved off every rotator's delay
+
 # Default-strat attackers commit somewhere in this window (uniform draw).
 DEFAULT_GO_EARLIEST = 90
 DEFAULT_GO_LATEST = 130

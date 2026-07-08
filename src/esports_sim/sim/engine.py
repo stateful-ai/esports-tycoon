@@ -92,6 +92,8 @@ class _PState:
     bonus_until: int = -1
     bonus: float = 0.0
     no_engage_until: int = -1  # disengage grace while falling back
+    # Unit vector this player is pre-aiming down while stationary.
+    watch: tuple[float, float] | None = None
     has_spike: bool = False
     charges: dict[str, int] = field(default_factory=dict)
 
@@ -188,6 +190,7 @@ class _MatchSim:
         self._smoke_until = -1
         self._spike_dropped_at: str | None = None
         self._retake_popped = False
+        self._info_rotate_used = False
 
     # -- setup helpers -----------------------------------------------------
 
@@ -433,6 +436,7 @@ class _MatchSim:
         self._smoke_until = -1
         self._spike_dropped_at = None
         self._retake_popped = False
+        self._info_rotate_used = False
         for pid in sorted(self.p):
             ps = self.p[pid]
             ps.alive = True
@@ -446,6 +450,7 @@ class _MatchSim:
             ps.bonus_until = -1
             ps.bonus = 0.0
             ps.no_engage_until = -1
+            ps.watch = None
             ps.has_spike = False
 
         attackers = self.roster[atk]
@@ -478,8 +483,10 @@ class _MatchSim:
         # take tactical slots (cover/doorway angles) at their assignment.
         for pid in sorted(attackers):
             self._place(pid, self.map.attacker_spawn, "enter", seed_path)
+            self._set_watch(self.p[pid], atk)
         for pid in sorted(defenders):
             self._place(pid, assignment[pid], "hold", seed_path)
+            self._set_watch(self.p[pid], atk)
 
         # -- attacker staging ---------------------------------------------------------
         entries = self._entry_callouts(target_site)
@@ -568,7 +575,24 @@ class _MatchSim:
                         rotate_at[leaner] = tick + delay
 
             # -- go decision ------------------------------------------------------
+            # The hit waits for bodies in position (utility popped while
+            # half the team is mid-corridor is wasted) — but never past
+            # the force-go point.
+            staged_ready = True
             if not went and tick >= go_tick and alive_atk:
+                staged = sum(
+                    1
+                    for q in alive_atk
+                    if self.p[q].callout in entries
+                    or any(
+                        nb in entries
+                        for nb in self.map.neighbors(self.p[q].callout)
+                    )
+                )
+                staged_ready = (
+                    staged >= min(2, len(alive_atk)) or tick >= C.FORCE_GO_TICK
+                )
+            if not went and tick >= go_tick and alive_atk and staged_ready:
                 if not recon_done:
                     recon_done = True
                     new_site = self._recon_recall(
@@ -616,6 +640,7 @@ class _MatchSim:
                     ps.move_dest = None
                     ps.move_eta = -1
                     ps.order_dirty = True
+                    self._set_watch(ps, atk)  # settle onto the new angle
 
             # -- dropped-spike pickup ------------------------------------------------------
             if self._spike_dropped_at is not None and not spike_planted:
@@ -747,7 +772,9 @@ class _MatchSim:
             # not to first blood — waiting for a site kill meant rotators
             # always arrived post-plant and the defense never held.
             if went and not spike_planted:
-                self._schedule_rotations(tick, defenders, defender_site, target_site, rotate_at)
+                self._schedule_rotations(
+                    tick, defenders, defender_site, target_site, rotate_at, seed_path
+                )
 
         # -- round end --------------------------------------------------------------
         assert winner is not None and reason is not None
@@ -837,6 +864,28 @@ class _MatchSim:
         x, y, _ = ranked[idx]
         return (x, y)
 
+    def _set_watch(self, ps: _PState, atk: str) -> None:
+        """Face the likely threat: defenders watch toward attacker spawn,
+        attackers toward defender spawn. Flanks come from everywhere else."""
+        enemy_spawn = (
+            self.map.defender_spawn if ps.team_id == atk else self.map.attacker_spawn
+        )
+        c = self.map.callouts[enemy_spawn]
+        dx, dy = c.x - ps.x, c.y - ps.y
+        norm = (dx * dx + dy * dy) ** 0.5
+        ps.watch = (dx / norm, dy / norm) if norm > 0 else None
+
+    def _facing(self, ps: _PState, ex: float, ey: float) -> float:
+        """cos(angle) between this player's watch direction and the enemy
+        at (ex, ey); 0.0 when not watching anything (mid-move)."""
+        if ps.watch is None:
+            return 0.0
+        dx, dy = ex - ps.x, ey - ps.y
+        norm = (dx * dx + dy * dy) ** 0.5
+        if norm == 0:
+            return 0.0
+        return ps.watch[0] * dx / norm + ps.watch[1] * dy / norm
+
     def _place(
         self, pid: str, room: str, prefer: str, seed_path: tuple[str, ...]
     ) -> None:
@@ -884,6 +933,7 @@ class _MatchSim:
         ps.move_dest = dest
         ps.move_eta = tick + ticks
         ps.path = pts[1:]
+        ps.watch = None  # no pre-aim while running
         self._emit(
             MoveEvent(
                 tick=tick,
@@ -1302,6 +1352,73 @@ class _MatchSim:
         ticks = C.HALF_DEFUSE_TICKS if defuse_half else C.DEFUSE_TICKS
         self.p[defuser].defusing_until = tick + ticks
 
+    # -- micro combat helpers ---------------------------------------------------
+
+    def _peek_prob(self, pid: str) -> float:
+        pl = self._player(pid)
+        p = C.PEEK_PROB
+        if pl.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
+            p += C.PEEK_PROB_AGGRO
+        p += max(0.0, pl.attr("aim_reactivity") - 60.0) / 2000.0
+        return p
+
+    def _flash_ability(self, ps: _PState) -> Ability | None:
+        for ab in self.gd.agents[ps.agent_id].abilities:
+            if ab.flashes and ab.type != "ultimate" and ps.charges.get(ab.id, 0) > 0:
+                return ab
+        return None
+
+    def _micro_move(
+        self,
+        ps: _PState,
+        tick: int,
+        seed_path: tuple[str, ...],
+        rng: np.random.Generator,
+    ) -> None:
+        """Shuffle a few units within the current room — toward another
+        slot (cover) when one is in range, otherwise a short strafe.
+        Emits a real MoveEvent so replays show the fight footwork."""
+        if not ps.alive or ps.busy:
+            return
+        room = ps.callout
+        candidates = [
+            (x, y)
+            for x, y, _kind in self._slots.get(room, [])
+            if C.MICRO_MOVE_MIN
+            <= ((x - ps.x) ** 2 + (y - ps.y) ** 2) ** 0.5
+            <= C.MICRO_MOVE_RADIUS
+        ]
+        if candidates:
+            tx, ty = candidates[int(rng.integers(0, len(candidates)))]
+        else:
+            ang = float(rng.uniform(0.0, 2.0 * np.pi))
+            tx, ty = ps.x + np.cos(ang) * 3.0, ps.y + np.sin(ang) * 3.0
+            if self._geo is not None and room in self._geo.regions:
+                r = self._geo.regions[room]
+                tx = min(max(tx, r.x + 1.0), r.x + r.w - 1.0)
+                ty = min(max(ty, r.y + 1.0), r.y + r.h - 1.0)
+        dist = ((tx - ps.x) ** 2 + (ty - ps.y) ** 2) ** 0.5
+        if dist < 0.5:
+            return
+        ps.move_dest = room  # same-room shuffle; callout is unchanged
+        ps.move_eta = tick + max(1, round(dist / self._speed(ps.pid)))
+        ps.path = [(tx, ty)]
+        ps.watch = None
+        self._emit(
+            MoveEvent(
+                tick=tick,
+                seed_path=seed_path,
+                player_id=ps.pid,
+                from_callout=room,
+                to_callout=room,
+                waypoints=[
+                    (round(ps.x, 2), round(ps.y, 2)),
+                    (round(tx, 2), round(ty, 2)),
+                ],
+                arrive_tick=ps.move_eta,
+            )
+        )
+
     # -- combat -------------------------------------------------------------------------
 
     def _sightline(self, ca: str, cb: str) -> tuple[bool, str | None]:
@@ -1336,6 +1453,8 @@ class _MatchSim:
         duel_range: float = 20.0,
         height_delta: float = 0.0,
         in_cover: bool = False,
+        facing: float = 0.0,
+        peeking: bool = False,
     ) -> float:
         ps = self.p[pid]
         pl = self._player(pid)
@@ -1367,8 +1486,15 @@ class _MatchSim:
             s += C.COVER_BONUS
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
+        # Pre-aim only pays inside the watched cone; a flank strips the
+        # holder's edge entirely and then some. Lurks are real now.
         if holder and not same_callout:
-            s += C.HOLDER_BONUS  # pre-aimed vs someone mid-move
+            if facing >= C.PREAIM_FACING_COS:
+                s += C.HOLDER_BONUS
+            elif facing <= C.FLANK_FACING_COS:
+                s -= C.FLANK_MALUS
+        if peeking:
+            s += C.PEEK_INITIATIVE  # swinging with intent beats reacting
         if ps.flash_until >= tick:
             s -= C.FLASH_DEBUFF
         if ps.bonus_until >= tick:
@@ -1420,14 +1546,27 @@ class _MatchSim:
                 if angle_broken:
                     p_engage *= C.SIGHT_BLOCK_ENGAGE_FACTOR
                 # Pre-commit poking is rare; committed pushes force fights.
+                # A deliberate PEEK breaks a stalemate: an aggressive
+                # player swings the angle with initiative instead of
+                # waiting for the coin-flip poke.
                 a_committed = pa.move_eta >= 0 or pa.bonus_until >= tick
                 d_committed = pd.move_eta >= 0
+                peek_a = peek_d = False
                 if not same and not a_committed and not d_committed:
-                    # Pre-commit pokes stay rare on purpose: raising this
-                    # was tried and RAISED attack rates — symmetric
-                    # attrition favors whichever side has more bodies to
-                    # spend, i.e. the attackers pre-hit.
-                    p_engage *= 0.05
+                    p_peek_a = self._peek_prob(a_pid)
+                    p_peek_d = self._peek_prob(d_pid)
+                    if rng.random() < p_peek_a:
+                        peek_a = True
+                        p_engage = 1.0
+                    elif rng.random() < p_peek_d:
+                        peek_d = True
+                        p_engage = 1.0
+                    else:
+                        # Pre-commit pokes stay rare on purpose: raising
+                        # this was tried and RAISED attack rates —
+                        # symmetric attrition favors whichever side has
+                        # more bodies to spend, i.e. the attackers pre-hit.
+                        p_engage *= 0.05
                 if rng.random() >= p_engage:
                     continue
                 engaged.add(a_pid)
@@ -1441,11 +1580,33 @@ class _MatchSim:
                     hit.flash_until = tick + C.FLASH_TICKS
                     self._flashed = False
 
-                if rng.random() < C.DUEL_FIZZLE_PROB:
+                # A peeker with a flash in the pocket swings behind it.
+                if peek_a or peek_d:
+                    peeker, mark = (pa, pd) if peek_a else (pd, pa)
+                    flash_ab = self._flash_ability(peeker)
+                    if flash_ab is not None and rng.random() < C.PEEK_FLASH_PROB:
+                        peeker.charges[flash_ab.id] -= 1
+                        mark.flash_until = tick + C.FLASH_TICKS
+                        self._emit(
+                            UtilityUsedEvent(
+                                tick=tick, seed_path=seed_path,
+                                player_id=peeker.pid, ability_id=flash_ab.id,
+                            )
+                        )
+
+                # Fizzle: nobody commits — both shuffle to new spots
+                # (jiggle-peek bait doubles the odds of that).
+                fizzle = C.DUEL_FIZZLE_PROB * (
+                    C.PEEK_FIZZLE_MULT if (peek_a or peek_d) else 1.0
+                )
+                if rng.random() < fizzle:
+                    self._micro_move(pa, tick, seed_path, rng)
+                    self._micro_move(pd, tick, seed_path, rng)
                     continue
 
-                a_holder = pa.move_eta < 0
-                d_holder = pd.move_eta < 0
+                # A peeker forfeits their anchored status for initiative.
+                a_holder = pa.move_eta < 0 and not peek_a
+                d_holder = pd.move_eta < 0 and not peek_d
                 adv_a = adv == "attack" and a_holder
                 adv_d = adv == "defense" and d_holder
                 if same:
@@ -1477,10 +1638,12 @@ class _MatchSim:
                 sa = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
                     len(alive_atk), len(alive_dfn), duel_range, dz, cover_a,
+                    self._facing(pa, pd.x, pd.y), peek_a,
                 )
                 sd = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
                     len(alive_dfn), len(alive_atk), duel_range, -dz, cover_d,
+                    self._facing(pd, pa.x, pa.y), peek_d,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:
@@ -1491,6 +1654,10 @@ class _MatchSim:
                 if duel_site == target_site:
                     fought_at_site = True
                 self._try_trade(killer, victim, tick, seed_path, rng)
+                # Winners re-angle after the fight more often than not.
+                kp = self.p[killer]
+                if kp.alive and rng.random() < C.KILLER_REPOSITION_PROB:
+                    self._micro_move(kp, tick, seed_path, rng)
         return fought_at_site
 
     def _kill(
@@ -1578,6 +1745,7 @@ class _MatchSim:
         defender_site: dict[str, str],
         target_site: str,
         rotate_at: dict[str, int],
+        seed_path: tuple[str, ...],
     ) -> None:
         off_site = [
             q
@@ -1588,6 +1756,32 @@ class _MatchSim:
         ]
         if not off_site:
             return
+        # An initiator burning an info charge calls the hit early — the
+        # whole rotation leaves sooner. Once per round.
+        info_bonus = 0
+        if not self._info_rotate_used:
+            for q in sorted(q for q in defenders if self.p[q].alive):
+                ps = self.p[q]
+                ab = next(
+                    (
+                        a
+                        for a in self.gd.agents[ps.agent_id].abilities
+                        if a.info and a.type != "ultimate"
+                        and ps.charges.get(a.id, 0) > 0
+                    ),
+                    None,
+                )
+                if ab is not None:
+                    ps.charges[ab.id] -= 1
+                    self._info_rotate_used = True
+                    info_bonus = C.INFO_ROTATE_BONUS
+                    self._emit(
+                        UtilityUsedEvent(
+                            tick=tick, seed_path=seed_path,
+                            player_id=q, ability_id=ab.id,
+                        )
+                    )
+                    break
         # The best-positioned off-site defender stays home to watch flank.
         off_site.sort(key=lambda q: (-self._player(q).attr("positioning"), q))
         stay = off_site[0] if len(off_site) > 1 else None
@@ -1597,7 +1791,9 @@ class _MatchSim:
             pl = self._player(q)
             delay = max(
                 2,
-                12 - int((pl.attr("game_sense") + pl.attr("comms_quality")) / 20.0),
+                12
+                - int((pl.attr("game_sense") + pl.attr("comms_quality")) / 20.0)
+                - info_bonus,
             )
             rotate_at[q] = tick + delay
 

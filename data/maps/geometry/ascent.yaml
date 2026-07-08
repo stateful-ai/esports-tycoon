@@ -26,6 +26,9 @@ regions:
   b_back: { x: 66.0, y: 68.0, w: 15.0, h: 15.0 }
 
 corridors:
+  # A Lobby is a doglegged hallway off spawn, not a straight shot.
+  - between: [attacker_spawn, a_lobby]
+    via: [[43.0, 30.0]]
   # Mid Courtyard is a long open run down from spawn.
   - between: [attacker_spawn, mid_courtyard]
     via: [[50.0, 25.0]]
@@ -34,9 +37,9 @@ corridors:
     via: [[36.0, 55.0]]
   - between: [a_garden, defender_spawn]
     via: [[38.0, 80.0]]
-  # Courtyard peeks across the open mid into B Main.
+  # Courtyard peeks across the open mid into B Main via a wide dogleg.
   - between: [mid_courtyard, b_main]
-    via: [[64.0, 42.0]]
+    via: [[63.0, 27.0]]
   # Market runs down the back wall into defender spawn.
   - between: [mid_market, defender_spawn]
     via: [[64.0, 78.0]]
