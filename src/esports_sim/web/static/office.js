@@ -43,7 +43,8 @@ function roomCorners(r) {
 }
 
 /* World rect shared with the guide renderer — MUST match GuideRenderer's
-   bounds math so painted art lands exactly on the geometry. */
+   bounds math so painted art lands exactly on the geometry. This is the
+   IMAGE mapping rect; the visible viewBox is tighter (officeViewRect). */
 function officeWorldRect(plan) {
   const pts = [...plan.rooms, ...plan.annexes].flatMap(roomCorners);
   const pad = plan.render.pad;
@@ -51,6 +52,19 @@ function officeWorldRect(plan) {
   const minY = Math.min(...pts.map((p) => p[1])) - pad;
   const maxX = Math.max(...pts.map((p) => p[0])) + pad;
   const maxY = Math.max(...pts.map((p) => p[1])) + pad + plan.render.wall_h + 4;
+  return [minX, minY, maxX - minX, maxY - minY];
+}
+
+/* Display rect: hug the building so the office fills the card instead of
+   floating in generated-image margin. Bottom keeps room for the plinth. */
+function officeViewRect(plan) {
+  const pts = [...plan.rooms, ...plan.annexes].flatMap(roomCorners);
+  const padX = 2.5, padTop = 2.5;
+  const padBottom = plan.render.wall_h + 6;
+  const minX = Math.min(...pts.map((p) => p[0])) - padX;
+  const minY = Math.min(...pts.map((p) => p[1])) - padTop;
+  const maxX = Math.max(...pts.map((p) => p[0])) + padX;
+  const maxY = Math.max(...pts.map((p) => p[1])) + padBottom;
   return [minX, minY, maxX - minX, maxY - minY];
 }
 
@@ -300,9 +314,10 @@ async function office(v) {
   const lots = plan.annexes.filter((a) => (facilities[a.id]?.level ?? 0) === 0);
   const rooms = [...plan.rooms, ...built];
 
-  const vb = officeWorldRect(plan);
+  const vb = officeWorldRect(plan); // image mapping (guide frame)
+  const view = officeViewRect(plan); // what the user actually sees
   const svg = osvg("svg", {
-    viewBox: vb.map((n) => n.toFixed(1)).join(" "),
+    viewBox: view.map((n) => n.toFixed(1)).join(" "),
     class: "office-svg",
     preserveAspectRatio: "xMidYMid meet",
   });
@@ -314,9 +329,31 @@ async function office(v) {
     // diff-mask), so "copy where it differs" reconstructs any facility
     // combination seam-free — no clip geometry, no per-combination
     // renders. Composed asynchronously; base paints immediately.
+    //
+    // The plan owns the SILHOUETTE: paint is clipped to the building
+    // footprint (+ a skirt for the 3D plinth) over an under-fill of
+    // dark floor tone — spill can't escape the building, and shortfall
+    // reads as shadowed floor instead of a hole into the background.
+    const skirt = plan.render.wall_h + 4.5;
+    const defs = osvg("defs", {}, svg);
+    const clip = osvg("clipPath", { id: "office-building-clip" }, defs);
+    for (const r of rooms) {
+      const c = roomCorners(r);
+      osvg("polygon", { points: opts(c) }, clip);
+      osvg("polygon", { points: opts(c.map((p) => [p[0], p[1] + skirt])) }, clip);
+    }
+    for (const r of rooms) {
+      const c = roomCorners(r);
+      osvg("polygon", { points: opts(c), class: "office-underfloor" }, svg);
+      osvg("polygon", {
+        points: opts(c.map((p) => [p[0], p[1] + skirt])),
+        class: "office-underfloor",
+      }, svg);
+    }
     const img = osvg("image", {
       x: vb[0], y: vb[1], width: vb[2], height: vb[3],
       preserveAspectRatio: "none", class: "office-painted-base",
+      "clip-path": "url(#office-building-clip)",
     }, svg);
     img.setAttribute("href", `${OFFICE_ART}/painted/base.webp`);
     officeComposeScene(built, facilities).then((url) => {

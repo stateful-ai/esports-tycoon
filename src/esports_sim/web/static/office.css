@@ -60,6 +60,8 @@
 }
 .office-stage.painted { background: #0b0d16; }
 .office-painted-base { pointer-events: none; }
+/* Dark floor tone under the clipped paint: shortfall reads as shadow. */
+.office-underfloor { fill: #171a26; stroke: none; }
 /* The painted scene is always dark — labels stay light in both themes. */
 .office-stage.painted .office-label { fill: #e7eaf2; }
 .office-stage.painted .office-sub { fill: #aeb6c8; }
