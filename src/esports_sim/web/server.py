@@ -482,11 +482,43 @@ def finances() -> dict:
             cfg = sponsors.SLOT_CONFIG[slot]
             deal = gs.sponsor_slots.get(slot)
             offer = gs.sponsor_slot_offers.get(slot)
+            facility_ok = sponsors._slot_unlocked(gs, slot)
             slots[slot] = {
                 "deal": deal.model_dump() if deal else None,
-                "offer": offer.model_dump() if offer else None,
+                "offer": offer.model_dump() if offer else None,  # legacy
+                "market": [
+                    {
+                        **o.model_dump(),
+                        "relation": sponsors.relation(gs, o.brand),
+                        "objective_labels": [
+                            {
+                                "kind": ob.kind,
+                                "bonus": ob.bonus,
+                                "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                            }
+                            for ob in o.objectives
+                        ],
+                    }
+                    for o in gs.sponsor_market.get(slot, [])
+                ],
                 "rep_gate": cfg["rep_gate"],
-                "unlocked": team.reputation >= cfg["rep_gate"],
+                "unlocked": facility_ok and team.reputation >= cfg["rep_gate"],
+                "locked_reason": (
+                    f"requires Marketing Office level {cfg['unlock']}"
+                    if not facility_ok
+                    else f"requires reputation {cfg['rep_gate']:.0f}"
+                    if team.reputation < cfg["rep_gate"]
+                    else None
+                ),
+                "objective_labels_deal": [
+                    {
+                        "kind": ob.kind,
+                        "bonus": ob.bonus,
+                        "met": ob.met,
+                        "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                    }
+                    for ob in (deal.objectives if deal else [])
+                ],
             }
 
         facilities = {}
@@ -502,6 +534,7 @@ def finances() -> dict:
         return {
             "balance": team.balance,
             "weekly_payroll": payroll,
+            "marketability": round(sponsors.marketability(gs), 2),
             "last_week_income": rep.user_income if rep else None,
             "last_week_expenses": rep.user_expenses if rep else None,
             # Legacy (pre-M4) fields, kept for saves with an in-flight deal.
@@ -519,6 +552,9 @@ def finances() -> dict:
 class SponsorBody(BaseModel):
     slot: str
     accept: bool
+    # Market offers (new): identify the brand; choose a structure to sign.
+    brand: str | None = None
+    structure: str | None = None
 
 
 @app.post("/api/actions/sponsor")
@@ -527,8 +563,21 @@ def sponsor_action(body: SponsorBody) -> dict:
         gs = S.require_gs()
         if body.slot not in sponsors.SLOT_ORDER:
             raise HTTPException(422, f"slot must be one of {sponsors.SLOT_ORDER}")
-        fn = sponsors.accept_slot_offer if body.accept else sponsors.decline_slot_offer
-        ok, msg = fn(gs, body.slot)
+        if body.brand is not None:
+            if body.accept:
+                ok, msg = sponsors.sign_market_offer(
+                    gs, body.slot, body.brand, body.structure or "steady"
+                )
+            else:
+                ok, msg = sponsors.decline_market_offer(gs, body.slot, body.brand)
+        else:
+            # Legacy single-offer path (pre-market saves).
+            fn = (
+                sponsors.accept_slot_offer
+                if body.accept
+                else sponsors.decline_slot_offer
+            )
+            ok, msg = fn(gs, body.slot)
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -943,6 +992,16 @@ def replay(fixture_id: str, map_index: int) -> dict:
             "abilities": abilities,
             "events": [e.model_dump() for e in events],
         }
+
+
+# Local app: force revalidation on scripts/styles so a server restart
+# never pairs a fresh backend with a stale cached frontend.
+@app.middleware("http")
+async def _no_stale_frontend(request, call_next):
+    response = await call_next(request)
+    if request.url.path.endswith((".js", ".css", ".html")) or request.url.path == "/":
+        response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 # Static frontend + design system + art (mounted last so /api wins).

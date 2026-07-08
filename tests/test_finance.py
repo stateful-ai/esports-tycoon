@@ -20,33 +20,25 @@ def campaign(game_data: GameData) -> GameState:
 # Slot exclusivity
 
 
-def test_slot_open_gates_on_active_deal_and_pending_offer(campaign: GameState) -> None:
-    assert sponsors._slot_open(campaign, "jersey")
+def test_slot_signable_gates_on_active_deal(campaign: GameState) -> None:
+    assert sponsors._slot_signable(campaign, "jersey")
 
     campaign.sponsor_slots["jersey"] = SponsorDeal(
         name="Testcorp", kind="steady", weekly=5_000, weeks_left=10,
     )
-    assert not sponsors._slot_open(campaign, "jersey")  # fresh deal, not near renewal
+    assert not sponsors._slot_signable(campaign, "jersey")  # fresh deal
 
     campaign.sponsor_slots["jersey"].weeks_left = 3
-    assert sponsors._slot_open(campaign, "jersey")  # inside the renewal window
-
-    del campaign.sponsor_slots["jersey"]
-    campaign.sponsor_slot_offers["jersey"] = SponsorDeal(
-        name="Offercorp", kind="steady", weekly=4_000, weeks_left=20,
-    )
-    assert not sponsors._slot_open(campaign, "jersey")  # offer already on the table
+    assert sponsors._slot_signable(campaign, "jersey")  # renewal window
 
 
-def test_maybe_offer_never_double_books_a_slot(campaign: GameState) -> None:
-    campaign.sponsor_slot_offers["title"] = SponsorDeal(
-        name="Locked-in", kind="steady", weekly=1, weeks_left=1,
-    )
-    campaign.teams[campaign.user_team_id].reputation = 90.0  # would otherwise qualify
+def test_market_respects_per_slot_cap(campaign: GameState) -> None:
+    campaign.teams[campaign.user_team_id].reputation = 90.0
     rng = RngTree(1).derive("force-a-roll")
-    for _ in range(50):  # hammer the roll so a bug would show up quickly
+    for _ in range(80):  # hammer the roll so a cap bug shows up quickly
         sponsors.maybe_offer(campaign, rng)
-    assert campaign.sponsor_slot_offers["title"].name == "Locked-in"
+    for slot in sponsors.SLOT_ORDER:
+        assert len(campaign.sponsor_market.get(slot, [])) <= sponsors.MARKET_CAP_PER_SLOT
 
 
 def test_slots_are_independent_and_can_all_be_filled_at_once(campaign: GameState) -> None:
@@ -94,14 +86,17 @@ def test_legacy_and_slot_fields_stay_independent(campaign: GameState) -> None:
 # Offer generation determinism
 
 
-def test_generate_deal_is_deterministic(campaign: GameState) -> None:
-    team = campaign.teams[campaign.user_team_id]
-    cfg = sponsors.SLOT_CONFIG["title"]
+def test_generate_offer_is_deterministic(campaign: GameState) -> None:
     rng_a = RngTree(4242).derive("season", 1, "week", 3, "weekly")
     rng_b = RngTree(4242).derive("season", 1, "week", 3, "weekly")
-    deal_a = sponsors._generate_deal(rng_a, team, cfg)
-    deal_b = sponsors._generate_deal(rng_b, team, cfg)
-    assert deal_a == deal_b
+    offer_a = sponsors._generate_offer(rng_a, campaign, "title")
+    offer_b = sponsors._generate_offer(rng_b, campaign, "title")
+    assert offer_a == offer_b
+    # Every offer carries all three structures and at least one objective.
+    assert offer_a.upfront.signing_bonus > 0
+    assert offer_a.steady.weekly > 0
+    assert offer_a.performance.per_win > 0
+    assert offer_a.objectives
 
 
 def test_maybe_offer_end_to_end_is_deterministic(game_data: GameData) -> None:
@@ -115,32 +110,103 @@ def test_maybe_offer_end_to_end_is_deterministic(game_data: GameData) -> None:
         rng_b = RngTree(b.seed).derive("season", b.season, "week", week, "weekly")
         sponsors.maybe_offer(a, rng_a)
         sponsors.maybe_offer(b, rng_b)
-        if a.sponsor_slot_offers or a.sponsor_slots:
+        if any(a.sponsor_market.values()):
             touched = True
 
     assert touched, "no slot rolled an offer in 15 weeks — test seed needs adjusting"
-    assert a.sponsor_slot_offers == b.sponsor_slot_offers
-    assert a.sponsor_slots == b.sponsor_slots
+    assert a.sponsor_market == b.sponsor_market
 
 
-def test_offer_scale_grows_with_reputation_and_fan_count(campaign: GameState) -> None:
+def test_marketability_grows_with_reputation_and_fans(campaign: GameState) -> None:
     team = campaign.teams[campaign.user_team_id]
-    cfg = sponsors.SLOT_CONFIG["jersey"]
 
     team.reputation, team.fan_count = 30.0, 10_000
-    low = sponsors._offer_scale(team, cfg)
+    low = sponsors.marketability(campaign)
     team.reputation, team.fan_count = 90.0, 2_000_000
-    high = sponsors._offer_scale(team, cfg)
+    high = sponsors.marketability(campaign)
     assert high > low
 
 
 def test_title_slot_is_bigger_money_than_peripheral(campaign: GameState) -> None:
     team = campaign.teams[campaign.user_team_id]
     team.reputation, team.fan_count = 70.0, 500_000
-    title_scale = sponsors._offer_scale(team, sponsors.SLOT_CONFIG["title"])
-    jersey_scale = sponsors._offer_scale(team, sponsors.SLOT_CONFIG["jersey"])
-    peripheral_scale = sponsors._offer_scale(team, sponsors.SLOT_CONFIG["peripheral"])
-    assert title_scale > jersey_scale > peripheral_scale
+    title = sponsors._offer_scale(campaign, "title", "Testbrand")
+    jersey = sponsors._offer_scale(campaign, "jersey", "Testbrand")
+    peripheral = sponsors._offer_scale(campaign, "peripheral", "Testbrand")
+    assert title > jersey > peripheral
+
+
+def test_relations_scale_offer_money(campaign: GameState) -> None:
+    cold = sponsors._offer_scale(campaign, "jersey", "GrudgeCorp")
+    campaign.sponsor_relations["GrudgeCorp"] = 95.0
+    warm = sponsors._offer_scale(campaign, "jersey", "GrudgeCorp")
+    assert warm > cold
+
+
+def test_objective_payout_and_relation_swing(campaign: GameState) -> None:
+    from esports_sim.manager.state import SponsorObjective
+
+    gs = campaign
+    team = gs.teams[gs.user_team_id]
+    gs.sponsor_slots["jersey"] = SponsorDeal(
+        name="Testcorp", kind="performance", weekly=1_000, weeks_left=20,
+        objectives=[SponsorObjective(kind="make_masters", bonus=50_000)],
+    )
+    # Masters drawn WITH the user: objective met, bonus paid, brand warms.
+    gs.masters_seeds = [gs.user_team_id]
+    before = team.balance
+    rel_before = sponsors.relation(gs, "Testcorp")
+    total = sponsors.weekly_tick(gs, user_won_this_week=False)
+    assert total == 1_000 + 50_000
+    assert team.balance == before + 51_000
+    assert gs.sponsor_slots["jersey"].objectives[0].met is True
+    assert sponsors.relation(gs, "Testcorp") > rel_before
+    # Second week: objective doesn't pay twice.
+    assert sponsors.weekly_tick(gs, user_won_this_week=False) == 1_000
+
+
+def test_missed_objective_cools_relations(campaign: GameState) -> None:
+    from esports_sim.manager.state import SponsorObjective
+
+    gs = campaign
+    gs.sponsor_slots["jersey"] = SponsorDeal(
+        name="Sadcorp", kind="steady", weekly=1_000, weeks_left=20,
+        objectives=[SponsorObjective(kind="make_masters", bonus=50_000)],
+    )
+    gs.masters_seeds = ["someone_else"]
+    rel_before = sponsors.relation(gs, "Sadcorp")
+    total = sponsors.weekly_tick(gs, user_won_this_week=False)
+    assert total == 1_000
+    assert gs.sponsor_slots["jersey"].objectives[0].met is False
+    assert sponsors.relation(gs, "Sadcorp") < rel_before
+
+
+def test_stream_and_apparel_slots_gated_by_marketing_office(campaign: GameState) -> None:
+    gs = campaign
+    assert not sponsors._slot_unlocked(gs, "stream")
+    assert not sponsors._slot_unlocked(gs, "apparel")
+    gs.facilities["marketing_office"] = 1
+    assert sponsors._slot_unlocked(gs, "stream")
+    assert not sponsors._slot_unlocked(gs, "apparel")
+    gs.facilities["marketing_office"] = 2
+    assert sponsors._slot_unlocked(gs, "apparel")
+
+
+def test_sign_market_offer_structure_choice(campaign: GameState) -> None:
+    gs = campaign
+    rng = RngTree(7).derive("offer")
+    offer = sponsors._generate_offer(rng, gs, "jersey")
+    gs.sponsor_market["jersey"] = [offer]
+    team = gs.teams[gs.user_team_id]
+    before = team.balance
+    ok, _ = sponsors.sign_market_offer(gs, "jersey", offer.brand, "upfront")
+    assert ok
+    deal = gs.sponsor_slots["jersey"]
+    assert deal.kind == "upfront"
+    assert team.balance == before + offer.upfront.signing_bonus
+    # Upfront structure discounts the objective bonuses.
+    assert deal.objectives[0].bonus == int(offer.objectives[0].bonus * 0.7)
+    assert gs.sponsor_market["jersey"] == []
 
 
 def test_title_slot_gated_by_reputation(campaign: GameState) -> None:

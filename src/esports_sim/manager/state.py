@@ -155,10 +155,21 @@ class StaffMember(BaseModel):
     salary: int  # per week
 
 
+class SponsorObjective(BaseModel):
+    """Achievement-linked bonus (Motorsport-Manager-style): the brand
+    pays extra when the org delivers a result. `met` is None while the
+    season can still decide it."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: str  # make_playoffs | win_split | make_masters | win_champions | beat_top4 | top_half
+    bonus: int
+    met: bool | None = None
+
+
 class SponsorDeal(BaseModel):
     """A named sponsorship: weekly cash, optional per-win bonus, finite
-    term. The user team holds at most one active deal plus one pending
-    offer (offers expire after a week on the table)."""
+    term, optional achievement objectives."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -168,6 +179,35 @@ class SponsorDeal(BaseModel):
     weekly: int = 0
     per_win: int = 0
     weeks_left: int = 0
+    objectives: list[SponsorObjective] = Field(default_factory=list)
+
+
+class SponsorPackage(BaseModel):
+    """One payment structure for an offer — the user picks one at
+    signing (cash now vs steady vs results-loaded)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    signing_bonus: int = 0
+    weekly: int = 0
+    per_win: int = 0
+
+
+class SponsorOffer(BaseModel):
+    """A brand courting one slot. Carries all three payment structures
+    and the objectives that will ride on the deal; sits in the market
+    until `expires_week`."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    brand: str
+    slot: str
+    weeks: int
+    expires_week: int
+    upfront: SponsorPackage
+    steady: SponsorPackage
+    performance: SponsorPackage
+    objectives: list[SponsorObjective] = Field(default_factory=list)
 
 
 class TransferOffer(BaseModel):
@@ -310,6 +350,14 @@ class GameState(BaseModel):
     # an in-flight deal keeps paying out (see manager/sponsors.py).
     sponsor_slots: dict[str, SponsorDeal] = Field(default_factory=dict)
     sponsor_slot_offers: dict[str, SponsorDeal] = Field(default_factory=dict)
+    # The sponsor MARKET (Motorsport-Manager-style): competing offers per
+    # slot, each carrying three payment structures + objectives. Replaces
+    # sponsor_slot_offers for new offers (old field still expires cleanly).
+    sponsor_market: dict[str, list[SponsorOffer]] = Field(default_factory=dict)
+    # Brand relationship memory (0-100, 50 = neutral): met objectives and
+    # completed deals raise it, failures and snubs lower it; it scales the
+    # money that brand offers next time.
+    sponsor_relations: dict[str, float] = Field(default_factory=dict)
     # Upgradeable org facilities, level 0-3 (missing key == level 0):
-    # "training_center", "analytics_suite". User org only.
+    # "training_center", "analytics_suite", "marketing_office". User only.
     facilities: dict[str, int] = Field(default_factory=dict)

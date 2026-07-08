@@ -77,13 +77,25 @@ def apply_weekly_finance(
 # ---------------------------------------------------------------------------
 # Facilities (user org only)
 
-FACILITY_NAMES: tuple[str, ...] = ("training_center", "analytics_suite")
+FACILITY_NAMES: tuple[str, ...] = (
+    "training_center",
+    "analytics_suite",
+    "marketing_office",
+)
 FACILITY_MAX_LEVEL = 3
 FACILITY_UPGRADE_COST: dict[int, int] = {1: 150_000, 2: 350_000, 3: 700_000}
 FACILITY_UPKEEP_PER_LEVEL: dict[str, int] = {
     "training_center": 1_800,
     "analytics_suite": 2_200,
+    "marketing_office": 1_500,
 }
+
+
+def facility_marketing_mult(gs: GameState) -> float:
+    """Sponsor-offer money multiplier from the marketing_office: 1.0
+    bare, +5%/level. Levels 1 and 2 also unlock the stream and apparel
+    sponsor slots (see sponsors.SLOT_CONFIG)."""
+    return 1.0 + 0.05 * gs.facilities.get("marketing_office", 0)
 
 
 def facility_upgrade_cost(current_level: int) -> int | None:

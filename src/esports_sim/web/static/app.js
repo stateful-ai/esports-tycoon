@@ -730,8 +730,15 @@ function dealLine(d) {
   return `${bits.join(" · ")} — ${d.weeks_left} weeks`;
 }
 
-const SLOT_LABELS = { title: "Title", jersey: "Jersey", peripheral: "Peripheral" };
-const FACILITY_LABELS = { training_center: "Training center", analytics_suite: "Analytics suite" };
+const SLOT_LABELS = {
+  title: "Title", jersey: "Jersey", peripheral: "Peripheral",
+  stream: "Stream", apparel: "Apparel",
+};
+const FACILITY_LABELS = {
+  training_center: "Training center",
+  analytics_suite: "Analytics suite",
+  marketing_office: "Marketing office",
+};
 
 async function finances(v) {
   const data = await api("/api/finances");
@@ -749,23 +756,33 @@ async function finances(v) {
 
   // -- sponsor slots -------------------------------------------------------
   const slotsCard = el("div", "card");
-  slotsCard.innerHTML = `<h2>Sponsorship slots</h2>`;
-  for (const slot of ["title", "jersey", "peripheral"]) {
+  slotsCard.innerHTML = `<h2>Sponsorship slots
+    <span class="muted" style="font-weight:400">— marketability ${data.marketability ?? "?"}</span></h2>`;
+  const objChips = (objs) => (objs ?? [])
+    .map((o) => {
+      const mark = o.met === true ? "✓ " : o.met === false ? "✗ " : "";
+      const cls = o.met === true ? "good" : o.met === false ? "bad" : "";
+      return `<span class="pill obj ${cls}" title="${money(o.bonus)}">${mark}${o.label} → ${money(o.bonus)}</span>`;
+    })
+    .join(" ");
+  for (const slot of ["title", "jersey", "peripheral", "stream", "apparel"]) {
     const s = data.slots[slot];
+    if (!s) continue;
     const row = el("div", "slot-row");
     if (s.deal) {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
         <b>${s.deal.name}</b> <span class="pill">${s.deal.kind}</span><br>
-        <span class="muted">${dealLine(s.deal)}</span>`;
+        <span class="muted">${dealLine(s.deal)}</span><br>${objChips(s.objective_labels_deal)}`;
     } else if (!s.unlocked) {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
-        <span class="muted">locked — needs ${s.rep_gate}+ reputation</span>`;
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
+        <span class="muted">locked — ${s.locked_reason ?? "unavailable"}</span>`;
     } else {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
-        <span class="muted">no active deal</span>`;
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
+        <span class="muted">no active deal — ${s.market.length ? "offers below" : "no suitors yet"}</span>`;
     }
     slotsCard.appendChild(row);
 
+    // Legacy single-offer (old saves).
     if (s.offer) {
       const box = el("div", "row");
       box.innerHTML = `<span><b>Offer: ${s.offer.name}</b> <span class="pill">${s.offer.kind}</span><br>
@@ -784,14 +801,47 @@ async function finances(v) {
       box.appendChild(no);
       slotsCard.appendChild(box);
     }
+
+    // The market: competing brands, pick a payment structure.
+    for (const o of s.market ?? []) {
+      const box = el("div", "row offer-row");
+      const relTag = o.relation > 55 ? " · warm relations" : o.relation < 45 ? " · cool relations" : "";
+      box.innerHTML = `<span style="min-width:340px"><b>${o.brand}</b>
+        <span class="muted">${o.weeks}w · until wk ${o.expires_week}${relTag}</span><br>
+        ${objChips(o.objective_labels)}</span>`;
+      const structures = [
+        ["upfront", `${money(o.upfront.signing_bonus)} now + ${money(o.upfront.weekly)}/wk`],
+        ["steady", `${money(o.steady.weekly)}/wk`],
+        ["performance", `${money(o.performance.weekly)}/wk + ${money(o.performance.per_win)}/win`],
+      ];
+      for (const [structure, label] of structures) {
+        const b = el("button", "btn btn-sm", `${structure}: ${label}`);
+        b.disabled = !!s.deal;
+        b.title = s.deal ? "slot occupied" : "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4";
+        b.onclick = async () => {
+          const r = await api("/api/actions/sponsor", { slot, accept: true, brand: o.brand, structure });
+          toast(r.message); refresh(); render();
+        };
+        box.appendChild(b);
+      }
+      const no = el("button", "btn btn-sm", "✕");
+      no.title = "decline (the brand remembers)";
+      no.onclick = async () => {
+        const r = await api("/api/actions/sponsor", { slot, accept: false, brand: o.brand });
+        toast(r.message); render();
+      };
+      box.appendChild(no);
+      slotsCard.appendChild(box);
+    }
   }
   v.appendChild(slotsCard);
 
   // -- facilities ------------------------------------------------------------
   const facCard = el("div", "card");
   facCard.innerHTML = `<h2>Facilities</h2>`;
-  for (const name of ["training_center", "analytics_suite"]) {
+  for (const name of ["training_center", "analytics_suite", "marketing_office"]) {
     const f = data.facilities[name];
+    if (!f) continue;
     const row = el("div", "row facility-row");
     row.innerHTML = `<span style="min-width:240px"><b>${FACILITY_LABELS[name]}</b><br>
       <span class="muted">level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span></span>`;
