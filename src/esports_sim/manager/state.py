@@ -53,7 +53,12 @@ class Fixture(BaseModel):
 
     id: str
     week: int
-    stage: str = "regular"  # regular | semi | final
+    # regular | semi | final (regional) · masters_qf | masters_sf |
+    # masters_final (international)
+    stage: str = "regular"
+    # "league" = intra-region, "masters" = cross-region. Default keeps
+    # pre-VCT saves loading.
+    bracket: str = "league"
     best_of: int = 1
     team_a: str
     team_b: str
@@ -209,6 +214,10 @@ class GameState(BaseModel):
     # Talk module: one 1:1 per week. Holds "s{season}w{week}" once used.
     talked_week: str = ""
 
+    # Masters seeding (set when the international bracket is drawn;
+    # cleared at offseason). Seeds 1-3 = regional champs by record.
+    masters_seeds: list[str] = Field(default_factory=list)
+
     # Sponsorship (user team only; AI org finances stay background).
     sponsor: SponsorDeal | None = None
     sponsor_offer: SponsorDeal | None = None
@@ -233,12 +242,23 @@ class GameState(BaseModel):
                 return f
         return None
 
-    def standings_order(self) -> list[str]:
+    def standings_order(self, region: str | None = None) -> list[str]:
+        """Table order, optionally restricted to one region's league."""
+
         def key(tid: str) -> tuple:
             r = self.standings[tid]
             return (-r.wins, -(r.diff), -r.rounds_won, tid)
 
-        return sorted(self.standings, key=key)
+        tids = (
+            [t for t in self.standings if str(self.teams[t].region) == region]
+            if region is not None
+            else list(self.standings)
+        )
+        return sorted(tids, key=key)
+
+    def regions(self) -> list[str]:
+        """Regions that actually have league teams, sorted."""
+        return sorted({str(t.region) for t in self.teams.values()})
 
     def push_news(self, msg: str) -> None:
         self.news.append(f"[S{self.season} W{self.week}] {msg}")

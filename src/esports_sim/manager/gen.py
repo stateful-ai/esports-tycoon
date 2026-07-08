@@ -50,6 +50,22 @@ _TEAM_NAMES = [
     ("Azure Vanta", "AZV"),
     ("Kraken Unit", "KRK"),
     ("Ghostline", "GHL"),
+    ("Berlin Wolves", "BWV"),
+    ("Meridian Cross", "MRC"),
+    ("Volga Reign", "VLG"),
+    ("Lisbon Tide", "LTD"),
+    ("Nordic Frost", "NFR"),
+    ("Saracen Guard", "SRG"),
+    ("Alpine Echo", "ALE"),
+    ("Gallic Storm", "GST"),
+    ("Tokyo Drift Six", "TD6"),
+    ("Seoul Dynasty Prime", "SDP"),
+    ("Manila Monsoon", "MMS"),
+    ("Jakarta Ravens", "JKR"),
+    ("Mekong Vipers", "MKV"),
+    ("Harbour City Nine", "HC9"),
+    ("Outback Sentinels", "OBS"),
+    ("Mumbai Meteors", "MUM"),
 ]
 
 # Playstyle archetypes: which attributes run hot (+) or cold (-) relative
@@ -177,15 +193,25 @@ def generate_player(
 
 
 def generate_league_teams(
-    rng: np.random.Generator, gd: GameData, n_teams: int = 6
+    rng: np.random.Generator,
+    gd: GameData,
+    n_teams: int = 6,
+    region: Region = Region.AMERICAS,
+    used_names: set[str] | None = None,
 ) -> tuple[list[Team], list[Player]]:
     """Generate `n_teams` orgs with full rosters, spread across a quality
-    ladder so the league has a top, a middle, and a bottom."""
+    ladder so the league has a top, a middle, and a bottom. `used_names`
+    keeps org names unique across multi-region generation."""
     teams: list[Team] = []
     players: list[Player] = []
-    name_order = list(rng.permutation(len(_TEAM_NAMES)))[:n_teams]
+    used = used_names if used_names is not None else set()
+    available = [i for i, (n, _) in enumerate(_TEAM_NAMES) if n not in used]
+    name_order = [
+        available[int(k)] for k in rng.permutation(len(available))
+    ][:n_teams]
     for i, name_idx in enumerate(name_order):
         name, tag = _TEAM_NAMES[int(name_idx)]
+        used.add(name)
         slug = "team_" + name.lower().replace(" ", "_")
         # Quality ladder from ~74 down to ~58. Kept narrow on purpose:
         # with per-duel edges compounding over rounds, a 20+ point team
@@ -196,7 +222,7 @@ def generate_league_teams(
         for j, (style, role) in enumerate(_ROSTER_SLOTS):
             pid = f"{slug}_p{j}"
             quality = float(np.clip(team_q + rng.normal(0, 4), 40, 88))
-            p = generate_player(rng, pid, style, role, quality, gd)
+            p = generate_player(rng, pid, style, role, quality, gd, region=region)
             players.append(p)
             roster_ids.append(pid)
             if style == Playstyle.IGL:
@@ -206,7 +232,7 @@ def generate_league_teams(
                 id=slug,
                 name=name,
                 tag=tag,
-                region=Region.AMERICAS,
+                region=region,
                 player_ids=roster_ids,
                 captain_id=captain_id,
                 balance=int(rng.integers(300, 900)) * 1000,

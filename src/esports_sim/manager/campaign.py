@@ -14,8 +14,8 @@ from esports_sim.manager import market, narrative, sponsors, staff, training
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
-    pay_regular_season_prizes,
 )
+from esports_sim.schemas.common import Region
 from esports_sim.manager.gen import generate_free_agents, generate_league_teams
 from esports_sim.manager.schedule import (
     build_final,
@@ -64,17 +64,45 @@ class WeekReport:
 # New game
 
 
+# The VCT-style world: three regional leagues of 8; their top two meet
+# at Masters after the regional playoffs.
+LEAGUE_REGIONS = [Region.AMERICAS, Region.EMEA, Region.PACIFIC]
+TEAMS_PER_REGION = 8
+
+
+def _build_all_leagues(gs_teams: dict, map_ids: list[str], season: int) -> list:
+    """One double round-robin per region, weeks aligned so every league
+    plays the same calendar."""
+    fixtures = []
+    for region in LEAGUE_REGIONS:
+        tids = sorted(
+            t.id for t in gs_teams.values() if t.region == region
+        )
+        regional = build_regular_season(tids, map_ids, season)
+        for f in regional:
+            # Region-qualified ids keep fixtures unique across leagues.
+            f.id = f"{f.id}{str(region)[:2]}"
+        fixtures.extend(regional)
+    return fixtures
+
+
 def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> GameState:
     rng = RngTree(seed).derive("campaign", "gen")
 
     teams = {tid: t.model_copy(deep=True) for tid, t in gd.teams.items()}
     players = {pid: p.model_copy(deep=True) for pid, p in gd.players.items()}
 
-    gen_teams, gen_players = generate_league_teams(rng, gd, n_teams=6)
-    for t in gen_teams:
-        teams[t.id] = t
-    for p in gen_players:
-        players[p.id] = p
+    used_names: set[str] = set()
+    for region in LEAGUE_REGIONS:
+        have = sum(1 for t in teams.values() if t.region == region)
+        gen_teams, gen_players = generate_league_teams(
+            rng, gd, n_teams=TEAMS_PER_REGION - have,
+            region=region, used_names=used_names,
+        )
+        for t in gen_teams:
+            teams[t.id] = t
+        for p in gen_players:
+            players[p.id] = p
 
     fas = generate_free_agents(rng, gd, n=18)
     for p in fas:
@@ -86,13 +114,14 @@ def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> G
         teams=teams,
         players=players,
         free_agent_ids=[p.id for p in fas],
-        fixtures=build_regular_season(sorted(teams), sorted(gd.maps), season=1),
+        fixtures=_build_all_leagues(teams, sorted(gd.maps), season=1),
         standings={tid: TeamRecord() for tid in teams},
         training_focus={tid: "tactical" for tid in teams},
     )
     gs.push_news(
-        f"Season 1 begins — {len(teams)} teams, "
-        f"{regular_season_weeks(len(teams))} weeks of league play, then playoffs."
+        f"Season 1 begins — {len(LEAGUE_REGIONS)} regional leagues of "
+        f"{TEAMS_PER_REGION}, {regular_season_weeks(TEAMS_PER_REGION)} weeks "
+        f"of league play, then playoffs and Masters."
     )
     staff.refresh_candidates(gs)
     _update_world_ranks(gs)
@@ -200,45 +229,139 @@ def advance_week(
             gs.teams[b].tag,
         )
 
-    n_weeks = regular_season_weeks(len(gs.teams))
+    n_weeks = regular_season_weeks(TEAMS_PER_REGION)
+    season_fixtures = [f for f in gs.fixtures if f.id.startswith(f"s{gs.season}")]
+
+    def _stage_fixtures(stage: str) -> list[Fixture]:
+        return [f for f in season_fixtures if f.stage == stage]
+
     if gs.phase == "regular" and gs.week == n_weeks:
-        pay_regular_season_prizes(gs)
-        order = gs.standings_order()
-        gs.fixtures.extend(
-            build_semifinals(order, gs.season, gs.week + 1, veto_for)
-        )
+        # Regional playoffs, one bracket per league.
+        for region in LEAGUE_REGIONS:
+            order = gs.standings_order(str(region))
+            _pay_region_prizes(gs, order)
+            semis = build_semifinals(order, gs.season, gs.week + 1, veto_for)
+            for i, f in enumerate(semis):
+                f.id = f"s{gs.season}{str(region)[:2]}semi{i}"
+            gs.fixtures.extend(semis)
+            top4 = ", ".join(gs.teams[t].name for t in order[:4])
+            gs.push_news(f"{str(region).upper()} playoffs set: {top4}.")
         gs.phase = "playoffs"
-        top4 = ", ".join(gs.teams[t].name for t in order[:4])
-        gs.push_news(f"Playoffs set: {top4}.")
-        report.notes.append("Regular season complete — playoffs next week.")
+        report.notes.append("Regular season complete — regional playoffs next week.")
     elif gs.phase == "playoffs":
-        semis = [f for f in gs.fixtures if f.stage == "semi"]
-        final = next((f for f in gs.fixtures if f.stage == "final"), None)
-        if all(f.played for f in semis) and final is None:
-            winners = [f.winner_id for f in semis if f.winner_id]
+        semis = _stage_fixtures("semi")
+        finals = _stage_fixtures("final")
+        qfs = _stage_fixtures("masters_qf")
+        msfs = _stage_fixtures("masters_sf")
+        mf = next(iter(_stage_fixtures("masters_final")), None)
+
+        if semis and all(f.played for f in semis) and not finals:
+            # Regional finals: winners of each region's two semis.
+            for region in LEAGUE_REGIONS:
+                rsemis = [f for f in semis if f.id.startswith(f"s{gs.season}{str(region)[:2]}")]
+                winners = [f.winner_id for f in rsemis if f.winner_id]
+                final = build_final(winners, gs.season, gs.week + 1, veto_for)
+                final.id = f"s{gs.season}{str(region)[:2]}final"
+                gs.fixtures.append(final)
+            report.notes.append("Regional finals next week.")
+        elif finals and all(f.played for f in finals) and not qfs:
+            # Masters: top two per region. Champs seeded by league record;
+            # seeds 1-2 bye the QF round.
+            champs, runners = [], []
+            for region in LEAGUE_REGIONS:
+                rf = next(
+                    f for f in finals
+                    if f.id.startswith(f"s{gs.season}{str(region)[:2]}")
+                )
+                assert rf.winner_id is not None
+                champs.append(rf.winner_id)
+                runners.append(
+                    rf.team_b if rf.winner_id == rf.team_a else rf.team_a
+                )
+
+            def rec_key(tid: str) -> tuple:
+                r = gs.standings[tid]
+                return (-r.wins, -r.diff, tid)
+
+            champs.sort(key=rec_key)
+            runners.sort(key=rec_key)
+            seeds = champs + runners  # 1-3 champs, 4-6 runners
+            gs.masters_seeds = seeds
+            pairs = [(seeds[2], seeds[5]), (seeds[3], seeds[4])]
+            for i, (a, b) in enumerate(pairs):
+                maps, veto = veto_for(a, b)
+                gs.fixtures.append(
+                    Fixture(
+                        id=f"s{gs.season}mqf{i}",
+                        week=gs.week + 1,
+                        stage="masters_qf",
+                        bracket="masters",
+                        best_of=3,
+                        team_a=a,
+                        team_b=b,
+                        maps=maps,
+                        veto=veto,
+                    )
+                )
+            names = ", ".join(gs.teams[t].name for t in seeds)
+            gs.push_news(f"MASTERS field set: {names}.")
+            report.notes.append("Masters begins next week.")
+        elif qfs and all(f.played for f in qfs) and not msfs:
+            seeds = gs.masters_seeds
+            qf_winners = [f.winner_id for f in sorted(qfs, key=lambda f: f.id)]
+            pairs = [(seeds[0], qf_winners[1]), (seeds[1], qf_winners[0])]
+            for i, (a, b) in enumerate(pairs):
+                maps, veto = veto_for(a, b)
+                gs.fixtures.append(
+                    Fixture(
+                        id=f"s{gs.season}msf{i}",
+                        week=gs.week + 1,
+                        stage="masters_sf",
+                        bracket="masters",
+                        best_of=3,
+                        team_a=a,
+                        team_b=b,
+                        maps=maps,
+                        veto=veto,
+                    )
+                )
+            report.notes.append("Masters semifinals next week.")
+        elif msfs and all(f.played for f in msfs) and mf is None:
+            winners = [f.winner_id for f in sorted(msfs, key=lambda f: f.id)]
+            maps, veto = veto_for(winners[0], winners[1])
             gs.fixtures.append(
-                build_final(winners, gs.season, gs.week + 1, veto_for)
+                Fixture(
+                    id=f"s{gs.season}mfinal",
+                    week=gs.week + 1,
+                    stage="masters_final",
+                    bracket="masters",
+                    best_of=5,
+                    team_a=winners[0],
+                    team_b=winners[1],
+                    maps=maps + maps[:2],  # BO5: replay the picks if needed
+                    veto=veto,
+                )
             )
-            report.notes.append("Grand final next week.")
-        elif final is not None and final.played:
-            assert final.winner_id is not None
-            runner_up = (
-                final.team_b if final.winner_id == final.team_a else final.team_a
-            )
-            semi_losers = [
-                (f.team_b if f.winner_id == f.team_a else f.team_a) for f in semis
+            report.notes.append("The Masters grand final is next week.")
+        elif mf is not None and mf.played:
+            assert mf.winner_id is not None
+            runner_up = mf.team_b if mf.winner_id == mf.team_a else mf.team_a
+            sf_losers = [
+                (f.team_b if f.winner_id == f.team_a else f.team_a) for f in msfs
             ]
-            pay_playoff_prizes(gs, final.winner_id, runner_up, semi_losers)
-            champ = gs.teams[final.winner_id]
+            pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
+            champ = gs.teams[mf.winner_id]
             gs.champions.append(
                 ChampionRecord(
                     season=gs.season, team_id=champ.id, team_name=champ.name
                 )
             )
-            gs.push_news(f"{champ.name} are the Season {gs.season} champions!")
+            gs.push_news(
+                f"{champ.name} win MASTERS — Season {gs.season} world champions!"
+            )
             gs.phase = "offseason"
             report.notes.append(
-                f"{champ.name} win the title. Offseason next week."
+                f"{champ.name} are world champions. Offseason next week."
             )
 
     # 6. News (before the week label moves on).
@@ -246,6 +369,19 @@ def advance_week(
 
     gs.week += 1
     return report
+
+
+def _pay_region_prizes(gs: GameState, order: list[str]) -> None:
+    """Regional-league placement money (top half). Masters money is paid
+    separately via pay_playoff_prizes when the world final resolves."""
+    scale = [120_000, 70_000, 40_000, 25_000]
+    for i, tid in enumerate(order[: len(scale)]):
+        gs.teams[tid].balance += scale[i]
+    leader = gs.teams[order[0]]
+    gs.push_news(
+        f"{leader.name} top the {str(leader.region).upper()} regular season "
+        f"({scale[0]:,} cr)."
+    )
 
 
 def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None:
@@ -501,11 +637,12 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # New season. Scouting knowledge goes stale over the break; the staff
     # candidate market refreshes.
     gs.scout_progress = {}
+    gs.masters_seeds = []
     gs.season += 1
     staff.refresh_candidates(gs)
     gs.week = 1
     gs.phase = "regular"
-    gs.fixtures = build_regular_season(sorted(gs.teams), sorted(gd.maps), gs.season)
+    gs.fixtures = _build_all_leagues(gs.teams, sorted(gd.maps), gs.season)
     gs.standings = {tid: TeamRecord() for tid in gs.teams}
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")

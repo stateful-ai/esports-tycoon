@@ -329,74 +329,107 @@ function attrDetail(p) {
 
 async function standings(v) {
   const data = await api("/api/standings");
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Standings</h2>`;
-  const t = el("table");
-  t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
-    <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
-  const tb = el("tbody");
-  data.rows.forEach((r, i) => {
-    const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
-      <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
-      <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
-      <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
-      <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
-      <td class="num">${r.reputation}</td>`);
-    tr.style.cursor = "pointer";
-    tr.title = "view roster";
-    tr.onclick = () => {
-      App.rosterTeam = r.id === App.state.user_team.id ? null : r.id;
-      document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
-      document.querySelector('[data-tab="roster"]').classList.add("active");
-      App.tab = "roster";
-      render();
-    };
-    tb.appendChild(tr);
-  });
-  t.appendChild(tb);
-  card.appendChild(t);
-  v.appendChild(card);
+  for (const league of data.regions) {
+    const card = el("div", "card");
+    card.innerHTML = `<h2>${league.region.toUpperCase()} league${league.is_user ? " — your region" : ""}</h2>`;
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
+      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
+    const tb = el("tbody");
+    league.rows.forEach((r, i) => {
+      const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
+        <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
+        <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
+        <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
+        <td class="num">${r.reputation}</td>`);
+      tr.style.cursor = "pointer";
+      tr.title = "view roster";
+      tr.onclick = () => {
+        App.rosterTeam = r.id === App.state.user_team.id ? null : r.id;
+        document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+        document.querySelector('[data-tab="roster"]').classList.add("active");
+        App.tab = "roster";
+        render();
+      };
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    card.appendChild(t);
+    v.appendChild(card);
+  }
 }
 
-function bracketCard(fixtures) {
-  const semis = fixtures.filter((f) => f.stage === "semi");
-  const final = fixtures.find((f) => f.stage === "final");
-  if (!semis.length) return null;
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Playoff bracket</h2>`;
-  const wrap = el("div", "bracket");
-  const col1 = el("div", "bracket-col");
-  const col2 = el("div", "bracket-col");
-  const node = (f) => {
-    if (!f) return el("div", "bracket-node muted", "TBD");
-    const line = (tid, name) => {
-      const winner = f.played && f.winner_id === tid;
-      const score = f.played
-        ? (tid === f.team_a ? f.map_score[0] : f.map_score[1])
-        : "";
-      return `<div class="bracket-team ${winner ? "w" : ""}">
-        <span>${name}</span><b class="mono">${score}</b></div>`;
-    };
-    const n = el("div", "bracket-node",
-      line(f.team_a, f.team_a_name) + line(f.team_b, f.team_b_name));
-    if (f.played) {
-      n.style.cursor = "pointer";
-      n.title = "see schedule for maps";
-    }
-    return n;
+const REGION_CODES = { am: "Americas", em: "EMEA", pa: "Pacific", ch: "China" };
+
+function bracketNode(f) {
+  if (!f) return el("div", "bracket-node muted", "TBD");
+  const line = (tid, name) => {
+    const winner = f.played && f.winner_id === tid;
+    const score = f.played
+      ? (tid === f.team_a ? f.map_score[0] : f.map_score[1])
+      : "";
+    return `<div class="bracket-team ${winner ? "w" : ""}">
+      <span>${name}</span><b class="mono">${score}</b></div>`;
   };
-  for (const s of semis) col1.appendChild(node(s));
-  col2.appendChild(node(final));
-  wrap.appendChild(col1);
-  wrap.appendChild(col2);
+  const n = el("div", "bracket-node",
+    line(f.team_a, f.team_a_name) + line(f.team_b, f.team_b_name));
+  if (f.played) {
+    n.style.cursor = "pointer";
+    n.title = "see schedule for maps";
+  }
+  return n;
+}
+
+function bracketCard(title, columns) {
+  // columns: list of fixture-lists, left to right (TBD-padded).
+  if (!columns[0]?.some(Boolean)) return null;
+  const card = el("div", "card");
+  card.innerHTML = `<h2>${title}</h2>`;
+  const wrap = el("div", "bracket");
+  for (const colFixtures of columns) {
+    const col = el("div", "bracket-col");
+    for (const f of colFixtures) col.appendChild(bracketNode(f));
+    wrap.appendChild(col);
+  }
   card.appendChild(wrap);
   return card;
 }
 
+function regionCodeOf(fixtureId) {
+  const m = fixtureId.match(/^s\d+(am|em|pa|ch)(semi|final)/);
+  return m ? m[1] : null;
+}
+
 async function schedule(v) {
   const data = await api("/api/schedule");
-  const bracket = bracketCard(data.fixtures);
-  if (bracket) v.appendChild(bracket);
+
+  // Masters bracket (QF -> SF -> Final), once it exists.
+  const mqf = data.fixtures.filter((f) => f.stage === "masters_qf");
+  const msf = data.fixtures.filter((f) => f.stage === "masters_sf");
+  const mf = data.fixtures.filter((f) => f.stage === "masters_final");
+  if (mqf.length) {
+    const card = bracketCard("MASTERS — world championship", [
+      mqf, msf.length ? msf : [null, null], mf.length ? mf : [null],
+    ]);
+    if (card) v.appendChild(card);
+  }
+
+  // One regional bracket per league, user's region first.
+  const regional = data.fixtures.filter((f) => regionCodeOf(f.id));
+  const codes = [...new Set(regional.map((f) => regionCodeOf(f.id)))];
+  const userRegion = (App.state.user_team.region || "").slice(0, 2);
+  codes.sort((a, b) => (a === userRegion ? -1 : b === userRegion ? 1 : a < b ? -1 : 1));
+  for (const code of codes) {
+    const rf = regional.filter((f) => regionCodeOf(f.id) === code);
+    const semis = rf.filter((f) => f.stage === "semi");
+    const final = rf.filter((f) => f.stage === "final");
+    const card = bracketCard(
+      `${REGION_CODES[code] ?? code} playoffs`,
+      [semis, final.length ? final : [null]],
+    );
+    if (card) v.appendChild(card);
+  }
   const byWeek = new Map();
   for (const f of data.fixtures) {
     if (!byWeek.has(f.week)) byWeek.set(f.week, []);

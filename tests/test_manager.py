@@ -20,33 +20,51 @@ def campaign(game_data: GameData) -> GameState:
 
 
 def test_schedule_shape(campaign: GameState) -> None:
+    from esports_sim.manager.campaign import LEAGUE_REGIONS, TEAMS_PER_REGION
+
     n_teams = len(campaign.teams)
-    n_weeks = regular_season_weeks(n_teams)
-    # One match per team per week.
+    assert n_teams == len(LEAGUE_REGIONS) * TEAMS_PER_REGION
+    # Three parallel leagues: every team plays exactly once every week.
+    n_weeks = regular_season_weeks(TEAMS_PER_REGION)
     for week in range(1, n_weeks + 1):
         seen: set[str] = set()
         for f in campaign.fixtures_for_week(week):
             assert f.team_a not in seen and f.team_b not in seen
             seen.update((f.team_a, f.team_b))
         assert len(seen) == n_teams
-    # Each pair meets exactly twice.
+    # Each intra-region pair meets exactly twice; regular play never
+    # crosses regions.
     pairs = Counter(
         frozenset((f.team_a, f.team_b))
         for f in campaign.fixtures
         if f.stage == "regular"
     )
     assert all(count == 2 for count in pairs.values())
+    for f in campaign.fixtures:
+        if f.stage == "regular":
+            assert (
+                campaign.teams[f.team_a].region == campaign.teams[f.team_b].region
+            )
 
 
 def test_full_season_lifecycle(campaign: GameState, game_data: GameData) -> None:
-    n_weeks = regular_season_weeks(len(campaign.teams))
+    from esports_sim.manager.campaign import TEAMS_PER_REGION
+
+    n_weeks = regular_season_weeks(TEAMS_PER_REGION)
     for _ in range(n_weeks):
         advance_week(campaign, game_data)
     assert campaign.phase == "playoffs"
-    for _ in range(2):
+    # Regional semis, regional finals, Masters QF/SF/Final = 5 weeks.
+    for _ in range(5):
         advance_week(campaign, game_data)
     assert campaign.phase == "offseason"
     assert len(campaign.champions) == 1
+    # The Masters bracket actually happened, cross-region.
+    masters = [f for f in campaign.fixtures if f.bracket == "masters"]
+    assert len(masters) == 5  # 2 QF + 2 SF + 1 final
+    assert all(f.played for f in masters)
+    mf = next(f for f in masters if f.stage == "masters_final")
+    assert campaign.champions[-1].team_id == mf.winner_id
     advance_week(campaign, game_data)  # offseason tick
     assert campaign.phase == "regular"
     assert campaign.season == 2

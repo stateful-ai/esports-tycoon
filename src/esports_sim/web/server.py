@@ -257,7 +257,7 @@ def state() -> dict:
         gs = S.require_gs()
         user = gs.teams[gs.user_team_id]
         fixture = gs.team_fixture(gs.user_team_id)
-        order = gs.standings_order()
+        order = gs.standings_order(str(user.region))
         return {
             "season": gs.season,
             "week": gs.week,
@@ -316,15 +316,26 @@ def roster(team_id: str) -> dict:
 def standings() -> dict:
     with S.lock:
         gs = S.require_gs()
-        return {
-            "rows": [
+
+        def rows_for(region: str | None) -> list[dict]:
+            return [
                 {
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
                 }
-                for tid in gs.standings_order()
+                for tid in gs.standings_order(region)
             ]
+
+        user_region = str(gs.teams[gs.user_team_id].region)
+        regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
+        return {
+            "regions": [
+                {"region": r, "is_user": r == user_region, "rows": rows_for(r)}
+                for r in regions
+            ],
+            # Kept for any consumer expecting the flat world table.
+            "rows": rows_for(None),
         }
 
 
