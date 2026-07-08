@@ -234,6 +234,14 @@ async function roster(v) {
     card.appendChild(el("p", "muted",
       `Scouting book: ${data.tendencies.join(" · ")}`));
   }
+  const cp = data.chemistry_pairs ?? { duos: [], feuds: [] };
+  if (cp.duos.length || cp.feuds.length) {
+    const bits = [
+      ...cp.duos.map(([a, b]) => `🤝 ${a} + ${b}`),
+      ...cp.feuds.map(([a, b]) => `⚡ ${a} vs ${b}`),
+    ];
+    card.appendChild(el("p", "muted", `Locker room: ${bits.join(" · ")}`));
+  }
   if (!data.is_user_team) {
     const row = el("div", "row");
     const back = el("button", "btn btn-sm", "← My team");

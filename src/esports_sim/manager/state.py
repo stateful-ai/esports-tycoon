@@ -287,6 +287,10 @@ class GameState(BaseModel):
     # instantly and only leave news lines).
     transfer_offers: list[TransferOffer] = Field(default_factory=list)
 
+    # Pairwise player relationships ("pidA|pidB" sorted → 0-100). Sparse;
+    # pruned toward the most-informative entries. Survives transfers.
+    relationships: dict[str, float] = Field(default_factory=dict)
+
     # Masters seeding (set when the international bracket is drawn;
     # cleared at offseason). Seeds 1-3 = regional champs by record.
     masters_seeds: list[str] = Field(default_factory=list)

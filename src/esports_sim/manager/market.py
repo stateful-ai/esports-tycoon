@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import development
+from esports_sim.manager import development, relationships
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.schemas import Player
@@ -85,6 +85,7 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     p = gs.players[player_id]
     severance = p.salary * SEVERANCE_WEEKS
     team.balance -= severance
+    relationships.on_departure(gs, player_id, team_id)
     team.player_ids.remove(player_id)
     if team.captain_id == player_id:
         team.captain_id = team.player_ids[0] if team.player_ids else None
@@ -261,6 +262,7 @@ def execute_transfer(
             buyer.captain_id = buyer.player_ids[0] if buyer.player_ids else None
     buyer.balance -= fee
     seller.balance += fee
+    relationships.on_departure(gs, pid, seller_id)
     seller.player_ids.remove(pid)
     buyer.player_ids.append(pid)
     if seller.captain_id == pid:

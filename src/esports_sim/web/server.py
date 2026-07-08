@@ -20,7 +20,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import development, economy, market, sponsors, staff as staff_mod, talk
+from esports_sim.manager import (
+    development,
+    economy,
+    market,
+    relationships,
+    sponsors,
+    staff as staff_mod,
+    talk,
+)
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -342,6 +350,16 @@ def roster(team_id: str) -> dict:
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
             "tendencies": tendencies,
+            "chemistry_pairs": {
+                kind: [
+                    [gs.players[a].handle, gs.players[b].handle]
+                    for a, b in pairs
+                    if a in gs.players and b in gs.players
+                ]
+                for kind, pairs in relationships.duos_and_feuds(gs, team_id).items()
+            }
+            if team_id == gs.user_team_id
+            else {"duos": [], "feuds": []},
         }
 
 

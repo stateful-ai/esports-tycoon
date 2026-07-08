@@ -17,6 +17,7 @@ from esports_sim.manager import (
     economy,
     market,
     narrative,
+    relationships,
     sponsors,
     staff,
     training,
@@ -221,6 +222,16 @@ def advance_week(
     if recovery > 0:
         for p in gs.roster(gs.user_team_id):
             p.stamina = round(min(100.0, p.stamina + recovery), 1)
+
+    # 2c. Relationships drift; team chemistry chases the pair graph.
+    user_fx = next(
+        (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
+        None,
+    )
+    relationships.weekly_tick(
+        gs, week_rng,
+        user_won=bool(user_fx and user_fx.winner_id == gs.user_team_id),
+    )
 
     # 3. Finances. The user org's merch/ticket line rides its real
     # win-rate momentum; AI orgs stay at the neutral default.
