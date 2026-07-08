@@ -63,6 +63,30 @@ class SightLine(BaseModel):
     advantaged_side: str | None = None  # "attack" | "defense" | None
 
 
+class GimmickType(StrEnum):
+    """Map mechanics that live on an adjacency edge."""
+
+    ROTATING_DOOR = "rotating_door"  # Lotus: usable but LOUD
+    TELEPORTER = "teleporter"  # Bind: near-instant hop, loud at both ends
+    BREAKABLE_DOOR = "breakable_door"  # Ascent: can start shut; shoot through
+
+
+class Gimmick(BaseModel):
+    """A mechanical feature on an edge. All uses are loud: enemies within
+    `noise_radius` of the sound learn something real (watch snaps toward
+    it; defenders may launch rotations off it) — which also makes fakes a
+    legitimate play."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    id: str
+    type: GimmickType
+    between: tuple[str, str]  # must also be an adjacency edge
+    noise_radius: float = 25.0
+    # breakable_door only: chance the defense starts the round with it shut.
+    start_closed_prob: float = 0.7
+
+
 class Map(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -75,6 +99,7 @@ class Map(BaseModel):
     sightlines: list[SightLine] = Field(default_factory=list)
     attacker_spawn: str
     defender_spawn: str
+    gimmicks: list[Gimmick] = Field(default_factory=list)
 
     def neighbors(self, callout_id: str) -> list[str]:
         return self.adjacency.get(callout_id, [])

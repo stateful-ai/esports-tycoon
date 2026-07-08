@@ -48,22 +48,34 @@ corridors:
 # room, a full-height "mid box" (Ascent's signature crate stack), and A
 # Heaven as the elevated perch over A Site.
 #
-# The mid box sits toward the Market-facing side of Mid Courtyard, which
-# intentionally breaks the (neutral) mid_courtyard -> mid_market sightline —
-# faithful to Ascent, where the mid boxes stop you from holding the full
-# diagonal across mid from one spot. It does NOT cross the
-# mid_courtyard -> catwalk line, which stays open.
+# The mid box sits toward the Market-facing side of Mid Courtyard. That
+# pairing (mid_courtyard -> mid_market) is now a defense-advantaged
+# sightline — Market watches down Courtyard in the real map — and the box
+# still denies the FULL easy diagonal hold from one spot, so the angle is
+# real but has to be worked for. It does NOT cross the mid_courtyard ->
+# catwalk line, which stays the neutral open contest.
 props:
   # -- A site cover -------------------------------------------------------
   - { region: a_site, x: 13.0, y: 48.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 22.0, y: 50.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 15.0, y: 58.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 25.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   # -- B site cover -------------------------------------------------------
   - { region: b_site, x: 73.0, y: 56.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 82.0, y: 58.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 75.0, y: 64.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 80.0, y: 68.0, w: 3.0, h: 3.0, height: half }
   # -- Main lane cover ------------------------------------------------------
   - { region: a_main, x: 12.0, y: 36.0, w: 3.0, h: 3.0, height: half }
   - { region: b_main, x: 76.0, y: 38.0, w: 3.0, h: 3.0, height: half }
+  # -- Holder-spot cover: a body posted at the garden/market doors gets a
+  # crate to anchor behind once the door's open, instead of standing flat
+  # in the frame. Heaven and Back get one too — with the doors shut half
+  # the time, these are the reads that hold every round, so they carry
+  # more of the defensive weight now.
+  - { region: a_garden, x: 30.0, y: 65.0, w: 3.0, h: 3.0, height: half }
+  - { region: mid_market, x: 60.0, y: 54.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_heaven, x: 20.0, y: 70.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_back, x: 70.0, y: 72.0, w: 3.0, h: 3.0, height: half }
   # -- Mid box (sight blocker) ---------------------------------------------
   - { region: mid_courtyard, x: 53.0, y: 47.0, w: 4.0, h: 4.0, height: full }

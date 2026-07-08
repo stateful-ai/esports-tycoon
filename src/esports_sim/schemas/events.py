@@ -61,6 +61,8 @@ class RoundStartEvent(Event):
     round_num: int
     attacking_team_id: str
     defending_team_id: str
+    # Breakable doors the defense shut during setup (gimmick ids).
+    closed_doors: list[str] = Field(default_factory=list)
 
 
 class RoundEndEvent(Event):
@@ -121,6 +123,20 @@ class UtilityUsedEvent(Event):
     target_callout: str | None = None
 
 
+class GimmickUsedEvent(Event):
+    """A map mechanic fired: a rotating door swung, a teleporter took
+    someone, a shut door got shot open. Loud by design — the viewer pings
+    it and nearby enemies react in-engine."""
+
+    type: Literal["round.gimmick"] = "round.gimmick"
+    gimmick_id: str
+    kind: str  # rotating_door | teleporter | breakable_door
+    action: str  # "used" | "broken"
+    player_id: str
+    x: float | None = None
+    y: float | None = None
+
+
 class MoveEvent(Event):
     """Player movement in continuous space.
 
@@ -158,6 +174,7 @@ EventUnion = Annotated[
         SpikeDefuseEvent,
         UtilityUsedEvent,
         MoveEvent,
+        GimmickUsedEvent,
     ],
     Field(discriminator="type"),
 ]

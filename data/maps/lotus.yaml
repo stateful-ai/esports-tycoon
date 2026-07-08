@@ -163,6 +163,18 @@ callouts:
     x: 84
     y: 72
 
+# Lotus's identity: the rotating stone doors. Great flank routes — but
+# everyone nearby hears the stone grind when they swing.
+gimmicks:
+  - id: lotus_door_a
+    type: rotating_door
+    between: [a_link, a_site]
+    noise_radius: 26
+  - id: lotus_door_c
+    type: rotating_door
+    between: [c_alley, c_site]
+    noise_radius: 26
+
 # Directed adjacency. Symmetric by default (both sides can traverse).
 adjacency:
   attacker_spawn: [a_main, mid_center, b_main, b_diamond, c_main]

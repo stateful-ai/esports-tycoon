@@ -117,18 +117,24 @@ adjacency:
   attacker_spawn: [a_lobby, b_fountain, b_long]
   a_lobby: [attacker_spawn, a_showers, a_short]
   a_showers: [a_lobby, a_site]
-  a_short: [a_lobby, a_site, a_lamps]
+  a_short: [a_lobby, a_site, a_lamps, b_window]
   a_site: [a_showers, a_short, a_lamps, a_uhall]
   a_lamps: [a_short, a_site, defender_spawn]
-  a_uhall: [a_site, defender_spawn]
+  a_uhall: [a_site, defender_spawn, b_long]
   b_fountain: [attacker_spawn, b_window]
-  b_window: [b_fountain, b_site]
-  b_long: [attacker_spawn, b_site, b_elbow]
+  b_window: [b_fountain, b_site, a_short]
+  b_long: [attacker_spawn, b_site, b_elbow, a_uhall]
   b_site: [b_window, b_long, b_elbow, b_hall]
   b_elbow: [b_long, b_site, defender_spawn]
   b_hall: [b_site, defender_spawn]
   defender_spawn: [a_lamps, a_uhall, b_elbow, b_hall]
 
+# The pillars deny the long diagonal pick, so defenders lean on the closer
+# holder spots instead — Lamps/U-Hall on A, Elbow/Hall on B are the real
+# anchors. Each holder also gets a long read straight up its own hallway
+# into an entry — U-Hall/Hall cover the far door (Showers/Window), Lamps/
+# Elbow cover the near one (Short/Long) — so both entries face a
+# pre-aimed angle, not just the site itself.
 sightlines:
   - { from_callout: a_showers, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_short, to_callout: a_site, advantaged_side: defense }
@@ -138,3 +144,25 @@ sightlines:
   - { from_callout: b_long, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_elbow, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_hall, to_callout: b_site, advantaged_side: defense }
+  - { from_callout: a_lamps, to_callout: a_short, advantaged_side: defense }
+  - { from_callout: b_elbow, to_callout: b_long, advantaged_side: defense }
+  - { from_callout: a_uhall, to_callout: a_showers, advantaged_side: defense }
+  - { from_callout: b_hall, to_callout: b_window, advantaged_side: defense }
+
+# Bind's identity: no mid, but two one-way-feeling shortcuts that let a
+# team appear on the other side of the map in seconds. Both are loud at
+# both ends — free info for whoever isn't using them. TP1 crosses the two
+# attacker approaches directly (the classic Showers/Hookah-style cross).
+# TP2 runs the defender-side backline — B Long straight to U-Hall — so a
+# body rotating off B's long side reappears right behind A Site instead of
+# trekking the full spawn route; that's what makes cross-map retakes and
+# late-round lurks so dangerous here.
+gimmicks:
+  - id: tp_short_window
+    type: teleporter
+    between: [a_short, b_window]
+    noise_radius: 30.0
+  - id: tp_long_uhall
+    type: teleporter
+    between: [b_long, a_uhall]
+    noise_radius: 30.0

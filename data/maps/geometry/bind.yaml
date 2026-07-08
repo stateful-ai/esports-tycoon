@@ -42,6 +42,13 @@ corridors:
   # B Hall mirrors U-Hall on the defender side.
   - between: [b_hall, defender_spawn]
     via: [[80.0, 80.0]]
+  # Teleporter shafts — not walked (the gimmick beams players straight
+  # from center to center), but geometry still needs a nominal path for
+  # the viewer to draw the shaft along.
+  - between: [a_short, b_window]
+    via: [[50.0, 38.0]]
+  - between: [b_long, a_uhall]
+    via: [[50.0, 56.0]]
 
 # Detail layer: Bind has no verticality in the real map (no mid, no heaven
 # boxes — its gimmick is the teleporters), so no room gets elevation here.
@@ -55,17 +62,35 @@ corridors:
 # Both were `advantaged_side: defense`; breaking them removes defense's
 # ranged pick from those angles and forces a closer, angle-less fight —
 # faithful to how the pillars are used to deny long holds in the real map.
+# The pillars were trimmed from 4x4 to 3x3 in this pass: still enough
+# footprint to deny the free full-diagonal hold (faithful to the real
+# map), but small enough that the site anchor's defense-advantaged read
+# on Short/Long (see sightlines) isn't cancelled by angle_broken on most
+# of the room's width — the holder has to work the crate, not lose the
+# angle outright.
 props:
   # -- A site cover + pillar ------------------------------------------------
   - { region: a_site, x: 14.0, y: 50.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 15.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 26.0, y: 62.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 24.0, y: 50.0, w: 4.0, h: 4.0, height: full }
+  - { region: a_site, x: 20.0, y: 58.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 27.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 24.0, y: 50.0, w: 3.0, h: 3.0, height: full }
   # -- B site cover + pillar ------------------------------------------------
   - { region: b_site, x: 68.0, y: 50.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 69.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 80.0, y: 62.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 78.0, y: 49.0, w: 4.0, h: 4.0, height: full }
-  # -- Long lane cover --------------------------------------------------------
-  - { region: a_short, x: 30.0, y: 34.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_long, x: 80.0, y: 32.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 74.0, y: 58.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 72.0, y: 65.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 78.0, y: 49.0, w: 3.0, h: 3.0, height: full }
+  # -- Long lane cover removed: it was propping up whoever camps Short/Long
+  # pre-commit and post-plant, which in practice is almost always the
+  # attackers (staging, then holding it as a post-plant crossfire spot) —
+  # a straight buff to the side we're trying to pull back down.
+  # -- Holder-spot cover: every holder room (Lamps/U-Hall on A, Elbow/Hall
+  # on B) gets a crate to anchor its read into the site instead of
+  # standing flat in the doorway.
+  - { region: a_lamps, x: 26.0, y: 68.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_uhall, x: 20.0, y: 72.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_elbow, x: 62.0, y: 70.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_hall, x: 80.0, y: 72.0, w: 3.0, h: 3.0, height: half }

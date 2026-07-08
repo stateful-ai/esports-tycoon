@@ -114,14 +114,19 @@ callouts:
     x: 74
     y: 76
 
+# Catwalk no longer walks straight into A Site: the mid rush now has to
+# cut through A Garden (and its door — see gimmicks below), the same way
+# A Main is the other, more exposed way in. This is the layout-pass fix
+# for A running too many easy entries; catwalk keeps a peek window into
+# site (see sightlines) but not a walk-in.
 adjacency:
   attacker_spawn: [a_lobby, mid_courtyard, b_lobby]
   a_lobby: [attacker_spawn, a_main, catwalk]
   a_main: [a_lobby, a_site]
-  a_site: [a_main, a_heaven, a_garden, catwalk]
+  a_site: [a_main, a_heaven, a_garden]
   a_heaven: [a_site, a_garden, defender_spawn]
   a_garden: [a_site, a_heaven, catwalk, defender_spawn]
-  catwalk: [a_lobby, mid_courtyard, a_site, a_garden]
+  catwalk: [a_lobby, mid_courtyard, a_garden]
   mid_courtyard: [attacker_spawn, catwalk, mid_market, b_main]
   mid_market: [mid_courtyard, b_site, defender_spawn]
   b_lobby: [attacker_spawn, b_main]
@@ -130,13 +135,37 @@ adjacency:
   b_back: [b_site, defender_spawn]
   defender_spawn: [a_heaven, a_garden, mid_market, b_back]
 
+# Open mid (Courtyard/Catwalk/Market) is Ascent's real defining feature —
+# and in the real map it leans defense: Market watches down the length of
+# Courtyard, and a defender pre-aiming the Catwalk gap into A Site beats a
+# peek that just arrived. Only the Courtyard<->Catwalk run stays neutral
+# — that's the actual open contest ground.
 sightlines:
   - { from_callout: a_main, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_heaven, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_garden, to_callout: a_site, advantaged_side: defense }
-  - { from_callout: catwalk, to_callout: a_site }
+  - { from_callout: catwalk, to_callout: a_site, advantaged_side: defense }
   - { from_callout: b_main, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_back, to_callout: b_site, advantaged_side: defense }
   - { from_callout: mid_market, to_callout: b_site, advantaged_side: defense }
   - { from_callout: mid_courtyard, to_callout: catwalk }
-  - { from_callout: mid_courtyard, to_callout: mid_market }
+  - { from_callout: mid_courtyard, to_callout: mid_market, advantaged_side: defense }
+  # Both sites are down to one clean entry now — give the elevated/back
+  # holder a long read straight down that entry's own hallway, the angle
+  # they've already got pre-aimed off a rotate.
+  - { from_callout: a_heaven, to_callout: a_main, advantaged_side: defense }
+  - { from_callout: b_back, to_callout: b_main, advantaged_side: defense }
+
+# Ascent's identity: mechanical site doors. Both start mostly shut and
+# force an attacker to spend ~4s shooting them open (loud) — the garden
+# door covers A's back-side flank off Catwalk, the market door covers B's
+# mid tie-in. Both sit on real (two-way) adjacency edges.
+gimmicks:
+  - id: a_garden_door
+    type: breakable_door
+    between: [a_garden, a_site]
+    start_closed_prob: 0.7
+  - id: b_market_door
+    type: breakable_door
+    between: [mid_market, b_site]
+    start_closed_prob: 0.7

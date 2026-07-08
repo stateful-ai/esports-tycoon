@@ -251,6 +251,13 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
   stroke-width: .3;
 }
 .prop-side { filter: brightness(.62); stroke: none; }
+/* Map gimmicks */
+.gk-tp { fill: none; stroke: var(--es-color-info, #4aa3ff); stroke-width: .5; }
+.gk-door { fill: var(--es-color-border-primary, #565b68); opacity: .55; }
+.gk-door.gk-closed { fill: var(--es-color-danger, #d84a5f); opacity: .95; }
+.gk-ping { fill: none; stroke: var(--es-color-warning, #e8a33d); stroke-width: .6; }
+.u-chip.u-gimmick { background: var(--es-color-warning, #e8a33d); }
+
 svg.iso .callout-label { font-size: 3.4px; }
 svg.iso .site-label { font-size: 7px; }
 svg.iso .plabel { font-size: 3.4px; }

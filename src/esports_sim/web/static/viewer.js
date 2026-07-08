@@ -22,6 +22,7 @@ function parseReplay(data) {
         cur = {
           num: e.round_num, attacker: e.attacking_team_id,
           placements: {}, placeXY: {}, moves: {}, kills: [], utility: [],
+          gimmicks: [], closedDoors: new Set(e.closed_doors || []),
           plant: null, defuse: null, end: null,
           scoreBefore: [scoreA, scoreB], maxTick: 1,
         };
@@ -53,6 +54,10 @@ function parseReplay(data) {
         break;
       case "round.utility_used":
         cur.utility.push(e);
+        cur.maxTick = Math.max(cur.maxTick, e.tick);
+        break;
+      case "round.gimmick":
+        cur.gimmicks.push(e);
         cur.maxTick = Math.max(cur.maxTick, e.tick);
         break;
       case "round.spike_plant":
@@ -278,6 +283,44 @@ function drawUtilityMarkers(round, t) {
   }
 }
 
+const GIMMICK_PING_TICKS = 10;
+
+// Map-mechanic markers: teleporter pads and doors, drawn every frame so a
+// door's open/shut state tracks the round's events; plus loud-use pings.
+function drawGimmicks(round, t) {
+  for (const g of V.map.gimmicks ?? []) {
+    const z = zOf(g.between[0]);
+    const [x, y] = gpoint(g.x, g.y, z);
+    if (g.type === "teleporter") {
+      V.dyn.appendChild(svgEl("circle", { cx: x, cy: y, r: S(2.2), class: "gk gk-tp" }));
+      V.dyn.appendChild(svgEl("circle", { cx: x, cy: y, r: S(1.1), class: "gk gk-tp" }));
+    } else {
+      const closed =
+        g.type === "breakable_door" &&
+        round.closedDoors.has(g.id) &&
+        !round.gimmicks.some(
+          (e) => e.gimmick_id === g.id && e.action === "broken" && e.tick <= t
+        );
+      V.dyn.appendChild(svgEl("rect", {
+        x: x - S(1.8), y: y - S(0.55),
+        width: S(3.6), height: S(1.1),
+        class: "gk gk-door" + (closed ? " gk-closed" : ""),
+      }));
+    }
+  }
+  for (const e of round.gimmicks) {
+    const age = t - e.tick;
+    if (age < 0 || age > GIMMICK_PING_TICKS || e.x == null) continue;
+    const fade = 1 - age / GIMMICK_PING_TICKS;
+    const g = (V.map.gimmicks ?? []).find((g) => g.id === e.gimmick_id);
+    const [x, y] = gpoint(e.x, e.y, g ? zOf(g.between[0]) : 0);
+    V.dyn.appendChild(svgEl("circle", {
+      cx: x, cy: y, r: S(2 + age * 0.9).toFixed(2),
+      class: "gk-ping", opacity: (fade * 0.8).toFixed(2),
+    }));
+  }
+}
+
 // Brief fading ring at the death spot, same math-driven approach as above.
 function drawKillFlashes(round, t) {
   for (const k of round.kills) {
@@ -481,6 +524,7 @@ function drawFrame() {
 
   // Transient overlays first so player dots (persistent layer, drawn after
   // V.dyn in the DOM) render on top of them.
+  drawGimmicks(round, t);
   drawKillFlashes(round, t);
   drawUtilityMarkers(round, t);
 
@@ -592,6 +636,19 @@ function drawFrame() {
         return {
           tick: u.tick,
           html: `<div class="u"><span class="u-chip u-${kind}"></span>${pn} used <span class="muted">${name}</span></div>`,
+        };
+      }))
+    .concat(round.gimmicks
+      .filter((e) => e.tick <= t)
+      .map((e) => {
+        const pn = V.players[e.player_id]?.handle ?? e.player_id;
+        const verb =
+          e.action === "broken" ? "broke a door open"
+          : e.kind === "teleporter" ? "took the teleporter"
+          : "swung the rotating door";
+        return {
+          tick: e.tick,
+          html: `<div class="u"><span class="u-chip u-gimmick"></span>${pn} ${verb} <span class="muted">· heard nearby</span></div>`,
         };
       }));
 

@@ -28,6 +28,9 @@ from esports_sim.schemas import (
     Ability,
     BuyEvent,
     Event,
+    Gimmick,
+    GimmickType,
+    GimmickUsedEvent,
     KillEvent,
     Map,
     MatchEndEvent,
@@ -184,6 +187,11 @@ class _MatchSim:
             team_b: float(df_rng.normal(0.0, 6.5)),
         }
 
+        # Map gimmicks keyed by the adjacency edge they sit on.
+        self._gimmicks = {
+            frozenset(g.between): g for g in self.map.gimmicks
+        }
+
         # Round-scoped scratch, reset in _play_round.
         self._flashed = False
         self._flash_side = "defense"  # which side eats the pending flash
@@ -191,6 +199,9 @@ class _MatchSim:
         self._spike_dropped_at: str | None = None
         self._retake_popped = False
         self._info_rotate_used = False
+        self._doors_closed: set[str] = set()
+        # (gimmick, mover_team, dest_room, x, y) — resolved in the tick loop.
+        self._pending_sounds: list[tuple] = []
 
     # -- setup helpers -----------------------------------------------------
 
@@ -418,12 +429,22 @@ class _MatchSim:
         atk, dfn = self._sides(round_num)
         rng = self.rng_tree.derive("match", self.match_id, "round", round_num)
         seed_path = ("match", self.match_id, "round", str(round_num))
+
+        # Defense setup: shut breakable doors (usually).
+        self._doors_closed = {
+            g.id
+            for g in sorted(self.map.gimmicks, key=lambda g: g.id)
+            if g.type == GimmickType.BREAKABLE_DOOR
+            and rng.random() < g.start_closed_prob
+        }
+
         self._emit(
             RoundStartEvent(
                 seed_path=seed_path,
                 round_num=round_num,
                 attacking_team_id=atk,
                 defending_team_id=dfn,
+                closed_doors=sorted(self._doors_closed),
             )
         )
 
@@ -437,6 +458,7 @@ class _MatchSim:
         self._spike_dropped_at = None
         self._retake_popped = False
         self._info_rotate_used = False
+        self._pending_sounds = []
         for pid in sorted(self.p):
             ps = self.p[pid]
             ps.alive = True
@@ -676,6 +698,31 @@ class _MatchSim:
                     else "enter"
                 )
                 self._apply_action(ps, act, tick, seed_path, prefer)
+
+            # -- gimmick sounds ------------------------------------------------------
+            # Everyone in earshot reacts: watch snaps toward the noise, and
+            # pre-plant defenders treat sound headed at a site as a rotate
+            # call (fakes through a teleporter buy real rotations).
+            for gimmick, mover_team, dest_room, sx, sy in self._pending_sounds:
+                for q in sorted(self.p):
+                    hs = self.p[q]
+                    if not hs.alive or hs.team_id == mover_team:
+                        continue
+                    d = ((hs.x - sx) ** 2 + (hs.y - sy) ** 2) ** 0.5
+                    if d > gimmick.noise_radius:
+                        continue
+                    dx, dy = sx - hs.x, sy - hs.y
+                    norm = (dx * dx + dy * dy) ** 0.5
+                    if norm > 0 and hs.move_eta < 0:
+                        hs.watch = (dx / norm, dy / norm)
+                if mover_team == atk and not spike_planted:
+                    sound_site = self._callout_site(dest_room)
+                    if sound_site in sites:
+                        self._schedule_rotations(
+                            tick, defenders, defender_site, sound_site,
+                            rotate_at, seed_path,
+                        )
+            self._pending_sounds.clear()
 
             # -- plant channel ------------------------------------------------------------------
             for pid in sorted(self.p):
@@ -930,6 +977,27 @@ class _MatchSim:
         target = self._slot_for(ps.pid, dest, prefer)
         pts = self._path_pts(ps.callout, dest, (ps.x, ps.y), target)
         ticks = max(C.MIN_MOVE_TICKS, round(self._poly_len(pts) / self._speed(ps.pid)))
+
+        # Map gimmicks on this edge: teleporters beat walking, doors cost
+        # time — and everything mechanical is LOUD.
+        gimmick = self._gimmicks.get(frozenset((ps.callout, dest)))
+        if gimmick is not None:
+            if gimmick.type == GimmickType.TELEPORTER:
+                ticks = C.TELEPORT_TICKS + 2
+                pts = [pts[0], pts[-1]]  # the box takes you; no corridor
+                ps.no_engage_until = tick + ticks  # can't fight in transit
+                self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "used")
+            elif gimmick.type == GimmickType.ROTATING_DOOR:
+                ticks += C.ROTATING_DOOR_DELAY
+                self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "used")
+            elif (
+                gimmick.type == GimmickType.BREAKABLE_DOOR
+                and gimmick.id in self._doors_closed
+            ):
+                ticks += C.DOOR_BREAK_TICKS
+                self._doors_closed.discard(gimmick.id)  # open for the round
+                self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "broken")
+
         ps.move_dest = dest
         ps.move_eta = tick + ticks
         ps.path = pts[1:]
@@ -945,6 +1013,24 @@ class _MatchSim:
                 arrive_tick=ps.move_eta,
             )
         )
+
+    def _gimmick_noise(
+        self, gimmick: Gimmick, ps: _PState, dest: str,
+        tick: int, seed_path: tuple[str, ...], action: str,
+    ) -> None:
+        self._emit(
+            GimmickUsedEvent(
+                tick=tick,
+                seed_path=seed_path,
+                gimmick_id=gimmick.id,
+                kind=str(gimmick.type),
+                action=action,
+                player_id=ps.pid,
+                x=round(ps.x, 2),
+                y=round(ps.y, 2),
+            )
+        )
+        self._pending_sounds.append((gimmick, ps.team_id, dest, ps.x, ps.y))
 
     def _stall_move(
         self, ps: _PState, extra: int, tick: int, seed_path: tuple[str, ...]
@@ -1531,6 +1617,14 @@ class _MatchSim:
                 # Disengage grace: a player falling back has broken
                 # contact — neither side gets the duel.
                 if pa.no_engage_until >= tick or pd.no_engage_until >= tick:
+                    continue
+                # A shut door between the two rooms blocks everything.
+                door = self._gimmicks.get(frozenset((pa.callout, pd.callout)))
+                if (
+                    door is not None
+                    and door.type == GimmickType.BREAKABLE_DOOR
+                    and door.id in self._doors_closed
+                ):
                     continue
                 visible, adv = self._sightline(pa.callout, pd.callout)
                 if not visible:

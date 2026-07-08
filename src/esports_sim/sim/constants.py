@@ -53,6 +53,16 @@ KILLER_REPOSITION_PROB = 0.5
 # Rotation info: an initiator burns an info charge to call the hit early.
 INFO_ROTATE_BONUS = 4  # ticks shaved off every rotator's delay
 
+# ---------------------------------------------------------------------------
+# Map gimmicks (rotating doors, teleporters, breakable doors)
+
+TELEPORT_TICKS = 3  # in-transit time; no fighting mid-teleport
+ROTATING_DOOR_DELAY = 2  # extra ticks to swing through
+DOOR_BREAK_TICKS = 8  # shooting a shut door open (4 s, very loud)
+# Every gimmick use is loud. Enemies inside the noise radius snap their
+# watch toward it, and pre-plant defenders treat sound near a site as a
+# rotation trigger — which is also exactly why fakes work.
+
 # Default-strat attackers commit somewhere in this window (uniform draw).
 DEFAULT_GO_EARLIEST = 90
 DEFAULT_GO_LATEST = 130

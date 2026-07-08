@@ -616,8 +616,30 @@ def map_geometry(map_id: str) -> dict:
             "paths": paths,
             "props": [p.model_dump() for p in geo.props],
         }
+    gimmicks = []
+    for g in m.gimmicks:
+        a, b = g.between
+        if geo is not None and geo.portal(a, b) is not None:
+            gx, gy = geo.portal(a, b)
+        elif geo is not None and a in geo.regions and b in geo.regions:
+            ra, rb = geo.regions[a], geo.regions[b]
+            gx, gy = (ra.cx + rb.cx) / 2, (ra.cy + rb.cy) / 2
+        else:
+            ca, cb = m.callouts[a], m.callouts[b]
+            gx, gy = (ca.x + cb.x) / 2, (ca.y + cb.y) / 2
+        gimmicks.append(
+            {
+                "id": g.id,
+                "type": str(g.type),
+                "between": list(g.between),
+                "x": round(gx, 1),
+                "y": round(gy, 1),
+                "noise_radius": g.noise_radius,
+            }
+        )
     return {
         "floor": floor,
+        "gimmicks": gimmicks,
         "id": m.id,
         "display_name": m.display_name,
         "sites": [str(s) for s in m.sites],
