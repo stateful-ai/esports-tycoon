@@ -315,9 +315,25 @@ def roster(team_id: str) -> dict:
         fog = _team_fog(gs, team_id)
         players = [_player_view(p, gs, fog) for p in gs.roster(team_id)]
         # Rival rosters are buyable: show the seller's ask per player.
+        tendencies: list[str] = []
         if team_id != gs.user_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
+            # Well-scouted rivals leak their coaching identity.
+            if gs.scout_progress.get(team_id, 0.0) >= 0.5:
+                tac = gs.teams[team_id].tactics
+                if tac.aggression >= 62:
+                    tendencies.append("swings angles aggressively")
+                elif tac.aggression <= 38:
+                    tendencies.append("holds passive angles")
+                if tac.pace >= 62:
+                    tendencies.append("hits sites fast")
+                elif tac.pace <= 38:
+                    tendencies.append("plays slow defaults")
+                if tac.site_focus != "balanced":
+                    tendencies.append(f"{tac.site_focus.upper()}-heavy attack")
+                if tac.eco_greed >= 62:
+                    tendencies.append("force-buys relentlessly")
         return {
             "team": _team_view(gs.teams[team_id], gs),
             "players": players,
@@ -325,6 +341,7 @@ def roster(team_id: str) -> dict:
             "fog": round(fog, 1),
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
+            "tendencies": tendencies,
         }
 
 
@@ -718,6 +735,39 @@ def talk_resolve(body: TalkBody) -> dict:
         if not ok:
             raise HTTPException(409, msg)
         return {"ok": True, "message": msg, "effects": effects}
+
+
+@app.get("/api/tactics")
+def tactics_view() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        tac = gs.teams[gs.user_team_id].tactics
+        return {"tactics": tac.model_dump()}
+
+
+class TacticsBody(BaseModel):
+    aggression: float | None = None
+    pace: float | None = None
+    util_discipline: float | None = None
+    eco_greed: float | None = None
+    site_focus: str | None = None
+
+
+@app.post("/api/actions/tactics")
+def set_tactics(body: TacticsBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        tac = gs.teams[gs.user_team_id].tactics
+        for field in ("aggression", "pace", "util_discipline", "eco_greed"):
+            v = getattr(body, field)
+            if v is not None:
+                setattr(tac, field, float(min(100.0, max(0.0, v))))
+        if body.site_focus is not None:
+            if body.site_focus not in ("balanced", "a", "b", "c"):
+                raise HTTPException(422, "site_focus must be balanced/a/b/c")
+            tac.site_focus = body.site_focus
+        S.save()
+        return {"ok": True, "message": "tactics updated", "tactics": tac.model_dump()}
 
 
 class BidBody(BaseModel):

@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+import numpy as np
+
 from esports_sim.manager import (
     development,
     economy,
@@ -146,6 +148,7 @@ def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> G
         f"of league play, then playoffs and Masters."
     )
     staff.refresh_candidates(gs)
+    _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     return gs
 
@@ -851,6 +854,42 @@ def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
         gs.push_news(f"Season {gs.season + 1} rookie class enters free agency.")
 
 
+def _assign_ai_tactics(gs: GameState, rng) -> None:
+    """Every AI coach stamps an identity on their team, derived from the
+    roster they actually have (re-derived each season — rosters change).
+    The user's dials are never touched."""
+    for tid in sorted(gs.teams):
+        if tid == gs.user_team_id:
+            continue
+        roster = gs.roster(tid)
+        if not roster:
+            continue
+        tac = gs.teams[tid].tactics
+        avg_reac = sum(p.attr("aim_reactivity") for p in roster) / len(roster)
+        entries = [
+            p for p in roster if str(p.playstyle) in ("entry", "awper")
+        ]
+        entry_q = (
+            sum(market.player_quality(p) for p in entries) / len(entries)
+            if entries
+            else 50.0
+        )
+        igl_sense = max(
+            (p.attr("game_sense") for p in roster if str(p.playstyle) == "igl"),
+            default=55.0,
+        )
+        clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
+        tac.aggression = round(clamp(50 + (avg_reac - 60) * 0.8 + rng.normal(0, 8)), 1)
+        tac.pace = round(clamp(50 + (entry_q - 60) * 0.7 + rng.normal(0, 8)), 1)
+        tac.util_discipline = round(clamp(igl_sense * 0.8 + rng.normal(0, 8)), 1)
+        tac.eco_greed = round(clamp(50 + rng.normal(0, 12)), 1)
+        tac.site_focus = (
+            "balanced"
+            if rng.random() < 0.65
+            else str(rng.choice(["a", "b", "c"]))
+        )
+
+
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
@@ -895,6 +934,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     staff.refresh_candidates(gs)
     gs.week = 1
     gs.phase = "regular"
+    _assign_ai_tactics(gs, rng)  # new rosters, new coaching identities
     gs.fixtures = _build_all_leagues(gs.teams, sorted(gd.maps), gs.season)
     gs.standings = {tid: TeamRecord() for tid in gs.teams}
     gs.push_news(f"Season {gs.season} begins.")

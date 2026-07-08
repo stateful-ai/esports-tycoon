@@ -33,6 +33,7 @@ const App = { tab: "dashboard", state: null };
 /* -- boot ------------------------------------------------------------------ */
 
 async function boot() {
+  if (App.tab === "dashboard") App.tab = "office"; // land on the visual HQ
   const b = await api("/api/bootstrap");
   if (!b.campaign) {
     const grid = $("#ng-teams");
@@ -91,7 +92,7 @@ function render() {
   // finishes into a detached node instead of double-appending.
   const container = el("div");
   $("#view").replaceChildren(container);
-  ({ dashboard, roster, standings, schedule, market, scouting, stats, finances })[App.tab](container);
+  ({ office, dashboard, roster, tactics, standings, schedule, market, scouting, stats, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -229,6 +230,10 @@ async function roster(v) {
     ? ` <span class="muted">— scouted estimates ±${data.fog}</span>`
     : "";
   card.innerHTML = `<h2>Roster — ${data.team.name} (${data.players.length}/5)${fogNote}</h2>`;
+  if ((data.tendencies ?? []).length) {
+    card.appendChild(el("p", "muted",
+      `Scouting book: ${data.tendencies.join(" · ")}`));
+  }
   if (!data.is_user_team) {
     const row = el("div", "row");
     const back = el("button", "btn btn-sm", "← My team");
@@ -369,6 +374,59 @@ function attrDetail(p) {
         : ""}
       <p class="muted">asking salary next deal: ${money(p.asking_salary)}/wk</p>
     </div></div>`;
+}
+
+const TACTIC_DIALS = [
+  ["aggression", "Aggression", "passive angles ↔ swing everything"],
+  ["pace", "Pace", "slow defaults ↔ fast executes"],
+  ["util_discipline", "Utility discipline", "dump on the hit ↔ hold for retakes"],
+  ["eco_greed", "Eco greed", "save on broke rounds ↔ force-buy often"],
+];
+
+async function tactics(v) {
+  const data = await api("/api/tactics");
+  const tac = data.tactics;
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Coaching strategy</h2>
+    <p class="muted">The identity your team plays with. 50 is neutral on
+    every dial; the effects run through the match engine itself.</p>`;
+  const pending = {};
+  for (const [key, label, hint] of TACTIC_DIALS) {
+    const row = el("div", "row", `
+      <span style="min-width:190px"><b>${label}</b><br><span class="muted">${hint}</span></span>`);
+    const slider = el("input");
+    slider.type = "range"; slider.min = 0; slider.max = 100;
+    slider.value = tac[key];
+    slider.style.flex = "1";
+    const val = el("span", "mono", String(Math.round(tac[key])));
+    val.style.minWidth = "34px";
+    slider.oninput = () => { val.textContent = slider.value; pending[key] = parseFloat(slider.value); };
+    row.appendChild(slider);
+    row.appendChild(val);
+    card.appendChild(row);
+  }
+  const siteRow = el("div", "row", `<span style="min-width:190px"><b>Site focus</b><br>
+    <span class="muted">bias the attack toward one site</span></span>`);
+  const sel = el("select");
+  for (const o of ["balanced", "a", "b", "c"]) {
+    const opt = el("option", "", o === "balanced" ? "balanced" : o.toUpperCase());
+    opt.value = o;
+    if (o === tac.site_focus) opt.selected = true;
+    sel.appendChild(opt);
+  }
+  sel.onchange = () => { pending.site_focus = sel.value; };
+  siteRow.appendChild(sel);
+  card.appendChild(siteRow);
+
+  const save = el("button", "btn btn-primary", "Set strategy");
+  save.onclick = async () => {
+    const r = await api("/api/actions/tactics", pending);
+    toast(r.message);
+  };
+  card.appendChild(save);
+  card.appendChild(el("p", "muted",
+    "Scout a rival to at least 50% to read their coaching identity on their roster page."));
+  v.appendChild(card);
 }
 
 async function standings(v) {

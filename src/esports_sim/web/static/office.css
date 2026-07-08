@@ -1,0 +1,152 @@
+/* Office tab — tycoon HQ scene. Room sprites are absolutely positioned onto
+   the backdrop; coords live in office.js (percent-based so the scene scales
+   with the card). Colors/type come from the design-system tokens with the
+   same fallbacks app.css uses. */
+
+.office-card { max-width: 1100px; margin-left: auto; margin-right: auto; }
+
+.office-stage {
+  position: relative;
+  border-radius: var(--es-radius-lg, 8px);
+  overflow: hidden;
+  /* Matches the backdrop's outer floor so the rounded crop reads seamless. */
+  background: #171a2e;
+  border: 1px solid var(--es-color-border-primary, #262a35);
+  user-select: none;
+}
+.office-base { display: block; width: 100%; height: auto; }
+
+/* Ambient header strip over the scene: org, week, balance. */
+.office-head {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, rgba(5, 6, 12, .72), rgba(5, 6, 12, 0));
+  pointer-events: none;
+  font-size: var(--es-text-md, 13px);
+}
+.office-head-dim { color: var(--es-color-text-secondary, #9aa3b5); }
+
+/* -- clickable rooms -------------------------------------------------------- */
+
+.office-room {
+  position: absolute; cursor: pointer; z-index: 3;
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.office-room img {
+  width: 100%; height: auto; display: block;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .55));
+  transition: filter var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.office-room:hover { transform: translateY(-4px); z-index: 5; }
+.office-room:hover img {
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, .7)) brightness(1.12);
+}
+
+.office-label {
+  position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%);
+  white-space: nowrap; text-align: center;
+  padding: 3px 10px; border-radius: var(--es-radius-full, 99px);
+  background: rgba(8, 10, 18, .92);
+  border: 1px solid var(--es-color-border-primary, #262a35);
+  color: var(--es-color-text-primary, #e6e9f0);
+  font-size: var(--es-text-xs, 11px);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--es-duration-quick, 120ms);
+  z-index: 7;
+}
+.office-label i {
+  display: block; font-style: normal;
+  color: var(--es-color-text-secondary, #9aa3b5);
+  font-size: var(--es-text-2xs, 10px);
+}
+.office-room:hover .office-label { opacity: 1; }
+
+/* Sprite failed to load: keep the hotspot usable as a labeled pad. */
+.office-room-flat {
+  min-height: 60px;
+  border: 1px dashed var(--es-color-border-primary, #262a35);
+  border-radius: var(--es-radius-md, 6px);
+}
+.office-room-flat .office-label { opacity: 1; bottom: 8px; }
+
+/* Invisible center region over the HQ desks (goes to roster). */
+.office-hq { z-index: 2; border: 1px dashed transparent; border-radius: 12px; }
+.office-hq:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 6%, transparent);
+}
+.office-hq .office-label { bottom: 10px; }
+
+/* -- training-focus quick picker ------------------------------------------- */
+
+.office-pop {
+  position: absolute; right: 2.5%; bottom: 34%; z-index: 8;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px; min-width: 170px;
+  background: var(--es-color-bg-surface, #14161d);
+  border: 1px solid var(--es-color-border-primary, #262a35);
+  border-radius: var(--es-radius-lg, 8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .6);
+}
+.office-pop-title {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-text-tertiary, #6c7383);
+}
+.office-pop .btn.active { border-color: var(--es-color-brand, #ff4655); }
+
+/* -- facilities wing --------------------------------------------------------- */
+
+.office-wing { margin-top: 12px; }
+.office-wing-title {
+  font-size: var(--es-text-xs, 11px); text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-text-tertiary, #6c7383);
+  margin-bottom: 8px;
+}
+.office-wing-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+.office-fac {
+  position: relative; cursor: pointer; text-align: center;
+  padding: 12px 10px 10px;
+  background: var(--es-color-bg-elevated, #1c202b);
+  border: 1px solid var(--es-color-border-primary, #262a35);
+  border-radius: var(--es-radius-lg, 8px);
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    border-color var(--es-duration-quick, 120ms);
+}
+.office-fac:hover {
+  transform: translateY(-3px);
+  border-color: var(--es-color-brand, #ff4655);
+}
+.office-fac img {
+  width: 72%; max-width: 210px; margin: 0 auto; display: block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .5));
+}
+/* Not built yet: the lot sits dark until the org invests. */
+.office-fac.locked img { filter: grayscale(1) brightness(.42) contrast(.9); }
+.office-fac.locked:hover { border-color: var(--es-color-border-primary, #262a35); }
+
+.office-badge {
+  position: absolute; top: 8px; right: 8px;
+  padding: 1px 8px; border-radius: var(--es-radius-full, 99px);
+  font-family: var(--es-font-mono, monospace);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 22%, var(--es-color-bg-sunken, #0b0d12));
+  border: 1px solid color-mix(in srgb, var(--es-color-brand, #ff4655) 45%, transparent);
+  color: var(--es-color-text-primary, #e6e9f0);
+}
+.office-badge.off {
+  background: var(--es-color-bg-sunken, #0b0d12);
+  border-color: var(--es-color-border-primary, #262a35);
+  color: var(--es-color-text-tertiary, #6c7383);
+}
+.office-fac-name { margin-top: 8px; font-size: var(--es-text-xs, 11px); line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .office-wing-row { grid-template-columns: 1fr; }
+  .office-fac img { width: 55%; }
+}
