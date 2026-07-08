@@ -21,7 +21,7 @@ function parseReplay(data) {
       case "round.start":
         cur = {
           num: e.round_num, attacker: e.attacking_team_id,
-          placements: {}, moves: {}, kills: [], utility: [],
+          placements: {}, placeXY: {}, moves: {}, kills: [], utility: [],
           plant: null, defuse: null, end: null,
           scoreBefore: [scoreA, scoreB], maxTick: 1,
         };
@@ -29,10 +29,22 @@ function parseReplay(data) {
         break;
       case "round.move":
         if (!cur) break;
-        if (e.from_callout === null) cur.placements[e.player_id] = e.to_callout;
-        else {
-          (cur.moves[e.player_id] ??= []).push({ tick: e.tick, from: e.from_callout, to: e.to_callout });
-          cur.maxTick = Math.max(cur.maxTick, e.tick);
+        if (e.from_callout === null) {
+          cur.placements[e.player_id] = e.to_callout;
+          if (e.waypoints?.length) cur.placeXY[e.player_id] = e.waypoints[0];
+        } else {
+          // New logs: emitted at move START with waypoints + arrive_tick
+          // (a re-paced move emits again and supersedes). Legacy logs:
+          // emitted at arrival, straight MOVE_TICKS window.
+          const isNew = e.arrive_tick != null;
+          (cur.moves[e.player_id] ??= []).push({
+            start: isNew ? e.tick : e.tick - MOVE_TICKS,
+            arrive: isNew ? e.arrive_tick : e.tick,
+            from: e.from_callout,
+            to: e.to_callout,
+            pts: e.waypoints?.length >= 2 ? e.waypoints : null,
+          });
+          cur.maxTick = Math.max(cur.maxTick, isNew ? e.arrive_tick : e.tick);
         }
         break;
       case "round.kill":
@@ -137,25 +149,46 @@ function pointAlong(pts, f) {
 // Richer variant of playerPos: also reports whether the player is mid-move
 // and a trail-start point, so callers can draw a short fading line without
 // re-deriving the interpolation math.
+// Project a raw grid point (event coordinates) to screen, riding a room's
+// floor elevation.
+function gpoint(x, y, z) {
+  const p = P(x, 100 - y);
+  return [p[0], p[1] - (V.iso ? z || 0 : 0)];
+}
+
 function playerMoveInfo(round, pid, t) {
-  let at = round.placements[pid] ?? null;
-  const moves = round.moves[pid] ?? [];
-  for (const m of moves) {
-    if (m.tick <= t) { at = m.to; }
-    else if (m.tick - MOVE_TICKS <= t) {
-      const f = (t - (m.tick - MOVE_TICKS)) / MOVE_TICKS;
-      const pts = hopPath(m.from, m.to);
-      const p = pointAlong(pts, f);
-      const back = pointAlong(pts, Math.max(0, f - TRAIL_SPAN));
-      // Ramp between floor heights while crossing rooms.
-      const z = zOf(m.from) + (zOf(m.to) - zOf(m.from)) * f;
-      return {
-        pos: [p[0], p[1] - z], moving: true,
-        from: [back[0], back[1] - z], f,
-      };
-    } else break;
+  // Resting spot: room + (for new logs) the exact placement coordinate.
+  let atRoom = round.placements[pid] ?? null;
+  let atXY = round.placeXY[pid] ?? null;
+  let flight = null;
+  for (const m of round.moves[pid] ?? []) {
+    if (m.start > t) break;
+    if (m.arrive <= t) {
+      atRoom = m.to;
+      atXY = m.pts ? m.pts[m.pts.length - 1] : null;
+      flight = null; // any earlier in-flight record is superseded
+    } else {
+      flight = m; // latest event governs (stall re-pacing)
+    }
   }
-  return at ? { pos: pos(at), moving: false } : null;
+  if (flight) {
+    const m = flight;
+    const f = Math.min(1, (t - m.start) / Math.max(1, m.arrive - m.start));
+    const pts = m.pts
+      ? m.pts.map(([x, y]) => P(x, 100 - y))
+      : hopPath(m.from, m.to);
+    const p = pointAlong(pts, f);
+    const back = pointAlong(pts, Math.max(0, f - TRAIL_SPAN));
+    // Ramp between floor heights while crossing rooms.
+    const z = V.iso ? zOf(m.from) + (zOf(m.to) - zOf(m.from)) * f : 0;
+    return {
+      pos: [p[0], p[1] - z], moving: true,
+      from: [back[0], back[1] - z], f,
+    };
+  }
+  if (atRoom === null) return null;
+  if (atXY) return { pos: gpoint(atXY[0], atXY[1], zOf(atRoom)), moving: false };
+  return { pos: pos(atRoom), moving: false };
 }
 
 function playerPos(round, pid, t) {
@@ -250,9 +283,13 @@ function drawKillFlashes(round, t) {
   for (const k of round.kills) {
     const age = t - k.tick;
     if (age < 0 || age > KILL_FLASH_TICKS) continue;
-    const cid = k.callout_id ?? round.placements[k.victim_id];
-    if (!cid) continue;
-    const [x, y] = pos(cid);
+    const p = k.victim_x != null
+      ? gpoint(k.victim_x, k.victim_y, zOf(k.callout_id))
+      : (k.callout_id ?? round.placements[k.victim_id])
+        ? pos(k.callout_id ?? round.placements[k.victim_id])
+        : null;
+    if (!p) continue;
+    const [x, y] = p;
     const fade = 1 - age / KILL_FLASH_TICKS;
     V.dyn.appendChild(svgEl("circle", {
       cx: x, cy: y, r: S(2 + age * 1.4).toFixed(2),
@@ -451,7 +488,9 @@ function drawFrame() {
   // keeps running instead of restarting every frame.
   const planted = round.plant && round.plant.tick <= t;
   if (planted) {
-    const [x, y] = pos(round.plant.callout_id);
+    const [x, y] = round.plant.x != null
+      ? gpoint(round.plant.x, round.plant.y, zOf(round.plant.callout_id))
+      : pos(round.plant.callout_id);
     V.spikeEl.setAttribute("x", x - S(1.4));
     V.spikeEl.setAttribute("y", y - S(1.4));
     V.spikeEl.setAttribute("transform", `rotate(45 ${x} ${y})`);
@@ -472,7 +511,9 @@ function drawFrame() {
     const teamCls = info.team_id === V.teamA ? "a" : "b";
     if (dead) {
       hidePlayerEl(pid);
-      const p = pos(death.callout_id ?? round.placements[pid]);
+      const p = death.victim_x != null
+        ? gpoint(death.victim_x, death.victim_y, zOf(death.callout_id))
+        : pos(death.callout_id ?? round.placements[pid]);
       if (p) {
         const r = S(1.2);
         V.dyn.appendChild(svgEl("path", {

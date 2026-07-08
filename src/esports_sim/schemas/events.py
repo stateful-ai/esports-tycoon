@@ -93,12 +93,18 @@ class KillEvent(Event):
     callout_id: str | None = None
     # "trade" = kill within N ticks of a teammate dying, useful for chemistry.
     is_trade: bool = False
+    # Where the victim actually stood (continuous layer; None in old logs).
+    victim_x: float | None = None
+    victim_y: float | None = None
 
 
 class SpikePlantEvent(Event):
     type: Literal["round.spike_plant"] = "round.spike_plant"
     player_id: str
     callout_id: str
+    # Exact plant spot (continuous layer; None in old logs).
+    x: float | None = None
+    y: float | None = None
 
 
 class SpikeDefuseEvent(Event):
@@ -116,16 +122,24 @@ class UtilityUsedEvent(Event):
 
 
 class MoveEvent(Event):
-    """Player placement or arrival at a callout. `from_callout is None`
-    marks round-start placement. Arrival-only: departures are implied
-    (arrival tick minus MOVE_TICKS_PER_EDGE), and a player killed mid-move
-    never arrives — their last event keeps them at the old callout.
+    """Player movement in continuous space.
+
+    Emitted at move START (`tick`), carrying the waypoint polyline and the
+    expected `arrive_tick`; a re-paced move (defensive utility stalls the
+    push) emits a fresh event that supersedes the old one. Placement:
+    `from_callout is None`, waypoints hold the single spawn position.
+    Viewers lerp along `waypoints` by arc length between tick and
+    arrive_tick — no sim logic needed. Coordinate-free consumers can keep
+    using the callout fields.
     """
 
     type: Literal["round.move"] = "round.move"
     player_id: str
     from_callout: str | None = None
     to_callout: str
+    # Continuous layer (absent in pre-geometry logs).
+    waypoints: list[tuple[float, float]] = Field(default_factory=list)
+    arrive_tick: int | None = None
 
 
 # ---------------------------------------------------------------------------

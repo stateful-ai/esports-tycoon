@@ -14,7 +14,16 @@ SPIKE_TICKS = 90  # 45 s from plant to detonation
 PLANT_TICKS = 8  # 4 s plant channel
 DEFUSE_TICKS = 14  # 7 s full defuse
 HALF_DEFUSE_TICKS = 7  # progress checkpoint
-MOVE_TICKS_PER_EDGE = 6  # 3 s to traverse one callout edge
+MOVE_TICKS_PER_EDGE = 6  # legacy fallback pacing (no-geometry maps)
+
+# Continuous movement: players hold real positions and travel at speed.
+# 2.4 grid units/tick makes a typical door-to-door hop ~4-9 ticks, which
+# keeps overall round pacing near the old fixed 6-tick hops.
+PLAYER_SPEED = 2.4  # grid units per tick at movement=50
+MIN_MOVE_TICKS = 2
+# Positional cover: a stationary holder hugging a crate that sits between
+# them and the shooter is simply harder to kill.
+COVER_BONUS = 4.0
 
 # Default-strat attackers commit somewhere in this window (uniform draw).
 DEFAULT_GO_EARLIEST = 90

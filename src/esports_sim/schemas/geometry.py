@@ -177,6 +177,108 @@ class MapGeometry(BaseModel):
                 return True
         return False
 
+    # -- continuous positions: slots, point LOS, point paths -----------------
+
+    def los_blocked_at(
+        self, x1: float, y1: float, x2: float, y2: float
+    ) -> bool:
+        """True when a full-height prop crosses the line between two
+        actual positions. Point-level upgrade of `sight_blocked` — where
+        you stand decides whether the box is in the way."""
+        for p in self.props:
+            if p.height != "full":
+                continue
+            if _segment_hits_rect(x1, y1, x2, y2, p.x, p.y, p.w, p.h):
+                return True
+        return False
+
+    def cover_near(
+        self, x: float, y: float, ex: float, ey: float,
+        radius: float = 5.0,
+    ) -> bool:
+        """Is there a half-height prop close to (x, y) that sits roughly
+        between it and the enemy at (ex, ey)? Positional cover: hugging a
+        crate only helps against fire from the far side of it."""
+        for p in self.props:
+            if p.height != "half":
+                continue
+            pcx, pcy = p.x + p.w / 2.0, p.y + p.h / 2.0
+            dpx, dpy = pcx - x, pcy - y
+            dist = (dpx * dpx + dpy * dpy) ** 0.5
+            if dist > radius or dist == 0.0:
+                continue
+            dex, dey = ex - x, ey - y
+            elen = (dex * dex + dey * dey) ** 0.5
+            if elen == 0.0:
+                continue
+            # Prop within a ~60° cone toward the enemy counts as cover.
+            if (dpx * dex + dpy * dey) / (dist * elen) > 0.5:
+                return True
+        return False
+
+    def room_slots(self, region_id: str) -> list[tuple[float, float, str]]:
+        """Deterministic tactical spots inside a room: one behind each
+        prop ("cover"), one just inside each doorway ("portal"), and four
+        interior spread points ("spread"). Players stand at slots instead
+        of stacking on the room center."""
+        r = self.regions.get(region_id)
+        if r is None:
+            return []
+        margin = 1.5
+        lo_x, hi_x = r.x + margin, r.x + r.w - margin
+        lo_y, hi_y = r.y + margin, r.y + r.h - margin
+
+        def clamp(px: float, py: float) -> tuple[float, float]:
+            return (min(max(px, lo_x), hi_x), min(max(py, lo_y), hi_y))
+
+        slots: list[tuple[float, float, str]] = []
+        # Cover slots: on the room-center side of each prop in the room.
+        for p in sorted(
+            (p for p in self.props if p.region == region_id),
+            key=lambda p: (p.x, p.y),
+        ):
+            pcx, pcy = p.x + p.w / 2.0, p.y + p.h / 2.0
+            dx, dy = r.cx - pcx, r.cy - pcy
+            norm = (dx * dx + dy * dy) ** 0.5 or 1.0
+            off = max(p.w, p.h) / 2.0 + 1.2
+            cx, cy = clamp(pcx + dx / norm * off, pcy + dy / norm * off)
+            slots.append((cx, cy, "cover"))
+        # Portal slots: just inside each doorway.
+        for other in sorted(self.regions):
+            if other == region_id:
+                continue
+            portal = self.portal(region_id, other)
+            if portal is None:
+                continue
+            px, py = portal
+            dx, dy = r.cx - px, r.cy - py
+            norm = (dx * dx + dy * dy) ** 0.5 or 1.0
+            sx, sy = clamp(px + dx / norm * 3.0, py + dy / norm * 3.0)
+            slots.append((sx, sy, "portal"))
+        # Spread slots: quarter points of the room interior.
+        for fx, fy in ((0.3, 0.3), (0.7, 0.3), (0.3, 0.7), (0.7, 0.7)):
+            slots.append(
+                (round(r.x + r.w * fx, 2), round(r.y + r.h * fy, 2), "spread")
+            )
+        return slots
+
+    def path_between_points(
+        self,
+        from_room: str,
+        to_room: str,
+        from_pt: tuple[float, float],
+        to_pt: tuple[float, float],
+    ) -> list[tuple[float, float]]:
+        """Waypoint polyline from an actual position in one room to an
+        actual position in an adjacent room: through the corridor/portal,
+        never through walls. Same room → straight line."""
+        if from_room == to_room:
+            return [from_pt, to_pt]
+        mid = self.path(from_room, to_room)
+        # Replace the room-center endpoints with the real positions.
+        core = mid[1:-1] if len(mid) > 2 else []
+        return [from_pt, *core, to_pt]
+
 
 def _segment_hits_rect(
     x1: float, y1: float, x2: float, y2: float,

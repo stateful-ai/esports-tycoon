@@ -14,6 +14,7 @@ tests/test_determinism.py).
 
 from __future__ import annotations
 
+import hashlib
 from collections import deque
 from dataclasses import dataclass, field
 
@@ -76,6 +77,11 @@ class _PState:
     # per-round state
     alive: bool = True
     callout: str = ""
+    # Continuous position (grid coords). Updated every tick while moving.
+    x: float = 0.0
+    y: float = 0.0
+    # Waypoints still ahead on the current move (excludes current pos).
+    path: list[tuple[float, float]] = field(default_factory=list)
     order: str = "hold"
     order_dirty: bool = True  # consult policy when set
     move_dest: str | None = None
@@ -144,24 +150,21 @@ class _MatchSim:
             for sl in self.map.sightlines
         }
 
-        # Floor geometry (optional): physical distances, elevation, cover,
-        # and line-of-sight detail. Maps without geometry fall back to a
-        # neutral mid-range with no height/cover/blocking effects.
-        geo = load_geometry(map_id)
-        self._range: dict[frozenset[str], float] = {}
+        # Floor geometry (optional): rooms, props, elevation. With it,
+        # players hold real positions at tactical slots, travel at speed
+        # through corridors, and duels are fought point-to-point. Without
+        # it, positions collapse to the callout anchors and everything
+        # still runs (straight-line paths, no cover/height/blocking).
+        self._geo = load_geometry(map_id)
         self._z: dict[str, float] = {}
-        self._cover: dict[str, int] = {}
-        self._blocked: set[frozenset[str]] = set()
-        if geo is not None:
-            for key in self._sight:
-                pair = sorted(key)
-                if len(pair) == 2:
-                    self._range[key] = geo.sight_distance(pair[0], pair[1])
-                    if geo.sight_blocked(pair[0], pair[1]):
-                        self._blocked.add(key)
-            for rid, region in geo.regions.items():
+        self._slots: dict[str, list[tuple[float, float, str]]] = {}
+        if self._geo is not None:
+            for rid, region in self._geo.regions.items():
                 self._z[rid] = region.z
-                self._cover[rid] = geo.cover_count(rid)
+                self._slots[rid] = self._geo.room_slots(rid)
+        for cid, c in self.map.callouts.items():
+            if not self._slots.get(cid):
+                self._slots[cid] = [(c.x, c.y, "spread")]
 
         # Day form: correlated per-match noise. Without it, ~100 independent
         # duel rolls per match let the stronger roster win almost every time;
@@ -447,8 +450,6 @@ class _MatchSim:
 
         attackers = self.roster[atk]
         defenders = self.roster[dfn]
-        for pid in attackers:
-            self.p[pid].callout = self.map.attacker_spawn
         # Spike carrier: best game_sense (steady hands, good decisions).
         carrier = max(
             attackers, key=lambda pid: (self._player(pid).attr("game_sense"), pid)
@@ -471,20 +472,14 @@ class _MatchSim:
 
         # -- defender setup --------------------------------------------------------
         assignment = self._assign_defense(defenders, sites, rng)
-        for pid, spot in assignment.items():
-            self.p[pid].callout = spot
         defender_site = {pid: self._callout_site(assignment[pid]) for pid in defenders}
 
-        # Round-start placements for the replay viewer (from_callout=None).
-        for pid in sorted(self.p):
-            self._emit(
-                MoveEvent(
-                    seed_path=seed_path,
-                    player_id=pid,
-                    from_callout=None,
-                    to_callout=self.p[pid].callout,
-                )
-            )
+        # Round-start placements: attackers spread across spawn, defenders
+        # take tactical slots (cover/doorway angles) at their assignment.
+        for pid in sorted(attackers):
+            self._place(pid, self.map.attacker_spawn, "enter", seed_path)
+        for pid in sorted(defenders):
+            self._place(pid, assignment[pid], "hold", seed_path)
 
         # -- attacker staging ---------------------------------------------------------
         entries = self._entry_callouts(target_site)
@@ -609,25 +604,18 @@ class _MatchSim:
                     for i, q in enumerate(alive_atk):
                         self._order(q, f"goto:{entries[i % len(entries)]}")
 
-            # -- movement arrivals -----------------------------------------------------
+            # -- movement: continuous stepping, then arrivals ----------------------------
+            self._advance_movers(tick)
             for pid in sorted(self.p):
                 ps = self.p[pid]
-                if ps.alive and ps.move_eta == tick:
-                    prev = ps.callout
+                if ps.alive and 0 <= ps.move_eta <= tick:
+                    if ps.path:
+                        ps.x, ps.y = ps.path[-1]
+                    ps.path = []
                     ps.callout = ps.move_dest or ps.callout
                     ps.move_dest = None
                     ps.move_eta = -1
                     ps.order_dirty = True
-                    if ps.callout != prev:
-                        self._emit(
-                            MoveEvent(
-                                tick=tick,
-                                seed_path=seed_path,
-                                player_id=pid,
-                                from_callout=prev,
-                                to_callout=ps.callout,
-                            )
-                        )
 
             # -- dropped-spike pickup ------------------------------------------------------
             if self._spike_dropped_at is not None and not spike_planted:
@@ -655,7 +643,14 @@ class _MatchSim:
                     pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order
                 )
                 act = self.policy.decide(obs, legal, rng)
-                self._apply_action(ps, act, tick)
+                # Holders (defenders, post-plant attackers) settle into
+                # cover/angle slots; pushing players spread through rooms.
+                prefer = (
+                    "hold"
+                    if ps.team_id != atk or spike_planted
+                    else "enter"
+                )
+                self._apply_action(ps, act, tick, seed_path, prefer)
 
             # -- plant channel ------------------------------------------------------------------
             for pid in sorted(self.p):
@@ -672,6 +667,7 @@ class _MatchSim:
                         SpikePlantEvent(
                             tick=tick, seed_path=seed_path,
                             player_id=pid, callout_id=ps.callout,
+                            x=round(ps.x, 2), y=round(ps.y, 2),
                         )
                     )
                     for q in sorted(self.p):
@@ -726,8 +722,7 @@ class _MatchSim:
                     stall = min(C.STALL_TICKS_MAX, int(round(2.5 * stall_power)))
                     if stall > 0:
                         for q in alive_atk:
-                            if self.p[q].move_eta >= 0:
-                                self.p[q].move_eta += stall
+                            self._stall_move(self.p[q], stall, tick, seed_path)
                     # Fallback: badly outnumbered site defenders break
                     # contact and rally instead of dying in the crossfire.
                     # The post-plant grouped retake then arrives with
@@ -817,6 +812,135 @@ class _MatchSim:
         for pid in pool[i:]:
             assignment[pid] = self.map.defender_spawn
         return assignment
+
+    # -- continuous movement --------------------------------------------------
+
+    def _slot_for(self, pid: str, room: str, prefer: str) -> tuple[float, float]:
+        """Deterministic tactical spot in a room. Holders gravitate to
+        cover and doorway angles; entries spread out. Hash-spread so five
+        players don't stack on one crate (never Python's `hash` — it's
+        salted per process and would break replay determinism)."""
+        slots = self._slots.get(room)
+        if not slots:
+            c = self.map.callouts.get(room)
+            return (c.x, c.y) if c else (50.0, 50.0)
+        if prefer == "hold":
+            ranked = sorted(
+                slots, key=lambda s: {"cover": 0, "portal": 1, "spread": 2}[s[2]]
+            )
+        else:
+            ranked = sorted(
+                slots, key=lambda s: {"spread": 0, "portal": 1, "cover": 2}[s[2]]
+            )
+        h = hashlib.blake2b(f"{pid}|{room}".encode(), digest_size=4)
+        idx = int.from_bytes(h.digest(), "big") % min(len(ranked), 4)
+        x, y, _ = ranked[idx]
+        return (x, y)
+
+    def _place(
+        self, pid: str, room: str, prefer: str, seed_path: tuple[str, ...]
+    ) -> None:
+        ps = self.p[pid]
+        ps.callout = room
+        ps.x, ps.y = self._slot_for(pid, room, prefer)
+        ps.path = []
+        self._emit(
+            MoveEvent(
+                seed_path=seed_path,
+                player_id=pid,
+                from_callout=None,
+                to_callout=room,
+                waypoints=[(round(ps.x, 2), round(ps.y, 2))],
+                arrive_tick=0,
+            )
+        )
+
+    def _speed(self, pid: str) -> float:
+        """Grid units per tick — quick players rotate meaningfully faster."""
+        return C.PLAYER_SPEED * (0.9 + self._player(pid).attr("movement") / 500.0)
+
+    def _path_pts(
+        self, from_room: str, to_room: str,
+        from_pt: tuple[float, float], to_pt: tuple[float, float],
+    ) -> list[tuple[float, float]]:
+        if self._geo is not None:
+            return self._geo.path_between_points(from_room, to_room, from_pt, to_pt)
+        return [from_pt, to_pt]
+
+    @staticmethod
+    def _poly_len(pts: list[tuple[float, float]]) -> float:
+        return sum(
+            ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+            for (x1, y1), (x2, y2) in zip(pts, pts[1:])
+        )
+
+    def _begin_move(
+        self, ps: _PState, dest: str, tick: int,
+        seed_path: tuple[str, ...], prefer: str,
+    ) -> None:
+        target = self._slot_for(ps.pid, dest, prefer)
+        pts = self._path_pts(ps.callout, dest, (ps.x, ps.y), target)
+        ticks = max(C.MIN_MOVE_TICKS, round(self._poly_len(pts) / self._speed(ps.pid)))
+        ps.move_dest = dest
+        ps.move_eta = tick + ticks
+        ps.path = pts[1:]
+        self._emit(
+            MoveEvent(
+                tick=tick,
+                seed_path=seed_path,
+                player_id=ps.pid,
+                from_callout=ps.callout,
+                to_callout=dest,
+                waypoints=[(round(x, 2), round(y, 2)) for x, y in pts],
+                arrive_tick=ps.move_eta,
+            )
+        )
+
+    def _stall_move(
+        self, ps: _PState, extra: int, tick: int, seed_path: tuple[str, ...]
+    ) -> None:
+        """Defensive utility re-paces an in-flight move; the fresh event
+        supersedes the old one for any replay consumer."""
+        if ps.move_eta < 0 or ps.move_dest is None:
+            return
+        ps.move_eta += extra
+        self._emit(
+            MoveEvent(
+                tick=tick,
+                seed_path=seed_path,
+                player_id=ps.pid,
+                from_callout=ps.callout,
+                to_callout=ps.move_dest,
+                waypoints=[(round(ps.x, 2), round(ps.y, 2))]
+                + [(round(x, 2), round(y, 2)) for x, y in ps.path],
+                arrive_tick=ps.move_eta,
+            )
+        )
+
+    def _advance_movers(self, tick: int) -> None:
+        """Step every moving player along their path so that they land on
+        the final waypoint exactly at move_eta (stall-aware re-pacing)."""
+        for pid in sorted(self.p):
+            ps = self.p[pid]
+            if not ps.alive or ps.move_eta < 0 or not ps.path:
+                continue
+            remaining_ticks = ps.move_eta - tick
+            if remaining_ticks <= 0:
+                ps.x, ps.y = ps.path[-1]
+                ps.path = []
+                continue
+            step = self._poly_len([(ps.x, ps.y), *ps.path]) / (remaining_ticks + 1)
+            while step > 0 and ps.path:
+                nx, ny = ps.path[0]
+                d = ((nx - ps.x) ** 2 + (ny - ps.y) ** 2) ** 0.5
+                if d <= step:
+                    ps.x, ps.y = nx, ny
+                    ps.path.pop(0)
+                    step -= d
+                else:
+                    ps.x += (nx - ps.x) / d * step
+                    ps.y += (ny - ps.y) / d * step
+                    step = 0.0
 
     # -- orders / actions ---------------------------------------------------------
 
@@ -935,11 +1059,13 @@ class _MatchSim:
             legal.append(Action(type=ActionType.DEFUSE_SPIKE))
         return legal
 
-    def _apply_action(self, ps: _PState, act: Action, tick: int) -> None:
+    def _apply_action(
+        self, ps: _PState, act: Action, tick: int,
+        seed_path: tuple[str, ...], prefer: str,
+    ) -> None:
         if act.type == ActionType.MOVE_TO and act.callout_id:
             if act.callout_id in self.map.neighbors(ps.callout):
-                ps.move_dest = act.callout_id
-                ps.move_eta = tick + C.MOVE_TICKS_PER_EDGE
+                self._begin_move(ps, act.callout_id, tick, seed_path, prefer)
         elif act.type == ActionType.PLANT_SPIKE:
             ps.planting_until = tick + C.PLANT_TICKS
         elif act.type == ActionType.DEFUSE_SPIKE:
@@ -1209,6 +1335,7 @@ class _MatchSim:
         n_alive_opp: int,
         duel_range: float = 20.0,
         height_delta: float = 0.0,
+        in_cover: bool = False,
     ) -> float:
         ps = self.p[pid]
         pl = self._player(pid)
@@ -1234,11 +1361,10 @@ class _MatchSim:
         # High ground: only the higher player collects it.
         if height_delta > 0:
             s += min(C.HEIGHT_CAP, height_delta * C.HEIGHT_PER_Z)
-        # Cover: anchored holders shoot over the boxes in their room
-        # (irrelevant point-blank — nobody hides behind a crate in a
-        # knife-range fight).
-        if holder and not same_callout:
-            s += min(C.COVER_CAP, self._cover.get(ps.callout, 0) * C.COVER_PER_PROP)
+        # Positional cover: this player is actually crouched behind a
+        # crate that sits between them and the shooter.
+        if in_cover:
+            s += C.COVER_BONUS
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
         if holder and not same_callout:
@@ -1285,8 +1411,12 @@ class _MatchSim:
                     continue
                 same = pa.callout == pd.callout
                 p_engage = C.ENGAGE_PROB_SAME_CALLOUT if same else C.ENGAGE_PROB
-                sight_key = frozenset((pa.callout, pd.callout))
-                angle_broken = not same and sight_key in self._blocked
+                # Positional line of sight: a full-height box between the
+                # two ACTUAL positions breaks the angle — even inside one
+                # room (dancing around the mid box).
+                angle_broken = self._geo is not None and self._geo.los_blocked_at(
+                    pa.x, pa.y, pd.x, pd.y
+                )
                 if angle_broken:
                     p_engage *= C.SIGHT_BLOCK_ENGAGE_FACTOR
                 # Pre-commit poking is rare; committed pushes force fights.
@@ -1327,17 +1457,30 @@ class _MatchSim:
                     adv_a = adv_d = False  # utility neutralizes angles
                 if angle_broken:
                     adv_a = adv_d = False  # can't hold an angle through a box
-                duel_range = (
-                    C.RANGE_POINT_BLANK if same else self._range.get(sight_key, 20.0)
+                # The fight happens at the real distance between the two
+                # players — not between their rooms' centers.
+                duel_range = max(
+                    2.0,
+                    ((pa.x - pd.x) ** 2 + (pa.y - pd.y) ** 2) ** 0.5,
                 )
                 dz = self._z.get(pa.callout, 0.0) - self._z.get(pd.callout, 0.0)
+                cover_a = (
+                    a_holder
+                    and self._geo is not None
+                    and self._geo.cover_near(pa.x, pa.y, pd.x, pd.y)
+                )
+                cover_d = (
+                    d_holder
+                    and self._geo is not None
+                    and self._geo.cover_near(pd.x, pd.y, pa.x, pa.y)
+                )
                 sa = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
-                    len(alive_atk), len(alive_dfn), duel_range, dz,
+                    len(alive_atk), len(alive_dfn), duel_range, dz, cover_a,
                 )
                 sd = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
-                    len(alive_dfn), len(alive_atk), duel_range, -dz,
+                    len(alive_dfn), len(alive_atk), duel_range, -dz, cover_d,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:
@@ -1366,6 +1509,7 @@ class _MatchSim:
         vp.defusing_until = -1
         vp.move_eta = -1
         vp.move_dest = None
+        vp.path = []  # died where they stood
         if vp.has_spike:
             vp.has_spike = False
             self._spike_dropped_at = vp.callout
@@ -1386,6 +1530,8 @@ class _MatchSim:
                 headshot=headshot,
                 callout_id=vp.callout or None,
                 is_trade=is_trade,
+                victim_x=round(vp.x, 2),
+                victim_y=round(vp.y, 2),
             )
         )
 
