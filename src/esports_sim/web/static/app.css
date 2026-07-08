@@ -375,3 +375,7 @@ svg.iso .plabel { font-size: 3.4px; }
 .facility-row:last-child { border-bottom: 0; }
 
 .kill-flash { fill: none; stroke: var(--es-color-text-danger, #e5484d); stroke-width: .6; pointer-events: none; }
+
+/* audio toggle (audio.js) */
+#audio-toggle { min-width: 40px; }
+#audio-toggle[aria-pressed="false"] { opacity: 0.55; }
