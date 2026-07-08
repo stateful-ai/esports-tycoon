@@ -122,9 +122,12 @@ class GuideRenderer:
         # Back-to-front by max screen y.
         rooms.sort(key=lambda r: max(p[1] for p in self.project(r)))
 
-        # Floors.
-        for r in rooms:
-            d.polygon(self.project(r), fill=FLOOR, outline=FLOOR_EDGE)
+        # Floors: no outlines (lines teach the model to paint lines);
+        # rooms are distinguished by alternating close tones instead, so
+        # the model sees zones without inheriting borders.
+        floor_tones = [(52, 58, 78), (58, 63, 82), (48, 55, 74)]
+        for i, r in enumerate(rooms):
+            d.polygon(self.project(r), fill=floor_tones[i % 3])
 
         # Exterior walls: cheap version for the guide — extrude the two
         # viewer-facing edges (front y=min side, right x=max side) of the
@@ -140,6 +143,10 @@ class GuideRenderer:
                     return True
             return False
 
+        # NOTE (art-pipeline rule): no interior boundary LINES in guides —
+        # the runtime draws authoritative borders as a vector overlay, and
+        # lines in the guide teach the model to paint (drifting) lines.
+        # Exterior walls keep their solid faces so the plinth reads 3D.
         wall_px = self.wall_h * self.scale
         for r in rooms:
             p = self.project(r)
@@ -148,15 +155,11 @@ class GuideRenderer:
                     [p[0], p[1], (p[1][0], p[1][1] + wall_px), (p[0][0], p[0][1] + wall_px)],
                     fill=WALL_FACE,
                 )
-                d.line([p[0], p[1]], fill=WALL_CROWN, width=2)
             if not has_neighbor(r, "right"):
                 d.polygon(
                     [p[1], p[2], (p[2][0], p[2][1] + wall_px), (p[1][0], p[1][1] + wall_px)],
                     fill=WALL_FACE,
                 )
-                d.line([p[1], p[2]], fill=WALL_CROWN, width=2)
-            d.line([p[2], p[3]], fill=WALL_CROWN, width=2)
-            d.line([p[3], p[0]], fill=WALL_CROWN, width=2)
 
         # Furniture.
         for r in rooms:

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(ls:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe -m pytest:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\balance_report.py:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\pacing_report.py:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\snowball_report.py:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\regen_golden.py:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\render_office_guide.py:*)",
+      "PowerShell(.\\.venv-win\\Scripts\\python.exe scripts\\align_painted.py:*)",
+      "PowerShell(git status:*)",
+      "PowerShell(git diff:*)",
+      "PowerShell(git log:*)"
+    ]
+  }
+}

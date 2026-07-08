@@ -1,0 +1,30 @@
+# AI skills & agents in this repo
+
+Index of the repo's AI-assist configuration. `CLAUDE.md` is the entry
+point (environment, commands, invariants); `AGENTS.md` is the cross-tool
+mirror of it.
+
+## Skills (`.claude/skills/`)
+
+| Skill | Use it to |
+|---|---|
+| `ship` | Run the full gate stack (tests → golden → balance → pacing → JS) and push with CI watch |
+| `art-pass` | Run a scene-art generation pass through the blockout→beautify pipeline |
+| `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
+
+## Custom agents (`.claude/agents/`)
+
+| Agent | Scope |
+|---|---|
+| `map-author` | Map content only (graphs, geometry, props, gimmicks) with balance + pacing gates baked in |
+| `art-generator` | Asset generation via the validated Ludo / Google AI Studio / Scenario recipes, with structure gating |
+| `sim-tuner` | Engine balance/pacing tuning with the measurement stack and the do-not-retread lesson bank |
+
+## Other AI-relevant fixtures
+
+- `.claude/settings.json` — shared permission allowlist (tests, gate
+  scripts, git/gh read ops) so sessions prompt less.
+- `.claude/launch.json` — "web" preview config (`python -m esports_sim
+  --web --no-browser`, port 8420).
+- `docs/art-pipeline.md` — the full blockout→beautify doctrine.
+- `.env` (gitignored) — generation API keys; never commit.
