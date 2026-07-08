@@ -1,0 +1,81 @@
+{
+  "comment": "Furniture sprite manifest for the layered office (shell + sprites). Types match office_plan.json furniture entries. Sprites are generated once as isolated isometric assets on transparent backgrounds (baked soft under-shadow, light from upper-left, cool ambient + warm accent), placed by the plan at exact anchors, z-sorted by screen-y. `scale` = sprite width in grid units per 1.0 of the furniture block's w.",
+  "style_lock": "stylized 3D isometric game asset, 2:1 isometric angle matching a diamond floor grid, single object on transparent background, soft baked drop shadow under the object, lit from upper-left, cool blue ambient with warm amber accent, cinematic teal-and-amber grade, high detail, no text, no watermark",
+  "sprites": {
+    "desk": {
+      "prompt": "esports gaming desk setup: dark wooden desk with a glowing gaming PC tower, curved monitor, RGB keyboard and mouse, headset on a stand, energy drink can, tangled cables, ergonomic gaming chair pushed in behind it",
+      "orientations": ["se", "sw"],
+      "scale": 1.15
+    },
+    "screen": {
+      "prompt": "tall freestanding glowing cyan monitor panel on a slim stand, screen showing abstract match statistics",
+      "orientations": ["se"],
+      "scale": 1.0
+    },
+    "bigscreen": {
+      "prompt": "wide wall-mounted video screen on a dark stand, glowing cyan, showing an abstract tactical map",
+      "orientations": ["se"],
+      "scale": 1.05
+    },
+    "table": {
+      "prompt": "long rustic wooden conference table with papers, laptops and coffee mugs on it",
+      "orientations": ["se"],
+      "scale": 1.1
+    },
+    "chair": {
+      "prompt": "modern office chair, dark fabric with subtle red accent stitching",
+      "orientations": ["se", "sw"],
+      "scale": 1.0
+    },
+    "couch": {
+      "prompt": "plush deep-red lounge sofa with throw pillows and a folded blanket",
+      "orientations": ["se", "sw"],
+      "scale": 1.1
+    },
+    "shelf": {
+      "prompt": "low wooden trophy shelf with small plants and esports memorabilia",
+      "orientations": ["se"],
+      "scale": 1.05
+    },
+    "board": {
+      "prompt": "large whiteboard on wheels covered in tactical scribbles, arrows and small map diagrams",
+      "orientations": ["se"],
+      "scale": 1.05
+    },
+    "bench": {
+      "prompt": "physiotherapy treatment bench with green padded top and a folded white towel",
+      "orientations": ["se"],
+      "scale": 1.1
+    },
+    "cabinet": {
+      "prompt": "tall medical supply cabinet with glass doors and neatly stacked supplies",
+      "orientations": ["se"],
+      "scale": 1.0
+    },
+    "server": {
+      "prompt": "tall server rack with glowing teal status LEDs and neat cable management",
+      "orientations": ["se"],
+      "scale": 1.0
+    },
+    "camera": {
+      "prompt": "professional studio camera on a tripod next to a glowing ring light",
+      "orientations": ["se"],
+      "scale": 1.0
+    },
+    "pod": {
+      "prompt": "enclosed esports training pod booth: boxy dark-red privacy booth with a glowing cyan door seam and small status screen",
+      "orientations": ["se", "sw"],
+      "scale": 1.15
+    },
+    "trophy": {
+      "prompt": "small golden esports championship trophy cup",
+      "orientations": ["se"],
+      "scale": 1.4
+    },
+    "plant": {
+      "prompt": "potted monstera plant in a dark ceramic pot",
+      "orientations": ["se"],
+      "scale": 1.2
+    }
+  }
+}

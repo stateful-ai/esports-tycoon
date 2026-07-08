@@ -18,6 +18,7 @@ Requires Pillow (in the [dev] extras).
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -112,7 +113,9 @@ class GuideRenderer:
         d.polygon([cs[0], cs[1], lift(cs[1]), lift(cs[0])], fill=mid)
         d.polygon([lift(p) for p in cs], fill=color)
 
-    def render(self, annex_levels: dict[str, int]) -> Image.Image:
+    def render(
+        self, annex_levels: dict[str, int], furniture: bool = True
+    ) -> Image.Image:
         """annex_levels: annex id -> level (0 = absent)."""
         img = Image.new("RGB", (self.w, self.h), GROUND)
         d = ImageDraw.Draw(img)
@@ -161,15 +164,16 @@ class GuideRenderer:
                     fill=WALL_FACE,
                 )
 
-        # Furniture.
-        for r in rooms:
-            furn = r.get("furniture")
-            if furn is None and "furniture_by_level" in r:
-                level = annex_levels.get(r["id"], 0)
-                key = "3" if level >= 3 else "1"
-                furn = r["furniture_by_level"].get(key, [])
-            for f in furn or []:
-                self.box(d, r, f)
+        # Furniture (skipped for sprite-mode shell guides).
+        if furniture:
+            for r in rooms:
+                furn = r.get("furniture")
+                if furn is None and "furniture_by_level" in r:
+                    level = annex_levels.get(r["id"], 0)
+                    key = "3" if level >= 3 else "1"
+                    furn = r["furniture_by_level"].get(key, [])
+                for f in furn or []:
+                    self.box(d, r, f)
         return img
 
 
@@ -177,6 +181,18 @@ def main() -> None:
     plan = load_plan()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     rend = GuideRenderer(plan)
+
+    if "--shell" in sys.argv:
+        # Sprite-mode shell guide: EVERY room + annex floor, NO furniture.
+        # The runtime clips unbuilt annex floors away and places furniture
+        # as individual sprites, so the shell is one furniture-free image.
+        img = rend.render(
+            {a["id"]: 1 for a in plan["annexes"]}, furniture=False
+        )
+        path = OUT_DIR / "shell.png"
+        img.save(path)
+        print(f"wrote {path} ({rend.w}x{rend.h})")
+        return
 
     rend.render({}).save(OUT_DIR / "base.png")
     print(f"wrote {OUT_DIR / 'base.png'} ({rend.w}x{rend.h})")
