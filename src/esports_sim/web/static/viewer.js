@@ -479,6 +479,11 @@ function drawStatic() {
   );
   svg.classList.toggle("iso", !!V.iso);
 
+  // Per-player circular clip paths for agent icons live here (rebuilt with
+  // everything else since drawStatic() wipes the whole svg subtree).
+  V.defs = svgEl("defs", {});
+  svg.appendChild(V.defs);
+
   if (V.floor) drawFloor(svg);
   else drawGraph(svg);
 
@@ -500,19 +505,59 @@ function drawStatic() {
   V.persist.appendChild(V.spikeEl);
 }
 
+const ICON_R = 2.2; // agent-icon dot radius, in the same units as the old plain pdot
+
 function hidePlayerEl(pid) {
   const e = V.playerEls[pid];
-  if (e) { e.circle.style.display = "none"; e.label.style.display = "none"; }
+  if (!e) return;
+  e.ring.style.display = "none";
+  e.icon.style.display = "none";
+  e.fallback.style.display = "none";
+  e.label.style.display = "none";
 }
 
+// Player dot = team-colored ring + the player's agent icon clipped to a
+// circle on top, with a plain colored dot as fallback for missing/broken
+// icon assets (older/incomplete art drops, or a 404 caught at runtime).
 function getPlayerEls(pid) {
   let e = V.playerEls[pid];
   if (!e) {
-    const circle = svgEl("circle", { r: S(1.7), class: "pdot" });
+    const agentIcon = V.players[pid]?.agent_icon || null;
+
+    const ring = svgEl("circle", { r: S(ICON_R), class: "pdot-ring" });
+
+    // clipPathUnits=objectBoundingBox: the clip circle is relative to the
+    // <image>'s own box, so it never needs repositioning as the icon moves.
+    const clip = svgEl("clipPath", { id: `pclip-${pid}`, clipPathUnits: "objectBoundingBox" });
+    clip.appendChild(svgEl("circle", { cx: 0.5, cy: 0.5, r: 0.5 }));
+    V.defs.appendChild(clip);
+
+    const icon = svgEl("image", {
+      width: S(ICON_R * 2), height: S(ICON_R * 2),
+      class: "pdot-icon", "clip-path": `url(#pclip-${pid})`,
+    });
+    const fallback = svgEl("circle", { r: S(1.7), class: "pdot" });
+
+    if (agentIcon) {
+      icon.setAttributeNS("http://www.w3.org/1999/xlink", "href", agentIcon);
+      icon.setAttribute("href", agentIcon);
+      // Asset missing (404) or otherwise failed to decode: hide the icon +
+      // ring and show the plain team-colored dot instead.
+      icon.addEventListener("error", () => {
+        icon.dataset.failed = "1";
+        icon.style.display = "none";
+        fallback.style.display = "";
+      });
+    } else {
+      icon.dataset.failed = "1";
+    }
+
     const label = svgEl("text", { class: "plabel" });
-    V.persist.appendChild(circle);
+    V.persist.appendChild(ring);
+    V.persist.appendChild(fallback);
+    V.persist.appendChild(icon);
     V.persist.appendChild(label);
-    e = V.playerEls[pid] = { circle, label };
+    e = V.playerEls[pid] = { ring, icon, fallback, label };
   }
   return e;
 }
@@ -570,13 +615,22 @@ function drawFrame() {
     const move = playerMoveInfo(round, pid, t);
     if (!move) { hidePlayerEl(pid); continue; }
     const [x, y] = move.pos;
-    const { circle, label } = getPlayerEls(pid);
-    circle.setAttribute("cx", x);
-    circle.setAttribute("cy", y);
-    circle.setAttribute("class", "pdot " + teamCls);
-    circle.style.display = "";
+    const { ring, icon, fallback, label } = getPlayerEls(pid);
+    const failed = icon.dataset.failed === "1";
+    ring.setAttribute("cx", x);
+    ring.setAttribute("cy", y);
+    ring.setAttribute("class", "pdot-ring " + teamCls);
+    ring.style.display = failed ? "none" : "";
+    const iw = S(ICON_R * 2);
+    icon.setAttribute("x", x - iw / 2);
+    icon.setAttribute("y", y - iw / 2);
+    icon.style.display = failed ? "none" : "";
+    fallback.setAttribute("cx", x);
+    fallback.setAttribute("cy", y);
+    fallback.setAttribute("class", "pdot " + teamCls);
+    fallback.style.display = failed ? "" : "none";
     label.setAttribute("x", x);
-    label.setAttribute("y", y - 2.3);
+    label.setAttribute("y", y - S(2.6));
     label.style.display = "";
     label.textContent = info.handle;
 

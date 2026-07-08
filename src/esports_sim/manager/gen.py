@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from esports_sim.manager import development
 from esports_sim.registry.loader import GameData
 from esports_sim.schemas import AgentMastery, MapMastery, Player, Team
 from esports_sim.schemas.common import Playstyle, Region, Role
@@ -153,7 +154,7 @@ def generate_player(
     tags = [str(t) for t in rng.choice(_TAG_POOL, size=n_tags, replace=False)]
 
     salary = int(np.round((quality ** 1.6) * 6 / 100) * 100)
-    return Player(
+    p = Player(
         id=pid,
         handle=handle,
         real_name=real_name,
@@ -171,6 +172,8 @@ def generate_player(
         form=round(float(rng.uniform(40, 65)), 1),
         personality_tags=tags,
     )
+    development.assign_potential(p, rng)
+    return p
 
 
 def generate_league_teams(

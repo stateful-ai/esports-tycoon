@@ -437,15 +437,27 @@ SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full knowledge
 
 
 def _tick_scouting(gs: GameState) -> None:
-    if gs.scout_target and gs.scout_target in gs.teams:
-        cur = gs.scout_progress.get(gs.scout_target, 0.0)
-        gain = SCOUT_WEEKLY_GAIN * staff.scout_multiplier(gs)
-        after = min(1.0, round(cur + gain, 2))
-        gs.scout_progress[gs.scout_target] = after
-        if after >= 1.0 and cur < 1.0:
-            gs.push_news(
-                f"Scouting report on {gs.teams[gs.scout_target].name} complete."
-            )
+    """Advance whatever the scout watches: a rival team, or the open
+    market ("market" — free agents and prospects, EHM-style)."""
+    target = gs.scout_target
+    if not target:
+        return
+    if target != "market" and target not in gs.teams:
+        return
+    cur = gs.scout_progress.get(target, 0.0)
+    gain = SCOUT_WEEKLY_GAIN * staff.scout_multiplier(gs)
+    # The market is a bigger beat than one team: slower coverage.
+    if target == "market":
+        gain *= 0.6
+    after = min(1.0, round(cur + gain, 2))
+    gs.scout_progress[target] = after
+    if after >= 1.0 and cur < 1.0:
+        label = (
+            "the free-agent market"
+            if target == "market"
+            else gs.teams[target].name
+        )
+        gs.push_news(f"Scouting report on {label} complete.")
 
 
 def _update_world_ranks(gs: GameState) -> None:

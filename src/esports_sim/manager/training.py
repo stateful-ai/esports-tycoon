@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from esports_sim.manager import development
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.attributes import AttributeCategory
 
@@ -35,6 +36,17 @@ def growth_rate(age: int) -> float:
     return 0.08
 
 
+def _player_rate(p: Player) -> float:
+    """Age curve × the EHM layer: CA→PA headroom and traits. A player at
+    their ceiling maintains; a raw prospect flies; late bloomers keep a
+    floor under the age curve into their late twenties."""
+    base = growth_rate(p.age)
+    floor = development.trait_value(p, "growth_floor", 0.0)
+    if floor > 0 and p.age <= development.decline_age(p) - 1:
+        base = max(base, floor)
+    return base * development.dev_multiplier(p)
+
+
 def apply_training(
     team: Team,
     roster: list[Player],
@@ -57,7 +69,7 @@ def apply_training(
 
     attrs = _CATEGORY_ATTRS.get(focus, _CATEGORY_ATTRS["tactical"])
     for p in roster:
-        rate = growth_rate(p.age)
+        rate = _player_rate(p)
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.
@@ -75,6 +87,13 @@ def apply_training(
         team.chemistry = min(100.0, team.chemistry + 1.2)
         for p in roster:
             p.morale = min(100.0, p.morale + 0.5)
+
+    # Locker-room gravity: leaders pull chemistry up a little every week.
+    chem_regen = sum(
+        development.trait_value(p, "chem_regen", 0.0) for p in roster
+    )
+    if chem_regen > 0:
+        team.chemistry = round(min(100.0, team.chemistry + chem_regen), 1)
 
 
 def ai_pick_focus(roster: list[Player], rng: np.random.Generator) -> str:
@@ -95,10 +114,13 @@ def ai_pick_focus(roster: list[Player], rng: np.random.Generator) -> str:
 
 
 def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
-    """One year older: young players get a bump, veterans decline."""
+    """One year older: young players get a bump, veterans decline. The
+    turn happens at a trait-driven age — prodigies burn out at 26, late
+    bloomers hold their peak until 31."""
     p.age += 1
-    if p.age >= 28:
-        decline = (p.age - 27) * 0.8
+    turn = development.decline_age(p)
+    if p.age >= turn:
+        decline = (p.age - (turn - 1)) * 0.8
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
             p.attributes[attr_id] = round(
                 max(1.0, p.attr(attr_id) - decline * float(rng.uniform(0.7, 1.3))), 2
@@ -107,9 +129,10 @@ def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
         for attr_id in ("game_sense", "composure"):
             p.attributes[attr_id] = round(min(99.0, p.attr(attr_id) + 0.4), 2)
     elif p.age <= 22:
+        cap = development.potential_of(p) + 3.0  # PA gates the bump too
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
             p.attributes[attr_id] = round(
-                min(99.0, p.attr(attr_id) + float(rng.uniform(0.3, 1.2))), 2
+                min(99.0, cap, p.attr(attr_id) + float(rng.uniform(0.3, 1.2))), 2
             )
     # Fresh legs for the new season.
     p.stamina = max(p.stamina, 88.0)

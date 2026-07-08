@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import market, sponsors, staff as staff_mod, talk
+from esports_sim.manager import development, market, sponsors, staff as staff_mod, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -82,6 +82,27 @@ def _portrait_url(pid: str, role: str) -> str:
     return f"/assets/portraits/{role}_{_stable_idx(pid, PORTRAITS_PER_ROLE)}.webp"
 
 
+def _agent_icon_url(agent_id: str) -> str:
+    return f"/assets/agents/{agent_id}.webp"
+
+
+def _map_thumb_url(map_id: str) -> str:
+    return f"/assets/maps/{map_id}.webp"
+
+
+def _pick_agent_id(p: Player, gd: GameData) -> str:
+    """Highest-mastery agent the player knows; fall back to a role default.
+    Mirrors sim.engine.MatchEngine._pick_agent (kept in sync manually — the
+    web layer doesn't import sim internals) so the icon shown in a replay
+    matches the agent that was actually played."""
+    pool = sorted(p.agent_pool, key=lambda m: (-m.mastery, m.agent_id))
+    for m in pool:
+        if m.agent_id in gd.agents:
+            return m.agent_id
+    by_role = sorted(a.id for a in gd.agents.values() if a.role == p.role)
+    return by_role[0] if by_role else sorted(gd.agents)[0]
+
+
 def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -> float:
     """Scout-noised attribute. Deterministic per (campaign, player, attr):
     the same fog level always shows the same guess — reports don't jitter."""
@@ -120,7 +141,19 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
             {"agent_id": m.agent_id, "mastery": m.mastery}
             for m in sorted(p.agent_pool, key=lambda m: -m.mastery)
         ],
-        "personality": p.personality_tags if fog <= 0 else ["?"],
+        "personality": (
+            [
+                {"id": t, "blurb": development.TRAITS.get(t, {}).get("blurb", "")}
+                for t in p.personality_tags
+            ]
+            if fog <= 0
+            else [{"id": "?", "blurb": "scout to reveal"}]
+        ),
+        # Own club knows its players' ceilings; rivals' PA stays scouted-only.
+        "potential_stars": (
+            development.stars(development.potential_of(p)) if fog <= 0 else None
+        ),
+        "ca_stars": development.stars(overall),
         "is_free_agent": p.id in gs.free_agent_ids,
         "asking_salary": market.asking_salary(p),
         "portrait": _portrait_url(p.id, str(p.role)),
@@ -159,6 +192,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "team_a_name": gs.teams[f.team_a].name,
         "team_b_name": gs.teams[f.team_b].name,
         "maps": f.maps,
+        "map_thumbs": {mid: _map_thumb_url(mid) for mid in f.maps},
         "veto": f.veto,
         "played": f.played,
         "winner_id": f.winner_id,
@@ -166,6 +200,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "results": [
             {
                 "map_id": r.map_id,
+                "map_thumb": _map_thumb_url(r.map_id),
                 "score_a": r.score_a,
                 "score_b": r.score_b,
                 "winner_id": r.winner_id,
@@ -234,9 +269,13 @@ def state() -> dict:
             "news": list(reversed(gs.news[-12:])),
             "scout": {
                 "target": gs.scout_target,
-                "target_name": gs.teams[gs.scout_target].name
-                if gs.scout_target in gs.teams
-                else None,
+                "target_name": (
+                    "Free-agent market"
+                    if gs.scout_target == "market"
+                    else gs.teams[gs.scout_target].name
+                    if gs.scout_target in gs.teams
+                    else None
+                ),
                 "progress": gs.scout_progress.get(gs.scout_target or "", 0.0),
             },
             "standings_top": [
@@ -311,10 +350,25 @@ def market_view() -> dict:
             key=lambda p: -market.player_quality(p),
         )
         out = []
+        # Market fog: without market scouting you shop on rumor — banded
+        # ability, unknown ceiling. Reports tighten the view.
+        progress = gs.scout_progress.get("market", 0.0)
         for p in fas:
             ok, why = market.can_sign(gs, gs.user_team_id, p.id)
-            out.append({**_player_view(p, gs), "can_sign": ok, "block_reason": why})
-        return {"free_agents": out, "roster_size": market.ROSTER_SIZE}
+            view = _player_view(p, gs, fog=6.0 * (1.0 - progress))
+            report = development.scout_report(gs, p, progress)
+            view["scout"] = {
+                "ca_stars": report["ca_stars"],
+                "pa_stars": report["pa_stars"] if progress > 0 else None,
+                "traits": report["traits"],
+                "traits_hidden": report["traits_hidden"],
+            }
+            out.append({**view, "can_sign": ok, "block_reason": why})
+        return {
+            "free_agents": out,
+            "roster_size": market.ROSTER_SIZE,
+            "market_scouting": round(progress, 2),
+        }
 
 
 @app.get("/api/stats")
@@ -527,13 +581,58 @@ class ScoutBody(BaseModel):
 def scout(body: ScoutBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        if body.team_id not in gs.teams:
+        if body.team_id != "market" and body.team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
         if body.team_id == gs.user_team_id:
             raise HTTPException(422, "you already know your own team")
         gs.scout_target = body.team_id
         S.save()
-        return {"ok": True, "message": f"scout assigned to {gs.teams[body.team_id].name}"}
+        label = (
+            "the free-agent market"
+            if body.team_id == "market"
+            else gs.teams[body.team_id].name
+        )
+        return {"ok": True, "message": f"scout assigned to {label}"}
+
+
+@app.get("/api/scouting")
+def scouting_view() -> dict:
+    """The scout's desk: current assignment, progress, and report cards
+    (banded CA/PA stars, progressively revealed traits)."""
+    with S.lock:
+        gs = S.require_gs()
+        target = gs.scout_target
+        reports: list[dict] = []
+        if target == "market":
+            progress = gs.scout_progress.get("market", 0.0)
+            fas = sorted(
+                (gs.players[pid] for pid in gs.free_agent_ids),
+                key=lambda p: -development.potential_of(p),
+            )
+            reports = [development.scout_report(gs, p, progress) for p in fas]
+        elif target and target in gs.teams:
+            progress = gs.scout_progress.get(target, 0.0)
+            reports = [
+                development.scout_report(gs, p, progress)
+                for p in gs.roster(target)
+            ]
+        else:
+            progress = 0.0
+        return {
+            "target": target,
+            "target_name": (
+                "Free-agent market"
+                if target == "market"
+                else gs.teams[target].name if target in gs.teams else None
+            ),
+            "progress": round(progress, 2),
+            "reports": reports,
+            "teams": [
+                {"id": tid, "name": gs.teams[tid].name}
+                for tid in sorted(gs.teams)
+                if tid != gs.user_team_id
+            ],
+        }
 
 
 class PlayerBody(BaseModel):
@@ -684,7 +783,13 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for pid in gs.teams[tid].player_ids:
                 p = gs.players.get(pid)
                 if p:
-                    players[pid] = {"handle": p.handle, "team_id": tid}
+                    agent_id = _pick_agent_id(p, S.gd)
+                    players[pid] = {
+                        "handle": p.handle,
+                        "team_id": tid,
+                        "agent_id": agent_id,
+                        "agent_icon": _agent_icon_url(agent_id),
+                    }
         # Ability flags so the viewer can render utility (smoke vs flash…).
         abilities = {
             ab.id: {

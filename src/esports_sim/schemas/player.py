@@ -50,6 +50,10 @@ class Player(BaseModel):
     agent_pool: list[AgentMastery] = Field(default_factory=list)
     map_pool: list[MapMastery] = Field(default_factory=list)
 
+    # Hidden ceiling (EHM-style Potential Ability, 1-99 like attributes).
+    # 0 = not assigned; manager/development.py derives a stable fallback.
+    potential: float = Field(default=0.0, ge=0.0, le=99.0)
+
     # Career / contract
     salary: int = 0  # per week
     contract_weeks_left: int = 0

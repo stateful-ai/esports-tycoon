@@ -83,7 +83,7 @@ function render() {
   // finishes into a detached node instead of double-appending.
   const container = el("div");
   $("#view").replaceChildren(container);
-  ({ dashboard, roster, standings, schedule, market, stats, finances })[App.tab](container);
+  ({ dashboard, roster, standings, schedule, market, scouting, stats, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -97,6 +97,23 @@ function bar(value, opts = {}) {
 
 function stylePill(p) {
   return `<span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span>`;
+}
+
+// `sm` gives a 20px chip for inline use in buttons/veto text; the default
+// (no cls) is the 40px card-style thumbnail. Hides itself on 404 so a
+// missing asset degrades to just the map name instead of a broken-image box.
+function mapThumb(mapId, cls = "") {
+  return `<img class="map-thumb ${cls}" src="/assets/maps/${mapId}.webp" alt="${mapId}" onerror="this.style.display='none'">`;
+}
+
+// EHM-style star band: "★★★½–★★★★" for [3.5, 4]; single value collapses.
+function starsRange(band) {
+  if (!band) return `<span class="muted">unknown</span>`;
+  const one = (v) => "★".repeat(Math.floor(v)) + (v % 1 >= 0.5 ? "½" : "");
+  const [lo, hi] = band;
+  return `<span class="stars" title="${lo}–${hi} of 5">${one(lo)}${
+    hi > lo ? "–" + one(hi) : ""
+  }</span>`;
 }
 
 /* -- screens --------------------------------------------------------------------- */
@@ -121,7 +138,9 @@ function dashboard(v) {
     const f = s.next_fixture;
     next.innerHTML = `<h2>This week — ${f.stage} (BO${f.best_of})</h2>
       <p><b>${f.team_a_name}</b> vs <b>${f.team_b_name}</b></p>
-      <p class="muted">maps: ${f.maps.join(", ")}</p>`;
+      <div class="row" style="flex-wrap:wrap"><span class="muted">maps:</span> ${f.maps
+        .map((m) => `${mapThumb(m)}<span class="muted" style="margin-right:8px">${m}</span>`)
+        .join("")}</div>`;
   } else {
     next.innerHTML = `<h2>This week</h2><p class="muted">No fixture — ${s.phase}.</p>`;
   }
@@ -198,6 +217,7 @@ async function roster(v) {
   const t = el("table");
   t.innerHTML = `<thead><tr>
     <th>Player</th><th>Role</th><th class="num">Age</th><th class="num">OVR</th>
+    <th>Ceiling</th>
     <th>Form</th><th>Morale</th><th>Stamina</th>
     <th class="num">Salary</th><th class="num">Contract</th><th></th></tr></thead>`;
   const tb = el("tbody");
@@ -214,6 +234,7 @@ async function roster(v) {
       <td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
+      <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
       <td>${bar(p.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>
@@ -294,7 +315,14 @@ function attrDetail(p) {
     <table><tbody>${rows}</tbody></table>
     <div>
       <p class="muted">agents: ${agents || "—"}</p>
-      <p class="muted">personality: ${p.personality.join(", ") || "—"}</p>
+      <p class="muted">personality: ${
+        (p.personality || [])
+          .map((t) => `<span class="pill" title="${t.blurb || ""}">${t.id}</span>`)
+          .join(" ") || "—"
+      }</p>
+      ${p.potential_stars != null
+        ? `<p class="muted">ability: ${starsRange([p.ca_stars, p.ca_stars])} now · ${starsRange([p.potential_stars, p.potential_stars])} ceiling</p>`
+        : ""}
       <p class="muted">asking salary next deal: ${money(p.asking_salary)}/wk</p>
     </div></div>`;
 }
@@ -395,7 +423,7 @@ async function schedule(v) {
         const r = f.results[i];
         const b = el(
           "button", "btn btn-sm",
-          `${r.map_id} ${r.score_a}–${r.score_b}${r.has_replay ? " ▶" : ""}`
+          `${mapThumb(r.map_id, "sm")}${r.map_id} ${r.score_a}–${r.score_b}${r.has_replay ? " ▶" : ""}`
         );
         b.disabled = !r.has_replay;
         b.title = r.has_replay ? "watch replay" : "replay only kept for the latest week";
@@ -404,8 +432,13 @@ async function schedule(v) {
       }
       card.appendChild(line);
       if (f.veto.length) {
-        card.appendChild(el("div", "muted",
-          `<small>veto: ${f.veto.join(" · ")}</small>`));
+        const vetoRow = el("div", "veto-row");
+        vetoRow.appendChild(el("span", "muted", "veto:"));
+        for (const entry of f.veto) {
+          const mapId = entry.trim().split(" ").pop();
+          vetoRow.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${entry}`));
+        }
+        card.appendChild(vetoRow);
       }
     }
     v.appendChild(card);
@@ -415,15 +448,24 @@ async function schedule(v) {
 async function market(v) {
   const data = await api("/api/market");
   const card = el("div", "card");
-  card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>`;
+  card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>` +
+    (data.market_scouting < 1
+      ? `<p class="muted">Market coverage ${Math.round(data.market_scouting * 100)}% —
+         numbers below are estimates${data.market_scouting === 0 ? "; assign your scout to the market to see ceilings" : ""}.</p>`
+      : "");
   const t = el("table");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
-    <th class="num">OVR</th><th class="num">Asking</th><th></th></tr></thead>`;
+    <th class="num">OVR</th><th>Ability</th><th>Ceiling</th>
+    <th class="num">Asking</th><th></th></tr></thead>`;
   const tb = el("tbody");
   for (const p of data.free_agents) {
+    const fogged = p.fog > 0;
     const tr = el("tr", "", `
       <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b></td><td>${stylePill(p)}</td>
-      <td class="num">${p.age}</td><td class="num">${p.overall}</td>
+      <td class="num">${p.age}</td>
+      <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
+      <td>${starsRange(p.scout?.ca_stars)}</td>
+      <td>${starsRange(p.scout?.pa_stars)}</td>
       <td class="num">${money(p.asking_salary)}/wk</td>
       <td><button class="btn btn-sm" ${p.can_sign ? "" : "disabled"}
         title="${p.block_reason || "sign to a 40-week deal"}">Sign</button></td>`);
@@ -436,7 +478,7 @@ async function market(v) {
     tr.onclick = (e) => {
       if (e.target.tagName === "BUTTON") return;
       if (detail) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="6">${attrDetail(p)}</td>`);
+      detail = el("tr", "", `<td colspan="8">${attrDetail(p)}</td>`);
       tr.after(detail);
     };
     tb.appendChild(tr);
@@ -444,6 +486,74 @@ async function market(v) {
   t.appendChild(tb);
   card.appendChild(t);
   v.appendChild(card);
+}
+
+async function scouting(v) {
+  const data = await api("/api/scouting");
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Scouting desk</h2>`;
+  const row = el("div", "row");
+  const sel = el("select");
+  sel.appendChild(el("option", "", "— assign the scout —"));
+  const mkt = el("option", "", "Free-agent market");
+  mkt.value = "market";
+  if (data.target === "market") mkt.selected = true;
+  sel.appendChild(mkt);
+  for (const t of data.teams) {
+    const o = el("option", "", t.name);
+    o.value = t.id;
+    if (t.id === data.target) o.selected = true;
+    sel.appendChild(o);
+  }
+  sel.onchange = async () => {
+    if (!sel.value) return;
+    const r = await api("/api/actions/scout", { team_id: sel.value });
+    toast(r.message);
+    render();
+  };
+  row.appendChild(sel);
+  if (data.target) {
+    row.appendChild(el("span", "muted",
+      `coverage: ${Math.round(data.progress * 100)}%`));
+  }
+  card.appendChild(row);
+  if (!data.target) {
+    card.appendChild(el("p", "muted",
+      "Nobody is being watched. Reports on rivals reveal ability bands; " +
+      "market coverage exposes free agents' ceilings before you pay for them."));
+  }
+  v.appendChild(card);
+
+  if (data.reports.length) {
+    const rc = el("div", "card");
+    rc.innerHTML = `<h2>Reports — ${data.target_name}</h2>`;
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
+      <th>Ability</th><th>Ceiling</th><th>Character</th><th>Read</th></tr></thead>`;
+    const tb = el("tbody");
+    for (const r of data.reports) {
+      const traits = r.traits
+        .map((t) => `<span class="pill" title="${t.blurb}">${t.id}</span>`)
+        .join(" ") +
+        (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden}?</span>` : "");
+      const read = r.strengths.length
+        ? `<span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
+          (r.weaknesses.length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") +
+          `</span>`
+        : `<span class="muted">needs more time</span>`;
+      tb.appendChild(el("tr", "", `
+        <td><b>${r.handle}</b></td>
+        <td><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span></td>
+        <td class="num">${r.age}</td>
+        <td>${starsRange(r.ca_stars)}</td>
+        <td>${starsRange(r.pa_stars)}</td>
+        <td>${traits || '<span class="muted">—</span>'}</td>
+        <td>${read}</td>`));
+    }
+    t.appendChild(tb);
+    rc.appendChild(t);
+    v.appendChild(rc);
+  }
 }
 
 async function stats(v) {

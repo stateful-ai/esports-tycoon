@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from esports_sim.manager import development
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState
 from esports_sim.schemas import Player
@@ -29,13 +30,15 @@ def player_quality(p: Player) -> float:
 
 def asking_salary(p: Player) -> int:
     """What a free agent wants per week. Age discounts the very young
-    (prove-it deals) and the old (last contracts)."""
+    (prove-it deals) and the old (last contracts); mercenaries charge a
+    premium, loyal players take a hometown number."""
     q = player_quality(p)
     base = (q ** 1.6) * 6 / 100
     if p.age <= 19:
         base *= 0.8
     elif p.age >= 29:
         base *= 0.75
+    base *= development.trait_value(p, "salary_mult", 1.0)
     return max(1_200, int(np.round(base / 100) * 100))
 
 

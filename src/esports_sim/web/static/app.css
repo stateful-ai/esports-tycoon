@@ -105,6 +105,19 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
   vertical-align: middle; margin-right: 8px;
   border: 1px solid var(--es-color-border-primary, #262a35);
 }
+.map-thumb {
+  width: 40px; height: 40px; border-radius: var(--es-radius-md, 6px);
+  object-fit: cover; vertical-align: middle; margin-right: 6px;
+  border: 1px solid var(--es-color-border-primary, #262a35);
+}
+.map-thumb.sm { width: 20px; height: 20px; border-radius: 4px; margin-right: 4px; }
+.veto-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 4px; }
+.veto-chip {
+  display: inline-flex; align-items: center;
+  font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #9aa3b5);
+}
+
+.stars { color: var(--es-color-text-warning, #e5a53a); letter-spacing: .04em; white-space: nowrap; }
 
 .pill {
   display: inline-block; padding: 1px 7px; border-radius: var(--es-radius-full, 99px);
@@ -279,6 +292,22 @@ svg.iso .plabel { font-size: 3.4px; }
 .pdot.a { fill: var(--es-color-side-attack, #ff8f4d); }
 .pdot.b { fill: var(--es-color-side-defense, #52a9ff); }
 .pdot.dead { opacity: .28; }
+
+/* Agent-icon dot: a team-colored ring behind a circular-clipped icon
+   image. Same transition treatment as .pdot so movement stays smooth. */
+.pdot-ring {
+  fill: var(--es-color-bg-sunken, #0b0d12);
+  stroke-width: .6;
+  transition: cx var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    cy var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.pdot-ring.a { stroke: var(--es-color-side-attack, #ff8f4d); }
+.pdot-ring.b { stroke: var(--es-color-side-defense, #52a9ff); }
+.pdot-icon {
+  pointer-events: none;
+  transition: x var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    y var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
 .plabel {
   font-size: 2.4px; fill: var(--es-color-text-primary, #e6e9f0); text-anchor: middle; pointer-events: none;
   transition: x var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
