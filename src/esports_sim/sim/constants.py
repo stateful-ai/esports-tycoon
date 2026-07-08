@@ -54,6 +54,20 @@ KILLER_REPOSITION_PROB = 0.5
 INFO_ROTATE_BONUS = 4  # ticks shaved off every rotator's delay
 
 # ---------------------------------------------------------------------------
+# Micro texture: whiffed utility and comms quality
+
+# Chance a thrown basic ability just misses its lineup (scaled by the
+# thrower's utility_usage — a 55 thrower whiffs ~5%, a 30 thrower ~15%).
+UTIL_FAIL_BASE = 0.05
+UTIL_FAIL_MAX = 0.30
+# Team comms on rotations: below the threshold, calls can cross and the
+# whole rotation stalls; above the high bar, the call is clean (flavor).
+MISCOMM_COMMS_THRESHOLD = 62.0
+MISCOMM_MAX_PROB = 0.35
+MISCOMM_DELAY = 5  # extra ticks on every rotator when comms cross
+CALL_COMMS_THRESHOLD = 72.0
+
+# ---------------------------------------------------------------------------
 # Map gimmicks (rotating doors, teleporters, breakable doors)
 
 TELEPORT_TICKS = 3  # in-transit time; no fighting mid-teleport

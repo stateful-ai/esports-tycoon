@@ -22,6 +22,8 @@ from esports_sim.schemas.events import (
     UtilityUsedEvent,
     MoveEvent,
     GimmickUsedEvent,
+    WhiffEvent,
+    CommsEvent,
     EventUnion,
 )
 
@@ -64,5 +66,7 @@ __all__ = [
     "UtilityUsedEvent",
     "MoveEvent",
     "GimmickUsedEvent",
+    "WhiffEvent",
+    "CommsEvent",
     "EventUnion",
 ]

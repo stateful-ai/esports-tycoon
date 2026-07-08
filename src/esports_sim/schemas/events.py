@@ -121,6 +121,29 @@ class UtilityUsedEvent(Event):
     player_id: str
     ability_id: str
     target_callout: str | None = None
+    # A whiffed lineup: charge spent, no effect (low utility_usage).
+    failed: bool = False
+
+
+class WhiffEvent(Event):
+    """A duel where the opening shots missed — both players live and
+    reposition. Pure texture for the feed/viewer; no reward impact."""
+
+    type: Literal["round.whiff"] = "round.whiff"
+    a_id: str
+    b_id: str
+    x: float | None = None
+    y: float | None = None
+
+
+class CommsEvent(Event):
+    """Team communication moment: a clean rotate call, or crossed comms
+    that stall the rotation. `player_id` is the voice on the call."""
+
+    type: Literal["round.comms"] = "round.comms"
+    team_id: str
+    player_id: str
+    kind: str  # call | miscomm
 
 
 class GimmickUsedEvent(Event):
@@ -175,6 +198,8 @@ EventUnion = Annotated[
         UtilityUsedEvent,
         MoveEvent,
         GimmickUsedEvent,
+        WhiffEvent,
+        CommsEvent,
     ],
     Field(discriminator="type"),
 ]

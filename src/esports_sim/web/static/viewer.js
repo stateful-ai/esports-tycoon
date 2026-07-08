@@ -22,6 +22,7 @@ function parseReplay(data) {
         cur = {
           num: e.round_num, attacker: e.attacking_team_id,
           placements: {}, placeXY: {}, moves: {}, kills: [], utility: [],
+          whiffs: [], comms: [],
           gimmicks: [], closedDoors: new Set(e.closed_doors || []),
           plant: null, defuse: null, end: null,
           scoreBefore: [scoreA, scoreB], maxTick: 1,
@@ -54,6 +55,14 @@ function parseReplay(data) {
         break;
       case "round.utility_used":
         cur.utility.push(e);
+        cur.maxTick = Math.max(cur.maxTick, e.tick);
+        break;
+      case "round.whiff":
+        cur.whiffs.push(e);
+        cur.maxTick = Math.max(cur.maxTick, e.tick);
+        break;
+      case "round.comms":
+        cur.comms.push(e);
         cur.maxTick = Math.max(cur.maxTick, e.tick);
         break;
       case "round.gimmick":
@@ -321,6 +330,22 @@ function drawGimmicks(round, t) {
   }
 }
 
+// Whiffed duels: a brief spark where the shots crossed and missed.
+function drawWhiffs(round, t) {
+  for (const w of round.whiffs ?? []) {
+    const age = t - w.tick;
+    if (age < 0 || age > 3 || w.x == null) continue;
+    const p = gpoint(w.x, w.y, 0);
+    const fade = 1 - age / 3;
+    const r = S(0.9 + age * 0.4);
+    V.dyn.appendChild(svgEl("path", {
+      d: `M${p[0] - r} ${p[1]} L${p[0] + r} ${p[1]} M${p[0]} ${p[1] - r} L${p[0]} ${p[1] + r}`,
+      class: "whiff-mark", opacity: (fade * 0.7).toFixed(2),
+      transform: `rotate(45 ${p[0]} ${p[1]})`,
+    }));
+  }
+}
+
 // Brief fading ring at the death spot, same math-driven approach as above.
 function drawKillFlashes(round, t) {
   for (const k of round.kills) {
@@ -571,6 +596,7 @@ function drawFrame() {
   // V.dyn in the DOM) render on top of them.
   drawGimmicks(round, t);
   drawKillFlashes(round, t);
+  drawWhiffs(round, t);
   drawUtilityMarkers(round, t);
 
   // Spike — persistent element, updated in place so its CSS pulse animation
@@ -687,9 +713,24 @@ function drawFrame() {
         const ability = abilities[u.ability_id];
         const kind = abilityKind(ability);
         const name = ability?.name ?? u.ability_id;
+        const line = u.failed
+          ? `${pn} <span class="muted">whiffs ${name} — no effect</span>`
+          : `${pn} used <span class="muted">${name}</span>`;
         return {
           tick: u.tick,
-          html: `<div class="u"><span class="u-chip u-${kind}"></span>${pn} used <span class="muted">${name}</span></div>`,
+          html: `<div class="u${u.failed ? " dim" : ""}"><span class="u-chip u-${kind}"></span>${line}</div>`,
+        };
+      }))
+    .concat((round.comms ?? [])
+      .filter((c) => c.tick <= t)
+      .map((c) => {
+        const pn = V.players[c.player_id]?.handle ?? c.player_id;
+        const line = c.kind === "miscomm"
+          ? `<b>${pn}</b> crosses the comms — rotation stalls`
+          : `<b>${pn}</b> calls the rotate clean`;
+        return {
+          tick: c.tick,
+          html: `<div class="u comms"><span class="u-chip u-comms"></span>${line}</div>`,
         };
       }))
     .concat(round.gimmicks

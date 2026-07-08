@@ -358,6 +358,10 @@ svg.iso .plabel { font-size: 3.4px; }
 
 /* -- finances tab: sponsor slots + facilities (M4) ------------------------- */
 
+.whiff-mark { stroke: var(--es-color-text-tertiary, #8a8f9e); stroke-width: .5; fill: none; }
+.u.dim { opacity: .55; }
+.u-chip.u-comms { background: var(--es-color-info, #4aa8ff); }
+
 .pill.obj { font-size: 10px; opacity: .9; }
 .pill.obj.good { color: var(--es-color-success, #3fb68b); }
 .pill.obj.bad { color: var(--es-color-danger, #ff4655); }

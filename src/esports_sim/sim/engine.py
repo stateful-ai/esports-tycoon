@@ -1,14 +1,14 @@
-"""Tick-level match engine.
+﻿"""Tick-level match engine.
 
 The engine is the *coach and referee*: it decides team-level strategy
 (site calls, go timing, rotations), hands each player a per-player order,
 and consults that player's `PlayerPolicy` to turn orders into concrete
-actions. It also resolves everything physical — movement, duels, utility,
-the spike — and emits typed events.
+actions. It also resolves everything physical â€” movement, duels, utility,
+the spike â€” and emits typed events.
 
 Determinism contract: every random draw comes from a per-round generator
 derived from (match, round) labels on the RngTree, and all iteration is in
-sorted order. Same seed → byte-identical event log (see
+sorted order. Same seed â†’ byte-identical event log (see
 tests/test_determinism.py).
 """
 
@@ -47,7 +47,9 @@ from esports_sim.schemas import (
     UtilityUsedEvent,
 )
 from esports_sim.rng.tree import RngTree
+from esports_sim.schemas import CommsEvent, WhiffEvent
 from esports_sim.schemas.map import CalloutZone, Site
+from esports_sim.schemas.traits import trait_value
 from esports_sim.sim import constants as C
 
 
@@ -178,7 +180,13 @@ class _MatchSim:
         df_rng = self.rng_tree.derive("match", self.match_id, "day_form")
         self.day_form: dict[str, float] = {}
         for pid in sorted(self.p):
-            sigma = 12.0 - self._player(pid).attr("composure") / 20.0
+            pl = self._player(pid)
+            # Volatile personalities swing harder day to day; ice runs flat.
+            sigma = (
+                12.0
+                - pl.attr("composure") / 20.0
+                + trait_value(pl, "day_sigma", 0.0)
+            )
             self.day_form[pid] = float(
                 np.clip(df_rng.normal(0.0, max(sigma, 2.5)), -18.0, 18.0)
             )
@@ -200,7 +208,7 @@ class _MatchSim:
         self._retake_popped = False
         self._info_rotate_used = False
         self._doors_closed: set[str] = set()
-        # (gimmick, mover_team, dest_room, x, y) — resolved in the tick loop.
+        # (gimmick, mover_team, dest_room, x, y) â€” resolved in the tick loop.
         self._pending_sounds: list[tuple] = []
 
     # -- setup helpers -----------------------------------------------------
@@ -238,7 +246,7 @@ class _MatchSim:
 
     def _entry_callouts(self, site: str) -> list[str]:
         """Attacker-side / mid callouts adjacent to the site's site-zone
-        callouts — where an execute stages."""
+        callouts â€” where an execute stages."""
         entries: set[str] = set()
         for sc in self._site_callouts(site):
             for nb in self.map.neighbors(sc):
@@ -249,7 +257,7 @@ class _MatchSim:
 
     def _holder_spots(self, site: str) -> list[str]:
         """Defense-advantaged callouts overlooking the site. Only
-        defender-side ground counts — a "holder spot" on an attacker-side
+        defender-side ground counts â€” a "holder spot" on an attacker-side
         callout would park a lone defender in the path of five attackers."""
         spots: set[str] = set()
         sites = set(self._site_callouts(site))
@@ -535,7 +543,7 @@ class _MatchSim:
         while winner is None:
             tick += 1
 
-            # Timer checks first: no completed plant → time win for defense.
+            # Timer checks first: no completed plant â†’ time win for defense.
             if not spike_planted and tick > C.ROUND_TICKS:
                 winner, reason = dfn, "time"
                 break
@@ -554,7 +562,7 @@ class _MatchSim:
 
             # -- defensive lean ---------------------------------------------------
             # Five bodies staging at one site's entries is loud. The best
-            # communicator off-site leans over early — one rotator, not a
+            # communicator off-site leans over early â€” one rotator, not a
             # full commit (fakes would punish that, once they exist).
             if not went and not lean_done and not spike_planted:
                 entry_set = set(self._entry_callouts(target_site))
@@ -569,7 +577,7 @@ class _MatchSim:
                     ]
                     if on_site_dfn:
                         self._execute_utility(
-                            on_site_dfn, tick, seed_path, flash_side="attack"
+                            on_site_dfn, tick, seed_path, flash_side="attack", rng=rng
                         )
                     off_site = [
                         q
@@ -598,7 +606,7 @@ class _MatchSim:
 
             # -- go decision ------------------------------------------------------
             # The hit waits for bodies in position (utility popped while
-            # half the team is mid-corridor is wasted) — but never past
+            # half the team is mid-corridor is wasted) â€” but never past
             # the force-go point.
             staged_ready = True
             if not went and tick >= go_tick and alive_atk:
@@ -629,7 +637,7 @@ class _MatchSim:
                         go_tick = tick + 12
                         continue
                 went = True
-                self._execute_utility(alive_atk, tick, seed_path, flash_side="defense")
+                self._execute_utility(alive_atk, tick, seed_path, flash_side="defense", rng=rng)
                 site_cs = self._site_callouts(target_site)
                 for i, q in enumerate(alive_atk):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
@@ -720,7 +728,7 @@ class _MatchSim:
                     if sound_site in sites:
                         self._schedule_rotations(
                             tick, defenders, defender_site, sound_site,
-                            rotate_at, seed_path,
+                            rotate_at, seed_path, rng,
                         )
             self._pending_sounds.clear()
 
@@ -787,7 +795,7 @@ class _MatchSim:
                 ]
                 if on_site_dfn:
                     stall_power = self._execute_utility(
-                        on_site_dfn, tick, seed_path, flash_side="attack"
+                        on_site_dfn, tick, seed_path, flash_side="attack", rng=rng
                     )
                     # Defensive util STALLS the hit: mollies and setups
                     # make attackers path around, buying rotation time.
@@ -798,7 +806,7 @@ class _MatchSim:
                     # Fallback: badly outnumbered site defenders break
                     # contact and rally instead of dying in the crossfire.
                     # The post-plant grouped retake then arrives with
-                    # numbers — that's the asymmetry that keeps defense
+                    # numbers â€” that's the asymmetry that keeps defense
                     # in the round.
                     if len(alive_atk) - len(on_site_dfn) >= C.FALLBACK_OUTNUMBER:
                         for q in on_site_dfn:
@@ -806,6 +814,7 @@ class _MatchSim:
                             p_fall = (
                                 C.FALLBACK_BASE_PROB
                                 + (pl.attr("game_sense") - 50.0) / 150.0
+                                + trait_value(pl, "fallback_bonus", 0.0)
                             )
                             if rng.random() < p_fall:
                                 qs = self.p[q]
@@ -816,11 +825,12 @@ class _MatchSim:
 
             # -- rotations ---------------------------------------------------------------------------------
             # Defenders react to the *execute* (utility popping is loud),
-            # not to first blood — waiting for a site kill meant rotators
+            # not to first blood â€” waiting for a site kill meant rotators
             # always arrived post-plant and the defense never held.
             if went and not spike_planted:
                 self._schedule_rotations(
-                    tick, defenders, defender_site, target_site, rotate_at, seed_path
+                    tick, defenders, defender_site, target_site, rotate_at,
+                    seed_path, rng,
                 )
 
         # -- round end --------------------------------------------------------------
@@ -892,7 +902,7 @@ class _MatchSim:
     def _slot_for(self, pid: str, room: str, prefer: str) -> tuple[float, float]:
         """Deterministic tactical spot in a room. Holders gravitate to
         cover and doorway angles; entries spread out. Hash-spread so five
-        players don't stack on one crate (never Python's `hash` — it's
+        players don't stack on one crate (never Python's `hash` â€” it's
         salted per process and would break replay determinism)."""
         slots = self._slots.get(room)
         if not slots:
@@ -952,7 +962,7 @@ class _MatchSim:
         )
 
     def _speed(self, pid: str) -> float:
-        """Grid units per tick — quick players rotate meaningfully faster."""
+        """Grid units per tick â€” quick players rotate meaningfully faster."""
         return C.PLAYER_SPEED * (0.9 + self._player(pid).attr("movement") / 500.0)
 
     def _path_pts(
@@ -979,7 +989,7 @@ class _MatchSim:
         ticks = max(C.MIN_MOVE_TICKS, round(self._poly_len(pts) / self._speed(ps.pid)))
 
         # Map gimmicks on this edge: teleporters beat walking, doors cost
-        # time — and everything mechanical is LOUD.
+        # time â€” and everything mechanical is LOUD.
         gimmick = self._gimmicks.get(frozenset((ps.callout, dest)))
         if gimmick is not None:
             if gimmick.type == GimmickType.TELEPORTER:
@@ -1120,7 +1130,7 @@ class _MatchSim:
                     self._order(carrier, "plant")
         else:
             # Post-plant: attackers take stable crossfire spots and hold.
-            # Assignments are sticky — constant re-shuffling would keep
+            # Assignments are sticky â€” constant re-shuffling would keep
             # everyone mid-move and forfeit holder advantage.
             if planted_at is not None:
                 spots = [planted_at] + sorted(self.map.neighbors(planted_at))
@@ -1133,7 +1143,7 @@ class _MatchSim:
 
         if spike_planted and planted_at is not None:
             # Retake or save? Outnumbered defenders (or ones who can no
-            # longer make it in time) save weapons and concede — that's
+            # longer make it in time) save weapons and concede â€” that's
             # how attackers win by detonation. Retakers group up one edge
             # out and enter together instead of feeding one by one.
             near = [
@@ -1284,9 +1294,11 @@ class _MatchSim:
         tick: int,
         seed_path: tuple[str, ...],
         flash_side: str,
+        rng: np.random.Generator | None = None,
     ) -> float:
         """Coarse execute/retake: everyone throws their best util; total
-        power becomes a temporary duel bonus. Charged ults pop for extra."""
+        power becomes a temporary duel bonus. Charged ults pop for extra.
+        Sloppy throwers WHIFF lineups â€” charge spent, no effect."""
         power = 0.0
         smoked = False
         flashed = False
@@ -1296,13 +1308,25 @@ class _MatchSim:
             ab = self._best_ability(ps)
             if ab is not None:
                 ps.charges[ab.id] -= 1
-                power += self._ability_power(ab) * (pl.attr("utility_usage") / 100.0)
-                smoked = smoked or ab.blocks_sight
-                flashed = flashed or ab.flashes
+                fail_p = min(
+                    C.UTIL_FAIL_MAX,
+                    max(
+                        0.03,
+                        C.UTIL_FAIL_BASE
+                        + (55.0 - pl.attr("utility_usage")) / 250.0,
+                    ),
+                )
+                failed = rng is not None and rng.random() < fail_p
+                if not failed:
+                    power += self._ability_power(ab) * (
+                        pl.attr("utility_usage") / 100.0
+                    )
+                    smoked = smoked or ab.blocks_sight
+                    flashed = flashed or ab.flashes
                 self._emit(
                     UtilityUsedEvent(
                         tick=tick, seed_path=seed_path,
-                        player_id=pid, ability_id=ab.id,
+                        player_id=pid, ability_id=ab.id, failed=failed,
                     )
                 )
             ult = next(
@@ -1405,12 +1429,12 @@ class _MatchSim:
         if not on_spike:
             return
         # Retake utility pops the moment the first defender reaches the
-        # spike — and the attackers answer with their remaining lineups,
+        # spike â€” and the attackers answer with their remaining lineups,
         # so the post-plant is a util battle, not a free defender win.
         if not self._retake_popped:
             self._retake_popped = True
-            self._execute_utility(sorted(alive_dfn), tick, seed_path, flash_side="attack")
-            self._execute_utility(sorted(alive_atk), tick, seed_path, flash_side="defense")
+            self._execute_utility(sorted(alive_dfn), tick, seed_path, flash_side="attack", rng=rng)
+            self._execute_utility(sorted(alive_atk), tick, seed_path, flash_side="defense", rng=rng)
         defuser = sorted(on_spike)[0]
         # Post-plant denial: attackers' damage util can kill the defuser.
         denial_power = 0.0
@@ -1446,7 +1470,7 @@ class _MatchSim:
         if pl.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
             p += C.PEEK_PROB_AGGRO
         p += max(0.0, pl.attr("aim_reactivity") - 60.0) / 2000.0
-        return p
+        return p * trait_value(pl, "peek_mult", 1.0)
 
     def _flash_ability(self, ps: _PState) -> Ability | None:
         for ab in self.gd.agents[ps.agent_id].abilities:
@@ -1461,7 +1485,7 @@ class _MatchSim:
         seed_path: tuple[str, ...],
         rng: np.random.Generator,
     ) -> None:
-        """Shuffle a few units within the current room — toward another
+        """Shuffle a few units within the current room â€” toward another
         slot (cover) when one is in range, otherwise a short strafe.
         Emits a real MoveEvent so replays show the fight footwork."""
         if not ps.alive or ps.busy:
@@ -1615,7 +1639,7 @@ class _MatchSim:
                 if a_pid in engaged or d_pid in engaged:
                     continue
                 # Disengage grace: a player falling back has broken
-                # contact — neither side gets the duel.
+                # contact â€” neither side gets the duel.
                 if pa.no_engage_until >= tick or pd.no_engage_until >= tick:
                     continue
                 # A shut door between the two rooms blocks everything.
@@ -1632,7 +1656,7 @@ class _MatchSim:
                 same = pa.callout == pd.callout
                 p_engage = C.ENGAGE_PROB_SAME_CALLOUT if same else C.ENGAGE_PROB
                 # Positional line of sight: a full-height box between the
-                # two ACTUAL positions breaks the angle — even inside one
+                # two ACTUAL positions breaks the angle â€” even inside one
                 # room (dancing around the mid box).
                 angle_broken = self._geo is not None and self._geo.los_blocked_at(
                     pa.x, pa.y, pd.x, pd.y
@@ -1657,7 +1681,7 @@ class _MatchSim:
                         p_engage = 1.0
                     else:
                         # Pre-commit pokes stay rare on purpose: raising
-                        # this was tried and RAISED attack rates —
+                        # this was tried and RAISED attack rates â€”
                         # symmetric attrition favors whichever side has
                         # more bodies to spend, i.e. the attackers pre-hit.
                         p_engage *= 0.05
@@ -1688,12 +1712,21 @@ class _MatchSim:
                             )
                         )
 
-                # Fizzle: nobody commits — both shuffle to new spots
+                # Fizzle: nobody commits â€” both shuffle to new spots
                 # (jiggle-peek bait doubles the odds of that).
                 fizzle = C.DUEL_FIZZLE_PROB * (
                     C.PEEK_FIZZLE_MULT if (peek_a or peek_d) else 1.0
                 )
                 if rng.random() < fizzle:
+                    # Shots traded, nobody drops â€” both live and shuffle.
+                    self._emit(
+                        WhiffEvent(
+                            tick=tick, seed_path=seed_path,
+                            a_id=a_pid, b_id=d_pid,
+                            x=round((pa.x + pd.x) / 2, 2),
+                            y=round((pa.y + pd.y) / 2, 2),
+                        )
+                    )
                     self._micro_move(pa, tick, seed_path, rng)
                     self._micro_move(pd, tick, seed_path, rng)
                     continue
@@ -1713,7 +1746,7 @@ class _MatchSim:
                 if angle_broken:
                     adv_a = adv_d = False  # can't hold an angle through a box
                 # The fight happens at the real distance between the two
-                # players — not between their rooms' centers.
+                # players â€” not between their rooms' centers.
                 duel_range = max(
                     2.0,
                     ((pa.x - pd.x) ** 2 + (pa.y - pd.y) ** 2) ** 0.5,
@@ -1825,6 +1858,7 @@ class _MatchSim:
             C.TRADE_BASE_PROB
             + (pl.attr("aim_reactivity") - 50.0) / 200.0
             + (pl.attr("game_sense") - 50.0) / 300.0
+            + trait_value(pl, "trade_bonus", 0.0)  # glue players refrag
         )
         if rng.random() < p_trade:
             self._kill(
@@ -1840,6 +1874,7 @@ class _MatchSim:
         target_site: str,
         rotate_at: dict[str, int],
         seed_path: tuple[str, ...],
+        rng: np.random.Generator | None = None,
     ) -> None:
         off_site = [
             q
@@ -1850,7 +1885,45 @@ class _MatchSim:
         ]
         if not off_site:
             return
-        # An initiator burning an info charge calls the hit early — the
+
+        # Comms quality decides whether the rotate call is clean. Crossed
+        # comms stall everyone; a sharp caller is pure feed flavor (the
+        # speed benefit already lives in each rotator's delay formula).
+        alive = [q for q in defenders if self.p[q].alive]
+        avg_comms = sum(
+            self._player(q).attr("comms_quality") for q in alive
+        ) / max(len(alive), 1)
+        caller = max(
+            alive, key=lambda q: (self._player(q).attr("comms_quality"), q)
+        )
+        miscomm_extra = 0
+        if rng is not None and avg_comms < C.MISCOMM_COMMS_THRESHOLD:
+            p_mis = min(
+                C.MISCOMM_MAX_PROB,
+                (C.MISCOMM_COMMS_THRESHOLD - avg_comms) / 80.0,
+            )
+            if rng.random() < p_mis:
+                miscomm_extra = C.MISCOMM_DELAY
+                garbled = min(
+                    alive,
+                    key=lambda q: (self._player(q).attr("comms_quality"), q),
+                )
+                self._emit(
+                    CommsEvent(
+                        tick=tick, seed_path=seed_path,
+                        team_id=self.p[caller].team_id,
+                        player_id=garbled, kind="miscomm",
+                    )
+                )
+        if miscomm_extra == 0 and avg_comms >= C.CALL_COMMS_THRESHOLD:
+            self._emit(
+                CommsEvent(
+                    tick=tick, seed_path=seed_path,
+                    team_id=self.p[caller].team_id,
+                    player_id=caller, kind="call",
+                )
+            )
+        # An initiator burning an info charge calls the hit early â€” the
         # whole rotation leaves sooner. Once per round.
         info_bonus = 0
         if not self._info_rotate_used:
