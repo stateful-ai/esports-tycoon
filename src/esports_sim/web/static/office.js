@@ -322,6 +322,30 @@ async function office(v) {
     officeComposeScene(built, facilities).then((url) => {
       if (url) img.setAttribute("href", url);
     });
+    // Room borders are drawn as a VECTOR overlay from the plan — the
+    // paint supplies texture and furniture, but the lines that must
+    // match the hotspots come from the same geometry as the hotspots.
+    // (Generated interiors drift; ours can't.)
+    const { exterior, interior } = edgeSegments(rooms);
+    for (const w of interior) {
+      const mid = (w.lo + w.hi) / 2;
+      const half = Math.min(plan.render.door_w, (w.hi - w.lo) * 0.5) / 2;
+      for (const [a, b] of [[w.lo, mid - half], [mid + half, w.hi]]) {
+        if (b - a < 0.3) continue;
+        const [p1, p2] = segPoints({ ...w, lo: a, hi: b });
+        osvg("line", {
+          x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1],
+          class: "office-wall-in painted-line",
+        }, svg);
+      }
+    }
+    for (const w of exterior) {
+      const [p1, p2] = segPoints(w);
+      osvg("line", {
+        x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1],
+        class: "office-wall-crown painted-line",
+      }, svg);
+    }
   } else {
     // Geometry mode: the guide look, interactive.
     const { exterior, interior } = edgeSegments(rooms);

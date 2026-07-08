@@ -65,6 +65,22 @@
 .office-stage.painted .office-sub { fill: #aeb6c8; }
 .office-stage.painted .office-label.lot { fill: #aeb6c8; }
 
+/* Vector room borders over the paint: warm LED look that matches the
+   art's strips, additive-blended so they sit IN the scene. These are the
+   authoritative lines — they share geometry with the hotspots. */
+.office-wall-in.painted-line {
+  stroke: rgba(255, 214, 150, .55);
+  stroke-width: .42;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 .7px rgba(255, 200, 130, .8));
+}
+.office-wall-crown.painted-line {
+  stroke: rgba(255, 214, 150, .75);
+  stroke-width: .55;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 1px rgba(255, 200, 130, .9));
+}
+
 /* -- walls ------------------------------------------------------------------ */
 
 .office-wall-out {
