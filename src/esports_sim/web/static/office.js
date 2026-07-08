@@ -175,6 +175,85 @@ function officeOpenFocusPicker(stage) {
   setTimeout(() => document.addEventListener("click", officeCloseFocusPicker, { once: true }), 0);
 }
 
+/* -- painted-scene compositor -------------------------------------------------- */
+
+/* Cache: one composed object-URL per facility-state signature. */
+const OFFICE_SCENE_CACHE = { sig: null, url: null };
+
+function officeLoadImage(src) {
+  return new Promise((resolve, reject) => {
+    const i = new Image();
+    i.onload = () => resolve(i);
+    i.onerror = reject;
+    i.src = src;
+  });
+}
+
+async function officeComposeScene(built, facilities) {
+  const sig = built
+    .map((a) => `${a.id}:${(facilities[a.id]?.level ?? 1) >= 3 ? 3 : 1}`)
+    .sort()
+    .join("|");
+  if (OFFICE_SCENE_CACHE.sig === sig) return OFFICE_SCENE_CACHE.url;
+  if (!built.length) return null; // bare base is already showing
+
+  let baseImg;
+  try {
+    baseImg = await officeLoadImage(`${OFFICE_ART}/painted/base.webp`);
+  } catch (e) {
+    return null;
+  }
+  const W = baseImg.naturalWidth, H = baseImg.naturalHeight;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(baseImg, 0, 0);
+  const base = ctx.getImageData(0, 0, W, H);
+  const out = ctx.getImageData(0, 0, W, H);
+
+  const scratch = document.createElement("canvas");
+  scratch.width = W;
+  scratch.height = H;
+  const sctx = scratch.getContext("2d", { willReadFrequently: true });
+
+  for (const a of built) {
+    const variant = (facilities[a.id]?.level ?? 1) >= 3 ? "l3" : "l1";
+    let img;
+    try {
+      img = await officeLoadImage(`${OFFICE_ART}/painted/${a.id}_${variant}.webp`);
+    } catch (e) {
+      continue; // missing variant: that wing just stays bare
+    }
+    sctx.clearRect(0, 0, W, H);
+    sctx.drawImage(img, 0, 0, W, H);
+    const layer = sctx.getImageData(0, 0, W, H).data;
+    const O = out.data, B = base.data;
+    // Copy pixels where this state's render differs from the bare base.
+    // Threshold mirrors the art pipeline's diff mask (webp noise floor).
+    for (let i = 0; i < O.length; i += 4) {
+      const d =
+        Math.abs(layer[i] - B[i]) +
+        Math.abs(layer[i + 1] - B[i + 1]) +
+        Math.abs(layer[i + 2] - B[i + 2]);
+      if (d > 42) {
+        O[i] = layer[i];
+        O[i + 1] = layer[i + 1];
+        O[i + 2] = layer[i + 2];
+      }
+    }
+  }
+  ctx.putImageData(out, 0, 0);
+
+  const url = await new Promise((resolve) =>
+    canvas.toBlob((b) => resolve(b ? URL.createObjectURL(b) : null), "image/png")
+  );
+  if (OFFICE_SCENE_CACHE.url) URL.revokeObjectURL(OFFICE_SCENE_CACHE.url);
+  OFFICE_SCENE_CACHE.sig = sig;
+  OFFICE_SCENE_CACHE.url = url;
+  return url;
+}
+
 /* -- loading ----------------------------------------------------------------- */
 
 async function officeLoadPlan() {
@@ -229,32 +308,20 @@ async function office(v) {
   });
 
   if (OFFICE_PAINTED) {
-    // The Scenario-painted scene IS the office; same transform as the guide.
+    // The painted scene IS the office; same transform as the guide.
+    // Facility states composite per-PIXEL: each annex file is identical
+    // to the base outside its own wing (guaranteed by the art pipeline's
+    // diff-mask), so "copy where it differs" reconstructs any facility
+    // combination seam-free — no clip geometry, no per-combination
+    // renders. Composed asynchronously; base paints immediately.
     const img = osvg("image", {
       x: vb[0], y: vb[1], width: vb[2], height: vb[3],
       preserveAspectRatio: "none", class: "office-painted-base",
     }, svg);
     img.setAttribute("href", `${OFFICE_ART}/painted/base.webp`);
-    // Built annexes: their painted patch clipped to the annex polygon.
-    for (const a of built) {
-      const level = facilities[a.id]?.level ?? 1;
-      const variant = level >= 3 ? "l3" : "l1";
-      const clipId = `office-annex-clip-${a.id}`;
-      const defs = osvg("defs", {}, svg);
-      // Clip slightly beyond the floor to include walls/furniture height.
-      const c = roomCorners(a);
-      const grow = plan.render.wall_h + 5;
-      const clipPts = [
-        [c[0][0], c[0][1] - grow], [c[1][0], c[1][1] - grow],
-        [c[2][0], c[2][1] + 2], [c[3][0], c[3][1] + 2],
-      ];
-      osvg("polygon", { points: opts(clipPts) }, osvg("clipPath", { id: clipId }, defs));
-      const patch = osvg("image", {
-        x: vb[0], y: vb[1], width: vb[2], height: vb[3],
-        preserveAspectRatio: "none", "clip-path": `url(#${clipId})`,
-      }, svg);
-      patch.setAttribute("href", `${OFFICE_ART}/painted/${a.id}_${variant}.webp`);
-    }
+    officeComposeScene(built, facilities).then((url) => {
+      if (url) img.setAttribute("href", url);
+    });
   } else {
     // Geometry mode: the guide look, interactive.
     const { exterior, interior } = edgeSegments(rooms);
