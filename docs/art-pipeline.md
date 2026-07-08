@@ -53,6 +53,15 @@ Key separations — updated after the v2 style pass (2026-07-08):
   base finished the annex variants seamlessly (reference images are safe
   THERE because the diff-mask composite discards everything outside the
   annex region anyway).
+- **Never ask the paint for boundary lines.** The footprint gate can't
+  hold interior lines in place (they drift even when the silhouette
+  passes), and hover hotspots expose every pixel of disagreement. Rule:
+  prompt scenes WITHOUT floor/boundary LED strips or wall outlines; the
+  runtime draws authoritative borders as a vector overlay from the same
+  plan geometry as the hotspots (see office.js painted mode). Paint =
+  texture, furniture, mood. Vectors = anything that must align. A small
+  global drift can additionally be corrected once with
+  `scripts/align_painted.py` (mask-based scale/shift estimate).
 
 The winning verbatim prompts (style ref, base repaint, annex variant)
 live in the v2 pass report and in `assets/office/style/`; the base
