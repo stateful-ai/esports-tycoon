@@ -23,7 +23,11 @@ Full background: `docs/art-pipeline.md`. Condensed runbook:
    them. Keep runners-up in `assets/office/style/candidates/`.
 4. **States**: composite variants as diff-region patches over the one
    accepted base (`composite.py` pattern) — never regenerate state
-   combinations.
+   combinations. For the OFFICE, prefer sprite decomposition instead
+   (art-pipeline.md "Stage 2"): one furniture-free shell
+   (`render_office_guide.py --shell`) + per-type transparent sprites
+   from `office_sprites.json`; placement/z-sort is the runtime's job,
+   so furniture cannot drift and no state files exist at all.
 5. **Align**: if hover outlines look off, `scripts\align_painted.py`
    estimates/applies a one-time global scale/shift.
 6. **Verify in the browser** (hotspot hover on top of painted rooms),

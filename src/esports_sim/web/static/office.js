@@ -5,14 +5,19 @@
    images; Scenario repaints them (img2img, structure preserved) into
    assets/office/painted/. This file renders the plan interactively:
 
-   - PAINTED mode (when painted/base.webp exists): the Scenario art is
-     the scene; the SVG on top carries only hotspots, labels, hover
-     glows, empty-lot dashes, per-annex painted patches, and dynamic
-     bits (trophies). Art and hotspots can't drift apart because both
-     derive from the same plan + the same projection.
+   - SPRITE mode (when painted/shell.webp + office_sprites.json exist):
+     the scene is DECOMPOSED — one furniture-free painted shell supplies
+     floors/walls/light, and each furniture item is its own transparent
+     sprite placed at the plan's exact anchors, z-sorted by screen-y
+     (painter's algorithm). Furniture can't drift into the wrong room
+     because placement is ours, not the paint's; facility levels are
+     just different sprite lists; and the sprite layer is exactly what
+     PixiJS characters will later walk behind/in front of.
+   - PAINTED mode (fallback: painted/base.webp): one whole-scene image
+     per facility state, composited per-pixel where states differ.
    - GEOMETRY mode (fallback): full flat render — floors, walls with
      doorways, furniture boxes. This is also exactly what the guide
-     images look like, so what you ship is what Scenario saw.
+     images look like, so what you ship is what the model saw.
 
    Desk anchors in the plan are reserved for future PixiJS characters.
    Relies on app.js globals: $, el, api, money, toast, App. */
@@ -21,6 +26,7 @@ const OFFICE_ART = "/assets/office";
 
 let OFFICE_DATA = null; // cached office_plan.json
 let OFFICE_PAINTED = null; // true/false once probed
+let OFFICE_SPRITES = null; // sprite manifest once probed, false if unavailable
 
 /* -- projection (same 2:1 iso as the match viewer + guide script) ---------- */
 
@@ -268,6 +274,72 @@ async function officeComposeScene(built, facilities) {
   return url;
 }
 
+/* -- sprite layer (sprite mode) ---------------------------------------------- */
+
+/* Natural-size cache so each sprite file is measured once. */
+const OFFICE_SPRITE_IMGS = {};
+
+function officeSpriteImage(key) {
+  if (!OFFICE_SPRITE_IMGS[key]) {
+    OFFICE_SPRITE_IMGS[key] = officeLoadImage(
+      `${OFFICE_ART}/sprites/${key}.webp`
+    ).catch(() => null); // missing sprite: skip it, never break the scene
+  }
+  return OFFICE_SPRITE_IMGS[key];
+}
+
+/* One placement per furniture entry. The footprint diamond of a w×d box
+   projects to iso-x extent (w+d), horizontal center x+y+(w+d)/2, and its
+   front (screen-bottom) vertex at corner (x+w, y). Sprites anchor there:
+   bottom-center of the image on the bottom vertex of the footprint. */
+function officeSpriteEntries(rooms, facilities) {
+  const entries = [];
+  for (const r of rooms) {
+    const level = facilities[r.id]?.level ?? 0;
+    for (const f of furnitureFor(r, level)) {
+      const spec = OFFICE_SPRITES.sprites?.[f.type];
+      if (!spec) continue;
+      // Long axis along grid-y reads as the mirrored orientation.
+      const o =
+        f.d > f.w && spec.orientations.includes("sw") ? "sw" : spec.orientations[0];
+      const x = r.x + f.x, y = r.y + f.y;
+      entries.push({
+        key: `${f.type}_${o}`,
+        w: (f.w + f.d) * (spec.scale ?? 1),
+        cx: x + y + (f.w + f.d) / 2,
+        by: (x + f.w - y) / 2,
+      });
+    }
+  }
+  entries.sort((a, b) => a.by - b.by); // painter's algorithm, back to front
+  return entries;
+}
+
+/* Fills the (already-positioned) group asynchronously: DOM order inside
+   the group is the z-order, and the group's position in the SVG keeps
+   sprites under the hotspot/label layer even though images load late. */
+async function officeSpriteLayer(g, rooms, facilities) {
+  const entries = officeSpriteEntries(rooms, facilities);
+  const keys = [...new Set(entries.map((e) => e.key))];
+  const imgs = {};
+  await Promise.all(
+    keys.map(async (k) => { imgs[k] = await officeSpriteImage(k); })
+  );
+  for (const e of entries) {
+    const im = imgs[e.key];
+    if (!im) continue;
+    const h = e.w * (im.naturalHeight / im.naturalWidth);
+    const node = osvg("image", {
+      x: (e.cx - e.w / 2).toFixed(2),
+      y: (e.by - h + 0.5).toFixed(2), // +0.5: baked shadow dips past the base
+      width: e.w.toFixed(2),
+      height: h.toFixed(2),
+      class: "office-sprite",
+    }, g);
+    node.setAttribute("href", `${OFFICE_ART}/sprites/${e.key}.webp`);
+  }
+}
+
 /* -- loading ----------------------------------------------------------------- */
 
 async function officeLoadPlan() {
@@ -281,6 +353,23 @@ async function officeLoadPlan() {
       probe.onerror = () => resolve(false);
       probe.src = `${OFFICE_ART}/painted/base.webp`;
     });
+  }
+  if (OFFICE_SPRITES === null) {
+    const shellOk = await new Promise((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = `${OFFICE_ART}/painted/shell.webp`;
+    });
+    if (shellOk) {
+      try {
+        OFFICE_SPRITES = await (await fetch("/office_sprites.json")).json();
+      } catch (e) {
+        OFFICE_SPRITES = false;
+      }
+    } else {
+      OFFICE_SPRITES = false;
+    }
   }
   return OFFICE_DATA;
 }
@@ -308,7 +397,11 @@ async function office(v) {
       <span class="mono">${money(s.user_team.balance)}</span>
     </div>`;
 
-  const stage = el("div", "office-stage" + (OFFICE_PAINTED ? " painted" : ""));
+  const spriteMode = !!OFFICE_SPRITES;
+  const stage = el(
+    "div",
+    "office-stage" + (spriteMode || OFFICE_PAINTED ? " painted" : "")
+  );
 
   const built = plan.annexes.filter((a) => (facilities[a.id]?.level ?? 0) > 0);
   const lots = plan.annexes.filter((a) => (facilities[a.id]?.level ?? 0) === 0);
@@ -322,18 +415,22 @@ async function office(v) {
     preserveAspectRatio: "xMidYMid meet",
   });
 
-  if (OFFICE_PAINTED) {
+  if (spriteMode || OFFICE_PAINTED) {
     // The painted scene IS the office; same transform as the guide.
-    // Facility states composite per-PIXEL: each annex file is identical
-    // to the base outside its own wing (guaranteed by the art pipeline's
-    // diff-mask), so "copy where it differs" reconstructs any facility
-    // combination seam-free — no clip geometry, no per-combination
-    // renders. Composed asynchronously; base paints immediately.
     //
-    // The plan owns the SILHOUETTE: paint is clipped to the building
-    // footprint (+ a skirt for the 3D plinth) over an under-fill of
-    // dark floor tone — spill can't escape the building, and shortfall
-    // reads as shadowed floor instead of a hole into the background.
+    // SPRITE mode: the image is the furniture-free shell (one file for
+    // every facility state — the silhouette clip below reveals exactly
+    // the built rooms) and furniture arrives as individual transparent
+    // sprites in a dedicated layer further down.
+    // PAINTED fallback: whole-scene base + per-PIXEL facility
+    // compositing (each annex file differs from base only in its own
+    // wing, so "copy where it differs" reconstructs any combination).
+    //
+    // Either way the plan owns the SILHOUETTE: paint is clipped to the
+    // building footprint (+ a skirt for the 3D plinth) over an
+    // under-fill of dark floor tone — spill can't escape the building,
+    // and shortfall reads as shadowed floor instead of a hole into the
+    // background.
     const skirt = plan.render.wall_h + 4.5;
     const defs = osvg("defs", {}, svg);
     const clip = osvg("clipPath", { id: "office-building-clip" }, defs);
@@ -355,10 +452,14 @@ async function office(v) {
       preserveAspectRatio: "none", class: "office-painted-base",
       "clip-path": "url(#office-building-clip)",
     }, svg);
-    img.setAttribute("href", `${OFFICE_ART}/painted/base.webp`);
-    officeComposeScene(built, facilities).then((url) => {
-      if (url) img.setAttribute("href", url);
-    });
+    if (spriteMode) {
+      img.setAttribute("href", `${OFFICE_ART}/painted/shell.webp`);
+    } else {
+      img.setAttribute("href", `${OFFICE_ART}/painted/base.webp`);
+      officeComposeScene(built, facilities).then((url) => {
+        if (url) img.setAttribute("href", url);
+      });
+    }
     // Room borders are drawn as a VECTOR overlay from the plan — the
     // paint supplies texture and furniture, but the lines that must
     // match the hotspots come from the same geometry as the hotspots.
@@ -382,6 +483,12 @@ async function office(v) {
         x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1],
         class: "office-wall-crown painted-line",
       }, svg);
+    }
+    if (spriteMode) {
+      // Group inserted NOW (under trophies/hotspots/labels), populated
+      // async once sprite images are measured.
+      const sprites = osvg("g", { class: "office-sprites" }, svg);
+      officeSpriteLayer(sprites, rooms, facilities);
     }
   } else {
     // Geometry mode: the guide look, interactive.

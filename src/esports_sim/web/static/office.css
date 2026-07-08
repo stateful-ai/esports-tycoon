@@ -60,6 +60,9 @@
 }
 .office-stage.painted { background: #0b0d16; }
 .office-painted-base { pointer-events: none; }
+/* Furniture sprites (sprite mode): pure scenery — clicks belong to the
+   room hotspots above them. */
+.office-sprites { pointer-events: none; }
 /* Dark floor tone under the clipped paint: shortfall reads as shadow. */
 .office-underfloor { fill: #171a26; stroke: none; }
 /* The painted scene is always dark — labels stay light in both themes. */

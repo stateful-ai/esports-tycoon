@@ -72,6 +72,51 @@ Interpret the blocks: … Make it RICH: per-room floor materials, LED
 boundary strips, plants, cable clutter, glowing light pools … No text,
 no logos, no people."
 
+## Stage 2 — sprite decomposition (office v4, owner-directed 2026-07-08)
+
+Whole-scene repaints hit a ceiling: even gated, beauty-selected bases
+put *some* furniture in the wrong room or at loose anchors, because one
+generation is being asked to solve layout + placement + style at once.
+The fix is to stop asking for placement at all:
+
+- **Shell**: ONE furniture-free repaint of the all-rooms guide
+  (`render_office_guide.py --shell` → `guides/shell.png` →
+  `painted/shell.webp`). Only the silhouette needs to survive — the
+  easiest possible gate — and the whole multi-file state set collapses
+  to one image (the runtime's silhouette clip reveals built annexes).
+- **Sprites**: each furniture type generated once as an isolated
+  isometric object on a transparent background
+  (`office_sprites.json` manifest → `assets/office/sprites/
+  <type>_<orient>.webp`). Placement is the PLAN's job at runtime:
+  bottom-center anchored on the footprint diamond's front vertex,
+  width = projected footprint extent × manifest scale, z-sorted by
+  screen-y (painter's algorithm). Furniture *cannot* drift.
+- **Lighting coherence** across shell + sprites comes from the shared
+  `style_lock` phrase: fixed upper-left light, baked soft under-shadow
+  on every sprite, cool-ambient/warm-accent grade; the eventual LoRA
+  hardens this further.
+- **Orientation economy**: generate `se` only; `sw` is a horizontal
+  mirror (PIL) — the iso projection makes a mirrored along-x object
+  read as along-y. Abstract screen content mirrors safely.
+- This layer split is exactly the PixiJS handoff shape: shell =
+  background sprite, furniture = display objects characters can pass
+  behind/in front of.
+- **Validated sprite chain (v4 pass, 2026-07-08)**: Ludo createImage
+  insists on painting a diorama tile base under isolated objects
+  (prompt negations ignored; creative rembg won't strip it). Working
+  chain: Ludo createImage (style) → Gemini flash-image edit "delete
+  the base/extra object, plain white background" (surgical) → Ludo
+  removeBackground (`creative_edit=false`) → PIL trim + shadow + gates
+  (perimeter alpha ≥ 90% clear, coverage 15–92%, short side ≥ 256 px).
+  Shell prompt traps: "lamplight" bait-paints literal lanterns and
+  "floor markings" bait-paints glyph text — say "light from unseen
+  sources above the frame" instead. Reusable scripts from the pass:
+  scratchpad `gen_shell.py` / `sprites.py` / `gemini_edit.py`.
+
+Facility-state diff compositing (above) remains the fallback path for
+whole-scene sets and is still the right tool for map door/teleporter
+state patches.
+
 ## Credit strategy (owner-set, 2026-07-08)
 
 1. **Iterate on cheap/abundant tools**: Gemini image edits + Imagen for
