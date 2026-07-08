@@ -101,3 +101,38 @@ def test_user_offer_accept_and_decline(campaign) -> None:
     assert ok
     assert pid in buyer.player_ids
     assert gs.teams[gs.user_team_id].balance == bal_before + 200_000
+
+
+def test_lifecycle_retirements_and_rookies(campaign, game_data: GameData) -> None:
+    """Across multiple seasons the population turns over but stays
+    bounded: careers end, rookie classes arrive, rosters stay legal."""
+    gs = campaign
+    # Age the world so retirements are guaranteed to fire.
+    for p in gs.players.values():
+        if p.age >= 26:
+            p.age = 33
+    # Play through to the offseason and roll it.
+    guard = 0
+    while gs.phase != "offseason" and guard < 40:
+        advance_week(gs, game_data)
+        guard += 1
+    assert gs.phase == "offseason"
+    n_before = len(gs.players)
+    advance_week(gs, game_data)  # offseason tick → new season
+    assert gs.retired, "aged world produced no retirements"
+    assert any("rookie class" in n for n in gs.news)
+    # Rookies actually landed in free agency with the rookie tag.
+    assert any(
+        "rookie" in gs.players[pid].personality_tags
+        for pid in gs.free_agent_ids
+    )
+    # Population bounded (turnover, not growth).
+    assert len(gs.players) < n_before + 40
+    # Retired players are fully unreferenced.
+    handles = {r.handle for r in gs.retired}
+    for t in gs.teams.values():
+        for pid in t.player_ids:
+            assert pid in gs.players
+    for pid in gs.free_agent_ids:
+        assert pid in gs.players
+    assert handles  # records kept

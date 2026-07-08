@@ -10,7 +10,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from esports_sim.manager import economy, market, narrative, sponsors, staff, training
+from esports_sim.manager import (
+    development,
+    economy,
+    market,
+    narrative,
+    sponsors,
+    staff,
+    training,
+)
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
@@ -758,6 +766,91 @@ def _update_world_ranks(gs: GameState) -> None:
 # Offseason
 
 
+def _process_retirements(gs: GameState, rng) -> int:
+    """Roll every player against their retirement odds. Rosters lose the
+    player on the spot (AI refills next tick; the user gets a news warning
+    and an open seat)."""
+    from esports_sim.manager.state import RetiredRecord
+
+    retiring: list[str] = []
+    for pid in sorted(gs.players):
+        if rng.random() < development.retirement_prob(gs.players[pid]):
+            retiring.append(pid)
+
+    notable: list[str] = []
+    for pid in retiring:
+        p = gs.players[pid]
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+        if team is not None:
+            team.player_ids.remove(pid)
+            if team.captain_id == pid:
+                team.captain_id = team.player_ids[0] if team.player_ids else None
+            if team.id == gs.user_team_id:
+                gs.push_news(
+                    f"{p.handle} retires — your roster has an open seat."
+                )
+        if pid in gs.free_agent_ids:
+            gs.free_agent_ids.remove(pid)
+        ca = development.overall(p)
+        gs.retired.append(
+            RetiredRecord(
+                season=gs.season,
+                handle=p.handle,
+                real_name=p.real_name,
+                age=p.age,
+                team_name=team.name if team else "",
+                peak_note=f"retired at {ca:.0f} CA",
+            )
+        )
+        if ca >= 62 or p.age >= 31:
+            notable.append(f"{p.handle} ({p.age})")
+        del gs.players[pid]
+    del gs.retired[:-40]
+
+    if notable:
+        rest = len(retiring) - len(notable)
+        tail = f" and {rest} others" if rest > 0 else ""
+        gs.push_news(
+            f"Retirements: {', '.join(notable[:4])}{tail} call it a career."
+        )
+    elif retiring:
+        gs.push_news(f"{len(retiring)} players quietly retire over the break.")
+    return len(retiring)
+
+
+def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
+    """Each region graduates a rookie class into free agency — the talent
+    pipeline that replaces retiring careers. Class size breathes with how
+    many careers just ended."""
+    from esports_sim.manager.gen import _FA_SLOTS, generate_player
+
+    per_region = 2 + max(0, n_retired) // (len(LEAGUE_REGIONS) * 2)
+    headliners: list[str] = []
+    for region in LEAGUE_REGIONS:
+        for _ in range(per_region):
+            style, role = _FA_SLOTS[gs.fa_counter % len(_FA_SLOTS)]
+            gs.fa_counter += 1
+            pid = f"fa_gen_{gs.fa_counter}"
+            quality = float(rng.uniform(40, 58))
+            p = generate_player(
+                rng, pid, style, role, quality, gd,
+                region=region, age_lo=17, age_hi=20,
+            )
+            p.contract_weeks_left = 0
+            p.personality_tags = sorted({*p.personality_tags, "rookie"})
+            gs.players[pid] = p
+            gs.free_agent_ids.append(pid)
+            if development.potential_of(p) >= 78:
+                headliners.append(f"{p.handle} ({str(region)[:2].upper()})")
+    if headliners:
+        gs.push_news(
+            f"Season {gs.season + 1} rookie class arrives — scouts circle "
+            f"{', '.join(headliners[:3])}."
+        )
+    else:
+        gs.push_news(f"Season {gs.season + 1} rookie class enters free agency.")
+
+
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
@@ -772,16 +865,25 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     for pid in sorted(gs.players):
         training.apply_offseason_aging(gs.players[pid], rng)
 
-    # Refresh the free-agent pool: cull the weakest, add fresh prospects.
+    # Careers end: a year older, some hang it up. Then the next
+    # generation arrives as regional rookie classes.
+    n_retired = _process_retirements(gs, rng)
+    _rookie_classes(gs, gd, rng, n_retired)
+
+    # Refresh the free-agent pool: cull the weakest journeymen (rookies
+    # are exempt — prospects deserve a season on the market).
     fas = sorted(
-        gs.free_agent_ids, key=lambda pid: market.player_quality(gs.players[pid])
+        (
+            pid
+            for pid in gs.free_agent_ids
+            if gs.players[pid].age >= 21
+        ),
+        key=lambda pid: market.player_quality(gs.players[pid]),
     )
-    while len(fas) > 14:
+    while len(gs.free_agent_ids) > 20 and fas:
         cut = fas.pop(0)
         gs.free_agent_ids.remove(cut)
         del gs.players[cut]
-    for _ in range(5):
-        market._generate_rookie(gs, gd, rng)
 
     # New season. Scouting knowledge goes stale over the break; the staff
     # candidate market refreshes.

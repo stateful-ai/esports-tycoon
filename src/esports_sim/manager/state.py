@@ -210,6 +210,19 @@ class SponsorOffer(BaseModel):
     objectives: list[SponsorObjective] = Field(default_factory=list)
 
 
+class RetiredRecord(BaseModel):
+    """A career that ended — enough to remember them by."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int  # season after which they retired
+    handle: str
+    real_name: str = ""
+    age: int
+    team_name: str = ""  # last club ("" = free agent)
+    peak_note: str = ""  # e.g. "career 71 CA"
+
+
 class TransferOffer(BaseModel):
     """An AI org's bid for one of the user's contracted players. Sits on
     the table for a bounded number of weeks, then quietly withdraws."""
@@ -254,6 +267,7 @@ class GameState(BaseModel):
 
     news: list[str] = Field(default_factory=list)
     champions: list[ChampionRecord] = Field(default_factory=list)
+    retired: list[RetiredRecord] = Field(default_factory=list)
     fa_counter: int = 0  # monotonic id counter for generated free agents
 
     # Season analytics (reset at rollover, after awards are handed out).

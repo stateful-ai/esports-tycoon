@@ -115,6 +115,21 @@ def assign_potential(p: Player, rng: np.random.Generator) -> None:
     p.potential = float(np.ceil(raw * 10.0) / 10.0)
 
 
+def retirement_prob(p: Player) -> float:
+    """Offseason chance a player hangs it up. Nobody retires in their
+    prime; past the decline turn it ramps fast, and faster for players
+    whose game has already fallen off."""
+    turn = decline_age(p)
+    if p.age < turn + 2:
+        return 0.0
+    prob = 0.22 * (p.age - (turn + 1))
+    if overall(p) < 48.0:
+        prob += 0.18  # the tier-2 grind stops being worth it
+    if "veteran" in p.personality_tags:
+        prob -= 0.08  # lifers squeeze out one more season
+    return float(min(0.95, max(0.0, prob)))
+
+
 # ---------------------------------------------------------------------------
 # Scout assessment
 
