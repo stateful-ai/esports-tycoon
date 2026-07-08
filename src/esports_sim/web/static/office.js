@@ -1,33 +1,146 @@
-/* Office — tycoon-style visual HQ, the campaign's landing tab.
-   The backdrop and cut-out room sprites are AI-generated art in
-   /assets/office/. Facility pods read their level from GET /api/finances,
-   so upgrades bought on the Finances tab visibly change the scene the next
-   time the office renders (office() re-fetches on every render).
+/* Office v3 — blockout→beautify pipeline.
+
+   office_plan.json is the single source of truth for the HQ layout.
+   scripts/render_office_guide.py rasterizes the SAME plan as flat guide
+   images; Scenario repaints them (img2img, structure preserved) into
+   assets/office/painted/. This file renders the plan interactively:
+
+   - PAINTED mode (when painted/base.webp exists): the Scenario art is
+     the scene; the SVG on top carries only hotspots, labels, hover
+     glows, empty-lot dashes, per-annex painted patches, and dynamic
+     bits (trophies). Art and hotspots can't drift apart because both
+     derive from the same plan + the same projection.
+   - GEOMETRY mode (fallback): full flat render — floors, walls with
+     doorways, furniture boxes. This is also exactly what the guide
+     images look like, so what you ship is what Scenario saw.
+
+   Desk anchors in the plan are reserved for future PixiJS characters.
    Relies on app.js globals: $, el, api, money, toast, App. */
 
 const OFFICE_ART = "/assets/office";
 
-/* Rooms pinned onto the scene. Coords/width are % of the stage so the whole
-   scene scales with the card. `go` is a tab button name ("a|b" = feature-
-   detect a, fall back to b); `training: true` opens the inline focus picker
-   instead of switching tabs. */
-const OFFICE_ROOMS = [
-  { id: "boardroom",     label: "Boardroom",     sub: "sponsors · finances",  go: "finances",       x: 1.5,  y: 2,    w: 13 },
-  { id: "lounge",        label: "Lounge",        sub: "standings · trophies", go: "standings",      x: 66.5, y: 1.5,  w: 12 },
-  { id: "scout_desk",    label: "Scout Desk",    sub: "scouting reports",     go: "scouting",       x: 80.5, y: 1,    w: 12.5 },
-  { id: "medical",       label: "Physio Corner", sub: "roster · staff",       go: "roster",         x: 1,    y: 57,   w: 11 },
-  { id: "war_room",      label: "War Room",      sub: "stats · tactics",      go: "tactics|stats",  x: 13,   y: 66,   w: 14 },
-  { id: "practice_room", label: "Practice Room", sub: "set training focus",   training: true,       x: 70,   y: 62,   w: 15 },
-];
+let OFFICE_DATA = null; // cached office_plan.json
+let OFFICE_PAINTED = null; // true/false once probed
 
-const OFFICE_FACILITY_ROOMS = [
-  { id: "training_center",  label: "Training Center",  sub: "player development" },
-  { id: "analytics_suite",  label: "Analytics Suite",  sub: "scouting & prep" },
-  { id: "marketing_office", label: "Marketing Office", sub: "fans & sponsors" },
-];
+/* -- projection (same 2:1 iso as the match viewer + guide script) ---------- */
 
-/* Switch tabs by driving the real tab buttons so active-state and App.tab
-   stay owned by app.js. "a|b" tries a first (e.g. a future tactics tab). */
+const oiso = (x, y) => [x + y, (x - y) / 2];
+
+const OSVG = "http://www.w3.org/2000/svg";
+function osvg(tag, attrs, parent) {
+  const n = document.createElementNS(OSVG, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+
+const opts = (pts) => pts.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+
+function roomCorners(r) {
+  return [
+    [r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h],
+  ].map(([x, y]) => oiso(x, y));
+}
+
+/* World rect shared with the guide renderer — MUST match GuideRenderer's
+   bounds math so painted art lands exactly on the geometry. */
+function officeWorldRect(plan) {
+  const pts = [...plan.rooms, ...plan.annexes].flatMap(roomCorners);
+  const pad = plan.render.pad;
+  const minX = Math.min(...pts.map((p) => p[0])) - pad;
+  const minY = Math.min(...pts.map((p) => p[1])) - pad;
+  const maxX = Math.max(...pts.map((p) => p[0])) + pad;
+  const maxY = Math.max(...pts.map((p) => p[1])) + pad + plan.render.wall_h + 4;
+  return [minX, minY, maxX - minX, maxY - minY];
+}
+
+/* -- shared-edge analysis (geometry mode) ---------------------------------- */
+
+function edgeSegments(rooms) {
+  const exterior = [];
+  const interior = [];
+  for (const r of rooms) {
+    const edges = [
+      { fixed: r.y,       lo: r.x, hi: r.x + r.w, axis: "h", side: "front" },
+      { fixed: r.y + r.h, lo: r.x, hi: r.x + r.w, axis: "h", side: "back" },
+      { fixed: r.x,       lo: r.y, hi: r.y + r.h, axis: "v", side: "left" },
+      { fixed: r.x + r.w, lo: r.y, hi: r.y + r.h, axis: "v", side: "right" },
+    ];
+    for (const e of edges) {
+      let spans = [[e.lo, e.hi]];
+      for (const o of rooms) {
+        if (o === r) continue;
+        const touches =
+          e.axis === "h"
+            ? (o.y === e.fixed || o.y + o.h === e.fixed) && o.x < e.hi && o.x + o.w > e.lo
+            : (o.x === e.fixed || o.x + o.w === e.fixed) && o.y < e.hi && o.y + o.h > e.lo;
+        if (!touches) continue;
+        const s = Math.max(e.lo, e.axis === "h" ? o.x : o.y);
+        const t = Math.min(e.hi, e.axis === "h" ? o.x + o.w : o.y + o.h);
+        if (t - s > 0.5 && r.id < o.id) {
+          interior.push({ axis: e.axis, fixed: e.fixed, lo: s, hi: t });
+        }
+        spans = spans.flatMap(([a, b]) => {
+          const out = [];
+          if (s > a) out.push([a, Math.min(b, s)]);
+          if (t < b) out.push([Math.max(a, t), b]);
+          return out.filter(([p, q]) => q - p > 0.3);
+        });
+      }
+      for (const [a, b] of spans) {
+        exterior.push({ axis: e.axis, fixed: e.fixed, lo: a, hi: b, side: e.side });
+      }
+    }
+  }
+  return { exterior, interior };
+}
+
+function segPoints(seg) {
+  const [a, b] =
+    seg.axis === "h"
+      ? [[seg.lo, seg.fixed], [seg.hi, seg.fixed]]
+      : [[seg.fixed, seg.lo], [seg.fixed, seg.hi]];
+  return [oiso(a[0], a[1]), oiso(b[0], b[1])];
+}
+
+/* -- furniture (geometry mode; boxes come from the plan) --------------------- */
+
+function isoBox(g, x, y, w, d, h, cls) {
+  const c = [oiso(x, y), oiso(x + w, y), oiso(x + w, y + d), oiso(x, y + d)];
+  const lift = (p) => [p[0], p[1] - h];
+  osvg("polygon", { points: opts([c[3], c[0], lift(c[0]), lift(c[3])]), class: `${cls} face-a` }, g);
+  osvg("polygon", { points: opts([c[0], c[1], lift(c[1]), lift(c[0])]), class: `${cls} face-b` }, g);
+  osvg("polygon", { points: opts(c.map(lift)), class: `${cls} face-top` }, g);
+}
+
+function furnitureFor(room, level) {
+  if (room.furniture) return room.furniture;
+  if (room.furniture_by_level) {
+    return room.furniture_by_level[level >= 3 ? "3" : "1"] ?? [];
+  }
+  return [];
+}
+
+function drawFurniture(g, room, level) {
+  for (const f of furnitureFor(room, level)) {
+    isoBox(g, room.x + f.x, room.y + f.y, f.w, f.d, f.h, `furn-${f.type}`);
+  }
+}
+
+/* Trophies are dynamic (one per championship) so they render in BOTH modes
+   as an overlay on the lounge shelf. */
+function drawTrophies(svg, plan) {
+  const lounge = plan.rooms.find((r) => r.id === "lounge");
+  if (!lounge) return;
+  const cups = Math.min(6, (App.state?.champions ?? []).length);
+  const g = osvg("g", { class: "office-trophies" }, svg);
+  for (let i = 0; i < cups; i++) {
+    isoBox(g, lounge.x + 9.4 + i * 0.62, lounge.y + 1.3, 0.4, 0.4, 2.1, "furn-trophy");
+  }
+}
+
+/* -- navigation ------------------------------------------------------------ */
+
 function officeGoTab(names) {
   for (const n of names.split("|")) {
     const btn = document.querySelector(`#tabs [data-tab="${n}"]`);
@@ -40,8 +153,6 @@ function officeCloseFocusPicker() {
   if (pop) pop.remove();
 }
 
-/* Inline training-focus quick picker (same action the dashboard select
-   drives: POST /api/actions/training). Anchored over the practice room. */
 function officeOpenFocusPicker(stage) {
   officeCloseFocusPicker();
   const s = App.state;
@@ -61,93 +172,164 @@ function officeOpenFocusPicker(stage) {
     pop.appendChild(b);
   }
   stage.appendChild(pop);
-  // Any click outside the popover dismisses it.
   setTimeout(() => document.addEventListener("click", officeCloseFocusPicker, { once: true }), 0);
 }
+
+/* -- loading ----------------------------------------------------------------- */
+
+async function officeLoadPlan() {
+  if (!OFFICE_DATA) {
+    OFFICE_DATA = await (await fetch("/office_plan.json")).json();
+  }
+  if (OFFICE_PAINTED === null) {
+    OFFICE_PAINTED = await new Promise((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = `${OFFICE_ART}/painted/base.webp`;
+    });
+  }
+  return OFFICE_DATA;
+}
+
+/* -- the scene -------------------------------------------------------------- */
 
 async function office(v) {
   if (!App.state) return;
   const s = App.state;
+  const plan = await officeLoadPlan();
+
+  let facilities = {};
+  try {
+    facilities = (await api("/api/finances")).facilities ?? {};
+  } catch (e) { /* pre-campaign */ }
 
   const card = el("div", "card office-card");
-  card.innerHTML = `<h2>Headquarters <span class="muted" style="text-transform:none;letter-spacing:0">— click a room to jump to its desk</span></h2>`;
+  card.innerHTML = `<h2>Headquarters
+    <span class="muted" style="text-transform:none;letter-spacing:0">— click a room to jump to its desk</span></h2>
+    <div class="office-head">
+      <img class="logo" src="${s.user_team.logo}" alt="">
+      <b>${s.user_team.name}</b>
+      <span class="office-head-dim">S${s.season} · W${s.week} · ${s.phase}</span>
+      <span class="spacer"></span>
+      <span class="mono">${money(s.user_team.balance)}</span>
+    </div>`;
 
-  /* -- the scene --------------------------------------------------------- */
-  const stage = el("div", "office-stage");
+  const stage = el("div", "office-stage" + (OFFICE_PAINTED ? " painted" : ""));
 
-  const base = el("img", "office-base");
-  base.src = `${OFFICE_ART}/office_base.webp`;
-  base.alt = "team headquarters";
-  base.draggable = false;
-  stage.appendChild(base);
+  const built = plan.annexes.filter((a) => (facilities[a.id]?.level ?? 0) > 0);
+  const lots = plan.annexes.filter((a) => (facilities[a.id]?.level ?? 0) === 0);
+  const rooms = [...plan.rooms, ...built];
 
-  // Ambient header strip: org identity + week + balance (already in App.state).
-  stage.appendChild(el("div", "office-head", `
-    <img class="logo" src="${s.user_team.logo}" alt="">
-    <b>${s.user_team.name}</b>
-    <span class="office-head-dim">S${s.season} · W${s.week} · ${s.phase}</span>
-    <span class="spacer"></span>
-    <span class="mono">${money(s.user_team.balance)}</span>`));
+  const vb = officeWorldRect(plan);
+  const svg = osvg("svg", {
+    viewBox: vb.map((n) => n.toFixed(1)).join(" "),
+    class: "office-svg",
+    preserveAspectRatio: "xMidYMid meet",
+  });
 
-  // Center of the HQ = the team desks -> roster.
-  const hq = el("div", "office-room office-hq");
-  Object.assign(hq.style, { left: "30%", top: "32%", width: "38%", height: "42%" });
-  hq.appendChild(el("span", "office-label", `Team Desks<i>open roster</i>`));
-  hq.onclick = () => officeGoTab("roster");
-  stage.appendChild(hq);
-
-  for (const r of OFFICE_ROOMS) {
-    const d = el("div", "office-room");
-    Object.assign(d.style, { left: r.x + "%", top: r.y + "%", width: r.w + "%" });
-    const img = el("img");
-    img.src = `${OFFICE_ART}/${r.id}.png`;
-    img.alt = r.label;
-    img.draggable = false;
-    // Missing art degrades to a labeled dashed pad instead of a broken image.
-    img.onerror = () => { img.remove(); d.classList.add("office-room-flat"); };
-    d.appendChild(img);
-    d.appendChild(el("span", "office-label", `${r.label}<i>${r.sub}</i>`));
-    d.onclick = r.training
-      ? (e) => { e.stopPropagation(); officeOpenFocusPicker(stage); }
-      : () => officeGoTab(r.go);
-    stage.appendChild(d);
+  if (OFFICE_PAINTED) {
+    // The Scenario-painted scene IS the office; same transform as the guide.
+    const img = osvg("image", {
+      x: vb[0], y: vb[1], width: vb[2], height: vb[3],
+      preserveAspectRatio: "none", class: "office-painted-base",
+    }, svg);
+    img.setAttribute("href", `${OFFICE_ART}/painted/base.webp`);
+    // Built annexes: their painted patch clipped to the annex polygon.
+    for (const a of built) {
+      const level = facilities[a.id]?.level ?? 1;
+      const variant = level >= 3 ? "l3" : "l1";
+      const clipId = `office-annex-clip-${a.id}`;
+      const defs = osvg("defs", {}, svg);
+      // Clip slightly beyond the floor to include walls/furniture height.
+      const c = roomCorners(a);
+      const grow = plan.render.wall_h + 5;
+      const clipPts = [
+        [c[0][0], c[0][1] - grow], [c[1][0], c[1][1] - grow],
+        [c[2][0], c[2][1] + 2], [c[3][0], c[3][1] + 2],
+      ];
+      osvg("polygon", { points: opts(clipPts) }, osvg("clipPath", { id: clipId }, defs));
+      const patch = osvg("image", {
+        x: vb[0], y: vb[1], width: vb[2], height: vb[3],
+        preserveAspectRatio: "none", "clip-path": `url(#${clipId})`,
+      }, svg);
+      patch.setAttribute("href", `${OFFICE_ART}/painted/${a.id}_${variant}.webp`);
+    }
+  } else {
+    // Geometry mode: the guide look, interactive.
+    const { exterior, interior } = edgeSegments(rooms);
+    const ordered = [...rooms].sort(
+      (a, b) =>
+        Math.max(...roomCorners(a).map((p) => p[1])) -
+        Math.max(...roomCorners(b).map((p) => p[1]))
+    );
+    for (const r of ordered) {
+      const g = osvg("g", { class: `office-geom room-${r.id}` }, svg);
+      const level = facilities[r.id]?.level ?? 0;
+      osvg("polygon", {
+        points: opts(roomCorners(r)),
+        class: "office-floor" + (level >= 3 ? " floor-lux" : ""),
+      }, g);
+      drawFurniture(g, r, level);
+    }
+    for (const w of interior) {
+      const mid = (w.lo + w.hi) / 2;
+      const half = Math.min(plan.render.door_w, (w.hi - w.lo) * 0.5) / 2;
+      for (const [a, b] of [[w.lo, mid - half], [mid + half, w.hi]]) {
+        if (b - a < 0.3) continue;
+        const [p1, p2] = segPoints({ ...w, lo: a, hi: b });
+        osvg("line", { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], class: "office-wall-in" }, svg);
+      }
+    }
+    for (const w of exterior) {
+      const [p1, p2] = segPoints(w);
+      if (w.side === "front" || w.side === "right") {
+        osvg("polygon", {
+          points: opts([p1, p2, [p2[0], p2[1] + plan.render.wall_h], [p1[0], p1[1] + plan.render.wall_h]]),
+          class: "office-wall-out",
+        }, svg);
+      }
+      osvg("line", { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], class: "office-wall-crown" }, svg);
+    }
   }
+
+  drawTrophies(svg, plan);
+
+  // Interaction layer (both modes): transparent room polygons that ARE the
+  // hotspots, plus labels and empty-lot dashes.
+  for (const r of rooms) {
+    const g = osvg("g", { class: "office-room-g" }, svg);
+    const hot = osvg("polygon", {
+      points: opts(roomCorners(r)), class: "office-hot",
+    }, g);
+    const level = facilities[r.id]?.level ?? 0;
+    const [lx, ly] = oiso(r.x + r.w / 2, r.y + r.h / 2);
+    const label = osvg("text", { x: lx, y: ly + r.h / 4 + 2.4, class: "office-label" }, g);
+    label.textContent = r.label + (facilities[r.id] ? ` · L${level}` : "");
+    const sub = osvg("text", { x: lx, y: ly + r.h / 4 + 5.0, class: "office-sub" }, g);
+    sub.textContent = r.sub;
+    if (r.go || r.training || facilities[r.id]) {
+      g.classList.add("clickable");
+      g.onclick = (e) => {
+        e.stopPropagation();
+        if (r.training) officeOpenFocusPicker(stage);
+        else if (r.go) officeGoTab(r.go);
+        else officeGoTab("finances");
+      };
+    }
+  }
+  for (const a of lots) {
+    const g = osvg("g", { class: "office-room-g office-lot clickable" }, svg);
+    osvg("polygon", { points: opts(roomCorners(a)), class: "office-lot-floor" }, g);
+    const [lx, ly] = oiso(a.x + a.w / 2, a.y + a.h / 2);
+    const label = osvg("text", { x: lx, y: ly + 1.2, class: "office-label lot" }, g);
+    label.textContent = `+ ${a.label}`;
+    const sub = osvg("text", { x: lx, y: ly + 3.8, class: "office-sub" }, g);
+    sub.textContent = "build in Finances";
+    g.onclick = (e) => { e.stopPropagation(); officeGoTab("finances"); };
+  }
+
+  stage.appendChild(svg);
   card.appendChild(stage);
-
-  /* -- facilities wing ---------------------------------------------------- */
-  // Re-fetched every render so an upgrade made in Finances shows up as soon
-  // as the player comes back to the office.
-  let fin = null;
-  try { fin = await api("/api/finances"); } catch (e) { /* wing renders unleveled */ }
-
-  const wing = el("div", "office-wing");
-  wing.appendChild(el("div", "office-wing-title",
-    `Facilities wing <span class="muted">— build & upgrade under Finances</span>`));
-  const row = el("div", "office-wing-row");
-  for (const f of OFFICE_FACILITY_ROOMS) {
-    const info = fin && fin.facilities ? fin.facilities[f.id] : null;
-    const level = info ? info.level : 1;
-    const built = level > 0;
-    const d = el("div", "office-fac" + (built ? "" : " locked"));
-    const img = el("img");
-    img.src = `${OFFICE_ART}/${f.id}_l${level >= 3 ? 3 : 1}.png`;
-    img.alt = f.label;
-    img.draggable = false;
-    d.appendChild(img);
-    d.appendChild(el("span", "office-badge" + (built ? "" : " off"), built ? `L${level}` : "not built"));
-    const sub = built
-      ? `level ${level}/${info ? info.max_level : 3}` +
-        (info && info.upkeep ? ` · ${money(info.upkeep)}/wk` : "") + ` · ${f.sub}`
-      : `empty lot — ${f.sub}`;
-    d.appendChild(el("div", "office-fac-name", `<b>${f.label}</b><br><span class="muted">${sub}</span>`));
-    d.title = built
-      ? `${f.label} (level ${level}) — manage in Finances`
-      : `${f.label} not built yet — open Finances to invest`;
-    d.onclick = () => officeGoTab("finances");
-    row.appendChild(d);
-  }
-  wing.appendChild(row);
-  card.appendChild(wing);
-
   v.appendChild(card);
 }

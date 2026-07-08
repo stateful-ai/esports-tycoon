@@ -21,6 +21,7 @@ esports-sim = "esports_sim.app.cli:main"
 dev = [
   "pytest>=8.0",
   "pytest-xdist>=3.5",
+  "pillow>=10.0",  # office guide rasterizer (scripts/render_office_guide.py)
 ]
 web = [
   "fastapi>=0.111",
