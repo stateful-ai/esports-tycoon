@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from esports_sim.manager import market, narrative, sponsors, staff, training
+from esports_sim.manager import economy, market, narrative, sponsors, staff, training
 from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
@@ -181,7 +181,7 @@ def advance_week(
         roster = gs.roster(tid)
         if tid == gs.user_team_id:
             focus = gs.training_focus.get(tid, "tactical")
-            mult = staff.coach_multiplier(gs)
+            mult = staff.coach_multiplier(gs) * economy.facility_training_mult(gs)
         else:
             focus = training.ai_pick_focus(roster, week_rng)
             gs.training_focus[tid] = focus
@@ -194,13 +194,21 @@ def advance_week(
         for p in gs.roster(gs.user_team_id):
             p.stamina = round(min(100.0, p.stamina + recovery), 1)
 
-    # 3. Finances.
+    # 3. Finances. The user org's merch/ticket line rides its real
+    # win-rate momentum; AI orgs stay at the neutral default.
     for tid in sorted(gs.teams):
-        cost = staff.weekly_cost(gs) if tid == gs.user_team_id else 0
-        income, expenses = apply_weekly_finance(
-            gs.teams[tid], gs.roster(tid), staff_cost=cost
+        is_user = tid == gs.user_team_id
+        cost = staff.weekly_cost(gs) if is_user else 0
+        rec = gs.standings.get(tid)
+        win_rate = (
+            rec.wins / max(rec.wins + rec.losses, 1)
+            if is_user and rec is not None
+            else 0.5
         )
-        if tid == gs.user_team_id:
+        income, expenses = apply_weekly_finance(
+            gs.teams[tid], gs.roster(tid), staff_cost=cost, win_rate=win_rate
+        )
+        if is_user:
             report.user_income, report.user_expenses = income, expenses
 
     # 3b. Sponsorship (user org only): pay the active deal, roll offers.
@@ -581,7 +589,11 @@ def _tick_scouting(gs: GameState) -> None:
     if target != "market" and target not in gs.teams:
         return
     cur = gs.scout_progress.get(target, 0.0)
-    gain = SCOUT_WEEKLY_GAIN * staff.scout_multiplier(gs)
+    gain = (
+        SCOUT_WEEKLY_GAIN
+        * staff.scout_multiplier(gs)
+        * economy.facility_scout_mult(gs)
+    )
     # The market is a bigger beat than one team: slower coverage.
     if target == "market":
         gain *= 0.6

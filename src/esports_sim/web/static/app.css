@@ -196,10 +196,17 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 }
 #v-score { font-size: var(--es-text-2xl, 22px); font-weight: 700; }
 .viewer-main { flex: 1; display: flex; min-height: 0; }
-#v-map { flex: 1; height: 100%; background: var(--es-color-bg-sunken, #0b0d12); }
+#v-map { flex: 1 1 60%; min-width: 320px; height: 100%; background: var(--es-color-bg-sunken, #0b0d12); }
 .viewer-side {
   width: 280px; border-left: 1px solid var(--es-color-border-primary, #262a35);
   padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow: hidden;
+}
+/* Narrow panels: stack the feed under the map instead of crushing it. */
+@media (max-width: 700px) {
+  .viewer-main { flex-direction: column; }
+  #v-map { min-width: 0; min-height: 300px; }
+  .viewer-side { width: auto; max-height: 180px; border-left: 0;
+    border-top: 1px solid var(--es-color-border-primary, #262a35); }
 }
 .v-round { font-size: var(--es-text-lg, 15px); }
 .v-banner { min-height: 20px; color: var(--es-color-text-warning, #e5a53a); }
@@ -348,5 +355,14 @@ svg.iso .plabel { font-size: 3.4px; }
 .util-info { fill: none; stroke: var(--es-viz-3, #3fb59b); stroke-width: .5; }
 .util-ult { fill: none; stroke: var(--es-color-brand, #ff4655); stroke-width: .6; }
 .util-generic { fill: var(--es-color-text-tertiary, #6c7383); }
+
+/* -- finances tab: sponsor slots + facilities (M4) ------------------------- */
+
+.slot-row {
+  padding: 6px 0; border-bottom: 1px dotted var(--es-color-border-secondary, #1c202b);
+}
+.slot-row:last-of-type { border-bottom: 0; }
+.facility-row { padding: 6px 0; border-bottom: 1px dotted var(--es-color-border-secondary, #1c202b); }
+.facility-row:last-child { border-bottom: 0; }
 
 .kill-flash { fill: none; stroke: var(--es-color-text-danger, #e5484d); stroke-width: .6; pointer-events: none; }

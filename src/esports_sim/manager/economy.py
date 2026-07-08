@@ -1,7 +1,8 @@
-"""Org finances: weekly cash flow and season prize money.
+"""Org finances: weekly cash flow, facilities, and season prize money.
 
-Tuned so a mid-table org roughly breaks even on sponsorship vs payroll —
-prize money and smart signings are where budgets are actually won.
+Tuned so a mid-table org roughly breaks even on base sponsorship vs
+payroll — prize money, merch/ticket momentum, and smart signings are
+where budgets are actually won.
 """
 
 from __future__ import annotations
@@ -15,20 +16,212 @@ from esports_sim.manager.state import (
 )
 from esports_sim.schemas import Player, Team
 
+# ---------------------------------------------------------------------------
+# Base sponsorship + revenue depth
+
 
 def weekly_sponsor_income(team: Team) -> int:
     fans_component = min(team.fan_count, 2_000_000) * 0.012
     return int(8_000 + team.reputation * 550 + fans_component)
 
 
+_MERCH_PER_FAN = 0.006
+_TICKET_PER_FAN = 0.004
+_FAN_CAP_FOR_REVENUE = 3_000_000
+
+
+def merch_ticket_income(team: Team, win_rate: float = 0.5) -> tuple[int, int]:
+    """Merch + ticket revenue, scaled by fan_count and recent win-rate
+    momentum (0..1, 0.5 = neutral: fresh campaigns and AI teams without a
+    tracked record use this). Returns (merch, tickets)."""
+    fans = min(team.fan_count, _FAN_CAP_FOR_REVENUE)
+    momentum = 0.6 + 1.4 * max(0.0, min(1.0, win_rate))
+    merch = int(fans * _MERCH_PER_FAN * momentum)
+    tickets = int(fans * _TICKET_PER_FAN * momentum)
+    return merch, tickets
+
+
 def apply_weekly_finance(
-    team: Team, roster: list[Player], staff_cost: int = 0
+    team: Team,
+    roster: list[Player],
+    staff_cost: int = 0,
+    win_rate: float | None = None,
+    facility_upkeep: int = 0,
 ) -> tuple[int, int]:
-    """Returns (income, expenses) after applying them to the balance."""
-    income = weekly_sponsor_income(team)
-    expenses = sum(p.salary for p in roster) + staff_cost
+    """Returns (income, expenses) after applying them to the balance.
+
+    `win_rate` (0..1, recent win rate) drives merch/ticket momentum; it
+    defaults to neutral (0.5) for callers without a standings record handy
+    — notably campaign.py's per-team weekly loop, which calls this
+    identically for every org and does not currently pass it. Wiring in
+    the user org's real win rate there is an optional enhancement (see the
+    parent session's hookup notes); the neutral default already keeps
+    merch/ticket income live for every team without any campaign.py edit.
+
+    `facility_upkeep` is a plain int (not a GameState) so the caller
+    decides which team, if any, actually owns facilities — it defaults to
+    0 so this is a no-op for every caller that doesn't pass it. In
+    practice the user org's facility upkeep is charged automatically from
+    `sponsors.weekly_tick` instead (see that function's docstring for why);
+    this parameter exists so upkeep can also be exercised/tested directly
+    against this function, and so a future campaign.py hookup can move the
+    deduction here if desired.
+    """
+    merch, tickets = merch_ticket_income(team, 0.5 if win_rate is None else win_rate)
+    income = weekly_sponsor_income(team) + merch + tickets
+    expenses = sum(p.salary for p in roster) + staff_cost + facility_upkeep
     team.balance += income - expenses
     return income, expenses
+
+
+# ---------------------------------------------------------------------------
+# Facilities (user org only)
+
+FACILITY_NAMES: tuple[str, ...] = ("training_center", "analytics_suite")
+FACILITY_MAX_LEVEL = 3
+FACILITY_UPGRADE_COST: dict[int, int] = {1: 150_000, 2: 350_000, 3: 700_000}
+FACILITY_UPKEEP_PER_LEVEL: dict[str, int] = {
+    "training_center": 1_800,
+    "analytics_suite": 2_200,
+}
+
+
+def facility_upgrade_cost(current_level: int) -> int | None:
+    """One-time cost to go from `current_level` to `current_level + 1`, or
+    None if already at FACILITY_MAX_LEVEL."""
+    target = current_level + 1
+    if target > FACILITY_MAX_LEVEL:
+        return None
+    return FACILITY_UPGRADE_COST[target]
+
+
+def facility_weekly_upkeep(facilities: dict[str, int]) -> int:
+    return sum(
+        FACILITY_UPKEEP_PER_LEVEL.get(name, 0) * level
+        for name, level in facilities.items()
+    )
+
+
+def facility_training_mult(gs: GameState) -> float:
+    """Training growth multiplier from the training_center facility: 1.0
+    bare, +6%/level, up to 1.18 at level 3.
+
+    NOT YET CONSUMED anywhere — campaign.py computes training growth via
+    `staff.coach_multiplier(gs)` and does not multiply by this. See the
+    report for the exact one-line hookup."""
+    return 1.0 + 0.06 * gs.facilities.get("training_center", 0)
+
+
+def facility_scout_mult(gs: GameState) -> float:
+    """Scouting speed multiplier from the analytics_suite facility: 1.0
+    bare, +8%/level, up to 1.24 at level 3.
+
+    NOT YET CONSUMED anywhere — campaign.py computes scouting gain via
+    `staff.scout_multiplier(gs)` and does not multiply by this. See the
+    report for the exact one-line hookup."""
+    return 1.0 + 0.08 * gs.facilities.get("analytics_suite", 0)
+
+
+# ---------------------------------------------------------------------------
+# Itemized breakdown + projection (user org only; feeds the finances tab)
+
+_SLOTS: tuple[str, ...] = ("title", "jersey", "peripheral")
+
+
+def _user_win_rate(gs: GameState) -> float:
+    record = gs.standings.get(gs.user_team_id)
+    if not record or (record.wins + record.losses) == 0:
+        return 0.5
+    return record.wins / (record.wins + record.losses)
+
+
+def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
+    """Itemized income/expense snapshot for the user's org, computed live
+    from current state (roster, sponsor slots, facilities, standings).
+
+    This is a run-rate *projection* for display, not a literal ledger of a
+    past week: some pieces (win-rate momentum, facility upkeep) are
+    applied automatically today via `sponsors.weekly_tick` rather than
+    through campaign.py's per-team call into `apply_weekly_finance` — see
+    that function's docstring. Every component here matches what actually
+    lands on the user's balance each week either way.
+    """
+    team = gs.teams[gs.user_team_id]
+    roster = gs.roster(gs.user_team_id)
+    win_rate = _user_win_rate(gs)
+
+    salaries = sum(p.salary for p in roster)
+    base_sponsor = weekly_sponsor_income(team)
+    merch, tickets = merch_ticket_income(team, win_rate)
+    sponsors_by_slot = {
+        slot: (
+            deal.weekly + int(deal.per_win * win_rate)
+            if (deal := gs.sponsor_slots.get(slot))
+            else 0
+        )
+        for slot in _SLOTS
+    }
+    sponsors_total = base_sponsor + sum(sponsors_by_slot.values())
+    upkeep = facility_weekly_upkeep(gs.facilities)
+
+    income_total = sponsors_total + merch + tickets
+    expense_total = salaries + staff_cost + upkeep
+
+    return {
+        "salaries": salaries,
+        "staff": staff_cost,
+        "sponsors_base": base_sponsor,
+        "sponsors_by_slot": sponsors_by_slot,
+        "sponsors_total": sponsors_total,
+        "merch": merch,
+        "tickets": tickets,
+        "facility_upkeep": upkeep,
+        "prizes": 0,  # episodic (season/playoff payouts), not a weekly run-rate item
+        "income_total": income_total,
+        "expense_total": expense_total,
+        "net": income_total - expense_total,
+    }
+
+
+def cash_projection(gs: GameState, staff_cost: int = 0, weeks: int = 8) -> list[dict]:
+    """Simple week-by-week balance projection: salaries/staff/merch/tickets/
+    facility upkeep held flat at current levels; active sponsor slot deals
+    pay out and drop off as their `weeks_left` counts down. No charting
+    lib — this feeds a plain table. Prize money and roster/contract churn
+    aren't modeled (keeps the projection honest about its own simplicity)."""
+    team = gs.teams[gs.user_team_id]
+    roster = gs.roster(gs.user_team_id)
+    win_rate = _user_win_rate(gs)
+
+    salaries = sum(p.salary for p in roster)
+    base_sponsor = weekly_sponsor_income(team)
+    merch, tickets = merch_ticket_income(team, win_rate)
+    upkeep = facility_weekly_upkeep(gs.facilities)
+    flat_net = (base_sponsor + merch + tickets) - (salaries + staff_cost + upkeep)
+
+    remaining = {slot: deal.weeks_left for slot, deal in gs.sponsor_slots.items()}
+    weekly_amounts = {
+        slot: deal.weekly + int(deal.per_win * win_rate)
+        for slot, deal in gs.sponsor_slots.items()
+    }
+
+    balance = team.balance
+    rows = []
+    for w in range(1, weeks + 1):
+        slot_income = 0
+        for slot in list(remaining):
+            if remaining[slot] <= 0:
+                continue
+            slot_income += weekly_amounts[slot]
+            remaining[slot] -= 1
+        net = flat_net + slot_income
+        balance += net
+        rows.append({"week": gs.week + w, "net": net, "balance": balance})
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Season prize money
 
 
 def pay_regular_season_prizes(gs: GameState) -> None:

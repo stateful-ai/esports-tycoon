@@ -37,19 +37,27 @@ async function boot() {
   if (!b.campaign) {
     const grid = $("#ng-teams");
     grid.innerHTML = "";
-    for (const t of b.teams) {
-      const btn = el(
-        "button",
-        "team-pick",
-        `<b>${t.name}</b> <span class="pill">${t.tag}</span><br>
-         <span class="muted">rank #${t.world_rank ?? "?"} · rep ${t.reputation} · ${money(t.balance)}</span>`
-      );
-      btn.onclick = async () => {
-        await api("/api/new", { team_id: t.id, seed: parseInt($("#ng-seed").value) || 2026 });
-        $("#newgame").classList.add("hidden");
-        refresh();
-      };
-      grid.appendChild(btn);
+    // Pick screen groups the world by region (authored orgs first).
+    const regions = [...new Set(b.teams.map((t) => t.region))].sort();
+    for (const region of regions) {
+      const head = el("div", "muted", region ? region.toUpperCase() : "");
+      head.style.gridColumn = "1 / -1";
+      head.style.marginTop = "6px";
+      grid.appendChild(head);
+      for (const t of b.teams.filter((x) => x.region === region)) {
+        const btn = el(
+          "button",
+          "team-pick",
+          `<b>${t.name}</b> <span class="pill">${t.tag}</span><br>
+           <span class="muted">rep ${t.reputation} · ${money(t.balance)}</span>`
+        );
+        btn.onclick = async () => {
+          await api("/api/new", { team_id: t.id, seed: parseInt($("#ng-seed").value) || 2026 });
+          $("#newgame").classList.add("hidden");
+          refresh();
+        };
+        grid.appendChild(btn);
+      }
     }
     $("#newgame").classList.remove("hidden");
     return;
@@ -361,6 +369,15 @@ async function standings(v) {
 }
 
 const REGION_CODES = { am: "Americas", em: "EMEA", pa: "Pacific", ch: "China" };
+const STAGE_LABELS = {
+  regular: "league",
+  semi: "semifinal",
+  final: "regional final",
+  masters_qf: "Masters QF",
+  masters_sf: "Masters semi",
+  masters_final: "MASTERS FINAL",
+};
+const stageLabel = (s) => STAGE_LABELS[s] ?? s;
 
 function bracketNode(f) {
   if (!f) return el("div", "bracket-node muted", "TBD");
@@ -449,7 +466,7 @@ async function schedule(v) {
           : `<b class="mono">${f.results[0].score_a}–${f.results[0].score_b}</b>`;
       }
       line.innerHTML = `
-        <span class="pill">${f.stage}</span>
+        <span class="pill">${stageLabel(f.stage)}</span>
         <span style="min-width:340px">${mine ? "<b>" : ""}${f.team_a_name} vs ${f.team_b_name}${mine ? "</b>" : ""}</span>
         ${score}`;
       for (let i = 0; i < f.results.length; i++) {
@@ -663,8 +680,12 @@ function dealLine(d) {
   return `${bits.join(" · ")} — ${d.weeks_left} weeks`;
 }
 
+const SLOT_LABELS = { title: "Title", jersey: "Jersey", peripheral: "Peripheral" };
+const FACILITY_LABELS = { training_center: "Training center", analytics_suite: "Analytics suite" };
+
 async function finances(v) {
   const data = await api("/api/finances");
+
   const card = el("div", "card");
   card.innerHTML = `<h2>Finances</h2>
     <table><tbody>
@@ -673,37 +694,107 @@ async function finances(v) {
       <tr><td>Last week income</td><td class="num">${money(data.last_week_income)}</td></tr>
       <tr><td>Last week expenses</td><td class="num">${money(data.last_week_expenses)}</td></tr>
     </tbody></table>
-    <p class="muted" style="margin-top:8px">Income = base sponsorship (reputation + fans) + deal money + prize money. Expenses = payroll + severance.</p>`;
+    <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
   v.appendChild(card);
 
-  const sp = el("div", "card");
-  sp.innerHTML = `<h2>Sponsorship</h2>`;
-  if (data.sponsor) {
-    sp.appendChild(el("p", "", `<b>${data.sponsor.name}</b> <span class="pill">${data.sponsor.kind}</span><br>
-      <span class="muted">${dealLine(data.sponsor)}</span>`));
-  } else {
-    sp.appendChild(el("p", "muted", "No active deal — running on base sponsorship only."));
+  // -- sponsor slots -------------------------------------------------------
+  const slotsCard = el("div", "card");
+  slotsCard.innerHTML = `<h2>Sponsorship slots</h2>`;
+  for (const slot of ["title", "jersey", "peripheral"]) {
+    const s = data.slots[slot];
+    const row = el("div", "slot-row");
+    if (s.deal) {
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
+        <b>${s.deal.name}</b> <span class="pill">${s.deal.kind}</span><br>
+        <span class="muted">${dealLine(s.deal)}</span>`;
+    } else if (!s.unlocked) {
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
+        <span class="muted">locked — needs ${s.rep_gate}+ reputation</span>`;
+    } else {
+      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot]}</span>
+        <span class="muted">no active deal</span>`;
+    }
+    slotsCard.appendChild(row);
+
+    if (s.offer) {
+      const box = el("div", "row");
+      box.innerHTML = `<span><b>Offer: ${s.offer.name}</b> <span class="pill">${s.offer.kind}</span><br>
+        <span class="muted">${dealLine(s.offer)} — expires if unanswered this week</span></span>`;
+      const yes = el("button", "btn btn-primary btn-sm", "Accept");
+      yes.onclick = async () => {
+        const r = await api("/api/actions/sponsor", { slot, accept: true });
+        toast(r.message); refresh(); render();
+      };
+      const no = el("button", "btn btn-sm", "Decline");
+      no.onclick = async () => {
+        const r = await api("/api/actions/sponsor", { slot, accept: false });
+        toast(r.message); render();
+      };
+      box.appendChild(yes);
+      box.appendChild(no);
+      slotsCard.appendChild(box);
+    }
   }
-  if (data.sponsor_offer) {
-    const o = data.sponsor_offer;
-    const box = el("div", "row");
-    box.innerHTML = `<span><b>Offer: ${o.name}</b> <span class="pill">${o.kind}</span><br>
-      <span class="muted">${dealLine(o)} — expires if unanswered this week</span></span>`;
-    const yes = el("button", "btn btn-primary btn-sm", "Accept");
-    yes.onclick = async () => {
-      const r = await api("/api/actions/sponsor", { accept: true });
-      toast(r.message); refresh(); render();
-    };
-    const no = el("button", "btn btn-sm", "Decline");
-    no.onclick = async () => {
-      const r = await api("/api/actions/sponsor", { accept: false });
-      toast(r.message); render();
-    };
-    box.appendChild(yes);
-    box.appendChild(no);
-    sp.appendChild(box);
+  v.appendChild(slotsCard);
+
+  // -- facilities ------------------------------------------------------------
+  const facCard = el("div", "card");
+  facCard.innerHTML = `<h2>Facilities</h2>`;
+  for (const name of ["training_center", "analytics_suite"]) {
+    const f = data.facilities[name];
+    const row = el("div", "row facility-row");
+    row.innerHTML = `<span style="min-width:240px"><b>${FACILITY_LABELS[name]}</b><br>
+      <span class="muted">level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span></span>`;
+    if (f.next_cost != null) {
+      const affordable = data.balance >= f.next_cost;
+      const btn = el("button", "btn btn-sm", `Upgrade — ${money(f.next_cost)}`);
+      btn.disabled = !affordable;
+      btn.title = affordable ? "" : "not enough banked";
+      btn.onclick = async () => {
+        const r = await api("/api/actions/facility_upgrade", { facility: name });
+        toast(r.message); refresh(); render();
+      };
+      row.appendChild(btn);
+    } else {
+      row.appendChild(el("span", "pill", "max level"));
+    }
+    facCard.appendChild(row);
   }
-  v.appendChild(sp);
+  v.appendChild(facCard);
+
+  // -- itemized weekly breakdown ----------------------------------------------
+  const b = data.breakdown;
+  const bkCard = el("div", "card");
+  bkCard.innerHTML = `<h2>This week's run rate</h2>
+    <table><tbody>
+      <tr><td>Base sponsorship</td><td class="num">${money(b.sponsors_base)}</td></tr>
+      <tr><td>Title sponsor</td><td class="num">${money(b.sponsors_by_slot.title || 0)}</td></tr>
+      <tr><td>Jersey sponsor</td><td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td></tr>
+      <tr><td>Peripheral sponsor</td><td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td></tr>
+      <tr><td>Merchandise</td><td class="num">${money(b.merch)}</td></tr>
+      <tr><td>Ticket sales</td><td class="num">${money(b.tickets)}</td></tr>
+      <tr><td>Prize money</td><td class="num">${money(b.prizes)}</td></tr>
+      <tr><td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td></tr>
+      <tr><td>Salaries</td><td class="num">-${money(b.salaries)}</td></tr>
+      <tr><td>Staff</td><td class="num">-${money(b.staff)}</td></tr>
+      <tr><td>Facility upkeep</td><td class="num">-${money(b.facility_upkeep)}</td></tr>
+      <tr><td class="mono"><b>Expense total</b></td><td class="num mono"><b>-${money(b.expense_total)}</b></td></tr>
+      <tr><td><b>Net</b></td><td class="num"><b>${b.net >= 0 ? "+" : ""}${money(b.net)}</b></td></tr>
+    </tbody></table>
+    <p class="muted" style="margin-top:8px">A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.</p>`;
+  v.appendChild(bkCard);
+
+  // -- 8-week cash projection -----------------------------------------------
+  const projCard = el("div", "card");
+  const rows = data.projection.map((p) => `
+    <tr><td>W${p.week}</td>
+      <td class="num">${p.net >= 0 ? "+" : ""}${money(p.net)}</td>
+      <td class="num">${money(p.balance)}</td></tr>`).join("");
+  projCard.innerHTML = `<h2>8-week cash projection</h2>
+    <table><thead><tr><th>Week</th><th class="num">Net</th><th class="num">Balance</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <p class="muted" style="margin-top:8px">Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.</p>`;
+  v.appendChild(projCard);
 }
 
 /* -- talk 1:1 ---------------------------------------------------------------------- */
@@ -763,7 +854,7 @@ function showReport(rep) {
     const score = f.best_of > 1
       ? `${f.map_score[0]}–${f.map_score[1]}`
       : f.results.length ? `${f.results[0].score_a}–${f.results[0].score_b}` : "";
-    row.innerHTML = `<span class="pill ${f.winner_id ? "" : ""}">${f.stage}</span>
+    row.innerHTML = `<span class="pill">${stageLabel(f.stage)}</span>
       <span style="min-width:320px">${mine ? "<b>" : ""}${f.team_a_name} vs ${f.team_b_name}${mine ? "</b>" : ""}</span>
       <b class="mono">${score}</b>`;
     for (let i = 0; i < f.results.length; i++) {

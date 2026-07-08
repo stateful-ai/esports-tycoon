@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from esports_sim.manager import development, market, sponsors, staff as staff_mod, talk
+from esports_sim.manager import development, economy, market, sponsors, staff as staff_mod, talk
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
@@ -450,20 +450,50 @@ def finances() -> dict:
         gs = S.require_gs()
         team = gs.teams[gs.user_team_id]
         payroll = sum(p.salary for p in gs.roster(gs.user_team_id))
+        staff_cost = staff_mod.weekly_cost(gs)
         rep = S.last_report
+
+        slots = {}
+        for slot in sponsors.SLOT_ORDER:
+            cfg = sponsors.SLOT_CONFIG[slot]
+            deal = gs.sponsor_slots.get(slot)
+            offer = gs.sponsor_slot_offers.get(slot)
+            slots[slot] = {
+                "deal": deal.model_dump() if deal else None,
+                "offer": offer.model_dump() if offer else None,
+                "rep_gate": cfg["rep_gate"],
+                "unlocked": team.reputation >= cfg["rep_gate"],
+            }
+
+        facilities = {}
+        for name in economy.FACILITY_NAMES:
+            level = gs.facilities.get(name, 0)
+            facilities[name] = {
+                "level": level,
+                "max_level": economy.FACILITY_MAX_LEVEL,
+                "next_cost": economy.facility_upgrade_cost(level),
+                "upkeep": economy.FACILITY_UPKEEP_PER_LEVEL.get(name, 0) * level,
+            }
+
         return {
             "balance": team.balance,
             "weekly_payroll": payroll,
             "last_week_income": rep.user_income if rep else None,
             "last_week_expenses": rep.user_expenses if rep else None,
+            # Legacy (pre-M4) fields, kept for saves with an in-flight deal.
             "sponsor": gs.sponsor.model_dump() if gs.sponsor else None,
             "sponsor_offer": gs.sponsor_offer.model_dump()
             if gs.sponsor_offer
             else None,
+            "slots": slots,
+            "facilities": facilities,
+            "breakdown": economy.weekly_breakdown(gs, staff_cost=staff_cost),
+            "projection": economy.cash_projection(gs, staff_cost=staff_cost),
         }
 
 
 class SponsorBody(BaseModel):
+    slot: str
     accept: bool
 
 
@@ -471,12 +501,45 @@ class SponsorBody(BaseModel):
 def sponsor_action(body: SponsorBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        fn = sponsors.accept_offer if body.accept else sponsors.decline_offer
-        ok, msg = fn(gs)
+        if body.slot not in sponsors.SLOT_ORDER:
+            raise HTTPException(422, f"slot must be one of {sponsors.SLOT_ORDER}")
+        fn = sponsors.accept_slot_offer if body.accept else sponsors.decline_slot_offer
+        ok, msg = fn(gs, body.slot)
         S.save()
         if not ok:
             raise HTTPException(409, msg)
         return {"ok": True, "message": msg}
+
+
+class FacilityBody(BaseModel):
+    facility: str
+
+
+@app.post("/api/actions/facility_upgrade")
+def facility_upgrade(body: FacilityBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.facility not in economy.FACILITY_NAMES:
+            raise HTTPException(422, f"facility must be one of {economy.FACILITY_NAMES}")
+        team = gs.teams[gs.user_team_id]
+        level = gs.facilities.get(body.facility, 0)
+        cost = economy.facility_upgrade_cost(level)
+        if cost is None:
+            raise HTTPException(409, "already at max level")
+        if team.balance < cost:
+            raise HTTPException(409, f"need {cost:,} cr banked for the upgrade")
+        team.balance -= cost
+        gs.facilities[body.facility] = level + 1
+        gs.push_news(
+            f"{team.name} upgrade {body.facility.replace('_', ' ')} to "
+            f"level {level + 1} ({cost:,} cr)."
+        )
+        S.save()
+        return {
+            "ok": True,
+            "message": f"{body.facility.replace('_', ' ')} upgraded to level {level + 1}",
+            "level": level + 1,
+        }
 
 
 # ---------------------------------------------------------------------------

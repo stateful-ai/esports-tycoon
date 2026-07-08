@@ -275,3 +275,15 @@ class GameState(BaseModel):
     def load(cls, path: Path | str) -> "GameState":
         raw = Path(path).read_text(encoding="utf-8")
         return cls.model_validate_json(raw)
+
+    # -- finance depth (M4) ---------------------------------------------------
+    # Three concurrent sponsor slots ("title", "jersey", "peripheral"), keyed
+    # by slot name; at most one active deal and one pending offer per slot.
+    # The legacy `sponsor`/`sponsor_offer` fields above are pre-M4 saves'
+    # single deal — no longer written to by new offers, but still honored so
+    # an in-flight deal keeps paying out (see manager/sponsors.py).
+    sponsor_slots: dict[str, SponsorDeal] = Field(default_factory=dict)
+    sponsor_slot_offers: dict[str, SponsorDeal] = Field(default_factory=dict)
+    # Upgradeable org facilities, level 0-3 (missing key == level 0):
+    # "training_center", "analytics_suite". User org only.
+    facilities: dict[str, int] = Field(default_factory=dict)
