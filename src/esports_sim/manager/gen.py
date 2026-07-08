@@ -66,6 +66,26 @@ _TEAM_NAMES = [
     ("Harbour City Nine", "HC9"),
     ("Outback Sentinels", "OBS"),
     ("Mumbai Meteors", "MUM"),
+    # Challengers-flavored orgs (tier 2 draws from the same pool; smaller
+    # brands read like smaller brands).
+    ("Rust Belt Gaming", "RBG"),
+    ("Bayou Kings", "BYK"),
+    ("Cascadia Youth", "CSY"),
+    ("Prairie Signal", "PRS"),
+    ("Yucatan Ceibas", "YCB"),
+    ("Patagonia Sur", "PSU"),
+    ("Midnight Polders", "MDP"),
+    ("Adriatic Sirens", "ADS"),
+    ("Baltic Meridian", "BLM"),
+    ("Anatolia Forge", "ANF"),
+    ("Sahara Compass", "SHC"),
+    ("Highlands Nine", "HL9"),
+    ("Hokkaido Drift", "HKD"),
+    ("Busan Tempest", "BST"),
+    ("Chao Phraya Owls", "CPO"),
+    ("Taipei Circuit", "TPC"),
+    ("Kathmandu Apex", "KTA"),
+    ("Coral Sea Drakes", "CSD"),
 ]
 
 # Playstyle archetypes: which attributes run hot (+) or cold (-) relative
@@ -134,6 +154,8 @@ def generate_player(
     quality: float,
     gd: GameData,
     region: Region = Region.AMERICAS,
+    age_lo: int = 17,
+    age_hi: int = 29,
 ) -> Player:
     """One player around a base `quality` (roughly 40-85), shaped by their
     playstyle archetype."""
@@ -142,7 +164,7 @@ def generate_player(
         + str(rng.choice(_HANDLE_PARTS_B)).lower()
     )
     real_name = f"{rng.choice(_FIRST_NAMES)} {rng.choice(_LAST_NAMES)}"
-    age = int(rng.integers(17, 29))
+    age = int(rng.integers(age_lo, age_hi))
     # Younger players trade current quality for growth headroom.
     q = quality - max(0, 22 - age) * 1.5
 
@@ -198,10 +220,15 @@ def generate_league_teams(
     n_teams: int = 6,
     region: Region = Region.AMERICAS,
     used_names: set[str] | None = None,
+    tier: int = 1,
 ) -> tuple[list[Team], list[Player]]:
     """Generate `n_teams` orgs with full rosters, spread across a quality
     ladder so the league has a top, a middle, and a bottom. `used_names`
-    keeps org names unique across multi-region generation."""
+    keeps org names unique across multi-region generation.
+
+    Tier 2 (Challengers) orgs are younger, rawer, and poorer: lower CA
+    on a lower ladder, teenage-heavy rosters with big CA→PA gaps — a
+    development circuit worth scouting."""
     teams: list[Team] = []
     players: list[Player] = []
     used = used_names if used_names is not None else set()
@@ -209,20 +236,26 @@ def generate_league_teams(
     name_order = [
         available[int(k)] for k in rng.permutation(len(available))
     ][:n_teams]
+    top_q = 74.0 if tier == 1 else 58.0
+    span = 16.0 if tier == 1 else 12.0
+    age_lo, age_hi = (17, 29) if tier == 1 else (17, 23)
     for i, name_idx in enumerate(name_order):
         name, tag = _TEAM_NAMES[int(name_idx)]
         used.add(name)
         slug = "team_" + name.lower().replace(" ", "_")
-        # Quality ladder from ~74 down to ~58. Kept narrow on purpose:
-        # with per-duel edges compounding over rounds, a 20+ point team
-        # gap makes the league a foregone conclusion.
-        team_q = 74.0 - i * (16.0 / max(n_teams - 1, 1))
+        # Quality ladder kept narrow on purpose: with per-duel edges
+        # compounding over rounds, a 20+ point team gap makes the league
+        # a foregone conclusion.
+        team_q = top_q - i * (span / max(n_teams - 1, 1))
         roster_ids: list[str] = []
         captain_id: str | None = None
         for j, (style, role) in enumerate(_ROSTER_SLOTS):
             pid = f"{slug}_p{j}"
-            quality = float(np.clip(team_q + rng.normal(0, 4), 40, 88))
-            p = generate_player(rng, pid, style, role, quality, gd, region=region)
+            quality = float(np.clip(team_q + rng.normal(0, 4), 35, 88))
+            p = generate_player(
+                rng, pid, style, role, quality, gd,
+                region=region, age_lo=age_lo, age_hi=age_hi,
+            )
             players.append(p)
             roster_ids.append(pid)
             if style == Playstyle.IGL:
@@ -233,11 +266,12 @@ def generate_league_teams(
                 name=name,
                 tag=tag,
                 region=region,
+                tier=tier,
                 player_ids=roster_ids,
                 captain_id=captain_id,
-                balance=int(rng.integers(300, 900)) * 1000,
+                balance=int(rng.integers(300, 900)) * (1000 if tier == 1 else 300),
                 reputation=round(_clamp(team_q + rng.normal(0, 6), 20, 95), 1),
-                fan_count=int(rng.integers(50, 800)) * 1000,
+                fan_count=int(rng.integers(50, 800)) * (1000 if tier == 1 else 150),
                 chemistry=round(float(rng.uniform(55, 85)), 1),
             )
         )

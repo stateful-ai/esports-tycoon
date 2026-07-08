@@ -190,6 +190,32 @@ function dashboard(v) {
   top.appendChild(tt);
   v.appendChild(top);
 
+  if ((s.transfer_offers ?? []).length) {
+    const oc = el("div", "card");
+    oc.innerHTML = `<h2>Transfer offers</h2>`;
+    for (const o of s.transfer_offers) {
+      const row = el("div", "row", `
+        <span style="min-width:280px"><b>${o.to_team_name}</b> bid
+        <b class="mono">${money(o.fee)}</b> for <b>${o.handle}</b></span>
+        <span class="muted">expires week ${o.expires_week}</span>`);
+      const sell = el("button", "btn btn-sm", "Sell");
+      sell.onclick = async () => {
+        if (!confirm(`Sell ${o.handle} to ${o.to_team_name} for ${money(o.fee)}?`)) return;
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, accept: true });
+        toast(r.message); refresh();
+      };
+      const keep = el("button", "btn btn-sm", "Decline");
+      keep.onclick = async () => {
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, accept: false });
+        toast(r.message); refresh();
+      };
+      row.appendChild(sell);
+      row.appendChild(keep);
+      oc.appendChild(row);
+    }
+    v.appendChild(oc);
+  }
+
   const news = el("div", "card");
   news.innerHTML = `<h2>News</h2>` + s.news.map((n) => `<div class="newsline">${n}</div>`).join("");
   v.appendChild(news);
@@ -236,7 +262,9 @@ async function roster(v) {
       ? `<button class="btn btn-sm" data-act="talk">Talk</button>
          <button class="btn btn-sm" data-act="renew">Renew</button>
          <button class="btn btn-sm" data-act="release">Release</button>`
-      : "";
+      : p.transfer_ask != null
+        ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>`
+        : "";
     const tr = el("tr", "", `
       <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
       <td>${stylePill(p)}</td>
@@ -247,6 +275,14 @@ async function roster(v) {
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>
       <td>${actions}</td>`);
+    if (!data.is_user_team && p.transfer_ask != null) {
+      tr.querySelector('[data-act="bid"]').onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm(`Buy ${p.handle} from ${data.team.name} for ${money(p.transfer_ask)}?`)) return;
+        const r = await api("/api/actions/bid", { player_id: p.id });
+        toast(r.message); refresh(); render();
+      };
+    }
     if (data.is_user_team) {
       tr.querySelector('[data-act="talk"]').onclick = (e) => {
         e.stopPropagation();
@@ -344,7 +380,7 @@ async function standings(v) {
     t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
       <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
     const tb = el("tbody");
-    league.rows.forEach((r, i) => {
+    const rowFor = (r, i) => {
       const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
         <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
@@ -360,10 +396,24 @@ async function standings(v) {
         App.tab = "roster";
         render();
       };
-      tb.appendChild(tr);
-    });
+      return tr;
+    };
+    league.rows.forEach((r, i) => tb.appendChild(rowFor(r, i)));
     t.appendChild(tb);
     card.appendChild(t);
+
+    // Challengers underneath: the development circuit scouts live in.
+    if ((league.tier2_rows ?? []).length) {
+      const h = el("h2", "", `${league.region.toUpperCase()} Challengers <span class="muted" style="font-weight:400">— tier 2, click through to scout</span>`);
+      h.style.marginTop = "14px";
+      card.appendChild(h);
+      const t2 = el("table");
+      t2.innerHTML = t.querySelector("thead").outerHTML;
+      const tb2 = el("tbody");
+      league.tier2_rows.forEach((r, i) => tb2.appendChild(rowFor(r, i)));
+      t2.appendChild(tb2);
+      card.appendChild(t2);
+    }
     v.appendChild(card);
   }
 }

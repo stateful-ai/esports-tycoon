@@ -326,10 +326,17 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
             (t.name for t in gs.teams.values() if pid in t.player_ids), "—"
         )
 
+    def tier_of(pid: str) -> int:
+        return next(
+            (t.tier for t in gs.teams.values() if pid in t.player_ids), 1
+        )
+
+    # Main awards are tier-1 only — Challengers numbers come against
+    # Challengers competition and get their own award below.
     eligible = {
         pid: st
         for pid, st in gs.player_stats.items()
-        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 1
     }
     out: list[AwardRecord] = []
 
@@ -358,6 +365,19 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
             rook = max(rookies, key=lambda pid: (rookies[pid].rating, pid))
             add("Rookie of the Season", rook,
                 f"{rookies[rook].rating:.2f} rating at age {gs.players[rook].age}")
+
+    # Challengers MVP: the tier-2 name every tier-1 scout now knows.
+    t2_eligible = {
+        pid: st
+        for pid, st in gs.player_stats.items()
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 2
+    }
+    if t2_eligible:
+        t2mvp = max(t2_eligible, key=lambda pid: (t2_eligible[pid].rating, pid))
+        add(
+            "Challengers MVP", t2mvp,
+            f"{t2_eligible[t2mvp].rating:.2f} rating, age {gs.players[t2mvp].age}",
+        )
 
     gs.awards.extend(out)
     del gs.awards[:-24]

@@ -15,6 +15,9 @@ class Team(BaseModel):
     name: str
     tag: str  # short prefix for scoreboards, e.g. "NXS"
     region: Region = Region.AMERICAS
+    # 1 = franchised league, 2 = Challengers (development circuit — fully
+    # simulated, never broadcast).
+    tier: int = 1
 
     # Roster. MVP = 5 active; substitutes/coaches land later.
     player_ids: list[str] = Field(default_factory=list)

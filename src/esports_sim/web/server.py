@@ -283,6 +283,17 @@ def state() -> dict:
                 for tid in order[:4]
             ],
             "champions": [c.model_dump() for c in gs.champions],
+            "transfer_offers": [
+                {
+                    "player_id": o.player_id,
+                    "handle": gs.players[o.player_id].handle,
+                    "to_team_name": gs.teams[o.to_team].name,
+                    "fee": o.fee,
+                    "expires_week": o.expires_week,
+                }
+                for o in gs.transfer_offers
+                if o.player_id in gs.players and o.to_team in gs.teams
+            ],
         }
 
 
@@ -302,9 +313,14 @@ def roster(team_id: str) -> dict:
         if team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
         fog = _team_fog(gs, team_id)
+        players = [_player_view(p, gs, fog) for p in gs.roster(team_id)]
+        # Rival rosters are buyable: show the seller's ask per player.
+        if team_id != gs.user_team_id:
+            for v in players:
+                v["transfer_ask"] = market.transfer_ask(gs, v["id"])
         return {
             "team": _team_view(gs.teams[team_id], gs),
-            "players": [_player_view(p, gs, fog) for p in gs.roster(team_id)],
+            "players": players,
             "is_user_team": team_id == gs.user_team_id,
             "fog": round(fog, 1),
             "scouting_this": gs.scout_target == team_id,
@@ -317,21 +333,26 @@ def standings() -> dict:
     with S.lock:
         gs = S.require_gs()
 
-        def rows_for(region: str | None) -> list[dict]:
+        def rows_for(region: str | None, tier: int = 1) -> list[dict]:
             return [
                 {
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
                 }
-                for tid in gs.standings_order(region)
+                for tid in gs.standings_order(region, tier=tier)
             ]
 
         user_region = str(gs.teams[gs.user_team_id].region)
         regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
         return {
             "regions": [
-                {"region": r, "is_user": r == user_region, "rows": rows_for(r)}
+                {
+                    "region": r,
+                    "is_user": r == user_region,
+                    "rows": rows_for(r),
+                    "tier2_rows": rows_for(r, tier=2),
+                }
                 for r in regions
             ],
             # Kept for any consumer expecting the flat world table.
@@ -345,9 +366,12 @@ def schedule() -> dict:
         gs = S.require_gs()
         return {
             "current_week": gs.week,
+            # Tier 2 plays but isn't broadcast — its results live in
+            # standings, stats, and scout reports, not the fixture list.
             "fixtures": [
                 _fixture_view(f, gs)
                 for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+                if f.tier == 1
             ],
         }
 
@@ -645,6 +669,39 @@ def talk_resolve(body: TalkBody) -> dict:
         if not ok:
             raise HTTPException(409, msg)
         return {"ok": True, "message": msg, "effects": effects}
+
+
+class BidBody(BaseModel):
+    player_id: str
+
+
+@app.post("/api/actions/bid")
+def bid(body: BidBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg = market.user_bid(gs, body.player_id)
+        S.save()
+        if not ok:
+            raise HTTPException(422, msg)
+        return {"ok": True, "message": msg}
+
+
+class OfferBody(BaseModel):
+    player_id: str
+    accept: bool
+
+
+@app.post("/api/actions/transfer_offer")
+def transfer_offer(body: OfferBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = market.respond_offer(gs, body.player_id, body.accept)
+        S.save()
+        if not ok:
+            raise HTTPException(422, msg)
+        return {"ok": True, "message": msg}
 
 
 class ScoutBody(BaseModel):

@@ -20,20 +20,27 @@ def campaign(game_data: GameData) -> GameState:
 
 
 def test_schedule_shape(campaign: GameState) -> None:
-    from esports_sim.manager.campaign import LEAGUE_REGIONS, TEAMS_PER_REGION
+    from esports_sim.manager.campaign import (
+        LEAGUE_REGIONS,
+        TEAMS_PER_REGION,
+        TIER2_PER_REGION,
+    )
 
-    n_teams = len(campaign.teams)
-    assert n_teams == len(LEAGUE_REGIONS) * TEAMS_PER_REGION
-    # Three parallel leagues: every team plays exactly once every week.
+    tier1 = [t for t in campaign.teams.values() if t.tier == 1]
+    tier2 = [t for t in campaign.teams.values() if t.tier == 2]
+    assert len(tier1) == len(LEAGUE_REGIONS) * TEAMS_PER_REGION
+    assert len(tier2) == len(LEAGUE_REGIONS) * TIER2_PER_REGION
+    # Parallel leagues: every tier-1 team plays exactly once every week
+    # of the franchised calendar (Challengers wraps earlier — 6 teams).
     n_weeks = regular_season_weeks(TEAMS_PER_REGION)
     for week in range(1, n_weeks + 1):
         seen: set[str] = set()
         for f in campaign.fixtures_for_week(week):
             assert f.team_a not in seen and f.team_b not in seen
             seen.update((f.team_a, f.team_b))
-        assert len(seen) == n_teams
-    # Each intra-region pair meets exactly twice; regular play never
-    # crosses regions.
+        assert {t.id for t in tier1} <= seen or week > n_weeks
+    # Each intra-league pair meets exactly twice; regular play never
+    # crosses regions or tiers.
     pairs = Counter(
         frozenset((f.team_a, f.team_b))
         for f in campaign.fixtures
@@ -45,6 +52,8 @@ def test_schedule_shape(campaign: GameState) -> None:
             assert (
                 campaign.teams[f.team_a].region == campaign.teams[f.team_b].region
             )
+            assert campaign.teams[f.team_a].tier == campaign.teams[f.team_b].tier
+            assert f.tier == campaign.teams[f.team_a].tier
 
 
 def test_full_season_lifecycle(campaign: GameState, game_data: GameData) -> None:
@@ -54,17 +63,33 @@ def test_full_season_lifecycle(campaign: GameState, game_data: GameData) -> None
     for _ in range(n_weeks):
         advance_week(campaign, game_data)
     assert campaign.phase == "playoffs"
-    # Regional semis, regional finals, Masters QF/SF/Final = 5 weeks.
+    # Regional semis, regional finals, Masters QF/SF/Final = 5 weeks,
+    # then Champions QF/SF/Final = 3 more.
     for _ in range(5):
+        advance_week(campaign, game_data)
+    assert campaign.phase == "playoffs"  # Masters done, Champions drawn
+    assert len(campaign.champions_seeds) == 8
+    for _ in range(3):
         advance_week(campaign, game_data)
     assert campaign.phase == "offseason"
     assert len(campaign.champions) == 1
-    # The Masters bracket actually happened, cross-region.
+    # Both internationals actually happened, cross-region.
     masters = [f for f in campaign.fixtures if f.bracket == "masters"]
     assert len(masters) == 5  # 2 QF + 2 SF + 1 final
     assert all(f.played for f in masters)
-    mf = next(f for f in masters if f.stage == "masters_final")
-    assert campaign.champions[-1].team_id == mf.winner_id
+    champs = [f for f in campaign.fixtures if f.bracket == "champions"]
+    assert len(champs) == 7  # 4 QF + 2 SF + 1 final
+    assert all(f.played for f in champs)
+    cf = next(f for f in champs if f.stage == "champ_final")
+    assert campaign.champions[-1].team_id == cf.winner_id
+    # Challengers ran silently underneath: tier-2 fixtures simmed with
+    # box scores feeding development, and every t2 player has stats.
+    t2 = [f for f in campaign.fixtures if f.tier == 2]
+    assert t2 and all(f.played for f in t2 if f.stage == "regular")
+    some_t2_team = next(t for t in campaign.teams.values() if t.tier == 2)
+    assert any(
+        pid in campaign.player_stats for pid in some_t2_team.player_ids
+    )
     advance_week(campaign, game_data)  # offseason tick
     assert campaign.phase == "regular"
     assert campaign.season == 2

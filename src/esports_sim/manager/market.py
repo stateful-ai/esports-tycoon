@@ -1,8 +1,11 @@
-"""Transfer market: free-agent signings, releases, contract renewals.
+"""Transfer market: free-agent signings, releases, renewals — and real
+transfers: contracted players moving between orgs for a fee.
 
-MVP rules: rosters are exactly five when healthy — to upgrade a slot you
-release first (paying severance), then sign. AI teams keep themselves
-legal automatically; the user does it from the roster/market screens.
+Roster rules: rosters are exactly five when healthy — to upgrade a slot
+you release first (paying severance), then sign or buy. AI teams keep
+themselves legal automatically; the user does it from the roster/market
+screens. AI↔AI transfers resolve instantly (news only); bids for USER
+players become TransferOffers the user answers.
 """
 
 from __future__ import annotations
@@ -11,7 +14,7 @@ import numpy as np
 
 from esports_sim.manager import development
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.schemas import Player
 from esports_sim.schemas.common import Playstyle
 
@@ -33,13 +36,14 @@ def asking_salary(p: Player) -> int:
     (prove-it deals) and the old (last contracts); mercenaries charge a
     premium, loyal players take a hometown number."""
     q = player_quality(p)
+    # Same curve gen.py uses for initial contracts (q=70 → ~5,400/wk).
     base = (q ** 1.6) * 6 / 100
     if p.age <= 19:
         base *= 0.8
     elif p.age >= 29:
         base *= 0.75
     base *= development.trait_value(p, "salary_mult", 1.0)
-    return max(1_200, int(np.round(base / 100) * 100))
+    return max(1_200, int(np.round(base) * 100))
 
 
 def can_sign(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
@@ -187,3 +191,186 @@ def _generate_rookie(gs: GameState, gd, rng: np.random.Generator) -> Player:
     gs.free_agent_ids.append(pid)
     gs.push_news(f"Prospect {p.handle} ({p.playstyle}) enters free agency.")
     return p
+
+# ---------------------------------------------------------------------------
+# Transfers: contracted players moving for a fee
+
+
+def transfer_value(p: Player) -> int:
+    """What a contracted player is worth on the market. Youth with a big
+    CA->PA gap carries a premium; expiring contracts sell at a discount
+    (why pay full freight for someone who walks in two months?)."""
+    ca = player_quality(p)
+    pa = development.potential_of(p)
+    # Curve calibrated so a 55-CA squaddie ≈ 95k, a 70-CA starter ≈ 240k,
+    # an 85-CA star ≈ 420k before premiums.
+    base = 800.0 * max(1.0, ca - 35.0) ** 1.6
+    gap_premium = max(0.0, pa - ca) / 40.0 * (1.5 if p.age <= 21 else 0.8)
+    base *= 1.0 + gap_premium
+    if p.age >= 28:
+        base *= 0.55
+    elif p.age >= 26:
+        base *= 0.8
+    base *= 0.5 + min(p.contract_weeks_left, 60) / 80.0
+    return max(10_000, int(round(base / 1000) * 1000))
+
+
+def team_of(gs: GameState, pid: str) -> str | None:
+    return next((t.id for t in gs.teams.values() if pid in t.player_ids), None)
+
+
+def transfer_ask(gs: GameState, pid: str) -> int:
+    """Seller's price: market value, plus a scarcity premium when the
+    player is the seller's best (nobody sells their franchise cheap)."""
+    p = gs.players[pid]
+    seller_id = team_of(gs, pid)
+    if seller_id is None:
+        return transfer_value(p)
+    roster = gs.roster(seller_id)
+    ranked = sorted(roster, key=lambda q: -player_quality(q))
+    mult = 1.0
+    if ranked and ranked[0].id == pid:
+        mult = 1.6
+    elif len(ranked) > 1 and ranked[1].id == pid:
+        mult = 1.25
+    return int(round(transfer_value(p) * mult / 1000) * 1000)
+
+
+def execute_transfer(
+    gs: GameState, pid: str, buyer_id: str, fee: int, weeks: int = 52
+) -> tuple[bool, str]:
+    """Move a contracted player for money. The buyer must have roster
+    space unless it's an AI org (which auto-releases its weakest)."""
+    seller_id = team_of(gs, pid)
+    if seller_id is None or seller_id == buyer_id:
+        return False, "player is not transferable"
+    seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
+    p = gs.players[pid]
+    if buyer.balance < fee:
+        return False, "buyer cannot afford the fee"
+    if len(buyer.player_ids) >= ROSTER_SIZE:
+        if buyer_id == gs.user_team_id:
+            return False, f"roster is full ({ROSTER_SIZE}); release someone first"
+        weakest = min(
+            (gs.players[q] for q in buyer.player_ids), key=player_quality
+        )
+        buyer.player_ids.remove(weakest.id)
+        weakest.contract_weeks_left = 0
+        gs.free_agent_ids.append(weakest.id)
+        if buyer.captain_id == weakest.id:
+            buyer.captain_id = buyer.player_ids[0] if buyer.player_ids else None
+    buyer.balance -= fee
+    seller.balance += fee
+    seller.player_ids.remove(pid)
+    buyer.player_ids.append(pid)
+    if seller.captain_id == pid:
+        seller.captain_id = seller.player_ids[0] if seller.player_ids else None
+    if buyer.captain_id is None:
+        buyer.captain_id = pid
+    p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
+    p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
+    p.morale = round(min(100.0, p.morale + 6.0), 1)
+    gs.push_news(
+        f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} "
+        f"for {fee:,} cr."
+    )
+    return True, f"{p.handle} joins {buyer.name} for {fee:,} cr"
+
+
+def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
+    """User buys a contracted player at the seller's ask."""
+    seller_id = team_of(gs, pid)
+    if seller_id is None:
+        return False, "player is a free agent — sign them instead"
+    if seller_id == gs.user_team_id:
+        return False, "that's your own player"
+    ask = transfer_ask(gs, pid)
+    team = gs.teams[gs.user_team_id]
+    p = gs.players[pid]
+    if team.balance < ask + asking_salary(p) * 8:
+        return False, f"need {ask + asking_salary(p) * 8:,} cr to cover fee + wages"
+    return execute_transfer(gs, pid, gs.user_team_id, ask)
+
+
+def respond_offer(gs: GameState, player_id: str, accept: bool) -> tuple[bool, str]:
+    offer = next(
+        (o for o in gs.transfer_offers if o.player_id == player_id), None
+    )
+    if offer is None:
+        return False, "no live offer for that player"
+    gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]
+    p = gs.players[player_id]
+    if not accept:
+        # Mercenaries wanted the move; everyone else shrugs.
+        if "mercenary" in p.personality_tags:
+            p.morale = round(max(0.0, p.morale - 4.0), 1)
+            gs.push_news(f"{p.handle} wanted the {gs.teams[offer.to_team].name} move.")
+        return True, f"declined {gs.teams[offer.to_team].name}'s bid for {p.handle}"
+    return execute_transfer(gs, player_id, offer.to_team, offer.fee)
+
+
+def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
+    """Weekly AI transfer activity: a couple of orgs go shopping. Tier-1
+    money raids tier-2 breakouts (the promotion pipeline) and makes the
+    occasional lateral move; bids for user players land on the user's
+    desk instead of resolving."""
+    # Expire stale offers first.
+    gs.transfer_offers = [
+        o for o in gs.transfer_offers if o.expires_week > gs.week
+    ]
+    if gs.phase != "regular":
+        return
+    moves = 0
+    buyers = sorted(
+        (t for t in gs.teams.values() if t.tier == 1 and t.id != gs.user_team_id),
+        key=lambda t: t.id,
+    )
+    for buyer in buyers:
+        if moves >= 2:
+            break
+        if rng.random() > 0.15:
+            continue
+        roster = gs.roster(buyer.id)
+        if len(roster) < ROSTER_SIZE:
+            continue  # holes get filled from free agency, not transfers
+        weakest_q = min(player_quality(p) for p in roster)
+        best: tuple[float, int, str, str] | None = None
+        for seller in sorted(gs.teams.values(), key=lambda t: t.id):
+            if seller.id == buyer.id:
+                continue
+            for pid in seller.player_ids:
+                p = gs.players[pid]
+                q = player_quality(p)
+                upgrade = q - weakest_q
+                # Tier-2 targets: buy the future, not just the present.
+                if seller.tier == 2:
+                    upgrade += max(0.0, development.potential_of(p) - q) * 0.5
+                if upgrade < 5.0:
+                    continue
+                fee = transfer_ask(gs, pid)
+                if buyer.balance < fee + asking_salary(p) * 10:
+                    continue
+                key = (upgrade, -fee, pid, seller.id)
+                if best is None or key > (best[0], -best[1], best[2], best[3]):
+                    best = (upgrade, fee, pid, seller.id)
+        if best is None:
+            continue
+        _, fee, pid, seller_id = best
+        if seller_id == gs.user_team_id:
+            if any(o.player_id == pid for o in gs.transfer_offers):
+                continue
+            gs.transfer_offers.append(
+                TransferOffer(
+                    player_id=pid,
+                    from_team=seller_id,
+                    to_team=buyer.id,
+                    fee=fee,
+                    expires_week=gs.week + 2,
+                )
+            )
+            gs.push_news(
+                f"{buyer.name} bid {fee:,} cr for {gs.players[pid].handle}."
+            )
+        else:
+            execute_transfer(gs, pid, buyer.id, fee)
+        moves += 1

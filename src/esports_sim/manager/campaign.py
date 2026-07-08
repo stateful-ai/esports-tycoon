@@ -65,24 +65,34 @@ class WeekReport:
 
 
 # The VCT-style world: three regional leagues of 8; their top two meet
-# at Masters after the regional playoffs.
+# at Masters after the regional playoffs. Underneath, a 6-team
+# Challengers circuit per region develops prospects — fully simulated,
+# never broadcast.
 LEAGUE_REGIONS = [Region.AMERICAS, Region.EMEA, Region.PACIFIC]
 TEAMS_PER_REGION = 8
+TIER2_PER_REGION = 6
 
 
 def _build_all_leagues(gs_teams: dict, map_ids: list[str], season: int) -> list:
-    """One double round-robin per region, weeks aligned so every league
-    plays the same calendar."""
+    """One double round-robin per (region, tier), weeks aligned so every
+    league plays the same calendar. Challengers (10 weeks) wraps before
+    the franchised leagues (14)."""
     fixtures = []
     for region in LEAGUE_REGIONS:
-        tids = sorted(
-            t.id for t in gs_teams.values() if t.region == region
-        )
-        regional = build_regular_season(tids, map_ids, season)
-        for f in regional:
-            # Region-qualified ids keep fixtures unique across leagues.
-            f.id = f"{f.id}{str(region)[:2]}"
-        fixtures.extend(regional)
+        for tier in (1, 2):
+            tids = sorted(
+                t.id
+                for t in gs_teams.values()
+                if t.region == region and t.tier == tier
+            )
+            if not tids:
+                continue
+            regional = build_regular_season(tids, map_ids, season)
+            for f in regional:
+                # Region+tier-qualified ids stay unique across leagues.
+                f.id = f"{f.id}{str(region)[:2]}" + ("t2" if tier == 2 else "")
+                f.tier = tier
+            fixtures.extend(regional)
     return fixtures
 
 
@@ -99,9 +109,13 @@ def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> G
             rng, gd, n_teams=TEAMS_PER_REGION - have,
             region=region, used_names=used_names,
         )
-        for t in gen_teams:
+        t2_teams, t2_players = generate_league_teams(
+            rng, gd, n_teams=TIER2_PER_REGION,
+            region=region, used_names=used_names, tier=2,
+        )
+        for t in gen_teams + t2_teams:
             teams[t.id] = t
-        for p in gen_players:
+        for p in gen_players + t2_players:
             players[p.id] = p
 
     fas = generate_free_agents(rng, gd, n=18)
@@ -165,12 +179,15 @@ def advance_week(
     week_rng = tree.derive("season", gs.season, "week", gs.week, "weekly")
     rt_gd = runtime_gamedata(gs, gd)
 
-    # 1. Matches.
+    # 1. Matches. Challengers games sim fully (development, stats,
+    # scouting) but never capture replay logs — nobody broadcasts tier 2.
     week_fixtures = gs.fixtures_for_week()
     week_kills: dict[str, int] = {}
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
-            gs, rt_gd, tree, f, collector=report.match_stats, events_out=events_out
+            gs, rt_gd, tree, f,
+            collector=report.match_stats,
+            events_out=None if f.tier == 2 else events_out,
         )
         report.fixtures.append(f)
         for stats in report.match_stats.get(f.id, []):
@@ -220,8 +237,9 @@ def advance_week(
     report.user_income += sponsors.weekly_tick(gs, user_won)
     sponsors.maybe_offer(gs, week_rng)
 
-    # 4. Contracts + AI roster upkeep + scouting.
+    # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
+    market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
     _tick_scouting(gs)
 
@@ -244,6 +262,22 @@ def advance_week(
         return [f for f in season_fixtures if f.stage == stage]
 
     if gs.phase == "regular" and gs.week == n_weeks:
+        # Challengers seasons wrap with the franchised leagues: champion
+        # by record, a modest prize, and a headline scouts actually read.
+        for region in LEAGUE_REGIONS:
+            t2 = gs.standings_order(str(region), tier=2)
+            if t2:
+                champ2 = gs.teams[t2[0]]
+                champ2.balance += 25_000
+                champ2.reputation = round(min(95.0, champ2.reputation + 2.0), 1)
+                best = max(
+                    gs.roster(champ2.id),
+                    key=lambda p: (gs.player_stats.get(p.id) and gs.player_stats[p.id].rating) or 0.0,
+                )
+                gs.push_news(
+                    f"{champ2.name} win the {str(region).upper()} Challengers "
+                    f"season — {best.handle} the standout."
+                )
         # Regional playoffs, one bracket per league.
         for region in LEAGUE_REGIONS:
             order = gs.standings_order(str(region))
@@ -351,21 +385,124 @@ def advance_week(
                 )
             )
             report.notes.append("The Masters grand final is next week.")
-        elif mf is not None and mf.played:
+        elif mf is not None and mf.played and not _stage_fixtures("champ_qf"):
+            # Masters resolves; CHAMPIONS — the season-capping second
+            # international — is drawn: the six Masters sides plus the two
+            # best remaining league records, seeded winner-first.
             assert mf.winner_id is not None
             runner_up = mf.team_b if mf.winner_id == mf.team_a else mf.team_a
             sf_losers = [
                 (f.team_b if f.winner_id == f.team_a else f.team_a) for f in msfs
             ]
             pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
-            champ = gs.teams[mf.winner_id]
+            gs.push_news(f"{gs.teams[mf.winner_id].name} win MASTERS.")
+
+            def rec_key(tid: str) -> tuple:
+                r = gs.standings[tid]
+                return (-r.wins, -r.diff, tid)
+
+            extras = [
+                t for t in gs.standings_order(tier=1) if t not in gs.masters_seeds
+            ][:2]
+            field = list(gs.masters_seeds) + extras
+            rest = sorted(
+                (t for t in field if t not in (mf.winner_id, runner_up)),
+                key=rec_key,
+            )
+            seeds = [mf.winner_id, runner_up] + rest
+            gs.champions_seeds = seeds
+            # Bracket halves: (1v8, 4v5) feed SF0; (2v7, 3v6) feed SF1.
+            pairs = [
+                (seeds[0], seeds[7]), (seeds[3], seeds[4]),
+                (seeds[1], seeds[6]), (seeds[2], seeds[5]),
+            ]
+            for i, (a, b) in enumerate(pairs):
+                maps, veto = veto_for(a, b)
+                gs.fixtures.append(
+                    Fixture(
+                        id=f"s{gs.season}cqf{i}",
+                        week=gs.week + 1,
+                        stage="champ_qf",
+                        bracket="champions",
+                        best_of=3,
+                        team_a=a,
+                        team_b=b,
+                        maps=maps,
+                        veto=veto,
+                    )
+                )
+            names = ", ".join(gs.teams[t].name for t in seeds)
+            gs.push_news(f"CHAMPIONS field set: {names}.")
+            report.notes.append("Champions begins next week.")
+        elif (
+            (cqfs := _stage_fixtures("champ_qf"))
+            and all(f.played for f in cqfs)
+            and not _stage_fixtures("champ_sf")
+        ):
+            w = [f.winner_id for f in sorted(cqfs, key=lambda f: f.id)]
+            for i, (a, b) in enumerate([(w[0], w[1]), (w[2], w[3])]):
+                maps, veto = veto_for(a, b)
+                gs.fixtures.append(
+                    Fixture(
+                        id=f"s{gs.season}csf{i}",
+                        week=gs.week + 1,
+                        stage="champ_sf",
+                        bracket="champions",
+                        best_of=3,
+                        team_a=a,
+                        team_b=b,
+                        maps=maps,
+                        veto=veto,
+                    )
+                )
+            report.notes.append("Champions semifinals next week.")
+        elif (
+            (csfs := _stage_fixtures("champ_sf"))
+            and all(f.played for f in csfs)
+            and not _stage_fixtures("champ_final")
+        ):
+            w = [f.winner_id for f in sorted(csfs, key=lambda f: f.id)]
+            maps, veto = veto_for(w[0], w[1])
+            gs.fixtures.append(
+                Fixture(
+                    id=f"s{gs.season}cfinal",
+                    week=gs.week + 1,
+                    stage="champ_final",
+                    bracket="champions",
+                    best_of=5,
+                    team_a=w[0],
+                    team_b=w[1],
+                    maps=maps + maps[:2],
+                    veto=veto,
+                )
+            )
+            report.notes.append("The CHAMPIONS grand final is next week.")
+        elif (
+            cf := next(iter(_stage_fixtures("champ_final")), None)
+        ) is not None and cf.played:
+            assert cf.winner_id is not None
+            cf_runner = cf.team_b if cf.winner_id == cf.team_a else cf.team_a
+            csfs = _stage_fixtures("champ_sf")
+            cqfs = _stage_fixtures("champ_qf")
+            gs.teams[cf.winner_id].balance += 500_000
+            gs.teams[cf.winner_id].reputation = round(
+                min(99.0, gs.teams[cf.winner_id].reputation + 6.0), 1
+            )
+            gs.teams[cf_runner].balance += 250_000
+            for f in csfs:
+                loser = f.team_b if f.winner_id == f.team_a else f.team_a
+                gs.teams[loser].balance += 120_000
+            for f in cqfs:
+                loser = f.team_b if f.winner_id == f.team_a else f.team_a
+                gs.teams[loser].balance += 60_000
+            champ = gs.teams[cf.winner_id]
             gs.champions.append(
                 ChampionRecord(
                     season=gs.season, team_id=champ.id, team_name=champ.name
                 )
             )
             gs.push_news(
-                f"{champ.name} win MASTERS — Season {gs.season} world champions!"
+                f"{champ.name} win CHAMPIONS — Season {gs.season} world champions!"
             )
             gs.phase = "offseason"
             report.notes.append(
@@ -650,6 +787,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # candidate market refreshes.
     gs.scout_progress = {}
     gs.masters_seeds = []
+    gs.champions_seeds = []
+    gs.transfer_offers = []
     gs.season += 1
     staff.refresh_candidates(gs)
     gs.week = 1

@@ -59,6 +59,8 @@ class Fixture(BaseModel):
     # "league" = intra-region, "masters" = cross-region. Default keeps
     # pre-VCT saves loading.
     bracket: str = "league"
+    # 1 = franchised, 2 = Challengers (simmed, no replay capture).
+    tier: int = 1
     best_of: int = 1
     team_a: str
     team_b: str
@@ -168,6 +170,19 @@ class SponsorDeal(BaseModel):
     weeks_left: int = 0
 
 
+class TransferOffer(BaseModel):
+    """An AI org's bid for one of the user's contracted players. Sits on
+    the table for a bounded number of weeks, then quietly withdraws."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    player_id: str
+    from_team: str
+    to_team: str
+    fee: int
+    expires_week: int
+
+
 class AwardRecord(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -214,9 +229,16 @@ class GameState(BaseModel):
     # Talk module: one 1:1 per week. Holds "s{season}w{week}" once used.
     talked_week: str = ""
 
+    # Incoming transfer bids for user players (AI↔AI moves resolve
+    # instantly and only leave news lines).
+    transfer_offers: list[TransferOffer] = Field(default_factory=list)
+
     # Masters seeding (set when the international bracket is drawn;
     # cleared at offseason). Seeds 1-3 = regional champs by record.
     masters_seeds: list[str] = Field(default_factory=list)
+    # Champions (the season-capping second international): 8 teams —
+    # the six Masters sides plus the two best remaining league records.
+    champions_seeds: list[str] = Field(default_factory=list)
 
     # Sponsorship (user team only; AI org finances stay background).
     sponsor: SponsorDeal | None = None
@@ -242,18 +264,22 @@ class GameState(BaseModel):
                 return f
         return None
 
-    def standings_order(self, region: str | None = None) -> list[str]:
-        """Table order, optionally restricted to one region's league."""
+    def standings_order(
+        self, region: str | None = None, tier: int = 1
+    ) -> list[str]:
+        """Table order, optionally restricted to one region's league.
+        Tables are per-tier; pass tier=0 for everything."""
 
         def key(tid: str) -> tuple:
             r = self.standings[tid]
             return (-r.wins, -(r.diff), -r.rounds_won, tid)
 
-        tids = (
-            [t for t in self.standings if str(self.teams[t].region) == region]
-            if region is not None
-            else list(self.standings)
-        )
+        tids = [
+            t
+            for t in self.standings
+            if (region is None or str(self.teams[t].region) == region)
+            and (tier == 0 or self.teams[t].tier == tier)
+        ]
         return sorted(tids, key=key)
 
     def regions(self) -> list[str]:
