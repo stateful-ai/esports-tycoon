@@ -206,10 +206,6 @@ def advance_week(
         for stats in report.match_stats.get(f.id, []):
             _aggregate_stats(gs, f, stats, week_kills)
 
-    # 1b. AI coaches adapt their identity to how the season is going —
-    # winners entrench, strugglers drift back toward vanilla.
-    _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
-
     # 2. Training (user focus is whatever they set; AI picks its own).
     for tid in sorted(gs.teams):
         roster = gs.roster(tid)
@@ -536,8 +532,15 @@ def advance_week(
                 f"{champ.name} are world champions. Offseason next week."
             )
 
-    # 6. News (before the week label moves on).
+    # 6. News (before the week label moves on). Recaps read each winner's
+    # tactics, so this must run BEFORE the coaches adapt below — otherwise a
+    # recap could credit a style the team only shifted to after the match.
     narrative.weekly_news(gs, report, week_kills)
+
+    # 6b. AI coaches review the week and adapt their identity for next week —
+    # winners entrench, strugglers drift back toward vanilla. Deliberately
+    # after the news so the match-time tactics are what gets reported.
+    _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
     # 7. Inbox: aggregate the week's outcomes into the notification feed.
     # Runs last so it can read every subsystem's artifacts (news included),

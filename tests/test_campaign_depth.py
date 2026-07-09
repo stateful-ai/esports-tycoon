@@ -129,3 +129,6 @@ def test_best_defensive_team_award_is_granted() -> None:
     a = team_awards[-1]
     assert a.player_id in gs.players
     assert "%" in a.value
+    # CLI news is ASCII-only (cp1252 consoles) — the award line must comply.
+    def_news = [n for n in gs.news if "Best Defensive Team" in n]
+    assert def_news and all(n.isascii() for n in def_news)

@@ -435,7 +435,7 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
         )
         out.append(rec)
         gs.push_news(
-            f"Best Defensive Team: {team.name} — {best_rate:.0%} def round win."
+            f"Best Defensive Team: {team.name} - {best_rate:.0%} def round win."
         )
 
     gs.awards.extend(out)
