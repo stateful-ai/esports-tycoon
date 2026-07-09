@@ -488,21 +488,21 @@ svg.iso .plabel { font-size: 3.4px; }
    line-work over it: region borders + elevation still read, callouts/gimmicks
    /players keep full weight, and the paint shows through the glass floors. */
 #v-map.has-paint .floor {
-  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 20%, transparent);
-  stroke: color-mix(in srgb, var(--es-color-border-primary, #262a35) 65%, transparent);
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 7%, transparent);
+  stroke: color-mix(in srgb, var(--es-color-border-primary, #262a35) 60%, transparent);
   stroke-width: .35;
 }
 #v-map.has-paint .floor-site {
-  fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 15%, transparent);
+  fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 7%, transparent);
 }
 #v-map.has-paint .floor-raised {
-  fill: color-mix(in srgb, #fff 12%, transparent);
+  fill: color-mix(in srgb, #fff 5%, transparent);
 }
-#v-map.has-paint .floor-wall { opacity: .38; }
+#v-map.has-paint .floor-wall { opacity: .14; }
 #v-map.has-paint .prop-half,
-#v-map.has-paint .prop-full { opacity: .55; }
-#v-map.has-paint .prop-side { opacity: .8; }
-#v-map.has-paint .corridor { opacity: .35; }
+#v-map.has-paint .prop-full { opacity: .16; }
+#v-map.has-paint .prop-side { opacity: .22; }
+#v-map.has-paint .corridor { opacity: .16; }
 #v-map.has-paint .callout-label { opacity: .85; }
 
 /* Kill feed / event ticker: agent icon + agent name lead, handle dimmed. */

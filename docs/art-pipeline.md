@@ -161,23 +161,51 @@ state patches.
 | `scripts/render_office_guide.py` | guide rasterizer | bounds math must match `officeWorldRect()` in office.js exactly |
 | scratchpad `structcheck.py` / `composite.py` | gate + composite | promoted here if they harden further |
 
-## Applying it to maps (next target)
+## Maps (SHIPPED — v1 pass, 2026-07-09)
 
-The match maps already have everything the office had: floor-plan
-geometry (`data/maps/geometry/*.yaml` — rooms, props, elevation) and an
-iso projection shared with the viewer. Plan:
+All five maps are painted and live in the viewer. The working chain:
 
-1. Guide renderer variant for maps: rasterize map geometry (floors,
-   walls, crates, site tint, elevation shadows) at the viewer's exact
-   viewBox transform.
-2. Style ref per map theme (haven monastery, bind desert domes, …) —
-   one shared "broadcast map diorama" base style + per-map palette.
-3. Anchored edit + IoU gate as above. The painted map becomes a backdrop
-   `<image>` under the viewer's existing dynamic layers (players,
-   utility, spike are already SVG on top).
-4. States: maps are static (no variants), so no compositing needed —
-   one painted image per map. Doors/teleporters could get small state
-   patches later using the office annex technique.
+- `scripts/render_map_guide.py` rasterizes every map at the viewer's
+  exact transform (viewBox −110 −12 220 128 at 8 px/unit → 1760×1024;
+  constants documented in the script). `viewer.js` probes
+  `assets/maps/painted/<map>.webp` and layers it pixel-true as the
+  bottom SVG layer; geometry becomes whisper-level glass (floors ~7%,
+  props ~16%) so paint shows and the vector borders stay authoritative.
+- Style: `assets/maps/style/briefs.md` — shared broadcast-diorama spine
+  + per-map paragraphs distilled from real-map references (text only).
+  Winning verbatim prompts per map: `assets/maps/style/candidates/
+  prompts/`.
+- Results: IoU 0.972–0.996, ~2–7 generations per map, all Gemini
+  flash-image wins. **Ludo editImage is wrong for map guides** (2/2
+  re-imagined the layout as a glyph-covered diorama) — Gemini is the
+  map repaint tool; the office-shell Ludo win did not transfer.
+- Map-specific prompt rules that earned their place:
+  - Tinted plates get literally preserved unless told "Repaint EVERY
+    plate, including the colored ones: no plate may remain a flat
+    untextured color slab" + one material sentence per zone tint.
+  - The seam rule: structures may stand ONLY along plate borders facing
+    the dark void — never mid-plate, never on a seam where two plates
+    touch; every touching seam is an open walkway (the sim walks
+    players through there).
+  - Theme priors beat bans (monastery ⇒ courtyard walls 5/5, temple ⇒
+    water pools 3/4 despite "never water"): don't re-roll — plan for
+    **crop surgery**: crop the flawed region with margin → edit the
+    crop → per-channel mean/std color-transfer (Gemini regrades crops)
+    → feathered whole-crop paste. Whole-image "remove X" edits destroy
+    complex dioramas, and diff-region masks fail (Gemini re-frames
+    crops by a few percent).
+  - The deterministic outside-mask (carve everything outside the guide
+    footprint back to ground navy with PIL) is load-bearing: it fixes
+    void spill for free and severs paint bridging separated plates.
+  - Gate = IoU ≥ 0.86 **+ void-spill metric ≤ ~0.15 + a 50%-blend
+    overlay eyeball** — full-bleed repaints can fake IoU after masking,
+    and the overlay catches composition failures the numbers miss.
+  - Gemini returns 1344×768 for 1760×1024 input; LANCZOS upscale back
+    is fine (post-resize IoUs 0.94–0.996).
+- States: maps are static — one painted webp per map. Doors/teleporters
+  could get small state patches later using the office annex technique.
+- Reusable scripts from the pass (scratchpad): `map_gate.py` (gate +
+  spill + overlay + outside-mask), `croppaste.py` (surgical edits).
 
 ## Word on engines (owner decision log)
 
