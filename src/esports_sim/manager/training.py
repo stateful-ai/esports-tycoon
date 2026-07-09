@@ -22,6 +22,29 @@ _CATEGORY_ATTRS: dict[str, list[str]] = {
     "team": ["comms_quality"],
 }
 
+# System fit: a player whose playstyle suits the coach's system gets more
+# meaningful reps and develops faster; a mismatch develops slower. Each
+# playstyle keys off the tactic dials it lives on. Neutral tactics (every
+# dial 50) yield exactly 1.0, so default teams — and the development tests —
+# are unchanged.
+_FIT_DIALS: dict[str, list[str]] = {
+    "entry": ["aggression", "pace"],
+    "awper": ["aggression"],
+    "lurker": ["map_control"],
+    "igl": ["util_discipline", "map_control"],
+    "support": ["util_discipline"],
+    "anchor": ["util_discipline"],
+}
+_FIT_SPAN = 0.15  # per fully-cranked matching dial
+
+
+def _system_fit_mult(team: Team, p: Player) -> float:
+    dials = _FIT_DIALS.get(str(p.playstyle), [])
+    bonus = sum(
+        (getattr(team.tactics, d) - 50.0) / 50.0 for d in dials
+    ) * _FIT_SPAN
+    return float(np.clip(1.0 + bonus, 0.7, 1.3))
+
 
 def growth_rate(age: int) -> float:
     """Weekly attribute gain baseline by age."""
@@ -69,7 +92,7 @@ def apply_training(
 
     attrs = _CATEGORY_ATTRS.get(focus, _CATEGORY_ATTRS["tactical"])
     for p in roster:
-        rate = _player_rate(p)
+        rate = _player_rate(p) * _system_fit_mult(team, p)
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.
@@ -96,8 +119,15 @@ def apply_training(
         team.chemistry = round(min(100.0, team.chemistry + chem_regen), 1)
 
 
-def ai_pick_focus(roster: list[Player], rng: np.random.Generator) -> str:
-    """AI coaching: rest when gassed, otherwise train the weakest category."""
+def ai_pick_focus(
+    roster: list[Player],
+    rng: np.random.Generator,
+    team: Team | None = None,
+) -> str:
+    """AI coaching: rest when gassed, otherwise train toward the roster's
+    needs — the weakest category by default, but a young roster spends some
+    weeks building mechanics on its prospects, and a team with a strong
+    tactical identity trains the attributes that identity leans on."""
     avg_stamina = sum(p.stamina for p in roster) / max(len(roster), 1)
     if avg_stamina < 55:
         return "rest"
@@ -107,6 +137,17 @@ def ai_pick_focus(roster: list[Player], rng: np.random.Generator) -> str:
         for cat, attrs in _CATEGORY_ATTRS.items()
     }
     weakest = min(sorted(cat_avgs), key=lambda c: cat_avgs[c])
+    # Youth development: a young core spends reps on raw mechanics.
+    avg_age = sum(p.age for p in roster) / max(len(roster), 1)
+    if avg_age <= 21.0 and rng.random() < 0.35:
+        return "mechanical"
+    # Identity training: sharp systems drill the attributes they run on.
+    if team is not None:
+        tac = team.tactics
+        if max(tac.util_discipline, tac.map_control) >= 68.0 and rng.random() < 0.30:
+            return "tactical"
+        if max(tac.aggression, tac.pace) >= 68.0 and rng.random() < 0.30:
+            return "mechanical"
     # A little variety so every AI team doesn't march in lockstep.
     if rng.random() < 0.25:
         return str(rng.choice([c for c in FOCUS_OPTIONS if c != weakest]))
