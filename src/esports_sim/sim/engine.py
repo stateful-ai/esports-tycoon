@@ -747,7 +747,25 @@ class _MatchSim:
                         # A lurker that grabs the spike abandons the flank
                         # and rejoins the hit — otherwise the team would
                         # execute without the spike and lose on time.
+                        was_lurker = q in self._lurkers
                         self._lurkers.discard(q)
+                        # If the execute is already underway, route the fresh
+                        # carrier onto site: its stale goto:<drop> order would
+                        # otherwise park it at the pickup spot (which the
+                        # plant logic only overrides once on-site) until the
+                        # round times out. Neutral-safe: lurkers only exist
+                        # above map_control 50, so this never fires at 50.
+                        if was_lurker and went:
+                            site_cs = self._site_callouts(target_site)
+                            if self.p[q].callout not in site_cs and site_cs:
+                                dest = min(
+                                    site_cs,
+                                    key=lambda c: (
+                                        self.dist.get((self.p[q].callout, c), 99),
+                                        c,
+                                    ),
+                                )
+                                self._order(q, f"goto:{dest}")
                         break
 
             # -- coach re-orders --------------------------------------------------------------

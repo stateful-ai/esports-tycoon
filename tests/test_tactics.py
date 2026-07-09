@@ -110,3 +110,37 @@ def test_lurker_that_grabs_spike_rejoins_the_hit(monkeypatch) -> None:
     for s in range(40):
         _sim(s, map_control=100.0)
     assert violations == 0, f"a lurker held the spike at ordering time ({violations} ticks)"
+
+
+def test_spike_carrier_never_parks_off_site_mid_execute(monkeypatch) -> None:
+    """A fresh spike carrier (e.g. an ex-lurker who fetched a dropped spike)
+    must be moving, on-site, or ordered toward site once the execute is
+    live — never parked at an off-site pickup spot, which would stall the
+    round out to a time loss. Verified to fire ~200 ticks if the on-pickup
+    site re-route is removed."""
+    from esports_sim.sim import engine as eng
+
+    stalls = 0
+    orig = eng._MatchSim._update_orders
+
+    def checkpoint(self, tick, alive_atk, alive_dfn, target_site, spike_planted,
+                   planted_at, plant_tick, went, rotate_at, post_plant_spots):
+        nonlocal stalls
+        if went and not spike_planted:
+            site_cs = set(self._site_callouts(target_site))
+            for q in alive_atk:
+                ps = self.p[q]
+                if not ps.has_spike:
+                    continue
+                moving = ps.move_eta >= 0
+                on_site = ps.callout in site_cs
+                to_site = ps.order.startswith("goto:") and ps.order.split(":", 1)[1] in site_cs
+                if not (moving or on_site or to_site or ps.order == "plant"):
+                    stalls += 1
+        return orig(self, tick, alive_atk, alive_dfn, target_site, spike_planted,
+                    planted_at, plant_tick, went, rotate_at, post_plant_spots)
+
+    monkeypatch.setattr(eng._MatchSim, "_update_orders", checkpoint)
+    for s in range(40):
+        _sim(s, map_control=100.0)
+    assert stalls == 0, f"spike carrier parked off-site during execute ({stalls} ticks)"
