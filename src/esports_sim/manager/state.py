@@ -270,8 +270,15 @@ class RetiredRecord(BaseModel):
 
 
 class TransferOffer(BaseModel):
-    """An AI org's bid for one of the user's contracted players. Sits on
-    the table for a bounded number of weeks, then quietly withdraws."""
+    """A bid for one of the seller's contracted players (`player_id`, owned by
+    `from_team`) from `to_team`. Sits on the table for a bounded number of weeks,
+    then quietly withdraws.
+
+    A plain cash bid leaves the package fields at their defaults (`fee` cash to
+    the seller, nothing coming back). A package bid additionally sends
+    `offer_player_ids` (players moving from the buyer to the seller) and may
+    route cash either way via `cash_to_seller` / `cash_to_buyer`; when a package
+    is present `fee` mirrors `cash_to_seller` for backward-compatible display."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -280,6 +287,10 @@ class TransferOffer(BaseModel):
     to_team: str
     fee: int
     expires_week: int
+    # Package extras (default empty/zero == a plain cash bid).
+    offer_player_ids: list[str] = Field(default_factory=list)
+    cash_to_seller: int = 0
+    cash_to_buyer: int = 0
 
 
 class AwardRecord(BaseModel):
@@ -388,6 +399,12 @@ class GameState(BaseModel):
     # Incoming transfer bids for user players (AI↔AI moves resolve
     # instantly and only leave news lines).
     transfer_offers: list[TransferOffer] = Field(default_factory=list)
+
+    # Per-map dressed lineups. Key = "{team_id}|{fixture_id}|{map_id}" -> the
+    # five player ids that dress for that map. Absent -> the team's default
+    # lineup / auto top-five (see campaign.dressed_for). Cleared per season at
+    # offseason and pruned as fixtures are played.
+    map_lineups: dict[str, list[str]] = Field(default_factory=dict)
 
     # Pairwise player relationships ("pidA|pidB" sorted → 0-100). Sparse;
     # pruned toward the most-informative entries. Survives transfers.

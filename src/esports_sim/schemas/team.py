@@ -70,9 +70,16 @@ class Team(BaseModel):
     # simulated, never broadcast).
     tier: int = 1
 
-    # Roster. MVP = 5 active; substitutes/coaches land later.
+    # Roster. Five dress for any given map, but an org may carry a bench
+    # (up to ten) and rotate who is "dressed" per map — see manager/market.py
+    # (ROSTER_MAX) and campaign.dressed_for.
     player_ids: list[str] = Field(default_factory=list)
     captain_id: str | None = None  # the designated IGL
+    # Default starting five (ordered) the team dresses when no per-map lineup
+    # override is set. Empty == "auto top-five by quality". Ignored while the
+    # roster is exactly five (everyone dresses), which keeps the match gates
+    # byte-identical. Stale ids (released/retired) are filtered at read time.
+    lineup_ids: list[str] = Field(default_factory=list)
 
     # Org state
     balance: int = 500_000

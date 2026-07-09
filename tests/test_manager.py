@@ -8,6 +8,7 @@ from collections import Counter
 import pytest
 
 from esports_sim.manager import advance_week, new_campaign
+from esports_sim.manager import market
 from esports_sim.manager.market import release_player, sign_player
 from esports_sim.manager.schedule import regular_season_weeks, veto_bo3
 from esports_sim.manager.state import GameState
@@ -149,7 +150,13 @@ def test_save_load_roundtrip(
 def test_market_sign_and_release(campaign: GameState) -> None:
     tid = campaign.user_team_id
     team = campaign.teams[tid]
-    # Roster full: signing must be refused.
+    # A human org may now carry a bench up to ROSTER_MAX. Fill it, then signing
+    # one more must be refused as "full".
+    team.balance = 5_000_000
+    while len(team.player_ids) < market.ROSTER_MAX and campaign.free_agent_ids:
+        ok, _ = sign_player(campaign, tid, campaign.free_agent_ids[0])
+        assert ok
+    assert len(team.player_ids) == market.ROSTER_MAX
     fa = campaign.free_agent_ids[0]
     ok, why = sign_player(campaign, tid, fa)
     assert not ok and "full" in why
@@ -159,13 +166,13 @@ def test_market_sign_and_release(campaign: GameState) -> None:
     salary = campaign.players[victim].salary
     ok, _ = release_player(campaign, tid, victim)
     assert ok
-    assert len(team.player_ids) == 4
+    assert len(team.player_ids) == market.ROSTER_MAX - 1
     assert victim in campaign.free_agent_ids
     assert campaign.teams[tid].balance == balance_before - salary * 6
 
     ok, _ = sign_player(campaign, tid, fa)
     assert ok
-    assert len(team.player_ids) == 5
+    assert len(team.player_ids) == market.ROSTER_MAX
     assert fa not in campaign.free_agent_ids
     assert campaign.players[fa].contract_weeks_left > 0
 

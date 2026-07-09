@@ -189,6 +189,16 @@ function renderPlayerProfile(data) {
     `<div class="pf-meta">${meta}${teamBit}</div>` +
     `<div class="pf-contract muted">${contract}</div>` +
     `</div>`;
+  // Rival contracted player → offer a package (players and/or cash).
+  if (!p.is_free_agent && !p.is_user_team && p.transfer_ask != null
+      && typeof openOffer === "function") {
+    const offer = el("button", "btn btn-sm", "Make an offer…");
+    offer.onclick = () => {
+      closeProfile();
+      openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name });
+    };
+    header.appendChild(offer);
+  }
   frag.appendChild(header);
 
   // Overview stat tiles -----------------------------------------------------
@@ -248,7 +258,7 @@ function renderPlayerProfile(data) {
       if (t.revealed === false) {
         chips.appendChild(el("span", "pf-chip pf-chip-locked", "?"));
       } else {
-        const c = el("span", "pf-chip", t.name ?? "");
+        const c = el("span", "pf-chip", humanize(t.name ?? ""));
         if (t.desc) c.title = t.desc;
         chips.appendChild(c);
       }
