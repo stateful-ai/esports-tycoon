@@ -477,3 +477,65 @@ svg.iso .plabel { font-size: 3.4px; }
 .cat-development { --c: var(--es-color-text-success, #5DCAA5); }
 .cat-match       { --c: var(--es-viz-2, #D06142); }
 .cat-board       { --c: var(--es-color-role-flex, #9BA3AF); }
+
+/* -- match viewer: painted backdrop + agent-forward presentation ----------- */
+
+/* Painted map backdrop (viewer.js drawStatic, iso only). Sits under every
+   vector layer; the transform matches scripts/render_map_guide.py exactly. */
+.map-paint { pointer-events: none; }
+
+/* When a painted backdrop is present, the geometry becomes translucent
+   line-work over it: region borders + elevation still read, callouts/gimmicks
+   /players keep full weight, and the paint shows through the glass floors. */
+#v-map.has-paint .floor {
+  fill: color-mix(in srgb, var(--es-color-bg-elevated, #1c202b) 20%, transparent);
+  stroke: color-mix(in srgb, var(--es-color-border-primary, #262a35) 65%, transparent);
+  stroke-width: .35;
+}
+#v-map.has-paint .floor-site {
+  fill: color-mix(in srgb, var(--es-color-brand, #ff4655) 15%, transparent);
+}
+#v-map.has-paint .floor-raised {
+  fill: color-mix(in srgb, #fff 12%, transparent);
+}
+#v-map.has-paint .floor-wall { opacity: .38; }
+#v-map.has-paint .prop-half,
+#v-map.has-paint .prop-full { opacity: .55; }
+#v-map.has-paint .prop-side { opacity: .8; }
+#v-map.has-paint .corridor { opacity: .35; }
+#v-map.has-paint .callout-label { opacity: .85; }
+
+/* Kill feed / event ticker: agent icon + agent name lead, handle dimmed. */
+.v-feed .feed-agent {
+  width: 12px; height: 12px; border-radius: 50%; object-fit: cover;
+  vertical-align: middle; margin-right: 3px;
+  background: var(--es-color-bg-sunken, #0b0d12);
+}
+.v-feed .feed-name { font-weight: 600; }
+.v-feed .feed-handle { font-weight: 400; }
+
+/* Agent lineup injected into the viewer side panel (agents primary). */
+.v-lineup {
+  display: flex; gap: 10px; flex: none;
+  font-size: var(--es-text-2xs, 10px);
+  padding-bottom: 6px; border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
+}
+.v-lineup .lu-team { flex: 1; min-width: 0; }
+.v-lineup .lu-team-name {
+  text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
+  margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.v-lineup .lu-team-name.a { color: var(--es-color-side-attack, #ff8f4d); }
+.v-lineup .lu-team-name.b { color: var(--es-color-side-defense, #52a9ff); }
+.v-lineup .lu-row { display: flex; align-items: center; gap: 4px; padding: 1px 0; }
+.v-lineup .lu-icon {
+  width: 15px; height: 15px; border-radius: 50%; object-fit: cover; flex: none;
+  background: var(--es-color-bg-sunken, #0b0d12);
+}
+.v-lineup .lu-agent {
+  font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.v-lineup .lu-handle {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; text-align: right;
+}

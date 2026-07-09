@@ -110,6 +110,53 @@
         "se"
       ],
       "scale": 1.0
+    },
+    "char_desk1": {
+      "prompt": "esports pro player in red/black jersey seated at gaming desk (see art-pipeline Stage 2 winning template)",
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.78
+    },
+    "char_desk2": {
+      "prompt": "esports pro player in teal/white jersey with backwards cap seated at gaming desk",
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.78
+    },
+    "char_desk3": {
+      "prompt": "esports pro player in navy/orange jersey with ponytail seated at gaming desk",
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.78
+    },
+    "char_coach": {
+      "prompt": "esports team coach standing, teal polo with lanyard and badge, reading a tablet",
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.65
+    },
+    "char_staff": {
+      "prompt": "casual esports staff member standing with a coffee mug, olive sweater",
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.6
+    },
+    "char_physio": {
+      "prompt": "physiotherapist in light-green polo, towel over shoulder, assisting gesture",
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.7
     }
   }
 }

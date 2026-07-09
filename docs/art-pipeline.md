@@ -112,6 +112,19 @@ The fix is to stop asking for placement at all:
   "floor markings" bait-paints glyph text — say "light from unseen
   sources above the frame" instead. Reusable scripts from the pass:
   scratchpad `gen_shell.py` / `sprites.py` / `gemini_edit.py`.
+- **Characters (v4.2 pass)**: people work in the same chain, and the
+  occlusion problem is solved by GENERATION, not layering — a seated
+  character is one combined "player at desk" sprite that swaps in for
+  the empty-desk sprite (aspect matched desk_se within 0.02, scale
+  stays identical). Lessons: (1) append "exactly ONE person with one
+  head and two arms" — 6/6 single-subject raws first try; (2) new
+  rembg failure mode: it can keep an OPAQUE white background blob that
+  alpha gates can't see — deterministic fix is flood-filling the
+  debased PNG's near-white background from the borders and zeroing
+  those pixels in the rembg alpha (enclosed whites + shadows survive);
+  (3) Gemini debase is stochastic (~1/7 leaves the tile slab), so the
+  dark-background visual composite check is mandatory, numeric gates
+  alone are not enough.
 - **Placement tuning loop**: `scripts/render_sprite_office.py` mirrors
   office.js placement math and composes shell+sprites offline — judge
   layout/scale changes from its PNG instead of fighting flaky browser

@@ -10,6 +10,59 @@ const TRAIL_SPAN = 0.4;      // fraction of a move segment covered by the fading
 
 let V = null; // active replay session
 
+/* -- painted backdrop + agent helpers -------------------------------------- */
+
+// Iso viewBox — MUST match scripts/render_map_guide.py's VIEWBOX and the
+// painted-backdrop <image> box in drawStatic(). Guide pixels map linearly
+// onto this rectangle, so the paint lands pixel-true under the SVG layers.
+const ISO_VIEWBOX = [-110, -12, 220, 128];
+
+// Per-map probe cache: mapId -> painted URL when the asset exists, else null.
+// One <img> load decides it; absent files (404) fall through to the current
+// geometry rendering unchanged.
+const paintedCache = {};
+function probePainted(mapId) {
+  const url = `/assets/maps/painted/${mapId}.webp`;
+  if (mapId in paintedCache) return Promise.resolve(paintedCache[mapId]);
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve((paintedCache[mapId] = url));
+    img.onerror = () => resolve((paintedCache[mapId] = null));
+    img.src = url;
+  });
+}
+
+// Agent-forward identity. The serializer sends agent_id + agent_icon per
+// player but no agent DISPLAY name, so derive it from the slug (title-cased);
+// fall back to the icon URL slug if agent_id is ever absent.
+function agentSlug(pid) {
+  const p = V.players[pid];
+  if (!p) return "";
+  if (p.agent_id) return p.agent_id;
+  return (p.agent_icon || "").split("/").pop().replace(/\.webp$/, "");
+}
+function agentName(pid) {
+  const slug = agentSlug(pid);
+  return slug
+    ? slug.split(/[_\s]+/).map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(" ")
+    : "";
+}
+function handleOf(pid) {
+  return V.players[pid]?.handle ?? pid;
+}
+// Feed/ticker label: small agent icon + agent name (primary), player handle
+// dimmed in parens (secondary) — e.g. "[icon] Jett (Vortex)".
+function feedLabel(pid) {
+  const name = agentName(pid);
+  const handle = handleOf(pid);
+  const src = V.players[pid]?.agent_icon;
+  const icon = src
+    ? `<img class="feed-agent" src="${src}" onerror="this.style.display='none'" alt="">`
+    : "";
+  if (!name) return `${icon}<b class="feed-name">${handle}</b>`;
+  return `${icon}<b class="feed-name">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
+}
+
 /* -- parsing ---------------------------------------------------------------- */
 
 function parseReplay(data) {
@@ -500,7 +553,7 @@ function drawStatic() {
   svg.innerHTML = "";
   svg.setAttribute(
     "viewBox",
-    V.iso ? "-110 -12 220 128" : "-6 -6 112 112"
+    V.iso ? ISO_VIEWBOX.join(" ") : "-6 -6 112 112"
   );
   svg.classList.toggle("iso", !!V.iso);
 
@@ -508,6 +561,24 @@ function drawStatic() {
   // everything else since drawStatic() wipes the whole svg subtree).
   V.defs = svgEl("defs", {});
   svg.appendChild(V.defs);
+
+  // Painted backdrop: bottom-most layer, iso only, placed at the exact
+  // guide->viewer transform (scripts/render_map_guide.py). When present the
+  // floor/prop vectors become translucent line-work over it (.has-paint CSS)
+  // so region borders + callouts stay readable while the paint shows through.
+  // Absent painted file => V.painted is null and rendering is unchanged.
+  const paint = V.iso ? V.painted : null;
+  svg.classList.toggle("has-paint", !!paint);
+  if (paint) {
+    const [vx, vy, vw, vh] = ISO_VIEWBOX;
+    const bg = svgEl("image", {
+      x: vx, y: vy, width: vw, height: vh,
+      preserveAspectRatio: "none", class: "map-paint",
+    });
+    bg.setAttributeNS("http://www.w3.org/1999/xlink", "href", paint);
+    bg.setAttribute("href", paint);
+    svg.appendChild(bg);
+  }
 
   if (V.floor) drawFloor(svg);
   else drawGraph(svg);
@@ -530,7 +601,7 @@ function drawStatic() {
   V.persist.appendChild(V.spikeEl);
 }
 
-const ICON_R = 2.2; // agent-icon dot radius, in the same units as the old plain pdot
+const ICON_R = 2.8; // agent-icon dot radius (bumped so the agent reads, not a speck)
 
 function hidePlayerEl(pid) {
   const e = V.playerEls[pid];
@@ -578,6 +649,16 @@ function getPlayerEls(pid) {
     }
 
     const label = svgEl("text", { class: "plabel" });
+
+    // Hover tooltip: agent name first line, player handle second.
+    const an = agentName(pid);
+    const tipText = an ? `${an}\n${handleOf(pid)}` : handleOf(pid);
+    for (const host of [ring, icon, fallback]) {
+      const tip = svgEl("title", {});
+      tip.textContent = tipText;
+      host.appendChild(tip);
+    }
+
     V.persist.appendChild(ring);
     V.persist.appendChild(fallback);
     V.persist.appendChild(icon);
@@ -697,25 +778,21 @@ function drawFrame() {
   const abilities = V.abilities || {};
   const feedItems = round.kills
     .filter((k) => k.tick <= t)
-    .map((k) => {
-      const kn = V.players[k.killer_id]?.handle ?? k.killer_id;
-      const vn = V.players[k.victim_id]?.handle ?? k.victim_id;
-      return {
-        tick: k.tick,
-        html: `<div class="k">${kn} <span class="${k.headshot ? "hs" : ""}">${k.headshot ? "☠" : "→"}</span> ${vn}` +
-          ` <span class="muted">${k.weapon_id}${k.is_trade ? " · trade" : ""}</span></div>`,
-      };
-    })
+    .map((k) => ({
+      tick: k.tick,
+      html: `<div class="k">${feedLabel(k.killer_id)} <span class="${k.headshot ? "hs" : ""}">${k.headshot ? "☠" : "→"}</span> ${feedLabel(k.victim_id)}` +
+        ` <span class="muted">${k.weapon_id}${k.is_trade ? " · trade" : ""}</span></div>`,
+    }))
     .concat(round.utility
       .filter((u) => u.tick <= t)
       .map((u) => {
-        const pn = V.players[u.player_id]?.handle ?? u.player_id;
         const ability = abilities[u.ability_id];
         const kind = abilityKind(ability);
         const name = ability?.name ?? u.ability_id;
+        const who = feedLabel(u.player_id);
         const line = u.failed
-          ? `${pn} <span class="muted">whiffs ${name} — no effect</span>`
-          : `${pn} used <span class="muted">${name}</span>`;
+          ? `${who} <span class="muted">whiffs ${name} — no effect</span>`
+          : `${who} used <span class="muted">${name}</span>`;
         return {
           tick: u.tick,
           html: `<div class="u${u.failed ? " dim" : ""}"><span class="u-chip u-${kind}"></span>${line}</div>`,
@@ -724,10 +801,10 @@ function drawFrame() {
     .concat((round.comms ?? [])
       .filter((c) => c.tick <= t)
       .map((c) => {
-        const pn = V.players[c.player_id]?.handle ?? c.player_id;
+        const who = feedLabel(c.player_id);
         const line = c.kind === "miscomm"
-          ? `<b>${pn}</b> crosses the comms — rotation stalls`
-          : `<b>${pn}</b> calls the rotate clean`;
+          ? `${who} crosses the comms — rotation stalls`
+          : `${who} calls the rotate clean`;
         return {
           tick: c.tick,
           html: `<div class="u comms"><span class="u-chip u-comms"></span>${line}</div>`,
@@ -736,14 +813,13 @@ function drawFrame() {
     .concat(round.gimmicks
       .filter((e) => e.tick <= t)
       .map((e) => {
-        const pn = V.players[e.player_id]?.handle ?? e.player_id;
         const verb =
           e.action === "broken" ? "broke a door open"
           : e.kind === "teleporter" ? "took the teleporter"
           : "swung the rotating door";
         return {
           tick: e.tick,
-          html: `<div class="u"><span class="u-chip u-gimmick"></span>${pn} ${verb} <span class="muted">· heard nearby</span></div>`,
+          html: `<div class="u"><span class="u-chip u-gimmick"></span>${feedLabel(e.player_id)} ${verb} <span class="muted">· heard nearby</span></div>`,
         };
       }));
 
@@ -791,6 +867,38 @@ function setRound(idx) {
 
 /* -- public api ------------------------------------------------------------------ */
 
+// Agent-forward lineup for the side panel: agent icon + agent name primary,
+// player handle secondary. The viewer HTML has no static scoreboard, so this
+// is injected dynamically (and removed/rebuilt per replay, torn down on close).
+function buildLineup() {
+  const side = document.querySelector(".viewer-side");
+  if (!side) return;
+  const existing = document.getElementById("v-lineup");
+  if (existing) existing.remove();
+  const el = document.createElement("div");
+  el.id = "v-lineup";
+  el.className = "v-lineup";
+  el.innerHTML = [V.teamA, V.teamB]
+    .map((tid) => {
+      const cls = tid === V.teamA ? "a" : "b";
+      const rows = Object.keys(V.players)
+        .filter((pid) => V.players[pid].team_id === tid)
+        .map((pid) => {
+          const src = V.players[pid].agent_icon;
+          const icon = src
+            ? `<img class="lu-icon" src="${src}" onerror="this.style.visibility='hidden'" alt="">`
+            : `<span class="lu-icon"></span>`;
+          return `<div class="lu-row">${icon}` +
+            `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
+            `<span class="lu-handle muted">${handleOf(pid)}</span></div>`;
+        })
+        .join("");
+      return `<div class="lu-team"><div class="lu-team-name ${cls}">${V.names[tid]}</div>${rows}</div>`;
+    })
+    .join("");
+  side.insertBefore(el, document.getElementById("v-feed"));
+}
+
 async function openReplay(fixtureId, mapIndex) {
   const data = await api(`/api/replay/${fixtureId}/${mapIndex}`);
   const names = {};
@@ -811,12 +919,17 @@ async function openReplay(fixtureId, mapIndex) {
     playing: true,
     speed: 1,
     lastTs: null,
+    mapId: data.map.id || null,
+    painted: null,
   };
+  // Probe once for a painted backdrop; absent => plain geometry (unchanged).
+  V.painted = V.mapId ? await probePainted(V.mapId) : null;
   const isoBtn = document.getElementById("v-view");
   isoBtn.style.display = V.floor ? "" : "none";
   isoBtn.textContent = V.iso ? "2D" : "ISO";
   document.getElementById("v-title").innerHTML =
     `<b>${names[data.team_a]}</b> vs <b>${names[data.team_b]}</b> · ${data.map.display_name}`;
+  buildLineup();
   drawStatic();
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
@@ -827,6 +940,8 @@ async function openReplay(fixtureId, mapIndex) {
 function closeViewer() {
   if (V) V.playing = false;
   V = null;
+  const lineup = document.getElementById("v-lineup");
+  if (lineup) lineup.remove();
   document.getElementById("viewer").classList.add("hidden");
 }
 
