@@ -58,7 +58,7 @@ python -m esports_sim --auto 18 --seed 11 --team team_nexus
   anchored defensive setups, post-plant crossfire spread, and a lurker who
   baits then strikes as a second wave. A team's roster fit and chemistry
   scale how well it executes an extreme system. Every effect is
-  **neutral-safe** (a no-op at the default 50), so the coach's identity is
+  **neutral-safe** (a no-op at each dial's neutral default), so the coach's identity is
   felt without ever destabilising the golden or balance gates (see
   `docs/adr/ADR-007-neutral-safe-tactics.md`).
 - **Management layer** (`manager/`): a three-region VCT-style league

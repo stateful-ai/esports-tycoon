@@ -242,8 +242,10 @@ differently, in a dry, understated, no-hype voice (see
 ### 3.11 Coaching & tactics
 
 You don't just pick players — you stamp an **identity** on the team through
-a set of EHM-style coaching dials (`TeamTactics`, each 0–100, **50 =
-neutral**):
+`TeamTactics`: five numeric dials (each 0–100, **50 = neutral**) plus a
+separate site-focus selector.
+
+The five numeric dials:
 
 - **Aggression** — swing/peek appetite, refrag spacing, forward vs anchored
   defensive setups, and how wide the team holds post-plant.
@@ -257,7 +259,11 @@ neutral**):
 - **Map control** — stack tight and hit as five vs spread for map presence
   and peel a **lurker** who baits at a flank, then strikes the site as a
   late second wave.
-- **Site focus** — the attack-side site the book leans on.
+
+And, separately, **site focus** — not a numeric dial but a string selector
+(`balanced`, or a specific site) that biases which site the attack picks.
+Its neutral state is `balanced` (no bias); it has no 0–100 / neutral-50
+axis, so the numeric-dial rules below don't apply to it in the same way.
 
 Two factors decide how *well* a system is actually executed: **roster fit**
 (does the playstyle mix suit the dials — aim for aggression, game-sense and
@@ -271,12 +277,13 @@ roster and then **adapts it in-season** — winners entrench their identity,
 strugglers drift back toward vanilla, and pistol-round form nudges their eco
 appetite — so the league feels reactive over a season.
 
-**The load-bearing design rule:** every dial's effect is an *exact no-op at
-the neutral value 50*. A default team plays exactly like the pre-tactics
-engine, so the coach's identity reaches all the way into round micro without
-ever destabilising the balance or golden gates (which run neutral tactics).
-This is what let the tactics system get deep in small, low-risk increments;
-it's documented as [ADR-007](docs/adr/ADR-007-neutral-safe-tactics.md).
+**The load-bearing design rule:** every numeric dial's effect is an *exact
+no-op at the neutral value 50* (and site focus is neutral at `balanced`). A
+default team plays exactly like the pre-tactics engine, so the coach's
+identity reaches all the way into round micro without ever destabilising the
+balance or golden gates (which run neutral tactics). This is what let the
+tactics system get deep in small, low-risk increments; it's documented as
+[ADR-007](docs/adr/ADR-007-neutral-safe-tactics.md).
 
 ---
 
