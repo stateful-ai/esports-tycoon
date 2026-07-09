@@ -35,6 +35,8 @@ from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.schemas import Event, Player, Team
+from esports_sim.sim import constants as C
+from esports_sim.sim import tactics_fit
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_PATH = Path("saves") / "campaign.json"  # same file the CLI uses
@@ -791,12 +793,55 @@ def talk_resolve(body: TalkBody) -> dict:
         return {"ok": True, "message": msg, "effects": effects}
 
 
+def _tactics_fit(gs: GameState, team: Team) -> dict:
+    """Per-dial roster-fit data for the tactics screen. The match modifier is
+    computed HERE, on the server, from the same code the engine runs
+    (sim/tactics_fit.py) — the UI never recomputes a sim term. Each dial's
+    duel impact is exactly piecewise-linear in the dial value with its knot at
+    the neutral 50, so we hand the client the two endpoint impacts (`impact_lo`
+    at value 0, `impact_hi` at value 100) and it does nothing but linearly
+    interpolate between them and the neutral zero."""
+    roster = [gs.players[pid] for pid in team.player_ids if pid in gs.players]
+    reg = S.gd.attributes.definitions
+    chem_edge = tactics_fit.chem_edge(team.chemistry)
+    dials = []
+    for key, attr_ids in tactics_fit.DIAL_FIT_ATTRS.items():
+        names = [reg[a].display_name if a in reg else a for a in attr_ids]
+        pfits = [tactics_fit.player_fit(p.attr(a) for a in attr_ids) for p in roster]
+        scored = [
+            {"handle": p.handle, "playstyle": str(p.playstyle), "score": round(pf)}
+            for p, pf in zip(roster, pfits)
+        ]
+        scored.sort(key=lambda s: -s["score"])
+        fit = sum(pfits) / len(pfits) if pfits else 50.0
+        # Fit term is symmetric about 50; the chemistry term rides only the
+        # HIGH side of the coordination-heavy dials — so the two poles differ.
+        edge = tactics_fit.fit_edge(pfits)
+        gated = key in tactics_fit.CHEM_GATED
+        dials.append(
+            {
+                "key": key,
+                "attrs": names,
+                "fit": round(fit, 1),
+                "impact_lo": round(edge, 4),
+                "impact_hi": round(edge + (chem_edge if gated else 0.0), 4),
+                "chem_gated": gated,
+                "players": scored,
+            }
+        )
+    return {
+        "chemistry": round(team.chemistry, 1),
+        "mod_cap": C.EXEC_MOD_CAP,
+        "dials": dials,
+    }
+
+
 @app.get("/api/tactics")
 def tactics_view() -> dict:
     with S.lock:
         gs = S.require_gs()
-        tac = gs.teams[gs.user_team_id].tactics
-        return {"tactics": tac.model_dump()}
+        team = gs.teams[gs.user_team_id]
+        return {"tactics": team.tactics.model_dump(), "fit": _tactics_fit(gs, team)}
 
 
 class TacticsBody(BaseModel):
