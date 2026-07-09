@@ -5,7 +5,8 @@ description: Run a scene-art generation pass through the blockout→beautify pip
 
 # Art pass
 
-Full background: `docs/art-pipeline.md`. Condensed runbook:
+Full background: `docs/art-pipeline.md`. Condensed runbook (office/scene
+first; map-specific deltas at the end):
 
 1. **Guide**: rasterize the plan geometry flat — semantic block colors,
    alternating floor tones for zones, **no outlines or boundary lines**
@@ -32,4 +33,28 @@ Full background: `docs/art-pipeline.md`. Condensed runbook:
    estimates/applies a one-time global scale/shift.
 6. **Verify in the browser** (hotspot hover on top of painted rooms),
    then ship via the `ship` skill. Save accepted finals + prompt.txt to
-   `assets/office/style/` — that set seeds the future Scenario LoRA.
+   `assets/office/style/`. The style LoRA is TRAINED
+   (`esports-sim-diorama`, Scenario/FLUX.2 Dev, trigger word
+   `esports-sim-diorama` @ 0.8) — see `assets/office/style/lora/STATUS.md`;
+   API inference 500s on legacy endpoints, sample from the web UI.
+
+## Map backdrops (deltas from the office recipe)
+
+Structure guides come from `scripts\render_map_guide.py` (viewer-transform
+exact — see the map floor contract in `docs/art-pipeline.md`); briefs +
+winning prompts live in `assets/maps/style/`. Lessons that differ from the
+office:
+
+- **Full-scene Gemini edits only** — Ludo re-imagines map layouts (0/N
+  usable). Scene-framing prompts ("a flat teal stone floor") succeed where
+  change-requests ("drain the pool") fail; ONE surgical goal per call.
+- **Gate**: footprint IoU ≥ 0.86 + outside-spill ≤ 0.15, then a 50%-blend
+  overlay eyeball per seam. After a LOCALIZED geometry fix, IoU alone will
+  pass stale paint — the per-seam overlay read is the real detector.
+- **Deterministic cleanup**: mask everything outside the footprint back to
+  the guide ground color (9,11,17); per-channel mean/std color transfer
+  before pasting any crop; strip surgery (a tight band on the offending
+  wall) beats whole-courtyard edits for stubborn priors.
+- **After accepting**: write to `assets/maps/painted/<map>.webp`, regen
+  thumbs via `scripts\render_map_thumbs.py`, and verify in the viewer at
+  the pinned backdrop transform.

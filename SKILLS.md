@@ -8,8 +8,12 @@ mirror of it.
 
 | Skill | Use it to |
 |---|---|
-| `ship` | Run the full gate stack (tests → golden → balance → pacing → JS) and push with CI watch |
-| `art-pass` | Run a scene-art generation pass through the blockout→beautify pipeline |
+| `ship` | Run the full gate stack (tests → golden → balance → pacing → floor audit → JS) and push with CI watch |
+| `tactics` | Add or extend a coaching dial the neutral-safe way (ADR-007), incl. the shared `tactics_fit` layer |
+| `art-pass` | Run a scene-art generation pass through the blockout→beautify pipeline (office + maps) |
+| `maps` | Change map geometry/graphs end-to-end: audit → pacing/balance → guides → repaint check → thumbs → re-bless |
+| `web-screen` | Add or rework a web UI screen the repo way (thin serializer, no sim logic in JS, tokens, profile links) |
+| `campaign` | Add a campaign-layer (manager/) feature: determinism rules, save migration, snowball gate, inbox surfacing |
 | `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
 
 ## Custom agents (`.claude/agents/`)

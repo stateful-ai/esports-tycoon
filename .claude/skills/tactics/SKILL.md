@@ -32,18 +32,39 @@ from 50, so a neutral team gets exactly `0.0` / `1.0`.
 All magnitudes live in `sim/constants.py` as `*_SPAN` constants — never
 inline. A balance pass is then a config edit.
 
+## The roster-fit layer (`sim/tactics_fit.py`)
+
+The fit maths (which attributes power which dial, per-player fit, the
+misfit amplification, the chemistry edge) live in ONE module shared by the
+engine's `_execution_mod` and the web tactics serializer. Rules:
+
+- Fit is scored **per player** and below-baseline players are amplified by
+  `EXEC_MISFIT_PENALTY` before summing — an extreme identity must stay a
+  trade-off, not a free bonus for any above-average roster. Don't quietly
+  revert to a roster-average (penalty 1.0 reproduces the old behaviour if
+  a comparison is ever needed).
+- `eco_greed` has no fit entry ON PURPOSE (pure economy lever); the HIGH
+  side of `map_control`/`util_discipline` is additionally chemistry-gated.
+- **Never mirror the formula in app.js.** Per-dial impact is
+  piecewise-linear with its knot at 50, so `/api/tactics` serializes each
+  dial's impact at both poles (`impact_lo`/`impact_hi`) and the client
+  only lerps. If you change the maths' SHAPE (no longer piecewise-linear),
+  the serializer contract must change with it — the UI never gains a
+  formula.
+
 ## Where the wiring lives (touch all that apply)
 
 | Layer | File | What |
 |---|---|---|
 | Schema | `schemas/team.py` | `TeamTactics` field (default 50.0, ge/le) + docstring |
 | Engine reach | `sim/engine.py` | read via `self._tactics(tid)`; neutral-safe term |
-| Tuning | `sim/constants.py` | the `*_SPAN` / band constants |
-| API | `web/server.py` | `TacticsBody` field + the `set_tactics` clamp loop + validation |
-| UI | `web/static/app.js` | `TACTIC_DIALS` entry (label + hint) |
+| Fit maths | `sim/tactics_fit.py` | dial→attributes map, fit/chem edges (shared engine + serializer) |
+| Tuning | `sim/constants.py` | the `*_SPAN` / band / `EXEC_*` constants |
+| API | `web/server.py` | `TacticsBody` field + the `set_tactics` clamp loop + the `fit` block serializer |
+| UI | `web/static/app.js` | `TACTIC_DIALS` entry (pole labels + note); lerps server-sent impacts only |
 | AI identity | `manager/campaign.py` | `_assign_ai_tactics` (season identity) + `_adapt_ai_tactics` (in-season drift) |
 
-Not every change touches all six — a new dial does; deepening an existing
+Not every change touches all seven — a new dial does; deepening an existing
 dial's engine reach may only touch engine + constants (+ tests).
 
 ## Verify (the cheap proof)

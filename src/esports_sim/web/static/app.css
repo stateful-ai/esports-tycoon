@@ -770,3 +770,168 @@ tr.es-gap:hover td { background: none; }
 }
 .inbox-outcome.ok    { --c: var(--es-color-text-success, #5DCAA5); }
 .inbox-outcome.stale { --c: var(--es-color-text-tertiary, #6B6E67); }
+
+/* -- tactics tab: coaching dials (app.js tactics) -------------------------- */
+
+/* Live "execution edge" banner — clamped sum of every dial's duel term. */
+.tac-edge {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px;
+  margin: 10px 0 4px; padding: 8px 12px;
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-left: 3px solid var(--es-color-text-tertiary, #67748f);
+  border-radius: var(--es-radius-md, 6px);
+  background: var(--es-color-bg-elevated, #161e2e);
+}
+.tac-edge.good { border-left-color: var(--es-color-text-success, #46a758); }
+.tac-edge.bad  { border-left-color: var(--es-color-text-danger, #e5484d); }
+.tac-edge-lab {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .07em; color: var(--es-color-text-tertiary, #67748f);
+}
+.tac-edge-val {
+  font-family: var(--es-font-mono, monospace);
+  font-size: var(--es-text-xl, 18px); font-weight: 700;
+  color: var(--es-color-text-secondary, #a2aec6);
+}
+.tac-edge.good .tac-edge-val { color: var(--es-color-text-success, #4fc6a0); }
+.tac-edge.bad  .tac-edge-val { color: var(--es-color-text-danger, #ff6b6b); }
+.tac-edge-sub { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #9aa3b5); }
+
+.tac-dials {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px; margin-top: 12px;
+}
+
+.tac-dial {
+  padding: 12px 14px 13px;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-lg, 8px);
+}
+
+.tac-head { display: flex; align-items: baseline; gap: 8px; }
+.tac-name {
+  font-family: var(--es-font-display, inherit);
+  font-size: var(--es-text-md, 13px); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.tac-desc {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
+  padding: 1px 7px; border-radius: var(--es-radius-full, 99px);
+  background: var(--es-color-bg-surface, #0f1520);
+  color: var(--es-color-text-tertiary, #67748f);
+}
+.tac-desc.lo { color: var(--es-color-side-defense, #52a9ff);
+  background: color-mix(in srgb, var(--es-color-side-defense, #52a9ff) 14%, transparent); }
+.tac-desc.hi { color: var(--es-color-side-attack, #ff8f4d);
+  background: color-mix(in srgb, var(--es-color-side-attack, #ff8f4d) 14%, transparent); }
+.tac-val {
+  margin-left: auto; font-size: var(--es-text-lg, 15px); font-weight: 700;
+  color: var(--es-color-text-primary, #e9edf6); min-width: 22px; text-align: right;
+}
+
+.tac-poles { display: flex; justify-content: space-between; gap: 12px; margin: 8px 0 3px; }
+.tac-pole { display: flex; flex-direction: column; gap: 1px; max-width: 46%;
+  transition: opacity var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out); opacity: .6; }
+.tac-pole.hi { text-align: right; align-items: flex-end; }
+.tac-pole.on { opacity: 1; }
+.tac-pole-name {
+  font-size: var(--es-text-xs, 11px); font-weight: 600;
+  color: var(--es-color-text-secondary, #a2aec6);
+}
+.tac-pole.lo.on .tac-pole-name { color: var(--es-color-side-defense, #52a9ff); }
+.tac-pole.hi.on .tac-pole-name { color: var(--es-color-side-attack, #ff8f4d); }
+.tac-pole-note { font-size: var(--es-text-2xs, 10px); color: var(--es-color-text-tertiary, #67748f); }
+
+/* Slider with a centre notch marking the neutral (50) no-op point, and a
+   two-tone fill: blue toward the low pole, orange toward the high pole. */
+.tac-track { position: relative; padding: 5px 0 2px; }
+.tac-notch {
+  position: absolute; left: 50%; top: 0; bottom: 6px; width: 2px;
+  transform: translateX(-50%);
+  background: var(--es-color-border-primary, #26324a); z-index: 0; pointer-events: none;
+}
+.tac-track input[type=range] {
+  position: relative; z-index: 1; width: 100%; height: 6px; margin: 0;
+  -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer;
+}
+.tac-track input[type=range]::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg,
+    var(--es-color-side-defense, #52a9ff) 0%,
+    var(--es-color-side-defense, #52a9ff) 48%,
+    var(--es-color-border-primary, #26324a) 48%,
+    var(--es-color-border-primary, #26324a) 52%,
+    var(--es-color-side-attack, #ff8f4d) 52%,
+    var(--es-color-side-attack, #ff8f4d) 100%);
+  opacity: .5;
+}
+.tac-track input[type=range]::-moz-range-track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg,
+    var(--es-color-side-defense, #52a9ff), var(--es-color-side-attack, #ff8f4d));
+  opacity: .5;
+}
+.tac-track input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; margin-top: -5px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--es-color-text-primary, #e9edf6);
+  border: 2px solid var(--es-color-bg-surface, #0f1520);
+  box-shadow: var(--es-shadow-sm, 0 1px 3px rgba(2, 4, 10, 0.6));
+}
+.tac-track input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--es-color-text-primary, #e9edf6);
+  border: 2px solid var(--es-color-bg-surface, #0f1520);
+}
+
+.tac-foot { margin-top: 9px; display: flex; flex-direction: column; gap: 5px; }
+.tac-fit { display: flex; align-items: center; gap: 8px; }
+.tac-fit-lab { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6); flex: none; }
+.tac-fit .bar { flex: 1; }
+.tac-fit-num { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6); min-width: 18px; text-align: right; }
+
+.tac-who-row { display: flex; align-items: center; gap: 8px; }
+.tac-who-side { display: inline-flex; flex-wrap: wrap; gap: 4px; flex: 1; min-width: 0; }
+.tac-who-side.hi { justify-content: flex-end; text-align: right; }
+.tac-who {
+  display: inline-block; padding: 1px 7px; border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px); font-weight: 600;
+  background: var(--es-color-bg-surface, #0f1520);
+  color: var(--es-color-text-secondary, #a2aec6);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.tac-impact {
+  flex: none; font-family: var(--es-font-mono, monospace);
+  font-size: var(--es-text-xs, 11px); font-weight: 700;
+  color: var(--es-color-text-tertiary, #67748f); min-width: 62px; text-align: center;
+}
+.tac-impact.good { color: var(--es-color-text-success, #4fc6a0); }
+.tac-impact.bad  { color: var(--es-color-text-danger, #ff6b6b); }
+.tac-chem { font-size: var(--es-text-2xs, 10px); color: var(--es-color-text-warning, #e5a53a); }
+
+/* Site-focus segmented control. */
+.tac-seg { display: flex; gap: 4px; margin-top: 10px; }
+.tac-seg-btn {
+  flex: 1; font: inherit; cursor: pointer; padding: 6px 8px;
+  font-size: var(--es-text-xs, 11px);
+  color: var(--es-color-text-secondary, #a2aec6);
+  background: var(--es-color-bg-surface, #0f1520);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px);
+  transition: border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.tac-seg-btn:hover { color: var(--es-color-text-primary, #e9edf6); }
+.tac-seg-btn.on {
+  color: var(--es-color-text-primary, #e9edf6);
+  border-color: var(--es-color-brand, #ff4655);
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 12%, var(--es-color-bg-surface, #0f1520));
+}
+.tac-site-note { margin-top: 8px; font-size: var(--es-text-2xs, 10px); }
+
+.tac-savebar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+}

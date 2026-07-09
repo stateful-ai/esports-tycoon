@@ -115,8 +115,10 @@ New-NetFirewallRule -DisplayName 'esports-sim web (TCP 8420)' -Direction Inbound
   dials reach into the *micro*: peek/refrag appetite, execute-vs-default
   timing, commit-or-abort discipline, flash-for-swing reserves, forward vs
   anchored defensive setups, post-plant crossfire spread, and a lurker who
-  baits then strikes as a second wave. A team's roster fit and chemistry
-  scale how well it executes an extreme system. Every effect is
+  baits then strikes as a second wave. How well a system is *executed* is
+  scored per player from the same attributes the engine reads
+  (`sim/tactics_fit.py`) — and misfits drag harder than stars lift, so an
+  extreme identity is a real trade-off, not a free bonus. Every effect is
   **neutral-safe** (a no-op at each dial's neutral default), so the coach's identity is
   felt without ever destabilising the golden or balance gates (see
   `docs/adr/ADR-007-neutral-safe-tactics.md`).
@@ -136,13 +138,19 @@ New-NetFirewallRule -DisplayName 'esports-sim web (TCP 8420)' -Direction Inbound
   break ties by head-to-head. Saves carry a `schema_version` migration
   hook. All fully deterministic.
 - **Web UI** (`web/`): FastAPI + a no-build-step frontend on a custom
-  design system — dashboard, roster, standings, schedule, market, stats,
-  finances — plus an isometric 2D match viewer that replays the event log
-  with full playback controls (scrub, speed, round-skip).
+  design system — a dashboard hub, roster, tactics (with live roster-fit
+  preview), standings, schedule, scouting, market, stats, finances, a
+  weekly **inbox** with inline accept/decline actions, and a painted
+  isometric **office** home screen — plus click-through **player and team
+  profiles** (charts, weekly form, scouting-fogged attributes) from any
+  name in the app, and an isometric match viewer that replays the event
+  log over AI-painted map backdrops with full playback controls (scrub,
+  speed, round-skip).
 - **Data-driven content** (`data/`): 13 agents, 7 weapons, 5 maps (each
   with an authored floor-plan geometry layer — rooms, corridors, props,
-  elevation), and starter teams, all YAML — add an agent or a map without
-  touching code.
+  elevation — and its signature gimmick: Bind's teleporter, Lotus's
+  rotating door, Ascent's breakable door), and starter teams, all YAML —
+  add an agent or a map without touching code.
 - **Policy interface** (`policy/`): in-match player decisions go through a
   `PlayerPolicy` protocol; the shipped heuristic can be swapped for RL
   agents or LLM playtesters.
@@ -158,6 +166,7 @@ python scripts/balance_report.py 300     # every map 45-65% attack round rate
 python scripts/pacing_report.py          # attacker rotate 25-35s through spawn
 python scripts/snowball_report.py        # multi-season blowout/competitiveness band
 python scripts/tactics_report.py         # sweep the numeric coaching dials to extremes
+python scripts/map_floor_audit.py        # floor plates connect; paths/callouts on the floor
 ```
 
 `regen_golden.py` is **not** a gate — it's a mutating re-bless tool that

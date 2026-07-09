@@ -151,6 +151,31 @@ def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
     assert simple_hi == simple_lo
 
 
+def test_misfit_players_drag_execution_fit() -> None:
+    """Running an extreme system is a real trade-off, not a free bonus:
+    a team-mate below the fit baseline must subtract MORE than an equally
+    good fit adds, so a couple of stars can't average away the players who
+    can't run the system. Without this, any above-average roster gets a
+    positive edge at every extreme and cranking every dial is strictly best."""
+    from esports_sim.sim import constants as C
+    from esports_sim.sim import tactics_fit as tf
+
+    base = C.EXEC_FIT_BASELINE
+    hi, lo = base + 20.0, base - 20.0
+
+    # A roster sitting exactly on the baseline is a no-op either way.
+    assert tf.fit_edge([base] * 5) == 0.0
+
+    # Same MEAN as that flat roster (== baseline), but split into stars and
+    # scrubs: the penalty amplifies the below-baseline players, so the
+    # high-variance book nets NEGATIVE — an extreme identity misfires.
+    assert tf.fit_edge([hi, hi, lo, lo, base]) < 0.0
+
+    # Better rosters still earn a positive edge (we didn't kill the upside),
+    # and a strictly stronger roster fits strictly better.
+    assert tf.fit_edge([70.0] * 5) > tf.fit_edge([60.0] * 5) > 0.0
+
+
 def test_aggression_increases_refrags() -> None:
     """Aggressive teams stack tight and trade harder."""
     seeds = range(40)
