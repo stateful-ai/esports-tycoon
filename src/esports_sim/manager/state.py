@@ -342,6 +342,13 @@ class GameState(BaseModel):
     training_focus: dict[str, str] = Field(default_factory=dict)
 
     news: list[str] = Field(default_factory=list)
+    # Per-manager PRIVATE news: subsystem events that belong to one manager
+    # (scout reports completing, sponsor-objective outcomes, a player on YOUR
+    # roster retiring). push_private_news keeps the line in the shared `news`
+    # feed too (so the CLI panel + broadcast ticker are unchanged), but also
+    # records it here keyed by owner, so in a shared world each manager's inbox
+    # only surfaces their own private events, never a rival's.
+    private_news_by: dict[str, list[str]] = Field(default_factory=dict)
     # Weekly inbox feed (oldest first), per human manager. Populated at the end
     # of each tick. Reached via the `inbox` property (acting manager's feed).
     inboxes: dict[str, list[InboxItem]] = Field(default_factory=dict)
@@ -432,6 +439,11 @@ class GameState(BaseModel):
     @inbox.setter
     def inbox(self, value: list[InboxItem]) -> None:
         self.inboxes[self.acting_team_id] = value
+
+    @property
+    def private_news(self) -> list[str]:
+        """The acting manager's private news lines (see private_news_by)."""
+        return self.private_news_by.setdefault(self.acting_team_id, [])
 
     @property
     def scout_target(self) -> str | None:
@@ -619,6 +631,17 @@ class GameState(BaseModel):
     def push_news(self, msg: str) -> None:
         self.news.append(f"[S{self.season} W{self.week}] {msg}")
         del self.news[:-60]
+
+    def push_private_news(self, msg: str, owner: str | None = None) -> None:
+        """A news line that belongs to ONE manager. It still lands in the
+        shared `news` feed (the CLI panel and broadcast ticker keep showing it),
+        but is ALSO recorded against `owner` (defaults to the acting manager) so
+        only that manager's inbox surfaces it in a shared world. Stamped with
+        the same [Sx Wy] label as push_news so the inbox's week filter works."""
+        self.push_news(msg)
+        bucket = self.private_news_by.setdefault(owner or self.acting_team_id, [])
+        bucket.append(f"[S{self.season} W{self.week}] {msg}")
+        del bucket[:-60]
 
     # -- persistence ------------------------------------------------------------
 

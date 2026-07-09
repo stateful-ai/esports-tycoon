@@ -407,13 +407,14 @@ def _eval_objective(gs: GameState, obj: SponsorObjective, brand: str) -> int:
     if met:
         gs.teams[uid].balance += obj.bonus
         _bump_relation(gs, brand, +4.0)
-        gs.push_news(
+        # Private to this manager's sponsor book (runs in their acting context).
+        gs.push_private_news(
             f"Objective met — {brand} pay {obj.bonus:,} cr "
             f"({OBJECTIVE_LABELS.get(obj.kind, obj.kind)})."
         )
         return obj.bonus
     _bump_relation(gs, brand, -6.0)
-    gs.push_news(
+    gs.push_private_news(
         f"{brand} note the missed objective "
         f"({OBJECTIVE_LABELS.get(obj.kind, obj.kind)}). Relations cool."
     )

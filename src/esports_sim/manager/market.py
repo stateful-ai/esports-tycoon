@@ -369,12 +369,25 @@ def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
     return execute_transfer(gs, pid, buyer_id, ask)
 
 
-def respond_offer(gs: GameState, player_id: str, accept: bool) -> tuple[bool, str]:
-    offer = next(
-        (o for o in gs.transfer_offers if o.player_id == player_id), None
-    )
-    if offer is None:
+def respond_offer(
+    gs: GameState, player_id: str, accept: bool, to_team: str | None = None
+) -> tuple[bool, str]:
+    """The acting manager (the SELLER) answers a bid for one of their players.
+    Only offers whose `from_team` is the acting manager can be resolved here, so
+    in a shared world a rival can never accept/decline a bid that isn't theirs.
+    `to_team` disambiguates when several buyers have bid for the same player."""
+    seller_id = gs.acting_team_id
+    candidates = [
+        o
+        for o in gs.transfer_offers
+        if o.player_id == player_id
+        and o.from_team == seller_id
+        and (to_team is None or o.to_team == to_team)
+    ]
+    if not candidates:
         return False, "no live offer for that player"
+    # Deterministic pick when the buyer is unspecified and several exist.
+    offer = min(candidates, key=lambda o: o.to_team)
     gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]
     p = gs.players[player_id]
     if not accept:

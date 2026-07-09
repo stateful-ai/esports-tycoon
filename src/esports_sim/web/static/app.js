@@ -518,12 +518,12 @@ async function dashboard(v) {
       const sell = el("button", "btn btn-sm", "Sell");
       sell.onclick = async () => {
         if (!confirm(`Sell ${o.handle} to ${o.to_team_name} for ${money(o.fee)}?`)) return;
-        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, accept: true });
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: true });
         toast(r.message); refresh();
       };
       const keep = el("button", "btn btn-sm", "Decline");
       keep.onclick = async () => {
-        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, accept: false });
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: false });
         toast(r.message); refresh();
       };
       row.appendChild(sell);

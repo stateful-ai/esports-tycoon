@@ -835,7 +835,8 @@ def _tick_scouting_one(gs: GameState) -> None:
             if target == "market"
             else gs.teams[target].name
         )
-        gs.push_news(f"Scouting report on {label} complete.")
+        # Private to this manager (their scout desk) — see push_private_news.
+        gs.push_private_news(f"Scouting report on {label} complete.")
 
 
 def _update_world_ranks(gs: GameState) -> None:
@@ -871,8 +872,12 @@ def _process_retirements(gs: GameState, rng) -> int:
             if team.captain_id == pid:
                 team.captain_id = team.player_ids[0] if team.player_ids else None
             if gs.is_human(team.id):
-                gs.push_news(
-                    f"{p.handle} retires — {team.name} has an open seat."
+                # Private to the owning manager (not the whole world's inbox);
+                # _process_retirements runs outside any set_acting loop, so name
+                # the owner explicitly.
+                gs.push_private_news(
+                    f"{p.handle} retires — {team.name} has an open seat.",
+                    owner=team.id,
                 )
         if pid in gs.free_agent_ids:
             gs.free_agent_ids.remove(pid)

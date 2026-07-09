@@ -275,8 +275,8 @@ def test_transfer_item_carries_accept_decline_actions(
     acts = inbox.actions_for(campaign, it)
     assert [a["id"] for a in acts] == ["accept", "decline"]
     assert all(a["endpoint"] == "/api/actions/transfer_offer" for a in acts)
-    assert acts[0]["payload"] == {"player_id": pid, "accept": True}
-    assert acts[1]["payload"] == {"player_id": pid, "accept": False}
+    assert acts[0]["payload"] == {"player_id": pid, "to_team": _rival, "accept": True}
+    assert acts[1]["payload"] == {"player_id": pid, "to_team": _rival, "accept": False}
     # to_api only surfaces actions when gs is supplied.
     assert "actions" not in inbox.to_api(it)
     assert inbox.to_api(it, campaign)["actions"] == acts
@@ -358,3 +358,40 @@ def test_declining_sponsor_via_action_resolves_and_drops_future_actions(
     assert inbox.actions_for(campaign, it) == []
     assert "actions" not in inbox.to_api(it, campaign)
     assert all(i.id != it.id for _p, i in inbox._sponsor_items(campaign, season, week))
+
+
+# ---------------------------------------------------------------------------
+# (h) shared world: private events (scouting / sponsors / retirements) stay
+#     with their owner and never leak into another manager's inbox
+
+
+def test_private_events_do_not_leak_across_managers(campaign: GameState) -> None:
+    gs = campaign
+    a = gs.user_team_id
+    b = next(t.id for t in gs.teams.values() if t.id != a)
+    gs.human_team_ids = [a, b]  # two live managers in one world
+    season, week = gs.season, gs.week
+
+    # A's scout finishes; B's sponsor objective pays out (each in its own
+    # acting context, exactly as the weekly tick pushes them).
+    gs.set_acting(a)
+    gs.push_private_news(f"Scouting report on {gs.teams[b].name} complete.")
+    gs.set_acting(b)
+    gs.push_private_news("Objective met - ZZ Testworks pay 100,000 cr (make playoffs).")
+    gs.set_acting(None)
+
+    # Both lines are in the SHARED feed (CLI panel + broadcast ticker unchanged).
+    assert any("Scouting report on" in n for n in gs.news)
+    assert any("Objective met" in n for n in gs.news)
+
+    # But each manager's inbox detectors only surface their OWN event.
+    gs.set_acting(a)
+    a_scout = inbox._scouting_items(gs, season, week)
+    a_obj = [it for _p, it in inbox._sponsor_items(gs, season, week) if "Objective met" in it.body]
+    gs.set_acting(b)
+    b_scout = inbox._scouting_items(gs, season, week)
+    b_obj = [it for _p, it in inbox._sponsor_items(gs, season, week) if "Objective met" in it.body]
+    gs.set_acting(None)
+
+    assert len(a_scout) == 1 and not b_scout   # scouting stays with A
+    assert len(b_obj) == 1 and not a_obj        # objective stays with B

@@ -561,6 +561,7 @@ def state() -> dict:
                 {
                     "player_id": o.player_id,
                     "handle": gs.players[o.player_id].handle,
+                    "to_team": o.to_team,
                     "to_team_name": gs.teams[o.to_team].name,
                     "fee": o.fee,
                     "expires_week": o.expires_week,
@@ -1172,13 +1173,17 @@ def bid(body: BidBody) -> dict:
 class OfferBody(BaseModel):
     player_id: str
     accept: bool
+    # Which buyer's bid to resolve (a manager may hold several for one player).
+    to_team: str | None = None
 
 
 @app.post("/api/actions/transfer_offer")
 def transfer_offer(body: OfferBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        ok, msg = market.respond_offer(gs, body.player_id, body.accept)
+        ok, msg = market.respond_offer(
+            gs, body.player_id, body.accept, body.to_team
+        )
         S.save()
         if not ok:
             raise HTTPException(422, msg)
