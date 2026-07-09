@@ -206,6 +206,10 @@ def advance_week(
         for stats in report.match_stats.get(f.id, []):
             _aggregate_stats(gs, f, stats, week_kills)
 
+    # 1b. AI coaches adapt their identity to how the season is going —
+    # winners entrench, strugglers drift back toward vanilla.
+    _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
+
     # 2. Training (user focus is whatever they set; AI picks its own).
     for tid in sorted(gs.teams):
         roster = gs.roster(tid)
@@ -213,7 +217,7 @@ def advance_week(
             focus = gs.training_focus.get(tid, "tactical")
             mult = staff.coach_multiplier(gs) * economy.facility_training_mult(gs)
         else:
-            focus = training.ai_pick_focus(roster, week_rng)
+            focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
             mult = 1.0
         training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
@@ -908,6 +912,50 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
             if rng.random() < 0.65
             else str(rng.choice(["a", "b", "c"]))
         )
+
+
+# How far a coach nudges the dials each week (small — identities shift over
+# a season, not overnight). Winners push their identity ~1.5 further from
+# neutral; strugglers shrink 8% back toward it; pistol form pulls eco_greed.
+_ADAPT_STEP = 1.5
+_ADAPT_SHRINK = 0.08
+_ADAPT_NOISE = 1.0
+_ADAPT_PISTOL = 6.0
+_ADAPT_MIN_MAPS = 3  # too few maps to read anything meaningful
+
+
+def _adapt_ai_tactics(gs: GameState, rng) -> None:
+    """AI orgs are no longer frozen for a season: each week a coach nudges
+    the dials toward how the campaign is actually going. A winning team
+    entrenches its identity (pushes each dial further from neutral); a
+    struggling team abandons a failing plan and drifts back toward the
+    league-standard 50. Pistol-round form pulls eco_greed. The user team is
+    never touched, and the match gates never run the campaign, so this is
+    invisible to golden/balance."""
+    clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
+    for tid in sorted(gs.teams):
+        if tid == gs.user_team_id:
+            continue
+        ts = gs.team_stats.get(tid)
+        if ts is None or ts.maps < _ADAPT_MIN_MAPS:
+            continue
+        rounds = ts.atk_rounds + ts.def_rounds
+        if rounds == 0:
+            continue
+        rwr = (ts.atk_won + ts.def_won) / rounds
+        winning, losing = rwr >= 0.52, rwr <= 0.45
+        tac = gs.teams[tid].tactics
+        for dial in ("aggression", "pace", "util_discipline", "map_control"):
+            v = getattr(tac, dial)
+            if winning and v != 50.0:
+                v += _ADAPT_STEP if v > 50.0 else -_ADAPT_STEP
+            elif losing:
+                v += (50.0 - v) * _ADAPT_SHRINK
+            v += float(rng.normal(0, _ADAPT_NOISE))
+            setattr(tac, dial, round(clamp(v), 1))
+        if ts.pistols >= 2:
+            pwr = ts.pistols_won / ts.pistols
+            tac.eco_greed = round(clamp(tac.eco_greed + (pwr - 0.5) * _ADAPT_PISTOL), 1)
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
