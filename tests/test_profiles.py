@@ -51,6 +51,7 @@ PLAYER_BLOCK = {
     "portrait",
     "is_user_team",
     "is_free_agent",
+    "transfer_ask",
 }
 OVERVIEW = {
     "ovr",
