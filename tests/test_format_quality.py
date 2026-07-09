@@ -41,6 +41,33 @@ def test_head_to_head_breaks_a_dead_tie() -> None:
     assert ordered.index(x) < ordered.index(y)
 
 
+def test_head_to_head_ignores_playoff_rematches() -> None:
+    """Only regular-season meetings count: a playoff rematch must not
+    reorder the league table (playoff results never touch TeamRecord)."""
+    gd = load_all()
+    gs = new_campaign(gd, seed=5)
+    region = gs.regions()[0]
+    x, y = gs.standings_order(region)[:2]
+    for t in (x, y):
+        gs.standings[t] = TeamRecord(
+            wins=6, losses=2, rounds_won=104, rounds_lost=96
+        )
+    # A regular meeting x beat y, plus a playoff rematch y beat x. The
+    # playoff game must be ignored, so x still ranks above y.
+    reg = next(f for f in gs.fixtures if {f.team_a, f.team_b} == {x, y})
+    reg.stage = "regular"
+    reg.played = True
+    reg.winner_id = x
+    from esports_sim.manager.state import Fixture
+
+    gs.fixtures.append(Fixture(
+        id="s1semi_rematch", week=99, stage="semi", best_of=3,
+        team_a=y, team_b=x, played=True, winner_id=y,
+    ))
+    ordered = gs.standings_order(region)
+    assert ordered.index(x) < ordered.index(y)
+
+
 def test_three_way_tie_is_transitive_and_insertion_order_independent() -> None:
     """A rock-paper-scissors H2H cycle (x>y>z>x) among three teams tied on
     wins and differential must NOT depend on standings insertion order — the

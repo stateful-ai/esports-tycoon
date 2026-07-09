@@ -357,11 +357,16 @@ class GameState(BaseModel):
 
     def _h2h_series(self, a: str, b: str) -> int:
         """Head-to-head series margin between two teams this season: a's
-        wins over b minus b's over a, among their played meetings."""
+        wins over b minus b's over a, among their played REGULAR-season
+        meetings. Only regular fixtures feed the standings (playoff results
+        never touch TeamRecord), so the tiebreaker must ignore playoff
+        rematches — otherwise a bracket game could reorder the league table
+        that seeded that very bracket."""
         margin = 0
         for f in self.fixtures:
             if (
-                f.played
+                f.stage == "regular"
+                and f.played
                 and f.winner_id is not None
                 and {f.team_a, f.team_b} == {a, b}
             ):
