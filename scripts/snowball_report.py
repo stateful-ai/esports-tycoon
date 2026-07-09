@@ -1,8 +1,14 @@
-"""Multi-season snowball report.
+"""Multi-season snowball gate.
 
 Measures whether the league stays competitive across seasons: map scoreline
-distribution (blowout share) and top-team dominance, per season. Run before
+distribution (blowout share) and close-game share, per season. Run before
 and after balance changes to compare.
+
+This is a GATE (exit 1 = fail), not just a diagnostic: a healthy league
+keeps blowouts and close games within a wide band. Baseline across the
+default seeds sits at ~13-20% blowout and ~37-46% close, so the thresholds
+below are generous degenerate-detectors — they only trip if a change makes
+the league snowball hard (blowouts pile up, close games vanish).
 
 Usage:
     .venv-win\\Scripts\\python.exe scripts\\snowball_report.py [seeds...]
@@ -19,8 +25,14 @@ from esports_sim.registry import load_all
 
 N_SEASONS = 3
 
+# Degenerate-detector band (per season). Baseline: blowout 13-20%, close
+# 37-46% — these leave wide margin and only catch real snowballing.
+MAX_BLOWOUT_PCT = 32.0  # share of maps a team loses with <= 2 rounds
+MIN_CLOSE_PCT = 24.0  # share of maps decided by <= 5 rounds / OT
 
-def run(seed: int) -> None:
+
+def run(seed: int) -> bool:
+    """Returns True if any season this seed breaches the band."""
     gd = load_all()
     gs = new_campaign(gd, seed=seed)
     per_season: dict[int, Counter] = defaultdict(Counter)
@@ -45,6 +57,7 @@ def run(seed: int) -> None:
                 wins[season][f.winner_id] += 1
 
     print(f"\nseed {seed}")
+    breached = False
     for season in sorted(per_season):
         c = per_season[season]
         total = sum(c.values())
@@ -52,13 +65,30 @@ def run(seed: int) -> None:
         top = wins[season].most_common(1)[0] if wins[season] else ("-", 0)
         blowout = 100 * (c["0-2"]) / max(total, 1)
         close = 100 * (c["8-11"] + c["OT/close"]) / max(total, 1)
+        flags = []
+        if blowout > MAX_BLOWOUT_PCT:
+            flags.append(f"blowout>{MAX_BLOWOUT_PCT:.0f}%")
+        if close < MIN_CLOSE_PCT:
+            flags.append(f"close<{MIN_CLOSE_PCT:.0f}%")
+        breached = breached or bool(flags)
+        note = ("  <-- " + ", ".join(flags)) if flags else ""
         print(
             f"  S{season}: {total} maps | blowout(<=2) {blowout:4.1f}% | "
-            f"close(>=8) {close:4.1f}% | top team {top[1]}/{n_weeks} wins"
+            f"close(>=8) {close:4.1f}% | top team {top[1]}/{n_weeks} wins{note}"
         )
+    return breached
 
 
 if __name__ == "__main__":
     seeds = [int(s) for s in sys.argv[1:]] or [777, 2026, 31337]
+    any_breach = False
     for s in seeds:
-        run(s)
+        any_breach = run(s) or any_breach
+    print(
+        f"\nband: blowout <= {MAX_BLOWOUT_PCT:.0f}%, close >= {MIN_CLOSE_PCT:.0f}% "
+        f"per season"
+    )
+    if any_breach:
+        print("SNOWBALL GATE FAIL — league competitiveness out of band")
+        sys.exit(1)
+    print("snowball gate OK")

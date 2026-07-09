@@ -541,6 +541,12 @@ def advance_week(
                 f"{champ.name} are world champions. Offseason next week."
             )
 
+    # 5b. Solvency: only AFTER every balance mutation for the week —
+    # including the same-week regional/Masters/Champions prize payouts in
+    # the phase transitions above — so a team that ends the tick in the
+    # black off prize money never takes a spurious debt hit or board warning.
+    economy.check_solvency(gs)
+
     # 6. News (before the week label moves on). Recaps read each winner's
     # tactics, so this must run BEFORE the coaches adapt below — otherwise a
     # recap could credit a style the team only shifted to after the match.
