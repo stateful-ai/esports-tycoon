@@ -81,7 +81,15 @@ def main() -> None:
         stages = {
             s: _route_seconds(geo, _route(m, spawn, entry[s])) for s in sites
         }
-        print(f"{mid:8s} stage: " + "  ".join(f"{s.upper()}={t:4.1f}s" for s, t in stages.items()))
+        # Gate the spawn->entry stage time too (was computed but never
+        # checked): a stage far outside the band means the entry is mislaid
+        # relative to spawn, which distorts every rotation off it.
+        parts = []
+        for s, t in stages.items():
+            in_band = STAGE_TARGET[0] <= t <= STAGE_TARGET[1]
+            any_fail |= not in_band
+            parts.append(f"{s.upper()}={t:4.1f}s" + ("!" if not in_band else ""))
+        print(f"{mid:8s} stage: " + "  ".join(parts))
 
         for i, s1 in enumerate(sites):
             for s2 in sites[i + 1:]:
@@ -111,7 +119,10 @@ def main() -> None:
                     f" {secs:5.1f}s   def rotate: {d_secs:5.1f}s{flag}"
                 )
     print()
-    print(f"target: attacker rotate {ATK_ROTATE_TARGET[0]:.0f}-{ATK_ROTATE_TARGET[1]:.0f}s via spawn")
+    print(
+        f"target: attacker rotate {ATK_ROTATE_TARGET[0]:.0f}-{ATK_ROTATE_TARGET[1]:.0f}s "
+        f"via spawn; spawn->entry stage {STAGE_TARGET[0]:.0f}-{STAGE_TARGET[1]:.0f}s"
+    )
     if any_fail:
         raise SystemExit(1)
 
