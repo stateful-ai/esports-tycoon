@@ -554,14 +554,7 @@ class _MatchSim:
         target_site = sites[int(rng.choice(len(sites), p=weights))]
         # 0.35 slow book … 0.75 fast; 50 pace = the engine's old 0.55.
         p_execute = 0.35 + tac.pace / 250.0
-        # Eco discipline: on an under-gunned round, a greedy book runs it
-        # down (fast hit to catch the buy off-guard) while a thrifty book
-        # plays slow for picks and the exit. Judged on the actual loadout,
-        # not the credit-based buy call — a team carrying rifles through a
-        # broke round is on a gun round, not an eco. Neutral eco_greed
-        # leaves it alone, so the golden log holds.
-        if self._under_gunned(atk):
-            p_execute += (tac.eco_greed - 50.0) / 50.0 * C.ECO_EXECUTE_SPAN
+        p_execute += self._eco_tempo_shift(atk, round_num)
         p_execute = min(0.9, max(0.05, p_execute))
         strat = "execute" if rng.random() < p_execute else "default"
         if strat == "execute":
@@ -1666,6 +1659,22 @@ class _MatchSim:
 
     def _tactics(self, team_id: str):
         return self.gd.teams[team_id].tactics
+
+    def _eco_tempo_shift(self, atk: str, round_num: int) -> float:
+        """Execute-probability shift from eco discipline.
+
+        A greedy book runs a save/force round down (a fast hit to catch the
+        buy off-guard); a thrifty book plays slow for picks and the exit.
+        Zero unless the round is a genuine eco: pistol rounds are excluded
+        (everyone is on pistols by rule, not an eco choice), gun rounds are
+        excluded (judged on the actual loadout, so rifles carried through a
+        broke round don't count), and neutral eco_greed is a no-op — which
+        is what keeps the golden/sweep gates byte-identical."""
+        if round_num in (1, C.ROUNDS_PER_HALF + 1):
+            return 0.0
+        if not self._under_gunned(atk):
+            return 0.0
+        return (self._tactics(atk).eco_greed - 50.0) / 50.0 * C.ECO_EXECUTE_SPAN
 
     def _under_gunned(self, tid: str) -> bool:
         """Whether the team is genuinely on a save/force by FIREPOWER — most

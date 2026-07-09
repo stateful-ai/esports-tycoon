@@ -93,6 +93,35 @@ def test_under_gunned_reads_loadout_not_credits() -> None:
     assert sim._under_gunned(A) is True
 
 
+def test_eco_tempo_skips_pistol_and_gun_rounds() -> None:
+    """The eco tempo shift only fires on a genuine save/force round: never
+    on a pistol round (fixed loadout by rule), never on a gun round (rifles
+    in hand), and never at neutral eco_greed."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "haven", 1)
+    pistol = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "pistol")
+    rifle = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "rifle")
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = pistol  # under-gunned by loadout
+
+    gd.teams[A].tactics.eco_greed = 100.0
+    # Pistol rounds (1 and 13) are excluded even though under-gunned + greedy.
+    assert sim._eco_tempo_shift(A, 1) == 0.0
+    assert sim._eco_tempo_shift(A, 13) == 0.0
+    # A genuine eco round shifts.
+    assert sim._eco_tempo_shift(A, 4) > 0.0
+    # Neutral eco_greed is a no-op.
+    gd.teams[A].tactics.eco_greed = 50.0
+    assert sim._eco_tempo_shift(A, 4) == 0.0
+    # Rifles in hand -> gun round, no shift.
+    gd.teams[A].tactics.eco_greed = 100.0
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = rifle
+    assert sim._eco_tempo_shift(A, 4) == 0.0
+
+
 def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
     """The roster/chemistry execution modifier must vanish at neutral
     tactics (so it can't touch the golden or balance gates) and, once a
