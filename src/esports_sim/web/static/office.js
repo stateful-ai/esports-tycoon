@@ -151,11 +151,17 @@ function drawFurniture(g, room, level) {
    as an overlay on the lounge shelf. */
 function drawTrophies(svg, plan) {
   const lounge = plan.rooms.find((r) => r.id === "lounge");
-  if (!lounge) return;
+  const shelf = lounge?.furniture?.find((f) => f.type === "shelf");
+  if (!lounge || !shelf) return;
   const cups = Math.min(6, (App.state?.champions ?? []).length);
   const g = osvg("g", { class: "office-trophies" }, svg);
   for (let i = 0; i < cups; i++) {
-    isoBox(g, lounge.x + 9.4 + i * 0.62, lounge.y + 1.3, 0.4, 0.4, 2.1, "furn-trophy");
+    isoBox(
+      g,
+      lounge.x + shelf.x + 0.4 + i * 0.62,
+      lounge.y + shelf.y + 0.3,
+      0.4, 0.4, 2.1, "furn-trophy"
+    );
   }
 }
 
@@ -291,7 +297,9 @@ function officeSpriteImage(key) {
 /* One placement per furniture entry. The footprint diamond of a w×d box
    projects to iso-x extent (w+d), horizontal center x+y+(w+d)/2, and its
    front (screen-bottom) vertex at corner (x+w, y). Sprites anchor there:
-   bottom-center of the image on the bottom vertex of the footprint. */
+   bottom-center of the image on the bottom vertex of the footprint.
+   Entries may override the manifest per-piece: "o" (orientation) and
+   "s" (extra scale multiplier). */
 function officeSpriteEntries(rooms, facilities) {
   const entries = [];
   for (const r of rooms) {
@@ -300,18 +308,22 @@ function officeSpriteEntries(rooms, facilities) {
       const spec = OFFICE_SPRITES.sprites?.[f.type];
       if (!spec) continue;
       // Long axis along grid-y reads as the mirrored orientation.
-      const o =
+      const auto =
         f.d > f.w && spec.orientations.includes("sw") ? "sw" : spec.orientations[0];
+      const o = f.o && spec.orientations.includes(f.o) ? f.o : auto;
       const x = r.x + f.x, y = r.y + f.y;
       entries.push({
         key: `${f.type}_${o}`,
-        w: (f.w + f.d) * (spec.scale ?? 1),
+        w: (f.w + f.d) * (spec.scale ?? 1) * (f.s ?? 1),
         cx: x + y + (f.w + f.d) / 2,
         by: (x + f.w - y) / 2,
+        // Depth sorts by footprint CENTER, not front vertex — a wide
+        // table's left half must not leapfrog the chairs beside it.
+        depth: x + f.w / 2 - (y + f.d / 2),
       });
     }
   }
-  entries.sort((a, b) => a.by - b.by); // painter's algorithm, back to front
+  entries.sort((a, b) => a.depth - b.depth); // painter's algo, back to front
   return entries;
 }
 

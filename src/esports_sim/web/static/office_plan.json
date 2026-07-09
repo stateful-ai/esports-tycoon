@@ -1,131 +1,632 @@
 {
-  "comment": "Single source of truth for the HQ. office.js renders it interactively, scripts/render_office_guide.py rasterizes it as the img2img guide for Scenario, and desk anchors are reserved for future PixiJS characters. Grid: x right, y back; furniture boxes are {x,y,w,d,h} in room-local grid units (h in screen units).",
-  "render": { "scale": 16, "pad": 6, "wall_h": 3.4, "door_w": 4.0 },
+  "comment": "Single source of truth for the HQ. office.js renders it interactively, scripts/render_office_guide.py rasterizes it as the img2img guide, and desk anchors are reserved for future PixiJS characters. Grid: x toward lower-right, y toward upper-right (back); furniture boxes are {x,y,w,d,h} in room-local grid units (h in screen units, used by geometry/guide modes only). Sprite-mode placement rules: tall wall pieces sit on BACK edges (high y, or low x with o:sw); optional per-piece o (orientation) and s (scale multiplier) override the sprite manifest.",
+  "render": {
+    "scale": 16,
+    "pad": 6,
+    "wall_h": 3.4,
+    "door_w": 4.0
+  },
   "rooms": [
-    { "id": "lounge", "label": "Lounge", "sub": "standings · trophies", "go": "standings",
-      "x": 0, "y": 0, "w": 14, "h": 8,
+    {
+      "id": "lounge",
+      "label": "Lounge",
+      "sub": "standings \u00b7 trophies",
+      "go": "standings",
+      "x": 0,
+      "y": 0,
+      "w": 14,
+      "h": 8,
       "furniture": [
-        { "type": "couch", "x": 1.5, "y": 2, "w": 5.5, "d": 2, "h": 1.8 },
-        { "type": "couch", "x": 1.5, "y": 4, "w": 2, "d": 2.5, "h": 1.8 },
-        { "type": "shelf", "x": 9, "y": 1, "w": 4, "d": 1, "h": 1.2 }
-      ] },
-    { "id": "lobby", "label": "Lobby", "sub": "the front door", "go": null,
-      "x": 14, "y": 0, "w": 20, "h": 8,
+        {
+          "type": "couch",
+          "x": 4.0,
+          "y": 3.0,
+          "w": 5.5,
+          "d": 2,
+          "h": 1.8
+        },
+        {
+          "type": "couch",
+          "x": 1.2,
+          "y": 2.2,
+          "w": 2,
+          "d": 2.5,
+          "h": 1.8
+        },
+        {
+          "type": "shelf",
+          "x": 8.5,
+          "y": 6.2,
+          "w": 4,
+          "d": 1,
+          "h": 1.2
+        },
+        {
+          "type": "plant",
+          "x": 12.2,
+          "y": 6.2,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        }
+      ]
+    },
+    {
+      "id": "lobby",
+      "label": "Lobby",
+      "sub": "the front door",
+      "go": null,
+      "x": 14,
+      "y": 0,
+      "w": 20,
+      "h": 8,
       "furniture": [
-        { "type": "desk", "x": 7, "y": 4.5, "w": 6, "d": 2, "h": 2.6 }
-      ] },
-    { "id": "practice", "label": "Practice", "sub": "set training focus", "training": true,
-      "x": 34, "y": 0, "w": 14, "h": 8,
+        {
+          "type": "desk",
+          "x": 5.5,
+          "y": 3.0,
+          "w": 5,
+          "d": 2,
+          "h": 2.6
+        },
+        {
+          "type": "couch",
+          "x": 15.0,
+          "y": 1.2,
+          "w": 4.5,
+          "d": 2,
+          "h": 1.8
+        },
+        {
+          "type": "plant",
+          "x": 2.5,
+          "y": 5.8,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        },
+        {
+          "type": "plant",
+          "x": 17.5,
+          "y": 1.2,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "label": "Practice",
+      "sub": "set training focus",
+      "training": true,
+      "x": 34,
+      "y": 0,
+      "w": 14,
+      "h": 8,
       "furniture": [
-        { "type": "desk", "x": 2, "y": 4.5, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 2.8, "y": 4.9, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 6, "y": 4.5, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 6.8, "y": 4.9, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 10, "y": 4.5, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 10.8, "y": 4.9, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "bigscreen", "x": 3, "y": 0.8, "w": 8, "d": 0.4, "h": 4.2 }
-      ] },
-    { "id": "boardroom", "label": "Boardroom", "sub": "sponsors · finances", "go": "finances",
-      "x": 0, "y": 8, "w": 14, "h": 12,
+        {
+          "type": "bigscreen",
+          "x": 8.5,
+          "y": 6.8,
+          "w": 4,
+          "d": 0.4,
+          "h": 4.2
+        },
+        {
+          "type": "desk",
+          "x": 1.5,
+          "y": 2.6,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 5.7,
+          "y": 2.6,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 9.9,
+          "y": 2.6,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        }
+      ]
+    },
+    {
+      "id": "boardroom",
+      "label": "Boardroom",
+      "sub": "sponsors \u00b7 finances",
+      "go": "finances",
+      "x": 0,
+      "y": 8,
+      "w": 14,
+      "h": 12,
       "furniture": [
-        { "type": "table", "x": 3.5, "y": 4, "w": 7, "d": 3.4, "h": 2.4 },
-        { "type": "chair", "x": 4, "y": 2.6, "w": 1.1, "d": 1.1, "h": 1.9 },
-        { "type": "chair", "x": 6.3, "y": 2.6, "w": 1.1, "d": 1.1, "h": 1.9 },
-        { "type": "chair", "x": 8.6, "y": 2.6, "w": 1.1, "d": 1.1, "h": 1.9 },
-        { "type": "chair", "x": 4, "y": 7.8, "w": 1.1, "d": 1.1, "h": 1.9 },
-        { "type": "chair", "x": 6.3, "y": 7.8, "w": 1.1, "d": 1.1, "h": 1.9 },
-        { "type": "chair", "x": 8.6, "y": 7.8, "w": 1.1, "d": 1.1, "h": 1.9 }
-      ] },
-    { "id": "team_desks", "label": "Team Desks", "sub": "roster · contracts", "go": "roster",
-      "x": 14, "y": 8, "w": 20, "h": 12,
-      "desk_anchors": [[3.7, 3.9], [7.0, 3.9], [10.3, 3.9], [13.6, 3.9], [16.9, 3.9]],
+        {
+          "type": "table",
+          "x": 3.5,
+          "y": 5.2,
+          "w": 7,
+          "d": 3.4,
+          "h": 2.4
+        },
+        {
+          "type": "chair",
+          "x": 4.3,
+          "y": 3.4,
+          "w": 1.1,
+          "d": 1.1,
+          "h": 1.9
+        },
+        {
+          "type": "chair",
+          "x": 6.5,
+          "y": 3.4,
+          "w": 1.1,
+          "d": 1.1,
+          "h": 1.9
+        },
+        {
+          "type": "chair",
+          "x": 8.7,
+          "y": 3.4,
+          "w": 1.1,
+          "d": 1.1,
+          "h": 1.9
+        }
+      ]
+    },
+    {
+      "id": "team_desks",
+      "label": "Team Desks",
+      "sub": "roster \u00b7 contracts",
+      "go": "roster",
+      "x": 14,
+      "y": 8,
+      "w": 20,
+      "h": 12,
+      "desk_anchors": [
+        [
+          3.7,
+          3.9
+        ],
+        [
+          9.7,
+          3.9
+        ],
+        [
+          15.7,
+          3.9
+        ],
+        [
+          3.7,
+          8.9
+        ],
+        [
+          9.7,
+          8.9
+        ]
+      ],
       "furniture": [
-        { "type": "desk", "x": 2.2, "y": 3, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 3.0, "y": 3.4, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 5.5, "y": 3, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 6.3, "y": 3.4, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 8.8, "y": 3, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 9.6, "y": 3.4, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 12.1, "y": 3, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 12.9, "y": 3.4, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 15.4, "y": 3, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 16.2, "y": 3.4, "w": 1.4, "d": 0.2, "h": 3.4 },
-        { "type": "desk", "x": 2.2, "y": 8, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "desk", "x": 5.5, "y": 8, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "desk", "x": 8.8, "y": 8, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "desk", "x": 12.1, "y": 8, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "desk", "x": 15.4, "y": 8, "w": 3, "d": 1.8, "h": 2.2 }
-      ] },
-    { "id": "scout_desk", "label": "Scout Desk", "sub": "scouting reports", "go": "scouting",
-      "x": 34, "y": 8, "w": 14, "h": 12,
+        {
+          "type": "desk",
+          "x": 2.2,
+          "y": 3.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 8.2,
+          "y": 3.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 14.2,
+          "y": 3.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 2.2,
+          "y": 8.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 8.2,
+          "y": 8.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 14.2,
+          "y": 8.0,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "plant",
+          "x": 18.4,
+          "y": 10.4,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        }
+      ]
+    },
+    {
+      "id": "scout_desk",
+      "label": "Scout Desk",
+      "sub": "scouting reports",
+      "go": "scouting",
+      "x": 34,
+      "y": 8,
+      "w": 14,
+      "h": 12,
       "furniture": [
-        { "type": "desk", "x": 2, "y": 6, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "desk", "x": 7, "y": 6, "w": 3, "d": 1.8, "h": 2.2 },
-        { "type": "screen", "x": 2, "y": 1, "w": 2, "d": 0.3, "h": 3.0 },
-        { "type": "screen", "x": 4.6, "y": 1, "w": 2, "d": 0.3, "h": 3.0 },
-        { "type": "screen", "x": 7.2, "y": 1, "w": 2, "d": 0.3, "h": 3.0 },
-        { "type": "screen", "x": 9.8, "y": 1, "w": 2, "d": 0.3, "h": 3.0 }
-      ] },
-    { "id": "war_room", "label": "War Room", "sub": "tactics · stats", "go": "tactics|stats",
-      "x": 0, "y": 20, "w": 14, "h": 10,
+        {
+          "type": "screen",
+          "x": 4.2,
+          "y": 9.8,
+          "w": 2,
+          "d": 0.3,
+          "h": 3.0
+        },
+        {
+          "type": "screen",
+          "x": 6.9,
+          "y": 9.8,
+          "w": 2,
+          "d": 0.3,
+          "h": 3.0
+        },
+        {
+          "type": "screen",
+          "x": 9.6,
+          "y": 9.8,
+          "w": 2,
+          "d": 0.3,
+          "h": 3.0
+        },
+        {
+          "type": "desk",
+          "x": 2.5,
+          "y": 4.2,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "desk",
+          "x": 7.8,
+          "y": 4.2,
+          "w": 3,
+          "d": 1.8,
+          "h": 2.2
+        },
+        {
+          "type": "plant",
+          "x": 11.6,
+          "y": 9.6,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        }
+      ]
+    },
+    {
+      "id": "war_room",
+      "label": "War Room",
+      "sub": "tactics \u00b7 stats",
+      "go": "tactics|stats",
+      "x": 0,
+      "y": 20,
+      "w": 14,
+      "h": 10,
       "furniture": [
-        { "type": "table", "x": 4, "y": 4, "w": 6, "d": 3, "h": 2.4 },
-        { "type": "board", "x": 2, "y": 1, "w": 9, "d": 0.4, "h": 4.0 }
-      ] },
-    { "id": "physio", "label": "Physio", "sub": "roster · staff", "go": "roster",
-      "x": 34, "y": 20, "w": 14, "h": 10,
+        {
+          "type": "board",
+          "x": 3.2,
+          "y": 7.8,
+          "w": 7,
+          "d": 0.4,
+          "h": 4.0
+        },
+        {
+          "type": "table",
+          "x": 4,
+          "y": 3.8,
+          "w": 6,
+          "d": 3,
+          "h": 2.4
+        }
+      ]
+    },
+    {
+      "id": "physio",
+      "label": "Physio",
+      "sub": "roster \u00b7 staff",
+      "go": "roster",
+      "x": 34,
+      "y": 20,
+      "w": 14,
+      "h": 10,
       "furniture": [
-        { "type": "bench", "x": 2.5, "y": 3.5, "w": 6, "d": 2.4, "h": 1.6 },
-        { "type": "cabinet", "x": 10, "y": 1.5, "w": 2.4, "d": 2, "h": 3.6 }
-      ] }
+        {
+          "type": "bench",
+          "x": 3,
+          "y": 4,
+          "w": 6,
+          "d": 2.4,
+          "h": 1.6
+        },
+        {
+          "type": "cabinet",
+          "x": 10.6,
+          "y": 7.2,
+          "w": 2.4,
+          "d": 2,
+          "h": 3.6
+        },
+        {
+          "type": "plant",
+          "x": 1.2,
+          "y": 7.6,
+          "w": 1.2,
+          "d": 1.2,
+          "h": 2.2
+        }
+      ]
+    }
   ],
   "annexes": [
-    { "id": "analytics_suite", "label": "Analytics Suite", "sub": "scouting & prep",
-      "x": 14, "y": 20, "w": 10, "h": 10,
+    {
+      "id": "analytics_suite",
+      "label": "Analytics Suite",
+      "sub": "scouting & prep",
+      "x": 14,
+      "y": 20,
+      "w": 10,
+      "h": 10,
       "furniture_by_level": {
         "1": [
-          { "type": "server", "x": 1.6, "y": 1.4, "w": 1.6, "d": 1.4, "h": 3.8 },
-          { "type": "server", "x": 3.7, "y": 1.4, "w": 1.6, "d": 1.4, "h": 4.8 },
-          { "type": "desk", "x": 2, "y": 6.5, "w": 3, "d": 1.8, "h": 2.2 }
+          {
+            "type": "server",
+            "x": 1.8,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 3.8
+          },
+          {
+            "type": "server",
+            "x": 4.0,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 4.8
+          },
+          {
+            "type": "desk",
+            "x": 2.6,
+            "y": 2.8,
+            "w": 3,
+            "d": 1.8,
+            "h": 2.2
+          }
         ],
         "3": [
-          { "type": "server", "x": 1.6, "y": 1.4, "w": 1.6, "d": 1.4, "h": 3.8 },
-          { "type": "server", "x": 3.7, "y": 1.4, "w": 1.6, "d": 1.4, "h": 4.8 },
-          { "type": "server", "x": 5.8, "y": 1.4, "w": 1.6, "d": 1.4, "h": 3.8 },
-          { "type": "server", "x": 7.9, "y": 1.4, "w": 1.6, "d": 1.4, "h": 4.8 },
-          { "type": "desk", "x": 2, "y": 6.5, "w": 3, "d": 1.8, "h": 2.2 },
-          { "type": "desk", "x": 6, "y": 6.5, "w": 3, "d": 1.8, "h": 2.2 }
+          {
+            "type": "server",
+            "x": 1.4,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 3.8
+          },
+          {
+            "type": "server",
+            "x": 3.5,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 4.8
+          },
+          {
+            "type": "server",
+            "x": 5.6,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 3.8
+          },
+          {
+            "type": "server",
+            "x": 7.7,
+            "y": 7.8,
+            "w": 1.6,
+            "d": 1.4,
+            "h": 4.8
+          },
+          {
+            "type": "desk",
+            "x": 2.0,
+            "y": 2.8,
+            "w": 3,
+            "d": 1.8,
+            "h": 2.2
+          },
+          {
+            "type": "desk",
+            "x": 6.0,
+            "y": 2.8,
+            "w": 3,
+            "d": 1.8,
+            "h": 2.2
+          }
         ]
-      } },
-    { "id": "marketing_office", "label": "Marketing Office", "sub": "fans & sponsors",
-      "x": 24, "y": 20, "w": 10, "h": 10,
+      }
+    },
+    {
+      "id": "marketing_office",
+      "label": "Marketing Office",
+      "sub": "fans & sponsors",
+      "x": 24,
+      "y": 20,
+      "w": 10,
+      "h": 10,
       "furniture_by_level": {
         "1": [
-          { "type": "desk", "x": 2, "y": 5.5, "w": 3, "d": 2, "h": 2.2 },
-          { "type": "camera", "x": 6.5, "y": 5.8, "w": 1.2, "d": 1.2, "h": 3.8 },
-          { "type": "shelf", "x": 1.6, "y": 1.2, "w": 2, "d": 0.8, "h": 2.6 }
+          {
+            "type": "desk",
+            "x": 2.2,
+            "y": 3.0,
+            "w": 3,
+            "d": 2,
+            "h": 2.2
+          },
+          {
+            "type": "camera",
+            "x": 6.8,
+            "y": 3.4,
+            "w": 1.2,
+            "d": 1.2,
+            "h": 3.8
+          },
+          {
+            "type": "shelf",
+            "x": 1.8,
+            "y": 7.6,
+            "w": 2,
+            "d": 0.8,
+            "h": 2.6
+          }
         ],
         "3": [
-          { "type": "desk", "x": 2, "y": 5.5, "w": 3, "d": 2, "h": 2.2 },
-          { "type": "camera", "x": 6.5, "y": 5.8, "w": 1.2, "d": 1.2, "h": 3.8 },
-          { "type": "shelf", "x": 1.6, "y": 1.2, "w": 2, "d": 0.8, "h": 2.6 },
-          { "type": "shelf", "x": 4.0, "y": 1.2, "w": 2, "d": 0.8, "h": 2.6 },
-          { "type": "shelf", "x": 6.4, "y": 1.2, "w": 2, "d": 0.8, "h": 2.6 }
+          {
+            "type": "desk",
+            "x": 2.2,
+            "y": 3.0,
+            "w": 3,
+            "d": 2,
+            "h": 2.2
+          },
+          {
+            "type": "camera",
+            "x": 6.8,
+            "y": 3.4,
+            "w": 1.2,
+            "d": 1.2,
+            "h": 3.8
+          },
+          {
+            "type": "shelf",
+            "x": 1.8,
+            "y": 7.6,
+            "w": 2,
+            "d": 0.8,
+            "h": 2.6
+          },
+          {
+            "type": "shelf",
+            "x": 4.4,
+            "y": 7.6,
+            "w": 2,
+            "d": 0.8,
+            "h": 2.6
+          },
+          {
+            "type": "shelf",
+            "x": 7.0,
+            "y": 7.6,
+            "w": 2,
+            "d": 0.8,
+            "h": 2.6
+          }
         ]
-      } },
-    { "id": "training_center", "label": "Training Center", "sub": "player development",
-      "x": 48, "y": 8, "w": 12, "h": 12,
+      }
+    },
+    {
+      "id": "training_center",
+      "label": "Training Center",
+      "sub": "player development",
+      "x": 48,
+      "y": 8,
+      "w": 12,
+      "h": 12,
       "furniture_by_level": {
         "1": [
-          { "type": "pod", "x": 1.8, "y": 1.8, "w": 4, "d": 2.6, "h": 2.8 },
-          { "type": "pod", "x": 7.2, "y": 1.8, "w": 4, "d": 2.6, "h": 2.8 }
+          {
+            "type": "pod",
+            "x": 1.6,
+            "y": 2.4,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          },
+          {
+            "type": "pod",
+            "x": 6.6,
+            "y": 2.4,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          }
         ],
         "3": [
-          { "type": "pod", "x": 1.8, "y": 1.8, "w": 4, "d": 2.6, "h": 2.8 },
-          { "type": "pod", "x": 7.2, "y": 1.8, "w": 4, "d": 2.6, "h": 2.8 },
-          { "type": "pod", "x": 1.8, "y": 6.2, "w": 4, "d": 2.6, "h": 2.8 },
-          { "type": "pod", "x": 7.2, "y": 6.2, "w": 4, "d": 2.6, "h": 2.8 }
+          {
+            "type": "pod",
+            "x": 1.6,
+            "y": 2.4,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          },
+          {
+            "type": "pod",
+            "x": 6.6,
+            "y": 2.4,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          },
+          {
+            "type": "pod",
+            "x": 1.6,
+            "y": 7.2,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          },
+          {
+            "type": "pod",
+            "x": 6.6,
+            "y": 7.2,
+            "w": 4,
+            "d": 2.6,
+            "h": 2.8
+          }
         ]
-      } }
+      }
+    }
   ]
 }

@@ -25,6 +25,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Multi-season snowball check | `... scripts\snowball_report.py` |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
 | Office guide rasterizer | `... scripts\render_office_guide.py` |
+| Sprite-office offline preview (no browser) | `... scripts\render_sprite_office.py [out.png]` |
 | Painted-art drift fix | `... scripts\align_painted.py [--apply]` |
 | JS sanity | `node --check src\esports_sim\web\static\<file>.js` |
 

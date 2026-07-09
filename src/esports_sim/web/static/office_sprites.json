@@ -4,78 +4,112 @@
   "sprites": {
     "desk": {
       "prompt": "esports gaming desk setup: dark wooden desk with a glowing gaming PC tower, curved monitor, RGB keyboard and mouse, headset on a stand, energy drink can, tangled cables, ergonomic gaming chair pushed in behind it",
-      "orientations": ["se", "sw"],
-      "scale": 1.15
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.78
     },
     "screen": {
       "prompt": "tall freestanding glowing cyan monitor panel on a slim stand, screen showing abstract match statistics",
-      "orientations": ["se"],
-      "scale": 1.0
+      "orientations": [
+        "se"
+      ],
+      "scale": 1.35
     },
     "bigscreen": {
       "prompt": "wide wall-mounted video screen on a dark stand, glowing cyan, showing an abstract tactical map",
-      "orientations": ["se"],
-      "scale": 1.05
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.8
     },
     "table": {
       "prompt": "long rustic wooden conference table with papers, laptops and coffee mugs on it",
-      "orientations": ["se"],
-      "scale": 1.1
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.75
     },
     "chair": {
       "prompt": "modern office chair, dark fabric with subtle red accent stitching",
-      "orientations": ["se", "sw"],
-      "scale": 1.0
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.7
     },
     "couch": {
       "prompt": "plush deep-red lounge sofa with throw pillows and a folded blanket",
-      "orientations": ["se", "sw"],
-      "scale": 1.1
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.68
     },
     "shelf": {
       "prompt": "low wooden trophy shelf with small plants and esports memorabilia",
-      "orientations": ["se"],
-      "scale": 1.05
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.8
     },
     "board": {
       "prompt": "large whiteboard on wheels covered in tactical scribbles, arrows and small map diagrams",
-      "orientations": ["se"],
-      "scale": 1.05
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.68
     },
     "bench": {
       "prompt": "physiotherapy treatment bench with green padded top and a folded white towel",
-      "orientations": ["se"],
-      "scale": 1.1
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.62
     },
     "cabinet": {
       "prompt": "tall medical supply cabinet with glass doors and neatly stacked supplies",
-      "orientations": ["se"],
-      "scale": 1.0
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.62
     },
     "server": {
       "prompt": "tall server rack with glowing teal status LEDs and neat cable management",
-      "orientations": ["se"],
-      "scale": 1.0
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.9
     },
     "camera": {
       "prompt": "professional studio camera on a tripod next to a glowing ring light",
-      "orientations": ["se"],
-      "scale": 1.0
+      "orientations": [
+        "se"
+      ],
+      "scale": 0.7
     },
     "pod": {
       "prompt": "enclosed esports training pod booth: boxy dark-red privacy booth with a glowing cyan door seam and small status screen",
-      "orientations": ["se", "sw"],
-      "scale": 1.15
+      "orientations": [
+        "se",
+        "sw"
+      ],
+      "scale": 0.9
     },
     "trophy": {
       "prompt": "small golden esports championship trophy cup",
-      "orientations": ["se"],
+      "orientations": [
+        "se"
+      ],
       "scale": 1.4
     },
     "plant": {
       "prompt": "potted monstera plant in a dark ceramic pot",
-      "orientations": ["se"],
-      "scale": 1.2
+      "orientations": [
+        "se"
+      ],
+      "scale": 1.0
     }
   }
 }

@@ -112,6 +112,15 @@ The fix is to stop asking for placement at all:
   "floor markings" bait-paints glyph text — say "light from unseen
   sources above the frame" instead. Reusable scripts from the pass:
   scratchpad `gen_shell.py` / `sprites.py` / `gemini_edit.py`.
+- **Placement tuning loop**: `scripts/render_sprite_office.py` mirrors
+  office.js placement math and composes shell+sprites offline — judge
+  layout/scale changes from its PNG instead of fighting flaky browser
+  screenshots. Lessons from the first pass: z-sort by footprint CENTER
+  (front-vertex sorting lets wide tables leapfrog their chairs); tune
+  per-type scale against measured sprite aspect (portrait sprites
+  explode under width-only scaling); wall pieces go on BACK edges (high
+  y, or low x mirrored); don't pair standalone monitor sprites with
+  desks whose art already includes monitors.
 
 Facility-state diff compositing (above) remains the fallback path for
 whole-scene sets and is still the right tool for map door/teleporter
