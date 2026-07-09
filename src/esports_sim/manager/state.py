@@ -13,7 +13,6 @@ event log (nothing but the box score is persisted).
 from __future__ import annotations
 
 import json
-from functools import cmp_to_key
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -375,30 +374,49 @@ class GameState(BaseModel):
         """Table order, optionally restricted to one region's league.
         Tables are per-tier; pass tier=0 for everything.
 
-        Tiebreakers, in order: wins, round differential, head-to-head series
-        (only meaningful between the two tied teams), rounds won, then team
-        id as a deterministic final fallback."""
-
-        def cmp(t1: str, t2: str) -> int:
-            r1, r2 = self.standings[t1], self.standings[t2]
-            if r1.wins != r2.wins:
-                return -1 if r1.wins > r2.wins else 1
-            if r1.diff != r2.diff:
-                return -1 if r1.diff > r2.diff else 1
-            h2h = self._h2h_series(t1, t2)
-            if h2h != 0:
-                return -1 if h2h > 0 else 1
-            if r1.rounds_won != r2.rounds_won:
-                return -1 if r1.rounds_won > r2.rounds_won else 1
-            return -1 if t1 < t2 else 1
-
+        Tiebreakers, in order: wins, round differential, then — within a
+        group still tied on both — a head-to-head MINI-TABLE (each team's net
+        H2H margin against only the other tied teams), then rounds won, then
+        team id. The mini-table keeps the order transitive even when three+
+        teams tie in a rock-paper-scissors cycle (A>B>C>A); applying pairwise
+        H2H inside a global comparator would resolve such a cycle by
+        insertion order instead."""
         tids = [
             t
             for t in self.standings
             if (region is None or str(self.teams[t].region) == region)
             and (tier == 0 or self.teams[t].tier == tier)
         ]
-        return sorted(tids, key=cmp_to_key(cmp))
+        # Primary sort: wins then differential (id keeps it stable).
+        tids.sort(
+            key=lambda t: (-self.standings[t].wins, -self.standings[t].diff, t)
+        )
+        ordered: list[str] = []
+        i = 0
+        while i < len(tids):
+            j = i
+            w, d = self.standings[tids[i]].wins, self.standings[tids[i]].diff
+            while (
+                j < len(tids)
+                and self.standings[tids[j]].wins == w
+                and self.standings[tids[j]].diff == d
+            ):
+                j += 1
+            group = tids[i:j]
+            if len(group) > 1:
+                # Rank the tied group by net H2H margin among ITSELF — a
+                # scalar per team, so the order is transitive.
+                def mini_key(t: str) -> tuple:
+                    margin = sum(
+                        self._h2h_series(t, o) for o in group if o != t
+                    )
+                    r = self.standings[t]
+                    return (-margin, -r.rounds_won, t)
+
+                group.sort(key=mini_key)
+            ordered.extend(group)
+            i = j
+        return ordered
 
     def regions(self) -> list[str]:
         """Regions that actually have league teams, sorted."""

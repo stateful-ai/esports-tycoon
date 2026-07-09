@@ -41,6 +41,39 @@ def test_head_to_head_breaks_a_dead_tie() -> None:
     assert ordered.index(x) < ordered.index(y)
 
 
+def test_three_way_tie_is_transitive_and_insertion_order_independent() -> None:
+    """A rock-paper-scissors H2H cycle (x>y>z>x) among three teams tied on
+    wins and differential must NOT depend on standings insertion order — the
+    mini-table resolves it deterministically (here all net margins are 0, so
+    it falls to rounds-won then id)."""
+    gd = load_all()
+    gs = new_campaign(gd, seed=8)
+    region = gs.regions()[0]
+    x, y, z = gs.standings_order(region)[:3]
+    for t in (x, y, z):
+        gs.standings[t] = TeamRecord(
+            wins=6, losses=2, rounds_won=100, rounds_lost=100
+        )
+
+    def beat(a: str, b: str) -> None:
+        f = next(fx for fx in gs.fixtures if {fx.team_a, fx.team_b} == {a, b})
+        f.played = True
+        f.winner_id = a
+
+    beat(x, y)
+    beat(y, z)
+    beat(z, x)  # the cycle
+    base = gs.standings_order(region)
+    # The three tied teams take the top three slots, in id order (margins 0).
+    assert base[:3] == sorted([x, y, z])
+    # Re-inserting the three teams in a different dict order changes nothing.
+    reordered = {k: v for k, v in gs.standings.items() if k not in (x, y, z)}
+    for k in (z, y, x):
+        reordered[k] = gs.standings[k]
+    gs.standings = reordered
+    assert gs.standings_order(region) == base
+
+
 # -- veto balance + semifinal guard ------------------------------------------
 
 def _ban_counts(log: list[str], tag_a: str, tag_b: str) -> tuple[int, int]:
