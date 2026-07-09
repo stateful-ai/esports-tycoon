@@ -234,6 +234,23 @@ All five maps are painted and live in the viewer. The working chain:
 - Reusable scripts from the pass (scratchpad): `map_gate.py` (gate +
   spill + overlay + outside-mask), `croppaste.py` (surgical edits).
 
+## Map floor contract (v2 repaint, 2026-07-09)
+
+The paint can only be walked on if the GEOMETRY is walkable art:
+`scripts/map_floor_audit.py` is now a permanent gate — every adjacency
+pair's plates must touch, every callout center sits on its own plate,
+every path polyline stays on the plate union (teleporter edges exempt:
+players beam, never walk). When plates CONNECT in a geometry fix,
+re-audit the briefs' flavor lines: props that were legal on
+void-facing walls become seam-blockers (lotus's B-site mural painted
+onto the newly live spawn seam 4/4 until reworded to decorate the
+elevation drop instead). Repaint lessons: strip surgery (tight band on
+the offending wall, floors as slivers) beats whole-courtyard edits 3/3
+vs 0/3 on haven; scene-framing ("a flat teal stone floor") succeeds
+where change-requests ("drain the pool") fail; one surgical goal per
+Gemini call on dense dioramas; per-channel mean/std color transfer
+before every crop paste (scratchpad colorxfer.py).
+
 ## Word on engines (owner decision log)
 
 No game engine adoption for now. The office/PixiJS trigger: when

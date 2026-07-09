@@ -3,60 +3,66 @@
 # compact Mid (Tree/Center/Alley) forks off toward both A Link and C.
 map_id: lotus
 regions:
-  # -- Spawns (wide, shallow) -------------------------------------------
-  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 76.0, w: 40.0, h: 14.0 }
+  # -- Spawns. Attacker spawn is the wide top band — it feeds five doors
+  # (A Main, Mid, B Main, Diamond, C Main), so its floor runs door to
+  # door. Defender spawn reaches Tree on the west and Tunnel on the east.
+  attacker_spawn: { x: 14.0, y: 0.0, w: 72.0, h: 16.0 }
+  defender_spawn: { x: 21.5, y: 76.0, w: 50.0, h: 16.5 }
 
   # -- A site -----------------------------------------------------------
-  a_main: { x: 8.0, y: 26.0, w: 9.0, h: 22.0 }
+  # A Main runs from the spawn seam all the way down into the site.
+  a_main: { x: 8.0, y: 15.5, w: 10.0, h: 32.5 }
   a_link: { x: 20.0, y: 31.0, w: 14.0, h: 14.0 }
   a_site: { x: 8.0, y: 44.0, w: 20.0, h: 20.0 }
   a_tree: { x: 8.0, y: 62.0, w: 14.0, h: 14.0 }
-  a_dock: { x: 16.0, y: 65.0, w: 14.0, h: 16.0 }
+  a_dock: { x: 16.0, y: 63.5, w: 14.0, h: 17.5 }
 
-  # -- Mid ------------------------------------------------------------------
+  # -- Mid. Center is the tall strip beside the B Main lane — it doors
+  # off the spawn seam and runs down to the Tree/Alley forks.
   mid_tree: { x: 25.0, y: 33.0, w: 14.0, h: 14.0 }
-  mid_center: { x: 32.0, y: 39.0, w: 14.0, h: 14.0 }
-  alley: { x: 60.0, y: 35.0, w: 14.0, h: 14.0 }
+  mid_center: { x: 36.0, y: 15.5, w: 14.0, h: 37.5 }
+  alley: { x: 50.0, y: 35.0, w: 24.0, h: 14.0 }
 
   # -- B site -----------------------------------------------------------
   b_main: { x: 45.0, y: 16.0, w: 10.0, h: 34.0 }
-  b_diamond: { x: 52.0, y: 17.0, w: 14.0, h: 17.0 }
+  # Diamond is the east flank column — spawn seam down the outside of
+  # B Main to the back corner of the site.
+  b_diamond: { x: 52.0, y: 15.5, w: 14.0, h: 35.0 }
   b_site: { x: 40.0, y: 50.0, w: 20.0, h: 20.0 }
   b_link: { x: 40.0, y: 65.0, w: 14.0, h: 16.0 }
   b_tower: { x: 48.0, y: 67.0, w: 14.0, h: 14.0, z: 5.0 }
 
   # -- C site -----------------------------------------------------------
-  c_main: { x: 85.0, y: 16.0, w: 9.0, h: 30.0 }
+  c_main: { x: 81.5, y: 16.0, w: 12.5, h: 30.0 }
   c_alley: { x: 66.0, y: 31.0, w: 14.0, h: 14.0 }
   c_site: { x: 72.0, y: 44.0, w: 20.0, h: 20.0 }
   c_tunnel: { x: 71.0, y: 63.0, w: 14.0, h: 18.0 }
-  c_dock: { x: 70.0, y: 65.0, w: 14.0, h: 16.0 }
+  c_dock: { x: 70.0, y: 63.5, w: 14.0, h: 17.5 }
 
 corridors:
-  # A Main is a doglegged flank lane off spawn (kept off the direct line
-  # so the A stage doesn't collapse to the straight-line minimum).
-  - between: [attacker_spawn, a_main]
-    via: [[31.3, 22.5]]
+  # A Main doors off the far-west end of the spawn band — the portal walk
+  # is already the dogleg, so no extra waypoints are needed here.
   - between: [attacker_spawn, c_main]
     via: [[85.0, 12.0]]
-  # Mid Center is a straight run down the middle of spawn.
+  # Mid Center weaves down the strip off the spawn seam — the jogs keep
+  # the mid connection from collapsing to the straight-line minimum.
   - between: [attacker_spawn, mid_center]
-    via: [[50.0, 25.0]]
-  # Alley forks off Mid toward C.
+    via: [[44.0, 12.0], [38.5, 20.0], [46.0, 28.0]]
+  # Tree fork doubles back low through the strip before the doorway.
+  - between: [mid_center, mid_tree]
+    via: [[38.0, 48.0], [32.0, 44.0]]
+  # Alley forks off Mid toward C, swinging low through the strip.
   - between: [mid_center, alley]
-    via: [[54.0, 44.0]]
-  # Diamond loops wide off spawn before doubling back to the room, instead
-  # of a straight shot in.
+    via: [[54.0, 48.0]]
+  # Diamond loops wide across the spawn floor before doubling back into
+  # its column, instead of a straight shot in.
   - between: [attacker_spawn, b_diamond]
-    via: [[84.4, 1.4]]
-  # Diamond loops around B Main to reach the back of site.
+    via: [[78.0, 6.0], [62.0, 13.0]]
+  # Diamond runs down its column and hooks into the back of site.
   - between: [b_diamond, b_site]
     via: [[58.0, 42.0]]
-  # Tree is a defender-side flank back to spawn — short and direct now
-  # that spawn sits close behind the site backs.
-  - between: [defender_spawn, a_tree]
-    via: [[32.5, 76.0]]
+  # Tree touches the widened defender plaza directly; the auto-portal is
+  # the short flank line back to spawn.
 
 # Detail layer: plant-cover crates in each site plus one in each main lane
 # room. B Tower is Lotus's one elevated perch, overlooking B Site — its

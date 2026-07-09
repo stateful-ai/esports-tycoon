@@ -2,43 +2,49 @@
 # lanes that each end in a wide site and a defender-side hall back to spawn.
 map_id: bind
 regions:
-  # -- Spawns (wide, shallow) -------------------------------------------
-  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+  # -- Spawns. Attacker spawn reaches the B Long door; defender spawn is
+  # the wide back street — its floor runs under the U-Hall, Lamps, Elbow
+  # and Hall doorways spread across the map's bottom edge.
+  attacker_spawn: { x: 30.0, y: 0.0, w: 46.5, h: 16.0 }
+  defender_spawn: { x: 21.5, y: 81.5, w: 69.5, h: 18.5 }
 
   # -- A side --------------------------------------------------------------
   a_lobby: { x: 14.0, y: 12.0, w: 20.0, h: 17.0 }
-  a_showers: { x: 4.0, y: 32.0, w: 18.0, h: 16.0 }
-  a_short: { x: 26.0, y: 30.0, w: 16.0, h: 16.0 }
+  a_showers: { x: 4.0, y: 28.5, w: 18.0, h: 19.5 }
+  # A Short is the long lane of the A dome — it runs from the lobby seam
+  # down past the site's east wall to the Lamps doorway.
+  a_short: { x: 26.0, y: 28.5, w: 16.0, h: 38.0 }
   a_site: { x: 12.0, y: 48.0, w: 20.0, h: 20.0 }
   a_lamps: { x: 24.0, y: 66.0, w: 16.0, h: 16.0 }
   a_uhall: { x: 6.0, y: 68.0, w: 16.0, h: 16.0 }
 
   # -- B side -----------------------------------------------------------------
   b_fountain: { x: 66.0, y: 12.0, w: 20.0, h: 17.0 }
-  b_window: { x: 58.0, y: 30.0, w: 16.0, h: 16.0 }
-  b_long: { x: 76.0, y: 28.0, w: 18.0, h: 18.0 }
+  b_window: { x: 58.0, y: 28.5, w: 16.0, h: 20.0 }
+  # B Long is the outside-wall hallway — spawn seam down to the Elbow turn.
+  b_long: { x: 76.0, y: 15.5, w: 18.0, h: 45.0 }
   b_site: { x: 66.0, y: 48.0, w: 20.0, h: 20.0 }
-  b_elbow: { x: 60.0, y: 68.0, w: 16.0, h: 16.0 }
+  b_elbow: { x: 60.0, y: 60.0, w: 16.0, h: 24.0 }
   b_hall: { x: 76.0, y: 68.0, w: 16.0, h: 16.0 }
 
 corridors:
-  # A Lobby is a doglegged hallway off spawn, not a straight shot.
+  # A Lobby is a doglegged hallway off spawn — the loop swings through the
+  # spawn floor before the door.
   - between: [attacker_spawn, a_lobby]
-    via: [[45.3, 31.6]]
-  # B Long is its own hallway straight off spawn, looping wide before it
-  # doors into the room.
+    via: [[58.0, 11.0], [34.0, 13.5]]
+  # B Long is its own hallway off spawn, looping wide across the spawn
+  # floor before it doors into the room.
   - between: [attacker_spawn, b_long]
-    via: [[87.0, -1.0]]
+    via: [[40.0, 8.0], [74.0, 12.0]]
   # A Short cuts across to Lamps behind the back of A Site.
   - between: [a_short, a_lamps]
     via: [[28.0, 58.0]]
   # U-Hall is the defender-side corridor back to spawn.
   - between: [a_uhall, defender_spawn]
-    via: [[20.0, 80.0]]
-  # B Long runs down the outside wall to Elbow.
+    via: [[20.0, 80.0], [24.0, 82.5]]
+  # B Long runs down the outside wall and turns into Elbow.
   - between: [b_long, b_elbow]
-    via: [[80.0, 60.0]]
+    via: [[78.0, 58.0], [74.0, 63.0]]
   # B Hall mirrors U-Hall on the defender side.
   - between: [b_hall, defender_spawn]
     via: [[80.0, 80.0]]

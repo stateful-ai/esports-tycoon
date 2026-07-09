@@ -3,43 +3,47 @@
 # open mid lane that both sides fight over.
 map_id: ascent
 regions:
-  # -- Spawns (wide, shallow) -------------------------------------------
+  # -- Spawns. Defender spawn is the deep back plaza — its floor reaches
+  # the Heaven, Garden, Market and B Back doorways.
   attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 84.0, w: 40.0, h: 16.0 }
+  defender_spawn: { x: 30.0, y: 66.0, w: 40.0, h: 34.0 }
 
   # -- A side -------------------------------------------------------------
-  a_lobby: { x: 12.0, y: 14.0, w: 18.0, h: 16.0 }
+  a_lobby: { x: 12.0, y: 14.0, w: 19.5, h: 19.5 }
   a_main: { x: 6.0, y: 30.0, w: 18.0, h: 16.0 }
   a_site: { x: 10.0, y: 46.0, w: 20.0, h: 20.0 }
-  a_heaven: { x: 16.0, y: 66.0, w: 15.0, h: 15.0, z: 5.0 }
+  a_heaven: { x: 16.0, y: 66.0, w: 16.0, h: 15.0, z: 5.0 }
   a_garden: { x: 27.0, y: 60.0, w: 15.0, h: 15.0 }
 
-  # -- Mid ------------------------------------------------------------------
-  catwalk: { x: 31.0, y: 33.0, w: 15.0, h: 16.0 }
-  mid_courtyard: { x: 44.0, y: 38.0, w: 14.0, h: 14.0 }
+  # -- Mid. Courtyard is the full mid strip — a long open run from the
+  # spawn seam down to Market, which is Ascent's defining lane.
+  catwalk: { x: 31.0, y: 33.0, w: 15.0, h: 27.5 }
+  mid_courtyard: { x: 44.0, y: 15.5, w: 14.0, h: 36.5 }
   mid_market: { x: 56.0, y: 50.0, w: 16.0, h: 16.0 }
 
   # -- B side ---------------------------------------------------------------
-  b_lobby: { x: 70.0, y: 14.0, w: 18.0, h: 16.0 }
-  b_main: { x: 70.0, y: 32.0, w: 18.0, h: 19.0 }
+  b_lobby: { x: 70.0, y: 14.0, w: 18.0, h: 18.5 }
+  b_main: { x: 57.5, y: 32.0, w: 30.5, h: 22.5 }
   b_site: { x: 70.0, y: 54.0, w: 18.0, h: 18.0 }
   b_back: { x: 66.0, y: 68.0, w: 15.0, h: 15.0 }
 
 corridors:
-  # A Lobby is a doglegged hallway off spawn, not a straight shot.
+  # A Lobby is a doglegged hallway off spawn — the loop swings through the
+  # spawn floor before the door.
   - between: [attacker_spawn, a_lobby]
-    via: [[43.0, 30.0]]
-  # Mid Courtyard is a long open run down from spawn.
+    via: [[56.0, 12.0], [31.0, 15.0]]
+  # Mid Courtyard is a long open run down from spawn, with a jog at the top.
   - between: [attacker_spawn, mid_courtyard]
-    via: [[50.0, 25.0]]
+    via: [[40.0, 11.0], [51.0, 24.0]]
   # Garden loops around the back of A Site to reach Catwalk and spawn.
   - between: [a_garden, catwalk]
     via: [[36.0, 55.0]]
   - between: [a_garden, defender_spawn]
     via: [[38.0, 80.0]]
-  # Courtyard peeks across the open mid into B Main via a wide dogleg.
+  # Courtyard peeks across the open mid into B Main via a wide dogleg that
+  # swings low through the strip before crossing the seam.
   - between: [mid_courtyard, b_main]
-    via: [[63.0, 27.0]]
+    via: [[50.0, 49.0], [68.0, 50.0]]
   # Market runs down the back wall into defender spawn.
   - between: [mid_market, defender_spawn]
     via: [[64.0, 78.0]]
@@ -77,5 +81,6 @@ props:
   - { region: mid_market, x: 60.0, y: 54.0, w: 3.0, h: 3.0, height: half }
   - { region: a_heaven, x: 20.0, y: 70.0, w: 3.0, h: 3.0, height: half }
   - { region: b_back, x: 70.0, y: 72.0, w: 3.0, h: 3.0, height: half }
-  # -- Mid box (sight blocker) ---------------------------------------------
-  - { region: mid_courtyard, x: 53.0, y: 47.0, w: 4.0, h: 4.0, height: full }
+  # -- Mid box (sight blocker) — sits on the Courtyard->Market center line
+  # so the long Market read still has to be worked around the crate.
+  - { region: mid_courtyard, x: 56.0, y: 46.0, w: 4.0, h: 4.0, height: full }

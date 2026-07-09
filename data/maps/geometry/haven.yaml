@@ -3,14 +3,16 @@
 # cluster (courtyard/doors/window) bridging A and B.
 map_id: haven
 regions:
-  # -- Spawns (wide, shallow) -------------------------------------------
-  attacker_spawn: { x: 26.0, y: 0.0, w: 48.0, h: 17.0 }
-  defender_spawn: { x: 30.0, y: 70.0, w: 40.0, h: 16.0 }
+  # -- Spawns. Attacker spawn is the full-width band across the top — it
+  # feeds all three lanes, so its floor runs door to door. Defender spawn
+  # is the back plaza reaching Heaven, Sewer, B Back and C Link.
+  attacker_spawn: { x: 14.5, y: 0.0, w: 70.0, h: 17.0 }
+  defender_spawn: { x: 22.0, y: 67.0, w: 48.0, h: 24.0 }
 
   # -- A lane -------------------------------------------------------------
   a_lobby: { x: 6.0, y: 9.0, w: 18.0, h: 16.0 }
-  a_long: { x: 5.0, y: 15.0, w: 9.0, h: 26.0 }
-  a_short: { x: 14.0, y: 28.0, w: 16.0, h: 16.0 }
+  a_long: { x: 5.0, y: 15.0, w: 10.5, h: 26.0 }
+  a_short: { x: 14.0, y: 24.5, w: 16.0, h: 19.5 }
   a_site: { x: 12.0, y: 40.0, w: 18.0, h: 18.0 }
   a_heaven: { x: 10.0, y: 58.0, w: 13.0, h: 13.0, z: 5.0 }
   a_sewer: { x: 23.0, y: 56.0, w: 13.0, h: 13.0 }
@@ -25,24 +27,27 @@ regions:
   c_lobby: { x: 74.0, y: 9.0, w: 18.0, h: 16.0 }
   c_long: { x: 84.0, y: 15.0, w: 9.0, h: 26.0 }
   c_site: { x: 70.0, y: 41.0, w: 18.0, h: 18.0 }
-  c_cubby: { x: 62.0, y: 44.0, w: 12.0, h: 12.0 }
-  c_link: { x: 62.0, y: 54.0, w: 16.0, h: 14.0 }
+  c_cubby: { x: 66.0, y: 44.0, w: 12.0, h: 12.0 }
+  # C Link is the C<->B connector band — it stretches left to meet B Site
+  # and B Back so the cross-map rotate has floor the whole way.
+  c_link: { x: 58.5, y: 54.0, w: 19.5, h: 14.0 }
 
   # -- Mid cluster --------------------------------------------------------
-  mid_doors: { x: 26.0, y: 41.0, w: 14.0, h: 15.0 }
+  mid_doors: { x: 26.0, y: 41.0, w: 19.5, h: 15.0 }
   mid_courtyard: { x: 40.0, y: 44.0, w: 14.0, h: 14.0 }
-  mid_window: { x: 54.0, y: 44.0, w: 14.0, h: 14.0 }
+  # Window reaches up to B Main — the overlook connector has its own floor.
+  mid_window: { x: 54.0, y: 34.5, w: 14.0, h: 23.5 }
 
 corridors:
-  # Attacker spawn's two long lanes loop wide before their doors — literal
-  # hallways, not open doors.
+  # Attacker spawn's two long lanes loop wide before their doors — the
+  # loops swing through the spawn band's floor before diving down-lane.
   - between: [attacker_spawn, a_long]
-    via: [[18.8, -4.4]]
+    via: [[17.0, 15.5], [20.0, 2.5]]
   - between: [attacker_spawn, c_long]
-    via: [[80.9, -4.7]]
+    via: [[82.0, 15.5], [79.0, 2.5]]
   # B Main is its own hallway off spawn, looped out to the side.
   - between: [attacker_spawn, b_main]
-    via: [[25.9, 17.3]]
+    via: [[28.0, 13.0], [42.5, 16.5]]
   # Defender spawn fans out to the back of each site — short, direct
   # interior lines (the defenders' compensation for a blind rotate).
   - between: [defender_spawn, a_heaven]
