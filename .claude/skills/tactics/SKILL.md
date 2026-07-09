@@ -51,11 +51,14 @@ dial's engine reach may only touch engine + constants (+ tests).
 1. **Golden = byte-identical** → neutral-safe. Run
    `pytest -q tests/test_golden.py`. If it drifts, a term isn't zero at 50 —
    fix the term, don't re-bless.
-2. **Sanity sweep**: `scripts/tactics_report.py` pushes each dial to its
-   extremes and asserts a wide degenerate-detector band (attack 30–75%,
-   plant rate ≥ 10%). Exit 0 required. Note it prints each dial's `d-atk`
-   for eyeballing but does NOT threshold movement — proving a dial actually
-   moves its signal is the regression test's job (step 4), not this script's.
+2. **Sanity sweep**: `scripts/tactics_report.py` pushes each of the five
+   NUMERIC dials (aggression, pace, util_discipline, eco_greed, map_control)
+   to its extremes and asserts a wide degenerate-detector band (attack
+   30–75%, plant rate ≥ 10%). Exit 0 required. Caveats: it prints each
+   dial's `d-atk` for eyeballing but does NOT threshold movement (step 4
+   owns that), and it does NOT cover `site_focus` — that's a string setting
+   (`balanced`/site id) outside the numeric sweep, so a site_focus change
+   needs its own regression test in step 4, not this script.
 3. **Balance still in band**: `scripts/balance_report.py 300` (neutral data
    teams → unchanged, but confirm). Golden byte-identical already implies
    this.

@@ -98,7 +98,7 @@ gates (all exit 1 on failure):
 python scripts/balance_report.py 300     # every map 45-65% attack round rate
 python scripts/pacing_report.py          # attacker rotate 25-35s through spawn
 python scripts/snowball_report.py        # multi-season blowout/competitiveness band
-python scripts/tactics_report.py         # sweep each coaching dial to its extremes
+python scripts/tactics_report.py         # sweep the numeric coaching dials to extremes
 ```
 
 `regen_golden.py` is **not** a gate — it's a mutating re-bless tool that
