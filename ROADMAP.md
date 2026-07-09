@@ -143,7 +143,7 @@ sponsorship depth, insolvency, traits/potential/development. Still open:
 
 Explicit non-goals. Calling these out so we don't drift.
 
-- Real Valorant pro names or their real statistical profiles (legal + fictional roster works fine)
+- ~~Real Valorant pro names or their real statistical profiles~~ **Amended 2026-07-09 (owner call):** the game is private (never publishing), so an optional VCT 2026 roster pack imports the real teams/players; the shipped default world stays fictional and pack attributes are original estimates, not scraped stats.
 - ~~3D match rendering (callout-graph + 2D is the whole thesis)~~ **Amended 2026-07-07 (owner call):** the sim keeps the callout graph as its decision vocabulary, but maps now carry floor-plan geometry (`data/maps/geometry/`) rendered as an isometric viewer, and the engine consumes physical distances (range-aware duels). True 3D remains out of scope.
 - Multiplayer / network play
 - Mobile port

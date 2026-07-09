@@ -1,0 +1,226 @@
+id: team_evil_geniuses
+name: Evil Geniuses
+tag: EG
+region: americas
+tier: 1
+captain_id: team_evil_geniuses_paincakes
+balance: 708000
+reputation: 68.0
+fan_count: 416160
+chemistry: 76.8
+players:
+- id: team_evil_geniuses_paincakes
+  handle: Paincakes
+  real_name: Jake Hass
+  region: americas
+  age: 23
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 52.0
+    aim_reactivity: 57.7
+    movement: 64.3
+    game_sense: 78.4
+    utility_usage: 66.0
+    positioning: 64.3
+    clutch_factor: 66.3
+    tilt_resistance: 63.7
+    composure: 75.1
+    comms_quality: 83.3
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.0
+  - agent_id: skye
+    mastery: 77.4
+  map_pool:
+  - map_id: ascent
+    mastery: 72.8
+  - map_id: bind
+    mastery: 83.9
+  - map_id: haven
+    mastery: 70.2
+  - map_id: lotus
+    mastery: 63.6
+  - map_id: split
+    mastery: 79.2
+  salary: 4900
+  contract_weeks_left: 69
+  morale: 72.2
+  stamina: 90.9
+  form: 46.4
+  personality_tags:
+  - hot_head
+  - streamer
+  potential: 69.1
+- id: team_evil_geniuses_bao
+  handle: bao
+  real_name: Bao Nguyen
+  region: americas
+  age: 19
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 58.4
+    aim_reactivity: 61.4
+    movement: 59.0
+    game_sense: 64.8
+    utility_usage: 69.1
+    positioning: 73.0
+    clutch_factor: 64.4
+    tilt_resistance: 76.1
+    composure: 76.3
+    comms_quality: 67.2
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 85.4
+  - agent_id: cypher
+    mastery: 69.4
+  map_pool:
+  - map_id: ascent
+    mastery: 71.3
+  - map_id: bind
+    mastery: 74.9
+  - map_id: haven
+    mastery: 72.9
+  - map_id: lotus
+    mastery: 73.9
+  - map_id: split
+    mastery: 85.9
+  salary: 4700
+  contract_weeks_left: 42
+  morale: 71.8
+  stamina: 88.7
+  form: 57.7
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 76.9
+- id: team_evil_geniuses_dgzin
+  handle: dgzin
+  real_name: Douglas Silva
+  region: americas
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 93.4
+    aim_reactivity: 87.7
+    movement: 88.5
+    game_sense: 69.2
+    utility_usage: 68.9
+    positioning: 73.1
+    clutch_factor: 76.9
+    tilt_resistance: 72.7
+    composure: 68.7
+    comms_quality: 77.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 87.7
+  - agent_id: chamber
+    mastery: 76.9
+  map_pool:
+  - map_id: ascent
+    mastery: 81.1
+  - map_id: bind
+    mastery: 85.9
+  - map_id: haven
+    mastery: 78.6
+  - map_id: lotus
+    mastery: 86.1
+  - map_id: split
+    mastery: 90.0
+  salary: 6100
+  contract_weeks_left: 30
+  morale: 62.2
+  stamina: 94.7
+  form: 53.7
+  personality_tags:
+  - independent
+  - quiet
+  potential: 81.3
+- id: team_evil_geniuses_supamen
+  handle: supamen
+  real_name: Phat Le
+  region: americas
+  age: 24
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 59.8
+    aim_reactivity: 60.8
+    movement: 63.7
+    game_sense: 68.2
+    utility_usage: 72.6
+    positioning: 61.3
+    clutch_factor: 70.1
+    tilt_resistance: 61.9
+    composure: 74.6
+    comms_quality: 73.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 78.4
+  - agent_id: omen
+    mastery: 74.2
+  map_pool:
+  - map_id: ascent
+    mastery: 74.1
+  - map_id: bind
+    mastery: 69.6
+  - map_id: haven
+    mastery: 82.3
+  - map_id: lotus
+    mastery: 66.6
+  - map_id: split
+    mastery: 62.3
+  salary: 4900
+  contract_weeks_left: 79
+  morale: 67.2
+  stamina: 91.9
+  form: 46.1
+  personality_tags:
+  - clutch_gene
+  - streamer
+  potential: 66.7
+- id: team_evil_geniuses_zerona
+  handle: zerona
+  real_name: Javan Varela
+  region: americas
+  age: 20
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 60.0
+    aim_reactivity: 69.8
+    movement: 66.4
+    game_sense: 77.5
+    utility_usage: 63.1
+    positioning: 73.7
+    clutch_factor: 78.2
+    tilt_resistance: 68.2
+    composure: 69.3
+    comms_quality: 50.5
+  agent_pool:
+  - agent_id: viper
+    mastery: 76.7
+  - agent_id: phoenix
+    mastery: 70.1
+  map_pool:
+  - map_id: ascent
+    mastery: 71.1
+  - map_id: bind
+    mastery: 74.2
+  - map_id: haven
+    mastery: 71.6
+  - map_id: lotus
+    mastery: 69.9
+  - map_id: split
+    mastery: 87.5
+  salary: 5000
+  contract_weeks_left: 70
+  morale: 63.3
+  stamina: 91.1
+  form: 56.0
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 79.0

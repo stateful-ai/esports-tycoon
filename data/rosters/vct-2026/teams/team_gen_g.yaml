@@ -1,0 +1,229 @@
+id: team_gen_g
+name: Gen.G
+tag: GEN
+region: pacific
+tier: 1
+captain_id: team_gen_g_efina
+balance: 810000
+reputation: 85.0
+fan_count: 650250
+chemistry: 68.3
+players:
+- id: team_gen_g_t3xture
+  handle: t3xture
+  real_name: Kim Na-ra
+  region: pacific
+  age: 24
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 81.1
+    aim_reactivity: 92.2
+    movement: 90.9
+    game_sense: 64.5
+    utility_usage: 70.4
+    positioning: 74.8
+    clutch_factor: 80.1
+    tilt_resistance: 72.2
+    composure: 75.9
+    comms_quality: 75.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 93.5
+  - agent_id: raze
+    mastery: 88.7
+  - agent_id: chamber
+    mastery: 79.8
+  map_pool:
+  - map_id: ascent
+    mastery: 87.8
+  - map_id: bind
+    mastery: 84.4
+  - map_id: haven
+    mastery: 95.1
+  - map_id: lotus
+    mastery: 81.6
+  - map_id: split
+    mastery: 90.3
+  salary: 6400
+  contract_weeks_left: 65
+  morale: 65.7
+  stamina: 81.7
+  form: 51.5
+  personality_tags:
+  - fan_favorite
+  - quiet
+  potential: 81.1
+- id: team_gen_g_karon
+  handle: Karon
+  real_name: Kim Won-tae
+  region: pacific
+  age: 22
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 68.6
+    aim_reactivity: 62.9
+    movement: 71.1
+    game_sense: 81.5
+    utility_usage: 83.4
+    positioning: 70.2
+    clutch_factor: 72.4
+    tilt_resistance: 77.4
+    composure: 81.1
+    comms_quality: 77.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 92.0
+  - agent_id: phoenix
+    mastery: 83.1
+  map_pool:
+  - map_id: ascent
+    mastery: 94.9
+  - map_id: bind
+    mastery: 83.1
+  - map_id: haven
+    mastery: 83.0
+  - map_id: lotus
+    mastery: 76.8
+  - map_id: split
+    mastery: 85.2
+  salary: 5700
+  contract_weeks_left: 66
+  morale: 61.4
+  stamina: 85.9
+  form: 52.5
+  personality_tags:
+  - flashy
+  - hot_head
+  potential: 80.2
+- id: team_gen_g_ash
+  handle: Ash
+  real_name: Ha Hyun-cheol
+  region: pacific
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 59.2
+    aim_reactivity: 64.5
+    movement: 70.7
+    game_sense: 84.4
+    utility_usage: 84.2
+    positioning: 77.1
+    clutch_factor: 74.3
+    tilt_resistance: 71.9
+    composure: 74.3
+    comms_quality: 80.2
+  agent_pool:
+  - agent_id: jett
+    mastery: 84.7
+  - agent_id: omen
+    mastery: 72.8
+  map_pool:
+  - map_id: ascent
+    mastery: 76.7
+  - map_id: bind
+    mastery: 78.5
+  - map_id: haven
+    mastery: 80.9
+  - map_id: lotus
+    mastery: 79.4
+  - map_id: split
+    mastery: 90.6
+  salary: 5400
+  contract_weeks_left: 34
+  morale: 67.4
+  stamina: 86.3
+  form: 52.7
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 84.0
+- id: team_gen_g_efina
+  handle: Efina
+  real_name: Kim Nak-yeon
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 53.1
+    aim_reactivity: 48.5
+    movement: 59.9
+    game_sense: 76.4
+    utility_usage: 73.0
+    positioning: 62.9
+    clutch_factor: 61.7
+    tilt_resistance: 59.5
+    composure: 72.1
+    comms_quality: 74.4
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 69.2
+  - agent_id: cypher
+    mastery: 62.1
+  map_pool:
+  - map_id: ascent
+    mastery: 71.8
+  - map_id: bind
+    mastery: 77.6
+  - map_id: haven
+    mastery: 69.8
+  - map_id: lotus
+    mastery: 81.1
+  - map_id: split
+    mastery: 60.8
+  salary: 4400
+  contract_weeks_left: 63
+  morale: 64.0
+  stamina: 81.7
+  form: 48.1
+  personality_tags:
+  - hot_head
+  - quiet
+  potential: 74.3
+- id: team_gen_g_raxcal
+  handle: RaxcaL
+  real_name: Kim Min-seok
+  region: pacific
+  age: 18
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 69.2
+    aim_reactivity: 76.3
+    movement: 76.4
+    game_sense: 49.3
+    utility_usage: 51.7
+    positioning: 60.9
+    clutch_factor: 61.1
+    tilt_resistance: 55.9
+    composure: 59.4
+    comms_quality: 57.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 71.0
+  - agent_id: raze
+    mastery: 68.3
+  map_pool:
+  - map_id: ascent
+    mastery: 75.6
+  - map_id: bind
+    mastery: 57.1
+  - map_id: haven
+    mastery: 67.9
+  - map_id: lotus
+    mastery: 72.2
+  - map_id: split
+    mastery: 75.1
+  salary: 4300
+  contract_weeks_left: 52
+  morale: 72.4
+  stamina: 96.4
+  form: 54.7
+  personality_tags:
+  - perfectionist
+  - rookie
+  - slow_starter
+  potential: 75.7

@@ -1,0 +1,228 @@
+id: team_sentinels
+name: Sentinels
+tag: SEN
+region: americas
+tier: 1
+captain_id: team_sentinels_johnqt
+balance: 852000
+reputation: 92.0
+fan_count: 761760
+chemistry: 61.0
+players:
+- id: team_sentinels_johnqt
+  handle: johnqt
+  real_name: Mohamed Amine Ouarid
+  region: americas
+  age: 25
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 61.6
+    aim_reactivity: 60.9
+    movement: 72.9
+    game_sense: 86.5
+    utility_usage: 86.3
+    positioning: 76.5
+    clutch_factor: 71.5
+    tilt_resistance: 72.4
+    composure: 79.7
+    comms_quality: 83.0
+  agent_pool:
+  - agent_id: viper
+    mastery: 84.6
+  - agent_id: omen
+    mastery: 76.4
+  map_pool:
+  - map_id: ascent
+    mastery: 74.7
+  - map_id: bind
+    mastery: 74.6
+  - map_id: haven
+    mastery: 92.9
+  - map_id: lotus
+    mastery: 71.6
+  - map_id: split
+    mastery: 82.1
+  salary: 5600
+  contract_weeks_left: 56
+  morale: 63.9
+  stamina: 99.4
+  form: 51.9
+  personality_tags:
+  - grinder
+  - perfectionist
+  potential: 77.0
+- id: team_sentinels_reduxx
+  handle: Reduxx
+  real_name: Yassin Aboulalazm
+  region: americas
+  age: 20
+  role: flex
+  playstyle: entry
+  attributes:
+    aim_precision: 91.0
+    aim_reactivity: 84.7
+    movement: 90.2
+    game_sense: 68.6
+    utility_usage: 67.5
+    positioning: 71.8
+    clutch_factor: 75.1
+    tilt_resistance: 71.5
+    composure: 75.5
+    comms_quality: 82.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 91.2
+  - agent_id: jett
+    mastery: 80.4
+  - agent_id: raze
+    mastery: 78.0
+  map_pool:
+  - map_id: ascent
+    mastery: 81.3
+  - map_id: bind
+    mastery: 79.8
+  - map_id: haven
+    mastery: 80.3
+  - map_id: lotus
+    mastery: 77.6
+  - map_id: split
+    mastery: 80.5
+  salary: 6000
+  contract_weeks_left: 41
+  morale: 76.1
+  stamina: 94.1
+  form: 59.3
+  personality_tags:
+  - quiet
+  - streamer
+  potential: 79.3
+- id: team_sentinels_jonahp
+  handle: JonahP
+  real_name: Jonah Pulice
+  region: americas
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 60.4
+    aim_reactivity: 58.9
+    movement: 67.8
+    game_sense: 75.4
+    utility_usage: 73.7
+    positioning: 63.1
+    clutch_factor: 62.7
+    tilt_resistance: 65.5
+    composure: 76.5
+    comms_quality: 80.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 74.8
+  - agent_id: skye
+    mastery: 76.3
+  map_pool:
+  - map_id: ascent
+    mastery: 69.7
+  - map_id: bind
+    mastery: 80.8
+  - map_id: haven
+    mastery: 79.6
+  - map_id: lotus
+    mastery: 71.3
+  - map_id: split
+    mastery: 74.9
+  salary: 5100
+  contract_weeks_left: 35
+  morale: 63.9
+  stamina: 87.6
+  form: 59.7
+  personality_tags:
+  - grinder
+  potential: 71.3
+- id: team_sentinels_jerrwin
+  handle: Jerrwin
+  real_name: Gurjiwan Gill
+  region: americas
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 76.4
+    aim_reactivity: 77.2
+    movement: 76.9
+    game_sense: 56.4
+    utility_usage: 51.0
+    positioning: 64.0
+    clutch_factor: 65.3
+    tilt_resistance: 55.0
+    composure: 66.7
+    comms_quality: 69.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 77.1
+  - agent_id: raze
+    mastery: 71.4
+  map_pool:
+  - map_id: ascent
+    mastery: 75.4
+  - map_id: bind
+    mastery: 78.3
+  - map_id: haven
+    mastery: 72.0
+  - map_id: lotus
+    mastery: 64.0
+  - map_id: split
+    mastery: 79.9
+  salary: 4900
+  contract_weeks_left: 56
+  morale: 64.5
+  stamina: 84.0
+  form: 52.9
+  personality_tags:
+  - independent
+  - team_player
+  potential: 87.8
+- id: team_sentinels_cortezia
+  handle: cortezia
+  real_name: Gabriel Cortez
+  region: americas
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 78.0
+    aim_reactivity: 77.5
+    movement: 76.3
+    game_sense: 70.9
+    utility_usage: 81.3
+    positioning: 90.5
+    clutch_factor: 75.4
+    tilt_resistance: 84.6
+    composure: 85.8
+    comms_quality: 79.7
+  agent_pool:
+  - agent_id: viper
+    mastery: 93.1
+  - agent_id: killjoy
+    mastery: 91.1
+  - agent_id: cypher
+    mastery: 87.1
+  map_pool:
+  - map_id: ascent
+    mastery: 83.3
+  - map_id: bind
+    mastery: 88.6
+  - map_id: haven
+    mastery: 80.6
+  - map_id: lotus
+    mastery: 77.7
+  - map_id: split
+    mastery: 88.8
+  salary: 6500
+  contract_weeks_left: 79
+  morale: 66.5
+  stamina: 81.1
+  form: 50.1
+  personality_tags:
+  - streamer
+  potential: 88.4

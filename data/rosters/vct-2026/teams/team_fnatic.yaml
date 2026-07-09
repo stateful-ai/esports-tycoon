@@ -1,0 +1,230 @@
+id: team_fnatic
+name: Fnatic
+tag: FNC
+region: emea
+tier: 1
+captain_id: team_fnatic_boaster
+balance: 852000
+reputation: 92.0
+fan_count: 761760
+chemistry: 65.9
+players:
+- id: team_fnatic_boaster
+  handle: Boaster
+  real_name: Jake Howlett
+  region: emea
+  age: 31
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 62.9
+    aim_reactivity: 70.3
+    movement: 71.9
+    game_sense: 88.6
+    utility_usage: 81.7
+    positioning: 71.7
+    clutch_factor: 77.0
+    tilt_resistance: 67.5
+    composure: 80.5
+    comms_quality: 83.7
+  agent_pool:
+  - agent_id: omen
+    mastery: 91.0
+  - agent_id: viper
+    mastery: 92.6
+  map_pool:
+  - map_id: ascent
+    mastery: 77.2
+  - map_id: bind
+    mastery: 77.1
+  - map_id: haven
+    mastery: 82.8
+  - map_id: lotus
+    mastery: 80.8
+  - map_id: split
+    mastery: 91.4
+  salary: 5700
+  contract_weeks_left: 44
+  morale: 72.1
+  stamina: 85.0
+  form: 59.7
+  personality_tags:
+  - clutch_gene
+  - team_player
+  - veteran
+  potential: 75.6
+- id: team_fnatic_kaajak
+  handle: kaajak
+  real_name: Kajetan Haremski
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 85.3
+    aim_reactivity: 95.2
+    movement: 94.4
+    game_sense: 74.2
+    utility_usage: 72.1
+    positioning: 84.8
+    clutch_factor: 78.9
+    tilt_resistance: 78.5
+    composure: 81.9
+    comms_quality: 79.2
+  agent_pool:
+  - agent_id: jett
+    mastery: 90.9
+  - agent_id: raze
+    mastery: 83.3
+  map_pool:
+  - map_id: ascent
+    mastery: 85.7
+  - map_id: bind
+    mastery: 93.1
+  - map_id: haven
+    mastery: 99.0
+  - map_id: lotus
+    mastery: 86.5
+  - map_id: split
+    mastery: 79.2
+  salary: 6700
+  contract_weeks_left: 64
+  morale: 70.8
+  stamina: 85.2
+  form: 57.7
+  personality_tags:
+  - independent
+  - quiet
+  potential: 90.0
+- id: team_fnatic_alfajer
+  handle: Alfajer
+  real_name: Emir Ali Beder
+  region: emea
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 80.2
+    aim_reactivity: 79.4
+    movement: 74.7
+    game_sense: 77.0
+    utility_usage: 85.8
+    positioning: 90.1
+    clutch_factor: 81.4
+    tilt_resistance: 85.4
+    composure: 86.7
+    comms_quality: 74.1
+  agent_pool:
+  - agent_id: cypher
+    mastery: 92.5
+  - agent_id: killjoy
+    mastery: 97.7
+  - agent_id: viper
+    mastery: 79.7
+  map_pool:
+  - map_id: ascent
+    mastery: 88.7
+  - map_id: bind
+    mastery: 80.2
+  - map_id: haven
+    mastery: 87.6
+  - map_id: lotus
+    mastery: 88.1
+  - map_id: split
+    mastery: 93.4
+  salary: 6800
+  contract_weeks_left: 35
+  morale: 72.8
+  stamina: 95.4
+  form: 49.7
+  personality_tags:
+  - analytical
+  - team_player
+  potential: 92.4
+- id: team_fnatic_crashies
+  handle: crashies
+  real_name: Austin Roberts
+  region: emea
+  age: 29
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 70.2
+    aim_reactivity: 69.7
+    movement: 81.7
+    game_sense: 73.7
+    utility_usage: 92.2
+    positioning: 76.3
+    clutch_factor: 73.3
+    tilt_resistance: 78.5
+    composure: 80.6
+    comms_quality: 81.6
+  agent_pool:
+  - agent_id: sova
+    mastery: 88.0
+  - agent_id: skye
+    mastery: 85.5
+  map_pool:
+  - map_id: ascent
+    mastery: 84.7
+  - map_id: bind
+    mastery: 72.8
+  - map_id: haven
+    mastery: 79.7
+  - map_id: lotus
+    mastery: 87.8
+  - map_id: split
+    mastery: 83.1
+  salary: 5900
+  contract_weeks_left: 42
+  morale: 79.9
+  stamina: 94.9
+  form: 46.2
+  personality_tags:
+  - fan_favorite
+  - flashy
+  - veteran
+  potential: 79.1
+- id: team_fnatic_cloud
+  handle: Cloud
+  real_name: Kirill Nekhozhin
+  region: emea
+  age: 20
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 60.1
+    aim_reactivity: 65.8
+    movement: 70.1
+    game_sense: 76.6
+    utility_usage: 87.6
+    positioning: 67.6
+    clutch_factor: 69.2
+    tilt_resistance: 71.5
+    composure: 76.6
+    comms_quality: 85.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 83.1
+  - agent_id: skye
+    mastery: 78.0
+  map_pool:
+  - map_id: ascent
+    mastery: 80.4
+  - map_id: bind
+    mastery: 70.8
+  - map_id: haven
+    mastery: 80.5
+  - map_id: lotus
+    mastery: 75.5
+  - map_id: split
+    mastery: 72.6
+  salary: 5400
+  contract_weeks_left: 57
+  morale: 76.6
+  stamina: 89.5
+  form: 50.7
+  personality_tags:
+  - flashy
+  - independent
+  potential: 77.8

@@ -1,0 +1,224 @@
+id: team_dplus
+name: Dplus
+tag: DP
+region: pacific
+tier: 2
+captain_id: team_dplus_cabeza
+balance: 192000
+reputation: 44.0
+fan_count: 29040
+chemistry: 70.0
+players:
+- id: team_dplus_shu
+  handle: shu
+  real_name: Shu
+  region: pacific
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 71.0
+    aim_reactivity: 74.9
+    movement: 68.4
+    game_sense: 53.8
+    utility_usage: 47.9
+    positioning: 57.8
+    clutch_factor: 57.5
+    tilt_resistance: 48.7
+    composure: 52.7
+    comms_quality: 50.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 71.3
+  - agent_id: raze
+    mastery: 63.6
+  map_pool:
+  - map_id: ascent
+    mastery: 72.7
+  - map_id: bind
+    mastery: 61.1
+  - map_id: haven
+    mastery: 73.5
+  - map_id: lotus
+    mastery: 66.8
+  - map_id: split
+    mastery: 66.5
+  salary: 3900
+  contract_weeks_left: 52
+  morale: 78.3
+  stamina: 90.0
+  form: 57.9
+  personality_tags:
+  - hot_head
+  - team_player
+  potential: 65.5
+- id: team_dplus_ramgi
+  handle: Ramgi
+  real_name: Ramgi
+  region: pacific
+  age: 23
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 49.3
+    aim_reactivity: 45.9
+    movement: 53.9
+    game_sense: 59.9
+    utility_usage: 65.1
+    positioning: 49.0
+    clutch_factor: 51.9
+    tilt_resistance: 55.2
+    composure: 55.5
+    comms_quality: 64.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 66.5
+  - agent_id: skye
+    mastery: 64.6
+  map_pool:
+  - map_id: ascent
+    mastery: 57.2
+  - map_id: bind
+    mastery: 67.7
+  - map_id: haven
+    mastery: 61.2
+  - map_id: lotus
+    mastery: 59.0
+  - map_id: split
+    mastery: 68.9
+  salary: 3800
+  contract_weeks_left: 73
+  morale: 75.3
+  stamina: 95.7
+  form: 55.9
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 59.9
+- id: team_dplus_kally
+  handle: Kally
+  real_name: Kally
+  region: pacific
+  age: 21
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 52.6
+    aim_reactivity: 53.3
+    movement: 49.2
+    game_sense: 57.0
+    utility_usage: 66.6
+    positioning: 59.4
+    clutch_factor: 59.0
+    tilt_resistance: 51.8
+    composure: 55.9
+    comms_quality: 62.5
+  agent_pool:
+  - agent_id: omen
+    mastery: 66.6
+  - agent_id: clove
+    mastery: 55.3
+  map_pool:
+  - map_id: ascent
+    mastery: 71.7
+  - map_id: bind
+    mastery: 56.1
+  - map_id: haven
+    mastery: 57.2
+  - map_id: lotus
+    mastery: 62.6
+  - map_id: split
+    mastery: 61.0
+  salary: 3700
+  contract_weeks_left: 41
+  morale: 72.3
+  stamina: 97.8
+  form: 58.0
+  personality_tags:
+  - streamer
+  potential: 65.2
+- id: team_dplus_jaxe
+  handle: JaXe
+  real_name: JaXe
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 55.0
+    aim_reactivity: 52.3
+    movement: 49.6
+    game_sense: 55.9
+    utility_usage: 60.3
+    positioning: 59.8
+    clutch_factor: 52.4
+    tilt_resistance: 66.8
+    composure: 64.7
+    comms_quality: 51.9
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 61.4
+  - agent_id: cypher
+    mastery: 62.4
+  map_pool:
+  - map_id: ascent
+    mastery: 59.9
+  - map_id: bind
+    mastery: 76.4
+  - map_id: haven
+    mastery: 64.1
+  - map_id: lotus
+    mastery: 56.2
+  - map_id: split
+    mastery: 71.1
+  salary: 3500
+  contract_weeks_left: 53
+  morale: 62.9
+  stamina: 91.5
+  form: 57.0
+  personality_tags:
+  - analytical
+  - team_player
+  potential: 70.3
+- id: team_dplus_cabeza
+  handle: CabezA
+  real_name: CabezA
+  region: pacific
+  age: 25
+  role: flex
+  playstyle: igl
+  attributes:
+    aim_precision: 47.6
+    aim_reactivity: 54.1
+    movement: 59.1
+    game_sense: 69.0
+    utility_usage: 56.6
+    positioning: 49.0
+    clutch_factor: 56.8
+    tilt_resistance: 63.4
+    composure: 62.4
+    comms_quality: 68.4
+  agent_pool:
+  - agent_id: skye
+    mastery: 70.6
+  - agent_id: omen
+    mastery: 63.6
+  map_pool:
+  - map_id: ascent
+    mastery: 57.3
+  - map_id: bind
+    mastery: 48.7
+  - map_id: haven
+    mastery: 67.1
+  - map_id: lotus
+    mastery: 73.9
+  - map_id: split
+    mastery: 58.2
+  salary: 3700
+  contract_weeks_left: 49
+  morale: 63.7
+  stamina: 93.0
+  form: 49.2
+  personality_tags:
+  - slow_starter
+  potential: 58.7

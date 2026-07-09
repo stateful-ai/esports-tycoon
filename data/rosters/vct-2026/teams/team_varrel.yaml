@@ -1,0 +1,225 @@
+id: team_varrel
+name: VARREL
+tag: VL
+region: pacific
+tier: 1
+captain_id: team_varrel_c1nder
+balance: 552000
+reputation: 42.0
+fan_count: 158760
+chemistry: 72.0
+players:
+- id: team_varrel_oonzmlp
+  handle: oonzmlp
+  real_name: Shin Sang-beom
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 67.0
+    aim_reactivity: 58.4
+    movement: 66.9
+    game_sense: 62.2
+    utility_usage: 75.1
+    positioning: 80.8
+    clutch_factor: 63.6
+    tilt_resistance: 71.0
+    composure: 71.7
+    comms_quality: 69.7
+  agent_pool:
+  - agent_id: viper
+    mastery: 79.9
+  - agent_id: cypher
+    mastery: 75.1
+  map_pool:
+  - map_id: ascent
+    mastery: 58.3
+  - map_id: bind
+    mastery: 68.1
+  - map_id: haven
+    mastery: 87.4
+  - map_id: lotus
+    mastery: 74.5
+  - map_id: split
+    mastery: 75.6
+  salary: 5100
+  contract_weeks_left: 77
+  morale: 77.2
+  stamina: 87.5
+  form: 50.8
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  potential: 77.9
+- id: team_varrel_xuna
+  handle: XuNa
+  real_name: Kim Tae-geon
+  region: pacific
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 59.1
+    aim_reactivity: 57.9
+    movement: 67.3
+    game_sense: 69.7
+    utility_usage: 76.0
+    positioning: 64.9
+    clutch_factor: 66.2
+    tilt_resistance: 61.9
+    composure: 69.8
+    comms_quality: 73.5
+  agent_pool:
+  - agent_id: skye
+    mastery: 76.7
+  - agent_id: sova
+    mastery: 72.2
+  map_pool:
+  - map_id: ascent
+    mastery: 71.1
+  - map_id: bind
+    mastery: 77.4
+  - map_id: haven
+    mastery: 65.5
+  - map_id: lotus
+    mastery: 87.0
+  - map_id: split
+    mastery: 76.1
+  salary: 4800
+  contract_weeks_left: 78
+  morale: 61.7
+  stamina: 82.8
+  form: 50.9
+  personality_tags:
+  - analytical
+  potential: 73.4
+- id: team_varrel_zexy
+  handle: zexy
+  real_name: Jang Suk-hyun
+  region: pacific
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 70.1
+    aim_reactivity: 73.1
+    movement: 68.8
+    game_sense: 58.9
+    utility_usage: 53.3
+    positioning: 59.7
+    clutch_factor: 65.7
+    tilt_resistance: 53.5
+    composure: 57.4
+    comms_quality: 64.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 78.0
+  - agent_id: raze
+    mastery: 68.4
+  map_pool:
+  - map_id: ascent
+    mastery: 71.3
+  - map_id: bind
+    mastery: 72.4
+  - map_id: haven
+    mastery: 81.8
+  - map_id: lotus
+    mastery: 72.2
+  - map_id: split
+    mastery: 69.0
+  salary: 4500
+  contract_weeks_left: 67
+  morale: 67.4
+  stamina: 98.2
+  form: 45.7
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 71.6
+- id: team_varrel_klaus
+  handle: Klaus
+  real_name: Kim Min-hyuk
+  region: pacific
+  age: 21
+  role: flex
+  playstyle: entry
+  attributes:
+    aim_precision: 74.8
+    aim_reactivity: 73.4
+    movement: 69.5
+    game_sense: 57.9
+    utility_usage: 55.0
+    positioning: 62.7
+    clutch_factor: 56.6
+    tilt_resistance: 63.4
+    composure: 58.3
+    comms_quality: 72.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 74.8
+  - agent_id: killjoy
+    mastery: 66.1
+  map_pool:
+  - map_id: ascent
+    mastery: 64.8
+  - map_id: bind
+    mastery: 78.2
+  - map_id: haven
+    mastery: 57.7
+  - map_id: lotus
+    mastery: 67.9
+  - map_id: split
+    mastery: 66.6
+  salary: 4400
+  contract_weeks_left: 72
+  morale: 71.0
+  stamina: 84.9
+  form: 58.7
+  personality_tags:
+  - slow_starter
+  - team_player
+  potential: 72.7
+- id: team_varrel_c1nder
+  handle: C1ndeR
+  real_name: Go Jae-hyuk
+  region: pacific
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 55.1
+    aim_reactivity: 50.0
+    movement: 63.2
+    game_sense: 76.3
+    utility_usage: 67.8
+    positioning: 64.8
+    clutch_factor: 59.7
+    tilt_resistance: 62.0
+    composure: 66.2
+    comms_quality: 79.6
+  agent_pool:
+  - agent_id: omen
+    mastery: 75.1
+  - agent_id: clove
+    mastery: 74.6
+  map_pool:
+  - map_id: ascent
+    mastery: 66.7
+  - map_id: bind
+    mastery: 68.3
+  - map_id: haven
+    mastery: 69.3
+  - map_id: lotus
+    mastery: 71.9
+  - map_id: split
+    mastery: 70.5
+  salary: 4300
+  contract_weeks_left: 75
+  morale: 78.4
+  stamina: 83.6
+  form: 49.7
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 74.0

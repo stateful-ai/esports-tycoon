@@ -1,0 +1,12 @@
+id: vct-2026
+name: VCT 2026
+description: Imported real-world rosters. Attributes are estimates expanded deterministically
+  from the src/ sheets by scripts/build_roster_pack.py.
+world:
+  league_regions:
+  - americas
+  - china
+  - emea
+  - pacific
+  teams_per_region: 12
+  tier2_per_region: 6

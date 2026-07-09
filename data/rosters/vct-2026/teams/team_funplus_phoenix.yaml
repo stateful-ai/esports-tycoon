@@ -1,0 +1,226 @@
+id: team_funplus_phoenix
+name: FunPlus Phoenix
+tag: FPX
+region: china
+tier: 1
+captain_id: team_funplus_phoenix_kovaq
+balance: 720000
+reputation: 70.0
+fan_count: 441000
+chemistry: 76.8
+players:
+- id: team_funplus_phoenix_aaaay
+  handle: AAAAY
+  real_name: Zhang Yang
+  region: china
+  age: 23
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 68.1
+    aim_reactivity: 74.3
+    movement: 74.1
+    game_sense: 80.2
+    utility_usage: 86.7
+    positioning: 85.6
+    clutch_factor: 79.3
+    tilt_resistance: 82.2
+    composure: 78.6
+    comms_quality: 81.3
+  agent_pool:
+  - agent_id: viper
+    mastery: 94.3
+  - agent_id: killjoy
+    mastery: 84.1
+  map_pool:
+  - map_id: ascent
+    mastery: 87.3
+  - map_id: bind
+    mastery: 88.5
+  - map_id: haven
+    mastery: 88.2
+  - map_id: lotus
+    mastery: 96.4
+  - map_id: split
+    mastery: 73.9
+  salary: 6100
+  contract_weeks_left: 31
+  morale: 69.1
+  stamina: 96.9
+  form: 49.7
+  personality_tags:
+  - hot_head
+  potential: 81.3
+- id: team_funplus_phoenix_coconut
+  handle: coconut
+  real_name: Colin Patrick Chung
+  region: china
+  age: 25
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 64.7
+    aim_reactivity: 66.1
+    movement: 74.0
+    game_sense: 79.4
+    utility_usage: 84.0
+    positioning: 71.9
+    clutch_factor: 69.3
+    tilt_resistance: 68.9
+    composure: 73.2
+    comms_quality: 80.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 87.8
+  - agent_id: skye
+    mastery: 78.7
+  map_pool:
+  - map_id: ascent
+    mastery: 76.2
+  - map_id: bind
+    mastery: 77.9
+  - map_id: haven
+    mastery: 69.1
+  - map_id: lotus
+    mastery: 77.2
+  - map_id: split
+    mastery: 77.0
+  salary: 5400
+  contract_weeks_left: 73
+  morale: 78.4
+  stamina: 92.7
+  form: 45.8
+  personality_tags:
+  - fan_favorite
+  potential: 73.2
+- id: team_funplus_phoenix_kovaq
+  handle: kovaQ
+  real_name: Blendi Kovaci
+  region: china
+  age: 22
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 55.2
+    aim_reactivity: 61.1
+    movement: 72.1
+    game_sense: 81.5
+    utility_usage: 77.0
+    positioning: 59.1
+    clutch_factor: 71.7
+    tilt_resistance: 65.9
+    composure: 80.9
+    comms_quality: 84.8
+  agent_pool:
+  - agent_id: skye
+    mastery: 75.8
+  - agent_id: sova
+    mastery: 81.5
+  map_pool:
+  - map_id: ascent
+    mastery: 69.9
+  - map_id: bind
+    mastery: 59.8
+  - map_id: haven
+    mastery: 71.6
+  - map_id: lotus
+    mastery: 77.3
+  - map_id: split
+    mastery: 70.6
+  salary: 4900
+  contract_weeks_left: 43
+  morale: 67.0
+  stamina: 82.7
+  form: 45.9
+  personality_tags:
+  - hot_head
+  - independent
+  potential: 81.6
+- id: team_funplus_phoenix_setrod
+  handle: Setrod
+  real_name: Ou Tai-keng
+  region: china
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 77.7
+    aim_reactivity: 78.2
+    movement: 72.9
+    game_sense: 59.2
+    utility_usage: 58.4
+    positioning: 73.3
+    clutch_factor: 74.6
+    tilt_resistance: 61.0
+    composure: 67.8
+    comms_quality: 65.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 81.5
+  - agent_id: raze
+    mastery: 74.4
+  map_pool:
+  - map_id: ascent
+    mastery: 81.9
+  - map_id: bind
+    mastery: 78.8
+  - map_id: haven
+    mastery: 78.6
+  - map_id: lotus
+    mastery: 69.0
+  - map_id: split
+    mastery: 76.0
+  salary: 5000
+  contract_weeks_left: 50
+  morale: 83.8
+  stamina: 85.8
+  form: 51.1
+  personality_tags:
+  - fan_favorite
+  - independent
+  potential: 79.5
+- id: team_funplus_phoenix_xlele
+  handle: Xlele
+  real_name: Zhao Yanbo
+  region: china
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 61.4
+    aim_reactivity: 60.6
+    movement: 69.9
+    game_sense: 67.1
+    utility_usage: 79.4
+    positioning: 70.9
+    clutch_factor: 69.0
+    tilt_resistance: 65.2
+    composure: 71.3
+    comms_quality: 81.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 82.4
+  - agent_id: phoenix
+    mastery: 83.5
+  - agent_id: omen
+    mastery: 73.8
+  map_pool:
+  - map_id: ascent
+    mastery: 87.5
+  - map_id: bind
+    mastery: 78.2
+  - map_id: haven
+    mastery: 67.1
+  - map_id: lotus
+    mastery: 73.8
+  - map_id: split
+    mastery: 73.8
+  salary: 5100
+  contract_weeks_left: 33
+  morale: 61.4
+  stamina: 89.6
+  form: 56.9
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 77.5

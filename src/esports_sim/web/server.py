@@ -38,6 +38,7 @@ from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
+from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
 from esports_sim.sim import tactics_fit
@@ -193,14 +194,29 @@ class Lobby:
 
     # -- mutations ------------------------------------------------------------
     def create_game(
-        self, sid: str, team_id: str, seed: int, shared: bool
+        self,
+        sid: str,
+        team_id: str,
+        seed: int,
+        shared: bool,
+        pack_id: str | None = None,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
             # habit); seed a local RNG from the campaign seed + live game count.
             rng = random.Random(f"{seed}|{len(self.games)}|{sid}")
             code = self._new_code(rng)
-            gs = new_campaign(self.gd, seed=seed, user_team_id=team_id)
+            pack = None
+            if pack_id:
+                try:
+                    pack = load_roster_pack(pack_id)
+                except FileNotFoundError:
+                    raise HTTPException(
+                        422, f"unknown roster pack '{pack_id}'"
+                    ) from None
+            gs = new_campaign(
+                self.gd, seed=seed, user_team_id=team_id, pack=pack
+            )
             if team_id not in gs.teams:
                 raise HTTPException(422, f"unknown team '{team_id}'")
             game = _Game(self.gd, code, gs=gs)
@@ -463,7 +479,49 @@ def lobby() -> dict:
             "humans": list(ctx.game.gs.human_team_ids),
         }
     preview = new_campaign(_LOBBY.gd, seed=2026)
-    return {"in_game": False, "teams": _team_options(preview, taken=set())}
+    return {
+        "in_game": False,
+        "teams": _team_options(preview, taken=set()),
+        "packs": _pack_options(),
+    }
+
+
+_PACK_OPTIONS_CACHE: list[dict] | None = None
+
+
+def _pack_options() -> list[dict]:
+    """Installed roster packs with their pickable (tier-1) teams — straight
+    from pack data, no campaign build needed. Cached for the process:
+    packs are static data (rebuilding one means restarting the server)."""
+    global _PACK_OPTIONS_CACHE
+    if _PACK_OPTIONS_CACHE is not None:
+        return _PACK_OPTIONS_CACHE
+    out = []
+    for meta in list_roster_packs():
+        pack = load_roster_pack(meta.id)
+        out.append(
+            {
+                "id": meta.id,
+                "name": meta.name,
+                "description": meta.description,
+                "regions": [str(r) for r in meta.world.league_regions],
+                "teams_per_region": meta.world.teams_per_region,
+                "teams": [
+                    {
+                        "id": t.id,
+                        "name": t.name,
+                        "tag": t.tag,
+                        "region": str(t.region),
+                    }
+                    for t in sorted(
+                        pack.teams.values(), key=lambda t: (str(t.region), t.id)
+                    )
+                    if t.tier == 1
+                ],
+            }
+        )
+    _PACK_OPTIONS_CACHE = out
+    return out
 
 
 @app.get("/api/lobby/teams")
@@ -486,12 +544,13 @@ class NewGameBody(BaseModel):
     team_id: str = "team_nexus"
     seed: int = 2026
     shared: bool = False  # True -> open the world for other managers to join
+    pack: str | None = None  # roster pack id; None -> generated world
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
     game = _LOBBY.create_game(
-        _current_sid(), body.team_id, body.seed, body.shared
+        _current_sid(), body.team_id, body.seed, body.shared, pack_id=body.pack
     )
     return {
         "ok": True,

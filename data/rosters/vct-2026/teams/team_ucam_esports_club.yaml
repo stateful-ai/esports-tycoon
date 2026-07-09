@@ -1,0 +1,225 @@
+id: team_ucam_esports_club
+name: UCAM Esports Club
+tag: UCAM
+region: emea
+tier: 2
+captain_id: team_ucam_esports_club_buld
+balance: 159000
+reputation: 33.0
+fan_count: 16335
+chemistry: 79.2
+players:
+- id: team_ucam_esports_club_buld
+  handle: Buld
+  real_name: Michal Sokal
+  region: emea
+  age: 22
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 50.7
+    aim_reactivity: 50.9
+    movement: 53.8
+    game_sense: 73.3
+    utility_usage: 63.4
+    positioning: 48.3
+    clutch_factor: 57.7
+    tilt_resistance: 53.0
+    composure: 69.0
+    comms_quality: 71.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.9
+  - agent_id: skye
+    mastery: 73.7
+  map_pool:
+  - map_id: ascent
+    mastery: 62.9
+  - map_id: bind
+    mastery: 71.6
+  - map_id: haven
+    mastery: 57.6
+  - map_id: lotus
+    mastery: 65.6
+  - map_id: split
+    mastery: 73.1
+  salary: 3900
+  contract_weeks_left: 51
+  morale: 69.8
+  stamina: 81.9
+  form: 52.0
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 64.0
+- id: team_ucam_esports_club_b1sk
+  handle: B1SK
+  real_name: Vitaliy Emelyanov
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 66.3
+    aim_reactivity: 70.9
+    movement: 66.4
+    game_sense: 53.2
+    utility_usage: 54.4
+    positioning: 49.1
+    clutch_factor: 57.0
+    tilt_resistance: 54.2
+    composure: 55.3
+    comms_quality: 57.3
+  agent_pool:
+  - agent_id: jett
+    mastery: 76.5
+  - agent_id: raze
+    mastery: 68.9
+  map_pool:
+  - map_id: ascent
+    mastery: 61.3
+  - map_id: bind
+    mastery: 56.7
+  - map_id: haven
+    mastery: 68.8
+  - map_id: lotus
+    mastery: 60.3
+  - map_id: split
+    mastery: 63.4
+  salary: 4000
+  contract_weeks_left: 63
+  morale: 81.1
+  stamina: 86.9
+  form: 57.0
+  personality_tags:
+  - perfectionist
+  potential: 64.8
+- id: team_ucam_esports_club_famsii
+  handle: Famsii
+  real_name: Ramses Valentino Erasmus Koivukangas
+  region: emea
+  age: 21
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 49.7
+    aim_reactivity: 47.9
+    movement: 55.1
+    game_sense: 62.6
+    utility_usage: 70.8
+    positioning: 48.6
+    clutch_factor: 51.7
+    tilt_resistance: 52.7
+    composure: 65.0
+    comms_quality: 63.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 64.4
+  - agent_id: viper
+    mastery: 58.2
+  map_pool:
+  - map_id: ascent
+    mastery: 62.4
+  - map_id: bind
+    mastery: 63.4
+  - map_id: haven
+    mastery: 65.0
+  - map_id: lotus
+    mastery: 56.5
+  - map_id: split
+    mastery: 70.0
+  salary: 3700
+  contract_weeks_left: 71
+  morale: 61.5
+  stamina: 85.3
+  form: 48.3
+  personality_tags:
+  - clutch_gene
+  - flashy
+  potential: 66.8
+- id: team_ucam_esports_club_olizera
+  handle: OLIZERA
+  real_name: Diogo Oliveira
+  region: emea
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 55.9
+    aim_reactivity: 49.0
+    movement: 55.3
+    game_sense: 60.8
+    utility_usage: 64.4
+    positioning: 69.3
+    clutch_factor: 59.4
+    tilt_resistance: 68.0
+    composure: 56.4
+    comms_quality: 51.3
+  agent_pool:
+  - agent_id: cypher
+    mastery: 68.7
+  - agent_id: killjoy
+    mastery: 67.5
+  map_pool:
+  - map_id: ascent
+    mastery: 59.2
+  - map_id: bind
+    mastery: 61.3
+  - map_id: haven
+    mastery: 64.7
+  - map_id: lotus
+    mastery: 64.7
+  - map_id: split
+    mastery: 65.3
+  salary: 3800
+  contract_weeks_left: 73
+  morale: 73.0
+  stamina: 87.1
+  form: 58.2
+  personality_tags:
+  - flashy
+  - hot_head
+  potential: 62.2
+- id: team_ucam_esports_club_jesse
+  handle: Jesse
+  real_name: Adam Ctvrtnicek
+  region: emea
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 44.2
+    aim_reactivity: 54.9
+    movement: 52.8
+    game_sense: 62.8
+    utility_usage: 67.4
+    positioning: 57.0
+    clutch_factor: 55.3
+    tilt_resistance: 57.5
+    composure: 64.6
+    comms_quality: 57.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 68.6
+  - agent_id: breach
+    mastery: 64.7
+  map_pool:
+  - map_id: ascent
+    mastery: 62.5
+  - map_id: bind
+    mastery: 64.2
+  - map_id: haven
+    mastery: 66.4
+  - map_id: lotus
+    mastery: 61.5
+  - map_id: split
+    mastery: 56.3
+  salary: 3800
+  contract_weeks_left: 34
+  morale: 78.4
+  stamina: 83.7
+  form: 57.6
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 70.3

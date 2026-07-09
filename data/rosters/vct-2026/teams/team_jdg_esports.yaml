@@ -1,0 +1,228 @@
+id: team_jdg_esports
+name: JDG Esports
+tag: JDG
+region: china
+tier: 1
+captain_id: team_jdg_esports_berlin
+balance: 708000
+reputation: 68.0
+fan_count: 416160
+chemistry: 66.8
+players:
+- id: team_jdg_esports_zhe
+  handle: zhe
+  real_name: Niu Zhe
+  region: china
+  age: 21
+  role: flex
+  playstyle: entry
+  attributes:
+    aim_precision: 78.9
+    aim_reactivity: 86.9
+    movement: 80.6
+    game_sense: 66.3
+    utility_usage: 66.9
+    positioning: 67.5
+    clutch_factor: 65.7
+    tilt_resistance: 74.6
+    composure: 76.1
+    comms_quality: 78.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 81.8
+  - agent_id: viper
+    mastery: 86.5
+  - agent_id: killjoy
+    mastery: 74.3
+  map_pool:
+  - map_id: ascent
+    mastery: 67.6
+  - map_id: bind
+    mastery: 88.0
+  - map_id: haven
+    mastery: 87.8
+  - map_id: lotus
+    mastery: 80.4
+  - map_id: split
+    mastery: 75.8
+  salary: 5900
+  contract_weeks_left: 53
+  morale: 84.2
+  stamina: 84.5
+  form: 52.5
+  personality_tags:
+  - hot_head
+  - quiet
+  potential: 89.7
+- id: team_jdg_esports_yuicaw
+  handle: Yuicaw
+  real_name: Huang Yung-chieh
+  region: china
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 62.6
+    aim_reactivity: 60.3
+    movement: 67.5
+    game_sense: 80.1
+    utility_usage: 76.8
+    positioning: 68.1
+    clutch_factor: 70.7
+    tilt_resistance: 65.3
+    composure: 75.1
+    comms_quality: 82.7
+  agent_pool:
+  - agent_id: raze
+    mastery: 83.1
+  - agent_id: killjoy
+    mastery: 79.5
+  map_pool:
+  - map_id: ascent
+    mastery: 76.0
+  - map_id: bind
+    mastery: 77.8
+  - map_id: haven
+    mastery: 75.5
+  - map_id: lotus
+    mastery: 84.2
+  - map_id: split
+    mastery: 74.4
+  salary: 5100
+  contract_weeks_left: 58
+  morale: 77.7
+  stamina: 86.3
+  form: 58.1
+  personality_tags:
+  - flashy
+  - team_player
+  potential: 76.0
+- id: team_jdg_esports_jkuro
+  handle: jkuro
+  real_name: Yeung Ho Chung
+  region: china
+  age: 24
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 63.2
+    aim_reactivity: 67.8
+    movement: 55.9
+    game_sense: 71.7
+    utility_usage: 72.3
+    positioning: 83.0
+    clutch_factor: 69.6
+    tilt_resistance: 83.9
+    composure: 75.9
+    comms_quality: 71.0
+  agent_pool:
+  - agent_id: cypher
+    mastery: 78.3
+  - agent_id: omen
+    mastery: 76.4
+  map_pool:
+  - map_id: ascent
+    mastery: 67.1
+  - map_id: bind
+    mastery: 69.6
+  - map_id: haven
+    mastery: 77.9
+  - map_id: lotus
+    mastery: 71.2
+  - map_id: split
+    mastery: 74.6
+  salary: 5100
+  contract_weeks_left: 49
+  morale: 60.5
+  stamina: 81.4
+  form: 50.0
+  personality_tags:
+  - hot_head
+  - quiet
+  potential: 73.8
+- id: team_jdg_esports_berlin
+  handle: BerLIN
+  real_name: Chang Po-lin
+  region: china
+  age: 26
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 62.2
+    aim_reactivity: 58.1
+    movement: 66.2
+    game_sense: 77.9
+    utility_usage: 76.2
+    positioning: 63.6
+    clutch_factor: 63.7
+    tilt_resistance: 66.6
+    composure: 72.1
+    comms_quality: 84.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 87.8
+  - agent_id: viper
+    mastery: 78.9
+  map_pool:
+  - map_id: ascent
+    mastery: 67.3
+  - map_id: bind
+    mastery: 86.7
+  - map_id: haven
+    mastery: 74.3
+  - map_id: lotus
+    mastery: 70.6
+  - map_id: split
+    mastery: 72.4
+  salary: 5000
+  contract_weeks_left: 53
+  morale: 63.3
+  stamina: 85.3
+  form: 54.9
+  personality_tags:
+  - analytical
+  - independent
+  potential: 69.4
+- id: team_jdg_esports_crownfisher
+  handle: crownfisher
+  real_name: Li Ao
+  region: china
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 70.2
+    aim_reactivity: 75.4
+    movement: 71.1
+    game_sense: 64.6
+    utility_usage: 53.1
+    positioning: 64.0
+    clutch_factor: 65.8
+    tilt_resistance: 58.8
+    composure: 69.2
+    comms_quality: 62.7
+  agent_pool:
+  - agent_id: raze
+    mastery: 81.0
+  - agent_id: jett
+    mastery: 77.1
+  map_pool:
+  - map_id: ascent
+    mastery: 68.9
+  - map_id: bind
+    mastery: 81.3
+  - map_id: haven
+    mastery: 71.2
+  - map_id: lotus
+    mastery: 69.9
+  - map_id: split
+    mastery: 73.5
+  salary: 4400
+  contract_weeks_left: 65
+  morale: 83.9
+  stamina: 93.8
+  form: 50.8
+  personality_tags:
+  - independent
+  - quiet
+  potential: 78.8

@@ -26,15 +26,29 @@ python -m venv .venv-win
 .venv-win\Scripts\python -m esports_sim
 ```
 
-`New game` → pick a seed and a team → weekly loop: set training, scout a
-rival, work the market, talk to a player, advance the week, watch replays.
-The terminal CLI autosaves to `saves/campaign.json`; the web app saves each
-world separately (see **Play with others** below).
+`New game` → pick a seed, a **world**, and a team → weekly loop: set
+training, scout a rival, work the market, talk to a player, advance the
+week, watch replays. The terminal CLI autosaves to `saves/campaign.json`;
+the web app saves each world separately (see **Play with others** below).
+
+Two worlds ship in the box:
+
+- **Fictional** (default) — a generated 3-region league of original orgs.
+- **VCT 2026** (`data/rosters/vct-2026/`) — the real four-region VCT:
+  48 partner teams with their real mid-2026 starting fives (plus notable
+  Challengers orgs underneath), researched from vlr.gg/Liquipedia and
+  expanded into game attributes deterministically. Pick it from the world
+  selector on the new-game screen, or headless via `--roster vct-2026`.
+  Custom **roster packs** are just a directory of YAML under
+  `data/rosters/` — `scripts/build_roster_pack.py` expands a compact
+  per-player spec (handle, role, playstyle, quality, signature agents)
+  into full rosters.
 
 Headless demo (a hands-off season, no UI):
 
 ```bash
 python -m esports_sim --auto 18 --seed 11 --team team_nexus
+python -m esports_sim --auto 30 --seed 11 --team team_sentinels --roster vct-2026
 ```
 
 ## Play with others (LAN)

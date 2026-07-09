@@ -1,0 +1,236 @@
+id: team_nrg
+name: NRG
+tag: NRG
+region: americas
+tier: 1
+captain_id: team_nrg_ethan
+balance: 768000
+reputation: 78.0
+fan_count: 547560
+chemistry: 76.3
+players:
+- id: team_nrg_ethan
+  handle: Ethan
+  real_name: Ethan Arnold
+  region: americas
+  age: 26
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 67.4
+    aim_reactivity: 62.4
+    movement: 72.4
+    game_sense: 88.2
+    utility_usage: 84.1
+    positioning: 73.0
+    clutch_factor: 80.4
+    tilt_resistance: 66.6
+    composure: 88.5
+    comms_quality: 77.0
+  agent_pool:
+  - agent_id: sova
+    mastery: 86.0
+  - agent_id: breach
+    mastery: 78.2
+  - agent_id: skye
+    mastery: 73.7
+  map_pool:
+  - map_id: ascent
+    mastery: 86.6
+  - map_id: bind
+    mastery: 80.7
+  - map_id: haven
+    mastery: 84.3
+  - map_id: lotus
+    mastery: 80.8
+  - map_id: split
+    mastery: 69.8
+  salary: 5600
+  contract_weeks_left: 54
+  morale: 65.3
+  stamina: 81.0
+  form: 49.0
+  personality_tags:
+  - hot_head
+  - slow_starter
+  potential: 76.4
+- id: team_nrg_brawk
+  handle: brawk
+  real_name: Brock Somerhalder
+  region: americas
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 73.0
+    aim_reactivity: 74.8
+    movement: 82.1
+    game_sense: 86.8
+    utility_usage: 88.7
+    positioning: 86.5
+    clutch_factor: 87.8
+    tilt_resistance: 76.5
+    composure: 91.6
+    comms_quality: 89.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 98.5
+  - agent_id: killjoy
+    mastery: 88.3
+  - agent_id: omen
+    mastery: 84.6
+  map_pool:
+  - map_id: ascent
+    mastery: 95.5
+  - map_id: bind
+    mastery: 99.0
+  - map_id: haven
+    mastery: 76.9
+  - map_id: lotus
+    mastery: 97.0
+  - map_id: split
+    mastery: 95.7
+  salary: 7100
+  contract_weeks_left: 75
+  morale: 84.3
+  stamina: 80.4
+  form: 58.5
+  personality_tags:
+  - fan_favorite
+  - independent
+  potential: 96.0
+- id: team_nrg_keiko
+  handle: keiko
+  real_name: Georgio Sanassy
+  region: americas
+  age: 21
+  role: flex
+  playstyle: entry
+  attributes:
+    aim_precision: 90.4
+    aim_reactivity: 89.6
+    movement: 89.8
+    game_sense: 66.2
+    utility_usage: 78.3
+    positioning: 77.4
+    clutch_factor: 78.2
+    tilt_resistance: 76.5
+    composure: 84.6
+    comms_quality: 75.5
+  agent_pool:
+  - agent_id: omen
+    mastery: 92.1
+  - agent_id: jett
+    mastery: 85.3
+  - agent_id: phoenix
+    mastery: 82.4
+  map_pool:
+  - map_id: ascent
+    mastery: 78.8
+  - map_id: bind
+    mastery: 91.0
+  - map_id: haven
+    mastery: 86.2
+  - map_id: lotus
+    mastery: 89.4
+  - map_id: split
+    mastery: 82.6
+  salary: 6400
+  contract_weeks_left: 75
+  morale: 64.2
+  stamina: 92.5
+  form: 50.5
+  personality_tags:
+  - fan_favorite
+  - grinder
+  potential: 88.5
+- id: team_nrg_mada
+  handle: mada
+  real_name: Adam Pampuch
+  region: americas
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 87.3
+    aim_reactivity: 85.7
+    movement: 90.2
+    game_sense: 68.2
+    utility_usage: 57.7
+    positioning: 67.5
+    clutch_factor: 75.8
+    tilt_resistance: 72.5
+    composure: 72.4
+    comms_quality: 71.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 88.2
+  - agent_id: raze
+    mastery: 85.6
+  - agent_id: viper
+    mastery: 76.4
+  map_pool:
+  - map_id: ascent
+    mastery: 84.9
+  - map_id: bind
+    mastery: 77.1
+  - map_id: haven
+    mastery: 81.1
+  - map_id: lotus
+    mastery: 81.7
+  - map_id: split
+    mastery: 83.8
+  salary: 5900
+  contract_weeks_left: 57
+  morale: 72.5
+  stamina: 96.3
+  form: 54.4
+  personality_tags:
+  - flashy
+  - perfectionist
+  potential: 83.3
+- id: team_nrg_skuba
+  handle: skuba
+  real_name: Logan Jenkins
+  region: americas
+  age: 23
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 70.7
+    aim_reactivity: 65.9
+    movement: 61.2
+    game_sense: 68.4
+    utility_usage: 72.1
+    positioning: 88.8
+    clutch_factor: 73.5
+    tilt_resistance: 79.2
+    composure: 77.3
+    comms_quality: 68.2
+  agent_pool:
+  - agent_id: viper
+    mastery: 84.6
+  - agent_id: cypher
+    mastery: 75.8
+  - agent_id: omen
+    mastery: 76.3
+  map_pool:
+  - map_id: ascent
+    mastery: 66.9
+  - map_id: bind
+    mastery: 63.6
+  - map_id: haven
+    mastery: 81.8
+  - map_id: lotus
+    mastery: 82.7
+  - map_id: split
+    mastery: 81.1
+  salary: 5400
+  contract_weeks_left: 77
+  morale: 73.4
+  stamina: 86.1
+  form: 47.2
+  personality_tags:
+  - slow_starter
+  - team_player
+  potential: 77.5

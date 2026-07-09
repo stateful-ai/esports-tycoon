@@ -1,0 +1,224 @@
+id: team_m80
+name: M80
+tag: M80
+region: americas
+tier: 2
+captain_id: team_m80_nismo
+balance: 186000
+reputation: 42.0
+fan_count: 26460
+chemistry: 60.2
+players:
+- id: team_m80_nismo
+  handle: NiSMO
+  real_name: Marc-Andre Tayar
+  region: americas
+  age: 24
+  role: duelist
+  playstyle: igl
+  attributes:
+    aim_precision: 56.7
+    aim_reactivity: 56.6
+    movement: 59.1
+    game_sense: 74.6
+    utility_usage: 73.0
+    positioning: 61.0
+    clutch_factor: 68.2
+    tilt_resistance: 67.7
+    composure: 65.1
+    comms_quality: 86.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 71.5
+  - agent_id: raze
+    mastery: 71.7
+  map_pool:
+  - map_id: ascent
+    mastery: 82.5
+  - map_id: bind
+    mastery: 74.8
+  - map_id: haven
+    mastery: 67.3
+  - map_id: lotus
+    mastery: 76.4
+  - map_id: split
+    mastery: 66.0
+  salary: 4700
+  contract_weeks_left: 74
+  morale: 74.4
+  stamina: 85.0
+  form: 47.1
+  personality_tags:
+  - fan_favorite
+  - streamer
+  potential: 68.0
+- id: team_m80_kyu
+  handle: Kyu
+  real_name: Mirel Braco Hrustemovic
+  region: americas
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 51.1
+    aim_reactivity: 57.7
+    movement: 52.8
+    game_sense: 67.1
+    utility_usage: 72.5
+    positioning: 61.9
+    clutch_factor: 61.3
+    tilt_resistance: 61.6
+    composure: 64.0
+    comms_quality: 73.9
+  agent_pool:
+  - agent_id: sova
+    mastery: 71.7
+  - agent_id: skye
+    mastery: 77.4
+  map_pool:
+  - map_id: ascent
+    mastery: 72.4
+  - map_id: bind
+    mastery: 75.7
+  - map_id: haven
+    mastery: 65.9
+  - map_id: lotus
+    mastery: 69.3
+  - map_id: split
+    mastery: 67.8
+  salary: 4300
+  contract_weeks_left: 77
+  morale: 83.6
+  stamina: 89.6
+  form: 45.7
+  personality_tags:
+  - analytical
+  - independent
+  potential: 70.3
+- id: team_m80_spaz
+  handle: spaz
+  real_name: Adam Laamoumi
+  region: americas
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 55.8
+    aim_reactivity: 60.1
+    movement: 61.1
+    game_sense: 74.2
+    utility_usage: 75.8
+    positioning: 57.3
+    clutch_factor: 57.2
+    tilt_resistance: 57.0
+    composure: 66.5
+    comms_quality: 74.7
+  agent_pool:
+  - agent_id: omen
+    mastery: 75.3
+  - agent_id: killjoy
+    mastery: 71.4
+  map_pool:
+  - map_id: ascent
+    mastery: 72.9
+  - map_id: bind
+    mastery: 74.0
+  - map_id: haven
+    mastery: 78.1
+  - map_id: lotus
+    mastery: 75.0
+  - map_id: split
+    mastery: 90.6
+  salary: 4300
+  contract_weeks_left: 66
+  morale: 60.7
+  stamina: 84.5
+  form: 59.0
+  personality_tags:
+  - quiet
+  - streamer
+  potential: 76.0
+- id: team_m80_boni
+  handle: Boni
+  real_name: Mark Bonifacio
+  region: americas
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 66.0
+    aim_reactivity: 56.8
+    movement: 64.8
+    game_sense: 60.6
+    utility_usage: 69.9
+    positioning: 76.5
+    clutch_factor: 61.3
+    tilt_resistance: 70.9
+    composure: 68.7
+    comms_quality: 60.0
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 78.1
+  - agent_id: cypher
+    mastery: 68.1
+  map_pool:
+  - map_id: ascent
+    mastery: 77.5
+  - map_id: bind
+    mastery: 71.1
+  - map_id: haven
+    mastery: 65.0
+  - map_id: lotus
+    mastery: 81.8
+  - map_id: split
+    mastery: 72.4
+  salary: 4400
+  contract_weeks_left: 37
+  morale: 73.1
+  stamina: 99.7
+  form: 54.0
+  personality_tags:
+  - slow_starter
+  potential: 70.9
+- id: team_m80_alvinboy
+  handle: alvinboy
+  real_name: Alvin Hong
+  region: americas
+  age: 20
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 58.2
+    aim_reactivity: 58.8
+    movement: 61.9
+    game_sense: 66.9
+    utility_usage: 73.7
+    positioning: 66.0
+    clutch_factor: 58.7
+    tilt_resistance: 58.1
+    composure: 72.7
+    comms_quality: 74.6
+  agent_pool:
+  - agent_id: omen
+    mastery: 80.2
+  - agent_id: viper
+    mastery: 74.7
+  map_pool:
+  - map_id: ascent
+    mastery: 69.6
+  - map_id: bind
+    mastery: 74.0
+  - map_id: haven
+    mastery: 76.0
+  - map_id: lotus
+    mastery: 75.5
+  - map_id: split
+    mastery: 61.1
+  salary: 4400
+  contract_weeks_left: 62
+  morale: 61.5
+  stamina: 98.9
+  form: 47.9
+  personality_tags:
+  - slow_starter
+  potential: 77.6

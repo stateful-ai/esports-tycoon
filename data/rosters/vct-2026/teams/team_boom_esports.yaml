@@ -1,0 +1,225 @@
+id: team_boom_esports
+name: BOOM Esports
+tag: BOOM
+region: pacific
+tier: 2
+captain_id: team_boom_esports_natz
+balance: 186000
+reputation: 42.0
+fan_count: 26460
+chemistry: 59.2
+players:
+- id: team_boom_esports_shiro
+  handle: Shiro
+  real_name: Hildegrad Arnaldo Herikusuma
+  region: pacific
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 68.2
+    aim_reactivity: 72.3
+    movement: 65.9
+    game_sense: 51.0
+    utility_usage: 53.2
+    positioning: 66.3
+    clutch_factor: 53.4
+    tilt_resistance: 53.8
+    composure: 62.4
+    comms_quality: 56.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 70.0
+  - agent_id: raze
+    mastery: 68.6
+  map_pool:
+  - map_id: ascent
+    mastery: 61.9
+  - map_id: bind
+    mastery: 59.6
+  - map_id: haven
+    mastery: 77.7
+  - map_id: lotus
+    mastery: 63.7
+  - map_id: split
+    mastery: 67.5
+  salary: 4000
+  contract_weeks_left: 70
+  morale: 60.5
+  stamina: 82.5
+  form: 52.3
+  personality_tags:
+  - clutch_gene
+  - independent
+  potential: 68.3
+- id: team_boom_esports_d3ffo
+  handle: d3ffo
+  real_name: Nikita Sudakov
+  region: pacific
+  age: 22
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 74.0
+    aim_reactivity: 67.0
+    movement: 55.7
+    game_sense: 63.5
+    utility_usage: 48.5
+    positioning: 57.8
+    clutch_factor: 63.0
+    tilt_resistance: 54.1
+    composure: 57.5
+    comms_quality: 56.2
+  agent_pool:
+  - agent_id: chamber
+    mastery: 71.4
+  - agent_id: killjoy
+    mastery: 67.8
+  map_pool:
+  - map_id: ascent
+    mastery: 70.8
+  - map_id: bind
+    mastery: 59.2
+  - map_id: haven
+    mastery: 67.9
+  - map_id: lotus
+    mastery: 74.7
+  - map_id: split
+    mastery: 66.3
+  salary: 4000
+  contract_weeks_left: 44
+  morale: 73.1
+  stamina: 87.5
+  form: 48.1
+  personality_tags:
+  - analytical
+  - fan_favorite
+  potential: 67.4
+- id: team_boom_esports_natz
+  handle: naTz
+  real_name: Jonathan Adiputra
+  region: pacific
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 42.5
+    aim_reactivity: 44.3
+    movement: 57.9
+    game_sense: 65.8
+    utility_usage: 59.8
+    positioning: 56.5
+    clutch_factor: 56.7
+    tilt_resistance: 53.4
+    composure: 61.4
+    comms_quality: 76.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 72.9
+  - agent_id: viper
+    mastery: 66.5
+  map_pool:
+  - map_id: ascent
+    mastery: 61.1
+  - map_id: bind
+    mastery: 73.4
+  - map_id: haven
+    mastery: 63.5
+  - map_id: lotus
+    mastery: 67.7
+  - map_id: split
+    mastery: 74.4
+  salary: 3800
+  contract_weeks_left: 50
+  morale: 83.2
+  stamina: 90.4
+  form: 48.9
+  personality_tags:
+  - grinder
+  - quiet
+  potential: 61.1
+- id: team_boom_esports_ncslasher
+  handle: NcSlasher
+  real_name: Sheldon Andersen Chandra
+  region: pacific
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 44.1
+    aim_reactivity: 49.5
+    movement: 48.9
+    game_sense: 57.1
+    utility_usage: 67.5
+    positioning: 50.7
+    clutch_factor: 55.0
+    tilt_resistance: 53.6
+    composure: 62.3
+    comms_quality: 61.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 67.9
+  - agent_id: skye
+    mastery: 64.4
+  map_pool:
+  - map_id: ascent
+    mastery: 62.9
+  - map_id: bind
+    mastery: 55.0
+  - map_id: haven
+    mastery: 66.4
+  - map_id: lotus
+    mastery: 69.5
+  - map_id: split
+    mastery: 63.9
+  salary: 3700
+  contract_weeks_left: 52
+  morale: 80.9
+  stamina: 82.6
+  form: 48.7
+  personality_tags:
+  - grinder
+  potential: 64.8
+- id: team_boom_esports_nakya
+  handle: Nakya
+  real_name: Alehandro Fabian Simanjorang
+  region: pacific
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 44.7
+    aim_reactivity: 44.1
+    movement: 54.6
+    game_sense: 51.0
+    utility_usage: 65.8
+    positioning: 57.0
+    clutch_factor: 52.3
+    tilt_resistance: 54.7
+    composure: 54.9
+    comms_quality: 68.0
+  agent_pool:
+  - agent_id: skye
+    mastery: 70.3
+  - agent_id: killjoy
+    mastery: 65.3
+  map_pool:
+  - map_id: ascent
+    mastery: 57.0
+  - map_id: bind
+    mastery: 66.1
+  - map_id: haven
+    mastery: 65.6
+  - map_id: lotus
+    mastery: 59.3
+  - map_id: split
+    mastery: 63.0
+  salary: 3400
+  contract_weeks_left: 60
+  morale: 73.5
+  stamina: 96.4
+  form: 54.0
+  personality_tags:
+  - hot_head
+  - streamer
+  potential: 66.1

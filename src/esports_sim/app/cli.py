@@ -30,6 +30,7 @@ from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry import load_all
 from esports_sim.registry.loader import GameData
+from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import Player
 
 console = Console()
@@ -93,8 +94,24 @@ def title_screen(gd: GameData) -> GameState | None:
 def new_game_screen(gd: GameData) -> GameState:
     raw = ask("Campaign seed (blank = 2026): ")
     seed = int(raw) if raw.isdigit() else 2026
+    # World choice: the generated fictional league, or an installed
+    # roster pack (real teams imported under data/rosters/).
+    pack = None
+    packs = list_roster_packs()
+    if packs:
+        console.print("World: 0) Fictional (generated)")
+        for i, m in enumerate(packs, 1):
+            console.print(f"       {i}) {m.name} - {m.description[:60]}")
+        c = ask("World number (blank = 0): ")
+        if c.isdigit() and 1 <= int(c) <= len(packs):
+            pack = load_roster_pack(packs[int(c) - 1].id)
     # Build a preview campaign to show the actual league the seed produces.
-    gs = new_campaign(gd, seed)
+    preview_team = (
+        sorted(t.id for t in pack.teams.values() if t.tier == 1)[0]
+        if pack is not None
+        else "team_nexus"
+    )
+    gs = new_campaign(gd, seed, user_team_id=preview_team, pack=pack)
     table = Table(title="Pick your team", border_style="dim")
     table.add_column("#")
     table.add_column("Team")
@@ -102,7 +119,8 @@ def new_game_screen(gd: GameData) -> GameState:
     table.add_column("Balance", justify="right")
     table.add_column("Reputation", justify="right")
     ordered = sorted(
-        gs.teams, key=lambda t: -sum(player_quality(p) for p in gs.roster(t))
+        (t for t in gs.teams if gs.teams[t].tier == 1),
+        key=lambda t: -sum(player_quality(p) for p in gs.roster(t)),
     )
     for i, tid in enumerate(ordered, 1):
         t = gs.teams[tid]
@@ -116,8 +134,12 @@ def new_game_screen(gd: GameData) -> GameState:
     while True:
         c = ask("Team number: ")
         if c.isdigit() and 1 <= int(c) <= len(ordered):
-            gs.user_team_id = ordered[int(c) - 1]
+            picked = ordered[int(c) - 1]
             break
+    # Rebuild with the picked team so the human seat (human_team_ids, staff
+    # market, scouting state) is initialised for the right org — determinism
+    # makes this the same world, just seen from the picked chair.
+    gs = new_campaign(gd, seed, user_team_id=picked, pack=pack)
     console.print(
         f"[green]You are now managing {team_name(gs, gs.user_team_id)}.[/] "
         f"(seed {seed})"
@@ -454,8 +476,11 @@ def hub(gs: GameState, gd: GameData) -> None:
 # Headless auto mode (used for demos and end-to-end verification)
 
 
-def auto_play(gd: GameData, weeks: int, seed: int, team: str) -> None:
-    gs = new_campaign(gd, seed, user_team_id=team)
+def auto_play(
+    gd: GameData, weeks: int, seed: int, team: str, roster: str | None = None
+) -> None:
+    pack = load_roster_pack(roster) if roster else None
+    gs = new_campaign(gd, seed, user_team_id=team, pack=pack)
     # A hands-off manager who at least renews contracts and rests the team.
     for _ in range(weeks):
         for p in gs.roster(gs.user_team_id):
@@ -502,6 +527,13 @@ def main() -> None:
     parser.add_argument("--auto", type=int, default=0, help="headless: play N weeks")
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")
+    parser.add_argument(
+        "--roster",
+        type=str,
+        default=None,
+        help="roster pack id under data/rosters/ (e.g. vct-2026); "
+        "default = generated fictional world",
+    )
     parser.add_argument("--web", action="store_true", help="launch the browser UI")
     # Honour $PORT (dev-server harnesses assign one) when --port isn't given.
     parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8420)))
@@ -523,7 +555,7 @@ def main() -> None:
 
     gd = load_all()
     if args.auto > 0:
-        auto_play(gd, args.auto, args.seed, args.team)
+        auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
         return
 
     gs = title_screen(gd)

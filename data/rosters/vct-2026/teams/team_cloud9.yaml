@@ -1,0 +1,230 @@
+id: team_cloud9
+name: Cloud9
+tag: C9
+region: americas
+tier: 1
+captain_id: team_cloud9_zellsis
+balance: 780000
+reputation: 80.0
+fan_count: 576000
+chemistry: 66.2
+players:
+- id: team_cloud9_zellsis
+  handle: Zellsis
+  real_name: Jordan Montemurro
+  region: americas
+  age: 27
+  role: flex
+  playstyle: igl
+  attributes:
+    aim_precision: 60.7
+    aim_reactivity: 62.4
+    movement: 67.5
+    game_sense: 81.2
+    utility_usage: 76.7
+    positioning: 69.6
+    clutch_factor: 63.2
+    tilt_resistance: 61.5
+    composure: 75.0
+    comms_quality: 77.0
+  agent_pool:
+  - agent_id: viper
+    mastery: 83.6
+  - agent_id: skye
+    mastery: 72.9
+  - agent_id: killjoy
+    mastery: 70.5
+  map_pool:
+  - map_id: ascent
+    mastery: 77.8
+  - map_id: bind
+    mastery: 62.4
+  - map_id: haven
+    mastery: 79.5
+  - map_id: lotus
+    mastery: 75.9
+  - map_id: split
+    mastery: 66.3
+  salary: 5000
+  contract_weeks_left: 57
+  morale: 76.6
+  stamina: 80.3
+  form: 47.4
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 69.5
+- id: team_cloud9_oxy
+  handle: OXY
+  real_name: Francis Hoang
+  region: americas
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 88.3
+    aim_reactivity: 84.8
+    movement: 83.1
+    game_sense: 67.4
+    utility_usage: 66.9
+    positioning: 75.5
+    clutch_factor: 71.2
+    tilt_resistance: 71.5
+    composure: 75.9
+    comms_quality: 68.0
+  agent_pool:
+  - agent_id: raze
+    mastery: 82.9
+  - agent_id: jett
+    mastery: 83.7
+  map_pool:
+  - map_id: ascent
+    mastery: 88.5
+  - map_id: bind
+    mastery: 89.7
+  - map_id: haven
+    mastery: 83.7
+  - map_id: lotus
+    mastery: 74.0
+  - map_id: split
+    mastery: 76.9
+  salary: 6000
+  contract_weeks_left: 63
+  morale: 71.5
+  stamina: 97.8
+  form: 46.6
+  personality_tags:
+  - clutch_gene
+  - slow_starter
+  potential: 79.6
+- id: team_cloud9_notexxd
+  handle: Notexxd
+  real_name: Jaden Anderson
+  region: americas
+  age: 19
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 61.3
+    aim_reactivity: 59.2
+    movement: 66.8
+    game_sense: 75.7
+    utility_usage: 73.7
+    positioning: 70.7
+    clutch_factor: 74.0
+    tilt_resistance: 73.2
+    composure: 77.9
+    comms_quality: 80.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 74.5
+  - agent_id: clove
+    mastery: 78.1
+  map_pool:
+  - map_id: ascent
+    mastery: 84.8
+  - map_id: bind
+    mastery: 68.2
+  - map_id: haven
+    mastery: 71.0
+  - map_id: lotus
+    mastery: 74.2
+  - map_id: split
+    mastery: 75.2
+  salary: 5100
+  contract_weeks_left: 35
+  morale: 81.1
+  stamina: 80.2
+  form: 46.0
+  personality_tags:
+  - fan_favorite
+  - team_player
+  potential: 87.9
+- id: team_cloud9_jackk
+  handle: Jackk
+  real_name: Jack Foote
+  region: americas
+  age: 20
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 55.5
+    aim_reactivity: 61.7
+    movement: 65.1
+    game_sense: 71.5
+    utility_usage: 76.3
+    positioning: 64.4
+    clutch_factor: 65.3
+    tilt_resistance: 65.5
+    composure: 76.1
+    comms_quality: 77.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 78.7
+  - agent_id: skye
+    mastery: 75.0
+  map_pool:
+  - map_id: ascent
+    mastery: 73.1
+  - map_id: bind
+    mastery: 77.9
+  - map_id: haven
+    mastery: 77.5
+  - map_id: lotus
+    mastery: 71.9
+  - map_id: split
+    mastery: 63.8
+  salary: 4800
+  contract_weeks_left: 30
+  morale: 67.9
+  stamina: 97.3
+  form: 53.1
+  personality_tags:
+  - independent
+  - quiet
+  potential: 81.7
+- id: team_cloud9_fireballops
+  handle: FireBallOps
+  real_name: Cameron Tomaselli
+  region: americas
+  age: 19
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 59.7
+    aim_reactivity: 62.5
+    movement: 62.1
+    game_sense: 58.9
+    utility_usage: 66.8
+    positioning: 65.3
+    clutch_factor: 59.4
+    tilt_resistance: 72.0
+    composure: 76.0
+    comms_quality: 60.4
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 70.0
+  - agent_id: cypher
+    mastery: 72.1
+  - agent_id: omen
+    mastery: 69.7
+  map_pool:
+  - map_id: ascent
+    mastery: 76.7
+  - map_id: bind
+    mastery: 75.4
+  - map_id: haven
+    mastery: 58.5
+  - map_id: lotus
+    mastery: 64.1
+  - map_id: split
+    mastery: 82.1
+  salary: 4500
+  contract_weeks_left: 57
+  morale: 70.8
+  stamina: 94.2
+  form: 59.0
+  personality_tags:
+  - fan_favorite
+  - perfectionist
+  potential: 78.1

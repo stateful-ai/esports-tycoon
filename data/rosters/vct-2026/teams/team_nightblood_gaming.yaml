@@ -1,0 +1,225 @@
+id: team_nightblood_gaming
+name: Nightblood Gaming
+tag: NBG
+region: americas
+tier: 2
+captain_id: team_nightblood_gaming_stellar
+balance: 144000
+reputation: 28.0
+fan_count: 11760
+chemistry: 77.7
+players:
+- id: team_nightblood_gaming_stellar
+  handle: stellar
+  real_name: Brenden McGrath
+  region: americas
+  age: 27
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 55.9
+    aim_reactivity: 55.3
+    movement: 54.6
+    game_sense: 72.9
+    utility_usage: 63.5
+    positioning: 59.9
+    clutch_factor: 56.9
+    tilt_resistance: 68.5
+    composure: 67.2
+    comms_quality: 73.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 78.8
+  - agent_id: viper
+    mastery: 75.4
+  map_pool:
+  - map_id: ascent
+    mastery: 72.8
+  - map_id: bind
+    mastery: 70.2
+  - map_id: haven
+    mastery: 68.4
+  - map_id: lotus
+    mastery: 63.9
+  - map_id: split
+    mastery: 76.4
+  salary: 4100
+  contract_weeks_left: 74
+  morale: 80.1
+  stamina: 86.7
+  form: 48.0
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 62.8
+- id: team_nightblood_gaming_stunna
+  handle: stunna
+  real_name: Riley Stunard
+  region: americas
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 69.1
+    aim_reactivity: 69.5
+    movement: 65.7
+    game_sense: 46.2
+    utility_usage: 51.6
+    positioning: 55.4
+    clutch_factor: 55.5
+    tilt_resistance: 61.2
+    composure: 59.1
+    comms_quality: 56.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 71.5
+  - agent_id: raze
+    mastery: 67.2
+  map_pool:
+  - map_id: ascent
+    mastery: 76.0
+  - map_id: bind
+    mastery: 65.7
+  - map_id: haven
+    mastery: 60.9
+  - map_id: lotus
+    mastery: 77.8
+  - map_id: split
+    mastery: 68.9
+  salary: 4000
+  contract_weeks_left: 74
+  morale: 62.9
+  stamina: 87.9
+  form: 47.4
+  personality_tags:
+  - slow_starter
+  - team_player
+  potential: 70.0
+- id: team_nightblood_gaming_zeek
+  handle: zeek
+  real_name: Burair Ali
+  region: americas
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 50.9
+    aim_reactivity: 50.4
+    movement: 60.3
+    game_sense: 60.9
+    utility_usage: 73.4
+    positioning: 61.0
+    clutch_factor: 56.7
+    tilt_resistance: 50.6
+    composure: 65.4
+    comms_quality: 67.7
+  agent_pool:
+  - agent_id: sova
+    mastery: 69.9
+  - agent_id: skye
+    mastery: 70.6
+  map_pool:
+  - map_id: ascent
+    mastery: 64.7
+  - map_id: bind
+    mastery: 71.2
+  - map_id: haven
+    mastery: 58.5
+  - map_id: lotus
+    mastery: 65.5
+  - map_id: split
+    mastery: 70.5
+  salary: 3800
+  contract_weeks_left: 77
+  morale: 64.9
+  stamina: 85.8
+  form: 45.0
+  personality_tags:
+  - perfectionist
+  - quiet
+  potential: 69.7
+- id: team_nightblood_gaming_sonofcar
+  handle: sonofcar
+  real_name: Carson Young
+  region: americas
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 40.6
+    aim_reactivity: 46.4
+    movement: 53.6
+    game_sense: 60.9
+    utility_usage: 68.6
+    positioning: 55.0
+    clutch_factor: 50.6
+    tilt_resistance: 59.6
+    composure: 67.5
+    comms_quality: 67.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 63.4
+  - agent_id: killjoy
+    mastery: 69.2
+  map_pool:
+  - map_id: ascent
+    mastery: 57.1
+  - map_id: bind
+    mastery: 66.9
+  - map_id: haven
+    mastery: 56.6
+  - map_id: lotus
+    mastery: 64.9
+  - map_id: split
+    mastery: 68.3
+  salary: 3800
+  contract_weeks_left: 43
+  morale: 74.1
+  stamina: 92.4
+  form: 46.7
+  personality_tags:
+  - analytical
+  - perfectionist
+  potential: 70.7
+- id: team_nightblood_gaming_toozy
+  handle: toozy
+  real_name: Anthony De Leon
+  region: americas
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 61.8
+    aim_reactivity: 54.8
+    movement: 47.2
+    game_sense: 59.8
+    utility_usage: 67.4
+    positioning: 68.4
+    clutch_factor: 54.4
+    tilt_resistance: 67.6
+    composure: 62.0
+    comms_quality: 59.9
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 76.9
+  - agent_id: cypher
+    mastery: 64.6
+  map_pool:
+  - map_id: ascent
+    mastery: 45.8
+  - map_id: bind
+    mastery: 70.0
+  - map_id: haven
+    mastery: 62.3
+  - map_id: lotus
+    mastery: 55.1
+  - map_id: split
+    mastery: 58.8
+  salary: 3900
+  contract_weeks_left: 69
+  morale: 66.9
+  stamina: 82.4
+  form: 52.1
+  personality_tags:
+  - quiet
+  potential: 71.3

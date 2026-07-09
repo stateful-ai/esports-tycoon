@@ -1,0 +1,225 @@
+id: team_team_heretics
+name: Team Heretics
+tag: TH
+region: emea
+tier: 1
+captain_id: team_team_heretics_boo
+balance: 816000
+reputation: 86.0
+fan_count: 665640
+chemistry: 62.8
+players:
+- id: team_team_heretics_boo
+  handle: Boo
+  real_name: Ricardas Lukasevicius
+  region: emea
+  age: 25
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 70.1
+    aim_reactivity: 65.6
+    movement: 78.2
+    game_sense: 89.8
+    utility_usage: 79.2
+    positioning: 74.5
+    clutch_factor: 72.1
+    tilt_resistance: 84.3
+    composure: 83.9
+    comms_quality: 86.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 97.1
+  - agent_id: viper
+    mastery: 85.3
+  map_pool:
+  - map_id: ascent
+    mastery: 95.7
+  - map_id: bind
+    mastery: 85.4
+  - map_id: haven
+    mastery: 89.3
+  - map_id: lotus
+    mastery: 84.9
+  - map_id: split
+    mastery: 76.8
+  salary: 6100
+  contract_weeks_left: 47
+  morale: 63.8
+  stamina: 89.7
+  form: 53.9
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 78.5
+- id: team_team_heretics_wo0t
+  handle: Wo0t
+  real_name: Mert Alkan
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 98.9
+    aim_reactivity: 99.0
+    movement: 99.0
+    game_sense: 80.2
+    utility_usage: 70.7
+    positioning: 78.9
+    clutch_factor: 84.9
+    tilt_resistance: 76.5
+    composure: 85.9
+    comms_quality: 86.1
+  agent_pool:
+  - agent_id: raze
+    mastery: 94.5
+  - agent_id: jett
+    mastery: 95.3
+  map_pool:
+  - map_id: ascent
+    mastery: 89.1
+  - map_id: bind
+    mastery: 94.0
+  - map_id: haven
+    mastery: 95.1
+  - map_id: lotus
+    mastery: 93.3
+  - map_id: split
+    mastery: 87.6
+  salary: 7300
+  contract_weeks_left: 40
+  morale: 60.2
+  stamina: 81.6
+  form: 53.4
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 96.0
+- id: team_team_heretics_riens
+  handle: RieNs
+  real_name: Enes Ecirli
+  region: emea
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 75.9
+    aim_reactivity: 81.8
+    movement: 76.7
+    game_sense: 85.4
+    utility_usage: 96.1
+    positioning: 77.6
+    clutch_factor: 82.3
+    tilt_resistance: 85.2
+    composure: 83.7
+    comms_quality: 88.9
+  agent_pool:
+  - agent_id: sova
+    mastery: 97.9
+  - agent_id: skye
+    mastery: 89.8
+  map_pool:
+  - map_id: ascent
+    mastery: 88.3
+  - map_id: bind
+    mastery: 85.6
+  - map_id: haven
+    mastery: 84.8
+  - map_id: lotus
+    mastery: 97.3
+  - map_id: split
+    mastery: 93.0
+  salary: 6500
+  contract_weeks_left: 39
+  morale: 70.1
+  stamina: 91.1
+  form: 55.7
+  personality_tags: []
+  potential: 90.5
+- id: team_team_heretics_benjyfishy
+  handle: benjyfishy
+  real_name: Benjamin David Fish
+  region: emea
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 74.9
+    aim_reactivity: 79.6
+    movement: 69.0
+    game_sense: 76.5
+    utility_usage: 82.7
+    positioning: 93.1
+    clutch_factor: 67.5
+    tilt_resistance: 82.0
+    composure: 85.3
+    comms_quality: 76.2
+  agent_pool:
+  - agent_id: cypher
+    mastery: 99.0
+  - agent_id: killjoy
+    mastery: 90.4
+  - agent_id: viper
+    mastery: 87.0
+  map_pool:
+  - map_id: ascent
+    mastery: 86.7
+  - map_id: bind
+    mastery: 87.9
+  - map_id: haven
+    mastery: 94.8
+  - map_id: lotus
+    mastery: 79.7
+  - map_id: split
+    mastery: 81.3
+  salary: 6300
+  contract_weeks_left: 60
+  morale: 81.2
+  stamina: 98.2
+  form: 53.1
+  personality_tags:
+  - perfectionist
+  potential: 86.3
+- id: team_team_heretics_koshmaras
+  handle: koshmaras
+  real_name: Martynas Namikas
+  region: emea
+  age: 19
+  role: flex
+  playstyle: awper
+  attributes:
+    aim_precision: 88.3
+    aim_reactivity: 84.2
+    movement: 71.6
+    game_sense: 75.6
+    utility_usage: 68.1
+    positioning: 77.6
+    clutch_factor: 75.7
+    tilt_resistance: 71.0
+    composure: 75.5
+    comms_quality: 68.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 84.5
+  - agent_id: chamber
+    mastery: 85.4
+  map_pool:
+  - map_id: ascent
+    mastery: 88.3
+  - map_id: bind
+    mastery: 83.0
+  - map_id: haven
+    mastery: 82.2
+  - map_id: lotus
+    mastery: 84.9
+  - map_id: split
+    mastery: 76.3
+  salary: 5900
+  contract_weeks_left: 70
+  morale: 65.1
+  stamina: 83.0
+  form: 49.6
+  personality_tags:
+  - flashy
+  - slow_starter
+  potential: 86.1

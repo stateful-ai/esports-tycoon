@@ -1,0 +1,817 @@
+# VCT Americas rosters as of 2026-07-09 (post Stage 1 / Masters London,
+# pre Stage 2 which starts 2026-07-16). Sources: vlr.gg team pages +
+# VCT 2026 Americas Stage 1 stats, liquipedia.net Stage 2 participants.
+# Where a transfer completed between stages, the Stage 2 registered five
+# is used (see repo report for per-team notes).
+region: americas
+teams:
+  - name: Sentinels
+    tag: SEN
+    tier: 1
+    prestige: 92
+    players:
+      - handle: johnqt
+        real_name: Mohamed Amine Ouarid
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 72
+        agents: [viper, omen]
+      - handle: Reduxx
+        real_name: Yassin Aboulalazm
+        age: 20
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 75
+        agents: [omen, jett, raze]
+      - handle: JonahP
+        real_name: Jonah Pulice
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [sova, skye]
+      - handle: Jerrwin
+        real_name: Gurjiwan Gill
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, raze]
+      - handle: cortezia
+        real_name: Gabriel Cortez
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 79
+        agents: [viper, killjoy, cypher]
+  - name: G2 Esports
+    tag: G2
+    tier: 1
+    prestige: 86
+    players:
+      - handle: valyn
+        real_name: Jacob Batio
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 77
+        agents: [omen, viper]
+      - handle: trent
+        real_name: Trent Cairns
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 79
+        agents: [sova, skye]
+      - handle: leaf
+        real_name: Nathan Orf
+        age: 23
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 76
+        agents: [phoenix, viper, omen]
+      - handle: jawgemo
+        real_name: Alexander Mor
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 77
+        agents: [raze, phoenix, jett]
+      - handle: BABYBAY
+        real_name: Andrej Francisty
+        age: 29
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 76
+        agents: [chamber, killjoy]
+  - name: NRG
+    tag: NRG
+    tier: 1
+    prestige: 78
+    players:
+      - handle: Ethan
+        real_name: Ethan Arnold
+        age: 26
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 72
+        agents: [sova, breach, skye]
+      - handle: brawk
+        real_name: Brock Somerhalder
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 83
+        agents: [sova, killjoy, omen]
+      - handle: keiko
+        real_name: Georgio Sanassy
+        age: 21
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 78
+        agents: [omen, jett, phoenix]
+      - handle: mada
+        real_name: Adam Pampuch
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [jett, raze, viper]
+      - handle: skuba
+        real_name: Logan Jenkins
+        age: 23
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 70
+        agents: [viper, cypher, omen]
+  - name: 100 Thieves
+    tag: 100T
+    tier: 1
+    prestige: 82
+    players:
+      - handle: vora
+        real_name: Jordan Pulwer
+        age: 22
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 68
+        agents: [sova, skye]
+      - handle: Timotino
+        real_name: Timothee Lavigne Dupont
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 73
+        agents: [jett, phoenix, raze]
+      - handle: Cryocells
+        real_name: Matthew Panganiban
+        age: 23
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 78
+        agents: [cypher, chamber, viper]
+      - handle: bang
+        real_name: Sean Bezerra
+        age: 22
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 76
+        agents: [omen, viper]
+      - handle: Asuna
+        real_name: Peter Mazuryk
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [raze, phoenix]
+  - name: Leviatan
+    tag: LEV
+    tier: 1
+    prestige: 74
+    players:
+      - handle: kiNgg
+        real_name: Francisco Aravena
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 79
+        agents: [viper, omen, breach]
+      - handle: Neon
+        real_name: Bruno Rodriguez
+        age: 22
+        role: flex
+        playstyle: awper
+        igl: false
+        quality: 87
+        agents: [chamber, omen]
+      - handle: Sato
+        real_name: Eduardo Kenzo Nagahama Sato
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 78
+        agents: [phoenix, jett]
+      - handle: spike
+        real_name: Rodrigo Lombardi
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 76
+        agents: [jett, omen]
+      - handle: blowz
+        real_name: Guilherme Oliveira
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 77
+        agents: [sova, skye]
+  - name: MIBR
+    tag: MIBR
+    tier: 1
+    prestige: 75
+    players:
+      - handle: Verno
+        real_name: Andrew Maust
+        age: 23
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 71
+        agents: [sova, skye]
+      - handle: zekken
+        real_name: Zachary Patrone
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 81
+        agents: [jett, phoenix, sova]
+      - handle: aspas
+        real_name: Erick Santos
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 83
+        agents: [jett, raze]
+      - handle: tex
+        real_name: Ian Botsch
+        age: 26
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [killjoy, omen, chamber]
+      - handle: Mazino
+        real_name: Roberto Rivas
+        age: 25
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 71
+        agents: [omen, viper]
+  - name: KRU Esports
+    tag: KRU
+    tier: 1
+    prestige: 66
+    players:
+      - handle: saadhak
+        real_name: Matias Delipetro
+        age: 29
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 79
+        agents: [omen, viper]
+      - handle: mwzera
+        real_name: Leonardo Serrati
+        age: 24
+        role: initiator
+        playstyle: entry
+        igl: false
+        quality: 80
+        agents: [sova, skye]
+      - handle: Less
+        real_name: Felipe de Loyola Basso
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 85
+        agents: [viper, cypher, killjoy]
+      - handle: heat
+        real_name: Olavo Marcelo
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [raze, jett]
+      - handle: Dantedeu5
+        real_name: Jesus Federico Larrosa
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 64
+        agents: [jett, raze]
+  - name: LOUD
+    tag: LOUD
+    tier: 1
+    prestige: 84
+    players:
+      - handle: erde
+        real_name: Roberto Lobos
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 78
+        agents: [omen, breach]
+      - handle: lukxo
+        real_name: Lucca Travaioli
+        age: 20
+        role: controller
+        playstyle: anchor
+        igl: false
+        quality: 75
+        agents: [viper, chamber]
+      - handle: Darker
+        real_name: Sebastian Castro Cicuamia
+        age: 21
+        role: flex
+        playstyle: anchor
+        igl: false
+        quality: 69
+        agents: [omen, killjoy, viper]
+      - handle: cauanzin
+        real_name: Cauan Pereira
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [sova, skye]
+      - handle: Virtyy
+        real_name: Leandro Moreno
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 63
+        agents: [raze, jett]
+  - name: FURIA
+    tag: FUR
+    tier: 1
+    prestige: 72
+    players:
+      - handle: artzin
+        real_name: Arthur Araujo
+        age: 21
+        role: sentinel
+        playstyle: igl
+        igl: true
+        quality: 77
+        agents: [killjoy, cypher]
+      - handle: eeiu
+        real_name: Daniel Vucenovic
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [sova, skye]
+      - handle: koalanoob
+        real_name: Gianfranco Potestio
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [phoenix, jett]
+      - handle: Shyy
+        real_name: Fabian Usnayo
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 64
+        agents: [viper, omen, killjoy]
+      - handle: basic
+        real_name: Luis Henrique Ferlin Tessaro
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 63
+        agents: [sova, skye, omen]
+  - name: Cloud9
+    tag: C9
+    tier: 1
+    prestige: 80
+    players:
+      - handle: Zellsis
+        real_name: Jordan Montemurro
+        age: 27
+        role: flex
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [viper, skye, killjoy]
+      - handle: OXY
+        real_name: Francis Hoang
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 75
+        agents: [raze, jett]
+      - handle: Notexxd
+        real_name: Jaden Anderson
+        age: 19
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [omen]
+      - handle: Jackk
+        real_name: Jack Foote
+        age: 20
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 65
+        agents: [sova, skye]
+      - handle: FireBallOps
+        real_name: Cameron Tomaselli
+        age: 19
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 63
+        agents: [killjoy, cypher, omen]
+  - name: Evil Geniuses
+    tag: EG
+    tier: 1
+    prestige: 68
+    players:
+      - handle: Paincakes
+        real_name: Jake Hass
+        age: 23
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 66
+        agents: [sova, skye]
+      - handle: bao
+        real_name: Bao Nguyen
+        age: 19
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 64
+        agents: [killjoy, cypher]
+      - handle: dgzin
+        real_name: Douglas Silva
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 76
+        agents: [jett, chamber]
+      - handle: supamen
+        real_name: Phat Le
+        age: 24
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 66
+        agents: [viper, omen]
+      - handle: zerona
+        real_name: Javan Varela
+        age: 20
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 67
+        agents: [viper, phoenix]
+  - name: ENVY
+    tag: ENVY
+    tier: 1
+    prestige: 58
+    players:
+      - handle: Rossy
+        real_name: Daniel Abedrabbo
+        age: 25
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 73
+        agents: [sova, viper, omen]
+      - handle: keznit
+        real_name: Angelo Mori
+        age: 25
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [raze, jett]
+      - handle: Demon1
+        real_name: Max Mazanov
+        age: 25
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 74
+        agents: [chamber, killjoy, jett]
+      - handle: Eggsterr
+        real_name: Evan Grady
+        age: 20
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 62
+        agents: [omen, phoenix]
+      - handle: GLYPH
+        real_name: Conner Garcia
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 65
+        agents: [omen, viper]
+  - name: M80
+    tag: M80
+    tier: 2
+    prestige: 42
+    players:
+      - handle: NiSMO
+        real_name: Marc-Andre Tayar
+        age: 24
+        role: duelist
+        playstyle: igl
+        igl: true
+        quality: 64
+        agents: [jett, raze]
+      - handle: Kyu
+        real_name: Mirel Braco Hrustemovic
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 61
+        agents: [sova, skye]
+      - handle: spaz
+        real_name: Adam Laamoumi
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 61
+        agents: [omen, killjoy]
+      - handle: Boni
+        real_name: Mark Bonifacio
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 62
+        agents: [killjoy, cypher]
+      - handle: alvinboy
+        real_name: Alvin Hong
+        age: 20
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 62
+        agents: [omen, viper]
+  - name: Shopify Rebellion Black
+    tag: SRB
+    tier: 2
+    prestige: 40
+    players:
+      - handle: NaturE
+        real_name: Nicholas Garrison
+        age: 25
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 62
+        agents: [sova, skye]
+      - handle: exa
+        real_name: Kim Lee-hwan
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 60
+        agents: [jett, raze]
+      - handle: Zander
+        real_name: Alexander Dituri
+        age: 23
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 59
+        agents: [omen, viper]
+      - handle: Satellite
+        real_name: Derrick Xu
+        age: 20
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [omen, sova]
+      - handle: Smoke
+        real_name: Unknown
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 58
+        agents: [killjoy, cypher]
+  - name: Nightblood Gaming
+    tag: NBG
+    tier: 2
+    prestige: 28
+    players:
+      - handle: stellar
+        real_name: Brenden McGrath
+        age: 27
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 59
+        agents: [omen, viper]
+      - handle: stunna
+        real_name: Riley Stunard
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 58
+        agents: [jett, raze]
+      - handle: zeek
+        real_name: Burair Ali
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [sova, skye]
+      - handle: sonofcar
+        real_name: Carson Young
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [omen, killjoy]
+      - handle: toozy
+        real_name: Anthony De Leon
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 57
+        agents: [killjoy, cypher]
+  - name: 2GAME Esports
+    tag: 2G
+    tier: 2
+    prestige: 38
+    players:
+      - handle: gobera
+        real_name: Vitor Gobo Cesar
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 60
+        agents: [omen, viper]
+      - handle: frz
+        real_name: Leandro Fukuda Gomes
+        age: 26
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 58
+        agents: [jett, raze]
+      - handle: ambitioN
+        real_name: Gabriel Bertoni Lima
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 57
+        agents: [sova, skye]
+      - handle: Brinks
+        real_name: Joao Victor
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 57
+        agents: [omen, sova]
+      - handle: xenom
+        real_name: Eduardo Ribeiro de Moura Soeiro
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 56
+        agents: [killjoy, cypher]
+  - name: RED Canids
+    tag: RED
+    tier: 2
+    prestige: 33
+    players:
+      - handle: prozin
+        real_name: Wallacy Sales
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 55
+        agents: [omen, viper]
+      - handle: forbanz
+        real_name: Ithallo Paula
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 55
+        agents: [jett, raze]
+      - handle: sw
+        real_name: Jadisson Rayan
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 54
+        agents: [sova, skye]
+      - handle: RgLMeister
+        real_name: Matheus Rodigoli
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 54
+        agents: [omen, killjoy]
+      - handle: Urango
+        real_name: Victor Rodrigues
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 53
+        agents: [killjoy, cypher]
+  - name: BESTIA
+    tag: BST
+    tier: 2
+    prestige: 30
+    players:
+      - handle: Melser
+        real_name: Marco Eliot Machuca Amaro
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 64
+        agents: [omen, viper]
+      - handle: Tacolilla
+        real_name: Vicente Compagnon
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, raze]
+      - handle: david
+        real_name: David Olivares
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 57
+        agents: [sova, skye]
+      - handle: chubizin
+        real_name: Martin Ferres
+        age: 18
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 58
+        agents: [killjoy, cypher]
+      - handle: Loss
+        real_name: Unknown
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [omen, sova]

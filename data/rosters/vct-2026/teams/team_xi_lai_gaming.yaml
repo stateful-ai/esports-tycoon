@@ -1,0 +1,229 @@
+id: team_xi_lai_gaming
+name: Xi Lai Gaming
+tag: XLG
+region: china
+tier: 1
+captain_id: team_xi_lai_gaming_wsleo
+balance: 648000
+reputation: 58.0
+fan_count: 302760
+chemistry: 63.8
+players:
+- id: team_xi_lai_gaming_happywei
+  handle: happywei
+  real_name: Teng Min-wei
+  region: china
+  age: 23
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 80.4
+    aim_reactivity: 70.7
+    movement: 68.6
+    game_sense: 83.4
+    utility_usage: 87.4
+    positioning: 86.1
+    clutch_factor: 80.5
+    tilt_resistance: 90.0
+    composure: 89.4
+    comms_quality: 77.7
+  agent_pool:
+  - agent_id: viper
+    mastery: 93.7
+  - agent_id: cypher
+    mastery: 83.4
+  - agent_id: chamber
+    mastery: 81.5
+  map_pool:
+  - map_id: ascent
+    mastery: 90.1
+  - map_id: bind
+    mastery: 79.9
+  - map_id: haven
+    mastery: 84.9
+  - map_id: lotus
+    mastery: 77.3
+  - map_id: split
+    mastery: 85.7
+  salary: 6700
+  contract_weeks_left: 38
+  morale: 82.9
+  stamina: 93.8
+  form: 60.0
+  personality_tags:
+  - streamer
+  potential: 84.3
+- id: team_xi_lai_gaming_rarga
+  handle: Rarga
+  real_name: Arthur Churyumov
+  region: china
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 86.0
+    aim_reactivity: 88.6
+    movement: 78.3
+    game_sense: 69.2
+    utility_usage: 66.2
+    positioning: 79.5
+    clutch_factor: 78.0
+    tilt_resistance: 67.6
+    composure: 72.5
+    comms_quality: 76.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 93.6
+  - agent_id: phoenix
+    mastery: 78.2
+  map_pool:
+  - map_id: ascent
+    mastery: 82.7
+  - map_id: bind
+    mastery: 82.0
+  - map_id: haven
+    mastery: 86.1
+  - map_id: lotus
+    mastery: 83.6
+  - map_id: split
+    mastery: 86.5
+  salary: 5900
+  contract_weeks_left: 58
+  morale: 81.7
+  stamina: 96.3
+  form: 58.9
+  personality_tags:
+  - hot_head
+  - quiet
+  potential: 86.9
+- id: team_xi_lai_gaming_noman
+  handle: NoMan
+  real_name: James Man Ga Kit
+  region: china
+  age: 23
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 69.1
+    aim_reactivity: 68.3
+    movement: 69.2
+    game_sense: 75.6
+    utility_usage: 84.8
+    positioning: 68.4
+    clutch_factor: 69.1
+    tilt_resistance: 68.1
+    composure: 77.6
+    comms_quality: 82.3
+  agent_pool:
+  - agent_id: raze
+    mastery: 83.9
+  - agent_id: breach
+    mastery: 83.7
+  - agent_id: killjoy
+    mastery: 77.2
+  map_pool:
+  - map_id: ascent
+    mastery: 78.9
+  - map_id: bind
+    mastery: 80.4
+  - map_id: haven
+    mastery: 89.5
+  - map_id: lotus
+    mastery: 74.6
+  - map_id: split
+    mastery: 88.4
+  salary: 5500
+  contract_weeks_left: 50
+  morale: 79.9
+  stamina: 84.0
+  form: 49.0
+  personality_tags:
+  - slow_starter
+  - streamer
+  potential: 76.5
+- id: team_xi_lai_gaming_lysoar
+  handle: Lysoar
+  real_name: Liang Youhao
+  region: china
+  age: 20
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 72.8
+    aim_reactivity: 69.3
+    movement: 69.5
+    game_sense: 80.4
+    utility_usage: 85.9
+    positioning: 72.4
+    clutch_factor: 75.5
+    tilt_resistance: 71.8
+    composure: 79.2
+    comms_quality: 84.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 86.4
+  - agent_id: clove
+    mastery: 91.4
+  map_pool:
+  - map_id: ascent
+    mastery: 88.6
+  - map_id: bind
+    mastery: 77.9
+  - map_id: haven
+    mastery: 84.4
+  - map_id: lotus
+    mastery: 78.8
+  - map_id: split
+    mastery: 82.8
+  salary: 6000
+  contract_weeks_left: 67
+  morale: 83.6
+  stamina: 97.3
+  form: 51.6
+  personality_tags:
+  - independent
+  - perfectionist
+  potential: 85.3
+- id: team_xi_lai_gaming_wsleo
+  handle: WsLeo
+  real_name: Huang Ping-wei
+  region: china
+  age: 24
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 69.8
+    aim_reactivity: 68.9
+    movement: 76.7
+    game_sense: 87.7
+    utility_usage: 84.6
+    positioning: 68.3
+    clutch_factor: 77.3
+    tilt_resistance: 74.8
+    composure: 89.3
+    comms_quality: 92.9
+  agent_pool:
+  - agent_id: skye
+    mastery: 82.5
+  - agent_id: sova
+    mastery: 89.0
+  map_pool:
+  - map_id: ascent
+    mastery: 88.0
+  - map_id: bind
+    mastery: 83.8
+  - map_id: haven
+    mastery: 89.5
+  - map_id: lotus
+    mastery: 77.6
+  - map_id: split
+    mastery: 81.3
+  salary: 6100
+  contract_weeks_left: 61
+  morale: 80.4
+  stamina: 85.3
+  form: 57.7
+  personality_tags:
+  - perfectionist
+  - team_player
+  potential: 80.1

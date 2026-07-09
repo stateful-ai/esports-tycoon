@@ -1,0 +1,225 @@
+id: team_besiktas_esports
+name: Besiktas Esports
+tag: BJK
+region: emea
+tier: 2
+captain_id: team_besiktas_esports_docent
+balance: 186000
+reputation: 42.0
+fan_count: 26460
+chemistry: 78.2
+players:
+- id: team_besiktas_esports_docent
+  handle: Docent
+  real_name: Kadri Vatandas
+  region: emea
+  age: 26
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 52.5
+    aim_reactivity: 45.2
+    movement: 53.9
+    game_sense: 72.0
+    utility_usage: 64.3
+    positioning: 56.9
+    clutch_factor: 54.1
+    tilt_resistance: 63.3
+    composure: 63.7
+    comms_quality: 72.8
+  agent_pool:
+  - agent_id: omen
+    mastery: 66.0
+  - agent_id: viper
+    mastery: 60.6
+  map_pool:
+  - map_id: ascent
+    mastery: 64.4
+  - map_id: bind
+    mastery: 72.5
+  - map_id: haven
+    mastery: 66.2
+  - map_id: lotus
+    mastery: 63.5
+  - map_id: split
+    mastery: 62.3
+  salary: 3900
+  contract_weeks_left: 60
+  morale: 71.8
+  stamina: 96.1
+  form: 52.7
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 59.9
+- id: team_besiktas_esports_mersa
+  handle: MerSa
+  real_name: Mert Saatci
+  region: emea
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 68.2
+    aim_reactivity: 68.9
+    movement: 69.4
+    game_sense: 51.5
+    utility_usage: 55.8
+    positioning: 58.3
+    clutch_factor: 52.3
+    tilt_resistance: 50.9
+    composure: 56.5
+    comms_quality: 57.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 73.2
+  - agent_id: raze
+    mastery: 56.7
+  map_pool:
+  - map_id: ascent
+    mastery: 61.6
+  - map_id: bind
+    mastery: 64.2
+  - map_id: haven
+    mastery: 69.7
+  - map_id: lotus
+    mastery: 58.4
+  - map_id: split
+    mastery: 58.6
+  salary: 4000
+  contract_weeks_left: 44
+  morale: 67.7
+  stamina: 96.9
+  form: 50.1
+  personality_tags:
+  - clutch_gene
+  - hot_head
+  potential: 65.5
+- id: team_besiktas_esports_wezzy
+  handle: wezzy
+  real_name: Arda Celbis
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 53.6
+    aim_reactivity: 56.2
+    movement: 52.6
+    game_sense: 64.0
+    utility_usage: 63.6
+    positioning: 53.6
+    clutch_factor: 50.4
+    tilt_resistance: 59.0
+    composure: 63.4
+    comms_quality: 66.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 74.8
+  - agent_id: skye
+    mastery: 69.8
+  map_pool:
+  - map_id: ascent
+    mastery: 55.9
+  - map_id: bind
+    mastery: 65.7
+  - map_id: haven
+    mastery: 66.5
+  - map_id: lotus
+    mastery: 70.4
+  - map_id: split
+    mastery: 51.9
+  salary: 3800
+  contract_weeks_left: 59
+  morale: 79.5
+  stamina: 82.3
+  form: 56.4
+  personality_tags:
+  - analytical
+  - independent
+  potential: 61.0
+- id: team_besiktas_esports_influx
+  handle: influx
+  real_name: Kaan Taskin
+  region: emea
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 54.4
+    aim_reactivity: 50.3
+    movement: 49.7
+    game_sense: 57.9
+    utility_usage: 62.1
+    positioning: 59.5
+    clutch_factor: 53.5
+    tilt_resistance: 65.6
+    composure: 56.2
+    comms_quality: 52.3
+  agent_pool:
+  - agent_id: cypher
+    mastery: 59.5
+  - agent_id: killjoy
+    mastery: 62.5
+  map_pool:
+  - map_id: ascent
+    mastery: 62.5
+  - map_id: bind
+    mastery: 55.9
+  - map_id: haven
+    mastery: 58.4
+  - map_id: lotus
+    mastery: 68.3
+  - map_id: split
+    mastery: 62.1
+  salary: 3700
+  contract_weeks_left: 41
+  morale: 70.0
+  stamina: 86.8
+  form: 46.9
+  personality_tags:
+  - perfectionist
+  - team_player
+  potential: 59.3
+- id: team_besiktas_esports_oroni
+  handle: oroni
+  real_name: Omer Acar
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 64.5
+    aim_reactivity: 64.1
+    movement: 61.4
+    game_sense: 45.8
+    utility_usage: 46.7
+    positioning: 55.1
+    clutch_factor: 52.5
+    tilt_resistance: 52.0
+    composure: 61.0
+    comms_quality: 52.8
+  agent_pool:
+  - agent_id: raze
+    mastery: 67.8
+  - agent_id: phoenix
+    mastery: 70.7
+  map_pool:
+  - map_id: ascent
+    mastery: 68.3
+  - map_id: bind
+    mastery: 65.3
+  - map_id: haven
+    mastery: 62.5
+  - map_id: lotus
+    mastery: 57.9
+  - map_id: split
+    mastery: 65.9
+  salary: 3800
+  contract_weeks_left: 34
+  morale: 79.6
+  stamina: 87.3
+  form: 56.6
+  personality_tags:
+  - slow_starter
+  potential: 71.7

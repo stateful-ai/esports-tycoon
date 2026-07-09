@@ -1,0 +1,226 @@
+id: team_team_vitality
+name: Team Vitality
+tag: VIT
+region: emea
+tier: 1
+captain_id: team_team_vitality_jamppi
+balance: 816000
+reputation: 86.0
+fan_count: 665640
+chemistry: 66.8
+players:
+- id: team_team_vitality_jamppi
+  handle: Jamppi
+  real_name: Elias Olkkonen
+  region: emea
+  age: 25
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 74.9
+    aim_reactivity: 71.8
+    movement: 78.3
+    game_sense: 90.2
+    utility_usage: 84.7
+    positioning: 70.8
+    clutch_factor: 76.7
+    tilt_resistance: 73.1
+    composure: 83.5
+    comms_quality: 96.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 94.1
+  - agent_id: breach
+    mastery: 79.7
+  map_pool:
+  - map_id: ascent
+    mastery: 83.4
+  - map_id: bind
+    mastery: 77.3
+  - map_id: haven
+    mastery: 79.6
+  - map_id: lotus
+    mastery: 85.6
+  - map_id: split
+    mastery: 79.4
+  salary: 6000
+  contract_weeks_left: 69
+  morale: 63.8
+  stamina: 85.7
+  form: 56.2
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 80.7
+- id: team_team_vitality_derke
+  handle: Derke
+  real_name: Nikita Sirmitev
+  region: emea
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 85.9
+    aim_reactivity: 89.9
+    movement: 82.9
+    game_sense: 76.3
+    utility_usage: 75.7
+    positioning: 77.5
+    clutch_factor: 81.7
+    tilt_resistance: 83.6
+    composure: 78.4
+    comms_quality: 77.2
+  agent_pool:
+  - agent_id: jett
+    mastery: 93.7
+  - agent_id: raze
+    mastery: 79.3
+  map_pool:
+  - map_id: ascent
+    mastery: 90.4
+  - map_id: bind
+    mastery: 85.3
+  - map_id: haven
+    mastery: 89.7
+  - map_id: lotus
+    mastery: 93.0
+  - map_id: split
+    mastery: 99.0
+  salary: 6500
+  contract_weeks_left: 76
+  morale: 74.2
+  stamina: 85.5
+  form: 59.6
+  personality_tags:
+  - slow_starter
+  potential: 82.3
+- id: team_team_vitality_chronicle
+  handle: Chronicle
+  real_name: Timofey Khromov
+  region: emea
+  age: 24
+  role: flex
+  playstyle: anchor
+  attributes:
+    aim_precision: 77.9
+    aim_reactivity: 75.7
+    movement: 73.5
+    game_sense: 80.7
+    utility_usage: 89.4
+    positioning: 97.1
+    clutch_factor: 86.8
+    tilt_resistance: 89.1
+    composure: 86.0
+    comms_quality: 84.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 88.0
+  - agent_id: killjoy
+    mastery: 97.8
+  - agent_id: chamber
+    mastery: 85.3
+  map_pool:
+  - map_id: ascent
+    mastery: 99.0
+  - map_id: bind
+    mastery: 81.6
+  - map_id: haven
+    mastery: 83.6
+  - map_id: lotus
+    mastery: 78.5
+  - map_id: split
+    mastery: 84.8
+  salary: 6700
+  contract_weeks_left: 71
+  morale: 69.3
+  stamina: 90.1
+  form: 45.8
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 88.7
+- id: team_team_vitality_sayonara
+  handle: Sayonara
+  real_name: Stefan Mitcu
+  region: emea
+  age: 19
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 86.0
+    aim_reactivity: 79.6
+    movement: 82.0
+    game_sense: 86.3
+    utility_usage: 75.2
+    positioning: 95.7
+    clutch_factor: 85.4
+    tilt_resistance: 79.2
+    composure: 86.2
+    comms_quality: 75.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 98.9
+  - agent_id: viper
+    mastery: 91.6
+  - agent_id: phoenix
+    mastery: 87.3
+  map_pool:
+  - map_id: ascent
+    mastery: 88.6
+  - map_id: bind
+    mastery: 91.0
+  - map_id: haven
+    mastery: 96.4
+  - map_id: lotus
+    mastery: 99.0
+  - map_id: split
+    mastery: 82.5
+  salary: 6900
+  contract_weeks_left: 77
+  morale: 73.2
+  stamina: 87.3
+  form: 54.7
+  personality_tags:
+  - grinder
+  potential: 90.1
+- id: team_team_vitality_profek
+  handle: PROFEK
+  real_name: Dawid Swiec
+  region: emea
+  age: 21
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 60.3
+    aim_reactivity: 69.1
+    movement: 74.8
+    game_sense: 73.6
+    utility_usage: 86.1
+    positioning: 73.8
+    clutch_factor: 74.9
+    tilt_resistance: 75.2
+    composure: 79.3
+    comms_quality: 83.3
+  agent_pool:
+  - agent_id: omen
+    mastery: 90.9
+  - agent_id: viper
+    mastery: 82.7
+  map_pool:
+  - map_id: ascent
+    mastery: 80.6
+  - map_id: bind
+    mastery: 75.9
+  - map_id: haven
+    mastery: 86.1
+  - map_id: lotus
+    mastery: 82.0
+  - map_id: split
+    mastery: 87.7
+  salary: 5600
+  contract_weeks_left: 40
+  morale: 80.1
+  stamina: 82.8
+  form: 54.5
+  personality_tags: []
+  potential: 81.9

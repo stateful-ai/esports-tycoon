@@ -1,0 +1,226 @@
+id: team_reject
+name: REJECT
+tag: RC
+region: pacific
+tier: 2
+captain_id: team_reject_brian
+balance: 180000
+reputation: 40.0
+fan_count: 24000
+chemistry: 60.3
+players:
+- id: team_reject_yoshiii
+  handle: Yoshiii
+  real_name: John Yoshiharu Kawakami
+  region: pacific
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 68.6
+    aim_reactivity: 80.2
+    movement: 69.0
+    game_sense: 54.9
+    utility_usage: 46.2
+    positioning: 67.7
+    clutch_factor: 62.2
+    tilt_resistance: 58.3
+    composure: 65.2
+    comms_quality: 66.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 79.6
+  - agent_id: raze
+    mastery: 67.6
+  map_pool:
+  - map_id: ascent
+    mastery: 80.0
+  - map_id: bind
+    mastery: 65.5
+  - map_id: haven
+    mastery: 67.8
+  - map_id: lotus
+    mastery: 89.9
+  - map_id: split
+    mastery: 72.4
+  salary: 4400
+  contract_weeks_left: 37
+  morale: 68.5
+  stamina: 89.8
+  form: 59.9
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 63.9
+- id: team_reject_dep
+  handle: Dep
+  real_name: Yuma Hashimoto
+  region: pacific
+  age: 24
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 55.9
+    aim_reactivity: 68.9
+    movement: 61.2
+    game_sense: 72.7
+    utility_usage: 56.4
+    positioning: 66.9
+    clutch_factor: 74.3
+    tilt_resistance: 66.3
+    composure: 63.3
+    comms_quality: 54.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 76.5
+  - agent_id: chamber
+    mastery: 73.4
+  map_pool:
+  - map_id: ascent
+    mastery: 70.7
+  - map_id: bind
+    mastery: 68.0
+  - map_id: haven
+    mastery: 73.6
+  - map_id: lotus
+    mastery: 81.8
+  - map_id: split
+    mastery: 72.3
+  salary: 4300
+  contract_weeks_left: 48
+  morale: 71.5
+  stamina: 98.6
+  form: 57.4
+  personality_tags:
+  - flashy
+  - hot_head
+  potential: 67.0
+- id: team_reject_jremy
+  handle: Jremy
+  real_name: Jeremy Gagarra Cabrera
+  region: pacific
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 57.2
+    aim_reactivity: 45.0
+    movement: 67.6
+    game_sense: 67.9
+    utility_usage: 73.4
+    positioning: 61.7
+    clutch_factor: 64.4
+    tilt_resistance: 60.5
+    composure: 63.6
+    comms_quality: 67.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.4
+  - agent_id: skye
+    mastery: 66.2
+  map_pool:
+  - map_id: ascent
+    mastery: 65.2
+  - map_id: bind
+    mastery: 66.0
+  - map_id: haven
+    mastery: 63.4
+  - map_id: lotus
+    mastery: 60.7
+  - map_id: split
+    mastery: 70.4
+  salary: 4000
+  contract_weeks_left: 51
+  morale: 63.4
+  stamina: 84.2
+  form: 45.1
+  personality_tags:
+  - clutch_gene
+  - independent
+  potential: 71.1
+- id: team_reject_persia
+  handle: Persia
+  real_name: Yang Zi-on
+  region: pacific
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 56.8
+    aim_reactivity: 53.3
+    movement: 47.8
+    game_sense: 56.9
+    utility_usage: 71.2
+    positioning: 74.1
+    clutch_factor: 61.0
+    tilt_resistance: 66.0
+    composure: 57.0
+    comms_quality: 51.4
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 69.4
+  - agent_id: cypher
+    mastery: 71.8
+  map_pool:
+  - map_id: ascent
+    mastery: 65.3
+  - map_id: bind
+    mastery: 72.5
+  - map_id: haven
+    mastery: 72.3
+  - map_id: lotus
+    mastery: 70.1
+  - map_id: split
+    mastery: 67.0
+  salary: 3900
+  contract_weeks_left: 61
+  morale: 75.0
+  stamina: 95.1
+  form: 47.4
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 71.5
+- id: team_reject_brian
+  handle: BRIAN
+  real_name: Brian
+  region: pacific
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 52.5
+    aim_reactivity: 49.9
+    movement: 52.6
+    game_sense: 65.3
+    utility_usage: 62.7
+    positioning: 56.0
+    clutch_factor: 49.0
+    tilt_resistance: 55.7
+    composure: 64.7
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 73.9
+  - agent_id: clove
+    mastery: 68.9
+  map_pool:
+  - map_id: ascent
+    mastery: 72.8
+  - map_id: bind
+    mastery: 55.2
+  - map_id: haven
+    mastery: 63.7
+  - map_id: lotus
+    mastery: 69.1
+  - map_id: split
+    mastery: 69.5
+  salary: 3800
+  contract_weeks_left: 38
+  morale: 77.3
+  stamina: 93.7
+  form: 47.3
+  personality_tags:
+  - flashy
+  - streamer
+  potential: 66.3

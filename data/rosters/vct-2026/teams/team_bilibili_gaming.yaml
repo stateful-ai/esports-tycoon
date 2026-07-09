@@ -1,0 +1,225 @@
+id: team_bilibili_gaming
+name: Bilibili Gaming
+tag: BLG
+region: china
+tier: 1
+captain_id: team_bilibili_gaming_nephh
+balance: 750000
+reputation: 75.0
+fan_count: 506250
+chemistry: 64.4
+players:
+- id: team_bilibili_gaming_whzy
+  handle: whzy
+  real_name: Wang Haozhe
+  region: china
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 77.1
+    aim_reactivity: 88.4
+    movement: 84.4
+    game_sense: 70.3
+    utility_usage: 64.1
+    positioning: 71.5
+    clutch_factor: 75.2
+    tilt_resistance: 72.9
+    composure: 74.5
+    comms_quality: 70.0
+  agent_pool:
+  - agent_id: raze
+    mastery: 92.0
+  - agent_id: phoenix
+    mastery: 79.9
+  - agent_id: chamber
+    mastery: 80.2
+  map_pool:
+  - map_id: ascent
+    mastery: 81.4
+  - map_id: bind
+    mastery: 74.6
+  - map_id: haven
+    mastery: 79.5
+  - map_id: lotus
+    mastery: 88.9
+  - map_id: split
+    mastery: 79.6
+  salary: 5900
+  contract_weeks_left: 42
+  morale: 61.7
+  stamina: 83.5
+  form: 47.2
+  personality_tags:
+  - streamer
+  potential: 83.4
+- id: team_bilibili_gaming_knight
+  handle: Knight
+  real_name: Liu Yuxiang
+  region: china
+  age: 23
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 66.7
+    aim_reactivity: 60.8
+    movement: 71.5
+    game_sense: 83.0
+    utility_usage: 86.6
+    positioning: 74.2
+    clutch_factor: 77.2
+    tilt_resistance: 68.2
+    composure: 69.7
+    comms_quality: 79.7
+  agent_pool:
+  - agent_id: sova
+    mastery: 87.8
+  - agent_id: skye
+    mastery: 77.0
+  map_pool:
+  - map_id: ascent
+    mastery: 79.8
+  - map_id: bind
+    mastery: 69.7
+  - map_id: haven
+    mastery: 73.4
+  - map_id: lotus
+    mastery: 64.5
+  - map_id: split
+    mastery: 89.3
+  salary: 5600
+  contract_weeks_left: 55
+  morale: 60.4
+  stamina: 84.3
+  form: 55.8
+  personality_tags:
+  - perfectionist
+  - slow_starter
+  potential: 85.0
+- id: team_bilibili_gaming_nephh
+  handle: nephh
+  real_name: Marcus Tan Kai Wen
+  region: china
+  age: 21
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 66.7
+    aim_reactivity: 68.1
+    movement: 77.9
+    game_sense: 92.5
+    utility_usage: 82.3
+    positioning: 77.9
+    clutch_factor: 74.8
+    tilt_resistance: 73.5
+    composure: 78.1
+    comms_quality: 85.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 93.7
+  - agent_id: clove
+    mastery: 80.1
+  map_pool:
+  - map_id: ascent
+    mastery: 86.4
+  - map_id: bind
+    mastery: 81.5
+  - map_id: haven
+    mastery: 82.6
+  - map_id: lotus
+    mastery: 79.9
+  - map_id: split
+    mastery: 74.0
+  salary: 6100
+  contract_weeks_left: 64
+  morale: 68.6
+  stamina: 82.1
+  form: 46.2
+  personality_tags:
+  - flashy
+  potential: 82.1
+- id: team_bilibili_gaming_rushia
+  handle: rushia
+  real_name: Wang Xiaojie
+  region: china
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 62.0
+    aim_reactivity: 69.2
+    movement: 64.9
+    game_sense: 60.7
+    utility_usage: 74.4
+    positioning: 86.0
+    clutch_factor: 72.1
+    tilt_resistance: 82.0
+    composure: 78.8
+    comms_quality: 70.4
+  agent_pool:
+  - agent_id: viper
+    mastery: 84.1
+  - agent_id: cypher
+    mastery: 82.2
+  map_pool:
+  - map_id: ascent
+    mastery: 80.0
+  - map_id: bind
+    mastery: 74.0
+  - map_id: haven
+    mastery: 86.7
+  - map_id: lotus
+    mastery: 67.9
+  - map_id: split
+    mastery: 80.9
+  salary: 5100
+  contract_weeks_left: 52
+  morale: 60.1
+  stamina: 87.3
+  form: 53.8
+  personality_tags:
+  - clutch_gene
+  - team_player
+  potential: 74.4
+- id: team_bilibili_gaming_ft
+  handle: FT
+  real_name: Yan Shuaibo
+  region: china
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 71.3
+    aim_reactivity: 82.9
+    movement: 75.8
+    game_sense: 60.8
+    utility_usage: 61.5
+    positioning: 59.4
+    clutch_factor: 68.8
+    tilt_resistance: 51.0
+    composure: 58.5
+    comms_quality: 65.4
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 78.4
+  - agent_id: jett
+    mastery: 72.2
+  map_pool:
+  - map_id: ascent
+    mastery: 64.5
+  - map_id: bind
+    mastery: 76.0
+  - map_id: haven
+    mastery: 70.2
+  - map_id: lotus
+    mastery: 65.8
+  - map_id: split
+    mastery: 77.1
+  salary: 4500
+  contract_weeks_left: 39
+  morale: 81.6
+  stamina: 80.5
+  form: 52.3
+  personality_tags:
+  - fan_favorite
+  potential: 70.8

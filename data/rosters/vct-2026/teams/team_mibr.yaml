@@ -1,0 +1,229 @@
+id: team_mibr
+name: MIBR
+tag: MIBR
+region: americas
+tier: 1
+captain_id: team_mibr_verno
+balance: 750000
+reputation: 75.0
+fan_count: 506250
+chemistry: 75.1
+players:
+- id: team_mibr_verno
+  handle: Verno
+  real_name: Andrew Maust
+  region: americas
+  age: 23
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 62.6
+    aim_reactivity: 68.3
+    movement: 75.2
+    game_sense: 82.4
+    utility_usage: 75.6
+    positioning: 73.5
+    clutch_factor: 75.0
+    tilt_resistance: 69.6
+    composure: 83.4
+    comms_quality: 87.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 79.2
+  - agent_id: skye
+    mastery: 78.1
+  map_pool:
+  - map_id: ascent
+    mastery: 80.3
+  - map_id: bind
+    mastery: 86.6
+  - map_id: haven
+    mastery: 78.3
+  - map_id: lotus
+    mastery: 64.6
+  - map_id: split
+    mastery: 86.6
+  salary: 5500
+  contract_weeks_left: 56
+  morale: 71.3
+  stamina: 87.6
+  form: 47.4
+  personality_tags:
+  - flashy
+  - grinder
+  potential: 81.9
+- id: team_mibr_zekken
+  handle: zekken
+  real_name: Zachary Patrone
+  region: americas
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 92.7
+    aim_reactivity: 97.5
+    movement: 85.4
+    game_sense: 74.3
+    utility_usage: 76.7
+    positioning: 88.3
+    clutch_factor: 73.4
+    tilt_resistance: 78.0
+    composure: 83.2
+    comms_quality: 78.3
+  agent_pool:
+  - agent_id: jett
+    mastery: 94.9
+  - agent_id: phoenix
+    mastery: 93.7
+  - agent_id: sova
+    mastery: 85.7
+  map_pool:
+  - map_id: ascent
+    mastery: 92.9
+  - map_id: bind
+    mastery: 82.0
+  - map_id: haven
+    mastery: 89.2
+  - map_id: lotus
+    mastery: 94.8
+  - map_id: split
+    mastery: 82.3
+  salary: 6800
+  contract_weeks_left: 79
+  morale: 72.7
+  stamina: 89.7
+  form: 49.2
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 90.3
+- id: team_mibr_aspas
+  handle: aspas
+  real_name: Erick Santos
+  region: americas
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 87.3
+    aim_reactivity: 87.0
+    movement: 92.6
+    game_sense: 78.9
+    utility_usage: 76.5
+    positioning: 78.8
+    clutch_factor: 87.6
+    tilt_resistance: 83.8
+    composure: 82.9
+    comms_quality: 85.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 95.4
+  - agent_id: raze
+    mastery: 93.7
+  map_pool:
+  - map_id: ascent
+    mastery: 83.4
+  - map_id: bind
+    mastery: 96.3
+  - map_id: haven
+    mastery: 77.1
+  - map_id: lotus
+    mastery: 95.7
+  - map_id: split
+    mastery: 92.8
+  salary: 7100
+  contract_weeks_left: 54
+  morale: 77.8
+  stamina: 98.1
+  form: 57.1
+  personality_tags:
+  - perfectionist
+  - team_player
+  potential: 88.8
+- id: team_mibr_tex
+  handle: tex
+  real_name: Ian Botsch
+  region: americas
+  age: 26
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 68.7
+    aim_reactivity: 67.7
+    movement: 57.0
+    game_sense: 66.6
+    utility_usage: 73.5
+    positioning: 84.3
+    clutch_factor: 68.6
+    tilt_resistance: 75.2
+    composure: 80.7
+    comms_quality: 67.7
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 81.6
+  - agent_id: omen
+    mastery: 74.7
+  - agent_id: chamber
+    mastery: 71.5
+  map_pool:
+  - map_id: ascent
+    mastery: 78.3
+  - map_id: bind
+    mastery: 83.0
+  - map_id: haven
+    mastery: 76.6
+  - map_id: lotus
+    mastery: 69.8
+  - map_id: split
+    mastery: 71.0
+  salary: 5100
+  contract_weeks_left: 40
+  morale: 63.5
+  stamina: 99.5
+  form: 46.4
+  personality_tags:
+  - flashy
+  potential: 72.1
+- id: team_mibr_mazino
+  handle: Mazino
+  real_name: Roberto Rivas
+  region: americas
+  age: 25
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 60.0
+    aim_reactivity: 60.2
+    movement: 68.9
+    game_sense: 73.0
+    utility_usage: 86.7
+    positioning: 74.0
+    clutch_factor: 66.9
+    tilt_resistance: 73.4
+    composure: 82.8
+    comms_quality: 82.6
+  agent_pool:
+  - agent_id: omen
+    mastery: 96.8
+  - agent_id: viper
+    mastery: 80.3
+  map_pool:
+  - map_id: ascent
+    mastery: 90.3
+  - map_id: bind
+    mastery: 83.7
+  - map_id: haven
+    mastery: 82.9
+  - map_id: lotus
+    mastery: 73.1
+  - map_id: split
+    mastery: 72.8
+  salary: 5500
+  contract_weeks_left: 53
+  morale: 70.9
+  stamina: 93.9
+  form: 49.5
+  personality_tags:
+  - independent
+  - quiet
+  potential: 74.2

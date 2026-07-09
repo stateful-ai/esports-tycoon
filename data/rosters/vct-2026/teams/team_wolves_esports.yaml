@@ -1,0 +1,224 @@
+id: team_wolves_esports
+name: Wolves Esports
+tag: WOL
+region: china
+tier: 1
+captain_id: team_wolves_esports_aluba
+balance: 672000
+reputation: 62.0
+fan_count: 345960
+chemistry: 81.1
+players:
+- id: team_wolves_esports_spring
+  handle: Spring
+  real_name: Liu Chun-ting
+  region: china
+  age: 23
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 70.8
+    aim_reactivity: 63.2
+    movement: 71.1
+    game_sense: 78.1
+    utility_usage: 88.6
+    positioning: 74.6
+    clutch_factor: 74.0
+    tilt_resistance: 71.0
+    composure: 79.5
+    comms_quality: 86.6
+  agent_pool:
+  - agent_id: viper
+    mastery: 86.9
+  - agent_id: omen
+    mastery: 80.8
+  map_pool:
+  - map_id: ascent
+    mastery: 76.1
+  - map_id: bind
+    mastery: 83.4
+  - map_id: haven
+    mastery: 84.9
+  - map_id: lotus
+    mastery: 82.7
+  - map_id: split
+    mastery: 82.4
+  salary: 6000
+  contract_weeks_left: 76
+  morale: 67.2
+  stamina: 86.8
+  form: 59.0
+  personality_tags:
+  - clutch_gene
+  - team_player
+  potential: 81.1
+- id: team_wolves_esports_yosemite
+  handle: yosemite
+  real_name: Wang Lei
+  region: china
+  age: 24
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 69.1
+    aim_reactivity: 76.3
+    movement: 67.2
+    game_sense: 72.4
+    utility_usage: 82.2
+    positioning: 83.4
+    clutch_factor: 70.5
+    tilt_resistance: 86.3
+    composure: 78.2
+    comms_quality: 75.6
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 81.4
+  - agent_id: cypher
+    mastery: 80.9
+  map_pool:
+  - map_id: ascent
+    mastery: 80.5
+  - map_id: bind
+    mastery: 75.5
+  - map_id: haven
+    mastery: 68.6
+  - map_id: lotus
+    mastery: 77.7
+  - map_id: split
+    mastery: 74.9
+  salary: 5500
+  contract_weeks_left: 33
+  morale: 68.2
+  stamina: 92.9
+  form: 54.7
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 77.0
+- id: team_wolves_esports_glacier
+  handle: glacier
+  real_name: Liang Zhe-kai
+  region: china
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 73.8
+    aim_reactivity: 79.9
+    movement: 73.5
+    game_sense: 55.2
+    utility_usage: 57.3
+    positioning: 64.5
+    clutch_factor: 69.8
+    tilt_resistance: 59.0
+    composure: 61.3
+    comms_quality: 66.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 75.3
+  - agent_id: raze
+    mastery: 75.3
+  map_pool:
+  - map_id: ascent
+    mastery: 69.9
+  - map_id: bind
+    mastery: 84.6
+  - map_id: haven
+    mastery: 71.6
+  - map_id: lotus
+    mastery: 74.7
+  - map_id: split
+    mastery: 80.3
+  salary: 4900
+  contract_weeks_left: 37
+  morale: 63.4
+  stamina: 90.0
+  form: 53.2
+  personality_tags:
+  - independent
+  potential: 75.4
+- id: team_wolves_esports_aluba
+  handle: aluba
+  real_name: Zhong Haojun
+  region: china
+  age: 25
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 57.9
+    aim_reactivity: 62.1
+    movement: 70.3
+    game_sense: 75.9
+    utility_usage: 71.3
+    positioning: 61.0
+    clutch_factor: 63.9
+    tilt_resistance: 63.2
+    composure: 67.9
+    comms_quality: 82.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.1
+  - agent_id: skye
+    mastery: 69.6
+  map_pool:
+  - map_id: ascent
+    mastery: 67.3
+  - map_id: bind
+    mastery: 54.9
+  - map_id: haven
+    mastery: 85.8
+  - map_id: lotus
+    mastery: 69.6
+  - map_id: split
+    mastery: 71.5
+  salary: 4900
+  contract_weeks_left: 53
+  morale: 75.1
+  stamina: 80.3
+  form: 55.8
+  personality_tags:
+  - grinder
+  potential: 67.7
+- id: team_wolves_esports_deryeon
+  handle: Deryeon
+  real_name: Derrick Yee Dong Ting
+  region: china
+  age: 22
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 60.6
+    aim_reactivity: 61.0
+    movement: 70.3
+    game_sense: 80.3
+    utility_usage: 80.9
+    positioning: 61.9
+    clutch_factor: 62.7
+    tilt_resistance: 63.9
+    composure: 68.8
+    comms_quality: 77.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 89.8
+  - agent_id: clove
+    mastery: 77.9
+  map_pool:
+  - map_id: ascent
+    mastery: 70.6
+  - map_id: bind
+    mastery: 73.0
+  - map_id: haven
+    mastery: 74.7
+  - map_id: lotus
+    mastery: 77.5
+  - map_id: split
+    mastery: 68.4
+  salary: 5000
+  contract_weeks_left: 67
+  morale: 84.4
+  stamina: 88.6
+  form: 52.4
+  personality_tags:
+  - fan_favorite
+  - slow_starter
+  potential: 74.1

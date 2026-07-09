@@ -1,0 +1,231 @@
+id: team_g2_esports
+name: G2 Esports
+tag: G2
+region: americas
+tier: 1
+captain_id: team_g2_esports_valyn
+balance: 816000
+reputation: 86.0
+fan_count: 665640
+chemistry: 75.9
+players:
+- id: team_g2_esports_valyn
+  handle: valyn
+  real_name: Jacob Batio
+  region: americas
+  age: 25
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 70.9
+    aim_reactivity: 74.6
+    movement: 79.2
+    game_sense: 90.1
+    utility_usage: 79.2
+    positioning: 74.1
+    clutch_factor: 76.5
+    tilt_resistance: 80.7
+    composure: 84.5
+    comms_quality: 92.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 91.0
+  - agent_id: viper
+    mastery: 85.5
+  map_pool:
+  - map_id: ascent
+    mastery: 91.2
+  - map_id: bind
+    mastery: 97.7
+  - map_id: haven
+    mastery: 81.6
+  - map_id: lotus
+    mastery: 81.8
+  - map_id: split
+    mastery: 84.6
+  salary: 6300
+  contract_weeks_left: 31
+  morale: 63.0
+  stamina: 83.6
+  form: 49.0
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 80.2
+- id: team_g2_esports_trent
+  handle: trent
+  real_name: Trent Cairns
+  region: americas
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 68.8
+    aim_reactivity: 64.2
+    movement: 75.4
+    game_sense: 84.2
+    utility_usage: 88.4
+    positioning: 71.3
+    clutch_factor: 78.6
+    tilt_resistance: 77.0
+    composure: 85.5
+    comms_quality: 86.7
+  agent_pool:
+  - agent_id: sova
+    mastery: 89.5
+  - agent_id: skye
+    mastery: 87.6
+  map_pool:
+  - map_id: ascent
+    mastery: 85.5
+  - map_id: bind
+    mastery: 80.4
+  - map_id: haven
+    mastery: 98.4
+  - map_id: lotus
+    mastery: 92.7
+  - map_id: split
+    mastery: 98.5
+  salary: 6500
+  contract_weeks_left: 46
+  morale: 84.1
+  stamina: 85.6
+  form: 50.4
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 87.0
+- id: team_g2_esports_leaf
+  handle: leaf
+  real_name: Nathan Orf
+  region: americas
+  age: 23
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 77.8
+    aim_reactivity: 75.6
+    movement: 77.1
+    game_sense: 87.1
+    utility_usage: 79.7
+    positioning: 82.1
+    clutch_factor: 90.3
+    tilt_resistance: 68.7
+    composure: 77.0
+    comms_quality: 65.8
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 84.4
+  - agent_id: viper
+    mastery: 82.7
+  - agent_id: omen
+    mastery: 81.9
+  map_pool:
+  - map_id: ascent
+    mastery: 83.5
+  - map_id: bind
+    mastery: 81.3
+  - map_id: haven
+    mastery: 72.9
+  - map_id: lotus
+    mastery: 91.6
+  - map_id: split
+    mastery: 84.4
+  salary: 6100
+  contract_weeks_left: 36
+  morale: 84.4
+  stamina: 88.6
+  form: 50.4
+  personality_tags:
+  - fan_favorite
+  - flashy
+  potential: 83.0
+- id: team_g2_esports_jawgemo
+  handle: jawgemo
+  real_name: Alexander Mor
+  region: americas
+  age: 24
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 80.1
+    aim_reactivity: 87.5
+    movement: 80.6
+    game_sense: 70.4
+    utility_usage: 68.4
+    positioning: 83.2
+    clutch_factor: 75.3
+    tilt_resistance: 73.7
+    composure: 71.3
+    comms_quality: 73.7
+  agent_pool:
+  - agent_id: raze
+    mastery: 97.6
+  - agent_id: phoenix
+    mastery: 84.2
+  - agent_id: jett
+    mastery: 80.1
+  map_pool:
+  - map_id: ascent
+    mastery: 97.5
+  - map_id: bind
+    mastery: 87.9
+  - map_id: haven
+    mastery: 95.3
+  - map_id: lotus
+    mastery: 89.7
+  - map_id: split
+    mastery: 87.5
+  salary: 6300
+  contract_weeks_left: 65
+  morale: 73.6
+  stamina: 82.6
+  form: 55.2
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 78.9
+- id: team_g2_esports_babybay
+  handle: BABYBAY
+  real_name: Andrej Francisty
+  region: americas
+  age: 29
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 86.1
+    aim_reactivity: 81.0
+    movement: 79.1
+    game_sense: 77.9
+    utility_usage: 74.8
+    positioning: 81.6
+    clutch_factor: 80.1
+    tilt_resistance: 79.5
+    composure: 77.0
+    comms_quality: 74.2
+  agent_pool:
+  - agent_id: chamber
+    mastery: 88.7
+  - agent_id: killjoy
+    mastery: 85.5
+  map_pool:
+  - map_id: ascent
+    mastery: 81.3
+  - map_id: bind
+    mastery: 95.7
+  - map_id: haven
+    mastery: 82.3
+  - map_id: lotus
+    mastery: 86.2
+  - map_id: split
+    mastery: 78.9
+  salary: 6100
+  contract_weeks_left: 60
+  morale: 80.8
+  stamina: 86.0
+  form: 45.6
+  personality_tags:
+  - analytical
+  - slow_starter
+  - veteran
+  potential: 79.4

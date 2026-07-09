@@ -1,0 +1,228 @@
+id: team_team_liquid
+name: Team Liquid
+tag: TL
+region: emea
+tier: 1
+captain_id: team_team_liquid_nats
+balance: 834000
+reputation: 89.0
+fan_count: 712890
+chemistry: 69.9
+players:
+- id: team_team_liquid_nats
+  handle: nAts
+  real_name: Ayaz Akhmetshin
+  region: emea
+  age: 24
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 65.7
+    aim_reactivity: 74.3
+    movement: 76.0
+    game_sense: 89.9
+    utility_usage: 89.5
+    positioning: 86.5
+    clutch_factor: 72.4
+    tilt_resistance: 70.2
+    composure: 84.0
+    comms_quality: 93.9
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 91.9
+  - agent_id: viper
+    mastery: 89.0
+  - agent_id: cypher
+    mastery: 81.2
+  map_pool:
+  - map_id: ascent
+    mastery: 82.5
+  - map_id: bind
+    mastery: 82.8
+  - map_id: haven
+    mastery: 85.4
+  - map_id: lotus
+    mastery: 85.0
+  - map_id: split
+    mastery: 91.7
+  salary: 6300
+  contract_weeks_left: 59
+  morale: 61.5
+  stamina: 97.0
+  form: 54.3
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 80.3
+- id: team_team_liquid_trexx
+  handle: trexx
+  real_name: Nikita Cherednichenko
+  region: emea
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 79.8
+    aim_reactivity: 80.6
+    movement: 82.6
+    game_sense: 56.8
+    utility_usage: 66.9
+    positioning: 71.6
+    clutch_factor: 66.7
+    tilt_resistance: 67.2
+    composure: 71.8
+    comms_quality: 75.2
+  agent_pool:
+  - agent_id: jett
+    mastery: 80.9
+  - agent_id: raze
+    mastery: 82.5
+  map_pool:
+  - map_id: ascent
+    mastery: 80.2
+  - map_id: bind
+    mastery: 90.2
+  - map_id: haven
+    mastery: 83.7
+  - map_id: lotus
+    mastery: 76.3
+  - map_id: split
+    mastery: 91.0
+  salary: 5500
+  contract_weeks_left: 79
+  morale: 83.1
+  stamina: 85.6
+  form: 52.7
+  personality_tags:
+  - team_player
+  potential: 81.4
+- id: team_team_liquid_kicks
+  handle: Kicks
+  real_name: Kimmie Laasner
+  region: emea
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 63.1
+    aim_reactivity: 68.4
+    movement: 70.1
+    game_sense: 75.5
+    utility_usage: 81.1
+    positioning: 74.7
+    clutch_factor: 69.5
+    tilt_resistance: 74.7
+    composure: 77.7
+    comms_quality: 75.1
+  agent_pool:
+  - agent_id: skye
+    mastery: 84.8
+  - agent_id: omen
+    mastery: 75.6
+  - agent_id: sova
+    mastery: 75.5
+  map_pool:
+  - map_id: ascent
+    mastery: 75.5
+  - map_id: bind
+    mastery: 87.8
+  - map_id: haven
+    mastery: 89.6
+  - map_id: lotus
+    mastery: 75.8
+  - map_id: split
+    mastery: 81.4
+  salary: 5500
+  contract_weeks_left: 79
+  morale: 69.2
+  stamina: 80.8
+  form: 50.5
+  personality_tags:
+  - flashy
+  - independent
+  potential: 83.2
+- id: team_team_liquid_purp0
+  handle: purp0
+  real_name: Semyon Borchev
+  region: emea
+  age: 19
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 69.6
+    aim_reactivity: 66.4
+    movement: 76.8
+    game_sense: 80.8
+    utility_usage: 81.7
+    positioning: 75.5
+    clutch_factor: 76.6
+    tilt_resistance: 73.7
+    composure: 76.9
+    comms_quality: 83.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 82.9
+  - agent_id: skye
+    mastery: 83.9
+  map_pool:
+  - map_id: ascent
+    mastery: 69.2
+  - map_id: bind
+    mastery: 75.7
+  - map_id: haven
+    mastery: 82.1
+  - map_id: lotus
+    mastery: 86.1
+  - map_id: split
+    mastery: 91.6
+  salary: 5700
+  contract_weeks_left: 48
+  morale: 61.9
+  stamina: 96.2
+  form: 46.0
+  personality_tags:
+  - hot_head
+  - streamer
+  potential: 95.6
+- id: team_team_liquid_kamo
+  handle: kamo
+  real_name: Kamil Frackowiak
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 80.3
+    aim_reactivity: 82.6
+    movement: 84.1
+    game_sense: 72.4
+    utility_usage: 59.1
+    positioning: 71.7
+    clutch_factor: 72.7
+    tilt_resistance: 67.0
+    composure: 69.2
+    comms_quality: 73.9
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 80.0
+  - agent_id: raze
+    mastery: 81.8
+  map_pool:
+  - map_id: ascent
+    mastery: 79.1
+  - map_id: bind
+    mastery: 86.3
+  - map_id: haven
+    mastery: 82.1
+  - map_id: lotus
+    mastery: 83.6
+  - map_id: split
+    mastery: 83.5
+  salary: 5700
+  contract_weeks_left: 60
+  morale: 60.2
+  stamina: 87.7
+  form: 47.3
+  personality_tags:
+  - independent
+  potential: 83.4

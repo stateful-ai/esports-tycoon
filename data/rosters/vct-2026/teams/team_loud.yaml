@@ -1,0 +1,228 @@
+id: team_loud
+name: LOUD
+tag: LOUD
+region: americas
+tier: 1
+captain_id: team_loud_erde
+balance: 804000
+reputation: 84.0
+fan_count: 635040
+chemistry: 71.0
+players:
+- id: team_loud_erde
+  handle: erde
+  real_name: Roberto Lobos
+  region: americas
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 74.9
+    aim_reactivity: 68.7
+    movement: 79.8
+    game_sense: 93.1
+    utility_usage: 82.5
+    positioning: 75.9
+    clutch_factor: 73.2
+    tilt_resistance: 77.6
+    composure: 89.4
+    comms_quality: 94.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 83.4
+  - agent_id: breach
+    mastery: 82.2
+  map_pool:
+  - map_id: ascent
+    mastery: 96.0
+  - map_id: bind
+    mastery: 85.7
+  - map_id: haven
+    mastery: 92.5
+  - map_id: lotus
+    mastery: 78.2
+  - map_id: split
+    mastery: 93.5
+  salary: 6400
+  contract_weeks_left: 55
+  morale: 82.8
+  stamina: 88.1
+  form: 56.6
+  personality_tags:
+  - clutch_gene
+  - flashy
+  potential: 84.3
+- id: team_loud_lukxo
+  handle: lukxo
+  real_name: Lucca Travaioli
+  region: americas
+  age: 20
+  role: controller
+  playstyle: anchor
+  attributes:
+    aim_precision: 77.2
+    aim_reactivity: 67.6
+    movement: 66.3
+    game_sense: 82.2
+    utility_usage: 81.3
+    positioning: 86.3
+    clutch_factor: 72.8
+    tilt_resistance: 83.6
+    composure: 83.9
+    comms_quality: 70.7
+  agent_pool:
+  - agent_id: viper
+    mastery: 92.3
+  - agent_id: chamber
+    mastery: 80.4
+  map_pool:
+  - map_id: ascent
+    mastery: 90.5
+  - map_id: bind
+    mastery: 88.3
+  - map_id: haven
+    mastery: 78.8
+  - map_id: lotus
+    mastery: 79.9
+  - map_id: split
+    mastery: 78.2
+  salary: 6000
+  contract_weeks_left: 56
+  morale: 60.6
+  stamina: 85.7
+  form: 49.9
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 84.9
+- id: team_loud_darker
+  handle: Darker
+  real_name: Sebastian Castro Cicuamia
+  region: americas
+  age: 21
+  role: flex
+  playstyle: anchor
+  attributes:
+    aim_precision: 71.1
+    aim_reactivity: 63.2
+    movement: 66.8
+    game_sense: 72.8
+    utility_usage: 73.0
+    positioning: 77.3
+    clutch_factor: 68.7
+    tilt_resistance: 75.6
+    composure: 75.7
+    comms_quality: 68.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 79.8
+  - agent_id: killjoy
+    mastery: 73.6
+  - agent_id: viper
+    mastery: 70.5
+  map_pool:
+  - map_id: ascent
+    mastery: 87.9
+  - map_id: bind
+    mastery: 76.9
+  - map_id: haven
+    mastery: 73.1
+  - map_id: lotus
+    mastery: 80.3
+  - map_id: split
+    mastery: 81.8
+  salary: 5300
+  contract_weeks_left: 48
+  morale: 84.3
+  stamina: 85.8
+  form: 54.1
+  personality_tags:
+  - fan_favorite
+  - perfectionist
+  potential: 74.5
+- id: team_loud_cauanzin
+  handle: cauanzin
+  real_name: Cauan Pereira
+  region: americas
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 69.5
+    aim_reactivity: 61.5
+    movement: 76.0
+    game_sense: 79.0
+    utility_usage: 79.1
+    positioning: 68.4
+    clutch_factor: 73.5
+    tilt_resistance: 69.0
+    composure: 77.5
+    comms_quality: 80.6
+  agent_pool:
+  - agent_id: sova
+    mastery: 84.1
+  - agent_id: skye
+    mastery: 73.1
+  map_pool:
+  - map_id: ascent
+    mastery: 83.0
+  - map_id: bind
+    mastery: 84.8
+  - map_id: haven
+    mastery: 72.2
+  - map_id: lotus
+    mastery: 81.5
+  - map_id: split
+    mastery: 73.8
+  salary: 5400
+  contract_weeks_left: 52
+  morale: 64.7
+  stamina: 99.8
+  form: 49.2
+  personality_tags:
+  - grinder
+  - perfectionist
+  potential: 82.9
+- id: team_loud_virtyy
+  handle: Virtyy
+  real_name: Leandro Moreno
+  region: americas
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 74.2
+    aim_reactivity: 76.4
+    movement: 71.6
+    game_sense: 61.1
+    utility_usage: 53.7
+    positioning: 61.0
+    clutch_factor: 58.4
+    tilt_resistance: 58.1
+    composure: 58.5
+    comms_quality: 59.7
+  agent_pool:
+  - agent_id: raze
+    mastery: 83.6
+  - agent_id: jett
+    mastery: 76.1
+  map_pool:
+  - map_id: ascent
+    mastery: 74.1
+  - map_id: bind
+    mastery: 73.2
+  - map_id: haven
+    mastery: 66.9
+  - map_id: lotus
+    mastery: 68.1
+  - map_id: split
+    mastery: 75.7
+  salary: 4500
+  contract_weeks_left: 67
+  morale: 80.5
+  stamina: 90.7
+  form: 52.9
+  personality_tags:
+  - grinder
+  - streamer
+  potential: 72.9

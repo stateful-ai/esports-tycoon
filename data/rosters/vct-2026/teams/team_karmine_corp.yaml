@@ -1,0 +1,227 @@
+id: team_karmine_corp
+name: Karmine Corp
+tag: KC
+region: emea
+tier: 1
+captain_id: team_karmine_corp_avez
+balance: 810000
+reputation: 85.0
+fan_count: 650250
+chemistry: 61.8
+players:
+- id: team_karmine_corp_avez
+  handle: Avez
+  real_name: Hazem Khaled
+  region: emea
+  age: 22
+  role: flex
+  playstyle: igl
+  attributes:
+    aim_precision: 59.5
+    aim_reactivity: 55.2
+    movement: 63.1
+    game_sense: 83.3
+    utility_usage: 74.1
+    positioning: 65.7
+    clutch_factor: 62.5
+    tilt_resistance: 69.2
+    composure: 72.6
+    comms_quality: 79.9
+  agent_pool:
+  - agent_id: sova
+    mastery: 74.9
+  - agent_id: omen
+    mastery: 76.2
+  - agent_id: phoenix
+    mastery: 68.3
+  map_pool:
+  - map_id: ascent
+    mastery: 72.5
+  - map_id: bind
+    mastery: 89.2
+  - map_id: haven
+    mastery: 79.8
+  - map_id: lotus
+    mastery: 67.7
+  - map_id: split
+    mastery: 76.4
+  salary: 4900
+  contract_weeks_left: 71
+  morale: 64.5
+  stamina: 81.5
+  form: 58.1
+  personality_tags:
+  - perfectionist
+  potential: 76.7
+- id: team_karmine_corp_dos9
+  handle: dos9
+  real_name: Dastan Zhumagali
+  region: emea
+  age: 22
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 69.4
+    aim_reactivity: 60.9
+    movement: 69.1
+    game_sense: 80.2
+    utility_usage: 86.5
+    positioning: 66.7
+    clutch_factor: 66.5
+    tilt_resistance: 76.6
+    composure: 82.3
+    comms_quality: 80.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 82.1
+  - agent_id: viper
+    mastery: 82.9
+  map_pool:
+  - map_id: ascent
+    mastery: 79.1
+  - map_id: bind
+    mastery: 79.4
+  - map_id: haven
+    mastery: 78.5
+  - map_id: lotus
+    mastery: 75.4
+  - map_id: split
+    mastery: 79.3
+  salary: 5700
+  contract_weeks_left: 57
+  morale: 80.1
+  stamina: 80.2
+  form: 49.5
+  personality_tags:
+  - hot_head
+  - streamer
+  potential: 76.4
+- id: team_karmine_corp_lewn
+  handle: LewN
+  real_name: Burak Alkan
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 83.5
+    aim_reactivity: 84.7
+    movement: 86.4
+    game_sense: 67.2
+    utility_usage: 61.3
+    positioning: 72.3
+    clutch_factor: 76.6
+    tilt_resistance: 70.8
+    composure: 77.5
+    comms_quality: 78.1
+  agent_pool:
+  - agent_id: jett
+    mastery: 82.8
+  - agent_id: raze
+    mastery: 80.4
+  map_pool:
+  - map_id: ascent
+    mastery: 80.4
+  - map_id: bind
+    mastery: 83.6
+  - map_id: haven
+    mastery: 73.4
+  - map_id: lotus
+    mastery: 69.9
+  - map_id: split
+    mastery: 75.3
+  salary: 5600
+  contract_weeks_left: 35
+  morale: 78.5
+  stamina: 85.5
+  form: 53.9
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 84.2
+- id: team_karmine_corp_suygetsu
+  handle: SUYGETSU
+  real_name: Dmitry Ilyushin
+  region: emea
+  age: 24
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 73.7
+    aim_reactivity: 64.2
+    movement: 70.7
+    game_sense: 72.3
+    utility_usage: 80.9
+    positioning: 84.2
+    clutch_factor: 74.6
+    tilt_resistance: 84.0
+    composure: 83.6
+    comms_quality: 73.7
+  agent_pool:
+  - agent_id: cypher
+    mastery: 85.0
+  - agent_id: killjoy
+    mastery: 74.7
+  map_pool:
+  - map_id: ascent
+    mastery: 71.5
+  - map_id: bind
+    mastery: 83.9
+  - map_id: haven
+    mastery: 94.8
+  - map_id: lotus
+    mastery: 81.0
+  - map_id: split
+    mastery: 82.6
+  salary: 5900
+  contract_weeks_left: 79
+  morale: 84.4
+  stamina: 95.4
+  form: 49.9
+  personality_tags:
+  - fan_favorite
+  - hot_head
+  potential: 76.2
+- id: team_karmine_corp_n4rrate
+  handle: N4RRATE
+  real_name: Marshall Massey
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 70.3
+    aim_reactivity: 70.7
+    movement: 76.3
+    game_sense: 82.2
+    utility_usage: 77.0
+    positioning: 77.1
+    clutch_factor: 74.3
+    tilt_resistance: 73.2
+    composure: 76.0
+    comms_quality: 78.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 93.2
+  - agent_id: skye
+    mastery: 77.8
+  map_pool:
+  - map_id: ascent
+    mastery: 79.9
+  - map_id: bind
+    mastery: 81.5
+  - map_id: haven
+    mastery: 79.0
+  - map_id: lotus
+    mastery: 83.1
+  - map_id: split
+    mastery: 77.6
+  salary: 5500
+  contract_weeks_left: 74
+  morale: 83.6
+  stamina: 86.1
+  form: 46.0
+  personality_tags:
+  - clutch_gene
+  - streamer
+  potential: 83.0

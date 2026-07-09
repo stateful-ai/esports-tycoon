@@ -1,0 +1,224 @@
+id: team_navi_junior
+name: NAVI Junior
+tag: NVJ
+region: emea
+tier: 2
+captain_id: team_navi_junior_javelin
+balance: 180000
+reputation: 40.0
+fan_count: 24000
+chemistry: 59.6
+players:
+- id: team_navi_junior_javelin
+  handle: Javelin
+  real_name: Vitalii Fedak
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 52.8
+    aim_reactivity: 44.4
+    movement: 53.5
+    game_sense: 71.9
+    utility_usage: 65.3
+    positioning: 60.1
+    clutch_factor: 53.6
+    tilt_resistance: 53.5
+    composure: 62.8
+    comms_quality: 71.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 75.4
+  - agent_id: skye
+    mastery: 63.6
+  map_pool:
+  - map_id: ascent
+    mastery: 60.8
+  - map_id: bind
+    mastery: 60.1
+  - map_id: haven
+    mastery: 54.7
+  - map_id: lotus
+    mastery: 76.6
+  - map_id: split
+    mastery: 66.1
+  salary: 3800
+  contract_weeks_left: 59
+  morale: 82.6
+  stamina: 90.9
+  form: 51.0
+  personality_tags:
+  - hot_head
+  - slow_starter
+  potential: 67.1
+- id: team_navi_junior_kolosha
+  handle: Kolosha
+  real_name: Herman Skrypka
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 74.2
+    aim_reactivity: 74.2
+    movement: 67.0
+    game_sense: 56.0
+    utility_usage: 56.1
+    positioning: 58.6
+    clutch_factor: 67.7
+    tilt_resistance: 60.5
+    composure: 64.9
+    comms_quality: 57.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 81.7
+  - agent_id: raze
+    mastery: 73.4
+  map_pool:
+  - map_id: ascent
+    mastery: 75.2
+  - map_id: bind
+    mastery: 79.2
+  - map_id: haven
+    mastery: 74.2
+  - map_id: lotus
+    mastery: 70.6
+  - map_id: split
+    mastery: 69.8
+  salary: 4400
+  contract_weeks_left: 42
+  morale: 70.7
+  stamina: 99.4
+  form: 47.3
+  personality_tags:
+  - slow_starter
+  potential: 74.3
+- id: team_navi_junior_avey
+  handle: avey
+  real_name: Nikita Ivanovs
+  region: emea
+  age: 20
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 45.4
+    aim_reactivity: 47.5
+    movement: 50.6
+    game_sense: 58.7
+    utility_usage: 71.0
+    positioning: 56.9
+    clutch_factor: 60.3
+    tilt_resistance: 54.3
+    composure: 57.1
+    comms_quality: 65.5
+  agent_pool:
+  - agent_id: omen
+    mastery: 72.9
+  - agent_id: viper
+    mastery: 64.9
+  map_pool:
+  - map_id: ascent
+    mastery: 58.3
+  - map_id: bind
+    mastery: 57.6
+  - map_id: haven
+    mastery: 68.8
+  - map_id: lotus
+    mastery: 59.7
+  - map_id: split
+    mastery: 58.3
+  salary: 3700
+  contract_weeks_left: 61
+  morale: 66.4
+  stamina: 87.1
+  form: 55.3
+  personality_tags:
+  - perfectionist
+  - streamer
+  potential: 61.3
+- id: team_navi_junior_darxcioo
+  handle: Darxcioo
+  real_name: Waniss Mehl
+  region: emea
+  age: 19
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 47.8
+    aim_reactivity: 50.2
+    movement: 53.2
+    game_sense: 56.9
+    utility_usage: 63.7
+    positioning: 52.2
+    clutch_factor: 49.8
+    tilt_resistance: 49.9
+    composure: 61.1
+    comms_quality: 65.5
+  agent_pool:
+  - agent_id: skye
+    mastery: 70.7
+  - agent_id: breach
+    mastery: 64.2
+  map_pool:
+  - map_id: ascent
+    mastery: 65.9
+  - map_id: bind
+    mastery: 66.8
+  - map_id: haven
+    mastery: 64.7
+  - map_id: lotus
+    mastery: 72.7
+  - map_id: split
+    mastery: 65.0
+  salary: 3500
+  contract_weeks_left: 41
+  morale: 65.0
+  stamina: 83.3
+  form: 49.9
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 66.4
+- id: team_navi_junior_sizo
+  handle: sizo
+  real_name: Wiktor Bujak
+  region: emea
+  age: 19
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 52.6
+    aim_reactivity: 54.9
+    movement: 50.9
+    game_sense: 56.6
+    utility_usage: 59.8
+    positioning: 67.0
+    clutch_factor: 55.9
+    tilt_resistance: 58.7
+    composure: 57.7
+    comms_quality: 51.4
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 71.7
+  - agent_id: cypher
+    mastery: 61.9
+  map_pool:
+  - map_id: ascent
+    mastery: 55.7
+  - map_id: bind
+    mastery: 64.8
+  - map_id: haven
+    mastery: 68.0
+  - map_id: lotus
+    mastery: 65.7
+  - map_id: split
+    mastery: 62.9
+  salary: 3700
+  contract_weeks_left: 62
+  morale: 75.1
+  stamina: 85.2
+  form: 58.5
+  personality_tags:
+  - team_player
+  potential: 68.8
