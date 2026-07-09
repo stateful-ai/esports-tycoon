@@ -35,6 +35,7 @@ from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.schemas import Event, Player, Team
+from esports_sim.sim import constants as C
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_PATH = Path("saves") / "campaign.json"  # same file the CLI uses
@@ -791,12 +792,64 @@ def talk_resolve(body: TalkBody) -> dict:
         return {"ok": True, "message": msg, "effects": effects}
 
 
+# Each attribute-fit dial maps to the same roster attributes the match
+# engine's _execution_mod reads, so the "roster fit" the UI shows is exactly
+# what will move duels off-neutral. eco_greed is deliberately absent: it is a
+# pure economy lever with no roster-attribute fit.
+_DIAL_FIT_ATTRS: dict[str, tuple[str, ...]] = {
+    "aggression": ("aim_reactivity", "aim_precision"),
+    "pace": ("aim_reactivity", "movement"),
+    "util_discipline": ("game_sense", "utility_usage"),
+    "map_control": ("game_sense", "comms_quality"),
+}
+# The high side of these two dials is the coordination-heavy read, so the
+# engine gates it on team chemistry (see _execution_mod).
+_DIAL_CHEM_GATED = {"map_control", "util_discipline"}
+
+
+def _tactics_fit(gs: GameState, team: Team) -> dict:
+    """Per-dial roster-fit data for the tactics screen. Grounded in the same
+    attributes/baselines the match engine uses so the UI's "how it impacts the
+    players" readout matches what actually happens off-neutral."""
+    roster = [gs.players[pid] for pid in team.player_ids if pid in gs.players]
+    reg = S.gd.attributes.definitions
+    dials = []
+    for key, attr_ids in _DIAL_FIT_ATTRS.items():
+        names = [reg[a].display_name if a in reg else a for a in attr_ids]
+        scored = []
+        for p in roster:
+            score = sum(p.attr(a) for a in attr_ids) / len(attr_ids)
+            scored.append(
+                {"handle": p.handle, "playstyle": str(p.playstyle), "score": round(score)}
+            )
+        scored.sort(key=lambda s: -s["score"])
+        fit = sum(s["score"] for s in scored) / len(scored) if scored else 50.0
+        dials.append(
+            {
+                "key": key,
+                "attrs": names,
+                "fit": round(fit, 1),
+                "chem_gated": key in _DIAL_CHEM_GATED,
+                "players": scored,
+            }
+        )
+    return {
+        "chemistry": round(team.chemistry, 1),
+        "fit_baseline": C.EXEC_FIT_BASELINE,
+        "fit_div": C.EXEC_FIT_DIV,
+        "chem_baseline": C.EXEC_CHEM_BASELINE,
+        "chem_div": C.EXEC_CHEM_DIV,
+        "mod_cap": C.EXEC_MOD_CAP,
+        "dials": dials,
+    }
+
+
 @app.get("/api/tactics")
 def tactics_view() -> dict:
     with S.lock:
         gs = S.require_gs()
-        tac = gs.teams[gs.user_team_id].tactics
-        return {"tactics": tac.model_dump()}
+        team = gs.teams[gs.user_team_id]
+        return {"tactics": team.tactics.model_dump(), "fit": _tactics_fit(gs, team)}
 
 
 class TacticsBody(BaseModel):

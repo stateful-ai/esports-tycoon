@@ -707,57 +707,223 @@ function attrDetail(p) {
     </div></div>`;
 }
 
+// Each dial is bipolar: pushing off the neutral centre (50) leans the team
+// toward one pole. `styles` names the playstyles that thrive at that pole —
+// grounded in the match engine (entries/awpers swing on high aggression, a
+// lurker peels out on high map control, supports hold util for retakes). The
+// attribute dials also carry a `fit` from the server: how well the roster's
+// relevant attributes suit an extreme identity there. eco_greed is a pure
+// economy lever (`econ`) with no roster fit.
 const TACTIC_DIALS = [
-  ["aggression", "Aggression", "passive angles + safe spacing ↔ swing & refrag hard"],
-  ["pace", "Pace", "slow defaults, pull off bad hits ↔ fast executes, ram it through"],
-  ["util_discipline", "Utility discipline", "dump on the hit ↔ hold for retakes & swings"],
-  ["eco_greed", "Eco greed", "save on broke rounds ↔ force-buy often"],
-  ["map_control", "Map control", "stack & hit as five ↔ spread wide, lurk for picks"],
+  { key: "aggression", label: "Aggression",
+    low:  { name: "Hold & anchor", note: "safe spacing, patient angles", styles: ["anchor", "sentinel"] },
+    high: { name: "Swing & refrag", note: "peek hard, trade every duel", styles: ["entry", "awper"] } },
+  { key: "pace", label: "Pace",
+    low:  { name: "Slow default", note: "read it out, pull off bad hits", styles: ["igl", "lurker"] },
+    high: { name: "Fast execute", note: "early timings, ram the site", styles: ["entry"] } },
+  { key: "util_discipline", label: "Utility discipline",
+    low:  { name: "Dump on the hit", note: "spend util entering", styles: ["entry"] },
+    high: { name: "Hold for retakes", note: "bank util to swing & retake", styles: ["support", "sentinel"] } },
+  { key: "eco_greed", label: "Eco greed", econ: true,
+    low:  { name: "Disciplined save", note: "bank credits when broke", styles: [] },
+    high: { name: "Force-buy often", note: "gamble on half-buys", styles: [] } },
+  { key: "map_control", label: "Map control",
+    low:  { name: "Stack & hit five", note: "simple, cohesion-light", styles: ["entry"] },
+    high: { name: "Spread & lurk", note: "flank presence, pick timings", styles: ["lurker", "sentinel"] } },
 ];
+
+const SITE_FOCUS = [
+  ["balanced", "Balanced", "read both sites"],
+  ["a", "A site", "commit A"],
+  ["b", "B site", "commit B"],
+  ["c", "C site", "commit C"],
+];
+
+// Mirror of the engine's per-dial execution term (sim/engine.py _execution_mod)
+// so the "duel edge" the UI previews is exactly what the match will apply.
+function dialImpact(dial, value, fit, chem, f) {
+  if (!fit) return 0;
+  const dev = Math.abs(value - 50) / 50;
+  let impact = (dev * (fit.fit - f.fit_baseline)) / f.fit_div;
+  if (fit.chem_gated) {
+    impact += (Math.max(0, value - 50) / 50) * (chem - f.chem_baseline) / f.chem_div;
+  }
+  return impact;
+}
+
+function poleChips(fit, styles) {
+  // Roster members whose playstyle suits this pole, tagged with their score.
+  const set = new Set(styles);
+  const hits = (fit?.players ?? []).filter((p) => set.has(p.playstyle));
+  if (!hits.length) return "";
+  return hits
+    .map((p) => `<span class="tac-who" title="${p.playstyle} · ${p.score}">${p.handle}</span>`)
+    .join("");
+}
 
 async function tactics(v) {
   const data = await api("/api/tactics");
   const tac = data.tactics;
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Coaching strategy</h2>
-    <p class="muted">The identity your team plays with. 50 is neutral on
-    every dial; the effects run through the match engine itself.</p>`;
+  const f = data.fit;
+  const chem = f.chemistry;
+  const fitBy = Object.fromEntries(f.dials.map((d) => [d.key, d]));
+  const values = {}; // live working copy; only changed keys get POSTed
+  for (const d of TACTIC_DIALS) values[d.key] = tac[d.key];
+  let siteVal = tac.site_focus;
   const pending = {};
-  for (const [key, label, hint] of TACTIC_DIALS) {
-    const row = el("div", "row", `
-      <span style="min-width:190px"><b>${label}</b><br><span class="muted">${hint}</span></span>`);
-    const slider = el("input");
-    slider.type = "range"; slider.min = 0; slider.max = 100;
-    slider.value = tac[key];
-    slider.style.flex = "1";
-    const val = el("span", "mono", String(Math.round(tac[key])));
-    val.style.minWidth = "34px";
-    slider.oninput = () => { val.textContent = slider.value; pending[key] = parseFloat(slider.value); };
-    row.appendChild(slider);
-    row.appendChild(val);
-    card.appendChild(row);
-  }
-  const siteRow = el("div", "row", `<span style="min-width:190px"><b>Site focus</b><br>
-    <span class="muted">bias the attack toward one site</span></span>`);
-  const sel = el("select");
-  for (const o of ["balanced", "a", "b", "c"]) {
-    const opt = el("option", "", o === "balanced" ? "balanced" : o.toUpperCase());
-    opt.value = o;
-    if (o === tac.site_focus) opt.selected = true;
-    sel.appendChild(opt);
-  }
-  sel.onchange = () => { pending.site_focus = sel.value; };
-  siteRow.appendChild(sel);
-  card.appendChild(siteRow);
 
+  const card = el("div", "card", `<h2>Coaching strategy</h2>`);
+  const intro = el("p", "muted",
+    `The identity your squad plays with. Every dial sits neutral at <b>50</b> —
+     push it off centre and the match engine rewards a roster built for that
+     style and punishes one that isn't. Team chemistry is <b class="mono">${Math.round(chem)}</b>.`);
+  card.appendChild(intro);
+
+  // Live "execution edge" summary — the clamped sum of every dial's duel term.
+  const edge = el("div", "tac-edge");
+  card.appendChild(edge);
+
+  const dialsWrap = el("div", "tac-dials");
+  const refreshEdge = () => {
+    let total = 0;
+    for (const d of TACTIC_DIALS) total += dialImpact(d, values[d.key], fitBy[d.key], chem, f);
+    total = Math.max(-f.mod_cap, Math.min(f.mod_cap, total));
+    const tone = Math.abs(total) < 0.2 ? "" : total > 0 ? "good" : "bad";
+    const sign = total > 0 ? "+" : "";
+    edge.className = `tac-edge ${tone}`;
+    edge.innerHTML = `<span class="tac-edge-lab">Execution edge</span>
+      <span class="tac-edge-val">${sign}${total.toFixed(1)}</span>
+      <span class="tac-edge-sub">duel points from how your roster fits this system
+      (neutral = 0, capped ±${f.mod_cap})</span>`;
+  };
+
+  for (const d of TACTIC_DIALS) {
+    const fit = fitBy[d.key];
+    const block = el("div", "tac-dial");
+
+    const head = el("div", "tac-head", `<span class="tac-name">${d.label}</span>`);
+    const desc = el("span", "tac-desc");
+    const valBadge = el("span", "tac-val mono");
+    head.appendChild(desc);
+    head.appendChild(valBadge);
+    block.appendChild(head);
+
+    // Bipolar poles + slider with a neutral centre notch.
+    const poles = el("div", "tac-poles");
+    const lo = el("div", "tac-pole lo", `
+      <span class="tac-pole-name">${d.low.name}</span>
+      <span class="tac-pole-note">${d.low.note}</span>`);
+    const hi = el("div", "tac-pole hi", `
+      <span class="tac-pole-name">${d.high.name}</span>
+      <span class="tac-pole-note">${d.high.note}</span>`);
+    poles.appendChild(lo);
+    poles.appendChild(hi);
+    block.appendChild(poles);
+
+    const track = el("div", "tac-track");
+    const slider = el("input");
+    slider.type = "range"; slider.min = 0; slider.max = 100; slider.step = 1;
+    slider.value = values[d.key];
+    track.appendChild(el("span", "tac-notch"));
+    track.appendChild(slider);
+    block.appendChild(track);
+
+    // Fit line: which players suit each pole + a live per-dial duel term.
+    const foot = el("div", "tac-foot");
+    if (d.econ) {
+      foot.innerHTML = `<span class="tac-fit-lab">Economy call — no duel effect, but a
+        greedy force can snowball or bankrupt you.</span>`;
+    } else if (fit) {
+      const loWho = poleChips(fit, d.low.styles);
+      const hiWho = poleChips(fit, d.high.styles);
+      foot.innerHTML = `
+        <div class="tac-fit">
+          <span class="tac-fit-lab">Roster fit
+            <span class="muted">(${fit.attrs.join(" · ")})</span></span>
+          ${bar(fit.fit)}
+          <span class="mono tac-fit-num">${Math.round(fit.fit)}</span>
+        </div>
+        <div class="tac-who-row">
+          <span class="tac-who-side lo">${loWho || '<span class="muted">—</span>'}</span>
+          <span class="tac-impact"></span>
+          <span class="tac-who-side hi">${hiWho || '<span class="muted">—</span>'}</span>
+        </div>
+        ${fit.chem_gated
+          ? `<span class="tac-chem">↑ side is coordination-heavy — leans on team chemistry (${Math.round(chem)})</span>`
+          : ""}`;
+    }
+    block.appendChild(foot);
+    const impactEl = foot.querySelector(".tac-impact");
+
+    const paint = () => {
+      const val = values[d.key];
+      valBadge.textContent = Math.round(val);
+      // Descriptor tracks the neutral band [45,55] the engine treats as a no-op.
+      let label = "Neutral", side = "mid";
+      if (val < 45) { label = d.low.name; side = "lo"; }
+      else if (val > 55) { label = d.high.name; side = "hi"; }
+      desc.textContent = label;
+      desc.className = `tac-desc ${side}`;
+      lo.classList.toggle("on", side === "lo");
+      hi.classList.toggle("on", side === "hi");
+      if (impactEl && fit) {
+        const imp = dialImpact(d, val, fit, chem, f);
+        const tone = Math.abs(imp) < 0.05 ? "" : imp > 0 ? "good" : "bad";
+        impactEl.className = `tac-impact ${tone}`;
+        impactEl.textContent = Math.abs(imp) < 0.05
+          ? "neutral" : `${imp > 0 ? "+" : ""}${imp.toFixed(1)} duel`;
+      }
+    };
+    slider.oninput = () => {
+      values[d.key] = parseFloat(slider.value);
+      pending[d.key] = values[d.key];
+      paint();
+      refreshEdge();
+    };
+    paint();
+    dialsWrap.appendChild(block);
+  }
+  refreshEdge();
+  card.appendChild(dialsWrap);
+
+  // Site focus as a segmented control — cohesive with the dial blocks.
+  const siteBlock = el("div", "tac-dial");
+  siteBlock.appendChild(el("div", "tac-head",
+    `<span class="tac-name">Site focus</span>
+     <span class="tac-desc mid">${SITE_FOCUS.find((s) => s[0] === siteVal)[1]}</span>`));
+  const seg = el("div", "tac-seg");
+  const segDesc = siteBlock.querySelector(".tac-desc");
+  for (const [val, label, note] of SITE_FOCUS) {
+    const b = el("button", "tac-seg-btn", label);
+    b.title = note;
+    if (val === siteVal) b.classList.add("on");
+    b.onclick = () => {
+      siteVal = val;
+      pending.site_focus = val;
+      seg.querySelectorAll(".tac-seg-btn").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+      segDesc.textContent = label;
+    };
+    seg.appendChild(b);
+  }
+  siteBlock.appendChild(seg);
+  siteBlock.appendChild(el("p", "muted tac-site-note",
+    "Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels."));
+  dialsWrap.appendChild(siteBlock);
+
+  // Save bar.
+  const barRow = el("div", "tac-savebar");
   const save = el("button", "btn btn-primary", "Set strategy");
   save.onclick = async () => {
+    if (!Object.keys(pending).length) { toast("no changes"); return; }
     const r = await api("/api/actions/tactics", pending);
     toast(r.message);
+    for (const k of Object.keys(pending)) delete pending[k];
   };
-  card.appendChild(save);
-  card.appendChild(el("p", "muted",
-    "Scout a rival to at least 50% to read their coaching identity on their roster page."));
+  barRow.appendChild(save);
+  barRow.appendChild(el("span", "muted",
+    "Scout a rival to 50%+ to read their coaching identity on their roster page."));
+  card.appendChild(barRow);
   v.appendChild(card);
 }
 
