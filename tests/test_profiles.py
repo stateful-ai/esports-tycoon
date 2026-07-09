@@ -13,7 +13,11 @@ from __future__ import annotations
 import json
 
 import pytest
-from fastapi import HTTPException
+
+# The web layer is an optional extra; without it these contract tests skip
+# rather than break collection (CI installs ".[dev,web]" so they DO run there).
+fastapi = pytest.importorskip("fastapi")
+HTTPException = fastapi.HTTPException
 
 import esports_sim.web.server as server_mod
 from esports_sim.manager import advance_week, new_campaign
