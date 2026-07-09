@@ -6,14 +6,15 @@ regions:
   # -- Spawns. Attacker spawn is the wide top band — it feeds five doors
   # (A Main, Mid, B Main, Diamond, C Main), so its floor runs door to
   # door. Defender spawn reaches Tree on the west and Tunnel on the east.
-  attacker_spawn: { x: 14.0, y: 0.0, w: 72.0, h: 16.0 }
+  attacker_spawn: { x: 14.0, y: 0.0, w: 68.0, h: 16.0 }
   defender_spawn: { x: 21.5, y: 76.0, w: 50.0, h: 16.5 }
 
   # -- A site -----------------------------------------------------------
-  # A Main runs from the spawn seam all the way down into the site.
-  a_main: { x: 8.0, y: 15.5, w: 10.0, h: 32.5 }
-  a_link: { x: 20.0, y: 31.0, w: 14.0, h: 14.0 }
-  a_site: { x: 8.0, y: 44.0, w: 20.0, h: 20.0 }
+  # A Main is the wide west lane-and-lobby — spawn seam straight down
+  # into the raised site mouth (kept wide so the A stage fits the band).
+  a_main: { x: 8.0, y: 15.5, w: 16.0, h: 32.5 }
+  a_link: { x: 20.0, y: 31.0, w: 14.0, h: 17.0 }
+  a_site: { x: 8.0, y: 40.0, w: 20.0, h: 24.0 }
   a_tree: { x: 8.0, y: 62.0, w: 14.0, h: 14.0 }
   a_dock: { x: 16.0, y: 63.5, w: 14.0, h: 17.5 }
 
@@ -43,7 +44,7 @@ corridors:
   # A Main doors off the far-west end of the spawn band — the portal walk
   # is already the dogleg, so no extra waypoints are needed here.
   - between: [attacker_spawn, c_main]
-    via: [[85.0, 12.0]]
+    via: [[80.0, 12.5]]
   # Mid Center weaves down the strip off the spawn seam — the jogs keep
   # the mid connection from collapsing to the straight-line minimum.
   - between: [attacker_spawn, mid_center]
