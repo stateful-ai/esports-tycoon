@@ -38,15 +38,26 @@ async function boot() {
   if (lob.in_game) {
     App.mp = { code: lob.code, team_id: lob.team_id, mode: lob.mode };
     $("#newgame").classList.add("hidden");
+    $("#worlds-btn").classList.remove("hidden");
     refresh();
     // Prime the Inbox tab badge on load (inbox.js is loaded after us, but this
     // runs post-await so its globals are defined; guard keeps boot resilient).
     if (typeof refreshInboxBadge === "function") refreshInboxBadge();
     return;
   }
+  $("#worlds-btn").classList.add("hidden");
   setupLobby(lob);
   $("#newgame").classList.remove("hidden");
 }
+
+// Topbar "Worlds": detach from the current world (it stays saved and listed
+// under "Your worlds") and drop back to the lobby to resume/create/join.
+$("#worlds-btn").onclick = async () => {
+  const code = App.mp && App.mp.code ? ` (${App.mp.code})` : "";
+  if (!confirm(`Back to the lobby? This world${code} stays saved — resume it anytime from "Your worlds".`)) return;
+  await api("/api/leave", {});
+  location.reload();
+};
 
 /* -- lobby: new (solo/shared) or join -------------------------------------- */
 
@@ -86,6 +97,25 @@ function setupLobby(lob) {
   const create = $("#lobby-create");
   const join = $("#lobby-join");
   const packs = lob.packs || [];
+  // Worlds this browser can jump straight back into (incl. solo saves).
+  const worlds = lob.worlds || [];
+  const resume = $("#lobby-resume");
+  if (worlds.length) {
+    resume.classList.remove("hidden");
+    const list = $("#resume-list");
+    list.innerHTML = "";
+    for (const w of worlds) {
+      const b = el(
+        "button",
+        "btn",
+        `<b>${w.team_name}</b> <span class="pill">${w.code} · ${w.mode}</span>`
+      );
+      b.onclick = () => resumeGame(w.code);
+      list.appendChild(b);
+    }
+  } else {
+    resume.classList.add("hidden");
+  }
   // null = generated fictional world; otherwise a roster-pack id.
   let world = null;
   let shared_ = false;
@@ -157,6 +187,7 @@ async function createGame(teamId, shared, pack = null) {
   const r = await api("/api/new", { team_id: teamId, seed, shared, pack });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
   await refresh();
   if (shared) {
     toast(`Shared game created — code ${r.code}. Share it so others can join.`);
@@ -167,8 +198,18 @@ async function joinGame(code, teamId) {
   const r = await api("/api/join", { code, team_id: teamId });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
   await refresh();
   toast(`Joined game ${r.code}.`);
+}
+
+async function resumeGame(code) {
+  const r = await api("/api/resume", { code });
+  App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
+  $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
+  await refresh();
+  toast(`Resumed world ${r.code}.`);
 }
 
 async function refresh() {
@@ -191,7 +232,7 @@ function updateMpChip(mp) {
     return;
   }
   chip.classList.remove("hidden");
-  chip.textContent = `⛨ ${mp.code} · ${mp.ready.length}/${mp.humans.length} ready`;
+  chip.textContent = `CODE ${mp.code} ⧉ · ${mp.ready.length}/${mp.humans.length} ready`;
   chip.onclick = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(mp.code);
     toast(`Join code ${mp.code} copied.`);
