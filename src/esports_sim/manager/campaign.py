@@ -260,6 +260,9 @@ def advance_week(
     report.user_income += sponsors.weekly_tick(gs, user_won)
     sponsors.maybe_offer(gs, week_rng)
 
+    # 3c. Solvency: after the full weekly ledger, debt has consequences.
+    economy.check_solvency(gs)
+
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
     market.ai_transfer_window(gs, gd, week_rng)

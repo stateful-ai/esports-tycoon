@@ -109,7 +109,12 @@ SLOT_CONFIG: dict[str, dict] = {
         "money_mult": 0.5,
         "weeks": (12, 22),
         "unlock": 2,
-        "objectives": [("make_playoffs", 25, 45), ("win_split", 40, 70)],
+        # Apparel brands love a homegrown story — pay to field youth.
+        "objectives": [
+            ("make_playoffs", 25, 45),
+            ("win_split", 40, 70),
+            ("field_youth", 20, 40),
+        ],
     },
 }
 
@@ -119,6 +124,7 @@ OBJECTIVE_LABELS = {
     "make_masters": "qualify for Masters",
     "win_champions": "win CHAMPIONS",
     "beat_top4": "beat a world top-4 team (per win)",
+    "field_youth": "field an under-21 talent",
 }
 
 
@@ -388,6 +394,12 @@ def _eval_objective(gs: GameState, obj: SponsorObjective, brand: str) -> int:
         )
         if cf is not None:
             met = cf.winner_id == uid
+    elif obj.kind == "field_youth":
+        # An identity objective, not a standings one: resolve the moment a
+        # sub-21 talent is on the active roster. A veteran roster simply
+        # leaves it pending — squad-building is rewarded, never punished.
+        if any(p.age <= 21 for p in gs.roster(uid)):
+            met = True
     if met is None:
         return 0
 

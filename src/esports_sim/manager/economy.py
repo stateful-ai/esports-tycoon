@@ -116,21 +116,17 @@ def facility_weekly_upkeep(facilities: dict[str, int]) -> int:
 
 def facility_training_mult(gs: GameState) -> float:
     """Training growth multiplier from the training_center facility: 1.0
-    bare, +6%/level, up to 1.18 at level 3.
-
-    NOT YET CONSUMED anywhere — campaign.py computes training growth via
-    `staff.coach_multiplier(gs)` and does not multiply by this. See the
-    report for the exact one-line hookup."""
+    bare, +6%/level, up to 1.18 at level 3. Consumed in campaign.py's
+    weekly training step (multiplied onto the user org's growth alongside
+    the coach multiplier)."""
     return 1.0 + 0.06 * gs.facilities.get("training_center", 0)
 
 
 def facility_scout_mult(gs: GameState) -> float:
     """Scouting speed multiplier from the analytics_suite facility: 1.0
-    bare, +8%/level, up to 1.24 at level 3.
-
-    NOT YET CONSUMED anywhere — campaign.py computes scouting gain via
-    `staff.scout_multiplier(gs)` and does not multiply by this. See the
-    report for the exact one-line hookup."""
+    bare, +8%/level, up to 1.24 at level 3. Consumed in campaign.py's
+    weekly scouting step (multiplied onto the scout-progress gain alongside
+    the analyst multiplier)."""
     return 1.0 + 0.08 * gs.facilities.get("analytics_suite", 0)
 
 
@@ -230,6 +226,62 @@ def cash_projection(gs: GameState, staff_cost: int = 0, weeks: int = 8) -> list[
         balance += net
         rows.append({"week": gs.week + w, "net": net, "balance": balance})
     return rows
+
+
+# ---------------------------------------------------------------------------
+# Solvency: running an org into the red now has teeth
+
+# Debt below this floor triggers the board's patience running out (a hard,
+# escalating consequence rather than an unbounded slow bleed).
+INSOLVENCY_FLOOR = -250_000
+# Per-week penalties while in the red, scaled by how deep the debt is.
+_DEBT_REP_PER = 1.0 / 200_000.0  # reputation lost per credit of debt/week
+_DEBT_REP_CAP = 2.5
+_DEBT_MORALE_PER = 1.0 / 120_000.0  # morale lost per player per credit/week
+_DEBT_MORALE_CAP = 3.5
+
+
+def check_solvency(gs: GameState) -> None:
+    """Debt bites. Every org running a negative balance takes an escalating
+    weekly reputation + squad-morale hit (a struggling org can't pay bonuses
+    and the locker room feels it); the user also gets a board warning, and a
+    harsher one once debt crosses INSOLVENCY_FLOOR. Deterministic and
+    manager-only — the match engine never runs the campaign, so this never
+    touches the golden/balance gates."""
+    for tid in sorted(gs.teams):
+        team = gs.teams[tid]
+        if team.balance >= 0:
+            continue
+        debt = -team.balance
+        rep_hit = min(_DEBT_REP_CAP, debt * _DEBT_REP_PER)
+        morale_hit = min(_DEBT_MORALE_CAP, debt * _DEBT_MORALE_PER)
+        team.reputation = round(max(0.0, team.reputation - rep_hit), 1)
+        for p in gs.roster(tid):
+            p.morale = round(max(0.0, p.morale - morale_hit), 1)
+        if tid != gs.user_team_id:
+            continue
+        if team.balance <= INSOLVENCY_FLOOR:
+            gs.push_news(
+                f"BOARD WARNING: {team.name} are {debt:,} cr in the red — "
+                f"the board demand the books are balanced immediately."
+            )
+        else:
+            gs.push_news(
+                f"Finances: {team.name} are running a {debt:,} cr deficit."
+            )
+
+
+def weeks_until_insolvent(gs: GameState, staff_cost: int = 0) -> int | None:
+    """Run-rate weeks until the user org's balance would cross the
+    insolvency floor at the current flat net (None if the net is
+    non-negative — the org isn't heading for trouble). Display helper for
+    the finances tab; never mutates state."""
+    net = weekly_breakdown(gs, staff_cost)["net"]
+    if net >= 0:
+        return None
+    bal = gs.teams[gs.user_team_id].balance
+    runway = bal - INSOLVENCY_FLOOR  # cushion above the floor
+    return max(0, int(runway // -net))
 
 
 # ---------------------------------------------------------------------------

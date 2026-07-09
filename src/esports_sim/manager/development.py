@@ -105,10 +105,18 @@ def scout_report(gs, p: Player, progress: float) -> dict:
     is a stable per-player offset (scouts have priors, not dice), and the
     band tightens as progress rises."""
     ca, pa = overall(p), potential_of(p)
-    width_ca = 22.0 * (1.0 - progress) + 4.0
+    # A better analyst doesn't just read faster (progress) — they read more
+    # ACCURATELY: an elite analyst shrinks the residual floor width and the
+    # fixed per-player bias, so their bands hug the truth tighter at the same
+    # progress. With no analyst the multiplier is 1.0 and this is exactly the
+    # pre-existing report, so default scouting is unchanged.
+    from esports_sim.manager import staff
+
+    sm = staff.scout_multiplier(gs)  # 1.0 (none) .. ~1.9 (elite)
+    width_ca = 22.0 * (1.0 - progress) + 4.0 / sm
     width_pa = width_ca + 8.0
     # Stable offset in [-0.35, +0.35] of width — truth is always in-band.
-    off = ((_h(gs.seed, p.id, "scoutoff") % 1000) / 1000.0 - 0.5) * 0.7
+    off = ((_h(gs.seed, p.id, "scoutoff") % 1000) / 1000.0 - 0.5) * (0.7 / sm)
     ca_lo = max(1.0, ca + off * width_ca - width_ca / 2.0)
     pa_lo = max(ca_lo, pa + off * width_pa - width_pa / 2.0)
     known_n = int(round(progress * len(p.personality_tags) + 1e-9))
