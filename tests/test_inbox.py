@@ -10,8 +10,14 @@ import json
 
 import pytest
 
-from esports_sim.manager import advance_week, inbox, new_campaign
-from esports_sim.manager.state import GameState, InboxItem
+from esports_sim.manager import advance_week, inbox, market, new_campaign, sponsors
+from esports_sim.manager.state import (
+    GameState,
+    InboxItem,
+    SponsorOffer,
+    SponsorPackage,
+    TransferOffer,
+)
 from esports_sim.registry import GameData
 
 # Enough ticks to cover a regular season, both internationals, and the
@@ -140,10 +146,19 @@ def test_sorted_items_newest_first(campaign: GameState, game_data: GameData) -> 
 def test_wire_shape_is_frozen(campaign: GameState, game_data: GameData) -> None:
     _advance(campaign, game_data, 3)
     assert campaign.inbox
+    base = {"id", "season", "week", "category", "title", "body", "unread", "tab"}
     for it in campaign.inbox:
-        assert set(inbox.to_api(it)) == {
-            "id", "season", "week", "category", "title", "body", "unread", "tab",
-        }
+        # Without gs: always the frozen 8-field shape (backward compatible).
+        assert set(inbox.to_api(it)) == base
+        # With gs: base plus an OPTIONAL "actions" list, only on live offers.
+        api = inbox.to_api(it, campaign)
+        assert base <= set(api) <= base | {"actions"}
+        if "actions" in api:
+            assert it.category in ("transfer", "sponsor")
+            for a in api["actions"]:
+                assert set(a) == {"id", "label", "endpoint", "payload"}
+                assert a["id"] in ("accept", "decline")
+                assert isinstance(a["payload"], dict)
 
 
 # ---------------------------------------------------------------------------
@@ -205,3 +220,141 @@ def test_read_marking(campaign: GameState, game_data: GameData) -> None:
     assert inbox.mark_all_read(campaign) == 0
     assert inbox.unread_count(campaign) == 0
     assert all(not it.unread for it in campaign.inbox)
+
+
+# ---------------------------------------------------------------------------
+# (e) Accept/Decline actions on transfer + sponsor offer items. Actions are
+#     derived live from GameState (reconstructing the item's id from each live
+#     offer) and point ONLY at the app's existing mutation endpoints.
+
+
+def _a_rival(gs: GameState) -> str:
+    return next(tid for tid in sorted(gs.teams) if tid != gs.user_team_id)
+
+
+def _inject_transfer(gs: GameState) -> tuple[str, str, "InboxItem"]:
+    """Put one live bid for a user player on the table and return the real
+    inbox item the generator emits for it."""
+    uid = gs.user_team_id
+    pid = gs.teams[uid].player_ids[0]
+    rival = _a_rival(gs)
+    gs.transfer_offers = [
+        TransferOffer(
+            player_id=pid, from_team=uid, to_team=rival, fee=400_000,
+            expires_week=gs.week + 4,
+        )
+    ]
+    want = inbox._hash_id(gs.season, gs.week, "transfer", f"{pid}|{rival}")
+    it = next(i for _p, i in inbox._transfer_items(gs, gs.season, gs.week) if i.id == want)
+    return pid, rival, it
+
+
+def _inject_sponsor(gs: GameState, brand: str = "ZZ Testworks") -> tuple[str, str, "InboxItem"]:
+    slot = sponsors.SLOT_ORDER[0]
+    gs.sponsor_market[slot] = [
+        SponsorOffer(
+            brand=brand, slot=slot, weeks=10,
+            expires_week=gs.week + sponsors.OFFER_SHELF_LIFE,
+            upfront=SponsorPackage(signing_bonus=50_000, weekly=1_000),
+            steady=SponsorPackage(weekly=2_000),
+            performance=SponsorPackage(weekly=1_500, per_win=3_000),
+            objectives=[],
+        )
+    ]
+    want = inbox._hash_id(gs.season, gs.week, "sponsor", f"offer|{slot}|{brand}")
+    it = next(i for _p, i in inbox._sponsor_items(gs, gs.season, gs.week) if i.id == want)
+    return slot, brand, it
+
+
+def test_transfer_item_carries_accept_decline_actions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    pid, _rival, it = _inject_transfer(campaign)
+
+    acts = inbox.actions_for(campaign, it)
+    assert [a["id"] for a in acts] == ["accept", "decline"]
+    assert all(a["endpoint"] == "/api/actions/transfer_offer" for a in acts)
+    assert acts[0]["payload"] == {"player_id": pid, "accept": True}
+    assert acts[1]["payload"] == {"player_id": pid, "accept": False}
+    # to_api only surfaces actions when gs is supplied.
+    assert "actions" not in inbox.to_api(it)
+    assert inbox.to_api(it, campaign)["actions"] == acts
+
+
+def test_sponsor_offer_item_carries_accept_decline_actions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    slot, brand, it = _inject_sponsor(campaign)
+
+    acts = inbox.actions_for(campaign, it)
+    assert [a["id"] for a in acts] == ["accept", "decline"]
+    assert all(a["endpoint"] == "/api/actions/sponsor" for a in acts)
+    # Accept signs the default "steady" structure (no multi-step flow inline).
+    assert acts[0]["payload"] == {
+        "slot": slot, "accept": True, "brand": brand, "structure": "steady",
+    }
+    assert acts[1]["payload"] == {"slot": slot, "accept": False, "brand": brand}
+    assert inbox.to_api(it, campaign)["actions"] == acts
+
+
+def test_non_offer_items_have_no_actions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+    non_offer = [it for it in campaign.inbox if it.category not in ("transfer", "sponsor")]
+    assert non_offer  # a full season surfaces plenty of non-offer notices
+    for it in non_offer:
+        assert inbox.actions_for(campaign, it) == []
+        assert "actions" not in inbox.to_api(it, campaign)
+
+
+def test_actions_are_deterministic_across_seeds(game_data: GameData) -> None:
+    a = new_campaign(game_data, seed=777)
+    b = new_campaign(game_data, seed=777)
+    _advance(a, game_data, LIFECYCLE_WEEKS)
+    _advance(b, game_data, LIFECYCLE_WEEKS)
+    # Serialised WITH gs (so any live-offer actions ride along) — byte-identical.
+    assert [inbox.to_api(it, a) for it in inbox.sorted_items(a)] == [
+        inbox.to_api(it, b) for it in inbox.sorted_items(b)
+    ]
+
+
+def test_declining_transfer_via_action_resolves_and_drops_future_actions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    pid, _rival, it = _inject_transfer(campaign)
+    season, week = campaign.season, campaign.week
+
+    decline = next(a for a in inbox.actions_for(campaign, it) if a["id"] == "decline")
+    # Execute the exact mutation the endpoint runs, using the action's payload.
+    ok, _msg = market.respond_offer(campaign, **decline["payload"])
+    assert ok
+    assert all(o.player_id != pid for o in campaign.transfer_offers)  # resolved
+
+    # The same stored item now carries no actions, and a later regeneration
+    # produces no transfer item for the vanished offer.
+    assert inbox.actions_for(campaign, it) == []
+    assert "actions" not in inbox.to_api(it, campaign)
+    assert all(i.id != it.id for _p, i in inbox._transfer_items(campaign, season, week + 1))
+
+
+def test_declining_sponsor_via_action_resolves_and_drops_future_actions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    slot, brand, it = _inject_sponsor(campaign)
+    season, week = campaign.season, campaign.week
+
+    decline = next(a for a in inbox.actions_for(campaign, it) if a["id"] == "decline")
+    payload = dict(decline["payload"])
+    payload.pop("accept")  # the endpoint routes accept->sign / decline->this fn
+    ok, _msg = sponsors.decline_market_offer(campaign, payload["slot"], payload["brand"])
+    assert ok
+    assert all(o.brand != brand for o in campaign.sponsor_market.get(slot, []))
+
+    assert inbox.actions_for(campaign, it) == []
+    assert "actions" not in inbox.to_api(it, campaign)
+    assert all(i.id != it.id for _p, i in inbox._sponsor_items(campaign, season, week))

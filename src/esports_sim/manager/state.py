@@ -114,6 +114,11 @@ class PlayerSeasonStats(BaseModel):
     headshots: int = 0
     plants: int = 0
     defuses: int = 0
+    # Richer highlight stats (default 0 keeps old saves loading).
+    first_deaths: int = 0
+    multikills: int = 0
+    aces: int = 0
+    clutches: int = 0
     rating_sum: float = 0.0
 
     @property

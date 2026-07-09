@@ -139,15 +139,19 @@ Facility-state diff compositing (above) remains the fallback path for
 whole-scene sets and is still the right tool for map door/teleporter
 state patches.
 
-## Scenario LoRA — staged, blocked on plan tier (2026-07-09)
+## Scenario LoRA — TRAINED (2026-07-09)
 
 Model `model_5ZuAoQQnRSMSeykEwaHjBKwm` ("esports-sim-diorama",
-`flux.2-dev-lora`) exists on the account with the full 16-image
-captioned corpus (6 office scenes + 5 painted maps + 5 map alts,
-trigger `esports-sim-diorama`). Training start returns 429
-PlanLimitReachedError: plan `cu-basic` has a parallel-training limit
-of 0 — training requires a plan upgrade, not credits. Resume = one
-call after upgrade; see `assets/office/style/lora/STATUS.md`.
+`flux.2-dev-lora`, trigger `esports-sim-diorama`, concept scale 0.8)
+is trained on the full 16-image style corpus (6 office scenes +
+5 painted maps + 5 map alts). Use it for future volume generation so
+new scenes inherit the locked style by default.
+
+Caveat: API generation against the trained model currently 500s on
+both `/models/<id>/inferences` and `/generate/txt2img` (legacy paths
+apparently don't serve flux.2 LoRAs on this plan) — generate from the
+Scenario web UI, or research the current-generation endpoint before
+the next volume pass. Details: `assets/office/style/lora/STATUS.md`.
 
 Validated API recipe (Basic auth `key:secret`, api.cloud.scenario.com):
 1. `GET /v1/models?pageSize=100` — duplicate check first.

@@ -210,6 +210,35 @@ def _h2h_callback(
     return ""
 
 
+_TACTIC_FLAVOR: dict[tuple[str, str], str] = {
+    ("aggression", "hi"): "on the back of relentless aggression",
+    ("aggression", "lo"): "grinding out a patient, low-risk series",
+    ("pace", "hi"): "with a blistering fast-execute tempo",
+    ("util_discipline", "hi"): "on disciplined, utility-perfect retakes",
+    ("map_control", "hi"): "by suffocating the map with spread control",
+    ("map_control", "lo"): "hitting hard and fast as five",
+}
+
+
+def _tactic_flavor(tac) -> str:
+    """A grounded clause naming the winner's tactical identity — but only
+    when a dial is genuinely extreme. Deterministic: the single most
+    off-neutral dial wins. Gives the coaching dials a visible payoff in the
+    story instead of only living inside the sim."""
+    cands = []
+    for dial in ("aggression", "pace", "util_discipline", "map_control"):
+        v = getattr(tac, dial)
+        dev = abs(v - 50.0)
+        if dev >= 20.0:
+            cands.append((dev, dial, "hi" if v > 50.0 else "lo"))
+    if not cands:
+        return ""
+    cands.sort(reverse=True)
+    _, dial, side = cands[0]
+    clause = _TACTIC_FLAVOR.get((dial, side))
+    return f" {clause[0].upper()}{clause[1:]}." if clause else ""
+
+
 def _user_recap(gs: GameState, f, stats_list) -> None:
     won = f.winner_id == gs.user_team_id
     opp_id = f.team_b if f.team_a == gs.user_team_id else f.team_a
@@ -254,6 +283,11 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
             ],
             score=score, opp=opp, maps=maps_txt, star=star_txt,
         )
+    # Name the WINNER's tactical identity — a user win credits their own
+    # system, a loss credits the opponent's (grounded: it's how they just
+    # played). f.winner_id is guaranteed set for a played fixture.
+    if f.winner_id is not None:
+        msg += _tactic_flavor(gs.teams[f.winner_id].tactics)
     h2h = head_to_head(gs, gs.user_team_id, opp_id)
     msg += _h2h_callback(rng, h2h, gs.user_team_id, opp_id, opp, won)
     if f.stage != "regular":
@@ -377,6 +411,31 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
         add(
             "Challengers MVP", t2mvp,
             f"{t2_eligible[t2mvp].rating:.2f} rating, age {gs.players[t2mvp].age}",
+        )
+
+    # Best Defensive Team: the team-level aggregates in team_stats were
+    # written every week but surfaced nowhere. A team award anchors to the
+    # captain (or first player) so the record still points at a real person.
+    best_def, best_rate = None, -1.0
+    for tid in sorted(gs.team_stats):
+        team = gs.teams.get(tid)
+        ts = gs.team_stats[tid]
+        if team is None or team.tier != 1 or ts.def_rounds < 30:
+            continue
+        rate = ts.def_won / ts.def_rounds
+        if rate > best_rate:
+            best_rate, best_def = rate, tid
+    if best_def is not None:
+        team = gs.teams[best_def]
+        anchor = team.captain_id or (team.player_ids[0] if team.player_ids else "")
+        rec = AwardRecord(
+            season=gs.season, award="Best Defensive Team",
+            player_id=anchor, handle=team.name, team_name=team.name,
+            value=f"{best_rate:.0%} defensive round win rate",
+        )
+        out.append(rec)
+        gs.push_news(
+            f"Best Defensive Team: {team.name} - {best_rate:.0%} def round win."
         )
 
     gs.awards.extend(out)

@@ -193,6 +193,65 @@ def _generate_rookie(gs: GameState, gd, rng: np.random.Generator) -> Player:
     gs.push_news(f"Prospect {p.handle} ({p.playstyle}) enters free agency.")
     return p
 
+
+# Free-agent competition: a marquee FA draws rival AI interest.
+POACH_QUALITY = 60.0  # only genuinely desirable FAs draw competition
+POACH_GAP = 8.0  # quality edge a full team needs over its weakest same-role
+POACH_PROB = 0.5  # per week, once at least one suitor exists
+
+
+def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
+    """Premium free agents don't sit uncontested. After AI teams fill open
+    slots, a needy AI org may still move for a top FA — upgrading over its
+    weakest same-role player — so the user competes for marquee talent
+    instead of grabbing it for free. At most one poach per week keeps it
+    measured; deterministic from the passed rng."""
+    pool = sorted(
+        (gs.players[pid] for pid in gs.free_agent_ids),
+        key=lambda p: (player_quality(p), p.id),
+        reverse=True,
+    )
+    for cand in pool:
+        cq = player_quality(cand)
+        if cq < POACH_QUALITY:
+            return  # nothing premium left in the pool
+        suitors: list[tuple[str, str | None]] = []  # (team, player_to_drop)
+        for tid in sorted(gs.teams):
+            if tid == gs.user_team_id:
+                continue
+            team = gs.teams[tid]
+            if len(team.player_ids) < ROSTER_SIZE:
+                if team.balance >= asking_salary(cand) * 8:
+                    suitors.append((tid, None))
+                continue
+            same = [
+                gs.players[pid]
+                for pid in team.player_ids
+                if str(gs.players[pid].playstyle) == str(cand.playstyle)
+            ]
+            if not same:
+                continue
+            weakest = min(same, key=lambda p: (player_quality(p), p.id))
+            # Reserve the dropped player's severance too: release_player
+            # charges it before sign_player re-checks affordability, so
+            # without this the swap can strand the roster at four players.
+            severance = weakest.salary * SEVERANCE_WEEKS
+            if (
+                cq - player_quality(weakest) >= POACH_GAP
+                and team.balance >= asking_salary(cand) * 12 + severance
+            ):
+                suitors.append((tid, weakest.id))
+        if not suitors:
+            continue
+        if rng.random() >= POACH_PROB:
+            return  # the league lets this one sit this week
+        tid, drop = suitors[int(rng.integers(0, len(suitors)))]
+        if drop is not None:
+            release_player(gs, tid, drop)
+        sign_player(gs, tid, cand.id, weeks=int(rng.integers(32, 64)))
+        return  # one measured move per week
+
+
 # ---------------------------------------------------------------------------
 # Transfers: contracted players moving for a fee
 

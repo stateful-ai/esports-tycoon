@@ -130,78 +130,320 @@ function starsRange(band) {
 
 /* -- screens --------------------------------------------------------------------- */
 
-function dashboard(v) {
+/* -- dashboard: the "what do I do now" hub --------------------------------
+   Aggregates several read endpoints that already exist in the running server
+   (state + schedule + standings + rosters) into a dense, scannable HQ. Holds
+   no sim state — every value is derived from a fresh API payload. Team and
+   player names carry the .tlink/.plink + data-tid/data-pid contract so the
+   global (profile.js) delegated listener turns them into profile links. */
+
+const ORD = ["th", "st", "nd", "rd"];
+function ordinal(n) {
+  if (n == null) return "—";
+  const v = n % 100;
+  return n + (ORD[(v - 20) % 10] || ORD[v] || ORD[0]);
+}
+function cap(t) {
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+}
+
+// W/L/D form square — same success/danger language as .pill.win/.loss.
+function formSquare(res, title) {
+  const r = String(res || "").toUpperCase();
+  const cls = r.startsWith("W") ? "win" : r.startsWith("L") ? "loss" : "draw";
+  const sq = el("span", `es-form-sq ${cls}`, r.slice(0, 1) || "·");
+  if (title) sq.title = title;
+  return sq;
+}
+
+// Tone from a 0–100 stat (higher = better): green / amber / red bands.
+function statTone(x) {
+  if (x == null) return null;
+  return x >= 65 ? "good" : x >= 35 ? "warn" : "bad";
+}
+
+// A dense stat tile: mono numeral + tiny uppercase label (+ optional sub).
+// opts: { sub, tone, onClick, title }
+function statTile(label, value, opts = {}) {
+  const cls =
+    "es-tile" +
+    (opts.tone ? " tone-" + opts.tone : "") +
+    (opts.onClick ? " es-tile-btn" : "");
+  const tile = el(
+    "div",
+    cls,
+    `<div class="es-tile-val mono">${value}</div>` +
+      `<div class="es-tile-label">${label}</div>` +
+      (opts.sub ? `<div class="es-tile-sub">${opts.sub}</div>` : "")
+  );
+  if (opts.title) tile.title = opts.title;
+  if (opts.onClick) {
+    tile.tabIndex = 0;
+    tile.setAttribute("role", "button");
+    tile.onclick = opts.onClick;
+    tile.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); opts.onClick(); }
+    };
+  }
+  return tile;
+}
+
+// Jump to a top-nav tab by name (same effect as the user clicking it).
+function dashGoTab(name) {
+  const b = document.querySelector(`#tabs [data-tab="${name}"]`);
+  if (b) b.click();
+}
+
+async function dashboard(v) {
   const s = App.state;
-  const g = el("div", "grid2");
+  const me = s.user_team;
+  const myId = me.id;
+  const fix = s.next_fixture;
+  const oppId = fix ? (fix.team_a === myId ? fix.team_b : fix.team_a) : null;
 
-  const team = el("div", "card");
-  team.innerHTML = `<h2><img class="logo" src="${s.user_team.logo}" alt="">${s.user_team.name}</h2>
-    <table><tbody>
-      <tr><td>World rank</td><td class="num">#${s.user_team.world_rank ?? "—"}</td></tr>
-      <tr><td>Record</td><td class="num">${s.user_team.record ? s.user_team.record.wins + "–" + s.user_team.record.losses : "—"}</td></tr>
-      <tr><td>Reputation</td><td class="num">${s.user_team.reputation}</td></tr>
-      <tr><td>Chemistry</td><td class="num">${s.user_team.chemistry}</td></tr>
-      <tr><td>Fans</td><td class="num">${s.user_team.fan_count.toLocaleString()}</td></tr>
-    </tbody></table>`;
-  g.appendChild(team);
+  // Every endpoint below already exists in the running server.
+  const [sched, table, myRoster, oppRoster] = await Promise.all([
+    api("/api/schedule").catch(() => null),
+    api("/api/standings").catch(() => null),
+    api(`/api/roster/${myId}`).catch(() => null),
+    oppId ? api(`/api/roster/${oppId}`).catch(() => null) : Promise.resolve(null),
+  ]);
 
-  const next = el("div", "card");
-  if (s.next_fixture) {
-    const f = s.next_fixture;
-    next.innerHTML = `<h2>This week — ${f.stage} (BO${f.best_of})</h2>
-      <p><b>${f.team_a_name}</b> vs <b>${f.team_b_name}</b></p>
-      <div class="row" style="flex-wrap:wrap"><span class="muted">maps:</span> ${f.maps
-        .map((m) => `${mapThumb(m)}<span class="muted" style="margin-right:8px">${m}</span>`)
-        .join("")}</div>`;
-  } else {
-    next.innerHTML = `<h2>This week</h2><p class="muted">No fixture — ${s.phase}.</p>`;
+  // League position + record + region for any broadcast (tier-1) team.
+  const posOf = {}, recOf = {}, regionOf = {};
+  if (table) {
+    for (const reg of table.regions) {
+      reg.rows.forEach((row, i) => {
+        posOf[row.id] = i + 1;
+        recOf[row.id] = `${row.wins}–${row.losses}`;
+        regionOf[row.id] = reg.region;
+      });
+    }
   }
-  const focus = el("div", "row");
-  focus.innerHTML = `<label>Training focus&nbsp;</label>`;
-  const sel = el("select");
-  for (const o of s.focus_options) {
-    const opt = el("option", "", o);
-    opt.value = o;
-    if (o === s.training_focus) opt.selected = true;
-    sel.appendChild(opt);
-  }
-  sel.onchange = async () => {
-    await api("/api/actions/training", { focus: sel.value });
-    toast(`Training focus set: ${sel.value}`);
+
+  // A team's played fixtures, oldest → newest (recent form + streak).
+  const playedFor = (tid) =>
+    !sched
+      ? []
+      : sched.fixtures
+          .filter((f) => f.played && (f.team_a === tid || f.team_b === tid))
+          .sort((a, b) => a.week - b.week || (a.id < b.id ? -1 : 1));
+
+  // One result line from a team's point of view.
+  const lineFor = (f, tid) => {
+    const isA = f.team_a === tid;
+    const oppName = isA ? f.team_b_name : f.team_a_name;
+    const res = f.winner_id === tid ? "W" : "L";
+    let score = "";
+    if (f.best_of > 1) {
+      const [a, b] = f.map_score;
+      score = isA ? `${a}–${b}` : `${b}–${a}`;
+    } else if (f.results.length) {
+      const r = f.results[0];
+      score = isA ? `${r.score_a}–${r.score_b}` : `${r.score_b}–${r.score_a}`;
+    }
+    return {
+      opp: isA ? f.team_b : f.team_a,
+      oppName,
+      res,
+      score,
+      maps: f.results.map((r) => r.map_id),
+    };
   };
-  focus.appendChild(sel);
-  next.appendChild(focus);
-  if (s.scout && s.scout.target) {
-    next.appendChild(el("p", "muted",
-      `Scouting ${s.scout.target_name}: ${Math.round(s.scout.progress * 100)}% ` +
-      `(assign from a rival's roster page)`));
+
+  const streakOf = (tid) => {
+    const games = playedFor(tid);
+    if (!games.length) return null;
+    const won = games[games.length - 1].winner_id === tid;
+    let n = 0;
+    for (let i = games.length - 1; i >= 0; i--) {
+      if ((games[i].winner_id === tid) === won) n++; else break;
+    }
+    return { txt: `${won ? "W" : "L"}${n}`, won };
+  };
+
+  const oppName = fix ? (fix.team_a === myId ? fix.team_b_name : fix.team_a_name) : "";
+
+  /* -- 1. NEXT MATCH spotlight -------------------------------------------- */
+  const spot = el("div", "card es-spotlight");
+  spot.appendChild(el("h2", "", "Next match"));
+  if (fix) {
+    const region = cap(regionOf[myId] || me.region || "");
+    const stageTxt =
+      fix.stage === "regular"
+        ? `${region} League`
+        : stageLabel(fix.stage).toUpperCase();
+
+    const teamBlock = (tid, name, logo, side) => {
+      const sub = [posOf[tid] ? ordinal(posOf[tid]) : null, recOf[tid]]
+        .filter(Boolean)
+        .join(" · ");
+      return `<div class="es-vs-team ${side}">
+        ${logo ? `<img class="logo lg" src="${logo}" alt="" onerror="this.style.display='none'">` : ""}
+        <span class="es-vs-name tlink" data-tid="${tid}">${name}</span>
+        ${sub ? `<span class="es-vs-sub muted">${sub}</span>` : ""}
+      </div>`;
+    };
+    const oppLogo = oppRoster?.team?.logo || "";
+    spot.appendChild(
+      el(
+        "div",
+        "es-vs",
+        teamBlock(myId, me.name, me.logo, "left") +
+          `<div class="es-vs-mid">
+            <div class="es-vs-x">VS</div>
+            <div class="es-vs-ctx">S${s.season} · W${fix.week}</div>
+            <div class="es-vs-ctx">${stageTxt}</div>
+            <span class="pill es-bo">Best of ${fix.best_of}</span>
+          </div>` +
+          teamBlock(oppId, oppName, oppLogo, "right")
+      )
+    );
+
+    // Map feature — the veto ladder in playoffs, else the map pool thumbs.
+    if (fix.veto && fix.veto.length) {
+      const vr = el("div", "es-maps");
+      vr.appendChild(el("span", "es-maps-lab muted", "Veto"));
+      for (const entry of fix.veto) {
+        const mapId = entry.trim().split(" ").pop();
+        vr.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${entry}`));
+      }
+      spot.appendChild(vr);
+    } else if (fix.maps && fix.maps.length) {
+      const mr = el("div", "es-maps");
+      mr.appendChild(
+        el("span", "es-maps-lab muted", fix.maps.length > 1 ? "Map pool" : "Map")
+      );
+      for (const mid of fix.maps) {
+        mr.appendChild(
+          el(
+            "figure",
+            "es-map",
+            `<img src="/assets/maps/${mid}.webp" alt="${mid}" onerror="this.style.display='none'">` +
+              `<figcaption>${mid}</figcaption>`
+          )
+        );
+      }
+      spot.appendChild(mr);
+    }
+
+    // Opponent scouting: last-5 form + danger men.
+    if (oppId) {
+      const scout = el("div", "es-scout");
+      const oppGames = playedFor(oppId).slice(-5);
+      if (oppGames.length) {
+        const col = el("div", "es-scout-col");
+        col.appendChild(
+          el("span", "es-scout-lab muted", `${oppName} — last ${oppGames.length}`)
+        );
+        const strip = el("span", "es-form-strip");
+        for (const g of oppGames) {
+          const ln = lineFor(g, oppId);
+          strip.appendChild(
+            formSquare(ln.res, `vs ${ln.oppName}${ln.score ? " · " + ln.score : ""}`)
+          );
+        }
+        col.appendChild(strip);
+        scout.appendChild(col);
+      }
+      if (oppRoster && oppRoster.players.length) {
+        const fog = oppRoster.fog > 0;
+        const stars = [...oppRoster.players]
+          .sort((a, b) => b.overall - a.overall)
+          .slice(0, 3);
+        const col = el("div", "es-scout-col");
+        col.appendChild(el("span", "es-scout-lab muted", "Danger men"));
+        const names = el("span", "es-stars");
+        for (const p of stars) {
+          names.appendChild(
+            el(
+              "span",
+              "es-star",
+              `<span class="plink" data-pid="${p.id}">${p.handle}</span>` +
+                `<span class="pill">${p.role}</span>` +
+                `<span class="mono muted">${fog ? "~" : ""}${Math.round(p.overall)}</span>`
+            )
+          );
+        }
+        col.appendChild(names);
+        scout.appendChild(col);
+      }
+      if (scout.childElementCount) spot.appendChild(scout);
+    }
+  } else {
+    spot.appendChild(el("p", "muted", `No fixture scheduled — ${s.phase}.`));
   }
-  g.appendChild(next);
-  v.appendChild(g);
+  v.appendChild(spot);
 
-  const top = el("div", "card");
-  top.innerHTML = `<h2>Top of the table</h2>`;
-  const tt = el("table");
-  tt.innerHTML =
-    `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th></tr></thead>`;
-  const tb = el("tbody");
-  s.standings_top.forEach((r, i) => {
-    tb.appendChild(el("tr", r.team_id === s.user_team.id ? "me" : "", `
-      <td>${i + 1}</td><td>${r.name}</td>
-      <td class="num">${r.wins}</td><td class="num">${r.losses}</td>`));
-  });
-  tt.appendChild(tb);
-  top.appendChild(tt);
-  v.appendChild(top);
+  /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
+  const status = el("div", "card es-status");
+  status.appendChild(el("h2", "", "Team status"));
+  const tiles = el("div", "es-tiles");
+  const rec = me.record;
 
+  tiles.appendChild(statTile("Balance", money(me.balance)));
+  if (rec) {
+    tiles.appendChild(
+      statTile("Record", `${rec.wins}–${rec.losses}`, {
+        sub: `${rec.diff > 0 ? "+" : ""}${rec.diff} rd`,
+      })
+    );
+  }
+  if (posOf[myId]) {
+    tiles.appendChild(
+      statTile("League", ordinal(posOf[myId]), {
+        sub: cap(regionOf[myId] || me.region || ""),
+        onClick: () => dashGoTab("standings"),
+        title: "Open standings",
+      })
+    );
+  }
+  const streak = streakOf(myId);
+  if (streak) {
+    tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
+  }
+  if (myRoster && myRoster.players.length) {
+    const avg = (k) =>
+      myRoster.players.reduce((a, p) => a + (p[k] || 0), 0) / myRoster.players.length;
+    const mor = avg("morale"), cond = avg("stamina");
+    tiles.appendChild(statTile("Morale", Math.round(mor), { tone: statTone(mor) }));
+    tiles.appendChild(statTile("Condition", Math.round(cond), { tone: statTone(cond) }));
+  }
+  if (me.chemistry != null) tiles.appendChild(statTile("Chemistry", Math.round(me.chemistry)));
+  if (me.world_rank != null) tiles.appendChild(statTile("World rank", `#${me.world_rank}`));
+  if (me.reputation != null) tiles.appendChild(statTile("Reputation", Math.round(me.reputation)));
+  if (me.fan_count != null) tiles.appendChild(statTile("Fans", me.fan_count.toLocaleString()));
+  if (s.scout && s.scout.target) {
+    tiles.appendChild(
+      statTile("Scout", `${Math.round((s.scout.progress || 0) * 100)}%`, {
+        sub: s.scout.target_name || "",
+        onClick: () => dashGoTab("scouting"),
+        title: "Open the scouting desk",
+      })
+    );
+  }
+  tiles.appendChild(
+    statTile("Training", cap(s.training_focus), {
+      sub: "office →",
+      onClick: () => dashGoTab("office"),
+      title: "Set the training focus in the office",
+    })
+  );
+  status.appendChild(tiles);
+  v.appendChild(status);
+
+  /* -- 3. Transfer offers (actionable — carried over intact) -------------- */
   if ((s.transfer_offers ?? []).length) {
     const oc = el("div", "card");
-    oc.innerHTML = `<h2>Transfer offers</h2>`;
+    oc.appendChild(el("h2", "", "Transfer offers"));
     for (const o of s.transfer_offers) {
-      const row = el("div", "row", `
-        <span style="min-width:280px"><b>${o.to_team_name}</b> bid
-        <b class="mono">${money(o.fee)}</b> for <b>${o.handle}</b></span>
-        <span class="muted">expires week ${o.expires_week}</span>`);
+      const row = el(
+        "div",
+        "row",
+        `<span style="min-width:280px"><b>${o.to_team_name}</b> bid
+        <b class="mono">${money(o.fee)}</b> for <b class="plink" data-pid="${o.player_id}">${o.handle}</b></span>
+        <span class="muted">expires week ${o.expires_week}</span>`
+      );
       const sell = el("button", "btn btn-sm", "Sell");
       sell.onclick = async () => {
         if (!confirm(`Sell ${o.handle} to ${o.to_team_name} for ${money(o.fee)}?`)) return;
@@ -220,9 +462,87 @@ function dashboard(v) {
     v.appendChild(oc);
   }
 
+  /* -- 4. Two-column band: RECENT RESULTS | NEWS -------------------------- */
+  const band = el("div", "grid2");
+
+  const rc = el("div", "card");
+  rc.appendChild(el("h2", "", "Recent results"));
+  const myGames = playedFor(myId).slice(-5).reverse();
+  if (myGames.length) {
+    for (const f of myGames) {
+      const ln = lineFor(f, myId);
+      const thumbs = ln.maps.map((m) => mapThumb(m, "sm")).join("");
+      rc.appendChild(
+        el(
+          "div",
+          "row es-result",
+          `<span class="pill ${ln.res === "W" ? "win" : "loss"}">${ln.res}</span>` +
+            `<span class="es-result-opp tlink" data-tid="${ln.opp}">${ln.oppName}</span>` +
+            `<span class="spacer"></span>` +
+            `<b class="mono es-result-score">${ln.score}</b>` +
+            `<span class="es-result-maps">${thumbs}</span>`
+        )
+      );
+    }
+  } else {
+    rc.appendChild(el("p", "muted", "No matches played yet this season."));
+  }
+  band.appendChild(rc);
+
   const news = el("div", "card");
-  news.innerHTML = `<h2>News</h2>` + s.news.map((n) => `<div class="newsline">${n}</div>`).join("");
-  v.appendChild(news);
+  news.appendChild(el("h2", "", "News"));
+  if ((s.news ?? []).length) {
+    for (const n of s.news) news.appendChild(el("div", "newsline", n));
+  } else {
+    news.appendChild(el("p", "muted", "No news yet."));
+  }
+  band.appendChild(news);
+  v.appendChild(band);
+
+  /* -- 5. League mini-table (carries the old "Top of the table") ---------- */
+  let rows = null;
+  if (table) {
+    const reg = table.regions.find((r) => r.is_user) || table.regions[0];
+    rows = reg ? reg.rows : [];
+  } else if ((s.standings_top ?? []).length) {
+    rows = s.standings_top.map((r) => ({
+      id: r.team_id, name: r.name, wins: r.wins, losses: r.losses, diff: r.diff,
+    }));
+  }
+  if (rows && rows.length) {
+    const lc = el("div", "card");
+    lc.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
+    const t = el("table");
+    t.innerHTML =
+      `<thead><tr><th>#</th><th>Team</th><th class="num">W</th>` +
+      `<th class="num">L</th><th class="num">+/-</th></tr></thead>`;
+    const tb = el("tbody");
+    const myIdx = rows.findIndex((r) => r.id === myId);
+    const show = new Set();
+    rows.forEach((_, i) => { if (i < 4) show.add(i); });
+    if (myIdx >= 0) { if (myIdx > 0) show.add(myIdx - 1); show.add(myIdx); }
+    const idxs = [...show].sort((a, b) => a - b);
+    let prev = -1;
+    for (const i of idxs) {
+      if (i - prev > 1) tb.appendChild(el("tr", "es-gap", `<td colspan="5" class="muted">…</td>`));
+      const r = rows[i];
+      const d = r.diff ?? 0;
+      tb.appendChild(
+        el(
+          "tr",
+          r.id === myId ? "me" : "",
+          `<td>${i + 1}</td>` +
+            `<td><span class="tlink" data-tid="${r.id}">${r.name}</span></td>` +
+            `<td class="num">${r.wins}</td><td class="num">${r.losses}</td>` +
+            `<td class="num">${d > 0 ? "+" : ""}${d}</td>`
+        )
+      );
+      prev = i;
+    }
+    t.appendChild(tb);
+    lc.appendChild(t);
+    v.appendChild(lc);
+  }
 }
 
 async function roster(v) {
@@ -232,7 +552,7 @@ async function roster(v) {
   const fogNote = data.fog > 0
     ? ` <span class="muted">— scouted estimates ±${data.fog}</span>`
     : "";
-  card.innerHTML = `<h2>Roster — ${data.team.name} (${data.players.length}/5)${fogNote}</h2>`;
+  card.innerHTML = `<h2>Roster — <span class="tlink" data-tid="${data.team.id}">${data.team.name}</span> (${data.players.length}/5)${fogNote}</h2>`;
   if ((data.tendencies ?? []).length) {
     card.appendChild(el("p", "muted",
       `Scouting book: ${data.tendencies.join(" · ")}`));
@@ -282,7 +602,7 @@ async function roster(v) {
         ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>`
         : "";
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
       <td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
@@ -452,7 +772,7 @@ async function standings(v) {
     const tb = el("tbody");
     const rowFor = (r, i) => {
       const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
-        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${r.name}</b> <span class="pill">${r.tag}</span></td>
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span></td>
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
         <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
         <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
@@ -587,7 +907,7 @@ async function schedule(v) {
       }
       line.innerHTML = `
         <span class="pill">${stageLabel(f.stage)}</span>
-        <span style="min-width:340px">${mine ? "<b>" : ""}${f.team_a_name} vs ${f.team_b_name}${mine ? "</b>" : ""}</span>
+        <span style="min-width:340px">${mine ? "<b>" : ""}<span class="tlink" data-tid="${f.team_a}">${f.team_a_name}</span> vs <span class="tlink" data-tid="${f.team_b}">${f.team_b_name}</span>${mine ? "</b>" : ""}</span>
         ${score}`;
       for (let i = 0; i < f.results.length; i++) {
         const r = f.results[i];
@@ -631,7 +951,7 @@ async function market(v) {
   for (const p of data.free_agents) {
     const fogged = p.fog > 0;
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b>${p.handle}</b></td><td>${stylePill(p)}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b></td><td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
       <td>${starsRange(p.scout?.ca_stars)}</td>
@@ -712,7 +1032,7 @@ async function scouting(v) {
           `</span>`
         : `<span class="muted">needs more time</span>`;
       tb.appendChild(el("tr", "", `
-        <td><b>${r.handle}</b></td>
+        <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
         <td><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span></td>
         <td class="num">${r.age}</td>
         <td>${starsRange(r.ca_stars)}</td>
@@ -760,7 +1080,7 @@ async function stats(v) {
     const tb = el("tbody");
     data.players.slice(0, 25).forEach((r, i) => {
       tb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td>${i + 1}</td><td><b>${r.handle}</b></td><td class="muted">${r.team}</td>
+        <td>${i + 1}</td><td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td><td class="muted">${r.team}</td>
         <td class="num">${r.maps}</td><td class="num"><b>${r.rating.toFixed(2)}</b></td>
         <td class="num">${r.kills}</td><td class="num">${r.deaths}</td>
         <td class="num">${r.kd.toFixed(2)}</td><td class="num">${r.first_kills}</td>
@@ -782,7 +1102,7 @@ async function stats(v) {
     const tb = el("tbody");
     for (const r of data.teams) {
       tb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td><b>${r.name}</b></td><td class="num">${r.maps}</td>
+        <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b></td><td class="num">${r.maps}</td>
         <td class="num">${r.atk_pct}</td><td class="num">${r.def_pct}</td>
         <td class="num">${r.pistol_pct}</td>`));
     }

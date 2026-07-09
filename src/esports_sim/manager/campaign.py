@@ -213,7 +213,7 @@ def advance_week(
             focus = gs.training_focus.get(tid, "tactical")
             mult = staff.coach_multiplier(gs) * economy.facility_training_mult(gs)
         else:
-            focus = training.ai_pick_focus(roster, week_rng)
+            focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
             mult = 1.0
         training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
@@ -224,7 +224,14 @@ def advance_week(
         for p in gs.roster(gs.user_team_id):
             p.stamina = round(min(100.0, p.stamina + recovery), 1)
 
-    # 2c. Relationships drift; team chemistry chases the pair graph.
+    # 2c. Relationships drift; team chemistry chases the pair graph. Every
+    # org's chemistry rides its own week's result, not just the user's.
+    won_by_team: dict[str, bool] = {}
+    for f in report.fixtures:
+        if f.played and f.winner_id is not None:
+            loser = f.team_b if f.winner_id == f.team_a else f.team_a
+            won_by_team[f.winner_id] = True
+            won_by_team[loser] = False
     user_fx = next(
         (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
         None,
@@ -232,6 +239,7 @@ def advance_week(
     relationships.weekly_tick(
         gs, week_rng,
         user_won=bool(user_fx and user_fx.winner_id == gs.user_team_id),
+        won_by_team=won_by_team,
     )
 
     # 3. Finances. The user org's merch/ticket line rides its real
@@ -264,6 +272,7 @@ def advance_week(
     market.tick_contracts(gs, week_rng)
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
+    market.ai_poach_free_agents(gs, gd, week_rng)
     _tick_scouting(gs)
 
     _update_world_ranks(gs)
@@ -538,8 +547,15 @@ def advance_week(
     # black off prize money never takes a spurious debt hit or board warning.
     economy.check_solvency(gs)
 
-    # 6. News (before the week label moves on).
+    # 6. News (before the week label moves on). Recaps read each winner's
+    # tactics, so this must run BEFORE the coaches adapt below — otherwise a
+    # recap could credit a style the team only shifted to after the match.
     narrative.weekly_news(gs, report, week_kills)
+
+    # 6b. AI coaches review the week and adapt their identity for next week —
+    # winners entrench, strugglers drift back toward vanilla. Deliberately
+    # after the news so the match-time tactics are what gets reported.
+    _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
     # 7. Inbox: aggregate the week's outcomes into the notification feed.
     # Runs last so it can read every subsystem's artifacts (news included),
@@ -597,6 +613,10 @@ def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None
             ps.headshots += line.headshots
             ps.plants += line.plants
             ps.defuses += line.defuses
+            ps.first_deaths += line.first_deaths
+            ps.multikills += line.multikills
+            ps.aces += line.aces
+            ps.clutches += line.clutches
             ps.rating_sum += line.rating
             week_kills[pid] = week_kills.get(pid, 0) + line.kills
 
@@ -655,7 +675,12 @@ def _sim_fixture(
             "season", gs.season, "week", f.week, "fixture", f.id, "map", map_index
         )
         res = simulate_match_result(rt_gd, f.team_a, f.team_b, map_id, seed)
-        stats = compute_match_stats(res.events)
+        team_of = {
+            pid: tid
+            for tid in (f.team_a, f.team_b)
+            for pid in rt_gd.teams[tid].player_ids
+        }
+        stats = compute_match_stats(res.events, team_of)
         if collector is not None:
             collector.setdefault(f.id, []).append(stats)
         if events_out is not None:
@@ -914,6 +939,50 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
             if rng.random() < 0.65
             else str(rng.choice(["a", "b", "c"]))
         )
+
+
+# How far a coach nudges the dials each week (small — identities shift over
+# a season, not overnight). Winners push their identity ~1.5 further from
+# neutral; strugglers shrink 8% back toward it; pistol form pulls eco_greed.
+_ADAPT_STEP = 1.5
+_ADAPT_SHRINK = 0.08
+_ADAPT_NOISE = 1.0
+_ADAPT_PISTOL = 6.0
+_ADAPT_MIN_MAPS = 3  # too few maps to read anything meaningful
+
+
+def _adapt_ai_tactics(gs: GameState, rng) -> None:
+    """AI orgs are no longer frozen for a season: each week a coach nudges
+    the dials toward how the campaign is actually going. A winning team
+    entrenches its identity (pushes each dial further from neutral); a
+    struggling team abandons a failing plan and drifts back toward the
+    league-standard 50. Pistol-round form pulls eco_greed. The user team is
+    never touched, and the match gates never run the campaign, so this is
+    invisible to golden/balance."""
+    clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
+    for tid in sorted(gs.teams):
+        if tid == gs.user_team_id:
+            continue
+        ts = gs.team_stats.get(tid)
+        if ts is None or ts.maps < _ADAPT_MIN_MAPS:
+            continue
+        rounds = ts.atk_rounds + ts.def_rounds
+        if rounds == 0:
+            continue
+        rwr = (ts.atk_won + ts.def_won) / rounds
+        winning, losing = rwr >= 0.52, rwr <= 0.45
+        tac = gs.teams[tid].tactics
+        for dial in ("aggression", "pace", "util_discipline", "map_control"):
+            v = getattr(tac, dial)
+            if winning and v != 50.0:
+                v += _ADAPT_STEP if v > 50.0 else -_ADAPT_STEP
+            elif losing:
+                v += (50.0 - v) * _ADAPT_SHRINK
+            v += float(rng.normal(0, _ADAPT_NOISE))
+            setattr(tac, dial, round(clamp(v), 1))
+        if ts.pistols >= 2:
+            pwr = ts.pistols_won / ts.pistols
+            tac.eco_greed = round(clamp(tac.eco_greed + (pwr - 0.5) * _ADAPT_PISTOL), 1)
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:

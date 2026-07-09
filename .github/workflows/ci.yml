@@ -31,7 +31,9 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install
-        run: pip install -e ".[dev]"
+        # web extra included: the API contract tests (tests/test_profiles.py,
+        # parts of test_inbox.py) import the FastAPI server.
+        run: pip install -e ".[dev,web]"
 
       - name: Test suite
         run: pytest -q

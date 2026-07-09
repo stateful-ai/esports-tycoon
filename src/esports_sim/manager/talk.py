@@ -170,6 +170,17 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
     team = gs.teams[gs.user_team_id]
     team.chemistry = round(min(100.0, max(0.0, team.chemistry + d_chem)), 1)
 
+    # The 1:1 also colours how the player sees the captain running these
+    # meetings: a talk that lands bonds them, one that backfires sours it.
+    from esports_sim.manager import relationships
+
+    captain = team.captain_id
+    if captain and captain != pid and captain in gs.players:
+        if d_chem < 0 or d_morale < 0:
+            relationships.nudge(gs, pid, captain, -3.0)
+        elif d_form > 0 or d_morale >= 3.0:
+            relationships.nudge(gs, pid, captain, 2.0)
+
     gs.talked_week = week_key(gs)
     if abs(d_morale) >= 4.0:
         gs.push_news(f"1:1 with {p.handle}: {msg}")
