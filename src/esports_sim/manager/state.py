@@ -12,6 +12,7 @@ event log (nothing but the box score is persisted).
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -19,6 +20,13 @@ from pydantic import BaseModel, ConfigDict, Field
 from esports_sim.schemas import Player, Team
 
 SCHEMA_VERSION = 1
+
+# Save migrations, keyed by the schema_version they upgrade FROM. Each takes
+# the raw parsed dict and returns it bumped one version forward. Empty today
+# (v1 is current) — the hook exists so a future field rename/move can land
+# without breaking existing saves. Add-a-field changes need nothing here:
+# new fields carry defaults, so old saves load straight through.
+_MIGRATIONS: dict[int, "callable"] = {}
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
 PRIZE_SEMI_LOSER = 60_000
@@ -352,23 +360,73 @@ class GameState(BaseModel):
                 return f
         return None
 
+    def _h2h_series(self, a: str, b: str) -> int:
+        """Head-to-head series margin between two teams this season: a's
+        wins over b minus b's over a, among their played REGULAR-season
+        meetings. Only regular fixtures feed the standings (playoff results
+        never touch TeamRecord), so the tiebreaker must ignore playoff
+        rematches — otherwise a bracket game could reorder the league table
+        that seeded that very bracket."""
+        margin = 0
+        for f in self.fixtures:
+            if (
+                f.stage == "regular"
+                and f.played
+                and f.winner_id is not None
+                and {f.team_a, f.team_b} == {a, b}
+            ):
+                margin += 1 if f.winner_id == a else -1
+        return margin
+
     def standings_order(
         self, region: str | None = None, tier: int = 1
     ) -> list[str]:
         """Table order, optionally restricted to one region's league.
-        Tables are per-tier; pass tier=0 for everything."""
+        Tables are per-tier; pass tier=0 for everything.
 
-        def key(tid: str) -> tuple:
-            r = self.standings[tid]
-            return (-r.wins, -(r.diff), -r.rounds_won, tid)
-
+        Tiebreakers, in order: wins, round differential, then — within a
+        group still tied on both — a head-to-head MINI-TABLE (each team's net
+        H2H margin against only the other tied teams), then rounds won, then
+        team id. The mini-table keeps the order transitive even when three+
+        teams tie in a rock-paper-scissors cycle (A>B>C>A); applying pairwise
+        H2H inside a global comparator would resolve such a cycle by
+        insertion order instead."""
         tids = [
             t
             for t in self.standings
             if (region is None or str(self.teams[t].region) == region)
             and (tier == 0 or self.teams[t].tier == tier)
         ]
-        return sorted(tids, key=key)
+        # Primary sort: wins then differential (id keeps it stable).
+        tids.sort(
+            key=lambda t: (-self.standings[t].wins, -self.standings[t].diff, t)
+        )
+        ordered: list[str] = []
+        i = 0
+        while i < len(tids):
+            j = i
+            w, d = self.standings[tids[i]].wins, self.standings[tids[i]].diff
+            while (
+                j < len(tids)
+                and self.standings[tids[j]].wins == w
+                and self.standings[tids[j]].diff == d
+            ):
+                j += 1
+            group = tids[i:j]
+            if len(group) > 1:
+                # Rank the tied group by net H2H margin among ITSELF — a
+                # scalar per team, so the order is transitive.
+                def mini_key(t: str) -> tuple:
+                    margin = sum(
+                        self._h2h_series(t, o) for o in group if o != t
+                    )
+                    r = self.standings[t]
+                    return (-margin, -r.rounds_won, t)
+
+                group.sort(key=mini_key)
+            ordered.extend(group)
+            i = j
+        return ordered
 
     def regions(self) -> list[str]:
         """Regions that actually have league teams, sorted."""
@@ -388,7 +446,21 @@ class GameState(BaseModel):
     @classmethod
     def load(cls, path: Path | str) -> "GameState":
         raw = Path(path).read_text(encoding="utf-8")
-        return cls.model_validate_json(raw)
+        data = json.loads(raw)
+        version = int(data.get("schema_version", 1))
+        if version > SCHEMA_VERSION:
+            raise ValueError(
+                f"save is schema v{version}, but this build only understands "
+                f"up to v{SCHEMA_VERSION} — update the game to load it."
+            )
+        # Walk any registered migrations forward to the current version. New
+        # fields with defaults need no migration; this is for structural
+        # changes (renames/moves) that a plain load couldn't absorb.
+        while version < SCHEMA_VERSION:
+            data = _MIGRATIONS[version](data)
+            version += 1
+        data["schema_version"] = SCHEMA_VERSION
+        return cls.model_validate(data)
 
     # -- finance depth (M4) ---------------------------------------------------
     # Three concurrent sponsor slots ("title", "jersey", "peripheral"), keyed
