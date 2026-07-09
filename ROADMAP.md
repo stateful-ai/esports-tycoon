@@ -2,7 +2,7 @@
 
 **Project:** esports-sim — Valorant-inspired tycoon + RL substrate + world-model research target
 **Format:** Now / Next / Later. Avoids false precision for a solo long-horizon project.
-**Last updated:** 2026-04-22
+**Last updated:** 2026-07-09
 
 ---
 
@@ -18,25 +18,30 @@ Three outcomes the whole project is aiming at. Everything on the roadmap should 
 
 ## Now (active, 0-2 weeks)
 
-**→ Sprint 2 — "See the game": [docs/sprints/sprint-02.md](docs/sprints/sprint-02.md)**
-Web UI on the design system, 2D match viewer (adds MoveEvent to the engine),
-narrative v0 from the salvage patterns, season analytics, veto + scouting fog,
-2 maps + 4 agents + Ludo art.
+**→ Headless LLM-playtest harness (north-star bet #2).** The state-view +
+action API already drives the CLI, web UI, and `--auto` runs; the missing
+piece is a harness that hands an LLM the state + legal actions each week
+and collects a season-long narrative critique. This is the next
+committed item — everything below it in "Next" shipped.
 
-Previously in Now — all done:
+Also open, smaller: Scenario-API sampling of the trained `esports-sim-diorama`
+LoRA (works from the Scenario web UI; the legacy inference endpoints 500 —
+see `assets/office/style/lora/STATUS.md`), development-milestone inbox
+items, viewer camera follow/zoom, animated office characters.
 
-| # | Item | Status | Notes |
-|---|---|---|---|
-| 1 | **Sprint 0** — schemas, RNG tree, event log, data files, tests | ✅ Done | 18 passing + 1 xfail north-star test |
-| 2 | **Design system v0** — tokens, components, showcase | ✅ Done | `ui/design-system/` |
-| 3 | **Engineering guardrails** — skill enforcing determinism / typed-boundary / data-driven rules | ✅ Done | `skills/esports-sim-guardrails` |
-| 4 | **Heuristic player policy v0** | ✅ Done | `policy/heuristic.py` — order-following baseline behind the engine |
+Previously in Now — all done: Sprint 0 (schemas/RNG/events/tests), design
+system v0, engineering guardrails skill, heuristic policy v0, and
+**Sprint 2 — "See the game"** (web UI, match viewer, narrative v0,
+analytics, veto + scouting fog, maps/agents/art) — see
+[docs/sprints/sprint-02.md](docs/sprints/sprint-02.md).
 
 ---
 
-## Next (MVP game loop — target ~3 months)
+## Next (MVP game loop — target ~3 months) — ✅ SHIPPED
 
-Five phases in order. Each phase gates the next. **Don't start the next phase until the previous phase's acceptance criterion passes.**
+All five phases below are done (see the 2026-07-07/09 changelog entries);
+the tables are kept as the acceptance record. The only remnant is the LLM
+half of Phase 5, promoted to "Now" above.
 
 ### Phase 1 — Match engine (3-5 weeks) · *primary risk*
 
@@ -94,16 +99,16 @@ Five phases in order. Each phase gates the next. **Don't start the next phase un
 Three parallel tracks. **Not sequential.** Once the MVP is real, pick the track the MVP's flaws suggest first. Probably start with Track A for a month to deepen the sim before the RL work rewards it.
 
 ### Track A — Depth & realism ("feels more like life")
-- Partial observability / fog-of-war on attributes (uses the `scouting_uncertainty` column already reserved)
-- Scouting subsystem — hired scouts, attribute-noise shrinks with effort + time
-- Pairwise relationship graph — replaces team-chemistry scalar; chemistry emerges from edges
+
+Shipped from this track already: scouting fog + subsystem, the pairwise
+relationship graph, multi-region VCT + Challengers, all planned maps and
+agents, coaching staff/analyst/physio, the coaching-dial tactics system,
+sponsorship depth, insolvency, traits/potential/development. Still open:
+
 - Personality / tilt-spiral event system — threshold-triggered attribute deltas
 - Media & community sentiment layer — reactions feed back into morale
 - Meta evolution — patch cycles that nerf / buff agents; meta becomes a driver of fortunes
-- Multi-region VCT structure + Challengers / Ascension pathway
-- Additional maps (Ascent, Bind, Lotus)
-- Additional agents (Chamber, Skye, Viper, Cypher, Breach, Clove)
-- Coaching staff, substitutes, analyst roles
+- Substitutes / six-man rosters
 
 ### Track B — RL research arm
 - Gym-style `env` wrapper over the headless API
@@ -151,5 +156,15 @@ Explicit non-goals. Calling these out so we don't drift.
 
 ## Changelog
 
+- **2026-07-09** — The game grew past the MVP frame: Sprint 2 and the
+  whole "Next" block shipped (web app + isometric viewer, narrative,
+  analytics, veto/fog), then kept going — floor geometry with
+  continuous movement and the floor-connection audit gate, micro-combat,
+  authored map gimmicks, multi-region VCT through Champions, the
+  neutral-safe coaching-dial system with per-player roster fit
+  (ADR-007), inbox, player/team profiles, dashboard hub, the painted
+  office and painted map backdrops via the blockout→beautify art
+  pipeline, and a trained Scenario style LoRA. Suite is 179 tests + five
+  report gates. "Now" is the LLM-playtest harness (bet #2).
 - **2026-07-07** — MVP built in one push: Phase 1 (match engine, determinism gate strict-passing), Phase 3 (tycoon loop: league/training/economy/market/save-load), and the headless half of Phase 5 (`--auto` CLI) are done; 33 tests, CI live. Repo published to github.com/stateful-ai/esports-tycoon (old prototype preserved on `legacy-tycoon`; salvage in `docs/salvage/`). Phases 2 + 4 fold into **Sprint 2 — "See the game"** (`docs/sprints/sprint-02.md`) alongside analytics, veto, scouting fog, and content.
 - **2026-04-22** — First roadmap. Sprint 0 scaffold, design system v0, and engineering guardrails skill marked Done. Heuristic policy v0 is the next active item.

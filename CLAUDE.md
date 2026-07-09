@@ -21,9 +21,13 @@ Published at github.com/stateful-ai/esports-tycoon.
 |---|---|
 | Tests | `.venv-win\Scripts\python.exe -m pytest -q` |
 | Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` (exit 1 = fail) |
-| Rotation pacing gate (25–35s via spawn) | `... scripts\pacing_report.py` (exit 1 = fail) |
+| Rotation pacing gate (25–35s via spawn, 8–18s spawn→entry) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |
+| Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
+| Map floor gate (plates touch; callouts/paths on-floor) | `... scripts\map_floor_audit.py` (exit 1 = fail) |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
+| Map guide rasterizer (viewer-transform-exact) | `... scripts\render_map_guide.py [--map <id>]` |
+| Painted map thumbnails (crop from backdrops) | `... scripts\render_map_thumbs.py` |
 | Office guide rasterizer | `... scripts\render_office_guide.py` |
 | Sprite-office offline preview (no browser) | `... scripts\render_sprite_office.py [out.png]` |
 | Painted-art drift fix | `... scripts\align_painted.py [--apply]` |
@@ -35,9 +39,12 @@ Published at github.com/stateful-ai/esports-tycoon.
   knobs in `sim/constants.py`, never inline. Reads `TeamTactics` (the
   coaching dials, `schemas/team.py`) for site call, pace, aggression,
   utility discipline, eco greed, and map control (stack vs spread + a
-  lurker) — all neutral-safe (invariant 7). `sim/stats.py` derives the box
-  score (incl. clutches/multikills/aces/first-deaths) from the event log
-  only; never emits events, so it can't drift the golden.
+  lurker) — all neutral-safe (invariant 7). `sim/tactics_fit.py` is the
+  single source of truth for roster-fit maths, shared by the engine's
+  `_execution_mod` AND the web tactics serializer, so the UI's impact
+  preview can't drift from what the engine applies. `sim/stats.py` derives
+  the box score (incl. clutches/multikills/aces/first-deaths) from the
+  event log only; never emits events, so it can't drift the golden.
 - `src/esports_sim/manager/` — campaign: `campaign.py` (weekly tick, VCT
   phases, in-season AI tactic adaptation), `gen.py` (region-flavoured
   names), `market.py` (transfers + AI free-agent poaching), `development.py`
@@ -45,17 +52,25 @@ Published at github.com/stateful-ai/esports-tycoon.
   growth), `economy.py` (finances + insolvency), `sponsors.py`, `staff.py`,
   `talk.py`, `relationships.py` (pairwise chemistry graph, spotlight-role
   friction), `narrative.py` (recaps + tactical-identity + team awards),
-  `state.py` (save; `standings_order` H2H tiebreaker; `schema_version`
-  migration hook).
+  `inbox.py` (weekly digest; item actions derived LIVE from current
+  offers, never stored), `state.py` (save; `standings_order` H2H
+  tiebreaker; `schema_version` migration hook).
 - `src/esports_sim/web/` — FastAPI, thin serializers over GameState; static
   vanilla-JS frontend on `ui/design-system` tokens. **UI holds no sim
-  state — it renders event logs + GameState only.**
+  state — it renders event logs + GameState only.** Corollary: never
+  mirror an engine formula in JS — serialize the computed values (see
+  `tactics_fit`: the server returns per-dial impact at both poles, the
+  client only lerps). Screens: app.js (tabs incl. dashboard hub +
+  tactics), viewer.js (painted-backdrop isometric replay), office.js
+  (sprite-composited home), inbox.js, profile.js (player/team overlays,
+  opened via `[data-pid]`/`[data-tid]` delegation on any name).
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
   pydantic (`extra="forbid"`): typos fail loudly.
 - Docs: `GDD.md` (systems + design), `docs/art-pipeline.md`
-  (blockout→beautify), `docs/adr/` (esp. ADR-007 neutral-safe tactics),
-  `ROADMAP.md`. Skills: `/ship` (gate stack + push), `/tactics` (neutral-
-  safe dial workflow).
+  (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
+  (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index
+  of skills/agents). Skills: `/ship`, `/tactics`, `/art-pass`, `/maps`,
+  `/web-screen`, `/campaign`.
 
 ## Non-negotiable invariants
 
@@ -83,6 +98,13 @@ Published at github.com/stateful-ai/esports-tycoon.
    (AI adaptation, economy, development) never run inside the match gates,
    so they're unconstrained by this rule — but must stay campaign-
    deterministic (same seed → byte-identical `GameState`).
+8. **Map floor contract** (`scripts/map_floor_audit.py`, exit 1 = fail):
+   every adjacency pair's floor plates touch, every callout center sits on
+   its own plate, every path polyline stays on the plate union. Teleporter
+   edges are exempt (the engine collapses those moves to endpoints —
+   players beam, never walk). Run it after ANY `data/maps/geometry/**`
+   edit; a geometry fix that passes it may still leave the PAINT stale —
+   IoU won't catch that, only a per-seam 50%-blend overlay read does.
 
 ## Working conventions
 
@@ -93,5 +115,15 @@ Published at github.com/stateful-ai/esports-tycoon.
   another owns web/static/x.js). Shared-file edits = sequence, don't race.
 - Commit style: imperative subject + wrapped body explaining the why;
   gates run before every push; CI (GitHub Actions) must stay green.
+  Parallel sessions push to this repo — expect non-fast-forward rejects;
+  `git pull --rebase origin main`, rerun the gates, then push.
 - Replays are captured at sim time and kept for the latest week only —
   rosters mutate immediately after, so stored seeds don't reproduce logs.
+- Browser screenshots via the preview tools wedge chronically on this
+  machine — verify UI with `preview_snapshot`/`preview_eval`/
+  `preview_inspect`, and use the offline compositors
+  (`render_sprite_office.py`, `render_map_guide.py`) for pixel checks.
+- Viewer/guide transform contract: guides rasterize geometry at the exact
+  transform the viewer uses (`render_map_guide.py` prints it), and the
+  painted backdrop `<image>` is pinned at those same viewBox coords —
+  change one side and the other must follow or paint/positions shear.

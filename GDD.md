@@ -266,11 +266,20 @@ Its neutral state is `balanced` (no bias); it has no 0–100 / neutral-50
 axis, so the numeric-dial rules below don't apply to it in the same way.
 
 Two factors decide how *well* a system is actually executed: **roster fit**
-(does the playstyle mix suit the dials — aim for aggression, game-sense and
+(does the attribute mix suit the dials — aim for aggression, game-sense and
 comms for map control) and **team chemistry** (coordination-heavy systems
-like splits and disciplined retakes misfire without cohesion). Running an
-extreme system your roster can't execute costs you; a suited roster is
-rewarded.
+like splits and disciplined retakes misfire without cohesion). Fit is
+scored **per player** against a baseline, and a player *below* the baseline
+is amplified before summing — a teammate who can't run the system drags
+harder than an equally-good fit lifts. That's the deliberate design guard
+against "crank every dial": a couple of stars can't average away the
+misfits, and a high-variance roster nets *negative* at an extreme. The fit
+maths live in one module (`sim/tactics_fit.py`) shared by the match engine
+and the web serializer, so the "duel edge" the tactics screen previews is
+exactly what the engine applies — the UI only interpolates between
+server-computed poles, holding no formula of its own (per-dial impact is
+piecewise-linear with its knot at neutral 50, so two endpoints fully
+describe it).
 
 The AI is not frozen: each rival coach derives a season identity from its
 roster and then **adapts it in-season** — winners entrench their identity,
@@ -334,13 +343,23 @@ suite that guarantees no movement clips through a wall and every room sits
 where its callout anchor says it should.
 
 **Map gimmicks** — rotating doors (Lotus), teleporters (Bind), and
-breakable doors that can start a round shut (Ascent) — exist as a real
-edge-level mechanic in the schema and engine: every use is *loud*, and
-enemies within a noise radius react (a watch direction snaps toward the
-sound; a pre-plant defense can treat it as a rotation trigger), which is
-also what makes faking a gimmick a legitimate read. This system is
-implemented but not yet authored onto any specific map's data file — the
-plumbing exists, the content pass is still open.
+breakable doors that can start a round shut (Ascent) — are a real
+edge-level mechanic in the schema and engine, and are **authored onto the
+live map data**: Bind's A-Short↔B-Window teleporter, Lotus's rotating door
+into A, Ascent's breakable garden door. Every use is *loud*, and enemies
+within a noise radius react (a watch direction snaps toward the sound; a
+pre-plant defense can treat it as a rotation trigger), which is also what
+makes faking a gimmick a legitimate read. Teleporter travel is
+instantaneous — the engine collapses the move to its endpoints, so players
+beam rather than walk the gap (and the floor-connection rule below
+exempts those edges).
+
+**The floor contract:** paint, movement, and geometry are held to one
+walkability rule, enforced by a permanent gate
+(`scripts/map_floor_audit.py`): every adjacency pair's floor plates must
+physically touch, every callout center must sit on its own plate, and
+every path polyline must stay on the plate union. This is what guarantees
+players in the viewer never walk across the painted void between rooms.
 
 ### 4.3 Continuous movement
 
@@ -464,12 +483,42 @@ standing architecture-review rule on every change to the UI layer.
 ### 5.1 The web app
 
 A FastAPI backend (`web/server.py`) exposes the same `GameState` the
-terminal CLI drives, as JSON views (dashboard, roster, standings,
-schedule, market, stats, finances) and typed actions (train, sign,
-release, renew, talk, scout, sponsor respond, hire/release staff, advance
-week). The frontend is a no-build-step vanilla-JS app on a custom design
-system (`ui/design-system/` — dark-first, information-dense, a
-Valorant-red accent used sparingly).
+terminal CLI drives, as JSON views (dashboard, roster, tactics, standings,
+schedule, scouting, market, stats, finances, inbox, office) and typed
+actions (train, sign, release, renew, talk, scout, sponsor respond,
+hire/release staff, set tactics, advance week). The frontend is a
+no-build-step vanilla-JS app on a custom design system
+(`ui/design-system/` — dark-first navy, information-dense, a Rajdhani
+display face, a Valorant-red accent used sparingly with teal/amber
+support colors).
+
+Notable screens beyond the table-stakes tabs:
+
+- **Dashboard hub** — next-match spotlight, stat tiles, recent-form
+  squares, and "danger men" scouting callouts, so the week's decisions
+  start from one screen.
+- **Inbox** — a weekly digest of the most important events (results,
+  transfer and sponsorship offers, player-conversation prompts, news),
+  with unread tracking and **inline actions**: offers can be accepted or
+  declined right from the message, and the action list is derived live
+  from the current game state so a stale message can't fire a dead offer.
+- **Player & team profiles** — click any player or team name anywhere in
+  the app to open a profile overlay: attribute bars (scouting-fogged for
+  rivals), weekly form sparklines, season stat charts, contract and
+  chemistry context. Served by dedicated profile endpoints; the weekly
+  series derive from stored fixture lines.
+- **Tactics** — the coaching dials as bipolar two-tone sliders (named
+  poles, neutral notch at 50, live descriptor that reads "Neutral" inside
+  the engine's actual neutral band), roster chips showing which players
+  suit each pole, a per-dial "±X.X duel" impact readout, and an execution
+  edge banner — all fed by server-computed fit (§3.11), never by
+  formulas mirrored in JS.
+- **Office** — a painted isometric office as the campaign's home screen:
+  one AI-painted shell plus per-furniture transparent sprites composited
+  and z-sorted at runtime (so furniture placement is data, not paint),
+  with hotspots into the management screens and seated character sprites
+  at the desks. Ambient audio (a main theme + office room tone) plays
+  behind it.
 
 ### 5.2 The match viewer
 
@@ -477,19 +526,51 @@ Any played match can be replayed from a floor-plan **isometric** view (with
 a 2D top-down toggle): real rooms, extruded walls, tinted sites, corridor
 walkways, players walking their actual paths with motion trails, kill
 markers, utility markers (color- and shape-coded by ability type — smoke,
-flash, damage, info, ultimate), a live kill/utility feed, the round clock
-(with a post-plant amber state), and full playback control — 1×/4×/16×/
-instant speed, pause, scrub, round-skip. The viewer is a pure consumer of
-the event log; it holds no simulation state of its own, and a legacy-log
-fallback keeps older replays (pre-geometry, pre-continuous-movement)
-playable.
+flash, damage, info, ultimate), gimmick markers with tooltips (teleporter
+links, door states), a live agent-forward kill/utility feed and lineup
+panel, the round clock (with a post-plant amber state), and full playback
+control — 1×/4×/16×/instant speed, pause, scrub, round-skip. The isometric
+floor is an **AI-painted backdrop** per map (see §5.3), pinned under the
+vector overlay at an exact shared transform so hit positions, walkways,
+and paint never drift apart; each map gets a tight per-map viewBox
+(crop-to-content) and the viewer shell scales up to fill large monitors,
+so the map reads big relative to the player icons. The viewer is a pure
+consumer of the event log; it holds no simulation state of its own, and a
+legacy-log fallback keeps older replays (pre-geometry,
+pre-continuous-movement) playable. Replays are captured at sim time and
+kept for the latest week only — rosters mutate immediately after a week
+resolves, so an old seed wouldn't reproduce its log.
 
 ### 5.3 Art
 
-A small, deliberately curated asset pack (generated via the Ludo.ai API,
-committed once rather than generated on demand): a title splash, eight
-team logos, and ten role-based player portraits, assigned deterministically
-by entity-id hash so the same team or role always gets the same art.
+All art is AI-generated through a documented, gated pipeline
+(`docs/art-pipeline.md`), committed once rather than generated on demand.
+The core doctrine is **blockout→beautify**: structure comes from a flat
+guide image rasterized from the actual plan/geometry data, appearance
+comes from text prompts, and every generated scene is gated against its
+guide with a footprint-IoU structure check before acceptance — so the art
+can never quietly disagree with the gameplay data underneath it.
+
+The committed pack:
+
+- **Identity art** — a title splash, team logos, and role-based player
+  portraits, assigned deterministically by entity-id hash so the same
+  team or role always gets the same art; agent icons and painted map
+  thumbnails for match UI.
+- **Map backdrops** — five painted isometric floors (one per map)
+  generated from geometry-derived guides, plus per-map style briefs
+  researched from the real maps' visual identities. Guides, briefs, and
+  winning prompts are kept in `assets/maps/` so a repaint is
+  reproducible.
+- **The office** — a sprite-decomposed scene: one furniture-free painted
+  shell plus per-furniture-type transparent sprites (and seated-character
+  variants), composited and z-sorted by the runtime from
+  `office_plan.json`/`office_sprites.json`, so layout changes never
+  require repainting.
+- **Audio** — a looping main theme and office ambiance (Lyria).
+- **A trained style LoRA** — `esports-sim-diorama` (Scenario, FLUX.2 Dev)
+  trained on the accepted diorama art, locking the style for future
+  volume generation.
 
 ### 5.4 The terminal
 
@@ -547,6 +628,20 @@ preserving so future work doesn't relearn them the expensive way:
   was needed after headless multi-season runs showed condition (form/
   morale) snowballing into repeated 13–0/13–1 blowouts that single-match
   testing never surfaced.
+- **An average can hide a broken roster.** The first roster-fit model for
+  the coaching dials scored the roster *mean* against a baseline, which
+  made every above-average squad's optimum "crank a dial to a pole" — a
+  free bonus, not an identity choice. Scoring per player and amplifying
+  below-baseline misfits (so they drag harder than stars lift) restored
+  the intended trade-off; league-wide the mean edge at full crank moved
+  from +0.16 to ~0.00 duel points.
+- **Paint and geometry drift apart silently.** Players "walking on the
+  background" traced to floor plates that never physically touched — the
+  sim pathed through gaps the paint never covered. The fix was a
+  contract (plates touch, callouts on-plate, paths on the plate union)
+  enforced by a permanent audit gate, plus the lesson that a footprint-IoU
+  check alone can't detect *stale paint* after a localized geometry fix —
+  only a per-seam overlay read catches it.
 
 ---
 
@@ -565,26 +660,25 @@ preserving so future work doesn't relearn them the expensive way:
 
 **Shipped so far** (see `ROADMAP.md` changelog for exact commits): the
 full match engine with the fallback/retake model; the full management
-loop across multiple seasons; the web app and isometric viewer; floor
-geometry with props, elevation, and continuous movement; micro-combat
-(peeks, flanks, footwork); rotation pacing tuned to a real-feel ~30s rule;
-season analytics and grounded narrative; scouting fog, map veto, staff,
-sponsorships, and the Talk module.
-
-**In flight right now:** map gimmicks (rotating doors, teleporters,
-breakable doors) are implemented end-to-end in the schema and engine
-(noise propagation, watch-direction reactions, closed-door state) but not
-yet authored onto Lotus, Bind, or Ascent's actual map data — that content
-pass, plus re-blessing the golden fixture once the engine change is final,
-is the immediate next step.
+loop across multiple seasons (multi-region VCT, Challengers, Masters,
+Champions); the web app with inbox, profiles, dashboard hub, and the
+painted office home screen; the isometric viewer over painted map
+backdrops; floor geometry with props, elevation, continuous movement, and
+the floor-connection contract; map gimmicks authored onto Ascent, Bind,
+and Lotus; micro-combat (peeks, flanks, footwork); rotation pacing tuned
+to a real-feel ~30s rule; the neutral-safe coaching-dial system with
+per-player roster fit; season analytics and grounded narrative; scouting
+fog, map veto, staff, sponsorships, relationships, and the Talk module;
+the art pipeline with a trained style LoRA.
 
 **Next candidates** (unscheduled, in rough order of how they were left):
-site-geometry passes on Ascent/Bind to pull their attack rate closer to
-the other three maps' band; camera follow/zoom in the viewer; a headless
-LLM-playtest harness (north-star bet #2); an RL `env` wrapper over the
-same headless contract (Track B); deepening personality/relationship
-systems beyond the current tag-based model (Track A); and, eventually,
-the event-sequence world-model research arm (Track C). None of this is
+a headless LLM-playtest harness (north-star bet #2); camera follow/zoom
+in the viewer; Scenario-API sampling of the trained LoRA (currently
+web-UI only); development-milestone inbox items (needs prior-week state
+tracking); animated office characters; an RL `env` wrapper over the same
+headless contract (Track B); deepening personality/relationship systems
+beyond the current tag-based model (Track A); and, eventually, the
+event-sequence world-model research arm (Track C). None of this is
 committed scope until it lands on the roadmap's Now/Next list — this
 section is a map of the terrain, not a promise.
 

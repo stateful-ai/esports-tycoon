@@ -23,7 +23,10 @@ Measurement before and after every change:
 2. `.venv-win\Scripts\python.exe scripts\pacing_report.py` — exit 0.
 3. `.venv-win\Scripts\python.exe scripts\snowball_report.py` — multi-season
    blowout rates hold (~35% target band noted in the script).
-4. Full `pytest -q` minus golden; report golden drift for the parent to
+4. `.venv-win\Scripts\python.exe scripts\tactics_report.py` — exit 0, if
+   the change touches anything the coaching dials reach (most engine
+   micro does).
+5. Full `pytest -q` minus golden; report golden drift for the parent to
    re-bless (never bless yourself).
 Report numbers as before→after tables, and call out any lever you tried
 that did NOT work — negative results go in the lesson bank.

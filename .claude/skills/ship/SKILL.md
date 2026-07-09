@@ -25,11 +25,20 @@ justify, never skip silently.
 5. **Snowball** (if the change could affect multi-season competitiveness —
    balance, development, economy, market): `scripts\snowball_report.py` →
    exit 0 (blowout/close band across 3 seasons).
-6. **JS** (if web/static changed): `node --check` each changed file, and
-   verify the affected screen in the browser preview when one is running.
-7. **Commit**: imperative subject; body explains the why and records key
+6. **Floor audit** (if `data/maps/geometry/**` changed):
+   `scripts\map_floor_audit.py` → exit 0 (plates touch, callouts on-plate,
+   paths on the plate union; teleporter edges exempt). If geometry moved
+   where paint exists, also eyeball the seams — IoU won't catch stale
+   paint (see the `/maps` skill).
+7. **JS** (if web/static changed): `node --check` each changed file, and
+   verify the affected screen in the browser preview when one is running
+   (prefer preview_snapshot/preview_eval — screenshots wedge on this box).
+8. **Commit**: imperative subject; body explains the why and records key
    numbers (balance/pacing/snowball). Use the repo's co-author line.
-8. **Push + CI**: push to main, then watch
+9. **Push + CI**: push to main — parallel sessions land PRs here, so a
+   non-fast-forward reject is normal: `git pull --rebase origin main`,
+   rerun the gates that the incoming commits could affect, push again.
+   Then watch
    `gh run list -R stateful-ai/esports-tycoon --branch main --limit 1`
    in a background poll until `completed success`. Report the result.
 

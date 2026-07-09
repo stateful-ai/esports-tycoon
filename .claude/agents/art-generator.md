@@ -21,7 +21,11 @@ Recipes (all validated in production):
   positive → rephrase longer and retry.
 - **Scenario** (`SCENARIO_API_KEY`/`SCENARIO_SECRET_KEY`, Basic auth,
   api.cloud.scenario.com/v1): reserved for LoRA training + volume
-  generation once a style is locked — not for iteration.
+  generation once a style is locked — not for iteration. The style LoRA
+  is TRAINED: `esports-sim-diorama` (FLUX.2 Dev, trigger
+  `esports-sim-diorama`, scale 0.8) — see
+  `assets/office/style/lora/STATUS.md`. Legacy inference endpoints 500 on
+  it; sample from the Scenario web UI, don't burn time retrying the API.
 
 Scene-art rules (the pipeline's core lessons):
 1. Structure comes from a flat guide image rendered from plan geometry;
