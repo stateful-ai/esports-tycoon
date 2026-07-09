@@ -1645,6 +1645,21 @@ def advance() -> dict:
                 "waiting_on": [gs.teams[t].name for t in waiting_on],
                 "ready": sorted(game.ready),
             }
+        # Everyone's in — but a manager may have released or sold a player
+        # AFTER readying up, while waiting on the others. Revalidate every human
+        # roster right before the tick so a ready-but-now-short team can't slip
+        # the week through. Offenders lose their ready flag and must re-ready.
+        short = [t for t in gs.human_team_ids if not market.roster_ready(gs, t)[0]]
+        if short:
+            for t in short:
+                game.ready.discard(t)
+            game.save()
+            names = ", ".join(gs.teams[t].name for t in short)
+            raise HTTPException(
+                409,
+                f"can't advance — {names} need {market.ROSTER_MIN} players "
+                "(re-ready once fixed)",
+            )
         # Everyone's in — advance the shared world exactly once.
         game.event_logs.clear()  # replays are for the freshly played week
         report = advance_week(gs, S.gd, events_out=game.event_logs)

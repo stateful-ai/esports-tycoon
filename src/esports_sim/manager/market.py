@@ -642,6 +642,11 @@ def respond_offer(
         return False, "no live offer for that player"
     # Deterministic pick when the buyer is unspecified and several exist.
     offer = min(candidates, key=lambda o: o.to_team)
+    # Rosters lock in the playoffs: a human seller can't complete a sale (they'd
+    # drop a player they then can't replace under the advance gate). Accepting is
+    # refused and the offer stays live; declining is still allowed.
+    if accept and gs.phase == "playoffs" and gs.is_human(seller_id):
+        return False, "rosters are locked during the playoffs"
     gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]
     p = gs.players[player_id]
     if not accept:

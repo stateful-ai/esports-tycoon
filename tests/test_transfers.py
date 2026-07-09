@@ -244,6 +244,32 @@ def test_package_deal_moves_players_and_cash(campaign) -> None:
     assert len(seller.player_ids) == market.ROSTER_SIZE
 
 
+def test_offer_accept_blocked_in_playoffs(campaign) -> None:
+    """Rosters lock in the playoffs: a pre-existing offer can't be ACCEPTED by a
+    human seller (it stays live), though declining is still allowed."""
+    gs = campaign
+    seller = gs.user_team_id
+    buyer = next(t.id for t in gs.teams.values() if t.id != seller and t.tier == 1)
+    gs.teams[buyer].balance = 5_000_000
+    pid = gs.teams[seller].player_ids[0]
+    gs.transfer_offers = [
+        TransferOffer(
+            player_id=pid, from_team=seller, to_team=buyer,
+            fee=200_000, expires_week=gs.week + 2,
+        )
+    ]
+    gs.phase = "playoffs"
+    gs.set_acting(seller)
+    ok, msg = market.respond_offer(gs, pid, accept=True)
+    assert not ok and "playoff" in msg.lower()
+    # The offer survives and no player moved.
+    assert gs.transfer_offers and pid in gs.teams[seller].player_ids
+    # Declining is still allowed during the lock.
+    ok, _ = market.respond_offer(gs, pid, accept=False)
+    gs.set_acting(None)
+    assert ok and not gs.transfer_offers
+
+
 def test_package_offer_revalidates_stale_roster(campaign) -> None:
     """A package offer that was legal when made can go stale on a human's desk.
     execute_package must recheck roster sizes and refuse an illegal settlement
