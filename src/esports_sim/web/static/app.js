@@ -28,45 +28,98 @@ async function api(path, body) {
   return r.json();
 }
 
-const App = { tab: "dashboard", state: null };
+const App = { tab: "dashboard", state: null, mp: null };
 
 /* -- boot ------------------------------------------------------------------ */
 
 async function boot() {
   if (App.tab === "dashboard") App.tab = "office"; // land on the visual HQ
-  const b = await api("/api/bootstrap");
-  if (!b.campaign) {
-    const grid = $("#ng-teams");
-    grid.innerHTML = "";
-    // Pick screen groups the world by region (authored orgs first).
-    const regions = [...new Set(b.teams.map((t) => t.region))].sort();
-    for (const region of regions) {
-      const head = el("div", "muted", region ? region.toUpperCase() : "");
-      head.style.gridColumn = "1 / -1";
-      head.style.marginTop = "6px";
-      grid.appendChild(head);
-      for (const t of b.teams.filter((x) => x.region === region)) {
-        const btn = el(
-          "button",
-          "team-pick",
-          `<b>${t.name}</b> <span class="pill">${t.tag}</span><br>
-           <span class="muted">rep ${t.reputation} · ${money(t.balance)}</span>`
-        );
-        btn.onclick = async () => {
-          await api("/api/new", { team_id: t.id, seed: parseInt($("#ng-seed").value) || 2026 });
-          $("#newgame").classList.add("hidden");
-          refresh();
-        };
-        grid.appendChild(btn);
-      }
-    }
-    $("#newgame").classList.remove("hidden");
+  const lob = await api("/api/lobby");
+  if (lob.in_game) {
+    App.mp = { code: lob.code, team_id: lob.team_id, mode: lob.mode };
+    $("#newgame").classList.add("hidden");
+    refresh();
+    // Prime the Inbox tab badge on load (inbox.js is loaded after us, but this
+    // runs post-await so its globals are defined; guard keeps boot resilient).
+    if (typeof refreshInboxBadge === "function") refreshInboxBadge();
     return;
   }
-  refresh();
-  // Prime the Inbox tab badge on load (inbox.js is loaded after us, but this
-  // runs post-await so its globals are defined; guard keeps boot resilient).
-  if (typeof refreshInboxBadge === "function") refreshInboxBadge();
+  setupLobby(lob.teams);
+  $("#newgame").classList.remove("hidden");
+}
+
+/* -- lobby: new (solo/shared) or join -------------------------------------- */
+
+// Render a region-grouped grid of pickable team cards into `grid`. Teams
+// flagged `taken` (already claimed by another manager in a shared world)
+// render disabled. `onPick(team)` fires for a free pick.
+function renderTeamGrid(grid, teams, onPick) {
+  grid.innerHTML = "";
+  const regions = [...new Set(teams.map((t) => t.region))].sort();
+  for (const region of regions) {
+    const head = el("div", "muted", region ? region.toUpperCase() : "");
+    head.style.gridColumn = "1 / -1";
+    head.style.marginTop = "6px";
+    grid.appendChild(head);
+    for (const t of teams.filter((x) => x.region === region)) {
+      const taken = t.taken;
+      const btn = el(
+        "button",
+        "team-pick" + (taken ? " taken" : ""),
+        `<b>${t.name}</b> <span class="pill">${t.tag}</span>${taken ? ' <span class="pill">taken</span>' : ""}<br>
+         <span class="muted">rep ${t.reputation} · ${money(t.balance)}</span>`
+      );
+      btn.disabled = !!taken;
+      if (!taken) btn.onclick = () => onPick(t);
+      grid.appendChild(btn);
+    }
+  }
+}
+
+function setupLobby(previewTeams) {
+  const create = $("#lobby-create");
+  const join = $("#lobby-join");
+  const showCreate = (shared) => {
+    create.classList.remove("hidden");
+    join.classList.add("hidden");
+    $("#lobby-create-hint").textContent = shared
+      ? "Pick your team. Others join with the code you'll get next."
+      : "Pick your organisation. Seed controls the generated league.";
+    renderTeamGrid($("#ng-teams"), previewTeams, (t) => createGame(t.id, shared));
+  };
+  $("#mode-solo").onclick = () => showCreate(false);
+  $("#mode-shared").onclick = () => showCreate(true);
+  $("#mode-join").onclick = () => {
+    create.classList.add("hidden");
+    join.classList.remove("hidden");
+    $("#join-teams").innerHTML = "";
+  };
+  $("#join-load").onclick = async () => {
+    const code = ($("#join-code").value || "").trim().toUpperCase();
+    if (code.length !== 5) return toast("Enter the 5-character game code.");
+    const r = await api("/api/lobby/teams?code=" + encodeURIComponent(code));
+    renderTeamGrid($("#join-teams"), r.teams, (t) => joinGame(code, t.id));
+  };
+  showCreate(false); // default view
+}
+
+async function createGame(teamId, shared) {
+  const seed = parseInt($("#ng-seed").value) || 2026;
+  const r = await api("/api/new", { team_id: teamId, seed, shared });
+  App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
+  $("#newgame").classList.add("hidden");
+  await refresh();
+  if (shared) {
+    toast(`Shared game created — code ${r.code}. Share it so others can join.`);
+  }
+}
+
+async function joinGame(code, teamId) {
+  const r = await api("/api/join", { code, team_id: teamId });
+  App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
+  $("#newgame").classList.add("hidden");
+  await refresh();
+  toast(`Joined game ${r.code}.`);
 }
 
 async function refresh() {
@@ -75,7 +128,25 @@ async function refresh() {
   $("#context").textContent =
     `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
   $("#balance").textContent = money(s.user_team.balance);
+  updateMpChip(s.multiplayer);
   render();
+}
+
+// Topbar chip for shared games: the join code + how many managers are ready.
+// Hidden for solo games (nothing to coordinate). Click copies the code.
+function updateMpChip(mp) {
+  const chip = $("#mp-chip");
+  if (!chip) return;
+  if (!mp || mp.mode !== "shared") {
+    chip.classList.add("hidden");
+    return;
+  }
+  chip.classList.remove("hidden");
+  chip.textContent = `⛨ ${mp.code} · ${mp.ready.length}/${mp.humans.length} ready`;
+  chip.onclick = () => {
+    if (navigator.clipboard) navigator.clipboard.writeText(mp.code);
+    toast(`Join code ${mp.code} copied.`);
+  };
 }
 
 /* -- tabs ------------------------------------------------------------------- */
@@ -1322,18 +1393,60 @@ function closeTalk() {
 
 /* -- advance week ------------------------------------------------------------------ */
 
+let mpPolling = false;
+
 $("#advance-btn").onclick = async () => {
   $("#advance-btn").disabled = true;
+  const prevWeek = App.state?.week;
   try {
     const rep = await api("/api/actions/advance", {});
+    if (rep.advanced === false) {
+      // Shared game: you're ready, but the week waits for the others.
+      $("#advance-btn").textContent = "Waiting… ⏳";
+      toast("Ready — waiting for: " + rep.waiting_on.join(", "));
+      await refresh(); // reflect your ready state in the chip
+      pollForAdvance(prevWeek);
+      return; // stay disabled; pollForAdvance re-enables when the week ticks
+    }
     showReport(rep);
     await refresh();
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
-    $("#advance-btn").disabled = false;
+    if (!mpPolling) $("#advance-btn").disabled = false;
   }
 };
+
+// While waiting for other managers to ready up, poll the shared world until the
+// week actually advances, then drop the waiting player into the new week.
+function pollForAdvance(prevWeek) {
+  if (mpPolling) return;
+  mpPolling = true;
+  const tick = async () => {
+    let s;
+    try {
+      s = await api("/api/state");
+    } catch {
+      mpPolling = false;
+      $("#advance-btn").textContent = "Advance Week ▸";
+      $("#advance-btn").disabled = false;
+      return;
+    }
+    App.state = s;
+    updateMpChip(s.multiplayer);
+    if (s.week !== prevWeek) {
+      mpPolling = false;
+      $("#advance-btn").textContent = "Advance Week ▸";
+      $("#advance-btn").disabled = false;
+      toast(`Week ${s.week} — everyone advanced.`);
+      await refresh();
+      if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+      return;
+    }
+    setTimeout(tick, 2500);
+  };
+  setTimeout(tick, 2500);
+}
 
 function showReport(rep) {
   $("#report-title").textContent =

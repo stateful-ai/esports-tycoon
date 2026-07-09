@@ -53,7 +53,7 @@ def hire(gs: GameState, candidate_id: str) -> tuple[bool, str]:
         for cand in pool:
             if cand.id != candidate_id:
                 continue
-            team = gs.teams[gs.user_team_id]
+            team = gs.teams[gs.acting_team_id]
             if team.balance < cand.salary * 8:
                 return False, f"need {cand.salary * 8:,} cr banked for the hire"
             old = gs.staff.get(role)

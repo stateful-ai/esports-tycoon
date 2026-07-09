@@ -124,7 +124,7 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
     in form want an early extension — ignoring them costs morale weekly."""
     for tid in sorted(gs.teams):
         team = gs.teams[tid]
-        is_ai = tid != gs.user_team_id
+        is_ai = not gs.is_human(tid)
         for pid in list(team.player_ids):
             p = gs.players[pid]
             p.contract_weeks_left = max(0, p.contract_weeks_left - 1)
@@ -158,7 +158,7 @@ def ai_fill_rosters(gs: GameState, gd, rng: np.random.Generator) -> None:
     """Every AI team below five players signs the best-fitting free agent
     it can afford. If the pool runs dry, a fresh prospect is generated."""
     for tid in sorted(gs.teams):
-        if tid == gs.user_team_id:
+        if gs.is_human(tid):
             continue
         team = gs.teams[tid]
         while len(team.player_ids) < ROSTER_SIZE:
@@ -217,7 +217,7 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
             return  # nothing premium left in the pool
         suitors: list[tuple[str, str | None]] = []  # (team, player_to_drop)
         for tid in sorted(gs.teams):
-            if tid == gs.user_team_id:
+            if gs.is_human(tid):
                 continue
             team = gs.teams[tid]
             if len(team.player_ids) < ROSTER_SIZE:
@@ -309,7 +309,7 @@ def execute_transfer(
     if buyer.balance < fee:
         return False, "buyer cannot afford the fee"
     if len(buyer.player_ids) >= ROSTER_SIZE:
-        if buyer_id == gs.user_team_id:
+        if gs.is_human(buyer_id):
             return False, f"roster is full ({ROSTER_SIZE}); release someone first"
         weakest = min(
             (gs.players[q] for q in buyer.player_ids), key=player_quality
@@ -339,18 +339,34 @@ def execute_transfer(
 
 
 def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
-    """User buys a contracted player at the seller's ask."""
+    """The acting manager buys a contracted player at the seller's ask. A bid
+    for an AI org's player executes instantly; a bid for ANOTHER human's player
+    lands on that manager's desk as a transfer offer they must accept."""
+    buyer_id = gs.acting_team_id
     seller_id = team_of(gs, pid)
     if seller_id is None:
         return False, "player is a free agent — sign them instead"
-    if seller_id == gs.user_team_id:
+    if seller_id == buyer_id:
         return False, "that's your own player"
     ask = transfer_ask(gs, pid)
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[buyer_id]
     p = gs.players[pid]
     if team.balance < ask + asking_salary(p) * 8:
         return False, f"need {ask + asking_salary(p) * 8:,} cr to cover fee + wages"
-    return execute_transfer(gs, pid, gs.user_team_id, ask)
+    if gs.is_human(seller_id):
+        if any(o.player_id == pid and o.to_team == buyer_id for o in gs.transfer_offers):
+            return False, "you already have a bid in for that player"
+        gs.transfer_offers.append(
+            TransferOffer(
+                player_id=pid,
+                from_team=seller_id,
+                to_team=buyer_id,
+                fee=ask,
+                expires_week=gs.week + 2,
+            )
+        )
+        return True, f"bid sent to {gs.teams[seller_id].name} for {p.handle}"
+    return execute_transfer(gs, pid, buyer_id, ask)
 
 
 def respond_offer(gs: GameState, player_id: str, accept: bool) -> tuple[bool, str]:
@@ -383,7 +399,7 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
         return
     moves = 0
     buyers = sorted(
-        (t for t in gs.teams.values() if t.tier == 1 and t.id != gs.user_team_id),
+        (t for t in gs.teams.values() if t.tier == 1 and not gs.is_human(t.id)),
         key=lambda t: t.id,
     )
     for buyer in buyers:
@@ -417,7 +433,7 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
         if best is None:
             continue
         _, fee, pid, seller_id = best
-        if seller_id == gs.user_team_id:
+        if gs.is_human(seller_id):
             if any(o.player_id == pid for o in gs.transfer_offers):
                 continue
             gs.transfer_offers.append(

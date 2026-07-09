@@ -95,15 +95,21 @@ def _build(game_data: GameData) -> GameState:
     return gs
 
 
+def _bind(gs: GameState, gd: GameData) -> None:
+    """Bind a one-off game + request context so the endpoint functions (which
+    read the current game via the `S` proxy) can be called directly in-process,
+    without spinning up the ASGI app."""
+    game = server_mod._Game(gd, "TESTC", gs=gs)
+    server_mod._ctx.set(server_mod._ReqCtx(game, gs.user_team_id))
+
+
 def _player(gs: GameState, gd: GameData, pid: str) -> dict:
-    server_mod.S.gs = gs
-    server_mod.S.gd = gd
+    _bind(gs, gd)
     return server_mod.player_profile(pid)
 
 
 def _team(gs: GameState, gd: GameData, tid: str) -> dict:
-    server_mod.S.gs = gs
-    server_mod.S.gd = gd
+    _bind(gs, gd)
     return server_mod.team_profile(tid)
 
 

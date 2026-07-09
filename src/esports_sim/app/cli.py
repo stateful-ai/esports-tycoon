@@ -7,6 +7,7 @@ renders state and forwards menu choices.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -502,14 +503,22 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")
     parser.add_argument("--web", action="store_true", help="launch the browser UI")
-    parser.add_argument("--port", type=int, default=8420)
+    # Honour $PORT (dev-server harnesses assign one) when --port isn't given.
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8420)))
     parser.add_argument("--no-browser", action="store_true")
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="0.0.0.0",
+        help="bind address; 0.0.0.0 (default) lets LAN players connect, "
+        "127.0.0.1 keeps it to this PC only",
+    )
     args = parser.parse_args()
 
     if args.web:
         from esports_sim.web.server import run  # deferred: needs [web] extras
 
-        run(port=args.port, open_browser=not args.no_browser)
+        run(port=args.port, open_browser=not args.no_browser, host=args.host)
         return
 
     gd = load_all()

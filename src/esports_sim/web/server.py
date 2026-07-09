@@ -11,8 +11,12 @@ Run: python -m esports_sim --web
 
 from __future__ import annotations
 
+import contextvars
 import hashlib
+import json
 import random
+import re
+import secrets
 import threading
 from pathlib import Path
 
@@ -37,36 +41,245 @@ from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.schemas import Event, Player, Team
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-SAVE_PATH = Path("saves") / "campaign.json"  # same file the CLI uses
+SAVE_DIR = Path("saves")
 STATIC_DIR = Path(__file__).parent / "static"
 DS_DIR = _REPO_ROOT / "ui" / "design-system"
 
+# A browser is identified by an opaque `esports_sid` cookie; a shared campaign
+# world is identified by a short game CODE that players share to join. The
+# save file is keyed by the game code (one save per world), so several humans'
+# state persists together. Session->game membership is persisted separately so
+# a browser rejoins its game after a server restart.
+COOKIE_NAME = "esports_sid"
+_SID_RE = re.compile(r"^[0-9a-f]{32}$")
+_CODE_RE = re.compile(r"^[A-Z0-9]{5}$")
+# Unambiguous alphabet (no O/0, I/1) for human-typable join codes.
+_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+_SESSIONS_PATH = SAVE_DIR / "sessions.json"
 
-class _Session:
-    """Server-side campaign session. One campaign at a time, guarded by a
-    lock (endpoints are sync `def`s — FastAPI runs them in a threadpool)."""
 
-    def __init__(self) -> None:
+def _save_path_for(code: str) -> Path:
+    digest = hashlib.blake2b(code.encode(), digest_size=8).hexdigest()
+    return SAVE_DIR / f"campaign_{digest}.json"
+
+
+def _meta_path_for(code: str) -> Path:
+    digest = hashlib.blake2b(code.encode(), digest_size=8).hexdigest()
+    return SAVE_DIR / f"campaign_{digest}.meta.json"
+
+
+class _Game:
+    """One shared campaign world. Every human manager (LAN player) controls one
+    of its teams; the set of humans is `gs.human_team_ids`. A solo game is just
+    a world with a single human. Guarded by a lock (endpoints are sync `def`s
+    run in a threadpool); all mutation of the shared GameState — including the
+    per-request acting-manager binding — happens under it.
+
+    `gd` (the immutable YAML registries) is shared across all games."""
+
+    def __init__(self, gd: GameData, code: str, gs: GameState | None = None) -> None:
         self.lock = threading.Lock()
-        self.gd: GameData = load_all()
-        self.gs: GameState | None = None
+        self.gd: GameData = gd
+        self.code = code
+        self.mode = "solo"  # "solo" | "shared" (set by the lobby)
+        self.save_path = _save_path_for(code)
+        if gs is None and self.save_path.exists():
+            gs = GameState.load(self.save_path)
+        self.gs: GameState | None = gs
         self.last_report: WeekReport | None = None
+        # A human's team id, marked when they've hit "advance"; the week only
+        # ticks once every human is ready.
+        self.ready: set[str] = set()
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
-        if SAVE_PATH.exists():
-            self.gs = GameState.load(SAVE_PATH)
 
     def require_gs(self) -> GameState:
         if self.gs is None:
-            raise HTTPException(409, "no campaign — POST /api/new first")
+            raise HTTPException(409, "no campaign — create one first")
+        # Bind the acting manager for this request (we're under self.lock).
+        self.gs.set_acting(_ctx.get().team_id)
         return self.gs
 
     def save(self) -> None:
         if self.gs is not None:
-            self.gs.save(SAVE_PATH)
+            SAVE_DIR.mkdir(parents=True, exist_ok=True)
+            self.gs.save(self.save_path)
 
 
-S = _Session()
+class Lobby:
+    """Registry of shared campaign worlds + which team each browser controls.
+    GameData loads once and is shared. Games load lazily from disk (so a world
+    survives a server restart), and the session->membership map is persisted."""
+
+    def __init__(self) -> None:
+        self.gd: GameData = load_all()
+        self.games: dict[str, _Game] = {}
+        self.sessions: dict[str, tuple[str, str]] = {}  # sid -> (code, team_id)
+        self._lock = threading.Lock()
+        self._load_sessions()
+
+    # -- persistence of the sid -> (code, team) map --------------------------
+    def _load_sessions(self) -> None:
+        if _SESSIONS_PATH.exists():
+            try:
+                raw = json.loads(_SESSIONS_PATH.read_text(encoding="utf-8"))
+                self.sessions = {k: tuple(v) for k, v in raw.items()}
+            except (ValueError, OSError):
+                self.sessions = {}
+
+    def _save_sessions(self) -> None:
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+        _SESSIONS_PATH.write_text(
+            json.dumps({k: list(v) for k, v in self.sessions.items()}),
+            encoding="utf-8",
+        )
+
+    def _get_game(self, code: str) -> _Game | None:
+        """Return a loaded game, lazily loading its save from disk if needed.
+        Caller must hold `self._lock` (mutates the games cache)."""
+        game = self.games.get(code)
+        if game is None:
+            path = _save_path_for(code)
+            if path.exists():
+                game = _Game(self.gd, code)
+                game.mode = self._read_mode(code, game.gs)
+                self.games[code] = game
+        return game
+
+    @staticmethod
+    def _read_mode(code: str, gs: GameState | None) -> str:
+        """Restore a world's solo/shared mode from its sidecar, falling back to
+        an inference (>1 human == shared) for saves written before the sidecar."""
+        meta = _meta_path_for(code)
+        if meta.exists():
+            try:
+                return json.loads(meta.read_text(encoding="utf-8")).get("mode", "solo")
+            except (ValueError, OSError):
+                pass
+        return "shared" if gs is not None and len(gs.human_team_ids) > 1 else "solo"
+
+    @staticmethod
+    def _write_mode(code: str, mode: str) -> None:
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+        _meta_path_for(code).write_text(json.dumps({"mode": mode}), encoding="utf-8")
+
+    def _new_code(self, rng: random.Random) -> str:
+        for _ in range(50):
+            code = "".join(rng.choice(_CODE_ALPHABET) for _ in range(5))
+            if code not in self.games and not _save_path_for(code).exists():
+                return code
+        raise HTTPException(503, "could not allocate a game code — try again")
+
+    # -- request-time lookups -------------------------------------------------
+    def membership(self, sid: str) -> tuple[str, str] | None:
+        return self.sessions.get(sid)
+
+    def game_for(self, sid: str) -> tuple[_Game | None, str | None]:
+        """(game, team_id) for a browser, or (None, None) if it hasn't joined
+        one. Drops a stale membership whose world no longer exists on disk."""
+        with self._lock:
+            m = self.sessions.get(sid)
+            if m is None:
+                return None, None
+            code, team_id = m
+            game = self._get_game(code)
+            if game is None:
+                del self.sessions[sid]
+                self._save_sessions()
+                return None, None
+            return game, team_id
+
+    # -- mutations ------------------------------------------------------------
+    def create_game(
+        self, sid: str, team_id: str, seed: int, shared: bool
+    ) -> _Game:
+        with self._lock:
+            # Code allocation must not depend on wall-clock/hash() (determinism
+            # habit); seed a local RNG from the campaign seed + live game count.
+            rng = random.Random(f"{seed}|{len(self.games)}|{sid}")
+            code = self._new_code(rng)
+            gs = new_campaign(self.gd, seed=seed, user_team_id=team_id)
+            if team_id not in gs.teams:
+                raise HTTPException(422, f"unknown team '{team_id}'")
+            game = _Game(self.gd, code, gs=gs)
+            game.mode = "shared" if shared else "solo"
+            self.games[code] = game
+            self.sessions[sid] = (code, team_id)
+            self._save_sessions()
+            self._write_mode(code, game.mode)
+            game.save()
+            return game
+
+    def join_game(
+        self, sid: str, code: str, team_id: str
+    ) -> tuple[_Game | None, str | None]:
+        with self._lock:
+            game = self._get_game(code)
+            if game is None or game.gs is None:
+                return None, "no game with that code"
+            if game.mode != "shared":
+                return None, "that game isn't open to other managers"
+            gs = game.gs
+            if team_id not in gs.teams:
+                return None, "unknown team"
+            existing = self.sessions.get(sid)
+            # Rejoining your own seat is fine; taking someone else's isn't.
+            if team_id in gs.human_team_ids and (
+                existing is None or existing != (code, team_id)
+            ):
+                return None, "another manager already controls that team"
+            if team_id not in gs.human_team_ids:
+                gs.human_team_ids.append(team_id)
+            self.sessions[sid] = (code, team_id)
+            self._save_sessions()
+            game.save()
+            return game, None
+
+
+_LOBBY = Lobby()
+
+
+class _ReqCtx:
+    """The game + acting team bound to the request currently being handled."""
+
+    __slots__ = ("game", "team_id")
+
+    def __init__(self, game: _Game | None, team_id: str | None) -> None:
+        self.game = game
+        self.team_id = team_id
+
+
+# Set by SessionMiddleware before routing; read through the `S` proxy so the
+# existing endpoint bodies (`S.gs`, `S.lock`, `S.gd`, ...) keep working.
+_ctx: contextvars.ContextVar[_ReqCtx] = contextvars.ContextVar("req_ctx")
+# The requesting browser's cookie id — lobby endpoints (create/join) need it to
+# record membership. Set alongside `_ctx`.
+_sid_ctx: contextvars.ContextVar[str] = contextvars.ContextVar("req_sid")
+
+
+def _current_sid() -> str:
+    return _sid_ctx.get()
+
+
+class _GameProxy:
+    """Forwards attribute access to the `_Game` bound to this request. A browser
+    that hasn't joined a game yet has no game, so gameplay endpoints (which all
+    touch `S.lock` / `S.gs`) cleanly 409 — the lobby endpoints don't use `S`."""
+
+    def __getattr__(self, name: str):
+        game = _ctx.get().game
+        if game is None:
+            raise HTTPException(409, "no game — create or join one first")
+        return getattr(game, name)
+
+    def __setattr__(self, name: str, value) -> None:
+        game = _ctx.get().game
+        if game is None:
+            raise HTTPException(409, "no game — create or join one first")
+        setattr(game, name, value)
+
+
+S = _GameProxy()
 app = FastAPI(title="esports-sim", docs_url=None, redoc_url=None)
 
 
@@ -223,37 +436,87 @@ def _fixture_view(f, gs: GameState) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Bootstrap / new game
+# Lobby / game lifecycle
 
 
-@app.get("/api/bootstrap")
-def bootstrap() -> dict:
-    with S.lock:
-        if S.gs is None:
-            preview = new_campaign(S.gd, seed=2026)
-            return {
-                "campaign": False,
-                "teams": [
-                    _team_view(t, preview)
-                    for t in sorted(preview.teams.values(), key=lambda t: t.id)
-                ],
-            }
-        return {"campaign": True}
+def _team_options(gs: GameState, taken: set[str]) -> list[dict]:
+    return [
+        {**_team_view(t, gs), "taken": t.id in taken}
+        for t in sorted(gs.teams.values(), key=lambda t: t.id)
+    ]
+
+
+@app.get("/api/lobby")
+def lobby() -> dict:
+    """Pre-game screen. If this browser is already in a world, report it so the
+    frontend jumps straight to the hub; otherwise return the team roster to
+    pick from when starting a new (solo or shared) world."""
+    ctx = _ctx.get()
+    if ctx.game is not None and ctx.game.gs is not None:
+        return {
+            "in_game": True,
+            "code": ctx.game.code,
+            "team_id": ctx.team_id,
+            "mode": ctx.game.mode,
+            "humans": list(ctx.game.gs.human_team_ids),
+        }
+    preview = new_campaign(_LOBBY.gd, seed=2026)
+    return {"in_game": False, "teams": _team_options(preview, taken=set())}
+
+
+@app.get("/api/lobby/teams")
+def lobby_teams(code: str) -> dict:
+    """Which teams are still free to claim in an existing shared world."""
+    code = code.upper()
+    with _LOBBY._lock:
+        game = _LOBBY._get_game(code) if _CODE_RE.match(code) else None
+    if game is None or game.gs is None:
+        raise HTTPException(404, "no game with that code")
+    with game.lock:
+        return {
+            "code": code,
+            "mode": game.mode,
+            "teams": _team_options(game.gs, taken=set(game.gs.human_team_ids)),
+        }
 
 
 class NewGameBody(BaseModel):
     team_id: str = "team_nexus"
     seed: int = 2026
+    shared: bool = False  # True -> open the world for other managers to join
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
-    with S.lock:
-        S.gs = new_campaign(S.gd, seed=body.seed, user_team_id=body.team_id)
-        S.event_logs.clear()
-        S.last_report = None
-        S.save()
-        return {"ok": True}
+    game = _LOBBY.create_game(
+        _current_sid(), body.team_id, body.seed, body.shared
+    )
+    return {
+        "ok": True,
+        "code": game.code,
+        "team_id": body.team_id,
+        "mode": game.mode,
+    }
+
+
+class JoinBody(BaseModel):
+    code: str
+    team_id: str
+
+
+@app.post("/api/join")
+def join_game(body: JoinBody) -> dict:
+    game, err = _LOBBY.join_game(
+        _current_sid(), body.code.upper(), body.team_id
+    )
+    if err is not None:
+        raise HTTPException(409, err)
+    return {
+        "ok": True,
+        "code": game.code,
+        "team_id": body.team_id,
+        "mode": game.mode,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -264,8 +527,8 @@ def new_game(body: NewGameBody) -> dict:
 def state() -> dict:
     with S.lock:
         gs = S.require_gs()
-        user = gs.teams[gs.user_team_id]
-        fixture = gs.team_fixture(gs.user_team_id)
+        user = gs.teams[gs.acting_team_id]
+        fixture = gs.team_fixture(gs.acting_team_id)
         order = gs.standings_order(str(user.region))
         return {
             "season": gs.season,
@@ -273,7 +536,7 @@ def state() -> dict:
             "phase": gs.phase,
             "user_team": _team_view(user, gs),
             "next_fixture": _fixture_view(fixture, gs) if fixture else None,
-            "training_focus": gs.training_focus.get(gs.user_team_id, "tactical"),
+            "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
             "scout": {
@@ -301,8 +564,23 @@ def state() -> dict:
                     "expires_week": o.expires_week,
                 }
                 for o in gs.transfer_offers
-                if o.player_id in gs.players and o.to_team in gs.teams
+                # Only bids for THIS manager's players (they answer them).
+                if o.from_team == gs.acting_team_id
+                and o.player_id in gs.players
+                and o.to_team in gs.teams
             ],
+            # Multiplayer ready-up: who shares this world, and who has hit
+            # "advance". In a solo game humans == [you] so it's a no-op.
+            "multiplayer": {
+                "mode": S.mode,
+                "code": S.code,
+                "humans": [
+                    {"team_id": tid, "name": gs.teams[tid].name, "is_you": tid == gs.acting_team_id}
+                    for tid in gs.human_team_ids
+                ],
+                "ready": sorted(S.ready),
+                "you_ready": gs.acting_team_id in S.ready,
+            },
         }
 
 
@@ -341,7 +619,7 @@ FOG_BASE_SIGMA = 12.0
 
 
 def _team_fog(gs: GameState, team_id: str) -> float:
-    if team_id == gs.user_team_id:
+    if team_id == gs.acting_team_id:
         return 0.0
     return FOG_BASE_SIGMA * (1.0 - gs.scout_progress.get(team_id, 0.0))
 
@@ -356,7 +634,7 @@ def roster(team_id: str) -> dict:
         players = [_player_view(p, gs, fog) for p in gs.roster(team_id)]
         # Rival rosters are buyable: show the seller's ask per player.
         tendencies: list[str] = []
-        if team_id != gs.user_team_id:
+        if team_id != gs.acting_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
             # Well-scouted rivals leak their coaching identity.
@@ -381,7 +659,7 @@ def roster(team_id: str) -> dict:
         return {
             "team": _team_view(gs.teams[team_id], gs),
             "players": players,
-            "is_user_team": team_id == gs.user_team_id,
+            "is_user_team": team_id == gs.acting_team_id,
             "fog": round(fog, 1),
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
@@ -394,7 +672,7 @@ def roster(team_id: str) -> dict:
                 ]
                 for kind, pairs in relationships.duos_and_feuds(gs, team_id).items()
             }
-            if team_id == gs.user_team_id
+            if team_id == gs.acting_team_id
             else {"duos": [], "feuds": []},
         }
 
@@ -414,7 +692,7 @@ def standings() -> dict:
                 for tid in gs.standings_order(region, tier=tier)
             ]
 
-        user_region = str(gs.teams[gs.user_team_id].region)
+        user_region = str(gs.teams[gs.acting_team_id].region)
         regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
         return {
             "regions": [
@@ -460,7 +738,7 @@ def market_view() -> dict:
         # ability, unknown ceiling. Reports tighten the view.
         progress = gs.scout_progress.get("market", 0.0)
         for p in fas:
-            ok, why = market.can_sign(gs, gs.user_team_id, p.id)
+            ok, why = market.can_sign(gs, gs.acting_team_id, p.id)
             view = _player_view(p, gs, fog=6.0 * (1.0 - progress))
             report = development.scout_report(gs, p, progress)
             view["scout"] = {
@@ -508,7 +786,7 @@ def stats_view() -> dict:
                     "hs_pct": round(st.hs_pct, 1),
                     "plants": st.plants,
                     "defuses": st.defuses,
-                    "is_user": pid in gs.teams[gs.user_team_id].player_ids,
+                    "is_user": pid in gs.teams[gs.acting_team_id].player_ids,
                 }
             )
         players.sort(key=lambda r: (-r["rating"], -r["kills"]))
@@ -528,7 +806,7 @@ def stats_view() -> dict:
                     "pistol_pct": round(
                         100 * ts.pistols_won / max(ts.pistols, 1), 1
                     ),
-                    "is_user": tid == gs.user_team_id,
+                    "is_user": tid == gs.acting_team_id,
                 }
             )
 
@@ -543,8 +821,8 @@ def stats_view() -> dict:
 def finances() -> dict:
     with S.lock:
         gs = S.require_gs()
-        team = gs.teams[gs.user_team_id]
-        payroll = sum(p.salary for p in gs.roster(gs.user_team_id))
+        team = gs.teams[gs.acting_team_id]
+        payroll = sum(p.salary for p in gs.roster(gs.acting_team_id))
         staff_cost = staff_mod.weekly_cost(gs)
         rep = S.last_report
 
@@ -606,8 +884,12 @@ def finances() -> dict:
             "balance": team.balance,
             "weekly_payroll": payroll,
             "marketability": round(sponsors.marketability(gs), 2),
-            "last_week_income": rep.user_income if rep else None,
-            "last_week_expenses": rep.user_expenses if rep else None,
+            # Per-manager: the shared report carries every human's income/
+            # expenses, so read the acting manager's slice.
+            "last_week_income": rep.income_by.get(gs.acting_team_id) if rep else None,
+            "last_week_expenses": rep.expenses_by.get(gs.acting_team_id)
+            if rep
+            else None,
             # Legacy (pre-M4) fields, kept for saves with an in-flight deal.
             "sponsor": gs.sponsor.model_dump() if gs.sponsor else None,
             "sponsor_offer": gs.sponsor_offer.model_dump()
@@ -665,7 +947,7 @@ def facility_upgrade(body: FacilityBody) -> dict:
         gs = S.require_gs()
         if body.facility not in economy.FACILITY_NAMES:
             raise HTTPException(422, f"facility must be one of {economy.FACILITY_NAMES}")
-        team = gs.teams[gs.user_team_id]
+        team = gs.teams[gs.acting_team_id]
         level = gs.facilities.get(body.facility, 0)
         cost = economy.facility_upgrade_cost(level)
         if cost is None:
@@ -700,7 +982,7 @@ def set_training(body: TrainingBody) -> dict:
         gs = S.require_gs()
         if body.focus not in FOCUS_OPTIONS:
             raise HTTPException(422, f"focus must be one of {FOCUS_OPTIONS}")
-        gs.training_focus[gs.user_team_id] = body.focus
+        gs.training_focus[gs.acting_team_id] = body.focus
         S.save()
         return {"ok": True, "focus": body.focus}
 
@@ -795,7 +1077,7 @@ def talk_resolve(body: TalkBody) -> dict:
 def tactics_view() -> dict:
     with S.lock:
         gs = S.require_gs()
-        tac = gs.teams[gs.user_team_id].tactics
+        tac = gs.teams[gs.acting_team_id].tactics
         return {"tactics": tac.model_dump()}
 
 
@@ -812,7 +1094,7 @@ class TacticsBody(BaseModel):
 def set_tactics(body: TacticsBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        tac = gs.teams[gs.user_team_id].tactics
+        tac = gs.teams[gs.acting_team_id].tactics
         for field in ("aggression", "pace", "util_discipline", "eco_greed", "map_control"):
             v = getattr(body, field)
             if v is not None:
@@ -868,7 +1150,7 @@ def scout(body: ScoutBody) -> dict:
         gs = S.require_gs()
         if body.team_id != "market" and body.team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
-        if body.team_id == gs.user_team_id:
+        if body.team_id == gs.acting_team_id:
             raise HTTPException(422, "you already know your own team")
         gs.scout_target = body.team_id
         S.save()
@@ -915,7 +1197,7 @@ def scouting_view() -> dict:
             "teams": [
                 {"id": tid, "name": gs.teams[tid].name}
                 for tid in sorted(gs.teams)
-                if tid != gs.user_team_id
+                if tid != gs.acting_team_id
             ],
         }
 
@@ -928,7 +1210,7 @@ class PlayerBody(BaseModel):
 def sign(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        ok, msg = market.sign_player(gs, gs.user_team_id, body.player_id)
+        ok, msg = market.sign_player(gs, gs.acting_team_id, body.player_id)
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -939,7 +1221,7 @@ def sign(body: PlayerBody) -> dict:
 def release(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        ok, msg = market.release_player(gs, gs.user_team_id, body.player_id)
+        ok, msg = market.release_player(gs, gs.acting_team_id, body.player_id)
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -950,7 +1232,7 @@ def release(body: PlayerBody) -> dict:
 def renew(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        ok, msg = market.renew_contract(gs, gs.user_team_id, body.player_id)
+        ok, msg = market.renew_contract(gs, gs.acting_team_id, body.player_id)
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -959,19 +1241,39 @@ def renew(body: PlayerBody) -> dict:
 
 @app.post("/api/actions/advance")
 def advance() -> dict:
+    """Ready-up: mark the acting manager ready to advance. The week only ticks
+    once EVERY human in the world is ready (a solo game advances immediately).
+    Returns either the resolved week's report, or a 'waiting' status listing who
+    the world is still waiting on."""
     with S.lock:
         gs = S.require_gs()
-        S.event_logs.clear()  # replays are for the freshly played week
-        report = advance_week(gs, S.gd, events_out=S.event_logs)
-        S.last_report = report
-        S.save()
+        me = gs.acting_team_id
+        game = _ctx.get().game
+        game.ready.add(me)
+        waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
+        if waiting_on:
+            game.save()  # persist the ready flag isn't needed, but the join is
+            return {
+                "advanced": False,
+                "waiting_on": [gs.teams[t].name for t in waiting_on],
+                "ready": sorted(game.ready),
+            }
+        # Everyone's in — advance the shared world exactly once.
+        game.event_logs.clear()  # replays are for the freshly played week
+        report = advance_week(gs, S.gd, events_out=game.event_logs)
+        game.last_report = report
+        game.ready.clear()
+        # Re-bind acting (advance_week churns the acting pointer internally).
+        gs.set_acting(me)
+        game.save()
         return {
+            "advanced": True,
             "season": report.season,
             "week": report.week,
             "phase": report.phase,
             "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
-            "user_income": report.user_income,
-            "user_expenses": report.user_expenses,
+            "user_income": report.income_by.get(me, 0),
+            "user_expenses": report.expenses_by.get(me, 0),
             "notes": report.notes,
         }
 
@@ -1039,7 +1341,7 @@ def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
     team_id = market.team_of(gs, pid)
     if team_id is None:
         return 0.0, 1.0, False  # unrostered non-FA (e.g. mid-transfer): treat as known
-    if team_id == gs.user_team_id:
+    if team_id == gs.acting_team_id:
         return 0.0, 1.0, False
     return _team_fog(gs, team_id), gs.scout_progress.get(team_id, 0.0), False
 
@@ -1191,7 +1493,7 @@ def _profile_relationships(gs: GameState, pid: str) -> list[dict]:
     """The locker-room graph for this player. Mirrors the roster page,
     which only exposes chemistry pairs for the user's own club, so rival /
     free-agent profiles return []."""
-    if pid not in gs.teams[gs.user_team_id].player_ids:
+    if pid not in gs.teams[gs.acting_team_id].player_ids:
         return []
     out = []
     for k in sorted(gs.relationships):
@@ -1234,7 +1536,7 @@ def player_profile(pid: str) -> dict:
                 "team_name": team.name if team else None,
                 "team_logo": _logo_url(team_id) if team_id else None,
                 "portrait": _portrait_url(p.id, str(p.role)),
-                "is_user_team": team_id == gs.user_team_id,
+                "is_user_team": team_id == gs.acting_team_id,
                 "is_free_agent": is_fa,
             },
             "overview": _profile_overview(gs, p, fog, progress),
@@ -1364,7 +1666,7 @@ def team_profile(tid: str) -> dict:
                 "logo": _logo_url(t.id),
                 "region": region,
                 "league_tier": t.tier,
-                "is_user_team": tid == gs.user_team_id,
+                "is_user_team": tid == gs.acting_team_id,
             },
             "record": {
                 "wins": rec.wins if rec else 0,
@@ -1504,14 +1806,72 @@ def replay(fixture_id: str, map_index: int) -> dict:
         }
 
 
-# Local app: force revalidation on scripts/styles so a server restart
-# never pairs a fresh backend with a stale cached frontend.
-@app.middleware("http")
-async def _no_stale_frontend(request, call_next):
-    response = await call_next(request)
-    if request.url.path.endswith((".js", ".css", ".html")) or request.url.path == "/":
-        response.headers["Cache-Control"] = "no-cache"
-    return response
+def _cookie_sid(scope) -> str | None:
+    """Pull a valid `esports_sid` out of the request's Cookie header."""
+    for name, value in scope.get("headers", []):
+        if name == b"cookie":
+            for part in value.decode("latin-1").split(";"):
+                k, _, v = part.strip().partition("=")
+                if k == COOKIE_NAME and _SID_RE.match(v):
+                    return v
+    return None
+
+
+_NO_CACHE_SUFFIXES = (".js", ".css", ".html")
+
+
+class SessionMiddleware:
+    """Pure-ASGI middleware: identifies the browser by its `esports_sid` cookie
+    (minting one for first-time visitors), resolves which shared game + team it
+    controls, and binds that to the request via the `_ctx` / `_sid_ctx`
+    contextvars. Also stamps `Cache-Control: no-cache` on frontend assets so a
+    server restart never pairs a fresh backend with a stale cached page.
+
+    Deliberately pure ASGI rather than `BaseHTTPMiddleware`: the latter runs the
+    downstream app in a separate anyio task, and the contextvars we set here do
+    not reliably reach the sync endpoint threadpool across that hop. Keeping the
+    whole chain pure-ASGI means the values flow straight into the endpoint's
+    context copy."""
+
+    def __init__(self, app, lobby: Lobby) -> None:
+        self.app = app
+        self.lobby = lobby
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        sid = _cookie_sid(scope)
+        fresh = sid is None
+        if fresh:
+            sid = secrets.token_hex(16)  # 128-bit opaque id; not a sim draw
+        game, team_id = self.lobby.game_for(sid)
+        path = scope.get("path", "")
+        no_cache = path == "/" or path.endswith(_NO_CACHE_SUFFIXES)
+
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                headers = message.setdefault("headers", [])
+                if fresh:
+                    cookie = (
+                        f"{COOKIE_NAME}={sid}; Path=/; HttpOnly; SameSite=Lax; "
+                        f"Max-Age=31536000"
+                    )
+                    headers.append((b"set-cookie", cookie.encode("latin-1")))
+                if no_cache:
+                    headers.append((b"cache-control", b"no-cache"))
+            await send(message)
+
+        ctx_token = _ctx.set(_ReqCtx(game, team_id))
+        sid_token = _sid_ctx.set(sid)
+        try:
+            await self.app(scope, receive, send_wrapper)
+        finally:
+            _ctx.reset(ctx_token)
+            _sid_ctx.reset(sid_token)
+
+
+app.add_middleware(SessionMiddleware, lobby=_LOBBY)
 
 
 # Static frontend + design system + art (mounted last so /api wins).
@@ -1520,13 +1880,35 @@ app.mount("/ds", StaticFiles(directory=str(DS_DIR)), name="ds")
 app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
 
 
-def run(port: int = 8420, open_browser: bool = True) -> None:
+def _lan_ip() -> str | None:
+    """Best-effort primary LAN IPv4 (no traffic actually sent)."""
+    import socket
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("10.255.255.255", 1))
+        return s.getsockname()[0]
+    except OSError:
+        return None
+    finally:
+        s.close()
+
+
+def run(port: int = 8420, open_browser: bool = True, host: str = "0.0.0.0") -> None:
     import uvicorn
 
-    url = f"http://127.0.0.1:{port}"
-    print(f"esports-sim web UI: {url}")
+    local = f"http://127.0.0.1:{port}"
+    lines = [f"esports-sim web UI (this PC):  {local}"]
+    if host == "0.0.0.0":
+        lan = _lan_ip()
+        if lan:
+            lines.append(f"esports-sim web UI (LAN):      http://{lan}:{port}")
+        lines.append("Share the LAN URL - each player gets an independent session.")
+    # flush now: stdout is block-buffered when not a TTY, and uvicorn.run below
+    # blocks, so without a flush the launcher never sees the LAN URL.
+    print("\n".join(lines), flush=True)
     if open_browser:
         import webbrowser
 
-        threading.Timer(0.8, lambda: webbrowser.open(url)).start()
-    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
+        threading.Timer(0.8, lambda: webbrowser.open(local)).start()
+    uvicorn.run(app, host=host, port=port, log_level="warning")

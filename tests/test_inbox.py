@@ -188,7 +188,7 @@ def test_save_load_roundtrip(campaign: GameState, game_data: GameData, tmp_path)
 def test_load_old_save_without_inbox(campaign: GameState, game_data: GameData) -> None:
     _advance(campaign, game_data, 2)
     data = json.loads(campaign.model_dump_json())
-    data.pop("inbox")  # simulate a save written before the feature existed
+    data.pop("inboxes")  # simulate a save written before the feature existed
     loaded = GameState.model_validate_json(json.dumps(data))
     assert loaded.inbox == []
     # And the loaded save keeps ticking + generating a feed normally.

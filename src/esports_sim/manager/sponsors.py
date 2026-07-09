@@ -136,7 +136,7 @@ def marketability(gs: GameState) -> float:
     """How sellable this org is right now: reputation carries, fans and
     star power (streamer/star_player traits) amplify, results and an
     international appearance spike it. ~1.0 for a mid-table org."""
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     rep = team.reputation / 50.0
     fans = min(team.fan_count, 2_000_000) / 1_500_000.0
     stars = sum(
@@ -204,7 +204,7 @@ def _roll_objectives(
     cfg = SLOT_CONFIG[slot]
     pool = list(cfg["objectives"])
     big = cfg.get("big_objective")
-    if big and gs.teams[gs.user_team_id].reputation >= 70 and rng.random() < 0.4:
+    if big and gs.teams[gs.acting_team_id].reputation >= 70 and rng.random() < 0.4:
         pool.append(big)
     n = 1 if len(pool) < 2 or rng.random() < 0.55 else 2
     picks = [pool[int(i)] for i in rng.permutation(len(pool))[:n]]
@@ -257,7 +257,7 @@ def maybe_offer(gs: GameState, rng: np.random.Generator) -> None:
     advance_week (step 3b) — signature stable. Slots are visited in a
     fixed order and only draw from `rng` when actually rolling, keeping
     results deterministic per (seed, season, week)."""
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     for slot in SLOT_ORDER:
         cfg = SLOT_CONFIG[slot]
         if not _slot_unlocked(gs, slot):
@@ -312,7 +312,7 @@ def sign_market_offer(
             for o in offer.objectives
         ],
     )
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     team.balance += deal.signing_bonus
     gs.sponsor_slots[slot] = deal
     gs.sponsor_market[slot] = [
@@ -369,7 +369,7 @@ def _season_fixtures(gs: GameState, stage: str) -> list:
 def _eval_objective(gs: GameState, obj: SponsorObjective, brand: str) -> int:
     """Resolve one objective against the current season state. Returns
     the bonus paid this call (0 if nothing resolved)."""
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     if obj.kind == "beat_top4":
         # Recurring rider, handled in the weekly payout loop — not here.
         return 0
@@ -428,7 +428,7 @@ def accept_offer(gs: GameState) -> tuple[bool, str]:
     offer = gs.sponsor_offer
     if offer is None:
         return False, "no offer on the table"
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     team.balance += offer.signing_bonus
     gs.sponsor = offer
     gs.sponsor_offer = None
@@ -449,7 +449,7 @@ def accept_slot_offer(gs: GameState, slot: str) -> tuple[bool, str]:
     offer = gs.sponsor_slot_offers.get(slot)
     if offer is None:
         return False, "no offer on the table"
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     team.balance += offer.signing_bonus
     gs.sponsor_slots[slot] = offer
     del gs.sponsor_slot_offers[slot]
@@ -480,7 +480,7 @@ def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
     per-team loop because this function already runs exactly once a week
     for the user org with the full GameState in hand."""
     total = 0
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
 
     # Legacy single-deal fields (pre-M4 saves): still fully functional.
     if gs.sponsor_offer is not None:
@@ -515,14 +515,14 @@ def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
             ]
 
     # Which opponent did we play this week? (for the beat_top4 rider)
-    fixture = gs.team_fixture(gs.user_team_id)
+    fixture = gs.team_fixture(gs.acting_team_id)
     beat_top4 = False
     if (
         fixture is not None
         and fixture.played
-        and fixture.winner_id == gs.user_team_id
+        and fixture.winner_id == gs.acting_team_id
     ):
-        opp = fixture.team_b if fixture.team_a == gs.user_team_id else fixture.team_a
+        opp = fixture.team_b if fixture.team_a == gs.acting_team_id else fixture.team_a
         opp_rank = gs.teams[opp].world_rank
         beat_top4 = opp_rank is not None and opp_rank <= 4
 

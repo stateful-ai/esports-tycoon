@@ -269,7 +269,8 @@ def test_facility_upkeep_is_charged_in_weekly_tick(campaign: GameState) -> None:
 
 def test_old_save_without_m4_fields_still_loads(campaign: GameState) -> None:
     raw = campaign.model_dump(mode="json")
-    for key in ("sponsor_slots", "sponsor_slot_offers", "facilities"):
+    # v2 stores these per-manager (…_by); dropping them still loads to empty.
+    for key in ("sponsor_slots_by", "sponsor_slot_offers_by", "facilities_by"):
         assert key in raw
         del raw[key]
     reloaded = GameState.model_validate(raw)

@@ -110,7 +110,7 @@ def weekly_tick(
                     target -= 3.0
                 nxt = cur + (target - cur) * 0.08 + float(rng.normal(0, 0.6))
                 _set(gs, a, b, nxt)
-                if tid == gs.user_team_id:
+                if gs.is_human(tid):
                     if cur < FRIEND_BAR <= nxt:
                         gs.push_news(
                             f"{pa.handle} and {pb.handle} have become inseparable."
@@ -148,7 +148,7 @@ def on_departure(gs: GameState, pid: str, team_id: str) -> None:
         if get(gs, pid, mate_id) >= FRIEND_BAR:
             mate = gs.players[mate_id]
             mate.morale = round(max(0.0, mate.morale - 5.0), 1)
-            if team_id == gs.user_team_id:
+            if gs.is_human(team_id):
                 gs.push_news(
                     f"{mate.handle} takes {p.handle}'s departure hard."
                 )

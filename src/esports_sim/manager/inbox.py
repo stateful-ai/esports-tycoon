@@ -118,7 +118,7 @@ def _user_score(f, uid: str) -> tuple[int, int]:
 
 
 def _user_star(gs: "GameState", f, report: "WeekReport") -> str:
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     roster = set(gs.teams[uid].player_ids)
     best: tuple[str, float, int] | None = None
     for stats in report.match_stats.get(f.id, []):
@@ -135,7 +135,7 @@ def _user_star(gs: "GameState", f, report: "WeekReport") -> str:
 
 
 def _match_items(gs: "GameState", season: int, week: int, report: "WeekReport"):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     for f in sorted(report.fixtures, key=lambda x: x.id):
         if uid not in (f.team_a, f.team_b) or not f.played:
             continue
@@ -162,7 +162,11 @@ def _match_items(gs: "GameState", season: int, week: int, report: "WeekReport"):
 
 def _transfer_items(gs: "GameState", season: int, week: int):
     out = []
+    uid = gs.acting_team_id
     for o in sorted(gs.transfer_offers, key=lambda o: (o.player_id, o.to_team)):
+        # Only bids for THIS manager's players land on their desk.
+        if o.from_team != uid:
+            continue
         if o.player_id not in gs.players or o.to_team not in gs.teams:
             continue
         p = gs.players[o.player_id]
@@ -184,7 +188,7 @@ def _transfer_items(gs: "GameState", season: int, week: int):
 
 
 def _board_items(gs: "GameState", season: int, week: int):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     cands = []
     for pid in gs.teams[uid].player_ids:
         p = gs.players.get(pid)
@@ -211,7 +215,7 @@ def _board_items(gs: "GameState", season: int, week: int):
 
 
 def _talk_items(gs: "GameState", season: int, week: int):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     metric = {"morale": "morale", "workload": "stamina", "form": "form"}
     cands = []
     for pid in gs.teams[uid].player_ids:
