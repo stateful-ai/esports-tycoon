@@ -278,9 +278,11 @@ tr.me td { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 8%, tra
 .gk-ping { fill: none; stroke: var(--es-color-warning, #e8a33d); stroke-width: .6; }
 .u-chip.u-gimmick { background: var(--es-color-warning, #e8a33d); }
 
-svg.iso .callout-label { font-size: 3.4px; }
-svg.iso .site-label { font-size: 7px; }
-svg.iso .plabel { font-size: 3.4px; }
+/* Tight per-map viewBox zooms the scene ~1.4x; SVG-unit fonts shrink to
+   compensate so the map, not the text, gains the screen space. */
+svg.iso .callout-label { font-size: 2.6px; }
+svg.iso .site-label { font-size: 5.2px; }
+svg.iso .plabel { font-size: 2.4px; }
 
 .edge { stroke: var(--es-color-border-primary, #262a35); stroke-width: .6; }
 .callout-dot { fill: var(--es-color-bg-elevated, #1c202b); stroke: var(--es-color-border-primary, #262a35); stroke-width: .4; }

@@ -157,7 +157,8 @@ function P(x, y) {
 }
 const PP = (pt) => P(pt[0], pt[1]);
 // Marker/dot sizes read smaller on the iso viewBox (it's ~2x wider) — scale.
-const S = (v) => (V.iso ? v * 1.6 : v);
+// Kept modest on purpose: the map should dwarf the players, not vice versa.
+const S = (v) => (V.iso ? v * 1.25 : v);
 
 // Floor elevation of a room (0 when no geometry). Applied as an upward
 // screen shift in iso mode so heaven visibly floats above its site.
@@ -548,12 +549,32 @@ function drawGraph(svg) {
   }
 }
 
+// Tight per-map viewBox: hug the floor geometry so the map fills the panel
+// instead of floating in the fixed frame. The painted backdrop keeps its
+// ISO_VIEWBOX placement (the guide->paint contract); this only crops what
+// the user SEES — same trick as officeWorldRect vs officeViewRect.
+function isoContentViewBox() {
+  if (!V.floor) return ISO_VIEWBOX;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const rid of Object.keys(V.floor.regions)) {
+    for (const [x, y] of regionCorners(rid)) {
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (minX === Infinity) return ISO_VIEWBOX;
+  const pad = 4, plinth = 5.5; // room for the wall drop + glow below
+  return [minX - pad, minY - pad, maxX - minX + pad * 2, maxY - minY + pad * 2 + plinth];
+}
+
 function drawStatic() {
   const svg = document.getElementById("v-map");
   svg.innerHTML = "";
   svg.setAttribute(
     "viewBox",
-    V.iso ? ISO_VIEWBOX.join(" ") : "-6 -6 112 112"
+    V.iso ? isoContentViewBox().map((n) => n.toFixed(1)).join(" ") : "-6 -6 112 112"
   );
   svg.classList.toggle("iso", !!V.iso);
 
@@ -601,7 +622,10 @@ function drawStatic() {
   V.persist.appendChild(V.spikeEl);
 }
 
-const ICON_R = 2.8; // agent-icon dot radius (bumped so the agent reads, not a speck)
+// Agent-icon dot radius. The tight per-map viewBox (isoContentViewBox) zooms
+// the whole scene, so the icon stays readable on screen at a much smaller
+// world size — players read as people IN the map, not tokens ON it.
+const ICON_R = 2.1;
 
 function hidePlayerEl(pid) {
   const e = V.playerEls[pid];
