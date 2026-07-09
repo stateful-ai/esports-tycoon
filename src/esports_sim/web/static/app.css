@@ -612,3 +612,152 @@ svg.iso .plabel { font-size: 2.4px; }
   flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
   white-space: nowrap; text-align: right;
 }
+
+/* -- dashboard hub: spotlight + status tiles + form (app.js dashboard) ------ */
+
+/* Next-match spotlight — versus header with display-font names. */
+.es-vs {
+  display: flex; align-items: stretch; flex-wrap: wrap; gap: 14px;
+  margin: 4px 0 12px;
+}
+.es-vs-team {
+  flex: 1 1 140px; min-width: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px; text-align: center;
+}
+.es-vs-team .logo.lg { width: 46px; height: 46px; border-radius: 8px; margin: 0; }
+.es-vs-name {
+  font-family: var(--es-font-display, inherit);
+  font-size: var(--es-text-xl, 18px); font-weight: 700; letter-spacing: .02em;
+  line-height: 1.1;
+}
+.es-vs-name:hover { color: var(--es-color-accent, #4fd8c0); }
+.es-vs-sub { font-size: var(--es-text-xs, 11px); }
+.es-vs-mid {
+  flex: 0 0 auto; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px; padding: 0 4px;
+}
+.es-vs-x {
+  font-family: var(--es-font-display, inherit); font-weight: 700;
+  font-size: var(--es-text-2xl, 22px); letter-spacing: .12em;
+  color: var(--es-color-brand, #ff4655);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--es-color-brand, #ff4655) 45%, transparent);
+}
+.es-vs-ctx {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .08em; color: var(--es-color-text-tertiary, #67748f);
+}
+.es-bo { margin-top: 3px; }
+
+/* Map feature — the beauty crops shown large. */
+.es-maps {
+  display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px;
+  padding-top: 10px; margin-top: 2px;
+  border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.es-maps-lab {
+  align-self: center; font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.es-map { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.es-map img {
+  display: block; width: 132px; height: 74px; object-fit: cover;
+  border-radius: var(--es-radius-md, 6px);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+}
+.es-map figcaption {
+  text-align: center; font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--es-color-text-secondary, #a2aec6);
+}
+
+/* Opponent scouting — form strip + danger men. */
+.es-scout {
+  display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 12px;
+  padding-top: 10px; border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.es-scout-col { display: flex; flex-direction: column; gap: 5px; }
+.es-scout-lab {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .07em;
+}
+.es-form-strip { display: inline-flex; gap: 4px; }
+.es-form-sq {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: var(--es-radius-sm, 4px);
+  font-family: var(--es-font-mono, monospace); font-size: var(--es-text-2xs, 10px);
+  font-weight: 700;
+}
+.es-form-sq.win { color: var(--es-color-text-success, #4fc6a0); background: var(--es-color-fill-success, #0e352b); }
+.es-form-sq.loss { color: var(--es-color-text-danger, #ff6b6b); background: var(--es-color-fill-danger, #3a1620); }
+.es-form-sq.draw { color: var(--es-color-text-secondary, #a2aec6); background: var(--es-color-bg-elevated, #161e2e); }
+.es-stars { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.es-star { display: inline-flex; align-items: center; gap: 5px; }
+.es-star .plink { font-weight: 600; }
+.es-star .plink:hover { color: var(--es-color-accent, #4fd8c0); }
+
+/* Team-status stat tiles. */
+.es-tiles {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 8px;
+}
+.es-tile {
+  min-width: 0; padding: 8px 10px;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px);
+}
+.es-tile-val {
+  font-size: var(--es-text-xl, 18px); font-weight: 600; line-height: 1.1;
+  color: var(--es-color-text-primary, #e9edf6);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.es-tile-label {
+  margin-top: 3px; font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--es-color-text-tertiary, #67748f);
+}
+.es-tile-sub {
+  margin-top: 1px; font-size: var(--es-text-2xs, 10px);
+  color: var(--es-color-text-secondary, #a2aec6);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.es-tile.tone-good .es-tile-val { color: var(--es-color-text-success, #4fc6a0); }
+.es-tile.tone-warn .es-tile-val { color: var(--es-color-text-warning, #efb54a); }
+.es-tile.tone-bad .es-tile-val { color: var(--es-color-text-danger, #ff6b6b); }
+.es-tile-btn {
+  cursor: pointer;
+  transition: background var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.es-tile-btn:hover {
+  background: var(--es-color-bg-hover, #1b2536);
+  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, var(--es-color-border-primary, #26324a));
+}
+
+/* Recent-results rows. */
+.es-result { padding: 5px 0; border-bottom: 1px dotted var(--es-color-border-secondary, #1c2536); }
+.es-result:last-child { border-bottom: 0; }
+.es-result .pill { min-width: 20px; text-align: center; }
+.es-result-score { font-size: var(--es-text-md, 13px); }
+.es-result-maps { display: inline-flex; align-items: center; }
+
+/* League mini-table ellipsis divider. */
+tr.es-gap td { text-align: center; padding: 2px 8px; }
+tr.es-gap:hover td { background: none; }
+
+/* -- inbox actionable items: Accept/Decline + resolved chip (inbox.js) ------ */
+
+/* Action row lives inside an expanded transfer/sponsor offer item's body. */
+.inbox-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+/* Quiet outcome chip that replaces the buttons once an action settles:
+   .ok after a resolved Accept/Decline, .stale when the offer had vanished. */
+.inbox-outcome {
+  display: inline-block; padding: 2px 10px;
+  border-radius: var(--es-radius-full, 999px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .05em; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 16%, var(--es-color-bg-elevated, #1B1E23));
+  color: var(--c);
+}
+.inbox-outcome.ok    { --c: var(--es-color-text-success, #5DCAA5); }
+.inbox-outcome.stale { --c: var(--es-color-text-tertiary, #6B6E67); }

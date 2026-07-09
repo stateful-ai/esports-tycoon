@@ -912,7 +912,7 @@ function buildLineup() {
           const icon = src
             ? `<img class="lu-icon" src="${src}" onerror="this.style.visibility='hidden'" alt="">`
             : `<span class="lu-icon"></span>`;
-          return `<div class="lu-row">${icon}` +
+          return `<div class="lu-row plink" data-pid="${pid}">${icon}` +
             `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
             `<span class="lu-handle muted">${handleOf(pid)}</span></div>`;
         })

@@ -429,9 +429,78 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
 # Read API (server.py delegates here; keeps the web layer a thin serializer)
 
 
-def to_api(it: "InboxItem") -> dict:
-    """The frozen wire shape for one item."""
-    return {
+# ---------------------------------------------------------------------------
+# Actionable items — Accept/Decline wired to the app's EXISTING mutation
+# endpoints (/api/actions/transfer_offer, /api/actions/sponsor). Actions are
+# NOT stored on the item; they are derived live from current GameState by
+# reconstructing the item's deterministic id from each still-live offer and
+# matching. Consequences:
+#   * an offer that has expired/resolved reproduces no id match, so its item
+#     quietly carries no actions on the next serve (backward compatible);
+#   * the only stale window is between serving an item and clicking it, and
+#     the underlying endpoint rejects a vanished offer at click time (4xx),
+#     which the frontend surfaces — no new business logic lives here.
+# Derivation walks sorted GameState (transfer_offers list order, SLOT_ORDER),
+# so the actions attached to a given feed are deterministic for a seed.
+
+
+def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    for o in gs.transfer_offers:
+        if o.player_id not in gs.players or o.to_team not in gs.teams:
+            continue
+        subject = f"{o.player_id}|{o.to_team}"
+        if _hash_id(it.season, it.week, "transfer", subject) != it.id:
+            continue
+        return [
+            {"id": "accept", "label": "Accept",
+             "endpoint": "/api/actions/transfer_offer",
+             "payload": {"player_id": o.player_id, "accept": True}},
+            {"id": "decline", "label": "Decline",
+             "endpoint": "/api/actions/transfer_offer",
+             "payload": {"player_id": o.player_id, "accept": False}},
+        ]
+    return []
+
+
+def _sponsor_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    for slot in sponsors.SLOT_ORDER:
+        for o in gs.sponsor_market.get(slot, []):
+            # Only the market-offer items are actionable; objective-outcome
+            # items share the "sponsor" category but reconstruct no id match.
+            if o.expires_week - sponsors.OFFER_SHELF_LIFE != it.week:
+                continue
+            subject = f"offer|{slot}|{o.brand}"
+            if _hash_id(it.season, it.week, "sponsor", subject) != it.id:
+                continue
+            return [
+                {"id": "accept", "label": "Accept",
+                 "endpoint": "/api/actions/sponsor",
+                 "payload": {"slot": slot, "accept": True,
+                             "brand": o.brand, "structure": "steady"}},
+                {"id": "decline", "label": "Decline",
+                 "endpoint": "/api/actions/sponsor",
+                 "payload": {"slot": slot, "accept": False, "brand": o.brand}},
+            ]
+    return []
+
+
+def actions_for(gs: "GameState", it: "InboxItem") -> list[dict]:
+    """Accept/Decline actions for an item whose underlying offer is still live.
+    Only transfer-offer and sponsor-offer items ever carry actions; every other
+    category (and any item whose offer has expired/resolved) returns []."""
+    if it.category == "transfer":
+        return _transfer_actions(gs, it)
+    if it.category == "sponsor":
+        return _sponsor_actions(gs, it)
+    return []
+
+
+def to_api(it: "InboxItem", gs: "GameState | None" = None) -> dict:
+    """The wire shape for one item. When `gs` is supplied, offer items whose
+    underlying offer is still live also carry an `actions` list (Accept /
+    Decline, each an existing endpoint + verbatim payload). The key is omitted
+    otherwise, so non-actionable items keep the original frozen 8-field shape."""
+    d = {
         "id": it.id,
         "season": it.season,
         "week": it.week,
@@ -441,6 +510,11 @@ def to_api(it: "InboxItem") -> dict:
         "unread": it.unread,
         "tab": it.tab,
     }
+    if gs is not None:
+        acts = actions_for(gs, it)
+        if acts:
+            d["actions"] = acts
+    return d
 
 
 def sorted_items(gs: "GameState") -> list["InboxItem"]:

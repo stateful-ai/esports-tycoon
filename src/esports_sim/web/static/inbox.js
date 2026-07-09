@@ -108,6 +108,31 @@ function inboxGoTab(tab) {
   if (btn) btn.click();
 }
 
+// Quietly re-pull GameState into App.state after an inbox action resolves, so
+// the Market / Finances / Dashboard screens agree — WITHOUT re-rendering the
+// inbox (a full refresh() would wipe the just-placed "Resolved" chip). Those
+// screens fetch their own endpoints on navigation; this mainly keeps App.state
+// and the header (context + balance) current. Silent on failure.
+async function inboxSyncState() {
+  try {
+    const r = await fetch("/api/state");
+    if (!r.ok) return;
+    const s = await r.json();
+    if (typeof App !== "undefined") App.state = s;
+    if (s.user_team) {
+      const ctx = document.getElementById("context");
+      if (ctx) {
+        ctx.textContent =
+          `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
+      }
+      const bal = document.getElementById("balance");
+      if (bal && typeof money === "function") bal.textContent = money(s.user_team.balance);
+    }
+  } catch {
+    /* header stays as-is; screens still fetch fresh on navigation */
+  }
+}
+
 /* -- screen ----------------------------------------------------------------- */
 
 async function inbox(v) {
@@ -173,6 +198,54 @@ async function inbox(v) {
     }
   }
 
+  // Mark one item read on the server (idempotent) + repaint the badge. Shared
+  // by row-expand and by a resolved Accept/Decline action.
+  async function markItemRead(it, row) {
+    if (!it.unread) return;
+    it.unread = false;
+    row.classList.remove("unread");
+    const res = await inboxPost({ id: it.id });
+    if (res && typeof res.unread === "number") setInboxBadge(res.unread);
+    if (inboxUnread <= 0) markAll.style.display = "none";
+  }
+
+  // Accept/Decline row for transfer/sponsor offer items. Each action is a
+  // verbatim {endpoint, payload} the backend derived from live state; we POST
+  // it as-is (via the shared api() helper, which toasts + throws on any non-2xx)
+  // and never invent business logic here.
+  function inboxActionRow(it, row) {
+    const wrap = el("div", "inbox-actions");
+    const settle = (label, tone) =>
+      wrap.replaceChildren(el("span", `inbox-outcome ${tone}`, label));
+    const btns = [];
+    for (const act of it.actions) {
+      const primary = act.id === "accept";
+      const b = el(
+        "button",
+        "btn btn-sm" + (primary ? " btn-primary" : ""),
+        act.label || (primary ? "Accept" : "Decline"),
+      );
+      btns.push(b);
+      b.onclick = async (e) => {
+        e.stopPropagation();
+        btns.forEach((x) => (x.disabled = true));
+        try {
+          const r = await api(act.endpoint, act.payload); // toasts + throws on 4xx
+          toast((r && r.message) || `${act.label} done`);
+          await markItemRead(it, row);
+          settle("Resolved", "ok");
+          await inboxSyncState(); // keep Market/Finances/Dashboard in agreement
+        } catch (_e) {
+          // api() already surfaced the endpoint's detail (e.g. "offer no
+          // longer available") in a toast; just retire the stale row.
+          settle("No longer available", "stale");
+        }
+      };
+      wrap.appendChild(b);
+    }
+    return wrap;
+  }
+
   function inboxRow(it) {
     const cat = it.category || "news";
     const row = el("div", "inbox-item" + (it.unread ? " unread" : ""));
@@ -197,6 +270,10 @@ async function inbox(v) {
       go.onclick = (e) => { e.stopPropagation(); inboxGoTab(it.tab); };
       body.appendChild(go);
     }
+    // Actionable offer items (transfer/sponsor) get an Accept/Decline row.
+    if (Array.isArray(it.actions) && it.actions.length) {
+      body.appendChild(inboxActionRow(it, row));
+    }
     row.appendChild(body);
 
     let open = false;
@@ -205,13 +282,7 @@ async function inbox(v) {
       body.classList.toggle("hidden", !open);
       row.classList.toggle("open", open);
       // Expanding an unread item marks it read on the server.
-      if (open && it.unread) {
-        it.unread = false;
-        row.classList.remove("unread");
-        const res = await inboxPost({ id: it.id });
-        if (res && typeof res.unread === "number") setInboxBadge(res.unread);
-        if (inboxUnread <= 0) markAll.style.display = "none";
-      }
+      if (open) await markItemRead(it, row);
     };
     return row;
   }

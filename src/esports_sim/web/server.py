@@ -312,7 +312,9 @@ def inbox_view() -> dict:
         gs = S.require_gs()
         return {
             "unread": inbox_mod.unread_count(gs),
-            "items": [inbox_mod.to_api(it) for it in inbox_mod.sorted_items(gs)],
+            # Pass gs so offer items whose offer is still live carry Accept/
+            # Decline actions (existing mutation endpoints) inline in the feed.
+            "items": [inbox_mod.to_api(it, gs) for it in inbox_mod.sorted_items(gs)],
         }
 
 
@@ -971,6 +973,411 @@ def advance() -> dict:
             "user_income": report.user_income,
             "user_expenses": report.user_expenses,
             "notes": report.notes,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Profile screens (player / team read-only aggregation)
+#
+# Pure read-only views over GameState. Fog mirrors the roster/scouting
+# rules already in this file: the user's own club is exact; rivals are
+# scout-banded (value hidden, qualitative band shown) until fully scouted;
+# the free-agent market carries its own lighter fog. Season/box-score
+# aggregates (kills, deaths, ratings, per-map records) are public broadcast
+# data — never fogged. Anything the save simply does not persist (ACS,
+# assists, clutches, per-season career archive) comes back null / [].
+
+
+# Qualitative attribute band, 1-99 scale. Used both to describe an exact
+# value (own club) and to convey a scouted, number-hidden read (rivals).
+def _attr_band(v: float) -> str:
+    if v >= 80:
+        return "elite"
+    if v >= 68:
+        return "strong"
+    if v >= 55:
+        return "solid"
+    if v >= 42:
+        return "average"
+    if v >= 30:
+        return "weak"
+    return "poor"
+
+
+def _tier_from_stars(s: float) -> str:
+    """Coarse ceiling tier from a 0.5-5.0 star rating."""
+    if s >= 4.5:
+        return "elite"
+    if s >= 3.5:
+        return "star"
+    if s >= 2.5:
+        return "starter"
+    if s >= 1.5:
+        return "rotation"
+    return "depth"
+
+
+def _potential_text(gs: GameState, p: Player, fogged: bool, progress: float) -> str:
+    """Banded ceiling text 'as scouting knows it'. Own club knows the
+    tier exactly; a rival/free agent reads as the scout's (possibly wide)
+    star band, collapsed to a tier or a tier range."""
+    if not fogged:
+        return _tier_from_stars(development.stars(development.potential_of(p)))
+    report = development.scout_report(gs, p, progress)
+    lo, hi = report["pa_stars"]
+    tlo, thi = _tier_from_stars(lo), _tier_from_stars(hi)
+    return tlo if tlo == thi else f"{tlo}-{thi}"
+
+
+def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
+    """Return (sigma, scout_progress, is_free_agent) for a player. Own-team
+    players get sigma 0; rivals scale with team scout progress; free agents
+    ride the lighter market fog (matching /api/market)."""
+    if pid in gs.free_agent_ids:
+        progress = gs.scout_progress.get("market", 0.0)
+        return 6.0 * (1.0 - progress), progress, True
+    team_id = market.team_of(gs, pid)
+    if team_id is None:
+        return 0.0, 1.0, False  # unrostered non-FA (e.g. mid-transfer): treat as known
+    if team_id == gs.user_team_id:
+        return 0.0, 1.0, False
+    return _team_fog(gs, team_id), gs.scout_progress.get(team_id, 0.0), False
+
+
+def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
+    fogged = fog > 0.0
+    ovr = None if fogged else int(round(development.overall(p)))
+    return {
+        "ovr": ovr,
+        "potential": _potential_text(gs, p, fogged, progress),
+        "form": None if fogged else round(p.form, 1),
+        "morale": None if fogged else round(p.morale, 1),
+        "condition": None if fogged else round(p.stamina, 1),
+        # Value / salary / contract are public (rival transfer asks already
+        # leak on the roster page), so they show regardless of fog.
+        "market_value": market.transfer_value(p),
+        "salary": p.salary,
+        "contract_weeks": p.contract_weeks_left,
+        "playstyle": str(p.playstyle),
+        "fogged": fogged,
+    }
+
+
+def _profile_traits(p: Player, fog: float, progress: float) -> list[dict]:
+    """Own club: every trait revealed. Rival/FA: only the scout's revealed
+    traits are listed (progress * count, same math as scout_report);
+    unrevealed traits are OMITTED entirely."""
+    tags = sorted(p.personality_tags)
+    if fog <= 0.0:
+        shown = tags
+    else:
+        known_n = int(round(progress * len(tags) + 1e-9))
+        shown = tags[:known_n]
+    return [
+        {
+            "name": t,
+            "desc": development.TRAITS.get(t, {}).get("blurb", ""),
+            "revealed": True,
+        }
+        for t in shown
+    ]
+
+
+def _profile_attributes(gs: GameState, p: Player, fog: float) -> list[dict]:
+    fogged = fog > 0.0
+    reg = S.gd.attributes.definitions
+    out = []
+    for key in sorted(p.attributes):
+        true_val = p.attributes[key]
+        label = reg[key].display_name if key in reg else key
+        if fogged:
+            shown = _fogged(gs, p.id, key, true_val, fog)
+            out.append({"key": key, "label": label, "value": None, "band": _attr_band(shown)})
+        else:
+            out.append(
+                {
+                    "key": key,
+                    "label": label,
+                    "value": round(true_val, 1),
+                    "band": _attr_band(true_val),
+                }
+            )
+    return out
+
+
+def _profile_agents(p: Player) -> list[dict]:
+    out = []
+    for m in sorted(p.agent_pool, key=lambda m: (-m.mastery, m.agent_id)):
+        agent = S.gd.agents.get(m.agent_id)
+        out.append(
+            {
+                "agent_id": m.agent_id,
+                "name": agent.display_name if agent else m.agent_id,
+                "icon": _agent_icon_url(m.agent_id),
+                "mastery": m.mastery,
+            }
+        )
+    return out
+
+
+def _profile_season(gs: GameState, pid: str) -> dict:
+    """Season totals from the public box-score aggregates. ACS, assists,
+    and clutches are not tracked in the save -> null."""
+    st = gs.player_stats.get(pid)
+    if st is None or st.maps == 0:
+        return {
+            "matches": st.maps if st else 0,
+            "kills": st.kills if st else 0,
+            "deaths": st.deaths if st else 0,
+            "assists": None,
+            "kd": None,
+            "acs": None,
+            "first_kills": st.first_kills if st else 0,
+            "clutches": None,
+        }
+    return {
+        "matches": st.maps,
+        "kills": st.kills,
+        "deaths": st.deaths,
+        "assists": None,
+        "kd": round(st.kd, 2),
+        "acs": None,
+        "first_kills": st.first_kills,
+        "clutches": None,
+    }
+
+
+def _profile_weekly(gs: GameState, pid: str) -> list[dict]:
+    """Per-match line derived from the persisted box-score lines
+    (Fixture.results[*].lines). Only fixtures the player actually featured
+    in, for the side they currently sit on, are derivable — transfers move
+    rosters and the lines carry no historical team, so ambiguous games are
+    dropped rather than guessed. ACS is not stored -> null."""
+    out = []
+    for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id)):
+        if not f.played:
+            continue
+        if pid in gs.teams[f.team_a].player_ids:
+            side, opp = f.team_a, f.team_b
+        elif pid in gs.teams[f.team_b].player_ids:
+            side, opp = f.team_b, f.team_a
+        else:
+            continue
+        kills = deaths = 0
+        played_any = False
+        for r in f.results:
+            for ln in r.lines:
+                if ln.player_id == pid:
+                    kills += ln.kills
+                    deaths += ln.deaths
+                    played_any = True
+        if not played_any:
+            continue
+        out.append(
+            {
+                "season": gs.season,
+                "week": f.week,
+                "opponent": gs.teams[opp].name,
+                "result": "W" if f.winner_id == side else "L",
+                "kills": kills,
+                "deaths": deaths,
+                "acs": None,
+            }
+        )
+    return out
+
+
+def _profile_relationships(gs: GameState, pid: str) -> list[dict]:
+    """The locker-room graph for this player. Mirrors the roster page,
+    which only exposes chemistry pairs for the user's own club, so rival /
+    free-agent profiles return []."""
+    if pid not in gs.teams[gs.user_team_id].player_ids:
+        return []
+    out = []
+    for k in sorted(gs.relationships):
+        parts = k.split("|")
+        if pid not in parts:
+            continue
+        other = parts[1] if parts[0] == pid else parts[0]
+        op = gs.players.get(other)
+        if op is None:
+            continue
+        v = gs.relationships[k]
+        if v >= relationships.FRIEND_BAR:
+            kind = "duo"
+        elif v <= relationships.FEUD_BAR:
+            kind = "feud"
+        else:
+            kind = "neutral"
+        out.append({"pid": other, "handle": op.handle, "kind": kind, "strength": round(v, 1)})
+    out.sort(key=lambda r: (-r["strength"], r["pid"]))
+    return out
+
+
+@app.get("/api/players/{pid}/profile")
+def player_profile(pid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        p = gs.players.get(pid)
+        if p is None:
+            raise HTTPException(404, "unknown player")
+        fog, progress, is_fa = _player_fog(gs, pid)
+        team_id = None if is_fa else market.team_of(gs, pid)
+        team = gs.teams.get(team_id) if team_id else None
+        return {
+            "player": {
+                "id": p.id,
+                "handle": p.handle,
+                "age": p.age,
+                "role": str(p.role),
+                "team_id": team_id,
+                "team_name": team.name if team else None,
+                "team_logo": _logo_url(team_id) if team_id else None,
+                "portrait": _portrait_url(p.id, str(p.role)),
+                "is_user_team": team_id == gs.user_team_id,
+                "is_free_agent": is_fa,
+            },
+            "overview": _profile_overview(gs, p, fog, progress),
+            "traits": _profile_traits(p, fog, progress),
+            "attributes": _profile_attributes(gs, p, fog),
+            "agents": _profile_agents(p),
+            "season": _profile_season(gs, pid),
+            "weekly": _profile_weekly(gs, pid),
+            "relationships": _profile_relationships(gs, pid),
+            # No per-season career archive is persisted (player_stats reset
+            # each offseason), so only the current season exists -> [].
+            "career": [],
+        }
+
+
+def _team_streak(gs: GameState, tid: str) -> str | None:
+    played = sorted(
+        (f for f in gs.fixtures if f.played and tid in (f.team_a, f.team_b)),
+        key=lambda f: (f.week, f.id),
+    )
+    if not played:
+        return None
+    last_won = played[-1].winner_id == tid
+    n = 0
+    for f in reversed(played):
+        if (f.winner_id == tid) == last_won:
+            n += 1
+        else:
+            break
+    return f"{'W' if last_won else 'L'}{n}"
+
+
+@app.get("/api/teams/{tid}/profile")
+def team_profile(tid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if tid not in gs.teams:
+            raise HTTPException(404, "unknown team")
+        t = gs.teams[tid]
+        rec = gs.standings.get(tid)
+        region = str(t.region)
+        order = gs.standings_order(region, tier=t.tier)
+        position = order.index(tid) + 1 if tid in order else None
+
+        ts = gs.team_stats.get(tid)
+        splits = {
+            "attack_round_rate": round(100 * ts.atk_won / ts.atk_rounds, 1)
+            if ts and ts.atk_rounds
+            else None,
+            "defense_round_rate": round(100 * ts.def_won / ts.def_rounds, 1)
+            if ts and ts.def_rounds
+            else None,
+        }
+
+        # Per-map record from persisted results.
+        map_agg: dict[str, list[int]] = {}
+        team_fixtures = [
+            f for f in gs.fixtures if f.played and tid in (f.team_a, f.team_b)
+        ]
+        for f in team_fixtures:
+            for r in f.results:
+                agg = map_agg.setdefault(r.map_id, [0, 0, 0])
+                agg[0] += 1
+                if r.winner_id == tid:
+                    agg[1] += 1
+                else:
+                    agg[2] += 1
+        maps = [
+            {
+                "map": S.gd.maps[mid].display_name if mid in S.gd.maps else mid,
+                "played": agg[0],
+                "wins": agg[1],
+                "losses": agg[2],
+            }
+            for mid, agg in sorted(map_agg.items())
+        ]
+
+        # Roster with public season aggregates. ACS is untracked, so the
+        # contract's acs-desc order falls back to rating then handle.
+        players = []
+        for pid in t.player_ids:
+            p = gs.players.get(pid)
+            if p is None:
+                continue
+            st = gs.player_stats.get(pid)
+            has = st is not None and st.maps > 0
+            players.append(
+                {
+                    "pid": pid,
+                    "handle": p.handle,
+                    "role": str(p.role),
+                    "matches": st.maps if st else 0,
+                    "kd": round(st.kd, 2) if has else None,
+                    "acs": None,
+                    "_rating": st.rating if has else 0.0,
+                }
+            )
+        players.sort(key=lambda r: (-r["_rating"], r["handle"]))
+        for r in players:
+            del r["_rating"]
+
+        form = []
+        for f in sorted(team_fixtures, key=lambda f: (f.week, f.id))[-20:]:
+            opp = f.team_b if tid == f.team_a else f.team_a
+            a, b = f.map_score
+            score = f"{a}-{b}" if tid == f.team_a else f"{b}-{a}"
+            form.append(
+                {
+                    "season": gs.season,
+                    "week": f.week,
+                    "opponent": gs.teams[opp].name,
+                    "result": "W" if f.winner_id == tid else "L",
+                    "score": score,
+                }
+            )
+
+        honors = [
+            f"S{c.season} World Champion"
+            for c in sorted(gs.champions, key=lambda c: c.season)
+            if c.team_id == tid
+        ]
+
+        return {
+            "team": {
+                "id": t.id,
+                "name": t.name,
+                "logo": _logo_url(t.id),
+                "region": region,
+                "league_tier": t.tier,
+                "is_user_team": tid == gs.user_team_id,
+            },
+            "record": {
+                "wins": rec.wins if rec else 0,
+                "losses": rec.losses if rec else 0,
+                "round_diff": rec.diff if rec else 0,
+                "position": position,
+                "streak": _team_streak(gs, tid),
+            },
+            "splits": splits,
+            "maps": maps,
+            "players": players,
+            "form": form,
+            "honors": honors,
         }
 
 
