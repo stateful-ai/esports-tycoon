@@ -65,11 +65,90 @@ def test_each_micro_dial_is_wired() -> None:
     """Cranking any single micro dial off neutral must change the log —
     otherwise the engine isn't reading it."""
     base = _hash(range(8))
-    for dial in ("aggression", "pace", "util_discipline", "map_control"):
+    for dial in ("aggression", "pace", "util_discipline", "eco_greed", "map_control"):
         hi = _hash(range(8), **{dial: 100.0})
         lo = _hash(range(8), **{dial: 0.0})
         assert hi != base, f"{dial}=100 did not change the match log"
         assert lo != base, f"{dial}=0 did not change the match log"
+
+
+def test_under_gunned_reads_loadout_not_credits() -> None:
+    """The eco tempo shift must key off the actual loadout, not the credit-
+    based buy call: a team carrying rifles through a broke round is on a gun
+    round, not an eco."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "haven", 1)
+    rifle = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "rifle")
+    pistol = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "pistol")
+    # Rifles in hand but near-zero cash (survived a lost round) -> gun round.
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = rifle
+        sim.p[pid].credits = 100
+    assert sim._under_gunned(A) is False
+    # Stripped back to pistols -> genuine eco.
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = pistol
+    assert sim._under_gunned(A) is True
+
+
+def test_eco_tempo_skips_pistol_and_gun_rounds() -> None:
+    """The eco tempo shift only fires on a genuine save/force round: never
+    on a pistol round (fixed loadout by rule), never on a gun round (rifles
+    in hand), and never at neutral eco_greed."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "haven", 1)
+    pistol = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "pistol")
+    rifle = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "rifle")
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = pistol  # under-gunned by loadout
+
+    gd.teams[A].tactics.eco_greed = 100.0
+    # Pistol rounds (1 and 13) are excluded even though under-gunned + greedy.
+    assert sim._eco_tempo_shift(A, 1) == 0.0
+    assert sim._eco_tempo_shift(A, 13) == 0.0
+    # A genuine eco round shifts.
+    assert sim._eco_tempo_shift(A, 4) > 0.0
+    # Neutral eco_greed is a no-op.
+    gd.teams[A].tactics.eco_greed = 50.0
+    assert sim._eco_tempo_shift(A, 4) == 0.0
+    # Rifles in hand -> gun round, no shift.
+    gd.teams[A].tactics.eco_greed = 100.0
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = rifle
+    assert sim._eco_tempo_shift(A, 4) == 0.0
+
+
+def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
+    """The roster/chemistry execution modifier must vanish at neutral
+    tactics (so it can't touch the golden or balance gates) and, once a
+    complex system is dialled in, a high-chemistry team executes it better
+    than a low-chemistry one."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    neutral = eng._MatchSim(gd, A, B, "haven", 1)
+    assert neutral.exec_mod[A] == 0.0 and neutral.exec_mod[B] == 0.0
+
+    gd.teams[A].tactics.map_control = 100.0  # coordination-heavy system
+    gd.teams[A].chemistry = 100.0
+    high_chem = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    gd.teams[A].chemistry = 20.0
+    low_chem = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    assert high_chem > low_chem
+
+    # The SIMPLE side of the dials (stack tight / dump utility) is not a
+    # coordinated system, so chemistry must not swing it either way.
+    gd.teams[A].tactics.map_control = 0.0
+    gd.teams[A].tactics.util_discipline = 0.0
+    gd.teams[A].chemistry = 100.0
+    simple_hi = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    gd.teams[A].chemistry = 20.0
+    simple_lo = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    assert simple_hi == simple_lo
 
 
 def test_aggression_increases_refrags() -> None:

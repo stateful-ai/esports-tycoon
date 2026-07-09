@@ -242,3 +242,36 @@ LURK_STRIKE_DELAY = 18
 # Below neutral, collapse the staging onto fewer entry callouts (a hard
 # stack). At control 0 the whole team funnels through a single entry.
 STACK_MIN_CONTROL = 50.0
+
+# Execution fit: running an extreme system rewards a roster suited to it
+# and punishes one that isn't. A per-team duel modifier, ZERO when every
+# dial is neutral (each term scales by the dial's deviation from 50), so it
+# cannot move the golden/balance gates. Each dial's roster-fit average is
+# centered on EXEC_FIT_BASELINE — above helps, below hurts — and divided so
+# a fully-cranked dial with an elite (or terrible) roster is about +/-1
+# duel point per dial.
+EXEC_FIT_BASELINE = 55.0
+EXEC_FIT_DIV = 30.0
+# Chemistry: coordination-heavy systems (spread/lurk map control,
+# disciplined grouped retakes) lean on team cohesion. Complexity counts
+# only the ABOVE-neutral deviation of those two dials — the low side
+# (stacking tight, dumping utility) is the simpler read and isn't gated on
+# chemistry. Chemistry above the baseline sharpens the system, below it
+# makes the system misfire.
+EXEC_CHEM_BASELINE = 65.0
+EXEC_CHEM_DIV = 20.0
+# Total execution modifier is clamped to keep it a colour on the duel, not
+# the decider — squad quality and man-advantage still dominate.
+EXEC_MOD_CAP = 8.0
+
+# Eco discipline: on a save/force round eco_greed decides whether the team
+# runs it down (a fast aggressive hit to catch the buy off-guard) or plays
+# slow for picks and the exit. Shifts the execute probability by +/- this
+# on non-full-buy rounds only; neutral eco_greed leaves it untouched.
+ECO_EXECUTE_SPAN = 0.30
+
+# Pace also has a defensive dimension — tempo, not appetite. A fast book
+# rotates onto a hit sooner and commits the retake without waiting for a
+# partner; a slow book plays patient and grouped. Shifts each rotator's
+# delay by +/- this many ticks across the dial; neutral pace is unchanged.
+PACE_ROTATE_SPAN = 3

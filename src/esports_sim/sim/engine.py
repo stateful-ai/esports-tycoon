@@ -194,6 +194,13 @@ class _MatchSim:
             team_a: float(df_rng.normal(0.0, 6.5)),
             team_b: float(df_rng.normal(0.0, 6.5)),
         }
+        # How well each team's roster + chemistry can EXECUTE its coach's
+        # system. Zero at neutral tactics (see _execution_mod), so it never
+        # touches the golden/balance gates.
+        self.exec_mod: dict[str, float] = {
+            team_a: self._execution_mod(team_a),
+            team_b: self._execution_mod(team_b),
+        }
 
         # Map gimmicks keyed by the adjacency edge they sit on.
         self._gimmicks = {
@@ -547,6 +554,8 @@ class _MatchSim:
         target_site = sites[int(rng.choice(len(sites), p=weights))]
         # 0.35 slow book … 0.75 fast; 50 pace = the engine's old 0.55.
         p_execute = 0.35 + tac.pace / 250.0
+        p_execute += self._eco_tempo_shift(atk, round_num)
+        p_execute = min(0.9, max(0.05, p_execute))
         strat = "execute" if rng.random() < p_execute else "default"
         if strat == "execute":
             go_tick = C.EXECUTE_GO_EARLIEST + int(rng.integers(0, 15))
@@ -1317,8 +1326,12 @@ class _MatchSim:
             # values the round over the rifles and pushes a retake even a
             # body down; a thrifty book concedes early to save weapons.
             # Neutral (50) keeps the original down-2 save line exactly.
-            greed = self._tactics(self.p[alive_dfn[0]].team_id).eco_greed if alive_dfn else 50.0
+            dfn_tac = self._tactics(self.p[alive_dfn[0]].team_id) if alive_dfn else None
+            greed = dfn_tac.eco_greed if dfn_tac else 50.0
             retake_deficit = 1 + round((greed - 50.0) / 50.0)
+            # Fast books commit the retake without grouping; patient (neutral
+            # or slow) books wait for a partner at the door.
+            impatient = dfn_tac is not None and dfn_tac.pace >= 60.0
             for q in alive_dfn:
                 ps = self.p[q]
                 if ps.defusing_until >= 0:
@@ -1329,7 +1342,12 @@ class _MatchSim:
                 # Save when outmanned past the appetite line, or out of time.
                 if len(alive_dfn) < len(alive_atk) - retake_deficit or remaining < needed:
                     self._order(q, "hold")
-                elif d_hops <= 1 and not group_ready and remaining > needed + 10:
+                elif (
+                    d_hops <= 1
+                    and not group_ready
+                    and remaining > needed + 10
+                    and not impatient
+                ):
                     self._order(q, "hold")  # wait for a partner at the door
                 else:
                     self._order(q, f"goto:{planted_at}")
@@ -1642,6 +1660,78 @@ class _MatchSim:
     def _tactics(self, team_id: str):
         return self.gd.teams[team_id].tactics
 
+    def _eco_tempo_shift(self, atk: str, round_num: int) -> float:
+        """Execute-probability shift from eco discipline.
+
+        A greedy book runs a save/force round down (a fast hit to catch the
+        buy off-guard); a thrifty book plays slow for picks and the exit.
+        Zero unless the round is a genuine eco: pistol rounds are excluded
+        (everyone is on pistols by rule, not an eco choice), gun rounds are
+        excluded (judged on the actual loadout, so rifles carried through a
+        broke round don't count), and neutral eco_greed is a no-op — which
+        is what keeps the golden/sweep gates byte-identical."""
+        if round_num in (1, C.ROUNDS_PER_HALF + 1):
+            return 0.0
+        if not self._under_gunned(atk):
+            return 0.0
+        return (self._tactics(atk).eco_greed - 50.0) / 50.0 * C.ECO_EXECUTE_SPAN
+
+    def _under_gunned(self, tid: str) -> bool:
+        """Whether the team is genuinely on a save/force by FIREPOWER — most
+        players lack a rifle-tier primary. Credit-based buy calls misfire
+        here: a team that carried rifles through a broke round reads as
+        'eco' on cash but is fully armed, so the eco tempo shift keys off the
+        actual post-buy loadout instead."""
+        rifle_tier = {"rifle", "sniper", "lmg"}
+        armed = 0
+        for pid in self.roster[tid]:
+            w = self.gd.weapons.get(self.p[pid].weapon)
+            if w is not None and str(w.weapon_class) in rifle_tier:
+                armed += 1
+        return armed < 3  # majority lack a real primary
+
+    def _execution_mod(self, tid: str) -> float:
+        """Per-team duel modifier for how well the roster + chemistry can
+        EXECUTE the coach's chosen system.
+
+        Zero when every dial is neutral — each term scales by that dial's
+        deviation from 50 — so this cannot move the golden log or the
+        balance band (both run neutral tactics). Off neutral, an extreme
+        system rewards a roster suited to it (aim for aggression, movement
+        for pace, game-sense/util for discipline, game-sense/comms for map
+        control) and punishes one that isn't; the coordination-heavy dials
+        (map control, discipline) also lean on team chemistry."""
+        roster = [self._player(p) for p in self.roster[tid]]
+        if not roster:
+            return 0.0
+        tac = self._tactics(tid)
+
+        def avg(attr: str) -> float:
+            return sum(pl.attr(attr) for pl in roster) / len(roster)
+
+        fits = [
+            (tac.aggression, (avg("aim_reactivity") + avg("aim_precision")) / 2),
+            (tac.pace, (avg("aim_reactivity") + avg("movement")) / 2),
+            (tac.util_discipline, (avg("game_sense") + avg("utility_usage")) / 2),
+            (tac.map_control, (avg("game_sense") + avg("comms_quality")) / 2),
+        ]
+        total = 0.0
+        for dial, fit in fits:
+            dev = abs(dial - 50.0) / 50.0  # 0 at neutral
+            total += dev * (fit - C.EXEC_FIT_BASELINE) / C.EXEC_FIT_DIV
+        # Only the HIGH side of these dials is a coordination-heavy system —
+        # spread/lurk map control and held-for-retake discipline lean on
+        # cohesion. The low side (stacking tight, dumping utility on the hit)
+        # is the SIMPLER read and shouldn't be chemistry-gated, so count only
+        # the above-neutral deviation.
+        complexity = (
+            max(0.0, tac.map_control - 50.0)
+            + max(0.0, tac.util_discipline - 50.0)
+        ) / 50.0
+        chem = self.gd.teams[tid].chemistry
+        total += complexity * (chem - C.EXEC_CHEM_BASELINE) / C.EXEC_CHEM_DIV
+        return float(np.clip(total, -C.EXEC_MOD_CAP, C.EXEC_MOD_CAP))
+
     def _peek_prob(self, pid: str) -> float:
         pl = self._player(pid)
         p = C.PEEK_PROB
@@ -1798,6 +1888,7 @@ class _MatchSim:
         if ps.armor > 0:
             s += 2.0
         s += self.day_form[pid] + self.tactic_form[ps.team_id]
+        s += self.exec_mod[ps.team_id]
         return s
 
     def _combat(
@@ -2145,6 +2236,10 @@ class _MatchSim:
         # The best-positioned off-site defender stays home to watch flank.
         off_site.sort(key=lambda q: (-self._player(q).attr("positioning"), q))
         stay = off_site[0] if len(off_site) > 1 else None
+        # Defensive tempo: a fast book shaves ticks off every rotation, a
+        # slow book plays it patient. Neutral pace is a no-op.
+        def_pace = self._tactics(self.p[defenders[0]].team_id).pace if defenders else 50.0
+        pace_rotate = round((def_pace - 50.0) / 50.0 * C.PACE_ROTATE_SPAN)
         for q in off_site:
             if q == stay:
                 continue
@@ -2153,7 +2248,8 @@ class _MatchSim:
                 2,
                 12
                 - int((pl.attr("game_sense") + pl.attr("comms_quality")) / 20.0)
-                - info_bonus,
+                - info_bonus
+                - pace_rotate,
             )
             rotate_at[q] = tick + delay
 
