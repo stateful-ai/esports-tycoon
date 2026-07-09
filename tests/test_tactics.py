@@ -65,11 +65,30 @@ def test_each_micro_dial_is_wired() -> None:
     """Cranking any single micro dial off neutral must change the log —
     otherwise the engine isn't reading it."""
     base = _hash(range(8))
-    for dial in ("aggression", "pace", "util_discipline", "map_control"):
+    for dial in ("aggression", "pace", "util_discipline", "eco_greed", "map_control"):
         hi = _hash(range(8), **{dial: 100.0})
         lo = _hash(range(8), **{dial: 0.0})
         assert hi != base, f"{dial}=100 did not change the match log"
         assert lo != base, f"{dial}=0 did not change the match log"
+
+
+def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
+    """The roster/chemistry execution modifier must vanish at neutral
+    tactics (so it can't touch the golden or balance gates) and, once a
+    complex system is dialled in, a high-chemistry team executes it better
+    than a low-chemistry one."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    neutral = eng._MatchSim(gd, A, B, "haven", 1)
+    assert neutral.exec_mod[A] == 0.0 and neutral.exec_mod[B] == 0.0
+
+    gd.teams[A].tactics.map_control = 100.0  # coordination-heavy system
+    gd.teams[A].chemistry = 100.0
+    high_chem = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    gd.teams[A].chemistry = 20.0
+    low_chem = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    assert high_chem > low_chem
 
 
 def test_aggression_increases_refrags() -> None:

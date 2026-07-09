@@ -1,0 +1,15 @@
+{
+  "team_a": "team_nexus",
+  "team_b": "team_vanguard",
+  "maps": [
+    "ascent",
+    "bind",
+    "haven",
+    "lotus",
+    "split"
+  ],
+  "seeds": 10,
+  "n_matches": 50,
+  "event_count_total": 70845,
+  "sha256": "d355da12b81b0c2f28e8836601228455b0ac4e80797cbe38ccd42359151e20a3"
+}
