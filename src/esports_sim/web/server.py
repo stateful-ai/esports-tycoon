@@ -342,6 +342,10 @@ def roster(team_id: str) -> dict:
                     tendencies.append(f"{tac.site_focus.upper()}-heavy attack")
                 if tac.eco_greed >= 62:
                     tendencies.append("force-buys relentlessly")
+                if tac.map_control >= 62:
+                    tendencies.append("spreads wide and lurks for picks")
+                elif tac.map_control <= 38:
+                    tendencies.append("stacks tight and hits as five")
         return {
             "team": _team_view(gs.teams[team_id], gs),
             "players": players,
@@ -768,6 +772,7 @@ class TacticsBody(BaseModel):
     pace: float | None = None
     util_discipline: float | None = None
     eco_greed: float | None = None
+    map_control: float | None = None
     site_focus: str | None = None
 
 
@@ -776,7 +781,7 @@ def set_tactics(body: TacticsBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         tac = gs.teams[gs.user_team_id].tactics
-        for field in ("aggression", "pace", "util_discipline", "eco_greed"):
+        for field in ("aggression", "pace", "util_discipline", "eco_greed", "map_control"):
             v = getattr(body, field)
             if v is not None:
                 setattr(tac, field, float(min(100.0, max(0.0, v))))

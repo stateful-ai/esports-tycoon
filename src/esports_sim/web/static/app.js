@@ -385,10 +385,11 @@ function attrDetail(p) {
 }
 
 const TACTIC_DIALS = [
-  ["aggression", "Aggression", "passive angles ↔ swing everything"],
-  ["pace", "Pace", "slow defaults ↔ fast executes"],
-  ["util_discipline", "Utility discipline", "dump on the hit ↔ hold for retakes"],
+  ["aggression", "Aggression", "passive angles + safe spacing ↔ swing & refrag hard"],
+  ["pace", "Pace", "slow defaults, pull off bad hits ↔ fast executes, ram it through"],
+  ["util_discipline", "Utility discipline", "dump on the hit ↔ hold for retakes & swings"],
   ["eco_greed", "Eco greed", "save on broke rounds ↔ force-buy often"],
+  ["map_control", "Map control", "stack & hit as five ↔ spread wide, lurk for picks"],
 ];
 
 async function tactics(v) {

@@ -13,11 +13,18 @@ class TeamTactics(BaseModel):
     team. The match engine reads these directly; 50 = neutral on every
     dial, so a default team plays exactly like the pre-tactics engine.
 
-    aggression: angle-swinging appetite (peeks up, retreats down)
-    pace: execute-vs-default lean (high = fast hits, early go timings)
-    util_discipline: dump utility on the hit vs hold it for retakes
+    aggression: angle-swinging appetite (peeks up, retreats down) — also
+        governs how hard the team plays for refrags (tight, trade-hungry
+        spacing up; safer, looser spacing down)
+    pace: execute-vs-default lean (high = fast hits, early go timings) —
+        also how committal the team is when a hit trades poorly (rams it
+        through up, pulls out to re-default down)
+    util_discipline: dump utility on the hit vs hold it for retakes — also
+        whether players save a flash to pop on a swing
     eco_greed: force-buy appetite (greedy teams buy on broke rounds)
     site_focus: attack-side site preference ("balanced" or a site id)
+    map_control: stack tight and hit as five (down) vs spread for map
+        presence and peel a lurker onto a flank (up)
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -26,6 +33,7 @@ class TeamTactics(BaseModel):
     pace: float = Field(default=50.0, ge=0.0, le=100.0)
     util_discipline: float = Field(default=50.0, ge=0.0, le=100.0)
     eco_greed: float = Field(default=50.0, ge=0.0, le=100.0)
+    map_control: float = Field(default=50.0, ge=0.0, le=100.0)
     site_focus: str = "balanced"
 
 
