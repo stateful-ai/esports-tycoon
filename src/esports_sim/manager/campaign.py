@@ -15,6 +15,7 @@ import numpy as np
 from esports_sim.manager import (
     development,
     economy,
+    inbox,
     market,
     narrative,
     relationships,
@@ -534,6 +535,11 @@ def advance_week(
     # 6. News (before the week label moves on).
     narrative.weekly_news(gs, report, week_kills)
 
+    # 7. Inbox: aggregate the week's outcomes into the notification feed.
+    # Runs last so it can read every subsystem's artifacts (news included),
+    # and before the week label moves on so this-week news is still labelled.
+    inbox.generate_inbox(gs, report)
+
     gs.week += 1
     return report
 
@@ -951,4 +957,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
+    # Inbox for the offseason tick: retirements, rookie class, award slate.
+    # `report` still carries the pre-rollover (season, week) the offseason
+    # news was labelled with, so generate_inbox reads the right lines.
+    inbox.generate_inbox(gs, report)
     return report

@@ -23,6 +23,7 @@ from pydantic import BaseModel
 from esports_sim.manager import (
     development,
     economy,
+    inbox as inbox_mod,
     market,
     relationships,
     sponsors,
@@ -303,6 +304,35 @@ def state() -> dict:
                 if o.player_id in gs.players and o.to_team in gs.teams
             ],
         }
+
+
+@app.get("/api/inbox")
+def inbox_view() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        return {
+            "unread": inbox_mod.unread_count(gs),
+            "items": [inbox_mod.to_api(it) for it in inbox_mod.sorted_items(gs)],
+        }
+
+
+class InboxReadBody(BaseModel):
+    id: str | None = None
+    all: bool = False
+
+
+@app.post("/api/inbox/read")
+def inbox_read(body: InboxReadBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.all:
+            unread = inbox_mod.mark_all_read(gs)
+        elif body.id is not None:
+            unread = inbox_mod.mark_read(gs, body.id)  # unknown id: no-op
+        else:
+            unread = inbox_mod.unread_count(gs)
+        S.save()
+        return {"unread": unread}
 
 
 FOG_BASE_SIGMA = 12.0

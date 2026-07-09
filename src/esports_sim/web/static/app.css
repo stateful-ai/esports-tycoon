@@ -379,3 +379,101 @@ svg.iso .plabel { font-size: 3.4px; }
 /* audio toggle (audio.js) */
 #audio-toggle { min-width: 40px; }
 #audio-toggle[aria-pressed="false"] { opacity: 0.55; }
+
+/* -- inbox tab: weekly notifications (inbox.js) ---------------------------- */
+
+/* Unread count pill on the Inbox tab button; .hidden zeroes it out. */
+.inbox-badge {
+  display: inline-block; margin-left: 6px; vertical-align: middle;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: var(--es-radius-full, 999px);
+  background: var(--es-color-brand, #E24B4A); color: #fff;
+  font-family: var(--es-font-mono, monospace);
+  font-size: var(--es-text-2xs, 10px); font-weight: 700;
+  line-height: 16px; text-align: center;
+}
+
+.inbox-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.inbox-head h2 { margin-bottom: 0; }
+
+.inbox-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.inbox-chip {
+  font: inherit; cursor: pointer; padding: 3px 10px;
+  font-size: var(--es-text-xs, 11px);
+  border-radius: var(--es-radius-full, 999px);
+  border: 1px solid var(--es-color-border-primary, #2A2D34);
+  background: var(--es-color-bg-elevated, #1B1E23);
+  color: var(--es-color-text-secondary, #A8ABA3);
+}
+.inbox-chip:hover { background: var(--es-color-bg-hover, #20232A); }
+.inbox-chip.active {
+  border-color: var(--es-color-brand, #E24B4A);
+  color: var(--es-color-text-primary, #EEEFEC);
+}
+
+.inbox-weekhead {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-text-tertiary, #6E7169);
+  margin: 12px 0 4px; padding-top: 8px;
+  border-top: 1px solid var(--es-color-border-secondary, #22252B);
+}
+.inbox-weekhead:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+
+.inbox-item {
+  border: 1px solid var(--es-color-border-primary, #2A2D34);
+  border-radius: var(--es-radius-md, 6px);
+  background: var(--es-color-bg-elevated, #1B1E23);
+  margin-bottom: 6px; overflow: hidden;
+}
+.inbox-item.unread {
+  background: color-mix(in srgb, var(--es-color-brand, #E24B4A) 6%,
+    var(--es-color-bg-elevated, #1B1E23));
+}
+.inbox-row-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; cursor: pointer;
+}
+.inbox-row-head:hover { background: var(--es-color-bg-hover, #20232A); }
+.inbox-title { flex: 1; color: var(--es-color-text-primary, #EEEFEC); }
+.inbox-item.unread .inbox-title { font-weight: 600; }
+.inbox-week { flex: none; font-size: var(--es-text-xs, 11px); }
+.inbox-dot {
+  flex: none; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--es-color-brand, #E24B4A); display: none;
+}
+.inbox-item.unread .inbox-dot { display: inline-block; }
+
+.inbox-body {
+  padding: 0 12px 12px 12px;
+  border-top: 1px solid var(--es-color-border-secondary, #22252B);
+}
+.inbox-body-text {
+  white-space: pre-wrap; padding: 10px 0;
+  color: var(--es-color-text-secondary, #A8ABA3);
+  line-height: var(--es-leading-normal, 1.45);
+}
+.inbox-goto { margin-top: 2px; }
+.inbox-empty { padding: 18px 4px; }
+
+/* Category chips — distinct but muted; each carries its own accent via --c.
+   Tint the background lightly and use the accent for the label text. */
+.inbox-cat {
+  flex: none; display: inline-block; padding: 1px 7px;
+  border-radius: var(--es-radius-full, 999px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .05em; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 16%, var(--es-color-bg-elevated, #1B1E23));
+  color: var(--c);
+}
+.cat-news        { --c: var(--es-viz-1, #3C7CC9); }
+.cat-talk        { --c: var(--es-viz-3, #3FB59B); }
+.cat-transfer    { --c: var(--es-viz-5, #D9A441); }
+.cat-sponsor     { --c: var(--es-viz-6, #E87BA1); }
+.cat-scouting    { --c: var(--es-viz-4, #8A6BE0); }
+.cat-development { --c: var(--es-color-text-success, #5DCAA5); }
+.cat-match       { --c: var(--es-viz-2, #D06142); }
+.cat-board       { --c: var(--es-color-role-flex, #9BA3AF); }

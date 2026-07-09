@@ -64,6 +64,9 @@ async function boot() {
     return;
   }
   refresh();
+  // Prime the Inbox tab badge on load (inbox.js is loaded after us, but this
+  // runs post-await so its globals are defined; guard keeps boot resilient).
+  if (typeof refreshInboxBadge === "function") refreshInboxBadge();
 }
 
 async function refresh() {
@@ -92,7 +95,7 @@ function render() {
   // finishes into a detached node instead of double-appending.
   const container = el("div");
   $("#view").replaceChildren(container);
-  ({ office, dashboard, roster, tactics, standings, schedule, market, scouting, stats, finances })[App.tab](container);
+  ({ office, inbox, dashboard, roster, tactics, standings, schedule, market, scouting, stats, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -1004,6 +1007,8 @@ $("#advance-btn").onclick = async () => {
     const rep = await api("/api/actions/advance", {});
     showReport(rep);
     await refresh();
+    // Refresh the Inbox badge and toast any newly-arrived unread mail.
+    if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
     $("#advance-btn").disabled = false;
   }

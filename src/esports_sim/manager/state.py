@@ -247,6 +247,28 @@ class AwardRecord(BaseModel):
     value: str  # display string, e.g. "1.24 rating over 18 maps"
 
 
+class InboxItem(BaseModel):
+    """One weekly inbox/notification entry. Generated at the end of a tick
+    from real subsystem outcomes (see manager/inbox.py); the model lives
+    here so it saves/loads with the rest of GameState.
+
+    `id` is a deterministic blake2 hash of (season, week, category,
+    subject) — stable across runs, never a salted Python hash(). `tab`
+    names the UI tab a click should jump to (or None for a pure notice)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    season: int
+    week: int
+    # news | talk | transfer | sponsor | scouting | development | match | board
+    category: str
+    title: str  # short, <= 70 chars
+    body: str  # plain text, may be multi-line
+    unread: bool = True
+    tab: str | None = None
+
+
 class GameState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -266,6 +288,9 @@ class GameState(BaseModel):
     training_focus: dict[str, str] = Field(default_factory=dict)
 
     news: list[str] = Field(default_factory=list)
+    # Weekly inbox feed (oldest first). Populated at the end of each tick;
+    # pre-inbox saves load with an empty list (default). See manager/inbox.py.
+    inbox: list[InboxItem] = Field(default_factory=list)
     champions: list[ChampionRecord] = Field(default_factory=list)
     retired: list[RetiredRecord] = Field(default_factory=list)
     fa_counter: int = 0  # monotonic id counter for generated free agents
