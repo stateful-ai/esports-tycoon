@@ -24,6 +24,7 @@ from esports_sim.events.log import EventLog
 from esports_sim.policy.base import Action, ActionType
 from esports_sim.policy.heuristic import HeuristicPolicy
 from esports_sim.registry.loader import GameData, load_geometry
+from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.schemas import (
     Ability,
     BuyEvent,
@@ -133,16 +134,18 @@ class _MatchSim:
 
         self.policy = HeuristicPolicy(gd, self.map)
 
-        # Roster: sorted player ids per team for deterministic iteration.
+        # Roster: the week's committed starters, sorted for deterministic
+        # iteration. Default (no lineup set) = the whole roster, so this stays
+        # byte-identical to the pre-lineup engine (see sim/lineup.py).
         self.roster: dict[str, list[str]] = {
-            team_a: sorted(gd.teams[team_a].player_ids),
-            team_b: sorted(gd.teams[team_b].player_ids),
+            team_a: lineup_resolve.resolve_starters(gd.teams[team_a]),
+            team_b: lineup_resolve.resolve_starters(gd.teams[team_b]),
         }
         self.p: dict[str, _PState] = {}
         for tid in (team_a, team_b):
             for pid in self.roster[tid]:
                 pl = gd.players[pid]
-                agent = self._pick_agent(pl)
+                agent = lineup_resolve.resolve_agent(gd.teams[tid], pl, gd.agents)
                 self.p[pid] = _PState(pid=pid, team_id=tid, agent_id=agent)
 
         self.score = {team_a: 0, team_b: 0}
@@ -224,15 +227,9 @@ class _MatchSim:
     # -- setup helpers -----------------------------------------------------
 
     def _pick_agent(self, pl: Player) -> str:
-        """Highest-mastery agent the player knows; fall back to a role default."""
-        pool = sorted(pl.agent_pool, key=lambda m: (-m.mastery, m.agent_id))
-        for m in pool:
-            if m.agent_id in self.gd.agents:
-                return m.agent_id
-        by_role = sorted(
-            a.id for a in self.gd.agents.values() if a.role == pl.role
-        )
-        return by_role[0] if by_role else sorted(self.gd.agents)[0]
+        """Highest-mastery agent the player knows; fall back to a role default.
+        Delegates to the shared resolver so engine and web never diverge."""
+        return lineup_resolve.auto_pick_agent(pl, self.gd.agents)
 
     def _all_pairs_dist(self) -> dict[tuple[str, str], int]:
         dist: dict[tuple[str, str], int] = {}
