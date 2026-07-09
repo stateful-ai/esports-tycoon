@@ -87,3 +87,26 @@ def test_discipline_holds_utility() -> None:
     seeds = range(40)
     util = lambda d: _count(seeds, "round.utility_used", util_discipline=d)  # noqa: E731
     assert util(100.0) < util(0.0)
+
+
+def test_lurker_that_grabs_spike_rejoins_the_hit(monkeypatch) -> None:
+    """A lurker who picks up a dropped spike must abandon the lurk role and
+    rejoin the hit — otherwise the team would execute without the spike and
+    lose on time. Guard the invariant at ordering time across a spread
+    (map_control=100) sweep, where lurkers are common. Verified to fire
+    ~hundreds of times if the clear-on-pickup is removed."""
+    from esports_sim.sim import engine as eng
+
+    violations = 0
+    orig = eng._MatchSim._update_orders
+
+    def checkpoint(self, *a, **k):
+        nonlocal violations
+        if any(self.p[q].has_spike for q in self._lurkers):
+            violations += 1
+        return orig(self, *a, **k)
+
+    monkeypatch.setattr(eng._MatchSim, "_update_orders", checkpoint)
+    for s in range(40):
+        _sim(s, map_control=100.0)
+    assert violations == 0, f"a lurker held the spike at ordering time ({violations} ticks)"

@@ -744,6 +744,10 @@ class _MatchSim:
                     if self.p[q].callout == self._spike_dropped_at:
                         self.p[q].has_spike = True
                         self._spike_dropped_at = None
+                        # A lurker that grabs the spike abandons the flank
+                        # and rejoins the hit — otherwise the team would
+                        # execute without the spike and lose on time.
+                        self._lurkers.discard(q)
                         break
 
             # -- coach re-orders --------------------------------------------------------------
