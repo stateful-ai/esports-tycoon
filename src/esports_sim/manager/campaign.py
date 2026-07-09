@@ -224,7 +224,14 @@ def advance_week(
         for p in gs.roster(gs.user_team_id):
             p.stamina = round(min(100.0, p.stamina + recovery), 1)
 
-    # 2c. Relationships drift; team chemistry chases the pair graph.
+    # 2c. Relationships drift; team chemistry chases the pair graph. Every
+    # org's chemistry rides its own week's result, not just the user's.
+    won_by_team: dict[str, bool] = {}
+    for f in report.fixtures:
+        if f.played and f.winner_id is not None:
+            loser = f.team_b if f.winner_id == f.team_a else f.team_a
+            won_by_team[f.winner_id] = True
+            won_by_team[loser] = False
     user_fx = next(
         (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
         None,
@@ -232,6 +239,7 @@ def advance_week(
     relationships.weekly_tick(
         gs, week_rng,
         user_won=bool(user_fx and user_fx.winner_id == gs.user_team_id),
+        won_by_team=won_by_team,
     )
 
     # 3. Finances. The user org's merch/ticket line rides its real
@@ -264,6 +272,7 @@ def advance_week(
     market.tick_contracts(gs, week_rng)
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
+    market.ai_poach_free_agents(gs, gd, week_rng)
     _tick_scouting(gs)
 
     _update_world_ranks(gs)
@@ -591,6 +600,10 @@ def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None
             ps.headshots += line.headshots
             ps.plants += line.plants
             ps.defuses += line.defuses
+            ps.first_deaths += line.first_deaths
+            ps.multikills += line.multikills
+            ps.aces += line.aces
+            ps.clutches += line.clutches
             ps.rating_sum += line.rating
             week_kills[pid] = week_kills.get(pid, 0) + line.kills
 
@@ -649,7 +662,12 @@ def _sim_fixture(
             "season", gs.season, "week", f.week, "fixture", f.id, "map", map_index
         )
         res = simulate_match_result(rt_gd, f.team_a, f.team_b, map_id, seed)
-        stats = compute_match_stats(res.events)
+        team_of = {
+            pid: tid
+            for tid in (f.team_a, f.team_b)
+            for pid in rt_gd.teams[tid].player_ids
+        }
+        stats = compute_match_stats(res.events, team_of)
         if collector is not None:
             collector.setdefault(f.id, []).append(stats)
         if events_out is not None:

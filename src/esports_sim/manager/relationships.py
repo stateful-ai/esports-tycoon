@@ -39,6 +39,12 @@ _KINDRED: list[tuple[str, str, float]] = [
 FRIEND_BAR = 78.0
 FEUD_BAR = 26.0
 
+# Playstyles that compete for the spotlight: two players who both want to
+# be the star entry / AWPer / shotcaller grate on each other — one role,
+# one slot, egos included.
+_SPOTLIGHT_STYLES = {"entry", "awper", "igl"}
+_SPOTLIGHT_FRICTION = 7.0
+
 
 def key(a: str, b: str) -> str:
     return "|".join(sorted((a, b)))
@@ -52,6 +58,12 @@ def _set(gs: GameState, a: str, b: str, value: float) -> None:
     gs.relationships[key(a, b)] = round(min(100.0, max(0.0, value)), 1)
 
 
+def nudge(gs: GameState, a: str, b: str, delta: float) -> None:
+    """Public entry point for other modules (talk, events) to shift a pair's
+    relationship by `delta`, clamped to [0, 100]."""
+    _set(gs, a, b, get(gs, a, b) + delta)
+
+
 def affinity_target(pa: Player, pb: Player) -> float:
     """Where a pair naturally settles after enough time together."""
     target = 58.0  # shared reps breed mild friendship by default
@@ -59,16 +71,34 @@ def affinity_target(pa: Player, pb: Player) -> float:
     for t1, t2, delta in _CLASH + _KINDRED:
         if (t1 in tags_a and t2 in tags_b) or (t2 in tags_a and t1 in tags_b):
             target += delta
+    # Two players chasing the same spotlight role rub each other wrong.
+    if (
+        str(pa.playstyle) == str(pb.playstyle)
+        and str(pa.playstyle) in _SPOTLIGHT_STYLES
+    ):
+        target -= _SPOTLIGHT_FRICTION
     return float(min(95.0, max(15.0, target)))
 
 
-def weekly_tick(gs: GameState, rng: np.random.Generator, user_won: bool) -> None:
+def weekly_tick(
+    gs: GameState,
+    rng: np.random.Generator,
+    user_won: bool,
+    won_by_team: dict[str, bool] | None = None,
+) -> None:
     """Drift every teammate pair toward its affinity target; results add
     a shared push (winning together bonds, losing grates). Crossing the
-    friendship/feud bars makes news once per crossing."""
+    friendship/feud bars makes news once per crossing.
+
+    `won_by_team` (team_id -> won this week) lets every org's chemistry ride
+    its own results, not just the user's; without it only the user team gets
+    the win/loss push (the legacy behaviour)."""
     for tid in sorted(gs.teams):
         roster = sorted(gs.teams[tid].player_ids)
-        won = user_won if tid == gs.user_team_id else None
+        if won_by_team is not None:
+            won = won_by_team.get(tid)
+        else:
+            won = user_won if tid == gs.user_team_id else None
         for i, a in enumerate(roster):
             for b in roster[i + 1:]:
                 pa, pb = gs.players[a], gs.players[b]
