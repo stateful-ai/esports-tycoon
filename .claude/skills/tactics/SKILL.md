@@ -51,15 +51,18 @@ dial's engine reach may only touch engine + constants (+ tests).
 1. **Golden = byte-identical** → neutral-safe. Run
    `pytest -q tests/test_golden.py`. If it drifts, a term isn't zero at 50 —
    fix the term, don't re-bless.
-2. **Directional check**: `scripts/tactics_report.py` sweeps each dial to
-   its extremes and asserts the sanity band (attack 30–75%, plants ≥ 10%)
-   plus that the dial actually moves its signal. Exit 0 required.
+2. **Sanity sweep**: `scripts/tactics_report.py` pushes each dial to its
+   extremes and asserts a wide degenerate-detector band (attack 30–75%,
+   plant rate ≥ 10%). Exit 0 required. Note it prints each dial's `d-atk`
+   for eyeballing but does NOT threshold movement — proving a dial actually
+   moves its signal is the regression test's job (step 4), not this script's.
 3. **Balance still in band**: `scripts/balance_report.py 300` (neutral data
    teams → unchanged, but confirm). Golden byte-identical already implies
    this.
 4. Add a regression test in `tests/test_tactics.py`: assert neutral is a
    no-op AND the dial moves its target signal (see the existing
-   `test_*_is_wired` / directional tests for the pattern).
+   `test_*_is_wired` / directional tests for the pattern) — this is where
+   dial movement is actually enforced.
 
 ## Gotchas
 

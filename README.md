@@ -99,9 +99,13 @@ python scripts/balance_report.py 300     # every map 45-65% attack round rate
 python scripts/pacing_report.py          # attacker rotate 25-35s through spawn
 python scripts/snowball_report.py        # multi-season blowout/competitiveness band
 python scripts/tactics_report.py         # sweep each coaching dial to its extremes
-python scripts/regen_golden.py           # re-bless the golden (single + sweep) after
-                                          # an INTENTIONAL engine/geometry change
 ```
+
+`regen_golden.py` is **not** a gate — it's a mutating re-bless tool that
+overwrites the golden fixtures (single + sweep). Run it *only* after the
+golden test fails on an **intentional** engine/geometry change, to record
+the new baseline in the same commit. If the golden drifts unexpectedly,
+that's a regression — re-blessing would erase the evidence.
 
 Coaching-dial changes are held to a stricter bar: every term must be a
 no-op at the neutral value, so the golden stays byte-identical. Running
