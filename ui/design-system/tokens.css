@@ -15,6 +15,23 @@
  * through a --es-* variable so re-theming is a one-file edit.
  * ------------------------------------------------------------------ */
 
+/* Display face: Rajdhani (OFL), bundled locally — squared, condensed,
+   broadcast-scoreboard energy. Body copy stays on the system sans. */
+@font-face {
+  font-family: "Rajdhani";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/rajdhani-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Rajdhani";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/rajdhani-700.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light dark;
 
@@ -26,7 +43,7 @@
     "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
   --es-font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo,
     Consolas, "Liberation Mono", monospace;
-  --es-font-display: var(--es-font-sans);
+  --es-font-display: "Rajdhani", var(--es-font-sans);
 
   /* Scale — 1.125 ratio, floor at 10px (badges, kill feed, stat labels). */
   --es-text-2xs: 10px;   /* labels on stat bars, kill-feed meta */
@@ -117,9 +134,16 @@
    * ============================================================== */
 
   /* Valorant brand accent — used sparingly. Don't chrome the UI with this. */
-  --es-color-brand: #E24B4A;
-  --es-color-brand-hover: #F15E5D;
-  --es-color-brand-dim: #B83A39;
+  --es-color-brand: #FF4655;
+  --es-color-brand-hover: #FF5F6D;
+  --es-color-brand-dim: #C93844;
+
+  /* Scene accents — the teal/amber pair every painted asset is graded
+     with (cool ambient + warm lamp pools). UI chrome may use these for
+     secondary emphasis so screens and art read as one product. */
+  --es-color-accent: #4FD8C0;
+  --es-color-accent-dim: #2E9C8B;
+  --es-color-accent-warm: #F5B14C;
 
   /* Role colors — Duelist/Controller/Initiator/Sentinel/Flex.
      Chosen to span the hue wheel so roster grids stay distinguishable. */
@@ -214,99 +238,101 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --es-color-bg-page: #0E0F12;
-    --es-color-bg-surface: #15171B;
-    --es-color-bg-elevated: #1B1E23;
-    --es-color-bg-sunken: #0A0B0E;
-    --es-color-bg-hover: #20232A;
-    --es-color-bg-active: #272B33;
+    /* Navy family — matched to the painted art's dark-navy void so the
+       office, maps, and chrome read as one scene. */
+    --es-color-bg-page: #0A0E17;
+    --es-color-bg-surface: #0F1520;
+    --es-color-bg-elevated: #161E2E;
+    --es-color-bg-sunken: #060910;
+    --es-color-bg-hover: #1B2536;
+    --es-color-bg-active: #233049;
 
-    --es-color-text-primary: #EEEFEC;
-    --es-color-text-secondary: #A8ABA3;
-    --es-color-text-tertiary: #6E7169;
-    --es-color-text-inverse: #0E0F12;
-    --es-color-text-link: #7DB0EF;
-    --es-color-text-success: #5DCAA5;
-    --es-color-text-warning: #E8B94F;
-    --es-color-text-danger: #F0716F;
-    --es-color-text-info: #7DB0EF;
+    --es-color-text-primary: #E9EDF6;
+    --es-color-text-secondary: #A2AEC6;
+    --es-color-text-tertiary: #67748F;
+    --es-color-text-inverse: #0A0E17;
+    --es-color-text-link: #6FB7E8;
+    --es-color-text-success: #4FC6A0;
+    --es-color-text-warning: #EFB54A;
+    --es-color-text-danger: #FF6B6B;
+    --es-color-text-info: #6FB7E8;
 
-    --es-color-border-primary: #2A2D34;
-    --es-color-border-secondary: #22252B;
-    --es-color-border-tertiary: #1B1E23;
-    --es-color-border-focus: #7DB0EF;
+    --es-color-border-primary: #26324A;
+    --es-color-border-secondary: #1C2536;
+    --es-color-border-tertiary: #151C2B;
+    --es-color-border-focus: #4FD8C0;
 
-    --es-color-fill-success: #0F3A2A;
+    --es-color-fill-success: #0E352B;
     --es-color-fill-success-strong: #3FBF7F;
     --es-color-fill-warning: #3A2C0F;
-    --es-color-fill-warning-strong: #D9A441;
-    --es-color-fill-danger: #3A1614;
-    --es-color-fill-danger-strong: #E24B4A;
-    --es-color-fill-info: #132B47;
+    --es-color-fill-warning-strong: #F5B14C;
+    --es-color-fill-danger: #3A1620;
+    --es-color-fill-danger-strong: #FF4655;
+    --es-color-fill-info: #12283F;
     --es-color-fill-info-strong: #3C7CC9;
 
-    --es-color-accent-ring: rgba(125, 176, 239, 0.35);
+    --es-color-accent-ring: rgba(79, 216, 192, 0.3);
 
-    --es-color-stat-track: #272B33;
-    --es-color-stat-fill: #EEEFEC;
-    --es-color-stat-fill-warn: #E8B94F;
-    --es-color-stat-fill-danger: #F0716F;
+    --es-color-stat-track: #223049;
+    --es-color-stat-fill: #E9EDF6;
+    --es-color-stat-fill-warn: #EFB54A;
+    --es-color-stat-fill-danger: #FF6B6B;
 
-    --es-color-map-bg: #0A0B0E;
-    --es-color-map-grid: #1B1E23;
-    --es-color-map-site: rgba(125, 176, 239, 0.06);
-    --es-color-map-callout-stroke: #2A2D34;
+    --es-color-map-bg: #060910;
+    --es-color-map-grid: #151C2B;
+    --es-color-map-site: rgba(111, 183, 232, 0.06);
+    --es-color-map-callout-stroke: #26324A;
 
-    --es-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --es-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
-    --es-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --es-shadow-sm: 0 1px 2px rgba(2, 4, 10, 0.5);
+    --es-shadow-md: 0 2px 8px rgba(2, 4, 10, 0.55);
+    --es-shadow-lg: 0 12px 32px rgba(2, 4, 10, 0.65);
   }
 }
 
 /* Manual override — `data-theme="dark"` or "light" wins over media query. */
 [data-theme="dark"] {
-  --es-color-bg-page: #0E0F12;
-  --es-color-bg-surface: #15171B;
-  --es-color-bg-elevated: #1B1E23;
-  --es-color-bg-sunken: #0A0B0E;
-  --es-color-bg-hover: #20232A;
-  --es-color-bg-active: #272B33;
+  --es-color-bg-page: #0A0E17;
+  --es-color-bg-surface: #0F1520;
+  --es-color-bg-elevated: #161E2E;
+  --es-color-bg-sunken: #060910;
+  --es-color-bg-hover: #1B2536;
+  --es-color-bg-active: #233049;
 
-  --es-color-text-primary: #EEEFEC;
-  --es-color-text-secondary: #A8ABA3;
-  --es-color-text-tertiary: #6E7169;
-  --es-color-text-inverse: #0E0F12;
-  --es-color-text-link: #7DB0EF;
-  --es-color-text-success: #5DCAA5;
-  --es-color-text-warning: #E8B94F;
-  --es-color-text-danger: #F0716F;
-  --es-color-text-info: #7DB0EF;
+  --es-color-text-primary: #E9EDF6;
+  --es-color-text-secondary: #A2AEC6;
+  --es-color-text-tertiary: #67748F;
+  --es-color-text-inverse: #0A0E17;
+  --es-color-text-link: #6FB7E8;
+  --es-color-text-success: #4FC6A0;
+  --es-color-text-warning: #EFB54A;
+  --es-color-text-danger: #FF6B6B;
+  --es-color-text-info: #6FB7E8;
 
-  --es-color-border-primary: #2A2D34;
-  --es-color-border-secondary: #22252B;
-  --es-color-border-tertiary: #1B1E23;
-  --es-color-border-focus: #7DB0EF;
+  --es-color-border-primary: #26324A;
+  --es-color-border-secondary: #1C2536;
+  --es-color-border-tertiary: #151C2B;
+  --es-color-border-focus: #4FD8C0;
 
-  --es-color-fill-success: #0F3A2A;
+  --es-color-fill-success: #0E352B;
   --es-color-fill-warning: #3A2C0F;
-  --es-color-fill-danger: #3A1614;
-  --es-color-fill-info: #132B47;
+  --es-color-fill-danger: #3A1620;
+  --es-color-fill-info: #12283F;
 
-  --es-color-accent-ring: rgba(125, 176, 239, 0.35);
+  --es-color-accent-ring: rgba(79, 216, 192, 0.3);
 
-  --es-color-stat-track: #272B33;
-  --es-color-stat-fill: #EEEFEC;
-  --es-color-stat-fill-warn: #E8B94F;
-  --es-color-stat-fill-danger: #F0716F;
+  --es-color-stat-track: #223049;
+  --es-color-stat-fill: #E9EDF6;
+  --es-color-stat-fill-warn: #EFB54A;
+  --es-color-stat-fill-danger: #FF6B6B;
 
-  --es-color-map-bg: #0A0B0E;
-  --es-color-map-grid: #1B1E23;
-  --es-color-map-site: rgba(125, 176, 239, 0.06);
-  --es-color-map-callout-stroke: #2A2D34;
+  --es-color-map-bg: #060910;
+  --es-color-map-grid: #151C2B;
+  --es-color-map-site: rgba(111, 183, 232, 0.06);
+  --es-color-map-callout-stroke: #26324A;
 
-  --es-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --es-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --es-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --es-shadow-sm: 0 1px 2px rgba(2, 4, 10, 0.5);
+  --es-shadow-md: 0 2px 8px rgba(2, 4, 10, 0.55);
+  --es-shadow-lg: 0 12px 32px rgba(2, 4, 10, 0.65);
 }
 
 [data-theme="light"] {
