@@ -739,16 +739,15 @@ const SITE_FOCUS = [
   ["c", "C site", "commit C"],
 ];
 
-// Mirror of the engine's per-dial execution term (sim/engine.py _execution_mod)
-// so the "duel edge" the UI previews is exactly what the match will apply.
-function dialImpact(dial, value, fit, chem, f) {
+// No sim maths in the UI: the server computed the duel impact at each pole
+// (impact_lo at value 0, impact_hi at 100) from the same code the match engine
+// runs. Impact is piecewise-linear with its knot at the neutral 50, so all the
+// client does is interpolate between a pole and that zero.
+function dialImpact(fit, value) {
   if (!fit) return 0;
-  const dev = Math.abs(value - 50) / 50;
-  let impact = (dev * (fit.fit - f.fit_baseline)) / f.fit_div;
-  if (fit.chem_gated) {
-    impact += (Math.max(0, value - 50) / 50) * (chem - f.chem_baseline) / f.chem_div;
-  }
-  return impact;
+  return value <= 50
+    ? fit.impact_lo * (50 - value) / 50
+    : fit.impact_hi * (value - 50) / 50;
 }
 
 function poleChips(fit, styles) {
@@ -786,7 +785,7 @@ async function tactics(v) {
   const dialsWrap = el("div", "tac-dials");
   const refreshEdge = () => {
     let total = 0;
-    for (const d of TACTIC_DIALS) total += dialImpact(d, values[d.key], fitBy[d.key], chem, f);
+    for (const d of TACTIC_DIALS) total += dialImpact(fitBy[d.key], values[d.key]);
     total = Math.max(-f.mod_cap, Math.min(f.mod_cap, total));
     const tone = Math.abs(total) < 0.2 ? "" : total > 0 ? "good" : "bad";
     const sign = total > 0 ? "+" : "";
@@ -867,7 +866,7 @@ async function tactics(v) {
       lo.classList.toggle("on", side === "lo");
       hi.classList.toggle("on", side === "hi");
       if (impactEl && fit) {
-        const imp = dialImpact(d, val, fit, chem, f);
+        const imp = dialImpact(fit, val);
         const tone = Math.abs(imp) < 0.05 ? "" : imp > 0 ? "good" : "bad";
         impactEl.className = `tac-impact ${tone}`;
         impactEl.textContent = Math.abs(imp) < 0.05

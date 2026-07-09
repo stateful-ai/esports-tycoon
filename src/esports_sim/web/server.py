@@ -36,6 +36,7 @@ from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
+from esports_sim.sim import tactics_fit
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_PATH = Path("saves") / "campaign.json"  # same file the CLI uses
@@ -792,53 +793,44 @@ def talk_resolve(body: TalkBody) -> dict:
         return {"ok": True, "message": msg, "effects": effects}
 
 
-# Each attribute-fit dial maps to the same roster attributes the match
-# engine's _execution_mod reads, so the "roster fit" the UI shows is exactly
-# what will move duels off-neutral. eco_greed is deliberately absent: it is a
-# pure economy lever with no roster-attribute fit.
-_DIAL_FIT_ATTRS: dict[str, tuple[str, ...]] = {
-    "aggression": ("aim_reactivity", "aim_precision"),
-    "pace": ("aim_reactivity", "movement"),
-    "util_discipline": ("game_sense", "utility_usage"),
-    "map_control": ("game_sense", "comms_quality"),
-}
-# The high side of these two dials is the coordination-heavy read, so the
-# engine gates it on team chemistry (see _execution_mod).
-_DIAL_CHEM_GATED = {"map_control", "util_discipline"}
-
-
 def _tactics_fit(gs: GameState, team: Team) -> dict:
-    """Per-dial roster-fit data for the tactics screen. Grounded in the same
-    attributes/baselines the match engine uses so the UI's "how it impacts the
-    players" readout matches what actually happens off-neutral."""
+    """Per-dial roster-fit data for the tactics screen. The match modifier is
+    computed HERE, on the server, from the same code the engine runs
+    (sim/tactics_fit.py) — the UI never recomputes a sim term. Each dial's
+    duel impact is exactly piecewise-linear in the dial value with its knot at
+    the neutral 50, so we hand the client the two endpoint impacts (`impact_lo`
+    at value 0, `impact_hi` at value 100) and it does nothing but linearly
+    interpolate between them and the neutral zero."""
     roster = [gs.players[pid] for pid in team.player_ids if pid in gs.players]
     reg = S.gd.attributes.definitions
+    chem_edge = tactics_fit.chem_edge(team.chemistry)
     dials = []
-    for key, attr_ids in _DIAL_FIT_ATTRS.items():
+    for key, attr_ids in tactics_fit.DIAL_FIT_ATTRS.items():
         names = [reg[a].display_name if a in reg else a for a in attr_ids]
-        scored = []
-        for p in roster:
-            score = sum(p.attr(a) for a in attr_ids) / len(attr_ids)
-            scored.append(
-                {"handle": p.handle, "playstyle": str(p.playstyle), "score": round(score)}
-            )
+        pfits = [tactics_fit.player_fit(p.attr(a) for a in attr_ids) for p in roster]
+        scored = [
+            {"handle": p.handle, "playstyle": str(p.playstyle), "score": round(pf)}
+            for p, pf in zip(roster, pfits)
+        ]
         scored.sort(key=lambda s: -s["score"])
-        fit = sum(s["score"] for s in scored) / len(scored) if scored else 50.0
+        fit = sum(pfits) / len(pfits) if pfits else 50.0
+        # Fit term is symmetric about 50; the chemistry term rides only the
+        # HIGH side of the coordination-heavy dials — so the two poles differ.
+        edge = tactics_fit.fit_edge(pfits)
+        gated = key in tactics_fit.CHEM_GATED
         dials.append(
             {
                 "key": key,
                 "attrs": names,
                 "fit": round(fit, 1),
-                "chem_gated": key in _DIAL_CHEM_GATED,
+                "impact_lo": round(edge, 4),
+                "impact_hi": round(edge + (chem_edge if gated else 0.0), 4),
+                "chem_gated": gated,
                 "players": scored,
             }
         )
     return {
         "chemistry": round(team.chemistry, 1),
-        "fit_baseline": C.EXEC_FIT_BASELINE,
-        "fit_div": C.EXEC_FIT_DIV,
-        "chem_baseline": C.EXEC_CHEM_BASELINE,
-        "chem_div": C.EXEC_CHEM_DIV,
         "mod_cap": C.EXEC_MOD_CAP,
         "dials": dials,
     }

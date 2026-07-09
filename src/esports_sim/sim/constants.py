@@ -246,12 +246,19 @@ STACK_MIN_CONTROL = 50.0
 # Execution fit: running an extreme system rewards a roster suited to it
 # and punishes one that isn't. A per-team duel modifier, ZERO when every
 # dial is neutral (each term scales by the dial's deviation from 50), so it
-# cannot move the golden/balance gates. Each dial's roster-fit average is
-# centered on EXEC_FIT_BASELINE — above helps, below hurts — and divided so
-# a fully-cranked dial with an elite (or terrible) roster is about +/-1
-# duel point per dial.
+# cannot move the golden/balance gates. Fit is scored PER PLAYER (see
+# sim/tactics_fit.py) and centered on EXEC_FIT_BASELINE — above helps, below
+# hurts — divided so a fully-cranked dial with an elite (or terrible) roster
+# is about +/-1 duel point per dial.
 EXEC_FIT_BASELINE = 55.0
 EXEC_FIT_DIV = 30.0
+# Players who fall BELOW the fit baseline are amplified by this factor before
+# the per-player scores are summed, so a team-mate who can't run the system
+# drags harder than an equally-good fit lifts. This is what keeps "crank every
+# dial" from being free: a couple of stars can't average away the misfits, and
+# a high-variance roster nets NEGATIVE at an extreme. 1.0 = the old
+# roster-average behaviour (no extra penalty).
+EXEC_MISFIT_PENALTY = 2.5
 # Chemistry: coordination-heavy systems (spread/lurk map control,
 # disciplined grouped retakes) lean on team cohesion. Complexity counts
 # only the ABOVE-neutral deviation of those two dials — the low side
