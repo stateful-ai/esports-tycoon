@@ -39,6 +39,40 @@ _LAST_NAMES = [
     "Muller", "Janssen", "Horvat", "Sato", "Lopez", "Andersen", "Popov",
     "Takahashi", "Ferreira", "Lindqvist",
 ]
+
+# Region-flavoured name pools so an EMEA player doesn't read as "Minho
+# Nakamura". Keyed by Region; generate_player picks from the player's own
+# region (falling back to the mixed global pool above). The global lists
+# stay the neutral default and the staff-name source.
+_REGION_FIRST_NAMES: dict[Region, list[str]] = {
+    Region.AMERICAS: [
+        "Lucas", "Mateo", "Diego", "Santiago", "Gabriel", "Pablo", "Ethan",
+        "Noah", "Liam", "Marco", "Victor", "Andre",
+    ],
+    Region.EMEA: [
+        "Jonas", "Felix", "Emil", "Hugo", "Oscar", "Arthur", "Leon", "Erik",
+        "Jan", "Tomas", "Nikolai", "Dmitri", "Yusuf",
+    ],
+    Region.PACIFIC: [
+        "Kai", "Minho", "Jisoo", "Kenta", "Ren", "Arjun", "Ravi", "Haru",
+        "Wei", "Jin", "Tan", "Aditya",
+    ],
+}
+_REGION_LAST_NAMES: dict[Region, list[str]] = {
+    Region.AMERICAS: [
+        "Silva", "Reyes", "Santos", "Vargas", "Costa", "Ferreira", "Lopez",
+        "Moreno", "Herrera", "Castro",
+    ],
+    Region.EMEA: [
+        "Novak", "Petrov", "Larsson", "Weber", "Moreau", "Rossi", "Kowalski",
+        "Fischer", "Jensen", "Berg", "Muller", "Janssen", "Horvat", "Popov",
+        "Lindqvist", "Andersen",
+    ],
+    Region.PACIFIC: [
+        "Kim", "Tanaka", "Nakamura", "Park", "Chen", "Ito", "Nguyen", "Sato",
+        "Takahashi", "Wong", "Lee", "Sharma",
+    ],
+}
 _TEAM_NAMES = [
     ("Crimson Order", "CRO"),
     ("Nova Rift", "NVR"),
@@ -163,7 +197,9 @@ def generate_player(
         str(rng.choice(_HANDLE_PARTS_A))
         + str(rng.choice(_HANDLE_PARTS_B)).lower()
     )
-    real_name = f"{rng.choice(_FIRST_NAMES)} {rng.choice(_LAST_NAMES)}"
+    firsts = _REGION_FIRST_NAMES.get(region, _FIRST_NAMES)
+    lasts = _REGION_LAST_NAMES.get(region, _LAST_NAMES)
+    real_name = f"{rng.choice(firsts)} {rng.choice(lasts)}"
     age = int(rng.integers(age_lo, age_hi))
     # Younger players trade current quality for growth headroom.
     q = quality - max(0, 22 - age) * 1.5
@@ -233,6 +269,12 @@ def generate_league_teams(
     players: list[Player] = []
     used = used_names if used_names is not None else set()
     available = [i for i, (n, _) in enumerate(_TEAM_NAMES) if n not in used]
+    if len(available) < n_teams:
+        raise ValueError(
+            f"team-name pool exhausted: need {n_teams} unique names, only "
+            f"{len(available)} left of {len(_TEAM_NAMES)} (already used "
+            f"{len(used)}). Add more entries to _TEAM_NAMES."
+        )
     name_order = [
         available[int(k)] for k in rng.permutation(len(available))
     ][:n_teams]
