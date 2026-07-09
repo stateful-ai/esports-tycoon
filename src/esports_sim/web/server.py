@@ -34,7 +34,13 @@ from esports_sim.manager import (
     staff as staff_mod,
     talk,
 )
-from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
+from esports_sim.manager.campaign import (
+    WeekReport,
+    advance_week,
+    default_five,
+    dressed_for,
+    new_campaign,
+)
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
@@ -565,6 +571,14 @@ def state() -> dict:
                     "to_team_name": gs.teams[o.to_team].name,
                     "fee": o.fee,
                     "expires_week": o.expires_week,
+                    # Package extras (empty/zero for a plain cash bid).
+                    "offer_players": [
+                        {"id": pid, "handle": gs.players[pid].handle}
+                        for pid in o.offer_player_ids
+                        if pid in gs.players
+                    ],
+                    "cash_to_seller": o.cash_to_seller,
+                    "cash_to_buyer": o.cash_to_buyer,
                 }
                 for o in gs.transfer_offers
                 # Only bids for THIS manager's players (they answer them).
@@ -659,10 +673,49 @@ def roster(team_id: str) -> dict:
                     tendencies.append("spreads wide and lurks for picks")
                 elif tac.map_control <= 38:
                     tendencies.append("stacks tight and hits as five")
+        # Starter flags + (for a deep own roster) the upcoming fixture's per-map
+        # dressed lineups, so the UI can pick who plays each map.
+        starters = set(default_five(gs, team_id))
+        for v in players:
+            v["starter"] = v["id"] in starters
+        upcoming = None
+        is_user = team_id == gs.acting_team_id
+        if is_user and len(gs.roster(team_id)) > market.ROSTER_SIZE:
+            fx = next(
+                (
+                    f
+                    for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+                    if f.tier == 1
+                    and not f.played
+                    and team_id in (f.team_a, f.team_b)
+                    and f.week >= gs.week
+                ),
+                None,
+            )
+            if fx is not None:
+                opp = fx.team_a if fx.team_b == team_id else fx.team_b
+                upcoming = {
+                    "fixture_id": fx.id,
+                    "opponent": gs.teams[opp].name,
+                    "best_of": fx.best_of,
+                    "maps": [
+                        {
+                            "map_id": m,
+                            "dressed": dressed_for(gs, team_id, fx, m),
+                            "has_override": f"{team_id}|{fx.id}|{m}"
+                            in gs.map_lineups,
+                        }
+                        for m in fx.maps
+                    ],
+                }
         return {
             "team": _team_view(gs.teams[team_id], gs),
             "players": players,
             "is_user_team": team_id == gs.acting_team_id,
+            "lineup_ids": list(gs.teams[team_id].lineup_ids),
+            "roster_min": market.ROSTER_MIN,
+            "roster_max": market.roster_cap(gs, team_id),
+            "upcoming": upcoming,
             "fog": round(fog, 1),
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
@@ -751,9 +804,24 @@ def market_view() -> dict:
                 "traits_hidden": report["traits_hidden"],
             }
             out.append({**view, "can_sign": ok, "block_reason": why})
+        me = gs.acting_team_id
         return {
             "free_agents": out,
             "roster_size": market.ROSTER_SIZE,
+            "roster_min": market.ROSTER_MIN,
+            "roster_max": market.roster_cap(gs, me),
+            "roster_count": len(gs.roster(me)),
+            "phase": gs.phase,
+            # Own roster, for the "swap" (sign + drop in one) control.
+            "my_roster": [
+                {
+                    "id": p.id,
+                    "handle": p.handle,
+                    "overall": int(round(development.overall(p))),
+                    "value": market.transfer_value(p),
+                }
+                for p in gs.roster(me)
+            ],
             "market_scouting": round(progress, 2),
         }
 
@@ -1289,6 +1357,84 @@ def renew(body: PlayerBody) -> dict:
         return {"ok": True, "message": msg}
 
 
+class SwapBody(BaseModel):
+    sign_id: str  # free agent to sign
+    drop_id: str  # rostered player to release
+
+
+@app.post("/api/actions/swap")
+def swap(body: SwapBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = market.swap_player(
+            gs, gs.acting_team_id, body.sign_id, body.drop_id
+        )
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg}
+
+
+class LineupBody(BaseModel):
+    # Set the team default (order = starting five) and/or a per-map override.
+    lineup_ids: list[str] | None = None
+    fixture_id: str | None = None
+    map_id: str | None = None
+    player_ids: list[str] | None = None  # the five to dress for that map
+
+
+@app.post("/api/actions/lineup")
+def set_lineup(body: LineupBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        team = gs.teams[me]
+        roster = set(team.player_ids)
+        if body.lineup_ids is not None:
+            picks = [pid for pid in body.lineup_ids if pid in roster]
+            if len(picks) > market.ROSTER_SIZE:
+                raise HTTPException(422, f"a lineup is at most {market.ROSTER_SIZE}")
+            team.lineup_ids = picks
+        if body.player_ids is not None:
+            if not (body.fixture_id and body.map_id):
+                raise HTTPException(422, "a per-map lineup needs fixture_id + map_id")
+            picks = [pid for pid in body.player_ids if pid in roster]
+            if len(picks) != market.ROSTER_SIZE:
+                raise HTTPException(
+                    422, f"dress exactly {market.ROSTER_SIZE} players for a map"
+                )
+            key = f"{me}|{body.fixture_id}|{body.map_id}"
+            gs.map_lineups[key] = picks
+        S.save()
+        return {"ok": True, "message": "lineup saved"}
+
+
+class PackageBody(BaseModel):
+    target_pid: str  # the rival player you want
+    out_pids: list[str] = []  # your players you're offering
+    cash_out: int = 0  # cash you send
+    cash_in: int = 0  # cash you ask back
+
+
+@app.post("/api/actions/package")
+def package(body: PackageBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.target_pid not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg = market.propose_package(
+            gs,
+            body.target_pid,
+            list(body.out_pids),
+            max(0, int(body.cash_out)),
+            max(0, int(body.cash_in)),
+        )
+        S.save()
+        if not ok:
+            raise HTTPException(422, msg)
+        return {"ok": True, "message": msg}
+
+
 @app.post("/api/actions/advance")
 def advance() -> dict:
     """Ready-up: mark the acting manager ready to advance. The week only ticks
@@ -1298,6 +1444,10 @@ def advance() -> dict:
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
+        # A manager can't tick the week without a legal (five-deep) roster.
+        ok, why = market.roster_ready(gs, me)
+        if not ok:
+            raise HTTPException(409, why)
         game = _ctx.get().game
         game.ready.add(me)
         waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
@@ -1588,6 +1738,13 @@ def player_profile(pid: str) -> dict:
                 "portrait": _portrait_url(p.id, str(p.role)),
                 "is_user_team": team_id == gs.acting_team_id,
                 "is_free_agent": is_fa,
+                # A rival's contracted player is biddable: the seller's ask, so
+                # the profile overlay can open the package builder.
+                "transfer_ask": (
+                    market.transfer_ask(gs, pid)
+                    if (not is_fa and team_id and team_id != gs.acting_team_id)
+                    else None
+                ),
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),

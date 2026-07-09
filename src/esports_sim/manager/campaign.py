@@ -175,6 +175,78 @@ def runtime_gamedata(gs: GameState, gd: GameData) -> GameData:
     )
 
 
+def _resolve_five(gs: GameState, team_id: str, primary: list[str]) -> list[str]:
+    """Resolve exactly five dressed players: honour `primary` (an ordered lineup
+    preference) first, filtering stale ids, then top up with the best remaining
+    players by quality. Assumes the roster has more than five (callers short-
+    circuit at five-or-fewer). Order is irrelevant — the engine re-sorts by id."""
+    roster = list(gs.teams[team_id].player_ids)
+    chosen: list[str] = []
+    seen: set[str] = set()
+    for pid in primary:
+        if pid in roster and pid not in seen:
+            chosen.append(pid)
+            seen.add(pid)
+            if len(chosen) == market.ROSTER_SIZE:
+                return chosen
+    for pid in sorted(
+        roster, key=lambda q: (-market.player_quality(gs.players[q]), q)
+    ):
+        if pid not in seen:
+            chosen.append(pid)
+            seen.add(pid)
+            if len(chosen) == market.ROSTER_SIZE:
+                break
+    return chosen
+
+
+def default_five(gs: GameState, team_id: str) -> list[str]:
+    """The team's default dressed five (its saved `lineup_ids`, topped up by
+    quality). Everyone plays when the roster is five or fewer."""
+    roster = list(gs.teams[team_id].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return roster
+    return _resolve_five(gs, team_id, gs.teams[team_id].lineup_ids)
+
+
+def dressed_for(
+    gs: GameState, team_id: str, fixture: Fixture, map_id: str
+) -> list[str]:
+    """The exactly-five players a team dresses for one map. A roster of five or
+    fewer dresses everyone (this is what keeps the match/balance gates
+    byte-identical). Deeper rosters resolve, in order of precedence: a per-map
+    lineup override, then the team's default `lineup_ids`, then a top-up of the
+    best remaining players by quality.
+
+    The engine re-sorts the roster by id, so the returned order is irrelevant to
+    match output — only the SET of five matters."""
+    roster = list(gs.teams[team_id].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return roster
+    key = f"{team_id}|{fixture.id}|{map_id}"
+    primary = gs.map_lineups.get(key) or gs.teams[team_id].lineup_ids
+    return _resolve_five(gs, team_id, primary)
+
+
+def _dressed_gamedata(
+    gs: GameState, gd: GameData, dressed: dict[str, list[str]]
+) -> GameData:
+    """A per-map runtime view where the two competing teams expose only their
+    dressed five. Non-mutating: `gs.teams` is untouched; the two Team objects
+    are shallow copies with overridden `player_ids`."""
+    teams = dict(gs.teams)
+    for tid, pids in dressed.items():
+        teams[tid] = gs.teams[tid].model_copy(update={"player_ids": list(pids)})
+    return GameData(
+        attributes=gd.attributes,
+        agents=gd.agents,
+        weapons=gd.weapons,
+        maps=gd.maps,
+        teams=teams,
+        players=gs.players,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Weekly tick
 
@@ -208,8 +280,24 @@ def advance_week(
             events_out=None if f.tier == 2 else events_out,
         )
         report.fixtures.append(f)
-        for stats in report.match_stats.get(f.id, []):
-            _aggregate_stats(gs, f, stats, week_kills)
+        # Each played map's stats line up with f.results in order. Recompute the
+        # dressed five per map (rosters haven't moved yet this tick) so only the
+        # players who actually took the map get maps/rounds credited.
+        for map_res, stats in zip(f.results, report.match_stats.get(f.id, [])):
+            dressed = {
+                tid: set(dressed_for(gs, tid, f, map_res.map_id))
+                for tid in (f.team_a, f.team_b)
+            }
+            _aggregate_stats(gs, f, stats, week_kills, dressed)
+
+    # Per-map lineups are single-use: drop the entries for fixtures just played
+    # so `map_lineups` can't grow unbounded across a season.
+    _played_ids = {f.id for f in week_fixtures}
+    gs.map_lineups = {
+        k: v
+        for k, v in gs.map_lineups.items()
+        if k.split("|", 2)[1] not in _played_ids
+    }
 
     # 2. Training (human focus is whatever each manager set; AI picks its own,
     # and each human's coach/facility multiplier comes from their own org).
@@ -344,6 +432,7 @@ def advance_week(
             gs.push_news(f"{str(region).upper()} playoffs set: {top4}.")
         gs.phase = "playoffs"
         report.notes.append("Regular season complete — regional playoffs next week.")
+        _nudge_tournament_registration(gs)
     elif gs.phase == "playoffs":
         semis = _stage_fixtures("semi")
         finals = _stage_fixtures("final")
@@ -604,10 +693,19 @@ def _pay_region_prizes(gs: GameState, order: list[str]) -> None:
     )
 
 
-def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None:
-    """Fold one map's MatchStats into the season aggregates."""
+def _aggregate_stats(
+    gs: GameState,
+    f: Fixture,
+    stats,
+    week_kills: dict,
+    dressed: dict[str, set[str]],
+) -> None:
+    """Fold one map's MatchStats into the season aggregates. Only the players
+    who DRESSED for this map are credited a map/rounds — a benched player sat it
+    out. (For a five-player roster the dressed set is the whole roster, so this
+    is unchanged from the pre-bench behaviour.)"""
     n_rounds = len(stats.rounds)
-    rosters = {tid: set(gs.teams[tid].player_ids) for tid in (f.team_a, f.team_b)}
+    rosters = dressed
 
     for tid in (f.team_a, f.team_b):
         ts = gs.team_stats.setdefault(tid, TeamSeasonStats())
@@ -644,6 +742,20 @@ def _aggregate_stats(gs: GameState, f: Fixture, stats, week_kills: dict) -> None
             ps.clutches += line.clutches
             ps.rating_sum += line.rating
             week_kills[pid] = week_kills.get(pid, 0) + line.kills
+
+
+def _nudge_tournament_registration(gs: GameState) -> None:
+    """Soft, advisory reminder that a tournament roster is nominally six deep.
+    Fires as the playoffs are set; never blocks (rosters may already be locked
+    by now) — a heads-up plus a paper trail in each manager's inbox."""
+    for tid in sorted(gs.human_team_ids):
+        n = len(gs.teams[tid].player_ids)
+        if n < market.TOURNAMENT_REGISTER:
+            gs.push_private_news(
+                f"Playoffs: {gs.teams[tid].name} enter with {n} players — a "
+                f"{market.TOURNAMENT_REGISTER}-man tournament roster is advised.",
+                owner=tid,
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -699,11 +811,14 @@ def _sim_fixture(
         seed = tree.derive_seed(
             "season", gs.season, "week", f.week, "fixture", f.id, "map", map_index
         )
-        res = simulate_match_result(rt_gd, f.team_a, f.team_b, map_id, seed)
+        dressed = {
+            f.team_a: dressed_for(gs, f.team_a, f, map_id),
+            f.team_b: dressed_for(gs, f.team_b, f, map_id),
+        }
+        map_gd = _dressed_gamedata(gs, rt_gd, dressed)
+        res = simulate_match_result(map_gd, f.team_a, f.team_b, map_id, seed)
         team_of = {
-            pid: tid
-            for tid in (f.team_a, f.team_b)
-            for pid in rt_gd.teams[tid].player_ids
+            pid: tid for tid in (f.team_a, f.team_b) for pid in dressed[tid]
         }
         stats = compute_match_stats(res.events, team_of)
         if collector is not None:
@@ -1067,6 +1182,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.masters_seeds = []
     gs.champions_seeds = []
     gs.transfer_offers = []
+    gs.map_lineups = {}
     gs.season += 1
     for tid in sorted(gs.human_team_ids):
         gs.set_acting(tid)

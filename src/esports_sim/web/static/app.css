@@ -935,3 +935,20 @@ tr.es-gap:hover td { background: none; }
   margin-top: 14px; padding-top: 12px;
   border-top: 1px solid var(--es-color-border-secondary, #1c2536);
 }
+
+/* Roster depth: lineups, swaps, package offers */
+p.warn, .warn { color: var(--es-color-text-warning, #e5a53a); }
+p.good, .good { color: var(--es-color-text-success, #46a758); }
+.sel-sm {
+  padding: 3px 6px; font-size: 12px;
+  background: var(--es-color-bg-secondary, #121826);
+  color: var(--es-color-text-primary, #e8edf5);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: 6px; max-width: 160px;
+}
+.lineup-block {
+  margin-top: 14px; padding-top: 10px;
+  border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.lineup-block h3 { margin: 0 0 6px; font-size: 13px; }
+.lineup-block .row { flex-wrap: wrap; gap: 6px; }

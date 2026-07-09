@@ -8,6 +8,8 @@ const el = (tag, cls, html) => {
   return n;
 };
 const money = (n) => (n == null ? "—" : n.toLocaleString() + " cr");
+// Prettify a snake_case tag/trait id ("team_player" -> "Team Player") for display.
+const humanize = (s) => (s || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 function toast(msg) {
   const t = el("div", "t", msg);
@@ -508,16 +510,25 @@ async function dashboard(v) {
     const oc = el("div", "card");
     oc.appendChild(el("h2", "", "Transfer offers"));
     for (const o of s.transfer_offers) {
+      // Build the "what you get" description: cash and/or incoming players.
+      const bits = [];
+      if ((o.offer_players ?? []).length) {
+        bits.push(o.offer_players.map(pl =>
+          `<b class="plink" data-pid="${pl.id}">${pl.handle}</b>`).join(" + "));
+      }
+      if (o.cash_to_seller) bits.push(`<b class="mono">${money(o.cash_to_seller)}</b>`);
+      if (o.cash_to_buyer) bits.push(`<span class="muted">(you send back ${money(o.cash_to_buyer)})</span>`);
+      const gets = bits.length ? bits.join(" + ") : `<b class="mono">${money(o.fee)}</b>`;
       const row = el(
         "div",
         "row",
-        `<span style="min-width:280px"><b>${o.to_team_name}</b> bid
-        <b class="mono">${money(o.fee)}</b> for <b class="plink" data-pid="${o.player_id}">${o.handle}</b></span>
+        `<span style="min-width:280px"><b>${o.to_team_name}</b> offer
+        ${gets} for <b class="plink" data-pid="${o.player_id}">${o.handle}</b></span>
         <span class="muted">expires week ${o.expires_week}</span>`
       );
-      const sell = el("button", "btn btn-sm", "Sell");
+      const sell = el("button", "btn btn-sm", "Accept");
       sell.onclick = async () => {
-        if (!confirm(`Sell ${o.handle} to ${o.to_team_name} for ${money(o.fee)}?`)) return;
+        if (!confirm(`Accept ${o.to_team_name}'s offer for ${o.handle}?`)) return;
         const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: true });
         toast(r.message); refresh();
       };
@@ -623,7 +634,15 @@ async function roster(v) {
   const fogNote = data.fog > 0
     ? ` <span class="muted">— scouted estimates ±${data.fog}</span>`
     : "";
-  card.innerHTML = `<h2>Roster — <span class="tlink" data-tid="${data.team.id}">${data.team.name}</span> (${data.players.length}/5)${fogNote}</h2>`;
+  const cap = data.roster_max ?? 5;
+  card.innerHTML = `<h2>Roster — <span class="tlink" data-tid="${data.team.id}">${data.team.name}</span> (${data.players.length}/${cap})${fogNote}</h2>`;
+  if (data.is_user_team && data.players.length < (data.roster_min ?? 5)) {
+    card.appendChild(el("p", "warn",
+      `⚠ You need ${data.roster_min ?? 5} players to advance the week — sign ${(data.roster_min ?? 5) - data.players.length} more.`));
+  } else if (data.is_user_team && data.players.length < 6) {
+    card.appendChild(el("p", "muted",
+      "Tip: a 6-man roster is advised for tournaments (register a bench)."));
+  }
   if ((data.tendencies ?? []).length) {
     card.appendChild(el("p", "muted",
       `Scouting book: ${data.tendencies.join(" · ")}`));
@@ -670,10 +689,16 @@ async function roster(v) {
          <button class="btn btn-sm" data-act="renew">Renew</button>
          <button class="btn btn-sm" data-act="release">Release</button>`
       : p.transfer_ask != null
-        ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>`
+        ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
+           <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
         : "";
+    // Bench/starter marker only matters once a roster runs deeper than five.
+    const subMark = (data.is_user_team && data.players.length > 5)
+      ? (p.starter ? ' <span class="pill" title="in the starting five">★</span>'
+                   : ' <span class="pill muted" title="benched by default">sub</span>')
+      : "";
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${subMark}</td>
       <td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
@@ -688,6 +713,10 @@ async function roster(v) {
         if (!confirm(`Buy ${p.handle} from ${data.team.name} for ${money(p.transfer_ask)}?`)) return;
         const r = await api("/api/actions/bid", { player_id: p.id });
         toast(r.message); refresh(); render();
+      };
+      tr.querySelector('[data-act="offer"]').onclick = (e) => {
+        e.stopPropagation();
+        openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: data.team.name });
       };
     }
     if (data.is_user_team) {
@@ -720,7 +749,69 @@ async function roster(v) {
   card.appendChild(t);
   v.appendChild(card);
 
+  if (data.is_user_team && data.upcoming) v.appendChild(lineupCard(data));
   if (data.is_user_team) await staffCard(v);
+}
+
+// Per-map "dressed five" picker for the upcoming fixture (only shown when the
+// roster runs deeper than five, so there's an actual choice to make).
+function lineupCard(data) {
+  const up = data.upcoming;
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Lineups — vs ${up.opponent} (Bo${up.best_of})</h2>
+    <p class="muted">Dress exactly 5 for each map. A map with no pick uses your default five (★).</p>`;
+
+  const chipRow = (preselected, onSave) => {
+    const wrap = el("div", "");
+    const chips = el("div", "row");
+    const chosen = new Set(preselected);
+    const count = el("span", "muted", `${chosen.size}/5`);
+    for (const p of data.players) {
+      const chip = el("button", "btn btn-sm" + (chosen.has(p.id) ? " btn-primary" : ""), p.handle);
+      chip.onclick = () => {
+        if (chosen.has(p.id)) { chosen.delete(p.id); chip.classList.remove("btn-primary"); }
+        else if (chosen.size >= 5) { toast("five is the max — remove one first"); return; }
+        else { chosen.add(p.id); chip.classList.add("btn-primary"); }
+        count.textContent = `${chosen.size}/5`;
+      };
+      chips.appendChild(chip);
+    }
+    const save = el("button", "btn btn-sm", "Save");
+    save.onclick = () => onSave([...chosen]);
+    const bar = el("div", "row");
+    bar.append(count, save);
+    wrap.append(chips, bar);
+    return wrap;
+  };
+
+  // Default five.
+  const dflt = el("div", "lineup-block");
+  dflt.appendChild(el("h3", "", "Default five"));
+  dflt.appendChild(chipRow(data.lineup_ids ?? [], async (ids) => {
+    if (ids.length && ids.length !== 5) { toast("pick exactly 5 (or none for auto)"); return; }
+    const r = await api("/api/actions/lineup", { lineup_ids: ids });
+    toast(r.message); render();
+  }));
+  const auto = el("button", "btn btn-sm", "Clear (auto top-5)");
+  auto.onclick = async () => {
+    const r = await api("/api/actions/lineup", { lineup_ids: [] });
+    toast(r.message); render();
+  };
+  dflt.appendChild(auto);
+  card.appendChild(dflt);
+
+  // Per-map overrides.
+  for (const m of up.maps) {
+    const box = el("div", "lineup-block");
+    box.appendChild(el("h3", "", `${m.map_id}${m.has_override ? " · custom" : " · default"}`));
+    box.appendChild(chipRow(m.dressed, async (ids) => {
+      if (ids.length !== 5) { toast("dress exactly 5 for a map"); return; }
+      const r = await api("/api/actions/lineup", { fixture_id: up.fixture_id, map_id: m.map_id, player_ids: ids });
+      toast(r.message); render();
+    }));
+    card.appendChild(box);
+  }
+  return card;
 }
 
 async function staffCard(v) {
@@ -768,7 +859,7 @@ function attrDetail(p) {
       <p class="muted">agents: ${agents || "—"}</p>
       <p class="muted">personality: ${
         (p.personality || [])
-          .map((t) => `<span class="pill" title="${t.blurb || ""}">${t.id}</span>`)
+          .map((t) => `<span class="pill" title="${t.blurb || ""}">${humanize(t.id)}</span>`)
           .join(" ") || "—"
       }</p>
       ${p.potential_stars != null
@@ -1179,11 +1270,16 @@ async function market(v) {
       ? `<p class="muted">Market coverage ${Math.round(data.market_scouting * 100)}% —
          numbers below are estimates${data.market_scouting === 0 ? "; assign your scout to the market to see ceilings" : ""}.</p>`
       : "");
+  const cap = data.roster_max ?? 5;
+  card.appendChild(el("p", "muted",
+    `Squad ${data.roster_count}/${cap}. ${data.phase === "playoffs"
+      ? "Rosters are locked during the playoffs." : "Sign to fill a slot, or swap to add + drop in one move."}`));
   const t = el("table");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
     <th class="num">OVR</th><th>Ability</th><th>Ceiling</th>
-    <th class="num">Asking</th><th></th></tr></thead>`;
+    <th class="num">Asking</th><th></th><th>Swap out</th></tr></thead>`;
   const tb = el("tbody");
+  const locked = data.phase === "playoffs";
   for (const p of data.free_agents) {
     const fogged = p.fog > 0;
     const tr = el("tr", "", `
@@ -1193,18 +1289,41 @@ async function market(v) {
       <td>${starsRange(p.scout?.ca_stars)}</td>
       <td>${starsRange(p.scout?.pa_stars)}</td>
       <td class="num">${money(p.asking_salary)}/wk</td>
-      <td><button class="btn btn-sm" ${p.can_sign ? "" : "disabled"}
-        title="${p.block_reason || "sign to a 40-week deal"}">Sign</button></td>`);
-    tr.querySelector("button").onclick = async () => {
+      <td><button class="btn btn-sm" data-act="sign" ${p.can_sign ? "" : "disabled"}
+        title="${p.block_reason || "sign to a 40-week deal"}">Sign</button></td>
+      <td data-swap></td>`);
+    tr.querySelector('[data-act="sign"]').onclick = async () => {
       const r = await api("/api/actions/sign", { player_id: p.id });
       toast(r.message); refresh(); render();
     };
+    // Swap: pick one of your players to drop, then sign this FA in one move.
+    const swapCell = tr.querySelector("[data-swap]");
+    if (locked) {
+      swapCell.appendChild(el("span", "muted", "locked"));
+    } else {
+      const sel = el("select", "sel-sm");
+      sel.appendChild(el("option", "", "— drop —"));
+      for (const mine of data.my_roster) {
+        const o = el("option", "", `${mine.handle} (${mine.overall})`);
+        o.value = mine.id;
+        sel.appendChild(o);
+      }
+      const go = el("button", "btn btn-sm", "Swap");
+      go.onclick = async () => {
+        if (!sel.value) { toast("choose a player to drop"); return; }
+        const dropName = data.my_roster.find(x => x.id === sel.value)?.handle ?? "player";
+        if (!confirm(`Drop ${dropName} and sign ${p.handle}?`)) return;
+        const r = await api("/api/actions/swap", { sign_id: p.id, drop_id: sel.value });
+        toast(r.message); refresh(); render();
+      };
+      swapCell.append(sel, go);
+    }
     let detail = null;
     tr.style.cursor = "pointer";
     tr.onclick = (e) => {
-      if (e.target.tagName === "BUTTON") return;
+      if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT" || e.target.tagName === "OPTION") return;
       if (detail) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="8">${attrDetail(p)}</td>`);
+      detail = el("tr", "", `<td colspan="9">${attrDetail(p)}</td>`);
       tr.after(detail);
     };
     tb.appendChild(tr);
@@ -1212,6 +1331,81 @@ async function market(v) {
   t.appendChild(tb);
   card.appendChild(t);
   v.appendChild(card);
+}
+
+// Package-deal builder: offer any of my players + cash (either way) for a rival.
+async function openOffer(target) {
+  let mine = [];
+  try {
+    const mkt = await api("/api/market");
+    if (mkt.phase === "playoffs") { toast("rosters are locked during the playoffs"); return; }
+    mine = mkt.my_roster ?? [];
+  } catch { return; }
+
+  const ov = el("div", "overlay");
+  const panel = el("div", "panel");
+  panel.innerHTML = `<button class="btn btn-sm offer-close" style="float:right">✕</button>
+    <h2>Offer for ${target.handle}</h2>
+    <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value.</p>`;
+  const list = el("div", "");
+  const chosen = new Set();
+  for (const p of mine) {
+    const row = el("label", "row");
+    row.style.cursor = "pointer";
+    const cb = el("input");
+    cb.type = "checkbox";
+    cb.onchange = () => { cb.checked ? chosen.add(p.id) : chosen.delete(p.id); recompute(); };
+    row.append(cb, el("span", "", `${p.handle} — OVR ${p.overall} · ${money(p.value)}`));
+    list.appendChild(row);
+  }
+  panel.appendChild(el("h3", "", "Players you send"));
+  panel.appendChild(list);
+
+  const cashOut = el("input"); cashOut.type = "number"; cashOut.min = "0"; cashOut.value = "0"; cashOut.className = "sel-sm";
+  const cashIn = el("input"); cashIn.type = "number"; cashIn.min = "0"; cashIn.value = "0"; cashIn.className = "sel-sm";
+  cashOut.oninput = recompute; cashIn.oninput = recompute;
+  const cashWrap = el("div", "");
+  const oL = el("label", "row"); oL.append(el("span", "", "Cash you send: "), cashOut);
+  const iL = el("label", "row"); iL.append(el("span", "", "Cash you want back: "), cashIn);
+  cashWrap.append(oL, iL);
+  panel.appendChild(cashWrap);
+
+  const meter = el("p", "");
+  panel.appendChild(meter);
+  function recompute() {
+    const players = mine.filter(p => chosen.has(p.id)).reduce((s, p) => s + p.value, 0);
+    const co = Math.max(0, parseInt(cashOut.value || "0", 10));
+    const ci = Math.max(0, parseInt(cashIn.value || "0", 10));
+    const value = players + co - ci;
+    const ok = value >= target.ask;
+    meter.className = ok ? "good" : "warn";
+    meter.textContent = `Package value ${money(value)} vs ask ${money(target.ask)} — ${ok ? "should be accepted" : "short of value"}`;
+  }
+  recompute();
+
+  const send = el("button", "btn btn-primary", "Send offer");
+  send.onclick = async () => {
+    const co = Math.max(0, parseInt(cashOut.value || "0", 10));
+    const ci = Math.max(0, parseInt(cashIn.value || "0", 10));
+    try {
+      const r = await api("/api/actions/package", {
+        target_pid: target.id,
+        out_pids: [...chosen],
+        cash_out: co,
+        cash_in: ci,
+      });
+      toast(r.message); close(); refresh(); render();
+    } catch { /* api() already toasted the reason */ }
+  };
+  const actions = el("div", "row");
+  actions.append(send);
+  panel.appendChild(actions);
+
+  function close() { ov.remove(); }
+  ov.onclick = (e) => { if (e.target === ov) close(); };
+  panel.querySelector(".offer-close").onclick = close;
+  ov.appendChild(panel);
+  document.body.appendChild(ov);
 }
 
 async function scouting(v) {
@@ -1259,7 +1453,7 @@ async function scouting(v) {
     const tb = el("tbody");
     for (const r of data.reports) {
       const traits = r.traits
-        .map((t) => `<span class="pill" title="${t.blurb}">${t.id}</span>`)
+        .map((t) => `<span class="pill" title="${t.blurb}">${humanize(t.id)}</span>`)
         .join(" ") +
         (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden}?</span>` : "");
       const read = r.strengths.length
