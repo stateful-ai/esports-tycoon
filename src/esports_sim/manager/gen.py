@@ -57,6 +57,10 @@ _REGION_FIRST_NAMES: dict[Region, list[str]] = {
         "Kai", "Minho", "Jisoo", "Kenta", "Ren", "Arjun", "Ravi", "Haru",
         "Wei", "Jin", "Tan", "Aditya",
     ],
+    Region.CHINA: [
+        "Wei", "Jian", "Hao", "Yuxuan", "Zihan", "Cheng", "Bo", "Rui",
+        "Feng", "Kaiwen", "Ming", "Junjie",
+    ],
 }
 _REGION_LAST_NAMES: dict[Region, list[str]] = {
     Region.AMERICAS: [
@@ -71,6 +75,10 @@ _REGION_LAST_NAMES: dict[Region, list[str]] = {
     Region.PACIFIC: [
         "Kim", "Tanaka", "Nakamura", "Park", "Chen", "Ito", "Nguyen", "Sato",
         "Takahashi", "Wong", "Lee", "Sharma",
+    ],
+    Region.CHINA: [
+        "Wang", "Li", "Zhang", "Liu", "Chen", "Yang", "Huang", "Zhao",
+        "Wu", "Zhou", "Xu", "Sun",
     ],
 }
 _TEAM_NAMES = [

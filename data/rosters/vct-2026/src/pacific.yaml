@@ -1,0 +1,815 @@
+# VCT Pacific 2026 rosters - compiled 2026-07-09 from vlr.gg + liquipedia.net
+# Lineups = most recent official 2026 match, adjusted for completed roster moves
+# (Gen.G signed Efina/RaxcaL 2026-07-09; FULL SENSE benched Leviathan 2026-07-03).
+region: pacific
+teams:
+  - name: Paper Rex
+    tag: PRX
+    tier: 1
+    prestige: 92
+    players:
+      - handle: something
+        real_name: Ilia Petrov
+        age: 21
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 85
+        agents: [jett, phoenix]
+      - handle: Jinggg
+        real_name: Wang Jing Jie
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 83
+        agents: [raze, phoenix]
+      - handle: f0rsakeN
+        real_name: Jason Susanto
+        age: 21
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 82
+        agents: [omen, jett]
+      - handle: invy
+        real_name: Adrian Jiggs Aisa Reyes
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 74
+        agents: [skye, sova]
+      - handle: d4v41
+        real_name: Ahmad Khalish Rusyaidee bin Nordin
+        age: 24
+        role: sentinel
+        playstyle: igl
+        igl: true
+        quality: 78
+        agents: [killjoy, viper]
+  - name: T1
+    tag: T1
+    tier: 1
+    prestige: 90
+    players:
+      - handle: iZu
+        real_name: Ham Woo-joo
+        age: 20
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 76
+        agents: [chamber, killjoy]
+      - handle: BuZz
+        real_name: Yu Byung-chul
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [jett, raze]
+      - handle: stax
+        real_name: Kim Gu-taek
+        age: 26
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [skye, sova]
+      - handle: Meteor
+        real_name: Kim Tae-oh
+        age: 24
+        role: flex
+        playstyle: anchor
+        igl: false
+        quality: 71
+        agents: [viper, killjoy, phoenix]
+      - handle: Munchkin
+        real_name: Byeon Sang-beom
+        age: 26
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [omen, viper]
+  - name: Gen.G
+    tag: GEN
+    tier: 1
+    prestige: 85
+    players:
+      - handle: t3xture
+        real_name: Kim Na-ra
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 78
+        agents: [jett, raze, chamber]
+      - handle: Karon
+        real_name: Kim Won-tae
+        age: 22
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 73
+        agents: [viper, phoenix]
+      - handle: Ash
+        real_name: Ha Hyun-cheol
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [jett, omen]
+      - handle: Efina
+        real_name: Kim Nak-yeon
+        age: 20
+        role: sentinel
+        playstyle: igl
+        igl: true
+        quality: 62
+        agents: [killjoy, cypher]
+      - handle: RaxcaL
+        real_name: Kim Min-seok
+        age: 18
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 61
+        agents: [jett, raze]
+  - name: KIWOOM DRX
+    tag: KRX
+    tier: 1
+    prestige: 84
+    players:
+      - handle: MaKo
+        real_name: Kim Myeong-kwan
+        age: 25
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 78
+        agents: [omen, viper]
+      - handle: HYUNMIN
+        real_name: Song Hyun-min
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [jett, raze]
+      - handle: BeYN
+        real_name: Kang Ha-bin
+        age: 22
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 68
+        agents: [skye, breach]
+      - handle: free1ng
+        real_name: No Ha-jun
+        age: 19
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, sova]
+      - handle: Yong
+        real_name: Kim Ho-yong
+        age: 20
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 66
+        agents: [chamber, cypher]
+  - name: Rex Regum Qeon
+    tag: RRQ
+    tier: 1
+    prestige: 74
+    players:
+      - handle: Jemkin
+        real_name: Maksim Batorov
+        age: 24
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 76
+        agents: [chamber, raze]
+      - handle: xffero
+        real_name: David Sean Michael Monangin
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 73
+        agents: [viper, cypher]
+      - handle: Kushy
+        real_name: Bryan Carlos Setiawan
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [sova, skye]
+      - handle: crazyguy
+        real_name: Ngo Cong Anh
+        age: 27
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, breach]
+      - handle: xan
+        real_name: Xan Ng
+        age: 19
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 63
+        agents: [omen, jett]
+  - name: Team Secret
+    tag: TS
+    tier: 1
+    prestige: 72
+    players:
+      - handle: Sylvan
+        real_name: Ko Young-sub
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [omen, clove]
+      - handle: kellyS
+        real_name: Kelly Kent Sedillo
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 69
+        agents: [viper, breach, chamber]
+      - handle: Zeus
+        real_name: Jhian Zeus Dela Vega
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, raze]
+      - handle: BerserX
+        real_name: Rizkie Adla Kusuma
+        age: 24
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 64
+        agents: [cypher, killjoy]
+      - handle: Rimuru
+        real_name: Dwine Gatchalian Enriquez
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, reyna]
+  - name: ZETA DIVISION
+    tag: ZETA
+    tier: 1
+    prestige: 78
+    players:
+      - handle: Absol
+        real_name: Kazuki Fujinoki
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 68
+        agents: [jett, raze]
+      - handle: SyouTa
+        real_name: Shota Aoki
+        age: 20
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 65
+        agents: [viper, raze]
+      - handle: SugarZ3ro
+        real_name: Shota Watanabe
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 64
+        agents: [omen, viper]
+      - handle: eKo
+        real_name: Yeom Wang-ryong
+        age: 23
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, skye, phoenix]
+      - handle: Xdll
+        real_name: Yuto Mizomori
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 61
+        agents: [skye, breach]
+  - name: DetonatioN FocusMe
+    tag: DFM
+    tier: 1
+    prestige: 70
+    players:
+      - handle: Meiy
+        real_name: Ibuki Seki
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [jett, raze]
+      - handle: Caedye
+        real_name: Amon Mateus Okakura
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 67
+        agents: [cypher, killjoy]
+      - handle: akame
+        real_name: Yu Gwang-hui
+        age: 22
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, sova]
+      - handle: SSeeS
+        real_name: Tomonori Okimura
+        age: 26
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 64
+        agents: [omen, sova]
+      - handle: yatsuka
+        real_name: Kazuya Ikeda
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 63
+        agents: [skye, sova]
+  - name: Global Esports
+    tag: GE
+    tier: 1
+    prestige: 62
+    players:
+      - handle: autumn
+        real_name: Kale Dunne
+        age: 22
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 73
+        agents: [chamber, cypher]
+      - handle: PatMen
+        real_name: John Patrick Ramos Mendoza
+        age: 23
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [viper, omen]
+      - handle: UdoTan
+        real_name: Go Kyung-won
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 71
+        agents: [raze, jett]
+      - handle: Kr1stal
+        real_name: Savva Fedorov
+        age: 20
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 69
+        agents: [sova, killjoy]
+      - handle: xavi8k
+        real_name: Xavier Juan
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 68
+        agents: [omen, clove]
+  - name: Nongshim RedForce
+    tag: NS
+    tier: 1
+    prestige: 60
+    players:
+      - handle: Xross
+        real_name: Jung Hwan
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 71
+        agents: [sova, skye]
+      - handle: Dambi
+        real_name: Lee Hyuk-kyu
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 69
+        agents: [jett, phoenix]
+      - handle: Francis
+        real_name: Kim Mu-bin
+        age: 20
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 68
+        agents: [raze, breach]
+      - handle: Ivy
+        real_name: Park Sung-hyeon
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [viper, chamber]
+      - handle: Rb
+        real_name: Goo Sang-min
+        age: 27
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, clove]
+  - name: FULL SENSE
+    tag: FS
+    tier: 1
+    prestige: 55
+    players:
+      - handle: Primmie
+        real_name: Papaphat Sriprapha
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 80
+        agents: [jett, phoenix]
+      - handle: JitboyS
+        real_name: Jittana Nokngam
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [raze, reyna]
+      - handle: killua
+        real_name: Tanate Teerasawad
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 71
+        agents: [skye, sova]
+      - handle: Crws
+        real_name: Thanamethk Mahatthananuyut
+        age: 26
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [omen, clove]
+      - handle: seph1roth
+        real_name: Chinnakrit Phoojaroen
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 66
+        agents: [viper, killjoy, phoenix]
+  - name: VARREL
+    tag: VL
+    tier: 1
+    prestige: 42
+    players:
+      - handle: oonzmlp
+        real_name: Shin Sang-beom
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [viper, cypher]
+      - handle: XuNa
+        real_name: Kim Tae-geon
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 65
+        agents: [skye, sova]
+      - handle: zexy
+        real_name: Jang Suk-hyun
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 63
+        agents: [jett, raze]
+      - handle: Klaus
+        real_name: Kim Min-hyuk
+        age: 21
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, killjoy]
+      - handle: C1ndeR
+        real_name: Go Jae-hyuk
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 61
+        agents: [omen, clove]
+  - name: REJECT
+    tag: RC
+    tier: 2
+    prestige: 40
+    players:
+      - handle: Yoshiii
+        real_name: John Yoshiharu Kawakami
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, raze]
+      - handle: Dep
+        real_name: Yuma Hashimoto
+        age: 24
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 61
+        agents: [jett, chamber]
+      - handle: Jremy
+        real_name: Jeremy Gagarra Cabrera
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [sova, skye]
+      - handle: Persia
+        real_name: Yang Zi-on
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 57
+        agents: [killjoy, cypher]
+      - handle: BRIAN
+        real_name: Brian
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 56
+        agents: [omen, clove]
+  - name: CREST GAMING Zst
+    tag: CGZ
+    tier: 2
+    prestige: 32
+    players:
+      - handle: Flicker
+        real_name: Yoon Tae-hee
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 63
+        agents: [jett, raze]
+      - handle: KEN
+        real_name: Kim Yun-seung
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 57
+        agents: [sova, skye]
+      - handle: bazz
+        real_name: Naoya Matsuyama
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 56
+        agents: [omen, viper]
+      - handle: yutaro
+        real_name: Yutaro
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 55
+        agents: [killjoy, cypher]
+      - handle: nobita
+        real_name: Rintaro Matsumoto
+        age: 23
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 55
+        agents: [viper, skye]
+  - name: ONSIDE GAMING
+    tag: OSG
+    tier: 2
+    prestige: 30
+    players:
+      - handle: Xiesta
+        real_name: Jung Si-hwan
+        age: 21
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, omen]
+      - handle: Wolverine
+        real_name: Wolverine
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 57
+        agents: [jett, raze]
+      - handle: Ray
+        real_name: Ray
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [sova, skye]
+      - handle: Cloudy
+        real_name: Cloudy
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 55
+        agents: [killjoy, cypher]
+      - handle: Awayk
+        real_name: Awayk
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 54
+        agents: [omen, clove]
+  - name: Dplus
+    tag: DP
+    tier: 2
+    prestige: 44
+    players:
+      - handle: shu
+        real_name: Shu
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 57
+        agents: [jett, raze]
+      - handle: Ramgi
+        real_name: Ramgi
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [sova, skye]
+      - handle: Kally
+        real_name: Kally
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 55
+        agents: [omen, clove]
+      - handle: JaXe
+        real_name: JaXe
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 54
+        agents: [killjoy, cypher]
+      - handle: CabezA
+        real_name: CabezA
+        age: 25
+        role: flex
+        playstyle: igl
+        igl: true
+        quality: 55
+        agents: [skye, omen]
+  - name: BOOM Esports
+    tag: BOOM
+    tier: 2
+    prestige: 42
+    players:
+      - handle: Shiro
+        real_name: Hildegrad Arnaldo Herikusuma
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 58
+        agents: [jett, raze]
+      - handle: d3ffo
+        real_name: Nikita Sudakov
+        age: 22
+        role: sentinel
+        playstyle: awper
+        igl: false
+        quality: 58
+        agents: [chamber, killjoy]
+      - handle: naTz
+        real_name: Jonathan Adiputra
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 56
+        agents: [omen, viper]
+      - handle: NcSlasher
+        real_name: Sheldon Andersen Chandra
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 55
+        agents: [sova, skye]
+      - handle: Nakya
+        real_name: Alehandro Fabian Simanjorang
+        age: 20
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 53
+        agents: [skye, killjoy]
+  - name: Sharper Esports
+    tag: SPR
+    tier: 2
+    prestige: 28
+    players:
+      - handle: Kadoom
+        real_name: Kantapon Kingthong
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 60
+        agents: [jett, raze]
+      - handle: PTC
+        real_name: Kititkawin Rattanasukol
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 58
+        agents: [omen, clove]
+      - handle: Apinya
+        real_name: Apinya Laotaew
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 57
+        agents: [sova, skye]
+      - handle: Laz
+        real_name: Kittikawin Jirawatkakan
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 56
+        agents: [killjoy, cypher]
+      - handle: NIZ
+        real_name: Yutthaphum Thawongphia
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 56
+        agents: [viper, skye]

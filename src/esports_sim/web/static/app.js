@@ -40,15 +40,26 @@ async function boot() {
   if (lob.in_game) {
     App.mp = { code: lob.code, team_id: lob.team_id, mode: lob.mode };
     $("#newgame").classList.add("hidden");
+    $("#worlds-btn").classList.remove("hidden");
     refresh();
     // Prime the Inbox tab badge on load (inbox.js is loaded after us, but this
     // runs post-await so its globals are defined; guard keeps boot resilient).
     if (typeof refreshInboxBadge === "function") refreshInboxBadge();
     return;
   }
-  setupLobby(lob.teams);
+  $("#worlds-btn").classList.add("hidden");
+  setupLobby(lob);
   $("#newgame").classList.remove("hidden");
 }
+
+// Topbar "Worlds": detach from the current world (it stays saved and listed
+// under "Your worlds") and drop back to the lobby to resume/create/join.
+$("#worlds-btn").onclick = async () => {
+  const code = App.mp && App.mp.code ? ` (${App.mp.code})` : "";
+  if (!confirm(`Back to the lobby? This world${code} stays saved — resume it anytime from "Your worlds".`)) return;
+  await api("/api/leave", {});
+  location.reload();
+};
 
 /* -- lobby: new (solo/shared) or join -------------------------------------- */
 
@@ -65,11 +76,17 @@ function renderTeamGrid(grid, teams, onPick) {
     grid.appendChild(head);
     for (const t of teams.filter((x) => x.region === region)) {
       const taken = t.taken;
+      // Roster-pack teams come straight from pack data (no economy preview);
+      // world-preview teams carry rep/balance.
+      const sub =
+        t.reputation !== undefined
+          ? `rep ${t.reputation} · ${money(t.balance)}`
+          : t.region.toUpperCase();
       const btn = el(
         "button",
         "team-pick" + (taken ? " taken" : ""),
         `<b>${t.name}</b> <span class="pill">${t.tag}</span>${taken ? ' <span class="pill">taken</span>' : ""}<br>
-         <span class="muted">rep ${t.reputation} · ${money(t.balance)}</span>`
+         <span class="muted">${sub}</span>`
       );
       btn.disabled = !!taken;
       if (!taken) btn.onclick = () => onPick(t);
@@ -78,16 +95,78 @@ function renderTeamGrid(grid, teams, onPick) {
   }
 }
 
-function setupLobby(previewTeams) {
+function setupLobby(lob) {
   const create = $("#lobby-create");
   const join = $("#lobby-join");
+  const packs = lob.packs || [];
+  // Worlds this browser can jump straight back into (incl. solo saves).
+  const worlds = lob.worlds || [];
+  const resume = $("#lobby-resume");
+  if (worlds.length) {
+    resume.classList.remove("hidden");
+    const list = $("#resume-list");
+    list.innerHTML = "";
+    for (const w of worlds) {
+      const b = el(
+        "button",
+        "btn",
+        `<b>${w.team_name}</b> <span class="pill">${w.code} · ${w.mode}</span>`
+      );
+      b.onclick = () => resumeGame(w.code);
+      list.appendChild(b);
+    }
+  } else {
+    resume.classList.add("hidden");
+  }
+  // null = generated fictional world; otherwise a roster-pack id.
+  let world = null;
+  let shared_ = false;
+  const worldTeams = () =>
+    world === null ? lob.teams : packs.find((p) => p.id === world).teams;
+  const renderWorlds = () => {
+    const box = $("#ng-worlds");
+    box.innerHTML = "";
+    if (!packs.length) return;
+    const mk = (label, id) => {
+      const b = el(
+        "button",
+        "btn" + ((world === id) ? " btn-primary" : ""),
+        label
+      );
+      b.onclick = () => {
+        world = id;
+        renderWorlds();
+        renderPick();
+      };
+      box.appendChild(b);
+    };
+    mk("Fictional world", null);
+    for (const p of packs) mk(p.name, p.id);
+  };
+  const renderPick = () => {
+    const p = packs.find((x) => x.id === world);
+    const desc = $("#ng-world-desc");
+    if (p) {
+      desc.textContent =
+        `${p.regions.length} regions x ${p.teams_per_region} teams — ` +
+        (p.description || "");
+      desc.classList.remove("hidden");
+    } else {
+      desc.classList.add("hidden");
+    }
+    renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
+      createGame(t.id, shared_, world)
+    );
+  };
   const showCreate = (shared) => {
+    shared_ = shared;
     create.classList.remove("hidden");
     join.classList.add("hidden");
     $("#lobby-create-hint").textContent = shared
       ? "Pick your team. Others join with the code you'll get next."
       : "Pick your organisation. Seed controls the generated league.";
-    renderTeamGrid($("#ng-teams"), previewTeams, (t) => createGame(t.id, shared));
+    renderWorlds();
+    renderPick();
   };
   $("#mode-solo").onclick = () => showCreate(false);
   $("#mode-shared").onclick = () => showCreate(true);
@@ -105,11 +184,12 @@ function setupLobby(previewTeams) {
   showCreate(false); // default view
 }
 
-async function createGame(teamId, shared) {
+async function createGame(teamId, shared, pack = null) {
   const seed = parseInt($("#ng-seed").value) || 2026;
-  const r = await api("/api/new", { team_id: teamId, seed, shared });
+  const r = await api("/api/new", { team_id: teamId, seed, shared, pack });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
   await refresh();
   if (shared) {
     toast(`Shared game created — code ${r.code}. Share it so others can join.`);
@@ -120,8 +200,18 @@ async function joinGame(code, teamId) {
   const r = await api("/api/join", { code, team_id: teamId });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
   await refresh();
   toast(`Joined game ${r.code}.`);
+}
+
+async function resumeGame(code) {
+  const r = await api("/api/resume", { code });
+  App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
+  $("#newgame").classList.add("hidden");
+  $("#worlds-btn").classList.remove("hidden");
+  await refresh();
+  toast(`Resumed world ${r.code}.`);
 }
 
 async function refresh() {
@@ -144,7 +234,7 @@ function updateMpChip(mp) {
     return;
   }
   chip.classList.remove("hidden");
-  chip.textContent = `⛨ ${mp.code} · ${mp.ready.length}/${mp.humans.length} ready`;
+  chip.textContent = `CODE ${mp.code} ⧉ · ${mp.ready.length}/${mp.humans.length} ready`;
   chip.onclick = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(mp.code);
     toast(`Join code ${mp.code} copied.`);

@@ -1,0 +1,226 @@
+id: team_leviatan
+name: Leviatan
+tag: LEV
+region: americas
+tier: 1
+captain_id: team_leviatan_kingg
+balance: 744000
+reputation: 74.0
+fan_count: 492840
+chemistry: 62.5
+players:
+- id: team_leviatan_kingg
+  handle: kiNgg
+  real_name: Francisco Aravena
+  region: americas
+  age: 25
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 74.1
+    aim_reactivity: 67.6
+    movement: 81.2
+    game_sense: 96.5
+    utility_usage: 85.4
+    positioning: 82.0
+    clutch_factor: 80.7
+    tilt_resistance: 83.5
+    composure: 84.7
+    comms_quality: 91.2
+  agent_pool:
+  - agent_id: viper
+    mastery: 95.1
+  - agent_id: omen
+    mastery: 92.2
+  - agent_id: breach
+    mastery: 84.0
+  map_pool:
+  - map_id: ascent
+    mastery: 88.7
+  - map_id: bind
+    mastery: 78.3
+  - map_id: haven
+    mastery: 88.2
+  - map_id: lotus
+    mastery: 79.5
+  - map_id: split
+    mastery: 94.8
+  salary: 6500
+  contract_weeks_left: 67
+  morale: 84.9
+  stamina: 97.8
+  form: 53.4
+  personality_tags:
+  - hot_head
+  potential: 84.2
+- id: team_leviatan_neon
+  handle: Neon
+  real_name: Bruno Rodriguez
+  region: americas
+  age: 22
+  role: flex
+  playstyle: awper
+  attributes:
+    aim_precision: 94.8
+    aim_reactivity: 96.7
+    movement: 87.9
+    game_sense: 89.7
+    utility_usage: 79.2
+    positioning: 96.0
+    clutch_factor: 90.5
+    tilt_resistance: 84.6
+    composure: 84.9
+    comms_quality: 90.7
+  agent_pool:
+  - agent_id: chamber
+    mastery: 99.0
+  - agent_id: omen
+    mastery: 93.5
+  map_pool:
+  - map_id: ascent
+    mastery: 98.9
+  - map_id: bind
+    mastery: 97.1
+  - map_id: haven
+    mastery: 99.0
+  - map_id: lotus
+    mastery: 86.0
+  - map_id: split
+    mastery: 93.1
+  salary: 7600
+  contract_weeks_left: 50
+  morale: 63.5
+  stamina: 91.8
+  form: 54.9
+  personality_tags:
+  - grinder
+  - hot_head
+  potential: 90.5
+- id: team_leviatan_sato
+  handle: Sato
+  real_name: Eduardo Kenzo Nagahama Sato
+  region: americas
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 89.3
+    aim_reactivity: 89.7
+    movement: 86.9
+    game_sense: 77.9
+    utility_usage: 71.3
+    positioning: 73.7
+    clutch_factor: 77.4
+    tilt_resistance: 76.6
+    composure: 77.2
+    comms_quality: 80.9
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 83.8
+  - agent_id: jett
+    mastery: 90.8
+  map_pool:
+  - map_id: ascent
+    mastery: 90.3
+  - map_id: bind
+    mastery: 89.2
+  - map_id: haven
+    mastery: 90.0
+  - map_id: lotus
+    mastery: 89.9
+  - map_id: split
+    mastery: 89.1
+  salary: 6400
+  contract_weeks_left: 76
+  morale: 67.9
+  stamina: 84.2
+  form: 52.4
+  personality_tags:
+  - fan_favorite
+  potential: 84.7
+- id: team_leviatan_spike
+  handle: spike
+  real_name: Rodrigo Lombardi
+  region: americas
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 89.1
+    aim_reactivity: 88.4
+    movement: 84.9
+    game_sense: 72.8
+    utility_usage: 68.5
+    positioning: 73.5
+    clutch_factor: 76.5
+    tilt_resistance: 71.6
+    composure: 79.5
+    comms_quality: 75.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 83.6
+  - agent_id: omen
+    mastery: 85.3
+  map_pool:
+  - map_id: ascent
+    mastery: 84.9
+  - map_id: bind
+    mastery: 81.9
+  - map_id: haven
+    mastery: 90.2
+  - map_id: lotus
+    mastery: 89.6
+  - map_id: split
+    mastery: 87.2
+  salary: 6100
+  contract_weeks_left: 45
+  morale: 67.8
+  stamina: 98.4
+  form: 58.9
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 81.7
+- id: team_leviatan_blowz
+  handle: blowz
+  real_name: Guilherme Oliveira
+  region: americas
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 71.3
+    aim_reactivity: 70.9
+    movement: 73.1
+    game_sense: 81.9
+    utility_usage: 91.2
+    positioning: 76.4
+    clutch_factor: 73.7
+    tilt_resistance: 78.1
+    composure: 75.2
+    comms_quality: 86.9
+  agent_pool:
+  - agent_id: sova
+    mastery: 95.9
+  - agent_id: skye
+    mastery: 85.7
+  map_pool:
+  - map_id: ascent
+    mastery: 81.6
+  - map_id: bind
+    mastery: 88.1
+  - map_id: haven
+    mastery: 84.1
+  - map_id: lotus
+    mastery: 81.4
+  - map_id: split
+    mastery: 96.5
+  salary: 6300
+  contract_weeks_left: 30
+  morale: 67.2
+  stamina: 85.3
+  form: 46.0
+  personality_tags:
+  - grinder
+  - perfectionist
+  potential: 82.7

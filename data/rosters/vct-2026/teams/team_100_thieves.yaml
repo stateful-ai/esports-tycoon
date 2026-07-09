@@ -1,0 +1,228 @@
+id: team_100_thieves
+name: 100 Thieves
+tag: 100T
+region: americas
+tier: 1
+captain_id: team_100_thieves_vora
+balance: 792000
+reputation: 82.0
+fan_count: 605160
+chemistry: 80.1
+players:
+- id: team_100_thieves_vora
+  handle: vora
+  real_name: Jordan Pulwer
+  region: americas
+  age: 22
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 62.8
+    aim_reactivity: 59.1
+    movement: 74.7
+    game_sense: 88.5
+    utility_usage: 72.4
+    positioning: 68.1
+    clutch_factor: 68.6
+    tilt_resistance: 69.9
+    composure: 78.6
+    comms_quality: 81.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 82.3
+  - agent_id: skye
+    mastery: 78.2
+  map_pool:
+  - map_id: ascent
+    mastery: 73.2
+  - map_id: bind
+    mastery: 73.1
+  - map_id: haven
+    mastery: 61.4
+  - map_id: lotus
+    mastery: 72.6
+  - map_id: split
+    mastery: 71.2
+  salary: 5100
+  contract_weeks_left: 51
+  morale: 73.9
+  stamina: 80.3
+  form: 59.8
+  personality_tags:
+  - hot_head
+  potential: 75.9
+- id: team_100_thieves_timotino
+  handle: Timotino
+  real_name: Timothee Lavigne Dupont
+  region: americas
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 85.6
+    aim_reactivity: 89.2
+    movement: 81.7
+    game_sense: 70.8
+    utility_usage: 65.4
+    positioning: 70.1
+    clutch_factor: 76.5
+    tilt_resistance: 67.5
+    composure: 74.3
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: jett
+    mastery: 85.4
+  - agent_id: phoenix
+    mastery: 74.5
+  - agent_id: raze
+    mastery: 70.8
+  map_pool:
+  - map_id: ascent
+    mastery: 89.6
+  - map_id: bind
+    mastery: 84.2
+  - map_id: haven
+    mastery: 87.8
+  - map_id: lotus
+    mastery: 77.0
+  - map_id: split
+    mastery: 83.0
+  salary: 5700
+  contract_weeks_left: 44
+  morale: 83.2
+  stamina: 92.3
+  form: 54.4
+  personality_tags:
+  - independent
+  potential: 82.9
+- id: team_100_thieves_cryocells
+  handle: Cryocells
+  real_name: Matthew Panganiban
+  region: americas
+  age: 23
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 91.5
+    aim_reactivity: 86.0
+    movement: 76.6
+    game_sense: 75.9
+    utility_usage: 70.2
+    positioning: 86.1
+    clutch_factor: 85.2
+    tilt_resistance: 78.2
+    composure: 72.5
+    comms_quality: 79.5
+  agent_pool:
+  - agent_id: cypher
+    mastery: 95.7
+  - agent_id: chamber
+    mastery: 80.5
+  - agent_id: viper
+    mastery: 77.5
+  map_pool:
+  - map_id: ascent
+    mastery: 91.8
+  - map_id: bind
+    mastery: 85.3
+  - map_id: haven
+    mastery: 81.7
+  - map_id: lotus
+    mastery: 84.9
+  - map_id: split
+    mastery: 96.2
+  salary: 6400
+  contract_weeks_left: 35
+  morale: 68.8
+  stamina: 85.5
+  form: 56.3
+  personality_tags:
+  - flashy
+  - quiet
+  potential: 83.3
+- id: team_100_thieves_bang
+  handle: bang
+  real_name: Sean Bezerra
+  region: americas
+  age: 22
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 68.4
+    aim_reactivity: 73.6
+    movement: 78.0
+    game_sense: 80.6
+    utility_usage: 84.4
+    positioning: 75.0
+    clutch_factor: 79.6
+    tilt_resistance: 75.1
+    composure: 83.9
+    comms_quality: 84.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 97.7
+  - agent_id: viper
+    mastery: 83.1
+  map_pool:
+  - map_id: ascent
+    mastery: 85.2
+  - map_id: bind
+    mastery: 77.9
+  - map_id: haven
+    mastery: 87.6
+  - map_id: lotus
+    mastery: 77.7
+  - map_id: split
+    mastery: 78.8
+  salary: 6100
+  contract_weeks_left: 64
+  morale: 71.7
+  stamina: 90.2
+  form: 46.6
+  personality_tags:
+  - clutch_gene
+  - team_player
+  potential: 86.6
+- id: team_100_thieves_asuna
+  handle: Asuna
+  real_name: Peter Mazuryk
+  region: americas
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 85.2
+    aim_reactivity: 77.4
+    movement: 79.5
+    game_sense: 57.5
+    utility_usage: 63.9
+    positioning: 76.6
+    clutch_factor: 68.6
+    tilt_resistance: 76.5
+    composure: 68.8
+    comms_quality: 76.7
+  agent_pool:
+  - agent_id: raze
+    mastery: 82.9
+  - agent_id: phoenix
+    mastery: 81.7
+  map_pool:
+  - map_id: ascent
+    mastery: 72.9
+  - map_id: bind
+    mastery: 84.2
+  - map_id: haven
+    mastery: 71.7
+  - map_id: lotus
+    mastery: 81.1
+  - map_id: split
+    mastery: 74.3
+  salary: 5600
+  contract_weeks_left: 49
+  morale: 69.1
+  stamina: 99.2
+  form: 45.6
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 82.4

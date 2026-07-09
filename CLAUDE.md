@@ -26,6 +26,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
 | Map floor gate (plates touch; callouts/paths on-floor) | `... scripts\map_floor_audit.py` (exit 1 = fail) |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
+| Rebuild a roster pack from its src/ sheets | `... scripts\build_roster_pack.py <pack-id>` |
 | Map guide rasterizer (viewer-transform-exact) | `... scripts\render_map_guide.py [--map <id>]` |
 | Painted map thumbnails (crop from backdrops) | `... scripts\render_map_thumbs.py` |
 | Office guide rasterizer | `... scripts\render_office_guide.py` |
@@ -65,7 +66,14 @@ Published at github.com/stateful-ai/esports-tycoon.
   (sprite-composited home), inbox.js, profile.js (player/team overlays,
   opened via `[data-pid]`/`[data-tid]` delegation on any name).
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
-  pydantic (`extra="forbid"`): typos fail loudly.
+  pydantic (`extra="forbid"`): typos fail loudly. `data/rosters/<id>/` =
+  roster packs (importable worlds, e.g. the real VCT 2026): `pack.yaml`
+  (world shape: 3-4 regions, teams/region) + team bundles built from
+  compact `src/` sheets by `scripts/build_roster_pack.py`
+  (blake2-deterministic expansion; loader `registry/rosters.py`;
+  `new_campaign(pack=...)` seeds from it and generates only shortfall).
+  World shape lives on GameState (`league_regions`/`teams_per_region`),
+  NOT the module constants — those are just the defaults.
 - Docs: `GDD.md` (systems + design), `docs/art-pipeline.md`
   (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
   (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index

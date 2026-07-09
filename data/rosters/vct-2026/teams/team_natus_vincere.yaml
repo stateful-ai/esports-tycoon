@@ -1,0 +1,227 @@
+id: team_natus_vincere
+name: Natus Vincere
+tag: NAVI
+region: emea
+tier: 1
+captain_id: team_natus_vincere_chloric
+balance: 822000
+reputation: 87.0
+fan_count: 681210
+chemistry: 58.3
+players:
+- id: team_natus_vincere_chloric
+  handle: chloric
+  real_name: Caide Heaton
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 57.3
+    aim_reactivity: 59.9
+    movement: 70.9
+    game_sense: 85.5
+    utility_usage: 74.8
+    positioning: 67.9
+    clutch_factor: 71.8
+    tilt_resistance: 64.8
+    composure: 73.0
+    comms_quality: 80.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 87.0
+  - agent_id: skye
+    mastery: 77.4
+  map_pool:
+  - map_id: ascent
+    mastery: 76.1
+  - map_id: bind
+    mastery: 71.4
+  - map_id: haven
+    mastery: 88.1
+  - map_id: lotus
+    mastery: 74.1
+  - map_id: split
+    mastery: 85.8
+  salary: 5400
+  contract_weeks_left: 33
+  morale: 72.0
+  stamina: 82.9
+  form: 49.4
+  personality_tags:
+  - perfectionist
+  - slow_starter
+  potential: 82.4
+- id: team_natus_vincere_ruxic
+  handle: Ruxic
+  real_name: Ugur Guc
+  region: emea
+  age: 21
+  role: controller
+  playstyle: lurker
+  attributes:
+    aim_precision: 84.4
+    aim_reactivity: 88.1
+    movement: 75.3
+    game_sense: 92.4
+    utility_usage: 80.8
+    positioning: 93.0
+    clutch_factor: 90.5
+    tilt_resistance: 85.4
+    composure: 80.7
+    comms_quality: 80.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 89.4
+  - agent_id: viper
+    mastery: 88.3
+  map_pool:
+  - map_id: ascent
+    mastery: 92.4
+  - map_id: bind
+    mastery: 86.1
+  - map_id: haven
+    mastery: 91.9
+  - map_id: lotus
+    mastery: 89.3
+  - map_id: split
+    mastery: 96.4
+  salary: 6900
+  contract_weeks_left: 63
+  morale: 63.0
+  stamina: 98.2
+  form: 48.4
+  personality_tags:
+  - fan_favorite
+  - perfectionist
+  potential: 96.0
+- id: team_natus_vincere_hiro
+  handle: hiro
+  real_name: Emirhan Kat
+  region: emea
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 78.9
+    aim_reactivity: 80.4
+    movement: 74.8
+    game_sense: 80.4
+    utility_usage: 88.1
+    positioning: 84.6
+    clutch_factor: 84.4
+    tilt_resistance: 85.2
+    composure: 83.2
+    comms_quality: 81.3
+  agent_pool:
+  - agent_id: viper
+    mastery: 94.0
+  - agent_id: killjoy
+    mastery: 85.1
+  map_pool:
+  - map_id: ascent
+    mastery: 88.5
+  - map_id: bind
+    mastery: 70.5
+  - map_id: haven
+    mastery: 83.2
+  - map_id: lotus
+    mastery: 88.2
+  - map_id: split
+    mastery: 89.3
+  salary: 6400
+  contract_weeks_left: 40
+  morale: 66.6
+  stamina: 90.3
+  form: 56.3
+  personality_tags:
+  - hot_head
+  potential: 95.2
+- id: team_natus_vincere_exit
+  handle: ExiT
+  real_name: Abdullah Al-Twaijri
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 75.9
+    aim_reactivity: 84.6
+    movement: 81.7
+    game_sense: 66.2
+    utility_usage: 61.5
+    positioning: 74.0
+    clutch_factor: 73.6
+    tilt_resistance: 66.7
+    composure: 70.0
+    comms_quality: 67.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 83.8
+  - agent_id: raze
+    mastery: 81.1
+  map_pool:
+  - map_id: ascent
+    mastery: 77.0
+  - map_id: bind
+    mastery: 84.1
+  - map_id: haven
+    mastery: 81.7
+  - map_id: lotus
+    mastery: 64.8
+  - map_id: split
+    mastery: 83.6
+  salary: 5400
+  contract_weeks_left: 39
+  morale: 75.8
+  stamina: 88.2
+  form: 48.6
+  personality_tags:
+  - fan_favorite
+  - independent
+  potential: 83.5
+- id: team_natus_vincere_cyvoph
+  handle: CyvOph
+  real_name: Clement Millard
+  region: emea
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 67.8
+    aim_reactivity: 67.0
+    movement: 72.2
+    game_sense: 74.5
+    utility_usage: 80.0
+    positioning: 71.9
+    clutch_factor: 69.5
+    tilt_resistance: 71.6
+    composure: 74.3
+    comms_quality: 77.7
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 80.3
+  - agent_id: breach
+    mastery: 74.8
+  - agent_id: viper
+    mastery: 76.7
+  map_pool:
+  - map_id: ascent
+    mastery: 78.9
+  - map_id: bind
+    mastery: 76.9
+  - map_id: haven
+    mastery: 83.2
+  - map_id: lotus
+    mastery: 69.4
+  - map_id: split
+    mastery: 79.1
+  salary: 5500
+  contract_weeks_left: 53
+  morale: 77.5
+  stamina: 99.6
+  form: 49.9
+  personality_tags:
+  - hot_head
+  - team_player
+  potential: 81.8

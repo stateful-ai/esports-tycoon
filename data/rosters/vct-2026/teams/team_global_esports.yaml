@@ -1,0 +1,226 @@
+id: team_global_esports
+name: Global Esports
+tag: GE
+region: pacific
+tier: 1
+captain_id: team_global_esports_xavi8k
+balance: 672000
+reputation: 62.0
+fan_count: 345960
+chemistry: 65.1
+players:
+- id: team_global_esports_autumn
+  handle: autumn
+  real_name: Kale Dunne
+  region: pacific
+  age: 22
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 85.8
+    aim_reactivity: 77.0
+    movement: 69.8
+    game_sense: 73.4
+    utility_usage: 66.1
+    positioning: 79.2
+    clutch_factor: 78.4
+    tilt_resistance: 70.6
+    composure: 74.9
+    comms_quality: 73.8
+  agent_pool:
+  - agent_id: chamber
+    mastery: 84.6
+  - agent_id: cypher
+    mastery: 72.8
+  map_pool:
+  - map_id: ascent
+    mastery: 85.5
+  - map_id: bind
+    mastery: 90.7
+  - map_id: haven
+    mastery: 85.8
+  - map_id: lotus
+    mastery: 84.2
+  - map_id: split
+    mastery: 76.7
+  salary: 5700
+  contract_weeks_left: 78
+  morale: 73.4
+  stamina: 95.3
+  form: 49.3
+  personality_tags:
+  - perfectionist
+  - quiet
+  potential: 81.4
+- id: team_global_esports_patmen
+  handle: PatMen
+  real_name: John Patrick Ramos Mendoza
+  region: pacific
+  age: 23
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 64.6
+    aim_reactivity: 65.9
+    movement: 75.8
+    game_sense: 82.4
+    utility_usage: 88.6
+    positioning: 74.4
+    clutch_factor: 75.4
+    tilt_resistance: 70.5
+    composure: 77.5
+    comms_quality: 78.0
+  agent_pool:
+  - agent_id: viper
+    mastery: 84.4
+  - agent_id: omen
+    mastery: 84.2
+  map_pool:
+  - map_id: ascent
+    mastery: 83.2
+  - map_id: bind
+    mastery: 85.0
+  - map_id: haven
+    mastery: 86.1
+  - map_id: lotus
+    mastery: 78.4
+  - map_id: split
+    mastery: 79.2
+  salary: 5600
+  contract_weeks_left: 40
+  morale: 76.0
+  stamina: 80.4
+  form: 51.3
+  personality_tags:
+  - analytical
+  - perfectionist
+  potential: 77.1
+- id: team_global_esports_udotan
+  handle: UdoTan
+  real_name: Go Kyung-won
+  region: pacific
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 87.1
+    aim_reactivity: 79.3
+    movement: 81.0
+    game_sense: 67.7
+    utility_usage: 58.9
+    positioning: 74.8
+    clutch_factor: 69.6
+    tilt_resistance: 72.1
+    composure: 66.4
+    comms_quality: 68.3
+  agent_pool:
+  - agent_id: raze
+    mastery: 87.1
+  - agent_id: jett
+    mastery: 86.5
+  map_pool:
+  - map_id: ascent
+    mastery: 76.7
+  - map_id: bind
+    mastery: 94.6
+  - map_id: haven
+    mastery: 66.9
+  - map_id: lotus
+    mastery: 84.5
+  - map_id: split
+    mastery: 86.2
+  salary: 5500
+  contract_weeks_left: 47
+  morale: 64.9
+  stamina: 84.8
+  form: 55.8
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  potential: 77.8
+- id: team_global_esports_kr1stal
+  handle: Kr1stal
+  real_name: Savva Fedorov
+  region: pacific
+  age: 20
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 65.7
+    aim_reactivity: 59.4
+    movement: 65.4
+    game_sense: 74.7
+    utility_usage: 78.9
+    positioning: 65.6
+    clutch_factor: 69.8
+    tilt_resistance: 67.1
+    composure: 75.1
+    comms_quality: 85.4
+  agent_pool:
+  - agent_id: sova
+    mastery: 74.7
+  - agent_id: killjoy
+    mastery: 80.5
+  map_pool:
+  - map_id: ascent
+    mastery: 77.4
+  - map_id: bind
+    mastery: 74.8
+  - map_id: haven
+    mastery: 81.1
+  - map_id: lotus
+    mastery: 73.7
+  - map_id: split
+    mastery: 75.8
+  salary: 5300
+  contract_weeks_left: 36
+  morale: 68.7
+  stamina: 84.9
+  form: 47.1
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 82.5
+- id: team_global_esports_xavi8k
+  handle: xavi8k
+  real_name: Xavier Juan
+  region: pacific
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 63.7
+    aim_reactivity: 58.2
+    movement: 71.1
+    game_sense: 80.8
+    utility_usage: 72.0
+    positioning: 73.8
+    clutch_factor: 61.7
+    tilt_resistance: 69.6
+    composure: 76.0
+    comms_quality: 81.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 81.5
+  - agent_id: clove
+    mastery: 78.7
+  map_pool:
+  - map_id: ascent
+    mastery: 77.6
+  - map_id: bind
+    mastery: 71.9
+  - map_id: haven
+    mastery: 78.1
+  - map_id: lotus
+    mastery: 79.7
+  - map_id: split
+    mastery: 81.4
+  salary: 5100
+  contract_weeks_left: 66
+  morale: 61.0
+  stamina: 99.4
+  form: 47.8
+  personality_tags:
+  - fan_favorite
+  - slow_starter
+  potential: 76.7

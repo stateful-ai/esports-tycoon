@@ -28,6 +28,7 @@ from esports_sim.manager.economy import (
     pay_playoff_prizes,
 )
 from esports_sim.schemas.common import Region
+from esports_sim.registry.rosters import RosterPack
 from esports_sim.manager.gen import generate_free_agents, generate_league_teams
 from esports_sim.manager.schedule import (
     build_final,
@@ -81,21 +82,24 @@ class WeekReport:
 # New game
 
 
-# The VCT-style world: three regional leagues of 8; their top two meet
-# at Masters after the regional playoffs. Underneath, a 6-team
+# The default VCT-style world: three regional leagues of 8; their top two
+# meet at Masters after the regional playoffs. Underneath, a 6-team
 # Challengers circuit per region develops prospects — fully simulated,
-# never broadcast.
+# never broadcast. A roster pack can reshape all three numbers (its world
+# block is copied onto GameState, which the season state machine reads).
 LEAGUE_REGIONS = [Region.AMERICAS, Region.EMEA, Region.PACIFIC]
 TEAMS_PER_REGION = 8
 TIER2_PER_REGION = 6
 
 
-def _build_all_leagues(gs_teams: dict, map_ids: list[str], season: int) -> list:
+def _build_all_leagues(
+    gs_teams: dict, map_ids: list[str], season: int, regions: list[Region]
+) -> list:
     """One double round-robin per (region, tier), weeks aligned so every
-    league plays the same calendar. Challengers (10 weeks) wraps before
-    the franchised leagues (14)."""
+    league plays the same calendar. Challengers (fewer teams) wraps before
+    the franchised leagues."""
     fixtures = []
-    for region in LEAGUE_REGIONS:
+    for region in regions:
         for tier in (1, 2):
             tids = sorted(
                 t.id
@@ -113,21 +117,45 @@ def _build_all_leagues(gs_teams: dict, map_ids: list[str], season: int) -> list:
     return fixtures
 
 
-def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> GameState:
+def new_campaign(
+    gd: GameData,
+    seed: int,
+    user_team_id: str = "team_nexus",
+    pack: "RosterPack | None" = None,
+) -> GameState:
+    """Build season 1. With a roster pack, the pack's teams/players replace
+    the fictional starters and its world block sets the league shape;
+    generation only fills any shortfall, so a partial pack still plays."""
     rng = RngTree(seed).derive("campaign", "gen")
 
-    teams = {tid: t.model_copy(deep=True) for tid, t in gd.teams.items()}
-    players = {pid: p.model_copy(deep=True) for pid, p in gd.players.items()}
+    if pack is not None:
+        regions = list(pack.meta.world.league_regions)
+        teams_per_region = pack.meta.world.teams_per_region
+        tier2_per_region = pack.meta.world.tier2_per_region
+        base_teams, base_players = pack.teams, pack.players
+    else:
+        regions = list(LEAGUE_REGIONS)
+        teams_per_region = TEAMS_PER_REGION
+        tier2_per_region = TIER2_PER_REGION
+        base_teams, base_players = gd.teams, gd.players
 
-    used_names: set[str] = set()
-    for region in LEAGUE_REGIONS:
-        have = sum(1 for t in teams.values() if t.region == region)
+    teams = {tid: t.model_copy(deep=True) for tid, t in base_teams.items()}
+    players = {pid: p.model_copy(deep=True) for pid, p in base_players.items()}
+
+    used_names: set[str] = {t.name for t in teams.values()}
+    for region in regions:
+        have = sum(
+            1 for t in teams.values() if t.region == region and t.tier == 1
+        )
+        have2 = sum(
+            1 for t in teams.values() if t.region == region and t.tier == 2
+        )
         gen_teams, gen_players = generate_league_teams(
-            rng, gd, n_teams=TEAMS_PER_REGION - have,
+            rng, gd, n_teams=teams_per_region - have,
             region=region, used_names=used_names,
         )
         t2_teams, t2_players = generate_league_teams(
-            rng, gd, n_teams=TIER2_PER_REGION,
+            rng, gd, n_teams=tier2_per_region - have2,
             region=region, used_names=used_names, tier=2,
         )
         for t in gen_teams + t2_teams:
@@ -142,16 +170,20 @@ def new_campaign(gd: GameData, seed: int, user_team_id: str = "team_nexus") -> G
     gs = GameState(
         seed=seed,
         user_team_id=user_team_id,
+        league_regions=regions,
+        teams_per_region=teams_per_region,
+        tier2_per_region=tier2_per_region,
+        roster_pack=pack.id if pack is not None else None,
         teams=teams,
         players=players,
         free_agent_ids=[p.id for p in fas],
-        fixtures=_build_all_leagues(teams, sorted(gd.maps), season=1),
+        fixtures=_build_all_leagues(teams, sorted(gd.maps), 1, regions),
         standings={tid: TeamRecord() for tid in teams},
         training_focus={tid: "tactical" for tid in teams},
     )
     gs.push_news(
-        f"Season 1 begins — {len(LEAGUE_REGIONS)} regional leagues of "
-        f"{TEAMS_PER_REGION}, {regular_season_weeks(TEAMS_PER_REGION)} weeks "
+        f"Season 1 begins — {len(regions)} regional leagues of "
+        f"{teams_per_region}, {regular_season_weeks(teams_per_region)} weeks "
         f"of league play, then playoffs and Masters."
     )
     staff.refresh_candidates(gs)
@@ -397,7 +429,7 @@ def advance_week(
             gs.teams[b].tag,
         )
 
-    n_weeks = regular_season_weeks(TEAMS_PER_REGION)
+    n_weeks = regular_season_weeks(gs.teams_per_region)
     season_fixtures = [f for f in gs.fixtures if f.id.startswith(f"s{gs.season}")]
 
     def _stage_fixtures(stage: str) -> list[Fixture]:
@@ -406,7 +438,7 @@ def advance_week(
     if gs.phase == "regular" and gs.week == n_weeks:
         # Challengers seasons wrap with the franchised leagues: champion
         # by record, a modest prize, and a headline scouts actually read.
-        for region in LEAGUE_REGIONS:
+        for region in gs.league_regions:
             t2 = gs.standings_order(str(region), tier=2)
             if t2:
                 champ2 = gs.teams[t2[0]]
@@ -421,7 +453,7 @@ def advance_week(
                     f"season — {best.handle} the standout."
                 )
         # Regional playoffs, one bracket per league.
-        for region in LEAGUE_REGIONS:
+        for region in gs.league_regions:
             order = gs.standings_order(str(region))
             _pay_region_prizes(gs, order)
             semis = build_semifinals(order, gs.season, gs.week + 1, veto_for)
@@ -442,7 +474,7 @@ def advance_week(
 
         if semis and all(f.played for f in semis) and not finals:
             # Regional finals: winners of each region's two semis.
-            for region in LEAGUE_REGIONS:
+            for region in gs.league_regions:
                 rsemis = [f for f in semis if f.id.startswith(f"s{gs.season}{str(region)[:2]}")]
                 winners = [f.winner_id for f in rsemis if f.winner_id]
                 final = build_final(winners, gs.season, gs.week + 1, veto_for)
@@ -450,10 +482,11 @@ def advance_week(
                 gs.fixtures.append(final)
             report.notes.append("Regional finals next week.")
         elif finals and all(f.played for f in finals) and not qfs:
-            # Masters: top two per region. Champs seeded by league record;
-            # seeds 1-2 bye the QF round.
+            # Masters: top two per region. Champs seeded by league record.
+            # 3 regions (6 sides): seeds 1-2 bye the QF round. 4 regions
+            # (8 sides): a full quarterfinal bracket, no byes.
             champs, runners = [], []
-            for region in LEAGUE_REGIONS:
+            for region in gs.league_regions:
                 rf = next(
                     f for f in finals
                     if f.id.startswith(f"s{gs.season}{str(region)[:2]}")
@@ -470,9 +503,23 @@ def advance_week(
 
             champs.sort(key=rec_key)
             runners.sort(key=rec_key)
-            seeds = champs + runners  # 1-3 champs, 4-6 runners
+            seeds = champs + runners  # champs first, then runners, by record
             gs.masters_seeds = seeds
-            pairs = [(seeds[2], seeds[5]), (seeds[3], seeds[4])]
+            if len(seeds) == 6:
+                # Seeds 1-2 bye straight to the semis.
+                pairs = [(seeds[2], seeds[5]), (seeds[3], seeds[4])]
+            elif len(seeds) == 8:
+                # Full QF bracket: 1v8/4v5 feed SF0, 2v7/3v6 feed SF1.
+                pairs = [
+                    (seeds[0], seeds[7]), (seeds[3], seeds[4]),
+                    (seeds[1], seeds[6]), (seeds[2], seeds[5]),
+                ]
+            else:
+                raise ValueError(
+                    f"Masters supports 3 or 4 regional leagues "
+                    f"({len(seeds)} qualified sides is not a bracket shape "
+                    "the season state machine knows)."
+                )
             for i, (a, b) in enumerate(pairs):
                 maps, veto = veto_for(a, b)
                 gs.fixtures.append(
@@ -494,7 +541,15 @@ def advance_week(
         elif qfs and all(f.played for f in qfs) and not msfs:
             seeds = gs.masters_seeds
             qf_winners = [f.winner_id for f in sorted(qfs, key=lambda f: f.id)]
-            pairs = [(seeds[0], qf_winners[1]), (seeds[1], qf_winners[0])]
+            if len(seeds) == 6:
+                # The two byes meet the cross-bracket QF winners.
+                pairs = [(seeds[0], qf_winners[1]), (seeds[1], qf_winners[0])]
+            else:
+                # 8-side Masters: QF winners pair off within their halves.
+                pairs = [
+                    (qf_winners[0], qf_winners[1]),
+                    (qf_winners[2], qf_winners[3]),
+                ]
             for i, (a, b) in enumerate(pairs):
                 maps, veto = veto_for(a, b)
                 gs.fixtures.append(
@@ -544,9 +599,13 @@ def advance_week(
                 r = gs.standings[tid]
                 return (-r.wins, -r.diff, tid)
 
+            # Champions is always an 8-side bracket: the Masters field plus
+            # the best remaining league records (2 in a 3-region world; 0 in
+            # a 4-region world, where Masters already fields 8).
+            n_extra = max(0, 8 - len(gs.masters_seeds))
             extras = [
                 t for t in gs.standings_order(tier=1) if t not in gs.masters_seeds
-            ][:2]
+            ][:n_extra]
             field = list(gs.masters_seeds) + extras
             rest = sorted(
                 (t for t in field if t not in (mf.winner_id, runner_up)),
@@ -1029,9 +1088,9 @@ def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
     many careers just ended."""
     from esports_sim.manager.gen import _FA_SLOTS, generate_player
 
-    per_region = 2 + max(0, n_retired) // (len(LEAGUE_REGIONS) * 2)
+    per_region = 2 + max(0, n_retired) // (len(gs.league_regions) * 2)
     headliners: list[str] = []
-    for region in LEAGUE_REGIONS:
+    for region in gs.league_regions:
         for _ in range(per_region):
             style, role = _FA_SLOTS[gs.fa_counter % len(_FA_SLOTS)]
             gs.fa_counter += 1
@@ -1191,7 +1250,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.week = 1
     gs.phase = "regular"
     _assign_ai_tactics(gs, rng)  # new rosters, new coaching identities
-    gs.fixtures = _build_all_leagues(gs.teams, sorted(gd.maps), gs.season)
+    gs.fixtures = _build_all_leagues(
+        gs.teams, sorted(gd.maps), gs.season, gs.league_regions
+    )
     gs.standings = {tid: TeamRecord() for tid in gs.teams}
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")

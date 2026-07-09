@@ -1,0 +1,225 @@
+id: team_keepbest_gaming
+name: KeepBest Gaming
+tag: KBG
+region: china
+tier: 2
+captain_id: team_keepbest_gaming_ying
+balance: 141000
+reputation: 27.0
+fan_count: 10935
+chemistry: 69.9
+players:
+- id: team_keepbest_gaming_ying
+  handle: Ying
+  real_name: Wang Chenxu
+  region: china
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 46.9
+    aim_reactivity: 47.0
+    movement: 52.6
+    game_sense: 68.0
+    utility_usage: 68.4
+    positioning: 54.3
+    clutch_factor: 55.7
+    tilt_resistance: 56.2
+    composure: 61.2
+    comms_quality: 72.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 70.0
+  - agent_id: viper
+    mastery: 66.5
+  map_pool:
+  - map_id: ascent
+    mastery: 58.4
+  - map_id: bind
+    mastery: 63.0
+  - map_id: haven
+    mastery: 66.6
+  - map_id: lotus
+    mastery: 71.3
+  - map_id: split
+    mastery: 51.3
+  salary: 3800
+  contract_weeks_left: 79
+  morale: 69.1
+  stamina: 98.5
+  form: 56.7
+  personality_tags:
+  - analytical
+  potential: 63.5
+- id: team_keepbest_gaming_akeman
+  handle: Akeman
+  real_name: Zhang Haoran
+  region: china
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 47.4
+    aim_reactivity: 56.7
+    movement: 52.0
+    game_sense: 60.6
+    utility_usage: 68.1
+    positioning: 54.6
+    clutch_factor: 59.7
+    tilt_resistance: 52.7
+    composure: 64.9
+    comms_quality: 69.0
+  agent_pool:
+  - agent_id: skye
+    mastery: 74.8
+  - agent_id: killjoy
+    mastery: 69.6
+  map_pool:
+  - map_id: ascent
+    mastery: 82.3
+  - map_id: bind
+    mastery: 68.6
+  - map_id: haven
+    mastery: 60.3
+  - map_id: lotus
+    mastery: 72.9
+  - map_id: split
+    mastery: 61.1
+  salary: 4000
+  contract_weeks_left: 71
+  morale: 64.5
+  stamina: 93.7
+  form: 45.7
+  personality_tags:
+  - independent
+  potential: 65.4
+- id: team_keepbest_gaming_sibeastw0w
+  handle: sibeastw0w
+  real_name: Anton Govorukhin
+  region: china
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 68.7
+    aim_reactivity: 66.9
+    movement: 76.4
+    game_sense: 50.2
+    utility_usage: 44.8
+    positioning: 55.3
+    clutch_factor: 63.4
+    tilt_resistance: 57.4
+    composure: 57.6
+    comms_quality: 52.1
+  agent_pool:
+  - agent_id: jett
+    mastery: 72.2
+  - agent_id: reyna
+    mastery: 70.6
+  map_pool:
+  - map_id: ascent
+    mastery: 66.9
+  - map_id: bind
+    mastery: 57.0
+  - map_id: haven
+    mastery: 65.8
+  - map_id: lotus
+    mastery: 66.0
+  - map_id: split
+    mastery: 67.4
+  salary: 3900
+  contract_weeks_left: 60
+  morale: 82.6
+  stamina: 87.0
+  form: 46.3
+  personality_tags:
+  - perfectionist
+  potential: 65.9
+- id: team_keepbest_gaming_prospect1
+  handle: prospect1
+  real_name: ''
+  region: china
+  age: 17
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 48.7
+    aim_reactivity: 47.3
+    movement: 51.4
+    game_sense: 63.1
+    utility_usage: 66.6
+    positioning: 52.7
+    clutch_factor: 52.2
+    tilt_resistance: 47.6
+    composure: 57.2
+    comms_quality: 58.9
+  agent_pool:
+  - agent_id: clove
+    mastery: 65.3
+  - agent_id: omen
+    mastery: 62.4
+  map_pool:
+  - map_id: ascent
+    mastery: 61.3
+  - map_id: bind
+    mastery: 56.0
+  - map_id: haven
+    mastery: 65.5
+  - map_id: lotus
+    mastery: 56.5
+  - map_id: split
+    mastery: 68.2
+  salary: 3400
+  contract_weeks_left: 36
+  morale: 65.3
+  stamina: 96.5
+  form: 48.8
+  personality_tags:
+  - clutch_gene
+  - hot_head
+  - rookie
+  potential: 73.3
+- id: team_keepbest_gaming_prospect2
+  handle: prospect2
+  real_name: ''
+  region: china
+  age: 17
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 64.6
+    aim_reactivity: 64.3
+    movement: 61.0
+    game_sense: 46.6
+    utility_usage: 49.2
+    positioning: 54.7
+    clutch_factor: 51.8
+    tilt_resistance: 43.2
+    composure: 57.6
+    comms_quality: 56.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 65.9
+  - agent_id: phoenix
+    mastery: 65.3
+  map_pool:
+  - map_id: ascent
+    mastery: 70.7
+  - map_id: bind
+    mastery: 61.1
+  - map_id: haven
+    mastery: 66.0
+  - map_id: lotus
+    mastery: 57.3
+  - map_id: split
+    mastery: 61.0
+  salary: 3400
+  contract_weeks_left: 64
+  morale: 70.5
+  stamina: 86.6
+  form: 53.1
+  personality_tags:
+  - flashy
+  - hot_head
+  - rookie
+  potential: 77.4

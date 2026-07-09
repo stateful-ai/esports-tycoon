@@ -1,0 +1,225 @@
+id: team_rex_regum_qeon
+name: Rex Regum Qeon
+tag: RRQ
+region: pacific
+tier: 1
+captain_id: team_rex_regum_qeon_crazyguy
+balance: 744000
+reputation: 74.0
+fan_count: 492840
+chemistry: 66.1
+players:
+- id: team_rex_regum_qeon_jemkin
+  handle: Jemkin
+  real_name: Maksim Batorov
+  region: pacific
+  age: 24
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 92.8
+    aim_reactivity: 86.3
+    movement: 73.2
+    game_sense: 79.6
+    utility_usage: 66.0
+    positioning: 86.3
+    clutch_factor: 76.2
+    tilt_resistance: 74.2
+    composure: 78.0
+    comms_quality: 70.6
+  agent_pool:
+  - agent_id: chamber
+    mastery: 91.8
+  - agent_id: raze
+    mastery: 80.8
+  map_pool:
+  - map_id: ascent
+    mastery: 91.7
+  - map_id: bind
+    mastery: 76.7
+  - map_id: haven
+    mastery: 82.3
+  - map_id: lotus
+    mastery: 73.0
+  - map_id: split
+    mastery: 88.5
+  salary: 6100
+  contract_weeks_left: 59
+  morale: 78.8
+  stamina: 91.7
+  form: 54.3
+  personality_tags:
+  - clutch_gene
+  - flashy
+  potential: 78.4
+- id: team_rex_regum_qeon_xffero
+  handle: xffero
+  real_name: David Sean Michael Monangin
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 71.0
+    aim_reactivity: 67.6
+    movement: 62.1
+    game_sense: 77.3
+    utility_usage: 76.9
+    positioning: 80.4
+    clutch_factor: 68.0
+    tilt_resistance: 81.2
+    composure: 85.2
+    comms_quality: 72.8
+  agent_pool:
+  - agent_id: viper
+    mastery: 82.8
+  - agent_id: cypher
+    mastery: 84.1
+  map_pool:
+  - map_id: ascent
+    mastery: 90.7
+  - map_id: bind
+    mastery: 85.0
+  - map_id: haven
+    mastery: 80.5
+  - map_id: lotus
+    mastery: 93.0
+  - map_id: split
+    mastery: 91.9
+  salary: 5700
+  contract_weeks_left: 65
+  morale: 81.4
+  stamina: 92.5
+  form: 57.9
+  personality_tags:
+  - slow_starter
+  potential: 79.5
+- id: team_rex_regum_qeon_kushy
+  handle: Kushy
+  real_name: Bryan Carlos Setiawan
+  region: pacific
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 57.6
+    aim_reactivity: 66.8
+    movement: 67.5
+    game_sense: 71.1
+    utility_usage: 78.8
+    positioning: 74.6
+    clutch_factor: 73.1
+    tilt_resistance: 63.3
+    composure: 74.5
+    comms_quality: 78.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 77.2
+  - agent_id: skye
+    mastery: 83.8
+  map_pool:
+  - map_id: ascent
+    mastery: 78.0
+  - map_id: bind
+    mastery: 73.6
+  - map_id: haven
+    mastery: 73.8
+  - map_id: lotus
+    mastery: 80.9
+  - map_id: split
+    mastery: 74.1
+  salary: 5100
+  contract_weeks_left: 38
+  morale: 60.2
+  stamina: 91.7
+  form: 45.4
+  personality_tags:
+  - hot_head
+  - independent
+  potential: 77.4
+- id: team_rex_regum_qeon_crazyguy
+  handle: crazyguy
+  real_name: Ngo Cong Anh
+  region: pacific
+  age: 27
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 54.5
+    aim_reactivity: 61.3
+    movement: 64.1
+    game_sense: 76.6
+    utility_usage: 81.2
+    positioning: 64.2
+    clutch_factor: 68.8
+    tilt_resistance: 66.6
+    composure: 76.2
+    comms_quality: 80.3
+  agent_pool:
+  - agent_id: omen
+    mastery: 84.7
+  - agent_id: breach
+    mastery: 70.1
+  map_pool:
+  - map_id: ascent
+    mastery: 84.0
+  - map_id: bind
+    mastery: 85.4
+  - map_id: haven
+    mastery: 73.4
+  - map_id: lotus
+    mastery: 81.1
+  - map_id: split
+    mastery: 75.0
+  salary: 5000
+  contract_weeks_left: 35
+  morale: 60.3
+  stamina: 96.2
+  form: 55.9
+  personality_tags:
+  - analytical
+  - slow_starter
+  potential: 72.1
+- id: team_rex_regum_qeon_xan
+  handle: xan
+  real_name: Xan Ng
+  region: pacific
+  age: 19
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 59.7
+    aim_reactivity: 58.5
+    movement: 70.0
+    game_sense: 68.1
+    utility_usage: 78.3
+    positioning: 64.5
+    clutch_factor: 60.9
+    tilt_resistance: 61.7
+    composure: 69.3
+    comms_quality: 76.3
+  agent_pool:
+  - agent_id: omen
+    mastery: 79.0
+  - agent_id: jett
+    mastery: 70.2
+  map_pool:
+  - map_id: ascent
+    mastery: 63.7
+  - map_id: bind
+    mastery: 75.8
+  - map_id: haven
+    mastery: 68.0
+  - map_id: lotus
+    mastery: 73.9
+  - map_id: split
+    mastery: 70.8
+  salary: 4500
+  contract_weeks_left: 69
+  morale: 72.1
+  stamina: 99.6
+  form: 57.9
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 80.0

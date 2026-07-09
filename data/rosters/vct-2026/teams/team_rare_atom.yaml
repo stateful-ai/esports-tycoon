@@ -1,0 +1,224 @@
+id: team_rare_atom
+name: Rare Atom
+tag: RA
+region: china
+tier: 2
+captain_id: team_rare_atom_midnight
+balance: 174000
+reputation: 38.0
+fan_count: 21660
+chemistry: 76.5
+players:
+- id: team_rare_atom_midnight
+  handle: Midnight
+  real_name: Wang Yingjie
+  region: china
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 44.9
+    aim_reactivity: 43.2
+    movement: 57.1
+    game_sense: 71.6
+    utility_usage: 66.3
+    positioning: 54.6
+    clutch_factor: 57.2
+    tilt_resistance: 59.3
+    composure: 67.2
+    comms_quality: 67.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 68.5
+  - agent_id: clove
+    mastery: 69.0
+  map_pool:
+  - map_id: ascent
+    mastery: 61.2
+  - map_id: bind
+    mastery: 64.3
+  - map_id: haven
+    mastery: 66.0
+  - map_id: lotus
+    mastery: 58.8
+  - map_id: split
+    mastery: 55.9
+  salary: 3900
+  contract_weeks_left: 40
+  morale: 62.3
+  stamina: 92.5
+  form: 47.1
+  personality_tags: []
+  potential: 62.6
+- id: team_rare_atom_ben1ley
+  handle: Ben1Ley
+  real_name: Shi Benyu
+  region: china
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 73.6
+    aim_reactivity: 77.4
+    movement: 72.0
+    game_sense: 52.7
+    utility_usage: 54.3
+    positioning: 55.9
+    clutch_factor: 60.3
+    tilt_resistance: 50.9
+    composure: 62.5
+    comms_quality: 58.3
+  agent_pool:
+  - agent_id: jett
+    mastery: 70.8
+  - agent_id: raze
+    mastery: 70.1
+  map_pool:
+  - map_id: ascent
+    mastery: 67.4
+  - map_id: bind
+    mastery: 81.7
+  - map_id: haven
+    mastery: 73.1
+  - map_id: lotus
+    mastery: 68.3
+  - map_id: split
+    mastery: 72.1
+  salary: 4300
+  contract_weeks_left: 79
+  morale: 78.5
+  stamina: 83.2
+  form: 50.4
+  personality_tags:
+  - hot_head
+  - independent
+  potential: 70.9
+- id: team_rare_atom_z1yan
+  handle: Z1Yan
+  real_name: Liu Zihan
+  region: china
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 57.7
+    aim_reactivity: 57.7
+    movement: 60.1
+    game_sense: 63.7
+    utility_usage: 69.9
+    positioning: 59.6
+    clutch_factor: 57.8
+    tilt_resistance: 56.0
+    composure: 59.0
+    comms_quality: 61.6
+  agent_pool:
+  - agent_id: skye
+    mastery: 70.3
+  - agent_id: breach
+    mastery: 73.1
+  map_pool:
+  - map_id: ascent
+    mastery: 75.3
+  - map_id: bind
+    mastery: 62.4
+  - map_id: haven
+    mastery: 57.0
+  - map_id: lotus
+    mastery: 64.4
+  - map_id: split
+    mastery: 66.7
+  salary: 4000
+  contract_weeks_left: 32
+  morale: 82.4
+  stamina: 94.1
+  form: 50.1
+  personality_tags:
+  - clutch_gene
+  - fan_favorite
+  potential: 71.9
+- id: team_rare_atom_potter
+  handle: Potter
+  real_name: Sutthichai Promsrikaew
+  region: china
+  age: 24
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 57.0
+    aim_reactivity: 45.6
+    movement: 55.9
+    game_sense: 67.1
+    utility_usage: 63.9
+    positioning: 60.3
+    clutch_factor: 57.7
+    tilt_resistance: 55.5
+    composure: 63.7
+    comms_quality: 69.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 71.4
+  - agent_id: skye
+    mastery: 74.5
+  map_pool:
+  - map_id: ascent
+    mastery: 66.5
+  - map_id: bind
+    mastery: 59.1
+  - map_id: haven
+    mastery: 60.2
+  - map_id: lotus
+    mastery: 61.3
+  - map_id: split
+    mastery: 59.1
+  salary: 4000
+  contract_weeks_left: 77
+  morale: 76.0
+  stamina: 94.4
+  form: 57.2
+  personality_tags:
+  - independent
+  - streamer
+  potential: 62.5
+- id: team_rare_atom_guran
+  handle: Guran
+  real_name: Zhou Mingyan
+  region: china
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 51.5
+    aim_reactivity: 50.9
+    movement: 52.3
+    game_sense: 54.3
+    utility_usage: 58.8
+    positioning: 61.9
+    clutch_factor: 57.7
+    tilt_resistance: 64.2
+    composure: 62.1
+    comms_quality: 51.4
+  agent_pool:
+  - agent_id: cypher
+    mastery: 62.1
+  - agent_id: killjoy
+    mastery: 59.1
+  map_pool:
+  - map_id: ascent
+    mastery: 66.9
+  - map_id: bind
+    mastery: 70.0
+  - map_id: haven
+    mastery: 66.3
+  - map_id: lotus
+    mastery: 58.3
+  - map_id: split
+    mastery: 59.6
+  salary: 3700
+  contract_weeks_left: 71
+  morale: 80.3
+  stamina: 81.7
+  form: 46.4
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 65.3

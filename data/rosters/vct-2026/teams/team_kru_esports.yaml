@@ -1,0 +1,229 @@
+id: team_kru_esports
+name: KRU Esports
+tag: KRU
+region: americas
+tier: 1
+captain_id: team_kru_esports_saadhak
+balance: 696000
+reputation: 66.0
+fan_count: 392040
+chemistry: 69.8
+players:
+- id: team_kru_esports_saadhak
+  handle: saadhak
+  real_name: Matias Delipetro
+  region: americas
+  age: 29
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 72.0
+    aim_reactivity: 73.6
+    movement: 79.5
+    game_sense: 89.3
+    utility_usage: 85.4
+    positioning: 79.1
+    clutch_factor: 76.9
+    tilt_resistance: 80.6
+    composure: 86.3
+    comms_quality: 97.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 94.3
+  - agent_id: viper
+    mastery: 87.1
+  map_pool:
+  - map_id: ascent
+    mastery: 90.9
+  - map_id: bind
+    mastery: 82.6
+  - map_id: haven
+    mastery: 82.7
+  - map_id: lotus
+    mastery: 78.9
+  - map_id: split
+    mastery: 79.2
+  salary: 6500
+  contract_weeks_left: 70
+  morale: 65.7
+  stamina: 87.6
+  form: 54.1
+  personality_tags:
+  - fan_favorite
+  - streamer
+  - veteran
+  potential: 83.5
+- id: team_kru_esports_mwzera
+  handle: mwzera
+  real_name: Leonardo Serrati
+  region: americas
+  age: 24
+  role: initiator
+  playstyle: entry
+  attributes:
+    aim_precision: 87.6
+    aim_reactivity: 89.5
+    movement: 89.9
+    game_sense: 71.1
+    utility_usage: 67.8
+    positioning: 76.9
+    clutch_factor: 81.8
+    tilt_resistance: 79.3
+    composure: 76.8
+    comms_quality: 80.0
+  agent_pool:
+  - agent_id: sova
+    mastery: 84.6
+  - agent_id: skye
+    mastery: 87.7
+  map_pool:
+  - map_id: ascent
+    mastery: 87.5
+  - map_id: bind
+    mastery: 94.1
+  - map_id: haven
+    mastery: 83.4
+  - map_id: lotus
+    mastery: 85.6
+  - map_id: split
+    mastery: 81.8
+  salary: 6700
+  contract_weeks_left: 42
+  morale: 82.6
+  stamina: 84.7
+  form: 50.1
+  personality_tags:
+  - analytical
+  - streamer
+  potential: 80.1
+- id: team_kru_esports_less
+  handle: Less
+  real_name: Felipe de Loyola Basso
+  region: americas
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 87.4
+    aim_reactivity: 78.5
+    movement: 81.2
+    game_sense: 82.3
+    utility_usage: 93.3
+    positioning: 97.4
+    clutch_factor: 82.9
+    tilt_resistance: 92.1
+    composure: 97.0
+    comms_quality: 79.7
+  agent_pool:
+  - agent_id: viper
+    mastery: 97.6
+  - agent_id: cypher
+    mastery: 90.4
+  - agent_id: killjoy
+    mastery: 88.7
+  map_pool:
+  - map_id: ascent
+    mastery: 98.8
+  - map_id: bind
+    mastery: 90.3
+  - map_id: haven
+    mastery: 99.0
+  - map_id: lotus
+    mastery: 94.0
+  - map_id: split
+    mastery: 97.1
+  salary: 7300
+  contract_weeks_left: 32
+  morale: 63.1
+  stamina: 81.3
+  form: 49.7
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 93.9
+- id: team_kru_esports_heat
+  handle: heat
+  real_name: Olavo Marcelo
+  region: americas
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 81.4
+    aim_reactivity: 88.0
+    movement: 77.3
+    game_sense: 73.6
+    utility_usage: 64.7
+    positioning: 67.5
+    clutch_factor: 68.6
+    tilt_resistance: 70.9
+    composure: 77.9
+    comms_quality: 74.1
+  agent_pool:
+  - agent_id: raze
+    mastery: 95.1
+  - agent_id: jett
+    mastery: 81.0
+  map_pool:
+  - map_id: ascent
+    mastery: 86.1
+  - map_id: bind
+    mastery: 82.3
+  - map_id: haven
+    mastery: 80.2
+  - map_id: lotus
+    mastery: 75.5
+  - map_id: split
+    mastery: 81.9
+  salary: 5900
+  contract_weeks_left: 40
+  morale: 70.3
+  stamina: 88.5
+  form: 58.2
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 82.7
+- id: team_kru_esports_dantedeu5
+  handle: Dantedeu5
+  real_name: Jesus Federico Larrosa
+  region: americas
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 77.4
+    aim_reactivity: 73.5
+    movement: 71.1
+    game_sense: 55.9
+    utility_usage: 58.4
+    positioning: 64.6
+    clutch_factor: 56.1
+    tilt_resistance: 50.4
+    composure: 65.4
+    comms_quality: 61.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 75.7
+  - agent_id: raze
+    mastery: 77.7
+  map_pool:
+  - map_id: ascent
+    mastery: 56.2
+  - map_id: bind
+    mastery: 73.7
+  - map_id: haven
+    mastery: 68.0
+  - map_id: lotus
+    mastery: 65.9
+  - map_id: split
+    mastery: 65.5
+  salary: 4700
+  contract_weeks_left: 68
+  morale: 61.5
+  stamina: 99.9
+  form: 58.7
+  personality_tags:
+  - quiet
+  - streamer
+  potential: 77.9

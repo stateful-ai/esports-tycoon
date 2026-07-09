@@ -1,0 +1,224 @@
+id: team_gentle_mates
+name: Gentle Mates
+tag: M8
+region: emea
+tier: 1
+captain_id: team_gentle_mates_starxo
+balance: 696000
+reputation: 66.0
+fan_count: 392040
+chemistry: 62.8
+players:
+- id: team_gentle_mates_starxo
+  handle: starxo
+  real_name: Patryk Kopczynski
+  region: emea
+  age: 25
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 64.5
+    aim_reactivity: 66.8
+    movement: 67.2
+    game_sense: 84.3
+    utility_usage: 80.0
+    positioning: 69.9
+    clutch_factor: 70.3
+    tilt_resistance: 67.9
+    composure: 81.5
+    comms_quality: 89.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 87.3
+  - agent_id: skye
+    mastery: 78.3
+  map_pool:
+  - map_id: ascent
+    mastery: 79.3
+  - map_id: bind
+    mastery: 93.8
+  - map_id: haven
+    mastery: 74.7
+  - map_id: lotus
+    mastery: 85.5
+  - map_id: split
+    mastery: 78.0
+  salary: 5400
+  contract_weeks_left: 75
+  morale: 80.8
+  stamina: 99.3
+  form: 47.4
+  personality_tags:
+  - grinder
+  - streamer
+  potential: 74.2
+- id: team_gentle_mates_marteen
+  handle: marteen
+  real_name: Martin Patek
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.3
+    aim_reactivity: 91.8
+    movement: 92.4
+    game_sense: 76.1
+    utility_usage: 71.2
+    positioning: 74.2
+    clutch_factor: 78.5
+    tilt_resistance: 76.0
+    composure: 78.5
+    comms_quality: 75.5
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 90.7
+  - agent_id: raze
+    mastery: 87.7
+  map_pool:
+  - map_id: ascent
+    mastery: 95.5
+  - map_id: bind
+    mastery: 82.8
+  - map_id: haven
+    mastery: 84.5
+  - map_id: lotus
+    mastery: 90.6
+  - map_id: split
+    mastery: 86.0
+  salary: 6400
+  contract_weeks_left: 64
+  morale: 63.1
+  stamina: 82.5
+  form: 55.2
+  personality_tags:
+  - grinder
+  potential: 87.7
+- id: team_gentle_mates_minny
+  handle: Minny
+  real_name: Patrik Husek
+  region: emea
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 75.0
+    aim_reactivity: 69.9
+    movement: 70.3
+    game_sense: 70.9
+    utility_usage: 83.2
+    positioning: 91.3
+    clutch_factor: 71.5
+    tilt_resistance: 83.7
+    composure: 81.6
+    comms_quality: 71.8
+  agent_pool:
+  - agent_id: cypher
+    mastery: 86.4
+  - agent_id: viper
+    mastery: 80.7
+  map_pool:
+  - map_id: ascent
+    mastery: 75.2
+  - map_id: bind
+    mastery: 78.6
+  - map_id: haven
+    mastery: 81.3
+  - map_id: lotus
+    mastery: 87.0
+  - map_id: split
+    mastery: 87.6
+  salary: 5900
+  contract_weeks_left: 42
+  morale: 77.2
+  stamina: 96.4
+  form: 58.9
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 90.9
+- id: team_gentle_mates_bipo
+  handle: bipo
+  real_name: Taranvir Singh
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 80.8
+    aim_reactivity: 78.5
+    movement: 79.8
+    game_sense: 59.9
+    utility_usage: 59.4
+    positioning: 66.1
+    clutch_factor: 69.2
+    tilt_resistance: 62.7
+    composure: 62.4
+    comms_quality: 66.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 77.9
+  - agent_id: raze
+    mastery: 71.7
+  map_pool:
+  - map_id: ascent
+    mastery: 74.5
+  - map_id: bind
+    mastery: 64.5
+  - map_id: haven
+    mastery: 67.5
+  - map_id: lotus
+    mastery: 78.9
+  - map_id: split
+    mastery: 68.5
+  salary: 5000
+  contract_weeks_left: 75
+  morale: 64.3
+  stamina: 96.0
+  form: 51.4
+  personality_tags:
+  - clutch_gene
+  potential: 77.7
+- id: team_gentle_mates_proxh
+  handle: Proxh
+  real_name: Yusuf Emre Tunc
+  region: emea
+  age: 23
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 57.4
+    aim_reactivity: 68.6
+    movement: 68.7
+    game_sense: 80.1
+    utility_usage: 77.6
+    positioning: 66.8
+    clutch_factor: 64.9
+    tilt_resistance: 66.7
+    composure: 76.2
+    comms_quality: 82.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 81.3
+  - agent_id: viper
+    mastery: 82.0
+  map_pool:
+  - map_id: ascent
+    mastery: 93.3
+  - map_id: bind
+    mastery: 67.4
+  - map_id: haven
+    mastery: 74.8
+  - map_id: lotus
+    mastery: 70.5
+  - map_id: split
+    mastery: 69.1
+  salary: 5100
+  contract_weeks_left: 69
+  morale: 71.5
+  stamina: 95.2
+  form: 50.4
+  personality_tags:
+  - clutch_gene
+  - team_player
+  potential: 74.4

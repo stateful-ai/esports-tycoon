@@ -1,0 +1,706 @@
+# VCT China 2026 rosters - compiled 2026-07-09 from vlr.gg + liquipedia.net
+# Tier 1 = the 12 VCT China Stage 2 teams (event 2978; Stage 2 began 2026-07-09).
+# Lineups = most recent official 2026 match (Stage 2 W1 for WOL/TEC/DRG/BLG,
+# EWC Paris group stage for EDG/AG, Masters London for XLG, otherwise the
+# registered Stage 2 five after the June/July transfer window).
+# Tier 2 = China Evolution Series 2026 Act 2 / China National Tournament orgs.
+region: china
+teams:
+  - name: EDward Gaming
+    tag: EDG
+    tier: 1
+    prestige: 90
+    players:
+      - handle: ZmjjKK
+        real_name: Zheng Yongkang
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 85
+        agents: [jett, raze]
+      - handle: Smoggy
+        real_name: Zhang Zhao
+        age: 25
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 80
+        agents: [raze, phoenix, omen]
+      - handle: nobody
+        real_name: Wang Senxu
+        age: 27
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 74
+        agents: [skye, sova]
+      - handle: Jieni7
+        real_name: Zhang Juntai
+        age: 20
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 73
+        agents: [killjoy, breach, omen]
+      - handle: CHICHOO
+        real_name: Wan Shunzhi
+        age: 25
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 79
+        agents: [viper, cypher]
+  - name: Xi Lai Gaming
+    tag: XLG
+    tier: 1
+    prestige: 58
+    players:
+      - handle: happywei
+        real_name: Teng Min-wei
+        age: 23
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 80
+        agents: [viper, cypher, chamber]
+      - handle: Rarga
+        real_name: Arthur Churyumov
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [jett, phoenix]
+      - handle: NoMan
+        real_name: James Man Ga Kit
+        age: 23
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 71
+        agents: [raze, breach, killjoy]
+      - handle: Lysoar
+        real_name: Liang Youhao
+        age: 20
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 75
+        agents: [omen]
+      - handle: WsLeo
+        real_name: Huang Ping-wei
+        age: 24
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [skye, sova]
+  - name: Dragon Ranger Gaming
+    tag: DRG
+    tier: 1
+    prestige: 48
+    players:
+      - handle: vo0kashu
+        real_name: Ilya Ushakov
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 81
+        agents: [cypher, viper]
+      - handle: Life
+        real_name: Qu Donghao
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 70
+        agents: [jett, raze]
+      - handle: Nicc
+        real_name: Shao Yi-chun
+        age: 24
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 73
+        agents: [skye, sova]
+      - handle: SpiritZ1
+        real_name: Lin Ting-yu
+        age: 21
+        role: duelist
+        playstyle: lurker
+        igl: false
+        quality: 72
+        agents: [jett, phoenix]
+      - handle: Verse
+        real_name: Zhou Zijun
+        age: 20
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 66
+        agents: [omen]
+  - name: All Gamers
+    tag: AG
+    tier: 1
+    prestige: 62
+    players:
+      - handle: K1ra
+        real_name: Huang Zhihao
+        age: 22
+        role: sentinel
+        playstyle: igl
+        igl: true
+        quality: 72
+        agents: [cypher, viper]
+      - handle: Shr1mp
+        real_name: Yang Yong
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 74
+        agents: [skye, sova]
+      - handle: f4ngeer
+        real_name: Roman Smirnov
+        age: 19
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 78
+        agents: [jett, chamber]
+      - handle: iamgrq
+        real_name: Gao Ruiqi
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [omen]
+      - handle: Bai
+        real_name: Zhang Zeyang
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 63
+        agents: [jett, viper]
+  - name: TYLOO
+    tag: TYL
+    tier: 1
+    prestige: 72
+    players:
+      - handle: slowly
+        real_name: Sun Kelun
+        age: 22
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 78
+        agents: [omen]
+      - handle: Erv
+        real_name: Shen Zhiwei
+        age: 20
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [raze, phoenix, breach]
+      - handle: splash
+        real_name: Moses Christophe Jonathan
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [jett]
+      - handle: Scales
+        real_name: Zhang Zhen
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 70
+        agents: [viper, cypher, chamber]
+      - handle: SiuFatBB
+        real_name: Pong Ka Hei
+        age: 24
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 69
+        agents: [skye, sova]
+  - name: JDG Esports
+    tag: JDG
+    tier: 1
+    prestige: 68
+    players:
+      - handle: zhe
+        real_name: Niu Zhe
+        age: 21
+        role: flex
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [jett, viper, killjoy]
+      - handle: Yuicaw
+        real_name: Huang Yung-chieh
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [raze, killjoy]
+      - handle: jkuro
+        real_name: Yeung Ho Chung
+        age: 24
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [cypher, omen]
+      - handle: BerLIN
+        real_name: Chang Po-lin
+        age: 26
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, viper]
+      - handle: crownfisher
+        real_name: Li Ao
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [raze, jett]
+  - name: Titan Esports Club
+    tag: TEC
+    tier: 1
+    prestige: 50
+    players:
+      - handle: Spitfires
+        real_name: Xin Mingyang
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 69
+        agents: [jett, raze]
+      - handle: CoCo
+        real_name: Ding Dajian
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 67
+        agents: [omen, viper]
+      - handle: Dynamite
+        real_name: Zhao Zihao
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 69
+        agents: [jett, raze]
+      - handle: Haodong
+        real_name: Guo Haodong
+        age: 23
+        role: sentinel
+        playstyle: igl
+        igl: true
+        quality: 68
+        agents: [cypher, omen]
+      - handle: lucas
+        real_name: Lu Yunkun
+        age: 19
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [skye, sova]
+  - name: Trace Esports
+    tag: TE
+    tier: 1
+    prestige: 56
+    players:
+      - handle: Kai
+        real_name: Lu Zhinan
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 73
+        agents: [raze, jett]
+      - handle: deLb
+        real_name: Delbert Tanoto
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 74
+        agents: [omen, viper]
+      - handle: LuoK1ng
+        real_name: Zhang Zhanpeng
+        age: 21
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 68
+        agents: [omen, viper, jett]
+      - handle: FengF
+        real_name: Song Xuefeng
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 66
+        agents: [raze, sova]
+      - handle: Abo
+        real_name: Han Bohao
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 69
+        agents: [viper, killjoy]
+  - name: Bilibili Gaming
+    tag: BLG
+    tier: 1
+    prestige: 75
+    players:
+      - handle: whzy
+        real_name: Wang Haozhe
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 74
+        agents: [raze, phoenix, chamber]
+      - handle: Knight
+        real_name: Liu Yuxiang
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [sova, skye]
+      - handle: nephh
+        real_name: Marcus Tan Kai Wen
+        age: 21
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [omen]
+      - handle: rushia
+        real_name: Wang Xiaojie
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [viper, cypher]
+      - handle: FT
+        real_name: Yan Shuaibo
+        age: 19
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 63
+        agents: [phoenix, jett]
+  - name: FunPlus Phoenix
+    tag: FPX
+    tier: 1
+    prestige: 70
+    players:
+      - handle: AAAAY
+        real_name: Zhang Yang
+        age: 23
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 76
+        agents: [viper, killjoy]
+      - handle: coconut
+        real_name: Colin Patrick Chung
+        age: 25
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [sova, skye]
+      - handle: kovaQ
+        real_name: Blendi Kovaci
+        age: 22
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 66
+        agents: [skye, sova]
+      - handle: Setrod
+        real_name: Ou Tai-keng
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 67
+        agents: [jett, raze]
+      - handle: Xlele
+        real_name: Zhao Yanbo
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [jett, phoenix, omen]
+  - name: Wolves Esports
+    tag: WOL
+    tier: 1
+    prestige: 62
+    players:
+      - handle: Spring
+        real_name: Liu Chun-ting
+        age: 23
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 75
+        agents: [viper, omen]
+      - handle: yosemite
+        real_name: Wang Lei
+        age: 24
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 71
+        agents: [killjoy, cypher]
+      - handle: glacier
+        real_name: Liang Zhe-kai
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, raze]
+      - handle: aluba
+        real_name: Zhong Haojun
+        age: 25
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 66
+        agents: [sova, skye]
+      - handle: Deryeon
+        real_name: Derrick Yee Dong Ting
+        age: 22
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 67
+        agents: [omen]
+  - name: Nova Esports
+    tag: NOVA
+    tier: 1
+    prestige: 52
+    players:
+      - handle: qiutiaN
+        real_name: Bijan Moeinzadeh
+        age: 23
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [sova, skye]
+      - handle: cb
+        real_name: Wang Qingchuan
+        age: 22
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 66
+        agents: [phoenix, jett]
+      - handle: swagzor
+        real_name: Mikhail Vanyushin
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 71
+        agents: [jett, chamber, raze]
+      - handle: GuanG
+        real_name: Guang Honglin
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 67
+        agents: [cypher, killjoy]
+      - handle: Ezeir
+        real_name: Zhao Zejun
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [omen]
+  - name: Weibo Gaming
+    tag: WBG
+    tier: 2
+    prestige: 45
+    partial: true
+    players:
+      - handle: heybay
+        real_name: Ho Shun Hei
+        age: 25
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 61
+        agents: [sova, skye]
+      - handle: Yoyo
+        real_name: Hsu Yuh-siang
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 62
+        agents: [jett, raze]
+      - handle: Satoshi
+        real_name: Fei Zhixian
+        age: 21
+        role: controller
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [omen]
+      - handle: AcMe
+        real_name: Cha Il-hwan
+        age: 23
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 59
+        agents: [killjoy, cypher]
+  - name: Rare Atom
+    tag: RA
+    tier: 2
+    prestige: 38
+    players:
+      - handle: Midnight
+        real_name: Wang Yingjie
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 57
+        agents: [omen]
+      - handle: Ben1Ley
+        real_name: Shi Benyu
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 61
+        agents: [jett, raze]
+      - handle: Z1Yan
+        real_name: Liu Zihan
+        age: 21
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [skye, breach]
+      - handle: Potter
+        real_name: Sutthichai Promsrikaew
+        age: 24
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [sova, skye]
+      - handle: Guran
+        real_name: Zhou Mingyan
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 55
+        agents: [cypher, killjoy]
+  - name: Any Questions Gaming
+    tag: AQG
+    tier: 2
+    prestige: 30
+    players:
+      - handle: FFs
+        real_name: Leong Cheok Nam
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 56
+        agents: [omen]
+      - handle: juicy
+        real_name: Tyler James Aeria
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 60
+        agents: [jett, raze]
+      - handle: dannyy
+        real_name: Wang Pengcheng
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 55
+        agents: [sova, skye]
+      - handle: S1Mon
+        real_name: Hsieh Meng-hsun
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 55
+        agents: [killjoy, cypher]
+      - handle: 5CM
+        real_name: Ding Yipeng
+        age: 20
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 54
+        agents: [viper, omen]
+  - name: KeepBest Gaming
+    tag: KBG
+    tier: 2
+    prestige: 27
+    partial: true
+    players:
+      - handle: Ying
+        real_name: Wang Chenxu
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 56
+        agents: [omen, viper]
+      - handle: Akeman
+        real_name: Zhang Haoran
+        age: 22
+        role: flex
+        playstyle: support
+        igl: false
+        quality: 58
+        agents: [skye, killjoy]
+      - handle: sibeastw0w
+        real_name: Anton Govorukhin
+        age: 21
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 57
+        agents: [jett, reyna]

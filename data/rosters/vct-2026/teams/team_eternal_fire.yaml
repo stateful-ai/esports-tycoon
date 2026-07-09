@@ -1,0 +1,225 @@
+id: team_eternal_fire
+name: Eternal Fire
+tag: EF
+region: emea
+tier: 1
+captain_id: team_eternal_fire_nekky
+balance: 672000
+reputation: 62.0
+fan_count: 345960
+chemistry: 79.3
+players:
+- id: team_eternal_fire_nekky
+  handle: nekky
+  real_name: Anil Dagdeviren
+  region: emea
+  age: 22
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 58.8
+    aim_reactivity: 64.1
+    movement: 66.6
+    game_sense: 86.8
+    utility_usage: 83.2
+    positioning: 69.9
+    clutch_factor: 68.6
+    tilt_resistance: 70.5
+    composure: 82.0
+    comms_quality: 81.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 80.0
+  - agent_id: skye
+    mastery: 83.3
+  map_pool:
+  - map_id: ascent
+    mastery: 81.4
+  - map_id: bind
+    mastery: 86.0
+  - map_id: haven
+    mastery: 81.1
+  - map_id: lotus
+    mastery: 80.6
+  - map_id: split
+    mastery: 82.1
+  salary: 5400
+  contract_weeks_left: 64
+  morale: 81.2
+  stamina: 91.2
+  form: 58.9
+  personality_tags:
+  - analytical
+  - independent
+  potential: 81.2
+- id: team_eternal_fire_izzy
+  handle: Izzy
+  real_name: Baran Yilmaz
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 84.5
+    aim_reactivity: 80.8
+    movement: 80.9
+    game_sense: 64.8
+    utility_usage: 60.9
+    positioning: 74.7
+    clutch_factor: 72.3
+    tilt_resistance: 65.9
+    composure: 70.2
+    comms_quality: 69.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 86.5
+  - agent_id: raze
+    mastery: 87.6
+  map_pool:
+  - map_id: ascent
+    mastery: 73.7
+  - map_id: bind
+    mastery: 80.9
+  - map_id: haven
+    mastery: 93.6
+  - map_id: lotus
+    mastery: 82.2
+  - map_id: split
+    mastery: 83.9
+  salary: 5700
+  contract_weeks_left: 42
+  morale: 71.8
+  stamina: 98.7
+  form: 55.6
+  personality_tags:
+  - slow_starter
+  - team_player
+  potential: 82.4
+- id: team_eternal_fire_favian
+  handle: Favian
+  real_name: Enes Yigiter
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 90.7
+    aim_reactivity: 86.8
+    movement: 85.3
+    game_sense: 66.6
+    utility_usage: 72.7
+    positioning: 78.1
+    clutch_factor: 74.9
+    tilt_resistance: 70.2
+    composure: 72.5
+    comms_quality: 78.0
+  agent_pool:
+  - agent_id: raze
+    mastery: 87.2
+  - agent_id: phoenix
+    mastery: 76.8
+  map_pool:
+  - map_id: ascent
+    mastery: 73.2
+  - map_id: bind
+    mastery: 85.8
+  - map_id: haven
+    mastery: 83.2
+  - map_id: lotus
+    mastery: 81.9
+  - map_id: split
+    mastery: 82.9
+  salary: 6000
+  contract_weeks_left: 68
+  morale: 83.4
+  stamina: 91.5
+  form: 54.6
+  personality_tags:
+  - grinder
+  - streamer
+  potential: 90.3
+- id: team_eternal_fire_echo
+  handle: echo
+  real_name: Omur Serkan Senol
+  region: emea
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 75.5
+    aim_reactivity: 71.5
+    movement: 65.4
+    game_sense: 71.0
+    utility_usage: 78.2
+    positioning: 83.6
+    clutch_factor: 70.4
+    tilt_resistance: 83.1
+    composure: 84.1
+    comms_quality: 70.5
+  agent_pool:
+  - agent_id: cypher
+    mastery: 88.0
+  - agent_id: viper
+    mastery: 82.9
+  map_pool:
+  - map_id: ascent
+    mastery: 75.8
+  - map_id: bind
+    mastery: 69.5
+  - map_id: haven
+    mastery: 78.1
+  - map_id: lotus
+    mastery: 75.8
+  - map_id: split
+    mastery: 74.6
+  salary: 5700
+  contract_weeks_left: 79
+  morale: 64.3
+  stamina: 80.4
+  form: 50.6
+  personality_tags:
+  - streamer
+  potential: 83.7
+- id: team_eternal_fire_audaz
+  handle: audaz
+  real_name: Soner Ekiz
+  region: emea
+  age: 22
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 63.6
+    aim_reactivity: 63.1
+    movement: 72.3
+    game_sense: 78.7
+    utility_usage: 80.9
+    positioning: 65.1
+    clutch_factor: 73.0
+    tilt_resistance: 74.3
+    composure: 74.5
+    comms_quality: 79.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 82.5
+  - agent_id: viper
+    mastery: 74.0
+  map_pool:
+  - map_id: ascent
+    mastery: 84.8
+  - map_id: bind
+    mastery: 89.4
+  - map_id: haven
+    mastery: 69.9
+  - map_id: lotus
+    mastery: 81.3
+  - map_id: split
+    mastery: 76.7
+  salary: 5500
+  contract_weeks_left: 64
+  morale: 60.1
+  stamina: 83.3
+  form: 54.3
+  personality_tags:
+  - analytical
+  - slow_starter
+  potential: 77.7

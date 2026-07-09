@@ -1,0 +1,227 @@
+id: team_trace_esports
+name: Trace Esports
+tag: TE
+region: china
+tier: 1
+captain_id: team_trace_esports_delb
+balance: 636000
+reputation: 56.0
+fan_count: 282240
+chemistry: 64.7
+players:
+- id: team_trace_esports_kai
+  handle: Kai
+  real_name: Lu Zhinan
+  region: china
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 83.1
+    aim_reactivity: 86.6
+    movement: 86.4
+    game_sense: 69.4
+    utility_usage: 66.2
+    positioning: 74.1
+    clutch_factor: 73.3
+    tilt_resistance: 64.5
+    composure: 73.6
+    comms_quality: 70.1
+  agent_pool:
+  - agent_id: raze
+    mastery: 86.8
+  - agent_id: jett
+    mastery: 80.0
+  map_pool:
+  - map_id: ascent
+    mastery: 87.7
+  - map_id: bind
+    mastery: 77.0
+  - map_id: haven
+    mastery: 73.9
+  - map_id: lotus
+    mastery: 88.2
+  - map_id: split
+    mastery: 71.0
+  salary: 5700
+  contract_weeks_left: 78
+  morale: 70.1
+  stamina: 89.4
+  form: 58.7
+  personality_tags:
+  - quiet
+  - team_player
+  potential: 80.9
+- id: team_trace_esports_delb
+  handle: deLb
+  real_name: Delbert Tanoto
+  region: china
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 62.8
+    aim_reactivity: 63.7
+    movement: 81.7
+    game_sense: 81.2
+    utility_usage: 89.8
+    positioning: 71.1
+    clutch_factor: 68.5
+    tilt_resistance: 78.6
+    composure: 75.5
+    comms_quality: 90.5
+  agent_pool:
+  - agent_id: omen
+    mastery: 84.7
+  - agent_id: viper
+    mastery: 83.4
+  map_pool:
+  - map_id: ascent
+    mastery: 75.4
+  - map_id: bind
+    mastery: 86.4
+  - map_id: haven
+    mastery: 76.8
+  - map_id: lotus
+    mastery: 84.7
+  - map_id: split
+    mastery: 79.8
+  salary: 5900
+  contract_weeks_left: 47
+  morale: 68.3
+  stamina: 99.6
+  form: 51.9
+  personality_tags:
+  - flashy
+  - team_player
+  potential: 80.0
+- id: team_trace_esports_luok1ng
+  handle: LuoK1ng
+  real_name: Zhang Zhanpeng
+  region: china
+  age: 21
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 61.4
+    aim_reactivity: 67.3
+    movement: 70.3
+    game_sense: 76.9
+    utility_usage: 69.4
+    positioning: 73.7
+    clutch_factor: 71.4
+    tilt_resistance: 67.8
+    composure: 66.2
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 85.5
+  - agent_id: viper
+    mastery: 74.2
+  - agent_id: jett
+    mastery: 67.5
+  map_pool:
+  - map_id: ascent
+    mastery: 80.5
+  - map_id: bind
+    mastery: 75.4
+  - map_id: haven
+    mastery: 81.1
+  - map_id: lotus
+    mastery: 84.9
+  - map_id: split
+    mastery: 76.2
+  salary: 5100
+  contract_weeks_left: 60
+  morale: 80.5
+  stamina: 94.6
+  form: 58.1
+  personality_tags:
+  - fan_favorite
+  - perfectionist
+  potential: 74.4
+- id: team_trace_esports_fengf
+  handle: FengF
+  real_name: Song Xuefeng
+  region: china
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 57.5
+    aim_reactivity: 60.4
+    movement: 69.6
+    game_sense: 70.7
+    utility_usage: 81.1
+    positioning: 66.9
+    clutch_factor: 75.8
+    tilt_resistance: 59.9
+    composure: 66.0
+    comms_quality: 76.9
+  agent_pool:
+  - agent_id: raze
+    mastery: 79.1
+  - agent_id: sova
+    mastery: 71.7
+  map_pool:
+  - map_id: ascent
+    mastery: 75.8
+  - map_id: bind
+    mastery: 79.5
+  - map_id: haven
+    mastery: 72.0
+  - map_id: lotus
+    mastery: 68.5
+  - map_id: split
+    mastery: 77.4
+  salary: 4900
+  contract_weeks_left: 41
+  morale: 77.6
+  stamina: 97.0
+  form: 59.3
+  personality_tags:
+  - hot_head
+  potential: 80.1
+- id: team_trace_esports_abo
+  handle: Abo
+  real_name: Han Bohao
+  region: china
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 70.5
+    aim_reactivity: 67.8
+    movement: 55.6
+    game_sense: 73.9
+    utility_usage: 77.0
+    positioning: 73.3
+    clutch_factor: 70.9
+    tilt_resistance: 74.1
+    composure: 73.2
+    comms_quality: 64.9
+  agent_pool:
+  - agent_id: viper
+    mastery: 89.4
+  - agent_id: killjoy
+    mastery: 80.6
+  map_pool:
+  - map_id: ascent
+    mastery: 75.1
+  - map_id: bind
+    mastery: 77.6
+  - map_id: haven
+    mastery: 69.0
+  - map_id: lotus
+    mastery: 80.0
+  - map_id: split
+    mastery: 78.2
+  salary: 5300
+  contract_weeks_left: 56
+  morale: 77.8
+  stamina: 92.9
+  form: 50.4
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 78.3

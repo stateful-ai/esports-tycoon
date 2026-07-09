@@ -1,0 +1,226 @@
+id: team_fokus
+name: FOKUS
+tag: FKS
+region: emea
+tier: 2
+captain_id: team_fokus_yaboilewis
+balance: 144000
+reputation: 28.0
+fan_count: 11760
+chemistry: 79.5
+players:
+- id: team_fokus_yaboilewis
+  handle: YaBoiLewis
+  real_name: Lewis Hughes
+  region: emea
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 48.6
+    aim_reactivity: 52.8
+    movement: 56.7
+    game_sense: 69.9
+    utility_usage: 62.8
+    positioning: 63.0
+    clutch_factor: 57.0
+    tilt_resistance: 54.4
+    composure: 63.1
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 68.2
+  - agent_id: viper
+    mastery: 64.5
+  map_pool:
+  - map_id: ascent
+    mastery: 66.6
+  - map_id: bind
+    mastery: 59.9
+  - map_id: haven
+    mastery: 67.4
+  - map_id: lotus
+    mastery: 62.6
+  - map_id: split
+    mastery: 72.0
+  salary: 3800
+  contract_weeks_left: 74
+  morale: 76.2
+  stamina: 95.4
+  form: 49.5
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 64.8
+- id: team_fokus_serial
+  handle: Serial
+  real_name: Maikls Zdanovs
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 73.3
+    aim_reactivity: 66.7
+    movement: 71.9
+    game_sense: 49.6
+    utility_usage: 50.6
+    positioning: 57.4
+    clutch_factor: 60.1
+    tilt_resistance: 51.9
+    composure: 63.3
+    comms_quality: 48.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 75.0
+  - agent_id: raze
+    mastery: 73.4
+  map_pool:
+  - map_id: ascent
+    mastery: 73.1
+  - map_id: bind
+    mastery: 59.5
+  - map_id: haven
+    mastery: 71.7
+  - map_id: lotus
+    mastery: 70.4
+  - map_id: split
+    mastery: 48.1
+  salary: 4200
+  contract_weeks_left: 63
+  morale: 61.6
+  stamina: 92.8
+  form: 52.0
+  personality_tags:
+  - clutch_gene
+  - hot_head
+  potential: 70.3
+- id: team_fokus_pa1ze
+  handle: Pa1ze
+  real_name: Mohammad Khatib
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 51.9
+    aim_reactivity: 51.3
+    movement: 59.3
+    game_sense: 66.6
+    utility_usage: 64.3
+    positioning: 55.5
+    clutch_factor: 56.9
+    tilt_resistance: 55.0
+    composure: 63.4
+    comms_quality: 58.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.4
+  - agent_id: skye
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 53.5
+  - map_id: bind
+    mastery: 58.0
+  - map_id: haven
+    mastery: 56.2
+  - map_id: lotus
+    mastery: 57.2
+  - map_id: split
+    mastery: 65.1
+  salary: 3700
+  contract_weeks_left: 31
+  morale: 75.9
+  stamina: 83.6
+  form: 49.1
+  personality_tags:
+  - grinder
+  - quiet
+  potential: 65.3
+- id: team_fokus_molsi
+  handle: MOLSI
+  real_name: Michal Lacki
+  region: emea
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 49.4
+    aim_reactivity: 52.5
+    movement: 53.5
+    game_sense: 58.2
+    utility_usage: 70.1
+    positioning: 55.5
+    clutch_factor: 52.0
+    tilt_resistance: 53.0
+    composure: 61.5
+    comms_quality: 59.0
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 72.2
+  - agent_id: breach
+    mastery: 72.5
+  map_pool:
+  - map_id: ascent
+    mastery: 70.2
+  - map_id: bind
+    mastery: 70.4
+  - map_id: haven
+    mastery: 64.9
+  - map_id: lotus
+    mastery: 65.0
+  - map_id: split
+    mastery: 72.6
+  salary: 3900
+  contract_weeks_left: 38
+  morale: 69.4
+  stamina: 84.3
+  form: 45.7
+  personality_tags:
+  - clutch_gene
+  - quiet
+  potential: 60.3
+- id: team_fokus_shinnok
+  handle: shinnok
+  real_name: Viktor Zsombor Magloczki
+  region: emea
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 54.6
+    aim_reactivity: 51.6
+    movement: 47.4
+    game_sense: 52.4
+    utility_usage: 64.2
+    positioning: 63.1
+    clutch_factor: 59.2
+    tilt_resistance: 65.2
+    composure: 66.5
+    comms_quality: 52.1
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 66.5
+  - agent_id: cypher
+    mastery: 59.4
+  map_pool:
+  - map_id: ascent
+    mastery: 64.1
+  - map_id: bind
+    mastery: 69.4
+  - map_id: haven
+    mastery: 54.8
+  - map_id: lotus
+    mastery: 56.0
+  - map_id: split
+    mastery: 76.3
+  salary: 3700
+  contract_weeks_left: 33
+  morale: 61.5
+  stamina: 94.4
+  form: 57.4
+  personality_tags:
+  - clutch_gene
+  - flashy
+  potential: 59.9

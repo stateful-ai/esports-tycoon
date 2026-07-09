@@ -1,0 +1,224 @@
+id: team_2game_esports
+name: 2GAME Esports
+tag: 2G
+region: americas
+tier: 2
+captain_id: team_2game_esports_gobera
+balance: 174000
+reputation: 38.0
+fan_count: 21660
+chemistry: 81.0
+players:
+- id: team_2game_esports_gobera
+  handle: gobera
+  real_name: Vitor Gobo Cesar
+  region: americas
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 51.0
+    aim_reactivity: 52.7
+    movement: 63.1
+    game_sense: 70.8
+    utility_usage: 68.8
+    positioning: 58.0
+    clutch_factor: 60.9
+    tilt_resistance: 58.8
+    composure: 70.0
+    comms_quality: 76.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 70.2
+  - agent_id: viper
+    mastery: 73.9
+  map_pool:
+  - map_id: ascent
+    mastery: 63.0
+  - map_id: bind
+    mastery: 64.7
+  - map_id: haven
+    mastery: 69.6
+  - map_id: lotus
+    mastery: 66.5
+  - map_id: split
+    mastery: 67.9
+  salary: 4200
+  contract_weeks_left: 65
+  morale: 73.2
+  stamina: 93.9
+  form: 52.7
+  personality_tags:
+  - quiet
+  potential: 63.6
+- id: team_2game_esports_frz
+  handle: frz
+  real_name: Leandro Fukuda Gomes
+  region: americas
+  age: 26
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 66.3
+    aim_reactivity: 73.4
+    movement: 75.1
+    game_sense: 50.1
+    utility_usage: 49.8
+    positioning: 56.6
+    clutch_factor: 61.7
+    tilt_resistance: 60.2
+    composure: 58.9
+    comms_quality: 61.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 69.2
+  - agent_id: raze
+    mastery: 66.5
+  map_pool:
+  - map_id: ascent
+    mastery: 58.6
+  - map_id: bind
+    mastery: 71.6
+  - map_id: haven
+    mastery: 63.8
+  - map_id: lotus
+    mastery: 59.3
+  - map_id: split
+    mastery: 62.2
+  salary: 4000
+  contract_weeks_left: 61
+  morale: 63.3
+  stamina: 98.3
+  form: 49.1
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 61.4
+- id: team_2game_esports_ambition
+  handle: ambitioN
+  real_name: Gabriel Bertoni Lima
+  region: americas
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 45.7
+    aim_reactivity: 47.2
+    movement: 59.3
+    game_sense: 63.5
+    utility_usage: 66.4
+    positioning: 57.1
+    clutch_factor: 58.2
+    tilt_resistance: 57.4
+    composure: 59.2
+    comms_quality: 65.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 70.9
+  - agent_id: skye
+    mastery: 66.8
+  map_pool:
+  - map_id: ascent
+    mastery: 65.2
+  - map_id: bind
+    mastery: 73.1
+  - map_id: haven
+    mastery: 73.7
+  - map_id: lotus
+    mastery: 65.5
+  - map_id: split
+    mastery: 63.3
+  salary: 3900
+  contract_weeks_left: 48
+  morale: 60.2
+  stamina: 90.2
+  form: 47.4
+  personality_tags:
+  - clutch_gene
+  - hot_head
+  potential: 61.0
+- id: team_2game_esports_brinks
+  handle: Brinks
+  real_name: Joao Victor
+  region: americas
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 44.6
+    aim_reactivity: 52.1
+    movement: 54.7
+    game_sense: 64.5
+    utility_usage: 64.6
+    positioning: 59.2
+    clutch_factor: 65.3
+    tilt_resistance: 57.1
+    composure: 69.0
+    comms_quality: 67.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 61.2
+  - agent_id: sova
+    mastery: 64.5
+  map_pool:
+  - map_id: ascent
+    mastery: 54.1
+  - map_id: bind
+    mastery: 60.8
+  - map_id: haven
+    mastery: 76.0
+  - map_id: lotus
+    mastery: 53.4
+  - map_id: split
+    mastery: 69.8
+  salary: 3900
+  contract_weeks_left: 59
+  morale: 63.8
+  stamina: 81.5
+  form: 45.5
+  personality_tags:
+  - slow_starter
+  potential: 69.3
+- id: team_2game_esports_xenom
+  handle: xenom
+  real_name: Eduardo Ribeiro de Moura Soeiro
+  region: americas
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 58.7
+    aim_reactivity: 49.3
+    movement: 51.3
+    game_sense: 57.6
+    utility_usage: 63.4
+    positioning: 68.6
+    clutch_factor: 53.5
+    tilt_resistance: 66.1
+    composure: 65.0
+    comms_quality: 52.5
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 70.9
+  - agent_id: cypher
+    mastery: 66.1
+  map_pool:
+  - map_id: ascent
+    mastery: 61.5
+  - map_id: bind
+    mastery: 68.1
+  - map_id: haven
+    mastery: 57.9
+  - map_id: lotus
+    mastery: 74.1
+  - map_id: split
+    mastery: 62.1
+  salary: 3800
+  contract_weeks_left: 48
+  morale: 64.2
+  stamina: 90.0
+  form: 51.5
+  personality_tags:
+  - analytical
+  - quiet
+  potential: 71.3

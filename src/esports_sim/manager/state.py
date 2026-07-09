@@ -18,6 +18,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 
 from esports_sim.schemas import Player, Team
+from esports_sim.schemas.common import Region
 
 SCHEMA_VERSION = 2
 
@@ -338,6 +339,20 @@ class GameState(BaseModel):
     # set of all human-controlled teams (>=1). Solo play == one human here.
     user_team_id: str
     human_team_ids: list[str] = Field(default_factory=list)
+
+    # World shape: which regional leagues exist and how big each is. Written
+    # once by new_campaign (from the roster pack's world block, or these
+    # defaults) and read by every phase of the season state machine. The
+    # defaults match the classic 3x8 fictional world, so pre-pack saves load
+    # unchanged without a migration.
+    league_regions: list[Region] = Field(
+        default_factory=lambda: [Region.AMERICAS, Region.EMEA, Region.PACIFIC]
+    )
+    teams_per_region: int = 8
+    tier2_per_region: int = 6
+    # Id of the roster pack this campaign was created from (None = generated
+    # fictional world). Informational — the pack is baked in at creation.
+    roster_pack: str | None = None
 
     # Which human's private state (inbox, scouting, sponsors, staff, ...) the
     # per-team delegating properties below resolve to. Set per web request from

@@ -1,0 +1,228 @@
+id: team_edward_gaming
+name: EDward Gaming
+tag: EDG
+region: china
+tier: 1
+captain_id: team_edward_gaming_nobody
+balance: 840000
+reputation: 90.0
+fan_count: 729000
+chemistry: 76.8
+players:
+- id: team_edward_gaming_zmjjkk
+  handle: ZmjjKK
+  real_name: Zheng Yongkang
+  region: china
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 99.0
+    aim_reactivity: 96.4
+    movement: 87.4
+    game_sense: 81.0
+    utility_usage: 84.0
+    positioning: 88.8
+    clutch_factor: 77.4
+    tilt_resistance: 73.7
+    composure: 85.6
+    comms_quality: 81.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 92.9
+  - agent_id: raze
+    mastery: 94.2
+  map_pool:
+  - map_id: ascent
+    mastery: 95.5
+  - map_id: bind
+    mastery: 99.0
+  - map_id: haven
+    mastery: 92.9
+  - map_id: lotus
+    mastery: 99.0
+  - map_id: split
+    mastery: 87.6
+  salary: 7300
+  contract_weeks_left: 57
+  morale: 61.6
+  stamina: 84.8
+  form: 57.6
+  personality_tags:
+  - quiet
+  potential: 96.0
+- id: team_edward_gaming_smoggy
+  handle: Smoggy
+  real_name: Zhang Zhao
+  region: china
+  age: 25
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 76.9
+    aim_reactivity: 68.3
+    movement: 79.1
+    game_sense: 81.9
+    utility_usage: 91.6
+    positioning: 81.0
+    clutch_factor: 83.6
+    tilt_resistance: 88.5
+    composure: 90.2
+    comms_quality: 89.9
+  agent_pool:
+  - agent_id: raze
+    mastery: 99.0
+  - agent_id: phoenix
+    mastery: 98.8
+  - agent_id: omen
+    mastery: 85.6
+  map_pool:
+  - map_id: ascent
+    mastery: 78.1
+  - map_id: bind
+    mastery: 85.3
+  - map_id: haven
+    mastery: 88.7
+  - map_id: lotus
+    mastery: 90.8
+  - map_id: split
+    mastery: 81.6
+  salary: 6700
+  contract_weeks_left: 50
+  morale: 80.1
+  stamina: 93.7
+  form: 45.9
+  personality_tags:
+  - hot_head
+  - quiet
+  potential: 83.1
+- id: team_edward_gaming_nobody
+  handle: nobody
+  real_name: Wang Senxu
+  region: china
+  age: 27
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 57.1
+    aim_reactivity: 70.0
+    movement: 79.1
+    game_sense: 86.6
+    utility_usage: 87.0
+    positioning: 65.8
+    clutch_factor: 69.1
+    tilt_resistance: 73.4
+    composure: 83.5
+    comms_quality: 85.0
+  agent_pool:
+  - agent_id: skye
+    mastery: 90.0
+  - agent_id: sova
+    mastery: 74.8
+  map_pool:
+  - map_id: ascent
+    mastery: 89.0
+  - map_id: bind
+    mastery: 75.9
+  - map_id: haven
+    mastery: 81.8
+  - map_id: lotus
+    mastery: 91.4
+  - map_id: split
+    mastery: 67.6
+  salary: 5900
+  contract_weeks_left: 72
+  morale: 75.7
+  stamina: 99.1
+  form: 59.4
+  personality_tags:
+  - independent
+  potential: 77.4
+- id: team_edward_gaming_jieni7
+  handle: Jieni7
+  real_name: Zhang Juntai
+  region: china
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 70.3
+    aim_reactivity: 69.2
+    movement: 74.8
+    game_sense: 77.1
+    utility_usage: 84.2
+    positioning: 73.2
+    clutch_factor: 70.0
+    tilt_resistance: 74.3
+    composure: 80.2
+    comms_quality: 81.1
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 85.8
+  - agent_id: breach
+    mastery: 71.5
+  - agent_id: omen
+    mastery: 86.8
+  map_pool:
+  - map_id: ascent
+    mastery: 81.4
+  - map_id: bind
+    mastery: 86.1
+  - map_id: haven
+    mastery: 92.4
+  - map_id: lotus
+    mastery: 70.8
+  - map_id: split
+    mastery: 82.9
+  salary: 5700
+  contract_weeks_left: 52
+  morale: 79.4
+  stamina: 95.1
+  form: 57.7
+  personality_tags:
+  - analytical
+  - slow_starter
+  potential: 82.4
+- id: team_edward_gaming_chichoo
+  handle: CHICHOO
+  real_name: Wan Shunzhi
+  region: china
+  age: 25
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 82.9
+    aim_reactivity: 79.5
+    movement: 70.5
+    game_sense: 78.5
+    utility_usage: 86.9
+    positioning: 88.6
+    clutch_factor: 77.2
+    tilt_resistance: 89.7
+    composure: 89.1
+    comms_quality: 79.2
+  agent_pool:
+  - agent_id: viper
+    mastery: 91.3
+  - agent_id: cypher
+    mastery: 84.5
+  map_pool:
+  - map_id: ascent
+    mastery: 91.2
+  - map_id: bind
+    mastery: 84.2
+  - map_id: haven
+    mastery: 83.8
+  - map_id: lotus
+    mastery: 80.4
+  - map_id: split
+    mastery: 86.5
+  salary: 6500
+  contract_weeks_left: 73
+  morale: 64.3
+  stamina: 95.2
+  form: 52.4
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 83.0

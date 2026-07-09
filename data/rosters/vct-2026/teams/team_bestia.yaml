@@ -1,0 +1,225 @@
+id: team_bestia
+name: BESTIA
+tag: BST
+region: americas
+tier: 2
+captain_id: team_bestia_melser
+balance: 150000
+reputation: 30.0
+fan_count: 13500
+chemistry: 60.3
+players:
+- id: team_bestia_melser
+  handle: Melser
+  real_name: Marco Eliot Machuca Amaro
+  region: americas
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 52.3
+    aim_reactivity: 54.5
+    movement: 63.3
+    game_sense: 86.8
+    utility_usage: 69.7
+    positioning: 60.7
+    clutch_factor: 67.4
+    tilt_resistance: 65.2
+    composure: 74.6
+    comms_quality: 78.6
+  agent_pool:
+  - agent_id: omen
+    mastery: 72.0
+  - agent_id: viper
+    mastery: 70.7
+  map_pool:
+  - map_id: ascent
+    mastery: 80.9
+  - map_id: bind
+    mastery: 84.1
+  - map_id: haven
+    mastery: 70.2
+  - map_id: lotus
+    mastery: 65.7
+  - map_id: split
+    mastery: 66.9
+  salary: 4700
+  contract_weeks_left: 58
+  morale: 64.9
+  stamina: 87.5
+  form: 56.5
+  personality_tags:
+  - analytical
+  potential: 68.7
+- id: team_bestia_tacolilla
+  handle: Tacolilla
+  real_name: Vicente Compagnon
+  region: americas
+  age: 24
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 68.1
+    aim_reactivity: 72.3
+    movement: 74.3
+    game_sense: 62.4
+    utility_usage: 52.8
+    positioning: 63.7
+    clutch_factor: 64.4
+    tilt_resistance: 62.7
+    composure: 63.1
+    comms_quality: 62.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 75.5
+  - agent_id: raze
+    mastery: 75.0
+  map_pool:
+  - map_id: ascent
+    mastery: 84.8
+  - map_id: bind
+    mastery: 63.2
+  - map_id: haven
+    mastery: 61.0
+  - map_id: lotus
+    mastery: 67.8
+  - map_id: split
+    mastery: 75.0
+  salary: 4400
+  contract_weeks_left: 68
+  morale: 65.5
+  stamina: 94.1
+  form: 57.2
+  personality_tags:
+  - grinder
+  - streamer
+  potential: 65.0
+- id: team_bestia_david
+  handle: david
+  real_name: David Olivares
+  region: americas
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 47.3
+    aim_reactivity: 51.1
+    movement: 59.1
+    game_sense: 65.5
+    utility_usage: 68.4
+    positioning: 65.7
+    clutch_factor: 56.3
+    tilt_resistance: 54.2
+    composure: 61.6
+    comms_quality: 65.0
+  agent_pool:
+  - agent_id: sova
+    mastery: 76.4
+  - agent_id: skye
+    mastery: 63.3
+  map_pool:
+  - map_id: ascent
+    mastery: 59.8
+  - map_id: bind
+    mastery: 65.6
+  - map_id: haven
+    mastery: 66.7
+  - map_id: lotus
+    mastery: 70.4
+  - map_id: split
+    mastery: 55.3
+  salary: 3900
+  contract_weeks_left: 40
+  morale: 71.4
+  stamina: 82.6
+  form: 49.6
+  personality_tags:
+  - fan_favorite
+  - independent
+  potential: 69.0
+- id: team_bestia_chubizin
+  handle: chubizin
+  real_name: Martin Ferres
+  region: americas
+  age: 18
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 52.5
+    aim_reactivity: 53.1
+    movement: 56.5
+    game_sense: 57.5
+    utility_usage: 71.5
+    positioning: 69.3
+    clutch_factor: 62.5
+    tilt_resistance: 67.8
+    composure: 71.0
+    comms_quality: 59.2
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 69.8
+  - agent_id: cypher
+    mastery: 62.3
+  map_pool:
+  - map_id: ascent
+    mastery: 62.5
+  - map_id: bind
+    mastery: 63.4
+  - map_id: haven
+    mastery: 62.6
+  - map_id: lotus
+    mastery: 65.9
+  - map_id: split
+    mastery: 62.5
+  salary: 4000
+  contract_weeks_left: 40
+  morale: 69.1
+  stamina: 92.2
+  form: 57.4
+  personality_tags:
+  - grinder
+  - hot_head
+  - rookie
+  potential: 81.5
+- id: team_bestia_loss
+  handle: Loss
+  real_name: Unknown
+  region: americas
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 47.2
+    aim_reactivity: 50.0
+    movement: 56.4
+    game_sense: 53.7
+    utility_usage: 61.8
+    positioning: 55.3
+    clutch_factor: 54.2
+    tilt_resistance: 62.6
+    composure: 61.6
+    comms_quality: 59.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 71.0
+  - agent_id: sova
+    mastery: 67.3
+  map_pool:
+  - map_id: ascent
+    mastery: 61.0
+  - map_id: bind
+    mastery: 57.0
+  - map_id: haven
+    mastery: 58.0
+  - map_id: lotus
+    mastery: 62.2
+  - map_id: split
+    mastery: 62.4
+  salary: 3800
+  contract_weeks_left: 44
+  morale: 71.2
+  stamina: 83.3
+  form: 59.6
+  personality_tags:
+  - perfectionist
+  potential: 63.2

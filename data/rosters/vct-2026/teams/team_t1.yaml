@@ -1,0 +1,226 @@
+id: team_t1
+name: T1
+tag: T1
+region: pacific
+tier: 1
+captain_id: team_t1_munchkin
+balance: 840000
+reputation: 90.0
+fan_count: 729000
+chemistry: 73.8
+players:
+- id: team_t1_izu
+  handle: iZu
+  real_name: Ham Woo-joo
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 91.2
+    aim_reactivity: 78.5
+    movement: 70.8
+    game_sense: 74.4
+    utility_usage: 66.7
+    positioning: 81.0
+    clutch_factor: 76.5
+    tilt_resistance: 85.1
+    composure: 83.4
+    comms_quality: 72.7
+  agent_pool:
+  - agent_id: chamber
+    mastery: 89.0
+  - agent_id: killjoy
+    mastery: 90.8
+  map_pool:
+  - map_id: ascent
+    mastery: 77.4
+  - map_id: bind
+    mastery: 79.0
+  - map_id: haven
+    mastery: 75.9
+  - map_id: lotus
+    mastery: 87.2
+  - map_id: split
+    mastery: 71.7
+  salary: 6100
+  contract_weeks_left: 57
+  morale: 84.2
+  stamina: 96.9
+  form: 52.1
+  personality_tags:
+  - grinder
+  - hot_head
+  potential: 93.7
+- id: team_t1_buzz
+  handle: BuZz
+  real_name: Yu Byung-chul
+  region: pacific
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 77.9
+    aim_reactivity: 87.6
+    movement: 85.4
+    game_sense: 64.8
+    utility_usage: 72.6
+    positioning: 71.5
+    clutch_factor: 75.3
+    tilt_resistance: 67.9
+    composure: 78.2
+    comms_quality: 69.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 90.1
+  - agent_id: raze
+    mastery: 76.7
+  map_pool:
+  - map_id: ascent
+    mastery: 82.3
+  - map_id: bind
+    mastery: 79.4
+  - map_id: haven
+    mastery: 84.3
+  - map_id: lotus
+    mastery: 77.9
+  - map_id: split
+    mastery: 76.3
+  salary: 5900
+  contract_weeks_left: 35
+  morale: 62.9
+  stamina: 88.9
+  form: 58.0
+  personality_tags:
+  - slow_starter
+  potential: 79.5
+- id: team_t1_stax
+  handle: stax
+  real_name: Kim Gu-taek
+  region: pacific
+  age: 26
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 70.9
+    aim_reactivity: 70.6
+    movement: 74.7
+    game_sense: 74.6
+    utility_usage: 87.5
+    positioning: 74.4
+    clutch_factor: 72.1
+    tilt_resistance: 66.9
+    composure: 76.4
+    comms_quality: 86.7
+  agent_pool:
+  - agent_id: skye
+    mastery: 88.0
+  - agent_id: sova
+    mastery: 83.8
+  map_pool:
+  - map_id: ascent
+    mastery: 67.4
+  - map_id: bind
+    mastery: 82.0
+  - map_id: haven
+    mastery: 86.4
+  - map_id: lotus
+    mastery: 83.0
+  - map_id: split
+    mastery: 99.0
+  salary: 5600
+  contract_weeks_left: 44
+  morale: 70.1
+  stamina: 80.1
+  form: 51.9
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 77.7
+- id: team_t1_meteor
+  handle: Meteor
+  real_name: Kim Tae-oh
+  region: pacific
+  age: 24
+  role: flex
+  playstyle: anchor
+  attributes:
+    aim_precision: 70.7
+    aim_reactivity: 64.3
+    movement: 63.6
+    game_sense: 69.5
+    utility_usage: 75.6
+    positioning: 86.5
+    clutch_factor: 69.2
+    tilt_resistance: 81.4
+    composure: 78.3
+    comms_quality: 71.9
+  agent_pool:
+  - agent_id: viper
+    mastery: 85.2
+  - agent_id: killjoy
+    mastery: 80.4
+  - agent_id: phoenix
+    mastery: 69.3
+  map_pool:
+  - map_id: ascent
+    mastery: 83.0
+  - map_id: bind
+    mastery: 85.3
+  - map_id: haven
+    mastery: 64.4
+  - map_id: lotus
+    mastery: 75.6
+  - map_id: split
+    mastery: 79.7
+  salary: 5500
+  contract_weeks_left: 78
+  morale: 60.0
+  stamina: 92.0
+  form: 46.0
+  personality_tags:
+  - perfectionist
+  potential: 74.8
+- id: team_t1_munchkin
+  handle: Munchkin
+  real_name: Byeon Sang-beom
+  region: pacific
+  age: 26
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 64.3
+    aim_reactivity: 61.6
+    movement: 74.5
+    game_sense: 78.5
+    utility_usage: 78.3
+    positioning: 67.8
+    clutch_factor: 61.4
+    tilt_resistance: 73.8
+    composure: 70.7
+    comms_quality: 87.8
+  agent_pool:
+  - agent_id: omen
+    mastery: 82.6
+  - agent_id: viper
+    mastery: 78.2
+  map_pool:
+  - map_id: ascent
+    mastery: 75.7
+  - map_id: bind
+    mastery: 76.3
+  - map_id: haven
+    mastery: 77.5
+  - map_id: lotus
+    mastery: 81.2
+  - map_id: split
+    mastery: 87.3
+  salary: 5400
+  contract_weeks_left: 56
+  morale: 61.4
+  stamina: 87.6
+  form: 59.9
+  personality_tags:
+  - grinder
+  - hot_head
+  potential: 75.4

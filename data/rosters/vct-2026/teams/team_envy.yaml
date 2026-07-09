@@ -1,0 +1,229 @@
+id: team_envy
+name: ENVY
+tag: ENVY
+region: americas
+tier: 1
+captain_id: team_envy_rossy
+balance: 648000
+reputation: 58.0
+fan_count: 302760
+chemistry: 66.7
+players:
+- id: team_envy_rossy
+  handle: Rossy
+  real_name: Daniel Abedrabbo
+  region: americas
+  age: 25
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 63.2
+    aim_reactivity: 66.5
+    movement: 75.1
+    game_sense: 85.0
+    utility_usage: 71.7
+    positioning: 71.4
+    clutch_factor: 71.8
+    tilt_resistance: 75.4
+    composure: 83.9
+    comms_quality: 84.7
+  agent_pool:
+  - agent_id: sova
+    mastery: 90.9
+  - agent_id: viper
+    mastery: 80.8
+  - agent_id: omen
+    mastery: 81.1
+  map_pool:
+  - map_id: ascent
+    mastery: 78.2
+  - map_id: bind
+    mastery: 87.7
+  - map_id: haven
+    mastery: 92.5
+  - map_id: lotus
+    mastery: 73.5
+  - map_id: split
+    mastery: 78.1
+  salary: 5700
+  contract_weeks_left: 41
+  morale: 62.7
+  stamina: 92.0
+  form: 52.5
+  personality_tags:
+  - independent
+  - team_player
+  potential: 74.9
+- id: team_envy_keznit
+  handle: keznit
+  real_name: Angelo Mori
+  region: americas
+  age: 25
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 85.1
+    aim_reactivity: 88.0
+    movement: 82.3
+    game_sense: 70.1
+    utility_usage: 66.9
+    positioning: 77.1
+    clutch_factor: 68.0
+    tilt_resistance: 69.6
+    composure: 75.7
+    comms_quality: 77.8
+  agent_pool:
+  - agent_id: raze
+    mastery: 89.4
+  - agent_id: jett
+    mastery: 91.4
+  map_pool:
+  - map_id: ascent
+    mastery: 85.2
+  - map_id: bind
+    mastery: 81.9
+  - map_id: haven
+    mastery: 79.1
+  - map_id: lotus
+    mastery: 86.5
+  - map_id: split
+    mastery: 92.9
+  salary: 5900
+  contract_weeks_left: 51
+  morale: 62.9
+  stamina: 89.2
+  form: 52.3
+  personality_tags:
+  - flashy
+  - team_player
+  potential: 76.1
+- id: team_envy_demon1
+  handle: Demon1
+  real_name: Max Mazanov
+  region: americas
+  age: 25
+  role: sentinel
+  playstyle: awper
+  attributes:
+    aim_precision: 84.1
+    aim_reactivity: 79.7
+    movement: 70.3
+    game_sense: 72.8
+    utility_usage: 67.0
+    positioning: 76.4
+    clutch_factor: 80.4
+    tilt_resistance: 75.6
+    composure: 80.9
+    comms_quality: 71.2
+  agent_pool:
+  - agent_id: chamber
+    mastery: 91.8
+  - agent_id: killjoy
+    mastery: 81.3
+  - agent_id: jett
+    mastery: 89.7
+  map_pool:
+  - map_id: ascent
+    mastery: 83.4
+  - map_id: bind
+    mastery: 84.1
+  - map_id: haven
+    mastery: 86.4
+  - map_id: lotus
+    mastery: 76.5
+  - map_id: split
+    mastery: 92.2
+  salary: 5900
+  contract_weeks_left: 53
+  morale: 79.2
+  stamina: 98.0
+  form: 50.3
+  personality_tags:
+  - clutch_gene
+  - quiet
+  potential: 75.9
+- id: team_envy_eggsterr
+  handle: Eggsterr
+  real_name: Evan Grady
+  region: americas
+  age: 20
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 55.3
+    aim_reactivity: 58.5
+    movement: 63.3
+    game_sense: 72.2
+    utility_usage: 76.8
+    positioning: 62.5
+    clutch_factor: 61.1
+    tilt_resistance: 62.0
+    composure: 66.0
+    comms_quality: 70.5
+  agent_pool:
+  - agent_id: omen
+    mastery: 72.6
+  - agent_id: phoenix
+    mastery: 71.4
+  map_pool:
+  - map_id: ascent
+    mastery: 59.8
+  - map_id: bind
+    mastery: 66.5
+  - map_id: haven
+    mastery: 64.0
+  - map_id: lotus
+    mastery: 70.3
+  - map_id: split
+    mastery: 65.6
+  salary: 4400
+  contract_weeks_left: 35
+  morale: 71.6
+  stamina: 94.1
+  form: 47.0
+  personality_tags:
+  - hot_head
+  - independent
+  potential: 78.6
+- id: team_envy_glyph
+  handle: GLYPH
+  real_name: Conner Garcia
+  region: americas
+  age: 21
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 65.4
+    aim_reactivity: 59.9
+    movement: 63.4
+    game_sense: 70.6
+    utility_usage: 75.8
+    positioning: 67.9
+    clutch_factor: 72.5
+    tilt_resistance: 67.2
+    composure: 75.2
+    comms_quality: 76.8
+  agent_pool:
+  - agent_id: omen
+    mastery: 84.0
+  - agent_id: viper
+    mastery: 74.5
+  map_pool:
+  - map_id: ascent
+    mastery: 71.1
+  - map_id: bind
+    mastery: 74.9
+  - map_id: haven
+    mastery: 68.0
+  - map_id: lotus
+    mastery: 70.1
+  - map_id: split
+    mastery: 80.3
+  salary: 4800
+  contract_weeks_left: 32
+  morale: 83.5
+  stamina: 96.1
+  form: 50.2
+  personality_tags:
+  - perfectionist
+  potential: 72.9

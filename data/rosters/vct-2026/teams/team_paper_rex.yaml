@@ -1,0 +1,225 @@
+id: team_paper_rex
+name: Paper Rex
+tag: PRX
+region: pacific
+tier: 1
+captain_id: team_paper_rex_d4v41
+balance: 852000
+reputation: 92.0
+fan_count: 761760
+chemistry: 78.2
+players:
+- id: team_paper_rex_something
+  handle: something
+  real_name: Ilia Petrov
+  region: pacific
+  age: 21
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 98.9
+    aim_reactivity: 91.3
+    movement: 85.8
+    game_sense: 86.3
+    utility_usage: 79.8
+    positioning: 86.2
+    clutch_factor: 94.3
+    tilt_resistance: 84.5
+    composure: 81.9
+    comms_quality: 78.4
+  agent_pool:
+  - agent_id: jett
+    mastery: 99.0
+  - agent_id: phoenix
+    mastery: 82.6
+  map_pool:
+  - map_id: ascent
+    mastery: 96.3
+  - map_id: bind
+    mastery: 93.7
+  - map_id: haven
+    mastery: 92.5
+  - map_id: lotus
+    mastery: 95.0
+  - map_id: split
+    mastery: 86.2
+  salary: 7300
+  contract_weeks_left: 35
+  morale: 67.6
+  stamina: 96.6
+  form: 46.6
+  personality_tags:
+  - independent
+  - quiet
+  potential: 96.0
+- id: team_paper_rex_jinggg
+  handle: Jinggg
+  real_name: Wang Jing Jie
+  region: pacific
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 93.8
+    aim_reactivity: 93.7
+    movement: 92.9
+    game_sense: 77.6
+    utility_usage: 70.6
+    positioning: 83.7
+    clutch_factor: 82.8
+    tilt_resistance: 78.4
+    composure: 83.1
+    comms_quality: 83.1
+  agent_pool:
+  - agent_id: raze
+    mastery: 98.2
+  - agent_id: phoenix
+    mastery: 83.3
+  map_pool:
+  - map_id: ascent
+    mastery: 88.1
+  - map_id: bind
+    mastery: 89.0
+  - map_id: haven
+    mastery: 91.0
+  - map_id: lotus
+    mastery: 94.9
+  - map_id: split
+    mastery: 96.2
+  salary: 7100
+  contract_weeks_left: 55
+  morale: 73.6
+  stamina: 88.0
+  form: 48.0
+  personality_tags:
+  - fan_favorite
+  - flashy
+  potential: 96.0
+- id: team_paper_rex_f0rsaken
+  handle: f0rsakeN
+  real_name: Jason Susanto
+  region: pacific
+  age: 21
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 82.4
+    aim_reactivity: 83.7
+    movement: 87.6
+    game_sense: 94.0
+    utility_usage: 74.3
+    positioning: 84.0
+    clutch_factor: 90.6
+    tilt_resistance: 81.1
+    composure: 83.3
+    comms_quality: 70.6
+  agent_pool:
+  - agent_id: omen
+    mastery: 93.4
+  - agent_id: jett
+    mastery: 97.4
+  map_pool:
+  - map_id: ascent
+    mastery: 86.1
+  - map_id: bind
+    mastery: 84.0
+  - map_id: haven
+    mastery: 86.4
+  - map_id: lotus
+    mastery: 94.4
+  - map_id: split
+    mastery: 94.9
+  salary: 6900
+  contract_weeks_left: 54
+  morale: 68.4
+  stamina: 92.5
+  form: 55.0
+  personality_tags:
+  - flashy
+  - perfectionist
+  potential: 91.7
+- id: team_paper_rex_invy
+  handle: invy
+  real_name: Adrian Jiggs Aisa Reyes
+  region: pacific
+  age: 23
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 60.3
+    aim_reactivity: 67.7
+    movement: 74.8
+    game_sense: 76.1
+    utility_usage: 86.8
+    positioning: 77.2
+    clutch_factor: 75.1
+    tilt_resistance: 77.3
+    composure: 80.2
+    comms_quality: 83.1
+  agent_pool:
+  - agent_id: skye
+    mastery: 92.3
+  - agent_id: sova
+    mastery: 85.3
+  map_pool:
+  - map_id: ascent
+    mastery: 76.7
+  - map_id: bind
+    mastery: 69.0
+  - map_id: haven
+    mastery: 73.5
+  - map_id: lotus
+    mastery: 85.1
+  - map_id: split
+    mastery: 88.8
+  salary: 5900
+  contract_weeks_left: 58
+  morale: 79.4
+  stamina: 91.8
+  form: 50.6
+  personality_tags:
+  - fan_favorite
+  potential: 83.5
+- id: team_paper_rex_d4v41
+  handle: d4v41
+  real_name: Ahmad Khalish Rusyaidee bin Nordin
+  region: pacific
+  age: 24
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 70.2
+    aim_reactivity: 71.8
+    movement: 79.2
+    game_sense: 94.8
+    utility_usage: 88.1
+    positioning: 79.4
+    clutch_factor: 80.2
+    tilt_resistance: 74.6
+    composure: 88.9
+    comms_quality: 90.3
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 97.3
+  - agent_id: viper
+    mastery: 86.0
+  map_pool:
+  - map_id: ascent
+    mastery: 93.7
+  - map_id: bind
+    mastery: 82.2
+  - map_id: haven
+    mastery: 88.6
+  - map_id: lotus
+    mastery: 87.7
+  - map_id: split
+    mastery: 81.3
+  salary: 6400
+  contract_weeks_left: 55
+  morale: 70.7
+  stamina: 80.4
+  form: 51.7
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  potential: 83.5

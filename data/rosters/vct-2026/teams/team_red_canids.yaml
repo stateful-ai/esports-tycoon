@@ -1,0 +1,225 @@
+id: team_red_canids
+name: RED Canids
+tag: RED
+region: americas
+tier: 2
+captain_id: team_red_canids_prozin
+balance: 159000
+reputation: 33.0
+fan_count: 16335
+chemistry: 76.4
+players:
+- id: team_red_canids_prozin
+  handle: prozin
+  real_name: Wallacy Sales
+  region: americas
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 47.3
+    aim_reactivity: 50.4
+    movement: 55.0
+    game_sense: 75.3
+    utility_usage: 63.1
+    positioning: 53.0
+    clutch_factor: 53.4
+    tilt_resistance: 56.7
+    composure: 55.4
+    comms_quality: 78.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 71.8
+  - agent_id: viper
+    mastery: 68.8
+  map_pool:
+  - map_id: ascent
+    mastery: 62.6
+  - map_id: bind
+    mastery: 68.1
+  - map_id: haven
+    mastery: 61.3
+  - map_id: lotus
+    mastery: 62.1
+  - map_id: split
+    mastery: 57.0
+  salary: 3700
+  contract_weeks_left: 73
+  morale: 61.8
+  stamina: 94.5
+  form: 46.0
+  personality_tags:
+  - clutch_gene
+  - team_player
+  potential: 59.2
+- id: team_red_canids_forbanz
+  handle: forbanz
+  real_name: Ithallo Paula
+  region: americas
+  age: 24
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 62.0
+    aim_reactivity: 64.3
+    movement: 66.8
+    game_sense: 47.1
+    utility_usage: 49.7
+    positioning: 52.8
+    clutch_factor: 52.8
+    tilt_resistance: 47.7
+    composure: 57.4
+    comms_quality: 49.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 67.9
+  - agent_id: raze
+    mastery: 67.0
+  map_pool:
+  - map_id: ascent
+    mastery: 63.2
+  - map_id: bind
+    mastery: 56.0
+  - map_id: haven
+    mastery: 62.6
+  - map_id: lotus
+    mastery: 59.6
+  - map_id: split
+    mastery: 63.8
+  salary: 3700
+  contract_weeks_left: 68
+  morale: 69.2
+  stamina: 96.9
+  form: 48.9
+  personality_tags:
+  - grinder
+  - slow_starter
+  potential: 56.9
+- id: team_red_canids_sw
+  handle: sw
+  real_name: Jadisson Rayan
+  region: americas
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 47.2
+    aim_reactivity: 47.5
+    movement: 50.3
+    game_sense: 57.7
+    utility_usage: 72.5
+    positioning: 47.1
+    clutch_factor: 50.3
+    tilt_resistance: 53.3
+    composure: 64.2
+    comms_quality: 61.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 72.7
+  - agent_id: skye
+    mastery: 67.7
+  map_pool:
+  - map_id: ascent
+    mastery: 72.3
+  - map_id: bind
+    mastery: 65.0
+  - map_id: haven
+    mastery: 72.8
+  - map_id: lotus
+    mastery: 60.7
+  - map_id: split
+    mastery: 60.5
+  salary: 3500
+  contract_weeks_left: 51
+  morale: 67.0
+  stamina: 88.6
+  form: 48.4
+  personality_tags:
+  - analytical
+  potential: 62.8
+- id: team_red_canids_rglmeister
+  handle: RgLMeister
+  real_name: Matheus Rodigoli
+  region: americas
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 49.0
+    aim_reactivity: 46.7
+    movement: 50.9
+    game_sense: 62.6
+    utility_usage: 67.9
+    positioning: 56.7
+    clutch_factor: 46.8
+    tilt_resistance: 52.9
+    composure: 53.2
+    comms_quality: 63.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 65.8
+  - agent_id: killjoy
+    mastery: 60.9
+  map_pool:
+  - map_id: ascent
+    mastery: 56.5
+  - map_id: bind
+    mastery: 66.8
+  - map_id: haven
+    mastery: 55.7
+  - map_id: lotus
+    mastery: 63.4
+  - map_id: split
+    mastery: 58.2
+  salary: 3500
+  contract_weeks_left: 43
+  morale: 61.4
+  stamina: 86.3
+  form: 55.3
+  personality_tags:
+  - quiet
+  - team_player
+  potential: 63.4
+- id: team_red_canids_urango
+  handle: Urango
+  real_name: Victor Rodrigues
+  region: americas
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 59.8
+    aim_reactivity: 50.5
+    movement: 46.3
+    game_sense: 47.6
+    utility_usage: 58.4
+    positioning: 66.9
+    clutch_factor: 52.5
+    tilt_resistance: 59.5
+    composure: 66.9
+    comms_quality: 48.8
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 68.1
+  - agent_id: cypher
+    mastery: 55.8
+  map_pool:
+  - map_id: ascent
+    mastery: 64.5
+  - map_id: bind
+    mastery: 71.6
+  - map_id: haven
+    mastery: 56.6
+  - map_id: lotus
+    mastery: 66.5
+  - map_id: split
+    mastery: 54.1
+  salary: 3400
+  contract_weeks_left: 62
+  morale: 69.1
+  stamina: 98.5
+  form: 55.3
+  personality_tags:
+  - clutch_gene
+  - slow_starter
+  potential: 64.3

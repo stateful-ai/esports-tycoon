@@ -1,0 +1,225 @@
+id: team_any_questions_gaming
+name: Any Questions Gaming
+tag: AQG
+region: china
+tier: 2
+captain_id: team_any_questions_gaming_ffs
+balance: 150000
+reputation: 30.0
+fan_count: 13500
+chemistry: 73.8
+players:
+- id: team_any_questions_gaming_ffs
+  handle: FFs
+  real_name: Leong Cheok Nam
+  region: china
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 42.8
+    aim_reactivity: 44.4
+    movement: 53.9
+    game_sense: 68.8
+    utility_usage: 58.7
+    positioning: 55.7
+    clutch_factor: 54.8
+    tilt_resistance: 56.8
+    composure: 61.2
+    comms_quality: 72.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 69.8
+  - agent_id: clove
+    mastery: 68.1
+  map_pool:
+  - map_id: ascent
+    mastery: 67.4
+  - map_id: bind
+    mastery: 74.9
+  - map_id: haven
+    mastery: 72.1
+  - map_id: lotus
+    mastery: 63.7
+  - map_id: split
+    mastery: 60.3
+  salary: 3800
+  contract_weeks_left: 31
+  morale: 67.5
+  stamina: 89.2
+  form: 50.9
+  personality_tags:
+  - fan_favorite
+  - independent
+  potential: 59.1
+- id: team_any_questions_gaming_juicy
+  handle: juicy
+  real_name: Tyler James Aeria
+  region: china
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 69.7
+    aim_reactivity: 65.5
+    movement: 74.6
+    game_sense: 60.5
+    utility_usage: 50.4
+    positioning: 58.9
+    clutch_factor: 60.2
+    tilt_resistance: 56.8
+    composure: 58.1
+    comms_quality: 61.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 71.0
+  - agent_id: raze
+    mastery: 69.2
+  map_pool:
+  - map_id: ascent
+    mastery: 75.1
+  - map_id: bind
+    mastery: 72.2
+  - map_id: haven
+    mastery: 76.5
+  - map_id: lotus
+    mastery: 63.0
+  - map_id: split
+    mastery: 71.0
+  salary: 4200
+  contract_weeks_left: 70
+  morale: 72.4
+  stamina: 94.4
+  form: 55.6
+  personality_tags:
+  - analytical
+  - independent
+  potential: 64.4
+- id: team_any_questions_gaming_dannyy
+  handle: dannyy
+  real_name: Wang Pengcheng
+  region: china
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 49.9
+    aim_reactivity: 51.2
+    movement: 50.3
+    game_sense: 60.3
+    utility_usage: 68.2
+    positioning: 56.3
+    clutch_factor: 53.7
+    tilt_resistance: 55.6
+    composure: 59.8
+    comms_quality: 64.1
+  agent_pool:
+  - agent_id: sova
+    mastery: 72.2
+  - agent_id: skye
+    mastery: 61.3
+  map_pool:
+  - map_id: ascent
+    mastery: 64.1
+  - map_id: bind
+    mastery: 59.7
+  - map_id: haven
+    mastery: 67.3
+  - map_id: lotus
+    mastery: 57.8
+  - map_id: split
+    mastery: 73.3
+  salary: 3700
+  contract_weeks_left: 48
+  morale: 61.7
+  stamina: 94.1
+  form: 59.2
+  personality_tags:
+  - perfectionist
+  - quiet
+  potential: 67.9
+- id: team_any_questions_gaming_s1mon
+  handle: S1Mon
+  real_name: Hsieh Meng-hsun
+  region: china
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 49.5
+    aim_reactivity: 49.7
+    movement: 52.6
+    game_sense: 54.9
+    utility_usage: 60.1
+    positioning: 70.9
+    clutch_factor: 56.6
+    tilt_resistance: 65.9
+    composure: 67.9
+    comms_quality: 57.6
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 78.1
+  - agent_id: cypher
+    mastery: 60.7
+  map_pool:
+  - map_id: ascent
+    mastery: 62.5
+  - map_id: bind
+    mastery: 69.0
+  - map_id: haven
+    mastery: 72.1
+  - map_id: lotus
+    mastery: 54.6
+  - map_id: split
+    mastery: 57.1
+  salary: 3700
+  contract_weeks_left: 51
+  morale: 70.0
+  stamina: 86.6
+  form: 56.0
+  personality_tags:
+  - perfectionist
+  potential: 64.7
+- id: team_any_questions_gaming_5cm
+  handle: 5CM
+  real_name: Ding Yipeng
+  region: china
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 49.1
+    aim_reactivity: 44.1
+    movement: 53.1
+    game_sense: 60.6
+    utility_usage: 64.3
+    positioning: 46.8
+    clutch_factor: 57.5
+    tilt_resistance: 52.3
+    composure: 56.9
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 68.2
+  - agent_id: omen
+    mastery: 56.3
+  map_pool:
+  - map_id: ascent
+    mastery: 59.2
+  - map_id: bind
+    mastery: 62.6
+  - map_id: haven
+    mastery: 53.8
+  - map_id: lotus
+    mastery: 69.1
+  - map_id: split
+    mastery: 62.7
+  salary: 3500
+  contract_weeks_left: 69
+  morale: 77.6
+  stamina: 88.8
+  form: 55.9
+  personality_tags:
+  - perfectionist
+  - slow_starter
+  potential: 67.5

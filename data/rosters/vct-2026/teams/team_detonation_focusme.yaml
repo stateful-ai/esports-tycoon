@@ -1,0 +1,225 @@
+id: team_detonation_focusme
+name: DetonatioN FocusMe
+tag: DFM
+region: pacific
+tier: 1
+captain_id: team_detonation_focusme_ssees
+balance: 720000
+reputation: 70.0
+fan_count: 441000
+chemistry: 69.4
+players:
+- id: team_detonation_focusme_meiy
+  handle: Meiy
+  real_name: Ibuki Seki
+  region: pacific
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 86.5
+    aim_reactivity: 92.1
+    movement: 80.4
+    game_sense: 67.9
+    utility_usage: 72.4
+    positioning: 71.9
+    clutch_factor: 72.8
+    tilt_resistance: 61.6
+    composure: 74.6
+    comms_quality: 68.8
+  agent_pool:
+  - agent_id: jett
+    mastery: 88.6
+  - agent_id: raze
+    mastery: 91.4
+  map_pool:
+  - map_id: ascent
+    mastery: 81.0
+  - map_id: bind
+    mastery: 83.4
+  - map_id: haven
+    mastery: 82.3
+  - map_id: lotus
+    mastery: 77.9
+  - map_id: split
+    mastery: 81.0
+  salary: 5900
+  contract_weeks_left: 62
+  morale: 68.7
+  stamina: 89.4
+  form: 50.4
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 80.4
+- id: team_detonation_focusme_caedye
+  handle: Caedye
+  real_name: Amon Mateus Okakura
+  region: pacific
+  age: 20
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 66.9
+    aim_reactivity: 61.0
+    movement: 67.5
+    game_sense: 69.8
+    utility_usage: 70.7
+    positioning: 76.5
+    clutch_factor: 67.5
+    tilt_resistance: 75.4
+    composure: 71.4
+    comms_quality: 67.9
+  agent_pool:
+  - agent_id: cypher
+    mastery: 83.0
+  - agent_id: killjoy
+    mastery: 76.1
+  map_pool:
+  - map_id: ascent
+    mastery: 81.9
+  - map_id: bind
+    mastery: 69.0
+  - map_id: haven
+    mastery: 75.3
+  - map_id: lotus
+    mastery: 71.3
+  - map_id: split
+    mastery: 82.6
+  salary: 5000
+  contract_weeks_left: 39
+  morale: 73.9
+  stamina: 80.3
+  form: 46.5
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 84.7
+- id: team_detonation_focusme_akame
+  handle: akame
+  real_name: Yu Gwang-hui
+  region: pacific
+  age: 22
+  role: flex
+  playstyle: entry
+  attributes:
+    aim_precision: 80.3
+    aim_reactivity: 82.0
+    movement: 71.3
+    game_sense: 64.2
+    utility_usage: 64.3
+    positioning: 67.1
+    clutch_factor: 67.0
+    tilt_resistance: 62.7
+    composure: 71.2
+    comms_quality: 67.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 75.1
+  - agent_id: sova
+    mastery: 76.3
+  map_pool:
+  - map_id: ascent
+    mastery: 68.9
+  - map_id: bind
+    mastery: 71.1
+  - map_id: haven
+    mastery: 69.8
+  - map_id: lotus
+    mastery: 70.8
+  - map_id: split
+    mastery: 83.9
+  salary: 4900
+  contract_weeks_left: 54
+  morale: 76.2
+  stamina: 93.1
+  form: 52.7
+  personality_tags:
+  - analytical
+  potential: 72.8
+- id: team_detonation_focusme_ssees
+  handle: SSeeS
+  real_name: Tomonori Okimura
+  region: pacific
+  age: 26
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 57.4
+    aim_reactivity: 67.8
+    movement: 63.2
+    game_sense: 82.8
+    utility_usage: 73.1
+    positioning: 66.4
+    clutch_factor: 64.6
+    tilt_resistance: 65.2
+    composure: 71.5
+    comms_quality: 75.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 74.9
+  - agent_id: sova
+    mastery: 70.9
+  map_pool:
+  - map_id: ascent
+    mastery: 66.2
+  - map_id: bind
+    mastery: 64.9
+  - map_id: haven
+    mastery: 71.9
+  - map_id: lotus
+    mastery: 73.9
+  - map_id: split
+    mastery: 78.6
+  salary: 4700
+  contract_weeks_left: 45
+  morale: 75.7
+  stamina: 86.6
+  form: 47.3
+  personality_tags:
+  - slow_starter
+  - streamer
+  potential: 68.8
+- id: team_detonation_focusme_yatsuka
+  handle: yatsuka
+  real_name: Kazuya Ikeda
+  region: pacific
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 55.3
+    aim_reactivity: 58.6
+    movement: 60.1
+    game_sense: 72.0
+    utility_usage: 76.8
+    positioning: 63.5
+    clutch_factor: 66.4
+    tilt_resistance: 59.8
+    composure: 71.5
+    comms_quality: 70.6
+  agent_pool:
+  - agent_id: skye
+    mastery: 68.6
+  - agent_id: sova
+    mastery: 70.7
+  map_pool:
+  - map_id: ascent
+    mastery: 66.2
+  - map_id: bind
+    mastery: 63.9
+  - map_id: haven
+    mastery: 58.1
+  - map_id: lotus
+    mastery: 78.5
+  - map_id: split
+    mastery: 70.3
+  salary: 4500
+  contract_weeks_left: 44
+  morale: 83.7
+  stamina: 97.6
+  form: 45.7
+  personality_tags:
+  - streamer
+  - team_player
+  potential: 67.5

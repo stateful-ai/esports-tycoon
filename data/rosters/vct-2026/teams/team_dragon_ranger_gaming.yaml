@@ -1,0 +1,225 @@
+id: team_dragon_ranger_gaming
+name: Dragon Ranger Gaming
+tag: DRG
+region: china
+tier: 1
+captain_id: team_dragon_ranger_gaming_nicc
+balance: 588000
+reputation: 48.0
+fan_count: 207360
+chemistry: 63.8
+players:
+- id: team_dragon_ranger_gaming_vo0kashu
+  handle: vo0kashu
+  real_name: Ilya Ushakov
+  region: china
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 82.4
+    aim_reactivity: 81.5
+    movement: 76.6
+    game_sense: 80.9
+    utility_usage: 79.6
+    positioning: 90.9
+    clutch_factor: 78.5
+    tilt_resistance: 85.5
+    composure: 90.9
+    comms_quality: 84.4
+  agent_pool:
+  - agent_id: cypher
+    mastery: 90.3
+  - agent_id: viper
+    mastery: 90.7
+  map_pool:
+  - map_id: ascent
+    mastery: 79.1
+  - map_id: bind
+    mastery: 88.9
+  - map_id: haven
+    mastery: 95.3
+  - map_id: lotus
+    mastery: 86.5
+  - map_id: split
+    mastery: 84.9
+  salary: 6800
+  contract_weeks_left: 40
+  morale: 81.1
+  stamina: 98.1
+  form: 59.1
+  personality_tags:
+  - fan_favorite
+  - flashy
+  potential: 92.0
+- id: team_dragon_ranger_gaming_life
+  handle: Life
+  real_name: Qu Donghao
+  region: china
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.4
+    aim_reactivity: 84.4
+    movement: 79.6
+    game_sense: 59.5
+    utility_usage: 62.5
+    positioning: 70.8
+    clutch_factor: 75.9
+    tilt_resistance: 66.9
+    composure: 75.3
+    comms_quality: 67.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 86.2
+  - agent_id: raze
+    mastery: 83.7
+  map_pool:
+  - map_id: ascent
+    mastery: 78.3
+  - map_id: bind
+    mastery: 70.2
+  - map_id: haven
+    mastery: 74.5
+  - map_id: lotus
+    mastery: 75.8
+  - map_id: split
+    mastery: 78.2
+  salary: 5400
+  contract_weeks_left: 66
+  morale: 64.1
+  stamina: 97.2
+  form: 57.1
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 80.5
+- id: team_dragon_ranger_gaming_nicc
+  handle: Nicc
+  real_name: Shao Yi-chun
+  region: china
+  age: 24
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 63.8
+    aim_reactivity: 54.2
+    movement: 77.7
+    game_sense: 84.9
+    utility_usage: 86.9
+    positioning: 75.2
+    clutch_factor: 73.8
+    tilt_resistance: 74.0
+    composure: 74.3
+    comms_quality: 87.3
+  agent_pool:
+  - agent_id: skye
+    mastery: 89.1
+  - agent_id: sova
+    mastery: 87.3
+  map_pool:
+  - map_id: ascent
+    mastery: 89.6
+  - map_id: bind
+    mastery: 78.9
+  - map_id: haven
+    mastery: 81.1
+  - map_id: lotus
+    mastery: 74.6
+  - map_id: split
+    mastery: 75.3
+  salary: 5700
+  contract_weeks_left: 69
+  morale: 73.2
+  stamina: 92.8
+  form: 53.3
+  personality_tags:
+  - clutch_gene
+  - independent
+  potential: 75.3
+- id: team_dragon_ranger_gaming_spiritz1
+  handle: SpiritZ1
+  real_name: Lin Ting-yu
+  region: china
+  age: 21
+  role: duelist
+  playstyle: lurker
+  attributes:
+    aim_precision: 73.7
+    aim_reactivity: 75.5
+    movement: 72.5
+    game_sense: 80.0
+    utility_usage: 68.9
+    positioning: 81.8
+    clutch_factor: 80.9
+    tilt_resistance: 70.3
+    composure: 75.0
+    comms_quality: 61.2
+  agent_pool:
+  - agent_id: jett
+    mastery: 79.5
+  - agent_id: phoenix
+    mastery: 79.1
+  map_pool:
+  - map_id: ascent
+    mastery: 84.4
+  - map_id: bind
+    mastery: 85.3
+  - map_id: haven
+    mastery: 77.1
+  - map_id: lotus
+    mastery: 76.4
+  - map_id: split
+    mastery: 79.8
+  salary: 5600
+  contract_weeks_left: 52
+  morale: 69.1
+  stamina: 97.5
+  form: 49.2
+  personality_tags:
+  - analytical
+  potential: 86.2
+- id: team_dragon_ranger_gaming_verse
+  handle: Verse
+  real_name: Zhou Zijun
+  region: china
+  age: 20
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 63.3
+    aim_reactivity: 64.9
+    movement: 65.2
+    game_sense: 70.8
+    utility_usage: 83.6
+    positioning: 68.4
+    clutch_factor: 74.3
+    tilt_resistance: 66.5
+    composure: 67.0
+    comms_quality: 76.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 80.6
+  - agent_id: clove
+    mastery: 72.0
+  map_pool:
+  - map_id: ascent
+    mastery: 68.2
+  - map_id: bind
+    mastery: 68.2
+  - map_id: haven
+    mastery: 72.7
+  - map_id: lotus
+    mastery: 67.2
+  - map_id: split
+    mastery: 71.0
+  salary: 4900
+  contract_weeks_left: 59
+  morale: 82.2
+  stamina: 83.8
+  form: 51.0
+  personality_tags:
+  - quiet
+  - team_player
+  potential: 81.5

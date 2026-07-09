@@ -1,0 +1,226 @@
+id: team_joblife
+name: Joblife
+tag: JL
+region: emea
+tier: 2
+captain_id: team_joblife_doma
+balance: 156000
+reputation: 32.0
+fan_count: 15360
+chemistry: 71.6
+players:
+- id: team_joblife_doma
+  handle: doma
+  real_name: Domagoj Fancev
+  region: emea
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 49.3
+    aim_reactivity: 48.3
+    movement: 48.4
+    game_sense: 70.1
+    utility_usage: 64.5
+    positioning: 59.8
+    clutch_factor: 52.4
+    tilt_resistance: 51.8
+    composure: 65.0
+    comms_quality: 66.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 78.1
+  - agent_id: viper
+    mastery: 63.7
+  map_pool:
+  - map_id: ascent
+    mastery: 68.8
+  - map_id: bind
+    mastery: 62.9
+  - map_id: haven
+    mastery: 58.6
+  - map_id: lotus
+    mastery: 63.9
+  - map_id: split
+    mastery: 64.2
+  salary: 3800
+  contract_weeks_left: 55
+  morale: 79.3
+  stamina: 80.9
+  form: 49.4
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  potential: 63.2
+- id: team_joblife_runner
+  handle: runneR
+  real_name: Emil Trajkovski
+  region: emea
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 74.2
+    aim_reactivity: 78.5
+    movement: 72.2
+    game_sense: 51.7
+    utility_usage: 52.9
+    positioning: 66.9
+    clutch_factor: 59.8
+    tilt_resistance: 56.6
+    composure: 58.2
+    comms_quality: 60.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 73.5
+  - agent_id: raze
+    mastery: 67.6
+  map_pool:
+  - map_id: ascent
+    mastery: 71.2
+  - map_id: bind
+    mastery: 71.4
+  - map_id: haven
+    mastery: 70.0
+  - map_id: lotus
+    mastery: 65.6
+  - map_id: split
+    mastery: 52.6
+  salary: 4500
+  contract_weeks_left: 30
+  morale: 74.2
+  stamina: 82.3
+  form: 49.0
+  personality_tags:
+  - grinder
+  - streamer
+  potential: 74.9
+- id: team_joblife_unfake
+  handle: UNFAKE
+  real_name: Bartosz Bernacki
+  region: emea
+  age: 24
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 55.3
+    aim_reactivity: 60.5
+    movement: 49.2
+    game_sense: 56.4
+    utility_usage: 65.4
+    positioning: 76.7
+    clutch_factor: 54.8
+    tilt_resistance: 67.1
+    composure: 64.1
+    comms_quality: 60.6
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 70.6
+  - agent_id: cypher
+    mastery: 67.8
+  map_pool:
+  - map_id: ascent
+    mastery: 61.7
+  - map_id: bind
+    mastery: 58.0
+  - map_id: haven
+    mastery: 69.0
+  - map_id: lotus
+    mastery: 66.7
+  - map_id: split
+    mastery: 72.0
+  salary: 4100
+  contract_weeks_left: 74
+  morale: 73.2
+  stamina: 87.8
+  form: 57.7
+  personality_tags:
+  - flashy
+  - hot_head
+  potential: 64.4
+- id: team_joblife_kamyk
+  handle: kamyk
+  real_name: Maks Rychlewski
+  region: emea
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 52.6
+    aim_reactivity: 51.3
+    movement: 57.9
+    game_sense: 68.4
+    utility_usage: 68.6
+    positioning: 55.3
+    clutch_factor: 60.9
+    tilt_resistance: 59.3
+    composure: 66.0
+    comms_quality: 73.6
+  agent_pool:
+  - agent_id: sova
+    mastery: 67.6
+  - agent_id: skye
+    mastery: 74.6
+  map_pool:
+  - map_id: ascent
+    mastery: 65.8
+  - map_id: bind
+    mastery: 62.8
+  - map_id: haven
+    mastery: 63.5
+  - map_id: lotus
+    mastery: 63.8
+  - map_id: split
+    mastery: 73.9
+  salary: 3900
+  contract_weeks_left: 57
+  morale: 71.1
+  stamina: 95.4
+  form: 56.0
+  personality_tags:
+  - hot_head
+  - perfectionist
+  potential: 72.7
+- id: team_joblife_chiwa
+  handle: chiwa
+  real_name: Egor Stepanyuk
+  region: emea
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 48.1
+    aim_reactivity: 57.0
+    movement: 54.5
+    game_sense: 64.7
+    utility_usage: 71.9
+    positioning: 58.6
+    clutch_factor: 55.6
+    tilt_resistance: 58.1
+    composure: 63.0
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: viper
+    mastery: 71.2
+  - agent_id: phoenix
+    mastery: 67.3
+  map_pool:
+  - map_id: ascent
+    mastery: 69.9
+  - map_id: bind
+    mastery: 74.7
+  - map_id: haven
+    mastery: 59.2
+  - map_id: lotus
+    mastery: 61.2
+  - map_id: split
+    mastery: 57.0
+  salary: 3900
+  contract_weeks_left: 56
+  morale: 72.3
+  stamina: 92.7
+  form: 58.4
+  personality_tags:
+  - independent
+  - quiet
+  potential: 74.7

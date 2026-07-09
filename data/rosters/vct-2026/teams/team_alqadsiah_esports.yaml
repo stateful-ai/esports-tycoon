@@ -1,0 +1,226 @@
+id: team_alqadsiah_esports
+name: AlQadsiah Esports
+tag: QAD
+region: emea
+tier: 2
+captain_id: team_alqadsiah_esports_yassien
+balance: 174000
+reputation: 38.0
+fan_count: 21660
+chemistry: 72.8
+players:
+- id: team_alqadsiah_esports_yassien
+  handle: Yassien
+  real_name: Yassien Ahmed
+  region: emea
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 52.2
+    aim_reactivity: 51.8
+    movement: 56.7
+    game_sense: 65.3
+    utility_usage: 69.1
+    positioning: 55.6
+    clutch_factor: 54.1
+    tilt_resistance: 57.0
+    composure: 67.0
+    comms_quality: 65.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 65.2
+  - agent_id: viper
+    mastery: 58.7
+  map_pool:
+  - map_id: ascent
+    mastery: 63.5
+  - map_id: bind
+    mastery: 61.9
+  - map_id: haven
+    mastery: 62.0
+  - map_id: lotus
+    mastery: 70.1
+  - map_id: split
+    mastery: 66.8
+  salary: 3900
+  contract_weeks_left: 47
+  morale: 63.6
+  stamina: 80.3
+  form: 47.4
+  personality_tags:
+  - flashy
+  - independent
+  potential: 62.1
+- id: team_alqadsiah_esports_spyzera
+  handle: SpYzera
+  real_name: Abed Doughan
+  region: emea
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 75.3
+    aim_reactivity: 72.4
+    movement: 75.3
+    game_sense: 62.3
+    utility_usage: 52.1
+    positioning: 54.2
+    clutch_factor: 60.2
+    tilt_resistance: 51.6
+    composure: 64.1
+    comms_quality: 63.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 76.4
+  - agent_id: raze
+    mastery: 69.2
+  map_pool:
+  - map_id: ascent
+    mastery: 57.5
+  - map_id: bind
+    mastery: 65.2
+  - map_id: haven
+    mastery: 77.0
+  - map_id: lotus
+    mastery: 73.5
+  - map_id: split
+    mastery: 60.1
+  salary: 4400
+  contract_weeks_left: 45
+  morale: 62.8
+  stamina: 94.1
+  form: 47.3
+  personality_tags:
+  - grinder
+  - quiet
+  potential: 67.9
+- id: team_alqadsiah_esports_sickrey
+  handle: sickrey
+  real_name: Nikolay Novozhilov
+  region: emea
+  age: 22
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 46.5
+    aim_reactivity: 52.4
+    movement: 54.0
+    game_sense: 65.5
+    utility_usage: 66.4
+    positioning: 62.8
+    clutch_factor: 56.5
+    tilt_resistance: 56.1
+    composure: 59.6
+    comms_quality: 71.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 71.3
+  - agent_id: skye
+    mastery: 69.6
+  map_pool:
+  - map_id: ascent
+    mastery: 70.2
+  - map_id: bind
+    mastery: 70.5
+  - map_id: haven
+    mastery: 57.7
+  - map_id: lotus
+    mastery: 73.9
+  - map_id: split
+    mastery: 74.5
+  salary: 4000
+  contract_weeks_left: 51
+  morale: 74.6
+  stamina: 99.9
+  form: 48.1
+  personality_tags:
+  - hot_head
+  - slow_starter
+  potential: 62.9
+- id: team_alqadsiah_esports_zimo
+  handle: Zimo
+  real_name: Abdullah Amri
+  region: emea
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 56.5
+    aim_reactivity: 56.3
+    movement: 45.8
+    game_sense: 54.3
+    utility_usage: 57.2
+    positioning: 70.0
+    clutch_factor: 52.2
+    tilt_resistance: 66.8
+    composure: 71.5
+    comms_quality: 56.1
+  agent_pool:
+  - agent_id: cypher
+    mastery: 67.2
+  - agent_id: killjoy
+    mastery: 67.9
+  map_pool:
+  - map_id: ascent
+    mastery: 64.1
+  - map_id: bind
+    mastery: 64.5
+  - map_id: haven
+    mastery: 70.3
+  - map_id: lotus
+    mastery: 63.3
+  - map_id: split
+    mastery: 66.2
+  salary: 3800
+  contract_weeks_left: 78
+  morale: 62.0
+  stamina: 92.9
+  form: 58.9
+  personality_tags:
+  - grinder
+  - independent
+  potential: 69.8
+- id: team_alqadsiah_esports_simond4rk
+  handle: SimonD4rk
+  real_name: Alexandr Skovbel
+  region: emea
+  age: 21
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 50.7
+    aim_reactivity: 50.5
+    movement: 55.6
+    game_sense: 68.0
+    utility_usage: 65.4
+    positioning: 54.0
+    clutch_factor: 63.3
+    tilt_resistance: 54.9
+    composure: 66.6
+    comms_quality: 66.6
+  agent_pool:
+  - agent_id: viper
+    mastery: 67.5
+  - agent_id: skye
+    mastery: 62.5
+  map_pool:
+  - map_id: ascent
+    mastery: 59.4
+  - map_id: bind
+    mastery: 65.5
+  - map_id: haven
+    mastery: 69.7
+  - map_id: lotus
+    mastery: 55.6
+  - map_id: split
+    mastery: 72.7
+  salary: 3800
+  contract_weeks_left: 39
+  morale: 81.5
+  stamina: 92.0
+  form: 45.9
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  potential: 63.6

@@ -209,7 +209,10 @@ Three regional leagues of 8 (Americas / EMEA / Pacific) each run a double
 round-robin regular season (14 weeks), then a 4-team BO3 playoff bracket
 (1v4, 2v3) with **map veto** (mastery-driven ban/pick over the 5-map pool)
 down to a regional champion; the top teams advance to **Masters**
-(cross-region) and then **Champions**. A per-region Challengers circuit
+(cross-region) and then **Champions**. The world shape is data, not code:
+a **roster pack** (§6) can reshape it to 3 or 4 regions of 4–16 teams —
+with 4 regions, Masters becomes a full 8-side quarterfinal bracket
+(instead of 6 sides with two byes) and Champions fields the Masters eight. A per-region Challengers circuit
 develops prospects underneath. Standings break ties by wins → round
 differential → **head-to-head** (regular-season meetings only, so a playoff
 rematch never reorders the table) → rounds won → id. Then an offseason
@@ -592,9 +595,23 @@ harness.
 | **Attributes** | 10 | Registry-driven; adding an 11th is a data change |
 | **Teams** | 2 starter + generated league | Team Nexus, Team Vanguard, plus a deterministically generated league fill |
 
-All of the above are YAML under `data/`. None of it is a Riot Games asset
-or real player likeness — rosters, orgs, and agent kits are original
-fictional content in a Valorant-flavored idiom.
+All of the above are YAML under `data/`. The shipped default world is
+original fictional content in a Valorant-flavored idiom — no Riot Games
+assets, no real player likenesses.
+
+**Roster packs** (`data/rosters/<id>/`) — importable league worlds. A pack
+is a `pack.yaml` (name + world shape: which regions, how many teams per
+league) plus team files in the exact starter-team bundle format; at
+new-game it replaces the fictional starters, and generation only fills any
+shortfall. Packs are built from compact hand-editable research sheets by
+`scripts/build_roster_pack.py`, which expands each player (handle, role,
+playstyle, quality, signature agents) into full attributes
+deterministically (blake2-jittered per player id) — so a pack player has
+the same sheet in every campaign at any seed. One pack ships: **VCT 2026**
+— the real four-region VCT (48 partner orgs, real mid-2026 starting fives,
+notable Challengers orgs underneath), researched from vlr.gg/Liquipedia.
+Since this game is private (see §9), real names here are a
+personal-use convenience, not published content.
 
 ---
 
@@ -686,9 +703,13 @@ section is a map of the terrain, not a promise.
 
 ## 9. Explicit non-goals
 
-- Real Valorant pro names, real statistical profiles, or Riot Games assets
-  (a fictional roster and original agent kits serve the same design goals
-  legally and creatively).
+- ~~Real Valorant pro names or real statistical profiles~~ **Amended
+  2026-07-09 (owner call):** the game is private — for personal play with
+  friends, not publication — so an optional real-roster import now exists
+  (the VCT 2026 roster pack, §6). The shipped *default* world remains
+  fully fictional, attributes in packs are original estimates rather than
+  scraped statistical profiles, and Riot Games assets stay excluded
+  entirely. If this project were ever to be published, the packs go.
 - True 3D rendering — the isometric floor-plan viewer is the intentional
   ceiling; it gets most of the tactical legibility of 3D without the
   engine-building cost.

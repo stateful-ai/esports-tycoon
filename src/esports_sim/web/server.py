@@ -44,6 +44,7 @@ from esports_sim.manager.campaign import (
 from esports_sim.manager.state import GameState
 from esports_sim.manager.training import FOCUS_OPTIONS
 from esports_sim.registry.loader import GameData, load_all, load_geometry
+from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
 from esports_sim.sim import tactics_fit
@@ -123,6 +124,10 @@ class Lobby:
         self.gd: GameData = load_all()
         self.games: dict[str, _Game] = {}
         self.sessions: dict[str, tuple[str, str]] = {}  # sid -> (code, team_id)
+        # Every world a browser has ever created/joined (newest first):
+        # sid -> [[code, team_id, team_name, mode], ...]. Lets a browser leave
+        # a world (to start another) and later resume any of its old seats.
+        self.history: dict[str, list[list[str]]] = {}
         self._lock = threading.Lock()
         self._load_sessions()
 
@@ -131,16 +136,44 @@ class Lobby:
         if _SESSIONS_PATH.exists():
             try:
                 raw = json.loads(_SESSIONS_PATH.read_text(encoding="utf-8"))
-                self.sessions = {k: tuple(v) for k, v in raw.items()}
+                if "sessions" in raw:
+                    self.sessions = {
+                        k: tuple(v) for k, v in raw["sessions"].items()
+                    }
+                    self.history = raw.get("history", {})
+                else:  # pre-history flat format
+                    self.sessions = {k: tuple(v) for k, v in raw.items()}
             except (ValueError, OSError):
                 self.sessions = {}
 
     def _save_sessions(self) -> None:
         SAVE_DIR.mkdir(parents=True, exist_ok=True)
         _SESSIONS_PATH.write_text(
-            json.dumps({k: list(v) for k, v in self.sessions.items()}),
+            json.dumps(
+                {
+                    "sessions": {
+                        k: list(v) for k, v in self.sessions.items()
+                    },
+                    "history": self.history,
+                }
+            ),
             encoding="utf-8",
         )
+
+    def _remember(
+        self, sid: str, code: str, team_id: str, team_name: str, mode: str
+    ) -> None:
+        """Upsert a world into this browser's resumable history (newest
+        first). Caller must hold `self._lock` and follow with a save."""
+        rows = [r for r in self.history.get(sid, []) if r[0] != code]
+        self.history[sid] = [[code, team_id, team_name, mode], *rows][:12]
+
+    def _seat_holder(self, code: str, team_id: str) -> str | None:
+        """The sid currently attached to (code, team_id), if any."""
+        for other_sid, m in sorted(self.sessions.items()):
+            if m == (code, team_id):
+                return other_sid
+        return None
 
     def _get_game(self, code: str) -> _Game | None:
         """Return a loaded game, lazily loading its save from disk if needed.
@@ -199,20 +232,38 @@ class Lobby:
 
     # -- mutations ------------------------------------------------------------
     def create_game(
-        self, sid: str, team_id: str, seed: int, shared: bool
+        self,
+        sid: str,
+        team_id: str,
+        seed: int,
+        shared: bool,
+        pack_id: str | None = None,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
             # habit); seed a local RNG from the campaign seed + live game count.
             rng = random.Random(f"{seed}|{len(self.games)}|{sid}")
             code = self._new_code(rng)
-            gs = new_campaign(self.gd, seed=seed, user_team_id=team_id)
+            pack = None
+            if pack_id:
+                try:
+                    pack = load_roster_pack(pack_id)
+                except FileNotFoundError:
+                    raise HTTPException(
+                        422, f"unknown roster pack '{pack_id}'"
+                    ) from None
+            gs = new_campaign(
+                self.gd, seed=seed, user_team_id=team_id, pack=pack
+            )
             if team_id not in gs.teams:
                 raise HTTPException(422, f"unknown team '{team_id}'")
             game = _Game(self.gd, code, gs=gs)
             game.mode = "shared" if shared else "solo"
             self.games[code] = game
             self.sessions[sid] = (code, team_id)
+            self._remember(
+                sid, code, team_id, gs.teams[team_id].name, game.mode
+            )
             self._save_sessions()
             self._write_mode(code, game.mode)
             game.save()
@@ -230,18 +281,84 @@ class Lobby:
             gs = game.gs
             if team_id not in gs.teams:
                 return None, "unknown team"
-            existing = self.sessions.get(sid)
-            # Rejoining your own seat is fine; taking someone else's isn't.
-            if team_id in gs.human_team_ids and (
-                existing is None or existing != (code, team_id)
-            ):
+            # A human seat is claimable unless another browser session is
+            # CURRENTLY attached to it — so leaving a world and rejoining
+            # your old seat (same or different browser) just works.
+            holder = self._seat_holder(code, team_id)
+            if team_id in gs.human_team_ids and holder not in (None, sid):
                 return None, "another manager already controls that team"
             if team_id not in gs.human_team_ids:
                 gs.human_team_ids.append(team_id)
             self.sessions[sid] = (code, team_id)
+            self._remember(
+                sid, code, team_id, gs.teams[team_id].name, game.mode
+            )
             self._save_sessions()
             game.save()
             return game, None
+
+    def leave(self, sid: str) -> str | None:
+        """Detach this browser from its current world (the save stays on
+        disk and in this browser's resumable history). Returns the code
+        left, or None if it wasn't in a world."""
+        with self._lock:
+            m = self.sessions.pop(sid, None)
+            if m is not None:
+                code, team_id = m
+                # Worlds created before the history list existed need an
+                # entry NOW, or leaving would orphan them.
+                game = self._get_game(code)
+                if game is not None and game.gs is not None:
+                    team = game.gs.teams.get(team_id)
+                    self._remember(
+                        sid, code, team_id,
+                        team.name if team else team_id, game.mode,
+                    )
+                self._save_sessions()
+            return m[0] if m else None
+
+    def resume(self, sid: str, code: str) -> tuple[_Game | None, str | None]:
+        """Re-attach this browser to a world from its own history — the only
+        way back into a SOLO world, and a code-free way back into a shared
+        one. The old seat must not have been claimed by someone else."""
+        with self._lock:
+            row = next(
+                (r for r in self.history.get(sid, []) if r[0] == code), None
+            )
+            if row is None:
+                return None, "that world isn't in this browser's history"
+            game = self._get_game(code)
+            if game is None or game.gs is None:
+                return None, "that world's save no longer exists"
+            team_id = row[1]
+            holder = self._seat_holder(code, team_id)
+            if holder not in (None, sid):
+                return None, "another manager now controls that team"
+            if team_id not in game.gs.human_team_ids:
+                game.gs.human_team_ids.append(team_id)
+            self.sessions[sid] = (code, team_id)
+            self._remember(
+                sid, code, team_id, game.gs.teams[team_id].name, game.mode
+            )
+            self._save_sessions()
+            return game, None
+
+    def worlds_for(self, sid: str) -> list[dict]:
+        """This browser's resumable worlds (history entries whose save still
+        exists), newest first. No save-loading — history carries the label."""
+        with self._lock:
+            out = []
+            for code, team_id, team_name, mode in self.history.get(sid, []):
+                if code in self.games or _save_path_for(code).exists():
+                    out.append(
+                        {
+                            "code": code,
+                            "team_id": team_id,
+                            "team_name": team_name,
+                            "mode": mode,
+                        }
+                    )
+            return out
 
 
 _LOBBY = Lobby()
@@ -469,7 +586,50 @@ def lobby() -> dict:
             "humans": list(ctx.game.gs.human_team_ids),
         }
     preview = new_campaign(_LOBBY.gd, seed=2026)
-    return {"in_game": False, "teams": _team_options(preview, taken=set())}
+    return {
+        "in_game": False,
+        "teams": _team_options(preview, taken=set()),
+        "packs": _pack_options(),
+        "worlds": _LOBBY.worlds_for(_current_sid()),
+    }
+
+
+_PACK_OPTIONS_CACHE: list[dict] | None = None
+
+
+def _pack_options() -> list[dict]:
+    """Installed roster packs with their pickable (tier-1) teams — straight
+    from pack data, no campaign build needed. Cached for the process:
+    packs are static data (rebuilding one means restarting the server)."""
+    global _PACK_OPTIONS_CACHE
+    if _PACK_OPTIONS_CACHE is not None:
+        return _PACK_OPTIONS_CACHE
+    out = []
+    for meta in list_roster_packs():
+        pack = load_roster_pack(meta.id)
+        out.append(
+            {
+                "id": meta.id,
+                "name": meta.name,
+                "description": meta.description,
+                "regions": [str(r) for r in meta.world.league_regions],
+                "teams_per_region": meta.world.teams_per_region,
+                "teams": [
+                    {
+                        "id": t.id,
+                        "name": t.name,
+                        "tag": t.tag,
+                        "region": str(t.region),
+                    }
+                    for t in sorted(
+                        pack.teams.values(), key=lambda t: (str(t.region), t.id)
+                    )
+                    if t.tier == 1
+                ],
+            }
+        )
+    _PACK_OPTIONS_CACHE = out
+    return out
 
 
 @app.get("/api/lobby/teams")
@@ -492,12 +652,13 @@ class NewGameBody(BaseModel):
     team_id: str = "team_nexus"
     seed: int = 2026
     shared: bool = False  # True -> open the world for other managers to join
+    pack: str | None = None  # roster pack id; None -> generated world
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
     game = _LOBBY.create_game(
-        _current_sid(), body.team_id, body.seed, body.shared
+        _current_sid(), body.team_id, body.seed, body.shared, pack_id=body.pack
     )
     return {
         "ok": True,
@@ -523,6 +684,32 @@ def join_game(body: JoinBody) -> dict:
         "ok": True,
         "code": game.code,
         "team_id": body.team_id,
+        "mode": game.mode,
+    }
+
+
+@app.post("/api/leave")
+def leave_game() -> dict:
+    """Detach this browser from its world and return to the lobby. The world
+    stays on disk and in this browser's resumable list."""
+    code = _LOBBY.leave(_current_sid())
+    return {"ok": True, "code": code}
+
+
+class ResumeBody(BaseModel):
+    code: str
+
+
+@app.post("/api/resume")
+def resume_game(body: ResumeBody) -> dict:
+    game, err = _LOBBY.resume(_current_sid(), body.code.upper())
+    if err is not None:
+        raise HTTPException(409, err)
+    m = _LOBBY.membership(_current_sid())
+    return {
+        "ok": True,
+        "code": game.code,
+        "team_id": m[1] if m else None,
         "mode": game.mode,
     }
 

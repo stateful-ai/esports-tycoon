@@ -1,0 +1,228 @@
+id: team_giantx
+name: GiantX
+tag: GX
+region: emea
+tier: 1
+captain_id: team_giantx_grubinho
+balance: 720000
+reputation: 70.0
+fan_count: 441000
+chemistry: 79.5
+players:
+- id: team_giantx_grubinho
+  handle: grubinho
+  real_name: Grzegorz Ryczko
+  region: emea
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 55.3
+    aim_reactivity: 54.0
+    movement: 64.2
+    game_sense: 79.0
+    utility_usage: 79.9
+    positioning: 63.0
+    clutch_factor: 64.4
+    tilt_resistance: 61.5
+    composure: 76.0
+    comms_quality: 78.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 79.7
+  - agent_id: viper
+    mastery: 75.5
+  map_pool:
+  - map_id: ascent
+    mastery: 77.9
+  - map_id: bind
+    mastery: 70.9
+  - map_id: haven
+    mastery: 60.8
+  - map_id: lotus
+    mastery: 70.3
+  - map_id: split
+    mastery: 70.1
+  salary: 4700
+  contract_weeks_left: 73
+  morale: 75.6
+  stamina: 92.1
+  form: 59.0
+  personality_tags:
+  - slow_starter
+  - streamer
+  potential: 71.2
+- id: team_giantx_ara
+  handle: ara
+  real_name: Eduard-George Hanceriuc
+  region: emea
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 80.4
+    aim_reactivity: 82.0
+    movement: 81.0
+    game_sense: 66.8
+    utility_usage: 64.9
+    positioning: 66.6
+    clutch_factor: 75.1
+    tilt_resistance: 73.0
+    composure: 66.1
+    comms_quality: 72.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 77.8
+  - agent_id: raze
+    mastery: 76.0
+  map_pool:
+  - map_id: ascent
+    mastery: 77.8
+  - map_id: bind
+    mastery: 80.4
+  - map_id: haven
+    mastery: 85.2
+  - map_id: lotus
+    mastery: 75.5
+  - map_id: split
+    mastery: 65.9
+  salary: 5600
+  contract_weeks_left: 32
+  morale: 65.8
+  stamina: 96.4
+  form: 51.5
+  personality_tags:
+  - clutch_gene
+  - streamer
+  potential: 87.9
+- id: team_giantx_flickless
+  handle: Flickless
+  real_name: Karel Maeckelbergh
+  region: emea
+  age: 20
+  role: flex
+  playstyle: anchor
+  attributes:
+    aim_precision: 76.2
+    aim_reactivity: 69.1
+    movement: 63.7
+    game_sense: 75.7
+    utility_usage: 78.4
+    positioning: 83.2
+    clutch_factor: 74.2
+    tilt_resistance: 79.9
+    composure: 77.1
+    comms_quality: 65.5
+  agent_pool:
+  - agent_id: viper
+    mastery: 87.5
+  - agent_id: cypher
+    mastery: 78.8
+  - agent_id: sova
+    mastery: 74.6
+  map_pool:
+  - map_id: ascent
+    mastery: 78.6
+  - map_id: bind
+    mastery: 71.6
+  - map_id: haven
+    mastery: 91.2
+  - map_id: lotus
+    mastery: 80.4
+  - map_id: split
+    mastery: 79.5
+  salary: 5600
+  contract_weeks_left: 78
+  morale: 69.1
+  stamina: 86.7
+  form: 46.2
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 90.6
+- id: team_giantx_westside
+  handle: westside
+  real_name: Milosz Duda
+  region: emea
+  age: 19
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 62.2
+    aim_reactivity: 67.5
+    movement: 60.1
+    game_sense: 74.9
+    utility_usage: 81.1
+    positioning: 69.5
+    clutch_factor: 68.3
+    tilt_resistance: 68.7
+    composure: 72.7
+    comms_quality: 83.7
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 82.3
+  - agent_id: cypher
+    mastery: 80.5
+  map_pool:
+  - map_id: ascent
+    mastery: 78.2
+  - map_id: bind
+    mastery: 83.4
+  - map_id: haven
+    mastery: 71.4
+  - map_id: lotus
+    mastery: 70.6
+  - map_id: split
+    mastery: 71.1
+  salary: 5100
+  contract_weeks_left: 55
+  morale: 72.7
+  stamina: 81.6
+  form: 54.5
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 80.6
+- id: team_giantx_tomaszy
+  handle: tomaszy
+  real_name: Tomas Machado
+  region: emea
+  age: 20
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 49.6
+    aim_reactivity: 54.2
+    movement: 62.7
+    game_sense: 68.4
+    utility_usage: 71.4
+    positioning: 54.4
+    clutch_factor: 57.2
+    tilt_resistance: 58.6
+    composure: 59.9
+    comms_quality: 68.1
+  agent_pool:
+  - agent_id: skye
+    mastery: 69.4
+  - agent_id: omen
+    mastery: 65.5
+  map_pool:
+  - map_id: ascent
+    mastery: 57.4
+  - map_id: bind
+    mastery: 67.0
+  - map_id: haven
+    mastery: 77.3
+  - map_id: lotus
+    mastery: 68.8
+  - map_id: split
+    mastery: 50.7
+  salary: 4200
+  contract_weeks_left: 36
+  morale: 76.6
+  stamina: 95.4
+  form: 48.8
+  personality_tags:
+  - fan_favorite
+  - flashy
+  potential: 65.0

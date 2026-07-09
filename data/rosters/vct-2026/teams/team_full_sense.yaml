@@ -1,0 +1,226 @@
+id: team_full_sense
+name: FULL SENSE
+tag: FS
+region: pacific
+tier: 1
+captain_id: team_full_sense_crws
+balance: 630000
+reputation: 55.0
+fan_count: 272250
+chemistry: 76.2
+players:
+- id: team_full_sense_primmie
+  handle: Primmie
+  real_name: Papaphat Sriprapha
+  region: pacific
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 86.2
+    aim_reactivity: 91.0
+    movement: 91.4
+    game_sense: 73.8
+    utility_usage: 78.3
+    positioning: 79.2
+    clutch_factor: 75.8
+    tilt_resistance: 77.1
+    composure: 82.9
+    comms_quality: 77.3
+  agent_pool:
+  - agent_id: jett
+    mastery: 98.6
+  - agent_id: phoenix
+    mastery: 83.6
+  map_pool:
+  - map_id: ascent
+    mastery: 86.3
+  - map_id: bind
+    mastery: 81.8
+  - map_id: haven
+    mastery: 97.9
+  - map_id: lotus
+    mastery: 97.4
+  - map_id: split
+    mastery: 88.4
+  salary: 6700
+  contract_weeks_left: 57
+  morale: 82.6
+  stamina: 80.7
+  form: 52.8
+  personality_tags:
+  - analytical
+  - streamer
+  potential: 96.0
+- id: team_full_sense_jitboys
+  handle: JitboyS
+  real_name: Jittana Nokngam
+  region: pacific
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.7
+    aim_reactivity: 82.8
+    movement: 84.6
+    game_sense: 65.3
+    utility_usage: 66.2
+    positioning: 75.7
+    clutch_factor: 68.9
+    tilt_resistance: 71.5
+    composure: 69.0
+    comms_quality: 74.1
+  agent_pool:
+  - agent_id: raze
+    mastery: 89.5
+  - agent_id: reyna
+    mastery: 80.4
+  map_pool:
+  - map_id: ascent
+    mastery: 78.3
+  - map_id: bind
+    mastery: 82.3
+  - map_id: haven
+    mastery: 84.4
+  - map_id: lotus
+    mastery: 89.2
+  - map_id: split
+    mastery: 80.3
+  salary: 5600
+  contract_weeks_left: 38
+  morale: 75.0
+  stamina: 92.5
+  form: 55.8
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 77.8
+- id: team_full_sense_killua
+  handle: killua
+  real_name: Tanate Teerasawad
+  region: pacific
+  age: 23
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 61.7
+    aim_reactivity: 63.8
+    movement: 71.9
+    game_sense: 75.9
+    utility_usage: 82.0
+    positioning: 70.0
+    clutch_factor: 68.4
+    tilt_resistance: 74.0
+    composure: 74.8
+    comms_quality: 82.6
+  agent_pool:
+  - agent_id: skye
+    mastery: 84.7
+  - agent_id: sova
+    mastery: 83.4
+  map_pool:
+  - map_id: ascent
+    mastery: 76.9
+  - map_id: bind
+    mastery: 87.7
+  - map_id: haven
+    mastery: 83.1
+  - map_id: lotus
+    mastery: 75.9
+  - map_id: split
+    mastery: 79.2
+  salary: 5500
+  contract_weeks_left: 46
+  morale: 64.1
+  stamina: 84.5
+  form: 59.7
+  personality_tags:
+  - independent
+  potential: 79.2
+- id: team_full_sense_crws
+  handle: Crws
+  real_name: Thanamethk Mahatthananuyut
+  region: pacific
+  age: 26
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 60.8
+    aim_reactivity: 57.9
+    movement: 71.4
+    game_sense: 91.1
+    utility_usage: 78.9
+    positioning: 66.4
+    clutch_factor: 71.9
+    tilt_resistance: 72.8
+    composure: 75.7
+    comms_quality: 81.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 79.9
+  - agent_id: clove
+    mastery: 76.4
+  map_pool:
+  - map_id: ascent
+    mastery: 75.2
+  - map_id: bind
+    mastery: 77.5
+  - map_id: haven
+    mastery: 79.9
+  - map_id: lotus
+    mastery: 84.2
+  - map_id: split
+    mastery: 77.1
+  salary: 5400
+  contract_weeks_left: 48
+  morale: 73.8
+  stamina: 88.4
+  form: 52.6
+  personality_tags:
+  - analytical
+  - team_player
+  potential: 72.9
+- id: team_full_sense_seph1roth
+  handle: seph1roth
+  real_name: Chinnakrit Phoojaroen
+  region: pacific
+  age: 22
+  role: flex
+  playstyle: support
+  attributes:
+    aim_precision: 62.7
+    aim_reactivity: 56.6
+    movement: 63.5
+    game_sense: 75.2
+    utility_usage: 76.6
+    positioning: 71.4
+    clutch_factor: 71.6
+    tilt_resistance: 58.4
+    composure: 78.8
+    comms_quality: 76.0
+  agent_pool:
+  - agent_id: viper
+    mastery: 90.4
+  - agent_id: killjoy
+    mastery: 79.7
+  - agent_id: phoenix
+    mastery: 66.4
+  map_pool:
+  - map_id: ascent
+    mastery: 80.2
+  - map_id: bind
+    mastery: 69.5
+  - map_id: haven
+    mastery: 78.6
+  - map_id: lotus
+    mastery: 67.4
+  - map_id: split
+    mastery: 79.7
+  salary: 4900
+  contract_weeks_left: 31
+  morale: 71.9
+  stamina: 95.1
+  form: 48.6
+  personality_tags:
+  - team_player
+  potential: 77.3
