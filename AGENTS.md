@@ -13,11 +13,16 @@ Quick orientation for any agent:
   pacing gates and (if the match log changed on purpose) a golden re-bless.
   All commands are tabulated in CLAUDE.md.
 - Every stochastic thing derives from seeds/stable hashes. If you add
-  randomness, thread it through `RngTree` or blake2 of stable ids.
+  randomness, thread it through `RngTree` or blake2 of stable ids. This
+  holds for the CAMPAIGN too: same seed → byte-identical `GameState`.
 - Gameplay tuning lives in `src/esports_sim/sim/constants.py` and
   `data/*.yaml` — not inline in the engine.
+- **Coaching tactics are neutral-safe**: the `TeamTactics` dials reach into
+  round micro, but every term is an exact no-op at 50 so the golden gate
+  stays byte-identical. Extending a dial? Use the `/tactics` skill and see
+  `docs/adr/ADR-007-neutral-safe-tactics.md`.
 - The web UI is a pure consumer of GameState + event logs. Don't put sim
   logic in JavaScript.
-- Asset generation (Ludo / Scenario / Google AI Studio): recipes and the
-  blockout→beautify pipeline are in `docs/art-pipeline.md`; API keys are in
-  the gitignored `.env`.
+- Design overview: `GDD.md`. Asset generation (Ludo / Scenario / Google AI
+  Studio): recipes and the blockout→beautify pipeline are in
+  `docs/art-pipeline.md`; API keys are in the gitignored `.env`.

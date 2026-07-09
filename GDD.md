@@ -4,7 +4,7 @@
 **Genre:** Esports management sim / tycoon, tick-level tactical shooter sim underneath
 **Reference point:** *Esports Manager 2026* (Steam #2749950), Valorant (setting/flavor), Football Manager (management-depth ambition)
 **Status:** Playable, multi-season, browser + terminal. Actively in development.
-**Last updated:** 2026-07-07
+**Last updated:** 2026-07-09
 
 ---
 
@@ -129,14 +129,26 @@ player carries:
 - **Condition** — morale/stamina/form move week to week from training,
   match results, and rest, and they feed back into match performance (a
   burnt-out star plays worse than their attributes suggest).
+- **Relationships** — teammates carry a pairwise chemistry graph that drifts
+  toward trait-driven affinities (kindred tags bond, clashing tags grate),
+  is pushed by shared wins and losses, and outlives roster moves. Two
+  players chasing the same spotlight role (two would-be entries/AWPers/IGLs)
+  develop friction. Team chemistry chases the roster's mean relationship and
+  feeds back into how well the team executes a coordinated system (§3.11).
+- **Identity flavour** — generated players carry region-appropriate names
+  (an EMEA player no longer reads as "Minho Nakamura") and role-shaped
+  attribute archetypes (entries out-aim, IGLs out-think).
 
 ### 3.3 Training
 
 Each week you set one focus — mechanical, tactical, mental, team, or
 rest — for your whole roster (the AI picks independently for its own
-teams, informed by roster needs). Growth follows age curves (young players
-improve faster, veterans decay), and rest recovers stamina at the cost of
-growth. A hired **coach** multiplies training gains.
+teams, weighting the choice by roster youth and its own tactical identity).
+Growth follows age curves (young players improve faster, veterans decay),
+and rest recovers stamina at the cost of growth. A hired **coach**
+multiplies training gains. **System fit** matters too: a player whose
+playstyle suits the coach's tactics (see 3.11) gets more meaningful reps
+and develops faster; a mismatch develops slower.
 
 ### 3.4 Transfer market & contracts
 
@@ -145,15 +157,20 @@ offseason) is available to sign. Players ask for salaries scaled to their
 quality; signing, releasing (with a severance cost), and renewing are all
 manager actions. Contracts run down week by week; a player inside ~8 weeks
 of free agency with good form will press you for a renewal conversation —
-ignore it and morale suffers. AI teams work the same market against you.
+ignore it and morale suffers. AI teams work the same market against you —
+and a premium free agent is **contested**: a rival org with a matching need
+may sign the best available FA out from under you, so a marquee grab isn't
+guaranteed.
 
 ### 3.5 Scouting
 
 Rival rosters aren't shown at full fidelity — attributes render with a
 noise band (`visibility`/`scouting_uncertainty`, reserved from day one for
 exactly this). Assign your scout to a target team; the fog shrinks over
-roughly three weeks of dedicated scouting, faster with a hired **analyst**.
-The report resets every offseason as rosters change.
+roughly three weeks of dedicated scouting, faster with a hired **analyst** —
+who also improves the *accuracy* of the read, not just its speed (an elite
+analyst's bands hug the truth tighter at the same progress). The report
+resets every offseason as rosters change.
 
 ### 3.6 Staff
 
@@ -179,35 +196,94 @@ small on purpose: a talk is a nudge, not a lever you crank.
 Weekly income (sponsorships scaled by reputation and fan count, plus prize
 money) against weekly expenses (payroll, facilities). **Sponsorship deals**
 arrive as time-limited offers — upfront, steady, or performance-scaled
-payout structures — that you accept or decline. There's no hard bankruptcy
-wall yet, but the numbers are real and a mismanaged org can dig a genuine
-hole.
+payout structures, some carrying achievement objectives that reward results
+*or* squad-building (e.g. "field an under-21 talent") — that you accept or
+decline. **Insolvency now bites**: an org running a negative balance takes
+escalating reputation and squad-morale penalties and a board warning, with
+a harsher one past a debt floor. The finances tab projects a **runway** —
+weeks until the balance would cross that floor at the current run rate.
 
 ### 3.9 Season structure
 
-An 8-team league runs a double round-robin regular season (14–18 weeks
-depending on team count), then a BO3 playoff bracket with **map veto**
-(mastery-driven ban/ban/pick/pick/remaining over the 5-map pool) down to a
-champion, then an offseason (aging, awards, roster churn, free-agent pool
-refresh) before the next season begins. Campaigns run indefinitely — there
-is no scripted ending.
+Three regional leagues of 8 (Americas / EMEA / Pacific) each run a double
+round-robin regular season (14 weeks), then a 4-team BO3 playoff bracket
+(1v4, 2v3) with **map veto** (mastery-driven ban/pick over the 5-map pool)
+down to a regional champion; the top teams advance to **Masters**
+(cross-region) and then **Champions**. A per-region Challengers circuit
+develops prospects underneath. Standings break ties by wins → round
+differential → **head-to-head** (regular-season meetings only, so a playoff
+rematch never reorders the table) → rounds won → id. Then an offseason
+(aging, retirements, rookie classes, awards, free-agent refresh) before the
+next season. Campaigns run indefinitely — there is no scripted ending.
 
 ### 3.10 Analytics & storylines
 
 Season-long stat aggregation (K/D/A, an HLTV-flavored rating, first
-kills, trade kills, headshot %, plants/defuses per player; attack/defense
-round-win % and pistol conversion per team) feeds a league-leaders board,
-a team-tendencies view, and **season awards** (MVP, Top Fragger, Opening
-King, Rookie of the Season) handed out at season end.
+kills/first deaths, trade kills, headshot %, plants/defuses, plus
+highlight stats — **clutches** (1vX round wins), **multikills**, and
+**aces** — per player; attack/defense round-win % and pistol conversion per
+team) feeds a league-leaders board, a team-tendencies view, and **season
+awards** (MVP, Top Fragger, Opening King, Rookie, and a team-level **Best
+Defensive Team**) handed out at season end. Every highlight stat is derived
+purely from the match event log, so richer stats never alter the match
+itself.
 
 News isn't generic — recaps are **templated and grounded**: every fact in
 a recap sentence resolves to a real event in that match's log (a
 `head_to_head` helper tracks in-season streaks, revenge results, and
 "beat the reigning champions" storylines, and cites them only when
-genuinely notable — silence beats invented drama). Phrasing is seeded per
-event so the same result always reads the same way, but different results
-read differently, in a dry, understated, no-hype voice (see
+genuinely notable — silence beats invented drama). A recap also names the
+**winner's tactical identity** when a coaching dial is genuinely extreme
+("on the back of relentless aggression"). Phrasing is seeded per event so
+the same result always reads the same way, but different results read
+differently, in a dry, understated, no-hype voice (see
 `docs/salvage/tone_and_cast_lock.md` for the style bible this follows).
+
+### 3.11 Coaching & tactics
+
+You don't just pick players — you stamp an **identity** on the team through
+`TeamTactics`: five numeric dials (each 0–100, **50 = neutral**) plus a
+separate site-focus selector.
+
+The five numeric dials:
+
+- **Aggression** — swing/peek appetite, refrag spacing, forward vs anchored
+  defensive setups, and how wide the team holds post-plant.
+- **Pace** — execute-vs-default lean and go timing, whether a floundering
+  hit is rammed through or aborted and re-defaulted, and defensive rotation
+  tempo.
+- **Utility discipline** — dump everything on the hit vs hold util for the
+  retake, and whether players save a flash to pop on a swing.
+- **Eco greed** — force-buy appetite; on save rounds, run-it-down vs
+  play-for-picks; how aggressively defenders commit a retake.
+- **Map control** — stack tight and hit as five vs spread for map presence
+  and peel a **lurker** who baits at a flank, then strikes the site as a
+  late second wave.
+
+And, separately, **site focus** — not a numeric dial but a string selector
+(`balanced`, or a specific site) that biases which site the attack picks.
+Its neutral state is `balanced` (no bias); it has no 0–100 / neutral-50
+axis, so the numeric-dial rules below don't apply to it in the same way.
+
+Two factors decide how *well* a system is actually executed: **roster fit**
+(does the playstyle mix suit the dials — aim for aggression, game-sense and
+comms for map control) and **team chemistry** (coordination-heavy systems
+like splits and disciplined retakes misfire without cohesion). Running an
+extreme system your roster can't execute costs you; a suited roster is
+rewarded.
+
+The AI is not frozen: each rival coach derives a season identity from its
+roster and then **adapts it in-season** — winners entrench their identity,
+strugglers drift back toward vanilla, and pistol-round form nudges their eco
+appetite — so the league feels reactive over a season.
+
+**The load-bearing design rule:** every numeric dial's effect is an *exact
+no-op at the neutral value 50* (and site focus is neutral at `balanced`). A
+default team plays exactly like the pre-tactics engine, so the coach's
+identity reaches all the way into round micro without ever destabilising the
+balance or golden gates (which run neutral tactics). This is what let the
+tactics system get deep in small, low-risk increments; it's documented as
+[ADR-007](docs/adr/ADR-007-neutral-safe-tactics.md).
 
 ---
 
@@ -362,6 +438,15 @@ CI until the fixture is deliberately re-blessed. This is the load-bearing
 architectural bet: it's what makes replays trustworthy, what will make an
 RL agent's or LLM's play reproducible for debugging, and what will
 eventually make a world model trainable on logged play.
+
+The golden gate has two fixtures — a single canonical match and a
+multi-seed `sweep_neutral` aggregate (every map × several seeds) that
+catches drift the single match would miss. Both run **neutral tactics**, so
+the coaching dials (§3.11) are held to a strict rule: every dial term must
+be a no-op at 50, verified simply by the golden staying byte-identical.
+The campaign is deterministic on the same terms — same seed → byte-identical
+`GameState` — even though it never runs inside the match gates. Balance,
+pacing, snowball, and tactics-sweep gates round out the defence.
 
 ### 4.8 The event log is the only truth
 
