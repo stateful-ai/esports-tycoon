@@ -9,19 +9,31 @@ The gate stack, in order. A failure stops the ship — fix or explicitly
 justify, never skip silently.
 
 1. **Tests**: `.venv-win\Scripts\python.exe -m pytest -q` → all green.
-2. **Golden**: if the suite fails ONLY on `tests/test_golden.py` and the
-   session intentionally changed engine behavior / map data, re-bless with
+2. **Golden** (two fixtures — the single canonical match AND the
+   `sweep_neutral` multi-seed aggregate): if the suite fails ONLY on
+   `tests/test_golden.py` and the session intentionally changed engine
+   behavior / map data, re-bless BOTH with
    `.venv-win\Scripts\python.exe scripts\regen_golden.py`, then rerun
-   pytest. If the change was NOT intentional, that failure is a bug.
+   pytest. If the change was NOT intentional, that failure is a bug — and
+   for a tactics change it almost always means a term isn't neutral-safe
+   (see the `/tactics` skill / ADR-007), not something to re-bless.
 3. **Balance** (only if `sim/constants.py`, `sim/engine.py`, or
-   `data/maps/**` changed): `scripts\balance_report.py 300` — every map
-   45–65% attack.
-4. **Pacing** (same trigger set): `scripts\pacing_report.py` → exit 0.
-5. **JS** (if web/static changed): `node --check` each changed file, and
+   `data/maps/**` changed): `scripts\balance_report.py 300` → exit 0
+   (every map 45–65% attack, three core round-end reasons present).
+4. **Pacing** (same trigger set): `scripts\pacing_report.py` → exit 0
+   (attacker via-spawn rotate 25–35s, spawn→entry stage 8–18s).
+5. **Snowball** (if the change could affect multi-season competitiveness —
+   balance, development, economy, market): `scripts\snowball_report.py` →
+   exit 0 (blowout/close band across 3 seasons).
+6. **JS** (if web/static changed): `node --check` each changed file, and
    verify the affected screen in the browser preview when one is running.
-6. **Commit**: imperative subject; body explains the why and records key
-   numbers (balance/pacing/IoU); include
-   `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`.
-7. **Push + CI**: push to main, then watch
+7. **Commit**: imperative subject; body explains the why and records key
+   numbers (balance/pacing/snowball). Use the repo's co-author line.
+8. **Push + CI**: push to main, then watch
    `gh run list -R stateful-ai/esports-tycoon --branch main --limit 1`
    in a background poll until `completed success`. Report the result.
+
+Note: `balance_report.py` and `snowball_report.py` are now real exit-1
+gates (they were print-only diagnostics earlier). `tactics_report.py`
+(sweep each dial to its extremes) is also a gate — run it after any change
+to the tactics dials or their engine reach.

@@ -48,14 +48,34 @@ python -m esports_sim --auto 18 --seed 11 --team team_nexus
   recon, post-plant lineups), spike plant/defuse, an asymmetric
   defender-fallback/retake model, halftime swap, overtime. ~50 ms per
   match, and **deterministic**: same seed → byte-identical event log,
-  gated by both a determinism test and a golden-file fixture.
-- **Management layer** (`manager/`): 8-team league (double round-robin →
-  BO3 playoffs with map veto), weekly training with age curves,
+  gated by a determinism test and a golden-file fixture (single match +
+  a multi-seed sweep).
+- **Coaching & tactics**: an EHM-style dial set (`TeamTactics`) the coach
+  stamps on a team — aggression, pace, utility discipline, eco greed, site
+  focus, and map control (stack-and-hit-as-five vs spread-and-lurk). The
+  dials reach into the *micro*: peek/refrag appetite, execute-vs-default
+  timing, commit-or-abort discipline, flash-for-swing reserves, forward vs
+  anchored defensive setups, post-plant crossfire spread, and a lurker who
+  baits then strikes as a second wave. A team's roster fit and chemistry
+  scale how well it executes an extreme system. Every effect is
+  **neutral-safe** (a no-op at the default 50), so the coach's identity is
+  felt without ever destabilising the golden or balance gates (see
+  `docs/adr/ADR-007-neutral-safe-tactics.md`).
+- **Management layer** (`manager/`): a three-region VCT-style league
+  (double round-robin → BO3 playoffs with map veto → Masters/Champions),
+  weekly training with age curves and system-fit growth,
   morale/stamina/form, backroom staff (coach/analyst/physio), scouting
-  fog on rival attributes, weekly 1:1 player conversations, contract
-  pressure, sponsorship offers, finances, free agency, offseason aging,
-  multi-season campaigns, season stats + awards, grounded narrative
-  recaps with rivalry callbacks. Also fully deterministic.
+  fog whose precision sharpens with a better analyst, weekly 1:1 player
+  conversations that move the chemistry graph, contract pressure, a
+  transfer market where rival AI orgs poach free agents out from under
+  you, sponsorships with results *and* squad-building objectives, finances
+  with real insolvency consequences, free agency, offseason aging,
+  multi-season campaigns, and AI coaches that adapt their tactical identity
+  to how the season is going. Rich per-player season stats (clutches,
+  multikills, aces, first-deaths) and team awards feed grounded narrative
+  recaps with rivalry callbacks and tactical-identity flavour. Standings
+  break ties by head-to-head. Saves carry a `schema_version` migration
+  hook. All fully deterministic.
 - **Web UI** (`web/`): FastAPI + a no-build-step frontend on a custom
   design system — dashboard, roster, standings, schedule, market, stats,
   finances — plus an isometric 2D match viewer that replays the event log
@@ -70,16 +90,22 @@ python -m esports_sim --auto 18 --seed 11 --team team_nexus
 
 ## Tuning
 
-Gameplay feel lives in `src/esports_sim/sim/constants.py`. After changing
-numbers or map/geometry YAML, check the gates:
+Gameplay feel lives in `src/esports_sim/sim/constants.py` (match) — nothing
+inline in the engine. After changing numbers or map/geometry YAML, run the
+gates (all exit 1 on failure):
 
 ```bash
-python scripts/balance_report.py 200     # attack-side round rate, 45-65% band
-python scripts/pacing_report.py          # attacker rotate ~30s through spawn
-python scripts/snowball_report.py        # multi-season blowout/competitiveness check
-python scripts/regen_golden.py           # re-bless the golden match log after an
-                                          # intentional engine/geometry change
+python scripts/balance_report.py 300     # every map 45-65% attack round rate
+python scripts/pacing_report.py          # attacker rotate 25-35s through spawn
+python scripts/snowball_report.py        # multi-season blowout/competitiveness band
+python scripts/tactics_report.py         # sweep each coaching dial to its extremes
+python scripts/regen_golden.py           # re-bless the golden (single + sweep) after
+                                          # an INTENTIONAL engine/geometry change
 ```
+
+Coaching-dial changes are held to a stricter bar: every term must be a
+no-op at the neutral value, so the golden stays byte-identical. Running
+`pytest -q tests/test_golden.py` and seeing no change *is* the proof.
 
 ## Tests
 
