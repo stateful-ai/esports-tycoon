@@ -275,16 +275,17 @@ def check_solvency(gs: GameState) -> None:
 
 def weeks_until_insolvent(gs: GameState, staff_cost: int = 0) -> int | None:
     """Run-rate weeks until the user org's balance would cross the
-    insolvency floor at the current flat net (None if the net is
-    non-negative — the org isn't heading for trouble). Display helper for
-    the finances tab; never mutates state."""
-    net = weekly_breakdown(gs, staff_cost)["net"]
-    if net >= 0:
-        return None
+    insolvency floor at the current flat net. Returns 0 if already at or
+    past the floor (insolvent now, whatever the run rate), or None if above
+    the floor with a non-negative net (not heading for trouble). Display
+    helper for the finances tab; never mutates state."""
     bal = gs.teams[gs.user_team_id].balance
     runway = bal - INSOLVENCY_FLOOR  # cushion above the floor
     if runway <= 0:
-        return 0  # already at or past the floor
+        return 0  # already at or past the floor, regardless of run rate
+    net = weekly_breakdown(gs, staff_cost)["net"]
+    if net >= 0:
+        return None  # above the floor and not trending toward it
     # Ceiling: a non-exact cushion still crosses the floor on the tick that
     # takes it under, so round the week count up rather than truncating.
     return math.ceil(runway / -net)

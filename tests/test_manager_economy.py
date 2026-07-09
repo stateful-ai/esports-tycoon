@@ -58,6 +58,16 @@ def test_runway_ceils_the_crossing_week() -> None:
     assert economy.weeks_until_insolvent(gs, staff_cost=10_000_000) == 1
 
 
+def test_runway_zero_when_already_insolvent() -> None:
+    """An org already at or past the floor is insolvent NOW — report 0 even
+    if the current run rate is positive (e.g. after cutting payroll), not
+    None."""
+    _, gs = _campaign()
+    gs.teams[gs.user_team_id].balance = economy.INSOLVENCY_FLOOR - 50_000
+    # staff_cost 0 -> a fresh org runs a positive net, yet it's already under.
+    assert economy.weeks_until_insolvent(gs) == 0
+
+
 # -- scout precision ----------------------------------------------------------
 
 def test_analyst_never_widens_the_scout_band() -> None:
