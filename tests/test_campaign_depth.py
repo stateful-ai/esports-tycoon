@@ -86,6 +86,36 @@ def test_tactic_flavor_only_fires_on_extremes() -> None:
     assert "aggression" in _tactic_flavor(neutral).lower()
 
 
+def test_tactic_flavor_credits_the_winner_not_the_loser() -> None:
+    """The recap clause names the WINNER's identity: a user win credits the
+    user's system; a user loss must NOT stamp the user's own flavor onto a
+    defeat (the bug was appending it on the loss branch)."""
+    from esports_sim.manager.narrative import _user_recap
+    from esports_sim.manager.state import Fixture, MapResult
+
+    _, gs = _campaign()
+    user, opp = gs.user_team_id, "team_vanguard"
+    gs.teams[user].tactics.aggression = 90.0  # extreme, quotable identity
+    gs.teams[opp].tactics.aggression = 50.0  # neutral, no clause
+
+    def recap(winner: str) -> str:
+        f = Fixture(
+            id="t", week=1, best_of=1, team_a=user, team_b=opp, played=True,
+            winner_id=winner,
+            results=[MapResult(
+                map_id="haven", seed=1,
+                score_a=13 if winner == user else 7,
+                score_b=7 if winner == user else 13,
+                winner_id=winner,
+            )],
+        )
+        _user_recap(gs, f, [])
+        return gs.news[-1].lower()
+
+    assert "aggression" in recap(user)  # user won -> user's clause
+    assert "aggression" not in recap(opp)  # user lost -> no user clause
+
+
 def test_best_defensive_team_award_is_granted() -> None:
     """A full season produces the team-level award, anchored to a real
     player on the winning team."""

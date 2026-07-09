@@ -283,7 +283,11 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
             ],
             score=score, opp=opp, maps=maps_txt, star=star_txt,
         )
-        msg += _tactic_flavor(gs.teams[gs.user_team_id].tactics)
+    # Name the WINNER's tactical identity — a user win credits their own
+    # system, a loss credits the opponent's (grounded: it's how they just
+    # played). f.winner_id is guaranteed set for a played fixture.
+    if f.winner_id is not None:
+        msg += _tactic_flavor(gs.teams[f.winner_id].tactics)
     h2h = head_to_head(gs, gs.user_team_id, opp_id)
     msg += _h2h_callback(rng, h2h, gs.user_team_id, opp_id, opp, won)
     if f.stage != "regular":
