@@ -89,6 +89,71 @@ def test_discipline_holds_utility() -> None:
     assert util(100.0) < util(0.0)
 
 
+def test_eco_greed_drives_retake_commitment() -> None:
+    """A greedy book values the round over the rifles and commits retakes
+    even a body down; a thrifty book concedes to save weapons. More retake
+    commitment shows up as more defuse attempts reaching the spike."""
+    seeds = range(60)
+    defuses = lambda g: _count(seeds, "round.spike_defuse", eco_greed=g)  # noqa: E731
+    assert defuses(100.0) > defuses(0.0)
+
+
+def test_passive_defense_sets_up_differently_than_aggressive() -> None:
+    """The aggression setup dial is two-sided: a passive book anchors the
+    site, an aggressive book holds forward on the overlooks — the two must
+    produce distinct logs (and neither equals neutral)."""
+    passive = _hash(range(8), aggression=20.0)
+    aggressive = _hash(range(8), aggression=80.0)
+    neutral = _hash(range(8))
+    assert passive != aggressive
+    assert passive != neutral and aggressive != neutral
+
+
+def test_lurker_strikes_the_site(monkeypatch) -> None:
+    """map_control spread doesn't just park a lurker — once the hit lands
+    the lurker peels off its flank and strikes the site as a second wave.
+    Assert those strike orders actually fire."""
+    from esports_sim.sim import engine as eng
+
+    strikes = 0
+    orig = eng._MatchSim._order
+
+    def spy(self, pid, order):
+        nonlocal strikes
+        if pid in self._lurkers and order.startswith("goto:"):
+            c = self.map.callouts.get(order.split(":", 1)[1])
+            if c is not None and str(c.zone) == "site":
+                strikes += 1
+        return orig(self, pid, order)
+
+    monkeypatch.setattr(eng._MatchSim, "_order", spy)
+    for s in range(30):
+        _sim(s, map_control=100.0)
+    assert strikes > 0, "map_control lurkers never struck the site"
+
+
+def test_lurk_strike_held_while_hit_not_live() -> None:
+    """The strike must be gated on a live execute: if a hit aborts and
+    re-defaults (went -> False), the armed lurker is NOT sent into the site
+    alone during the regroup. Only the `went` flag should flip the gate;
+    all other conditions are held equal."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "ascent", 0)
+    lurker = sorted(gd.teams[A].player_ids)[0]
+    sim._lurkers = {lurker}
+    # armed (lurk_strike reached), spike not planted, a lurker present:
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=False) is True
+    assert sim._lurk_strike_due(10, 30, went=False, spike_planted=False) is False
+    # never strike once the spike is down, or before the timer, or unarmed:
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=True) is False
+    assert sim._lurk_strike_due(10, 5, went=True, spike_planted=False) is False
+    assert sim._lurk_strike_due(-1, 30, went=True, spike_planted=False) is False
+    sim._lurkers = set()
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=False) is False
+
+
 def test_lurker_that_grabs_spike_rejoins_the_hit(monkeypatch) -> None:
     """A lurker who picks up a dropped spike must abandon the lurk role and
     rejoin the hit — otherwise the team would execute without the spike and
@@ -113,11 +178,12 @@ def test_lurker_that_grabs_spike_rejoins_the_hit(monkeypatch) -> None:
 
 
 def test_spike_carrier_never_parks_off_site_mid_execute(monkeypatch) -> None:
-    """A fresh spike carrier (e.g. an ex-lurker who fetched a dropped spike)
-    must be moving, on-site, or ordered toward site once the execute is
-    live — never parked at an off-site pickup spot, which would stall the
-    round out to a time loss. Verified to fire ~200 ticks if the on-pickup
-    site re-route is removed."""
+    """A fresh spike carrier who fetched a dropped spike must be moving,
+    on-site, or ordered toward site once the execute is live — never parked
+    at an off-site pickup spot, which stalls the round to a time loss. This
+    guards BOTH the neutral case (any carrier) and the lurker case. Verified
+    to fire thousands of ticks at neutral if the on-pickup re-route is
+    removed."""
     from esports_sim.sim import engine as eng
 
     stalls = 0
@@ -141,6 +207,7 @@ def test_spike_carrier_never_parks_off_site_mid_execute(monkeypatch) -> None:
                     planted_at, plant_tick, went, rotate_at, post_plant_spots)
 
     monkeypatch.setattr(eng._MatchSim, "_update_orders", checkpoint)
-    for s in range(40):
-        _sim(s, map_control=100.0)
+    for s in range(30):
+        _sim(s)  # neutral: the general carrier case
+        _sim(s, map_control=100.0)  # lurker case
     assert stalls == 0, f"spike carrier parked off-site during execute ({stalls} ticks)"

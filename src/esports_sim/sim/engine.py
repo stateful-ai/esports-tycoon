@@ -257,6 +257,23 @@ class _MatchSim:
                     entries.add(nb)
         return sorted(entries) or self._site_callouts(site)
 
+    def _lurk_strike_due(
+        self, lurk_strike: int, tick: int, went: bool, spike_planted: bool
+    ) -> bool:
+        """Whether the armed lurker should peel off its flank into the site.
+
+        Gated on `went`: if the hit aborted and re-defaulted (went -> False),
+        the strike is HELD — the re-hit re-arms a fresh delay — so the lurker
+        never commits into the site alone during the regroup and get fed
+        ahead of the second wave."""
+        return (
+            lurk_strike >= 0
+            and tick >= lurk_strike
+            and went
+            and not spike_planted
+            and bool(self._lurkers)
+        )
+
     def _lurk_callout(self, target_site: str, sites: list[str]) -> str:
         """Where a peeled-off lurker sets up: a mid callout if the map has
         one, otherwise an entry toward a different site — anywhere that
@@ -590,6 +607,7 @@ class _MatchSim:
         committed = False
         aborted = False
         lean_done = False
+        lurk_strike = -1  # tick the lurker peels off its flank into the site
         rotate_at: dict[str, int] = {}
         post_plant_spots: dict[str, str] = {}
         winner: str | None = None
@@ -695,12 +713,30 @@ class _MatchSim:
                         continue
                 went = True
                 # The lurker sits out the group execute — it keeps its util
-                # and its flank instead of committing to the site.
+                # and its flank instead of committing to the site — then
+                # strikes in as a late second wave once the hit has landed.
                 pushers = [q for q in alive_atk if q not in self._lurkers]
                 self._execute_utility(pushers or alive_atk, tick, seed_path, flash_side="defense", rng=rng)
                 site_cs = self._site_callouts(target_site)
                 for i, q in enumerate(pushers):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
+                if self._lurkers:
+                    lurk_strike = tick + C.LURK_STRIKE_DELAY
+
+            # -- lurk strike -------------------------------------------------------------
+            # The bait is set; now the lurker flanks the site from its off
+            # angle, hitting defenders collapsed on the entry or rotating.
+            if self._lurk_strike_due(lurk_strike, tick, went, spike_planted):
+                site_cs = self._site_callouts(target_site)
+                for q in sorted(self._lurkers):
+                    if self.p[q].alive:
+                        dest = min(
+                            site_cs,
+                            key=lambda c: (self.dist.get((self.p[q].callout, c), 99), c),
+                        )
+                        self._order(q, f"goto:{dest}")
+                self._lurkers = set()  # committed — they're part of the hit now
+                lurk_strike = -1
 
             # -- abort a failed hit ------------------------------------------------------
             # Down two bodies in the entry fight with no plant: real teams
@@ -745,17 +781,20 @@ class _MatchSim:
                         self.p[q].has_spike = True
                         self._spike_dropped_at = None
                         # A lurker that grabs the spike abandons the flank
-                        # and rejoins the hit — otherwise the team would
-                        # execute without the spike and lose on time.
-                        was_lurker = q in self._lurkers
+                        # and rejoins the hit.
                         self._lurkers.discard(q)
                         # If the execute is already underway, route the fresh
-                        # carrier onto site: its stale goto:<drop> order would
-                        # otherwise park it at the pickup spot (which the
-                        # plant logic only overrides once on-site) until the
-                        # round times out. Neutral-safe: lurkers only exist
-                        # above map_control 50, so this never fires at 50.
-                        if was_lurker and went:
+                        # carrier onto site. Its standing order is a stale
+                        # goto:<drop> (from the fetch) or a lurk/flank hold —
+                        # and the plant logic only takes over once the
+                        # carrier is already on-site, so without this the
+                        # carrier parks at the pickup spot until the round
+                        # times out. This fires for any carrier (not just
+                        # lurkers), so it does shift neutral play — it wiped
+                        # out the undeserved clock losses in the balance
+                        # report — but the golden match (haven/42) never hits
+                        # this path, so that fixture is unchanged.
+                        if went:
                             site_cs = self._site_callouts(target_site)
                             if self.p[q].callout not in site_cs and site_cs:
                                 dest = min(
@@ -966,8 +1005,9 @@ class _MatchSim:
 
         Aggression bends the setup depth: an aggressive coach sets up
         forward on the overlooks to steal early picks (holder spots first);
-        a neutral or passive book anchors the site proper. Neutral (<=55)
-        keeps the pre-tactics ordering exactly, so the golden log holds."""
+        a passive coach abandons the forward angles and anchors the site
+        proper for the retake. Neutral (45-55) keeps the pre-tactics
+        ordering (site then holders) exactly, so the golden log holds."""
         counts = {s: 5 // len(sites) for s in sites}
         remainder = 5 - sum(counts.values())
         for idx in list(rng.permutation(len(sites)))[:remainder]:
@@ -980,6 +1020,7 @@ class _MatchSim:
 
         aggr = self._tactics(self.p[defenders[0]].team_id).aggression if defenders else 50.0
         forward = aggr > 55.0
+        passive = aggr < 45.0
         pool = sorted(defenders, key=anchor_key)
         assignment: dict[str, str] = {}
         i = 0
@@ -988,6 +1029,8 @@ class _MatchSim:
             holders = self._holder_spots(s)
             if forward and holders:
                 spots = holders + site_cs
+            elif passive:
+                spots = site_cs  # anchor the site, cede the forward angles
             else:
                 spots = site_cs + holders
             for k in range(counts[s]):
@@ -1237,8 +1280,9 @@ class _MatchSim:
             if planted_at is not None:
                 # Aggression bends where they hold: an aggressive team pushes
                 # off the spike onto the surrounding angles to deny the
-                # defuse wide; a neutral/passive team keeps a body on the
-                # spike. Neutral (<=55) keeps the original ordering exactly.
+                # defuse wide; a passive team double-stacks the spike itself
+                # to make the defuse impossible to sneak. Neutral (45-55)
+                # keeps the original ordering (one on spike) exactly.
                 neighbors = sorted(self.map.neighbors(planted_at))
                 aggr = (
                     self._tactics(self.p[alive_atk[0]].team_id).aggression
@@ -1247,6 +1291,8 @@ class _MatchSim:
                 )
                 if aggr > 55.0 and neighbors:
                     spots = neighbors + [planted_at]
+                elif aggr < 45.0:
+                    spots = [planted_at, planted_at] + neighbors
                 else:
                     spots = [planted_at] + neighbors
                 taken = set(post_plant_spots.values())
@@ -1267,6 +1313,12 @@ class _MatchSim:
                 if self.dist.get((self.p[q].callout, planted_at), 99) <= 1
             ]
             group_ready = len(near) >= min(2, len(alive_dfn))
+            # Eco greed sets the risk appetite for the retake: a greedy book
+            # values the round over the rifles and pushes a retake even a
+            # body down; a thrifty book concedes early to save weapons.
+            # Neutral (50) keeps the original down-2 save line exactly.
+            greed = self._tactics(self.p[alive_dfn[0]].team_id).eco_greed if alive_dfn else 50.0
+            retake_deficit = 1 + round((greed - 50.0) / 50.0)
             for q in alive_dfn:
                 ps = self.p[q]
                 if ps.defusing_until >= 0:
@@ -1274,8 +1326,8 @@ class _MatchSim:
                 remaining = plant_tick + C.SPIKE_TICKS - tick
                 d_hops = self.dist.get((ps.callout, planted_at), 9)
                 needed = d_hops * C.MOVE_TICKS_PER_EDGE + C.DEFUSE_TICKS + 4
-                # Save when clearly outmanned (down 2+) or out of time.
-                if len(alive_dfn) < len(alive_atk) - 1 or remaining < needed:
+                # Save when outmanned past the appetite line, or out of time.
+                if len(alive_dfn) < len(alive_atk) - retake_deficit or remaining < needed:
                     self._order(q, "hold")
                 elif d_hops <= 1 and not group_ready and remaining > needed + 10:
                     self._order(q, "hold")  # wait for a partner at the door

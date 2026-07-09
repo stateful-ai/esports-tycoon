@@ -235,6 +235,10 @@ PACE_ABORT_SPAN = 1
 # the stack less and rolls for a lurker.
 LURK_MIN_CONTROL = 50.0  # no lurker at or below neutral
 LURK_MAX_PROB = 0.55  # lurk chance at map_control=100
+# The lurker baits at its flank, then strikes into the site this many ticks
+# after the main hit commits — a late second wave onto defenders who have
+# collapsed on the entry or are mid-rotation.
+LURK_STRIKE_DELAY = 18
 # Below neutral, collapse the staging onto fewer entry callouts (a hard
 # stack). At control 0 the whole team funnels through a single entry.
 STACK_MIN_CONTROL = 50.0
