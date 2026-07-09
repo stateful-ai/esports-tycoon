@@ -210,6 +210,8 @@ class _MatchSim:
         self._doors_closed: set[str] = set()
         # (gimmick, mover_team, dest_room, x, y) — resolved in the tick loop.
         self._pending_sounds: list[tuple] = []
+        # Attackers peeled off the main hit to lurk a flank this round.
+        self._lurkers: set[str] = set()
 
     # -- setup helpers -----------------------------------------------------
 
@@ -254,6 +256,23 @@ class _MatchSim:
                 if zone in (CalloutZone.ATTACKER_SIDE, CalloutZone.MID):
                     entries.add(nb)
         return sorted(entries) or self._site_callouts(site)
+
+    def _lurk_callout(self, target_site: str, sites: list[str]) -> str:
+        """Where a peeled-off lurker sets up: a mid callout if the map has
+        one, otherwise an entry toward a different site — anywhere that
+        threatens a flank or a rotator away from the main hit. Deterministic
+        so the pick is replay-stable."""
+        mids = sorted(
+            c.id for c in self.map.callouts.values() if c.zone == CalloutZone.MID
+        )
+        if mids:
+            return mids[len(mids) // 2]
+        for s in sorted(s for s in sites if s != target_site):
+            ent = self._entry_callouts(s)
+            if ent:
+                return ent[0]
+        ent = self._entry_callouts(target_site)
+        return ent[0] if ent else self.map.attacker_spawn
 
     def _holder_spots(self, site: str) -> list[str]:
         """Defense-advantaged callouts overlooking the site. Only
@@ -469,6 +488,7 @@ class _MatchSim:
         self._retake_popped = False
         self._info_rotate_used = False
         self._pending_sounds = []
+        self._lurkers = set()
         for pid in sorted(self.p):
             ps = self.p[pid]
             ps.alive = True
@@ -531,9 +551,33 @@ class _MatchSim:
             self._set_watch(self.p[pid], atk)
 
         # -- attacker staging ---------------------------------------------------------
+        # Map control bends the shape of the default. Below neutral the team
+        # funnels onto fewer entries (a hard stack); above neutral it may
+        # peel a lurker off the hit to threaten a flank. Neutral (50) stages
+        # exactly like the pre-tactics engine.
         entries = self._entry_callouts(target_site)
-        for i, pid in enumerate(attackers):
-            self._order(pid, f"goto:{entries[i % len(entries)]}")
+        mc = tac.map_control
+        if mc > C.LURK_MIN_CONTROL:
+            p_lurk = (
+                (mc - C.LURK_MIN_CONTROL)
+                / (100.0 - C.LURK_MIN_CONTROL)
+                * C.LURK_MAX_PROB
+            )
+            if rng.random() < p_lurk:
+                pool = [q for q in attackers if not self.p[q].has_spike]
+                if pool:
+                    self._lurkers.add(
+                        max(pool, key=lambda q: (self._player(q).attr("game_sense"), q))
+                    )
+        width = len(entries)
+        if mc < C.STACK_MIN_CONTROL:
+            width = max(1, round(len(entries) * mc / C.STACK_MIN_CONTROL))
+        use_entries = entries[:width] or entries
+        stackers = [pid for pid in attackers if pid not in self._lurkers]
+        for i, pid in enumerate(stackers):
+            self._order(pid, f"goto:{use_entries[i % len(use_entries)]}")
+        for pid in self._lurkers:
+            self._order(pid, f"goto:{self._lurk_callout(target_site, sites)}")
 
         # -- round tick loop --------------------------------------------------------------
         spike_planted = False
@@ -644,14 +688,18 @@ class _MatchSim:
                     if new_site is not None:
                         target_site = new_site
                         entries = self._entry_callouts(target_site)
-                        for i, q in enumerate(alive_atk):
+                        pushers = [q for q in alive_atk if q not in self._lurkers]
+                        for i, q in enumerate(pushers):
                             self._order(q, f"goto:{entries[i % len(entries)]}")
                         go_tick = tick + 12
                         continue
                 went = True
-                self._execute_utility(alive_atk, tick, seed_path, flash_side="defense", rng=rng)
+                # The lurker sits out the group execute — it keeps its util
+                # and its flank instead of committing to the site.
+                pushers = [q for q in alive_atk if q not in self._lurkers]
+                self._execute_utility(pushers or alive_atk, tick, seed_path, flash_side="defense", rng=rng)
                 site_cs = self._site_callouts(target_site)
-                for i, q in enumerate(alive_atk):
+                for i, q in enumerate(pushers):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
 
             # -- abort a failed hit ------------------------------------------------------
@@ -661,13 +709,19 @@ class _MatchSim:
             if went and not spike_planted and not aborted:
                 atk_dead = 5 - len(alive_atk)
                 dfn_dead = 5 - len(alive_dfn)
-                if atk_dead - dfn_dead >= 2 and alive_atk:
+                # Fast books ram a floundering hit through; slow books pull
+                # out and re-default. Neutral pace bails at down-2.
+                abort_thresh = 2 + round(
+                    (tac.pace - 50.0) / 50.0 * C.PACE_ABORT_SPAN
+                )
+                if atk_dead - dfn_dead >= abort_thresh and alive_atk:
                     aborted = True
                     went = False
                     go_tick = min(tick + 50, C.FORCE_GO_TICK + 30)
                     for q in alive_atk:
                         self.p[q].bonus_until = -1
-                    for i, q in enumerate(alive_atk):
+                    pushers = [q for q in alive_atk if q not in self._lurkers]
+                    for i, q in enumerate(pushers):
                         self._order(q, f"goto:{entries[i % len(entries)]}")
 
             # -- movement: continuous stepping, then arrivals ----------------------------
@@ -690,6 +744,28 @@ class _MatchSim:
                     if self.p[q].callout == self._spike_dropped_at:
                         self.p[q].has_spike = True
                         self._spike_dropped_at = None
+                        # A lurker that grabs the spike abandons the flank
+                        # and rejoins the hit — otherwise the team would
+                        # execute without the spike and lose on time.
+                        was_lurker = q in self._lurkers
+                        self._lurkers.discard(q)
+                        # If the execute is already underway, route the fresh
+                        # carrier onto site: its stale goto:<drop> order would
+                        # otherwise park it at the pickup spot (which the
+                        # plant logic only overrides once on-site) until the
+                        # round times out. Neutral-safe: lurkers only exist
+                        # above map_control 50, so this never fires at 50.
+                        if was_lurker and went:
+                            site_cs = self._site_callouts(target_site)
+                            if self.p[q].callout not in site_cs and site_cs:
+                                dest = min(
+                                    site_cs,
+                                    key=lambda c: (
+                                        self.dist.get((self.p[q].callout, c), 99),
+                                        c,
+                                    ),
+                                )
+                                self._order(q, f"goto:{dest}")
                         break
 
             # -- coach re-orders --------------------------------------------------------------
@@ -886,7 +962,12 @@ class _MatchSim:
         self, defenders: list[str], sites: list[str], rng: np.random.Generator
     ) -> dict[str, str]:
         """Spread 5 defenders across sites: anchors on site, others on
-        defense-advantaged holder spots."""
+        defense-advantaged holder spots.
+
+        Aggression bends the setup depth: an aggressive coach sets up
+        forward on the overlooks to steal early picks (holder spots first);
+        a neutral or passive book anchors the site proper. Neutral (<=55)
+        keeps the pre-tactics ordering exactly, so the golden log holds."""
         counts = {s: 5 // len(sites) for s in sites}
         remainder = 5 - sum(counts.values())
         for idx in list(rng.permutation(len(sites)))[:remainder]:
@@ -897,11 +978,18 @@ class _MatchSim:
             is_anchor = pl.playstyle in (Playstyle.ANCHOR, Playstyle.SUPPORT)
             return (not is_anchor, -pl.attr("positioning"), pid)
 
+        aggr = self._tactics(self.p[defenders[0]].team_id).aggression if defenders else 50.0
+        forward = aggr > 55.0
         pool = sorted(defenders, key=anchor_key)
         assignment: dict[str, str] = {}
         i = 0
         for s in sites:
-            spots = self._site_callouts(s) + self._holder_spots(s)
+            site_cs = self._site_callouts(s)
+            holders = self._holder_spots(s)
+            if forward and holders:
+                spots = holders + site_cs
+            else:
+                spots = site_cs + holders
             for k in range(counts[s]):
                 if i >= len(pool):
                     break
@@ -1147,7 +1235,20 @@ class _MatchSim:
             # Assignments are sticky — constant re-shuffling would keep
             # everyone mid-move and forfeit holder advantage.
             if planted_at is not None:
-                spots = [planted_at] + sorted(self.map.neighbors(planted_at))
+                # Aggression bends where they hold: an aggressive team pushes
+                # off the spike onto the surrounding angles to deny the
+                # defuse wide; a neutral/passive team keeps a body on the
+                # spike. Neutral (<=55) keeps the original ordering exactly.
+                neighbors = sorted(self.map.neighbors(planted_at))
+                aggr = (
+                    self._tactics(self.p[alive_atk[0]].team_id).aggression
+                    if alive_atk
+                    else 50.0
+                )
+                if aggr > 55.0 and neighbors:
+                    spots = neighbors + [planted_at]
+                else:
+                    spots = [planted_at] + neighbors
                 taken = set(post_plant_spots.values())
                 free = [s for s in spots if s not in taken]
                 for q in alive_atk:
@@ -1728,10 +1829,16 @@ class _MatchSim:
                     self._flashed = False
 
                 # A peeker with a flash in the pocket swings behind it.
+                # Disciplined books hold a flash back for exactly this;
+                # dump-it-all books rarely have one left to pop.
                 if peek_a or peek_d:
                     peeker, mark = (pa, pd) if peek_a else (pd, pa)
                     flash_ab = self._flash_ability(peeker)
-                    if flash_ab is not None and rng.random() < C.PEEK_FLASH_PROB:
+                    disc = self._tactics(peeker.team_id).util_discipline
+                    p_pop = C.PEEK_FLASH_PROB * (
+                        1.0 + (disc - 50.0) / 50.0 * C.DISC_PEEK_FLASH_SPAN
+                    )
+                    if flash_ab is not None and rng.random() < p_pop:
                         peeker.charges[flash_ab.id] -= 1
                         mark.flash_until = tick + C.FLASH_TICKS
                         self._emit(
@@ -1889,6 +1996,11 @@ class _MatchSim:
             + (pl.attr("game_sense") - 50.0) / 300.0
             + trait_value(pl, "trade_bonus", 0.0)  # glue players refrag
         )
+        # Coaching identity: aggressive teams stack tight and hunt the
+        # refrag, passive teams give some trades up for safer spacing.
+        aggr = self._tactics(self.p[trader].team_id).aggression
+        p_trade *= 1.0 + (aggr - 50.0) / 50.0 * C.AGGRO_TRADE_SPAN
+        p_trade = min(0.95, max(0.0, p_trade))
         if rng.random() < p_trade:
             self._kill(
                 trader, killer, self.p[trader].weapon, tick, seed_path, rng,

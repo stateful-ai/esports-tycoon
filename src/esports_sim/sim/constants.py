@@ -206,3 +206,35 @@ STALL_TICKS_MAX = 10
 FALLBACK_OUTNUMBER = 2  # attackers minus on-site defenders to trigger rolls
 FALLBACK_BASE_PROB = 0.45  # + game_sense scaling; heroes sometimes stay
 FALLBACK_GRACE_TICKS = 8  # covers the retreat hop out of the crossfire
+
+# ---------------------------------------------------------------------------
+# Tactics reach: how far each coaching dial bends the *micro* of a round.
+# Every term below is written so a neutral 50 dial is an EXACT no-op — the
+# golden log and the balance band are both measured with default (neutral)
+# tactics, so neutrality here is what keeps those gates byte-stable.
+
+# Aggression also shapes refrag spacing: aggressive teams stack tighter and
+# hunt the trade, passive teams give up some refrags for safer spacing.
+# Scales the trade probability by +/- this fraction across the full dial.
+AGGRO_TRADE_SPAN = 0.30
+
+# Utility discipline shapes flash-for-peek: a disciplined player keeps a
+# flash in the pocket to pop on a swing instead of dumping it on the group
+# execute. Scales PEEK_FLASH_PROB by +/- this fraction across the dial.
+DISC_PEEK_FLASH_SPAN = 0.50
+
+# Pace shapes commitment on a floundering hit: fast books ram the entry
+# through, slow books pull out and re-default. Shifts the abort threshold
+# (attackers-down minus defenders-down) by +/- this many bodies. At pace 0
+# the team pulls out at -1, at pace 100 it only bails at -3.
+PACE_ABORT_SPAN = 1
+
+# Map control (attack default): stack tight onto one entry and hit as five,
+# or spread wide for map presence and peel a lurker onto a flank. Neutral
+# and below keeps the current grouped staging; above neutral concentrates
+# the stack less and rolls for a lurker.
+LURK_MIN_CONTROL = 50.0  # no lurker at or below neutral
+LURK_MAX_PROB = 0.55  # lurk chance at map_control=100
+# Below neutral, collapse the staging onto fewer entry callouts (a hard
+# stack). At control 0 the whole team funnels through a single entry.
+STACK_MIN_CONTROL = 50.0

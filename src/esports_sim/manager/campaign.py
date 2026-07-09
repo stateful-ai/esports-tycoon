@@ -900,6 +900,9 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
         tac.pace = round(clamp(50 + (entry_q - 60) * 0.7 + rng.normal(0, 8)), 1)
         tac.util_discipline = round(clamp(igl_sense * 0.8 + rng.normal(0, 8)), 1)
         tac.eco_greed = round(clamp(50 + rng.normal(0, 12)), 1)
+        # Map control tracks the IGL's read of the game: sharp IGLs spread
+        # and lurk for picks, blunt ones stack and hit as five.
+        tac.map_control = round(clamp(50 + (igl_sense - 55) * 0.6 + rng.normal(0, 9)), 1)
         tac.site_focus = (
             "balanced"
             if rng.random() < 0.65
