@@ -41,6 +41,7 @@ from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
+from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -431,19 +432,6 @@ def _map_thumb_url(map_id: str) -> str:
     return f"/assets/maps/{map_id}.webp"
 
 
-def _pick_agent_id(p: Player, gd: GameData) -> str:
-    """Highest-mastery agent the player knows; fall back to a role default.
-    Mirrors sim.engine.MatchEngine._pick_agent (kept in sync manually — the
-    web layer doesn't import sim internals) so the icon shown in a replay
-    matches the agent that was actually played."""
-    pool = sorted(p.agent_pool, key=lambda m: (-m.mastery, m.agent_id))
-    for m in pool:
-        if m.agent_id in gd.agents:
-            return m.agent_id
-    by_role = sorted(a.id for a in gd.agents.values() if a.role == p.role)
-    return by_role[0] if by_role else sorted(gd.agents)[0]
-
-
 def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -> float:
     """Scout-noised attribute. Deterministic per (campaign, player, attr):
     the same fog level always shows the same guess — reports don't jitter."""
@@ -806,6 +794,9 @@ def inbox_read(body: InboxReadBody) -> dict:
 
 
 FOG_BASE_SIGMA = 12.0
+# Scout coverage that unlocks a rival's committed lineup (their per-player agent
+# locks) — same tier as reading their coaching identity.
+LINEUP_REVEAL_PROGRESS = 0.5
 
 
 def _team_fog(gs: GameState, team_id: str) -> float:
@@ -822,6 +813,20 @@ def roster(team_id: str) -> dict:
             raise HTTPException(404, "unknown team")
         fog = _team_fog(gs, team_id)
         players = [_player_view(p, gs, fog) for p in gs.roster(team_id)]
+        team = gs.teams[team_id]
+        own = team_id == gs.acting_team_id
+        # Own club always sees its locks; a rival's leak once you've scouted them
+        # far enough to read their strategy. Below that, the agent column fogs.
+        lineup_revealed = own or gs.scout_progress.get(team_id, 0.0) >= LINEUP_REVEAL_PROGRESS
+        if lineup_revealed:
+            for v in players:
+                pl = gs.players[v["id"]]
+                aid = lineup_resolve.resolve_agent(team, pl, S.gd.agents)
+                v["planned_agent"] = S.gd.agents[aid].display_name
+                v["planned_agent_id"] = aid
+                # Distinguish a committed lock from the engine's likely auto-pick.
+                locked = team.lineup.agents.get(v["id"])
+                v["planned_locked"] = bool(locked and locked in S.gd.agents)
         # Rival rosters are buyable: show the seller's ask per player.
         tendencies: list[str] = []
         if team_id != gs.acting_team_id:
@@ -851,6 +856,7 @@ def roster(team_id: str) -> dict:
             "players": players,
             "is_user_team": team_id == gs.acting_team_id,
             "fog": round(fog, 1),
+            "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
             "tendencies": tendencies,
@@ -1306,12 +1312,92 @@ def _tactics_fit(gs: GameState, team: Team) -> dict:
     }
 
 
+def _lineup_view(gs: GameState, team: Team) -> dict:
+    """The week's lineup for the tactics screen: every starter with the full
+    agent menu, the coach's current lock (if any), and the automatic pick. The
+    resolved agent comes from sim/lineup.py — the same code the engine fields —
+    so the preview can't drift from what actually gets played."""
+    agents = S.gd.agents
+    players = []
+    for pid in team.player_ids:
+        if pid not in gs.players:
+            continue
+        pl = gs.players[pid]
+        # Every agent is offerable; mastery (0 off-pool) is the honest cost cue.
+        options = sorted(
+            (
+                {
+                    "id": a.id,
+                    "name": a.display_name,
+                    "role": str(a.role),
+                    "mastery": round(pl.agent_mastery(a.id, 0.0)),
+                }
+                for a in agents.values()
+            ),
+            key=lambda o: (-o["mastery"], o["name"]),
+        )
+        assigned = team.lineup.agents.get(pid)
+        assigned = assigned if (assigned and assigned in agents) else None
+        auto = lineup_resolve.auto_pick_agent(pl, agents)
+        resolved = assigned or auto
+        players.append(
+            {
+                "id": pid,
+                "handle": pl.handle,
+                "role": str(pl.role),
+                "playstyle": str(pl.playstyle),
+                "options": options,
+                "assigned": assigned,
+                "auto_id": auto,
+                "auto_name": agents[auto].display_name,
+                "resolved_id": resolved,
+                "resolved_name": agents[resolved].display_name,
+            }
+        )
+    return {"players": players}
+
+
 @app.get("/api/tactics")
 def tactics_view() -> dict:
     with S.lock:
         gs = S.require_gs()
         team = gs.teams[gs.acting_team_id]
-        return {"tactics": team.tactics.model_dump(), "fit": _tactics_fit(gs, team)}
+        return {
+            "tactics": team.tactics.model_dump(),
+            "fit": _tactics_fit(gs, team),
+            "lineup": _lineup_view(gs, team),
+        }
+
+
+class LineupBody(BaseModel):
+    # player_id -> agent_id. An empty/absent value clears that player back to
+    # the automatic pick. Starter selection is deferred until a bench exists.
+    agents: dict[str, str] | None = None
+
+
+@app.post("/api/actions/lineup")
+def set_lineup(body: LineupBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.agents is not None:
+            roster = set(team.player_ids)
+            new: dict[str, str] = {}
+            for pid, aid in body.agents.items():
+                if pid not in roster:
+                    raise HTTPException(422, f"{pid} is not on your roster")
+                if not aid:  # "" / null → auto-pick (leave unset)
+                    continue
+                if aid not in S.gd.agents:
+                    raise HTTPException(422, f"unknown agent {aid}")
+                new[pid] = aid
+            team.lineup.agents = new
+        S.save()
+        return {
+            "ok": True,
+            "message": "lineup locked",
+            "lineup": _lineup_view(gs, team),
+        }
 
 
 class TacticsBody(BaseModel):
@@ -2012,7 +2098,11 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for pid in gs.teams[tid].player_ids:
                 p = gs.players.get(pid)
                 if p:
-                    agent_id = _pick_agent_id(p, S.gd)
+                    # Honour the coach's agent lock so a replay's icon matches
+                    # the agent the engine actually fielded (shared resolver).
+                    agent_id = lineup_resolve.resolve_agent(
+                        gs.teams[tid], p, S.gd.agents
+                    )
                     players[pid] = {
                         "handle": p.handle,
                         "team_id": tid,

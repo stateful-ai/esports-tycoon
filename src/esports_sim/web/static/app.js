@@ -747,7 +747,7 @@ async function roster(v) {
   }
   const t = el("table");
   t.innerHTML = `<thead><tr>
-    <th>Player</th><th>Role</th><th class="num">Age</th><th class="num">OVR</th>
+    <th>Player</th><th>Role</th><th>Agent</th><th class="num">Age</th><th class="num">OVR</th>
     <th>Ceiling</th>
     <th>Form</th><th>Morale</th><th>Stamina</th>
     <th class="num">Salary</th><th class="num">Contract</th><th></th></tr></thead>`;
@@ -765,6 +765,9 @@ async function roster(v) {
     const tr = el("tr", "", `
       <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}</td>
       <td>${stylePill(p)}</td>
+      <td>${p.planned_agent
+        ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
+        : '<span class="muted">scout</span>'}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
       <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
@@ -801,7 +804,7 @@ async function roster(v) {
     let detail = null;
     tr.onclick = () => {
       if (detail) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="10">${attrDetail(p)}</td>`);
+      detail = el("tr", "", `<td colspan="12">${attrDetail(p)}</td>`);
       tr.after(detail);
     };
     tb.appendChild(tr);
@@ -1083,6 +1086,80 @@ async function tactics(v) {
   barRow.appendChild(save);
   barRow.appendChild(el("span", "muted",
     "Scout a rival to 50%+ to read their coaching identity on their roster page."));
+  card.appendChild(barRow);
+  v.appendChild(card);
+
+  lineupCard(v, data.lineup);
+}
+
+// This week's committed agents — one lock per player, chosen before you know
+// the map. "Auto" leaves the engine to field their best-mastery agent (the
+// default). Rivals must scout you to 50%+ to read this on your roster page.
+function lineupCard(v, lineup) {
+  const card = el("div", "card", `<h2>This week's lineup</h2>`);
+  card.appendChild(el("p", "muted",
+    `Lock the agent each player runs this week. You won't know the map when it's
+     played, so it's one agent per player — pick for comfort. <b>Auto</b> fields
+     their best-mastery agent. Off-role picks work but low mastery hurts duels.`));
+  const t = el("table");
+  t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th>Agent</th>
+    <th class="num">Mastery</th></tr></thead>`;
+  const tb = el("tbody");
+  const pending = {}; // pid -> agent_id ("" = auto)
+  for (const p of lineup.players) {
+    const sel = el("select", "lineup-sel");
+    const auto = el("option", "", `Auto — ${p.auto_name}`);
+    auto.value = "";
+    sel.appendChild(auto);
+    for (const o of p.options) {
+      const opt = el("option", "", `${o.name} · ${o.role} · ${o.mastery} mastery`);
+      opt.value = o.id;
+      sel.appendChild(opt);
+    }
+    sel.value = p.assigned ?? "";
+    const mCell = el("td", "num");
+    const paintM = () => {
+      const id = sel.value || p.auto_id;
+      const o = p.options.find((x) => x.id === id);
+      mCell.textContent = o ? o.mastery : "—";
+      mCell.className = "num" + (o && o.mastery < 40 ? " bad" : "");
+    };
+    const tr = el("tr");
+    tr.appendChild(el("td", "", `<b class="plink" data-pid="${p.id}">${p.handle}</b>`));
+    tr.appendChild(el("td", "", stylePill(p)));
+    const aCell = el("td");
+    aCell.appendChild(sel);
+    tr.appendChild(aCell);
+    tr.appendChild(mCell);
+    tb.appendChild(tr);
+    paintM();
+    sel.onchange = () => { pending[p.id] = sel.value; paintM(); };
+  }
+  t.appendChild(tb);
+  card.appendChild(t);
+
+  const barRow = el("div", "tac-savebar");
+  const save = el("button", "btn btn-primary", "Lock agents");
+  save.onclick = async () => {
+    // Send the full desired map so a cleared pick reverts to auto server-side.
+    const agents = {};
+    for (const p of lineup.players) {
+      const cur = p.id in pending ? pending[p.id] : (p.assigned ?? "");
+      if (cur) agents[p.id] = cur;
+    }
+    const r = await api("/api/actions/lineup", { agents });
+    toast(r.message);
+    // Sync local state to the server's fresh view: a POST replaces the whole
+    // agent map, so a later save must resend the locks this one just made.
+    const byId = Object.fromEntries((r.lineup?.players ?? []).map((q) => [q.id, q]));
+    for (const p of lineup.players) {
+      if (byId[p.id]) p.assigned = byId[p.id].assigned;
+    }
+    for (const k of Object.keys(pending)) delete pending[k];
+  };
+  barRow.appendChild(save);
+  barRow.appendChild(el("span", "muted",
+    "Committed before map pick — rivals need 50%+ scouting to read it."));
   card.appendChild(barRow);
   v.appendChild(card);
 }

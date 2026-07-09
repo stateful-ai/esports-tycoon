@@ -6,7 +6,7 @@ from esports_sim.schemas.agent import Agent, Ability, AbilityType
 from esports_sim.schemas.weapon import Weapon, WeaponClass
 from esports_sim.schemas.map import Callout, Gimmick, GimmickType, Map, SightLine
 from esports_sim.schemas.player import Player, AgentMastery, MapMastery
-from esports_sim.schemas.team import Team
+from esports_sim.schemas.team import Team, TeamLineup, TeamTactics
 from esports_sim.schemas.match import MatchState, RoundState, PlayerRoundState, RoundPhase
 from esports_sim.schemas.observation import PlayerObservation
 from esports_sim.schemas.events import (
@@ -49,6 +49,8 @@ __all__ = [
     "AgentMastery",
     "MapMastery",
     "Team",
+    "TeamLineup",
+    "TeamTactics",
     "MatchState",
     "RoundState",
     "PlayerRoundState",

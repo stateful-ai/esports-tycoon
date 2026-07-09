@@ -37,6 +37,28 @@ class TeamTactics(BaseModel):
     site_focus: str = "balanced"
 
 
+class TeamLineup(BaseModel):
+    """The week's committed lineup: which five start and the agent each locks
+    in. The agent is chosen before you know the map, so it's a single agent per
+    player, not a per-map sheet.
+
+    Both axes default empty, and empty means "let the engine decide" — the whole
+    roster starts and each player runs their best-mastery agent, exactly what
+    the pre-lineup engine did. So a default team is byte-identical under the
+    golden/balance gates; only an explicit coach choice changes anything.
+    Resolution lives in `sim/lineup.py`, shared by the engine and the web
+    serializer so a scouted opponent preview can't drift from what's fielded.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    # Player ids that start. [] = the whole roster (no bench exists yet, so
+    # this stays empty in practice; it activates for free once substitutes land).
+    starters: list[str] = Field(default_factory=list)
+    # player_id -> agent_id. A missing player = that player's automatic pick.
+    agents: dict[str, str] = Field(default_factory=dict)
+
+
 class Team(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -63,3 +85,7 @@ class Team(BaseModel):
 
     # Coaching strategy (defaults are neutral on every dial).
     tactics: TeamTactics = Field(default_factory=TeamTactics)
+
+    # This week's committed lineup (starters + per-player agent locks). Empty =
+    # the engine's automatic pick, so a default team plays exactly as before.
+    lineup: TeamLineup = Field(default_factory=TeamLineup)
