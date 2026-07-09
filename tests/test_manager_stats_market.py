@@ -43,6 +43,44 @@ def test_richer_stats_derived_from_log() -> None:
     assert sum(l.multikills for l in st0.lines.values()) == tot("multikills")
 
 
+def test_clutch_requires_surviving_to_win() -> None:
+    """A post-plant round can detonate for the attackers after their last man
+    dies — a win, but not a clutch. The isolated player is only credited if
+    they were still alive at round end."""
+    from esports_sim.schemas.events import (
+        KillEvent, MatchEndEvent, MatchStartEvent, RoundEndEvent,
+        RoundStartEvent, SpikePlantEvent,
+    )
+
+    team_of = {"a1": "A", "a2": "A", "a3": "A", "d1": "D", "d2": "D", "d3": "D"}
+
+    def clutches(last_man_dies: bool) -> int:
+        ev = [
+            MatchStartEvent(match_id="m", map_id="haven", team_a_id="A", team_b_id="D", seed=1),
+            RoundStartEvent(round_num=1, attacking_team_id="A", defending_team_id="D"),
+            KillEvent(killer_id="d1", victim_id="a1", weapon_id="vandal"),
+            KillEvent(killer_id="d1", victim_id="a2", weapon_id="vandal"),  # a3 isolated 1v3
+            SpikePlantEvent(player_id="a3", callout_id="site"),
+        ]
+        if last_man_dies:
+            ev.append(KillEvent(killer_id="d2", victim_id="a3", weapon_id="vandal"))
+            reason = "spike_detonation"  # still an A win
+        else:
+            ev += [
+                KillEvent(killer_id="a3", victim_id="d1", weapon_id="vandal"),
+                KillEvent(killer_id="a3", victim_id="d2", weapon_id="vandal"),
+                KillEvent(killer_id="a3", victim_id="d3", weapon_id="vandal"),
+            ]
+            reason = "elim"
+        ev.append(RoundEndEvent(round_num=1, winner_id="A", reason=reason))
+        ev.append(MatchEndEvent(match_id="m", winner_id="A", score_a=1, score_b=0))
+        st = compute_match_stats(ev, team_of)
+        return st.lines["a3"].clutches
+
+    assert clutches(last_man_dies=True) == 0  # died before detonation -> no clutch
+    assert clutches(last_man_dies=False) == 1  # survived the 1v3 -> clutch
+
+
 # -- relationships: role friction --------------------------------------------
 
 def test_two_spotlight_players_clash_more() -> None:
@@ -112,3 +150,23 @@ def test_ai_poaches_a_premium_free_agent() -> None:
     )
     assert signer != gs.user_team_id
     assert len(gs.teams[signer].player_ids) == market.ROSTER_SIZE
+
+
+def test_poach_reserves_severance_and_never_strands() -> None:
+    """A team that can cover the sign but NOT the sign plus the dropped
+    player's severance must not poach and strand itself at four players."""
+    gd, gs = _campaign()
+    target = next(t for t in sorted(gs.teams) if t != gs.user_team_id)
+    for t in gs.teams.values():
+        t.balance = 0  # price every other org out so `target` is the only suitor
+    team = gs.teams[target]
+    victim = gs.players[team.player_ids[0]]
+    fa = gs.players[gs.free_agent_ids[0]]
+    fa.playstyle = victim.playstyle
+    for k in list(fa.attributes):
+        fa.attributes[k] = 85.0  # premium, clear quality gap over the victim
+    ask = market.asking_salary(fa)
+    victim.salary = ask  # severance = 6*ask, so it eats past the sign reserve
+    team.balance = ask * 12  # enough for the sign alone, not sign + severance
+    market.ai_poach_free_agents(gs, gd, np.random.default_rng(2))
+    assert len(team.player_ids) == market.ROSTER_SIZE  # never left at four

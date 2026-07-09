@@ -232,9 +232,13 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
             if not same:
                 continue
             weakest = min(same, key=lambda p: (player_quality(p), p.id))
+            # Reserve the dropped player's severance too: release_player
+            # charges it before sign_player re-checks affordability, so
+            # without this the swap can strand the roster at four players.
+            severance = weakest.salary * SEVERANCE_WEEKS
             if (
                 cq - player_quality(weakest) >= POACH_GAP
-                and team.balance >= asking_salary(cand) * 12
+                and team.balance >= asking_salary(cand) * 12 + severance
             ):
                 suitors.append((tid, weakest.id))
         if not suitors:

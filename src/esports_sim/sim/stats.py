@@ -141,9 +141,16 @@ def compute_match_stats(
                     line(pid).multikills += 1
                 elif n >= 3:
                     line(pid).multikills += 1
-            # Clutch: the winner's last-man-standing, isolated vs 2+ enemies.
+            # Clutch: the winner's last-man-standing, isolated vs 2+ enemies
+            # — and still ALIVE at the end. A post-plant round can detonate
+            # for the attackers after their last man dies, which is a win but
+            # not a clutch, so require the isolated player to have survived.
             clutch = isolated.get(e.winner_id)
-            if clutch is not None and clutch[1] >= 2:
+            if (
+                clutch is not None
+                and clutch[1] >= 2
+                and clutch[0] in alive.get(e.winner_id, ())
+            ):
                 line(clutch[0]).clutches += 1
         elif e.type == "match.end":
             winner_id = e.winner_id
