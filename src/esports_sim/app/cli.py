@@ -18,11 +18,13 @@ from rich.table import Table
 
 from esports_sim.manager import advance_week, new_campaign
 from esports_sim.manager.market import (
+    ROSTER_MIN,
     asking_salary,
     can_sign,
     player_quality,
     release_player,
     renew_contract,
+    roster_ready,
     sign_player,
 )
 from esports_sim.manager.schedule import regular_season_weeks
@@ -404,13 +406,12 @@ def render_match_detail(gs: GameState, fixture, stats_list) -> None:
 
 
 def advance_screen(gs: GameState, gd: GameData) -> None:
-    roster_n = len(gs.teams[gs.user_team_id].player_ids)
-    if gs.phase != "offseason" and roster_n < 5:
-        console.print(
-            f"[red]Roster has {roster_n}/5 players — you'll play short-handed "
-            f"(or forfeit at 0).[/]"
-        )
-        if ask("Advance anyway? (y/n) ") != "y":
+    # A legal roster is required to tick a match week (the offseason tick plays
+    # no matches, so it's exempt). Same rule the web ready-up enforces.
+    if gs.phase != "offseason":
+        ok, why = roster_ready(gs, gs.user_team_id)
+        if not ok:
+            console.print(f"[red]{why}.[/]")
             return
     report = advance_week(gs, gd)
     render_week_results(gs, report)
@@ -456,11 +457,22 @@ def hub(gs: GameState, gd: GameData) -> None:
 
 def auto_play(gd: GameData, weeks: int, seed: int, team: str) -> None:
     gs = new_campaign(gd, seed, user_team_id=team)
-    # A hands-off manager who at least renews contracts and rests the team.
+    # A hands-off manager who at least renews contracts, keeps a legal roster,
+    # and rests the team.
     for _ in range(weeks):
         for p in gs.roster(gs.user_team_id):
             if 0 < p.contract_weeks_left <= 4:
                 renew_contract(gs, gs.user_team_id, p.id)
+        # Never tick a match week short-handed: fill empty seats with the best
+        # affordable free agent (mirrors the roster-min invariant).
+        while len(gs.teams[team].player_ids) < ROSTER_MIN and gs.free_agent_ids:
+            best = max(
+                (gs.players[pid] for pid in gs.free_agent_ids),
+                key=lambda p: (player_quality(p), p.id),
+            )
+            ok, _ = sign_player(gs, team, best.id)
+            if not ok:
+                break
         avg_stamina = sum(p.stamina for p in gs.roster(gs.user_team_id)) / max(
             len(gs.teams[gs.user_team_id].player_ids), 1
         )

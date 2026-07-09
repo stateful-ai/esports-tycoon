@@ -470,6 +470,16 @@ def execute_package(
     for pid in out_pids:
         if pid not in buyer.player_ids:
             return False, "an offered player is no longer on the buyer's roster"
+    # An offer can sit on a human seller's desk for weeks — either side may have
+    # signed or released in the meantime. Revalidate the resulting roster sizes
+    # (same rule as propose_package) so a stale deal can't strand a roster over
+    # the cap or under the minimum.
+    buyer_end = len(buyer.player_ids) - len(out_pids) + 1
+    seller_end = len(seller.player_ids) - 1 + len(out_pids)
+    if not (ROSTER_MIN <= buyer_end <= roster_cap(gs, buyer_id)):
+        return False, f"{buyer.name} can no longer legally roster this deal"
+    if not (ROSTER_MIN <= seller_end <= roster_cap(gs, seller_id)):
+        return False, f"{seller.name} can no longer legally roster this deal"
     if buyer.balance + cash_to_buyer < cash_to_seller:
         return False, "buyer cannot afford the cash in this deal"
     if seller.balance + cash_to_seller < cash_to_buyer:

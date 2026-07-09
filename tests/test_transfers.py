@@ -189,3 +189,85 @@ def test_lifecycle_retirements_and_rookies(campaign, game_data: GameData) -> Non
     for pid in gs.free_agent_ids:
         assert pid in gs.players
     assert handles  # records kept
+
+
+def test_swap_signs_and_drops(campaign) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    gs.teams[tid].balance = 5_000_000
+    drop = gs.teams[tid].player_ids[0]
+    fa = gs.free_agent_ids[0]
+    ok, _ = market.swap_player(gs, tid, fa, drop)
+    gs.set_acting(None)
+    assert ok
+    assert fa in gs.teams[tid].player_ids
+    assert drop not in gs.teams[tid].player_ids and drop in gs.free_agent_ids
+    assert len(gs.teams[tid].player_ids) == market.ROSTER_SIZE
+
+
+def test_roster_ready_gate(campaign) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    assert market.roster_ready(gs, tid)[0]
+    while len(gs.teams[tid].player_ids) > market.ROSTER_MIN - 1:
+        market.release_player(gs, tid, gs.teams[tid].player_ids[-1])
+    ok, why = market.roster_ready(gs, tid)
+    assert not ok and f"{market.ROSTER_MIN} players" in why
+
+
+def test_package_deal_moves_players_and_cash(campaign) -> None:
+    gs = campaign
+    buyer = gs.user_team_id
+    gs.set_acting(buyer)
+    gs.teams[buyer].balance = 10_000_000
+    seller = next(
+        t for t in gs.teams.values()
+        if t.id != buyer and not gs.is_human(t.id) and t.tier == 1
+    )
+    target = seller.player_ids[0]
+    mine = max(
+        gs.teams[buyer].player_ids,
+        key=lambda pid: market.transfer_value(gs.players[pid]),
+    )
+    ask = market.transfer_ask(gs, target)
+    mine_val = market.transfer_value(gs.players[mine])
+    # Sweeten with enough cash that the package clears the asking value.
+    cash = max(0, ask - mine_val) + 50_000
+    ok, msg = market.propose_package(gs, target, [mine], cash_out=cash, cash_in=0)
+    gs.set_acting(None)
+    assert ok, msg
+    # Target came in, the offered player went out.
+    assert target in gs.teams[buyer].player_ids
+    assert mine in seller.player_ids
+    assert len(gs.teams[buyer].player_ids) == market.ROSTER_SIZE
+    assert len(seller.player_ids) == market.ROSTER_SIZE
+
+
+def test_package_offer_revalidates_stale_roster(campaign) -> None:
+    """A package offer that was legal when made can go stale on a human's desk.
+    execute_package must recheck roster sizes and refuse an illegal settlement
+    rather than stranding a roster below the minimum."""
+    gs = campaign
+    seller = gs.user_team_id
+    buyer = next(t.id for t in gs.teams.values() if t.id != seller and t.tier == 1)
+    gs.teams[buyer].balance = 5_000_000
+    target = gs.teams[seller].player_ids[0]
+    # The buyer offers TWO of their players, but their roster is only five — so
+    # settling would drop them to four, below ROSTER_MIN. (Represents an offer
+    # that was legal when the buyer had six, then released one.)
+    out = list(gs.teams[buyer].player_ids[:2])
+    gs.transfer_offers = [
+        TransferOffer(
+            player_id=target, from_team=seller, to_team=buyer,
+            fee=0, expires_week=gs.week + 2,
+            offer_player_ids=out, cash_to_seller=0, cash_to_buyer=0,
+        )
+    ]
+    gs.set_acting(seller)
+    ok, _ = market.respond_offer(gs, target, accept=True)
+    gs.set_acting(None)
+    assert not ok
+    # Nothing moved: the deal was rejected, not half-applied.
+    assert target in gs.teams[seller].player_ids
+    assert all(p in gs.teams[buyer].player_ids for p in out)
