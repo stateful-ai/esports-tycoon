@@ -20,7 +20,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | What | Command |
 |---|---|
 | Tests | `.venv-win\Scripts\python.exe -m pytest -q` |
-| Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` |
+| Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` (exit 1 = fail) |
 | Rotation pacing gate (25–35s via spawn) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball check | `... scripts\snowball_report.py` |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |

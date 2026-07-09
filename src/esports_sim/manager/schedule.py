@@ -84,15 +84,17 @@ def veto_bo3(
         log.append(f"{tag} pick {m}")
         return m
 
-    # With a 5-map pool this leaves exactly one decider; with fewer maps,
-    # degrade gracefully by skipping bans.
+    # Ban down to three maps (two picks + a decider), alternating A/B so
+    # the bans stay balanced for any pool size. With five maps that's one
+    # ban each; with fewer, the loop simply doesn't run. (The old code
+    # counted the bans twice and dumped every extra ban on team A once the
+    # pool grew past five.)
     bans = max(0, len(pool) - 3)
-    if bans >= 1:
-        ban(mastery_a, mastery_b, tag_a)
-    if bans >= 2:
-        ban(mastery_b, mastery_a, tag_b)
-    for _ in range(max(0, len(pool) - 3)):
-        ban(mastery_a, mastery_b, tag_a)
+    for i in range(bans):
+        if i % 2 == 0:
+            ban(mastery_a, mastery_b, tag_a)
+        else:
+            ban(mastery_b, mastery_a, tag_b)
 
     m1 = pick(mastery_a, mastery_b, tag_a)
     m2 = pick(mastery_b, mastery_a, tag_b)
@@ -109,6 +111,11 @@ def build_semifinals(
 ) -> list[Fixture]:
     """1v4 and 2v3, BO3. `veto_for(a, b)` returns (maps, veto_log) — the
     campaign supplies it with live roster map masteries."""
+    if len(standings_order) < 4:
+        raise ValueError(
+            f"a four-team semifinal needs at least four qualifiers, got "
+            f"{len(standings_order)}"
+        )
     top = standings_order[:4]
     pairs = [(top[0], top[3]), (top[1], top[2])]
     out = []

@@ -111,6 +111,26 @@ def test_campaign_determinism(game_data: GameData) -> None:
     assert a.model_dump_json() == b.model_dump_json()
 
 
+@pytest.mark.parametrize("seed", [7, 2024])
+def test_full_season_determinism_multiseed(game_data: GameData, seed: int) -> None:
+    """Same seed -> byte-identical campaign across a WHOLE season into the
+    next: this reaches the playoff bracket, BO3 veto, Masters/Champions
+    seeding, and the offseason rollover — none of which the 6-week
+    single-seed check above ever exercises. (Two seeds keeps the run-time
+    reasonable; the cheap single-seed check above covers the common path.)"""
+
+    def run() -> str:
+        gs = new_campaign(game_data, seed=seed)
+        for _ in range(45):  # generous cap; breaks once season 2 opens
+            advance_week(gs, game_data)
+            if gs.season >= 2 and gs.phase == "regular":
+                break
+        assert gs.season >= 2, "campaign never reached season 2 within the cap"
+        return gs.model_dump_json()
+
+    assert run() == run()
+
+
 def test_save_load_roundtrip(
     campaign: GameState, game_data: GameData, tmp_path
 ) -> None:

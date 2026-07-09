@@ -12,6 +12,8 @@ event log (nothing but the box score is persisted).
 
 from __future__ import annotations
 
+import json
+from functools import cmp_to_key
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -19,6 +21,13 @@ from pydantic import BaseModel, ConfigDict, Field
 from esports_sim.schemas import Player, Team
 
 SCHEMA_VERSION = 1
+
+# Save migrations, keyed by the schema_version they upgrade FROM. Each takes
+# the raw parsed dict and returns it bumped one version forward. Empty today
+# (v1 is current) — the hook exists so a future field rename/move can land
+# without breaking existing saves. Add-a-field changes need nothing here:
+# new fields carry defaults, so old saves load straight through.
+_MIGRATIONS: dict[int, "callable"] = {}
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
 PRIZE_SEMI_LOSER = 60_000
@@ -347,15 +356,41 @@ class GameState(BaseModel):
                 return f
         return None
 
+    def _h2h_series(self, a: str, b: str) -> int:
+        """Head-to-head series margin between two teams this season: a's
+        wins over b minus b's over a, among their played meetings."""
+        margin = 0
+        for f in self.fixtures:
+            if (
+                f.played
+                and f.winner_id is not None
+                and {f.team_a, f.team_b} == {a, b}
+            ):
+                margin += 1 if f.winner_id == a else -1
+        return margin
+
     def standings_order(
         self, region: str | None = None, tier: int = 1
     ) -> list[str]:
         """Table order, optionally restricted to one region's league.
-        Tables are per-tier; pass tier=0 for everything."""
+        Tables are per-tier; pass tier=0 for everything.
 
-        def key(tid: str) -> tuple:
-            r = self.standings[tid]
-            return (-r.wins, -(r.diff), -r.rounds_won, tid)
+        Tiebreakers, in order: wins, round differential, head-to-head series
+        (only meaningful between the two tied teams), rounds won, then team
+        id as a deterministic final fallback."""
+
+        def cmp(t1: str, t2: str) -> int:
+            r1, r2 = self.standings[t1], self.standings[t2]
+            if r1.wins != r2.wins:
+                return -1 if r1.wins > r2.wins else 1
+            if r1.diff != r2.diff:
+                return -1 if r1.diff > r2.diff else 1
+            h2h = self._h2h_series(t1, t2)
+            if h2h != 0:
+                return -1 if h2h > 0 else 1
+            if r1.rounds_won != r2.rounds_won:
+                return -1 if r1.rounds_won > r2.rounds_won else 1
+            return -1 if t1 < t2 else 1
 
         tids = [
             t
@@ -363,7 +398,7 @@ class GameState(BaseModel):
             if (region is None or str(self.teams[t].region) == region)
             and (tier == 0 or self.teams[t].tier == tier)
         ]
-        return sorted(tids, key=key)
+        return sorted(tids, key=cmp_to_key(cmp))
 
     def regions(self) -> list[str]:
         """Regions that actually have league teams, sorted."""
@@ -383,7 +418,21 @@ class GameState(BaseModel):
     @classmethod
     def load(cls, path: Path | str) -> "GameState":
         raw = Path(path).read_text(encoding="utf-8")
-        return cls.model_validate_json(raw)
+        data = json.loads(raw)
+        version = int(data.get("schema_version", 1))
+        if version > SCHEMA_VERSION:
+            raise ValueError(
+                f"save is schema v{version}, but this build only understands "
+                f"up to v{SCHEMA_VERSION} — update the game to load it."
+            )
+        # Walk any registered migrations forward to the current version. New
+        # fields with defaults need no migration; this is for structural
+        # changes (renames/moves) that a plain load couldn't absorb.
+        while version < SCHEMA_VERSION:
+            data = _MIGRATIONS[version](data)
+            version += 1
+        data["schema_version"] = SCHEMA_VERSION
+        return cls.model_validate(data)
 
     # -- finance depth (M4) ---------------------------------------------------
     # Three concurrent sponsor slots ("title", "jersey", "peripheral"), keyed
