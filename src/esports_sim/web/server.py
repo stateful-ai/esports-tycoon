@@ -315,19 +315,6 @@ def _map_thumb_url(map_id: str) -> str:
     return f"/assets/maps/{map_id}.webp"
 
 
-def _pick_agent_id(p: Player, gd: GameData) -> str:
-    """Highest-mastery agent the player knows; fall back to a role default.
-    Mirrors sim.engine.MatchEngine._pick_agent (kept in sync manually — the
-    web layer doesn't import sim internals) so the icon shown in a replay
-    matches the agent that was actually played."""
-    pool = sorted(p.agent_pool, key=lambda m: (-m.mastery, m.agent_id))
-    for m in pool:
-        if m.agent_id in gd.agents:
-            return m.agent_id
-    by_role = sorted(a.id for a in gd.agents.values() if a.role == p.role)
-    return by_role[0] if by_role else sorted(gd.agents)[0]
-
-
 def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -> float:
     """Scout-noised attribute. Deterministic per (campaign, player, attr):
     the same fog level always shows the same guess — reports don't jitter."""
@@ -1924,7 +1911,11 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for pid in gs.teams[tid].player_ids:
                 p = gs.players.get(pid)
                 if p:
-                    agent_id = _pick_agent_id(p, S.gd)
+                    # Honour the coach's agent lock so a replay's icon matches
+                    # the agent the engine actually fielded (shared resolver).
+                    agent_id = lineup_resolve.resolve_agent(
+                        gs.teams[tid], p, S.gd.agents
+                    )
                     players[pid] = {
                         "handle": p.handle,
                         "team_id": tid,

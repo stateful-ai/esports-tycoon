@@ -1059,6 +1059,12 @@ function lineupCard(v, lineup) {
     }
     const r = await api("/api/actions/lineup", { agents });
     toast(r.message);
+    // Sync local state to the server's fresh view: a POST replaces the whole
+    // agent map, so a later save must resend the locks this one just made.
+    const byId = Object.fromEntries((r.lineup?.players ?? []).map((q) => [q.id, q]));
+    for (const p of lineup.players) {
+      if (byId[p.id]) p.assigned = byId[p.id].assigned;
+    }
     for (const k of Object.keys(pending)) delete pending[k];
   };
   barRow.appendChild(save);
