@@ -253,9 +253,11 @@ STACK_MIN_CONTROL = 50.0
 EXEC_FIT_BASELINE = 55.0
 EXEC_FIT_DIV = 30.0
 # Chemistry: coordination-heavy systems (spread/lurk map control,
-# disciplined grouped retakes) lean on team cohesion. Complexity is the
-# combined off-neutral deviation of those two dials; chemistry above the
-# baseline sharpens the system, below it makes the system misfire.
+# disciplined grouped retakes) lean on team cohesion. Complexity counts
+# only the ABOVE-neutral deviation of those two dials — the low side
+# (stacking tight, dumping utility) is the simpler read and isn't gated on
+# chemistry. Chemistry above the baseline sharpens the system, below it
+# makes the system misfire.
 EXEC_CHEM_BASELINE = 65.0
 EXEC_CHEM_DIV = 20.0
 # Total execution modifier is clamped to keep it a colour on the duel, not

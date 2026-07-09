@@ -111,6 +111,16 @@ def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
     low_chem = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
     assert high_chem > low_chem
 
+    # The SIMPLE side of the dials (stack tight / dump utility) is not a
+    # coordinated system, so chemistry must not swing it either way.
+    gd.teams[A].tactics.map_control = 0.0
+    gd.teams[A].tactics.util_discipline = 0.0
+    gd.teams[A].chemistry = 100.0
+    simple_hi = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    gd.teams[A].chemistry = 20.0
+    simple_lo = eng._MatchSim(gd, A, B, "haven", 1)._execution_mod(A)
+    assert simple_hi == simple_lo
+
 
 def test_aggression_increases_refrags() -> None:
     """Aggressive teams stack tight and trade harder."""

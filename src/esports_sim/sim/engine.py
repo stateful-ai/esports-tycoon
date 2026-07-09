@@ -1710,8 +1710,14 @@ class _MatchSim:
         for dial, fit in fits:
             dev = abs(dial - 50.0) / 50.0  # 0 at neutral
             total += dev * (fit - C.EXEC_FIT_BASELINE) / C.EXEC_FIT_DIV
+        # Only the HIGH side of these dials is a coordination-heavy system —
+        # spread/lurk map control and held-for-retake discipline lean on
+        # cohesion. The low side (stacking tight, dumping utility on the hit)
+        # is the SIMPLER read and shouldn't be chemistry-gated, so count only
+        # the above-neutral deviation.
         complexity = (
-            abs(tac.map_control - 50.0) + abs(tac.util_discipline - 50.0)
+            max(0.0, tac.map_control - 50.0)
+            + max(0.0, tac.util_discipline - 50.0)
         ) / 50.0
         chem = self.gd.teams[tid].chemistry
         total += complexity * (chem - C.EXEC_CHEM_BASELINE) / C.EXEC_CHEM_DIV
