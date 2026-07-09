@@ -103,6 +103,59 @@ def test_user_offer_accept_and_decline(campaign) -> None:
     assert gs.teams[gs.user_team_id].balance == bal_before + 200_000
 
 
+def test_respond_offer_requires_seller_ownership(campaign) -> None:
+    """Shared world: only the SELLER (offer.from_team == acting manager) can
+    resolve a bid for their player. A rival manager POSTing the same player id
+    must be rejected — they cannot accept a bid on someone else's roster."""
+    gs = campaign
+    seller = gs.user_team_id
+    buyer = next(t.id for t in gs.teams.values() if t.id != seller and t.tier == 1)
+    gs.human_team_ids = [seller, buyer]  # two live managers
+    gs.teams[buyer].balance = 5_000_000
+    gs.teams[buyer].player_ids.pop()  # a human buyer needs a free roster slot
+    pid = gs.teams[seller].player_ids[0]
+    gs.transfer_offers = [
+        TransferOffer(player_id=pid, from_team=seller, to_team=buyer,
+                      fee=200_000, expires_week=gs.week + 2)
+    ]
+
+    # The buyer (not the seller) tries to accept their own incoming bid -> no.
+    gs.set_acting(buyer)
+    ok, _ = market.respond_offer(gs, pid, accept=True)
+    assert not ok
+    assert gs.transfer_offers and pid not in gs.teams[buyer].player_ids
+
+    # The seller can.
+    gs.set_acting(seller)
+    ok, _ = market.respond_offer(gs, pid, accept=True)
+    assert ok and pid in gs.teams[buyer].player_ids
+    gs.set_acting(None)
+
+
+def test_respond_offer_disambiguates_between_buyers(campaign) -> None:
+    """Two buyers bidding for the same player resolve to the buyer named in the
+    payload, not whichever offer happens to sort first."""
+    gs = campaign
+    seller = gs.user_team_id
+    b1, b2 = [t.id for t in gs.teams.values() if t.id != seller and t.tier == 1][:2]
+    pid = gs.teams[seller].player_ids[0]
+    for b in (b1, b2):
+        gs.teams[b].balance = 5_000_000
+    gs.transfer_offers = [
+        TransferOffer(player_id=pid, from_team=seller, to_team=b1,
+                      fee=100_000, expires_week=gs.week + 2),
+        TransferOffer(player_id=pid, from_team=seller, to_team=b2,
+                      fee=300_000, expires_week=gs.week + 2),
+    ]
+    bal_before = gs.teams[seller].balance
+    gs.set_acting(seller)
+    ok, _ = market.respond_offer(gs, pid, accept=True, to_team=b2)
+    assert ok
+    assert pid in gs.teams[b2].player_ids and pid not in gs.teams[b1].player_ids
+    assert gs.teams[seller].balance == bal_before + 300_000  # b2's fee, not b1's
+    gs.set_acting(None)
+
+
 def test_lifecycle_retirements_and_rookies(campaign, game_data: GameData) -> None:
     """Across multiple seasons the population turns over but stays
     bounded: careers end, rookie classes arrive, rosters stay legal."""

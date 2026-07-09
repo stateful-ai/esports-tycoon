@@ -139,7 +139,7 @@ _SLOTS: tuple[str, ...] = ("title", "jersey", "peripheral")
 
 
 def _user_win_rate(gs: GameState) -> float:
-    record = gs.standings.get(gs.user_team_id)
+    record = gs.standings.get(gs.acting_team_id)
     if not record or (record.wins + record.losses) == 0:
         return 0.5
     return record.wins / (record.wins + record.losses)
@@ -156,8 +156,8 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     that function's docstring. Every component here matches what actually
     lands on the user's balance each week either way.
     """
-    team = gs.teams[gs.user_team_id]
-    roster = gs.roster(gs.user_team_id)
+    team = gs.teams[gs.acting_team_id]
+    roster = gs.roster(gs.acting_team_id)
     win_rate = _user_win_rate(gs)
 
     salaries = sum(p.salary for p in roster)
@@ -199,8 +199,8 @@ def cash_projection(gs: GameState, staff_cost: int = 0, weeks: int = 8) -> list[
     pay out and drop off as their `weeks_left` counts down. No charting
     lib — this feeds a plain table. Prize money and roster/contract churn
     aren't modeled (keeps the projection honest about its own simplicity)."""
-    team = gs.teams[gs.user_team_id]
-    roster = gs.roster(gs.user_team_id)
+    team = gs.teams[gs.acting_team_id]
+    roster = gs.roster(gs.acting_team_id)
     win_rate = _user_win_rate(gs)
 
     salaries = sum(p.salary for p in roster)
@@ -260,7 +260,7 @@ def check_solvency(gs: GameState) -> None:
         team.reputation = round(max(0.0, team.reputation - rep_hit), 1)
         for p in gs.roster(tid):
             p.morale = round(max(0.0, p.morale - morale_hit), 1)
-        if tid != gs.user_team_id:
+        if not gs.is_human(tid):
             continue
         if team.balance <= INSOLVENCY_FLOOR:
             gs.push_news(
@@ -279,7 +279,7 @@ def weeks_until_insolvent(gs: GameState, staff_cost: int = 0) -> int | None:
     past the floor (insolvent now, whatever the run rate), or None if above
     the floor with a non-negative net (not heading for trouble). Display
     helper for the finances tab; never mutates state."""
-    bal = gs.teams[gs.user_team_id].balance
+    bal = gs.teams[gs.acting_team_id].balance
     runway = bal - INSOLVENCY_FLOOR  # cushion above the floor
     if runway <= 0:
         return 0  # already at or past the floor, regardless of run rate

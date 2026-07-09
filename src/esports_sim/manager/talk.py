@@ -39,7 +39,7 @@ def week_key(gs: GameState) -> str:
 
 
 def can_talk(gs: GameState, pid: str) -> tuple[bool, str]:
-    if pid not in gs.teams[gs.user_team_id].player_ids:
+    if pid not in gs.teams[gs.acting_team_id].player_ids:
         return False, "not on your roster"
     if gs.talked_week == week_key(gs):
         return False, "you already held this week's 1:1"
@@ -167,7 +167,7 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
 
     p.morale = round(min(100.0, max(0.0, p.morale + d_morale)), 1)
     p.form = round(min(100.0, max(0.0, p.form + d_form)), 1)
-    team = gs.teams[gs.user_team_id]
+    team = gs.teams[gs.acting_team_id]
     team.chemistry = round(min(100.0, max(0.0, team.chemistry + d_chem)), 1)
 
     # The 1:1 also colours how the player sees the captain running these

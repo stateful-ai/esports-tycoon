@@ -101,6 +101,15 @@ def _week_news(gs: "GameState", season: int, week: int) -> list[str]:
     return [n[len(label):] for n in gs.news if n.startswith(label)]
 
 
+def _week_private_news(gs: "GameState", season: int, week: int) -> list[str]:
+    """This week's PRIVATE news for the ACTING manager (scout reports, sponsor
+    objectives, roster retirements). Used instead of the shared feed for
+    owner-specific items so a rival's private events never leak into this
+    manager's inbox in a shared world (see GameState.push_private_news)."""
+    label = f"[S{season} W{week}] "
+    return [n[len(label):] for n in gs.private_news if n.startswith(label)]
+
+
 # ---------------------------------------------------------------------------
 # Detectors (each returns a list of (priority, InboxItem))
 
@@ -118,7 +127,7 @@ def _user_score(f, uid: str) -> tuple[int, int]:
 
 
 def _user_star(gs: "GameState", f, report: "WeekReport") -> str:
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     roster = set(gs.teams[uid].player_ids)
     best: tuple[str, float, int] | None = None
     for stats in report.match_stats.get(f.id, []):
@@ -135,7 +144,7 @@ def _user_star(gs: "GameState", f, report: "WeekReport") -> str:
 
 
 def _match_items(gs: "GameState", season: int, week: int, report: "WeekReport"):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     for f in sorted(report.fixtures, key=lambda x: x.id):
         if uid not in (f.team_a, f.team_b) or not f.played:
             continue
@@ -162,7 +171,11 @@ def _match_items(gs: "GameState", season: int, week: int, report: "WeekReport"):
 
 def _transfer_items(gs: "GameState", season: int, week: int):
     out = []
+    uid = gs.acting_team_id
     for o in sorted(gs.transfer_offers, key=lambda o: (o.player_id, o.to_team)):
+        # Only bids for THIS manager's players land on their desk.
+        if o.from_team != uid:
+            continue
         if o.player_id not in gs.players or o.to_team not in gs.teams:
             continue
         p = gs.players[o.player_id]
@@ -184,7 +197,7 @@ def _transfer_items(gs: "GameState", season: int, week: int):
 
 
 def _board_items(gs: "GameState", season: int, week: int):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     cands = []
     for pid in gs.teams[uid].player_ids:
         p = gs.players.get(pid)
@@ -211,7 +224,7 @@ def _board_items(gs: "GameState", season: int, week: int):
 
 
 def _talk_items(gs: "GameState", season: int, week: int):
-    uid = gs.user_team_id
+    uid = gs.acting_team_id
     metric = {"morale": "morale", "workload": "stamina", "form": "form"}
     cands = []
     for pid in gs.teams[uid].player_ids:
@@ -267,9 +280,9 @@ def _sponsor_items(gs: "GameState", season: int, week: int):
                           title, _describe_offer(o, slot), "finances"),
                 ))
     out.extend(offers[: _CAT_CAP["sponsor_offer"]])
-    # Objective outcomes (paid or missed) reported in this week's news.
+    # Objective outcomes (paid or missed) — private to THIS manager's book.
     objs = []
-    for msg in _week_news(gs, season, week):
+    for msg in _week_private_news(gs, season, week):
         if msg.startswith("Objective met") or "missed objective" in msg:
             objs.append((
                 _P_SPONSOR_OBJ,
@@ -282,7 +295,9 @@ def _sponsor_items(gs: "GameState", season: int, week: int):
 
 def _scouting_items(gs: "GameState", season: int, week: int):
     out = []
-    for msg in _week_news(gs, season, week):
+    # Scout completions are private to the manager whose desk finished — read
+    # their own channel so a rival's report never appears here.
+    for msg in _week_private_news(gs, season, week):
         if msg.startswith("Scouting report on") and msg.rstrip().endswith("complete."):
             out.append((
                 _P_SCOUTING,
@@ -297,14 +312,20 @@ def _development_items(gs: "GameState", season: int, week: int):
     (Trait reveals ride scouting progress and potential is fixed at
     generation, so neither produces a discrete weekly event to surface.)"""
     out = []
-    for msg in _week_news(gs, season, week):
+    # A retirement on THIS manager's roster is private (opens a seat only they
+    # fill) — read the owner channel first so it isn't attributed to everyone,
+    # and keep it ahead of the public notices so the per-category cap never
+    # drops the urgent one.
+    for msg in _week_private_news(gs, season, week):
         if "open seat" in msg and "retire" in msg:
             out.append((
                 _P_DEV_URGENT,
                 _make(season, week, "development", f"retire_seat|{_hash_id(msg)}",
                       "A player on your roster retires", msg, "roster"),
             ))
-        elif msg.startswith("Retirements:") or msg.endswith("call it a career.") \
+    # Retirement classes and rookie classes are public broadcast news.
+    for msg in _week_news(gs, season, week):
+        if msg.startswith("Retirements:") or msg.endswith("call it a career.") \
                 or "quietly retire" in msg:
             out.append((
                 _P_DEV,
@@ -452,12 +473,14 @@ def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
         if _hash_id(it.season, it.week, "transfer", subject) != it.id:
             continue
         return [
+            # to_team pins WHICH buyer's bid this resolves (a manager may hold
+            # several bids for one player) and is validated server-side.
             {"id": "accept", "label": "Accept",
              "endpoint": "/api/actions/transfer_offer",
-             "payload": {"player_id": o.player_id, "accept": True}},
+             "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": True}},
             {"id": "decline", "label": "Decline",
              "endpoint": "/api/actions/transfer_offer",
-             "payload": {"player_id": o.player_id, "accept": False}},
+             "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": False}},
         ]
     return []
 

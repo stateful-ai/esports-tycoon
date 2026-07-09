@@ -28,12 +28,71 @@ python -m venv .venv-win
 
 `New game` → pick a seed and a team → weekly loop: set training, scout a
 rival, work the market, talk to a player, advance the week, watch replays.
-Autosaves to `saves/campaign.json` every week.
+The terminal CLI autosaves to `saves/campaign.json`; the web app saves each
+world separately (see **Play with others** below).
 
 Headless demo (a hands-off season, no UI):
 
 ```bash
 python -m esports_sim --auto 18 --seed 11 --team team_nexus
+```
+
+## Play with others (LAN)
+
+Run the web server on one PC and share its LAN URL — anyone on the same network
+plays in their browser, no install. On load, each player gets a lobby:
+
+- **Solo game** — your own private campaign, isolated from everyone else.
+- **Create shared game** — starts a world and gives you a 5-character join code.
+- **Join a game** — enter a friend's code and pick a free team.
+
+In a **shared world** you each manage a different team in the same league
+(shared standings, schedule, and transfer market — and you can be drawn against
+each other). The week only advances once **every** manager has hit *Advance*
+(solo advances instantly). Sessions survive a browser refresh or a server
+restart.
+
+### Boot options (PowerShell)
+
+`scripts\serve.ps1` is a friendly launcher: it finds the project's Python,
+prints a short pre-flight summary, and starts the server (which then prints the
+exact local + LAN URLs). LAN mode is the default. Run from the **repo root**;
+`-ExecutionPolicy Bypass` only affects the single invocation.
+
+```powershell
+# LAN multiplayer (default): bind 0.0.0.0, auto-open a browser on this PC.
+powershell -ExecutionPolicy Bypass -File .\scripts\serve.ps1
+
+# LAN + open the Windows Firewall so peers can reach you (UAC prompt).
+powershell -ExecutionPolicy Bypass -File .\scripts\serve.ps1 -OpenFirewall
+
+# Local-only (this PC): bind 127.0.0.1, nobody else can connect.
+powershell -ExecutionPolicy Bypass -File .\scripts\serve.ps1 -Local
+
+# Custom port / no auto-open browser (combine freely).
+powershell -ExecutionPolicy Bypass -File .\scripts\serve.ps1 -Port 9000 -NoBrowser
+```
+
+| Flag | Effect |
+|---|---|
+| _(none)_ | LAN mode: bind `0.0.0.0`, port 8420, auto-open browser |
+| `-Local` (alias `-LocalOnly`) | Bind `127.0.0.1` — this PC only |
+| `-Port <1-65535>` | Custom port (default 8420; `$env:PORT` used only when `-Port` is omitted) |
+| `-NoBrowser` | Do not auto-open a browser on the host |
+| `-OpenFirewall` | Add an inbound TCP allow rule (Private+Domain profiles). Needs admin; self-elevates via UAC or prints the exact elevated command |
+
+The equivalent raw commands (no launcher) are `.venv-win\Scripts\python -m
+esports_sim --web [--host 127.0.0.1] [--port N] [--no-browser]`. Press
+**Ctrl+C** to stop.
+
+**Firewall:** `-OpenFirewall` scopes the rule to Private/Domain networks (never
+Public). If your active network is Public, the launcher warns you; set it to
+Private first with `Set-NetConnectionProfile -InterfaceAlias <name>
+-NetworkCategory Private` (find `<name>` via `Get-NetConnectionProfile`). To add
+the rule by hand once, in an elevated PowerShell:
+
+```powershell
+New-NetFirewallRule -DisplayName 'esports-sim web (TCP 8420)' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8420 -Profile Private,Domain
 ```
 
 ## What's in the box

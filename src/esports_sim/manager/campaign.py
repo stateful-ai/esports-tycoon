@@ -67,6 +67,11 @@ class WeekReport:
     phase: str
     fixtures: list[Fixture] = field(default_factory=list)
     match_stats: dict[str, list] = field(default_factory=dict)
+    # Per human manager (team id -> weekly income/expenses). `user_income` /
+    # `user_expenses` mirror the PRIMARY human for back-compat; the web layer
+    # reads income_by/expenses_by for the manager actually being served.
+    income_by: dict[str, int] = field(default_factory=dict)
+    expenses_by: dict[str, int] = field(default_factory=dict)
     user_income: int = 0
     user_expenses: int = 0
     notes: list[str] = field(default_factory=list)
@@ -206,10 +211,12 @@ def advance_week(
         for stats in report.match_stats.get(f.id, []):
             _aggregate_stats(gs, f, stats, week_kills)
 
-    # 2. Training (user focus is whatever they set; AI picks its own).
+    # 2. Training (human focus is whatever each manager set; AI picks its own,
+    # and each human's coach/facility multiplier comes from their own org).
     for tid in sorted(gs.teams):
         roster = gs.roster(tid)
-        if tid == gs.user_team_id:
+        if gs.is_human(tid):
+            gs.set_acting(tid)
             focus = gs.training_focus.get(tid, "tactical")
             mult = staff.coach_multiplier(gs) * economy.facility_training_mult(gs)
         else:
@@ -217,12 +224,16 @@ def advance_week(
             gs.training_focus[tid] = focus
             mult = 1.0
         training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
+    gs.set_acting(None)
 
-    # 2b. Physio: extra recovery for the user roster.
-    recovery = staff.physio_recovery(gs)
-    if recovery > 0:
-        for p in gs.roster(gs.user_team_id):
-            p.stamina = round(min(100.0, p.stamina + recovery), 1)
+    # 2b. Physio: extra recovery for each human roster (own physio staff).
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        recovery = staff.physio_recovery(gs)
+        if recovery > 0:
+            for p in gs.roster(tid):
+                p.stamina = round(min(100.0, p.stamina + recovery), 1)
+    gs.set_acting(None)
 
     # 2c. Relationships drift; team chemistry chases the pair graph. Every
     # org's chemistry rides its own week's result, not just the user's.
@@ -242,31 +253,42 @@ def advance_week(
         won_by_team=won_by_team,
     )
 
-    # 3. Finances. The user org's merch/ticket line rides its real
-    # win-rate momentum; AI orgs stay at the neutral default.
+    # 3. Finances. Each human org's merch/ticket line rides its real win-rate
+    # momentum and pays its own staff; AI orgs stay at the neutral default.
     for tid in sorted(gs.teams):
-        is_user = tid == gs.user_team_id
-        cost = staff.weekly_cost(gs) if is_user else 0
+        is_human = gs.is_human(tid)
+        if is_human:
+            gs.set_acting(tid)
+        cost = staff.weekly_cost(gs) if is_human else 0
         rec = gs.standings.get(tid)
         win_rate = (
             rec.wins / max(rec.wins + rec.losses, 1)
-            if is_user and rec is not None
+            if is_human and rec is not None
             else 0.5
         )
         income, expenses = apply_weekly_finance(
             gs.teams[tid], gs.roster(tid), staff_cost=cost, win_rate=win_rate
         )
-        if is_user:
-            report.user_income, report.user_expenses = income, expenses
+        if is_human:
+            report.income_by[tid] = income
+            report.expenses_by[tid] = expenses
+    gs.set_acting(None)
 
-    # 3b. Sponsorship (user org only): pay the active deal, roll offers.
-    user_fixture = next(
-        (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
-        None,
-    )
-    user_won = bool(user_fixture and user_fixture.winner_id == gs.user_team_id)
-    report.user_income += sponsors.weekly_tick(gs, user_won)
-    sponsors.maybe_offer(gs, week_rng)
+    # 3b. Sponsorship (per human org): pay the active deal, roll offers.
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        fx = gs.team_fixture(tid)
+        won = bool(fx and fx.winner_id == tid)
+        report.income_by[tid] = report.income_by.get(tid, 0) + sponsors.weekly_tick(
+            gs, won
+        )
+        sponsors.maybe_offer(gs, week_rng)
+    gs.set_acting(None)
+
+    # Primary human mirrors into the legacy single-manager report fields.
+    primary = gs.user_team_id
+    report.user_income = report.income_by.get(primary, 0)
+    report.user_expenses = report.expenses_by.get(primary, 0)
 
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
@@ -557,10 +579,13 @@ def advance_week(
     # after the news so the match-time tactics are what gets reported.
     _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
-    # 7. Inbox: aggregate the week's outcomes into the notification feed.
+    # 7. Inbox: aggregate the week's outcomes into each human manager's feed.
     # Runs last so it can read every subsystem's artifacts (news included),
     # and before the week label moves on so this-week news is still labelled.
-    inbox.generate_inbox(gs, report)
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        inbox.generate_inbox(gs, report)
+    gs.set_acting(None)
 
     gs.week += 1
     return report
@@ -777,8 +802,17 @@ SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full knowledge
 
 
 def _tick_scouting(gs: GameState) -> None:
-    """Advance whatever the scout watches: a rival team, or the open
-    market ("market" — free agents and prospects, EHM-style)."""
+    """Advance each human manager's scout by one week (own desk, own
+    target/progress/staff/facilities)."""
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        _tick_scouting_one(gs)
+    gs.set_acting(None)
+
+
+def _tick_scouting_one(gs: GameState) -> None:
+    """One manager's scout: a rival team, or the open market ("market" —
+    free agents and prospects, EHM-style)."""
     target = gs.scout_target
     if not target:
         return
@@ -801,7 +835,8 @@ def _tick_scouting(gs: GameState) -> None:
             if target == "market"
             else gs.teams[target].name
         )
-        gs.push_news(f"Scouting report on {label} complete.")
+        # Private to this manager (their scout desk) — see push_private_news.
+        gs.push_private_news(f"Scouting report on {label} complete.")
 
 
 def _update_world_ranks(gs: GameState) -> None:
@@ -836,9 +871,13 @@ def _process_retirements(gs: GameState, rng) -> int:
             team.player_ids.remove(pid)
             if team.captain_id == pid:
                 team.captain_id = team.player_ids[0] if team.player_ids else None
-            if team.id == gs.user_team_id:
-                gs.push_news(
-                    f"{p.handle} retires — your roster has an open seat."
+            if gs.is_human(team.id):
+                # Private to the owning manager (not the whole world's inbox);
+                # _process_retirements runs outside any set_acting loop, so name
+                # the owner explicitly.
+                gs.push_private_news(
+                    f"{p.handle} retires — {team.name} has an open seat.",
+                    owner=team.id,
                 )
         if pid in gs.free_agent_ids:
             gs.free_agent_ids.remove(pid)
@@ -907,7 +946,7 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
     roster they actually have (re-derived each season — rosters change).
     The user's dials are never touched."""
     for tid in sorted(gs.teams):
-        if tid == gs.user_team_id:
+        if gs.is_human(tid):
             continue
         roster = gs.roster(tid)
         if not roster:
@@ -961,7 +1000,7 @@ def _adapt_ai_tactics(gs: GameState, rng) -> None:
     invisible to golden/balance."""
     clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
     for tid in sorted(gs.teams):
-        if tid == gs.user_team_id:
+        if gs.is_human(tid):
             continue
         ts = gs.team_stats.get(tid)
         if ts is None or ts.maps < _ADAPT_MIN_MAPS:
@@ -1019,14 +1058,20 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         gs.free_agent_ids.remove(cut)
         del gs.players[cut]
 
-    # New season. Scouting knowledge goes stale over the break; the staff
-    # candidate market refreshes.
-    gs.scout_progress = {}
+    # New season. Each human manager's scouting knowledge goes stale over the
+    # break (staff market refreshes below, after the season counter rolls).
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        gs.scout_progress = {}
+    gs.set_acting(None)
     gs.masters_seeds = []
     gs.champions_seeds = []
     gs.transfer_offers = []
     gs.season += 1
-    staff.refresh_candidates(gs)
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        staff.refresh_candidates(gs)
+    gs.set_acting(None)
     gs.week = 1
     gs.phase = "regular"
     _assign_ai_tactics(gs, rng)  # new rosters, new coaching identities
@@ -1035,8 +1080,11 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
-    # Inbox for the offseason tick: retirements, rookie class, award slate.
-    # `report` still carries the pre-rollover (season, week) the offseason
-    # news was labelled with, so generate_inbox reads the right lines.
-    inbox.generate_inbox(gs, report)
+    # Inbox for the offseason tick, per manager: retirements, rookie class,
+    # award slate. `report` still carries the pre-rollover (season, week) the
+    # offseason news was labelled with, so generate_inbox reads the right lines.
+    for tid in sorted(gs.human_team_ids):
+        gs.set_acting(tid)
+        inbox.generate_inbox(gs, report)
+    gs.set_acting(None)
     return report
