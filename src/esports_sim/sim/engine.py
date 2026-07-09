@@ -502,9 +502,6 @@ class _MatchSim:
         )
 
         self._grant_economy(round_num)
-        # Capture the attacker's buy tier BEFORE the buy phase spends it —
-        # read afterwards the credits are gone and everything looks like eco.
-        atk_buy = self._team_buy_call(atk, round_num)
         self._buy_phase(round_num, seed_path, rng)
 
         # -- per-round reset ---------------------------------------------------
@@ -557,11 +554,13 @@ class _MatchSim:
         target_site = sites[int(rng.choice(len(sites), p=weights))]
         # 0.35 slow book … 0.75 fast; 50 pace = the engine's old 0.55.
         p_execute = 0.35 + tac.pace / 250.0
-        # Eco discipline: on a save/force round, a greedy book runs it down
-        # (fast hit to catch the buy off-guard) while a thrifty book plays
-        # slow for picks and the exit. Neutral eco_greed leaves it alone, so
-        # the golden log holds.
-        if atk_buy in ("eco", "force"):
+        # Eco discipline: on an under-gunned round, a greedy book runs it
+        # down (fast hit to catch the buy off-guard) while a thrifty book
+        # plays slow for picks and the exit. Judged on the actual loadout,
+        # not the credit-based buy call — a team carrying rifles through a
+        # broke round is on a gun round, not an eco. Neutral eco_greed
+        # leaves it alone, so the golden log holds.
+        if self._under_gunned(atk):
             p_execute += (tac.eco_greed - 50.0) / 50.0 * C.ECO_EXECUTE_SPAN
         p_execute = min(0.9, max(0.05, p_execute))
         strat = "execute" if rng.random() < p_execute else "default"
@@ -1667,6 +1666,20 @@ class _MatchSim:
 
     def _tactics(self, team_id: str):
         return self.gd.teams[team_id].tactics
+
+    def _under_gunned(self, tid: str) -> bool:
+        """Whether the team is genuinely on a save/force by FIREPOWER — most
+        players lack a rifle-tier primary. Credit-based buy calls misfire
+        here: a team that carried rifles through a broke round reads as
+        'eco' on cash but is fully armed, so the eco tempo shift keys off the
+        actual post-buy loadout instead."""
+        rifle_tier = {"rifle", "sniper", "lmg"}
+        armed = 0
+        for pid in self.roster[tid]:
+            w = self.gd.weapons.get(self.p[pid].weapon)
+            if w is not None and str(w.weapon_class) in rifle_tier:
+                armed += 1
+        return armed < 3  # majority lack a real primary
 
     def _execution_mod(self, tid: str) -> float:
         """Per-team duel modifier for how well the roster + chemistry can

@@ -49,6 +49,12 @@ def test_golden_sweep_unchanged() -> None:
     gate even when haven/42 is unaffected."""
     sweep = json.loads(SWEEP_PATH.read_text(encoding="utf-8"))
     gd = load_all()
+    # The fixture must cover the whole current map pool — otherwise a newly
+    # added map would silently escape the drift gate until re-blessed.
+    assert sweep["maps"] == sorted(gd.maps), (
+        f"sweep fixture covers {sweep['maps']} but the registry has "
+        f"{sorted(gd.maps)}. Re-bless: {sys.executable} scripts/regen_golden.py"
+    )
     h = hashlib.sha256()
     total = 0
     for map_id in sweep["maps"]:

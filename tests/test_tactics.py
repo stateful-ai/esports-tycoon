@@ -72,6 +72,27 @@ def test_each_micro_dial_is_wired() -> None:
         assert lo != base, f"{dial}=0 did not change the match log"
 
 
+def test_under_gunned_reads_loadout_not_credits() -> None:
+    """The eco tempo shift must key off the actual loadout, not the credit-
+    based buy call: a team carrying rifles through a broke round is on a gun
+    round, not an eco."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "haven", 1)
+    rifle = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "rifle")
+    pistol = next(w.id for w in gd.weapons.values() if str(w.weapon_class) == "pistol")
+    # Rifles in hand but near-zero cash (survived a lost round) -> gun round.
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = rifle
+        sim.p[pid].credits = 100
+    assert sim._under_gunned(A) is False
+    # Stripped back to pistols -> genuine eco.
+    for pid in sim.roster[A]:
+        sim.p[pid].weapon = pistol
+    assert sim._under_gunned(A) is True
+
+
 def test_execution_mod_zero_at_neutral_and_scales_with_chemistry() -> None:
     """The roster/chemistry execution modifier must vanish at neutral
     tactics (so it can't touch the golden or balance gates) and, once a
