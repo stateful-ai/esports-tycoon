@@ -158,7 +158,9 @@ function P(x, y) {
 const PP = (pt) => P(pt[0], pt[1]);
 // Marker/dot sizes read smaller on the iso viewBox (it's ~2x wider) — scale.
 // Kept modest on purpose: the map should dwarf the players, not vice versa.
-const S = (v) => (V.iso ? v * 1.25 : v);
+// (The viewer shell now fills large monitors, so icons are physically big
+// even at a small world size.)
+const S = (v) => (V.iso ? v * 1.15 : v);
 
 // Floor elevation of a room (0 when no geometry). Applied as an upward
 // screen shift in iso mode so heaven visibly floats above its site.
@@ -355,8 +357,13 @@ function drawGimmicks(round, t) {
     const z = zOf(g.between[0]);
     const [x, y] = gpoint(g.x, g.y, z);
     if (g.type === "teleporter") {
-      V.dyn.appendChild(svgEl("circle", { cx: x, cy: y, r: S(2.2), class: "gk gk-tp" }));
-      V.dyn.appendChild(svgEl("circle", { cx: x, cy: y, r: S(1.1), class: "gk gk-tp" }));
+      const outer = svgEl("circle", { cx: x, cy: y, r: S(2.2), class: "gk gk-tp" });
+      const inner = svgEl("circle", { cx: x, cy: y, r: S(1.1), class: "gk gk-tp" });
+      const tip = svgEl("title", {});
+      tip.textContent = `Teleporter: ${g.between.join(" <-> ")}`;
+      outer.appendChild(tip);
+      V.dyn.appendChild(outer);
+      V.dyn.appendChild(inner);
     } else {
       const closed =
         g.type === "breakable_door" &&
@@ -364,11 +371,17 @@ function drawGimmicks(round, t) {
         !round.gimmicks.some(
           (e) => e.gimmick_id === g.id && e.action === "broken" && e.tick <= t
         );
-      V.dyn.appendChild(svgEl("rect", {
+      const door = svgEl("rect", {
         x: x - S(1.8), y: y - S(0.55),
         width: S(3.6), height: S(1.1),
         class: "gk gk-door" + (closed ? " gk-closed" : ""),
-      }));
+      });
+      const tip = svgEl("title", {});
+      tip.textContent =
+        (g.type === "breakable_door" ? "Breakable door" : "Door") +
+        (closed ? " (closed)" : "") + `: ${g.between.join(" <-> ")}`;
+      door.appendChild(tip);
+      V.dyn.appendChild(door);
     }
   }
   for (const e of round.gimmicks) {
@@ -625,7 +638,7 @@ function drawStatic() {
 // Agent-icon dot radius. The tight per-map viewBox (isoContentViewBox) zooms
 // the whole scene, so the icon stays readable on screen at a much smaller
 // world size — players read as people IN the map, not tokens ON it.
-const ICON_R = 2.1;
+const ICON_R = 1.9;
 
 function hidePlayerEl(pid) {
   const e = V.playerEls[pid];
