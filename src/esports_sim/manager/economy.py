@@ -7,6 +7,8 @@ where budgets are actually won.
 
 from __future__ import annotations
 
+import math
+
 from esports_sim.manager.state import (
     PRIZE_CHAMPION,
     PRIZE_FINAL_LOSER,
@@ -281,7 +283,11 @@ def weeks_until_insolvent(gs: GameState, staff_cost: int = 0) -> int | None:
         return None
     bal = gs.teams[gs.user_team_id].balance
     runway = bal - INSOLVENCY_FLOOR  # cushion above the floor
-    return max(0, int(runway // -net))
+    if runway <= 0:
+        return 0  # already at or past the floor
+    # Ceiling: a non-exact cushion still crosses the floor on the tick that
+    # takes it under, so round the week count up rather than truncating.
+    return math.ceil(runway / -net)
 
 
 # ---------------------------------------------------------------------------

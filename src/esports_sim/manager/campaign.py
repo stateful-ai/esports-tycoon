@@ -260,9 +260,6 @@ def advance_week(
     report.user_income += sponsors.weekly_tick(gs, user_won)
     sponsors.maybe_offer(gs, week_rng)
 
-    # 3c. Solvency: after the full weekly ledger, debt has consequences.
-    economy.check_solvency(gs)
-
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
     market.ai_transfer_window(gs, gd, week_rng)
@@ -534,6 +531,12 @@ def advance_week(
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
             )
+
+    # 5b. Solvency: only AFTER every balance mutation for the week —
+    # including the same-week regional/Masters/Champions prize payouts in
+    # the phase transitions above — so a team that ends the tick in the
+    # black off prize money never takes a spurious debt hit or board warning.
+    economy.check_solvency(gs)
 
     # 6. News (before the week label moves on).
     narrative.weekly_news(gs, report, week_kills)

@@ -48,6 +48,16 @@ def test_runway_none_when_net_nonnegative() -> None:
     assert economy.weeks_until_insolvent(gs) is None
 
 
+def test_runway_ceils_the_crossing_week() -> None:
+    """A cushion of 1 credit over a large weekly burn still crosses the floor
+    on the next tick — the helper must round the week count up, not truncate
+    it to 0."""
+    _, gs = _campaign()
+    gs.teams[gs.user_team_id].balance = economy.INSOLVENCY_FLOOR + 1
+    # A huge staff cost forces a large negative weekly net.
+    assert economy.weeks_until_insolvent(gs, staff_cost=10_000_000) == 1
+
+
 # -- scout precision ----------------------------------------------------------
 
 def test_analyst_never_widens_the_scout_band() -> None:
