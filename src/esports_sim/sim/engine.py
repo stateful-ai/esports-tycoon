@@ -257,6 +257,23 @@ class _MatchSim:
                     entries.add(nb)
         return sorted(entries) or self._site_callouts(site)
 
+    def _lurk_strike_due(
+        self, lurk_strike: int, tick: int, went: bool, spike_planted: bool
+    ) -> bool:
+        """Whether the armed lurker should peel off its flank into the site.
+
+        Gated on `went`: if the hit aborted and re-defaulted (went -> False),
+        the strike is HELD — the re-hit re-arms a fresh delay — so the lurker
+        never commits into the site alone during the regroup and get fed
+        ahead of the second wave."""
+        return (
+            lurk_strike >= 0
+            and tick >= lurk_strike
+            and went
+            and not spike_planted
+            and bool(self._lurkers)
+        )
+
     def _lurk_callout(self, target_site: str, sites: list[str]) -> str:
         """Where a peeled-off lurker sets up: a mid callout if the map has
         one, otherwise an entry toward a different site — anywhere that
@@ -709,12 +726,7 @@ class _MatchSim:
             # -- lurk strike -------------------------------------------------------------
             # The bait is set; now the lurker flanks the site from its off
             # angle, hitting defenders collapsed on the entry or rotating.
-            if (
-                lurk_strike >= 0
-                and tick >= lurk_strike
-                and not spike_planted
-                and self._lurkers
-            ):
+            if self._lurk_strike_due(lurk_strike, tick, went, spike_planted):
                 site_cs = self._site_callouts(target_site)
                 for q in sorted(self._lurkers):
                     if self.p[q].alive:

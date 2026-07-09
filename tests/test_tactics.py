@@ -132,6 +132,28 @@ def test_lurker_strikes_the_site(monkeypatch) -> None:
     assert strikes > 0, "map_control lurkers never struck the site"
 
 
+def test_lurk_strike_held_while_hit_not_live() -> None:
+    """The strike must be gated on a live execute: if a hit aborts and
+    re-defaults (went -> False), the armed lurker is NOT sent into the site
+    alone during the regroup. Only the `went` flag should flip the gate;
+    all other conditions are held equal."""
+    from esports_sim.sim import engine as eng
+
+    gd = load_all()
+    sim = eng._MatchSim(gd, A, B, "ascent", 0)
+    lurker = sorted(gd.teams[A].player_ids)[0]
+    sim._lurkers = {lurker}
+    # armed (lurk_strike reached), spike not planted, a lurker present:
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=False) is True
+    assert sim._lurk_strike_due(10, 30, went=False, spike_planted=False) is False
+    # never strike once the spike is down, or before the timer, or unarmed:
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=True) is False
+    assert sim._lurk_strike_due(10, 5, went=True, spike_planted=False) is False
+    assert sim._lurk_strike_due(-1, 30, went=True, spike_planted=False) is False
+    sim._lurkers = set()
+    assert sim._lurk_strike_due(10, 30, went=True, spike_planted=False) is False
+
+
 def test_lurker_that_grabs_spike_rejoins_the_hit(monkeypatch) -> None:
     """A lurker who picks up a dropped spike must abandon the lurk role and
     rejoin the hit — otherwise the team would execute without the spike and
