@@ -1,8 +1,29 @@
 # esports-sim-diorama LoRA — training status
 
-**Status: BLOCKED — plan has no training entitlement (2026-07-09).**
-Everything except the training run itself is done and parked on the
-Scenario account, ready to resume with one API call.
+**Status: TRAINED (2026-07-09).** After the plan upgrade the staged
+train call was accepted immediately and the job completed:
+`model_5ZuAoQQnRSMSeykEwaHjBKwm` now reports `status: trained`
+(FLUX.2 Dev base, 16-image captioned corpus, trigger phrase
+`esports-sim-diorama`, concept scale 0.8).
+
+**Open item — API sampling.** Every generation attempt against the
+trained model returns a bare 500 from Scenario
+(`POST /v1/models/<id>/inferences` with `{"parameters": {"type":
+"txt2img", ...}}`, and `POST /v1/generate/txt2img` — both exist, both
+500; retried for ~15 minutes post-training, so not deployment lag).
+The legacy inference path likely does not serve `flux.2-dev-lora` on
+this plan/API generation. The model itself is healthy and can be used
+from the Scenario web UI (app.scenario.com -> esports-sim-diorama ->
+Generate, prefix prompts with the trigger phrase). The agreed
+validation prompt: "esports-sim-diorama style, isometric esports team
+office lounge with couches and trophy shelf, dark navy background" —
+save a good result to `assets/office/style/lora/sample.png`. Finding
+the correct current-generation API route is a small research task for
+a future session.
+
+---
+
+Original staging notes below (historical).
 
 ## What exists on the account
 
