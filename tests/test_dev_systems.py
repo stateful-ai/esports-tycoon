@@ -263,6 +263,36 @@ def test_engine_fields_only_the_dressed_five(campaign, game_data) -> None:
     assert not (set(bench) & seen), "bench players never appear in a match"
 
 
+def test_bench_treatment_follows_actual_minutes(campaign) -> None:
+    """A player rotated in via a per-map override is NOT benched, and a
+    default-five player who sat every map IS — bench life keys off who
+    actually dressed, not the default lineup (PR review fix)."""
+    from esports_sim.manager.campaign import _apply_bench_week
+
+    tid = campaign.user_team_id
+    team = campaign.teams[tid]
+    team.balance += 10_000_000
+    while len(team.player_ids) < 7 and campaign.free_agent_ids:
+        ok, why = market.sign_player(campaign, tid, campaign.free_agent_ids[0])
+        assert ok, why
+    rotated_in = team.player_ids[5]  # outside the default five
+    sat_out = team.player_ids[0]  # in the default five, but sat this week
+    dressed = set(team.player_ids[1:5]) | {rotated_in}
+    st_in = campaign.players[rotated_in].stamina = 50.0
+    st_out = campaign.players[sat_out].stamina = 50.0
+    mor_out = campaign.players[sat_out].morale
+
+    _apply_bench_week(campaign, {tid: dressed})
+    assert campaign.players[rotated_in].stamina == st_in, "played -> no refund"
+    assert campaign.players[sat_out].stamina == st_out + 6.0, "sat -> refunded"
+    assert campaign.players[sat_out].morale < mor_out, "sat -> wants minutes"
+
+    # A bye week applies no bench treatment at all.
+    before = campaign.players[sat_out].stamina
+    _apply_bench_week(campaign, {})
+    assert campaign.players[sat_out].stamina == before
+
+
 def test_default_five_filters_stale_and_tops_up(campaign) -> None:
     from esports_sim.manager.campaign import default_five
 

@@ -311,6 +311,10 @@ def advance_week(
     week_fixtures = gs.fixtures_for_week()
     week_kills: dict[str, int] = {}
     week_perf: dict[str, dict] = {}  # pid -> this week's tallies (snapshots)
+    # tid -> everyone who dressed at least one map this week. Drives the
+    # bench treatment below: with per-map overrides a rotated-in player is
+    # NOT benched even though they sit outside the default five.
+    week_dressed: dict[str, set[str]] = {}
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f,
@@ -327,6 +331,8 @@ def advance_week(
                 tid: set(dressed_for(gs, tid, f, map_res.map_id))
                 for tid in (f.team_a, f.team_b)
             }
+            for tid, pids in dressed.items():
+                week_dressed.setdefault(tid, set()).update(pids)
             _aggregate_stats(gs, f, stats, week_kills, dressed, week_perf)
             _apply_match_development(gs, stats)
 
@@ -363,25 +369,14 @@ def advance_week(
                 p.stamina = round(min(100.0, p.stamina + recovery), 1)
     gs.set_acting(None)
 
-    # 2b'. Bench minutes: players outside the default five scrim instead of
-    # play — a fraction of real reps, fresher legs, and (for anyone good
-    # enough to start elsewhere) a weekly reminder that they want minutes.
-    for tid in sorted(gs.human_team_ids):
-        team = gs.teams[tid]
-        if len(team.player_ids) <= market.ROSTER_SIZE:
-            continue
-        active = set(default_five(gs, tid))
-        for p in gs.roster(tid):
-            if p.id in active:
-                continue
-            training.apply_scrim_reps(p)
-            p.stamina = round(min(100.0, p.stamina + 6.0), 1)
-            drain = (
-                2.0
-                if market.player_quality(p) >= 60
-                else 0.5 if p.age <= 20 else 1.2
-            )
-            p.morale = round(max(0.0, p.morale - drain), 1)
+    # 2b'. Bench minutes: players who did NOT dress a single map this week
+    # (while the team played) scrim instead — a fraction of real reps,
+    # fresher legs, and (for anyone good enough to start elsewhere) a
+    # weekly reminder that they want minutes. Keyed off who ACTUALLY
+    # dressed, so a per-map rotation counts as minutes and a default-five
+    # player who sat via overrides is treated as benched. Bye weeks apply
+    # no bench treatment — nobody was denied minutes.
+    _apply_bench_week(gs, week_dressed)
 
     # 2b''. Development events: the random texture of a career (breakouts,
     # slumps, tweaked wrists, viral clips). Own rng stream so the rest of
@@ -953,6 +948,31 @@ def _apply_match_development(gs: GameState, stats) -> None:
         p = gs.players.get(pid)
         if p is not None:
             training.apply_match_experience(p, stats.lines[pid], n_rounds)
+
+
+def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
+    """One week of bench life for every human roster deeper than five:
+    anyone who dressed no map (while the team played) gets scrim reps, a
+    stamina refund, and a minutes-morale drain scaled by how good they are.
+    Teams with no fixture this week are skipped entirely."""
+    for tid in sorted(gs.human_team_ids):
+        team = gs.teams[tid]
+        if len(team.player_ids) <= market.ROSTER_SIZE:
+            continue
+        played = week_dressed.get(tid)
+        if not played:
+            continue
+        for p in gs.roster(tid):
+            if p.id in played:
+                continue
+            training.apply_scrim_reps(p)
+            p.stamina = round(min(100.0, p.stamina + 6.0), 1)
+            drain = (
+                2.0
+                if market.player_quality(p) >= 60
+                else 0.5 if p.age <= 20 else 1.2
+            )
+            p.morale = round(max(0.0, p.morale - drain), 1)
 
 
 def _nudge_tournament_registration(gs: GameState) -> None:
