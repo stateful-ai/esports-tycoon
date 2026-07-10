@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -59,7 +59,25 @@ def _migrate_v1_to_v2(data: dict) -> dict:
     return data
 
 
-_MIGRATIONS: dict[int, "callable"] = {1: _migrate_v1_to_v2}
+def _migrate_v2_to_v3(data: dict) -> dict:
+    """v2 kept a small per-manager staff candidate market (3 per role).
+    v3 replaces it with one shared, world-level free-agent pool of staff
+    (`staff_pool`) that every manager hires from. Old candidates fold into
+    the pool (deduped by id); the per-manager field is removed. Missing
+    v3 StaffMember fields (age/region/...) carry model defaults."""
+    pool: list[dict] = []
+    seen: set[str] = set()
+    for market in (data.pop("staff_candidates_by", None) or {}).values():
+        for members in (market or {}).values():
+            for m in members or []:
+                if m.get("id") and m["id"] not in seen:
+                    seen.add(m["id"])
+                    pool.append(m)
+    data["staff_pool"] = pool
+    return data
+
+
+_MIGRATIONS: dict[int, "callable"] = {1: _migrate_v1_to_v2, 2: _migrate_v2_to_v3}
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
 PRIZE_SEMI_LOSER = 60_000
@@ -159,8 +177,19 @@ class PlayerSeasonStats(BaseModel):
     first_deaths: int = 0
     multikills: int = 0
     aces: int = 0
-    clutches: int = 0
+    clutches: int = 0  # legacy meaning: 1v2-or-worse round wins
     rating_sum: float = 0.0
+    # Analytics-department depth (all default-0 so old saves load):
+    assists: int = 0
+    kast_rounds: int = 0  # rounds with a Kill, Assist, Survival or Trade
+    combat_score: float = 0.0  # ACS points total; acs = per round
+    clutch_1v1: int = 0
+    clutch_1v2: int = 0
+    clutch_1v3: int = 0  # 1v3 or worse
+    pistol_kills: int = 0
+    eco_kills: int = 0  # kills while the team was under-gunned
+    save_kills: int = 0  # kills on a personal save loadout (sidearm round)
+    kills_by_weapon: dict[str, int] = Field(default_factory=dict)
 
     @property
     def rating(self) -> float:
@@ -173,6 +202,18 @@ class PlayerSeasonStats(BaseModel):
     @property
     def hs_pct(self) -> float:
         return 100.0 * self.headshots / max(self.kills, 1)
+
+    @property
+    def acs(self) -> float:
+        return self.combat_score / max(self.rounds, 1)
+
+    @property
+    def kast_pct(self) -> float:
+        return 100.0 * self.kast_rounds / max(self.rounds, 1)
+
+    @property
+    def fk_fd(self) -> float:
+        return self.first_kills / max(self.first_deaths, 1)
 
 
 class TeamSeasonStats(BaseModel):
@@ -187,10 +228,79 @@ class TeamSeasonStats(BaseModel):
     pistols_won: int = 0
 
 
+class TeamMapStats(BaseModel):
+    """One team's season record on one map (keyed by map id)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    maps: int = 0
+    wins: int = 0
+    atk_rounds: int = 0
+    atk_won: int = 0
+    def_rounds: int = 0
+    def_won: int = 0
+
+
+class StatSnap(BaseModel):
+    """One weekly point on a player's performance time-series (only weeks
+    they actually played). Feeds the profile trend charts."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    maps: int
+    rating: float
+    acs: float
+    kd: float
+    kast_pct: float
+    kills: int
+    deaths: int
+
+
+class DevSnap(BaseModel):
+    """One weekly point on a player's development time-series (ability,
+    confidence, condition, reach). Human rosters only — this is the
+    manager's own longitudinal view, not league-wide telemetry."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    ca: float  # current ability (mean attribute)
+    confidence: float
+    form: float
+    morale: float
+    followers: int
+
+
+class SocialPost(BaseModel):
+    """One entry in the social feed. Generated deterministically each week
+    from real outcomes (results, stat lines, dev events) — the feed is
+    flavor over facts, never a second source of truth."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str  # blake2 of (season, week, author, kind, salt)
+    season: int
+    week: int
+    author_kind: str  # player | team | media
+    author_id: str  # player/team id ("" for media)
+    author: str  # display handle at post time
+    text: str
+    likes: int
+    kind: str  # hype | result | viral | drama | milestone | transfer
+
+
 class StaffMember(BaseModel):
     """Backroom staff. Quality (1-99) scales the slot's effect:
-    coach → training growth, analyst → scouting speed, physio → stamina
-    recovery. User team only; AI orgs' staff stay abstract."""
+    coach → training growth, analyst → scouting speed + stat depth,
+    physio → stamina recovery. Human orgs only; AI orgs' staff stay
+    abstract (their baked-in multipliers assume a league-average bench).
+
+    v3 members carry a full identity (age, region, specialty, career) so
+    they get a profile page like players do; v2 saves load with the
+    defaults below and read as journeymen with no paper trail."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -199,6 +309,17 @@ class StaffMember(BaseModel):
     role: str  # coach | analyst | physio
     quality: float
     salary: int  # per week
+    age: int = 38
+    region: str = ""
+    # Coach: training category they drill best (mechanical | tactical |
+    # mental | team). Analyst/physio: flavor for now.
+    specialty: str = ""
+    traits: list[str] = Field(default_factory=list)
+    # Career lines, newest last (e.g. "S2: assistant, Berlin Wolves").
+    history: list[str] = Field(default_factory=list)
+    # Trophies collected while employed (appended by the campaign layer).
+    titles: list[str] = Field(default_factory=list)
+    seasons_experience: int = 0
 
 
 class SponsorObjective(BaseModel):
@@ -386,6 +507,21 @@ class GameState(BaseModel):
     player_stats: dict[str, PlayerSeasonStats] = Field(default_factory=dict)
     team_stats: dict[str, TeamSeasonStats] = Field(default_factory=dict)
     awards: list[AwardRecord] = Field(default_factory=list)
+    # Season splits (also reset at rollover): per-map and per-agent lines
+    # for players, per-map records for teams.
+    player_map_stats: dict[str, dict[str, PlayerSeasonStats]] = Field(
+        default_factory=dict
+    )
+    player_agent_stats: dict[str, dict[str, PlayerSeasonStats]] = Field(
+        default_factory=dict
+    )
+    team_map_stats: dict[str, dict[str, TeamMapStats]] = Field(default_factory=dict)
+    # Time-series (SURVIVE season rollover, capped): performance points for
+    # anyone who played that week; development points for human rosters.
+    stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)
+    dev_history: dict[str, list[DevSnap]] = Field(default_factory=dict)
+    # Social layer: the shared feed (capped) — world-visible by design.
+    social_feed: list[SocialPost] = Field(default_factory=list)
 
     # Scouting, per human manager: which rival each one's scout watches, and
     # how much of each team's true attributes that manager knows (0..1; own
@@ -422,13 +558,11 @@ class GameState(BaseModel):
     sponsor_by: dict[str, SponsorDeal | None] = Field(default_factory=dict)
     sponsor_offer_by: dict[str, SponsorDeal | None] = Field(default_factory=dict)
 
-    # Backroom staff per human manager: hired members by role + the current
-    # candidate market (refreshed each offseason). Reached via `staff` /
-    # `staff_candidates`.
+    # Backroom staff: hired members by role, per human manager (reached via
+    # `staff`), hiring from ONE shared world-level free-agent pool — in a
+    # shared world managers compete for the same coaches.
     staff_by: dict[str, dict[str, StaffMember]] = Field(default_factory=dict)
-    staff_candidates_by: dict[str, dict[str, list[StaffMember]]] = Field(
-        default_factory=dict
-    )
+    staff_pool: list[StaffMember] = Field(default_factory=list)
 
     # -- multi-manager plumbing ----------------------------------------------
     #
@@ -564,14 +698,6 @@ class GameState(BaseModel):
     @staff.setter
     def staff(self, value: dict[str, "StaffMember"]) -> None:
         self.staff_by[self.acting_team_id] = value
-
-    @property
-    def staff_candidates(self) -> dict[str, list["StaffMember"]]:
-        return self.staff_candidates_by.setdefault(self.acting_team_id, {})
-
-    @staff_candidates.setter
-    def staff_candidates(self, value: dict[str, list["StaffMember"]]) -> None:
-        self.staff_candidates_by[self.acting_team_id] = value
 
     # -- helpers -------------------------------------------------------------
 

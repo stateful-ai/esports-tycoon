@@ -1,8 +1,14 @@
 """Weekly training: attribute growth, stamina management, chemistry.
 
-The manager picks one focus per week per team. Growth is age-gated —
-teenagers develop fast, players past 27 mostly fight decline (which is
-applied in the offseason, not here).
+The manager picks one focus per week per team — and, per player, an
+individual development plan: a pinned focus category (`Player.dev_focus`,
+"auto" = follow the team week) and a training intensity that trades
+growth for stamina. Growth is age-gated — teenagers develop fast, players
+past 27 mostly fight decline (which is applied in the offseason, not
+here). Matches are the other half of development: `apply_match_experience`
+turns what a player actually DID on the server into reps, so playing time
+(and how they play) shapes who they become. AI players stay on the
+defaults ("auto"/"normal"), so the plans are a purely human lever.
 """
 
 from __future__ import annotations
@@ -14,6 +20,12 @@ from esports_sim.schemas import Player, Team
 from esports_sim.schemas.attributes import AttributeCategory
 
 FOCUS_OPTIONS = ["mechanical", "tactical", "mental", "team", "rest"]
+
+# Per-player plan knobs (Player.dev_focus / Player.training_intensity).
+DEV_FOCUS_OPTIONS = ["auto", "mechanical", "tactical", "mental", "team"]
+INTENSITY_OPTIONS = ["light", "normal", "intense"]
+_INTENSITY_GROWTH = {"light": 0.6, "normal": 1.0, "intense": 1.4}
+_INTENSITY_DRAIN = {"light": 3.0, "normal": 6.0, "intense": 10.0}
 
 _CATEGORY_ATTRS: dict[str, list[str]] = {
     "mechanical": ["aim_precision", "aim_reactivity", "movement"],
@@ -79,10 +91,13 @@ def apply_training(
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
-    # snowballs into 13-0 blowouts by season 3.
+    # snowballs into 13-0 blowouts by season 3. Confidence regresses the
+    # same way — belief needs re-earning too (and the clamp keeps the
+    # engine's neutral-safe term from compounding, see snowball gate).
     for p in roster:
         p.form = round(p.form + (52.0 - p.form) * 0.06, 1)
         p.morale = round(p.morale + (60.0 - p.morale) * 0.04, 1)
+        p.confidence = round(p.confidence + (50.0 - p.confidence) * 0.05, 1)
 
     if focus == "rest":
         for p in roster:
@@ -90,9 +105,13 @@ def apply_training(
             p.morale = min(100.0, p.morale + 1.5)
         return
 
-    attrs = _CATEGORY_ATTRS.get(focus, _CATEGORY_ATTRS["tactical"])
     for p in roster:
-        rate = _player_rate(p) * _system_fit_mult(team, p)
+        # Individual plan: a pinned focus overrides the team's category
+        # (a team "rest" week still rests everyone, handled above).
+        p_focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else focus
+        attrs = _CATEGORY_ATTRS.get(p_focus, _CATEGORY_ATTRS["tactical"])
+        intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
+        rate = _player_rate(p) * _system_fit_mult(team, p) * intensity
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.
@@ -104,7 +123,9 @@ def apply_training(
             # Diminishing returns near the ceiling.
             headroom = max(0.0, (95.0 - cur) / 45.0)
             p.attributes[attr_id] = round(min(99.0, cur + gain * headroom), 2)
-        p.stamina = max(0.0, p.stamina - 6.0)
+        p.stamina = max(
+            0.0, p.stamina - _INTENSITY_DRAIN.get(p.training_intensity, 6.0)
+        )
 
     if focus == "team":
         team.chemistry = min(100.0, team.chemistry + 1.2)
@@ -117,6 +138,54 @@ def apply_training(
     )
     if chem_regen > 0:
         team.chemistry = round(min(100.0, team.chemistry + chem_regen), 1)
+
+
+# ---------------------------------------------------------------------------
+# Match experience: playing time is the other half of development.
+
+# Per-attribute gain cap per map — a monster map is still one map.
+_MATCH_XP_CAP = 0.25
+_MATCH_XP_PER_REP = 0.02
+
+
+def apply_match_experience(p: Player, line, n_rounds: int) -> None:
+    """Turn one map's box-score line into attribute reps: what a player
+    actually DID on the server is what improves. Deterministic — derived
+    from the line only, no rng — and scaled by the same age/PA-gap rate
+    as training, so a prospect grows from minutes and a veteran at their
+    ceiling mostly just logs them. Bench players get none of this (see
+    apply_scrim_reps): playing time is a real development decision."""
+    rate = _player_rate(p)
+    clutch_n = line.clutch_1v1 + line.clutch_1v2 + line.clutch_1v3
+    reps = {
+        "aim_precision": line.kills * 0.5 + line.headshots * 0.5,
+        "aim_reactivity": line.first_kills + line.trade_kills * 0.5 + line.kills * 0.25,
+        "game_sense": n_rounds * 0.05 + line.assists * 0.5,
+        "utility_usage": line.assists * 0.7 + (line.plants + line.defuses) * 0.5,
+        "clutch_factor": clutch_n * 2.0,
+        "composure": line.survived * 0.08 + clutch_n,
+        "positioning": line.first_deaths * 0.4,  # dying first teaches spacing
+    }
+    for attr_id in sorted(reps):
+        r = reps[attr_id]
+        if r <= 0:
+            continue
+        cur = p.attr(attr_id)
+        headroom = max(0.0, (95.0 - cur) / 45.0)
+        gain = min(_MATCH_XP_CAP, _MATCH_XP_PER_REP * r) * rate * headroom
+        if gain > 0:
+            p.attributes[attr_id] = round(min(99.0, cur + gain), 2)
+
+
+def apply_scrim_reps(p: Player) -> None:
+    """A benched player's week: scrims and VOD, a fraction of real minutes.
+    Keeps prospects on the bench from flat-lining without making the bench
+    a substitute for playing."""
+    rate = _player_rate(p) * 0.25
+    for attr_id in sorted(("game_sense", "positioning")):
+        cur = p.attr(attr_id)
+        headroom = max(0.0, (95.0 - cur) / 45.0)
+        p.attributes[attr_id] = round(min(99.0, cur + 0.05 * rate * headroom), 2)
 
 
 def ai_pick_focus(

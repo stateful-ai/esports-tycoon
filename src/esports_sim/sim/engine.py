@@ -96,6 +96,8 @@ class _PState:
     planting_until: int = -1
     defusing_until: int = -1
     flash_until: int = -1
+    # Who flashed this player last (flash-assist credit while blind).
+    flashed_by: str | None = None
     bonus_until: int = -1
     bonus: float = 0.0
     no_engage_until: int = -1  # disengage grace while falling back
@@ -136,7 +138,9 @@ class _MatchSim:
 
         # Roster: the week's committed starters, sorted for deterministic
         # iteration. Default (no lineup set) = the whole roster, so this stays
-        # byte-identical to the pre-lineup engine (see sim/lineup.py).
+        # byte-identical to the pre-lineup engine (see sim/lineup.py). The
+        # campaign fields benched rosters through _dressed_gamedata, so the
+        # engine itself never sees more than the dressed five.
         self.roster: dict[str, list[str]] = {
             team_a: lineup_resolve.resolve_starters(gd.teams[team_a]),
             team_b: lineup_resolve.resolve_starters(gd.teams[team_b]),
@@ -214,6 +218,11 @@ class _MatchSim:
         # Round-scoped scratch, reset in _play_round.
         self._flashed = False
         self._flash_side = "defense"  # which side eats the pending flash
+        self._flash_owner: str | None = None  # who threw it (assist credit)
+        # Per-team setup credit: (top utility contributor, valid-until tick)
+        # from the last execute/retake — kills converted inside that window
+        # count as their assist (the sim's stand-in for damage assists).
+        self._setup_owner: dict[str, tuple[str, int]] = {}
         self._smoke_until = -1
         self._spike_dropped_at: str | None = None
         self._retake_popped = False
@@ -318,13 +327,21 @@ class _MatchSim:
         return self.gd.players[pid]
 
     def _condition(self, pl: Player) -> float:
-        """Form/morale/stamina folded into one additive term. Clamped
-        tight: unchecked, hot teams' condition compounded into 13-0
-        snowballs (winners gain form/morale, which wins more)."""
+        """Form/morale/stamina/confidence folded into one additive term.
+        Clamped tight: unchecked, hot teams' condition compounded into
+        13-0 snowballs (winners gain form/morale, which wins more).
+        Confidence is neutral-safe: exactly zero at the default 50."""
         form = max(-5.0, min(5.0, (pl.form - 50.0) / 8.0))
         morale = max(-3.0, min(3.0, (pl.morale - 50.0) / 12.0))
         stamina = (pl.stamina - 100.0) / 10.0
-        return form + morale + stamina
+        conf = max(
+            -C.CONFIDENCE_COND_CAP,
+            min(
+                C.CONFIDENCE_COND_CAP,
+                (pl.confidence - 50.0) / C.CONFIDENCE_COND_DIV,
+            ),
+        )
+        return form + morale + stamina + conf
 
     def _emit(self, ev: Event) -> None:
         self.log.append(ev)
@@ -339,6 +356,7 @@ class _MatchSim:
                 team_a_id=self.team_a,
                 team_b_id=self.team_b,
                 seed=self.seed,
+                agents={pid: self.p[pid].agent_id for pid in sorted(self.p)},
             )
         )
         round_num = 0
@@ -505,6 +523,8 @@ class _MatchSim:
         # -- per-round reset ---------------------------------------------------
         self._flashed = False
         self._flash_side = "defense"
+        self._flash_owner = None
+        self._setup_owner = {}
         self._smoke_until = -1
         self._spike_dropped_at = None
         self._retake_popped = False
@@ -521,6 +541,7 @@ class _MatchSim:
             ps.planting_until = -1
             ps.defusing_until = -1
             ps.flash_until = -1
+            ps.flashed_by = None
             ps.bonus_until = -1
             ps.bonus = 0.0
             ps.no_engage_until = -1
@@ -1487,12 +1508,14 @@ class _MatchSim:
         power = 0.0
         smoked = False
         flashed = False
+        flash_owner: str | None = None
         if pids:
             # Neutral (50) throws everything, like the engine always did;
             # only genuinely disciplined books hold charges back.
             disc = self._tactics(self.p[pids[0]].team_id).util_discipline
             n_throw = max(1, round(len(pids) * (1.0 - max(0.0, disc - 50.0) / 125.0)))
             pids = list(pids)[:n_throw]
+        best_contrib: tuple[float, str] | None = None  # (power, pid)
         for pid in pids:
             ps = self.p[pid]
             pl = self._player(pid)
@@ -1509,10 +1532,15 @@ class _MatchSim:
                 )
                 failed = rng is not None and rng.random() < fail_p
                 if not failed:
-                    power += self._ability_power(ab) * (
+                    contrib = self._ability_power(ab) * (
                         pl.attr("utility_usage") / 100.0
                     )
+                    power += contrib
+                    if best_contrib is None or contrib > best_contrib[0]:
+                        best_contrib = (contrib, pid)
                     smoked = smoked or ab.blocks_sight
+                    if ab.flashes and not flashed:
+                        flash_owner = pid  # first flasher gets the assist
                     flashed = flashed or ab.flashes
                 self._emit(
                     UtilityUsedEvent(
@@ -1542,6 +1570,11 @@ class _MatchSim:
             ps = self.p[pid]
             ps.bonus = bonus
             ps.bonus_until = tick + C.ENTRY_BONUS_TICKS
+        if best_contrib is not None and pids:
+            self._setup_owner[self.p[pids[0]].team_id] = (
+                best_contrib[1],
+                tick + C.ENTRY_BONUS_TICKS,
+            )
         if smoked:
             self._smoke_until = tick + C.ENTRY_BONUS_TICKS
         # Flash lands on the first target-site duel; flash_side names the
@@ -1549,6 +1582,7 @@ class _MatchSim:
         if flashed:
             self._flashed = True
             self._flash_side = flash_side
+            self._flash_owner = flash_owner
         return power
 
     def _recon_recall(
@@ -1733,6 +1767,9 @@ class _MatchSim:
             p += C.PEEK_PROB_AGGRO
         p += max(0.0, pl.attr("aim_reactivity") - 60.0) / 2000.0
         p *= trait_value(pl, "peek_mult", 1.0)
+        # Confidence is a tendency, not just a stat line: a player riding
+        # high swings angles they'd otherwise hold (exactly neutral at 50).
+        p *= 1.0 + (pl.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
         # The coach's identity: aggressive systems green-light swings
         # (50 = exactly neutral).
         aggr = self._tactics(self.p[pid].team_id).aggression
@@ -1876,7 +1913,11 @@ class _MatchSim:
         if ps.bonus_until >= tick:
             s += ps.bonus
         if n_alive_own == 1 and n_alive_opp >= 2:
-            s += (pl.attr("clutch_factor") - 50.0) / 5.0
+            # Confidence scales how much of the clutch gene shows up when
+            # it matters (neutral 50 = the raw attribute, unchanged).
+            s += ((pl.attr("clutch_factor") - 50.0) / 5.0) * (
+                1.0 + (pl.confidence - 50.0) / C.CONFIDENCE_CLUTCH_DIV
+            )
         if self.loss_streak[ps.team_id] >= C.TILT_STREAK:
             s -= (100.0 - pl.attr("tilt_resistance")) / 15.0
         if ps.armor > 0:
@@ -1963,6 +2004,7 @@ class _MatchSim:
                 if self._flashed and duel_site == target_site:
                     hit = pd if self._flash_side == "defense" else pa
                     hit.flash_until = tick + C.FLASH_TICKS
+                    hit.flashed_by = self._flash_owner
                     self._flashed = False
 
                 # A peeker with a flash in the pocket swings behind it.
@@ -1978,6 +2020,7 @@ class _MatchSim:
                     if flash_ab is not None and rng.random() < p_pop:
                         peeker.charges[flash_ab.id] -= 1
                         mark.flash_until = tick + C.FLASH_TICKS
+                        mark.flashed_by = peeker.pid
                         self._emit(
                             UtilityUsedEvent(
                                 tick=tick, seed_path=seed_path,
@@ -2087,6 +2130,26 @@ class _MatchSim:
         headshot = rng.random() < (
             C.HEADSHOT_BASE + self._player(killer).attr("aim_precision") / 300.0
         )
+        # Assists — pure bookkeeping off already-tracked state, no rng.
+        # Flash assist first: the victim died while still blind from a
+        # teammate's flash. Otherwise a setup assist: the kill converted
+        # inside an execute/retake window, credited to the teammate whose
+        # utility did the most to open it (the damage-assist stand-in).
+        assist = None
+        if vp.flash_until >= tick and vp.flashed_by:
+            cand = self.p.get(vp.flashed_by)
+            if (
+                cand is not None
+                and cand.pid != killer
+                and cand.team_id == kp.team_id
+            ):
+                assist = cand.pid
+        if assist is None:
+            setup = self._setup_owner.get(kp.team_id)
+            if setup is not None and setup[1] >= tick and setup[0] != killer:
+                so = self.p.get(setup[0])
+                if so is not None and so.alive:
+                    assist = setup[0]
         self._emit(
             KillEvent(
                 tick=tick,
@@ -2097,6 +2160,7 @@ class _MatchSim:
                 headshot=headshot,
                 callout_id=vp.callout or None,
                 is_trade=is_trade,
+                assist_id=assist,
                 victim_x=round(vp.x, 2),
                 victim_y=round(vp.y, 2),
             )

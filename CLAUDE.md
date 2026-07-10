@@ -47,24 +47,40 @@ Published at github.com/stateful-ai/esports-tycoon.
   the box score (incl. clutches/multikills/aces/first-deaths) from the
   event log only; never emits events, so it can't drift the golden.
 - `src/esports_sim/manager/` — campaign: `campaign.py` (weekly tick, VCT
-  phases, in-season AI tactic adaptation), `gen.py` (region-flavoured
-  names), `market.py` (transfers + AI free-agent poaching), `development.py`
-  (traits/PA, analyst-scaled scout precision), `training.py` (system-fit
-  growth), `economy.py` (finances + insolvency), `sponsors.py`, `staff.py`,
-  `talk.py`, `relationships.py` (pairwise chemistry graph, spotlight-role
-  friction), `narrative.py` (recaps + tactical-identity + team awards),
-  `inbox.py` (weekly digest; item actions derived LIVE from current
-  offers, never stored), `state.py` (save; `standings_order` H2H
-  tiebreaker; `schema_version` migration hook).
+  phases, in-season AI tactic adaptation, per-map/per-agent stat splits +
+  weekly history snapshots), `gen.py` (region-flavoured names),
+  `market.py` (transfers + AI poaching; humans may bench up to
+  ROSTER_MAX=10 — only the dressed five play a map, resolved by
+  `campaign.dressed_for` from per-map overrides -> `Team.lineup_ids` ->
+  quality top-up, with agent locks via `sim/lineup.py`; bench players
+  scrim at reduced growth), `development.py` (traits/PA, scout
+  precision, weekly random dev events on a dedicated rng stream),
+  `training.py` (system-fit growth, per-player dev_focus/intensity plans,
+  match-XP from box-score lines, bench scrim reps), `economy.py`
+  (finances + insolvency), `sponsors.py`, `staff.py` (ONE shared 50+
+  free-agent staff pool with rich identities; coach specialty boosts the
+  matching focus; `analytics_tier` gates stat-view depth), `social.py`
+  (follower counts + deterministic weekly feed; roster reach feeds
+  sponsor marketability), `talk.py`, `relationships.py` (pairwise
+  chemistry graph), `narrative.py` (recaps + awards), `inbox.py` (weekly
+  digest; item actions derived LIVE from current offers, never stored),
+  `state.py` (save; `standings_order` H2H tiebreaker; `schema_version`
+  migrations — v3 moved staff candidates into the shared pool). Player
+  `confidence` moves on results/ratings/dev events, regresses weekly,
+  and is read NEUTRAL-SAFE by the engine (exact no-op at 50).
 - `src/esports_sim/web/` — FastAPI, thin serializers over GameState; static
   vanilla-JS frontend on `ui/design-system` tokens. **UI holds no sim
   state — it renders event logs + GameState only.** Corollary: never
   mirror an engine formula in JS — serialize the computed values (see
   `tactics_fit`: the server returns per-dial impact at both poles, the
-  client only lerps). Screens: app.js (tabs incl. dashboard hub +
-  tactics), viewer.js (painted-backdrop isometric replay), office.js
-  (sprite-composited home), inbox.js, profile.js (player/team overlays,
-  opened via `[data-pid]`/`[data-tid]` delegation on any name).
+  client only lerps). Stat-column depth is gated SERVER-SIDE by
+  `staff.analytics_tier` — the client renders whatever fields arrive.
+  Screens: app.js (tabs incl. dashboard hub, tactics, market with a
+  Players|Staff split, stats hub, social feed), viewer.js
+  (painted-backdrop isometric replay), inbox.js, profile.js
+  (player/team/staff overlays via `[data-pid]`/`[data-tid]`/`[data-sid]`
+  delegation on any name). office.js is PARKED — unloaded from
+  index.html, kept on disk.
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
   pydantic (`extra="forbid"`): typos fail loudly. `data/rosters/<id>/` =
   roster packs (importable worlds, e.g. the real VCT 2026): `pack.yaml`

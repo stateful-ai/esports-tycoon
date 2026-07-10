@@ -35,7 +35,6 @@ const App = { tab: "dashboard", state: null, mp: null };
 /* -- boot ------------------------------------------------------------------ */
 
 async function boot() {
-  if (App.tab === "dashboard") App.tab = "office"; // land on the visual HQ
   const lob = await api("/api/lobby");
   if (lob.in_game) {
     App.mp = { code: lob.code, team_id: lob.team_id, mode: lob.mode };
@@ -258,7 +257,8 @@ function render() {
   // finishes into a detached node instead of double-appending.
   const container = el("div");
   $("#view").replaceChildren(container);
-  ({ office, inbox, dashboard, roster, tactics, standings, schedule, market, scouting, stats, finances })[App.tab](container);
+  // Office screen is parked for now (office.js stays on disk, unloaded).
+  ({ inbox, dashboard, roster, tactics, standings, schedule, market, scouting, stats, social, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -585,14 +585,21 @@ async function dashboard(v) {
       })
     );
   }
-  tiles.appendChild(
-    statTile("Training", cap(s.training_focus), {
-      sub: "office →",
-      onClick: () => dashGoTab("office"),
-      title: "Set the training focus in the office",
-    })
-  );
+  tiles.appendChild(statTile("Training", cap(s.training_focus)));
   status.appendChild(tiles);
+
+  // Weekly training focus lives here now (the office screen is parked).
+  const trainRow = el("div", "row", `<span class="muted">Training focus:</span>`);
+  for (const o of s.focus_options ?? []) {
+    const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
+    b.onclick = async () => {
+      await api("/api/actions/training", { focus: o });
+      toast(`Training focus: ${o}`);
+      refresh();
+    };
+    trainRow.appendChild(b);
+  }
+  status.appendChild(trainRow);
   v.appendChild(status);
 
   /* -- 3. Transfer offers (actionable — carried over intact) -------------- */
@@ -717,6 +724,14 @@ async function dashboard(v) {
   }
 }
 
+// Compact follower count: 12,400 -> "12.4K", 1,200,000 -> "1.2M".
+function fmtFollowers(n) {
+  if (n == null) return "—";
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  return String(n);
+}
+
 async function roster(v) {
   const teamId = App.rosterTeam ?? App.state.user_team.id;
   const data = await api(`/api/roster/${teamId}`);
@@ -764,11 +779,38 @@ async function roster(v) {
     row.appendChild(scout);
     card.appendChild(row);
   }
+  // Default-lineup editor: with a bench, the manager names the five who
+  // dress by default (per-map overrides live on the upcoming-fixture card).
+  const hasBench = data.is_user_team && data.players.length > 5;
+  const lineup = new Set(data.players.filter((p) => p.starter).map((p) => p.id));
+  let lineupBar = null;
+  const paintLineupBar = () => {
+    if (!lineupBar) return;
+    const n = lineup.size;
+    lineupBar.querySelector("b").textContent = `${n}/5`;
+    lineupBar.querySelector("button").disabled = n !== 5;
+  };
+  if (hasBench) {
+    lineupBar = el("div", "row",
+      `<span class="muted">Default five: <b class="mono">${lineup.size}/5</b> —
+       toggle ★ to change who dresses. Bench players scrim (reduced growth) and
+       good ones want minutes.</span>`);
+    const save = el("button", "btn btn-sm btn-primary", "Save lineup");
+    save.onclick = async () => {
+      const r = await api("/api/actions/lineup", { lineup_ids: [...lineup] });
+      toast(r.message); render();
+    };
+    lineupBar.appendChild(save);
+    card.appendChild(lineupBar);
+    paintLineupBar();
+  }
+
   const t = el("table");
   t.innerHTML = `<thead><tr>
-    <th>Player</th><th>Role</th><th>Agent</th><th class="num">Age</th><th class="num">OVR</th>
+    ${hasBench ? "<th>★</th>" : ""}<th>Player</th><th>Role</th><th>Agent</th><th class="num">Age</th><th class="num">OVR</th>
     <th>Ceiling</th>
-    <th>Form</th><th>Morale</th><th>Stamina</th>
+    <th>Form</th><th>Morale</th><th>Stamina</th><th>Conf</th>
+    ${data.is_user_team ? "<th>Dev plan</th>" : ""}
     <th class="num">Salary</th><th class="num">Contract</th><th></th></tr></thead>`;
   const tb = el("tbody");
   for (const p of data.players) {
@@ -782,13 +824,23 @@ async function roster(v) {
         ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
            <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
         : "";
-    // Bench/starter marker only matters once a roster runs deeper than five.
-    const subMark = (data.is_user_team && data.players.length > 5)
-      ? (p.starter ? ' <span class="pill" title="in the starting five">★</span>'
-                   : ' <span class="pill muted" title="benched by default">sub</span>')
+    const starCell = hasBench
+      ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
+    const devCell = data.is_user_team
+      ? `<td class="dev-plan">
+           <select data-act="focus" title="training focus (auto = team week)">
+             ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""}>${o}</option>`).join("")}
+           </select>
+           <select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
+             ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
+           </select>
+         </td>`
+      : "";
+    const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${subMark}</td>
+      ${starCell}
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${benchPill}</td>
       <td>${stylePill(p)}</td>
       <td>${p.planned_agent
         ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
@@ -797,9 +849,34 @@ async function roster(v) {
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
       <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
       <td>${bar(p.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
+      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}</td>
+      ${devCell}
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>
       <td>${actions}</td>`);
+    if (hasBench) {
+      tr.querySelector('[data-act="star"]').onclick = (e) => {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        if (lineup.has(p.id)) lineup.delete(p.id);
+        else lineup.add(p.id);
+        btn.classList.toggle("active", lineup.has(p.id));
+        btn.textContent = lineup.has(p.id) ? "★" : "☆";
+        paintLineupBar();
+      };
+    }
+    if (data.is_user_team) {
+      const post = async (field, value) => {
+        const r = await api("/api/actions/dev_plan", { player_id: p.id, [field]: value });
+        toast(r.message);
+      };
+      const fSel = tr.querySelector('[data-act="focus"]');
+      fSel.onclick = (e) => e.stopPropagation();
+      fSel.onchange = () => post("dev_focus", fSel.value);
+      const iSel = tr.querySelector('[data-act="intensity"]');
+      iSel.onclick = (e) => e.stopPropagation();
+      iSel.onchange = () => post("training_intensity", iSel.value);
+    }
     if (!data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
         e.stopPropagation();
@@ -831,9 +908,10 @@ async function roster(v) {
     }
     tr.style.cursor = "pointer";
     let detail = null;
-    tr.onclick = () => {
+    tr.onclick = (e) => {
+      if (e.target.tagName === "SELECT" || e.target.tagName === "OPTION") return;
       if (detail) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="12">${attrDetail(p)}</td>`);
+      detail = el("tr", "", `<td colspan="15">${attrDetail(p)}</td>`);
       tr.after(detail);
     };
     tb.appendChild(tr);
@@ -842,13 +920,15 @@ async function roster(v) {
   card.appendChild(t);
   v.appendChild(card);
 
-  if (data.is_user_team && data.upcoming) v.appendChild(lineupCard(data));
-  if (data.is_user_team) await staffCard(v);
+  if (data.is_user_team && data.upcoming) v.appendChild(mapLineupCard(data));
 }
 
 // Per-map "dressed five" picker for the upcoming fixture (only shown when the
-// roster runs deeper than five, so there's an actual choice to make).
-function lineupCard(data) {
+// roster runs deeper than five, so there's an actual choice to make). NOTE:
+// distinct from lineupCard(v, lineup) below (the weekly agent-lock table) —
+// the two used to share a name, and the later declaration hoisted over this
+// one, crashing the roster tab for any benched roster.
+function mapLineupCard(data) {
   const up = data.upcoming;
   const card = el("div", "card");
   card.innerHTML = `<h2>Lineups — vs ${up.opponent} (Bo${up.best_of})</h2>
@@ -907,40 +987,6 @@ function lineupCard(data) {
   return card;
 }
 
-async function staffCard(v) {
-  const data = await api("/api/staff");
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Backroom staff — ${money(data.weekly_cost)}/wk</h2>`;
-  for (const role of data.roles) {
-    const row = el("div", "row", "");
-    const hired = data.hired[role];
-    const head = `<span style="min-width:280px"><span class="pill">${role}</span> `;
-    if (hired) {
-      row.innerHTML = `${head}<b>${hired.name}</b>
-        <span class="muted">q${Math.round(hired.quality)} · ${money(hired.salary)}/wk — boosts ${data.blurbs[role]}</span></span>`;
-      const rel = el("button", "btn btn-sm", "Release");
-      rel.onclick = async () => {
-        const r = await api("/api/actions/release_staff", { role });
-        toast(r.message); render();
-      };
-      row.appendChild(rel);
-    } else {
-      row.innerHTML = `${head}<span class="muted">vacant — ${data.blurbs[role]}</span></span>`;
-      for (const c of data.candidates[role] ?? []) {
-        const b = el("button", "btn btn-sm",
-          `${c.name} (q${Math.round(c.quality)}, ${money(c.salary)}/wk)`);
-        b.onclick = async () => {
-          const r = await api("/api/actions/hire_staff", { candidate_id: c.id });
-          toast(r.message); refresh(); render();
-        };
-        row.appendChild(b);
-      }
-    }
-    card.appendChild(row);
-  }
-  v.appendChild(card);
-}
-
 function attrDetail(p) {
   const rows = Object.entries(p.attributes)
     .map(([k, val]) => `<tr><td>${k.replaceAll("_", " ")}</td><td>${bar(val)}</td><td class="num">${Math.round(val)}</td></tr>`)
@@ -959,6 +1005,7 @@ function attrDetail(p) {
         ? `<p class="muted">ability: ${starsRange([p.ca_stars, p.ca_stars])} now · ${starsRange([p.potential_stars, p.potential_stars])} ceiling</p>`
         : ""}
       <p class="muted">asking salary next deal: ${money(p.asking_salary)}/wk</p>
+      <p class="muted">social reach: ${fmtFollowers(p.followers)} followers · confidence ${Math.round(p.confidence ?? 50)}</p>
     </div></div>`;
 }
 
@@ -1430,6 +1477,88 @@ async function schedule(v) {
 }
 
 async function market(v) {
+  // Two desks: players (free agents + transfers) and backroom staff.
+  const sub = App.marketTab ?? "players";
+  const tabs = el("div", "row subtabs");
+  for (const [key, label] of [["players", "Players"], ["staff", "Staff"]]) {
+    const b = el("button", "btn btn-sm" + (sub === key ? " active" : ""), label);
+    b.onclick = () => { App.marketTab = key; render(); };
+    tabs.appendChild(b);
+  }
+  v.appendChild(tabs);
+  if (sub === "staff") return marketStaff(v);
+  return marketPlayers(v);
+}
+
+async function marketStaff(v) {
+  const data = await api("/api/staff");
+  const hiredCard = el("div", "card");
+  hiredCard.innerHTML = `<h2>Your backroom — ${money(data.weekly_cost)}/wk</h2>
+    <p class="muted">Analytics department: tier ${data.analytics.tier} — ${data.analytics.label}${
+      data.analytics.next_unlock ? ` · next unlock: ${data.analytics.next_unlock}` : ""
+    }</p>`;
+  for (const role of data.roles) {
+    const row = el("div", "row", "");
+    const hired = data.hired[role];
+    const head = `<span style="min-width:340px"><span class="pill">${role}</span> `;
+    if (hired) {
+      row.innerHTML = `${head}<b class="slink" data-sid="${hired.id}">${hired.name}</b>
+        <span class="muted">q${Math.round(hired.quality)} · ${hired.specialty || "—"} ·
+        ${money(hired.salary)}/wk — ${data.blurbs[role]}</span></span>`;
+      const rel = el("button", "btn btn-sm", "Release");
+      rel.onclick = async () => {
+        const r = await api("/api/actions/release_staff", { role });
+        toast(r.message); render();
+      };
+      row.appendChild(rel);
+    } else {
+      row.innerHTML = `${head}<span class="muted">vacant — ${data.blurbs[role]}</span></span>`;
+    }
+    hiredCard.appendChild(row);
+  }
+  v.appendChild(hiredCard);
+
+  const poolCard = el("div", "card");
+  poolCard.innerHTML = `<h2>Staff market (${data.pool.length} free agents)</h2>
+    <p class="muted">One shared pool — in a shared world, rival managers hire from the
+    same market. Hiring replaces your current ${data.roles.join("/")} in that role
+    (they return to the pool). Click a name for the full profile.</p>`;
+  const rolePlural = { coach: "Coaches", analyst: "Analysts", physio: "Physios" };
+  for (const role of data.roles) {
+    const members = data.pool.filter((m) => m.role === role);
+    if (!members.length) continue;
+    poolCard.appendChild(el("h2", "", `${rolePlural[role] ?? cap(role)} <span class="muted" style="font-weight:400">— ${data.blurbs[role]}</span>`));
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Name</th><th class="num">Age</th><th>Region</th>
+      <th>Specialty</th><th>Quality</th><th class="num">Salary</th>
+      <th class="num">Exp</th><th></th></tr></thead>`;
+    const tb = el("tbody");
+    for (const m of members) {
+      const tr = el("tr", "", `
+        <td><b class="slink" data-sid="${m.id}">${m.name}</b>${
+          (m.titles ?? []).length ? ` <span class="pill" title="${m.titles.join(", ")}">🏆 ${m.titles.length}</span>` : ""
+        }</td>
+        <td class="num">${m.age}</td>
+        <td>${m.region || "—"}</td>
+        <td title="${m.specialty_blurb || ""}"><span class="pill">${m.specialty || "—"}</span></td>
+        <td>${bar(m.quality)}</td>
+        <td class="num">${money(m.salary)}/wk</td>
+        <td class="num">${m.seasons_experience}s</td>
+        <td><button class="btn btn-sm">Hire</button></td>`);
+      tr.querySelector("button").onclick = async (e) => {
+        e.stopPropagation();
+        const r = await api("/api/actions/hire_staff", { candidate_id: m.id });
+        toast(r.message); refresh(); render();
+      };
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+    poolCard.appendChild(t);
+  }
+  v.appendChild(poolCard);
+}
+
+async function marketPlayers(v) {
   const data = await api("/api/market");
   const card = el("div", "card");
   card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>` +
@@ -1643,8 +1772,72 @@ async function scouting(v) {
   }
 }
 
+// Player-table columns per analytics tier. The server already dropped the
+// fields your department can't compile — a column renders only when its
+// key is present in the rows (never recomputed client-side).
+const STAT_COLS = [
+  { k: "maps", h: "Maps" },
+  { k: "rating", h: "Rating", f: (v) => `<b>${v.toFixed(2)}</b>` },
+  { k: "acs", h: "ACS" },
+  { k: "kills", h: "K" },
+  { k: "deaths", h: "D" },
+  { k: "assists", h: "A" },
+  { k: "kd", h: "K/D", f: (v) => v.toFixed(2) },
+  { k: "kast_pct", h: "KAST%" },
+  { k: "first_kills", h: "FK" },
+  { k: "first_deaths", h: "FD" },
+  { k: "fk_fd", h: "FK:FD", f: (v) => v.toFixed(2) },
+  { k: "hs_pct", h: "HS%" },
+  { k: "trade_kills", h: "Trades" },
+  { k: "clutches", h: "Clutch", t: "clutch round wins (1v1 + 1v2 + 1vX)" },
+  { k: "multikills", h: "3K+" },
+  { k: "aces", h: "Aces" },
+  { k: "pistol_kills", h: "Pistol K" },
+  { k: "eco_kills", h: "Eco K", t: "kills while your side was under-gunned" },
+  { k: "save_kills", h: "Save K", t: "kills on a sidearm save" },
+  { k: "plants", h: "Pl" },
+  { k: "defuses", h: "Df" },
+];
+
 async function stats(v) {
-  const data = await api("/api/stats");
+  const split = App.statsSplit; // {kind, key} | null
+  const qs = split ? `?split=${split.kind}&key=${encodeURIComponent(split.key)}` : "";
+  const data = await api("/api/stats" + qs);
+  const tier = data.analytics.tier;
+
+  // Analytics banner: what your department can compile, and what's next.
+  const banner = el("div", "card");
+  banner.innerHTML = `<h2>Analytics department — tier ${tier}</h2>
+    <p class="muted">${data.analytics.label}${
+      data.analytics.next_unlock
+        ? ` · hire a better analyst / upgrade the analytics suite to unlock: <b>${data.analytics.next_unlock}</b>`
+        : " · everything unlocked"
+    }</p>`;
+  // Split picker (tier 3): season / per-map / per-agent player tables.
+  if (data.split_keys) {
+    const row = el("div", "row");
+    const seasonBtn = el("button", "btn btn-sm" + (split ? "" : " active"), "Season");
+    seasonBtn.onclick = () => { App.statsSplit = null; render(); };
+    row.appendChild(seasonBtn);
+    const mkSel = (label, kind, keys) => {
+      const sel = el("select");
+      sel.appendChild(el("option", "", label));
+      for (const k of keys) {
+        const o = el("option", "", k);
+        o.value = k;
+        if (split && split.kind === kind && split.key === k) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.onchange = () => {
+        if (sel.value) { App.statsSplit = { kind, key: sel.value }; render(); }
+      };
+      return sel;
+    };
+    row.appendChild(mkSel("— by map —", "map", data.split_keys.maps));
+    row.appendChild(mkSel("— by agent —", "agent", data.split_keys.agents));
+    banner.appendChild(row);
+  }
+  v.appendChild(banner);
 
   const champs = App.state.champions ?? [];
   if (champs.length) {
@@ -1665,48 +1858,141 @@ async function stats(v) {
   }
 
   const lead = el("div", "card");
-  lead.innerHTML = `<h2>League leaders — season ${App.state.season}</h2>`;
+  const splitLabel = split ? ` — ${split.kind}: ${split.key}` : "";
+  lead.innerHTML = `<h2>League leaders — season ${App.state.season}${splitLabel}</h2>`;
   if (!data.players.length) {
-    lead.innerHTML += `<p class="muted">No maps played yet this season.</p>`;
+    lead.innerHTML += `<p class="muted">No maps played yet.</p>`;
   } else {
+    const cols = STAT_COLS.filter((c) => data.players[0][c.k] !== undefined);
+    const wrap = el("div", "table-scroll");
     const t = el("table");
-    t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>
-      <th class="num">Maps</th><th class="num">Rating</th><th class="num">K</th>
-      <th class="num">D</th><th class="num">K/D</th><th class="num">FK</th>
-      <th class="num">HS%</th><th class="num">Plants</th><th class="num">Defuses</th></tr></thead>`;
+    t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>${cols
+      .map((c) => `<th class="num" ${c.t ? `title="${c.t}"` : ""}>${c.h}</th>`)
+      .join("")}</tr></thead>`;
     const tb = el("tbody");
-    data.players.slice(0, 25).forEach((r, i) => {
+    data.players.slice(0, 40).forEach((r, i) => {
+      const cells = cols
+        .map((c) => `<td class="num">${c.f ? c.f(r[c.k]) : r[c.k]}</td>`)
+        .join("");
       tb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td>${i + 1}</td><td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td><td class="muted">${r.team}</td>
-        <td class="num">${r.maps}</td><td class="num"><b>${r.rating.toFixed(2)}</b></td>
-        <td class="num">${r.kills}</td><td class="num">${r.deaths}</td>
-        <td class="num">${r.kd.toFixed(2)}</td><td class="num">${r.first_kills}</td>
-        <td class="num">${r.hs_pct}</td><td class="num">${r.plants}</td>
-        <td class="num">${r.defuses}</td>`));
+        <td>${i + 1}</td><td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
+        <td class="muted">${r.team}</td>${cells}`));
     });
     t.appendChild(tb);
-    lead.appendChild(t);
+    wrap.appendChild(t);
+    lead.appendChild(wrap);
+    if (tier < 3) {
+      lead.appendChild(el("p", "muted",
+        "Per-map and per-agent leaderboards need a tier-3 analytics department."));
+    }
   }
   v.appendChild(lead);
 
   if (data.teams.length) {
     const tc = el("div", "card");
-    tc.innerHTML = `<h2>Team tendencies</h2>`;
+    tc.innerHTML = `<h2>Team tendencies</h2>` +
+      (tier >= 2 ? `<p class="muted">Click a team row for its per-map record.</p>` : "");
     const t = el("table");
     t.innerHTML = `<thead><tr><th>Team</th><th class="num">Maps</th>
       <th class="num">ATK round %</th><th class="num">DEF round %</th>
       <th class="num">Pistol %</th></tr></thead>`;
     const tb = el("tbody");
     for (const r of data.teams) {
-      tb.appendChild(el("tr", r.is_user ? "me" : "", `
+      const tr = el("tr", r.is_user ? "me" : "", `
         <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b></td><td class="num">${r.maps}</td>
         <td class="num">${r.atk_pct}</td><td class="num">${r.def_pct}</td>
-        <td class="num">${r.pistol_pct}</td>`));
+        <td class="num">${r.pistol_pct}</td>`);
+      if ((r.maps_detail ?? []).length) {
+        tr.style.cursor = "pointer";
+        let detail = null;
+        tr.onclick = (e) => {
+          if (e.target.closest("[data-tid]")) return;
+          if (detail) { detail.remove(); detail = null; return; }
+          const rows = r.maps_detail
+            .map((m) => `<tr><td>${mapThumb(m.map_id, "sm")}${m.map_id}</td>
+              <td class="num">${m.maps}</td><td class="num">${m.wins}</td>
+              <td class="num">${m.win_pct}%</td><td class="num">${m.atk_pct}%</td>
+              <td class="num">${m.def_pct}%</td></tr>`)
+            .join("");
+          detail = el("tr", "", `<td colspan="5"><table>
+            <thead><tr><th>Map</th><th class="num">Played</th><th class="num">W</th>
+            <th class="num">Win%</th><th class="num">ATK%</th><th class="num">DEF%</th></tr></thead>
+            <tbody>${rows}</tbody></table></td>`);
+          tr.after(detail);
+        };
+      }
+      tb.appendChild(tr);
     }
     t.appendChild(tb);
     tc.appendChild(t);
     v.appendChild(tc);
   }
+}
+
+/* -- social: the feed + follower economy ----------------------------------- */
+
+const POST_KIND_ICON = {
+  result: "🏁", hype: "🔥", viral: "📈", drama: "⚡", milestone: "🎉", transfer: "✍",
+};
+
+async function social(v) {
+  const data = await api("/api/social");
+
+  const head = el("div", "card");
+  head.innerHTML = `<h2>Social — your reach</h2>
+    <div class="row">
+      <span class="pill">roster reach ${fmtFollowers(data.your_reach)}</span>
+      <span class="pill">org fans ${fmtFollowers(data.fan_count)}</span>
+      <span class="muted">Reach feeds sponsor marketability; viral weeks move confidence.</span>
+    </div>`;
+  const rosterRow = el("div", "row");
+  for (const p of data.your_roster) {
+    rosterRow.appendChild(el("span", "pill",
+      `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ${fmtFollowers(p.followers)}`));
+  }
+  head.appendChild(rosterRow);
+  v.appendChild(head);
+
+  const band = el("div", "grid2");
+
+  const feedCard = el("div", "card");
+  feedCard.appendChild(el("h2", "", "Feed"));
+  if (!data.feed.length) {
+    feedCard.appendChild(el("p", "muted", "Nothing posted yet — play a week."));
+  } else {
+    for (const post of data.feed) {
+      const who = post.author_kind === "player"
+        ? `<b class="plink" data-pid="${post.author_id}">@${post.author}</b>`
+        : post.author_kind === "team"
+          ? `<b class="tlink" data-tid="${post.author_id}">@${post.author}</b>`
+          : `<b>${post.author}</b>`;
+      feedCard.appendChild(el("div", "post",
+        `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
+           <span class="muted">S${post.season} W${post.week}</span></div>
+         <div class="post-body">${post.text}</div>
+         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`));
+    }
+  }
+  band.appendChild(feedCard);
+
+  const lb = el("div", "card");
+  lb.appendChild(el("h2", "", "Most followed"));
+  const t = el("table");
+  t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>
+    <th class="num">Followers</th></tr></thead>`;
+  const tb = el("tbody");
+  data.leaderboard.forEach((r, i) => {
+    tb.appendChild(el("tr", r.is_user ? "me" : "", `
+      <td>${i + 1}</td>
+      <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
+      <td class="muted">${r.team_tag}</td>
+      <td class="num">${fmtFollowers(r.followers)}</td>`));
+  });
+  t.appendChild(tb);
+  lb.appendChild(t);
+  band.appendChild(lb);
+
+  v.appendChild(band);
 }
 
 function dealLine(d) {

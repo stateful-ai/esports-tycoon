@@ -37,6 +37,8 @@ PLAYER_TOP = {
     "agents",
     "season",
     "weekly",
+    "splits",
+    "charts",
     "relationships",
     "career",
 }
@@ -52,6 +54,11 @@ PLAYER_BLOCK = {
     "is_user_team",
     "is_free_agent",
     "transfer_ask",
+    "followers",
+    "confidence",
+    "is_starter",
+    "dev_focus",
+    "training_intensity",
 }
 OVERVIEW = {
     "ovr",
@@ -74,6 +81,22 @@ SEASON = {
     "acs",
     "first_kills",
     "clutches",
+    "rating",
+    "analytics_tier",
+    "hs_pct",
+    "first_deaths",
+    "fk_fd",
+    "clutch_1v1",
+    "clutch_1v2",
+    "clutch_1v3",
+    "kast_pct",
+    "trade_kills",
+    "eco_kills",
+    "save_kills",
+    "pistol_kills",
+    "multikills",
+    "aces",
+    "kills_by_weapon",
 }
 WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
 ATTR_ITEM = {"key", "label", "value", "band"}

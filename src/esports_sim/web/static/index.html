@@ -31,10 +31,10 @@
   <div class="panel">
     <h1>How to play</h1>
     <p class="muted">You run the org. Each week:</p>
-    <div class="newsline"><b>Roster</b> — watch form/morale/stamina, renew expiring contracts, hold your weekly 1:1 (Talk), hire backroom staff (coach, analyst, physio).</div>
-    <div class="newsline"><b>Dashboard</b> — set the training focus (rest when the team is gassed).</div>
+    <div class="newsline"><b>Roster</b> — watch form/morale/confidence, set each player's development plan (focus + intensity), name your starting five, renew contracts, hold your weekly 1:1 (Talk).</div>
+    <div class="newsline"><b>Dashboard</b> — set the team training focus (rest when the team is gassed).</div>
     <div class="newsline"><b>Standings</b> — click a rival to see their roster; assign your scout to sharpen their numbers over ~3 weeks.</div>
-    <div class="newsline"><b>Market</b> — sign free agents (roster is 5; release first, severance applies).</div>
+    <div class="newsline"><b>Market</b> — sign free agents (5 start, bench up to 7) and hire backroom staff (coach, analyst, physio) from a shared pool.</div>
     <div class="newsline"><b>Finances</b> — sponsorship offers expire after one week; pick the shape that fits your season.</div>
     <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
     <p class="muted" style="margin-top:10px">Same campaign seed + same decisions = the same season, every time.</p>
@@ -43,9 +43,8 @@
 </div>
 
 <nav id="tabs">
-  <button data-tab="office" class="tab active">Office</button>
+  <button data-tab="dashboard" class="tab active">Dashboard</button>
   <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="inbox-badge hidden">0</span></button>
-  <button data-tab="dashboard" class="tab">Dashboard</button>
   <button data-tab="roster" class="tab">Roster</button>
   <button data-tab="tactics" class="tab">Tactics</button>
   <button data-tab="standings" class="tab">Standings</button>
@@ -53,6 +52,7 @@
   <button data-tab="market" class="tab">Market</button>
   <button data-tab="scouting" class="tab">Scouting</button>
   <button data-tab="stats" class="tab">Stats</button>
+  <button data-tab="social" class="tab">Social</button>
   <button data-tab="finances" class="tab">Finances</button>
 </nav>
 
@@ -152,7 +152,6 @@
 <div id="toast"></div>
 
 <script src="/viewer.js"></script>
-<script src="/office.js"></script>
 <script src="/app.js"></script>
 <script src="/profile.js"></script>
 <script src="/audio.js"></script>
