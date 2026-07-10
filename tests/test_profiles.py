@@ -23,6 +23,7 @@ import esports_sim.web.server as server_mod
 from esports_sim.manager import advance_week, chronicle, new_campaign
 from esports_sim.manager.state import (
     CareerStats,
+    DevSnap,
     Fixture,
     GameState,
     MapResult,
@@ -119,7 +120,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
-    "rivals", "knowledge",
+    "identity", "tendencies", "rivals", "knowledge",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -535,3 +536,87 @@ def test_profile_career_totals_combines_history_and_live_season():
 def test_profile_career_totals_none_for_a_mapless_debutant():
     gs = GameState(seed=1, season=1, week=1, user_team_id="nxs", teams={}, players={})
     assert server_mod._profile_career_totals(gs, "rookie") is None
+
+
+# ---------------------------------------------------------------------------
+# Pass-4 web helpers: tactical identity, condition trend, leaders, movers
+
+
+def _p(pid, ca=75):
+    return Player(id=pid, handle=pid.title(), age=24, role=Role.DUELIST,
+                  playstyle=Playstyle.ENTRY, attributes={"aim_precision": ca})
+
+
+def test_team_identity_label_picks_the_dominant_dial():
+    t = Team(id="x", name="X", tag="X")
+    assert server_mod._team_identity_label(t.tactics) == "Balanced"  # all neutral
+    t.tactics.aggression = 80  # dev 30 -> Aggressive
+    assert server_mod._team_identity_label(t.tactics) == "Aggressive"
+    t.tactics.pace = 5  # dev 45 outweighs aggression's 30 -> Methodical
+    assert server_mod._team_identity_label(t.tactics) == "Methodical"
+
+
+def test_team_identity_label_balanced_inside_deadzone():
+    t = Team(id="y", name="Y", tag="Y")
+    t.tactics.aggression = 58  # dev 8 < 12 -> still Balanced
+    assert server_mod._team_identity_label(t.tactics) == "Balanced"
+
+
+def test_team_tendencies_read_the_poles():
+    t = Team(id="x", name="X", tag="X")
+    assert server_mod._team_tendencies(t.tactics) == []  # neutral -> nothing
+    t.tactics.aggression = 70
+    t.tactics.pace = 70
+    tend = server_mod._team_tendencies(t.tactics)
+    assert "swings angles aggressively" in tend and "hits sites fast" in tend
+
+
+def test_condition_trend_reads_direction():
+    gs = GameState(seed=1, season=1, week=3, user_team_id="nxs", teams={}, players={})
+    assert server_mod._condition_trend(gs, "p") is None  # no history yet
+    gs.dev_history["p"] = [
+        DevSnap(season=1, week=1, ca=70, confidence=50, form=50, morale=50, followers=1000),
+        DevSnap(season=1, week=2, ca=70, confidence=50, form=50, morale=50, followers=1000),
+        DevSnap(season=1, week=3, ca=72, confidence=60, form=45, morale=50, followers=1000),
+    ]
+    tr = server_mod._condition_trend(gs, "p")  # last(w3) vs snaps[-3](w1)
+    assert tr["ca"] == "up"          # +2 > 0.3
+    assert tr["confidence"] == "up"  # +10 > 2.0
+    assert tr["form"] == "down"      # -5 < -1.5
+
+
+def test_league_leaders_top_by_rating_tier1_only():
+    teams = {
+        "nxs": Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["a", "b"]),
+        "t2": Team(id="t2", name="T2", tag="T2", tier=2, player_ids=["c"]),
+    }
+    players = {pid: _p(pid) for pid in ("a", "b", "c")}
+    stats = {
+        "a": PlayerSeasonStats(maps=5, rating_sum=6.0, kills=100),   # 1.20
+        "b": PlayerSeasonStats(maps=5, rating_sum=5.0, kills=90),    # 1.00
+        "c": PlayerSeasonStats(maps=5, rating_sum=7.5, kills=120),   # 1.50 but tier-2
+    }
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams=teams, players=players, player_stats=stats)
+    ld = server_mod._league_leaders(gs, n=3)
+    assert [x["pid"] for x in ld] == ["a", "b"]  # c excluded (tier 2)
+    assert ld[0]["rating"] == 1.2
+
+
+def test_roster_movers_rank_by_absolute_swing():
+    teams = {"nxs": Team(id="nxs", name="Nexus", tag="NXS", tier=1,
+                         player_ids=["a", "b", "c"])}
+    players = {pid: _p(pid) for pid in ("a", "b", "c")}
+    gs = GameState(seed=1, season=1, week=2, user_team_id="nxs",
+                   teams=teams, players=players)
+
+    def hist(w1, w2):
+        return [DevSnap(season=1, week=1, ca=w1, confidence=50, form=50, morale=50, followers=1000),
+                DevSnap(season=1, week=2, ca=w2, confidence=50, form=50, morale=50, followers=1000)]
+
+    gs.dev_history["a"] = hist(70, 72.5)   # +2.5
+    gs.dev_history["b"] = hist(70, 69.0)   # -1.0
+    gs.dev_history["c"] = hist(70, 70.1)   # +0.1 -> below the 0.3 threshold
+    mv = server_mod._roster_movers(gs, "nxs")
+    assert [m["pid"] for m in mv] == ["a", "b"]  # |2.5| > |1.0|; c dropped
+    assert mv[0]["delta"] == 2.5 and mv[1]["delta"] == -1.0

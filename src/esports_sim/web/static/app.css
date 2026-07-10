@@ -725,6 +725,27 @@ tr.elim td { opacity: .5; }
 .es-career-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
 .es-career-lab { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
 
+/* Opponent coaching-identity on the spotlight + team-profile pill. */
+.es-identity, .pf-identity {
+  color: var(--es-color-accent, #4fd8c0);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 14%, transparent);
+  font-weight: 700;
+}
+.es-tendencies { display: block; margin-top: 3px; font-size: var(--es-text-xs, 11px); }
+
+/* Season-snapshot card: rating leaders + your weekly movers. */
+.es-snap-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 620px) { .es-snap-cols { grid-template-columns: 1fr; gap: 10px; } }
+.es-snap-col { display: flex; flex-direction: column; gap: 5px; }
+.es-leaders { margin: 4px 0 0; padding-left: 20px; }
+.es-leaders li { padding: 2px 0; }
+.es-movers { display: flex; flex-direction: column; gap: 3px; }
+.es-mover { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mover-delta { font-weight: 700; font-variant-numeric: tabular-nums; }
+.mover-delta.up, .trend-up { color: var(--es-color-success, #3fb68b); }
+.mover-delta.down, .trend-down { color: var(--es-color-danger, #ff4655); }
+.trend-up, .trend-down { font-size: 9px; }
+
 /* Map feature — the beauty crops shown large. */
 .es-maps {
   display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px;

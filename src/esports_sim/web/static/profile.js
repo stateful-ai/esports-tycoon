@@ -623,10 +623,24 @@ function renderTeamProfile(data) {
     logo +
     `<div class="pf-id">` +
     `<div class="pf-handle">${t.name ?? "Unknown"}</div>` +
-    (tierBits ? `<div class="pf-meta"><span class="pill">${tierBits}</span></div>` : "") +
+    (tierBits || data.identity
+      ? `<div class="pf-meta">` +
+        (tierBits ? `<span class="pill">${tierBits}</span>` : "") +
+        (data.identity ? ` <span class="pill pf-identity">${data.identity}</span>` : "") +
+        `</div>`
+      : "") +
     (recBits.length ? `<div class="pf-contract mono">${recBits.join("  ·  ")}</div>` : "") +
     `</div>`;
   frag.appendChild(header);
+
+  // Playstyle — coaching identity's tendency reads (own club or a scouted
+  // rival; server sends [] otherwise).
+  const tend = data.tendencies || [];
+  if (tend.length) {
+    const sec = pfSection("Playstyle");
+    sec.appendChild(el("p", "muted", tend.join(" · ")));
+    frag.appendChild(sec);
+  }
 
   // Attack / defense round-rate split --------------------------------------
   const sp = data.splits || {};

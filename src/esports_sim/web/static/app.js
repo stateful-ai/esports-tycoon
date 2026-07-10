@@ -683,12 +683,63 @@ async function dashboard(v) {
         col.appendChild(names);
         scout.appendChild(col);
       }
+      // Coaching style — shown once you've scouted them enough to read it
+      // (server sends identity/tendencies only past the scout threshold).
+      if (oppRoster && (oppRoster.identity || (oppRoster.tendencies ?? []).length)) {
+        const col = el("div", "es-scout-col");
+        col.appendChild(el("span", "es-scout-lab muted", "Playstyle"));
+        if (oppRoster.identity) {
+          col.appendChild(el("span", "pill es-identity", oppRoster.identity));
+        }
+        if ((oppRoster.tendencies ?? []).length) {
+          col.appendChild(
+            el("span", "es-tendencies muted", oppRoster.tendencies.join(" · "))
+          );
+        }
+        scout.appendChild(col);
+      }
       if (scout.childElementCount) spot.appendChild(scout);
     }
   } else {
     spot.appendChild(el("p", "muted", `No fixture scheduled — ${s.phase}.`));
   }
   v.appendChild(spot);
+
+  /* -- 1b. SEASON SNAPSHOT: league leaders + your roster's movers ---------- */
+  const leaders = s.leaders || [], movers = s.movers || [];
+  if (leaders.length || movers.length) {
+    const snap = el("div", "card es-snapshot");
+    snap.appendChild(el("h2", "", "This season"));
+    const cols = el("div", "es-snap-cols");
+    if (leaders.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Rating leaders"));
+      const ol = el("ol", "es-leaders");
+      for (const l of leaders) {
+        ol.appendChild(el("li", "",
+          `<span class="plink" data-pid="${l.pid}">${l.handle}</span> ` +
+          `<span class="muted tlink-soft">${l.team}</span> ` +
+          `<b class="mono">${l.rating.toFixed(2)}</b>`));
+      }
+      col.appendChild(ol);
+      cols.appendChild(col);
+    }
+    if (movers.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Your movers · this week"));
+      const list = el("div", "es-movers");
+      for (const m of movers) {
+        const up = m.delta > 0;
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${m.pid}">${m.handle}</span> ` +
+          `<span class="mover-delta ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(m.delta).toFixed(1)}</span>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    snap.appendChild(cols);
+    v.appendChild(snap);
+  }
 
   /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
   const status = el("div", "card es-status");
@@ -932,9 +983,11 @@ async function roster(v) {
     card.appendChild(el("p", "muted",
       "Tip: a 6-man roster is advised for tournaments (register a bench)."));
   }
-  if ((data.tendencies ?? []).length) {
-    card.appendChild(el("p", "muted",
-      `Scouting book: ${data.tendencies.join(" · ")}`));
+  if (data.identity || (data.tendencies ?? []).length) {
+    const bits = [];
+    if (data.identity) bits.push(`<b>${data.identity}</b>`);
+    if ((data.tendencies ?? []).length) bits.push(data.tendencies.join(" · "));
+    card.appendChild(el("p", "muted", `Scouting book: ${bits.join(" — ")}`));
   }
   const cp = data.chemistry_pairs ?? { duos: [], feuds: [] };
   if (cp.duos.length || cp.feuds.length) {
@@ -1022,6 +1075,12 @@ async function roster(v) {
          </td>`
       : "";
     const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
+    // Own-club condition trend arrows (server sends condition_trend only for
+    // your roster, and only once there are two dev-history points).
+    const ct = p.condition_trend || {};
+    const tArrow = (d) =>
+      d === "up" ? ' <span class="trend-up" title="trending up">▲</span>'
+        : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
     const tr = el("tr", "", `
       ${starCell}
       <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${benchPill}</td>
@@ -1032,8 +1091,8 @@ async function roster(v) {
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
       <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
-      <td>${bar(p.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
-      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}</td>
+      <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
+      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
       ${devCell}
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>

@@ -952,6 +952,41 @@ def accept_job(body: AcceptJobBody) -> dict:
     return {"ok": True, "team_id": body.team_id}
 
 
+def _league_leaders(gs: GameState, n: int = 3) -> list[dict]:
+    """This season's top tier-1 performers by rating (min 3 maps). A compact
+    league-leaders read for the dashboard hub; pure gs.player_stats."""
+    t1 = {pid for t in gs.teams.values() if t.tier == 1 for pid in t.player_ids}
+    elig = [
+        (pid, st) for pid, st in gs.player_stats.items()
+        if st.maps >= 3 and pid in t1 and pid in gs.players
+    ]
+    top = sorted(elig, key=lambda kv: (-kv[1].rating, kv[0]))[:n]
+    out = []
+    for pid, st in top:
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        out.append({
+            "pid": pid, "handle": gs.players[pid].handle, "team": team,
+            "rating": round(st.rating, 2), "kills": st.kills,
+        })
+    return out
+
+
+def _roster_movers(gs: GameState, tid: str, n: int = 4) -> list[dict]:
+    """Your roster's biggest week-over-week current-ability movers (up or
+    down), from the private dev-history series. Empty until two snapshots
+    exist; sorted by absolute swing."""
+    moves = []
+    for pid in (gs.teams[tid].player_ids if tid in gs.teams else []):
+        snaps = gs.dev_history.get(pid, [])
+        if len(snaps) < 2:
+            continue
+        delta = round(snaps[-1].ca - snaps[-2].ca, 1)
+        if abs(delta) >= 0.3 and pid in gs.players:
+            moves.append({"pid": pid, "handle": gs.players[pid].handle, "delta": delta})
+    moves.sort(key=lambda m: (-abs(m["delta"]), m["handle"]))
+    return moves[:n]
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -984,6 +1019,10 @@ def state() -> dict:
             "phase": gs.phase,
             "user_team": _team_view(user, gs),
             "next_fixture": next_fixture,
+            # Dashboard hub extras: this season's rating leaders (league-wide)
+            # and your roster's biggest week-over-week ability movers.
+            "leaders": _league_leaders(gs),
+            "movers": _roster_movers(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
@@ -1088,6 +1127,74 @@ def _team_fog(gs: GameState, team_id: str) -> float:
     return FOG_BASE_SIGMA * (1.0 - gs.scout_progress.get(team_id, 0.0))
 
 
+def _trend_dir(now: float, then: float, eps: float) -> str:
+    d = now - then
+    return "up" if d > eps else "down" if d < -eps else "flat"
+
+
+def _condition_trend(gs: GameState, pid: str) -> dict | None:
+    """Direction of a player's CA / form / confidence over the last couple
+    of weeks, from their private dev-history series (human rosters only).
+    None until there are two points to compare."""
+    snaps = gs.dev_history.get(pid, [])
+    if len(snaps) < 2:
+        return None
+    last = snaps[-1]
+    prev = snaps[-min(3, len(snaps))]  # ~2 weeks back when available
+    return {
+        "ca": _trend_dir(last.ca, prev.ca, 0.3),
+        "form": _trend_dir(last.form, prev.form, 1.5),
+        "confidence": _trend_dir(last.confidence, prev.confidence, 2.0),
+    }
+
+
+def _team_tendencies(tac) -> list[str]:
+    """Plain-language reads of a team's coaching dials, off their poles.
+    The single source for the scouting-report tendency list (own club or a
+    well-scouted rival)."""
+    out: list[str] = []
+    if tac.aggression >= 62:
+        out.append("swings angles aggressively")
+    elif tac.aggression <= 38:
+        out.append("holds passive angles")
+    if tac.pace >= 62:
+        out.append("hits sites fast")
+    elif tac.pace <= 38:
+        out.append("plays slow defaults")
+    if tac.site_focus != "balanced":
+        out.append(f"{tac.site_focus.upper()}-heavy attack")
+    if tac.eco_greed >= 62:
+        out.append("force-buys relentlessly")
+    if tac.map_control >= 62:
+        out.append("spreads wide and lurks for picks")
+    elif tac.map_control <= 38:
+        out.append("stacks tight and hits as five")
+    return out
+
+
+# Bipolar identity words per dial (value>50 -> first, <50 -> second).
+_IDENTITY_POLES: tuple[tuple[str, str, str], ...] = (
+    ("aggression", "Aggressive", "Passive"),
+    ("pace", "Fast-paced", "Methodical"),
+    ("map_control", "Map-spreading", "Compact"),
+    ("eco_greed", "Big-spending", "Thrifty"),
+    ("utility_discipline", "Disciplined", "Loose"),
+)
+
+
+def _team_identity_label(tac) -> str:
+    """A one-word coaching identity from the single most-committed dial, or
+    'Balanced' when nothing is off neutral. Same neutral-50 vocabulary the
+    tactics system uses, so the label never contradicts the tendencies."""
+    best_dev, best = 0.0, "Balanced"
+    for dial, hi, lo in _IDENTITY_POLES:
+        val = getattr(tac, dial, 50.0)
+        dev = abs(val - 50.0)
+        if dev > best_dev:
+            best_dev, best = dev, (hi if val > 50.0 else lo)
+    return best if best_dev >= 12.0 else "Balanced"
+
+
 @app.get("/api/roster/{team_id}")
 def roster(team_id: str) -> dict:
     with S.lock:
@@ -1112,28 +1219,21 @@ def roster(team_id: str) -> dict:
                 v["planned_locked"] = bool(locked and locked in S.gd.agents)
         # Rival rosters are buyable: show the seller's ask per player.
         tendencies: list[str] = []
+        identity: str | None = None
         if team_id != gs.acting_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
-            # Well-scouted rivals leak their coaching identity.
-            if gs.scout_progress.get(team_id, 0.0) >= 0.5:
-                tac = gs.teams[team_id].tactics
-                if tac.aggression >= 62:
-                    tendencies.append("swings angles aggressively")
-                elif tac.aggression <= 38:
-                    tendencies.append("holds passive angles")
-                if tac.pace >= 62:
-                    tendencies.append("hits sites fast")
-                elif tac.pace <= 38:
-                    tendencies.append("plays slow defaults")
-                if tac.site_focus != "balanced":
-                    tendencies.append(f"{tac.site_focus.upper()}-heavy attack")
-                if tac.eco_greed >= 62:
-                    tendencies.append("force-buys relentlessly")
-                if tac.map_control >= 62:
-                    tendencies.append("spreads wide and lurks for picks")
-                elif tac.map_control <= 38:
-                    tendencies.append("stacks tight and hits as five")
+        # Coaching identity: always readable for your own club, and for a
+        # rival once you've scouted them enough to read their style.
+        if own or gs.scout_progress.get(team_id, 0.0) >= 0.5:
+            tac = gs.teams[team_id].tactics
+            tendencies = _team_tendencies(tac)
+            identity = _team_identity_label(tac)
+        # Own club: a quick-glance form/confidence trend per player, from the
+        # private dev-history time series (empty -> None, no arrow shown).
+        if own:
+            for v in players:
+                v["condition_trend"] = _condition_trend(gs, v["id"])
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -1184,6 +1284,7 @@ def roster(team_id: str) -> dict:
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
             "tendencies": tendencies,
+            "identity": identity,
             "chemistry_pairs": {
                 kind: [
                     [gs.players[a].handle, gs.players[b].handle]
@@ -3173,6 +3274,18 @@ def team_profile(tid: str) -> dict:
             "players": players,
             "form": form,
             "honors": honors,
+            # Coaching identity + tendencies: own club always, a rival once
+            # scouted (>=0.5). None/[] hides the badge until it's earned.
+            "identity": (
+                _team_identity_label(t.tactics)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else None
+            ),
+            "tendencies": (
+                _team_tendencies(t.tactics)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else []
+            ),
             # Named rivalries (manager/rivalries.py), hottest first.
             "rivals": [
                 {
