@@ -13,6 +13,12 @@ players:
   handle: happywei
   real_name: Teng Min-wei
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  - lang: en
+    level: 55.0
   age: 23
   role: sentinel
   playstyle: anchor
@@ -34,29 +40,56 @@ players:
     mastery: 83.4
   - agent_id: chamber
     mastery: 81.5
+  - agent_id: killjoy
+    mastery: 73.4
+  - agent_id: breach
+    mastery: 57.4
+  - agent_id: clove
+    mastery: 58.1
+  - agent_id: jett
+    mastery: 59.1
+  - agent_id: omen
+    mastery: 56.8
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 55.4
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 57.2
   map_pool:
   - map_id: ascent
-    mastery: 90.1
+    mastery: 97.5
   - map_id: bind
-    mastery: 79.9
+    mastery: 93.0
   - map_id: haven
-    mastery: 84.9
+    mastery: 89.2
   - map_id: lotus
-    mastery: 77.3
+    mastery: 99.0
   - map_id: split
-    mastery: 85.7
+    mastery: 88.7
   salary: 6700
-  contract_weeks_left: 38
-  morale: 82.9
-  stamina: 93.8
-  form: 60.0
+  contract_weeks_left: 58
+  morale: 62.7
+  stamina: 99.4
+  form: 46.1
   personality_tags:
-  - streamer
-  potential: 84.3
+  - clutch_gene
+  - independent
+  potential: 84.8
 - id: team_xi_lai_gaming_rarga
   handle: Rarga
   real_name: Arthur Churyumov
   region: china
+  country: RU
+  languages:
+  - lang: ru
+    level: 98.0
+  - lang: zh
+    level: 50.0
   age: 21
   role: duelist
   playstyle: entry
@@ -76,30 +109,59 @@ players:
     mastery: 93.6
   - agent_id: phoenix
     mastery: 78.2
+  - agent_id: raze
+    mastery: 66.5
+  - agent_id: reyna
+    mastery: 66.0
+  - agent_id: breach
+    mastery: 55.3
+  - agent_id: chamber
+    mastery: 53.7
+  - agent_id: clove
+    mastery: 44.0
+  - agent_id: cypher
+    mastery: 50.9
+  - agent_id: killjoy
+    mastery: 57.2
+  - agent_id: omen
+    mastery: 59.8
+  - agent_id: skye
+    mastery: 52.4
+  - agent_id: sova
+    mastery: 51.0
+  - agent_id: viper
+    mastery: 53.3
   map_pool:
   - map_id: ascent
-    mastery: 82.7
+    mastery: 72.4
   - map_id: bind
-    mastery: 82.0
+    mastery: 83.1
   - map_id: haven
-    mastery: 86.1
+    mastery: 77.2
   - map_id: lotus
-    mastery: 83.6
+    mastery: 79.4
   - map_id: split
-    mastery: 86.5
+    mastery: 70.7
   salary: 5900
-  contract_weeks_left: 58
-  morale: 81.7
-  stamina: 96.3
-  form: 58.9
+  contract_weeks_left: 73
+  morale: 78.0
+  stamina: 85.2
+  form: 51.9
   personality_tags:
-  - hot_head
-  - quiet
-  potential: 86.9
+  - slow_starter
+  potential: 76.5
 - id: team_xi_lai_gaming_noman
   handle: NoMan
   real_name: James Man Ga Kit
   region: china
+  country: HK
+  languages:
+  - lang: en
+    level: 90.0
+  - lang: yue
+    level: 88.0
+  - lang: zh
+    level: 40.0
   age: 23
   role: flex
   playstyle: support
@@ -121,30 +183,54 @@ players:
     mastery: 83.7
   - agent_id: killjoy
     mastery: 77.2
+  - agent_id: chamber
+    mastery: 52.1
+  - agent_id: clove
+    mastery: 47.3
+  - agent_id: cypher
+    mastery: 52.3
+  - agent_id: jett
+    mastery: 55.3
+  - agent_id: omen
+    mastery: 51.3
+  - agent_id: phoenix
+    mastery: 46.4
+  - agent_id: reyna
+    mastery: 52.7
+  - agent_id: skye
+    mastery: 53.0
+  - agent_id: sova
+    mastery: 43.0
+  - agent_id: viper
+    mastery: 58.2
   map_pool:
   - map_id: ascent
-    mastery: 78.9
+    mastery: 82.5
   - map_id: bind
-    mastery: 80.4
+    mastery: 81.5
   - map_id: haven
-    mastery: 89.5
+    mastery: 79.2
   - map_id: lotus
-    mastery: 74.6
+    mastery: 75.8
   - map_id: split
-    mastery: 88.4
+    mastery: 75.3
   salary: 5500
-  contract_weeks_left: 50
-  morale: 79.9
-  stamina: 84.0
-  form: 49.0
+  contract_weeks_left: 43
+  morale: 72.6
+  stamina: 95.4
+  form: 45.3
   personality_tags:
-  - slow_starter
+  - hot_head
   - streamer
-  potential: 76.5
+  potential: 73.4
 - id: team_xi_lai_gaming_lysoar
   handle: Lysoar
   real_name: Liang Youhao
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: controller
   playstyle: support
@@ -164,30 +250,58 @@ players:
     mastery: 86.4
   - agent_id: clove
     mastery: 91.4
+  - agent_id: viper
+    mastery: 70.7
+  - agent_id: breach
+    mastery: 56.2
+  - agent_id: chamber
+    mastery: 54.9
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 59.9
+  - agent_id: killjoy
+    mastery: 58.5
+  - agent_id: phoenix
+    mastery: 56.8
+  - agent_id: raze
+    mastery: 0.6
+  - agent_id: reyna
+    mastery: 49.6
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 55.8
   map_pool:
   - map_id: ascent
-    mastery: 88.6
+    mastery: 85.3
   - map_id: bind
-    mastery: 77.9
+    mastery: 81.2
   - map_id: haven
-    mastery: 84.4
+    mastery: 79.6
   - map_id: lotus
-    mastery: 78.8
+    mastery: 75.9
   - map_id: split
-    mastery: 82.8
+    mastery: 87.3
   salary: 6000
-  contract_weeks_left: 67
-  morale: 83.6
-  stamina: 97.3
-  form: 51.6
+  contract_weeks_left: 46
+  morale: 61.8
+  stamina: 83.9
+  form: 55.2
   personality_tags:
-  - independent
+  - analytical
   - perfectionist
-  potential: 85.3
+  potential: 84.5
 - id: team_xi_lai_gaming_wsleo
   handle: WsLeo
   real_name: Huang Ping-wei
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  - lang: en
+    level: 55.0
   age: 24
   role: initiator
   playstyle: igl
@@ -207,23 +321,45 @@ players:
     mastery: 82.5
   - agent_id: sova
     mastery: 89.0
+  - agent_id: breach
+    mastery: 70.7
+  - agent_id: chamber
+    mastery: 1.6
+  - agent_id: clove
+    mastery: 53.8
+  - agent_id: cypher
+    mastery: 55.4
+  - agent_id: jett
+    mastery: 56.9
+  - agent_id: killjoy
+    mastery: 56.5
+  - agent_id: omen
+    mastery: 4.0
+  - agent_id: phoenix
+    mastery: 3.4
+  - agent_id: raze
+    mastery: 50.7
+  - agent_id: reyna
+    mastery: 57.2
+  - agent_id: viper
+    mastery: 57.4
   map_pool:
   - map_id: ascent
-    mastery: 88.0
+    mastery: 78.0
   - map_id: bind
-    mastery: 83.8
+    mastery: 84.2
   - map_id: haven
-    mastery: 89.5
+    mastery: 74.2
   - map_id: lotus
-    mastery: 77.6
+    mastery: 84.5
   - map_id: split
-    mastery: 81.3
+    mastery: 94.3
   salary: 6100
-  contract_weeks_left: 61
-  morale: 80.4
-  stamina: 85.3
-  form: 57.7
+  contract_weeks_left: 55
+  morale: 71.3
+  stamina: 81.5
+  form: 55.7
   personality_tags:
-  - perfectionist
-  - team_player
-  potential: 80.1
+  - flashy
+  - slow_starter
+  potential: 81.1

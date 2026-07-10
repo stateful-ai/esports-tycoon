@@ -83,8 +83,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   migrations — v3 moved staff candidates into the shared pool; v4 is a
   pass-through for the game-plan/sentiment/patch fields; v5 adds the
   Chronicle + legacy fields, backfilling a skeleton history from
-  champions/awards/retired; v6 is a pass-through for the telemetry
-  fields), `telemetry.py` (analytics substrate: `action_log` records
+  champions/awards/retired; v6/v7 are pass-throughs for the career-stat/
+  mentorship and tenure/language/negotiation fields; v8 is a pass-through
+  for the telemetry fields), `telemetry.py` (analytics substrate: `action_log` records
   every HUMAN decision at the web/CLI layer — never AI moves, they
   re-derive from the seed — so seed + action_log fully determines a
   career; `telemetry_snaps` appends a post-tick org feature vector per

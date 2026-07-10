@@ -13,6 +13,12 @@ players:
   handle: artzin
   real_name: Arthur Araujo
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 45.0
   age: 21
   role: sentinel
   playstyle: igl
@@ -32,29 +38,56 @@ players:
     mastery: 88.4
   - agent_id: cypher
     mastery: 90.6
+  - agent_id: chamber
+    mastery: 66.7
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 53.3
+  - agent_id: jett
+    mastery: 54.1
+  - agent_id: omen
+    mastery: 56.6
+  - agent_id: phoenix
+    mastery: 59.5
+  - agent_id: raze
+    mastery: 59.5
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 56.1
+  - agent_id: sova
+    mastery: 55.5
+  - agent_id: viper
+    mastery: 52.0
   map_pool:
   - map_id: ascent
-    mastery: 81.5
+    mastery: 79.5
   - map_id: bind
-    mastery: 85.9
+    mastery: 86.7
   - map_id: haven
-    mastery: 91.7
+    mastery: 84.9
   - map_id: lotus
-    mastery: 73.3
+    mastery: 93.6
   - map_id: split
-    mastery: 80.5
+    mastery: 85.5
   salary: 6300
-  contract_weeks_left: 51
-  morale: 62.4
-  stamina: 82.6
-  form: 56.4
+  contract_weeks_left: 49
+  morale: 80.8
+  stamina: 97.9
+  form: 57.4
   personality_tags:
-  - team_player
-  potential: 82.2
+  - slow_starter
+  - streamer
+  potential: 85.3
 - id: team_furia_eeiu
   handle: eeiu
   real_name: Daniel Vucenovic
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   role: initiator
   playstyle: support
@@ -74,30 +107,59 @@ players:
     mastery: 83.5
   - agent_id: skye
     mastery: 78.6
+  - agent_id: breach
+    mastery: 63.5
+  - agent_id: chamber
+    mastery: 54.0
+  - agent_id: clove
+    mastery: 52.0
+  - agent_id: cypher
+    mastery: 49.7
+  - agent_id: jett
+    mastery: 44.2
+  - agent_id: killjoy
+    mastery: 51.6
+  - agent_id: omen
+    mastery: 53.7
+  - agent_id: phoenix
+    mastery: 46.4
+  - agent_id: raze
+    mastery: 57.4
+  - agent_id: reyna
+    mastery: 52.1
+  - agent_id: viper
+    mastery: 51.5
   map_pool:
   - map_id: ascent
-    mastery: 80.2
+    mastery: 85.3
   - map_id: bind
-    mastery: 74.6
+    mastery: 72.3
   - map_id: haven
-    mastery: 82.9
+    mastery: 94.8
   - map_id: lotus
-    mastery: 85.1
+    mastery: 84.8
   - map_id: split
-    mastery: 80.4
+    mastery: 81.1
   salary: 5400
-  contract_weeks_left: 42
-  morale: 62.6
-  stamina: 94.1
-  form: 59.0
+  contract_weeks_left: 68
+  morale: 82.6
+  stamina: 83.1
+  form: 49.6
   personality_tags:
-  - perfectionist
-  - streamer
-  potential: 77.5
+  - slow_starter
+  potential: 78.5
 - id: team_furia_koalanoob
   handle: koalanoob
   real_name: Gianfranco Potestio
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 95.0
+  - lang: it
+    level: 35.0
+  - lang: pt
+    level: 30.0
   age: 20
   role: duelist
   playstyle: entry
@@ -117,30 +179,59 @@ players:
     mastery: 81.6
   - agent_id: jett
     mastery: 69.8
+  - agent_id: raze
+    mastery: 60.3
+  - agent_id: reyna
+    mastery: 61.4
+  - agent_id: breach
+    mastery: 47.0
+  - agent_id: chamber
+    mastery: 51.2
+  - agent_id: clove
+    mastery: 42.5
+  - agent_id: cypher
+    mastery: 47.3
+  - agent_id: killjoy
+    mastery: 44.4
+  - agent_id: omen
+    mastery: 44.8
+  - agent_id: skye
+    mastery: 44.4
+  - agent_id: sova
+    mastery: 43.4
+  - agent_id: viper
+    mastery: 2.9
   map_pool:
   - map_id: ascent
-    mastery: 77.4
+    mastery: 76.8
   - map_id: bind
-    mastery: 79.1
+    mastery: 65.9
   - map_id: haven
-    mastery: 71.5
+    mastery: 79.4
   - map_id: lotus
-    mastery: 75.2
+    mastery: 77.9
   - map_id: split
-    mastery: 88.4
+    mastery: 79.9
   salary: 4900
-  contract_weeks_left: 67
-  morale: 64.9
-  stamina: 98.2
-  form: 49.0
+  contract_weeks_left: 55
+  morale: 73.9
+  stamina: 80.9
+  form: 50.8
   personality_tags:
   - fan_favorite
-  - perfectionist
-  potential: 79.4
+  potential: 76.0
 - id: team_furia_shyy
   handle: Shyy
   real_name: Fabian Usnayo
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 21
   role: controller
   playstyle: support
@@ -162,30 +253,55 @@ players:
     mastery: 77.7
   - agent_id: killjoy
     mastery: 67.1
+  - agent_id: clove
+    mastery: 54.7
+  - agent_id: breach
+    mastery: 40.2
+  - agent_id: chamber
+    mastery: 32.0
+  - agent_id: cypher
+    mastery: 50.5
+  - agent_id: jett
+    mastery: 45.4
+  - agent_id: phoenix
+    mastery: 53.9
+  - agent_id: raze
+    mastery: 42.4
+  - agent_id: reyna
+    mastery: 39.1
+  - agent_id: skye
+    mastery: 38.5
+  - agent_id: sova
+    mastery: 42.8
   map_pool:
   - map_id: ascent
-    mastery: 70.0
+    mastery: 69.0
   - map_id: bind
-    mastery: 62.5
+    mastery: 75.5
   - map_id: haven
-    mastery: 67.4
+    mastery: 66.4
   - map_id: lotus
-    mastery: 72.9
+    mastery: 74.0
   - map_id: split
-    mastery: 57.7
+    mastery: 80.6
   salary: 4700
-  contract_weeks_left: 35
-  morale: 74.1
-  stamina: 80.7
-  form: 51.3
+  contract_weeks_left: 58
+  morale: 68.3
+  stamina: 88.6
+  form: 51.1
   personality_tags:
-  - clutch_gene
   - quiet
-  potential: 80.8
+  potential: 68.2
 - id: team_furia_basic
   handle: basic
   real_name: Luis Henrique Ferlin Tessaro
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 45.0
   age: 21
   role: flex
   playstyle: support
@@ -207,22 +323,43 @@ players:
     mastery: 73.0
   - agent_id: omen
     mastery: 53.6
+  - agent_id: breach
+    mastery: 33.3
+  - agent_id: chamber
+    mastery: 48.3
+  - agent_id: clove
+    mastery: 41.4
+  - agent_id: cypher
+    mastery: 44.3
+  - agent_id: jett
+    mastery: 43.3
+  - agent_id: killjoy
+    mastery: 45.5
+  - agent_id: phoenix
+    mastery: 47.6
+  - agent_id: raze
+    mastery: 46.2
+  - agent_id: reyna
+    mastery: 45.1
+  - agent_id: viper
+    mastery: 37.9
   map_pool:
   - map_id: ascent
-    mastery: 70.3
+    mastery: 89.5
   - map_id: bind
-    mastery: 59.4
+    mastery: 61.6
   - map_id: haven
-    mastery: 67.7
+    mastery: 71.8
   - map_id: lotus
-    mastery: 77.4
+    mastery: 70.0
   - map_id: split
-    mastery: 68.2
+    mastery: 58.7
   salary: 4500
-  contract_weeks_left: 77
-  morale: 79.9
-  stamina: 87.8
-  form: 45.1
+  contract_weeks_left: 71
+  morale: 81.2
+  stamina: 83.9
+  form: 53.5
   personality_tags:
-  - quiet
-  potential: 77.7
+  - flashy
+  - streamer
+  potential: 73.7

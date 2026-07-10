@@ -47,6 +47,43 @@ def test_chemistry_chases_pair_graph(campaign: GameState) -> None:
     assert team.chemistry > 65.0
 
 
+def test_language_overlap_shapes_affinity(campaign: GameState) -> None:
+    """Pairs sharing a fluent tongue settle warmer than pairs with no
+    common language; players without language data read neutral."""
+    from esports_sim.schemas import LanguageSkill
+
+    gs = campaign
+    roster = gs.roster(gs.user_team_id)
+    a, b, c = roster[0], roster[1], roster[2]
+    # Same personality slate so ONLY languages differ.
+    for p in (a, b, c):
+        p.personality_tags = []
+    a.languages = [LanguageSkill(lang="ko", level=95.0)]
+    b.languages = [LanguageSkill(lang="ko", level=92.0)]
+    c.languages = [LanguageSkill(lang="fr", level=95.0)]
+    shared = relationships.affinity_target(a, b)
+    none = relationships.affinity_target(a, c)
+    assert shared > none, "a shared fluent tongue must settle warmer"
+    assert relationships.language_overlap(a, b) > 0.9
+    assert relationships.language_overlap(a, c) == 0.0
+    # No language data (pre-heal save) reads neutral, not hostile.
+    c.languages = []
+    assert relationships.language_overlap(a, c) == 0.6
+
+
+def test_team_comms_cohesion_reads_roster(campaign: GameState) -> None:
+    from esports_sim.schemas import LanguageSkill
+
+    gs = campaign
+    tid = gs.user_team_id
+    for p in gs.roster(tid):
+        p.languages = [LanguageSkill(lang="en", level=90.0)]
+    assert relationships.team_comms_cohesion(gs, tid) >= 80.0
+    # One player with no shared tongue drags the roster read down.
+    gs.roster(tid)[0].languages = [LanguageSkill(lang="zh", level=95.0)]
+    assert relationships.team_comms_cohesion(gs, tid) < 70.0
+
+
 def test_departure_ripple_hits_best_friend(campaign: GameState) -> None:
     gs = campaign
     team = gs.teams[gs.user_team_id]

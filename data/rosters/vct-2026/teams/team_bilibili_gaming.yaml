@@ -13,6 +13,10 @@ players:
   handle: whzy
   real_name: Wang Haozhe
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: duelist
   playstyle: entry
@@ -34,29 +38,53 @@ players:
     mastery: 79.9
   - agent_id: chamber
     mastery: 80.2
+  - agent_id: jett
+    mastery: 65.6
+  - agent_id: reyna
+    mastery: 61.1
+  - agent_id: breach
+    mastery: 59.7
+  - agent_id: clove
+    mastery: 0.8
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 52.2
+  - agent_id: omen
+    mastery: 59.6
+  - agent_id: skye
+    mastery: 54.8
+  - agent_id: sova
+    mastery: 51.7
+  - agent_id: viper
+    mastery: 54.2
   map_pool:
   - map_id: ascent
-    mastery: 81.4
+    mastery: 81.2
   - map_id: bind
-    mastery: 74.6
+    mastery: 79.2
   - map_id: haven
-    mastery: 79.5
+    mastery: 80.4
   - map_id: lotus
-    mastery: 88.9
+    mastery: 81.1
   - map_id: split
-    mastery: 79.6
+    mastery: 84.8
   salary: 5900
-  contract_weeks_left: 42
-  morale: 61.7
-  stamina: 83.5
-  form: 47.2
+  contract_weeks_left: 50
+  morale: 69.6
+  stamina: 91.0
+  form: 52.0
   personality_tags:
-  - streamer
-  potential: 83.4
+  - clutch_gene
+  potential: 85.0
 - id: team_bilibili_gaming_knight
   handle: Knight
   real_name: Liu Yuxiang
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 23
   role: initiator
   playstyle: support
@@ -76,30 +104,58 @@ players:
     mastery: 87.8
   - agent_id: skye
     mastery: 77.0
+  - agent_id: breach
+    mastery: 63.9
+  - agent_id: chamber
+    mastery: 46.5
+  - agent_id: clove
+    mastery: 59.7
+  - agent_id: cypher
+    mastery: 52.0
+  - agent_id: jett
+    mastery: 1.7
+  - agent_id: killjoy
+    mastery: 49.6
+  - agent_id: omen
+    mastery: 52.5
+  - agent_id: phoenix
+    mastery: 56.4
+  - agent_id: raze
+    mastery: 53.6
+  - agent_id: reyna
+    mastery: 52.8
+  - agent_id: viper
+    mastery: 57.2
   map_pool:
   - map_id: ascent
-    mastery: 79.8
+    mastery: 86.9
   - map_id: bind
-    mastery: 69.7
+    mastery: 86.5
   - map_id: haven
-    mastery: 73.4
+    mastery: 78.0
   - map_id: lotus
-    mastery: 64.5
+    mastery: 74.5
   - map_id: split
-    mastery: 89.3
+    mastery: 73.1
   salary: 5600
-  contract_weeks_left: 55
-  morale: 60.4
-  stamina: 84.3
-  form: 55.8
+  contract_weeks_left: 49
+  morale: 73.4
+  stamina: 96.8
+  form: 51.8
   personality_tags:
+  - analytical
   - perfectionist
-  - slow_starter
-  potential: 85.0
+  potential: 78.8
 - id: team_bilibili_gaming_nephh
   handle: nephh
   real_name: Marcus Tan Kai Wen
   region: china
+  country: SG
+  languages:
+  - lang: en
+    level: 90.0
+  - lang: zh
+    level: 68.0
   age: 21
   role: controller
   playstyle: igl
@@ -119,29 +175,56 @@ players:
     mastery: 93.7
   - agent_id: clove
     mastery: 80.1
+  - agent_id: viper
+    mastery: 69.6
+  - agent_id: breach
+    mastery: 54.8
+  - agent_id: chamber
+    mastery: 47.6
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 53.5
+  - agent_id: killjoy
+    mastery: 53.8
+  - agent_id: phoenix
+    mastery: 53.8
+  - agent_id: raze
+    mastery: 58.1
+  - agent_id: reyna
+    mastery: 47.2
+  - agent_id: skye
+    mastery: 50.5
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 86.4
+    mastery: 81.8
   - map_id: bind
-    mastery: 81.5
+    mastery: 84.4
   - map_id: haven
-    mastery: 82.6
+    mastery: 85.0
   - map_id: lotus
-    mastery: 79.9
+    mastery: 91.0
   - map_id: split
-    mastery: 74.0
+    mastery: 84.9
   salary: 6100
-  contract_weeks_left: 64
-  morale: 68.6
-  stamina: 82.1
-  form: 46.2
+  contract_weeks_left: 33
+  morale: 67.4
+  stamina: 91.9
+  form: 56.2
   personality_tags:
   - flashy
-  potential: 82.1
+  - team_player
+  potential: 82.4
 - id: team_bilibili_gaming_rushia
   handle: rushia
   real_name: Wang Xiaojie
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -161,30 +244,55 @@ players:
     mastery: 84.1
   - agent_id: cypher
     mastery: 82.2
+  - agent_id: chamber
+    mastery: 62.6
+  - agent_id: killjoy
+    mastery: 58.7
+  - agent_id: breach
+    mastery: 41.2
+  - agent_id: clove
+    mastery: 6.8
+  - agent_id: jett
+    mastery: 48.3
+  - agent_id: omen
+    mastery: 57.2
+  - agent_id: phoenix
+    mastery: 36.5
+  - agent_id: raze
+    mastery: 44.2
+  - agent_id: reyna
+    mastery: 44.3
+  - agent_id: skye
+    mastery: 48.3
+  - agent_id: sova
+    mastery: 52.5
   map_pool:
   - map_id: ascent
-    mastery: 80.0
+    mastery: 74.3
   - map_id: bind
-    mastery: 74.0
+    mastery: 68.4
   - map_id: haven
-    mastery: 86.7
+    mastery: 71.8
   - map_id: lotus
-    mastery: 67.9
+    mastery: 81.0
   - map_id: split
-    mastery: 80.9
+    mastery: 71.2
   salary: 5100
-  contract_weeks_left: 52
-  morale: 60.1
-  stamina: 87.3
-  form: 53.8
+  contract_weeks_left: 79
+  morale: 69.2
+  stamina: 82.3
+  form: 51.9
   personality_tags:
-  - clutch_gene
-  - team_player
-  potential: 74.4
+  - slow_starter
+  potential: 84.3
 - id: team_bilibili_gaming_ft
   handle: FT
   real_name: Yan Shuaibo
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 19
   role: duelist
   playstyle: entry
@@ -204,22 +312,45 @@ players:
     mastery: 78.4
   - agent_id: jett
     mastery: 72.2
+  - agent_id: raze
+    mastery: 50.7
+  - agent_id: reyna
+    mastery: 58.4
+  - agent_id: breach
+    mastery: 38.7
+  - agent_id: chamber
+    mastery: 51.1
+  - agent_id: clove
+    mastery: 48.4
+  - agent_id: cypher
+    mastery: 3.9
+  - agent_id: killjoy
+    mastery: 32.7
+  - agent_id: omen
+    mastery: 50.1
+  - agent_id: skye
+    mastery: 32.2
+  - agent_id: sova
+    mastery: 36.5
+  - agent_id: viper
+    mastery: 44.0
   map_pool:
   - map_id: ascent
-    mastery: 64.5
+    mastery: 68.1
   - map_id: bind
-    mastery: 76.0
+    mastery: 67.8
   - map_id: haven
-    mastery: 70.2
+    mastery: 71.6
   - map_id: lotus
-    mastery: 65.8
+    mastery: 61.4
   - map_id: split
-    mastery: 77.1
+    mastery: 69.5
   salary: 4500
-  contract_weeks_left: 39
-  morale: 81.6
-  stamina: 80.5
-  form: 52.3
+  contract_weeks_left: 65
+  morale: 66.6
+  stamina: 82.1
+  form: 57.5
   personality_tags:
-  - fan_favorite
-  potential: 70.8
+  - clutch_gene
+  - team_player
+  potential: 77.7

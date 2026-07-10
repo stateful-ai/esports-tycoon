@@ -13,6 +13,14 @@ players:
   handle: kiNgg
   real_name: Francisco Aravena
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 97.0
+  - lang: pt
+    level: 40.0
+  - lang: en
+    level: 45.0
   age: 25
   role: controller
   playstyle: igl
@@ -34,29 +42,58 @@ players:
     mastery: 92.2
   - agent_id: breach
     mastery: 84.0
+  - agent_id: clove
+    mastery: 72.1
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 58.8
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 55.7
+  - agent_id: reyna
+    mastery: 56.5
+  - agent_id: skye
+    mastery: 57.1
+  - agent_id: sova
+    mastery: 54.9
   map_pool:
   - map_id: ascent
-    mastery: 88.7
+    mastery: 90.4
   - map_id: bind
-    mastery: 78.3
+    mastery: 89.8
   - map_id: haven
-    mastery: 88.2
+    mastery: 97.7
   - map_id: lotus
-    mastery: 79.5
+    mastery: 90.4
   - map_id: split
-    mastery: 94.8
+    mastery: 81.5
   salary: 6500
-  contract_weeks_left: 67
-  morale: 84.9
-  stamina: 97.8
-  form: 53.4
+  contract_weeks_left: 48
+  morale: 81.8
+  stamina: 93.9
+  form: 58.7
   personality_tags:
-  - hot_head
-  potential: 84.2
+  - clutch_gene
+  - flashy
+  potential: 82.7
 - id: team_leviatan_neon
   handle: Neon
   real_name: Bruno Rodriguez
   region: americas
+  country: AR
+  languages:
+  - lang: es
+    level: 97.0
+  - lang: pt
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 22
   role: flex
   playstyle: awper
@@ -76,30 +113,60 @@ players:
     mastery: 99.0
   - agent_id: omen
     mastery: 93.5
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 59.5
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 59.5
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 98.9
+    mastery: 99.0
   - map_id: bind
-    mastery: 97.1
+    mastery: 89.5
   - map_id: haven
     mastery: 99.0
   - map_id: lotus
-    mastery: 86.0
+    mastery: 96.7
   - map_id: split
-    mastery: 93.1
+    mastery: 93.3
   salary: 7600
-  contract_weeks_left: 50
-  morale: 63.5
-  stamina: 91.8
-  form: 54.9
+  contract_weeks_left: 56
+  morale: 73.4
+  stamina: 85.0
+  form: 57.4
   personality_tags:
-  - grinder
-  - hot_head
-  potential: 90.5
+  - clutch_gene
+  - perfectionist
+  potential: 90.8
 - id: team_leviatan_sato
   handle: Sato
   real_name: Eduardo Kenzo Nagahama Sato
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 21
   role: duelist
   playstyle: entry
@@ -119,29 +186,60 @@ players:
     mastery: 83.8
   - agent_id: jett
     mastery: 90.8
+  - agent_id: raze
+    mastery: 72.9
+  - agent_id: reyna
+    mastery: 72.2
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 51.9
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 57.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 58.8
   map_pool:
   - map_id: ascent
-    mastery: 90.3
+    mastery: 82.2
   - map_id: bind
-    mastery: 89.2
+    mastery: 81.4
   - map_id: haven
-    mastery: 90.0
+    mastery: 83.4
   - map_id: lotus
-    mastery: 89.9
+    mastery: 92.9
   - map_id: split
-    mastery: 89.1
+    mastery: 83.8
   salary: 6400
-  contract_weeks_left: 76
-  morale: 67.9
-  stamina: 84.2
-  form: 52.4
+  contract_weeks_left: 52
+  morale: 62.1
+  stamina: 86.0
+  form: 51.0
   personality_tags:
-  - fan_favorite
-  potential: 84.7
+  - quiet
+  - slow_starter
+  potential: 87.8
 - id: team_leviatan_spike
   handle: spike
   real_name: Rodrigo Lombardi
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 22
   role: duelist
   playstyle: entry
@@ -161,30 +259,60 @@ players:
     mastery: 83.6
   - agent_id: omen
     mastery: 85.3
+  - agent_id: phoenix
+    mastery: 68.6
+  - agent_id: raze
+    mastery: 66.6
+  - agent_id: reyna
+    mastery: 72.1
+  - agent_id: breach
+    mastery: 58.7
+  - agent_id: chamber
+    mastery: 51.9
+  - agent_id: clove
+    mastery: 53.0
+  - agent_id: cypher
+    mastery: 58.2
+  - agent_id: killjoy
+    mastery: 53.7
+  - agent_id: skye
+    mastery: 54.2
+  - agent_id: sova
+    mastery: 52.8
+  - agent_id: viper
+    mastery: 52.7
   map_pool:
   - map_id: ascent
-    mastery: 84.9
+    mastery: 79.7
   - map_id: bind
-    mastery: 81.9
+    mastery: 84.2
   - map_id: haven
-    mastery: 90.2
+    mastery: 82.8
   - map_id: lotus
-    mastery: 89.6
+    mastery: 82.4
   - map_id: split
-    mastery: 87.2
+    mastery: 74.5
   salary: 6100
-  contract_weeks_left: 45
-  morale: 67.8
-  stamina: 98.4
+  contract_weeks_left: 51
+  morale: 60.4
+  stamina: 85.0
   form: 58.9
   personality_tags:
-  - independent
-  - slow_starter
-  potential: 81.7
+  - perfectionist
+  - streamer
+  potential: 83.8
 - id: team_leviatan_blowz
   handle: blowz
   real_name: Guilherme Oliveira
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 22
   role: initiator
   playstyle: support
@@ -204,23 +332,44 @@ players:
     mastery: 95.9
   - agent_id: skye
     mastery: 85.7
+  - agent_id: breach
+    mastery: 66.8
+  - agent_id: chamber
+    mastery: 56.3
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 0.1
+  - agent_id: jett
+    mastery: 58.3
+  - agent_id: killjoy
+    mastery: 54.2
+  - agent_id: omen
+    mastery: 53.0
+  - agent_id: phoenix
+    mastery: 52.7
+  - agent_id: raze
+    mastery: 4.6
+  - agent_id: reyna
+    mastery: 50.8
+  - agent_id: viper
+    mastery: 58.6
   map_pool:
   - map_id: ascent
-    mastery: 81.6
+    mastery: 97.0
   - map_id: bind
-    mastery: 88.1
+    mastery: 75.9
   - map_id: haven
-    mastery: 84.1
+    mastery: 85.2
   - map_id: lotus
-    mastery: 81.4
+    mastery: 89.8
   - map_id: split
-    mastery: 96.5
+    mastery: 77.7
   salary: 6300
-  contract_weeks_left: 30
-  morale: 67.2
-  stamina: 85.3
-  form: 46.0
+  contract_weeks_left: 57
+  morale: 78.1
+  stamina: 82.9
+  form: 51.4
   personality_tags:
-  - grinder
-  - perfectionist
-  potential: 82.7
+  - slow_starter
+  potential: 82.2

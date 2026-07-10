@@ -132,12 +132,10 @@ OBJECTIVE_LABELS = {
 # Marketability + brand relations
 
 
-def marketability(gs: GameState) -> float:
-    """How sellable this org is right now: reputation carries, fans and
-    star power (streamer/star_player traits) amplify, results and an
-    international appearance spike it — and the roster's combined social
-    reach adds a modest premium (brands buy audiences). ~1.0 for a
-    mid-table org."""
+def _marketability_terms(gs: GameState) -> list[tuple[str, str, float]]:
+    """The (key, label, contribution) drivers that sum into marketability.
+    The SINGLE source for both the score and the finances-UI breakdown, so the
+    two can never drift apart."""
     from esports_sim.manager import social
 
     team = gs.teams[gs.acting_team_id]
@@ -162,11 +160,43 @@ def marketability(gs: GameState) -> float:
     # Brands read the room: a euphoric fanbase is a premium, a toxic one a
     # discount (sentiment 50 = exactly no term — fresh campaigns unchanged).
     sent = (gs.sentiment(team.id) - 50.0) / 50.0 * 0.15
-    score = (
-        rep * 0.55 + fans * 0.25 + stars * 0.35 + (wr - 0.5) * 0.4 + intl
-        + reach * 0.2 + sent
-    )
+    return [
+        ("reputation", "Reputation", rep * 0.55),
+        ("fans", "Fanbase", fans * 0.25),
+        ("stars", "Star power", stars * 0.35),
+        ("results", "Results", (wr - 0.5) * 0.4),
+        ("international", "International run", intl),
+        ("reach", "Social reach", reach * 0.2),
+        ("sentiment", "Community mood", sent),
+    ]
+
+
+def marketability(gs: GameState) -> float:
+    """How sellable this org is right now: reputation carries, fans and
+    star power (streamer/star_player traits) amplify, results and an
+    international appearance spike it — and the roster's combined social
+    reach adds a modest premium (brands buy audiences). ~1.0 for a
+    mid-table org."""
+    score = sum(c for _, _, c in _marketability_terms(gs))
     return max(0.4, score) * economy.facility_marketing_mult(gs)
+
+
+def marketability_breakdown(gs: GameState) -> dict:
+    """What's driving marketability right now, for the finances screen — the
+    same terms the score sums (single source), plus the facility multiplier.
+    Pure read."""
+    from esports_sim.manager import social
+
+    terms = _marketability_terms(gs)
+    return {
+        "score": round(marketability(gs), 2),
+        "facility_mult": round(economy.facility_marketing_mult(gs), 2),
+        "reach": social.roster_reach(gs, gs.acting_team_id),
+        "drivers": [
+            {"key": k, "label": lab, "contrib": round(c, 2)}
+            for k, lab, c in sorted(terms, key=lambda t: -t[2])
+        ],
+    }
 
 
 def relation(gs: GameState, brand: str) -> float:
@@ -275,11 +305,16 @@ def maybe_offer(gs: GameState, rng: np.random.Generator) -> None:
             continue
         if cfg["rep_gate"] and team.reputation < cfg["rep_gate"]:
             continue
+        # An occupied slot draws no suitors until its deal enters the
+        # renewal window (<= 4 weeks left) — no offers piling up against
+        # an active sponsorship.
+        if not _slot_signable(gs, slot):
+            continue
         live = gs.sponsor_market.get(slot, [])
         if len(live) >= MARKET_CAP_PER_SLOT:
             continue
-        # Empty, signable slots attract suitors faster.
-        prob = cfg["offer_prob"] * (1.5 if _slot_signable(gs, slot) and not live else 1.0)
+        # Empty slots attract suitors faster.
+        prob = cfg["offer_prob"] * (1.5 if not live else 1.0)
         if rng.random() >= min(prob, 0.9):
             continue
         offer = _generate_offer(rng, gs, slot)
@@ -326,9 +361,9 @@ def sign_market_offer(
     team = gs.teams[gs.acting_team_id]
     team.balance += deal.signing_bonus
     gs.sponsor_slots[slot] = deal
-    gs.sponsor_market[slot] = [
-        o for o in gs.sponsor_market.get(slot, []) if o.brand != brand
-    ]
+    # The slot is taken — every rival suitor withdraws (no offers linger
+    # against an active deal; new ones wait for the renewal window).
+    gs.sponsor_market[slot] = []
     _bump_relation(gs, brand, +2.0)
     gs.push_news(
         f"{team.name} sign a {slot} deal with {brand} ({_describe(deal)})."

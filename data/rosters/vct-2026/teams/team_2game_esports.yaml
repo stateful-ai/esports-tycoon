@@ -13,6 +13,12 @@ players:
   handle: gobera
   real_name: Vitor Gobo Cesar
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 23
   role: controller
   playstyle: igl
@@ -32,29 +38,57 @@ players:
     mastery: 70.2
   - agent_id: viper
     mastery: 73.9
+  - agent_id: clove
+    mastery: 48.7
+  - agent_id: breach
+    mastery: 41.3
+  - agent_id: chamber
+    mastery: 40.0
+  - agent_id: cypher
+    mastery: 45.6
+  - agent_id: jett
+    mastery: 43.0
+  - agent_id: killjoy
+    mastery: 32.4
+  - agent_id: phoenix
+    mastery: 48.1
+  - agent_id: raze
+    mastery: 42.4
+  - agent_id: reyna
+    mastery: 44.2
+  - agent_id: skye
+    mastery: 42.8
+  - agent_id: sova
+    mastery: 39.2
   map_pool:
   - map_id: ascent
-    mastery: 63.0
+    mastery: 67.5
   - map_id: bind
-    mastery: 64.7
+    mastery: 73.6
   - map_id: haven
-    mastery: 69.6
+    mastery: 55.3
   - map_id: lotus
-    mastery: 66.5
+    mastery: 76.6
   - map_id: split
-    mastery: 67.9
+    mastery: 60.4
   salary: 4200
-  contract_weeks_left: 65
-  morale: 73.2
-  stamina: 93.9
-  form: 52.7
+  contract_weeks_left: 46
+  morale: 82.9
+  stamina: 84.2
+  form: 60.0
   personality_tags:
-  - quiet
-  potential: 63.6
+  - grinder
+  potential: 69.4
 - id: team_2game_esports_frz
   handle: frz
   real_name: Leandro Fukuda Gomes
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 26
   role: duelist
   playstyle: entry
@@ -74,30 +108,58 @@ players:
     mastery: 69.2
   - agent_id: raze
     mastery: 66.5
+  - agent_id: phoenix
+    mastery: 45.0
+  - agent_id: reyna
+    mastery: 53.7
+  - agent_id: breach
+    mastery: 32.4
+  - agent_id: chamber
+    mastery: 35.8
+  - agent_id: clove
+    mastery: 37.2
+  - agent_id: cypher
+    mastery: 41.4
+  - agent_id: killjoy
+    mastery: 36.2
+  - agent_id: omen
+    mastery: 35.2
+  - agent_id: skye
+    mastery: 41.4
+  - agent_id: sova
+    mastery: 35.6
+  - agent_id: viper
+    mastery: 31.1
   map_pool:
   - map_id: ascent
-    mastery: 58.6
+    mastery: 65.0
   - map_id: bind
-    mastery: 71.6
+    mastery: 79.6
   - map_id: haven
-    mastery: 63.8
+    mastery: 51.7
   - map_id: lotus
-    mastery: 59.3
+    mastery: 58.3
   - map_id: split
-    mastery: 62.2
+    mastery: 61.2
   salary: 4000
-  contract_weeks_left: 61
-  morale: 63.3
-  stamina: 98.3
-  form: 49.1
+  contract_weeks_left: 59
+  morale: 74.4
+  stamina: 91.3
+  form: 50.5
   personality_tags:
-  - analytical
-  - clutch_gene
-  potential: 61.4
+  - perfectionist
+  - slow_starter
+  potential: 61.8
 - id: team_2game_esports_ambition
   handle: ambitioN
   real_name: Gabriel Bertoni Lima
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 50.0
   age: 22
   role: initiator
   playstyle: support
@@ -117,30 +179,58 @@ players:
     mastery: 70.9
   - agent_id: skye
     mastery: 66.8
+  - agent_id: breach
+    mastery: 49.2
+  - agent_id: chamber
+    mastery: 44.2
+  - agent_id: clove
+    mastery: 35.6
+  - agent_id: cypher
+    mastery: 37.0
+  - agent_id: jett
+    mastery: 4.1
+  - agent_id: killjoy
+    mastery: 45.2
+  - agent_id: omen
+    mastery: 40.8
+  - agent_id: phoenix
+    mastery: 36.8
+  - agent_id: raze
+    mastery: 33.7
+  - agent_id: reyna
+    mastery: 43.4
+  - agent_id: viper
+    mastery: 32.7
   map_pool:
   - map_id: ascent
-    mastery: 65.2
+    mastery: 72.8
   - map_id: bind
-    mastery: 73.1
+    mastery: 60.8
   - map_id: haven
-    mastery: 73.7
+    mastery: 62.7
   - map_id: lotus
-    mastery: 65.5
+    mastery: 59.7
   - map_id: split
-    mastery: 63.3
+    mastery: 58.5
   salary: 3900
-  contract_weeks_left: 48
-  morale: 60.2
-  stamina: 90.2
-  form: 47.4
+  contract_weeks_left: 30
+  morale: 82.0
+  stamina: 84.4
+  form: 45.8
   personality_tags:
-  - clutch_gene
+  - fan_favorite
   - hot_head
-  potential: 61.0
+  potential: 66.3
 - id: team_2game_esports_brinks
   handle: Brinks
   real_name: Joao Victor
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 21
   role: flex
   playstyle: support
@@ -160,29 +250,57 @@ players:
     mastery: 61.2
   - agent_id: sova
     mastery: 64.5
+  - agent_id: breach
+    mastery: 33.5
+  - agent_id: chamber
+    mastery: 27.4
+  - agent_id: clove
+    mastery: 34.3
+  - agent_id: cypher
+    mastery: 34.6
+  - agent_id: jett
+    mastery: 35.1
+  - agent_id: killjoy
+    mastery: 44.7
+  - agent_id: phoenix
+    mastery: 39.4
+  - agent_id: raze
+    mastery: 48.8
+  - agent_id: reyna
+    mastery: 40.4
+  - agent_id: skye
+    mastery: 30.9
+  - agent_id: viper
+    mastery: 38.0
   map_pool:
   - map_id: ascent
-    mastery: 54.1
+    mastery: 69.2
   - map_id: bind
-    mastery: 60.8
+    mastery: 66.9
   - map_id: haven
-    mastery: 76.0
+    mastery: 60.2
   - map_id: lotus
-    mastery: 53.4
+    mastery: 55.2
   - map_id: split
-    mastery: 69.8
+    mastery: 60.4
   salary: 3900
-  contract_weeks_left: 59
-  morale: 63.8
-  stamina: 81.5
-  form: 45.5
+  contract_weeks_left: 54
+  morale: 76.1
+  stamina: 82.3
+  form: 50.9
   personality_tags:
-  - slow_starter
-  potential: 69.3
+  - analytical
+  potential: 69.4
 - id: team_2game_esports_xenom
   handle: xenom
   real_name: Eduardo Ribeiro de Moura Soeiro
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -202,23 +320,45 @@ players:
     mastery: 70.9
   - agent_id: cypher
     mastery: 66.1
+  - agent_id: chamber
+    mastery: 46.4
+  - agent_id: breach
+    mastery: 30.9
+  - agent_id: clove
+    mastery: 34.4
+  - agent_id: jett
+    mastery: 45.6
+  - agent_id: omen
+    mastery: 41.1
+  - agent_id: phoenix
+    mastery: 37.0
+  - agent_id: raze
+    mastery: 35.7
+  - agent_id: reyna
+    mastery: 40.8
+  - agent_id: skye
+    mastery: 33.2
+  - agent_id: sova
+    mastery: 31.5
+  - agent_id: viper
+    mastery: 41.1
   map_pool:
   - map_id: ascent
-    mastery: 61.5
+    mastery: 68.3
   - map_id: bind
-    mastery: 68.1
+    mastery: 65.9
   - map_id: haven
-    mastery: 57.9
+    mastery: 62.8
   - map_id: lotus
-    mastery: 74.1
+    mastery: 77.3
   - map_id: split
-    mastery: 62.1
+    mastery: 59.5
   salary: 3800
-  contract_weeks_left: 48
-  morale: 64.2
-  stamina: 90.0
-  form: 51.5
+  contract_weeks_left: 71
+  morale: 74.8
+  stamina: 92.9
+  form: 46.9
   personality_tags:
-  - analytical
-  - quiet
-  potential: 71.3
+  - flashy
+  - grinder
+  potential: 75.0

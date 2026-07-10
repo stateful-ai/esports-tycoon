@@ -145,6 +145,10 @@ FLASH_TICKS = 6
 # Operator gets a bonus when holding a long angle, a malus when pushed close.
 OPERATOR_HOLD_BONUS = 8.0
 OPERATOR_CLOSE_MALUS = 6.0
+# Kits built around the op (Jett's dash out, Chamber's TP — agents flagged
+# op_affinity in data/agents.yaml) add a small edge to every operator duel.
+# You can op on anyone; you only get the buff on these.
+OPERATOR_AGENT_AFFINITY = 2.5
 
 # Range model (needs map floor geometry; neutral without it). Duels are
 # fought at the straight-line distance between the two rooms' centers

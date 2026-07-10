@@ -13,6 +13,14 @@ players:
   handle: erde
   real_name: Roberto Lobos
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 45.0
+  - lang: en
+    level: 40.0
   age: 23
   role: controller
   playstyle: igl
@@ -32,30 +40,57 @@ players:
     mastery: 83.4
   - agent_id: breach
     mastery: 82.2
+  - agent_id: clove
+    mastery: 76.6
+  - agent_id: viper
+    mastery: 69.8
+  - agent_id: chamber
+    mastery: 51.5
+  - agent_id: cypher
+    mastery: 54.1
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 58.5
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 48.1
+  - agent_id: sova
+    mastery: 49.8
   map_pool:
   - map_id: ascent
-    mastery: 96.0
+    mastery: 79.0
   - map_id: bind
-    mastery: 85.7
+    mastery: 87.0
   - map_id: haven
-    mastery: 92.5
+    mastery: 87.7
   - map_id: lotus
-    mastery: 78.2
+    mastery: 81.5
   - map_id: split
-    mastery: 93.5
+    mastery: 84.5
   salary: 6400
-  contract_weeks_left: 55
-  morale: 82.8
-  stamina: 88.1
-  form: 56.6
+  contract_weeks_left: 66
+  morale: 61.3
+  stamina: 93.4
+  form: 47.6
   personality_tags:
-  - clutch_gene
   - flashy
-  potential: 84.3
+  potential: 83.8
 - id: team_loud_lukxo
   handle: lukxo
   real_name: Lucca Travaioli
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 45.0
   age: 20
   role: controller
   playstyle: anchor
@@ -75,30 +110,59 @@ players:
     mastery: 92.3
   - agent_id: chamber
     mastery: 80.4
+  - agent_id: clove
+    mastery: 72.0
+  - agent_id: omen
+    mastery: 70.5
+  - agent_id: breach
+    mastery: 52.4
+  - agent_id: cypher
+    mastery: 57.4
+  - agent_id: jett
+    mastery: 52.7
+  - agent_id: killjoy
+    mastery: 59.7
+  - agent_id: phoenix
+    mastery: 58.2
+  - agent_id: raze
+    mastery: 54.7
+  - agent_id: reyna
+    mastery: 54.5
+  - agent_id: skye
+    mastery: 58.0
+  - agent_id: sova
+    mastery: 53.4
   map_pool:
   - map_id: ascent
-    mastery: 90.5
+    mastery: 76.3
   - map_id: bind
-    mastery: 88.3
+    mastery: 87.6
   - map_id: haven
-    mastery: 78.8
+    mastery: 73.4
   - map_id: lotus
-    mastery: 79.9
+    mastery: 72.4
   - map_id: split
-    mastery: 78.2
+    mastery: 80.4
   salary: 6000
-  contract_weeks_left: 56
-  morale: 60.6
-  stamina: 85.7
-  form: 49.9
+  contract_weeks_left: 32
+  morale: 84.5
+  stamina: 96.0
+  form: 45.1
   personality_tags:
-  - analytical
-  - grinder
-  potential: 84.9
+  - clutch_gene
+  potential: 83.1
 - id: team_loud_darker
   handle: Darker
   real_name: Sebastian Castro Cicuamia
   region: americas
+  country: CO
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 21
   role: flex
   playstyle: anchor
@@ -120,30 +184,56 @@ players:
     mastery: 73.6
   - agent_id: viper
     mastery: 70.5
+  - agent_id: breach
+    mastery: 48.9
+  - agent_id: chamber
+    mastery: 51.8
+  - agent_id: clove
+    mastery: 51.6
+  - agent_id: cypher
+    mastery: 55.8
+  - agent_id: jett
+    mastery: 41.8
+  - agent_id: phoenix
+    mastery: 42.7
+  - agent_id: raze
+    mastery: 0.3
+  - agent_id: reyna
+    mastery: 48.2
+  - agent_id: skye
+    mastery: 43.6
+  - agent_id: sova
+    mastery: 42.0
   map_pool:
   - map_id: ascent
-    mastery: 87.9
+    mastery: 75.2
   - map_id: bind
-    mastery: 76.9
+    mastery: 77.8
   - map_id: haven
-    mastery: 73.1
+    mastery: 70.2
   - map_id: lotus
-    mastery: 80.3
+    mastery: 82.3
   - map_id: split
-    mastery: 81.8
+    mastery: 70.5
   salary: 5300
-  contract_weeks_left: 48
-  morale: 84.3
-  stamina: 85.8
-  form: 54.1
+  contract_weeks_left: 68
+  morale: 79.5
+  stamina: 86.9
+  form: 46.9
   personality_tags:
-  - fan_favorite
-  - perfectionist
-  potential: 74.5
+  - flashy
+  - independent
+  potential: 78.3
 - id: team_loud_cauanzin
   handle: cauanzin
   real_name: Cauan Pereira
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 22
   role: initiator
   playstyle: support
@@ -163,30 +253,60 @@ players:
     mastery: 84.1
   - agent_id: skye
     mastery: 73.1
+  - agent_id: breach
+    mastery: 65.3
+  - agent_id: chamber
+    mastery: 45.1
+  - agent_id: clove
+    mastery: 46.5
+  - agent_id: cypher
+    mastery: 53.2
+  - agent_id: jett
+    mastery: 56.4
+  - agent_id: killjoy
+    mastery: 52.4
+  - agent_id: omen
+    mastery: 56.5
+  - agent_id: phoenix
+    mastery: 48.8
+  - agent_id: raze
+    mastery: 46.6
+  - agent_id: reyna
+    mastery: 47.5
+  - agent_id: viper
+    mastery: 6.0
   map_pool:
   - map_id: ascent
-    mastery: 83.0
+    mastery: 77.0
   - map_id: bind
-    mastery: 84.8
+    mastery: 79.8
   - map_id: haven
-    mastery: 72.2
+    mastery: 77.2
   - map_id: lotus
-    mastery: 81.5
+    mastery: 77.8
   - map_id: split
-    mastery: 73.8
+    mastery: 75.2
   salary: 5400
-  contract_weeks_left: 52
-  morale: 64.7
-  stamina: 99.8
-  form: 49.2
+  contract_weeks_left: 53
+  morale: 65.2
+  stamina: 98.0
+  form: 56.4
   personality_tags:
-  - grinder
-  - perfectionist
-  potential: 82.9
+  - analytical
+  - clutch_gene
+  potential: 76.0
 - id: team_loud_virtyy
   handle: Virtyy
   real_name: Leandro Moreno
   region: americas
+  country: DO
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 35.0
+  - lang: en
+    level: 40.0
   age: 20
   role: duelist
   playstyle: entry
@@ -206,23 +326,44 @@ players:
     mastery: 83.6
   - agent_id: jett
     mastery: 76.1
+  - agent_id: phoenix
+    mastery: 57.1
+  - agent_id: reyna
+    mastery: 56.5
+  - agent_id: breach
+    mastery: 40.5
+  - agent_id: chamber
+    mastery: 33.1
+  - agent_id: clove
+    mastery: 38.6
+  - agent_id: cypher
+    mastery: 44.6
+  - agent_id: killjoy
+    mastery: 41.3
+  - agent_id: omen
+    mastery: 42.1
+  - agent_id: skye
+    mastery: 39.2
+  - agent_id: sova
+    mastery: 48.4
+  - agent_id: viper
+    mastery: 34.5
   map_pool:
   - map_id: ascent
-    mastery: 74.1
+    mastery: 70.1
   - map_id: bind
     mastery: 73.2
   - map_id: haven
-    mastery: 66.9
+    mastery: 73.3
   - map_id: lotus
-    mastery: 68.1
+    mastery: 72.7
   - map_id: split
-    mastery: 75.7
+    mastery: 86.4
   salary: 4500
-  contract_weeks_left: 67
-  morale: 80.5
-  stamina: 90.7
-  form: 52.9
+  contract_weeks_left: 32
+  morale: 84.0
+  stamina: 81.7
+  form: 58.7
   personality_tags:
-  - grinder
-  - streamer
-  potential: 72.9
+  - flashy
+  potential: 68.5

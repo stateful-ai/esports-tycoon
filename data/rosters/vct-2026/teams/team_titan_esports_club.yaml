@@ -13,6 +13,10 @@ players:
   handle: Spitfires
   real_name: Xin Mingyang
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: duelist
   playstyle: entry
@@ -32,30 +36,56 @@ players:
     mastery: 79.1
   - agent_id: raze
     mastery: 83.3
+  - agent_id: phoenix
+    mastery: 58.0
+  - agent_id: reyna
+    mastery: 60.4
+  - agent_id: breach
+    mastery: 46.7
+  - agent_id: chamber
+    mastery: 47.8
+  - agent_id: clove
+    mastery: 45.2
+  - agent_id: cypher
+    mastery: 49.0
+  - agent_id: killjoy
+    mastery: 52.0
+  - agent_id: omen
+    mastery: 41.2
+  - agent_id: skye
+    mastery: 47.3
+  - agent_id: sova
+    mastery: 43.5
+  - agent_id: viper
+    mastery: 47.9
   map_pool:
   - map_id: ascent
-    mastery: 72.5
+    mastery: 80.7
   - map_id: bind
-    mastery: 76.1
+    mastery: 72.7
   - map_id: haven
-    mastery: 68.8
+    mastery: 80.3
   - map_id: lotus
-    mastery: 74.2
+    mastery: 76.6
   - map_id: split
-    mastery: 73.4
+    mastery: 82.5
   salary: 5300
-  contract_weeks_left: 63
-  morale: 64.2
-  stamina: 95.2
-  form: 58.1
+  contract_weeks_left: 59
+  morale: 78.8
+  stamina: 86.3
+  form: 49.9
   personality_tags:
-  - fan_favorite
-  - flashy
-  potential: 83.2
+  - hot_head
+  - slow_starter
+  potential: 84.9
 - id: team_titan_esports_club_coco
   handle: CoCo
   real_name: Ding Dajian
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: controller
   playstyle: support
@@ -75,30 +105,56 @@ players:
     mastery: 85.6
   - agent_id: viper
     mastery: 78.7
+  - agent_id: clove
+    mastery: 59.9
+  - agent_id: breach
+    mastery: 46.6
+  - agent_id: chamber
+    mastery: 56.0
+  - agent_id: cypher
+    mastery: 4.2
+  - agent_id: jett
+    mastery: 44.0
+  - agent_id: killjoy
+    mastery: 46.3
+  - agent_id: phoenix
+    mastery: 43.7
+  - agent_id: raze
+    mastery: 38.5
+  - agent_id: reyna
+    mastery: 39.6
+  - agent_id: skye
+    mastery: 49.4
+  - agent_id: sova
+    mastery: 53.0
   map_pool:
   - map_id: ascent
-    mastery: 76.4
+    mastery: 80.8
   - map_id: bind
-    mastery: 72.0
+    mastery: 78.6
   - map_id: haven
-    mastery: 74.5
+    mastery: 79.8
   - map_id: lotus
-    mastery: 74.0
+    mastery: 79.3
   - map_id: split
-    mastery: 85.8
+    mastery: 71.7
   salary: 5000
-  contract_weeks_left: 56
-  morale: 72.1
-  stamina: 83.6
-  form: 56.4
+  contract_weeks_left: 32
+  morale: 60.4
+  stamina: 98.0
+  form: 52.9
   personality_tags:
-  - flashy
-  - grinder
-  potential: 79.0
+  - independent
+  - team_player
+  potential: 74.4
 - id: team_titan_esports_club_dynamite
   handle: Dynamite
   real_name: Zhao Zihao
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: duelist
   playstyle: entry
@@ -118,30 +174,56 @@ players:
     mastery: 85.8
   - agent_id: raze
     mastery: 79.9
+  - agent_id: phoenix
+    mastery: 61.5
+  - agent_id: reyna
+    mastery: 58.3
+  - agent_id: breach
+    mastery: 57.1
+  - agent_id: chamber
+    mastery: 46.9
+  - agent_id: clove
+    mastery: 56.9
+  - agent_id: cypher
+    mastery: 43.4
+  - agent_id: killjoy
+    mastery: 55.4
+  - agent_id: omen
+    mastery: 48.4
+  - agent_id: skye
+    mastery: 44.1
+  - agent_id: sova
+    mastery: 6.1
+  - agent_id: viper
+    mastery: 47.3
   map_pool:
   - map_id: ascent
-    mastery: 77.7
+    mastery: 70.1
   - map_id: bind
-    mastery: 73.0
+    mastery: 75.6
   - map_id: haven
-    mastery: 74.6
+    mastery: 75.9
   - map_id: lotus
-    mastery: 86.7
+    mastery: 78.7
   - map_id: split
-    mastery: 73.7
+    mastery: 78.6
   salary: 5300
-  contract_weeks_left: 70
-  morale: 83.7
-  stamina: 83.5
-  form: 52.1
+  contract_weeks_left: 55
+  morale: 75.2
+  stamina: 98.1
+  form: 47.1
   personality_tags:
-  - perfectionist
+  - grinder
   - team_player
-  potential: 89.0
+  potential: 83.0
 - id: team_titan_esports_club_haodong
   handle: Haodong
   real_name: Guo Haodong
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 23
   role: sentinel
   playstyle: igl
@@ -161,30 +243,56 @@ players:
     mastery: 88.7
   - agent_id: omen
     mastery: 85.8
+  - agent_id: chamber
+    mastery: 65.9
+  - agent_id: killjoy
+    mastery: 61.3
+  - agent_id: breach
+    mastery: 50.8
+  - agent_id: clove
+    mastery: 41.1
+  - agent_id: jett
+    mastery: 49.2
+  - agent_id: phoenix
+    mastery: 7.2
+  - agent_id: raze
+    mastery: 46.9
+  - agent_id: reyna
+    mastery: 45.4
+  - agent_id: skye
+    mastery: 39.0
+  - agent_id: sova
+    mastery: 50.0
+  - agent_id: viper
+    mastery: 39.0
   map_pool:
   - map_id: ascent
-    mastery: 84.8
+    mastery: 80.0
   - map_id: bind
-    mastery: 77.9
+    mastery: 71.4
   - map_id: haven
-    mastery: 78.3
+    mastery: 78.0
   - map_id: lotus
-    mastery: 79.3
+    mastery: 78.6
   - map_id: split
-    mastery: 76.1
+    mastery: 78.4
   salary: 5100
-  contract_weeks_left: 44
-  morale: 69.7
-  stamina: 80.5
-  form: 58.6
+  contract_weeks_left: 76
+  morale: 71.4
+  stamina: 97.4
+  form: 54.8
   personality_tags:
-  - clutch_gene
+  - independent
   - team_player
-  potential: 76.2
+  potential: 76.4
 - id: team_titan_esports_club_lucas
   handle: lucas
   real_name: Lu Yunkun
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 19
   role: initiator
   playstyle: support
@@ -204,22 +312,45 @@ players:
     mastery: 84.4
   - agent_id: sova
     mastery: 81.8
+  - agent_id: breach
+    mastery: 68.7
+  - agent_id: chamber
+    mastery: 55.1
+  - agent_id: clove
+    mastery: 42.0
+  - agent_id: cypher
+    mastery: 52.7
+  - agent_id: jett
+    mastery: 50.2
+  - agent_id: killjoy
+    mastery: 49.3
+  - agent_id: omen
+    mastery: 50.0
+  - agent_id: phoenix
+    mastery: 50.6
+  - agent_id: raze
+    mastery: 0.4
+  - agent_id: reyna
+    mastery: 48.4
+  - agent_id: viper
+    mastery: 58.3
   map_pool:
   - map_id: ascent
-    mastery: 87.0
+    mastery: 78.1
   - map_id: bind
-    mastery: 75.1
+    mastery: 84.1
   - map_id: haven
-    mastery: 83.8
+    mastery: 85.6
   - map_id: lotus
-    mastery: 74.6
+    mastery: 85.4
   - map_id: split
-    mastery: 68.0
+    mastery: 70.9
   salary: 5600
-  contract_weeks_left: 74
-  morale: 82.5
-  stamina: 93.3
-  form: 55.5
+  contract_weeks_left: 51
+  morale: 72.4
+  stamina: 91.8
+  form: 57.4
   personality_tags:
   - analytical
-  potential: 88.9
+  - slow_starter
+  potential: 86.3

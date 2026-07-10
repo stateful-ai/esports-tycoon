@@ -13,6 +13,14 @@ players:
   handle: saadhak
   real_name: Matias Delipetro
   region: americas
+  country: AR
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 40.0
+  - lang: en
+    level: 50.0
   age: 29
   role: controller
   playstyle: igl
@@ -32,31 +40,61 @@ players:
     mastery: 94.3
   - agent_id: viper
     mastery: 87.1
+  - agent_id: clove
+    mastery: 73.6
+  - agent_id: breach
+    mastery: 55.4
+  - agent_id: chamber
+    mastery: 52.5
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 58.7
+  - agent_id: killjoy
+    mastery: 44.1
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 54.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 53.1
   map_pool:
   - map_id: ascent
-    mastery: 90.9
+    mastery: 87.5
   - map_id: bind
-    mastery: 82.6
+    mastery: 91.8
   - map_id: haven
-    mastery: 82.7
+    mastery: 86.2
   - map_id: lotus
-    mastery: 78.9
+    mastery: 93.3
   - map_id: split
-    mastery: 79.2
+    mastery: 80.0
   salary: 6500
-  contract_weeks_left: 70
-  morale: 65.7
-  stamina: 87.6
-  form: 54.1
+  contract_weeks_left: 31
+  morale: 83.7
+  stamina: 81.0
+  form: 55.5
   personality_tags:
   - fan_favorite
   - streamer
   - veteran
-  potential: 83.5
+  potential: 82.0
 - id: team_kru_esports_mwzera
   handle: mwzera
   real_name: Leonardo Serrati
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 24
   role: initiator
   playstyle: entry
@@ -76,30 +114,60 @@ players:
     mastery: 84.6
   - agent_id: skye
     mastery: 87.7
+  - agent_id: breach
+    mastery: 71.7
+  - agent_id: chamber
+    mastery: 56.1
+  - agent_id: clove
+    mastery: 54.8
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 56.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 57.5
+  - agent_id: phoenix
+    mastery: 54.4
+  - agent_id: raze
+    mastery: 59.4
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 87.5
+    mastery: 95.4
   - map_id: bind
-    mastery: 94.1
+    mastery: 85.4
   - map_id: haven
-    mastery: 83.4
+    mastery: 87.8
   - map_id: lotus
-    mastery: 85.6
+    mastery: 90.8
   - map_id: split
-    mastery: 81.8
+    mastery: 83.1
   salary: 6700
-  contract_weeks_left: 42
-  morale: 82.6
-  stamina: 84.7
-  form: 50.1
+  contract_weeks_left: 41
+  morale: 62.6
+  stamina: 99.1
+  form: 56.3
   personality_tags:
-  - analytical
-  - streamer
-  potential: 80.1
+  - clutch_gene
+  - grinder
+  potential: 80.6
 - id: team_kru_esports_less
   handle: Less
   real_name: Felipe de Loyola Basso
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -121,30 +189,58 @@ players:
     mastery: 90.4
   - agent_id: killjoy
     mastery: 88.7
+  - agent_id: chamber
+    mastery: 80.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 0.4
+  - agent_id: jett
+    mastery: 0.4
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 98.8
+    mastery: 91.9
   - map_id: bind
-    mastery: 90.3
+    mastery: 87.7
   - map_id: haven
-    mastery: 99.0
+    mastery: 82.7
   - map_id: lotus
-    mastery: 94.0
+    mastery: 90.8
   - map_id: split
-    mastery: 97.1
+    mastery: 86.0
   salary: 7300
-  contract_weeks_left: 32
-  morale: 63.1
-  stamina: 81.3
-  form: 49.7
+  contract_weeks_left: 79
+  morale: 79.1
+  stamina: 98.4
+  form: 54.2
   personality_tags:
-  - grinder
+  - analytical
   - slow_starter
-  potential: 93.9
+  potential: 88.4
 - id: team_kru_esports_heat
   handle: heat
   real_name: Olavo Marcelo
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: es
+    level: 40.0
+  - lang: en
+    level: 40.0
   age: 23
   role: duelist
   playstyle: entry
@@ -164,30 +260,60 @@ players:
     mastery: 95.1
   - agent_id: jett
     mastery: 81.0
+  - agent_id: phoenix
+    mastery: 68.7
+  - agent_id: reyna
+    mastery: 66.2
+  - agent_id: breach
+    mastery: 48.5
+  - agent_id: chamber
+    mastery: 51.6
+  - agent_id: clove
+    mastery: 58.1
+  - agent_id: cypher
+    mastery: 53.5
+  - agent_id: killjoy
+    mastery: 59.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 56.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 55.0
   map_pool:
   - map_id: ascent
-    mastery: 86.1
-  - map_id: bind
     mastery: 82.3
+  - map_id: bind
+    mastery: 78.3
   - map_id: haven
-    mastery: 80.2
+    mastery: 72.5
   - map_id: lotus
-    mastery: 75.5
+    mastery: 84.7
   - map_id: split
-    mastery: 81.9
+    mastery: 77.8
   salary: 5900
-  contract_weeks_left: 40
-  morale: 70.3
-  stamina: 88.5
-  form: 58.2
+  contract_weeks_left: 74
+  morale: 60.5
+  stamina: 81.4
+  form: 47.9
   personality_tags:
-  - analytical
-  - clutch_gene
-  potential: 82.7
+  - independent
+  - streamer
+  potential: 80.5
 - id: team_kru_esports_dantedeu5
   handle: Dantedeu5
   real_name: Jesus Federico Larrosa
   region: americas
+  country: AR
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: pt
+    level: 35.0
+  - lang: en
+    level: 40.0
   age: 20
   role: duelist
   playstyle: entry
@@ -207,23 +333,44 @@ players:
     mastery: 75.7
   - agent_id: raze
     mastery: 77.7
+  - agent_id: phoenix
+    mastery: 45.4
+  - agent_id: reyna
+    mastery: 57.1
+  - agent_id: breach
+    mastery: 38.9
+  - agent_id: chamber
+    mastery: 44.7
+  - agent_id: clove
+    mastery: 46.7
+  - agent_id: cypher
+    mastery: 45.7
+  - agent_id: killjoy
+    mastery: 52.8
+  - agent_id: omen
+    mastery: 50.1
+  - agent_id: skye
+    mastery: 35.9
+  - agent_id: sova
+    mastery: 1.7
+  - agent_id: viper
+    mastery: 46.2
   map_pool:
   - map_id: ascent
-    mastery: 56.2
+    mastery: 68.8
   - map_id: bind
-    mastery: 73.7
+    mastery: 81.9
   - map_id: haven
-    mastery: 68.0
+    mastery: 68.8
   - map_id: lotus
-    mastery: 65.9
+    mastery: 64.5
   - map_id: split
-    mastery: 65.5
+    mastery: 86.5
   salary: 4700
-  contract_weeks_left: 68
-  morale: 61.5
-  stamina: 99.9
-  form: 58.7
+  contract_weeks_left: 33
+  morale: 71.0
+  stamina: 86.8
+  form: 57.0
   personality_tags:
-  - quiet
-  - streamer
-  potential: 77.9
+  - slow_starter
+  potential: 67.4

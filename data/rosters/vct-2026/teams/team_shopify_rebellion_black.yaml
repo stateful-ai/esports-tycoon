@@ -13,6 +13,10 @@ players:
   handle: NaturE
   real_name: Nicholas Garrison
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 25
   role: initiator
   playstyle: igl
@@ -32,30 +36,58 @@ players:
     mastery: 77.9
   - agent_id: skye
     mastery: 73.8
+  - agent_id: breach
+    mastery: 51.0
+  - agent_id: chamber
+    mastery: 45.1
+  - agent_id: clove
+    mastery: 41.4
+  - agent_id: cypher
+    mastery: 40.2
+  - agent_id: jett
+    mastery: 40.0
+  - agent_id: killjoy
+    mastery: 48.7
+  - agent_id: omen
+    mastery: 39.9
+  - agent_id: phoenix
+    mastery: 36.5
+  - agent_id: raze
+    mastery: 5.5
+  - agent_id: reyna
+    mastery: 33.4
+  - agent_id: viper
+    mastery: 44.0
   map_pool:
   - map_id: ascent
-    mastery: 65.5
+    mastery: 78.0
   - map_id: bind
-    mastery: 75.3
+    mastery: 64.6
   - map_id: haven
-    mastery: 73.7
+    mastery: 71.3
   - map_id: lotus
-    mastery: 74.8
+    mastery: 71.4
   - map_id: split
-    mastery: 69.2
+    mastery: 70.7
   salary: 4400
-  contract_weeks_left: 50
-  morale: 80.3
-  stamina: 93.0
-  form: 47.0
+  contract_weeks_left: 57
+  morale: 83.5
+  stamina: 83.6
+  form: 53.0
   personality_tags:
-  - analytical
   - perfectionist
-  potential: 66.5
+  - streamer
+  potential: 68.0
 - id: team_shopify_rebellion_black_exa
   handle: exa
   real_name: Kim Lee-hwan
   region: americas
+  country: KR
+  languages:
+  - lang: ko
+    level: 98.0
+  - lang: en
+    level: 55.0
   age: 22
   role: duelist
   playstyle: entry
@@ -75,30 +107,56 @@ players:
     mastery: 76.6
   - agent_id: raze
     mastery: 72.1
+  - agent_id: phoenix
+    mastery: 51.9
+  - agent_id: reyna
+    mastery: 47.9
+  - agent_id: breach
+    mastery: 37.3
+  - agent_id: chamber
+    mastery: 37.5
+  - agent_id: clove
+    mastery: 39.2
+  - agent_id: cypher
+    mastery: 1.0
+  - agent_id: killjoy
+    mastery: 42.9
+  - agent_id: omen
+    mastery: 39.0
+  - agent_id: skye
+    mastery: 46.4
+  - agent_id: sova
+    mastery: 36.6
+  - agent_id: viper
+    mastery: 30.8
   map_pool:
   - map_id: ascent
-    mastery: 67.9
-  - map_id: bind
-    mastery: 61.9
-  - map_id: haven
     mastery: 68.8
+  - map_id: bind
+    mastery: 70.7
+  - map_id: haven
+    mastery: 72.0
   - map_id: lotus
-    mastery: 64.8
+    mastery: 73.3
   - map_id: split
-    mastery: 63.0
+    mastery: 72.4
   salary: 4200
-  contract_weeks_left: 57
-  morale: 72.8
-  stamina: 80.9
-  form: 46.9
+  contract_weeks_left: 44
+  morale: 72.7
+  stamina: 89.1
+  form: 55.5
   personality_tags:
-  - flashy
-  - hot_head
-  potential: 67.9
+  - fan_favorite
+  - quiet
+  potential: 66.2
 - id: team_shopify_rebellion_black_zander
   handle: Zander
   real_name: Alexander Dituri
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: controller
   playstyle: support
@@ -118,29 +176,58 @@ players:
     mastery: 73.1
   - agent_id: viper
     mastery: 69.6
+  - agent_id: clove
+    mastery: 47.3
+  - agent_id: breach
+    mastery: 41.5
+  - agent_id: chamber
+    mastery: 40.0
+  - agent_id: cypher
+    mastery: 37.9
+  - agent_id: jett
+    mastery: 36.4
+  - agent_id: killjoy
+    mastery: 40.8
+  - agent_id: phoenix
+    mastery: 40.5
+  - agent_id: raze
+    mastery: 43.5
+  - agent_id: reyna
+    mastery: 36.5
+  - agent_id: skye
+    mastery: 44.6
+  - agent_id: sova
+    mastery: 36.0
   map_pool:
   - map_id: ascent
-    mastery: 61.5
+    mastery: 69.7
   - map_id: bind
-    mastery: 70.1
+    mastery: 58.8
   - map_id: haven
-    mastery: 70.0
+    mastery: 61.1
   - map_id: lotus
-    mastery: 69.9
+    mastery: 69.8
   - map_id: split
-    mastery: 68.2
+    mastery: 71.8
   salary: 4100
-  contract_weeks_left: 43
-  morale: 78.0
-  stamina: 86.2
-  form: 54.3
+  contract_weeks_left: 32
+  morale: 60.9
+  stamina: 98.5
+  form: 55.9
   personality_tags:
-  - streamer
-  potential: 62.1
+  - grinder
+  - team_player
+  potential: 67.1
 - id: team_shopify_rebellion_black_satellite
   handle: Satellite
   real_name: Derrick Xu
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 98.0
+  - lang: zh
+    level: 25.0
   age: 20
   role: flex
   playstyle: support
@@ -160,30 +247,56 @@ players:
     mastery: 72.9
   - agent_id: sova
     mastery: 68.5
+  - agent_id: breach
+    mastery: 36.5
+  - agent_id: chamber
+    mastery: 39.4
+  - agent_id: clove
+    mastery: 39.2
+  - agent_id: cypher
+    mastery: 36.9
+  - agent_id: jett
+    mastery: 37.1
+  - agent_id: killjoy
+    mastery: 32.0
+  - agent_id: phoenix
+    mastery: 37.2
+  - agent_id: raze
+    mastery: 41.1
+  - agent_id: reyna
+    mastery: 41.1
+  - agent_id: skye
+    mastery: 38.3
+  - agent_id: viper
+    mastery: 43.8
   map_pool:
   - map_id: ascent
-    mastery: 66.6
+    mastery: 69.9
   - map_id: bind
-    mastery: 64.2
+    mastery: 70.2
   - map_id: haven
-    mastery: 71.8
+    mastery: 66.9
   - map_id: lotus
-    mastery: 67.7
+    mastery: 56.1
   - map_id: split
-    mastery: 62.8
+    mastery: 62.9
   salary: 4000
-  contract_weeks_left: 56
-  morale: 82.5
-  stamina: 92.6
-  form: 50.8
+  contract_weeks_left: 76
+  morale: 84.1
+  stamina: 96.2
+  form: 52.8
   personality_tags:
-  - analytical
-  - grinder
-  potential: 63.9
+  - flashy
+  - team_player
+  potential: 72.3
 - id: team_shopify_rebellion_black_smoke
   handle: Smoke
   real_name: Unknown
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -203,23 +316,44 @@ players:
     mastery: 66.3
   - agent_id: cypher
     mastery: 66.2
+  - agent_id: chamber
+    mastery: 42.8
+  - agent_id: breach
+    mastery: 36.1
+  - agent_id: clove
+    mastery: 37.6
+  - agent_id: jett
+    mastery: 32.3
+  - agent_id: omen
+    mastery: 38.6
+  - agent_id: phoenix
+    mastery: 32.3
+  - agent_id: raze
+    mastery: 36.4
+  - agent_id: reyna
+    mastery: 43.0
+  - agent_id: skye
+    mastery: 41.5
+  - agent_id: sova
+    mastery: 36.1
+  - agent_id: viper
+    mastery: 33.2
   map_pool:
   - map_id: ascent
-    mastery: 55.2
+    mastery: 72.0
   - map_id: bind
-    mastery: 67.5
+    mastery: 64.8
   - map_id: haven
-    mastery: 63.7
+    mastery: 62.3
   - map_id: lotus
-    mastery: 56.5
+    mastery: 50.3
   - map_id: split
-    mastery: 65.5
+    mastery: 67.5
   salary: 4000
-  contract_weeks_left: 32
-  morale: 73.9
-  stamina: 95.1
-  form: 51.4
+  contract_weeks_left: 53
+  morale: 77.2
+  stamina: 80.0
+  form: 59.3
   personality_tags:
-  - perfectionist
   - streamer
-  potential: 70.4
+  potential: 66.6

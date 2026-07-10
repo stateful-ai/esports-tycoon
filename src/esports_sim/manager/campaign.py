@@ -10,7 +10,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+import hashlib
+
 import numpy as np
+
+from esports_sim import perf
 
 from esports_sim.manager import (
     career,
@@ -37,7 +41,12 @@ from esports_sim.manager.economy import (
 )
 from esports_sim.schemas.common import Region
 from esports_sim.registry.rosters import RosterPack
-from esports_sim.manager.gen import generate_free_agents, generate_league_teams
+from esports_sim.manager.gen import (
+    assign_identity as gen_assign_identity,
+    backfill_agent_baselines,
+    generate_free_agents,
+    generate_league_teams,
+)
 from esports_sim.manager.schedule import (
     build_final,
     build_regular_season,
@@ -46,6 +55,14 @@ from esports_sim.manager.schedule import (
     veto_bo3,
 )
 from esports_sim.manager.state import (
+    PRIZE_CHAMPION,
+    PRIZE_CHAMPIONS_QF_LOSER,
+    PRIZE_CHAMPIONS_RUNNER_UP,
+    PRIZE_CHAMPIONS_SF_LOSER,
+    PRIZE_CHAMPIONS_WINNER,
+    PRIZE_REGIONAL_CHAMPION,
+    PRIZE_REGIONAL_FINAL_LOSER,
+    PRIZE_REGIONAL_SEMI_LOSER,
     ChampionRecord,
     DevSnap,
     Fixture,
@@ -183,9 +200,44 @@ def new_campaign(
         for p in gen_players + t2_players:
             players[p.id] = p
 
-    fas = generate_free_agents(rng, gd, n=18)
+    # Pack worlds seed the FA pool with REAL unrostered players (benched
+    # pros, org-less veterans, notable names); generation only tops up any
+    # shortfall so the market still has some fictional depth.
+    pack_fas: list = []
+    if pack is not None and pack.free_agents:
+        for pid in sorted(pack.free_agents):
+            p = pack.free_agents[pid].model_copy(deep=True)
+            p.contract_weeks_left = 0
+            players[p.id] = p
+            pack_fas.append(p)
+    fas = generate_free_agents(rng, gd, n=max(4, 18 - len(pack_fas)))
     for p in fas:
         players[p.id] = p
+    fas = pack_fas + fas
+
+    # Authored players (YAML starters / roster packs) carry only their 2-3
+    # signature agents — top the sheet up to the full cast so nobody reads
+    # as "never played" on the rest of their role, and give everyone a
+    # country + spoken languages (comms cohesion input). Hash-based
+    # (draw-free) and idempotent; generated players already have both.
+    for p in players.values():
+        backfill_agent_baselines(p, gd)
+        gen_assign_identity(p)
+
+    # Rostered players open the campaign with a real history at their club
+    # (12-102 weeks, stable per player) — day-one rosters are settled squads,
+    # not a league of brand-new signings, so loyalty premiums vary from the
+    # start and the AI churn protections don't freeze week-one management.
+    # Free agents stay at 0. Hash-based: no rng stream is touched.
+    rostered = {pid for t in teams.values() for pid in t.player_ids}
+    for pid in rostered:
+        p = players[pid]
+        p.tenure_weeks = 12 + int(
+            (int.from_bytes(
+                hashlib.blake2b(f"{pid}|tenure".encode(), digest_size=8).digest(),
+                "big",
+            ) % 91)
+        )
 
     gs = GameState(
         seed=seed,
@@ -212,6 +264,7 @@ def new_campaign(
     social.seed_followers(gs)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)
     return gs
 
 
@@ -320,6 +373,20 @@ def advance_week(
     it is transient: rosters move on (training/aging) immediately after,
     so a later re-sim from the stored seed would not reproduce these logs.
     """
+    # Observability: phase checkpoints for this tick. Write-only wall-clock
+    # sink (see esports_sim.perf) — nothing here reads it, so determinism
+    # is untouched.
+    _cp = perf.Checkpoints()
+
+    # Heal pre-baseline saves: players authored before full mastery sheets
+    # (or before countries/languages existed) top up here. Hash-based and
+    # idempotent (no-op once full), so campaign determinism is untouched —
+    # a fresh campaign is already full.
+    for p in gs.players.values():
+        backfill_agent_baselines(p, gd)
+        gen_assign_identity(p)
+    _cp.mark("heal")
+
     if gs.phase == "offseason":
         return _run_offseason(gs, gd)
 
@@ -392,6 +459,8 @@ def advance_week(
         if k.split("|", 2)[1] not in _played_ids
     }
 
+    _cp.mark("matches")
+
     # 2. Training (human focus is whatever each manager set; AI picks its own,
     # and each human's coach/facility multiplier comes from their own org).
     for tid in sorted(gs.teams):
@@ -408,7 +477,10 @@ def advance_week(
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
             mult = 1.0
-        training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
+        training.apply_training(
+            gs.teams[tid], roster, focus, week_rng, mult,
+            mentor_mults=_mentor_mults(gs, tid),
+        )
     gs.set_acting(None)
 
     # 2b. Backroom department effects, per human org: physio restores
@@ -472,6 +544,8 @@ def advance_week(
         won_by_team=won_by_team,
     )
 
+    _cp.mark("training_dev")
+
     # 3. Finances. Each human org's merch/ticket line rides its real win-rate
     # momentum and pays its own staff; AI orgs stay at the neutral default.
     for tid in sorted(gs.teams):
@@ -509,12 +583,14 @@ def advance_week(
     report.user_income = report.income_by.get(primary, 0)
     report.user_expenses = report.expenses_by.get(primary, 0)
 
+    _cp.mark("finances")
+
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
     market.ai_poach_free_agents(gs, gd, week_rng)
-    _tick_scouting(gs)
+    _tick_scouting(gs, report)
 
     # 4b. Stale game plans (fixture gone or already played — the consumed
     # case is handled at sim time in _sim_fixture) quietly expire.
@@ -525,6 +601,8 @@ def advance_week(
             del gs.game_plans_by[tid]
 
     _update_world_ranks(gs)
+
+    _cp.mark("market_scouting")
 
     # 5. Phase transitions.
     def veto_for(a: str, b: str) -> tuple[list[str], list[str]]:
@@ -609,6 +687,21 @@ def advance_week(
                 champs.append(rf.winner_id)
                 runners.append(
                     rf.team_b if rf.winner_id == rf.team_a else rf.team_a
+                )
+                # Regional playoff money: the title pays real prize money
+                # (on top of regular-season placement), the final loser and
+                # semi losers take home a cut — deep runs fund rosters.
+                gs.teams[rf.winner_id].balance += PRIZE_REGIONAL_CHAMPION
+                gs.teams[runners[-1]].balance += PRIZE_REGIONAL_FINAL_LOSER
+                for sf in semis:
+                    if not sf.id.startswith(f"s{gs.season}{str(region)[:2]}"):
+                        continue
+                    sf_loser = sf.team_b if sf.winner_id == sf.team_a else sf.team_a
+                    gs.teams[sf_loser].balance += PRIZE_REGIONAL_SEMI_LOSER
+                gs.push_news(
+                    f"{gs.teams[rf.winner_id].name} bank "
+                    f"{PRIZE_REGIONAL_CHAMPION:,} cr for the "
+                    f"{str(region).upper()} title."
                 )
                 chronicle.record(
                     gs, "regional_title",
@@ -716,12 +809,15 @@ def advance_week(
             sf_losers = [
                 (f.team_b if f.winner_id == f.team_a else f.team_a) for f in msfs
             ]
-            pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
+            qf_losers = [
+                (f.team_b if f.winner_id == f.team_a else f.team_a) for f in qfs
+            ]
+            pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers, qf_losers)
             staff.record_title(gs, mf.winner_id, f"S{gs.season} Masters")
             _hist = chronicle.title_history_line(gs, mf.winner_id, "masters_title")
             gs.push_news(
-                f"{gs.teams[mf.winner_id].name} win MASTERS"
-                + (f" — {_hist}." if _hist else ".")
+                f"{gs.teams[mf.winner_id].name} win MASTERS "
+                f"({PRIZE_CHAMPION:,} cr)" + (f" — {_hist}." if _hist else ".")
             )
             chronicle.record(
                 gs, "masters_title",
@@ -824,17 +920,17 @@ def advance_week(
             cf_runner = cf.team_b if cf.winner_id == cf.team_a else cf.team_a
             csfs = _stage_fixtures("champ_sf")
             cqfs = _stage_fixtures("champ_qf")
-            gs.teams[cf.winner_id].balance += 500_000
+            gs.teams[cf.winner_id].balance += PRIZE_CHAMPIONS_WINNER
             gs.teams[cf.winner_id].reputation = round(
                 min(99.0, gs.teams[cf.winner_id].reputation + 6.0), 1
             )
-            gs.teams[cf_runner].balance += 250_000
+            gs.teams[cf_runner].balance += PRIZE_CHAMPIONS_RUNNER_UP
             for f in csfs:
                 loser = f.team_b if f.winner_id == f.team_a else f.team_a
-                gs.teams[loser].balance += 120_000
+                gs.teams[loser].balance += PRIZE_CHAMPIONS_SF_LOSER
             for f in cqfs:
                 loser = f.team_b if f.winner_id == f.team_a else f.team_a
-                gs.teams[loser].balance += 60_000
+                gs.teams[loser].balance += PRIZE_CHAMPIONS_QF_LOSER
             champ = gs.teams[cf.winner_id]
             staff.record_title(gs, cf.winner_id, f"S{gs.season} Champions")
             gs.champions.append(
@@ -845,7 +941,8 @@ def advance_week(
             _hist = chronicle.title_history_line(gs, champ.id, "champions_title")
             gs.push_news(
                 f"{champ.name} win CHAMPIONS — Season {gs.season} world "
-                "champions!" + (f" ({_hist.capitalize()}.)" if _hist else "")
+                f"champions ({PRIZE_CHAMPIONS_WINNER:,} cr)!"
+                + (f" ({_hist.capitalize()}.)" if _hist else "")
             )
             chronicle.record(
                 gs, "champions_title",
@@ -860,6 +957,8 @@ def advance_week(
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
             )
+
+    _cp.mark("transitions")
 
     # 5b. Solvency: only AFTER every balance mutation for the week —
     # including the same-week regional/Masters/Champions prize payouts in
@@ -885,6 +984,8 @@ def advance_week(
     # after the news so the match-time tactics are what gets reported.
     _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
+    _cp.mark("news_adapt")
+
     # 6c. Social layer: follower counts chase the week's real outcomes,
     # the feed writes itself (results, player of the week, viral moments),
     # and community sentiment folds the week in and feeds back into
@@ -908,6 +1009,8 @@ def advance_week(
     # entries record inside; the private news line feeds the owner's inbox.
     for owner_tid, msg in chronicle.weekly_milestones(gs):
         gs.push_private_news(msg, owner=owner_tid)
+
+    _cp.mark("social")
 
     # 6d. History snapshots (before the week counter rolls): a performance
     # point for everyone who played, a development point for human rosters.
@@ -952,6 +1055,8 @@ def advance_week(
     # fired manager still receives their own bad news.
     sacked = career.weekly_patience(gs)
 
+    _cp.mark("snapshots")
+
     # 7. Inbox: aggregate the week's outcomes into each human manager's feed.
     # Runs last so it can read every subsystem's artifacts (news included),
     # and before the week label moves on so this-week news is still labelled.
@@ -969,10 +1074,31 @@ def advance_week(
             )
 
     # 8. Telemetry: the post-tick org feature snapshot per human seat —
-    # the state half of the RL episode stream. LAST (after dismissals),
-    # and before the week counter rolls so snap N pairs with week N's
-    # actions.
+    # the state half of the RL episode stream. After dismissals, and
+    # before the week counter rolls so snap N pairs with week N's actions.
     telemetry.weekly_snapshots(gs)
+
+    # Observability: this tick's breakdown, paired with the sizes of the
+    # structures that grow with save age — the "why is advancing slower in
+    # season 5" question answers itself from /api/perf. Write-only sink.
+    _cp.mark("inbox")
+    perf.record("tick.total", _cp.total_ms)
+    perf.record_tick({
+        "season": report.season,
+        "week": report.week,
+        "total_ms": _cp.total_ms,
+        "phases": _cp.phases,
+        "sizes": {
+            "players": len(gs.players),
+            "fixtures": len(gs.fixtures),
+            "chronicle": len(gs.chronicle),
+            "news": len(gs.news),
+            "social_feed": len(gs.social_feed),
+            "relationships": len(gs.relationships),
+            "career_stats": len(gs.career_stats),
+            "inbox_items": sum(len(v) for v in gs.inboxes.values()),
+        },
+    })
 
     gs.week += 1
     return report
@@ -1216,6 +1342,45 @@ def _fixture_plans(
     return plans, lineups
 
 
+TEAM_TALK_APPROACHES = ("fire_up", "reassure", "focus")
+
+
+def _talk_recipients(gs: GameState, tid: str, f: Fixture) -> list[str]:
+    """Everyone who will dress for `tid` across the fixture's maps — the union
+    of dressed_for over f.maps (which reads the finalised map_lineups, so a
+    per-map rotation is reflected). The pre-match team-talk audience. Sorted
+    for deterministic iteration."""
+    return sorted(
+        {pid for map_id in f.maps for pid in dressed_for(gs, tid, f, map_id)}
+    )
+
+
+def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
+    """A pre-match team talk nudges the dressed five's confidence, modulated
+    by personality and bounded to [5, 95] — the same range the rest of the
+    campaign clamps confidence to. Deterministic (personality is a pure
+    function). Called ONLY for a human side that set a talk in its game plan,
+    so hands-off sims never reach here and the balance gates are unchanged.
+
+    - fire_up:  a lift, bigger for ambitious players (they ride motivation).
+    - reassure: a lift, bigger for fragile (low-resilience) players.
+    - focus:    settle everyone toward a steady 55 (calms tilt AND hubris).
+    """
+    from esports_sim.manager import personality
+
+    for pid in five:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        if approach == "focus":
+            delta = (55.0 - p.confidence) * 0.25
+        elif approach == "reassure":
+            delta = 3.0 * (1.0 - 0.4 * personality.dev(p, "resilience"))
+        else:  # fire_up
+            delta = 5.0 * (1.0 + 0.4 * personality.dev(p, "ambition"))
+        p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
+
+
 def _sim_fixture(
     gs: GameState,
     rt_gd: GameData,
@@ -1272,6 +1437,20 @@ def _sim_fixture(
             gs.map_lineups.setdefault(
                 f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
             )
+
+    # Pre-match team talks land on the players who will ACTUALLY dress, resolved
+    # via dressed_for against the now-finalised map_lineups (explicit per-map
+    # overrides included). So a rotation gives the talk to the rotated-in five,
+    # not default_five. Applied here, once, before any map sim reads confidence.
+    # Human sides with a set talk only -> hands-off sims skip it -> gates hold.
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        plan = gs.game_plans_by.get(tid)
+        if plan is None or plan.fixture_id != f.id:
+            continue
+        if plan.team_talk in TEAM_TALK_APPROACHES:
+            _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
 
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
@@ -1412,32 +1591,102 @@ def _team_map_mastery(
     return out
 
 
-SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full knowledge
+SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full team knowledge
+# A single player is a focused beat: the book fills faster than a team's...
+SCOUT_PLAYER_MULT = 1.5
+# ...and watching them play LIVE this week adds a bonus on top.
+SCOUT_LIVE_WATCH_BONUS = 0.10
+# One-shot match intel: attending a fixture grants this much knowledge of
+# BOTH participants (a weekend at the venue ~= a week and a half of tape).
+SCOUT_MATCH_INTEL = 0.5
 
 
-def _tick_scouting(gs: GameState) -> None:
+def _tick_scouting(gs: GameState, report: WeekReport) -> None:
     """Advance each human manager's scout by one week (own desk, own
-    target/progress/staff/facilities)."""
+    target/progress/staff/facilities). `report` carries this week's played
+    fixtures for match assignments and live-watch bonuses."""
     for tid in sorted(gs.human_team_ids):
         gs.set_acting(tid)
-        _tick_scouting_one(gs)
+        _tick_scouting_one(gs, report)
     gs.set_acting(None)
 
 
-def _tick_scouting_one(gs: GameState) -> None:
-    """One manager's scout: a rival team, or the open market ("market" —
-    free agents and prospects, EHM-style)."""
+def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
+    """One manager's scout, by assignment type (all stored in the same
+    per-manager progress dict — team ids, "market", "player:<pid>",
+    "match:<fixture id>"):
+
+    * a rival TEAM — steady weekly coverage (the classic beat);
+    * the MARKET — slower, wider free-agent coverage;
+    * one PLAYER — a deep-dive book that fills ~1.5x faster, faster still
+      the weeks they actually play (progressive intel tiers: comfort picks,
+      style read, mental read, full verdict — see development.scout_report);
+    * one MATCH — the scout attends the fixture and comes home with a
+      one-shot intel packet on BOTH teams (then needs a new assignment)."""
     target = gs.scout_target
     if not target:
         return
+    mult = staff.scout_multiplier(gs) * economy.facility_scout_mult(gs)
+
+    if target.startswith("match:"):
+        fid = target[len("match:"):]
+        fx = next((f for f in report.fixtures if f.id == fid and f.played), None)
+        if fx is None:
+            # Not played this tick. If it vanished from the calendar
+            # entirely, send the scout home; otherwise keep waiting.
+            if not any(f.id == fid for f in gs.fixtures):
+                gs.scout_target = None
+                gs.push_private_news(
+                    "Scouted fixture is off the calendar — the scout needs "
+                    "a new assignment."
+                )
+            return
+        gained = min(1.0, round(SCOUT_MATCH_INTEL * mult, 2))
+        names = []
+        for tid in (fx.team_a, fx.team_b):
+            if tid == gs.acting_team_id or tid not in gs.teams:
+                continue
+            cur = gs.scout_progress.get(tid, 0.0)
+            gs.scout_progress[tid] = min(1.0, round(cur + gained, 2))
+            names.append(gs.teams[tid].name)
+        gs.scout_target = None  # one-shot: the scout comes home
+        if names:
+            gs.push_private_news(
+                f"Match intel: your scout's report from "
+                f"{gs.teams[fx.team_a].name} vs {gs.teams[fx.team_b].name} "
+                f"is in — coverage of {' and '.join(names)} jumps."
+            )
+        return
+
+    if target.startswith("player:"):
+        pid = target[len("player:"):]
+        p = gs.players.get(pid)
+        if p is None:
+            gs.scout_target = None
+            return
+        cur = gs.scout_progress.get(target, 0.0)
+        gain = SCOUT_WEEKLY_GAIN * SCOUT_PLAYER_MULT * mult
+        # They played this week: the scout watched it live.
+        played = any(
+            pid in stats.lines
+            for fid in report.match_stats
+            for stats in report.match_stats[fid]
+        )
+        if played:
+            gain += SCOUT_LIVE_WATCH_BONUS
+        after = min(1.0, round(cur + gain, 2))
+        gs.scout_progress[target] = after
+        if after >= 1.0 and cur < 1.0:
+            gs.push_private_news(
+                f"The full book on {p.handle} is compiled — style, "
+                "mentality, ceiling, the lot."
+            )
+        return
+
     if target != "market" and target not in gs.teams:
         return
     cur = gs.scout_progress.get(target, 0.0)
-    gain = (
-        SCOUT_WEEKLY_GAIN
-        * staff.scout_multiplier(gs)
-        * economy.facility_scout_mult(gs)
-    )
+    gain = SCOUT_WEEKLY_GAIN * mult
     # The market is a bigger beat than one team: slower coverage.
     if target == "market":
         gain *= 0.6
@@ -1464,6 +1713,92 @@ def _update_world_ranks(gs: GameState) -> None:
 
 # ---------------------------------------------------------------------------
 # Offseason
+
+
+def mentorship_valid(gs: GameState, protege_id: str, mentor_id: str) -> bool:
+    """A mentorship holds when both players share a roster and the mentor is
+    the older, higher-ability of the pair (a veteran guiding a junior)."""
+    if protege_id == mentor_id:
+        return False
+    pro, men = gs.players.get(protege_id), gs.players.get(mentor_id)
+    if pro is None or men is None:
+        return False
+    same_team = any(
+        {protege_id, mentor_id} <= set(t.player_ids) for t in gs.teams.values()
+    )
+    return (
+        same_team
+        and men.age > pro.age
+        and development.overall(men) > development.overall(pro)
+    )
+
+
+def _mentor_mults(gs: GameState, tid: str) -> dict[str, float] | None:
+    """Development multipliers for this team's protégés under a valid, set
+    mentorship. None when nothing applies — hands-off sims never set a
+    mentorship, so this returns None and training stays byte-identical
+    (rate * 1.0), keeping the snowball/dynasty gates unchanged."""
+    if not gs.mentorships:
+        return None
+    roster = set(gs.teams[tid].player_ids)
+    out = {
+        pid: training.MENTOR_GROWTH_MULT
+        for pid, mentor_id in gs.mentorships.items()
+        if pid in roster and mentorship_valid(gs, pid, mentor_id)
+    }
+    return out or None
+
+
+def _snapshot_season_start_ca(gs: GameState) -> None:
+    """Freeze every current player's current ability as the season's
+    baseline. Pure read of settled rosters (rng-free, sorted iteration),
+    so it's campaign-deterministic. The Most Improved award diffs
+    end-of-season CA against this."""
+    gs.season_start_ca = {
+        pid: round(development.overall(gs.players[pid]), 2)
+        for pid in sorted(gs.players)
+    }
+
+
+CAREER_KILL_BARS = (500, 1000, 1500, 2000, 3000, 5000)
+
+
+def _accumulate_career_stats(gs: GameState) -> None:
+    """Roll this season's box score into each player's lifetime totals
+    (before the per-season reset), and chronicle career-kill milestones the
+    moment they're crossed. Pure read of gs.player_stats (rng-free, sorted
+    iteration), so it stays campaign-deterministic."""
+    from esports_sim.manager.state import CareerStats
+
+    for pid in sorted(gs.player_stats):
+        st = gs.player_stats[pid]
+        if st.maps <= 0:
+            continue
+        cs = gs.career_stats.setdefault(pid, CareerStats())
+        prev_kills = cs.kills
+        cs.maps += st.maps
+        cs.rounds += st.rounds
+        cs.kills += st.kills
+        cs.deaths += st.deaths
+        cs.first_kills += st.first_kills
+        cs.clutches += st.clutches
+        cs.seasons += 1
+        p = gs.players.get(pid)
+        if p is not None:
+            cs.handle = p.handle  # keep the record's name current
+        if p is None:
+            continue
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+        for bar in CAREER_KILL_BARS:
+            if prev_kills < bar <= cs.kills:
+                chronicle.record(
+                    gs, "milestone",
+                    f"{p.handle} passes {bar} career kills.",
+                    team_id=team.id if team else "",
+                    player_id=pid,
+                    data={"career_kills": str(bar)},
+                )
+                gs.push_news(f"{p.handle} reaches {bar} career kills.")
 
 
 def _process_retirements(gs: GameState, rng) -> int:
@@ -1506,21 +1841,45 @@ def _process_retirements(gs: GameState, rng) -> int:
                 peak_note=f"retired at {ca:.0f} CA",
             )
         )
-        # Career titles/awards make a retirement land harder in history.
-        n_honours = sum(
-            1
-            for e in gs.chronicle
-            if e.player_id == pid and e.kind == "award"
+        # Career honours make a retirement land harder in history, and a
+        # decorated career earns a dry sendoff in the news. All grounded in
+        # the chronicle: this player's individual awards, and their debut
+        # season (career length) when the debut system saw them arrive.
+        mine = [e for e in gs.chronicle if e.player_id == pid]
+        honours = [e for e in mine if e.kind == "award"]
+        n_honours = len(honours)
+        mvps = sum(1 for e in honours if "MVP" in e.data.get("award", ""))
+        debut_season = next((e.season for e in mine if e.kind == "debut"), None)
+        seasons = (
+            gs.season - debut_season + 1 if debut_season is not None else None
         )
+        resume_bits: list[str] = []
+        if seasons is not None:
+            resume_bits.append(f"{seasons} pro season{'s' if seasons != 1 else ''}")
+        if n_honours:
+            resume_bits.append(
+                f"{n_honours} individual honour{'s' if n_honours != 1 else ''}"
+                + (f" ({mvps}x MVP)" if mvps else "")
+            )
+        resume = ", ".join(resume_bits)
         chronicle.record(
             gs, "retirement",
             f"{p.handle} retires at {p.age}"
-            + (f" ({team.name})." if team else "."),
+            + (f" ({team.name})" if team else "")
+            + (f" - {resume}." if resume else "."),
             team_id=team.id if team else "",
             player_id=pid,
-            importance=min(75.0, 40.0 + 10.0 * n_honours),
+            importance=min(80.0, 40.0 + 8.0 * n_honours + (5.0 if ca >= 78 else 0.0)),
             data={"age": str(p.age), "ca": f"{ca:.0f}"},
         )
+        # A genuinely decorated career (multiple honours, an MVP, or a
+        # star-level peak) gets its own sendoff line, not just a name in the
+        # bulk retirements list below.
+        if n_honours >= 2 or mvps >= 1 or ca >= 80:
+            gs.push_news(
+                f"End of an era: {p.handle} retires at {p.age} after "
+                f"{resume or f'a {ca:.0f} CA career'}."
+            )
         # A completed career faces the Hall (score reads the chronicle
         # entries above, so it runs after the retirement is recorded).
         hof.consider_at_retirement(gs, p, ca, team.name if team else "")
@@ -1767,7 +2126,14 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             team_id=winner_tid,
             player_id=a.player_id,
             importance=75.0 if "MVP" in a.award else 60.0,
-            data={"award": a.award},
+            data={"award": a.award, "value": a.value},
+        )
+
+    # The All-Star Five (best per role) — chronicled + a news line inside.
+    stars = narrative.season_all_star(gs)
+    if stars:
+        report.notes.append(
+            "All-Star Five: " + ", ".join(f"{s['handle']} ({s['role']})" for s in stars)
         )
 
     # The season's tactical era enters the chronicle while the final
@@ -1791,6 +2157,10 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(f"Patch {note.version} lands over the break.")
         knowledge.on_patch(gs)
 
+    # Lifetime career totals absorb this season before the per-season stats
+    # reset wipes them, and career-kill milestones enter the chronicle.
+    _accumulate_career_stats(gs)
+
     gs.player_stats = {}
     gs.team_stats = {}
     gs.player_map_stats = {}
@@ -1806,11 +2176,27 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     _rookie_classes(gs, gd, rng, n_retired)
     social.seed_followers(gs)  # rookies arrive with a baseline audience
 
-    # Ended careers stop charting; keep the history maps bounded.
+    # Season-in-review: one grounded paragraph over the season's records
+    # (champion, MVP, biggest riser, marquee retirement, tactical era),
+    # read while gs.season still names the season that just ended.
+    review = narrative.season_in_review(gs)
+    if review is not None:
+        gs.push_news(review)
+        report.notes.append(review)
+
+    # Ended careers stop charting: prune the bulky per-week chart series for
+    # anyone who has left. career_stats is DELIBERATELY exempt — it's the
+    # persistent lifetime record the all-time record book / playtest exports
+    # read (it carries its own handle), so a retired career-kill leader must
+    # not vanish from the books.
     for hist in (gs.stat_history, gs.dev_history):
         for pid in sorted(hist):
             if pid not in gs.players:
                 del hist[pid]
+    # Mentorships dissolve when either party leaves (retirement / transfer).
+    for pid in sorted(gs.mentorships):
+        if pid not in gs.players or gs.mentorships[pid] not in gs.players:
+            del gs.mentorships[pid]
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).
@@ -1863,6 +2249,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)  # baseline for next season's Most Improved
     # Inbox for the offseason tick, per manager: retirements, rookie class,
     # award slate. `report` still carries the pre-rollover (season, week) the
     # offseason news was labelled with, so generate_inbox reads the right lines.

@@ -13,6 +13,10 @@ players:
   handle: valyn
   real_name: Jacob Batio
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 25
   role: controller
   playstyle: igl
@@ -32,30 +36,55 @@ players:
     mastery: 91.0
   - agent_id: viper
     mastery: 85.5
+  - agent_id: clove
+    mastery: 73.1
+  - agent_id: breach
+    mastery: 54.1
+  - agent_id: chamber
+    mastery: 56.7
+  - agent_id: cypher
+    mastery: 55.6
+  - agent_id: jett
+    mastery: 59.6
+  - agent_id: killjoy
+    mastery: 55.3
+  - agent_id: phoenix
+    mastery: 57.4
+  - agent_id: raze
+    mastery: 52.8
+  - agent_id: reyna
+    mastery: 7.3
+  - agent_id: skye
+    mastery: 59.9
+  - agent_id: sova
+    mastery: 55.9
   map_pool:
   - map_id: ascent
-    mastery: 91.2
+    mastery: 85.2
   - map_id: bind
-    mastery: 97.7
+    mastery: 85.6
   - map_id: haven
-    mastery: 81.6
+    mastery: 88.6
   - map_id: lotus
-    mastery: 81.8
+    mastery: 82.2
   - map_id: split
-    mastery: 84.6
+    mastery: 95.9
   salary: 6300
-  contract_weeks_left: 31
-  morale: 63.0
-  stamina: 83.6
-  form: 49.0
+  contract_weeks_left: 78
+  morale: 80.6
+  stamina: 90.6
+  form: 45.7
   personality_tags:
-  - quiet
-  - slow_starter
-  potential: 80.2
+  - hot_head
+  potential: 81.1
 - id: team_g2_esports_trent
   handle: trent
   real_name: Trent Cairns
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: initiator
   playstyle: support
@@ -75,30 +104,55 @@ players:
     mastery: 89.5
   - agent_id: skye
     mastery: 87.6
+  - agent_id: breach
+    mastery: 70.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 49.4
+  - agent_id: jett
+    mastery: 58.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 56.6
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 56.4
   map_pool:
   - map_id: ascent
-    mastery: 85.5
+    mastery: 78.9
   - map_id: bind
-    mastery: 80.4
+    mastery: 90.6
   - map_id: haven
-    mastery: 98.4
+    mastery: 91.6
   - map_id: lotus
-    mastery: 92.7
+    mastery: 90.8
   - map_id: split
-    mastery: 98.5
+    mastery: 95.2
   salary: 6500
-  contract_weeks_left: 46
-  morale: 84.1
-  stamina: 85.6
-  form: 50.4
+  contract_weeks_left: 60
+  morale: 65.8
+  stamina: 97.8
+  form: 58.5
   personality_tags:
-  - analytical
   - grinder
-  potential: 87.0
+  potential: 85.5
 - id: team_g2_esports_leaf
   handle: leaf
   real_name: Nathan Orf
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: flex
   playstyle: lurker
@@ -120,30 +174,54 @@ players:
     mastery: 82.7
   - agent_id: omen
     mastery: 81.9
+  - agent_id: breach
+    mastery: 53.7
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 47.3
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 59.3
+  - agent_id: reyna
+    mastery: 55.8
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 56.5
   map_pool:
   - map_id: ascent
-    mastery: 83.5
+    mastery: 90.8
   - map_id: bind
-    mastery: 81.3
+    mastery: 85.6
   - map_id: haven
-    mastery: 72.9
+    mastery: 90.9
   - map_id: lotus
-    mastery: 91.6
+    mastery: 97.3
   - map_id: split
-    mastery: 84.4
+    mastery: 88.7
   salary: 6100
-  contract_weeks_left: 36
-  morale: 84.4
-  stamina: 88.6
-  form: 50.4
+  contract_weeks_left: 69
+  morale: 63.7
+  stamina: 94.2
+  form: 45.2
   personality_tags:
   - fan_favorite
   - flashy
-  potential: 83.0
+  potential: 81.1
 - id: team_g2_esports_jawgemo
   handle: jawgemo
   real_name: Alexander Mor
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 24
   role: duelist
   playstyle: entry
@@ -165,30 +243,54 @@ players:
     mastery: 84.2
   - agent_id: jett
     mastery: 80.1
+  - agent_id: reyna
+    mastery: 77.3
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 59.0
+  - agent_id: clove
+    mastery: 48.5
+  - agent_id: cypher
+    mastery: 57.5
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 49.1
+  - agent_id: skye
+    mastery: 54.9
+  - agent_id: sova
+    mastery: 49.9
+  - agent_id: viper
+    mastery: 58.7
   map_pool:
   - map_id: ascent
-    mastery: 97.5
+    mastery: 79.3
   - map_id: bind
-    mastery: 87.9
+    mastery: 85.5
   - map_id: haven
-    mastery: 95.3
+    mastery: 86.6
   - map_id: lotus
-    mastery: 89.7
+    mastery: 77.4
   - map_id: split
-    mastery: 87.5
+    mastery: 88.3
   salary: 6300
-  contract_weeks_left: 65
-  morale: 73.6
-  stamina: 82.6
-  form: 55.2
+  contract_weeks_left: 57
+  morale: 70.1
+  stamina: 81.9
+  form: 53.1
   personality_tags:
-  - quiet
-  - slow_starter
-  potential: 78.9
+  - grinder
+  - hot_head
+  potential: 77.0
 - id: team_g2_esports_babybay
   handle: BABYBAY
   real_name: Andrej Francisty
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 98.0
   age: 29
   role: sentinel
   playstyle: awper
@@ -208,24 +310,46 @@ players:
     mastery: 88.7
   - agent_id: killjoy
     mastery: 85.5
+  - agent_id: cypher
+    mastery: 66.2
+  - agent_id: breach
+    mastery: 54.6
+  - agent_id: clove
+    mastery: 0.9
+  - agent_id: jett
+    mastery: 48.9
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 4.2
+  - agent_id: raze
+    mastery: 7.4
+  - agent_id: reyna
+    mastery: 51.8
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 54.9
   map_pool:
   - map_id: ascent
-    mastery: 81.3
+    mastery: 77.2
   - map_id: bind
-    mastery: 95.7
+    mastery: 89.5
   - map_id: haven
-    mastery: 82.3
+    mastery: 83.5
   - map_id: lotus
-    mastery: 86.2
+    mastery: 85.7
   - map_id: split
-    mastery: 78.9
+    mastery: 74.2
   salary: 6100
-  contract_weeks_left: 60
-  morale: 80.8
-  stamina: 86.0
-  form: 45.6
+  contract_weeks_left: 41
+  morale: 67.7
+  stamina: 93.6
+  form: 46.7
   personality_tags:
   - analytical
   - slow_starter
   - veteran
-  potential: 79.4
+  potential: 81.2

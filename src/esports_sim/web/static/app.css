@@ -136,7 +136,15 @@ th {
   text-align: left; font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
   letter-spacing: .06em; color: var(--es-color-text-tertiary, #67748f);
   padding: 4px 8px; border-bottom: 1px solid var(--es-color-border-primary, #26324a);
+  cursor: pointer; user-select: none; /* click to sort (app.js delegate) */
 }
+th[data-nosort], table[data-nosort] th, .es-h2hm th { cursor: default; }
+th[data-dir]::after {
+  color: var(--es-color-accent, #4fd8c0);
+  font-size: 8px;
+}
+th[data-dir="asc"]::after { content: " ▲"; }
+th[data-dir="desc"]::after { content: " ▼"; }
 td { padding: 5px 8px; border-bottom: 1px solid var(--es-color-border-secondary, #1c2536); }
 tbody tr:hover td { background: color-mix(in srgb, var(--es-color-bg-hover, #1b2536) 65%, transparent); }
 td.num, th.num { text-align: right; font-family: var(--es-font-mono, monospace); }
@@ -181,7 +189,10 @@ tr.me td:first-child { box-shadow: inset 2px 0 0 var(--es-color-brand, #ff4655);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
   background: var(--es-color-bg-elevated, #161e2e);
   color: var(--es-color-text-secondary, #a2aec6);
+  white-space: nowrap;
 }
+/* Keep a role+playstyle pill pair on one line inside narrow table cells. */
+.pill-pair { white-space: nowrap; }
 .pill.win {
   color: var(--es-color-text-success, #4fc6a0);
   background: var(--es-color-fill-success, #0e352b);
@@ -603,6 +614,74 @@ svg.iso .plabel { font-size: 2.4px; }
   padding-bottom: 6px; border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
 }
 .v-lineup .lu-team { flex: 1; min-width: 0; }
+/* Round-by-round timeline strip in the match viewer. */
+.v-timeline {
+  display: flex; flex-wrap: wrap; gap: 3px; flex: none;
+  padding: 6px 0; border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
+}
+.v-tl-round {
+  min-width: 20px; height: 18px; padding: 0 3px; border-radius: 3px;
+  font-size: 9px; font-weight: 700; line-height: 16px; color: #fff;
+  border: 1px solid transparent; cursor: pointer;
+}
+.v-tl-round.a { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 60%, transparent); }
+.v-tl-round.b { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent); }
+.v-tl-round.active { outline: 2px solid var(--es-color-text-primary, #e6ecf5); outline-offset: -1px; }
+.v-tl-plant { margin-left: 1px; opacity: .85; }
+/* Post-match box-score summary panel in the viewer. */
+.v-summary {
+  flex: none; padding: 6px 0; font-size: var(--es-text-2xs, 10px);
+  border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
+}
+.v-sum-lab {
+  text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
+  color: var(--es-color-text-secondary, #a2aec6); margin-bottom: 4px;
+}
+.v-sum-row { display: flex; align-items: center; gap: 6px; padding: 1px 0; }
+.v-sum-row .plink { flex: 1; }
+.v-sum-dot { width: 7px; height: 7px; border-radius: 2px; flex: none; }
+.v-sum-dot.a { background: var(--es-color-brand, #ff4655); }
+.v-sum-dot.b { background: var(--es-color-accent, #4fd8c0); }
+
+/* Power rankings, award races, rumour mill, mentorship pill. */
+.es-power { display: flex; flex-direction: column; gap: 3px; }
+.es-power-row { display: grid; grid-template-columns: 24px 1fr auto auto; gap: 8px; align-items: baseline; }
+.es-power-rank { color: var(--es-color-text-tertiary, #67748f); }
+.es-race-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 6px; padding: 1px 0; font-size: var(--es-text-xs, 11px); }
+.es-rumors { display: flex; flex-direction: column; gap: 4px; }
+.es-rumor { font-size: var(--es-text-xs, 11px); line-height: 1.35; }
+.es-rumor.interest { color: var(--es-color-warn, #e8b34b); }
+.mentor-pill { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent); }
+.dev-plan select[data-act="mentor"] { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
+
+/* Match preview prose on the spotlight. */
+.es-preview { margin: 6px 0 0; font-size: var(--es-text-xs, 11px); line-height: 1.45; font-style: italic; }
+
+/* Run-in difficulty chips + on-this-day list. */
+.es-runin { display: flex; flex-wrap: wrap; gap: 4px; }
+.es-runin-chip {
+  padding: 2px 7px; border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.es-runin-chip.diff-hard { border-color: color-mix(in srgb, var(--es-color-danger, #ff4655) 55%, transparent); }
+.es-runin-chip.diff-medium { border-color: color-mix(in srgb, var(--es-color-warn, #e8b34b) 50%, transparent); }
+.es-runin-chip.diff-easy { border-color: color-mix(in srgb, var(--es-color-success, #3fb68b) 45%, transparent); }
+.es-otd { display: flex; flex-direction: column; gap: 4px; font-size: var(--es-text-xs, 11px); line-height: 1.35; }
+.tlink-soft { color: var(--es-color-text-primary, #e6ecf5); }
+
+/* Concrete staff effect pills. */
+.staff-fx { text-transform: none; letter-spacing: 0; margin-left: 2px; }
+
+/* Pre-match team-talk control on the game-plan screen. */
+.gp-talk { margin: 12px 0; }
+.gp-talk-row { flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
+/* Manager's-desk: objectives-to-chase + win/loss tint. */
+.es-obj { display: flex; flex-direction: column; gap: 4px; }
+.es-obj-row { font-size: var(--es-text-xs, 11px); line-height: 1.5; }
+.wl-w { color: var(--es-color-text-success, #4fc6a0); }
+.wl-l { color: var(--es-color-text-danger, #ff6b6b); }
 .v-lineup .lu-team-name {
   text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
   margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -656,6 +735,233 @@ svg.iso .plabel { font-size: 2.4px; }
   letter-spacing: .08em; color: var(--es-color-text-tertiary, #67748f);
 }
 .es-bo { margin-top: 3px; }
+/* Grudge-match flag on the next-match spotlight: a hot named rivalry. */
+.es-rivalry {
+  margin-top: 3px; font-weight: 700;
+  color: var(--es-color-text-danger, #ff6b6b);
+  background: var(--es-color-fill-danger, #3a1620);
+  border: 1px solid color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+}
+/* Head-to-head line under the VS block on the spotlight. */
+.es-h2h {
+  text-align: center; margin: 6px 0 0;
+  font-size: var(--es-text-xs, 11px); letter-spacing: .02em;
+}
+.es-h2h b { color: var(--es-color-text-primary, #e6ecf5); }
+
+/* Recent-form chips (standings table + anywhere a W/L run is shown). */
+.form-cell { white-space: nowrap; }
+.form-sq {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; margin-right: 2px; border-radius: 3px;
+  font-size: 9px; font-weight: 700; color: #fff; cursor: default;
+}
+.form-sq.w { background: var(--es-color-success, #3fb68b); }
+.form-sq.l { background: var(--es-color-danger, #ff4655); }
+
+/* Player-of-the-Match chip on played fixtures. */
+.potm-chip {
+  display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;
+  padding: 1px 8px; border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .05em;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.potm-chip .plink { text-transform: none; letter-spacing: 0; }
+.potm-star { color: var(--es-color-warn, #e8b34b); }
+
+/* Playoff cutoff line + eliminated rows in the standings table. */
+tr.playoff-cut td {
+  padding: 2px 8px; font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+  color: var(--es-color-accent, #4fd8c0);
+  border-top: 2px dashed color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 8%, transparent);
+}
+tr.elim td { opacity: .5; }
+.elim-pill {
+  color: var(--es-color-text-danger, #ff6b6b);
+  background: var(--es-color-fill-danger, #3a1620);
+}
+
+/* Manager career snapshot card on the dashboard. */
+.es-career-sub { margin: -4px 0 10px; font-size: var(--es-text-sm, 12px); }
+.es-career-tiles {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px;
+}
+@media (max-width: 620px) { .es-career-tiles { grid-template-columns: repeat(2, 1fr); } }
+.es-ctile {
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-md, 6px); padding: 8px 6px; text-align: center;
+}
+.es-ctile-v {
+  font-family: var(--es-font-display, inherit); font-weight: 700;
+  font-size: var(--es-text-lg, 18px); color: var(--es-color-text-primary, #e6ecf5);
+}
+.es-ctile-l { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
+.es-career-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.es-career-lab { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
+
+/* Opponent coaching-identity on the spotlight + team-profile pill. */
+.es-identity, .pf-identity {
+  color: var(--es-color-accent, #4fd8c0);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 14%, transparent);
+  font-weight: 700;
+}
+.es-tendencies { display: block; margin-top: 3px; font-size: var(--es-text-xs, 11px); }
+
+/* Season-snapshot card: rating leaders + your weekly movers. */
+.es-snap-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 620px) { .es-snap-cols { grid-template-columns: 1fr; gap: 10px; } }
+.es-snap-col { display: flex; flex-direction: column; gap: 5px; }
+.es-leaders { margin: 4px 0 0; padding-left: 20px; }
+.es-leaders li { padding: 2px 0; }
+.es-movers { display: flex; flex-direction: column; gap: 3px; }
+.es-mover { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mover-delta { font-weight: 700; font-variant-numeric: tabular-nums; }
+.mover-delta.up, .trend-up { color: var(--es-color-success, #3fb68b); }
+.mover-delta.down, .trend-down { color: var(--es-color-danger, #ff4655); }
+.trend-up, .trend-down { font-size: 9px; }
+
+/* All-time record book + dynasty pills on the standings screen. */
+.es-rec-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px;
+}
+.es-rec {
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-md, 6px); padding: 8px 10px;
+}
+.es-rec-lab { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
+.es-rec-val { margin-top: 2px; font-size: var(--es-text-sm, 12px); }
+.dynasty-pill {
+  color: var(--es-color-warn, #e8b34b);
+  background: color-mix(in srgb, var(--es-color-warn, #e8b34b) 14%, transparent);
+  font-weight: 700;
+}
+
+/* Squad-intelligence panel on the market screen. */
+.es-aid-cols {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;
+}
+.es-roles { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0; }
+.es-roles .pill { text-transform: capitalize; }
+
+/* Signing-headroom mini-panel on the market screen. */
+.es-head { display: flex; flex-direction: column; gap: 2px; font-size: var(--es-text-sm, 12px); }
+.trend-flat { color: var(--es-color-text-muted, #8a94a6); }
+
+/* Pundit one-liner on the dashboard manager's desk. */
+.es-press { font-style: italic; color: var(--es-color-text-secondary, #b7c0d0); margin: 2px 0 6px; }
+
+/* Map pool & veto board on the dashboard fixture spotlight. */
+.es-spot-sub { margin-top: 10px; }
+.es-veto { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+.es-veto-chip {
+  font-size: var(--es-text-2xs, 10px); padding: 2px 7px; border-radius: 10px; font-weight: 700;
+}
+.es-veto-chip.ban { color: var(--es-color-danger, #ff4655); background: color-mix(in srgb, var(--es-color-danger, #ff4655) 14%, transparent); }
+.es-veto-chip.pick { color: var(--es-color-success, #3fb68b); background: color-mix(in srgb, var(--es-color-success, #3fb68b) 14%, transparent); }
+.es-mapbars { display: flex; flex-direction: column; gap: 3px; }
+.es-mapbar { display: grid; grid-template-columns: 84px 1fr 40px 42px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.es-mapbar-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
+.es-mapbar-fill { display: block; height: 100%; background: var(--es-color-accent, #4fd8c0); }
+.es-mapbar-wr { text-align: right; }
+.es-mapbar-n { font-size: var(--es-text-2xs, 10px); }
+
+/* Team of the Week + projection table on the standings screen. */
+.es-totw { display: flex; flex-direction: column; gap: 4px; }
+.es-totw-row { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px; }
+.es-totw-team { font-size: var(--es-text-2xs, 10px); }
+.es-proj td { padding: 3px 6px; }
+
+/* Playoff bracket columns. */
+.es-bracket { display: flex; gap: 16px; overflow-x: auto; }
+.es-bracket-col { display: flex; flex-direction: column; gap: 8px; min-width: 150px; }
+.es-bracket-m {
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-md, 6px); padding: 5px 8px;
+  display: flex; flex-direction: column; gap: 3px; font-size: var(--es-text-sm, 12px);
+}
+.es-bracket-m > div { display: flex; justify-content: space-between; gap: 8px; }
+.es-bracket-m .bw-win { font-weight: 700; color: var(--es-color-success, #3fb68b); }
+.es-bracket-m .bw-out { color: var(--es-color-text-muted, #8a94a6); }
+
+/* Agent-meta card on the stats hub. */
+.es-meta-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0 8px; }
+.es-meta-chip { font-size: var(--es-text-2xs, 10px); padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+.es-meta-chip.buff { color: var(--es-color-success, #3fb68b); background: color-mix(in srgb, var(--es-color-success, #3fb68b) 14%, transparent); }
+.es-meta-chip.nerf { color: var(--es-color-danger, #ff4655); background: color-mix(in srgb, var(--es-color-danger, #ff4655) 14%, transparent); }
+.es-meta-chip.even { color: var(--es-color-text-muted, #8a94a6); }
+.es-meta-tier { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; }
+.es-meta-row { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.es-meta-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
+.es-meta-fill { display: block; height: 100%; background: var(--es-color-brand, #ff4655); }
+
+/* Board-standing line on the dashboard manager's desk. */
+.es-board { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); line-height: 1.6; }
+/* Center the tone pill against the line of text it prefixes (both the board
+   line and the objective rows) so nothing sits half a line low. */
+.es-board .pill, .es-obj-row .pill { vertical-align: middle; }
+
+/* Topbar save button: warm accent while the world has unsaved changes. */
+.save-dirty {
+  color: var(--es-color-text-warning, #efb54a);
+  border-color: var(--es-color-text-warning, #efb54a);
+}
+#autosave-sel { font-size: var(--es-text-xs, 11px); }
+
+/* Movement tracker on the social screen. */
+.es-movement { display: flex; flex-direction: column; gap: 3px; max-height: 420px; overflow-y: auto; }
+.es-move {
+  padding: 4px 6px; font-size: var(--es-text-sm, 12px); line-height: 1.5;
+  border-bottom: 1px dotted var(--es-color-border-secondary, #1c2536);
+}
+.es-move:last-child { border-bottom: 0; }
+.es-move.mine { box-shadow: inset 2px 0 0 var(--es-color-brand, #ff4655); }
+.es-move .pill { vertical-align: middle; }
+
+/* Marketability breakdown on the finances screen. */
+.es-mb { display: flex; flex-direction: column; gap: 4px; }
+.es-mb-row { display: grid; grid-template-columns: 120px 1fr 46px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.es-mb-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
+.es-mb-fill { display: block; height: 100%; }
+.es-mb-fill.pos { background: var(--es-color-success, #3fb68b); }
+.es-mb-fill.neg { background: var(--es-color-danger, #ff4655); }
+
+/* Head-to-head matrix on the standings screen. */
+.es-h2hm-wrap { overflow-x: auto; }
+.es-h2hm { border-collapse: collapse; font-size: var(--es-text-2xs, 10px); }
+.es-h2hm th, .es-h2hm td {
+  padding: 3px 6px; text-align: center; font-variant-numeric: tabular-nums;
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.es-h2hm thead th, .es-h2hm-row { color: var(--es-color-text-muted, #8a94a6); font-weight: 700; }
+.es-h2hm td.good { color: var(--es-color-success, #3fb68b); }
+.es-h2hm td.bad { color: var(--es-color-danger, #ff4655); }
+.es-h2hm-self { background: var(--es-color-bg-elevated, #161e2e); }
+
+/* Results archive on the standings screen. */
+.es-results { display: flex; flex-direction: column; gap: 3px; }
+.es-result { display: grid; grid-template-columns: 34px 1fr 54px 1fr; align-items: baseline; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.es-result-wk { font-size: var(--es-text-2xs, 10px); }
+.es-result-t.good { font-weight: 700; }
+.es-result-score { text-align: center; }
+
+/* Cumulative-wins sparkline on the dashboard. */
+.es-spark { display: flex; flex-direction: column; gap: 3px; }
+.es-spark svg { width: 100%; height: 46px; }
+.es-spark-line { stroke: var(--es-color-accent, #4fd8c0); stroke-width: 1.5; }
+.es-spark-w { fill: var(--es-color-success, #3fb68b); }
+.es-spark-l { fill: var(--es-color-danger, #ff4655); }
+
+/* Board season-goal status line on the manager career card. */
+.es-goal { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); }
+.goal-good { color: var(--es-color-success, #3fb68b); font-weight: 700; text-transform: capitalize; }
+.goal-warn { color: var(--es-color-warn, #e8b34b); font-weight: 700; text-transform: capitalize; }
+.goal-bad { color: var(--es-color-danger, #ff4655); font-weight: 700; text-transform: capitalize; }
 
 /* Map feature — the beauty crops shown large. */
 .es-maps {
@@ -1064,4 +1370,5 @@ td.good, .num.good { color: var(--es-color-text-success, #4fc6a0); }
 td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
 /* Mood pills (social header): tone must actually render. */
 .pill.good { color: var(--es-color-text-success, #4fc6a0); border-color: var(--es-color-text-success, #4fc6a0); }
+.pill.warn { color: var(--es-color-text-warning, #efb54a); border-color: var(--es-color-text-warning, #efb54a); }
 .pill.bad { color: var(--es-color-text-danger, #ff6b6b); border-color: var(--es-color-text-danger, #ff6b6b); }

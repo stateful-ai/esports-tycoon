@@ -6,12 +6,122 @@ seed produces the same league, rosters, and free agents.
 
 from __future__ import annotations
 
+import hashlib
+
 import numpy as np
 
 from esports_sim.manager import development
 from esports_sim.registry.loader import GameData
-from esports_sim.schemas import AgentMastery, MapMastery, Player, Team
+from esports_sim.schemas import AgentMastery, LanguageSkill, MapMastery, Player, Team
 from esports_sim.schemas.common import Playstyle, Region, Role
+
+# Nationality pools per league region: (country, native language, weight).
+# Coarse on purpose — flavour plus the comms-cohesion input, not a census.
+_REGION_IDENTITY: dict[Region, list[tuple[str, str, int]]] = {
+    Region.AMERICAS: [
+        ("US", "en", 28), ("BR", "pt", 26), ("CA", "en", 10), ("AR", "es", 10),
+        ("MX", "es", 10), ("CL", "es", 8), ("CO", "es", 8),
+    ],
+    Region.EMEA: [
+        ("FR", "fr", 13), ("UK", "en", 12), ("TR", "tr", 12), ("RU", "ru", 12),
+        ("DE", "de", 10), ("ES", "es", 9), ("SE", "sv", 8), ("PL", "pl", 8),
+        ("DK", "da", 6), ("FI", "fi", 5), ("NL", "nl", 5),
+    ],
+    Region.PACIFIC: [
+        ("KR", "ko", 28), ("JP", "ja", 14), ("PH", "en", 10), ("ID", "id", 10),
+        ("TH", "th", 10), ("IN", "en", 9), ("SG", "en", 8), ("AU", "en", 8),
+        ("VN", "vi", 3),
+    ],
+    Region.CHINA: [("CN", "zh", 100)],
+}
+# A rare third tongue, per region (neighbours/scene languages).
+_THIRD_LANGS: dict[Region, list[str]] = {
+    Region.AMERICAS: ["es", "pt"],
+    Region.EMEA: ["fr", "de", "ru"],
+    Region.PACIFIC: ["ko", "ja", "zh"],
+    Region.CHINA: ["ko"],
+}
+
+
+def assign_identity(p: Player) -> None:
+    """Give a player a country and up to three spoken languages, derived
+    from blake2 hashes of their id (draw-free, idempotent — players who
+    already have languages are never touched, so authored/pack data wins).
+    English fluency varies: some non-natives are fluent, some can call
+    rotations only, CN players skew isolated (the real VCT-CN dynamic)."""
+    if p.languages:
+        if not p.country:
+            p.country = "??"
+        return
+    pool = _REGION_IDENTITY.get(p.region, _REGION_IDENTITY[Region.AMERICAS])
+    total = sum(w for _, _, w in pool)
+    pick = _hash01(p.id, "country") * total
+    country, native = pool[-1][0], pool[-1][1]
+    for c, lang, w in pool:
+        if pick < w:
+            country, native = c, lang
+            break
+        pick -= w
+    if not p.country:
+        p.country = country
+    langs: list[LanguageSkill] = [
+        LanguageSkill(lang=native, level=round(85.0 + _hash01(p.id, "nat") * 15.0, 1))
+    ]
+    if native != "en":
+        u = _hash01(p.id, "eng")
+        # CN players skew low-English (many none at all); elsewhere a real
+        # spread with a genuine no-English tail.
+        eng = None
+        if p.region == Region.CHINA:
+            eng = 5.0 + u * 35.0 if u < 0.55 else None
+        elif u < 0.25:
+            eng = 70.0 + (u / 0.25) * 25.0  # properly fluent
+        elif u < 0.70:
+            eng = 40.0 + (u - 0.25) / 0.45 * 30.0  # can run comms
+        elif u < 0.90:
+            eng = 10.0 + (u - 0.70) / 0.20 * 30.0  # callouts only
+        # else: no English at all — an interpreter-and-pointing situation
+        if eng is not None:
+            langs.append(LanguageSkill(lang="en", level=round(eng, 1)))
+    if _hash01(p.id, "third") < 0.15 and len(langs) < 3:
+        extras = [l for l in _THIRD_LANGS.get(p.region, []) if l != native]
+        if extras:
+            third = extras[int(_hash01(p.id, "thirdpick") * len(extras)) % len(extras)]
+            langs.append(LanguageSkill(
+                lang=third, level=round(25.0 + _hash01(p.id, "thirdlvl") * 35.0, 1)
+            ))
+    p.languages = langs
+
+
+def _hash01(*parts: str) -> float:
+    """Stable uniform in [0, 1) from blake2 of the parts — draw-free, so
+    callers never disturb any rng stream."""
+    b = hashlib.blake2b("|".join(parts).encode(), digest_size=8)
+    return int.from_bytes(b.digest(), "big") / 2**64
+
+
+def backfill_agent_baselines(p: Player, gd: GameData) -> None:
+    """Extend a player's authored 2-3 agent pool to the full cast with the
+    same baselines generate_player rolls: same-role agents at least okay,
+    off-role playable-but-weak, a rare (~6%) off-role true gap. Values come
+    from blake2 hashes of (player id, agent id) — no rng stream is touched,
+    so it is deterministic AND idempotent (known agents are never altered).
+    The bare-engine gates never call this: registry players stay byte-
+    identical inside test fixtures; only campaigns run with full sheets."""
+    known = {m.agent_id for m in p.agent_pool}
+    missing = [aid for aid in sorted(gd.agents) if aid not in known]
+    if not missing:
+        return
+    q = development.overall(p)
+    for aid in missing:
+        u = _hash01(p.id, aid, "base")
+        if gd.agents[aid].role == p.role:
+            mv = _clamp(q - 8 + (u - 0.5) * 12, 35, 80)
+        elif _hash01(p.id, aid, "gap") < 0.06:
+            mv = u * 8  # never touched the agent
+        else:
+            mv = _clamp(q - 20 + (u - 0.5) * 14, 12, 60)
+        p.agent_pool.append(AgentMastery(agent_id=aid, mastery=round(mv, 1)))
 
 # ---------------------------------------------------------------------------
 # Name pools. Modest on purpose — uniqueness comes from combination + suffix.
@@ -218,15 +328,51 @@ def generate_player(
         base = q + shape.get(attr_id, 0.0) + rng.normal(0, 5)
         attributes[attr_id] = round(_clamp(base), 1)
 
-    # Agent pool: 2 agents matching role + 1 off-role flex pick.
+    # Agent pool: 2 signature agents matching role + 1 off-role flex pick run
+    # hot, then EVERY other agent gets a baseline so nobody reads as "0" on
+    # the rest of the cast: same-role agents are at least okay (an entry
+    # duelist can run any duelist), off-role agents are playable-but-weak,
+    # and a rare off-role gap (~never played) survives as the exception.
     role_agents = sorted(a.id for a in gd.agents.values() if a.role == role)
     other_agents = sorted(a.id for a in gd.agents.values() if a.role != role)
     picks = list(rng.permutation(role_agents))[:2]
     picks += [str(rng.choice(other_agents))]
+    # AWPers main the op-affinity kit of their role (Jett/Chamber): it
+    # leads their signature picks and gets a mastery nudge below, so the
+    # engine's best-mastery auto-pick fields them on it. Deterministic —
+    # the rng draw count is unchanged.
+    if playstyle is Playstyle.AWPER:
+        aff = [a for a in role_agents if gd.agents[a].op_affinity]
+        if aff and not any(a in aff for a in picks[:2]):
+            picks[0] = aff[0]
     agent_pool = [
-        AgentMastery(agent_id=str(a), mastery=round(_clamp(q + rng.normal(12, 8), 30, 99), 1))
+        AgentMastery(
+            agent_id=str(a),
+            mastery=round(_clamp(
+                q + rng.normal(12, 8)
+                + (6.0 if playstyle is Playstyle.AWPER and gd.agents[str(a)].op_affinity else 0.0),
+                30, 99), 1),
+        )
         for a in picks
     ]
+    signature = {m.agent_id for m in agent_pool}
+    for aid in role_agents:
+        if aid in signature:
+            continue
+        agent_pool.append(AgentMastery(
+            agent_id=aid, mastery=round(_clamp(q - 8 + rng.normal(0, 5), 35, 80), 1)
+        ))
+    for aid in other_agents:
+        if aid in signature:
+            continue
+        if rng.random() < 0.06:  # the rare true gap: never touched the agent
+            agent_pool.append(AgentMastery(
+                agent_id=aid, mastery=round(float(rng.uniform(0, 8)), 1)
+            ))
+        else:
+            agent_pool.append(AgentMastery(
+                agent_id=aid, mastery=round(_clamp(q - 20 + rng.normal(0, 6), 12, 60), 1)
+            ))
     map_pool = [
         MapMastery(map_id=mid, mastery=round(_clamp(q + rng.normal(8, 9), 30, 99), 1))
         for mid in sorted(gd.maps)
@@ -255,6 +401,7 @@ def generate_player(
         personality_tags=tags,
     )
     development.assign_potential(p, rng)
+    assign_identity(p)  # hash-based: no rng draw
     return p
 
 

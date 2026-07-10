@@ -13,6 +13,14 @@ players:
   handle: FFs
   real_name: Leong Cheok Nam
   region: china
+  country: MO
+  languages:
+  - lang: yue
+    level: 95.0
+  - lang: zh
+    level: 85.0
+  - lang: en
+    level: 45.0
   age: 24
   role: controller
   playstyle: igl
@@ -32,30 +40,58 @@ players:
     mastery: 69.8
   - agent_id: clove
     mastery: 68.1
+  - agent_id: viper
+    mastery: 50.3
+  - agent_id: breach
+    mastery: 42.8
+  - agent_id: chamber
+    mastery: 32.9
+  - agent_id: cypher
+    mastery: 38.2
+  - agent_id: jett
+    mastery: 40.0
+  - agent_id: killjoy
+    mastery: 39.8
+  - agent_id: phoenix
+    mastery: 31.7
+  - agent_id: raze
+    mastery: 39.3
+  - agent_id: reyna
+    mastery: 36.4
+  - agent_id: skye
+    mastery: 40.8
+  - agent_id: sova
+    mastery: 1.1
   map_pool:
   - map_id: ascent
-    mastery: 67.4
+    mastery: 63.4
   - map_id: bind
-    mastery: 74.9
+    mastery: 62.1
   - map_id: haven
-    mastery: 72.1
+    mastery: 70.9
   - map_id: lotus
-    mastery: 63.7
+    mastery: 63.3
   - map_id: split
-    mastery: 60.3
+    mastery: 64.5
   salary: 3800
-  contract_weeks_left: 31
-  morale: 67.5
-  stamina: 89.2
-  form: 50.9
+  contract_weeks_left: 32
+  morale: 79.2
+  stamina: 84.2
+  form: 46.3
   personality_tags:
-  - fan_favorite
-  - independent
-  potential: 59.1
+  - flashy
+  - hot_head
+  potential: 61.4
 - id: team_any_questions_gaming_juicy
   handle: juicy
   real_name: Tyler James Aeria
   region: china
+  country: SG
+  languages:
+  - lang: en
+    level: 95.0
+  - lang: zh
+    level: 20.0
   age: 23
   role: duelist
   playstyle: entry
@@ -75,30 +111,56 @@ players:
     mastery: 71.0
   - agent_id: raze
     mastery: 69.2
+  - agent_id: phoenix
+    mastery: 56.7
+  - agent_id: reyna
+    mastery: 54.8
+  - agent_id: breach
+    mastery: 35.8
+  - agent_id: chamber
+    mastery: 48.0
+  - agent_id: clove
+    mastery: 34.9
+  - agent_id: cypher
+    mastery: 44.7
+  - agent_id: killjoy
+    mastery: 34.9
+  - agent_id: omen
+    mastery: 49.3
+  - agent_id: skye
+    mastery: 48.0
+  - agent_id: sova
+    mastery: 41.7
+  - agent_id: viper
+    mastery: 51.4
   map_pool:
   - map_id: ascent
-    mastery: 75.1
+    mastery: 72.6
   - map_id: bind
-    mastery: 72.2
+    mastery: 72.0
   - map_id: haven
-    mastery: 76.5
+    mastery: 68.7
   - map_id: lotus
-    mastery: 63.0
+    mastery: 66.0
   - map_id: split
-    mastery: 71.0
+    mastery: 64.4
   salary: 4200
-  contract_weeks_left: 70
-  morale: 72.4
-  stamina: 94.4
-  form: 55.6
+  contract_weeks_left: 30
+  morale: 79.1
+  stamina: 96.7
+  form: 57.1
   personality_tags:
-  - analytical
-  - independent
-  potential: 64.4
+  - fan_favorite
+  - grinder
+  potential: 66.4
 - id: team_any_questions_gaming_dannyy
   handle: dannyy
   real_name: Wang Pengcheng
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: initiator
   playstyle: support
@@ -118,30 +180,58 @@ players:
     mastery: 72.2
   - agent_id: skye
     mastery: 61.3
+  - agent_id: breach
+    mastery: 47.7
+  - agent_id: chamber
+    mastery: 38.6
+  - agent_id: clove
+    mastery: 43.6
+  - agent_id: cypher
+    mastery: 40.4
+  - agent_id: jett
+    mastery: 42.0
+  - agent_id: killjoy
+    mastery: 27.4
+  - agent_id: omen
+    mastery: 43.2
+  - agent_id: phoenix
+    mastery: 38.2
+  - agent_id: raze
+    mastery: 44.7
+  - agent_id: reyna
+    mastery: 39.6
+  - agent_id: viper
+    mastery: 34.6
   map_pool:
   - map_id: ascent
-    mastery: 64.1
+    mastery: 54.4
   - map_id: bind
-    mastery: 59.7
+    mastery: 61.3
   - map_id: haven
-    mastery: 67.3
+    mastery: 65.6
   - map_id: lotus
-    mastery: 57.8
+    mastery: 60.6
   - map_id: split
-    mastery: 73.3
+    mastery: 68.1
   salary: 3700
-  contract_weeks_left: 48
-  morale: 61.7
-  stamina: 94.1
-  form: 59.2
+  contract_weeks_left: 52
+  morale: 80.7
+  stamina: 96.6
+  form: 54.3
   personality_tags:
-  - perfectionist
-  - quiet
-  potential: 67.9
+  - analytical
+  - grinder
+  potential: 63.4
 - id: team_any_questions_gaming_s1mon
   handle: S1Mon
   real_name: Hsieh Meng-hsun
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  - lang: en
+    level: 35.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -161,29 +251,56 @@ players:
     mastery: 78.1
   - agent_id: cypher
     mastery: 60.7
+  - agent_id: chamber
+    mastery: 46.7
+  - agent_id: breach
+    mastery: 42.6
+  - agent_id: clove
+    mastery: 30.0
+  - agent_id: jett
+    mastery: 31.2
+  - agent_id: omen
+    mastery: 27.4
+  - agent_id: phoenix
+    mastery: 34.1
+  - agent_id: raze
+    mastery: 30.2
+  - agent_id: reyna
+    mastery: 37.6
+  - agent_id: skye
+    mastery: 37.8
+  - agent_id: sova
+    mastery: 38.0
+  - agent_id: viper
+    mastery: 36.8
   map_pool:
   - map_id: ascent
-    mastery: 62.5
+    mastery: 68.2
   - map_id: bind
-    mastery: 69.0
+    mastery: 64.0
   - map_id: haven
-    mastery: 72.1
+    mastery: 73.5
   - map_id: lotus
-    mastery: 54.6
+    mastery: 59.3
   - map_id: split
-    mastery: 57.1
+    mastery: 53.6
   salary: 3700
-  contract_weeks_left: 51
-  morale: 70.0
-  stamina: 86.6
-  form: 56.0
+  contract_weeks_left: 40
+  morale: 81.4
+  stamina: 86.5
+  form: 56.4
   personality_tags:
-  - perfectionist
-  potential: 64.7
+  - flashy
+  - slow_starter
+  potential: 62.2
 - id: team_any_questions_gaming_5cm
   handle: 5CM
   real_name: Ding Yipeng
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: flex
   playstyle: support
@@ -203,23 +320,45 @@ players:
     mastery: 68.2
   - agent_id: omen
     mastery: 56.3
+  - agent_id: breach
+    mastery: 1.2
+  - agent_id: chamber
+    mastery: 39.9
+  - agent_id: clove
+    mastery: 37.2
+  - agent_id: cypher
+    mastery: 39.1
+  - agent_id: jett
+    mastery: 27.2
+  - agent_id: killjoy
+    mastery: 31.0
+  - agent_id: phoenix
+    mastery: 30.1
+  - agent_id: raze
+    mastery: 28.4
+  - agent_id: reyna
+    mastery: 43.2
+  - agent_id: skye
+    mastery: 37.2
+  - agent_id: sova
+    mastery: 32.1
   map_pool:
   - map_id: ascent
-    mastery: 59.2
+    mastery: 63.1
   - map_id: bind
-    mastery: 62.6
+    mastery: 63.8
   - map_id: haven
-    mastery: 53.8
+    mastery: 57.7
   - map_id: lotus
-    mastery: 69.1
+    mastery: 55.6
   - map_id: split
-    mastery: 62.7
+    mastery: 65.6
   salary: 3500
-  contract_weeks_left: 69
-  morale: 77.6
-  stamina: 88.8
-  form: 55.9
+  contract_weeks_left: 46
+  morale: 82.1
+  stamina: 92.2
+  form: 59.6
   personality_tags:
+  - hot_head
   - perfectionist
-  - slow_starter
-  potential: 67.5
+  potential: 63.1

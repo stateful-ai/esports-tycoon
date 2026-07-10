@@ -46,6 +46,39 @@ _SPOTLIGHT_STYLES = {"entry", "awper", "igl"}
 _SPOTLIGHT_FRICTION = 7.0
 
 
+def language_overlap(pa: Player, pb: Player) -> float:
+    """How well two players can actually talk, 0..1: the best shared
+    language, at the weaker speaker's fluency (a fluent/broken pair runs
+    at broken). 0 = no common tongue. Players without language data (old
+    saves pre-heal) read as neutral 0.6 so nothing shifts until the
+    backfill has run."""
+    if not pa.languages or not pb.languages:
+        return 0.6
+    best = 0.0
+    for la in pa.languages:
+        for lb in pb.languages:
+            if la.lang == lb.lang:
+                best = max(best, min(la.level, lb.level) / 100.0)
+    return best
+
+
+def team_comms_cohesion(gs: GameState, team_id: str) -> float:
+    """Roster-wide comms read, 0-100: mean pairwise language overlap.
+    Serialized for the roster page; the same overlap already shapes each
+    pair's affinity target, which is how it reaches chemistry (and from
+    there, the engine's existing chemistry channel)."""
+    roster = sorted(gs.teams[team_id].player_ids)
+    if len(roster) < 2:
+        return 100.0
+    pairs = [
+        language_overlap(gs.players[a], gs.players[b])
+        for i, a in enumerate(roster)
+        for b in roster[i + 1:]
+        if a in gs.players and b in gs.players
+    ]
+    return round(100.0 * sum(pairs) / max(len(pairs), 1), 1)
+
+
 def key(a: str, b: str) -> str:
     return "|".join(sorted((a, b)))
 
@@ -89,6 +122,11 @@ def affinity_target(pa: Player, pb: Player) -> float:
         max(0.0, ax_a["ego"] - 60.0) + max(0.0, ax_b["ego"] - 60.0)
     ) * 0.10
     target -= abs(ax_a["professionalism"] - ax_b["professionalism"]) * 0.04
+    # Comms: pairs who share a fluent tongue settle a shade warmer; a pair
+    # with no common language never fully gels (-6 at zero overlap, +4 at
+    # native/native). Flows into team chemistry via the mean-relationship
+    # chase below — the engine's existing chemistry channel, no new reach.
+    target += (language_overlap(pa, pb) - 0.6) * 10.0
     return float(min(95.0, max(15.0, target)))
 
 

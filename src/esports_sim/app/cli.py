@@ -617,6 +617,7 @@ def auto_play(
         f"season {gs.season} week {gs.week}"
     )
     save(gs)
+    return gs
 
 
 def main() -> None:
@@ -630,6 +631,19 @@ def main() -> None:
         default=None,
         help="roster pack id under data/rosters/ (e.g. vct-2026); "
         "default = generated fictional world",
+    )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="with --auto: print a deterministic season-report JSON after the run "
+        "(headless analytics export for LLM-playtest / analysis)",
+    )
+    parser.add_argument(
+        "--playtest",
+        type=int,
+        default=0,
+        help="headless: run N full seasons and print a deterministic multi-season "
+        "playtest summary JSON (title/award timelines, dynasties, career arcs)",
     )
     parser.add_argument("--web", action="store_true", help="launch the browser UI")
     # Honour $PORT (dev-server harnesses assign one) when --port isn't given.
@@ -651,8 +665,35 @@ def main() -> None:
         return
 
     gd = load_all()
+    if args.playtest > 0:
+        import json
+
+        from esports_sim.manager import analytics
+
+        pack = load_roster_pack(args.roster) if args.roster else None
+        gs = new_campaign(gd, args.seed, user_team_id=args.team, pack=pack)
+        # Hands-off: keep the user roster legal, let the world play out N seasons.
+        while gs.season <= args.playtest:
+            while len(gs.teams[args.team].player_ids) < ROSTER_MIN and gs.free_agent_ids:
+                best = max(
+                    (gs.players[pid] for pid in gs.free_agent_ids),
+                    key=lambda p: (player_quality(p), p.id),
+                )
+                ok, _ = sign_player(gs, args.team, best.id)
+                if not ok:
+                    break
+            advance_week(gs, gd)
+        print(json.dumps(analytics.playtest_summary(gs), indent=2, ensure_ascii=True))
+        return
+
     if args.auto > 0:
-        auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
+        gs = auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
+        if args.report:
+            import json
+
+            from esports_sim.manager import analytics
+
+            print(json.dumps(analytics.season_report(gs), indent=2, ensure_ascii=True))
         return
 
     gs = title_screen(gd)

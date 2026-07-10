@@ -19,6 +19,65 @@ def _campaign(seed: int = 4):
     return gd, new_campaign(gd, seed=seed)
 
 
+# -- scouting assignments (player deep-dive / match intel) ---------------------
+
+def test_player_deep_dive_fills_faster_and_tiers_unlock() -> None:
+    from esports_sim.manager import campaign as camp
+    from esports_sim.manager.campaign import WeekReport
+
+    _, gs = _campaign()
+    rival = next(t for t in gs.teams.values() if t.id != gs.user_team_id)
+    pid = rival.player_ids[0]
+    gs.set_acting(gs.user_team_id)
+    gs.scout_target = f"player:{pid}"
+    gs.set_acting(None)
+    report = WeekReport(season=1, week=1, phase="regular")  # no matches played
+    camp._tick_scouting(gs, report)
+    gs.set_acting(gs.user_team_id)
+    prog = gs.scout_progress[f"player:{pid}"]
+    gs.set_acting(None)
+    # Deep dive beats the team rate (0.34 * 1.5, no live-watch this week).
+    assert prog > camp.SCOUT_WEEKLY_GAIN
+
+    # Report tiers unlock with depth.
+    p = gs.players[pid]
+    low = development.scout_report(gs, p, 0.2)
+    assert low["agent_comfort"] == [] and low["style_read"] == ""
+    mid = development.scout_report(gs, p, 0.55)
+    assert mid["agent_comfort"] and mid["style_read"] and mid["mental_read"] == ""
+    deep = development.scout_report(gs, p, 0.8)
+    assert deep["mental_read"] and deep["verdict"] == ""
+    full = development.scout_report(gs, p, 1.0)
+    assert full["verdict"]
+
+
+def test_match_scouting_grants_both_teams_and_clears() -> None:
+    from esports_sim.manager import campaign as camp
+    from esports_sim.manager.campaign import WeekReport
+    from esports_sim.manager.state import Fixture
+
+    _, gs = _campaign()
+    rivals = [t.id for t in gs.teams.values() if t.id != gs.user_team_id][:2]
+    fx = Fixture(
+        id="scouttest", week=gs.week, stage="regular",
+        team_a=rivals[0], team_b=rivals[1], maps=["bind"],
+    )
+    fx.played = True
+    fx.winner_id = rivals[0]
+    gs.fixtures.append(fx)
+    gs.set_acting(gs.user_team_id)
+    gs.scout_target = "match:scouttest"
+    gs.set_acting(None)
+    report = WeekReport(season=1, week=gs.week, phase="regular")
+    report.fixtures.append(fx)
+    camp._tick_scouting(gs, report)
+    gs.set_acting(gs.user_team_id)
+    assert gs.scout_progress.get(rivals[0], 0.0) >= camp.SCOUT_MATCH_INTEL
+    assert gs.scout_progress.get(rivals[1], 0.0) >= camp.SCOUT_MATCH_INTEL
+    assert gs.scout_target is None, "one-shot: the scout comes home"
+    gs.set_acting(None)
+
+
 # -- insolvency ---------------------------------------------------------------
 
 def test_debt_penalises_reputation_and_morale_and_warns_user() -> None:

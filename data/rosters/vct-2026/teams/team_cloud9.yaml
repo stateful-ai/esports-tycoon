@@ -13,6 +13,10 @@ players:
   handle: Zellsis
   real_name: Jordan Montemurro
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 27
   role: flex
   playstyle: igl
@@ -34,30 +38,54 @@ players:
     mastery: 72.9
   - agent_id: killjoy
     mastery: 70.5
+  - agent_id: breach
+    mastery: 36.5
+  - agent_id: chamber
+    mastery: 47.7
+  - agent_id: clove
+    mastery: 42.8
+  - agent_id: cypher
+    mastery: 46.1
+  - agent_id: jett
+    mastery: 1.3
+  - agent_id: omen
+    mastery: 42.3
+  - agent_id: phoenix
+    mastery: 52.0
+  - agent_id: raze
+    mastery: 40.5
+  - agent_id: reyna
+    mastery: 35.6
+  - agent_id: sova
+    mastery: 44.1
   map_pool:
   - map_id: ascent
-    mastery: 77.8
+    mastery: 78.6
   - map_id: bind
-    mastery: 62.4
+    mastery: 77.5
   - map_id: haven
-    mastery: 79.5
+    mastery: 83.7
   - map_id: lotus
-    mastery: 75.9
+    mastery: 73.6
   - map_id: split
-    mastery: 66.3
+    mastery: 69.0
   salary: 5000
-  contract_weeks_left: 57
-  morale: 76.6
-  stamina: 80.3
-  form: 47.4
+  contract_weeks_left: 35
+  morale: 64.8
+  stamina: 98.5
+  form: 59.8
   personality_tags:
   - analytical
-  - grinder
+  - quiet
   potential: 69.5
 - id: team_cloud9_oxy
   handle: OXY
   real_name: Francis Hoang
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: duelist
   playstyle: entry
@@ -77,30 +105,56 @@ players:
     mastery: 82.9
   - agent_id: jett
     mastery: 83.7
+  - agent_id: phoenix
+    mastery: 70.6
+  - agent_id: reyna
+    mastery: 71.5
+  - agent_id: breach
+    mastery: 47.5
+  - agent_id: chamber
+    mastery: 55.3
+  - agent_id: clove
+    mastery: 49.7
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 0.1
+  - agent_id: omen
+    mastery: 59.3
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 54.0
+  - agent_id: viper
+    mastery: 52.3
   map_pool:
   - map_id: ascent
-    mastery: 88.5
+    mastery: 83.2
   - map_id: bind
-    mastery: 89.7
+    mastery: 87.5
   - map_id: haven
-    mastery: 83.7
+    mastery: 85.3
   - map_id: lotus
-    mastery: 74.0
+    mastery: 85.4
   - map_id: split
-    mastery: 76.9
+    mastery: 74.5
   salary: 6000
-  contract_weeks_left: 63
-  morale: 71.5
-  stamina: 97.8
-  form: 46.6
+  contract_weeks_left: 65
+  morale: 83.7
+  stamina: 93.8
+  form: 50.5
   personality_tags:
-  - clutch_gene
-  - slow_starter
-  potential: 79.6
+  - perfectionist
+  - streamer
+  potential: 78.5
 - id: team_cloud9_notexxd
   handle: Notexxd
   real_name: Jaden Anderson
   region: americas
+  country: BM
+  languages:
+  - lang: en
+    level: 100.0
   age: 19
   role: controller
   playstyle: support
@@ -120,30 +174,56 @@ players:
     mastery: 74.5
   - agent_id: clove
     mastery: 78.1
+  - agent_id: viper
+    mastery: 65.9
+  - agent_id: breach
+    mastery: 43.8
+  - agent_id: chamber
+    mastery: 47.3
+  - agent_id: cypher
+    mastery: 41.9
+  - agent_id: jett
+    mastery: 47.9
+  - agent_id: killjoy
+    mastery: 54.0
+  - agent_id: phoenix
+    mastery: 48.5
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 51.4
+  - agent_id: skye
+    mastery: 52.1
+  - agent_id: sova
+    mastery: 53.0
   map_pool:
   - map_id: ascent
-    mastery: 84.8
+    mastery: 75.8
   - map_id: bind
-    mastery: 68.2
+    mastery: 66.4
   - map_id: haven
-    mastery: 71.0
+    mastery: 71.6
   - map_id: lotus
-    mastery: 74.2
+    mastery: 63.9
   - map_id: split
-    mastery: 75.2
+    mastery: 78.4
   salary: 5100
-  contract_weeks_left: 35
-  morale: 81.1
-  stamina: 80.2
-  form: 46.0
+  contract_weeks_left: 54
+  morale: 76.7
+  stamina: 84.9
+  form: 51.2
   personality_tags:
-  - fan_favorite
-  - team_player
-  potential: 87.9
+  - grinder
+  - perfectionist
+  potential: 79.4
 - id: team_cloud9_jackk
   handle: Jackk
   real_name: Jack Foote
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 20
   role: initiator
   playstyle: support
@@ -163,30 +243,56 @@ players:
     mastery: 78.7
   - agent_id: skye
     mastery: 75.0
+  - agent_id: breach
+    mastery: 57.1
+  - agent_id: chamber
+    mastery: 48.8
+  - agent_id: clove
+    mastery: 37.4
+  - agent_id: cypher
+    mastery: 46.2
+  - agent_id: jett
+    mastery: 50.9
+  - agent_id: killjoy
+    mastery: 40.6
+  - agent_id: omen
+    mastery: 38.3
+  - agent_id: phoenix
+    mastery: 49.2
+  - agent_id: raze
+    mastery: 45.8
+  - agent_id: reyna
+    mastery: 40.1
+  - agent_id: viper
+    mastery: 51.3
   map_pool:
   - map_id: ascent
-    mastery: 73.1
+    mastery: 75.1
   - map_id: bind
-    mastery: 77.9
+    mastery: 75.3
   - map_id: haven
-    mastery: 77.5
+    mastery: 78.8
   - map_id: lotus
-    mastery: 71.9
+    mastery: 72.6
   - map_id: split
-    mastery: 63.8
+    mastery: 77.0
   salary: 4800
-  contract_weeks_left: 30
-  morale: 67.9
-  stamina: 97.3
-  form: 53.1
+  contract_weeks_left: 76
+  morale: 81.9
+  stamina: 84.2
+  form: 53.2
   personality_tags:
-  - independent
-  - quiet
-  potential: 81.7
+  - slow_starter
+  - team_player
+  potential: 81.1
 - id: team_cloud9_fireballops
   handle: FireBallOps
   real_name: Cameron Tomaselli
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 19
   role: sentinel
   playstyle: anchor
@@ -208,23 +314,42 @@ players:
     mastery: 72.1
   - agent_id: omen
     mastery: 69.7
+  - agent_id: chamber
+    mastery: 58.8
+  - agent_id: breach
+    mastery: 32.5
+  - agent_id: clove
+    mastery: 52.2
+  - agent_id: jett
+    mastery: 49.4
+  - agent_id: phoenix
+    mastery: 50.8
+  - agent_id: raze
+    mastery: 40.0
+  - agent_id: reyna
+    mastery: 44.8
+  - agent_id: skye
+    mastery: 42.0
+  - agent_id: sova
+    mastery: 41.4
+  - agent_id: viper
+    mastery: 38.9
   map_pool:
   - map_id: ascent
-    mastery: 76.7
+    mastery: 72.6
   - map_id: bind
-    mastery: 75.4
+    mastery: 67.6
   - map_id: haven
-    mastery: 58.5
+    mastery: 81.5
   - map_id: lotus
-    mastery: 64.1
+    mastery: 79.7
   - map_id: split
-    mastery: 82.1
+    mastery: 74.2
   salary: 4500
-  contract_weeks_left: 57
-  morale: 70.8
-  stamina: 94.2
-  form: 59.0
+  contract_weeks_left: 59
+  morale: 71.3
+  stamina: 93.0
+  form: 50.0
   personality_tags:
-  - fan_favorite
-  - perfectionist
-  potential: 78.1
+  - analytical
+  potential: 83.6

@@ -13,6 +13,12 @@ players:
   handle: Primmie
   real_name: Papaphat Sriprapha
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 97.0
+  - lang: en
+    level: 45.0
   age: 19
   role: duelist
   playstyle: entry
@@ -32,30 +38,58 @@ players:
     mastery: 98.6
   - agent_id: phoenix
     mastery: 83.6
+  - agent_id: raze
+    mastery: 70.9
+  - agent_id: reyna
+    mastery: 67.9
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 1.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 4.2
+  - agent_id: omen
+    mastery: 58.9
+  - agent_id: skye
+    mastery: 58.8
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 58.9
   map_pool:
   - map_id: ascent
-    mastery: 86.3
+    mastery: 84.0
   - map_id: bind
-    mastery: 81.8
+    mastery: 94.7
   - map_id: haven
-    mastery: 97.9
+    mastery: 83.0
   - map_id: lotus
-    mastery: 97.4
+    mastery: 74.8
   - map_id: split
-    mastery: 88.4
+    mastery: 96.4
   salary: 6700
-  contract_weeks_left: 57
-  morale: 82.6
-  stamina: 80.7
-  form: 52.8
+  contract_weeks_left: 44
+  morale: 71.9
+  stamina: 95.6
+  form: 46.2
   personality_tags:
-  - analytical
-  - streamer
-  potential: 96.0
+  - grinder
+  - quiet
+  potential: 89.5
 - id: team_full_sense_jitboys
   handle: JitboyS
   real_name: Jittana Nokngam
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 23
   role: duelist
   playstyle: entry
@@ -75,30 +109,57 @@ players:
     mastery: 89.5
   - agent_id: reyna
     mastery: 80.4
+  - agent_id: jett
+    mastery: 62.9
+  - agent_id: phoenix
+    mastery: 65.5
+  - agent_id: breach
+    mastery: 59.7
+  - agent_id: chamber
+    mastery: 54.3
+  - agent_id: clove
+    mastery: 49.4
+  - agent_id: cypher
+    mastery: 42.2
+  - agent_id: killjoy
+    mastery: 54.6
+  - agent_id: omen
+    mastery: 42.8
+  - agent_id: skye
+    mastery: 49.9
+  - agent_id: sova
+    mastery: 44.9
+  - agent_id: viper
+    mastery: 51.6
   map_pool:
   - map_id: ascent
-    mastery: 78.3
+    mastery: 72.9
   - map_id: bind
-    mastery: 82.3
+    mastery: 79.2
   - map_id: haven
-    mastery: 84.4
+    mastery: 83.3
   - map_id: lotus
-    mastery: 89.2
+    mastery: 67.8
   - map_id: split
-    mastery: 80.3
+    mastery: 86.3
   salary: 5600
-  contract_weeks_left: 38
-  morale: 75.0
-  stamina: 92.5
-  form: 55.8
+  contract_weeks_left: 47
+  morale: 71.3
+  stamina: 90.3
+  form: 57.0
   personality_tags:
-  - analytical
-  - grinder
-  potential: 77.8
+  - streamer
+  potential: 74.1
 - id: team_full_sense_killua
   handle: killua
   real_name: Tanate Teerasawad
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 45.0
   age: 23
   role: initiator
   playstyle: support
@@ -118,29 +179,58 @@ players:
     mastery: 84.7
   - agent_id: sova
     mastery: 83.4
+  - agent_id: breach
+    mastery: 61.6
+  - agent_id: chamber
+    mastery: 54.4
+  - agent_id: clove
+    mastery: 2.0
+  - agent_id: cypher
+    mastery: 46.9
+  - agent_id: jett
+    mastery: 46.0
+  - agent_id: killjoy
+    mastery: 47.7
+  - agent_id: omen
+    mastery: 50.1
+  - agent_id: phoenix
+    mastery: 43.7
+  - agent_id: raze
+    mastery: 48.8
+  - agent_id: reyna
+    mastery: 57.8
+  - agent_id: viper
+    mastery: 44.2
   map_pool:
   - map_id: ascent
-    mastery: 76.9
+    mastery: 75.4
   - map_id: bind
-    mastery: 87.7
+    mastery: 84.3
   - map_id: haven
-    mastery: 83.1
+    mastery: 80.3
   - map_id: lotus
-    mastery: 75.9
+    mastery: 66.4
   - map_id: split
-    mastery: 79.2
+    mastery: 81.9
   salary: 5500
-  contract_weeks_left: 46
-  morale: 64.1
-  stamina: 84.5
-  form: 59.7
+  contract_weeks_left: 61
+  morale: 66.7
+  stamina: 91.8
+  form: 52.1
   personality_tags:
+  - hot_head
   - independent
-  potential: 79.2
+  potential: 74.4
 - id: team_full_sense_crws
   handle: Crws
   real_name: Thanamethk Mahatthananuyut
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 40.0
   age: 26
   role: controller
   playstyle: igl
@@ -160,30 +250,58 @@ players:
     mastery: 79.9
   - agent_id: clove
     mastery: 76.4
+  - agent_id: viper
+    mastery: 60.1
+  - agent_id: breach
+    mastery: 7.2
+  - agent_id: chamber
+    mastery: 49.3
+  - agent_id: cypher
+    mastery: 39.8
+  - agent_id: jett
+    mastery: 52.8
+  - agent_id: killjoy
+    mastery: 55.0
+  - agent_id: phoenix
+    mastery: 48.4
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 43.4
+  - agent_id: skye
+    mastery: 51.7
+  - agent_id: sova
+    mastery: 3.0
   map_pool:
   - map_id: ascent
-    mastery: 75.2
+    mastery: 62.1
   - map_id: bind
-    mastery: 77.5
+    mastery: 83.0
   - map_id: haven
-    mastery: 79.9
+    mastery: 69.1
   - map_id: lotus
-    mastery: 84.2
+    mastery: 80.9
   - map_id: split
-    mastery: 77.1
+    mastery: 86.9
   salary: 5400
-  contract_weeks_left: 48
-  morale: 73.8
-  stamina: 88.4
-  form: 52.6
+  contract_weeks_left: 71
+  morale: 65.5
+  stamina: 90.7
+  form: 46.9
   personality_tags:
-  - analytical
-  - team_player
-  potential: 72.9
+  - perfectionist
+  - quiet
+  potential: 73.9
 - id: team_full_sense_seph1roth
   handle: seph1roth
   real_name: Chinnakrit Phoojaroen
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 95.0
+  - lang: en
+    level: 42.0
   age: 22
   role: flex
   playstyle: support
@@ -205,22 +323,42 @@ players:
     mastery: 79.7
   - agent_id: phoenix
     mastery: 66.4
+  - agent_id: breach
+    mastery: 42.2
+  - agent_id: chamber
+    mastery: 40.5
+  - agent_id: clove
+    mastery: 36.3
+  - agent_id: cypher
+    mastery: 3.8
+  - agent_id: jett
+    mastery: 37.5
+  - agent_id: omen
+    mastery: 43.8
+  - agent_id: raze
+    mastery: 46.2
+  - agent_id: reyna
+    mastery: 41.8
+  - agent_id: skye
+    mastery: 39.0
+  - agent_id: sova
+    mastery: 38.5
   map_pool:
   - map_id: ascent
-    mastery: 80.2
-  - map_id: bind
-    mastery: 69.5
-  - map_id: haven
-    mastery: 78.6
-  - map_id: lotus
     mastery: 67.4
+  - map_id: bind
+    mastery: 69.7
+  - map_id: haven
+    mastery: 63.9
+  - map_id: lotus
+    mastery: 73.7
   - map_id: split
-    mastery: 79.7
+    mastery: 80.1
   salary: 4900
-  contract_weeks_left: 31
-  morale: 71.9
-  stamina: 95.1
-  form: 48.6
+  contract_weeks_left: 49
+  morale: 69.2
+  stamina: 88.4
+  form: 46.0
   personality_tags:
-  - team_player
-  potential: 77.3
+  - clutch_gene
+  potential: 76.8

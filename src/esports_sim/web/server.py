@@ -26,13 +26,17 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from esports_sim.manager import (
+    analytics,
     career,
+    chronicle,
     development,
     economy,
     inbox as inbox_mod,
     knowledge as knowledge_mod,
     market,
     memories as memories_mod,
+    meta as meta_mod,
+    narrative,
     relationships,
     rivalries as rivalries_mod,
     social,
@@ -44,21 +48,33 @@ from esports_sim.manager import (
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
     PREP_EDGE_SPAN,
+    TEAM_TALK_APPROACHES,
     WeekReport,
     advance_week,
     default_five,
     dressed_for,
     new_campaign,
 )
+from esports_sim import perf
 from esports_sim.manager.state import GamePlan, GameState, PlayerSeasonStats
 from esports_sim.manager.training import (
     DEV_FOCUS_OPTIONS,
     FOCUS_OPTIONS,
     INTENSITY_OPTIONS,
 )
+from esports_sim.registry import roster_admin
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
-from esports_sim.schemas import Event, Player, Team
+from esports_sim.schemas import (
+    AgentMastery,
+    Event,
+    LanguageSkill,
+    MapMastery,
+    Player,
+    Playstyle,
+    Role,
+    Team,
+)
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
@@ -116,6 +132,13 @@ class _Game:
         self.ready: set[str] = set()
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
+        # Save policy runtime: actions only MARK the world dirty (the full
+        # GameState serializing on every click was the biggest per-action
+        # cost — see /api/perf save.write); disk writes happen on the
+        # explicit Save button, on world lifecycle moments (create / join /
+        # resume / leave), and on autosave every Nth week tick.
+        self.dirty = False
+        self.ticks_since_save = 0
 
     def require_gs(self) -> GameState:
         if self.gs is None:
@@ -124,10 +147,40 @@ class _Game:
         self.gs.set_acting(_ctx.get().team_id)
         return self.gs
 
-    def save(self) -> None:
-        if self.gs is not None:
-            SAVE_DIR.mkdir(parents=True, exist_ok=True)
+    def save(self, force: bool = False) -> None:
+        """The single persistence choke point. Plain `save()` (what every
+        action endpoint calls) only marks the world dirty; `force=True`
+        actually writes — the explicit Save button, world lifecycle
+        (create/join/resume/leave), and autosave_tick below."""
+        if self.gs is None:
+            return
+        if not force:
+            self.dirty = True
+            return
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+        # Save cost was the biggest per-action tax on deep saves (the
+        # whole GameState serializes) — time it and gauge the file size
+        # so /api/perf shows both growing.
+        with perf.span("save.write"):
             self.gs.save(self.save_path)
+        self.dirty = False
+        try:
+            perf.gauge("save.bytes", self.save_path.stat().st_size)
+        except OSError:
+            pass
+
+    def autosave_tick(self) -> None:
+        """Called after a week actually resolves: write every Nth tick per
+        the world's policy (autosave off = only the Save button writes)."""
+        self.dirty = True
+        self.ticks_since_save += 1
+        if (
+            self.gs is not None
+            and self.gs.autosave_enabled
+            and self.ticks_since_save >= self.gs.autosave_every_weeks
+        ):
+            self.save(force=True)
+            self.ticks_since_save = 0
 
 
 class Lobby:
@@ -310,7 +363,7 @@ class Lobby:
             )
             self._save_sessions()
             self._write_mode(code, game.mode)
-            game.save()
+            game.save(force=True)  # the world must exist on disk from birth
             return game
 
     def join_game(
@@ -354,7 +407,7 @@ class Lobby:
                 sid, code, team_id, gs.teams[team_id].name, game.mode
             )
             self._save_sessions()
-            game.save()
+            game.save(force=True)  # a claimed seat must survive a restart
             return game, None
 
     def leave(self, sid: str) -> str | None:
@@ -369,6 +422,9 @@ class Lobby:
                 # entry NOW, or leaving would orphan them.
                 game = self._get_game(code)
                 if game is not None and game.gs is not None:
+                    # Walking away is a save point — never lose a session's
+                    # work to the autosave interval.
+                    game.save(force=True)
                     team = game.gs.teams.get(team_id)
                     self._remember(
                         sid, code, team_id,
@@ -490,7 +546,29 @@ def _stable_idx(key: str, n: int) -> int:
     return int(hashlib.blake2b(key.encode(), digest_size=4).hexdigest(), 16) % n
 
 
+_TEAM_LOGO_IDS: set[str] | None = None
+
+
+def _team_logo_ids() -> set[str]:
+    """Team ids with a generated org logo on disk (assets/logos/teams/<id>.webp).
+
+    Cached on first call so lookups aren't a per-request disk hit; the set
+    is only populated once per process (generated logos are added by the
+    art pass, not at runtime).
+    """
+    global _TEAM_LOGO_IDS
+    if _TEAM_LOGO_IDS is None:
+        team_logo_dir = _REPO_ROOT / "assets" / "logos" / "teams"
+        if team_logo_dir.is_dir():
+            _TEAM_LOGO_IDS = {p.stem for p in team_logo_dir.glob("*.webp")}
+        else:
+            _TEAM_LOGO_IDS = set()
+    return _TEAM_LOGO_IDS
+
+
 def _logo_url(team_id: str) -> str:
+    if team_id in _team_logo_ids():
+        return f"/assets/logos/teams/{team_id}.webp"
     return f"/assets/logos/logo_{_stable_idx(team_id, N_LOGOS)}.webp"
 
 
@@ -591,7 +669,49 @@ def _team_view(t: Team, gs: GameState) -> dict:
     }
 
 
+def _series_potm(f, gs: GameState) -> dict | None:
+    """Player of the Match: the standout box-score line of a played series.
+    Aggregates each player's mean rating across the series maps and prefers
+    the winning side (identified by current roster membership), falling back
+    to the overall top line if the winner's roster has since churned. A pure
+    read of the stored per-map lines — no schema state, deterministic."""
+    if not f.played or f.winner_id is None:
+        return None
+    agg: dict[str, list[float]] = {}  # pid -> [rating_sum, maps, kills]
+    for r in f.results:
+        for ln in r.lines:
+            a = agg.setdefault(ln.player_id, [0.0, 0, 0])
+            a[0] += ln.rating
+            a[1] += 1
+            a[2] += int(ln.kills)
+    if not agg:
+        return None
+    winner_roster = (
+        set(gs.teams[f.winner_id].player_ids) if f.winner_id in gs.teams else set()
+    )
+
+    def _mean(pid: str) -> float:
+        rs, mp, _ = agg[pid]
+        return rs / mp if mp else 0.0
+
+    pool = [pid for pid in agg if pid in winner_roster] or list(agg)
+    pid = max(sorted(pool), key=_mean)  # sorted -> deterministic tie-break
+    p = gs.players.get(pid)
+    rs, mp, kills = agg[pid]
+    return {
+        "player_id": pid,
+        "handle": p.handle if p else pid,
+        "rating": round(rs / mp, 2) if mp else 0.0,
+        "kills": kills,
+        "on_winner": pid in winner_roster,
+    }
+
+
 def _fixture_view(f, gs: GameState) -> dict:
+    # A named rivalry between the two sides (symmetric pair heat), surfaced
+    # only once it's genuinely hot — so the dashboard can flag a grudge
+    # match before it's played. None when the pairing carries no history.
+    riv = rivalries_mod.get(gs, f.team_a, f.team_b)
     return {
         "id": f.id,
         "week": f.week,
@@ -601,6 +721,8 @@ def _fixture_view(f, gs: GameState) -> dict:
         "team_b": f.team_b,
         "team_a_name": gs.teams[f.team_a].name,
         "team_b_name": gs.teams[f.team_b].name,
+        "rivalry": round(riv, 1) if riv >= rivalries_mod.RIVALRY_BAR else None,
+        "potm": _series_potm(f, gs),
         "maps": f.maps,
         "map_thumbs": {mid: _map_thumb_url(mid) for mid in f.maps},
         "veto": f.veto,
@@ -917,7 +1039,7 @@ def accept_job(body: AcceptJobBody) -> dict:
         game = ctx.game
         game.ready.discard(gs.acting_team_id)
         gs.set_acting(body.team_id)
-        game.save()
+        game.save(force=True)  # a career move must survive a restart
     # Rebind the lobby session to the new club (outside the game lock;
     # the lobby has its own).
     with _LOBBY._lock:
@@ -930,6 +1052,41 @@ def accept_job(body: AcceptJobBody) -> dict:
     return {"ok": True, "team_id": body.team_id}
 
 
+def _league_leaders(gs: GameState, n: int = 3) -> list[dict]:
+    """This season's top tier-1 performers by rating (min 3 maps). A compact
+    league-leaders read for the dashboard hub; pure gs.player_stats."""
+    t1 = {pid for t in gs.teams.values() if t.tier == 1 for pid in t.player_ids}
+    elig = [
+        (pid, st) for pid, st in gs.player_stats.items()
+        if st.maps >= 3 and pid in t1 and pid in gs.players
+    ]
+    top = sorted(elig, key=lambda kv: (-kv[1].rating, kv[0]))[:n]
+    out = []
+    for pid, st in top:
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        out.append({
+            "pid": pid, "handle": gs.players[pid].handle, "team": team,
+            "rating": round(st.rating, 2), "kills": st.kills,
+        })
+    return out
+
+
+def _roster_movers(gs: GameState, tid: str, n: int = 4) -> list[dict]:
+    """Your roster's biggest week-over-week current-ability movers (up or
+    down), from the private dev-history series. Empty until two snapshots
+    exist; sorted by absolute swing."""
+    moves = []
+    for pid in (gs.teams[tid].player_ids if tid in gs.teams else []):
+        snaps = gs.dev_history.get(pid, [])
+        if len(snaps) < 2:
+            continue
+        delta = round(snaps[-1].ca - snaps[-2].ca, 1)
+        if abs(delta) >= 0.3 and pid in gs.players:
+            moves.append({"pid": pid, "handle": gs.players[pid].handle, "delta": delta})
+    moves.sort(key=lambda m: (-abs(m["delta"]), m["handle"]))
+    return moves[:n]
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -937,12 +1094,59 @@ def state() -> dict:
         user = gs.teams[gs.acting_team_id]
         fixture = gs.team_fixture(gs.acting_team_id)
         order = gs.standings_order(str(user.region))
+        # This-season head-to-head vs the upcoming opponent, from the acting
+        # team's perspective. Attached only when they've met (silence beats a
+        # "0-0" line); pure read of narrative.head_to_head.
+        next_fixture = _fixture_view(fixture, gs) if fixture else None
+        if next_fixture is not None:
+            opp_id = (
+                fixture.team_b if fixture.team_a == gs.acting_team_id
+                else fixture.team_a
+            )
+            h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
+            if h["meetings"]:
+                next_fixture["h2h"] = {
+                    "meetings": h["meetings"],
+                    "wins": h["wins_a"],  # acting team's series wins
+                    "losses": h["wins_b"],
+                    "streak_team": h["streak_winner_id"],
+                    "streak_len": h["streak_len"],
+                    "you_lead": h["wins_a"] > h["wins_b"],
+                }
+            # A grounded prose preview synthesising form / series / stakes.
+            next_fixture["preview"] = narrative.match_preview(
+                gs, fixture, gs.acting_team_id
+            )
+            # Map pool + a suggested veto vs this opponent (needs prior maps
+            # from both sides; the board simply hides its veto until then).
+            next_fixture["map_pool"] = _map_pool_board(
+                gs, gs.acting_team_id, opp_id
+            )
         return {
             "season": gs.season,
             "week": gs.week,
             "phase": gs.phase,
             "user_team": _team_view(user, gs),
-            "next_fixture": _fixture_view(fixture, gs) if fixture else None,
+            "next_fixture": next_fixture,
+            # Dashboard hub extras: this season's rating leaders (league-wide)
+            # and your roster's biggest week-over-week ability movers, plus
+            # the upcoming run-in difficulty and living-history callbacks.
+            "leaders": _league_leaders(gs),
+            "movers": _roster_movers(gs, gs.acting_team_id),
+            "run_in": _fixture_run_in(gs, gs.acting_team_id),
+            "on_this_day": analytics.on_this_day(gs),
+            # A debrief of the last result, the objectives to chase, and the
+            # squad's rotation/burnout picture.
+            "debrief": narrative.match_debrief(gs, gs.acting_team_id),
+            "press": narrative.press_reaction(gs, gs.acting_team_id),
+            # A read-only 'best available five' suggestion + legacy job security.
+            "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
+            "board": _board_standing(gs),
+            # Season form trendline + squad age/contract profile.
+            "form_trend": _form_trend(gs, gs.acting_team_id),
+            "squad_profile": _squad_profile(gs, gs.acting_team_id),
+            "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
+            "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
@@ -1001,7 +1205,55 @@ def state() -> dict:
                 "ready": sorted(S.ready),
                 "you_ready": gs.acting_team_id in S.ready,
             },
+            # Save policy + dirty flag (the topbar Save button's state).
+            "save": {
+                "dirty": S.dirty,
+                "autosave_enabled": gs.autosave_enabled,
+                "autosave_every_weeks": gs.autosave_every_weeks,
+            },
         }
+
+
+class SaveSettingsBody(BaseModel):
+    autosave_enabled: bool
+    autosave_every_weeks: int = 1
+
+
+@app.post("/api/actions/save")
+def save_now() -> dict:
+    """The explicit Save button: persist the world to disk right now."""
+    with S.lock:
+        S.require_gs()
+        game = _ctx.get().game
+        game.save(force=True)
+        game.ticks_since_save = 0
+        return {"ok": True, "message": "world saved"}
+
+
+@app.post("/api/actions/save_settings")
+def save_settings(body: SaveSettingsBody) -> dict:
+    """Autosave policy for this WORLD (one save file per world, so one
+    policy — shared worlds share it). The setting itself persists
+    immediately so it survives a restart either way."""
+    with S.lock:
+        gs = S.require_gs()
+        gs.autosave_enabled = bool(body.autosave_enabled)
+        gs.autosave_every_weeks = max(1, min(8, int(body.autosave_every_weeks)))
+        telemetry.record_action(
+            gs, "save_settings",
+            {
+                "autosave_enabled": gs.autosave_enabled,
+                "every_weeks": gs.autosave_every_weeks,
+            },
+        )
+        game = _ctx.get().game
+        game.save(force=True)
+        label = (
+            f"autosave every {gs.autosave_every_weeks} week"
+            + ("s" if gs.autosave_every_weeks != 1 else "")
+            if gs.autosave_enabled else "autosave off — use the Save button"
+        )
+        return {"ok": True, "message": label}
 
 
 @app.get("/api/inbox")
@@ -1047,6 +1299,74 @@ def _team_fog(gs: GameState, team_id: str) -> float:
     return FOG_BASE_SIGMA * (1.0 - gs.scout_progress.get(team_id, 0.0))
 
 
+def _trend_dir(now: float, then: float, eps: float) -> str:
+    d = now - then
+    return "up" if d > eps else "down" if d < -eps else "flat"
+
+
+def _condition_trend(gs: GameState, pid: str) -> dict | None:
+    """Direction of a player's CA / form / confidence over the last couple
+    of weeks, from their private dev-history series (human rosters only).
+    None until there are two points to compare."""
+    snaps = gs.dev_history.get(pid, [])
+    if len(snaps) < 2:
+        return None
+    last = snaps[-1]
+    prev = snaps[-min(3, len(snaps))]  # ~2 weeks back when available
+    return {
+        "ca": _trend_dir(last.ca, prev.ca, 0.3),
+        "form": _trend_dir(last.form, prev.form, 1.5),
+        "confidence": _trend_dir(last.confidence, prev.confidence, 2.0),
+    }
+
+
+def _team_tendencies(tac) -> list[str]:
+    """Plain-language reads of a team's coaching dials, off their poles.
+    The single source for the scouting-report tendency list (own club or a
+    well-scouted rival)."""
+    out: list[str] = []
+    if tac.aggression >= 62:
+        out.append("swings angles aggressively")
+    elif tac.aggression <= 38:
+        out.append("holds passive angles")
+    if tac.pace >= 62:
+        out.append("hits sites fast")
+    elif tac.pace <= 38:
+        out.append("plays slow defaults")
+    if tac.site_focus != "balanced":
+        out.append(f"{tac.site_focus.upper()}-heavy attack")
+    if tac.eco_greed >= 62:
+        out.append("force-buys relentlessly")
+    if tac.map_control >= 62:
+        out.append("spreads wide and lurks for picks")
+    elif tac.map_control <= 38:
+        out.append("stacks tight and hits as five")
+    return out
+
+
+# Bipolar identity words per dial (value>50 -> first, <50 -> second).
+_IDENTITY_POLES: tuple[tuple[str, str, str], ...] = (
+    ("aggression", "Aggressive", "Passive"),
+    ("pace", "Fast-paced", "Methodical"),
+    ("map_control", "Map-spreading", "Compact"),
+    ("eco_greed", "Big-spending", "Thrifty"),
+    ("utility_discipline", "Disciplined", "Loose"),
+)
+
+
+def _team_identity_label(tac) -> str:
+    """A one-word coaching identity from the single most-committed dial, or
+    'Balanced' when nothing is off neutral. Same neutral-50 vocabulary the
+    tactics system uses, so the label never contradicts the tendencies."""
+    best_dev, best = 0.0, "Balanced"
+    for dial, hi, lo in _IDENTITY_POLES:
+        val = getattr(tac, dial, 50.0)
+        dev = abs(val - 50.0)
+        if dev > best_dev:
+            best_dev, best = dev, (hi if val > 50.0 else lo)
+    return best if best_dev >= 12.0 else "Balanced"
+
+
 @app.get("/api/roster/{team_id}")
 def roster(team_id: str) -> dict:
     with S.lock:
@@ -1069,30 +1389,28 @@ def roster(team_id: str) -> dict:
                 # Distinguish a committed lock from the engine's likely auto-pick.
                 locked = team.lineup.agents.get(v["id"])
                 v["planned_locked"] = bool(locked and locked in S.gd.agents)
-        # Rival rosters are buyable: show the seller's ask per player.
+        # Rival rosters are buyable: show the seller's ask per player, and
+        # the buyout clause where one exists (tier-2 contracts) — the fast
+        # lane that skips negotiation entirely.
         tendencies: list[str] = []
+        identity: str | None = None
         if team_id != gs.acting_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
-            # Well-scouted rivals leak their coaching identity.
-            if gs.scout_progress.get(team_id, 0.0) >= 0.5:
-                tac = gs.teams[team_id].tactics
-                if tac.aggression >= 62:
-                    tendencies.append("swings angles aggressively")
-                elif tac.aggression <= 38:
-                    tendencies.append("holds passive angles")
-                if tac.pace >= 62:
-                    tendencies.append("hits sites fast")
-                elif tac.pace <= 38:
-                    tendencies.append("plays slow defaults")
-                if tac.site_focus != "balanced":
-                    tendencies.append(f"{tac.site_focus.upper()}-heavy attack")
-                if tac.eco_greed >= 62:
-                    tendencies.append("force-buys relentlessly")
-                if tac.map_control >= 62:
-                    tendencies.append("spreads wide and lurks for picks")
-                elif tac.map_control <= 38:
-                    tendencies.append("stacks tight and hits as five")
+                v["buyout"] = market.buyout_fee(gs, v["id"])
+        # Coaching identity: always readable for your own club, and for a
+        # rival once you've scouted them enough to read their style.
+        if own or gs.scout_progress.get(team_id, 0.0) >= 0.5:
+            tac = gs.teams[team_id].tactics
+            tendencies = _team_tendencies(tac)
+            identity = _team_identity_label(tac)
+        # Own club: a quick-glance form/confidence trend per player, from the
+        # private dev-history time series (empty -> None, no arrow shown),
+        # plus who mentors them (if anyone) for the mentorship control.
+        if own:
+            for v in players:
+                v["condition_trend"] = _condition_trend(gs, v["id"])
+                v["mentor_id"] = gs.mentorships.get(v["id"])
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -1143,6 +1461,11 @@ def roster(team_id: str) -> dict:
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
             "tendencies": tendencies,
+            "identity": identity,
+            # Comms cohesion (0-100): how well this roster can actually
+            # talk, from pairwise language overlap. Public — nationality
+            # and languages are broadcast facts.
+            "comms_cohesion": relationships.team_comms_cohesion(gs, team_id),
             "chemistry_pairs": {
                 kind: [
                     [gs.players[a].handle, gs.players[b].handle]
@@ -1156,24 +1479,617 @@ def roster(team_id: str) -> dict:
         }
 
 
+def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The team's next `n` unplayed regular-season fixtures, rated by opponent
+    strength (world rank) — a run-in difficulty read for planning. Pure read."""
+    upcoming = [
+        f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+        if f.tier == 1 and not f.played and f.stage == "regular"
+        and f.week >= gs.week and tid in (f.team_a, f.team_b)
+    ]
+    out = []
+    for f in upcoming[:n]:
+        opp = f.team_b if f.team_a == tid else f.team_a
+        wr = gs.teams[opp].world_rank if opp in gs.teams else None
+        diff = (
+            "hard" if (wr is not None and wr <= 6)
+            else "medium" if (wr is not None and wr <= 14)
+            else "easy"
+        )
+        out.append({
+            "week": f.week,
+            "opponent": gs.teams[opp].name if opp in gs.teams else opp,
+            "opp_rank": wr,
+            "difficulty": diff,
+        })
+    return out
+
+
+def _wonderkid_watch(gs: GameState, n: int = 6) -> list[dict]:
+    """League-wide young prospects (age <= 20) by potential star band — the
+    'next big thing' watch. Star bands are the coarse public read, so no
+    exact ceiling leaks. Pure read."""
+    cands = []
+    for p in gs.players.values():
+        if p.age <= 20:
+            cands.append((p, development.stars(development.potential_of(p))))
+    cands.sort(key=lambda pc: (-pc[1], pc[0].id))
+    out = []
+    for p, pot in cands[:n]:
+        team = next((t for t in gs.teams.values() if p.id in t.player_ids), None)
+        out.append({
+            "id": p.id, "handle": p.handle, "age": p.age, "role": str(p.role),
+            "potential_stars": round(pot, 1),
+            "team": team.name if team else "free agent",
+        })
+    return out
+
+
+def _challengers_standouts(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The user region's top Challengers (tier-2) performers by rating —
+    tomorrow's signings. Pure read of gs.player_stats."""
+    region = str(gs.teams[tid].region)
+    t2 = {
+        pid
+        for t in gs.teams.values()
+        if t.tier == 2 and str(t.region) == region
+        for pid in t.player_ids
+    }
+    elig = [
+        (pid, st) for pid, st in gs.player_stats.items()
+        if st.maps >= 3 and pid in t2 and pid in gs.players
+    ]
+    top = sorted(elig, key=lambda kv: (-kv[1].rating, kv[0]))[:n]
+    out = []
+    for pid, st in top:
+        p = gs.players[pid]
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        out.append({
+            "id": pid, "handle": p.handle, "age": p.age, "role": str(p.role),
+            "team": team, "rating": round(st.rating, 2),
+        })
+    return out
+
+
+def _dev_progress(gs: GameState, tid: str) -> list[dict]:
+    """Own roster: how close each player is to their ceiling (CA / potential)
+    and which way they're trending, from the private dev-history series."""
+    out = []
+    for pid in gs.teams[tid].player_ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        ca = development.overall(p)
+        pa = development.potential_of(p)
+        pct = round(100.0 * ca / pa) if pa > 0 else 100
+        snaps = gs.dev_history.get(pid, [])
+        traj = "steady"
+        if len(snaps) >= 3:
+            d = snaps[-1].ca - snaps[-3].ca
+            traj = "climbing" if d > 0.3 else "declining" if d < -0.3 else "steady"
+        out.append({
+            "id": pid, "handle": p.handle, "age": p.age,
+            "ca": round(ca), "potential": round(pa), "progress_pct": pct,
+            "trajectory": traj, "maxed": pct >= 97,
+        })
+    out.sort(key=lambda r: (-r["potential"], r["handle"]))
+    return out
+
+
+def _signing_headroom(gs: GameState, tid: str) -> dict:
+    """How much weekly wage the org can absorb at break-even, plus the current
+    runway — a signing-budget aid. Pure read of the economy helpers."""
+    staff_cost = staff_mod.weekly_cost(gs)
+    net = economy.weekly_breakdown(gs, staff_cost)["net"]
+    return {
+        "weekly_net": net,
+        "affordable_wage": max(0, net),
+        "runway_weeks": economy.weeks_until_insolvent(gs, staff_cost),
+        "balance": gs.teams[tid].balance,
+    }
+
+
+def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
+    """What this manager is chasing: the board season goal (legacy), active
+    sponsor objectives, and any award race their players are contending —
+    one consolidated 'what to chase' list. Pure read."""
+    out: list[dict] = []
+    seat = gs.seat_for_session(tid)
+    if seat is not None and seat.contract is not None:
+        st = career.objective_status(gs, tid, seat.contract.goal)
+        out.append({
+            "kind": "board",
+            "label": career.GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
+            "state": st["state"], "detail": st["detail"],
+        })
+    for slot, deal in sorted(gs.sponsor_slots.items()):
+        if deal is None:
+            continue
+        for ob in deal.objectives:
+            if ob.met is None:
+                st = career.objective_status(gs, tid, ob.kind)
+                out.append({
+                    "kind": "sponsor",
+                    "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                    "state": st["state"], "detail": st["detail"],
+                })
+    own = set(gs.teams[tid].player_ids)
+    for award, leaders in analytics.award_races(gs).items():
+        for i, ldr in enumerate(leaders):
+            if ldr["player_id"] in own:
+                out.append({
+                    "kind": "award",
+                    "label": f"{ldr['handle']}: {award}",
+                    "state": "leading" if i == 0 else "in contention",
+                    "detail": f"{['1st', '2nd', '3rd'][i]} · {ldr['value']}",
+                })
+    return out
+
+
+def _rotation_usage(gs: GameState, tid: str) -> list[dict]:
+    """Per own-roster player: season maps played, starter/bench, and a
+    burnout flag (heavy minutes on a low tank). Pure read."""
+    starters = set(default_five(gs, tid))
+    ids = gs.teams[tid].player_ids
+    team_max = max(
+        (gs.player_stats[p].maps for p in ids if p in gs.player_stats), default=0
+    )
+    out = []
+    for pid in ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        maps = gs.player_stats[pid].maps if pid in gs.player_stats else 0
+        burnout = p.stamina < 40.0 and maps >= max(4, team_max * 0.6)
+        out.append({
+            "id": pid, "handle": p.handle, "maps": maps,
+            "starter": pid in starters, "stamina": round(p.stamina),
+            "burnout": burnout,
+        })
+    out.sort(key=lambda r: (-r["maps"], r["handle"]))
+    return out
+
+
+def _squad_chemistry(gs: GameState, tid: str) -> dict:
+    """Roster chemistry: the strongest bonds and worst frictions among the
+    team's players, plus overall cohesion (mean pair strength). Pure read of
+    relationships.get; own-club intel."""
+    ids = [pid for pid in gs.teams[tid].player_ids if pid in gs.players]
+    pairs = []
+    for i, a in enumerate(ids):
+        for b in ids[i + 1:]:
+            pairs.append((a, b, relationships.get(gs, a, b)))
+    if not pairs:
+        return {"cohesion": None, "bonds": [], "frictions": []}
+
+    def _view(a, b, s):
+        return {
+            "a": gs.players[a].handle, "a_id": a,
+            "b": gs.players[b].handle, "b_id": b,
+            "strength": round(s, 1),
+        }
+
+    bonds = [
+        _view(a, b, s)
+        for a, b, s in sorted(pairs, key=lambda t: (-t[2], t[0], t[1]))
+        if s >= relationships.FRIEND_BAR
+    ][:4]
+    frictions = [
+        _view(a, b, s)
+        for a, b, s in sorted(pairs, key=lambda t: (t[2], t[0], t[1]))
+        if s <= relationships.FEUD_BAR
+    ][:4]
+    cohesion = round(sum(s for _, _, s in pairs) / len(pairs), 1)
+    return {"cohesion": cohesion, "bonds": bonds, "frictions": frictions}
+
+
+def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The team's last `n` played fixtures as compact W/L chips (oldest
+    first, so the table reads left-to-right up to the most recent). Pure
+    read of gs.fixtures — the same source the recap and streak use."""
+    played = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None and tid in (f.team_a, f.team_b)
+        ),
+        key=lambda f: (f.week, f.id),
+    )[-n:]
+    out = []
+    for f in played:
+        opp = f.team_b if tid == f.team_a else f.team_a
+        a, b = f.map_score
+        score = f"{a}-{b}" if tid == f.team_a else f"{b}-{a}"
+        out.append(
+            {
+                "result": "W" if f.winner_id == tid else "L",
+                "opponent": gs.teams[opp].name if opp in gs.teams else opp,
+                "score": score,
+                "week": f.week,
+            }
+        )
+    return out
+
+
+PLAYOFF_CUT = 4  # regional playoffs take the top four of the regular season
+
+
+def _eliminated_teams(gs: GameState, region: str) -> set[str]:
+    """Tier-1 teams in `region` that can no longer reach the top-4 playoff
+    cut, however every remaining regular-season game falls. Correct
+    regardless of tiebreakers — it uses only strict win comparisons: a team
+    X is out when at least four rivals already have more wins than X could
+    reach by winning out. Empty outside the regular season."""
+    if gs.phase != "regular":
+        return set()
+    tids = [
+        t.id for t in gs.teams.values()
+        if str(t.region) == region and t.tier == 1
+    ]
+    wins = {tid: (gs.standings[tid].wins if tid in gs.standings else 0) for tid in tids}
+    remaining = {tid: 0 for tid in tids}
+    for f in gs.fixtures:
+        if f.tier != 1 or f.stage != "regular" or f.played:
+            continue
+        if f.team_a in remaining:
+            remaining[f.team_a] += 1
+        if f.team_b in remaining:
+            remaining[f.team_b] += 1
+    out: set[str] = set()
+    for x in tids:
+        x_ceiling = wins[x] + remaining[x]
+        certainly_ahead = sum(1 for y in tids if y != x and wins[y] > x_ceiling)
+        if certainly_ahead >= PLAYOFF_CUT:
+            out.add(x)
+    return out
+
+
+def _team_map_record(gs: GameState, tid: str) -> dict[str, list[int]]:
+    """{map_id: [played, wins]} for a team, from persisted map results."""
+    agg: dict[str, list[int]] = {}
+    for f in gs.fixtures:
+        if not f.played or tid not in (f.team_a, f.team_b):
+            continue
+        for r in f.results:
+            a = agg.setdefault(r.map_id, [0, 0])
+            a[0] += 1
+            if r.winner_id == tid:
+                a[1] += 1
+    return agg
+
+
+def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
+    """A team's per-map win rates (the map pool) and — when an opponent is
+    given — a suggested veto: ban where they hold the biggest edge, pick where
+    you do. Pure read of persisted results."""
+    mine = _team_map_record(gs, tid)
+
+    def _name(mid: str) -> str:
+        return S.gd.maps[mid].display_name if mid in S.gd.maps else mid
+
+    def _wr(agg: dict[str, list[int]], mid: str) -> float | None:
+        if mid in agg and agg[mid][0]:
+            return agg[mid][1] / agg[mid][0]
+        return None
+
+    maps = [
+        {
+            "map": _name(mid), "map_id": mid,
+            "played": played, "wins": wins,
+            "win_rate": round(100 * wins / played) if played else None,
+        }
+        for mid, (played, wins) in mine.items()
+    ]
+    maps.sort(key=lambda m: (-(m["win_rate"] if m["win_rate"] is not None else -1), m["map"]))
+
+    veto = None
+    if opp_id and opp_id in gs.teams:
+        opp = _team_map_record(gs, opp_id)
+        # Shared universe: maps either side has actually played (real signal).
+        universe = sorted(set(mine) | set(opp))
+        ban_pick, pick_pick = None, None
+        best_ban, best_pick = None, None
+        for mid in universe:
+            my, ot = _wr(mine, mid), _wr(opp, mid)
+            if my is None or ot is None:
+                continue
+            edge_them = ot - my  # opponent's advantage -> ban candidate
+            edge_me = my - ot    # our advantage -> pick candidate
+            if best_ban is None or edge_them > best_ban:
+                best_ban, ban_pick = edge_them, mid
+            if best_pick is None or edge_me > best_pick:
+                best_pick, pick_pick = edge_me, mid
+        veto = {
+            "opponent": gs.teams[opp_id].name,
+            "ban": (
+                {"map": _name(ban_pick), "map_id": ban_pick,
+                 "their_wr": round(100 * _wr(opp, ban_pick)),
+                 "our_wr": round(100 * _wr(mine, ban_pick))}
+                if ban_pick else None
+            ),
+            "pick": (
+                {"map": _name(pick_pick), "map_id": pick_pick,
+                 "their_wr": round(100 * _wr(opp, pick_pick)),
+                 "our_wr": round(100 * _wr(mine, pick_pick))}
+                if pick_pick else None
+            ),
+        }
+    return {"maps": maps, "veto": veto}
+
+
+def _team_of_week(gs: GameState, n: int = 5) -> dict:
+    """The best five players of the most recent completed match week, by mean
+    rating across that week's maps. League-wide, pure read of stored lines."""
+    played = [f for f in gs.fixtures if f.played]
+    if not played:
+        return {"week": None, "players": []}
+    wk = max(f.week for f in played)
+    agg: dict[str, list[float]] = {}  # pid -> [rating_sum, maps, kills, deaths]
+    for f in played:
+        if f.week != wk:
+            continue
+        for r in f.results:
+            for ln in r.lines:
+                a = agg.setdefault(ln.player_id, [0.0, 0, 0, 0])
+                a[0] += ln.rating
+                a[1] += 1
+                a[2] += ln.kills
+                a[3] += ln.deaths
+    rows = []
+    for pid, (rsum, maps, k, d) in agg.items():
+        if maps == 0 or pid not in gs.players:
+            continue
+        p = gs.players[pid]
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        rows.append({
+            "id": pid, "handle": p.handle, "role": str(p.role), "team": team,
+            "rating": round(rsum / maps, 2),
+            "kd": round(k / d, 2) if d else float(k),
+            "maps": int(maps),
+        })
+    rows.sort(key=lambda r: (-r["rating"], r["id"]))
+    return {"week": wk, "players": rows[:n]}
+
+
+def _playoff_bracket(gs: GameState, region: str, tier: int = 1) -> list[dict]:
+    """The current season's playoff tree: regional semis/final (this region)
+    plus the global Champions final. Pure read of the bracket fixtures."""
+    stages = [("semi", "Semifinals"), ("final", "Regional Final"),
+              ("champ_final", "Champions Final")]
+    out = []
+    for stage, label in stages:
+        matches = []
+        fx = [f for f in gs.fixtures
+              if f.stage == stage and f.id.startswith(f"s{gs.season}")]
+        for f in sorted(fx, key=lambda f: f.id):
+            ta, tb = f.team_a, f.team_b
+            # Regional rounds are scoped to this region; champ_final is global.
+            if stage in ("semi", "final"):
+                if ta not in gs.teams or str(gs.teams[ta].region) != region:
+                    continue
+            a, b = f.map_score
+            matches.append({
+                "team_a": gs.teams[ta].name if ta in gs.teams else ta,
+                "team_a_id": ta,
+                "team_b": gs.teams[tb].name if tb in gs.teams else tb,
+                "team_b_id": tb,
+                "score_a": a, "score_b": b,
+                "played": f.played, "winner_id": f.winner_id,
+            })
+        if matches:
+            out.append({"stage": stage, "label": label, "matches": matches})
+    return out
+
+
+def _projected_standings(gs: GameState, region: str, tier: int = 1) -> list[dict]:
+    """A simple 'if current form holds' projection of the final regional table:
+    current wins + (win rate x remaining regular-season games). Deterministic,
+    pure read — a manager aid, not the canonical result."""
+    rows = []
+    for tid in gs.standings_order(region, tier=tier):
+        rec = gs.standings.get(tid)
+        if rec is None:
+            continue
+        done = rec.wins + rec.losses
+        win_rate = rec.wins / done if done else 0.5
+        remaining = sum(
+            1 for f in gs.fixtures
+            if not f.played and f.stage == "regular"
+            and tid in (f.team_a, f.team_b)
+            and f.id.startswith(f"s{gs.season}")
+        )
+        rows.append({
+            "team_id": tid, "name": gs.teams[tid].name,
+            "wins": rec.wins, "losses": rec.losses,
+            "remaining": remaining,
+            "proj_wins": round(rec.wins + win_rate * remaining, 1),
+        })
+    rows.sort(key=lambda r: (-r["proj_wins"], r["name"]))
+    for i, r in enumerate(rows):
+        r["proj_pos"] = i + 1
+    return rows
+
+
+def _h2h_matrix(gs: GameState, region: str, tier: int = 1) -> dict:
+    """A grid of every team's series record vs every other team in the region
+    this season, reusing narrative.head_to_head (the canonical tally) so it
+    can't drift. Cell [a][b] is a's wins-losses vs b."""
+    order = gs.standings_order(region, tier=tier)
+    teams = [{"team_id": t, "name": gs.teams[t].name} for t in order]
+    rows = []
+    for a in order:
+        cells = []
+        for b in order:
+            if a == b:
+                cells.append(None)
+                continue
+            h = narrative.head_to_head(gs, a, b)
+            cells.append(
+                {"w": h["wins_a"], "l": h["wins_b"], "played": h["meetings"]}
+                if h["meetings"] else {"w": 0, "l": 0, "played": 0}
+            )
+        rows.append({"team_id": a, "cells": cells})
+    return {"teams": teams, "rows": rows}
+
+
+def _results_archive(gs: GameState, region: str, n: int = 24) -> list[dict]:
+    """The region's most recent played fixtures, newest first — a results
+    archive. Pure read of gs.fixtures."""
+    played = [
+        f for f in gs.fixtures
+        if f.played and f.team_a in gs.teams
+        and str(gs.teams[f.team_a].region) == region
+    ]
+    played.sort(key=lambda f: (f.week, f.id), reverse=True)
+    out = []
+    for f in played[:n]:
+        a, b = f.map_score
+        out.append({
+            "week": f.week, "stage": f.stage,
+            "team_a": gs.teams[f.team_a].name, "team_a_id": f.team_a,
+            "team_b": gs.teams[f.team_b].name if f.team_b in gs.teams else f.team_b,
+            "team_b_id": f.team_b,
+            "score_a": a, "score_b": b, "winner_id": f.winner_id,
+        })
+    return out
+
+
+def _form_trend(gs: GameState, tid: str) -> list[dict]:
+    """Cumulative wins by week across the team's played regular-season
+    fixtures — a season form trendline. Pure read."""
+    fixtures = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and tid in (f.team_a, f.team_b)
+            and f.id.startswith(f"s{gs.season}")
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+    trend, wins = [], 0
+    for i, f in enumerate(fixtures, start=1):
+        won = f.winner_id == tid
+        if won:
+            wins += 1
+        trend.append({"n": i, "week": f.week, "wins": wins, "won": won})
+    return trend
+
+
+def _squad_profile(gs: GameState, tid: str) -> dict:
+    """Own roster age mix + contract-expiry timeline. Pure read."""
+    buckets = {"youth": 0, "prime": 0, "veteran": 0}
+    ages, expiries = [], []
+    for p in gs.roster(tid):
+        ages.append(p.age)
+        if p.age <= 21:
+            buckets["youth"] += 1
+        elif p.age <= 26:
+            buckets["prime"] += 1
+        else:
+            buckets["veteran"] += 1
+        expiries.append({
+            "id": p.id, "handle": p.handle, "age": p.age,
+            "weeks_left": p.contract_weeks_left,
+        })
+    expiries.sort(key=lambda e: (e["weeks_left"], e["handle"]))
+    return {
+        "avg_age": round(sum(ages) / len(ages), 1) if ages else 0.0,
+        "buckets": buckets,
+        "expiries": expiries,
+    }
+
+
+_IMPACT_CATS = (
+    ("clutches", "Clutches", "clutches"),
+    ("multikills", "Multikills", "multikills"),
+    ("aces", "Aces", "aces"),
+    ("first_kills", "First bloods", "first_kills"),
+)
+
+
+def _impact_leaders(gs: GameState, n: int = 5, league_tier: int = 1) -> dict:
+    """League-wide highlight-stat leaderboards (clutches / multikills / aces /
+    first bloods) from the stored season aggregates, filtered to one league
+    tier so top-flight and Challengers boards stay separate. Pure read —
+    these are summed at sim time by stats.py, never re-derived here."""
+    out = {}
+    for key, label, attr in _IMPACT_CATS:
+        rows = []
+        for pid, st in gs.player_stats.items():
+            if pid not in gs.players or st.maps <= 0:
+                continue
+            if _player_league_tier(gs, pid) != league_tier:
+                continue
+            v = getattr(st, attr, 0)
+            if v > 0:
+                rows.append((v, pid))
+        rows.sort(key=lambda kv: (-kv[0], kv[1]))
+        out[key] = {
+            "label": label,
+            "leaders": [
+                {
+                    "player_id": pid, "value": v,
+                    "handle": gs.players[pid].handle,
+                    "team": next(
+                        (t.name for t in gs.teams.values() if pid in t.player_ids), ""
+                    ),
+                }
+                for v, pid in rows[:n]
+            ],
+        }
+    return out
+
+
+@app.get("/api/league")
+def league() -> dict:
+    """League-wide, forward-looking context for the standings screen: team of
+    the week, the live playoff bracket, a form-hold projection, plus a
+    head-to-head matrix and results archive. All pure reads."""
+    with S.lock:
+        gs = S.require_gs()
+        region = str(gs.teams[gs.acting_team_id].region)
+        tier = gs.teams[gs.acting_team_id].tier
+        return {
+            "team_of_week": _team_of_week(gs),
+            "bracket": _playoff_bracket(gs, region, tier),
+            "projection": _projected_standings(gs, region, tier),
+            "h2h_matrix": _h2h_matrix(gs, region, tier),
+            "results": _results_archive(gs, region),
+            "in_regular_season": gs.phase == "regular",
+        }
+
+
+@app.get("/api/meta")
+def meta_view() -> dict:
+    """The live agent meta: the most recent balance patch, active buff/nerf
+    standings, and a usage tier list (manager/meta.py). Pure read."""
+    with S.lock:
+        return meta_mod.meta_report(S.require_gs(), S.gd.agents)
+
+
 @app.get("/api/standings")
 def standings() -> dict:
     with S.lock:
         gs = S.require_gs()
 
         def rows_for(region: str | None, tier: int = 1) -> list[dict]:
-            return [
-                {
+            elim = _eliminated_teams(gs, region) if (region and tier == 1) else set()
+            rows = []
+            for tid in gs.standings_order(region, tier=tier):
+                idx = analytics.dynasty_index(gs, tid) if tier == 1 else 0.0
+                rows.append({
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
-                }
-                for tid in gs.standings_order(region, tier=tier)
-            ]
+                    "recent_form": _team_recent_form(gs, tid),
+                    "eliminated": tid in elim,
+                    "dynasty": analytics.dynasty_label(idx),
+                })
+            return rows
 
         user_region = str(gs.teams[gs.acting_team_id].region)
         regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
         return {
+            "playoff_cut": PLAYOFF_CUT,  # rows above this line are in the hunt
+            "in_regular_season": gs.phase == "regular",
             "regions": [
                 {
                     "region": r,
@@ -1186,6 +2102,67 @@ def standings() -> dict:
             # Kept for any consumer expecting the flat world table.
             "rows": rows_for(None),
         }
+
+
+@app.get("/api/records")
+def records() -> dict:
+    """The save's all-time record book, current top dynasties, and a league
+    parity read (pure chronicle + career_stats; manager/analytics.py)."""
+    with S.lock:
+        gs = S.require_gs()
+        return {**analytics.all_time_records(gs), "parity": analytics.parity(gs)}
+
+
+@app.get("/api/report/season")
+def season_report(season: int | None = None) -> dict:
+    """A deterministic structured season summary — the headless analytics
+    export (ROADMAP bet #2), also consumable by the web Season Review."""
+    with S.lock:
+        return analytics.season_report(S.require_gs(), season)
+
+
+@app.get("/api/power")
+def power_rankings() -> dict:
+    """A global pundit power ranking across regions (record + form + diff),
+    with movement vs world rank. Pure analytics read."""
+    with S.lock:
+        return {"rankings": analytics.power_rankings(S.require_gs())}
+
+
+@app.get("/api/races")
+def award_races() -> dict:
+    """Mid-season award-race leaderboards (who's chasing MVP, Top Fragger,
+    …) from the live season stats. Pure analytics read."""
+    with S.lock:
+        return {"races": analytics.award_races(S.require_gs())}
+
+
+@app.get("/api/compare")
+def compare(a: str, b: str) -> dict:
+    """Two players side by side — attributes (scouting-fogged for rivals) and
+    season stats — for the comparison overlay."""
+    with S.lock:
+        gs = S.require_gs()
+
+        def side(pid: str) -> dict:
+            p = gs.players.get(pid)
+            if p is None:
+                raise HTTPException(404, f"unknown player {pid}")
+            fog, _progress, _is_fa = _player_fog(gs, pid)
+            st = gs.player_stats.get(pid)
+            has = st is not None and st.maps > 0
+            team = market.team_of(gs, pid)
+            return {
+                "id": pid, "handle": p.handle, "age": p.age, "role": str(p.role),
+                "team_name": gs.teams[team].name if team in gs.teams else None,
+                "overall": None if fog > 0 else int(round(development.overall(p))),
+                "attributes": _profile_attributes(gs, p, fog),
+                "rating": round(st.rating, 2) if has else None,
+                "kd": round(st.kd, 2) if has else None,
+                "maps": st.maps if st else 0,
+            }
+
+        return {"a": side(a), "b": side(b)}
 
 
 @app.get("/api/schedule")
@@ -1202,6 +2179,172 @@ def schedule() -> dict:
                 if f.tier == 1
             ],
         }
+
+
+_CORE_ROLES = ("duelist", "controller", "initiator", "sentinel", "flex")
+
+
+def _squad_needs(gs: GameState, tid: str) -> dict:
+    """Role balance of the squad + the biggest gap and weakest position, to
+    steer the market. Pure read of the roster's roles + quality."""
+    counts = {r: 0 for r in _CORE_ROLES}
+    quality: dict[str, list[float]] = {r: [] for r in _CORE_ROLES}
+    for p in gs.roster(tid):
+        r = str(p.role)
+        if r in counts:
+            counts[r] += 1
+            quality[r].append(market.player_quality(p))
+    # A gap is a CORE role (not flex) nobody covers.
+    gaps = [r for r in _CORE_ROLES if r != "flex" and counts[r] == 0]
+    present = [(r, sum(q) / len(q)) for r, q in quality.items() if q]
+    weakest = min(present, key=lambda rc: (rc[1], rc[0])) if present else None
+    return {
+        "role_counts": counts,
+        "gaps": gaps,
+        "weakest_role": (
+            {"role": weakest[0], "quality": round(weakest[1], 1)} if weakest else None
+        ),
+    }
+
+
+def _target_suggestions(gs: GameState, tid: str, needs: dict, n: int = 3) -> list[dict]:
+    """The best free agents that address the squad's priority role (a gap
+    first, else its weakest position), affordability flagged. Pure read."""
+    want = set(needs["gaps"])
+    if not want and needs["weakest_role"]:
+        want = {needs["weakest_role"]["role"]}
+    cands = []
+    for pid in gs.free_agent_ids:
+        p = gs.players.get(pid)
+        if p is None or (want and str(p.role) not in want):
+            continue
+        ok, _ = market.can_sign(gs, tid, pid)
+        cands.append((p, ok))
+    cands.sort(key=lambda pc: (-market.player_quality(pc[0]), pc[0].id))
+    return [
+        {
+            "id": p.id, "handle": p.handle, "role": str(p.role),
+            "quality": round(market.player_quality(p), 1), "affordable": ok,
+        }
+        for p, ok in cands[:n]
+    ]
+
+
+def _contract_watch(gs: GameState, tid: str, weeks: int = 8, n: int = 5) -> dict:
+    """Your players entering their final weeks (renewal urgency) plus notable
+    tier-1 rivals nearing free agency (signing opportunities). Pure read."""
+    own = sorted(
+        (
+            {"id": p.id, "handle": p.handle, "role": str(p.role),
+             "weeks_left": p.contract_weeks_left}
+            for p in gs.roster(tid)
+            if 0 < p.contract_weeks_left <= weeks
+        ),
+        key=lambda x: (x["weeks_left"], x["handle"]),
+    )
+    rivals = []
+    for t in gs.teams.values():
+        if t.tier != 1 or t.id == tid:
+            continue
+        for pid in t.player_ids:
+            p = gs.players.get(pid)
+            if p and 0 < p.contract_weeks_left <= weeks:
+                rivals.append((p, t))
+    rivals.sort(key=lambda pt: (-market.player_quality(pt[0]), pt[0].id))
+    market_watch = [
+        {"id": p.id, "handle": p.handle, "role": str(p.role),
+         "team": t.name, "weeks_left": p.contract_weeks_left}
+        for p, t in rivals[:n]
+    ]
+    return {"expiring_own": own, "market_watch": market_watch}
+
+
+def _transfer_rumors(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """Deterministic transfer whispers: rival interest in your soon-to-be
+    free-agent stars, and marquee free agents linked with a club that lacks
+    their role. Pure read — the 'linked' club is a stable sorted pick, no
+    rng, so the rumor mill is campaign-deterministic."""
+    rumors: list[dict] = []
+    for p in sorted(gs.roster(tid), key=lambda x: (-market.player_quality(x), x.id)):
+        if 0 < p.contract_weeks_left <= 12 and market.player_quality(p) >= 70:
+            rumors.append({
+                "kind": "interest",
+                "text": f"Rivals are circling {p.handle} with just "
+                f"{p.contract_weeks_left}w left on his deal.",
+            })
+        if len([r for r in rumors if r["kind"] == "interest"]) >= 2:
+            break
+    fas = sorted(
+        (gs.players[pid] for pid in gs.free_agent_ids),
+        key=lambda x: (-market.player_quality(x), x.id),
+    )[:3]
+    for fa in fas:
+        role = str(fa.role)
+        needy = next(
+            (
+                t for t in sorted(gs.teams.values(), key=lambda t: t.id)
+                if t.tier == 1
+                and role not in {
+                    str(gs.players[q].role) for q in t.player_ids if q in gs.players
+                }
+            ),
+            None,
+        )
+        club = needy.name if needy else gs.teams[tid].name
+        rumors.append({
+            "kind": "link",
+            "text": f"Free agent {fa.handle} ({role}) linked with a move to {club}.",
+        })
+    return rumors[:n]
+
+
+@app.get("/api/market/search")
+def market_search(q: str = "") -> dict:
+    """League-wide player search by handle or real name — sign/trade targets.
+    Fog mirrors the roster/market screens: a rival's exact rating hides
+    behind their team's scout progress; free agents ride the market fog.
+    Pure read; capped at 30 rows sorted by (visible) quality."""
+    with S.lock:
+        gs = S.require_gs()
+        needle = q.strip().lower()
+        if len(needle) < 2:
+            return {"results": []}
+        me = gs.acting_team_id
+        rows = []
+        for pid in sorted(gs.players):
+            p = gs.players[pid]
+            if (
+                needle not in p.handle.lower()
+                and needle not in (p.real_name or "").lower()
+            ):
+                continue
+            is_fa = pid in gs.free_agent_ids
+            team_id = None if is_fa else market.team_of(gs, pid)
+            if not is_fa and team_id is None:
+                continue  # unrostered mid-move: not a signable target
+            fog, _progress, _ = _player_fog(gs, pid)
+            fogged = fog > 0
+            rival = team_id is not None and team_id != me
+            rows.append({
+                "id": pid,
+                "handle": p.handle,
+                "real_name": p.real_name,
+                "role": str(p.role),
+                "playstyle": str(p.playstyle),
+                "age": p.age,
+                "overall": round(development.overall(p)),
+                "fogged": fogged,
+                "team_id": team_id,
+                "team_name": gs.teams[team_id].name if team_id else None,
+                "is_free_agent": is_fa,
+                "mine": team_id == me,
+                "asking_salary": market.asking_salary(p) if is_fa else None,
+                "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
+                "buyout": market.buyout_fee(gs, pid) if rival else None,
+                "portrait": _portrait_url(pid, str(p.role)),
+            })
+        rows.sort(key=lambda r: (-r["overall"], r["handle"]))
+        return {"results": rows[:30]}
 
 
 @app.get("/api/market")
@@ -1228,6 +2371,7 @@ def market_view() -> dict:
             }
             out.append({**view, "can_sign": ok, "block_reason": why})
         me = gs.acting_team_id
+        needs = _squad_needs(gs, me)
         return {
             "free_agents": out,
             "roster_size": market.ROSTER_SIZE,
@@ -1235,6 +2379,18 @@ def market_view() -> dict:
             "roster_max": market.roster_cap(gs, me),
             "roster_count": len(gs.roster(me)),
             "phase": gs.phase,
+            # Decision aids: where the squad is thin, who to sign, and whose
+            # contracts are running down (yours + rivals'). All pure reads.
+            "squad_needs": needs,
+            "target_suggestions": _target_suggestions(gs, me, needs),
+            "contract_watch": _contract_watch(gs, me),
+            "rumors": _transfer_rumors(gs, me),
+            # Scouting/finance decision aids: league-wide young prospects, the
+            # region's Challengers form book, and how much wage the org can
+            # absorb before the runway floor. All pure reads.
+            "wonderkids": _wonderkid_watch(gs),
+            "challengers": _challengers_standouts(gs, me),
+            "signing_headroom": _signing_headroom(gs, me),
             # Own roster, for the "swap" (sign + drop in one) control.
             "my_roster": [
                 {
@@ -1320,14 +2476,26 @@ def _analytics_view(gs: GameState) -> dict:
     }
 
 
+def _player_league_tier(gs: GameState, pid: str) -> int:
+    """Which league tier a player's stats belong to: their club's tier.
+    Free agents read as tier 1 (they're targets for the top flight)."""
+    team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+    return team.tier if team else 1
+
+
 @app.get("/api/stats")
-def stats_view(split: str | None = None, key: str | None = None) -> dict:
+def stats_view(
+    split: str | None = None, key: str | None = None, league_tier: int = 1
+) -> dict:
     """League stats. `split=map&key=<map_id>` or `split=agent&key=<agent_id>`
-    swaps the player table for that split (analytics tier 3 only)."""
+    swaps the player table for that split (analytics tier 3 only).
+    `league_tier` (1 default, 2) filters the player tables so the top
+    flight and the Challengers circuit read as separate groups."""
     with S.lock:
         gs = S.require_gs()
         analytics = _analytics_view(gs)
         tier = analytics["tier"]
+        league_tier = 2 if league_tier == 2 else 1
 
         source: dict[str, PlayerSeasonStats] = gs.player_stats
         if split in ("map", "agent") and key:
@@ -1347,6 +2515,8 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
         for pid in sorted(source):
             st = source[pid]
             if pid not in gs.players or st.maps == 0:
+                continue
+            if _player_league_tier(gs, pid) != league_tier:
                 continue
             players.append(_season_stat_row(gs, pid, st, tier))
         players.sort(key=lambda r: (-r["rating"], -r["kills"]))
@@ -1401,6 +2571,10 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
             "split_keys": split_keys,
             "players": players,
             "teams": teams,
+            # Highlight-stat leaderboards (clutches/multikills/aces/first
+            # bloods) from the stored season aggregates. Public, never gated.
+            "impact": _impact_leaders(gs, league_tier=league_tier),
+            "league_tier": league_tier,
             "awards": [a.model_dump() for a in reversed(gs.awards)],
             # Patch notes are public information — never tier-gated.
             "patches": [n.model_dump() for n in reversed(gs.patch_history[-6:])],
@@ -1459,6 +2633,10 @@ def finances() -> dict:
                         "bonus": ob.bonus,
                         "met": ob.met,
                         "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                        # Live in-season progress toward this bonus (read-only).
+                        "status": career.objective_status(
+                            gs, gs.acting_team_id, ob.kind
+                        ),
                     }
                     for ob in (deal.objectives if deal else [])
                 ],
@@ -1478,6 +2656,8 @@ def finances() -> dict:
             "balance": team.balance,
             "weekly_payroll": payroll,
             "marketability": round(sponsors.marketability(gs), 2),
+            # What's driving that number (single-source breakdown).
+            "marketability_breakdown": sponsors.marketability_breakdown(gs),
             # Per-manager: the shared report carries every human's income/
             # expenses, so read the acting manager's slice.
             "last_week_income": rep.income_by.get(gs.acting_team_id) if rep else None,
@@ -1600,6 +2780,9 @@ def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict
     return {
         **m.model_dump(),
         "specialty_blurb": staff_mod.SPECIALTY_BLURB.get(m.specialty, ""),
+        # Concrete contribution lines so hired staff show their impact inline
+        # (not just on their profile overlay). Server-computed, never re-derived.
+        "effects": _staff_effect_lines(m),
         "employer_id": employer_id,
         "employer_name": gs.teams[employer_id].name if employer_id else None,
     }
@@ -1646,6 +2829,19 @@ def _staff_effect_lines(m) -> list[str]:
             f"+{m.quality:.0f}% scouting speed",
             "deeper stat views (analytics tier, with the analytics suite)",
         ]
+    # Department roles each drive a DIFFERENT recovery axis — mirror the
+    # canonical staff.py formulas so the hiring UI doesn't mislabel them.
+    if m.role == "psychologist":
+        return [
+            f"+{m.quality / 60.0:.1f}/wk confidence recovery for shaken players "
+            "(pull toward neutral, never a hype boost)"
+        ]
+    if m.role == "performance_coach":
+        return [
+            f"+{m.quality / 70.0:.1f}/wk form upkeep for out-of-form players "
+            "(pull toward neutral)"
+        ]
+    # physio (and any future recovery role): stamina.
     return [f"+{m.quality / 18.0:.1f} stamina per player per week"]
 
 
@@ -1723,8 +2919,9 @@ def social_view() -> dict:
             key=lambda r: (-r["sentiment"], r["team_id"]),
         )
         return {
+            # Latest 40 only — a feed should be a scroll, not an archive.
             "feed": llm_social.overlay(
-                game.code, [p.model_dump() for p in reversed(gs.social_feed)]
+                game.code, [p.model_dump() for p in reversed(gs.social_feed[-40:])]
             ),
             "leaderboard": leaderboard,
             "your_roster": [
@@ -1740,7 +2937,36 @@ def social_view() -> dict:
             "sentiment": sent_rows,
             "your_sentiment": gs.sentiment(gs.acting_team_id),
             "your_mood": social.mood_view(gs.sentiment(gs.acting_team_id)),
+            "movement": _movement_feed(gs),
         }
+
+
+# Chronicle kinds that count as market movement, and how the tracker tags
+# them. AI-to-AI moves show here too — that's the point (watch the league).
+_MOVEMENT_KINDS = ("signing", "release", "renewal", "transfer", "poach")
+
+
+def _movement_feed(gs: GameState, n: int = 40) -> list[dict]:
+    """League-wide signings/releases/renewals/transfers, newest first — a
+    pure read of the chronicle (the append-only truth for market moves)."""
+    rows = []
+    for e in reversed(gs.chronicle):
+        if e.kind not in _MOVEMENT_KINDS:
+            continue
+        team = gs.teams.get(e.team_id)
+        rows.append({
+            "season": e.season,
+            "week": e.week,
+            "kind": e.kind,
+            "text": e.text,
+            "team_id": e.team_id or None,
+            "team_tag": team.tag if team else None,
+            "player_id": e.player_id or None,
+            "mine": e.team_id == gs.acting_team_id,
+        })
+        if len(rows) >= n:
+            break
+    return rows
 
 
 class DevPlanBody(BaseModel):
@@ -1784,6 +3010,47 @@ def dev_plan_action(body: DevPlanBody) -> dict:
             "message": f"{p.handle}: {p.dev_focus} focus, "
             f"{p.training_intensity} intensity",
         }
+
+
+class MentorBody(BaseModel):
+    protege_id: str
+    mentor_id: str | None = None  # None clears the pairing
+
+
+@app.post("/api/actions/mentor")
+def mentor_action(body: MentorBody) -> dict:
+    """Pair a young player with a veteran teammate (own roster), or clear the
+    pairing when mentor_id is null. A protege under a mentor develops faster
+    (training.MENTOR_GROWTH_MULT)."""
+    from esports_sim.manager.campaign import mentorship_valid
+
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.protege_id not in team.player_ids:
+            raise HTTPException(409, "player is not on your roster")
+        pro = gs.players[body.protege_id]
+        if body.mentor_id is None:
+            gs.mentorships.pop(body.protege_id, None)
+            telemetry.record_action(
+                gs, "mentor", {"protege_id": body.protege_id, "mentor_id": ""}
+            )
+            S.save()
+            return {"ok": True, "message": f"{pro.handle}'s mentorship cleared"}
+        if body.mentor_id not in team.player_ids:
+            raise HTTPException(409, "the mentor is not on your roster")
+        if not mentorship_valid(gs, body.protege_id, body.mentor_id):
+            raise HTTPException(
+                409, "a mentor must be an older, higher-rated teammate"
+            )
+        gs.mentorships[body.protege_id] = body.mentor_id
+        telemetry.record_action(
+            gs, "mentor",
+            {"protege_id": body.protege_id, "mentor_id": body.mentor_id},
+        )
+        S.save()
+        men = gs.players[body.mentor_id]
+        return {"ok": True, "message": f"{men.handle} now mentors {pro.handle}"}
 
 
 class HireBody(BaseModel):
@@ -2206,6 +3473,7 @@ class GamePlanBody(BaseModel):
     site_focus: str | None = None
     focus_target: str | None = None
     starter_ids: list[str] = []
+    team_talk: str | None = None
 
 
 @app.post("/api/actions/gameplan")
@@ -2247,11 +3515,16 @@ def set_gameplan(body: GamePlanBody) -> dict:
             if v is not None and not math.isfinite(v):
                 raise HTTPException(422, f"{k} must be a finite number")
             dials[k] = None if v is None else float(min(100.0, max(0.0, v)))
+        if body.team_talk is not None and body.team_talk not in TEAM_TALK_APPROACHES:
+            raise HTTPException(
+                422, f"team_talk must be one of {TEAM_TALK_APPROACHES}"
+            )
         gs.game_plan = GamePlan(
             fixture_id=fx.id,
             site_focus=body.site_focus,
             focus_target=body.focus_target,
             starter_ids=starters,
+            team_talk=body.team_talk,
             **dials,
         )
         telemetry.record_action(
@@ -2288,6 +3561,23 @@ def bid(body: BidBody) -> dict:
         return {"ok": True, "message": msg}
 
 
+@app.post("/api/actions/buyout")
+def buyout(body: BidBody) -> dict:
+    """Trigger a tier-2 player's buyout clause: pay the fee, they arrive
+    this week — no negotiation, the selling org can't refuse."""
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg = market.buy_out_player(gs, gs.acting_team_id, body.player_id)
+        if ok:
+            telemetry.record_action(gs, "buyout", {"player_id": body.player_id})
+        S.save()
+        if not ok:
+            raise HTTPException(422, msg)
+        return {"ok": True, "message": msg}
+
+
 class OfferBody(BaseModel):
     player_id: str
     accept: bool
@@ -2318,13 +3608,39 @@ def transfer_offer(body: OfferBody) -> dict:
 
 
 class ScoutBody(BaseModel):
-    team_id: str
+    # Exactly one of these picks the assignment type.
+    team_id: str | None = None  # rival team id, or "market"
+    player_id: str | None = None  # deep-dive one player
+    fixture_id: str | None = None  # attend one upcoming match
 
 
 @app.post("/api/actions/scout")
 def scout(body: ScoutBody) -> dict:
     with S.lock:
         gs = S.require_gs()
+        picked = [x for x in (body.team_id, body.player_id, body.fixture_id) if x]
+        if len(picked) != 1:
+            raise HTTPException(422, "pick exactly one scouting target")
+        if body.player_id is not None:
+            p = gs.players.get(body.player_id)
+            if p is None:
+                raise HTTPException(404, "unknown player")
+            if body.player_id in gs.teams[gs.acting_team_id].player_ids:
+                raise HTTPException(422, "you already know your own player")
+            gs.scout_target = f"player:{body.player_id}"
+            S.save()
+            return {"ok": True, "message": f"scout is building the book on {p.handle}"}
+        if body.fixture_id is not None:
+            fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+            if fx is None:
+                raise HTTPException(404, "unknown fixture")
+            if fx.played:
+                raise HTTPException(422, "that match has already been played")
+            gs.scout_target = f"match:{body.fixture_id}"
+            S.save()
+            a = gs.teams[fx.team_a].name if fx.team_a in gs.teams else fx.team_a
+            b = gs.teams[fx.team_b].name if fx.team_b in gs.teams else fx.team_b
+            return {"ok": True, "message": f"scout will attend {a} vs {b}"}
         if body.team_id != "market" and body.team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
         if body.team_id == gs.acting_team_id:
@@ -2342,34 +3658,74 @@ def scout(body: ScoutBody) -> dict:
 
 @app.get("/api/scouting")
 def scouting_view() -> dict:
-    """The scout's desk: current assignment, progress, and report cards
-    (banded CA/PA stars, progressively revealed traits)."""
+    """The scout's desk: current assignment (team / market / one player /
+    one match), progress, and report cards. A player deep-dive returns ONE
+    rich report whose sections unlock with book depth (comfort picks at
+    25%, style read at 50%, mental read at 75%, the verdict at ~100 —
+    see development.scout_report); team/market return the classic table."""
     with S.lock:
         gs = S.require_gs()
         target = gs.scout_target
         reports: list[dict] = []
+        target_kind = "none"
+        target_name = None
+        progress = 0.0
         if target == "market":
+            target_kind = "market"
+            target_name = "Free-agent market"
             progress = gs.scout_progress.get("market", 0.0)
             fas = sorted(
                 (gs.players[pid] for pid in gs.free_agent_ids),
                 key=lambda p: -development.potential_of(p),
             )
             reports = [development.scout_report(gs, p, progress) for p in fas]
+        elif target and target.startswith("player:"):
+            pid = target[len("player:"):]
+            p = gs.players.get(pid)
+            if p is not None:
+                target_kind = "player"
+                target_name = p.handle
+                # The deep dive stacks with whatever team coverage exists.
+                _fog, progress, _fa = _player_fog(gs, pid)
+                reports = [development.scout_report(gs, p, progress)]
+        elif target and target.startswith("match:"):
+            fid = target[len("match:"):]
+            fx = next((f for f in gs.fixtures if f.id == fid), None)
+            if fx is not None:
+                target_kind = "match"
+                a = gs.teams[fx.team_a].name if fx.team_a in gs.teams else fx.team_a
+                b = gs.teams[fx.team_b].name if fx.team_b in gs.teams else fx.team_b
+                target_name = f"{a} vs {b} (W{fx.week})"
         elif target and target in gs.teams:
+            target_kind = "team"
+            target_name = gs.teams[target].name
             progress = gs.scout_progress.get(target, 0.0)
             reports = [
                 development.scout_report(gs, p, progress)
                 for p in gs.roster(target)
             ]
-        else:
-            progress = 0.0
+        # Upcoming fixtures the scout could attend (next two weeks of
+        # unplayed matches not involving your own club — you're there anyway).
+        me = gs.acting_team_id
+        upcoming = [
+            {
+                "id": f.id,
+                "week": f.week,
+                "stage": f.stage,
+                "label": (
+                    f"{gs.teams[f.team_a].name if f.team_a in gs.teams else f.team_a}"
+                    f" vs "
+                    f"{gs.teams[f.team_b].name if f.team_b in gs.teams else f.team_b}"
+                ),
+            }
+            for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+            if not f.played and me not in (f.team_a, f.team_b)
+            and f.week <= gs.week + 1
+        ][:14]
         return {
             "target": target,
-            "target_name": (
-                "Free-agent market"
-                if target == "market"
-                else gs.teams[target].name if target in gs.teams else None
-            ),
+            "target_kind": target_kind,
+            "target_name": target_name,
             "progress": round(progress, 2),
             "reports": reports,
             "teams": [
@@ -2377,11 +3733,91 @@ def scouting_view() -> dict:
                 for tid in sorted(gs.teams)
                 if tid != gs.acting_team_id
             ],
+            "upcoming": upcoming,
         }
 
 
 class PlayerBody(BaseModel):
     player_id: str
+
+
+class NegotiationOfferBody(BaseModel):
+    player_id: str
+    salary: int
+    weeks: int
+
+
+def _negotiation_view(gs: GameState, neg) -> dict:
+    p = gs.players[neg.player_id]
+    return {
+        "player_id": neg.player_id,
+        "handle": p.handle,
+        "kind": neg.kind,
+        "demand_salary": neg.demand_salary,
+        "demand_weeks": neg.demand_weeks,
+        "rounds_used": neg.rounds,
+        "rounds_left": market.NEGOTIATION_MAX_ROUNDS - neg.rounds,
+        "current_salary": p.salary if neg.kind == "renew" else None,
+        "contract_weeks_left": p.contract_weeks_left if neg.kind == "renew" else None,
+    }
+
+
+@app.post("/api/negotiation/open")
+def negotiation_open(body: PlayerBody) -> dict:
+    """Sit down with a player: their opening demands (or the live table)."""
+    with S.lock:
+        gs = S.require_gs()
+        ok, why, neg = market.open_negotiation(gs, body.player_id)
+        if ok:
+            telemetry.record_action(
+                gs, "negotiate_open", {"player_id": body.player_id}
+            )
+        S.save()
+        if not ok:
+            raise HTTPException(422, why)
+        return {"ok": True, "negotiation": _negotiation_view(gs, neg)}
+
+
+@app.post("/api/negotiation/offer")
+def negotiation_offer(body: NegotiationOfferBody) -> dict:
+    """Put an offer on the table: accepted / countered / collapsed."""
+    with S.lock:
+        gs = S.require_gs()
+        status, msg, neg = market.negotiate_offer(
+            gs, body.player_id, body.salary, body.weeks
+        )
+        if status != "error":
+            telemetry.record_action(
+                gs, "negotiate_offer",
+                {
+                    "player_id": body.player_id,
+                    "salary": body.salary,
+                    "weeks": body.weeks,
+                    "status": status,
+                },
+            )
+        S.save()
+        if status == "error":
+            raise HTTPException(422, msg)
+        return {
+            "ok": True,
+            "status": status,
+            "message": msg,
+            "negotiation": _negotiation_view(gs, neg) if neg is not None else None,
+        }
+
+
+@app.post("/api/negotiation/cancel")
+def negotiation_cancel(body: PlayerBody) -> dict:
+    """Leave the table yourself — no cooldown, reopen any time."""
+    with S.lock:
+        gs = S.require_gs()
+        market.cancel_negotiation(gs, body.player_id)
+        telemetry.record_action(
+            gs, "negotiate_cancel", {"player_id": body.player_id}
+        )
+        S.save()
+        return {"ok": True, "message": "you leave the table"}
 
 
 @app.post("/api/actions/sign")
@@ -2543,17 +3979,41 @@ def advance() -> dict:
         llm_social.enqueue(game)
         # Re-bind acting (advance_week churns the acting pointer internally).
         gs.set_acting(me)
-        game.save()
-        return {
-            "advanced": True,
-            "season": report.season,
-            "week": report.week,
-            "phase": report.phase,
-            "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
-            "user_income": report.income_by.get(me, 0),
-            "user_expenses": report.expenses_by.get(me, 0),
-            "notes": report.notes,
-        }
+        # Persistence follows the world's autosave policy (every Nth tick,
+        # or never — the explicit Save button always works).
+        game.autosave_tick()
+        return _report_view(report, gs, me)
+
+
+def _report_view(report, gs: GameState, me: str) -> dict:
+    """The week-report payload — shared by the advance response and
+    /api/report so a waiting shared-world manager sees the same report
+    (incl. replay buttons) as the manager whose ready-up ticked the week."""
+    return {
+        "advanced": True,
+        "season": report.season,
+        "week": report.week,
+        "phase": report.phase,
+        "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
+        "user_income": report.income_by.get(me, 0),
+        "user_expenses": report.expenses_by.get(me, 0),
+        "notes": report.notes,
+    }
+
+
+@app.get("/api/report")
+def last_week_report() -> dict:
+    """The most recently played week's report, for managers who were waiting
+    on others when the world ticked (their own advance call returned
+    'waiting'). In-memory only: after a server restart there's no report
+    until a week is played, and clients treat {report: null} as 'nothing to
+    show'."""
+    with S.lock:
+        gs = S.require_gs()
+        report = S.last_report
+        if report is None:
+            return {"report": None}
+        return {"report": _report_view(report, gs, gs.acting_team_id)}
 
 
 # ---------------------------------------------------------------------------
@@ -2612,24 +4072,41 @@ def _potential_text(gs: GameState, p: Player, fogged: bool, progress: float) -> 
 def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
     """Return (sigma, scout_progress, is_free_agent) for a player. Own-team
     players get sigma 0; rivals scale with team scout progress; free agents
-    ride the lighter market fog (matching /api/market)."""
+    ride the lighter market fog (matching /api/market). A player-targeted
+    deep dive ("player:<pid>" progress) cuts through BOTH — the whole point
+    of sending your scout after one name."""
+    deep = gs.scout_progress.get(f"player:{pid}", 0.0)
     if pid in gs.free_agent_ids:
-        progress = gs.scout_progress.get("market", 0.0)
+        progress = max(gs.scout_progress.get("market", 0.0), deep)
         return 6.0 * (1.0 - progress), progress, True
     team_id = market.team_of(gs, pid)
     if team_id is None:
         return 0.0, 1.0, False  # unrostered non-FA (e.g. mid-transfer): treat as known
     if team_id == gs.acting_team_id:
         return 0.0, 1.0, False
-    return _team_fog(gs, team_id), gs.scout_progress.get(team_id, 0.0), False
+    fog = _team_fog(gs, team_id) * (1.0 - deep)
+    progress = max(gs.scout_progress.get(team_id, 0.0), deep)
+    return fog, progress, False
 
 
 def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
     fogged = fog > 0.0
     ovr = None if fogged else int(round(development.overall(p)))
+    # The overall/ceiling NUMBER is the source of truth in the profile; the
+    # star rating rides along only as a coarse quick-glance. A fogged rival
+    # can't be read exactly, so their ceiling stays the scout's banded tier
+    # text and the star sub is withheld.
+    if fogged:
+        potential: int | str = _potential_text(gs, p, fogged, progress)
+        pot_stars = None
+    else:
+        potential = int(round(development.potential_of(p)))
+        pot_stars = development.stars(development.potential_of(p))
     return {
         "ovr": ovr,
-        "potential": _potential_text(gs, p, fogged, progress),
+        "ovr_stars": None if fogged else development.stars(development.overall(p)),
+        "potential": potential,
+        "potential_stars": pot_stars,
         "form": None if fogged else round(p.form, 1),
         "morale": None if fogged else round(p.morale, 1),
         "condition": None if fogged else round(p.stamina, 1),
@@ -2918,6 +4395,12 @@ def player_profile(pid: str) -> dict:
                 ),
                 "dev_focus": p.dev_focus if own else None,
                 "training_intensity": p.training_intensity if own else None,
+                # Identity: nationality + spoken tongues (public info —
+                # shared languages drive the locker room's comms cohesion).
+                "country": p.country or None,
+                "languages": [
+                    {"lang": l.lang, "level": round(l.level)} for l in p.languages
+                ],
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),
@@ -2931,11 +4414,104 @@ def player_profile(pid: str) -> dict:
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
             "career": [],
+            # Lifetime totals (completed seasons + the current one in
+            # progress): maps, kills, K/D, honours. None until they've
+            # played a map. Reads gs.career_stats + the live season.
+            "career_totals": _profile_career_totals(gs, pid),
+            # The player's career as a per-season chronicle timeline (debut,
+            # awards, milestones, moves), newest season first.
+            "career_arc": analytics.career_arc(gs, pid),
+            # The trophy cabinet: individual season awards this player has
+            # won, newest first. A clean structured read of the chronicle's
+            # award entries (the cleanly player-attributable honours; team
+            # titles carry a team_id, not a player_id, so they stay in the
+            # broader "memories" list rather than this personal cabinet).
+            "honours": _profile_honours(gs, pid),
+            # A one-line earned epithet ("League MVP", "Clutch merchant"),
+            # derived from the honours above — None until they've won
+            # something, so it's always grounded, never a hollow label.
+            "epithet": _player_epithet(gs, pid),
             # What this player remembers — their defining chronicle
             # entries (debut, titles, milestones, moves), newest-important
             # first. Pure chronicle read (manager/memories.py).
             "memories": memories_mod.memory_lines(gs, pid),
         }
+
+
+# Earned epithets, best-first: a player's headline honour becomes their
+# label. Award names match narrative.season_awards exactly.
+_EPITHETS: tuple[tuple[str, str], ...] = (
+    ("Season MVP", "League MVP"),
+    ("Clutch Merchant", "Clutch merchant"),
+    ("Opening King", "Opening specialist"),
+    ("Top Fragger", "Star fragger"),
+    ("Most Improved", "Breakout riser"),
+    ("Challengers MVP", "Challengers standout"),
+    ("Rookie of the Season", "Standout rookie"),
+)
+
+
+def _profile_career_totals(gs: GameState, pid: str) -> dict | None:
+    """Lifetime box-score totals for the profile's Career section: the
+    rolled-up gs.career_stats plus the current in-progress season, with
+    honours/MVP counts from the chronicle. None until the player has a map
+    to their name (a debutant with nothing to show yet)."""
+    cs = gs.career_stats.get(pid)
+    cur = gs.player_stats.get(pid)
+    cur_maps = cur.maps if cur else 0
+    maps = (cs.maps if cs else 0) + cur_maps
+    if maps <= 0:
+        return None
+    kills = (cs.kills if cs else 0) + (cur.kills if cur else 0)
+    deaths = (cs.deaths if cs else 0) + (cur.deaths if cur else 0)
+    entries = chronicle.entries_for_player(gs, pid)
+    return {
+        "maps": maps,
+        "kills": kills,
+        "deaths": deaths,
+        "kd": round(kills / max(deaths, 1), 2),
+        "first_kills": (cs.first_kills if cs else 0) + (cur.first_kills if cur else 0),
+        "clutches": (cs.clutches if cs else 0) + (cur.clutches if cur else 0),
+        "seasons": (cs.seasons if cs else 0) + (1 if cur_maps > 0 else 0),
+        "honours": sum(1 for e in entries if e.kind == "award"),
+        "mvps": sum(
+            1 for e in entries
+            if e.kind == "award" and "MVP" in e.data.get("award", "")
+        ),
+        "all_stars": sum(1 for e in entries if e.kind == "all_star"),
+    }
+
+
+def _player_epithet(gs: GameState, pid: str) -> str | None:
+    """The player's headline earned label, or None if they've won nothing
+    yet. Pure chronicle read; priority follows _EPITHETS (MVP outranks the
+    rest, a bare honour still earns 'Decorated pro')."""
+    won = {
+        e.data.get("award", "")
+        for e in chronicle.entries_for_player(gs, pid)
+        if e.kind == "award"
+    }
+    for key, label in _EPITHETS:
+        if key in won:
+            return label
+    return "Decorated pro" if won else None
+
+
+def _profile_honours(gs: GameState, pid: str) -> list[dict]:
+    """The player's individual season awards, newest first. Pure chronicle
+    read; the value string was frozen into the award entry at win time, so
+    the detail is grounded, not re-derived."""
+    out = [
+        {
+            "season": e.season,
+            "award": e.data.get("award", "Award"),
+            "detail": e.data.get("value", ""),
+        }
+        for e in chronicle.entries_for_player(gs, pid)
+        if e.kind == "award"
+    ]
+    out.sort(key=lambda h: (-h["season"], h["award"]))
+    return out
 
 
 def _team_streak(gs: GameState, tid: str) -> str | None:
@@ -2953,6 +4529,131 @@ def _team_streak(gs: GameState, tid: str) -> str | None:
         else:
             break
     return f"{'W' if last_won else 'L'}{n}"
+
+
+_STRENGTH_AXES = ("mechanical", "tactical", "mental", "team")
+_STRENGTH_LABEL = {
+    "mechanical": "Aim & mechanics", "tactical": "Tactical IQ",
+    "mental": "Mentals", "team": "Teamplay",
+}
+
+
+def _team_strength(gs: GameState, tid: str, fogged: bool = False) -> list[dict]:
+    """A squad-strength profile: the dressed five's mean attribute per category
+    (aim / tactical / mentals / teamplay). Own club shows exact means; a
+    scouted rival shows only the band."""
+    reg = S.gd.attributes.definitions
+    by_axis: dict[str, list[str]] = {ax: [] for ax in _STRENGTH_AXES}
+    for key, d in reg.items():
+        if d.category in by_axis:
+            by_axis[d.category].append(key)
+    five = default_five(gs, tid)
+    out = []
+    for ax in _STRENGTH_AXES:
+        vals = [
+            p.attr(k, 50.0)
+            for pid in five
+            if (p := gs.players.get(pid)) is not None
+            for k in by_axis[ax]
+        ]
+        if not vals:
+            continue
+        mean = sum(vals) / len(vals)
+        out.append({
+            "axis": ax, "label": _STRENGTH_LABEL[ax],
+            "value": None if fogged else round(mean, 1),
+            "band": _attr_band(mean),
+        })
+    return out
+
+
+COMFORT_MASTERY = 60.0  # a pool entry only counts as "covers it" from here up
+
+
+def _agent_pool_coverage(gs: GameState, tid: str) -> dict:
+    """The roster's collective agent coverage (how many players run each agent
+    comfortably and the best mastery), plus the meta staples they don't cover.
+    Every player now carries a baseline on the whole cast, so coverage counts
+    COMFORT picks (mastery >= COMFORT_MASTERY), not mere pool membership.
+    Own-club roster intel; pure read."""
+    cov: dict[str, dict] = {}
+    for pid in gs.teams[tid].player_ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        for m in p.agent_pool:
+            if m.mastery < COMFORT_MASTERY:
+                continue
+            c = cov.setdefault(m.agent_id, {"count": 0, "best": 0.0})
+            c["count"] += 1
+            c["best"] = max(c["best"], m.mastery)
+    usage = meta_mod._agent_usage(gs)
+    top_meta = sorted(usage, key=lambda a: (-usage[a], a))[:8]
+    covered = [
+        {
+            "agent_id": aid,
+            "name": S.gd.agents[aid].display_name if aid in S.gd.agents else aid,
+            "players": c["count"], "mastery": round(c["best"]),
+        }
+        for aid, c in sorted(cov.items(), key=lambda kv: (-kv[1]["best"], kv[0]))
+    ][:10]
+    gaps = [
+        {"agent_id": a, "name": S.gd.agents[a].display_name if a in S.gd.agents else a}
+        for a in top_meta if a not in cov
+    ]
+    return {"covered": covered, "meta_gaps": gaps}
+
+
+def _suggested_lineup(gs: GameState, tid: str) -> dict | None:
+    """A read-only 'best available five' by quality + current form/confidence,
+    with a flag where it diverges from the dressed five. None when the roster
+    is five or fewer (everyone plays — nothing to pick)."""
+    roster = list(gs.teams[tid].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return None
+    current = set(default_five(gs, tid))
+    scored = []
+    for pid in roster:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        q = market.player_quality(p)
+        score = q + (p.form - 50.0) * 0.05 + (p.confidence - 50.0) * 0.05
+        scored.append((score, pid, p.handle, round(q)))
+    scored.sort(key=lambda s: (-s[0], s[1]))
+    picks = scored[:market.ROSTER_SIZE]
+    suggested_ids = {pid for _, pid, _, _ in picks}
+    return {
+        "players": [
+            {"id": pid, "handle": handle, "quality": q, "dressed": pid in current}
+            for _, pid, handle, q in picks
+        ],
+        "changed": suggested_ids != current,
+    }
+
+
+def _board_standing(gs: GameState) -> dict | None:
+    """Legacy-mode job security: the board goal, patience band, seasons left on
+    the deal, and how the goal is tracking. None in sandbox / when unemployed."""
+    seat = gs.seat_for_session(gs.acting_team_id)
+    if seat is None or seat.contract is None or not seat.team_id:
+        return None
+    c = seat.contract
+    pat = c.patience
+    band = (
+        "secure" if pat >= 66 else "stable" if pat >= 45
+        else "under pressure" if pat >= 25
+        else "hot seat" if pat >= career.MIDSEASON_FLOOR else "on the brink"
+    )
+    status = career.objective_status(gs, seat.team_id, c.goal)
+    return {
+        "goal": career.GOAL_LABELS.get(c.goal, c.goal),
+        "patience": round(pat, 1),
+        "band": band,
+        "seasons_left": max(0, c.start_season + c.seasons - 1 - gs.season),
+        "goal_state": status.get("state"),
+        "goal_detail": status.get("detail"),
+    }
 
 
 @app.get("/api/teams/{tid}/profile")
@@ -3002,6 +4703,7 @@ def team_profile(tid: str) -> dict:
 
         # Roster with public season aggregates. ACS is untracked, so the
         # contract's acs-desc order falls back to rating then handle.
+        own_team = tid == gs.acting_team_id
         players = []
         for pid in t.player_ids:
             p = gs.players.get(pid)
@@ -3017,6 +4719,12 @@ def team_profile(tid: str) -> dict:
                     "matches": st.maps if st else 0,
                     "kd": round(st.kd, 2) if has else None,
                     "acs": None,
+                    # Farewell-tour watch: a veteran carrying real offseason
+                    # retirement odds. Own club only — the odds read true CA,
+                    # which stays fogged for rivals.
+                    "retirement_risk": (
+                        own_team and development.retirement_prob(p) >= 0.15
+                    ),
                     "_rating": st.rating if has else 0.0,
                 }
             )
@@ -3039,10 +4747,20 @@ def team_profile(tid: str) -> dict:
                 }
             )
 
+        # Full honours board from the chronicle: world/Masters/regional
+        # titles, newest first (a dynasty's cabinet, not just its world
+        # crowns). memories.team_titles is the canonical team-title reader.
+        _TITLE_LABEL = {
+            "champions_title": "World Champion",
+            "masters_title": "Masters",
+            "regional_title": "Regional title",
+        }
         honors = [
-            f"S{c.season} World Champion"
-            for c in sorted(gs.champions, key=lambda c: c.season)
-            if c.team_id == tid
+            f"S{e.season} {_TITLE_LABEL.get(e.kind, 'Title')}"
+            for e in sorted(
+                memories_mod.team_titles(gs, tid),
+                key=lambda e: (-e.season, e.kind),
+            )
         ]
 
         return {
@@ -3066,6 +4784,18 @@ def team_profile(tid: str) -> dict:
             "players": players,
             "form": form,
             "honors": honors,
+            # Coaching identity + tendencies: own club always, a rival once
+            # scouted (>=0.5). None/[] hides the badge until it's earned.
+            "identity": (
+                _team_identity_label(t.tactics)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else None
+            ),
+            "tendencies": (
+                _team_tendencies(t.tactics)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else []
+            ),
             # Named rivalries (manager/rivalries.py), hottest first.
             "rivals": [
                 {
@@ -3082,7 +4812,200 @@ def team_profile(tid: str) -> dict:
                 if tid == gs.acting_team_id
                 else None
             ),
+            # Squad chemistry (bonds, frictions, cohesion) — own club only.
+            "chemistry": _squad_chemistry(gs, tid) if own_team else None,
+            # Development headroom: each own player's CA vs ceiling and which
+            # way they're trending. Private dev-history read → own club only.
+            "dev_progress": _dev_progress(gs, tid) if own_team else None,
+            # Squad strength radar (aim/tactical/mentals/teamplay): own club
+            # exact, a well-scouted rival banded, hidden until then.
+            "strength": (
+                _team_strength(gs, tid, fogged=not own_team)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else None
+            ),
+            # Collective agent coverage + meta gaps — own-club roster intel.
+            "agent_pool": _agent_pool_coverage(gs, tid) if own_team else None,
         }
+
+
+# ---------------------------------------------------------------------------
+# Admin data-correction toggle. The client's toggle is purely a UI reveal —
+# these routes always exist (this app has no auth model beyond the LAN game
+# code), but they only ever touch REAL players/teams that trace back to a
+# roster pack's src/ sheet (see registry/roster_admin.py); generated fill
+# entities 404 as not-editable. Persists to disk (the pack sheet, rebuilt)
+# AND patches the live save's identity/skill fields — never the
+# campaign-managed ones (salary, contract, morale, stamina, form,
+# confidence, balance, reputation, fan_count, ...), so a correction can't
+# reset progress already made in the running campaign.
+
+
+def _sync_player_identity(p: Player, fresh: dict) -> None:
+    p.handle = fresh["handle"]
+    p.real_name = fresh["real_name"]
+    p.country = fresh["country"]
+    p.languages = [LanguageSkill(**entry) for entry in fresh["languages"]]
+    p.age = fresh["age"]
+    p.role = Role(fresh["role"])
+    p.playstyle = Playstyle(fresh["playstyle"])
+    p.attributes = dict(fresh["attributes"])
+    p.agent_pool = [AgentMastery(**a) for a in fresh["agent_pool"]]
+    p.map_pool = [MapMastery(**m) for m in fresh["map_pool"]]
+    p.potential = fresh["potential"]
+    p.personality_tags = list(fresh["personality_tags"])
+
+
+class PlayerAdminEditBody(BaseModel):
+    handle: str | None = None
+    real_name: str | None = None
+    age: int | None = None
+    country: str | None = None
+    languages: list[dict] | None = None
+    role: str | None = None
+    playstyle: str | None = None
+    quality: float | None = None
+    agents: list[str] | None = None
+
+
+class TeamAdminEditBody(BaseModel):
+    name: str | None = None
+    tag: str | None = None
+    tier: int | None = None
+    prestige: float | None = None
+
+
+@app.get("/api/admin/player/{pid}")
+def admin_player_editable(pid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        p = gs.players.get(pid)
+        if p is None:
+            raise HTTPException(404, "unknown player")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            return {
+                "editable": False,
+                "reason": "this campaign wasn't seeded from a roster pack",
+            }
+        loc = roster_admin.find_player(pack_id, pid)
+        if loc is None:
+            return {
+                "editable": False,
+                "reason": "generated player — no roster-pack sheet to correct",
+            }
+        spec = loc.player_spec
+        return {
+            "editable": True,
+            "pack_id": pack_id,
+            "fields": {
+                "handle": spec.get("handle", p.handle),
+                "real_name": spec.get("real_name", p.real_name),
+                "age": spec.get("age", p.age),
+                "country": spec.get("country", p.country),
+                "languages": spec.get("languages", []),
+                "role": spec.get("role", str(p.role)),
+                "playstyle": spec.get("playstyle", str(p.playstyle)),
+                "quality": spec.get("quality"),
+                "agents": spec.get("agents", []),
+            },
+        }
+
+
+@app.post("/api/admin/player/{pid}")
+def admin_edit_player(pid: str, body: PlayerAdminEditBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        p = gs.players.get(pid)
+        if p is None:
+            raise HTTPException(404, "unknown player")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            raise HTTPException(
+                409, "this campaign wasn't seeded from a roster pack"
+            )
+        edits = {k: v for k, v in body.model_dump().items() if v is not None}
+        if not edits:
+            raise HTTPException(422, "no edits supplied")
+        try:
+            fresh = roster_admin.edit_player(S.gd, pack_id, pid, edits)
+        except roster_admin.RosterEditError as e:
+            raise HTTPException(422, str(e)) from None
+        _sync_player_identity(p, fresh)
+        S.save()
+        return {"ok": True, "message": f"{p.handle}'s sheet corrected", "player": {
+            "id": p.id, "handle": p.handle, "real_name": p.real_name,
+            "age": p.age, "country": p.country, "role": str(p.role),
+            "playstyle": str(p.playstyle),
+        }}
+
+
+@app.get("/api/admin/team/{tid}")
+def admin_team_editable(tid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        t = gs.teams.get(tid)
+        if t is None:
+            raise HTTPException(404, "unknown team")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            return {
+                "editable": False,
+                "reason": "this campaign wasn't seeded from a roster pack",
+            }
+        loc = roster_admin.find_team(pack_id, tid)
+        if loc is None:
+            return {
+                "editable": False,
+                "reason": "generated team — no roster-pack sheet to correct",
+            }
+        spec = loc.team_spec
+        return {
+            "editable": True,
+            "pack_id": pack_id,
+            "fields": {
+                "name": spec.get("name", t.name),
+                "tag": spec.get("tag", t.tag),
+                "tier": spec.get("tier", t.tier),
+                "prestige": spec.get("prestige"),
+            },
+            "note": (
+                "Renaming only affects future new campaigns started from "
+                "this pack; this world's team keeps its current id. "
+                "Prestige only affects future new campaigns (this world's "
+                "balance/reputation/fan count already evolved through play "
+                "and are left untouched)."
+            ),
+        }
+
+
+@app.post("/api/admin/team/{tid}")
+def admin_edit_team(tid: str, body: TeamAdminEditBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        t = gs.teams.get(tid)
+        if t is None:
+            raise HTTPException(404, "unknown team")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            raise HTTPException(
+                409, "this campaign wasn't seeded from a roster pack"
+            )
+        edits = {k: v for k, v in body.model_dump().items() if v is not None}
+        if not edits:
+            raise HTTPException(422, "no edits supplied")
+        try:
+            roster_admin.edit_team(pack_id, tid, edits)
+        except roster_admin.RosterEditError as e:
+            raise HTTPException(422, str(e)) from None
+        if "name" in edits:
+            t.name = str(edits["name"])
+        if "tag" in edits:
+            t.tag = str(edits["tag"]).upper()
+        S.save()
+        return {"ok": True, "message": f"{t.name}'s sheet corrected", "team": {
+            "id": t.id, "name": t.name, "tag": t.tag, "tier": t.tier,
+        }}
 
 
 # ---------------------------------------------------------------------------
@@ -3158,6 +5081,15 @@ def map_geometry(map_id: str) -> dict:
     }
 
 
+@app.get("/api/perf")
+def perf_view() -> dict:
+    """This process's performance sink (see esports_sim.perf): tick-phase
+    timings paired with state-size gauges (the slowdown-over-weeks view),
+    save cost, and per-endpoint latency aggregates. In-memory only —
+    resets on restart; never part of the save."""
+    return perf.snapshot()
+
+
 @app.get("/api/replay/{fixture_id}/{map_index}")
 def replay(fixture_id: str, map_index: int) -> dict:
     with S.lock:
@@ -3201,6 +5133,25 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for agent in S.gd.agents.values()
             for ab in agent.abilities
         }
+        dumped = [e.model_dump() for e in events]
+        # Post-match box score (top performers + MVP) from the stored map
+        # lines — the viewer's match-summary panel. Pure read.
+        box = sorted(
+            (
+                {
+                    "player_id": ln.player_id,
+                    "handle": (
+                        gs.players[ln.player_id].handle
+                        if ln.player_id in gs.players else ln.player_id
+                    ),
+                    "team_id": players.get(ln.player_id, {}).get("team_id"),
+                    "kills": ln.kills, "deaths": ln.deaths,
+                    "rating": round(ln.rating, 2),
+                }
+                for ln in fixture.results[map_index].lines
+            ),
+            key=lambda r: (-r["rating"], r["player_id"]),
+        )
         return {
             "fixture": _fixture_view(fixture, gs),
             "map": map_geometry(map_id),
@@ -3208,8 +5159,44 @@ def replay(fixture_id: str, map_index: int) -> dict:
             "team_b": fixture.team_b,
             "players": players,
             "abilities": abilities,
-            "events": [e.model_dump() for e in events],
+            "events": dumped,
+            # Per-round result strip for the viewer timeline (winner, running
+            # score, whether the spike went down). Derived from the log.
+            "round_summaries": _round_summaries(dumped, fixture.team_a),
+            "box_score": box,
+            "mvp": box[0] if box else None,
         }
+
+
+def _round_summaries(events: list[dict], team_a: str) -> list[dict]:
+    """A compact per-round result list from a map's event log: round number,
+    the attacking side, whether the spike was planted, the winner, and the
+    running score. Pure read of the log — the viewer renders it as a
+    round-by-round timeline strip."""
+    out: list[dict] = []
+    cur: dict | None = None
+    sa = sb = 0
+    for d in events:
+        t = d.get("type")
+        if t == "round.start":
+            cur = {
+                "num": d.get("round_num"),
+                "attacker": d.get("attacking_team_id"),
+                "plant": False, "winner_id": None,
+            }
+        elif t == "round.spike_plant" and cur is not None:
+            cur["plant"] = True
+        elif t == "round.end" and cur is not None:
+            w = d.get("winner_id")
+            cur["winner_id"] = w
+            if w == team_a:
+                sa += 1
+            else:
+                sb += 1
+            cur["score_a"], cur["score_b"] = sa, sb
+            out.append(cur)
+            cur = None
+    return out
 
 
 def _cookie_sid(scope) -> str | None:
@@ -3271,7 +5258,15 @@ class SessionMiddleware:
         ctx_token = _ctx.set(_ReqCtx(game, team_id))
         sid_token = _sid_ctx.set(sid)
         try:
-            await self.app(scope, receive, send_wrapper)
+            if path.startswith("/api/"):
+                # Per-endpoint latency: bucket by the first two path
+                # segments so dynamic ids collapse into one series
+                # ("/api/roster/team_x" -> "api./api/roster").
+                route = "/".join(path.split("/", 3)[:3])
+                with perf.span(f"api.{route}"):
+                    await self.app(scope, receive, send_wrapper)
+            else:
+                await self.app(scope, receive, send_wrapper)
         finally:
             _ctx.reset(ctx_token)
             _sid_ctx.reset(sid_token)

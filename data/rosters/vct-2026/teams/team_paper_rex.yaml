@@ -13,6 +13,12 @@ players:
   handle: something
   real_name: Ilia Petrov
   region: pacific
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 60.0
   age: 21
   role: duelist
   playstyle: awper
@@ -32,30 +38,58 @@ players:
     mastery: 99.0
   - agent_id: phoenix
     mastery: 82.6
+  - agent_id: raze
+    mastery: 79.2
+  - agent_id: reyna
+    mastery: 77.5
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 96.3
+    mastery: 97.4
   - map_id: bind
-    mastery: 93.7
+    mastery: 79.8
   - map_id: haven
-    mastery: 92.5
+    mastery: 99.0
   - map_id: lotus
-    mastery: 95.0
+    mastery: 96.7
   - map_id: split
-    mastery: 86.2
+    mastery: 93.9
   salary: 7300
-  contract_weeks_left: 35
-  morale: 67.6
-  stamina: 96.6
-  form: 46.6
+  contract_weeks_left: 64
+  morale: 75.3
+  stamina: 98.3
+  form: 51.4
   personality_tags:
+  - flashy
   - independent
-  - quiet
-  potential: 96.0
+  potential: 87.2
 - id: team_paper_rex_jinggg
   handle: Jinggg
   real_name: Wang Jing Jie
   region: pacific
+  country: SG
+  languages:
+  - lang: en
+    level: 90.0
+  - lang: zh
+    level: 80.0
   age: 21
   role: duelist
   playstyle: entry
@@ -75,30 +109,58 @@ players:
     mastery: 98.2
   - agent_id: phoenix
     mastery: 83.3
+  - agent_id: jett
+    mastery: 73.1
+  - agent_id: reyna
+    mastery: 73.7
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 56.9
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 53.7
   map_pool:
   - map_id: ascent
-    mastery: 88.1
+    mastery: 84.3
   - map_id: bind
-    mastery: 89.0
+    mastery: 99.0
   - map_id: haven
-    mastery: 91.0
+    mastery: 99.0
   - map_id: lotus
-    mastery: 94.9
+    mastery: 87.6
   - map_id: split
-    mastery: 96.2
+    mastery: 80.5
   salary: 7100
-  contract_weeks_left: 55
-  morale: 73.6
-  stamina: 88.0
-  form: 48.0
+  contract_weeks_left: 30
+  morale: 61.4
+  stamina: 81.3
+  form: 50.9
   personality_tags:
-  - fan_favorite
-  - flashy
-  potential: 96.0
+  - analytical
+  - streamer
+  potential: 88.4
 - id: team_paper_rex_f0rsaken
   handle: f0rsakeN
   real_name: Jason Susanto
   region: pacific
+  country: ID
+  languages:
+  - lang: id
+    level: 95.0
+  - lang: en
+    level: 88.0
   age: 21
   role: flex
   playstyle: lurker
@@ -118,30 +180,58 @@ players:
     mastery: 93.4
   - agent_id: jett
     mastery: 97.4
+  - agent_id: breach
+    mastery: 57.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 58.6
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 58.8
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 0.1
+  - agent_id: reyna
+    mastery: 59.3
+  - agent_id: skye
+    mastery: 53.5
+  - agent_id: sova
+    mastery: 5.1
+  - agent_id: viper
+    mastery: 59.8
   map_pool:
   - map_id: ascent
-    mastery: 86.1
+    mastery: 84.2
   - map_id: bind
-    mastery: 84.0
+    mastery: 80.2
   - map_id: haven
-    mastery: 86.4
+    mastery: 85.8
   - map_id: lotus
-    mastery: 94.4
+    mastery: 91.6
   - map_id: split
-    mastery: 94.9
+    mastery: 81.1
   salary: 6900
-  contract_weeks_left: 54
-  morale: 68.4
-  stamina: 92.5
-  form: 55.0
+  contract_weeks_left: 42
+  morale: 82.3
+  stamina: 96.6
+  form: 60.0
   personality_tags:
-  - flashy
   - perfectionist
-  potential: 91.7
+  - slow_starter
+  potential: 86.5
 - id: team_paper_rex_invy
   handle: invy
   real_name: Adrian Jiggs Aisa Reyes
   region: pacific
+  country: PH
+  languages:
+  - lang: tl
+    level: 92.0
+  - lang: en
+    level: 82.0
   age: 23
   role: initiator
   playstyle: support
@@ -161,29 +251,58 @@ players:
     mastery: 92.3
   - agent_id: sova
     mastery: 85.3
+  - agent_id: breach
+    mastery: 62.5
+  - agent_id: chamber
+    mastery: 47.0
+  - agent_id: clove
+    mastery: 59.6
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 50.8
+  - agent_id: omen
+    mastery: 57.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 59.0
+  - agent_id: reyna
+    mastery: 51.1
+  - agent_id: viper
+    mastery: 52.4
   map_pool:
   - map_id: ascent
-    mastery: 76.7
+    mastery: 81.4
   - map_id: bind
-    mastery: 69.0
+    mastery: 70.5
   - map_id: haven
-    mastery: 73.5
+    mastery: 79.9
   - map_id: lotus
-    mastery: 85.1
+    mastery: 67.4
   - map_id: split
-    mastery: 88.8
+    mastery: 90.3
   salary: 5900
-  contract_weeks_left: 58
-  morale: 79.4
-  stamina: 91.8
-  form: 50.6
+  contract_weeks_left: 74
+  morale: 67.8
+  stamina: 94.5
+  form: 58.5
   personality_tags:
-  - fan_favorite
-  potential: 83.5
+  - independent
+  - perfectionist
+  potential: 81.6
 - id: team_paper_rex_d4v41
   handle: d4v41
   real_name: Ahmad Khalish Rusyaidee bin Nordin
   region: pacific
+  country: MY
+  languages:
+  - lang: ms
+    level: 95.0
+  - lang: en
+    level: 85.0
   age: 24
   role: sentinel
   playstyle: igl
@@ -203,23 +322,45 @@ players:
     mastery: 97.3
   - agent_id: viper
     mastery: 86.0
+  - agent_id: chamber
+    mastery: 75.1
+  - agent_id: cypher
+    mastery: 67.4
+  - agent_id: breach
+    mastery: 59.4
+  - agent_id: clove
+    mastery: 59.7
+  - agent_id: jett
+    mastery: 53.9
+  - agent_id: omen
+    mastery: 3.6
+  - agent_id: phoenix
+    mastery: 59.1
+  - agent_id: raze
+    mastery: 54.1
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 58.6
+  - agent_id: sova
+    mastery: 2.5
   map_pool:
   - map_id: ascent
-    mastery: 93.7
+    mastery: 83.9
   - map_id: bind
-    mastery: 82.2
+    mastery: 78.9
   - map_id: haven
-    mastery: 88.6
+    mastery: 84.6
   - map_id: lotus
-    mastery: 87.7
+    mastery: 96.7
   - map_id: split
-    mastery: 81.3
+    mastery: 92.7
   salary: 6400
-  contract_weeks_left: 55
-  morale: 70.7
-  stamina: 80.4
-  form: 51.7
+  contract_weeks_left: 51
+  morale: 75.4
+  stamina: 91.7
+  form: 55.8
   personality_tags:
-  - clutch_gene
-  - perfectionist
-  potential: 83.5
+  - analytical
+  - team_player
+  potential: 84.2

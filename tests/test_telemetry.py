@@ -90,7 +90,7 @@ def test_snapshots_are_deterministic(game_data):
     }
 
 
-def test_save_roundtrip_and_v5_load(tmp_path, campaign, game_data):
+def test_save_roundtrip_and_v7_load(tmp_path, campaign, game_data):
     gs = campaign
     telemetry.record_action(gs, "advance")
     advance_week(gs, game_data)
@@ -102,14 +102,14 @@ def test_save_roundtrip_and_v5_load(tmp_path, campaign, game_data):
     ]
     assert loaded.telemetry_snaps == gs.telemetry_snaps
 
-    # A v5 save (no telemetry fields) loads with empty defaults.
+    # A v7 save (no telemetry fields) loads with empty defaults.
     data = json.loads(path.read_text(encoding="utf-8"))
     data.pop("action_log")
     data.pop("telemetry_snaps")
-    data["schema_version"] = 5
-    v5 = tmp_path / "v5.json"
-    v5.write_text(json.dumps(data), encoding="utf-8")
-    migrated = GameState.load(v5)
+    data["schema_version"] = 7
+    v7 = tmp_path / "v7.json"
+    v7.write_text(json.dumps(data), encoding="utf-8")
+    migrated = GameState.load(v7)
     assert migrated.action_log == []
     assert migrated.telemetry_snaps == {}
 

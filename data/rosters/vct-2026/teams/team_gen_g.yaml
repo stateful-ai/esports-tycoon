@@ -13,6 +13,12 @@ players:
   handle: t3xture
   real_name: Kim Na-ra
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 30.0
   age: 24
   role: duelist
   playstyle: entry
@@ -34,30 +40,55 @@ players:
     mastery: 88.7
   - agent_id: chamber
     mastery: 79.8
+  - agent_id: phoenix
+    mastery: 71.2
+  - agent_id: reyna
+    mastery: 68.9
+  - agent_id: breach
+    mastery: 54.3
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 53.2
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 59.0
+  - agent_id: sova
+    mastery: 57.7
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 87.8
+    mastery: 99.0
   - map_id: bind
-    mastery: 84.4
+    mastery: 88.8
   - map_id: haven
-    mastery: 95.1
+    mastery: 85.8
   - map_id: lotus
-    mastery: 81.6
+    mastery: 81.3
   - map_id: split
-    mastery: 90.3
+    mastery: 85.8
   salary: 6400
-  contract_weeks_left: 65
-  morale: 65.7
-  stamina: 81.7
-  form: 51.5
+  contract_weeks_left: 47
+  morale: 66.3
+  stamina: 99.7
+  form: 49.6
   personality_tags:
-  - fan_favorite
-  - quiet
-  potential: 81.1
+  - grinder
+  potential: 79.7
 - id: team_gen_g_karon
   handle: Karon
   real_name: Kim Won-tae
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 25.0
   age: 22
   role: controller
   playstyle: support
@@ -77,30 +108,58 @@ players:
     mastery: 92.0
   - agent_id: phoenix
     mastery: 83.1
+  - agent_id: clove
+    mastery: 74.3
+  - agent_id: omen
+    mastery: 66.4
+  - agent_id: breach
+    mastery: 6.8
+  - agent_id: chamber
+    mastery: 55.1
+  - agent_id: cypher
+    mastery: 56.8
+  - agent_id: jett
+    mastery: 53.3
+  - agent_id: killjoy
+    mastery: 55.6
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 56.6
+  - agent_id: skye
+    mastery: 53.8
+  - agent_id: sova
+    mastery: 46.5
   map_pool:
   - map_id: ascent
-    mastery: 94.9
+    mastery: 82.9
   - map_id: bind
-    mastery: 83.1
+    mastery: 78.5
   - map_id: haven
-    mastery: 83.0
+    mastery: 78.1
   - map_id: lotus
-    mastery: 76.8
+    mastery: 78.8
   - map_id: split
-    mastery: 85.2
+    mastery: 80.3
   salary: 5700
-  contract_weeks_left: 66
-  morale: 61.4
-  stamina: 85.9
-  form: 52.5
+  contract_weeks_left: 31
+  morale: 63.5
+  stamina: 96.5
+  form: 56.2
   personality_tags:
-  - flashy
-  - hot_head
-  potential: 80.2
+  - clutch_gene
+  - team_player
+  potential: 83.8
 - id: team_gen_g_ash
   handle: Ash
   real_name: Ha Hyun-cheol
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 25.0
   age: 21
   role: flex
   playstyle: support
@@ -120,30 +179,58 @@ players:
     mastery: 84.7
   - agent_id: omen
     mastery: 72.8
+  - agent_id: breach
+    mastery: 50.5
+  - agent_id: chamber
+    mastery: 51.2
+  - agent_id: clove
+    mastery: 56.8
+  - agent_id: cypher
+    mastery: 52.2
+  - agent_id: killjoy
+    mastery: 51.4
+  - agent_id: phoenix
+    mastery: 43.7
+  - agent_id: raze
+    mastery: 50.3
+  - agent_id: reyna
+    mastery: 48.5
+  - agent_id: skye
+    mastery: 52.2
+  - agent_id: sova
+    mastery: 54.7
+  - agent_id: viper
+    mastery: 38.9
   map_pool:
   - map_id: ascent
-    mastery: 76.7
+    mastery: 80.2
   - map_id: bind
-    mastery: 78.5
+    mastery: 71.0
   - map_id: haven
-    mastery: 80.9
+    mastery: 73.6
   - map_id: lotus
-    mastery: 79.4
+    mastery: 71.3
   - map_id: split
-    mastery: 90.6
+    mastery: 77.5
   salary: 5400
-  contract_weeks_left: 34
-  morale: 67.4
-  stamina: 86.3
-  form: 52.7
+  contract_weeks_left: 67
+  morale: 62.8
+  stamina: 83.6
+  form: 45.7
   personality_tags:
-  - streamer
-  - team_player
-  potential: 84.0
+  - independent
+  - perfectionist
+  potential: 85.1
 - id: team_gen_g_efina
   handle: Efina
   real_name: Kim Nak-yeon
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 20
   role: sentinel
   playstyle: igl
@@ -163,30 +250,58 @@ players:
     mastery: 69.2
   - agent_id: cypher
     mastery: 62.1
+  - agent_id: chamber
+    mastery: 55.2
+  - agent_id: breach
+    mastery: 41.8
+  - agent_id: clove
+    mastery: 34.3
+  - agent_id: jett
+    mastery: 44.5
+  - agent_id: omen
+    mastery: 48.2
+  - agent_id: phoenix
+    mastery: 43.8
+  - agent_id: raze
+    mastery: 29.0
+  - agent_id: reyna
+    mastery: 42.1
+  - agent_id: skye
+    mastery: 30.8
+  - agent_id: sova
+    mastery: 39.2
+  - agent_id: viper
+    mastery: 57.3
   map_pool:
   - map_id: ascent
-    mastery: 71.8
+    mastery: 69.7
   - map_id: bind
-    mastery: 77.6
+    mastery: 74.3
   - map_id: haven
-    mastery: 69.8
+    mastery: 68.9
   - map_id: lotus
-    mastery: 81.1
+    mastery: 74.3
   - map_id: split
-    mastery: 60.8
+    mastery: 74.2
   salary: 4400
-  contract_weeks_left: 63
-  morale: 64.0
-  stamina: 81.7
-  form: 48.1
+  contract_weeks_left: 38
+  morale: 65.7
+  stamina: 97.8
+  form: 58.7
   personality_tags:
-  - hot_head
   - quiet
-  potential: 74.3
+  - slow_starter
+  potential: 74.7
 - id: team_gen_g_raxcal
   handle: RaxcaL
   real_name: Kim Min-seok
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 18
   role: duelist
   playstyle: entry
@@ -206,24 +321,46 @@ players:
     mastery: 71.0
   - agent_id: raze
     mastery: 68.3
+  - agent_id: phoenix
+    mastery: 57.4
+  - agent_id: reyna
+    mastery: 45.1
+  - agent_id: breach
+    mastery: 43.7
+  - agent_id: chamber
+    mastery: 6.9
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 45.7
+  - agent_id: killjoy
+    mastery: 28.1
+  - agent_id: omen
+    mastery: 37.2
+  - agent_id: skye
+    mastery: 35.3
+  - agent_id: sova
+    mastery: 44.7
+  - agent_id: viper
+    mastery: 41.0
   map_pool:
   - map_id: ascent
-    mastery: 75.6
+    mastery: 73.4
   - map_id: bind
-    mastery: 57.1
+    mastery: 66.2
   - map_id: haven
-    mastery: 67.9
+    mastery: 82.1
   - map_id: lotus
-    mastery: 72.2
+    mastery: 70.7
   - map_id: split
-    mastery: 75.1
+    mastery: 79.2
   salary: 4300
-  contract_weeks_left: 52
-  morale: 72.4
-  stamina: 96.4
-  form: 54.7
+  contract_weeks_left: 42
+  morale: 74.1
+  stamina: 87.7
+  form: 51.1
   personality_tags:
-  - perfectionist
+  - fan_favorite
+  - grinder
   - rookie
-  - slow_starter
-  potential: 75.7
+  potential: 76.1
