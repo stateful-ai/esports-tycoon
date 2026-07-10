@@ -952,3 +952,50 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 }
 .lineup-block h3 { margin: 0 0 6px; font-size: 13px; }
 .lineup-block .row { flex-wrap: wrap; gap: 6px; }
+
+/* -- dev-systems overhaul: sub-tabs, staff market, social feed, stats depth,
+      lineup controls. Same token language as everything above. ------------- */
+
+.subtabs { margin-bottom: 12px; }
+.btn.active {
+  color: var(--es-color-text-primary, #e9edf6);
+  border-color: var(--es-color-brand, #ff4655);
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 12%, var(--es-color-bg-surface, #0f1520));
+}
+
+/* Wide analytics tables scroll inside the card, never the page. */
+.table-scroll { overflow-x: auto; }
+.table-scroll table { min-width: 100%; }
+
+/* Roster lineup + development plan controls. */
+.starter-toggle { min-width: 34px; }
+.starter-toggle.active {
+  color: var(--es-color-accent, #4fd8c0);
+  border-color: var(--es-color-accent, #4fd8c0);
+}
+.dev-plan { white-space: nowrap; }
+.dev-plan select {
+  font: inherit;
+  font-size: var(--es-text-xs, 11px);
+  color: var(--es-color-text-secondary, #a2aec6);
+  background: var(--es-color-bg-surface, #0f1520);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-sm, 4px);
+  padding: 2px 4px;
+  max-width: 96px;
+}
+
+/* Staff market: names are profile links like players/teams. */
+.slink { cursor: pointer; }
+.slink:hover { color: var(--es-color-accent, #4fd8c0); }
+
+/* Social feed posts. */
+.post {
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.post:last-child { border-bottom: none; }
+.post-head { display: flex; gap: 8px; align-items: baseline; font-size: var(--es-text-sm, 12px); }
+.post-head .muted { margin-left: auto; font-size: var(--es-text-2xs, 10px); }
+.post-body { margin: 3px 0 2px; }
+.post-likes { font-size: var(--es-text-2xs, 10px); }

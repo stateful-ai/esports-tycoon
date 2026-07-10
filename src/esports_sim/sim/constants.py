@@ -271,6 +271,17 @@ EXEC_CHEM_DIV = 20.0
 # the decider — squad quality and man-advantage still dominate.
 EXEC_MOD_CAP = 8.0
 
+# Confidence (campaign-fed, neutral-safe): 50 is an EXACT no-op on every
+# term below, so default players keep the golden/balance gates byte-stable.
+# The campaign layer moves confidence on results, personal ratings and the
+# social layer; the engine reads it three ways — an additive duel term
+# (mechanics), a peek-probability scale (tendencies: confident players
+# swing angles), and a clutch-factor scale (belief in the big moment).
+CONFIDENCE_COND_DIV = 10.0  # duel points per confidence point (/ div)
+CONFIDENCE_COND_CAP = 3.0  # clamp on the additive duel term
+CONFIDENCE_PEEK_DIV = 250.0  # +/-20% peek appetite across the dial
+CONFIDENCE_CLUTCH_DIV = 200.0  # +/-25% clutch-factor leverage
+
 # Eco discipline: on a save/force round eco_greed decides whether the team
 # runs it down (a fast aggressive hit to catch the buy off-guard) or plays
 # slow for picks and the exit. Shifts the execute probability by +/- this

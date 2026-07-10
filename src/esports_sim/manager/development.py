@@ -92,6 +92,136 @@ def retirement_prob(p: Player) -> float:
 
 
 # ---------------------------------------------------------------------------
+# Weekly development events: the random texture of a career. Applied to
+# EVERY org's roster (AI parity — rivals' prospects break out and slump
+# too); only human-owned teams get the news line. Drawn from a dedicated
+# rng stream (campaign label "devevents") so adding/removing events never
+# shifts any other subsystem's draws.
+
+DEV_EVENT_PROB = 0.05  # per player per week
+
+# Substrings that identify a dev-event news line (the inbox's detector —
+# keep in sync with the headlines in _fire_event below).
+DEV_EVENT_MARKERS = [
+    "breakthrough week",
+    "is in a slump",
+    "tweaks a wrist",
+    "running on fumes",
+    "does numbers online",
+    "gets into it with fans",
+    "under their wing",
+    "grinding.",
+]
+
+_CATEGORY_ATTRS = {
+    "mechanical": ["aim_precision", "aim_reactivity", "movement"],
+    "tactical": ["game_sense", "utility_usage", "positioning"],
+    "mental": ["clutch_factor", "tilt_resistance", "composure"],
+}
+
+
+def _clamp_stat(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
+    return round(min(hi, max(lo, v)), 1)
+
+
+def _bump_attr(p: Player, attr_id: str, amount: float) -> None:
+    cur = p.attr(attr_id)
+    headroom = max(0.0, (95.0 - cur) / 45.0)
+    p.attributes[attr_id] = round(min(99.0, cur + amount * headroom), 2)
+
+
+def _weakest_category(p: Player) -> str:
+    return min(
+        sorted(_CATEGORY_ATTRS),
+        key=lambda c: sum(p.attr(a) for a in _CATEGORY_ATTRS[c]),
+    )
+
+
+def weekly_dev_events(gs, rng) -> list[dict]:
+    """Roll development events for every rostered player. Returns the
+    events that fired ({team_id, player_id, kind, headline}) so the inbox
+    and the social layer can surface them; effects are applied here."""
+    out: list[dict] = []
+    for tid in sorted(gs.teams):
+        for p in sorted(gs.roster(tid), key=lambda q: q.id):
+            if rng.random() >= DEV_EVENT_PROB:
+                continue
+            kind, headline = _fire_event(gs, tid, p, rng)
+            out.append(
+                {"team_id": tid, "player_id": p.id, "kind": kind, "headline": headline}
+            )
+            if gs.is_human(tid):
+                gs.push_private_news(headline, owner=tid)
+    return out
+
+
+def _fire_event(gs, tid: str, p: Player, rng) -> tuple[str, str]:
+    """Pick and apply one event. An 'intense' training plan adds burnout
+    to the table — the risk that pays for the extra growth."""
+    roll = rng.random()
+    if p.training_intensity == "intense" and roll < 0.22:
+        p.stamina = _clamp_stat(p.stamina - 30.0)
+        p.morale = _clamp_stat(p.morale - 8.0)
+        p.confidence = _clamp_stat(p.confidence - 6.0, 5.0, 95.0)
+        p.form = _clamp_stat(p.form - 6.0)
+        return "burnout", (
+            f"{p.handle} is running on fumes — the intense schedule bites."
+        )
+    if roll < 0.18:
+        mult = dev_multiplier(p)
+        for a in _CATEGORY_ATTRS[_weakest_category(p)]:
+            _bump_attr(p, a, float(rng.uniform(0.8, 1.4)) * mult)
+        p.confidence = _clamp_stat(p.confidence + 6.0, 5.0, 95.0)
+        return "breakthrough", (
+            f"{p.handle} has a breakthrough week — something clicked in practice."
+        )
+    if roll < 0.33:
+        p.form = _clamp_stat(p.form - 8.0)
+        p.confidence = _clamp_stat(p.confidence - 7.0, 5.0, 95.0)
+        return "slump", f"{p.handle} is in a slump — coaches see hesitation."
+    if roll < 0.45:
+        p.stamina = _clamp_stat(p.stamina - 35.0)
+        p.form = _clamp_stat(p.form - 4.0)
+        return "minor_injury", (
+            f"{p.handle} tweaks a wrist in practice — the physio is monitoring."
+        )
+    if roll < 0.60:
+        p.confidence = _clamp_stat(p.confidence + 5.0, 5.0, 95.0)
+        p.morale = _clamp_stat(p.morale + 3.0)
+        return "viral_clip", f"A clip of {p.handle} does numbers online."
+    if roll < 0.70:
+        p.morale = _clamp_stat(p.morale - 6.0)
+        p.confidence = _clamp_stat(p.confidence - 4.0, 5.0, 95.0)
+        team = gs.teams[tid]
+        team.chemistry = _clamp_stat(team.chemistry - 2.0)
+        return "drama", f"{p.handle} gets into it with fans online."
+    # Mentorship: a veteran takes a young player under their wing; falls
+    # back to a solo grind week when the roster has no such pairing.
+    vets = [
+        q
+        for q in gs.roster(tid)
+        if q.id != p.id and (q.age >= 27 or "veteran" in q.personality_tags)
+    ]
+    if p.age <= 22 and vets:
+        vet = min(vets, key=lambda q: q.id)
+        _bump_attr(p, "game_sense", float(rng.uniform(0.6, 1.0)))
+        _bump_attr(p, "composure", float(rng.uniform(0.4, 0.8)))
+        p.morale = _clamp_stat(p.morale + 3.0)
+        return "mentorship", (
+            f"{vet.handle} takes {p.handle} under their wing this week."
+        )
+    focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else _weakest_category(p)
+    _bump_attr(
+        p,
+        min(_CATEGORY_ATTRS[focus], key=lambda a: p.attr(a)),
+        float(rng.uniform(0.5, 0.9)),
+    )
+    p.stamina = _clamp_stat(p.stamina - 8.0)
+    p.morale = _clamp_stat(p.morale + 2.0)
+    return "grind", f"{p.handle} stays late every night this week, grinding."
+
+
+# ---------------------------------------------------------------------------
 # Scout assessment
 
 

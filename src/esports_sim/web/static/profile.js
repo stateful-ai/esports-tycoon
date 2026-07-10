@@ -156,6 +156,70 @@ function pfMirrorBars(weekly) {
   return `<svg class="pf-chart pf-mirror" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Kills and deaths by week">${axis}${bars}</svg>`;
 }
 
+// Generic single-metric line over a weekly series (same visual language as
+// pfSparkline, different accessor). Returns null when the series is empty.
+function pfMetricLine(series, get, fmt, aria) {
+  const pts = (series || []).filter((w) => w && get(w) != null && !isNaN(get(w)));
+  if (!pts.length) return null;
+  const W = 280, H = 64, ml = 6, mr = 6, mt = 12, mb = 10;
+  const pw = W - ml - mr, ph = H - mt - mb;
+  const vals = pts.map(get).map(Number);
+  let mn = Math.min(...vals), mx = Math.max(...vals);
+  if (mn === mx) { mn -= 1; mx += 1; }
+  const x = (i) => (pts.length === 1 ? ml + pw / 2 : ml + (i / (pts.length - 1)) * pw);
+  const y = (v) => mt + ph - ((v - mn) / (mx - mn)) * ph;
+  const coords = vals.map((v, i) => [x(i), y(v)]);
+  const dots = coords
+    .map(
+      (c, i) =>
+        `<circle class="pf-spark-dot" cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="2.6">` +
+        `<title>${pfWk(pts[i])}: ${fmt(vals[i])}</title></circle>`
+    )
+    .join("");
+  const poly =
+    pts.length > 1
+      ? `<polyline class="pf-spark-line" points="${coords.map((c) => `${c[0].toFixed(1)},${c[1].toFixed(1)}`).join(" ")}"/>`
+      : "";
+  const yLabels =
+    `<text class="pf-axis" x="${ml}" y="${mt - 3}">${fmt(mx)}</text>` +
+    `<text class="pf-axis" x="${ml}" y="${H - 2}">${fmt(mn)}</text>`;
+  return `<svg class="pf-chart pf-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${aria}">${poly}${dots}${yLabels}</svg>`;
+}
+
+function pfRatingLine(series) {
+  return pfMetricLine(series, (w) => w.rating, (v) => Number(v).toFixed(2), "Rating by week");
+}
+
+// Two-line development chart: current ability + confidence, shared x-axis.
+function pfDevChart(series) {
+  const pts = (series || []).filter((w) => w && w.ca != null);
+  if (!pts.length) return null;
+  const W = 280, H = 88, ml = 6, mr = 6, mt = 12, mb = 10;
+  const pw = W - ml - mr, ph = H - mt - mb;
+  const caVals = pts.map((w) => +w.ca);
+  const cfVals = pts.map((w) => +(w.confidence ?? 50));
+  let mn = Math.min(...caVals, ...cfVals), mx = Math.max(...caVals, ...cfVals);
+  if (mx - mn < 4) { mn -= 2; mx += 2; }
+  const x = (i) => (pts.length === 1 ? ml + pw / 2 : ml + (i / (pts.length - 1)) * pw);
+  const y = (v) => mt + ph - ((v - mn) / (mx - mn)) * ph;
+  const line = (vals, cls) =>
+    pts.length > 1
+      ? `<polyline class="${cls}" points="${vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}"/>`
+      : `<circle class="pf-spark-dot" cx="${x(0)}" cy="${y(vals[0])}" r="2.6"/>`;
+  const tips = pts
+    .map(
+      (w, i) =>
+        `<circle class="pf-spark-dot" cx="${x(i).toFixed(1)}" cy="${y(caVals[i]).toFixed(1)}" r="2.4">` +
+        `<title>${pfWk(w)}: CA ${caVals[i].toFixed(1)} / conf ${Math.round(cfVals[i])}</title></circle>`
+    )
+    .join("");
+  const yLabels =
+    `<text class="pf-axis" x="${ml}" y="${mt - 3}">${Math.round(mx)}</text>` +
+    `<text class="pf-axis" x="${ml}" y="${H - 2}">${Math.round(mn)}</text>`;
+  return `<svg class="pf-chart pf-dev" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ability and confidence over time">` +
+    `${line(caVals, "pf-spark-line")}${line(cfVals, "pf-spark-line pf-line-alt")}${tips}${yLabels}</svg>`;
+}
+
 /* -- player profile --------------------------------------------------------- */
 
 function renderPlayerProfile(data) {
@@ -178,6 +242,13 @@ function renderPlayerProfile(data) {
     p.role ? `<span class="pill">${p.role}</span>` : "",
     ov.playstyle ? `<span class="pill">${ov.playstyle}</span>` : "",
     p.age != null ? `<span class="pf-age">age ${p.age}</span>` : "",
+    p.is_starter === false ? `<span class="pill">bench</span>` : "",
+    p.followers != null && typeof fmtFollowers === "function"
+      ? `<span class="pill" title="social reach">${fmtFollowers(p.followers)} followers</span>`
+      : "",
+    p.dev_focus
+      ? `<span class="pill" title="development plan">${p.dev_focus} · ${p.training_intensity}</span>`
+      : "",
   ].filter(Boolean).join("");
   const contract = p.is_free_agent
     ? "Free agent — unsigned"
@@ -209,6 +280,7 @@ function renderPlayerProfile(data) {
   tiles.appendChild(pfTile("Form", pfNum(ov.form)));
   tiles.appendChild(pfTile("Morale", pfNum(ov.morale)));
   tiles.appendChild(pfTile("Condition", pfNum(ov.condition)));
+  tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve"));
   tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—"));
   frag.appendChild(tiles);
 
@@ -304,11 +376,38 @@ function renderPlayerProfile(data) {
     const sec = pfSection(`Season — analytics`);
     if (s) {
       const st = el("div", "pf-tiles pf-tiles-sm");
+      st.appendChild(pfTile("Rating", pfNum(s.rating, 2)));
       st.appendChild(pfTile("K/D", pfNum(s.kd, 2)));
       st.appendChild(pfTile("ACS", pfNum(s.acs)));
-      st.appendChild(pfTile("First kills", pfNum(s.first_kills)));
+      st.appendChild(pfTile("KAST%", pfNum(s.kast_pct)));
+      st.appendChild(pfTile("HS%", pfNum(s.hs_pct)));
+      st.appendChild(
+        pfTile(
+          "FK : FD",
+          s.first_deaths != null ? `${pfNum(s.first_kills)} : ${pfNum(s.first_deaths)}` : pfNum(s.first_kills),
+          s.fk_fd != null ? `ratio ${pfNum(s.fk_fd, 2)}` : ""
+        )
+      );
       st.appendChild(pfTile("Clutches", pfNum(s.clutches)));
       sec.appendChild(st);
+      if (s.clutch_1v1 != null) {
+        sec.appendChild(el("p", "pf-season-line muted",
+          `Clutches: ${pfNum(s.clutch_1v1)}x 1v1, ${pfNum(s.clutch_1v2)}x 1v2, ${pfNum(s.clutch_1v3)}x 1vX` +
+          ` / Kills: ${pfNum(s.pistol_kills)} pistol, ${pfNum(s.eco_kills)} eco, ${pfNum(s.save_kills)} save` +
+          (s.trade_kills != null ? `, ${pfNum(s.trade_kills)} trades` : "")));
+      }
+      if (s.kills_by_weapon && Object.keys(s.kills_by_weapon).length) {
+        const chips = el("div", "pf-chips");
+        chips.innerHTML = Object.entries(s.kills_by_weapon)
+          .slice(0, 8)
+          .map(([w, n]) => `<span class="pf-chip" title="kills with ${w}">${w} ${n}</span>`)
+          .join("");
+        sec.appendChild(chips);
+      }
+      if ((s.analytics_tier ?? 0) < 2) {
+        sec.appendChild(el("p", "pf-empty muted",
+          "Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department."));
+      }
       sec.appendChild(
         el(
           "p",
@@ -317,11 +416,20 @@ function renderPlayerProfile(data) {
         )
       );
     }
-    const spark = pfSparkline(weekly);
+    // ACS trend prefers the persisted weekly series (analytics tier 2+),
+    // falling back to this season's derivable match lines.
+    const perf = (data.charts && data.charts.performance) || [];
+    const spark = pfSparkline(perf.length ? perf : weekly);
+    const rating = pfRatingLine(perf);
     const mirror = pfMirrorBars(weekly);
     if (spark) {
       const box = el("div", "pf-chart-box");
       box.innerHTML = `<div class="pf-chart-cap">ACS by week</div>${spark}`;
+      sec.appendChild(box);
+    }
+    if (rating) {
+      const box = el("div", "pf-chart-box");
+      box.innerHTML = `<div class="pf-chart-cap">Rating by week</div>${rating}`;
       sec.appendChild(box);
     }
     if (mirror) {
@@ -333,6 +441,54 @@ function renderPlayerProfile(data) {
       sec.appendChild(box);
     }
     if (!s && !spark && !mirror) sec.appendChild(pfEmpty("No matches played yet."));
+    frag.appendChild(sec);
+  }
+
+  // Development trend (own players): ability + confidence over the weeks.
+  const devSeries = (data.charts && data.charts.development) || [];
+  if (devSeries.length) {
+    const sec = pfSection("Development");
+    const dev = pfDevChart(devSeries);
+    if (dev) {
+      const box = el("div", "pf-chart-box");
+      box.innerHTML =
+        `<div class="pf-chart-cap">Ability &amp; confidence over time` +
+        `<span class="pf-legend"><span class="pf-sw pf-sw-k"></span>CA` +
+        `<span class="pf-sw pf-sw-d"></span>Conf</span></div>${dev}`;
+      sec.appendChild(box);
+    }
+    const first = devSeries[0], last = devSeries[devSeries.length - 1];
+    sec.appendChild(el("p", "pf-season-line muted",
+      `CA ${pfNum(first.ca, 1)} to ${pfNum(last.ca, 1)} over ${devSeries.length} weeks` +
+      (typeof fmtFollowers === "function" ? ` / ${fmtFollowers(last.followers)} followers` : "")));
+    frag.appendChild(sec);
+  }
+
+  // Per-map / per-agent splits (analytics tier 3) ----------------------------
+  const splits = data.splits;
+  if (splits && ((splits.maps || []).length || (splits.agents || []).length)) {
+    const sec = pfSection("Splits");
+    const grid2 = el("div", "pf-grid2");
+    const mkTable = (rows, label) => {
+      const col = el("div");
+      const t = el("table", "pf-table");
+      t.innerHTML = `<thead><tr><th>${label}</th><th class="num">Maps</th>
+        <th class="num">Rating</th><th class="num">ACS</th><th class="num">K/D</th>
+        <th class="num">KAST%</th></tr></thead>`;
+      const tb = el("tbody");
+      for (const r of rows) {
+        tb.appendChild(el("tr", "", `
+          <td>${r.label}</td><td class="num">${r.maps}</td>
+          <td class="num">${pfNum(r.rating, 2)}</td><td class="num">${pfNum(r.acs)}</td>
+          <td class="num">${pfNum(r.kd, 2)}</td><td class="num">${pfNum(r.kast_pct)}</td>`));
+      }
+      t.appendChild(tb);
+      col.appendChild(t);
+      return col;
+    };
+    if ((splits.maps || []).length) grid2.appendChild(mkTable(splits.maps, "Map"));
+    if ((splits.agents || []).length) grid2.appendChild(mkTable(splits.agents, "Agent"));
+    sec.appendChild(grid2);
     frag.appendChild(sec);
   }
 
@@ -510,6 +666,83 @@ function renderTeamProfile(data) {
   return frag;
 }
 
+/* -- staff profile ----------------------------------------------------------- */
+
+function renderStaffProfile(data) {
+  const frag = document.createDocumentFragment();
+  const m = data.member || {};
+
+  const header = el("div", "pf-header");
+  const initial = (m.name || "?").charAt(0).toUpperCase();
+  const meta = [
+    m.role ? `<span class="pill">${m.role}</span>` : "",
+    m.specialty ? `<span class="pill" title="${m.specialty_blurb || ""}">${m.specialty}</span>` : "",
+    m.age != null ? `<span class="pf-age">age ${m.age}</span>` : "",
+    m.region ? `<span class="pill">${m.region}</span>` : "",
+  ].filter(Boolean).join("");
+  const employ = m.employer_name
+    ? `${m.employer_name}${data.is_yours ? " (your org)" : ""}`
+    : "Free agent";
+  header.innerHTML =
+    `<span class="pf-portrait pf-portrait-blank pf-staff-initial">${initial}</span>` +
+    `<div class="pf-id">` +
+    `<div class="pf-handle">${m.name ?? "Unknown"}</div>` +
+    `<div class="pf-meta">${meta}</div>` +
+    `<div class="pf-contract muted">${employ} · ${money(m.salary)}/wk</div>` +
+    `</div>`;
+  frag.appendChild(header);
+
+  const tiles = el("div", "pf-tiles");
+  tiles.appendChild(pfTile("Quality", pfNum(m.quality)));
+  tiles.appendChild(pfTile("Experience", `${pfNum(m.seasons_experience)}s`));
+  tiles.appendChild(pfTile("Titles", pfNum((m.titles || []).length)));
+  frag.appendChild(tiles);
+
+  const eff = pfSection("What they do");
+  for (const line of data.effects || []) eff.appendChild(el("div", "pf-honor", `▸ ${line}`));
+  if (data.in_pool && data.hire_cost_note) {
+    eff.appendChild(el("p", "muted", `Hire from the Market tab (${data.hire_cost_note}).`));
+  }
+  frag.appendChild(eff);
+
+  const traits = (m.traits || []).filter(Boolean);
+  if (traits.length) {
+    const sec = pfSection("Style");
+    const chips = el("div", "pf-chips");
+    for (const t of traits) chips.appendChild(el("span", "pf-chip", t.replaceAll("_", " ")));
+    sec.appendChild(chips);
+    frag.appendChild(sec);
+  }
+
+  const honors = (m.titles || []).filter(Boolean);
+  if (honors.length) {
+    const sec = pfSection("Honors");
+    for (const h of honors) sec.appendChild(el("div", "pf-honor", `★ ${h}`));
+    frag.appendChild(sec);
+  }
+
+  const history = (m.history || []).filter(Boolean);
+  if (history.length) {
+    const sec = pfSection("Career");
+    for (const h of history) sec.appendChild(el("div", "newsline", h));
+    frag.appendChild(sec);
+  } else {
+    const sec = pfSection("Career");
+    sec.appendChild(pfEmpty("No paper trail — a newcomer to the scene."));
+    frag.appendChild(sec);
+  }
+
+  return frag;
+}
+
+async function openStaffProfile(sid) {
+  if (sid == null) return;
+  pfShow(pfLoading());
+  const data = await profileFetch(`/api/staff/${encodeURIComponent(sid)}/profile`);
+  if (!isProfileOpen()) return;
+  pfShow(data ? renderStaffProfile(data) : pfUnavailable());
+}
+
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
@@ -593,6 +826,13 @@ function pfDelegatedClick(e) {
     e.stopPropagation();
     e.preventDefault();
     openPlayerProfile(pl.getAttribute("data-pid"));
+    return;
+  }
+  const sl = node.closest("[data-sid]");
+  if (sl) {
+    e.stopPropagation();
+    e.preventDefault();
+    openStaffProfile(sl.getAttribute("data-sid"));
     return;
   }
   const tl = node.closest("[data-tid]");

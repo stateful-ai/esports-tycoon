@@ -61,6 +61,23 @@ class Player(BaseModel):
     stamina: float = Field(default=100.0, ge=0.0, le=100.0)
     form: float = Field(default=50.0, ge=0.0, le=100.0)
 
+    # Confidence: belief in their own game right now. The match engine
+    # reads it NEUTRAL-SAFE (exact no-op at 50 — see ADR-007), so the
+    # default keeps the golden gates byte-stable; the campaign layer moves
+    # it on results, personal ratings, dev events and the social layer.
+    confidence: float = Field(default=50.0, ge=0.0, le=100.0)
+
+    # Social reach. 0 = not seeded yet; manager/social.py derives a stable
+    # per-player baseline (ability + id hash) on first touch.
+    followers: int = 0
+
+    # Individual development plan, user-set (AI players stay on defaults).
+    # dev_focus: "auto" follows the team's weekly focus, otherwise pins one
+    # training category for this player every week.
+    dev_focus: str = "auto"  # auto | mechanical | tactical | mental | team
+    # Intensity trades growth for stamina (and burnout risk at "intense").
+    training_intensity: str = "normal"  # light | normal | intense
+
     # Free-form tags for personality. The narrative layer keys off these.
     personality_tags: list[str] = Field(default_factory=list)
 

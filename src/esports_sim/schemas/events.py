@@ -42,6 +42,9 @@ class MatchStartEvent(Event):
     team_a_id: str
     team_b_id: str
     seed: int
+    # Agent each player locked for this map (player_id -> agent_id). Lets
+    # stats attribute a whole map line to the agent actually played.
+    agents: dict[str, str] = Field(default_factory=dict)
 
 
 class MatchEndEvent(Event):
@@ -95,6 +98,9 @@ class KillEvent(Event):
     callout_id: str | None = None
     # "trade" = kill within N ticks of a teammate dying, useful for chemistry.
     is_trade: bool = False
+    # Flash assist: the teammate whose flash the victim was still blind
+    # from when they died (None = unassisted).
+    assist_id: str | None = None
     # Where the victim actually stood (continuous layer; None in old logs).
     victim_x: float | None = None
     victim_y: float | None = None

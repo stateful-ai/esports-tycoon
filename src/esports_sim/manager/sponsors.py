@@ -135,7 +135,11 @@ OBJECTIVE_LABELS = {
 def marketability(gs: GameState) -> float:
     """How sellable this org is right now: reputation carries, fans and
     star power (streamer/star_player traits) amplify, results and an
-    international appearance spike it. ~1.0 for a mid-table org."""
+    international appearance spike it — and the roster's combined social
+    reach adds a modest premium (brands buy audiences). ~1.0 for a
+    mid-table org."""
+    from esports_sim.manager import social
+
     team = gs.teams[gs.acting_team_id]
     rep = team.reputation / 50.0
     fans = min(team.fan_count, 2_000_000) / 1_500_000.0
@@ -154,7 +158,11 @@ def marketability(gs: GameState) -> float:
         if team.id in gs.masters_seeds or team.id in gs.champions_seeds
         else 0.0
     )
-    score = rep * 0.55 + fans * 0.25 + stars * 0.35 + (wr - 0.5) * 0.4 + intl
+    reach = min(social.roster_reach(gs, team.id), 4_000_000) / 4_000_000.0
+    score = (
+        rep * 0.55 + fans * 0.25 + stars * 0.35 + (wr - 0.5) * 0.4 + intl
+        + reach * 0.2
+    )
     return max(0.4, score) * economy.facility_marketing_mult(gs)
 
 

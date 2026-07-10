@@ -304,3 +304,18 @@
   font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
   color: var(--es-color-text-primary, #e9edf6); margin-bottom: 4px;
 }
+
+/* -- dev-systems overhaul additions --------------------------------------- */
+.slink { cursor: pointer; text-decoration: none; }
+.slink:hover { color: var(--es-color-accent, #4fd8c0); }
+/* Second series (confidence) on the development chart: dashed alt color. */
+.pf-line-alt {
+  stroke: var(--es-color-warn, #e8b34b);
+  stroke-dasharray: 4 3;
+}
+/* Staff profiles have no portrait art: an initial in the portrait slot. */
+.pf-staff-initial {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 700;
+  color: var(--es-color-text-secondary, #a2aec6);
+}

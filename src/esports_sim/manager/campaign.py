@@ -19,6 +19,7 @@ from esports_sim.manager import (
     market,
     narrative,
     relationships,
+    social,
     sponsors,
     staff,
     training,
@@ -39,11 +40,14 @@ from esports_sim.manager.schedule import (
 )
 from esports_sim.manager.state import (
     ChampionRecord,
+    DevSnap,
     Fixture,
     GameState,
     MapResult,
     PlayerLineSnap,
     PlayerSeasonStats,
+    StatSnap,
+    TeamMapStats,
     TeamRecord,
     TeamSeasonStats,
 )
@@ -186,7 +190,8 @@ def new_campaign(
         f"{teams_per_region}, {regular_season_weeks(teams_per_region)} weeks "
         f"of league play, then playoffs and Masters."
     )
-    staff.refresh_candidates(gs)
+    staff.seed_pool(gs)
+    social.seed_followers(gs)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     return gs
@@ -305,6 +310,7 @@ def advance_week(
     # scouting) but never capture replay logs — nobody broadcasts tier 2.
     week_fixtures = gs.fixtures_for_week()
     week_kills: dict[str, int] = {}
+    week_perf: dict[str, dict] = {}  # pid -> this week's tallies (snapshots)
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f,
@@ -314,13 +320,15 @@ def advance_week(
         report.fixtures.append(f)
         # Each played map's stats line up with f.results in order. Recompute the
         # dressed five per map (rosters haven't moved yet this tick) so only the
-        # players who actually took the map get maps/rounds credited.
+        # players who actually took the map get maps/rounds credited — and
+        # only they bank match experience (playing time IS development).
         for map_res, stats in zip(f.results, report.match_stats.get(f.id, [])):
             dressed = {
                 tid: set(dressed_for(gs, tid, f, map_res.map_id))
                 for tid in (f.team_a, f.team_b)
             }
-            _aggregate_stats(gs, f, stats, week_kills, dressed)
+            _aggregate_stats(gs, f, stats, week_kills, dressed, week_perf)
+            _apply_match_development(gs, stats)
 
     # Per-map lineups are single-use: drop the entries for fixtures just played
     # so `map_lineups` can't grow unbounded across a season.
@@ -338,7 +346,7 @@ def advance_week(
         if gs.is_human(tid):
             gs.set_acting(tid)
             focus = gs.training_focus.get(tid, "tactical")
-            mult = staff.coach_multiplier(gs) * economy.facility_training_mult(gs)
+            mult = staff.coach_multiplier(gs, focus) * economy.facility_training_mult(gs)
         else:
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
@@ -354,6 +362,34 @@ def advance_week(
             for p in gs.roster(tid):
                 p.stamina = round(min(100.0, p.stamina + recovery), 1)
     gs.set_acting(None)
+
+    # 2b'. Bench minutes: players outside the default five scrim instead of
+    # play — a fraction of real reps, fresher legs, and (for anyone good
+    # enough to start elsewhere) a weekly reminder that they want minutes.
+    for tid in sorted(gs.human_team_ids):
+        team = gs.teams[tid]
+        if len(team.player_ids) <= market.ROSTER_SIZE:
+            continue
+        active = set(default_five(gs, tid))
+        for p in gs.roster(tid):
+            if p.id in active:
+                continue
+            training.apply_scrim_reps(p)
+            p.stamina = round(min(100.0, p.stamina + 6.0), 1)
+            drain = (
+                2.0
+                if market.player_quality(p) >= 60
+                else 0.5 if p.age <= 20 else 1.2
+            )
+            p.morale = round(max(0.0, p.morale - drain), 1)
+
+    # 2b''. Development events: the random texture of a career (breakouts,
+    # slumps, tweaked wrists, viral clips). Own rng stream so the rest of
+    # the week's draws never shift; effects apply to every org (AI parity),
+    # news lines only to the owning human manager.
+    dev_events = development.weekly_dev_events(
+        gs, tree.derive("season", gs.season, "week", gs.week, "devevents")
+    )
 
     # 2c. Relationships drift; team chemistry chases the pair graph. Every
     # org's chemistry rides its own week's result, not just the user's.
@@ -593,6 +629,7 @@ def advance_week(
                 (f.team_b if f.winner_id == f.team_a else f.team_a) for f in msfs
             ]
             pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
+            staff.record_title(gs, mf.winner_id, f"S{gs.season} Masters")
             gs.push_news(f"{gs.teams[mf.winner_id].name} win MASTERS.")
 
             def rec_key(tid: str) -> tuple:
@@ -698,6 +735,7 @@ def advance_week(
                 loser = f.team_b if f.winner_id == f.team_a else f.team_a
                 gs.teams[loser].balance += 60_000
             champ = gs.teams[cf.winner_id]
+            staff.record_title(gs, cf.winner_id, f"S{gs.season} Champions")
             gs.champions.append(
                 ChampionRecord(
                     season=gs.season, team_id=champ.id, team_name=champ.name
@@ -727,6 +765,50 @@ def advance_week(
     # after the news so the match-time tactics are what gets reported.
     _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
+    # 6c. Social layer: follower counts chase the week's real outcomes and
+    # the feed writes itself (results, player of the week, viral moments).
+    social.weekly_tick(
+        gs, report, dev_events,
+        tree.derive("season", gs.season, "week", gs.week, "social"),
+    )
+
+    # 6d. History snapshots (before the week counter rolls): a performance
+    # point for everyone who played, a development point for human rosters.
+    for pid in sorted(week_perf):
+        wp = week_perf[pid]
+        if wp["maps"] == 0 or pid not in gs.players:
+            continue
+        hist = gs.stat_history.setdefault(pid, [])
+        hist.append(
+            StatSnap(
+                season=gs.season,
+                week=gs.week,
+                maps=wp["maps"],
+                rating=round(wp["rating_sum"] / wp["maps"], 2),
+                acs=round(wp["cs"] / max(wp["rounds"], 1), 1),
+                kd=round(wp["kills"] / max(wp["deaths"], 1), 2),
+                kast_pct=round(100.0 * wp["kast"] / max(wp["rounds"], 1), 1),
+                kills=wp["kills"],
+                deaths=wp["deaths"],
+            )
+        )
+        del hist[:-60]
+    for tid in sorted(gs.human_team_ids):
+        for p in gs.roster(tid):
+            dh = gs.dev_history.setdefault(p.id, [])
+            dh.append(
+                DevSnap(
+                    season=gs.season,
+                    week=gs.week,
+                    ca=round(development.overall(p), 1),
+                    confidence=p.confidence,
+                    form=p.form,
+                    morale=p.morale,
+                    followers=p.followers,
+                )
+            )
+            del dh[:-80]
+
     # 7. Inbox: aggregate the week's outcomes into each human manager's feed.
     # Runs last so it can read every subsystem's artifacts (news included),
     # and before the week label moves on so this-week news is still labelled.
@@ -752,55 +834,125 @@ def _pay_region_prizes(gs: GameState, order: list[str]) -> None:
     )
 
 
+def _fold_line(ps: PlayerSeasonStats, line, n_rounds: int) -> None:
+    """Fold one map's PlayerLine into a season aggregate (also used for
+    the per-map and per-agent splits — one source of folding truth)."""
+    ps.maps += 1
+    ps.rounds += n_rounds
+    ps.kills += line.kills
+    ps.deaths += line.deaths
+    ps.assists += line.assists
+    ps.first_kills += line.first_kills
+    ps.trade_kills += line.trade_kills
+    ps.headshots += line.headshots
+    ps.plants += line.plants
+    ps.defuses += line.defuses
+    ps.first_deaths += line.first_deaths
+    ps.multikills += line.multikills
+    ps.aces += line.aces
+    ps.clutches += line.clutches
+    ps.clutch_1v1 += line.clutch_1v1
+    ps.clutch_1v2 += line.clutch_1v2
+    ps.clutch_1v3 += line.clutch_1v3
+    ps.kast_rounds += line.kast_rounds
+    ps.combat_score += line.combat_score
+    ps.pistol_kills += line.pistol_kills
+    ps.eco_kills += line.eco_kills
+    ps.save_kills += line.save_kills
+    for wid in sorted(line.kills_by_weapon):
+        ps.kills_by_weapon[wid] = (
+            ps.kills_by_weapon.get(wid, 0) + line.kills_by_weapon[wid]
+        )
+    ps.rating_sum += line.rating
+
+
 def _aggregate_stats(
     gs: GameState,
     f: Fixture,
     stats,
     week_kills: dict,
     dressed: dict[str, set[str]],
+    week_perf: dict,
 ) -> None:
-    """Fold one map's MatchStats into the season aggregates. Only the players
-    who DRESSED for this map are credited a map/rounds — a benched player sat it
-    out. (For a five-player roster the dressed set is the whole roster, so this
-    is unchanged from the pre-bench behaviour.)"""
+    """Fold one map's MatchStats into the season aggregates + splits. Only
+    players who DRESSED for this map are credited a map/rounds — a benched
+    player sat it out, which is exactly the point of minutes mattering.
+    (For a five-player roster the dressed set is the whole roster.)"""
     n_rounds = len(stats.rounds)
-    rosters = dressed
+    dressed_all: set[str] = set().union(*dressed.values()) if dressed else set()
 
     for tid in (f.team_a, f.team_b):
         ts = gs.team_stats.setdefault(tid, TeamSeasonStats())
+        tm = gs.team_map_stats.setdefault(tid, {}).setdefault(
+            stats.map_id, TeamMapStats()
+        )
         ts.maps += 1
-        for i, r in enumerate(stats.rounds):
+        tm.maps += 1
+        if stats.winner_id == tid:
+            tm.wins += 1
+        for r in stats.rounds:
             attacking = r.attacking_team_id == tid
             won = r.winner_id == tid
             if attacking:
                 ts.atk_rounds += 1
                 ts.atk_won += int(won)
+                tm.atk_rounds += 1
+                tm.atk_won += int(won)
             else:
                 ts.def_rounds += 1
                 ts.def_won += int(won)
+                tm.def_rounds += 1
+                tm.def_won += int(won)
             if r.round_num in (1, 13):
                 ts.pistols += 1
                 ts.pistols_won += int(won)
-        for pid in sorted(rosters[tid]):
-            ps = gs.player_stats.setdefault(pid, PlayerSeasonStats())
-            ps.maps += 1
-            ps.rounds += n_rounds
-            line = stats.lines.get(pid)
-            if line is None:
-                continue
-            ps.kills += line.kills
-            ps.deaths += line.deaths
-            ps.first_kills += line.first_kills
-            ps.trade_kills += line.trade_kills
-            ps.headshots += line.headshots
-            ps.plants += line.plants
-            ps.defuses += line.defuses
-            ps.first_deaths += line.first_deaths
-            ps.multikills += line.multikills
-            ps.aces += line.aces
-            ps.clutches += line.clutches
-            ps.rating_sum += line.rating
-            week_kills[pid] = week_kills.get(pid, 0) + line.kills
+
+    for pid in sorted(stats.lines):
+        if pid not in gs.players or (dressed_all and pid not in dressed_all):
+            continue
+        line = stats.lines[pid]
+        _fold_line(
+            gs.player_stats.setdefault(pid, PlayerSeasonStats()), line, n_rounds
+        )
+        _fold_line(
+            gs.player_map_stats.setdefault(pid, {}).setdefault(
+                stats.map_id, PlayerSeasonStats()
+            ),
+            line,
+            n_rounds,
+        )
+        _fold_line(
+            gs.player_agent_stats.setdefault(pid, {}).setdefault(
+                line.agent_id or "unknown", PlayerSeasonStats()
+            ),
+            line,
+            n_rounds,
+        )
+        week_kills[pid] = week_kills.get(pid, 0) + line.kills
+        wp = week_perf.setdefault(
+            pid,
+            {
+                "maps": 0, "rounds": 0, "kills": 0, "deaths": 0,
+                "rating_sum": 0.0, "cs": 0.0, "kast": 0,
+            },
+        )
+        wp["maps"] += 1
+        wp["rounds"] += n_rounds
+        wp["kills"] += line.kills
+        wp["deaths"] += line.deaths
+        wp["rating_sum"] += line.rating
+        wp["cs"] += line.combat_score
+        wp["kast"] += line.kast_rounds
+
+
+def _apply_match_development(gs: GameState, stats) -> None:
+    """Minutes are development: every played line becomes attribute reps
+    (see training.apply_match_experience). Deterministic — no rng."""
+    n_rounds = len(stats.rounds)
+    for pid in sorted(stats.lines):
+        p = gs.players.get(pid)
+        if p is not None:
+            training.apply_match_experience(p, stats.lines[pid], n_rounds)
 
 
 def _nudge_tournament_registration(gs: GameState) -> None:
@@ -876,10 +1028,15 @@ def _sim_fixture(
         }
         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
         res = simulate_match_result(map_gd, f.team_a, f.team_b, map_id, seed)
+        # The dressed five per side (bench players have no line), plus the
+        # weapon registry's class map for the economy splits (eco/save kills).
         team_of = {
             pid: tid for tid in (f.team_a, f.team_b) for pid in dressed[tid]
         }
-        stats = compute_match_stats(res.events, team_of)
+        weapon_class_of = {
+            wid: str(w.weapon_class) for wid, w in rt_gd.weapons.items()
+        }
+        stats = compute_match_stats(res.events, team_of, weapon_class_of)
         if collector is not None:
             collector.setdefault(f.id, []).append(stats)
         if events_out is not None:
@@ -929,6 +1086,7 @@ def _sim_fixture(
 
 def _apply_map_effects(gs: GameState, f: Fixture, map_winner: str, stats) -> None:
     for tid in (f.team_a, f.team_b):
+        won = tid == map_winner
         for p in gs.roster(tid):
             line = stats.lines.get(p.id)
             if line is None:
@@ -937,6 +1095,17 @@ def _apply_map_effects(gs: GameState, f: Fixture, map_winner: str, stats) -> Non
             # Form chases recent performance.
             perf = 30.0 + line.rating * 28.0
             p.form = round(min(100.0, max(0.0, 0.75 * p.form + 0.25 * perf)), 1)
+            # Confidence chases results AND the player's own game: a carry
+            # on a losing team keeps believing; a passenger on a winning
+            # one doesn't bank much. Clamped off the rails (5..95) and
+            # regressed weekly in training, so it can't snowball.
+            dc = 1.2 if won else -1.2
+            if line.rating >= 1.15:
+                dc += 0.8
+            elif line.rating <= 0.6:
+                dc -= 0.8
+            dc += 0.4 * min(2, line.clutch_1v1 + line.clutch_1v2 + line.clutch_1v3)
+            p.confidence = round(min(95.0, max(5.0, p.confidence + dc)), 1)
 
 
 def _apply_match_effects(gs: GameState, f: Fixture) -> None:
@@ -947,6 +1116,11 @@ def _apply_match_effects(gs: GameState, f: Fixture) -> None:
         won = tid == f.winner_id
         for p in gs.roster(tid):
             p.morale = round(min(100.0, max(0.0, p.morale + (5.0 if won else -4.0))), 1)
+            # Series result moves the whole locker room's belief a little
+            # (bench included); the big stages cut deeper both ways.
+            p.confidence = round(
+                min(95.0, max(5.0, p.confidence + (1.0 if won else -1.0) * big)), 1
+            )
         team.chemistry = round(
             min(100.0, max(0.0, team.chemistry + (1.5 if won else -1.0))), 1
         )
@@ -1208,6 +1382,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(f"{a.award}: {a.handle} ({a.team_name}) — {a.value}")
     gs.player_stats = {}
     gs.team_stats = {}
+    gs.player_map_stats = {}
+    gs.player_agent_stats = {}
+    gs.team_map_stats = {}
 
     for pid in sorted(gs.players):
         training.apply_offseason_aging(gs.players[pid], rng)
@@ -1216,6 +1393,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # generation arrives as regional rookie classes.
     n_retired = _process_retirements(gs, rng)
     _rookie_classes(gs, gd, rng, n_retired)
+    social.seed_followers(gs)  # rookies arrive with a baseline audience
+
+    # Ended careers stop charting; keep the history maps bounded.
+    for hist in (gs.stat_history, gs.dev_history):
+        for pid in sorted(hist):
+            if pid not in gs.players:
+                del hist[pid]
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).
@@ -1243,10 +1427,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.transfer_offers = []
     gs.map_lineups = {}
     gs.season += 1
-    for tid in sorted(gs.human_team_ids):
-        gs.set_acting(tid)
-        staff.refresh_candidates(gs)
-    gs.set_acting(None)
+    # Staff market churn: retirements out, the new season's class in
+    # (one shared pool — no per-manager refresh).
+    staff.offseason_churn(gs)
     gs.week = 1
     gs.phase = "regular"
     _assign_ai_tactics(gs, rng)  # new rosters, new coaching identities

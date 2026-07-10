@@ -169,6 +169,11 @@ def test_market_sign_and_release(campaign: GameState) -> None:
     assert len(team.player_ids) == market.ROSTER_MAX - 1
     assert victim in campaign.free_agent_ids
     assert campaign.teams[tid].balance == balance_before - salary * 6
+    # The default five heals after the departure (stale ids filter out).
+    from esports_sim.manager.campaign import default_five
+
+    assert len(default_five(campaign, tid)) == 5
+    assert victim not in default_five(campaign, tid)
 
     ok, _ = sign_player(campaign, tid, fa)
     assert ok
@@ -249,18 +254,53 @@ def test_sponsor_deal_lifecycle(campaign: GameState) -> None:
 def test_staff_hire_and_effects(campaign: GameState) -> None:
     from esports_sim.manager import staff
 
-    assert campaign.staff_candidates, "candidate market seeded at campaign start"
-    coach = campaign.staff_candidates["coach"][0]
+    # A healthy shared market: 50+ free agents across all three roles.
+    assert len(campaign.staff_pool) >= staff.POOL_MIN
+    by_role = {r: [m for m in campaign.staff_pool if m.role == r] for r in staff.ROLES}
+    assert all(by_role[r] for r in staff.ROLES)
+    # v3 members carry a full identity.
+    sample = campaign.staff_pool[0]
+    assert sample.age > 0 and sample.specialty and sample.region
+
+    coach = by_role["coach"][0]
     ok, _ = staff.hire(campaign, coach.id)
     assert ok
     assert campaign.staff["coach"].id == coach.id
+    assert coach.id not in {m.id for m in campaign.staff_pool}
     assert staff.coach_multiplier(campaign) > 1.0
+    # Specialty premium: the matching focus trains harder than the others.
+    assert staff.coach_multiplier(campaign, coach.specialty) > staff.coach_multiplier(
+        campaign, "some_other_focus"
+    )
     assert staff.weekly_cost(campaign) == coach.salary
-    # Hiring a replacement returns the old coach to the market.
-    other = campaign.staff_candidates["coach"][0]
+    # Hiring a replacement returns the old coach to the shared market.
+    other = next(m for m in campaign.staff_pool if m.role == "coach")
     ok, _ = staff.hire(campaign, other.id)
     assert ok
     assert campaign.staff["coach"].id == other.id
-    assert any(c.id == coach.id for c in campaign.staff_candidates["coach"])
+    assert any(m.id == coach.id for m in campaign.staff_pool)
     ok, _ = staff.release(campaign, "coach")
     assert ok and "coach" not in campaign.staff
+
+    # Analytics tiers ride the analyst + facility.
+    assert staff.analytics_tier(campaign) == 0
+    analyst = max(by_role["analyst"], key=lambda m: m.quality)
+    campaign.teams[campaign.user_team_id].balance += analyst.salary * 8
+    ok, _ = staff.hire(campaign, analyst.id)
+    assert ok
+    assert staff.analytics_tier(campaign) >= 1
+
+
+def test_staff_pool_never_mints_doppelgangers(campaign: GameState) -> None:
+    """A hired member's id must stay taken: a lazy top-up can't create a
+    different person under the same id (the profile page would lie)."""
+    from esports_sim.manager import staff
+
+    cand = campaign.staff_pool[0]
+    ok, _ = staff.hire(campaign, cand.id)
+    assert ok
+    staff.seed_pool(campaign)  # refill to POOL_MIN
+    assert len(campaign.staff_pool) >= staff.POOL_MIN
+    assert cand.id not in {m.id for m in campaign.staff_pool}
+    member, employer = staff.find_member(campaign, cand.id)
+    assert member is cand and employer == campaign.user_team_id

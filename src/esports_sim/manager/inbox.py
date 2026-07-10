@@ -323,6 +323,14 @@ def _development_items(gs: "GameState", season: int, week: int):
                 _make(season, week, "development", f"retire_seat|{_hash_id(msg)}",
                       "A player on your roster retires", msg, "roster"),
             ))
+        elif any(m in msg for m in development.DEV_EVENT_MARKERS):
+            # A development event on THIS manager's roster (breakthrough,
+            # slump, injury scare, viral clip, ...).
+            out.append((
+                _P_DEV,
+                _make(season, week, "development", f"devev|{_hash_id(msg)}",
+                      "Player development", msg, "roster"),
+            ))
     # Retirement classes and rookie classes are public broadcast news.
     for msg in _week_news(gs, season, week):
         if msg.startswith("Retirements:") or msg.endswith("call it a career.") \

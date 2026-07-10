@@ -30,6 +30,7 @@ from esports_sim.manager import (
     inbox as inbox_mod,
     market,
     relationships,
+    social,
     sponsors,
     staff as staff_mod,
     talk,
@@ -41,8 +42,12 @@ from esports_sim.manager.campaign import (
     dressed_for,
     new_campaign,
 )
-from esports_sim.manager.state import GameState
-from esports_sim.manager.training import FOCUS_OPTIONS
+from esports_sim.manager.state import GameState, PlayerSeasonStats
+from esports_sim.manager.training import (
+    DEV_FOCUS_OPTIONS,
+    FOCUS_OPTIONS,
+    INTENSITY_OPTIONS,
+)
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import Event, Player, Team
@@ -469,6 +474,12 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "morale": _fogged(gs, p.id, "morale", p.morale, fog),
         "stamina": _fogged(gs, p.id, "stamina", p.stamina, fog),
         "form": _fogged(gs, p.id, "form", p.form, fog),
+        "confidence": _fogged(gs, p.id, "confidence", p.confidence, fog),
+        # Follower counts are public by nature; dev plans are the owning
+        # manager's knobs (the UI only renders them for the user's team).
+        "followers": p.followers,
+        "dev_focus": p.dev_focus,
+        "training_intensity": p.training_intensity,
         "attributes": attrs,
         "overall": overall,
         "fog": round(fog, 1),
@@ -510,6 +521,7 @@ def _team_view(t: Team, gs: GameState) -> dict:
         "chemistry": t.chemistry,
         "captain_id": t.captain_id,
         "player_ids": t.player_ids,
+        "starter_ids": default_five(gs, t.id),
         "record": {"wins": rec.wins, "losses": rec.losses, "diff": rec.diff}
         if rec
         else None,
@@ -908,6 +920,8 @@ def roster(team_id: str) -> dict:
             "roster_min": market.ROSTER_MIN,
             "roster_max": market.roster_cap(gs, team_id),
             "upcoming": upcoming,
+            "dev_focus_options": DEV_FOCUS_OPTIONS,
+            "intensity_options": INTENSITY_OPTIONS,
             "fog": round(fog, 1),
             "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
@@ -1019,40 +1033,106 @@ def market_view() -> dict:
         }
 
 
+# ---------------------------------------------------------------------------
+# Stats hub. Column depth is gated by the org's ANALYTICS department (the
+# analyst's quality + the analytics-suite facility, see staff.analytics_tier):
+# tier 0 reads box scores, tier 1 adds duel detail, tier 2 adds round
+# context, tier 3 unlocks the full splits and trend charts. The gate lives
+# HERE, server-side — the client renders whatever fields arrive.
+
+
+def _season_stat_row(gs: GameState, pid: str, st: PlayerSeasonStats, tier: int) -> dict:
+    p = gs.players[pid]
+    row = {
+        "player_id": pid,
+        "handle": p.handle,
+        "team": next(
+            (t.name for t in gs.teams.values() if pid in t.player_ids), "FA"
+        ),
+        "maps": st.maps,
+        "rounds": st.rounds,
+        "kills": st.kills,
+        "deaths": st.deaths,
+        "kd": round(st.kd, 2),
+        "rating": round(st.rating, 2),
+        "plants": st.plants,
+        "defuses": st.defuses,
+        "is_user": pid in gs.teams[gs.acting_team_id].player_ids,
+    }
+    if tier >= 1:
+        row.update(
+            first_kills=st.first_kills,
+            first_deaths=st.first_deaths,
+            fk_fd=round(st.fk_fd, 2),
+            hs_pct=round(st.hs_pct, 1),
+            acs=round(st.acs, 1),
+            multikills=st.multikills,
+            aces=st.aces,
+            clutches=st.clutch_1v1 + st.clutch_1v2 + st.clutch_1v3,
+            pistol_kills=st.pistol_kills,
+        )
+    if tier >= 2:
+        row.update(
+            assists=st.assists,
+            kast_pct=round(st.kast_pct, 1),
+            trade_kills=st.trade_kills,
+            clutch_1v1=st.clutch_1v1,
+            clutch_1v2=st.clutch_1v2,
+            clutch_1v3=st.clutch_1v3,
+            eco_kills=st.eco_kills,
+            save_kills=st.save_kills,
+            kills_by_weapon=dict(
+                sorted(
+                    st.kills_by_weapon.items(), key=lambda kv: (-kv[1], kv[0])
+                )
+            ),
+        )
+    return row
+
+
+def _analytics_view(gs: GameState) -> dict:
+    tier = staff_mod.analytics_tier(gs)
+    nxt = (
+        None
+        if tier >= 3
+        else staff_mod.ANALYTICS_TIER_LABEL[tier + 1]
+    )
+    return {
+        "tier": tier,
+        "label": staff_mod.ANALYTICS_TIER_LABEL[tier],
+        "next_unlock": nxt,
+    }
+
+
 @app.get("/api/stats")
-def stats_view() -> dict:
+def stats_view(split: str | None = None, key: str | None = None) -> dict:
+    """League stats. `split=map&key=<map_id>` or `split=agent&key=<agent_id>`
+    swaps the player table for that split (analytics tier 3 only)."""
     with S.lock:
         gs = S.require_gs()
+        analytics = _analytics_view(gs)
+        tier = analytics["tier"]
 
-        def team_of(pid: str) -> str:
-            return next(
-                (t.name for t in gs.teams.values() if pid in t.player_ids), "FA"
-            )
+        source: dict[str, PlayerSeasonStats] = gs.player_stats
+        if split in ("map", "agent") and key:
+            if tier < 3:
+                raise HTTPException(
+                    409, "per-map and per-agent splits need an elite analytics "
+                    "department (tier 3)"
+                )
+            table = gs.player_map_stats if split == "map" else gs.player_agent_stats
+            source = {
+                pid: by_key[key]
+                for pid, by_key in table.items()
+                if key in by_key
+            }
 
         players = []
-        for pid in sorted(gs.player_stats):
-            st = gs.player_stats[pid]
-            p = gs.players.get(pid)
-            if p is None or st.maps == 0:
+        for pid in sorted(source):
+            st = source[pid]
+            if pid not in gs.players or st.maps == 0:
                 continue
-            players.append(
-                {
-                    "player_id": pid,
-                    "handle": p.handle,
-                    "team": team_of(pid),
-                    "maps": st.maps,
-                    "kills": st.kills,
-                    "deaths": st.deaths,
-                    "kd": round(st.kd, 2),
-                    "rating": round(st.rating, 2),
-                    "first_kills": st.first_kills,
-                    "trade_kills": st.trade_kills,
-                    "hs_pct": round(st.hs_pct, 1),
-                    "plants": st.plants,
-                    "defuses": st.defuses,
-                    "is_user": pid in gs.teams[gs.acting_team_id].player_ids,
-                }
-            )
+            players.append(_season_stat_row(gs, pid, st, tier))
         players.sort(key=lambda r: (-r["rating"], -r["kills"]))
 
         teams = []
@@ -1060,21 +1140,49 @@ def stats_view() -> dict:
             ts = gs.team_stats.get(tid)
             if ts is None or ts.maps == 0:
                 continue
-            teams.append(
-                {
-                    "team_id": tid,
-                    "name": gs.teams[tid].name,
-                    "maps": ts.maps,
-                    "atk_pct": round(100 * ts.atk_won / max(ts.atk_rounds, 1), 1),
-                    "def_pct": round(100 * ts.def_won / max(ts.def_rounds, 1), 1),
-                    "pistol_pct": round(
-                        100 * ts.pistols_won / max(ts.pistols, 1), 1
-                    ),
-                    "is_user": tid == gs.acting_team_id,
-                }
-            )
+            row = {
+                "team_id": tid,
+                "name": gs.teams[tid].name,
+                "maps": ts.maps,
+                "atk_pct": round(100 * ts.atk_won / max(ts.atk_rounds, 1), 1),
+                "def_pct": round(100 * ts.def_won / max(ts.def_rounds, 1), 1),
+                "pistol_pct": round(100 * ts.pistols_won / max(ts.pistols, 1), 1),
+                "is_user": tid == gs.acting_team_id,
+            }
+            if tier >= 2:
+                row["maps_detail"] = [
+                    {
+                        "map_id": mid,
+                        "map_thumb": _map_thumb_url(mid),
+                        "maps": tm.maps,
+                        "wins": tm.wins,
+                        "win_pct": round(100 * tm.wins / max(tm.maps, 1), 1),
+                        "atk_pct": round(
+                            100 * tm.atk_won / max(tm.atk_rounds, 1), 1
+                        ),
+                        "def_pct": round(
+                            100 * tm.def_won / max(tm.def_rounds, 1), 1
+                        ),
+                    }
+                    for mid, tm in sorted(gs.team_map_stats.get(tid, {}).items())
+                ]
+            teams.append(row)
+
+        # Split pickers (which maps/agents have data) — tier 3 only.
+        split_keys = None
+        if tier >= 3:
+            maps_seen: set[str] = set()
+            agents_seen: set[str] = set()
+            for by_key in gs.player_map_stats.values():
+                maps_seen.update(by_key)
+            for by_key in gs.player_agent_stats.values():
+                agents_seen.update(by_key)
+            split_keys = {"maps": sorted(maps_seen), "agents": sorted(agents_seen)}
 
         return {
+            "analytics": analytics,
+            "split": {"kind": split, "key": key} if split and key else None,
+            "split_keys": split_keys,
             "players": players,
             "teams": teams,
             "awards": [a.model_dump() for a in reversed(gs.awards)],
@@ -1251,24 +1359,153 @@ def set_training(body: TrainingBody) -> dict:
         return {"ok": True, "focus": body.focus}
 
 
+def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict:
+    return {
+        **m.model_dump(),
+        "specialty_blurb": staff_mod.SPECIALTY_BLURB.get(m.specialty, ""),
+        "employer_id": employer_id,
+        "employer_name": gs.teams[employer_id].name if employer_id else None,
+    }
+
+
 @app.get("/api/staff")
 def staff_view() -> dict:
     with S.lock:
         gs = S.require_gs()
-        if not gs.staff_candidates:
-            # Saves from before the staff feature: build the market lazily
-            # (deterministic from seed+season, so no drift).
-            staff_mod.refresh_candidates(gs)
+        if len(gs.staff_pool) < 20:
+            # Pre-v3 saves arrive with a near-empty market: build it lazily
+            # (each member is a pure function of seed + id, so no drift).
+            # A healthy pool thins as managers hire and replenishes at the
+            # offseason churn — hiring is not instantly backfilled.
+            staff_mod.seed_pool(gs)
             S.save()
+        pool = sorted(gs.staff_pool, key=lambda m: (m.role, -m.quality, m.id))
         return {
-            "hired": {r: m.model_dump() for r, m in sorted(gs.staff.items())},
-            "candidates": {
-                r: [m.model_dump() for m in pool]
-                for r, pool in sorted(gs.staff_candidates.items())
+            "hired": {
+                r: _staff_member_view(gs, m, gs.acting_team_id)
+                for r, m in sorted(gs.staff.items())
             },
+            "pool": [_staff_member_view(gs, m) for m in pool],
             "roles": staff_mod.ROLES,
             "blurbs": staff_mod.ROLE_BLURB,
             "weekly_cost": staff_mod.weekly_cost(gs),
+            "analytics": _analytics_view(gs),
+        }
+
+
+def _staff_effect_lines(m) -> list[str]:
+    """What this member does for the org, in plain lines (server-computed —
+    the client never re-derives an effect formula)."""
+    if m.role == "coach":
+        lines = [f"+{m.quality / 2:.0f}% weekly training growth"]
+        if m.specialty:
+            lines.append(
+                f"+{int(staff_mod.SPECIALTY_GROWTH_BONUS * 100)}% extra on "
+                f"{m.specialty} weeks (their specialty)"
+            )
+        return lines
+    if m.role == "analyst":
+        return [
+            f"+{m.quality:.0f}% scouting speed",
+            "deeper stat views (analytics tier, with the analytics suite)",
+        ]
+    return [f"+{m.quality / 18.0:.1f} stamina per player per week"]
+
+
+@app.get("/api/staff/{staff_id}/profile")
+def staff_profile(staff_id: str) -> dict:
+    """A coach/analyst/physio profile page — the staff analogue of the
+    player profile overlay."""
+    with S.lock:
+        gs = S.require_gs()
+        m, employer = staff_mod.find_member(gs, staff_id)
+        if m is None:
+            raise HTTPException(404, "unknown staff member")
+        return {
+            "member": _staff_member_view(gs, m, employer),
+            "effects": _staff_effect_lines(m),
+            "role_blurb": staff_mod.ROLE_BLURB.get(m.role, ""),
+            "hire_cost_note": f"{m.salary * 8:,} cr banked to hire",
+            "is_yours": employer == gs.acting_team_id,
+            "in_pool": employer is None,
+        }
+
+
+@app.get("/api/social")
+def social_view() -> dict:
+    """The feed plus follower leaderboards. World-visible by design."""
+    with S.lock:
+        gs = S.require_gs()
+
+        def team_of(pid: str) -> tuple[str | None, str]:
+            t = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+            return (t.id, t.tag) if t else (None, "FA")
+
+        top = sorted(
+            (p for p in gs.players.values()),
+            key=lambda p: (-p.followers, p.id),
+        )[:15]
+        leaderboard = []
+        for p in top:
+            tid, tag = team_of(p.id)
+            leaderboard.append(
+                {
+                    "player_id": p.id,
+                    "handle": p.handle,
+                    "team_tag": tag,
+                    "followers": p.followers,
+                    "is_user": tid == gs.acting_team_id,
+                }
+            )
+        roster = gs.roster(gs.acting_team_id)
+        return {
+            "feed": [p.model_dump() for p in reversed(gs.social_feed)],
+            "leaderboard": leaderboard,
+            "your_roster": [
+                {
+                    "player_id": p.id,
+                    "handle": p.handle,
+                    "followers": p.followers,
+                }
+                for p in sorted(roster, key=lambda p: (-p.followers, p.id))
+            ],
+            "your_reach": social.roster_reach(gs, gs.acting_team_id),
+            "fan_count": gs.teams[gs.acting_team_id].fan_count,
+        }
+
+
+class DevPlanBody(BaseModel):
+    player_id: str
+    dev_focus: str | None = None
+    training_intensity: str | None = None
+
+
+@app.post("/api/actions/dev_plan")
+def dev_plan_action(body: DevPlanBody) -> dict:
+    """Set a player's individual development plan (own roster only)."""
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.player_id not in team.player_ids:
+            raise HTTPException(409, "player is not on your roster")
+        p = gs.players[body.player_id]
+        if body.dev_focus is not None:
+            if body.dev_focus not in DEV_FOCUS_OPTIONS:
+                raise HTTPException(
+                    422, f"dev_focus must be one of {DEV_FOCUS_OPTIONS}"
+                )
+            p.dev_focus = body.dev_focus
+        if body.training_intensity is not None:
+            if body.training_intensity not in INTENSITY_OPTIONS:
+                raise HTTPException(
+                    422, f"training_intensity must be one of {INTENSITY_OPTIONS}"
+                )
+            p.training_intensity = body.training_intensity
+        S.save()
+        return {
+            "ok": True,
+            "message": f"{p.handle}: {p.dev_focus} focus, "
+            f"{p.training_intensity} intensity",
         }
 
 
@@ -1438,18 +1675,30 @@ def tactics_view() -> dict:
 
 
 class LineupBody(BaseModel):
-    # player_id -> agent_id. An empty/absent value clears that player back to
-    # the automatic pick. Starter selection is deferred until a bench exists.
+    """One endpoint for every lineup lever; any subset may be set per call.
+    (Two same-path routes used to coexist here — Starlette serves the FIRST
+    match, so the second was silently dead. Unified so default-lineup saves
+    actually land.)"""
+
+    # player_id -> agent_id lock. An empty/absent value clears that player
+    # back to the automatic pick.
     agents: dict[str, str] | None = None
+    # The team's default starting five (order = dressing preference).
+    lineup_ids: list[str] | None = None
+    # A per-map override: dress exactly five for (fixture_id, map_id).
+    fixture_id: str | None = None
+    map_id: str | None = None
+    player_ids: list[str] | None = None
 
 
 @app.post("/api/actions/lineup")
 def set_lineup(body: LineupBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        team = gs.teams[gs.acting_team_id]
+        me = gs.acting_team_id
+        team = gs.teams[me]
+        roster = set(team.player_ids)
         if body.agents is not None:
-            roster = set(team.player_ids)
             new: dict[str, str] = {}
             for pid, aid in body.agents.items():
                 if pid not in roster:
@@ -1460,10 +1709,28 @@ def set_lineup(body: LineupBody) -> dict:
                     raise HTTPException(422, f"unknown agent {aid}")
                 new[pid] = aid
             team.lineup.agents = new
+        if body.lineup_ids is not None:
+            picks = [pid for pid in body.lineup_ids if pid in roster]
+            if len(picks) > market.ROSTER_SIZE:
+                raise HTTPException(
+                    422, f"a lineup is at most {market.ROSTER_SIZE}"
+                )
+            team.lineup_ids = picks
+        if body.player_ids is not None:
+            if not (body.fixture_id and body.map_id):
+                raise HTTPException(
+                    422, "a per-map lineup needs fixture_id + map_id"
+                )
+            picks = [pid for pid in body.player_ids if pid in roster]
+            if len(picks) != market.ROSTER_SIZE:
+                raise HTTPException(
+                    422, f"dress exactly {market.ROSTER_SIZE} players for a map"
+                )
+            gs.map_lineups[f"{me}|{body.fixture_id}|{body.map_id}"] = picks
         S.save()
         return {
             "ok": True,
-            "message": "lineup locked",
+            "message": "lineup saved",
             "lineup": _lineup_view(gs, team),
         }
 
@@ -1646,40 +1913,6 @@ def swap(body: SwapBody) -> dict:
         if not ok:
             raise HTTPException(409, msg)
         return {"ok": True, "message": msg}
-
-
-class LineupBody(BaseModel):
-    # Set the team default (order = starting five) and/or a per-map override.
-    lineup_ids: list[str] | None = None
-    fixture_id: str | None = None
-    map_id: str | None = None
-    player_ids: list[str] | None = None  # the five to dress for that map
-
-
-@app.post("/api/actions/lineup")
-def set_lineup(body: LineupBody) -> dict:
-    with S.lock:
-        gs = S.require_gs()
-        me = gs.acting_team_id
-        team = gs.teams[me]
-        roster = set(team.player_ids)
-        if body.lineup_ids is not None:
-            picks = [pid for pid in body.lineup_ids if pid in roster]
-            if len(picks) > market.ROSTER_SIZE:
-                raise HTTPException(422, f"a lineup is at most {market.ROSTER_SIZE}")
-            team.lineup_ids = picks
-        if body.player_ids is not None:
-            if not (body.fixture_id and body.map_id):
-                raise HTTPException(422, "a per-map lineup needs fixture_id + map_id")
-            picks = [pid for pid in body.player_ids if pid in roster]
-            if len(picks) != market.ROSTER_SIZE:
-                raise HTTPException(
-                    422, f"dress exactly {market.ROSTER_SIZE} players for a map"
-                )
-            key = f"{me}|{body.fixture_id}|{body.map_id}"
-            gs.map_lineups[key] = picks
-        S.save()
-        return {"ok": True, "message": "lineup saved"}
 
 
 class PackageBody(BaseModel):
@@ -1911,30 +2144,117 @@ def _profile_agents(p: Player) -> list[dict]:
 
 
 def _profile_season(gs: GameState, pid: str) -> dict:
-    """Season totals from the public box-score aggregates. ACS, assists,
-    and clutches are not tracked in the save -> null."""
+    """Season totals from the box-score aggregates. Depth follows the
+    org's analytics tier (same gate as the stats hub): gated fields come
+    back null, and the client renders them as locked."""
     st = gs.player_stats.get(pid)
-    if st is None or st.maps == 0:
-        return {
-            "matches": st.maps if st else 0,
-            "kills": st.kills if st else 0,
-            "deaths": st.deaths if st else 0,
-            "assists": None,
-            "kd": None,
-            "acs": None,
-            "first_kills": st.first_kills if st else 0,
-            "clutches": None,
-        }
-    return {
+    tier = staff_mod.analytics_tier(gs)
+    empty = st is None or st.maps == 0
+    if empty:
+        st = PlayerSeasonStats()
+    out = {
         "matches": st.maps,
         "kills": st.kills,
         "deaths": st.deaths,
-        "assists": None,
-        "kd": round(st.kd, 2),
-        "acs": None,
+        "kd": round(st.kd, 2) if not empty else None,
         "first_kills": st.first_kills,
+        "rating": round(st.rating, 2) if not empty else None,
+        "analytics_tier": tier,
+        # Tier-gated depth (null = locked or no data).
+        "assists": None,
+        "acs": None,
+        "hs_pct": None,
+        "first_deaths": None,
+        "fk_fd": None,
         "clutches": None,
+        "clutch_1v1": None,
+        "clutch_1v2": None,
+        "clutch_1v3": None,
+        "kast_pct": None,
+        "trade_kills": None,
+        "eco_kills": None,
+        "save_kills": None,
+        "pistol_kills": None,
+        "multikills": None,
+        "aces": None,
+        "kills_by_weapon": None,
     }
+    if empty:
+        return out
+    if tier >= 1:
+        out.update(
+            acs=round(st.acs, 1),
+            hs_pct=round(st.hs_pct, 1),
+            first_deaths=st.first_deaths,
+            fk_fd=round(st.fk_fd, 2),
+            clutches=st.clutch_1v1 + st.clutch_1v2 + st.clutch_1v3,
+            multikills=st.multikills,
+            aces=st.aces,
+            pistol_kills=st.pistol_kills,
+        )
+    if tier >= 2:
+        out.update(
+            assists=st.assists,
+            kast_pct=round(st.kast_pct, 1),
+            trade_kills=st.trade_kills,
+            clutch_1v1=st.clutch_1v1,
+            clutch_1v2=st.clutch_1v2,
+            clutch_1v3=st.clutch_1v3,
+            eco_kills=st.eco_kills,
+            save_kills=st.save_kills,
+            kills_by_weapon=dict(
+                sorted(st.kills_by_weapon.items(), key=lambda kv: (-kv[1], kv[0]))
+            ),
+        )
+    return out
+
+
+def _profile_splits(gs: GameState, pid: str) -> dict | None:
+    """Per-map and per-agent season lines (analytics tier 3)."""
+    if staff_mod.analytics_tier(gs) < 3:
+        return None
+
+    def rows(table: dict[str, PlayerSeasonStats], is_agent: bool) -> list[dict]:
+        out = []
+        for key, st in sorted(table.items()):
+            if st.maps == 0:
+                continue
+            agent = S.gd.agents.get(key) if is_agent else None
+            out.append(
+                {
+                    "key": key,
+                    "label": agent.display_name if agent else key,
+                    "icon": _agent_icon_url(key) if is_agent else _map_thumb_url(key),
+                    "maps": st.maps,
+                    "rating": round(st.rating, 2),
+                    "acs": round(st.acs, 1),
+                    "kd": round(st.kd, 2),
+                    "kast_pct": round(st.kast_pct, 1),
+                }
+            )
+        out.sort(key=lambda r: (-r["maps"], r["key"]))
+        return out
+
+    return {
+        "maps": rows(gs.player_map_stats.get(pid, {}), is_agent=False),
+        "agents": rows(gs.player_agent_stats.get(pid, {}), is_agent=True),
+    }
+
+
+def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
+    """Time-series for the profile trend charts. Performance series needs
+    an analytics department (tier 2+); the development series (ability,
+    confidence, condition, reach) is the manager's own private view."""
+    tier = staff_mod.analytics_tier(gs)
+    perf = (
+        [s.model_dump() for s in gs.stat_history.get(pid, [])]
+        if tier >= 2
+        else None
+    )
+    dev = (
+        [s.model_dump() for s in gs.dev_history.get(pid, [])] if own else None
+    )
+    return {"performance": perf, "development": dev, "analytics_tier": tier}
 
 
 def _profile_weekly(gs: GameState, pid: str) -> list[dict]:
@@ -2014,6 +2334,7 @@ def player_profile(pid: str) -> dict:
         fog, progress, is_fa = _player_fog(gs, pid)
         team_id = None if is_fa else market.team_of(gs, pid)
         team = gs.teams.get(team_id) if team_id else None
+        own = team_id == gs.acting_team_id
         return {
             "player": {
                 "id": p.id,
@@ -2024,7 +2345,7 @@ def player_profile(pid: str) -> dict:
                 "team_name": team.name if team else None,
                 "team_logo": _logo_url(team_id) if team_id else None,
                 "portrait": _portrait_url(p.id, str(p.role)),
-                "is_user_team": team_id == gs.acting_team_id,
+                "is_user_team": own,
                 "is_free_agent": is_fa,
                 # A rival's contracted player is biddable: the seller's ask, so
                 # the profile overlay can open the package builder.
@@ -2033,6 +2354,13 @@ def player_profile(pid: str) -> dict:
                     if (not is_fa and team_id and team_id != gs.acting_team_id)
                     else None
                 ),
+                "followers": p.followers,
+                "confidence": None if fog > 0 else round(p.confidence, 1),
+                "is_starter": (
+                    pid in default_five(gs, team_id) if team_id else None
+                ),
+                "dev_focus": p.dev_focus if own else None,
+                "training_intensity": p.training_intensity if own else None,
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),
@@ -2040,6 +2368,8 @@ def player_profile(pid: str) -> dict:
             "agents": _profile_agents(p),
             "season": _profile_season(gs, pid),
             "weekly": _profile_weekly(gs, pid),
+            "splits": _profile_splits(gs, pid),
+            "charts": _profile_charts(gs, pid, own),
             "relationships": _profile_relationships(gs, pid),
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
