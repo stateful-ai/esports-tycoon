@@ -268,13 +268,24 @@ class Lobby:
                     raise HTTPException(
                         422, f"unknown roster pack '{pack_id}'"
                     ) from None
+            # Validate the pick BEFORE building the world: new_campaign
+            # now creates the manager seat (indexing gs.teams[team_id]),
+            # so an unknown id must 422 here, not 500 in there.
+            known = (
+                {t.id for t in pack.teams.values()}
+                if pack is not None
+                else set(self.gd.teams)
+            )
+            if team_id not in known:
+                raise HTTPException(422, f"unknown team '{team_id}'")
             offer = None
             if game_mode == "legacy":
                 # Re-derive the founding seat's offer slate server-side and
                 # demand the pick comes from it — the lobby showed exactly
                 # this set (same seed, seat 0), so nothing can drift.
                 preview = new_campaign(
-                    self.gd, seed=seed, pack=pack, mode="sandbox"
+                    self.gd, seed=seed, pack=pack, mode="sandbox",
+                    user_team_id=_preview_team(self.gd, pack),
                 )
                 offers = career.new_game_offers(preview, 0)
                 offer = next(
@@ -289,8 +300,6 @@ class Lobby:
                 mode=game_mode, manager_name=manager_name,
                 career_offer=offer,
             )
-            if team_id not in gs.teams:
-                raise HTTPException(422, f"unknown team '{team_id}'")
             game = _Game(self.gd, code, gs=gs)
             game.mode = "shared" if shared else "solo"
             self.games[code] = game
@@ -770,9 +779,20 @@ def lobby_offers(
             pk = load_roster_pack(pack)
         except FileNotFoundError:
             raise HTTPException(422, f"unknown roster pack '{pack}'") from None
-    preview = new_campaign(_LOBBY.gd, seed=seed, pack=pk)
+    preview = new_campaign(
+        _LOBBY.gd, seed=seed, pack=pk, user_team_id=_preview_team(_LOBBY.gd, pk)
+    )
     offers = career.new_game_offers(preview, 0)
     return {"offers": [_offer_view(preview, o) for o in offers]}
+
+
+def _preview_team(gd: GameData, pack) -> str:
+    """A team id that exists in the world being previewed. Roster packs
+    replace the fictional starters, so 'team_nexus' isn't a safe default
+    there — pick the pack's first tier-1 club, like the CLI preview."""
+    if pack is not None:
+        return sorted(t.id for t in pack.teams.values() if t.tier == 1)[0]
+    return "team_nexus"
 
 
 class JoinBody(BaseModel):

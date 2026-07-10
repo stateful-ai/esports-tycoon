@@ -442,7 +442,10 @@ def weekly_patience(gs: GameState) -> list[str]:
             ),
             key=lambda f: (f.week, f.id),
         )
-        if not played:
+        # Patience only moves on a NEW qualifying result: without this,
+        # a split-ending loss streak would be re-penalized every playoff
+        # week the team doesn't even play.
+        if not played or played[-1].week != gs.week:
             continue
         streak_w = streak_l = 0
         for f in reversed(played):

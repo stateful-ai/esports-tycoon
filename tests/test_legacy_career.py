@@ -167,6 +167,79 @@ def test_web_career_state_and_profile(game_data):
     assert st2["career"]["blocked"] is True
 
 
+def test_unemployment_survives_save_load(tmp_path, game_data):
+    """PR #200 review (P1): a dismissed SOLO manager empties
+    human_team_ids while user_team_id still names the old org; the
+    back-compat default must not resurrect that org as human-run on
+    load — it froze the club's AI upkeep."""
+    gs = _legacy(game_data, seed=71)
+    seat = gs.manager_for(gs.user_team_id)
+    old_tid = seat.team_id
+    seat.contract.goal = "win_champions"
+    seat.contract.patience = 1.0
+    career.apply_dismissals(gs, career.review_boards(gs))
+    assert gs.human_team_ids == []
+    path = tmp_path / "fired.json"
+    gs.save(path)
+    loaded = GameState.load(path)
+    assert loaded.human_team_ids == []  # old org stays AI-run
+    assert not loaded.is_human(old_tid)
+    assert career.blocked_seats(loaded)  # still on the job market
+    # Accepting a job on the LOADED state rebinds cleanly.
+    offer = loaded.career_offers_by[seat.id][0]
+    ok, _ = career.accept_offer(loaded, seat.id, offer.team_id)
+    assert ok and loaded.human_team_ids == [offer.team_id]
+    # A blank-slate old save still gets the back-compat default.
+    fresh = new_campaign(game_data, seed=71)
+    fresh.human_team_ids = []
+    refreshed = GameState.model_validate(fresh.model_dump())
+    assert refreshed.human_team_ids == [fresh.user_team_id]
+
+
+def test_patience_only_drifts_on_new_results(game_data):
+    """PR #200 review (P2): a split-ending loss streak must not be
+    re-penalized every playoff week the team doesn't play."""
+    gs = _legacy(game_data, seed=73)
+    seat = gs.manager_for(gs.user_team_id)
+    tid = seat.team_id
+    other = next(
+        t for t in sorted(gs.teams) if t != tid and gs.teams[t].tier == 1
+    )
+    from esports_sim.manager.state import Fixture
+
+    gs.fixtures = [
+        Fixture(
+            id=f"s1w{w}loss", week=w, stage="regular", team_a=tid,
+            team_b=other, played=True, winner_id=other,
+        )
+        for w in range(1, 6)
+    ]
+    gs.week = 5  # the last loss happened THIS week -> drift applies
+    before = seat.contract.patience
+    career.weekly_patience(gs)
+    after_hit = seat.contract.patience
+    assert after_hit < before
+    gs.week = 8  # a playoff week with no new result -> no re-penalty
+    career.weekly_patience(gs)
+    assert seat.contract.patience == after_hit
+
+
+def test_lobby_offers_work_with_roster_pack(game_data):
+    """PR #200 review (P2): the legacy offer preview must not index
+    'team_nexus' into a roster-pack world that doesn't contain it."""
+    pytest.importorskip("fastapi")
+    from esports_sim.registry.rosters import list_roster_packs
+
+    import esports_sim.web.server as server_mod
+
+    packs = list_roster_packs()
+    if not packs:
+        pytest.skip("no roster packs installed")
+    out = server_mod.lobby_offers(seed=2026, pack=packs[0].id)
+    assert out["offers"], "pack preview produced no career offers"
+    assert all(o["team_id"] for o in out["offers"])
+
+
 def test_reputation_reads_chronicle(game_data):
     gs = _legacy(game_data)
     seat = gs.manager_for(gs.user_team_id)

@@ -797,7 +797,12 @@ class GameState(BaseModel):
 
     @model_validator(mode="after")
     def _default_human_team_ids(self) -> "GameState":
-        if not self.human_team_ids:
+        # Back-compat default for pre-multiplayer saves (v1 had exactly one
+        # human, named by user_team_id). An EMPTY list is legitimate in
+        # legacy mode, though: a solo manager between jobs (dismissed,
+        # offers pending) runs no org, and resurrecting their old club as
+        # human-run here would freeze its AI upkeep after a save/load.
+        if not self.human_team_ids and not self.career_offers_by:
             self.human_team_ids = [self.user_team_id]
         return self
 
