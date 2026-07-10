@@ -168,6 +168,88 @@ def head_to_head(gs: GameState, team_a: str, team_b: str) -> dict:
     }
 
 
+_PLAYOFF_CUT = 4
+
+
+def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[str]:
+    """Grounded pre-match preview clauses from `team_id`'s perspective (the
+    acting team by default): recent form, the season head-to-head, the
+    stakes, and the opponent's danger man. Prose, not chips — each clause
+    cites live state; empty ones are dropped. Pure read."""
+    team_id = team_id or gs.user_team_id
+    opp = fixture.team_b if fixture.team_a == team_id else fixture.team_a
+    if opp not in gs.teams:
+        return []
+    opp_name = gs.teams[opp].name
+    bits: list[str] = []
+
+    def _streak(tid: str) -> str | None:
+        played = sorted(
+            (
+                f for f in gs.fixtures
+                if f.played and f.winner_id is not None and tid in (f.team_a, f.team_b)
+            ),
+            key=lambda f: (f.week, f.id),
+        )
+        if not played:
+            return None
+        won = played[-1].winner_id == tid
+        run = 0
+        for f in reversed(played):
+            if (f.winner_id == tid) == won:
+                run += 1
+            else:
+                break
+        if run < 2:
+            return None
+        return f"a {run}-match {'winning' if won else 'losing'} run"
+
+    st = _streak(team_id)
+    if st:
+        bits.append(f"They arrive on {st}.")
+
+    h = head_to_head(gs, team_id, opp)
+    if h["meetings"] == 1:
+        won = h["last_winner_id"] == team_id
+        bits.append(f"{'They won' if won else opp_name + ' won'} the season's only prior meeting.")
+    elif h["meetings"] >= 2:
+        if h["wins_a"] == h["meetings"]:
+            bits.append(f"They've won all {h['meetings']} meetings this season.")
+        elif h["wins_b"] == h["meetings"]:
+            bits.append(f"{opp_name} have taken all {h['meetings']} this season.")
+        else:
+            holder = "their" if h["wins_a"] >= h["wins_b"] else opp_name + "'s"
+            bits.append(
+                f"The season series stands {h['wins_a']}-{h['wins_b']} in {holder} favour."
+            )
+
+    region = str(gs.teams[team_id].region)
+    order = gs.standings_order(region, tier=gs.teams[team_id].tier)
+    if team_id in order and opp in order and gs.phase == "regular":
+        pos = order.index(team_id) + 1
+        if pos > _PLAYOFF_CUT:
+            bits.append("A win would haul them back toward the playoff places.")
+        elif pos <= _PLAYOFF_CUT:
+            bits.append("Three points here tighten their grip on a top-four berth.")
+
+    # Opponent danger man: their top-rated player this season (min a few maps).
+    opp_ids = set(gs.teams[opp].player_ids)
+    danger = max(
+        (
+            (pid, st) for pid, st in gs.player_stats.items()
+            if pid in opp_ids and st.maps >= 3
+        ),
+        key=lambda kv: (kv[1].rating, kv[0]),
+        default=None,
+    )
+    if danger is not None and danger[0] in gs.players:
+        bits.append(
+            f"Watch {gs.players[danger[0]].handle} — {opp_name}'s form pick at "
+            f"{danger[1].rating:.2f}."
+        )
+    return bits
+
+
 def _h2h_callback(
     rng: random.Random, h2h: dict, user_team_id: str, opp_id: str, opp: str, won: bool
 ) -> str:

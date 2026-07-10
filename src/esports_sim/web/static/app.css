@@ -642,6 +642,25 @@ svg.iso .plabel { font-size: 2.4px; }
 .es-rumor.interest { color: var(--es-color-warn, #e8b34b); }
 .mentor-pill { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent); }
 .dev-plan select[data-act="mentor"] { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
+
+/* Match preview prose on the spotlight. */
+.es-preview { margin: 6px 0 0; font-size: var(--es-text-xs, 11px); line-height: 1.45; font-style: italic; }
+
+/* Run-in difficulty chips + on-this-day list. */
+.es-runin { display: flex; flex-wrap: wrap; gap: 4px; }
+.es-runin-chip {
+  padding: 2px 7px; border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.es-runin-chip.diff-hard { border-color: color-mix(in srgb, var(--es-color-danger, #ff4655) 55%, transparent); }
+.es-runin-chip.diff-medium { border-color: color-mix(in srgb, var(--es-color-warn, #e8b34b) 50%, transparent); }
+.es-runin-chip.diff-easy { border-color: color-mix(in srgb, var(--es-color-success, #3fb68b) 45%, transparent); }
+.es-otd { display: flex; flex-direction: column; gap: 4px; font-size: var(--es-text-xs, 11px); line-height: 1.35; }
+.tlink-soft { color: var(--es-color-text-primary, #e6ecf5); }
+
+/* Concrete staff effect pills. */
+.staff-fx { text-transform: none; letter-spacing: 0; margin-left: 2px; }
 .v-lineup .lu-team-name {
   text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
   margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

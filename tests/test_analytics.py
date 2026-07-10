@@ -240,3 +240,26 @@ def test_award_races_leaderboards():
     assert races["Top Fragger"][0]["player_id"] == "b"   # 120 > 100
     assert races["Opening King"][0]["player_id"] == "a"
     assert races["Clutch Merchant"][0]["player_id"] == "a"
+
+
+# ---------------------------------------------------------------------------
+# Pass-9: on_this_day living-history callbacks
+
+
+def test_on_this_day_pulls_landmarks_from_past_seasons():
+    gs = GameState(seed=1, season=5, week=1, user_team_id="a",
+                   teams={"a": _team("a")}, players={})
+    _title(gs, 4, "champions_title", "a")   # 1 season ago
+    _title(gs, 2, "regional_title", "a")    # 3 seasons ago (importance 70 >= 60)
+    gs.season = 5
+    otd = analytics.on_this_day(gs)
+    ago = {o["seasons_ago"] for o in otd}
+    assert 1 in ago and 3 in ago
+    first = next(o for o in otd if o["seasons_ago"] == 1)
+    assert first["season"] == 4 and "champions_title" in first["text"]
+
+
+def test_on_this_day_empty_without_landmarks():
+    gs = GameState(seed=1, season=2, week=1, user_team_id="a",
+                   teams={"a": _team("a")}, players={})
+    assert analytics.on_this_day(gs) == []

@@ -768,6 +768,26 @@ function renderTeamProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Squad chemistry ---------------------------------------------------------
+  // Own-club only: cohesion + the strongest bonds and worst frictions.
+  const chem = data.chemistry;
+  if (chem && (chem.cohesion != null)) {
+    const sec = pfSection(`Squad chemistry · cohesion ${Math.round(chem.cohesion)}`);
+    const pairChip = (p, cls) => {
+      const chip = el("span", `pf-rel-chip ${cls}`,
+        `${p.a} + ${p.b}<span class="pf-rel-kind">${Math.round(p.strength)}</span>`);
+      return chip;
+    };
+    const chips = el("div", "pf-chips");
+    for (const b of chem.bonds) chips.appendChild(pairChip(b, "rel-duo"));
+    for (const f of chem.frictions) chips.appendChild(pairChip(f, "rel-feud"));
+    if (!chem.bonds.length && !chem.frictions.length) {
+      chips.appendChild(el("span", "muted", "a settled, unremarkable dressing room"));
+    }
+    sec.appendChild(chips);
+    frag.appendChild(sec);
+  }
+
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
     const sec = pfSection("Honors");

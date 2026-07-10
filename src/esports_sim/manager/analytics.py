@@ -399,3 +399,22 @@ def award_races(gs: "GameState", top: int = 3) -> dict:
             for pid, d in risers[:top] if d > 0
         ]
     return {k: v for k, v in races.items() if v}
+
+
+def on_this_day(gs: "GameState", n: int = 3) -> list[dict]:
+    """Living-history callbacks: the standout chronicle landmark from each of
+    a few seasons ago (1/2/3/5), newest lookback first. A dry 'remember
+    when' for the dashboard, straight from the chronicle."""
+    out = []
+    for back in (1, 2, 3, 5):
+        s = gs.season - back
+        if s < 1:
+            continue
+        cands = [e for e in gs.chronicle if e.season == s and e.importance >= 60.0]
+        if not cands:
+            continue
+        top = max(cands, key=lambda e: (e.importance, e.id))
+        out.append({"seasons_ago": back, "season": s, "text": top.text})
+        if len(out) >= n:
+            break
+    return out

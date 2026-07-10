@@ -453,3 +453,33 @@ def test_season_all_star_empty_without_eligible_players():
     gs = _award_gs([p], stats)
     from esports_sim.manager.narrative import season_all_star
     assert season_all_star(gs) == []
+
+
+# ---------------------------------------------------------------------------
+# Match preview clauses
+
+
+def test_match_preview_reads_streak_series_and_stakes():
+    from esports_sim.manager.narrative import match_preview
+    # nxs on a 2-game losing run into a fixture vs vgd, whom they've split with.
+    prior = [
+        _played_fixture("s2w1m0", 1, "nxs", "vgd", winner_id="nxs"),  # series: nxs 1
+        _played_fixture("s2w2m0", 2, "nxs", "obs", winner_id="nxs"),
+        _played_fixture("s2w3m0", 3, "nxs", "obs", winner_id="obs"),  # nxs L
+        _played_fixture("s2w4m0", 4, "vgd", "nxs", winner_id="vgd"),  # nxs L, series 1-1
+    ]
+    upcoming = Fixture(id="s2w5m0", week=5, stage="regular", tier=1,
+                       team_a="nxs", team_b="vgd", maps=["ascent"])
+    gs = _gs(fixtures=prior + [upcoming], week=5)
+    from esports_sim.manager.state import TeamRecord
+    gs.standings = {t: TeamRecord() for t in gs.teams}
+    bits = match_preview(gs, upcoming, "nxs")
+    assert any("losing run" in b for b in bits)      # nxs lost their last two
+    assert any("season series" in b.lower() for b in bits)  # 1-1 vs vgd
+
+
+def test_match_preview_empty_for_unknown_opponent():
+    from esports_sim.manager.narrative import match_preview
+    f = Fixture(id="x", week=1, team_a="nxs", team_b="ZZZ", maps=["ascent"])
+    gs = _gs(fixtures=[], week=1)
+    assert match_preview(gs, f, "nxs") == []

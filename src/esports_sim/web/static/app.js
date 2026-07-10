@@ -615,6 +615,11 @@ async function dashboard(v) {
       );
     }
 
+    // Grounded prose preview synthesising form / series / stakes / danger man.
+    if ((fix.preview || []).length) {
+      spot.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
+    }
+
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
       const vr = el("div", "es-maps");
@@ -739,6 +744,38 @@ async function dashboard(v) {
     }
     snap.appendChild(cols);
     v.appendChild(snap);
+  }
+
+  /* -- 1c. RUN-IN + ON THIS DAY ------------------------------------------- */
+  const runIn = s.run_in || [], otd = s.on_this_day || [];
+  if (runIn.length || otd.length) {
+    const card = el("div", "card");
+    const cols = el("div", "es-snap-cols");
+    if (runIn.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Run-in"));
+      const strip = el("div", "es-runin");
+      for (const f of runIn) {
+        strip.appendChild(el("span", `es-runin-chip diff-${f.difficulty}`,
+          `<span class="muted">W${f.week}</span> <span class="tlink-soft">${f.opponent}</span>`));
+      }
+      col.appendChild(strip);
+      cols.appendChild(col);
+    }
+    if (otd.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "On this day"));
+      const list = el("div", "es-otd");
+      for (const o of otd) {
+        list.appendChild(el("div", "muted",
+          `<b class="mono">${o.seasons_ago}yr</b> ${o.text}`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    card.appendChild(el("h2", "", "Looking ahead & back"));
+    card.appendChild(cols);
+    v.appendChild(card);
   }
 
   /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
@@ -2106,9 +2143,10 @@ async function marketStaff(v) {
     const hired = data.hired[role];
     const head = `<span style="min-width:340px"><span class="pill">${role}</span> `;
     if (hired) {
+      const fx = (hired.effects || []).map((e) => `<span class="pill obj good staff-fx">${e}</span>`).join(" ");
       row.innerHTML = `${head}<b class="slink" data-sid="${hired.id}">${hired.name}</b>
         <span class="muted">q${Math.round(hired.quality)} · ${hired.specialty || "—"} ·
-        ${money(hired.salary)}/wk — ${data.blurbs[role]}</span></span>`;
+        ${money(hired.salary)}/wk</span> ${fx}</span>`;
       const rel = el("button", "btn btn-sm", "Release");
       rel.onclick = async () => {
         const r = await api("/api/actions/release_staff", { role });

@@ -121,7 +121,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
-    "identity", "tendencies", "rivals", "knowledge",
+    "identity", "tendencies", "rivals", "knowledge", "chemistry",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -688,3 +688,21 @@ def test_transfer_rumors_shape(env):
     assert isinstance(rumors, list)
     assert all(set(r) == {"kind", "text"} for r in rumors)
     assert all(r["kind"] in ("interest", "link") for r in rumors)
+
+
+def test_fixture_run_in_rates_upcoming(env):
+    gs, gd, h = env
+    run_in = server_mod._fixture_run_in(gs, h.user_team)
+    assert isinstance(run_in, list) and len(run_in) <= 5
+    assert all(set(r) == {"week", "opponent", "opp_rank", "difficulty"} for r in run_in)
+    assert all(r["difficulty"] in ("easy", "medium", "hard") for r in run_in)
+    assert all(r["week"] >= gs.week for r in run_in)
+
+
+def test_squad_chemistry_shape(env):
+    gs, gd, h = env
+    chem = server_mod._squad_chemistry(gs, h.user_team)
+    assert set(chem) == {"cohesion", "bonds", "frictions"}
+    assert chem["cohesion"] is None or isinstance(chem["cohesion"], float)
+    for p in chem["bonds"] + chem["frictions"]:
+        assert set(p) == {"a", "a_id", "b", "b_id", "strength"}

@@ -1014,6 +1014,10 @@ def state() -> dict:
                     "streak_len": h["streak_len"],
                     "you_lead": h["wins_a"] > h["wins_b"],
                 }
+            # A grounded prose preview synthesising form / series / stakes.
+            next_fixture["preview"] = narrative.match_preview(
+                gs, fixture, gs.acting_team_id
+            )
         return {
             "season": gs.season,
             "week": gs.week,
@@ -1021,9 +1025,12 @@ def state() -> dict:
             "user_team": _team_view(user, gs),
             "next_fixture": next_fixture,
             # Dashboard hub extras: this season's rating leaders (league-wide)
-            # and your roster's biggest week-over-week ability movers.
+            # and your roster's biggest week-over-week ability movers, plus
+            # the upcoming run-in difficulty and living-history callbacks.
             "leaders": _league_leaders(gs),
             "movers": _roster_movers(gs, gs.acting_team_id),
+            "run_in": _fixture_run_in(gs, gs.acting_team_id),
+            "on_this_day": analytics.on_this_day(gs),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
@@ -1299,6 +1306,65 @@ def roster(team_id: str) -> dict:
             if team_id == gs.acting_team_id
             else {"duos": [], "feuds": []},
         }
+
+
+def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The team's next `n` unplayed regular-season fixtures, rated by opponent
+    strength (world rank) — a run-in difficulty read for planning. Pure read."""
+    upcoming = [
+        f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+        if f.tier == 1 and not f.played and f.stage == "regular"
+        and f.week >= gs.week and tid in (f.team_a, f.team_b)
+    ]
+    out = []
+    for f in upcoming[:n]:
+        opp = f.team_b if f.team_a == tid else f.team_a
+        wr = gs.teams[opp].world_rank if opp in gs.teams else None
+        diff = (
+            "hard" if (wr is not None and wr <= 6)
+            else "medium" if (wr is not None and wr <= 14)
+            else "easy"
+        )
+        out.append({
+            "week": f.week,
+            "opponent": gs.teams[opp].name if opp in gs.teams else opp,
+            "opp_rank": wr,
+            "difficulty": diff,
+        })
+    return out
+
+
+def _squad_chemistry(gs: GameState, tid: str) -> dict:
+    """Roster chemistry: the strongest bonds and worst frictions among the
+    team's players, plus overall cohesion (mean pair strength). Pure read of
+    relationships.get; own-club intel."""
+    ids = [pid for pid in gs.teams[tid].player_ids if pid in gs.players]
+    pairs = []
+    for i, a in enumerate(ids):
+        for b in ids[i + 1:]:
+            pairs.append((a, b, relationships.get(gs, a, b)))
+    if not pairs:
+        return {"cohesion": None, "bonds": [], "frictions": []}
+
+    def _view(a, b, s):
+        return {
+            "a": gs.players[a].handle, "a_id": a,
+            "b": gs.players[b].handle, "b_id": b,
+            "strength": round(s, 1),
+        }
+
+    bonds = [
+        _view(a, b, s)
+        for a, b, s in sorted(pairs, key=lambda t: (-t[2], t[0], t[1]))
+        if s >= relationships.FRIEND_BAR
+    ][:4]
+    frictions = [
+        _view(a, b, s)
+        for a, b, s in sorted(pairs, key=lambda t: (t[2], t[0], t[1]))
+        if s <= relationships.FEUD_BAR
+    ][:4]
+    cohesion = round(sum(s for _, _, s in pairs) / len(pairs), 1)
+    return {"cohesion": cohesion, "bonds": bonds, "frictions": frictions}
 
 
 def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
@@ -1958,6 +2024,9 @@ def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict
     return {
         **m.model_dump(),
         "specialty_blurb": staff_mod.SPECIALTY_BLURB.get(m.specialty, ""),
+        # Concrete contribution lines so hired staff show their impact inline
+        # (not just on their profile overlay). Server-computed, never re-derived.
+        "effects": _staff_effect_lines(m),
         "employer_id": employer_id,
         "employer_name": gs.teams[employer_id].name if employer_id else None,
     }
@@ -3506,6 +3575,8 @@ def team_profile(tid: str) -> dict:
                 if tid == gs.acting_team_id
                 else None
             ),
+            # Squad chemistry (bonds, frictions, cohesion) — own club only.
+            "chemistry": _squad_chemistry(gs, tid) if own_team else None,
         }
 
 
