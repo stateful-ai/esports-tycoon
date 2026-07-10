@@ -486,3 +486,57 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
     gs.awards.extend(out)
     del gs.awards[:-24]
     return out
+
+
+def season_in_review(gs: GameState) -> str | None:
+    """One grounded paragraph capping the season for the news feed: the
+    world champion, the MVP, the biggest riser, a marquee retirement, and
+    the tactical era it closed as. Every clause cites a record already on
+    GameState/chronicle (call at offseason, after awards + retirements +
+    the meta era are recorded, while gs.season is still the ending season).
+    Clauses with nothing to say are dropped; returns None if all are."""
+    season = gs.season
+    bits: list[str] = []
+
+    champ = next((c for c in reversed(gs.champions) if c.season == season), None)
+    if champ is not None:
+        bits.append(f"{champ.team_name} were crowned world champions")
+
+    def _award_handle(name: str) -> str | None:
+        return next(
+            (a.handle for a in gs.awards if a.season == season and a.award == name),
+            None,
+        )
+
+    mvp = _award_handle("Season MVP")
+    if mvp:
+        bits.append(f"{mvp} claimed MVP")
+    mip = _award_handle("Most Improved")
+    if mip:
+        bits.append(f"{mip} made the biggest leap")
+
+    # Marquee retirement: the highest-importance retirement chronicled this
+    # season (Pass-1 tributes lift decorated careers above the floor).
+    rets = [e for e in gs.chronicle if e.kind == "retirement" and e.season == season]
+    if rets:
+        top = max(rets, key=lambda e: (e.importance, e.id))
+        if top.importance > 45.0:  # only a genuinely notable career rates a line
+            handle = top.text.split(" retires", 1)[0]
+            bits.append(f"{handle} called time on a storied career")
+
+    # The tactical era (league-level meta_shift entry carries no team_id).
+    era = next(
+        (
+            e.text.split("closes as ", 1)[1].rstrip(".")
+            for e in reversed(gs.chronicle)
+            if e.kind == "meta_shift" and e.season == season and not e.team_id
+            and "closes as " in e.text
+        ),
+        None,
+    )
+    if era:
+        bits.append(f"the league settled into {era}")
+
+    if not bits:
+        return None
+    return f"S{season} in review: " + "; ".join(bits) + "."

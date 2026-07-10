@@ -12,8 +12,15 @@ from __future__ import annotations
 
 import types
 
-from esports_sim.manager.narrative import head_to_head, season_awards, weekly_news
+from esports_sim.manager import chronicle
+from esports_sim.manager.narrative import (
+    head_to_head,
+    season_awards,
+    season_in_review,
+    weekly_news,
+)
 from esports_sim.manager.state import (
+    AwardRecord,
     ChampionRecord,
     Fixture,
     GameState,
@@ -355,3 +362,56 @@ def test_most_improved_silent_when_nobody_really_rose():
     stats = {"aria": PlayerSeasonStats(maps=10, rating_sum=11.0, kills=150, first_kills=20)}
     gs = _award_gs([a], stats, season_start_ca={"aria": 70.0})  # only +1 CA
     assert not any(r.award == "Most Improved" for r in season_awards(gs))
+
+
+# ---------------------------------------------------------------------------
+# Season-in-review: one grounded paragraph over the season's records
+
+
+def test_season_in_review_composes_grounded_clauses():
+    gs = _gs(
+        fixtures=[],
+        champions=[ChampionRecord(season=2, team_id="vgd", team_name="Vanguard")],
+        week=1,
+    )  # _gs pins season=2
+    gs.awards = [
+        AwardRecord(season=2, award="Season MVP", player_id="a", handle="Aria",
+                    team_name="Nexus", value="1.30 rating"),
+        AwardRecord(season=2, award="Most Improved", player_id="b", handle="Brax",
+                    team_name="Nexus", value="+8 CA"),
+    ]
+    chronicle.record(
+        gs, "retirement",
+        "Legend retires at 40 (Nexus) - 6 pro seasons, 2 individual honours (2x MVP).",
+        player_id="c", importance=70.0,
+    )
+    chronicle.record(gs, "meta_shift", "Season 2 closes as an aggro-heavy era.")
+
+    review = season_in_review(gs)
+    assert review is not None and review.startswith("S2 in review:")
+    assert "Vanguard were crowned world champions" in review
+    assert "Aria claimed MVP" in review
+    assert "Brax made the biggest leap" in review
+    assert "Legend" in review and "storied career" in review
+    assert "an aggro-heavy era" in review
+    assert review.isascii()  # surfaced in ASCII CLI news too
+
+
+def test_season_in_review_none_when_nothing_notable():
+    gs = _gs(fixtures=[], champions=[], week=1)  # season 2, no awards/chronicle
+    assert season_in_review(gs) is None
+
+
+def test_season_in_review_drops_a_quiet_retirement():
+    """A run-of-the-mill retirement (importance at the floor) doesn't earn a
+    line — only a genuinely notable career does."""
+    gs = _gs(
+        fixtures=[],
+        champions=[ChampionRecord(season=2, team_id="vgd", team_name="Vanguard")],
+        week=1,
+    )
+    chronicle.record(gs, "retirement", "Journeyman retires at 33.",
+                     player_id="j", importance=40.0)
+    review = season_in_review(gs)
+    assert review is not None  # champion clause still fires
+    assert "storied career" not in review

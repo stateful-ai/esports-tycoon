@@ -20,9 +20,11 @@ fastapi = pytest.importorskip("fastapi")
 HTTPException = fastapi.HTTPException
 
 import esports_sim.web.server as server_mod
-from esports_sim.manager import advance_week, new_campaign
-from esports_sim.manager.state import GameState
+from esports_sim.manager import advance_week, chronicle, new_campaign
+from esports_sim.manager.state import Fixture, GameState, MapResult, PlayerLineSnap
 from esports_sim.registry import GameData
+from esports_sim.schemas import Player, Team
+from esports_sim.schemas.common import Playstyle, Role
 
 SEED = 2026
 WEEKS = 3  # enough to populate stats, fixtures, and relationships
@@ -42,6 +44,7 @@ PLAYER_TOP = {
     "relationships",
     "career",
     "honours",
+    "epithet",
     "memories",
 }
 PLAYER_BLOCK = {
@@ -373,3 +376,101 @@ def test_profile_determinism(game_data: GameData) -> None:
         assert dump_player(gs_a, pid) == dump_player(gs_b, pid)
     for tid in (h.user_team, h.rival_team, h.tier2_team):
         assert dump_team(gs_a, tid) == dump_team(gs_b, tid)
+
+
+# ---------------------------------------------------------------------------
+# Pass-2 web helpers: POTM, recent form, epithet (pure reads over GameState)
+
+
+def _line(pid, kills, rating):
+    return PlayerLineSnap(player_id=pid, kills=kills, deaths=12, rating=rating)
+
+
+def test_series_potm_prefers_the_winning_side():
+    # vex (loser) has the highest rating, but POTM goes to the winner's top.
+    r = MapResult(
+        map_id="ascent", seed=0, score_a=13, score_b=9, winner_id="nxs",
+        lines=[_line("apex", 20, 1.30), _line("vex", 25, 1.55)],
+    )
+    f = Fixture(id="s1w1m0", week=1, team_a="nxs", team_b="vgd", maps=["ascent"],
+                played=True, winner_id="nxs", results=[r])
+    gs = GameState(
+        seed=1, season=1, week=1, user_team_id="nxs",
+        teams={
+            "nxs": Team(id="nxs", name="Nexus", tag="NXS", player_ids=["apex"]),
+            "vgd": Team(id="vgd", name="Vanguard", tag="VGD", player_ids=["vex"]),
+        },
+        players={
+            "apex": Player(id="apex", handle="Apex", age=24, role=Role.DUELIST,
+                           playstyle=Playstyle.ENTRY, attributes={"aim_precision": 80}),
+            "vex": Player(id="vex", handle="Vex", age=24, role=Role.DUELIST,
+                          playstyle=Playstyle.ENTRY, attributes={"aim_precision": 80}),
+        },
+    )
+    potm = server_mod._series_potm(f, gs)
+    assert potm["player_id"] == "apex" and potm["on_winner"] is True
+    assert potm["handle"] == "Apex"
+
+
+def test_series_potm_falls_back_to_overall_top_when_roster_churned():
+    r = MapResult(
+        map_id="ascent", seed=0, score_a=13, score_b=5, winner_id="nxs",
+        lines=[_line("ghost", 25, 1.60)],
+    )
+    f = Fixture(id="s1w1m0", week=1, team_a="nxs", team_b="vgd", maps=["ascent"],
+                played=True, winner_id="nxs", results=[r])
+    gs = GameState(
+        seed=1, season=1, week=1, user_team_id="nxs",
+        teams={"nxs": Team(id="nxs", name="Nexus", tag="NXS", player_ids=[])},
+        players={"ghost": Player(id="ghost", handle="Ghost", age=24, role=Role.DUELIST,
+                                 playstyle=Playstyle.ENTRY, attributes={"aim_precision": 80})},
+    )
+    potm = server_mod._series_potm(f, gs)
+    assert potm["player_id"] == "ghost" and potm["on_winner"] is False
+
+
+def test_series_potm_none_for_unplayed_fixture():
+    f = Fixture(id="x", week=1, team_a="nxs", team_b="vgd", maps=["ascent"], played=False)
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs", teams={}, players={})
+    assert server_mod._series_potm(f, gs) is None
+
+
+def _bo1(week, winner):
+    sa, sb = (13, 7) if winner == "nxs" else (7, 13)
+    return Fixture(
+        id=f"s1w{week}m0", week=week, team_a="nxs", team_b="vgd", maps=["ascent"],
+        played=True, winner_id=winner,
+        results=[MapResult(map_id="ascent", seed=0, score_a=sa, score_b=sb,
+                           winner_id=winner)],
+    )
+
+
+def test_team_recent_form_returns_last_five_oldest_first():
+    teams = {
+        "nxs": Team(id="nxs", name="Nexus", tag="NXS"),
+        "vgd": Team(id="vgd", name="Vanguard", tag="VGD"),
+    }
+    # weeks 1..6: nxs wins odd weeks, loses even weeks.
+    fixtures = [_bo1(w, "nxs" if w % 2 else "vgd") for w in range(1, 7)]
+    gs = GameState(seed=1, season=1, week=7, user_team_id="nxs",
+                   teams=teams, fixtures=fixtures)
+    form = server_mod._team_recent_form(gs, "nxs", n=5)
+    assert [g["week"] for g in form] == [2, 3, 4, 5, 6]  # week 1 dropped, oldest-first
+    assert [g["result"] for g in form] == ["L", "W", "L", "W", "L"]
+    assert form[-1]["opponent"] == "Vanguard"
+
+
+def test_player_epithet_priority_and_grounding():
+    gs = GameState(seed=1, season=3, week=1, user_team_id="nxs", teams={}, players={})
+    assert server_mod._player_epithet(gs, "p") is None  # nothing won yet
+    chronicle.record(gs, "award", "P wins Top Fragger.", player_id="p",
+                     data={"award": "Top Fragger"})
+    assert server_mod._player_epithet(gs, "p") == "Star fragger"
+    chronicle.record(gs, "award", "P wins Season MVP.", player_id="p",
+                     data={"award": "Season MVP"})
+    assert server_mod._player_epithet(gs, "p") == "League MVP"  # MVP outranks
+    # An award without a mapped epithet still earns the generic label.
+    gs2 = GameState(seed=1, season=1, week=1, user_team_id="nxs", teams={}, players={})
+    chronicle.record(gs2, "award", "Q wins Best Defensive Team.", player_id="q",
+                     data={"award": "Best Defensive Team"})
+    assert server_mod._player_epithet(gs2, "q") == "Decorated pro"

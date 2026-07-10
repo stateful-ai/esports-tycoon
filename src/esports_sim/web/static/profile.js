@@ -257,6 +257,7 @@ function renderPlayerProfile(data) {
     portrait +
     `<div class="pf-id">` +
     `<div class="pf-handle">${p.handle ?? "Unknown"}</div>` +
+    (data.epithet ? `<div class="pf-epithet">${data.epithet}</div>` : "") +
     `<div class="pf-meta">${meta}${teamBit}</div>` +
     `<div class="pf-contract muted">${contract}</div>` +
     `</div>`;

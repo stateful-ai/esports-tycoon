@@ -320,6 +320,14 @@
   color: var(--es-color-text-secondary, #a2aec6);
 }
 
+/* Earned epithet under the handle in the profile header. */
+.pf-epithet {
+  display: inline-block; margin: 2px 0 1px;
+  font-size: var(--es-text-2xs, 10px); font-weight: 700;
+  text-transform: uppercase; letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-warn, #e8b34b);
+}
+
 /* Honours — the trophy cabinet: one row per individual season award. */
 .pf-honour {
   display: flex; align-items: baseline; gap: 8px;

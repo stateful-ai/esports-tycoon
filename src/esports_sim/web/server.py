@@ -34,6 +34,7 @@ from esports_sim.manager import (
     knowledge as knowledge_mod,
     market,
     memories as memories_mod,
+    narrative,
     relationships,
     rivalries as rivalries_mod,
     social,
@@ -582,6 +583,44 @@ def _team_view(t: Team, gs: GameState) -> dict:
     }
 
 
+def _series_potm(f, gs: GameState) -> dict | None:
+    """Player of the Match: the standout box-score line of a played series.
+    Aggregates each player's mean rating across the series maps and prefers
+    the winning side (identified by current roster membership), falling back
+    to the overall top line if the winner's roster has since churned. A pure
+    read of the stored per-map lines — no schema state, deterministic."""
+    if not f.played or f.winner_id is None:
+        return None
+    agg: dict[str, list[float]] = {}  # pid -> [rating_sum, maps, kills]
+    for r in f.results:
+        for ln in r.lines:
+            a = agg.setdefault(ln.player_id, [0.0, 0, 0])
+            a[0] += ln.rating
+            a[1] += 1
+            a[2] += int(ln.kills)
+    if not agg:
+        return None
+    winner_roster = (
+        set(gs.teams[f.winner_id].player_ids) if f.winner_id in gs.teams else set()
+    )
+
+    def _mean(pid: str) -> float:
+        rs, mp, _ = agg[pid]
+        return rs / mp if mp else 0.0
+
+    pool = [pid for pid in agg if pid in winner_roster] or list(agg)
+    pid = max(sorted(pool), key=_mean)  # sorted -> deterministic tie-break
+    p = gs.players.get(pid)
+    rs, mp, kills = agg[pid]
+    return {
+        "player_id": pid,
+        "handle": p.handle if p else pid,
+        "rating": round(rs / mp, 2) if mp else 0.0,
+        "kills": kills,
+        "on_winner": pid in winner_roster,
+    }
+
+
 def _fixture_view(f, gs: GameState) -> dict:
     # A named rivalry between the two sides (symmetric pair heat), surfaced
     # only once it's genuinely hot — so the dashboard can flag a grudge
@@ -597,6 +636,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "team_a_name": gs.teams[f.team_a].name,
         "team_b_name": gs.teams[f.team_b].name,
         "rivalry": round(riv, 1) if riv >= rivalries_mod.RIVALRY_BAR else None,
+        "potm": _series_potm(f, gs),
         "maps": f.maps,
         "map_thumbs": {mid: _map_thumb_url(mid) for mid in f.maps},
         "veto": f.veto,
@@ -919,12 +959,31 @@ def state() -> dict:
         user = gs.teams[gs.acting_team_id]
         fixture = gs.team_fixture(gs.acting_team_id)
         order = gs.standings_order(str(user.region))
+        # This-season head-to-head vs the upcoming opponent, from the acting
+        # team's perspective. Attached only when they've met (silence beats a
+        # "0-0" line); pure read of narrative.head_to_head.
+        next_fixture = _fixture_view(fixture, gs) if fixture else None
+        if next_fixture is not None:
+            opp_id = (
+                fixture.team_b if fixture.team_a == gs.acting_team_id
+                else fixture.team_a
+            )
+            h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
+            if h["meetings"]:
+                next_fixture["h2h"] = {
+                    "meetings": h["meetings"],
+                    "wins": h["wins_a"],  # acting team's series wins
+                    "losses": h["wins_b"],
+                    "streak_team": h["streak_winner_id"],
+                    "streak_len": h["streak_len"],
+                    "you_lead": h["wins_a"] > h["wins_b"],
+                }
         return {
             "season": gs.season,
             "week": gs.week,
             "phase": gs.phase,
             "user_team": _team_view(user, gs),
-            "next_fixture": _fixture_view(fixture, gs) if fixture else None,
+            "next_fixture": next_fixture,
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
@@ -1138,6 +1197,33 @@ def roster(team_id: str) -> dict:
         }
 
 
+def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The team's last `n` played fixtures as compact W/L chips (oldest
+    first, so the table reads left-to-right up to the most recent). Pure
+    read of gs.fixtures — the same source the recap and streak use."""
+    played = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None and tid in (f.team_a, f.team_b)
+        ),
+        key=lambda f: (f.week, f.id),
+    )[-n:]
+    out = []
+    for f in played:
+        opp = f.team_b if tid == f.team_a else f.team_a
+        a, b = f.map_score
+        score = f"{a}-{b}" if tid == f.team_a else f"{b}-{a}"
+        out.append(
+            {
+                "result": "W" if f.winner_id == tid else "L",
+                "opponent": gs.teams[opp].name if opp in gs.teams else opp,
+                "score": score,
+                "week": f.week,
+            }
+        )
+    return out
+
+
 @app.get("/api/standings")
 def standings() -> dict:
     with S.lock:
@@ -1149,6 +1235,7 @@ def standings() -> dict:
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
+                    "recent_form": _team_recent_form(gs, tid),
                 }
                 for tid in gs.standings_order(region, tier=tier)
             ]
@@ -2814,11 +2901,43 @@ def player_profile(pid: str) -> dict:
             # titles carry a team_id, not a player_id, so they stay in the
             # broader "memories" list rather than this personal cabinet).
             "honours": _profile_honours(gs, pid),
+            # A one-line earned epithet ("League MVP", "Clutch merchant"),
+            # derived from the honours above — None until they've won
+            # something, so it's always grounded, never a hollow label.
+            "epithet": _player_epithet(gs, pid),
             # What this player remembers — their defining chronicle
             # entries (debut, titles, milestones, moves), newest-important
             # first. Pure chronicle read (manager/memories.py).
             "memories": memories_mod.memory_lines(gs, pid),
         }
+
+
+# Earned epithets, best-first: a player's headline honour becomes their
+# label. Award names match narrative.season_awards exactly.
+_EPITHETS: tuple[tuple[str, str], ...] = (
+    ("Season MVP", "League MVP"),
+    ("Clutch Merchant", "Clutch merchant"),
+    ("Opening King", "Opening specialist"),
+    ("Top Fragger", "Star fragger"),
+    ("Most Improved", "Breakout riser"),
+    ("Challengers MVP", "Challengers standout"),
+    ("Rookie of the Season", "Standout rookie"),
+)
+
+
+def _player_epithet(gs: GameState, pid: str) -> str | None:
+    """The player's headline earned label, or None if they've won nothing
+    yet. Pure chronicle read; priority follows _EPITHETS (MVP outranks the
+    rest, a bare honour still earns 'Decorated pro')."""
+    won = {
+        e.data.get("award", "")
+        for e in chronicle.entries_for_player(gs, pid)
+        if e.kind == "award"
+    }
+    for key, label in _EPITHETS:
+        if key in won:
+            return label
+    return "Decorated pro" if won else None
 
 
 def _profile_honours(gs: GameState, pid: str) -> list[dict]:

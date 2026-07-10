@@ -598,6 +598,22 @@ async function dashboard(v) {
       )
     );
 
+    // Head-to-head this season vs the upcoming opponent (server attaches it
+    // only when they've already met — see /api/state).
+    if (fix.h2h) {
+      const h = fix.h2h;
+      const lead = h.wins === h.losses ? "level" : h.you_lead ? "you lead" : "you trail";
+      const streak =
+        h.streak_len > 1 ? ` · ${h.streak_team === myId ? "W" : "L"}${h.streak_len}` : "";
+      spot.appendChild(
+        el(
+          "div",
+          "es-h2h muted",
+          `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${streak}`
+        )
+      );
+    }
+
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
       const vr = el("div", "es-maps");
@@ -1657,6 +1673,16 @@ async function gameplanPanel(v) {
   v.appendChild(card);
 }
 
+// Last-5 W/L chips for the standings table (oldest first, most recent
+// rightmost). Each chip tips to its scoreline — the sim's own record.
+const formSquares = (form) =>
+  (form || [])
+    .map(
+      (g) =>
+        `<span class="form-sq ${g.result === "W" ? "w" : "l"}" title="${g.result} ${g.score} vs ${g.opponent} (W${g.week})">${g.result}</span>`
+    )
+    .join("") || '<span class="muted">—</span>';
+
 async function standings(v) {
   const data = await api("/api/standings");
   for (const league of data.regions) {
@@ -1664,7 +1690,7 @@ async function standings(v) {
     card.innerHTML = `<h2>${league.region.toUpperCase()} league${league.is_user ? " — your region" : ""}</h2>`;
     const t = el("table");
     t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
-      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
+      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
     const tb = el("tbody");
     const rowFor = (r, i) => {
       const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
@@ -1672,7 +1698,8 @@ async function standings(v) {
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
         <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
         <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
-        <td class="num">${r.reputation}</td>`);
+        <td class="num">${r.reputation}</td>
+        <td class="form-cell">${formSquares(r.recent_form)}</td>`);
       tr.style.cursor = "pointer";
       tr.title = "view roster";
       tr.onclick = () => {
@@ -1815,6 +1842,20 @@ async function schedule(v) {
         b.title = r.has_replay ? "watch replay" : "replay only kept for the latest week";
         b.onclick = () => openReplay(f.id, i);
         line.appendChild(b);
+      }
+      // Player of the Match — the series' standout box-score line (server
+      // derives it; .plink/data-pid opens the profile overlay).
+      if (f.played && f.potm) {
+        const p = f.potm;
+        line.appendChild(
+          el(
+            "span",
+            "potm-chip",
+            `<span class="potm-star">★</span> POTM ` +
+              `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ` +
+              `<span class="muted">${p.rating.toFixed(2)} · ${p.kills}K</span>`
+          )
+        );
       }
       card.appendChild(line);
       if (f.veto.length) {

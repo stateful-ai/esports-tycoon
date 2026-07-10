@@ -663,6 +663,34 @@ svg.iso .plabel { font-size: 2.4px; }
   background: var(--es-color-fill-danger, #3a1620);
   border: 1px solid color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
 }
+/* Head-to-head line under the VS block on the spotlight. */
+.es-h2h {
+  text-align: center; margin: 6px 0 0;
+  font-size: var(--es-text-xs, 11px); letter-spacing: .02em;
+}
+.es-h2h b { color: var(--es-color-text-primary, #e6ecf5); }
+
+/* Recent-form chips (standings table + anywhere a W/L run is shown). */
+.form-cell { white-space: nowrap; }
+.form-sq {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; margin-right: 2px; border-radius: 3px;
+  font-size: 9px; font-weight: 700; color: #fff; cursor: default;
+}
+.form-sq.w { background: var(--es-color-success, #3fb68b); }
+.form-sq.l { background: var(--es-color-danger, #ff4655); }
+
+/* Player-of-the-Match chip on played fixtures. */
+.potm-chip {
+  display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;
+  padding: 1px 8px; border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: .05em;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.potm-chip .plink { text-transform: none; letter-spacing: 0; }
+.potm-star { color: var(--es-color-warn, #e8b34b); }
 
 /* Map feature — the beauty crops shown large. */
 .es-maps {

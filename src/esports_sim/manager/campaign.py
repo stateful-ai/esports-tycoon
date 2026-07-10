@@ -1835,6 +1835,14 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     _rookie_classes(gs, gd, rng, n_retired)
     social.seed_followers(gs)  # rookies arrive with a baseline audience
 
+    # Season-in-review: one grounded paragraph over the season's records
+    # (champion, MVP, biggest riser, marquee retirement, tactical era),
+    # read while gs.season still names the season that just ended.
+    review = narrative.season_in_review(gs)
+    if review is not None:
+        gs.push_news(review)
+        report.notes.append(review)
+
     # Ended careers stop charting; keep the history maps bounded.
     for hist in (gs.stat_history, gs.dev_history):
         for pid in sorted(hist):
