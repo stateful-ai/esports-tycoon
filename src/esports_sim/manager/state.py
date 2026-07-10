@@ -342,6 +342,9 @@ class CareerStats(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    # A stored display name so a retired player's record survives even after
+    # they leave gs.players (the all-time record book reads career_stats).
+    handle: str = ""
     maps: int = 0
     rounds: int = 0
     kills: int = 0

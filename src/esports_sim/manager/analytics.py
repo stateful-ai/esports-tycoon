@@ -110,9 +110,12 @@ def all_time_records(gs: "GameState") -> dict:
     if gs.career_stats:
         pid = max(sorted(gs.career_stats), key=lambda p: gs.career_stats[p].kills)
         cs = gs.career_stats[pid]
-        if cs.kills > 0 and pid in gs.players:
+        if cs.kills > 0:
+            # Retired leaders keep their record: fall back to the stored handle
+            # once they've left gs.players.
+            handle = gs.players[pid].handle if pid in gs.players else (cs.handle or pid)
             kills_rec = {
-                "player_id": pid, "handle": gs.players[pid].handle,
+                "player_id": pid, "handle": handle,
                 "count": cs.kills, "label": "Most career kills",
             }
 
@@ -279,7 +282,10 @@ def playtest_summary(gs: "GameState") -> dict:
         cs = gs.career_stats.get(pid)
         top_arcs.append({
             "player_id": pid,
-            "handle": gs.players[pid].handle if pid in gs.players else pid,
+            "handle": (
+                gs.players[pid].handle if pid in gs.players
+                else (cs.handle if cs and cs.handle else pid)
+            ),
             "honours": honours[pid],
             "career_kills": cs.kills if cs else None,
             "seasons": cs.seasons if cs else None,

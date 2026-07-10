@@ -78,6 +78,22 @@ def test_all_time_records_counts_titles_awards_kills():
     assert by["Most career kills"]["count"] == 2000
 
 
+def test_all_time_records_keeps_a_retired_kill_leader():
+    # Codex review: a retired player is removed from gs.players, but their
+    # lifetime record must survive in the record book via the stored handle.
+    gs = GameState(seed=1, season=6, week=1, user_team_id="a",
+                   teams={"a": _team("a")}, players={})  # nobody active
+    gs.career_stats["ghost"] = CareerStats(
+        handle="Ghost", maps=200, kills=4200, deaths=3000, seasons=8
+    )
+    gs.season = 6
+    rec = analytics.all_time_records(gs)
+    by = {r["label"]: r for r in rec["records"]}
+    assert by["Most career kills"]["count"] == 4200
+    assert by["Most career kills"]["handle"] == "Ghost"  # not the raw id
+    assert by["Most career kills"]["player_id"] == "ghost"
+
+
 def test_all_time_records_empty_on_a_blank_save():
     gs = GameState(seed=1, season=1, week=1, user_team_id="a",
                    teams={"a": _team("a")}, players={})

@@ -1565,6 +1565,8 @@ def _accumulate_career_stats(gs: GameState) -> None:
         cs.clutches += st.clutches
         cs.seasons += 1
         p = gs.players.get(pid)
+        if p is not None:
+            cs.handle = p.handle  # keep the record's name current
         if p is None:
             continue
         team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
@@ -1963,9 +1965,12 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         gs.push_news(review)
         report.notes.append(review)
 
-    # Ended careers stop charting; keep the history maps bounded (retirees
-    # pass into the Hall of Fame, so their career totals aren't lost here).
-    for hist in (gs.stat_history, gs.dev_history, gs.career_stats):
+    # Ended careers stop charting: prune the bulky per-week chart series for
+    # anyone who has left. career_stats is DELIBERATELY exempt — it's the
+    # persistent lifetime record the all-time record book / playtest exports
+    # read (it carries its own handle), so a retired career-kill leader must
+    # not vanish from the books.
+    for hist in (gs.stat_history, gs.dev_history):
         for pid in sorted(hist):
             if pid not in gs.players:
                 del hist[pid]
