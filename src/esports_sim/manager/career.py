@@ -328,16 +328,17 @@ def objective_status(gs: GameState, tid: str, kind: str) -> dict:
             return {"state": "missed", "detail": "Champions is decided"}
 
     if kind == "field_youth":
-        fielded = any(
-            gs.players[pid].age <= 21
-            and gs.player_stats.get(pid)
-            and gs.player_stats[pid].maps > 0
-            for pid in gs.teams[tid].player_ids
-            if pid in gs.players
-        )
+        # Match the canonical payout rule (sponsors._eval_objective): the
+        # objective resolves the moment a sub-21 is on the active roster —
+        # they need not have played yet. Reading it any stricter would show
+        # 'at_risk' for a squad that already satisfies the payout.
+        has_youth = any(p.age <= 21 for p in gs.roster(tid))
         return {
-            "state": "on_track" if fielded else "at_risk",
-            "detail": "youth fielded" if fielded else "no youngster has played yet",
+            "state": "on_track" if has_youth else "at_risk",
+            "detail": (
+                "under-21 on the roster" if has_youth
+                else "no under-21 on the roster"
+            ),
         }
 
     if kind == "beat_top4":

@@ -861,6 +861,43 @@ function renderTeamProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Squad strength profile -----------------------------------------------------
+  // Aim / tactical / mentals / teamplay, from the dressed five's attributes.
+  // Own club shows exact means; a scouted rival shows the band only.
+  const strength = data.strength;
+  if (strength && strength.length) {
+    const sec = pfSection("Squad strength");
+    const list = el("div", "pf-str");
+    for (const a of strength) {
+      const w = a.value != null ? a.value : { elite: 92, strong: 78, solid: 62, average: 48, weak: 32 }[a.band] || 50;
+      list.appendChild(el("div", "pf-str-row",
+        `<span class="pf-str-lab">${a.label}</span>` +
+        `<span class="pf-str-bar"><span class="pf-str-fill" style="width:${w}%"></span></span>` +
+        `<span class="mono ${a.value == null ? "muted" : ""}">${a.value != null ? a.value : a.band}</span>`));
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
+  // Agent-pool coverage (own club) --------------------------------------------
+  const pool = data.agent_pool;
+  if (pool && (pool.covered?.length || pool.meta_gaps?.length)) {
+    const sec = pfSection("Agent pool");
+    if (pool.covered.length) {
+      const chips = el("div", "pf-chips");
+      for (const a of pool.covered) {
+        chips.appendChild(el("span", "pf-pool-chip",
+          `${a.name} <span class="pf-rel-kind">${a.players}x·${a.mastery}</span>`));
+      }
+      sec.appendChild(chips);
+    }
+    if (pool.meta_gaps.length) {
+      sec.appendChild(el("div", "muted pf-pool-gaps",
+        "Meta gaps: " + pool.meta_gaps.map((g) => g.name).join(", ")));
+    }
+    frag.appendChild(sec);
+  }
+
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
     const sec = pfSection("Honors");

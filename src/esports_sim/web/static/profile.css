@@ -312,6 +312,20 @@
 }
 .trend-flat { color: var(--es-color-text-muted, #8a94a6); }
 
+/* -- squad strength profile ------------------------------------------------ */
+.pf-str { display: flex; flex-direction: column; gap: 5px; }
+.pf-str-row { display: grid; grid-template-columns: 110px 1fr 36px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.pf-str-bar { height: 7px; border-radius: 4px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
+.pf-str-fill { display: block; height: 100%; background: var(--es-color-accent, #4fd8c0); }
+
+/* -- agent-pool coverage --------------------------------------------------- */
+.pf-pool-chip {
+  font-size: var(--es-text-2xs, 10px); padding: 2px 7px; border-radius: 10px;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.pf-pool-gaps { margin-top: 6px; font-size: var(--es-text-2xs, 10px); }
+
 /* -- loading / unavailable ------------------------------------------------- */
 .pf-loading { padding: 40px 0; text-align: center; }
 .pf-unavailable { padding: 44px 20px; text-align: center; }

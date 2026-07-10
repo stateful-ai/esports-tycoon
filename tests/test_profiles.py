@@ -122,7 +122,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
     "identity", "tendencies", "rivals", "knowledge", "chemistry",
-    "dev_progress",
+    "dev_progress", "strength", "agent_pool",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -840,6 +840,95 @@ def test_meta_report_direction_and_latest_patch(game_data):
     assert dirs[aids[0]] == "buff"
     assert dirs[aids[1]] == "nerf"
     assert rep["latest_patch"]["version"] == "1.03"
+
+
+def test_team_strength_own_vs_fogged(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    own = server_mod._team_strength(gs, h.user_team, fogged=False)
+    assert [a["axis"] for a in own] == ["mechanical", "tactical", "mental", "team"]
+    for a in own:
+        assert set(a) == {"axis", "label", "value", "band"}
+        assert isinstance(a["value"], float) and a["band"]
+    fog = server_mod._team_strength(gs, h.rival_team, fogged=True)
+    assert all(a["value"] is None and a["band"] for a in fog)
+
+
+def test_agent_pool_coverage_shape(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    pool = server_mod._agent_pool_coverage(gs, h.user_team)
+    assert set(pool) == {"covered", "meta_gaps"}
+    for a in pool["covered"]:
+        assert set(a) == {"agent_id", "name", "players", "mastery"}
+        assert a["players"] >= 1
+    # covered sorted by best mastery descending
+    masteries = [a["mastery"] for a in pool["covered"]]
+    assert masteries == sorted(masteries, reverse=True)
+    for g in pool["meta_gaps"]:
+        assert set(g) == {"agent_id", "name"}
+
+
+def test_suggested_lineup_none_at_five_and_shape_when_deeper(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    # A five-man roster has nothing to pick.
+    if len(gs.teams[h.user_team].player_ids) <= 5:
+        assert server_mod._suggested_lineup(gs, h.user_team) is None
+    # Deep-roster path on an isolated copy (never mutate the shared env):
+    # pad to a guaranteed 7-man roster so there's a real selection to make.
+    gs2 = gs.model_copy(deep=True)
+    existing = list(gs2.teams[h.user_team].player_ids)
+    fas = [pid for pid in sorted(gs2.free_agent_ids) if pid not in existing]
+    gs2.teams[h.user_team].player_ids = (existing + fas)[:7]
+    assert len(gs2.teams[h.user_team].player_ids) > 5
+    sug = server_mod._suggested_lineup(gs2, h.user_team)
+    assert sug is not None
+    assert set(sug) == {"players", "changed"}
+    assert len(sug["players"]) == 5
+    for p in sug["players"]:
+        assert set(p) == {"id", "handle", "quality", "dressed"}
+
+
+def test_board_standing_none_in_sandbox_or_shaped(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    board = server_mod._board_standing(gs)
+    assert board is None or set(board) == {
+        "goal", "patience", "band", "seasons_left", "goal_state", "goal_detail",
+    }
+
+
+def test_marketability_breakdown_sums_to_score(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    from esports_sim.manager import sponsors
+    mb = sponsors.marketability_breakdown(gs)
+    assert set(mb) == {"score", "facility_mult", "reach", "drivers"}
+    for d in mb["drivers"]:
+        assert set(d) == {"key", "label", "contrib"}
+    # drivers are contribution-descending
+    contribs = [d["contrib"] for d in mb["drivers"]]
+    assert contribs == sorted(contribs, reverse=True)
+    # pre-facility sum, clamped at 0.4, times the facility mult == the score
+    raw = sum(d["contrib"] for d in mb["drivers"])  # rounded terms
+    expected = max(0.4, raw) * mb["facility_mult"]
+    # Per-driver 2dp rounding (7 terms) x facility mult loosens the tie.
+    assert abs(expected - mb["score"]) <= 0.06
+
+
+def test_staff_effect_lines_department_roles():
+    # Codex review: the fallback labelled every non-coach/analyst role as
+    # stamina recovery, but psychologist drives confidence and performance
+    # coach drives form. Each department role must read its own axis.
+    import types
+    eff = server_mod._staff_effect_lines
+    psy = eff(types.SimpleNamespace(role="psychologist", quality=60.0, specialty=""))
+    pc = eff(types.SimpleNamespace(role="performance_coach", quality=70.0, specialty=""))
+    phys = eff(types.SimpleNamespace(role="physio", quality=54.0, specialty=""))
+    assert "confidence" in psy[0].lower() and "stamina" not in psy[0].lower()
+    assert "form" in pc[0].lower() and "stamina" not in pc[0].lower()
+    assert "stamina" in phys[0].lower()
 
 
 def test_objectives_hub_and_rotation_shape(env):

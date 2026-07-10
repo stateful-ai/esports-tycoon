@@ -815,7 +815,8 @@ async function dashboard(v) {
   /* -- 1d. MANAGER'S DESK: debrief + objectives + burnout ----------------- */
   const debrief = s.debrief || {}, objectives = s.objectives_hub || [];
   const burnt = (s.rotation || []).filter((r) => r.burnout);
-  if (debrief.result || objectives.length || burnt.length || s.press) {
+  const board = s.board, sug = s.suggested_lineup;
+  if (debrief.result || objectives.length || burnt.length || s.press || board || (sug && sug.changed)) {
     const card = el("div", "card");
     card.appendChild(el("h2", "", "Manager's desk"));
     if (debrief.result) {
@@ -825,7 +826,30 @@ async function dashboard(v) {
       card.appendChild(el("p", "muted", "Last time out — " + parts.join(" ")));
     }
     if (s.press) card.appendChild(el("p", "es-press", `“${s.press}”`));
+    // Legacy job security: board goal + patience band.
+    if (board) {
+      const bcls = board.band === "secure" || board.band === "stable" ? "good"
+        : board.band === "under pressure" ? "warn" : "bad";
+      card.appendChild(el("p", "es-board",
+        `<span class="pill obj ${bcls}">Board: ${board.band}</span> ` +
+        `Goal — ${board.goal} <span class="muted">(${(board.goal_state || "").replace("_", " ")}` +
+        `${board.seasons_left ? " · " + board.seasons_left + " season" + (board.seasons_left > 1 ? "s" : "") + " left" : ", final season"})</span>`));
+    }
     const cols = el("div", "es-snap-cols");
+    // Suggested XI: only surfaced when it diverges from the dressed five.
+    if (sug && sug.changed) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Suggested five"));
+      const list = el("div", "es-movers");
+      for (const p of sug.players) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<b class="mono">${p.quality}</b> ` +
+          (p.dressed ? '<span class="muted">dressed</span>' : '<span class="trend-up">▲ in</span>')));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
     if (objectives.length) {
       const col = el("div", "es-snap-col");
       col.appendChild(el("span", "es-scout-lab muted", "What to chase"));
@@ -3068,6 +3092,26 @@ async function finances(v) {
     </tbody></table>
     <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
   v.appendChild(card);
+
+  // -- marketability breakdown ---------------------------------------------
+  const mb = data.marketability_breakdown;
+  if (mb && mb.drivers?.length) {
+    const mbCard = el("div", "card");
+    mbCard.innerHTML = `<h2>Brand value
+      <span class="muted" style="font-weight:400">— marketability ${mb.score} (facility x${mb.facility_mult})</span></h2>`;
+    const list = el("div", "es-mb");
+    const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
+    for (const d of mb.drivers) {
+      const pos = d.contrib >= 0;
+      const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
+      list.appendChild(el("div", "es-mb-row",
+        `<span class="es-mb-lab">${d.label}</span>` +
+        `<span class="es-mb-track"><span class="es-mb-fill ${pos ? "pos" : "neg"}" style="width:${w}%"></span></span>` +
+        `<span class="mono ${pos ? "trend-up" : "trend-down"}">${pos ? "+" : ""}${d.contrib}</span>`));
+    }
+    mbCard.appendChild(list);
+    v.appendChild(mbCard);
+  }
 
   // -- sponsor slots -------------------------------------------------------
   const slotsCard = el("div", "card");

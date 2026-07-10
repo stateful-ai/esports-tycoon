@@ -1042,6 +1042,9 @@ def state() -> dict:
             # squad's rotation/burnout picture.
             "debrief": narrative.match_debrief(gs, gs.acting_team_id),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
+            # A read-only 'best available five' suggestion + legacy job security.
+            "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
+            "board": _board_standing(gs),
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
@@ -2300,6 +2303,8 @@ def finances() -> dict:
             "balance": team.balance,
             "weekly_payroll": payroll,
             "marketability": round(sponsors.marketability(gs), 2),
+            # What's driving that number (single-source breakdown).
+            "marketability_breakdown": sponsors.marketability_breakdown(gs),
             # Per-manager: the shared report carries every human's income/
             # expenses, so read the acting manager's slice.
             "last_week_income": rep.income_by.get(gs.acting_team_id) if rep else None,
@@ -2456,6 +2461,19 @@ def _staff_effect_lines(m) -> list[str]:
             f"+{m.quality:.0f}% scouting speed",
             "deeper stat views (analytics tier, with the analytics suite)",
         ]
+    # Department roles each drive a DIFFERENT recovery axis — mirror the
+    # canonical staff.py formulas so the hiring UI doesn't mislabel them.
+    if m.role == "psychologist":
+        return [
+            f"+{m.quality / 60.0:.1f}/wk confidence recovery for shaken players "
+            "(pull toward neutral, never a hype boost)"
+        ]
+    if m.role == "performance_coach":
+        return [
+            f"+{m.quality / 70.0:.1f}/wk form upkeep for out-of-form players "
+            "(pull toward neutral)"
+        ]
+    # physio (and any future recovery role): stamina.
     return [f"+{m.quality / 18.0:.1f} stamina per player per week"]
 
 
@@ -3808,6 +3826,124 @@ def _team_streak(gs: GameState, tid: str) -> str | None:
     return f"{'W' if last_won else 'L'}{n}"
 
 
+_STRENGTH_AXES = ("mechanical", "tactical", "mental", "team")
+_STRENGTH_LABEL = {
+    "mechanical": "Aim & mechanics", "tactical": "Tactical IQ",
+    "mental": "Mentals", "team": "Teamplay",
+}
+
+
+def _team_strength(gs: GameState, tid: str, fogged: bool = False) -> list[dict]:
+    """A squad-strength profile: the dressed five's mean attribute per category
+    (aim / tactical / mentals / teamplay). Own club shows exact means; a
+    scouted rival shows only the band."""
+    reg = S.gd.attributes.definitions
+    by_axis: dict[str, list[str]] = {ax: [] for ax in _STRENGTH_AXES}
+    for key, d in reg.items():
+        if d.category in by_axis:
+            by_axis[d.category].append(key)
+    five = default_five(gs, tid)
+    out = []
+    for ax in _STRENGTH_AXES:
+        vals = [
+            p.attr(k, 50.0)
+            for pid in five
+            if (p := gs.players.get(pid)) is not None
+            for k in by_axis[ax]
+        ]
+        if not vals:
+            continue
+        mean = sum(vals) / len(vals)
+        out.append({
+            "axis": ax, "label": _STRENGTH_LABEL[ax],
+            "value": None if fogged else round(mean, 1),
+            "band": _attr_band(mean),
+        })
+    return out
+
+
+def _agent_pool_coverage(gs: GameState, tid: str) -> dict:
+    """The roster's collective agent coverage (how many players run each agent
+    and the best mastery), plus the meta staples they don't cover. Own-club
+    roster intel; pure read."""
+    cov: dict[str, dict] = {}
+    for pid in gs.teams[tid].player_ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        for m in p.agent_pool:
+            c = cov.setdefault(m.agent_id, {"count": 0, "best": 0.0})
+            c["count"] += 1
+            c["best"] = max(c["best"], m.mastery)
+    usage = meta_mod._agent_usage(gs)
+    top_meta = sorted(usage, key=lambda a: (-usage[a], a))[:8]
+    covered = [
+        {
+            "agent_id": aid,
+            "name": S.gd.agents[aid].display_name if aid in S.gd.agents else aid,
+            "players": c["count"], "mastery": round(c["best"]),
+        }
+        for aid, c in sorted(cov.items(), key=lambda kv: (-kv[1]["best"], kv[0]))
+    ][:10]
+    gaps = [
+        {"agent_id": a, "name": S.gd.agents[a].display_name if a in S.gd.agents else a}
+        for a in top_meta if a not in cov
+    ]
+    return {"covered": covered, "meta_gaps": gaps}
+
+
+def _suggested_lineup(gs: GameState, tid: str) -> dict | None:
+    """A read-only 'best available five' by quality + current form/confidence,
+    with a flag where it diverges from the dressed five. None when the roster
+    is five or fewer (everyone plays — nothing to pick)."""
+    roster = list(gs.teams[tid].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return None
+    current = set(default_five(gs, tid))
+    scored = []
+    for pid in roster:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        q = market.player_quality(p)
+        score = q + (p.form - 50.0) * 0.05 + (p.confidence - 50.0) * 0.05
+        scored.append((score, pid, p.handle, round(q)))
+    scored.sort(key=lambda s: (-s[0], s[1]))
+    picks = scored[:market.ROSTER_SIZE]
+    suggested_ids = {pid for _, pid, _, _ in picks}
+    return {
+        "players": [
+            {"id": pid, "handle": handle, "quality": q, "dressed": pid in current}
+            for _, pid, handle, q in picks
+        ],
+        "changed": suggested_ids != current,
+    }
+
+
+def _board_standing(gs: GameState) -> dict | None:
+    """Legacy-mode job security: the board goal, patience band, seasons left on
+    the deal, and how the goal is tracking. None in sandbox / when unemployed."""
+    seat = gs.seat_for_session(gs.acting_team_id)
+    if seat is None or seat.contract is None or not seat.team_id:
+        return None
+    c = seat.contract
+    pat = c.patience
+    band = (
+        "secure" if pat >= 66 else "stable" if pat >= 45
+        else "under pressure" if pat >= 25
+        else "hot seat" if pat >= career.MIDSEASON_FLOOR else "on the brink"
+    )
+    status = career.objective_status(gs, seat.team_id, c.goal)
+    return {
+        "goal": career.GOAL_LABELS.get(c.goal, c.goal),
+        "patience": round(pat, 1),
+        "band": band,
+        "seasons_left": max(0, c.start_season + c.seasons - 1 - gs.season),
+        "goal_state": status.get("state"),
+        "goal_detail": status.get("detail"),
+    }
+
+
 @app.get("/api/teams/{tid}/profile")
 def team_profile(tid: str) -> dict:
     with S.lock:
@@ -3969,6 +4105,15 @@ def team_profile(tid: str) -> dict:
             # Development headroom: each own player's CA vs ceiling and which
             # way they're trending. Private dev-history read → own club only.
             "dev_progress": _dev_progress(gs, tid) if own_team else None,
+            # Squad strength radar (aim/tactical/mentals/teamplay): own club
+            # exact, a well-scouted rival banded, hidden until then.
+            "strength": (
+                _team_strength(gs, tid, fogged=not own_team)
+                if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
+                else None
+            ),
+            # Collective agent coverage + meta gaps — own-club roster intel.
+            "agent_pool": _agent_pool_coverage(gs, tid) if own_team else None,
         }
 
 

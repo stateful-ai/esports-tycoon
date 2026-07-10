@@ -889,6 +889,17 @@ tr.elim td { opacity: .5; }
 .es-meta-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
 .es-meta-fill { display: block; height: 100%; background: var(--es-color-brand, #ff4655); }
 
+/* Board-standing line on the dashboard manager's desk. */
+.es-board { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); }
+
+/* Marketability breakdown on the finances screen. */
+.es-mb { display: flex; flex-direction: column; gap: 4px; }
+.es-mb-row { display: grid; grid-template-columns: 120px 1fr 46px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
+.es-mb-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
+.es-mb-fill { display: block; height: 100%; }
+.es-mb-fill.pos { background: var(--es-color-success, #3fb68b); }
+.es-mb-fill.neg { background: var(--es-color-danger, #ff4655); }
+
 /* Board season-goal status line on the manager career card. */
 .es-goal { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); }
 .goal-good { color: var(--es-color-success, #3fb68b); font-weight: 700; text-transform: capitalize; }

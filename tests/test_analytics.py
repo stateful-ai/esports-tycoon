@@ -300,6 +300,24 @@ def test_objective_status_champions_goal_survives_the_regional_final():
     assert career.objective_status(gs, "t0", "win_champions")["state"] == "missed"
 
 
+def test_objective_status_field_youth_matches_payout_rule():
+    # Codex review: field_youth resolves the moment a sub-21 is on the ACTIVE
+    # roster (sponsors._eval_objective), no maps required. The status reader
+    # must not show 'at_risk' for a squad that already satisfies the payout.
+    teams = {"a": _team("a")}
+    teams["a"].player_ids = ["kid"]
+    young = Player(id="kid", handle="Kid", age=19, role=Role.DUELIST,
+                   playstyle=Playstyle.ENTRY, attributes={"aim_precision": 70})
+    gs = GameState(seed=1, season=2, week=3, user_team_id="a", phase="regular",
+                   teams=teams, players={"kid": young},
+                   standings={"a": TeamRecord(wins=3, losses=1)})
+    assert gs.player_stats == {}  # nobody has played
+    assert career.objective_status(gs, "a", "field_youth")["state"] == "on_track"
+    # Age the youngster out -> the objective is now at risk.
+    gs.players["kid"].age = 25
+    assert career.objective_status(gs, "a", "field_youth")["state"] == "at_risk"
+
+
 def test_objective_status_make_playoffs_missed_when_semis_are_seeded():
     # Codex review: make_playoffs is decided by the SEMIFINAL seeding (see
     # _goal_met), so a non-semifinalist has missed the cut the moment the semis
