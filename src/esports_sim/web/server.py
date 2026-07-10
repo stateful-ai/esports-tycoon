@@ -26,6 +26,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from esports_sim.manager import (
+    analytics,
     career,
     chronicle,
     development,
@@ -1365,16 +1366,18 @@ def standings() -> dict:
 
         def rows_for(region: str | None, tier: int = 1) -> list[dict]:
             elim = _eliminated_teams(gs, region) if (region and tier == 1) else set()
-            return [
-                {
+            rows = []
+            for tid in gs.standings_order(region, tier=tier):
+                idx = analytics.dynasty_index(gs, tid) if tier == 1 else 0.0
+                rows.append({
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
                     "recent_form": _team_recent_form(gs, tid),
                     "eliminated": tid in elim,
-                }
-                for tid in gs.standings_order(region, tier=tier)
-            ]
+                    "dynasty": analytics.dynasty_label(idx),
+                })
+            return rows
 
         user_region = str(gs.teams[gs.acting_team_id].region)
         regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
@@ -1393,6 +1396,22 @@ def standings() -> dict:
             # Kept for any consumer expecting the flat world table.
             "rows": rows_for(None),
         }
+
+
+@app.get("/api/records")
+def records() -> dict:
+    """The save's all-time record book + current top dynasties (pure
+    chronicle + career_stats read; manager/analytics.py)."""
+    with S.lock:
+        return analytics.all_time_records(S.require_gs())
+
+
+@app.get("/api/report/season")
+def season_report(season: int | None = None) -> dict:
+    """A deterministic structured season summary — the headless analytics
+    export (ROADMAP bet #2), also consumable by the web Season Review."""
+    with S.lock:
+        return analytics.season_report(S.require_gs(), season)
 
 
 @app.get("/api/schedule")

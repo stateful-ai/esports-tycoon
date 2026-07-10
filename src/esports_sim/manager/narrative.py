@@ -488,14 +488,14 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
     return out
 
 
-def season_in_review(gs: GameState) -> str | None:
-    """One grounded paragraph capping the season for the news feed: the
-    world champion, the MVP, the biggest riser, a marquee retirement, and
-    the tactical era it closed as. Every clause cites a record already on
-    GameState/chronicle (call at offseason, after awards + retirements +
-    the meta era are recorded, while gs.season is still the ending season).
-    Clauses with nothing to say are dropped; returns None if all are."""
-    season = gs.season
+def season_storylines(gs: GameState, season: int | None = None) -> list[str]:
+    """The season's grounded storyline clauses — champion, MVP, biggest
+    riser, a marquee retirement, the tactical era. Each cites a record on
+    GameState/chronicle. Shared by the news-feed season-in-review line AND
+    the headless season report (analytics.season_report). `season` defaults
+    to the current one; awards resolve from gs.awards first (current season)
+    then the chronicle (any past season), so it works either way."""
+    season = gs.season if season is None else season
     bits: list[str] = []
 
     champ = next((c for c in reversed(gs.champions) if c.season == season), None)
@@ -503,10 +503,16 @@ def season_in_review(gs: GameState) -> str | None:
         bits.append(f"{champ.team_name} were crowned world champions")
 
     def _award_handle(name: str) -> str | None:
-        return next(
+        live = next(
             (a.handle for a in gs.awards if a.season == season and a.award == name),
             None,
         )
+        if live:
+            return live
+        for e in gs.chronicle:
+            if e.kind == "award" and e.season == season and e.data.get("award") == name:
+                return e.text.split(" wins", 1)[0]
+        return None
 
     mvp = _award_handle("Season MVP")
     if mvp:
@@ -537,6 +543,13 @@ def season_in_review(gs: GameState) -> str | None:
     if era:
         bits.append(f"the league settled into {era}")
 
+    return bits
+
+
+def season_in_review(gs: GameState) -> str | None:
+    """One grounded paragraph capping the season for the news feed. Built
+    from season_storylines; None when nothing rates a mention."""
+    bits = season_storylines(gs)
     if not bits:
         return None
-    return f"S{season} in review: " + "; ".join(bits) + "."
+    return f"S{gs.season} in review: " + "; ".join(bits) + "."

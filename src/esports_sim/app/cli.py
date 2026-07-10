@@ -593,6 +593,7 @@ def auto_play(
         f"season {gs.season} week {gs.week}"
     )
     save(gs)
+    return gs
 
 
 def main() -> None:
@@ -606,6 +607,12 @@ def main() -> None:
         default=None,
         help="roster pack id under data/rosters/ (e.g. vct-2026); "
         "default = generated fictional world",
+    )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="with --auto: print a deterministic season-report JSON after the run "
+        "(headless analytics export for LLM-playtest / analysis)",
     )
     parser.add_argument("--web", action="store_true", help="launch the browser UI")
     # Honour $PORT (dev-server harnesses assign one) when --port isn't given.
@@ -628,7 +635,13 @@ def main() -> None:
 
     gd = load_all()
     if args.auto > 0:
-        auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
+        gs = auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
+        if args.report:
+            import json
+
+            from esports_sim.manager import analytics
+
+            print(json.dumps(analytics.season_report(gs), indent=2, ensure_ascii=True))
         return
 
     gs = title_screen(gd)

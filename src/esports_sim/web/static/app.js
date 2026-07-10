@@ -1776,7 +1776,39 @@ const formSquares = (form) =>
     .join("") || '<span class="muted">—</span>';
 
 async function standings(v) {
-  const data = await api("/api/standings");
+  const [data, records] = await Promise.all([
+    api("/api/standings"),
+    api("/api/records").catch(() => null),
+  ]);
+
+  // All-time record book + current dynasties, above the tables.
+  if (records && (records.records?.length || records.dynasties?.length)) {
+    const rc = el("div", "card es-records");
+    rc.appendChild(el("h2", "", "Record book"));
+    if (records.records?.length) {
+      const grid = el("div", "es-rec-grid");
+      for (const r of records.records) {
+        const who = r.team_id
+          ? `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>`
+          : `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>`;
+        grid.appendChild(el("div", "es-rec",
+          `<div class="es-rec-lab muted">${r.label}</div>` +
+          `<div class="es-rec-val">${who} <b class="mono">${r.count}</b></div>`));
+      }
+      rc.appendChild(grid);
+    }
+    if (records.dynasties?.length) {
+      const row = el("div", "es-career-tags");
+      row.appendChild(el("span", "muted es-career-lab", "Dynasties"));
+      for (const d of records.dynasties) {
+        row.appendChild(el("span", "pill dynasty-pill",
+          `<span class="tlink" data-tid="${d.team_id}">${d.name}</span> · ${d.label || "Rising"}`));
+      }
+      rc.appendChild(row);
+    }
+    v.appendChild(rc);
+  }
+
   for (const league of data.regions) {
     const card = el("div", "card");
     card.innerHTML = `<h2>${league.region.toUpperCase()} league${league.is_user ? " — your region" : ""}</h2>`;
@@ -1788,11 +1820,14 @@ async function standings(v) {
       const outTag = r.eliminated
         ? ' <span class="pill elim-pill" title="Cannot reach the top-4 playoff cut">OUT</span>'
         : "";
+      const dynTag = r.dynasty
+        ? ` <span class="pill dynasty-pill" title="Dynasty index — recent-title dominance">${r.dynasty}</span>`
+        : "";
       const cls = [r.id === App.state.user_team.id ? "me" : "", r.eliminated ? "elim" : ""]
         .filter(Boolean)
         .join(" ");
       const tr = el("tr", cls, `
-        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span>${outTag}</td>
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span>${dynTag}${outTag}</td>
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
         <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
         <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
