@@ -762,9 +762,16 @@ def advance_week(
 
     # 6c. Social layer: follower counts chase the week's real outcomes and
     # the feed writes itself (results, player of the week, viral moments).
+    # Result bumps are pinned to the MATCH-TIME side — contracts/transfers
+    # already ran above, so live rosters can misattribute a same-tick mover.
     social.weekly_tick(
         gs, report, dev_events,
         tree.derive("season", gs.season, "week", gs.week, "social"),
+        match_team_of={
+            pid: tid
+            for tid in sorted(week_dressed)
+            for pid in sorted(week_dressed[tid])
+        },
     )
 
     # 6d. History snapshots (before the week counter rolls): a performance

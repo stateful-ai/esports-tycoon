@@ -102,9 +102,17 @@ def _grow(p, pct: float) -> None:
     p.followers = max(500, int(p.followers * (1.0 + pct / 100.0)))
 
 
-def weekly_tick(gs, report, dev_events: list[dict], rng) -> None:
+def weekly_tick(
+    gs, report, dev_events: list[dict], rng,
+    match_team_of: dict[str, str] | None = None,
+) -> None:
     """One week of the social layer: seed newcomers, move follower counts
-    on the week's real outcomes, and write the feed."""
+    on the week's real outcomes, and write the feed.
+
+    `match_team_of` (player -> the team they DRESSED for this week) pins
+    result bumps to the match-time side: contracts expire and transfers
+    resolve before this runs, so recomputing membership from the live
+    rosters would credit a same-tick mover with the wrong team's result."""
     seed_followers(gs)
     season, week = report.season, report.week
     before = {pid: gs.players[pid].followers for pid in sorted(gs.players)}
@@ -138,7 +146,9 @@ def weekly_tick(gs, report, dev_events: list[dict], rng) -> None:
         d = perf.get(pid)
         if d is None:
             continue
-        tid = next((t.id for t in gs.teams.values() if pid in t.player_ids), None)
+        tid = (match_team_of or {}).get(pid) or next(
+            (t.id for t in gs.teams.values() if pid in t.player_ids), None
+        )
         if tid is not None and tid in won_series:
             _grow(p, 1.0 if won_series[tid] else 0.3)
         rating = d["rating_sum"] / max(d["maps"], 1)
