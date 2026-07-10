@@ -310,3 +310,24 @@ def test_team_talk_focus_settles_toward_the_middle():
     _apply_team_talk(gs, "focus", ["t", "h"])
     assert gs.players["t"].confidence > 20.0    # pulled up toward 55
     assert gs.players["h"].confidence < 90.0    # pulled down toward 55
+
+
+def test_team_talk_recipients_follow_a_per_map_override():
+    # Codex review: the talk must land on the players who ACTUALLY dress. With
+    # a per-map lineup override, dressed_for (and so the recipient set) rotates
+    # the bench player in — the talk must follow, not stick to default_five.
+    from esports_sim.manager.campaign import _talk_recipients
+    from esports_sim.manager.state import Fixture
+
+    ids = ["a", "b", "c", "d", "e", "f"]
+    ps = {pid: _mp(pid, 24, 70.0) for pid in ids}
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1,
+                player_ids=ids, lineup_ids=["a", "b", "c", "d", "e"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players=ps)
+    fx = Fixture(id="s1w1m0", week=1, team_a="nxs", team_b="opp", maps=["ascent"])
+    # Default: recipients are the default five (bench player 'f' excluded).
+    assert _talk_recipients(gs, "nxs", fx) == ["a", "b", "c", "d", "e"]
+    # Override rotates 'f' in for 'e' -> the recipients follow.
+    gs.map_lineups["nxs|s1w1m0|ascent"] = ["a", "b", "c", "d", "f"]
+    assert _talk_recipients(gs, "nxs", fx) == ["a", "b", "c", "d", "f"]

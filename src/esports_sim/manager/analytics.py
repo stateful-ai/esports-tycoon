@@ -69,6 +69,19 @@ def _leaders(gs: "GameState", n: int = 5) -> list[dict]:
     return out
 
 
+def _handle_of(gs: "GameState", pid: str) -> str:
+    """Display handle for a player id that survives retirement: the live roster
+    first, then the persisted CareerStats handle (kept for retirees), else the
+    raw id. Used by every record/summary reader so a retired leader never shows
+    an internal id."""
+    if pid in gs.players:
+        return gs.players[pid].handle
+    cs = gs.career_stats.get(pid)
+    if cs and cs.handle:
+        return cs.handle
+    return pid
+
+
 def all_time_records(gs: "GameState") -> dict:
     """The save's record book — most-titled team, most-decorated player,
     the career-kill leader — plus the current top dynasties. Pure chronicle
@@ -102,7 +115,7 @@ def all_time_records(gs: "GameState") -> dict:
         pid = max(sorted(counts), key=lambda p: counts[p])
         return {
             "player_id": pid,
-            "handle": gs.players[pid].handle if pid in gs.players else pid,
+            "handle": _handle_of(gs, pid),  # survives retirement (award leaders too)
             "count": counts[pid], "label": label,
         }
 
@@ -111,11 +124,8 @@ def all_time_records(gs: "GameState") -> dict:
         pid = max(sorted(gs.career_stats), key=lambda p: gs.career_stats[p].kills)
         cs = gs.career_stats[pid]
         if cs.kills > 0:
-            # Retired leaders keep their record: fall back to the stored handle
-            # once they've left gs.players.
-            handle = gs.players[pid].handle if pid in gs.players else (cs.handle or pid)
             kills_rec = {
-                "player_id": pid, "handle": handle,
+                "player_id": pid, "handle": _handle_of(gs, pid),
                 "count": cs.kills, "label": "Most career kills",
             }
 
@@ -282,10 +292,7 @@ def playtest_summary(gs: "GameState") -> dict:
         cs = gs.career_stats.get(pid)
         top_arcs.append({
             "player_id": pid,
-            "handle": (
-                gs.players[pid].handle if pid in gs.players
-                else (cs.handle if cs and cs.handle else pid)
-            ),
+            "handle": _handle_of(gs, pid),
             "honours": honours[pid],
             "career_kills": cs.kills if cs else None,
             "seasons": cs.seasons if cs else None,

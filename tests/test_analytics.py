@@ -94,6 +94,25 @@ def test_all_time_records_keeps_a_retired_kill_leader():
     assert by["Most career kills"]["player_id"] == "ghost"
 
 
+def test_all_time_records_keeps_a_retired_award_leader():
+    # Codex review: a retired MVP / individual-honours leader must show their
+    # display handle (via the CareerStats fallback), not the internal id.
+    gs = GameState(seed=1, season=6, week=1, user_team_id="a",
+                   teams={"a": _team("a")}, players={})  # winner has retired
+    gs.career_stats["ghost"] = CareerStats(
+        handle="Ghost", maps=50, kills=800, seasons=4
+    )
+    gs.season = 4
+    chronicle.record(gs, "award", "Ghost wins Season MVP (1.3).",
+                     player_id="ghost", data={"award": "Season MVP", "value": "1.3"})
+    gs.season = 6
+    rec = analytics.all_time_records(gs)
+    by = {r["label"]: r for r in rec["records"]}
+    assert by["Most MVP awards"]["player_id"] == "ghost"
+    assert by["Most MVP awards"]["handle"] == "Ghost"       # not the raw id
+    assert by["Most individual honours"]["handle"] == "Ghost"
+
+
 def test_all_time_records_empty_on_a_blank_save():
     gs = GameState(seed=1, season=1, week=1, user_team_id="a",
                    teams={"a": _team("a")}, players={})

@@ -1210,14 +1210,20 @@ def _fixture_plans(
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
             lineups[tid] = lineup
-        if plan.team_talk in TEAM_TALK_APPROACHES:
-            _apply_team_talk(
-                gs, plan.team_talk, lineups.get(tid) or default_five(gs, tid)
-            )
     return plans, lineups
 
 
 TEAM_TALK_APPROACHES = ("fire_up", "reassure", "focus")
+
+
+def _talk_recipients(gs: GameState, tid: str, f: Fixture) -> list[str]:
+    """Everyone who will dress for `tid` across the fixture's maps — the union
+    of dressed_for over f.maps (which reads the finalised map_lineups, so a
+    per-map rotation is reflected). The pre-match team-talk audience. Sorted
+    for deterministic iteration."""
+    return sorted(
+        {pid for map_id in f.maps for pid in dressed_for(gs, tid, f, map_id)}
+    )
 
 
 def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
@@ -1302,6 +1308,20 @@ def _sim_fixture(
             gs.map_lineups.setdefault(
                 f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
             )
+
+    # Pre-match team talks land on the players who will ACTUALLY dress, resolved
+    # via dressed_for against the now-finalised map_lineups (explicit per-map
+    # overrides included). So a rotation gives the talk to the rotated-in five,
+    # not default_five. Applied here, once, before any map sim reads confidence.
+    # Human sides with a set talk only -> hands-off sims skip it -> gates hold.
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        plan = gs.game_plans_by.get(tid)
+        if plan is None or plan.fixture_id != f.id:
+            continue
+        if plan.team_talk in TEAM_TALK_APPROACHES:
+            _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
 
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
