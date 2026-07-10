@@ -334,6 +334,27 @@ class StatSnap(BaseModel):
     deaths: int
 
 
+class CareerStats(BaseModel):
+    """Lifetime box-score totals, accumulated from each season's
+    PlayerSeasonStats at rollover (before the per-season reset). The
+    persistent counterpart to PlayerSeasonStats — titles/awards live in the
+    chronicle, so only the raw counters that reset each season live here."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    maps: int = 0
+    rounds: int = 0
+    kills: int = 0
+    deaths: int = 0
+    first_kills: int = 0
+    clutches: int = 0
+    seasons: int = 0  # seasons with at least one map played
+
+    @property
+    def kd(self) -> float:
+        return self.kills / max(self.deaths, 1)
+
+
 class DevSnap(BaseModel):
     """One weekly point on a player's development time-series (ability,
     confidence, condition, reach). Human rosters only — this is the
@@ -1124,6 +1145,10 @@ class GameState(BaseModel):
     # migration); empty on old saves -> the award simply skips until the
     # next offseason repopulates it.
     season_start_ca: dict[str, float] = Field(default_factory=dict)
+    # Lifetime box-score totals per living player, rolled up at each
+    # offseason before player_stats resets. Pruned to current players
+    # (retirees pass into the Hall of Fame instead). Additive/defaulted.
+    career_stats: dict[str, CareerStats] = Field(default_factory=dict)
 
     # -- Legacy Mode (v5) ------------------------------------------------------
     # "sandbox" = the classic game (pick any org, manage forever).

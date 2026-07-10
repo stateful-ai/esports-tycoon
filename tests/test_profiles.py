@@ -21,7 +21,15 @@ HTTPException = fastapi.HTTPException
 
 import esports_sim.web.server as server_mod
 from esports_sim.manager import advance_week, chronicle, new_campaign
-from esports_sim.manager.state import Fixture, GameState, MapResult, PlayerLineSnap
+from esports_sim.manager.state import (
+    CareerStats,
+    Fixture,
+    GameState,
+    MapResult,
+    PlayerLineSnap,
+    PlayerSeasonStats,
+    TeamRecord,
+)
 from esports_sim.registry import GameData
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Playstyle, Role
@@ -43,6 +51,7 @@ PLAYER_TOP = {
     "charts",
     "relationships",
     "career",
+    "career_totals",
     "honours",
     "epithet",
     "memories",
@@ -116,7 +125,9 @@ TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
 SPLITS = {"attack_round_rate", "defense_round_rate"}
 MAP_ITEM = {"map", "played", "wins", "losses"}
-TEAM_PLAYER_ITEM = {"pid", "handle", "role", "matches", "kd", "acs"}
+TEAM_PLAYER_ITEM = {
+    "pid", "handle", "role", "matches", "kd", "acs", "retirement_risk",
+}
 FORM_ITEM = {"season", "week", "opponent", "result", "score"}
 
 
@@ -474,3 +485,53 @@ def test_player_epithet_priority_and_grounding():
     chronicle.record(gs2, "award", "Q wins Best Defensive Team.", player_id="q",
                      data={"award": "Best Defensive Team"})
     assert server_mod._player_epithet(gs2, "q") == "Decorated pro"
+
+
+# ---------------------------------------------------------------------------
+# Pass-3 web helpers: playoff elimination + career totals (pure reads)
+
+
+def test_eliminated_teams_flags_the_hopeless():
+    def mk(tid, wins):
+        return Team(id=tid, name=tid.title(), tag=tid.upper()[:3], tier=1), \
+            TeamRecord(wins=wins, losses=0)
+
+    teams, standings = {}, {}
+    for tid, w in [("a", 6), ("b", 6), ("c", 5), ("d", 5), ("e", 2)]:
+        t, rec = mk(tid, w)
+        teams[tid], standings[tid] = t, rec
+    region = str(teams["a"].region)
+    # 'e' has one regular game left (ceiling 3); a..d already have >3 wins,
+    # so four rivals finish certainly above -> 'e' can't reach the top-4.
+    fx = [Fixture(id="s1w9", week=9, stage="regular", tier=1,
+                  team_a="e", team_b="a", maps=["ascent"], played=False)]
+    gs = GameState(seed=1, season=1, week=9, user_team_id="a", phase="regular",
+                   teams=teams, standings=standings, fixtures=fx)
+    assert server_mod._eliminated_teams(gs, region) == {"e"}
+
+
+def test_eliminated_teams_empty_outside_regular_season():
+    t = Team(id="a", name="A", tag="A", tier=1)
+    gs = GameState(seed=1, season=1, week=1, user_team_id="a", phase="playoffs",
+                   teams={"a": t}, standings={"a": TeamRecord()})
+    assert server_mod._eliminated_teams(gs, str(t.region)) == set()
+
+
+def test_profile_career_totals_combines_history_and_live_season():
+    gs = GameState(seed=1, season=3, week=5, user_team_id="nxs", teams={}, players={})
+    gs.career_stats["p"] = CareerStats(
+        maps=40, kills=500, deaths=420, first_kills=60, clutches=20, seasons=3
+    )
+    gs.player_stats["p"] = PlayerSeasonStats(maps=6, kills=90, deaths=70)
+    chronicle.record(gs, "award", "P wins Season MVP.", player_id="p",
+                     data={"award": "Season MVP"})
+    ct = server_mod._profile_career_totals(gs, "p")
+    assert ct["maps"] == 46 and ct["kills"] == 590
+    assert ct["seasons"] == 4  # 3 completed + the live one
+    assert ct["kd"] == round(590 / 490, 2)
+    assert ct["honours"] == 1 and ct["mvps"] == 1
+
+
+def test_profile_career_totals_none_for_a_mapless_debutant():
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs", teams={}, players={})
+    assert server_mod._profile_career_totals(gs, "rookie") is None

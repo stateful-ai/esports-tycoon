@@ -1224,18 +1224,53 @@ def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     return out
 
 
+PLAYOFF_CUT = 4  # regional playoffs take the top four of the regular season
+
+
+def _eliminated_teams(gs: GameState, region: str) -> set[str]:
+    """Tier-1 teams in `region` that can no longer reach the top-4 playoff
+    cut, however every remaining regular-season game falls. Correct
+    regardless of tiebreakers — it uses only strict win comparisons: a team
+    X is out when at least four rivals already have more wins than X could
+    reach by winning out. Empty outside the regular season."""
+    if gs.phase != "regular":
+        return set()
+    tids = [
+        t.id for t in gs.teams.values()
+        if str(t.region) == region and t.tier == 1
+    ]
+    wins = {tid: (gs.standings[tid].wins if tid in gs.standings else 0) for tid in tids}
+    remaining = {tid: 0 for tid in tids}
+    for f in gs.fixtures:
+        if f.tier != 1 or f.stage != "regular" or f.played:
+            continue
+        if f.team_a in remaining:
+            remaining[f.team_a] += 1
+        if f.team_b in remaining:
+            remaining[f.team_b] += 1
+    out: set[str] = set()
+    for x in tids:
+        x_ceiling = wins[x] + remaining[x]
+        certainly_ahead = sum(1 for y in tids if y != x and wins[y] > x_ceiling)
+        if certainly_ahead >= PLAYOFF_CUT:
+            out.add(x)
+    return out
+
+
 @app.get("/api/standings")
 def standings() -> dict:
     with S.lock:
         gs = S.require_gs()
 
         def rows_for(region: str | None, tier: int = 1) -> list[dict]:
+            elim = _eliminated_teams(gs, region) if (region and tier == 1) else set()
             return [
                 {
                     **_team_view(gs.teams[tid], gs),
                     **gs.standings[tid].model_dump(),
                     "diff": gs.standings[tid].diff,
                     "recent_form": _team_recent_form(gs, tid),
+                    "eliminated": tid in elim,
                 }
                 for tid in gs.standings_order(region, tier=tier)
             ]
@@ -1243,6 +1278,8 @@ def standings() -> dict:
         user_region = str(gs.teams[gs.acting_team_id].region)
         regions = sorted(gs.regions(), key=lambda r: (r != user_region, r))
         return {
+            "playoff_cut": PLAYOFF_CUT,  # rows above this line are in the hunt
+            "in_regular_season": gs.phase == "regular",
             "regions": [
                 {
                     "region": r,
@@ -2895,6 +2932,10 @@ def player_profile(pid: str) -> dict:
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
             "career": [],
+            # Lifetime totals (completed seasons + the current one in
+            # progress): maps, kills, K/D, honours. None until they've
+            # played a map. Reads gs.career_stats + the live season.
+            "career_totals": _profile_career_totals(gs, pid),
             # The trophy cabinet: individual season awards this player has
             # won, newest first. A clean structured read of the chronicle's
             # award entries (the cleanly player-attributable honours; team
@@ -2923,6 +2964,36 @@ _EPITHETS: tuple[tuple[str, str], ...] = (
     ("Challengers MVP", "Challengers standout"),
     ("Rookie of the Season", "Standout rookie"),
 )
+
+
+def _profile_career_totals(gs: GameState, pid: str) -> dict | None:
+    """Lifetime box-score totals for the profile's Career section: the
+    rolled-up gs.career_stats plus the current in-progress season, with
+    honours/MVP counts from the chronicle. None until the player has a map
+    to their name (a debutant with nothing to show yet)."""
+    cs = gs.career_stats.get(pid)
+    cur = gs.player_stats.get(pid)
+    cur_maps = cur.maps if cur else 0
+    maps = (cs.maps if cs else 0) + cur_maps
+    if maps <= 0:
+        return None
+    kills = (cs.kills if cs else 0) + (cur.kills if cur else 0)
+    deaths = (cs.deaths if cs else 0) + (cur.deaths if cur else 0)
+    entries = chronicle.entries_for_player(gs, pid)
+    return {
+        "maps": maps,
+        "kills": kills,
+        "deaths": deaths,
+        "kd": round(kills / max(deaths, 1), 2),
+        "first_kills": (cs.first_kills if cs else 0) + (cur.first_kills if cur else 0),
+        "clutches": (cs.clutches if cs else 0) + (cur.clutches if cur else 0),
+        "seasons": (cs.seasons if cs else 0) + (1 if cur_maps > 0 else 0),
+        "honours": sum(1 for e in entries if e.kind == "award"),
+        "mvps": sum(
+            1 for e in entries
+            if e.kind == "award" and "MVP" in e.data.get("award", "")
+        ),
+    }
 
 
 def _player_epithet(gs: GameState, pid: str) -> str | None:
@@ -3021,6 +3092,7 @@ def team_profile(tid: str) -> dict:
 
         # Roster with public season aggregates. ACS is untracked, so the
         # contract's acs-desc order falls back to rating then handle.
+        own_team = tid == gs.acting_team_id
         players = []
         for pid in t.player_ids:
             p = gs.players.get(pid)
@@ -3036,6 +3108,12 @@ def team_profile(tid: str) -> dict:
                     "matches": st.maps if st else 0,
                     "kd": round(st.kd, 2) if has else None,
                     "acs": None,
+                    # Farewell-tour watch: a veteran carrying real offseason
+                    # retirement odds. Own club only — the odds read true CA,
+                    # which stays fogged for rivals.
+                    "retirement_risk": (
+                        own_team and development.retirement_prob(p) >= 0.15
+                    ),
                     "_rating": st.rating if has else 0.0,
                 }
             )
@@ -3058,10 +3136,20 @@ def team_profile(tid: str) -> dict:
                 }
             )
 
+        # Full honours board from the chronicle: world/Masters/regional
+        # titles, newest first (a dynasty's cabinet, not just its world
+        # crowns). memories.team_titles is the canonical team-title reader.
+        _TITLE_LABEL = {
+            "champions_title": "World Champion",
+            "masters_title": "Masters",
+            "regional_title": "Regional title",
+        }
         honors = [
-            f"S{c.season} World Champion"
-            for c in sorted(gs.champions, key=lambda c: c.season)
-            if c.team_id == tid
+            f"S{e.season} {_TITLE_LABEL.get(e.kind, 'Title')}"
+            for e in sorted(
+                memories_mod.team_titles(gs, tid),
+                key=lambda e: (-e.season, e.kind),
+            )
         ]
 
         return {

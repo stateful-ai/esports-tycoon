@@ -1471,6 +1471,45 @@ def _snapshot_season_start_ca(gs: GameState) -> None:
     }
 
 
+CAREER_KILL_BARS = (500, 1000, 1500, 2000, 3000, 5000)
+
+
+def _accumulate_career_stats(gs: GameState) -> None:
+    """Roll this season's box score into each player's lifetime totals
+    (before the per-season reset), and chronicle career-kill milestones the
+    moment they're crossed. Pure read of gs.player_stats (rng-free, sorted
+    iteration), so it stays campaign-deterministic."""
+    from esports_sim.manager.state import CareerStats
+
+    for pid in sorted(gs.player_stats):
+        st = gs.player_stats[pid]
+        if st.maps <= 0:
+            continue
+        cs = gs.career_stats.setdefault(pid, CareerStats())
+        prev_kills = cs.kills
+        cs.maps += st.maps
+        cs.rounds += st.rounds
+        cs.kills += st.kills
+        cs.deaths += st.deaths
+        cs.first_kills += st.first_kills
+        cs.clutches += st.clutches
+        cs.seasons += 1
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+        for bar in CAREER_KILL_BARS:
+            if prev_kills < bar <= cs.kills:
+                chronicle.record(
+                    gs, "milestone",
+                    f"{p.handle} passes {bar} career kills.",
+                    team_id=team.id if team else "",
+                    player_id=pid,
+                    data={"career_kills": str(bar)},
+                )
+                gs.push_news(f"{p.handle} reaches {bar} career kills.")
+
+
 def _process_retirements(gs: GameState, rng) -> int:
     """Roll every player against their retirement odds. Rosters lose the
     player on the spot (AI refills next tick; the user gets a news warning
@@ -1820,6 +1859,10 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(f"Patch {note.version} lands over the break.")
         knowledge.on_patch(gs)
 
+    # Lifetime career totals absorb this season before the per-season stats
+    # reset wipes them, and career-kill milestones enter the chronicle.
+    _accumulate_career_stats(gs)
+
     gs.player_stats = {}
     gs.team_stats = {}
     gs.player_map_stats = {}
@@ -1843,8 +1886,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         gs.push_news(review)
         report.notes.append(review)
 
-    # Ended careers stop charting; keep the history maps bounded.
-    for hist in (gs.stat_history, gs.dev_history):
+    # Ended careers stop charting; keep the history maps bounded (retirees
+    # pass into the Hall of Fame, so their career totals aren't lost here).
+    for hist in (gs.stat_history, gs.dev_history, gs.career_stats):
         for pid in sorted(hist):
             if pid not in gs.players:
                 del hist[pid]

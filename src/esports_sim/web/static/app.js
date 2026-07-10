@@ -493,11 +493,12 @@ async function dashboard(v) {
   const oppId = fix ? (fix.team_a === myId ? fix.team_b : fix.team_a) : null;
 
   // Every endpoint below already exists in the running server.
-  const [sched, table, myRoster, oppRoster] = await Promise.all([
+  const [sched, table, myRoster, oppRoster, career] = await Promise.all([
     api("/api/schedule").catch(() => null),
     api("/api/standings").catch(() => null),
     api(`/api/roster/${myId}`).catch(() => null),
     oppId ? api(`/api/roster/${oppId}`).catch(() => null) : Promise.resolve(null),
+    api("/api/career").catch(() => null),
   ]);
 
   // League position + record + region for any broadcast (tier-1) team.
@@ -872,6 +873,38 @@ async function dashboard(v) {
     t.appendChild(tb);
     lc.appendChild(t);
     v.appendChild(lc);
+  }
+
+  // Manager career snapshot — surfaces the /api/career chronicle read
+  // (both game modes carry a manager seat, so this always has data).
+  if (career && career.name) {
+    const cc = el("div", "card es-career");
+    cc.appendChild(el("h2", "", "Manager career"));
+    const sub = [career.name, career.archetype ? cap(career.archetype) : null]
+      .filter(Boolean)
+      .join(" · ");
+    cc.appendChild(el("div", "muted es-career-sub", sub));
+    const tile = (label, val) =>
+      `<div class="es-ctile"><div class="es-ctile-v">${val}</div>` +
+      `<div class="es-ctile-l muted">${label}</div></div>`;
+    const tiles = el("div", "es-career-tiles");
+    tiles.innerHTML =
+      tile("Titles", (career.titles || []).length) +
+      tile("Developed", career.players_developed ?? 0) +
+      tile("Debuts", career.debuts_given ?? 0) +
+      tile("Signings", career.signings ?? 0);
+    cc.appendChild(tiles);
+    const tagRow = (label, items) => {
+      const vals = (items || []).map((x) => x && (x.name || x)).filter(Boolean);
+      if (!vals.length) return;
+      const row = el("div", "es-career-tags");
+      row.appendChild(el("span", "muted es-career-lab", label));
+      for (const val of vals) row.appendChild(el("span", "pill", val));
+      cc.appendChild(row);
+    };
+    tagRow("Known for", career.known_for);
+    tagRow("Philosophy", career.philosophies);
+    v.appendChild(cc);
   }
 }
 
@@ -1693,8 +1726,14 @@ async function standings(v) {
       <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
     const tb = el("tbody");
     const rowFor = (r, i) => {
-      const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
-        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span></td>
+      const outTag = r.eliminated
+        ? ' <span class="pill elim-pill" title="Cannot reach the top-4 playoff cut">OUT</span>'
+        : "";
+      const cls = [r.id === App.state.user_team.id ? "me" : "", r.eliminated ? "elim" : ""]
+        .filter(Boolean)
+        .join(" ");
+      const tr = el("tr", cls, `
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span>${outTag}</td>
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
         <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
         <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
@@ -1711,7 +1750,17 @@ async function standings(v) {
       };
       return tr;
     };
-    league.rows.forEach((r, i) => tb.appendChild(rowFor(r, i)));
+    // Draw the top-4 playoff cutoff line inside the tier-1 table during the
+    // regular season (server sends the cut + phase; rows are ranked).
+    const cut = data.in_regular_season ? data.playoff_cut : 0;
+    league.rows.forEach((r, i) => {
+      tb.appendChild(rowFor(r, i));
+      if (cut && i === cut - 1 && i < league.rows.length - 1) {
+        tb.appendChild(
+          el("tr", "playoff-cut", `<td colspan="9">Playoff cutoff</td>`)
+        );
+      }
+    });
     t.appendChild(tb);
     card.appendChild(t);
 

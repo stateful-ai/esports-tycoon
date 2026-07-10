@@ -201,3 +201,40 @@ def test_undecorated_retiree_gets_no_tribute() -> None:
     )
     _process_retirements(gs, _AlwaysRetireRng())
     assert not any("End of an era" in ln for ln in gs.news)
+
+
+def test_career_stats_accumulate_and_kill_milestone():
+    from esports_sim.manager.campaign import _accumulate_career_stats
+    from esports_sim.manager.state import CareerStats, PlayerSeasonStats
+
+    p = Player(id="ace", handle="Ace", age=24, role=Role.DUELIST,
+               playstyle=Playstyle.ENTRY, attributes={"aim_precision": 80})
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["ace"])
+    gs = GameState(seed=1, season=2, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"ace": p})
+    gs.career_stats["ace"] = CareerStats(maps=40, kills=480, deaths=400, seasons=3)
+    gs.player_stats["ace"] = PlayerSeasonStats(
+        maps=14, kills=60, deaths=50, rounds=300, first_kills=10, clutches=5)
+    _accumulate_career_stats(gs)
+    cs = gs.career_stats["ace"]
+    assert cs.kills == 540 and cs.maps == 54 and cs.seasons == 4
+    assert cs.first_kills == 10 and cs.clutches == 5
+    # crossed 500 career kills this season -> chronicled milestone + news
+    assert any(e.kind == "milestone" and "500 career kills" in e.text
+               for e in gs.chronicle)
+    assert any("500 career kills" in n for n in gs.news)
+
+
+def test_career_stats_no_milestone_without_a_crossing():
+    from esports_sim.manager.campaign import _accumulate_career_stats
+    from esports_sim.manager.state import PlayerSeasonStats
+
+    p = Player(id="rk", handle="Rook", age=19, role=Role.DUELIST,
+               playstyle=Playstyle.ENTRY, attributes={"aim_precision": 70})
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["rk"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"rk": p})
+    gs.player_stats["rk"] = PlayerSeasonStats(maps=8, kills=120, deaths=100)
+    _accumulate_career_stats(gs)
+    assert gs.career_stats["rk"].kills == 120  # first season, no prior total
+    assert not any(e.kind == "milestone" for e in gs.chronicle)  # 120 < 500 bar

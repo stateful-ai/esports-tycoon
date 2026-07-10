@@ -692,6 +692,39 @@ svg.iso .plabel { font-size: 2.4px; }
 .potm-chip .plink { text-transform: none; letter-spacing: 0; }
 .potm-star { color: var(--es-color-warn, #e8b34b); }
 
+/* Playoff cutoff line + eliminated rows in the standings table. */
+tr.playoff-cut td {
+  padding: 2px 8px; font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+  color: var(--es-color-accent, #4fd8c0);
+  border-top: 2px dashed color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 8%, transparent);
+}
+tr.elim td { opacity: .5; }
+.elim-pill {
+  color: var(--es-color-text-danger, #ff6b6b);
+  background: var(--es-color-fill-danger, #3a1620);
+}
+
+/* Manager career snapshot card on the dashboard. */
+.es-career-sub { margin: -4px 0 10px; font-size: var(--es-text-sm, 12px); }
+.es-career-tiles {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px;
+}
+@media (max-width: 620px) { .es-career-tiles { grid-template-columns: repeat(2, 1fr); } }
+.es-ctile {
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-md, 6px); padding: 8px 6px; text-align: center;
+}
+.es-ctile-v {
+  font-family: var(--es-font-display, inherit); font-weight: 700;
+  font-size: var(--es-text-lg, 18px); color: var(--es-color-text-primary, #e6ecf5);
+}
+.es-ctile-l { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
+.es-career-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.es-career-lab { font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .06em; }
+
 /* Map feature — the beauty crops shown large. */
 .es-maps {
   display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px;

@@ -320,6 +320,13 @@
   color: var(--es-color-text-secondary, #a2aec6);
 }
 
+/* Farewell-tour flag next to a veteran on the roster table. */
+.retire-pill {
+  color: var(--es-color-warn, #e8b34b);
+  background: color-mix(in srgb, var(--es-color-warn, #e8b34b) 16%, transparent);
+  font-size: var(--es-text-2xs, 10px);
+}
+
 /* Earned epithet under the handle in the profile header. */
 .pf-epithet {
   display: inline-block; margin: 2px 0 1px;

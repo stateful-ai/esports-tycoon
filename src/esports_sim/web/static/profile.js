@@ -512,6 +512,23 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Career --------------------------------------------------------------
+  // Lifetime totals (completed seasons + the live one), from the server's
+  // career_totals (gs.career_stats rolled up + the current season).
+  const ct = data.career_totals;
+  if (ct) {
+    const sec = pfSection("Career");
+    const tiles = el("div", "pf-tiles pf-tiles-sm");
+    tiles.appendChild(pfTile("Seasons", pfNum(ct.seasons)));
+    tiles.appendChild(pfTile("Maps", pfNum(ct.maps)));
+    tiles.appendChild(pfTile("Kills", pfNum(ct.kills)));
+    tiles.appendChild(pfTile("K/D", ct.kd.toFixed(2)));
+    tiles.appendChild(pfTile("Honours", pfNum(ct.honours)));
+    tiles.appendChild(pfTile("MVPs", pfNum(ct.mvps)));
+    sec.appendChild(tiles);
+    frag.appendChild(sec);
+  }
+
   // Honours ------------------------------------------------------------
   // The trophy cabinet: this player's individual season awards, newest
   // first (server-selected chronicle read; renders as-is).
@@ -663,7 +680,7 @@ function renderTeamProfile(data) {
       const tr = el(
         "tr",
         "pf-rrow plink",
-        `<td><b>${pl.handle ?? "—"}</b></td>` +
+        `<td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk ? ` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>` : ""}</td>` +
           `<td>${pl.role ? `<span class="pill">${pl.role}</span>` : ""}</td>` +
           `<td class="num">${pfNum(pl.matches)}</td>` +
           `<td class="num">${pfNum(pl.kd, 2)}</td>` +
