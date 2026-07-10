@@ -211,6 +211,7 @@ def new_campaign(
     social.seed_followers(gs)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)
     return gs
 
 
@@ -1459,6 +1460,17 @@ def _update_world_ranks(gs: GameState) -> None:
 # Offseason
 
 
+def _snapshot_season_start_ca(gs: GameState) -> None:
+    """Freeze every current player's current ability as the season's
+    baseline. Pure read of settled rosters (rng-free, sorted iteration),
+    so it's campaign-deterministic. The Most Improved award diffs
+    end-of-season CA against this."""
+    gs.season_start_ca = {
+        pid: round(development.overall(gs.players[pid]), 2)
+        for pid in sorted(gs.players)
+    }
+
+
 def _process_retirements(gs: GameState, rng) -> int:
     """Roll every player against their retirement odds. Rosters lose the
     player on the spot (AI refills next tick; the user gets a news warning
@@ -1499,21 +1511,45 @@ def _process_retirements(gs: GameState, rng) -> int:
                 peak_note=f"retired at {ca:.0f} CA",
             )
         )
-        # Career titles/awards make a retirement land harder in history.
-        n_honours = sum(
-            1
-            for e in gs.chronicle
-            if e.player_id == pid and e.kind == "award"
+        # Career honours make a retirement land harder in history, and a
+        # decorated career earns a dry sendoff in the news. All grounded in
+        # the chronicle: this player's individual awards, and their debut
+        # season (career length) when the debut system saw them arrive.
+        mine = [e for e in gs.chronicle if e.player_id == pid]
+        honours = [e for e in mine if e.kind == "award"]
+        n_honours = len(honours)
+        mvps = sum(1 for e in honours if "MVP" in e.data.get("award", ""))
+        debut_season = next((e.season for e in mine if e.kind == "debut"), None)
+        seasons = (
+            gs.season - debut_season + 1 if debut_season is not None else None
         )
+        resume_bits: list[str] = []
+        if seasons is not None:
+            resume_bits.append(f"{seasons} pro season{'s' if seasons != 1 else ''}")
+        if n_honours:
+            resume_bits.append(
+                f"{n_honours} individual honour{'s' if n_honours != 1 else ''}"
+                + (f" ({mvps}x MVP)" if mvps else "")
+            )
+        resume = ", ".join(resume_bits)
         chronicle.record(
             gs, "retirement",
             f"{p.handle} retires at {p.age}"
-            + (f" ({team.name})." if team else "."),
+            + (f" ({team.name})" if team else "")
+            + (f" - {resume}." if resume else "."),
             team_id=team.id if team else "",
             player_id=pid,
-            importance=min(75.0, 40.0 + 10.0 * n_honours),
+            importance=min(80.0, 40.0 + 8.0 * n_honours + (5.0 if ca >= 78 else 0.0)),
             data={"age": str(p.age), "ca": f"{ca:.0f}"},
         )
+        # A genuinely decorated career (multiple honours, an MVP, or a
+        # star-level peak) gets its own sendoff line, not just a name in the
+        # bulk retirements list below.
+        if n_honours >= 2 or mvps >= 1 or ca >= 80:
+            gs.push_news(
+                f"End of an era: {p.handle} retires at {p.age} after "
+                f"{resume or f'a {ca:.0f} CA career'}."
+            )
         # A completed career faces the Hall (score reads the chronicle
         # entries above, so it runs after the retirement is recorded).
         hof.consider_at_retirement(gs, p, ca, team.name if team else "")
@@ -1760,7 +1796,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             team_id=winner_tid,
             player_id=a.player_id,
             importance=75.0 if "MVP" in a.award else 60.0,
-            data={"award": a.award},
+            data={"award": a.award, "value": a.value},
         )
 
     # The season's tactical era enters the chronicle while the final
@@ -1856,6 +1892,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)  # baseline for next season's Most Improved
     # Inbox for the offseason tick, per manager: retirements, rookie class,
     # award slate. `report` still carries the pre-rollover (season, week) the
     # offseason news was labelled with, so generate_inbox reads the right lines.

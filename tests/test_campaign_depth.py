@@ -11,10 +11,13 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import advance_week, new_campaign, training
-from esports_sim.manager.campaign import _adapt_ai_tactics
+from esports_sim.manager import advance_week, chronicle, new_campaign, training
+from esports_sim.manager.campaign import _adapt_ai_tactics, _process_retirements
 from esports_sim.manager.narrative import _tactic_flavor
+from esports_sim.manager.state import GameState
 from esports_sim.registry import load_all
+from esports_sim.schemas import Player, Team
+from esports_sim.schemas.common import Playstyle, Role
 
 
 def _campaign(seed: int = 7):
@@ -132,3 +135,69 @@ def test_best_defensive_team_award_is_granted() -> None:
     # CLI news is ASCII-only (cp1252 consoles) — the award line must comply.
     def_news = [n for n in gs.news if "Best Defensive Team" in n]
     assert def_news and all(n.isascii() for n in def_news)
+
+
+def _decorated_veteran() -> GameState:
+    """A 40-year-old two-time MVP on a tier-1 side, with a debut and two
+    award entries already on the chronicle — the raw material for a
+    retirement sendoff."""
+    star = Player(
+        id="star", handle="Legend", age=40, role=Role.DUELIST,
+        playstyle=Playstyle.ENTRY,
+        attributes={a: 82.0 for a in ("aim_precision", "aim_reactivity", "movement")},
+    )
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["star"])
+    gs = GameState(
+        seed=1, season=6, week=1, user_team_id="nxs",
+        teams={"nxs": team}, players={"star": star},
+    )
+    gs.season = 1
+    chronicle.record(gs, "debut", "Legend debuts.", team_id="nxs", player_id="star")
+    for yr, rat in ((3, "1.30"), (5, "1.25")):
+        gs.season = yr
+        chronicle.record(
+            gs, "award", f"Legend wins Season MVP ({rat}).",
+            team_id="nxs", player_id="star",
+            data={"award": "Season MVP", "value": f"{rat} rating"},
+        )
+    gs.season = 6
+    return gs
+
+
+class _AlwaysRetireRng:
+    """rng.random() == 0.0 < any positive retirement prob, so an
+    already-past-decline veteran is guaranteed to hang it up."""
+
+    def random(self) -> float:
+        return 0.0
+
+
+def test_retirement_tribute_for_a_decorated_career() -> None:
+    gs = _decorated_veteran()
+    n = _process_retirements(gs, _AlwaysRetireRng())
+    assert n == 1
+    # A decorated retiree earns their own sendoff line...
+    sendoffs = [ln for ln in gs.news if "End of an era" in ln and "Legend" in ln]
+    assert sendoffs, "a two-time MVP retired without a tribute"
+    assert all(ln.isascii() for ln in sendoffs)  # CLI news is ASCII-only
+    # ...and the retirement chronicle entry carries the career resume,
+    # lifted above the plain-retirement importance floor for callbacks.
+    ret = [e for e in gs.chronicle if e.kind == "retirement" and e.player_id == "star"]
+    assert ret and "pro seasons" in ret[0].text and "MVP" in ret[0].text
+    assert ret[0].importance > 40.0
+
+
+def test_undecorated_retiree_gets_no_tribute() -> None:
+    """A journeyman with no honours retires quietly — no sendoff spam."""
+    p = Player(
+        id="jrn", handle="Journeyman", age=40, role=Role.SENTINEL,
+        playstyle=Playstyle.ANCHOR,
+        attributes={a: 55.0 for a in ("aim_precision", "aim_reactivity", "movement")},
+    )
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["jrn"])
+    gs = GameState(
+        seed=1, season=4, week=1, user_team_id="nxs",
+        teams={"nxs": team}, players={"jrn": p},
+    )
+    _process_retirements(gs, _AlwaysRetireRng())
+    assert not any("End of an era" in ln for ln in gs.news)

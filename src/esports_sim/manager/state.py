@@ -1118,6 +1118,12 @@ class GameState(BaseModel):
     # Debut bookkeeping: "" = generated this save, debut pending;
     # "s{n}w{k}" = debut recorded. Absent = predates the system.
     debut_marks: dict[str, str] = Field(default_factory=dict)
+    # Season-start current-ability per player, snapshotted the moment a
+    # season's rosters settle. The Most Improved award reads it against
+    # end-of-season CA. Additive/defaulted (see load(): new fields need no
+    # migration); empty on old saves -> the award simply skips until the
+    # next offseason repopulates it.
+    season_start_ca: dict[str, float] = Field(default_factory=dict)
 
     # -- Legacy Mode (v5) ------------------------------------------------------
     # "sandbox" = the classic game (pick any org, manage forever).

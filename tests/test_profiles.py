@@ -41,6 +41,7 @@ PLAYER_TOP = {
     "charts",
     "relationships",
     "career",
+    "honours",
     "memories",
 }
 PLAYER_BLOCK = {

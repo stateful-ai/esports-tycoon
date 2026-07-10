@@ -27,6 +27,7 @@ from pydantic import BaseModel
 
 from esports_sim.manager import (
     career,
+    chronicle,
     development,
     economy,
     inbox as inbox_mod,
@@ -582,6 +583,10 @@ def _team_view(t: Team, gs: GameState) -> dict:
 
 
 def _fixture_view(f, gs: GameState) -> dict:
+    # A named rivalry between the two sides (symmetric pair heat), surfaced
+    # only once it's genuinely hot — so the dashboard can flag a grudge
+    # match before it's played. None when the pairing carries no history.
+    riv = rivalries_mod.get(gs, f.team_a, f.team_b)
     return {
         "id": f.id,
         "week": f.week,
@@ -591,6 +596,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "team_b": f.team_b,
         "team_a_name": gs.teams[f.team_a].name,
         "team_b_name": gs.teams[f.team_b].name,
+        "rivalry": round(riv, 1) if riv >= rivalries_mod.RIVALRY_BAR else None,
         "maps": f.maps,
         "map_thumbs": {mid: _map_thumb_url(mid) for mid in f.maps},
         "veto": f.veto,
@@ -2802,11 +2808,34 @@ def player_profile(pid: str) -> dict:
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
             "career": [],
+            # The trophy cabinet: individual season awards this player has
+            # won, newest first. A clean structured read of the chronicle's
+            # award entries (the cleanly player-attributable honours; team
+            # titles carry a team_id, not a player_id, so they stay in the
+            # broader "memories" list rather than this personal cabinet).
+            "honours": _profile_honours(gs, pid),
             # What this player remembers — their defining chronicle
             # entries (debut, titles, milestones, moves), newest-important
             # first. Pure chronicle read (manager/memories.py).
             "memories": memories_mod.memory_lines(gs, pid),
         }
+
+
+def _profile_honours(gs: GameState, pid: str) -> list[dict]:
+    """The player's individual season awards, newest first. Pure chronicle
+    read; the value string was frozen into the award entry at win time, so
+    the detail is grounded, not re-derived."""
+    out = [
+        {
+            "season": e.season,
+            "award": e.data.get("award", "Award"),
+            "detail": e.data.get("value", ""),
+        }
+        for e in chronicle.entries_for_player(gs, pid)
+        if e.kind == "award"
+    ]
+    out.sort(key=lambda h: (-h["season"], h["award"]))
+    return out
 
 
 def _team_streak(gs: GameState, tid: str) -> str | None:

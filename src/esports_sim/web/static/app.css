@@ -656,6 +656,13 @@ svg.iso .plabel { font-size: 2.4px; }
   letter-spacing: .08em; color: var(--es-color-text-tertiary, #67748f);
 }
 .es-bo { margin-top: 3px; }
+/* Grudge-match flag on the next-match spotlight: a hot named rivalry. */
+.es-rivalry {
+  margin-top: 3px; font-weight: 700;
+  color: var(--es-color-text-danger, #ff6b6b);
+  background: var(--es-color-fill-danger, #3a1620);
+  border: 1px solid color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+}
 
 /* Map feature — the beauty crops shown large. */
 .es-maps {

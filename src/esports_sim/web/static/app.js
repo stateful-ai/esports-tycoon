@@ -592,6 +592,7 @@ async function dashboard(v) {
             <div class="es-vs-ctx">S${s.season} · W${fix.week}</div>
             <div class="es-vs-ctx">${stageTxt}</div>
             <span class="pill es-bo">Best of ${fix.best_of}</span>
+            ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
           </div>` +
           teamBlock(oppId, oppName, oppLogo, "right")
       )

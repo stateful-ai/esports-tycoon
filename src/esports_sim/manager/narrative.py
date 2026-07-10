@@ -15,6 +15,8 @@ import random
 from esports_sim.manager.state import AwardRecord, GameState
 
 _MIN_AWARD_MAPS = 6
+_MIN_CLUTCHES = 4  # below this, "Clutch Merchant" is noise, not an honour
+_MIN_IMPROVEMENT = 3.0  # CA points; a season with no real riser awards no one
 
 
 def _rng(*parts) -> random.Random:
@@ -412,6 +414,36 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
             rook = max(rookies, key=lambda pid: (rookies[pid].rating, pid))
             add("Rookie of the Season", rook,
                 f"{rookies[rook].rating:.2f} rating at age {gs.players[rook].age}")
+
+        # Clutch Merchant — the name defenders don't want left alive. Ranked
+        # on hard clutches (1v2-or-worse; PlayerStats.clutches), citing the
+        # 1v3+ heroics when there are any. Skipped when nobody cleared the bar.
+        clutch = max(eligible, key=lambda pid: (eligible[pid].clutches, pid))
+        if eligible[clutch].clutches >= _MIN_CLUTCHES:
+            cst = eligible[clutch]
+            val = f"{cst.clutches} clutch rounds from a man down"
+            if cst.clutch_1v3:
+                val += f", incl. {cst.clutch_1v3} from 1v3+"
+            add("Clutch Merchant", clutch, val)
+
+        # Most Improved — biggest current-ability rise from the season's
+        # opening baseline (season_start_ca, frozen when the rosters settled)
+        # to now. Silent when the snapshot is missing (old save / season 1)
+        # or nobody made a real jump — a manufactured winner would be noise.
+        from esports_sim.manager import development
+
+        risers = {
+            pid: development.overall(gs.players[pid]) - gs.season_start_ca[pid]
+            for pid in eligible
+            if pid in gs.season_start_ca
+        }
+        if risers:
+            mip = max(risers, key=lambda pid: (risers[pid], pid))
+            if risers[mip] >= _MIN_IMPROVEMENT:
+                base = gs.season_start_ca[mip]
+                now = development.overall(gs.players[mip])
+                add("Most Improved", mip,
+                    f"+{risers[mip]:.0f} CA this season ({base:.0f} -> {now:.0f})")
 
     # Challengers MVP: the tier-2 name every tier-1 scout now knows.
     t2_eligible = {

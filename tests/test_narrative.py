@@ -12,9 +12,16 @@ from __future__ import annotations
 
 import types
 
-from esports_sim.manager.narrative import head_to_head, weekly_news
-from esports_sim.manager.state import ChampionRecord, Fixture, GameState, MapResult
-from esports_sim.schemas import Team
+from esports_sim.manager.narrative import head_to_head, season_awards, weekly_news
+from esports_sim.manager.state import (
+    ChampionRecord,
+    Fixture,
+    GameState,
+    MapResult,
+    PlayerSeasonStats,
+)
+from esports_sim.schemas import Player, Team
+from esports_sim.schemas.common import Playstyle, Role
 
 
 def _team(team_id: str, name: str, world_rank: int | None = None) -> Team:
@@ -269,3 +276,82 @@ def test_league_line_no_champion_mention_when_loser_isnt_champion():
     weekly_news(gs, _report(fixtures), week_kills={})
     assert gs.news
     assert not any("reigning champions" in line for line in gs.news)
+
+
+# ---------------------------------------------------------------------------
+# Season awards: Clutch Merchant + Most Improved (grounded in the aggregates)
+
+
+def _award_player(pid: str, ca: float, age: int = 24) -> Player:
+    return Player(
+        id=pid, handle=pid.title(), age=age, role=Role.DUELIST,
+        playstyle=Playstyle.ENTRY,
+        attributes={a: ca for a in ("aim_precision", "aim_reactivity", "movement")},
+    )
+
+
+def _award_gs(players, stats, season_start_ca=None) -> GameState:
+    team = Team(
+        id="nxs", name="Nexus", tag="NXS", tier=1,
+        player_ids=[p.id for p in players],
+    )
+    return GameState(
+        seed=1, season=3, week=1, user_team_id="nxs",
+        teams={"nxs": team},
+        players={p.id: p for p in players},
+        player_stats=dict(stats),
+        season_start_ca=dict(season_start_ca or {}),
+    )
+
+
+def test_clutch_merchant_goes_to_the_top_clutcher():
+    a, b = _award_player("aria", 75), _award_player("brax", 70)
+    stats = {
+        # b is the better fragger (higher rating/kills) but a is the clutch god.
+        "aria": PlayerSeasonStats(maps=10, rating_sum=10.0, kills=150,
+                                  first_kills=20, clutches=6, clutch_1v3=2),
+        "brax": PlayerSeasonStats(maps=10, rating_sum=12.0, kills=180,
+                                  first_kills=25, clutches=1),
+    }
+    awards = season_awards(_award_gs([a, b], stats))
+    by_name = {r.award: r for r in awards}
+    assert "Clutch Merchant" in by_name
+    assert by_name["Clutch Merchant"].player_id == "aria"
+    assert "1v3" in by_name["Clutch Merchant"].value  # cites the 1v3+ heroics
+    # sanity: the fragging honours still went to brax
+    assert by_name["Season MVP"].player_id == "brax"
+
+
+def test_clutch_merchant_silent_below_the_bar():
+    a = _award_player("aria", 75)
+    stats = {"aria": PlayerSeasonStats(maps=10, rating_sum=10.0, kills=150,
+                                       first_kills=20, clutches=2)}
+    awards = season_awards(_award_gs([a], stats))
+    assert not any(r.award == "Clutch Merchant" for r in awards)
+
+
+def test_most_improved_reads_the_season_start_baseline():
+    a, b = _award_player("aria", 78), _award_player("brax", 70)
+    stats = {
+        "aria": PlayerSeasonStats(maps=10, rating_sum=11.0, kills=150, first_kills=20),
+        "brax": PlayerSeasonStats(maps=10, rating_sum=10.0, kills=140, first_kills=18),
+    }
+    gs = _award_gs([a, b], stats, season_start_ca={"aria": 70.0, "brax": 69.0})
+    mip = next((r for r in season_awards(gs) if r.award == "Most Improved"), None)
+    assert mip is not None and mip.player_id == "aria"  # +8 CA vs brax's +1
+    assert "+8" in mip.value
+
+
+def test_most_improved_silent_without_a_baseline():
+    """Season 1 / an old save has no snapshot -> no manufactured winner."""
+    a = _award_player("aria", 78)
+    stats = {"aria": PlayerSeasonStats(maps=10, rating_sum=11.0, kills=150, first_kills=20)}
+    awards = season_awards(_award_gs([a], stats, season_start_ca={}))
+    assert not any(r.award == "Most Improved" for r in awards)
+
+
+def test_most_improved_silent_when_nobody_really_rose():
+    a = _award_player("aria", 71)
+    stats = {"aria": PlayerSeasonStats(maps=10, rating_sum=11.0, kills=150, first_kills=20)}
+    gs = _award_gs([a], stats, season_start_ca={"aria": 70.0})  # only +1 CA
+    assert not any(r.award == "Most Improved" for r in season_awards(gs))

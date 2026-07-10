@@ -511,6 +511,30 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Honours ------------------------------------------------------------
+  // The trophy cabinet: this player's individual season awards, newest
+  // first (server-selected chronicle read; renders as-is).
+  const honours = data.honours || [];
+  if (honours.length) {
+    const sec = pfSection(`Honours (${honours.length})`);
+    const list = el("ul", "pf-honours");
+    list.style.cssText = "margin:0;padding:0;list-style:none";
+    for (const h of honours) {
+      const li = el("li", "pf-honour");
+      const award = el("span", "pf-honour-award");
+      award.textContent = `S${h.season} · ${h.award}`;
+      li.appendChild(award);
+      if (h.detail) {
+        const det = el("span", "pf-honour-detail muted");
+        det.textContent = h.detail;
+        li.appendChild(det);
+      }
+      list.appendChild(li);
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
   // Memories ------------------------------------------------------------
   // The player's defining chronicle entries — what their career will be
   // remembered for (server-selected; pure history, renders as-is).

@@ -319,3 +319,25 @@
   font-size: 28px; font-weight: 700;
   color: var(--es-color-text-secondary, #a2aec6);
 }
+
+/* Honours — the trophy cabinet: one row per individual season award. */
+.pf-honour {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.pf-honour:last-child { border-bottom: 0; }
+.pf-honour-award {
+  font-weight: 600; font-size: var(--es-text-sm, 12px);
+  color: var(--es-color-text-primary, #e6ecf5);
+  flex: 0 0 auto;
+}
+.pf-honour-award::before {
+  content: "\2605"; /* filled star */
+  color: var(--es-color-warn, #e8b34b);
+  margin-right: 6px;
+}
+.pf-honour-detail {
+  font-size: var(--es-text-xs, 11px);
+  margin-left: auto; text-align: right;
+}
