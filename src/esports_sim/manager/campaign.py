@@ -28,6 +28,7 @@ from esports_sim.manager import (
     social,
     sponsors,
     staff,
+    telemetry,
     training,
 )
 from esports_sim.manager.economy import (
@@ -967,6 +968,12 @@ def advance_week(
                 career.dismissal_inbox_item(gs, mid, gs.season, gs.week)
             )
 
+    # 8. Telemetry: the post-tick org feature snapshot per human seat —
+    # the state half of the RL episode stream. LAST (after dismissals),
+    # and before the week counter rolls so snap N pairs with week N's
+    # actions.
+    telemetry.weekly_snapshots(gs)
+
     gs.week += 1
     return report
 
@@ -1873,4 +1880,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(
             "The board has made a change - accept a new post to continue."
         )
+    # The offseason tick's snapshot is the new season's baseline (season
+    # already rolled, standings reset) — the episode boundary marker.
+    telemetry.weekly_snapshots(gs)
     return report

@@ -39,6 +39,7 @@ from esports_sim.manager import (
     sponsors,
     staff as staff_mod,
     talk,
+    telemetry,
 )
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
@@ -910,6 +911,9 @@ def accept_job(body: AcceptJobBody) -> dict:
         ok, why = career.accept_offer(gs, seat.id, body.team_id)
         if not ok:
             raise HTTPException(409, why)
+        telemetry.record_action(
+            gs, "accept_job", {"seat": seat.id}, team_id=body.team_id
+        )
         game = ctx.game
         game.ready.discard(gs.acting_team_id)
         gs.set_acting(body.team_id)
@@ -1521,6 +1525,16 @@ def sponsor_action(body: SponsorBody) -> dict:
                 else sponsors.decline_slot_offer
             )
             ok, msg = fn(gs, body.slot)
+        if ok:
+            telemetry.record_action(
+                gs, "sponsor_respond",
+                {
+                    "slot": body.slot,
+                    "brand": body.brand or "",
+                    "accept": body.accept,
+                    "structure": body.structure or "",
+                },
+            )
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -1550,6 +1564,10 @@ def facility_upgrade(body: FacilityBody) -> dict:
             f"{team.name} upgrade {body.facility.replace('_', ' ')} to "
             f"level {level + 1} ({cost:,} cr)."
         )
+        telemetry.record_action(
+            gs, "facility_upgrade",
+            {"facility": body.facility, "level": level + 1, "cost": cost},
+        )
         S.save()
         return {
             "ok": True,
@@ -1573,6 +1591,7 @@ def set_training(body: TrainingBody) -> dict:
         if body.focus not in FOCUS_OPTIONS:
             raise HTTPException(422, f"focus must be one of {FOCUS_OPTIONS}")
         gs.training_focus[gs.acting_team_id] = body.focus
+        telemetry.record_action(gs, "set_training", {"focus": body.focus})
         S.save()
         return {"ok": True, "focus": body.focus}
 
@@ -1751,6 +1770,14 @@ def dev_plan_action(body: DevPlanBody) -> dict:
                     422, f"training_intensity must be one of {INTENSITY_OPTIONS}"
                 )
             p.training_intensity = body.training_intensity
+        telemetry.record_action(
+            gs, "set_dev_plan",
+            {
+                "player_id": body.player_id,
+                "dev_focus": p.dev_focus,
+                "intensity": p.training_intensity,
+            },
+        )
         S.save()
         return {
             "ok": True,
@@ -1768,6 +1795,10 @@ def hire_staff(body: HireBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         ok, msg = staff_mod.hire(gs, body.candidate_id)
+        if ok:
+            telemetry.record_action(
+                gs, "hire_staff", {"candidate_id": body.candidate_id}
+            )
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -1783,6 +1814,8 @@ def release_staff(body: ReleaseStaffBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         ok, msg = staff_mod.release(gs, body.role)
+        if ok:
+            telemetry.record_action(gs, "release_staff", {"role": body.role})
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -1818,6 +1851,11 @@ def talk_resolve(body: TalkBody) -> dict:
         if body.player_id not in gs.players:
             raise HTTPException(404, "unknown player")
         ok, msg, effects = talk.resolve(gs, body.player_id, body.option_id)
+        if ok:
+            telemetry.record_action(
+                gs, "talk",
+                {"player_id": body.player_id, "option_id": body.option_id},
+            )
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -1977,6 +2015,16 @@ def set_lineup(body: LineupBody) -> dict:
                     422, f"dress exactly {market.ROSTER_SIZE} players for a map"
                 )
             gs.map_lineups[f"{me}|{body.fixture_id}|{body.map_id}"] = picks
+        telemetry.record_action(
+            gs, "set_lineup",
+            {
+                "agents": bool(body.agents is not None),
+                "default_five": bool(body.lineup_ids is not None),
+                "per_map": bool(body.player_ids is not None),
+                "fixture_id": body.fixture_id or "",
+                "map_id": body.map_id or "",
+            },
+        )
         S.save()
         return {
             "ok": True,
@@ -2007,6 +2055,19 @@ def set_tactics(body: TacticsBody) -> dict:
             if body.site_focus not in ("balanced", "a", "b", "c"):
                 raise HTTPException(422, "site_focus must be balanced/a/b/c")
             tac.site_focus = body.site_focus
+        # Record the RESULTING book (not just the changed dial): the
+        # behavior report reads identity distributions from these.
+        telemetry.record_action(
+            gs, "set_tactics",
+            {
+                "aggression": tac.aggression,
+                "pace": tac.pace,
+                "util_discipline": tac.util_discipline,
+                "eco_greed": tac.eco_greed,
+                "map_control": tac.map_control,
+                "site_focus": tac.site_focus,
+            },
+        )
         S.save()
         return {"ok": True, "message": "tactics updated", "tactics": tac.model_dump()}
 
@@ -2157,6 +2218,7 @@ def set_gameplan(body: GamePlanBody) -> dict:
         tid = gs.acting_team_id
         if body.clear:
             gs.game_plan = None
+            telemetry.record_action(gs, "clear_game_plan")
             S.save()
             return {"ok": True, "message": "game plan cleared — playing the book"}
         fx = gs.team_fixture(tid)
@@ -2192,6 +2254,17 @@ def set_gameplan(body: GamePlanBody) -> dict:
             starter_ids=starters,
             **dials,
         )
+        telemetry.record_action(
+            gs, "set_game_plan",
+            {
+                "fixture_id": fx.id,
+                "opponent": opp_id,
+                "n_dials": sum(1 for v in dials.values() if v is not None),
+                "site_focus": body.site_focus or "",
+                "focus_target": body.focus_target or "",
+                "one_match_lineup": bool(starters),
+            },
+        )
         S.save()
         return {"ok": True, "message": "game plan locked in for the next match"}
 
@@ -2207,6 +2280,8 @@ def bid(body: BidBody) -> dict:
         if body.player_id not in gs.players:
             raise HTTPException(404, "unknown player")
         ok, msg = market.user_bid(gs, body.player_id)
+        if ok:
+            telemetry.record_action(gs, "bid", {"player_id": body.player_id})
         S.save()
         if not ok:
             raise HTTPException(422, msg)
@@ -2227,6 +2302,15 @@ def transfer_offer(body: OfferBody) -> dict:
         ok, msg = market.respond_offer(
             gs, body.player_id, body.accept, body.to_team
         )
+        if ok:
+            telemetry.record_action(
+                gs, "respond_offer",
+                {
+                    "player_id": body.player_id,
+                    "accept": body.accept,
+                    "to_team": body.to_team or "",
+                },
+            )
         S.save()
         if not ok:
             raise HTTPException(422, msg)
@@ -2246,6 +2330,7 @@ def scout(body: ScoutBody) -> dict:
         if body.team_id == gs.acting_team_id:
             raise HTTPException(422, "you already know your own team")
         gs.scout_target = body.team_id
+        telemetry.record_action(gs, "set_scout", {"target": body.team_id})
         S.save()
         label = (
             "the free-agent market"
@@ -2304,6 +2389,8 @@ def sign(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         ok, msg = market.sign_player(gs, gs.acting_team_id, body.player_id)
+        if ok:
+            telemetry.record_action(gs, "sign", {"player_id": body.player_id})
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -2315,6 +2402,8 @@ def release(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         ok, msg = market.release_player(gs, gs.acting_team_id, body.player_id)
+        if ok:
+            telemetry.record_action(gs, "release", {"player_id": body.player_id})
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -2326,6 +2415,8 @@ def renew(body: PlayerBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         ok, msg = market.renew_contract(gs, gs.acting_team_id, body.player_id)
+        if ok:
+            telemetry.record_action(gs, "renew", {"player_id": body.player_id})
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -2344,6 +2435,10 @@ def swap(body: SwapBody) -> dict:
         ok, msg = market.swap_player(
             gs, gs.acting_team_id, body.sign_id, body.drop_id
         )
+        if ok:
+            telemetry.record_action(
+                gs, "swap", {"sign_id": body.sign_id, "drop_id": body.drop_id}
+            )
         S.save()
         if not ok:
             raise HTTPException(409, msg)
@@ -2370,6 +2465,16 @@ def package(body: PackageBody) -> dict:
             max(0, int(body.cash_out)),
             max(0, int(body.cash_in)),
         )
+        if ok:
+            telemetry.record_action(
+                gs, "propose_package",
+                {
+                    "target_pid": body.target_pid,
+                    "n_out": len(body.out_pids),
+                    "cash_out": max(0, int(body.cash_out)),
+                    "cash_in": max(0, int(body.cash_in)),
+                },
+            )
         S.save()
         if not ok:
             raise HTTPException(422, msg)
@@ -2423,7 +2528,11 @@ def advance() -> dict:
                 f"can't advance — {names} need {market.ROSTER_MIN} players "
                 "(re-ready once fixed)",
             )
-        # Everyone's in — advance the shared world exactly once.
+        # Everyone's in — advance the shared world exactly once. Each
+        # seat's ready-up is its own recorded decision (the advance is
+        # the RL episode's step boundary).
+        for t in sorted(game.ready):
+            telemetry.record_action(gs, "advance", team_id=t)
         game.event_logs.clear()  # replays are for the freshly played week
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report

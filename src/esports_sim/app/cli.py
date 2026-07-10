@@ -16,7 +16,7 @@ from rich.panel import Panel
 from rich.rule import Rule
 from rich.table import Table
 
-from esports_sim.manager import advance_week, career, new_campaign
+from esports_sim.manager import advance_week, career, new_campaign, telemetry
 from esports_sim.manager.market import (
     ROSTER_MIN,
     asking_salary,
@@ -241,6 +241,10 @@ def roster_screen(gs: GameState) -> None:
             confirm = ask(f"Renew {p.handle} at ~{est:,}/wk for 48w? (y/n) ")
             if confirm == "y":
                 ok, msg = renew_contract(gs, tid, p.id)
+                if ok:
+                    telemetry.record_action(
+                        gs, "renew", {"player_id": p.id}, source="cli"
+                    )
                 console.print(f"[{'green' if ok else 'red'}]{msg}[/]")
         elif c.startswith("x") and c[1:].isdigit() and 1 <= int(c[1:]) <= len(roster):
             p = roster[int(c[1:]) - 1]
@@ -249,6 +253,10 @@ def roster_screen(gs: GameState) -> None:
             )
             if confirm == "y":
                 ok, msg = release_player(gs, tid, p.id)
+                if ok:
+                    telemetry.record_action(
+                        gs, "release", {"player_id": p.id}, source="cli"
+                    )
                 console.print(f"[{'green' if ok else 'red'}]{msg}[/]")
         elif c.isdigit() and 1 <= int(c) <= len(roster):
             player_detail(gs, roster[int(c) - 1])
@@ -281,6 +289,11 @@ def training_screen(gs: GameState) -> None:
     c = ask("Focus (or b): ")
     if c.isdigit() and 1 <= int(c) <= len(FOCUS_OPTIONS):
         gs.training_focus[gs.user_team_id] = FOCUS_OPTIONS[int(c) - 1]
+        telemetry.record_action(
+            gs, "set_training",
+            {"focus": FOCUS_OPTIONS[int(c) - 1]},
+            source="cli",
+        )
         console.print(f"[green]Focus set to {FOCUS_OPTIONS[int(c) - 1]}.[/]")
 
 
@@ -319,6 +332,10 @@ def market_screen(gs: GameState) -> None:
             confirm = ask(f"Sign {p.handle} at {asking_salary(p):,}/wk for 40w? (y/n) ")
             if confirm == "y":
                 ok, msg = sign_player(gs, tid, p.id)
+                if ok:
+                    telemetry.record_action(
+                        gs, "sign", {"player_id": p.id}, source="cli"
+                    )
                 console.print(f"[{'green' if ok else 'red'}]{msg}[/]")
         elif c.isdigit() and 1 <= int(c) <= len(fas[:15]):
             player_detail(gs, fas[int(c) - 1])
@@ -478,6 +495,12 @@ def job_market_screen(gs: GameState) -> None:
             if c.isdigit() and 1 <= int(c) <= len(offers):
                 ok, msg = career.accept_offer(gs, mid, offers[int(c) - 1].team_id)
                 if ok:
+                    telemetry.record_action(
+                        gs, "accept_job",
+                        {"seat": mid},
+                        team_id=offers[int(c) - 1].team_id,
+                        source="cli",
+                    )
                     console.print(f"[green]{msg}[/]")
                     break
         save(gs)
@@ -494,6 +517,7 @@ def advance_screen(gs: GameState, gd: GameData) -> None:
         if not ok:
             console.print(f"[red]{why}.[/]")
             return
+    telemetry.record_action(gs, "advance", source="cli")
     report = advance_week(gs, gd)
     render_week_results(gs, report)
     save(gs)
