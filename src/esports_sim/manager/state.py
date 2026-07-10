@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -157,18 +157,45 @@ def _migrate_v5_to_v6(data: dict) -> dict:
     return data
 
 
+def _migrate_v6_to_v7(data: dict) -> dict:
+    """v7 adds only defaulted fields: Player.tenure_weeks (the loyalty
+    clock) plus country/languages (comms cohesion) — both heal lazily on
+    the next tick — the per-manager contract-negotiation stores
+    (negotiations_by / talks_cooldown_by), and the world save policy
+    (autosave_enabled / autosave_every_weeks). A v6 save loads unchanged;
+    the bump exists so an OLDER build refuses a v7 save with the clean
+    "update the game" message instead of an extra="forbid" validation
+    stack trace on unknown keys."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
     3: _migrate_v3_to_v4,
     4: _migrate_v4_to_v5,
     5: _migrate_v5_to_v6,
+    6: _migrate_v6_to_v7,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
-PRIZE_SEMI_LOSER = 60_000
-PRIZE_FINAL_LOSER = 120_000
-PRIZE_CHAMPION = 300_000
+# Tournament prize ladder: every bracket pays, higher places pay more, and
+# each tier of tournament roughly doubles the one below — deep runs are a
+# real economic engine, not just trophies.
+# Regional playoffs (per region, on top of regular-season placement money).
+PRIZE_REGIONAL_CHAMPION = 250_000
+PRIZE_REGIONAL_FINAL_LOSER = 120_000
+PRIZE_REGIONAL_SEMI_LOSER = 60_000
+# Masters (the mid-season international).
+PRIZE_SEMI_LOSER = 120_000
+PRIZE_FINAL_LOSER = 250_000
+PRIZE_CHAMPION = 500_000
+PRIZE_MASTERS_QF_LOSER = 60_000
+# Champions (the world final — the biggest cheque in the game).
+PRIZE_CHAMPIONS_WINNER = 1_000_000
+PRIZE_CHAMPIONS_RUNNER_UP = 450_000
+PRIZE_CHAMPIONS_SF_LOSER = 200_000
+PRIZE_CHAMPIONS_QF_LOSER = 100_000
 
 
 class PlayerLineSnap(BaseModel):
@@ -558,6 +585,25 @@ class RetiredRecord(BaseModel):
     peak_note: str = ""  # e.g. "career 71 CA"
 
 
+class Negotiation(BaseModel):
+    """A live contract negotiation between the acting manager and one player
+    (a renewal on their own roster, or a free-agent signing). NHL-style:
+    the player opens with DEMANDS, each counter-offer moves them a little,
+    patience runs out after a few rounds — and an insulting offer collapses
+    the talks entirely (cooldown before they'll sit down again).
+
+    Deterministic: demands and concessions are pure functions of GameState
+    (traits, form, loyalty, stable hashes) — no rng at the table."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    player_id: str
+    kind: str  # "renew" | "sign"
+    rounds: int = 0  # offers already rejected
+    demand_salary: int = 0  # their CURRENT ask (concedes as rounds go)
+    demand_weeks: int = 0
+
+
 class TransferOffer(BaseModel):
     """A bid for one of the seller's contracted players (`player_id`, owned by
     `from_team`) from `to_team`. Sits on the table for a bounded number of weeks,
@@ -787,6 +833,19 @@ class GameState(BaseModel):
     scout_targets: dict[str, str | None] = Field(default_factory=dict)
     scout_progress_by: dict[str, dict[str, float]] = Field(default_factory=dict)
 
+    # Contract negotiations, per human manager: live tables (player id ->
+    # Negotiation) and post-collapse cooldowns (player id -> absolute week
+    # when they'll talk to THIS manager again). Reached via `negotiations`
+    # / `talks_cooldown`.
+    negotiations_by: dict[str, dict[str, Negotiation]] = Field(default_factory=dict)
+    talks_cooldown_by: dict[str, dict[str, int]] = Field(default_factory=dict)
+
+    # Save policy, per WORLD (one save file per world): with autosave on,
+    # the world persists after every Nth week tick; off, only the explicit
+    # Save button writes. Sim-inert config — it never influences a draw.
+    autosave_enabled: bool = True
+    autosave_every_weeks: int = Field(default=1, ge=1, le=8)
+
     # Talk module: one 1:1 per week, per manager. Holds "s{season}w{week}".
     talked_weeks: dict[str, str] = Field(default_factory=dict)
 
@@ -889,6 +948,14 @@ class GameState(BaseModel):
     @scout_progress.setter
     def scout_progress(self, value: dict[str, float]) -> None:
         self.scout_progress_by[self.acting_team_id] = value
+
+    @property
+    def negotiations(self) -> dict[str, "Negotiation"]:
+        return self.negotiations_by.setdefault(self.acting_team_id, {})
+
+    @property
+    def talks_cooldown(self) -> dict[str, int]:
+        return self.talks_cooldown_by.setdefault(self.acting_team_id, {})
 
     @property
     def talked_week(self) -> str:

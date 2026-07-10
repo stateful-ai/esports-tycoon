@@ -13,6 +13,12 @@ players:
   handle: Buld
   real_name: Michal Sokal
   region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 22
   role: initiator
   playstyle: igl
@@ -32,30 +38,57 @@ players:
     mastery: 73.9
   - agent_id: skye
     mastery: 73.7
+  - agent_id: breach
+    mastery: 47.6
+  - agent_id: chamber
+    mastery: 30.8
+  - agent_id: clove
+    mastery: 7.5
+  - agent_id: cypher
+    mastery: 3.4
+  - agent_id: jett
+    mastery: 23.9
+  - agent_id: killjoy
+    mastery: 48.6
+  - agent_id: omen
+    mastery: 48.6
+  - agent_id: phoenix
+    mastery: 38.3
+  - agent_id: raze
+    mastery: 47.8
+  - agent_id: reyna
+    mastery: 30.5
+  - agent_id: viper
+    mastery: 36.8
   map_pool:
   - map_id: ascent
-    mastery: 62.9
+    mastery: 63.5
   - map_id: bind
-    mastery: 71.6
+    mastery: 69.4
   - map_id: haven
-    mastery: 57.6
+    mastery: 63.7
   - map_id: lotus
-    mastery: 65.6
+    mastery: 71.0
   - map_id: split
-    mastery: 73.1
+    mastery: 68.4
   salary: 3900
-  contract_weeks_left: 51
-  morale: 69.8
-  stamina: 81.9
-  form: 52.0
+  contract_weeks_left: 75
+  morale: 68.8
+  stamina: 81.1
+  form: 50.3
   personality_tags:
-  - clutch_gene
-  - grinder
-  potential: 64.0
+  - independent
+  potential: 64.9
 - id: team_ucam_esports_club_b1sk
   handle: B1SK
   real_name: Vitaliy Emelyanov
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 58.0
   age: 20
   role: duelist
   playstyle: entry
@@ -75,29 +108,57 @@ players:
     mastery: 76.5
   - agent_id: raze
     mastery: 68.9
+  - agent_id: phoenix
+    mastery: 46.9
+  - agent_id: reyna
+    mastery: 43.8
+  - agent_id: breach
+    mastery: 33.3
+  - agent_id: chamber
+    mastery: 39.8
+  - agent_id: clove
+    mastery: 33.2
+  - agent_id: cypher
+    mastery: 41.4
+  - agent_id: killjoy
+    mastery: 29.4
+  - agent_id: omen
+    mastery: 49.2
+  - agent_id: skye
+    mastery: 38.8
+  - agent_id: sova
+    mastery: 37.3
+  - agent_id: viper
+    mastery: 7.1
   map_pool:
   - map_id: ascent
-    mastery: 61.3
+    mastery: 54.1
   - map_id: bind
-    mastery: 56.7
+    mastery: 66.4
   - map_id: haven
-    mastery: 68.8
+    mastery: 64.4
   - map_id: lotus
-    mastery: 60.3
+    mastery: 69.7
   - map_id: split
-    mastery: 63.4
+    mastery: 71.0
   salary: 4000
-  contract_weeks_left: 63
-  morale: 81.1
-  stamina: 86.9
-  form: 57.0
+  contract_weeks_left: 74
+  morale: 72.8
+  stamina: 82.3
+  form: 53.3
   personality_tags:
   - perfectionist
-  potential: 64.8
+  potential: 72.8
 - id: team_ucam_esports_club_famsii
   handle: Famsii
   real_name: Ramses Valentino Erasmus Koivukangas
   region: emea
+  country: FI
+  languages:
+  - lang: fi
+    level: 96.0
+  - lang: en
+    level: 82.0
   age: 21
   role: controller
   playstyle: support
@@ -117,30 +178,60 @@ players:
     mastery: 64.4
   - agent_id: viper
     mastery: 58.2
+  - agent_id: clove
+    mastery: 46.6
+  - agent_id: breach
+    mastery: 36.6
+  - agent_id: chamber
+    mastery: 40.8
+  - agent_id: cypher
+    mastery: 36.5
+  - agent_id: jett
+    mastery: 2.1
+  - agent_id: killjoy
+    mastery: 37.2
+  - agent_id: phoenix
+    mastery: 31.3
+  - agent_id: raze
+    mastery: 31.3
+  - agent_id: reyna
+    mastery: 35.4
+  - agent_id: skye
+    mastery: 34.5
+  - agent_id: sova
+    mastery: 22.7
   map_pool:
   - map_id: ascent
-    mastery: 62.4
+    mastery: 67.9
   - map_id: bind
-    mastery: 63.4
+    mastery: 54.4
   - map_id: haven
-    mastery: 65.0
+    mastery: 56.3
   - map_id: lotus
-    mastery: 56.5
+    mastery: 55.6
   - map_id: split
-    mastery: 70.0
+    mastery: 63.4
   salary: 3700
-  contract_weeks_left: 71
-  morale: 61.5
-  stamina: 85.3
-  form: 48.3
+  contract_weeks_left: 37
+  morale: 69.8
+  stamina: 87.9
+  form: 48.0
   personality_tags:
-  - clutch_gene
-  - flashy
-  potential: 66.8
+  - fan_favorite
+  - slow_starter
+  potential: 62.4
 - id: team_ucam_esports_club_olizera
   handle: OLIZERA
   real_name: Diogo Oliveira
   region: emea
+  country: PT
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 70.0
+  - lang: es
+    level: 45.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -160,30 +251,58 @@ players:
     mastery: 68.7
   - agent_id: killjoy
     mastery: 67.5
+  - agent_id: chamber
+    mastery: 44.8
+  - agent_id: breach
+    mastery: 36.6
+  - agent_id: clove
+    mastery: 37.1
+  - agent_id: jett
+    mastery: 29.6
+  - agent_id: omen
+    mastery: 39.9
+  - agent_id: phoenix
+    mastery: 31.0
+  - agent_id: raze
+    mastery: 35.6
+  - agent_id: reyna
+    mastery: 32.9
+  - agent_id: skye
+    mastery: 33.5
+  - agent_id: sova
+    mastery: 39.5
+  - agent_id: viper
+    mastery: 42.6
   map_pool:
   - map_id: ascent
-    mastery: 59.2
+    mastery: 55.8
   - map_id: bind
-    mastery: 61.3
+    mastery: 63.7
   - map_id: haven
-    mastery: 64.7
+    mastery: 65.6
   - map_id: lotus
-    mastery: 64.7
+    mastery: 64.4
   - map_id: split
-    mastery: 65.3
+    mastery: 67.6
   salary: 3800
-  contract_weeks_left: 73
-  morale: 73.0
-  stamina: 87.1
-  form: 58.2
+  contract_weeks_left: 64
+  morale: 82.4
+  stamina: 88.3
+  form: 58.4
   personality_tags:
-  - flashy
-  - hot_head
-  potential: 62.2
+  - analytical
+  - team_player
+  potential: 64.2
 - id: team_ucam_esports_club_jesse
   handle: Jesse
   real_name: Adam Ctvrtnicek
   region: emea
+  country: CZ
+  languages:
+  - lang: cs
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 21
   role: flex
   playstyle: support
@@ -203,23 +322,44 @@ players:
     mastery: 68.6
   - agent_id: breach
     mastery: 64.7
+  - agent_id: chamber
+    mastery: 36.1
+  - agent_id: clove
+    mastery: 33.9
+  - agent_id: cypher
+    mastery: 44.2
+  - agent_id: jett
+    mastery: 44.4
+  - agent_id: killjoy
+    mastery: 29.1
+  - agent_id: omen
+    mastery: 41.0
+  - agent_id: phoenix
+    mastery: 35.2
+  - agent_id: raze
+    mastery: 34.2
+  - agent_id: reyna
+    mastery: 46.3
+  - agent_id: skye
+    mastery: 42.1
+  - agent_id: sova
+    mastery: 33.0
   map_pool:
   - map_id: ascent
-    mastery: 62.5
+    mastery: 66.5
   - map_id: bind
-    mastery: 64.2
+    mastery: 60.7
   - map_id: haven
-    mastery: 66.4
+    mastery: 68.6
   - map_id: lotus
-    mastery: 61.5
+    mastery: 53.0
   - map_id: split
-    mastery: 56.3
+    mastery: 62.4
   salary: 3800
-  contract_weeks_left: 34
-  morale: 78.4
-  stamina: 83.7
-  form: 57.6
+  contract_weeks_left: 55
+  morale: 78.7
+  stamina: 99.5
+  form: 50.2
   personality_tags:
-  - clutch_gene
-  - fan_favorite
-  potential: 70.3
+  - team_player
+  potential: 68.7

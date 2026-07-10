@@ -13,6 +13,12 @@ players:
   handle: MaKo
   real_name: Kim Myeong-kwan
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 98.0
+  - lang: en
+    level: 30.0
   age: 25
   role: controller
   playstyle: support
@@ -32,30 +38,58 @@ players:
     mastery: 83.3
   - agent_id: viper
     mastery: 84.7
+  - agent_id: clove
+    mastery: 70.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 57.4
+  - agent_id: cypher
+    mastery: 55.3
+  - agent_id: jett
+    mastery: 55.4
+  - agent_id: killjoy
+    mastery: 53.6
+  - agent_id: phoenix
+    mastery: 55.6
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 54.6
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 85.9
+    mastery: 85.5
   - map_id: bind
-    mastery: 89.1
+    mastery: 83.6
   - map_id: haven
-    mastery: 95.8
+    mastery: 84.4
   - map_id: lotus
-    mastery: 92.0
+    mastery: 82.8
   - map_id: split
-    mastery: 85.2
+    mastery: 78.0
   salary: 6400
-  contract_weeks_left: 45
-  morale: 71.6
-  stamina: 90.7
-  form: 48.7
+  contract_weeks_left: 59
+  morale: 74.9
+  stamina: 93.0
+  form: 53.4
   personality_tags:
-  - fan_favorite
+  - clutch_gene
   - slow_starter
-  potential: 83.1
+  potential: 80.6
 - id: team_kiwoom_drx_hyunmin
   handle: HYUNMIN
   real_name: Song Hyun-min
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 19
   role: duelist
   playstyle: entry
@@ -75,30 +109,58 @@ players:
     mastery: 89.3
   - agent_id: raze
     mastery: 84.5
+  - agent_id: phoenix
+    mastery: 66.2
+  - agent_id: reyna
+    mastery: 67.3
+  - agent_id: breach
+    mastery: 54.2
+  - agent_id: chamber
+    mastery: 50.6
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 48.5
+  - agent_id: killjoy
+    mastery: 53.0
+  - agent_id: omen
+    mastery: 58.7
+  - agent_id: skye
+    mastery: 48.9
+  - agent_id: sova
+    mastery: 1.5
+  - agent_id: viper
+    mastery: 7.0
   map_pool:
   - map_id: ascent
-    mastery: 83.3
+    mastery: 75.6
   - map_id: bind
-    mastery: 85.0
+    mastery: 67.7
   - map_id: haven
-    mastery: 75.7
+    mastery: 78.5
   - map_id: lotus
-    mastery: 82.7
+    mastery: 77.1
   - map_id: split
-    mastery: 82.3
+    mastery: 90.4
   salary: 5600
-  contract_weeks_left: 73
-  morale: 72.4
-  stamina: 92.3
-  form: 55.5
+  contract_weeks_left: 48
+  morale: 76.7
+  stamina: 87.1
+  form: 49.8
   personality_tags:
-  - analytical
-  - hot_head
-  potential: 93.1
+  - flashy
+  - independent
+  potential: 82.7
 - id: team_kiwoom_drx_beyn
   handle: BeYN
   real_name: Kang Ha-bin
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 22
   role: initiator
   playstyle: igl
@@ -118,29 +180,58 @@ players:
     mastery: 86.9
   - agent_id: breach
     mastery: 85.7
+  - agent_id: sova
+    mastery: 63.4
+  - agent_id: chamber
+    mastery: 45.8
+  - agent_id: clove
+    mastery: 47.0
+  - agent_id: cypher
+    mastery: 50.3
+  - agent_id: jett
+    mastery: 42.6
+  - agent_id: killjoy
+    mastery: 52.5
+  - agent_id: omen
+    mastery: 48.7
+  - agent_id: phoenix
+    mastery: 49.8
+  - agent_id: raze
+    mastery: 59.6
+  - agent_id: reyna
+    mastery: 57.5
+  - agent_id: viper
+    mastery: 0.3
   map_pool:
   - map_id: ascent
-    mastery: 81.0
+    mastery: 70.8
   - map_id: bind
-    mastery: 71.6
+    mastery: 71.0
   - map_id: haven
-    mastery: 73.4
+    mastery: 75.0
   - map_id: lotus
-    mastery: 77.3
+    mastery: 82.3
   - map_id: split
-    mastery: 74.8
+    mastery: 84.8
   salary: 5100
-  contract_weeks_left: 70
-  morale: 83.3
-  stamina: 86.6
-  form: 56.2
+  contract_weeks_left: 53
+  morale: 81.1
+  stamina: 88.9
+  form: 46.3
   personality_tags:
   - quiet
-  potential: 81.0
+  - team_player
+  potential: 76.5
 - id: team_kiwoom_drx_free1ng
   handle: free1ng
   real_name: No Ha-jun
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 19
   role: flex
   playstyle: entry
@@ -160,29 +251,58 @@ players:
     mastery: 81.9
   - agent_id: sova
     mastery: 75.1
+  - agent_id: breach
+    mastery: 47.7
+  - agent_id: chamber
+    mastery: 42.6
+  - agent_id: clove
+    mastery: 51.1
+  - agent_id: cypher
+    mastery: 49.3
+  - agent_id: killjoy
+    mastery: 47.9
+  - agent_id: omen
+    mastery: 47.6
+  - agent_id: phoenix
+    mastery: 48.1
+  - agent_id: raze
+    mastery: 48.8
+  - agent_id: reyna
+    mastery: 41.3
+  - agent_id: skye
+    mastery: 50.6
+  - agent_id: viper
+    mastery: 45.5
   map_pool:
   - map_id: ascent
-    mastery: 63.3
+    mastery: 75.4
   - map_id: bind
-    mastery: 76.1
+    mastery: 74.1
   - map_id: haven
-    mastery: 81.5
+    mastery: 74.2
   - map_id: lotus
-    mastery: 70.0
+    mastery: 71.2
   - map_id: split
-    mastery: 70.1
+    mastery: 71.1
   salary: 4900
-  contract_weeks_left: 35
-  morale: 70.2
-  stamina: 94.2
-  form: 51.0
+  contract_weeks_left: 60
+  morale: 76.2
+  stamina: 86.4
+  form: 46.0
   personality_tags:
-  - quiet
-  potential: 84.5
+  - clutch_gene
+  - hot_head
+  potential: 80.0
 - id: team_kiwoom_drx_yong
   handle: Yong
   real_name: Kim Ho-yong
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 20
   role: sentinel
   playstyle: awper
@@ -202,23 +322,45 @@ players:
     mastery: 76.9
   - agent_id: cypher
     mastery: 71.4
+  - agent_id: killjoy
+    mastery: 52.8
+  - agent_id: breach
+    mastery: 44.5
+  - agent_id: clove
+    mastery: 39.7
+  - agent_id: jett
+    mastery: 49.2
+  - agent_id: omen
+    mastery: 47.5
+  - agent_id: phoenix
+    mastery: 43.9
+  - agent_id: raze
+    mastery: 38.1
+  - agent_id: reyna
+    mastery: 44.1
+  - agent_id: skye
+    mastery: 36.2
+  - agent_id: sova
+    mastery: 45.2
+  - agent_id: viper
+    mastery: 42.5
   map_pool:
   - map_id: ascent
-    mastery: 66.2
+    mastery: 84.6
   - map_id: bind
-    mastery: 64.1
+    mastery: 64.8
   - map_id: haven
-    mastery: 72.2
-  - map_id: lotus
     mastery: 75.3
+  - map_id: lotus
+    mastery: 82.1
   - map_id: split
-    mastery: 66.4
+    mastery: 77.3
   salary: 4900
-  contract_weeks_left: 76
-  morale: 75.6
-  stamina: 85.3
-  form: 56.8
+  contract_weeks_left: 62
+  morale: 73.6
+  stamina: 81.1
+  form: 45.6
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 74.5
+  - quiet
+  - streamer
+  potential: 80.8

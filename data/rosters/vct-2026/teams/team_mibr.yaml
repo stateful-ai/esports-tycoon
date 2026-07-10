@@ -13,6 +13,10 @@ players:
   handle: Verno
   real_name: Andrew Maust
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: initiator
   playstyle: igl
@@ -32,30 +36,55 @@ players:
     mastery: 79.2
   - agent_id: skye
     mastery: 78.1
+  - agent_id: breach
+    mastery: 63.9
+  - agent_id: chamber
+    mastery: 50.5
+  - agent_id: clove
+    mastery: 57.4
+  - agent_id: cypher
+    mastery: 57.2
+  - agent_id: jett
+    mastery: 51.2
+  - agent_id: killjoy
+    mastery: 55.3
+  - agent_id: omen
+    mastery: 56.1
+  - agent_id: phoenix
+    mastery: 56.7
+  - agent_id: raze
+    mastery: 55.3
+  - agent_id: reyna
+    mastery: 50.2
+  - agent_id: viper
+    mastery: 53.7
   map_pool:
   - map_id: ascent
-    mastery: 80.3
+    mastery: 83.6
   - map_id: bind
-    mastery: 86.6
+    mastery: 78.9
   - map_id: haven
-    mastery: 78.3
+    mastery: 82.2
   - map_id: lotus
-    mastery: 64.6
+    mastery: 84.5
   - map_id: split
-    mastery: 86.6
+    mastery: 79.9
   salary: 5500
-  contract_weeks_left: 56
-  morale: 71.3
-  stamina: 87.6
-  form: 47.4
+  contract_weeks_left: 63
+  morale: 62.5
+  stamina: 87.1
+  form: 45.3
   personality_tags:
-  - flashy
-  - grinder
-  potential: 81.9
+  - perfectionist
+  potential: 81.8
 - id: team_mibr_zekken
   handle: zekken
   real_name: Zachary Patrone
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   role: duelist
   playstyle: entry
@@ -77,30 +106,56 @@ players:
     mastery: 93.7
   - agent_id: sova
     mastery: 85.7
+  - agent_id: raze
+    mastery: 75.6
+  - agent_id: reyna
+    mastery: 68.3
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 58.1
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 92.9
+    mastery: 91.7
   - map_id: bind
-    mastery: 82.0
+    mastery: 91.3
   - map_id: haven
-    mastery: 89.2
+    mastery: 98.3
   - map_id: lotus
-    mastery: 94.8
+    mastery: 76.7
   - map_id: split
-    mastery: 82.3
+    mastery: 99.0
   salary: 6800
-  contract_weeks_left: 79
-  morale: 72.7
-  stamina: 89.7
-  form: 49.2
+  contract_weeks_left: 46
+  morale: 62.2
+  stamina: 95.8
+  form: 52.9
   personality_tags:
   - quiet
-  - slow_starter
-  potential: 90.3
+  - streamer
+  potential: 87.5
 - id: team_mibr_aspas
   handle: aspas
   real_name: Erick Santos
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 23
   role: duelist
   playstyle: entry
@@ -120,30 +175,55 @@ players:
     mastery: 95.4
   - agent_id: raze
     mastery: 93.7
+  - agent_id: phoenix
+    mastery: 69.9
+  - agent_id: reyna
+    mastery: 78.5
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 55.9
+  - agent_id: clove
+    mastery: 58.3
+  - agent_id: cypher
+    mastery: 59.2
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 83.4
+    mastery: 97.8
   - map_id: bind
-    mastery: 96.3
+    mastery: 97.2
   - map_id: haven
-    mastery: 77.1
+    mastery: 98.1
   - map_id: lotus
-    mastery: 95.7
+    mastery: 99.0
   - map_id: split
-    mastery: 92.8
+    mastery: 99.0
   salary: 7100
-  contract_weeks_left: 54
-  morale: 77.8
-  stamina: 98.1
-  form: 57.1
+  contract_weeks_left: 68
+  morale: 70.7
+  stamina: 91.5
+  form: 49.3
   personality_tags:
-  - perfectionist
-  - team_player
-  potential: 88.8
+  - analytical
+  potential: 85.4
 - id: team_mibr_tex
   handle: tex
   real_name: Ian Botsch
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 26
   role: sentinel
   playstyle: anchor
@@ -165,29 +245,58 @@ players:
     mastery: 74.7
   - agent_id: chamber
     mastery: 71.5
+  - agent_id: cypher
+    mastery: 61.5
+  - agent_id: breach
+    mastery: 48.5
+  - agent_id: clove
+    mastery: 43.9
+  - agent_id: jett
+    mastery: 52.7
+  - agent_id: phoenix
+    mastery: 48.9
+  - agent_id: raze
+    mastery: 50.6
+  - agent_id: reyna
+    mastery: 47.2
+  - agent_id: skye
+    mastery: 43.6
+  - agent_id: sova
+    mastery: 53.0
+  - agent_id: viper
+    mastery: 54.6
   map_pool:
   - map_id: ascent
-    mastery: 78.3
+    mastery: 76.9
   - map_id: bind
-    mastery: 83.0
+    mastery: 70.4
   - map_id: haven
-    mastery: 76.6
+    mastery: 79.6
   - map_id: lotus
-    mastery: 69.8
+    mastery: 81.3
   - map_id: split
-    mastery: 71.0
+    mastery: 62.7
   salary: 5100
-  contract_weeks_left: 40
-  morale: 63.5
-  stamina: 99.5
-  form: 46.4
+  contract_weeks_left: 77
+  morale: 60.7
+  stamina: 85.4
+  form: 45.8
   personality_tags:
-  - flashy
-  potential: 72.1
+  - independent
+  - team_player
+  potential: 71.5
 - id: team_mibr_mazino
   handle: Mazino
   real_name: Roberto Rivas
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: en
+    level: 65.0
+  - lang: pt
+    level: 35.0
   age: 25
   role: controller
   playstyle: support
@@ -207,23 +316,45 @@ players:
     mastery: 96.8
   - agent_id: viper
     mastery: 80.3
+  - agent_id: clove
+    mastery: 70.6
+  - agent_id: breach
+    mastery: 54.2
+  - agent_id: chamber
+    mastery: 45.8
+  - agent_id: cypher
+    mastery: 59.7
+  - agent_id: jett
+    mastery: 47.1
+  - agent_id: killjoy
+    mastery: 55.3
+  - agent_id: phoenix
+    mastery: 46.2
+  - agent_id: raze
+    mastery: 56.3
+  - agent_id: reyna
+    mastery: 59.7
+  - agent_id: skye
+    mastery: 59.8
+  - agent_id: sova
+    mastery: 56.9
   map_pool:
   - map_id: ascent
-    mastery: 90.3
+    mastery: 80.3
   - map_id: bind
-    mastery: 83.7
+    mastery: 89.9
   - map_id: haven
-    mastery: 82.9
+    mastery: 76.9
   - map_id: lotus
-    mastery: 73.1
+    mastery: 78.4
   - map_id: split
-    mastery: 72.8
+    mastery: 83.5
   salary: 5500
-  contract_weeks_left: 53
-  morale: 70.9
-  stamina: 93.9
-  form: 49.5
+  contract_weeks_left: 76
+  morale: 82.3
+  stamina: 99.9
+  form: 54.8
   personality_tags:
-  - independent
-  - quiet
-  potential: 74.2
+  - analytical
+  - flashy
+  potential: 72.9

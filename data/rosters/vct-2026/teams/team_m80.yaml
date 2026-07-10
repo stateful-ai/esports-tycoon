@@ -13,6 +13,12 @@ players:
   handle: NiSMO
   real_name: Marc-Andre Tayar
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 90.0
+  - lang: fr
+    level: 55.0
   age: 24
   role: duelist
   playstyle: igl
@@ -32,30 +38,55 @@ players:
     mastery: 71.5
   - agent_id: raze
     mastery: 71.7
+  - agent_id: phoenix
+    mastery: 63.0
+  - agent_id: reyna
+    mastery: 57.9
+  - agent_id: breach
+    mastery: 47.7
+  - agent_id: chamber
+    mastery: 37.7
+  - agent_id: clove
+    mastery: 39.3
+  - agent_id: cypher
+    mastery: 45.1
+  - agent_id: killjoy
+    mastery: 42.4
+  - agent_id: omen
+    mastery: 6.6
+  - agent_id: skye
+    mastery: 40.0
+  - agent_id: sova
+    mastery: 40.6
+  - agent_id: viper
+    mastery: 33.3
   map_pool:
   - map_id: ascent
-    mastery: 82.5
+    mastery: 64.1
   - map_id: bind
     mastery: 74.8
   - map_id: haven
-    mastery: 67.3
+    mastery: 76.2
   - map_id: lotus
-    mastery: 76.4
+    mastery: 81.7
   - map_id: split
-    mastery: 66.0
+    mastery: 73.8
   salary: 4700
-  contract_weeks_left: 74
-  morale: 74.4
-  stamina: 85.0
-  form: 47.1
+  contract_weeks_left: 77
+  morale: 63.5
+  stamina: 86.5
+  form: 53.0
   personality_tags:
-  - fan_favorite
-  - streamer
-  potential: 68.0
+  - clutch_gene
+  potential: 69.2
 - id: team_m80_kyu
   handle: Kyu
   real_name: Mirel Braco Hrustemovic
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 98.0
   age: 21
   role: initiator
   playstyle: support
@@ -75,30 +106,60 @@ players:
     mastery: 71.7
   - agent_id: skye
     mastery: 77.4
+  - agent_id: breach
+    mastery: 55.3
+  - agent_id: chamber
+    mastery: 38.4
+  - agent_id: clove
+    mastery: 40.0
+  - agent_id: cypher
+    mastery: 38.0
+  - agent_id: jett
+    mastery: 29.3
+  - agent_id: killjoy
+    mastery: 0.1
+  - agent_id: omen
+    mastery: 42.7
+  - agent_id: phoenix
+    mastery: 33.9
+  - agent_id: raze
+    mastery: 46.7
+  - agent_id: reyna
+    mastery: 36.4
+  - agent_id: viper
+    mastery: 41.4
   map_pool:
   - map_id: ascent
-    mastery: 72.4
+    mastery: 59.9
   - map_id: bind
-    mastery: 75.7
+    mastery: 69.4
   - map_id: haven
-    mastery: 65.9
+    mastery: 77.5
   - map_id: lotus
-    mastery: 69.3
+    mastery: 63.1
   - map_id: split
-    mastery: 67.8
+    mastery: 77.5
   salary: 4300
-  contract_weeks_left: 77
-  morale: 83.6
-  stamina: 89.6
-  form: 45.7
+  contract_weeks_left: 44
+  morale: 80.1
+  stamina: 84.2
+  form: 57.1
   personality_tags:
-  - analytical
-  - independent
-  potential: 70.3
+  - streamer
+  - team_player
+  potential: 73.3
 - id: team_m80_spaz
   handle: spaz
   real_name: Adam Laamoumi
   region: americas
+  country: MA
+  languages:
+  - lang: ar
+    level: 95.0
+  - lang: fr
+    level: 80.0
+  - lang: en
+    level: 65.0
   age: 21
   role: flex
   playstyle: support
@@ -118,30 +179,56 @@ players:
     mastery: 75.3
   - agent_id: killjoy
     mastery: 71.4
+  - agent_id: breach
+    mastery: 45.1
+  - agent_id: chamber
+    mastery: 46.0
+  - agent_id: clove
+    mastery: 35.6
+  - agent_id: cypher
+    mastery: 42.0
+  - agent_id: jett
+    mastery: 37.6
+  - agent_id: phoenix
+    mastery: 46.4
+  - agent_id: raze
+    mastery: 2.1
+  - agent_id: reyna
+    mastery: 40.9
+  - agent_id: skye
+    mastery: 45.7
+  - agent_id: sova
+    mastery: 4.0
+  - agent_id: viper
+    mastery: 51.5
   map_pool:
   - map_id: ascent
-    mastery: 72.9
+    mastery: 69.4
   - map_id: bind
-    mastery: 74.0
+    mastery: 70.3
   - map_id: haven
-    mastery: 78.1
+    mastery: 61.2
   - map_id: lotus
-    mastery: 75.0
+    mastery: 59.5
   - map_id: split
-    mastery: 90.6
+    mastery: 61.1
   salary: 4300
-  contract_weeks_left: 66
-  morale: 60.7
-  stamina: 84.5
-  form: 59.0
-  personality_tags:
-  - quiet
-  - streamer
-  potential: 76.0
+  contract_weeks_left: 69
+  morale: 70.9
+  stamina: 84.0
+  form: 51.8
+  personality_tags: []
+  potential: 75.8
 - id: team_m80_boni
   handle: Boni
   real_name: Mark Bonifacio
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 98.0
+  - lang: tl
+    level: 25.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -161,29 +248,57 @@ players:
     mastery: 78.1
   - agent_id: cypher
     mastery: 68.1
+  - agent_id: chamber
+    mastery: 59.0
+  - agent_id: breach
+    mastery: 37.8
+  - agent_id: clove
+    mastery: 44.0
+  - agent_id: jett
+    mastery: 44.1
+  - agent_id: omen
+    mastery: 49.0
+  - agent_id: phoenix
+    mastery: 46.8
+  - agent_id: raze
+    mastery: 32.9
+  - agent_id: reyna
+    mastery: 6.2
+  - agent_id: skye
+    mastery: 41.5
+  - agent_id: sova
+    mastery: 27.6
+  - agent_id: viper
+    mastery: 48.1
   map_pool:
   - map_id: ascent
-    mastery: 77.5
+    mastery: 72.8
   - map_id: bind
-    mastery: 71.1
+    mastery: 52.8
   - map_id: haven
-    mastery: 65.0
+    mastery: 70.7
   - map_id: lotus
-    mastery: 81.8
+    mastery: 73.1
   - map_id: split
-    mastery: 72.4
+    mastery: 62.3
   salary: 4400
-  contract_weeks_left: 37
-  morale: 73.1
-  stamina: 99.7
-  form: 54.0
+  contract_weeks_left: 52
+  morale: 82.3
+  stamina: 81.6
+  form: 59.4
   personality_tags:
-  - slow_starter
-  potential: 70.9
+  - perfectionist
+  potential: 73.8
 - id: team_m80_alvinboy
   handle: alvinboy
   real_name: Alvin Hong
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 98.0
+  - lang: ko
+    level: 25.0
   age: 20
   role: controller
   playstyle: support
@@ -203,22 +318,44 @@ players:
     mastery: 80.2
   - agent_id: viper
     mastery: 74.7
+  - agent_id: clove
+    mastery: 53.7
+  - agent_id: breach
+    mastery: 47.0
+  - agent_id: chamber
+    mastery: 34.6
+  - agent_id: cypher
+    mastery: 41.2
+  - agent_id: jett
+    mastery: 38.8
+  - agent_id: killjoy
+    mastery: 34.2
+  - agent_id: phoenix
+    mastery: 44.0
+  - agent_id: raze
+    mastery: 38.8
+  - agent_id: reyna
+    mastery: 41.5
+  - agent_id: skye
+    mastery: 43.0
+  - agent_id: sova
+    mastery: 44.7
   map_pool:
   - map_id: ascent
-    mastery: 69.6
+    mastery: 76.4
   - map_id: bind
-    mastery: 74.0
+    mastery: 63.5
   - map_id: haven
-    mastery: 76.0
+    mastery: 81.1
   - map_id: lotus
-    mastery: 75.5
+    mastery: 62.4
   - map_id: split
-    mastery: 61.1
+    mastery: 75.8
   salary: 4400
-  contract_weeks_left: 62
-  morale: 61.5
-  stamina: 98.9
-  form: 47.9
+  contract_weeks_left: 42
+  morale: 74.4
+  stamina: 96.7
+  form: 53.4
   personality_tags:
-  - slow_starter
-  potential: 77.6
+  - fan_favorite
+  potential: 78.2

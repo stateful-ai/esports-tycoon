@@ -450,18 +450,33 @@ def test_offseason_patch_is_usage_driven_and_state_resets(game_data) -> None:
 
 def test_heater_growth_can_fire_milestones(campaign) -> None:
     """A heater's follower bump lands BEFORE the milestone check, so a
-    boundary it crosses still produces the milestone post + confidence."""
+    boundary it crosses still produces the milestone post + confidence.
+    Only landmarks >= MILESTONE_POST_FLOOR post (smaller crossings just
+    nudge confidence — the feed stays out of "thanks for 25K" territory)."""
     gs = campaign
     p = gs.roster(gs.user_team_id)[0]
-    p.followers = 9_990  # ambient drift + heater growth crosses 10K
+    p.followers = 99_990  # ambient drift + heater growth crosses 100K
+    conf_before = p.confidence
     report = WeekReport(season=gs.season, week=gs.week, phase="regular")
     mental = [{"team_id": gs.user_team_id, "player_id": p.id,
                "kind": "heater", "headline": "x"}]
     social.weekly_tick(gs, report, [], RngTree(3).derive("s"), mental_events=mental)
-    assert p.followers >= 10_000
+    assert p.followers >= 100_000
     assert any(
         po.kind == "milestone" and po.author_id == p.id for po in gs.social_feed
-    ), "the 10K milestone post fired on heater-driven growth"
+    ), "the 100K milestone post fired on heater-driven growth"
+
+    # A small landmark still boosts confidence but does NOT post.
+    q = gs.roster(gs.user_team_id)[1]
+    q.followers = 9_990
+    conf_before = q.confidence
+    report2 = WeekReport(season=gs.season, week=gs.week + 1, phase="regular")
+    social.weekly_tick(gs, report2, [], RngTree(4).derive("s"))
+    assert q.followers >= 10_000
+    assert q.confidence > conf_before, "small landmark still nudges belief"
+    assert not any(
+        po.kind == "milestone" and po.author_id == q.id for po in gs.social_feed
+    ), "sub-100K landmarks stay off the feed"
 
 
 # ---------------------------------------------------------------------------

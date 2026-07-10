@@ -12,6 +12,7 @@ import math
 from esports_sim.manager.state import (
     PRIZE_CHAMPION,
     PRIZE_FINAL_LOSER,
+    PRIZE_MASTERS_QF_LOSER,
     PRIZE_SEMI_LOSER,
     REGULAR_PRIZES,
     GameState,
@@ -306,11 +307,16 @@ def pay_regular_season_prizes(gs: GameState) -> None:
 
 
 def pay_playoff_prizes(gs: GameState, champion_id: str, runner_up_id: str,
-                       semi_losers: list[str]) -> None:
+                       semi_losers: list[str],
+                       qf_losers: list[str] | None = None) -> None:
+    """Masters money: the full bracket pays, top-heavy (see the prize
+    ladder in state.py)."""
     gs.teams[champion_id].balance += PRIZE_CHAMPION
     gs.teams[runner_up_id].balance += PRIZE_FINAL_LOSER
     for tid in semi_losers:
         gs.teams[tid].balance += PRIZE_SEMI_LOSER
+    for tid in qf_losers or []:
+        gs.teams[tid].balance += PRIZE_MASTERS_QF_LOSER
     champ = gs.teams[champion_id]
     champ.reputation = min(100.0, champ.reputation + 6.0)
     champ.fan_count = int(champ.fan_count * 1.15)

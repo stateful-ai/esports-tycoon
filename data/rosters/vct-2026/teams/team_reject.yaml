@@ -13,6 +13,14 @@ players:
   handle: Yoshiii
   real_name: John Yoshiharu Kawakami
   region: pacific
+  country: PH
+  languages:
+  - lang: tl
+    level: 95.0
+  - lang: en
+    level: 80.0
+  - lang: ja
+    level: 45.0
   age: 23
   role: duelist
   playstyle: entry
@@ -32,30 +40,58 @@ players:
     mastery: 79.6
   - agent_id: raze
     mastery: 67.6
+  - agent_id: phoenix
+    mastery: 60.7
+  - agent_id: reyna
+    mastery: 51.0
+  - agent_id: breach
+    mastery: 58.6
+  - agent_id: chamber
+    mastery: 39.0
+  - agent_id: clove
+    mastery: 47.0
+  - agent_id: cypher
+    mastery: 44.4
+  - agent_id: killjoy
+    mastery: 29.5
+  - agent_id: omen
+    mastery: 39.9
+  - agent_id: skye
+    mastery: 41.2
+  - agent_id: sova
+    mastery: 46.6
+  - agent_id: viper
+    mastery: 41.0
   map_pool:
   - map_id: ascent
-    mastery: 80.0
+    mastery: 71.5
   - map_id: bind
-    mastery: 65.5
+    mastery: 66.6
   - map_id: haven
-    mastery: 67.8
+    mastery: 68.8
   - map_id: lotus
-    mastery: 89.9
+    mastery: 70.5
   - map_id: split
-    mastery: 72.4
+    mastery: 65.4
   salary: 4400
-  contract_weeks_left: 37
-  morale: 68.5
-  stamina: 89.8
-  form: 59.9
+  contract_weeks_left: 51
+  morale: 62.8
+  stamina: 97.6
+  form: 47.0
   personality_tags:
-  - independent
-  - slow_starter
-  potential: 63.9
+  - analytical
+  - perfectionist
+  potential: 69.6
 - id: team_reject_dep
   handle: Dep
   real_name: Yuma Hashimoto
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 96.0
+  - lang: en
+    level: 35.0
   age: 24
   role: flex
   playstyle: lurker
@@ -75,30 +111,60 @@ players:
     mastery: 76.5
   - agent_id: chamber
     mastery: 73.4
+  - agent_id: breach
+    mastery: 40.1
+  - agent_id: clove
+    mastery: 51.7
+  - agent_id: cypher
+    mastery: 39.4
+  - agent_id: killjoy
+    mastery: 35.0
+  - agent_id: omen
+    mastery: 47.2
+  - agent_id: phoenix
+    mastery: 41.5
+  - agent_id: raze
+    mastery: 43.4
+  - agent_id: reyna
+    mastery: 37.8
+  - agent_id: skye
+    mastery: 48.5
+  - agent_id: sova
+    mastery: 43.5
+  - agent_id: viper
+    mastery: 40.0
   map_pool:
   - map_id: ascent
-    mastery: 70.7
+    mastery: 67.8
   - map_id: bind
-    mastery: 68.0
+    mastery: 62.5
   - map_id: haven
-    mastery: 73.6
+    mastery: 63.1
   - map_id: lotus
-    mastery: 81.8
+    mastery: 73.6
   - map_id: split
-    mastery: 72.3
+    mastery: 71.0
   salary: 4300
-  contract_weeks_left: 48
-  morale: 71.5
-  stamina: 98.6
-  form: 57.4
+  contract_weeks_left: 60
+  morale: 83.8
+  stamina: 85.3
+  form: 57.2
   personality_tags:
-  - flashy
-  - hot_head
-  potential: 67.0
+  - grinder
+  - team_player
+  potential: 69.3
 - id: team_reject_jremy
   handle: Jremy
   real_name: Jeremy Gagarra Cabrera
   region: pacific
+  country: PH
+  languages:
+  - lang: tl
+    level: 92.0
+  - lang: en
+    level: 80.0
+  - lang: ja
+    level: 30.0
   age: 22
   role: initiator
   playstyle: support
@@ -118,30 +184,59 @@ players:
     mastery: 73.4
   - agent_id: skye
     mastery: 66.2
+  - agent_id: breach
+    mastery: 49.4
+  - agent_id: chamber
+    mastery: 35.8
+  - agent_id: clove
+    mastery: 41.6
+  - agent_id: cypher
+    mastery: 35.7
+  - agent_id: jett
+    mastery: 43.9
+  - agent_id: killjoy
+    mastery: 7.5
+  - agent_id: omen
+    mastery: 40.2
+  - agent_id: phoenix
+    mastery: 39.4
+  - agent_id: raze
+    mastery: 37.5
+  - agent_id: reyna
+    mastery: 36.5
+  - agent_id: viper
+    mastery: 39.7
   map_pool:
   - map_id: ascent
-    mastery: 65.2
+    mastery: 73.2
   - map_id: bind
-    mastery: 66.0
+    mastery: 65.8
   - map_id: haven
-    mastery: 63.4
+    mastery: 73.7
   - map_id: lotus
-    mastery: 60.7
+    mastery: 68.3
   - map_id: split
-    mastery: 70.4
+    mastery: 63.1
   salary: 4000
-  contract_weeks_left: 51
-  morale: 63.4
-  stamina: 84.2
-  form: 45.1
+  contract_weeks_left: 38
+  morale: 64.3
+  stamina: 91.5
+  form: 48.3
   personality_tags:
-  - clutch_gene
-  - independent
-  potential: 71.1
+  - fan_favorite
+  potential: 72.5
 - id: team_reject_persia
   handle: Persia
   real_name: Yang Zi-on
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 55.0
+  - lang: ja
+    level: 15.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -161,30 +256,58 @@ players:
     mastery: 69.4
   - agent_id: cypher
     mastery: 71.8
+  - agent_id: chamber
+    mastery: 49.2
+  - agent_id: breach
+    mastery: 43.1
+  - agent_id: clove
+    mastery: 38.7
+  - agent_id: jett
+    mastery: 37.2
+  - agent_id: omen
+    mastery: 36.8
+  - agent_id: phoenix
+    mastery: 31.4
+  - agent_id: raze
+    mastery: 43.7
+  - agent_id: reyna
+    mastery: 41.4
+  - agent_id: skye
+    mastery: 37.5
+  - agent_id: sova
+    mastery: 30.7
+  - agent_id: viper
+    mastery: 44.2
   map_pool:
   - map_id: ascent
-    mastery: 65.3
+    mastery: 71.8
   - map_id: bind
-    mastery: 72.5
+    mastery: 70.3
   - map_id: haven
-    mastery: 72.3
+    mastery: 67.1
   - map_id: lotus
-    mastery: 70.1
+    mastery: 69.2
   - map_id: split
-    mastery: 67.0
+    mastery: 64.3
   salary: 3900
-  contract_weeks_left: 61
-  morale: 75.0
-  stamina: 95.1
-  form: 47.4
+  contract_weeks_left: 66
+  morale: 62.4
+  stamina: 84.0
+  form: 48.8
   personality_tags:
-  - streamer
-  - team_player
-  potential: 71.5
+  - fan_favorite
+  - grinder
+  potential: 69.9
 - id: team_reject_brian
   handle: BRIAN
   real_name: Brian
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 22
   role: controller
   playstyle: igl
@@ -204,23 +327,45 @@ players:
     mastery: 73.9
   - agent_id: clove
     mastery: 68.9
+  - agent_id: viper
+    mastery: 53.8
+  - agent_id: breach
+    mastery: 35.8
+  - agent_id: chamber
+    mastery: 40.6
+  - agent_id: cypher
+    mastery: 34.8
+  - agent_id: jett
+    mastery: 38.5
+  - agent_id: killjoy
+    mastery: 42.5
+  - agent_id: phoenix
+    mastery: 33.7
+  - agent_id: raze
+    mastery: 2.9
+  - agent_id: reyna
+    mastery: 31.9
+  - agent_id: skye
+    mastery: 38.7
+  - agent_id: sova
+    mastery: 47.1
   map_pool:
   - map_id: ascent
-    mastery: 72.8
+    mastery: 59.8
   - map_id: bind
-    mastery: 55.2
+    mastery: 61.3
   - map_id: haven
-    mastery: 63.7
+    mastery: 72.7
   - map_id: lotus
-    mastery: 69.1
+    mastery: 65.6
   - map_id: split
-    mastery: 69.5
+    mastery: 73.1
   salary: 3800
-  contract_weeks_left: 38
-  morale: 77.3
-  stamina: 93.7
-  form: 47.3
+  contract_weeks_left: 71
+  morale: 80.7
+  stamina: 87.1
+  form: 46.6
   personality_tags:
-  - flashy
+  - analytical
   - streamer
-  potential: 66.3
+  potential: 63.0

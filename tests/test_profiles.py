@@ -75,10 +75,14 @@ PLAYER_BLOCK = {
     "is_starter",
     "dev_focus",
     "training_intensity",
+    "country",
+    "languages",
 }
 OVERVIEW = {
     "ovr",
+    "ovr_stars",
     "potential",
+    "potential_stars",
     "form",
     "morale",
     "condition",

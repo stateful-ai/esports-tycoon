@@ -1,0 +1,2186 @@
+free_agents:
+- id: fa_boostio
+  handle: Boostio
+  real_name: Kelden Pupello
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 25
+  role: duelist
+  playstyle: igl
+  attributes:
+    aim_precision: 70.9
+    aim_reactivity: 68.8
+    movement: 71.1
+    game_sense: 88.8
+    utility_usage: 84.2
+    positioning: 73.4
+    clutch_factor: 77.5
+    tilt_resistance: 82.7
+    composure: 82.2
+    comms_quality: 88.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 92.0
+  - agent_id: reyna
+    mastery: 85.1
+  - agent_id: chamber
+    mastery: 82.2
+  - agent_id: phoenix
+    mastery: 60.9
+  - agent_id: raze
+    mastery: 66.1
+  - agent_id: breach
+    mastery: 47.6
+  - agent_id: clove
+    mastery: 51.3
+  - agent_id: cypher
+    mastery: 58.4
+  - agent_id: killjoy
+    mastery: 52.7
+  - agent_id: omen
+    mastery: 59.5
+  - agent_id: skye
+    mastery: 56.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 47.7
+  map_pool:
+  - map_id: ascent
+    mastery: 92.9
+  - map_id: bind
+    mastery: 92.1
+  - map_id: haven
+    mastery: 78.0
+  - map_id: lotus
+    mastery: 76.1
+  - map_id: split
+    mastery: 84.2
+  salary: 5900
+  contract_weeks_left: 0
+  morale: 68.5
+  stamina: 80.6
+  form: 54.0
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 82.3
+- id: fa_subroza
+  handle: Subroza
+  real_name: Yassine Taoufik
+  region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 95.0
+  - lang: fr
+    level: 45.0
+  - lang: ar
+    level: 30.0
+  age: 29
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 75.7
+    aim_reactivity: 67.6
+    movement: 62.3
+    game_sense: 59.2
+    utility_usage: 54.9
+    positioning: 68.4
+    clutch_factor: 70.5
+    tilt_resistance: 64.5
+    composure: 58.6
+    comms_quality: 61.7
+  agent_pool:
+  - agent_id: jett
+    mastery: 73.1
+  - agent_id: chamber
+    mastery: 78.5
+  - agent_id: reyna
+    mastery: 59.0
+  - agent_id: phoenix
+    mastery: 48.8
+  - agent_id: raze
+    mastery: 50.3
+  - agent_id: breach
+    mastery: 46.1
+  - agent_id: clove
+    mastery: 42.9
+  - agent_id: cypher
+    mastery: 0.5
+  - agent_id: killjoy
+    mastery: 38.2
+  - agent_id: omen
+    mastery: 31.6
+  - agent_id: skye
+    mastery: 55.0
+  - agent_id: sova
+    mastery: 39.7
+  - agent_id: viper
+    mastery: 39.2
+  map_pool:
+  - map_id: ascent
+    mastery: 61.3
+  - map_id: bind
+    mastery: 70.7
+  - map_id: haven
+    mastery: 76.2
+  - map_id: lotus
+    mastery: 68.8
+  - map_id: split
+    mastery: 70.6
+  salary: 4400
+  contract_weeks_left: 0
+  morale: 79.7
+  stamina: 86.6
+  form: 56.1
+  personality_tags:
+  - quiet
+  - streamer
+  - veteran
+  potential: 64.4
+- id: fa_marved
+  handle: Marved
+  real_name: Jimmy Nguyen
+  region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: fr
+    level: 40.0
+  age: 28
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 52.9
+    aim_reactivity: 50.5
+    movement: 59.9
+    game_sense: 70.5
+    utility_usage: 68.5
+    positioning: 56.7
+    clutch_factor: 60.1
+    tilt_resistance: 52.9
+    composure: 61.8
+    comms_quality: 72.8
+  agent_pool:
+  - agent_id: omen
+    mastery: 76.3
+  - agent_id: viper
+    mastery: 69.7
+  - agent_id: breach
+    mastery: 65.6
+  - agent_id: clove
+    mastery: 49.4
+  - agent_id: chamber
+    mastery: 41.7
+  - agent_id: cypher
+    mastery: 39.5
+  - agent_id: jett
+    mastery: 37.8
+  - agent_id: killjoy
+    mastery: 33.5
+  - agent_id: phoenix
+    mastery: 37.2
+  - agent_id: raze
+    mastery: 35.0
+  - agent_id: reyna
+    mastery: 40.7
+  - agent_id: skye
+    mastery: 34.6
+  - agent_id: sova
+    mastery: 41.6
+  map_pool:
+  - map_id: ascent
+    mastery: 65.2
+  - map_id: bind
+    mastery: 60.8
+  - map_id: haven
+    mastery: 58.9
+  - map_id: lotus
+    mastery: 69.7
+  - map_id: split
+    mastery: 81.3
+  salary: 4000
+  contract_weeks_left: 0
+  morale: 77.2
+  stamina: 98.4
+  form: 51.6
+  personality_tags:
+  - flashy
+  - veteran
+  potential: 60.7
+- id: fa_sacy
+  handle: Sacy
+  real_name: Gustavo Rossi
+  region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 28
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 45.8
+    aim_reactivity: 46.8
+    movement: 61.3
+    game_sense: 69.9
+    utility_usage: 68.2
+    positioning: 63.3
+    clutch_factor: 57.5
+    tilt_resistance: 59.6
+    composure: 64.8
+    comms_quality: 71.1
+  agent_pool:
+  - agent_id: cypher
+    mastery: 78.5
+  - agent_id: killjoy
+    mastery: 66.0
+  - agent_id: viper
+    mastery: 68.7
+  - agent_id: chamber
+    mastery: 45.3
+  - agent_id: breach
+    mastery: 4.4
+  - agent_id: clove
+    mastery: 40.1
+  - agent_id: jett
+    mastery: 40.6
+  - agent_id: omen
+    mastery: 33.6
+  - agent_id: phoenix
+    mastery: 39.5
+  - agent_id: raze
+    mastery: 36.0
+  - agent_id: reyna
+    mastery: 28.5
+  - agent_id: skye
+    mastery: 40.1
+  - agent_id: sova
+    mastery: 38.3
+  map_pool:
+  - map_id: ascent
+    mastery: 64.3
+  - map_id: bind
+    mastery: 68.7
+  - map_id: haven
+    mastery: 57.7
+  - map_id: lotus
+    mastery: 72.4
+  - map_id: split
+    mastery: 55.3
+  salary: 3800
+  contract_weeks_left: 0
+  morale: 72.2
+  stamina: 90.4
+  form: 46.0
+  personality_tags:
+  - clutch_gene
+  - team_player
+  - veteran
+  potential: 60.9
+- id: fa_mummay
+  handle: mummAy
+  real_name: Anthony DiPaolo
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 25
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 63.4
+    aim_reactivity: 67.5
+    movement: 65.5
+    game_sense: 47.0
+    utility_usage: 51.5
+    positioning: 53.7
+    clutch_factor: 56.6
+    tilt_resistance: 61.1
+    composure: 52.1
+    comms_quality: 57.1
+  agent_pool:
+  - agent_id: jett
+    mastery: 65.3
+  - agent_id: raze
+    mastery: 63.8
+  - agent_id: reyna
+    mastery: 59.8
+  - agent_id: phoenix
+    mastery: 47.7
+  - agent_id: breach
+    mastery: 30.9
+  - agent_id: chamber
+    mastery: 36.6
+  - agent_id: clove
+    mastery: 36.1
+  - agent_id: cypher
+    mastery: 42.5
+  - agent_id: killjoy
+    mastery: 42.5
+  - agent_id: omen
+    mastery: 40.3
+  - agent_id: skye
+    mastery: 34.9
+  - agent_id: sova
+    mastery: 38.6
+  - agent_id: viper
+    mastery: 41.0
+  map_pool:
+  - map_id: ascent
+    mastery: 61.9
+  - map_id: bind
+    mastery: 58.6
+  - map_id: haven
+    mastery: 66.6
+  - map_id: lotus
+    mastery: 61.8
+  - map_id: split
+    mastery: 69.5
+  salary: 3800
+  contract_weeks_left: 0
+  morale: 81.4
+  stamina: 92.1
+  form: 60.0
+  personality_tags:
+  - fan_favorite
+  - grinder
+  potential: 57.6
+- id: fa_s0m
+  handle: s0m
+  real_name: Sam Oh
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: ko
+    level: 20.0
+  age: 24
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 47.8
+    aim_reactivity: 52.2
+    movement: 54.1
+    game_sense: 69.0
+    utility_usage: 69.2
+    positioning: 51.4
+    clutch_factor: 54.5
+    tilt_resistance: 57.2
+    composure: 61.6
+    comms_quality: 65.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 73.2
+  - agent_id: skye
+    mastery: 60.7
+  - agent_id: breach
+    mastery: 55.8
+  - agent_id: chamber
+    mastery: 42.6
+  - agent_id: clove
+    mastery: 42.3
+  - agent_id: cypher
+    mastery: 32.4
+  - agent_id: jett
+    mastery: 33.7
+  - agent_id: killjoy
+    mastery: 32.6
+  - agent_id: omen
+    mastery: 38.3
+  - agent_id: phoenix
+    mastery: 32.7
+  - agent_id: raze
+    mastery: 37.8
+  - agent_id: reyna
+    mastery: 43.5
+  - agent_id: viper
+    mastery: 40.6
+  map_pool:
+  - map_id: ascent
+    mastery: 72.6
+  - map_id: bind
+    mastery: 57.8
+  - map_id: haven
+    mastery: 60.6
+  - map_id: lotus
+    mastery: 54.2
+  - map_id: split
+    mastery: 66.2
+  salary: 3800
+  contract_weeks_left: 0
+  morale: 77.4
+  stamina: 90.8
+  form: 45.3
+  personality_tags:
+  - analytical
+  - perfectionist
+  potential: 58.3
+- id: fa_wardell
+  handle: Wardell
+  real_name: Matthew Yu
+  region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: fr
+    level: 30.0
+  age: 28
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 62.1
+    aim_reactivity: 61.8
+    movement: 51.6
+    game_sense: 54.3
+    utility_usage: 45.2
+    positioning: 62.7
+    clutch_factor: 58.6
+    tilt_resistance: 56.9
+    composure: 54.8
+    comms_quality: 52.5
+  agent_pool:
+  - agent_id: chamber
+    mastery: 68.5
+  - agent_id: jett
+    mastery: 64.4
+  - agent_id: reyna
+    mastery: 59.4
+  - agent_id: phoenix
+    mastery: 42.6
+  - agent_id: raze
+    mastery: 43.3
+  - agent_id: breach
+    mastery: 35.3
+  - agent_id: clove
+    mastery: 38.0
+  - agent_id: cypher
+    mastery: 25.2
+  - agent_id: killjoy
+    mastery: 32.7
+  - agent_id: omen
+    mastery: 32.4
+  - agent_id: skye
+    mastery: 37.0
+  - agent_id: sova
+    mastery: 40.4
+  - agent_id: viper
+    mastery: 40.0
+  map_pool:
+  - map_id: ascent
+    mastery: 58.3
+  - map_id: bind
+    mastery: 62.2
+  - map_id: haven
+    mastery: 65.3
+  - map_id: lotus
+    mastery: 61.4
+  - map_id: split
+    mastery: 58.3
+  salary: 3500
+  contract_weeks_left: 0
+  morale: 82.7
+  stamina: 82.0
+  form: 49.5
+  personality_tags:
+  - flashy
+  - streamer
+  - veteran
+  potential: 60.1
+- id: fa_fns
+  handle: FNS
+  real_name: Pujan Mehta
+  region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: hi
+    level: 25.0
+  age: 34
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 44.8
+    aim_reactivity: 47.2
+    movement: 53.5
+    game_sense: 60.0
+    utility_usage: 63.7
+    positioning: 46.7
+    clutch_factor: 44.3
+    tilt_resistance: 54.1
+    composure: 53.8
+    comms_quality: 66.4
+  agent_pool:
+  - agent_id: cypher
+    mastery: 59.4
+  - agent_id: killjoy
+    mastery: 48.9
+  - agent_id: sova
+    mastery: 56.9
+  - agent_id: chamber
+    mastery: 43.2
+  - agent_id: breach
+    mastery: 29.1
+  - agent_id: clove
+    mastery: 32.9
+  - agent_id: jett
+    mastery: 24.4
+  - agent_id: omen
+    mastery: 21.5
+  - agent_id: phoenix
+    mastery: 29.6
+  - agent_id: raze
+    mastery: 26.2
+  - agent_id: reyna
+    mastery: 19.3
+  - agent_id: skye
+    mastery: 22.9
+  - agent_id: viper
+    mastery: 3.6
+  map_pool:
+  - map_id: ascent
+    mastery: 59.9
+  - map_id: bind
+    mastery: 59.0
+  - map_id: haven
+    mastery: 67.4
+  - map_id: lotus
+    mastery: 55.6
+  - map_id: split
+    mastery: 52.4
+  salary: 3100
+  contract_weeks_left: 0
+  morale: 80.4
+  stamina: 98.7
+  form: 51.4
+  personality_tags:
+  - hot_head
+  - streamer
+  - veteran
+  potential: 54.2
+- id: fa_ion2x
+  handle: ion2x
+  real_name: Ayan Rastogi
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: hi
+    level: 20.0
+  age: 17
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 43.5
+    aim_reactivity: 42.1
+    movement: 48.9
+    game_sense: 54.6
+    utility_usage: 57.6
+    positioning: 48.9
+    clutch_factor: 45.1
+    tilt_resistance: 41.4
+    composure: 50.8
+    comms_quality: 55.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 67.0
+  - agent_id: viper
+    mastery: 48.4
+  - agent_id: breach
+    mastery: 49.6
+  - agent_id: clove
+    mastery: 35.0
+  - agent_id: chamber
+    mastery: 36.8
+  - agent_id: cypher
+    mastery: 25.0
+  - agent_id: jett
+    mastery: 27.1
+  - agent_id: killjoy
+    mastery: 26.7
+  - agent_id: phoenix
+    mastery: 21.9
+  - agent_id: raze
+    mastery: 20.3
+  - agent_id: reyna
+    mastery: 27.3
+  - agent_id: skye
+    mastery: 17.4
+  - agent_id: sova
+    mastery: 21.8
+  map_pool:
+  - map_id: ascent
+    mastery: 52.4
+  - map_id: bind
+    mastery: 46.4
+  - map_id: haven
+    mastery: 35.9
+  - map_id: lotus
+    mastery: 47.4
+  - map_id: split
+    mastery: 55.5
+  salary: 2700
+  contract_weeks_left: 0
+  morale: 84.9
+  stamina: 99.7
+  form: 52.6
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  - rookie
+  potential: 77.3
+- id: fa_ninebody
+  handle: Ninebody
+  real_name: Ding Yi
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
+  age: 23
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.5
+    aim_reactivity: 83.6
+    movement: 77.5
+    game_sense: 58.5
+    utility_usage: 59.9
+    positioning: 66.4
+    clutch_factor: 64.2
+    tilt_resistance: 64.1
+    composure: 67.2
+    comms_quality: 62.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 84.7
+  - agent_id: raze
+    mastery: 79.3
+  - agent_id: phoenix
+    mastery: 77.9
+  - agent_id: reyna
+    mastery: 54.9
+  - agent_id: breach
+    mastery: 49.9
+  - agent_id: chamber
+    mastery: 42.7
+  - agent_id: clove
+    mastery: 38.0
+  - agent_id: cypher
+    mastery: 43.3
+  - agent_id: killjoy
+    mastery: 46.7
+  - agent_id: omen
+    mastery: 51.0
+  - agent_id: skye
+    mastery: 50.5
+  - agent_id: sova
+    mastery: 44.9
+  - agent_id: viper
+    mastery: 45.1
+  map_pool:
+  - map_id: ascent
+    mastery: 75.6
+  - map_id: bind
+    mastery: 76.2
+  - map_id: haven
+    mastery: 79.9
+  - map_id: lotus
+    mastery: 77.5
+  - map_id: split
+    mastery: 72.5
+  salary: 5100
+  contract_weeks_left: 0
+  morale: 69.5
+  stamina: 96.1
+  form: 47.1
+  personality_tags:
+  - analytical
+  - clutch_gene
+  potential: 69.7
+- id: fa_obone
+  handle: OBONE
+  real_name: Chen Yijie
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 97.0
+  age: 24
+  role: controller
+  playstyle: anchor
+  attributes:
+    aim_precision: 63.8
+    aim_reactivity: 53.4
+    movement: 54.7
+    game_sense: 59.7
+    utility_usage: 61.2
+    positioning: 70.2
+    clutch_factor: 55.8
+    tilt_resistance: 73.4
+    composure: 70.1
+    comms_quality: 57.4
+  agent_pool:
+  - agent_id: viper
+    mastery: 73.2
+  - agent_id: omen
+    mastery: 69.6
+  - agent_id: clove
+    mastery: 69.6
+  - agent_id: breach
+    mastery: 41.5
+  - agent_id: chamber
+    mastery: 43.9
+  - agent_id: cypher
+    mastery: 6.1
+  - agent_id: jett
+    mastery: 44.9
+  - agent_id: killjoy
+    mastery: 38.0
+  - agent_id: phoenix
+    mastery: 43.3
+  - agent_id: raze
+    mastery: 42.0
+  - agent_id: reyna
+    mastery: 42.7
+  - agent_id: skye
+    mastery: 43.5
+  - agent_id: sova
+    mastery: 6.3
+  map_pool:
+  - map_id: ascent
+    mastery: 72.6
+  - map_id: bind
+    mastery: 74.4
+  - map_id: haven
+    mastery: 65.9
+  - map_id: lotus
+    mastery: 70.5
+  - map_id: split
+    mastery: 77.3
+  salary: 4200
+  contract_weeks_left: 0
+  morale: 65.2
+  stamina: 97.6
+  form: 55.3
+  personality_tags:
+  - flashy
+  - streamer
+  potential: 66.1
+- id: fa_sscary
+  handle: sScary
+  real_name: Natchaphon Matarat
+  region: china
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 70.0
+  age: 26
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 54.3
+    aim_reactivity: 54.5
+    movement: 65.4
+    game_sense: 62.1
+    utility_usage: 72.9
+    positioning: 56.1
+    clutch_factor: 65.4
+    tilt_resistance: 57.7
+    composure: 65.0
+    comms_quality: 70.9
+  agent_pool:
+  - agent_id: omen
+    mastery: 79.0
+  - agent_id: viper
+    mastery: 67.5
+  - agent_id: clove
+    mastery: 59.7
+  - agent_id: breach
+    mastery: 36.4
+  - agent_id: chamber
+    mastery: 38.8
+  - agent_id: cypher
+    mastery: 44.7
+  - agent_id: jett
+    mastery: 39.8
+  - agent_id: killjoy
+    mastery: 33.4
+  - agent_id: phoenix
+    mastery: 34.2
+  - agent_id: raze
+    mastery: 33.6
+  - agent_id: reyna
+    mastery: 41.3
+  - agent_id: skye
+    mastery: 40.8
+  - agent_id: sova
+    mastery: 50.2
+  map_pool:
+  - map_id: ascent
+    mastery: 64.6
+  - map_id: bind
+    mastery: 61.5
+  - map_id: haven
+    mastery: 68.6
+  - map_id: lotus
+    mastery: 65.9
+  - map_id: split
+    mastery: 66.8
+  salary: 4200
+  contract_weeks_left: 0
+  morale: 60.6
+  stamina: 83.7
+  form: 55.5
+  personality_tags:
+  - fan_favorite
+  - quiet
+  potential: 65.2
+- id: fa_iceking
+  handle: ICEKING
+  real_name: Cheng Wanpeng
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 97.0
+  age: 25
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 36.5
+    aim_reactivity: 48.8
+    movement: 57.8
+    game_sense: 65.8
+    utility_usage: 70.2
+    positioning: 52.6
+    clutch_factor: 56.9
+    tilt_resistance: 54.9
+    composure: 62.1
+    comms_quality: 70.9
+  agent_pool:
+  - agent_id: killjoy
+    mastery: 71.0
+  - agent_id: cypher
+    mastery: 66.6
+  - agent_id: omen
+    mastery: 53.1
+  - agent_id: chamber
+    mastery: 52.0
+  - agent_id: breach
+    mastery: 0.3
+  - agent_id: clove
+    mastery: 30.0
+  - agent_id: jett
+    mastery: 40.8
+  - agent_id: phoenix
+    mastery: 32.9
+  - agent_id: raze
+    mastery: 37.5
+  - agent_id: reyna
+    mastery: 32.2
+  - agent_id: skye
+    mastery: 29.1
+  - agent_id: sova
+    mastery: 33.3
+  - agent_id: viper
+    mastery: 40.0
+  map_pool:
+  - map_id: ascent
+    mastery: 65.6
+  - map_id: bind
+    mastery: 60.2
+  - map_id: haven
+    mastery: 51.8
+  - map_id: lotus
+    mastery: 57.8
+  - map_id: split
+    mastery: 69.5
+  salary: 3700
+  contract_weeks_left: 0
+  morale: 69.6
+  stamina: 90.2
+  form: 50.3
+  personality_tags:
+  - clutch_gene
+  - streamer
+  potential: 60.1
+- id: fa_lsn
+  handle: Lsn
+  real_name: Li Sinan
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
+  age: 33
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 41.4
+    aim_reactivity: 40.9
+    movement: 44.2
+    game_sense: 59.8
+    utility_usage: 48.4
+    positioning: 49.6
+    clutch_factor: 44.4
+    tilt_resistance: 51.3
+    composure: 55.7
+    comms_quality: 62.0
+  agent_pool:
+  - agent_id: sova
+    mastery: 62.5
+  - agent_id: breach
+    mastery: 59.4
+  - agent_id: skye
+    mastery: 45.9
+  - agent_id: chamber
+    mastery: 27.4
+  - agent_id: clove
+    mastery: 34.4
+  - agent_id: cypher
+    mastery: 21.0
+  - agent_id: jett
+    mastery: 25.8
+  - agent_id: killjoy
+    mastery: 31.3
+  - agent_id: omen
+    mastery: 27.8
+  - agent_id: phoenix
+    mastery: 30.0
+  - agent_id: raze
+    mastery: 23.3
+  - agent_id: reyna
+    mastery: 21.0
+  - agent_id: viper
+    mastery: 23.9
+  map_pool:
+  - map_id: ascent
+    mastery: 51.4
+  - map_id: bind
+    mastery: 56.6
+  - map_id: haven
+    mastery: 54.1
+  - map_id: lotus
+    mastery: 64.4
+  - map_id: split
+    mastery: 68.4
+  salary: 2900
+  contract_weeks_left: 0
+  morale: 66.2
+  stamina: 96.7
+  form: 54.8
+  personality_tags:
+  - clutch_gene
+  - hot_head
+  - veteran
+  potential: 50.7
+- id: fa_cxyy
+  handle: cxyy
+  real_name: Cui Xinyu
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 96.0
+  age: 25
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 51.3
+    aim_reactivity: 41.8
+    movement: 41.1
+    game_sense: 47.9
+    utility_usage: 51.4
+    positioning: 64.3
+    clutch_factor: 41.2
+    tilt_resistance: 54.7
+    composure: 59.8
+    comms_quality: 38.0
+  agent_pool:
+  - agent_id: cypher
+    mastery: 61.6
+  - agent_id: killjoy
+    mastery: 61.1
+  - agent_id: chamber
+    mastery: 51.6
+  - agent_id: breach
+    mastery: 27.4
+  - agent_id: clove
+    mastery: 24.1
+  - agent_id: jett
+    mastery: 25.5
+  - agent_id: omen
+    mastery: 2.0
+  - agent_id: phoenix
+    mastery: 24.3
+  - agent_id: raze
+    mastery: 3.4
+  - agent_id: reyna
+    mastery: 29.7
+  - agent_id: skye
+    mastery: 33.8
+  - agent_id: sova
+    mastery: 18.4
+  - agent_id: viper
+    mastery: 24.7
+  map_pool:
+  - map_id: ascent
+    mastery: 65.6
+  - map_id: bind
+    mastery: 59.3
+  - map_id: haven
+    mastery: 63.3
+  - map_id: lotus
+    mastery: 56.6
+  - map_id: split
+    mastery: 52.5
+  salary: 2800
+  contract_weeks_left: 0
+  morale: 75.5
+  stamina: 84.9
+  form: 56.9
+  personality_tags:
+  - fan_favorite
+  potential: 49.2
+- id: fa_miniboo
+  handle: MiniBoo
+  real_name: Dominykas Lukasevicius
+  region: emea
+  country: LT
+  languages:
+  - lang: lt
+    level: 100.0
+  - lang: en
+    level: 80.0
+  - lang: ru
+    level: 50.0
+  age: 24
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.0
+    aim_reactivity: 82.7
+    movement: 78.4
+    game_sense: 65.6
+    utility_usage: 61.1
+    positioning: 65.4
+    clutch_factor: 73.8
+    tilt_resistance: 62.3
+    composure: 77.4
+    comms_quality: 75.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 85.5
+  - agent_id: raze
+    mastery: 83.5
+  - agent_id: reyna
+    mastery: 82.0
+  - agent_id: phoenix
+    mastery: 61.8
+  - agent_id: breach
+    mastery: 45.6
+  - agent_id: chamber
+    mastery: 59.7
+  - agent_id: clove
+    mastery: 6.6
+  - agent_id: cypher
+    mastery: 55.6
+  - agent_id: killjoy
+    mastery: 1.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 38.9
+  - agent_id: viper
+    mastery: 44.6
+  map_pool:
+  - map_id: ascent
+    mastery: 68.7
+  - map_id: bind
+    mastery: 73.4
+  - map_id: haven
+    mastery: 78.6
+  - map_id: lotus
+    mastery: 88.5
+  - map_id: split
+    mastery: 83.0
+  salary: 5700
+  contract_weeks_left: 0
+  morale: 81.7
+  stamina: 96.3
+  form: 58.1
+  personality_tags:
+  - quiet
+  - streamer
+  potential: 73.3
+- id: fa_shao
+  handle: Shao
+  real_name: Andrei Kiprskii
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 26
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 64.0
+    aim_reactivity: 63.9
+    movement: 69.5
+    game_sense: 68.1
+    utility_usage: 80.3
+    positioning: 72.7
+    clutch_factor: 69.4
+    tilt_resistance: 67.8
+    composure: 76.5
+    comms_quality: 79.4
+  agent_pool:
+  - agent_id: omen
+    mastery: 84.0
+  - agent_id: viper
+    mastery: 79.2
+  - agent_id: sova
+    mastery: 75.3
+  - agent_id: clove
+    mastery: 58.0
+  - agent_id: breach
+    mastery: 52.0
+  - agent_id: chamber
+    mastery: 40.3
+  - agent_id: cypher
+    mastery: 47.2
+  - agent_id: jett
+    mastery: 42.1
+  - agent_id: killjoy
+    mastery: 47.8
+  - agent_id: phoenix
+    mastery: 41.6
+  - agent_id: raze
+    mastery: 46.2
+  - agent_id: reyna
+    mastery: 54.5
+  - agent_id: skye
+    mastery: 54.4
+  map_pool:
+  - map_id: ascent
+    mastery: 78.5
+  - map_id: bind
+    mastery: 88.3
+  - map_id: haven
+    mastery: 66.2
+  - map_id: lotus
+    mastery: 69.1
+  - map_id: split
+    mastery: 70.4
+  salary: 5100
+  contract_weeks_left: 0
+  morale: 82.8
+  stamina: 85.6
+  form: 53.6
+  personality_tags:
+  - quiet
+  - slow_starter
+  potential: 73.6
+- id: fa_sheydos
+  handle: Sheydos
+  real_name: Bogdan Naumov
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 65.0
+  age: 24
+  role: sentinel
+  playstyle: igl
+  attributes:
+    aim_precision: 53.6
+    aim_reactivity: 52.2
+    movement: 62.1
+    game_sense: 75.0
+    utility_usage: 75.0
+    positioning: 64.7
+    clutch_factor: 60.8
+    tilt_resistance: 61.9
+    composure: 69.5
+    comms_quality: 74.9
+  agent_pool:
+  - agent_id: cypher
+    mastery: 75.0
+  - agent_id: killjoy
+    mastery: 72.4
+  - agent_id: viper
+    mastery: 58.9
+  - agent_id: chamber
+    mastery: 59.0
+  - agent_id: breach
+    mastery: 36.8
+  - agent_id: clove
+    mastery: 40.8
+  - agent_id: jett
+    mastery: 46.9
+  - agent_id: omen
+    mastery: 34.0
+  - agent_id: phoenix
+    mastery: 41.9
+  - agent_id: raze
+    mastery: 37.9
+  - agent_id: reyna
+    mastery: 55.3
+  - agent_id: skye
+    mastery: 4.6
+  - agent_id: sova
+    mastery: 46.3
+  map_pool:
+  - map_id: ascent
+    mastery: 76.1
+  - map_id: bind
+    mastery: 75.3
+  - map_id: haven
+    mastery: 72.0
+  - map_id: lotus
+    mastery: 69.6
+  - map_id: split
+    mastery: 73.0
+  salary: 4500
+  contract_weeks_left: 0
+  morale: 65.3
+  stamina: 99.6
+  form: 57.0
+  personality_tags:
+  - team_player
+  potential: 65.5
+- id: fa_baddyg
+  handle: baddyG
+  real_name: Kamil Graniczka
+  region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 100.0
+  - lang: en
+    level: 65.0
+  age: 24
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 54.6
+    aim_reactivity: 53.9
+    movement: 61.2
+    game_sense: 63.2
+    utility_usage: 76.7
+    positioning: 60.9
+    clutch_factor: 59.2
+    tilt_resistance: 59.3
+    composure: 62.9
+    comms_quality: 68.7
+  agent_pool:
+  - agent_id: skye
+    mastery: 73.8
+  - agent_id: sova
+    mastery: 73.2
+  - agent_id: breach
+    mastery: 63.5
+  - agent_id: chamber
+    mastery: 50.1
+  - agent_id: clove
+    mastery: 39.8
+  - agent_id: cypher
+    mastery: 47.7
+  - agent_id: jett
+    mastery: 42.1
+  - agent_id: killjoy
+    mastery: 47.0
+  - agent_id: omen
+    mastery: 42.8
+  - agent_id: phoenix
+    mastery: 46.7
+  - agent_id: raze
+    mastery: 39.7
+  - agent_id: reyna
+    mastery: 43.2
+  - agent_id: viper
+    mastery: 37.7
+  map_pool:
+  - map_id: ascent
+    mastery: 71.6
+  - map_id: bind
+    mastery: 65.4
+  - map_id: haven
+    mastery: 74.3
+  - map_id: lotus
+    mastery: 61.2
+  - map_id: split
+    mastery: 66.3
+  salary: 4300
+  contract_weeks_left: 0
+  morale: 77.3
+  stamina: 84.2
+  form: 57.7
+  personality_tags:
+  - analytical
+  - fan_favorite
+  potential: 62.8
+- id: fa_filu
+  handle: Filu
+  real_name: Dawid Czarnecki
+  region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 66.9
+    aim_reactivity: 69.0
+    movement: 69.9
+    game_sense: 54.1
+    utility_usage: 43.2
+    positioning: 62.4
+    clutch_factor: 58.3
+    tilt_resistance: 52.3
+    composure: 66.6
+    comms_quality: 54.8
+  agent_pool:
+  - agent_id: phoenix
+    mastery: 71.3
+  - agent_id: chamber
+    mastery: 66.5
+  - agent_id: raze
+    mastery: 62.1
+  - agent_id: jett
+    mastery: 47.8
+  - agent_id: reyna
+    mastery: 48.4
+  - agent_id: breach
+    mastery: 36.9
+  - agent_id: clove
+    mastery: 34.3
+  - agent_id: cypher
+    mastery: 43.2
+  - agent_id: killjoy
+    mastery: 46.1
+  - agent_id: omen
+    mastery: 31.9
+  - agent_id: skye
+    mastery: 33.3
+  - agent_id: sova
+    mastery: 21.2
+  - agent_id: viper
+    mastery: 41.3
+  map_pool:
+  - map_id: ascent
+    mastery: 71.6
+  - map_id: bind
+    mastery: 62.9
+  - map_id: haven
+    mastery: 68.7
+  - map_id: lotus
+    mastery: 79.6
+  - map_id: split
+    mastery: 69.3
+  salary: 4000
+  contract_weeks_left: 0
+  morale: 73.6
+  stamina: 98.6
+  form: 47.6
+  personality_tags:
+  - quiet
+  - team_player
+  potential: 67.2
+- id: fa_scream
+  handle: ScreaM
+  real_name: Adil Benrlitom
+  region: emea
+  country: BE
+  languages:
+  - lang: fr
+    level: 100.0
+  - lang: en
+    level: 80.0
+  - lang: nl
+    level: 40.0
+  age: 33
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 71.2
+    aim_reactivity: 64.9
+    movement: 56.7
+    game_sense: 60.3
+    utility_usage: 53.8
+    positioning: 63.1
+    clutch_factor: 67.8
+    tilt_resistance: 60.6
+    composure: 56.7
+    comms_quality: 53.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 79.9
+  - agent_id: chamber
+    mastery: 71.1
+  - agent_id: reyna
+    mastery: 59.9
+  - agent_id: phoenix
+    mastery: 49.3
+  - agent_id: raze
+    mastery: 51.8
+  - agent_id: breach
+    mastery: 44.8
+  - agent_id: clove
+    mastery: 1.5
+  - agent_id: cypher
+    mastery: 42.7
+  - agent_id: killjoy
+    mastery: 44.5
+  - agent_id: omen
+    mastery: 38.2
+  - agent_id: skye
+    mastery: 48.5
+  - agent_id: sova
+    mastery: 3.9
+  - agent_id: viper
+    mastery: 38.2
+  map_pool:
+  - map_id: ascent
+    mastery: 65.7
+  - map_id: bind
+    mastery: 70.6
+  - map_id: haven
+    mastery: 65.5
+  - map_id: lotus
+    mastery: 74.1
+  - map_id: split
+    mastery: 65.5
+  salary: 4000
+  contract_weeks_left: 0
+  morale: 74.2
+  stamina: 86.9
+  form: 50.0
+  personality_tags:
+  - analytical
+  - clutch_gene
+  - veteran
+  potential: 60.9
+- id: fa_natank
+  handle: nataNk
+  real_name: Nathan Bocqueho
+  region: emea
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 23
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 51.4
+    aim_reactivity: 49.0
+    movement: 49.2
+    game_sense: 57.2
+    utility_usage: 65.7
+    positioning: 66.7
+    clutch_factor: 51.6
+    tilt_resistance: 55.3
+    composure: 59.9
+    comms_quality: 49.7
+  agent_pool:
+  - agent_id: cypher
+    mastery: 70.3
+  - agent_id: killjoy
+    mastery: 65.2
+  - agent_id: viper
+    mastery: 51.9
+  - agent_id: chamber
+    mastery: 47.1
+  - agent_id: breach
+    mastery: 31.5
+  - agent_id: clove
+    mastery: 38.5
+  - agent_id: jett
+    mastery: 36.7
+  - agent_id: omen
+    mastery: 32.7
+  - agent_id: phoenix
+    mastery: 25.5
+  - agent_id: raze
+    mastery: 29.4
+  - agent_id: reyna
+    mastery: 42.9
+  - agent_id: skye
+    mastery: 40.5
+  - agent_id: sova
+    mastery: 35.2
+  map_pool:
+  - map_id: ascent
+    mastery: 66.5
+  - map_id: bind
+    mastery: 60.8
+  - map_id: haven
+    mastery: 56.5
+  - map_id: lotus
+    mastery: 54.5
+  - map_id: split
+    mastery: 72.1
+  salary: 3500
+  contract_weeks_left: 0
+  morale: 73.4
+  stamina: 99.7
+  form: 49.8
+  personality_tags:
+  - analytical
+  potential: 60.0
+- id: fa_leo
+  handle: Leo
+  real_name: Leo Jannesson
+  region: emea
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
+  - lang: en
+    level: 85.0
+  age: 22
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 44.6
+    aim_reactivity: 45.6
+    movement: 41.4
+    game_sense: 49.0
+    utility_usage: 62.2
+    positioning: 63.0
+    clutch_factor: 48.3
+    tilt_resistance: 60.0
+    composure: 59.8
+    comms_quality: 52.8
+  agent_pool:
+  - agent_id: cypher
+    mastery: 62.7
+  - agent_id: killjoy
+    mastery: 61.3
+  - agent_id: viper
+    mastery: 49.4
+  - agent_id: chamber
+    mastery: 40.0
+  - agent_id: breach
+    mastery: 30.9
+  - agent_id: clove
+    mastery: 26.5
+  - agent_id: jett
+    mastery: 33.2
+  - agent_id: omen
+    mastery: 32.9
+  - agent_id: phoenix
+    mastery: 27.3
+  - agent_id: raze
+    mastery: 4.7
+  - agent_id: reyna
+    mastery: 28.8
+  - agent_id: skye
+    mastery: 19.9
+  - agent_id: sova
+    mastery: 23.9
+  map_pool:
+  - map_id: ascent
+    mastery: 66.9
+  - map_id: bind
+    mastery: 62.5
+  - map_id: haven
+    mastery: 50.5
+  - map_id: lotus
+    mastery: 42.7
+  - map_id: split
+    mastery: 71.4
+  salary: 2900
+  contract_weeks_left: 0
+  morale: 79.7
+  stamina: 86.4
+  form: 46.6
+  personality_tags:
+  - clutch_gene
+  potential: 59.1
+- id: fa_foxy9
+  handle: Foxy9
+  real_name: Jung Jae-sung
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 77.8
+    aim_reactivity: 80.1
+    movement: 76.6
+    game_sense: 65.2
+    utility_usage: 61.3
+    positioning: 64.6
+    clutch_factor: 71.9
+    tilt_resistance: 64.8
+    composure: 70.4
+    comms_quality: 71.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 87.8
+  - agent_id: raze
+    mastery: 79.3
+  - agent_id: reyna
+    mastery: 76.4
+  - agent_id: phoenix
+    mastery: 62.1
+  - agent_id: breach
+    mastery: 55.8
+  - agent_id: chamber
+    mastery: 44.9
+  - agent_id: clove
+    mastery: 49.9
+  - agent_id: cypher
+    mastery: 53.4
+  - agent_id: killjoy
+    mastery: 49.0
+  - agent_id: omen
+    mastery: 47.4
+  - agent_id: skye
+    mastery: 44.3
+  - agent_id: sova
+    mastery: 44.2
+  - agent_id: viper
+    mastery: 38.7
+  map_pool:
+  - map_id: ascent
+    mastery: 82.0
+  - map_id: bind
+    mastery: 73.1
+  - map_id: haven
+    mastery: 84.9
+  - map_id: lotus
+    mastery: 86.7
+  - map_id: split
+    mastery: 79.2
+  salary: 5400
+  contract_weeks_left: 0
+  morale: 70.9
+  stamina: 85.5
+  form: 57.0
+  personality_tags:
+  - perfectionist
+  - slow_starter
+  potential: 79.4
+- id: fa_lakia
+  handle: Lakia
+  real_name: Kim Jong-min
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 98.0
+  age: 25
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 60.3
+    aim_reactivity: 56.5
+    movement: 61.5
+    game_sense: 79.0
+    utility_usage: 74.9
+    positioning: 69.6
+    clutch_factor: 64.4
+    tilt_resistance: 61.7
+    composure: 75.8
+    comms_quality: 73.9
+  agent_pool:
+  - agent_id: sova
+    mastery: 77.1
+  - agent_id: skye
+    mastery: 79.1
+  - agent_id: breach
+    mastery: 72.1
+  - agent_id: chamber
+    mastery: 46.4
+  - agent_id: clove
+    mastery: 47.4
+  - agent_id: cypher
+    mastery: 51.0
+  - agent_id: jett
+    mastery: 40.4
+  - agent_id: killjoy
+    mastery: 56.8
+  - agent_id: omen
+    mastery: 40.6
+  - agent_id: phoenix
+    mastery: 44.0
+  - agent_id: raze
+    mastery: 49.7
+  - agent_id: reyna
+    mastery: 55.6
+  - agent_id: viper
+    mastery: 6.1
+  map_pool:
+  - map_id: ascent
+    mastery: 73.6
+  - map_id: bind
+    mastery: 76.2
+  - map_id: haven
+    mastery: 73.1
+  - map_id: lotus
+    mastery: 72.8
+  - map_id: split
+    mastery: 76.7
+  salary: 4900
+  contract_weeks_left: 0
+  morale: 73.0
+  stamina: 95.3
+  form: 50.4
+  personality_tags:
+  - streamer
+  potential: 71.3
+- id: fa_hermes
+  handle: Hermes
+  real_name: Ahn Byeong-wook
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 71.6
+    aim_reactivity: 71.5
+    movement: 70.4
+    game_sense: 53.0
+    utility_usage: 50.6
+    positioning: 56.7
+    clutch_factor: 66.7
+    tilt_resistance: 50.7
+    composure: 63.6
+    comms_quality: 67.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 72.9
+  - agent_id: raze
+    mastery: 80.3
+  - agent_id: reyna
+    mastery: 62.0
+  - agent_id: phoenix
+    mastery: 57.3
+  - agent_id: breach
+    mastery: 38.1
+  - agent_id: chamber
+    mastery: 45.0
+  - agent_id: clove
+    mastery: 45.5
+  - agent_id: cypher
+    mastery: 40.4
+  - agent_id: killjoy
+    mastery: 39.8
+  - agent_id: omen
+    mastery: 30.5
+  - agent_id: skye
+    mastery: 35.5
+  - agent_id: sova
+    mastery: 43.2
+  - agent_id: viper
+    mastery: 43.7
+  map_pool:
+  - map_id: ascent
+    mastery: 79.8
+  - map_id: bind
+    mastery: 75.1
+  - map_id: haven
+    mastery: 68.2
+  - map_id: lotus
+    mastery: 71.0
+  - map_id: split
+    mastery: 64.5
+  salary: 4200
+  contract_weeks_left: 0
+  morale: 68.7
+  stamina: 97.2
+  form: 48.6
+  personality_tags:
+  - analytical
+  - perfectionist
+  potential: 69.8
+- id: fa_thyy
+  handle: thyy
+  real_name: Anupong Preamsak
+  region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 97.0
+  - lang: en
+    level: 50.0
+  age: 19
+  role: controller
+  playstyle: support
+  attributes:
+    aim_precision: 51.6
+    aim_reactivity: 55.1
+    movement: 53.4
+    game_sense: 57.8
+    utility_usage: 70.0
+    positioning: 57.7
+    clutch_factor: 58.5
+    tilt_resistance: 57.4
+    composure: 56.8
+    comms_quality: 66.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 70.5
+  - agent_id: viper
+    mastery: 65.7
+  - agent_id: clove
+    mastery: 57.5
+  - agent_id: breach
+    mastery: 41.4
+  - agent_id: chamber
+    mastery: 42.4
+  - agent_id: cypher
+    mastery: 34.9
+  - agent_id: jett
+    mastery: 43.7
+  - agent_id: killjoy
+    mastery: 37.7
+  - agent_id: phoenix
+    mastery: 32.7
+  - agent_id: raze
+    mastery: 41.7
+  - agent_id: reyna
+    mastery: 35.9
+  - agent_id: skye
+    mastery: 34.2
+  - agent_id: sova
+    mastery: 38.6
+  map_pool:
+  - map_id: ascent
+    mastery: 55.2
+  - map_id: bind
+    mastery: 68.0
+  - map_id: haven
+    mastery: 72.3
+  - map_id: lotus
+    mastery: 64.4
+  - map_id: split
+    mastery: 62.8
+  salary: 3900
+  contract_weeks_left: 0
+  morale: 71.5
+  stamina: 94.8
+  form: 46.5
+  personality_tags:
+  - clutch_gene
+  potential: 68.8
+- id: fa_surf
+  handle: Surf
+  real_name: Thanachart Rungapajaratkul
+  region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 45.0
+  age: 22
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 66.3
+    aim_reactivity: 66.1
+    movement: 64.3
+    game_sense: 49.9
+    utility_usage: 42.8
+    positioning: 50.5
+    clutch_factor: 54.1
+    tilt_resistance: 45.4
+    composure: 49.5
+    comms_quality: 48.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 66.1
+  - agent_id: raze
+    mastery: 66.2
+  - agent_id: phoenix
+    mastery: 47.4
+  - agent_id: reyna
+    mastery: 36.8
+  - agent_id: breach
+    mastery: 24.6
+  - agent_id: chamber
+    mastery: 40.1
+  - agent_id: clove
+    mastery: 30.4
+  - agent_id: cypher
+    mastery: 25.5
+  - agent_id: killjoy
+    mastery: 35.3
+  - agent_id: omen
+    mastery: 29.7
+  - agent_id: skye
+    mastery: 35.9
+  - agent_id: sova
+    mastery: 43.3
+  - agent_id: viper
+    mastery: 32.4
+  map_pool:
+  - map_id: ascent
+    mastery: 64.6
+  - map_id: bind
+    mastery: 59.8
+  - map_id: haven
+    mastery: 67.6
+  - map_id: lotus
+    mastery: 48.2
+  - map_id: split
+    mastery: 67.3
+  salary: 3300
+  contract_weeks_left: 0
+  morale: 74.1
+  stamina: 93.3
+  form: 48.1
+  personality_tags:
+  - flashy
+  - hot_head
+  potential: 61.2
+- id: fa_blazek1ng
+  handle: blaZek1ng
+  real_name: Gary Dastin
+  region: pacific
+  country: ID
+  languages:
+  - lang: id
+    level: 97.0
+  - lang: en
+    level: 75.0
+  age: 30
+  role: controller
+  playstyle: anchor
+  attributes:
+    aim_precision: 49.6
+    aim_reactivity: 44.2
+    movement: 41.2
+    game_sense: 52.4
+    utility_usage: 57.8
+    positioning: 63.2
+    clutch_factor: 58.2
+    tilt_resistance: 59.9
+    composure: 60.1
+    comms_quality: 43.0
+  agent_pool:
+  - agent_id: omen
+    mastery: 67.3
+  - agent_id: viper
+    mastery: 64.7
+  - agent_id: clove
+    mastery: 55.6
+  - agent_id: breach
+    mastery: 42.2
+  - agent_id: chamber
+    mastery: 19.8
+  - agent_id: cypher
+    mastery: 33.8
+  - agent_id: jett
+    mastery: 7.4
+  - agent_id: killjoy
+    mastery: 29.8
+  - agent_id: phoenix
+    mastery: 28.4
+  - agent_id: raze
+    mastery: 42.7
+  - agent_id: reyna
+    mastery: 34.3
+  - agent_id: skye
+    mastery: 18.3
+  - agent_id: sova
+    mastery: 32.9
+  map_pool:
+  - map_id: ascent
+    mastery: 65.8
+  - map_id: bind
+    mastery: 60.0
+  - map_id: haven
+    mastery: 62.6
+  - map_id: lotus
+    mastery: 53.6
+  - map_id: split
+    mastery: 58.1
+  salary: 3100
+  contract_weeks_left: 0
+  morale: 72.4
+  stamina: 98.9
+  form: 52.1
+  personality_tags:
+  - clutch_gene
+  - veteran
+  potential: 55.0
+- id: fa_bunny
+  handle: Bunny
+  real_name: Chae Joon-hyuk
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 35.0
+  age: 28
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 57.4
+    aim_reactivity: 61.8
+    movement: 59.6
+    game_sense: 38.8
+    utility_usage: 38.9
+    positioning: 46.2
+    clutch_factor: 42.2
+    tilt_resistance: 43.6
+    composure: 44.9
+    comms_quality: 51.5
+  agent_pool:
+  - agent_id: jett
+    mastery: 64.8
+  - agent_id: reyna
+    mastery: 57.9
+  - agent_id: phoenix
+    mastery: 52.4
+  - agent_id: raze
+    mastery: 40.1
+  - agent_id: breach
+    mastery: 20.6
+  - agent_id: chamber
+    mastery: 24.7
+  - agent_id: clove
+    mastery: 40.0
+  - agent_id: cypher
+    mastery: 19.1
+  - agent_id: killjoy
+    mastery: 25.2
+  - agent_id: omen
+    mastery: 25.9
+  - agent_id: skye
+    mastery: 26.3
+  - agent_id: sova
+    mastery: 29.3
+  - agent_id: viper
+    mastery: 29.5
+  map_pool:
+  - map_id: ascent
+    mastery: 49.3
+  - map_id: bind
+    mastery: 60.5
+  - map_id: haven
+    mastery: 63.0
+  - map_id: lotus
+    mastery: 63.6
+  - map_id: split
+    mastery: 59.9
+  salary: 2800
+  contract_weeks_left: 0
+  morale: 69.4
+  stamina: 81.8
+  form: 59.5
+  personality_tags:
+  - fan_favorite
+  - veteran
+  potential: 48.5
+- id: fa_sota
+  handle: Sota
+  real_name: Sota
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 96.0
+  age: 20
+  role: initiator
+  playstyle: igl
+  attributes:
+    aim_precision: 37.9
+    aim_reactivity: 41.6
+    movement: 47.0
+    game_sense: 59.6
+    utility_usage: 50.8
+    positioning: 44.1
+    clutch_factor: 51.1
+    tilt_resistance: 45.4
+    composure: 57.7
+    comms_quality: 60.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 57.3
+  - agent_id: killjoy
+    mastery: 55.8
+  - agent_id: cypher
+    mastery: 47.3
+  - agent_id: breach
+    mastery: 43.4
+  - agent_id: skye
+    mastery: 35.0
+  - agent_id: chamber
+    mastery: 29.7
+  - agent_id: clove
+    mastery: 25.6
+  - agent_id: jett
+    mastery: 23.8
+  - agent_id: omen
+    mastery: 19.2
+  - agent_id: phoenix
+    mastery: 18.2
+  - agent_id: raze
+    mastery: 19.2
+  - agent_id: reyna
+    mastery: 27.1
+  - agent_id: viper
+    mastery: 25.4
+  map_pool:
+  - map_id: ascent
+    mastery: 47.1
+  - map_id: bind
+    mastery: 60.8
+  - map_id: haven
+    mastery: 54.9
+  - map_id: lotus
+    mastery: 59.2
+  - map_id: split
+    mastery: 49.7
+  salary: 2700
+  contract_weeks_left: 0
+  morale: 67.3
+  stamina: 84.4
+  form: 56.5
+  personality_tags:
+  - team_player
+  potential: 62.8

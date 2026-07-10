@@ -27,6 +27,16 @@ class MapMastery(BaseModel):
     mastery: float = Field(ge=0.0, le=100.0)
 
 
+class LanguageSkill(BaseModel):
+    """One language a player speaks, with fluency 0-100. Up to three per
+    player. Shared languages drive comms cohesion (relationships layer)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    lang: str  # ISO-ish code: "en", "pt", "ko", ...
+    level: float = Field(ge=0.0, le=100.0)
+
+
 class Player(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -36,6 +46,10 @@ class Player(BaseModel):
     real_name: str = ""
     region: Region = Region.AMERICAS
     age: int = 20
+    # Nationality + spoken languages (up to 3, with fluency). "" / empty on
+    # older saves — gen.assign_identity backfills deterministically.
+    country: str = ""
+    languages: list[LanguageSkill] = Field(default_factory=list)
 
     # Role / style
     role: Role
@@ -57,6 +71,10 @@ class Player(BaseModel):
     # Career / contract
     salary: int = 0  # per week
     contract_weeks_left: int = 0
+    # Weeks at the current club (ticks weekly, resets when they move).
+    # Feeds loyalty: tenured players are pricier to pry away and protected
+    # from AI churn. 0 on old saves — heals as weeks tick.
+    tenure_weeks: int = 0
     morale: float = Field(default=70.0, ge=0.0, le=100.0)
     stamina: float = Field(default=100.0, ge=0.0, le=100.0)
     form: float = Field(default=50.0, ge=0.0, le=100.0)

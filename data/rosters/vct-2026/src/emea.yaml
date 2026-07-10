@@ -13,6 +13,8 @@ teams:
         igl: true
         quality: 73
         agents: [omen, viper]
+        country: GB
+        languages: [{lang: en, level: 99}]
       - handle: kaajak
         real_name: Kajetan Haremski
         age: 20
@@ -21,6 +23,8 @@ teams:
         igl: false
         quality: 80
         agents: [jett, raze]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 78}]
       - handle: Alfajer
         real_name: Emir Ali Beder
         age: 21
@@ -29,6 +33,8 @@ teams:
         igl: false
         quality: 81
         agents: [cypher, killjoy, viper]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 72}]
       - handle: crashies
         real_name: Austin Roberts
         age: 29
@@ -37,6 +43,8 @@ teams:
         igl: false
         quality: 74
         agents: [sova, skye]
+        country: US
+        languages: [{lang: en, level: 99}]
       - handle: Cloud
         real_name: Kirill Nekhozhin
         age: 20
@@ -45,6 +53,8 @@ teams:
         igl: false
         quality: 70
         agents: [sova, skye]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 65}]
   - name: Team Liquid
     tag: TL
     tier: 1
@@ -58,6 +68,8 @@ teams:
         igl: true
         quality: 77
         agents: [killjoy, viper, cypher]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 68}]
       - handle: trexx
         real_name: Nikita Cherednichenko
         age: 22
@@ -66,6 +78,8 @@ teams:
         igl: false
         quality: 71
         agents: [jett, raze]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 62}]
       - handle: Kicks
         real_name: Kimmie Laasner
         age: 20
@@ -74,6 +88,8 @@ teams:
         igl: false
         quality: 71
         agents: [skye, omen, sova]
+        country: EE
+        languages: [{lang: et, level: 96}, {lang: en, level: 85}, {lang: ru, level: 55}]
       - handle: purp0
         real_name: Semyon Borchev
         age: 19
@@ -82,6 +98,8 @@ teams:
         igl: false
         quality: 73
         agents: [sova, skye]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 60}]
       - handle: kamo
         real_name: Kamil Frackowiak
         age: 19
@@ -90,6 +108,8 @@ teams:
         igl: false
         quality: 73
         agents: [phoenix, raze]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 75}]
   - name: Team Vitality
     tag: VIT
     tier: 1
@@ -103,6 +123,8 @@ teams:
         igl: true
         quality: 75
         agents: [sova, breach]
+        country: FI
+        languages: [{lang: fi, level: 96}, {lang: en, level: 90}]
       - handle: Derke
         real_name: Nikita Sirmitev
         age: 23
@@ -111,6 +133,8 @@ teams:
         igl: false
         quality: 79
         agents: [jett, raze]
+        country: FI
+        languages: [{lang: fi, level: 90}, {lang: en, level: 88}, {lang: ru, level: 60}]
       - handle: Chronicle
         real_name: Timofey Khromov
         age: 24
@@ -119,6 +143,8 @@ teams:
         igl: false
         quality: 80
         agents: [viper, killjoy, chamber]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 70}]
       - handle: Sayonara
         real_name: Stefan Mitcu
         age: 19
@@ -127,6 +153,8 @@ teams:
         igl: false
         quality: 82
         agents: [sova, viper, phoenix]
+        country: MD
+        languages: [{lang: ro, level: 96}, {lang: en, level: 65}, {lang: ru, level: 55}]
       - handle: PROFEK
         real_name: Dawid Swiec
         age: 21
@@ -135,6 +163,8 @@ teams:
         igl: false
         quality: 72
         agents: [omen, viper]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 78}]
   - name: Team Heretics
     tag: TH
     tier: 1
@@ -148,6 +178,8 @@ teams:
         igl: true
         quality: 76
         agents: [omen, viper]
+        country: LT
+        languages: [{lang: lt, level: 98}, {lang: en, level: 82}]
       - handle: Wo0t
         real_name: Mert Alkan
         age: 20
@@ -156,6 +188,8 @@ teams:
         igl: false
         quality: 85
         agents: [raze, jett]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 75}]
       - handle: RieNs
         real_name: Enes Ecirli
         age: 22
@@ -164,6 +198,8 @@ teams:
         igl: false
         quality: 79
         agents: [sova, skye]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 72}]
       - handle: benjyfishy
         real_name: Benjamin David Fish
         age: 22
@@ -172,6 +208,8 @@ teams:
         igl: false
         quality: 77
         agents: [cypher, killjoy, viper]
+        country: GB
+        languages: [{lang: en, level: 99}]
       - handle: koshmaras
         real_name: Martynas Namikas
         age: 19
@@ -180,6 +218,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, chamber]
+        country: LT
+        languages: [{lang: lt, level: 97}, {lang: en, level: 78}]
   - name: Natus Vincere
     tag: NAVI
     tier: 1
@@ -193,6 +233,8 @@ teams:
         igl: true
         quality: 70
         agents: [sova, skye]
+        country: US
+        languages: [{lang: en, level: 99}]
       - handle: Ruxic
         real_name: Ugur Guc
         age: 21
@@ -201,6 +243,8 @@ teams:
         igl: false
         quality: 82
         agents: [omen, viper]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 78}]
       - handle: hiro
         real_name: Emirhan Kat
         age: 20
@@ -209,6 +253,8 @@ teams:
         igl: false
         quality: 78
         agents: [viper, killjoy]
+        country: NL
+        languages: [{lang: nl, level: 95}, {lang: en, level: 85}, {lang: tr, level: 80}]
       - handle: ExiT
         real_name: Abdullah Al-Twaijri
         age: 20
@@ -217,6 +263,8 @@ teams:
         igl: false
         quality: 70
         agents: [jett, raze]
+        country: SA
+        languages: [{lang: ar, level: 96}, {lang: en, level: 70}]
       - handle: CyvOph
         real_name: Clement Millard
         age: 21
@@ -225,6 +273,8 @@ teams:
         igl: false
         quality: 71
         agents: [phoenix, breach, viper]
+        country: FR
+        languages: [{lang: fr, level: 97}, {lang: en, level: 78}]
   - name: Karmine Corp
     tag: KC
     tier: 1
@@ -238,6 +288,8 @@ teams:
         igl: true
         quality: 66
         agents: [sova, omen, phoenix]
+        country: EG
+        languages: [{lang: ar, level: 96}, {lang: en, level: 75}]
       - handle: dos9
         real_name: Dastan Zhumagali
         age: 22
@@ -246,6 +298,8 @@ teams:
         igl: false
         quality: 73
         agents: [omen, viper]
+        country: KZ
+        languages: [{lang: ru, level: 92}, {lang: kk, level: 60}, {lang: en, level: 58}]
       - handle: LewN
         real_name: Burak Alkan
         age: 19
@@ -254,6 +308,8 @@ teams:
         igl: false
         quality: 72
         agents: [jett, raze]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 76}]
       - handle: SUYGETSU
         real_name: Dmitry Ilyushin
         age: 24
@@ -262,6 +318,8 @@ teams:
         igl: false
         quality: 74
         agents: [cypher, killjoy]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 75}]
       - handle: N4RRATE
         real_name: Marshall Massey
         age: 21
@@ -270,6 +328,8 @@ teams:
         igl: false
         quality: 71
         agents: [sova, skye]
+        country: US
+        languages: [{lang: en, level: 99}]
   - name: BBL Esports
     tag: BBL
     tier: 1
@@ -283,6 +343,8 @@ teams:
         igl: true
         quality: 69
         agents: [sova, skye]
+        country: TR
+        languages: [{lang: tr, level: 98}, {lang: en, level: 70}]
       - handle: lovers rock
         real_name: Umut Pekdogan
         age: 20
@@ -291,6 +353,8 @@ teams:
         igl: false
         quality: 73
         agents: [jett, raze]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: Lar0k
         real_name: Yusuf Kaan Kanber
         age: 20
@@ -299,6 +363,8 @@ teams:
         igl: false
         quality: 71
         agents: [raze, breach]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 62}]
       - handle: Loita
         real_name: Utku Kart
         age: 21
@@ -307,6 +373,8 @@ teams:
         igl: false
         quality: 69
         agents: [omen, viper]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 68}]
       - handle: Crewen
         real_name: Ali Eren Sargin
         age: 21
@@ -315,6 +383,8 @@ teams:
         igl: false
         quality: 74
         agents: [cypher, viper, killjoy]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 63}]
   - name: FUT Esports
     tag: FUT
     tier: 1
@@ -328,6 +398,8 @@ teams:
         igl: true
         quality: 71
         agents: [omen, viper]
+        country: TR
+        languages: [{lang: tr, level: 98}, {lang: en, level: 72}]
       - handle: yetujey
         real_name: Eray Budak
         age: 21
@@ -336,6 +408,8 @@ teams:
         igl: false
         quality: 76
         agents: [viper, cypher, killjoy]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 60}]
       - handle: s0pp
         real_name: Efe Tur
         age: 19
@@ -344,6 +418,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, raze]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: xeus
         real_name: Dogan Gozgen
         age: 20
@@ -352,6 +428,8 @@ teams:
         igl: false
         quality: 72
         agents: [raze, phoenix]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 62}]
       - handle: KROSTALY
         real_name: Okan Alacam
         age: 20
@@ -360,6 +438,8 @@ teams:
         igl: false
         quality: 67
         agents: [sova, skye]
+        country: TR
+        languages: [{lang: tr, level: 95}, {lang: en, level: 58}]
   - name: GiantX
     tag: GX
     tier: 1
@@ -373,6 +453,8 @@ teams:
         igl: true
         quality: 64
         agents: [omen, viper]
+        country: PL
+        languages: [{lang: pl, level: 96}, {lang: en, level: 80}]
       - handle: ara
         real_name: Eduard-George Hanceriuc
         age: 19
@@ -381,6 +463,8 @@ teams:
         igl: false
         quality: 72
         agents: [jett, raze]
+        country: RO
+        languages: [{lang: ro, level: 95}, {lang: en, level: 78}]
       - handle: Flickless
         real_name: Karel Maeckelbergh
         age: 20
@@ -389,6 +473,8 @@ teams:
         igl: false
         quality: 72
         agents: [viper, cypher, sova]
+        country: BE
+        languages: [{lang: nl, level: 95}, {lang: en, level: 82}, {lang: fr, level: 30}]
       - handle: westside
         real_name: Milosz Duda
         age: 19
@@ -397,6 +483,8 @@ teams:
         igl: false
         quality: 68
         agents: [phoenix, cypher]
+        country: PL
+        languages: [{lang: pl, level: 95}, {lang: en, level: 79}]
       - handle: tomaszy
         real_name: Tomas Machado
         age: 20
@@ -405,6 +493,8 @@ teams:
         igl: false
         quality: 60
         agents: [skye, omen]
+        country: PT
+        languages: [{lang: pt, level: 95}, {lang: en, level: 83}]
   - name: Gentle Mates
     tag: M8
     tier: 1
@@ -418,6 +508,8 @@ teams:
         igl: true
         quality: 70
         agents: [sova, skye]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 70}]
       - handle: marteen
         real_name: Martin Patek
         age: 19
@@ -426,6 +518,8 @@ teams:
         igl: false
         quality: 78
         agents: [phoenix, raze]
+        country: CZ
+        languages: [{lang: cs, level: 96}, {lang: en, level: 65}]
       - handle: Minny
         real_name: Patrik Husek
         age: 20
@@ -434,6 +528,8 @@ teams:
         igl: false
         quality: 74
         agents: [cypher, viper]
+        country: CZ
+        languages: [{lang: cs, level: 96}, {lang: en, level: 65}]
       - handle: bipo
         real_name: Taranvir Singh
         age: 19
@@ -442,6 +538,8 @@ teams:
         igl: false
         quality: 67
         agents: [jett, raze]
+        country: IT
+        languages: [{lang: it, level: 92}, {lang: en, level: 65}, {lang: pa, level: 25}]
       - handle: Proxh
         real_name: Yusuf Emre Tunc
         age: 23
@@ -450,6 +548,8 @@ teams:
         igl: false
         quality: 68
         agents: [omen, viper]
+        country: DE
+        languages: [{lang: de, level: 90}, {lang: tr, level: 45}, {lang: en, level: 65}]
   - name: Eternal Fire
     tag: EF
     tier: 1
@@ -463,6 +563,8 @@ teams:
         igl: true
         quality: 70
         agents: [sova, skye]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: Izzy
         real_name: Baran Yilmaz
         age: 19
@@ -471,6 +573,8 @@ teams:
         igl: false
         quality: 73
         agents: [jett, raze]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: Favian
         real_name: Enes Yigiter
         age: 19
@@ -479,6 +583,8 @@ teams:
         igl: false
         quality: 75
         agents: [raze, phoenix]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: echo
         real_name: Omur Serkan Senol
         age: 21
@@ -487,6 +593,8 @@ teams:
         igl: false
         quality: 73
         agents: [cypher, viper]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
       - handle: audaz
         real_name: Soner Ekiz
         age: 22
@@ -495,6 +603,8 @@ teams:
         igl: false
         quality: 71
         agents: [omen, viper]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 65}]
   - name: PCIFIC Esports
     tag: PCF
     tier: 1
@@ -508,6 +618,8 @@ teams:
         igl: true
         quality: 61
         agents: [omen, viper]
+        country: RS
+        languages: [{lang: sr, level: 96}, {lang: en, level: 65}]
       - handle: cNed
         real_name: Mehmet Yagiz Ipek
         age: 24
@@ -516,6 +628,8 @@ teams:
         igl: false
         quality: 68
         agents: [jett, chamber]
+        country: TR
+        languages: [{lang: tr, level: 96}, {lang: en, level: 65}]
       - handle: seven
         real_name: Johann Hernandez
         age: 20
@@ -524,6 +638,8 @@ teams:
         igl: false
         quality: 62
         agents: [raze, phoenix]
+        country: MX
+        languages: [{lang: es, level: 97}, {lang: en, level: 60}]
       - handle: NINJA
         real_name: Patryk Koczyba
         age: 22
@@ -532,6 +648,8 @@ teams:
         igl: false
         quality: 62
         agents: [sova, skye]
+        country: PL
+        languages: [{lang: pl, level: 96}, {lang: en, level: 65}]
       - handle: al0rante
         real_name: Felix Brandl
         age: 21
@@ -540,6 +658,8 @@ teams:
         igl: false
         quality: 63
         agents: [viper, killjoy]
+        country: DE
+        languages: [{lang: de, level: 96}, {lang: en, level: 70}]
   - name: Besiktas Esports
     tag: BJK
     tier: 2
@@ -553,6 +673,8 @@ teams:
         igl: true
         quality: 57
         agents: [omen, viper]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 60}]
       - handle: MerSa
         real_name: Mert Saatci
         age: 22
@@ -561,6 +683,8 @@ teams:
         igl: false
         quality: 58
         agents: [jett, raze]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 60}]
       - handle: wezzy
         real_name: Arda Celbis
         age: 21
@@ -569,6 +693,8 @@ teams:
         igl: false
         quality: 56
         agents: [sova, skye]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 60}]
       - handle: influx
         real_name: Kaan Taskin
         age: 22
@@ -577,6 +703,8 @@ teams:
         igl: false
         quality: 55
         agents: [cypher, killjoy]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 60}]
       - handle: oroni
         real_name: Omer Acar
         age: 20
@@ -585,6 +713,8 @@ teams:
         igl: false
         quality: 56
         agents: [raze, phoenix]
+        country: TR
+        languages: [{lang: tr, level: 97}, {lang: en, level: 60}]
   - name: NAVI Junior
     tag: NVJ
     tier: 2
@@ -598,6 +728,8 @@ teams:
         igl: true
         quality: 56
         agents: [sova, skye]
+        country: UA
+        languages: [{lang: uk, level: 97}, {lang: ru, level: 85}, {lang: en, level: 55}]
       - handle: Kolosha
         real_name: Herman Skrypka
         age: 19
@@ -606,6 +738,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, raze]
+        country: UA
+        languages: [{lang: uk, level: 97}, {lang: ru, level: 85}, {lang: en, level: 55}]
       - handle: avey
         real_name: Nikita Ivanovs
         age: 20
@@ -614,6 +748,8 @@ teams:
         igl: false
         quality: 55
         agents: [omen, viper]
+        country: LV
+        languages: [{lang: lv, level: 95}, {lang: ru, level: 80}, {lang: en, level: 60}]
       - handle: Darxcioo
         real_name: Waniss Mehl
         age: 19
@@ -622,6 +758,8 @@ teams:
         igl: false
         quality: 54
         agents: [skye, breach]
+        country: BE
+        languages: [{lang: fr, level: 95}, {lang: en, level: 65}, {lang: nl, level: 25}]
       - handle: sizo
         real_name: Wiktor Bujak
         age: 19
@@ -630,6 +768,8 @@ teams:
         igl: false
         quality: 55
         agents: [killjoy, cypher]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 65}]
   - name: AlQadsiah Esports
     tag: QAD
     tier: 2
@@ -643,6 +783,8 @@ teams:
         igl: true
         quality: 57
         agents: [omen, viper]
+        country: EG
+        languages: [{lang: ar, level: 97}, {lang: en, level: 65}]
       - handle: SpYzera
         real_name: Abed Doughan
         age: 22
@@ -651,6 +793,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, raze]
+        country: LB
+        languages: [{lang: ar, level: 95}, {lang: en, level: 70}, {lang: fr, level: 40}]
       - handle: sickrey
         real_name: Nikolay Novozhilov
         age: 22
@@ -659,6 +803,8 @@ teams:
         igl: false
         quality: 58
         agents: [sova, skye]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 55}]
       - handle: Zimo
         real_name: Abdullah Amri
         age: 22
@@ -667,6 +813,8 @@ teams:
         igl: false
         quality: 56
         agents: [cypher, killjoy]
+        country: SA
+        languages: [{lang: ar, level: 97}, {lang: en, level: 60}]
       - handle: SimonD4rk
         real_name: Alexandr Skovbel
         age: 21
@@ -675,6 +823,8 @@ teams:
         igl: false
         quality: 56
         agents: [viper, skye]
+        country: BY
+        languages: [{lang: ru, level: 95}, {lang: be, level: 40}, {lang: en, level: 55}]
   - name: UCAM Esports Club
     tag: UCAM
     tier: 2
@@ -688,6 +838,8 @@ teams:
         igl: true
         quality: 57
         agents: [sova, skye]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 65}]
       - handle: B1SK
         real_name: Vitaliy Emelyanov
         age: 20
@@ -696,6 +848,8 @@ teams:
         igl: false
         quality: 58
         agents: [jett, raze]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 58}]
       - handle: Famsii
         real_name: Ramses Valentino Erasmus Koivukangas
         age: 21
@@ -704,6 +858,8 @@ teams:
         igl: false
         quality: 55
         agents: [omen, viper]
+        country: FI
+        languages: [{lang: fi, level: 96}, {lang: en, level: 82}]
       - handle: OLIZERA
         real_name: Diogo Oliveira
         age: 22
@@ -712,6 +868,8 @@ teams:
         igl: false
         quality: 56
         agents: [cypher, killjoy]
+        country: PT
+        languages: [{lang: pt, level: 97}, {lang: en, level: 70}, {lang: es, level: 45}]
       - handle: Jesse
         real_name: Adam Ctvrtnicek
         age: 21
@@ -720,6 +878,8 @@ teams:
         igl: false
         quality: 56
         agents: [viper, breach]
+        country: CZ
+        languages: [{lang: cs, level: 97}, {lang: en, level: 65}]
   - name: Joblife
     tag: JL
     tier: 2
@@ -733,6 +893,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, viper]
+        country: HR
+        languages: [{lang: hr, level: 97}, {lang: en, level: 65}]
       - handle: runneR
         real_name: Emil Trajkovski
         age: 20
@@ -741,6 +903,8 @@ teams:
         igl: false
         quality: 63
         agents: [jett, raze]
+        country: MK
+        languages: [{lang: mk, level: 97}, {lang: en, level: 60}]
       - handle: UNFAKE
         real_name: Bartosz Bernacki
         age: 24
@@ -749,6 +913,8 @@ teams:
         igl: false
         quality: 59
         agents: [killjoy, cypher]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 65}]
       - handle: kamyk
         real_name: Maks Rychlewski
         age: 21
@@ -757,6 +923,8 @@ teams:
         igl: false
         quality: 57
         agents: [sova, skye]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 65}]
       - handle: chiwa
         real_name: Egor Stepanyuk
         age: 20
@@ -765,6 +933,8 @@ teams:
         igl: false
         quality: 57
         agents: [viper, phoenix]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 55}]
   - name: FOKUS
     tag: FKS
     tier: 2
@@ -778,6 +948,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, viper]
+        country: GB
+        languages: [{lang: en, level: 98}]
       - handle: Serial
         real_name: Maikls Zdanovs
         age: 20
@@ -786,6 +958,8 @@ teams:
         igl: false
         quality: 60
         agents: [jett, raze]
+        country: LV
+        languages: [{lang: lv, level: 96}, {lang: en, level: 68}, {lang: ru, level: 50}]
       - handle: Pa1ze
         real_name: Mohammad Khatib
         age: 21
@@ -794,6 +968,8 @@ teams:
         igl: false
         quality: 55
         agents: [sova, skye]
+        country: DK
+        languages: [{lang: da, level: 96}, {lang: en, level: 82}, {lang: ar, level: 30}]
       - handle: MOLSI
         real_name: Michal Lacki
         age: 22
@@ -802,6 +978,8 @@ teams:
         igl: false
         quality: 57
         agents: [phoenix, breach]
+        country: PL
+        languages: [{lang: pl, level: 97}, {lang: en, level: 65}]
       - handle: shinnok
         real_name: Viktor Zsombor Magloczki
         age: 22
@@ -810,3 +988,5 @@ teams:
         igl: false
         quality: 55
         agents: [killjoy, cypher]
+        country: HU
+        languages: [{lang: hu, level: 97}, {lang: en, level: 65}]

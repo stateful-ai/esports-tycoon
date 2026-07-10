@@ -13,6 +13,10 @@ players:
   handle: zhe
   real_name: Niu Zhe
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: flex
   playstyle: entry
@@ -34,30 +38,55 @@ players:
     mastery: 86.5
   - agent_id: killjoy
     mastery: 74.3
+  - agent_id: breach
+    mastery: 59.0
+  - agent_id: chamber
+    mastery: 52.6
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 55.9
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 47.7
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 56.6
+  - agent_id: sova
+    mastery: 44.1
   map_pool:
   - map_id: ascent
-    mastery: 67.6
+    mastery: 84.5
   - map_id: bind
-    mastery: 88.0
+    mastery: 84.4
   - map_id: haven
-    mastery: 87.8
+    mastery: 80.2
   - map_id: lotus
-    mastery: 80.4
+    mastery: 75.1
   - map_id: split
-    mastery: 75.8
+    mastery: 84.4
   salary: 5900
-  contract_weeks_left: 53
-  morale: 84.2
-  stamina: 84.5
-  form: 52.5
+  contract_weeks_left: 47
+  morale: 65.5
+  stamina: 93.8
+  form: 58.5
   personality_tags:
-  - hot_head
-  - quiet
-  potential: 89.7
+  - fan_favorite
+  potential: 81.5
 - id: team_jdg_esports_yuicaw
   handle: Yuicaw
   real_name: Huang Yung-chieh
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  - lang: en
+    level: 45.0
   age: 22
   role: flex
   playstyle: support
@@ -77,30 +106,59 @@ players:
     mastery: 83.1
   - agent_id: killjoy
     mastery: 79.5
+  - agent_id: breach
+    mastery: 49.5
+  - agent_id: chamber
+    mastery: 54.9
+  - agent_id: clove
+    mastery: 53.3
+  - agent_id: cypher
+    mastery: 42.7
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 44.0
+  - agent_id: phoenix
+    mastery: 44.4
+  - agent_id: reyna
+    mastery: 45.4
+  - agent_id: skye
+    mastery: 48.8
+  - agent_id: sova
+    mastery: 43.2
+  - agent_id: viper
+    mastery: 42.1
   map_pool:
   - map_id: ascent
-    mastery: 76.0
+    mastery: 72.6
   - map_id: bind
-    mastery: 77.8
+    mastery: 71.9
   - map_id: haven
-    mastery: 75.5
+    mastery: 71.4
   - map_id: lotus
-    mastery: 84.2
+    mastery: 84.6
   - map_id: split
-    mastery: 74.4
+    mastery: 76.5
   salary: 5100
-  contract_weeks_left: 58
-  morale: 77.7
-  stamina: 86.3
-  form: 58.1
+  contract_weeks_left: 66
+  morale: 83.7
+  stamina: 84.8
+  form: 47.1
   personality_tags:
-  - flashy
-  - team_player
-  potential: 76.0
+  - analytical
+  potential: 72.3
 - id: team_jdg_esports_jkuro
   handle: jkuro
   real_name: Yeung Ho Chung
   region: china
+  country: HK
+  languages:
+  - lang: yue
+    level: 96.0
+  - lang: zh
+    level: 78.0
+  - lang: en
+    level: 50.0
   age: 24
   role: sentinel
   playstyle: anchor
@@ -120,30 +178,58 @@ players:
     mastery: 78.3
   - agent_id: omen
     mastery: 76.4
+  - agent_id: chamber
+    mastery: 54.0
+  - agent_id: killjoy
+    mastery: 55.8
+  - agent_id: breach
+    mastery: 44.0
+  - agent_id: clove
+    mastery: 49.1
+  - agent_id: jett
+    mastery: 46.6
+  - agent_id: phoenix
+    mastery: 54.3
+  - agent_id: raze
+    mastery: 47.1
+  - agent_id: reyna
+    mastery: 41.0
+  - agent_id: skye
+    mastery: 56.9
+  - agent_id: sova
+    mastery: 52.2
+  - agent_id: viper
+    mastery: 46.2
   map_pool:
   - map_id: ascent
-    mastery: 67.1
+    mastery: 79.1
   - map_id: bind
-    mastery: 69.6
+    mastery: 86.3
   - map_id: haven
-    mastery: 77.9
+    mastery: 77.7
   - map_id: lotus
-    mastery: 71.2
+    mastery: 76.5
   - map_id: split
-    mastery: 74.6
+    mastery: 70.4
   salary: 5100
-  contract_weeks_left: 49
-  morale: 60.5
-  stamina: 81.4
-  form: 50.0
+  contract_weeks_left: 57
+  morale: 79.3
+  stamina: 82.4
+  form: 48.9
   personality_tags:
-  - hot_head
-  - quiet
-  potential: 73.8
+  - analytical
+  - fan_favorite
+  potential: 76.1
 - id: team_jdg_esports_berlin
   handle: BerLIN
   real_name: Chang Po-lin
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  - lang: en
+    level: 40.0
   age: 26
   role: controller
   playstyle: igl
@@ -163,30 +249,56 @@ players:
     mastery: 87.8
   - agent_id: viper
     mastery: 78.9
+  - agent_id: clove
+    mastery: 53.9
+  - agent_id: breach
+    mastery: 46.4
+  - agent_id: chamber
+    mastery: 44.8
+  - agent_id: cypher
+    mastery: 55.1
+  - agent_id: jett
+    mastery: 47.9
+  - agent_id: killjoy
+    mastery: 42.4
+  - agent_id: phoenix
+    mastery: 45.6
+  - agent_id: raze
+    mastery: 44.1
+  - agent_id: reyna
+    mastery: 48.9
+  - agent_id: skye
+    mastery: 37.2
+  - agent_id: sova
+    mastery: 52.5
   map_pool:
   - map_id: ascent
-    mastery: 67.3
+    mastery: 69.5
   - map_id: bind
-    mastery: 86.7
+    mastery: 74.9
   - map_id: haven
-    mastery: 74.3
+    mastery: 75.9
   - map_id: lotus
-    mastery: 70.6
+    mastery: 71.2
   - map_id: split
-    mastery: 72.4
+    mastery: 81.4
   salary: 5000
-  contract_weeks_left: 53
-  morale: 63.3
-  stamina: 85.3
-  form: 54.9
+  contract_weeks_left: 70
+  morale: 76.8
+  stamina: 97.5
+  form: 48.2
   personality_tags:
   - analytical
-  - independent
-  potential: 69.4
+  - team_player
+  potential: 76.2
 - id: team_jdg_esports_crownfisher
   handle: crownfisher
   real_name: Li Ao
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 19
   role: duelist
   playstyle: entry
@@ -206,23 +318,45 @@ players:
     mastery: 81.0
   - agent_id: jett
     mastery: 77.1
+  - agent_id: phoenix
+    mastery: 53.2
+  - agent_id: reyna
+    mastery: 61.5
+  - agent_id: breach
+    mastery: 41.9
+  - agent_id: chamber
+    mastery: 50.0
+  - agent_id: clove
+    mastery: 35.4
+  - agent_id: cypher
+    mastery: 41.6
+  - agent_id: killjoy
+    mastery: 38.1
+  - agent_id: omen
+    mastery: 41.1
+  - agent_id: skye
+    mastery: 45.1
+  - agent_id: sova
+    mastery: 38.9
+  - agent_id: viper
+    mastery: 38.0
   map_pool:
   - map_id: ascent
-    mastery: 68.9
+    mastery: 69.2
   - map_id: bind
-    mastery: 81.3
+    mastery: 67.3
   - map_id: haven
-    mastery: 71.2
+    mastery: 73.2
   - map_id: lotus
-    mastery: 69.9
+    mastery: 75.1
   - map_id: split
-    mastery: 73.5
+    mastery: 70.2
   salary: 4400
-  contract_weeks_left: 65
-  morale: 83.9
-  stamina: 93.8
-  form: 50.8
+  contract_weeks_left: 60
+  morale: 67.8
+  stamina: 96.8
+  form: 57.3
   personality_tags:
-  - independent
-  - quiet
-  potential: 78.8
+  - analytical
+  - grinder
+  potential: 74.9

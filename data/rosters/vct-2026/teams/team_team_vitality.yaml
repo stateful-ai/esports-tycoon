@@ -13,6 +13,12 @@ players:
   handle: Jamppi
   real_name: Elias Olkkonen
   region: emea
+  country: FI
+  languages:
+  - lang: fi
+    level: 96.0
+  - lang: en
+    level: 90.0
   age: 25
   role: initiator
   playstyle: igl
@@ -32,30 +38,60 @@ players:
     mastery: 94.1
   - agent_id: breach
     mastery: 79.7
+  - agent_id: skye
+    mastery: 67.3
+  - agent_id: chamber
+    mastery: 52.2
+  - agent_id: clove
+    mastery: 52.0
+  - agent_id: cypher
+    mastery: 6.4
+  - agent_id: jett
+    mastery: 53.5
+  - agent_id: killjoy
+    mastery: 56.3
+  - agent_id: omen
+    mastery: 54.4
+  - agent_id: phoenix
+    mastery: 58.0
+  - agent_id: raze
+    mastery: 7.5
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 2.7
   map_pool:
   - map_id: ascent
-    mastery: 83.4
+    mastery: 77.4
   - map_id: bind
-    mastery: 77.3
+    mastery: 93.5
   - map_id: haven
-    mastery: 79.6
+    mastery: 78.3
   - map_id: lotus
-    mastery: 85.6
-  - map_id: split
     mastery: 79.4
+  - map_id: split
+    mastery: 80.0
   salary: 6000
-  contract_weeks_left: 69
-  morale: 63.8
-  stamina: 85.7
-  form: 56.2
+  contract_weeks_left: 74
+  morale: 64.9
+  stamina: 84.7
+  form: 56.6
   personality_tags:
-  - grinder
+  - quiet
   - team_player
-  potential: 80.7
+  potential: 80.1
 - id: team_team_vitality_derke
   handle: Derke
   real_name: Nikita Sirmitev
   region: emea
+  country: FI
+  languages:
+  - lang: fi
+    level: 90.0
+  - lang: en
+    level: 88.0
+  - lang: ru
+    level: 60.0
   age: 23
   role: duelist
   playstyle: entry
@@ -75,29 +111,57 @@ players:
     mastery: 93.7
   - agent_id: raze
     mastery: 79.3
+  - agent_id: phoenix
+    mastery: 73.3
+  - agent_id: reyna
+    mastery: 69.9
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 50.7
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 53.9
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 55.8
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 52.2
   map_pool:
   - map_id: ascent
-    mastery: 90.4
+    mastery: 79.9
   - map_id: bind
-    mastery: 85.3
+    mastery: 84.3
   - map_id: haven
-    mastery: 89.7
+    mastery: 84.5
   - map_id: lotus
-    mastery: 93.0
+    mastery: 83.8
   - map_id: split
-    mastery: 99.0
+    mastery: 82.4
   salary: 6500
-  contract_weeks_left: 76
-  morale: 74.2
-  stamina: 85.5
-  form: 59.6
+  contract_weeks_left: 78
+  morale: 70.5
+  stamina: 91.3
+  form: 59.1
   personality_tags:
-  - slow_starter
-  potential: 82.3
+  - independent
+  potential: 84.5
 - id: team_team_vitality_chronicle
   handle: Chronicle
   real_name: Timofey Khromov
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 70.0
   age: 24
   role: flex
   playstyle: anchor
@@ -119,30 +183,58 @@ players:
     mastery: 97.8
   - agent_id: chamber
     mastery: 85.3
+  - agent_id: breach
+    mastery: 54.7
+  - agent_id: clove
+    mastery: 52.1
+  - agent_id: cypher
+    mastery: 53.9
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 46.6
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 51.0
   map_pool:
   - map_id: ascent
-    mastery: 99.0
+    mastery: 82.8
   - map_id: bind
-    mastery: 81.6
+    mastery: 90.6
   - map_id: haven
-    mastery: 83.6
+    mastery: 93.0
   - map_id: lotus
-    mastery: 78.5
+    mastery: 89.6
   - map_id: split
-    mastery: 84.8
+    mastery: 86.1
   salary: 6700
-  contract_weeks_left: 71
-  morale: 69.3
-  stamina: 90.1
-  form: 45.8
+  contract_weeks_left: 40
+  morale: 69.0
+  stamina: 88.8
+  form: 50.7
   personality_tags:
-  - clutch_gene
-  - fan_favorite
-  potential: 88.7
+  - flashy
+  - team_player
+  potential: 84.1
 - id: team_team_vitality_sayonara
   handle: Sayonara
   real_name: Stefan Mitcu
   region: emea
+  country: MD
+  languages:
+  - lang: ro
+    level: 96.0
+  - lang: en
+    level: 65.0
+  - lang: ru
+    level: 55.0
   age: 19
   role: flex
   playstyle: lurker
@@ -164,29 +256,56 @@ players:
     mastery: 91.6
   - agent_id: phoenix
     mastery: 87.3
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 6.3
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 3.6
   map_pool:
   - map_id: ascent
-    mastery: 88.6
-  - map_id: bind
-    mastery: 91.0
-  - map_id: haven
-    mastery: 96.4
-  - map_id: lotus
     mastery: 99.0
+  - map_id: bind
+    mastery: 97.2
+  - map_id: haven
+    mastery: 87.1
+  - map_id: lotus
+    mastery: 84.4
   - map_id: split
-    mastery: 82.5
+    mastery: 84.6
   salary: 6900
-  contract_weeks_left: 77
-  morale: 73.2
-  stamina: 87.3
-  form: 54.7
+  contract_weeks_left: 62
+  morale: 76.0
+  stamina: 98.8
+  form: 53.5
   personality_tags:
-  - grinder
-  potential: 90.1
+  - flashy
+  - independent
+  potential: 88.3
 - id: team_team_vitality_profek
   handle: PROFEK
   real_name: Dawid Swiec
   region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 97.0
+  - lang: en
+    level: 78.0
   age: 21
   role: controller
   playstyle: support
@@ -206,21 +325,44 @@ players:
     mastery: 90.9
   - agent_id: viper
     mastery: 82.7
+  - agent_id: clove
+    mastery: 64.4
+  - agent_id: breach
+    mastery: 57.1
+  - agent_id: chamber
+    mastery: 58.4
+  - agent_id: cypher
+    mastery: 57.6
+  - agent_id: jett
+    mastery: 50.7
+  - agent_id: killjoy
+    mastery: 55.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 47.2
+  - agent_id: reyna
+    mastery: 47.5
+  - agent_id: skye
+    mastery: 51.5
+  - agent_id: sova
+    mastery: 6.3
   map_pool:
   - map_id: ascent
-    mastery: 80.6
+    mastery: 74.0
   - map_id: bind
-    mastery: 75.9
+    mastery: 83.7
   - map_id: haven
-    mastery: 86.1
+    mastery: 75.1
   - map_id: lotus
-    mastery: 82.0
+    mastery: 77.4
   - map_id: split
-    mastery: 87.7
+    mastery: 79.6
   salary: 5600
-  contract_weeks_left: 40
-  morale: 80.1
-  stamina: 82.8
-  form: 54.5
-  personality_tags: []
-  potential: 81.9
+  contract_weeks_left: 48
+  morale: 64.2
+  stamina: 89.5
+  form: 59.6
+  personality_tags:
+  - quiet
+  potential: 82.0

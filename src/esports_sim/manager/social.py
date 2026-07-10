@@ -21,19 +21,50 @@ import hashlib
 
 from esports_sim.manager import development
 
-FEED_CAP = 120
+FEED_CAP = 60
 MILESTONES = [
     10_000, 25_000, 50_000, 100_000, 250_000,
     500_000, 1_000_000, 2_000_000, 5_000_000,
 ]
+# Only landmark crossings this big get a POST (smaller ones still nudge
+# confidence) — the feed was drowning in "thanks for 25K" filler.
+MILESTONE_POST_FLOOR = 100_000
 
 _FLAVOR_POSTS = [
     "Lock in.",
     "New week. Back to work.",
-    "Trust the process.",
     "Scrims felt different today.",
-    "Sleep, grind, repeat.",
     "We're not done yet.",
+    "practice server down AGAIN. someone's getting blamed and it won't be me",
+    "ranked is a warcrime tonight",
+    "chat i can't say what happened in scrims but WOW",
+    "petition to make Mondays illegal during split",
+]
+
+# Milestone post variants (hash-picked per player+landmark — no rng draw).
+_MILESTONE_POSTS = [
+    "{label}. Thank you all, honestly.",
+    "{label}?? who let this happen. love you all",
+    "{label} of you now. no refunds.",
+    "hit {label}. mom i made it",
+]
+
+# Salty-loser lines after a decided series (hash-picked, star of the losing
+# side). Grounded: only fires on a real played fixture.
+_SALT_POSTS = [
+    "gg. don't @ me.",
+    "we win that series 9 times out of 10.",
+    "deleting my VOD review notes. starting over.",
+    "not going to say what I want to say. gn.",
+    "refund my anti-strat sessions.",
+]
+
+# Meme-account reactions to an upset (winner's tag, loser's tag).
+_UPSET_POSTS = [
+    "{w} just ended {l}'s whole career. timeline in SHAMBLES.",
+    "{l} fans logging off in real time. {w} what was that??",
+    "no because how did {w} just do that to {l}.",
+    "{w} beating {l} was NOT on my bingo card.",
 ]
 
 
@@ -248,18 +279,25 @@ def weekly_tick(
             _likes(rng, max(team.fan_count, 1_000)), salt=tid,
         )
 
-    # Milestones: crossing a landmark is worth a post and a little belief.
+    # Milestones: crossing a landmark is worth a little belief — but only
+    # the BIG ones are worth a post (the feed was wall-to-wall "thanks for
+    # 25K"; now a landmark post is an event). Template hash-picked, no draw.
     for pid in sorted(gs.players):
         p = gs.players[pid]
         prev = before.get(pid, p.followers)
         crossed = [m for m in MILESTONES if prev < m <= p.followers]
         if crossed:
             m = crossed[-1]
-            label = f"{m // 1_000_000}M" if m >= 1_000_000 else f"{m // 1_000}K"
             p.confidence = round(min(95.0, p.confidence + 2.0), 1)
+            if m < MILESTONE_POST_FLOOR:
+                continue
+            label = f"{m // 1_000_000}M" if m >= 1_000_000 else f"{m // 1_000}K"
+            tmpl = _MILESTONE_POSTS[
+                int(_h(p.id, m), 16) % len(_MILESTONE_POSTS)
+            ]
             _post(
                 gs, season, week, "milestone", "player", p.id, p.handle,
-                f"{label}. Thank you all, honestly.", _likes(rng, p.followers),
+                tmpl.format(label=label), _likes(rng, p.followers),
                 salt=str(m),
             )
 
@@ -307,6 +345,79 @@ def weekly_tick(
                 f"Patch {note.version} is live: {note.lines[0]}.",
                 _likes(rng, 400_000), salt=note.version,
             )
+
+    # -- meme & drama beats (appended: new draws stay at the END) -----------
+    # All grounded in this week's real fixtures/box scores — the templates
+    # are spicy, the facts are not invented.
+
+    # 1. The upset: a clearly weaker org toppling a stronger one is the
+    #    timeline's main character for the day. One per week (biggest gap).
+    upset: tuple[float, object] | None = None
+    for f in sorted(report.fixtures, key=lambda x: x.id):
+        if not f.played or f.winner_id is None:
+            continue
+        loser_id = f.team_b if f.winner_id == f.team_a else f.team_a
+        w, l = gs.teams.get(f.winner_id), gs.teams.get(loser_id)
+        if w is None or l is None:
+            continue
+        gap = l.reputation - w.reputation
+        if gap >= 12.0 and (upset is None or gap > upset[0]):
+            upset = (gap, f)
+    if upset is not None:
+        f = upset[1]
+        loser_id = f.team_b if f.winner_id == f.team_a else f.team_a
+        w, l = gs.teams[f.winner_id], gs.teams[loser_id]
+        tmpl = _UPSET_POSTS[int(_h(f.id, "upset"), 16) % len(_UPSET_POSTS)]
+        _post(
+            gs, season, week, "drama", "media", f.winner_id, _voices["clips"],
+            tmpl.format(w=w.tag, l=l.tag),
+            _likes(rng, max(w.fan_count + l.fan_count, 50_000)), salt=f.id,
+        )
+
+    # 2. The salty loser: the beaten side's biggest name logs on. One per
+    #    week, highest-profile defeat first (playoff stages over regular).
+    salty: tuple[float, object] | None = None
+    for f in sorted(report.fixtures, key=lambda x: x.id):
+        if not f.played or f.winner_id is None:
+            continue
+        loser_id = f.team_b if f.winner_id == f.team_a else f.team_a
+        l = gs.teams.get(loser_id)
+        if l is None or not l.player_ids:
+            continue
+        weight = (2.0 if f.stage != "regular" else 1.0) * l.reputation
+        if salty is None or weight > salty[0]:
+            salty = (weight, f)
+    if salty is not None:
+        f = salty[1]
+        loser_id = f.team_b if f.winner_id == f.team_a else f.team_a
+        star_pid = max(
+            gs.teams[loser_id].player_ids,
+            key=lambda q: (gs.players[q].followers, q) if q in gs.players else (0, q),
+        )
+        star = gs.players.get(star_pid)
+        if star is not None:
+            line = _SALT_POSTS[int(_h(f.id, star_pid), 16) % len(_SALT_POSTS)]
+            _post(
+                gs, season, week, "drama", "player", star.id, star.handle,
+                line, _likes(rng, star.followers * 2), salt=f.id,
+            )
+
+    # 3. The clip: somebody's highlight is doing numbers. Fires on a real
+    #    multi-ace or monster-rating week; one per week.
+    clip_pid = None
+    for pid in sorted(perf):
+        d = perf[pid]
+        rating = d["rating_sum"] / max(d["maps"], 1)
+        if pid in gs.players and (d["aces"] >= 2 or (rating >= 1.35 and d["maps"] >= 2)):
+            clip_pid = pid
+            break
+    if clip_pid is not None:
+        cp = gs.players[clip_pid]
+        _post(
+            gs, season, week, "viral", "media", cp.id, _voices["clips"],
+            f"{cp.handle} is not human. someone check the demo.",
+            _likes(rng, cp.followers * 3), salt="clipweek",
+        )
 
     # -- community sentiment ------------------------------------------------
     _sentiment_tick(gs, report, dev_events, mental_events, rng)

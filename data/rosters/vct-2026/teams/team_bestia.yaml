@@ -13,6 +13,12 @@ players:
   handle: Melser
   real_name: Marco Eliot Machuca Amaro
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: en
+    level: 50.0
   age: 24
   role: controller
   playstyle: igl
@@ -32,29 +38,58 @@ players:
     mastery: 72.0
   - agent_id: viper
     mastery: 70.7
+  - agent_id: clove
+    mastery: 62.0
+  - agent_id: breach
+    mastery: 42.5
+  - agent_id: chamber
+    mastery: 39.8
+  - agent_id: cypher
+    mastery: 41.9
+  - agent_id: jett
+    mastery: 43.9
+  - agent_id: killjoy
+    mastery: 39.1
+  - agent_id: phoenix
+    mastery: 5.4
+  - agent_id: raze
+    mastery: 47.6
+  - agent_id: reyna
+    mastery: 51.6
+  - agent_id: skye
+    mastery: 51.9
+  - agent_id: sova
+    mastery: 44.2
   map_pool:
   - map_id: ascent
-    mastery: 80.9
+    mastery: 63.8
   - map_id: bind
-    mastery: 84.1
+    mastery: 72.8
   - map_id: haven
-    mastery: 70.2
+    mastery: 67.3
   - map_id: lotus
-    mastery: 65.7
+    mastery: 72.6
   - map_id: split
-    mastery: 66.9
+    mastery: 73.9
   salary: 4700
-  contract_weeks_left: 58
-  morale: 64.9
-  stamina: 87.5
-  form: 56.5
+  contract_weeks_left: 60
+  morale: 72.3
+  stamina: 99.6
+  form: 56.9
   personality_tags:
-  - analytical
-  potential: 68.7
+  - flashy
+  - hot_head
+  potential: 68.1
 - id: team_bestia_tacolilla
   handle: Tacolilla
   real_name: Vicente Compagnon
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: en
+    level: 45.0
   age: 24
   role: duelist
   playstyle: entry
@@ -74,30 +109,57 @@ players:
     mastery: 75.5
   - agent_id: raze
     mastery: 75.0
+  - agent_id: phoenix
+    mastery: 63.9
+  - agent_id: reyna
+    mastery: 49.4
+  - agent_id: breach
+    mastery: 40.2
+  - agent_id: chamber
+    mastery: 47.9
+  - agent_id: clove
+    mastery: 44.6
+  - agent_id: cypher
+    mastery: 45.6
+  - agent_id: killjoy
+    mastery: 35.8
+  - agent_id: omen
+    mastery: 43.0
+  - agent_id: skye
+    mastery: 44.0
+  - agent_id: sova
+    mastery: 37.7
+  - agent_id: viper
+    mastery: 47.1
   map_pool:
   - map_id: ascent
-    mastery: 84.8
+    mastery: 67.0
   - map_id: bind
-    mastery: 63.2
+    mastery: 62.4
   - map_id: haven
-    mastery: 61.0
+    mastery: 62.7
   - map_id: lotus
-    mastery: 67.8
+    mastery: 69.1
   - map_id: split
-    mastery: 75.0
+    mastery: 77.3
   salary: 4400
   contract_weeks_left: 68
-  morale: 65.5
-  stamina: 94.1
-  form: 57.2
+  morale: 61.3
+  stamina: 88.9
+  form: 49.1
   personality_tags:
-  - grinder
-  - streamer
-  potential: 65.0
+  - analytical
+  potential: 65.9
 - id: team_bestia_david
   handle: david
   real_name: David Olivares
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: en
+    level: 40.0
   age: 21
   role: initiator
   playstyle: support
@@ -117,30 +179,58 @@ players:
     mastery: 76.4
   - agent_id: skye
     mastery: 63.3
+  - agent_id: breach
+    mastery: 45.5
+  - agent_id: chamber
+    mastery: 38.4
+  - agent_id: clove
+    mastery: 28.9
+  - agent_id: cypher
+    mastery: 28.2
+  - agent_id: jett
+    mastery: 37.4
+  - agent_id: killjoy
+    mastery: 40.6
+  - agent_id: omen
+    mastery: 21.5
+  - agent_id: phoenix
+    mastery: 35.5
+  - agent_id: raze
+    mastery: 43.3
+  - agent_id: reyna
+    mastery: 39.8
+  - agent_id: viper
+    mastery: 30.9
   map_pool:
   - map_id: ascent
-    mastery: 59.8
+    mastery: 64.0
   - map_id: bind
-    mastery: 65.6
+    mastery: 56.5
   - map_id: haven
-    mastery: 66.7
+    mastery: 66.4
   - map_id: lotus
-    mastery: 70.4
+    mastery: 64.3
   - map_id: split
-    mastery: 55.3
+    mastery: 52.5
   salary: 3900
-  contract_weeks_left: 40
-  morale: 71.4
-  stamina: 82.6
-  form: 49.6
+  contract_weeks_left: 65
+  morale: 73.9
+  stamina: 83.4
+  form: 49.7
   personality_tags:
-  - fan_favorite
-  - independent
-  potential: 69.0
+  - quiet
+  - slow_starter
+  potential: 63.8
 - id: team_bestia_chubizin
   handle: chubizin
   real_name: Martin Ferres
   region: americas
+  country: CL
+  languages:
+  - lang: es
+    level: 95.0
+  - lang: en
+    level: 35.0
   age: 18
   role: sentinel
   playstyle: anchor
@@ -160,31 +250,60 @@ players:
     mastery: 69.8
   - agent_id: cypher
     mastery: 62.3
+  - agent_id: chamber
+    mastery: 47.7
+  - agent_id: breach
+    mastery: 35.1
+  - agent_id: clove
+    mastery: 35.1
+  - agent_id: jett
+    mastery: 26.9
+  - agent_id: omen
+    mastery: 26.6
+  - agent_id: phoenix
+    mastery: 26.3
+  - agent_id: raze
+    mastery: 44.5
+  - agent_id: reyna
+    mastery: 33.8
+  - agent_id: skye
+    mastery: 35.1
+  - agent_id: sova
+    mastery: 39.7
+  - agent_id: viper
+    mastery: 35.9
   map_pool:
   - map_id: ascent
-    mastery: 62.5
+    mastery: 69.7
   - map_id: bind
-    mastery: 63.4
+    mastery: 59.5
   - map_id: haven
-    mastery: 62.6
+    mastery: 68.0
   - map_id: lotus
-    mastery: 65.9
+    mastery: 62.6
   - map_id: split
-    mastery: 62.5
+    mastery: 78.9
   salary: 4000
-  contract_weeks_left: 40
-  morale: 69.1
-  stamina: 92.2
-  form: 57.4
+  contract_weeks_left: 72
+  morale: 64.4
+  stamina: 84.0
+  form: 50.4
   personality_tags:
-  - grinder
-  - hot_head
+  - fan_favorite
   - rookie
-  potential: 81.5
+  potential: 76.4
 - id: team_bestia_loss
   handle: Loss
   real_name: Unknown
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 95.0
+  - lang: es
+    level: 35.0
+  - lang: en
+    level: 40.0
   age: 22
   role: flex
   playstyle: support
@@ -204,22 +323,44 @@ players:
     mastery: 71.0
   - agent_id: sova
     mastery: 67.3
+  - agent_id: breach
+    mastery: 30.2
+  - agent_id: chamber
+    mastery: 34.5
+  - agent_id: clove
+    mastery: 42.0
+  - agent_id: cypher
+    mastery: 44.1
+  - agent_id: jett
+    mastery: 27.9
+  - agent_id: killjoy
+    mastery: 33.1
+  - agent_id: phoenix
+    mastery: 45.9
+  - agent_id: raze
+    mastery: 38.6
+  - agent_id: reyna
+    mastery: 35.8
+  - agent_id: skye
+    mastery: 37.4
+  - agent_id: viper
+    mastery: 29.3
   map_pool:
   - map_id: ascent
-    mastery: 61.0
+    mastery: 66.2
   - map_id: bind
-    mastery: 57.0
+    mastery: 56.8
   - map_id: haven
-    mastery: 58.0
+    mastery: 65.4
   - map_id: lotus
-    mastery: 62.2
+    mastery: 73.1
   - map_id: split
-    mastery: 62.4
+    mastery: 60.3
   salary: 3800
-  contract_weeks_left: 44
-  morale: 71.2
-  stamina: 83.3
-  form: 59.6
+  contract_weeks_left: 74
+  morale: 66.9
+  stamina: 96.0
+  form: 51.0
   personality_tags:
-  - perfectionist
-  potential: 63.2
+  - streamer
+  potential: 62.2

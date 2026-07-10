@@ -305,11 +305,16 @@ def maybe_offer(gs: GameState, rng: np.random.Generator) -> None:
             continue
         if cfg["rep_gate"] and team.reputation < cfg["rep_gate"]:
             continue
+        # An occupied slot draws no suitors until its deal enters the
+        # renewal window (<= 4 weeks left) — no offers piling up against
+        # an active sponsorship.
+        if not _slot_signable(gs, slot):
+            continue
         live = gs.sponsor_market.get(slot, [])
         if len(live) >= MARKET_CAP_PER_SLOT:
             continue
-        # Empty, signable slots attract suitors faster.
-        prob = cfg["offer_prob"] * (1.5 if _slot_signable(gs, slot) and not live else 1.0)
+        # Empty slots attract suitors faster.
+        prob = cfg["offer_prob"] * (1.5 if not live else 1.0)
         if rng.random() >= min(prob, 0.9):
             continue
         offer = _generate_offer(rng, gs, slot)
@@ -356,9 +361,9 @@ def sign_market_offer(
     team = gs.teams[gs.acting_team_id]
     team.balance += deal.signing_bonus
     gs.sponsor_slots[slot] = deal
-    gs.sponsor_market[slot] = [
-        o for o in gs.sponsor_market.get(slot, []) if o.brand != brand
-    ]
+    # The slot is taken — every rival suitor withdraws (no offers linger
+    # against an active deal; new ones wait for the renewal window).
+    gs.sponsor_market[slot] = []
     _bump_relation(gs, brand, +2.0)
     gs.push_news(
         f"{team.name} sign a {slot} deal with {brand} ({_describe(deal)})."

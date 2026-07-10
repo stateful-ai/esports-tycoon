@@ -16,6 +16,8 @@ teams:
         igl: false
         quality: 85
         agents: [jett, phoenix]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: en, level: 60}]
       - handle: Jinggg
         real_name: Wang Jing Jie
         age: 21
@@ -24,6 +26,8 @@ teams:
         igl: false
         quality: 83
         agents: [raze, phoenix]
+        country: SG
+        languages: [{lang: en, level: 90}, {lang: zh, level: 80}]
       - handle: f0rsakeN
         real_name: Jason Susanto
         age: 21
@@ -32,6 +36,8 @@ teams:
         igl: false
         quality: 82
         agents: [omen, jett]
+        country: ID
+        languages: [{lang: id, level: 95}, {lang: en, level: 88}]
       - handle: invy
         real_name: Adrian Jiggs Aisa Reyes
         age: 23
@@ -40,6 +46,8 @@ teams:
         igl: false
         quality: 74
         agents: [skye, sova]
+        country: PH
+        languages: [{lang: tl, level: 92}, {lang: en, level: 82}]
       - handle: d4v41
         real_name: Ahmad Khalish Rusyaidee bin Nordin
         age: 24
@@ -48,6 +56,8 @@ teams:
         igl: true
         quality: 78
         agents: [killjoy, viper]
+        country: MY
+        languages: [{lang: ms, level: 95}, {lang: en, level: 85}]
   - name: T1
     tag: T1
     tier: 1
@@ -61,6 +71,8 @@ teams:
         igl: false
         quality: 76
         agents: [chamber, killjoy]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 30}]
       - handle: BuZz
         real_name: Yu Byung-chul
         age: 23
@@ -69,6 +81,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 30}]
       - handle: stax
         real_name: Kim Gu-taek
         age: 26
@@ -77,6 +91,8 @@ teams:
         igl: false
         quality: 72
         agents: [skye, sova]
+        country: KR
+        languages: [{lang: ko, level: 98}, {lang: en, level: 40}]
       - handle: Meteor
         real_name: Kim Tae-oh
         age: 24
@@ -85,6 +101,8 @@ teams:
         igl: false
         quality: 71
         agents: [viper, killjoy, phoenix]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 35}]
       - handle: Munchkin
         real_name: Byeon Sang-beom
         age: 26
@@ -93,6 +111,8 @@ teams:
         igl: true
         quality: 70
         agents: [omen, viper]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 55}]
   - name: Gen.G
     tag: GEN
     tier: 1
@@ -106,6 +126,8 @@ teams:
         igl: false
         quality: 78
         agents: [jett, raze, chamber]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 30}]
       - handle: Karon
         real_name: Kim Won-tae
         age: 22
@@ -114,6 +136,8 @@ teams:
         igl: false
         quality: 73
         agents: [viper, phoenix]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 25}]
       - handle: Ash
         real_name: Ha Hyun-cheol
         age: 21
@@ -122,6 +146,8 @@ teams:
         igl: false
         quality: 70
         agents: [jett, omen]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 25}]
       - handle: Efina
         real_name: Kim Nak-yeon
         age: 20
@@ -130,6 +156,8 @@ teams:
         igl: true
         quality: 62
         agents: [killjoy, cypher]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: RaxcaL
         real_name: Kim Min-seok
         age: 18
@@ -138,6 +166,8 @@ teams:
         igl: false
         quality: 61
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
   - name: KIWOOM DRX
     tag: KRX
     tier: 1
@@ -151,6 +181,8 @@ teams:
         igl: false
         quality: 78
         agents: [omen, viper]
+        country: KR
+        languages: [{lang: ko, level: 98}, {lang: en, level: 30}]
       - handle: HYUNMIN
         real_name: Song Hyun-min
         age: 19
@@ -159,6 +191,8 @@ teams:
         igl: false
         quality: 72
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: BeYN
         real_name: Kang Ha-bin
         age: 22
@@ -167,6 +201,8 @@ teams:
         igl: true
         quality: 68
         agents: [skye, breach]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: free1ng
         real_name: No Ha-jun
         age: 19
@@ -175,6 +211,8 @@ teams:
         igl: false
         quality: 66
         agents: [jett, sova]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: Yong
         real_name: Kim Ho-yong
         age: 20
@@ -183,6 +221,8 @@ teams:
         igl: false
         quality: 66
         agents: [chamber, cypher]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
   - name: Rex Regum Qeon
     tag: RRQ
     tier: 1
@@ -196,6 +236,8 @@ teams:
         igl: false
         quality: 76
         agents: [chamber, raze]
+        country: RU
+        languages: [{lang: ru, level: 96}, {lang: en, level: 60}]
       - handle: xffero
         real_name: David Sean Michael Monangin
         age: 20
@@ -204,6 +246,8 @@ teams:
         igl: false
         quality: 73
         agents: [viper, cypher]
+        country: ID
+        languages: [{lang: id, level: 96}, {lang: en, level: 70}]
       - handle: Kushy
         real_name: Bryan Carlos Setiawan
         age: 22
@@ -212,6 +256,8 @@ teams:
         igl: false
         quality: 68
         agents: [sova, skye]
+        country: ID
+        languages: [{lang: id, level: 96}, {lang: en, level: 60}]
       - handle: crazyguy
         real_name: Ngo Cong Anh
         age: 27
@@ -220,6 +266,8 @@ teams:
         igl: true
         quality: 67
         agents: [omen, breach]
+        country: VN
+        languages: [{lang: vi, level: 97}, {lang: en, level: 60}]
       - handle: xan
         real_name: Xan Ng
         age: 19
@@ -228,6 +276,8 @@ teams:
         igl: false
         quality: 63
         agents: [omen, jett]
+        country: MY
+        languages: [{lang: en, level: 80}, {lang: zh, level: 65}, {lang: ms, level: 55}]
   - name: Team Secret
     tag: TS
     tier: 1
@@ -241,6 +291,8 @@ teams:
         igl: true
         quality: 70
         agents: [omen, clove]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 55}]
       - handle: kellyS
         real_name: Kelly Kent Sedillo
         age: 22
@@ -249,6 +301,8 @@ teams:
         igl: false
         quality: 69
         agents: [viper, breach, chamber]
+        country: PH
+        languages: [{lang: tl, level: 95}, {lang: en, level: 85}]
       - handle: Zeus
         real_name: Jhian Zeus Dela Vega
         age: 19
@@ -257,6 +311,8 @@ teams:
         igl: false
         quality: 66
         agents: [jett, raze]
+        country: PH
+        languages: [{lang: tl, level: 95}, {lang: en, level: 85}]
       - handle: BerserX
         real_name: Rizkie Adla Kusuma
         age: 24
@@ -265,6 +321,8 @@ teams:
         igl: false
         quality: 64
         agents: [cypher, killjoy]
+        country: ID
+        languages: [{lang: id, level: 95}, {lang: en, level: 65}]
       - handle: Rimuru
         real_name: Dwine Gatchalian Enriquez
         age: 21
@@ -273,6 +331,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, reyna]
+        country: PH
+        languages: [{lang: tl, level: 95}, {lang: en, level: 85}]
   - name: ZETA DIVISION
     tag: ZETA
     tier: 1
@@ -286,6 +346,8 @@ teams:
         igl: false
         quality: 68
         agents: [jett, raze]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
       - handle: SyouTa
         real_name: Shota Aoki
         age: 20
@@ -294,6 +356,8 @@ teams:
         igl: false
         quality: 65
         agents: [viper, raze]
+        country: JP
+        languages: [{lang: ja, level: 95}, {lang: zh, level: 60}, {lang: en, level: 30}]
       - handle: SugarZ3ro
         real_name: Shota Watanabe
         age: 24
@@ -302,6 +366,8 @@ teams:
         igl: true
         quality: 64
         agents: [omen, viper]
+        country: JP
+        languages: [{lang: ja, level: 96}, {lang: en, level: 35}]
       - handle: eKo
         real_name: Yeom Wang-ryong
         age: 23
@@ -310,6 +376,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, skye, phoenix]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: ja, level: 55}, {lang: en, level: 25}]
       - handle: Xdll
         real_name: Yuto Mizomori
         age: 21
@@ -318,6 +386,8 @@ teams:
         igl: false
         quality: 61
         agents: [skye, breach]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
   - name: DetonatioN FocusMe
     tag: DFM
     tier: 1
@@ -331,6 +401,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, raze]
+        country: JP
+        languages: [{lang: ja, level: 96}, {lang: en, level: 20}]
       - handle: Caedye
         real_name: Amon Mateus Okakura
         age: 20
@@ -339,6 +411,8 @@ teams:
         igl: false
         quality: 67
         agents: [cypher, killjoy]
+        country: JP
+        languages: [{lang: ja, level: 95}, {lang: en, level: 30}]
       - handle: akame
         real_name: Yu Gwang-hui
         age: 22
@@ -347,6 +421,8 @@ teams:
         igl: false
         quality: 66
         agents: [jett, sova]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: ja, level: 65}, {lang: en, level: 25}]
       - handle: SSeeS
         real_name: Tomonori Okimura
         age: 26
@@ -355,6 +431,8 @@ teams:
         igl: true
         quality: 64
         agents: [omen, sova]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
       - handle: yatsuka
         real_name: Kazuya Ikeda
         age: 22
@@ -363,6 +441,8 @@ teams:
         igl: false
         quality: 63
         agents: [skye, sova]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
   - name: Global Esports
     tag: GE
     tier: 1
@@ -376,6 +456,8 @@ teams:
         igl: false
         quality: 73
         agents: [chamber, cypher]
+        country: AU
+        languages: [{lang: en, level: 98}]
       - handle: PatMen
         real_name: John Patrick Ramos Mendoza
         age: 23
@@ -384,6 +466,8 @@ teams:
         igl: false
         quality: 72
         agents: [viper, omen]
+        country: PH
+        languages: [{lang: tl, level: 95}, {lang: en, level: 85}]
       - handle: UdoTan
         real_name: Go Kyung-won
         age: 22
@@ -392,6 +476,8 @@ teams:
         igl: false
         quality: 71
         agents: [raze, jett]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 55}]
       - handle: Kr1stal
         real_name: Savva Fedorov
         age: 20
@@ -400,6 +486,8 @@ teams:
         igl: false
         quality: 69
         agents: [sova, killjoy]
+        country: RU
+        languages: [{lang: ru, level: 96}, {lang: en, level: 60}]
       - handle: xavi8k
         real_name: Xavier Juan
         age: 22
@@ -408,6 +496,8 @@ teams:
         igl: true
         quality: 68
         agents: [omen, clove]
+        country: PH
+        languages: [{lang: en, level: 95}, {lang: tl, level: 80}]
   - name: Nongshim RedForce
     tag: NS
     tier: 1
@@ -421,6 +511,8 @@ teams:
         igl: false
         quality: 71
         agents: [sova, skye]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 25}]
       - handle: Dambi
         real_name: Lee Hyuk-kyu
         age: 21
@@ -429,6 +521,8 @@ teams:
         igl: false
         quality: 69
         agents: [jett, phoenix]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: Francis
         real_name: Kim Mu-bin
         age: 20
@@ -437,6 +531,8 @@ teams:
         igl: false
         quality: 68
         agents: [raze, breach]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 30}]
       - handle: Ivy
         real_name: Park Sung-hyeon
         age: 22
@@ -445,6 +541,8 @@ teams:
         igl: false
         quality: 68
         agents: [viper, chamber]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}]
       - handle: Rb
         real_name: Goo Sang-min
         age: 27
@@ -453,6 +551,8 @@ teams:
         igl: true
         quality: 67
         agents: [omen, clove]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 25}]
   - name: FULL SENSE
     tag: FS
     tier: 1
@@ -466,6 +566,8 @@ teams:
         igl: false
         quality: 80
         agents: [jett, phoenix]
+        country: TH
+        languages: [{lang: th, level: 97}, {lang: en, level: 45}]
       - handle: JitboyS
         real_name: Jittana Nokngam
         age: 23
@@ -474,6 +576,8 @@ teams:
         igl: false
         quality: 72
         agents: [raze, reyna]
+        country: TH
+        languages: [{lang: th, level: 97}, {lang: en, level: 40}]
       - handle: killua
         real_name: Tanate Teerasawad
         age: 23
@@ -482,6 +586,8 @@ teams:
         igl: false
         quality: 71
         agents: [skye, sova]
+        country: TH
+        languages: [{lang: th, level: 96}, {lang: en, level: 45}]
       - handle: Crws
         real_name: Thanamethk Mahatthananuyut
         age: 26
@@ -490,6 +596,8 @@ teams:
         igl: true
         quality: 70
         agents: [omen, clove]
+        country: TH
+        languages: [{lang: th, level: 96}, {lang: en, level: 40}]
       - handle: seph1roth
         real_name: Chinnakrit Phoojaroen
         age: 22
@@ -498,6 +606,8 @@ teams:
         igl: false
         quality: 66
         agents: [viper, killjoy, phoenix]
+        country: TH
+        languages: [{lang: th, level: 95}, {lang: en, level: 42}]
   - name: VARREL
     tag: VL
     tier: 1
@@ -511,6 +621,8 @@ teams:
         igl: false
         quality: 68
         agents: [viper, cypher]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 40}]
       - handle: XuNa
         real_name: Kim Tae-geon
         age: 22
@@ -519,6 +631,8 @@ teams:
         igl: false
         quality: 65
         agents: [skye, sova]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 38}]
       - handle: zexy
         real_name: Jang Suk-hyun
         age: 21
@@ -527,6 +641,8 @@ teams:
         igl: false
         quality: 63
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 42}]
       - handle: Klaus
         real_name: Kim Min-hyuk
         age: 21
@@ -535,6 +651,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, killjoy]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 35}]
       - handle: C1ndeR
         real_name: Go Jae-hyuk
         age: 22
@@ -543,6 +661,8 @@ teams:
         igl: true
         quality: 61
         agents: [omen, clove]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 40}]
   - name: REJECT
     tag: RC
     tier: 2
@@ -556,6 +676,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, raze]
+        country: PH
+        languages: [{lang: tl, level: 95}, {lang: en, level: 80}, {lang: ja, level: 45}]
       - handle: Dep
         real_name: Yuma Hashimoto
         age: 24
@@ -564,6 +686,8 @@ teams:
         igl: false
         quality: 61
         agents: [jett, chamber]
+        country: JP
+        languages: [{lang: ja, level: 96}, {lang: en, level: 35}]
       - handle: Jremy
         real_name: Jeremy Gagarra Cabrera
         age: 22
@@ -572,6 +696,8 @@ teams:
         igl: false
         quality: 58
         agents: [sova, skye]
+        country: PH
+        languages: [{lang: tl, level: 92}, {lang: en, level: 80}, {lang: ja, level: 30}]
       - handle: Persia
         real_name: Yang Zi-on
         age: 21
@@ -580,6 +706,8 @@ teams:
         igl: false
         quality: 57
         agents: [killjoy, cypher]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 55}, {lang: ja, level: 15}]
       - handle: BRIAN
         real_name: Brian
         age: 22
@@ -588,6 +716,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, clove]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
   - name: CREST GAMING Zst
     tag: CGZ
     tier: 2
@@ -601,6 +731,8 @@ teams:
         igl: false
         quality: 63
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 25}, {lang: ja, level: 20}]
       - handle: KEN
         real_name: Kim Yun-seung
         age: 22
@@ -609,6 +741,8 @@ teams:
         igl: false
         quality: 57
         agents: [sova, skye]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: ja, level: 55}, {lang: en, level: 25}]
       - handle: bazz
         real_name: Naoya Matsuyama
         age: 25
@@ -617,6 +751,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, viper]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 25}]
       - handle: yutaro
         real_name: Yutaro
         age: 21
@@ -625,6 +761,8 @@ teams:
         igl: false
         quality: 55
         agents: [killjoy, cypher]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
       - handle: nobita
         real_name: Rintaro Matsumoto
         age: 23
@@ -633,6 +771,8 @@ teams:
         igl: false
         quality: 55
         agents: [viper, skye]
+        country: JP
+        languages: [{lang: ja, level: 97}, {lang: en, level: 20}]
   - name: ONSIDE GAMING
     tag: OSG
     tier: 2
@@ -646,6 +786,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, omen]
+        country: KR
+        languages: [{lang: ko, level: 98}, {lang: en, level: 35}]
       - handle: Wolverine
         real_name: Wolverine
         age: 22
@@ -654,6 +796,8 @@ teams:
         igl: false
         quality: 57
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 30}]
       - handle: Ray
         real_name: Ray
         age: 21
@@ -662,6 +806,8 @@ teams:
         igl: false
         quality: 56
         agents: [sova, skye]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 32}]
       - handle: Cloudy
         real_name: Cloudy
         age: 20
@@ -670,6 +816,8 @@ teams:
         igl: false
         quality: 55
         agents: [killjoy, cypher]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 30}]
       - handle: Awayk
         real_name: Awayk
         age: 22
@@ -678,6 +826,8 @@ teams:
         igl: true
         quality: 54
         agents: [omen, clove]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 33}]
   - name: Dplus
     tag: DP
     tier: 2
@@ -691,6 +841,8 @@ teams:
         igl: false
         quality: 57
         agents: [jett, raze]
+        country: KR
+        languages: [{lang: ko, level: 98}, {lang: en, level: 35}]
       - handle: Ramgi
         real_name: Ramgi
         age: 23
@@ -699,6 +851,8 @@ teams:
         igl: false
         quality: 56
         agents: [sova, skye]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 32}]
       - handle: Kally
         real_name: Kally
         age: 21
@@ -707,6 +861,8 @@ teams:
         igl: false
         quality: 55
         agents: [omen, clove]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 33}]
       - handle: JaXe
         real_name: JaXe
         age: 20
@@ -715,6 +871,8 @@ teams:
         igl: false
         quality: 54
         agents: [killjoy, cypher]
+        country: KR
+        languages: [{lang: ko, level: 96}, {lang: en, level: 30}]
       - handle: CabezA
         real_name: CabezA
         age: 25
@@ -723,6 +881,8 @@ teams:
         igl: true
         quality: 55
         agents: [skye, omen]
+        country: KR
+        languages: [{lang: ko, level: 97}, {lang: en, level: 32}]
   - name: BOOM Esports
     tag: BOOM
     tier: 2
@@ -736,6 +896,8 @@ teams:
         igl: false
         quality: 58
         agents: [jett, raze]
+        country: ID
+        languages: [{lang: id, level: 96}, {lang: en, level: 60}]
       - handle: d3ffo
         real_name: Nikita Sudakov
         age: 22
@@ -744,6 +906,8 @@ teams:
         igl: false
         quality: 58
         agents: [chamber, killjoy]
+        country: RU
+        languages: [{lang: ru, level: 96}, {lang: en, level: 55}]
       - handle: naTz
         real_name: Jonathan Adiputra
         age: 24
@@ -752,6 +916,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, viper]
+        country: ID
+        languages: [{lang: id, level: 96}, {lang: en, level: 60}]
       - handle: NcSlasher
         real_name: Sheldon Andersen Chandra
         age: 21
@@ -760,6 +926,8 @@ teams:
         igl: false
         quality: 55
         agents: [sova, skye]
+        country: ID
+        languages: [{lang: id, level: 95}, {lang: en, level: 60}]
       - handle: Nakya
         real_name: Alehandro Fabian Simanjorang
         age: 20
@@ -768,6 +936,8 @@ teams:
         igl: false
         quality: 53
         agents: [skye, killjoy]
+        country: ID
+        languages: [{lang: id, level: 95}, {lang: en, level: 55}]
   - name: Sharper Esports
     tag: SPR
     tier: 2
@@ -781,6 +951,8 @@ teams:
         igl: false
         quality: 60
         agents: [jett, raze]
+        country: TH
+        languages: [{lang: th, level: 96}, {lang: en, level: 45}]
       - handle: PTC
         real_name: Kititkawin Rattanasukol
         age: 24
@@ -789,6 +961,8 @@ teams:
         igl: true
         quality: 58
         agents: [omen, clove]
+        country: TH
+        languages: [{lang: th, level: 95}, {lang: en, level: 42}]
       - handle: Apinya
         real_name: Apinya Laotaew
         age: 22
@@ -797,6 +971,8 @@ teams:
         igl: false
         quality: 57
         agents: [sova, skye]
+        country: TH
+        languages: [{lang: th, level: 96}, {lang: en, level: 40}]
       - handle: Laz
         real_name: Kittikawin Jirawatkakan
         age: 22
@@ -805,6 +981,8 @@ teams:
         igl: false
         quality: 56
         agents: [killjoy, cypher]
+        country: TH
+        languages: [{lang: th, level: 95}, {lang: en, level: 42}]
       - handle: NIZ
         real_name: Yutthaphum Thawongphia
         age: 21
@@ -813,3 +991,5 @@ teams:
         igl: false
         quality: 56
         agents: [viper, skye]
+        country: TH
+        languages: [{lang: th, level: 96}, {lang: en, level: 38}]

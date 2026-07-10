@@ -13,6 +13,12 @@ players:
   handle: Yassien
   real_name: Yassien Ahmed
   region: emea
+  country: EG
+  languages:
+  - lang: ar
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 23
   role: controller
   playstyle: igl
@@ -32,30 +38,60 @@ players:
     mastery: 65.2
   - agent_id: viper
     mastery: 58.7
+  - agent_id: clove
+    mastery: 48.0
+  - agent_id: breach
+    mastery: 34.5
+  - agent_id: chamber
+    mastery: 38.5
+  - agent_id: cypher
+    mastery: 34.2
+  - agent_id: jett
+    mastery: 38.2
+  - agent_id: killjoy
+    mastery: 42.5
+  - agent_id: phoenix
+    mastery: 5.2
+  - agent_id: raze
+    mastery: 43.3
+  - agent_id: reyna
+    mastery: 30.7
+  - agent_id: skye
+    mastery: 38.9
+  - agent_id: sova
+    mastery: 29.6
   map_pool:
   - map_id: ascent
-    mastery: 63.5
+    mastery: 60.3
   - map_id: bind
-    mastery: 61.9
+    mastery: 58.8
   - map_id: haven
-    mastery: 62.0
+    mastery: 58.4
   - map_id: lotus
-    mastery: 70.1
+    mastery: 64.0
   - map_id: split
-    mastery: 66.8
+    mastery: 73.2
   salary: 3900
-  contract_weeks_left: 47
-  morale: 63.6
-  stamina: 80.3
-  form: 47.4
+  contract_weeks_left: 77
+  morale: 72.9
+  stamina: 89.8
+  form: 58.9
   personality_tags:
-  - flashy
-  - independent
-  potential: 62.1
+  - perfectionist
+  - streamer
+  potential: 67.7
 - id: team_alqadsiah_esports_spyzera
   handle: SpYzera
   real_name: Abed Doughan
   region: emea
+  country: LB
+  languages:
+  - lang: ar
+    level: 95.0
+  - lang: en
+    level: 70.0
+  - lang: fr
+    level: 40.0
   age: 22
   role: duelist
   playstyle: entry
@@ -75,30 +111,58 @@ players:
     mastery: 76.4
   - agent_id: raze
     mastery: 69.2
+  - agent_id: phoenix
+    mastery: 45.6
+  - agent_id: reyna
+    mastery: 50.8
+  - agent_id: breach
+    mastery: 44.9
+  - agent_id: chamber
+    mastery: 44.3
+  - agent_id: clove
+    mastery: 48.5
+  - agent_id: cypher
+    mastery: 43.4
+  - agent_id: killjoy
+    mastery: 36.1
+  - agent_id: omen
+    mastery: 41.8
+  - agent_id: skye
+    mastery: 40.5
+  - agent_id: sova
+    mastery: 38.9
+  - agent_id: viper
+    mastery: 50.0
   map_pool:
   - map_id: ascent
-    mastery: 57.5
+    mastery: 76.9
   - map_id: bind
-    mastery: 65.2
+    mastery: 61.9
   - map_id: haven
-    mastery: 77.0
+    mastery: 69.5
   - map_id: lotus
-    mastery: 73.5
+    mastery: 72.0
   - map_id: split
-    mastery: 60.1
+    mastery: 68.5
   salary: 4400
-  contract_weeks_left: 45
-  morale: 62.8
-  stamina: 94.1
-  form: 47.3
+  contract_weeks_left: 65
+  morale: 67.9
+  stamina: 80.3
+  form: 53.4
   personality_tags:
+  - flashy
   - grinder
-  - quiet
-  potential: 67.9
+  potential: 73.0
 - id: team_alqadsiah_esports_sickrey
   handle: sickrey
   real_name: Nikolay Novozhilov
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 55.0
   age: 22
   role: initiator
   playstyle: support
@@ -118,30 +182,58 @@ players:
     mastery: 71.3
   - agent_id: skye
     mastery: 69.6
+  - agent_id: breach
+    mastery: 52.8
+  - agent_id: chamber
+    mastery: 31.1
+  - agent_id: clove
+    mastery: 45.1
+  - agent_id: cypher
+    mastery: 40.0
+  - agent_id: jett
+    mastery: 42.3
+  - agent_id: killjoy
+    mastery: 31.7
+  - agent_id: omen
+    mastery: 32.7
+  - agent_id: phoenix
+    mastery: 28.6
+  - agent_id: raze
+    mastery: 1.6
+  - agent_id: reyna
+    mastery: 30.8
+  - agent_id: viper
+    mastery: 31.9
   map_pool:
   - map_id: ascent
-    mastery: 70.2
+    mastery: 66.3
   - map_id: bind
-    mastery: 70.5
+    mastery: 71.6
   - map_id: haven
-    mastery: 57.7
+    mastery: 57.9
   - map_id: lotus
-    mastery: 73.9
+    mastery: 76.5
   - map_id: split
-    mastery: 74.5
+    mastery: 64.7
   salary: 4000
-  contract_weeks_left: 51
-  morale: 74.6
-  stamina: 99.9
-  form: 48.1
+  contract_weeks_left: 31
+  morale: 79.0
+  stamina: 97.7
+  form: 50.1
   personality_tags:
-  - hot_head
-  - slow_starter
-  potential: 62.9
+  - grinder
+  - independent
+  potential: 62.0
 - id: team_alqadsiah_esports_zimo
   handle: Zimo
   real_name: Abdullah Amri
   region: emea
+  country: SA
+  languages:
+  - lang: ar
+    level: 97.0
+  - lang: en
+    level: 60.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -161,30 +253,60 @@ players:
     mastery: 67.2
   - agent_id: killjoy
     mastery: 67.9
+  - agent_id: chamber
+    mastery: 48.0
+  - agent_id: breach
+    mastery: 3.9
+  - agent_id: clove
+    mastery: 37.8
+  - agent_id: jett
+    mastery: 39.9
+  - agent_id: omen
+    mastery: 37.9
+  - agent_id: phoenix
+    mastery: 38.9
+  - agent_id: raze
+    mastery: 36.2
+  - agent_id: reyna
+    mastery: 32.1
+  - agent_id: skye
+    mastery: 33.5
+  - agent_id: sova
+    mastery: 31.1
+  - agent_id: viper
+    mastery: 35.5
   map_pool:
   - map_id: ascent
-    mastery: 64.1
+    mastery: 63.4
   - map_id: bind
-    mastery: 64.5
+    mastery: 61.7
   - map_id: haven
-    mastery: 70.3
+    mastery: 62.2
   - map_id: lotus
-    mastery: 63.3
+    mastery: 59.6
   - map_id: split
-    mastery: 66.2
+    mastery: 61.5
   salary: 3800
-  contract_weeks_left: 78
-  morale: 62.0
-  stamina: 92.9
-  form: 58.9
+  contract_weeks_left: 38
+  morale: 78.9
+  stamina: 93.6
+  form: 54.8
   personality_tags:
   - grinder
-  - independent
-  potential: 69.8
+  - slow_starter
+  potential: 67.1
 - id: team_alqadsiah_esports_simond4rk
   handle: SimonD4rk
   real_name: Alexandr Skovbel
   region: emea
+  country: BY
+  languages:
+  - lang: ru
+    level: 95.0
+  - lang: be
+    level: 40.0
+  - lang: en
+    level: 55.0
   age: 21
   role: flex
   playstyle: support
@@ -204,23 +326,44 @@ players:
     mastery: 67.5
   - agent_id: skye
     mastery: 62.5
+  - agent_id: breach
+    mastery: 37.2
+  - agent_id: chamber
+    mastery: 29.0
+  - agent_id: clove
+    mastery: 38.2
+  - agent_id: cypher
+    mastery: 29.9
+  - agent_id: jett
+    mastery: 31.6
+  - agent_id: killjoy
+    mastery: 6.1
+  - agent_id: omen
+    mastery: 40.2
+  - agent_id: phoenix
+    mastery: 37.0
+  - agent_id: raze
+    mastery: 44.4
+  - agent_id: reyna
+    mastery: 43.2
+  - agent_id: sova
+    mastery: 0.1
   map_pool:
   - map_id: ascent
-    mastery: 59.4
+    mastery: 66.6
   - map_id: bind
-    mastery: 65.5
+    mastery: 68.6
   - map_id: haven
-    mastery: 69.7
+    mastery: 66.6
   - map_id: lotus
-    mastery: 55.6
-  - map_id: split
     mastery: 72.7
+  - map_id: split
+    mastery: 65.0
   salary: 3800
-  contract_weeks_left: 39
-  morale: 81.5
-  stamina: 92.0
-  form: 45.9
+  contract_weeks_left: 41
+  morale: 76.8
+  stamina: 84.9
+  form: 57.7
   personality_tags:
-  - clutch_gene
-  - perfectionist
-  potential: 63.6
+  - independent
+  potential: 66.8

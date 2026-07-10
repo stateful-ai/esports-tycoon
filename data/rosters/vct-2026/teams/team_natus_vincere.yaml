@@ -13,6 +13,10 @@ players:
   handle: chloric
   real_name: Caide Heaton
   region: emea
+  country: US
+  languages:
+  - lang: en
+    level: 99.0
   age: 21
   role: initiator
   playstyle: igl
@@ -32,30 +36,58 @@ players:
     mastery: 87.0
   - agent_id: skye
     mastery: 77.4
+  - agent_id: breach
+    mastery: 60.7
+  - agent_id: chamber
+    mastery: 58.4
+  - agent_id: clove
+    mastery: 56.5
+  - agent_id: cypher
+    mastery: 52.2
+  - agent_id: jett
+    mastery: 51.2
+  - agent_id: killjoy
+    mastery: 56.6
+  - agent_id: omen
+    mastery: 53.2
+  - agent_id: phoenix
+    mastery: 42.0
+  - agent_id: raze
+    mastery: 49.4
+  - agent_id: reyna
+    mastery: 49.3
+  - agent_id: viper
+    mastery: 52.1
   map_pool:
   - map_id: ascent
-    mastery: 76.1
+    mastery: 70.5
   - map_id: bind
-    mastery: 71.4
+    mastery: 81.6
   - map_id: haven
-    mastery: 88.1
+    mastery: 78.2
   - map_id: lotus
-    mastery: 74.1
+    mastery: 81.0
   - map_id: split
-    mastery: 85.8
+    mastery: 75.3
   salary: 5400
-  contract_weeks_left: 33
-  morale: 72.0
-  stamina: 82.9
-  form: 49.4
+  contract_weeks_left: 43
+  morale: 83.6
+  stamina: 95.2
+  form: 50.2
   personality_tags:
-  - perfectionist
-  - slow_starter
-  potential: 82.4
+  - independent
+  - streamer
+  potential: 83.0
 - id: team_natus_vincere_ruxic
   handle: Ruxic
   real_name: Ugur Guc
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 78.0
   age: 21
   role: controller
   playstyle: lurker
@@ -75,30 +107,59 @@ players:
     mastery: 89.4
   - agent_id: viper
     mastery: 88.3
+  - agent_id: clove
+    mastery: 75.6
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 59.8
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 59.8
+  - agent_id: raze
+    mastery: 53.6
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 59.3
+  - agent_id: sova
+    mastery: 53.4
   map_pool:
   - map_id: ascent
-    mastery: 92.4
+    mastery: 93.2
   - map_id: bind
-    mastery: 86.1
+    mastery: 99.0
   - map_id: haven
-    mastery: 91.9
+    mastery: 97.7
   - map_id: lotus
-    mastery: 89.3
+    mastery: 80.3
   - map_id: split
-    mastery: 96.4
+    mastery: 80.2
   salary: 6900
-  contract_weeks_left: 63
-  morale: 63.0
-  stamina: 98.2
-  form: 48.4
+  contract_weeks_left: 33
+  morale: 75.2
+  stamina: 97.3
+  form: 54.1
   personality_tags:
-  - fan_favorite
-  - perfectionist
-  potential: 96.0
+  - independent
+  potential: 87.2
 - id: team_natus_vincere_hiro
   handle: hiro
   real_name: Emirhan Kat
   region: emea
+  country: NL
+  languages:
+  - lang: nl
+    level: 95.0
+  - lang: en
+    level: 85.0
+  - lang: tr
+    level: 80.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -118,29 +179,57 @@ players:
     mastery: 94.0
   - agent_id: killjoy
     mastery: 85.1
+  - agent_id: chamber
+    mastery: 71.7
+  - agent_id: cypher
+    mastery: 59.7
+  - agent_id: breach
+    mastery: 6.5
+  - agent_id: clove
+    mastery: 59.8
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 59.3
+  - agent_id: phoenix
+    mastery: 57.7
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 88.5
+    mastery: 79.6
   - map_id: bind
-    mastery: 70.5
+    mastery: 78.6
   - map_id: haven
-    mastery: 83.2
+    mastery: 94.3
   - map_id: lotus
-    mastery: 88.2
+    mastery: 99.0
   - map_id: split
-    mastery: 89.3
+    mastery: 91.3
   salary: 6400
-  contract_weeks_left: 40
-  morale: 66.6
-  stamina: 90.3
-  form: 56.3
+  contract_weeks_left: 60
+  morale: 76.0
+  stamina: 95.7
+  form: 54.8
   personality_tags:
   - hot_head
-  potential: 95.2
+  potential: 86.4
 - id: team_natus_vincere_exit
   handle: ExiT
   real_name: Abdullah Al-Twaijri
   region: emea
+  country: SA
+  languages:
+  - lang: ar
+    level: 96.0
+  - lang: en
+    level: 70.0
   age: 20
   role: duelist
   playstyle: entry
@@ -160,30 +249,58 @@ players:
     mastery: 83.8
   - agent_id: raze
     mastery: 81.1
+  - agent_id: phoenix
+    mastery: 61.4
+  - agent_id: reyna
+    mastery: 66.1
+  - agent_id: breach
+    mastery: 39.0
+  - agent_id: chamber
+    mastery: 46.1
+  - agent_id: clove
+    mastery: 50.5
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 49.1
+  - agent_id: omen
+    mastery: 56.9
+  - agent_id: skye
+    mastery: 43.8
+  - agent_id: sova
+    mastery: 41.9
+  - agent_id: viper
+    mastery: 53.2
   map_pool:
   - map_id: ascent
-    mastery: 77.0
+    mastery: 82.2
   - map_id: bind
-    mastery: 84.1
+    mastery: 83.4
   - map_id: haven
-    mastery: 81.7
+    mastery: 79.8
   - map_id: lotus
-    mastery: 64.8
+    mastery: 77.3
   - map_id: split
-    mastery: 83.6
+    mastery: 70.5
   salary: 5400
-  contract_weeks_left: 39
+  contract_weeks_left: 36
   morale: 75.8
-  stamina: 88.2
-  form: 48.6
+  stamina: 83.3
+  form: 52.1
   personality_tags:
-  - fan_favorite
-  - independent
-  potential: 83.5
+  - grinder
+  - perfectionist
+  potential: 84.0
 - id: team_natus_vincere_cyvoph
   handle: CyvOph
   real_name: Clement Millard
   region: emea
+  country: FR
+  languages:
+  - lang: fr
+    level: 97.0
+  - lang: en
+    level: 78.0
   age: 21
   role: flex
   playstyle: support
@@ -205,23 +322,43 @@ players:
     mastery: 74.8
   - agent_id: viper
     mastery: 76.7
+  - agent_id: chamber
+    mastery: 49.2
+  - agent_id: clove
+    mastery: 43.0
+  - agent_id: cypher
+    mastery: 49.9
+  - agent_id: jett
+    mastery: 46.5
+  - agent_id: killjoy
+    mastery: 44.0
+  - agent_id: omen
+    mastery: 50.4
+  - agent_id: raze
+    mastery: 53.9
+  - agent_id: reyna
+    mastery: 47.6
+  - agent_id: skye
+    mastery: 56.3
+  - agent_id: sova
+    mastery: 52.4
   map_pool:
   - map_id: ascent
-    mastery: 78.9
+    mastery: 70.2
   - map_id: bind
-    mastery: 76.9
+    mastery: 79.7
   - map_id: haven
-    mastery: 83.2
+    mastery: 89.2
   - map_id: lotus
-    mastery: 69.4
+    mastery: 84.9
   - map_id: split
-    mastery: 79.1
+    mastery: 81.2
   salary: 5500
-  contract_weeks_left: 53
-  morale: 77.5
-  stamina: 99.6
-  form: 49.9
+  contract_weeks_left: 34
+  morale: 65.9
+  stamina: 93.3
+  form: 49.7
   personality_tags:
-  - hot_head
-  - team_player
-  potential: 81.8
+  - analytical
+  - independent
+  potential: 80.5

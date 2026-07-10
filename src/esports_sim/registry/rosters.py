@@ -2,8 +2,9 @@
 
 A pack is a directory under ``data/rosters/<pack_id>/``:
 
-    pack.yaml       # meta + world shape (regions, league sizes)
-    teams/*.yaml    # full Team + inline players, SAME schema as data/teams/
+    pack.yaml         # meta + world shape (regions, league sizes)
+    teams/*.yaml      # full Team + inline players, SAME schema as data/teams/
+    free_agents.yaml  # optional: unrostered real players seeding the FA pool
 
 Team files are the exact ``load_team`` bundle format, so a pack team is
 authored/validated identically to a starter team. Packs are static data:
@@ -57,6 +58,10 @@ class RosterPack:
     meta: PackMeta
     teams: dict[str, Team] = field(default_factory=dict)
     players: dict[str, Player] = field(default_factory=dict)
+    # Unrostered real players (benched pros, org-less veterans, notable
+    # streamers) who seed the campaign's free-agent pool. Kept OUT of
+    # `players` so roster maths never counts them.
+    free_agents: dict[str, Player] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
@@ -112,7 +117,21 @@ def load_roster_pack(pack_id: str, data_dir: Path | None = None) -> RosterPack:
             players[p.id] = p
         teams[team.id] = team
 
-    pack = RosterPack(meta=meta, teams=teams, players=players)
+    free_agents: dict[str, Player] = {}
+    fa_file = d / "free_agents.yaml"
+    if fa_file.is_file():
+        raw = yaml.safe_load(fa_file.read_text(encoding="utf-8")) or {}
+        for entry in raw.get("free_agents", []):
+            p = Player(**entry)
+            if p.id in players or p.id in free_agents:
+                raise ValueError(
+                    f"pack {pack_id!r}: free agent {p.id!r} duplicates a player id"
+                )
+            free_agents[p.id] = p
+
+    pack = RosterPack(
+        meta=meta, teams=teams, players=players, free_agents=free_agents
+    )
     _validate(pack)
     return pack
 

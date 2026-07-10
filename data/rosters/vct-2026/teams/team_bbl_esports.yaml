@@ -13,6 +13,12 @@ players:
   handle: Rose
   real_name: Eren Erzan
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 98.0
+  - lang: en
+    level: 70.0
   age: 22
   role: initiator
   playstyle: igl
@@ -32,30 +38,58 @@ players:
     mastery: 76.6
   - agent_id: skye
     mastery: 74.7
+  - agent_id: breach
+    mastery: 53.9
+  - agent_id: chamber
+    mastery: 47.6
+  - agent_id: clove
+    mastery: 43.7
+  - agent_id: cypher
+    mastery: 46.4
+  - agent_id: jett
+    mastery: 46.1
+  - agent_id: killjoy
+    mastery: 59.6
+  - agent_id: omen
+    mastery: 52.3
+  - agent_id: phoenix
+    mastery: 43.1
+  - agent_id: raze
+    mastery: 49.1
+  - agent_id: reyna
+    mastery: 47.5
+  - agent_id: viper
+    mastery: 1.4
   map_pool:
   - map_id: ascent
-    mastery: 66.4
+    mastery: 86.4
   - map_id: bind
-    mastery: 65.9
+    mastery: 86.5
   - map_id: haven
-    mastery: 75.4
+    mastery: 79.0
   - map_id: lotus
-    mastery: 80.5
+    mastery: 80.3
   - map_id: split
-    mastery: 70.6
+    mastery: 77.8
   salary: 5300
-  contract_weeks_left: 64
-  morale: 65.1
-  stamina: 93.1
-  form: 56.4
+  contract_weeks_left: 41
+  morale: 74.4
+  stamina: 92.2
+  form: 55.2
   personality_tags:
-  - analytical
-  - independent
-  potential: 83.2
+  - grinder
+  - quiet
+  potential: 79.6
 - id: team_bbl_esports_lovers_rock
   handle: lovers rock
   real_name: Umut Pekdogan
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 20
   role: duelist
   playstyle: entry
@@ -75,30 +109,58 @@ players:
     mastery: 82.8
   - agent_id: raze
     mastery: 80.1
+  - agent_id: phoenix
+    mastery: 68.0
+  - agent_id: reyna
+    mastery: 62.3
+  - agent_id: breach
+    mastery: 52.1
+  - agent_id: chamber
+    mastery: 53.0
+  - agent_id: clove
+    mastery: 49.9
+  - agent_id: cypher
+    mastery: 43.9
+  - agent_id: killjoy
+    mastery: 48.7
+  - agent_id: omen
+    mastery: 56.0
+  - agent_id: skye
+    mastery: 7.3
+  - agent_id: sova
+    mastery: 57.5
+  - agent_id: viper
+    mastery: 54.3
   map_pool:
   - map_id: ascent
-    mastery: 85.4
+    mastery: 77.3
   - map_id: bind
-    mastery: 76.9
+    mastery: 68.1
   - map_id: haven
-    mastery: 74.3
+    mastery: 81.4
   - map_id: lotus
-    mastery: 79.9
+    mastery: 68.7
   - map_id: split
-    mastery: 86.1
+    mastery: 74.5
   salary: 5700
-  contract_weeks_left: 40
-  morale: 79.9
-  stamina: 91.4
-  form: 49.8
+  contract_weeks_left: 77
+  morale: 79.6
+  stamina: 88.3
+  form: 56.7
   personality_tags:
-  - fan_favorite
+  - grinder
   - streamer
-  potential: 82.1
+  potential: 78.0
 - id: team_bbl_esports_lar0k
   handle: Lar0k
   real_name: Yusuf Kaan Kanber
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 62.0
   age: 20
   role: flex
   playstyle: entry
@@ -118,30 +180,58 @@ players:
     mastery: 81.9
   - agent_id: breach
     mastery: 83.4
+  - agent_id: chamber
+    mastery: 49.5
+  - agent_id: clove
+    mastery: 50.7
+  - agent_id: cypher
+    mastery: 4.9
+  - agent_id: jett
+    mastery: 55.1
+  - agent_id: killjoy
+    mastery: 49.7
+  - agent_id: omen
+    mastery: 46.4
+  - agent_id: phoenix
+    mastery: 45.0
+  - agent_id: reyna
+    mastery: 48.6
+  - agent_id: skye
+    mastery: 48.0
+  - agent_id: sova
+    mastery: 54.0
+  - agent_id: viper
+    mastery: 52.5
   map_pool:
   - map_id: ascent
-    mastery: 80.6
+    mastery: 86.6
   - map_id: bind
-    mastery: 77.2
+    mastery: 84.9
   - map_id: haven
-    mastery: 77.4
+    mastery: 82.1
   - map_id: lotus
-    mastery: 78.7
+    mastery: 76.7
   - map_id: split
-    mastery: 83.4
+    mastery: 76.4
   salary: 5500
-  contract_weeks_left: 46
-  morale: 80.4
-  stamina: 82.9
-  form: 58.4
+  contract_weeks_left: 53
+  morale: 68.1
+  stamina: 82.0
+  form: 57.5
   personality_tags:
-  - grinder
-  - independent
-  potential: 82.0
+  - analytical
+  - fan_favorite
+  potential: 80.3
 - id: team_bbl_esports_loita
   handle: Loita
   real_name: Utku Kart
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 68.0
   age: 21
   role: controller
   playstyle: support
@@ -161,30 +251,58 @@ players:
     mastery: 86.1
   - agent_id: viper
     mastery: 78.7
+  - agent_id: clove
+    mastery: 60.9
+  - agent_id: breach
+    mastery: 4.3
+  - agent_id: chamber
+    mastery: 44.1
+  - agent_id: cypher
+    mastery: 40.8
+  - agent_id: jett
+    mastery: 37.4
+  - agent_id: killjoy
+    mastery: 49.0
+  - agent_id: phoenix
+    mastery: 48.3
+  - agent_id: raze
+    mastery: 52.4
+  - agent_id: reyna
+    mastery: 47.5
+  - agent_id: skye
+    mastery: 52.6
+  - agent_id: sova
+    mastery: 51.6
   map_pool:
   - map_id: ascent
-    mastery: 76.8
+    mastery: 71.0
   - map_id: bind
-    mastery: 79.5
+    mastery: 79.8
   - map_id: haven
-    mastery: 74.8
+    mastery: 76.3
   - map_id: lotus
-    mastery: 70.6
+    mastery: 81.6
   - map_id: split
-    mastery: 71.1
+    mastery: 72.0
   salary: 5300
-  contract_weeks_left: 60
-  morale: 78.2
-  stamina: 81.9
-  form: 50.0
+  contract_weeks_left: 75
+  morale: 69.3
+  stamina: 82.9
+  form: 59.9
   personality_tags:
-  - fan_favorite
-  - streamer
-  potential: 79.7
+  - grinder
+  - team_player
+  potential: 74.8
 - id: team_bbl_esports_crewen
   handle: Crewen
   real_name: Ali Eren Sargin
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 97.0
+  - lang: en
+    level: 63.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -206,23 +324,43 @@ players:
     mastery: 73.6
   - agent_id: killjoy
     mastery: 77.3
+  - agent_id: chamber
+    mastery: 65.2
+  - agent_id: breach
+    mastery: 2.1
+  - agent_id: clove
+    mastery: 52.8
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 54.2
+  - agent_id: phoenix
+    mastery: 56.0
+  - agent_id: raze
+    mastery: 55.8
+  - agent_id: reyna
+    mastery: 49.4
+  - agent_id: skye
+    mastery: 56.2
+  - agent_id: sova
+    mastery: 57.8
   map_pool:
   - map_id: ascent
-    mastery: 80.9
+    mastery: 80.0
   - map_id: bind
-    mastery: 86.2
+    mastery: 77.3
   - map_id: haven
-    mastery: 80.1
+    mastery: 81.6
   - map_id: lotus
-    mastery: 84.2
+    mastery: 83.0
   - map_id: split
-    mastery: 80.6
+    mastery: 89.1
   salary: 5900
-  contract_weeks_left: 78
-  morale: 73.8
-  stamina: 80.1
-  form: 48.7
+  contract_weeks_left: 39
+  morale: 82.7
+  stamina: 97.7
+  form: 56.8
   personality_tags:
-  - analytical
-  - hot_head
-  potential: 88.6
+  - clutch_gene
+  - perfectionist
+  potential: 82.0

@@ -13,6 +13,12 @@ players:
   handle: prozin
   real_name: Wallacy Sales
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 45.0
   age: 24
   role: controller
   playstyle: igl
@@ -32,30 +38,57 @@ players:
     mastery: 71.8
   - agent_id: viper
     mastery: 68.8
+  - agent_id: clove
+    mastery: 46.8
+  - agent_id: breach
+    mastery: 33.6
+  - agent_id: chamber
+    mastery: 30.0
+  - agent_id: cypher
+    mastery: 42.5
+  - agent_id: jett
+    mastery: 29.2
+  - agent_id: killjoy
+    mastery: 33.7
+  - agent_id: phoenix
+    mastery: 3.9
+  - agent_id: raze
+    mastery: 29.5
+  - agent_id: reyna
+    mastery: 38.6
+  - agent_id: skye
+    mastery: 41.5
+  - agent_id: sova
+    mastery: 35.2
   map_pool:
   - map_id: ascent
-    mastery: 62.6
+    mastery: 68.5
   - map_id: bind
-    mastery: 68.1
+    mastery: 72.4
   - map_id: haven
-    mastery: 61.3
+    mastery: 65.8
   - map_id: lotus
-    mastery: 62.1
+    mastery: 71.6
   - map_id: split
-    mastery: 57.0
+    mastery: 48.7
   salary: 3700
-  contract_weeks_left: 73
-  morale: 61.8
-  stamina: 94.5
-  form: 46.0
+  contract_weeks_left: 55
+  morale: 64.5
+  stamina: 93.7
+  form: 56.5
   personality_tags:
-  - clutch_gene
-  - team_player
-  potential: 59.2
+  - perfectionist
+  potential: 62.3
 - id: team_red_canids_forbanz
   handle: forbanz
   real_name: Ithallo Paula
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 24
   role: duelist
   playstyle: entry
@@ -75,30 +108,58 @@ players:
     mastery: 67.9
   - agent_id: raze
     mastery: 67.0
+  - agent_id: phoenix
+    mastery: 47.1
+  - agent_id: reyna
+    mastery: 42.3
+  - agent_id: breach
+    mastery: 32.2
+  - agent_id: chamber
+    mastery: 30.9
+  - agent_id: clove
+    mastery: 32.4
+  - agent_id: cypher
+    mastery: 36.0
+  - agent_id: killjoy
+    mastery: 35.9
+  - agent_id: omen
+    mastery: 33.9
+  - agent_id: skye
+    mastery: 4.1
+  - agent_id: sova
+    mastery: 38.3
+  - agent_id: viper
+    mastery: 42.4
   map_pool:
   - map_id: ascent
-    mastery: 63.2
+    mastery: 54.5
   - map_id: bind
-    mastery: 56.0
+    mastery: 65.9
   - map_id: haven
-    mastery: 62.6
+    mastery: 75.1
   - map_id: lotus
-    mastery: 59.6
+    mastery: 67.4
   - map_id: split
-    mastery: 63.8
+    mastery: 55.8
   salary: 3700
-  contract_weeks_left: 68
-  morale: 69.2
-  stamina: 96.9
-  form: 48.9
+  contract_weeks_left: 63
+  morale: 68.4
+  stamina: 83.8
+  form: 46.7
   personality_tags:
   - grinder
-  - slow_starter
-  potential: 56.9
+  - quiet
+  potential: 62.7
 - id: team_red_canids_sw
   handle: sw
   real_name: Jadisson Rayan
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 21
   role: initiator
   playstyle: support
@@ -118,29 +179,58 @@ players:
     mastery: 72.7
   - agent_id: skye
     mastery: 67.7
+  - agent_id: breach
+    mastery: 52.9
+  - agent_id: chamber
+    mastery: 43.0
+  - agent_id: clove
+    mastery: 32.8
+  - agent_id: cypher
+    mastery: 28.7
+  - agent_id: jett
+    mastery: 30.7
+  - agent_id: killjoy
+    mastery: 33.6
+  - agent_id: omen
+    mastery: 39.2
+  - agent_id: phoenix
+    mastery: 26.5
+  - agent_id: raze
+    mastery: 29.8
+  - agent_id: reyna
+    mastery: 15.2
+  - agent_id: viper
+    mastery: 38.6
   map_pool:
   - map_id: ascent
-    mastery: 72.3
+    mastery: 57.0
   - map_id: bind
-    mastery: 65.0
+    mastery: 52.1
   - map_id: haven
-    mastery: 72.8
+    mastery: 54.3
   - map_id: lotus
-    mastery: 60.7
+    mastery: 58.7
   - map_id: split
-    mastery: 60.5
+    mastery: 54.8
   salary: 3500
-  contract_weeks_left: 51
-  morale: 67.0
-  stamina: 88.6
-  form: 48.4
+  contract_weeks_left: 73
+  morale: 78.5
+  stamina: 90.0
+  form: 56.2
   personality_tags:
-  - analytical
-  potential: 62.8
+  - hot_head
+  - slow_starter
+  potential: 67.7
 - id: team_red_canids_rglmeister
   handle: RgLMeister
   real_name: Matheus Rodigoli
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 22
   role: flex
   playstyle: support
@@ -160,30 +250,58 @@ players:
     mastery: 65.8
   - agent_id: killjoy
     mastery: 60.9
+  - agent_id: breach
+    mastery: 38.0
+  - agent_id: chamber
+    mastery: 35.2
+  - agent_id: clove
+    mastery: 26.1
+  - agent_id: cypher
+    mastery: 36.9
+  - agent_id: jett
+    mastery: 31.5
+  - agent_id: phoenix
+    mastery: 31.6
+  - agent_id: raze
+    mastery: 32.4
+  - agent_id: reyna
+    mastery: 35.0
+  - agent_id: skye
+    mastery: 26.7
+  - agent_id: sova
+    mastery: 36.8
+  - agent_id: viper
+    mastery: 30.4
   map_pool:
   - map_id: ascent
-    mastery: 56.5
+    mastery: 61.7
   - map_id: bind
-    mastery: 66.8
+    mastery: 60.0
   - map_id: haven
-    mastery: 55.7
+    mastery: 65.5
   - map_id: lotus
-    mastery: 63.4
+    mastery: 60.1
   - map_id: split
-    mastery: 58.2
+    mastery: 62.2
   salary: 3500
-  contract_weeks_left: 43
-  morale: 61.4
-  stamina: 86.3
-  form: 55.3
+  contract_weeks_left: 72
+  morale: 66.3
+  stamina: 93.6
+  form: 56.8
   personality_tags:
-  - quiet
-  - team_player
-  potential: 63.4
+  - fan_favorite
+  - independent
+  potential: 60.1
 - id: team_red_canids_urango
   handle: Urango
   real_name: Victor Rodrigues
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 97.0
+  - lang: en
+    level: 40.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -203,23 +321,45 @@ players:
     mastery: 68.1
   - agent_id: cypher
     mastery: 55.8
+  - agent_id: chamber
+    mastery: 47.3
+  - agent_id: breach
+    mastery: 29.3
+  - agent_id: clove
+    mastery: 27.3
+  - agent_id: jett
+    mastery: 34.0
+  - agent_id: omen
+    mastery: 29.6
+  - agent_id: phoenix
+    mastery: 34.6
+  - agent_id: raze
+    mastery: 37.7
+  - agent_id: reyna
+    mastery: 35.6
+  - agent_id: skye
+    mastery: 40.4
+  - agent_id: sova
+    mastery: 32.3
+  - agent_id: viper
+    mastery: 29.1
   map_pool:
   - map_id: ascent
-    mastery: 64.5
+    mastery: 63.6
   - map_id: bind
-    mastery: 71.6
+    mastery: 51.5
   - map_id: haven
-    mastery: 56.6
+    mastery: 61.6
   - map_id: lotus
-    mastery: 66.5
+    mastery: 48.3
   - map_id: split
-    mastery: 54.1
+    mastery: 71.2
   salary: 3400
-  contract_weeks_left: 62
-  morale: 69.1
-  stamina: 98.5
-  form: 55.3
+  contract_weeks_left: 72
+  morale: 74.5
+  stamina: 80.6
+  form: 51.4
   personality_tags:
-  - clutch_gene
+  - fan_favorite
   - slow_starter
-  potential: 64.3
+  potential: 59.3

@@ -13,6 +13,12 @@ players:
   handle: nAts
   real_name: Ayaz Akhmetshin
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 68.0
   age: 24
   role: sentinel
   playstyle: igl
@@ -34,30 +40,56 @@ players:
     mastery: 89.0
   - agent_id: cypher
     mastery: 81.2
+  - agent_id: chamber
+    mastery: 67.3
+  - agent_id: breach
+    mastery: 57.3
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 54.5
+  - agent_id: omen
+    mastery: 6.8
+  - agent_id: phoenix
+    mastery: 54.0
+  - agent_id: raze
+    mastery: 51.9
+  - agent_id: reyna
+    mastery: 55.2
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 54.8
   map_pool:
   - map_id: ascent
-    mastery: 82.5
+    mastery: 77.1
   - map_id: bind
-    mastery: 82.8
+    mastery: 81.0
   - map_id: haven
-    mastery: 85.4
+    mastery: 86.5
   - map_id: lotus
-    mastery: 85.0
+    mastery: 91.5
   - map_id: split
-    mastery: 91.7
+    mastery: 82.2
   salary: 6300
-  contract_weeks_left: 59
-  morale: 61.5
-  stamina: 97.0
-  form: 54.3
+  contract_weeks_left: 62
+  morale: 81.3
+  stamina: 87.9
+  form: 45.3
   personality_tags:
-  - analytical
   - clutch_gene
-  potential: 80.3
+  - flashy
+  potential: 82.7
 - id: team_team_liquid_trexx
   handle: trexx
   real_name: Nikita Cherednichenko
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 62.0
   age: 22
   role: duelist
   playstyle: entry
@@ -77,29 +109,60 @@ players:
     mastery: 80.9
   - agent_id: raze
     mastery: 82.5
+  - agent_id: phoenix
+    mastery: 63.8
+  - agent_id: reyna
+    mastery: 70.5
+  - agent_id: breach
+    mastery: 48.8
+  - agent_id: chamber
+    mastery: 55.1
+  - agent_id: clove
+    mastery: 49.8
+  - agent_id: cypher
+    mastery: 51.9
+  - agent_id: killjoy
+    mastery: 54.5
+  - agent_id: omen
+    mastery: 49.1
+  - agent_id: skye
+    mastery: 51.4
+  - agent_id: sova
+    mastery: 51.7
+  - agent_id: viper
+    mastery: 58.9
   map_pool:
   - map_id: ascent
-    mastery: 80.2
+    mastery: 71.6
   - map_id: bind
-    mastery: 90.2
+    mastery: 76.2
   - map_id: haven
-    mastery: 83.7
+    mastery: 72.7
   - map_id: lotus
-    mastery: 76.3
+    mastery: 79.7
   - map_id: split
-    mastery: 91.0
+    mastery: 78.6
   salary: 5500
-  contract_weeks_left: 79
-  morale: 83.1
-  stamina: 85.6
-  form: 52.7
+  contract_weeks_left: 38
+  morale: 65.2
+  stamina: 89.5
+  form: 48.6
   personality_tags:
-  - team_player
-  potential: 81.4
+  - grinder
+  - quiet
+  potential: 79.9
 - id: team_team_liquid_kicks
   handle: Kicks
   real_name: Kimmie Laasner
   region: emea
+  country: EE
+  languages:
+  - lang: et
+    level: 96.0
+  - lang: en
+    level: 85.0
+  - lang: ru
+    level: 55.0
   age: 20
   role: flex
   playstyle: support
@@ -121,30 +184,55 @@ players:
     mastery: 75.6
   - agent_id: sova
     mastery: 75.5
+  - agent_id: breach
+    mastery: 58.3
+  - agent_id: chamber
+    mastery: 48.4
+  - agent_id: clove
+    mastery: 41.1
+  - agent_id: cypher
+    mastery: 46.8
+  - agent_id: jett
+    mastery: 2.9
+  - agent_id: killjoy
+    mastery: 45.7
+  - agent_id: phoenix
+    mastery: 48.5
+  - agent_id: raze
+    mastery: 52.4
+  - agent_id: reyna
+    mastery: 55.8
+  - agent_id: viper
+    mastery: 46.4
   map_pool:
   - map_id: ascent
-    mastery: 75.5
+    mastery: 72.0
   - map_id: bind
-    mastery: 87.8
+    mastery: 83.6
   - map_id: haven
-    mastery: 89.6
+    mastery: 83.7
   - map_id: lotus
-    mastery: 75.8
+    mastery: 80.1
   - map_id: split
-    mastery: 81.4
+    mastery: 78.6
   salary: 5500
-  contract_weeks_left: 79
-  morale: 69.2
-  stamina: 80.8
-  form: 50.5
+  contract_weeks_left: 44
+  morale: 75.3
+  stamina: 93.8
+  form: 51.4
   personality_tags:
-  - flashy
-  - independent
-  potential: 83.2
+  - slow_starter
+  potential: 83.8
 - id: team_team_liquid_purp0
   handle: purp0
   real_name: Semyon Borchev
   region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 97.0
+  - lang: en
+    level: 60.0
   age: 19
   role: initiator
   playstyle: support
@@ -164,30 +252,57 @@ players:
     mastery: 82.9
   - agent_id: skye
     mastery: 83.9
+  - agent_id: breach
+    mastery: 57.1
+  - agent_id: chamber
+    mastery: 53.9
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 47.8
+  - agent_id: jett
+    mastery: 47.3
+  - agent_id: killjoy
+    mastery: 56.2
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 55.0
+  - agent_id: raze
+    mastery: 47.8
+  - agent_id: reyna
+    mastery: 47.7
+  - agent_id: viper
+    mastery: 7.4
   map_pool:
   - map_id: ascent
-    mastery: 69.2
+    mastery: 83.1
   - map_id: bind
-    mastery: 75.7
+    mastery: 72.1
   - map_id: haven
-    mastery: 82.1
+    mastery: 71.7
   - map_id: lotus
-    mastery: 86.1
+    mastery: 77.8
   - map_id: split
-    mastery: 91.6
+    mastery: 80.9
   salary: 5700
-  contract_weeks_left: 48
-  morale: 61.9
-  stamina: 96.2
-  form: 46.0
+  contract_weeks_left: 35
+  morale: 62.3
+  stamina: 87.8
+  form: 49.2
   personality_tags:
-  - hot_head
-  - streamer
-  potential: 95.6
+  - flashy
+  potential: 85.8
 - id: team_team_liquid_kamo
   handle: kamo
   real_name: Kamil Frackowiak
   region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 97.0
+  - lang: en
+    level: 75.0
   age: 19
   role: duelist
   playstyle: entry
@@ -207,22 +322,45 @@ players:
     mastery: 80.0
   - agent_id: raze
     mastery: 81.8
+  - agent_id: jett
+    mastery: 63.7
+  - agent_id: reyna
+    mastery: 68.5
+  - agent_id: breach
+    mastery: 55.1
+  - agent_id: chamber
+    mastery: 50.5
+  - agent_id: clove
+    mastery: 52.2
+  - agent_id: cypher
+    mastery: 56.3
+  - agent_id: killjoy
+    mastery: 48.9
+  - agent_id: omen
+    mastery: 56.6
+  - agent_id: skye
+    mastery: 52.4
+  - agent_id: sova
+    mastery: 6.0
+  - agent_id: viper
+    mastery: 53.4
   map_pool:
   - map_id: ascent
-    mastery: 79.1
+    mastery: 86.9
   - map_id: bind
-    mastery: 86.3
+    mastery: 80.1
   - map_id: haven
-    mastery: 82.1
+    mastery: 87.4
   - map_id: lotus
-    mastery: 83.6
+    mastery: 84.3
   - map_id: split
-    mastery: 83.5
+    mastery: 87.3
   salary: 5700
-  contract_weeks_left: 60
-  morale: 60.2
-  stamina: 87.7
-  form: 47.3
+  contract_weeks_left: 69
+  morale: 75.5
+  stamina: 84.4
+  form: 57.9
   personality_tags:
-  - independent
-  potential: 83.4
+  - grinder
+  - streamer
+  potential: 85.7

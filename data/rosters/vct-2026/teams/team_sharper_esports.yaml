@@ -13,6 +13,12 @@ players:
   handle: Kadoom
   real_name: Kantapon Kingthong
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 45.0
   age: 21
   role: duelist
   playstyle: entry
@@ -32,29 +38,58 @@ players:
     mastery: 72.6
   - agent_id: raze
     mastery: 77.7
+  - agent_id: phoenix
+    mastery: 53.8
+  - agent_id: reyna
+    mastery: 49.8
+  - agent_id: breach
+    mastery: 32.7
+  - agent_id: chamber
+    mastery: 41.0
+  - agent_id: clove
+    mastery: 34.4
+  - agent_id: cypher
+    mastery: 31.0
+  - agent_id: killjoy
+    mastery: 50.1
+  - agent_id: omen
+    mastery: 49.3
+  - agent_id: skye
+    mastery: 41.6
+  - agent_id: sova
+    mastery: 35.7
+  - agent_id: viper
+    mastery: 36.6
   map_pool:
   - map_id: ascent
-    mastery: 70.6
+    mastery: 67.6
   - map_id: bind
-    mastery: 64.7
+    mastery: 67.2
   - map_id: haven
-    mastery: 70.9
+    mastery: 56.0
   - map_id: lotus
-    mastery: 59.3
+    mastery: 63.1
   - map_id: split
-    mastery: 73.9
+    mastery: 64.9
   salary: 4200
-  contract_weeks_left: 45
-  morale: 66.1
-  stamina: 88.2
-  form: 54.1
+  contract_weeks_left: 71
+  morale: 68.0
+  stamina: 81.7
+  form: 52.1
   personality_tags:
   - analytical
-  potential: 78.6
+  - flashy
+  potential: 74.0
 - id: team_sharper_esports_ptc
   handle: PTC
   real_name: Kititkawin Rattanasukol
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 95.0
+  - lang: en
+    level: 42.0
   age: 24
   role: controller
   playstyle: igl
@@ -74,30 +109,57 @@ players:
     mastery: 74.5
   - agent_id: clove
     mastery: 64.5
+  - agent_id: viper
+    mastery: 57.1
+  - agent_id: breach
+    mastery: 37.2
+  - agent_id: chamber
+    mastery: 38.4
+  - agent_id: cypher
+    mastery: 46.0
+  - agent_id: jett
+    mastery: 37.4
+  - agent_id: killjoy
+    mastery: 46.1
+  - agent_id: phoenix
+    mastery: 35.9
+  - agent_id: raze
+    mastery: 39.7
+  - agent_id: reyna
+    mastery: 38.5
+  - agent_id: skye
+    mastery: 42.0
+  - agent_id: sova
+    mastery: 34.6
   map_pool:
   - map_id: ascent
-    mastery: 76.7
+    mastery: 69.7
   - map_id: bind
-    mastery: 68.5
+    mastery: 71.9
   - map_id: haven
-    mastery: 65.0
+    mastery: 51.8
   - map_id: lotus
-    mastery: 73.2
+    mastery: 69.4
   - map_id: split
-    mastery: 66.5
+    mastery: 61.7
   salary: 4000
-  contract_weeks_left: 40
-  morale: 68.5
-  stamina: 80.2
-  form: 56.2
+  contract_weeks_left: 53
+  morale: 70.8
+  stamina: 98.5
+  form: 45.1
   personality_tags:
-  - quiet
-  - streamer
-  potential: 63.3
+  - slow_starter
+  potential: 65.1
 - id: team_sharper_esports_apinya
   handle: Apinya
   real_name: Apinya Laotaew
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 40.0
   age: 22
   role: initiator
   playstyle: support
@@ -117,30 +179,58 @@ players:
     mastery: 68.5
   - agent_id: skye
     mastery: 61.2
+  - agent_id: breach
+    mastery: 45.5
+  - agent_id: chamber
+    mastery: 35.4
+  - agent_id: clove
+    mastery: 37.7
+  - agent_id: cypher
+    mastery: 39.5
+  - agent_id: jett
+    mastery: 34.5
+  - agent_id: killjoy
+    mastery: 5.3
+  - agent_id: omen
+    mastery: 39.2
+  - agent_id: phoenix
+    mastery: 34.7
+  - agent_id: raze
+    mastery: 6.2
+  - agent_id: reyna
+    mastery: 2.0
+  - agent_id: viper
+    mastery: 36.8
   map_pool:
   - map_id: ascent
-    mastery: 59.8
+    mastery: 61.6
   - map_id: bind
-    mastery: 66.7
+    mastery: 76.5
   - map_id: haven
-    mastery: 63.0
+    mastery: 60.2
   - map_id: lotus
-    mastery: 65.8
+    mastery: 62.2
   - map_id: split
-    mastery: 65.9
+    mastery: 55.4
   salary: 3900
-  contract_weeks_left: 50
-  morale: 71.2
-  stamina: 93.2
-  form: 45.1
+  contract_weeks_left: 67
+  morale: 74.1
+  stamina: 87.6
+  form: 56.5
   personality_tags:
-  - clutch_gene
-  - flashy
-  potential: 63.8
+  - analytical
+  - quiet
+  potential: 65.1
 - id: team_sharper_esports_laz
   handle: Laz
   real_name: Kittikawin Jirawatkakan
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 95.0
+  - lang: en
+    level: 42.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -160,30 +250,58 @@ players:
     mastery: 68.5
   - agent_id: cypher
     mastery: 66.2
+  - agent_id: chamber
+    mastery: 48.5
+  - agent_id: breach
+    mastery: 35.6
+  - agent_id: clove
+    mastery: 40.1
+  - agent_id: jett
+    mastery: 23.3
+  - agent_id: omen
+    mastery: 47.5
+  - agent_id: phoenix
+    mastery: 37.5
+  - agent_id: raze
+    mastery: 33.6
+  - agent_id: reyna
+    mastery: 29.2
+  - agent_id: skye
+    mastery: 32.9
+  - agent_id: sova
+    mastery: 45.2
+  - agent_id: viper
+    mastery: 26.4
   map_pool:
   - map_id: ascent
-    mastery: 64.7
+    mastery: 68.3
   - map_id: bind
-    mastery: 62.3
+    mastery: 74.4
   - map_id: haven
-    mastery: 63.5
+    mastery: 69.4
   - map_id: lotus
-    mastery: 70.2
+    mastery: 68.6
   - map_id: split
-    mastery: 69.0
+    mastery: 65.7
   salary: 3800
-  contract_weeks_left: 53
-  morale: 84.3
-  stamina: 94.7
-  form: 54.1
+  contract_weeks_left: 42
+  morale: 81.4
+  stamina: 82.1
+  form: 50.5
   personality_tags:
   - flashy
-  - quiet
-  potential: 61.9
+  - team_player
+  potential: 64.8
 - id: team_sharper_esports_niz
   handle: NIZ
   real_name: Yutthaphum Thawongphia
   region: pacific
+  country: TH
+  languages:
+  - lang: th
+    level: 96.0
+  - lang: en
+    level: 38.0
   age: 21
   role: flex
   playstyle: support
@@ -203,22 +321,45 @@ players:
     mastery: 63.1
   - agent_id: skye
     mastery: 64.8
+  - agent_id: breach
+    mastery: 39.6
+  - agent_id: chamber
+    mastery: 37.2
+  - agent_id: clove
+    mastery: 37.7
+  - agent_id: cypher
+    mastery: 37.9
+  - agent_id: jett
+    mastery: 32.4
+  - agent_id: killjoy
+    mastery: 33.9
+  - agent_id: omen
+    mastery: 38.2
+  - agent_id: phoenix
+    mastery: 38.9
+  - agent_id: raze
+    mastery: 35.2
+  - agent_id: reyna
+    mastery: 41.0
+  - agent_id: sova
+    mastery: 39.0
   map_pool:
   - map_id: ascent
-    mastery: 57.6
+    mastery: 69.1
   - map_id: bind
-    mastery: 68.4
+    mastery: 62.1
   - map_id: haven
-    mastery: 67.5
+    mastery: 57.4
   - map_id: lotus
-    mastery: 65.5
+    mastery: 68.8
   - map_id: split
-    mastery: 64.4
+    mastery: 60.2
   salary: 3800
-  contract_weeks_left: 56
-  morale: 64.4
-  stamina: 82.0
-  form: 48.6
+  contract_weeks_left: 44
+  morale: 78.8
+  stamina: 89.5
+  form: 54.9
   personality_tags:
-  - flashy
-  potential: 69.0
+  - independent
+  - team_player
+  potential: 66.6

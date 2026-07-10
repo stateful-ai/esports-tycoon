@@ -13,6 +13,10 @@ players:
   handle: autumn
   real_name: Kale Dunne
   region: pacific
+  country: AU
+  languages:
+  - lang: en
+    level: 98.0
   age: 22
   role: sentinel
   playstyle: awper
@@ -32,30 +36,58 @@ players:
     mastery: 84.6
   - agent_id: cypher
     mastery: 72.8
+  - agent_id: killjoy
+    mastery: 68.0
+  - agent_id: breach
+    mastery: 57.0
+  - agent_id: clove
+    mastery: 49.4
+  - agent_id: jett
+    mastery: 57.7
+  - agent_id: omen
+    mastery: 51.3
+  - agent_id: phoenix
+    mastery: 53.2
+  - agent_id: raze
+    mastery: 52.6
+  - agent_id: reyna
+    mastery: 49.3
+  - agent_id: skye
+    mastery: 49.1
+  - agent_id: sova
+    mastery: 55.4
+  - agent_id: viper
+    mastery: 58.0
   map_pool:
   - map_id: ascent
-    mastery: 85.5
+    mastery: 71.6
   - map_id: bind
-    mastery: 90.7
+    mastery: 86.4
   - map_id: haven
-    mastery: 85.8
+    mastery: 88.6
   - map_id: lotus
-    mastery: 84.2
+    mastery: 81.2
   - map_id: split
-    mastery: 76.7
+    mastery: 75.9
   salary: 5700
-  contract_weeks_left: 78
-  morale: 73.4
-  stamina: 95.3
-  form: 49.3
+  contract_weeks_left: 44
+  morale: 68.2
+  stamina: 88.8
+  form: 57.5
   personality_tags:
-  - perfectionist
+  - analytical
   - quiet
-  potential: 81.4
+  potential: 83.3
 - id: team_global_esports_patmen
   handle: PatMen
   real_name: John Patrick Ramos Mendoza
   region: pacific
+  country: PH
+  languages:
+  - lang: tl
+    level: 95.0
+  - lang: en
+    level: 85.0
   age: 23
   role: flex
   playstyle: support
@@ -75,30 +107,57 @@ players:
     mastery: 84.4
   - agent_id: omen
     mastery: 84.2
+  - agent_id: breach
+    mastery: 56.2
+  - agent_id: chamber
+    mastery: 50.7
+  - agent_id: clove
+    mastery: 55.3
+  - agent_id: cypher
+    mastery: 52.7
+  - agent_id: jett
+    mastery: 3.4
+  - agent_id: killjoy
+    mastery: 49.1
+  - agent_id: phoenix
+    mastery: 50.8
+  - agent_id: raze
+    mastery: 44.6
+  - agent_id: reyna
+    mastery: 45.6
+  - agent_id: skye
+    mastery: 57.0
+  - agent_id: sova
+    mastery: 52.0
   map_pool:
   - map_id: ascent
-    mastery: 83.2
+    mastery: 72.9
   - map_id: bind
-    mastery: 85.0
+    mastery: 82.4
   - map_id: haven
-    mastery: 86.1
+    mastery: 70.0
   - map_id: lotus
-    mastery: 78.4
+    mastery: 76.7
   - map_id: split
-    mastery: 79.2
+    mastery: 81.2
   salary: 5600
-  contract_weeks_left: 40
-  morale: 76.0
-  stamina: 80.4
-  form: 51.3
+  contract_weeks_left: 51
+  morale: 70.5
+  stamina: 92.4
+  form: 47.8
   personality_tags:
   - analytical
-  - perfectionist
-  potential: 77.1
+  potential: 76.2
 - id: team_global_esports_udotan
   handle: UdoTan
   real_name: Go Kyung-won
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 55.0
   age: 22
   role: duelist
   playstyle: entry
@@ -118,30 +177,58 @@ players:
     mastery: 87.1
   - agent_id: jett
     mastery: 86.5
+  - agent_id: phoenix
+    mastery: 61.5
+  - agent_id: reyna
+    mastery: 73.4
+  - agent_id: breach
+    mastery: 55.6
+  - agent_id: chamber
+    mastery: 46.4
+  - agent_id: clove
+    mastery: 53.7
+  - agent_id: cypher
+    mastery: 56.2
+  - agent_id: killjoy
+    mastery: 53.4
+  - agent_id: omen
+    mastery: 52.7
+  - agent_id: skye
+    mastery: 52.8
+  - agent_id: sova
+    mastery: 46.3
+  - agent_id: viper
+    mastery: 50.2
   map_pool:
   - map_id: ascent
-    mastery: 76.7
+    mastery: 75.2
   - map_id: bind
-    mastery: 94.6
+    mastery: 82.4
   - map_id: haven
-    mastery: 66.9
+    mastery: 88.6
   - map_id: lotus
-    mastery: 84.5
+    mastery: 71.2
   - map_id: split
-    mastery: 86.2
+    mastery: 71.4
   salary: 5500
-  contract_weeks_left: 47
-  morale: 64.9
-  stamina: 84.8
-  form: 55.8
+  contract_weeks_left: 31
+  morale: 76.0
+  stamina: 82.5
+  form: 46.8
   personality_tags:
-  - clutch_gene
-  - perfectionist
-  potential: 77.8
+  - quiet
+  - team_player
+  potential: 79.2
 - id: team_global_esports_kr1stal
   handle: Kr1stal
   real_name: Savva Fedorov
   region: pacific
+  country: RU
+  languages:
+  - lang: ru
+    level: 96.0
+  - lang: en
+    level: 60.0
   age: 20
   role: initiator
   playstyle: support
@@ -161,30 +248,58 @@ players:
     mastery: 74.7
   - agent_id: killjoy
     mastery: 80.5
+  - agent_id: breach
+    mastery: 61.2
+  - agent_id: skye
+    mastery: 59.5
+  - agent_id: chamber
+    mastery: 46.3
+  - agent_id: clove
+    mastery: 44.2
+  - agent_id: cypher
+    mastery: 50.4
+  - agent_id: jett
+    mastery: 53.2
+  - agent_id: omen
+    mastery: 48.0
+  - agent_id: phoenix
+    mastery: 47.4
+  - agent_id: raze
+    mastery: 48.0
+  - agent_id: reyna
+    mastery: 49.0
+  - agent_id: viper
+    mastery: 51.3
   map_pool:
   - map_id: ascent
-    mastery: 77.4
+    mastery: 88.0
   - map_id: bind
-    mastery: 74.8
+    mastery: 75.5
   - map_id: haven
-    mastery: 81.1
+    mastery: 65.4
   - map_id: lotus
-    mastery: 73.7
+    mastery: 74.9
   - map_id: split
-    mastery: 75.8
+    mastery: 74.4
   salary: 5300
-  contract_weeks_left: 36
-  morale: 68.7
-  stamina: 84.9
-  form: 47.1
+  contract_weeks_left: 75
+  morale: 83.7
+  stamina: 96.5
+  form: 50.8
   personality_tags:
-  - grinder
-  - slow_starter
-  potential: 82.5
+  - flashy
+  - independent
+  potential: 80.4
 - id: team_global_esports_xavi8k
   handle: xavi8k
   real_name: Xavier Juan
   region: pacific
+  country: PH
+  languages:
+  - lang: en
+    level: 95.0
+  - lang: tl
+    level: 80.0
   age: 22
   role: controller
   playstyle: igl
@@ -204,23 +319,45 @@ players:
     mastery: 81.5
   - agent_id: clove
     mastery: 78.7
+  - agent_id: viper
+    mastery: 61.1
+  - agent_id: breach
+    mastery: 49.8
+  - agent_id: chamber
+    mastery: 52.5
+  - agent_id: cypher
+    mastery: 51.4
+  - agent_id: jett
+    mastery: 7.7
+  - agent_id: killjoy
+    mastery: 44.2
+  - agent_id: phoenix
+    mastery: 50.6
+  - agent_id: raze
+    mastery: 4.8
+  - agent_id: reyna
+    mastery: 50.6
+  - agent_id: skye
+    mastery: 52.1
+  - agent_id: sova
+    mastery: 49.0
   map_pool:
   - map_id: ascent
-    mastery: 77.6
+    mastery: 89.6
   - map_id: bind
-    mastery: 71.9
+    mastery: 76.6
   - map_id: haven
-    mastery: 78.1
+    mastery: 74.2
   - map_id: lotus
-    mastery: 79.7
+    mastery: 81.5
   - map_id: split
-    mastery: 81.4
+    mastery: 70.5
   salary: 5100
-  contract_weeks_left: 66
-  morale: 61.0
-  stamina: 99.4
-  form: 47.8
+  contract_weeks_left: 60
+  morale: 79.6
+  stamina: 81.4
+  form: 59.4
   personality_tags:
-  - fan_favorite
-  - slow_starter
-  potential: 76.7
+  - clutch_gene
+  - quiet
+  potential: 77.6

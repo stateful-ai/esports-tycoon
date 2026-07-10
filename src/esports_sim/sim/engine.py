@@ -1965,6 +1965,12 @@ class _MatchSim:
             if m.map_id == self.map.id:
                 s += (m.mastery - 50.0) / 25.0
                 break
+        if ps.weapon == "operator":
+            # Op-affinity kits (Jett's dash, Chamber's TP) buff every
+            # operator duel a touch — anyone can op, these agents op WELL.
+            agent = self.gd.agents.get(ps.agent_id)
+            if agent is not None and agent.op_affinity:
+                s += C.OPERATOR_AGENT_AFFINITY
         if ps.weapon == "operator" and holder and advantaged:
             s += C.OPERATOR_HOLD_BONUS
         # Range replaces the old flat same-room operator malus: every

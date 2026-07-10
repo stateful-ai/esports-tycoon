@@ -13,6 +13,12 @@ players:
   handle: qpert
   real_name: Mateja Mijovic
   region: emea
+  country: RS
+  languages:
+  - lang: sr
+    level: 96.0
+  - lang: en
+    level: 65.0
   age: 22
   role: controller
   playstyle: igl
@@ -32,30 +38,58 @@ players:
     mastery: 77.2
   - agent_id: viper
     mastery: 71.0
+  - agent_id: clove
+    mastery: 49.4
+  - agent_id: breach
+    mastery: 48.4
+  - agent_id: chamber
+    mastery: 4.3
+  - agent_id: cypher
+    mastery: 47.0
+  - agent_id: jett
+    mastery: 47.9
+  - agent_id: killjoy
+    mastery: 42.5
+  - agent_id: phoenix
+    mastery: 41.1
+  - agent_id: raze
+    mastery: 50.3
+  - agent_id: reyna
+    mastery: 45.8
+  - agent_id: skye
+    mastery: 34.7
+  - agent_id: sova
+    mastery: 33.2
   map_pool:
   - map_id: ascent
-    mastery: 63.5
+    mastery: 64.9
   - map_id: bind
-    mastery: 78.7
+    mastery: 75.8
   - map_id: haven
-    mastery: 77.8
+    mastery: 72.7
   - map_id: lotus
-    mastery: 70.5
+    mastery: 72.5
   - map_id: split
-    mastery: 73.0
+    mastery: 63.8
   salary: 4300
-  contract_weeks_left: 46
-  morale: 66.3
-  stamina: 96.9
-  form: 57.0
+  contract_weeks_left: 44
+  morale: 69.4
+  stamina: 98.0
+  form: 55.0
   personality_tags:
-  - flashy
-  - independent
-  potential: 69.8
+  - perfectionist
+  - team_player
+  potential: 74.9
 - id: team_pcific_esports_cned
   handle: cNed
   real_name: Mehmet Yagiz Ipek
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 65.0
   age: 24
   role: duelist
   playstyle: awper
@@ -75,29 +109,58 @@ players:
     mastery: 90.1
   - agent_id: chamber
     mastery: 72.9
+  - agent_id: phoenix
+    mastery: 58.8
+  - agent_id: raze
+    mastery: 60.9
+  - agent_id: reyna
+    mastery: 55.4
+  - agent_id: breach
+    mastery: 54.8
+  - agent_id: clove
+    mastery: 48.4
+  - agent_id: cypher
+    mastery: 4.4
+  - agent_id: killjoy
+    mastery: 54.6
+  - agent_id: omen
+    mastery: 48.2
+  - agent_id: skye
+    mastery: 52.0
+  - agent_id: sova
+    mastery: 54.5
+  - agent_id: viper
+    mastery: 52.5
   map_pool:
   - map_id: ascent
-    mastery: 74.2
+    mastery: 71.6
   - map_id: bind
-    mastery: 77.4
+    mastery: 75.8
   - map_id: haven
-    mastery: 69.1
+    mastery: 84.1
   - map_id: lotus
-    mastery: 84.7
+    mastery: 80.6
   - map_id: split
-    mastery: 84.2
+    mastery: 78.5
   salary: 5100
-  contract_weeks_left: 74
-  morale: 60.6
-  stamina: 91.0
-  form: 53.4
+  contract_weeks_left: 30
+  morale: 61.3
+  stamina: 93.0
+  form: 59.8
   personality_tags:
-  - clutch_gene
-  potential: 73.8
+  - fan_favorite
+  - streamer
+  potential: 74.0
 - id: team_pcific_esports_seven
   handle: seven
   real_name: Johann Hernandez
   region: emea
+  country: MX
+  languages:
+  - lang: es
+    level: 97.0
+  - lang: en
+    level: 60.0
   age: 20
   role: duelist
   playstyle: entry
@@ -117,28 +180,58 @@ players:
     mastery: 77.8
   - agent_id: phoenix
     mastery: 73.9
+  - agent_id: jett
+    mastery: 56.6
+  - agent_id: reyna
+    mastery: 52.1
+  - agent_id: breach
+    mastery: 43.8
+  - agent_id: chamber
+    mastery: 47.7
+  - agent_id: clove
+    mastery: 41.3
+  - agent_id: cypher
+    mastery: 39.9
+  - agent_id: killjoy
+    mastery: 52.5
+  - agent_id: omen
+    mastery: 41.3
+  - agent_id: skye
+    mastery: 40.1
+  - agent_id: sova
+    mastery: 45.8
+  - agent_id: viper
+    mastery: 46.1
   map_pool:
   - map_id: ascent
-    mastery: 73.9
+    mastery: 67.5
   - map_id: bind
-    mastery: 67.2
+    mastery: 70.4
   - map_id: haven
-    mastery: 66.8
+    mastery: 67.3
   - map_id: lotus
-    mastery: 72.1
+    mastery: 67.6
   - map_id: split
-    mastery: 65.8
+    mastery: 73.1
   salary: 4400
-  contract_weeks_left: 49
-  morale: 72.9
-  stamina: 96.1
-  form: 56.6
-  personality_tags: []
-  potential: 78.5
+  contract_weeks_left: 43
+  morale: 67.6
+  stamina: 92.3
+  form: 45.1
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 78.2
 - id: team_pcific_esports_ninja
   handle: NINJA
   real_name: Patryk Koczyba
   region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 96.0
+  - lang: en
+    level: 65.0
   age: 22
   role: initiator
   playstyle: support
@@ -158,30 +251,57 @@ players:
     mastery: 76.8
   - agent_id: skye
     mastery: 69.0
+  - agent_id: breach
+    mastery: 56.5
+  - agent_id: chamber
+    mastery: 42.7
+  - agent_id: clove
+    mastery: 41.5
+  - agent_id: cypher
+    mastery: 38.4
+  - agent_id: jett
+    mastery: 34.1
+  - agent_id: killjoy
+    mastery: 33.8
+  - agent_id: omen
+    mastery: 36.5
+  - agent_id: phoenix
+    mastery: 40.1
+  - agent_id: raze
+    mastery: 45.8
+  - agent_id: reyna
+    mastery: 39.5
+  - agent_id: viper
+    mastery: 38.7
   map_pool:
   - map_id: ascent
-    mastery: 73.7
+    mastery: 77.3
   - map_id: bind
-    mastery: 66.8
+    mastery: 73.6
   - map_id: haven
-    mastery: 70.8
+    mastery: 68.1
   - map_id: lotus
-    mastery: 83.5
+    mastery: 74.3
   - map_id: split
-    mastery: 69.4
+    mastery: 71.8
   salary: 4400
-  contract_weeks_left: 44
-  morale: 81.5
-  stamina: 97.4
-  form: 48.5
+  contract_weeks_left: 64
+  morale: 64.3
+  stamina: 92.6
+  form: 53.6
   personality_tags:
   - hot_head
-  - independent
-  potential: 66.8
+  potential: 72.5
 - id: team_pcific_esports_al0rante
   handle: al0rante
   real_name: Felix Brandl
   region: emea
+  country: DE
+  languages:
+  - lang: de
+    level: 96.0
+  - lang: en
+    level: 70.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -201,23 +321,45 @@ players:
     mastery: 77.6
   - agent_id: killjoy
     mastery: 65.4
+  - agent_id: chamber
+    mastery: 55.4
+  - agent_id: cypher
+    mastery: 53.6
+  - agent_id: breach
+    mastery: 37.6
+  - agent_id: clove
+    mastery: 36.3
+  - agent_id: jett
+    mastery: 44.7
+  - agent_id: omen
+    mastery: 46.5
+  - agent_id: phoenix
+    mastery: 39.6
+  - agent_id: raze
+    mastery: 40.9
+  - agent_id: reyna
+    mastery: 44.2
+  - agent_id: skye
+    mastery: 4.7
+  - agent_id: sova
+    mastery: 43.7
   map_pool:
   - map_id: ascent
-    mastery: 71.5
+    mastery: 67.4
   - map_id: bind
-    mastery: 68.9
+    mastery: 67.1
   - map_id: haven
-    mastery: 78.9
+    mastery: 68.3
   - map_id: lotus
-    mastery: 64.5
+    mastery: 67.0
   - map_id: split
-    mastery: 68.5
+    mastery: 72.6
   salary: 4500
-  contract_weeks_left: 79
-  morale: 63.8
-  stamina: 90.0
-  form: 53.9
+  contract_weeks_left: 53
+  morale: 67.0
+  stamina: 84.0
+  form: 59.7
   personality_tags:
+  - analytical
   - flashy
-  - hot_head
-  potential: 74.8
+  potential: 69.4

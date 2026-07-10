@@ -13,6 +13,14 @@ players:
   handle: johnqt
   real_name: Mohamed Amine Ouarid
   region: americas
+  country: MA
+  languages:
+  - lang: ar
+    level: 95.0
+  - lang: fr
+    level: 80.0
+  - lang: en
+    level: 70.0
   age: 25
   role: controller
   playstyle: igl
@@ -32,30 +40,58 @@ players:
     mastery: 84.6
   - agent_id: omen
     mastery: 76.4
+  - agent_id: clove
+    mastery: 60.5
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 53.7
+  - agent_id: cypher
+    mastery: 50.9
+  - agent_id: jett
+    mastery: 47.7
+  - agent_id: killjoy
+    mastery: 45.8
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 53.4
+  - agent_id: reyna
+    mastery: 49.0
+  - agent_id: skye
+    mastery: 42.4
+  - agent_id: sova
+    mastery: 53.7
   map_pool:
   - map_id: ascent
-    mastery: 74.7
+    mastery: 72.1
   - map_id: bind
-    mastery: 74.6
+    mastery: 74.5
   - map_id: haven
-    mastery: 92.9
+    mastery: 85.9
   - map_id: lotus
-    mastery: 71.6
+    mastery: 77.6
   - map_id: split
-    mastery: 82.1
+    mastery: 75.2
   salary: 5600
-  contract_weeks_left: 56
-  morale: 63.9
-  stamina: 99.4
-  form: 51.9
+  contract_weeks_left: 33
+  morale: 64.5
+  stamina: 90.2
+  form: 49.0
   personality_tags:
+  - clutch_gene
   - grinder
-  - perfectionist
-  potential: 77.0
+  potential: 75.2
 - id: team_sentinels_reduxx
   handle: Reduxx
   real_name: Yassin Aboulalazm
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 98.0
+  - lang: ar
+    level: 40.0
   age: 20
   role: flex
   playstyle: entry
@@ -77,30 +113,54 @@ players:
     mastery: 80.4
   - agent_id: raze
     mastery: 78.0
+  - agent_id: breach
+    mastery: 52.4
+  - agent_id: chamber
+    mastery: 4.6
+  - agent_id: clove
+    mastery: 54.0
+  - agent_id: cypher
+    mastery: 53.1
+  - agent_id: killjoy
+    mastery: 50.2
+  - agent_id: phoenix
+    mastery: 5.8
+  - agent_id: reyna
+    mastery: 48.5
+  - agent_id: skye
+    mastery: 53.0
+  - agent_id: sova
+    mastery: 52.9
+  - agent_id: viper
+    mastery: 54.3
   map_pool:
   - map_id: ascent
-    mastery: 81.3
+    mastery: 80.8
   - map_id: bind
-    mastery: 79.8
+    mastery: 76.4
   - map_id: haven
-    mastery: 80.3
+    mastery: 72.5
   - map_id: lotus
-    mastery: 77.6
+    mastery: 87.5
   - map_id: split
-    mastery: 80.5
+    mastery: 85.5
   salary: 6000
-  contract_weeks_left: 41
-  morale: 76.1
-  stamina: 94.1
-  form: 59.3
+  contract_weeks_left: 38
+  morale: 70.6
+  stamina: 91.3
+  form: 57.1
   personality_tags:
-  - quiet
-  - streamer
-  potential: 79.3
+  - hot_head
+  - slow_starter
+  potential: 87.1
 - id: team_sentinels_jonahp
   handle: JonahP
   real_name: Jonah Pulice
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   role: initiator
   playstyle: support
@@ -120,29 +180,58 @@ players:
     mastery: 74.8
   - agent_id: skye
     mastery: 76.3
+  - agent_id: breach
+    mastery: 55.8
+  - agent_id: chamber
+    mastery: 51.0
+  - agent_id: clove
+    mastery: 0.2
+  - agent_id: cypher
+    mastery: 43.9
+  - agent_id: jett
+    mastery: 48.6
+  - agent_id: killjoy
+    mastery: 48.9
+  - agent_id: omen
+    mastery: 49.6
+  - agent_id: phoenix
+    mastery: 52.8
+  - agent_id: raze
+    mastery: 49.6
+  - agent_id: reyna
+    mastery: 57.0
+  - agent_id: viper
+    mastery: 53.0
   map_pool:
   - map_id: ascent
-    mastery: 69.7
+    mastery: 69.2
   - map_id: bind
-    mastery: 80.8
+    mastery: 74.4
   - map_id: haven
-    mastery: 79.6
+    mastery: 68.2
   - map_id: lotus
-    mastery: 71.3
+    mastery: 76.1
   - map_id: split
-    mastery: 74.9
+    mastery: 70.7
   salary: 5100
-  contract_weeks_left: 35
-  morale: 63.9
-  stamina: 87.6
-  form: 59.7
+  contract_weeks_left: 63
+  morale: 71.5
+  stamina: 91.6
+  form: 46.6
   personality_tags:
-  - grinder
-  potential: 71.3
+  - clutch_gene
+  - independent
+  potential: 78.3
 - id: team_sentinels_jerrwin
   handle: Jerrwin
   real_name: Gurjiwan Gill
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 98.0
+  - lang: pa
+    level: 30.0
   age: 19
   role: duelist
   playstyle: entry
@@ -162,30 +251,58 @@ players:
     mastery: 77.1
   - agent_id: raze
     mastery: 71.4
+  - agent_id: phoenix
+    mastery: 58.9
+  - agent_id: reyna
+    mastery: 60.8
+  - agent_id: breach
+    mastery: 37.6
+  - agent_id: chamber
+    mastery: 35.3
+  - agent_id: clove
+    mastery: 38.5
+  - agent_id: cypher
+    mastery: 48.1
+  - agent_id: killjoy
+    mastery: 55.0
+  - agent_id: omen
+    mastery: 42.2
+  - agent_id: skye
+    mastery: 41.5
+  - agent_id: sova
+    mastery: 44.8
+  - agent_id: viper
+    mastery: 49.6
   map_pool:
   - map_id: ascent
-    mastery: 75.4
+    mastery: 73.4
   - map_id: bind
-    mastery: 78.3
+    mastery: 75.7
   - map_id: haven
-    mastery: 72.0
+    mastery: 74.3
   - map_id: lotus
-    mastery: 64.0
+    mastery: 91.6
   - map_id: split
-    mastery: 79.9
+    mastery: 70.5
   salary: 4900
-  contract_weeks_left: 56
-  morale: 64.5
-  stamina: 84.0
-  form: 52.9
+  contract_weeks_left: 61
+  morale: 80.6
+  stamina: 80.0
+  form: 55.0
   personality_tags:
-  - independent
-  - team_player
-  potential: 87.8
+  - analytical
+  - quiet
+  potential: 69.4
 - id: team_sentinels_cortezia
   handle: cortezia
   real_name: Gabriel Cortez
   region: americas
+  country: BR
+  languages:
+  - lang: pt
+    level: 98.0
+  - lang: en
+    level: 50.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -207,22 +324,42 @@ players:
     mastery: 91.1
   - agent_id: cypher
     mastery: 87.1
+  - agent_id: chamber
+    mastery: 68.5
+  - agent_id: breach
+    mastery: 53.6
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 59.7
+  - agent_id: raze
+    mastery: 57.6
+  - agent_id: reyna
+    mastery: 57.5
+  - agent_id: skye
+    mastery: 59.2
+  - agent_id: sova
+    mastery: 52.7
   map_pool:
   - map_id: ascent
-    mastery: 83.3
+    mastery: 79.5
   - map_id: bind
-    mastery: 88.6
+    mastery: 91.7
   - map_id: haven
-    mastery: 80.6
+    mastery: 89.1
   - map_id: lotus
-    mastery: 77.7
+    mastery: 91.5
   - map_id: split
-    mastery: 88.8
+    mastery: 85.5
   salary: 6500
-  contract_weeks_left: 79
-  morale: 66.5
-  stamina: 81.1
-  form: 50.1
+  contract_weeks_left: 67
+  morale: 79.1
+  stamina: 89.1
+  form: 51.1
   personality_tags:
-  - streamer
-  potential: 88.4
+  - grinder
+  potential: 85.3

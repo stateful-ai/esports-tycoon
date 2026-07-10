@@ -13,6 +13,10 @@ players:
   handle: Ethan
   real_name: Ethan Arnold
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 26
   role: initiator
   playstyle: igl
@@ -34,30 +38,54 @@ players:
     mastery: 78.2
   - agent_id: skye
     mastery: 73.7
+  - agent_id: chamber
+    mastery: 52.6
+  - agent_id: clove
+    mastery: 52.7
+  - agent_id: cypher
+    mastery: 52.5
+  - agent_id: jett
+    mastery: 44.3
+  - agent_id: killjoy
+    mastery: 2.1
+  - agent_id: omen
+    mastery: 52.8
+  - agent_id: phoenix
+    mastery: 48.6
+  - agent_id: raze
+    mastery: 47.6
+  - agent_id: reyna
+    mastery: 54.0
+  - agent_id: viper
+    mastery: 47.3
   map_pool:
   - map_id: ascent
-    mastery: 86.6
+    mastery: 75.9
   - map_id: bind
-    mastery: 80.7
-  - map_id: haven
     mastery: 84.3
+  - map_id: haven
+    mastery: 88.4
   - map_id: lotus
-    mastery: 80.8
+    mastery: 77.3
   - map_id: split
-    mastery: 69.8
+    mastery: 69.6
   salary: 5600
-  contract_weeks_left: 54
-  morale: 65.3
-  stamina: 81.0
-  form: 49.0
+  contract_weeks_left: 49
+  morale: 60.1
+  stamina: 85.7
+  form: 55.2
   personality_tags:
-  - hot_head
-  - slow_starter
-  potential: 76.4
+  - clutch_gene
+  - fan_favorite
+  potential: 76.0
 - id: team_nrg_brawk
   handle: brawk
   real_name: Brock Somerhalder
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: flex
   playstyle: support
@@ -79,30 +107,53 @@ players:
     mastery: 88.3
   - agent_id: omen
     mastery: 84.6
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 56.3
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 7.2
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 3.2
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 56.2
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 95.5
+    mastery: 90.4
   - map_id: bind
-    mastery: 99.0
+    mastery: 85.5
   - map_id: haven
-    mastery: 76.9
+    mastery: 88.6
   - map_id: lotus
-    mastery: 97.0
+    mastery: 99.0
   - map_id: split
-    mastery: 95.7
+    mastery: 86.6
   salary: 7100
-  contract_weeks_left: 75
-  morale: 84.3
-  stamina: 80.4
-  form: 58.5
+  contract_weeks_left: 32
+  morale: 64.7
+  stamina: 83.6
+  form: 59.2
   personality_tags:
-  - fan_favorite
-  - independent
-  potential: 96.0
+  - team_player
+  potential: 88.5
 - id: team_nrg_keiko
   handle: keiko
   real_name: Georgio Sanassy
   region: americas
+  country: GB
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: flex
   playstyle: entry
@@ -124,30 +175,54 @@ players:
     mastery: 85.3
   - agent_id: phoenix
     mastery: 82.4
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 56.5
+  - agent_id: killjoy
+    mastery: 49.6
+  - agent_id: raze
+    mastery: 57.5
+  - agent_id: reyna
+    mastery: 58.9
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 78.8
+    mastery: 93.7
   - map_id: bind
-    mastery: 91.0
+    mastery: 93.3
   - map_id: haven
-    mastery: 86.2
+    mastery: 91.9
   - map_id: lotus
-    mastery: 89.4
+    mastery: 85.5
   - map_id: split
-    mastery: 82.6
+    mastery: 81.3
   salary: 6400
-  contract_weeks_left: 75
-  morale: 64.2
-  stamina: 92.5
-  form: 50.5
+  contract_weeks_left: 50
+  morale: 63.7
+  stamina: 89.2
+  form: 56.4
   personality_tags:
-  - fan_favorite
-  - grinder
-  potential: 88.5
+  - flashy
+  - hot_head
+  potential: 88.3
 - id: team_nrg_mada
   handle: mada
   real_name: Adam Pampuch
   region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   role: duelist
   playstyle: entry
@@ -169,30 +244,54 @@ players:
     mastery: 85.6
   - agent_id: viper
     mastery: 76.4
+  - agent_id: phoenix
+    mastery: 67.9
+  - agent_id: reyna
+    mastery: 62.7
+  - agent_id: breach
+    mastery: 53.7
+  - agent_id: chamber
+    mastery: 4.0
+  - agent_id: clove
+    mastery: 54.1
+  - agent_id: cypher
+    mastery: 54.4
+  - agent_id: killjoy
+    mastery: 56.4
+  - agent_id: omen
+    mastery: 51.7
+  - agent_id: skye
+    mastery: 55.3
+  - agent_id: sova
+    mastery: 52.4
   map_pool:
   - map_id: ascent
-    mastery: 84.9
+    mastery: 88.1
   - map_id: bind
-    mastery: 77.1
+    mastery: 84.8
   - map_id: haven
-    mastery: 81.1
+    mastery: 90.0
   - map_id: lotus
-    mastery: 81.7
+    mastery: 81.2
   - map_id: split
-    mastery: 83.8
+    mastery: 79.5
   salary: 5900
-  contract_weeks_left: 57
-  morale: 72.5
-  stamina: 96.3
-  form: 54.4
+  contract_weeks_left: 66
+  morale: 84.8
+  stamina: 92.0
+  form: 47.9
   personality_tags:
-  - flashy
-  - perfectionist
-  potential: 83.3
+  - quiet
+  - streamer
+  potential: 83.9
 - id: team_nrg_skuba
   handle: skuba
   real_name: Logan Jenkins
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: sentinel
   playstyle: anchor
@@ -214,23 +313,42 @@ players:
     mastery: 75.8
   - agent_id: omen
     mastery: 76.3
+  - agent_id: chamber
+    mastery: 54.6
+  - agent_id: killjoy
+    mastery: 52.4
+  - agent_id: breach
+    mastery: 53.9
+  - agent_id: clove
+    mastery: 51.3
+  - agent_id: jett
+    mastery: 50.3
+  - agent_id: phoenix
+    mastery: 49.3
+  - agent_id: raze
+    mastery: 43.1
+  - agent_id: reyna
+    mastery: 43.8
+  - agent_id: skye
+    mastery: 48.0
+  - agent_id: sova
+    mastery: 44.6
   map_pool:
   - map_id: ascent
-    mastery: 66.9
+    mastery: 78.3
   - map_id: bind
-    mastery: 63.6
+    mastery: 76.8
   - map_id: haven
-    mastery: 81.8
+    mastery: 88.8
   - map_id: lotus
-    mastery: 82.7
+    mastery: 77.5
   - map_id: split
-    mastery: 81.1
+    mastery: 74.1
   salary: 5400
-  contract_weeks_left: 77
-  morale: 73.4
-  stamina: 86.1
-  form: 47.2
+  contract_weeks_left: 78
+  morale: 70.4
+  stamina: 97.4
+  form: 59.6
   personality_tags:
-  - slow_starter
-  - team_player
-  potential: 77.5
+  - clutch_gene
+  potential: 72.7

@@ -6,6 +6,7 @@ agents:
   - id: jett
     display_name: Jett
     role: duelist
+    op_affinity: true
     description: >-
       Mobility duelist with dash and updraft. Operator main's best friend —
       disengage out of a peek after the shot.
@@ -281,6 +282,7 @@ agents:
   - id: chamber
     display_name: Chamber
     role: sentinel
+    op_affinity: true
     description: >-
       Custom gunsmith. Trademark warns the flank, Headhunter wins the duel,
       Rendezvous resets the angle — a sentinel who plays like a duelist.
