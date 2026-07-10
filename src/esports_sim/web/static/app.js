@@ -1075,6 +1075,18 @@ async function roster(v) {
     const starCell = hasBench
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
+    // Mentorship: older, higher-rated teammates can mentor this player.
+    const eligibleMentors = data.is_user_team
+      ? data.players.filter(
+          (q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0)
+        )
+      : [];
+    const mentorSel = (eligibleMentors.length || p.mentor_id)
+      ? `<select data-act="mentor" title="pair with a veteran mentor for faster development">
+           <option value="">no mentor</option>
+           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}</option>`).join("")}
+         </select>`
+      : "";
     const devCell = data.is_user_team
       ? `<td class="dev-plan">
            <select data-act="focus" title="training focus (auto = team week)">
@@ -1083,6 +1095,7 @@ async function roster(v) {
            <select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
              ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
            </select>
+           ${mentorSel}
          </td>`
       : "";
     const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
@@ -1094,7 +1107,7 @@ async function roster(v) {
         : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
     const tr = el("tr", "", `
       ${starCell}
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${benchPill}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${benchPill}</td>
       <td>${stylePill(p)}</td>
       <td>${p.planned_agent
         ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
@@ -1130,6 +1143,18 @@ async function roster(v) {
       const iSel = tr.querySelector('[data-act="intensity"]');
       iSel.onclick = (e) => e.stopPropagation();
       iSel.onchange = () => post("training_intensity", iSel.value);
+      const mSel = tr.querySelector('[data-act="mentor"]');
+      if (mSel) {
+        mSel.onclick = (e) => e.stopPropagation();
+        mSel.onchange = async () => {
+          const r = await api("/api/actions/mentor", {
+            protege_id: p.id,
+            mentor_id: mSel.value || null,
+          });
+          toast(r.message);
+          if (App.tab === "roster") render();
+        };
+      }
     }
     if (!data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
@@ -1787,10 +1812,32 @@ const formSquares = (form) =>
     .join("") || '<span class="muted">—</span>';
 
 async function standings(v) {
-  const [data, records] = await Promise.all([
+  const [data, records, power] = await Promise.all([
     api("/api/standings"),
     api("/api/records").catch(() => null),
+    api("/api/power").catch(() => null),
   ]);
+
+  // Global pundit power ranking (across regions), with movement vs world rank.
+  const pr = power?.rankings || [];
+  if (pr.length) {
+    const pc = el("div", "card");
+    pc.appendChild(el("h2", "", "Power rankings <span class=\"muted\" style=\"font-weight:400\">— global form book</span>"));
+    const list = el("div", "es-power");
+    for (const r of pr.slice(0, 10)) {
+      const mv = r.movement;
+      const arrow = mv == null ? "" : mv > 0
+        ? `<span class="trend-up">▲${mv}</span>` : mv < 0
+        ? `<span class="trend-down">▼${-mv}</span>` : '<span class="muted">–</span>';
+      list.appendChild(el("div", "es-power-row",
+        `<span class="es-power-rank mono">${r.rank}</span>` +
+        `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>` +
+        `<span class="muted">${(r.region || "").toUpperCase()}</span>` +
+        `<span class="es-power-mv">${arrow}</span>`));
+    }
+    pc.appendChild(list);
+    v.appendChild(pc);
+  }
 
   // All-time record book + current dynasties, above the tables.
   if (records && (records.records?.length || records.dynasties?.length)) {
@@ -2172,6 +2219,17 @@ async function marketPlayers(v) {
       c3.appendChild(list);
       cols.appendChild(c3);
     }
+    const rumors = data.rumors || [];
+    if (rumors.length) {
+      const c4 = el("div", "es-snap-col");
+      c4.appendChild(el("span", "es-scout-lab muted", "Rumour mill"));
+      const list = el("div", "es-rumors");
+      for (const r of rumors) {
+        list.appendChild(el("div", `es-rumor muted ${r.kind}`, r.text));
+      }
+      c4.appendChild(list);
+      cols.appendChild(c4);
+    }
     aid.appendChild(cols);
     v.appendChild(aid);
   }
@@ -2418,8 +2476,29 @@ const STAT_COLS = [
 async function stats(v) {
   const split = App.statsSplit; // {kind, key} | null
   const qs = split ? `?split=${split.kind}&key=${encodeURIComponent(split.key)}` : "";
-  const data = await api("/api/stats" + qs);
+  const [data, racesResp] = await Promise.all([
+    api("/api/stats" + qs),
+    api("/api/races").catch(() => null),
+  ]);
   const tier = data.analytics.tier;
+
+  // Award races: who's in contention for each season award right now.
+  const races = racesResp?.races || {};
+  if (Object.keys(races).length) {
+    const rc = el("div", "card");
+    rc.appendChild(el("h2", "", "Award races"));
+    const grid = el("div", "es-rec-grid");
+    for (const [award, leaders] of Object.entries(races)) {
+      const rows = leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
+        `<b class="mono">${l.value}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${award}</div>${rows}`));
+    }
+    rc.appendChild(grid);
+    v.appendChild(rc);
+  }
 
   // Analytics banner: what your department can compile, and what's next.
   const banner = el("div", "card");

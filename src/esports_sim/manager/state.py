@@ -1149,6 +1149,11 @@ class GameState(BaseModel):
     # offseason before player_stats resets. Pruned to current players
     # (retirees pass into the Hall of Fame instead). Additive/defaulted.
     career_stats: dict[str, CareerStats] = Field(default_factory=dict)
+    # Mentorships: protege player id -> mentor player id. A manager pairs a
+    # young player with a veteran teammate for a bounded development boost.
+    # Empty by default (hands-off sims never set one, so the balance gates
+    # are byte-identical); additive/defaulted, pruned at the offseason.
+    mentorships: dict[str, str] = Field(default_factory=dict)
 
     # -- Legacy Mode (v5) ------------------------------------------------------
     # "sandbox" = the classic game (pick any org, manage forever).

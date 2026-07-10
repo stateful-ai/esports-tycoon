@@ -82,12 +82,19 @@ def _player_rate(p: Player) -> float:
     return base * development.dev_multiplier(p)
 
 
+# A protege under a veteran's wing develops this much faster. Bounded and
+# opt-in: only a manager-set mentorship (empty in hands-off sims) supplies a
+# multiplier here, so the balance gates see rate * 1.0 == rate, unchanged.
+MENTOR_GROWTH_MULT = 1.15
+
+
 def apply_training(
     team: Team,
     roster: list[Player],
     focus: str,
     rng: np.random.Generator,
     growth_mult: float = 1.0,  # coaching staff boost (user team)
+    mentor_mults: dict[str, float] | None = None,
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -111,7 +118,9 @@ def apply_training(
         p_focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else focus
         attrs = _CATEGORY_ATTRS.get(p_focus, _CATEGORY_ATTRS["tactical"])
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
-        rate = _player_rate(p) * _system_fit_mult(team, p) * intensity
+        # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
+        mentor = mentor_mults.get(p.id, 1.0) if mentor_mults else 1.0
+        rate = _player_rate(p) * _system_fit_mult(team, p) * intensity * mentor
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.

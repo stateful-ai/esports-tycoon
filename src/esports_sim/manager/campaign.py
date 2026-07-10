@@ -408,7 +408,10 @@ def advance_week(
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
             mult = 1.0
-        training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
+        training.apply_training(
+            gs.teams[tid], roster, focus, week_rng, mult,
+            mentor_mults=_mentor_mults(gs, tid),
+        )
     gs.set_acting(None)
 
     # 2b. Backroom department effects, per human org: physio restores
@@ -1460,6 +1463,40 @@ def _update_world_ranks(gs: GameState) -> None:
 # Offseason
 
 
+def mentorship_valid(gs: GameState, protege_id: str, mentor_id: str) -> bool:
+    """A mentorship holds when both players share a roster and the mentor is
+    the older, higher-ability of the pair (a veteran guiding a junior)."""
+    if protege_id == mentor_id:
+        return False
+    pro, men = gs.players.get(protege_id), gs.players.get(mentor_id)
+    if pro is None or men is None:
+        return False
+    same_team = any(
+        {protege_id, mentor_id} <= set(t.player_ids) for t in gs.teams.values()
+    )
+    return (
+        same_team
+        and men.age > pro.age
+        and development.overall(men) > development.overall(pro)
+    )
+
+
+def _mentor_mults(gs: GameState, tid: str) -> dict[str, float] | None:
+    """Development multipliers for this team's protégés under a valid, set
+    mentorship. None when nothing applies — hands-off sims never set a
+    mentorship, so this returns None and training stays byte-identical
+    (rate * 1.0), keeping the snowball/dynasty gates unchanged."""
+    if not gs.mentorships:
+        return None
+    roster = set(gs.teams[tid].player_ids)
+    out = {
+        pid: training.MENTOR_GROWTH_MULT
+        for pid, mentor_id in gs.mentorships.items()
+        if pid in roster and mentorship_valid(gs, pid, mentor_id)
+    }
+    return out or None
+
+
 def _snapshot_season_start_ca(gs: GameState) -> None:
     """Freeze every current player's current ability as the season's
     baseline. Pure read of settled rosters (rng-free, sorted iteration),
@@ -1899,6 +1936,10 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         for pid in sorted(hist):
             if pid not in gs.players:
                 del hist[pid]
+    # Mentorships dissolve when either party leaves (retirement / transfer).
+    for pid in sorted(gs.mentorships):
+        if pid not in gs.players or gs.mentorships[pid] not in gs.players:
+            del gs.mentorships[pid]
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).

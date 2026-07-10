@@ -238,3 +238,47 @@ def test_career_stats_no_milestone_without_a_crossing():
     _accumulate_career_stats(gs)
     assert gs.career_stats["rk"].kills == 120  # first season, no prior total
     assert not any(e.kind == "milestone" for e in gs.chronicle)  # 120 < 500 bar
+
+
+def _mp(pid, age, ca, role=Role.DUELIST, potential=0.0):
+    return Player(id=pid, handle=pid.upper(), age=age, role=role,
+                  playstyle=Playstyle.ENTRY, potential=potential,
+                  attributes={a: ca for a in ("aim_precision", "aim_reactivity", "movement")})
+
+
+def test_mentorship_valid_requires_older_and_better_teammate():
+    from esports_sim.manager.campaign import mentorship_valid
+    young = _mp("y", 19, 60.0)
+    vet = _mp("v", 27, 85.0, role=Role.CONTROLLER)
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["y", "v"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"y": young, "v": vet})
+    assert mentorship_valid(gs, "y", "v") is True
+    assert mentorship_valid(gs, "v", "y") is False   # mentor must be older + better
+    assert mentorship_valid(gs, "y", "y") is False   # not oneself
+
+
+def test_mentor_mults_is_none_without_a_set_mentorship():
+    from esports_sim.manager.campaign import _mentor_mults
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["y"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"y": _mp("y", 19, 60.0)})
+    assert _mentor_mults(gs, "nxs") is None  # hands-off -> byte-identical training
+
+
+def test_mentorship_boosts_protege_growth_same_seed():
+    import numpy as np
+    from esports_sim.manager import training
+
+    proto = _mp("y", 18, 55.0, potential=92.0)  # big headroom -> real growth
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["y"])
+    base = proto.model_copy(deep=True)
+    boosted = proto.model_copy(deep=True)
+
+    def ca(p):
+        return sum(p.attributes.values()) / len(p.attributes)
+
+    training.apply_training(team, [base], "mechanical", np.random.default_rng(0))
+    training.apply_training(team, [boosted], "mechanical", np.random.default_rng(0),
+                            mentor_mults={"y": training.MENTOR_GROWTH_MULT})
+    assert ca(boosted) > ca(base)  # identical rng, only the mentor mult differs

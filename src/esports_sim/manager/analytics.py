@@ -304,3 +304,98 @@ def playtest_summary(gs: "GameState") -> dict:
         "records": recs["records"],
         "top_career_arcs": top_arcs,
     }
+
+
+def _recent_form_score(gs: "GameState", tid: str, n: int = 5) -> float:
+    """Win fraction over the team's last `n` played fixtures (0.5 when none)."""
+    games = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None and tid in (f.team_a, f.team_b)
+        ),
+        key=lambda f: (f.week, f.id),
+    )[-n:]
+    if not games:
+        return 0.5
+    return sum(1 for f in games if f.winner_id == tid) / len(games)
+
+
+def power_rankings(gs: "GameState", tier: int = 1) -> list[dict]:
+    """A pundit-style GLOBAL team ranking (across regions) blending record,
+    recent form, and round differential — distinct from the per-region
+    table and from world_rank. Each row carries its movement vs world_rank
+    (positive = the form book rates them higher than their standing). Pure
+    read of standings + fixtures, deterministic."""
+    scored = []
+    for t in gs.teams.values():
+        if t.tier != tier:
+            continue
+        rec = gs.standings.get(t.id)
+        wins = rec.wins if rec else 0
+        diff = rec.diff if rec else 0
+        form = _recent_form_score(gs, t.id)
+        score = wins * 3.0 + diff * 0.15 + form * 6.0
+        scored.append((t.id, round(score, 2)))
+    scored.sort(key=lambda x: (-x[1], x[0]))
+    out = []
+    for i, (tid, score) in enumerate(scored):
+        wr = gs.teams[tid].world_rank
+        out.append({
+            "rank": i + 1,
+            "team_id": tid,
+            "name": gs.teams[tid].name,
+            "region": str(gs.teams[tid].region),
+            "score": score,
+            "world_rank": wr,
+            "movement": (wr - (i + 1)) if wr else None,
+        })
+    return out
+
+
+def award_races(gs: "GameState", top: int = 3) -> dict:
+    """Mid-season leaderboards for the season awards, from the live
+    player_stats (min 3 maps). Lets a manager see who's in contention (and
+    chase a sponsor/board objective). Pure read; Most Improved needs the
+    season-start CA baseline and is omitted before it exists."""
+    from esports_sim.manager import development
+
+    t1 = {pid for t in gs.teams.values() if t.tier == 1 for pid in t.player_ids}
+    elig = [
+        (pid, st) for pid, st in gs.player_stats.items()
+        if st.maps >= 3 and pid in t1 and pid in gs.players
+    ]
+
+    def team_of(pid: str) -> str:
+        return next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+
+    def board(key, label, fmt):
+        ranked = sorted(elig, key=lambda kv: (-key(kv[1]), kv[0]))[:top]
+        return [
+            {"player_id": pid, "handle": gs.players[pid].handle,
+             "team": team_of(pid), "value": fmt(st)}
+            for pid, st in ranked if key(st) > 0
+        ]
+
+    races = {
+        "Season MVP": board(lambda s: s.rating, "rating", lambda s: f"{s.rating:.2f}"),
+        "Top Fragger": board(lambda s: s.kills, "kills", lambda s: f"{s.kills}"),
+        "Opening King": board(
+            lambda s: s.first_kills, "opening kills", lambda s: f"{s.first_kills}"
+        ),
+        "Clutch Merchant": board(
+            lambda s: s.clutches, "clutches", lambda s: f"{s.clutches}"
+        ),
+    }
+    if gs.season_start_ca:
+        risers = [
+            (pid, development.overall(gs.players[pid]) - gs.season_start_ca[pid])
+            for pid, _ in elig
+            if pid in gs.season_start_ca
+        ]
+        risers.sort(key=lambda kv: (-kv[1], kv[0]))
+        races["Most Improved"] = [
+            {"player_id": pid, "handle": gs.players[pid].handle,
+             "team": team_of(pid), "value": f"+{d:.0f} CA"}
+            for pid, d in risers[:top] if d > 0
+        ]
+    return {k: v for k, v in races.items() if v}

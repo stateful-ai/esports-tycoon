@@ -680,3 +680,11 @@ def test_round_summaries_from_event_log():
                      "winner_id": "a", "score_a": 1, "score_b": 0}
     assert rs[1] == {"num": 2, "attacker": "a", "plant": False,
                      "winner_id": "b", "score_a": 1, "score_b": 1}
+
+
+def test_transfer_rumors_shape(env):
+    gs, gd, h = env
+    rumors = server_mod._transfer_rumors(gs, h.user_team)
+    assert isinstance(rumors, list)
+    assert all(set(r) == {"kind", "text"} for r in rumors)
+    assert all(r["kind"] in ("interest", "link") for r in rumors)

@@ -1231,10 +1231,12 @@ def roster(team_id: str) -> dict:
             tendencies = _team_tendencies(tac)
             identity = _team_identity_label(tac)
         # Own club: a quick-glance form/confidence trend per player, from the
-        # private dev-history time series (empty -> None, no arrow shown).
+        # private dev-history time series (empty -> None, no arrow shown),
+        # plus who mentors them (if anyone) for the mentorship control.
         if own:
             for v in players:
                 v["condition_trend"] = _condition_trend(gs, v["id"])
+                v["mentor_id"] = gs.mentorships.get(v["id"])
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -1415,6 +1417,22 @@ def season_report(season: int | None = None) -> dict:
         return analytics.season_report(S.require_gs(), season)
 
 
+@app.get("/api/power")
+def power_rankings() -> dict:
+    """A global pundit power ranking across regions (record + form + diff),
+    with movement vs world rank. Pure analytics read."""
+    with S.lock:
+        return {"rankings": analytics.power_rankings(S.require_gs())}
+
+
+@app.get("/api/races")
+def award_races() -> dict:
+    """Mid-season award-race leaderboards (who's chasing MVP, Top Fragger,
+    …) from the live season stats. Pure analytics read."""
+    with S.lock:
+        return {"races": analytics.award_races(S.require_gs())}
+
+
 @app.get("/api/schedule")
 def schedule() -> dict:
     with S.lock:
@@ -1509,6 +1527,45 @@ def _contract_watch(gs: GameState, tid: str, weeks: int = 8, n: int = 5) -> dict
     return {"expiring_own": own, "market_watch": market_watch}
 
 
+def _transfer_rumors(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """Deterministic transfer whispers: rival interest in your soon-to-be
+    free-agent stars, and marquee free agents linked with a club that lacks
+    their role. Pure read — the 'linked' club is a stable sorted pick, no
+    rng, so the rumor mill is campaign-deterministic."""
+    rumors: list[dict] = []
+    for p in sorted(gs.roster(tid), key=lambda x: (-market.player_quality(x), x.id)):
+        if 0 < p.contract_weeks_left <= 12 and market.player_quality(p) >= 70:
+            rumors.append({
+                "kind": "interest",
+                "text": f"Rivals are circling {p.handle} with just "
+                f"{p.contract_weeks_left}w left on his deal.",
+            })
+        if len([r for r in rumors if r["kind"] == "interest"]) >= 2:
+            break
+    fas = sorted(
+        (gs.players[pid] for pid in gs.free_agent_ids),
+        key=lambda x: (-market.player_quality(x), x.id),
+    )[:3]
+    for fa in fas:
+        role = str(fa.role)
+        needy = next(
+            (
+                t for t in sorted(gs.teams.values(), key=lambda t: t.id)
+                if t.tier == 1
+                and role not in {
+                    str(gs.players[q].role) for q in t.player_ids if q in gs.players
+                }
+            ),
+            None,
+        )
+        club = needy.name if needy else gs.teams[tid].name
+        rumors.append({
+            "kind": "link",
+            "text": f"Free agent {fa.handle} ({role}) linked with a move to {club}.",
+        })
+    return rumors[:n]
+
+
 @app.get("/api/market")
 def market_view() -> dict:
     with S.lock:
@@ -1546,6 +1603,7 @@ def market_view() -> dict:
             "squad_needs": needs,
             "target_suggestions": _target_suggestions(gs, me, needs),
             "contract_watch": _contract_watch(gs, me),
+            "rumors": _transfer_rumors(gs, me),
             # Own roster, for the "swap" (sign + drop in one) control.
             "my_roster": [
                 {
@@ -2076,6 +2134,40 @@ def dev_plan_action(body: DevPlanBody) -> dict:
             "message": f"{p.handle}: {p.dev_focus} focus, "
             f"{p.training_intensity} intensity",
         }
+
+
+class MentorBody(BaseModel):
+    protege_id: str
+    mentor_id: str | None = None  # None clears the pairing
+
+
+@app.post("/api/actions/mentor")
+def mentor_action(body: MentorBody) -> dict:
+    """Pair a young player with a veteran teammate (own roster), or clear the
+    pairing when mentor_id is null. A protege under a mentor develops faster
+    (training.MENTOR_GROWTH_MULT)."""
+    from esports_sim.manager.campaign import mentorship_valid
+
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.protege_id not in team.player_ids:
+            raise HTTPException(409, "player is not on your roster")
+        pro = gs.players[body.protege_id]
+        if body.mentor_id is None:
+            gs.mentorships.pop(body.protege_id, None)
+            S.save()
+            return {"ok": True, "message": f"{pro.handle}'s mentorship cleared"}
+        if body.mentor_id not in team.player_ids:
+            raise HTTPException(409, "the mentor is not on your roster")
+        if not mentorship_valid(gs, body.protege_id, body.mentor_id):
+            raise HTTPException(
+                409, "a mentor must be an older, higher-rated teammate"
+            )
+        gs.mentorships[body.protege_id] = body.mentor_id
+        S.save()
+        men = gs.players[body.mentor_id]
+        return {"ok": True, "message": f"{men.handle} now mentors {pro.handle}"}
 
 
 class HireBody(BaseModel):
@@ -3534,6 +3626,24 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for ab in agent.abilities
         }
         dumped = [e.model_dump() for e in events]
+        # Post-match box score (top performers + MVP) from the stored map
+        # lines — the viewer's match-summary panel. Pure read.
+        box = sorted(
+            (
+                {
+                    "player_id": ln.player_id,
+                    "handle": (
+                        gs.players[ln.player_id].handle
+                        if ln.player_id in gs.players else ln.player_id
+                    ),
+                    "team_id": players.get(ln.player_id, {}).get("team_id"),
+                    "kills": ln.kills, "deaths": ln.deaths,
+                    "rating": round(ln.rating, 2),
+                }
+                for ln in fixture.results[map_index].lines
+            ),
+            key=lambda r: (-r["rating"], r["player_id"]),
+        )
         return {
             "fixture": _fixture_view(fixture, gs),
             "map": map_geometry(map_id),
@@ -3545,6 +3655,8 @@ def replay(fixture_id: str, map_index: int) -> dict:
             # Per-round result strip for the viewer timeline (winner, running
             # score, whether the spike went down). Derived from the log.
             "round_summaries": _round_summaries(dumped, fixture.team_a),
+            "box_score": box,
+            "mvp": box[0] if box else None,
         }
 
 

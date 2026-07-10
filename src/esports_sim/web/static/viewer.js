@@ -978,6 +978,33 @@ function markTimeline() {
   });
 }
 
+// Post-match box score: MVP + the top performers by rating (server-computed).
+function buildMatchSummary() {
+  const side = document.querySelector(".viewer-side");
+  if (!side) return;
+  const existing = document.getElementById("v-summary");
+  if (existing) existing.remove();
+  if (!V.boxScore || !V.boxScore.length) return;
+  const el = document.createElement("div");
+  el.id = "v-summary";
+  el.className = "v-summary";
+  const mvp = V.mvp;
+  const rows = V.boxScore
+    .slice(0, 5)
+    .map((r) => {
+      const cls = r.team_id === V.teamA ? "a" : "b";
+      return `<div class="v-sum-row"><span class="v-sum-dot ${cls}"></span>` +
+        `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>` +
+        `<span class="mono muted">${r.kills}/${r.deaths}</span>` +
+        `<b class="mono">${r.rating.toFixed(2)}</b></div>`;
+    })
+    .join("");
+  el.innerHTML =
+    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b class="plink" data-pid="${mvp.player_id}">${mvp.handle}</b>` : ""}</div>` +
+    rows;
+  side.insertBefore(el, document.getElementById("v-feed"));
+}
+
 async function openReplay(fixtureId, mapIndex) {
   const data = await api(`/api/replay/${fixtureId}/${mapIndex}`);
   const names = {};
@@ -994,6 +1021,8 @@ async function openReplay(fixtureId, mapIndex) {
     abilities: data.abilities || {}, // guard: older payloads may omit this
     rounds: parseReplay(data),
     summaries: data.round_summaries || [], // server-computed round result strip
+    boxScore: data.box_score || [], // per-map box score (top performers)
+    mvp: data.mvp || null,
     _tlRound: -1,
     roundIdx: 0,
     tick: 0,
@@ -1012,6 +1041,7 @@ async function openReplay(fixtureId, mapIndex) {
     `<b>${names[data.team_a]}</b> vs <b>${names[data.team_b]}</b> · ${data.map.display_name}`;
   buildLineup();
   buildTimeline();
+  buildMatchSummary();
   drawStatic();
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
@@ -1026,6 +1056,8 @@ function closeViewer() {
   if (lineup) lineup.remove();
   const timeline = document.getElementById("v-timeline");
   if (timeline) timeline.remove();
+  const summary = document.getElementById("v-summary");
+  if (summary) summary.remove();
   document.getElementById("viewer").classList.add("hidden");
 }
 

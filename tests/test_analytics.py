@@ -208,3 +208,35 @@ def test_playtest_summary_multiseason_shape_and_determinism():
     assert pt["top_career_arcs"][0]["honours"] == 2
     assert pt["parity"]["distinct_champions"] == 2
     assert analytics.playtest_summary(gs) == analytics.playtest_summary(gs)
+
+
+# ---------------------------------------------------------------------------
+# Pass-8 readers: power rankings + award races
+
+
+def test_power_rankings_orders_and_movement():
+    teams = {"a": _team("a", 3), "b": _team("b", 1)}  # world_rank a=3, b=1
+    gs = GameState(seed=1, season=1, week=5, user_team_id="a", teams=teams, fixtures=[],
+                   standings={"a": TeamRecord(wins=8, losses=1),
+                              "b": TeamRecord(wins=2, losses=7)})
+    pr = analytics.power_rankings(gs)
+    assert [r["team_id"] for r in pr] == ["a", "b"]
+    assert pr[0]["rank"] == 1 and pr[0]["movement"] == 2  # 1st in form, world #3
+
+
+def test_award_races_leaderboards():
+    teams = {"nxs": _team("nxs")}
+    teams["nxs"].player_ids = ["a", "b"]
+    gs = GameState(seed=1, season=1, week=5, user_team_id="nxs", teams=teams,
+                   players={"a": _player("a"), "b": _player("b")},
+                   player_stats={
+                       "a": PlayerSeasonStats(maps=5, rating_sum=6.0, kills=100,
+                                              first_kills=30, clutches=4),
+                       "b": PlayerSeasonStats(maps=5, rating_sum=5.0, kills=120,
+                                              first_kills=10, clutches=1),
+                   })
+    races = analytics.award_races(gs)
+    assert races["Season MVP"][0]["player_id"] == "a"    # 1.20 > 1.00
+    assert races["Top Fragger"][0]["player_id"] == "b"   # 120 > 100
+    assert races["Opening King"][0]["player_id"] == "a"
+    assert races["Clutch Merchant"][0]["player_id"] == "a"

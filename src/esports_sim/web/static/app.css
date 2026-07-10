@@ -617,6 +617,31 @@ svg.iso .plabel { font-size: 2.4px; }
 .v-tl-round.b { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent); }
 .v-tl-round.active { outline: 2px solid var(--es-color-text-primary, #e6ecf5); outline-offset: -1px; }
 .v-tl-plant { margin-left: 1px; opacity: .85; }
+/* Post-match box-score summary panel in the viewer. */
+.v-summary {
+  flex: none; padding: 6px 0; font-size: var(--es-text-2xs, 10px);
+  border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
+}
+.v-sum-lab {
+  text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
+  color: var(--es-color-text-secondary, #a2aec6); margin-bottom: 4px;
+}
+.v-sum-row { display: flex; align-items: center; gap: 6px; padding: 1px 0; }
+.v-sum-row .plink { flex: 1; }
+.v-sum-dot { width: 7px; height: 7px; border-radius: 2px; flex: none; }
+.v-sum-dot.a { background: var(--es-color-brand, #ff4655); }
+.v-sum-dot.b { background: var(--es-color-accent, #4fd8c0); }
+
+/* Power rankings, award races, rumour mill, mentorship pill. */
+.es-power { display: flex; flex-direction: column; gap: 3px; }
+.es-power-row { display: grid; grid-template-columns: 24px 1fr auto auto; gap: 8px; align-items: baseline; }
+.es-power-rank { color: var(--es-color-text-tertiary, #67748f); }
+.es-race-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 6px; padding: 1px 0; font-size: var(--es-text-xs, 11px); }
+.es-rumors { display: flex; flex-direction: column; gap: 4px; }
+.es-rumor { font-size: var(--es-text-xs, 11px); line-height: 1.35; }
+.es-rumor.interest { color: var(--es-color-warn, #e8b34b); }
+.mentor-pill { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent); }
+.dev-plan select[data-act="mentor"] { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
 .v-lineup .lu-team-name {
   text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
   margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
