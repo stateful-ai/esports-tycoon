@@ -1228,6 +1228,7 @@ async function tactics(v) {
   v.appendChild(card);
 
   lineupCard(v, data.lineup);
+  await gameplanPanel(v);
 }
 
 // This week's committed agents — one lock per player, chosen before you know
@@ -1299,6 +1300,213 @@ function lineupCard(v, lineup) {
   barRow.appendChild(el("span", "muted",
     "Committed before map pick — rivals need 50%+ scouting to read it."));
   card.appendChild(barRow);
+  v.appendChild(card);
+}
+
+// -- game plan: one match's prep, layered over the standing book ------------
+// All numbers (prep edge, fogged opponent view, suggested target) come from
+// the server — the client renders and posts choices, nothing more.
+async function gameplanPanel(v) {
+  const gp = await api("/api/gameplan");
+  const card = el("div", "card");
+  if (!gp.fixture) {
+    card.innerHTML = `<h2>Game plan</h2>
+      <p class="muted">No upcoming fixture — nothing to plan for this week.</p>`;
+    v.appendChild(card);
+    return;
+  }
+  const fx = gp.fixture;
+  const opp = fx.opponent;
+  const plan = gp.plan;
+  const state = {
+    dials: {},          // key -> value, only for overridden dials
+    site_focus: plan?.site_focus ?? null,
+    focus_target: plan?.focus_target ?? null,
+    starters: new Set(plan?.starter_ids ?? []),
+  };
+  for (const d of TACTIC_DIALS) {
+    if (plan && plan[d.key] != null) state.dials[d.key] = plan[d.key];
+  }
+
+  card.innerHTML = `<h2>Game plan — vs <b class="tlink" data-tid="${opp.id}">${opp.name}</b>
+    <span class="pill">${opp.tag}</span>
+    ${plan ? '<span class="pill gp-live">plan set</span>' : ""}</h2>`;
+  card.appendChild(el("p", "muted",
+    `${stageLabel(fx.stage)} · best of ${fx.best_of} · ${fx.maps.join(", ")}
+     · their record ${opp.record || "0-0"}${opp.world_rank ? ` · world #${opp.world_rank}` : ""}.
+     A plan is one match's prep — consumed when the match sims; your standing
+     strategy above is untouched.`));
+
+  // Prep meter: setting ANY plan brings the edge; scouting raises it.
+  const pct = Math.round(gp.scout_knowledge * 100);
+  const prep = el("div", "gp-prep");
+  prep.innerHTML = `<span class="gp-prep-lab">Prep edge</span>
+    <span class="gp-prep-val mono">+${gp.prep_edge.toFixed(1)}</span>
+    <span class="gp-prep-sub">duel points while a plan is set. ${opp.name} is
+    ${pct}% scouted — deeper scouting raises this (max +${gp.prep_edge_max.toFixed(1)}).</span>`;
+  card.appendChild(prep);
+
+  // Focus target: hunt one opponent — an edge on him, a small tax elsewhere.
+  const tgtWrap = el("div", "gp-block");
+  tgtWrap.appendChild(el("div", "tac-head",
+    `<span class="tac-name">Focus target</span>
+     <span class="tac-desc mid">edge vs the hunted man, a small tax vs everyone else</span>`));
+  const tgtTable = el("table");
+  tgtTable.innerHTML = `<thead><tr><th></th><th>Player</th><th>Role</th>
+    <th>Style</th><th class="num">CA</th><th class="num">Form</th><th></th></tr></thead>`;
+  const tb = el("tbody");
+  const noneRow = el("tr", "", `<td><input type="radio" name="gp-tgt"
+    ${state.focus_target == null ? "checked" : ""}></td>
+    <td colspan="6" class="muted">No target — play our own game</td>`);
+  noneRow.querySelector("input").onchange = () => { state.focus_target = null; };
+  tb.appendChild(noneRow);
+  for (const r of gp.opponent_roster.filter((r) => r.is_starter)) {
+    const fogp = r.fogged ? "~" : "";
+    const sug = r.player_id === gp.suggested_target
+      ? ' <span class="pill gp-sug">scout&#39;s pick</span>' : "";
+    const tr = el("tr", "", `
+      <td><input type="radio" name="gp-tgt" ${state.focus_target === r.player_id ? "checked" : ""}></td>
+      <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b>${sug}</td>
+      <td>${r.role}</td><td>${r.playstyle}</td>
+      <td class="num mono">${fogp}${Math.round(r.overall)}</td>
+      <td class="num mono">${fogp}${Math.round(r.form)}</td><td></td>`);
+    tr.querySelector("input").onchange = () => { state.focus_target = r.player_id; };
+    tb.appendChild(tr);
+  }
+  tgtTable.appendChild(tb);
+  tgtWrap.appendChild(tgtTable);
+  if (gp.suggested_target == null && pct < 35) {
+    tgtWrap.appendChild(el("p", "muted gp-note",
+      "Scout them past 35% and your analyst will name the weak link."));
+  }
+  card.appendChild(tgtWrap);
+
+  // Per-match dial overrides: check a dial to bend it for this match only.
+  const ovWrap = el("div", "gp-block");
+  ovWrap.appendChild(el("div", "tac-head",
+    `<span class="tac-name">Dial overrides</span>
+     <span class="tac-desc mid">unchecked dials play the standing book</span>`));
+  for (const d of TACTIC_DIALS) {
+    const standing = gp.tactics[d.key];
+    const row = el("div", "gp-dial");
+    const cb = el("input");
+    cb.type = "checkbox";
+    cb.checked = d.key in state.dials;
+    const lab = el("span", "gp-dial-lab", d.label);
+    const slider = el("input");
+    slider.type = "range"; slider.min = 0; slider.max = 100; slider.step = 1;
+    slider.value = state.dials[d.key] ?? standing;
+    slider.disabled = !cb.checked;
+    const val = el("span", "gp-dial-val mono",
+      `${Math.round(slider.value)}${cb.checked ? "" : " (book)"}`);
+    const paint = () => {
+      val.textContent = `${Math.round(slider.value)}${cb.checked ? "" : " (book)"}`;
+      row.classList.toggle("on", cb.checked);
+    };
+    cb.onchange = () => {
+      slider.disabled = !cb.checked;
+      if (cb.checked) state.dials[d.key] = parseFloat(slider.value);
+      else delete state.dials[d.key];
+      paint();
+    };
+    slider.oninput = () => { state.dials[d.key] = parseFloat(slider.value); paint(); };
+    row.appendChild(cb); row.appendChild(lab); row.appendChild(slider); row.appendChild(val);
+    ovWrap.appendChild(row);
+    paint();
+  }
+  // Site focus override rides the same block.
+  const siteRow = el("div", "gp-dial gp-site");
+  siteRow.appendChild(el("span", "gp-dial-lab", "Site focus"));
+  const seg = el("div", "tac-seg");
+  const siteOpts = [["", "Book"], ...SITE_FOCUS.map((s) => [s[0], s[1]])];
+  for (const [valKey, label] of siteOpts) {
+    const b = el("button", "tac-seg-btn", label);
+    const isOn = (state.site_focus ?? "") === valKey;
+    if (isOn) b.classList.add("on");
+    b.onclick = () => {
+      state.site_focus = valKey === "" ? null : valKey;
+      seg.querySelectorAll(".tac-seg-btn").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+    };
+    seg.appendChild(b);
+  }
+  siteRow.appendChild(seg);
+  ovWrap.appendChild(siteRow);
+  card.appendChild(ovWrap);
+
+  // One-match lineup (only when there is a bench to rotate from).
+  if (gp.own_roster.length > 5) {
+    const luWrap = el("div", "gp-block");
+    luWrap.appendChild(el("div", "tac-head",
+      `<span class="tac-name">One-match lineup</span>
+       <span class="tac-desc mid">pick exactly five, or leave the standing five</span>`));
+    const count = el("span", "gp-lu-count mono");
+    const chips = el("div", "gp-lineup");
+    const paintCount = () => {
+      const n = state.starters.size;
+      count.textContent = n === 0 ? "standing five" : `${n}/5 picked`;
+      count.className = `gp-lu-count mono ${n === 0 || n === 5 ? "" : "bad"}`;
+    };
+    for (const r of gp.own_roster) {
+      const chip = el("button", "gp-chip", `
+        <b>${r.handle}</b> <span class="muted">${r.playstyle}</span>
+        <span class="mono">${Math.round(r.overall)}</span>
+        <span class="mono ${r.stamina < 30 ? "bad" : ""}">${Math.round(r.stamina)} sta</span>
+        ${r.is_starter ? '<span class="pill">starter</span>' : ""}`);
+      const paint = () => chip.classList.toggle("on", state.starters.has(r.player_id));
+      chip.onclick = () => {
+        if (state.starters.has(r.player_id)) state.starters.delete(r.player_id);
+        else state.starters.add(r.player_id);
+        paint(); paintCount();
+      };
+      paint();
+      chips.appendChild(chip);
+    }
+    luWrap.appendChild(chips);
+    const luFoot = el("div", "gp-lu-foot");
+    const clearLu = el("button", "btn", "Use standing five");
+    clearLu.onclick = () => {
+      state.starters.clear();
+      chips.querySelectorAll(".gp-chip").forEach((c) => c.classList.remove("on"));
+      paintCount();
+    };
+    luFoot.appendChild(clearLu);
+    luFoot.appendChild(count);
+    paintCount();
+    luWrap.appendChild(luFoot);
+    for (const h of gp.rotation_hints) {
+      luWrap.appendChild(el("p", "muted gp-note", h));
+    }
+    card.appendChild(luWrap);
+  }
+
+  // Save / clear.
+  const barRow2 = el("div", "tac-savebar");
+  const saveBtn = el("button", "btn btn-primary", plan ? "Update game plan" : "Lock in game plan");
+  saveBtn.onclick = async () => {
+    const n = state.starters.size;
+    if (n !== 0 && n !== 5) { toast("pick exactly five, or none"); return; }
+    const body = {
+      site_focus: state.site_focus,
+      focus_target: state.focus_target,
+      starter_ids: [...state.starters],
+    };
+    for (const d of TACTIC_DIALS) body[d.key] = state.dials[d.key] ?? null;
+    const r = await api("/api/actions/gameplan", body);
+    toast(r.message);
+    render();
+  };
+  barRow2.appendChild(saveBtn);
+  if (plan) {
+    const clearBtn = el("button", "btn", "Scrap the plan");
+    clearBtn.onclick = async () => {
+      const r = await api("/api/actions/gameplan", { clear: true });
+      toast(r.message);
+      render();
+    };
+    barRow2.appendChild(clearBtn);
+  }
+  card.appendChild(barRow2);
   v.appendChild(card);
 }
 
@@ -1839,6 +2047,19 @@ async function stats(v) {
   }
   v.appendChild(banner);
 
+  // Balance patches: public info, straight from the notes.
+  if ((data.patches ?? []).length) {
+    const pc = el("div", "card");
+    pc.innerHTML = `<h2>Patch notes</h2>
+      <p class="muted">The meta moves twice a season — mid-split and over the break.
+      Rosters built around a nerfed kit feel it.</p>` +
+      data.patches.map((n) => `<div class="newsline">
+        <span class="pill">Patch ${n.version}</span>
+        <span class="muted">S${n.season} W${n.week}</span> —
+        ${n.lines.join("; ")}</div>`).join("");
+    v.appendChild(pc);
+  }
+
   const champs = App.state.champions ?? [];
   if (champs.length) {
     const hc = el("div", "card");
@@ -1938,12 +2159,18 @@ const POST_KIND_ICON = {
 async function social(v) {
   const data = await api("/api/social");
 
+  const mood = data.your_sentiment ?? 50;
+  const moodWord = mood >= 70 ? "euphoric" : mood >= 58 ? "warm"
+    : mood > 42 ? "neutral" : mood > 30 ? "restless" : "toxic";
+  const moodTone = mood >= 58 ? "good" : mood <= 42 ? "bad" : "";
   const head = el("div", "card");
   head.innerHTML = `<h2>Social — your reach</h2>
     <div class="row">
       <span class="pill">roster reach ${fmtFollowers(data.your_reach)}</span>
       <span class="pill">org fans ${fmtFollowers(data.fan_count)}</span>
-      <span class="muted">Reach feeds sponsor marketability; viral weeks move confidence.</span>
+      <span class="pill ${moodTone}">fanbase ${moodWord} (${Math.round(mood)})</span>
+      <span class="muted">Reach feeds sponsor marketability; the crowd's mood leaks
+      into the locker room — and brands read the room too.</span>
     </div>`;
   const rosterRow = el("div", "row");
   for (const p of data.your_roster) {
@@ -1990,6 +2217,26 @@ async function social(v) {
   });
   t.appendChild(tb);
   lb.appendChild(t);
+
+  // Community mood board: whose fans are euphoric, whose are done.
+  if ((data.sentiment ?? []).length) {
+    lb.appendChild(el("h2", "", "Fanbase mood"));
+    const st = el("table");
+    st.innerHTML = `<thead><tr><th>Team</th><th class="num">Mood</th></tr></thead>`;
+    const stb = el("tbody");
+    const hot = data.sentiment.slice(0, 5);
+    const cold = data.sentiment.slice(-3);
+    const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
+    for (const r of rows) {
+      const tone = r.sentiment >= 58 ? "good" : r.sentiment <= 42 ? "bad" : "";
+      stb.appendChild(el("tr", r.is_user ? "me" : "", `
+        <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b>
+          <span class="pill">${r.tag}</span></td>
+        <td class="num ${tone}">${Math.round(r.sentiment)}</td>`));
+    }
+    st.appendChild(stb);
+    lb.appendChild(st);
+  }
   band.appendChild(lb);
 
   v.appendChild(band);

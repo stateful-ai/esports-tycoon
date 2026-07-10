@@ -17,6 +17,7 @@ from esports_sim.manager import (
     economy,
     inbox,
     market,
+    meta,
     narrative,
     relationships,
     social,
@@ -54,6 +55,7 @@ from esports_sim.manager.state import (
 from esports_sim.registry.loader import GameData
 from esports_sim.rng.tree import RngTree
 from esports_sim.sim import simulate_match_result
+from esports_sim.sim.engine import TeamMatchPlan
 from esports_sim.sim.stats import compute_match_stats
 
 
@@ -202,9 +204,13 @@ def new_campaign(
 
 
 def runtime_gamedata(gs: GameState, gd: GameData) -> GameData:
+    """Static registries + live campaign rosters. Live balance patches are
+    applied HERE — a fresh agents dict, never a mutation of the shared
+    registry — so campaign matches play the patched meta while the
+    bare-engine gates (which load the registry directly) never see it."""
     return GameData(
         attributes=gd.attributes,
-        agents=gd.agents,
+        agents=meta.apply_patches(gd.agents, gs.agent_patches),
         weapons=gd.weapons,
         maps=gd.maps,
         teams=gs.teams,
@@ -304,6 +310,19 @@ def advance_week(
     report = WeekReport(season=gs.season, week=gs.week, phase=gs.phase)
     tree = RngTree(gs.seed)
     week_rng = tree.derive("season", gs.season, "week", gs.week, "weekly")
+
+    # 0. Mid-split balance patch — BEFORE matches (and before rt_gd is
+    # built), so this week's games and their replays run on the new meta.
+    # The second patch of the year ships in the offseason.
+    if gs.phase == "regular" and gs.week == regular_season_weeks(TEAMS_PER_REGION) // 2 + 1:
+        note = meta.roll_patch(
+            gs, gd,
+            tree.derive("season", gs.season, "patch", "mid"),
+            version=f"{gs.season}.{gs.week:02d}",
+        )
+        if note is not None:
+            report.notes.append(f"Patch {note.version} shakes the meta.")
+
     rt_gd = runtime_gamedata(gs, gd)
 
     # 1. Matches. Challengers games sim fully (development, stats,
@@ -386,6 +405,13 @@ def advance_week(
         gs, tree.derive("season", gs.season, "week", gs.week, "devevents")
     )
 
+    # 2b'''. Mental momentum: tilt spirals and heaters — threshold events
+    # on top of the smooth per-map confidence movement. Own stream
+    # ("tilt"), AI parity like dev events, fed to the social layer below.
+    mental_events = development.weekly_mental_events(
+        gs, tree.derive("season", gs.season, "week", gs.week, "tilt")
+    )
+
     # 2c. Relationships drift; team chemistry chases the pair graph. Every
     # org's chemistry rides its own week's result, not just the user's.
     won_by_team: dict[str, bool] = {}
@@ -447,6 +473,14 @@ def advance_week(
     market.ai_fill_rosters(gs, gd, week_rng)
     market.ai_poach_free_agents(gs, gd, week_rng)
     _tick_scouting(gs)
+
+    # 4b. Stale game plans (fixture gone or already played — the consumed
+    # case is handled at sim time in _sim_fixture) quietly expire.
+    for tid in sorted(list(gs.game_plans_by)):
+        plan = gs.game_plans_by[tid]
+        fx = next((x for x in gs.fixtures if x.id == plan.fixture_id), None)
+        if fx is None or fx.played:
+            del gs.game_plans_by[tid]
 
     _update_world_ranks(gs)
 
@@ -760,8 +794,10 @@ def advance_week(
     # after the news so the match-time tactics are what gets reported.
     _adapt_ai_tactics(gs, tree.derive("season", gs.season, "week", gs.week, "adapt"))
 
-    # 6c. Social layer: follower counts chase the week's real outcomes and
-    # the feed writes itself (results, player of the week, viral moments).
+    # 6c. Social layer: follower counts chase the week's real outcomes,
+    # the feed writes itself (results, player of the week, viral moments),
+    # and community sentiment folds the week in and feeds back into
+    # confidence/morale (sponsors read it next week — deterministic lag).
     # Result bumps are pinned to the MATCH-TIME side — contracts/transfers
     # already ran above, so live rosters can misattribute a same-tick mover.
     social.weekly_tick(
@@ -772,6 +808,7 @@ def advance_week(
             for tid in sorted(week_dressed)
             for pid in sorted(week_dressed[tid])
         },
+        mental_events=mental_events,
     )
 
     # 6d. History snapshots (before the week counter rolls): a performance
@@ -999,6 +1036,63 @@ def _nudge_tournament_registration(gs: GameState) -> None:
 # ---------------------------------------------------------------------------
 # Fixture simulation
 
+# Scouting-driven prep: a manager who set a game plan brings a small duel
+# edge — a baseline for having prepped at all, plus the real payoff for
+# scout knowledge of THIS opponent (0..1). The engine clamps the total
+# (sim/constants.PREP_EDGE_CAP). AI orgs don't set plans — their weekly
+# tactic adaptation is the AI's version of prep (documented parity choice,
+# same shape as the human-only bench in market.py).
+PREP_EDGE_BASE = 0.3
+PREP_EDGE_SPAN = 1.0
+
+_PLAN_DIALS = (
+    "aggression", "pace", "util_discipline", "eco_greed", "map_control",
+    "site_focus",
+)
+
+
+def _fixture_plans(
+    gs: GameState, f: Fixture
+) -> tuple[dict[str, TeamMatchPlan], dict[str, list[str]]]:
+    """Resolve each human side's game plan for this fixture into (engine
+    plans, per-match lineup overrides). Stored plans are RE-VALIDATED here
+    — rosters move under them (transfers, retirements), so ids are never
+    trusted at rest. A focus target only has to be on the opponent's
+    ROSTER: if their coach benches the hunted man, the prep tax still
+    stands and the edge never fires — benching your star is real
+    counterplay to an anti-strat."""
+    plans: dict[str, TeamMatchPlan] = {}
+    lineups: dict[str, list[str]] = {}
+    for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
+        if not gs.is_human(tid):
+            continue
+        plan = gs.game_plans_by.get(tid)
+        if plan is None or plan.fixture_id != f.id:
+            continue
+        overrides = {
+            k: getattr(plan, k)
+            for k in _PLAN_DIALS
+            if getattr(plan, k) is not None
+        }
+        tactics = (
+            gs.teams[tid].tactics.model_copy(update=overrides)
+            if overrides
+            else None
+        )
+        target = plan.focus_target
+        if target is not None and target not in gs.teams[opp].player_ids:
+            target = None
+        know = gs.scout_progress_by.get(tid, {}).get(opp, 0.0)
+        plans[tid] = TeamMatchPlan(
+            tactics=tactics,
+            focus_target=target,
+            prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know,
+        )
+        lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
+        if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
+            lineups[tid] = lineup
+    return plans, lineups
+
 
 def _sim_fixture(
     gs: GameState,
@@ -1042,6 +1136,21 @@ def _sim_fixture(
                 rec_b.rounds_lost += r.score_a
         return
 
+    # Game plans: per-match tactics/target/prep go to the engine as an
+    # override parameter (never by mutating live Teams); a plan's
+    # one-match lineup rides the map_lineups override channel — the same
+    # single-use, swept-with-the-fixture mechanism explicit per-map
+    # lineups use — so the caller's post-match dressed_for re-derivation
+    # (stats + development attribution) sees exactly the five who played.
+    # setdefault: an explicit per-map lineup, being more specific, beats
+    # the plan's match-wide five.
+    plans, plan_lineups = _fixture_plans(gs, f)
+    for tid in sorted(plan_lineups):
+        for map_id in f.maps:
+            gs.map_lineups.setdefault(
+                f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
+            )
+
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
         if a_wins >= need or b_wins >= need:
@@ -1054,7 +1163,9 @@ def _sim_fixture(
             f.team_b: dressed_for(gs, f.team_b, f, map_id),
         }
         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
-        res = simulate_match_result(map_gd, f.team_a, f.team_b, map_id, seed)
+        res = simulate_match_result(
+            map_gd, f.team_a, f.team_b, map_id, seed, plans=plans or None
+        )
         # The dressed five per side (bench players have no line), plus the
         # weapon registry's class map for the economy splits (eco/save kills).
         team_of = {
@@ -1089,6 +1200,12 @@ def _sim_fixture(
         )
         # Per-map wear and per-map form movement.
         _apply_map_effects(gs, f, res.winner_id, stats)
+
+    # A plan is one match's prep: consumed when its fixture sims.
+    for tid in (f.team_a, f.team_b):
+        plan = gs.game_plans_by.get(tid)
+        if plan is not None and plan.fixture_id == f.id:
+            del gs.game_plans_by[tid]
 
     a_wins, b_wins = f.map_score
     f.winner_id = f.team_a if a_wins > b_wins else f.team_b
@@ -1407,6 +1524,17 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # Awards first — they read the season aggregates being retired.
     for a in narrative.season_awards(gs):
         report.notes.append(f"{a.award}: {a.handle} ({a.team_name}) — {a.value}")
+
+    # The big offseason balance patch — rolled BEFORE the per-agent splits
+    # reset below (patch content reads this season's pick rates).
+    note = meta.roll_patch(
+        gs, gd,
+        tree.derive("season", gs.season, "patch", "off"),
+        version=f"{gs.season + 1}.00",
+    )
+    if note is not None:
+        report.notes.append(f"Patch {note.version} lands over the break.")
+
     gs.player_stats = {}
     gs.team_stats = {}
     gs.player_map_stats = {}
@@ -1453,6 +1581,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.champions_seeds = []
     gs.transfer_offers = []
     gs.map_lineups = {}
+    gs.game_plans_by = {}
+    # The break cools every fanbase halfway back to neutral — last
+    # season's euphoria (or bile) carries in, but softer.
+    gs.team_sentiment = {
+        tid: round(50.0 + (v - 50.0) * 0.5, 1)
+        for tid, v in sorted(gs.team_sentiment.items())
+    }
     gs.season += 1
     # Staff market churn: retirements out, the new season's class in
     # (one shared pool — no per-manager refresh).

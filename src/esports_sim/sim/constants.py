@@ -282,6 +282,31 @@ CONFIDENCE_COND_CAP = 3.0  # clamp on the additive duel term
 CONFIDENCE_PEEK_DIV = 250.0  # +/-20% peek appetite across the dial
 CONFIDENCE_CLUTCH_DIV = 200.0  # +/-25% clutch-factor leverage
 
+# In-match momentum (neutral-safe): kills build it, deaths bleed it, and it
+# decays every round — but it only ever AMPLIFIES a player's existing
+# confidence deviation (eff = dev + m * SPAN * |dev|), so a default-50
+# player feels nothing and the golden/balance gates stay byte-stable. In a
+# campaign, where confidence spreads immediately, a heater lifts a shaky
+# player back toward level and a tilt dims a swaggering one — mental state
+# sets the ceiling, momentum decides how much of it shows up tonight.
+MOMENTUM_KILL = 0.08  # per kill
+MOMENTUM_DEATH = 0.10  # per death (dying stings more than killing thrills)
+MOMENTUM_CLUTCH = 0.25  # winning a round as the last one standing
+MOMENTUM_DECAY = 0.85  # per-round decay toward flat
+MOMENTUM_CAP = 1.0  # |momentum| clamp before the span applies
+MOMENTUM_SPAN = 0.6  # max fraction of |dev| that momentum adds/removes
+
+# Game-plan reach (campaign-fed, default-off): the bare-engine gates never
+# construct a plan, so every term below is gated on a plan existing.
+# prep_edge is the scouting-driven duel bonus a prepared side brings
+# (campaign computes it from scout knowledge; clamped here so prep stays a
+# colour, not a decider). Focus targeting trades a real edge in duels
+# against the hunted opponent for a small tax everywhere else —
+# over-indexing your anti-strat on one man has a cost.
+PREP_EDGE_CAP = 1.5
+FOCUS_TARGET_EDGE = 2.5  # duel points vs the hunted player
+FOCUS_OFF_MALUS = 0.5  # duel points given up vs everyone else
+
 # Eco discipline: on a save/force round eco_greed decides whether the team
 # runs it down (a fast aggressive hit to catch the buy off-guard) or plays
 # slow for picks and the exit. Shifts the execute probability by +/- this

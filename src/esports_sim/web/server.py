@@ -36,13 +36,15 @@ from esports_sim.manager import (
     talk,
 )
 from esports_sim.manager.campaign import (
+    PREP_EDGE_BASE,
+    PREP_EDGE_SPAN,
     WeekReport,
     advance_week,
     default_five,
     dressed_for,
     new_campaign,
 )
-from esports_sim.manager.state import GameState, PlayerSeasonStats
+from esports_sim.manager.state import GamePlan, GameState, PlayerSeasonStats
 from esports_sim.manager.training import (
     DEV_FOCUS_OPTIONS,
     FOCUS_OPTIONS,
@@ -1186,6 +1188,8 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
             "players": players,
             "teams": teams,
             "awards": [a.model_dump() for a in reversed(gs.awards)],
+            # Patch notes are public information — never tier-gated.
+            "patches": [n.model_dump() for n in reversed(gs.patch_history[-6:])],
         }
 
 
@@ -1458,6 +1462,21 @@ def social_view() -> dict:
                 }
             )
         roster = gs.roster(gs.acting_team_id)
+        # Community mood board: hottest and coldest fanbases (tier-1 orgs).
+        sent_rows = sorted(
+            (
+                {
+                    "team_id": t.id,
+                    "name": t.name,
+                    "tag": t.tag,
+                    "sentiment": gs.sentiment(t.id),
+                    "is_user": t.id == gs.acting_team_id,
+                }
+                for t in gs.teams.values()
+                if t.tier == 1
+            ),
+            key=lambda r: (-r["sentiment"], r["team_id"]),
+        )
         return {
             "feed": [p.model_dump() for p in reversed(gs.social_feed)],
             "leaderboard": leaderboard,
@@ -1471,6 +1490,8 @@ def social_view() -> dict:
             ],
             "your_reach": social.roster_reach(gs, gs.acting_team_id),
             "fan_count": gs.teams[gs.acting_team_id].fan_count,
+            "sentiment": sent_rows,
+            "your_sentiment": gs.sentiment(gs.acting_team_id),
         }
 
 
@@ -1759,6 +1780,182 @@ def set_tactics(body: TacticsBody) -> dict:
             tac.site_focus = body.site_focus
         S.save()
         return {"ok": True, "message": "tactics updated", "tactics": tac.model_dump()}
+
+
+_PLAN_DIAL_FIELDS = (
+    "aggression", "pace", "util_discipline", "eco_greed", "map_control",
+)
+
+
+@app.get("/api/gameplan")
+def gameplan_view() -> dict:
+    """The coach's desk for the NEXT fixture: opponent intel (fogged by
+    scout knowledge — same fog the roster screen uses), the current plan,
+    the server-computed prep edge, a suggested target once scouting can
+    actually name one, and rotation hints for the one-match lineup. All
+    numbers computed here; the client only renders."""
+    with S.lock:
+        gs = S.require_gs()
+        tid = gs.acting_team_id
+        team = gs.teams[tid]
+        fx = gs.team_fixture(tid)
+        if fx is None or fx.played:
+            return {"fixture": None, "plan": None}
+        opp_id = fx.team_b if fx.team_a == tid else fx.team_a
+        opp = gs.teams[opp_id]
+        know = gs.scout_progress.get(opp_id, 0.0)
+        fog = _team_fog(gs, opp_id)
+
+        opp_rows = []
+        active = set(default_five(gs, opp_id))
+        for p in sorted(gs.roster(opp_id), key=lambda q: q.id):
+            quality = market.player_quality(p)
+            opp_rows.append(
+                {
+                    "player_id": p.id,
+                    "handle": p.handle,
+                    "role": str(p.role),
+                    "playstyle": str(p.playstyle),
+                    "overall": _fogged(gs, p.id, "overall", quality, fog),
+                    "form": _fogged(gs, p.id, "form", p.form, fog),
+                    "is_starter": p.id in active,
+                    "fogged": fog > 0,
+                }
+            )
+        # A target suggestion only once the scout can actually name the
+        # weak link (the fogged view IS the manager's knowledge).
+        suggested = None
+        if know >= 0.35:
+            starters = [r for r in opp_rows if r["is_starter"]]
+            if starters:
+                suggested = min(starters, key=lambda r: (r["overall"], r["player_id"]))[
+                    "player_id"
+                ]
+
+        plan = gs.game_plan
+        if plan is not None and plan.fixture_id != fx.id:
+            plan = None  # stale plan for a past fixture; the tick will sweep it
+
+        own_rows = []
+        starters_own = set(default_five(gs, tid))
+        for p in sorted(gs.roster(tid), key=lambda q: q.id):
+            own_rows.append(
+                {
+                    "player_id": p.id,
+                    "handle": p.handle,
+                    "role": str(p.role),
+                    "playstyle": str(p.playstyle),
+                    "overall": round(market.player_quality(p), 1),
+                    "stamina": p.stamina,
+                    "form": p.form,
+                    "confidence": p.confidence,
+                    "is_starter": p.id in starters_own,
+                }
+            )
+        gassed = [r for r in own_rows if r["is_starter"] and r["stamina"] < 30.0]
+        fresh = [r for r in own_rows if not r["is_starter"] and r["stamina"] >= 70.0]
+        hints = [
+            f"{g['handle']} is running on fumes ({g['stamina']:.0f} stamina)"
+            for g in sorted(gassed, key=lambda r: r["stamina"])[:2]
+        ]
+        if gassed and fresh:
+            names = ", ".join(r["handle"] for r in fresh[:2])
+            hints.append(f"Fresh on the bench: {names}")
+
+        rec = gs.standings.get(opp_id)
+        return {
+            "fixture": {
+                "id": fx.id,
+                "week": fx.week,
+                "stage": fx.stage,
+                "best_of": fx.best_of,
+                "maps": fx.maps[: fx.best_of],
+                "opponent": {
+                    "id": opp_id,
+                    "name": opp.name,
+                    "tag": opp.tag,
+                    "world_rank": opp.world_rank,
+                    "record": (
+                        f"{rec.wins}-{rec.losses}" if rec is not None else ""
+                    ),
+                },
+            },
+            "plan": plan.model_dump() if plan is not None else None,
+            "tactics": team.tactics.model_dump(),
+            "scout_knowledge": round(know, 2),
+            "prep_edge": round(PREP_EDGE_BASE + PREP_EDGE_SPAN * know, 2),
+            "prep_edge_max": round(
+                min(PREP_EDGE_BASE + PREP_EDGE_SPAN, C.PREP_EDGE_CAP), 2
+            ),
+            "opponent_roster": opp_rows,
+            "suggested_target": suggested,
+            "own_roster": own_rows,
+            "rotation_hints": hints,
+            "site_options": ["balanced", "a", "b", "c"],
+        }
+
+
+class GamePlanBody(BaseModel):
+    clear: bool = False
+    aggression: float | None = None
+    pace: float | None = None
+    util_discipline: float | None = None
+    eco_greed: float | None = None
+    map_control: float | None = None
+    site_focus: str | None = None
+    focus_target: str | None = None
+    starter_ids: list[str] = []
+
+
+@app.post("/api/actions/gameplan")
+def set_gameplan(body: GamePlanBody) -> dict:
+    """Set (or clear) the pre-match plan for the acting manager's next
+    fixture. Everything is validated against live state — a plan is a
+    claim about THIS match, not a standing setting."""
+    with S.lock:
+        gs = S.require_gs()
+        tid = gs.acting_team_id
+        if body.clear:
+            gs.game_plan = None
+            S.save()
+            return {"ok": True, "message": "game plan cleared — playing the book"}
+        fx = gs.team_fixture(tid)
+        if fx is None or fx.played:
+            raise HTTPException(409, "no upcoming fixture to plan for")
+        opp_id = fx.team_b if fx.team_a == tid else fx.team_a
+        if body.site_focus is not None and body.site_focus not in (
+            "balanced", "a", "b", "c",
+        ):
+            raise HTTPException(422, "site_focus must be balanced/a/b/c")
+        if (
+            body.focus_target is not None
+            and body.focus_target not in gs.teams[opp_id].player_ids
+        ):
+            raise HTTPException(422, "focus target is not on the opponent's roster")
+        starters = list(body.starter_ids)
+        if starters:
+            team = gs.teams[tid]
+            if len(starters) != 5 or len(set(starters)) != 5:
+                raise HTTPException(422, "a one-match lineup names exactly 5 players")
+            if any(pid not in team.player_ids for pid in starters):
+                raise HTTPException(422, "lineup includes players not on your roster")
+        dials = {
+            k: (
+                None
+                if getattr(body, k) is None
+                else float(min(100.0, max(0.0, getattr(body, k))))
+            )
+            for k in _PLAN_DIAL_FIELDS
+        }
+        gs.game_plan = GamePlan(
+            fixture_id=fx.id,
+            site_focus=body.site_focus,
+            focus_target=body.focus_target,
+            starter_ids=starters,
+            **dials,
+        )
+        S.save()
+        return {"ok": True, "message": "game plan locked in for the next match"}
 
 
 class BidBody(BaseModel):

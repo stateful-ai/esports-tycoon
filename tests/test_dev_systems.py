@@ -9,7 +9,7 @@ import pytest
 
 from esports_sim.manager import development, market, social, staff, training
 from esports_sim.manager.campaign import advance_week, new_campaign, runtime_gamedata
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import SCHEMA_VERSION, GameState
 from esports_sim.registry import load_all
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import (
@@ -324,10 +324,11 @@ def test_v2_save_loads_and_migrates(campaign, tmp_path) -> None:
             {k: m[k] for k in ("id", "name", "role", "quality", "salary")}
         )
     data["staff_candidates_by"] = {campaign.user_team_id: {"coach": old_members}}
-    # Strip every v3-only field a real v2 save wouldn't have.
+    # Strip every v3+-only field a real v2 save wouldn't have.
     for k in (
         "player_map_stats", "player_agent_stats", "team_map_stats",
         "stat_history", "dev_history", "social_feed",
+        "game_plans_by", "team_sentiment", "agent_patches", "patch_history",
     ):
         data.pop(k)
     for p in data["players"].values():
@@ -337,7 +338,7 @@ def test_v2_save_loads_and_migrates(campaign, tmp_path) -> None:
     path.write_text(json.dumps(data), encoding="utf-8")
 
     loaded = GameState.load(path)
-    assert loaded.schema_version == 3
+    assert loaded.schema_version == SCHEMA_VERSION
     migrated_ids = {m["id"] for m in old_members}
     assert migrated_ids <= {m.id for m in loaded.staff_pool}
     assert all(p.confidence == 50.0 for p in loaded.players.values())
