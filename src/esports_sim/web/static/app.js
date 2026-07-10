@@ -1318,11 +1318,19 @@ async function gameplanPanel(v) {
   const fx = gp.fixture;
   const opp = fx.opponent;
   const plan = gp.plan;
+  // Stored plans can go stale under roster churn: drop starters who left
+  // the roster (no chip could ever deselect a ghost) and a focus target
+  // no longer among the rendered starters (the radio group would render
+  // with nothing selected while silently re-saving the hidden pid).
+  const ownIds = new Set(gp.own_roster.map((r) => r.player_id));
+  const oppStarterIds = new Set(
+    gp.opponent_roster.filter((r) => r.is_starter).map((r) => r.player_id));
+  const storedTarget = plan?.focus_target ?? null;
   const state = {
     dials: {},          // key -> value, only for overridden dials
     site_focus: plan?.site_focus ?? null,
-    focus_target: plan?.focus_target ?? null,
-    starters: new Set(plan?.starter_ids ?? []),
+    focus_target: oppStarterIds.has(storedTarget) ? storedTarget : null,
+    starters: new Set((plan?.starter_ids ?? []).filter((pid) => ownIds.has(pid))),
   };
   for (const d of TACTIC_DIALS) {
     if (plan && plan[d.key] != null) state.dials[d.key] = plan[d.key];
@@ -1405,8 +1413,12 @@ async function gameplanPanel(v) {
     };
     cb.onchange = () => {
       slider.disabled = !cb.checked;
-      if (cb.checked) state.dials[d.key] = parseFloat(slider.value);
-      else delete state.dials[d.key];
+      if (cb.checked) {
+        state.dials[d.key] = parseFloat(slider.value);
+      } else {
+        delete state.dials[d.key];
+        slider.value = standing; // "(book)" must show the book's number
+      }
       paint();
     };
     slider.oninput = () => { state.dials[d.key] = parseFloat(slider.value); paint(); };
@@ -2159,10 +2171,11 @@ const POST_KIND_ICON = {
 async function social(v) {
   const data = await api("/api/social");
 
+  // Mood word/tone come from the server (social.mood_view) — the UI never
+  // re-derives sim thresholds.
   const mood = data.your_sentiment ?? 50;
-  const moodWord = mood >= 70 ? "euphoric" : mood >= 58 ? "warm"
-    : mood > 42 ? "neutral" : mood > 30 ? "restless" : "toxic";
-  const moodTone = mood >= 58 ? "good" : mood <= 42 ? "bad" : "";
+  const moodWord = data.your_mood?.word ?? "neutral";
+  const moodTone = data.your_mood?.tone ?? "";
   const head = el("div", "card");
   head.innerHTML = `<h2>Social — your reach</h2>
     <div class="row">
@@ -2228,11 +2241,11 @@ async function social(v) {
     const cold = data.sentiment.slice(-3);
     const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
     for (const r of rows) {
-      const tone = r.sentiment >= 58 ? "good" : r.sentiment <= 42 ? "bad" : "";
       stb.appendChild(el("tr", r.is_user ? "me" : "", `
         <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b>
           <span class="pill">${r.tag}</span></td>
-        <td class="num ${tone}">${Math.round(r.sentiment)}</td>`));
+        <td class="num ${r.tone ?? ""}">${Math.round(r.sentiment)}
+          <span class="muted">${r.word ?? ""}</span></td>`));
     }
     st.appendChild(stb);
     lb.appendChild(st);

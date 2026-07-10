@@ -313,8 +313,15 @@ def advance_week(
 
     # 0. Mid-split balance patch — BEFORE matches (and before rt_gd is
     # built), so this week's games and their replays run on the new meta.
-    # The second patch of the year ships in the offseason.
-    if gs.phase == "regular" and gs.week == regular_season_weeks(TEAMS_PER_REGION) // 2 + 1:
+    # The second patch of the year ships in the offseason. The split's
+    # midpoint is derived from the fixtures actually on the calendar, not
+    # the module's default world shape — roster-pack worlds (a different
+    # teams-per-region) get the right week for free.
+    season_len = max(
+        (f.week for f in gs.fixtures if f.stage == "regular" and f.tier == 1),
+        default=0,
+    )
+    if gs.phase == "regular" and season_len > 0 and gs.week == season_len // 2 + 1:
         note = meta.roll_patch(
             gs, gd,
             tree.derive("season", gs.season, "patch", "mid"),

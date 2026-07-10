@@ -40,7 +40,13 @@ Published at github.com/stateful-ai/esports-tycoon.
   knobs in `sim/constants.py`, never inline. Reads `TeamTactics` (the
   coaching dials, `schemas/team.py`) for site call, pace, aggression,
   utility discipline, eco greed, and map control (stack vs spread + a
-  lurker) — all neutral-safe (invariant 7). `sim/tactics_fit.py` is the
+  lurker) — all neutral-safe (invariant 7) — plus optional per-match
+  `TeamMatchPlan` overrides (game plans: tactics swap, focus target,
+  scouting prep edge) supplied by the campaign; the gates pass None, so
+  no plan == the pre-plan engine byte-for-byte. In-match `momentum`
+  (kills/deaths/clutches, rng-free bookkeeping) only AMPLIFIES a
+  player's confidence deviation via `_conf_dev` — exact no-op at 50.
+  `sim/tactics_fit.py` is the
   single source of truth for roster-fit maths, shared by the engine's
   `_execution_mod` AND the web tactics serializer, so the UI's impact
   preview can't drift from what the engine applies. `sim/stats.py` derives
@@ -61,13 +67,22 @@ Published at github.com/stateful-ai/esports-tycoon.
   free-agent staff pool with rich identities; coach specialty boosts the
   matching focus; `analytics_tier` gates stat-view depth), `social.py`
   (follower counts + deterministic weekly feed; roster reach feeds
-  sponsor marketability), `talk.py`, `relationships.py` (pairwise
+  sponsor marketability; per-team community SENTIMENT chases weekly
+  outcomes and feeds back into confidence/morale + sponsor pressure),
+  `meta.py` (live balance patches twice a season: usage-driven agent
+  buffs/nerfs held on GameState, applied by `runtime_gamedata` as a
+  fresh agents dict — the bare-engine gates never see them), `talk.py`,
+  `relationships.py` (pairwise
   chemistry graph), `narrative.py` (recaps + awards), `inbox.py` (weekly
   digest; item actions derived LIVE from current offers, never stored),
   `state.py` (save; `standings_order` H2H tiebreaker; `schema_version`
-  migrations — v3 moved staff candidates into the shared pool). Player
-  `confidence` moves on results/ratings/dev events, regresses weekly,
-  and is read NEUTRAL-SAFE by the engine (exact no-op at 50).
+  migrations — v3 moved staff candidates into the shared pool; v4 is a
+  pass-through for the game-plan/sentiment/patch fields). Player
+  `confidence` moves on results/ratings/dev events/sentiment, regresses
+  weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
+  tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game
+  plans live per-manager in `game_plans_by` (one per next fixture,
+  consumed at sim time, may carry a one-match lineup).
 - `src/esports_sim/web/` — FastAPI, thin serializers over GameState; static
   vanilla-JS frontend on `ui/design-system` tokens. **UI holds no sim
   state — it renders event logs + GameState only.** Corollary: never

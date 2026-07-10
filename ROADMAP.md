@@ -103,12 +103,17 @@ Three parallel tracks. **Not sequential.** Once the MVP is real, pick the track 
 Shipped from this track already: scouting fog + subsystem, the pairwise
 relationship graph, multi-region VCT + Challengers, all planned maps and
 agents, coaching staff/analyst/physio, the coaching-dial tactics system,
-sponsorship depth, insolvency, traits/potential/development. Still open:
+sponsorship depth, insolvency, traits/potential/development — and, as of
+the coaching-loop pass (2026-07-09): tilt spirals + heaters (in-match
+momentum amplifying confidence deviation, plus cross-week threshold
+events), the community-sentiment layer (feed → sentiment →
+confidence/morale + sponsor pressure), meta patch cycles (usage-driven
+agent buffs/nerfs held on GameState), pre-match game plans (per-match
+dial overrides, focus targets, scouting-scaled prep edge), and
+one-match lineups over the 7-man bench. Still open:
 
-- Personality / tilt-spiral event system — threshold-triggered attribute deltas
-- Media & community sentiment layer — reactions feed back into morale
-- Meta evolution — patch cycles that nerf / buff agents; meta becomes a driver of fortunes
-- Substitutes / six-man rosters
+- Mid-series (between-map) substitutions — lineups are per-match today
+- AI orgs setting game plans / carrying benches (documented parity choice)
 
 ### Track B — RL research arm
 - Gym-style `env` wrapper over the headless API

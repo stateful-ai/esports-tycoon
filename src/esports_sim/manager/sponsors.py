@@ -530,9 +530,11 @@ def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
     # org whose mentions turned toxic and warm to one the crowd loves.
     # (Sentiment is last week's stored value — the social tick runs after
     # this one — which keeps the lag deterministic.)
+    from esports_sim.manager import social
+
     sent = gs.sentiment(gs.acting_team_id)
-    if sent <= 30.0 or sent >= 70.0:
-        delta = -0.5 if sent <= 30.0 else 0.3
+    if sent <= social.SENT_COLD or sent >= social.SENT_HOT:
+        delta = -0.5 if sent <= social.SENT_COLD else 0.3
         brands = {d.name for d in gs.sponsor_slots.values()}
         if legacy is not None:
             brands.add(legacy.name)

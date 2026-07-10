@@ -353,10 +353,12 @@ def _rotation_items(gs: "GameState", season: int, week: int):
     """Coach's desk: a gassed starter with a fresh body on the bench is a
     rotation decision waiting to happen. Live-state read (no rng), only
     for rosters that actually carry a bench."""
+    from esports_sim.manager.campaign import default_five
+
     team = gs.teams[gs.acting_team_id]
     if len(team.player_ids) <= 5:
         return []
-    active = set(team.active_ids())
+    active = set(default_five(gs, team.id))
     gassed = sorted(
         (p for p in gs.roster(team.id) if p.id in active and p.stamina < 30.0),
         key=lambda p: (p.stamina, p.id),

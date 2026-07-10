@@ -175,7 +175,7 @@ def test_game_plan_lineup_applies_and_restores(campaign, game_data) -> None:
     gs.players[fa].contract_weeks_left = 20
     gs.players[fa].salary = 2_000
     standing = list(team.player_ids[:5])
-    team.starter_ids = standing
+    team.lineup_ids = list(standing)
 
     fx = _user_fixture(gs)
     bench_in = [fa] + standing[:4]  # the 6th man starts, one starter sits
@@ -187,9 +187,11 @@ def test_game_plan_lineup_applies_and_restores(campaign, game_data) -> None:
     played = {ln.player_id for r in fx.results for ln in r.lines}
     assert fa in played, "the one-match lineup actually played"
     assert standing[4] not in played, "the rested starter sat out"
-    # The plan was consumed and the standing lineup restored.
+    # The plan was consumed; the default five is untouched, and the plan's
+    # single-use map_lineups entries were swept with the played fixture.
     assert uid not in gs.game_plans_by
-    assert gs.teams[uid].starter_ids == standing
+    assert gs.teams[uid].lineup_ids == standing
+    assert not any(k.startswith(f"{uid}|{fx.id}|") for k in gs.map_lineups)
 
 
 def test_stale_game_plan_expires(campaign, game_data) -> None:
@@ -352,6 +354,115 @@ def test_patched_campaign_saves_and_reloads(campaign, game_data, tmp_path) -> No
 
 
 # ---------------------------------------------------------------------------
+# Plan re-validation at sim time (stored plans are never trusted)
+
+
+def test_fixture_plans_revalidate_against_live_state(campaign) -> None:
+    from esports_sim.manager.campaign import (
+        PREP_EDGE_BASE,
+        PREP_EDGE_SPAN,
+        _fixture_plans,
+    )
+
+    gs = campaign
+    uid = gs.user_team_id
+    fx = gs.team_fixture(uid)
+    opp_id = fx.team_b if fx.team_a == uid else fx.team_a
+    opp = gs.teams[opp_id]
+
+    # A target on the opponent's roster but BENCHED keeps the plan's
+    # target (the tax-without-edge counterplay); one who LEFT the roster
+    # is nulled; a lineup with a departed player is discarded whole.
+    target = sorted(opp.player_ids)[0]
+    gone = "player_who_left"
+    gs.game_plans_by[uid] = GamePlan(
+        fixture_id=fx.id, focus_target=target,
+        starter_ids=[gone] + sorted(gs.teams[uid].player_ids)[:4],
+    )
+    gs.scout_progress_by.setdefault(uid, {})[opp_id] = 0.5
+    plans, lineups = _fixture_plans(gs, fx)
+    assert plans[uid].focus_target == target
+    assert uid not in lineups, "a lineup with a departed player is discarded"
+    assert plans[uid].prep_edge == pytest.approx(PREP_EDGE_BASE + PREP_EDGE_SPAN * 0.5)
+
+    # Same plan after the target leaves the roster entirely: nulled.
+    opp.player_ids.remove(target)
+    plans, _ = _fixture_plans(gs, fx)
+    assert plans[uid].focus_target is None
+    opp.player_ids.insert(0, target)
+
+    # Prep edge scales with scouting: unscouted opponent = the baseline.
+    gs.scout_progress_by[uid][opp_id] = 0.0
+    plans, _ = _fixture_plans(gs, fx)
+    assert plans[uid].prep_edge == pytest.approx(PREP_EDGE_BASE)
+
+
+# ---------------------------------------------------------------------------
+# Offseason contracts: patch-before-reset, sentiment cooling, plan sweep
+
+
+def test_offseason_patch_is_usage_driven_and_state_resets(game_data) -> None:
+    gs = new_campaign(game_data, seed=42)
+    gd = game_data
+    # Run a full season into the offseason tick.
+    guard = 0
+    while gs.phase != "offseason" and guard < 60:
+        advance_week(gs, gd)
+        guard += 1
+    assert gs.phase == "offseason"
+    usage_before = set()
+    for by_agent in gs.player_agent_stats.values():
+        usage_before.update(k for k, v in by_agent.items() if v.maps > 0)
+    assert usage_before, "a played season has per-agent usage"
+    gs.game_plans_by[gs.user_team_id] = GamePlan(fixture_id="whatever")
+    gs.team_sentiment[gs.user_team_id] = 80.0
+
+    advance_week(gs, gd)  # the offseason tick
+
+    # The offseason patch shipped, stamped with the NEW season's version,
+    # and its nerfs read the season's real pick rates — which only works
+    # if roll_patch ran BEFORE the per-agent splits were reset.
+    note = gs.patch_history[-1]
+    assert note.version == f"{gs.season}.00"
+    nerfed = [
+        ch.agent_id
+        for ch in gs.agent_patches
+        if any(f"({'nerf'})" in ln and gd.agents[ch.agent_id].display_name in ln
+               for ln in note.lines)
+    ]
+    assert any(a in usage_before for a in nerfed), (
+        "offseason nerfs target agents that were actually played"
+    )
+    assert gs.player_agent_stats == {}, "splits reset after the patch read them"
+    # The break sweeps plans and cools sentiment halfway to neutral.
+    assert gs.game_plans_by == {}
+    assert gs.team_sentiment[gs.user_team_id] == pytest.approx(65.0)
+
+    # The new season's first social tick posts the break patch.
+    advance_week(gs, gd)
+    assert any(
+        p.author == "PatchWatch" and note.version in p.text
+        for p in gs.social_feed
+    ), "offseason patch gets its PatchWatch post in the new season's week 1"
+
+
+def test_heater_growth_can_fire_milestones(campaign) -> None:
+    """A heater's follower bump lands BEFORE the milestone check, so a
+    boundary it crosses still produces the milestone post + confidence."""
+    gs = campaign
+    p = gs.roster(gs.user_team_id)[0]
+    p.followers = 9_990  # ambient drift + heater growth crosses 10K
+    report = WeekReport(season=gs.season, week=gs.week, phase="regular")
+    mental = [{"team_id": gs.user_team_id, "player_id": p.id,
+               "kind": "heater", "headline": "x"}]
+    social.weekly_tick(gs, report, [], RngTree(3).derive("s"), mental_events=mental)
+    assert p.followers >= 10_000
+    assert any(
+        po.kind == "milestone" and po.author_id == p.id for po in gs.social_feed
+    ), "the 10K milestone post fired on heater-driven growth"
+
+
+# ---------------------------------------------------------------------------
 # Web endpoints (thin-serializer checks)
 
 
@@ -395,3 +506,5 @@ def test_gameplan_rejects_bad_input(campaign, game_data) -> None:
         server_mod.set_gameplan(server_mod.GamePlanBody(starter_ids=["a", "b"]))
     with pytest.raises(HTTPException):
         server_mod.set_gameplan(server_mod.GamePlanBody(site_focus="z"))
+    with pytest.raises(HTTPException):
+        server_mod.set_gameplan(server_mod.GamePlanBody(pace=float("nan")))

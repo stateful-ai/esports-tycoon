@@ -14,6 +14,7 @@ from __future__ import annotations
 import contextvars
 import hashlib
 import json
+import math
 import random
 import re
 import secrets
@@ -1470,6 +1471,9 @@ def social_view() -> dict:
                     "name": t.name,
                     "tag": t.tag,
                     "sentiment": gs.sentiment(t.id),
+                    # Mood word/tone computed HERE from the sim's own
+                    # thresholds — the client renders, never re-derives.
+                    **social.mood_view(gs.sentiment(t.id)),
                     "is_user": t.id == gs.acting_team_id,
                 }
                 for t in gs.teams.values()
@@ -1492,6 +1496,7 @@ def social_view() -> dict:
             "fan_count": gs.teams[gs.acting_team_id].fan_count,
             "sentiment": sent_rows,
             "your_sentiment": gs.sentiment(gs.acting_team_id),
+            "your_mood": social.mood_view(gs.sentiment(gs.acting_team_id)),
         }
 
 
@@ -1809,14 +1814,25 @@ def gameplan_view() -> dict:
         opp_rows = []
         active = set(default_five(gs, opp_id))
         for p in sorted(gs.roster(opp_id), key=lambda q: q.id):
-            quality = market.player_quality(p)
+            # Fogged overall = mean of the per-attribute fogged draws —
+            # the SAME draws the roster screen shows, so the two surfaces
+            # can never disagree about who the weak link looks like.
+            fogged_attrs = [
+                _fogged(gs, p.id, k, v, fog)
+                for k, v in sorted(p.attributes.items())
+            ]
+            overall = (
+                round(sum(fogged_attrs) / len(fogged_attrs), 1)
+                if fogged_attrs
+                else round(market.player_quality(p), 1)
+            )
             opp_rows.append(
                 {
                     "player_id": p.id,
                     "handle": p.handle,
                     "role": str(p.role),
                     "playstyle": str(p.playstyle),
-                    "overall": _fogged(gs, p.id, "overall", quality, fog),
+                    "overall": overall,
                     "form": _fogged(gs, p.id, "form", p.form, fog),
                     "is_starter": p.id in active,
                     "fogged": fog > 0,
@@ -1939,14 +1955,12 @@ def set_gameplan(body: GamePlanBody) -> dict:
                 raise HTTPException(422, "a one-match lineup names exactly 5 players")
             if any(pid not in team.player_ids for pid in starters):
                 raise HTTPException(422, "lineup includes players not on your roster")
-        dials = {
-            k: (
-                None
-                if getattr(body, k) is None
-                else float(min(100.0, max(0.0, getattr(body, k))))
-            )
-            for k in _PLAN_DIAL_FIELDS
-        }
+        dials = {}
+        for k in _PLAN_DIAL_FIELDS:
+            v = getattr(body, k)
+            if v is not None and not math.isfinite(v):
+                raise HTTPException(422, f"{k} must be a finite number")
+            dials[k] = None if v is None else float(min(100.0, max(0.0, v)))
         gs.game_plan = GamePlan(
             fixture_id=fx.id,
             site_focus=body.site_focus,

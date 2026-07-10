@@ -164,6 +164,16 @@ def weekly_tick(
         if d["clutches"]:
             _grow(p, 1.0 * min(d["clutches"], 2))
 
+    # Mental-momentum follower growth happens HERE — before the milestone
+    # check below, like every other growth source — so a heater that
+    # carries a player over a landmark still fires the milestone post.
+    # (_grow draws no rng; only the feed posts do, and those stay at the
+    # END of the stream.)
+    for ev in mental_events:
+        p = gs.players.get(ev["player_id"])
+        if p is not None and ev["kind"] == "heater":
+            _grow(p, 2.0)
+
     # Dev-event amplifiers: the clip that went viral, the spat with fans.
     for ev in dev_events:
         p = gs.players.get(ev["player_id"])
@@ -251,7 +261,6 @@ def weekly_tick(
         if p is None:
             continue
         if ev["kind"] == "heater":
-            _grow(p, 2.0)
             _post(
                 gs, season, week, "hype", "media", p.id, "VCT Wire",
                 f"{p.handle} cannot miss right now.",
@@ -264,10 +273,16 @@ def weekly_tick(
                 _likes(rng, p.followers), salt=p.id,
             )
 
-    # A shipped balance patch is the week's other story.
+    # A shipped balance patch is the week's other story. The mid-split
+    # patch is stamped with the current tick; the offseason patch ships
+    # during a tick that never runs the social layer and is stamped with
+    # the OLD season, so it posts on the new season's opening week (its
+    # version is always "<new season>.00").
     if gs.patch_history:
         note = gs.patch_history[-1]
-        if note.season == season and note.week == week and note.lines:
+        shipped_this_week = note.season == season and note.week == week
+        shipped_over_break = week == 1 and note.version == f"{season}.00"
+        if (shipped_this_week or shipped_over_break) and note.lines:
             _post(
                 gs, season, week, "hype", "media", "", "PatchWatch",
                 f"Patch {note.version} is live: {note.lines[0]}.",
@@ -291,6 +306,25 @@ SENT_PULL = 0.30  # how fast sentiment chases the week's target
 SENT_DEADZONE = 8.0  # |sentiment-50| below this doesn't move players
 SENT_CONF_SPAN = 1.5  # confidence points/week at sentiment 0/100
 SENT_MORALE_SPAN = 1.2
+# Extreme-mood bands, shared by the sponsor pressure triggers
+# (sponsors.weekly_tick) and the web mood serializer — one source of
+# truth so the UI can never claim a mood the sim isn't acting on.
+SENT_HOT = 70.0  # brands warm to the org / fanbase euphoric
+SENT_COLD = 30.0  # brands cool on the org / fanbase toxic
+
+
+def mood_view(sent: float) -> dict:
+    """Serializer-side mood word + tone for a sentiment value. Lives here
+    (not in JS) so the labels track the exact thresholds the sim uses."""
+    if sent >= SENT_HOT:
+        return {"word": "euphoric", "tone": "good"}
+    if sent >= 50.0 + SENT_DEADZONE:
+        return {"word": "warm", "tone": "good"}
+    if sent > 50.0 - SENT_DEADZONE:
+        return {"word": "neutral", "tone": ""}
+    if sent > SENT_COLD:
+        return {"word": "restless", "tone": "bad"}
+    return {"word": "toxic", "tone": "bad"}
 
 
 def _clamp_conf(v: float) -> float:

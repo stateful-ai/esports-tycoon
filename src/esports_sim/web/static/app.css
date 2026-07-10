@@ -1062,3 +1062,6 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .gp-lu-count.bad { color: var(--es-color-text-danger, #ff6b6b); }
 td.good, .num.good { color: var(--es-color-text-success, #4fc6a0); }
 td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
+/* Mood pills (social header): tone must actually render. */
+.pill.good { color: var(--es-color-text-success, #4fc6a0); border-color: var(--es-color-text-success, #4fc6a0); }
+.pill.bad { color: var(--es-color-text-danger, #ff6b6b); border-color: var(--es-color-text-danger, #ff6b6b); }
