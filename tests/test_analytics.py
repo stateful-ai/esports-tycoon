@@ -318,6 +318,22 @@ def test_objective_status_field_youth_matches_payout_rule():
     assert career.objective_status(gs, "a", "field_youth")["state"] == "at_risk"
 
 
+def test_objective_status_top_half_missed_after_the_table_locks():
+    # Codex review: once the regular season ends the table can't move, so a
+    # side below the cut has already missed top_half — matching the offseason
+    # _goal_met verdict. During the season it stays merely at_risk.
+    teams, standings = _league(8)  # t0 best ... t7 worst
+    gs = GameState(seed=1, season=2, week=13, user_team_id="t0", phase="regular",
+                   teams=teams, standings=standings, fixtures=[])
+    assert career.objective_status(gs, "t6", "top_half")["state"] == "at_risk"
+    gs.phase = "playoffs"  # regular season over -> table locked
+    assert career.objective_status(gs, "t6", "top_half")["state"] == "missed"
+    # A top-half side is unaffected.
+    assert career.objective_status(gs, "t1", "top_half")["state"] in (
+        "on_track", "achieved",
+    )
+
+
 def test_objective_status_make_playoffs_missed_when_semis_are_seeded():
     # Codex review: make_playoffs is decided by the SEMIFINAL seeding (see
     # _goal_met), so a non-semifinalist has missed the cut the moment the semis

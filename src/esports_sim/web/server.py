@@ -1045,6 +1045,9 @@ def state() -> dict:
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
             "board": _board_standing(gs),
+            # Season form trendline + squad age/contract profile.
+            "form_trend": _form_trend(gs, gs.acting_team_id),
+            "squad_profile": _squad_profile(gs, gs.acting_team_id),
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
@@ -1754,11 +1757,137 @@ def _projected_standings(gs: GameState, region: str, tier: int = 1) -> list[dict
     return rows
 
 
+def _h2h_matrix(gs: GameState, region: str, tier: int = 1) -> dict:
+    """A grid of every team's series record vs every other team in the region
+    this season, reusing narrative.head_to_head (the canonical tally) so it
+    can't drift. Cell [a][b] is a's wins-losses vs b."""
+    order = gs.standings_order(region, tier=tier)
+    teams = [{"team_id": t, "name": gs.teams[t].name} for t in order]
+    rows = []
+    for a in order:
+        cells = []
+        for b in order:
+            if a == b:
+                cells.append(None)
+                continue
+            h = narrative.head_to_head(gs, a, b)
+            cells.append(
+                {"w": h["wins_a"], "l": h["wins_b"], "played": h["meetings"]}
+                if h["meetings"] else {"w": 0, "l": 0, "played": 0}
+            )
+        rows.append({"team_id": a, "cells": cells})
+    return {"teams": teams, "rows": rows}
+
+
+def _results_archive(gs: GameState, region: str, n: int = 24) -> list[dict]:
+    """The region's most recent played fixtures, newest first — a results
+    archive. Pure read of gs.fixtures."""
+    played = [
+        f for f in gs.fixtures
+        if f.played and f.team_a in gs.teams
+        and str(gs.teams[f.team_a].region) == region
+    ]
+    played.sort(key=lambda f: (f.week, f.id), reverse=True)
+    out = []
+    for f in played[:n]:
+        a, b = f.map_score
+        out.append({
+            "week": f.week, "stage": f.stage,
+            "team_a": gs.teams[f.team_a].name, "team_a_id": f.team_a,
+            "team_b": gs.teams[f.team_b].name if f.team_b in gs.teams else f.team_b,
+            "team_b_id": f.team_b,
+            "score_a": a, "score_b": b, "winner_id": f.winner_id,
+        })
+    return out
+
+
+def _form_trend(gs: GameState, tid: str) -> list[dict]:
+    """Cumulative wins by week across the team's played regular-season
+    fixtures — a season form trendline. Pure read."""
+    fixtures = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and tid in (f.team_a, f.team_b)
+            and f.id.startswith(f"s{gs.season}")
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+    trend, wins = [], 0
+    for i, f in enumerate(fixtures, start=1):
+        won = f.winner_id == tid
+        if won:
+            wins += 1
+        trend.append({"n": i, "week": f.week, "wins": wins, "won": won})
+    return trend
+
+
+def _squad_profile(gs: GameState, tid: str) -> dict:
+    """Own roster age mix + contract-expiry timeline. Pure read."""
+    buckets = {"youth": 0, "prime": 0, "veteran": 0}
+    ages, expiries = [], []
+    for p in gs.roster(tid):
+        ages.append(p.age)
+        if p.age <= 21:
+            buckets["youth"] += 1
+        elif p.age <= 26:
+            buckets["prime"] += 1
+        else:
+            buckets["veteran"] += 1
+        expiries.append({
+            "id": p.id, "handle": p.handle, "age": p.age,
+            "weeks_left": p.contract_weeks_left,
+        })
+    expiries.sort(key=lambda e: (e["weeks_left"], e["handle"]))
+    return {
+        "avg_age": round(sum(ages) / len(ages), 1) if ages else 0.0,
+        "buckets": buckets,
+        "expiries": expiries,
+    }
+
+
+_IMPACT_CATS = (
+    ("clutches", "Clutches", "clutches"),
+    ("multikills", "Multikills", "multikills"),
+    ("aces", "Aces", "aces"),
+    ("first_kills", "First bloods", "first_kills"),
+)
+
+
+def _impact_leaders(gs: GameState, n: int = 5) -> dict:
+    """League-wide highlight-stat leaderboards (clutches / multikills / aces /
+    first bloods) from the stored season aggregates. Pure read — these are
+    summed at sim time by stats.py, never re-derived here."""
+    out = {}
+    for key, label, attr in _IMPACT_CATS:
+        rows = []
+        for pid, st in gs.player_stats.items():
+            if pid not in gs.players or st.maps <= 0:
+                continue
+            v = getattr(st, attr, 0)
+            if v > 0:
+                rows.append((v, pid))
+        rows.sort(key=lambda kv: (-kv[0], kv[1]))
+        out[key] = {
+            "label": label,
+            "leaders": [
+                {
+                    "player_id": pid, "value": v,
+                    "handle": gs.players[pid].handle,
+                    "team": next(
+                        (t.name for t in gs.teams.values() if pid in t.player_ids), ""
+                    ),
+                }
+                for v, pid in rows[:n]
+            ],
+        }
+    return out
+
+
 @app.get("/api/league")
 def league() -> dict:
     """League-wide, forward-looking context for the standings screen: team of
-    the week, the live playoff bracket, and a form-hold projection of the
-    user region's final table. All pure reads."""
+    the week, the live playoff bracket, a form-hold projection, plus a
+    head-to-head matrix and results archive. All pure reads."""
     with S.lock:
         gs = S.require_gs()
         region = str(gs.teams[gs.acting_team_id].region)
@@ -1767,6 +1896,8 @@ def league() -> dict:
             "team_of_week": _team_of_week(gs),
             "bracket": _playoff_bracket(gs, region, tier),
             "projection": _projected_standings(gs, region, tier),
+            "h2h_matrix": _h2h_matrix(gs, region, tier),
+            "results": _results_archive(gs, region),
             "in_regular_season": gs.phase == "regular",
         }
 
@@ -2222,6 +2353,9 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
             "split_keys": split_keys,
             "players": players,
             "teams": teams,
+            # Highlight-stat leaderboards (clutches/multikills/aces/first
+            # bloods) from the stored season aggregates. Public, never gated.
+            "impact": _impact_leaders(gs),
             "awards": [a.model_dump() for a in reversed(gs.awards)],
             # Patch notes are public information — never tier-gated.
             "patches": [n.model_dump() for n in reversed(gs.patch_history[-6:])],

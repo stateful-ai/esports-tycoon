@@ -790,7 +790,10 @@ def test_league_endpoint_shape(env):
     gs, gd, h = env
     _bind(gs, gd)
     lg = server_mod.league()
-    assert set(lg) == {"team_of_week", "bracket", "projection", "in_regular_season"}
+    assert set(lg) == {
+        "team_of_week", "bracket", "projection", "in_regular_season",
+        "h2h_matrix", "results",
+    }
     for r in lg["projection"]:
         assert set(r) == {
             "team_id", "name", "wins", "losses", "remaining", "proj_wins", "proj_pos",
@@ -833,12 +836,18 @@ def test_meta_report_direction_and_latest_patch(game_data):
     gs.agent_patches = [
         PatchChange(agent_id=aids[0], ability_id="x", field="cost", delta=-50),  # cheaper = buff
         PatchChange(agent_id=aids[1], ability_id="y", field="cost", delta=120),  # dearer = nerf
+        PatchChange(agent_id=aids[2], ability_id="z", field="ult_points", delta=-1),  # cheaper ult = buff
+        PatchChange(agent_id=aids[3], ability_id="w", field="charges", delta=-1),  # fewer charges = nerf
     ]
     gs.patch_history = [PatchNote(season=1, week=3, version="1.03", lines=["tweak"])]
     rep = meta.meta_report(gs, game_data.agents)
     dirs = {a["agent_id"]: a["direction"] for a in rep["patched_agents"]}
     assert dirs[aids[0]] == "buff"
     assert dirs[aids[1]] == "nerf"
+    # Codex review: an ult_points CUT is a buff (cheaper ult); a charges cut is
+    # a nerf. Only cost + ult_points flip sign; charges is straight power.
+    assert dirs[aids[2]] == "buff"
+    assert dirs[aids[3]] == "nerf"
     assert rep["latest_patch"]["version"] == "1.03"
 
 
@@ -915,6 +924,70 @@ def test_marketability_breakdown_sums_to_score(env):
     expected = max(0.4, raw) * mb["facility_mult"]
     # Per-driver 2dp rounding (7 terms) x facility mult loosens the tie.
     assert abs(expected - mb["score"]) <= 0.06
+
+
+def test_h2h_matrix_shape(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    region = str(gs.teams[h.user_team].region)
+    mx = server_mod._h2h_matrix(gs, region)
+    assert set(mx) == {"teams", "rows"}
+    n = len(mx["teams"])
+    assert len(mx["rows"]) == n
+    for i, row in enumerate(mx["rows"]):
+        assert len(row["cells"]) == n
+        assert row["cells"][i] is None  # diagonal (self) is blank
+        for cell in row["cells"]:
+            if cell is not None:
+                assert set(cell) == {"w", "l", "played"}
+
+
+def test_results_archive_newest_first(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    region = str(gs.teams[h.user_team].region)
+    res = server_mod._results_archive(gs, region, n=10)
+    assert isinstance(res, list) and len(res) <= 10
+    for r in res:
+        assert set(r) == {
+            "week", "stage", "team_a", "team_a_id", "team_b", "team_b_id",
+            "score_a", "score_b", "winner_id",
+        }
+    weeks = [r["week"] for r in res]
+    assert weeks == sorted(weeks, reverse=True)  # newest first
+
+
+def test_squad_profile_shape(env):
+    gs, gd, h = env
+    sp = server_mod._squad_profile(gs, h.user_team)
+    assert set(sp) == {"avg_age", "buckets", "expiries"}
+    assert set(sp["buckets"]) == {"youth", "prime", "veteran"}
+    assert sum(sp["buckets"].values()) == len(sp["expiries"])
+    wl = [e["weeks_left"] for e in sp["expiries"]]
+    assert wl == sorted(wl)  # soonest-expiring first
+
+
+def test_form_trend_is_monotone(env):
+    gs, gd, h = env
+    trend = server_mod._form_trend(gs, h.user_team)
+    wins = [p["wins"] for p in trend]
+    assert wins == sorted(wins)  # cumulative wins never decrease
+    for i, p in enumerate(trend, start=1):
+        assert p["n"] == i
+
+
+def test_impact_leaders_shape_and_order(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    imp = server_mod._impact_leaders(gs)
+    assert set(imp) == {"clutches", "multikills", "aces", "first_kills"}
+    for cat in imp.values():
+        assert set(cat) == {"label", "leaders"}
+        for l in cat["leaders"]:
+            assert set(l) == {"player_id", "value", "handle", "team"}
+            assert l["value"] > 0
+        vals = [l["value"] for l in cat["leaders"]]
+        assert vals == sorted(vals, reverse=True)
 
 
 def test_staff_effect_lines_department_roles():

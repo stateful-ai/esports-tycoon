@@ -347,6 +347,12 @@ def objective_status(gs: GameState, tid: str, kind: str) -> dict:
     cut = max(1, n // 2) if kind == "top_half" else 4
     if pos is None:
         return {"state": "at_risk", "detail": ""}
+    # top_half is settled by the final regular-season table: once the regular
+    # season is over the standings can't move, so a side below the cut has
+    # already missed it — matching _goal_met, which reads that locked table at
+    # the offseason review.
+    if kind == "top_half" and gs.phase != "regular" and pos > cut:
+        return {"state": "missed", "detail": f"finished {_ordinal(pos)} of {n}"}
     return {
         "state": "on_track" if pos <= cut else "at_risk",
         "detail": f"currently {_ordinal(pos)} of {n}",

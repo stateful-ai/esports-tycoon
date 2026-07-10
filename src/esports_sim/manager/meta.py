@@ -113,13 +113,13 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
     usage = _agent_usage(gs)
     total_maps = sum(usage.values())
 
-    # Net direction per patched agent: a negative summed delta on cost is a
-    # buff (cheaper), a positive one a nerf; charges/ult flip the sign. We fold
-    # everything to a simple {agent: net} where net>0 = buffed, net<0 = nerfed.
+    # Net direction per patched agent, folded to a "power" delta where
+    # net>0 = buffed, net<0 = nerfed. A higher COST or higher ULT_POINTS makes
+    # the kit worse (dearer / a slower ult) — those flip sign; more CHARGES is
+    # straight power. See _change_options for the canonical delta directions.
     net: dict[str, int] = {}
     for ch in gs.agent_patches:
-        # cost up = nerf (-), charges/ult up = buff (+). Normalise to "power".
-        signed = -ch.delta if ch.field == "cost" else ch.delta
+        signed = -ch.delta if ch.field in ("cost", "ult_points") else ch.delta
         net[ch.agent_id] = net.get(ch.agent_id, 0) + signed
     patched = [
         {

@@ -880,6 +880,60 @@ async function dashboard(v) {
     v.appendChild(card);
   }
 
+  /* -- 1e. FORM TREND + SQUAD PROFILE ------------------------------------- */
+  const trend = s.form_trend || [], sp = s.squad_profile;
+  if (trend.length >= 2 || sp) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Season shape"));
+    const cols = el("div", "es-snap-cols");
+    if (trend.length >= 2) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Cumulative wins"));
+      // Inline SVG sparkline of cumulative wins over played games.
+      const W = 220, H = 46, maxW = trend[trend.length - 1].wins || 1;
+      const pts = trend.map((p, i) => {
+        const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+        const y = H - 4 - (p.wins / maxW) * (H - 8);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(" ");
+      const dots = trend.map((p, i) => {
+        const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+        const y = H - 4 - (p.wins / maxW) * (H - 8);
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" class="${p.won ? "es-spark-w" : "es-spark-l"}"/>`;
+      }).join("");
+      const spark = document.createElement("div");
+      spark.className = "es-spark";
+      spark.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="cumulative wins">` +
+        `<polyline points="${pts}" fill="none" class="es-spark-line"/>${dots}</svg>` +
+        `<span class="muted">${maxW}W in ${trend.length} played</span>`;
+      col.appendChild(spark);
+      cols.appendChild(col);
+    }
+    if (sp) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", `Squad profile — avg age ${sp.avg_age}`));
+      const b = sp.buckets || {};
+      const bar = el("div", "es-roles");
+      bar.appendChild(el("span", "pill", `youth ${b.youth || 0}`));
+      bar.appendChild(el("span", "pill", `prime ${b.prime || 0}`));
+      bar.appendChild(el("span", "pill", `vet ${b.veteran || 0}`));
+      col.appendChild(bar);
+      const soon = (sp.expiries || []).filter((e) => e.weeks_left > 0).slice(0, 3);
+      if (soon.length) {
+        const list = el("div", "es-movers");
+        for (const e of soon) {
+          list.appendChild(el("div", "es-mover",
+            `<span class="plink" data-pid="${e.id}">${e.handle}</span> ` +
+            `<span class="muted">${e.age}y</span> <b class="mono ${e.weeks_left <= 8 ? "trend-down" : ""}">${e.weeks_left}w</b>`));
+        }
+        col.appendChild(list);
+      }
+      cols.appendChild(col);
+    }
+    if (cols.childElementCount) card.appendChild(cols);
+    v.appendChild(card);
+  }
+
   /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
   const status = el("div", "card es-status");
   status.appendChild(el("h2", "", "Team status"));
@@ -2040,6 +2094,50 @@ async function standings(v) {
     v.appendChild(c);
   }
 
+  // Head-to-head matrix: each team's series record vs every other this season.
+  const mx = league?.h2h_matrix;
+  if (mx && mx.teams.length > 1) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Head-to-head <span class=\"muted\" style=\"font-weight:400\">— series record</span>"));
+    const wrap = el("div", "es-h2hm-wrap");
+    const t = el("table", "es-h2hm");
+    const head = mx.teams.map((tm) => `<th title="${tm.name}">${tm.name.slice(0, 3).toUpperCase()}</th>`).join("");
+    t.innerHTML = `<thead><tr><th></th>${head}</tr></thead>`;
+    const tb = el("tbody");
+    mx.rows.forEach((row, i) => {
+      const cells = row.cells.map((cell) => {
+        if (cell == null) return '<td class="es-h2hm-self">—</td>';
+        if (!cell.played) return '<td class="muted">·</td>';
+        const cls = cell.w > cell.l ? "good" : cell.w < cell.l ? "bad" : "";
+        return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
+      }).join("");
+      tb.appendChild(el("tr", "",
+        `<th class="es-h2hm-row"><span class="tlink" data-tid="${row.team_id}">${mx.teams[i].name.slice(0, 3).toUpperCase()}</span></th>${cells}`));
+    });
+    t.appendChild(tb);
+    wrap.appendChild(t);
+    c.appendChild(wrap);
+    v.appendChild(c);
+  }
+
+  // Results archive: recent played fixtures in the region, newest first.
+  const results = league?.results || [];
+  if (results.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Recent results"));
+    const list = el("div", "es-results");
+    for (const r of results) {
+      const aWon = r.winner_id === r.team_a_id;
+      list.appendChild(el("div", "es-result",
+        `<span class="muted es-result-wk">W${r.week}</span>` +
+        `<span class="es-result-t ${aWon ? "good" : ""}" ><span class="tlink" data-tid="${r.team_a_id}">${r.team_a}</span></span>` +
+        `<b class="mono es-result-score">${r.score_a}-${r.score_b}</b>` +
+        `<span class="es-result-t ${!aWon ? "good" : ""}" style="text-align:right"><span class="tlink" data-tid="${r.team_b_id}">${r.team_b}</span></span>`));
+    }
+    c.appendChild(list);
+    v.appendChild(c);
+  }
+
   // Global pundit power ranking (across regions), with movement vs world rank.
   const pr = power?.rankings || [];
   if (pr.length) {
@@ -2794,6 +2892,25 @@ async function stats(v) {
       mc.appendChild(list);
     }
     v.appendChild(mc);
+  }
+
+  // Impact leaderboards: clutches / multikills / aces / first bloods.
+  const impact = data.impact || {};
+  const impactCats = Object.entries(impact).filter(([, c]) => c.leaders?.length);
+  if (impactCats.length) {
+    const ic = el("div", "card");
+    ic.appendChild(el("h2", "", "Impact leaders"));
+    const grid = el("div", "es-rec-grid");
+    for (const [, cat] of impactCats) {
+      const rows = cat.leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
+        `<b class="mono">${l.value}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${cat.label}</div>${rows}`));
+    }
+    ic.appendChild(grid);
+    v.appendChild(ic);
   }
 
   // Award races: who's in contention for each season award right now.
