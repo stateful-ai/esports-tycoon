@@ -5,10 +5,11 @@ No engine, no registry: the readers only touch fields already on GameState.
 
 from __future__ import annotations
 
-from esports_sim.manager import analytics, chronicle
+from esports_sim.manager import analytics, career, chronicle
 from esports_sim.manager.state import (
     CareerStats,
     ChampionRecord,
+    Fixture,
     GameState,
     PlayerSeasonStats,
     TeamRecord,
@@ -115,3 +116,45 @@ def test_season_report_is_deterministic():
     _title(gs, 3, "regional_title", "a")
     gs.season = 3
     assert analytics.season_report(gs) == analytics.season_report(gs)
+
+
+# ---------------------------------------------------------------------------
+# career.objective_status — read-only in-season board/sponsor goal progress
+
+
+def _league(n: int = 8):
+    teams, standings = {}, {}
+    for i in range(n):
+        tid = f"t{i}"
+        teams[tid] = Team(id=tid, name=tid, tag=f"T{i}", tier=1)
+        standings[tid] = TeamRecord(wins=n - i, losses=i)  # t0 best -> t{n-1} worst
+    return teams, standings
+
+
+def test_objective_status_on_track_vs_at_risk_by_position():
+    teams, standings = _league(8)
+    gs = GameState(seed=1, season=2, week=5, user_team_id="t0", phase="regular",
+                   teams=teams, standings=standings, fixtures=[])
+    top = career.objective_status(gs, "t0", "make_playoffs")   # 1st
+    assert top["state"] == "on_track" and "1st of 8" in top["detail"]
+    low = career.objective_status(gs, "t6", "make_playoffs")   # 7th
+    assert low["state"] == "at_risk"
+
+
+def test_objective_status_achieved_and_missed_after_the_final():
+    teams, standings = _league(8)
+    final = Fixture(id="s2t0final", week=13, stage="final", tier=1,
+                    team_a="t0", team_b="t1", maps=["ascent"], played=True,
+                    winner_id="t1")
+    gs = GameState(seed=1, season=2, week=14, user_team_id="t0", phase="playoffs",
+                   teams=teams, standings=standings, fixtures=[final])
+    assert career.objective_status(gs, "t1", "win_split")["state"] == "achieved"
+    # t0 reached the final but lost it -> the split goal is now missed.
+    assert career.objective_status(gs, "t0", "win_split")["state"] == "missed"
+
+
+def test_objective_status_beat_top4_is_incremental():
+    teams, standings = _league(8)
+    gs = GameState(seed=1, season=2, week=5, user_team_id="t0", phase="regular",
+                   teams=teams, standings=standings, fixtures=[])
+    assert career.objective_status(gs, "t3", "beat_top4")["state"] == "in_progress"

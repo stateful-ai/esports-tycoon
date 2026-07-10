@@ -1430,6 +1430,84 @@ def schedule() -> dict:
         }
 
 
+_CORE_ROLES = ("duelist", "controller", "initiator", "sentinel", "flex")
+
+
+def _squad_needs(gs: GameState, tid: str) -> dict:
+    """Role balance of the squad + the biggest gap and weakest position, to
+    steer the market. Pure read of the roster's roles + quality."""
+    counts = {r: 0 for r in _CORE_ROLES}
+    quality: dict[str, list[float]] = {r: [] for r in _CORE_ROLES}
+    for p in gs.roster(tid):
+        r = str(p.role)
+        if r in counts:
+            counts[r] += 1
+            quality[r].append(market.player_quality(p))
+    # A gap is a CORE role (not flex) nobody covers.
+    gaps = [r for r in _CORE_ROLES if r != "flex" and counts[r] == 0]
+    present = [(r, sum(q) / len(q)) for r, q in quality.items() if q]
+    weakest = min(present, key=lambda rc: (rc[1], rc[0])) if present else None
+    return {
+        "role_counts": counts,
+        "gaps": gaps,
+        "weakest_role": (
+            {"role": weakest[0], "quality": round(weakest[1], 1)} if weakest else None
+        ),
+    }
+
+
+def _target_suggestions(gs: GameState, tid: str, needs: dict, n: int = 3) -> list[dict]:
+    """The best free agents that address the squad's priority role (a gap
+    first, else its weakest position), affordability flagged. Pure read."""
+    want = set(needs["gaps"])
+    if not want and needs["weakest_role"]:
+        want = {needs["weakest_role"]["role"]}
+    cands = []
+    for pid in gs.free_agent_ids:
+        p = gs.players.get(pid)
+        if p is None or (want and str(p.role) not in want):
+            continue
+        ok, _ = market.can_sign(gs, tid, pid)
+        cands.append((p, ok))
+    cands.sort(key=lambda pc: (-market.player_quality(pc[0]), pc[0].id))
+    return [
+        {
+            "id": p.id, "handle": p.handle, "role": str(p.role),
+            "quality": round(market.player_quality(p), 1), "affordable": ok,
+        }
+        for p, ok in cands[:n]
+    ]
+
+
+def _contract_watch(gs: GameState, tid: str, weeks: int = 8, n: int = 5) -> dict:
+    """Your players entering their final weeks (renewal urgency) plus notable
+    tier-1 rivals nearing free agency (signing opportunities). Pure read."""
+    own = sorted(
+        (
+            {"id": p.id, "handle": p.handle, "role": str(p.role),
+             "weeks_left": p.contract_weeks_left}
+            for p in gs.roster(tid)
+            if 0 < p.contract_weeks_left <= weeks
+        ),
+        key=lambda x: (x["weeks_left"], x["handle"]),
+    )
+    rivals = []
+    for t in gs.teams.values():
+        if t.tier != 1 or t.id == tid:
+            continue
+        for pid in t.player_ids:
+            p = gs.players.get(pid)
+            if p and 0 < p.contract_weeks_left <= weeks:
+                rivals.append((p, t))
+    rivals.sort(key=lambda pt: (-market.player_quality(pt[0]), pt[0].id))
+    market_watch = [
+        {"id": p.id, "handle": p.handle, "role": str(p.role),
+         "team": t.name, "weeks_left": p.contract_weeks_left}
+        for p, t in rivals[:n]
+    ]
+    return {"expiring_own": own, "market_watch": market_watch}
+
+
 @app.get("/api/market")
 def market_view() -> dict:
     with S.lock:
@@ -1454,6 +1532,7 @@ def market_view() -> dict:
             }
             out.append({**view, "can_sign": ok, "block_reason": why})
         me = gs.acting_team_id
+        needs = _squad_needs(gs, me)
         return {
             "free_agents": out,
             "roster_size": market.ROSTER_SIZE,
@@ -1461,6 +1540,11 @@ def market_view() -> dict:
             "roster_max": market.roster_cap(gs, me),
             "roster_count": len(gs.roster(me)),
             "phase": gs.phase,
+            # Decision aids: where the squad is thin, who to sign, and whose
+            # contracts are running down (yours + rivals'). All pure reads.
+            "squad_needs": needs,
+            "target_suggestions": _target_suggestions(gs, me, needs),
+            "contract_watch": _contract_watch(gs, me),
             # Own roster, for the "swap" (sign + drop in one) control.
             "my_roster": [
                 {
@@ -1685,6 +1769,10 @@ def finances() -> dict:
                         "bonus": ob.bonus,
                         "met": ob.met,
                         "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                        # Live in-season progress toward this bonus (read-only).
+                        "status": career.objective_status(
+                            gs, gs.acting_team_id, ob.kind
+                        ),
                     }
                     for ob in (deal.objectives if deal else [])
                 ],

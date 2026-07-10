@@ -935,6 +935,17 @@ async function dashboard(v) {
       .filter(Boolean)
       .join(" · ");
     cc.appendChild(el("div", "muted es-career-sub", sub));
+    // Board season-goal, and how it's tracking right now (legacy contracts).
+    if (career.contract && career.contract.goal) {
+      const gst = career.contract.goal_status || {};
+      const st = gst.state || "pending";
+      const cls = st === "achieved" || st === "on_track" ? "good"
+        : st === "missed" ? "bad" : "warn";
+      cc.appendChild(el("div", "es-goal",
+        `Board goal: <b>${career.contract.goal}</b> · ` +
+        `<span class="goal-${cls}">${st.replace("_", " ")}</span>` +
+        (gst.detail ? ` <span class="muted">(${gst.detail})</span>` : "")));
+    }
     const tile = (label, val) =>
       `<div class="es-ctile"><div class="es-ctile-v">${val}</div>` +
       `<div class="es-ctile-l muted">${label}</div></div>`;
@@ -2099,6 +2110,65 @@ async function marketStaff(v) {
 
 async function marketPlayers(v) {
   const data = await api("/api/market");
+
+  // Squad intelligence: where you're thin, who to sign, contracts running down.
+  const needs = data.squad_needs, targets = data.target_suggestions || [];
+  const cw = data.contract_watch || {};
+  if (needs) {
+    const aid = el("div", "card");
+    aid.appendChild(el("h2", "", "Squad intelligence"));
+    const cols = el("div", "es-aid-cols");
+
+    const c1 = el("div", "es-snap-col");
+    c1.appendChild(el("span", "es-scout-lab muted", "Role balance"));
+    const rolebar = el("div", "es-roles");
+    for (const [role, n] of Object.entries(needs.role_counts || {})) {
+      const gap = (needs.gaps || []).includes(role);
+      rolebar.appendChild(el("span", "pill" + (gap ? " elim-pill" : ""), `${role} ${n}`));
+    }
+    c1.appendChild(rolebar);
+    if (needs.weakest_role) {
+      c1.appendChild(el("div", "muted",
+        `Weakest: ${needs.weakest_role.role} (${needs.weakest_role.quality})`));
+    }
+    cols.appendChild(c1);
+
+    if (targets.length) {
+      const c2 = el("div", "es-snap-col");
+      c2.appendChild(el("span", "es-scout-lab muted", "Suggested signings"));
+      const list = el("div", "es-movers");
+      for (const t of targets) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${t.id}">${t.handle}</span> ` +
+          `<span class="muted">${t.role}</span> <b class="mono">${t.quality}</b>` +
+          (t.affordable ? "" : ' <span class="muted" title="over budget">✗</span>')));
+      }
+      c2.appendChild(list);
+      cols.appendChild(c2);
+    }
+
+    const own = cw.expiring_own || [], watch = cw.market_watch || [];
+    if (own.length || watch.length) {
+      const c3 = el("div", "es-snap-col");
+      c3.appendChild(el("span", "es-scout-lab muted", "Contracts running down"));
+      const list = el("div", "es-movers");
+      for (const p of own) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">yours · ${p.role}</span> <b class="mono trend-down">${p.weeks_left}w</b>`));
+      }
+      for (const p of watch) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.team} · ${p.role}</span> <b class="mono">${p.weeks_left}w</b>`));
+      }
+      c3.appendChild(list);
+      cols.appendChild(c3);
+    }
+    aid.appendChild(cols);
+    v.appendChild(aid);
+  }
+
   const card = el("div", "card");
   card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>` +
     (data.market_scouting < 1
@@ -2630,8 +2700,17 @@ async function finances(v) {
   const objChips = (objs) => (objs ?? [])
     .map((o) => {
       const mark = o.met === true ? "✓ " : o.met === false ? "✗ " : "";
-      const cls = o.met === true ? "good" : o.met === false ? "bad" : "";
-      return `<span class="pill obj ${cls}" title="${money(o.bonus)}">${mark}${o.label} → ${money(o.bonus)}</span>`;
+      let cls = o.met === true ? "good" : o.met === false ? "bad" : "";
+      let prog = "";
+      // Undecided objectives show their live in-season status (server aid).
+      if (o.met == null && o.status) {
+        const st = o.status.state;
+        cls = st === "achieved" || st === "on_track" ? "good"
+          : st === "missed" ? "bad" : "warn";
+        prog = ` · ${st.replace("_", " ")}`;
+      }
+      const tip = o.status?.detail || money(o.bonus);
+      return `<span class="pill obj ${cls}" title="${tip}">${mark}${o.label} → ${money(o.bonus)}${prog}</span>`;
     })
     .join(" ");
   for (const slot of ["title", "jersey", "peripheral", "stream", "apparel"]) {

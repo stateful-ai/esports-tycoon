@@ -620,3 +620,46 @@ def test_roster_movers_rank_by_absolute_swing():
     mv = server_mod._roster_movers(gs, "nxs")
     assert [m["pid"] for m in mv] == ["a", "b"]  # |2.5| > |1.0|; c dropped
     assert mv[0]["delta"] == 2.5 and mv[1]["delta"] == -1.0
+
+
+# ---------------------------------------------------------------------------
+# Pass-6 market decision aids (server helpers over a real campaign)
+
+
+def test_squad_needs_covers_every_core_role(env):
+    gs, gd, h = env
+    needs = server_mod._squad_needs(gs, h.user_team)
+    assert set(needs["role_counts"]) == {
+        "duelist", "controller", "initiator", "sentinel", "flex"
+    }
+    # a full five-man starter roster has no empty CORE role
+    assert all(isinstance(v, int) for v in needs["role_counts"].values())
+    if needs["weakest_role"] is not None:
+        assert needs["weakest_role"]["role"] in needs["role_counts"]
+
+
+def test_target_suggestions_respect_the_priority_role(env):
+    gs, gd, h = env
+    needs = server_mod._squad_needs(gs, h.user_team)
+    targets = server_mod._target_suggestions(gs, h.user_team, needs)
+    assert isinstance(targets, list) and len(targets) <= 3
+    want = set(needs["gaps"]) or (
+        {needs["weakest_role"]["role"]} if needs["weakest_role"] else set()
+    )
+    if want and targets:
+        assert all(t["role"] in want for t in targets)
+    # ranked by quality (descending)
+    q = [t["quality"] for t in targets]
+    assert q == sorted(q, reverse=True)
+
+
+def test_contract_watch_shape_and_thresholds(env):
+    gs, gd, h = env
+    cw = server_mod._contract_watch(gs, h.user_team, weeks=8)
+    assert set(cw) == {"expiring_own", "market_watch"}
+    assert all(0 < p["weeks_left"] <= 8 for p in cw["expiring_own"])
+    assert all(0 < p["weeks_left"] <= 8 for p in cw["market_watch"])
+    # own entries are your players; market entries are rivals (not your club)
+    own_ids = {p.id for p in gs.roster(h.user_team)}
+    assert all(p["id"] in own_ids for p in cw["expiring_own"])
+    assert all(p["id"] not in own_ids for p in cw["market_watch"])

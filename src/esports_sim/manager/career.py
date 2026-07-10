@@ -280,6 +280,63 @@ GOAL_LABELS = {
     "top_half": "finish in the top half",
 }
 
+_PLAYOFF_KINDS = ("make_playoffs", "win_split", "make_masters", "win_champions")
+
+
+def _ordinal(n: int) -> str:
+    suf = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suf}"
+
+
+def objective_status(gs: GameState, tid: str, kind: str) -> dict:
+    """In-season progress on a board/sponsor objective, WITHOUT mutating
+    anything: 'achieved' (already met), 'missed' (the deciding stage passed
+    without it), or an in-season 'on_track' / 'at_risk' read off the team's
+    league position. The canonical verdict is still _goal_met at season end
+    (and _eval_objective for sponsor pay-outs); this is a read-only aid so a
+    manager can see where a goal stands mid-season."""
+    if _goal_met(gs, tid, kind):
+        return {"state": "achieved", "detail": "achieved"}
+
+    def season_fixtures(stage: str) -> list:
+        return [
+            f for f in gs.fixtures
+            if f.id.startswith(f"s{gs.season}") and f.stage == stage
+        ]
+
+    order = gs.standings_order(str(gs.teams[tid].region), tier=gs.teams[tid].tier)
+    n = len(order)
+    pos = order.index(tid) + 1 if tid in order else None
+
+    if kind in _PLAYOFF_KINDS:
+        finals = season_fixtures("final")
+        if finals and all(f.played for f in finals):
+            return {"state": "missed", "detail": "the playoffs are settled"}
+
+    if kind == "field_youth":
+        fielded = any(
+            gs.players[pid].age <= 21
+            and gs.player_stats.get(pid)
+            and gs.player_stats[pid].maps > 0
+            for pid in gs.teams[tid].player_ids
+            if pid in gs.players
+        )
+        return {
+            "state": "on_track" if fielded else "at_risk",
+            "detail": "youth fielded" if fielded else "no youngster has played yet",
+        }
+
+    if kind == "beat_top4":
+        return {"state": "in_progress", "detail": "pays per qualifying win"}
+
+    cut = max(1, n // 2) if kind == "top_half" else 4
+    if pos is None:
+        return {"state": "at_risk", "detail": ""}
+    return {
+        "state": "on_track" if pos <= cut else "at_risk",
+        "detail": f"currently {_ordinal(pos)} of {n}",
+    }
+
 
 def review_boards(gs: GameState) -> list[str]:
     """The offseason board review for every employed legacy seat. Moves
@@ -625,6 +682,12 @@ def career_summary(gs: GameState, mid: str) -> dict:
                 "start_season": seat.contract.start_season,
                 "goal": GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
                 "patience": round(seat.contract.patience, 1),
+                # How the season goal is tracking right now (read-only aid).
+                "goal_status": (
+                    objective_status(gs, seat.team_id, seat.contract.goal)
+                    if seat.team_id in gs.teams
+                    else None
+                ),
             }
             if seat and seat.contract
             else None
