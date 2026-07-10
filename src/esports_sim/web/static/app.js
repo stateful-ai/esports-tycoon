@@ -1366,16 +1366,18 @@ async function roster(v) {
     const starCell = hasBench
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
-    // Mentorship: older, higher-rated teammates can mentor this player.
+    // Mentorship: older, higher-rated teammates can mentor this player. Sorted
+    // by hidden teaching ability (mentor_skill) so the best teacher is first —
+    // a strong mentor raises the protege's ceiling on their own best skills.
     const eligibleMentors = data.is_user_team
-      ? data.players.filter(
-          (q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0)
-        )
+      ? data.players
+          .filter((q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0))
+          .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
       : [];
     const mentorSel = (eligibleMentors.length || p.mentor_id)
-      ? `<select data-act="mentor" title="pair with a veteran mentor for faster development">
+      ? `<select data-act="mentor" title="pair with a veteran mentor: faster growth + a higher ceiling on the mentor's best skills (teach = teaching ability)">
            <option value="">no mentor</option>
-           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}</option>`).join("")}
+           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
          </select>`
       : "";
     const devCell = data.is_user_team
@@ -1398,7 +1400,7 @@ async function roster(v) {
         : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
     const tr = el("tr", "", `
       ${starCell}
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${benchPill}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${(p.badges || []).map((bd) => ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${bd.name}: ${bd.blurb}">${bd.emoji}</span>`).join("")}${benchPill}</td>
       <td>${stylePill(p)}</td>
       <td>${p.planned_agent
         ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
@@ -3144,8 +3146,11 @@ async function scouting(v) {
     dc.innerHTML = `<h2>The book on <span class="plink" data-pid="${r.player_id}">${r.handle}</span>
       <span class="muted" style="font-weight:400">— ${scoutTier(data.progress)} (${Math.round(data.progress * 100)}%)</span></h2>`;
     const lines = [];
+    const proj = (r.pa_projection ?? []).length === 2
+      ? ` <span class="muted" title="A ceiling is a projection, never an exact read — and it keeps moving.">(proj. ${r.pa_projection[0]}–${r.pa_projection[1]})</span>`
+      : "";
     lines.push(`<div><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span>
-      <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}</div>`);
+      <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}${proj}</div>`);
     if ((r.agent_comfort ?? []).length) {
       lines.push(`<div><b>Comfort picks:</b> ` + r.agent_comfort
         .map((a) => `<span class="pill">${a.agent_id} ${a.mastery}</span>`).join(" ") + `</div>`);
@@ -3166,6 +3171,10 @@ async function scouting(v) {
     if ((r.strengths ?? []).length) {
       lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
         ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") + `</span></div>`);
+    }
+    if ((r.ceiling_reads ?? []).length) {
+      lines.push(`<div><b>Ceilings:</b> ` + r.ceiling_reads
+        .map((c) => `<span class="pill" title="how much room this skill has left to its ceiling">${humanize(c.attr)}: ${c.read}</span>`).join(" ") + `</div>`);
     }
     lines.push(r.verdict
       ? `<div><b>Verdict:</b> ${r.verdict}</div>`

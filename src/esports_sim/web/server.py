@@ -561,6 +561,41 @@ def _logo_url(team_id: str) -> str:
     return f"/assets/logos/logo_{_stable_idx(team_id, N_LOGOS)}.webp"
 
 
+_BADGE_ART_IDS: set[str] | None = None
+
+
+def _badge_art_ids() -> set[str]:
+    """Badge ids with generated emblem art on disk (assets/badges/<id>.webp),
+    cached once per process (added by the art pass, not at runtime)."""
+    global _BADGE_ART_IDS
+    if _BADGE_ART_IDS is None:
+        d = _REPO_ROOT / "assets" / "badges"
+        _BADGE_ART_IDS = {p.stem for p in d.glob("*.webp")} if d.is_dir() else set()
+    return _BADGE_ART_IDS
+
+
+def _badge_views(p: Player) -> list[dict]:
+    """A player's badges for the client (public info — earned at public
+    moments): positives first, then by id. Carries emoji + optional art url."""
+    from esports_sim.schemas.badges import BADGES
+
+    out = []
+    for pb in sorted(
+        p.badges, key=lambda x: (-BADGES.get(x.id, {}).get("polarity", 1), x.id)
+    ):
+        b = BADGES.get(pb.id)
+        if not b:
+            continue
+        bid = pb.id
+        out.append({
+            "id": bid, "name": b["name"], "emoji": b["emoji"],
+            "polarity": b["polarity"], "blurb": b["blurb"],
+            "art": (f"/assets/badges/{bid}.webp" if bid in _badge_art_ids() else None),
+            "season": pb.season,
+        })
+    return out
+
+
 def _portrait_url(pid: str, role: str) -> str:
     return f"/assets/portraits/{role}_{_stable_idx(pid, PORTRAITS_PER_ROLE)}.webp"
 
@@ -633,6 +668,8 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "is_free_agent": p.id in gs.free_agent_ids,
         "asking_salary": market.asking_salary(p),
         "portrait": _portrait_url(p.id, str(p.role)),
+        # Badges are public (earned at public moments) — shown for any player.
+        "badges": _badge_views(p),
     }
 
 
@@ -1390,6 +1427,15 @@ def roster(team_id: str) -> dict:
             for v in players:
                 v["condition_trend"] = _condition_trend(gs, v["id"])
                 v["mentor_id"] = gs.mentorships.get(v["id"])
+                pv = gs.players.get(v["id"])
+                if pv is not None:
+                    _cs = gs.career_stats.get(v["id"])
+                    # Hidden teaching ability, so the manager can spot which
+                    # veteran is worth pairing with a prospect (grows with age
+                    # + experience; young players almost never rate high).
+                    v["mentor_skill"] = round(
+                        development.mentor_skill(pv, _cs.seasons if _cs else 0)
+                    )
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -1531,25 +1577,33 @@ def _challengers_standouts(gs: GameState, tid: str, n: int = 5) -> list[dict]:
 
 
 def _dev_progress(gs: GameState, tid: str) -> list[dict]:
-    """Own roster: how close each player is to their ceiling (CA / potential)
-    and which way they're trending, from the private dev-history series."""
+    """Own roster: how close each player is to their (projected) ceiling and
+    which way they're trending, from the private dev-history series. Even your
+    own academy's ceiling is a PROJECTION band that firms up with age — never
+    an exact number — and it moves on monumental moments and mentorship. Also
+    carries each player's hidden mentor_skill so the manager can pick a teacher
+    worth pairing a prospect with."""
     out = []
     for pid in gs.teams[tid].player_ids:
         p = gs.players.get(pid)
         if p is None:
             continue
         ca = development.overall(p)
-        pa = development.potential_of(p)
-        pct = round(100.0 * ca / pa) if pa > 0 else 100
+        lo, hi = development.potential_projection(p, own=True)
+        est = max(ca, round((lo + hi) / 2.0, 1))  # the shown estimate, not truth
+        pct = min(100, round(100.0 * ca / est)) if est > 0 else 100
         snaps = gs.dev_history.get(pid, [])
         traj = "steady"
         if len(snaps) >= 3:
             d = snaps[-1].ca - snaps[-3].ca
             traj = "climbing" if d > 0.3 else "declining" if d < -0.3 else "steady"
+        cs = gs.career_stats.get(pid)
         out.append({
             "id": pid, "handle": p.handle, "age": p.age,
-            "ca": round(ca), "potential": round(pa), "progress_pct": pct,
+            "ca": round(ca), "potential": round(est),
+            "potential_band": [round(lo), round(hi)], "progress_pct": pct,
             "trajectory": traj, "maxed": pct >= 97,
+            "mentor_skill": round(development.mentor_skill(p, cs.seasons if cs else 0)),
         })
     out.sort(key=lambda r: (-r["potential"], r["handle"]))
     return out
@@ -2977,7 +3031,9 @@ class MentorBody(BaseModel):
 def mentor_action(body: MentorBody) -> dict:
     """Pair a young player with a veteran teammate (own roster), or clear the
     pairing when mentor_id is null. A protege under a mentor develops faster
-    (training.MENTOR_GROWTH_MULT)."""
+    (training.MENTOR_GROWTH_MULT) AND, gated by the mentor's hidden mentor_skill,
+    slowly gains a higher CEILING on the mentor's best skills
+    (development.apply_mentorship_growth)."""
     from esports_sim.manager.campaign import mentorship_valid
 
     with S.lock:
@@ -3944,17 +4000,30 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
     # star rating rides along only as a coarse quick-glance. A fogged rival
     # can't be read exactly, so their ceiling stays the scout's banded tier
     # text and the star sub is withheld.
+    potential_band: list[int] | None = None
+    skill_ceilings: dict[str, int] | None = None
     if fogged:
         potential: int | str = _potential_text(gs, p, fogged, progress)
         pot_stars = None
     else:
-        potential = int(round(development.potential_of(p)))
-        pot_stars = development.stars(development.potential_of(p))
+        # Own club: the ceiling is still a projection, not a measurement. Show
+        # a band (firms up with age) and the estimate's tier; per-skill
+        # ceilings are the payoff of the per-attribute potential model.
+        lo, hi = development.potential_projection(p, own=True)
+        est = max(development.overall(p), (lo + hi) / 2.0)
+        potential = int(round(est))
+        pot_stars = development.stars(est)
+        potential_band = [round(lo), round(hi)]
+        skill_ceilings = {
+            a: round(development.skill_ceiling(p, a)) for a in sorted(p.attributes)
+        }
     return {
         "ovr": ovr,
         "ovr_stars": None if fogged else development.stars(development.overall(p)),
         "potential": potential,
         "potential_stars": pot_stars,
+        "potential_band": potential_band,
+        "skill_ceilings": skill_ceilings,
         "form": None if fogged else round(p.form, 1),
         "morale": None if fogged else round(p.morale, 1),
         "condition": None if fogged else round(p.stamina, 1),
@@ -4252,6 +4321,7 @@ def player_profile(pid: str) -> dict:
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),
+            "badges": _badge_views(p),
             "attributes": _profile_attributes(gs, p, fog),
             "agents": _profile_agents(p),
             "season": _profile_season(gs, pid),

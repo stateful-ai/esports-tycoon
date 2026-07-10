@@ -44,6 +44,7 @@ PLAYER_TOP = {
     "player",
     "overview",
     "traits",
+    "badges",
     "attributes",
     "agents",
     "season",
@@ -83,6 +84,8 @@ OVERVIEW = {
     "ovr_stars",
     "potential",
     "potential_stars",
+    "potential_band",
+    "skill_ceilings",
     "form",
     "morale",
     "condition",
@@ -751,10 +754,12 @@ def test_dev_progress_shape(env):
     assert isinstance(dev, list)
     for d in dev:
         assert set(d) == {
-            "id", "handle", "age", "ca", "potential",
-            "progress_pct", "trajectory", "maxed",
+            "id", "handle", "age", "ca", "potential", "potential_band",
+            "progress_pct", "trajectory", "maxed", "mentor_skill",
         }
         assert 0 <= d["progress_pct"] <= 100
+        assert d["potential_band"][0] <= d["potential_band"][1]
+        assert 0 <= d["mentor_skill"] <= 99
         assert d["trajectory"] in ("climbing", "declining", "steady")
         assert d["ca"] <= d["potential"] + 1  # CA never exceeds ceiling
     # Sorted by potential descending, then handle.

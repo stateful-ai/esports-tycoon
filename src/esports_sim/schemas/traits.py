@@ -5,7 +5,9 @@ match engine can read trait effects without an import cycle. Effects by
 key:
 
   Management: dev_mult, growth_floor, decline_age, chem_regen, fan_mult,
-  salary_mult (consumed in manager/development.py, training, market).
+  salary_mult, mentor_bonus (consumed in manager/development.py, training,
+  market). mentor_bonus is a teaching-aptitude shade SUMMED (not maxed) into
+  development.mentor_skill — locker-room voices teach better.
 
   Match engine: peek_mult (angle-swinging appetite), day_sigma (added to
   the day-form spread — volatility as a mechanic), trade_bonus (refrag
@@ -22,7 +24,8 @@ TRAITS: dict[str, dict] = {
     "lazy": {"blurb": "coasts on talent", "dev_mult": 0.7},
     "prodigy": {"blurb": "arrived early, peaks early", "dev_mult": 1.2, "decline_age": 26},
     "late_bloomer": {"blurb": "keeps improving when others plateau", "growth_floor": 0.3, "decline_age": 31},
-    "student": {"blurb": "film-room devotee", "dev_mult": 1.1},
+    "student": {"blurb": "film-room devotee", "dev_mult": 1.1, "mentor_bonus": 6.0},
+    "clutch_gene": {"blurb": "born for the 1vX", "mentor_bonus": 2.0},
     # temperament (talk module keys on several; the ENGINE now does too)
     "hot_head": {"blurb": "combustible under critique", "peek_mult": 1.3},
     "volatile": {"blurb": "week to week, a different player", "day_sigma": 3.0},
@@ -30,19 +33,19 @@ TRAITS: dict[str, dict] = {
     "calm": {"blurb": "flat heartbeat", "peek_mult": 0.75, "day_sigma": -1.5},
     "ice_cold": {"blurb": "wants the last round", "day_sigma": -2.0},
     # social / org
-    "leader": {"blurb": "locker-room gravity", "chem_regen": 0.4},
-    "team_player": {"blurb": "glue", "chem_regen": 0.2, "trade_bonus": 0.06},
+    "leader": {"blurb": "locker-room gravity", "chem_regen": 0.4, "mentor_bonus": 8.0},
+    "team_player": {"blurb": "glue", "chem_regen": 0.2, "trade_bonus": 0.06, "mentor_bonus": 5.0},
     "streamer": {"blurb": "brings an audience", "fan_mult": 1.5},
     "star_player": {"blurb": "the poster", "fan_mult": 1.3},
     "mercenary": {"blurb": "plays for the number", "salary_mult": 1.25},
     "loyal": {"blurb": "stays where it started", "salary_mult": 0.9},
-    "veteran": {"blurb": "seen every meta"},
+    "veteran": {"blurb": "seen every meta", "mentor_bonus": 12.0},
     "rookie": {"blurb": "first contract"},
     "underrated": {"blurb": "always the discount pick"},
-    "quiet": {"blurb": "lets the clips talk"},
+    "quiet": {"blurb": "lets the clips talk", "mentor_bonus": 3.0},
     "reliable": {"blurb": "never the reason you lost", "day_sigma": -1.5},
     "independent": {"blurb": "self-managed"},
-    "shotcaller": {"blurb": "runs the room"},
+    "shotcaller": {"blurb": "runs the room", "mentor_bonus": 10.0},
     "mechanical": {"blurb": "aim first, questions later", "peek_mult": 1.2},
     "analytical": {"blurb": "spreadsheet gamer", "fallback_bonus": 0.15},
     "patient": {"blurb": "plays the long round", "peek_mult": 0.7, "fallback_bonus": 0.1},

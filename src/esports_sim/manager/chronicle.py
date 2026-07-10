@@ -49,6 +49,8 @@ KIND_IMPORTANCE: dict[str, float] = {
     "rivalry": 45.0,
     "meta_shift": 35.0,
     "all_star": 50.0,
+    "badge": 55.0,
+    "badge_lost": 30.0,
 }
 
 
