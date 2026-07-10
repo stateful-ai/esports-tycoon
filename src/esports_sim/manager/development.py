@@ -96,6 +96,259 @@ def assign_potential(p: Player, rng: np.random.Generator) -> None:
     p.potential = float(np.ceil(max(ca, _soft_cap_potential(raw)) * 10.0) / 10.0)
 
 
+# ---------------------------------------------------------------------------
+# Per-skill ceilings (per-attribute Potential Ability). The scalar `potential`
+# is the OVERALL ceiling; each attribute has its OWN ceiling that varies around
+# it (some players cap higher on aim than utility, and vice-versa). An absent
+# skill_potential entry derives a stable per-skill ceiling from the scalar PA
+# plus a blake2 spread, so a save with an empty map behaves as before EXCEPT
+# that an attribute now plateaus at its own ceiling instead of drifting toward
+# the old flat 95 — which is exactly what makes PA a real ceiling. Mentorship
+# and monumental moments WRITE entries to raise specific skills.
+
+_SKILL_SPREAD = 13.0  # peak-to-peak spread of the derived per-skill ceilings
+
+
+def skill_ceiling(p: Player, attr_id: str) -> float:
+    """Ceiling for one attribute. An explicit skill_potential entry wins;
+    otherwise derive PA +/- a stable per-(player, skill) spread, floored at the
+    current value (a ceiling never sits below where the skill already is)."""
+    cur = p.attr(attr_id)
+    stored = p.skill_potential.get(attr_id)
+    if stored is not None:
+        return float(min(99.0, max(cur, stored)))
+    pa = potential_of(p)
+    spread = ((_h(p.id, "skillpa", attr_id) % 1000) / 1000.0 - 0.5) * _SKILL_SPREAD
+    return float(min(99.0, max(cur, pa + spread)))
+
+
+def _raise_toward(value: float, delta: float, cap: float, softness: float) -> float:
+    """Monotonic raise of `value` by up to `delta`, diminishing as it nears
+    `cap`. Never drops below `value`, never exceeds `cap` — so re-applying it
+    can only ever inch a ceiling up, which keeps PA moves order-independent."""
+    if delta <= 0.0:
+        return value
+    room = max(0.0, cap - value)
+    return round(min(cap, value + delta * (room / (room + softness))), 2)
+
+
+def adjust_potential(p: Player, delta: float, attrs=None) -> float:
+    """The SECOND writer of potential (assign_potential is the first). Raise the
+    scalar ceiling by `delta` (already scaled by the caller), diminishing near
+    the cap and never below current ability, and optionally lift the same into
+    specific skill ceilings. Returns the applied scalar delta. Deterministic —
+    no rng; the magnitude is the caller's responsibility."""
+    if delta <= 0.0:
+        return 0.0
+    ca = overall(p)
+    old = potential_of(p)
+    new = round(min(99.0, max(ca, _raise_toward(old, delta, _PA_CAP, 6.0))), 1)
+    p.potential = new
+    if attrs:
+        for a in sorted(set(attrs)):
+            base = skill_ceiling(p, a)
+            p.skill_potential[a] = round(
+                min(99.0, max(p.attr(a), _raise_toward(base, delta, 99.0, 8.0))), 1
+            )
+    return round(new - old, 2)
+
+
+def _moment_scale(p: Player) -> float:
+    """How plastic a player's ceiling is to a career moment: young players with
+    room revise up hard; players at or past their peak barely move."""
+    return float(np.clip((27 - p.age) / 9.0, 0.0, 1.0))  # 18 -> 1.0, 27+ -> 0
+
+
+def moment_potential_bump(p: Player, base: float, *, skills: int = 2) -> float:
+    """Apply a monumental-moment ceiling revision: `base` points scaled down by
+    age, raising the scalar ceiling and the player's top current strengths (the
+    skills they just proved). Returns the applied scalar delta (0 if capped/old
+    enough that it rounds away)."""
+    delta = base * _moment_scale(p)
+    if delta < 0.05:
+        return 0.0
+    top = sorted(p.attributes, key=lambda a: (-p.attributes[a], a))[:skills]
+    return adjust_potential(p, delta, attrs=top)
+
+
+# ---------------------------------------------------------------------------
+# Potential as a projection band. Even a full scout book / your own academy
+# never resolves the ceiling to an exact number — the future is a projection.
+# The band narrows as a player ages toward their ceiling (a settled veteran is
+# nearly known, a teenager a wide range) and, for a scouted rival, as scouting
+# progress rises. Centered on truth with a stable per-player residual, so the
+# band always contains the real ceiling and repeated looks converge, never
+# collapse to a point.
+
+_PROJ_FLOOR = 1.5  # irreducible half-width — the ceiling is never fully known
+
+
+def potential_projection(
+    p: Player, progress: float = 1.0, own: bool = False
+) -> tuple[float, float]:
+    """A ceiling estimate as a (lo, hi) band that always contains true PA."""
+    pa = potential_of(p)
+    ca = overall(p)
+    youth = float(np.clip((26 - p.age) / 8.0, 0.0, 1.0))
+    gap = max(0.0, pa - ca)
+    half = _PROJ_FLOOR + youth * 6.0 + min(gap, 15.0) * 0.20
+    if not own:
+        half += (1.0 - float(np.clip(progress, 0.0, 1.0))) * 10.0
+    off = ((_h(p.id, "paresid") % 1000) / 1000.0 - 0.5) * 0.7 * half
+    lo = max(ca, pa + off - half)
+    hi = min(99.0, pa + off + half)
+    return round(lo, 1), round(hi, 1)
+
+
+# ---------------------------------------------------------------------------
+# Mentorship: a manager pairs a young player with a stronger, older teammate.
+# Validity + the flat growth-rate boost live with training/campaign; the
+# CEILING-raising effect and the hidden mentor_skill that gates it live here.
+# gs.mentorships is empty in hands-off sims, so every mentorship function is a
+# no-op there and the balance gates never see it.
+
+MENTOR_MIN_SKILL = 30.0     # below this a veteran teaches too little to matter
+MENTOR_CEILING_STEP = 0.18  # weekly ceiling nudge (before skill/youth scaling)
+
+
+def mentorship_valid(gs, protege_id: str, mentor_id: str) -> bool:
+    """A mentorship holds when both share a roster and the mentor is the older,
+    higher-ability of the pair (a senior guiding a junior)."""
+    if protege_id == mentor_id:
+        return False
+    pro, men = gs.players.get(protege_id), gs.players.get(mentor_id)
+    if pro is None or men is None:
+        return False
+    same_team = any(
+        {protege_id, mentor_id} <= set(t.player_ids) for t in gs.teams.values()
+    )
+    return same_team and men.age > pro.age and overall(men) > overall(pro)
+
+
+def mentor_skill(p: Player, seasons: int = 0) -> float:
+    """Hidden teaching ability (0-99). Grows with AGE and EXPERIENCE, so young
+    players floor low; a small stable blake2 latent leaves room for the rare
+    young natural teacher, game-IQ/comms help, and locker-room traits shade it
+    up. Pure function of the player + a seasons-played count — no rng."""
+    latent = 6.0 + (_h(p.id, "mentor") % 1000) / 1000.0 * 16.0        # ~6..22
+    age_term = float(np.clip((p.age - 22) / 8.0, 0.0, 1.0)) * 44.0    # 0..44
+    exp_term = float(np.clip(seasons / 6.0, 0.0, 1.0)) * 24.0         # 0..24
+    iq = (p.attr("game_sense") + p.attr("comms_quality")) / 2.0
+    iq_term = float(np.clip((iq - 50.0) / 45.0, 0.0, 1.0)) * 12.0     # 0..12
+    tag_term = sum(
+        TRAITS[t].get("mentor_bonus", 0.0)
+        for t in p.personality_tags if t in TRAITS
+    )
+    return round(
+        float(np.clip(latent + age_term + exp_term + iq_term + tag_term, 0.0, 99.0)),
+        1,
+    )
+
+
+def _team_of(gs, pid: str) -> str:
+    return next((t for t in sorted(gs.teams) if pid in gs.teams[t].player_ids), "")
+
+
+def apply_mentorship_growth(gs) -> list[dict]:
+    """Weekly: each valid, manager-set mentorship slowly raises the protege's
+    ceiling on the MENTOR's best skills, toward (never past) the mentor's own
+    level, gated by the mentor's hidden mentor_skill and the protege's youth.
+    A great aimer lifts a young player's aim ceiling specifically. Also nudges
+    the scalar ceiling so the headline projection tracks the skill lift.
+    Deterministic (no rng); no-op when gs.mentorships is empty."""
+    if not gs.mentorships:
+        return []
+    out: list[dict] = []
+    for pid in sorted(gs.mentorships):
+        mentor_id = gs.mentorships[pid]
+        if not mentorship_valid(gs, pid, mentor_id):
+            continue
+        pro, men = gs.players[pid], gs.players[mentor_id]
+        cs = gs.career_stats.get(mentor_id)
+        msk = mentor_skill(men, cs.seasons if cs else 0)
+        if msk < MENTOR_MIN_SKILL:
+            continue
+        youth = float(np.clip((25 - pro.age) / 7.0, 0.1, 1.0))
+        best = sorted(men.attributes, key=lambda a: (-men.attributes[a], a))[:2]
+        total_step, lifted = 0.0, []
+        for a in best:
+            mentor_level = men.attr(a)
+            cap = mentor_level - max(0.0, (99.0 - msk) * 0.15)  # skill gates reach
+            cur_ceil = skill_ceiling(pro, a)
+            if cap <= cur_ceil:
+                continue
+            step = MENTOR_CEILING_STEP * (msk / 99.0) * youth
+            new_ceil = round(min(cap, cur_ceil + step), 2)
+            pro.skill_potential[a] = new_ceil
+            total_step += new_ceil - cur_ceil
+            lifted.append(a)
+        if lifted:
+            adjust_potential(pro, total_step * 0.4)  # headline tracks the lift
+            out.append(
+                {
+                    "team_id": _team_of(gs, pid),
+                    "player_id": pid,
+                    "mentor_id": mentor_id,
+                    "skills": lifted,
+                }
+            )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Earned traits: unlocked once from settled, deterministic career state at the
+# offseason (rng-free, sorted iteration). Guarded by tag membership so each
+# fires once. Applied to EVERY org (AI parity, like dev events); the news line
+# goes only to the owning human. Some unlocks carry a ceiling revision.
+
+_LATE_BLOOM_GAIN = 2.5   # CA gained this season to earn the late-bloomer streak
+_CLUTCH_GENE_BAR = 22    # career clutch rounds to earn the clutch gene
+
+
+def _add_tag(p: Player, tag: str) -> None:
+    p.personality_tags = sorted({*p.personality_tags, tag})
+
+
+def offseason_trait_unlocks(gs) -> list[dict]:
+    """Unlock earned traits. Call at the offseason BEFORE aging (so age is the
+    just-played age and season_start_ca still holds this season's baseline)."""
+    out: list[dict] = []
+    for tid in sorted(gs.teams):
+        for p in sorted(gs.roster(tid), key=lambda q: q.id):
+            tags = p.personality_tags
+            unlocked: list[tuple[str, str]] = []
+            # veteran: a long career earns the badge (and feeds mentor_skill).
+            if p.age >= 30 and "veteran" not in tags and "rookie" not in tags:
+                _add_tag(p, "veteran")
+                unlocked.append(("veteran", "a veteran's presence"))
+            # late_bloomer: still climbing in their mid-to-late twenties.
+            if (
+                24 <= p.age <= 29
+                and "late_bloomer" not in p.personality_tags
+                and "prodigy" not in p.personality_tags
+                and p.id in gs.season_start_ca
+                and overall(p) - gs.season_start_ca[p.id] >= _LATE_BLOOM_GAIN
+            ):
+                _add_tag(p, "late_bloomer")
+                adjust_potential(p, 2.0)  # a later, higher peak
+                unlocked.append(("late_bloomer", "a late-bloomer streak"))
+            # clutch_gene: a career of stepping up a man down.
+            cs = gs.career_stats.get(p.id)
+            if cs and cs.clutches >= _CLUTCH_GENE_BAR and "clutch_gene" not in p.personality_tags:
+                _add_tag(p, "clutch_gene")
+                adjust_potential(p, 1.0, attrs=["clutch_factor"])
+                unlocked.append(("clutch_gene", "the clutch gene"))
+            for trait, phrase in unlocked:
+                out.append(
+                    {"team_id": tid, "player_id": p.id, "kind": "trait_unlock", "trait": trait}
+                )
+                if gs.is_human(tid):
+                    gs.push_private_news(
+                        f"{p.handle} unlocks a new trait: {phrase}.", owner=tid
+                    )
+    return out
+
+
 def retirement_prob(p: Player) -> float:
     """Offseason chance a player hangs it up. Nobody retires in their
     prime; past the decline turn it ramps fast, and faster for players
@@ -134,6 +387,8 @@ DEV_EVENT_MARKERS = [
     "grinding.",
     "is spiralling",
     "is on a heater",
+    "unlocks a new trait",
+    "badge.",
 ]
 
 _CATEGORY_ATTRS = {
@@ -149,8 +404,9 @@ def _clamp_stat(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 def _bump_attr(p: Player, attr_id: str, amount: float) -> None:
     cur = p.attr(attr_id)
-    headroom = max(0.0, (95.0 - cur) / 45.0)
-    p.attributes[attr_id] = round(min(99.0, cur + amount * headroom), 2)
+    ceil = skill_ceiling(p, attr_id)
+    headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+    p.attributes[attr_id] = round(min(cur + amount * headroom, max(cur, ceil)), 2)
 
 
 def _weakest_category(p: Player) -> str:
@@ -369,12 +625,21 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         "playstyle": str(p.playstyle),
         "ca_stars": [stars(ca_lo), stars(ca_lo + width_ca)],
         "pa_stars": [stars(pa_lo), stars(pa_lo + width_pa)],
+        # A numeric ceiling PROJECTION band. Always a range, never a point —
+        # the future can't be read exactly — and it never closes below an
+        # irreducible floor even at a full book (see potential_projection).
+        "pa_projection": list(potential_projection(p, progress, own=False)),
         "traits": [
             {"id": t, "blurb": TRAITS.get(t, {}).get("blurb", "")} for t in known
         ],
         "traits_hidden": max(0, len(p.personality_tags) - known_n),
         "strengths": strengths if progress >= 0.35 else [],
         "weaknesses": weaknesses if progress >= 0.6 else [],
+        # Per-skill ceiling reads (which skills have headroom, which are near
+        # their cap) — the deep-book payoff of a per-attribute potential model.
+        "ceiling_reads": (
+            _ceiling_reads(p, strengths + weaknesses) if progress >= 0.6 else []
+        ),
         # Progressive "how they play" intel — each tier unlocks a deeper
         # read (the whole point of deep-diving one player):
         "agent_comfort": (
@@ -386,9 +651,35 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         ),
         "style_read": _style_read(p) if progress >= 0.5 else "",
         "mental_read": _mental_read(p) if progress >= 0.75 else "",
-        "verdict": _scout_verdict(p, ca, pa) if progress >= 0.95 else "",
+        "verdict": _scout_verdict(p, ca, progress) if progress >= 0.95 else "",
         "progress": round(progress, 2),
     }
+
+
+def _ceiling_tier(headroom: float) -> str:
+    """Qualitative read of how much room a skill has left to its ceiling."""
+    if headroom >= 12.0:
+        return "big ceiling"
+    if headroom >= 6.0:
+        return "room to grow"
+    if headroom >= 2.5:
+        return "some headroom"
+    return "near their cap"
+
+
+def _ceiling_reads(p: Player, attrs: list[str]) -> list[dict]:
+    """For a handful of the player's notable skills, how much ceiling is left
+    (deduped, stable order). Reads the per-skill ceiling, so a great-aimer
+    prospect shows aim headroom even once their current aim is already good."""
+    out, seen = [], set()
+    for a in attrs:
+        if a in seen:
+            continue
+        seen.add(a)
+        out.append(
+            {"attr": a, "read": _ceiling_tier(skill_ceiling(p, a) - p.attr(a))}
+        )
+    return out
 
 
 def _style_read(p: Player) -> str:
@@ -428,17 +719,20 @@ def _mental_read(p: Player) -> str:
     return f"{nerve}; {temper}"
 
 
-def _scout_verdict(p: Player, ca: float, pa: float) -> str:
-    """The full book's bottom line (95%+): a near-exact read."""
-    gap = pa - ca
-    if gap >= 12 and p.age <= 21:
-        shape = "a genuine prospect — the ceiling is real"
-    elif gap >= 6:
-        shape = "still has another level"
+def _scout_verdict(p: Player, ca: float, progress: float) -> str:
+    """The full book's bottom line (95%+): a precise read of CURRENT ability
+    and a PROJECTED ceiling BAND — never a single exact number, because a
+    ceiling is a forecast, not a measurement (and it keeps moving)."""
+    lo, hi = potential_projection(p, progress, own=False)
+    gap = (lo + hi) / 2.0 - ca
+    if gap >= 10 and p.age <= 21:
+        shape = "a genuine prospect — the ceiling looks real"
+    elif gap >= 5:
+        shape = "still has another level in them"
     elif ca >= 75:
         shape = "the finished article, and it's good"
     elif p.age >= 27:
         shape = "what you see is what you get"
     else:
         shape = "close to their ceiling"
-    return f"CA ~{ca:.0f}, ceiling ~{pa:.0f} — {shape}."
+    return f"reads around {ca:.0f} now; ceiling projects to ~{lo:.0f}-{hi:.0f} — {shape}."

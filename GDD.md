@@ -174,6 +174,68 @@ over roughly three weeks of dedicated scouting, faster with a hired
 its speed (an elite analyst's bands hug the truth tighter at the same
 progress). The report resets every offseason as rosters change.
 
+**Potential is a projection, not a fact.** Current ability you can
+measure; a *ceiling* is a forecast, so scouting never resolves it to an
+exact number. A single-player **deep dive** is now a multi-week
+commitment (capped per week --- even an elite desk can't compile the full
+book in one sitting), and even a completed book returns a ceiling
+**band** with an irreducible residual, plus per-skill reads ("big
+ceiling on aim, near their cap on utility"). Your own academy is no
+different: its ceilings show as a band too, one that firms up as a player
+ages toward it. And the target keeps moving (see 3.5a), so last season's
+book is already a little stale.
+
+### 3.5a Potential, development, and mentorship
+
+Every player carries a hidden overall ceiling **and a per-skill ceiling
+for each attribute** (a player can cap generational on aim yet ordinary
+on utility). A skill grows toward its own ceiling and plateaus there ---
+so *raising* a ceiling, not just grinding reps, is how a prospect breaks
+through.
+
+Ceilings **move on monumental moments**: winning an international
+(Masters/Champions), a league award (MVP, Rookie of the Season,
+All-Star), or breaking a career record revises a player's ceiling
+*up* --- hardest for the young with room to grow, barely at all for a
+veteran already at their cap. Players also **unlock earned traits** from
+their career (a clutch-heavy record earns the clutch gene; a late-career
+surge earns the late-bloomer streak), some of which nudge the ceiling
+further. AI orgs' prospects break out the same way --- a rival's academy
+can surprise you.
+
+**Mentorship** is the manager's lever on all of this. Pair a young player
+with an older, stronger teammate: the protege develops faster *and*
+slowly gains a **higher ceiling on the mentor's best skills** --- a great
+aimer lifts a young player's aim ceiling specifically. How high a mentor
+can lift is gated by a hidden **mentor skill** that grows with age and
+experience, so a teenager almost never teaches well (rare naturals
+aside) and a grizzled veteran-leader teaches best. The roster's mentor
+dropdown surfaces each teammate's teaching rating so you can pick a real
+tutor, not just the oldest body.
+
+### 3.5b Badges
+
+Badges are named, career-defining honours (and stigmas) --- Aim Demon,
+Clutch Master, Superstar, Phenom, Big-Game Player, Ascending; and the
+negatives Choker, Injury Prone, Inconsistent. A career moment doesn't
+*grant* a badge, it **rolls** for one: winning Clutch King gives a
+*chance* at Clutch Master, a 30-bomb single map a *chance* at Aim Demon,
+choking a final a *chance* at the Choker stigma. Rolls are gated so a
+badge feels earned (you can't become an Aim Demon with mediocre aim) and
+happen on a dedicated deterministic stream, so they never disturb match
+results.
+
+Badges **move players**: a positive badge grants a reversible current-
+ability edge on the skills it celebrates *and* a permanent ceiling
+revision --- earning it says the ceiling was underrated. Negatives are a
+reversible drag. Badges also **decay**: if the celebrated skill falls off
+(or the badge simply goes stale without being re-earned) the player loses
+it, the CA edge reverts, but the ceiling they earned stays (you proved
+the potential; losing the label doesn't un-prove it). Negatives recover
+the same way. AI orgs earn and lose badges too, so a rival's roster wears
+its reputation. Each badge carries its own emblem art on the profile and
+roster.
+
 ### 3.6 Staff
 
 Three backroom hires, each multiplying one system: a **coach** (training

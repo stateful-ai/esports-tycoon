@@ -17,6 +17,7 @@ import numpy as np
 from esports_sim import perf
 
 from esports_sim.manager import (
+    badges,
     career,
     chronicle,
     development,
@@ -484,6 +485,13 @@ def advance_week(
         )
     gs.set_acting(None)
 
+    # 2a'. Mentorship, the CEILING half: a valid, manager-set mentorship slowly
+    # raises the protege's ceiling on the mentor's best skills (a great aimer
+    # lifts a young player's aim ceiling), gated by the mentor's hidden
+    # mentor_skill. gs.mentorships is empty in hands-off sims, so this is a
+    # no-op there and the balance gates stay byte-identical.
+    development.apply_mentorship_growth(gs)
+
     # 2b. Backroom department effects, per human org: physio restores
     # stamina; psychologist pulls shaken confidence back toward neutral;
     # performance coach does the same for slumped form. The department
@@ -526,6 +534,13 @@ def advance_week(
     mental_events = development.weekly_mental_events(
         gs, tree.derive("season", gs.season, "week", gs.week, "tilt")
     )
+
+    # 2b''''. Badges: roll match-performance + negative badges from this week's
+    # box scores and dev events. Dedicated "badges" stream so no match/other
+    # draw ever shifts; title-winning rosters also roll (in the phase machine
+    # below, off this same weekly stream). Every org (AI parity).
+    badge_rng = tree.derive("season", gs.season, "week", gs.week, "badges")
+    badges.weekly_feats(gs, badge_rng, report, dev_events)
 
     # 2c. Relationships drift; team chemistry chases the pair graph. Every
     # org's chemistry rides its own week's result, not just the user's.
@@ -714,6 +729,8 @@ def advance_week(
                         "runner_up": runners[-1],
                     },
                 )
+                # A domestic title nudges the winners' ceilings up a touch.
+                _moment_team_bump(gs, rf.winner_id, MOMENT_REGIONAL)
 
             def rec_key(tid: str) -> tuple:
                 r = gs.standings[tid]
@@ -829,6 +846,10 @@ def advance_week(
                     "runner_up": runner_up,
                 },
             )
+            # First international of the season — a real ceiling revision, and a
+            # Big-Game Player roll for the winners.
+            _moment_team_bump(gs, mf.winner_id, MOMENT_MASTERS)
+            badges.title_feats(gs, badge_rng, mf.winner_id)
 
             def rec_key(tid: str) -> tuple:
                 r = gs.standings[tid]
@@ -954,6 +975,10 @@ def advance_week(
                     "runner_up": cf_runner,
                 },
             )
+            # A world title is the biggest ceiling revision in the game, and a
+            # shot at the Big-Game Player badge for anyone on the roster.
+            _moment_team_bump(gs, cf.winner_id, MOMENT_CHAMPIONS)
+            badges.title_feats(gs, badge_rng, cf.winner_id)
             gs.phase = "offseason"
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
@@ -1633,13 +1658,44 @@ def _team_map_mastery(
 
 
 SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full team knowledge
-# A single player is a focused beat: the book fills faster than a team's...
-SCOUT_PLAYER_MULT = 1.5
-# ...and watching them play LIVE this week adds a bonus on top.
-SCOUT_LIVE_WATCH_BONUS = 0.10
+# A single player is a focused beat, but reading a CEILING is slow, careful
+# work — a deep-dive book is a multi-week investment, not a one-week glance
+# (and even a full book only ever yields a projection BAND, never an exact
+# ceiling number; see development.scout_report / potential_projection).
+SCOUT_PLAYER_MULT = 0.7
+# ...and watching them play LIVE this week adds a small bonus on top.
+SCOUT_LIVE_WATCH_BONUS = 0.05
+# Per-week ceiling on deep-dive progress: even an elite analyst desk can't
+# compile the full book faster than a few weeks of real observation.
+SCOUT_PLAYER_WEEK_CAP = 0.30
 # One-shot match intel: attending a fixture grants this much knowledge of
 # BOTH participants (a weekend at the venue ~= a week and a half of tape).
 SCOUT_MATCH_INTEL = 0.5
+
+# Monumental-moment ceiling revisions: a career peak (an international title, a
+# league award, a record) revises a player's ceiling UP — most for the young
+# with room, ~nothing for a veteran at their cap (development.moment_potential
+# _bump scales by age and soft-caps). Fires for EVERY org (AI parity); the soft
+# cap is what keeps it from snowballing dynasties (an 85-PA star barely moves).
+MOMENT_CHAMPIONS = 3.0
+MOMENT_MASTERS = 2.2
+MOMENT_REGIONAL = 1.0
+MOMENT_AWARD_MVP = 3.0  # Season MVP / Rookie of the Season
+MOMENT_AWARD = 1.5      # other league awards
+MOMENT_ALL_STAR = 1.5
+MOMENT_RECORD = 1.0     # career-kill milestones
+
+
+def _moment_team_bump(gs: GameState, tid: str, base: float) -> None:
+    """Revise the ceiling of every player on a title-winning roster (sorted,
+    rng-free), scaled per-player by age inside moment_potential_bump."""
+    team = gs.teams.get(tid)
+    if team is None:
+        return
+    for pid in sorted(team.player_ids):
+        p = gs.players.get(pid)
+        if p is not None:
+            development.moment_potential_bump(p, base)
 
 
 def _tick_scouting(gs: GameState, report: WeekReport) -> None:
@@ -1706,7 +1762,10 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
             gs.scout_target = None
             return
         cur = gs.scout_progress.get(target, 0.0)
-        gain = SCOUT_WEEKLY_GAIN * SCOUT_PLAYER_MULT * mult
+        # A ceiling read is slow work: capped per week so no single week (even
+        # an elite analyst desk) compiles the full book — a deep dive is a
+        # multi-week commitment now, not a one-week reveal.
+        gain = min(SCOUT_PLAYER_WEEK_CAP, SCOUT_WEEKLY_GAIN * SCOUT_PLAYER_MULT * mult)
         # They played this week: the scout watched it live.
         played = any(
             pid in stats.lines
@@ -1758,20 +1817,9 @@ def _update_world_ranks(gs: GameState) -> None:
 
 def mentorship_valid(gs: GameState, protege_id: str, mentor_id: str) -> bool:
     """A mentorship holds when both players share a roster and the mentor is
-    the older, higher-ability of the pair (a veteran guiding a junior)."""
-    if protege_id == mentor_id:
-        return False
-    pro, men = gs.players.get(protege_id), gs.players.get(mentor_id)
-    if pro is None or men is None:
-        return False
-    same_team = any(
-        {protege_id, mentor_id} <= set(t.player_ids) for t in gs.teams.values()
-    )
-    return (
-        same_team
-        and men.age > pro.age
-        and development.overall(men) > development.overall(pro)
-    )
+    the older, higher-ability of the pair. The logic lives in development (the
+    ceiling-raise reads it too); this stays the campaign/web entry point."""
+    return development.mentorship_valid(gs, protege_id, mentor_id)
 
 
 def _mentor_mults(gs: GameState, tid: str) -> dict[str, float] | None:
@@ -1840,6 +1888,9 @@ def _accumulate_career_stats(gs: GameState) -> None:
                     data={"career_kills": str(bar)},
                 )
                 gs.push_news(f"{p.handle} reaches {bar} career kills.")
+                # A record entering the books is a (small) ceiling revision —
+                # meaningful only if they're young enough to still have room.
+                development.moment_potential_bump(p, MOMENT_RECORD)
 
 
 def _process_retirements(gs: GameState, rng) -> int:
@@ -2155,7 +2206,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     rng = tree.derive("season", gs.season, "offseason")
 
     # Awards first — they read the season aggregates being retired.
-    for a in narrative.season_awards(gs):
+    season_awards = narrative.season_awards(gs)
+    off_badge_rng = tree.derive("season", gs.season, "offseason", "badges")
+    for a in season_awards:
         report.notes.append(f"{a.award}: {a.handle} ({a.team_name}) — {a.value}")
         winner_tid = next(
             (t.id for t in gs.teams.values() if a.player_id in t.player_ids),
@@ -2169,10 +2222,30 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             importance=75.0 if "MVP" in a.award else 60.0,
             data={"award": a.award, "value": a.value},
         )
+        # A league award revises the winner's ceiling up; the marquee ones
+        # (MVP / Rookie of the Season) revise hardest and stamp the poster.
+        winner = gs.players.get(a.player_id)
+        if winner is not None:
+            marquee = "MVP" in a.award or "Rookie" in a.award
+            development.moment_potential_bump(
+                winner, MOMENT_AWARD_MVP if marquee else MOMENT_AWARD
+            )
+            if marquee and "star_player" not in winner.personality_tags:
+                winner.personality_tags = sorted(
+                    {*winner.personality_tags, "star_player"}
+                )
+
+    # Award-linked badges — a chance at a named badge, not a coronation:
+    # winning Clutch King only gives a shot at Clutch Master.
+    badges.award_feats(gs, off_badge_rng, season_awards)
 
     # The All-Star Five (best per role) — chronicled + a news line inside.
     stars = narrative.season_all_star(gs)
     if stars:
+        for s in stars:
+            sp = gs.players.get(s["player_id"])
+            if sp is not None:
+                development.moment_potential_bump(sp, MOMENT_ALL_STAR)
         report.notes.append(
             "All-Star Five: " + ", ".join(f"{s['handle']} ({s['role']})" for s in stars)
         )
@@ -2208,8 +2281,17 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.player_agent_stats = {}
     gs.team_map_stats = {}
 
+    # Earned traits unlock from settled career state (career_stats just rolled
+    # up, season_start_ca still this season's baseline, age still the played-
+    # season age) BEFORE aging shifts any of it. rng-free; AI parity.
+    development.offseason_trait_unlocks(gs)
+
     for pid in sorted(gs.players):
         training.apply_offseason_aging(gs.players[pid], rng)
+
+    # Badges decay: a fallen-off skill or a badge gone stale is lost — its CA
+    # edge reverts, the ceiling it earned is kept. rng-free; every org.
+    badges.decay(gs)
 
     # Careers end: a year older, some hang it up. Then the next
     # generation arrives as regional rookie classes.

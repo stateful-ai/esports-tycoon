@@ -654,6 +654,15 @@ svg.iso .plabel { font-size: 2.4px; }
 .mentor-pill { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent); }
 .dev-plan select[data-act="mentor"] { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
 
+/* Badges — rolled honours (and stigmas). */
+.roster-badge { font-size: var(--es-text-xs, 11px); vertical-align: middle; cursor: help; }
+.roster-badge.badge-neg { filter: grayscale(0.3) brightness(0.9); }
+.pf-badge { display: inline-flex; align-items: center; gap: 5px; }
+.pf-badge-emoji { font-size: 14px; line-height: 1; }
+.pf-badge-art { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; }
+.pf-badge-pos { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
+.pf-badge-neg { border-color: color-mix(in srgb, var(--es-color-warn, #e8b34b) 50%, transparent); color: var(--es-color-warn, #e8b34b); }
+
 /* Match preview prose on the spotlight. */
 .es-preview { margin: 6px 0 0; font-size: var(--es-text-xs, 11px); line-height: 1.45; font-style: italic; }
 

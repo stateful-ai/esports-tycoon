@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -170,10 +170,20 @@ def _migrate_v6_to_v7(data: dict) -> dict:
 
 
 def _migrate_v7_to_v8(data: dict) -> dict:
-    """v8 adds only the defaulted `last_review_by` field (the latest
-    match-review diagnosis per human team). A v7 save loads unchanged — the
+    """v8 adds only defaulted Player fields: skill_potential (per-skill
+    ceilings — empty heals lazily via development.skill_ceiling) and badges
+    (rolled/decaying honours — empty on old saves). A v7 save loads unchanged;
+    the bump exists so an OLDER build refuses a v8 save with the clean "update
+    the game" message instead of an extra="forbid" validation stack trace on
+    the unknown keys."""
+    return data
+
+
+def _migrate_v8_to_v9(data: dict) -> dict:
+    """v9 adds only the defaulted `last_review_by` field (the latest
+    match-review diagnosis per human team). A v8 save loads unchanged — the
     field simply starts empty and fills on the next played week. The bump
-    exists so an OLDER build refuses a v8 save with the clean "update the
+    exists so an OLDER build refuses a v9 save with the clean "update the
     game" message instead of an extra="forbid" validation stack trace."""
     return data
 
@@ -186,6 +196,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     5: _migrate_v5_to_v6,
     6: _migrate_v6_to_v7,
     7: _migrate_v7_to_v8,
+    8: _migrate_v8_to_v9,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]

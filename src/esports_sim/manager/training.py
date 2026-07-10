@@ -129,9 +129,14 @@ def apply_training(
             gain = rate * fatigue_mult * growth_mult * (1.0 if i == 0 else 0.5)
             gain *= float(rng.uniform(0.6, 1.4))
             cur = p.attr(attr_id)
-            # Diminishing returns near the ceiling.
-            headroom = max(0.0, (95.0 - cur) / 45.0)
-            p.attributes[attr_id] = round(min(99.0, cur + gain * headroom), 2)
+            ceil = development.skill_ceiling(p, attr_id)
+            # Diminishing returns near the ceiling; hard-stop at the per-skill
+            # ceiling (the anchor stays 95 for a default ceiling, so growth
+            # SPEED is unchanged — only the plateau point moves).
+            headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+            p.attributes[attr_id] = round(
+                min(cur + gain * headroom, max(cur, ceil)), 2
+            )
         p.stamina = max(
             0.0, p.stamina - _INTENSITY_DRAIN.get(p.training_intensity, 6.0)
         )
@@ -180,10 +185,11 @@ def apply_match_experience(p: Player, line, n_rounds: int) -> None:
         if r <= 0:
             continue
         cur = p.attr(attr_id)
-        headroom = max(0.0, (95.0 - cur) / 45.0)
+        ceil = development.skill_ceiling(p, attr_id)
+        headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
         gain = min(_MATCH_XP_CAP, _MATCH_XP_PER_REP * r) * rate * headroom
         if gain > 0:
-            p.attributes[attr_id] = round(min(99.0, cur + gain), 2)
+            p.attributes[attr_id] = round(min(cur + gain, max(cur, ceil)), 2)
 
 
 def apply_scrim_reps(p: Player) -> None:
@@ -193,8 +199,11 @@ def apply_scrim_reps(p: Player) -> None:
     rate = _player_rate(p) * 0.25
     for attr_id in sorted(("game_sense", "positioning")):
         cur = p.attr(attr_id)
-        headroom = max(0.0, (95.0 - cur) / 45.0)
-        p.attributes[attr_id] = round(min(99.0, cur + 0.05 * rate * headroom), 2)
+        ceil = development.skill_ceiling(p, attr_id)
+        headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+        p.attributes[attr_id] = round(
+            min(cur + 0.05 * rate * headroom, max(cur, ceil)), 2
+        )
 
 
 def ai_pick_focus(
@@ -248,8 +257,10 @@ def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
         for attr_id in ("game_sense", "composure"):
             p.attributes[attr_id] = round(min(99.0, p.attr(attr_id) + 0.4), 2)
     elif p.age <= 22:
-        cap = development.potential_of(p) + 3.0  # PA gates the bump too
+        pa3 = development.potential_of(p) + 3.0  # scalar PA gates the bump too
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
+            # ...and so does the per-skill ceiling, whichever is tighter.
+            cap = min(pa3, development.skill_ceiling(p, attr_id))
             p.attributes[attr_id] = round(
                 min(99.0, cap, p.attr(attr_id) + float(rng.uniform(0.3, 1.2))), 2
             )

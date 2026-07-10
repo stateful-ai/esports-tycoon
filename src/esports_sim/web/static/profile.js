@@ -292,13 +292,16 @@ function renderPlayerProfile(data) {
   const tiles = el("div", "pf-tiles");
   const ovrSub = ov.fogged ? "scouted" : pfStars(ov.ovr_stars);
   tiles.appendChild(pfTile("OVR", (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), ovrSub));
-  // Ceiling: a known number for own club (stars as the sub); a fogged rival
-  // shows the scout's banded tier text instead.
+  // Ceiling: a PROJECTION band even for your own club (it firms up with age
+  // and moves on big moments); a fogged rival shows the scout's banded tier.
   const potIsNum = typeof ov.potential === "number";
+  const potBand = ov.potential_band;
   tiles.appendChild(pfTile(
     "Potential",
-    potIsNum ? pfNum(ov.potential) : (ov.potential || "—"),
-    potIsNum ? pfStars(ov.potential_stars) : "scouted"
+    potBand ? `${potBand[0]}–${potBand[1]}`
+      : (potIsNum ? pfNum(ov.potential) : (ov.potential || "—")),
+    potBand ? "projected ceiling"
+      : (potIsNum ? pfStars(ov.potential_stars) : "scouted")
   ));
   tiles.appendChild(pfTile("Form", pfNum(ov.form)));
   tiles.appendChild(pfTile("Morale", pfNum(ov.morale)));
@@ -306,6 +309,27 @@ function renderPlayerProfile(data) {
   tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve"));
   tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—"));
   frag.appendChild(tiles);
+
+  // Badges — rolled, decaying honours (and stigmas) that move a player.
+  const badges = data.badges || [];
+  if (badges.length) {
+    const bSec = pfSection("Badges");
+    const chips = el("div", "pf-chips");
+    for (const bd of badges) {
+      const icon = bd.art
+        ? `<img class="pf-badge-art" src="${bd.art}" alt="">`
+        : `<span class="pf-badge-emoji">${bd.emoji}</span>`;
+      const chip = el(
+        "span",
+        `pf-chip pf-badge ${bd.polarity < 0 ? "pf-badge-neg" : "pf-badge-pos"}`,
+        `${icon} ${bd.name}`
+      );
+      chip.title = bd.blurb + (bd.season ? ` — earned S${bd.season}` : "");
+      chips.appendChild(chip);
+    }
+    bSec.appendChild(chips);
+    frag.appendChild(bSec);
+  }
 
   // Attributes | traits + agents (two columns) ------------------------------
   const grid = el("div", "pf-grid2");
@@ -317,13 +341,18 @@ function renderPlayerProfile(data) {
     for (const a of attrs) {
       const lbl = a.label || a.key || "";
       if (a.value != null) {
+        // Per-skill ceiling: show remaining headroom on the skill (own club).
+        const ceil = (ov.skill_ceilings || {})[a.key];
+        const ceilTxt = (ceil != null && ceil > Math.round(a.value) + 1)
+          ? ` <span class="muted" title="projected ceiling for this skill">→${ceil}</span>`
+          : "";
         list.appendChild(
           el(
             "div",
             "pf-attr",
             `<span class="pf-attr-label">${lbl}</span>` +
               `<span class="pf-attr-bar">${pfBar(a.value, 100)}</span>` +
-              `<span class="pf-attr-val mono">${Math.round(a.value)}</span>`
+              `<span class="pf-attr-val mono">${Math.round(a.value)}${ceilTxt}</span>`
           )
         );
       } else {
@@ -872,9 +901,12 @@ function renderTeamProfile(data) {
       const acls = d.maxed ? "trend-flat" : d.trajectory === "climbing" ? "trend-up"
         : d.trajectory === "declining" ? "trend-down" : "muted";
       const row = el("div", "pf-dev-row");
+      const ceilTxt = d.potential_band
+        ? `${d.potential_band[0]}–${d.potential_band[1]}` : d.potential;
+      const teach = d.mentor_skill >= 55 ? ` · <span title="strong mentor — worth pairing with a prospect">🎓${d.mentor_skill}</span>` : "";
       row.innerHTML =
         `<span class="plink pf-dev-name" data-pid="${d.id}">${d.handle}</span>` +
-        `<span class="muted pf-dev-meta">${d.age}y · CA ${d.ca}/${d.potential}</span>` +
+        `<span class="muted pf-dev-meta">${d.age}y · CA ${d.ca} · ceil ${ceilTxt}${teach}</span>` +
         `<span class="pf-dev-bar"><span class="pf-dev-fill" style="width:${d.progress_pct}%"></span></span>` +
         `<span class="mono ${acls}">${d.progress_pct}% ${arrow}</span>`;
       list.appendChild(row);

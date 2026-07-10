@@ -37,6 +37,24 @@ class LanguageSkill(BaseModel):
     level: float = Field(ge=0.0, le=100.0)
 
 
+class PlayerBadge(BaseModel):
+    """One badge a player currently holds (manager/badges.py). Rolled at a
+    career moment, not guaranteed. `applied` is the REVERSIBLE current-ability
+    edge actually applied on earn (subtracted back on decay); `pa_applied` is
+    the PERMANENT ceiling revision, kept for the record only (never reverted).
+    `last_qualified` is the season the badge was last (re-)earned, which drives
+    decay timing."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    season: int = 0
+    week: int = 0
+    applied: dict[str, float] = Field(default_factory=dict)
+    pa_applied: float = 0.0
+    last_qualified: int = 0
+
+
 class Player(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -67,6 +85,20 @@ class Player(BaseModel):
     # Hidden ceiling (EHM-style Potential Ability, 1-99 like attributes).
     # 0 = not assigned; manager/development.py derives a stable fallback.
     potential: float = Field(default=0.0, ge=0.0, le=99.0)
+
+    # Per-skill ceilings (EHM per-attribute Potential Ability). Sparse: keyed
+    # by attribute-registry id, value 0-99. EMPTY by default and on old saves;
+    # development.skill_ceiling derives a stable per-skill ceiling from the
+    # scalar `potential` plus a blake2 spread when a key is absent, so the
+    # default growth math is unchanged. Mentorship and monumental moments
+    # WRITE specific entries here to raise the ceiling on chosen skills — the
+    # only mutable per-skill state a scalar `potential` couldn't carry.
+    skill_potential: dict[str, float] = Field(default_factory=dict)
+
+    # Badges the player currently holds (manager/badges.py) — rolled at career
+    # moments, decaying, with reversible CA edges + permanent ceiling revisions.
+    # Empty by default and on old saves.
+    badges: list[PlayerBadge] = Field(default_factory=list)
 
     # Career / contract
     salary: int = 0  # per week
