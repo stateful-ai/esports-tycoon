@@ -284,6 +284,33 @@ def test_objective_status_champions_goal_survives_the_regional_final():
     assert career.objective_status(gs, "t0", "win_champions")["state"] == "missed"
 
 
+def test_objective_status_make_playoffs_missed_when_semis_are_seeded():
+    # Codex review: make_playoffs is decided by the SEMIFINAL seeding (see
+    # _goal_met), so a non-semifinalist has missed the cut the moment the semis
+    # exist — no need to wait for the regional finals to be played.
+    teams, standings = _league(8)
+    semis = [
+        Fixture(id="s2semi0", week=12, stage="semi", tier=1, team_a="t0",
+                team_b="t3", maps=["ascent"]),
+        Fixture(id="s2semi1", week=12, stage="semi", tier=1, team_a="t1",
+                team_b="t2", maps=["ascent"]),
+    ]
+    gs = GameState(seed=1, season=2, week=12, user_team_id="t0", phase="playoffs",
+                   teams=teams, standings=standings, fixtures=semis)
+    # A semifinalist has achieved it; a team left out of the bracket has missed
+    # it now, before any final is played.
+    assert career.objective_status(gs, "t0", "make_playoffs")["state"] == "achieved"
+    assert career.objective_status(gs, "t6", "make_playoffs")["state"] == "missed"
+
+
+def test_objective_status_make_playoffs_live_before_bracket():
+    # Still in the regular season (no semi fixtures) -> never prematurely missed.
+    teams, standings = _league(8)
+    gs = GameState(seed=1, season=2, week=5, user_team_id="t0", phase="regular",
+                   teams=teams, standings=standings, fixtures=[])
+    assert career.objective_status(gs, "t6", "make_playoffs")["state"] != "missed"
+
+
 def test_objective_status_masters_goal_missed_only_when_seeds_exclude_you():
     teams, standings = _league(8)
     final = Fixture(id="s2f", week=13, stage="final", tier=1, team_a="t0",

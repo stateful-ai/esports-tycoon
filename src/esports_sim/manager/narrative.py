@@ -250,6 +250,43 @@ def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[st
     return bits
 
 
+def press_reaction(gs: GameState, team_id: str | None = None) -> str | None:
+    """A dry one-line pundit take on `team_id`'s current standing — driven by
+    their recent form streak and league position. Deterministic; None when
+    there's nothing worth a column inch (too early / mid-table drift)."""
+    team_id = team_id or gs.user_team_id
+    if team_id not in gs.teams:
+        return None
+    played = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None and team_id in (f.team_a, f.team_b)
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+    if len(played) < 2:
+        return None
+    won = played[-1].winner_id == team_id
+    run = 0
+    for f in reversed(played):
+        if (f.winner_id == team_id) == won:
+            run += 1
+        else:
+            break
+    order = gs.standings_order(str(gs.teams[team_id].region), tier=gs.teams[team_id].tier)
+    pos = order.index(team_id) + 1 if team_id in order else None
+    name = gs.teams[team_id].name
+    if won and run >= 3:
+        return f"The press have {name} among the form teams on a {run}-game tear."
+    if won and pos is not None and pos <= 3:
+        return f"Pundits like {name}'s title credentials from {_ordinal(pos)}."
+    if not won and run >= 3:
+        return f"Questions are being asked of {name} after {run} straight defeats."
+    if not won and pos is not None and pos > len(order) - 3:
+        return f"The columns are circling {name} down in {_ordinal(pos)}."
+    return None
+
+
 def match_debrief(gs: GameState, team_id: str | None = None) -> dict:
     """A grounded debrief of `team_id`'s most recent played fixture: the
     result, the standout, and any underperformer — from the stored box

@@ -837,6 +837,30 @@ function renderTeamProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Development headroom ------------------------------------------------------
+  // Own-club only: how close each player is to their ceiling and which way
+  // they're trending. A progress bar of CA / potential.
+  const dev = data.dev_progress;
+  if (dev && dev.length) {
+    const sec = pfSection("Development");
+    const list = el("div", "pf-dev");
+    for (const d of dev) {
+      const arrow = d.maxed ? "◆" : d.trajectory === "climbing" ? "▲"
+        : d.trajectory === "declining" ? "▼" : "—";
+      const acls = d.maxed ? "trend-flat" : d.trajectory === "climbing" ? "trend-up"
+        : d.trajectory === "declining" ? "trend-down" : "muted";
+      const row = el("div", "pf-dev-row");
+      row.innerHTML =
+        `<span class="plink pf-dev-name" data-pid="${d.id}">${d.handle}</span>` +
+        `<span class="muted pf-dev-meta">${d.age}y · CA ${d.ca}/${d.potential}</span>` +
+        `<span class="pf-dev-bar"><span class="pf-dev-fill" style="width:${d.progress_pct}%"></span></span>` +
+        `<span class="mono ${acls}">${d.progress_pct}% ${arrow}</span>`;
+      list.appendChild(row);
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
     const sec = pfSection("Honors");

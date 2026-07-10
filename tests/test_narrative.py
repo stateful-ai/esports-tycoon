@@ -15,6 +15,7 @@ import types
 from esports_sim.manager import chronicle
 from esports_sim.manager.narrative import (
     head_to_head,
+    press_reaction,
     season_awards,
     season_in_review,
     weekly_news,
@@ -144,6 +145,41 @@ def test_streak_breaks_on_split_result():
     h2h = head_to_head(gs, "nxs", "vgd")
     assert h2h["streak_winner_id"] == "nxs"
     assert h2h["streak_len"] == 1
+
+
+# ---------------------------------------------------------------------------
+# press_reaction: pundit one-liner off form
+
+
+def test_press_reaction_hot_streak_names_team():
+    fixtures = [
+        _played_fixture("s2w1m0", 1, "nxs", "vgd", winner_id="nxs"),
+        _played_fixture("s2w2m0", 2, "nxs", "obs", winner_id="nxs"),
+        _played_fixture("s2w3m0", 3, "nxs", "vgd", winner_id="nxs"),
+    ]
+    gs = _gs(fixtures, week=4)
+    txt = press_reaction(gs, "nxs")
+    assert txt and "Nexus" in txt and "tear" in txt
+
+
+def test_press_reaction_cold_streak_names_team():
+    fixtures = [
+        _played_fixture("s2w1m0", 1, "nxs", "vgd", winner_id="vgd"),
+        _played_fixture("s2w2m0", 2, "nxs", "obs", winner_id="obs"),
+        _played_fixture("s2w3m0", 3, "nxs", "vgd", winner_id="vgd"),
+    ]
+    gs = _gs(fixtures, week=4)
+    txt = press_reaction(gs, "nxs")
+    assert txt and "Nexus" in txt and "defeat" in txt
+
+
+def test_press_reaction_too_early_is_none():
+    gs = _gs([_played_fixture("s2w1m0", 1, "nxs", "vgd", winner_id="nxs")], week=2)
+    assert press_reaction(gs, "nxs") is None
+
+
+def test_press_reaction_unknown_team_is_none():
+    assert press_reaction(_gs([], week=1), "zzz") is None
 
 
 def test_revenge_detection():

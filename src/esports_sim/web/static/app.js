@@ -781,7 +781,7 @@ async function dashboard(v) {
   /* -- 1d. MANAGER'S DESK: debrief + objectives + burnout ----------------- */
   const debrief = s.debrief || {}, objectives = s.objectives_hub || [];
   const burnt = (s.rotation || []).filter((r) => r.burnout);
-  if (debrief.result || objectives.length || burnt.length) {
+  if (debrief.result || objectives.length || burnt.length || s.press) {
     const card = el("div", "card");
     card.appendChild(el("h2", "", "Manager's desk"));
     if (debrief.result) {
@@ -790,6 +790,7 @@ async function dashboard(v) {
       if (debrief.underperformer) parts.push(`Off-colour: ${debrief.underperformer}.`);
       card.appendChild(el("p", "muted", "Last time out — " + parts.join(" ")));
     }
+    if (s.press) card.appendChild(el("p", "es-press", `“${s.press}”`));
     const cols = el("div", "es-snap-cols");
     if (objectives.length) {
       const col = el("div", "es-snap-col");
@@ -2337,6 +2338,61 @@ async function marketPlayers(v) {
     }
     aid.appendChild(cols);
     v.appendChild(aid);
+  }
+
+  // Scouting & budget: the "next big thing" watch, the region's Challengers
+  // form book, and how much wage the org can take on before the runway floor.
+  const wk = data.wonderkids || [], chal = data.challengers || [];
+  const head = data.signing_headroom || {};
+  if (wk.length || chal.length || head.balance != null) {
+    const scoutCard = el("div", "card");
+    scoutCard.appendChild(el("h2", "", "Prospects & budget"));
+    const cols = el("div", "es-aid-cols");
+
+    if (wk.length) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Wonderkid watch (≤20)"));
+      const list = el("div", "es-movers");
+      for (const p of wk) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
+          `<b class="mono">${"★".repeat(Math.round(p.potential_stars))}</b>`));
+      }
+      c.appendChild(list);
+      cols.appendChild(c);
+    }
+
+    if (chal.length) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Challengers standouts"));
+      const list = el("div", "es-movers");
+      for (const p of chal) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
+          `<b class="mono">${p.rating.toFixed(2)}</b>`));
+      }
+      c.appendChild(list);
+      cols.appendChild(c);
+    }
+
+    if (head.balance != null) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Signing headroom"));
+      const box = el("div", "es-head");
+      const runway = head.runway_weeks == null ? "stable"
+        : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+      const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
+      box.innerHTML =
+        `<div>Weekly net <b class="mono ${netCls}">${money(head.weekly_net)}</b></div>` +
+        `<div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>` +
+        `<div class="muted">${runway}</div>`;
+      c.appendChild(box);
+      cols.appendChild(c);
+    }
+    scoutCard.appendChild(cols);
+    v.appendChild(scoutCard);
   }
 
   const card = el("div", "card");

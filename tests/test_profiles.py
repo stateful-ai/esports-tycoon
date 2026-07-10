@@ -122,6 +122,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
     "identity", "tendencies", "rivals", "knowledge", "chemistry",
+    "dev_progress",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -706,6 +707,55 @@ def test_squad_chemistry_shape(env):
     assert chem["cohesion"] is None or isinstance(chem["cohesion"], float)
     for p in chem["bonds"] + chem["frictions"]:
         assert set(p) == {"a", "a_id", "b", "b_id", "strength"}
+
+
+def test_wonderkid_watch_shape(env):
+    gs, gd, h = env
+    wk = server_mod._wonderkid_watch(gs)
+    assert isinstance(wk, list) and len(wk) <= 6
+    for w in wk:
+        assert set(w) == {"id", "handle", "age", "role", "potential_stars", "team"}
+        assert w["age"] <= 20
+        assert 0 <= w["potential_stars"] <= 5
+    # Sorted by potential star band descending, then id (deterministic).
+    stars = [w["potential_stars"] for w in wk]
+    assert stars == sorted(stars, reverse=True)
+
+
+def test_challengers_standouts_shape(env):
+    gs, gd, h = env
+    chal = server_mod._challengers_standouts(gs, h.user_team)
+    assert isinstance(chal, list) and len(chal) <= 5
+    for c in chal:
+        assert set(c) == {"id", "handle", "age", "role", "team", "rating"}
+    ratings = [c["rating"] for c in chal]
+    assert ratings == sorted(ratings, reverse=True)
+
+
+def test_signing_headroom_shape(env):
+    gs, gd, h = env
+    head = server_mod._signing_headroom(gs, h.user_team)
+    assert set(head) == {"weekly_net", "affordable_wage", "runway_weeks", "balance"}
+    assert head["affordable_wage"] >= 0
+    assert head["affordable_wage"] == max(0, head["weekly_net"])
+    assert head["runway_weeks"] is None or head["runway_weeks"] >= 0
+
+
+def test_dev_progress_shape(env):
+    gs, gd, h = env
+    dev = server_mod._dev_progress(gs, h.user_team)
+    assert isinstance(dev, list)
+    for d in dev:
+        assert set(d) == {
+            "id", "handle", "age", "ca", "potential",
+            "progress_pct", "trajectory", "maxed",
+        }
+        assert 0 <= d["progress_pct"] <= 100
+        assert d["trajectory"] in ("climbing", "declining", "steady")
+        assert d["ca"] <= d["potential"] + 1  # CA never exceeds ceiling
+    # Sorted by potential descending, then handle.
+    pots = [d["potential"] for d in dev]
+    assert pots == sorted(pots, reverse=True)
 
 
 def test_objectives_hub_and_rotation_shape(env):

@@ -307,13 +307,18 @@ def objective_status(gs: GameState, tid: str, kind: str) -> dict:
     pos = order.index(tid) + 1 if tid in order else None
 
     # A goal is "missed" only once ITS OWN deciding stage has passed without
-    # meeting it — the regional final settles make_playoffs / win_split, but
-    # Masters and Champions come afterwards, so a qualified side chasing them
-    # stays live through the rest of the playoffs.
-    if kind in ("make_playoffs", "win_split"):
+    # meeting it. Masters and Champions come after the regional playoffs, so a
+    # qualified side chasing them stays live through the rest of the bracket.
+    if kind == "make_playoffs":
+        # Qualification is decided by the SEMIFINAL seeding (see _goal_met):
+        # once the semis exist, a team not among them (else _goal_met would
+        # have said achieved) has missed the cut — no need to wait for finals.
+        if season_fixtures("semi"):
+            return {"state": "missed", "detail": "missed the playoff cut"}
+    elif kind == "win_split":
         finals = season_fixtures("final")
         if finals and all(f.played for f in finals):
-            return {"state": "missed", "detail": "the playoffs are settled"}
+            return {"state": "missed", "detail": "the regional final is settled"}
     elif kind == "make_masters":
         if gs.masters_seeds and tid not in gs.masters_seeds:
             return {"state": "missed", "detail": "missed the Masters cut"}

@@ -1035,6 +1035,7 @@ def state() -> dict:
             # A debrief of the last result, the objectives to chase, and the
             # squad's rotation/burnout picture.
             "debrief": narrative.match_debrief(gs, gs.acting_team_id),
+            "press": narrative.press_reaction(gs, gs.acting_team_id),
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
@@ -1338,6 +1339,90 @@ def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
             "difficulty": diff,
         })
     return out
+
+
+def _wonderkid_watch(gs: GameState, n: int = 6) -> list[dict]:
+    """League-wide young prospects (age <= 20) by potential star band — the
+    'next big thing' watch. Star bands are the coarse public read, so no
+    exact ceiling leaks. Pure read."""
+    cands = []
+    for p in gs.players.values():
+        if p.age <= 20:
+            cands.append((p, development.stars(development.potential_of(p))))
+    cands.sort(key=lambda pc: (-pc[1], pc[0].id))
+    out = []
+    for p, pot in cands[:n]:
+        team = next((t for t in gs.teams.values() if p.id in t.player_ids), None)
+        out.append({
+            "id": p.id, "handle": p.handle, "age": p.age, "role": str(p.role),
+            "potential_stars": round(pot, 1),
+            "team": team.name if team else "free agent",
+        })
+    return out
+
+
+def _challengers_standouts(gs: GameState, tid: str, n: int = 5) -> list[dict]:
+    """The user region's top Challengers (tier-2) performers by rating —
+    tomorrow's signings. Pure read of gs.player_stats."""
+    region = str(gs.teams[tid].region)
+    t2 = {
+        pid
+        for t in gs.teams.values()
+        if t.tier == 2 and str(t.region) == region
+        for pid in t.player_ids
+    }
+    elig = [
+        (pid, st) for pid, st in gs.player_stats.items()
+        if st.maps >= 3 and pid in t2 and pid in gs.players
+    ]
+    top = sorted(elig, key=lambda kv: (-kv[1].rating, kv[0]))[:n]
+    out = []
+    for pid, st in top:
+        p = gs.players[pid]
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        out.append({
+            "id": pid, "handle": p.handle, "age": p.age, "role": str(p.role),
+            "team": team, "rating": round(st.rating, 2),
+        })
+    return out
+
+
+def _dev_progress(gs: GameState, tid: str) -> list[dict]:
+    """Own roster: how close each player is to their ceiling (CA / potential)
+    and which way they're trending, from the private dev-history series."""
+    out = []
+    for pid in gs.teams[tid].player_ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        ca = development.overall(p)
+        pa = development.potential_of(p)
+        pct = round(100.0 * ca / pa) if pa > 0 else 100
+        snaps = gs.dev_history.get(pid, [])
+        traj = "steady"
+        if len(snaps) >= 3:
+            d = snaps[-1].ca - snaps[-3].ca
+            traj = "climbing" if d > 0.3 else "declining" if d < -0.3 else "steady"
+        out.append({
+            "id": pid, "handle": p.handle, "age": p.age,
+            "ca": round(ca), "potential": round(pa), "progress_pct": pct,
+            "trajectory": traj, "maxed": pct >= 97,
+        })
+    out.sort(key=lambda r: (-r["potential"], r["handle"]))
+    return out
+
+
+def _signing_headroom(gs: GameState, tid: str) -> dict:
+    """How much weekly wage the org can absorb at break-even, plus the current
+    runway — a signing-budget aid. Pure read of the economy helpers."""
+    staff_cost = staff_mod.weekly_cost(gs)
+    net = economy.weekly_breakdown(gs, staff_cost)["net"]
+    return {
+        "weekly_net": net,
+        "affordable_wage": max(0, net),
+        "runway_weeks": economy.weeks_until_insolvent(gs, staff_cost),
+        "balance": gs.teams[tid].balance,
+    }
 
 
 def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
@@ -1765,6 +1850,12 @@ def market_view() -> dict:
             "target_suggestions": _target_suggestions(gs, me, needs),
             "contract_watch": _contract_watch(gs, me),
             "rumors": _transfer_rumors(gs, me),
+            # Scouting/finance decision aids: league-wide young prospects, the
+            # region's Challengers form book, and how much wage the org can
+            # absorb before the runway floor. All pure reads.
+            "wonderkids": _wonderkid_watch(gs),
+            "challengers": _challengers_standouts(gs, me),
+            "signing_headroom": _signing_headroom(gs, me),
             # Own roster, for the "swap" (sign + drop in one) control.
             "my_roster": [
                 {
@@ -3678,6 +3769,9 @@ def team_profile(tid: str) -> dict:
             ),
             # Squad chemistry (bonds, frictions, cohesion) — own club only.
             "chemistry": _squad_chemistry(gs, tid) if own_team else None,
+            # Development headroom: each own player's CA vs ceiling and which
+            # way they're trending. Private dev-history read → own club only.
+            "dev_progress": _dev_progress(gs, tid) if own_team else None,
         }
 
 
