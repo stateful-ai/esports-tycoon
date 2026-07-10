@@ -286,7 +286,16 @@ function renderPlayerProfile(data) {
     };
     header.appendChild(offer);
   }
-  frag.appendChild(header);
+  if (isAdminMode()) {
+    const slot = el("div", "pf-admin-slot");
+    const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
+    editBtn.onclick = () => pfOpenAdminEdit("player", p.id, slot);
+    header.appendChild(editBtn);
+    frag.appendChild(header);
+    frag.appendChild(slot);
+  } else {
+    frag.appendChild(header);
+  }
 
   // Overview stat tiles -----------------------------------------------------
   const tiles = el("div", "pf-tiles");
@@ -723,7 +732,16 @@ function renderTeamProfile(data) {
       : "") +
     (recBits.length ? `<div class="pf-contract mono">${recBits.join("  ·  ")}</div>` : "") +
     `</div>`;
-  frag.appendChild(header);
+  if (isAdminMode()) {
+    const slot = el("div", "pf-admin-slot");
+    const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
+    editBtn.onclick = () => pfOpenAdminEdit("team", t.id, slot);
+    header.appendChild(editBtn);
+    frag.appendChild(header);
+    frag.appendChild(slot);
+  } else {
+    frag.appendChild(header);
+  }
 
   // Playstyle — coaching identity's tendency reads (own club or a scouted
   // rival; server sends [] otherwise).
@@ -1116,3 +1134,141 @@ function pfDelegatedClick(e) {
     }
   });
 })();
+
+/* -- admin data-correction toggle -------------------------------------------
+   Purely a client-side UI reveal (localStorage-persisted, per browser): it
+   shows a "Correct data" control on player/team profiles that opens a small
+   form hitting /api/admin/{player,team}/{id}. The server independently
+   re-validates that the target is actually roster-pack-sourced (a generated
+   fill player/team just 404s as not editable), so this toggle is a
+   convenience, not a security boundary. */
+const PF_ADMIN_KEY = "esports_admin_mode";
+const PF_ROLES = ["duelist", "controller", "initiator", "sentinel", "flex"];
+const PF_PLAYSTYLES = ["igl", "entry", "anchor", "lurker", "awper", "support"];
+
+function isAdminMode() {
+  return document.body.classList.contains("admin-mode");
+}
+
+(function pfAdminInit() {
+  const btn = document.getElementById("admin-toggle");
+  if (!btn) return;
+  const on = localStorage.getItem(PF_ADMIN_KEY) === "1";
+  document.body.classList.toggle("admin-mode", on);
+  btn.setAttribute("aria-pressed", String(on));
+  btn.classList.toggle("btn-primary", on);
+  btn.onclick = () => {
+    const next = !isAdminMode();
+    document.body.classList.toggle("admin-mode", next);
+    btn.setAttribute("aria-pressed", String(next));
+    btn.classList.toggle("btn-primary", next);
+    localStorage.setItem(PF_ADMIN_KEY, next ? "1" : "0");
+    toast(next ? "Admin edit mode on — profiles show a data-correction control." : "Admin edit mode off.");
+    if (isProfileOpen()) pfOverlayEl.classList.add("hidden");
+  };
+})();
+
+function pfAdminOption(v) {
+  return `<option value="${v}">${v}</option>`;
+}
+
+function pfAdminField(name, label, value, type) {
+  const safe = value == null ? "" : String(value).replace(/"/g, "&quot;");
+  return `<label class="pf-admin-field"><span>${label}</span><input name="${name}" type="${type || "text"}" value="${safe}"></label>`;
+}
+
+// Fetches admin-editability for a player/team, then swaps `slot`'s content
+// for the correction form (or a quiet "not editable" line).
+async function pfOpenAdminEdit(kind, id, slot) {
+  slot.innerHTML = `<p class="muted">Checking roster-pack sheet…</p>`;
+  const url = kind === "player"
+    ? `/api/admin/player/${encodeURIComponent(id)}`
+    : `/api/admin/team/${encodeURIComponent(id)}`;
+  const info = await profileFetch(url);
+  if (!info || !info.editable) {
+    slot.innerHTML = `<p class="muted">${(info && info.reason) || "Not editable — no roster-pack sheet for this entry."}</p>`;
+    return;
+  }
+  slot.replaceChildren(
+    kind === "player"
+      ? pfPlayerAdminForm(id, info.fields, slot)
+      : pfTeamAdminForm(id, info.fields, info.note, slot)
+  );
+}
+
+function pfAdminBox(note) {
+  const box = el("div", "pf-admin-box");
+  box.innerHTML =
+    `<div class="pf-admin-title">Correct roster-pack data</div>` +
+    `<p class="muted pf-admin-note">Writes to the pack's src sheet and rebuilds it. ` +
+    `Campaign-managed fields (salary, contract, morale, form, finances) are left alone.` +
+    (note ? ` ${note}` : "") + `</p>`;
+  return box;
+}
+
+function pfPlayerAdminForm(pid, f, slot) {
+  const box = pfAdminBox();
+  const form = el("form", "pf-admin-form");
+  form.innerHTML =
+    pfAdminField("handle", "Handle", f.handle) +
+    pfAdminField("real_name", "Real name", f.real_name) +
+    pfAdminField("age", "Age", f.age, "number") +
+    pfAdminField("country", "Country code", f.country) +
+    pfAdminField("quality", "Quality (1-99)", f.quality, "number") +
+    `<label class="pf-admin-field"><span>Role</span><select name="role">${PF_ROLES.map((r) => `<option value="${r}"${r === f.role ? " selected" : ""}>${r}</option>`).join("")}</select></label>` +
+    `<label class="pf-admin-field"><span>Playstyle</span><select name="playstyle">${PF_PLAYSTYLES.map((s) => `<option value="${s}"${s === f.playstyle ? " selected" : ""}>${s}</option>`).join("")}</select></label>` +
+    pfAdminField("agents", "Agents (comma-separated ids)", (f.agents || []).join(",")) +
+    `<div class="pf-admin-actions"><button type="submit" class="btn btn-sm btn-primary">Save correction</button><button type="button" class="btn btn-sm pf-admin-cancel">Cancel</button></div>`;
+  form.querySelector(".pf-admin-cancel").onclick = () => { slot.innerHTML = ""; };
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const agentsRaw = String(fd.get("agents") || "").trim();
+    const body = {
+      handle: fd.get("handle") || undefined,
+      real_name: fd.get("real_name"),
+      age: fd.get("age") ? parseInt(fd.get("age"), 10) : undefined,
+      country: fd.get("country"),
+      quality: fd.get("quality") ? parseFloat(fd.get("quality")) : undefined,
+      role: fd.get("role"),
+      playstyle: fd.get("playstyle"),
+      agents: agentsRaw ? agentsRaw.split(",").map((s) => s.trim()).filter(Boolean) : undefined,
+    };
+    try {
+      const r = await api(`/api/admin/player/${encodeURIComponent(pid)}`, body);
+      toast(r.message || "Corrected.");
+      openPlayerProfile(pid);
+    } catch { /* api() already toasted the error */ }
+  };
+  box.appendChild(form);
+  return box;
+}
+
+function pfTeamAdminForm(tid, f, note, slot) {
+  const box = pfAdminBox(note);
+  const form = el("form", "pf-admin-form");
+  form.innerHTML =
+    pfAdminField("name", "Team name", f.name) +
+    pfAdminField("tag", "Tag", f.tag) +
+    `<label class="pf-admin-field"><span>Tier</span><select name="tier"><option value="1"${f.tier === 1 ? " selected" : ""}>1 — franchised</option><option value="2"${f.tier === 2 ? " selected" : ""}>2 — challengers</option></select></label>` +
+    pfAdminField("prestige", "Prestige (1-99)", f.prestige, "number") +
+    `<div class="pf-admin-actions"><button type="submit" class="btn btn-sm btn-primary">Save correction</button><button type="button" class="btn btn-sm pf-admin-cancel">Cancel</button></div>`;
+  form.querySelector(".pf-admin-cancel").onclick = () => { slot.innerHTML = ""; };
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const body = {
+      name: fd.get("name") || undefined,
+      tag: fd.get("tag") || undefined,
+      tier: fd.get("tier") ? parseInt(fd.get("tier"), 10) : undefined,
+      prestige: fd.get("prestige") ? parseFloat(fd.get("prestige")) : undefined,
+    };
+    try {
+      const r = await api(`/api/admin/team/${encodeURIComponent(tid)}`, body);
+      toast(r.message || "Corrected.");
+      openTeamProfile(tid);
+    } catch { /* api() already toasted the error */ }
+  };
+  box.appendChild(form);
+  return box;
+}

@@ -61,9 +61,19 @@ from esports_sim.manager.training import (
     FOCUS_OPTIONS,
     INTENSITY_OPTIONS,
 )
+from esports_sim.registry import roster_admin
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
-from esports_sim.schemas import Event, Player, Team
+from esports_sim.schemas import (
+    AgentMastery,
+    Event,
+    LanguageSkill,
+    MapMastery,
+    Player,
+    Playstyle,
+    Role,
+    Team,
+)
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
@@ -4675,6 +4685,185 @@ def team_profile(tid: str) -> dict:
             # Collective agent coverage + meta gaps — own-club roster intel.
             "agent_pool": _agent_pool_coverage(gs, tid) if own_team else None,
         }
+
+
+# ---------------------------------------------------------------------------
+# Admin data-correction toggle. The client's toggle is purely a UI reveal —
+# these routes always exist (this app has no auth model beyond the LAN game
+# code), but they only ever touch REAL players/teams that trace back to a
+# roster pack's src/ sheet (see registry/roster_admin.py); generated fill
+# entities 404 as not-editable. Persists to disk (the pack sheet, rebuilt)
+# AND patches the live save's identity/skill fields — never the
+# campaign-managed ones (salary, contract, morale, stamina, form,
+# confidence, balance, reputation, fan_count, ...), so a correction can't
+# reset progress already made in the running campaign.
+
+
+def _sync_player_identity(p: Player, fresh: dict) -> None:
+    p.handle = fresh["handle"]
+    p.real_name = fresh["real_name"]
+    p.country = fresh["country"]
+    p.languages = [LanguageSkill(**entry) for entry in fresh["languages"]]
+    p.age = fresh["age"]
+    p.role = Role(fresh["role"])
+    p.playstyle = Playstyle(fresh["playstyle"])
+    p.attributes = dict(fresh["attributes"])
+    p.agent_pool = [AgentMastery(**a) for a in fresh["agent_pool"]]
+    p.map_pool = [MapMastery(**m) for m in fresh["map_pool"]]
+    p.potential = fresh["potential"]
+    p.personality_tags = list(fresh["personality_tags"])
+
+
+class PlayerAdminEditBody(BaseModel):
+    handle: str | None = None
+    real_name: str | None = None
+    age: int | None = None
+    country: str | None = None
+    languages: list[dict] | None = None
+    role: str | None = None
+    playstyle: str | None = None
+    quality: float | None = None
+    agents: list[str] | None = None
+
+
+class TeamAdminEditBody(BaseModel):
+    name: str | None = None
+    tag: str | None = None
+    tier: int | None = None
+    prestige: float | None = None
+
+
+@app.get("/api/admin/player/{pid}")
+def admin_player_editable(pid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        p = gs.players.get(pid)
+        if p is None:
+            raise HTTPException(404, "unknown player")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            return {
+                "editable": False,
+                "reason": "this campaign wasn't seeded from a roster pack",
+            }
+        loc = roster_admin.find_player(pack_id, pid)
+        if loc is None:
+            return {
+                "editable": False,
+                "reason": "generated player — no roster-pack sheet to correct",
+            }
+        spec = loc.player_spec
+        return {
+            "editable": True,
+            "pack_id": pack_id,
+            "fields": {
+                "handle": spec.get("handle", p.handle),
+                "real_name": spec.get("real_name", p.real_name),
+                "age": spec.get("age", p.age),
+                "country": spec.get("country", p.country),
+                "languages": spec.get("languages", []),
+                "role": spec.get("role", str(p.role)),
+                "playstyle": spec.get("playstyle", str(p.playstyle)),
+                "quality": spec.get("quality"),
+                "agents": spec.get("agents", []),
+            },
+        }
+
+
+@app.post("/api/admin/player/{pid}")
+def admin_edit_player(pid: str, body: PlayerAdminEditBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        p = gs.players.get(pid)
+        if p is None:
+            raise HTTPException(404, "unknown player")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            raise HTTPException(
+                409, "this campaign wasn't seeded from a roster pack"
+            )
+        edits = {k: v for k, v in body.model_dump().items() if v is not None}
+        if not edits:
+            raise HTTPException(422, "no edits supplied")
+        try:
+            fresh = roster_admin.edit_player(S.gd, pack_id, pid, edits)
+        except roster_admin.RosterEditError as e:
+            raise HTTPException(422, str(e)) from None
+        _sync_player_identity(p, fresh)
+        S.save()
+        return {"ok": True, "message": f"{p.handle}'s sheet corrected", "player": {
+            "id": p.id, "handle": p.handle, "real_name": p.real_name,
+            "age": p.age, "country": p.country, "role": str(p.role),
+            "playstyle": str(p.playstyle),
+        }}
+
+
+@app.get("/api/admin/team/{tid}")
+def admin_team_editable(tid: str) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        t = gs.teams.get(tid)
+        if t is None:
+            raise HTTPException(404, "unknown team")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            return {
+                "editable": False,
+                "reason": "this campaign wasn't seeded from a roster pack",
+            }
+        loc = roster_admin.find_team(pack_id, tid)
+        if loc is None:
+            return {
+                "editable": False,
+                "reason": "generated team — no roster-pack sheet to correct",
+            }
+        spec = loc.team_spec
+        return {
+            "editable": True,
+            "pack_id": pack_id,
+            "fields": {
+                "name": spec.get("name", t.name),
+                "tag": spec.get("tag", t.tag),
+                "tier": spec.get("tier", t.tier),
+                "prestige": spec.get("prestige"),
+            },
+            "note": (
+                "Renaming only affects future new campaigns started from "
+                "this pack; this world's team keeps its current id. "
+                "Prestige only affects future new campaigns (this world's "
+                "balance/reputation/fan count already evolved through play "
+                "and are left untouched)."
+            ),
+        }
+
+
+@app.post("/api/admin/team/{tid}")
+def admin_edit_team(tid: str, body: TeamAdminEditBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        t = gs.teams.get(tid)
+        if t is None:
+            raise HTTPException(404, "unknown team")
+        pack_id = gs.roster_pack
+        if not pack_id:
+            raise HTTPException(
+                409, "this campaign wasn't seeded from a roster pack"
+            )
+        edits = {k: v for k, v in body.model_dump().items() if v is not None}
+        if not edits:
+            raise HTTPException(422, "no edits supplied")
+        try:
+            roster_admin.edit_team(pack_id, tid, edits)
+        except roster_admin.RosterEditError as e:
+            raise HTTPException(422, str(e)) from None
+        if "name" in edits:
+            t.name = str(edits["name"])
+        if "tag" in edits:
+            t.tag = str(edits["tag"]).upper()
+        S.save()
+        return {"ok": True, "message": f"{t.name}'s sheet corrected", "team": {
+            "id": t.id, "name": t.name, "tag": t.tag, "tier": t.tier,
+        }}
 
 
 # ---------------------------------------------------------------------------
