@@ -35,6 +35,7 @@ from esports_sim.manager import (
     knowledge as knowledge_mod,
     market,
     memories as memories_mod,
+    meta as meta_mod,
     narrative,
     relationships,
     rivalries as rivalries_mod,
@@ -1019,6 +1020,11 @@ def state() -> dict:
             next_fixture["preview"] = narrative.match_preview(
                 gs, fixture, gs.acting_team_id
             )
+            # Map pool + a suggested veto vs this opponent (needs prior maps
+            # from both sides; the board simply hides its veto until then).
+            next_fixture["map_pool"] = _map_pool_board(
+                gs, gs.acting_team_id, opp_id
+            )
         return {
             "season": gs.season,
             "week": gs.week,
@@ -1577,6 +1583,197 @@ def _eliminated_teams(gs: GameState, region: str) -> set[str]:
         if certainly_ahead >= PLAYOFF_CUT:
             out.add(x)
     return out
+
+
+def _team_map_record(gs: GameState, tid: str) -> dict[str, list[int]]:
+    """{map_id: [played, wins]} for a team, from persisted map results."""
+    agg: dict[str, list[int]] = {}
+    for f in gs.fixtures:
+        if not f.played or tid not in (f.team_a, f.team_b):
+            continue
+        for r in f.results:
+            a = agg.setdefault(r.map_id, [0, 0])
+            a[0] += 1
+            if r.winner_id == tid:
+                a[1] += 1
+    return agg
+
+
+def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
+    """A team's per-map win rates (the map pool) and — when an opponent is
+    given — a suggested veto: ban where they hold the biggest edge, pick where
+    you do. Pure read of persisted results."""
+    mine = _team_map_record(gs, tid)
+
+    def _name(mid: str) -> str:
+        return S.gd.maps[mid].display_name if mid in S.gd.maps else mid
+
+    def _wr(agg: dict[str, list[int]], mid: str) -> float | None:
+        if mid in agg and agg[mid][0]:
+            return agg[mid][1] / agg[mid][0]
+        return None
+
+    maps = [
+        {
+            "map": _name(mid), "map_id": mid,
+            "played": played, "wins": wins,
+            "win_rate": round(100 * wins / played) if played else None,
+        }
+        for mid, (played, wins) in mine.items()
+    ]
+    maps.sort(key=lambda m: (-(m["win_rate"] if m["win_rate"] is not None else -1), m["map"]))
+
+    veto = None
+    if opp_id and opp_id in gs.teams:
+        opp = _team_map_record(gs, opp_id)
+        # Shared universe: maps either side has actually played (real signal).
+        universe = sorted(set(mine) | set(opp))
+        ban_pick, pick_pick = None, None
+        best_ban, best_pick = None, None
+        for mid in universe:
+            my, ot = _wr(mine, mid), _wr(opp, mid)
+            if my is None or ot is None:
+                continue
+            edge_them = ot - my  # opponent's advantage -> ban candidate
+            edge_me = my - ot    # our advantage -> pick candidate
+            if best_ban is None or edge_them > best_ban:
+                best_ban, ban_pick = edge_them, mid
+            if best_pick is None or edge_me > best_pick:
+                best_pick, pick_pick = edge_me, mid
+        veto = {
+            "opponent": gs.teams[opp_id].name,
+            "ban": (
+                {"map": _name(ban_pick), "map_id": ban_pick,
+                 "their_wr": round(100 * _wr(opp, ban_pick)),
+                 "our_wr": round(100 * _wr(mine, ban_pick))}
+                if ban_pick else None
+            ),
+            "pick": (
+                {"map": _name(pick_pick), "map_id": pick_pick,
+                 "their_wr": round(100 * _wr(opp, pick_pick)),
+                 "our_wr": round(100 * _wr(mine, pick_pick))}
+                if pick_pick else None
+            ),
+        }
+    return {"maps": maps, "veto": veto}
+
+
+def _team_of_week(gs: GameState, n: int = 5) -> dict:
+    """The best five players of the most recent completed match week, by mean
+    rating across that week's maps. League-wide, pure read of stored lines."""
+    played = [f for f in gs.fixtures if f.played]
+    if not played:
+        return {"week": None, "players": []}
+    wk = max(f.week for f in played)
+    agg: dict[str, list[float]] = {}  # pid -> [rating_sum, maps, kills, deaths]
+    for f in played:
+        if f.week != wk:
+            continue
+        for r in f.results:
+            for ln in r.lines:
+                a = agg.setdefault(ln.player_id, [0.0, 0, 0, 0])
+                a[0] += ln.rating
+                a[1] += 1
+                a[2] += ln.kills
+                a[3] += ln.deaths
+    rows = []
+    for pid, (rsum, maps, k, d) in agg.items():
+        if maps == 0 or pid not in gs.players:
+            continue
+        p = gs.players[pid]
+        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        rows.append({
+            "id": pid, "handle": p.handle, "role": str(p.role), "team": team,
+            "rating": round(rsum / maps, 2),
+            "kd": round(k / d, 2) if d else float(k),
+            "maps": int(maps),
+        })
+    rows.sort(key=lambda r: (-r["rating"], r["id"]))
+    return {"week": wk, "players": rows[:n]}
+
+
+def _playoff_bracket(gs: GameState, region: str, tier: int = 1) -> list[dict]:
+    """The current season's playoff tree: regional semis/final (this region)
+    plus the global Champions final. Pure read of the bracket fixtures."""
+    stages = [("semi", "Semifinals"), ("final", "Regional Final"),
+              ("champ_final", "Champions Final")]
+    out = []
+    for stage, label in stages:
+        matches = []
+        fx = [f for f in gs.fixtures
+              if f.stage == stage and f.id.startswith(f"s{gs.season}")]
+        for f in sorted(fx, key=lambda f: f.id):
+            ta, tb = f.team_a, f.team_b
+            # Regional rounds are scoped to this region; champ_final is global.
+            if stage in ("semi", "final"):
+                if ta not in gs.teams or str(gs.teams[ta].region) != region:
+                    continue
+            a, b = f.map_score
+            matches.append({
+                "team_a": gs.teams[ta].name if ta in gs.teams else ta,
+                "team_a_id": ta,
+                "team_b": gs.teams[tb].name if tb in gs.teams else tb,
+                "team_b_id": tb,
+                "score_a": a, "score_b": b,
+                "played": f.played, "winner_id": f.winner_id,
+            })
+        if matches:
+            out.append({"stage": stage, "label": label, "matches": matches})
+    return out
+
+
+def _projected_standings(gs: GameState, region: str, tier: int = 1) -> list[dict]:
+    """A simple 'if current form holds' projection of the final regional table:
+    current wins + (win rate x remaining regular-season games). Deterministic,
+    pure read — a manager aid, not the canonical result."""
+    rows = []
+    for tid in gs.standings_order(region, tier=tier):
+        rec = gs.standings.get(tid)
+        if rec is None:
+            continue
+        done = rec.wins + rec.losses
+        win_rate = rec.wins / done if done else 0.5
+        remaining = sum(
+            1 for f in gs.fixtures
+            if not f.played and f.stage == "regular"
+            and tid in (f.team_a, f.team_b)
+            and f.id.startswith(f"s{gs.season}")
+        )
+        rows.append({
+            "team_id": tid, "name": gs.teams[tid].name,
+            "wins": rec.wins, "losses": rec.losses,
+            "remaining": remaining,
+            "proj_wins": round(rec.wins + win_rate * remaining, 1),
+        })
+    rows.sort(key=lambda r: (-r["proj_wins"], r["name"]))
+    for i, r in enumerate(rows):
+        r["proj_pos"] = i + 1
+    return rows
+
+
+@app.get("/api/league")
+def league() -> dict:
+    """League-wide, forward-looking context for the standings screen: team of
+    the week, the live playoff bracket, and a form-hold projection of the
+    user region's final table. All pure reads."""
+    with S.lock:
+        gs = S.require_gs()
+        region = str(gs.teams[gs.acting_team_id].region)
+        tier = gs.teams[gs.acting_team_id].tier
+        return {
+            "team_of_week": _team_of_week(gs),
+            "bracket": _playoff_bracket(gs, region, tier),
+            "projection": _projected_standings(gs, region, tier),
+            "in_regular_season": gs.phase == "regular",
+        }
+
+
+@app.get("/api/meta")
+def meta_view() -> dict:
+    """The live agent meta: the most recent balance patch, active buff/nerf
+    standings, and a usage tier list (manager/meta.py). Pure read."""
+    with S.lock:
+        return meta_mod.meta_report(S.require_gs(), S.gd.agents)
 
 
 @app.get("/api/standings")

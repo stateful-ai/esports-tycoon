@@ -758,6 +758,90 @@ def test_dev_progress_shape(env):
     assert pots == sorted(pots, reverse=True)
 
 
+def test_map_pool_board_shape(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    mp = server_mod._map_pool_board(gs, h.user_team)
+    assert set(mp) == {"maps", "veto"}
+    for m in mp["maps"]:
+        assert set(m) == {"map", "map_id", "played", "wins", "win_rate"}
+        assert m["wins"] <= m["played"]
+    # Win-rate descending (None sinks to the bottom).
+    wrs = [m["win_rate"] if m["win_rate"] is not None else -1 for m in mp["maps"]]
+    assert wrs == sorted(wrs, reverse=True)
+    assert mp["veto"] is None  # no opponent -> no veto suggestion
+    mp2 = server_mod._map_pool_board(gs, h.user_team, h.rival_team)
+    assert set(mp2["veto"]) == {"opponent", "ban", "pick"}
+
+
+def test_team_of_week_shape(env):
+    gs, gd, h = env
+    totw = server_mod._team_of_week(gs)
+    assert set(totw) == {"week", "players"}
+    assert totw["week"] is None or totw["week"] >= 1
+    assert len(totw["players"]) <= 5
+    for p in totw["players"]:
+        assert set(p) == {"id", "handle", "role", "team", "rating", "kd", "maps"}
+    ratings = [p["rating"] for p in totw["players"]]
+    assert ratings == sorted(ratings, reverse=True)
+
+
+def test_league_endpoint_shape(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    lg = server_mod.league()
+    assert set(lg) == {"team_of_week", "bracket", "projection", "in_regular_season"}
+    for r in lg["projection"]:
+        assert set(r) == {
+            "team_id", "name", "wins", "losses", "remaining", "proj_wins", "proj_pos",
+        }
+        assert r["proj_wins"] >= r["wins"]
+    assert [r["proj_pos"] for r in lg["projection"]] == list(
+        range(1, len(lg["projection"]) + 1)
+    )
+    for rnd in lg["bracket"]:
+        assert set(rnd) == {"stage", "label", "matches"}
+        for m in rnd["matches"]:
+            assert set(m) == {
+                "team_a", "team_a_id", "team_b", "team_b_id",
+                "score_a", "score_b", "played", "winner_id",
+            }
+
+
+def test_meta_endpoint_shape(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    mv = server_mod.meta_view()
+    assert set(mv) == {"latest_patch", "patched_agents", "tier_list"}
+    for a in mv["tier_list"]:
+        assert set(a) == {"agent_id", "name", "maps", "pick_rate"}
+        assert a["maps"] > 0
+    picks = [a["maps"] for a in mv["tier_list"]]
+    assert picks == sorted(picks, reverse=True)
+    for a in mv["patched_agents"]:
+        assert set(a) == {"agent_id", "name", "direction"}
+        assert a["direction"] in ("buff", "nerf", "even")
+
+
+def test_meta_report_direction_and_latest_patch(game_data):
+    # Direction logic on injected patches (fresh gs — never touch the shared env).
+    from esports_sim.manager import meta
+    from esports_sim.manager.state import PatchChange, PatchNote
+
+    gs = new_campaign(game_data, seed=7, user_team_id="team_nexus")
+    aids = sorted(game_data.agents)
+    gs.agent_patches = [
+        PatchChange(agent_id=aids[0], ability_id="x", field="cost", delta=-50),  # cheaper = buff
+        PatchChange(agent_id=aids[1], ability_id="y", field="cost", delta=120),  # dearer = nerf
+    ]
+    gs.patch_history = [PatchNote(season=1, week=3, version="1.03", lines=["tweak"])]
+    rep = meta.meta_report(gs, game_data.agents)
+    dirs = {a["agent_id"]: a["direction"] for a in rep["patched_agents"]}
+    assert dirs[aids[0]] == "buff"
+    assert dirs[aids[1]] == "nerf"
+    assert rep["latest_patch"]["version"] == "1.03"
+
+
 def test_objectives_hub_and_rotation_shape(env):
     gs, gd, h = env
     hub = server_mod._objectives_hub(gs, h.user_team)

@@ -705,6 +705,40 @@ async function dashboard(v) {
       }
       if (scout.childElementCount) spot.appendChild(scout);
     }
+
+    // Map pool & veto: your map win rates + a suggested ban/pick vs this opp.
+    const mp = fix.map_pool;
+    if (mp && (mp.maps.length || mp.veto)) {
+      const board = el("div", "es-mappool");
+      if (mp.veto && (mp.veto.ban || mp.veto.pick)) {
+        const vr = el("div", "es-veto");
+        if (mp.veto.ban) {
+          vr.appendChild(el("span", "es-veto-chip ban",
+            `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.ban.map ? mp.veto.opponent : ""} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+        }
+        if (mp.veto.pick) {
+          vr.appendChild(el("span", "es-veto-chip pick",
+            `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+        }
+        board.appendChild(vr);
+      }
+      if (mp.maps.length) {
+        const bars = el("div", "es-mapbars");
+        for (const m of mp.maps.slice(0, 7)) {
+          const wr = m.win_rate == null ? 0 : m.win_rate;
+          bars.appendChild(el("div", "es-mapbar",
+            `<span class="es-mapbar-name">${m.map}</span>` +
+            `<span class="es-mapbar-track"><span class="es-mapbar-fill" style="width:${wr}%"></span></span>` +
+            `<span class="mono es-mapbar-wr">${m.win_rate == null ? "—" : m.win_rate + "%"}</span>` +
+            `<span class="muted es-mapbar-n">${m.wins}/${m.played}</span>`));
+        }
+        board.appendChild(bars);
+      }
+      const wrap = el("div", "es-spot-sub");
+      wrap.appendChild(el("span", "es-scout-lab muted", "Map pool & veto"));
+      wrap.appendChild(board);
+      spot.appendChild(wrap);
+    }
   } else {
     spot.appendChild(el("p", "muted", `No fixture scheduled — ${s.phase}.`));
   }
@@ -1917,11 +1951,70 @@ const formSquares = (form) =>
     .join("") || '<span class="muted">—</span>';
 
 async function standings(v) {
-  const [data, records, power] = await Promise.all([
+  const [data, records, power, league] = await Promise.all([
     api("/api/standings"),
     api("/api/records").catch(() => null),
     api("/api/power").catch(() => null),
+    api("/api/league").catch(() => null),
   ]);
+
+  // Team of the Week: the best five of the latest completed match week.
+  const totw = league?.team_of_week;
+  if (totw && totw.players?.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", `Team of the Week <span class="muted" style="font-weight:400">— week ${totw.week}</span>`));
+    const list = el("div", "es-totw");
+    for (const p of totw.players) {
+      list.appendChild(el("div", "es-totw-row",
+        `<span class="pill">${p.role}</span>` +
+        `<span class="plink" data-pid="${p.id}">${p.handle}</span>` +
+        `<span class="muted es-totw-team">${p.team}</span>` +
+        `<b class="mono">${p.rating.toFixed(2)}</b>`));
+    }
+    c.appendChild(list);
+    v.appendChild(c);
+  }
+
+  // Playoff bracket (during the postseason) or a form-hold table projection
+  // (during the regular season).
+  const bracket = league?.bracket || [];
+  if (bracket.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Playoff bracket"));
+    const cols = el("div", "es-bracket");
+    for (const round of bracket) {
+      const col = el("div", "es-bracket-col");
+      col.appendChild(el("span", "es-scout-lab muted", round.label));
+      for (const m of round.matches) {
+        const aWon = m.played && m.winner_id === m.team_a_id;
+        const bWon = m.played && m.winner_id === m.team_b_id;
+        col.appendChild(el("div", "es-bracket-m",
+          `<div class="${aWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_a_id}">${m.team_a}</span> <b class="mono">${m.score_a}</b></div>` +
+          `<div class="${bWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_b_id}">${m.team_b}</span> <b class="mono">${m.score_b}</b></div>`));
+      }
+      cols.appendChild(col);
+    }
+    c.appendChild(cols);
+    v.appendChild(c);
+  } else if (league?.in_regular_season && (league?.projection || []).length) {
+    const proj = league.projection;
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Projected finish <span class=\"muted\" style=\"font-weight:400\">— if current form holds</span>"));
+    const t = el("table", "es-proj");
+    t.innerHTML = "<thead><tr><th>#</th><th>Team</th><th class=\"num\">W</th><th class=\"num\">Rem</th><th class=\"num\">Proj W</th></tr></thead>";
+    const tb = el("tbody");
+    for (const r of proj) {
+      tb.appendChild(el("tr", "",
+        `<td class="mono">${r.proj_pos}</td>` +
+        `<td><span class="tlink" data-tid="${r.team_id}">${r.name}</span></td>` +
+        `<td class="num mono">${r.wins}</td>` +
+        `<td class="num mono muted">${r.remaining}</td>` +
+        `<td class="num mono"><b>${r.proj_wins}</b></td>`));
+    }
+    t.appendChild(tb);
+    c.appendChild(t);
+    v.appendChild(c);
+  }
 
   // Global pundit power ranking (across regions), with movement vs world rank.
   const pr = power?.rankings || [];
@@ -2637,11 +2730,47 @@ const STAT_COLS = [
 async function stats(v) {
   const split = App.statsSplit; // {kind, key} | null
   const qs = split ? `?split=${split.kind}&key=${encodeURIComponent(split.key)}` : "";
-  const [data, racesResp] = await Promise.all([
+  const [data, racesResp, metaResp] = await Promise.all([
     api("/api/stats" + qs),
     api("/api/races").catch(() => null),
+    api("/api/meta").catch(() => null),
   ]);
   const tier = data.analytics.tier;
+
+  // Live agent meta: latest patch, active buffs/nerfs, usage tier list.
+  if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
+    const mc = el("div", "card");
+    mc.appendChild(el("h2", "", "Agent meta"));
+    const lp = metaResp.latest_patch;
+    if (lp) {
+      mc.appendChild(el("p", "muted",
+        `Patch ${lp.version} (S${lp.season} W${lp.week}) — ${lp.lines.join("; ")}`));
+    }
+    const patched = metaResp.patched_agents || [];
+    if (patched.length) {
+      const chips = el("div", "es-meta-chips");
+      for (const a of patched) {
+        chips.appendChild(el("span", `es-meta-chip ${a.direction}`,
+          `${a.name} ${a.direction === "buff" ? "▲" : a.direction === "nerf" ? "▼" : "–"}`));
+      }
+      mc.appendChild(chips);
+    }
+    const tl = metaResp.tier_list || [];
+    if (tl.length) {
+      const list = el("div", "es-meta-tier");
+      const top = tl[0].maps || 1;
+      for (const a of tl) {
+        const w = Math.round(100 * a.maps / top);
+        list.appendChild(el("div", "es-meta-row",
+          `<span class="es-meta-name">${a.name}</span>` +
+          `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
+          `<span class="mono muted">${a.pick_rate}%</span>`));
+      }
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(list);
+    }
+    v.appendChild(mc);
+  }
 
   // Award races: who's in contention for each season award right now.
   const races = racesResp?.races || {};
