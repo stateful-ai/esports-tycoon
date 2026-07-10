@@ -257,6 +257,7 @@ function renderPlayerProfile(data) {
     portrait +
     `<div class="pf-id">` +
     `<div class="pf-handle">${p.handle ?? "Unknown"}</div>` +
+    (data.epithet ? `<div class="pf-epithet">${data.epithet}</div>` : "") +
     `<div class="pf-meta">${meta}${teamBit}</div>` +
     `<div class="pf-contract muted">${contract}</div>` +
     `</div>`;
@@ -511,6 +512,68 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Career --------------------------------------------------------------
+  // Lifetime totals (completed seasons + the live one), from the server's
+  // career_totals (gs.career_stats rolled up + the current season).
+  const ct = data.career_totals;
+  if (ct) {
+    const sec = pfSection("Career");
+    const tiles = el("div", "pf-tiles pf-tiles-sm");
+    tiles.appendChild(pfTile("Seasons", pfNum(ct.seasons)));
+    tiles.appendChild(pfTile("Maps", pfNum(ct.maps)));
+    tiles.appendChild(pfTile("Kills", pfNum(ct.kills)));
+    tiles.appendChild(pfTile("K/D", ct.kd.toFixed(2)));
+    tiles.appendChild(pfTile("Honours", pfNum(ct.honours)));
+    tiles.appendChild(pfTile("MVPs", pfNum(ct.mvps)));
+    tiles.appendChild(pfTile("All-Star", pfNum(ct.all_stars)));
+    sec.appendChild(tiles);
+    frag.appendChild(sec);
+  }
+
+  // Career arc ----------------------------------------------------------
+  // The player's chronicle as a per-season timeline (newest first).
+  const arc = data.career_arc || [];
+  if (arc.length) {
+    const sec = pfSection("Career timeline");
+    const list = el("div", "pf-arc");
+    for (const yr of arc) {
+      const row = el("div", "pf-arc-row");
+      row.appendChild(el("span", "pf-arc-season mono", `S${yr.season}`));
+      const evs = el("div", "pf-arc-evs");
+      for (const e of yr.events) {
+        evs.appendChild(el("span", `pf-arc-ev arc-${e.kind}`, e.text));
+      }
+      row.appendChild(evs);
+      list.appendChild(row);
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
+  // Honours ------------------------------------------------------------
+  // The trophy cabinet: this player's individual season awards, newest
+  // first (server-selected chronicle read; renders as-is).
+  const honours = data.honours || [];
+  if (honours.length) {
+    const sec = pfSection(`Honours (${honours.length})`);
+    const list = el("ul", "pf-honours");
+    list.style.cssText = "margin:0;padding:0;list-style:none";
+    for (const h of honours) {
+      const li = el("li", "pf-honour");
+      const award = el("span", "pf-honour-award");
+      award.textContent = `S${h.season} · ${h.award}`;
+      li.appendChild(award);
+      if (h.detail) {
+        const det = el("span", "pf-honour-detail muted");
+        det.textContent = h.detail;
+        li.appendChild(det);
+      }
+      list.appendChild(li);
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
   // Memories ------------------------------------------------------------
   // The player's defining chronicle entries — what their career will be
   // remembered for (server-selected; pure history, renders as-is).
@@ -554,7 +617,56 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Compare -----------------------------------------------------------------
+  // A lightweight side-by-side vs a teammate, fetched on demand.
+  if (data.player.team_id) {
+    const sec = pfSection("Compare");
+    const sel = el("select", "pf-compare-sel");
+    sel.innerHTML = `<option value="">compare with a teammate…</option>`;
+    sec.appendChild(sel);
+    const out = el("div", "pf-compare");
+    sec.appendChild(out);
+    frag.appendChild(sec);
+    api(`/api/roster/${data.player.team_id}`)
+      .then((rd) => {
+        for (const q of rd.players || []) {
+          if (q.id === data.player.id) continue;
+          const o = document.createElement("option");
+          o.value = q.id;
+          o.textContent = q.handle;
+          sel.appendChild(o);
+        }
+      })
+      .catch(() => {});
+    sel.onchange = async () => {
+      if (!sel.value) { out.innerHTML = ""; return; }
+      const c = await api(`/api/compare?a=${data.player.id}&b=${sel.value}`).catch(() => null);
+      if (c) out.innerHTML = compareTable(c);
+    };
+  }
+
   return frag;
+}
+
+// Compact side-by-side comparison table (higher value wins each row).
+function compareTable(c) {
+  const better = (x, y) => x != null && y != null && x > y;
+  const row = (label, av, bv) =>
+    `<tr><td class="num ${better(av, bv) ? "cmp-win" : ""}">${av ?? "—"}</td>` +
+    `<th>${label}</th>` +
+    `<td class="num ${better(bv, av) ? "cmp-win" : ""}">${bv ?? "—"}</td></tr>`;
+  const rows = [
+    row("Overall", c.a.overall, c.b.overall),
+    row("Rating", c.a.rating, c.b.rating),
+    row("K/D", c.a.kd, c.b.kd),
+  ];
+  const bm = Object.fromEntries((c.b.attributes || []).map((x) => [x.key, x]));
+  for (const a of c.a.attributes || []) {
+    const b = bm[a.key];
+    rows.push(row(a.label, a.value, b ? b.value : null));
+  }
+  return `<table class="pf-table cmp"><thead><tr><th class="num">${c.a.handle}</th>` +
+    `<th></th><th class="num">${c.b.handle}</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
 }
 
 /* -- team profile ----------------------------------------------------------- */
@@ -581,10 +693,24 @@ function renderTeamProfile(data) {
     logo +
     `<div class="pf-id">` +
     `<div class="pf-handle">${t.name ?? "Unknown"}</div>` +
-    (tierBits ? `<div class="pf-meta"><span class="pill">${tierBits}</span></div>` : "") +
+    (tierBits || data.identity
+      ? `<div class="pf-meta">` +
+        (tierBits ? `<span class="pill">${tierBits}</span>` : "") +
+        (data.identity ? ` <span class="pill pf-identity">${data.identity}</span>` : "") +
+        `</div>`
+      : "") +
     (recBits.length ? `<div class="pf-contract mono">${recBits.join("  ·  ")}</div>` : "") +
     `</div>`;
   frag.appendChild(header);
+
+  // Playstyle — coaching identity's tendency reads (own club or a scouted
+  // rival; server sends [] otherwise).
+  const tend = data.tendencies || [];
+  if (tend.length) {
+    const sec = pfSection("Playstyle");
+    sec.appendChild(el("p", "muted", tend.join(" · ")));
+    frag.appendChild(sec);
+  }
 
   // Attack / defense round-rate split --------------------------------------
   const sp = data.splits || {};
@@ -638,7 +764,7 @@ function renderTeamProfile(data) {
       const tr = el(
         "tr",
         "pf-rrow plink",
-        `<td><b>${pl.handle ?? "—"}</b></td>` +
+        `<td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk ? ` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>` : ""}</td>` +
           `<td>${pl.role ? `<span class="pill">${pl.role}</span>` : ""}</td>` +
           `<td class="num">${pfNum(pl.matches)}</td>` +
           `<td class="num">${pfNum(pl.kd, 2)}</td>` +
@@ -688,6 +814,87 @@ function renderTeamProfile(data) {
       chips.appendChild(chip);
     }
     sec.appendChild(chips);
+    frag.appendChild(sec);
+  }
+
+  // Squad chemistry ---------------------------------------------------------
+  // Own-club only: cohesion + the strongest bonds and worst frictions.
+  const chem = data.chemistry;
+  if (chem && (chem.cohesion != null)) {
+    const sec = pfSection(`Squad chemistry · cohesion ${Math.round(chem.cohesion)}`);
+    const pairChip = (p, cls) => {
+      const chip = el("span", `pf-rel-chip ${cls}`,
+        `${p.a} + ${p.b}<span class="pf-rel-kind">${Math.round(p.strength)}</span>`);
+      return chip;
+    };
+    const chips = el("div", "pf-chips");
+    for (const b of chem.bonds) chips.appendChild(pairChip(b, "rel-duo"));
+    for (const f of chem.frictions) chips.appendChild(pairChip(f, "rel-feud"));
+    if (!chem.bonds.length && !chem.frictions.length) {
+      chips.appendChild(el("span", "muted", "a settled, unremarkable dressing room"));
+    }
+    sec.appendChild(chips);
+    frag.appendChild(sec);
+  }
+
+  // Development headroom ------------------------------------------------------
+  // Own-club only: how close each player is to their ceiling and which way
+  // they're trending. A progress bar of CA / potential.
+  const dev = data.dev_progress;
+  if (dev && dev.length) {
+    const sec = pfSection("Development");
+    const list = el("div", "pf-dev");
+    for (const d of dev) {
+      const arrow = d.maxed ? "◆" : d.trajectory === "climbing" ? "▲"
+        : d.trajectory === "declining" ? "▼" : "—";
+      const acls = d.maxed ? "trend-flat" : d.trajectory === "climbing" ? "trend-up"
+        : d.trajectory === "declining" ? "trend-down" : "muted";
+      const row = el("div", "pf-dev-row");
+      row.innerHTML =
+        `<span class="plink pf-dev-name" data-pid="${d.id}">${d.handle}</span>` +
+        `<span class="muted pf-dev-meta">${d.age}y · CA ${d.ca}/${d.potential}</span>` +
+        `<span class="pf-dev-bar"><span class="pf-dev-fill" style="width:${d.progress_pct}%"></span></span>` +
+        `<span class="mono ${acls}">${d.progress_pct}% ${arrow}</span>`;
+      list.appendChild(row);
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
+  // Squad strength profile -----------------------------------------------------
+  // Aim / tactical / mentals / teamplay, from the dressed five's attributes.
+  // Own club shows exact means; a scouted rival shows the band only.
+  const strength = data.strength;
+  if (strength && strength.length) {
+    const sec = pfSection("Squad strength");
+    const list = el("div", "pf-str");
+    for (const a of strength) {
+      const w = a.value != null ? a.value : { elite: 92, strong: 78, solid: 62, average: 48, weak: 32 }[a.band] || 50;
+      list.appendChild(el("div", "pf-str-row",
+        `<span class="pf-str-lab">${a.label}</span>` +
+        `<span class="pf-str-bar"><span class="pf-str-fill" style="width:${w}%"></span></span>` +
+        `<span class="mono ${a.value == null ? "muted" : ""}">${a.value != null ? a.value : a.band}</span>`));
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
+  // Agent-pool coverage (own club) --------------------------------------------
+  const pool = data.agent_pool;
+  if (pool && (pool.covered?.length || pool.meta_gaps?.length)) {
+    const sec = pfSection("Agent pool");
+    if (pool.covered.length) {
+      const chips = el("div", "pf-chips");
+      for (const a of pool.covered) {
+        chips.appendChild(el("span", "pf-pool-chip",
+          `${a.name} <span class="pf-rel-kind">${a.players}x·${a.mastery}</span>`));
+      }
+      sec.appendChild(chips);
+    }
+    if (pool.meta_gaps.length) {
+      sec.appendChild(el("div", "muted pf-pool-gaps",
+        "Meta gaps: " + pool.meta_gaps.map((g) => g.name).join(", ")));
+    }
     frag.appendChild(sec);
   }
 

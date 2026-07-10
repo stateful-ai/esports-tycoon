@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -148,11 +148,21 @@ def _migrate_v4_to_v5(data: dict) -> dict:
     return data
 
 
+def _migrate_v5_to_v6(data: dict) -> dict:
+    """v6 adds only new defaulted GameState fields (season_start_ca,
+    career_stats — now carrying a stored handle — and mentorships) plus the
+    per-map/agent split history. A v5 save loads unchanged; the bump exists so
+    an OLDER build refuses a v6 save with the clean "update the game" message
+    instead of an extra="forbid" validation stack trace on the unknown keys."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
     3: _migrate_v3_to_v4,
     4: _migrate_v4_to_v5,
+    5: _migrate_v5_to_v6,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -334,6 +344,30 @@ class StatSnap(BaseModel):
     deaths: int
 
 
+class CareerStats(BaseModel):
+    """Lifetime box-score totals, accumulated from each season's
+    PlayerSeasonStats at rollover (before the per-season reset). The
+    persistent counterpart to PlayerSeasonStats — titles/awards live in the
+    chronicle, so only the raw counters that reset each season live here."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    # A stored display name so a retired player's record survives even after
+    # they leave gs.players (the all-time record book reads career_stats).
+    handle: str = ""
+    maps: int = 0
+    rounds: int = 0
+    kills: int = 0
+    deaths: int = 0
+    first_kills: int = 0
+    clutches: int = 0
+    seasons: int = 0  # seasons with at least one map played
+
+    @property
+    def kd(self) -> float:
+        return self.kills / max(self.deaths, 1)
+
+
 class DevSnap(BaseModel):
     """One weekly point on a player's development time-series (ability,
     confidence, condition, reach). Human rosters only — this is the
@@ -388,6 +422,10 @@ class GamePlan(BaseModel):
     site_focus: str | None = None
     focus_target: str | None = None  # opponent pid to hunt
     starter_ids: list[str] = Field(default_factory=list)  # this match only
+    # Pre-match team talk: "fire_up" | "reassure" | "focus" — a bounded,
+    # personality-modulated confidence nudge for the dressed five, applied
+    # once when the fixture sims. Opt-in, so hands-off sims never set it.
+    team_talk: str | None = None
 
 
 class PatchChange(BaseModel):
@@ -1123,6 +1161,21 @@ class GameState(BaseModel):
     # Debut bookkeeping: "" = generated this save, debut pending;
     # "s{n}w{k}" = debut recorded. Absent = predates the system.
     debut_marks: dict[str, str] = Field(default_factory=dict)
+    # Season-start current-ability per player, snapshotted the moment a
+    # season's rosters settle. The Most Improved award reads it against
+    # end-of-season CA. Additive/defaulted (see load(): new fields need no
+    # migration); empty on old saves -> the award simply skips until the
+    # next offseason repopulates it.
+    season_start_ca: dict[str, float] = Field(default_factory=dict)
+    # Lifetime box-score totals per living player, rolled up at each
+    # offseason before player_stats resets. Pruned to current players
+    # (retirees pass into the Hall of Fame instead). Additive/defaulted.
+    career_stats: dict[str, CareerStats] = Field(default_factory=dict)
+    # Mentorships: protege player id -> mentor player id. A manager pairs a
+    # young player with a veteran teammate for a bounded development boost.
+    # Empty by default (hands-off sims never set one, so the balance gates
+    # are byte-identical); additive/defaulted, pruned at the offseason.
+    mentorships: dict[str, str] = Field(default_factory=dict)
 
     # -- Legacy Mode (v5) ------------------------------------------------------
     # "sandbox" = the classic game (pick any org, manage forever).

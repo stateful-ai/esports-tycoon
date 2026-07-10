@@ -105,6 +105,60 @@ def _agent_usage(gs: GameState) -> dict[str, int]:
     return usage
 
 
+def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
+    """Read-only snapshot of the live meta for the UI: the most recent patch
+    note, the net buff/nerf standing of every patched agent, and a usage tier
+    list (most-played agents this season). `agents` is the STATIC registry
+    bundle; nothing here mutates state or the registry."""
+    usage = _agent_usage(gs)
+    total_maps = sum(usage.values())
+
+    # Net direction per patched agent, folded to a "power" delta where
+    # net>0 = buffed, net<0 = nerfed. A higher COST or higher ULT_POINTS makes
+    # the kit worse (dearer / a slower ult) — those flip sign; more CHARGES is
+    # straight power. See _change_options for the canonical delta directions.
+    net: dict[str, int] = {}
+    for ch in gs.agent_patches:
+        signed = -ch.delta if ch.field in ("cost", "ult_points") else ch.delta
+        net[ch.agent_id] = net.get(ch.agent_id, 0) + signed
+    patched = [
+        {
+            "agent_id": aid,
+            "name": agents[aid].display_name if aid in agents else aid,
+            "direction": "buff" if v > 0 else "nerf" if v < 0 else "even",
+        }
+        for aid, v in sorted(net.items(), key=lambda kv: (kv[1], kv[0]))
+        if v != 0
+    ]
+
+    tiers = [
+        {
+            "agent_id": aid,
+            "name": agents[aid].display_name if aid in agents else aid,
+            "maps": usage[aid],
+            "pick_rate": round(100.0 * usage[aid] / total_maps, 1) if total_maps else 0.0,
+        }
+        for aid in sorted(usage, key=lambda a: (-usage[a], a))
+        if usage[aid] > 0
+    ][:8]
+
+    latest = gs.patch_history[-1] if gs.patch_history else None
+    return {
+        "latest_patch": (
+            {
+                "version": latest.version,
+                "season": latest.season,
+                "week": latest.week,
+                "lines": list(latest.lines),
+            }
+            if latest is not None
+            else None
+        ),
+        "patched_agents": patched,
+        "tier_list": tiers,
+    }
+
+
 def _change_options(
     agent: Agent, nerf: bool
 ) -> list[tuple[str, str, int, str]]:

@@ -493,11 +493,12 @@ async function dashboard(v) {
   const oppId = fix ? (fix.team_a === myId ? fix.team_b : fix.team_a) : null;
 
   // Every endpoint below already exists in the running server.
-  const [sched, table, myRoster, oppRoster] = await Promise.all([
+  const [sched, table, myRoster, oppRoster, career] = await Promise.all([
     api("/api/schedule").catch(() => null),
     api("/api/standings").catch(() => null),
     api(`/api/roster/${myId}`).catch(() => null),
     oppId ? api(`/api/roster/${oppId}`).catch(() => null) : Promise.resolve(null),
+    api("/api/career").catch(() => null),
   ]);
 
   // League position + record + region for any broadcast (tier-1) team.
@@ -592,10 +593,32 @@ async function dashboard(v) {
             <div class="es-vs-ctx">S${s.season} · W${fix.week}</div>
             <div class="es-vs-ctx">${stageTxt}</div>
             <span class="pill es-bo">Best of ${fix.best_of}</span>
+            ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
           </div>` +
           teamBlock(oppId, oppName, oppLogo, "right")
       )
     );
+
+    // Head-to-head this season vs the upcoming opponent (server attaches it
+    // only when they've already met — see /api/state).
+    if (fix.h2h) {
+      const h = fix.h2h;
+      const lead = h.wins === h.losses ? "level" : h.you_lead ? "you lead" : "you trail";
+      const streak =
+        h.streak_len > 1 ? ` · ${h.streak_team === myId ? "W" : "L"}${h.streak_len}` : "";
+      spot.appendChild(
+        el(
+          "div",
+          "es-h2h muted",
+          `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${streak}`
+        )
+      );
+    }
+
+    // Grounded prose preview synthesising form / series / stakes / danger man.
+    if ((fix.preview || []).length) {
+      spot.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
+    }
 
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
@@ -665,12 +688,251 @@ async function dashboard(v) {
         col.appendChild(names);
         scout.appendChild(col);
       }
+      // Coaching style — shown once you've scouted them enough to read it
+      // (server sends identity/tendencies only past the scout threshold).
+      if (oppRoster && (oppRoster.identity || (oppRoster.tendencies ?? []).length)) {
+        const col = el("div", "es-scout-col");
+        col.appendChild(el("span", "es-scout-lab muted", "Playstyle"));
+        if (oppRoster.identity) {
+          col.appendChild(el("span", "pill es-identity", oppRoster.identity));
+        }
+        if ((oppRoster.tendencies ?? []).length) {
+          col.appendChild(
+            el("span", "es-tendencies muted", oppRoster.tendencies.join(" · "))
+          );
+        }
+        scout.appendChild(col);
+      }
       if (scout.childElementCount) spot.appendChild(scout);
+    }
+
+    // Map pool & veto: your map win rates + a suggested ban/pick vs this opp.
+    const mp = fix.map_pool;
+    if (mp && (mp.maps.length || mp.veto)) {
+      const board = el("div", "es-mappool");
+      if (mp.veto && (mp.veto.ban || mp.veto.pick)) {
+        const vr = el("div", "es-veto");
+        if (mp.veto.ban) {
+          vr.appendChild(el("span", "es-veto-chip ban",
+            `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.ban.map ? mp.veto.opponent : ""} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+        }
+        if (mp.veto.pick) {
+          vr.appendChild(el("span", "es-veto-chip pick",
+            `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+        }
+        board.appendChild(vr);
+      }
+      if (mp.maps.length) {
+        const bars = el("div", "es-mapbars");
+        for (const m of mp.maps.slice(0, 7)) {
+          const wr = m.win_rate == null ? 0 : m.win_rate;
+          bars.appendChild(el("div", "es-mapbar",
+            `<span class="es-mapbar-name">${m.map}</span>` +
+            `<span class="es-mapbar-track"><span class="es-mapbar-fill" style="width:${wr}%"></span></span>` +
+            `<span class="mono es-mapbar-wr">${m.win_rate == null ? "—" : m.win_rate + "%"}</span>` +
+            `<span class="muted es-mapbar-n">${m.wins}/${m.played}</span>`));
+        }
+        board.appendChild(bars);
+      }
+      const wrap = el("div", "es-spot-sub");
+      wrap.appendChild(el("span", "es-scout-lab muted", "Map pool & veto"));
+      wrap.appendChild(board);
+      spot.appendChild(wrap);
     }
   } else {
     spot.appendChild(el("p", "muted", `No fixture scheduled — ${s.phase}.`));
   }
   v.appendChild(spot);
+
+  /* -- 1b. SEASON SNAPSHOT: league leaders + your roster's movers ---------- */
+  const leaders = s.leaders || [], movers = s.movers || [];
+  if (leaders.length || movers.length) {
+    const snap = el("div", "card es-snapshot");
+    snap.appendChild(el("h2", "", "This season"));
+    const cols = el("div", "es-snap-cols");
+    if (leaders.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Rating leaders"));
+      const ol = el("ol", "es-leaders");
+      for (const l of leaders) {
+        ol.appendChild(el("li", "",
+          `<span class="plink" data-pid="${l.pid}">${l.handle}</span> ` +
+          `<span class="muted tlink-soft">${l.team}</span> ` +
+          `<b class="mono">${l.rating.toFixed(2)}</b>`));
+      }
+      col.appendChild(ol);
+      cols.appendChild(col);
+    }
+    if (movers.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Your movers · this week"));
+      const list = el("div", "es-movers");
+      for (const m of movers) {
+        const up = m.delta > 0;
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${m.pid}">${m.handle}</span> ` +
+          `<span class="mover-delta ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(m.delta).toFixed(1)}</span>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    snap.appendChild(cols);
+    v.appendChild(snap);
+  }
+
+  /* -- 1c. RUN-IN + ON THIS DAY ------------------------------------------- */
+  const runIn = s.run_in || [], otd = s.on_this_day || [];
+  if (runIn.length || otd.length) {
+    const card = el("div", "card");
+    const cols = el("div", "es-snap-cols");
+    if (runIn.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Run-in"));
+      const strip = el("div", "es-runin");
+      for (const f of runIn) {
+        strip.appendChild(el("span", `es-runin-chip diff-${f.difficulty}`,
+          `<span class="muted">W${f.week}</span> <span class="tlink-soft">${f.opponent}</span>`));
+      }
+      col.appendChild(strip);
+      cols.appendChild(col);
+    }
+    if (otd.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "On this day"));
+      const list = el("div", "es-otd");
+      for (const o of otd) {
+        list.appendChild(el("div", "muted",
+          `<b class="mono">${o.seasons_ago}yr</b> ${o.text}`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    card.appendChild(el("h2", "", "Looking ahead & back"));
+    card.appendChild(cols);
+    v.appendChild(card);
+  }
+
+  /* -- 1d. MANAGER'S DESK: debrief + objectives + burnout ----------------- */
+  const debrief = s.debrief || {}, objectives = s.objectives_hub || [];
+  const burnt = (s.rotation || []).filter((r) => r.burnout);
+  const board = s.board, sug = s.suggested_lineup;
+  if (debrief.result || objectives.length || burnt.length || s.press || board || (sug && sug.changed)) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Manager's desk"));
+    if (debrief.result) {
+      const parts = [`<b class="${debrief.won ? "wl-w" : "wl-l"}">${debrief.result}</b>.`];
+      if (debrief.standout) parts.push(`Standout: ${debrief.standout}.`);
+      if (debrief.underperformer) parts.push(`Off-colour: ${debrief.underperformer}.`);
+      card.appendChild(el("p", "muted", "Last time out — " + parts.join(" ")));
+    }
+    if (s.press) card.appendChild(el("p", "es-press", `“${s.press}”`));
+    // Legacy job security: board goal + patience band.
+    if (board) {
+      const bcls = board.band === "secure" || board.band === "stable" ? "good"
+        : board.band === "under pressure" ? "warn" : "bad";
+      card.appendChild(el("p", "es-board",
+        `<span class="pill obj ${bcls}">Board: ${board.band}</span> ` +
+        `Goal — ${board.goal} <span class="muted">(${(board.goal_state || "").replace("_", " ")}` +
+        `${board.seasons_left ? " · " + board.seasons_left + " season" + (board.seasons_left > 1 ? "s" : "") + " left" : ", final season"})</span>`));
+    }
+    const cols = el("div", "es-snap-cols");
+    // Suggested XI: only surfaced when it diverges from the dressed five.
+    if (sug && sug.changed) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Suggested five"));
+      const list = el("div", "es-movers");
+      for (const p of sug.players) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<b class="mono">${p.quality}</b> ` +
+          (p.dressed ? '<span class="muted">dressed</span>' : '<span class="trend-up">▲ in</span>')));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    if (objectives.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "What to chase"));
+      const list = el("div", "es-obj");
+      for (const o of objectives.slice(0, 6)) {
+        const cls = o.state === "achieved" || o.state === "on_track" || o.state === "leading" ? "good"
+          : o.state === "missed" ? "bad" : "warn";
+        list.appendChild(el("div", "es-obj-row",
+          `<span class="pill obj ${cls}">${o.kind}</span> ${o.label} ` +
+          `<span class="muted">${(o.state || "").replace("_", " ")}${o.detail ? " · " + o.detail : ""}</span>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    if (burnt.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Burnout watch"));
+      const list = el("div", "es-movers");
+      for (const r of burnt) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${r.id}">${r.handle}</span> ` +
+          `<span class="muted">${r.maps} maps</span> <b class="mono trend-down">${r.stamina} sta</b>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    if (cols.childElementCount) card.appendChild(cols);
+    v.appendChild(card);
+  }
+
+  /* -- 1e. FORM TREND + SQUAD PROFILE ------------------------------------- */
+  const trend = s.form_trend || [], sp = s.squad_profile;
+  if (trend.length >= 2 || sp) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Season shape"));
+    const cols = el("div", "es-snap-cols");
+    if (trend.length >= 2) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Cumulative wins"));
+      // Inline SVG sparkline of cumulative wins over played games.
+      const W = 220, H = 46, maxW = trend[trend.length - 1].wins || 1;
+      const pts = trend.map((p, i) => {
+        const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+        const y = H - 4 - (p.wins / maxW) * (H - 8);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(" ");
+      const dots = trend.map((p, i) => {
+        const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+        const y = H - 4 - (p.wins / maxW) * (H - 8);
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" class="${p.won ? "es-spark-w" : "es-spark-l"}"/>`;
+      }).join("");
+      const spark = document.createElement("div");
+      spark.className = "es-spark";
+      spark.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="cumulative wins">` +
+        `<polyline points="${pts}" fill="none" class="es-spark-line"/>${dots}</svg>` +
+        `<span class="muted">${maxW}W in ${trend.length} played</span>`;
+      col.appendChild(spark);
+      cols.appendChild(col);
+    }
+    if (sp) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", `Squad profile — avg age ${sp.avg_age}`));
+      const b = sp.buckets || {};
+      const bar = el("div", "es-roles");
+      bar.appendChild(el("span", "pill", `youth ${b.youth || 0}`));
+      bar.appendChild(el("span", "pill", `prime ${b.prime || 0}`));
+      bar.appendChild(el("span", "pill", `vet ${b.veteran || 0}`));
+      col.appendChild(bar);
+      const soon = (sp.expiries || []).filter((e) => e.weeks_left > 0).slice(0, 3);
+      if (soon.length) {
+        const list = el("div", "es-movers");
+        for (const e of soon) {
+          list.appendChild(el("div", "es-mover",
+            `<span class="plink" data-pid="${e.id}">${e.handle}</span> ` +
+            `<span class="muted">${e.age}y</span> <b class="mono ${e.weeks_left <= 8 ? "trend-down" : ""}">${e.weeks_left}w</b>`));
+        }
+        col.appendChild(list);
+      }
+      cols.appendChild(col);
+    }
+    if (cols.childElementCount) card.appendChild(cols);
+    v.appendChild(card);
+  }
 
   /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
   const status = el("div", "card es-status");
@@ -856,6 +1118,49 @@ async function dashboard(v) {
     lc.appendChild(t);
     v.appendChild(lc);
   }
+
+  // Manager career snapshot — surfaces the /api/career chronicle read
+  // (both game modes carry a manager seat, so this always has data).
+  if (career && career.name) {
+    const cc = el("div", "card es-career");
+    cc.appendChild(el("h2", "", "Manager career"));
+    const sub = [career.name, career.archetype ? cap(career.archetype) : null]
+      .filter(Boolean)
+      .join(" · ");
+    cc.appendChild(el("div", "muted es-career-sub", sub));
+    // Board season-goal, and how it's tracking right now (legacy contracts).
+    if (career.contract && career.contract.goal) {
+      const gst = career.contract.goal_status || {};
+      const st = gst.state || "pending";
+      const cls = st === "achieved" || st === "on_track" ? "good"
+        : st === "missed" ? "bad" : "warn";
+      cc.appendChild(el("div", "es-goal",
+        `Board goal: <b>${career.contract.goal}</b> · ` +
+        `<span class="goal-${cls}">${st.replace("_", " ")}</span>` +
+        (gst.detail ? ` <span class="muted">(${gst.detail})</span>` : "")));
+    }
+    const tile = (label, val) =>
+      `<div class="es-ctile"><div class="es-ctile-v">${val}</div>` +
+      `<div class="es-ctile-l muted">${label}</div></div>`;
+    const tiles = el("div", "es-career-tiles");
+    tiles.innerHTML =
+      tile("Titles", (career.titles || []).length) +
+      tile("Developed", career.players_developed ?? 0) +
+      tile("Debuts", career.debuts_given ?? 0) +
+      tile("Signings", career.signings ?? 0);
+    cc.appendChild(tiles);
+    const tagRow = (label, items) => {
+      const vals = (items || []).map((x) => x && (x.name || x)).filter(Boolean);
+      if (!vals.length) return;
+      const row = el("div", "es-career-tags");
+      row.appendChild(el("span", "muted es-career-lab", label));
+      for (const val of vals) row.appendChild(el("span", "pill", val));
+      cc.appendChild(row);
+    };
+    tagRow("Known for", career.known_for);
+    tagRow("Philosophy", career.philosophies);
+    v.appendChild(cc);
+  }
 }
 
 // Compact follower count: 12,400 -> "12.4K", 1,200,000 -> "1.2M".
@@ -882,9 +1187,11 @@ async function roster(v) {
     card.appendChild(el("p", "muted",
       "Tip: a 6-man roster is advised for tournaments (register a bench)."));
   }
-  if ((data.tendencies ?? []).length) {
-    card.appendChild(el("p", "muted",
-      `Scouting book: ${data.tendencies.join(" · ")}`));
+  if (data.identity || (data.tendencies ?? []).length) {
+    const bits = [];
+    if (data.identity) bits.push(`<b>${data.identity}</b>`);
+    if ((data.tendencies ?? []).length) bits.push(data.tendencies.join(" · "));
+    card.appendChild(el("p", "muted", `Scouting book: ${bits.join(" — ")}`));
   }
   const cp = data.chemistry_pairs ?? { duos: [], feuds: [] };
   if (cp.duos.length || cp.feuds.length) {
@@ -961,6 +1268,18 @@ async function roster(v) {
     const starCell = hasBench
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
+    // Mentorship: older, higher-rated teammates can mentor this player.
+    const eligibleMentors = data.is_user_team
+      ? data.players.filter(
+          (q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0)
+        )
+      : [];
+    const mentorSel = (eligibleMentors.length || p.mentor_id)
+      ? `<select data-act="mentor" title="pair with a veteran mentor for faster development">
+           <option value="">no mentor</option>
+           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}</option>`).join("")}
+         </select>`
+      : "";
     const devCell = data.is_user_team
       ? `<td class="dev-plan">
            <select data-act="focus" title="training focus (auto = team week)">
@@ -969,12 +1288,19 @@ async function roster(v) {
            <select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
              ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
            </select>
+           ${mentorSel}
          </td>`
       : "";
     const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
+    // Own-club condition trend arrows (server sends condition_trend only for
+    // your roster, and only once there are two dev-history points).
+    const ct = p.condition_trend || {};
+    const tArrow = (d) =>
+      d === "up" ? ' <span class="trend-up" title="trending up">▲</span>'
+        : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
     const tr = el("tr", "", `
       ${starCell}
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${benchPill}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${benchPill}</td>
       <td>${stylePill(p)}</td>
       <td>${p.planned_agent
         ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
@@ -982,8 +1308,8 @@ async function roster(v) {
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
       <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
-      <td>${bar(p.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
-      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}</td>
+      <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
+      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
       ${devCell}
       <td class="num">${money(p.salary)}/wk</td>
       <td class="num">${p.contract_weeks_left}w</td>
@@ -1010,6 +1336,18 @@ async function roster(v) {
       const iSel = tr.querySelector('[data-act="intensity"]');
       iSel.onclick = (e) => e.stopPropagation();
       iSel.onchange = () => post("training_intensity", iSel.value);
+      const mSel = tr.querySelector('[data-act="mentor"]');
+      if (mSel) {
+        mSel.onclick = (e) => e.stopPropagation();
+        mSel.onchange = async () => {
+          const r = await api("/api/actions/mentor", {
+            protege_id: p.id,
+            mentor_id: mSel.value || null,
+          });
+          toast(r.message);
+          if (App.tab === "roster") render();
+        };
+      }
     }
     if (!data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
@@ -1465,6 +1803,7 @@ async function gameplanPanel(v) {
     site_focus: plan?.site_focus ?? null,
     focus_target: oppStarterIds.has(storedTarget) ? storedTarget : null,
     starters: new Set((plan?.starter_ids ?? []).filter((pid) => ownIds.has(pid))),
+    team_talk: plan?.team_talk ?? null,
   };
   for (const d of TACTIC_DIALS) {
     if (plan && plan[d.key] != null) state.dials[d.key] = plan[d.key];
@@ -1626,6 +1965,28 @@ async function gameplanPanel(v) {
     card.appendChild(luWrap);
   }
 
+  // Team talk — a pre-match motivational choice (bounded confidence nudge).
+  const talkWrap = el("div", "gp-talk");
+  talkWrap.appendChild(el("span", "tac-fit-lab", "Team talk"));
+  const TALKS = [
+    ["", "None — let them focus"],
+    ["fire_up", "Fire them up (lift, best for ambitious players)"],
+    ["reassure", "Reassure (steadies fragile nerves)"],
+    ["focus", "Refocus (settle tilt and hubris alike)"],
+  ];
+  const talkRow = el("div", "row gp-talk-row");
+  for (const [val, label] of TALKS) {
+    const b = el("button", "btn btn-sm" + ((state.team_talk || "") === val ? " active" : ""), label);
+    b.onclick = () => {
+      state.team_talk = val || null;
+      talkRow.querySelectorAll("button").forEach((x) => x.classList.remove("active"));
+      b.classList.add("active");
+    };
+    talkRow.appendChild(b);
+  }
+  talkWrap.appendChild(talkRow);
+  card.appendChild(talkWrap);
+
   // Save / clear.
   const barRow2 = el("div", "tac-savebar");
   const saveBtn = el("button", "btn btn-primary", plan ? "Update game plan" : "Lock in game plan");
@@ -1636,6 +1997,7 @@ async function gameplanPanel(v) {
       site_focus: state.site_focus,
       focus_target: state.focus_target,
       starter_ids: [...state.starters],
+      team_talk: state.team_talk,
     };
     for (const d of TACTIC_DIALS) body[d.key] = state.dials[d.key] ?? null;
     const r = await api("/api/actions/gameplan", body);
@@ -1656,22 +2018,206 @@ async function gameplanPanel(v) {
   v.appendChild(card);
 }
 
+// Last-5 W/L chips for the standings table (oldest first, most recent
+// rightmost). Each chip tips to its scoreline — the sim's own record.
+const formSquares = (form) =>
+  (form || [])
+    .map(
+      (g) =>
+        `<span class="form-sq ${g.result === "W" ? "w" : "l"}" title="${g.result} ${g.score} vs ${g.opponent} (W${g.week})">${g.result}</span>`
+    )
+    .join("") || '<span class="muted">—</span>';
+
 async function standings(v) {
-  const data = await api("/api/standings");
+  const [data, records, power, league] = await Promise.all([
+    api("/api/standings"),
+    api("/api/records").catch(() => null),
+    api("/api/power").catch(() => null),
+    api("/api/league").catch(() => null),
+  ]);
+
+  // Team of the Week: the best five of the latest completed match week.
+  const totw = league?.team_of_week;
+  if (totw && totw.players?.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", `Team of the Week <span class="muted" style="font-weight:400">— week ${totw.week}</span>`));
+    const list = el("div", "es-totw");
+    for (const p of totw.players) {
+      list.appendChild(el("div", "es-totw-row",
+        `<span class="pill">${p.role}</span>` +
+        `<span class="plink" data-pid="${p.id}">${p.handle}</span>` +
+        `<span class="muted es-totw-team">${p.team}</span>` +
+        `<b class="mono">${p.rating.toFixed(2)}</b>`));
+    }
+    c.appendChild(list);
+    v.appendChild(c);
+  }
+
+  // Playoff bracket (during the postseason) or a form-hold table projection
+  // (during the regular season).
+  const bracket = league?.bracket || [];
+  if (bracket.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Playoff bracket"));
+    const cols = el("div", "es-bracket");
+    for (const round of bracket) {
+      const col = el("div", "es-bracket-col");
+      col.appendChild(el("span", "es-scout-lab muted", round.label));
+      for (const m of round.matches) {
+        const aWon = m.played && m.winner_id === m.team_a_id;
+        const bWon = m.played && m.winner_id === m.team_b_id;
+        col.appendChild(el("div", "es-bracket-m",
+          `<div class="${aWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_a_id}">${m.team_a}</span> <b class="mono">${m.score_a}</b></div>` +
+          `<div class="${bWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_b_id}">${m.team_b}</span> <b class="mono">${m.score_b}</b></div>`));
+      }
+      cols.appendChild(col);
+    }
+    c.appendChild(cols);
+    v.appendChild(c);
+  } else if (league?.in_regular_season && (league?.projection || []).length) {
+    const proj = league.projection;
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Projected finish <span class=\"muted\" style=\"font-weight:400\">— if current form holds</span>"));
+    const t = el("table", "es-proj");
+    t.innerHTML = "<thead><tr><th>#</th><th>Team</th><th class=\"num\">W</th><th class=\"num\">Rem</th><th class=\"num\">Proj W</th></tr></thead>";
+    const tb = el("tbody");
+    for (const r of proj) {
+      tb.appendChild(el("tr", "",
+        `<td class="mono">${r.proj_pos}</td>` +
+        `<td><span class="tlink" data-tid="${r.team_id}">${r.name}</span></td>` +
+        `<td class="num mono">${r.wins}</td>` +
+        `<td class="num mono muted">${r.remaining}</td>` +
+        `<td class="num mono"><b>${r.proj_wins}</b></td>`));
+    }
+    t.appendChild(tb);
+    c.appendChild(t);
+    v.appendChild(c);
+  }
+
+  // Head-to-head matrix: each team's series record vs every other this season.
+  const mx = league?.h2h_matrix;
+  if (mx && mx.teams.length > 1) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Head-to-head <span class=\"muted\" style=\"font-weight:400\">— series record</span>"));
+    const wrap = el("div", "es-h2hm-wrap");
+    const t = el("table", "es-h2hm");
+    const head = mx.teams.map((tm) => `<th title="${tm.name}">${tm.name.slice(0, 3).toUpperCase()}</th>`).join("");
+    t.innerHTML = `<thead><tr><th></th>${head}</tr></thead>`;
+    const tb = el("tbody");
+    mx.rows.forEach((row, i) => {
+      const cells = row.cells.map((cell) => {
+        if (cell == null) return '<td class="es-h2hm-self">—</td>';
+        if (!cell.played) return '<td class="muted">·</td>';
+        const cls = cell.w > cell.l ? "good" : cell.w < cell.l ? "bad" : "";
+        return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
+      }).join("");
+      tb.appendChild(el("tr", "",
+        `<th class="es-h2hm-row"><span class="tlink" data-tid="${row.team_id}">${mx.teams[i].name.slice(0, 3).toUpperCase()}</span></th>${cells}`));
+    });
+    t.appendChild(tb);
+    wrap.appendChild(t);
+    c.appendChild(wrap);
+    v.appendChild(c);
+  }
+
+  // Results archive: recent played fixtures in the region, newest first.
+  const results = league?.results || [];
+  if (results.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Recent results"));
+    const list = el("div", "es-results");
+    for (const r of results) {
+      const aWon = r.winner_id === r.team_a_id;
+      list.appendChild(el("div", "es-result",
+        `<span class="muted es-result-wk">W${r.week}</span>` +
+        `<span class="es-result-t ${aWon ? "good" : ""}" ><span class="tlink" data-tid="${r.team_a_id}">${r.team_a}</span></span>` +
+        `<b class="mono es-result-score">${r.score_a}-${r.score_b}</b>` +
+        `<span class="es-result-t ${!aWon ? "good" : ""}" style="text-align:right"><span class="tlink" data-tid="${r.team_b_id}">${r.team_b}</span></span>`));
+    }
+    c.appendChild(list);
+    v.appendChild(c);
+  }
+
+  // Global pundit power ranking (across regions), with movement vs world rank.
+  const pr = power?.rankings || [];
+  if (pr.length) {
+    const pc = el("div", "card");
+    pc.appendChild(el("h2", "", "Power rankings <span class=\"muted\" style=\"font-weight:400\">— global form book</span>"));
+    const list = el("div", "es-power");
+    for (const r of pr.slice(0, 10)) {
+      const mv = r.movement;
+      const arrow = mv == null ? "" : mv > 0
+        ? `<span class="trend-up">▲${mv}</span>` : mv < 0
+        ? `<span class="trend-down">▼${-mv}</span>` : '<span class="muted">–</span>';
+      list.appendChild(el("div", "es-power-row",
+        `<span class="es-power-rank mono">${r.rank}</span>` +
+        `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>` +
+        `<span class="muted">${(r.region || "").toUpperCase()}</span>` +
+        `<span class="es-power-mv">${arrow}</span>`));
+    }
+    pc.appendChild(list);
+    v.appendChild(pc);
+  }
+
+  // All-time record book + current dynasties, above the tables.
+  if (records && (records.records?.length || records.dynasties?.length)) {
+    const rc = el("div", "card es-records");
+    rc.appendChild(el("h2", "", "Record book"));
+    if (records.records?.length) {
+      const grid = el("div", "es-rec-grid");
+      for (const r of records.records) {
+        const who = r.team_id
+          ? `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>`
+          : `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>`;
+        grid.appendChild(el("div", "es-rec",
+          `<div class="es-rec-lab muted">${r.label}</div>` +
+          `<div class="es-rec-val">${who} <b class="mono">${r.count}</b></div>`));
+      }
+      rc.appendChild(grid);
+    }
+    if (records.dynasties?.length) {
+      const row = el("div", "es-career-tags");
+      row.appendChild(el("span", "muted es-career-lab", "Dynasties"));
+      for (const d of records.dynasties) {
+        row.appendChild(el("span", "pill dynasty-pill",
+          `<span class="tlink" data-tid="${d.team_id}">${d.name}</span> · ${d.label || "Rising"}`));
+      }
+      rc.appendChild(row);
+    }
+    if (records.parity && records.parity.titles > 0) {
+      const p = records.parity;
+      rc.appendChild(el("div", "muted es-parity",
+        `Parity: ${p.distinct_champions} distinct champion${p.distinct_champions !== 1 ? "s" : ""} ` +
+        `across ${p.titles} title${p.titles !== 1 ? "s" : ""} · ` +
+        `top team's share ${Math.round(p.top_share * 100)}%`));
+    }
+    v.appendChild(rc);
+  }
+
   for (const league of data.regions) {
     const card = el("div", "card");
     card.innerHTML = `<h2>${league.region.toUpperCase()} league${league.is_user ? " — your region" : ""}</h2>`;
     const t = el("table");
     t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
-      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th></tr></thead>`;
+      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
     const tb = el("tbody");
     const rowFor = (r, i) => {
-      const tr = el("tr", r.id === App.state.user_team.id ? "me" : "", `
-        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span></td>
+      const outTag = r.eliminated
+        ? ' <span class="pill elim-pill" title="Cannot reach the top-4 playoff cut">OUT</span>'
+        : "";
+      const dynTag = r.dynasty
+        ? ` <span class="pill dynasty-pill" title="Dynasty index — recent-title dominance">${r.dynasty}</span>`
+        : "";
+      const cls = [r.id === App.state.user_team.id ? "me" : "", r.eliminated ? "elim" : ""]
+        .filter(Boolean)
+        .join(" ");
+      const tr = el("tr", cls, `
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span>${dynTag}${outTag}</td>
         <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
         <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
         <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
-        <td class="num">${r.reputation}</td>`);
+        <td class="num">${r.reputation}</td>
+        <td class="form-cell">${formSquares(r.recent_form)}</td>`);
       tr.style.cursor = "pointer";
       tr.title = "view roster";
       tr.onclick = () => {
@@ -1683,7 +2229,17 @@ async function standings(v) {
       };
       return tr;
     };
-    league.rows.forEach((r, i) => tb.appendChild(rowFor(r, i)));
+    // Draw the top-4 playoff cutoff line inside the tier-1 table during the
+    // regular season (server sends the cut + phase; rows are ranked).
+    const cut = data.in_regular_season ? data.playoff_cut : 0;
+    league.rows.forEach((r, i) => {
+      tb.appendChild(rowFor(r, i));
+      if (cut && i === cut - 1 && i < league.rows.length - 1) {
+        tb.appendChild(
+          el("tr", "playoff-cut", `<td colspan="9">Playoff cutoff</td>`)
+        );
+      }
+    });
     t.appendChild(tb);
     card.appendChild(t);
 
@@ -1815,6 +2371,20 @@ async function schedule(v) {
         b.onclick = () => openReplay(f.id, i);
         line.appendChild(b);
       }
+      // Player of the Match — the series' standout box-score line (server
+      // derives it; .plink/data-pid opens the profile overlay).
+      if (f.played && f.potm) {
+        const p = f.potm;
+        line.appendChild(
+          el(
+            "span",
+            "potm-chip",
+            `<span class="potm-star">★</span> POTM ` +
+              `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ` +
+              `<span class="muted">${p.rating.toFixed(2)} · ${p.kills}K</span>`
+          )
+        );
+      }
       card.appendChild(line);
       if (f.veto.length) {
         const vetoRow = el("div", "veto-row");
@@ -1856,9 +2426,10 @@ async function marketStaff(v) {
     const hired = data.hired[role];
     const head = `<span style="min-width:340px"><span class="pill">${role}</span> `;
     if (hired) {
+      const fx = (hired.effects || []).map((e) => `<span class="pill obj good staff-fx">${e}</span>`).join(" ");
       row.innerHTML = `${head}<b class="slink" data-sid="${hired.id}">${hired.name}</b>
         <span class="muted">q${Math.round(hired.quality)} · ${hired.specialty || "—"} ·
-        ${money(hired.salary)}/wk — ${data.blurbs[role]}</span></span>`;
+        ${money(hired.salary)}/wk</span> ${fx}</span>`;
       const rel = el("button", "btn btn-sm", "Release");
       rel.onclick = async () => {
         const r = await api("/api/actions/release_staff", { role });
@@ -1914,6 +2485,131 @@ async function marketStaff(v) {
 
 async function marketPlayers(v) {
   const data = await api("/api/market");
+
+  // Squad intelligence: where you're thin, who to sign, contracts running down.
+  const needs = data.squad_needs, targets = data.target_suggestions || [];
+  const cw = data.contract_watch || {};
+  if (needs) {
+    const aid = el("div", "card");
+    aid.appendChild(el("h2", "", "Squad intelligence"));
+    const cols = el("div", "es-aid-cols");
+
+    const c1 = el("div", "es-snap-col");
+    c1.appendChild(el("span", "es-scout-lab muted", "Role balance"));
+    const rolebar = el("div", "es-roles");
+    for (const [role, n] of Object.entries(needs.role_counts || {})) {
+      const gap = (needs.gaps || []).includes(role);
+      rolebar.appendChild(el("span", "pill" + (gap ? " elim-pill" : ""), `${role} ${n}`));
+    }
+    c1.appendChild(rolebar);
+    if (needs.weakest_role) {
+      c1.appendChild(el("div", "muted",
+        `Weakest: ${needs.weakest_role.role} (${needs.weakest_role.quality})`));
+    }
+    cols.appendChild(c1);
+
+    if (targets.length) {
+      const c2 = el("div", "es-snap-col");
+      c2.appendChild(el("span", "es-scout-lab muted", "Suggested signings"));
+      const list = el("div", "es-movers");
+      for (const t of targets) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${t.id}">${t.handle}</span> ` +
+          `<span class="muted">${t.role}</span> <b class="mono">${t.quality}</b>` +
+          (t.affordable ? "" : ' <span class="muted" title="over budget">✗</span>')));
+      }
+      c2.appendChild(list);
+      cols.appendChild(c2);
+    }
+
+    const own = cw.expiring_own || [], watch = cw.market_watch || [];
+    if (own.length || watch.length) {
+      const c3 = el("div", "es-snap-col");
+      c3.appendChild(el("span", "es-scout-lab muted", "Contracts running down"));
+      const list = el("div", "es-movers");
+      for (const p of own) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">yours · ${p.role}</span> <b class="mono trend-down">${p.weeks_left}w</b>`));
+      }
+      for (const p of watch) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.team} · ${p.role}</span> <b class="mono">${p.weeks_left}w</b>`));
+      }
+      c3.appendChild(list);
+      cols.appendChild(c3);
+    }
+    const rumors = data.rumors || [];
+    if (rumors.length) {
+      const c4 = el("div", "es-snap-col");
+      c4.appendChild(el("span", "es-scout-lab muted", "Rumour mill"));
+      const list = el("div", "es-rumors");
+      for (const r of rumors) {
+        list.appendChild(el("div", `es-rumor muted ${r.kind}`, r.text));
+      }
+      c4.appendChild(list);
+      cols.appendChild(c4);
+    }
+    aid.appendChild(cols);
+    v.appendChild(aid);
+  }
+
+  // Scouting & budget: the "next big thing" watch, the region's Challengers
+  // form book, and how much wage the org can take on before the runway floor.
+  const wk = data.wonderkids || [], chal = data.challengers || [];
+  const head = data.signing_headroom || {};
+  if (wk.length || chal.length || head.balance != null) {
+    const scoutCard = el("div", "card");
+    scoutCard.appendChild(el("h2", "", "Prospects & budget"));
+    const cols = el("div", "es-aid-cols");
+
+    if (wk.length) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Wonderkid watch (≤20)"));
+      const list = el("div", "es-movers");
+      for (const p of wk) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
+          `<b class="mono">${"★".repeat(Math.round(p.potential_stars))}</b>`));
+      }
+      c.appendChild(list);
+      cols.appendChild(c);
+    }
+
+    if (chal.length) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Challengers standouts"));
+      const list = el("div", "es-movers");
+      for (const p of chal) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
+          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
+          `<b class="mono">${p.rating.toFixed(2)}</b>`));
+      }
+      c.appendChild(list);
+      cols.appendChild(c);
+    }
+
+    if (head.balance != null) {
+      const c = el("div", "es-snap-col");
+      c.appendChild(el("span", "es-scout-lab muted", "Signing headroom"));
+      const box = el("div", "es-head");
+      const runway = head.runway_weeks == null ? "stable"
+        : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+      const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
+      box.innerHTML =
+        `<div>Weekly net <b class="mono ${netCls}">${money(head.weekly_net)}</b></div>` +
+        `<div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>` +
+        `<div class="muted">${runway}</div>`;
+      c.appendChild(box);
+      cols.appendChild(c);
+    }
+    scoutCard.appendChild(cols);
+    v.appendChild(scoutCard);
+  }
+
   const card = el("div", "card");
   card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>` +
     (data.market_scouting < 1
@@ -2156,8 +2852,84 @@ const STAT_COLS = [
 async function stats(v) {
   const split = App.statsSplit; // {kind, key} | null
   const qs = split ? `?split=${split.kind}&key=${encodeURIComponent(split.key)}` : "";
-  const data = await api("/api/stats" + qs);
+  const [data, racesResp, metaResp] = await Promise.all([
+    api("/api/stats" + qs),
+    api("/api/races").catch(() => null),
+    api("/api/meta").catch(() => null),
+  ]);
   const tier = data.analytics.tier;
+
+  // Live agent meta: latest patch, active buffs/nerfs, usage tier list.
+  if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
+    const mc = el("div", "card");
+    mc.appendChild(el("h2", "", "Agent meta"));
+    const lp = metaResp.latest_patch;
+    if (lp) {
+      mc.appendChild(el("p", "muted",
+        `Patch ${lp.version} (S${lp.season} W${lp.week}) — ${lp.lines.join("; ")}`));
+    }
+    const patched = metaResp.patched_agents || [];
+    if (patched.length) {
+      const chips = el("div", "es-meta-chips");
+      for (const a of patched) {
+        chips.appendChild(el("span", `es-meta-chip ${a.direction}`,
+          `${a.name} ${a.direction === "buff" ? "▲" : a.direction === "nerf" ? "▼" : "–"}`));
+      }
+      mc.appendChild(chips);
+    }
+    const tl = metaResp.tier_list || [];
+    if (tl.length) {
+      const list = el("div", "es-meta-tier");
+      const top = tl[0].maps || 1;
+      for (const a of tl) {
+        const w = Math.round(100 * a.maps / top);
+        list.appendChild(el("div", "es-meta-row",
+          `<span class="es-meta-name">${a.name}</span>` +
+          `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
+          `<span class="mono muted">${a.pick_rate}%</span>`));
+      }
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(list);
+    }
+    v.appendChild(mc);
+  }
+
+  // Impact leaderboards: clutches / multikills / aces / first bloods.
+  const impact = data.impact || {};
+  const impactCats = Object.entries(impact).filter(([, c]) => c.leaders?.length);
+  if (impactCats.length) {
+    const ic = el("div", "card");
+    ic.appendChild(el("h2", "", "Impact leaders"));
+    const grid = el("div", "es-rec-grid");
+    for (const [, cat] of impactCats) {
+      const rows = cat.leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
+        `<b class="mono">${l.value}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${cat.label}</div>${rows}`));
+    }
+    ic.appendChild(grid);
+    v.appendChild(ic);
+  }
+
+  // Award races: who's in contention for each season award right now.
+  const races = racesResp?.races || {};
+  if (Object.keys(races).length) {
+    const rc = el("div", "card");
+    rc.appendChild(el("h2", "", "Award races"));
+    const grid = el("div", "es-rec-grid");
+    for (const [award, leaders] of Object.entries(races)) {
+      const rows = leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
+        `<b class="mono">${l.value}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${award}</div>${rows}`));
+    }
+    rc.appendChild(grid);
+    v.appendChild(rc);
+  }
 
   // Analytics banner: what your department can compile, and what's next.
   const banner = el("div", "card");
@@ -2438,6 +3210,26 @@ async function finances(v) {
     <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
   v.appendChild(card);
 
+  // -- marketability breakdown ---------------------------------------------
+  const mb = data.marketability_breakdown;
+  if (mb && mb.drivers?.length) {
+    const mbCard = el("div", "card");
+    mbCard.innerHTML = `<h2>Brand value
+      <span class="muted" style="font-weight:400">— marketability ${mb.score} (facility x${mb.facility_mult})</span></h2>`;
+    const list = el("div", "es-mb");
+    const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
+    for (const d of mb.drivers) {
+      const pos = d.contrib >= 0;
+      const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
+      list.appendChild(el("div", "es-mb-row",
+        `<span class="es-mb-lab">${d.label}</span>` +
+        `<span class="es-mb-track"><span class="es-mb-fill ${pos ? "pos" : "neg"}" style="width:${w}%"></span></span>` +
+        `<span class="mono ${pos ? "trend-up" : "trend-down"}">${pos ? "+" : ""}${d.contrib}</span>`));
+    }
+    mbCard.appendChild(list);
+    v.appendChild(mbCard);
+  }
+
   // -- sponsor slots -------------------------------------------------------
   const slotsCard = el("div", "card");
   slotsCard.innerHTML = `<h2>Sponsorship slots
@@ -2445,8 +3237,17 @@ async function finances(v) {
   const objChips = (objs) => (objs ?? [])
     .map((o) => {
       const mark = o.met === true ? "✓ " : o.met === false ? "✗ " : "";
-      const cls = o.met === true ? "good" : o.met === false ? "bad" : "";
-      return `<span class="pill obj ${cls}" title="${money(o.bonus)}">${mark}${o.label} → ${money(o.bonus)}</span>`;
+      let cls = o.met === true ? "good" : o.met === false ? "bad" : "";
+      let prog = "";
+      // Undecided objectives show their live in-season status (server aid).
+      if (o.met == null && o.status) {
+        const st = o.status.state;
+        cls = st === "achieved" || st === "on_track" ? "good"
+          : st === "missed" ? "bad" : "warn";
+        prog = ` · ${st.replace("_", " ")}`;
+      }
+      const tip = o.status?.detail || money(o.bonus);
+      return `<span class="pill obj ${cls}" title="${tip}">${mark}${o.label} → ${money(o.bonus)}${prog}</span>`;
     })
     .join(" ");
   for (const slot of ["title", "jersey", "peripheral", "stream", "apparel"]) {

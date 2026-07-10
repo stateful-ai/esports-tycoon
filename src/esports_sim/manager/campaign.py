@@ -211,6 +211,7 @@ def new_campaign(
     social.seed_followers(gs)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)
     return gs
 
 
@@ -407,7 +408,10 @@ def advance_week(
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
             mult = 1.0
-        training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
+        training.apply_training(
+            gs.teams[tid], roster, focus, week_rng, mult,
+            mentor_mults=_mentor_mults(gs, tid),
+        )
     gs.set_acting(None)
 
     # 2b. Backroom department effects, per human org: physio restores
@@ -1209,6 +1213,45 @@ def _fixture_plans(
     return plans, lineups
 
 
+TEAM_TALK_APPROACHES = ("fire_up", "reassure", "focus")
+
+
+def _talk_recipients(gs: GameState, tid: str, f: Fixture) -> list[str]:
+    """Everyone who will dress for `tid` across the fixture's maps — the union
+    of dressed_for over f.maps (which reads the finalised map_lineups, so a
+    per-map rotation is reflected). The pre-match team-talk audience. Sorted
+    for deterministic iteration."""
+    return sorted(
+        {pid for map_id in f.maps for pid in dressed_for(gs, tid, f, map_id)}
+    )
+
+
+def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
+    """A pre-match team talk nudges the dressed five's confidence, modulated
+    by personality and bounded to [5, 95] — the same range the rest of the
+    campaign clamps confidence to. Deterministic (personality is a pure
+    function). Called ONLY for a human side that set a talk in its game plan,
+    so hands-off sims never reach here and the balance gates are unchanged.
+
+    - fire_up:  a lift, bigger for ambitious players (they ride motivation).
+    - reassure: a lift, bigger for fragile (low-resilience) players.
+    - focus:    settle everyone toward a steady 55 (calms tilt AND hubris).
+    """
+    from esports_sim.manager import personality
+
+    for pid in five:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        if approach == "focus":
+            delta = (55.0 - p.confidence) * 0.25
+        elif approach == "reassure":
+            delta = 3.0 * (1.0 - 0.4 * personality.dev(p, "resilience"))
+        else:  # fire_up
+            delta = 5.0 * (1.0 + 0.4 * personality.dev(p, "ambition"))
+        p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
+
+
 def _sim_fixture(
     gs: GameState,
     rt_gd: GameData,
@@ -1265,6 +1308,20 @@ def _sim_fixture(
             gs.map_lineups.setdefault(
                 f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
             )
+
+    # Pre-match team talks land on the players who will ACTUALLY dress, resolved
+    # via dressed_for against the now-finalised map_lineups (explicit per-map
+    # overrides included). So a rotation gives the talk to the rotated-in five,
+    # not default_five. Applied here, once, before any map sim reads confidence.
+    # Human sides with a set talk only -> hands-off sims skip it -> gates hold.
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        plan = gs.game_plans_by.get(tid)
+        if plan is None or plan.fixture_id != f.id:
+            continue
+        if plan.team_talk in TEAM_TALK_APPROACHES:
+            _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
 
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
@@ -1459,6 +1516,92 @@ def _update_world_ranks(gs: GameState) -> None:
 # Offseason
 
 
+def mentorship_valid(gs: GameState, protege_id: str, mentor_id: str) -> bool:
+    """A mentorship holds when both players share a roster and the mentor is
+    the older, higher-ability of the pair (a veteran guiding a junior)."""
+    if protege_id == mentor_id:
+        return False
+    pro, men = gs.players.get(protege_id), gs.players.get(mentor_id)
+    if pro is None or men is None:
+        return False
+    same_team = any(
+        {protege_id, mentor_id} <= set(t.player_ids) for t in gs.teams.values()
+    )
+    return (
+        same_team
+        and men.age > pro.age
+        and development.overall(men) > development.overall(pro)
+    )
+
+
+def _mentor_mults(gs: GameState, tid: str) -> dict[str, float] | None:
+    """Development multipliers for this team's protégés under a valid, set
+    mentorship. None when nothing applies — hands-off sims never set a
+    mentorship, so this returns None and training stays byte-identical
+    (rate * 1.0), keeping the snowball/dynasty gates unchanged."""
+    if not gs.mentorships:
+        return None
+    roster = set(gs.teams[tid].player_ids)
+    out = {
+        pid: training.MENTOR_GROWTH_MULT
+        for pid, mentor_id in gs.mentorships.items()
+        if pid in roster and mentorship_valid(gs, pid, mentor_id)
+    }
+    return out or None
+
+
+def _snapshot_season_start_ca(gs: GameState) -> None:
+    """Freeze every current player's current ability as the season's
+    baseline. Pure read of settled rosters (rng-free, sorted iteration),
+    so it's campaign-deterministic. The Most Improved award diffs
+    end-of-season CA against this."""
+    gs.season_start_ca = {
+        pid: round(development.overall(gs.players[pid]), 2)
+        for pid in sorted(gs.players)
+    }
+
+
+CAREER_KILL_BARS = (500, 1000, 1500, 2000, 3000, 5000)
+
+
+def _accumulate_career_stats(gs: GameState) -> None:
+    """Roll this season's box score into each player's lifetime totals
+    (before the per-season reset), and chronicle career-kill milestones the
+    moment they're crossed. Pure read of gs.player_stats (rng-free, sorted
+    iteration), so it stays campaign-deterministic."""
+    from esports_sim.manager.state import CareerStats
+
+    for pid in sorted(gs.player_stats):
+        st = gs.player_stats[pid]
+        if st.maps <= 0:
+            continue
+        cs = gs.career_stats.setdefault(pid, CareerStats())
+        prev_kills = cs.kills
+        cs.maps += st.maps
+        cs.rounds += st.rounds
+        cs.kills += st.kills
+        cs.deaths += st.deaths
+        cs.first_kills += st.first_kills
+        cs.clutches += st.clutches
+        cs.seasons += 1
+        p = gs.players.get(pid)
+        if p is not None:
+            cs.handle = p.handle  # keep the record's name current
+        if p is None:
+            continue
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+        for bar in CAREER_KILL_BARS:
+            if prev_kills < bar <= cs.kills:
+                chronicle.record(
+                    gs, "milestone",
+                    f"{p.handle} passes {bar} career kills.",
+                    team_id=team.id if team else "",
+                    player_id=pid,
+                    data={"career_kills": str(bar)},
+                )
+                gs.push_news(f"{p.handle} reaches {bar} career kills.")
+
+
 def _process_retirements(gs: GameState, rng) -> int:
     """Roll every player against their retirement odds. Rosters lose the
     player on the spot (AI refills next tick; the user gets a news warning
@@ -1499,21 +1642,45 @@ def _process_retirements(gs: GameState, rng) -> int:
                 peak_note=f"retired at {ca:.0f} CA",
             )
         )
-        # Career titles/awards make a retirement land harder in history.
-        n_honours = sum(
-            1
-            for e in gs.chronicle
-            if e.player_id == pid and e.kind == "award"
+        # Career honours make a retirement land harder in history, and a
+        # decorated career earns a dry sendoff in the news. All grounded in
+        # the chronicle: this player's individual awards, and their debut
+        # season (career length) when the debut system saw them arrive.
+        mine = [e for e in gs.chronicle if e.player_id == pid]
+        honours = [e for e in mine if e.kind == "award"]
+        n_honours = len(honours)
+        mvps = sum(1 for e in honours if "MVP" in e.data.get("award", ""))
+        debut_season = next((e.season for e in mine if e.kind == "debut"), None)
+        seasons = (
+            gs.season - debut_season + 1 if debut_season is not None else None
         )
+        resume_bits: list[str] = []
+        if seasons is not None:
+            resume_bits.append(f"{seasons} pro season{'s' if seasons != 1 else ''}")
+        if n_honours:
+            resume_bits.append(
+                f"{n_honours} individual honour{'s' if n_honours != 1 else ''}"
+                + (f" ({mvps}x MVP)" if mvps else "")
+            )
+        resume = ", ".join(resume_bits)
         chronicle.record(
             gs, "retirement",
             f"{p.handle} retires at {p.age}"
-            + (f" ({team.name})." if team else "."),
+            + (f" ({team.name})" if team else "")
+            + (f" - {resume}." if resume else "."),
             team_id=team.id if team else "",
             player_id=pid,
-            importance=min(75.0, 40.0 + 10.0 * n_honours),
+            importance=min(80.0, 40.0 + 8.0 * n_honours + (5.0 if ca >= 78 else 0.0)),
             data={"age": str(p.age), "ca": f"{ca:.0f}"},
         )
+        # A genuinely decorated career (multiple honours, an MVP, or a
+        # star-level peak) gets its own sendoff line, not just a name in the
+        # bulk retirements list below.
+        if n_honours >= 2 or mvps >= 1 or ca >= 80:
+            gs.push_news(
+                f"End of an era: {p.handle} retires at {p.age} after "
+                f"{resume or f'a {ca:.0f} CA career'}."
+            )
         # A completed career faces the Hall (score reads the chronicle
         # entries above, so it runs after the retirement is recorded).
         hof.consider_at_retirement(gs, p, ca, team.name if team else "")
@@ -1760,7 +1927,14 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             team_id=winner_tid,
             player_id=a.player_id,
             importance=75.0 if "MVP" in a.award else 60.0,
-            data={"award": a.award},
+            data={"award": a.award, "value": a.value},
+        )
+
+    # The All-Star Five (best per role) — chronicled + a news line inside.
+    stars = narrative.season_all_star(gs)
+    if stars:
+        report.notes.append(
+            "All-Star Five: " + ", ".join(f"{s['handle']} ({s['role']})" for s in stars)
         )
 
     # The season's tactical era enters the chronicle while the final
@@ -1784,6 +1958,10 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(f"Patch {note.version} lands over the break.")
         knowledge.on_patch(gs)
 
+    # Lifetime career totals absorb this season before the per-season stats
+    # reset wipes them, and career-kill milestones enter the chronicle.
+    _accumulate_career_stats(gs)
+
     gs.player_stats = {}
     gs.team_stats = {}
     gs.player_map_stats = {}
@@ -1799,11 +1977,27 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     _rookie_classes(gs, gd, rng, n_retired)
     social.seed_followers(gs)  # rookies arrive with a baseline audience
 
-    # Ended careers stop charting; keep the history maps bounded.
+    # Season-in-review: one grounded paragraph over the season's records
+    # (champion, MVP, biggest riser, marquee retirement, tactical era),
+    # read while gs.season still names the season that just ended.
+    review = narrative.season_in_review(gs)
+    if review is not None:
+        gs.push_news(review)
+        report.notes.append(review)
+
+    # Ended careers stop charting: prune the bulky per-week chart series for
+    # anyone who has left. career_stats is DELIBERATELY exempt — it's the
+    # persistent lifetime record the all-time record book / playtest exports
+    # read (it carries its own handle), so a retired career-kill leader must
+    # not vanish from the books.
     for hist in (gs.stat_history, gs.dev_history):
         for pid in sorted(hist):
             if pid not in gs.players:
                 del hist[pid]
+    # Mentorships dissolve when either party leaves (retirement / transfer).
+    for pid in sorted(gs.mentorships):
+        if pid not in gs.players or gs.mentorships[pid] not in gs.players:
+            del gs.mentorships[pid]
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).
@@ -1856,6 +2050,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
+    _snapshot_season_start_ca(gs)  # baseline for next season's Most Improved
     # Inbox for the offseason tick, per manager: retirements, rookie class,
     # award slate. `report` still carries the pre-rollover (season, week) the
     # offseason news was labelled with, so generate_inbox reads the right lines.

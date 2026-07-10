@@ -281,6 +281,84 @@ GOAL_LABELS = {
 }
 
 
+def _ordinal(n: int) -> str:
+    suf = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suf}"
+
+
+def objective_status(gs: GameState, tid: str, kind: str) -> dict:
+    """In-season progress on a board/sponsor objective, WITHOUT mutating
+    anything: 'achieved' (already met), 'missed' (the deciding stage passed
+    without it), or an in-season 'on_track' / 'at_risk' read off the team's
+    league position. The canonical verdict is still _goal_met at season end
+    (and _eval_objective for sponsor pay-outs); this is a read-only aid so a
+    manager can see where a goal stands mid-season."""
+    if _goal_met(gs, tid, kind):
+        return {"state": "achieved", "detail": "achieved"}
+
+    def season_fixtures(stage: str) -> list:
+        return [
+            f for f in gs.fixtures
+            if f.id.startswith(f"s{gs.season}") and f.stage == stage
+        ]
+
+    order = gs.standings_order(str(gs.teams[tid].region), tier=gs.teams[tid].tier)
+    n = len(order)
+    pos = order.index(tid) + 1 if tid in order else None
+
+    # A goal is "missed" only once ITS OWN deciding stage has passed without
+    # meeting it. Masters and Champions come after the regional playoffs, so a
+    # qualified side chasing them stays live through the rest of the bracket.
+    if kind == "make_playoffs":
+        # Qualification is decided by the SEMIFINAL seeding (see _goal_met):
+        # once the semis exist, a team not among them (else _goal_met would
+        # have said achieved) has missed the cut — no need to wait for finals.
+        if season_fixtures("semi"):
+            return {"state": "missed", "detail": "missed the playoff cut"}
+    elif kind == "win_split":
+        finals = season_fixtures("final")
+        if finals and all(f.played for f in finals):
+            return {"state": "missed", "detail": "the regional final is settled"}
+    elif kind == "make_masters":
+        if gs.masters_seeds and tid not in gs.masters_seeds:
+            return {"state": "missed", "detail": "missed the Masters cut"}
+    elif kind == "win_champions":
+        cf = season_fixtures("champ_final")
+        if cf and all(f.played for f in cf):
+            return {"state": "missed", "detail": "Champions is decided"}
+
+    if kind == "field_youth":
+        # Match the canonical payout rule (sponsors._eval_objective): the
+        # objective resolves the moment a sub-21 is on the active roster —
+        # they need not have played yet. Reading it any stricter would show
+        # 'at_risk' for a squad that already satisfies the payout.
+        has_youth = any(p.age <= 21 for p in gs.roster(tid))
+        return {
+            "state": "on_track" if has_youth else "at_risk",
+            "detail": (
+                "under-21 on the roster" if has_youth
+                else "no under-21 on the roster"
+            ),
+        }
+
+    if kind == "beat_top4":
+        return {"state": "in_progress", "detail": "pays per qualifying win"}
+
+    cut = max(1, n // 2) if kind == "top_half" else 4
+    if pos is None:
+        return {"state": "at_risk", "detail": ""}
+    # top_half is settled by the final regular-season table: once the regular
+    # season is over the standings can't move, so a side below the cut has
+    # already missed it — matching _goal_met, which reads that locked table at
+    # the offseason review.
+    if kind == "top_half" and gs.phase != "regular" and pos > cut:
+        return {"state": "missed", "detail": f"finished {_ordinal(pos)} of {n}"}
+    return {
+        "state": "on_track" if pos <= cut else "at_risk",
+        "detail": f"currently {_ordinal(pos)} of {n}",
+    }
+
+
 def review_boards(gs: GameState) -> list[str]:
     """The offseason board review for every employed legacy seat. Moves
     patience, decides renewals/dismissals, pushes the news, and PARKS
@@ -628,6 +706,12 @@ def career_summary(gs: GameState, mid: str) -> dict:
                 "start_season": seat.contract.start_season,
                 "goal": GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
                 "patience": round(seat.contract.patience, 1),
+                # How the season goal is tracking right now (read-only aid).
+                "goal_status": (
+                    objective_status(gs, seat.team_id, seat.contract.goal)
+                    if seat.team_id in gs.teams
+                    else None
+                ),
             }
             if seat and seat.contract
             else None

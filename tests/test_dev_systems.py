@@ -350,6 +350,23 @@ def test_v2_save_loads_and_migrates(campaign, tmp_path) -> None:
     )
 
 
+def test_v5_save_migrates_to_v6(campaign, tmp_path) -> None:
+    # Codex review: the new defaulted GameState fields (season_start_ca,
+    # career_stats, mentorships) warranted a schema bump so an OLDER build
+    # rejects them cleanly. v5 -> v6 is a pure pass-through: a v5-stamped save
+    # loads unchanged and reports v6, keeping the new fields.
+    assert SCHEMA_VERSION >= 6
+    data = json.loads(campaign.model_dump_json())
+    data["schema_version"] = 5
+    path = tmp_path / "v5.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    loaded = GameState.load(path)
+    assert loaded.schema_version == SCHEMA_VERSION
+    assert isinstance(loaded.career_stats, dict)
+    assert isinstance(loaded.mentorships, dict)
+    assert isinstance(loaded.season_start_ca, dict)
+
+
 # ---------------------------------------------------------------------------
 # Analytics gating (server-side)
 
