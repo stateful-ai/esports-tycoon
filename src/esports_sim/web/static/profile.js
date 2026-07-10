@@ -525,7 +525,28 @@ function renderPlayerProfile(data) {
     tiles.appendChild(pfTile("K/D", ct.kd.toFixed(2)));
     tiles.appendChild(pfTile("Honours", pfNum(ct.honours)));
     tiles.appendChild(pfTile("MVPs", pfNum(ct.mvps)));
+    tiles.appendChild(pfTile("All-Star", pfNum(ct.all_stars)));
     sec.appendChild(tiles);
+    frag.appendChild(sec);
+  }
+
+  // Career arc ----------------------------------------------------------
+  // The player's chronicle as a per-season timeline (newest first).
+  const arc = data.career_arc || [];
+  if (arc.length) {
+    const sec = pfSection("Career timeline");
+    const list = el("div", "pf-arc");
+    for (const yr of arc) {
+      const row = el("div", "pf-arc-row");
+      row.appendChild(el("span", "pf-arc-season mono", `S${yr.season}`));
+      const evs = el("div", "pf-arc-evs");
+      for (const e of yr.events) {
+        evs.appendChild(el("span", `pf-arc-ev arc-${e.kind}`, e.text));
+      }
+      row.appendChild(evs);
+      list.appendChild(row);
+    }
+    sec.appendChild(list);
     frag.appendChild(sec);
   }
 

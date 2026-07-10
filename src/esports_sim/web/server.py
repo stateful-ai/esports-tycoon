@@ -1400,10 +1400,11 @@ def standings() -> dict:
 
 @app.get("/api/records")
 def records() -> dict:
-    """The save's all-time record book + current top dynasties (pure
-    chronicle + career_stats read; manager/analytics.py)."""
+    """The save's all-time record book, current top dynasties, and a league
+    parity read (pure chronicle + career_stats; manager/analytics.py)."""
     with S.lock:
-        return analytics.all_time_records(S.require_gs())
+        gs = S.require_gs()
+        return {**analytics.all_time_records(gs), "parity": analytics.parity(gs)}
 
 
 @app.get("/api/report/season")
@@ -3144,6 +3145,9 @@ def player_profile(pid: str) -> dict:
             # progress): maps, kills, K/D, honours. None until they've
             # played a map. Reads gs.career_stats + the live season.
             "career_totals": _profile_career_totals(gs, pid),
+            # The player's career as a per-season chronicle timeline (debut,
+            # awards, milestones, moves), newest season first.
+            "career_arc": analytics.career_arc(gs, pid),
             # The trophy cabinet: individual season awards this player has
             # won, newest first. A clean structured read of the chronicle's
             # award entries (the cleanly player-attributable honours; team
@@ -3201,6 +3205,7 @@ def _profile_career_totals(gs: GameState, pid: str) -> dict | None:
             1 for e in entries
             if e.kind == "award" and "MVP" in e.data.get("award", "")
         ),
+        "all_stars": sum(1 for e in entries if e.kind == "all_star"),
     }
 
 
@@ -3528,6 +3533,7 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for agent in S.gd.agents.values()
             for ab in agent.abilities
         }
+        dumped = [e.model_dump() for e in events]
         return {
             "fixture": _fixture_view(fixture, gs),
             "map": map_geometry(map_id),
@@ -3535,8 +3541,42 @@ def replay(fixture_id: str, map_index: int) -> dict:
             "team_b": fixture.team_b,
             "players": players,
             "abilities": abilities,
-            "events": [e.model_dump() for e in events],
+            "events": dumped,
+            # Per-round result strip for the viewer timeline (winner, running
+            # score, whether the spike went down). Derived from the log.
+            "round_summaries": _round_summaries(dumped, fixture.team_a),
         }
+
+
+def _round_summaries(events: list[dict], team_a: str) -> list[dict]:
+    """A compact per-round result list from a map's event log: round number,
+    the attacking side, whether the spike was planted, the winner, and the
+    running score. Pure read of the log — the viewer renders it as a
+    round-by-round timeline strip."""
+    out: list[dict] = []
+    cur: dict | None = None
+    sa = sb = 0
+    for d in events:
+        t = d.get("type")
+        if t == "round.start":
+            cur = {
+                "num": d.get("round_num"),
+                "attacker": d.get("attacking_team_id"),
+                "plant": False, "winner_id": None,
+            }
+        elif t == "round.spike_plant" and cur is not None:
+            cur["plant"] = True
+        elif t == "round.end" and cur is not None:
+            w = d.get("winner_id")
+            cur["winner_id"] = w
+            if w == team_a:
+                sa += 1
+            else:
+                sb += 1
+            cur["score_a"], cur["score_b"] = sa, sb
+            out.append(cur)
+            cur = None
+    return out
 
 
 def _cookie_sid(scope) -> str | None:

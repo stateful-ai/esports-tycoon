@@ -889,6 +889,7 @@ function loop(ts) {
     }
   }
   drawFrame();
+  markTimeline();
   requestAnimationFrame(loop);
 }
 
@@ -900,6 +901,7 @@ function setRound(idx) {
   V.roundIdx = Math.max(0, Math.min(V.rounds.length - 1, idx));
   V.tick = 0;
   drawFrame();
+  markTimeline();
 }
 
 /* -- public api ------------------------------------------------------------------ */
@@ -936,6 +938,46 @@ function buildLineup() {
   side.insertBefore(el, document.getElementById("v-feed"));
 }
 
+// Round-by-round timeline strip: one chip per round, tinted by winner, with
+// a spike marker when the bomb went down. Chips jump the replay to a round.
+function buildTimeline() {
+  const side = document.querySelector(".viewer-side");
+  if (!side) return;
+  const existing = document.getElementById("v-timeline");
+  if (existing) existing.remove();
+  if (!V.summaries || !V.summaries.length) return;
+  const el = document.createElement("div");
+  el.id = "v-timeline";
+  el.className = "v-timeline";
+  el.innerHTML = V.summaries
+    .map((s, i) => {
+      const cls = s.winner_id === V.teamA ? "a" : "b";
+      const plant = s.plant ? '<span class="v-tl-plant">◈</span>' : "";
+      const tip = `Round ${s.num}: ${s.score_a}-${s.score_b}${s.plant ? " · spike planted" : ""}`;
+      return `<button class="v-tl-round ${cls}" data-round="${i}" title="${tip}">${s.num}${plant}</button>`;
+    })
+    .join("");
+  el.querySelectorAll(".v-tl-round").forEach((b) => {
+    b.onclick = () => {
+      setRound(Number(b.dataset.round));
+      V.playing = false;
+      updatePlayBtn();
+    };
+  });
+  side.insertBefore(el, document.getElementById("v-feed"));
+  V._tlRound = -1;
+  markTimeline();
+}
+
+function markTimeline() {
+  const tl = document.getElementById("v-timeline");
+  if (!tl || !V || V._tlRound === V.roundIdx) return;
+  V._tlRound = V.roundIdx;
+  tl.querySelectorAll(".v-tl-round").forEach((b, i) => {
+    b.classList.toggle("active", i === V.roundIdx);
+  });
+}
+
 async function openReplay(fixtureId, mapIndex) {
   const data = await api(`/api/replay/${fixtureId}/${mapIndex}`);
   const names = {};
@@ -951,6 +993,8 @@ async function openReplay(fixtureId, mapIndex) {
     names,
     abilities: data.abilities || {}, // guard: older payloads may omit this
     rounds: parseReplay(data),
+    summaries: data.round_summaries || [], // server-computed round result strip
+    _tlRound: -1,
     roundIdx: 0,
     tick: 0,
     playing: true,
@@ -967,6 +1011,7 @@ async function openReplay(fixtureId, mapIndex) {
   document.getElementById("v-title").innerHTML =
     `<b>${names[data.team_a]}</b> vs <b>${names[data.team_b]}</b> · ${data.map.display_name}`;
   buildLineup();
+  buildTimeline();
   drawStatic();
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
@@ -979,6 +1024,8 @@ function closeViewer() {
   V = null;
   const lineup = document.getElementById("v-lineup");
   if (lineup) lineup.remove();
+  const timeline = document.getElementById("v-timeline");
+  if (timeline) timeline.remove();
   document.getElementById("viewer").classList.add("hidden");
 }
 

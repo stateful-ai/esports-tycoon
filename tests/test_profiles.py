@@ -53,6 +53,7 @@ PLAYER_TOP = {
     "relationships",
     "career",
     "career_totals",
+    "career_arc",
     "honours",
     "epithet",
     "memories",
@@ -663,3 +664,19 @@ def test_contract_watch_shape_and_thresholds(env):
     own_ids = {p.id for p in gs.roster(h.user_team)}
     assert all(p["id"] in own_ids for p in cw["expiring_own"])
     assert all(p["id"] not in own_ids for p in cw["market_watch"])
+
+
+def test_round_summaries_from_event_log():
+    events = [
+        {"type": "round.start", "round_num": 1, "attacking_team_id": "a"},
+        {"type": "round.spike_plant"},
+        {"type": "round.end", "winner_id": "a"},
+        {"type": "round.start", "round_num": 2, "attacking_team_id": "a"},
+        {"type": "round.end", "winner_id": "b"},
+    ]
+    rs = server_mod._round_summaries(events, team_a="a")
+    assert len(rs) == 2
+    assert rs[0] == {"num": 1, "attacker": "a", "plant": True,
+                     "winner_id": "a", "score_a": 1, "score_b": 0}
+    assert rs[1] == {"num": 2, "attacker": "a", "plant": False,
+                     "winner_id": "b", "score_a": 1, "score_b": 1}

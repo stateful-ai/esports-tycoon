@@ -415,3 +415,41 @@ def test_season_in_review_drops_a_quiet_retirement():
     review = season_in_review(gs)
     assert review is not None  # champion clause still fires
     assert "storied career" not in review
+
+
+# ---------------------------------------------------------------------------
+# All-Star Five: best eligible tier-1 player per role
+
+
+def test_season_all_star_picks_best_per_role():
+    from esports_sim.manager.narrative import season_all_star
+
+    roles = {
+        "d1": Role.DUELIST, "d2": Role.DUELIST, "c": Role.CONTROLLER,
+        "i": Role.INITIATOR, "s": Role.SENTINEL, "f": Role.FLEX,
+    }
+    players = {
+        pid: Player(id=pid, handle=pid.upper(), age=24, role=role,
+                    playstyle=Playstyle.ENTRY,
+                    attributes={a: 75.0 for a in ("aim_precision", "aim_reactivity", "movement")})
+        for pid, role in roles.items()
+    }
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=list(roles))
+    stats = {pid: PlayerSeasonStats(maps=10, rating_sum=10.0, kills=100) for pid in roles}
+    stats["d2"] = PlayerSeasonStats(maps=10, rating_sum=13.0, kills=140)  # 1.30 > d1's 1.0
+    gs = GameState(seed=1, season=3, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players=players, player_stats=stats)
+    picks = season_all_star(gs)
+    by_role = {p["role"]: p["player_id"] for p in picks}
+    assert set(by_role) == {"duelist", "controller", "initiator", "sentinel", "flex"}
+    assert by_role["duelist"] == "d2"  # the higher-rated duelist wins the slot
+    assert sum(1 for e in gs.chronicle if e.kind == "all_star") == 5
+    assert any("All-Star Five" in n for n in gs.news)
+
+
+def test_season_all_star_empty_without_eligible_players():
+    p = _award_player("solo", 75)
+    stats = {"solo": PlayerSeasonStats(maps=2, rating_sum=3.0, kills=20)}  # < 6 maps
+    gs = _award_gs([p], stats)
+    from esports_sim.manager.narrative import season_all_star
+    assert season_all_star(gs) == []

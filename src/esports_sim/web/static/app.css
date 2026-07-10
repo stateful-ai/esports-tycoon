@@ -603,6 +603,20 @@ svg.iso .plabel { font-size: 2.4px; }
   padding-bottom: 6px; border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
 }
 .v-lineup .lu-team { flex: 1; min-width: 0; }
+/* Round-by-round timeline strip in the match viewer. */
+.v-timeline {
+  display: flex; flex-wrap: wrap; gap: 3px; flex: none;
+  padding: 6px 0; border-bottom: 1px solid var(--es-color-border-secondary, #1c202b);
+}
+.v-tl-round {
+  min-width: 20px; height: 18px; padding: 0 3px; border-radius: 3px;
+  font-size: 9px; font-weight: 700; line-height: 16px; color: #fff;
+  border: 1px solid transparent; cursor: pointer;
+}
+.v-tl-round.a { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 60%, transparent); }
+.v-tl-round.b { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent); }
+.v-tl-round.active { outline: 2px solid var(--es-color-text-primary, #e6ecf5); outline-offset: -1px; }
+.v-tl-plant { margin-left: 1px; opacity: .85; }
 .v-lineup .lu-team-name {
   text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
   margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

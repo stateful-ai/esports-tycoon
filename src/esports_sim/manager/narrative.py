@@ -488,6 +488,57 @@ def season_awards(gs: GameState) -> list[AwardRecord]:
     return out
 
 
+_ALL_STAR_ROLES = ("duelist", "controller", "initiator", "sentinel", "flex")
+
+
+def season_all_star(gs: GameState) -> list[dict]:
+    """The season's All-Star Five: the top-rated eligible tier-1 player at
+    each role (min maps). Chronicled as 'all_star' entries plus one news
+    line. Grounded in season stats; a role with no eligible player is left
+    empty. Call at offseason, before player_stats resets."""
+    from esports_sim.manager import chronicle
+
+    def team_id_of(pid: str) -> str:
+        return next((t.id for t in gs.teams.values() if pid in t.player_ids), "")
+
+    def tier_of(pid: str) -> int:
+        return next((t.tier for t in gs.teams.values() if pid in t.player_ids), 1)
+
+    eligible = {
+        pid: st
+        for pid, st in gs.player_stats.items()
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 1
+    }
+    picks: list[dict] = []
+    for role in _ALL_STAR_ROLES:
+        cands = {
+            pid: st for pid, st in eligible.items()
+            if str(gs.players[pid].role) == role
+        }
+        if not cands:
+            continue
+        best = max(cands, key=lambda pid: (cands[pid].rating, pid))
+        p = gs.players[best]
+        picks.append(
+            {"role": role, "player_id": best, "handle": p.handle,
+             "rating": round(cands[best].rating, 2)}
+        )
+
+    if not picks:
+        return []
+    for pick in picks:
+        chronicle.record(
+            gs, "all_star",
+            f"{pick['handle']} named to the All-Star Five ({pick['role']}).",
+            team_id=team_id_of(pick["player_id"]),
+            player_id=pick["player_id"],
+            data={"role": pick["role"], "rating": f"{pick['rating']:.2f}"},
+        )
+    listing = ", ".join(f"{p['handle']} ({p['role']})" for p in picks)
+    gs.push_news(f"All-Star Five: {listing}.")
+    return picks
+
+
 def season_storylines(gs: GameState, season: int | None = None) -> list[str]:
     """The season's grounded storyline clauses — champion, MVP, biggest
     riser, a marquee retirement, the tactical era. Each cites a record on

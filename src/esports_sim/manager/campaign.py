@@ -1838,6 +1838,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             data={"award": a.award, "value": a.value},
         )
 
+    # The All-Star Five (best per role) — chronicled + a news line inside.
+    stars = narrative.season_all_star(gs)
+    if stars:
+        report.notes.append(
+            "All-Star Five: " + ", ".join(f"{s['handle']} ({s['role']})" for s in stars)
+        )
+
     # The season's tactical era enters the chronicle while the final
     # identities are still in state (tactics reassign below).
     _record_meta_era(gs)

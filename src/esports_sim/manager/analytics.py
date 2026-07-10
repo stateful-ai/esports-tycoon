@@ -202,3 +202,105 @@ def season_report(gs: "GameState", season: int | None = None) -> dict:
         "storylines": narrative.season_storylines(gs, season),
         "dynasties": all_time_records(gs)["dynasties"],
     }
+
+
+def career_arc(gs: "GameState", pid: str) -> list[dict]:
+    """A player's career as a per-season timeline from the chronicle — their
+    debut, awards, milestones, and moves grouped by season, newest first.
+    Pure chronicle read (team titles carry a team_id not a player_id, so they
+    live on the team timeline, not here)."""
+    by_season: dict[int, list[dict]] = {}
+    for e in gs.chronicle:
+        if e.player_id != pid:
+            continue
+        by_season.setdefault(e.season, []).append({"kind": e.kind, "text": e.text})
+    return [
+        {"season": s, "events": by_season[s]}
+        for s in sorted(by_season, reverse=True)
+    ]
+
+
+def parity(gs: "GameState") -> dict:
+    """Competitive parity of the save from the world-title record: how many
+    distinct teams have won, and the most-titled team's share (higher
+    distinct / lower share = more open competition)."""
+    champs = [
+        e.team_id for e in gs.chronicle
+        if e.kind == "champions_title" and e.team_id
+    ]
+    if not champs:
+        return {"titles": 0, "distinct_champions": 0, "top_share": 0.0}
+    counts: dict[str, int] = {}
+    for tid in champs:
+        counts[tid] = counts.get(tid, 0) + 1
+    return {
+        "titles": len(champs),
+        "distinct_champions": len(counts),
+        "top_share": round(max(counts.values()) / len(champs), 2),
+    }
+
+
+def playtest_summary(gs: "GameState") -> dict:
+    """A multi-season summary of a played save — the artifact a headless
+    playtest / world-model pipeline consumes. All chronicle + career_stats,
+    so it survives the per-season stat reset: title timelines, the award
+    slate over time, meta eras, parity, the record book, and the most
+    decorated career arcs."""
+
+    def _title_line(kind: str) -> list[dict]:
+        return [
+            {
+                "season": e.season,
+                "team": gs.teams[e.team_id].name if e.team_id in gs.teams else e.team_id,
+            }
+            for e in sorted(
+                (x for x in gs.chronicle if x.kind == kind and x.team_id),
+                key=lambda x: x.season,
+            )
+        ]
+
+    awards_tl = [
+        {
+            "season": e.season, "award": e.data.get("award", "Award"),
+            "handle": e.text.split(" wins", 1)[0],
+        }
+        for e in sorted(
+            (x for x in gs.chronicle if x.kind == "award"),
+            key=lambda x: (x.season, x.data.get("award", "")),
+        )
+    ]
+
+    honours: dict[str, int] = {}
+    for e in gs.chronicle:
+        if e.kind == "award" and e.player_id:
+            honours[e.player_id] = honours.get(e.player_id, 0) + 1
+    top_arcs = []
+    for pid in sorted(honours, key=lambda p: (-honours[p], p))[:5]:
+        cs = gs.career_stats.get(pid)
+        top_arcs.append({
+            "player_id": pid,
+            "handle": gs.players[pid].handle if pid in gs.players else pid,
+            "honours": honours[pid],
+            "career_kills": cs.kills if cs else None,
+            "seasons": cs.seasons if cs else None,
+        })
+
+    meta_eras = [
+        {"season": e.season, "text": e.text}
+        for e in sorted(
+            (x for x in gs.chronicle if x.kind == "meta_shift" and not x.team_id),
+            key=lambda x: x.season,
+        )
+    ]
+    recs = all_time_records(gs)
+    return {
+        "seasons_played": gs.season,
+        "champions_timeline": _title_line("champions_title"),
+        "masters_timeline": _title_line("masters_title"),
+        "award_timeline": awards_tl,
+        "meta_eras": meta_eras,
+        "parity": parity(gs),
+        "dynasties": recs["dynasties"],
+        "records": recs["records"],
+        "top_career_arcs": top_arcs,
+    }

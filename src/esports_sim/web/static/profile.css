@@ -335,6 +335,19 @@
   color: var(--es-color-warn, #e8b34b);
 }
 
+/* Career arc — a per-season chronicle timeline on the player profile. */
+.pf-arc { display: flex; flex-direction: column; gap: 7px; }
+.pf-arc-row { display: flex; gap: 10px; align-items: baseline; }
+.pf-arc-season {
+  flex: 0 0 auto; font-weight: 700;
+  color: var(--es-color-text-secondary, #a2aec6);
+}
+.pf-arc-evs { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pf-arc-ev { font-size: var(--es-text-xs, 11px); }
+.pf-arc-ev.arc-award, .pf-arc-ev.arc-all_star {
+  color: var(--es-color-warn, #e8b34b);
+}
+
 /* Honours — the trophy cabinet: one row per individual season award. */
 .pf-honour {
   display: flex; align-items: baseline; gap: 8px;

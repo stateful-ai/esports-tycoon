@@ -1817,6 +1817,13 @@ async function standings(v) {
       }
       rc.appendChild(row);
     }
+    if (records.parity && records.parity.titles > 0) {
+      const p = records.parity;
+      rc.appendChild(el("div", "muted es-parity",
+        `Parity: ${p.distinct_champions} distinct champion${p.distinct_champions !== 1 ? "s" : ""} ` +
+        `across ${p.titles} title${p.titles !== 1 ? "s" : ""} · ` +
+        `top team's share ${Math.round(p.top_share * 100)}%`));
+    }
     v.appendChild(rc);
   }
 
