@@ -323,14 +323,6 @@ def _development_items(gs: "GameState", season: int, week: int):
                 _make(season, week, "development", f"retire_seat|{_hash_id(msg)}",
                       "A player on your roster retires", msg, "roster"),
             ))
-        elif "Milestone:" in msg:
-            # A chronicle development milestone on THIS manager's roster
-            # (a player crossed an ability band for the first time).
-            out.append((
-                _P_DEV,
-                _make(season, week, "development", f"milestone|{_hash_id(msg)}",
-                      "Development milestone", msg, "roster"),
-            ))
         elif any(m in msg for m in development.DEV_EVENT_MARKERS):
             # A development event on THIS manager's roster (breakthrough,
             # slump, injury scare, viral clip, ...).
@@ -444,49 +436,6 @@ def _news_items(gs: "GameState", season: int, week: int):
     return out
 
 
-def _department_items(gs: "GameState", season: int, week: int):
-    """The analytics department's weekly opponent report (GDD section 10:
-    departments generate actionable reads). Tier-gated like the stat
-    views it derives from — a bare org gets no briefing. Every number is
-    a real season aggregate; nothing is invented."""
-    from esports_sim.manager import staff as staff_mod
-
-    if staff_mod.analytics_tier(gs) < 2:
-        return []
-    # The briefing previews NEXT week's opponent (this runs at the end of
-    # a tick, before the week counter rolls — this week's game is played).
-    fx = gs.team_fixture(gs.acting_team_id, week + 1)
-    if fx is None or fx.played:
-        return []
-    opp = fx.team_b if fx.team_a == gs.acting_team_id else fx.team_a
-    ts = gs.team_stats.get(opp)
-    if ts is None or ts.maps < 3:
-        return []  # too few maps to say anything honest
-    opp_team = gs.teams.get(opp)
-    if opp_team is None:
-        return []
-    atk = 100.0 * ts.atk_won / max(ts.atk_rounds, 1)
-    deff = 100.0 * ts.def_won / max(ts.def_rounds, 1)
-    pistol = 100.0 * ts.pistols_won / max(ts.pistols, 1)
-    lean = (
-        "their defense is the weak half - lean into your attack"
-        if deff < atk
-        else "their attack carries them - win your defensive rounds"
-    )
-    body = (
-        f"Department briefing on {opp_team.name}:\n"
-        f"- attack rounds won: {atk:.0f}%\n"
-        f"- defense rounds won: {deff:.0f}%\n"
-        f"- pistol conversion: {pistol:.0f}%\n"
-        f"Read: {lean}."
-    )
-    return [(
-        _P_SCOUTING,
-        _make(season, week, "scouting", f"dept|{opp}|{week}",
-              f"Analytics briefing - {opp_team.name}", body, "tactics"),
-    )]
-
-
 # ---------------------------------------------------------------------------
 # Generation + rolling cap
 
@@ -530,7 +479,6 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _sponsor_items(gs, season, week)
         candidates += _scouting_items(gs, season, week)
         candidates += _rotation_items(gs, season, week)
-        candidates += _department_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
     candidates += _news_items(gs, season, week)

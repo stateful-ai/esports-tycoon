@@ -94,24 +94,6 @@ function renderTeamGrid(grid, teams, onPick) {
   }
 }
 
-// Legacy-career offer cards (lobby + job market). Each offer is an org
-// courting the manager with an archetype, a contract, and a board goal.
-function renderOfferGrid(grid, offers, onPick) {
-  grid.innerHTML = "";
-  for (const o of offers) {
-    const arch = (o.archetype || "").replace(/_/g, " ");
-    const btn = el(
-      "button",
-      "team-pick",
-      `<b>${o.team_name}</b> <span class="pill">${arch}</span><br>
-       <span class="muted">${(o.region || "").toUpperCase()} · ${o.seasons}-season deal · board: ${o.goal}</span><br>
-       <span class="muted">${o.blurb || ""}</span>`
-    );
-    btn.onclick = () => onPick(o);
-    grid.appendChild(btn);
-  }
-}
-
 function setupLobby(lob) {
   const create = $("#lobby-create");
   const join = $("#lobby-join");
@@ -138,36 +120,8 @@ function setupLobby(lob) {
   // null = generated fictional world; otherwise a roster-pack id.
   let world = null;
   let shared_ = false;
-  // "sandbox" = classic (pick any org, manage forever);
-  // "legacy" = career mode (offers, contracts, boards that fire you).
-  let gameMode = "sandbox";
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
-  const renderModes = () => {
-    const box = $("#ng-modes");
-    box.innerHTML = "";
-    const mk = (label, id) => {
-      const b = el(
-        "button",
-        "btn" + (gameMode === id ? " btn-primary" : ""),
-        label
-      );
-      b.onclick = () => {
-        gameMode = id;
-        renderModes();
-        renderPick();
-      };
-      box.appendChild(b);
-    };
-    mk("Sandbox", "sandbox");
-    mk("Legacy career", "legacy");
-    $("#ng-mode-desc").textContent =
-      gameMode === "legacy"
-        ? "Start from real job offers. Your board sets a goal and can " +
-          "fire you; your career and reputation outlive any one club."
-        : "Pick any organisation and manage it forever. No contracts, " +
-          "no sack race - the classic game.";
-  };
   const renderWorlds = () => {
     const box = $("#ng-worlds");
     box.innerHTML = "";
@@ -199,29 +153,10 @@ function setupLobby(lob) {
     } else {
       desc.classList.add("hidden");
     }
-    if (gameMode === "legacy") {
-      // Career offers come from the server (same seed/pack derivation
-      // the create call validates against). Repaint on seed edits.
-      const grid = $("#ng-teams");
-      grid.innerHTML = '<span class="muted">Fetching offers…</span>';
-      const seed = parseInt($("#ng-seed").value) || 2026;
-      api(
-        `/api/lobby/offers?seed=${seed}` +
-          (world ? `&pack=${encodeURIComponent(world)}` : "")
-      )
-        .then((r) =>
-          renderOfferGrid(grid, r.offers, (o) =>
-            createGame(o.team_id, shared_, world, "legacy")
-          )
-        )
-        .catch(() => (grid.innerHTML = '<span class="muted">Offer fetch failed.</span>'));
-      return;
-    }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
       createGame(t.id, shared_, world)
     );
   };
-  $("#ng-seed").addEventListener("change", () => renderPick());
   const showCreate = (shared) => {
     shared_ = shared;
     create.classList.remove("hidden");
@@ -229,7 +164,6 @@ function setupLobby(lob) {
     $("#lobby-create-hint").textContent = shared
       ? "Pick your team. Others join with the code you'll get next."
       : "Pick your organisation. Seed controls the generated league.";
-    renderModes();
     renderWorlds();
     renderPick();
   };
@@ -244,25 +178,14 @@ function setupLobby(lob) {
     const code = ($("#join-code").value || "").trim().toUpperCase();
     if (code.length !== 5) return toast("Enter the 5-character game code.");
     const r = await api("/api/lobby/teams?code=" + encodeURIComponent(code));
-    if (r.game_mode === "legacy") {
-      // A legacy world: joiners pick from THEIR offer slate, not the
-      // full team list.
-      const o = await api("/api/lobby/offers?code=" + encodeURIComponent(code));
-      renderOfferGrid($("#join-teams"), o.offers, (of) =>
-        joinGame(code, of.team_id)
-      );
-      return;
-    }
     renderTeamGrid($("#join-teams"), r.teams, (t) => joinGame(code, t.id));
   };
   showCreate(false); // default view
 }
 
-async function createGame(teamId, shared, pack = null, gameMode = "sandbox") {
+async function createGame(teamId, shared, pack = null) {
   const seed = parseInt($("#ng-seed").value) || 2026;
-  const r = await api("/api/new", {
-    team_id: teamId, seed, shared, pack, game_mode: gameMode,
-  });
+  const r = await api("/api/new", { team_id: teamId, seed, shared, pack });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
   $("#worlds-btn").classList.remove("hidden");
@@ -434,59 +357,8 @@ function dashGoTab(name) {
   if (b) b.click();
 }
 
-// Legacy career: the job-market takeover panel a dismissed manager sees
-// instead of the normal hub. Accepting rebinds the session server-side,
-// so a full reload is the honest refresh.
-function renderJobMarket(v, careerState) {
-  v.innerHTML = "";
-  const panel = el("div", "panel");
-  panel.appendChild(el("h2", "", "The board has made a change"));
-  panel.appendChild(
-    el(
-      "p",
-      "muted",
-      "You've been relieved of your duties - but the phone is ringing. " +
-        "Pick your next project; the world waits until you do."
-    )
-  );
-  const grid = el("div", "team-grid");
-  renderOfferGrid(grid, careerState.offers, async (o) => {
-    try {
-      await api("/api/actions/accept_job", { team_id: o.team_id });
-      toast(`Appointed at ${o.team_name}.`);
-      location.reload();
-    } catch (e) {
-      toast(String(e.message || e));
-    }
-  });
-  panel.appendChild(grid);
-  v.appendChild(panel);
-}
-
-// The contract strip on the legacy dashboard: goal, term, board patience.
-function careerStrip(careerState) {
-  const c = careerState.contract;
-  if (!c) return null;
-  const tone = c.patience >= 60 ? "good" : c.patience >= 30 ? "warn" : "bad";
-  const strip = el("div", "row es-career-strip", "");
-  strip.style.cssText = "gap:10px;align-items:center;flex-wrap:wrap";
-  strip.appendChild(
-    el("span", "pill", (careerState.seat.archetype || "manager").replace(/_/g, " "))
-  );
-  strip.appendChild(
-    el("span", "muted", `Board goal: <b>${c.goal}</b> · contract through S${c.end_season}`)
-  );
-  strip.appendChild(statTile("Board patience", Math.round(c.patience), { tone }));
-  return strip;
-}
-
 async function dashboard(v) {
   const s = App.state;
-  // A dismissed legacy manager sees the job market, nothing else.
-  if (s.career && s.career.seat && s.career.seat.unemployed) {
-    renderJobMarket(v, s.career);
-    return;
-  }
   const me = s.user_team;
   const myId = me.id;
   const fix = s.next_fixture;
@@ -554,12 +426,6 @@ async function dashboard(v) {
   };
 
   const oppName = fix ? (fix.team_a === myId ? fix.team_b_name : fix.team_a_name) : "";
-
-  /* -- 0. Legacy career strip (contract + board patience) ------------------ */
-  if (s.career && s.career.mode === "legacy" && s.career.contract) {
-    const strip = careerStrip(s.career);
-    if (strip) v.appendChild(strip);
-  }
 
   /* -- 1. NEXT MATCH spotlight -------------------------------------------- */
   const spot = el("div", "card es-spotlight");
@@ -2224,17 +2090,6 @@ async function stats(v) {
     v.appendChild(aw);
   }
 
-  // The Hall of Fame — careers the save remembers (inducted at
-  // retirement; server-scored from the chronicle).
-  if ((data.hall_of_fame ?? []).length) {
-    const hf = el("div", "card");
-    hf.innerHTML = `<h2>Hall of Fame</h2>` + data.hall_of_fame
-      .map((h) => `<div class="newsline"><span class="pill">S${h.season}</span>
-        <b>${h.handle}</b>${h.team_name ? ` (${h.team_name})` : ""} — ${h.blurb}</div>`)
-      .join("");
-    v.appendChild(hf);
-  }
-
   const lead = el("div", "card");
   const splitLabel = split ? ` — ${split.kind}: ${split.key}` : "";
   lead.innerHTML = `<h2>League leaders — season ${App.state.season}${splitLabel}</h2>`;
@@ -2351,17 +2206,11 @@ async function social(v) {
         : post.author_kind === "team"
           ? `<b class="tlink" data-tid="${post.author_id}">@${post.author}</b>`
           : `<b>${post.author}</b>`;
-      const node = el("div", "post",
+      feedCard.appendChild(el("div", "post",
         `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
            <span class="muted">S${post.season} W${post.week}</span></div>
          <div class="post-body">${post.text}</div>
-         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`);
-      // LLM-ghost-written posts keep the grounded fact on hover; the
-      // server only ever rephrases real outcomes (web/llm_social.py).
-      if (post.ai && post.fact) {
-        node.querySelector(".post-body").title = post.fact;
-      }
-      feedCard.appendChild(node);
+         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`));
     }
   }
   band.appendChild(feedCard);

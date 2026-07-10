@@ -47,24 +47,6 @@ def _hint(*parts) -> int:
     return int.from_bytes(b.digest(), "big")
 
 
-# Per-save media voices: every world gets ITS OWN named outlets — the
-# wire service, the clip account, the balance-watch blog — picked
-# deterministically from the seed (GDD section 10: a persistent media
-# ecosystem instead of anonymous one-off stories). Rng-free, so the
-# social stream's draw order never shifts.
-_WIRE_NAMES = ["VCT Wire", "The Spike Report", "Round Eleven", "SiteTake"]
-_CLIP_NAMES = ["ClipHub", "FragVault", "HighlightHQ", "OneTapDaily"]
-_PATCH_NAMES = ["PatchWatch", "MetaLens", "BalanceDesk", "NerfHerald"]
-
-
-def media_voices(gs) -> dict[str, str]:
-    return {
-        "wire": _WIRE_NAMES[_hint(gs.seed, "voice", "wire") % len(_WIRE_NAMES)],
-        "clips": _CLIP_NAMES[_hint(gs.seed, "voice", "clips") % len(_CLIP_NAMES)],
-        "patch": _PATCH_NAMES[_hint(gs.seed, "voice", "patch") % len(_PATCH_NAMES)],
-    }
-
-
 def _baseline(seed: int, p) -> int:
     """Stable starting audience: exponential in ability (stars are famous,
     journeymen aren't), jittered per player, discounted for teenagers
@@ -136,7 +118,6 @@ def weekly_tick(
     resolve before this runs, so recomputing membership from the live
     rosters would credit a same-tick mover with the wrong team's result."""
     seed_followers(gs)
-    _voices = media_voices(gs)  # this save's named outlets (rng-free)
     mental_events = mental_events or []
     season, week = report.season, report.week
     before = {pid: gs.players[pid].followers for pid in sorted(gs.players)}
@@ -201,7 +182,7 @@ def weekly_tick(
         if ev["kind"] == "viral_clip":
             _grow(p, 10.0 + float(rng.uniform(0.0, 15.0)))
             _post(
-                gs, season, week, "viral", "media", p.id, _voices["clips"],
+                gs, season, week, "viral", "media", p.id, "ClipHub",
                 f"That {p.handle} clip is everywhere.",
                 _likes(rng, p.followers * 3), salt=p.id,
             )
@@ -222,7 +203,7 @@ def weekly_tick(
         bp = gs.players[best]
         b_rating = perf[best]["rating_sum"] / max(perf[best]["maps"], 1)
         _post(
-            gs, season, week, "hype", "media", bp.id, _voices["wire"],
+            gs, season, week, "hype", "media", bp.id, "VCT Wire",
             f"Player of the Week: {bp.handle} — {b_rating:.2f} rating "
             f"across {perf[best]['maps']} map"
             f"{'s' if perf[best]['maps'] != 1 else ''}.",
@@ -281,13 +262,13 @@ def weekly_tick(
             continue
         if ev["kind"] == "heater":
             _post(
-                gs, season, week, "hype", "media", p.id, _voices["wire"],
+                gs, season, week, "hype", "media", p.id, "VCT Wire",
                 f"{p.handle} cannot miss right now.",
                 _likes(rng, p.followers * 2), salt=p.id,
             )
         elif ev["kind"] == "tilt_spiral":
             _post(
-                gs, season, week, "drama", "media", p.id, _voices["wire"],
+                gs, season, week, "drama", "media", p.id, "VCT Wire",
                 f"What has happened to {p.handle}?",
                 _likes(rng, p.followers), salt=p.id,
             )
@@ -303,7 +284,7 @@ def weekly_tick(
         shipped_over_break = week == 1 and note.version == f"{season}.00"
         if (shipped_this_week or shipped_over_break) and note.lines:
             _post(
-                gs, season, week, "hype", "media", "", _voices["patch"],
+                gs, season, week, "hype", "media", "", "PatchWatch",
                 f"Patch {note.version} is live: {note.lines[0]}.",
                 _likes(rng, 400_000), salt=note.version,
             )
@@ -357,7 +338,6 @@ def _sentiment_tick(
     extremes touch the roster's heads, and post when a fanbase flips. The
     target construction is bounded, so sentiment can't run away — a team
     that wins every week converges near 60, not 100."""
-    _voices = media_voices(gs)
     won_series: dict[str, bool] = {}
     stakes: dict[str, float] = {}
     for f in report.fixtures:
@@ -416,13 +396,13 @@ def _sentiment_tick(
         team = gs.teams[tid]
         if prev < 70.0 <= cur:
             _post(
-                gs, report.season, report.week, "hype", "media", tid, _voices["wire"],
+                gs, report.season, report.week, "hype", "media", tid, "VCT Wire",
                 f"{team.name} fans are ALL-IN right now.",
                 _likes(rng, max(team.fan_count, 2_000)), salt=tid,
             )
         elif prev > 30.0 >= cur:
             _post(
-                gs, report.season, report.week, "drama", "media", tid, _voices["wire"],
+                gs, report.season, report.week, "drama", "media", tid, "VCT Wire",
                 f"The replies under every {team.name} post are getting ugly.",
                 _likes(rng, max(team.fan_count, 2_000)), salt=tid,
             )

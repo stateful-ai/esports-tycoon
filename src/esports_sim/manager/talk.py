@@ -120,25 +120,9 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
 
     rng = RngTree(gs.seed).derive("talk", gs.season, gs.week, pid, option_id)
     tags = _tags(p)
+    risky = tags & RISKY_TAGS
     steady = tags & STEADY_TAGS
     young = tags & YOUNG_TAGS
-    # The continuous layer under the tags: how criticism lands rides
-    # resilience/ego, not a binary "risky" flag — anyone can bristle on a
-    # bad day (base 25%), a brittle or big-ego player far more often.
-    from esports_sim.manager import memories, personality
-
-    bristle_p = min(
-        0.9,
-        max(
-            0.05,
-            0.25
-            + 0.5 * max(0.0, -personality.dev(p, "resilience"))
-            + 0.25 * max(0.0, personality.dev(p, "ego")),
-        ),
-    )
-    # History with THIS org tilts the room (a debut given, a release
-    # survived): a nudge, never a lever.
-    loyalty = memories.loyalty_bias(gs, pid, gs.acting_team_id)
 
     d_morale = 0.0
     d_form = 0.0
@@ -146,14 +130,12 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
     msg = ""
 
     if option_id in ("reassure", "back", "commit", "praise"):
-        d_morale = 4.0 + (1.5 if young else 0.0) + loyalty * 0.15
+        d_morale = 4.0 + (1.5 if young else 0.0)
         if steady:
             d_morale -= 1.0  # veterans don't need the pep talk
         msg = f"{p.handle} takes it well."
-        if loyalty >= 5.0:
-            msg = f"{p.handle} takes it well. This club means something to them."
     elif option_id in ("challenge", "bench_threat", "push"):
-        if rng.random() < bristle_p:
+        if risky and rng.random() < 0.55:
             d_morale = -5.0
             d_chem = -1.0
             msg = f"{p.handle} bristles. That landed badly."

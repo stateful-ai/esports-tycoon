@@ -438,14 +438,12 @@ def test_offseason_patch_is_usage_driven_and_state_resets(game_data) -> None:
     assert gs.game_plans_by == {}
     assert gs.team_sentiment[gs.user_team_id] == pytest.approx(65.0)
 
-    # The new season's first social tick posts the break patch — under
-    # this save's own balance-watch outlet (media voices are per-save).
+    # The new season's first social tick posts the break patch.
     advance_week(gs, gd)
-    patch_voice = social.media_voices(gs)["patch"]
     assert any(
-        p.author == patch_voice and note.version in p.text
+        p.author == "PatchWatch" and note.version in p.text
         for p in gs.social_feed
-    ), "offseason patch gets its balance-watch post in the new season's week 1"
+    ), "offseason patch gets its PatchWatch post in the new season's week 1"
 
 
 def test_heater_growth_can_fire_milestones(campaign) -> None:

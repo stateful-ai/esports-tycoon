@@ -110,23 +110,10 @@ events), the community-sentiment layer (feed → sentiment →
 confidence/morale + sponsor pressure), meta patch cycles (usage-driven
 agent buffs/nerfs held on GameState), pre-match game plans (per-match
 dial overrides, focus targets, scouting-scaled prep edge), and
-one-match lineups over the 7-man bench — and, as of the Legacy Mode
-pass (2026-07-09, GDD section 10): the career Chronicle (append-only
-history every legacy system reads), two game modes (sandbox = classic,
-legacy = career offers + manager contracts + board patience + dismissal
-+ job market, solo and LAN), chronicle-derived manager reputation and
-earned philosophies, personality axes under the tags, player/org
-memories (loyalty in renewals/talks, board posture on reunions),
-rivalries, the Hall of Fame, living-history title callbacks, per-save
-media voices, the coaching tree (retirees into the staff pool),
-organizational knowledge (playbooks/anti-strats/methodology feeding the
-game-plan prep edge, guarded by the new dynasty gate), a psychologist +
-performance-coach department with weekly analytics briefings, and
-strategy diffusion with chronicled meta eras. Still open:
+one-match lineups over the 7-man bench. Still open:
 
 - Mid-series (between-map) substitutions — lineups are per-match today
 - AI orgs setting game plans / carrying benches (documented parity choice)
-- Memories/relationship arcs beyond loyalty (grudges, mentor bonds)
 
 ### Track B — RL research arm
 - Gym-style `env` wrapper over the headless API
@@ -174,15 +161,6 @@ Explicit non-goals. Calling these out so we don't drift.
 
 ## Changelog
 
-- **2026-07-09 (Legacy Mode)** — GDD section 10 shipped in one pass,
-  phases P0-P5 on a chronicle-first architecture (see
-  `docs/proposals/2026-07-09-new-systems-proposal.md`): career
-  Chronicle + schema v5, sandbox/legacy game modes with career offers,
-  manager contracts, board reviews, dismissal and the job market;
-  derived reputation + earned philosophies; personality axes +
-  memories; rivalries, Hall of Fame, living history, per-save media
-  voices; coaching tree, org knowledge + dynasty gate, expanded
-  backroom department; strategy diffusion + chronicled meta eras.
 - **2026-07-09** — The game grew past the MVP frame: Sprint 2 and the
   whole "Next" block shipped (web app + isometric viewer, narrative,
   analytics, veto/fog), then kept going — floor geometry with

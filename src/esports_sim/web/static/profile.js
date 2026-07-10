@@ -511,23 +511,6 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
-  // Memories ------------------------------------------------------------
-  // The player's defining chronicle entries — what their career will be
-  // remembered for (server-selected; pure history, renders as-is).
-  const mems = data.memories || [];
-  if (mems.length) {
-    const sec = pfSection("Memories");
-    const list = el("ul", "pf-memories");
-    list.style.cssText = "margin:0;padding-left:18px";
-    for (const m of mems) {
-      const li = el("li", "muted", "");
-      li.textContent = m;
-      list.appendChild(li);
-    }
-    sec.appendChild(list);
-    frag.appendChild(sec);
-  }
-
   // Career ------------------------------------------------------------------
   const career = data.career || [];
   if (career.length) {
@@ -673,24 +656,6 @@ function renderTeamProfile(data) {
   }
 
   // Honors ------------------------------------------------------------------
-  // Rivalries — the pairs whose history means something (server-ranked).
-  const rivals = data.rivals || [];
-  if (rivals.length) {
-    const sec = pfSection("Rivalries");
-    const chips = el("div", "pf-chips");
-    for (const r of rivals) {
-      const chip = el(
-        "span",
-        "pf-rel-chip tlink rel-clash",
-        `${r.name}<span class="pf-rel-kind">heat ${Math.round(r.intensity)}</span>`
-      );
-      if (r.team_id) chip.dataset.tid = r.team_id;
-      chips.appendChild(chip);
-    }
-    sec.appendChild(chips);
-    frag.appendChild(sec);
-  }
-
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
     const sec = pfSection("Honors");

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import chronicle, development, relationships
+from esports_sim.manager import development, relationships
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.schemas import Player
@@ -107,12 +107,6 @@ def sign_player(
     if team.captain_id is None:
         team.captain_id = player_id
     gs.push_news(f"{team.name} sign {p.handle} ({p.playstyle}) for {p.salary:,}/wk.")
-    chronicle.record(
-        gs, "signing",
-        f"{team.name} sign {p.handle}.",
-        team_id=team_id,
-        player_id=player_id,
-    )
     return True, f"signed {p.handle} at {p.salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
@@ -131,12 +125,6 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     p.morale = max(0.0, p.morale - 15.0)
     gs.free_agent_ids.append(player_id)
     gs.push_news(f"{team.name} release {p.handle} (severance {severance:,} cr).")
-    chronicle.record(
-        gs, "release",
-        f"{team.name} release {p.handle}.",
-        team_id=team_id,
-        player_id=player_id,
-    )
     return True, f"released {p.handle}, severance {severance:,} cr"
 
 
@@ -147,24 +135,11 @@ def renew_contract(
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
     p = gs.players[player_id]
-    # Memory moves the table a nudge: a player whose career was MADE here
-    # (debut, milestones, a title run) re-signs a shade under market; one
-    # this org once released wants it back in salary. +/-10% at the caps.
-    from esports_sim.manager import memories
-
-    loyalty = memories.loyalty_bias(gs, player_id, team_id)
     new_salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
-    new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
     p.salary = new_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
-    p.morale = min(100.0, p.morale + 5.0 + loyalty * 0.2)
+    p.morale = min(100.0, p.morale + 5.0)
     gs.push_news(f"{p.handle} re-signs with {team.name} at {new_salary:,}/wk.")
-    chronicle.record(
-        gs, "renewal",
-        f"{p.handle} re-signs with {team.name}.",
-        team_id=team_id,
-        player_id=player_id,
-    )
     return True, f"renewed {p.handle} at {new_salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
@@ -295,7 +270,6 @@ def _generate_rookie(gs: GameState, gd, rng: np.random.Generator) -> Player:
     p.contract_weeks_left = 0
     gs.players[pid] = p
     gs.free_agent_ids.append(pid)
-    chronicle.mark_debut_pending(gs, pid)
     gs.push_news(f"Prospect {p.handle} ({p.playstyle}) enters free agency.")
     return p
 
@@ -441,13 +415,6 @@ def execute_transfer(
     gs.push_news(
         f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} "
         f"for {fee:,} cr."
-    )
-    chronicle.record(
-        gs, "transfer",
-        f"{p.handle} joins {buyer.name} from {seller.name}.",
-        team_id=buyer_id,
-        player_id=pid,
-        data={"from": seller_id, "fee": str(fee)},
     )
     return True, f"{p.handle} joins {buyer.name} for {fee:,} cr"
 

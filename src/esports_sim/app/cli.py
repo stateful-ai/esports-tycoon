@@ -16,7 +16,7 @@ from rich.panel import Panel
 from rich.rule import Rule
 from rich.table import Table
 
-from esports_sim.manager import advance_week, career, new_campaign
+from esports_sim.manager import advance_week, new_campaign
 from esports_sim.manager.market import (
     ROSTER_MIN,
     asking_salary,
@@ -107,10 +107,6 @@ def new_game_screen(gd: GameData) -> GameState:
         c = ask("World number (blank = 0): ")
         if c.isdigit() and 1 <= int(c) <= len(packs):
             pack = load_roster_pack(packs[int(c) - 1].id)
-    # Game mode: sandbox (classic) or a legacy career.
-    console.print("Mode: 1) Sandbox - pick any org, manage forever")
-    console.print("      2) Legacy - start from job offers; boards can fire you")
-    mode = "legacy" if ask("Mode (blank = 1): ") == "2" else "sandbox"
     # Build a preview campaign to show the actual league the seed produces.
     preview_team = (
         sorted(t.id for t in pack.teams.values() if t.tier == 1)[0]
@@ -118,32 +114,6 @@ def new_game_screen(gd: GameData) -> GameState:
         else "team_nexus"
     )
     gs = new_campaign(gd, seed, user_team_id=preview_team, pack=pack)
-    if mode == "legacy":
-        offers = career.new_game_offers(gs, 0)
-        console.print("Your offers:")
-        for i, o in enumerate(offers, 1):
-            t = gs.teams[o.team_id]
-            goal = career.GOAL_LABELS.get(o.goal, o.goal)
-            console.print(
-                f"  {i}) {t.name} [{o.archetype.replace('_', ' ')}] - "
-                f"{o.seasons}-season deal, board wants: {goal}"
-            )
-            console.print(f"     {o.blurb}")
-        while True:
-            c = ask("Offer number: ")
-            if c.isdigit() and 1 <= int(c) <= len(offers):
-                offer = offers[int(c) - 1]
-                break
-        gs = new_campaign(
-            gd, seed, user_team_id=offer.team_id, pack=pack,
-            mode="legacy", career_offer=offer,
-        )
-        console.print(
-            f"[green]You take over at {team_name(gs, gs.user_team_id)}.[/] "
-            f"(seed {seed})"
-        )
-        save(gs)
-        return gs
     table = Table(title="Pick your team", border_style="dim")
     table.add_column("#")
     table.add_column("Team")
@@ -457,36 +427,7 @@ def render_match_detail(gs: GameState, fixture, stats_list) -> None:
     )
 
 
-def job_market_screen(gs: GameState) -> None:
-    """A dismissed legacy manager picks their next club — the world does
-    not advance until they do (same rule the web advance gate enforces)."""
-    for mid in career.blocked_seats(gs):
-        offers = gs.career_offers_by[mid]
-        console.print(
-            "[red]The board has relieved you of your duties.[/] "
-            "Offers on the table:"
-        )
-        for i, o in enumerate(offers, 1):
-            goal = career.GOAL_LABELS.get(o.goal, o.goal)
-            console.print(
-                f"  {i}) {team_name(gs, o.team_id)} "
-                f"[{o.archetype.replace('_', ' ')}] - {o.seasons}-season "
-                f"deal, board wants: {goal}"
-            )
-        while True:
-            c = ask("Offer number: ")
-            if c.isdigit() and 1 <= int(c) <= len(offers):
-                ok, msg = career.accept_offer(gs, mid, offers[int(c) - 1].team_id)
-                if ok:
-                    console.print(f"[green]{msg}[/]")
-                    break
-        save(gs)
-
-
 def advance_screen(gs: GameState, gd: GameData) -> None:
-    # A dismissed legacy manager must take a job before the world moves.
-    if career.blocked_seats(gs):
-        job_market_screen(gs)
     # A legal roster is required to tick a match week (the offseason tick plays
     # no matches, so it's exempt). Same rule the web ready-up enforces.
     if gs.phase != "offseason":
@@ -498,8 +439,6 @@ def advance_screen(gs: GameState, gd: GameData) -> None:
     render_week_results(gs, report)
     save(gs)
     console.print("[dim]autosaved[/]")
-    if career.blocked_seats(gs):
-        job_market_screen(gs)
 
 
 def hub(gs: GameState, gd: GameData) -> None:
