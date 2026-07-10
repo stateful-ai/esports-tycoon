@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -169,6 +169,14 @@ def _migrate_v6_to_v7(data: dict) -> dict:
     return data
 
 
+def _migrate_v7_to_v8(data: dict) -> dict:
+    """v8 adds only new fields with defaults (the manager action log and
+    weekly telemetry snapshots — manager/telemetry.py). A v7 save loads
+    unchanged; the bump exists so an older build refuses a v8 save
+    cleanly."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -176,6 +184,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     4: _migrate_v4_to_v5,
     5: _migrate_v5_to_v6,
     6: _migrate_v6_to_v7,
+    7: _migrate_v7_to_v8,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -702,6 +711,46 @@ class CareerOffer(BaseModel):
     goal: str
     patience: float
     blurb: str
+
+
+class ActionRecord(BaseModel):
+    """One HUMAN manager decision, recorded at the moment the web/CLI
+    layer applied it (manager/telemetry.py). The campaign-scale
+    complement of the match event log: seed + action log fully
+    determines a career, which is what makes saved games replayable
+    inputs for RL/imitation training — and what tells us which features
+    real players actually touch. AI decisions are deliberately NOT
+    recorded (they're derivable from the seed). Append-only, never
+    pruned (same owner call as the chronicle)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    phase: str  # regular | playoffs | offseason (at action time)
+    manager_id: str  # seat id — follows the person in legacy mode
+    team_id: str  # org the action was taken for
+    # See telemetry.ACTION_KINDS for the closed vocabulary.
+    kind: str
+    # Compact stringly-typed args (pid, dial values, approach, ...).
+    params: dict[str, str] = Field(default_factory=dict)
+    source: str = "web"  # web | cli
+
+
+class TelemetrySnap(BaseModel):
+    """One post-tick org feature snapshot for a human seat (see
+    telemetry.state_features — the single source of truth for the
+    feature vector, shared with the RL episode exporter). Keyed by seat
+    id so an episode follows the MANAGER, not the org, across a legacy
+    dismissal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    phase: str
+    team_id: str  # org managed when the snapshot was taken ("" = between jobs)
+    features: dict[str, float] = Field(default_factory=dict)
 
 
 class ChronicleEntry(BaseModel):
@@ -1243,6 +1292,15 @@ class GameState(BaseModel):
     # Empty by default (hands-off sims never set one, so the balance gates
     # are byte-identical); additive/defaulted, pruned at the offseason.
     mentorships: dict[str, str] = Field(default_factory=dict)
+
+    # -- Telemetry (v8) --------------------------------------------------------
+    # Every HUMAN decision (manager/telemetry.py): the input half of the
+    # campaign's determinism contract, and the raw material for both RL
+    # episodes and the how-do-people-play report. Append-only.
+    action_log: list[ActionRecord] = Field(default_factory=list)
+    # Post-tick org feature snapshots per manager SEAT id — the state
+    # half of (state, action, reward) episodes (scripts/export_telemetry).
+    telemetry_snaps: dict[str, list[TelemetrySnap]] = Field(default_factory=dict)
 
     # -- Legacy Mode (v5) ------------------------------------------------------
     # "sandbox" = the classic game (pick any org, manage forever).
