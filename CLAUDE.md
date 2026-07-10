@@ -23,6 +23,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` (exit 1 = fail) |
 | Rotation pacing gate (25–35s via spawn, 8–18s spawn→entry) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |
+| Dynasty gate (title concentration over N seasons) | `... scripts\dynasty_report.py [seasons] [seed]` (exit 1 = fail) |
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
 | Map floor gate (plates touch; callouts/paths on-floor) | `... scripts\map_floor_audit.py` (exit 1 = fail) |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
@@ -77,12 +78,31 @@ Published at github.com/stateful-ai/esports-tycoon.
   digest; item actions derived LIVE from current offers, never stored),
   `state.py` (save; `standings_order` H2H tiebreaker; `schema_version`
   migrations — v3 moved staff candidates into the shared pool; v4 is a
-  pass-through for the game-plan/sentiment/patch fields). Player
+  pass-through for the game-plan/sentiment/patch fields; v5 adds the
+  Chronicle + legacy fields, backfilling a skeleton history from
+  champions/awards/retired). Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game
   plans live per-manager in `game_plans_by` (one per next fixture,
   consumed at sim time, may carry a one-match lineup).
+  **Legacy Mode (GDD section 10)** rides `chronicle.py` — an append-only
+  career-event list on GameState (titles/awards/moves/debuts/milestones;
+  NEVER pruned) that every legacy system READS, mirroring "the event log
+  is the only truth": `career.py` (game_mode sandbox|legacy, ManagerSeat
+  ids that follow the person, career offers, contracts + board patience
+  + dismissal + job market, reputation/philosophies DERIVED from the
+  chronicle), `personality.py` (five axes as a pure function of id+tags;
+  consumers scale by (axis-50)/50), `memories.py` (loyalty bias, board
+  posture — bounded nudges), `rivalries.py` (pair heat from playoff
+  meetings/poaches; offseason cooling), `hof.py` (induction at
+  retirement — the one STORED legacy view, retirees are deleted),
+  `knowledge.py` (org playbooks/anti-strats/methodology; leaks with
+  staff moves; feeds prep edge ONLY through a set game plan; guarded by
+  the dynasty gate), coaching tree via `staff.retire_into_staff`
+  (deterministic, no rng draw), and strategy diffusion in
+  `_adapt_ai_tactics` (strugglers copy the meta identity; season-end
+  meta eras chronicled).
 - `src/esports_sim/web/` — FastAPI, thin serializers over GameState; static
   vanilla-JS frontend on `ui/design-system` tokens. **UI holds no sim
   state — it renders event logs + GameState only.** Corollary: never

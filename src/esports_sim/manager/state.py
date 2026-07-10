@@ -445,6 +445,11 @@ class StaffMember(BaseModel):
     # Trophies collected while employed (appended by the campaign layer).
     titles: list[str] = Field(default_factory=list)
     seasons_experience: int = 0
+    # The org they last worked for IN THIS SAVE ("" = none) — hiring an
+    # ex-rival staffer carries part of their old book (knowledge leak).
+    last_org: str = ""
+    # Non-empty for coaching-tree members: the player id they used to be.
+    former_player_id: str = ""
 
 
 class SponsorObjective(BaseModel):
@@ -1131,6 +1136,10 @@ class GameState(BaseModel):
     rivalries: dict[str, float] = Field(default_factory=dict)
     # The Hall of Fame — inducted at retirement, kept forever.
     hall_of_fame: list[HofRecord] = Field(default_factory=list)
+    # Organizational knowledge per org: "playbook:<map>", "antistrat:<tid>",
+    # "methodology" -> 0-100 (manager/knowledge.py). Accrues from play,
+    # decays at offseason/patches, leaks with staff moves.
+    org_knowledge: dict[str, dict[str, float]] = Field(default_factory=dict)
 
     def manager_for(self, team_id: str) -> "ManagerSeat | None":
         """The seat currently managing a team (None = AI-run)."""

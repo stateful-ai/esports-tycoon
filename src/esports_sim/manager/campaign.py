@@ -19,6 +19,7 @@ from esports_sim.manager import (
     economy,
     hof,
     inbox,
+    knowledge,
     market,
     meta,
     narrative,
@@ -343,6 +344,7 @@ def advance_week(
         )
         if note is not None:
             report.notes.append(f"Patch {note.version} shakes the meta.")
+            knowledge.on_patch(gs)  # setups date when the numbers move
 
     rt_gd = runtime_gamedata(gs, gd)
 
@@ -396,7 +398,11 @@ def advance_week(
         if gs.is_human(tid):
             gs.set_acting(tid)
             focus = gs.training_focus.get(tid, "tactical")
-            mult = staff.coach_multiplier(gs, focus) * economy.facility_training_mult(gs)
+            mult = (
+                staff.coach_multiplier(gs, focus)
+                * economy.facility_training_mult(gs)
+                * career.philosophy_training_mult(gs, tid)
+            )
         else:
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
@@ -404,13 +410,23 @@ def advance_week(
         training.apply_training(gs.teams[tid], roster, focus, week_rng, mult)
     gs.set_acting(None)
 
-    # 2b. Physio: extra recovery for each human roster (own physio staff).
+    # 2b. Backroom department effects, per human org: physio restores
+    # stamina; psychologist pulls shaken confidence back toward neutral;
+    # performance coach does the same for slumped form. The department
+    # roles are pulls toward 50, never boosts past it — support staff
+    # steady a roster, they don't inflate one.
     for tid in sorted(gs.human_team_ids):
         gs.set_acting(tid)
         recovery = staff.physio_recovery(gs)
-        if recovery > 0:
-            for p in gs.roster(tid):
+        support = staff.confidence_support(gs)
+        upkeep = staff.form_upkeep(gs)
+        for p in gs.roster(tid):
+            if recovery > 0:
                 p.stamina = round(min(100.0, p.stamina + recovery), 1)
+            if support > 0 and p.confidence < 50.0:
+                p.confidence = round(min(50.0, p.confidence + support), 1)
+            if upkeep > 0 and p.form < 50.0:
+                p.form = round(min(50.0, p.form + upkeep), 1)
     gs.set_acting(None)
 
     # 2b'. Bench minutes: players who did NOT dress a single map this week
@@ -854,6 +870,10 @@ def advance_week(
     # the pair graph — before the news, so recaps can read fresh heat.
     rivalries.on_week(gs, report)
 
+    # 5c'. Organizational knowledge accrues from this week's play (maps
+    # executed, opponents met, a coached practice week). Rng-free.
+    knowledge.on_week(gs, report)
+
     # 6. News (before the week label moves on). Recaps read each winner's
     # tactics, so this must run BEFORE the coaches adapt below — otherwise a
     # recap could credit a style the team only shifted to after the match.
@@ -1174,10 +1194,14 @@ def _fixture_plans(
         if target is not None and target not in gs.teams[opp].player_ids:
             target = None
         know = gs.scout_progress_by.get(tid, {}).get(opp, 0.0)
+        # Institutional knowledge amplifies preparation: the org's book on
+        # these maps and this opponent adds to the edge — but only WITH a
+        # plan (no prep, no payoff). The engine clamps the total.
+        book = knowledge.prep_bonus(gs, tid, opp, list(f.maps))
         plans[tid] = TeamMatchPlan(
             tactics=tactics,
             focus_target=target,
-            prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know,
+            prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book,
         )
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
@@ -1493,6 +1517,10 @@ def _process_retirements(gs: GameState, rng) -> int:
         # A completed career faces the Hall (score reads the chronicle
         # entries above, so it runs after the retirement is recorded).
         hof.consider_at_retirement(gs, p, ca, team.name if team else "")
+        # The coaching tree: IGLs and high-game-sense retirees re-enter
+        # the world as staff candidates (deterministic — no rng draw, so
+        # the offseason stream never shifts).
+        staff.retire_into_staff(gs, p, ca, team.name if team else "")
         if ca >= 62 or p.age >= 31:
             notable.append(f"{p.handle} ({p.age})")
         del gs.players[pid]
@@ -1592,15 +1620,46 @@ _ADAPT_PISTOL = 6.0
 _ADAPT_MIN_MAPS = 3  # too few maps to read anything meaningful
 
 
+_DIFFUSION_PULL = 0.5  # how much of the meta identity a struggler copies
+_META_WIN_BAR = 0.55  # round win rate that makes a team worth copying
+
+_ADAPT_DIALS = ("aggression", "pace", "util_discipline", "map_control")
+
+
+def _meta_identity(gs: GameState) -> dict[str, float] | None:
+    """What winning looks like right now: the mean dial identity of the
+    league's in-form teams (round win rate >= _META_WIN_BAR, enough maps).
+    None when nobody stands out — early season has no meta to copy."""
+    winners: list = []
+    for tid in sorted(gs.teams):
+        if gs.teams[tid].tier != 1:
+            continue
+        ts = gs.team_stats.get(tid)
+        if ts is None or ts.maps < _ADAPT_MIN_MAPS:
+            continue
+        rounds = ts.atk_rounds + ts.def_rounds
+        if rounds and (ts.atk_won + ts.def_won) / rounds >= _META_WIN_BAR:
+            winners.append(gs.teams[tid].tactics)
+    if not winners:
+        return None
+    return {
+        dial: float(np.mean([getattr(t, dial) for t in winners]))
+        for dial in _ADAPT_DIALS
+    }
+
+
 def _adapt_ai_tactics(gs: GameState, rng) -> None:
     """AI orgs are no longer frozen for a season: each week a coach nudges
     the dials toward how the campaign is actually going. A winning team
     entrenches its identity (pushes each dial further from neutral); a
-    struggling team abandons a failing plan and drifts back toward the
-    league-standard 50. Pistol-round form pulls eco_greed. The user team is
-    never touched, and the match gates never run the campaign, so this is
-    invisible to golden/balance."""
+    struggling team abandons a failing plan and drifts toward what is
+    WORKING for others — the blend of neutral and the current meta
+    identity (strategy diffusion: successful approaches get copied).
+    Pistol-round form pulls eco_greed. The user team is never touched,
+    and the match gates never run the campaign, so this is invisible to
+    golden/balance."""
     clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
+    meta_id = _meta_identity(gs)
     for tid in sorted(gs.teams):
         if gs.is_human(tid):
             continue
@@ -1613,17 +1672,74 @@ def _adapt_ai_tactics(gs: GameState, rng) -> None:
         rwr = (ts.atk_won + ts.def_won) / rounds
         winning, losing = rwr >= 0.52, rwr <= 0.45
         tac = gs.teams[tid].tactics
-        for dial in ("aggression", "pace", "util_discipline", "map_control"):
+        for dial in _ADAPT_DIALS:
             v = getattr(tac, dial)
             if winning and v != 50.0:
                 v += _ADAPT_STEP if v > 50.0 else -_ADAPT_STEP
             elif losing:
-                v += (50.0 - v) * _ADAPT_SHRINK
+                # Not "back to vanilla" — toward what wins around here.
+                target = 50.0
+                if meta_id is not None:
+                    target += (meta_id[dial] - 50.0) * _DIFFUSION_PULL
+                v += (target - v) * _ADAPT_SHRINK
             v += float(rng.normal(0, _ADAPT_NOISE))
             setattr(tac, dial, round(clamp(v), 1))
         if ts.pistols >= 2:
             pwr = ts.pistols_won / ts.pistols
             tac.eco_greed = round(clamp(tac.eco_greed + (pwr - 0.5) * _ADAPT_PISTOL), 1)
+
+
+# A dial whose league-wide mean ends a season this far from neutral marks
+# a meta era worth remembering (chronicled at the offseason).
+_META_ERA_DEV = 6.0
+_META_ERA_NAMES = {
+    ("aggression", True): "an all-out aggression era",
+    ("aggression", False): "a disciplined, patient era",
+    ("pace", True): "a fast-execute era",
+    ("pace", False): "a default-heavy, slow era",
+    ("util_discipline", True): "a utility-hoarding era",
+    ("util_discipline", False): "a dump-and-hit era",
+    ("map_control", True): "a spread-map-control era",
+    ("map_control", False): "a stack-and-hit era",
+}
+
+
+def _record_meta_era(gs: GameState) -> None:
+    """Season's end: if the league's tactical center of mass drifted off
+    neutral, the chronicle remembers the era — and credits the regional
+    champions who defined it (their dial furthest out the same way),
+    which is what feeds a manager's tactical-innovation reputation."""
+    tier1 = [t for t in gs.teams.values() if t.tier == 1]
+    if not tier1:
+        return
+    champs = {
+        e.team_id
+        for e in gs.chronicle
+        if e.kind == "regional_title" and e.season == gs.season
+    }
+    for dial in _ADAPT_DIALS:
+        mean = float(np.mean([getattr(t.tactics, dial) for t in tier1]))
+        if abs(mean - 50.0) < _META_ERA_DEV:
+            continue
+        high = mean > 50.0
+        era = _META_ERA_NAMES[(dial, high)]
+        chronicle.record(
+            gs, "meta_shift",
+            f"Season {gs.season} closes as {era}.",
+            data={"dial": dial, "mean": f"{mean:.1f}"},
+        )
+        for tid in sorted(champs):
+            t = gs.teams.get(tid)
+            if t is None:
+                continue
+            v = getattr(t.tactics, dial)
+            if (high and v >= mean + 4.0) or (not high and v <= mean - 4.0):
+                chronicle.record(
+                    gs, "meta_shift",
+                    f"{t.name} defined the season's style ({era}).",
+                    team_id=tid,
+                    data={"dial": dial},
+                )
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
@@ -1647,6 +1763,10 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
             data={"award": a.award},
         )
 
+    # The season's tactical era enters the chronicle while the final
+    # identities are still in state (tactics reassign below).
+    _record_meta_era(gs)
+
     # Legacy mode: the board reviews the season goal while the season's
     # brackets and Masters seeds are still in state (they clear below).
     # Dismissals are only PARKED here — the unseat applies after the
@@ -1662,6 +1782,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     )
     if note is not None:
         report.notes.append(f"Patch {note.version} lands over the break.")
+        knowledge.on_patch(gs)
 
     gs.player_stats = {}
     gs.team_stats = {}
@@ -1712,6 +1833,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.game_plans_by = {}
     # Grudges cool over the break; the faint ones are forgotten.
     rivalries.offseason_decay(gs)
+    # Institutional knowledge fades: anti-strats gut (their roster moved),
+    # playbooks date, methodology mostly keeps.
+    knowledge.offseason_decay(gs)
     # The break cools every fanbase halfway back to neutral — last
     # season's euphoria (or bile) carries in, but softer.
     gs.team_sentiment = {

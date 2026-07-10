@@ -768,7 +768,19 @@ section is a map of the terrain, not a promise.
 
 ------------------------------------------------------------------------
 
-# 10. Legacy Mode (Proposed)
+# 10. Legacy Mode
+
+**Status: SHIPPED (first cut) 2026-07-09** --- implemented as phases
+P0-P5 on the chronicle-first architecture in
+`docs/proposals/2026-07-09-new-systems-proposal.md`: the career
+Chronicle, two game modes (sandbox = classic / legacy = career offers +
+manager contracts + board dismissal + job market), derived manager
+reputation, personality axes + player/org memories, rivalries, the Hall
+of Fame, living-history callbacks, per-save media voices, the coaching
+tree, earned philosophies, organizational knowledge (guarded by
+`scripts/dynasty_report.py`), the expanded backroom department, and
+strategy diffusion with chronicled meta eras. The section below is the
+design it was built from.
 
 ## Vision
 

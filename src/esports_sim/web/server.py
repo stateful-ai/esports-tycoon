@@ -30,6 +30,7 @@ from esports_sim.manager import (
     development,
     economy,
     inbox as inbox_mod,
+    knowledge as knowledge_mod,
     market,
     memories as memories_mod,
     relationships,
@@ -2930,6 +2931,12 @@ def team_profile(tid: str) -> dict:
                 for rid, heat in rivalries_mod.top_rivals(gs, tid)
                 if heat >= rivalries_mod.RIVALRY_BAR / 2
             ],
+            # Institutional knowledge is private intel: own org only.
+            "knowledge": (
+                knowledge_mod.org_summary(gs, tid)
+                if tid == gs.acting_team_id
+                else None
+            ),
         }
 
 

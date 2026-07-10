@@ -523,6 +523,67 @@ def reputation(gs: GameState, mid: str) -> dict[str, float]:
     }
 
 
+# -- philosophy (earned labels, not a menu) -----------------------------------
+
+PHILOSOPHY_DEFS = {
+    "trust_rookies": "Trusts Rookies - debuts handed out season after season",
+    "development_school": "A Development School - players grow here",
+    "loyalty_first": "Loyalty First - re-signs their own before shopping",
+    "ruthless": "Ruthless - the roster is a machine, parts get replaced",
+    "big_match": "Big-Match Manager - wins the ones that count",
+    "heavy_analytics": "Heavy Analytics - a data-first backroom",
+}
+
+
+def philosophies(gs: GameState, mid: str) -> list[str]:
+    """A manager's philosophical identity — EARNED from repeated observed
+    behavior in the chronicle (the GDD's rule: identities come from what
+    you did, not from a picker). Returns PHILOSOPHY_DEFS keys."""
+    mine = [e for e in gs.chronicle if e.manager_id == mid]
+
+    def n(kind: str) -> int:
+        return sum(1 for e in mine if e.kind == kind)
+
+    out: list[str] = []
+    if n("debut") >= 3:
+        out.append("trust_rookies")
+    if n("milestone") >= 6:
+        out.append("development_school")
+    renewals, releases = n("renewal"), n("release")
+    if renewals >= 6 and renewals > releases * 2:
+        out.append("loyalty_first")
+    if releases >= renewals + 4:
+        out.append("ruthless")
+    titles = sum(
+        1
+        for e in mine
+        if e.kind in ("regional_title", "masters_title", "champions_title")
+    )
+    if titles >= 2:
+        out.append("big_match")
+    seat = gs.managers.get(mid)
+    if seat is not None and seat.team_id:
+        # Read the department directly off the per-team maps — never
+        # touch the acting pointer from inside a read helper.
+        analyst = gs.staff_by.get(seat.team_id, {}).get("analyst")
+        score = (analyst.quality if analyst else 0.0) + 15.0 * gs.facilities_by.get(
+            seat.team_id, {}
+        ).get("analytics_suite", 0)
+        if score >= 55.0:
+            out.append("heavy_analytics")
+    return out
+
+
+def philosophy_training_mult(gs: GameState, tid: str) -> float:
+    """A Development School's roster grows a shade faster — the one
+    philosophy with a mechanical effect (small, multiplicative, human
+    orgs only since only they have manager seats with history)."""
+    seat = gs.manager_for(tid)
+    if seat is None:
+        return 1.0
+    return 1.05 if "development_school" in philosophies(gs, seat.id) else 1.0
+
+
 def known_for(gs: GameState, mid: str) -> list[str]:
     """Short 'Known For' lines off the strongest reputation axes —
     generated from actual history, silence when there's none yet."""
@@ -574,6 +635,9 @@ def career_summary(gs: GameState, mid: str) -> dict:
         "signings": sum(1 for e in mine if e.kind == "signing"),
         "reputation": {k: round(v, 1) for k, v in reputation(gs, mid).items()},
         "known_for": known_for(gs, mid),
+        "philosophies": [
+            PHILOSOPHY_DEFS[k] for k in philosophies(gs, mid)
+        ],
         "timeline": [
             {
                 "season": e.season,

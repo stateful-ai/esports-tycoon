@@ -106,7 +106,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
-    "rivals",
+    "rivals", "knowledge",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
