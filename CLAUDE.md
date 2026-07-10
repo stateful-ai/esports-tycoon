@@ -24,6 +24,9 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Rotation pacing gate (25–35s via spawn, 8–18s spawn→entry) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |
 | Dynasty gate (title concentration over N seasons) | `... scripts\dynasty_report.py [seasons] [seed]` (exit 1 = fail) |
+| RL episode export (save -> transitions/actions/chronicle JSONL) | `... scripts\export_telemetry.py <save-or-dir> [stem]` |
+| Match token corpus (world-model data; pinned vocab) | `... scripts\dump_season_tokens.py [n] [seed] [stem]` |
+| Play-pattern report (feature usage across saves) | `... scripts\telemetry_report.py [saves-dir]` |
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
 | Map floor gate (plates touch; callouts/paths on-floor) | `... scripts\map_floor_audit.py` (exit 1 = fail) |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
@@ -80,7 +83,16 @@ Published at github.com/stateful-ai/esports-tycoon.
   migrations — v3 moved staff candidates into the shared pool; v4 is a
   pass-through for the game-plan/sentiment/patch fields; v5 adds the
   Chronicle + legacy fields, backfilling a skeleton history from
-  champions/awards/retired). Player
+  champions/awards/retired; v6 is a pass-through for the telemetry
+  fields), `telemetry.py` (analytics substrate: `action_log` records
+  every HUMAN decision at the web/CLI layer — never AI moves, they
+  re-derive from the seed — so seed + action_log fully determines a
+  career; `telemetry_snaps` appends a post-tick org feature vector per
+  manager seat each week; `state_features`/`reward_components` are the
+  single source of truth for RL episodes — `scripts/export_telemetry.py`
+  emits (state, actions, reward) JSONL, `scripts/dump_season_tokens.py`
+  a match token corpus with a PINNED vocab, `scripts/telemetry_report.py`
+  the cross-save feature-usage report). Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game

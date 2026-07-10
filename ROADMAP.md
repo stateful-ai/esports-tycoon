@@ -129,14 +129,30 @@ strategy diffusion with chronicled meta eras. Still open:
 - Memories/relationship arcs beyond loyalty (grudges, mentor bonds)
 
 ### Track B — RL research arm
-- Gym-style `env` wrapper over the headless API
+
+Shipped (2026-07-10): the data substrate — every human decision recorded
+as a typed `action_log` on GameState, weekly per-seat state feature
+snapshots, shared reward shaping (`manager/telemetry.py`), and
+`scripts/export_telemetry.py` emitting (state, actions, reward, next
+state) JSONL episodes from any save. Still open:
+
+- Gym-style `env` wrapper over the headless API (obs/reward now exist —
+  the wrapper should consume `telemetry.state_features` and
+  `reward_components`, never re-derive its own)
 - Baseline single-agent PPO on the tycoon role (proves the wrapper)
 - Per-player RL policies — multi-agent; distinct "thinking" per player archetype
 - Population-based self-play across organisations (not just players)
 - Distilling policy archetypes ("aggressive entry", "passive anchor", "tilt-prone clutch hero") into named personalities
 
 ### Track C — World model
-- Event-sequence tokenizer — seasons as token streams
+
+Shipped (2026-07-10): the match-level tokenizer —
+`scripts/dump_season_tokens.py` turns deterministic match corpora into
+side-attributed token streams (75-token pinned vocab v1: round flow,
+buy tiers, kills by weapon class/headshot/trade, utility, spike,
+gimmicks). Still open:
+
+- Season-level event tokenizer (campaign events as token streams)
 - Transformer pretraining on agent-played seasons
 - Conditional generation (dream a season given a roster)
 - Counterfactual play ("what if we'd hired X instead of Y")
