@@ -13,6 +13,10 @@ players:
   handle: Ying
   real_name: Wang Chenxu
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 23
   role: controller
   playstyle: igl
@@ -32,29 +36,55 @@ players:
     mastery: 70.0
   - agent_id: viper
     mastery: 66.5
+  - agent_id: clove
+    mastery: 44.3
+  - agent_id: breach
+    mastery: 38.2
+  - agent_id: chamber
+    mastery: 25.4
+  - agent_id: cypher
+    mastery: 47.6
+  - agent_id: jett
+    mastery: 32.4
+  - agent_id: killjoy
+    mastery: 35.8
+  - agent_id: phoenix
+    mastery: 42.2
+  - agent_id: raze
+    mastery: 0.0
+  - agent_id: reyna
+    mastery: 31.9
+  - agent_id: skye
+    mastery: 48.1
+  - agent_id: sova
+    mastery: 32.5
   map_pool:
   - map_id: ascent
-    mastery: 58.4
+    mastery: 57.7
   - map_id: bind
-    mastery: 63.0
+    mastery: 51.0
   - map_id: haven
-    mastery: 66.6
+    mastery: 59.6
   - map_id: lotus
-    mastery: 71.3
+    mastery: 64.0
   - map_id: split
-    mastery: 51.3
+    mastery: 64.3
   salary: 3800
-  contract_weeks_left: 79
-  morale: 69.1
-  stamina: 98.5
-  form: 56.7
+  contract_weeks_left: 56
+  morale: 78.5
+  stamina: 87.5
+  form: 54.0
   personality_tags:
-  - analytical
-  potential: 63.5
+  - slow_starter
+  potential: 63.9
 - id: team_keepbest_gaming_akeman
   handle: Akeman
   real_name: Zhang Haoran
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 22
   role: flex
   playstyle: support
@@ -74,29 +104,60 @@ players:
     mastery: 74.8
   - agent_id: killjoy
     mastery: 69.6
+  - agent_id: breach
+    mastery: 40.2
+  - agent_id: chamber
+    mastery: 43.8
+  - agent_id: clove
+    mastery: 37.4
+  - agent_id: cypher
+    mastery: 42.7
+  - agent_id: jett
+    mastery: 40.6
+  - agent_id: omen
+    mastery: 33.8
+  - agent_id: phoenix
+    mastery: 43.3
+  - agent_id: raze
+    mastery: 44.5
+  - agent_id: reyna
+    mastery: 29.8
+  - agent_id: sova
+    mastery: 35.2
+  - agent_id: viper
+    mastery: 5.6
   map_pool:
   - map_id: ascent
-    mastery: 82.3
+    mastery: 69.7
   - map_id: bind
-    mastery: 68.6
+    mastery: 76.6
   - map_id: haven
-    mastery: 60.3
+    mastery: 63.2
   - map_id: lotus
-    mastery: 72.9
-  - map_id: split
     mastery: 61.1
+  - map_id: split
+    mastery: 69.7
   salary: 4000
-  contract_weeks_left: 71
-  morale: 64.5
-  stamina: 93.7
-  form: 45.7
+  contract_weeks_left: 49
+  morale: 65.7
+  stamina: 95.0
+  form: 53.6
   personality_tags:
-  - independent
-  potential: 65.4
+  - clutch_gene
+  - streamer
+  potential: 64.8
 - id: team_keepbest_gaming_sibeastw0w
   handle: sibeastw0w
   real_name: Anton Govorukhin
   region: china
+  country: RU
+  languages:
+  - lang: ru
+    level: 98.0
+  - lang: zh
+    level: 35.0
+  - lang: en
+    level: 25.0
   age: 21
   role: duelist
   playstyle: entry
@@ -116,29 +177,54 @@ players:
     mastery: 72.2
   - agent_id: reyna
     mastery: 70.6
+  - agent_id: phoenix
+    mastery: 50.2
+  - agent_id: raze
+    mastery: 43.6
+  - agent_id: breach
+    mastery: 37.8
+  - agent_id: chamber
+    mastery: 49.7
+  - agent_id: clove
+    mastery: 36.1
+  - agent_id: cypher
+    mastery: 45.6
+  - agent_id: killjoy
+    mastery: 37.7
+  - agent_id: omen
+    mastery: 37.1
+  - agent_id: skye
+    mastery: 35.4
+  - agent_id: sova
+    mastery: 41.0
+  - agent_id: viper
+    mastery: 34.6
   map_pool:
   - map_id: ascent
-    mastery: 66.9
+    mastery: 60.4
   - map_id: bind
-    mastery: 57.0
+    mastery: 73.9
   - map_id: haven
-    mastery: 65.8
+    mastery: 72.6
   - map_id: lotus
-    mastery: 66.0
+    mastery: 77.1
   - map_id: split
-    mastery: 67.4
+    mastery: 68.4
   salary: 3900
-  contract_weeks_left: 60
-  morale: 82.6
-  stamina: 87.0
-  form: 46.3
+  contract_weeks_left: 37
+  morale: 69.6
+  stamina: 84.9
+  form: 52.0
   personality_tags:
-  - perfectionist
-  potential: 65.9
+  - hot_head
+  - quiet
+  potential: 65.2
 - id: team_keepbest_gaming_prospect1
   handle: prospect1
   real_name: ''
   region: china
+  country: ''
+  languages: []
   age: 17
   role: controller
   playstyle: support
@@ -158,31 +244,55 @@ players:
     mastery: 65.3
   - agent_id: omen
     mastery: 62.4
+  - agent_id: viper
+    mastery: 45.2
+  - agent_id: breach
+    mastery: 36.8
+  - agent_id: chamber
+    mastery: 39.0
+  - agent_id: cypher
+    mastery: 33.1
+  - agent_id: jett
+    mastery: 37.3
+  - agent_id: killjoy
+    mastery: 33.5
+  - agent_id: phoenix
+    mastery: 24.8
+  - agent_id: raze
+    mastery: 35.8
+  - agent_id: reyna
+    mastery: 38.5
+  - agent_id: skye
+    mastery: 35.4
+  - agent_id: sova
+    mastery: 34.2
   map_pool:
   - map_id: ascent
-    mastery: 61.3
+    mastery: 60.9
   - map_id: bind
-    mastery: 56.0
+    mastery: 69.8
   - map_id: haven
-    mastery: 65.5
+    mastery: 62.3
   - map_id: lotus
-    mastery: 56.5
+    mastery: 60.3
   - map_id: split
-    mastery: 68.2
+    mastery: 57.6
   salary: 3400
-  contract_weeks_left: 36
-  morale: 65.3
-  stamina: 96.5
-  form: 48.8
+  contract_weeks_left: 39
+  morale: 74.7
+  stamina: 88.4
+  form: 50.9
   personality_tags:
-  - clutch_gene
-  - hot_head
+  - analytical
+  - independent
   - rookie
-  potential: 73.3
+  potential: 64.6
 - id: team_keepbest_gaming_prospect2
   handle: prospect2
   real_name: ''
   region: china
+  country: ''
+  languages: []
   age: 17
   role: duelist
   playstyle: entry
@@ -202,24 +312,46 @@ players:
     mastery: 65.9
   - agent_id: phoenix
     mastery: 65.3
+  - agent_id: raze
+    mastery: 51.5
+  - agent_id: reyna
+    mastery: 45.1
+  - agent_id: breach
+    mastery: 30.0
+  - agent_id: chamber
+    mastery: 33.1
+  - agent_id: clove
+    mastery: 36.2
+  - agent_id: cypher
+    mastery: 33.7
+  - agent_id: killjoy
+    mastery: 33.8
+  - agent_id: omen
+    mastery: 42.7
+  - agent_id: skye
+    mastery: 40.3
+  - agent_id: sova
+    mastery: 30.1
+  - agent_id: viper
+    mastery: 36.0
   map_pool:
   - map_id: ascent
-    mastery: 70.7
+    mastery: 57.9
   - map_id: bind
-    mastery: 61.1
+    mastery: 60.5
   - map_id: haven
-    mastery: 66.0
+    mastery: 60.4
   - map_id: lotus
-    mastery: 57.3
+    mastery: 56.9
   - map_id: split
-    mastery: 61.0
+    mastery: 72.7
   salary: 3400
-  contract_weeks_left: 64
-  morale: 70.5
-  stamina: 86.6
-  form: 53.1
+  contract_weeks_left: 79
+  morale: 81.5
+  stamina: 82.4
+  form: 51.3
   personality_tags:
-  - flashy
-  - hot_head
+  - quiet
   - rookie
-  potential: 77.4
+  - slow_starter
+  potential: 64.1

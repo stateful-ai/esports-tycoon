@@ -244,6 +244,206 @@ def test_package_deal_moves_players_and_cash(campaign) -> None:
     assert len(seller.player_ids) == market.ROSTER_SIZE
 
 
+def test_two_for_one_package_to_ai_seller(campaign) -> None:
+    """A 2-for-1 (two of mine for one of theirs) must not bounce off the AI
+    seller's roster cap: everyone may carry a bench up to ROSTER_MAX, so the
+    AI ending at six players is legal. The buyer needs 7+ players to stay at
+    ROSTER_MIN after sending two away."""
+    gs = campaign
+    buyer = gs.user_team_id
+    gs.set_acting(buyer)
+    gs.teams[buyer].balance = 20_000_000
+    # Deepen the buyer's bench so shipping two out keeps them at five+.
+    for fa in list(gs.free_agent_ids[:2]):
+        ok, msg = market.sign_player(gs, buyer, fa)
+        assert ok, msg
+    seller = next(
+        t for t in gs.teams.values()
+        if t.id != buyer and not gs.is_human(t.id) and t.tier == 1
+    )
+    target = seller.player_ids[0]
+    start = len(seller.player_ids)
+    # Offer my two cheapest players + enough cash to clear the ask.
+    mine = sorted(
+        gs.teams[buyer].player_ids,
+        key=lambda pid: market.transfer_value(gs.players[pid]),
+    )[:2]
+    ask = market.transfer_ask(gs, target)
+    got = sum(market.transfer_value(gs.players[p]) for p in mine)
+    cash = max(0, ask - got) + 50_000
+    ok, msg = market.propose_package(gs, target, mine, cash_out=cash, cash_in=0)
+    gs.set_acting(None)
+    assert ok, msg
+    assert target in gs.teams[buyer].player_ids
+    assert all(p in seller.player_ids for p in mine)
+    # The AI seller legally carries one more than it started with.
+    assert len(seller.player_ids) == start + 1
+    assert len(seller.player_ids) <= market.ROSTER_MAX
+
+
+def test_tier2_buyout_clause(campaign) -> None:
+    """A tier-1 org triggers a tier-2 player's buyout clause: the fee is a
+    stable per-player multiple of value, the player moves instantly, and
+    tier-1 players carry no clause."""
+    gs = campaign
+    buyer = gs.user_team_id
+    gs.set_acting(buyer)
+    gs.teams[buyer].balance = 20_000_000
+    t2 = next(t for t in gs.teams.values() if t.tier == 2 and t.player_ids)
+    pid = t2.player_ids[0]
+    fee = market.buyout_fee(gs, pid)
+    assert fee is not None and fee > 0
+    assert fee == market.buyout_fee(gs, pid)  # stable, "negotiated at signing"
+    # Clause sits above plain market value (the tier-2 org's protection).
+    assert fee >= market.transfer_value(gs.players[pid])
+    ok, msg = market.buy_out_player(gs, buyer, pid)
+    assert ok, msg
+    assert pid in gs.teams[buyer].player_ids
+    assert pid not in t2.player_ids
+    # Tier-1 players carry no clause.
+    t1 = next(
+        t for t in gs.teams.values()
+        if t.tier == 1 and t.id != buyer and t.player_ids
+    )
+    assert market.buyout_fee(gs, t1.player_ids[0]) is None
+    gs.set_acting(None)
+
+
+def test_subjective_valuation_differs_by_viewer(campaign) -> None:
+    """Two orgs read the same rival player differently (stable per-viewer
+    bias); a club always knows its OWN player exactly."""
+    gs = campaign
+    seller = next(
+        t for t in gs.teams.values()
+        if t.id != gs.user_team_id and t.tier == 1 and not gs.is_human(t.id)
+    )
+    pid = seller.player_ids[0]
+    p = gs.players[pid]
+    truth = market.player_quality(p)
+    # The owner's read is exact.
+    assert market.perceived_quality(gs, seller.id, p) == truth
+    # Other orgs' reads are stable and (across the league) not all identical.
+    viewers = [t.id for t in gs.teams.values() if t.id != seller.id][:8]
+    reads = [market.perceived_quality(gs, v, p) for v in viewers]
+    assert reads == [market.perceived_quality(gs, v, p) for v in viewers]
+    assert len({round(r, 3) for r in reads}) > 1
+    # And every read stays within the documented blur.
+    assert all(abs(r - truth) <= market.VALUATION_BLUR for r in reads)
+
+
+def test_ai_buyer_protects_new_signings(campaign) -> None:
+    """execute_transfer's AI auto-release never flips a fresh arrival: the
+    weakest SETTLED player goes instead."""
+    gs = campaign
+    buyer = next(
+        t for t in gs.teams.values()
+        if not gs.is_human(t.id) and t.tier == 1 and len(t.player_ids) >= 5
+    )
+    # Make the roster's weakest player brand-new; everyone else settled.
+    ps = [gs.players[q] for q in buyer.player_ids]
+    for p in ps:
+        p.tenure_weeks = 52
+    weakest = min(ps, key=market.player_quality)
+    weakest.tenure_weeks = 0  # just arrived
+    settled_weakest = min(
+        (p for p in ps if p.id != weakest.id), key=market.player_quality
+    )
+    seller = next(
+        t for t in gs.teams.values()
+        if t.id != buyer.id and t.tier == 1 and t.player_ids
+    )
+    target = seller.player_ids[0]
+    buyer.balance = 20_000_000
+    ok, msg = market.execute_transfer(gs, target, buyer.id, 50_000)
+    assert ok, msg
+    assert weakest.id in buyer.player_ids  # the new arrival was protected
+    assert settled_weakest.id not in buyer.player_ids  # the settled one went
+
+
+def test_negotiation_haggle_counter_accept(campaign) -> None:
+    """The table works: demands open above the current deal, a decent
+    offer draws a CONCEDING counter, and meeting the counter signs at the
+    NEGOTIATED number (cheaper than the opening ask)."""
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    pid = gs.teams[tid].player_ids[0]
+    p = gs.players[pid]
+    ok, why, neg = market.open_negotiation(gs, pid)
+    assert ok, why
+    assert neg.kind == "renew"
+    assert neg.demand_salary >= p.salary  # nobody re-signs for less unprompted
+    ask0 = neg.demand_salary
+    status, msg, neg = market.negotiate_offer(
+        gs, pid, int(ask0 * 0.88), neg.demand_weeks
+    )
+    assert status == "countered"
+    assert neg.demand_salary < ask0  # they conceded
+    counter = neg.demand_salary
+    status, msg, _ = market.negotiate_offer(gs, pid, counter, neg.demand_weeks)
+    assert status == "accepted", msg
+    assert p.salary == counter < ask0  # the haggle saved real money
+    assert pid not in gs.negotiations
+    gs.set_acting(None)
+
+
+def test_negotiation_insult_collapses_with_cooldown(campaign) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    pid = gs.teams[tid].player_ids[1]
+    p = gs.players[pid]
+    morale0 = p.morale
+    ok, why, neg = market.open_negotiation(gs, pid)
+    assert ok, why
+    status, msg, _ = market.negotiate_offer(
+        gs, pid, int(neg.demand_salary * 0.5), neg.demand_weeks
+    )
+    assert status == "collapsed"
+    assert p.morale < morale0  # they know you tried to lowball them
+    assert gs.talks_cooldown[pid] > gs.week
+    ok, why, _ = market.open_negotiation(gs, pid)
+    assert not ok and "collapsed" in why  # not taking your calls
+    gs.set_acting(None)
+
+
+def test_negotiation_patience_runs_out(campaign) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    pid = gs.teams[tid].player_ids[2]
+    ok, why, neg = market.open_negotiation(gs, pid)
+    assert ok, why
+    lowish = int(neg.demand_salary * 0.78)
+    statuses = []
+    for _ in range(market.NEGOTIATION_MAX_ROUNDS):
+        status, _msg, neg = market.negotiate_offer(gs, pid, lowish, 30)
+        statuses.append(status)
+    assert statuses[-1] == "collapsed"
+    assert all(s == "countered" for s in statuses[:-1])
+    gs.set_acting(None)
+
+
+def test_negotiation_fa_signing_uses_negotiated_terms(campaign) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    gs.teams[tid].balance = 10_000_000
+    fa = gs.free_agent_ids[0]
+    ok, why, neg = market.open_negotiation(gs, fa)
+    assert ok, why
+    assert neg.kind == "sign"
+    status, msg, _ = market.negotiate_offer(
+        gs, fa, neg.demand_salary, neg.demand_weeks
+    )
+    assert status == "accepted", msg
+    assert fa in gs.teams[tid].player_ids
+    p = gs.players[fa]
+    assert p.salary == neg.demand_salary
+    assert p.contract_weeks_left == neg.demand_weeks
+    gs.set_acting(None)
+
+
 def test_offer_accept_blocked_in_playoffs(campaign) -> None:
     """Rosters lock in the playoffs: a pre-existing offer can't be ACCEPTED by a
     human seller (it stays live), though declining is still allowed."""

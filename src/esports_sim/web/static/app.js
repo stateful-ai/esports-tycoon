@@ -32,6 +32,54 @@ async function api(path, body) {
 
 const App = { tab: "dashboard", state: null, mp: null };
 
+/* -- sortable tables --------------------------------------------------------
+   Click any column header to sort its table (first click: numbers high-to-low,
+   text A-to-Z; click again to flip). One delegated listener covers every
+   table, including re-renders. Opt out per-table or per-header with
+   data-nosort (the H2H matrix opts out — its rows/columns must stay aligned).
+   Rows keep their event handlers: sorting just re-appends the same nodes. */
+function _sortKey(cell) {
+  const t = (cell?.textContent || "").trim();
+  if (!t || t === "—") return null; // always sorts to the bottom
+  const stars = (t.match(/★/g) || []).length;
+  if (stars) return stars + (t.includes("½") ? 0.5 : 0);
+  const m = t.replace(/,/g, "").match(/-?\d+(\.\d+)?/);
+  if (m) return parseFloat(m[0]);
+  return t.toLowerCase();
+}
+
+document.addEventListener("click", (e) => {
+  const th = e.target.closest("th");
+  if (!th || "nosort" in th.dataset) return;
+  if (!(th.textContent || "").trim()) return; // blank headers (action columns)
+  const table = th.closest("table");
+  const tbody = table?.querySelector("tbody");
+  if (!table || !tbody || "nosort" in table.dataset) return;
+  if (table.classList.contains("es-h2hm")) return; // matrix: keep alignment
+  const col = th.cellIndex;
+  const rows = [...tbody.rows];
+  if (rows.length < 2) return;
+  // First click sorts numeric columns high-to-low (top performers first) and
+  // text columns A-to-Z; a second click flips.
+  const keys = rows.map((r) => _sortKey(r.cells[col]));
+  const numeric = keys.filter((k) => typeof k === "number").length >= keys.filter((k) => k != null).length / 2;
+  const dir = th.dataset.dir ? (th.dataset.dir === "asc" ? "desc" : "asc") : numeric ? "desc" : "asc";
+  for (const h of th.parentElement.cells) delete h.dataset.dir;
+  th.dataset.dir = dir;
+  const sign = dir === "asc" ? 1 : -1;
+  rows
+    .map((r, i) => [r, keys[i], i])
+    .sort((a, b) => {
+      const [ka, kb] = [a[1], b[1]];
+      if (ka == null && kb == null) return a[2] - b[2];
+      if (ka == null) return 1; // blanks stay at the bottom either way
+      if (kb == null) return -1;
+      if (typeof ka === "number" && typeof kb === "number") return sign * (ka - kb) || a[2] - b[2];
+      return sign * String(ka).localeCompare(String(kb)) || a[2] - b[2];
+    })
+    .forEach(([r]) => tbody.appendChild(r));
+});
+
 /* -- boot ------------------------------------------------------------------ */
 
 async function boot() {
@@ -233,9 +281,14 @@ function setupLobby(lob) {
     renderWorlds();
     renderPick();
   };
-  $("#mode-solo").onclick = () => showCreate(false);
-  $("#mode-shared").onclick = () => showCreate(true);
+  // Only the active lobby mode carries the primary highlight.
+  const modeBtns = [$("#mode-solo"), $("#mode-shared"), $("#mode-join")];
+  const setActiveMode = (active) =>
+    modeBtns.forEach((b) => b.classList.toggle("btn-primary", b === active));
+  $("#mode-solo").onclick = () => { setActiveMode($("#mode-solo")); showCreate(false); };
+  $("#mode-shared").onclick = () => { setActiveMode($("#mode-shared")); showCreate(true); };
   $("#mode-join").onclick = () => {
+    setActiveMode($("#mode-join"));
     create.classList.add("hidden");
     join.classList.remove("hidden");
     $("#join-teams").innerHTML = "";
@@ -297,7 +350,35 @@ async function refresh() {
     `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
+  updateSaveControls(s.save);
   render();
+}
+
+// Topbar save controls: the explicit Save button (dot = unsaved changes)
+// and the autosave policy select. Server-owned state; this only paints.
+function updateSaveControls(sv) {
+  const btn = $("#save-btn"), sel = $("#autosave-sel");
+  if (!btn || !sel) return;
+  if (!sv) { btn.classList.add("hidden"); sel.classList.add("hidden"); return; }
+  btn.classList.remove("hidden");
+  sel.classList.remove("hidden");
+  btn.textContent = sv.dirty ? "Save •" : "Save";
+  btn.classList.toggle("save-dirty", !!sv.dirty);
+  sel.value = sv.autosave_enabled ? String(sv.autosave_every_weeks) : "0";
+  btn.onclick = async () => {
+    const r = await api("/api/actions/save", {});
+    toast(r.message);
+    btn.textContent = "Save";
+    btn.classList.remove("save-dirty");
+  };
+  sel.onchange = async () => {
+    const v = parseInt(sel.value, 10);
+    const r = await api("/api/actions/save_settings", {
+      autosave_enabled: v > 0,
+      autosave_every_weeks: Math.max(1, v),
+    });
+    toast(r.message);
+  };
 }
 
 // Topbar chip for shared games: the join code + how many managers are ready.
@@ -348,7 +429,7 @@ function bar(value, opts = {}) {
 }
 
 function stylePill(p) {
-  return `<span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span>`;
+  return `<span class="pill-pair"><span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span></span>`;
 }
 
 // `sm` gives a 20px chip for inline use in buttons/veto text; the default
@@ -476,7 +557,9 @@ function careerStrip(careerState) {
   strip.appendChild(
     el("span", "muted", `Board goal: <b>${c.goal}</b> · contract through S${c.end_season}`)
   );
-  strip.appendChild(statTile("Board patience", Math.round(c.patience), { tone }));
+  strip.appendChild(
+    el("span", "pill " + tone, `Board patience · ${Math.round(c.patience)}`)
+  );
   return strip;
 }
 
@@ -1201,6 +1284,13 @@ async function roster(v) {
     ];
     card.appendChild(el("p", "muted", `Locker room: ${bits.join(" · ")}`));
   }
+  if (data.comms_cohesion != null) {
+    const cc = data.comms_cohesion;
+    const tone = cc >= 75 ? "good" : cc >= 50 ? "" : cc >= 35 ? "warn" : "bad";
+    card.appendChild(el("p", "muted",
+      `<span class="pill ${tone}" title="pairwise language overlap — pairs with no common tongue never fully gel">Comms ${Math.round(cc)}</span> ` +
+      `shared languages across the roster feed chemistry.`));
+  }
   if (!data.is_user_team) {
     const row = el("div", "row");
     const back = el("button", "btn btn-sm", "← My team");
@@ -1261,10 +1351,14 @@ async function roster(v) {
       ? `<button class="btn btn-sm" data-act="talk">Talk</button>
          <button class="btn btn-sm" data-act="renew">Renew</button>
          <button class="btn btn-sm" data-act="release">Release</button>`
-      : p.transfer_ask != null
-        ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
-           <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
-        : "";
+      : p.buyout != null
+        // Tier-2 contract: the buyout clause is the fast lane — pay it and
+        // the player arrives, no negotiation, the org can't refuse.
+        ? `<button class="btn btn-sm" data-act="buyout" title="trigger the buyout clause — the org can't refuse">Buy out ${money(p.buyout)}</button>`
+        : p.transfer_ask != null
+          ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
+             <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
+          : "";
     const starCell = hasBench
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
@@ -1349,7 +1443,14 @@ async function roster(v) {
         };
       }
     }
-    if (!data.is_user_team && p.transfer_ask != null) {
+    if (!data.is_user_team && p.buyout != null) {
+      tr.querySelector('[data-act="buyout"]').onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}? ${data.team.name} can't refuse.`)) return;
+        const r = await api("/api/actions/buyout", { player_id: p.id });
+        toast(r.message); refresh(); render();
+      };
+    } else if (!data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
         e.stopPropagation();
         if (!confirm(`Buy ${p.handle} from ${data.team.name} for ${money(p.transfer_ask)}?`)) return;
@@ -1366,10 +1467,9 @@ async function roster(v) {
         e.stopPropagation();
         openTalk(p);
       };
-      tr.querySelector('[data-act="renew"]').onclick = async (e) => {
+      tr.querySelector('[data-act="renew"]').onclick = (e) => {
         e.stopPropagation();
-        const r = await api("/api/actions/renew", { player_id: p.id });
-        toast(r.message); refresh(); render();
+        openNegotiation({ id: p.id, handle: p.handle }); // a table, not a button
       };
       tr.querySelector('[data-act="release"]').onclick = async (e) => {
         e.stopPropagation();
@@ -1463,7 +1563,10 @@ function attrDetail(p) {
   const rows = Object.entries(p.attributes)
     .map(([k, val]) => `<tr><td>${k.replaceAll("_", " ")}</td><td>${bar(val)}</td><td class="num">${Math.round(val)}</td></tr>`)
     .join("");
-  const agents = p.agents.map((a) => `${a.agent_id} (${Math.round(a.mastery)})`).join(", ");
+  // Every player now carries a baseline on the whole cast — show the top
+  // comfort picks, not all 13.
+  const agents = p.agents.slice(0, 5).map((a) => `${a.agent_id} (${Math.round(a.mastery)})`).join(", ")
+    + (p.agents.length > 5 ? `, +${p.agents.length - 5} more` : "");
   return `<div class="grid2">
     <table><tbody>${rows}</tbody></table>
     <div>
@@ -2483,8 +2586,88 @@ async function marketStaff(v) {
   v.appendChild(poolCard);
 }
 
+// Search any player league-wide by handle/real name; act on the result
+// (Sign a free agent, open the package-offer flow on a rival).
+function playerSearchCard() {
+  const card = el("div", "card");
+  card.innerHTML = `<h2>Find a player</h2>`;
+  const row = el("div", "row", "");
+  const inp = el("input", "mono");
+  inp.placeholder = "search by handle or real name…";
+  inp.style.minWidth = "260px";
+  row.appendChild(inp);
+  card.appendChild(row);
+  const box = el("div", "");
+  card.appendChild(box);
+  let timer = null, seq = 0;
+  const run = async () => {
+    const q = inp.value.trim();
+    const my = ++seq;
+    if (q.length < 2) { box.innerHTML = ""; return; }
+    let r;
+    try { r = await api("/api/market/search?q=" + encodeURIComponent(q)); }
+    catch { return; }
+    if (my !== seq) return; // a newer query superseded this one
+    box.innerHTML = "";
+    if (!r.results.length) {
+      box.appendChild(el("p", "muted", "no players match"));
+      return;
+    }
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
+      <th class="num">OVR</th><th>Club</th><th class="num">Price</th><th data-nosort></th></tr></thead>`;
+    const tb = el("tbody");
+    for (const p of r.results) {
+      const price = p.is_free_agent
+        ? `${money(p.asking_salary)}/wk`
+        : p.transfer_ask != null ? money(p.transfer_ask) : "—";
+      const club = p.is_free_agent
+        ? '<span class="pill">free agent</span>'
+        : `<span class="tlink" data-tid="${p.team_id}">${p.team_name}</span>${p.mine ? ' <span class="pill">yours</span>' : ""}`;
+      const tr = el("tr", "", `
+        <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>
+          ${p.real_name ? `<span class="muted"> ${p.real_name}</span>` : ""}</td>
+        <td>${stylePill(p)}</td>
+        <td class="num">${p.age}</td>
+        <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
+        <td>${club}</td>
+        <td class="num">${price}</td>
+        <td data-act></td>`);
+      const actCell = tr.querySelector("[data-act]");
+      if (p.is_free_agent) {
+        const b = el("button", "btn btn-sm", "Negotiate…");
+        b.onclick = () => openNegotiation({ id: p.id, handle: p.handle });
+        actCell.appendChild(b);
+      } else if (!p.mine && p.buyout != null) {
+        const b = el("button", "btn btn-sm", "Buy out");
+        b.title = "trigger the buyout clause — the org can't refuse";
+        b.onclick = async () => {
+          if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}?`)) return;
+          const res = await api("/api/actions/buyout", { player_id: p.id });
+          toast(res.message); refresh(); render();
+        };
+        actCell.appendChild(b);
+      } else if (!p.mine && p.transfer_ask != null) {
+        const b = el("button", "btn btn-sm", "Offer…");
+        b.onclick = () => openOffer({
+          id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
+        });
+        actCell.appendChild(b);
+      }
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+    box.appendChild(t);
+  };
+  inp.oninput = () => { clearTimeout(timer); timer = setTimeout(run, 250); };
+  inp.onkeydown = (e) => { if (e.key === "Enter") { clearTimeout(timer); run(); } };
+  return card;
+}
+
 async function marketPlayers(v) {
   const data = await api("/api/market");
+
+  v.appendChild(playerSearchCard());
 
   // Squad intelligence: where you're thin, who to sign, contracts running down.
   const needs = data.squad_needs, targets = data.target_suggestions || [];
@@ -2636,11 +2819,12 @@ async function marketPlayers(v) {
       <td>${starsRange(p.scout?.pa_stars)}</td>
       <td class="num">${money(p.asking_salary)}/wk</td>
       <td><button class="btn btn-sm" data-act="sign" ${p.can_sign ? "" : "disabled"}
-        title="${p.block_reason || "sign to a 40-week deal"}">Sign</button></td>
+        title="${p.block_reason || "open contract talks — their ask is an opening number"}">Negotiate…</button></td>
       <td data-swap></td>`);
-    tr.querySelector('[data-act="sign"]').onclick = async () => {
-      const r = await api("/api/actions/sign", { player_id: p.id });
-      toast(r.message); refresh(); render();
+    tr.querySelector('[data-act="sign"]').onclick = () => {
+      // Signing is a negotiation now — the ask column is their OPENING
+      // number, not the price.
+      openNegotiation({ id: p.id, handle: p.handle });
     };
     // Swap: pick one of your players to drop, then sign this FA in one move.
     const swapCell = tr.querySelector("[data-swap]");
@@ -2692,7 +2876,9 @@ async function openOffer(target) {
   const panel = el("div", "panel");
   panel.innerHTML = `<button class="btn btn-sm offer-close" style="float:right">✕</button>
     <h2>Offer for ${target.handle}</h2>
-    <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value.</p>`;
+    <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value —
+    but they run <i>their own</i> numbers on your players. A scout who rates your
+    guys sees a rich package; one who doesn't will want more cash on top.</p>`;
   const list = el("div", "");
   const chosen = new Set();
   for (const p of mine) {
@@ -2725,7 +2911,10 @@ async function openOffer(target) {
     const value = players + co - ci;
     const ok = value >= target.ask;
     meter.className = ok ? "good" : "warn";
-    meter.textContent = `Package value ${money(value)} vs ask ${money(target.ask)} — ${ok ? "should be accepted" : "short of value"}`;
+    // "By your numbers" on purpose: the seller prices your players with
+    // their own scouting, so a package that clears on paper can still
+    // bounce — and a "short" one can land if they rate your guys.
+    meter.textContent = `Package value ${money(value)} vs ask ${money(target.ask)} — ${ok ? "looks fair by your numbers" : "short by your numbers"}`;
   }
   recompute();
 
@@ -2754,13 +2943,123 @@ async function openOffer(target) {
   document.body.appendChild(ov);
 }
 
+// Contract negotiation modal (renewals + free-agent signings): the player
+// opens with DEMANDS, you counter with a salary + term, they accept /
+// counter / walk. Three rejected offers — or an insulting number — and
+// they leave the table (cooldown before they'll talk again).
+async function openNegotiation(target) {
+  let neg;
+  try {
+    const r = await api("/api/negotiation/open", { player_id: target.id });
+    neg = r.negotiation;
+  } catch { return; } // api() toasted the reason (cooldown, wrong target...)
+
+  const ov = el("div", "overlay");
+  const panel = el("div", "panel");
+  const title = neg.kind === "renew" ? "Contract talks" : "Free-agent talks";
+  panel.innerHTML = `<button class="btn btn-sm neg-close" style="float:right">✕</button>
+    <h2>${title} — ${neg.handle}</h2>` +
+    (neg.kind === "renew"
+      ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w left.</p>`
+      : "");
+  const demand = el("p", "", "");
+  const log = el("div", "es-obj");
+  const rounds = el("p", "muted", "");
+  const paint = () => {
+    demand.innerHTML = `Their ask: <b class="mono">${money(neg.demand_salary)}/wk</b>
+      on <b class="mono">${neg.demand_weeks} weeks</b>`;
+    rounds.textContent = `${neg.rounds_left} offer${neg.rounds_left !== 1 ? "s" : ""} before they walk away.`;
+  };
+  paint();
+  panel.append(demand, rounds);
+
+  const sal = el("input"); sal.type = "number"; sal.min = "800"; sal.step = "100";
+  sal.value = String(neg.demand_salary); sal.className = "sel-sm mono";
+  const wks = el("input"); wks.type = "number"; wks.min = "16"; wks.max = "80";
+  wks.value = String(neg.demand_weeks); wks.className = "sel-sm mono";
+  const sL = el("label", "row"); sL.append(el("span", "", "Salary/wk: "), sal);
+  const wL = el("label", "row"); wL.append(el("span", "", "Weeks: "), wks);
+  panel.append(sL, wL);
+
+  const offerBtn = el("button", "btn btn-primary", "Make the offer");
+  const walkBtn = el("button", "btn btn-sm", "Leave the table");
+  offerBtn.onclick = async () => {
+    let r;
+    try {
+      r = await api("/api/negotiation/offer", {
+        player_id: target.id,
+        salary: Math.max(0, parseInt(sal.value || "0", 10)),
+        weeks: Math.max(16, parseInt(wks.value || "40", 10)),
+      });
+    } catch { return; } // error keeps the table open; reason toasted
+    if (r.status === "accepted") {
+      toast(r.message); close(); refresh(); render();
+      return;
+    }
+    if (r.status === "collapsed") {
+      log.appendChild(el("div", "es-obj-row",
+        `<span class="pill bad">walked</span> ${r.message}`));
+      offerBtn.disabled = true; walkBtn.textContent = "Close";
+      return;
+    }
+    neg = r.negotiation;
+    log.appendChild(el("div", "es-obj-row",
+      `<span class="pill warn">counter</span> ${r.message}`));
+    paint();
+  };
+  walkBtn.onclick = async () => {
+    try { await api("/api/negotiation/cancel", { player_id: target.id }); } catch {}
+    close();
+  };
+  const actions = el("div", "row");
+  actions.append(offerBtn, walkBtn);
+  panel.append(actions, log);
+
+  function close() { ov.remove(); }
+  ov.onclick = (e) => { if (e.target === ov) close(); };
+  panel.querySelector(".neg-close").onclick = close;
+  ov.appendChild(panel);
+  document.body.appendChild(ov);
+}
+
+// Book-depth tier label for a player deep-dive (mirrors the unlock
+// thresholds in development.scout_report — server decides, this labels).
+function scoutTier(p) {
+  if (p >= 0.95) return "complete book";
+  if (p >= 0.75) return "mental read";
+  if (p >= 0.5) return "style read";
+  if (p >= 0.25) return "basics";
+  return "first looks";
+}
+
 async function scouting(v) {
   const data = await api("/api/scouting");
   const card = el("div", "card");
-  card.innerHTML = `<h2>Scouting desk</h2>`;
+  card.innerHTML = `<h2>Scouting desk</h2>
+    <p class="muted">One scout, one assignment: cover a <b>team</b> (steady, ~3 weeks),
+    sweep the <b>market</b> (slower, wider), attend a <b>match</b> (one-shot intel on both
+    sides), or build the <b>book on one player</b> (fastest — and it goes deeper: comfort
+    picks, how they play, their mentality, the full verdict).</p>`;
+
+  // -- current assignment ----------------------------------------------------
+  if (data.target) {
+    const kindLabel = { team: "covering", market: "sweeping", player: "deep-diving", match: "attending" };
+    const status = el("p", "", "");
+    status.innerHTML =
+      `<span class="pill good">${kindLabel[data.target_kind] ?? "on"} ${data.target_name ?? data.target}</span> ` +
+      (data.target_kind === "match"
+        ? '<span class="muted">intel lands after the match is played</span>'
+        : `<span class="muted">coverage ${Math.round(data.progress * 100)}%` +
+          (data.target_kind === "player" ? ` · ${scoutTier(data.progress)}` : "") + "</span>");
+    card.appendChild(status);
+  } else {
+    card.appendChild(el("p", "muted", "Nobody is being watched."));
+  }
+
+  // -- assignment pickers ------------------------------------------------------
   const row = el("div", "row");
   const sel = el("select");
-  sel.appendChild(el("option", "", "— assign the scout —"));
+  sel.appendChild(el("option", "", "— cover a team / market —"));
   const mkt = el("option", "", "Free-agent market");
   mkt.value = "market";
   if (data.target === "market") mkt.selected = true;
@@ -2778,17 +3077,99 @@ async function scouting(v) {
     render();
   };
   row.appendChild(sel);
-  if (data.target) {
-    row.appendChild(el("span", "muted",
-      `coverage: ${Math.round(data.progress * 100)}%`));
+
+  // Attend a match (next two weeks, not your own games).
+  if ((data.upcoming ?? []).length) {
+    const fsel = el("select");
+    fsel.appendChild(el("option", "", "— attend a match —"));
+    for (const f of data.upcoming) {
+      const o = el("option", "", `${f.label} (W${f.week}${f.stage !== "regular" ? " · " + f.stage : ""})`);
+      o.value = f.id;
+      if (data.target === "match:" + f.id) o.selected = true;
+      fsel.appendChild(o);
+    }
+    fsel.onchange = async () => {
+      if (!fsel.value) return;
+      const r = await api("/api/actions/scout", { fixture_id: fsel.value });
+      toast(r.message);
+      render();
+    };
+    row.appendChild(fsel);
   }
   card.appendChild(row);
-  if (!data.target) {
-    card.appendChild(el("p", "muted",
-      "Nobody is being watched. Reports on rivals reveal ability bands; " +
-      "market coverage exposes free agents' ceilings before you pay for them."));
-  }
+
+  // Deep-dive a player: search league-wide, click to assign.
+  const prow = el("div", "row");
+  const pin = el("input", "mono");
+  pin.placeholder = "deep-dive a player: search by name…";
+  pin.style.minWidth = "240px";
+  prow.appendChild(pin);
+  const pbox = el("div", "");
+  let ptimer = null;
+  pin.oninput = () => {
+    clearTimeout(ptimer);
+    ptimer = setTimeout(async () => {
+      const q = pin.value.trim();
+      pbox.innerHTML = "";
+      if (q.length < 2) return;
+      let r;
+      try { r = await api("/api/market/search?q=" + encodeURIComponent(q)); }
+      catch { return; }
+      for (const p of r.results.slice(0, 6)) {
+        if (p.mine) continue;
+        const b = el("button", "btn btn-sm",
+          `${p.handle} <span class="muted">${p.team_name ?? "free agent"}</span>`);
+        b.onclick = async () => {
+          const res = await api("/api/actions/scout", { player_id: p.id });
+          toast(res.message);
+          render();
+        };
+        pbox.appendChild(b);
+      }
+      if (!pbox.childElementCount) pbox.appendChild(el("span", "muted", "no players match"));
+    }, 250);
+  };
+  card.appendChild(prow);
+  card.appendChild(pbox);
   v.appendChild(card);
+
+  // -- player deep-dive: one rich, tiered report ------------------------------
+  if (data.target_kind === "player" && data.reports.length) {
+    const r = data.reports[0];
+    const dc = el("div", "card");
+    dc.innerHTML = `<h2>The book on <span class="plink" data-pid="${r.player_id}">${r.handle}</span>
+      <span class="muted" style="font-weight:400">— ${scoutTier(data.progress)} (${Math.round(data.progress * 100)}%)</span></h2>`;
+    const lines = [];
+    lines.push(`<div><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span>
+      <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}</div>`);
+    if ((r.agent_comfort ?? []).length) {
+      lines.push(`<div><b>Comfort picks:</b> ` + r.agent_comfort
+        .map((a) => `<span class="pill">${a.agent_id} ${a.mastery}</span>`).join(" ") + `</div>`);
+    } else {
+      lines.push(`<div class="muted">Comfort picks unlock at 25%.</div>`);
+    }
+    lines.push(r.style_read
+      ? `<div><b>How they play:</b> ${r.style_read}</div>`
+      : `<div class="muted">Style read unlocks at 50%.</div>`);
+    lines.push(r.mental_read
+      ? `<div><b>Mentality:</b> ${r.mental_read}</div>`
+      : `<div class="muted">Mental read unlocks at 75%.</div>`);
+    if ((r.traits ?? []).length || r.traits_hidden) {
+      lines.push(`<div><b>Character:</b> ` + r.traits
+        .map((t) => `<span class="pill" title="${t.blurb}">${humanize(t.id)}</span>`).join(" ") +
+        (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden} unknown</span>` : "") + `</div>`);
+    }
+    if ((r.strengths ?? []).length) {
+      lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
+        ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") + `</span></div>`);
+    }
+    lines.push(r.verdict
+      ? `<div><b>Verdict:</b> ${r.verdict}</div>`
+      : `<div class="muted">The verdict lands with the complete book.</div>`);
+    dc.appendChild(el("div", "es-obj", lines.join("")));
+    v.appendChild(dc);
+    return; // deep-dive replaces the table view
+  }
 
   if (data.reports.length) {
     const rc = el("div", "card");
@@ -2851,7 +3232,10 @@ const STAT_COLS = [
 
 async function stats(v) {
   const split = App.statsSplit; // {kind, key} | null
-  const qs = split ? `?split=${split.kind}&key=${encodeURIComponent(split.key)}` : "";
+  const lgTier = App.statsTier ?? 1; // 1 = top flight, 2 = Challengers
+  const parts = [`league_tier=${lgTier}`];
+  if (split) parts.push(`split=${split.kind}`, `key=${encodeURIComponent(split.key)}`);
+  const qs = "?" + parts.join("&");
   const [data, racesResp, metaResp] = await Promise.all([
     api("/api/stats" + qs),
     api("/api/races").catch(() => null),
@@ -2899,7 +3283,7 @@ async function stats(v) {
   const impactCats = Object.entries(impact).filter(([, c]) => c.leaders?.length);
   if (impactCats.length) {
     const ic = el("div", "card");
-    ic.appendChild(el("h2", "", "Impact leaders"));
+    ic.appendChild(el("h2", "", `Impact leaders${lgTier === 2 ? " — Challengers" : ""}`));
     const grid = el("div", "es-rec-grid");
     for (const [, cat] of impactCats) {
       const rows = cat.leaders.map((l, i) =>
@@ -3009,7 +3393,18 @@ async function stats(v) {
 
   const lead = el("div", "card");
   const splitLabel = split ? ` — ${split.kind}: ${split.key}` : "";
-  lead.innerHTML = `<h2>League leaders — season ${App.state.season}${splitLabel}</h2>`;
+  lead.innerHTML = `<h2>${lgTier === 2 ? "Challengers leaders" : "League leaders"} — season ${App.state.season}${splitLabel}</h2>`;
+  // Tier tabs: the top flight and the Challengers circuit are separate
+  // player groups — the server filters, the client only picks.
+  const tierRow = el("div", "row", "");
+  const mkTier = (label, tval) => {
+    const b = el("button", "btn btn-sm" + (lgTier === tval ? " btn-primary" : ""), label);
+    b.onclick = () => { App.statsTier = tval; render(); };
+    tierRow.appendChild(b);
+  };
+  mkTier("Tier 1", 1);
+  mkTier("Tier 2 (Challengers)", 2);
+  lead.appendChild(tierRow);
   if (!data.players.length) {
     lead.innerHTML += `<p class="muted">No maps played yet.</p>`;
   } else {
@@ -3077,6 +3472,57 @@ async function stats(v) {
     tc.appendChild(t);
     v.appendChild(tc);
   }
+
+  // Performance observability (this server session): tick-time trend
+  // against state growth, phase breakdown, save cost, slowest endpoints.
+  // Read-only view of /api/perf — the sink never touches the sim.
+  try {
+    const perf = await api("/api/perf");
+    const ticks = perf.ticks || [];
+    const pc = el("div", "card");
+    pc.innerHTML = `<h2>Performance <span class="muted" style="font-weight:400">— this session, resets on restart</span></h2>`;
+    if (!ticks.length) {
+      pc.appendChild(el("p", "muted", "No weeks advanced this session yet."));
+    } else {
+      const last = ticks[ticks.length - 1];
+      // Tick-time trend: bar per tick, so slowdown-over-weeks is visible.
+      const maxMs = Math.max(...ticks.map((t) => t.total_ms), 1);
+      const bars = ticks.slice(-40).map((t) =>
+        `<span title="S${t.season} W${t.week}: ${t.total_ms}ms" style="display:inline-block;width:7px;margin-right:1px;vertical-align:bottom;height:${Math.max(2, Math.round(36 * t.total_ms / maxMs))}px;background:var(--es-color-accent,#4fd8c0)"></span>`
+      ).join("");
+      pc.appendChild(el("p", "", `Advance time, last ${Math.min(ticks.length, 40)} weeks
+        (peak ${Math.round(maxMs)}ms):<br>${bars}`));
+      // Last tick's phase breakdown + the size gauges next to it.
+      const phases = Object.entries(last.phases || {}).sort((a, b) => b[1] - a[1]);
+      const pt = el("table");
+      pt.innerHTML = `<thead><tr><th>Phase (last tick: ${last.total_ms}ms)</th><th class="num">ms</th></tr></thead>`;
+      const ptb = el("tbody");
+      for (const [name, ms] of phases) {
+        ptb.appendChild(el("tr", "", `<td>${name}</td><td class="num">${ms}</td>`));
+      }
+      pt.appendChild(ptb);
+      pc.appendChild(pt);
+      const sizes = Object.entries(last.sizes || {})
+        .map(([k, n]) => `${k} ${n.toLocaleString()}`).join(" · ");
+      const saveB = perf.gauges?.["save.bytes"];
+      pc.appendChild(el("p", "muted",
+        `State growth: ${sizes}${saveB ? ` · save ${(saveB / 1024 / 1024).toFixed(1)}MB` : ""}`));
+    }
+    const api5 = Object.entries(perf.spans || {})
+      .filter(([k]) => k.startsWith("api."))
+      .sort((a, b) => b[1].p95_ms - a[1].p95_ms).slice(0, 5);
+    if (api5.length) {
+      pc.appendChild(el("p", "muted",
+        "Slowest endpoints (p95): " + api5
+          .map(([k, s]) => `${k.slice(4)} ${s.p95_ms}ms×${s.count}`).join(" · ")));
+    }
+    const save = perf.spans?.["save.write"];
+    if (save) {
+      pc.appendChild(el("p", "muted",
+        `Save write: last ${save.last_ms}ms · p95 ${save.p95_ms}ms · ${save.count} writes`));
+    }
+    v.appendChild(pc);
+  } catch { /* perf view is best-effort */ }
 }
 
 /* -- social: the feed + follower economy ----------------------------------- */
@@ -3172,6 +3618,33 @@ async function social(v) {
     }
     st.appendChild(stb);
     lb.appendChild(st);
+  }
+  // Movement tracker: every signing/release/renewal/transfer league-wide —
+  // including AI-to-AI moves — straight off the chronicle.
+  const moves = data.movement || [];
+  if (moves.length) {
+    const mv = el("div", "card");
+    mv.appendChild(el("h2", "", "Movement tracker"));
+    mv.appendChild(el("p", "muted",
+      "Every move in the league, newest first — watch what rival orgs are doing."));
+    const KIND_BADGE = {
+      signing: ["signing", "good"], release: ["release", "bad"],
+      renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
+    };
+    const list = el("div", "es-movement");
+    for (const m of moves) {
+      const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
+      const text = m.player_id
+        ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
+            `<span class="plink" data-pid="${m.player_id}">$1</span>`)
+        : m.text;
+      list.appendChild(el("div", "es-move" + (m.mine ? " mine" : ""),
+        `<span class="pill ${tone}">${label}</span> ` +
+        `<span class="muted mono">S${m.season}·W${m.week}</span> ` +
+        (m.team_tag ? `<span class="pill">${m.team_tag}</span> ` : "") + text));
+    }
+    mv.appendChild(list);
+    lb.appendChild(mv);
   }
   band.appendChild(lb);
 
@@ -3462,7 +3935,16 @@ function pollForAdvance(prevWeek) {
       mpPolling = false;
       $("#advance-btn").textContent = "Advance Week ▸";
       $("#advance-btn").disabled = false;
-      toast(`Week ${s.week} — everyone advanced.`);
+      // Show the played week's report (results + replay buttons) — the
+      // manager whose ready-up ticked the world got it from advance();
+      // everyone else fetches the same report here.
+      try {
+        const r = await api("/api/report");
+        if (r.report) showReport(r.report);
+        else toast(`Week ${s.week} — everyone advanced.`);
+      } catch {
+        toast(`Week ${s.week} — everyone advanced.`);
+      }
       await refresh();
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
       return;

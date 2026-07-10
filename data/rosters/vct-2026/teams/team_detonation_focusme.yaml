@@ -13,6 +13,12 @@ players:
   handle: Meiy
   real_name: Ibuki Seki
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 96.0
+  - lang: en
+    level: 20.0
   age: 23
   role: duelist
   playstyle: entry
@@ -32,30 +38,57 @@ players:
     mastery: 88.6
   - agent_id: raze
     mastery: 91.4
+  - agent_id: phoenix
+    mastery: 65.3
+  - agent_id: reyna
+    mastery: 66.9
+  - agent_id: breach
+    mastery: 50.6
+  - agent_id: chamber
+    mastery: 52.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 48.1
+  - agent_id: killjoy
+    mastery: 53.2
+  - agent_id: omen
+    mastery: 54.5
+  - agent_id: skye
+    mastery: 43.6
+  - agent_id: sova
+    mastery: 53.2
+  - agent_id: viper
+    mastery: 40.8
   map_pool:
   - map_id: ascent
-    mastery: 81.0
+    mastery: 76.1
   - map_id: bind
-    mastery: 83.4
+    mastery: 80.5
   - map_id: haven
-    mastery: 82.3
+    mastery: 75.0
   - map_id: lotus
-    mastery: 77.9
+    mastery: 81.4
   - map_id: split
-    mastery: 81.0
+    mastery: 78.0
   salary: 5900
-  contract_weeks_left: 62
-  morale: 68.7
-  stamina: 89.4
-  form: 50.4
+  contract_weeks_left: 32
+  morale: 69.2
+  stamina: 84.3
+  form: 46.7
   personality_tags:
-  - clutch_gene
-  - grinder
-  potential: 80.4
+  - streamer
+  potential: 82.4
 - id: team_detonation_focusme_caedye
   handle: Caedye
   real_name: Amon Mateus Okakura
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 95.0
+  - lang: en
+    level: 30.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -75,30 +108,60 @@ players:
     mastery: 83.0
   - agent_id: killjoy
     mastery: 76.1
+  - agent_id: chamber
+    mastery: 63.6
+  - agent_id: breach
+    mastery: 47.2
+  - agent_id: clove
+    mastery: 53.3
+  - agent_id: jett
+    mastery: 41.9
+  - agent_id: omen
+    mastery: 46.6
+  - agent_id: phoenix
+    mastery: 44.2
+  - agent_id: raze
+    mastery: 36.6
+  - agent_id: reyna
+    mastery: 44.1
+  - agent_id: skye
+    mastery: 43.4
+  - agent_id: sova
+    mastery: 53.9
+  - agent_id: viper
+    mastery: 43.5
   map_pool:
   - map_id: ascent
-    mastery: 81.9
+    mastery: 60.7
   - map_id: bind
-    mastery: 69.0
+    mastery: 82.0
   - map_id: haven
     mastery: 75.3
   - map_id: lotus
-    mastery: 71.3
+    mastery: 67.8
   - map_id: split
-    mastery: 82.6
+    mastery: 70.4
   salary: 5000
-  contract_weeks_left: 39
-  morale: 73.9
-  stamina: 80.3
-  form: 46.5
+  contract_weeks_left: 60
+  morale: 77.0
+  stamina: 85.6
+  form: 51.0
   personality_tags:
   - clutch_gene
-  - grinder
-  potential: 84.7
+  - independent
+  potential: 75.1
 - id: team_detonation_focusme_akame
   handle: akame
   real_name: Yu Gwang-hui
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: ja
+    level: 65.0
+  - lang: en
+    level: 25.0
   age: 22
   role: flex
   playstyle: entry
@@ -118,29 +181,58 @@ players:
     mastery: 75.1
   - agent_id: sova
     mastery: 76.3
+  - agent_id: breach
+    mastery: 43.6
+  - agent_id: chamber
+    mastery: 43.4
+  - agent_id: clove
+    mastery: 51.4
+  - agent_id: cypher
+    mastery: 44.5
+  - agent_id: killjoy
+    mastery: 46.8
+  - agent_id: omen
+    mastery: 5.2
+  - agent_id: phoenix
+    mastery: 39.8
+  - agent_id: raze
+    mastery: 38.7
+  - agent_id: reyna
+    mastery: 51.0
+  - agent_id: skye
+    mastery: 47.5
+  - agent_id: viper
+    mastery: 47.3
   map_pool:
   - map_id: ascent
-    mastery: 68.9
+    mastery: 76.1
   - map_id: bind
-    mastery: 71.1
+    mastery: 82.5
   - map_id: haven
-    mastery: 69.8
+    mastery: 64.0
   - map_id: lotus
-    mastery: 70.8
+    mastery: 68.3
   - map_id: split
-    mastery: 83.9
+    mastery: 70.6
   salary: 4900
-  contract_weeks_left: 54
-  morale: 76.2
-  stamina: 93.1
-  form: 52.7
+  contract_weeks_left: 66
+  morale: 83.6
+  stamina: 95.8
+  form: 47.5
   personality_tags:
-  - analytical
-  potential: 72.8
+  - grinder
+  - streamer
+  potential: 77.1
 - id: team_detonation_focusme_ssees
   handle: SSeeS
   real_name: Tomonori Okimura
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 26
   role: controller
   playstyle: igl
@@ -160,30 +252,58 @@ players:
     mastery: 74.9
   - agent_id: sova
     mastery: 70.9
+  - agent_id: clove
+    mastery: 52.1
+  - agent_id: viper
+    mastery: 51.3
+  - agent_id: breach
+    mastery: 45.5
+  - agent_id: chamber
+    mastery: 43.3
+  - agent_id: cypher
+    mastery: 44.3
+  - agent_id: jett
+    mastery: 46.1
+  - agent_id: killjoy
+    mastery: 42.6
+  - agent_id: phoenix
+    mastery: 35.2
+  - agent_id: raze
+    mastery: 42.0
+  - agent_id: reyna
+    mastery: 43.2
+  - agent_id: skye
+    mastery: 42.4
   map_pool:
   - map_id: ascent
-    mastery: 66.2
+    mastery: 83.1
   - map_id: bind
-    mastery: 64.9
+    mastery: 66.2
   - map_id: haven
-    mastery: 71.9
+    mastery: 61.2
   - map_id: lotus
-    mastery: 73.9
+    mastery: 70.5
   - map_id: split
-    mastery: 78.6
+    mastery: 62.6
   salary: 4700
-  contract_weeks_left: 45
-  morale: 75.7
-  stamina: 86.6
-  form: 47.3
+  contract_weeks_left: 57
+  morale: 83.6
+  stamina: 98.1
+  form: 46.3
   personality_tags:
+  - flashy
   - slow_starter
-  - streamer
   potential: 68.8
 - id: team_detonation_focusme_yatsuka
   handle: yatsuka
   real_name: Kazuya Ikeda
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 22
   role: initiator
   playstyle: support
@@ -203,23 +323,44 @@ players:
     mastery: 68.6
   - agent_id: sova
     mastery: 70.7
+  - agent_id: breach
+    mastery: 51.8
+  - agent_id: chamber
+    mastery: 32.3
+  - agent_id: clove
+    mastery: 42.4
+  - agent_id: cypher
+    mastery: 39.3
+  - agent_id: jett
+    mastery: 43.4
+  - agent_id: killjoy
+    mastery: 2.8
+  - agent_id: omen
+    mastery: 42.2
+  - agent_id: phoenix
+    mastery: 44.5
+  - agent_id: raze
+    mastery: 51.2
+  - agent_id: reyna
+    mastery: 46.9
+  - agent_id: viper
+    mastery: 41.6
   map_pool:
   - map_id: ascent
-    mastery: 66.2
+    mastery: 66.0
   - map_id: bind
-    mastery: 63.9
+    mastery: 71.8
   - map_id: haven
-    mastery: 58.1
+    mastery: 74.6
   - map_id: lotus
-    mastery: 78.5
+    mastery: 60.3
   - map_id: split
-    mastery: 70.3
+    mastery: 73.1
   salary: 4500
-  contract_weeks_left: 44
-  morale: 83.7
-  stamina: 97.6
-  form: 45.7
+  contract_weeks_left: 55
+  morale: 64.7
+  stamina: 81.6
+  form: 51.5
   personality_tags:
   - streamer
-  - team_player
-  potential: 67.5
+  potential: 70.3

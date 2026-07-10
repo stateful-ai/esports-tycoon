@@ -13,6 +13,10 @@ players:
   handle: slowly
   real_name: Sun Kelun
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 22
   role: controller
   playstyle: support
@@ -32,30 +36,55 @@ players:
     mastery: 94.5
   - agent_id: clove
     mastery: 81.0
+  - agent_id: viper
+    mastery: 63.0
+  - agent_id: breach
+    mastery: 6.6
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 58.3
+  - agent_id: jett
+    mastery: 51.9
+  - agent_id: killjoy
+    mastery: 59.3
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 43.6
+  - agent_id: reyna
+    mastery: 50.4
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 75.5
+    mastery: 82.1
   - map_id: bind
-    mastery: 85.9
+    mastery: 90.1
   - map_id: haven
-    mastery: 90.2
+    mastery: 86.3
   - map_id: lotus
-    mastery: 83.4
+    mastery: 78.7
   - map_id: split
-    mastery: 99.0
+    mastery: 80.1
   salary: 6400
-  contract_weeks_left: 55
-  morale: 64.5
-  stamina: 86.8
-  form: 53.2
+  contract_weeks_left: 34
+  morale: 70.5
+  stamina: 82.2
+  form: 53.9
   personality_tags:
-  - hot_head
-  - quiet
-  potential: 88.2
+  - perfectionist
+  potential: 87.7
 - id: team_tyloo_erv
   handle: Erv
   real_name: Shen Zhiwei
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: flex
   playstyle: entry
@@ -77,30 +106,58 @@ players:
     mastery: 76.6
   - agent_id: breach
     mastery: 81.8
+  - agent_id: chamber
+    mastery: 52.7
+  - agent_id: clove
+    mastery: 58.8
+  - agent_id: cypher
+    mastery: 50.6
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 42.4
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 55.2
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 59.8
+  - agent_id: viper
+    mastery: 52.5
   map_pool:
   - map_id: ascent
-    mastery: 89.8
+    mastery: 82.6
   - map_id: bind
-    mastery: 80.5
+    mastery: 69.6
   - map_id: haven
-    mastery: 75.1
+    mastery: 76.3
   - map_id: lotus
-    mastery: 87.8
+    mastery: 82.9
   - map_id: split
-    mastery: 78.2
+    mastery: 84.7
   salary: 5900
-  contract_weeks_left: 46
-  morale: 80.9
-  stamina: 87.1
-  form: 52.5
+  contract_weeks_left: 79
+  morale: 73.2
+  stamina: 88.6
+  form: 55.1
   personality_tags:
-  - analytical
-  - slow_starter
-  potential: 93.5
+  - fan_favorite
+  - perfectionist
+  potential: 83.0
 - id: team_tyloo_splash
   handle: splash
   real_name: Moses Christophe Jonathan
   region: china
+  country: ID
+  languages:
+  - lang: id
+    level: 97.0
+  - lang: en
+    level: 55.0
+  - lang: zh
+    level: 40.0
   age: 22
   role: duelist
   playstyle: entry
@@ -120,30 +177,56 @@ players:
     mastery: 84.7
   - agent_id: phoenix
     mastery: 85.4
+  - agent_id: raze
+    mastery: 60.5
+  - agent_id: reyna
+    mastery: 65.2
+  - agent_id: breach
+    mastery: 46.8
+  - agent_id: chamber
+    mastery: 55.5
+  - agent_id: clove
+    mastery: 54.8
+  - agent_id: cypher
+    mastery: 49.2
+  - agent_id: killjoy
+    mastery: 53.6
+  - agent_id: omen
+    mastery: 57.0
+  - agent_id: skye
+    mastery: 49.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 52.7
   map_pool:
   - map_id: ascent
-    mastery: 74.8
+    mastery: 87.7
   - map_id: bind
-    mastery: 81.8
+    mastery: 88.0
   - map_id: haven
-    mastery: 94.1
+    mastery: 86.6
   - map_id: lotus
-    mastery: 73.7
+    mastery: 74.7
   - map_id: split
-    mastery: 83.4
+    mastery: 73.9
   salary: 5600
-  contract_weeks_left: 36
-  morale: 79.6
-  stamina: 84.1
-  form: 49.2
+  contract_weeks_left: 54
+  morale: 67.0
+  stamina: 97.8
+  form: 53.8
   personality_tags:
-  - fan_favorite
-  - flashy
-  potential: 79.6
+  - perfectionist
+  - streamer
+  potential: 82.8
 - id: team_tyloo_scales
   handle: Scales
   real_name: Zhang Zhen
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -165,30 +248,57 @@ players:
     mastery: 76.7
   - agent_id: chamber
     mastery: 66.2
+  - agent_id: killjoy
+    mastery: 62.9
+  - agent_id: breach
+    mastery: 59.2
+  - agent_id: clove
+    mastery: 43.8
+  - agent_id: jett
+    mastery: 49.0
+  - agent_id: omen
+    mastery: 48.5
+  - agent_id: phoenix
+    mastery: 47.7
+  - agent_id: raze
+    mastery: 51.8
+  - agent_id: reyna
+    mastery: 46.2
+  - agent_id: skye
+    mastery: 42.8
+  - agent_id: sova
+    mastery: 54.1
   map_pool:
   - map_id: ascent
-    mastery: 79.4
+    mastery: 78.8
   - map_id: bind
-    mastery: 74.5
+    mastery: 69.7
   - map_id: haven
-    mastery: 89.1
+    mastery: 71.0
   - map_id: lotus
-    mastery: 80.7
+    mastery: 77.4
   - map_id: split
-    mastery: 70.6
+    mastery: 82.4
   salary: 5400
-  contract_weeks_left: 51
-  morale: 68.8
-  stamina: 83.1
-  form: 46.8
+  contract_weeks_left: 78
+  morale: 77.0
+  stamina: 89.0
+  form: 47.6
   personality_tags:
-  - analytical
-  - streamer
-  potential: 81.6
+  - clutch_gene
+  potential: 80.1
 - id: team_tyloo_siufatbb
   handle: SiuFatBB
   real_name: Pong Ka Hei
   region: china
+  country: HK
+  languages:
+  - lang: yue
+    level: 96.0
+  - lang: zh
+    level: 80.0
+  - lang: en
+    level: 45.0
   age: 24
   role: initiator
   playstyle: igl
@@ -208,23 +318,45 @@ players:
     mastery: 76.6
   - agent_id: sova
     mastery: 82.9
+  - agent_id: breach
+    mastery: 61.9
+  - agent_id: chamber
+    mastery: 49.6
+  - agent_id: clove
+    mastery: 53.4
+  - agent_id: cypher
+    mastery: 52.0
+  - agent_id: jett
+    mastery: 50.6
+  - agent_id: killjoy
+    mastery: 50.5
+  - agent_id: omen
+    mastery: 52.9
+  - agent_id: phoenix
+    mastery: 55.9
+  - agent_id: raze
+    mastery: 56.5
+  - agent_id: reyna
+    mastery: 45.4
+  - agent_id: viper
+    mastery: 52.1
   map_pool:
   - map_id: ascent
-    mastery: 78.4
+    mastery: 75.6
   - map_id: bind
-    mastery: 84.8
+    mastery: 73.5
   - map_id: haven
-    mastery: 77.7
+    mastery: 66.1
   - map_id: lotus
-    mastery: 82.4
+    mastery: 66.1
   - map_id: split
-    mastery: 82.3
+    mastery: 72.3
   salary: 5300
-  contract_weeks_left: 63
-  morale: 79.0
-  stamina: 97.2
-  form: 48.4
+  contract_weeks_left: 65
+  morale: 67.4
+  stamina: 84.8
+  form: 45.0
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 74.6
+  - fan_favorite
+  - slow_starter
+  potential: 72.5

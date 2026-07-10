@@ -13,6 +13,14 @@ players:
   handle: Javelin
   real_name: Vitalii Fedak
   region: emea
+  country: UA
+  languages:
+  - lang: uk
+    level: 97.0
+  - lang: ru
+    level: 85.0
+  - lang: en
+    level: 55.0
   age: 21
   role: initiator
   playstyle: igl
@@ -32,30 +40,60 @@ players:
     mastery: 75.4
   - agent_id: skye
     mastery: 63.6
+  - agent_id: breach
+    mastery: 45.8
+  - agent_id: chamber
+    mastery: 28.2
+  - agent_id: clove
+    mastery: 28.7
+  - agent_id: cypher
+    mastery: 37.7
+  - agent_id: jett
+    mastery: 40.3
+  - agent_id: killjoy
+    mastery: 39.9
+  - agent_id: omen
+    mastery: 41.5
+  - agent_id: phoenix
+    mastery: 36.5
+  - agent_id: raze
+    mastery: 34.4
+  - agent_id: reyna
+    mastery: 33.9
+  - agent_id: viper
+    mastery: 33.3
   map_pool:
   - map_id: ascent
-    mastery: 60.8
+    mastery: 56.9
   - map_id: bind
-    mastery: 60.1
+    mastery: 62.7
   - map_id: haven
-    mastery: 54.7
+    mastery: 68.6
   - map_id: lotus
-    mastery: 76.6
+    mastery: 65.9
   - map_id: split
-    mastery: 66.1
+    mastery: 63.1
   salary: 3800
-  contract_weeks_left: 59
-  morale: 82.6
-  stamina: 90.9
-  form: 51.0
+  contract_weeks_left: 63
+  morale: 83.6
+  stamina: 95.2
+  form: 56.7
   personality_tags:
-  - hot_head
-  - slow_starter
-  potential: 67.1
+  - analytical
+  - clutch_gene
+  potential: 68.0
 - id: team_navi_junior_kolosha
   handle: Kolosha
   real_name: Herman Skrypka
   region: emea
+  country: UA
+  languages:
+  - lang: uk
+    level: 97.0
+  - lang: ru
+    level: 85.0
+  - lang: en
+    level: 55.0
   age: 19
   role: duelist
   playstyle: entry
@@ -75,29 +113,60 @@ players:
     mastery: 81.7
   - agent_id: raze
     mastery: 73.4
+  - agent_id: phoenix
+    mastery: 57.4
+  - agent_id: reyna
+    mastery: 60.1
+  - agent_id: breach
+    mastery: 42.5
+  - agent_id: chamber
+    mastery: 3.4
+  - agent_id: clove
+    mastery: 39.2
+  - agent_id: cypher
+    mastery: 41.1
+  - agent_id: killjoy
+    mastery: 39.3
+  - agent_id: omen
+    mastery: 41.6
+  - agent_id: skye
+    mastery: 28.7
+  - agent_id: sova
+    mastery: 45.6
+  - agent_id: viper
+    mastery: 3.4
   map_pool:
   - map_id: ascent
-    mastery: 75.2
+    mastery: 60.7
   - map_id: bind
-    mastery: 79.2
+    mastery: 70.9
   - map_id: haven
-    mastery: 74.2
+    mastery: 72.4
   - map_id: lotus
-    mastery: 70.6
+    mastery: 70.3
   - map_id: split
-    mastery: 69.8
+    mastery: 73.5
   salary: 4400
-  contract_weeks_left: 42
-  morale: 70.7
-  stamina: 99.4
-  form: 47.3
+  contract_weeks_left: 75
+  morale: 82.2
+  stamina: 83.7
+  form: 58.5
   personality_tags:
+  - perfectionist
   - slow_starter
-  potential: 74.3
+  potential: 82.5
 - id: team_navi_junior_avey
   handle: avey
   real_name: Nikita Ivanovs
   region: emea
+  country: LV
+  languages:
+  - lang: lv
+    level: 95.0
+  - lang: ru
+    level: 80.0
+  - lang: en
+    level: 60.0
   age: 20
   role: controller
   playstyle: support
@@ -117,30 +186,59 @@ players:
     mastery: 72.9
   - agent_id: viper
     mastery: 64.9
+  - agent_id: clove
+    mastery: 43.9
+  - agent_id: breach
+    mastery: 39.8
+  - agent_id: chamber
+    mastery: 31.1
+  - agent_id: cypher
+    mastery: 35.6
+  - agent_id: jett
+    mastery: 39.4
+  - agent_id: killjoy
+    mastery: 39.5
+  - agent_id: phoenix
+    mastery: 30.8
+  - agent_id: raze
+    mastery: 37.7
+  - agent_id: reyna
+    mastery: 37.0
+  - agent_id: skye
+    mastery: 39.4
+  - agent_id: sova
+    mastery: 31.7
   map_pool:
   - map_id: ascent
-    mastery: 58.3
+    mastery: 68.2
   - map_id: bind
-    mastery: 57.6
+    mastery: 62.0
   - map_id: haven
-    mastery: 68.8
+    mastery: 69.1
   - map_id: lotus
-    mastery: 59.7
+    mastery: 55.0
   - map_id: split
-    mastery: 58.3
+    mastery: 61.1
   salary: 3700
-  contract_weeks_left: 61
-  morale: 66.4
-  stamina: 87.1
-  form: 55.3
+  contract_weeks_left: 62
+  morale: 63.2
+  stamina: 87.3
+  form: 48.4
   personality_tags:
-  - perfectionist
-  - streamer
-  potential: 61.3
+  - hot_head
+  potential: 74.5
 - id: team_navi_junior_darxcioo
   handle: Darxcioo
   real_name: Waniss Mehl
   region: emea
+  country: BE
+  languages:
+  - lang: fr
+    level: 95.0
+  - lang: en
+    level: 65.0
+  - lang: nl
+    level: 25.0
   age: 19
   role: initiator
   playstyle: support
@@ -160,30 +258,58 @@ players:
     mastery: 70.7
   - agent_id: breach
     mastery: 64.2
+  - agent_id: sova
+    mastery: 48.6
+  - agent_id: chamber
+    mastery: 7.3
+  - agent_id: clove
+    mastery: 36.5
+  - agent_id: cypher
+    mastery: 27.0
+  - agent_id: jett
+    mastery: 31.3
+  - agent_id: killjoy
+    mastery: 39.8
+  - agent_id: omen
+    mastery: 34.9
+  - agent_id: phoenix
+    mastery: 30.4
+  - agent_id: raze
+    mastery: 27.7
+  - agent_id: reyna
+    mastery: 48.1
+  - agent_id: viper
+    mastery: 29.4
   map_pool:
   - map_id: ascent
-    mastery: 65.9
+    mastery: 66.7
   - map_id: bind
-    mastery: 66.8
+    mastery: 53.1
   - map_id: haven
-    mastery: 64.7
+    mastery: 48.4
   - map_id: lotus
-    mastery: 72.7
+    mastery: 73.5
   - map_id: split
-    mastery: 65.0
+    mastery: 49.5
   salary: 3500
-  contract_weeks_left: 41
-  morale: 65.0
-  stamina: 83.3
-  form: 49.9
+  contract_weeks_left: 50
+  morale: 75.1
+  stamina: 99.5
+  form: 46.8
   personality_tags:
-  - streamer
-  - team_player
-  potential: 66.4
+  - fan_favorite
+  - hot_head
+  potential: 69.4
 - id: team_navi_junior_sizo
   handle: sizo
   real_name: Wiktor Bujak
   region: emea
+  country: PL
+  languages:
+  - lang: pl
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 19
   role: sentinel
   playstyle: anchor
@@ -203,22 +329,45 @@ players:
     mastery: 71.7
   - agent_id: cypher
     mastery: 61.9
+  - agent_id: chamber
+    mastery: 42.1
+  - agent_id: breach
+    mastery: 39.2
+  - agent_id: clove
+    mastery: 2.0
+  - agent_id: jett
+    mastery: 36.6
+  - agent_id: omen
+    mastery: 34.5
+  - agent_id: phoenix
+    mastery: 32.1
+  - agent_id: raze
+    mastery: 35.3
+  - agent_id: reyna
+    mastery: 28.9
+  - agent_id: skye
+    mastery: 33.6
+  - agent_id: sova
+    mastery: 37.3
+  - agent_id: viper
+    mastery: 51.7
   map_pool:
   - map_id: ascent
-    mastery: 55.7
+    mastery: 70.1
   - map_id: bind
-    mastery: 64.8
+    mastery: 57.4
   - map_id: haven
-    mastery: 68.0
+    mastery: 63.5
   - map_id: lotus
-    mastery: 65.7
+    mastery: 61.4
   - map_id: split
-    mastery: 62.9
+    mastery: 64.1
   salary: 3700
-  contract_weeks_left: 62
-  morale: 75.1
-  stamina: 85.2
-  form: 58.5
+  contract_weeks_left: 73
+  morale: 63.3
+  stamina: 94.1
+  form: 52.4
   personality_tags:
-  - team_player
-  potential: 68.8
+  - fan_favorite
+  - flashy
+  potential: 68.1

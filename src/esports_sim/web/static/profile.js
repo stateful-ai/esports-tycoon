@@ -60,6 +60,14 @@ function pfNum(v, digits = 0) {
   return digits ? n.toFixed(digits) : String(Math.round(n));
 }
 
+// Coarse star quick-glance ("★★★½") from a 0.5-5.0 rating — the number is
+// the real signal; stars are just a fast read.
+function pfStars(v) {
+  if (v == null || isNaN(v)) return "";
+  const full = Math.floor(v);
+  return "★".repeat(full) + (v % 1 >= 0.5 ? "½" : "");
+}
+
 // Round-rate values may arrive as a fraction (0..1) or a percent (0..100).
 function pfPct(v) {
   if (v == null || isNaN(v)) return null;
@@ -238,9 +246,16 @@ function renderPlayerProfile(data) {
         (p.team_logo ? `<img class="pf-team-logo" src="${p.team_logo}" alt="" onerror="this.style.display='none'">` : "") +
         `<span>${p.team_name ?? "—"}</span></span>`
       : `<span class="pill">free agent</span>`;
+  // Languages read as "PT 95 · EN 60" — the fluency number matters (shared
+  // languages drive the locker room's comms cohesion).
+  const langBit = (p.languages || [])
+    .map((l) => `${(l.lang || "").toUpperCase()} ${l.level}`)
+    .join(" · ");
   const meta = [
     p.role ? `<span class="pill">${p.role}</span>` : "",
     ov.playstyle ? `<span class="pill">${ov.playstyle}</span>` : "",
+    p.country ? `<span class="pill" title="nationality">${p.country}</span>` : "",
+    langBit ? `<span class="pill" title="spoken languages (fluency)">${langBit}</span>` : "",
     p.age != null ? `<span class="pf-age">age ${p.age}</span>` : "",
     p.is_starter === false ? `<span class="pill">bench</span>` : "",
     p.followers != null && typeof fmtFollowers === "function"
@@ -275,9 +290,16 @@ function renderPlayerProfile(data) {
 
   // Overview stat tiles -----------------------------------------------------
   const tiles = el("div", "pf-tiles");
-  const ovrSub = ov.fogged ? "scouted" : "";
+  const ovrSub = ov.fogged ? "scouted" : pfStars(ov.ovr_stars);
   tiles.appendChild(pfTile("OVR", (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), ovrSub));
-  tiles.appendChild(pfTile("Potential", pfNum(ov.potential)));
+  // Ceiling: a known number for own club (stars as the sub); a fogged rival
+  // shows the scout's banded tier text instead.
+  const potIsNum = typeof ov.potential === "number";
+  tiles.appendChild(pfTile(
+    "Potential",
+    potIsNum ? pfNum(ov.potential) : (ov.potential || "—"),
+    potIsNum ? pfStars(ov.potential_stars) : "scouted"
+  ));
   tiles.appendChild(pfTile("Form", pfNum(ov.form)));
   tiles.appendChild(pfTile("Morale", pfNum(ov.morale)));
   tiles.appendChild(pfTile("Condition", pfNum(ov.condition)));

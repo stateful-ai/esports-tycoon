@@ -19,6 +19,8 @@ teams:
         igl: false
         quality: 85
         agents: [jett, raze]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Smoggy
         real_name: Zhang Zhao
         age: 25
@@ -27,6 +29,8 @@ teams:
         igl: false
         quality: 80
         agents: [raze, phoenix, omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: nobody
         real_name: Wang Senxu
         age: 27
@@ -35,6 +39,8 @@ teams:
         igl: true
         quality: 74
         agents: [skye, sova]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Jieni7
         real_name: Zhang Juntai
         age: 20
@@ -43,6 +49,8 @@ teams:
         igl: false
         quality: 73
         agents: [killjoy, breach, omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: CHICHOO
         real_name: Wan Shunzhi
         age: 25
@@ -51,6 +59,8 @@ teams:
         igl: false
         quality: 79
         agents: [viper, cypher]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Xi Lai Gaming
     tag: XLG
     tier: 1
@@ -64,6 +74,8 @@ teams:
         igl: false
         quality: 80
         agents: [viper, cypher, chamber]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 55}]
       - handle: Rarga
         real_name: Arthur Churyumov
         age: 21
@@ -72,6 +84,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, phoenix]
+        country: RU
+        languages: [{lang: ru, level: 98}, {lang: zh, level: 50}]
       - handle: NoMan
         real_name: James Man Ga Kit
         age: 23
@@ -80,6 +94,8 @@ teams:
         igl: false
         quality: 71
         agents: [raze, breach, killjoy]
+        country: HK
+        languages: [{lang: en, level: 90}, {lang: yue, level: 88}, {lang: zh, level: 40}]
       - handle: Lysoar
         real_name: Liang Youhao
         age: 20
@@ -88,6 +104,8 @@ teams:
         igl: false
         quality: 75
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: WsLeo
         real_name: Huang Ping-wei
         age: 24
@@ -96,6 +114,8 @@ teams:
         igl: true
         quality: 76
         agents: [skye, sova]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 55}]
   - name: Dragon Ranger Gaming
     tag: DRG
     tier: 1
@@ -109,6 +129,8 @@ teams:
         igl: false
         quality: 81
         agents: [cypher, viper]
+        country: RU
+        languages: [{lang: ru, level: 98}, {lang: zh, level: 45}, {lang: en, level: 30}]
       - handle: Life
         real_name: Qu Donghao
         age: 19
@@ -117,6 +139,8 @@ teams:
         igl: false
         quality: 70
         agents: [jett, raze]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Nicc
         real_name: Shao Yi-chun
         age: 24
@@ -125,6 +149,8 @@ teams:
         igl: true
         quality: 73
         agents: [skye, sova]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 55}]
       - handle: SpiritZ1
         real_name: Lin Ting-yu
         age: 21
@@ -133,6 +159,8 @@ teams:
         igl: false
         quality: 72
         agents: [jett, phoenix]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 55}]
       - handle: Verse
         real_name: Zhou Zijun
         age: 20
@@ -141,6 +169,8 @@ teams:
         igl: false
         quality: 66
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: All Gamers
     tag: AG
     tier: 1
@@ -154,6 +184,8 @@ teams:
         igl: true
         quality: 72
         agents: [cypher, viper]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Shr1mp
         real_name: Yang Yong
         age: 23
@@ -162,6 +194,8 @@ teams:
         igl: false
         quality: 74
         agents: [skye, sova]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: f4ngeer
         real_name: Roman Smirnov
         age: 19
@@ -170,6 +204,8 @@ teams:
         igl: false
         quality: 78
         agents: [jett, chamber]
+        country: RU
+        languages: [{lang: ru, level: 98}, {lang: en, level: 32}, {lang: zh, level: 25}]
       - handle: iamgrq
         real_name: Gao Ruiqi
         age: 21
@@ -178,6 +214,8 @@ teams:
         igl: false
         quality: 70
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Bai
         real_name: Zhang Zeyang
         age: 20
@@ -186,6 +224,8 @@ teams:
         igl: false
         quality: 63
         agents: [jett, viper]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: TYLOO
     tag: TYL
     tier: 1
@@ -199,6 +239,8 @@ teams:
         igl: false
         quality: 78
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Erv
         real_name: Shen Zhiwei
         age: 20
@@ -207,6 +249,8 @@ teams:
         igl: false
         quality: 74
         agents: [raze, phoenix, breach]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: splash
         real_name: Moses Christophe Jonathan
         age: 22
@@ -215,6 +259,8 @@ teams:
         igl: false
         quality: 72
         agents: [jett]
+        country: ID
+        languages: [{lang: id, level: 97}, {lang: en, level: 55}, {lang: zh, level: 40}]
       - handle: Scales
         real_name: Zhang Zhen
         age: 21
@@ -223,6 +269,8 @@ teams:
         igl: false
         quality: 70
         agents: [viper, cypher, chamber]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: SiuFatBB
         real_name: Pong Ka Hei
         age: 24
@@ -231,6 +279,8 @@ teams:
         igl: true
         quality: 69
         agents: [skye, sova]
+        country: HK
+        languages: [{lang: yue, level: 96}, {lang: zh, level: 80}, {lang: en, level: 45}]
   - name: JDG Esports
     tag: JDG
     tier: 1
@@ -244,6 +294,8 @@ teams:
         igl: false
         quality: 74
         agents: [jett, viper, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Yuicaw
         real_name: Huang Yung-chieh
         age: 22
@@ -252,6 +304,8 @@ teams:
         igl: false
         quality: 68
         agents: [raze, killjoy]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 45}]
       - handle: jkuro
         real_name: Yeung Ho Chung
         age: 24
@@ -260,6 +314,8 @@ teams:
         igl: false
         quality: 68
         agents: [cypher, omen]
+        country: HK
+        languages: [{lang: yue, level: 96}, {lang: zh, level: 78}, {lang: en, level: 50}]
       - handle: BerLIN
         real_name: Chang Po-lin
         age: 26
@@ -268,6 +324,8 @@ teams:
         igl: true
         quality: 67
         agents: [omen, viper]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 40}]
       - handle: crownfisher
         real_name: Li Ao
         age: 19
@@ -276,6 +334,8 @@ teams:
         igl: false
         quality: 62
         agents: [raze, jett]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Titan Esports Club
     tag: TEC
     tier: 1
@@ -289,6 +349,8 @@ teams:
         igl: false
         quality: 69
         agents: [jett, raze]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: CoCo
         real_name: Ding Dajian
         age: 21
@@ -297,6 +359,8 @@ teams:
         igl: false
         quality: 67
         agents: [omen, viper]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Dynamite
         real_name: Zhao Zihao
         age: 20
@@ -305,6 +369,8 @@ teams:
         igl: false
         quality: 69
         agents: [jett, raze]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Haodong
         real_name: Guo Haodong
         age: 23
@@ -313,6 +379,8 @@ teams:
         igl: true
         quality: 68
         agents: [cypher, omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: lucas
         real_name: Lu Yunkun
         age: 19
@@ -321,6 +389,8 @@ teams:
         igl: false
         quality: 72
         agents: [skye, sova]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Trace Esports
     tag: TE
     tier: 1
@@ -334,6 +404,8 @@ teams:
         igl: false
         quality: 73
         agents: [raze, jett]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: deLb
         real_name: Delbert Tanoto
         age: 22
@@ -342,6 +414,8 @@ teams:
         igl: true
         quality: 74
         agents: [omen, viper]
+        country: ID
+        languages: [{lang: id, level: 97}, {lang: en, level: 60}, {lang: zh, level: 30}]
       - handle: LuoK1ng
         real_name: Zhang Zhanpeng
         age: 21
@@ -350,6 +424,8 @@ teams:
         igl: false
         quality: 68
         agents: [omen, viper, jett]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: FengF
         real_name: Song Xuefeng
         age: 22
@@ -358,6 +434,8 @@ teams:
         igl: false
         quality: 66
         agents: [raze, sova]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Abo
         real_name: Han Bohao
         age: 22
@@ -366,6 +444,8 @@ teams:
         igl: false
         quality: 69
         agents: [viper, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Bilibili Gaming
     tag: BLG
     tier: 1
@@ -379,6 +459,8 @@ teams:
         igl: false
         quality: 74
         agents: [raze, phoenix, chamber]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Knight
         real_name: Liu Yuxiang
         age: 23
@@ -387,6 +469,8 @@ teams:
         igl: false
         quality: 72
         agents: [sova, skye]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: nephh
         real_name: Marcus Tan Kai Wen
         age: 21
@@ -395,6 +479,8 @@ teams:
         igl: true
         quality: 76
         agents: [omen]
+        country: SG
+        languages: [{lang: en, level: 90}, {lang: zh, level: 68}]
       - handle: rushia
         real_name: Wang Xiaojie
         age: 20
@@ -403,6 +489,8 @@ teams:
         igl: false
         quality: 68
         agents: [viper, cypher]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: FT
         real_name: Yan Shuaibo
         age: 19
@@ -411,6 +499,8 @@ teams:
         igl: false
         quality: 63
         agents: [phoenix, jett]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: FunPlus Phoenix
     tag: FPX
     tier: 1
@@ -424,6 +514,8 @@ teams:
         igl: false
         quality: 76
         agents: [viper, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: coconut
         real_name: Colin Patrick Chung
         age: 25
@@ -432,6 +524,8 @@ teams:
         igl: false
         quality: 70
         agents: [sova, skye]
+        country: HK
+        languages: [{lang: yue, level: 95}, {lang: zh, level: 82}, {lang: en, level: 50}]
       - handle: kovaQ
         real_name: Blendi Kovaci
         age: 22
@@ -440,6 +534,8 @@ teams:
         igl: true
         quality: 66
         agents: [skye, sova]
+        country: AL
+        languages: [{lang: sq, level: 97}, {lang: en, level: 75}]
       - handle: Setrod
         real_name: Ou Tai-keng
         age: 21
@@ -448,6 +544,8 @@ teams:
         igl: false
         quality: 67
         agents: [jett, raze]
+        country: TW
+        languages: [{lang: zh, level: 97}, {lang: en, level: 42}]
       - handle: Xlele
         real_name: Zhao Yanbo
         age: 21
@@ -456,6 +554,8 @@ teams:
         igl: false
         quality: 68
         agents: [jett, phoenix, omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Wolves Esports
     tag: WOL
     tier: 1
@@ -469,6 +569,8 @@ teams:
         igl: false
         quality: 75
         agents: [viper, omen]
+        country: TW
+        languages: [{lang: zh, level: 97}, {lang: en, level: 45}]
       - handle: yosemite
         real_name: Wang Lei
         age: 24
@@ -477,6 +579,8 @@ teams:
         igl: false
         quality: 71
         agents: [killjoy, cypher]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: glacier
         real_name: Liang Zhe-kai
         age: 20
@@ -485,6 +589,8 @@ teams:
         igl: false
         quality: 66
         agents: [jett, raze]
+        country: TW
+        languages: [{lang: zh, level: 97}, {lang: en, level: 45}]
       - handle: aluba
         real_name: Zhong Haojun
         age: 25
@@ -493,6 +599,8 @@ teams:
         igl: true
         quality: 66
         agents: [sova, skye]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Deryeon
         real_name: Derrick Yee Dong Ting
         age: 22
@@ -501,6 +609,8 @@ teams:
         igl: false
         quality: 67
         agents: [omen]
+        country: SG
+        languages: [{lang: en, level: 85}, {lang: zh, level: 32}]
   - name: Nova Esports
     tag: NOVA
     tier: 1
@@ -514,6 +624,8 @@ teams:
         igl: true
         quality: 70
         agents: [sova, skye]
+        country: TW
+        languages: [{lang: zh, level: 96}, {lang: en, level: 40}]
       - handle: cb
         real_name: Wang Qingchuan
         age: 22
@@ -522,6 +634,8 @@ teams:
         igl: false
         quality: 66
         agents: [phoenix, jett]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: swagzor
         real_name: Mikhail Vanyushin
         age: 21
@@ -530,6 +644,8 @@ teams:
         igl: false
         quality: 71
         agents: [jett, chamber, raze]
+        country: RU
+        languages: [{lang: ru, level: 97}, {lang: zh, level: 25}, {lang: en, level: 20}]
       - handle: GuanG
         real_name: Guang Honglin
         age: 22
@@ -538,6 +654,8 @@ teams:
         igl: false
         quality: 67
         agents: [cypher, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Ezeir
         real_name: Zhao Zejun
         age: 21
@@ -546,6 +664,8 @@ teams:
         igl: false
         quality: 68
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Weibo Gaming
     tag: WBG
     tier: 2
@@ -560,6 +680,8 @@ teams:
         igl: true
         quality: 61
         agents: [sova, skye]
+        country: HK
+        languages: [{lang: yue, level: 96}, {lang: zh, level: 78}, {lang: en, level: 45}]
       - handle: Yoyo
         real_name: Hsu Yuh-siang
         age: 24
@@ -568,6 +690,8 @@ teams:
         igl: false
         quality: 62
         agents: [jett, raze]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 35}]
       - handle: Satoshi
         real_name: Fei Zhixian
         age: 21
@@ -576,6 +700,8 @@ teams:
         igl: false
         quality: 58
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: AcMe
         real_name: Cha Il-hwan
         age: 23
@@ -584,6 +710,8 @@ teams:
         igl: false
         quality: 59
         agents: [killjoy, cypher]
+        country: KR
+        languages: [{lang: ko, level: 98}, {lang: zh, level: 55}]
   - name: Rare Atom
     tag: RA
     tier: 2
@@ -597,6 +725,8 @@ teams:
         igl: true
         quality: 57
         agents: [omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Ben1Ley
         real_name: Shi Benyu
         age: 21
@@ -605,6 +735,8 @@ teams:
         igl: false
         quality: 61
         agents: [jett, raze]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Z1Yan
         real_name: Liu Zihan
         age: 21
@@ -613,6 +745,8 @@ teams:
         igl: false
         quality: 58
         agents: [skye, breach]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Potter
         real_name: Sutthichai Promsrikaew
         age: 24
@@ -621,6 +755,8 @@ teams:
         igl: false
         quality: 58
         agents: [sova, skye]
+        country: TH
+        languages: [{lang: th, level: 98}, {lang: en, level: 65}, {lang: zh, level: 25}]
       - handle: Guran
         real_name: Zhou Mingyan
         age: 22
@@ -629,6 +765,8 @@ teams:
         igl: false
         quality: 55
         agents: [cypher, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: Any Questions Gaming
     tag: AQG
     tier: 2
@@ -642,6 +780,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen]
+        country: MO
+        languages: [{lang: yue, level: 95}, {lang: zh, level: 85}, {lang: en, level: 45}]
       - handle: juicy
         real_name: Tyler James Aeria
         age: 23
@@ -650,6 +790,8 @@ teams:
         igl: false
         quality: 60
         agents: [jett, raze]
+        country: SG
+        languages: [{lang: en, level: 95}, {lang: zh, level: 20}]
       - handle: dannyy
         real_name: Wang Pengcheng
         age: 21
@@ -658,6 +800,8 @@ teams:
         igl: false
         quality: 55
         agents: [sova, skye]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: S1Mon
         real_name: Hsieh Meng-hsun
         age: 22
@@ -666,6 +810,8 @@ teams:
         igl: false
         quality: 55
         agents: [killjoy, cypher]
+        country: TW
+        languages: [{lang: zh, level: 98}, {lang: en, level: 35}]
       - handle: 5CM
         real_name: Ding Yipeng
         age: 20
@@ -674,6 +820,8 @@ teams:
         igl: false
         quality: 54
         agents: [viper, omen]
+        country: CN
+        languages: [{lang: zh, level: 98}]
   - name: KeepBest Gaming
     tag: KBG
     tier: 2
@@ -688,6 +836,8 @@ teams:
         igl: true
         quality: 56
         agents: [omen, viper]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: Akeman
         real_name: Zhang Haoran
         age: 22
@@ -696,6 +846,8 @@ teams:
         igl: false
         quality: 58
         agents: [skye, killjoy]
+        country: CN
+        languages: [{lang: zh, level: 98}]
       - handle: sibeastw0w
         real_name: Anton Govorukhin
         age: 21
@@ -704,3 +856,5 @@ teams:
         igl: false
         quality: 57
         agents: [jett, reyna]
+        country: RU
+        languages: [{lang: ru, level: 98}, {lang: zh, level: 35}, {lang: en, level: 25}]

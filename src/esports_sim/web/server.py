@@ -54,6 +54,7 @@ from esports_sim.manager.campaign import (
     dressed_for,
     new_campaign,
 )
+from esports_sim import perf
 from esports_sim.manager.state import GamePlan, GameState, PlayerSeasonStats
 from esports_sim.manager.training import (
     DEV_FOCUS_OPTIONS,
@@ -120,6 +121,13 @@ class _Game:
         self.ready: set[str] = set()
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
+        # Save policy runtime: actions only MARK the world dirty (the full
+        # GameState serializing on every click was the biggest per-action
+        # cost — see /api/perf save.write); disk writes happen on the
+        # explicit Save button, on world lifecycle moments (create / join /
+        # resume / leave), and on autosave every Nth week tick.
+        self.dirty = False
+        self.ticks_since_save = 0
 
     def require_gs(self) -> GameState:
         if self.gs is None:
@@ -128,10 +136,40 @@ class _Game:
         self.gs.set_acting(_ctx.get().team_id)
         return self.gs
 
-    def save(self) -> None:
-        if self.gs is not None:
-            SAVE_DIR.mkdir(parents=True, exist_ok=True)
+    def save(self, force: bool = False) -> None:
+        """The single persistence choke point. Plain `save()` (what every
+        action endpoint calls) only marks the world dirty; `force=True`
+        actually writes — the explicit Save button, world lifecycle
+        (create/join/resume/leave), and autosave_tick below."""
+        if self.gs is None:
+            return
+        if not force:
+            self.dirty = True
+            return
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+        # Save cost was the biggest per-action tax on deep saves (the
+        # whole GameState serializes) — time it and gauge the file size
+        # so /api/perf shows both growing.
+        with perf.span("save.write"):
             self.gs.save(self.save_path)
+        self.dirty = False
+        try:
+            perf.gauge("save.bytes", self.save_path.stat().st_size)
+        except OSError:
+            pass
+
+    def autosave_tick(self) -> None:
+        """Called after a week actually resolves: write every Nth tick per
+        the world's policy (autosave off = only the Save button writes)."""
+        self.dirty = True
+        self.ticks_since_save += 1
+        if (
+            self.gs is not None
+            and self.gs.autosave_enabled
+            and self.ticks_since_save >= self.gs.autosave_every_weeks
+        ):
+            self.save(force=True)
+            self.ticks_since_save = 0
 
 
 class Lobby:
@@ -314,7 +352,7 @@ class Lobby:
             )
             self._save_sessions()
             self._write_mode(code, game.mode)
-            game.save()
+            game.save(force=True)  # the world must exist on disk from birth
             return game
 
     def join_game(
@@ -358,7 +396,7 @@ class Lobby:
                 sid, code, team_id, gs.teams[team_id].name, game.mode
             )
             self._save_sessions()
-            game.save()
+            game.save(force=True)  # a claimed seat must survive a restart
             return game, None
 
     def leave(self, sid: str) -> str | None:
@@ -373,6 +411,9 @@ class Lobby:
                 # entry NOW, or leaving would orphan them.
                 game = self._get_game(code)
                 if game is not None and game.gs is not None:
+                    # Walking away is a save point — never lose a session's
+                    # work to the autosave interval.
+                    game.save(force=True)
                     team = game.gs.teams.get(team_id)
                     self._remember(
                         sid, code, team_id,
@@ -494,7 +535,29 @@ def _stable_idx(key: str, n: int) -> int:
     return int(hashlib.blake2b(key.encode(), digest_size=4).hexdigest(), 16) % n
 
 
+_TEAM_LOGO_IDS: set[str] | None = None
+
+
+def _team_logo_ids() -> set[str]:
+    """Team ids with a generated org logo on disk (assets/logos/teams/<id>.webp).
+
+    Cached on first call so lookups aren't a per-request disk hit; the set
+    is only populated once per process (generated logos are added by the
+    art pass, not at runtime).
+    """
+    global _TEAM_LOGO_IDS
+    if _TEAM_LOGO_IDS is None:
+        team_logo_dir = _REPO_ROOT / "assets" / "logos" / "teams"
+        if team_logo_dir.is_dir():
+            _TEAM_LOGO_IDS = {p.stem for p in team_logo_dir.glob("*.webp")}
+        else:
+            _TEAM_LOGO_IDS = set()
+    return _TEAM_LOGO_IDS
+
+
 def _logo_url(team_id: str) -> str:
+    if team_id in _team_logo_ids():
+        return f"/assets/logos/teams/{team_id}.webp"
     return f"/assets/logos/logo_{_stable_idx(team_id, N_LOGOS)}.webp"
 
 
@@ -962,7 +1025,7 @@ def accept_job(body: AcceptJobBody) -> dict:
         game = ctx.game
         game.ready.discard(gs.acting_team_id)
         gs.set_acting(body.team_id)
-        game.save()
+        game.save(force=True)  # a career move must survive a restart
     # Rebind the lobby session to the new club (outside the game lock;
     # the lobby has its own).
     with _LOBBY._lock:
@@ -1128,7 +1191,48 @@ def state() -> dict:
                 "ready": sorted(S.ready),
                 "you_ready": gs.acting_team_id in S.ready,
             },
+            # Save policy + dirty flag (the topbar Save button's state).
+            "save": {
+                "dirty": S.dirty,
+                "autosave_enabled": gs.autosave_enabled,
+                "autosave_every_weeks": gs.autosave_every_weeks,
+            },
         }
+
+
+class SaveSettingsBody(BaseModel):
+    autosave_enabled: bool
+    autosave_every_weeks: int = 1
+
+
+@app.post("/api/actions/save")
+def save_now() -> dict:
+    """The explicit Save button: persist the world to disk right now."""
+    with S.lock:
+        S.require_gs()
+        game = _ctx.get().game
+        game.save(force=True)
+        game.ticks_since_save = 0
+        return {"ok": True, "message": "world saved"}
+
+
+@app.post("/api/actions/save_settings")
+def save_settings(body: SaveSettingsBody) -> dict:
+    """Autosave policy for this WORLD (one save file per world, so one
+    policy — shared worlds share it). The setting itself persists
+    immediately so it survives a restart either way."""
+    with S.lock:
+        gs = S.require_gs()
+        gs.autosave_enabled = bool(body.autosave_enabled)
+        gs.autosave_every_weeks = max(1, min(8, int(body.autosave_every_weeks)))
+        game = _ctx.get().game
+        game.save(force=True)
+        label = (
+            f"autosave every {gs.autosave_every_weeks} week"
+            + ("s" if gs.autosave_every_weeks != 1 else "")
+            if gs.autosave_enabled else "autosave off — use the Save button"
+        )
+        return {"ok": True, "message": label}
 
 
 @app.get("/api/inbox")
@@ -1264,12 +1368,15 @@ def roster(team_id: str) -> dict:
                 # Distinguish a committed lock from the engine's likely auto-pick.
                 locked = team.lineup.agents.get(v["id"])
                 v["planned_locked"] = bool(locked and locked in S.gd.agents)
-        # Rival rosters are buyable: show the seller's ask per player.
+        # Rival rosters are buyable: show the seller's ask per player, and
+        # the buyout clause where one exists (tier-2 contracts) — the fast
+        # lane that skips negotiation entirely.
         tendencies: list[str] = []
         identity: str | None = None
         if team_id != gs.acting_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
+                v["buyout"] = market.buyout_fee(gs, v["id"])
         # Coaching identity: always readable for your own club, and for a
         # rival once you've scouted them enough to read their style.
         if own or gs.scout_progress.get(team_id, 0.0) >= 0.5:
@@ -1334,6 +1441,10 @@ def roster(team_id: str) -> dict:
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
             "tendencies": tendencies,
             "identity": identity,
+            # Comms cohesion (0-100): how well this roster can actually
+            # talk, from pairwise language overlap. Public — nationality
+            # and languages are broadcast facts.
+            "comms_cohesion": relationships.team_comms_cohesion(gs, team_id),
             "chemistry_pairs": {
                 kind: [
                     [gs.players[a].handle, gs.players[b].handle]
@@ -1873,15 +1984,18 @@ _IMPACT_CATS = (
 )
 
 
-def _impact_leaders(gs: GameState, n: int = 5) -> dict:
+def _impact_leaders(gs: GameState, n: int = 5, league_tier: int = 1) -> dict:
     """League-wide highlight-stat leaderboards (clutches / multikills / aces /
-    first bloods) from the stored season aggregates. Pure read — these are
-    summed at sim time by stats.py, never re-derived here."""
+    first bloods) from the stored season aggregates, filtered to one league
+    tier so top-flight and Challengers boards stay separate. Pure read —
+    these are summed at sim time by stats.py, never re-derived here."""
     out = {}
     for key, label, attr in _IMPACT_CATS:
         rows = []
         for pid, st in gs.player_stats.items():
             if pid not in gs.players or st.maps <= 0:
+                continue
+            if _player_league_tier(gs, pid) != league_tier:
                 continue
             v = getattr(st, attr, 0)
             if v > 0:
@@ -2163,6 +2277,55 @@ def _transfer_rumors(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     return rumors[:n]
 
 
+@app.get("/api/market/search")
+def market_search(q: str = "") -> dict:
+    """League-wide player search by handle or real name — sign/trade targets.
+    Fog mirrors the roster/market screens: a rival's exact rating hides
+    behind their team's scout progress; free agents ride the market fog.
+    Pure read; capped at 30 rows sorted by (visible) quality."""
+    with S.lock:
+        gs = S.require_gs()
+        needle = q.strip().lower()
+        if len(needle) < 2:
+            return {"results": []}
+        me = gs.acting_team_id
+        rows = []
+        for pid in sorted(gs.players):
+            p = gs.players[pid]
+            if (
+                needle not in p.handle.lower()
+                and needle not in (p.real_name or "").lower()
+            ):
+                continue
+            is_fa = pid in gs.free_agent_ids
+            team_id = None if is_fa else market.team_of(gs, pid)
+            if not is_fa and team_id is None:
+                continue  # unrostered mid-move: not a signable target
+            fog, _progress, _ = _player_fog(gs, pid)
+            fogged = fog > 0
+            rival = team_id is not None and team_id != me
+            rows.append({
+                "id": pid,
+                "handle": p.handle,
+                "real_name": p.real_name,
+                "role": str(p.role),
+                "playstyle": str(p.playstyle),
+                "age": p.age,
+                "overall": round(development.overall(p)),
+                "fogged": fogged,
+                "team_id": team_id,
+                "team_name": gs.teams[team_id].name if team_id else None,
+                "is_free_agent": is_fa,
+                "mine": team_id == me,
+                "asking_salary": market.asking_salary(p) if is_fa else None,
+                "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
+                "buyout": market.buyout_fee(gs, pid) if rival else None,
+                "portrait": _portrait_url(pid, str(p.role)),
+            })
+        rows.sort(key=lambda r: (-r["overall"], r["handle"]))
+        return {"results": rows[:30]}
+
+
 @app.get("/api/market")
 def market_view() -> dict:
     with S.lock:
@@ -2292,14 +2455,26 @@ def _analytics_view(gs: GameState) -> dict:
     }
 
 
+def _player_league_tier(gs: GameState, pid: str) -> int:
+    """Which league tier a player's stats belong to: their club's tier.
+    Free agents read as tier 1 (they're targets for the top flight)."""
+    team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
+    return team.tier if team else 1
+
+
 @app.get("/api/stats")
-def stats_view(split: str | None = None, key: str | None = None) -> dict:
+def stats_view(
+    split: str | None = None, key: str | None = None, league_tier: int = 1
+) -> dict:
     """League stats. `split=map&key=<map_id>` or `split=agent&key=<agent_id>`
-    swaps the player table for that split (analytics tier 3 only)."""
+    swaps the player table for that split (analytics tier 3 only).
+    `league_tier` (1 default, 2) filters the player tables so the top
+    flight and the Challengers circuit read as separate groups."""
     with S.lock:
         gs = S.require_gs()
         analytics = _analytics_view(gs)
         tier = analytics["tier"]
+        league_tier = 2 if league_tier == 2 else 1
 
         source: dict[str, PlayerSeasonStats] = gs.player_stats
         if split in ("map", "agent") and key:
@@ -2319,6 +2494,8 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
         for pid in sorted(source):
             st = source[pid]
             if pid not in gs.players or st.maps == 0:
+                continue
+            if _player_league_tier(gs, pid) != league_tier:
                 continue
             players.append(_season_stat_row(gs, pid, st, tier))
         players.sort(key=lambda r: (-r["rating"], -r["kills"]))
@@ -2375,7 +2552,8 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
             "teams": teams,
             # Highlight-stat leaderboards (clutches/multikills/aces/first
             # bloods) from the stored season aggregates. Public, never gated.
-            "impact": _impact_leaders(gs),
+            "impact": _impact_leaders(gs, league_tier=league_tier),
+            "league_tier": league_tier,
             "awards": [a.model_dump() for a in reversed(gs.awards)],
             # Patch notes are public information — never tier-gated.
             "patches": [n.model_dump() for n in reversed(gs.patch_history[-6:])],
@@ -2705,8 +2883,9 @@ def social_view() -> dict:
             key=lambda r: (-r["sentiment"], r["team_id"]),
         )
         return {
+            # Latest 40 only — a feed should be a scroll, not an archive.
             "feed": llm_social.overlay(
-                game.code, [p.model_dump() for p in reversed(gs.social_feed)]
+                game.code, [p.model_dump() for p in reversed(gs.social_feed[-40:])]
             ),
             "leaderboard": leaderboard,
             "your_roster": [
@@ -2722,7 +2901,36 @@ def social_view() -> dict:
             "sentiment": sent_rows,
             "your_sentiment": gs.sentiment(gs.acting_team_id),
             "your_mood": social.mood_view(gs.sentiment(gs.acting_team_id)),
+            "movement": _movement_feed(gs),
         }
+
+
+# Chronicle kinds that count as market movement, and how the tracker tags
+# them. AI-to-AI moves show here too — that's the point (watch the league).
+_MOVEMENT_KINDS = ("signing", "release", "renewal", "transfer", "poach")
+
+
+def _movement_feed(gs: GameState, n: int = 40) -> list[dict]:
+    """League-wide signings/releases/renewals/transfers, newest first — a
+    pure read of the chronicle (the append-only truth for market moves)."""
+    rows = []
+    for e in reversed(gs.chronicle):
+        if e.kind not in _MOVEMENT_KINDS:
+            continue
+        team = gs.teams.get(e.team_id)
+        rows.append({
+            "season": e.season,
+            "week": e.week,
+            "kind": e.kind,
+            "text": e.text,
+            "team_id": e.team_id or None,
+            "team_tag": team.tag if team else None,
+            "player_id": e.player_id or None,
+            "mine": e.team_id == gs.acting_team_id,
+        })
+        if len(rows) >= n:
+            break
+    return rows
 
 
 class DevPlanBody(BaseModel):
@@ -3254,6 +3462,21 @@ def bid(body: BidBody) -> dict:
         return {"ok": True, "message": msg}
 
 
+@app.post("/api/actions/buyout")
+def buyout(body: BidBody) -> dict:
+    """Trigger a tier-2 player's buyout clause: pay the fee, they arrive
+    this week — no negotiation, the selling org can't refuse."""
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg = market.buy_out_player(gs, gs.acting_team_id, body.player_id)
+        S.save()
+        if not ok:
+            raise HTTPException(422, msg)
+        return {"ok": True, "message": msg}
+
+
 class OfferBody(BaseModel):
     player_id: str
     accept: bool
@@ -3275,13 +3498,39 @@ def transfer_offer(body: OfferBody) -> dict:
 
 
 class ScoutBody(BaseModel):
-    team_id: str
+    # Exactly one of these picks the assignment type.
+    team_id: str | None = None  # rival team id, or "market"
+    player_id: str | None = None  # deep-dive one player
+    fixture_id: str | None = None  # attend one upcoming match
 
 
 @app.post("/api/actions/scout")
 def scout(body: ScoutBody) -> dict:
     with S.lock:
         gs = S.require_gs()
+        picked = [x for x in (body.team_id, body.player_id, body.fixture_id) if x]
+        if len(picked) != 1:
+            raise HTTPException(422, "pick exactly one scouting target")
+        if body.player_id is not None:
+            p = gs.players.get(body.player_id)
+            if p is None:
+                raise HTTPException(404, "unknown player")
+            if body.player_id in gs.teams[gs.acting_team_id].player_ids:
+                raise HTTPException(422, "you already know your own player")
+            gs.scout_target = f"player:{body.player_id}"
+            S.save()
+            return {"ok": True, "message": f"scout is building the book on {p.handle}"}
+        if body.fixture_id is not None:
+            fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+            if fx is None:
+                raise HTTPException(404, "unknown fixture")
+            if fx.played:
+                raise HTTPException(422, "that match has already been played")
+            gs.scout_target = f"match:{body.fixture_id}"
+            S.save()
+            a = gs.teams[fx.team_a].name if fx.team_a in gs.teams else fx.team_a
+            b = gs.teams[fx.team_b].name if fx.team_b in gs.teams else fx.team_b
+            return {"ok": True, "message": f"scout will attend {a} vs {b}"}
         if body.team_id != "market" and body.team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
         if body.team_id == gs.acting_team_id:
@@ -3298,34 +3547,74 @@ def scout(body: ScoutBody) -> dict:
 
 @app.get("/api/scouting")
 def scouting_view() -> dict:
-    """The scout's desk: current assignment, progress, and report cards
-    (banded CA/PA stars, progressively revealed traits)."""
+    """The scout's desk: current assignment (team / market / one player /
+    one match), progress, and report cards. A player deep-dive returns ONE
+    rich report whose sections unlock with book depth (comfort picks at
+    25%, style read at 50%, mental read at 75%, the verdict at ~100 —
+    see development.scout_report); team/market return the classic table."""
     with S.lock:
         gs = S.require_gs()
         target = gs.scout_target
         reports: list[dict] = []
+        target_kind = "none"
+        target_name = None
+        progress = 0.0
         if target == "market":
+            target_kind = "market"
+            target_name = "Free-agent market"
             progress = gs.scout_progress.get("market", 0.0)
             fas = sorted(
                 (gs.players[pid] for pid in gs.free_agent_ids),
                 key=lambda p: -development.potential_of(p),
             )
             reports = [development.scout_report(gs, p, progress) for p in fas]
+        elif target and target.startswith("player:"):
+            pid = target[len("player:"):]
+            p = gs.players.get(pid)
+            if p is not None:
+                target_kind = "player"
+                target_name = p.handle
+                # The deep dive stacks with whatever team coverage exists.
+                _fog, progress, _fa = _player_fog(gs, pid)
+                reports = [development.scout_report(gs, p, progress)]
+        elif target and target.startswith("match:"):
+            fid = target[len("match:"):]
+            fx = next((f for f in gs.fixtures if f.id == fid), None)
+            if fx is not None:
+                target_kind = "match"
+                a = gs.teams[fx.team_a].name if fx.team_a in gs.teams else fx.team_a
+                b = gs.teams[fx.team_b].name if fx.team_b in gs.teams else fx.team_b
+                target_name = f"{a} vs {b} (W{fx.week})"
         elif target and target in gs.teams:
+            target_kind = "team"
+            target_name = gs.teams[target].name
             progress = gs.scout_progress.get(target, 0.0)
             reports = [
                 development.scout_report(gs, p, progress)
                 for p in gs.roster(target)
             ]
-        else:
-            progress = 0.0
+        # Upcoming fixtures the scout could attend (next two weeks of
+        # unplayed matches not involving your own club — you're there anyway).
+        me = gs.acting_team_id
+        upcoming = [
+            {
+                "id": f.id,
+                "week": f.week,
+                "stage": f.stage,
+                "label": (
+                    f"{gs.teams[f.team_a].name if f.team_a in gs.teams else f.team_a}"
+                    f" vs "
+                    f"{gs.teams[f.team_b].name if f.team_b in gs.teams else f.team_b}"
+                ),
+            }
+            for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+            if not f.played and me not in (f.team_a, f.team_b)
+            and f.week <= gs.week + 1
+        ][:14]
         return {
             "target": target,
-            "target_name": (
-                "Free-agent market"
-                if target == "market"
-                else gs.teams[target].name if target in gs.teams else None
-            ),
+            "target_kind": target_kind,
+            "target_name": target_name,
             "progress": round(progress, 2),
             "reports": reports,
             "teams": [
@@ -3333,11 +3622,74 @@ def scouting_view() -> dict:
                 for tid in sorted(gs.teams)
                 if tid != gs.acting_team_id
             ],
+            "upcoming": upcoming,
         }
 
 
 class PlayerBody(BaseModel):
     player_id: str
+
+
+class NegotiationOfferBody(BaseModel):
+    player_id: str
+    salary: int
+    weeks: int
+
+
+def _negotiation_view(gs: GameState, neg) -> dict:
+    p = gs.players[neg.player_id]
+    return {
+        "player_id": neg.player_id,
+        "handle": p.handle,
+        "kind": neg.kind,
+        "demand_salary": neg.demand_salary,
+        "demand_weeks": neg.demand_weeks,
+        "rounds_used": neg.rounds,
+        "rounds_left": market.NEGOTIATION_MAX_ROUNDS - neg.rounds,
+        "current_salary": p.salary if neg.kind == "renew" else None,
+        "contract_weeks_left": p.contract_weeks_left if neg.kind == "renew" else None,
+    }
+
+
+@app.post("/api/negotiation/open")
+def negotiation_open(body: PlayerBody) -> dict:
+    """Sit down with a player: their opening demands (or the live table)."""
+    with S.lock:
+        gs = S.require_gs()
+        ok, why, neg = market.open_negotiation(gs, body.player_id)
+        S.save()
+        if not ok:
+            raise HTTPException(422, why)
+        return {"ok": True, "negotiation": _negotiation_view(gs, neg)}
+
+
+@app.post("/api/negotiation/offer")
+def negotiation_offer(body: NegotiationOfferBody) -> dict:
+    """Put an offer on the table: accepted / countered / collapsed."""
+    with S.lock:
+        gs = S.require_gs()
+        status, msg, neg = market.negotiate_offer(
+            gs, body.player_id, body.salary, body.weeks
+        )
+        S.save()
+        if status == "error":
+            raise HTTPException(422, msg)
+        return {
+            "ok": True,
+            "status": status,
+            "message": msg,
+            "negotiation": _negotiation_view(gs, neg) if neg is not None else None,
+        }
+
+
+@app.post("/api/negotiation/cancel")
+def negotiation_cancel(body: PlayerBody) -> dict:
+    """Leave the table yourself — no cooldown, reopen any time."""
+    with S.lock:
+        gs = S.require_gs()
+        market.cancel_negotiation(gs, body.player_id)
+        S.save()
+        return {"ok": True, "message": "you leave the table"}
 
 
 @app.post("/api/actions/sign")
@@ -3475,17 +3827,41 @@ def advance() -> dict:
         llm_social.enqueue(game)
         # Re-bind acting (advance_week churns the acting pointer internally).
         gs.set_acting(me)
-        game.save()
-        return {
-            "advanced": True,
-            "season": report.season,
-            "week": report.week,
-            "phase": report.phase,
-            "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
-            "user_income": report.income_by.get(me, 0),
-            "user_expenses": report.expenses_by.get(me, 0),
-            "notes": report.notes,
-        }
+        # Persistence follows the world's autosave policy (every Nth tick,
+        # or never — the explicit Save button always works).
+        game.autosave_tick()
+        return _report_view(report, gs, me)
+
+
+def _report_view(report, gs: GameState, me: str) -> dict:
+    """The week-report payload — shared by the advance response and
+    /api/report so a waiting shared-world manager sees the same report
+    (incl. replay buttons) as the manager whose ready-up ticked the week."""
+    return {
+        "advanced": True,
+        "season": report.season,
+        "week": report.week,
+        "phase": report.phase,
+        "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
+        "user_income": report.income_by.get(me, 0),
+        "user_expenses": report.expenses_by.get(me, 0),
+        "notes": report.notes,
+    }
+
+
+@app.get("/api/report")
+def last_week_report() -> dict:
+    """The most recently played week's report, for managers who were waiting
+    on others when the world ticked (their own advance call returned
+    'waiting'). In-memory only: after a server restart there's no report
+    until a week is played, and clients treat {report: null} as 'nothing to
+    show'."""
+    with S.lock:
+        gs = S.require_gs()
+        report = S.last_report
+        if report is None:
+            return {"report": None}
+        return {"report": _report_view(report, gs, gs.acting_team_id)}
 
 
 # ---------------------------------------------------------------------------
@@ -3544,24 +3920,41 @@ def _potential_text(gs: GameState, p: Player, fogged: bool, progress: float) -> 
 def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
     """Return (sigma, scout_progress, is_free_agent) for a player. Own-team
     players get sigma 0; rivals scale with team scout progress; free agents
-    ride the lighter market fog (matching /api/market)."""
+    ride the lighter market fog (matching /api/market). A player-targeted
+    deep dive ("player:<pid>" progress) cuts through BOTH — the whole point
+    of sending your scout after one name."""
+    deep = gs.scout_progress.get(f"player:{pid}", 0.0)
     if pid in gs.free_agent_ids:
-        progress = gs.scout_progress.get("market", 0.0)
+        progress = max(gs.scout_progress.get("market", 0.0), deep)
         return 6.0 * (1.0 - progress), progress, True
     team_id = market.team_of(gs, pid)
     if team_id is None:
         return 0.0, 1.0, False  # unrostered non-FA (e.g. mid-transfer): treat as known
     if team_id == gs.acting_team_id:
         return 0.0, 1.0, False
-    return _team_fog(gs, team_id), gs.scout_progress.get(team_id, 0.0), False
+    fog = _team_fog(gs, team_id) * (1.0 - deep)
+    progress = max(gs.scout_progress.get(team_id, 0.0), deep)
+    return fog, progress, False
 
 
 def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
     fogged = fog > 0.0
     ovr = None if fogged else int(round(development.overall(p)))
+    # The overall/ceiling NUMBER is the source of truth in the profile; the
+    # star rating rides along only as a coarse quick-glance. A fogged rival
+    # can't be read exactly, so their ceiling stays the scout's banded tier
+    # text and the star sub is withheld.
+    if fogged:
+        potential: int | str = _potential_text(gs, p, fogged, progress)
+        pot_stars = None
+    else:
+        potential = int(round(development.potential_of(p)))
+        pot_stars = development.stars(development.potential_of(p))
     return {
         "ovr": ovr,
-        "potential": _potential_text(gs, p, fogged, progress),
+        "ovr_stars": None if fogged else development.stars(development.overall(p)),
+        "potential": potential,
+        "potential_stars": pot_stars,
         "form": None if fogged else round(p.form, 1),
         "morale": None if fogged else round(p.morale, 1),
         "condition": None if fogged else round(p.stamina, 1),
@@ -3850,6 +4243,12 @@ def player_profile(pid: str) -> dict:
                 ),
                 "dev_focus": p.dev_focus if own else None,
                 "training_intensity": p.training_intensity if own else None,
+                # Identity: nationality + spoken tongues (public info —
+                # shared languages drive the locker room's comms cohesion).
+                "country": p.country or None,
+                "languages": [
+                    {"lang": l.lang, "level": round(l.level)} for l in p.languages
+                ],
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),
@@ -4016,16 +4415,23 @@ def _team_strength(gs: GameState, tid: str, fogged: bool = False) -> list[dict]:
     return out
 
 
+COMFORT_MASTERY = 60.0  # a pool entry only counts as "covers it" from here up
+
+
 def _agent_pool_coverage(gs: GameState, tid: str) -> dict:
     """The roster's collective agent coverage (how many players run each agent
-    and the best mastery), plus the meta staples they don't cover. Own-club
-    roster intel; pure read."""
+    comfortably and the best mastery), plus the meta staples they don't cover.
+    Every player now carries a baseline on the whole cast, so coverage counts
+    COMFORT picks (mastery >= COMFORT_MASTERY), not mere pool membership.
+    Own-club roster intel; pure read."""
     cov: dict[str, dict] = {}
     for pid in gs.teams[tid].player_ids:
         p = gs.players.get(pid)
         if p is None:
             continue
         for m in p.agent_pool:
+            if m.mastery < COMFORT_MASTERY:
+                continue
             c = cov.setdefault(m.agent_id, {"count": 0, "best": 0.0})
             c["count"] += 1
             c["best"] = max(c["best"], m.mastery)
@@ -4344,6 +4750,15 @@ def map_geometry(map_id: str) -> dict:
     }
 
 
+@app.get("/api/perf")
+def perf_view() -> dict:
+    """This process's performance sink (see esports_sim.perf): tick-phase
+    timings paired with state-size gauges (the slowdown-over-weeks view),
+    save cost, and per-endpoint latency aggregates. In-memory only —
+    resets on restart; never part of the save."""
+    return perf.snapshot()
+
+
 @app.get("/api/replay/{fixture_id}/{map_index}")
 def replay(fixture_id: str, map_index: int) -> dict:
     with S.lock:
@@ -4512,7 +4927,15 @@ class SessionMiddleware:
         ctx_token = _ctx.set(_ReqCtx(game, team_id))
         sid_token = _sid_ctx.set(sid)
         try:
-            await self.app(scope, receive, send_wrapper)
+            if path.startswith("/api/"):
+                # Per-endpoint latency: bucket by the first two path
+                # segments so dynamic ids collapse into one series
+                # ("/api/roster/team_x" -> "api./api/roster").
+                route = "/".join(path.split("/", 3)[:3])
+                with perf.span(f"api.{route}"):
+                    await self.app(scope, receive, send_wrapper)
+            else:
+                await self.app(scope, receive, send_wrapper)
         finally:
             _ctx.reset(ctx_token)
             _sid_ctx.reset(sid_token)

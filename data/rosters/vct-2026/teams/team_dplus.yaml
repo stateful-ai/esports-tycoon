@@ -13,6 +13,12 @@ players:
   handle: shu
   real_name: Shu
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 98.0
+  - lang: en
+    level: 35.0
   age: 22
   role: duelist
   playstyle: entry
@@ -32,30 +38,58 @@ players:
     mastery: 71.3
   - agent_id: raze
     mastery: 63.6
+  - agent_id: phoenix
+    mastery: 54.2
+  - agent_id: reyna
+    mastery: 46.4
+  - agent_id: breach
+    mastery: 38.5
+  - agent_id: chamber
+    mastery: 43.2
+  - agent_id: clove
+    mastery: 30.8
+  - agent_id: cypher
+    mastery: 43.3
+  - agent_id: killjoy
+    mastery: 34.5
+  - agent_id: omen
+    mastery: 36.2
+  - agent_id: skye
+    mastery: 29.9
+  - agent_id: sova
+    mastery: 45.4
+  - agent_id: viper
+    mastery: 34.3
   map_pool:
   - map_id: ascent
-    mastery: 72.7
+    mastery: 67.4
   - map_id: bind
-    mastery: 61.1
+    mastery: 70.7
   - map_id: haven
-    mastery: 73.5
+    mastery: 60.1
   - map_id: lotus
-    mastery: 66.8
+    mastery: 65.9
   - map_id: split
-    mastery: 66.5
+    mastery: 60.0
   salary: 3900
-  contract_weeks_left: 52
-  morale: 78.3
-  stamina: 90.0
-  form: 57.9
+  contract_weeks_left: 56
+  morale: 75.1
+  stamina: 92.4
+  form: 48.7
   personality_tags:
-  - hot_head
-  - team_player
-  potential: 65.5
+  - independent
+  - streamer
+  potential: 66.8
 - id: team_dplus_ramgi
   handle: Ramgi
   real_name: Ramgi
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 32.0
   age: 23
   role: initiator
   playstyle: support
@@ -75,30 +109,58 @@ players:
     mastery: 66.5
   - agent_id: skye
     mastery: 64.6
+  - agent_id: breach
+    mastery: 43.5
+  - agent_id: chamber
+    mastery: 33.7
+  - agent_id: clove
+    mastery: 40.1
+  - agent_id: cypher
+    mastery: 42.2
+  - agent_id: jett
+    mastery: 33.7
+  - agent_id: killjoy
+    mastery: 28.0
+  - agent_id: omen
+    mastery: 40.5
+  - agent_id: phoenix
+    mastery: 37.5
+  - agent_id: raze
+    mastery: 40.3
+  - agent_id: reyna
+    mastery: 37.4
+  - agent_id: viper
+    mastery: 37.9
   map_pool:
   - map_id: ascent
-    mastery: 57.2
+    mastery: 65.9
   - map_id: bind
-    mastery: 67.7
+    mastery: 63.0
   - map_id: haven
-    mastery: 61.2
+    mastery: 67.3
   - map_id: lotus
-    mastery: 59.0
+    mastery: 61.6
   - map_id: split
-    mastery: 68.9
+    mastery: 71.4
   salary: 3800
-  contract_weeks_left: 73
-  morale: 75.3
-  stamina: 95.7
-  form: 55.9
+  contract_weeks_left: 30
+  morale: 61.0
+  stamina: 95.1
+  form: 45.4
   personality_tags:
-  - clutch_gene
-  - fan_favorite
-  potential: 59.9
+  - streamer
+  - team_player
+  potential: 59.4
 - id: team_dplus_kally
   handle: Kally
   real_name: Kally
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 33.0
   age: 21
   role: controller
   playstyle: support
@@ -118,29 +180,58 @@ players:
     mastery: 66.6
   - agent_id: clove
     mastery: 55.3
+  - agent_id: viper
+    mastery: 52.8
+  - agent_id: breach
+    mastery: 30.2
+  - agent_id: chamber
+    mastery: 33.4
+  - agent_id: cypher
+    mastery: 32.6
+  - agent_id: jett
+    mastery: 35.8
+  - agent_id: killjoy
+    mastery: 36.3
+  - agent_id: phoenix
+    mastery: 37.6
+  - agent_id: raze
+    mastery: 37.2
+  - agent_id: reyna
+    mastery: 31.0
+  - agent_id: skye
+    mastery: 50.4
+  - agent_id: sova
+    mastery: 30.5
   map_pool:
   - map_id: ascent
-    mastery: 71.7
+    mastery: 60.0
   - map_id: bind
-    mastery: 56.1
+    mastery: 68.0
   - map_id: haven
-    mastery: 57.2
+    mastery: 64.2
   - map_id: lotus
-    mastery: 62.6
+    mastery: 65.8
   - map_id: split
-    mastery: 61.0
+    mastery: 69.3
   salary: 3700
-  contract_weeks_left: 41
-  morale: 72.3
-  stamina: 97.8
-  form: 58.0
+  contract_weeks_left: 37
+  morale: 83.7
+  stamina: 91.9
+  form: 53.6
   personality_tags:
-  - streamer
-  potential: 65.2
+  - grinder
+  - quiet
+  potential: 59.8
 - id: team_dplus_jaxe
   handle: JaXe
   real_name: JaXe
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 30.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -160,30 +251,58 @@ players:
     mastery: 61.4
   - agent_id: cypher
     mastery: 62.4
+  - agent_id: chamber
+    mastery: 44.6
+  - agent_id: breach
+    mastery: 35.7
+  - agent_id: clove
+    mastery: 41.6
+  - agent_id: jett
+    mastery: 25.2
+  - agent_id: omen
+    mastery: 26.5
+  - agent_id: phoenix
+    mastery: 33.4
+  - agent_id: raze
+    mastery: 29.1
+  - agent_id: reyna
+    mastery: 31.4
+  - agent_id: skye
+    mastery: 39.7
+  - agent_id: sova
+    mastery: 29.1
+  - agent_id: viper
+    mastery: 30.8
   map_pool:
   - map_id: ascent
-    mastery: 59.9
+    mastery: 68.9
   - map_id: bind
-    mastery: 76.4
+    mastery: 76.1
   - map_id: haven
-    mastery: 64.1
+    mastery: 70.6
   - map_id: lotus
-    mastery: 56.2
+    mastery: 58.6
   - map_id: split
-    mastery: 71.1
+    mastery: 69.5
   salary: 3500
-  contract_weeks_left: 53
-  morale: 62.9
-  stamina: 91.5
-  form: 57.0
+  contract_weeks_left: 47
+  morale: 69.6
+  stamina: 87.2
+  form: 55.4
   personality_tags:
-  - analytical
-  - team_player
-  potential: 70.3
+  - fan_favorite
+  - grinder
+  potential: 66.8
 - id: team_dplus_cabeza
   handle: CabezA
   real_name: CabezA
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 32.0
   age: 25
   role: flex
   playstyle: igl
@@ -203,22 +322,45 @@ players:
     mastery: 70.6
   - agent_id: omen
     mastery: 63.6
+  - agent_id: breach
+    mastery: 23.1
+  - agent_id: chamber
+    mastery: 44.0
+  - agent_id: clove
+    mastery: 31.3
+  - agent_id: cypher
+    mastery: 35.6
+  - agent_id: jett
+    mastery: 33.1
+  - agent_id: killjoy
+    mastery: 26.0
+  - agent_id: phoenix
+    mastery: 34.3
+  - agent_id: raze
+    mastery: 29.0
+  - agent_id: reyna
+    mastery: 33.6
+  - agent_id: sova
+    mastery: 38.2
+  - agent_id: viper
+    mastery: 39.7
   map_pool:
   - map_id: ascent
-    mastery: 57.3
+    mastery: 66.6
   - map_id: bind
-    mastery: 48.7
+    mastery: 71.8
   - map_id: haven
-    mastery: 67.1
+    mastery: 63.4
   - map_id: lotus
-    mastery: 73.9
+    mastery: 53.6
   - map_id: split
-    mastery: 58.2
+    mastery: 62.4
   salary: 3700
-  contract_weeks_left: 49
-  morale: 63.7
-  stamina: 93.0
-  form: 49.2
+  contract_weeks_left: 37
+  morale: 65.2
+  stamina: 86.4
+  form: 51.1
   personality_tags:
+  - flashy
   - slow_starter
-  potential: 58.7
+  potential: 59.2

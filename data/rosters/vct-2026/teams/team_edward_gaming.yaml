@@ -13,6 +13,10 @@ players:
   handle: ZmjjKK
   real_name: Zheng Yongkang
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 22
   role: duelist
   playstyle: entry
@@ -32,29 +36,56 @@ players:
     mastery: 92.9
   - agent_id: raze
     mastery: 94.2
+  - agent_id: phoenix
+    mastery: 78.6
+  - agent_id: reyna
+    mastery: 80.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 1.5
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 95.5
+    mastery: 98.6
   - map_id: bind
-    mastery: 99.0
+    mastery: 89.3
   - map_id: haven
-    mastery: 92.9
+    mastery: 86.4
   - map_id: lotus
-    mastery: 99.0
+    mastery: 98.9
   - map_id: split
-    mastery: 87.6
+    mastery: 88.4
   salary: 7300
-  contract_weeks_left: 57
-  morale: 61.6
-  stamina: 84.8
-  form: 57.6
+  contract_weeks_left: 31
+  morale: 67.7
+  stamina: 81.6
+  form: 45.4
   personality_tags:
-  - quiet
-  potential: 96.0
+  - flashy
+  - perfectionist
+  potential: 86.7
 - id: team_edward_gaming_smoggy
   handle: Smoggy
   real_name: Zhang Zhao
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 25
   role: flex
   playstyle: support
@@ -76,30 +107,54 @@ players:
     mastery: 98.8
   - agent_id: omen
     mastery: 85.6
+  - agent_id: breach
+    mastery: 57.8
+  - agent_id: chamber
+    mastery: 7.4
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 56.3
+  - agent_id: killjoy
+    mastery: 53.3
+  - agent_id: reyna
+    mastery: 54.8
+  - agent_id: skye
+    mastery: 59.1
+  - agent_id: sova
+    mastery: 58.1
+  - agent_id: viper
+    mastery: 2.9
   map_pool:
   - map_id: ascent
-    mastery: 78.1
+    mastery: 91.3
   - map_id: bind
-    mastery: 85.3
+    mastery: 84.9
   - map_id: haven
-    mastery: 88.7
+    mastery: 96.7
   - map_id: lotus
-    mastery: 90.8
+    mastery: 82.7
   - map_id: split
-    mastery: 81.6
+    mastery: 89.0
   salary: 6700
-  contract_weeks_left: 50
-  morale: 80.1
-  stamina: 93.7
-  form: 45.9
+  contract_weeks_left: 60
+  morale: 72.6
+  stamina: 89.4
+  form: 56.3
   personality_tags:
-  - hot_head
-  - quiet
+  - flashy
+  - slow_starter
   potential: 83.1
 - id: team_edward_gaming_nobody
   handle: nobody
   real_name: Wang Senxu
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 27
   role: initiator
   playstyle: igl
@@ -119,29 +174,56 @@ players:
     mastery: 90.0
   - agent_id: sova
     mastery: 74.8
+  - agent_id: breach
+    mastery: 70.7
+  - agent_id: chamber
+    mastery: 53.8
+  - agent_id: clove
+    mastery: 42.0
+  - agent_id: cypher
+    mastery: 50.5
+  - agent_id: jett
+    mastery: 50.2
+  - agent_id: killjoy
+    mastery: 53.2
+  - agent_id: omen
+    mastery: 57.9
+  - agent_id: phoenix
+    mastery: 50.1
+  - agent_id: raze
+    mastery: 51.7
+  - agent_id: reyna
+    mastery: 3.6
+  - agent_id: viper
+    mastery: 55.1
   map_pool:
   - map_id: ascent
-    mastery: 89.0
+    mastery: 85.8
   - map_id: bind
-    mastery: 75.9
+    mastery: 79.3
   - map_id: haven
-    mastery: 81.8
+    mastery: 91.5
   - map_id: lotus
-    mastery: 91.4
+    mastery: 77.5
   - map_id: split
-    mastery: 67.6
+    mastery: 81.6
   salary: 5900
-  contract_weeks_left: 72
-  morale: 75.7
-  stamina: 99.1
-  form: 59.4
+  contract_weeks_left: 69
+  morale: 71.5
+  stamina: 99.6
+  form: 59.1
   personality_tags:
-  - independent
-  potential: 77.4
+  - hot_head
+  - streamer
+  potential: 75.7
 - id: team_edward_gaming_jieni7
   handle: Jieni7
   real_name: Zhang Juntai
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: flex
   playstyle: support
@@ -163,30 +245,54 @@ players:
     mastery: 71.5
   - agent_id: omen
     mastery: 86.8
+  - agent_id: chamber
+    mastery: 57.3
+  - agent_id: clove
+    mastery: 44.5
+  - agent_id: cypher
+    mastery: 51.2
+  - agent_id: jett
+    mastery: 53.7
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 6.3
+  - agent_id: reyna
+    mastery: 53.9
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 48.8
   map_pool:
   - map_id: ascent
-    mastery: 81.4
+    mastery: 82.3
   - map_id: bind
-    mastery: 86.1
+    mastery: 89.0
   - map_id: haven
-    mastery: 92.4
+    mastery: 83.6
   - map_id: lotus
-    mastery: 70.8
+    mastery: 77.9
   - map_id: split
-    mastery: 82.9
+    mastery: 84.7
   salary: 5700
-  contract_weeks_left: 52
-  morale: 79.4
-  stamina: 95.1
-  form: 57.7
+  contract_weeks_left: 60
+  morale: 81.1
+  stamina: 84.6
+  form: 57.5
   personality_tags:
-  - analytical
-  - slow_starter
-  potential: 82.4
+  - independent
+  - perfectionist
+  potential: 82.5
 - id: team_edward_gaming_chichoo
   handle: CHICHOO
   real_name: Wan Shunzhi
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 25
   role: sentinel
   playstyle: anchor
@@ -206,23 +312,45 @@ players:
     mastery: 91.3
   - agent_id: cypher
     mastery: 84.5
+  - agent_id: chamber
+    mastery: 73.8
+  - agent_id: killjoy
+    mastery: 69.2
+  - agent_id: breach
+    mastery: 4.7
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 59.8
+  - agent_id: omen
+    mastery: 51.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 53.8
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 57.9
   map_pool:
   - map_id: ascent
-    mastery: 91.2
+    mastery: 86.7
   - map_id: bind
-    mastery: 84.2
+    mastery: 89.6
   - map_id: haven
-    mastery: 83.8
+    mastery: 90.2
   - map_id: lotus
-    mastery: 80.4
+    mastery: 98.4
   - map_id: split
-    mastery: 86.5
+    mastery: 79.4
   salary: 6500
-  contract_weeks_left: 73
-  morale: 64.3
-  stamina: 95.2
-  form: 52.4
+  contract_weeks_left: 37
+  morale: 75.5
+  stamina: 99.0
+  form: 57.7
   personality_tags:
-  - grinder
+  - fan_favorite
   - slow_starter
-  potential: 83.0
+  potential: 82.3

@@ -136,7 +136,15 @@ th {
   text-align: left; font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
   letter-spacing: .06em; color: var(--es-color-text-tertiary, #67748f);
   padding: 4px 8px; border-bottom: 1px solid var(--es-color-border-primary, #26324a);
+  cursor: pointer; user-select: none; /* click to sort (app.js delegate) */
 }
+th[data-nosort], table[data-nosort] th, .es-h2hm th { cursor: default; }
+th[data-dir]::after {
+  color: var(--es-color-accent, #4fd8c0);
+  font-size: 8px;
+}
+th[data-dir="asc"]::after { content: " ▲"; }
+th[data-dir="desc"]::after { content: " ▼"; }
 td { padding: 5px 8px; border-bottom: 1px solid var(--es-color-border-secondary, #1c2536); }
 tbody tr:hover td { background: color-mix(in srgb, var(--es-color-bg-hover, #1b2536) 65%, transparent); }
 td.num, th.num { text-align: right; font-family: var(--es-font-mono, monospace); }
@@ -181,7 +189,10 @@ tr.me td:first-child { box-shadow: inset 2px 0 0 var(--es-color-brand, #ff4655);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
   background: var(--es-color-bg-elevated, #161e2e);
   color: var(--es-color-text-secondary, #a2aec6);
+  white-space: nowrap;
 }
+/* Keep a role+playstyle pill pair on one line inside narrow table cells. */
+.pill-pair { white-space: nowrap; }
 .pill.win {
   color: var(--es-color-text-success, #4fc6a0);
   background: var(--es-color-fill-success, #0e352b);
@@ -890,7 +901,27 @@ tr.elim td { opacity: .5; }
 .es-meta-fill { display: block; height: 100%; background: var(--es-color-brand, #ff4655); }
 
 /* Board-standing line on the dashboard manager's desk. */
-.es-board { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); }
+.es-board { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); line-height: 1.6; }
+/* Center the tone pill against the line of text it prefixes (both the board
+   line and the objective rows) so nothing sits half a line low. */
+.es-board .pill, .es-obj-row .pill { vertical-align: middle; }
+
+/* Topbar save button: warm accent while the world has unsaved changes. */
+.save-dirty {
+  color: var(--es-color-text-warning, #efb54a);
+  border-color: var(--es-color-text-warning, #efb54a);
+}
+#autosave-sel { font-size: var(--es-text-xs, 11px); }
+
+/* Movement tracker on the social screen. */
+.es-movement { display: flex; flex-direction: column; gap: 3px; max-height: 420px; overflow-y: auto; }
+.es-move {
+  padding: 4px 6px; font-size: var(--es-text-sm, 12px); line-height: 1.5;
+  border-bottom: 1px dotted var(--es-color-border-secondary, #1c2536);
+}
+.es-move:last-child { border-bottom: 0; }
+.es-move.mine { box-shadow: inset 2px 0 0 var(--es-color-brand, #ff4655); }
+.es-move .pill { vertical-align: middle; }
 
 /* Marketability breakdown on the finances screen. */
 .es-mb { display: flex; flex-direction: column; gap: 4px; }
@@ -1339,4 +1370,5 @@ td.good, .num.good { color: var(--es-color-text-success, #4fc6a0); }
 td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
 /* Mood pills (social header): tone must actually render. */
 .pill.good { color: var(--es-color-text-success, #4fc6a0); border-color: var(--es-color-text-success, #4fc6a0); }
+.pill.warn { color: var(--es-color-text-warning, #efb54a); border-color: var(--es-color-text-warning, #efb54a); }
 .pill.bad { color: var(--es-color-text-danger, #ff6b6b); border-color: var(--es-color-text-danger, #ff6b6b); }

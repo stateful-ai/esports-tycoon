@@ -83,8 +83,11 @@ def provider() -> dict | None:
         return {
             "url": "https://openrouter.ai/api/v1/chat/completions",
             "key": key,
+            # Rewriting grounded facts is a light task, so default to a cheap,
+            # fast model (~20-30x lower output cost than a 70B) to stretch the
+            # budget. Override with SOCIAL_LLM_MODEL for higher-quality prose.
             "model": os.environ.get(
-                "SOCIAL_LLM_MODEL", "meta-llama/llama-3.3-70b-instruct"
+                "SOCIAL_LLM_MODEL", "google/gemini-2.0-flash-001"
             ),
         }
     if mode == "local" or (mode == "auto" and base):

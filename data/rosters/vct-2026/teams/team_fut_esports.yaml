@@ -13,6 +13,12 @@ players:
   handle: sociablEE
   real_name: Volkan Yonal
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 98.0
+  - lang: en
+    level: 72.0
   age: 25
   role: controller
   playstyle: igl
@@ -32,29 +38,58 @@ players:
     mastery: 81.5
   - agent_id: viper
     mastery: 75.0
+  - agent_id: clove
+    mastery: 62.7
+  - agent_id: breach
+    mastery: 47.7
+  - agent_id: chamber
+    mastery: 39.4
+  - agent_id: cypher
+    mastery: 56.2
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 51.7
+  - agent_id: phoenix
+    mastery: 55.0
+  - agent_id: raze
+    mastery: 42.3
+  - agent_id: reyna
+    mastery: 44.9
+  - agent_id: skye
+    mastery: 53.1
+  - agent_id: sova
+    mastery: 52.2
   map_pool:
   - map_id: ascent
-    mastery: 78.5
+    mastery: 89.4
   - map_id: bind
-    mastery: 77.1
+    mastery: 85.9
   - map_id: haven
-    mastery: 75.1
+    mastery: 79.5
   - map_id: lotus
-    mastery: 82.9
+    mastery: 79.4
   - map_id: split
-    mastery: 65.0
+    mastery: 86.8
   salary: 5500
-  contract_weeks_left: 64
-  morale: 63.4
-  stamina: 99.9
-  form: 58.7
+  contract_weeks_left: 49
+  morale: 65.6
+  stamina: 86.1
+  form: 55.7
   personality_tags:
-  - flashy
-  potential: 72.5
+  - hot_head
+  - quiet
+  potential: 74.0
 - id: team_fut_esports_yetujey
   handle: yetujey
   real_name: Eray Budak
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 60.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -76,30 +111,55 @@ players:
     mastery: 89.9
   - agent_id: killjoy
     mastery: 82.2
+  - agent_id: chamber
+    mastery: 67.5
+  - agent_id: breach
+    mastery: 55.1
+  - agent_id: clove
+    mastery: 48.3
+  - agent_id: jett
+    mastery: 56.3
+  - agent_id: omen
+    mastery: 52.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 55.7
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 52.2
   map_pool:
   - map_id: ascent
-    mastery: 83.2
+    mastery: 66.7
   - map_id: bind
-    mastery: 96.3
+    mastery: 80.8
   - map_id: haven
-    mastery: 82.9
+    mastery: 90.5
   - map_id: lotus
-    mastery: 73.2
+    mastery: 88.6
   - map_id: split
     mastery: 74.8
   salary: 6100
-  contract_weeks_left: 74
-  morale: 66.2
-  stamina: 84.1
-  form: 56.5
+  contract_weeks_left: 51
+  morale: 79.1
+  stamina: 89.4
+  form: 58.7
   personality_tags:
-  - independent
-  - streamer
-  potential: 85.3
+  - grinder
+  potential: 85.1
 - id: team_fut_esports_s0pp
   handle: s0pp
   real_name: Efe Tur
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 97.0
+  - lang: en
+    level: 65.0
   age: 19
   role: duelist
   playstyle: entry
@@ -119,29 +179,58 @@ players:
     mastery: 89.6
   - agent_id: raze
     mastery: 83.8
+  - agent_id: phoenix
+    mastery: 62.3
+  - agent_id: reyna
+    mastery: 69.0
+  - agent_id: breach
+    mastery: 45.1
+  - agent_id: chamber
+    mastery: 52.0
+  - agent_id: clove
+    mastery: 53.5
+  - agent_id: cypher
+    mastery: 58.1
+  - agent_id: killjoy
+    mastery: 58.0
+  - agent_id: omen
+    mastery: 50.3
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 52.6
+  - agent_id: viper
+    mastery: 53.1
   map_pool:
   - map_id: ascent
-    mastery: 76.5
+    mastery: 83.9
   - map_id: bind
-    mastery: 86.5
+    mastery: 80.6
   - map_id: haven
-    mastery: 83.1
+    mastery: 80.0
   - map_id: lotus
-    mastery: 71.4
+    mastery: 92.0
   - map_id: split
-    mastery: 75.3
+    mastery: 82.4
   salary: 5900
-  contract_weeks_left: 60
-  morale: 82.1
-  stamina: 91.6
-  form: 57.1
+  contract_weeks_left: 69
+  morale: 62.8
+  stamina: 85.3
+  form: 53.1
   personality_tags:
-  - flashy
-  potential: 90.7
+  - slow_starter
+  - streamer
+  potential: 80.6
 - id: team_fut_esports_xeus
   handle: xeus
   real_name: Dogan Gozgen
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 96.0
+  - lang: en
+    level: 62.0
   age: 20
   role: duelist
   playstyle: entry
@@ -161,30 +250,58 @@ players:
     mastery: 88.1
   - agent_id: phoenix
     mastery: 78.2
+  - agent_id: jett
+    mastery: 62.3
+  - agent_id: reyna
+    mastery: 68.2
+  - agent_id: breach
+    mastery: 46.9
+  - agent_id: chamber
+    mastery: 51.1
+  - agent_id: clove
+    mastery: 50.2
+  - agent_id: cypher
+    mastery: 5.7
+  - agent_id: killjoy
+    mastery: 52.1
+  - agent_id: omen
+    mastery: 48.4
+  - agent_id: skye
+    mastery: 53.9
+  - agent_id: sova
+    mastery: 49.2
+  - agent_id: viper
+    mastery: 47.0
   map_pool:
   - map_id: ascent
-    mastery: 77.4
+    mastery: 82.3
   - map_id: bind
-    mastery: 86.2
+    mastery: 89.2
   - map_id: haven
-    mastery: 72.0
+    mastery: 74.0
   - map_id: lotus
-    mastery: 73.8
+    mastery: 74.4
   - map_id: split
-    mastery: 84.6
+    mastery: 79.6
   salary: 5600
-  contract_weeks_left: 66
-  morale: 67.2
-  stamina: 80.5
-  form: 55.6
+  contract_weeks_left: 32
+  morale: 66.7
+  stamina: 83.7
+  form: 58.1
   personality_tags:
   - analytical
-  - fan_favorite
+  - team_player
   potential: 79.0
 - id: team_fut_esports_krostaly
   handle: KROSTALY
   real_name: Okan Alacam
   region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 95.0
+  - lang: en
+    level: 58.0
   age: 20
   role: initiator
   playstyle: support
@@ -204,23 +321,44 @@ players:
     mastery: 82.7
   - agent_id: skye
     mastery: 76.2
+  - agent_id: breach
+    mastery: 64.0
+  - agent_id: chamber
+    mastery: 51.8
+  - agent_id: clove
+    mastery: 50.5
+  - agent_id: cypher
+    mastery: 44.5
+  - agent_id: jett
+    mastery: 50.4
+  - agent_id: killjoy
+    mastery: 44.6
+  - agent_id: omen
+    mastery: 44.2
+  - agent_id: phoenix
+    mastery: 6.8
+  - agent_id: raze
+    mastery: 40.3
+  - agent_id: reyna
+    mastery: 51.3
+  - agent_id: viper
+    mastery: 51.4
   map_pool:
   - map_id: ascent
-    mastery: 82.4
+    mastery: 73.0
   - map_id: bind
-    mastery: 74.8
+    mastery: 77.8
   - map_id: haven
-    mastery: 80.7
+    mastery: 75.3
   - map_id: lotus
-    mastery: 70.6
+    mastery: 77.2
   - map_id: split
-    mastery: 79.2
+    mastery: 76.1
   salary: 5000
-  contract_weeks_left: 47
-  morale: 62.0
-  stamina: 94.2
-  form: 55.7
+  contract_weeks_left: 41
+  morale: 65.5
+  stamina: 87.3
+  form: 49.5
   personality_tags:
-  - analytical
-  - quiet
-  potential: 80.7
+  - streamer
+  potential: 85.1

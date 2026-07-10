@@ -13,6 +13,10 @@ players:
   handle: vora
   real_name: Jordan Pulwer
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   role: initiator
   playstyle: igl
@@ -32,29 +36,57 @@ players:
     mastery: 82.3
   - agent_id: skye
     mastery: 78.2
+  - agent_id: breach
+    mastery: 58.2
+  - agent_id: chamber
+    mastery: 35.8
+  - agent_id: clove
+    mastery: 4.7
+  - agent_id: cypher
+    mastery: 44.4
+  - agent_id: jett
+    mastery: 48.8
+  - agent_id: killjoy
+    mastery: 49.2
+  - agent_id: omen
+    mastery: 47.9
+  - agent_id: phoenix
+    mastery: 58.7
+  - agent_id: raze
+    mastery: 46.8
+  - agent_id: reyna
+    mastery: 46.8
+  - agent_id: viper
+    mastery: 46.3
   map_pool:
   - map_id: ascent
-    mastery: 73.2
+    mastery: 66.9
   - map_id: bind
-    mastery: 73.1
+    mastery: 74.9
   - map_id: haven
-    mastery: 61.4
+    mastery: 85.8
   - map_id: lotus
-    mastery: 72.6
+    mastery: 69.9
   - map_id: split
-    mastery: 71.2
+    mastery: 75.0
   salary: 5100
-  contract_weeks_left: 51
-  morale: 73.9
-  stamina: 80.3
-  form: 59.8
+  contract_weeks_left: 43
+  morale: 64.0
+  stamina: 84.0
+  form: 51.4
   personality_tags:
-  - hot_head
-  potential: 75.9
+  - slow_starter
+  potential: 75.7
 - id: team_100_thieves_timotino
   handle: Timotino
   real_name: Timothee Lavigne Dupont
   region: americas
+  country: CA
+  languages:
+  - lang: fr
+    level: 90.0
+  - lang: en
+    level: 85.0
   age: 20
   role: duelist
   playstyle: entry
@@ -76,29 +108,54 @@ players:
     mastery: 74.5
   - agent_id: raze
     mastery: 70.8
+  - agent_id: reyna
+    mastery: 70.7
+  - agent_id: breach
+    mastery: 58.7
+  - agent_id: chamber
+    mastery: 54.7
+  - agent_id: clove
+    mastery: 56.3
+  - agent_id: cypher
+    mastery: 48.9
+  - agent_id: killjoy
+    mastery: 58.4
+  - agent_id: omen
+    mastery: 49.8
+  - agent_id: skye
+    mastery: 58.9
+  - agent_id: sova
+    mastery: 51.6
+  - agent_id: viper
+    mastery: 55.4
   map_pool:
   - map_id: ascent
-    mastery: 89.6
-  - map_id: bind
     mastery: 84.2
+  - map_id: bind
+    mastery: 81.2
   - map_id: haven
-    mastery: 87.8
+    mastery: 80.0
   - map_id: lotus
-    mastery: 77.0
+    mastery: 82.9
   - map_id: split
-    mastery: 83.0
+    mastery: 84.8
   salary: 5700
-  contract_weeks_left: 44
-  morale: 83.2
-  stamina: 92.3
-  form: 54.4
+  contract_weeks_left: 52
+  morale: 75.6
+  stamina: 99.9
+  form: 51.4
   personality_tags:
-  - independent
-  potential: 82.9
+  - analytical
+  - quiet
+  potential: 85.4
 - id: team_100_thieves_cryocells
   handle: Cryocells
   real_name: Matthew Panganiban
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: sentinel
   playstyle: awper
@@ -120,30 +177,54 @@ players:
     mastery: 80.5
   - agent_id: viper
     mastery: 77.5
+  - agent_id: killjoy
+    mastery: 73.8
+  - agent_id: breach
+    mastery: 54.5
+  - agent_id: clove
+    mastery: 2.8
+  - agent_id: jett
+    mastery: 51.2
+  - agent_id: omen
+    mastery: 59.7
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 56.3
+  - agent_id: skye
+    mastery: 58.9
+  - agent_id: sova
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 91.8
+    mastery: 78.2
   - map_id: bind
-    mastery: 85.3
+    mastery: 82.3
   - map_id: haven
-    mastery: 81.7
+    mastery: 99.0
   - map_id: lotus
-    mastery: 84.9
+    mastery: 78.0
   - map_id: split
-    mastery: 96.2
+    mastery: 81.7
   salary: 6400
-  contract_weeks_left: 35
-  morale: 68.8
-  stamina: 85.5
-  form: 56.3
+  contract_weeks_left: 65
+  morale: 76.0
+  stamina: 96.9
+  form: 50.1
   personality_tags:
   - flashy
-  - quiet
-  potential: 83.3
+  - team_player
+  potential: 84.7
 - id: team_100_thieves_bang
   handle: bang
   real_name: Sean Bezerra
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   role: controller
   playstyle: support
@@ -163,30 +244,56 @@ players:
     mastery: 97.7
   - agent_id: viper
     mastery: 83.1
+  - agent_id: clove
+    mastery: 68.8
+  - agent_id: breach
+    mastery: 59.0
+  - agent_id: chamber
+    mastery: 51.7
+  - agent_id: cypher
+    mastery: 59.1
+  - agent_id: jett
+    mastery: 56.6
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 59.1
+  - agent_id: reyna
+    mastery: 57.6
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 50.0
   map_pool:
   - map_id: ascent
-    mastery: 85.2
+    mastery: 86.7
   - map_id: bind
-    mastery: 77.9
+    mastery: 86.1
   - map_id: haven
-    mastery: 87.6
+    mastery: 88.6
   - map_id: lotus
-    mastery: 77.7
+    mastery: 86.3
   - map_id: split
-    mastery: 78.8
+    mastery: 72.3
   salary: 6100
-  contract_weeks_left: 64
-  morale: 71.7
-  stamina: 90.2
-  form: 46.6
+  contract_weeks_left: 56
+  morale: 70.1
+  stamina: 84.3
+  form: 53.8
   personality_tags:
   - clutch_gene
-  - team_player
-  potential: 86.6
+  - flashy
+  potential: 80.1
 - id: team_100_thieves_asuna
   handle: Asuna
   real_name: Peter Mazuryk
   region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   role: duelist
   playstyle: entry
@@ -206,23 +313,45 @@ players:
     mastery: 82.9
   - agent_id: phoenix
     mastery: 81.7
+  - agent_id: jett
+    mastery: 59.3
+  - agent_id: reyna
+    mastery: 66.8
+  - agent_id: breach
+    mastery: 52.9
+  - agent_id: chamber
+    mastery: 55.0
+  - agent_id: clove
+    mastery: 46.7
+  - agent_id: cypher
+    mastery: 49.6
+  - agent_id: killjoy
+    mastery: 59.3
+  - agent_id: omen
+    mastery: 43.5
+  - agent_id: skye
+    mastery: 46.5
+  - agent_id: sova
+    mastery: 47.7
+  - agent_id: viper
+    mastery: 43.1
   map_pool:
   - map_id: ascent
-    mastery: 72.9
+    mastery: 85.1
   - map_id: bind
-    mastery: 84.2
-  - map_id: haven
-    mastery: 71.7
-  - map_id: lotus
     mastery: 81.1
+  - map_id: haven
+    mastery: 76.7
+  - map_id: lotus
+    mastery: 88.0
   - map_id: split
-    mastery: 74.3
+    mastery: 78.0
   salary: 5600
-  contract_weeks_left: 49
-  morale: 69.1
-  stamina: 99.2
-  form: 45.6
+  contract_weeks_left: 68
+  morale: 77.5
+  stamina: 89.3
+  form: 51.5
   personality_tags:
-  - grinder
-  - team_player
-  potential: 82.4
+  - flashy
+  - perfectionist
+  potential: 78.2

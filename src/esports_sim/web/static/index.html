@@ -20,6 +20,15 @@
   <div class="spacer"></div>
   <div id="balance" class="balance mono"></div>
   <span id="mp-chip" class="pill hidden" title="shared game — click to copy the join code"></span>
+  <button id="save-btn" class="btn hidden" title="save the world to disk now">Save</button>
+  <select id="autosave-sel" class="hidden" title="autosave: write the save after every Nth week (off = only the Save button writes)">
+    <option value="0">autosave off</option>
+    <option value="1">autosave 1w</option>
+    <option value="2">autosave 2w</option>
+    <option value="3">autosave 3w</option>
+    <option value="5">autosave 5w</option>
+    <option value="8">autosave 8w</option>
+  </select>
   <button id="worlds-btn" class="btn hidden" title="leave to the lobby — this world stays saved and resumable">Worlds</button>
   <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
   <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>

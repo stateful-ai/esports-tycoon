@@ -13,6 +13,10 @@ players:
   handle: AAAAY
   real_name: Zhang Yang
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 23
   role: sentinel
   playstyle: anchor
@@ -32,29 +36,60 @@ players:
     mastery: 94.3
   - agent_id: killjoy
     mastery: 84.1
+  - agent_id: chamber
+    mastery: 70.2
+  - agent_id: cypher
+    mastery: 71.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 50.5
+  - agent_id: jett
+    mastery: 2.9
+  - agent_id: omen
+    mastery: 49.4
+  - agent_id: phoenix
+    mastery: 54.7
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 51.7
+  - agent_id: skye
+    mastery: 55.2
+  - agent_id: sova
+    mastery: 52.4
   map_pool:
   - map_id: ascent
-    mastery: 87.3
+    mastery: 77.1
   - map_id: bind
-    mastery: 88.5
+    mastery: 88.9
   - map_id: haven
-    mastery: 88.2
+    mastery: 84.1
   - map_id: lotus
-    mastery: 96.4
+    mastery: 79.8
   - map_id: split
-    mastery: 73.9
+    mastery: 87.0
   salary: 6100
-  contract_weeks_left: 31
-  morale: 69.1
-  stamina: 96.9
-  form: 49.7
+  contract_weeks_left: 58
+  morale: 69.9
+  stamina: 91.9
+  form: 51.8
   personality_tags:
-  - hot_head
-  potential: 81.3
+  - analytical
+  - flashy
+  potential: 82.4
 - id: team_funplus_phoenix_coconut
   handle: coconut
   real_name: Colin Patrick Chung
   region: china
+  country: HK
+  languages:
+  - lang: yue
+    level: 95.0
+  - lang: zh
+    level: 82.0
+  - lang: en
+    level: 50.0
   age: 25
   role: initiator
   playstyle: support
@@ -74,29 +109,58 @@ players:
     mastery: 87.8
   - agent_id: skye
     mastery: 78.7
+  - agent_id: breach
+    mastery: 60.8
+  - agent_id: chamber
+    mastery: 42.6
+  - agent_id: clove
+    mastery: 49.1
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 49.3
+  - agent_id: killjoy
+    mastery: 5.6
+  - agent_id: omen
+    mastery: 59.6
+  - agent_id: phoenix
+    mastery: 51.5
+  - agent_id: raze
+    mastery: 51.7
+  - agent_id: reyna
+    mastery: 46.0
+  - agent_id: viper
+    mastery: 44.7
   map_pool:
   - map_id: ascent
-    mastery: 76.2
+    mastery: 70.3
   - map_id: bind
-    mastery: 77.9
+    mastery: 76.6
   - map_id: haven
-    mastery: 69.1
+    mastery: 73.2
   - map_id: lotus
-    mastery: 77.2
+    mastery: 85.1
   - map_id: split
-    mastery: 77.0
+    mastery: 78.2
   salary: 5400
-  contract_weeks_left: 73
-  morale: 78.4
-  stamina: 92.7
-  form: 45.8
+  contract_weeks_left: 55
+  morale: 66.5
+  stamina: 92.9
+  form: 54.7
   personality_tags:
-  - fan_favorite
+  - flashy
+  - streamer
   potential: 73.2
 - id: team_funplus_phoenix_kovaq
   handle: kovaQ
   real_name: Blendi Kovaci
   region: china
+  country: AL
+  languages:
+  - lang: sq
+    level: 97.0
+  - lang: en
+    level: 75.0
   age: 22
   role: initiator
   playstyle: igl
@@ -116,30 +180,57 @@ players:
     mastery: 75.8
   - agent_id: sova
     mastery: 81.5
+  - agent_id: breach
+    mastery: 55.3
+  - agent_id: chamber
+    mastery: 44.0
+  - agent_id: clove
+    mastery: 43.2
+  - agent_id: cypher
+    mastery: 44.8
+  - agent_id: jett
+    mastery: 46.7
+  - agent_id: killjoy
+    mastery: 5.6
+  - agent_id: omen
+    mastery: 47.8
+  - agent_id: phoenix
+    mastery: 42.6
+  - agent_id: raze
+    mastery: 48.5
+  - agent_id: reyna
+    mastery: 53.3
+  - agent_id: viper
+    mastery: 51.1
   map_pool:
   - map_id: ascent
-    mastery: 69.9
+    mastery: 75.4
   - map_id: bind
-    mastery: 59.8
+    mastery: 69.6
   - map_id: haven
-    mastery: 71.6
+    mastery: 72.8
   - map_id: lotus
-    mastery: 77.3
+    mastery: 72.6
   - map_id: split
-    mastery: 70.6
+    mastery: 73.8
   salary: 4900
   contract_weeks_left: 43
-  morale: 67.0
-  stamina: 82.7
-  form: 45.9
+  morale: 77.0
+  stamina: 93.0
+  form: 50.7
   personality_tags:
-  - hot_head
-  - independent
-  potential: 81.6
+  - team_player
+  potential: 80.0
 - id: team_funplus_phoenix_setrod
   handle: Setrod
   real_name: Ou Tai-keng
   region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 97.0
+  - lang: en
+    level: 42.0
   age: 21
   role: duelist
   playstyle: entry
@@ -159,30 +250,56 @@ players:
     mastery: 81.5
   - agent_id: raze
     mastery: 74.4
+  - agent_id: phoenix
+    mastery: 63.6
+  - agent_id: reyna
+    mastery: 61.5
+  - agent_id: breach
+    mastery: 42.0
+  - agent_id: chamber
+    mastery: 43.9
+  - agent_id: clove
+    mastery: 41.8
+  - agent_id: cypher
+    mastery: 48.0
+  - agent_id: killjoy
+    mastery: 52.3
+  - agent_id: omen
+    mastery: 46.3
+  - agent_id: skye
+    mastery: 2.9
+  - agent_id: sova
+    mastery: 49.1
+  - agent_id: viper
+    mastery: 49.5
   map_pool:
   - map_id: ascent
-    mastery: 81.9
+    mastery: 70.4
   - map_id: bind
-    mastery: 78.8
+    mastery: 69.6
   - map_id: haven
-    mastery: 78.6
+    mastery: 77.1
   - map_id: lotus
-    mastery: 69.0
+    mastery: 77.8
   - map_id: split
-    mastery: 76.0
+    mastery: 77.2
   salary: 5000
-  contract_weeks_left: 50
-  morale: 83.8
+  contract_weeks_left: 41
+  morale: 66.0
   stamina: 85.8
-  form: 51.1
+  form: 45.4
   personality_tags:
-  - fan_favorite
-  - independent
-  potential: 79.5
+  - grinder
+  - streamer
+  potential: 77.0
 - id: team_funplus_phoenix_xlele
   handle: Xlele
   real_name: Zhao Yanbo
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: flex
   playstyle: support
@@ -204,23 +321,43 @@ players:
     mastery: 83.5
   - agent_id: omen
     mastery: 73.8
+  - agent_id: breach
+    mastery: 49.8
+  - agent_id: chamber
+    mastery: 46.2
+  - agent_id: clove
+    mastery: 55.5
+  - agent_id: cypher
+    mastery: 53.2
+  - agent_id: killjoy
+    mastery: 46.2
+  - agent_id: raze
+    mastery: 38.4
+  - agent_id: reyna
+    mastery: 52.3
+  - agent_id: skye
+    mastery: 43.3
+  - agent_id: sova
+    mastery: 56.2
+  - agent_id: viper
+    mastery: 49.6
   map_pool:
   - map_id: ascent
-    mastery: 87.5
+    mastery: 81.2
   - map_id: bind
-    mastery: 78.2
+    mastery: 66.2
   - map_id: haven
-    mastery: 67.1
+    mastery: 73.6
   - map_id: lotus
-    mastery: 73.8
+    mastery: 78.8
   - map_id: split
-    mastery: 73.8
+    mastery: 75.2
   salary: 5100
-  contract_weeks_left: 33
-  morale: 61.4
-  stamina: 89.6
-  form: 56.9
+  contract_weeks_left: 52
+  morale: 84.8
+  stamina: 95.2
+  form: 51.0
   personality_tags:
-  - streamer
+  - hot_head
   - team_player
-  potential: 77.5
+  potential: 76.3

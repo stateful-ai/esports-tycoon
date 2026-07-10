@@ -13,6 +13,12 @@ players:
   handle: Xross
   real_name: Jung Hwan
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 25.0
   age: 21
   role: initiator
   playstyle: support
@@ -32,29 +38,57 @@ players:
     mastery: 91.3
   - agent_id: skye
     mastery: 77.6
+  - agent_id: breach
+    mastery: 63.6
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 48.0
+  - agent_id: cypher
+    mastery: 45.6
+  - agent_id: jett
+    mastery: 55.7
+  - agent_id: killjoy
+    mastery: 58.5
+  - agent_id: omen
+    mastery: 52.3
+  - agent_id: phoenix
+    mastery: 53.8
+  - agent_id: raze
+    mastery: 49.3
+  - agent_id: reyna
+    mastery: 52.5
+  - agent_id: viper
+    mastery: 56.5
   map_pool:
   - map_id: ascent
-    mastery: 79.9
+    mastery: 81.0
   - map_id: bind
-    mastery: 79.0
+    mastery: 80.6
   - map_id: haven
-    mastery: 90.1
+    mastery: 68.6
   - map_id: lotus
-    mastery: 75.2
+    mastery: 71.5
   - map_id: split
-    mastery: 75.4
+    mastery: 79.9
   salary: 5500
-  contract_weeks_left: 69
-  morale: 73.6
-  stamina: 97.5
-  form: 55.7
+  contract_weeks_left: 54
+  morale: 63.1
+  stamina: 99.9
+  form: 47.3
   personality_tags:
-  - flashy
-  potential: 82.1
+  - slow_starter
+  potential: 81.9
 - id: team_nongshim_redforce_dambi
   handle: Dambi
   real_name: Lee Hyuk-kyu
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 21
   role: duelist
   playstyle: entry
@@ -74,30 +108,58 @@ players:
     mastery: 86.7
   - agent_id: phoenix
     mastery: 79.2
+  - agent_id: raze
+    mastery: 60.5
+  - agent_id: reyna
+    mastery: 59.6
+  - agent_id: breach
+    mastery: 53.1
+  - agent_id: chamber
+    mastery: 51.7
+  - agent_id: clove
+    mastery: 38.1
+  - agent_id: cypher
+    mastery: 44.6
+  - agent_id: killjoy
+    mastery: 53.1
+  - agent_id: omen
+    mastery: 54.8
+  - agent_id: skye
+    mastery: 52.6
+  - agent_id: sova
+    mastery: 3.4
+  - agent_id: viper
+    mastery: 50.2
   map_pool:
   - map_id: ascent
-    mastery: 76.3
+    mastery: 88.4
   - map_id: bind
-    mastery: 74.9
+    mastery: 69.9
   - map_id: haven
-    mastery: 84.4
+    mastery: 73.6
   - map_id: lotus
-    mastery: 81.9
+    mastery: 85.4
   - map_id: split
-    mastery: 71.1
+    mastery: 67.4
   salary: 5300
-  contract_weeks_left: 42
-  morale: 83.6
-  stamina: 88.9
-  form: 58.9
+  contract_weeks_left: 72
+  morale: 62.8
+  stamina: 96.8
+  form: 54.6
   personality_tags:
-  - perfectionist
-  - quiet
-  potential: 84.0
+  - grinder
+  - slow_starter
+  potential: 81.2
 - id: team_nongshim_redforce_francis
   handle: Francis
   real_name: Kim Mu-bin
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 30.0
   age: 20
   role: flex
   playstyle: entry
@@ -117,30 +179,58 @@ players:
     mastery: 80.3
   - agent_id: breach
     mastery: 82.4
+  - agent_id: chamber
+    mastery: 42.2
+  - agent_id: clove
+    mastery: 48.9
+  - agent_id: cypher
+    mastery: 44.5
+  - agent_id: jett
+    mastery: 45.7
+  - agent_id: killjoy
+    mastery: 57.5
+  - agent_id: omen
+    mastery: 39.1
+  - agent_id: phoenix
+    mastery: 50.0
+  - agent_id: reyna
+    mastery: 49.0
+  - agent_id: skye
+    mastery: 45.8
+  - agent_id: sova
+    mastery: 42.1
+  - agent_id: viper
+    mastery: 42.5
   map_pool:
   - map_id: ascent
-    mastery: 78.5
+    mastery: 72.1
   - map_id: bind
-    mastery: 69.1
+    mastery: 84.4
   - map_id: haven
-    mastery: 86.1
+    mastery: 74.2
   - map_id: lotus
-    mastery: 77.1
+    mastery: 70.6
   - map_id: split
-    mastery: 80.0
+    mastery: 76.9
   salary: 5100
-  contract_weeks_left: 55
-  morale: 60.6
-  stamina: 98.3
-  form: 57.9
+  contract_weeks_left: 57
+  morale: 76.3
+  stamina: 86.0
+  form: 53.4
   personality_tags:
-  - quiet
+  - flashy
   - team_player
-  potential: 72.9
+  potential: 80.0
 - id: team_nongshim_redforce_ivy
   handle: Ivy
   real_name: Park Sung-hyeon
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
   age: 22
   role: sentinel
   playstyle: anchor
@@ -160,30 +250,57 @@ players:
     mastery: 75.3
   - agent_id: chamber
     mastery: 77.1
+  - agent_id: cypher
+    mastery: 60.9
+  - agent_id: killjoy
+    mastery: 59.0
+  - agent_id: breach
+    mastery: 54.1
+  - agent_id: clove
+    mastery: 54.0
+  - agent_id: jett
+    mastery: 44.7
+  - agent_id: omen
+    mastery: 56.7
+  - agent_id: phoenix
+    mastery: 50.8
+  - agent_id: raze
+    mastery: 49.2
+  - agent_id: reyna
+    mastery: 46.4
+  - agent_id: skye
+    mastery: 43.9
+  - agent_id: sova
+    mastery: 48.8
   map_pool:
   - map_id: ascent
-    mastery: 77.4
+    mastery: 68.6
   - map_id: bind
-    mastery: 74.5
+    mastery: 80.3
   - map_id: haven
-    mastery: 76.8
+    mastery: 70.7
   - map_id: lotus
-    mastery: 83.3
+    mastery: 83.4
   - map_id: split
-    mastery: 69.2
+    mastery: 73.7
   salary: 5100
-  contract_weeks_left: 62
-  morale: 64.7
-  stamina: 97.5
-  form: 57.9
+  contract_weeks_left: 60
+  morale: 75.0
+  stamina: 90.0
+  form: 52.7
   personality_tags:
-  - fan_favorite
-  - grinder
-  potential: 78.2
+  - quiet
+  potential: 81.3
 - id: team_nongshim_redforce_rb
   handle: Rb
   real_name: Goo Sang-min
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  - lang: en
+    level: 25.0
   age: 27
   role: controller
   playstyle: igl
@@ -203,22 +320,45 @@ players:
     mastery: 80.0
   - agent_id: clove
     mastery: 73.7
+  - agent_id: viper
+    mastery: 61.8
+  - agent_id: breach
+    mastery: 43.6
+  - agent_id: chamber
+    mastery: 38.2
+  - agent_id: cypher
+    mastery: 44.2
+  - agent_id: jett
+    mastery: 46.5
+  - agent_id: killjoy
+    mastery: 47.1
+  - agent_id: phoenix
+    mastery: 51.8
+  - agent_id: raze
+    mastery: 52.4
+  - agent_id: reyna
+    mastery: 44.8
+  - agent_id: skye
+    mastery: 53.9
+  - agent_id: sova
+    mastery: 40.4
   map_pool:
   - map_id: ascent
-    mastery: 79.2
+    mastery: 72.7
   - map_id: bind
-    mastery: 66.8
+    mastery: 88.5
   - map_id: haven
-    mastery: 70.9
+    mastery: 81.7
   - map_id: lotus
-    mastery: 66.4
+    mastery: 81.3
   - map_id: split
-    mastery: 64.5
+    mastery: 81.3
   salary: 5000
-  contract_weeks_left: 33
-  morale: 73.1
-  stamina: 97.7
-  form: 57.0
+  contract_weeks_left: 31
+  morale: 76.1
+  stamina: 96.2
+  form: 46.5
   personality_tags:
   - clutch_gene
-  potential: 70.0
+  - quiet
+  potential: 70.6

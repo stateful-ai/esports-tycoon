@@ -196,6 +196,41 @@ def _transfer_items(gs: "GameState", season: int, week: int):
     return out[: _CAT_CAP["transfer"]]
 
 
+_MOVEMENT_KINDS = ("signing", "release", "renewal", "transfer", "poach")
+
+
+def _movement_items(gs: "GameState", season: int, week: int):
+    """The week's transfer wire: every signing/release/renewal/transfer that
+    landed this tick (yours AND the AI's), read straight off the chronicle —
+    one bounded digest item, your own moves listed first."""
+    moves = [
+        e for e in gs.chronicle
+        if e.season == season and e.week == week and e.kind in _MOVEMENT_KINDS
+    ]
+    if not moves:
+        return []
+    uid = gs.acting_team_id
+    mine = [e for e in moves if e.team_id == uid]
+    league = [e for e in moves if e.team_id != uid]
+    lines = []
+    if mine:
+        lines.append("Your moves:")
+        lines += [f"- {e.text}" for e in mine]
+    if league:
+        if mine:
+            lines.append("")
+        lines.append("Around the league:")
+        lines += [f"- {e.text}" for e in league[:8]]
+        if len(league) > 8:
+            lines.append(f"...and {len(league) - 8} more (see the movement tracker).")
+    n = len(moves)
+    title = f"Transfer wire: {n} move{'s' if n != 1 else ''} this week"
+    return [(
+        _P_DEV,  # digest, not a decision — sits below actionable items
+        _make(season, week, "transfer", "movement", title, "\n".join(lines), "social"),
+    )]
+
+
 def _board_items(gs: "GameState", season: int, week: int):
     uid = gs.acting_team_id
     cands = []
@@ -525,6 +560,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
     if in_season:
         candidates += _match_items(gs, season, week, report)
         candidates += _transfer_items(gs, season, week)
+        candidates += _movement_items(gs, season, week)
         candidates += _board_items(gs, season, week)
         candidates += _talk_items(gs, season, week)
         candidates += _sponsor_items(gs, season, week)

@@ -13,6 +13,10 @@ players:
   handle: K1ra
   real_name: Huang Zhihao
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 22
   role: sentinel
   playstyle: igl
@@ -32,29 +36,56 @@ players:
     mastery: 88.2
   - agent_id: viper
     mastery: 82.2
+  - agent_id: chamber
+    mastery: 63.1
+  - agent_id: killjoy
+    mastery: 64.0
+  - agent_id: breach
+    mastery: 41.3
+  - agent_id: clove
+    mastery: 44.7
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 57.6
+  - agent_id: phoenix
+    mastery: 51.6
+  - agent_id: raze
+    mastery: 46.1
+  - agent_id: reyna
+    mastery: 47.0
+  - agent_id: skye
+    mastery: 49.2
+  - agent_id: sova
+    mastery: 53.2
   map_pool:
   - map_id: ascent
-    mastery: 78.6
+    mastery: 81.5
   - map_id: bind
-    mastery: 79.9
+    mastery: 82.6
   - map_id: haven
-    mastery: 84.9
+    mastery: 84.6
   - map_id: lotus
-    mastery: 67.2
+    mastery: 83.8
   - map_id: split
-    mastery: 82.7
+    mastery: 86.6
   salary: 5600
-  contract_weeks_left: 61
-  morale: 71.5
-  stamina: 99.1
-  form: 46.4
+  contract_weeks_left: 53
+  morale: 73.8
+  stamina: 93.4
+  form: 52.0
   personality_tags:
-  - analytical
-  potential: 82.4
+  - fan_favorite
+  - streamer
+  potential: 77.9
 - id: team_all_gamers_shr1mp
   handle: Shr1mp
   real_name: Yang Yong
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 23
   role: initiator
   playstyle: support
@@ -74,30 +105,59 @@ players:
     mastery: 83.6
   - agent_id: sova
     mastery: 79.2
+  - agent_id: breach
+    mastery: 61.2
+  - agent_id: chamber
+    mastery: 46.2
+  - agent_id: clove
+    mastery: 7.8
+  - agent_id: cypher
+    mastery: 49.0
+  - agent_id: jett
+    mastery: 50.8
+  - agent_id: killjoy
+    mastery: 53.8
+  - agent_id: omen
+    mastery: 43.9
+  - agent_id: phoenix
+    mastery: 58.6
+  - agent_id: raze
+    mastery: 57.1
+  - agent_id: reyna
+    mastery: 56.7
+  - agent_id: viper
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 74.8
+    mastery: 73.9
   - map_id: bind
-    mastery: 83.6
+    mastery: 80.7
   - map_id: haven
-    mastery: 72.7
+    mastery: 91.9
   - map_id: lotus
-    mastery: 78.7
+    mastery: 73.5
   - map_id: split
-    mastery: 87.7
+    mastery: 79.1
   salary: 5900
-  contract_weeks_left: 51
-  morale: 67.6
-  stamina: 83.8
-  form: 50.3
+  contract_weeks_left: 72
+  morale: 77.6
+  stamina: 91.2
+  form: 58.1
   personality_tags:
-  - fan_favorite
-  - team_player
-  potential: 83.2
+  - slow_starter
+  potential: 82.3
 - id: team_all_gamers_f4ngeer
   handle: f4ngeer
   real_name: Roman Smirnov
   region: china
+  country: RU
+  languages:
+  - lang: ru
+    level: 98.0
+  - lang: en
+    level: 32.0
+  - lang: zh
+    level: 25.0
   age: 19
   role: duelist
   playstyle: awper
@@ -117,30 +177,55 @@ players:
     mastery: 89.5
   - agent_id: chamber
     mastery: 82.6
+  - agent_id: phoenix
+    mastery: 67.4
+  - agent_id: raze
+    mastery: 72.8
+  - agent_id: reyna
+    mastery: 69.9
+  - agent_id: breach
+    mastery: 54.5
+  - agent_id: clove
+    mastery: 56.7
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 54.1
+  - agent_id: skye
+    mastery: 56.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 56.0
   map_pool:
   - map_id: ascent
-    mastery: 82.1
+    mastery: 89.1
   - map_id: bind
-    mastery: 90.2
+    mastery: 76.2
   - map_id: haven
-    mastery: 85.9
+    mastery: 94.6
   - map_id: lotus
-    mastery: 90.7
+    mastery: 86.6
   - map_id: split
-    mastery: 81.8
+    mastery: 80.0
   salary: 6400
-  contract_weeks_left: 49
-  morale: 67.1
-  stamina: 94.6
-  form: 57.3
+  contract_weeks_left: 41
+  morale: 68.2
+  stamina: 96.7
+  form: 51.0
   personality_tags:
-  - fan_favorite
-  - streamer
-  potential: 92.6
+  - perfectionist
+  potential: 86.2
 - id: team_all_gamers_iamgrq
   handle: iamgrq
   real_name: Gao Ruiqi
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 21
   role: controller
   playstyle: support
@@ -160,29 +245,56 @@ players:
     mastery: 85.7
   - agent_id: clove
     mastery: 79.7
+  - agent_id: viper
+    mastery: 57.6
+  - agent_id: breach
+    mastery: 54.2
+  - agent_id: chamber
+    mastery: 58.7
+  - agent_id: cypher
+    mastery: 53.1
+  - agent_id: jett
+    mastery: 50.0
+  - agent_id: killjoy
+    mastery: 55.5
+  - agent_id: phoenix
+    mastery: 50.7
+  - agent_id: raze
+    mastery: 58.9
+  - agent_id: reyna
+    mastery: 48.0
+  - agent_id: skye
+    mastery: 46.4
+  - agent_id: sova
+    mastery: 47.6
   map_pool:
   - map_id: ascent
-    mastery: 71.4
+    mastery: 78.5
   - map_id: bind
-    mastery: 82.6
+    mastery: 89.3
   - map_id: haven
-    mastery: 83.0
+    mastery: 77.1
   - map_id: lotus
-    mastery: 71.7
+    mastery: 76.5
   - map_id: split
-    mastery: 88.5
+    mastery: 70.5
   salary: 5400
-  contract_weeks_left: 75
-  morale: 77.9
-  stamina: 85.0
-  form: 53.8
+  contract_weeks_left: 73
+  morale: 60.8
+  stamina: 94.9
+  form: 54.6
   personality_tags:
-  - independent
-  potential: 81.7
+  - fan_favorite
+  - quiet
+  potential: 80.3
 - id: team_all_gamers_bai
   handle: Bai
   real_name: Zhang Zeyang
   region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
   age: 20
   role: duelist
   playstyle: entry
@@ -202,23 +314,45 @@ players:
     mastery: 80.4
   - agent_id: viper
     mastery: 82.5
+  - agent_id: phoenix
+    mastery: 57.0
+  - agent_id: raze
+    mastery: 56.7
+  - agent_id: reyna
+    mastery: 54.4
+  - agent_id: breach
+    mastery: 42.8
+  - agent_id: chamber
+    mastery: 37.6
+  - agent_id: clove
+    mastery: 40.5
+  - agent_id: cypher
+    mastery: 45.3
+  - agent_id: killjoy
+    mastery: 41.8
+  - agent_id: omen
+    mastery: 42.5
+  - agent_id: skye
+    mastery: 38.2
+  - agent_id: sova
+    mastery: 39.4
   map_pool:
   - map_id: ascent
-    mastery: 74.0
+    mastery: 78.9
   - map_id: bind
-    mastery: 73.6
+    mastery: 65.1
   - map_id: haven
-    mastery: 70.1
+    mastery: 61.8
   - map_id: lotus
-    mastery: 77.2
+    mastery: 72.4
   - map_id: split
-    mastery: 70.8
+    mastery: 79.6
   salary: 4500
-  contract_weeks_left: 65
-  morale: 72.1
-  stamina: 96.0
-  form: 56.0
+  contract_weeks_left: 79
+  morale: 76.5
+  stamina: 92.1
+  form: 57.2
   personality_tags:
-  - streamer
+  - hot_head
   - team_player
-  potential: 79.8
+  potential: 67.7

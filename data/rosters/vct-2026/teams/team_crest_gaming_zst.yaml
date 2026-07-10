@@ -13,6 +13,14 @@ players:
   handle: Flicker
   real_name: Yoon Tae-hee
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: en
+    level: 25.0
+  - lang: ja
+    level: 20.0
   age: 20
   role: duelist
   playstyle: entry
@@ -32,29 +40,60 @@ players:
     mastery: 82.2
   - agent_id: raze
     mastery: 69.2
+  - agent_id: phoenix
+    mastery: 52.5
+  - agent_id: reyna
+    mastery: 61.8
+  - agent_id: breach
+    mastery: 45.4
+  - agent_id: chamber
+    mastery: 48.4
+  - agent_id: clove
+    mastery: 38.7
+  - agent_id: cypher
+    mastery: 51.0
+  - agent_id: killjoy
+    mastery: 46.1
+  - agent_id: omen
+    mastery: 40.2
+  - agent_id: skye
+    mastery: 42.4
+  - agent_id: sova
+    mastery: 39.2
+  - agent_id: viper
+    mastery: 38.8
   map_pool:
   - map_id: ascent
-    mastery: 67.3
+    mastery: 63.1
   - map_id: bind
-    mastery: 81.2
+    mastery: 79.8
   - map_id: haven
-    mastery: 59.7
+    mastery: 67.3
   - map_id: lotus
-    mastery: 73.9
+    mastery: 66.8
   - map_id: split
-    mastery: 75.2
+    mastery: 78.7
   salary: 4500
-  contract_weeks_left: 34
-  morale: 67.1
-  stamina: 82.0
-  form: 57.6
+  contract_weeks_left: 60
+  morale: 84.8
+  stamina: 94.3
+  form: 53.2
   personality_tags:
-  - streamer
-  potential: 73.6
+  - hot_head
+  - perfectionist
+  potential: 74.7
 - id: team_crest_gaming_zst_ken
   handle: KEN
   real_name: Kim Yun-seung
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: ja
+    level: 55.0
+  - lang: en
+    level: 25.0
   age: 22
   role: initiator
   playstyle: support
@@ -74,30 +113,58 @@ players:
     mastery: 76.7
   - agent_id: skye
     mastery: 64.7
+  - agent_id: breach
+    mastery: 48.3
+  - agent_id: chamber
+    mastery: 29.2
+  - agent_id: clove
+    mastery: 42.0
+  - agent_id: cypher
+    mastery: 43.1
+  - agent_id: jett
+    mastery: 1.0
+  - agent_id: killjoy
+    mastery: 30.6
+  - agent_id: omen
+    mastery: 33.9
+  - agent_id: phoenix
+    mastery: 32.5
+  - agent_id: raze
+    mastery: 29.3
+  - agent_id: reyna
+    mastery: 31.8
+  - agent_id: viper
+    mastery: 31.4
   map_pool:
   - map_id: ascent
-    mastery: 64.0
+    mastery: 76.1
   - map_id: bind
-    mastery: 67.0
+    mastery: 67.5
   - map_id: haven
-    mastery: 55.6
+    mastery: 60.1
   - map_id: lotus
-    mastery: 68.3
+    mastery: 59.7
   - map_id: split
-    mastery: 71.0
+    mastery: 55.8
   salary: 3900
-  contract_weeks_left: 58
-  morale: 60.3
-  stamina: 82.4
-  form: 57.1
+  contract_weeks_left: 67
+  morale: 73.8
+  stamina: 93.6
+  form: 45.7
   personality_tags:
-  - hot_head
-  - team_player
-  potential: 69.6
+  - fan_favorite
+  - slow_starter
+  potential: 67.6
 - id: team_crest_gaming_zst_bazz
   handle: bazz
   real_name: Naoya Matsuyama
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 25.0
   age: 25
   role: controller
   playstyle: igl
@@ -117,29 +184,58 @@ players:
     mastery: 69.1
   - agent_id: viper
     mastery: 65.8
+  - agent_id: clove
+    mastery: 51.0
+  - agent_id: breach
+    mastery: 43.9
+  - agent_id: chamber
+    mastery: 31.4
+  - agent_id: cypher
+    mastery: 32.4
+  - agent_id: jett
+    mastery: 40.2
+  - agent_id: killjoy
+    mastery: 45.2
+  - agent_id: phoenix
+    mastery: 33.0
+  - agent_id: raze
+    mastery: 29.6
+  - agent_id: reyna
+    mastery: 41.0
+  - agent_id: skye
+    mastery: 27.6
+  - agent_id: sova
+    mastery: 26.5
   map_pool:
   - map_id: ascent
-    mastery: 68.6
+    mastery: 57.7
   - map_id: bind
-    mastery: 59.6
+    mastery: 57.6
   - map_id: haven
-    mastery: 73.4
+    mastery: 66.4
   - map_id: lotus
-    mastery: 58.5
+    mastery: 70.6
   - map_id: split
-    mastery: 58.5
+    mastery: 67.8
   salary: 3800
-  contract_weeks_left: 57
-  morale: 71.0
-  stamina: 86.8
-  form: 52.9
+  contract_weeks_left: 56
+  morale: 82.8
+  stamina: 83.0
+  form: 47.6
   personality_tags:
-  - independent
+  - flashy
+  - streamer
   potential: 59.4
 - id: team_crest_gaming_zst_yutaro
   handle: yutaro
   real_name: Yutaro
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 21
   role: sentinel
   playstyle: anchor
@@ -159,29 +255,58 @@ players:
     mastery: 73.0
   - agent_id: cypher
     mastery: 67.1
+  - agent_id: chamber
+    mastery: 46.8
+  - agent_id: breach
+    mastery: 35.3
+  - agent_id: clove
+    mastery: 37.2
+  - agent_id: jett
+    mastery: 32.1
+  - agent_id: omen
+    mastery: 30.1
+  - agent_id: phoenix
+    mastery: 6.8
+  - agent_id: raze
+    mastery: 38.9
+  - agent_id: reyna
+    mastery: 36.9
+  - agent_id: skye
+    mastery: 34.3
+  - agent_id: sova
+    mastery: 30.0
+  - agent_id: viper
+    mastery: 32.6
   map_pool:
   - map_id: ascent
-    mastery: 62.7
+    mastery: 67.6
   - map_id: bind
-    mastery: 56.0
+    mastery: 65.1
   - map_id: haven
-    mastery: 63.3
+    mastery: 55.1
   - map_id: lotus
-    mastery: 57.1
+    mastery: 67.8
   - map_id: split
-    mastery: 65.6
+    mastery: 72.0
   salary: 3700
-  contract_weeks_left: 50
-  morale: 82.1
-  stamina: 86.2
-  form: 45.6
+  contract_weeks_left: 62
+  morale: 62.7
+  stamina: 90.3
+  form: 58.5
   personality_tags:
-  - grinder
-  potential: 70.2
+  - flashy
+  - perfectionist
+  potential: 62.0
 - id: team_crest_gaming_zst_nobita
   handle: nobita
   real_name: Rintaro Matsumoto
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 23
   role: flex
   playstyle: support
@@ -201,23 +326,44 @@ players:
     mastery: 63.8
   - agent_id: skye
     mastery: 62.1
+  - agent_id: breach
+    mastery: 2.5
+  - agent_id: chamber
+    mastery: 7.3
+  - agent_id: clove
+    mastery: 32.1
+  - agent_id: cypher
+    mastery: 22.5
+  - agent_id: jett
+    mastery: 36.7
+  - agent_id: killjoy
+    mastery: 33.3
+  - agent_id: omen
+    mastery: 42.0
+  - agent_id: phoenix
+    mastery: 36.4
+  - agent_id: raze
+    mastery: 33.4
+  - agent_id: reyna
+    mastery: 39.6
+  - agent_id: sova
+    mastery: 0.5
   map_pool:
   - map_id: ascent
-    mastery: 60.8
+    mastery: 64.2
   - map_id: bind
-    mastery: 57.8
+    mastery: 59.3
   - map_id: haven
-    mastery: 59.8
+    mastery: 61.1
   - map_id: lotus
-    mastery: 58.6
+    mastery: 59.5
   - map_id: split
-    mastery: 55.6
+    mastery: 51.0
   salary: 3700
-  contract_weeks_left: 55
-  morale: 65.1
-  stamina: 88.9
-  form: 58.9
+  contract_weeks_left: 30
+  morale: 81.8
+  stamina: 97.2
+  form: 53.3
   personality_tags:
   - flashy
-  - team_player
-  potential: 62.2
+  potential: 63.6

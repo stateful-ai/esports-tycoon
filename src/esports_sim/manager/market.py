@@ -29,13 +29,21 @@ TOURNAMENT_REGISTER = 6
 SEVERANCE_WEEKS = 6
 MIN_CONTRACT_WEEKS = 16
 MAX_CONTRACT_WEEKS = 80
+# Churn damping: an AI org gives a new arrival this long before they can be
+# auto-dropped for the next shiny thing (poach swaps, buyer auto-release).
+NEW_SIGNING_PROTECT_WEEKS = 12
+# The AI transfer window stays quiet while the season settles.
+TRANSFER_QUIET_WEEKS = 4
 
 
 def roster_cap(gs: GameState, team_id: str) -> int:
-    """How many players this org may carry. Humans build a bench (up to
-    ROSTER_MAX); AI orgs stay lean at the field size so their economy and
-    roster upkeep are unchanged."""
-    return ROSTER_MAX if gs.is_human(team_id) else ROSTER_SIZE
+    """How many players this org may carry. Everyone may hold a bench up to
+    ROSTER_MAX — for AI orgs that headroom only ever fills through trades
+    (their weekly market logic still targets the lean ROSTER_SIZE and never
+    signs above it), so a 2-for-1 package no longer bounces off a full AI
+    five while their economy stays effectively unchanged; surplus fringe
+    players shed naturally as their contracts lapse."""
+    return ROSTER_MAX
 
 
 def roster_ready(gs: GameState, team_id: str) -> tuple[bool, str]:
@@ -92,16 +100,21 @@ def can_sign(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
 
 
 def sign_player(
-    gs: GameState, team_id: str, player_id: str, weeks: int = 40
+    gs: GameState, team_id: str, player_id: str, weeks: int = 40,
+    salary: int | None = None,
 ) -> tuple[bool, str]:
+    """`salary` overrides the default asking-salary deal — the negotiated
+    number (see open_negotiation / negotiate_offer). AI callers leave it
+    None and pay the ask, exactly as before."""
     ok, why = can_sign(gs, team_id, player_id)
     if not ok:
         return False, why
     team = gs.teams[team_id]
     p = gs.players[player_id]
-    p.salary = asking_salary(p)
+    p.salary = asking_salary(p) if salary is None else max(800, int(salary))
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     p.morale = min(100.0, p.morale + 8.0)
+    p.tenure_weeks = 0  # fresh club, fresh loyalty clock
     team.player_ids.append(player_id)
     gs.free_agent_ids.remove(player_id)
     if team.captain_id is None:
@@ -129,6 +142,7 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
         team.captain_id = team.player_ids[0] if team.player_ids else None
     p.contract_weeks_left = 0
     p.morale = max(0.0, p.morale - 15.0)
+    p.tenure_weeks = 0
     gs.free_agent_ids.append(player_id)
     gs.push_news(f"{team.name} release {p.handle} (severance {severance:,} cr).")
     chronicle.record(
@@ -141,8 +155,12 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
 
 
 def renew_contract(
-    gs: GameState, team_id: str, player_id: str, weeks: int = 48
+    gs: GameState, team_id: str, player_id: str, weeks: int = 48,
+    salary: int | None = None,
 ) -> tuple[bool, str]:
+    """`salary` overrides the auto-computed number with a NEGOTIATED one
+    (see open_negotiation / negotiate_offer). AI renewals leave it None —
+    the pre-negotiation formula, unchanged."""
     team = gs.teams[team_id]
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
@@ -150,11 +168,15 @@ def renew_contract(
     # Memory moves the table a nudge: a player whose career was MADE here
     # (debut, milestones, a title run) re-signs a shade under market; one
     # this org once released wants it back in salary. +/-10% at the caps.
+    # (Also warms the re-signing morale bump below, negotiated or not.)
     from esports_sim.manager import memories
 
     loyalty = memories.loyalty_bias(gs, player_id, team_id)
-    new_salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
-    new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
+    if salary is not None:
+        new_salary = max(800, int(salary))
+    else:
+        new_salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
+        new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
     p.salary = new_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     p.morale = min(100.0, p.morale + 5.0 + loyalty * 0.2)
@@ -233,6 +255,7 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
         for pid in list(team.player_ids):
             p = gs.players[pid]
             p.contract_weeks_left = max(0, p.contract_weeks_left - 1)
+            p.tenure_weeks += 1  # the loyalty clock (resets on any move)
             if (
                 not is_ai
                 and 0 < p.contract_weeks_left <= CONTRACT_PRESSURE_WEEKS
@@ -246,7 +269,10 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
                 p.morale = max(0.0, round(p.morale - 2.0, 1))
             if is_ai and 0 < p.contract_weeks_left <= 6:
                 affordable = team.balance > p.salary * 20
-                wants = player_quality(p) >= 52 or len(team.player_ids) <= ROSTER_SIZE
+                # Tenure lowers the quality bar to keep the shirt: a club
+                # legend gets a new deal a journeyman wouldn't.
+                bar = 52.0 - min(8.0, p.tenure_weeks / 26.0 * 2.0)
+                wants = player_quality(p) >= bar or len(team.player_ids) <= ROSTER_SIZE
                 if affordable and wants and rng.random() < 0.6:
                     renew_contract(gs, tid, pid, weeks=int(rng.integers(32, 64)))
             if p.contract_weeks_left == 0:
@@ -334,6 +360,9 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
                 gs.players[pid]
                 for pid in team.player_ids
                 if str(gs.players[pid].playstyle) == str(cand.playstyle)
+                # Churn damping: fresh arrivals get a real look before the
+                # org flips them for the next shiny free agent.
+                and gs.players[pid].tenure_weeks >= NEW_SIGNING_PROTECT_WEEKS
             ]
             if not same:
                 continue
@@ -362,12 +391,14 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
 # Transfers: contracted players moving for a fee
 
 
-def transfer_value(p: Player) -> int:
+def transfer_value(p: Player, ca: float | None = None, pa: float | None = None) -> int:
     """What a contracted player is worth on the market. Youth with a big
     CA->PA gap carries a premium; expiring contracts sell at a discount
-    (why pay full freight for someone who walks in two months?)."""
-    ca = player_quality(p)
-    pa = development.potential_of(p)
+    (why pay full freight for someone who walks in two months?).
+    `ca`/`pa` override the true numbers so a viewer can price a player at
+    their PERCEIVED ability (see perceived_value)."""
+    ca = player_quality(p) if ca is None else ca
+    pa = development.potential_of(p) if pa is None else pa
     # Curve calibrated so a 55-CA squaddie ≈ 95k, a 70-CA starter ≈ 240k,
     # an 85-CA star ≈ 420k before premiums.
     base = 800.0 * max(1.0, ca - 35.0) ** 1.6
@@ -385,9 +416,55 @@ def team_of(gs: GameState, pid: str) -> str | None:
     return next((t.id for t in gs.teams.values() if pid in t.player_ids), None)
 
 
+def _hash01(*parts: object) -> float:
+    """Stable uniform in [0, 1) — draw-free, never Python hash()."""
+    import hashlib
+
+    b = hashlib.blake2b("|".join(str(x) for x in parts).encode(), digest_size=8)
+    return int.from_bytes(b.digest(), "big") / 2**64
+
+
+# How far (in ability points) an org's read of a RIVAL player can sit from
+# the truth. Scouting shrinks it (humans: their scout progress on the
+# owner's club; AI orgs carry the full blur — they run their own flawed
+# models).
+VALUATION_BLUR = 6.0
+
+
+def perceived_quality(gs: GameState, viewer_id: str | None, p: Player) -> float:
+    """How good VIEWER thinks `p` is. Own players are known exactly; anyone
+    else carries a stable per-(viewer, player) bias — two orgs genuinely
+    disagree about the same player, and that disagreement is per-save
+    deterministic (seed + ids), not a dice roll."""
+    q = player_quality(p)
+    if viewer_id is None:
+        return q
+    owner = team_of(gs, p.id)
+    if owner == viewer_id:
+        return q
+    blur = VALUATION_BLUR
+    if gs.is_human(viewer_id) and owner is not None:
+        blur *= 1.0 - gs.scout_progress.get(owner, 0.0)
+    bias = (_hash01(gs.seed, viewer_id, p.id, "val") * 2.0 - 1.0) * blur
+    return q + bias
+
+
+def perceived_value(gs: GameState, viewer_id: str | None, p: Player) -> int:
+    """`transfer_value` through the viewer's eyes: their (possibly wrong)
+    read of both current ability and ceiling. The asymmetry between two
+    orgs' perceived values is what makes a trade a bargain — or a fleecing."""
+    q = player_quality(p)
+    pq = perceived_quality(gs, viewer_id, p)
+    # The same bias colours their read of the ceiling.
+    ppa = max(pq, development.potential_of(p) + (pq - q))
+    return transfer_value(p, ca=pq, pa=ppa)
+
+
 def transfer_ask(gs: GameState, pid: str) -> int:
     """Seller's price: market value, plus a scarcity premium when the
-    player is the seller's best (nobody sells their franchise cheap)."""
+    player is the seller's best (nobody sells their franchise cheap), plus
+    a loyalty premium — a tenured, in-form fixture of the club costs real
+    money to pry away."""
     p = gs.players[pid]
     seller_id = team_of(gs, pid)
     if seller_id is None:
@@ -399,7 +476,244 @@ def transfer_ask(gs: GameState, pid: str) -> int:
         mult = 1.6
     elif len(ranked) > 1 and ranked[1].id == pid:
         mult = 1.25
+    # Loyalty: the club digs in for players who've been part of the
+    # furniture — more so when they're playing well right now.
+    if p.tenure_weeks >= 104:
+        mult *= 1.30
+    elif p.tenure_weeks >= 52:
+        mult *= 1.15
+    if p.form >= 62:
+        mult *= 1.10
     return int(round(transfer_value(p) * mult / 1000) * 1000)
+
+
+# ---------------------------------------------------------------------------
+# Contract negotiation: renewals and free-agent signings are a TABLE, not a
+# button. The player opens with demands, concedes a little per round, runs
+# out of patience after a few, and walks entirely on an insulting number.
+# Deterministic end to end: demands and concessions are pure functions of
+# GameState + stable hashes — no rng at the table.
+
+NEGOTIATION_MAX_ROUNDS = 3  # rejected offers before they walk
+NEGOTIATION_INSULT_RATIO = 0.70  # offer under this share of the ask = walkout
+NEGOTIATION_COOLDOWN_RENEW = 6  # weeks before a walked renewal talks again
+NEGOTIATION_COOLDOWN_SIGN = 4  # ...and a walked free agent
+# How far they move toward your last offer with each counter.
+NEGOTIATION_CONCESSION = 0.35
+
+
+def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
+    """The player's OPENING ask: (salary/wk, contract weeks). Form and
+    confidence inflate it; loyalty (memories) and long tenure soften a
+    renewal; age shapes the term (kids take prove-it deals, veterans want
+    security). A stable per-player-per-season hash adds texture so no two
+    negotiations feel identical."""
+    from esports_sim.manager import memories
+
+    p = gs.players[pid]
+    base = asking_salary(p)
+    mult = 1.0
+    if p.form >= 60:
+        mult += 0.08
+    if p.confidence >= 65:
+        mult += 0.05
+    if kind == "renew":
+        # Renewals anchor on the current deal — nobody re-signs for less
+        # than they're on without a reason.
+        base = max(base, int(p.salary * 1.05))
+        loyalty = memories.loyalty_bias(gs, pid, gs.acting_team_id)
+        mult -= loyalty / 100.0 * 0.8
+        if p.tenure_weeks >= 104:
+            mult -= 0.05  # part of the furniture: friendlier table
+        if p.morale <= 40:
+            mult += 0.10  # unhappy: pay me to stay
+    jitter = (_hash01(gs.seed, pid, gs.season, "negsal") - 0.5) * 0.10
+    salary = max(1_000, int(round(base * (mult + jitter) / 100) * 100))
+    if p.age <= 20:
+        weeks = 40  # prove-it: back at the table sooner
+    elif p.age >= 27:
+        weeks = 64  # security
+    else:
+        weeks = 52
+    weeks += int((_hash01(gs.seed, pid, gs.season, "negwk") - 0.5) * 16)
+    return salary, int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
+
+
+def negotiation_kind(gs: GameState, pid: str) -> tuple[str | None, str]:
+    """What kind of table this manager can open with `pid`: "renew" for
+    their own roster, "sign" for a free agent, None otherwise."""
+    if pid in gs.teams[gs.acting_team_id].player_ids:
+        return "renew", ""
+    if pid in gs.free_agent_ids:
+        return "sign", ""
+    return None, "player is under contract elsewhere — bid or buy out instead"
+
+
+def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
+    """Sit down with a player (or return the live table). Returns
+    (ok, why, Negotiation | None)."""
+    from esports_sim.manager.state import Negotiation
+
+    p = gs.players.get(pid)
+    if p is None:
+        return False, "unknown player", None
+    kind, why = negotiation_kind(gs, pid)
+    if kind is None:
+        return False, why, None
+    if kind == "sign" and gs.phase == "playoffs" and gs.is_human(gs.acting_team_id):
+        return False, "rosters are locked during the playoffs", None
+    until = gs.talks_cooldown.get(pid, 0)
+    if until > gs.week:
+        return False, (
+            f"{p.handle} isn't taking your calls after the last talks "
+            f"collapsed (week {until})"
+        ), None
+    live = gs.negotiations.get(pid)
+    if live is not None and live.kind == kind:
+        return True, "", live
+    salary, weeks = contract_demands(gs, pid, kind)
+    neg = Negotiation(
+        player_id=pid, kind=kind,
+        demand_salary=salary, demand_weeks=weeks,
+    )
+    gs.negotiations[pid] = neg
+    return True, "", neg
+
+
+def negotiate_offer(
+    gs: GameState, pid: str, salary: int, weeks: int
+) -> tuple[str, str, "object"]:
+    """Put an offer on the table. Returns (status, message, negotiation):
+    status is "accepted" | "countered" | "collapsed" | "error".
+    Acceptance weighs salary (mostly) and term fit; each rejection burns
+    patience and softens their ask a little; an insulting number — or
+    running out of rounds — collapses the talks with a cooldown (and a
+    morale knock on a renewal: they know you tried to lowball them)."""
+    neg = gs.negotiations.get(pid)
+    if neg is None:
+        return "error", "no talks are open with this player", None
+    p = gs.players.get(pid)
+    kind, why = negotiation_kind(gs, pid)
+    if p is None or kind != neg.kind:
+        del gs.negotiations[pid]
+        return "error", "the situation changed — talks are off", None
+    salary = max(0, int(salary))
+    weeks = int(np.clip(int(weeks), MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
+    ratio = salary / max(neg.demand_salary, 1)
+    term_gap = abs(weeks - neg.demand_weeks) / max(neg.demand_weeks, 1)
+    # Overpaying can buy term flexibility (capped), and meeting their
+    # number with a term in the same neighbourhood is simply a deal.
+    score = min(ratio, 1.10) - 0.25 * min(term_gap, 0.6)
+    if ratio >= 1.0 and abs(weeks - neg.demand_weeks) <= 8:
+        score = 2.0  # their ask, their term (near enough): done
+
+    def _collapse(msg: str) -> tuple[str, str, "object"]:
+        del gs.negotiations[pid]
+        cooldown = (
+            NEGOTIATION_COOLDOWN_RENEW if neg.kind == "renew"
+            else NEGOTIATION_COOLDOWN_SIGN
+        )
+        gs.talks_cooldown[pid] = gs.week + cooldown
+        if neg.kind == "renew":
+            p.morale = round(max(0.0, p.morale - 5.0), 1)
+        return "collapsed", msg, None
+
+    if ratio < NEGOTIATION_INSULT_RATIO:
+        return _collapse(
+            f"{p.handle}'s agent hangs up — that number was an insult. "
+            "They won't talk to you for a while."
+        )
+    threshold = 0.97 - 0.02 * neg.rounds  # they wear down a little
+    if score >= threshold:
+        # Deal. Settle it through the normal channels with the NEGOTIATED
+        # terms; the affordability rules still apply.
+        if neg.kind == "renew":
+            ok, msg = renew_contract(
+                gs, gs.acting_team_id, pid, weeks=weeks, salary=salary
+            )
+        else:
+            ok, msg = sign_player(
+                gs, gs.acting_team_id, pid, weeks=weeks, salary=salary
+            )
+        if not ok:
+            return "error", msg, neg  # e.g. can't afford it: table stays open
+        del gs.negotiations[pid]
+        gs.talks_cooldown.pop(pid, None)
+        return "accepted", msg, None
+    neg.rounds += 1
+    if neg.rounds >= NEGOTIATION_MAX_ROUNDS:
+        return _collapse(
+            f"{p.handle} is done negotiating — three offers, no deal. "
+            "They walk away from the table."
+        )
+    # Counter: concede toward the offer, never below it.
+    neg.demand_salary = max(
+        salary,
+        int(round(
+            (neg.demand_salary - (neg.demand_salary - salary) * NEGOTIATION_CONCESSION)
+            / 100
+        ) * 100),
+    )
+    neg.demand_weeks = int(np.clip(
+        round(neg.demand_weeks + (weeks - neg.demand_weeks) * 0.3),
+        MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS,
+    ))
+    left = NEGOTIATION_MAX_ROUNDS - neg.rounds
+    return "countered", (
+        f"{p.handle} counters: {neg.demand_salary:,}/wk on "
+        f"{neg.demand_weeks} weeks ({left} more offer{'s' if left != 1 else ''} "
+        "before they walk)."
+    ), neg
+
+
+def cancel_negotiation(gs: GameState, pid: str) -> None:
+    """Walk away yourself — no cooldown, no hard feelings (you can reopen)."""
+    gs.negotiations.pop(pid, None)
+
+
+# ---------------------------------------------------------------------------
+# Tier-2 buyout clauses: the promotion pipeline's fast lane
+
+
+def buyout_fee(gs: GameState, pid: str) -> int | None:
+    """Tier-2 contracts carry a buyout clause — negotiated between the org
+    and the player at signing (modelled as a stable per-player multiplier on
+    current market value, 1.5x-2.5x). A tier-1 org pays it and the player
+    goes; no transfer negotiation, no refusing. None when the player's club
+    is tier 1 (top-flight contracts have no clause — that's what packages
+    and bids are for) or when they're a free agent."""
+    owner = team_of(gs, pid)
+    if owner is None or gs.teams[owner].tier != 2:
+        return None
+    p = gs.players[pid]
+    mult = 1.5 + _hash01(pid, "buyout") * 1.0
+    return max(15_000, int(round(transfer_value(p) * mult / 1000) * 1000))
+
+
+def buy_out_player(gs: GameState, buyer_id: str, pid: str) -> tuple[bool, str]:
+    """A tier-1 org triggers a tier-2 player's buyout clause: pay the fee,
+    the player moves this week. The selling org has no say — the clause was
+    the price of signing the player to a tier-2 deal in the first place."""
+    if gs.phase == "playoffs" and gs.is_human(buyer_id):
+        return False, "rosters are locked during the playoffs"
+    if gs.teams[buyer_id].tier != 1:
+        return False, "only a tier-1 org can trigger a buyout clause"
+    fee = buyout_fee(gs, pid)
+    if fee is None:
+        return False, "no buyout clause — negotiate a transfer instead"
+    p = gs.players[pid]
+    buyer = gs.teams[buyer_id]
+    if buyer.balance < fee + asking_salary(p) * 8:
+        return False, f"need {fee + asking_salary(p) * 8:,} cr to cover clause + wages"
+    seller = gs.teams[team_of(gs, pid)]
+    ok, msg = execute_transfer(gs, pid, buyer_id, fee)
+    if not ok:
+        return False, msg
+    gs.push_news(
+        f"{buyer.name} trigger {p.handle}'s buyout clause at {seller.name} "
+        f"({fee:,} cr) — the clause leaves no room to argue."
+    )
+    return True, f"bought out {p.handle} for {fee:,} cr"
 
 
 def execute_transfer(
@@ -414,12 +728,24 @@ def execute_transfer(
     p = gs.players[pid]
     if buyer.balance < fee:
         return False, "buyer cannot afford the fee"
-    if len(buyer.player_ids) >= roster_cap(gs, buyer_id):
-        if gs.is_human(buyer_id):
+    if gs.is_human(buyer_id):
+        if len(buyer.player_ids) >= roster_cap(gs, buyer_id):
             cap = roster_cap(gs, buyer_id)
             return False, f"roster is full ({cap}); release someone first"
+    elif len(buyer.player_ids) >= ROSTER_SIZE:
+        # An AI BUYER stays lean at the field size: it sheds its weakest to
+        # make room, so AI-window trades never grow AI rosters (their bench
+        # headroom up to roster_cap only ever fills via human-offered
+        # packages — see roster_cap). Fresh arrivals are protected — the
+        # org won't flip a player it just signed/bought (falls back to the
+        # overall weakest only if the WHOLE roster is new).
+        settled = [
+            gs.players[q] for q in buyer.player_ids
+            if gs.players[q].tenure_weeks >= NEW_SIGNING_PROTECT_WEEKS
+        ]
         weakest = min(
-            (gs.players[q] for q in buyer.player_ids), key=player_quality
+            settled or (gs.players[q] for q in buyer.player_ids),
+            key=player_quality,
         )
         buyer.player_ids.remove(weakest.id)
         weakest.contract_weeks_left = 0
@@ -438,6 +764,7 @@ def execute_transfer(
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     p.morale = round(min(100.0, p.morale + 6.0), 1)
+    p.tenure_weeks = 0
     gs.push_news(
         f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} "
         f"for {fee:,} cr."
@@ -457,12 +784,21 @@ def execute_transfer(
 
 
 def package_value(
-    gs: GameState, out_pids: list[str], cash_to_seller: int, cash_to_buyer: int = 0
+    gs: GameState,
+    out_pids: list[str],
+    cash_to_seller: int,
+    cash_to_buyer: int = 0,
+    viewer_id: str | None = None,
 ) -> int:
     """Net value the buyer is sending the seller: the market value of the
-    players offered plus cash going out, minus any cash requested back. What an
-    AI seller weighs against its asking price."""
-    players = sum(transfer_value(gs.players[pid]) for pid in out_pids)
+    players offered plus cash going out, minus any cash requested back.
+    With `viewer_id` the players are priced at THAT org's perception
+    (see perceived_value) — an AI seller weighs your package with its own
+    flawed read of your players, so the same offer can be a steal to one
+    club and an insult to another. Cash is cash to everyone."""
+    players = sum(
+        perceived_value(gs, viewer_id, gs.players[pid]) for pid in out_pids
+    )
     return players + cash_to_seller - cash_to_buyer
 
 
@@ -481,6 +817,7 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     p.morale = round(min(100.0, p.morale + 6.0), 1)
+    p.tenure_weeks = 0
 
 
 def execute_package(
@@ -533,6 +870,23 @@ def execute_package(
         f"TRANSFER: {target.handle} joins {buyer.name} from {seller.name} "
         f"for {incoming}{cash_note}."
     )
+    # Chronicle every player who moved — the movement feed and career
+    # profiles read these (the cash path records the same way).
+    chronicle.record(
+        gs, "transfer",
+        f"{target.handle} joins {buyer.name} from {seller.name}.",
+        team_id=buyer_id,
+        player_id=target_pid,
+        data={"from": seller_id, "package": incoming},
+    )
+    for pid in out_pids:
+        chronicle.record(
+            gs, "transfer",
+            f"{gs.players[pid].handle} joins {seller.name} from {buyer.name}.",
+            team_id=seller_id,
+            player_id=pid,
+            data={"from": buyer_id, "package": target.handle},
+        )
     return True, f"{target.handle} joins {buyer.name} ({incoming}{cash_note})"
 
 
@@ -609,14 +963,15 @@ def propose_package(
             f"package offer sent to {seller.name} for "
             f"{gs.players[target_pid].handle}"
         )
-    # AI seller: accept iff the package clears the asking price, and it can fund
-    # any cash-back it's being asked for.
-    value = package_value(gs, out_pids, cash_out, cash_in)
+    # AI seller: accept iff the package clears the asking price BY THEIR OWN
+    # NUMBERS — they price your players at their perception, not yours, so
+    # the rejection note deliberately doesn't say how short you really are.
+    value = package_value(gs, out_pids, cash_out, cash_in, viewer_id=seller_id)
     ask = transfer_ask(gs, target_pid)
     if value < ask:
         return False, (
-            f"{seller.name} reject the package — about {ask - value:,} cr "
-            "short of value"
+            f"{seller.name} reject the package — they don't rate it "
+            "against their asking price"
         )
     if seller.balance < cash_in:
         return False, f"{seller.name} can't fund the cash-back in this deal"
@@ -712,14 +1067,19 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
     if gs.phase != "regular":
         return
     moves = 0
+    # Rosters settle before the wheeling starts: the opening weeks see
+    # almost no AI shopping, and never more than one move league-wide per
+    # week after that (transfers should read as events, not noise).
+    quiet = gs.week <= TRANSFER_QUIET_WEEKS
+    appetite = 0.04 if quiet else 0.12
     buyers = sorted(
         (t for t in gs.teams.values() if t.tier == 1 and not gs.is_human(t.id)),
         key=lambda t: t.id,
     )
     for buyer in buyers:
-        if moves >= 2:
+        if moves >= 1:
             break
-        if rng.random() > 0.15:
+        if rng.random() > appetite:
             continue
         roster = gs.roster(buyer.id)
         if len(roster) < ROSTER_SIZE:
@@ -731,14 +1091,21 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                 continue
             for pid in seller.player_ids:
                 p = gs.players[pid]
-                q = player_quality(p)
+                # The buyer shops on ITS OWN read of the player — an org
+                # that over-rates someone will overpay for them (and one
+                # that under-rates a gem walks right past).
+                q = perceived_quality(gs, buyer.id, p)
                 upgrade = q - weakest_q
                 # Tier-2 targets: buy the future, not just the present.
                 if seller.tier == 2:
                     upgrade += max(0.0, development.potential_of(p) - q) * 0.5
                 if upgrade < 5.0:
                     continue
-                fee = transfer_ask(gs, pid)
+                # Tier-2 contracts settle at the buyout clause — no
+                # negotiation. Tier-1 targets pay the seller's ask.
+                fee = (
+                    buyout_fee(gs, pid) if seller.tier == 2 else None
+                ) or transfer_ask(gs, pid)
                 if buyer.balance < fee + asking_salary(p) * 10:
                     continue
                 key = (upgrade, -fee, pid, seller.id)
@@ -747,6 +1114,20 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
         if best is None:
             continue
         _, fee, pid, seller_id = best
+        # A tier-2 buyout executes against ANY owner (a clause is a clause —
+        # human tier-2 managers lose players to it too, with the news to
+        # show for it); only tier-1 bids land on a human seller's desk.
+        if gs.teams[seller_id].tier == 2:
+            buyer_name = buyer.name
+            target = gs.players[pid]
+            seller_name = gs.teams[seller_id].name
+            execute_transfer(gs, pid, buyer.id, fee)
+            gs.push_news(
+                f"{buyer_name} trigger {target.handle}'s buyout clause at "
+                f"{seller_name} ({fee:,} cr)."
+            )
+            moves += 1
+            continue
         if gs.is_human(seller_id):
             if any(o.player_id == pid for o in gs.transfer_offers):
                 continue

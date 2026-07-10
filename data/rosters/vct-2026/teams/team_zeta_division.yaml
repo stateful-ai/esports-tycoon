@@ -13,6 +13,12 @@ players:
   handle: Absol
   real_name: Kazuki Fujinoki
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 21
   role: duelist
   playstyle: entry
@@ -32,30 +38,60 @@ players:
     mastery: 78.8
   - agent_id: raze
     mastery: 75.6
+  - agent_id: phoenix
+    mastery: 62.7
+  - agent_id: reyna
+    mastery: 55.0
+  - agent_id: breach
+    mastery: 39.9
+  - agent_id: chamber
+    mastery: 46.6
+  - agent_id: clove
+    mastery: 52.0
+  - agent_id: cypher
+    mastery: 50.4
+  - agent_id: killjoy
+    mastery: 57.3
+  - agent_id: omen
+    mastery: 42.3
+  - agent_id: skye
+    mastery: 47.4
+  - agent_id: sova
+    mastery: 41.7
+  - agent_id: viper
+    mastery: 45.1
   map_pool:
   - map_id: ascent
-    mastery: 80.1
+    mastery: 69.1
   - map_id: bind
-    mastery: 68.5
+    mastery: 79.4
   - map_id: haven
-    mastery: 69.6
+    mastery: 69.1
   - map_id: lotus
-    mastery: 66.3
+    mastery: 73.3
   - map_id: split
-    mastery: 68.2
+    mastery: 76.6
   salary: 5100
-  contract_weeks_left: 60
-  morale: 70.4
-  stamina: 92.1
-  form: 48.6
+  contract_weeks_left: 39
+  morale: 63.3
+  stamina: 80.3
+  form: 54.2
   personality_tags:
-  - flashy
+  - analytical
   - quiet
-  potential: 84.6
+  potential: 81.4
 - id: team_zeta_division_syouta
   handle: SyouTa
   real_name: Shota Aoki
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 95.0
+  - lang: zh
+    level: 60.0
+  - lang: en
+    level: 30.0
   age: 20
   role: flex
   playstyle: support
@@ -75,30 +111,57 @@ players:
     mastery: 83.5
   - agent_id: raze
     mastery: 76.4
+  - agent_id: breach
+    mastery: 33.0
+  - agent_id: chamber
+    mastery: 5.1
+  - agent_id: clove
+    mastery: 41.5
+  - agent_id: cypher
+    mastery: 50.8
+  - agent_id: jett
+    mastery: 49.2
+  - agent_id: killjoy
+    mastery: 50.5
+  - agent_id: omen
+    mastery: 34.1
+  - agent_id: phoenix
+    mastery: 42.0
+  - agent_id: reyna
+    mastery: 45.9
+  - agent_id: skye
+    mastery: 45.9
+  - agent_id: sova
+    mastery: 2.7
   map_pool:
   - map_id: ascent
-    mastery: 66.0
+    mastery: 63.7
   - map_id: bind
-    mastery: 58.5
+    mastery: 68.0
   - map_id: haven
-    mastery: 77.1
+    mastery: 71.9
   - map_id: lotus
-    mastery: 72.4
+    mastery: 77.0
   - map_id: split
-    mastery: 75.2
+    mastery: 91.4
   salary: 4800
-  contract_weeks_left: 61
-  morale: 62.2
-  stamina: 96.2
-  form: 56.2
+  contract_weeks_left: 47
+  morale: 71.2
+  stamina: 99.5
+  form: 52.1
   personality_tags:
-  - analytical
-  - independent
-  potential: 76.5
+  - quiet
+  potential: 74.8
 - id: team_zeta_division_sugarz3ro
   handle: SugarZ3ro
   real_name: Shota Watanabe
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 96.0
+  - lang: en
+    level: 35.0
   age: 24
   role: controller
   playstyle: igl
@@ -118,29 +181,60 @@ players:
     mastery: 74.0
   - agent_id: viper
     mastery: 67.8
+  - agent_id: clove
+    mastery: 58.3
+  - agent_id: breach
+    mastery: 44.7
+  - agent_id: chamber
+    mastery: 46.9
+  - agent_id: cypher
+    mastery: 51.6
+  - agent_id: jett
+    mastery: 46.8
+  - agent_id: killjoy
+    mastery: 38.6
+  - agent_id: phoenix
+    mastery: 55.6
+  - agent_id: raze
+    mastery: 30.1
+  - agent_id: reyna
+    mastery: 41.3
+  - agent_id: skye
+    mastery: 47.7
+  - agent_id: sova
+    mastery: 46.9
   map_pool:
   - map_id: ascent
-    mastery: 75.5
+    mastery: 68.5
   - map_id: bind
-    mastery: 76.1
+    mastery: 67.1
   - map_id: haven
-    mastery: 72.8
+    mastery: 78.8
   - map_id: lotus
-    mastery: 61.7
+    mastery: 72.2
   - map_id: split
-    mastery: 75.4
+    mastery: 70.0
   salary: 4700
-  contract_weeks_left: 59
-  morale: 67.9
-  stamina: 90.7
-  form: 58.8
+  contract_weeks_left: 69
+  morale: 75.0
+  stamina: 99.2
+  form: 49.6
   personality_tags:
-  - fan_favorite
-  potential: 66.9
+  - perfectionist
+  - quiet
+  potential: 69.1
 - id: team_zeta_division_eko
   handle: eKo
   real_name: Yeom Wang-ryong
   region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 96.0
+  - lang: ja
+    level: 55.0
+  - lang: en
+    level: 25.0
   age: 23
   role: flex
   playstyle: entry
@@ -162,30 +256,55 @@ players:
     mastery: 76.5
   - agent_id: phoenix
     mastery: 67.6
+  - agent_id: breach
+    mastery: 38.2
+  - agent_id: chamber
+    mastery: 42.6
+  - agent_id: clove
+    mastery: 33.9
+  - agent_id: cypher
+    mastery: 47.1
+  - agent_id: killjoy
+    mastery: 39.5
+  - agent_id: omen
+    mastery: 46.0
+  - agent_id: raze
+    mastery: 43.5
+  - agent_id: reyna
+    mastery: 48.5
+  - agent_id: sova
+    mastery: 37.4
+  - agent_id: viper
+    mastery: 38.2
   map_pool:
   - map_id: ascent
-    mastery: 72.7
+    mastery: 73.8
   - map_id: bind
-    mastery: 65.5
+    mastery: 66.4
   - map_id: haven
-    mastery: 75.1
+    mastery: 67.8
   - map_id: lotus
-    mastery: 70.7
+    mastery: 63.0
   - map_id: split
-    mastery: 74.4
+    mastery: 70.9
   salary: 4400
-  contract_weeks_left: 38
-  morale: 66.9
-  stamina: 92.3
-  form: 54.7
+  contract_weeks_left: 72
+  morale: 77.3
+  stamina: 97.5
+  form: 59.7
   personality_tags:
-  - perfectionist
-  - team_player
-  potential: 67.3
+  - independent
+  potential: 63.9
 - id: team_zeta_division_xdll
   handle: Xdll
   real_name: Yuto Mizomori
   region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 20.0
   age: 21
   role: initiator
   playstyle: support
@@ -205,22 +324,45 @@ players:
     mastery: 79.4
   - agent_id: breach
     mastery: 65.5
+  - agent_id: sova
+    mastery: 53.2
+  - agent_id: chamber
+    mastery: 44.1
+  - agent_id: clove
+    mastery: 32.4
+  - agent_id: cypher
+    mastery: 4.8
+  - agent_id: jett
+    mastery: 37.5
+  - agent_id: killjoy
+    mastery: 44.7
+  - agent_id: omen
+    mastery: 41.3
+  - agent_id: phoenix
+    mastery: 40.5
+  - agent_id: raze
+    mastery: 28.5
+  - agent_id: reyna
+    mastery: 31.4
+  - agent_id: viper
+    mastery: 39.5
   map_pool:
   - map_id: ascent
-    mastery: 69.4
+    mastery: 70.7
   - map_id: bind
-    mastery: 63.9
+    mastery: 71.5
   - map_id: haven
-    mastery: 72.7
+    mastery: 65.2
   - map_id: lotus
-    mastery: 86.9
+    mastery: 79.2
   - map_id: split
-    mastery: 58.6
+    mastery: 70.8
   salary: 4300
-  contract_weeks_left: 59
-  morale: 82.3
-  stamina: 86.2
-  form: 51.4
+  contract_weeks_left: 60
+  morale: 62.6
+  stamina: 97.3
+  form: 45.2
   personality_tags:
+  - flashy
   - grinder
-  potential: 77.8
+  potential: 64.6

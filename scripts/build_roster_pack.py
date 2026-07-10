@@ -133,6 +133,30 @@ def _expand_player(
         }
         for i, a in enumerate(picks)
     ]
+    # Baseline the rest of the cast (mirrors gen.py): same-role agents are
+    # at least okay, off-role playable-but-weak, with a rare off-role gap.
+    same_role = sorted(
+        a.id for a in gd.agents.values() if a.role == role and a.id not in picks
+    )
+    off_role = sorted(
+        a.id for a in gd.agents.values() if a.role != role and a.id not in picks
+    )
+    for aid in same_role:
+        agent_pool.append({
+            "agent_id": aid,
+            "mastery": round(_clamp(quality - 8 + rng.normal(0, 4), 35, 80), 1),
+        })
+    for aid in off_role:
+        if rng.random() < 0.06:  # never touched the agent — the rare gap
+            agent_pool.append({
+                "agent_id": aid,
+                "mastery": round(float(rng.uniform(0, 8)), 1),
+            })
+        else:
+            agent_pool.append({
+                "agent_id": aid,
+                "mastery": round(_clamp(quality - 20 + rng.normal(0, 5), 12, 60), 1),
+            })
     map_pool = [
         {
             "map_id": mid,
@@ -150,11 +174,21 @@ def _expand_player(
         tags.add("rookie")
 
     salary = max(int(np.round((quality ** 1.6) * 6 / 100) * 100), 1200)
+    # Optional authored identity: `country: BR` and
+    # `languages: [{lang: pt, level: 95}, {lang: en, level: 60}]` on the
+    # src sheet. Absent -> left empty here; the campaign's identity heal
+    # derives a region-plausible one deterministically at load.
+    languages = [
+        {"lang": str(l["lang"]), "level": float(l.get("level", 80))}
+        for l in spec.get("languages", [])
+    ][:3]
     player = {
         "id": pid,
         "handle": handle,
         "real_name": _require_ascii(str(spec.get("real_name", "")), pid),
         "region": region,
+        "country": _require_ascii(str(spec.get("country", "")), pid),
+        "languages": languages,
         "age": age,
         "role": str(role),
         "playstyle": str(playstyle),
@@ -196,7 +230,10 @@ def build(pack_id: str) -> None:
     pack_dir = REPO / "data" / "rosters" / pack_id
     src_dir = pack_dir / "src"
     out_dir = pack_dir / "teams"
-    specs = sorted(src_dir.glob("*.yaml"))
+    # free_agents.yaml is the FA spec, not a region sheet — handled below.
+    specs = sorted(
+        f for f in src_dir.glob("*.yaml") if f.name != "free_agents.yaml"
+    )
     if not specs:
         raise SystemExit(f"no spec files under {src_dir}")
 
@@ -292,6 +329,30 @@ def build(pack_id: str) -> None:
             counts[region] = counts.get(region, 0) + 1
             n_players += len(players)
 
+    # Optional real free agents: src/free_agents.yaml carries unrostered
+    # players (each entry is the same compact spec plus a `region:`), which
+    # expand exactly like rostered players and seed the campaign FA pool.
+    fa_src = src_dir / "free_agents.yaml"
+    n_fas = 0
+    if fa_src.is_file():
+        raw_fas = yaml.safe_load(fa_src.read_text(encoding="utf-8")) or {}
+        out_fas = []
+        seen_fa: set[str] = set()
+        for spec in raw_fas.get("free_agents", []):
+            region = str(Region(spec["region"]))
+            pid = "fa_" + _slug(str(spec["handle"]))
+            if pid in seen_fa:
+                raise SystemExit(f"duplicate free-agent handle {spec['handle']!r}")
+            seen_fa.add(pid)
+            player = _expand_player(pack_id, pid, spec, region, gd, "fa")
+            player["contract_weeks_left"] = 0  # signable from day one
+            out_fas.append(player)
+            n_fas += 1
+        (pack_dir / "free_agents.yaml").write_text(
+            yaml.safe_dump({"free_agents": out_fas}, sort_keys=False, width=88),
+            encoding="ascii",
+        )
+
     # Floor 4: the regional playoff bracket needs four qualifiers.
     teams_per_region = max(4, max(tier1_counts.values()))
     if len(set(tier1_counts.values())) > 1:
@@ -317,7 +378,8 @@ def build(pack_id: str) -> None:
     print(
         f"pack {pack_id}: {sum(tier1_counts.values())} tier-1 + "
         f"{sum(tier2_counts.values())} tier-2 teams, {n_players} players, "
-        f"regions {regions}, teams_per_region {teams_per_region}"
+        f"{n_fas} free agents, regions {regions}, "
+        f"teams_per_region {teams_per_region}"
     )
 
 

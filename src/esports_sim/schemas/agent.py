@@ -42,3 +42,8 @@ class Agent(BaseModel):
     role: Role
     abilities: list[Ability] = Field(default_factory=list)
     description: str = ""
+    # This agent's kit is built around operator play (Jett's disengage
+    # dash, Chamber's TP): op duels on them get a small engine bonus
+    # (C.OPERATOR_AGENT_AFFINITY) — you can op on anyone, but only these
+    # kits buff it.
+    op_affinity: bool = False

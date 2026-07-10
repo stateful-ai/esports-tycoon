@@ -13,6 +13,12 @@ players:
   handle: Jemkin
   real_name: Maksim Batorov
   region: pacific
+  country: RU
+  languages:
+  - lang: ru
+    level: 96.0
+  - lang: en
+    level: 60.0
   age: 24
   role: duelist
   playstyle: awper
@@ -32,30 +38,58 @@ players:
     mastery: 91.8
   - agent_id: raze
     mastery: 80.8
+  - agent_id: jett
+    mastery: 73.1
+  - agent_id: phoenix
+    mastery: 63.1
+  - agent_id: reyna
+    mastery: 66.9
+  - agent_id: breach
+    mastery: 59.7
+  - agent_id: clove
+    mastery: 48.3
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 53.7
+  - agent_id: omen
+    mastery: 59.0
+  - agent_id: skye
+    mastery: 59.3
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 52.3
   map_pool:
   - map_id: ascent
-    mastery: 91.7
+    mastery: 79.7
   - map_id: bind
-    mastery: 76.7
+    mastery: 86.4
   - map_id: haven
-    mastery: 82.3
+    mastery: 89.1
   - map_id: lotus
-    mastery: 73.0
+    mastery: 91.3
   - map_id: split
-    mastery: 88.5
+    mastery: 93.7
   salary: 6100
-  contract_weeks_left: 59
-  morale: 78.8
-  stamina: 91.7
-  form: 54.3
+  contract_weeks_left: 44
+  morale: 68.0
+  stamina: 93.9
+  form: 59.7
   personality_tags:
-  - clutch_gene
-  - flashy
-  potential: 78.4
+  - analytical
+  - fan_favorite
+  potential: 79.0
 - id: team_rex_regum_qeon_xffero
   handle: xffero
   real_name: David Sean Michael Monangin
   region: pacific
+  country: ID
+  languages:
+  - lang: id
+    level: 96.0
+  - lang: en
+    level: 70.0
   age: 20
   role: sentinel
   playstyle: anchor
@@ -75,29 +109,58 @@ players:
     mastery: 82.8
   - agent_id: cypher
     mastery: 84.1
+  - agent_id: chamber
+    mastery: 71.4
+  - agent_id: killjoy
+    mastery: 67.7
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 53.9
+  - agent_id: jett
+    mastery: 44.8
+  - agent_id: omen
+    mastery: 45.1
+  - agent_id: phoenix
+    mastery: 44.9
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 43.3
+  - agent_id: skye
+    mastery: 54.3
+  - agent_id: sova
+    mastery: 48.7
   map_pool:
   - map_id: ascent
-    mastery: 90.7
+    mastery: 75.7
   - map_id: bind
-    mastery: 85.0
+    mastery: 74.8
   - map_id: haven
-    mastery: 80.5
+    mastery: 87.4
   - map_id: lotus
-    mastery: 93.0
+    mastery: 77.4
   - map_id: split
-    mastery: 91.9
+    mastery: 82.4
   salary: 5700
-  contract_weeks_left: 65
-  morale: 81.4
-  stamina: 92.5
-  form: 57.9
+  contract_weeks_left: 32
+  morale: 63.2
+  stamina: 85.7
+  form: 53.1
   personality_tags:
-  - slow_starter
-  potential: 79.5
+  - fan_favorite
+  - quiet
+  potential: 82.7
 - id: team_rex_regum_qeon_kushy
   handle: Kushy
   real_name: Bryan Carlos Setiawan
   region: pacific
+  country: ID
+  languages:
+  - lang: id
+    level: 96.0
+  - lang: en
+    level: 60.0
   age: 22
   role: initiator
   playstyle: support
@@ -117,30 +180,58 @@ players:
     mastery: 77.2
   - agent_id: skye
     mastery: 83.8
+  - agent_id: breach
+    mastery: 61.3
+  - agent_id: chamber
+    mastery: 46.2
+  - agent_id: clove
+    mastery: 46.4
+  - agent_id: cypher
+    mastery: 45.8
+  - agent_id: jett
+    mastery: 4.7
+  - agent_id: killjoy
+    mastery: 0.4
+  - agent_id: omen
+    mastery: 57.5
+  - agent_id: phoenix
+    mastery: 4.6
+  - agent_id: raze
+    mastery: 45.0
+  - agent_id: reyna
+    mastery: 31.9
+  - agent_id: viper
+    mastery: 45.1
   map_pool:
   - map_id: ascent
-    mastery: 78.0
+    mastery: 82.6
   - map_id: bind
-    mastery: 73.6
+    mastery: 65.6
   - map_id: haven
-    mastery: 73.8
+    mastery: 70.7
   - map_id: lotus
-    mastery: 80.9
+    mastery: 72.1
   - map_id: split
-    mastery: 74.1
+    mastery: 64.4
   salary: 5100
-  contract_weeks_left: 38
-  morale: 60.2
-  stamina: 91.7
-  form: 45.4
+  contract_weeks_left: 43
+  morale: 64.0
+  stamina: 93.0
+  form: 47.4
   personality_tags:
-  - hot_head
   - independent
-  potential: 77.4
+  - perfectionist
+  potential: 82.4
 - id: team_rex_regum_qeon_crazyguy
   handle: crazyguy
   real_name: Ngo Cong Anh
   region: pacific
+  country: VN
+  languages:
+  - lang: vi
+    level: 97.0
+  - lang: en
+    level: 60.0
   age: 27
   role: controller
   playstyle: igl
@@ -160,30 +251,60 @@ players:
     mastery: 84.7
   - agent_id: breach
     mastery: 70.1
+  - agent_id: clove
+    mastery: 65.0
+  - agent_id: viper
+    mastery: 65.9
+  - agent_id: chamber
+    mastery: 0.6
+  - agent_id: cypher
+    mastery: 42.2
+  - agent_id: jett
+    mastery: 47.7
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 53.7
+  - agent_id: raze
+    mastery: 47.3
+  - agent_id: reyna
+    mastery: 50.7
+  - agent_id: skye
+    mastery: 44.1
+  - agent_id: sova
+    mastery: 43.3
   map_pool:
   - map_id: ascent
-    mastery: 84.0
+    mastery: 78.3
   - map_id: bind
-    mastery: 85.4
+    mastery: 77.5
   - map_id: haven
-    mastery: 73.4
-  - map_id: lotus
-    mastery: 81.1
-  - map_id: split
     mastery: 75.0
+  - map_id: lotus
+    mastery: 71.6
+  - map_id: split
+    mastery: 74.7
   salary: 5000
-  contract_weeks_left: 35
-  morale: 60.3
+  contract_weeks_left: 71
+  morale: 73.5
   stamina: 96.2
-  form: 55.9
+  form: 50.8
   personality_tags:
-  - analytical
-  - slow_starter
-  potential: 72.1
+  - grinder
+  - team_player
+  potential: 73.8
 - id: team_rex_regum_qeon_xan
   handle: xan
   real_name: Xan Ng
   region: pacific
+  country: MY
+  languages:
+  - lang: en
+    level: 80.0
+  - lang: zh
+    level: 65.0
+  - lang: ms
+    level: 55.0
   age: 19
   role: flex
   playstyle: support
@@ -203,23 +324,45 @@ players:
     mastery: 79.0
   - agent_id: jett
     mastery: 70.2
+  - agent_id: breach
+    mastery: 47.0
+  - agent_id: chamber
+    mastery: 45.4
+  - agent_id: clove
+    mastery: 41.5
+  - agent_id: cypher
+    mastery: 37.3
+  - agent_id: killjoy
+    mastery: 49.7
+  - agent_id: phoenix
+    mastery: 33.8
+  - agent_id: raze
+    mastery: 40.5
+  - agent_id: reyna
+    mastery: 45.9
+  - agent_id: skye
+    mastery: 36.0
+  - agent_id: sova
+    mastery: 44.6
+  - agent_id: viper
+    mastery: 35.5
   map_pool:
   - map_id: ascent
-    mastery: 63.7
+    mastery: 71.7
   - map_id: bind
-    mastery: 75.8
+    mastery: 83.0
   - map_id: haven
-    mastery: 68.0
+    mastery: 69.9
   - map_id: lotus
-    mastery: 73.9
+    mastery: 67.0
   - map_id: split
-    mastery: 70.8
+    mastery: 70.5
   salary: 4500
-  contract_weeks_left: 69
-  morale: 72.1
-  stamina: 99.6
-  form: 57.9
+  contract_weeks_left: 39
+  morale: 77.4
+  stamina: 81.4
+  form: 53.6
   personality_tags:
-  - independent
-  - slow_starter
-  potential: 80.0
+  - hot_head
+  - perfectionist
+  potential: 78.0

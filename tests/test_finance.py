@@ -32,6 +32,69 @@ def test_slot_signable_gates_on_active_deal(campaign: GameState) -> None:
     assert sponsors._slot_signable(campaign, "jersey")  # renewal window
 
 
+def test_occupied_slot_draws_no_new_offers(campaign: GameState) -> None:
+    """A slot with an active deal attracts no suitors until the renewal
+    window (<= 4 weeks left); signing clears the slot's whole market."""
+    gs = campaign
+    gs.teams[gs.user_team_id].reputation = 90.0
+    gs.sponsor_slots["jersey"] = SponsorDeal(
+        name="Testcorp", kind="steady", weekly=5_000, weeks_left=20,
+    )
+    rng = RngTree(2).derive("occupied")
+    for _ in range(80):
+        sponsors.maybe_offer(gs, rng)
+    assert not gs.sponsor_market.get("jersey"), (
+        "an occupied slot must draw no offers outside the renewal window"
+    )
+    # In the renewal window the suitors return.
+    gs.sponsor_slots["jersey"].weeks_left = 3
+    for _ in range(80):
+        sponsors.maybe_offer(gs, rng)
+    assert gs.sponsor_market.get("jersey"), "renewal window re-opens the market"
+
+
+# ---------------------------------------------------------------------------
+# Tournament prize ladder
+
+
+def test_prize_ladder_is_monotonic() -> None:
+    """Within every bracket higher places pay more, and each tier of
+    tournament out-pays the one below — winning tournaments is the
+    economic engine."""
+    from esports_sim.manager import state as st
+
+    # Within brackets: champion > final loser > semi loser > qf loser.
+    assert (
+        st.PRIZE_REGIONAL_CHAMPION > st.PRIZE_REGIONAL_FINAL_LOSER
+        > st.PRIZE_REGIONAL_SEMI_LOSER > 0
+    )
+    assert (
+        st.PRIZE_CHAMPION > st.PRIZE_FINAL_LOSER > st.PRIZE_SEMI_LOSER
+        > st.PRIZE_MASTERS_QF_LOSER > 0
+    )
+    assert (
+        st.PRIZE_CHAMPIONS_WINNER > st.PRIZE_CHAMPIONS_RUNNER_UP
+        > st.PRIZE_CHAMPIONS_SF_LOSER > st.PRIZE_CHAMPIONS_QF_LOSER > 0
+    )
+    # Across tiers: Champions > Masters > regional title.
+    assert st.PRIZE_CHAMPIONS_WINNER > st.PRIZE_CHAMPION > st.PRIZE_REGIONAL_CHAMPION
+
+
+def test_masters_prizes_pay_full_bracket(campaign: GameState) -> None:
+    gs = campaign
+    tids = sorted(gs.teams)[:6]
+    before = {t: gs.teams[t].balance for t in tids}
+    economy.pay_playoff_prizes(
+        gs, tids[0], tids[1], [tids[2], tids[3]], [tids[4], tids[5]]
+    )
+    from esports_sim.manager import state as st
+
+    assert gs.teams[tids[0]].balance - before[tids[0]] == st.PRIZE_CHAMPION
+    assert gs.teams[tids[1]].balance - before[tids[1]] == st.PRIZE_FINAL_LOSER
+    assert gs.teams[tids[2]].balance - before[tids[2]] == st.PRIZE_SEMI_LOSER
+    assert gs.teams[tids[4]].balance - before[tids[4]] == st.PRIZE_MASTERS_QF_LOSER
+
+
 def test_market_respects_per_slot_cap(campaign: GameState) -> None:
     campaign.teams[campaign.user_team_id].reputation = 90.0
     rng = RngTree(1).derive("force-a-roll")
