@@ -13,6 +13,8 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from esports_sim.manager import (
+    career,
+    chronicle,
     development,
     economy,
     inbox,
@@ -128,10 +130,18 @@ def new_campaign(
     seed: int,
     user_team_id: str = "team_nexus",
     pack: "RosterPack | None" = None,
+    mode: str = "sandbox",
+    manager_name: str = "",
+    career_offer=None,
 ) -> GameState:
     """Build season 1. With a roster pack, the pack's teams/players replace
     the fictional starters and its world block sets the league shape;
-    generation only fills any shortfall, so a partial pack still plays."""
+    generation only fills any shortfall, so a partial pack still plays.
+
+    `mode` picks the game: "sandbox" (classic — no contracts, never
+    fired) or "legacy" (career offers, board goals, dismissal;
+    manager/career.py). `career_offer` carries the accepted CareerOffer
+    in legacy mode so the seat's contract matches what the lobby showed."""
     rng = RngTree(seed).derive("campaign", "gen")
 
     if pack is not None:
@@ -176,6 +186,7 @@ def new_campaign(
     gs = GameState(
         seed=seed,
         user_team_id=user_team_id,
+        game_mode=mode,
         league_regions=regions,
         teams_per_region=teams_per_region,
         tier2_per_region=tier2_per_region,
@@ -187,6 +198,7 @@ def new_campaign(
         standings={tid: TeamRecord() for tid in teams},
         training_focus={tid: "tactical" for tid in teams},
     )
+    career.create_seat(gs, user_team_id, manager_name, offer=career_offer)
     gs.push_news(
         f"Season 1 begins — {len(regions)} regional leagues of "
         f"{teams_per_region}, {regular_season_weeks(teams_per_region)} weeks "
@@ -362,6 +374,10 @@ def advance_week(
             _aggregate_stats(gs, f, stats, week_kills, dressed, week_perf)
             _apply_match_development(gs, stats)
 
+    # First professional appearances (pending rookies only) go into the
+    # chronicle while the week's dressed sets are still in hand.
+    chronicle.record_debuts(gs, week_dressed)
+
     # Per-map lineups are single-use: drop the entries for fixtures just played
     # so `map_lineups` can't grow unbounded across a season.
     _played_ids = {f.id for f in week_fixtures}
@@ -524,6 +540,13 @@ def advance_week(
                     f"{champ2.name} win the {str(region).upper()} Challengers "
                     f"season — {best.handle} the standout."
                 )
+                chronicle.record(
+                    gs, "challengers_title",
+                    f"{champ2.name} win the {str(region).upper()} "
+                    f"Challengers season.",
+                    team_id=champ2.id,
+                    data={"title": f"S{gs.season} {str(region).upper()} Challengers"},
+                )
         # Regional playoffs, one bracket per league.
         for region in gs.league_regions:
             order = gs.standings_order(str(region))
@@ -567,6 +590,16 @@ def advance_week(
                 champs.append(rf.winner_id)
                 runners.append(
                     rf.team_b if rf.winner_id == rf.team_a else rf.team_a
+                )
+                chronicle.record(
+                    gs, "regional_title",
+                    f"{gs.teams[rf.winner_id].name} win the "
+                    f"{str(region).upper()} title.",
+                    team_id=rf.winner_id,
+                    data={
+                        "title": f"S{gs.season} {str(region).upper()}",
+                        "runner_up": runners[-1],
+                    },
                 )
 
             def rec_key(tid: str) -> tuple:
@@ -667,6 +700,15 @@ def advance_week(
             pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
             staff.record_title(gs, mf.winner_id, f"S{gs.season} Masters")
             gs.push_news(f"{gs.teams[mf.winner_id].name} win MASTERS.")
+            chronicle.record(
+                gs, "masters_title",
+                f"{gs.teams[mf.winner_id].name} win Masters.",
+                team_id=mf.winner_id,
+                data={
+                    "title": f"S{gs.season} Masters",
+                    "runner_up": runner_up,
+                },
+            )
 
             def rec_key(tid: str) -> tuple:
                 r = gs.standings[tid]
@@ -780,6 +822,15 @@ def advance_week(
             gs.push_news(
                 f"{champ.name} win CHAMPIONS — Season {gs.season} world champions!"
             )
+            chronicle.record(
+                gs, "champions_title",
+                f"{champ.name} win Champions.",
+                team_id=champ.id,
+                data={
+                    "title": f"S{gs.season} Champions",
+                    "runner_up": cf_runner,
+                },
+            )
             gs.phase = "offseason"
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
@@ -818,6 +869,13 @@ def advance_week(
         mental_events=mental_events,
     )
 
+    # 6c'. Development milestones: band crossings read AFTER training, dev
+    # events, and mental momentum have all landed (a heater-driven crossing
+    # found before heater growth would be permanently lost). Chronicle
+    # entries record inside; the private news line feeds the owner's inbox.
+    for owner_tid, msg in chronicle.weekly_milestones(gs):
+        gs.push_private_news(msg, owner=owner_tid)
+
     # 6d. History snapshots (before the week counter rolls): a performance
     # point for everyone who played, a development point for human rosters.
     for pid in sorted(week_perf):
@@ -855,6 +913,12 @@ def advance_week(
             )
             del dh[:-80]
 
+    # 6e. Legacy mode: board patience drifts with streaks; a manager deep
+    # under the floor is sacked mid-season. The news lands BEFORE the
+    # inbox generates; the unseat itself is applied AFTER (below), so the
+    # fired manager still receives their own bad news.
+    sacked = career.weekly_patience(gs)
+
     # 7. Inbox: aggregate the week's outcomes into each human manager's feed.
     # Runs last so it can read every subsystem's artifacts (news included),
     # and before the week label moves on so this-week news is still labelled.
@@ -862,6 +926,14 @@ def advance_week(
         gs.set_acting(tid)
         inbox.generate_inbox(gs, report)
     gs.set_acting(None)
+
+    if sacked:
+        career.apply_dismissals(gs, sacked)
+        for mid in sacked:
+            old = gs.managers[mid].last_team_id
+            gs.inboxes.setdefault(old, []).append(
+                career.dismissal_inbox_item(gs, mid, gs.season, gs.week)
+            )
 
     gs.week += 1
     return report
@@ -1391,6 +1463,21 @@ def _process_retirements(gs: GameState, rng) -> int:
                 peak_note=f"retired at {ca:.0f} CA",
             )
         )
+        # Career titles/awards make a retirement land harder in history.
+        n_honours = sum(
+            1
+            for e in gs.chronicle
+            if e.player_id == pid and e.kind == "award"
+        )
+        chronicle.record(
+            gs, "retirement",
+            f"{p.handle} retires at {p.age}"
+            + (f" ({team.name})." if team else "."),
+            team_id=team.id if team else "",
+            player_id=pid,
+            importance=min(75.0, 40.0 + 10.0 * n_honours),
+            data={"age": str(p.age), "ca": f"{ca:.0f}"},
+        )
         if ca >= 62 or p.age >= 31:
             notable.append(f"{p.handle} ({p.age})")
         del gs.players[pid]
@@ -1429,6 +1516,7 @@ def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
             p.personality_tags = sorted({*p.personality_tags, "rookie"})
             gs.players[pid] = p
             gs.free_agent_ids.append(pid)
+            chronicle.mark_debut_pending(gs, pid)
             if development.potential_of(p) >= 78:
                 headliners.append(f"{p.handle} ({str(region)[:2].upper()})")
     if headliners:
@@ -1531,6 +1619,24 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # Awards first — they read the season aggregates being retired.
     for a in narrative.season_awards(gs):
         report.notes.append(f"{a.award}: {a.handle} ({a.team_name}) — {a.value}")
+        winner_tid = next(
+            (t.id for t in gs.teams.values() if a.player_id in t.player_ids),
+            "",
+        )
+        chronicle.record(
+            gs, "award",
+            f"{a.handle} wins {a.award} ({a.value}).",
+            team_id=winner_tid,
+            player_id=a.player_id,
+            importance=75.0 if "MVP" in a.award else 60.0,
+            data={"award": a.award},
+        )
+
+    # Legacy mode: the board reviews the season goal while the season's
+    # brackets and Masters seeds are still in state (they clear below).
+    # Dismissals are only PARKED here — the unseat applies after the
+    # inboxes generate at the end of this tick.
+    board_dismissed = career.review_boards(gs)
 
     # The big offseason balance patch — rolled BEFORE the per-agent splits
     # reset below (patch content reads this season's pick rates).
@@ -1616,4 +1722,14 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         gs.set_acting(tid)
         inbox.generate_inbox(gs, report)
     gs.set_acting(None)
+    if board_dismissed:
+        career.apply_dismissals(gs, board_dismissed)
+        for mid in board_dismissed:
+            old = gs.managers[mid].last_team_id
+            gs.inboxes.setdefault(old, []).append(
+                career.dismissal_inbox_item(gs, mid, report.season, report.week)
+            )
+        report.notes.append(
+            "The board has made a change - accept a new post to continue."
+        )
     return report

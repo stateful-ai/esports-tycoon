@@ -323,6 +323,14 @@ def _development_items(gs: "GameState", season: int, week: int):
                 _make(season, week, "development", f"retire_seat|{_hash_id(msg)}",
                       "A player on your roster retires", msg, "roster"),
             ))
+        elif "Milestone:" in msg:
+            # A chronicle development milestone on THIS manager's roster
+            # (a player crossed an ability band for the first time).
+            out.append((
+                _P_DEV,
+                _make(season, week, "development", f"milestone|{_hash_id(msg)}",
+                      "Development milestone", msg, "roster"),
+            ))
         elif any(m in msg for m in development.DEV_EVENT_MARKERS):
             # A development event on THIS manager's roster (breakthrough,
             # slump, injury scare, viral clip, ...).

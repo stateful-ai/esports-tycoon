@@ -26,6 +26,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from esports_sim.manager import (
+    career,
     development,
     economy,
     inbox as inbox_mod,
@@ -247,6 +248,8 @@ class Lobby:
         seed: int,
         shared: bool,
         pack_id: str | None = None,
+        game_mode: str = "sandbox",
+        manager_name: str = "",
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
@@ -261,8 +264,26 @@ class Lobby:
                     raise HTTPException(
                         422, f"unknown roster pack '{pack_id}'"
                     ) from None
+            offer = None
+            if game_mode == "legacy":
+                # Re-derive the founding seat's offer slate server-side and
+                # demand the pick comes from it — the lobby showed exactly
+                # this set (same seed, seat 0), so nothing can drift.
+                preview = new_campaign(
+                    self.gd, seed=seed, pack=pack, mode="sandbox"
+                )
+                offers = career.new_game_offers(preview, 0)
+                offer = next(
+                    (o for o in offers if o.team_id == team_id), None
+                )
+                if offer is None:
+                    raise HTTPException(
+                        422, "pick one of the offered clubs to start a career"
+                    )
             gs = new_campaign(
-                self.gd, seed=seed, user_team_id=team_id, pack=pack
+                self.gd, seed=seed, user_team_id=team_id, pack=pack,
+                mode=game_mode, manager_name=manager_name,
+                career_offer=offer,
             )
             if team_id not in gs.teams:
                 raise HTTPException(422, f"unknown team '{team_id}'")
@@ -297,7 +318,23 @@ class Lobby:
             if team_id in gs.human_team_ids and holder not in (None, sid):
                 return None, "another manager already controls that team"
             if team_id not in gs.human_team_ids:
+                offer = None
+                if gs.game_mode == "legacy" and gs.manager_for(team_id) is None:
+                    # A joining career manager picks from THEIR offer
+                    # slate (seat index = managers so far, taken = seats
+                    # already held) — the lobby offers endpoint showed
+                    # exactly this derivation.
+                    offers = career.new_game_offers(
+                        gs, len(gs.managers), taken=set(gs.human_team_ids)
+                    )
+                    offer = next(
+                        (o for o in offers if o.team_id == team_id), None
+                    )
+                    if offer is None:
+                        return None, "pick one of the clubs offering you the job"
                 gs.human_team_ids.append(team_id)
+                if gs.manager_for(team_id) is None:
+                    career.create_seat(gs, team_id, offer=offer)
             self.sessions[sid] = (code, team_id)
             self._remember(
                 sid, code, team_id, gs.teams[team_id].name, game.mode
@@ -343,8 +380,17 @@ class Lobby:
             holder = self._seat_holder(code, team_id)
             if holder not in (None, sid):
                 return None, "another manager now controls that team"
+            seat = game.gs.seat_for_session(team_id)
             if team_id not in game.gs.human_team_ids:
-                game.gs.human_team_ids.append(team_id)
+                if seat is not None and not seat.team_id:
+                    # A dismissed legacy manager resuming: the session
+                    # re-binds (they land on the job market), but their
+                    # old org stays AI-run.
+                    pass
+                else:
+                    game.gs.human_team_ids.append(team_id)
+                    if game.gs.manager_for(team_id) is None:
+                        career.create_seat(game.gs, team_id)
             self.sessions[sid] = (code, team_id)
             self._remember(
                 sid, code, team_id, game.gs.teams[team_id].name, game.mode
@@ -647,6 +693,7 @@ def lobby_teams(code: str) -> dict:
         return {
             "code": code,
             "mode": game.mode,
+            "game_mode": game.gs.game_mode,
             "teams": _team_options(game.gs, taken=set(game.gs.human_team_ids)),
         }
 
@@ -656,12 +703,18 @@ class NewGameBody(BaseModel):
     seed: int = 2026
     shared: bool = False  # True -> open the world for other managers to join
     pack: str | None = None  # roster pack id; None -> generated world
+    game_mode: str = "sandbox"  # "sandbox" | "legacy"
+    manager_name: str = ""
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
+    if body.game_mode not in ("sandbox", "legacy"):
+        raise HTTPException(422, "game_mode must be 'sandbox' or 'legacy'")
     game = _LOBBY.create_game(
-        _current_sid(), body.team_id, body.seed, body.shared, pack_id=body.pack
+        _current_sid(), body.team_id, body.seed, body.shared,
+        pack_id=body.pack, game_mode=body.game_mode,
+        manager_name=body.manager_name,
     )
     return {
         "ok": True,
@@ -669,6 +722,53 @@ def new_game(body: NewGameBody) -> dict:
         "team_id": body.team_id,
         "mode": game.mode,
     }
+
+
+def _offer_view(gs: GameState, o) -> dict:
+    t = gs.teams[o.team_id]
+    return {
+        "team_id": o.team_id,
+        "team_name": t.name,
+        "tag": t.tag,
+        "region": str(t.region),
+        "archetype": o.archetype,
+        "seasons": o.seasons,
+        "goal": career.GOAL_LABELS.get(o.goal, o.goal),
+        "patience": o.patience,
+        "blurb": o.blurb,
+    }
+
+
+@app.get("/api/lobby/offers")
+def lobby_offers(
+    seed: int = 2026, pack: str | None = None, code: str | None = None
+) -> dict:
+    """The legacy-mode career offers a manager starts from. Without
+    `code`: the founding seat's slate for a new world (seed + pack).
+    With `code`: the next joiner's slate for an existing shared world."""
+    if code:
+        code = code.upper()
+        with _LOBBY._lock:
+            game = _LOBBY._get_game(code) if _CODE_RE.match(code) else None
+        if game is None or game.gs is None:
+            raise HTTPException(404, "no game with that code")
+        with game.lock:
+            gs = game.gs
+            if gs.game_mode != "legacy":
+                raise HTTPException(409, "that world is a sandbox game")
+            offers = career.new_game_offers(
+                gs, len(gs.managers), taken=set(gs.human_team_ids)
+            )
+            return {"offers": [_offer_view(gs, o) for o in offers]}
+    pk = None
+    if pack:
+        try:
+            pk = load_roster_pack(pack)
+        except FileNotFoundError:
+            raise HTTPException(422, f"unknown roster pack '{pack}'") from None
+    preview = new_campaign(_LOBBY.gd, seed=seed, pack=pk)
+    offers = career.new_game_offers(preview, 0)
+    return {"offers": [_offer_view(preview, o) for o in offers]}
 
 
 class JoinBody(BaseModel):
@@ -719,6 +819,87 @@ def resume_game(body: ResumeBody) -> dict:
 
 # ---------------------------------------------------------------------------
 # State views
+
+
+def _career_state(gs: GameState) -> dict:
+    """The acting session's career snapshot (both modes; sandbox seats
+    just have no contract and can't be unemployed)."""
+    seat = gs.seat_for_session(gs.acting_team_id)
+    if seat is None:
+        return {"mode": gs.game_mode, "seat": None}
+    offers = gs.career_offers_by.get(seat.id) or []
+    c = seat.contract
+    return {
+        "mode": gs.game_mode,
+        "seat": {
+            "id": seat.id,
+            "name": seat.name,
+            "team_id": seat.team_id,
+            "archetype": seat.archetype,
+            "unemployed": not seat.team_id,
+        },
+        "contract": (
+            {
+                "goal": career.GOAL_LABELS.get(c.goal, c.goal),
+                "patience": round(c.patience, 1),
+                "seasons": c.seasons,
+                "start_season": c.start_season,
+                "end_season": c.start_season + c.seasons - 1,
+            }
+            if c
+            else None
+        ),
+        "offers": [_offer_view(gs, o) for o in offers],
+        "blocked": bool(career.blocked_seats(gs)),
+    }
+
+
+@app.get("/api/career")
+def career_profile() -> dict:
+    """The acting manager's full career profile — a pure chronicle read."""
+    with S.lock:
+        gs = S.require_gs()
+        seat = gs.seat_for_session(gs.acting_team_id)
+        if seat is None:
+            raise HTTPException(404, "no manager seat for this session")
+        out = career.career_summary(gs, seat.id)
+        out["team_name"] = (
+            gs.teams[seat.team_id].name if seat.team_id in gs.teams else ""
+        )
+        return out
+
+
+class AcceptJobBody(BaseModel):
+    team_id: str
+
+
+@app.post("/api/actions/accept_job")
+def accept_job(body: AcceptJobBody) -> dict:
+    """A dismissed legacy manager takes one of their offers. Rebinds the
+    seat in GameState AND this browser session's team mapping."""
+    ctx = _ctx.get()
+    with S.lock:
+        gs = S.require_gs()
+        seat = gs.seat_for_session(gs.acting_team_id)
+        if seat is None or seat.team_id:
+            raise HTTPException(409, "you are not on the job market")
+        ok, why = career.accept_offer(gs, seat.id, body.team_id)
+        if not ok:
+            raise HTTPException(409, why)
+        game = ctx.game
+        game.ready.discard(gs.acting_team_id)
+        gs.set_acting(body.team_id)
+        game.save()
+    # Rebind the lobby session to the new club (outside the game lock;
+    # the lobby has its own).
+    with _LOBBY._lock:
+        _LOBBY.sessions[_current_sid()] = (game.code, body.team_id)
+        _LOBBY._remember(
+            _current_sid(), game.code, body.team_id,
+            game.gs.teams[body.team_id].name, game.mode,
+        )
+        _LOBBY._save_sessions()
+    return {"ok": True, "team_id": body.team_id}
 
 
 @app.get("/api/state")
@@ -776,6 +957,10 @@ def state() -> dict:
                 and o.player_id in gs.players
                 and o.to_team in gs.teams
             ],
+            # Legacy-mode career state for the acting seat: contract +
+            # patience while employed; pending offers while between jobs
+            # (the dashboard renders the job market off this).
+            "career": _career_state(gs),
             # Multiplayer ready-up: who shares this world, and who has hit
             # "advance". In a solo game humans == [you] so it's a no-op.
             "multiplayer": {
@@ -2161,6 +2346,15 @@ def advance() -> dict:
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
+        # Legacy mode: a dismissed manager must take a job before anyone
+        # advances — the world doesn't move while a seat is empty.
+        blocked = career.blocked_seats(gs)
+        if blocked:
+            names = ", ".join(gs.managers[m].name for m in blocked)
+            raise HTTPException(
+                409,
+                f"waiting on a manager to accept a new post ({names})",
+            )
         # A manager can't tick the week without a legal (five-deep) roster.
         ok, why = market.roster_ready(gs, me)
         if not ok:
