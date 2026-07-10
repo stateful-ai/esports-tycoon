@@ -384,9 +384,15 @@ def accept_offer(gs: GameState, mid: str, team_id: str) -> tuple[bool, str]:
     seat = gs.managers[mid]
     seat.team_id = team_id
     seat.archetype = offer.archetype
+    # Org memory: a boardroom you won with starts warmer, one that fired
+    # you before starts colder (manager/memories.py).
+    from esports_sim.manager import memories
+
+    posture = memories.board_posture(gs, mid, team_id)
     seat.contract = ManagerContract(
         start_season=gs.season, seasons=offer.seasons,
-        goal=offer.goal, patience=offer.patience,
+        goal=offer.goal,
+        patience=float(np.clip(offer.patience + posture, 10.0, 100.0)),
     )
     gs.human_team_ids.append(team_id)
     del gs.career_offers_by[mid]

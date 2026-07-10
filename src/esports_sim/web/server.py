@@ -31,6 +31,7 @@ from esports_sim.manager import (
     economy,
     inbox as inbox_mod,
     market,
+    memories as memories_mod,
     relationships,
     social,
     sponsors,
@@ -2779,6 +2780,10 @@ def player_profile(pid: str) -> dict:
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
             "career": [],
+            # What this player remembers — their defining chronicle
+            # entries (debut, titles, milestones, moves), newest-important
+            # first. Pure chronicle read (manager/memories.py).
+            "memories": memories_mod.memory_lines(gs, pid),
         }
 
 

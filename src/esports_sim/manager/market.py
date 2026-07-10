@@ -147,10 +147,17 @@ def renew_contract(
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
     p = gs.players[player_id]
+    # Memory moves the table a nudge: a player whose career was MADE here
+    # (debut, milestones, a title run) re-signs a shade under market; one
+    # this org once released wants it back in salary. +/-10% at the caps.
+    from esports_sim.manager import memories
+
+    loyalty = memories.loyalty_bias(gs, player_id, team_id)
     new_salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
+    new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
     p.salary = new_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
-    p.morale = min(100.0, p.morale + 5.0)
+    p.morale = min(100.0, p.morale + 5.0 + loyalty * 0.2)
     gs.push_news(f"{p.handle} re-signs with {team.name} at {new_salary:,}/wk.")
     chronicle.record(
         gs, "renewal",
