@@ -2351,11 +2351,17 @@ async function social(v) {
         : post.author_kind === "team"
           ? `<b class="tlink" data-tid="${post.author_id}">@${post.author}</b>`
           : `<b>${post.author}</b>`;
-      feedCard.appendChild(el("div", "post",
+      const node = el("div", "post",
         `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
            <span class="muted">S${post.season} W${post.week}</span></div>
          <div class="post-body">${post.text}</div>
-         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`));
+         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`);
+      // LLM-ghost-written posts keep the grounded fact on hover; the
+      // server only ever rephrases real outcomes (web/llm_social.py).
+      if (post.ai && post.fact) {
+        node.querySelector(".post-body").title = post.fact;
+      }
+      feedCard.appendChild(node);
     }
   }
   band.appendChild(feedCard);

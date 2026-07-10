@@ -110,6 +110,14 @@ Published at github.com/stateful-ai/esports-tycoon.
   `tactics_fit`: the server returns per-dial impact at both poles, the
   client only lerps). Stat-column depth is gated SERVER-SIDE by
   `staff.analytics_tier` — the client renders whatever fields arrive.
+  `web/llm_social.py` ghost-writes social posts with an LLM at SERVE
+  time only: the deterministic template text stays in the save (the
+  grounded fallback + hover "fact"), rewrites live in a sidecar cache
+  (`saves/social_llm_<code>.json`) keyed by post id — so campaign
+  determinism is untouched. Providers via .env: `OPENROUTER_API_KEY`
+  (OpenRouter) or `SOCIAL_LLM_BASE_URL` (any local OpenAI-compatible
+  server, e.g. Ollama); `SOCIAL_LLM=off` disables. The model REPHRASES
+  facts we hand it, never invents events (grounded like narrative).
   Screens: app.js (tabs incl. dashboard hub, tactics, market with a
   Players|Staff split, stats hub, social feed), viewer.js
   (painted-backdrop isometric replay), inbox.js, profile.js

@@ -61,6 +61,7 @@ from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
+from esports_sim.web import llm_social
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -1630,9 +1631,18 @@ def staff_profile(staff_id: str) -> dict:
 
 @app.get("/api/social")
 def social_view() -> dict:
-    """The feed plus follower leaderboards. World-visible by design."""
+    """The feed plus follower leaderboards. World-visible by design.
+
+    When an LLM provider is configured (OpenRouter key in .env or a
+    local OpenAI-compatible server; see web/llm_social.py), post text is
+    overlaid from the sidecar rewrite cache — the deterministic template
+    text stays in the save and serves as the grounded fallback."""
+    game = _ctx.get().game
     with S.lock:
         gs = S.require_gs()
+        # Catch-up pass: worlds resumed on a fresh process (or with a
+        # freshly configured provider) get their recent posts written.
+        llm_social.enqueue(game)
 
         def team_of(pid: str) -> tuple[str | None, str]:
             t = next((t for t in gs.teams.values() if pid in t.player_ids), None)
@@ -1674,7 +1684,9 @@ def social_view() -> dict:
             key=lambda r: (-r["sentiment"], r["team_id"]),
         )
         return {
-            "feed": [p.model_dump() for p in reversed(gs.social_feed)],
+            "feed": llm_social.overlay(
+                game.code, [p.model_dump() for p in reversed(gs.social_feed)]
+            ),
             "leaderboard": leaderboard,
             "your_roster": [
                 {
@@ -2396,6 +2408,10 @@ def advance() -> dict:
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
         game.ready.clear()
+        # Hand the week's fresh posts to the LLM ghost-writer (async,
+        # serving-layer only — see web/llm_social.py; no-op without a
+        # configured provider).
+        llm_social.enqueue(game)
         # Re-bind acting (advance_week churns the acting pointer internally).
         gs.set_acting(me)
         game.save()
