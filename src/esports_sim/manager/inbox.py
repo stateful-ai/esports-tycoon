@@ -349,10 +349,56 @@ def _development_items(gs: "GameState", season: int, week: int):
     return out[: _CAT_CAP["development"]]
 
 
+def _rotation_items(gs: "GameState", season: int, week: int):
+    """Coach's desk: a gassed starter with a fresh body on the bench is a
+    rotation decision waiting to happen. Live-state read (no rng), only
+    for rosters that actually carry a bench."""
+    from esports_sim.manager.campaign import default_five
+
+    team = gs.teams[gs.acting_team_id]
+    if len(team.player_ids) <= 5:
+        return []
+    active = set(default_five(gs, team.id))
+    gassed = sorted(
+        (p for p in gs.roster(team.id) if p.id in active and p.stamina < 30.0),
+        key=lambda p: (p.stamina, p.id),
+    )
+    fresh = sorted(
+        (p for p in gs.roster(team.id) if p.id not in active and p.stamina >= 70.0),
+        key=lambda p: (-p.stamina, p.id),
+    )
+    if not gassed or not fresh:
+        return []
+    body = (
+        "Running on fumes: "
+        + ", ".join(f"{p.handle} ({p.stamina:.0f} stamina)" for p in gassed[:3])
+        + ".\nFresh on the bench: "
+        + ", ".join(f"{p.handle} ({p.stamina:.0f})" for p in fresh[:3])
+        + ".\nSet a one-match lineup in the game plan, or rotate the starting five."
+    )
+    return [(
+        _P_DEV,
+        _make(season, week, "development",
+              f"rotation|{'|'.join(p.id for p in gassed[:3])}",
+              "Rotation: fresh legs available", body, "tactics"),
+    )]
+
+
 def _news_items(gs: "GameState", season: int, week: int):
     """Curated broadcast storylines — grounded, high-signal news lines the
     other detectors don't already own, plus the end-of-season award slate."""
     out = []
+    # Balance patches read from durable state, not the news ticker — the
+    # patch ships at the START of the tick and a busy week's 60-line news
+    # cap can evict the line before the inbox is generated.
+    for note in gs.patch_history:
+        if note.season == season and note.week == week and note.lines:
+            out.append((
+                _P_NEWS,
+                _make(season, week, "news", f"patch|{note.version}",
+                      f"Patch {note.version} shakes the meta",
+                      "\n".join(note.lines), "stats"),
+            ))
     for msg in _week_news(gs, season, week):
         title: str | None = None
         tab: str | None = None
@@ -432,6 +478,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _talk_items(gs, season, week)
         candidates += _sponsor_items(gs, season, week)
         candidates += _scouting_items(gs, season, week)
+        candidates += _rotation_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
     candidates += _news_items(gs, season, week)

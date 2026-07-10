@@ -999,3 +999,69 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .post-head .muted { margin-left: auto; font-size: var(--es-text-2xs, 10px); }
 .post-body { margin: 3px 0 2px; }
 .post-likes { font-size: var(--es-text-2xs, 10px); }
+
+/* Game plan panel (tactics tab): one match's prep over the standing book. */
+.gp-prep {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 12px;
+  margin: 8px 0;
+  background: var(--es-color-bg-surface, #0f1520);
+  border-left: 3px solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-sm, 4px);
+}
+.gp-prep-lab {
+  font-size: var(--es-text-xs, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--es-color-text-secondary, #9aa3b5);
+}
+.gp-prep-val {
+  font-size: var(--es-text-lg, 17px);
+  font-weight: 700;
+  color: var(--es-color-accent, #4fd8c0);
+}
+.gp-prep-sub { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #9aa3b5); }
+.gp-block { margin-top: 14px; }
+.gp-note { font-size: var(--es-text-xs, 11px); margin: 6px 0 0; }
+.pill.gp-live { color: var(--es-color-accent, #4fd8c0); border-color: var(--es-color-accent, #4fd8c0); }
+.pill.gp-sug { color: var(--es-color-text-success, #46a758); }
+.gp-dial {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 0;
+  opacity: 0.65;
+}
+.gp-dial.on, .gp-dial.gp-site { opacity: 1; }
+.gp-dial-lab { min-width: 130px; font-size: var(--es-text-sm, 12px); }
+.gp-dial input[type="range"] { flex: 1; }
+.gp-dial-val { min-width: 64px; text-align: right; font-size: var(--es-text-sm, 12px); }
+.gp-dial .tac-seg { margin-top: 0; }
+.gp-lineup { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.gp-chip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+  font: inherit;
+  font-size: var(--es-text-sm, 12px);
+  color: var(--es-color-text-primary, #e6ebf4);
+  background: var(--es-color-bg-surface, #0f1520);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-sm, 4px);
+  padding: 5px 9px;
+  cursor: pointer;
+}
+.gp-chip.on {
+  border-color: var(--es-color-accent, #4fd8c0);
+  color: var(--es-color-accent, #4fd8c0);
+}
+.gp-chip .bad { color: var(--es-color-text-danger, #ff6b6b); }
+.gp-lu-foot { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+.gp-lu-count.bad { color: var(--es-color-text-danger, #ff6b6b); }
+td.good, .num.good { color: var(--es-color-text-success, #4fc6a0); }
+td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
+/* Mood pills (social header): tone must actually render. */
+.pill.good { color: var(--es-color-text-success, #4fc6a0); border-color: var(--es-color-text-success, #4fc6a0); }
+.pill.bad { color: var(--es-color-text-danger, #ff6b6b); border-color: var(--es-color-text-danger, #ff6b6b); }

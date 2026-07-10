@@ -159,9 +159,12 @@ def marketability(gs: GameState) -> float:
         else 0.0
     )
     reach = min(social.roster_reach(gs, team.id), 4_000_000) / 4_000_000.0
+    # Brands read the room: a euphoric fanbase is a premium, a toxic one a
+    # discount (sentiment 50 = exactly no term — fresh campaigns unchanged).
+    sent = (gs.sentiment(team.id) - 50.0) / 50.0 * 0.15
     score = (
         rep * 0.55 + fans * 0.25 + stars * 0.35 + (wr - 0.5) * 0.4 + intl
-        + reach * 0.2
+        + reach * 0.2 + sent
     )
     return max(0.4, score) * economy.facility_marketing_mult(gs)
 
@@ -522,6 +525,21 @@ def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
             gs.sponsor_market[slot] = [
                 o for o in live if o.expires_week > gs.week
             ]
+
+    # Sentiment pressure on live partnerships: brands quietly cool on an
+    # org whose mentions turned toxic and warm to one the crowd loves.
+    # (Sentiment is last week's stored value — the social tick runs after
+    # this one — which keeps the lag deterministic.)
+    from esports_sim.manager import social
+
+    sent = gs.sentiment(gs.acting_team_id)
+    if sent <= social.SENT_COLD or sent >= social.SENT_HOT:
+        delta = -0.5 if sent <= social.SENT_COLD else 0.3
+        brands = {d.name for d in gs.sponsor_slots.values()}
+        if legacy is not None:
+            brands.add(legacy.name)
+        for brand in sorted(brands):
+            _bump_relation(gs, brand, delta)
 
     # Which opponent did we play this week? (for the beat_top4 rider)
     fixture = gs.team_fixture(gs.acting_team_id)

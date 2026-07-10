@@ -105,15 +105,20 @@ def _grow(p, pct: float) -> None:
 def weekly_tick(
     gs, report, dev_events: list[dict], rng,
     match_team_of: dict[str, str] | None = None,
+    mental_events: list[dict] | None = None,
 ) -> None:
     """One week of the social layer: seed newcomers, move follower counts
-    on the week's real outcomes, and write the feed.
+    on the week's real outcomes, write the feed — then fold the week into
+    community sentiment and let it feed back (see _sentiment_tick). New
+    draws only ever land at the END of the stream (repo convention: the
+    'social' rng label is append-only, so existing draws never shift).
 
     `match_team_of` (player -> the team they DRESSED for this week) pins
     result bumps to the match-time side: contracts expire and transfers
     resolve before this runs, so recomputing membership from the live
     rosters would credit a same-tick mover with the wrong team's result."""
     seed_followers(gs)
+    mental_events = mental_events or []
     season, week = report.season, report.week
     before = {pid: gs.players[pid].followers for pid in sorted(gs.players)}
 
@@ -158,6 +163,16 @@ def weekly_tick(
             _grow(p, 2.0 * min(d["aces"], 2))
         if d["clutches"]:
             _grow(p, 1.0 * min(d["clutches"], 2))
+
+    # Mental-momentum follower growth happens HERE — before the milestone
+    # check below, like every other growth source — so a heater that
+    # carries a player over a landmark still fires the milestone post.
+    # (_grow draws no rng; only the feed posts do, and those stay at the
+    # END of the stream.)
+    for ev in mental_events:
+        p = gs.players.get(ev["player_id"])
+        if p is not None and ev["kind"] == "heater":
+            _grow(p, 2.0)
 
     # Dev-event amplifiers: the clip that went viral, the spat with fans.
     for ev in dev_events:
@@ -239,4 +254,155 @@ def weekly_tick(
             _likes(rng, poster.followers),
         )
 
+    # -- appended feed beats (new draws stay at the END of the stream) -----
+    # Mental-momentum texture: heaters get hyped, spirals get picked at.
+    for ev in mental_events:
+        p = gs.players.get(ev["player_id"])
+        if p is None:
+            continue
+        if ev["kind"] == "heater":
+            _post(
+                gs, season, week, "hype", "media", p.id, "VCT Wire",
+                f"{p.handle} cannot miss right now.",
+                _likes(rng, p.followers * 2), salt=p.id,
+            )
+        elif ev["kind"] == "tilt_spiral":
+            _post(
+                gs, season, week, "drama", "media", p.id, "VCT Wire",
+                f"What has happened to {p.handle}?",
+                _likes(rng, p.followers), salt=p.id,
+            )
+
+    # A shipped balance patch is the week's other story. The mid-split
+    # patch is stamped with the current tick; the offseason patch ships
+    # during a tick that never runs the social layer and is stamped with
+    # the OLD season, so it posts on the new season's opening week (its
+    # version is always "<new season>.00").
+    if gs.patch_history:
+        note = gs.patch_history[-1]
+        shipped_this_week = note.season == season and note.week == week
+        shipped_over_break = week == 1 and note.version == f"{season}.00"
+        if (shipped_this_week or shipped_over_break) and note.lines:
+            _post(
+                gs, season, week, "hype", "media", "", "PatchWatch",
+                f"Patch {note.version} is live: {note.lines[0]}.",
+                _likes(rng, 400_000), salt=note.version,
+            )
+
+    # -- community sentiment ------------------------------------------------
+    _sentiment_tick(gs, report, dev_events, mental_events, rng)
+
     del gs.social_feed[:-FEED_CAP]
+
+
+# ---------------------------------------------------------------------------
+# Community sentiment: the crowd's mood about each org, fed by the same
+# real outcomes as the feed, and fed BACK into the game — players read
+# their mentions (confidence/morale), and brands read the room (sponsor
+# marketability + relations, see sponsors.py). Stored on GameState so the
+# one-week lag to the sponsor tick is deterministic.
+
+SENT_PULL = 0.30  # how fast sentiment chases the week's target
+SENT_DEADZONE = 8.0  # |sentiment-50| below this doesn't move players
+SENT_CONF_SPAN = 1.5  # confidence points/week at sentiment 0/100
+SENT_MORALE_SPAN = 1.2
+# Extreme-mood bands, shared by the sponsor pressure triggers
+# (sponsors.weekly_tick) and the web mood serializer — one source of
+# truth so the UI can never claim a mood the sim isn't acting on.
+SENT_HOT = 70.0  # brands warm to the org / fanbase euphoric
+SENT_COLD = 30.0  # brands cool on the org / fanbase toxic
+
+
+def mood_view(sent: float) -> dict:
+    """Serializer-side mood word + tone for a sentiment value. Lives here
+    (not in JS) so the labels track the exact thresholds the sim uses."""
+    if sent >= SENT_HOT:
+        return {"word": "euphoric", "tone": "good"}
+    if sent >= 50.0 + SENT_DEADZONE:
+        return {"word": "warm", "tone": "good"}
+    if sent > 50.0 - SENT_DEADZONE:
+        return {"word": "neutral", "tone": ""}
+    if sent > SENT_COLD:
+        return {"word": "restless", "tone": "bad"}
+    return {"word": "toxic", "tone": "bad"}
+
+
+def _clamp_conf(v: float) -> float:
+    return round(min(95.0, max(5.0, v)), 1)
+
+
+def _sentiment_tick(
+    gs, report, dev_events: list[dict], mental_events: list[dict], rng
+) -> None:
+    """Move each org's sentiment toward this week's target (rng-free), let
+    extremes touch the roster's heads, and post when a fanbase flips. The
+    target construction is bounded, so sentiment can't run away — a team
+    that wins every week converges near 60, not 100."""
+    won_series: dict[str, bool] = {}
+    stakes: dict[str, float] = {}
+    for f in report.fixtures:
+        if f.played and f.winner_id is not None:
+            loser = f.team_b if f.winner_id == f.team_a else f.team_a
+            won_series[f.winner_id] = True
+            won_series[loser] = False
+            big = 1.5 if f.stage != "regular" else 1.0
+            stakes[f.winner_id] = big
+            stakes[loser] = big
+
+    drama_by: dict[str, float] = {}
+    for ev in dev_events:
+        tid = ev["team_id"]
+        if ev["kind"] == "drama":
+            drama_by[tid] = drama_by.get(tid, 0.0) - 6.0
+        elif ev["kind"] == "viral_clip":
+            drama_by[tid] = drama_by.get(tid, 0.0) + 4.0
+    for ev in mental_events:
+        tid = ev["team_id"]
+        if ev["kind"] == "heater":
+            drama_by[tid] = drama_by.get(tid, 0.0) + 2.0
+        elif ev["kind"] == "tilt_spiral":
+            drama_by[tid] = drama_by.get(tid, 0.0) - 3.0
+
+    before: dict[str, float] = {}
+    for tid in sorted(gs.teams):
+        drivers = 0.0
+        if tid in won_series:
+            drivers += (9.0 if won_series[tid] else -8.0) * stakes.get(tid, 1.0)
+        drivers += drama_by.get(tid, 0.0)
+        target = 50.0 + max(-30.0, min(30.0, drivers))
+        cur = gs.team_sentiment.get(tid, 50.0)
+        before[tid] = cur
+        gs.team_sentiment[tid] = round(
+            min(100.0, max(0.0, cur + (target - cur) * SENT_PULL)), 1
+        )
+
+    # Feedback: players read their mentions. Small and dead-zoned — the
+    # weekly confidence regression (training.py) is the counterweight that
+    # keeps this from snowballing (verified by the snowball gate).
+    for tid in sorted(gs.teams):
+        scale = (gs.team_sentiment[tid] - 50.0) / 50.0
+        if abs(scale) * 50.0 < SENT_DEADZONE:
+            continue
+        for p in gs.roster(tid):
+            p.confidence = _clamp_conf(p.confidence + SENT_CONF_SPAN * scale)
+            p.morale = round(
+                min(100.0, max(0.0, p.morale + SENT_MORALE_SPAN * scale)), 1
+            )
+
+    # A fanbase flipping to euphoric/toxic is a story (crossing posts only,
+    # like follower milestones — the feed never repeats a standing mood).
+    for tid in sorted(gs.teams):
+        cur, prev = gs.team_sentiment[tid], before[tid]
+        team = gs.teams[tid]
+        if prev < 70.0 <= cur:
+            _post(
+                gs, report.season, report.week, "hype", "media", tid, "VCT Wire",
+                f"{team.name} fans are ALL-IN right now.",
+                _likes(rng, max(team.fan_count, 2_000)), salt=tid,
+            )
+        elif prev > 30.0 >= cur:
+            _post(
+                gs, report.season, report.week, "drama", "media", tid, "VCT Wire",
+                f"The replies under every {team.name} post are getting ugly.",
+                _likes(rng, max(team.fan_count, 2_000)), salt=tid,
+            )

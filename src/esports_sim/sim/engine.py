@@ -50,6 +50,7 @@ from esports_sim.schemas import (
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import CommsEvent, WhiffEvent
 from esports_sim.schemas.map import CalloutZone, Site
+from esports_sim.schemas.team import TeamTactics
 from esports_sim.schemas.traits import trait_value
 from esports_sim.sim import constants as C
 from esports_sim.sim import tactics_fit
@@ -65,6 +66,27 @@ class MatchResult:
     score_b: int
     winner_id: str
     events: list[Event]
+
+
+@dataclass(frozen=True)
+class TeamMatchPlan:
+    """Per-match coaching overrides, supplied by the campaign layer (a
+    manager's pre-match game plan). The bare-engine gates never construct
+    one, and an all-defaults plan is an exact no-op, so this can't move
+    the golden/balance gates:
+
+    tactics: replaces the standing TeamTactics for THIS match only (the
+        dials themselves stay neutral-safe per ADR-007).
+    focus_target: opponent pid the anti-strat keys on — a real duel edge
+        against the hunted player, paid for with a small tax everywhere
+        else (over-indexing prep on one man has a cost).
+    prep_edge: scouting-driven duel bonus for the prepared side; the
+        campaign computes it from scout knowledge, the engine only clamps.
+    """
+
+    tactics: TeamTactics | None = None
+    focus_target: str | None = None
+    prep_edge: float = 0.0
 
 
 @dataclass
@@ -124,6 +146,7 @@ class _MatchSim:
         map_id: str,
         seed: int,
         log: EventLog | None = None,
+        plans: dict[str, TeamMatchPlan] | None = None,
     ):
         self.gd = gd
         self.map: Map = gd.maps[map_id]
@@ -133,6 +156,21 @@ class _MatchSim:
         self.rng_tree = RngTree(root_seed=seed)
         self.seed = seed
         self.log = log if log is not None else EventLog()
+
+        # Game plans (campaign-fed; None for the bare-engine gates). Must
+        # be bound BEFORE exec_mod below — _execution_mod reads tactics
+        # through _tactics(), which honours a plan's override.
+        self._plans: dict[str, TeamMatchPlan] = plans or {}
+        self._prep: dict[str, float] = {
+            team_a: 0.0,
+            team_b: 0.0,
+        }
+        for tid in (team_a, team_b):
+            plan = self._plans.get(tid)
+            if plan is not None:
+                self._prep[tid] = float(
+                    np.clip(plan.prep_edge, 0.0, C.PREP_EDGE_CAP)
+                )
 
         self.policy = HeuristicPolicy(gd, self.map)
 
@@ -209,6 +247,13 @@ class _MatchSim:
             team_a: self._execution_mod(team_a),
             team_b: self._execution_mod(team_b),
         }
+
+        # In-match momentum: kills build it, deaths bleed it, it decays
+        # every round. Pure bookkeeping (no rng, no events) — it only ever
+        # AMPLIFIES a player's confidence deviation (see _conf_dev), so at
+        # the default confidence 50 it is an exact no-op and the golden
+        # gates stay byte-stable.
+        self.momentum: dict[str, float] = {pid: 0.0 for pid in self.p}
 
         # Map gimmicks keyed by the adjacency edge they sit on.
         self._gimmicks = {
@@ -326,11 +371,13 @@ class _MatchSim:
     def _player(self, pid: str) -> Player:
         return self.gd.players[pid]
 
-    def _condition(self, pl: Player) -> float:
+    def _condition(self, pid: str, pl: Player) -> float:
         """Form/morale/stamina/confidence folded into one additive term.
         Clamped tight: unchecked, hot teams' condition compounded into
         13-0 snowballs (winners gain form/morale, which wins more).
-        Confidence is neutral-safe: exactly zero at the default 50."""
+        Confidence is neutral-safe: exactly zero at the default 50 —
+        in-match momentum only amplifies an existing deviation
+        (see _conf_dev)."""
         form = max(-5.0, min(5.0, (pl.form - 50.0) / 8.0))
         morale = max(-3.0, min(3.0, (pl.morale - 50.0) / 12.0))
         stamina = (pl.stamina - 100.0) / 10.0
@@ -338,7 +385,7 @@ class _MatchSim:
             -C.CONFIDENCE_COND_CAP,
             min(
                 C.CONFIDENCE_COND_CAP,
-                (pl.confidence - 50.0) / C.CONFIDENCE_COND_DIV,
+                self._conf_dev(pid) / C.CONFIDENCE_COND_DIV,
             ),
         )
         return form + morale + stamina + conf
@@ -998,6 +1045,20 @@ class _MatchSim:
         self.loss_streak[loser] += 1
         if winner == atk and reason in ("elim", "spike_detonation"):
             self.site_wins[target_site] = self.site_wins.get(target_site, 0) + 1
+
+        # Momentum: winning a round as the last one standing is the stuff
+        # heaters are made of; everyone else's momentum decays toward flat.
+        # Bookkeeping only — feeds _conf_dev, an exact no-op at conf 50.
+        clutcher: str | None = None
+        alive_winners = [q for q in self.roster[winner] if self.p[q].alive]
+        if len(alive_winners) == 1:
+            clutcher = alive_winners[0]
+        for pid in sorted(self.p):
+            self.momentum[pid] *= C.MOMENTUM_DECAY
+        if clutcher is not None:
+            self.momentum[clutcher] = min(
+                C.MOMENTUM_CAP, self.momentum[clutcher] + C.MOMENTUM_CLUTCH
+            )
 
         overtime = round_num > 2 * C.ROUNDS_PER_HALF
         for pid in sorted(self.p):
@@ -1690,7 +1751,24 @@ class _MatchSim:
     # -- micro combat helpers ---------------------------------------------------
 
     def _tactics(self, team_id: str):
+        plan = self._plans.get(team_id)
+        if plan is not None and plan.tactics is not None:
+            return plan.tactics
         return self.gd.teams[team_id].tactics
+
+    def _conf_dev(self, pid: str) -> float:
+        """Confidence deviation from neutral, amplified by in-match
+        momentum: eff = dev + m * SPAN * |dev|. Momentum scales the
+        deviation, never creates one — exactly 0.0 whenever confidence is
+        50, which is what keeps the golden gates byte-stable (ADR-007).
+        In a campaign a heater lifts a shaky player back toward level and
+        a cold streak dims a swaggering one."""
+        dev = self._player(pid).confidence - 50.0
+        if dev == 0.0:
+            return 0.0
+        m = max(-C.MOMENTUM_CAP, min(C.MOMENTUM_CAP, self.momentum[pid]))
+        eff = dev + m * C.MOMENTUM_SPAN * abs(dev)
+        return max(-45.0, min(45.0, eff))
 
     def _eco_tempo_shift(self, atk: str, round_num: int) -> float:
         """Execute-probability shift from eco discipline.
@@ -1768,8 +1846,9 @@ class _MatchSim:
         p += max(0.0, pl.attr("aim_reactivity") - 60.0) / 2000.0
         p *= trait_value(pl, "peek_mult", 1.0)
         # Confidence is a tendency, not just a stat line: a player riding
-        # high swings angles they'd otherwise hold (exactly neutral at 50).
-        p *= 1.0 + (pl.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
+        # high swings angles they'd otherwise hold (exactly neutral at 50;
+        # in-match momentum amplifies the lean, never creates one).
+        p *= 1.0 + self._conf_dev(pid) / C.CONFIDENCE_PEEK_DIV
         # The coach's identity: aggressive systems green-light swings
         # (50 = exactly neutral).
         aggr = self._tactics(self.p[pid].team_id).aggression
@@ -1868,6 +1947,7 @@ class _MatchSim:
         in_cover: bool = False,
         facing: float = 0.0,
         peeking: bool = False,
+        opp_pid: str | None = None,
     ) -> float:
         ps = self.p[pid]
         pl = self._player(pid)
@@ -1877,7 +1957,7 @@ class _MatchSim:
             + 0.15 * pl.attr("movement")
             + 0.20 * pl.attr("positioning" if holder else "game_sense")
         )
-        s += self._condition(pl)
+        s += self._condition(pid, pl)
         weapon = self.gd.weapons[ps.weapon]
         s += (weapon.accuracy_base - 0.6) * 20.0
         s += (pl.agent_mastery(ps.agent_id, 50.0) - 50.0) / 25.0
@@ -1914,9 +1994,10 @@ class _MatchSim:
             s += ps.bonus
         if n_alive_own == 1 and n_alive_opp >= 2:
             # Confidence scales how much of the clutch gene shows up when
-            # it matters (neutral 50 = the raw attribute, unchanged).
+            # it matters (neutral 50 = the raw attribute, unchanged;
+            # momentum amplifies the deviation only).
             s += ((pl.attr("clutch_factor") - 50.0) / 5.0) * (
-                1.0 + (pl.confidence - 50.0) / C.CONFIDENCE_CLUTCH_DIV
+                1.0 + self._conf_dev(pid) / C.CONFIDENCE_CLUTCH_DIV
             )
         if self.loss_streak[ps.team_id] >= C.TILT_STREAK:
             s -= (100.0 - pl.attr("tilt_resistance")) / 15.0
@@ -1924,6 +2005,16 @@ class _MatchSim:
             s += 2.0
         s += self.day_form[pid] + self.tactic_form[ps.team_id]
         s += self.exec_mod[ps.team_id]
+        # Game-plan reach (zero for the bare-engine gates — no plan, no
+        # term): scouting prep is a flat edge; a focus target is a real
+        # bonus against the hunted opponent, a small tax against others.
+        s += self._prep[ps.team_id]
+        plan = self._plans.get(ps.team_id)
+        if plan is not None and plan.focus_target is not None and opp_pid is not None:
+            if opp_pid == plan.focus_target:
+                s += C.FOCUS_TARGET_EDGE
+            else:
+                s -= C.FOCUS_OFF_MALUS
         return s
 
     def _combat(
@@ -2081,12 +2172,12 @@ class _MatchSim:
                 sa = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
                     len(alive_atk), len(alive_dfn), duel_range, dz, cover_a,
-                    self._facing(pa, pd.x, pd.y), peek_a,
+                    self._facing(pa, pd.x, pd.y), peek_a, d_pid,
                 )
                 sd = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
                     len(alive_dfn), len(alive_atk), duel_range, -dz, cover_d,
-                    self._facing(pd, pa.x, pa.y), peek_d,
+                    self._facing(pd, pa.x, pa.y), peek_d, a_pid,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:
@@ -2127,6 +2218,13 @@ class _MatchSim:
         kp.credits = min(kp.credits + (w.kill_reward if w else 200), C.CREDIT_CAP)
         kp.ult_points += C.ULT_POINTS_KILL
         self.kills[kp.team_id] += 1
+        # Momentum bookkeeping (no rng, no events — see _conf_dev).
+        self.momentum[killer] = min(
+            C.MOMENTUM_CAP, self.momentum[killer] + C.MOMENTUM_KILL
+        )
+        self.momentum[victim] = max(
+            -C.MOMENTUM_CAP, self.momentum[victim] - C.MOMENTUM_DEATH
+        )
         headshot = rng.random() < (
             C.HEADSHOT_BASE + self._player(killer).attr("aim_precision") / 300.0
         )
@@ -2323,8 +2421,12 @@ def simulate_match_result(
     map_id: str,
     seed: int,
     log: EventLog | None = None,
+    plans: dict[str, TeamMatchPlan] | None = None,
 ) -> MatchResult:
-    sim = _MatchSim(gd, team_a, team_b, map_id, seed, log=log)
+    """`plans` carries per-match coaching overrides (game plans) from the
+    campaign layer; None — the only thing the match gates ever pass — is
+    exactly the pre-plan engine."""
+    sim = _MatchSim(gd, team_a, team_b, map_id, seed, log=log, plans=plans)
     return sim.run()
 
 

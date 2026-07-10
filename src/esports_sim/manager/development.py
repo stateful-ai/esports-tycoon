@@ -101,7 +101,8 @@ def retirement_prob(p: Player) -> float:
 DEV_EVENT_PROB = 0.05  # per player per week
 
 # Substrings that identify a dev-event news line (the inbox's detector —
-# keep in sync with the headlines in _fire_event below).
+# keep in sync with the headlines in _fire_event below AND the mental
+# events in weekly_mental_events).
 DEV_EVENT_MARKERS = [
     "breakthrough week",
     "is in a slump",
@@ -111,6 +112,8 @@ DEV_EVENT_MARKERS = [
     "gets into it with fans",
     "under their wing",
     "grinding.",
+    "is spiralling",
+    "is on a heater",
 ]
 
 _CATEGORY_ATTRS = {
@@ -219,6 +222,66 @@ def _fire_event(gs, tid: str, p: Player, rng) -> tuple[str, str]:
     p.stamina = _clamp_stat(p.stamina - 8.0)
     p.morale = _clamp_stat(p.morale + 2.0)
     return "grind", f"{p.handle} stays late every night this week, grinding."
+
+
+# ---------------------------------------------------------------------------
+# Mental momentum across weeks: tilt spirals and heaters. The per-map
+# confidence movement (campaign._apply_map_effects) is the smooth signal;
+# these are the THRESHOLD events — a player whose belief has already
+# cratered keeps unravelling, one riding high keeps hitting. Applied to
+# every org (AI parity, like dev events); news lines only to the owning
+# human manager. Drawn from a dedicated rng stream (campaign label
+# "tilt") so no other subsystem's draws ever shift. The weekly 5%
+# confidence regression in training.apply_training is the counterweight
+# that keeps spirals from running away (see the snowball gate).
+
+TILT_SPIRAL_PROB = 0.30  # per week, for a player under both thresholds
+HEATER_PROB = 0.25  # per week, for a player over both thresholds
+_TILT_CONF, _TILT_FORM = 30.0, 45.0
+_HEAT_CONF, _HEAT_FORM = 72.0, 58.0
+
+
+def weekly_mental_events(gs, rng) -> list[dict]:
+    """Roll spiral/heater events for every rostered player. Exactly one
+    rng draw per player (fixed effect sizes — no extra draws on fire), so
+    the stream stays stable as rosters churn. Returns the same
+    {team_id, player_id, kind, headline} shape as weekly_dev_events so
+    the inbox and social layer consume both alike."""
+    out: list[dict] = []
+    for tid in sorted(gs.teams):
+        for p in sorted(gs.roster(tid), key=lambda q: q.id):
+            roll = rng.random()
+            kind: str | None = None
+            headline = ""
+            if p.confidence <= _TILT_CONF and p.form <= _TILT_FORM:
+                # Fragile players spiral harder; ice-cold ones catch it.
+                fragility = (100.0 - p.attr("tilt_resistance")) / 100.0
+                if roll < TILT_SPIRAL_PROB * (0.4 + 0.6 * fragility):
+                    p.confidence = _clamp_stat(p.confidence - 5.0, 5.0, 95.0)
+                    p.form = _clamp_stat(p.form - 3.0)
+                    p.morale = _clamp_stat(p.morale - 3.0)
+                    kind = "tilt_spiral"
+                    headline = (
+                        f"{p.handle} is spiralling — the belief is gone "
+                        f"and everyone can see it."
+                    )
+            elif p.confidence >= _HEAT_CONF and p.form >= _HEAT_FORM:
+                if roll < HEATER_PROB:
+                    p.confidence = _clamp_stat(p.confidence + 3.0, 5.0, 95.0)
+                    p.morale = _clamp_stat(p.morale + 2.0)
+                    kind = "heater"
+                    headline = (
+                        f"{p.handle} is on a heater — everything is "
+                        f"hitting right now."
+                    )
+            if kind is None:
+                continue
+            out.append(
+                {"team_id": tid, "player_id": p.id, "kind": kind, "headline": headline}
+            )
+            if gs.is_human(tid):
+                gs.push_private_news(headline, owner=tid)
+    return out
 
 
 # ---------------------------------------------------------------------------

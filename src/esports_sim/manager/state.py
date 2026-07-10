@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -77,7 +77,19 @@ def _migrate_v2_to_v3(data: dict) -> dict:
     return data
 
 
-_MIGRATIONS: dict[int, "callable"] = {1: _migrate_v1_to_v2, 2: _migrate_v2_to_v3}
+def _migrate_v3_to_v4(data: dict) -> dict:
+    """v4 adds only new fields with defaults (game plans, meta patches,
+    community sentiment) — a v3 save loads unchanged. The version bump
+    exists so an OLDER build refuses a v4 save with the clean "update the
+    game" message instead of an extra="forbid" validation stack trace."""
+    return data
+
+
+_MIGRATIONS: dict[int, "callable"] = {
+    1: _migrate_v1_to_v2,
+    2: _migrate_v2_to_v3,
+    3: _migrate_v3_to_v4,
+}
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
 PRIZE_SEMI_LOSER = 60_000
@@ -290,6 +302,55 @@ class SocialPost(BaseModel):
     text: str
     likes: int
     kind: str  # hype | result | viral | drama | milestone | transfer
+
+
+class GamePlan(BaseModel):
+    """One manager's pre-match game plan for a specific fixture: optional
+    per-match dial overrides (None = keep the standing book), an optional
+    focus target on the opponent's roster, and an optional one-match
+    lineup. Consumed when the fixture sims; stale plans (fixture already
+    played, roster moved on) are re-validated at apply time, never
+    trusted. The prep edge itself is DERIVED at sim time from scout
+    knowledge — it is not stored, so it can't go stale."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    fixture_id: str
+    aggression: float | None = None
+    pace: float | None = None
+    util_discipline: float | None = None
+    eco_greed: float | None = None
+    map_control: float | None = None
+    site_focus: str | None = None
+    focus_target: str | None = None  # opponent pid to hunt
+    starter_ids: list[str] = Field(default_factory=list)  # this match only
+
+
+class PatchChange(BaseModel):
+    """One live balance modifier: a delta to a numeric knob on one agent
+    ability (cost / charges / ult_points). The ACTIVE set is cumulative
+    across patches; runtime_gamedata applies it when building each week's
+    GameData, so the bare-engine gates (which load the registry directly)
+    never see one."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    agent_id: str
+    ability_id: str
+    field: str  # cost | charges | ult_points
+    delta: int
+
+
+class PatchNote(BaseModel):
+    """One shipped balance patch, for the news/UI. `lines` are the
+    human-readable change list ("Jett: Cloudburst 200 -> 250 credits")."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    version: str  # e.g. "3.07"
+    lines: list[str] = Field(default_factory=list)
 
 
 class StaffMember(BaseModel):
@@ -699,6 +760,22 @@ class GameState(BaseModel):
     def staff(self, value: dict[str, "StaffMember"]) -> None:
         self.staff_by[self.acting_team_id] = value
 
+    @property
+    def game_plan(self) -> "GamePlan | None":
+        """The acting manager's pre-match plan (None = play the book)."""
+        return self.game_plans_by.get(self.acting_team_id)
+
+    @game_plan.setter
+    def game_plan(self, value: "GamePlan | None") -> None:
+        if value is None:
+            self.game_plans_by.pop(self.acting_team_id, None)
+        else:
+            self.game_plans_by[self.acting_team_id] = value
+
+    def sentiment(self, team_id: str) -> float:
+        """Community sentiment for a team (50 = neutral; missing = 50)."""
+        return self.team_sentiment.get(team_id, 50.0)
+
     # -- helpers -------------------------------------------------------------
 
     def roster(self, team_id: str) -> list[Player]:
@@ -855,3 +932,17 @@ class GameState(BaseModel):
     # Upgradeable org facilities, level 0-3 (missing key == level 0):
     # "training_center", "analytics_suite", "marketing_office".
     facilities_by: dict[str, dict[str, int]] = Field(default_factory=dict)
+
+    # -- coaching + meta depth (v4) -------------------------------------------
+    # Pre-match game plans, per human manager (reached via `game_plan`).
+    # At most one live plan per manager — for their next fixture.
+    game_plans_by: dict[str, GamePlan] = Field(default_factory=dict)
+    # Community sentiment per team (0-100, 50 = neutral; missing = 50).
+    # Derived weekly from the social layer's real outcomes and fed back
+    # into confidence/morale and sponsor pressure. World-shared.
+    team_sentiment: dict[str, float] = Field(default_factory=dict)
+    # Live balance patches: the cumulative active modifier set (applied by
+    # runtime_gamedata when building each week's GameData — default empty,
+    # so the bare-engine gates never see them) and the shipped notes.
+    agent_patches: list[PatchChange] = Field(default_factory=list)
+    patch_history: list[PatchNote] = Field(default_factory=list)
