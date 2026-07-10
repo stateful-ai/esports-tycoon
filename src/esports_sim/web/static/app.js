@@ -183,6 +183,10 @@ function setupLobby(lob) {
   } else {
     resume.classList.add("hidden");
   }
+  // Randomize the default seed each lobby visit so a new game (and its
+  // legacy offer slate) isn't the same every time; still overridable by
+  // hand for a reproducible/shared world.
+  $("#ng-seed").value = 1 + Math.floor(Math.random() * 999999);
   // null = generated fictional world; otherwise a roster-pack id.
   let world = null;
   let shared_ = false;
