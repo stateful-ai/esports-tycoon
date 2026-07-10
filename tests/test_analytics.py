@@ -201,7 +201,7 @@ def test_playtest_summary_multiseason_shape_and_determinism():
     gs.career_stats["p1"] = CareerStats(maps=30, kills=500, deaths=400, seasons=2)
     gs.season = 3
     pt = analytics.playtest_summary(gs)
-    assert pt["seasons_played"] == 3
+    assert pt["seasons_played"] == 2  # two seasons crowned (season 3 in progress)
     assert [c["season"] for c in pt["champions_timeline"]] == [1, 2]
     assert len(pt["award_timeline"]) == 2
     assert pt["top_career_arcs"][0]["player_id"] == "p1"
@@ -263,3 +263,34 @@ def test_on_this_day_empty_without_landmarks():
     gs = GameState(seed=1, season=2, week=1, user_team_id="a",
                    teams={"a": _team("a")}, players={})
     assert analytics.on_this_day(gs) == []
+
+
+def test_objective_status_champions_goal_survives_the_regional_final():
+    # Codex review: a Champions goal must stay live through the playoffs — the
+    # regional final only settles regional goals, Champions resolves later.
+    teams, standings = _league(8)
+    final = Fixture(id="s2t0final", week=13, stage="final", tier=1,
+                    team_a="t0", team_b="t1", maps=["ascent"], played=True,
+                    winner_id="t0")
+    gs = GameState(seed=1, season=2, week=14, user_team_id="t0", phase="playoffs",
+                   teams=teams, standings=standings, fixtures=[final])
+    assert career.objective_status(gs, "t0", "win_split")["state"] == "achieved"
+    # win_champions is NOT missed just because the regional final is done...
+    assert career.objective_status(gs, "t0", "win_champions")["state"] != "missed"
+    # ...but IS once the Champions final is played without t0 lifting it.
+    gs.fixtures.append(Fixture(id="s2champ", week=16, stage="champ_final", tier=1,
+                               team_a="t2", team_b="t3", maps=["ascent"],
+                               played=True, winner_id="t2"))
+    assert career.objective_status(gs, "t0", "win_champions")["state"] == "missed"
+
+
+def test_objective_status_masters_goal_missed_only_when_seeds_exclude_you():
+    teams, standings = _league(8)
+    final = Fixture(id="s2f", week=13, stage="final", tier=1, team_a="t0",
+                    team_b="t1", maps=["ascent"], played=True, winner_id="t0")
+    gs = GameState(seed=1, season=2, week=14, user_team_id="t0", phase="playoffs",
+                   teams=teams, standings=standings, fixtures=[final])
+    # Seeds not set yet -> not missed.
+    assert career.objective_status(gs, "t0", "make_masters")["state"] != "missed"
+    gs.masters_seeds = ["t1", "t2"]  # t0 left out
+    assert career.objective_status(gs, "t0", "make_masters")["state"] == "missed"

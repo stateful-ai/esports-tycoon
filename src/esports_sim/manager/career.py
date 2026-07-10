@@ -280,8 +280,6 @@ GOAL_LABELS = {
     "top_half": "finish in the top half",
 }
 
-_PLAYOFF_KINDS = ("make_playoffs", "win_split", "make_masters", "win_champions")
-
 
 def _ordinal(n: int) -> str:
     suf = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
@@ -308,10 +306,21 @@ def objective_status(gs: GameState, tid: str, kind: str) -> dict:
     n = len(order)
     pos = order.index(tid) + 1 if tid in order else None
 
-    if kind in _PLAYOFF_KINDS:
+    # A goal is "missed" only once ITS OWN deciding stage has passed without
+    # meeting it — the regional final settles make_playoffs / win_split, but
+    # Masters and Champions come afterwards, so a qualified side chasing them
+    # stays live through the rest of the playoffs.
+    if kind in ("make_playoffs", "win_split"):
         finals = season_fixtures("final")
         if finals and all(f.played for f in finals):
             return {"state": "missed", "detail": "the playoffs are settled"}
+    elif kind == "make_masters":
+        if gs.masters_seeds and tid not in gs.masters_seeds:
+            return {"state": "missed", "detail": "missed the Masters cut"}
+    elif kind == "win_champions":
+        cf = season_fixtures("champ_final")
+        if cf and all(f.played for f in cf):
+            return {"state": "missed", "detail": "Champions is decided"}
 
     if kind == "field_youth":
         fielded = any(

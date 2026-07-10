@@ -293,9 +293,13 @@ def playtest_summary(gs: "GameState") -> dict:
         )
     ]
     recs = all_time_records(gs)
+    champions_tl = _title_line("champions_title")
     return {
-        "seasons_played": gs.season,
-        "champions_timeline": _title_line("champions_title"),
+        # Completed seasons = those already crowned. The --playtest loop
+        # advances into season N+1 after the Nth offseason, so gs.season
+        # overcounts by one; the champions timeline is the true tally.
+        "seasons_played": len(champions_tl),
+        "champions_timeline": champions_tl,
         "masters_timeline": _title_line("masters_title"),
         "award_timeline": awards_tl,
         "meta_eras": meta_eras,
