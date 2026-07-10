@@ -129,6 +129,29 @@ def of_kinds(gs: "GameState", kinds: Iterable[str]) -> list["ChronicleEntry"]:
     return [e for e in gs.chronicle if e.kind in ks]
 
 
+def title_history_line(gs: "GameState", tid: str, kind: str) -> str:
+    """The living-history clause for a fresh title: "their first
+    Masters", "back-to-back", "their first since S3" — or "" when the
+    history has nothing worth saying (silence beats invented drama).
+    Call BEFORE recording this season's entry."""
+    prior = sorted(
+        e.season
+        for e in gs.chronicle
+        if e.kind == kind and e.team_id == tid and e.season < gs.season
+    )
+    label = {
+        "champions_title": "world title",
+        "masters_title": "Masters",
+        "regional_title": "regional crown",
+    }.get(kind, "title")
+    if not prior:
+        # A first in season 1 isn't history yet — everyone's on zero.
+        return f"their first {label}" if gs.season > 1 else ""
+    if prior[-1] == gs.season - 1:
+        return "back-to-back"
+    return f"their first {label} since S{prior[-1]}"
+
+
 # -- development milestones ---------------------------------------------------
 #
 # The manager-facing "your player crossed a line" feature. Human rosters

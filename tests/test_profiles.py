@@ -104,7 +104,10 @@ ATTR_ITEM = {"key", "label", "value", "band"}
 AGENT_ITEM = {"agent_id", "name", "icon", "mastery"}
 REL_ITEM = {"pid", "handle", "kind", "strength"}
 
-TEAM_TOP = {"team", "record", "splits", "maps", "players", "form", "honors"}
+TEAM_TOP = {
+    "team", "record", "splits", "maps", "players", "form", "honors",
+    "rivals",
+}
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
 SPLITS = {"attack_round_rate", "defense_round_rate"}

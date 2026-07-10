@@ -17,11 +17,13 @@ from esports_sim.manager import (
     chronicle,
     development,
     economy,
+    hof,
     inbox,
     market,
     meta,
     narrative,
     relationships,
+    rivalries,
     social,
     sponsors,
     staff,
@@ -699,7 +701,11 @@ def advance_week(
             ]
             pay_playoff_prizes(gs, mf.winner_id, runner_up, sf_losers)
             staff.record_title(gs, mf.winner_id, f"S{gs.season} Masters")
-            gs.push_news(f"{gs.teams[mf.winner_id].name} win MASTERS.")
+            _hist = chronicle.title_history_line(gs, mf.winner_id, "masters_title")
+            gs.push_news(
+                f"{gs.teams[mf.winner_id].name} win MASTERS"
+                + (f" — {_hist}." if _hist else ".")
+            )
             chronicle.record(
                 gs, "masters_title",
                 f"{gs.teams[mf.winner_id].name} win Masters.",
@@ -819,8 +825,10 @@ def advance_week(
                     season=gs.season, team_id=champ.id, team_name=champ.name
                 )
             )
+            _hist = chronicle.title_history_line(gs, champ.id, "champions_title")
             gs.push_news(
-                f"{champ.name} win CHAMPIONS — Season {gs.season} world champions!"
+                f"{champ.name} win CHAMPIONS — Season {gs.season} world "
+                "champions!" + (f" ({_hist.capitalize()}.)" if _hist else "")
             )
             chronicle.record(
                 gs, "champions_title",
@@ -841,6 +849,10 @@ def advance_week(
     # the phase transitions above — so a team that ends the tick in the
     # black off prize money never takes a spurious debt hit or board warning.
     economy.check_solvency(gs)
+
+    # 5c. Rivalries: fold this week's playoff meetings and poaches into
+    # the pair graph — before the news, so recaps can read fresh heat.
+    rivalries.on_week(gs, report)
 
     # 6. News (before the week label moves on). Recaps read each winner's
     # tactics, so this must run BEFORE the coaches adapt below — otherwise a
@@ -1478,6 +1490,9 @@ def _process_retirements(gs: GameState, rng) -> int:
             importance=min(75.0, 40.0 + 10.0 * n_honours),
             data={"age": str(p.age), "ca": f"{ca:.0f}"},
         )
+        # A completed career faces the Hall (score reads the chronicle
+        # entries above, so it runs after the retirement is recorded).
+        hof.consider_at_retirement(gs, p, ca, team.name if team else "")
         if ca >= 62 or p.age >= 31:
             notable.append(f"{p.handle} ({p.age})")
         del gs.players[pid]
@@ -1695,6 +1710,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.transfer_offers = []
     gs.map_lineups = {}
     gs.game_plans_by = {}
+    # Grudges cool over the break; the faint ones are forgotten.
+    rivalries.offseason_decay(gs)
     # The break cools every fanbase halfway back to neutral — last
     # season's euphoria (or bile) carries in, but softer.
     gs.team_sentiment = {

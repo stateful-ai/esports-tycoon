@@ -673,6 +673,24 @@ function renderTeamProfile(data) {
   }
 
   // Honors ------------------------------------------------------------------
+  // Rivalries — the pairs whose history means something (server-ranked).
+  const rivals = data.rivals || [];
+  if (rivals.length) {
+    const sec = pfSection("Rivalries");
+    const chips = el("div", "pf-chips");
+    for (const r of rivals) {
+      const chip = el(
+        "span",
+        "pf-rel-chip tlink rel-clash",
+        `${r.name}<span class="pf-rel-kind">heat ${Math.round(r.intensity)}</span>`
+      );
+      if (r.team_id) chip.dataset.tid = r.team_id;
+      chips.appendChild(chip);
+    }
+    sec.appendChild(chips);
+    frag.appendChild(sec);
+  }
+
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
     const sec = pfSection("Honors");

@@ -33,6 +33,7 @@ from esports_sim.manager import (
     market,
     memories as memories_mod,
     relationships,
+    rivalries as rivalries_mod,
     social,
     sponsors,
     staff as staff_mod,
@@ -1377,6 +1378,10 @@ def stats_view(split: str | None = None, key: str | None = None) -> dict:
             "awards": [a.model_dump() for a in reversed(gs.awards)],
             # Patch notes are public information — never tier-gated.
             "patches": [n.model_dump() for n in reversed(gs.patch_history[-6:])],
+            # The Hall of Fame — public history, never tier-gated.
+            "hall_of_fame": [
+                h.model_dump() for h in reversed(gs.hall_of_fame)
+            ],
         }
 
 
@@ -2915,6 +2920,16 @@ def team_profile(tid: str) -> dict:
             "players": players,
             "form": form,
             "honors": honors,
+            # Named rivalries (manager/rivalries.py), hottest first.
+            "rivals": [
+                {
+                    "team_id": rid,
+                    "name": gs.teams[rid].name if rid in gs.teams else rid,
+                    "intensity": round(heat, 1),
+                }
+                for rid, heat in rivalries_mod.top_rivals(gs, tid)
+                if heat >= rivalries_mod.RIVALRY_BAR / 2
+            ],
         }
 
 

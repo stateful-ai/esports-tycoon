@@ -550,6 +550,22 @@ class AwardRecord(BaseModel):
     value: str  # display string, e.g. "1.24 rating over 18 maps"
 
 
+class HofRecord(BaseModel):
+    """One Hall of Fame career (manager/hof.py). Stored — not derived —
+    because retired players are deleted from `players`; this list is the
+    save's permanent memory of them."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int  # season of induction (= retirement season)
+    player_id: str
+    handle: str
+    real_name: str = ""
+    team_name: str = ""  # last club
+    score: float
+    blurb: str  # why they're in, one line
+
+
 class ManagerContract(BaseModel):
     """A legacy-mode manager's deal with their org: a term, a per-season
     board goal (SponsorObjective kind vocabulary), and the board's
@@ -1109,6 +1125,12 @@ class GameState(BaseModel):
     # Pending job-market offers per DISMISSED manager seat. Non-empty =
     # that manager must accept a job before the world can advance.
     career_offers_by: dict[str, list[CareerOffer]] = Field(default_factory=dict)
+
+    # Org rivalries ("tidA|tidB" sorted -> intensity 0-100; manager/
+    # rivalries.py). Heat from playoff meetings/poaches; cools offseason.
+    rivalries: dict[str, float] = Field(default_factory=dict)
+    # The Hall of Fame — inducted at retirement, kept forever.
+    hall_of_fame: list[HofRecord] = Field(default_factory=list)
 
     def manager_for(self, team_id: str) -> "ManagerSeat | None":
         """The seat currently managing a team (None = AI-run)."""

@@ -2224,6 +2224,17 @@ async function stats(v) {
     v.appendChild(aw);
   }
 
+  // The Hall of Fame — careers the save remembers (inducted at
+  // retirement; server-scored from the chronicle).
+  if ((data.hall_of_fame ?? []).length) {
+    const hf = el("div", "card");
+    hf.innerHTML = `<h2>Hall of Fame</h2>` + data.hall_of_fame
+      .map((h) => `<div class="newsline"><span class="pill">S${h.season}</span>
+        <b>${h.handle}</b>${h.team_name ? ` (${h.team_name})` : ""} — ${h.blurb}</div>`)
+      .join("");
+    v.appendChild(hf);
+  }
+
   const lead = el("div", "card");
   const splitLabel = split ? ` — ${split.kind}: ${split.key}` : "";
   lead.innerHTML = `<h2>League leaders — season ${App.state.season}${splitLabel}</h2>`;
