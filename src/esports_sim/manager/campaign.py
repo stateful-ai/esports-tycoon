@@ -67,6 +67,7 @@ from esports_sim.manager.state import (
     Fixture,
     GameState,
     MapResult,
+    MatchReview,
     PlayerLineSnap,
     PlayerSeasonStats,
     StatSnap,
@@ -76,6 +77,7 @@ from esports_sim.manager.state import (
 )
 from esports_sim.registry.loader import GameData
 from esports_sim.rng.tree import RngTree
+from esports_sim.manager.match_review import build_match_review
 from esports_sim.sim import simulate_match_result
 from esports_sim.sim.engine import TeamMatchPlan
 from esports_sim.sim.stats import compute_match_stats
@@ -1415,6 +1417,25 @@ def _sim_fixture(
                 rec_a.rounds_lost += r.score_b
                 rec_b.rounds_won += r.score_b
                 rec_b.rounds_lost += r.score_a
+        # A walkover has no rounds to diagnose — leave a thin (uncontested)
+        # review so the dashboard shows the scoreline, not a stale prior match.
+        a_wins, b_wins = f.map_score
+        for tid in (f.team_a, f.team_b):
+            if not gs.is_human(tid):
+                continue
+            you_a = tid == f.team_a
+            gs.last_review_by[tid] = MatchReview(
+                fixture_id=f.id,
+                season=gs.season,
+                week=f.week,
+                team_id=tid,
+                opp_id=f.team_b if you_a else f.team_a,
+                won=tid == walkover,
+                best_of=f.best_of,
+                your_maps=a_wins if you_a else b_wins,
+                their_maps=b_wins if you_a else a_wins,
+                contested=False,
+            )
         return
 
     # Game plans: per-match tactics/target/prep go to the engine as an
@@ -1446,6 +1467,11 @@ def _sim_fixture(
         if plan.team_talk in TEAM_TALK_APPROACHES:
             _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
 
+    # Per-map (box score, event log, dressed roster) bundles, kept for the
+    # post-series match-review synthesis while the full stats + events are
+    # still alive (they are transient — dropped once the week rolls over).
+    review_bundles: list[tuple] = []
+    review_weapon_class: dict[str, str] = {}
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
         if a_wins >= need or b_wins >= need:
@@ -1470,6 +1496,8 @@ def _sim_fixture(
             wid: str(w.weapon_class) for wid, w in rt_gd.weapons.items()
         }
         stats = compute_match_stats(res.events, team_of, weapon_class_of)
+        review_bundles.append((stats, res.events, team_of))
+        review_weapon_class = weapon_class_of
         if collector is not None:
             collector.setdefault(f.id, []).append(stats)
         if events_out is not None:
@@ -1495,6 +1523,25 @@ def _sim_fixture(
         )
         # Per-map wear and per-map form movement.
         _apply_map_effects(gs, f, res.winner_id, stats)
+
+    # Match review: synthesize a "why you won/lost" diagnosis for each human
+    # side while the full box score + event log are still in hand. Only the
+    # latest per team is kept on GameState (the dashboard card reads it); the
+    # durable corpus is appended on disk at the web layer, off the tick.
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        opp = f.team_b if tid == f.team_a else f.team_a
+        gs.last_review_by[tid] = build_match_review(
+            gs.season,
+            f.week,
+            f.id,
+            tid,
+            opp,
+            f.best_of,
+            review_bundles,
+            review_weapon_class,
+        )
 
     # A plan is one match's prep: consumed when its fixture sims.
     for tid in (f.team_a, f.team_b):

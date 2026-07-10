@@ -967,6 +967,69 @@ async function dashboard(v) {
     v.appendChild(card);
   }
 
+  /* -- 1d2. MATCH REVIEW: why you won/lost + what to tweak ---------------- */
+  const lmr = s.last_match_review;
+  if (lmr) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Match review"));
+    const scoreTxt = lmr.best_of > 1
+      ? `${lmr.your_maps}–${lmr.their_maps}`
+      : `${lmr.your_rounds}–${lmr.their_rounds}`;
+    card.appendChild(el("div", "row es-review-head",
+      `<span class="pill ${lmr.won ? "win" : "loss"}">${lmr.won ? "W" : "L"}</span>` +
+      `<span class="es-review-opp">vs <span class="tlink" data-tid="${lmr.opp_id}">${lmr.opp_name}</span></span>` +
+      `<span class="spacer"></span>` +
+      `<b class="mono es-review-score">${scoreTxt}</b>`));
+    if (lmr.potm) {
+      card.appendChild(el("div", "potm-chip",
+        `<span class="potm-star">★</span> POTM ` +
+        `<span class="plink" data-pid="${lmr.potm.player_id}">${lmr.potm.handle}</span>`));
+    }
+    if (!lmr.contested) {
+      card.appendChild(el("p", "muted", "Match not contested — no breakdown."));
+      v.appendChild(card);
+    } else {
+      const mkCol = (label, points) => {
+        const col = el("div", "es-snap-col");
+        col.appendChild(el("span", "es-scout-lab muted", label));
+        const list = el("div", "es-review-list");
+        if (!points.length) list.appendChild(el("div", "muted es-review-d", "—"));
+        for (const p of points) {
+          const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
+            `<b class="es-review-h">${p.headline}</b>` +
+            `<span class="es-review-d muted">${p.detail}</span>`);
+          if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
+          list.appendChild(pt);
+        }
+        col.appendChild(list);
+        return col;
+      };
+      const cols = el("div", "es-snap-cols");
+      cols.appendChild(mkCol("What worked", lmr.working));
+      cols.appendChild(mkCol("Where it broke down", lmr.breaking));
+      card.appendChild(cols);
+      // What to tweak: coach-gated levers, each jumping to the right screen.
+      if (lmr.levers && lmr.levers.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "What to tweak"));
+        const tabOf = { tactics: "tactics", training: "roster", roster: "roster" };
+        const ll = el("div", "es-review-levers");
+        for (const lv of lmr.levers) {
+          const row = el("div", "es-review-lever" + (lv.on_focus ? " on-focus" : ""),
+            `<span class="es-review-arrow">▸</span> ${lv.text}`);
+          row.onclick = () => dashGoTab(tabOf[lv.tab] || "tactics");
+          ll.appendChild(row);
+        }
+        card.appendChild(ll);
+      } else if (lmr.coach && !lmr.coach.present) {
+        card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
+      }
+      if (lmr.locked && lmr.locked_hint) {
+        card.appendChild(el("p", "muted es-review-d", lmr.locked_hint));
+      }
+      v.appendChild(card);
+    }
+  }
+
   /* -- 1e. FORM TREND + SQUAD PROFILE ------------------------------------- */
   const trend = s.form_trend || [], sp = s.squad_profile;
   if (trend.length >= 2 || sp) {

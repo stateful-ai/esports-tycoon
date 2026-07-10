@@ -950,6 +950,23 @@ tr.elim td { opacity: .5; }
 .es-result-t.good { font-weight: 700; }
 .es-result-score { text-align: center; }
 
+/* Match review ("why you won/lost") card. */
+.es-review-head { align-items: center; gap: 8px; margin-bottom: 8px; }
+.es-review-opp { color: var(--es-color-text-secondary, #b7c0d0); }
+.es-review-score { font-size: var(--es-text-sm, 12px); }
+.es-review-list { display: flex; flex-direction: column; gap: 6px; }
+.es-review-pt { border-left: 2px solid var(--es-color-border-secondary, #1c2536); padding-left: 8px; }
+.es-review-pt.good { border-left-color: var(--es-color-text-success, #3fb68b); }
+.es-review-pt.bad { border-left-color: var(--es-color-brand, #ff4655); }
+.es-review-pt[data-pid] { cursor: pointer; }
+.es-review-h { display: block; font-size: var(--es-text-xs, 11px); }
+.es-review-d { display: block; font-size: var(--es-text-2xs, 10px); }
+.es-review-levers { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.es-review-lever { cursor: pointer; font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); padding: 5px 7px; border: 1px solid var(--es-color-border-secondary, #1c2536); border-radius: var(--es-radius-md, 6px); }
+.es-review-lever:hover { border-color: var(--es-color-accent, #4fd8c0); }
+.es-review-lever.on-focus { border-left: 2px solid var(--es-color-accent, #4fd8c0); }
+.es-review-arrow { color: var(--es-color-accent, #4fd8c0); }
+
 /* Cumulative-wins sparkline on the dashboard. */
 .es-spark { display: flex; flex-direction: column; gap: 3px; }
 .es-spark svg { width: 100%; height: 46px; }

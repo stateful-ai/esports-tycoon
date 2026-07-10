@@ -67,7 +67,7 @@ from esports_sim.schemas import Event, Player, Team
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
-from esports_sim.web import llm_social
+from esports_sim.web import llm_social, review_history
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -121,6 +121,9 @@ class _Game:
         self.ready: set[str] = set()
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
+        # (team_id, fixture_id) keys already written to the on-disk match-review
+        # corpus this session — skips byes / re-appends (see web.review_history).
+        self.review_seen: set[tuple[str, str]] = set()
         # Save policy runtime: actions only MARK the world dirty (the full
         # GameState serializing on every click was the biggest per-action
         # cost — see /api/perf save.write); disk writes happen on the
@@ -735,6 +738,206 @@ def _fixture_view(f, gs: GameState) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Last-match review ("why you won/lost")
+#
+# The diagnosis engine (manager/match_review.py) stores numbers + a stable
+# code; wording lives here (so it can change with no save migration) and depth
+# is gated SERVER-SIDE by the analyst's analytics tier — the client renders
+# whatever arrives. tone drives colour; lever_code maps a breaking point to a
+# concrete fix, gated/ordered by the coach.
+
+# code -> tone-specific headline + a detail template over {num}/{den}/{pct}/{val}.
+_REVIEW_COPY = {
+    "atk_side": ("Attack is clicking", "Attack is stalling",
+                 "{num}/{den} attack rounds won ({pct}%)."),
+    "def_side": ("Defense is a wall", "Defense is leaking",
+                 "{num}/{den} defense rounds won ({pct}%)."),
+    "pistol": ("Pistols won", "Pistols lost",
+               "{num}/{den} pistol rounds ({pct}%)."),
+    "player_std": ("{handle} carried", "{handle} carried",
+                   "Team-high {val} average rating."),
+    "player_under": ("{handle} off-colour", "{handle} off-colour",
+                     "{val} average rating across the series."),
+    "opening": ("Winning the opening duels", "Losing the opening duels",
+                "{num}/{den} first bloods ({pct}%)."),
+    "clutch": ("Clutch when it counts", "No clutches closed",
+               "{num}/{den} last-alive rounds won."),
+    "trades": ("Trading deaths well", "Deaths going untraded",
+               "{num}/{den} deaths traded ({pct}%)."),
+    "economy": ("Stealing gun rounds", "Eco rounds wasted",
+                "{num}/{den} under-gunned rounds won."),
+    "post_plant": ("Closing out post-plants", "Losing post-plants",
+                   "{num}/{den} planted rounds won ({pct}%)."),
+    "retake": ("Retakes landing", "Retakes failing",
+               "{num}/{den} enemy plants retaken ({pct}%)."),
+    "comms": ("Clean comms", "Crossed comms",
+              "{num} miscalls in {den} rounds ({pct}%)."),
+    "utility": ("Utility on point", "Utility whiffing",
+                "{num}/{den} abilities whiffed ({pct}%)."),
+}
+
+# lever_code -> where the fix lives + the coach specialty that owns it + copy.
+_REVIEW_LEVERS = {
+    "atk_tempo": {"tab": "tactics", "specialty": "tactical",
+                  "text": "Attack is stalling — raise pace/aggression or set a "
+                          "defined default on the Tactics screen."},
+    "def_setups": {"tab": "tactics", "specialty": "tactical",
+                   "text": "Defense is leaking — tighten map control (stack) and "
+                           "utility discipline in Tactics."},
+    "pistol_prep": {"tab": "training", "specialty": "tactical",
+                    "text": "Pistols are costing you — drill pistol setups "
+                            "(tactical focus) and rein in eco greed."},
+    "entry_support": {"tab": "tactics", "specialty": "mechanical",
+                      "text": "Entries are losing first contact — trade tighter "
+                              "(lower aggression) or sharpen aim (mechanical focus)."},
+    "clutch_mental": {"tab": "training", "specialty": "mental",
+                      "text": "No clutches are landing — mental training builds "
+                              "composure in 1vX spots."},
+    "aim_training": {"tab": "training", "specialty": "mechanical",
+                     "text": "You're being out-fragged — mechanical training "
+                             "closes the raw-aim gap."},
+    "trade_discipline": {"tab": "tactics", "specialty": "tactical",
+                         "text": "Deaths go untraded — spread less (map control) "
+                                 "and drill trade pairs."},
+    "eco_discipline": {"tab": "tactics", "specialty": "tactical",
+                       "text": "Eco rounds are wasted — tune eco greed so "
+                               "force-buys and saves line up."},
+    "post_plant": {"tab": "training", "specialty": "tactical",
+                   "text": "Post-plants are slipping — tactical training tightens "
+                           "your post-plant setups."},
+    "retake_util": {"tab": "tactics", "specialty": "tactical",
+                    "text": "Retakes are failing — raise utility discipline to "
+                            "coordinate the retake."},
+    "comms_cohesion": {"tab": "roster", "specialty": "team",
+                       "text": "Crossed comms stall rotations — build cohesion "
+                               "(chemistry/lineup) on the Roster screen."},
+    "util_discipline": {"tab": "tactics", "specialty": "tactical",
+                        "text": "Utility is whiffing — raise utility discipline "
+                                "so lineups land."},
+    "player_form": {"tab": "roster", "specialty": "team",
+                    "text": "{handle} is off-colour — consider a bench/agent swap "
+                            "or set their dev focus on the Roster screen."},
+}
+
+
+def _review_point_view(gs: GameState, p) -> dict:
+    """Render one stored ReviewPoint into display copy (headline + detail)."""
+    handle = ""
+    if p.player_id:
+        pl = gs.players.get(p.player_id)
+        handle = pl.handle if pl else p.player_id
+    if p.code == "acs_gap":
+        head = "Out-fragging the opponent" if p.tone == "good" else "Being out-fragged"
+        detail = f"{p.num} ACS vs {p.den} — a {abs(int(round(p.value)))}-point gap."
+    else:
+        good_head, bad_head, tmpl = _REVIEW_COPY.get(
+            p.code, (p.code, p.code, "{num}/{den}")
+        )
+        head = (good_head if p.tone == "good" else bad_head).format(handle=handle)
+        pct = int(round(p.value * 100))
+        detail = tmpl.format(
+            num=p.num, den=p.den, pct=pct, val=round(p.value, 2), handle=handle
+        )
+    return {
+        "code": p.code,
+        "category": p.category,
+        "tone": p.tone,
+        "headline": head,
+        "detail": detail,
+        "player_id": p.player_id or None,
+        "handle": handle or None,
+    }
+
+
+def _last_match_review(gs: GameState) -> dict | None:
+    """The acting team's most recent match diagnosis, depth-gated by the
+    analyst's tier and given coach-gated 'what to tweak' levers. None when
+    there's no review yet (first week / AI-only path)."""
+    review = gs.last_review_by.get(gs.acting_team_id)
+    if review is None:
+        return None
+    tier = staff_mod.analytics_tier(gs)
+    opp = gs.teams.get(review.opp_id)
+    potm = gs.players.get(review.potm_id) if review.potm_id else None
+
+    out: dict = {
+        "fixture_id": review.fixture_id,
+        "won": review.won,
+        "contested": review.contested,
+        "best_of": review.best_of,
+        "your_maps": review.your_maps,
+        "their_maps": review.their_maps,
+        "your_rounds": review.your_rounds,
+        "their_rounds": review.their_rounds,
+        "opp_id": review.opp_id,
+        "opp_name": opp.name if opp else review.opp_id,
+        "potm": (
+            {"player_id": review.potm_id, "handle": potm.handle}
+            if potm else None
+        ),
+        "tier": tier,
+        "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
+    }
+    if not review.contested:
+        out["working"] = []
+        out["breaking"] = []
+        out["levers"] = []
+        out["locked"] = False
+        return out
+
+    vis_working = [p for p in review.working if p.min_tier <= tier]
+    vis_breaking = [p for p in review.breaking if p.min_tier <= tier]
+    out["working"] = [_review_point_view(gs, p) for p in vis_working[:4]]
+    out["breaking"] = [_review_point_view(gs, p) for p in vis_breaking[:5]]
+
+    # 'What to tweak' — levers from the visible breaking points, gated by the
+    # coach's quality (how many) and ordered so the coach's specialty leads.
+    coach = gs.staff.get("coach")
+    levers: list[dict] = []
+    if coach is not None:
+        cap = 1 if coach.quality < 40 else 2 if coach.quality < 70 else 3
+        seen: set[str] = set()
+        cand = []
+        for p in vis_breaking:
+            spec = _REVIEW_LEVERS.get(p.lever_code)
+            if not p.lever_code or spec is None or p.lever_code in seen:
+                continue
+            seen.add(p.lever_code)
+            handle = ""
+            if p.player_id:
+                pl = gs.players.get(p.player_id)
+                handle = pl.handle if pl else p.player_id
+            cand.append((
+                0 if spec["specialty"] == coach.specialty else 1,
+                {
+                    "code": p.lever_code,
+                    "tab": spec["tab"],
+                    "specialty": spec["specialty"],
+                    "on_focus": spec["specialty"] == coach.specialty,
+                    "text": spec["text"].format(handle=handle),
+                },
+            ))
+        cand.sort(key=lambda t: t[0])  # specialty-matches first; stable otherwise
+        levers = [c[1] for c in cand[:cap]]
+    out["levers"] = levers
+    out["coach"] = {
+        "present": coach is not None,
+        "specialty": coach.specialty if coach else "",
+    }
+
+    # Locked hint: higher-tier signals exist but the analyst can't surface them.
+    hidden = [
+        p for p in (review.working + review.breaking) if p.min_tier > tier
+    ]
+    out["locked"] = bool(hidden)
+    if hidden and tier < 3:
+        out["locked_hint"] = (
+            f"A stronger analyst would surface {staff_mod.ANALYTICS_TIER_LABEL.get(tier + 1, '')}."
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Lobby / game lifecycle
 
 
@@ -1124,6 +1327,9 @@ def state() -> dict:
             # A debrief of the last result, the objectives to chase, and the
             # squad's rotation/burnout picture.
             "debrief": narrative.match_debrief(gs, gs.acting_team_id),
+            # The "why you won/lost" synthesis of the last match — working vs
+            # breaking signals + coach-gated fixes, depth-gated by the analyst.
+            "last_match_review": _last_match_review(gs),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
@@ -3821,6 +4027,13 @@ def advance() -> dict:
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
         game.ready.clear()
+        # Append this week's fresh match reviews to the durable on-disk corpus
+        # (serving-layer side effect, off the deterministic tick — see
+        # web/review_history.py). Never fatal: the corpus is analysis-only.
+        try:
+            review_history.append_reviews(gs, game.code, game.review_seen)
+        except Exception:
+            pass
         # Hand the week's fresh posts to the LLM ghost-writer (async,
         # serving-layer only — see web/llm_social.py; no-op without a
         # configured provider).
