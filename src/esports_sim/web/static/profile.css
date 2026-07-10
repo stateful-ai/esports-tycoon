@@ -335,6 +335,14 @@
   color: var(--es-color-warn, #e8b34b);
 }
 
+/* Player comparison table. */
+.pf-compare-sel { margin-bottom: 8px; }
+.pf-table.cmp th { text-align: center; font-weight: 600; color: var(--es-color-text-secondary, #a2aec6); }
+.pf-table.cmp td.cmp-win {
+  color: var(--es-color-text-success, #4fc6a0); font-weight: 700;
+  background: color-mix(in srgb, var(--es-color-success, #3fb68b) 10%, transparent);
+}
+
 /* Career arc — a per-season chronicle timeline on the player profile. */
 .pf-arc { display: flex; flex-direction: column; gap: 7px; }
 .pf-arc-row { display: flex; gap: 10px; align-items: baseline; }

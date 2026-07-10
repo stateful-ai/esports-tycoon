@@ -661,6 +661,16 @@ svg.iso .plabel { font-size: 2.4px; }
 
 /* Concrete staff effect pills. */
 .staff-fx { text-transform: none; letter-spacing: 0; margin-left: 2px; }
+
+/* Pre-match team-talk control on the game-plan screen. */
+.gp-talk { margin: 12px 0; }
+.gp-talk-row { flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
+/* Manager's-desk: objectives-to-chase + win/loss tint. */
+.es-obj { display: flex; flex-direction: column; gap: 4px; }
+.es-obj-row { font-size: var(--es-text-xs, 11px); line-height: 1.5; }
+.wl-w { color: var(--es-color-text-success, #4fc6a0); }
+.wl-l { color: var(--es-color-text-danger, #ff6b6b); }
 .v-lineup .lu-team-name {
   text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
   margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

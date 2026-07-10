@@ -46,6 +46,7 @@ from esports_sim.manager import (
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
     PREP_EDGE_SPAN,
+    TEAM_TALK_APPROACHES,
     WeekReport,
     advance_week,
     default_five,
@@ -1031,6 +1032,11 @@ def state() -> dict:
             "movers": _roster_movers(gs, gs.acting_team_id),
             "run_in": _fixture_run_in(gs, gs.acting_team_id),
             "on_this_day": analytics.on_this_day(gs),
+            # A debrief of the last result, the objectives to chase, and the
+            # squad's rotation/burnout picture.
+            "debrief": narrative.match_debrief(gs, gs.acting_team_id),
+            "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
+            "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
@@ -1334,6 +1340,67 @@ def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     return out
 
 
+def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
+    """What this manager is chasing: the board season goal (legacy), active
+    sponsor objectives, and any award race their players are contending —
+    one consolidated 'what to chase' list. Pure read."""
+    out: list[dict] = []
+    seat = gs.seat_for_session(tid)
+    if seat is not None and seat.contract is not None:
+        st = career.objective_status(gs, tid, seat.contract.goal)
+        out.append({
+            "kind": "board",
+            "label": career.GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
+            "state": st["state"], "detail": st["detail"],
+        })
+    for slot, deal in sorted(gs.sponsor_slots.items()):
+        if deal is None:
+            continue
+        for ob in deal.objectives:
+            if ob.met is None:
+                st = career.objective_status(gs, tid, ob.kind)
+                out.append({
+                    "kind": "sponsor",
+                    "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                    "state": st["state"], "detail": st["detail"],
+                })
+    own = set(gs.teams[tid].player_ids)
+    for award, leaders in analytics.award_races(gs).items():
+        for i, ldr in enumerate(leaders):
+            if ldr["player_id"] in own:
+                out.append({
+                    "kind": "award",
+                    "label": f"{ldr['handle']}: {award}",
+                    "state": "leading" if i == 0 else "in contention",
+                    "detail": f"{['1st', '2nd', '3rd'][i]} · {ldr['value']}",
+                })
+    return out
+
+
+def _rotation_usage(gs: GameState, tid: str) -> list[dict]:
+    """Per own-roster player: season maps played, starter/bench, and a
+    burnout flag (heavy minutes on a low tank). Pure read."""
+    starters = set(default_five(gs, tid))
+    ids = gs.teams[tid].player_ids
+    team_max = max(
+        (gs.player_stats[p].maps for p in ids if p in gs.player_stats), default=0
+    )
+    out = []
+    for pid in ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        maps = gs.player_stats[pid].maps if pid in gs.player_stats else 0
+        burnout = p.stamina < 40.0 and maps >= max(4, team_max * 0.6)
+        out.append({
+            "id": pid, "handle": p.handle, "maps": maps,
+            "starter": pid in starters, "stamina": round(p.stamina),
+            "burnout": burnout,
+        })
+    out.sort(key=lambda r: (-r["maps"], r["handle"]))
+    return out
+
+
 def _squad_chemistry(gs: GameState, tid: str) -> dict:
     """Roster chemistry: the strongest bonds and worst frictions among the
     team's players, plus overall cohesion (mean pair strength). Pure read of
@@ -1497,6 +1564,34 @@ def award_races() -> dict:
     …) from the live season stats. Pure analytics read."""
     with S.lock:
         return {"races": analytics.award_races(S.require_gs())}
+
+
+@app.get("/api/compare")
+def compare(a: str, b: str) -> dict:
+    """Two players side by side — attributes (scouting-fogged for rivals) and
+    season stats — for the comparison overlay."""
+    with S.lock:
+        gs = S.require_gs()
+
+        def side(pid: str) -> dict:
+            p = gs.players.get(pid)
+            if p is None:
+                raise HTTPException(404, f"unknown player {pid}")
+            fog, _progress, _is_fa = _player_fog(gs, pid)
+            st = gs.player_stats.get(pid)
+            has = st is not None and st.maps > 0
+            team = market.team_of(gs, pid)
+            return {
+                "id": pid, "handle": p.handle, "age": p.age, "role": str(p.role),
+                "team_name": gs.teams[team].name if team in gs.teams else None,
+                "overall": None if fog > 0 else int(round(development.overall(p))),
+                "attributes": _profile_attributes(gs, p, fog),
+                "rating": round(st.rating, 2) if has else None,
+                "kd": round(st.kd, 2) if has else None,
+                "maps": st.maps if st else 0,
+            }
+
+        return {"a": side(a), "b": side(b)}
 
 
 @app.get("/api/schedule")
@@ -2625,6 +2720,7 @@ class GamePlanBody(BaseModel):
     site_focus: str | None = None
     focus_target: str | None = None
     starter_ids: list[str] = []
+    team_talk: str | None = None
 
 
 @app.post("/api/actions/gameplan")
@@ -2665,11 +2761,16 @@ def set_gameplan(body: GamePlanBody) -> dict:
             if v is not None and not math.isfinite(v):
                 raise HTTPException(422, f"{k} must be a finite number")
             dials[k] = None if v is None else float(min(100.0, max(0.0, v)))
+        if body.team_talk is not None and body.team_talk not in TEAM_TALK_APPROACHES:
+            raise HTTPException(
+                422, f"team_talk must be one of {TEAM_TALK_APPROACHES}"
+            )
         gs.game_plan = GamePlan(
             fixture_id=fx.id,
             site_focus=body.site_focus,
             focus_target=body.focus_target,
             starter_ids=starters,
+            team_talk=body.team_talk,
             **dials,
         )
         S.save()

@@ -706,3 +706,14 @@ def test_squad_chemistry_shape(env):
     assert chem["cohesion"] is None or isinstance(chem["cohesion"], float)
     for p in chem["bonds"] + chem["frictions"]:
         assert set(p) == {"a", "a_id", "b", "b_id", "strength"}
+
+
+def test_objectives_hub_and_rotation_shape(env):
+    gs, gd, h = env
+    hub = server_mod._objectives_hub(gs, h.user_team)
+    assert isinstance(hub, list)
+    assert all(set(o) >= {"kind", "label", "state"} for o in hub)
+    assert all(o["kind"] in ("board", "sponsor", "award") for o in hub)
+    rot = server_mod._rotation_usage(gs, h.user_team)
+    assert all(set(r) == {"id", "handle", "maps", "starter", "stamina", "burnout"} for r in rot)
+    assert rot == sorted(rot, key=lambda r: (-r["maps"], r["handle"]))

@@ -1210,7 +1210,40 @@ def _fixture_plans(
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
             lineups[tid] = lineup
+        if plan.team_talk in TEAM_TALK_APPROACHES:
+            _apply_team_talk(
+                gs, plan.team_talk, lineups.get(tid) or default_five(gs, tid)
+            )
     return plans, lineups
+
+
+TEAM_TALK_APPROACHES = ("fire_up", "reassure", "focus")
+
+
+def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
+    """A pre-match team talk nudges the dressed five's confidence, modulated
+    by personality and bounded to [5, 95] — the same range the rest of the
+    campaign clamps confidence to. Deterministic (personality is a pure
+    function). Called ONLY for a human side that set a talk in its game plan,
+    so hands-off sims never reach here and the balance gates are unchanged.
+
+    - fire_up:  a lift, bigger for ambitious players (they ride motivation).
+    - reassure: a lift, bigger for fragile (low-resilience) players.
+    - focus:    settle everyone toward a steady 55 (calms tilt AND hubris).
+    """
+    from esports_sim.manager import personality
+
+    for pid in five:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        if approach == "focus":
+            delta = (55.0 - p.confidence) * 0.25
+        elif approach == "reassure":
+            delta = 3.0 * (1.0 - 0.4 * personality.dev(p, "resilience"))
+        else:  # fire_up
+            delta = 5.0 * (1.0 + 0.4 * personality.dev(p, "ambition"))
+        p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
 
 
 def _sim_fixture(

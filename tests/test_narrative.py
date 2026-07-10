@@ -483,3 +483,36 @@ def test_match_preview_empty_for_unknown_opponent():
     f = Fixture(id="x", week=1, team_a="nxs", team_b="ZZZ", maps=["ascent"])
     gs = _gs(fixtures=[], week=1)
     assert match_preview(gs, f, "nxs") == []
+
+
+# ---------------------------------------------------------------------------
+# Post-match debrief
+
+
+def test_match_debrief_reads_last_result_and_box_score():
+    from esports_sim.manager.narrative import match_debrief
+    from esports_sim.manager.state import MapResult, PlayerLineSnap
+    lines = [
+        PlayerLineSnap(player_id="star", kills=25, deaths=10, rating=1.60),
+        PlayerLineSnap(player_id="dud", kills=8, deaths=18, rating=0.70),
+    ]
+    r = MapResult(map_id="ascent", seed=0, score_a=13, score_b=9,
+                  winner_id="nxs", lines=lines)
+    f = _played_fixture("s2w1m0", 1, "nxs", "vgd", winner_id="nxs")
+    f.results = [r]
+    gs = _gs(fixtures=[f], week=2)
+    gs.teams["nxs"].player_ids = ["star", "dud"]
+    gs.players = {
+        "star": Player(id="star", handle="Star", age=24, role=Role.DUELIST,
+                       playstyle=Playstyle.ENTRY, attributes={"aim_precision": 80}),
+        "dud": Player(id="dud", handle="Dud", age=24, role=Role.SENTINEL,
+                      playstyle=Playstyle.ANCHOR, attributes={"aim_precision": 60}),
+    }
+    d = match_debrief(gs, "nxs")
+    assert d["won"] is True and "Vanguard" in d["result"]
+    assert "Star" in d["standout"] and "Dud" in d["underperformer"]
+
+
+def test_match_debrief_empty_without_a_played_match():
+    from esports_sim.manager.narrative import match_debrief
+    assert match_debrief(_gs(fixtures=[], week=1), "nxs") == {}

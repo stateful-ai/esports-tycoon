@@ -778,6 +778,49 @@ async function dashboard(v) {
     v.appendChild(card);
   }
 
+  /* -- 1d. MANAGER'S DESK: debrief + objectives + burnout ----------------- */
+  const debrief = s.debrief || {}, objectives = s.objectives_hub || [];
+  const burnt = (s.rotation || []).filter((r) => r.burnout);
+  if (debrief.result || objectives.length || burnt.length) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Manager's desk"));
+    if (debrief.result) {
+      const parts = [`<b class="${debrief.won ? "wl-w" : "wl-l"}">${debrief.result}</b>.`];
+      if (debrief.standout) parts.push(`Standout: ${debrief.standout}.`);
+      if (debrief.underperformer) parts.push(`Off-colour: ${debrief.underperformer}.`);
+      card.appendChild(el("p", "muted", "Last time out — " + parts.join(" ")));
+    }
+    const cols = el("div", "es-snap-cols");
+    if (objectives.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "What to chase"));
+      const list = el("div", "es-obj");
+      for (const o of objectives.slice(0, 6)) {
+        const cls = o.state === "achieved" || o.state === "on_track" || o.state === "leading" ? "good"
+          : o.state === "missed" ? "bad" : "warn";
+        list.appendChild(el("div", "es-obj-row",
+          `<span class="pill obj ${cls}">${o.kind}</span> ${o.label} ` +
+          `<span class="muted">${(o.state || "").replace("_", " ")}${o.detail ? " · " + o.detail : ""}</span>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    if (burnt.length) {
+      const col = el("div", "es-snap-col");
+      col.appendChild(el("span", "es-scout-lab muted", "Burnout watch"));
+      const list = el("div", "es-movers");
+      for (const r of burnt) {
+        list.appendChild(el("div", "es-mover",
+          `<span class="plink" data-pid="${r.id}">${r.handle}</span> ` +
+          `<span class="muted">${r.maps} maps</span> <b class="mono trend-down">${r.stamina} sta</b>`));
+      }
+      col.appendChild(list);
+      cols.appendChild(col);
+    }
+    if (cols.childElementCount) card.appendChild(cols);
+    v.appendChild(card);
+  }
+
   /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
   const status = el("div", "card es-status");
   status.appendChild(el("h2", "", "Team status"));
@@ -1647,6 +1690,7 @@ async function gameplanPanel(v) {
     site_focus: plan?.site_focus ?? null,
     focus_target: oppStarterIds.has(storedTarget) ? storedTarget : null,
     starters: new Set((plan?.starter_ids ?? []).filter((pid) => ownIds.has(pid))),
+    team_talk: plan?.team_talk ?? null,
   };
   for (const d of TACTIC_DIALS) {
     if (plan && plan[d.key] != null) state.dials[d.key] = plan[d.key];
@@ -1808,6 +1852,28 @@ async function gameplanPanel(v) {
     card.appendChild(luWrap);
   }
 
+  // Team talk — a pre-match motivational choice (bounded confidence nudge).
+  const talkWrap = el("div", "gp-talk");
+  talkWrap.appendChild(el("span", "tac-fit-lab", "Team talk"));
+  const TALKS = [
+    ["", "None — let them focus"],
+    ["fire_up", "Fire them up (lift, best for ambitious players)"],
+    ["reassure", "Reassure (steadies fragile nerves)"],
+    ["focus", "Refocus (settle tilt and hubris alike)"],
+  ];
+  const talkRow = el("div", "row gp-talk-row");
+  for (const [val, label] of TALKS) {
+    const b = el("button", "btn btn-sm" + ((state.team_talk || "") === val ? " active" : ""), label);
+    b.onclick = () => {
+      state.team_talk = val || null;
+      talkRow.querySelectorAll("button").forEach((x) => x.classList.remove("active"));
+      b.classList.add("active");
+    };
+    talkRow.appendChild(b);
+  }
+  talkWrap.appendChild(talkRow);
+  card.appendChild(talkWrap);
+
   // Save / clear.
   const barRow2 = el("div", "tac-savebar");
   const saveBtn = el("button", "btn btn-primary", plan ? "Update game plan" : "Lock in game plan");
@@ -1818,6 +1884,7 @@ async function gameplanPanel(v) {
       site_focus: state.site_focus,
       focus_target: state.focus_target,
       starter_ids: [...state.starters],
+      team_talk: state.team_talk,
     };
     for (const d of TACTIC_DIALS) body[d.key] = state.dials[d.key] ?? null;
     const r = await api("/api/actions/gameplan", body);

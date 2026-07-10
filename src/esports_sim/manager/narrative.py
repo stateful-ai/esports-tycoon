@@ -250,6 +250,52 @@ def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[st
     return bits
 
 
+def match_debrief(gs: GameState, team_id: str | None = None) -> dict:
+    """A grounded debrief of `team_id`'s most recent played fixture: the
+    result, the standout, and any underperformer — from the stored box
+    score. Returns {result, standout, underperformer} display strings (empty
+    dict when nothing has been played). Pure read."""
+    team_id = team_id or gs.user_team_id
+    played = [f for f in gs.fixtures if f.played and team_id in (f.team_a, f.team_b)]
+    if not played:
+        return {}
+    f = max(played, key=lambda x: (x.week, x.id))
+    if f.winner_id is None:
+        return {}
+    opp = f.team_b if f.team_a == team_id else f.team_a
+    opp_name = gs.teams[opp].name if opp in gs.teams else opp
+    won = f.winner_id == team_id
+    if f.best_of > 1:
+        a, b = f.map_score
+        score = f"{a}-{b}" if f.team_a == team_id else f"{b}-{a}"
+    else:
+        r0 = f.results[0] if f.results else None
+        score = (
+            (f"{r0.score_a}-{r0.score_b}" if f.team_a == team_id
+             else f"{r0.score_b}-{r0.score_a}")
+            if r0 else "w/o"
+        )
+    out = {"result": f"{'Beat' if won else 'Lost to'} {opp_name} {score}", "won": won}
+
+    roster = set(gs.teams[team_id].player_ids)
+    agg: dict[str, list[float]] = {}
+    for r in f.results:
+        for ln in r.lines:
+            if ln.player_id in roster:
+                x = agg.setdefault(ln.player_id, [0.0, 0])
+                x[0] += ln.rating
+                x[1] += 1
+    rated = [(pid, s / m) for pid, (s, m) in agg.items() if m]
+    if rated:
+        top = max(rated, key=lambda kv: (kv[1], kv[0]))
+        if top[0] in gs.players:
+            out["standout"] = f"{gs.players[top[0]].handle} ({top[1]:.2f})"
+        low = min(rated, key=lambda kv: (kv[1], kv[0]))
+        if low[0] in gs.players and low[0] != top[0] and low[1] < 0.9:
+            out["underperformer"] = f"{gs.players[low[0]].handle} ({low[1]:.2f})"
+    return out
+
+
 def _h2h_callback(
     rng: random.Random, h2h: dict, user_team_id: str, opp_id: str, opp: str, won: bool
 ) -> str:

@@ -409,6 +409,10 @@ class GamePlan(BaseModel):
     site_focus: str | None = None
     focus_target: str | None = None  # opponent pid to hunt
     starter_ids: list[str] = Field(default_factory=list)  # this match only
+    # Pre-match team talk: "fire_up" | "reassure" | "focus" — a bounded,
+    # personality-modulated confidence nudge for the dressed five, applied
+    # once when the fixture sims. Opt-in, so hands-off sims never set it.
+    team_talk: str | None = None
 
 
 class PatchChange(BaseModel):

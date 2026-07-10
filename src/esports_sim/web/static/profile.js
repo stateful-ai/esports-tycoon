@@ -617,7 +617,56 @@ function renderPlayerProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Compare -----------------------------------------------------------------
+  // A lightweight side-by-side vs a teammate, fetched on demand.
+  if (data.player.team_id) {
+    const sec = pfSection("Compare");
+    const sel = el("select", "pf-compare-sel");
+    sel.innerHTML = `<option value="">compare with a teammate…</option>`;
+    sec.appendChild(sel);
+    const out = el("div", "pf-compare");
+    sec.appendChild(out);
+    frag.appendChild(sec);
+    api(`/api/roster/${data.player.team_id}`)
+      .then((rd) => {
+        for (const q of rd.players || []) {
+          if (q.id === data.player.id) continue;
+          const o = document.createElement("option");
+          o.value = q.id;
+          o.textContent = q.handle;
+          sel.appendChild(o);
+        }
+      })
+      .catch(() => {});
+    sel.onchange = async () => {
+      if (!sel.value) { out.innerHTML = ""; return; }
+      const c = await api(`/api/compare?a=${data.player.id}&b=${sel.value}`).catch(() => null);
+      if (c) out.innerHTML = compareTable(c);
+    };
+  }
+
   return frag;
+}
+
+// Compact side-by-side comparison table (higher value wins each row).
+function compareTable(c) {
+  const better = (x, y) => x != null && y != null && x > y;
+  const row = (label, av, bv) =>
+    `<tr><td class="num ${better(av, bv) ? "cmp-win" : ""}">${av ?? "—"}</td>` +
+    `<th>${label}</th>` +
+    `<td class="num ${better(bv, av) ? "cmp-win" : ""}">${bv ?? "—"}</td></tr>`;
+  const rows = [
+    row("Overall", c.a.overall, c.b.overall),
+    row("Rating", c.a.rating, c.b.rating),
+    row("K/D", c.a.kd, c.b.kd),
+  ];
+  const bm = Object.fromEntries((c.b.attributes || []).map((x) => [x.key, x]));
+  for (const a of c.a.attributes || []) {
+    const b = bm[a.key];
+    rows.push(row(a.label, a.value, b ? b.value : null));
+  }
+  return `<table class="pf-table cmp"><thead><tr><th class="num">${c.a.handle}</th>` +
+    `<th></th><th class="num">${c.b.handle}</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
 }
 
 /* -- team profile ----------------------------------------------------------- */

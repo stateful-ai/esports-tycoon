@@ -282,3 +282,31 @@ def test_mentorship_boosts_protege_growth_same_seed():
     training.apply_training(team, [boosted], "mechanical", np.random.default_rng(0),
                             mentor_mults={"y": training.MENTOR_GROWTH_MULT})
     assert ca(boosted) > ca(base)  # identical rng, only the mentor mult differs
+
+
+def test_team_talk_nudges_dressed_confidence_and_is_bounded():
+    from esports_sim.manager.campaign import _apply_team_talk
+    lo = _mp("lo", 24, 70.0)
+    lo.confidence = 90.0   # near the ceiling: a fire_up can't push past 95
+    mid = _mp("mid", 24, 70.0)
+    mid.confidence = 50.0
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["lo", "mid"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"lo": lo, "mid": mid})
+    _apply_team_talk(gs, "fire_up", ["lo", "mid"])
+    assert gs.players["mid"].confidence > 50.0      # a lift
+    assert gs.players["lo"].confidence <= 95.0       # clamped to the ceiling
+
+
+def test_team_talk_focus_settles_toward_the_middle():
+    from esports_sim.manager.campaign import _apply_team_talk
+    tilted = _mp("t", 24, 70.0)
+    tilted.confidence = 20.0
+    hubris = _mp("h", 24, 70.0)
+    hubris.confidence = 90.0
+    team = Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["t", "h"])
+    gs = GameState(seed=1, season=1, week=1, user_team_id="nxs",
+                   teams={"nxs": team}, players={"t": tilted, "h": hubris})
+    _apply_team_talk(gs, "focus", ["t", "h"])
+    assert gs.players["t"].confidence > 20.0    # pulled up toward 55
+    assert gs.players["h"].confidence < 90.0    # pulled down toward 55
