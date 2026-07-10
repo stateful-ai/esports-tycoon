@@ -66,6 +66,8 @@ def nudge(gs: GameState, a: str, b: str, delta: float) -> None:
 
 def affinity_target(pa: Player, pb: Player) -> float:
     """Where a pair naturally settles after enough time together."""
+    from esports_sim.manager import personality
+
     target = 58.0  # shared reps breed mild friendship by default
     tags_a, tags_b = set(pa.personality_tags), set(pb.personality_tags)
     for t1, t2, delta in _CLASH + _KINDRED:
@@ -77,6 +79,16 @@ def affinity_target(pa: Player, pb: Player) -> float:
         and str(pa.playstyle) in _SPOTLIGHT_STYLES
     ):
         target -= _SPOTLIGHT_FRICTION
+    # The continuous layer under the tags (manager/personality.py):
+    # sociable pairs bond above the default, two big egos grate, and a
+    # professionalism gulf (the grinder and the slacker) wears. Every
+    # term is an exact no-op for a 50/50 neutral pair.
+    ax_a, ax_b = personality.axes(pa), personality.axes(pb)
+    target += (ax_a["sociability"] + ax_b["sociability"] - 100.0) * 0.05
+    target -= (
+        max(0.0, ax_a["ego"] - 60.0) + max(0.0, ax_b["ego"] - 60.0)
+    ) * 0.10
+    target -= abs(ax_a["professionalism"] - ax_b["professionalism"]) * 0.04
     return float(min(95.0, max(15.0, target)))
 
 

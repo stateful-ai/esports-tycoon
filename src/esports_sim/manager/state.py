@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -85,10 +85,74 @@ def _migrate_v3_to_v4(data: dict) -> dict:
     return data
 
 
+def _migrate_v4_to_v5(data: dict) -> dict:
+    """v5 adds the career Chronicle (plus legacy-mode fields, all
+    defaulted). Backfill a skeleton history from the record lists a v4
+    save already keeps — champions, awards, retirements — so career
+    views aren't empty on old saves. Weeks are unknown for past seasons;
+    0 marks a backfilled entry."""
+    import hashlib
+
+    def eid(season: int, kind: str, *parts: object) -> str:
+        key = "|".join(str(x) for x in (season, 0, kind, *parts))
+        return hashlib.blake2b(key.encode("utf-8"), digest_size=8).hexdigest()
+
+    chron: list[dict] = []
+    for c in data.get("champions") or []:
+        chron.append(
+            {
+                "id": eid(c["season"], "champions_title", c["team_id"], ""),
+                "season": c["season"],
+                "week": 0,
+                "kind": "champions_title",
+                "importance": 95.0,
+                "team_id": c["team_id"],
+                "player_id": "",
+                "manager_id": "",
+                "text": f"{c['team_name']} win Champions.",
+                "data": {"title": f"S{c['season']} Champions"},
+            }
+        )
+    for a in data.get("awards") or []:
+        chron.append(
+            {
+                "id": eid(a["season"], "award", "", a["player_id"], a["award"]),
+                "season": a["season"],
+                "week": 0,
+                "kind": "award",
+                "importance": 60.0,
+                "team_id": "",
+                "player_id": a["player_id"],
+                "manager_id": "",
+                "text": f"{a['handle']} wins {a['award']} ({a['value']}).",
+                "data": {"award": a["award"]},
+            }
+        )
+    for r in data.get("retired") or []:
+        chron.append(
+            {
+                "id": eid(r["season"], "retirement", "", r["handle"]),
+                "season": r["season"],
+                "week": 0,
+                "kind": "retirement",
+                "importance": 40.0,
+                "team_id": "",
+                "player_id": "",
+                "manager_id": "",
+                "text": f"{r['handle']} retires at {r['age']}.",
+                "data": {},
+            }
+        )
+    chron.sort(key=lambda e: (e["season"], e["week"], e["kind"], e["id"]))
+    data["chronicle"] = chron
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
     3: _migrate_v3_to_v4,
+    4: _migrate_v4_to_v5,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -381,6 +445,11 @@ class StaffMember(BaseModel):
     # Trophies collected while employed (appended by the campaign layer).
     titles: list[str] = Field(default_factory=list)
     seasons_experience: int = 0
+    # The org they last worked for IN THIS SAVE ("" = none) — hiring an
+    # ex-rival staffer carries part of their old book (knowledge leak).
+    last_org: str = ""
+    # Non-empty for coaching-tree members: the player id they used to be.
+    former_player_id: str = ""
 
 
 class SponsorObjective(BaseModel):
@@ -484,6 +553,96 @@ class AwardRecord(BaseModel):
     handle: str
     team_name: str
     value: str  # display string, e.g. "1.24 rating over 18 maps"
+
+
+class HofRecord(BaseModel):
+    """One Hall of Fame career (manager/hof.py). Stored — not derived —
+    because retired players are deleted from `players`; this list is the
+    save's permanent memory of them."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    season: int  # season of induction (= retirement season)
+    player_id: str
+    handle: str
+    real_name: str = ""
+    team_name: str = ""  # last club
+    score: float
+    blurb: str  # why they're in, one line
+
+
+class ManagerContract(BaseModel):
+    """A legacy-mode manager's deal with their org: a term, a per-season
+    board goal (SponsorObjective kind vocabulary), and the board's
+    patience (0-100). Patience moves at the offseason review (goal
+    met/missed) and drifts a little with in-season streaks; it hitting
+    the floor is a dismissal (manager/career.py)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    start_season: int
+    seasons: int  # contract length
+    # make_playoffs | win_split | make_masters | win_champions | top_half
+    goal: str
+    patience: float = 75.0
+
+
+class ManagerSeat(BaseModel):
+    """One human manager's career identity. The id is minted at creation
+    ("mgr_{founding team id}") and FOLLOWS THE PERSON — in legacy mode a
+    dismissal re-seats them at a new org but the id (and so their whole
+    chronicle) persists. Sandbox seats have no contract and never move."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    name: str
+    team_id: str  # current org ("" = between jobs, offers pending)
+    contract: ManagerContract | None = None
+    archetype: str = ""  # the career-offer archetype they accepted
+    # The org a dismissal just removed them from — how a browser session
+    # still keyed to the old team finds its seat while unemployed.
+    last_team_id: str = ""
+
+
+class CareerOffer(BaseModel):
+    """One org courting a manager — at new game (legacy mode start) or on
+    the job market after a dismissal. Deterministic from (seed, season,
+    seat), never stored long: accepting or the next offseason clears it."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    team_id: str
+    archetype: str  # dynasty | rebuilder | academy | sleeping_giant
+    seasons: int
+    goal: str
+    patience: float
+    blurb: str
+
+
+class ChronicleEntry(BaseModel):
+    """One entry in the campaign's append-only career history (see
+    manager/chronicle.py — the writers and readers both live there).
+    `week` 0 marks an entry backfilled by migration from a pre-chronicle
+    save (its real week is unknown). Never pruned (owner call): the
+    chronicle IS the save's long-term memory."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str  # blake2 of (season, week, kind, subject) — dedup key
+    season: int
+    week: int
+    # champions_title | masters_title | regional_title | challengers_title |
+    # award | retirement | signing | release | renewal | transfer | poach |
+    # debut | milestone | dismissal | appointment | hall_of_fame | rivalry |
+    # meta_shift  (see chronicle.KIND_IMPORTANCE)
+    kind: str
+    importance: float  # 0-100; readers slice by it, writers never prune
+    team_id: str = ""  # primary org involved ("" = none/world)
+    player_id: str = ""  # primary player involved
+    manager_id: str = ""  # human seat responsible ("" = AI/world event)
+    text: str  # one human-readable line, ASCII
+    data: dict[str, str] = Field(default_factory=dict)  # small typed payload
 
 
 class InboxItem(BaseModel):
@@ -638,7 +797,12 @@ class GameState(BaseModel):
 
     @model_validator(mode="after")
     def _default_human_team_ids(self) -> "GameState":
-        if not self.human_team_ids:
+        # Back-compat default for pre-multiplayer saves (v1 had exactly one
+        # human, named by user_team_id). An EMPTY list is legitimate in
+        # legacy mode, though: a solo manager between jobs (dismissed,
+        # offers pending) runs no org, and resurrecting their old club as
+        # human-run here would freeze its AI upkeep after a save/load.
+        if not self.human_team_ids and not self.career_offers_by:
             self.human_team_ids = [self.user_team_id]
         return self
 
@@ -946,3 +1110,59 @@ class GameState(BaseModel):
     # so the bare-engine gates never see them) and the shipped notes.
     agent_patches: list[PatchChange] = Field(default_factory=list)
     patch_history: list[PatchNote] = Field(default_factory=list)
+
+    # -- the Chronicle (v5) ----------------------------------------------------
+    # Append-only career history (manager/chronicle.py). Titles, awards,
+    # retirements, market moves, debuts, milestones — recorded at the
+    # moment they happen; career profiles, reputation, memories, the Hall
+    # of Fame and narrative callbacks are pure readers. NEVER pruned.
+    chronicle: list[ChronicleEntry] = Field(default_factory=list)
+    # Milestone bookkeeping: last celebrated 5-point overall band per
+    # player (human rosters; see chronicle.weekly_milestones).
+    dev_marks: dict[str, int] = Field(default_factory=dict)
+    # Debut bookkeeping: "" = generated this save, debut pending;
+    # "s{n}w{k}" = debut recorded. Absent = predates the system.
+    debut_marks: dict[str, str] = Field(default_factory=dict)
+
+    # -- Legacy Mode (v5) ------------------------------------------------------
+    # "sandbox" = the classic game (pick any org, manage forever).
+    # "legacy" = the career game: offers, contracts, boards that fire you.
+    # Both support solo and shared (LAN) play; old saves load as sandbox.
+    game_mode: str = "sandbox"
+    # Every human seat gets a ManagerSeat (both modes) so careers/reputation
+    # work everywhere; only legacy seats carry contracts. Keyed by seat id.
+    managers: dict[str, ManagerSeat] = Field(default_factory=dict)
+    # Pending job-market offers per DISMISSED manager seat. Non-empty =
+    # that manager must accept a job before the world can advance.
+    career_offers_by: dict[str, list[CareerOffer]] = Field(default_factory=dict)
+
+    # Org rivalries ("tidA|tidB" sorted -> intensity 0-100; manager/
+    # rivalries.py). Heat from playoff meetings/poaches; cools offseason.
+    rivalries: dict[str, float] = Field(default_factory=dict)
+    # The Hall of Fame — inducted at retirement, kept forever.
+    hall_of_fame: list[HofRecord] = Field(default_factory=list)
+    # Organizational knowledge per org: "playbook:<map>", "antistrat:<tid>",
+    # "methodology" -> 0-100 (manager/knowledge.py). Accrues from play,
+    # decays at offseason/patches, leaks with staff moves.
+    org_knowledge: dict[str, dict[str, float]] = Field(default_factory=dict)
+
+    def manager_for(self, team_id: str) -> "ManagerSeat | None":
+        """The seat currently managing a team (None = AI-run)."""
+        for mid in sorted(self.managers):
+            if self.managers[mid].team_id == team_id:
+                return self.managers[mid]
+        return None
+
+    def seat_for_session(self, team_id: str) -> "ManagerSeat | None":
+        """The seat a UI session keyed to `team_id` belongs to: the
+        employed seat at that org, else the (unique in practice) fired
+        seat whose last org it was — a dismissed manager's browser stays
+        bound to the old team until they accept a new job."""
+        seat = self.manager_for(team_id)
+        if seat is not None:
+            return seat
+        for mid in sorted(self.managers):
+            s = self.managers[mid]
+            if not s.team_id and s.last_team_id == team_id:
+                return s
+        return None

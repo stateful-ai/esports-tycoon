@@ -22,26 +22,32 @@ from esports_sim.manager.gen import _FIRST_NAMES, _LAST_NAMES, _TEAM_NAMES
 from esports_sim.manager.state import GameState, StaffMember
 from esports_sim.rng.tree import RngTree
 
-ROLES = ["coach", "analyst", "physio"]
+ROLES = ["coach", "analyst", "physio", "psychologist", "performance_coach"]
 
-# A healthy market: at least this many free agents at all times, roughly
-# 40% coaches / 30% analysts / 30% physios.
+# A healthy market: at least this many free agents at all times. The two
+# department roles (psychologist / performance coach) are rarer — a full
+# competitive-intelligence department is a late-game build.
 POOL_MIN = 54
 _POOL_ROLE_CYCLE = [
     "coach", "analyst", "physio", "coach", "analyst",
-    "physio", "coach", "coach", "analyst", "physio",
+    "physio", "psychologist", "coach", "analyst", "physio",
+    "coach", "performance_coach",
 ]
 
 ROLE_BLURB = {
     "coach": "training growth (extra on their specialty focus)",
     "analyst": "scouting speed + stat depth",
     "physio": "weekly stamina recovery",
+    "psychologist": "confidence stability (shaken players recover faster)",
+    "performance_coach": "form upkeep between matches",
 }
 
 SPECIALTIES: dict[str, list[str]] = {
     "coach": ["mechanical", "tactical", "mental", "team"],
     "analyst": ["opponents", "market", "data"],
     "physio": ["recovery", "longevity", "prevention"],
+    "psychologist": ["pressure", "confidence", "cohesion"],
+    "performance_coach": ["routines", "consistency", "peaking"],
 }
 
 SPECIALTY_BLURB = {
@@ -55,6 +61,12 @@ SPECIALTY_BLURB = {
     "recovery": "post-match recovery protocols",
     "longevity": "career-extension programs",
     "prevention": "wrist/posture injury prevention",
+    "pressure": "big-stage composure work",
+    "confidence": "rebuilding shaken players",
+    "cohesion": "keeping five heads in one game",
+    "routines": "week-in, week-out preparation",
+    "consistency": "flattening the form rollercoaster",
+    "peaking": "arriving at playoffs in top gear",
 }
 
 _TRAIT_POOL = [
@@ -62,7 +74,13 @@ _TRAIT_POOL = [
     "networker", "quiet", "demanding", "developer", "grinder",
 ]
 
-_AGE_RANGE = {"coach": (30, 56), "analyst": (23, 46), "physio": (26, 52)}
+_AGE_RANGE = {
+    "coach": (30, 56),
+    "analyst": (23, 46),
+    "physio": (26, 52),
+    "psychologist": (30, 58),
+    "performance_coach": (27, 50),
+}
 _REGIONS = ["americas", "emea", "pacific"]
 
 # Extra ticks a coach's specialty adds when the week's focus matches it.
@@ -174,7 +192,15 @@ def hire(gs: GameState, staff_id: str) -> tuple[bool, str]:
     gs.staff[cand.role] = cand
     gs.staff_pool.remove(cand)
     cand.history.append(f"S{gs.season}: {cand.role}, {team.name}")
+    # An ex-staffer of another org carries part of the old book with them
+    # (knowledge leak — see manager/knowledge.py).
+    if cand.last_org and cand.role in ("coach", "analyst"):
+        from esports_sim.manager import knowledge
+
+        knowledge.on_staff_move(gs, cand.last_org, gs.acting_team_id)
+    cand.last_org = ""
     if old is not None:
+        old.last_org = gs.acting_team_id
         gs.staff_pool.append(old)
         gs.staff_pool.sort(key=lambda m: m.id)
     gs.push_news(
@@ -187,6 +213,7 @@ def release(gs: GameState, role: str) -> tuple[bool, str]:
     member = gs.staff.pop(role, None)
     if member is None:
         return False, f"no {role} on staff"
+    member.last_org = gs.acting_team_id  # they leave knowing your book
     gs.staff_pool.append(member)
     gs.staff_pool.sort(key=lambda m: m.id)
     gs.push_news(f"{member.name} leaves the {role} role.")
@@ -229,6 +256,75 @@ def physio_recovery(gs: GameState) -> float:
     """Extra stamina per player per week."""
     physio = gs.staff.get("physio")
     return physio.quality / 18.0 if physio else 0.0  # up to ~5.4/wk
+
+
+def confidence_support(gs: GameState) -> float:
+    """Psychologist: weekly pull applied to sub-50 confidence — shaken
+    players recover toward neutral faster. Zero without one, and never
+    inflates confidence past 50 (support, not a hype machine)."""
+    psych = gs.staff.get("psychologist")
+    return psych.quality / 60.0 if psych else 0.0  # up to ~1.5/wk
+
+
+def form_upkeep(gs: GameState) -> float:
+    """Performance coach: weekly form floor maintenance for sub-50 form.
+    Same shape as confidence_support — a pull toward neutral, not a buff."""
+    pc = gs.staff.get("performance_coach")
+    return pc.quality / 70.0 if pc else 0.0  # up to ~1.3/wk
+
+
+# -- coaching tree --------------------------------------------------------------
+
+# What makes a retiring player staff material, and which chair suits them.
+TREE_MIN_AGE = 28
+TREE_MIN_CA = 52.0
+
+
+def retire_into_staff(gs: GameState, p, ca: float, team_name: str) -> "StaffMember | None":
+    """The coaching tree: an eligible retiree joins the shared staff pool
+    as a candidate — IGLs and high-game-sense players become coaches,
+    utility/positioning brains become analysts. Deterministic (no rng, so
+    the offseason stream never shifts); their playing identity carries
+    into the chair (name, region, a career line, their titles)."""
+    if p.age < TREE_MIN_AGE or ca < TREE_MIN_CA:
+        return None
+    attrs = p.attributes
+    game_sense = attrs.get("game_sense", 0.0)
+    comms = attrs.get("comms_quality", 0.0)
+    utility = attrs.get("utility_usage", 0.0)
+    positioning = attrs.get("positioning", 0.0)
+    is_igl = str(p.playstyle) == "igl"
+    if is_igl or game_sense >= 62.0 or comms >= 66.0:
+        role = "coach"
+        specialty = "tactical" if game_sense >= comms else "team"
+    elif utility >= 62.0 or positioning >= 64.0:
+        role = "analyst"
+        specialty = "opponents"
+    else:
+        return None
+    quality = float(np.round(min(88.0, 30.0 + ca * 0.55 + (8.0 if is_igl else 0.0)), 1))
+    member = StaffMember(
+        id=f"staff_ex_{p.id}",
+        name=p.real_name or p.handle,
+        role=role,
+        quality=quality,
+        salary=max(1_500, int(np.round((quality ** 1.5) * 8 / 100) * 100)),
+        age=p.age,
+        region=str(getattr(p, "region", "") or ""),
+        specialty=specialty,
+        traits=["developer"] if role == "coach" else ["grinder"],
+        history=[f"pro career as {p.handle}" + (f", last of {team_name}" if team_name else "")],
+        seasons_experience=0,
+        former_player_id=p.id,
+    )
+    if any(m.id == member.id for m in gs.staff_pool):
+        return None  # already in the pool (can't happen twice, but cheap)
+    gs.staff_pool.append(member)
+    gs.staff_pool.sort(key=lambda m: m.id)
+    gs.push_news(
+        f"{p.handle} moves into the backroom - available as a {role.replace('_', ' ')}."
+    )
+    return member
 
 
 # -- analytics department ------------------------------------------------------

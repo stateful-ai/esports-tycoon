@@ -290,6 +290,19 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
         msg += _tactic_flavor(gs.teams[f.winner_id].tactics)
     h2h = head_to_head(gs, gs.user_team_id, opp_id)
     msg += _h2h_callback(rng, h2h, gs.user_team_id, opp_id, opp, won)
+    # A named rivalry colours the result — dry, and only when the heat is
+    # real (the rivalry graph, manager/rivalries.py).
+    from esports_sim.manager import rivalries as _riv
+
+    if _riv.get(gs, gs.user_team_id, opp_id) >= _riv.RIVALRY_BAR:
+        msg += _pick(
+            rng,
+            [
+                " No love lost between these two.",
+                " The rivalry ledger gets another page.",
+                " These teams do not like each other.",
+            ],
+        )
     if f.stage != "regular":
         msg = f"[{f.stage.upper()}] " + msg
     gs.push_news(msg)
