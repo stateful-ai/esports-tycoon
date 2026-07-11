@@ -545,3 +545,466 @@ free_agents:
   - sova
   - killjoy
   - cypher
+# --- 2026-07 batch: deeper pool, deliberately lopsided profiles (owner
+# asked for "great thinker, bad aimer" / "great AWPer, weak IGL" types
+# via attr_overrides rather than uniform archetype jitter). ---
+- handle: C0M
+  real_name: Corbin Lee
+  age: 25
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 58
+  agents:
+  - sova
+  - skye
+  - breach
+  attr_overrides:
+    utility_usage: 88
+    game_sense: 82
+    aim_precision: 42
+    aim_reactivity: 40
+    clutch_factor: 44
+- handle: okeanos
+  real_name: Anthony Nguyen
+  age: 21
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 47
+  agents:
+  - omen
+  - viper
+  - clove
+- handle: ANGE1
+  real_name: Kyrylo Karasov
+  age: 29
+  region: emea
+  country: UA
+  languages:
+  - lang: uk
+    level: 100.0
+  - lang: ru
+    level: 90.0
+  - lang: en
+    level: 70.0
+  role: sentinel
+  playstyle: igl
+  igl: true
+  quality: 62
+  agents:
+  - killjoy
+  - cypher
+  - viper
+  attr_overrides:
+    game_sense: 94
+    comms_quality: 92
+    composure: 80
+    aim_precision: 38
+    aim_reactivity: 34
+    movement: 40
+- handle: Magnum
+  real_name: Martin Penkov
+  age: 27
+  region: emea
+  country: BG
+  languages:
+  - lang: bg
+    level: 100.0
+  - lang: en
+    level: 70.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 54
+  agents:
+  - jett
+  - reyna
+  - raze
+- handle: pyrolll
+  real_name: Artur Minin
+  age: 21
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 45.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 63
+  agents:
+  - jett
+  - raze
+  - phoenix
+  attr_overrides:
+    aim_precision: 82
+    aim_reactivity: 80
+    tilt_resistance: 38
+- handle: TenTen
+  real_name: Kim Tae-young
+  age: 22
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 98.0
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 53
+  agents:
+  - killjoy
+  - cypher
+  - chamber
+- handle: CLZ
+  real_name: Hikaru Mizutani
+  age: 25
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 49
+  agents:
+  - jett
+  - raze
+  - phoenix
+- handle: mindfreak
+  real_name: Aaron Leonhart
+  age: 25
+  region: pacific
+  country: SG
+  languages:
+  - lang: en
+    level: 100.0
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 71
+  agents:
+  - clove
+  - omen
+  - viper
+  attr_overrides:
+    game_sense: 88
+    utility_usage: 86
+    comms_quality: 80
+    aim_precision: 46
+- handle: neth
+  real_name: Yusuke Matsuda
+  age: 29
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 100.0
+  - lang: en
+    level: 40.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 46
+  agents:
+  - jett
+  - raze
+  - phoenix
+  attr_overrides:
+    tilt_resistance: 34
+    composure: 38
+- handle: TenZ
+  real_name: Tyson Ngo
+  age: 25
+  region: americas
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  role: duelist
+  playstyle: awper
+  igl: false
+  quality: 79
+  agents:
+  - jett
+  - chamber
+  - raze
+  attr_overrides:
+    aim_precision: 99
+    aim_reactivity: 97
+    movement: 92
+    clutch_factor: 78
+    game_sense: 44
+    comms_quality: 40
+- handle: Tarik
+  real_name: Tarik Celik
+  age: 32
+  region: americas
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: tr
+    level: 60.0
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 56
+  agents:
+  - sova
+  - skye
+  - breach
+  attr_overrides:
+    game_sense: 80
+    comms_quality: 84
+    aim_precision: 48
+    aim_reactivity: 46
+    composure: 68
+- handle: Mixwell
+  real_name: Oscar Canellas
+  age: 30
+  region: emea
+  country: ES
+  languages:
+  - lang: es
+    level: 100.0
+  - lang: en
+    level: 75.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 51
+  agents:
+  - jett
+  - raze
+  - phoenix
+  attr_overrides:
+    aim_precision: 76
+    aim_reactivity: 68
+    game_sense: 40
+    tilt_resistance: 36
+# --- T2/Challengers batch: lower-profile scene talent, still deliberately
+# lopsided where the scouting reports support it. ---
+- handle: Chadi
+  real_name: Balazs Farsang
+  age: 23
+  region: emea
+  country: HU
+  languages:
+  - lang: hu
+    level: 100.0
+  - lang: en
+    level: 55.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 48
+  agents:
+  - jett
+  - reyna
+  - raze
+  attr_overrides:
+    aim_precision: 66
+    aim_reactivity: 62
+    game_sense: 40
+- handle: STERBEN
+  real_name: Emre Demirci
+  age: 27
+  region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 100.0
+  - lang: en
+    level: 50.0
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 50
+  agents:
+  - killjoy
+  - cypher
+  - viper
+  attr_overrides:
+    composure: 70
+    tilt_resistance: 68
+    game_sense: 62
+    aim_precision: 40
+    aim_reactivity: 36
+- handle: glovee
+  real_name: Burak Yildirim
+  age: 26
+  region: emea
+  country: TR
+  languages:
+  - lang: tr
+    level: 100.0
+  - lang: en
+    level: 55.0
+  role: controller
+  playstyle: igl
+  igl: true
+  quality: 52
+  agents:
+  - omen
+  - viper
+  - clove
+  attr_overrides:
+    game_sense: 78
+    comms_quality: 80
+    aim_precision: 38
+    aim_reactivity: 36
+- handle: TENNN
+  real_name: Tenta Asai
+  age: 24
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  - lang: en
+    level: 30.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 58
+  agents:
+  - jett
+  - raze
+  - reyna
+  attr_overrides:
+    aim_precision: 82
+    aim_reactivity: 80
+    movement: 74
+    utility_usage: 34
+    game_sense: 42
+- handle: Ask
+  real_name: Seigi Yamamoto
+  age: 22
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 97.0
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 54
+  agents:
+  - sova
+  - skye
+  - breach
+  attr_overrides:
+    aim_precision: 74
+    aim_reactivity: 72
+    utility_usage: 40
+- handle: Yowamu
+  real_name: Ryohei Sato
+  age: 21
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 96.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 50
+  agents:
+  - raze
+  - jett
+  - phoenix
+- handle: Bangnan
+  real_name: Jung Min-u
+  age: 24
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 97.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 49
+  agents:
+  - jett
+  - reyna
+  - raze
+- handle: STYRON
+  real_name: Tidus Goh
+  age: 24
+  region: pacific
+  country: SG
+  languages:
+  - lang: en
+    level: 100.0
+  - lang: zh
+    level: 60.0
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 53
+  agents:
+  - cypher
+  - killjoy
+  - viper
+  attr_overrides:
+    tilt_resistance: 42
+    composure: 46
+- handle: Septem7
+  real_name: Liu Zhening
+  age: 27
+  region: china
+  country: CN
+  languages:
+  - lang: zh
+    level: 98.0
+  role: controller
+  playstyle: igl
+  igl: true
+  quality: 48
+  agents:
+  - omen
+  - viper
+  - clove
+  attr_overrides:
+    game_sense: 88
+    comms_quality: 82
+    composure: 74
+    aim_precision: 32
+    aim_reactivity: 30
+    movement: 34
+- handle: Youze
+  real_name: Lai You-ze
+  age: 18
+  region: china
+  country: TW
+  languages:
+  - lang: zh
+    level: 98.0
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 44
+  agents:
+  - raze
+  - jett
+  - phoenix
+  attr_overrides:
+    aim_precision: 60
+    movement: 62
+    game_sense: 34
