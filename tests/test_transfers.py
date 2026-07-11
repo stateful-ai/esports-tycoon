@@ -306,6 +306,15 @@ def test_tier2_buyout_clause(campaign) -> None:
         if t.tier == 1 and t.id != buyer and t.player_ids
     )
     assert market.buyout_fee(gs, t1.player_ids[0]) is None
+
+
+def test_transfer_ask_breakdown_reconciles(campaign) -> None:
+    gs = campaign
+    seller = next(t for t in gs.teams.values() if t.id != gs.user_team_id)
+    pid = seller.player_ids[0]
+    parts = market.transfer_ask_breakdown(gs, pid)
+    assert sum(part["delta"] for part in parts) == market.transfer_ask(gs, pid)
+    assert parts[0]["label"] == "base value"
     gs.set_acting(None)
 
 

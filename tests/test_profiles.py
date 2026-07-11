@@ -72,6 +72,7 @@ PLAYER_BLOCK = {
     "is_free_agent",
     "tenure_weeks",
     "transfer_ask",
+    "ask_breakdown",
     "followers",
     "stream_load",
     "stream_status",
@@ -876,6 +877,16 @@ def test_market_rows_carry_languages(env):
     fa = gs.players[sorted(gs.free_agent_ids)[0]]
     res = server_mod.market_search(q=fa.handle)["results"]
     assert res and all(isinstance(r["languages"], list) for r in res)
+
+
+def test_rival_prices_carry_reconciled_breakdowns(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    rv = server_mod.roster(h.rival_team)
+    for row in rv["players"]:
+        quoted = row["buyout"] if row["buyout"] is not None else row["transfer_ask"]
+        assert sum(part["delta"] for part in row["ask_breakdown"]) == quoted
+        assert all(set(part) == {"label", "delta"} for part in row["ask_breakdown"])
 
 
 def test_league_endpoint_shape(env):
