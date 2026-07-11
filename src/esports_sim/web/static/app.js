@@ -8,6 +8,11 @@ const el = (tag, cls, html) => {
   return n;
 };
 const money = (n) => (n == null ? "—" : n.toLocaleString() + " cr");
+const askBreakdown = (parts) => !parts?.length ? "" :
+  `<details class="ask-breakdown"><summary class="chip">Why this price?</summary>` +
+  parts.map((p) => `<div class="rowbar"><span>${esc(p.label)}</span>` +
+    `<span class="rowbar-val mono">${p.delta >= 0 ? "+" : "−"}${money(Math.abs(p.delta))}</span></div>`).join("") +
+  `</details>`;
 // Prettify a snake_case tag/trait id ("team_player" -> "Team Player") for display.
 const humanize = (s) => (s || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -1511,7 +1516,7 @@ async function roster(v) {
         <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
         <td class="num">${money(p.salary)}/wk</td>
         <td class="num">${p.contract_weeks_left}w</td>
-        <td>${actions}</td>`;
+        <td>${actions}${askBreakdown(p.ask_breakdown)}</td>`;
     } else {
       // Development view: the per-player weekly plan, one interaction each.
       // Mentorship: older, higher-rated teammates can mentor this player,
@@ -1601,7 +1606,8 @@ async function roster(v) {
       };
       tr.querySelector('[data-act="offer"]').onclick = (e) => {
         e.stopPropagation();
-        openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: data.team.name });
+        openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask,
+          team_name: data.team.name, ask_breakdown: p.ask_breakdown });
       };
     }
     if (overview && data.is_user_team) {
@@ -3202,7 +3208,7 @@ function playerSearchCard() {
         <td class="num">${p.age}</td>
         <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
         <td>${club}</td>
-        <td class="num">${price}</td>
+        <td class="num">${price}${askBreakdown(p.ask_breakdown)}</td>
         <td data-act></td>`);
       const actCell = tr.querySelector("[data-act]");
       if (p.is_free_agent) {
@@ -3222,6 +3228,7 @@ function playerSearchCard() {
         const b = el("button", "btn btn-sm", "Offer…");
         b.onclick = () => openOffer({
           id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
+          ask_breakdown: p.ask_breakdown,
         });
         actCell.appendChild(b);
       }
@@ -3473,6 +3480,7 @@ async function openOffer(target) {
     <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value —
     but they run <i>their own</i> numbers on your players. A scout who rates your
     guys sees a rich package; one who doesn't will want more cash on top.</p>`;
+  panel.insertAdjacentHTML("beforeend", askBreakdown(target.ask_breakdown));
   const list = el("div", "");
   const chosen = new Set();
   for (const p of mine) {

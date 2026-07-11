@@ -1703,6 +1703,11 @@ def roster(team_id: str) -> dict:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
                 v["buyout"] = market.buyout_fee(gs, v["id"])
+                v["ask_breakdown"] = (
+                    market.buyout_breakdown(gs, v["id"])
+                    if v["buyout"] is not None
+                    else market.transfer_ask_breakdown(gs, v["id"])
+                )
         # Coaching identity: always readable for your own club, and for a
         # rival once you've scouted them enough to read their style.
         if own or gs.scout_progress.get(team_id, 0.0) >= 0.5:
@@ -2685,6 +2690,11 @@ def market_search(q: str = "") -> dict:
                 "asking_salary": market.asking_salary(p) if is_fa else None,
                 "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
                 "buyout": market.buyout_fee(gs, pid) if rival else None,
+                "ask_breakdown": (
+                    market.buyout_breakdown(gs, pid)
+                    if rival and market.buyout_fee(gs, pid) is not None
+                    else market.transfer_ask_breakdown(gs, pid) if rival else []
+                ),
                 "portrait": _portrait_url(pid, str(p.role)),
                 "languages": _language_views(p),
             })
@@ -4792,6 +4802,11 @@ def player_profile(pid: str) -> dict:
                     market.transfer_ask(gs, pid)
                     if (not is_fa and team_id and team_id != gs.acting_team_id)
                     else None
+                ),
+                "ask_breakdown": (
+                    market.transfer_ask_breakdown(gs, pid)
+                    if (not is_fa and team_id and team_id != gs.acting_team_id)
+                    else []
                 ),
                 "followers": p.followers,
                 # Streaming: how much they stream, the org's weekly cut, the
