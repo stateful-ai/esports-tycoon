@@ -1441,15 +1441,15 @@ async function roster(v) {
     right,
   }));
 
-  const ws = el("div", "ws");
+  const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
-  const main = el("div", "ws-9");
-  const rail = el("div", "ws-3 ws-col");
+  const main = el("div", "ws-9 roster-main");
+  const rail = el("div", "ws-3 ws-col roster-rail");
   ws.appendChild(main);
   ws.appendChild(rail);
 
   /* -- main ws-9: the roster table ----------------------------------------- */
-  const card = el("div", "card");
+  const card = el("div", "card roster-card");
   if (data.is_user_team && data.players.length < (data.roster_min ?? 5)) {
     card.appendChild(el("p", "warn",
       `⚠ You need ${data.roster_min ?? 5} players to advance the week — sign ${(data.roster_min ?? 5) - data.players.length} more.`));
@@ -1459,7 +1459,7 @@ async function roster(v) {
   }
 
   const starTh = hasBench ? "<th>★</th>" : "";
-  const t = el("table");
+  const t = el("table", "roster-table");
   t.innerHTML = overview
     ? `<thead><tr>${starTh}<th>Player</th><th>Role</th><th>Agent</th>
        <th class="num">Age</th><th class="num">OVR</th><th>Ceiling</th>
@@ -1522,7 +1522,7 @@ async function roster(v) {
         <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
         <td class="num">${money(p.salary)}/wk</td>
         <td class="num">${p.contract_weeks_left}w</td>
-        <td>${actions}${askBreakdown(p.ask_breakdown)}</td>`;
+        <td><div class="roster-actions">${actions}</div>${askBreakdown(p.ask_breakdown)}</td>`;
     } else {
       // Development view: the per-player weekly plan, one interaction each.
       // Mentorship: older, higher-rated teammates can mentor this player,
@@ -2108,7 +2108,7 @@ function tacticsStrategy(main, rail, data) {
 // the map. "Auto" leaves the engine to field their best-mastery agent (the
 // default). Rivals must scout you to 50%+ to read this on your roster page.
 function lineupCard(v, lineup) {
-  const card = el("div", "card", `<h2>This week's lineup</h2>`);
+  const card = el("div", "card lineup-card", `<h2>This week's lineup</h2>`);
   card.appendChild(el("p", "muted",
     `Lock the agent each player runs this week. You won't know the map when it's
      played, so it's one agent per player — pick for comfort. <b>Auto</b> fields
@@ -2119,12 +2119,12 @@ function lineupCard(v, lineup) {
   const tb = el("tbody");
   const pending = {}; // pid -> agent_id ("" = auto)
   for (const p of lineup.players) {
-    const sel = el("select", "lineup-sel");
+    const sel = el("select", "select lineup-sel");
     const auto = el("option", "", `Auto — ${p.auto_name}`);
     auto.value = "";
     sel.appendChild(auto);
     for (const o of p.options) {
-      const opt = el("option", "", `${o.name} · ${o.role} · ${o.mastery} mastery`);
+      const opt = el("option", "", o.name);
       opt.value = o.id;
       sel.appendChild(opt);
     }
@@ -3053,10 +3053,13 @@ async function marketStaff(v) {
     `Staff market <span class="muted" style="font-weight:400">— ${data.pool.length} free agents</span>`));
   poolCard.appendChild(el("p", "muted",
     `One shared pool — in a shared world, rival managers hire from the same market. ` +
-    `Hiring replaces your current ${esc(data.roles.join("/"))} in that role (they return ` +
+    `Hiring replaces your current ${data.roles.map((r) => humanize(r)).join(" / ")} in that role (they return ` +
     `to the pool). Click a name for the full profile.`));
 
-  const rolePlural = { coach: "Coaches", analyst: "Analysts", physio: "Physios" };
+  const rolePlural = {
+    coach: "Coaches", analyst: "Analysts", physio: "Physios",
+    psychologist: "Psychologists", performance_coach: "Performance coaches",
+  };
   // Role filter chips (client-only): "All" plus one per role. Repaints the
   // tables area in place — no re-fetch, tables keep their sortable headers.
   let activeRole = "all";
@@ -3072,7 +3075,7 @@ async function marketStaff(v) {
   for (const role of data.roles) mkChip(role, rolePlural[role] ?? cap(role));
   poolCard.appendChild(chipRow);
 
-  const tablesBox = el("div", "");
+  const tablesBox = el("div", "staff-tables");
   const paint = () => {
     for (const [id, b] of chips) b.classList.toggle("on", id === activeRole);
     tablesBox.innerHTML = "";
@@ -3080,7 +3083,7 @@ async function marketStaff(v) {
       if (activeRole !== "all" && role !== activeRole) continue;
       const members = data.pool.filter((m) => m.role === role);
       if (!members.length) continue;
-      tablesBox.appendChild(el("h2", "",
+      tablesBox.appendChild(el("h2", "staff-section-title",
         `${rolePlural[role] ?? cap(role)} <span class="muted" style="font-weight:400">— ${esc(data.blurbs[role])}</span>`));
       const t = el("table");
       t.innerHTML = `<thead><tr><th>Name</th><th class="num">Age</th><th>Region</th>
@@ -3126,7 +3129,7 @@ async function marketStaff(v) {
     const block = el("div", "");
     if (hired) {
       const row = el("div", "entity",
-        `<span class="pill">${esc(role)}</span> <span class="entity-name"><b>${slink(hired.id, hired.name)}</b></span>`);
+        `<span class="pill">${humanize(role)}</span> <span class="entity-name"><b>${slink(hired.id, hired.name)}</b></span>`);
       const rel = el("button", "btn btn-sm", "Release");
       rel.style.marginLeft = "auto";
       rel.onclick = async () => {
@@ -3144,7 +3147,7 @@ async function marketStaff(v) {
       }
     } else {
       block.appendChild(el("div", "entity",
-        `<span class="pill">${esc(role)}</span> <span class="entity-meta">vacant</span>`));
+        `<span class="pill">${humanize(role)}</span> <span class="entity-meta">vacant</span>`));
       block.appendChild(el("div", "muted", esc(data.blurbs[role])));
     }
     backroom.appendChild(block);
@@ -3173,9 +3176,8 @@ function playerSearchCard() {
   const card = el("div", "card");
   card.innerHTML = `<h2>Find a player</h2>`;
   const row = el("div", "row", "");
-  const inp = el("input", "mono");
+  const inp = el("input", "field mono player-search-input");
   inp.placeholder = "search by handle or real name…";
-  inp.style.minWidth = "260px";
   row.appendChild(inp);
   card.appendChild(row);
   const box = el("div", "");
@@ -3662,13 +3664,17 @@ async function scouting(v) {
   ws.appendChild(rail);
 
   /* -- main ws-7: the scout desk (assignment + active job) ------------------ */
-  const card = el("div", "card");
+  const card = el("div", "card scout-desk");
   card.appendChild(el("h2", "", "Scout desk"));
   card.appendChild(el("p", "muted",
     "One scout, one assignment: cover a team (steady, ~3 weeks), sweep the " +
     "market (slower, wider), attend a match (one-shot intel on both sides), or " +
     "build the book on one player (fastest — and it goes deeper: comfort picks, " +
     "how they play, their mentality, the full verdict)."));
+  card.appendChild(el("div", "scout-one-note",
+    `<span class="chip tone-accent">One active job</span>` +
+    `<b>Choose one of the three assignments below.</b> ` +
+    `<span class="muted">Starting another immediately replaces the current job.</span>`));
 
   // Current assignment: the team name LINKS when covering a team (id in scope).
   if (data.target) {
@@ -3692,8 +3698,12 @@ async function scouting(v) {
   }
 
   // -- assignment pickers ----------------------------------------------------
-  const row = el("div", "row");
-  const sel = el("select");
+  const choices = el("div", "scout-choices");
+  const coverageChoice = el("div", "tile scout-choice");
+  coverageChoice.appendChild(el("div", "scout-choice-head",
+    `<span class="chip">1</span><b>Cover a beat</b>`));
+  coverageChoice.appendChild(el("span", "muted scout-choice-copy", "Build team or market coverage over time."));
+  const sel = el("select", "select");
   sel.appendChild(el("option", "", "— cover a team / market —"));
   const mkt = el("option", "", "Free-agent market");
   mkt.value = "market";
@@ -3711,12 +3721,19 @@ async function scouting(v) {
     toast(r.message);
     render();
   };
-  row.appendChild(sel);
+  coverageChoice.appendChild(sel);
+  choices.appendChild(coverageChoice);
 
   // Attend a match (next two weeks, not your own games).
+  const matchChoice = el("div", "tile scout-choice");
+  matchChoice.appendChild(el("div", "scout-choice-head",
+    `<span class="chip">2</span><b>Attend a match</b>`));
+  matchChoice.appendChild(el("span", "muted scout-choice-copy", "One-shot intel on both teams after they play."));
+  const fsel = el("select", "select");
+  fsel.appendChild(el("option", "", (data.upcoming ?? []).length
+    ? "— choose a fixture —" : "No attendable matches"));
+  fsel.disabled = !(data.upcoming ?? []).length;
   if ((data.upcoming ?? []).length) {
-    const fsel = el("select");
-    fsel.appendChild(el("option", "", "— attend a match —"));
     for (const f of data.upcoming) {
       const o = el("option", "", `${f.label} (W${f.week}${f.stage !== "regular" ? " · " + f.stage : ""})`);
       o.value = f.id;
@@ -3729,16 +3746,18 @@ async function scouting(v) {
       toast(r.message);
       render();
     };
-    row.appendChild(fsel);
   }
-  card.appendChild(row);
+  matchChoice.appendChild(fsel);
+  choices.appendChild(matchChoice);
 
   // Deep-dive a player: search league-wide, click to assign.
-  const prow = el("div", "row");
-  const pin = el("input", "mono");
+  const playerChoice = el("div", "tile scout-choice");
+  playerChoice.appendChild(el("div", "scout-choice-head",
+    `<span class="chip">3</span><b>Deep-dive a player</b>`));
+  playerChoice.appendChild(el("span", "muted scout-choice-copy", "Fastest route to comfort, style and mentality reads."));
+  const pin = el("input", "field mono");
   pin.placeholder = "deep-dive a player: search by name…";
-  pin.style.minWidth = "240px";
-  prow.appendChild(pin);
+  playerChoice.appendChild(pin);
   const pbox = el("div", "");
   let ptimer = null;
   pin.oninput = () => {
@@ -3764,8 +3783,9 @@ async function scouting(v) {
       if (!pbox.childElementCount) pbox.appendChild(el("span", "muted", "no players match"));
     }, 250);
   };
-  card.appendChild(prow);
-  card.appendChild(pbox);
+  playerChoice.appendChild(pbox);
+  choices.appendChild(playerChoice);
+  card.appendChild(choices);
   main.appendChild(card);
 
   if (data.match_report) {
@@ -4403,9 +4423,11 @@ async function social(v) {
     `<span class="chip">roster reach ${fmtFollowers(data.your_reach)}</span>` +
     `<span class="chip">org fans ${fmtFollowers(data.fan_count)}</span>` +
     `<span class="pill ${moodTone}">fanbase ${esc(moodWord)} (${Math.round(mood)})</span>`));
-  const streamRow = el("div", "row",
-    `<span class="microlabel">Streaming</span> <b class="mono">${money(data.your_stream_income || 0)}/wk</b> ` +
-    `<span class="muted">org cut</span><span class="spacer"></span>`);
+  const streamRow = el("div", "tile stream-income-tile",
+    `<span class="stream-income-icon">↗</span>` +
+    `<span><span class="microlabel">Streamer revenue</span>` +
+    `<b class="mono stream-income-value">${money(data.your_stream_income || 0)}/wk</b>` +
+    `<span class="muted">direct weekly org income</span></span><span class="spacer"></span>`);
   const finBtn = el("button", "btn btn-sm", "→ Finances");
   finBtn.onclick = () => dashGoTab("finances");
   streamRow.appendChild(finBtn);

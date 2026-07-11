@@ -77,7 +77,7 @@ body {
   text-shadow: 0 0 14px color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
 }
 
-#view { padding: 16px; max-width: 1440px; margin: 0 auto; }
+#view { padding: 16px; max-width: 1680px; margin: 0 auto; }
 
 /* -- primitives ----------------------------------------------------------- */
 
@@ -129,6 +129,12 @@ body {
   content: ""; width: 5px; height: 12px; flex: 0 0 auto;
   background: var(--es-color-brand, #ff4655);
   transform: skewX(-12deg); border-radius: 1px;
+}
+.tile {
+  padding: 9px 10px;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-md, 6px);
 }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .row { display: flex; gap: 10px; align-items: center; }
@@ -1314,18 +1320,30 @@ p.warn, .warn { color: var(--es-color-text-warning, #e5a53a); }
 p.good, .good { color: var(--es-color-text-success, #46a758); }
 /* Select base — one form-control skin; the size variants below keep their
    own metrics. */
-.select, .sel-sm, .dev-plan select {
+.field, .select, .sel-sm, .dev-plan select {
   font: inherit; font-size: var(--es-text-xs, 11px);
-  color: var(--es-color-text-secondary, #a2aec6);
-  background: var(--es-color-bg-surface, #0f1520);
+  color: var(--es-color-text-primary, #e9edf6);
+  background: var(--es-color-bg-sunken, #0b1019);
   border: 1px solid var(--es-color-border-primary, #26324a);
   border-radius: var(--es-radius-sm, 4px);
-  padding: 3px 6px;
+  padding: 6px 9px;
+  color-scheme: dark;
+  transition: border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    background var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
+.field::placeholder { color: var(--es-color-text-tertiary, #67748f); }
+.field:hover, .select:hover, .sel-sm:hover, .dev-plan select:hover {
+  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 40%, var(--es-color-border-primary, #26324a));
+}
+.field:focus, .select:focus, .sel-sm:focus, .dev-plan select:focus {
+  border-color: var(--es-color-accent, #4fd8c0);
+  background: var(--es-color-bg-surface, #0f1520);
+}
+.field:disabled, .select:disabled { opacity: .5; cursor: not-allowed; }
 .sel-sm { font-size: 12px; max-width: 160px; }
 /* Re-assert mono for .sel-sm.mono inputs: the .mono rule sits above this
    grouped `font: inherit`, which would otherwise win on order. */
-.select.mono, .sel-sm.mono { font-family: var(--es-font-mono, monospace); }
+.field.mono, .select.mono, .sel-sm.mono { font-family: var(--es-font-mono, monospace); }
 .lineup-block {
   margin-top: 14px; padding-top: 10px;
   border-top: 1px solid var(--es-color-border-secondary, #1c2536);
@@ -1358,6 +1376,67 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .dev-plan { white-space: nowrap; }
 /* Skin comes from the grouped .select base above; only the density here. */
 .dev-plan select { padding: 2px 4px; max-width: 96px; }
+
+/* Roster overview: spend the wider desktop canvas on stable one-line rows. */
+.roster-table { min-width: 1040px; }
+.roster-table th, .roster-table td { padding-left: 6px; padding-right: 6px; white-space: nowrap; }
+.roster-table .portrait { margin-right: 6px; }
+.roster-actions { display: flex; align-items: center; gap: 3px; flex-wrap: nowrap; }
+.roster-actions .btn { flex: none; }
+.roster-card .ask-breakdown { margin-top: 4px; }
+@media (min-width: 1500px) {
+  .roster-ws { grid-template-columns: repeat(16, minmax(0, 1fr)); }
+  .roster-main { grid-column: span 12; }
+  .roster-rail { grid-column: span 4; }
+}
+
+/* Weekly agent locks: fixed columns and compact labels keep the table inside
+   its rail card instead of letting option text define the card width. */
+.lineup-card { overflow: hidden; }
+.lineup-card table { table-layout: fixed; }
+.lineup-card th:nth-child(1) { width: 20%; }
+.lineup-card th:nth-child(2) { width: 30%; }
+.lineup-card th:nth-child(3) { width: 42%; }
+.lineup-card th:nth-child(4) { width: 8%; }
+.lineup-card th, .lineup-card td { padding-left: 5px; padding-right: 5px; }
+.lineup-card .lineup-sel { width: 100%; min-width: 0; padding: 3px 6px; }
+
+/* Market controls and staff sections use the same native form language. */
+.player-search-input { width: min(100%, 440px); }
+.staff-tables { padding-top: 8px; }
+.card .staff-section-title { margin-top: 22px; margin-bottom: 10px; }
+.card .staff-section-title:first-child { margin-top: 16px; }
+
+/* Scouting is one mutually-exclusive desk, expressed as three equal choices. */
+.scout-one-note {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 9px 10px; margin: 10px 0 12px;
+  border: 1px solid color-mix(in srgb, var(--es-color-accent, #4fd8c0) 35%, var(--es-color-border-primary, #26324a));
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 7%, transparent);
+  border-radius: var(--es-radius-md, 6px);
+}
+.scout-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.scout-choice { display: flex; flex-direction: column; gap: 7px; min-width: 0; margin: 0; }
+.scout-choice-head { display: flex; align-items: center; gap: 7px; }
+.scout-choice-copy { min-height: 34px; font-size: var(--es-text-xs, 11px); }
+.scout-choice .field, .scout-choice .select { width: 100%; min-width: 0; }
+.scout-choice .btn { margin: 4px 4px 0 0; }
+@media (max-width: 760px) { .scout-choices { grid-template-columns: 1fr; } }
+
+/* Social revenue is operating income, not footnote metadata. */
+.stream-income-tile {
+  display: flex; align-items: center; gap: 10px; margin: 10px 0 8px;
+  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 38%, var(--es-color-border-primary, #26324a));
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 7%, var(--es-color-bg-elevated, #161e2e));
+}
+.stream-income-icon {
+  display: grid; place-items: center; width: 30px; height: 30px; flex: none;
+  border-radius: 50%; color: var(--es-color-accent, #4fd8c0);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent);
+  font-size: var(--es-text-lg, 15px); font-weight: 700;
+}
+.stream-income-tile > span:nth-child(2) { display: flex; flex-direction: column; }
+.stream-income-value { color: var(--es-color-accent, #4fd8c0); font-size: 18px; line-height: 1.15; }
 
 /* Staff market names (.slink) share the unified .plink/.tlink/.slink link
    affordance at the bottom of this file. */
