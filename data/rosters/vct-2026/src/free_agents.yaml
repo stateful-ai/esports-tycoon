@@ -1008,3 +1008,390 @@ free_agents:
     aim_precision: 60
     movement: 62
     game_sense: 34
+# --- 2026-07 VLR intake. Profiles verified 2026-07-11; roles, ages, and
+# quality remain authored campaign estimates, as documented in NOTES.md. ---
+- handle: Click
+  real_name: Haydem Ali
+  age: 22
+  region: emea
+  country: DE
+  languages: [{lang: de, level: 100.0}, {lang: en, level: 70.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 57
+  agents: [jett, raze, reyna]
+- handle: Redgar
+  real_name: Igor Vlasov
+  age: 28
+  region: emea
+  country: RU
+  languages: [{lang: ru, level: 100.0}, {lang: en, level: 75.0}]
+  role: initiator
+  playstyle: igl
+  igl: true
+  quality: 65
+  agents: [sova, breach, skye]
+- handle: yay
+  real_name: Jaccob Whiteaker
+  age: 25
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: duelist
+  playstyle: awper
+  igl: false
+  quality: 75
+  agents: [chamber, jett, reyna]
+- handle: teasohot
+  real_name: ''
+  age: 21
+  region: pacific
+  country: AU
+  languages: [{lang: en, level: 100.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 48
+  agents: [jett, raze, reyna]
+- handle: Mephisto
+  real_name: ''
+  age: 22
+  region: americas
+  country: MX
+  languages: [{lang: es, level: 100.0}, {lang: en, level: 45.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 49
+  agents: [omen, viper, clove]
+- handle: flyuh
+  real_name: Xavier Carlson
+  age: 24
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 58
+  agents: [omen, viper, clove]
+- handle: moose
+  real_name: Kaleb Jayne
+  age: 25
+  region: americas
+  country: CA
+  languages: [{lang: en, level: 100.0}]
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 61
+  agents: [killjoy, cypher, viper]
+- handle: Derrek
+  real_name: Derrek Ha
+  age: 26
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 63
+  agents: [sova, skye, breach]
+- handle: infiltrator
+  real_name: Philip Nguyen
+  age: 23
+  region: pacific
+  country: VN
+  languages: [{lang: vi, level: 100.0}, {lang: en, level: 55.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 51
+  agents: [jett, raze, reyna]
+- handle: qck
+  real_name: Gabriel Lima
+  age: 22
+  region: americas
+  country: BR
+  languages: [{lang: pt, level: 100.0}, {lang: en, level: 50.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 64
+  agents: [jett, raze, reyna]
+- handle: Inspire
+  real_name: Hunter Schline
+  age: 27
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 51
+  agents: [sova, skye, breach]
+- handle: P0PPIN
+  real_name: Matteo Weber
+  age: 20
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 50
+  agents: [jett, raze, reyna]
+- handle: nightz
+  real_name: Christian Smith
+  age: 23
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 49
+  agents: [omen, viper, clove]
+- handle: tdawgg
+  real_name: Travis Regan
+  age: 24
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 50
+  agents: [sova, skye, breach]
+- handle: florescent
+  real_name: Ava Eugene
+  age: 19
+  region: pacific
+  country: VN
+  languages: [{lang: en, level: 100.0}, {lang: vi, level: 65.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 70
+  agents: [jett, raze, reyna]
+- handle: zombs
+  real_name: Jared Gitlin
+  age: 28
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: controller
+  playstyle: lurker
+  igl: false
+  quality: 58
+  agents: [omen, viper, clove]
+- handle: ShahZaM
+  real_name: Shahzeb Khan
+  age: 31
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}, {lang: ur, level: 50.0}]
+  role: duelist
+  playstyle: awper
+  igl: true
+  quality: 59
+  agents: [jett, chamber, sova]
+- handle: dapr
+  real_name: Michael Gulino
+  age: 25
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 61
+  agents: [cypher, killjoy, viper]
+- handle: Victor
+  real_name: Victor Wong
+  age: 29
+  region: americas
+  country: US
+  languages: [{lang: en, level: 100.0}]
+  role: flex
+  playstyle: entry
+  igl: false
+  quality: 70
+  agents: [raze, neon, breach]
+- handle: Zyppan
+  real_name: Pontus Eek
+  age: 23
+  region: emea
+  country: SE
+  languages: [{lang: sv, level: 100.0}, {lang: en, level: 85.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 68
+  agents: [breach, skye, raze]
+- handle: ardiis
+  real_name: Ardis Svarenieks
+  age: 27
+  region: emea
+  country: LV
+  languages: [{lang: lv, level: 100.0}, {lang: en, level: 90.0}, {lang: ru, level: 70.0}]
+  role: duelist
+  playstyle: awper
+  igl: false
+  quality: 64
+  agents: [jett, chamber, raze]
+- handle: pANcada
+  real_name: Bryan Luna
+  age: 27
+  region: americas
+  country: BR
+  languages: [{lang: pt, level: 100.0}, {lang: en, level: 60.0}]
+  role: controller
+  playstyle: anchor
+  igl: false
+  quality: 69
+  agents: [viper, omen, clove]
+- handle: tuyz
+  real_name: Arthur Andrade
+  age: 23
+  region: americas
+  country: BR
+  languages: [{lang: pt, level: 100.0}, {lang: en, level: 55.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 63
+  agents: [omen, viper, clove]
+- handle: havoc
+  real_name: Ilan Eloy
+  age: 22
+  region: americas
+  country: BR
+  languages: [{lang: pt, level: 100.0}, {lang: en, level: 45.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 60
+  agents: [jett, raze, reyna]
+- handle: raafa
+  real_name: Rafael Lima
+  age: 22
+  region: americas
+  country: BR
+  languages: [{lang: pt, level: 100.0}, {lang: en, level: 45.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 52
+  agents: [sova, skye, breach]
+- handle: zenox
+  real_name: ''
+  age: 21
+  region: emea
+  country: EG
+  languages: [{lang: ar, level: 100.0}, {lang: en, level: 60.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 49
+  agents: [jett, raze, reyna]
+- handle: TITOUNE
+  real_name: ''
+  age: 20
+  region: emea
+  country: FR
+  languages: [{lang: fr, level: 100.0}, {lang: en, level: 55.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 51
+  agents: [jett, raze, reyna]
+- handle: ecco
+  real_name: ''
+  age: 21
+  region: pacific
+  country: AU
+  languages: [{lang: en, level: 100.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 49
+  agents: [omen, viper, clove]
+- handle: Swag
+  real_name: ''
+  age: 21
+  region: emea
+  country: UN
+  languages: [{lang: en, level: 70.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 48
+  agents: [jett, raze, reyna]
+- handle: deviceHP
+  real_name: ''
+  age: 20
+  region: pacific
+  country: VN
+  languages: [{lang: vi, level: 100.0}, {lang: en, level: 50.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 48
+  agents: [jett, raze, reyna]
+- handle: Meep
+  real_name: ''
+  age: 22
+  region: emea
+  country: FR
+  languages: [{lang: fr, level: 100.0}, {lang: en, level: 65.0}]
+  role: sentinel
+  playstyle: anchor
+  igl: false
+  quality: 50
+  agents: [cypher, killjoy, viper]
+- handle: bethany
+  real_name: Bethany Davie
+  age: 22
+  region: pacific
+  country: AU
+  languages: [{lang: en, level: 100.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 52
+  agents: [sova, skye, breach]
+- handle: kozzy
+  real_name: Denis Stefan Aionitoaei
+  age: 21
+  region: emea
+  country: RO
+  languages: [{lang: ro, level: 100.0}, {lang: en, level: 65.0}]
+  role: duelist
+  playstyle: entry
+  igl: false
+  quality: 50
+  agents: [jett, raze, reyna]
+- handle: Czester
+  real_name: Nikolas Zarow
+  age: 22
+  region: emea
+  country: PL
+  languages: [{lang: pl, level: 100.0}, {lang: en, level: 60.0}]
+  role: initiator
+  playstyle: support
+  igl: false
+  quality: 50
+  agents: [sova, skye, breach]
+- handle: endoist
+  real_name: ''
+  age: 21
+  region: pacific
+  country: TH
+  languages: [{lang: th, level: 100.0}, {lang: en, level: 45.0}]
+  role: controller
+  playstyle: support
+  igl: false
+  quality: 49
+  agents: [omen, viper, clove]
