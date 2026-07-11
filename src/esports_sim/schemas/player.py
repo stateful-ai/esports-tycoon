@@ -121,6 +121,16 @@ class Player(BaseModel):
     # per-player baseline (ability + id hash) on first touch.
     followers: int = 0
 
+    # Streaming load: how much of the player's week goes to streaming vs
+    # practice (0-100). Drives org stream revenue (economy.py) and a
+    # current-ability growth penalty (training.py). 0 = not seeded yet;
+    # manager/social.py heals it toward a follower-driven baseline each week
+    # (famous players stream more), so the default keeps synthetic players
+    # (no followers) penalty-free and the growth/gate math unchanged. A
+    # manager's "rein it in" 1:1 (talk.py) pushes it down for more practice at
+    # the cost of morale + revenue; it drifts back toward the baseline.
+    stream_load: float = Field(default=0.0, ge=0.0, le=100.0)
+
     # Individual development plan, user-set (AI players stay on defaults).
     # dev_focus: "auto" follows the team's weekly focus, otherwise pins one
     # training category for this player every week.

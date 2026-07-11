@@ -44,6 +44,7 @@ from esports_sim.manager import (
     staff as staff_mod,
     talk,
     telemetry,
+    training,
 )
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
@@ -657,6 +658,12 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         # Follower counts are public by nature; dev plans are the owning
         # manager's knobs (the UI only renders them for the user's team).
         "followers": p.followers,
+        # Streaming (public, like followers): how much they stream, the org's
+        # weekly cut, and the practice/growth cost of it.
+        "stream_load": round(p.stream_load, 1),
+        "stream_status": social.stream_status(p.stream_load),
+        "stream_income": economy.player_stream_income(p),
+        "stream_growth_mult": round(training.stream_practice_mult(p), 2),
         "dev_focus": p.dev_focus,
         "training_intensity": p.training_intensity,
         "attributes": attrs,
@@ -3231,10 +3238,15 @@ def social_view() -> dict:
                     "player_id": p.id,
                     "handle": p.handle,
                     "followers": p.followers,
+                    "stream_load": round(p.stream_load, 1),
+                    "stream_status": social.stream_status(p.stream_load),
+                    "stream_income": economy.player_stream_income(p),
                 }
                 for p in sorted(roster, key=lambda p: (-p.followers, p.id))
             ],
             "your_reach": social.roster_reach(gs, gs.acting_team_id),
+            # Weekly streaming revenue the whole roster brings the org (its cut).
+            "your_stream_income": economy.roster_stream_income(roster),
             "fan_count": gs.teams[gs.acting_team_id].fan_count,
             "sentiment": sent_rows,
             "your_sentiment": gs.sentiment(gs.acting_team_id),
@@ -3426,6 +3438,29 @@ def talk_resolve(body: TalkBody) -> dict:
             telemetry.record_action(
                 gs, "talk",
                 {"player_id": body.player_id, "option_id": body.option_id},
+            )
+        S.save()
+        if not ok:
+            raise HTTPException(409, msg)
+        return {"ok": True, "message": msg, "effects": effects}
+
+
+class ReinStreamingBody(BaseModel):
+    player_id: str
+
+
+@app.post("/api/actions/rein_streaming")
+def rein_streaming(body: ReinStreamingBody) -> dict:
+    """Spend the week's 1:1 asking a player to cut back on streaming and
+    grind (talk.rein_in_streaming): more practice, less revenue, some morale."""
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        ok, msg, effects = talk.rein_in_streaming(gs, body.player_id)
+        if ok:
+            telemetry.record_action(
+                gs, "rein_streaming", {"player_id": body.player_id}
             )
         S.save()
         if not ok:
@@ -4713,6 +4748,16 @@ def player_profile(pid: str) -> dict:
                     else None
                 ),
                 "followers": p.followers,
+                # Streaming: how much they stream, the org's weekly cut, the
+                # growth cost, and whether the manager can rein it in this week
+                # (own players only — the "rein it in" 1:1).
+                "stream_load": round(p.stream_load, 1),
+                "stream_status": social.stream_status(p.stream_load),
+                "stream_income": economy.player_stream_income(p),
+                "stream_growth_mult": round(training.stream_practice_mult(p), 2),
+                "can_rein_streaming": (
+                    talk.can_rein_streaming(gs, pid)[0] if own else False
+                ),
                 "confidence": None if fog > 0 else round(p.confidence, 1),
                 "is_starter": (
                     pid in default_five(gs, team_id) if team_id else None

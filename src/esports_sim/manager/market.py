@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import chronicle, development, relationships
+from esports_sim.manager import chronicle, development, economy, relationships
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.schemas import Player
@@ -451,20 +451,73 @@ def perceived_quality(gs: GameState, viewer_id: str | None, p: Player) -> float:
 
 def perceived_value(gs: GameState, viewer_id: str | None, p: Player) -> int:
     """`transfer_value` through the viewer's eyes: their (possibly wrong)
-    read of both current ability and ceiling. The asymmetry between two
-    orgs' perceived values is what makes a trade a bargain — or a fleecing."""
+    read of both current ability and ceiling, plus what the player's audience
+    is worth to THEM. The asymmetry between two orgs' perceived values is what
+    makes a trade a bargain — or a fleecing."""
     q = player_quality(p)
     pq = perceived_quality(gs, viewer_id, p)
     # The same bias colours their read of the ceiling.
     ppa = max(pq, development.potential_of(p) + (pq - q))
-    return transfer_value(p, ca=pq, pa=ppa)
+    base = transfer_value(p, ca=pq, pa=ppa)
+    # A player's streaming revenue is worth more to a viewer for whom it is a
+    # bigger slice of income — so a cash-rich club sees a smaller premium than
+    # a hungry one on the exact same audience (the asymmetry that makes these
+    # trades live). No viewer (a neutral market quote) => intrinsic value only.
+    if viewer_id is not None and viewer_id in gs.teams:
+        share = economy.player_stream_income(p) / max(
+            economy.org_weekly_income(gs, viewer_id), 1
+        )
+        prem = min(STREAM_PERC_CAP, share * STREAM_PERC_K)
+        base = int(round(base * (1.0 + prem) / 1000) * 1000)
+    return base
+
+
+# Streaming as a trade-value lever (GDD: audiences are assets). A player who
+# generates a big share of their org's income is worth more to that org than
+# their play alone — the more so when the club is cash-strapped and leans on
+# the revenue. The buyer, in turn, values that audience relative to ITS OWN
+# books, so a rich club sees a smaller premium than a poor one: a strapped
+# seller prices high, a flush buyer won't match it, and the gap is where the
+# interesting deals live. All deterministic (followers/load/balances are all
+# state) and campaign-only — the match gates never price a transfer.
+STREAM_ASK_PREMIUM_K = 2.0        # owner ask premium per unit of income-share
+STREAM_ASK_PREMIUM_CAP = 0.6      # ...capped at +60% of market value
+STREAM_STRAPPED_CASH = 250_000    # balance below which a club leans harder
+STREAM_CASH_MAX_AMP = 2.0         # ...up to a 2x amplifier when broke / in the red
+STREAM_PERC_K = 1.5               # buyer premium per unit of THEIR income-share
+STREAM_PERC_CAP = 0.4             # ...capped at +40%
+
+
+def _cash_amp(balance: int) -> float:
+    """A club poorer than STREAM_STRAPPED_CASH values steady revenue more:
+    1.0 at the threshold, ramping up to STREAM_CASH_MAX_AMP when broke or in
+    the red."""
+    if balance >= STREAM_STRAPPED_CASH:
+        return 1.0
+    short = (STREAM_STRAPPED_CASH - balance) / STREAM_STRAPPED_CASH
+    return float(min(STREAM_CASH_MAX_AMP, 1.0 + short))
+
+
+def stream_ask_premium(gs: GameState, pid: str, owner_id: str) -> float:
+    """The fractional bump `transfer_ask` adds for a player's streaming
+    revenue: the share of the owner's income it represents, amplified when the
+    club is cash-strapped, capped. 0 when the player barely streams."""
+    share = economy.player_stream_income(gs.players[pid]) / max(
+        economy.org_weekly_income(gs, owner_id), 1
+    )
+    return min(
+        STREAM_ASK_PREMIUM_CAP,
+        share * STREAM_ASK_PREMIUM_K * _cash_amp(gs.teams[owner_id].balance),
+    )
 
 
 def transfer_ask(gs: GameState, pid: str) -> int:
     """Seller's price: market value, plus a scarcity premium when the
-    player is the seller's best (nobody sells their franchise cheap), plus
-    a loyalty premium — a tenured, in-form fixture of the club costs real
-    money to pry away."""
+    player is the seller's best (nobody sells their franchise cheap), a
+    loyalty premium — a tenured, in-form fixture of the club costs real
+    money to pry away — and a streaming premium when the player is a big
+    slice of the club's income (bigger still for a cash-strapped org that
+    can't afford to lose the revenue)."""
     p = gs.players[pid]
     seller_id = team_of(gs, pid)
     if seller_id is None:
@@ -484,6 +537,8 @@ def transfer_ask(gs: GameState, pid: str) -> int:
         mult *= 1.15
     if p.form >= 62:
         mult *= 1.10
+    # Streaming: a revenue engine costs more to prise away, cash-amplified.
+    mult *= 1.0 + stream_ask_premium(gs, pid, seller_id)
     return int(round(transfer_value(p) * mult / 1000) * 1000)
 
 

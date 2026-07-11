@@ -361,7 +361,10 @@ def test_weekly_breakdown_sums_to_net(campaign: GameState) -> None:
 
     d = economy.weekly_breakdown(campaign, staff_cost=1_500)
 
-    assert d["income_total"] == d["sponsors_total"] + d["merch"] + d["tickets"]
+    assert d["income_total"] == (
+        d["sponsors_total"] + d["merch"] + d["tickets"] + d["streaming"]
+    )
+    assert d["streaming"] == economy.roster_stream_income(campaign.roster(team_id))
     assert d["sponsors_total"] == d["sponsors_base"] + sum(d["sponsors_by_slot"].values())
     assert d["expense_total"] == d["salaries"] + d["staff"] + d["facility_upkeep"]
     assert d["net"] == d["income_total"] - d["expense_total"]

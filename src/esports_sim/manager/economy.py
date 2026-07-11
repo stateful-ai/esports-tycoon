@@ -44,6 +44,54 @@ def merch_ticket_income(team: Team, win_rate: float = 0.5) -> tuple[int, int]:
     return merch, tickets
 
 
+# ---------------------------------------------------------------------------
+# Streaming revenue: players with an audience stream, and the org takes a
+# contractual cut. A follower-driven load (social.stream_load) sets how much
+# each player streams; a bigger following => more streaming => more money —
+# and (see training.py) slower current-ability growth, the tradeoff the
+# manager weighs. Applies to EVERY org (AI parity), like merch and tickets.
+
+STREAM_RATE_PER_FOLLOWER = 0.03  # weekly gross per follower at full load
+STREAM_ORG_CUT = 0.30            # share of a player's stream gross the org keeps
+
+
+def player_stream_gross(p: Player) -> int:
+    """What a player grosses from streaming this week: followers x rate,
+    scaled by how much they actually stream (Player.stream_load, 0-100)."""
+    return int(p.followers * STREAM_RATE_PER_FOLLOWER * (p.stream_load / 100.0))
+
+
+def player_stream_income(p: Player) -> int:
+    """The ORG's cut of one player's streaming gross (the player keeps the
+    rest). This is what lands on the org's books and drives the trade-value
+    premium (market.py)."""
+    return int(player_stream_gross(p) * STREAM_ORG_CUT)
+
+
+def roster_stream_income(roster: list[Player]) -> int:
+    """Org streaming revenue from a whole roster this week (bench included —
+    benched players have more time for the camera, not less)."""
+    return sum(player_stream_income(p) for p in roster)
+
+
+def org_weekly_income(gs: GameState, team_id: str) -> int:
+    """A team's baseline weekly revenue run-rate — sponsor base + merch +
+    tickets + streaming — used as the denominator when pricing how much of an
+    org's income a player's streaming generates (market.transfer_ask /
+    perceived_value). Context-free (works for any org, human or AI, without
+    binding an acting manager): it deliberately excludes episodic prize money
+    and the user's negotiated sponsor-slot deals, so the share is a stable,
+    comparable number across every club."""
+    team = gs.teams[team_id]
+    merch, tickets = merch_ticket_income(team, 0.5)
+    return (
+        weekly_sponsor_income(team)
+        + merch
+        + tickets
+        + roster_stream_income(gs.roster(team_id))
+    )
+
+
 def apply_weekly_finance(
     team: Team,
     roster: list[Player],
@@ -71,7 +119,8 @@ def apply_weekly_finance(
     deduction here if desired.
     """
     merch, tickets = merch_ticket_income(team, 0.5 if win_rate is None else win_rate)
-    income = weekly_sponsor_income(team) + merch + tickets
+    streaming = roster_stream_income(roster)
+    income = weekly_sponsor_income(team) + merch + tickets + streaming
     expenses = sum(p.salary for p in roster) + staff_cost + facility_upkeep
     team.balance += income - expenses
     return income, expenses
@@ -164,6 +213,7 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     salaries = sum(p.salary for p in roster)
     base_sponsor = weekly_sponsor_income(team)
     merch, tickets = merch_ticket_income(team, win_rate)
+    streaming = roster_stream_income(roster)
     sponsors_by_slot = {
         slot: (
             deal.weekly + int(deal.per_win * win_rate)
@@ -175,7 +225,7 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     sponsors_total = base_sponsor + sum(sponsors_by_slot.values())
     upkeep = facility_weekly_upkeep(gs.facilities)
 
-    income_total = sponsors_total + merch + tickets
+    income_total = sponsors_total + merch + tickets + streaming
     expense_total = salaries + staff_cost + upkeep
 
     return {
@@ -186,6 +236,7 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
         "sponsors_total": sponsors_total,
         "merch": merch,
         "tickets": tickets,
+        "streaming": streaming,
         "facility_upkeep": upkeep,
         "prizes": 0,  # episodic (season/playoff payouts), not a weekly run-rate item
         "income_total": income_total,
@@ -207,8 +258,12 @@ def cash_projection(gs: GameState, staff_cost: int = 0, weeks: int = 8) -> list[
     salaries = sum(p.salary for p in roster)
     base_sponsor = weekly_sponsor_income(team)
     merch, tickets = merch_ticket_income(team, win_rate)
+    streaming = roster_stream_income(roster)
     upkeep = facility_weekly_upkeep(gs.facilities)
-    flat_net = (base_sponsor + merch + tickets) - (salaries + staff_cost + upkeep)
+    flat_net = (
+        (base_sponsor + merch + tickets + streaming)
+        - (salaries + staff_cost + upkeep)
+    )
 
     remaining = {slot: deal.weeks_left for slot, deal in gs.sponsor_slots.items()}
     weekly_amounts = {
