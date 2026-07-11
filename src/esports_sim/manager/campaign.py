@@ -1757,6 +1757,17 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
         # The active assignment still clears below; the scouting serializer
         # uses this key to derive the latest post-match report from Fixture.
         gs.scout_progress[target] = gained
+        for observed_tid in (fx.team_a, fx.team_b):
+            team = gs.teams.get(observed_tid)
+            if team is None:
+                continue
+            for dial in ("aggression", "pace", "eco_greed", "map_control"):
+                gs.scout_progress[
+                    f"matchobs:{fid}:{observed_tid}:{dial}"
+                ] = float(getattr(team.tactics, dial))
+            gs.scout_progress[
+                f"matchobs:{fid}:{observed_tid}:site:{team.tactics.site_focus}"
+            ] = 1.0
         names = []
         for tid in (fx.team_a, fx.team_b):
             if tid == gs.acting_team_id or tid not in gs.teams:

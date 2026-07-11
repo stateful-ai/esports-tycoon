@@ -20,6 +20,7 @@ import re
 import secrets
 import threading
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -4161,8 +4162,8 @@ def _match_scout_report(gs: GameState, fixture) -> dict | None:
         "team_b_name": b.name if b else fixture.team_b,
         "winner_id": fixture.winner_id,
         "score": f"{score_a}-{score_b}",
-        "team_a_tendencies": _team_tendencies(a.tactics) if a else [],
-        "team_b_tendencies": _team_tendencies(b.tactics) if b else [],
+        "team_a_tendencies": _match_scout_tendencies(gs, fixture.id, fixture.team_a),
+        "team_b_tendencies": _match_scout_tendencies(gs, fixture.id, fixture.team_b),
         "danger_man": (
             {"player_id": danger_id, "handle": danger.handle,
              "rating": round(sum(lines[danger_id]) / len(lines[danger_id]), 2)}
@@ -4170,6 +4171,23 @@ def _match_scout_report(gs: GameState, fixture) -> dict | None:
         ),
         "veto_lean": statement,
     }
+
+
+def _match_scout_tendencies(gs: GameState, fixture_id: str, team_id: str) -> list[str]:
+    """Rebuild the tactic read captured when the attended match resolved."""
+    prefix = f"matchobs:{fixture_id}:{team_id}:"
+    values = {
+        dial: gs.scout_progress.get(prefix + dial)
+        for dial in ("aggression", "pace", "eco_greed", "map_control")
+    }
+    if any(value is None for value in values.values()):
+        return []
+    site = next(
+        (key[len(prefix + "site:"):] for key in sorted(gs.scout_progress)
+         if key.startswith(prefix + "site:")),
+        "balanced",
+    )
+    return _team_tendencies(SimpleNamespace(**values, site_focus=site))
 
 
 class PlayerBody(BaseModel):

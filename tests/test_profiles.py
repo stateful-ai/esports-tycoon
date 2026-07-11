@@ -883,6 +883,10 @@ def test_completed_match_scout_returns_grounded_report(env):
     _bind(gs, gd)
     fixture = next(f for f in gs.fixtures if f.played and f.results)
     gs.scout_progress[f"match:{fixture.id}"] = 0.5
+    for tid in (fixture.team_a, fixture.team_b):
+        for dial in ("aggression", "pace", "eco_greed", "map_control"):
+            gs.scout_progress[f"matchobs:{fixture.id}:{tid}:{dial}"] = 50.0
+        gs.scout_progress[f"matchobs:{fixture.id}:{tid}:site:balanced"] = 1.0
     view = server_mod.scouting_view()
     report = view["match_report"]
     assert report["fixture_id"] == fixture.id
@@ -894,6 +898,8 @@ def test_completed_match_scout_returns_grounded_report(env):
     assert report["danger_man"] is None or set(report["danger_man"]) == {
         "player_id", "handle", "rating",
     }
+    gs.teams[fixture.team_a].tactics.aggression = 100
+    assert server_mod.scouting_view()["match_report"]["team_a_tendencies"] == []
 
 
 def test_league_endpoint_shape(env):
