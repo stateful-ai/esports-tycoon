@@ -952,9 +952,16 @@ function buildTimeline() {
   el.innerHTML = V.summaries
     .map((s, i) => {
       const cls = s.winner_id === V.teamA ? "a" : "b";
+      const leaders = Object.entries(V.momentum[i]?.values || {})
+        .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+      const lead = leaders[0];
+      const heat = lead && Math.abs(lead[1]) >= .18
+        ? (lead[1] > 0 ? " hot" : " cold") : "";
       const plant = s.plant ? '<span class="v-tl-plant">◈</span>' : "";
       const tip = `Round ${s.num}: ${s.score_a}-${s.score_b}${s.plant ? " · spike planted" : ""}`;
-      return `<button class="v-tl-round ${cls}" data-round="${i}" title="${tip}">${s.num}${plant}</button>`;
+      const momentumTip = lead && heat
+        ? ` / ${handleOf(lead[0])} ${heat.trim()} (${lead[1].toFixed(2)})` : "";
+      return `<button class="v-tl-round ${cls}${heat}" data-round="${i}" title="${tip}${momentumTip}">${s.num}${plant}</button>`;
     })
     .join("");
   el.querySelectorAll(".v-tl-round").forEach((b) => {
@@ -1021,6 +1028,7 @@ async function openReplay(fixtureId, mapIndex) {
     abilities: data.abilities || {}, // guard: older payloads may omit this
     rounds: parseReplay(data),
     summaries: data.round_summaries || [], // server-computed round result strip
+    momentum: data.momentum || [], // event-log-derived mental runs
     boxScore: data.box_score || [], // per-map box score (top performers)
     mvp: data.mvp || null,
     _tlRound: -1,
