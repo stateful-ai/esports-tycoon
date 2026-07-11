@@ -78,6 +78,7 @@ def test_match_scouting_grants_both_teams_and_clears() -> None:
     assert gs.scout_progress.get(rivals[0], 0.0) >= camp.SCOUT_MATCH_INTEL
     assert gs.scout_progress.get(rivals[1], 0.0) >= camp.SCOUT_MATCH_INTEL
     assert gs.scout_target is None, "one-shot: the scout comes home"
+    assert gs.scout_progress["match:scouttest"] >= camp.SCOUT_MATCH_INTEL
     gs.set_acting(None)
 
 

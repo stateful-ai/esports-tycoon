@@ -4141,12 +4141,20 @@ def scouting_view() -> dict:
             if not f.played and me not in (f.team_a, f.team_b)
             and f.week <= gs.week + 1
         ][:14]
+        completed = [
+            f for f in gs.fixtures
+            if f.played and gs.scout_progress.get(f"match:{f.id}", 0.0) > 0
+        ]
+        match_report = _match_scout_report(gs, max(
+            completed, key=lambda f: (f.week, f.id), default=None
+        ))
         return {
             "target": target,
             "target_kind": target_kind,
             "target_name": target_name,
             "progress": round(progress, 2),
             "reports": reports,
+            "match_report": match_report,
             "teams": [
                 {"id": tid, "name": gs.teams[tid].name}
                 for tid in sorted(gs.teams)
@@ -4154,6 +4162,53 @@ def scouting_view() -> dict:
             ],
             "upcoming": upcoming,
         }
+
+
+def _match_scout_report(gs: GameState, fixture) -> dict | None:
+    """Latest attended-match payoff, derived only from the played fixture."""
+    if fixture is None or not fixture.results:
+        return None
+    a = gs.teams.get(fixture.team_a)
+    b = gs.teams.get(fixture.team_b)
+    score_a, score_b = fixture.map_score
+    lines: dict[str, list[float]] = {}
+    for result in fixture.results:
+        for line in result.lines:
+            lines.setdefault(line.player_id, []).append(line.rating)
+    danger_id = max(
+        lines,
+        key=lambda pid: (sum(lines[pid]) / len(lines[pid]), pid),
+        default=None,
+    )
+    danger = gs.players.get(danger_id) if danger_id else None
+    statement = "No clear veto lean from the played maps."
+    if fixture.veto:
+        statement = fixture.veto[-1]
+    else:
+        widest = max(
+            fixture.results,
+            key=lambda r: (abs(r.score_a - r.score_b), r.map_id),
+        )
+        winner = gs.teams.get(widest.winner_id)
+        statement = f"{winner.name if winner else widest.winner_id} looked strongest on {widest.map_id}."
+    return {
+        "fixture_id": fixture.id,
+        "week": fixture.week,
+        "team_a_id": fixture.team_a,
+        "team_a_name": a.name if a else fixture.team_a,
+        "team_b_id": fixture.team_b,
+        "team_b_name": b.name if b else fixture.team_b,
+        "winner_id": fixture.winner_id,
+        "score": f"{score_a}-{score_b}",
+        "team_a_tendencies": _team_tendencies(a.tactics) if a else [],
+        "team_b_tendencies": _team_tendencies(b.tactics) if b else [],
+        "danger_man": (
+            {"player_id": danger_id, "handle": danger.handle,
+             "rating": round(sum(lines[danger_id]) / len(lines[danger_id]), 2)}
+            if danger else None
+        ),
+        "veto_lean": statement,
+    }
 
 
 class PlayerBody(BaseModel):

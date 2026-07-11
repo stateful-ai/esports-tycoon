@@ -879,6 +879,24 @@ def test_market_rows_carry_languages(env):
     assert res and all(isinstance(r["languages"], list) for r in res)
 
 
+def test_completed_match_scout_returns_grounded_report(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    fixture = next(f for f in gs.fixtures if f.played and f.results)
+    gs.scout_progress[f"match:{fixture.id}"] = 0.5
+    view = server_mod.scouting_view()
+    report = view["match_report"]
+    assert report["fixture_id"] == fixture.id
+    assert set(report) == {
+        "fixture_id", "week", "team_a_id", "team_a_name", "team_b_id",
+        "team_b_name", "winner_id", "score", "team_a_tendencies",
+        "team_b_tendencies", "danger_man", "veto_lean",
+    }
+    assert report["danger_man"] is None or set(report["danger_man"]) == {
+        "player_id", "handle", "rating",
+    }
+
+
 def test_rival_prices_carry_reconciled_breakdowns(env):
     gs, gd, h = env
     _bind(gs, gd)

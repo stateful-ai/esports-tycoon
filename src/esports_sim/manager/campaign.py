@@ -1753,6 +1753,10 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
                 )
             return
         gained = min(1.0, round(SCOUT_MATCH_INTEL * mult, 2))
+        # Keep a completion marker in the existing prefixed progress store.
+        # The active assignment still clears below; the scouting serializer
+        # uses this key to derive the latest post-match report from Fixture.
+        gs.scout_progress[target] = gained
         names = []
         for tid in (fx.team_a, fx.team_b):
             if tid == gs.acting_team_id or tid not in gs.teams:
