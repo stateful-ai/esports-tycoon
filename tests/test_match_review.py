@@ -124,3 +124,20 @@ def test_build_empty_bundles() -> None:
     assert rv.contested is False
     assert rv.fixture_id == "fx" and rv.season == 1 and rv.week == 2
     assert not rv.working and not rv.breaking
+
+
+def test_momentum_trace_reconstructs_kills_decay_and_clutch() -> None:
+    from esports_sim.schemas import KillEvent, RoundEndEvent, RoundStartEvent
+    from esports_sim.sim import constants as C
+    from esports_sim.sim.momentum import momentum_trace
+
+    team_of = {"a": "A", "b": "A", "x": "B", "y": "B"}
+    events = [
+        RoundStartEvent(round_num=1, attacking_team_id="A", defending_team_id="B"),
+        KillEvent(killer_id="a", victim_id="x", weapon_id="vandal"),
+        KillEvent(killer_id="y", victim_id="b", weapon_id="vandal"),
+        RoundEndEvent(round_num=1, winner_id="A", reason="elim"),
+    ]
+    row = momentum_trace(events, team_of)[0]
+    assert row.values["a"] == round(C.MOMENTUM_KILL * C.MOMENTUM_DECAY + C.MOMENTUM_CLUTCH, 4)
+    assert row.values["b"] == round(-C.MOMENTUM_DEATH * C.MOMENTUM_DECAY, 4)

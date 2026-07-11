@@ -518,28 +518,46 @@ def transfer_ask(gs: GameState, pid: str) -> int:
     money to pry away — and a streaming premium when the player is a big
     slice of the club's income (bigger still for a cash-strapped org that
     can't afford to lose the revenue)."""
+    return sum(int(part["delta"]) for part in transfer_ask_breakdown(gs, pid))
+
+
+def transfer_ask_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]]:
+    """Currency deltas that reconcile exactly to ``transfer_ask``."""
     p = gs.players[pid]
     seller_id = team_of(gs, pid)
     if seller_id is None:
-        return transfer_value(p)
+        return [{"label": "base value", "delta": transfer_value(p)}]
     roster = gs.roster(seller_id)
     ranked = sorted(roster, key=lambda q: -player_quality(q))
-    mult = 1.0
+    factors: list[tuple[str, float]] = []
     if ranked and ranked[0].id == pid:
-        mult = 1.6
+        factors.append(("franchise player", 1.6))
     elif len(ranked) > 1 and ranked[1].id == pid:
-        mult = 1.25
+        factors.append(("key player", 1.25))
     # Loyalty: the club digs in for players who've been part of the
     # furniture — more so when they're playing well right now.
     if p.tenure_weeks >= 104:
-        mult *= 1.30
+        factors.append(("long-term loyalty", 1.30))
     elif p.tenure_weeks >= 52:
-        mult *= 1.15
+        factors.append(("loyalty", 1.15))
     if p.form >= 62:
-        mult *= 1.10
+        factors.append(("current form", 1.10))
     # Streaming: a revenue engine costs more to prise away, cash-amplified.
-    mult *= 1.0 + stream_ask_premium(gs, pid, seller_id)
-    return int(round(transfer_value(p) * mult / 1000) * 1000)
+    stream = stream_ask_premium(gs, pid, seller_id)
+    if stream > 0:
+        label = ("streaming (cash-strapped club)"
+                 if _cash_amp(gs.teams[seller_id].balance) > 1.0
+                 else "streaming income")
+        factors.append((label, 1.0 + stream))
+    base = transfer_value(p)
+    parts: list[dict[str, int | str]] = [{"label": "base value", "delta": base}]
+    mult, previous = 1.0, base
+    for label, factor in factors:
+        mult *= factor
+        current = int(round(base * mult / 1000) * 1000)
+        parts.append({"label": label, "delta": current - previous})
+        previous = current
+    return parts
 
 
 # ---------------------------------------------------------------------------
@@ -743,6 +761,18 @@ def buyout_fee(gs: GameState, pid: str) -> int | None:
     p = gs.players[pid]
     mult = 1.5 + _hash01(pid, "buyout") * 1.0
     return max(15_000, int(round(transfer_value(p) * mult / 1000) * 1000))
+
+
+def buyout_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]]:
+    """Base value plus the player's stable tier-2 clause premium."""
+    fee = buyout_fee(gs, pid)
+    if fee is None:
+        return []
+    base = transfer_value(gs.players[pid])
+    return [
+        {"label": "base value", "delta": base},
+        {"label": "contract buyout clause", "delta": fee - base},
+    ]
 
 
 def buy_out_player(gs: GameState, buyer_id: str, pid: str) -> tuple[bool, str]:

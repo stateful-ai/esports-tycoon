@@ -79,6 +79,7 @@ from esports_sim.schemas import (
 )
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
+from esports_sim.sim import momentum as momentum_mod
 from esports_sim.sim import tactics_fit
 from esports_sim.web import llm_social, review_history
 
@@ -941,7 +942,9 @@ def _review_point_view(gs: GameState, p) -> dict:
     return out
 
 
-def _last_match_review(gs: GameState) -> dict | None:
+def _last_match_review(
+    gs: GameState, event_logs: dict[str, list[list[Event]]] | None = None
+) -> dict | None:
     """The acting team's most recent match diagnosis, depth-gated by the
     analyst's tier and given coach-gated 'what to tweak' levers. None when
     there's no review yet (first week / AI-only path)."""
@@ -973,7 +976,33 @@ def _last_match_review(gs: GameState) -> dict | None:
         ),
         "tier": tier,
         "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
+        "momentum_beat": None,
     }
+    logs = (event_logs or {}).get(review.fixture_id, [])
+    if logs:
+        team_of = {
+            pid: tid
+            for tid in (gs.acting_team_id, review.opp_id)
+            if tid in gs.teams
+            for pid in gs.teams[tid].player_ids
+        }
+        beats = [
+            momentum_mod.momentum_beat(momentum_mod.momentum_trace(events, team_of))
+            for events in logs
+        ]
+        beat = max(
+            (b for b in beats if b is not None),
+            key=lambda b: (b["rounds"], b["peak"], b["player_id"]),
+            default=None,
+        )
+        if beat is not None:
+            player = gs.players.get(beat["player_id"])
+            handle = player.handle if player else beat["player_id"]
+            out["momentum_beat"] = {
+                **beat,
+                "handle": handle,
+                "text": f"got {beat['tone']} mid-map ({beat['rounds']}-round run).",
+            }
     if not review.contested:
         out["working"] = []
         out["breaking"] = []
@@ -1443,7 +1472,7 @@ def state() -> dict:
             "debrief": narrative.match_debrief(gs, gs.acting_team_id),
             # The "why you won/lost" synthesis of the last match — working vs
             # breaking signals + coach-gated fixes, depth-gated by the analyst.
-            "last_match_review": _last_match_review(gs),
+            "last_match_review": _last_match_review(gs, S.event_logs),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
@@ -1704,6 +1733,11 @@ def roster(team_id: str) -> dict:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
                 v["buyout"] = market.buyout_fee(gs, v["id"])
+                v["ask_breakdown"] = (
+                    market.buyout_breakdown(gs, v["id"])
+                    if v["buyout"] is not None
+                    else market.transfer_ask_breakdown(gs, v["id"])
+                )
         # Coaching identity: always readable for your own club, and for a
         # rival once you've scouted them enough to read their style.
         if own or gs.scout_progress.get(team_id, 0.0) >= 0.5:
@@ -2686,6 +2720,11 @@ def market_search(q: str = "") -> dict:
                 "asking_salary": market.asking_salary(p) if is_fa else None,
                 "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
                 "buyout": market.buyout_fee(gs, pid) if rival else None,
+                "ask_breakdown": (
+                    market.buyout_breakdown(gs, pid)
+                    if rival and market.buyout_fee(gs, pid) is not None
+                    else market.transfer_ask_breakdown(gs, pid) if rival else []
+                ),
                 "portrait": _portrait_url(pid, str(p.role)),
                 "languages": _language_views(p),
             })
@@ -4866,6 +4905,11 @@ def player_profile(pid: str) -> dict:
                     if (not is_fa and team_id and team_id != gs.acting_team_id)
                     else None
                 ),
+                "ask_breakdown": (
+                    market.transfer_ask_breakdown(gs, pid)
+                    if (not is_fa and team_id and team_id != gs.acting_team_id)
+                    else []
+                ),
                 "followers": p.followers,
                 # Streaming: how much they stream, the org's weekly cut, the
                 # growth cost, and whether the manager can rein it in this week
@@ -5623,6 +5667,8 @@ def replay(fixture_id: str, map_index: int) -> dict:
             for ab in agent.abilities
         }
         dumped = [e.model_dump() for e in events]
+        team_of = {pid: p["team_id"] for pid, p in players.items()}
+        momentum = momentum_mod.momentum_trace(events, team_of)
         # Post-match box score (top performers + MVP) from the stored map
         # lines — the viewer's match-summary panel. Pure read.
         box = sorted(
@@ -5652,6 +5698,10 @@ def replay(fixture_id: str, map_index: int) -> dict:
             # Per-round result strip for the viewer timeline (winner, running
             # score, whether the spike went down). Derived from the log.
             "round_summaries": _round_summaries(dumped, fixture.team_a),
+            "momentum": [
+                {"round_num": row.round_num, "values": row.values}
+                for row in momentum
+            ],
             "box_score": box,
             "mvp": box[0] if box else None,
         }
