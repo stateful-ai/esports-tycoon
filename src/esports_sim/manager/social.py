@@ -122,6 +122,68 @@ def roster_reach(gs, team_id: str) -> int:
     return sum(p.followers for p in gs.roster(team_id))
 
 
+# ---------------------------------------------------------------------------
+# Streaming load: how much of a player's week goes to the camera vs the
+# server (0-100). Follower-driven — fame pulls players to stream — so only
+# genuinely big accounts stream heavily. Stored on Player.stream_load and
+# moved ONLY here (economy/training/market READ it, never write it): seeded
+# to the baseline, then healed toward it weekly, so a manager's "rein it in"
+# 1:1 (talk.py) that pushes a player below baseline decays back over time.
+# All rng-FREE (derived from followers), so the 'social' draw order is
+# untouched — the repo invariant that lets this system be extended freely.
+
+STREAM_LOAD_HALF = 300_000   # followers at which baseline load = 50
+STREAM_LOAD_HEAL = 0.34      # weekly pull of stream_load toward its baseline
+STREAM_LOAD_MIN = 5.0        # floor a manager can rein a player down to (never
+                             # a full stop — and keeps the seed sentinel below
+                             # unambiguous, so a reined player drifts back via
+                             # the gradual heal, not an instant re-seed)
+
+
+def stream_baseline(followers: int) -> float:
+    """Follower-driven streaming load (0-100): a saturating curve, so a
+    journeyman barely streams and a megastar streams flat out (100k -> ~25,
+    300k -> 50, 1M -> ~77)."""
+    f = max(0, followers)
+    return round(100.0 * f / (f + STREAM_LOAD_HALF), 1)
+
+
+def stream_status(load: float) -> str:
+    """Coarse label for the streaming status shown on the player card."""
+    if load >= 60.0:
+        return "heavy streamer"
+    if load >= 30.0:
+        return "balanced"
+    return "practice-focused"
+
+
+def seed_stream_load(gs) -> None:
+    """Give every unseeded player (stream_load == 0) their follower-driven
+    baseline. Called at campaign start and each week (rookies/generated
+    players arrive mid-season); already-seeded players are left for the
+    weekly heal below."""
+    for pid in sorted(gs.players):
+        p = gs.players[pid]
+        if p.stream_load <= 0.0:
+            p.stream_load = stream_baseline(p.followers)
+
+
+def stream_load_tick(gs) -> None:
+    """One rng-free week of streaming load: seed newcomers, then heal every
+    player's load toward their (follower-driven, so slowly rising) baseline.
+    A manager 1:1 pushes a player below baseline; this is what drifts them
+    back. Runs for every org (AI parity) — AI stars stream at baseline and so
+    develop a touch slower, which a human who actively manages streaming can
+    exploit (a documented human-only lever, like game plans and bench
+    minutes)."""
+    seed_stream_load(gs)
+    for pid in sorted(gs.players):
+        p = gs.players[pid]
+        target = stream_baseline(p.followers)
+        moved = p.stream_load + (target - p.stream_load) * STREAM_LOAD_HEAL
+        p.stream_load = round(min(100.0, max(0.0, moved)), 1)
+
+
 def _post(
     gs, season: int, week: int, kind: str, author_kind: str,
     author_id: str, author: str, text: str, likes: int, salt: str = "",

@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -196,6 +196,16 @@ def _migrate_v9_to_v10(data: dict) -> dict:
     return data
 
 
+def _migrate_v10_to_v11(data: dict) -> dict:
+    """v11 adds only the defaulted Player.stream_load field (the streaming-vs-
+    practice balance — manager/social.py heals it toward a follower-driven
+    baseline on the next tick, so an empty value ramps in on its own). A v10
+    save loads unchanged; the bump exists so an OLDER build refuses a v11 save
+    with the clean "update the game" message instead of an extra="forbid"
+    validation stack trace on the unknown key."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -206,6 +216,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     7: _migrate_v7_to_v8,
     8: _migrate_v8_to_v9,
     9: _migrate_v9_to_v10,
+    10: _migrate_v10_to_v11,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]

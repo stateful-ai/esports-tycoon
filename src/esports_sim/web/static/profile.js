@@ -261,6 +261,9 @@ function renderPlayerProfile(data) {
     p.followers != null && typeof fmtFollowers === "function"
       ? `<span class="pill" title="social reach">${fmtFollowers(p.followers)} followers</span>`
       : "",
+    p.stream_load != null && p.stream_load > 5
+      ? `<span class="pill" title="org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}">🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>`
+      : "",
     p.dev_focus
       ? `<span class="pill" title="development plan">${p.dev_focus} · ${p.training_intensity}</span>`
       : "",
@@ -285,6 +288,20 @@ function renderPlayerProfile(data) {
       openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name });
     };
     header.appendChild(offer);
+  }
+  // Own player streaming enough to matter → spend the week's 1:1 asking them
+  // to cut back and grind: more practice (faster growth) for less streaming
+  // revenue and a morale knock. Drifts back toward their baseline over weeks.
+  if (p.is_user_team && p.can_rein_streaming) {
+    const rein = el("button", "btn btn-sm", "Rein in streaming…");
+    rein.title = "Spend this week's 1:1 telling them to stream less and practice more";
+    rein.onclick = async () => {
+      try {
+        await api("/api/actions/rein_streaming", { player_id: p.id });
+        openPlayerProfile(p.id);  // refresh: new load/status, button now gone
+      } catch { /* api() already surfaced the reason (e.g. 1:1 already used) */ }
+    };
+    header.appendChild(rein);
   }
   if (isAdminMode()) {
     const slot = el("div", "pf-admin-slot");

@@ -82,6 +82,21 @@ def _player_rate(p: Player) -> float:
     return base * development.dev_multiplier(p)
 
 
+# Streaming eats practice time: a player pouring their week into the camera
+# (Player.stream_load, follower-driven — see social.py) develops slower. It's
+# a pure read of stream_load, so a synthetic player (load 0, no followers) is
+# unchanged and the golden/balance gates — which never run campaign training —
+# stay byte-identical. A manager reins a player in via a 1:1 (talk.py) to buy
+# back some of this growth, trading away streaming revenue and morale.
+STREAM_GROWTH_PENALTY_SPAN = 0.35  # a full-load streamer develops 35% slower
+
+
+def stream_practice_mult(p: Player) -> float:
+    """Growth multiplier from streaming load: 1.0 at load 0, falling to
+    1 - STREAM_GROWTH_PENALTY_SPAN at load 100."""
+    return 1.0 - (p.stream_load / 100.0) * STREAM_GROWTH_PENALTY_SPAN
+
+
 # A protege under a veteran's wing develops this much faster. Bounded and
 # opt-in: only a manager-set mentorship (empty in hands-off sims) supplies a
 # multiplier here, so the balance gates see rate * 1.0 == rate, unchanged.
@@ -120,7 +135,10 @@ def apply_training(
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
         # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
         mentor = mentor_mults.get(p.id, 1.0) if mentor_mults else 1.0
-        rate = _player_rate(p) * _system_fit_mult(team, p) * intensity * mentor
+        rate = (
+            _player_rate(p) * _system_fit_mult(team, p) * intensity * mentor
+            * stream_practice_mult(p)
+        )
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.
@@ -169,7 +187,7 @@ def apply_match_experience(p: Player, line, n_rounds: int) -> None:
     as training, so a prospect grows from minutes and a veteran at their
     ceiling mostly just logs them. Bench players get none of this (see
     apply_scrim_reps): playing time is a real development decision."""
-    rate = _player_rate(p)
+    rate = _player_rate(p) * stream_practice_mult(p)
     clutch_n = line.clutch_1v1 + line.clutch_1v2 + line.clutch_1v3
     reps = {
         "aim_precision": line.kills * 0.5 + line.headshots * 0.5,

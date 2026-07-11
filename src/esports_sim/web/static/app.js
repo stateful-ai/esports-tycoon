@@ -3626,14 +3626,17 @@ async function social(v) {
     <div class="row">
       <span class="pill">roster reach ${fmtFollowers(data.your_reach)}</span>
       <span class="pill">org fans ${fmtFollowers(data.fan_count)}</span>
+      <span class="pill" title="the org's weekly cut of the roster's streaming income">streaming ${money(data.your_stream_income || 0)}/wk</span>
       <span class="pill ${moodTone}">fanbase ${moodWord} (${Math.round(mood)})</span>
-      <span class="muted">Reach feeds sponsor marketability; the crowd's mood leaks
-      into the locker room — and brands read the room too.</span>
+      <span class="muted">Reach feeds sponsor marketability; streaming pays the org a cut
+      (but heavy streamers develop slower — rein one in with a 1:1); the crowd's mood
+      leaks into the locker room, and brands read the room too.</span>
     </div>`;
   const rosterRow = el("div", "row");
   for (const p of data.your_roster) {
     rosterRow.appendChild(el("span", "pill",
-      `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ${fmtFollowers(p.followers)}`));
+      `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ${fmtFollowers(p.followers)}` +
+      ` <span class="muted" title="${p.stream_status} — org cut ${money(p.stream_income)}/wk">· ${money(p.stream_income)}/wk</span>`));
   }
   head.appendChild(rosterRow);
   v.appendChild(head);
@@ -3762,7 +3765,7 @@ async function finances(v) {
       <tr><td>Last week income</td><td class="num">${money(data.last_week_income)}</td></tr>
       <tr><td>Last week expenses</td><td class="num">${money(data.last_week_expenses)}</td></tr>
     </tbody></table>
-    <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
+    <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + streaming + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
   v.appendChild(card);
 
   // -- marketability breakdown ---------------------------------------------
@@ -3913,6 +3916,7 @@ async function finances(v) {
       <tr><td>Peripheral sponsor</td><td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td></tr>
       <tr><td>Merchandise</td><td class="num">${money(b.merch)}</td></tr>
       <tr><td>Ticket sales</td><td class="num">${money(b.tickets)}</td></tr>
+      <tr><td title="the org's cut of the roster's streaming income">Streaming</td><td class="num">${money(b.streaming || 0)}</td></tr>
       <tr><td>Prize money</td><td class="num">${money(b.prizes)}</td></tr>
       <tr><td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td></tr>
       <tr><td>Salaries</td><td class="num">-${money(b.salaries)}</td></tr>

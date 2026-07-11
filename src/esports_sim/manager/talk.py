@@ -204,3 +204,65 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
         gs.push_news(f"1:1 with {p.handle}: {msg}")
     effects = {"morale": d_morale, "form": d_form, "chemistry": d_chem}
     return True, msg, effects
+
+
+# ---------------------------------------------------------------------------
+# Streaming: the manager can spend the week's 1:1 asking a player to cut back
+# on streaming and put the hours into practice. It buys back development (the
+# load drops, so training.py's growth penalty eases) at the cost of org
+# streaming revenue and morale — you're telling someone to step away from
+# something they enjoy and profit from. Shares the one-per-week 1:1 gate
+# (can_talk): this week you address their morale, their contract, OR their
+# streaming — one real conversation. Deterministic (no rng).
+
+REIN_CHUNK = 30.0       # how far a single talk pushes stream_load down
+REIN_MORALE_BASE = 4.0  # baseline morale cost of the conversation
+
+
+def can_rein_streaming(gs: GameState, pid: str) -> tuple[bool, str]:
+    """Whether a 'rein in the streaming' 1:1 is available for this player:
+    on the acting roster, the weekly 1:1 unspent, and actually streaming
+    enough to be worth the conversation."""
+    from esports_sim.manager import social
+
+    ok, why = can_talk(gs, pid)
+    if not ok:
+        return False, why
+    p = gs.players[pid]
+    if p.stream_load <= social.STREAM_LOAD_MIN + 1.0:
+        return False, f"{p.handle} barely streams — nothing to rein in"
+    return True, ""
+
+
+def rein_in_streaming(gs: GameState, pid: str) -> tuple[bool, str, dict]:
+    """Spend the week's 1:1 telling a player to stream less and grind. Lowers
+    their streaming load (more practice per training.py, less revenue per
+    economy.py) at a morale cost that's steeper for a heavier streamer and for
+    a player who bristles at direction (big ego / thin resilience). The load
+    drifts back toward its follower baseline over the following weeks
+    (social.stream_load_tick), so this is a recurring lever, not a one-off fix."""
+    from esports_sim.manager import personality, social
+
+    ok, why = can_rein_streaming(gs, pid)
+    if not ok:
+        return False, why, {}
+    p = gs.players[pid]
+    before = p.stream_load
+    p.stream_load = round(max(social.STREAM_LOAD_MIN, before - REIN_CHUNK), 1)
+    dropped = round(before - p.stream_load, 1)
+    # Morale cost: bigger the more they stream (more to give up), and bigger
+    # for a big ego / thin resilience (dislikes being told what to do).
+    ego = max(0.0, personality.dev(p, "ego"))
+    resil = max(0.0, -personality.dev(p, "resilience"))
+    cost = REIN_MORALE_BASE * (0.5 + before / 100.0) * (1.0 + 0.6 * ego + 0.4 * resil)
+    d_morale = -round(cost, 1)
+    p.morale = round(min(100.0, max(0.0, p.morale + d_morale)), 1)
+    gs.talked_week = week_key(gs)
+    gs.push_news(
+        f"1:1 with {p.handle}: asked to cut the streaming and focus on the game. "
+        + ("They take it on the chin." if d_morale > -5.0 else "They aren't happy.")
+    )
+    return True, (
+        f"{p.handle} will stream less and practice more "
+        f"(load {before:.0f} -> {p.stream_load:.0f})."
+    ), {"stream_load": -dropped, "morale": d_morale}

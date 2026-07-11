@@ -265,6 +265,7 @@ def new_campaign(
     )
     staff.seed_pool(gs)
     social.seed_followers(gs)
+    social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)
@@ -1029,6 +1030,13 @@ def advance_week(
         },
         mental_events=mental_events,
     )
+
+    # 6c''. Streaming load drifts toward each player's follower-driven
+    # baseline (rng-free, so the 'social' draw order above is untouched).
+    # Runs AFTER follower counts move (fresh baseline) and after training
+    # already read this week's load — so a manager's "rein it in" 1:1 gets a
+    # full week of extra practice before the load starts drifting back.
+    social.stream_load_tick(gs)
 
     # 6c'. Development milestones: band crossings read AFTER training, dev
     # events, and mental momentum have all landed (a heater-driven crossing
