@@ -160,7 +160,7 @@ New-NetFirewallRule -DisplayName 'esports-sim web (TCP 8420)' -Direction Inbound
   name in the app, and an isometric match viewer that replays the event
   log over AI-painted map backdrops with full playback controls (scrub,
   speed, round-skip).
-- **Data-driven content** (`data/`): 13 agents, 7 weapons, 5 maps (each
+- **Data-driven content** (`data/`): 29 agents, 7 weapons, 5 maps (each
   with an authored floor-plan geometry layer — rooms, corridors, props,
   elevation — and its signature gimmick: Bind's teleporter, Lotus's
   rotating door, Ascent's breakable door), and starter teams, all YAML —
