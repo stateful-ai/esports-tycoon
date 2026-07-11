@@ -34,7 +34,19 @@ packages = ["src/esports_sim"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-addopts = "-ra"
+# Parallel by default: this suite is dominated by whole-season campaign
+# sims, so it fans out cleanly across cores (>10min serial -> ~4min on 16
+# cores). `--dist loadgroup` distributes per-test (so big files spread
+# across workers) but honours `@pytest.mark.xdist_group`, which conftest
+# pins on the tests that share a module-scoped season fixture (test_inbox)
+# so that fixture is built once, not once per worker. Escape hatches for
+# debugging a single test:
+#   pytest -n0            # serial, live output, usable with -x / --pdb
+#   pytest -m "not slow"  # skip the whole-season soak tests (fast loop)
+addopts = "-ra -n auto --dist loadgroup"
+markers = [
+  "slow: whole-season / multi-seed soak tests. Skipped by `-m 'not slow'` for a fast pre-merge loop; always run in CI and before a real push.",
+]
 filterwarnings = [
   "error",
   "ignore::DeprecationWarning",

@@ -9,6 +9,9 @@ The gate stack, in order. A failure stops the ship — fix or explicitly
 justify, never skip silently.
 
 1. **Tests**: `.venv-win\Scripts\python.exe -m pytest -q` → all green.
+   Runs parallel by default (`-n auto`, see pyproject). Ship runs the FULL
+   suite — the `-m "not slow"` fast lane is for the tight edit loop only and
+   skips the whole-season determinism soak tests, so never ship on it alone.
 2. **Golden** (two fixtures — the single canonical match AND the
    `sweep_neutral` multi-seed aggregate): if the suite fails ONLY on
    `tests/test_golden.py` and the session intentionally changed engine
