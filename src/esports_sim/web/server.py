@@ -78,7 +78,7 @@ from esports_sim.schemas import (
 from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import tactics_fit
-from esports_sim.web import llm_social
+from esports_sim.web import llm_social, review_history
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -132,6 +132,9 @@ class _Game:
         self.ready: set[str] = set()
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
+        # (team_id, fixture_id) keys already written to the on-disk match-review
+        # corpus this session — skips byes / re-appends (see web.review_history).
+        self.review_seen: set[tuple[str, str]] = set()
         # Save policy runtime: actions only MARK the world dirty (the full
         # GameState serializing on every click was the biggest per-action
         # cost — see /api/perf save.write); disk writes happen on the
@@ -572,6 +575,41 @@ def _logo_url(team_id: str) -> str:
     return f"/assets/logos/logo_{_stable_idx(team_id, N_LOGOS)}.webp"
 
 
+_BADGE_ART_IDS: set[str] | None = None
+
+
+def _badge_art_ids() -> set[str]:
+    """Badge ids with generated emblem art on disk (assets/badges/<id>.webp),
+    cached once per process (added by the art pass, not at runtime)."""
+    global _BADGE_ART_IDS
+    if _BADGE_ART_IDS is None:
+        d = _REPO_ROOT / "assets" / "badges"
+        _BADGE_ART_IDS = {p.stem for p in d.glob("*.webp")} if d.is_dir() else set()
+    return _BADGE_ART_IDS
+
+
+def _badge_views(p: Player) -> list[dict]:
+    """A player's badges for the client (public info — earned at public
+    moments): positives first, then by id. Carries emoji + optional art url."""
+    from esports_sim.schemas.badges import BADGES
+
+    out = []
+    for pb in sorted(
+        p.badges, key=lambda x: (-BADGES.get(x.id, {}).get("polarity", 1), x.id)
+    ):
+        b = BADGES.get(pb.id)
+        if not b:
+            continue
+        bid = pb.id
+        out.append({
+            "id": bid, "name": b["name"], "emoji": b["emoji"],
+            "polarity": b["polarity"], "blurb": b["blurb"],
+            "art": (f"/assets/badges/{bid}.webp" if bid in _badge_art_ids() else None),
+            "season": pb.season,
+        })
+    return out
+
+
 def _portrait_url(pid: str, role: str) -> str:
     return f"/assets/portraits/{role}_{_stable_idx(pid, PORTRAITS_PER_ROLE)}.webp"
 
@@ -644,6 +682,8 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "is_free_agent": p.id in gs.free_agent_ids,
         "asking_salary": market.asking_salary(p),
         "portrait": _portrait_url(p.id, str(p.role)),
+        # Badges are public (earned at public moments) — shown for any player.
+        "badges": _badge_views(p),
     }
 
 
@@ -743,6 +783,248 @@ def _fixture_view(f, gs: GameState) -> dict:
             for i, r in enumerate(f.results)
         ],
     }
+
+
+# ---------------------------------------------------------------------------
+# Last-match review ("why you won/lost")
+#
+# The diagnosis engine (manager/match_review.py) stores numbers + a stable
+# code; wording lives here (so it can change with no save migration) and depth
+# is gated SERVER-SIDE by the analyst's analytics tier — the client renders
+# whatever arrives. tone drives colour; lever_code maps a breaking point to a
+# concrete fix, gated/ordered by the coach.
+
+# code -> tone-specific headline + a detail template over {num}/{den}/{pct}/{val}.
+_REVIEW_COPY = {
+    "atk_side": ("Attack is clicking", "Attack is stalling",
+                 "{num}/{den} attack rounds won ({pct}%)."),
+    "def_side": ("Defense is a wall", "Defense is leaking",
+                 "{num}/{den} defense rounds won ({pct}%)."),
+    "pistol": ("Pistols won", "Pistols lost",
+               "{num}/{den} pistol rounds ({pct}%)."),
+    "player_std": ("{handle} carried", "{handle} carried",
+                   "Team-high {val} average rating."),
+    "player_under": ("{handle} off-colour", "{handle} off-colour",
+                     "{val} average rating across the series."),
+    "opening": ("Winning the opening duels", "Losing the opening duels",
+                "{num}/{den} first bloods ({pct}%)."),
+    "clutch": ("Clutch when it counts", "No clutches closed",
+               "{num}/{den} last-alive rounds won."),
+    "trades": ("Trading deaths well", "Deaths going untraded",
+               "{num}/{den} deaths traded ({pct}%)."),
+    "economy": ("Stealing gun rounds", "Eco rounds wasted",
+                "{num}/{den} under-gunned rounds won."),
+    "post_plant": ("Closing out post-plants", "Losing post-plants",
+                   "{num}/{den} planted rounds won ({pct}%)."),
+    "retake": ("Retakes landing", "Retakes failing",
+               "{num}/{den} enemy plants retaken ({pct}%)."),
+    "comms": ("Clean comms", "Crossed comms",
+              "{num} miscalls in {den} rounds ({pct}%)."),
+    "utility": ("Utility on point", "Utility whiffing",
+                "{num}/{den} abilities whiffed ({pct}%)."),
+}
+
+# lever_code -> where the fix lives + the coach specialty that owns it + copy.
+_REVIEW_LEVERS = {
+    "atk_tempo": {"tab": "tactics", "specialty": "tactical",
+                  "text": "Attack is stalling — raise pace/aggression or set a "
+                          "defined default on the Tactics screen."},
+    "def_setups": {"tab": "tactics", "specialty": "tactical",
+                   "text": "Defense is leaking — tighten map control (stack) and "
+                           "utility discipline in Tactics."},
+    "pistol_prep": {"tab": "training", "specialty": "tactical",
+                    "text": "Pistols are costing you — drill pistol setups "
+                            "(tactical focus) and rein in eco greed."},
+    "entry_support": {"tab": "tactics", "specialty": "mechanical",
+                      "text": "Entries are losing first contact — trade tighter "
+                              "(lower aggression) or sharpen aim (mechanical focus)."},
+    "clutch_mental": {"tab": "training", "specialty": "mental",
+                      "text": "No clutches are landing — mental training builds "
+                              "composure in 1vX spots."},
+    "aim_training": {"tab": "training", "specialty": "mechanical",
+                     "text": "You're being out-fragged — mechanical training "
+                             "closes the raw-aim gap."},
+    "trade_discipline": {"tab": "tactics", "specialty": "tactical",
+                         "text": "Deaths go untraded — spread less (map control) "
+                                 "and drill trade pairs."},
+    "eco_discipline": {"tab": "tactics", "specialty": "tactical",
+                       "text": "Eco rounds are wasted — tune eco greed so "
+                               "force-buys and saves line up."},
+    "post_plant": {"tab": "training", "specialty": "tactical",
+                   "text": "Post-plants are slipping — tactical training tightens "
+                           "your post-plant setups."},
+    "retake_util": {"tab": "tactics", "specialty": "tactical",
+                    "text": "Retakes are failing — raise utility discipline to "
+                            "coordinate the retake."},
+    "comms_cohesion": {"tab": "roster", "specialty": "team",
+                       "text": "Crossed comms stall rotations — build cohesion "
+                               "(chemistry/lineup) on the Roster screen."},
+    "util_discipline": {"tab": "tactics", "specialty": "tactical",
+                        "text": "Utility is whiffing — raise utility discipline "
+                                "so lineups land."},
+    "player_form": {"tab": "roster", "specialty": "team",
+                    "text": "{handle} is off-colour — consider a bench/agent swap "
+                            "or set their dev focus on the Roster screen."},
+}
+
+
+def _player_developing(gs: GameState, pl: Player) -> tuple[bool, list[int]]:
+    """Is this player still climbing toward a higher ceiling (so an off week is
+    a development call, not a drop call)? Reads the potential PROJECTION band —
+    young + real headroom == developing. Returns (developing, [lo, hi])."""
+    lo, hi = development.potential_projection(pl, own=True)
+    ovr = development.overall(pl)
+    developing = pl.age <= 23 and (hi - ovr) >= 4.0
+    return developing, [round(lo), round(hi)]
+
+
+def _review_point_view(gs: GameState, p) -> dict:
+    """Render one stored ReviewPoint into display copy (headline + detail).
+    Player-scoped points carry the player's badges (clutch_master, choker, ...)
+    and, for the off-colour flag, a potential-aware develop-vs-replace note."""
+    handle = ""
+    pl = None
+    if p.player_id:
+        pl = gs.players.get(p.player_id)
+        handle = pl.handle if pl else p.player_id
+    if p.code == "acs_gap":
+        head = "Out-fragging the opponent" if p.tone == "good" else "Being out-fragged"
+        detail = f"{p.num} ACS vs {p.den} — a {abs(int(round(p.value)))}-point gap."
+    else:
+        good_head, bad_head, tmpl = _REVIEW_COPY.get(
+            p.code, (p.code, p.code, "{num}/{den}")
+        )
+        head = (good_head if p.tone == "good" else bad_head).format(handle=handle)
+        pct = int(round(p.value * 100))
+        detail = tmpl.format(
+            num=p.num, den=p.den, pct=pct, val=round(p.value, 2), handle=handle
+        )
+    out = {
+        "code": p.code,
+        "category": p.category,
+        "tone": p.tone,
+        "headline": head,
+        "detail": detail,
+        "player_id": p.player_id or None,
+        "handle": handle or None,
+        # Badges are public — surface the relevant honours/stigmas on the line
+        # (a Choker off-colour or a Clutch Master carry reads instantly).
+        "badges": _badge_views(pl) if pl else [],
+    }
+    if p.code == "player_under" and pl is not None:
+        developing, band = _player_developing(gs, pl)
+        out["dev_note"] = (
+            f"Young with room (proj. {band[0]}–{band[1]}) — a development call, "
+            "not a bench."
+            if developing
+            else f"Near their ceiling (proj. {band[0]}–{band[1]}) — a lineup call."
+        )
+    return out
+
+
+def _last_match_review(gs: GameState) -> dict | None:
+    """The acting team's most recent match diagnosis, depth-gated by the
+    analyst's tier and given coach-gated 'what to tweak' levers. None when
+    there's no review yet (first week / AI-only path)."""
+    review = gs.last_review_by.get(gs.acting_team_id)
+    if review is None:
+        return None
+    tier = staff_mod.analytics_tier(gs)
+    opp = gs.teams.get(review.opp_id)
+    potm = gs.players.get(review.potm_id) if review.potm_id else None
+
+    out: dict = {
+        "fixture_id": review.fixture_id,
+        "won": review.won,
+        "contested": review.contested,
+        "best_of": review.best_of,
+        "your_maps": review.your_maps,
+        "their_maps": review.their_maps,
+        "your_rounds": review.your_rounds,
+        "their_rounds": review.their_rounds,
+        "opp_id": review.opp_id,
+        "opp_name": opp.name if opp else review.opp_id,
+        "potm": (
+            {
+                "player_id": review.potm_id,
+                "handle": potm.handle,
+                "badges": _badge_views(potm),
+            }
+            if potm else None
+        ),
+        "tier": tier,
+        "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
+    }
+    if not review.contested:
+        out["working"] = []
+        out["breaking"] = []
+        out["levers"] = []
+        out["locked"] = False
+        return out
+
+    vis_working = [p for p in review.working if p.min_tier <= tier]
+    vis_breaking = [p for p in review.breaking if p.min_tier <= tier]
+    out["working"] = [_review_point_view(gs, p) for p in vis_working[:4]]
+    out["breaking"] = [_review_point_view(gs, p) for p in vis_breaking[:5]]
+
+    # 'What to tweak' — levers from the visible breaking points, gated by the
+    # coach's quality (how many) and ordered so the coach's specialty leads.
+    coach = gs.staff.get("coach")
+    levers: list[dict] = []
+    if coach is not None:
+        cap = 1 if coach.quality < 40 else 2 if coach.quality < 70 else 3
+        seen: set[str] = set()
+        cand = []
+        for p in vis_breaking:
+            spec = _REVIEW_LEVERS.get(p.lever_code)
+            if not p.lever_code or spec is None or p.lever_code in seen:
+                continue
+            seen.add(p.lever_code)
+            handle = ""
+            pl = None
+            if p.player_id:
+                pl = gs.players.get(p.player_id)
+                handle = pl.handle if pl else p.player_id
+            text = spec["text"].format(handle=handle)
+            # A high-ceiling youngster off-colour is a development call, not a
+            # drop — steer the lever by the potential system when we can.
+            if p.lever_code == "player_form" and pl is not None:
+                developing, _band = _player_developing(gs, pl)
+                text = (
+                    f"{handle} is off-colour but still developing — set their "
+                    "dev focus or pair a mentor on the Roster screen."
+                    if developing
+                    else f"{handle} is off-colour — consider a bench or agent "
+                    "swap on the Roster screen."
+                )
+            cand.append((
+                0 if spec["specialty"] == coach.specialty else 1,
+                {
+                    "code": p.lever_code,
+                    "tab": spec["tab"],
+                    "specialty": spec["specialty"],
+                    "on_focus": spec["specialty"] == coach.specialty,
+                    "text": text,
+                },
+            ))
+        cand.sort(key=lambda t: t[0])  # specialty-matches first; stable otherwise
+        levers = [c[1] for c in cand[:cap]]
+    out["levers"] = levers
+    out["coach"] = {
+        "present": coach is not None,
+        "specialty": coach.specialty if coach else "",
+    }
+
+    # Locked hint: higher-tier signals exist but the analyst can't surface them.
+    hidden = [
+        p for p in (review.working + review.breaking) if p.min_tier > tier
+    ]
+    out["locked"] = bool(hidden)
+    if hidden and tier < 3:
+        out["locked_hint"] = (
+            f"A stronger analyst would surface {staff_mod.ANALYTICS_TIER_LABEL.get(tier + 1, '')}."
+        )
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -1138,6 +1420,9 @@ def state() -> dict:
             # A debrief of the last result, the objectives to chase, and the
             # squad's rotation/burnout picture.
             "debrief": narrative.match_debrief(gs, gs.acting_team_id),
+            # The "why you won/lost" synthesis of the last match — working vs
+            # breaking signals + coach-gated fixes, depth-gated by the analyst.
+            "last_match_review": _last_match_review(gs),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
@@ -1411,6 +1696,15 @@ def roster(team_id: str) -> dict:
             for v in players:
                 v["condition_trend"] = _condition_trend(gs, v["id"])
                 v["mentor_id"] = gs.mentorships.get(v["id"])
+                pv = gs.players.get(v["id"])
+                if pv is not None:
+                    _cs = gs.career_stats.get(v["id"])
+                    # Hidden teaching ability, so the manager can spot which
+                    # veteran is worth pairing with a prospect (grows with age
+                    # + experience; young players almost never rate high).
+                    v["mentor_skill"] = round(
+                        development.mentor_skill(pv, _cs.seasons if _cs else 0)
+                    )
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -1552,25 +1846,33 @@ def _challengers_standouts(gs: GameState, tid: str, n: int = 5) -> list[dict]:
 
 
 def _dev_progress(gs: GameState, tid: str) -> list[dict]:
-    """Own roster: how close each player is to their ceiling (CA / potential)
-    and which way they're trending, from the private dev-history series."""
+    """Own roster: how close each player is to their (projected) ceiling and
+    which way they're trending, from the private dev-history series. Even your
+    own academy's ceiling is a PROJECTION band that firms up with age — never
+    an exact number — and it moves on monumental moments and mentorship. Also
+    carries each player's hidden mentor_skill so the manager can pick a teacher
+    worth pairing a prospect with."""
     out = []
     for pid in gs.teams[tid].player_ids:
         p = gs.players.get(pid)
         if p is None:
             continue
         ca = development.overall(p)
-        pa = development.potential_of(p)
-        pct = round(100.0 * ca / pa) if pa > 0 else 100
+        lo, hi = development.potential_projection(p, own=True)
+        est = max(ca, round((lo + hi) / 2.0, 1))  # the shown estimate, not truth
+        pct = min(100, round(100.0 * ca / est)) if est > 0 else 100
         snaps = gs.dev_history.get(pid, [])
         traj = "steady"
         if len(snaps) >= 3:
             d = snaps[-1].ca - snaps[-3].ca
             traj = "climbing" if d > 0.3 else "declining" if d < -0.3 else "steady"
+        cs = gs.career_stats.get(pid)
         out.append({
             "id": pid, "handle": p.handle, "age": p.age,
-            "ca": round(ca), "potential": round(pa), "progress_pct": pct,
+            "ca": round(ca), "potential": round(est),
+            "potential_band": [round(lo), round(hi)], "progress_pct": pct,
             "trajectory": traj, "maxed": pct >= 97,
+            "mentor_skill": round(development.mentor_skill(p, cs.seasons if cs else 0)),
         })
     out.sort(key=lambda r: (-r["potential"], r["handle"]))
     return out
@@ -3021,7 +3323,9 @@ class MentorBody(BaseModel):
 def mentor_action(body: MentorBody) -> dict:
     """Pair a young player with a veteran teammate (own roster), or clear the
     pairing when mentor_id is null. A protege under a mentor develops faster
-    (training.MENTOR_GROWTH_MULT)."""
+    (training.MENTOR_GROWTH_MULT) AND, gated by the mentor's hidden mentor_skill,
+    slowly gains a higher CEILING on the mentor's best skills
+    (development.apply_mentorship_growth)."""
     from esports_sim.manager.campaign import mentorship_valid
 
     with S.lock:
@@ -3973,6 +4277,13 @@ def advance() -> dict:
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
         game.ready.clear()
+        # Append this week's fresh match reviews to the durable on-disk corpus
+        # (serving-layer side effect, off the deterministic tick — see
+        # web/review_history.py). Never fatal: the corpus is analysis-only.
+        try:
+            review_history.append_reviews(gs, game.code, game.review_seen)
+        except Exception:
+            pass
         # Hand the week's fresh posts to the LLM ghost-writer (async,
         # serving-layer only — see web/llm_social.py; no-op without a
         # configured provider).
@@ -4096,17 +4407,30 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
     # star rating rides along only as a coarse quick-glance. A fogged rival
     # can't be read exactly, so their ceiling stays the scout's banded tier
     # text and the star sub is withheld.
+    potential_band: list[int] | None = None
+    skill_ceilings: dict[str, int] | None = None
     if fogged:
         potential: int | str = _potential_text(gs, p, fogged, progress)
         pot_stars = None
     else:
-        potential = int(round(development.potential_of(p)))
-        pot_stars = development.stars(development.potential_of(p))
+        # Own club: the ceiling is still a projection, not a measurement. Show
+        # a band (firms up with age) and the estimate's tier; per-skill
+        # ceilings are the payoff of the per-attribute potential model.
+        lo, hi = development.potential_projection(p, own=True)
+        est = max(development.overall(p), (lo + hi) / 2.0)
+        potential = int(round(est))
+        pot_stars = development.stars(est)
+        potential_band = [round(lo), round(hi)]
+        skill_ceilings = {
+            a: round(development.skill_ceiling(p, a)) for a in sorted(p.attributes)
+        }
     return {
         "ovr": ovr,
         "ovr_stars": None if fogged else development.stars(development.overall(p)),
         "potential": potential,
         "potential_stars": pot_stars,
+        "potential_band": potential_band,
+        "skill_ceilings": skill_ceilings,
         "form": None if fogged else round(p.form, 1),
         "morale": None if fogged else round(p.morale, 1),
         "condition": None if fogged else round(p.stamina, 1),
@@ -4404,6 +4728,7 @@ def player_profile(pid: str) -> dict:
             },
             "overview": _profile_overview(gs, p, fog, progress),
             "traits": _profile_traits(p, fog, progress),
+            "badges": _badge_views(p),
             "attributes": _profile_attributes(gs, p, fog),
             "agents": _profile_agents(p),
             "season": _profile_season(gs, pid),

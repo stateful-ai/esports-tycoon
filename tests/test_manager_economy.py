@@ -21,7 +21,7 @@ def _campaign(seed: int = 4):
 
 # -- scouting assignments (player deep-dive / match intel) ---------------------
 
-def test_player_deep_dive_fills_faster_and_tiers_unlock() -> None:
+def test_player_deep_dive_accrues_over_weeks_and_tiers_unlock() -> None:
     from esports_sim.manager import campaign as camp
     from esports_sim.manager.campaign import WeekReport
 
@@ -36,8 +36,11 @@ def test_player_deep_dive_fills_faster_and_tiers_unlock() -> None:
     gs.set_acting(gs.user_team_id)
     prog = gs.scout_progress[f"player:{pid}"]
     gs.set_acting(None)
-    # Deep dive beats the team rate (0.34 * 1.5, no live-watch this week).
-    assert prog > camp.SCOUT_WEEKLY_GAIN
+    # Reading a CEILING is slow, careful work: a deep dive is a deliberate
+    # multi-week commitment now (capped per week), not the old one-week reveal.
+    # One week makes real progress but comes nowhere near a full book.
+    assert 0 < prog < 0.5
+    assert prog <= camp.SCOUT_PLAYER_WEEK_CAP + camp.SCOUT_LIVE_WATCH_BONUS
 
     # Report tiers unlock with depth.
     p = gs.players[pid]

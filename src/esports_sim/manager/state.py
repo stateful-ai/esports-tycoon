@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 10
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -177,6 +177,25 @@ def _migrate_v7_to_v8(data: dict) -> dict:
     return data
 
 
+def _migrate_v8_to_v9(data: dict) -> dict:
+    """v9 adds only defaulted Player fields: skill_potential (per-skill
+    ceilings — empty heals lazily via development.skill_ceiling) and badges
+    (rolled/decaying honours — empty on old saves). A v8 save loads unchanged;
+    the bump exists so an OLDER build refuses a v9 save with the clean "update
+    the game" message instead of an extra="forbid" validation stack trace on
+    the unknown keys."""
+    return data
+
+
+def _migrate_v9_to_v10(data: dict) -> dict:
+    """v10 adds only the defaulted `last_review_by` field (the latest
+    match-review diagnosis per human team). A v9 save loads unchanged — the
+    field simply starts empty and fills on the next played week. The bump
+    exists so an OLDER build refuses a v10 save with the clean "update the
+    game" message instead of an extra="forbid" validation stack trace."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -185,6 +204,8 @@ _MIGRATIONS: dict[int, "callable"] = {
     5: _migrate_v5_to_v6,
     6: _migrate_v6_to_v7,
     7: _migrate_v7_to_v8,
+    8: _migrate_v8_to_v9,
+    9: _migrate_v9_to_v10,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -257,6 +278,54 @@ class Fixture(BaseModel):
         a = sum(1 for r in self.results if r.winner_id == self.team_a)
         b = sum(1 for r in self.results if r.winner_id == self.team_b)
         return a, b
+
+
+class ReviewPoint(BaseModel):
+    """One diagnosed signal from a match — a thing that worked (tone=good) or
+    broke down (tone=bad). Numeric + a stable `code`; the web layer turns the
+    code + num/den/value into display copy (so wording changes need no
+    migration), gates it by the analyst's analytics tier, and maps `lever_code`
+    to a concrete fix (a tactics dial / training focus / lineup move). Neutral
+    signals are dropped, not stored."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    code: str
+    category: str
+    tone: str  # good | bad
+    min_tier: int = 0  # analyst analytics tier that unlocks it (0-2)
+    value: float = 0.0  # headline rate/number (rounded)
+    num: int = 0  # detail numerator ("4/13 attack rounds")
+    den: int = 0  # detail denominator
+    weight: float = 0.0  # ranking score (decisiveness), rounded
+    player_id: str = ""  # player-scoped points resolve their handle at serve
+    lever_code: str = ""  # candidate fix key (breaking points only)
+
+
+class MatchReview(BaseModel):
+    """A synthesized 'why you won/lost' for a team's most recent series.
+    Computed at sim time from the full box score + event log (both transient),
+    kept as the latest review per human team. TIER-AGNOSTIC: it holds every
+    signal it could derive; the serializer filters by the analyst's tier, so a
+    better analyst retroactively deepens even last match's breakdown."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    fixture_id: str
+    season: int = 0
+    week: int = 0
+    team_id: str = ""
+    opp_id: str = ""
+    won: bool = False
+    best_of: int = 1
+    your_maps: int = 0
+    their_maps: int = 0
+    your_rounds: int = 0  # aggregated across played maps
+    their_rounds: int = 0
+    potm_id: str = ""
+    contested: bool = True  # False for a forfeit / walkover (no breakdown)
+    working: list[ReviewPoint] = Field(default_factory=list)
+    breaking: list[ReviewPoint] = Field(default_factory=list)
 
 
 class TeamRecord(BaseModel):
@@ -873,6 +942,12 @@ class GameState(BaseModel):
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)
     dev_history: dict[str, list[DevSnap]] = Field(default_factory=dict)
+    # The latest match-review diagnosis per human team ("why you won/lost"),
+    # overwritten each week they play. Computed at sim time in _sim_fixture
+    # while the full box score + event log are still alive; only the LATEST is
+    # kept here (the dashboard card reads it). The durable, append-only corpus
+    # of every review lives on disk (web/review_history.py), not in the save.
+    last_review_by: dict[str, MatchReview] = Field(default_factory=dict)
     # Social layer: the shared feed (capped) — world-visible by design.
     social_feed: list[SocialPost] = Field(default_factory=list)
 
