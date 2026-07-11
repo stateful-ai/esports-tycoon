@@ -965,6 +965,12 @@ tr.elim td { opacity: .5; }
 .es-meta-row { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: 8px; font-size: var(--es-text-sm, 12px); }
 .es-meta-track { height: 6px; border-radius: 3px; background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
 .es-meta-fill { display: block; height: 100%; background: var(--es-color-brand, #ff4655); }
+.es-map-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; }
+.es-map-meta { border: 1px solid var(--es-color-border-secondary, #1c2536); border-radius: var(--es-radius-md, 6px); padding: 8px; display: flex; flex-direction: column; gap: 5px; font-size: var(--es-text-sm, 12px); }
+.es-map-meta-head { display: flex; align-items: center; gap: 6px; }
+.es-map-meta-head .mono { margin-left: auto; font-size: var(--es-text-2xs, 10px); }
+.es-map-meta-dials { display: flex; flex-wrap: wrap; gap: 4px; }
+.es-map-meta-dial { border-radius: 10px; padding: 2px 6px; background: var(--es-color-surface-raised, #162033); font-size: var(--es-text-2xs, 10px); }
 
 /* Board-standing line on the dashboard manager's desk. */
 .es-board { margin: 2px 0 8px; font-size: var(--es-text-sm, 12px); line-height: 1.6; }

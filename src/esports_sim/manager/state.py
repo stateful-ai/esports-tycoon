@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -206,6 +206,13 @@ def _migrate_v10_to_v11(data: dict) -> dict:
     return data
 
 
+def _migrate_v11_to_v12(data: dict) -> dict:
+    """v12 adds defaulted public per-map meta aggregates. Old saves begin
+    collecting trends from their next played map; no private scouting data is
+    inferred or backfilled."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -217,6 +224,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     8: _migrate_v8_to_v9,
     9: _migrate_v9_to_v10,
     10: _migrate_v10_to_v11,
+    11: _migrate_v11_to_v12,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -441,6 +449,17 @@ class TeamMapStats(BaseModel):
     atk_won: int = 0
     def_rounds: int = 0
     def_won: int = 0
+
+
+class MapMetaStats(BaseModel):
+    """Public, season-local read on how the whole league plays one map."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    team_maps: int = 0
+    agent_picks: dict[str, int] = Field(default_factory=dict)
+    tactic_sums: dict[str, float] = Field(default_factory=dict)
+    site_focuses: dict[str, int] = Field(default_factory=dict)
 
 
 class StatSnap(BaseModel):
@@ -949,6 +968,8 @@ class GameState(BaseModel):
         default_factory=dict
     )
     team_map_stats: dict[str, dict[str, TeamMapStats]] = Field(default_factory=dict)
+    # Aggregate observations from completed maps, never gated by scouting.
+    map_meta_stats: dict[str, MapMetaStats] = Field(default_factory=dict)
     # Time-series (SURVIVE season rollover, capped): performance points for
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)

@@ -143,6 +143,39 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
     ][:8]
 
     latest = gs.patch_history[-1] if gs.patch_history else None
+    map_trends = []
+    for map_id, trend in sorted(gs.map_meta_stats.items()):
+        total_picks = sum(trend.agent_picks.values())
+        top_agents = [
+            {
+                "agent_id": aid,
+                "name": agents[aid].display_name if aid in agents else aid,
+                "picks": picks,
+                "pick_rate": round(100.0 * picks / total_picks, 1) if total_picks else 0.0,
+            }
+            for aid, picks in sorted(
+                trend.agent_picks.items(), key=lambda item: (-item[1], item[0])
+            )[:5]
+        ]
+        tactics = [
+            {
+                "key": dial,
+                "average": round(trend.tactic_sums.get(dial, 0.0) / trend.team_maps, 1),
+            }
+            for dial in ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
+            if trend.team_maps
+        ]
+        site_focus = (
+            max(sorted(trend.site_focuses), key=lambda focus: trend.site_focuses[focus])
+            if trend.site_focuses else "balanced"
+        )
+        map_trends.append({
+            "map_id": map_id,
+            "team_maps": trend.team_maps,
+            "agents": top_agents,
+            "tactics": tactics,
+            "site_focus": site_focus,
+        })
     return {
         "latest_patch": (
             {
@@ -156,6 +189,7 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
         ),
         "patched_agents": patched,
         "tier_list": tiers,
+        "map_trends": map_trends,
     }
 
 

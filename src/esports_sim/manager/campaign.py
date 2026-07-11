@@ -68,6 +68,7 @@ from esports_sim.manager.state import (
     DevSnap,
     Fixture,
     GameState,
+    MapMetaStats,
     MapResult,
     MatchReview,
     PlayerLineSnap,
@@ -1263,6 +1264,26 @@ def _aggregate_stats(
         wp["kast"] += line.kast_rounds
 
 
+_META_DIALS = ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
+
+
+def _record_map_meta(gs: GameState, stats, tactics_by_team: dict[str, object]) -> None:
+    """Fold a completed map into the public, scouting-independent meta."""
+    trend = gs.map_meta_stats.setdefault(stats.map_id, MapMetaStats())
+    for tid in sorted(tactics_by_team):
+        tactics = tactics_by_team[tid]
+        trend.team_maps += 1
+        for dial in _META_DIALS:
+            trend.tactic_sums[dial] = trend.tactic_sums.get(dial, 0.0) + float(
+                getattr(tactics, dial)
+            )
+        focus = str(getattr(tactics, "site_focus"))
+        trend.site_focuses[focus] = trend.site_focuses.get(focus, 0) + 1
+    for pid in sorted(stats.lines):
+        agent_id = stats.lines[pid].agent_id or "unknown"
+        trend.agent_picks[agent_id] = trend.agent_picks.get(agent_id, 0) + 1
+
+
 def _apply_match_development(gs: GameState, stats) -> None:
     """Minutes are development: every played line becomes attribute reps
     (see training.apply_match_experience). Deterministic — no rng."""
@@ -1535,6 +1556,18 @@ def _sim_fixture(
             wid: str(w.weapon_class) for wid, w in rt_gd.weapons.items()
         }
         stats = compute_match_stats(res.events, team_of, weapon_class_of)
+        _record_map_meta(
+            gs,
+            stats,
+            {
+                tid: (
+                    plans[tid].tactics
+                    if tid in plans and plans[tid].tactics is not None
+                    else gs.teams[tid].tactics
+                )
+                for tid in (f.team_a, f.team_b)
+            },
+        )
         review_bundles.append((stats, res.events, team_of))
         review_weapon_class = weapon_class_of
         if collector is not None:
@@ -2298,6 +2331,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.player_map_stats = {}
     gs.player_agent_stats = {}
     gs.team_map_stats = {}
+    gs.map_meta_stats = {}
 
     # Earned traits unlock from settled career state (career_stats just rolled
     # up, season_start_ca still this season's baseline, age still the played-
