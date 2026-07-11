@@ -70,6 +70,7 @@ def test_match_scouting_grants_both_teams_and_clears() -> None:
     gs.fixtures.append(fx)
     gs.set_acting(gs.user_team_id)
     gs.scout_target = "match:scouttest"
+    gs.teams[rivals[0]].tactics.aggression = 70
     gs.set_acting(None)
     report = WeekReport(season=1, week=gs.week, phase="regular")
     report.fixtures.append(fx)
@@ -78,6 +79,8 @@ def test_match_scouting_grants_both_teams_and_clears() -> None:
     assert gs.scout_progress.get(rivals[0], 0.0) >= camp.SCOUT_MATCH_INTEL
     assert gs.scout_progress.get(rivals[1], 0.0) >= camp.SCOUT_MATCH_INTEL
     assert gs.scout_target is None, "one-shot: the scout comes home"
+    assert gs.scout_progress["match:scouttest"] >= camp.SCOUT_MATCH_INTEL
+    assert gs.scout_progress[f"matchobs:scouttest:{rivals[0]}:aggression"] == 70
     gs.set_acting(None)
 
 

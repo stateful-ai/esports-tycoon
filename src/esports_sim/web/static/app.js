@@ -3768,6 +3768,22 @@ async function scouting(v) {
   card.appendChild(pbox);
   main.appendChild(card);
 
+  if (data.match_report) {
+    const mr = data.match_report;
+    const rc = el("div", "card");
+    rc.innerHTML = `<h2>Match-scout report <span class="chip tone-good">W${mr.week}</span></h2>` +
+      `<div class="rowbar"><span>${tlink(mr.team_a_id, mr.team_a_name)} vs ${tlink(mr.team_b_id, mr.team_b_name)}</span>` +
+      `<b class="rowbar-val mono">${esc(mr.score)}</b></div>` +
+      (mr.danger_man ? `<div class="rowbar"><span>Danger man</span><span class="rowbar-val">` +
+        `${plink(mr.danger_man.player_id, mr.danger_man.handle)} <span class="chip">${mr.danger_man.rating.toFixed(2)}</span></span></div>` : "") +
+      `<div class="rowbar"><span>Veto lean</span><span class="rowbar-val">${esc(mr.veto_lean)}</span></div>` +
+      `<div class="tile"><b>${tlink(mr.team_a_id, mr.team_a_name)}</b><div class="muted">` +
+        `${(mr.team_a_tendencies || []).map(esc).join(" · ") || "no strong tendency observed"}</div></div>` +
+      `<div class="tile"><b>${tlink(mr.team_b_id, mr.team_b_name)}</b><div class="muted">` +
+        `${(mr.team_b_tendencies || []).map(esc).join(" · ") || "no strong tendency observed"}</div></div>`;
+    main.appendChild(rc);
+  }
+
   /* -- main ws-7: the report(s). CRITICAL FIX — the desk (above) and any
      report BOTH render; a deep-dive no longer early-returns and hides the
      team-coverage table. reports[] is single-kind, so it's one or the other. */
