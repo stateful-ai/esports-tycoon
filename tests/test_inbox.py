@@ -25,22 +25,55 @@ from esports_sim.registry import GameData
 LIFECYCLE_WEEKS = 25
 
 
-@pytest.fixture()
-def campaign(game_data: GameData) -> GameState:
-    return new_campaign(game_data, seed=123)
-
-
 def _advance(gs: GameState, gd: GameData, n: int) -> None:
     for _ in range(n):
         advance_week(gs, gd)
+
+
+@pytest.fixture()
+def campaign(game_data: GameData) -> GameState:
+    """Fresh, un-advanced seed=123 campaign for the cheap tests that only
+    tick a week or two (or none)."""
+    return new_campaign(game_data, seed=123)
+
+
+# The whole-season tests below all wanted the same thing: one seed=123
+# campaign advanced through a full lifecycle. Simulating 25 weeks per test
+# dominated the file's runtime (~9 independent season sims). Build it ONCE
+# per module and share it; mutation-free tests read `season` directly,
+# mutating ones take a cheap deep copy via `season_copy`. `--dist loadscope`
+# (see pyproject) keeps this file on one worker so the fixture is built once.
+@pytest.fixture(scope="module")
+def season(game_data: GameData) -> GameState:
+    gs = new_campaign(game_data, seed=123)
+    _advance(gs, game_data, LIFECYCLE_WEEKS)
+    return gs
+
+
+@pytest.fixture()
+def season_copy(season: GameState) -> GameState:
+    """An isolated deep copy of the shared season for tests that mutate the
+    feed (read-marking, save/load). Copying is far cheaper than re-simming."""
+    return season.model_copy(deep=True)
+
+
+@pytest.fixture(scope="module")
+def det_pair(game_data: GameData) -> tuple[GameState, GameState]:
+    """Two independent seed=777 campaigns advanced identically — the raw
+    material for the inbox determinism checks. Built once, read-only."""
+    a = new_campaign(game_data, seed=777)
+    b = new_campaign(game_data, seed=777)
+    _advance(a, game_data, LIFECYCLE_WEEKS)
+    _advance(b, game_data, LIFECYCLE_WEEKS)
+    return a, b
 
 
 # ---------------------------------------------------------------------------
 # (a) items are produced and stay within the per-week and 200-item bounds
 
 
-def test_items_generated_and_well_formed(campaign: GameState, game_data: GameData) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+def test_items_generated_and_well_formed(season: GameState) -> None:
+    campaign = season
     assert campaign.inbox, "advancing a seeded campaign should produce inbox items"
 
     for it in campaign.inbox:
@@ -60,9 +93,8 @@ def test_items_generated_and_well_formed(campaign: GameState, game_data: GameDat
     assert len(cats) >= 3
 
 
-def test_per_week_and_total_bounds(campaign: GameState, game_data: GameData) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
-
+def test_per_week_and_total_bounds(season: GameState) -> None:
+    campaign = season
     # Each (season, week) is written by exactly one tick, capped per week.
     per_week: dict[tuple[int, int], int] = {}
     for it in campaign.inbox:
@@ -118,11 +150,8 @@ def test_rolling_cap_holds_when_feed_is_full(campaign: GameState, game_data: Gam
 # (b) same seed -> byte-identical inbox
 
 
-def test_determinism(game_data: GameData) -> None:
-    a = new_campaign(game_data, seed=777)
-    b = new_campaign(game_data, seed=777)
-    _advance(a, game_data, LIFECYCLE_WEEKS)
-    _advance(b, game_data, LIFECYCLE_WEEKS)
+def test_determinism(det_pair: tuple[GameState, GameState]) -> None:
+    a, b = det_pair
 
     ia = [inbox.to_api(it) for it in a.inbox]
     ib = [inbox.to_api(it) for it in b.inbox]
@@ -133,8 +162,8 @@ def test_determinism(game_data: GameData) -> None:
     ]
 
 
-def test_sorted_items_newest_first(campaign: GameState, game_data: GameData) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+def test_sorted_items_newest_first(season: GameState) -> None:
+    campaign = season
     ordered = inbox.sorted_items(campaign)
     keys = [(it.season, it.week) for it in ordered]
     assert keys == sorted(keys, key=lambda k: (-k[0], -k[1]))
@@ -166,8 +195,8 @@ def test_wire_shape_is_frozen(campaign: GameState, game_data: GameData) -> None:
 # (c) save/load round-trips items + unread; old saves without inbox load
 
 
-def test_save_load_roundtrip(campaign: GameState, game_data: GameData, tmp_path) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+def test_save_load_roundtrip(season_copy: GameState, tmp_path) -> None:
+    campaign = season_copy
     assert campaign.inbox
     # Read one item so an unread flag has to survive the trip.
     target = inbox.sorted_items(campaign)[0]
@@ -201,8 +230,8 @@ def test_load_old_save_without_inbox(campaign: GameState, game_data: GameData) -
 # (d) read-marking updates unread counts, including {"all": true}
 
 
-def test_read_marking(campaign: GameState, game_data: GameData) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+def test_read_marking(season_copy: GameState) -> None:
+    campaign = season_copy
     total_unread = inbox.unread_count(campaign)
     assert total_unread > 0
 
@@ -300,10 +329,8 @@ def test_sponsor_offer_item_carries_accept_decline_actions(
     assert inbox.to_api(it, campaign)["actions"] == acts
 
 
-def test_non_offer_items_have_no_actions(
-    campaign: GameState, game_data: GameData
-) -> None:
-    _advance(campaign, game_data, LIFECYCLE_WEEKS)
+def test_non_offer_items_have_no_actions(season: GameState) -> None:
+    campaign = season
     non_offer = [it for it in campaign.inbox if it.category not in ("transfer", "sponsor")]
     assert non_offer  # a full season surfaces plenty of non-offer notices
     for it in non_offer:
@@ -311,11 +338,10 @@ def test_non_offer_items_have_no_actions(
         assert "actions" not in inbox.to_api(it, campaign)
 
 
-def test_actions_are_deterministic_across_seeds(game_data: GameData) -> None:
-    a = new_campaign(game_data, seed=777)
-    b = new_campaign(game_data, seed=777)
-    _advance(a, game_data, LIFECYCLE_WEEKS)
-    _advance(b, game_data, LIFECYCLE_WEEKS)
+def test_actions_are_deterministic_across_seeds(
+    det_pair: tuple[GameState, GameState]
+) -> None:
+    a, b = det_pair
     # Serialised WITH gs (so any live-offer actions ride along) — byte-identical.
     assert [inbox.to_api(it, a) for it in inbox.sorted_items(a)] == [
         inbox.to_api(it, b) for it in inbox.sorted_items(b)

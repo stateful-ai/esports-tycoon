@@ -19,7 +19,9 @@ Published at github.com/stateful-ai/esports-tycoon.
 
 | What | Command |
 |---|---|
-| Tests | `.venv-win\Scripts\python.exe -m pytest -q` |
+| Tests (full, parallel by default) | `.venv-win\Scripts\python.exe -m pytest -q` |
+| Tests (fast pre-merge loop, skips whole-season soak) | `... -m pytest -q -m "not slow"` |
+| Tests (serial, for `-x`/`--pdb` on one test) | `... -m pytest -q -n0 <path>::<test>` |
 | Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` (exit 1 = fail) |
 | Rotation pacing gate (25–35s via spawn, 8–18s spawn→entry) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |
