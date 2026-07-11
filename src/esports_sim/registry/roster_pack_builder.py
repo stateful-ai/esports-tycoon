@@ -27,6 +27,9 @@ Spec shape per src file:
             igl: false
             quality: 82       # overall 50-88; becomes the attribute base
             agents: [jett, raze]
+            attr_overrides:   # optional: pin specific attributes past the
+              aim_precision: 92   # archetype shape, for deliberately lopsided
+              game_sense: 34      # players (elite aim / weak IQ, and so on)
 
 CLI usage: python scripts/build_roster_pack.py vct-2026
 
@@ -111,6 +114,14 @@ def expand_player(
         # quantities, the archetype does the differentiating.
         base = quality + shape.get(attr_id, 0.0) + rng.normal(0, 3.5)
         attributes[attr_id] = round(_clamp(base), 1)
+    # Optional authored overrides for deliberately lopsided profiles (elite
+    # aim / poor game sense, brilliant IGL / mediocre mechanics, etc.) —
+    # pins specific attributes past what quality+archetype+jitter would
+    # produce. Unlisted attributes are untouched.
+    for attr_id, value in spec.get("attr_overrides", {}).items():
+        if attr_id not in _ATTR_IDS:
+            raise SystemExit(f"{pid}: unknown attr_overrides key {attr_id!r}")
+        attributes[attr_id] = round(_clamp(float(value)), 1)
 
     # Agent pool: the spec's signature agents, topped up from same-role
     # agents (or any agent for flex players) to at least two picks.

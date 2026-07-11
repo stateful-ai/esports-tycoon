@@ -967,6 +967,75 @@ async function dashboard(v) {
     v.appendChild(card);
   }
 
+  /* -- 1d2. MATCH REVIEW: why you won/lost + what to tweak ---------------- */
+  const lmr = s.last_match_review;
+  if (lmr) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Match review"));
+    // Public badges (Clutch Master, Choker, ...) as emoji chips — same look as
+    // the roster's badge pills, so a carry or a stigma reads at a glance.
+    const badgeStrip = (bs) => (bs || []).map((bd) =>
+      ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${bd.name}: ${bd.blurb}">${bd.emoji}</span>`).join("");
+    const scoreTxt = lmr.best_of > 1
+      ? `${lmr.your_maps}–${lmr.their_maps}`
+      : `${lmr.your_rounds}–${lmr.their_rounds}`;
+    card.appendChild(el("div", "row es-review-head",
+      `<span class="pill ${lmr.won ? "win" : "loss"}">${lmr.won ? "W" : "L"}</span>` +
+      `<span class="es-review-opp">vs <span class="tlink" data-tid="${lmr.opp_id}">${lmr.opp_name}</span></span>` +
+      `<span class="spacer"></span>` +
+      `<b class="mono es-review-score">${scoreTxt}</b>`));
+    if (lmr.potm) {
+      card.appendChild(el("div", "potm-chip",
+        `<span class="potm-star">★</span> POTM ` +
+        `<span class="plink" data-pid="${lmr.potm.player_id}">${lmr.potm.handle}</span>` +
+        badgeStrip(lmr.potm.badges)));
+    }
+    if (!lmr.contested) {
+      card.appendChild(el("p", "muted", "Match not contested — no breakdown."));
+      v.appendChild(card);
+    } else {
+      const mkCol = (label, points) => {
+        const col = el("div", "es-snap-col");
+        col.appendChild(el("span", "es-scout-lab muted", label));
+        const list = el("div", "es-review-list");
+        if (!points.length) list.appendChild(el("div", "muted es-review-d", "—"));
+        for (const p of points) {
+          const note = p.dev_note ? `<span class="es-review-d muted">${p.dev_note}</span>` : "";
+          const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
+            `<b class="es-review-h">${p.headline}${badgeStrip(p.badges)}</b>` +
+            `<span class="es-review-d muted">${p.detail}</span>` + note);
+          if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
+          list.appendChild(pt);
+        }
+        col.appendChild(list);
+        return col;
+      };
+      const cols = el("div", "es-snap-cols");
+      cols.appendChild(mkCol("What worked", lmr.working));
+      cols.appendChild(mkCol("Where it broke down", lmr.breaking));
+      card.appendChild(cols);
+      // What to tweak: coach-gated levers, each jumping to the right screen.
+      if (lmr.levers && lmr.levers.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "What to tweak"));
+        const tabOf = { tactics: "tactics", training: "roster", roster: "roster" };
+        const ll = el("div", "es-review-levers");
+        for (const lv of lmr.levers) {
+          const row = el("div", "es-review-lever" + (lv.on_focus ? " on-focus" : ""),
+            `<span class="es-review-arrow">▸</span> ${lv.text}`);
+          row.onclick = () => dashGoTab(tabOf[lv.tab] || "tactics");
+          ll.appendChild(row);
+        }
+        card.appendChild(ll);
+      } else if (lmr.coach && !lmr.coach.present) {
+        card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
+      }
+      if (lmr.locked && lmr.locked_hint) {
+        card.appendChild(el("p", "muted es-review-d", lmr.locked_hint));
+      }
+      v.appendChild(card);
+    }
+  }
+
   /* -- 1e. FORM TREND + SQUAD PROFILE ------------------------------------- */
   const trend = s.form_trend || [], sp = s.squad_profile;
   if (trend.length >= 2 || sp) {
@@ -1366,16 +1435,18 @@ async function roster(v) {
     const starCell = hasBench
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
-    // Mentorship: older, higher-rated teammates can mentor this player.
+    // Mentorship: older, higher-rated teammates can mentor this player. Sorted
+    // by hidden teaching ability (mentor_skill) so the best teacher is first —
+    // a strong mentor raises the protege's ceiling on their own best skills.
     const eligibleMentors = data.is_user_team
-      ? data.players.filter(
-          (q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0)
-        )
+      ? data.players
+          .filter((q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0))
+          .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
       : [];
     const mentorSel = (eligibleMentors.length || p.mentor_id)
-      ? `<select data-act="mentor" title="pair with a veteran mentor for faster development">
+      ? `<select data-act="mentor" title="pair with a veteran mentor: faster growth + a higher ceiling on the mentor's best skills (teach = teaching ability)">
            <option value="">no mentor</option>
-           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}</option>`).join("")}
+           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
          </select>`
       : "";
     const devCell = data.is_user_team
@@ -1398,7 +1469,7 @@ async function roster(v) {
         : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
     const tr = el("tr", "", `
       ${starCell}
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${benchPill}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${(p.badges || []).map((bd) => ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${bd.name}: ${bd.blurb}">${bd.emoji}</span>`).join("")}${benchPill}</td>
       <td>${stylePill(p)}</td>
       <td>${p.planned_agent
         ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
@@ -3144,8 +3215,11 @@ async function scouting(v) {
     dc.innerHTML = `<h2>The book on <span class="plink" data-pid="${r.player_id}">${r.handle}</span>
       <span class="muted" style="font-weight:400">— ${scoutTier(data.progress)} (${Math.round(data.progress * 100)}%)</span></h2>`;
     const lines = [];
+    const proj = (r.pa_projection ?? []).length === 2
+      ? ` <span class="muted" title="A ceiling is a projection, never an exact read — and it keeps moving.">(proj. ${r.pa_projection[0]}–${r.pa_projection[1]})</span>`
+      : "";
     lines.push(`<div><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span>
-      <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}</div>`);
+      <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}${proj}</div>`);
     if ((r.agent_comfort ?? []).length) {
       lines.push(`<div><b>Comfort picks:</b> ` + r.agent_comfort
         .map((a) => `<span class="pill">${a.agent_id} ${a.mastery}</span>`).join(" ") + `</div>`);
@@ -3166,6 +3240,10 @@ async function scouting(v) {
     if ((r.strengths ?? []).length) {
       lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
         ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") + `</span></div>`);
+    }
+    if ((r.ceiling_reads ?? []).length) {
+      lines.push(`<div><b>Ceilings:</b> ` + r.ceiling_reads
+        .map((c) => `<span class="pill" title="how much room this skill has left to its ceiling">${humanize(c.attr)}: ${c.read}</span>`).join(" ") + `</div>`);
     }
     lines.push(r.verdict
       ? `<div><b>Verdict:</b> ${r.verdict}</div>`

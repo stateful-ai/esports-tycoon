@@ -654,6 +654,15 @@ svg.iso .plabel { font-size: 2.4px; }
 .mentor-pill { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 16%, transparent); }
 .dev-plan select[data-act="mentor"] { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
 
+/* Badges — rolled honours (and stigmas). */
+.roster-badge { font-size: var(--es-text-xs, 11px); vertical-align: middle; cursor: help; }
+.roster-badge.badge-neg { filter: grayscale(0.3) brightness(0.9); }
+.pf-badge { display: inline-flex; align-items: center; gap: 5px; }
+.pf-badge-emoji { font-size: 14px; line-height: 1; }
+.pf-badge-art { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; }
+.pf-badge-pos { border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 45%, transparent); }
+.pf-badge-neg { border-color: color-mix(in srgb, var(--es-color-warn, #e8b34b) 50%, transparent); color: var(--es-color-warn, #e8b34b); }
+
 /* Match preview prose on the spotlight. */
 .es-preview { margin: 6px 0 0; font-size: var(--es-text-xs, 11px); line-height: 1.45; font-style: italic; }
 
@@ -949,6 +958,23 @@ tr.elim td { opacity: .5; }
 .es-result-wk { font-size: var(--es-text-2xs, 10px); }
 .es-result-t.good { font-weight: 700; }
 .es-result-score { text-align: center; }
+
+/* Match review ("why you won/lost") card. */
+.es-review-head { align-items: center; gap: 8px; margin-bottom: 8px; }
+.es-review-opp { color: var(--es-color-text-secondary, #b7c0d0); }
+.es-review-score { font-size: var(--es-text-sm, 12px); }
+.es-review-list { display: flex; flex-direction: column; gap: 6px; }
+.es-review-pt { border-left: 2px solid var(--es-color-border-secondary, #1c2536); padding-left: 8px; }
+.es-review-pt.good { border-left-color: var(--es-color-text-success, #3fb68b); }
+.es-review-pt.bad { border-left-color: var(--es-color-brand, #ff4655); }
+.es-review-pt[data-pid] { cursor: pointer; }
+.es-review-h { display: block; font-size: var(--es-text-xs, 11px); }
+.es-review-d { display: block; font-size: var(--es-text-2xs, 10px); }
+.es-review-levers { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.es-review-lever { cursor: pointer; font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); padding: 5px 7px; border: 1px solid var(--es-color-border-secondary, #1c2536); border-radius: var(--es-radius-md, 6px); }
+.es-review-lever:hover { border-color: var(--es-color-accent, #4fd8c0); }
+.es-review-lever.on-focus { border-left: 2px solid var(--es-color-accent, #4fd8c0); }
+.es-review-arrow { color: var(--es-color-accent, #4fd8c0); }
 
 /* Cumulative-wins sparkline on the dashboard. */
 .es-spark { display: flex; flex-direction: column; gap: 3px; }

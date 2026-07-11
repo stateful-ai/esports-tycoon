@@ -367,6 +367,22 @@ def test_v5_save_migrates_to_v6(campaign, tmp_path) -> None:
     assert isinstance(loaded.season_start_ca, dict)
 
 
+def test_v7_save_migrates_to_v8(campaign, tmp_path) -> None:
+    # v8 adds Player.skill_potential (per-skill ceilings), defaulted empty and
+    # healed lazily by development.skill_ceiling. v7 -> v8 is a pure pass-
+    # through: a v7-stamped save missing the field loads and reports v8.
+    assert SCHEMA_VERSION >= 8
+    data = json.loads(campaign.model_dump_json())
+    data["schema_version"] = 7
+    for p in data["players"].values():
+        p.pop("skill_potential", None)  # a real v7 save predates the field
+    path = tmp_path / "v7.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    loaded = GameState.load(path)
+    assert loaded.schema_version == SCHEMA_VERSION
+    assert all(isinstance(p.skill_potential, dict) for p in loaded.players.values())
+
+
 # ---------------------------------------------------------------------------
 # Analytics gating (server-side)
 
