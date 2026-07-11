@@ -4203,6 +4203,33 @@ function statsMeta(ws, data, metaResp, tier) {
       `<h2>Agent meta</h2><p class="muted">No meta data compiled yet.</p>`));
   }
 
+  const mapTrends = metaResp?.map_trends || [];
+  const dialLabels = {
+    aggression: "Aggression", pace: "Pace", util_discipline: "Utility",
+    eco_greed: "Eco greed", map_control: "Map control",
+  };
+  if (mapTrends.length) {
+    const trends = el("div", "card");
+    trends.innerHTML = `<h2>Map trends</h2><p class="muted">Public league data from completed maps. Use it to match the field or prepare a counter; team-specific plans remain scouting intel.</p>`;
+    const grid = el("div", "es-map-meta-grid");
+    for (const trend of mapTrends) {
+      const agents = trend.agents.length
+        ? trend.agents.map((a) => `${esc(a.name)} <span class="muted">${a.pick_rate}%</span>`).join(" · ")
+        : "No agent picks yet";
+      const tactics = trend.tactics.map((t) =>
+        `<span class="es-map-meta-dial"><b>${esc(dialLabels[t.key] || t.key)}</b> ${t.average}</span>`
+      ).join("");
+      grid.appendChild(el("div", "es-map-meta", `
+        <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(trend.map_id)}</b>
+          <span class="mono muted">${trend.team_maps} team maps</span></div>
+        <div><span class="muted">Top agents</span> ${agents}</div>
+        <div class="es-map-meta-dials">${tactics}</div>
+        <span class="muted">Most focused site: ${esc(trend.site_focus)}</span>`));
+    }
+    trends.appendChild(grid);
+    main.appendChild(trends);
+  }
+
   if (data.teams.length) {
     const tc = el("div", "card");
     tc.innerHTML = `<h2>Team tendencies</h2>` +
