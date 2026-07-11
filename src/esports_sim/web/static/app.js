@@ -1034,6 +1034,12 @@ async function dashboard(v) {
           `<span class="potm-star">★</span> POTM ${plink(lmr.potm.player_id, lmr.potm.handle)}` +
           badgeStrip(lmr.potm.badges)));
       }
+      if (lmr.momentum_beat) {
+        const mb = lmr.momentum_beat;
+        card.appendChild(el("div", "rowbar es-momentum-beat",
+          `<span class="chip ${mb.tone === "hot" ? "tone-good" : "tone-brand"}">${esc(mb.tone)}</span>` +
+          `<span>${plink(mb.player_id, mb.handle)} ${esc(mb.text)}</span>`));
+      }
       if (!lmr.contested) {
         card.appendChild(el("p", "muted", "Match not contested — no breakdown."));
       } else {

@@ -657,6 +657,8 @@ svg.iso .plabel { font-size: 2.4px; }
 .v-tl-round.a { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 60%, transparent); }
 .v-tl-round.b { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent); }
 .v-tl-round.active { outline: 2px solid var(--es-color-text-primary, #e6ecf5); outline-offset: -1px; }
+.v-tl-round.hot { box-shadow: inset 0 -3px 0 var(--es-color-text-success, #4fc6a0); }
+.v-tl-round.cold { box-shadow: inset 0 -3px 0 var(--es-color-text-danger, #ff6b6b); }
 .v-tl-plant { margin-left: 1px; opacity: .85; }
 /* Post-match box-score summary panel in the viewer. */
 .v-summary {
