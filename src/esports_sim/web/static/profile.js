@@ -30,11 +30,16 @@
    shows a quiet "not tracked yet" line rather than rendering NaN/undefined.
 
    Navigation: opening a relationship chip or a roster row from inside a
-   profile replaces the overlay content in place (no back-stack). A single
-   document-level, capture-phase click listener (installed here) turns any
-   [data-pid]/[data-tid] element across the whole app into a profile link.
+   profile pushes the current view onto a back-stack ("← Back" in the panel
+   chrome walks it; closing the overlay clears it). Every open captures a
+   ++pfSeq token before fetching and drops its response if a newer open
+   superseded it, so rapid clicks can't race a stale profile onto screen.
+   A single document-level, capture-phase click listener (installed here)
+   turns any [data-pid]/[data-tid]/[data-sid] element across the whole app
+   into a profile link.
 
-   Relies on app.js globals: el, money. */
+   Relies on app.js globals: el, money, esc, humanize, plink/tlink/slink,
+   api, toast, App. */
 
 /* -- silent transport ------------------------------------------------------
    Deliberately NOT the shared api(): api() toasts + throws on any non-2xx,
@@ -263,6 +268,10 @@ function renderPlayerProfile(data) {
       : "",
     p.stream_load != null && p.stream_load > 5
       ? `<span class="pill" title="org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}">🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>`
+      : "",
+    // Long tenure = a club fixture (serializer sends raw weeks; render-only).
+    p.tenure_weeks != null && p.tenure_weeks >= 26
+      ? `<span class="pill" title="long tenure builds loyalty — affects transfer asks and renewals">${pfNum(p.tenure_weeks)}w at club</span>`
       : "",
     p.dev_focus
       ? `<span class="pill" title="development plan">${p.dev_focus} · ${p.training_intensity}</span>`
@@ -590,113 +599,113 @@ function renderPlayerProfile(data) {
   }
 
   // Career --------------------------------------------------------------
-  // Lifetime totals (completed seasons + the live one), from the server's
-  // career_totals (gs.career_stats rolled up + the current season).
+  // ONE section for the player's whole history: lifetime totals, the
+  // chronicle timeline, honours, memories and the season-by-season table
+  // as sub-blocks (small muted labels) — all server-selected reads.
   const ct = data.career_totals;
-  if (ct) {
-    const sec = pfSection("Career");
-    const tiles = el("div", "pf-tiles pf-tiles-sm");
-    tiles.appendChild(pfTile("Seasons", pfNum(ct.seasons)));
-    tiles.appendChild(pfTile("Maps", pfNum(ct.maps)));
-    tiles.appendChild(pfTile("Kills", pfNum(ct.kills)));
-    tiles.appendChild(pfTile("K/D", ct.kd.toFixed(2)));
-    tiles.appendChild(pfTile("Honours", pfNum(ct.honours)));
-    tiles.appendChild(pfTile("MVPs", pfNum(ct.mvps)));
-    tiles.appendChild(pfTile("All-Star", pfNum(ct.all_stars)));
-    sec.appendChild(tiles);
-    frag.appendChild(sec);
-  }
-
-  // Career arc ----------------------------------------------------------
-  // The player's chronicle as a per-season timeline (newest first).
   const arc = data.career_arc || [];
-  if (arc.length) {
-    const sec = pfSection("Career timeline");
-    const list = el("div", "pf-arc");
-    for (const yr of arc) {
-      const row = el("div", "pf-arc-row");
-      row.appendChild(el("span", "pf-arc-season mono", `S${yr.season}`));
-      const evs = el("div", "pf-arc-evs");
-      for (const e of yr.events) {
-        evs.appendChild(el("span", `pf-arc-ev arc-${e.kind}`, e.text));
-      }
-      row.appendChild(evs);
-      list.appendChild(row);
-    }
-    sec.appendChild(list);
-    frag.appendChild(sec);
-  }
-
-  // Honours ------------------------------------------------------------
-  // The trophy cabinet: this player's individual season awards, newest
-  // first (server-selected chronicle read; renders as-is).
   const honours = data.honours || [];
-  if (honours.length) {
-    const sec = pfSection(`Honours (${honours.length})`);
-    const list = el("ul", "pf-honours");
-    list.style.cssText = "margin:0;padding:0;list-style:none";
-    for (const h of honours) {
-      const li = el("li", "pf-honour");
-      const award = el("span", "pf-honour-award");
-      award.textContent = `S${h.season} · ${h.award}`;
-      li.appendChild(award);
-      if (h.detail) {
-        const det = el("span", "pf-honour-detail muted");
-        det.textContent = h.detail;
-        li.appendChild(det);
-      }
-      list.appendChild(li);
-    }
-    sec.appendChild(list);
-    frag.appendChild(sec);
-  }
-
-  // Memories ------------------------------------------------------------
-  // The player's defining chronicle entries — what their career will be
-  // remembered for (server-selected; pure history, renders as-is).
   const mems = data.memories || [];
-  if (mems.length) {
-    const sec = pfSection("Memories");
-    const list = el("ul", "pf-memories");
-    list.style.cssText = "margin:0;padding-left:18px";
-    for (const m of mems) {
-      const li = el("li", "muted", "");
-      li.textContent = m;
-      list.appendChild(li);
-    }
-    sec.appendChild(list);
-    frag.appendChild(sec);
-  }
-
-  // Career ------------------------------------------------------------------
   const career = data.career || [];
-  if (career.length) {
+  if (ct || arc.length || honours.length || mems.length || career.length) {
     const sec = pfSection("Career");
-    const t = el("table", "pf-table");
-    t.innerHTML =
-      `<thead><tr><th>Season</th><th>Team</th><th class="num">Maps</th>` +
-      `<th class="num">K/D</th><th class="num">ACS</th></tr></thead>`;
-    const tb = el("tbody");
-    for (const c of career) {
-      tb.appendChild(
-        el(
-          "tr",
-          "",
-          `<td>S${c.season ?? "—"}</td><td>${c.team ?? "—"}</td>` +
-            `<td class="num">${pfNum(c.matches)}</td>` +
-            `<td class="num">${pfNum(c.kd, 2)}</td>` +
-            `<td class="num">${pfNum(c.acs)}</td>`
-        )
-      );
+
+    // Lifetime totals (completed seasons + the live one), from the server's
+    // career_totals (gs.career_stats rolled up + the current season).
+    if (ct) {
+      const ctTiles = el("div", "pf-tiles pf-tiles-sm");
+      ctTiles.appendChild(pfTile("Seasons", pfNum(ct.seasons)));
+      ctTiles.appendChild(pfTile("Maps", pfNum(ct.maps)));
+      ctTiles.appendChild(pfTile("Kills", pfNum(ct.kills)));
+      ctTiles.appendChild(pfTile("K/D", ct.kd.toFixed(2)));
+      ctTiles.appendChild(pfTile("Honours", pfNum(ct.honours)));
+      ctTiles.appendChild(pfTile("MVPs", pfNum(ct.mvps)));
+      ctTiles.appendChild(pfTile("All-Star", pfNum(ct.all_stars)));
+      sec.appendChild(ctTiles);
     }
-    t.appendChild(tb);
-    sec.appendChild(t);
+
+    // The player's chronicle as a per-season timeline (newest first).
+    if (arc.length) {
+      sec.appendChild(el("div", "pf-career-sub muted", "Timeline"));
+      const list = el("div", "pf-arc");
+      for (const yr of arc) {
+        const row = el("div", "pf-arc-row");
+        row.appendChild(el("span", "pf-arc-season mono", `S${yr.season}`));
+        const evs = el("div", "pf-arc-evs");
+        for (const e of yr.events) {
+          evs.appendChild(el("span", `pf-arc-ev arc-${e.kind}`, e.text));
+        }
+        row.appendChild(evs);
+        list.appendChild(row);
+      }
+      sec.appendChild(list);
+    }
+
+    // The trophy cabinet: this player's individual season awards, newest
+    // first (server-selected chronicle read; renders as-is).
+    if (honours.length) {
+      sec.appendChild(el("div", "pf-career-sub muted", `Honours (${honours.length})`));
+      const list = el("ul", "pf-honours");
+      list.style.cssText = "margin:0;padding:0;list-style:none";
+      for (const h of honours) {
+        const li = el("li", "pf-honour");
+        const award = el("span", "pf-honour-award");
+        award.textContent = `S${h.season} · ${h.award}`;
+        li.appendChild(award);
+        if (h.detail) {
+          const det = el("span", "pf-honour-detail muted");
+          det.textContent = h.detail;
+          li.appendChild(det);
+        }
+        list.appendChild(li);
+      }
+      sec.appendChild(list);
+    }
+
+    // The player's defining chronicle entries — what their career will be
+    // remembered for (server-selected; pure history, renders as-is).
+    if (mems.length) {
+      sec.appendChild(el("div", "pf-career-sub muted", "Memories"));
+      const list = el("ul", "pf-memories");
+      list.style.cssText = "margin:0;padding-left:18px";
+      for (const m of mems) {
+        const li = el("li", "muted", "");
+        li.textContent = m;
+        list.appendChild(li);
+      }
+      sec.appendChild(list);
+    }
+
+    // Season by season (team names are plain text — no ids in the payload).
+    if (career.length) {
+      sec.appendChild(el("div", "pf-career-sub muted", "Season by season"));
+      const t = el("table", "pf-table");
+      t.innerHTML =
+        `<thead><tr><th>Season</th><th>Team</th><th class="num">Maps</th>` +
+        `<th class="num">K/D</th><th class="num">ACS</th></tr></thead>`;
+      const tb = el("tbody");
+      for (const c of career) {
+        tb.appendChild(
+          el(
+            "tr",
+            "",
+            `<td>S${c.season ?? "—"}</td><td>${c.team ?? "—"}</td>` +
+              `<td class="num">${pfNum(c.matches)}</td>` +
+              `<td class="num">${pfNum(c.kd, 2)}</td>` +
+              `<td class="num">${pfNum(c.acs)}</td>`
+          )
+        );
+      }
+      t.appendChild(tb);
+      sec.appendChild(t);
+    }
+
     frag.appendChild(sec);
   }
 
   // Compare -----------------------------------------------------------------
   // A lightweight side-by-side vs a teammate, fetched on demand.
-  if (data.player.team_id) {
+  if (p.team_id) {
     const sec = pfSection("Compare");
     const sel = el("select", "pf-compare-sel");
     sel.innerHTML = `<option value="">compare with a teammate…</option>`;
@@ -704,10 +713,10 @@ function renderPlayerProfile(data) {
     const out = el("div", "pf-compare");
     sec.appendChild(out);
     frag.appendChild(sec);
-    api(`/api/roster/${data.player.team_id}`)
+    api(`/api/roster/${p.team_id}`)
       .then((rd) => {
         for (const q of rd.players || []) {
-          if (q.id === data.player.id) continue;
+          if (q.id === p.id) continue;
           const o = document.createElement("option");
           o.value = q.id;
           o.textContent = q.handle;
@@ -717,7 +726,7 @@ function renderPlayerProfile(data) {
       .catch(() => {});
     sel.onchange = async () => {
       if (!sel.value) { out.innerHTML = ""; return; }
-      const c = await api(`/api/compare?a=${data.player.id}&b=${sel.value}`).catch(() => null);
+      const c = await api(`/api/compare?a=${p.id}&b=${sel.value}`).catch(() => null);
       if (c) out.innerHTML = compareTable(c);
     };
   }
@@ -778,6 +787,30 @@ function renderTeamProfile(data) {
       : "") +
     (recBits.length ? `<div class="pf-contract mono">${recBits.join("  ·  ")}</div>` : "") +
     `</div>`;
+  // Jump straight to this team's roster screen (own team = the default view,
+  // matching the standings-row convention in app.js).
+  const rosterBtn = el("button", "btn btn-sm", "View roster ▸");
+  rosterBtn.onclick = () => {
+    if (typeof App === "object") {
+      App.rosterTeam = t.is_user_team ? null : t.id;
+    }
+    closeProfile();
+    const tab = document.querySelector('#tabs [data-tab="roster"]');
+    if (tab) tab.click();
+  };
+  header.appendChild(rosterBtn);
+  // Rival orgs: point the scout at them from here (api() toasts errors).
+  if (!t.is_user_team && t.id) {
+    const scoutBtn = el("button", "btn btn-sm", "Assign scout");
+    scoutBtn.title = "Retask your scout onto this org (replaces the current assignment)";
+    scoutBtn.onclick = async () => {
+      try {
+        const r = await api("/api/actions/scout", { team_id: t.id });
+        toast(r.message || "Scout assigned.");
+      } catch { /* api() already surfaced the reason */ }
+    };
+    header.appendChild(scoutBtn);
+  }
   if (isAdminMode()) {
     const slot = el("div", "pf-admin-slot");
     const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
@@ -884,8 +917,8 @@ function renderTeamProfile(data) {
     frag.appendChild(sec);
   }
 
-  // Honors ------------------------------------------------------------------
-  // Rivalries — the pairs whose history means something (server-ranked).
+  // Rivalries ---------------------------------------------------------------
+  // The pairs whose history means something (server-ranked).
   const rivals = data.rivals || [];
   if (rivals.length) {
     const sec = pfSection("Rivalries");
@@ -908,9 +941,11 @@ function renderTeamProfile(data) {
   const chem = data.chemistry;
   if (chem && (chem.cohesion != null)) {
     const sec = pfSection(`Squad chemistry · cohesion ${Math.round(chem.cohesion)}`);
+    // Each name in the pair is its own profile link (a_id/b_id from server).
     const pairChip = (p, cls) => {
       const chip = el("span", `pf-rel-chip ${cls}`,
-        `${p.a} + ${p.b}<span class="pf-rel-kind">${Math.round(p.strength)}</span>`);
+        `${plink(p.a_id, p.a)} + ${plink(p.b_id, p.b)}` +
+        `<span class="pf-rel-kind">${Math.round(p.strength)}</span>`);
       return chip;
     };
     const chips = el("div", "pf-chips");
@@ -987,9 +1022,48 @@ function renderTeamProfile(data) {
     frag.appendChild(sec);
   }
 
+  // Playbook & knowledge --------------------------------------------------
+  // Institutional knowledge (own org only — the server sends null for
+  // rivals): methodology, per-map playbook depth, and the anti-strat books
+  // that feed prep edge through a set game plan. Renders defensively —
+  // only the keys that exist.
+  const know = data.knowledge;
+  if (know && (know.methodology != null
+      || (know.playbooks || []).length || (know.antistrats || []).length)) {
+    const sec = pfSection("Playbook & knowledge");
+    if (know.methodology != null) {
+      sec.appendChild(el("p", "pf-season-line muted",
+        `Methodology <b class="mono">${pfNum(know.methodology, 1)}</b>` +
+        ` — training-ground know-how that survives roster churn`));
+    }
+    if ((know.playbooks || []).length) {
+      sec.appendChild(el("div", "pf-career-sub muted", "Map playbooks"));
+      const chips = el("div", "pf-chips");
+      for (const pb of know.playbooks) {
+        const c = el("span", "pf-chip",
+          `${esc(humanize(pb.map))}<span class="pf-rel-kind">${pfNum(pb.depth, 1)}</span>`);
+        c.title = "playbook depth on this map";
+        chips.appendChild(c);
+      }
+      sec.appendChild(chips);
+    }
+    if ((know.antistrats || []).length) {
+      sec.appendChild(el("div", "pf-career-sub muted", "Anti-strat books"));
+      const chips = el("div", "pf-chips");
+      for (const a of know.antistrats) {
+        const c = el("span", "pf-chip",
+          `${tlink(a.team_id, a.name || a.team_id)}<span class="pf-rel-kind">${pfNum(a.depth, 1)}</span>`);
+        c.title = "opponent book depth — feeds prep edge through a set game plan";
+        chips.appendChild(c);
+      }
+      sec.appendChild(chips);
+    }
+    frag.appendChild(sec);
+  }
+
   const honors = (data.honors || []).filter(Boolean);
   if (honors.length) {
-    const sec = pfSection("Honors");
+    const sec = pfSection("Honours");
     for (const h of honors) sec.appendChild(el("div", "pf-honor", `★ ${h}`));
     frag.appendChild(sec);
   }
@@ -1011,8 +1085,9 @@ function renderStaffProfile(data) {
     m.age != null ? `<span class="pf-age">age ${m.age}</span>` : "",
     m.region ? `<span class="pill">${m.region}</span>` : "",
   ].filter(Boolean).join("");
+  // Employer name links through to the org when the id is in the payload.
   const employ = m.employer_name
-    ? `${m.employer_name}${data.is_yours ? " (your org)" : ""}`
+    ? `${tlink(m.employer_id, m.employer_name)}${data.is_yours ? " (your org)" : ""}`
     : "Free agent";
   header.innerHTML =
     `<span class="pf-portrait pf-portrait-blank pf-staff-initial">${initial}</span>` +
@@ -1047,7 +1122,7 @@ function renderStaffProfile(data) {
 
   const honors = (m.titles || []).filter(Boolean);
   if (honors.length) {
-    const sec = pfSection("Honors");
+    const sec = pfSection("Honours");
     for (const h of honors) sec.appendChild(el("div", "pf-honor", `★ ${h}`));
     frag.appendChild(sec);
   }
@@ -1066,17 +1141,174 @@ function renderStaffProfile(data) {
   return frag;
 }
 
-async function openStaffProfile(sid) {
+async function openStaffProfile(sid, opts) {
   if (sid == null) return;
+  const seq = pfNavTo({ kind: "staff", id: sid }, opts);
   pfShow(pfLoading());
   const data = await profileFetch(`/api/staff/${encodeURIComponent(sid)}/profile`);
-  if (!isProfileOpen()) return;
+  if (seq !== pfSeq || !isProfileOpen()) return; // superseded or closed
   pfShow(data ? renderStaffProfile(data) : pfUnavailable());
+}
+
+/* -- manager profile ---------------------------------------------------------
+   The acting manager's career overlay, fed the /api/career payload directly
+   (the dashboard's "Career ▸" button passes the object it already fetched).
+   Same pf- chrome as every other profile; participates in the back-stack as
+   kind:'manager' (Back re-fetches /api/career for freshness, falling back to
+   the payload it was opened with). */
+
+function renderManagerProfile(career) {
+  const frag = document.createDocumentFragment();
+  const c = career || {};
+
+  // Header ------------------------------------------------------------------
+  const header = el("div", "pf-header");
+  const initial = (c.name || "?").charAt(0).toUpperCase();
+  const meta = [
+    c.archetype ? `<span class="pill">${esc(humanize(c.archetype))}</span>` : "",
+    c.team_id && c.team_name
+      ? tlink(c.team_id, c.team_name)
+      : `<span class="pill">between clubs</span>`,
+  ].filter(Boolean).join(" ");
+  const conBits = [];
+  const con = c.contract;
+  if (con) {
+    if (con.goal) {
+      const st = con.goal_status && con.goal_status.state;
+      conBits.push(`Board goal: ${esc(con.goal)}` +
+        (st ? ` (${esc(String(st).replace(/_/g, " "))})` : ""));
+    }
+    if (con.patience != null) conBits.push(`patience ${pfNum(con.patience)}`);
+    if (con.seasons != null && con.start_season != null) {
+      conBits.push(`S${con.start_season}–S${con.start_season + con.seasons - 1}`);
+    }
+  }
+  header.innerHTML =
+    `<span class="pf-portrait pf-portrait-blank pf-staff-initial">${initial}</span>` +
+    `<div class="pf-id">` +
+    `<div class="pf-handle">${esc(c.name ?? "Manager")}</div>` +
+    `<div class="pf-meta">${meta}</div>` +
+    `<div class="pf-contract muted">${conBits.length ? conBits.join(" · ") : "No active contract"}</div>` +
+    `</div>`;
+  frag.appendChild(header);
+
+  // Chronicle counts ----------------------------------------------------------
+  const tiles = el("div", "pf-tiles");
+  tiles.appendChild(pfTile("Titles", pfNum((c.titles || []).length)));
+  tiles.appendChild(pfTile("Developed", pfNum(c.players_developed)));
+  tiles.appendChild(pfTile("Debuts", pfNum(c.debuts_given)));
+  tiles.appendChild(pfTile("Signings", pfNum(c.signings)));
+  frag.appendChild(tiles);
+
+  // Reputation axes — the numbers that gate career offers.
+  const rep = c.reputation || {};
+  if (Object.keys(rep).length) {
+    const sec = pfSection("Reputation");
+    const list = el("div", "pf-attrs");
+    for (const [axis, val] of Object.entries(rep)) {
+      list.appendChild(el("div", "pf-attr",
+        `<span class="pf-attr-label">${esc(humanize(axis))}</span>` +
+        `<span class="pf-attr-bar">${pfBar(val, 100)}</span>` +
+        `<span class="pf-attr-val mono">${pfNum(val)}</span>`));
+    }
+    sec.appendChild(list);
+    frag.appendChild(sec);
+  }
+
+  // Known for / Philosophy — earned identities, chips like traits.
+  const chipRow = (title, items) => {
+    const vals = (items || []).map((x) => x && (x.name || x)).filter(Boolean);
+    if (!vals.length) return;
+    const sec = pfSection(title);
+    const chips = el("div", "pf-chips");
+    for (const v of vals) chips.appendChild(el("span", "pf-chip", esc(String(v))));
+    sec.appendChild(chips);
+    frag.appendChild(sec);
+  };
+  chipRow("Known for", c.known_for);
+  chipRow("Philosophy", c.philosophies);
+
+  // Honours -------------------------------------------------------------
+  const titles = (c.titles || []).filter(Boolean);
+  if (titles.length) {
+    const sec = pfSection(`Honours (${titles.length})`);
+    for (const h of titles) sec.appendChild(el("div", "pf-honor", `★ ${esc(h)}`));
+    frag.appendChild(sec);
+  }
+
+  // Timeline — landmark chronicle entries, newest first, scrollable.
+  const timeline = (c.timeline || []).slice().reverse();
+  const sec = pfSection("Timeline");
+  if (timeline.length) {
+    const wrap = el("div", "card-scroll");
+    wrap.style.setProperty("--scroll-max", "40vh");
+    for (const e of timeline) {
+      wrap.appendChild(el("div", `newsline pf-tl-${e.kind || "event"}`,
+        `<span class="mono muted">S${e.season}·W${e.week}</span> ${esc(e.text)}`));
+    }
+    sec.appendChild(wrap);
+  } else {
+    sec.appendChild(pfEmpty("No landmark moments yet — the chronicle is waiting."));
+  }
+  frag.appendChild(sec);
+
+  return frag;
+}
+
+window.openManagerProfile = (career, opts) => {
+  if (!career) return;
+  // Bumps pfSeq even though the render is synchronous, so any in-flight
+  // fetch from an earlier open drops instead of clobbering this view.
+  pfNavTo({ kind: "manager", id: career.id || "me", career }, opts);
+  pfShow(renderManagerProfile(career));
+};
+
+// Back-stack re-entry: refetch for freshness, degrade to the stored payload.
+async function pfReopenManager(entry) {
+  const seq = pfNavTo(entry, { replace: true });
+  pfShow(pfLoading());
+  const data = await profileFetch("/api/career");
+  if (seq !== pfSeq || !isProfileOpen()) return;
+  const payload = data || entry.career;
+  pfShow(payload ? renderManagerProfile(payload) : pfUnavailable());
 }
 
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
+
+/* Back-stack + stale-response guard.
+   pfSeq is a monotonically increasing open token: every open (or reopen)
+   captures `const seq = ++pfSeq` BEFORE its fetch and only renders when
+   `seq === pfSeq && isProfileOpen()` still holds — a newer open or a close
+   invalidates it, so rapid clicks can't race a stale profile onto screen.
+   pfStack holds the {kind, id} entries beneath the current view: opening a
+   profile from INSIDE the overlay pushes the one being replaced; "← Back"
+   pops and re-opens in replace mode (no push). closeProfile() clears the
+   stack — the single choke point. Escape still closes the whole overlay. */
+let pfSeq = 0;
+const pfStack = [];
+let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
+
+function pfNavTo(entry, opts) {
+  const replace = !!(opts && opts.replace);
+  const same = pfCurrent && pfCurrent.kind === entry.kind
+    && String(pfCurrent.id) === String(entry.id);
+  // Push only when a DIFFERENT profile is already showing (a refresh of the
+  // same entry — admin save, rein-in-streaming — must not stack on itself).
+  if (!replace && !same && isProfileOpen() && pfCurrent) pfStack.push(pfCurrent);
+  pfCurrent = entry;
+  return ++pfSeq;
+}
+
+function pfGoBack() {
+  const prev = pfStack.pop();
+  if (!prev) return;
+  if (prev.kind === "player") openPlayerProfile(prev.id, { replace: true });
+  else if (prev.kind === "team") openTeamProfile(prev.id, { replace: true });
+  else if (prev.kind === "staff") openStaffProfile(prev.id, { replace: true });
+  else if (prev.kind === "manager") pfReopenManager(prev);
+}
 
 function pfEnsureOverlay() {
   if (pfOverlayEl) return pfOverlayEl;
@@ -1085,12 +1317,14 @@ function pfEnsureOverlay() {
   ov.className = "overlay hidden";
   ov.innerHTML =
     `<div class="panel pf-panel">` +
+    `<button class="pf-back btn btn-sm hidden" aria-label="Back to previous profile">← Back</button>` +
     `<button class="pf-close" aria-label="Close profile">✕</button>` +
     `<div id="profile-body" class="pf-body"></div>` +
     `</div>`;
   // Click-outside closes; clicks inside the panel do not reach here.
   ov.addEventListener("click", (e) => { if (e.target === ov) closeProfile(); });
   ov.querySelector(".pf-close").addEventListener("click", closeProfile);
+  ov.querySelector(".pf-back").addEventListener("click", pfGoBack);
   document.body.appendChild(ov);
   pfOverlayEl = ov;
   return ov;
@@ -1100,6 +1334,8 @@ function pfShow(node) {
   const ov = pfEnsureOverlay();
   const body = ov.querySelector("#profile-body");
   body.replaceChildren(node);
+  // The Back affordance tracks the stack on every render (incl. loading).
+  ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
   body.scrollTop = 0;
   ov.classList.remove("hidden");
 }
@@ -1119,7 +1355,15 @@ function pfUnavailable() {
 }
 
 function closeProfile() {
-  if (pfOverlayEl) pfOverlayEl.classList.add("hidden");
+  // Single choke point: closing the overlay resets navigation entirely and
+  // invalidates any profile fetch still in flight.
+  pfStack.length = 0;
+  pfCurrent = null;
+  pfSeq++;
+  if (pfOverlayEl) {
+    pfOverlayEl.classList.add("hidden");
+    pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
+  }
 }
 
 function isProfileOpen() {
@@ -1128,19 +1372,21 @@ function isProfileOpen() {
 
 /* -- public entry points ---------------------------------------------------- */
 
-async function openPlayerProfile(pid) {
+async function openPlayerProfile(pid, opts) {
   if (pid == null) return;
+  const seq = pfNavTo({ kind: "player", id: pid }, opts);
   pfShow(pfLoading());
   const data = await profileFetch(`/api/players/${encodeURIComponent(pid)}/profile`);
-  if (!isProfileOpen()) return; // user closed it while the request was in flight
+  if (seq !== pfSeq || !isProfileOpen()) return; // superseded or closed mid-flight
   pfShow(data ? renderPlayerProfile(data) : pfUnavailable());
 }
 
-async function openTeamProfile(tid) {
+async function openTeamProfile(tid, opts) {
   if (tid == null) return;
+  const seq = pfNavTo({ kind: "team", id: tid }, opts);
   pfShow(pfLoading());
   const data = await profileFetch(`/api/teams/${encodeURIComponent(tid)}/profile`);
-  if (!isProfileOpen()) return;
+  if (seq !== pfSeq || !isProfileOpen()) return;
   pfShow(data ? renderTeamProfile(data) : pfUnavailable());
 }
 
@@ -1213,7 +1459,7 @@ function isAdminMode() {
     btn.classList.toggle("btn-primary", next);
     localStorage.setItem(PF_ADMIN_KEY, next ? "1" : "0");
     toast(next ? "Admin edit mode on — profiles show a data-correction control." : "Admin edit mode off.");
-    if (isProfileOpen()) pfOverlayEl.classList.add("hidden");
+    if (isProfileOpen()) closeProfile(); // through the choke point: clears the back-stack too
   };
 })();
 

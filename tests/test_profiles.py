@@ -70,8 +70,14 @@ PLAYER_BLOCK = {
     "portrait",
     "is_user_team",
     "is_free_agent",
+    "tenure_weeks",
     "transfer_ask",
     "followers",
+    "stream_load",
+    "stream_status",
+    "stream_income",
+    "stream_growth_mult",
+    "can_rein_streaming",
     "confidence",
     "is_starter",
     "dev_focus",
@@ -220,6 +226,14 @@ def test_user_player_profile(env) -> None:
     assert prof["player"]["is_user_team"] is True
     assert prof["player"]["is_free_agent"] is False
     assert prof["player"]["team_id"] == h.user_team
+    # Rostered at campaign start -> the loyalty clock is already running.
+    assert prof["player"]["tenure_weeks"] >= 1
+    # Streaming block is public: a label plus the org's weekly cut, and the
+    # own-club-only "rein it in" affordance is a bool either way.
+    assert prof["player"]["stream_status"] in (
+        "heavy streamer", "balanced", "practice-focused"
+    )
+    assert isinstance(prof["player"]["can_rein_streaming"], bool)
 
     ov = prof["overview"]
     assert ov["fogged"] is False
@@ -610,6 +624,8 @@ def test_league_leaders_top_by_rating_tier1_only():
     ld = server_mod._league_leaders(gs, n=3)
     assert [x["pid"] for x in ld] == ["a", "b"]  # c excluded (tier 2)
     assert ld[0]["rating"] == 1.2
+    # Each row links back to the player's club.
+    assert all(x["team_id"] == "nxs" for x in ld)
 
 
 def test_roster_movers_rank_by_absolute_swing():
@@ -672,6 +688,11 @@ def test_contract_watch_shape_and_thresholds(env):
     own_ids = {p.id for p in gs.roster(h.user_team)}
     assert all(p["id"] in own_ids for p in cw["expiring_own"])
     assert all(p["id"] not in own_ids for p in cw["market_watch"])
+    # Market-watch rows link to the rival club holding the expiring deal.
+    assert all(
+        p["team_id"] in gs.teams and p["team_id"] != h.user_team
+        for p in cw["market_watch"]
+    )
 
 
 def test_round_summaries_from_event_log():
@@ -702,9 +723,14 @@ def test_fixture_run_in_rates_upcoming(env):
     gs, gd, h = env
     run_in = server_mod._fixture_run_in(gs, h.user_team)
     assert isinstance(run_in, list) and len(run_in) <= 5
-    assert all(set(r) == {"week", "opponent", "opp_rank", "difficulty"} for r in run_in)
+    assert all(
+        set(r) == {"week", "opponent", "opponent_id", "opp_rank", "difficulty"}
+        for r in run_in
+    )
     assert all(r["difficulty"] in ("easy", "medium", "hard") for r in run_in)
     assert all(r["week"] >= gs.week for r in run_in)
+    # The opponent id resolves to a real club (linkable in the UI).
+    assert all(r["opponent_id"] in gs.teams for r in run_in)
 
 
 def test_squad_chemistry_shape(env):
@@ -721,8 +747,14 @@ def test_wonderkid_watch_shape(env):
     wk = server_mod._wonderkid_watch(gs)
     assert isinstance(wk, list) and len(wk) <= 6
     for w in wk:
-        assert set(w) == {"id", "handle", "age", "role", "potential_stars", "team"}
+        assert set(w) == {
+            "id", "handle", "age", "role", "potential_stars", "team", "team_id",
+        }
         assert w["age"] <= 20
+        # Rostered prospects link to their club; free agents carry None.
+        assert (w["team_id"] in gs.teams) or (
+            w["team_id"] is None and w["team"] == "free agent"
+        )
         assert 0 <= w["potential_stars"] <= 5
     # Sorted by potential star band descending, then id (deterministic).
     stars = [w["potential_stars"] for w in wk]
@@ -734,7 +766,8 @@ def test_challengers_standouts_shape(env):
     chal = server_mod._challengers_standouts(gs, h.user_team)
     assert isinstance(chal, list) and len(chal) <= 5
     for c in chal:
-        assert set(c) == {"id", "handle", "age", "role", "team", "rating"}
+        assert set(c) == {"id", "handle", "age", "role", "team", "team_id", "rating"}
+        assert c["team_id"] in gs.teams and gs.teams[c["team_id"]].tier == 2
     ratings = [c["rating"] for c in chal]
     assert ratings == sorted(ratings, reverse=True)
 
@@ -790,9 +823,59 @@ def test_team_of_week_shape(env):
     assert totw["week"] is None or totw["week"] >= 1
     assert len(totw["players"]) <= 5
     for p in totw["players"]:
-        assert set(p) == {"id", "handle", "role", "team", "rating", "kd", "maps"}
+        assert set(p) == {
+            "id", "handle", "role", "team", "team_id", "rating", "kd", "maps",
+        }
+        assert p["team_id"] is None or p["team_id"] in gs.teams
     ratings = [p["rating"] for p in totw["players"]]
     assert ratings == sorted(ratings, reverse=True)
+
+
+def test_roster_chemistry_pair_ids_mirror_handles(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    ro = server_mod.roster(h.user_team)
+    pairs, pair_ids = ro["chemistry_pairs"], ro["chemistry_pair_ids"]
+    assert set(pairs) == set(pair_ids) == {"duos", "feuds"}
+    for kind in ("duos", "feuds"):
+        # Same pairs in the same order: ids resolve to exactly the handles.
+        assert [
+            [gs.players[a].handle, gs.players[b].handle]
+            for a, b in pair_ids[kind]
+        ] == pairs[kind]
+    # Per-player streaming chip flag: a bool that just restates the label.
+    for v in ro["players"]:
+        assert v["stream_heavy"] == (v["stream_status"] == "heavy streamer")
+    # A rival roster exposes no locker-room pairs, id or handle form alike.
+    rv = server_mod.roster(h.rival_team)
+    assert rv["chemistry_pairs"] == {"duos": [], "feuds": []}
+    assert rv["chemistry_pair_ids"] == {"duos": [], "feuds": []}
+
+
+def test_tactics_fit_chips_carry_player_ids(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    fit = server_mod._tactics_fit(gs, gs.teams[h.user_team])
+    roster_ids = set(gs.teams[h.user_team].player_ids)
+    for dial in fit["dials"]:
+        for chip in dial["players"]:
+            assert set(chip) == {"id", "handle", "playstyle", "score"}
+            assert chip["id"] in roster_ids
+
+
+def test_market_rows_carry_languages(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    mv = server_mod.market_view()
+    assert mv["free_agents"], "campaign should have free agents to shop"
+    for row in mv["free_agents"]:
+        assert isinstance(row["languages"], list)
+        for l in row["languages"]:
+            assert set(l) == {"lang", "level"}
+    # Search rows carry the same public language read.
+    fa = gs.players[sorted(gs.free_agent_ids)[0]]
+    res = server_mod.market_search(q=fa.handle)["results"]
+    assert res and all(isinstance(r["languages"], list) for r in res)
 
 
 def test_league_endpoint_shape(env):
