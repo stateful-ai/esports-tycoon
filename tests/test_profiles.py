@@ -72,6 +72,7 @@ PLAYER_BLOCK = {
     "is_free_agent",
     "tenure_weeks",
     "transfer_ask",
+    "seller_stance",
     "ask_breakdown",
     "followers",
     "stream_load",

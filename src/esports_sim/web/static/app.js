@@ -3217,7 +3217,7 @@ function playerSearchCard() {
         <td class="num">${p.age}</td>
         <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
         <td>${club}</td>
-        <td class="num">${price}${askBreakdown(p.ask_breakdown)}</td>
+        <td class="num">${price}${p.seller_stance ? `<div><span class="pill">${esc(p.seller_stance)}</span></div>` : ""}${askBreakdown(p.ask_breakdown)}</td>
         <td data-act></td>`);
       const actCell = tr.querySelector("[data-act]");
       if (p.is_free_agent) {
@@ -3237,7 +3237,7 @@ function playerSearchCard() {
         const b = el("button", "btn btn-sm", "Offer…");
         b.onclick = () => openOffer({
           id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
-          ask_breakdown: p.ask_breakdown,
+          ask_breakdown: p.ask_breakdown, seller_stance: p.seller_stance,
         });
         actCell.appendChild(b);
       }

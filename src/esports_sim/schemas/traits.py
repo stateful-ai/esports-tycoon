@@ -37,6 +37,7 @@ TRAITS: dict[str, dict] = {
     "team_player": {"blurb": "glue", "chem_regen": 0.2, "trade_bonus": 0.06, "mentor_bonus": 5.0},
     "streamer": {"blurb": "brings an audience", "fan_mult": 1.5},
     "star_player": {"blurb": "the poster", "fan_mult": 1.3},
+    "fan_favorite": {"blurb": "belongs to the supporters", "fan_mult": 1.4},
     "mercenary": {"blurb": "plays for the number", "salary_mult": 1.25},
     "loyal": {"blurb": "stays where it started", "salary_mult": 0.9},
     "veteran": {"blurb": "seen every meta", "mentor_bonus": 12.0},

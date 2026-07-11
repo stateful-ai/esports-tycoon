@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -206,6 +206,12 @@ def _migrate_v10_to_v11(data: dict) -> dict:
     return data
 
 
+def _migrate_v11_to_v12(data: dict) -> dict:
+    """v12 adds the append-only market decision ledger. Old careers begin
+    with an empty ledger; their Chronicle still retains historical moves."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -217,6 +223,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     8: _migrate_v8_to_v9,
     9: _migrate_v9_to_v10,
     10: _migrate_v10_to_v11,
+    11: _migrate_v11_to_v12,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -858,6 +865,36 @@ class ChronicleEntry(BaseModel):
     data: dict[str, str] = Field(default_factory=dict)  # small typed payload
 
 
+class MarketDecision(BaseModel):
+    """An auditable snapshot of a roster/transfer decision.
+
+    Unlike the Chronicle this includes failed and avoided moves, plus the
+    valuation that caused the decision. Values are captured at decision time
+    so later tuning can be evaluated against real saved careers.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    season: int
+    week: int
+    phase: str
+    kind: str  # sign | renew | release | expire | bid | transfer | package
+    outcome: str  # completed | accepted | rejected | retained | expired
+    player_id: str
+    actor_team_id: str = ""
+    counterparty_team_id: str = ""
+    context: str = ""
+    stance: str = ""
+    fee: int = 0
+    salary: int = 0
+    market_value: int = 0
+    org_value: int = 0
+    components: dict[str, int] = Field(default_factory=dict)
+    effects: dict[str, int] = Field(default_factory=dict)
+    reason: str = ""
+
+
 class InboxItem(BaseModel):
     """One weekly inbox/notification entry. Generated at the end of a tick
     from real subsystem outcomes (see manager/inbox.py); the model lives
@@ -1357,6 +1394,10 @@ class GameState(BaseModel):
     # moment they happen; career profiles, reputation, memories, the Hall
     # of Fame and narrative callbacks are pure readers. NEVER pruned.
     chronicle: list[ChronicleEntry] = Field(default_factory=list)
+    # Append-only transfer/roster decision audit trail. This is deliberately
+    # richer than Chronicle movement entries: rejected bids, expiries and the
+    # valuation snapshot survive so save cohorts can be analysed later.
+    market_decisions: list[MarketDecision] = Field(default_factory=list)
     # Milestone bookkeeping: last celebrated 5-point overall band per
     # player (human rosters; see chronicle.weekly_milestones).
     dev_marks: dict[str, int] = Field(default_factory=dict)
