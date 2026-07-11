@@ -60,6 +60,38 @@ players:
     mastery: 55.5
   - agent_id: viper
     mastery: 52.0
+  - agent_id: astra
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 54.6
+  - agent_id: deadlock
+    mastery: 75.6
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 54.7
+  - agent_id: iso
+    mastery: 58.3
+  - agent_id: kayo
+    mastery: 59.9
+  - agent_id: miks
+    mastery: 57.7
+  - agent_id: neon
+    mastery: 57.3
+  - agent_id: sage
+    mastery: 67.1
+  - agent_id: tejo
+    mastery: 58.9
+  - agent_id: veto
+    mastery: 73.5
+  - agent_id: vyse
+    mastery: 75.3
+  - agent_id: waylay
+    mastery: 56.7
+  - agent_id: yoru
+    mastery: 56.9
   map_pool:
   - map_id: ascent
     mastery: 79.5
@@ -129,6 +161,38 @@ players:
     mastery: 52.1
   - agent_id: viper
     mastery: 51.5
+  - agent_id: astra
+    mastery: 52.3
+  - agent_id: brimstone
+    mastery: 53.6
+  - agent_id: deadlock
+    mastery: 51.1
+  - agent_id: fade
+    mastery: 61.2
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 44.9
+  - agent_id: iso
+    mastery: 47.8
+  - agent_id: kayo
+    mastery: 60.5
+  - agent_id: miks
+    mastery: 55.3
+  - agent_id: neon
+    mastery: 53.1
+  - agent_id: sage
+    mastery: 55.9
+  - agent_id: tejo
+    mastery: 65.7
+  - agent_id: veto
+    mastery: 46.8
+  - agent_id: vyse
+    mastery: 44.5
+  - agent_id: waylay
+    mastery: 46.1
+  - agent_id: yoru
+    mastery: 50.3
   map_pool:
   - map_id: ascent
     mastery: 85.3
@@ -201,6 +265,38 @@ players:
     mastery: 43.4
   - agent_id: viper
     mastery: 2.9
+  - agent_id: astra
+    mastery: 48.6
+  - agent_id: brimstone
+    mastery: 51.0
+  - agent_id: deadlock
+    mastery: 47.7
+  - agent_id: fade
+    mastery: 50.5
+  - agent_id: gekko
+    mastery: 41.7
+  - agent_id: harbor
+    mastery: 48.2
+  - agent_id: iso
+    mastery: 64.6
+  - agent_id: kayo
+    mastery: 49.0
+  - agent_id: miks
+    mastery: 42.3
+  - agent_id: neon
+    mastery: 64.8
+  - agent_id: sage
+    mastery: 47.1
+  - agent_id: tejo
+    mastery: 54.0
+  - agent_id: veto
+    mastery: 42.6
+  - agent_id: vyse
+    mastery: 46.1
+  - agent_id: waylay
+    mastery: 63.3
+  - agent_id: yoru
+    mastery: 57.2
   map_pool:
   - map_id: ascent
     mastery: 76.8
@@ -273,6 +369,38 @@ players:
     mastery: 38.5
   - agent_id: sova
     mastery: 42.8
+  - agent_id: astra
+    mastery: 64.1
+  - agent_id: brimstone
+    mastery: 57.6
+  - agent_id: deadlock
+    mastery: 45.1
+  - agent_id: fade
+    mastery: 45.7
+  - agent_id: gekko
+    mastery: 54.1
+  - agent_id: harbor
+    mastery: 56.5
+  - agent_id: iso
+    mastery: 44.8
+  - agent_id: kayo
+    mastery: 44.0
+  - agent_id: miks
+    mastery: 55.9
+  - agent_id: neon
+    mastery: 41.8
+  - agent_id: sage
+    mastery: 42.6
+  - agent_id: tejo
+    mastery: 43.3
+  - agent_id: veto
+    mastery: 49.9
+  - agent_id: vyse
+    mastery: 47.3
+  - agent_id: waylay
+    mastery: 54.3
+  - agent_id: yoru
+    mastery: 48.7
   map_pool:
   - map_id: ascent
     mastery: 69.0
@@ -343,6 +471,38 @@ players:
     mastery: 45.1
   - agent_id: viper
     mastery: 37.9
+  - agent_id: astra
+    mastery: 44.0
+  - agent_id: brimstone
+    mastery: 51.7
+  - agent_id: deadlock
+    mastery: 40.4
+  - agent_id: fade
+    mastery: 38.6
+  - agent_id: gekko
+    mastery: 45.6
+  - agent_id: harbor
+    mastery: 50.1
+  - agent_id: iso
+    mastery: 48.5
+  - agent_id: kayo
+    mastery: 51.0
+  - agent_id: miks
+    mastery: 48.7
+  - agent_id: neon
+    mastery: 51.1
+  - agent_id: sage
+    mastery: 46.7
+  - agent_id: tejo
+    mastery: 50.5
+  - agent_id: veto
+    mastery: 45.8
+  - agent_id: vyse
+    mastery: 49.3
+  - agent_id: waylay
+    mastery: 45.4
+  - agent_id: yoru
+    mastery: 5.7
   map_pool:
   - map_id: ascent
     mastery: 89.5

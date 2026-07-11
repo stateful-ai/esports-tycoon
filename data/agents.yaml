@@ -1,4 +1,5 @@
-# Valorant agents — thirteen agents covering every role at least twice.
+# Valorant agents — the full 29-agent roster (through Miks), every role
+# covered many times over.
 # Abilities carry names + mechanical flags; the match engine consumes the
 # flags through its coarse utility model.
 
@@ -403,3 +404,506 @@ agents:
         name: Run It Back
         type: ultimate
         ult_points: 6
+
+  - id: brimstone
+    display_name: Brimstone
+    role: controller
+    description: >-
+      Battle-hardened commander controller. Map-wide smokes and a buff beacon
+      from a tactical overlay, orbital fire support to end a round early.
+    abilities:
+      - id: brimstone_stim_beacon
+        name: Stim Beacon
+        type: basic
+        charges: 1
+        cost: 100
+      - id: brimstone_incendiary
+        name: Incendiary
+        type: basic
+        charges: 1
+        cost: 250
+        damages: true
+      - id: brimstone_sky_smoke
+        name: Sky Smoke
+        type: signature
+        charges: 3
+        cost: 0
+        blocks_sight: true
+      - id: brimstone_orbital_strike
+        name: Orbital Strike
+        type: ultimate
+        ult_points: 7
+        damages: true
+
+  - id: sage
+    display_name: Sage
+    role: sentinel
+    description: >-
+      The original support. Slows a chokepoint, heals a hurting teammate, and
+      walls off a site entirely — the only agent who can bring someone back.
+    abilities:
+      - id: sage_slow_orb
+        name: Slow Orb
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: sage_healing_orb
+        name: Healing Orb
+        type: basic
+        charges: 1
+        cost: 200
+      - id: sage_barrier_orb
+        name: Barrier Orb
+        type: signature
+        charges: 1
+        cost: 0
+        blocks_sight: true
+      - id: sage_resurrection
+        name: Resurrection
+        type: ultimate
+        ult_points: 8
+
+  - id: yoru
+    display_name: Yoru
+    role: duelist
+    description: >-
+      Reality-tearing infiltrator. Teleport tethers and a decoy clone get him
+      behind the defense unseen; Dimensional Drift makes him untouchable
+      while he gets there.
+    abilities:
+      - id: yoru_blindside
+        name: Blindside
+        type: basic
+        charges: 1
+        cost: 250
+        flashes: true
+      - id: yoru_fakeout
+        name: Fakeout
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+        info: true
+      - id: yoru_gatecrash
+        name: Gatecrash
+        type: signature
+        charges: 2
+        cost: 0
+      - id: yoru_dimensional_drift
+        name: Dimensional Drift
+        type: ultimate
+        ult_points: 8
+
+  - id: astra
+    display_name: Astra
+    role: controller
+    description: >-
+      Cosmic controller who plays from the star map. Pre-place Stars, then
+      detonate them into smokes, pulls, or stuns from anywhere on the map.
+    abilities:
+      - id: astra_nova_pulse
+        name: Nova Pulse
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: astra_gravity_well
+        name: Gravity Well
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: astra_nebula
+        name: Nebula
+        type: signature
+        charges: 2
+        cost: 0
+        blocks_sight: true
+      - id: astra_cosmic_divide
+        name: Cosmic Divide
+        type: ultimate
+        ult_points: 8
+        blocks_sight: true
+
+  - id: kayo
+    display_name: KAY/O
+    role: initiator
+    description: >-
+      Weaponized suppression. FRAG/ment threatens the site, FLASH/drive
+      blinds the entry, and his ultimate strips the entire enemy team's
+      abilities cold.
+    abilities:
+      - id: kayo_fragment
+        name: FRAG/ment
+        type: basic
+        charges: 1
+        cost: 200
+        damages: true
+      - id: kayo_flashdrive
+        name: FLASH/drive
+        type: basic
+        charges: 2
+        cost: 200
+        flashes: true
+      - id: kayo_zeropoint
+        name: ZERO/point
+        type: signature
+        charges: 1
+        cost: 0
+        flashes: true
+      - id: kayo_nullcmd
+        name: NULL/cmd
+        type: ultimate
+        ult_points: 8
+        flashes: true
+
+  - id: neon
+    display_name: Neon
+    role: duelist
+    op_affinity: true
+    description: >-
+      Filipino speed duelist. Electrified walls split a site, a bouncing
+      bolt softens an angle, and High Gear turns any peek into a slide out
+      of the fight.
+    abilities:
+      - id: neon_fast_lane
+        name: Fast Lane
+        type: basic
+        charges: 2
+        cost: 300
+        blocks_sight: true
+        damages: true
+      - id: neon_relay_bolt
+        name: Relay Bolt
+        type: basic
+        charges: 2
+        cost: 200
+        flashes: true
+      - id: neon_high_gear
+        name: High Gear
+        type: signature
+        charges: 1
+        cost: 0
+      - id: neon_overdrive
+        name: Overdrive
+        type: ultimate
+        ult_points: 8
+        damages: true
+
+  - id: fade
+    display_name: Fade
+    role: initiator
+    description: >-
+      Nightmare hunter. Prowler nearsights on a trail, Seize roots and
+      decays a group, Haunt marks bodies through walls — fear as a tracking
+      tool.
+    abilities:
+      - id: fade_prowler
+        name: Prowler
+        type: basic
+        charges: 2
+        cost: 300
+        flashes: true
+        info: true
+      - id: fade_seize
+        name: Seize
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+        damages: true
+      - id: fade_haunt
+        name: Haunt
+        type: signature
+        charges: 1
+        cost: 0
+        info: true
+      - id: fade_nightfall
+        name: Nightfall
+        type: ultimate
+        ult_points: 8
+        info: true
+        damages: true
+
+  - id: harbor
+    display_name: Harbor
+    role: controller
+    description: >-
+      Water-bending controller. Cove bundles a smoke with a bullet-absorbing
+      shield, High Tide curves a slowing wall through a whole lane.
+    abilities:
+      - id: harbor_cove
+        name: Cove
+        type: basic
+        charges: 1
+        cost: 400
+        blocks_sight: true
+      - id: harbor_cascade
+        name: Cascade
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: harbor_high_tide
+        name: High Tide
+        type: signature
+        charges: 1
+        cost: 0
+        blocks_sight: true
+      - id: harbor_reckoning
+        name: Reckoning
+        type: ultimate
+        ult_points: 7
+        flashes: true
+        info: true
+
+  - id: gekko
+    display_name: Gekko
+    role: initiator
+    description: >-
+      Reusable creature companions. Mosh Pit denies a corner, Wingman stuns
+      and can even plant or defuse, Dizzy blinds a whole doorway — recall
+      them after the round to refill charges.
+    abilities:
+      - id: gekko_mosh_pit
+        name: Mosh Pit
+        type: basic
+        charges: 1
+        cost: 300
+        damages: true
+      - id: gekko_wingman
+        name: Wingman
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: gekko_dizzy
+        name: Dizzy
+        type: signature
+        charges: 1
+        cost: 0
+        flashes: true
+      - id: gekko_thrash
+        name: Thrash
+        type: ultimate
+        ult_points: 7
+        flashes: true
+
+  - id: deadlock
+    display_name: Deadlock
+    role: sentinel
+    description: >-
+      Sound-triggered lockdown. Sonic Sensor stuns whoever trips it, GravNet
+      crushes a push to a crawl, and Annihilation cocoons the last man
+      standing.
+    abilities:
+      - id: deadlock_sonic_sensor
+        name: Sonic Sensor
+        type: basic
+        charges: 1
+        cost: 200
+        info: true
+        flashes: true
+      - id: deadlock_gravnet
+        name: GravNet
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+      - id: deadlock_barrier_mesh
+        name: Barrier Mesh
+        type: signature
+        charges: 1
+        cost: 0
+        blocks_sight: true
+      - id: deadlock_annihilation
+        name: Annihilation
+        type: ultimate
+        ult_points: 8
+        damages: true
+
+  - id: iso
+    display_name: Iso
+    role: duelist
+    description: >-
+      Damage-mitigation duelist. Contingency pushes a bullet-blocking
+      barrier down a chokepoint, Double Tap makes one duel unlosable, Kill
+      Contract strips a 1v1 to knives.
+    abilities:
+      - id: iso_contingency
+        name: Contingency
+        type: basic
+        charges: 1
+        cost: 200
+        blocks_sight: true
+      - id: iso_undercut
+        name: Undercut
+        type: basic
+        charges: 1
+        cost: 200
+      - id: iso_double_tap
+        name: Double Tap
+        type: signature
+        charges: 1
+        cost: 0
+      - id: iso_kill_contract
+        name: Kill Contract
+        type: ultimate
+        ult_points: 7
+
+  - id: tejo
+    display_name: Tejo
+    role: initiator
+    description: >-
+      Missiles and drones from a distance. Stealth Drone suppresses and
+      reveals in one pass, Guided Salvo displaces a site, Armageddon
+      cascades airstrikes down a whole lane.
+    abilities:
+      - id: tejo_special_delivery
+        name: Special Delivery
+        type: basic
+        charges: 2
+        cost: 200
+        flashes: true
+      - id: tejo_stealth_drone
+        name: Stealth Drone
+        type: basic
+        charges: 1
+        cost: 300
+        info: true
+        flashes: true
+      - id: tejo_guided_salvo
+        name: Guided Salvo
+        type: signature
+        charges: 1
+        cost: 0
+        damages: true
+      - id: tejo_armageddon
+        name: Armageddon
+        type: ultimate
+        ult_points: 8
+        damages: true
+
+  - id: vyse
+    display_name: Vyse
+    role: sentinel
+    description: >-
+      Biotech traps. Razorvine punishes a push through it, Shear springs an
+      indestructible wall behind an overextension, Steel Garden jams the
+      whole enemy team down to pistols.
+    abilities:
+      - id: vyse_razorvine
+        name: Razorvine
+        type: basic
+        charges: 1
+        cost: 300
+        damages: true
+      - id: vyse_shear
+        name: Shear
+        type: basic
+        charges: 2
+        cost: 200
+        blocks_sight: true
+      - id: vyse_arc_rose
+        name: Arc Rose
+        type: signature
+        charges: 1
+        cost: 0
+        flashes: true
+      - id: vyse_steel_garden
+        name: Steel Garden
+        type: ultimate
+        ult_points: 7
+
+  - id: veto
+    display_name: Veto
+    role: sentinel
+    description: >-
+      Anti-utility specialist. Interceptor eats incoming grenades before
+      they land, Chokehold deafens and decays whoever it traps, Evolution
+      turns him into a debuff-immune frontline tank.
+    abilities:
+      - id: veto_chokehold
+        name: Chokehold
+        type: basic
+        charges: 1
+        cost: 200
+        flashes: true
+        damages: true
+      - id: veto_crosscut
+        name: Crosscut
+        type: basic
+        charges: 1
+        cost: 200
+      - id: veto_interceptor
+        name: Interceptor
+        type: signature
+        charges: 1
+        cost: 0
+      - id: veto_evolution
+        name: Evolution
+        type: ultimate
+        ult_points: 7
+
+  - id: waylay
+    display_name: Waylay
+    role: duelist
+    op_affinity: true
+    description: >-
+      Light-speed duelist. Double dash and a rewind teleport give her the
+      most repositioning in the game — Refract snaps her back to a beacon,
+      invulnerable, in the middle of a bad peek.
+    abilities:
+      - id: waylay_saturate
+        name: Saturate
+        type: basic
+        charges: 2
+        cost: 250
+        flashes: true
+      - id: waylay_lightspeed
+        name: Lightspeed
+        type: basic
+        charges: 1
+        cost: 200
+      - id: waylay_refract
+        name: Refract
+        type: signature
+        charges: 1
+        cost: 0
+      - id: waylay_convergent_paths
+        name: Convergent Paths
+        type: ultimate
+        ult_points: 7
+        damages: true
+
+  - id: miks
+    display_name: Miks
+    role: controller
+    description: >-
+      Sonic controller and the first Controller who can heal. Waveform
+      smokes a whole execute from a map targeter, M-Pulse toggles between a
+      stun and a heal, Bassquake deafens and slows the enemy team at once.
+    abilities:
+      - id: miks_harmonize
+        name: Harmonize
+        type: basic
+        charges: 1
+        cost: 200
+      - id: miks_m_pulse
+        name: M-Pulse
+        type: basic
+        charges: 2
+        cost: 200
+        flashes: true
+      - id: miks_waveform
+        name: Waveform
+        type: signature
+        charges: 2
+        cost: 0
+        blocks_sight: true
+      - id: miks_bassquake
+        name: Bassquake
+        type: ultimate
+        ult_points: 7
+        flashes: true
