@@ -12,7 +12,9 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import chronicle, development, economy, relationships
+from esports_sim.manager import (
+    chronicle, development, economy, market_history, memories, relationships,
+)
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.schemas import Player
@@ -126,6 +128,8 @@ def sign_player(
         team_id=team_id,
         player_id=player_id,
     )
+    _record_value_decision(gs, "sign", "completed", player_id, team_id,
+                           context="buy", reason="free-agent signing")
     return True, f"signed {p.handle} at {p.salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
@@ -134,6 +138,9 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
     p = gs.players[player_id]
+    effects = _departure_consequences(gs, team_id, player_id)
+    _record_value_decision(gs, "release", "completed", player_id, team_id,
+                           reason="roster release", effects=effects)
     severance = p.salary * SEVERANCE_WEEKS
     team.balance -= severance
     relationships.on_departure(gs, player_id, team_id)
@@ -187,6 +194,8 @@ def renew_contract(
         team_id=team_id,
         player_id=player_id,
     )
+    _record_value_decision(gs, "renew", "completed", player_id, team_id,
+                           reason="contract renewed")
     return True, f"renewed {p.handle} at {new_salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
@@ -269,13 +278,19 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
                 p.morale = max(0.0, round(p.morale - 2.0, 1))
             if is_ai and 0 < p.contract_weeks_left <= 6:
                 affordable = team.balance > p.salary * 20
-                # Tenure lowers the quality bar to keep the shirt: a club
-                # legend gets a new deal a journeyman wouldn't.
-                bar = 52.0 - min(8.0, p.tenure_weeks / 26.0 * 2.0)
-                wants = player_quality(p) >= bar or len(team.player_ids) <= ROSTER_SIZE
+                replacement_bar = transfer_value(p, ca=52.0, pa=55.0)
+                wants = (
+                    retention_value(gs, tid, pid) >= replacement_bar
+                    or len(team.player_ids) <= ROSTER_SIZE
+                )
                 if affordable and wants and rng.random() < 0.6:
                     renew_contract(gs, tid, pid, weeks=int(rng.integers(32, 64)))
             if p.contract_weeks_left == 0:
+                effects = _departure_consequences(gs, tid, pid)
+                _record_value_decision(
+                    gs, "expire", "expired", pid, tid,
+                    reason="contract reached zero without renewal", effects=effects,
+                )
                 team.player_ids.remove(pid)
                 if team.captain_id == pid:
                     team.captain_id = team.player_ids[0] if team.player_ids else None
@@ -366,7 +381,9 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
             ]
             if not same:
                 continue
-            weakest = min(same, key=lambda p: (player_quality(p), p.id))
+            weakest = min(
+                same, key=lambda p: (retention_value(gs, tid, p.id), p.id)
+            )
             # Reserve the dropped player's severance too: release_player
             # charges it before sign_player re-checks affordability, so
             # without this the swap can strand the roster at four players.
@@ -472,6 +489,145 @@ def perceived_value(gs: GameState, viewer_id: str | None, p: Player) -> int:
     return base
 
 
+def _round_value(value: float) -> int:
+    return int(round(value / 1000.0) * 1000)
+
+
+def org_player_valuation(
+    gs: GameState, team_id: str, pid: str, context: str = "retain"
+) -> dict[str, object]:
+    """How one org values a player, with an auditable additive breakdown.
+
+    ``retain``/``sell`` include club-specific attachment and replacement
+    pain. ``buy`` uses the buyer's imperfect scouting read and only portable
+    fame/revenue. Keeping these contexts separate is intentional: a pillar can
+    be worth far more to their home than any rational rival should pay.
+    """
+    p = gs.players[pid]
+    own = team_of(gs, pid) == team_id and context != "buy"
+    base = transfer_value(p) if own else perceived_value(gs, team_id, p)
+    parts: dict[str, int] = {"base value": base}
+    tags = set(p.personality_tags)
+    badge_ids = {b.id for b in p.badges}
+
+    if own:
+        roster = sorted(gs.roster(team_id), key=lambda q: (-player_quality(q), q.id))
+        rank = next((i for i, q in enumerate(roster) if q.id == pid), len(roster))
+        if rank == 0:
+            parts["sporting importance"] = _round_value(base * 0.50)
+        elif rank == 1:
+            parts["sporting importance"] = _round_value(base * 0.20)
+        replacements = [q for q in roster if q.id != pid and q.playstyle == p.playstyle]
+        gap = player_quality(p) - max((player_quality(q) for q in replacements), default=35.0)
+        if gap > 4:
+            parts["replacement scarcity"] = _round_value(
+                base * min(0.30, 0.08 + gap / 80.0)
+            )
+
+    fame = 0.0
+    if "superstar" in badge_ids:
+        fame += 0.28
+    if "star_player" in tags:
+        fame += 0.18
+    if fame:
+        parts["superstar status"] = _round_value(base * min(0.35, fame))
+
+    # A season of actual org streaming income is a concrete portable asset.
+    stream_asset = min(base * 0.40, economy.player_stream_income(p) * 52)
+    if stream_asset >= 1000:
+        parts["audience revenue"] = _round_value(stream_asset)
+    if own:
+        dependence = stream_ask_premium(gs, pid, team_id)
+        if dependence > 0:
+            parts["revenue dependence"] = _round_value(base * dependence)
+
+    if "fan_favorite" in tags:
+        parts["supporter favorite"] = _round_value(base * (0.35 if own else 0.12))
+
+    if own:
+        pillar = 0.0
+        if p.tenure_weeks >= 156:
+            pillar += 0.30
+        elif p.tenure_weeks >= 104:
+            pillar += 0.22
+        elif p.tenure_weeks >= 52:
+            pillar += 0.12
+        if gs.teams[team_id].captain_id == pid:
+            pillar += 0.20
+        loyalty = max(0.0, memories.loyalty_bias(gs, pid, team_id))
+        pillar += loyalty / 100.0
+        if pillar:
+            parts["club pillar"] = _round_value(base * min(0.55, pillar))
+
+    total = min(sum(parts.values()), _round_value(base * 3.5))
+    # If the cap trims an extreme icon, keep the components reconcilable.
+    trim = sum(parts.values()) - total
+    if trim > 0:
+        parts["valuation cap"] = -trim
+    ratio = total / max(base, 1)
+    if context == "buy":
+        stance = "target"
+    elif ratio >= 2.30:
+        stance = "not for sale"
+    elif ratio >= 1.75:
+        stance = "club pillar"
+    elif ratio >= 1.30:
+        stance = "reluctant"
+    else:
+        stance = "available"
+    return {
+        "value": int(total), "market_value": int(base),
+        "stance": stance, "components": parts,
+    }
+
+
+def retention_value(gs: GameState, team_id: str, pid: str) -> int:
+    return int(org_player_valuation(gs, team_id, pid, "retain")["value"])
+
+
+def _record_value_decision(
+    gs: GameState, kind: str, outcome: str, pid: str, actor: str,
+    *, counterparty: str = "", context: str = "retain", fee: int = 0,
+    reason: str = "", effects: dict[str, int] | None = None,
+) -> None:
+    view = org_player_valuation(gs, actor, pid, context)
+    market_history.record(
+        gs, kind, outcome, pid, actor_team_id=actor,
+        counterparty_team_id=counterparty, context=context,
+        stance=str(view["stance"]), fee=fee, salary=gs.players[pid].salary,
+        market_value=int(view["market_value"]), org_value=int(view["value"]),
+        components=view["components"], reason=reason,
+        effects=effects,
+    )
+
+
+def _departure_consequences(gs: GameState, team_id: str, pid: str) -> dict[str, int]:
+    """Apply bounded supporter and locker-room cost before a player leaves.
+    Ordinary departures are neutral; icons make an org feel their absence."""
+    view = org_player_valuation(gs, team_id, pid, "retain")
+    stance = str(view["stance"])
+    if stance not in ("club pillar", "not for sale"):
+        return {"fans_lost": 0, "sentiment_lost": 0}
+    p = gs.players[pid]
+    team = gs.teams[team_id]
+    severe = stance == "not for sale"
+    fan_rate = 0.035 if severe else 0.015
+    if "fan_favorite" in p.personality_tags:
+        fan_rate += 0.015
+    fans_lost = min(75_000, int(team.fan_count * fan_rate))
+    team.fan_count = max(0, team.fan_count - fans_lost)
+    sentiment_lost = 6 if severe else 3
+    gs.team_sentiment[team_id] = max(
+        0.0, round(gs.sentiment(team_id) - sentiment_lost, 1)
+    )
+    morale_hit = 5.0 if severe else 2.0
+    for teammate_id in team.player_ids:
+        if teammate_id != pid:
+            mate = gs.players[teammate_id]
+            mate.morale = max(0.0, round(mate.morale - morale_hit, 1))
+    return {"fans_lost": fans_lost, "sentiment_lost": sentiment_lost}
+
+
 # Streaming as a trade-value lever (GDD: audiences are assets). A player who
 # generates a big share of their org's income is worth more to that org than
 # their play alone — the more so when the club is cash-strapped and leans on
@@ -518,7 +674,10 @@ def transfer_ask(gs: GameState, pid: str) -> int:
     money to pry away — and a streaming premium when the player is a big
     slice of the club's income (bigger still for a cash-strapped org that
     can't afford to lose the revenue)."""
-    return sum(int(part["delta"]) for part in transfer_ask_breakdown(gs, pid))
+    seller_id = team_of(gs, pid)
+    if seller_id is None:
+        return transfer_value(gs.players[pid])
+    return int(org_player_valuation(gs, seller_id, pid, "sell")["value"])
 
 
 def transfer_ask_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]]:
@@ -527,37 +686,14 @@ def transfer_ask_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]
     seller_id = team_of(gs, pid)
     if seller_id is None:
         return [{"label": "base value", "delta": transfer_value(p)}]
-    roster = gs.roster(seller_id)
-    ranked = sorted(roster, key=lambda q: -player_quality(q))
-    factors: list[tuple[str, float]] = []
-    if ranked and ranked[0].id == pid:
-        factors.append(("franchise player", 1.6))
-    elif len(ranked) > 1 and ranked[1].id == pid:
-        factors.append(("key player", 1.25))
+    view = org_player_valuation(gs, seller_id, pid, "sell")
+    return [
+        {"label": label, "delta": delta}
+        for label, delta in view["components"].items()
+    ]
     # Loyalty: the club digs in for players who've been part of the
     # furniture — more so when they're playing well right now.
-    if p.tenure_weeks >= 104:
-        factors.append(("long-term loyalty", 1.30))
-    elif p.tenure_weeks >= 52:
-        factors.append(("loyalty", 1.15))
-    if p.form >= 62:
-        factors.append(("current form", 1.10))
     # Streaming: a revenue engine costs more to prise away, cash-amplified.
-    stream = stream_ask_premium(gs, pid, seller_id)
-    if stream > 0:
-        label = ("streaming (cash-strapped club)"
-                 if _cash_amp(gs.teams[seller_id].balance) > 1.0
-                 else "streaming income")
-        factors.append((label, 1.0 + stream))
-    base = transfer_value(p)
-    parts: list[dict[str, int | str]] = [{"label": "base value", "delta": base}]
-    mult, previous = 1.0, base
-    for label, factor in factors:
-        mult *= factor
-        current = int(round(base * mult / 1000) * 1000)
-        parts.append({"label": label, "delta": current - previous})
-        previous = current
-    return parts
 
 
 # ---------------------------------------------------------------------------
@@ -830,13 +966,34 @@ def execute_transfer(
         ]
         weakest = min(
             settled or (gs.players[q] for q in buyer.player_ids),
-            key=player_quality,
+            key=lambda q: (retention_value(gs, buyer_id, q.id), q.id),
+        )
+        effects = _departure_consequences(gs, buyer_id, weakest.id)
+        _record_value_decision(
+            gs, "release", "completed", weakest.id, buyer_id,
+            reason=f"made room for transfer target {pid}", effects=effects,
         )
         buyer.player_ids.remove(weakest.id)
         weakest.contract_weeks_left = 0
         gs.free_agent_ids.append(weakest.id)
         if buyer.captain_id == weakest.id:
             buyer.captain_id = buyer.player_ids[0] if buyer.player_ids else None
+    seller_view = org_player_valuation(gs, seller_id, pid, "sell")
+    effects = _departure_consequences(gs, seller_id, pid)
+    _record_value_decision(
+        gs, "transfer", "completed", pid, seller_id,
+        counterparty=buyer_id, context="sell", fee=fee,
+        reason="transfer completed", effects=effects,
+    )
+    market_history.record(
+        gs, "transfer", "completed", pid, actor_team_id=buyer_id,
+        counterparty_team_id=seller_id, context="buy", fee=fee,
+        salary=p.salary,
+        market_value=int(org_player_valuation(gs, buyer_id, pid, "buy")["market_value"]),
+        org_value=int(org_player_valuation(gs, buyer_id, pid, "buy")["value"]),
+        components=org_player_valuation(gs, buyer_id, pid, "buy")["components"],
+        reason=f"seller stance: {seller_view['stance']}",
+    )
     buyer.balance -= fee
     seller.balance += fee
     relationships.on_departure(gs, pid, seller_id)
@@ -892,6 +1049,12 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
     repairing captaincy on both ends. Cash is the caller's job."""
     src, dst = gs.teams[from_id], gs.teams[to_id]
     p = gs.players[pid]
+    effects = _departure_consequences(gs, from_id, pid)
+    _record_value_decision(
+        gs, "package", "completed", pid, from_id,
+        counterparty=to_id, context="sell", reason="package exchange",
+        effects=effects,
+    )
     relationships.on_departure(gs, pid, from_id)
     src.player_ids.remove(pid)
     dst.player_ids.append(pid)
@@ -1054,6 +1217,11 @@ def propose_package(
     value = package_value(gs, out_pids, cash_out, cash_in, viewer_id=seller_id)
     ask = transfer_ask(gs, target_pid)
     if value < ask:
+        _record_value_decision(
+            gs, "package", "rejected", target_pid, seller_id,
+            counterparty=buyer_id, context="sell", fee=cash_out,
+            reason=f"package valued at {value}, below {ask}",
+        )
         return False, (
             f"{seller.name} reject the package — they don't rate it "
             "against their asking price"
@@ -1093,6 +1261,17 @@ def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
             )
         )
         return True, f"bid sent to {gs.teams[seller_id].name} for {p.handle}"
+    stance = str(org_player_valuation(gs, seller_id, pid, "sell")["stance"])
+    if stance == "not for sale":
+        _record_value_decision(
+            gs, "bid", "rejected", pid, seller_id,
+            counterparty=buyer_id, context="sell", fee=ask,
+            reason="cash bid refused for an organisational icon",
+        )
+        return False, (
+            f"{gs.teams[seller_id].name} will not sell {p.handle} for cash - "
+            "they see them as a pillar of the organisation"
+        )
     return execute_transfer(gs, pid, buyer_id, ask)
 
 
@@ -1123,6 +1302,11 @@ def respond_offer(
     gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]
     p = gs.players[player_id]
     if not accept:
+        _record_value_decision(
+            gs, "bid", "rejected", player_id, seller_id,
+            counterparty=offer.to_team, context="sell", fee=offer.fee,
+            reason="human manager declined offer",
+        )
         # Mercenaries wanted the move; everyone else shrugs.
         if "mercenary" in p.personality_tags:
             p.morale = round(max(0.0, p.morale - 4.0), 1)
@@ -1186,6 +1370,9 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                     upgrade += max(0.0, development.potential_of(p) - q) * 0.5
                 if upgrade < 5.0:
                     continue
+                seller_view = org_player_valuation(gs, seller.id, pid, "sell")
+                if seller.tier == 1 and seller_view["stance"] == "not for sale":
+                    continue
                 # Tier-2 contracts settle at the buyout clause — no
                 # negotiation. Tier-1 targets pay the seller's ask.
                 fee = (
@@ -1193,7 +1380,13 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                 ) or transfer_ask(gs, pid)
                 if buyer.balance < fee + asking_salary(p) * 10:
                     continue
-                key = (upgrade, -fee, pid, seller.id)
+                buyer_view = org_player_valuation(gs, buyer.id, pid, "buy")
+                # Commercial stars can justify a smaller pure-ability upgrade,
+                # but an AI never pays above its own total valuation.
+                if int(buyer_view["value"]) < fee:
+                    continue
+                surplus = int(buyer_view["value"]) - fee
+                key = (upgrade + surplus / 100_000.0, -fee, pid, seller.id)
                 if best is None or key > (best[0], -best[1], best[2], best[3]):
                     best = (upgrade, fee, pid, seller.id)
         if best is None:

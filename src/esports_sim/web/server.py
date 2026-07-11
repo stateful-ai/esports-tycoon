@@ -1732,6 +1732,9 @@ def roster(team_id: str) -> dict:
         if team_id != gs.acting_team_id:
             for v in players:
                 v["transfer_ask"] = market.transfer_ask(gs, v["id"])
+                v["seller_stance"] = market.org_player_valuation(
+                    gs, team_id, v["id"], "sell"
+                )["stance"]
                 v["buyout"] = market.buyout_fee(gs, v["id"])
                 v["ask_breakdown"] = (
                     market.buyout_breakdown(gs, v["id"])
@@ -2719,6 +2722,10 @@ def market_search(q: str = "") -> dict:
                 "mine": team_id == me,
                 "asking_salary": market.asking_salary(p) if is_fa else None,
                 "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
+                "seller_stance": (
+                    market.org_player_valuation(gs, team_id, pid, "sell")["stance"]
+                    if rival else None
+                ),
                 "buyout": market.buyout_fee(gs, pid) if rival else None,
                 "ask_breakdown": (
                     market.buyout_breakdown(gs, pid)
@@ -4902,6 +4909,11 @@ def player_profile(pid: str) -> dict:
                 # the profile overlay can open the package builder.
                 "transfer_ask": (
                     market.transfer_ask(gs, pid)
+                    if (not is_fa and team_id and team_id != gs.acting_team_id)
+                    else None
+                ),
+                "seller_stance": (
+                    market.org_player_valuation(gs, team_id, pid, "sell")["stance"]
                     if (not is_fa and team_id and team_id != gs.acting_team_id)
                     else None
                 ),
