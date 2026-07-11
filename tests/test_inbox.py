@@ -51,7 +51,7 @@ def test_items_generated_and_well_formed(campaign: GameState, game_data: GameDat
         assert len(it.id) == 16 and all(c in "0123456789abcdef" for c in it.id)
         assert it.tab in (
             None, "market", "roster", "scouting", "finances", "standings",
-            "stats", "social",  # transfer-wire gossip routes to the social feed
+            "stats", "social",  # the movement-wire digest deep-links here
         )
 
     # A real campaign surfaces more than one kind of thing over a season.
