@@ -3195,7 +3195,8 @@ function playerSearchCard() {
     for (const p of r.results) {
       const price = p.is_free_agent
         ? `${money(p.asking_salary)}/wk`
-        : p.transfer_ask != null ? money(p.transfer_ask) : "—";
+        : p.buyout != null ? money(p.buyout)
+          : p.transfer_ask != null ? money(p.transfer_ask) : "—";
       const club = p.is_free_agent
         ? '<span class="pill">free agent</span>'
         : `${tlink(p.team_id, p.team_name)}${p.mine ? ' <span class="pill">yours</span>' : ""}`;
