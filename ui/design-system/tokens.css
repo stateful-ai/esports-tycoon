@@ -227,6 +227,19 @@
   --es-color-map-grid: #E5E5DF;
   --es-color-map-site: rgba(59, 124, 201, 0.08);
   --es-color-map-callout-stroke: #C2C2BA;
+
+  /* Semantic shorthands — aliases of the mode-remapped tokens above.
+     App CSS grew references to these short names; without aliases they
+     silently fall through to per-rule hardcoded fallbacks and drift
+     between light/dark. Alias once here; they track each mode because
+     var() resolves at use time. */
+  --es-color-success: var(--es-color-text-success);
+  --es-color-warn: var(--es-color-text-warning);
+  --es-color-warning: var(--es-color-text-warning);
+  --es-color-danger: var(--es-color-text-danger);
+  --es-color-info: var(--es-color-text-info);
+  --es-color-text-muted: var(--es-color-text-tertiary);
+  --es-color-bg-secondary: var(--es-color-bg-surface);
 }
 
 /* ================================================================== *

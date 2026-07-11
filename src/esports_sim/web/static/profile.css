@@ -3,14 +3,8 @@
    a token is renamed. Matches the hub identity: skewed red tick section
    heads, uppercase display-font labels, mono numerals, teal accent bars. */
 
-/* -- profile-link affordance (used across every hub screen) ---------------- */
-/* Subtle: dotted underline on hover + pointer, no color change. */
-.plink, .tlink { cursor: pointer; text-decoration: none; }
-.plink:hover, .tlink:hover {
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-}
+/* Profile-link affordance (.plink/.tlink/.slink): unified in app.css —
+   the single hover rule lives at the bottom of that file. */
 
 /* -- overlay + panel ------------------------------------------------------- */
 /* Sit above the match viewer (both are .overlay at --es-z-modal). */
@@ -34,6 +28,28 @@
 .pf-close:hover {
   color: var(--es-color-text-primary, #e9edf6);
   border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, var(--es-color-border-primary, #26324a));
+}
+/* Back-navigation chip (profile.js back-stack) — mirrors .pf-close, top-left. */
+.pf-back {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  height: 30px; padding: 0 10px; line-height: 1;
+  font: inherit; font-size: 12px; cursor: pointer;
+  color: var(--es-color-text-secondary, #a2aec6);
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px);
+}
+.pf-back:hover {
+  color: var(--es-color-text-primary, #e9edf6);
+  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, var(--es-color-border-primary, #26324a));
+}
+/* Sub-block label inside merged sections (Career, Playbook & knowledge). */
+.pf-career-sub {
+  display: block;
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-text-tertiary, #67748f);
+  margin: 10px 0 4px;
 }
 .pf-body { padding: 20px; }
 
@@ -74,18 +90,8 @@
 /* -- sections -------------------------------------------------------------- */
 .pf-section { margin-bottom: 18px; }
 .pf-section:last-child { margin-bottom: 0; }
-.pf-section-title {
-  display: flex; align-items: center; gap: 7px;
-  font-family: var(--es-font-display, inherit);
-  font-size: 12px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: var(--es-tracking-wider, .08em);
-  color: var(--es-color-text-secondary, #a2aec6); margin-bottom: 10px;
-}
-.pf-section-title::before {
-  content: ""; width: 5px; height: 12px; flex: 0 0 auto;
-  background: var(--es-color-brand, #ff4655);
-  transform: skewX(-12deg); border-radius: 1px;
-}
+/* .pf-section-title: grouped onto app.css's `.card h2, .sec-title` rule
+   (the skewed-red-tick section header) — no local copy. */
 .pf-col > .pf-section:first-child { margin-top: 0; }
 .pf-empty { padding: 4px 0; font-size: var(--es-text-xs, 11px); }
 
@@ -154,17 +160,8 @@
 }
 
 /* -- token-styled fill bar ------------------------------------------------- */
-.pf-hbar {
-  display: block; height: 5px; border-radius: 3px; min-width: 40px;
-  background: var(--es-color-stat-track, #223049); overflow: hidden;
-}
-.pf-hbar > i {
-  display: block; height: 100%; border-radius: 3px;
-  background: linear-gradient(90deg, var(--es-color-accent-dim, #2e9c8b), var(--es-color-accent, #4fd8c0));
-}
-.pf-hbar.good > i { background: var(--es-color-text-success, #46a758); }
-.pf-hbar.warn > i { background: var(--es-color-text-warning, #e5a53a); }
-.pf-hbar.bad  > i { background: var(--es-color-text-danger, #e5484d); }
+/* .pf-hbar: grouped onto app.css's parameterized .bar rule (--bar-h: 5px
+   override + good/warn/bad modifiers live there). */
 
 /* -- attributes ------------------------------------------------------------ */
 .pf-attrs { display: flex; flex-direction: column; gap: 5px; }
@@ -290,15 +287,8 @@
 
 /* -- form strip ------------------------------------------------------------ */
 .pf-form { display: flex; flex-wrap: wrap; gap: 4px; }
-.pf-form-sq {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border-radius: var(--es-radius-sm, 4px);
-  font-family: var(--es-font-display, inherit); font-weight: 700; font-size: 12px;
-  color: #fff; cursor: default;
-}
-.pf-form-sq.w { background: var(--es-color-text-success, #46a758); }
-.pf-form-sq.l { background: var(--es-color-text-danger, #e5484d); }
-.pf-form-sq.d { background: var(--es-color-role-flex, #9ba3af); }
+/* .pf-form-sq: grouped onto app.css's .fsq form-square block (22px display
+   font via the .fsq-lg-sized override + tinted W/L/D letters live there). */
 
 /* -- relationships --------------------------------------------------------- */
 .pf-rel-chip {
@@ -344,7 +334,7 @@
   display: block; height: 100%;
   background: var(--es-color-accent, #4fd8c0);
 }
-.trend-flat { color: var(--es-color-text-muted, #8a94a6); }
+/* .trend-flat: deduped — app.css owns the single copy. */
 
 /* -- squad strength profile ------------------------------------------------ */
 .pf-str { display: flex; flex-direction: column; gap: 5px; }
@@ -371,8 +361,7 @@
 }
 
 /* -- dev-systems overhaul additions --------------------------------------- */
-.slink { cursor: pointer; text-decoration: none; }
-.slink:hover { color: var(--es-color-accent, #4fd8c0); }
+/* .slink: deduped — the unified link affordance in app.css covers it. */
 /* Second series (confidence) on the development chart: dashed alt color. */
 .pf-line-alt {
   stroke: var(--es-color-warn, #e8b34b);

@@ -103,9 +103,20 @@ async function inboxAfterAdvance() {
 
 // Jump to another screen by clicking its tab button (same mechanism the
 // office HQ uses). Self-contained so inbox.js has no cross-file coupling.
+// Retired tabs alias to their new home as [target tab, App.seasonTab value];
+// App.seasonTab is set BEFORE the click so the season render picks it up.
+// The alias never depends on the old Standings/Schedule buttons existing.
+const INBOX_TAB_ALIAS = {
+  standings: ["season", "league"],
+  schedule: ["season", "fixtures"],
+};
 function inboxGoTab(tab) {
-  const btn = document.querySelector(`#tabs [data-tab="${tab}"]`);
-  if (btn) btn.click();
+  const alias = INBOX_TAB_ALIAS[tab];
+  const target = alias ? alias[0] : tab;
+  const btn = document.querySelector(`#tabs [data-tab="${target}"]`);
+  if (!btn) return; // unknown tab: silent no-op, same as before
+  if (alias && typeof App !== "undefined") App.seasonTab = alias[1];
+  btn.click();
 }
 
 // Quietly re-pull GameState into App.state after an inbox action resolves, so
@@ -139,7 +150,17 @@ async function inbox(v) {
   const data = await inboxFetch();
   setInboxBadge(data.unread || 0);
 
+  // Workspace layout: main column = header + filter chips + the list
+  // (scrolling INSIDE its card); rail = a "This week" digest whose lines
+  // jump into (and expand) the matching list item.
+  const ws = el("div", "ws");
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.append(main, rail);
+  v.appendChild(ws);
+
   const card = el("div", "card inbox");
+  main.appendChild(card);
 
   const head = el("div", "inbox-head");
   head.appendChild(el("h2", "", "Inbox"));
@@ -147,6 +168,10 @@ async function inbox(v) {
   markAll.onclick = async () => {
     const res = await inboxPost({ all: true });
     if (res && typeof res.unread === "number") setInboxBadge(res.unread);
+    // Flip the local flags too, so re-renders (filter switches) and the
+    // per-category chip counts agree with the server.
+    for (const it of data.items || []) it.unread = false;
+    refreshChipCounts();
     card.querySelectorAll(".inbox-item.unread")
       .forEach((n) => n.classList.remove("unread"));
     markAll.style.display = "none";
@@ -155,26 +180,46 @@ async function inbox(v) {
   head.appendChild(markAll);
   card.appendChild(head);
 
-  // Category filter chips (pure client-side).
+  // Category filter chips (pure client-side) with live unread counts.
+  const unreadIn = (key) =>
+    (data.items || []).filter(
+      (it) => it.unread && (key === "all" || it.category === key)).length;
+  function refreshChipCounts() {
+    for (const [key, label] of INBOX_CATEGORIES) {
+      const n = unreadIn(key);
+      chipEls[key].textContent = n > 0 ? `${label} (${n})` : label;
+    }
+  }
+  function setFilter(key) {
+    inboxFilter = key;
+    for (const k in chipEls) chipEls[k].classList.toggle("active", k === key);
+    drawList();
+  }
   const chips = el("div", "inbox-filters");
   const chipEls = {};
   for (const [key, label] of INBOX_CATEGORIES) {
     const c = el("button", "inbox-chip" + (inboxFilter === key ? " active" : ""), label);
-    c.onclick = () => {
-      inboxFilter = key;
-      for (const k in chipEls) chipEls[k].classList.toggle("active", k === key);
-      drawList();
-    };
+    c.onclick = () => setFilter(key);
     chipEls[key] = c;
     chips.appendChild(c);
   }
+  refreshChipCounts();
   card.appendChild(chips);
 
+  // The list scrolls inside its card so the page stays one viewport tall.
+  const scroll = el("div", "card-scroll");
+  scroll.style.setProperty("--scroll-max", "72vh");
   const listWrap = el("div", "inbox-list");
-  card.appendChild(listWrap);
-  v.appendChild(card);
+  scroll.appendChild(listWrap);
+  card.appendChild(scroll);
+
+  // item.id -> { row, openRow } so the digest can expand a list row through
+  // the exact same path as a click on the row itself. Rebuilt by every
+  // drawList (filter switches produce fresh row nodes).
+  const rowCtl = new Map();
 
   function drawList() {
+    rowCtl.clear();
     listWrap.replaceChildren();
     const all = data.items || [];
     const items = all.filter((it) => inboxFilter === "all" || it.category === inboxFilter);
@@ -204,6 +249,7 @@ async function inbox(v) {
     if (!it.unread) return;
     it.unread = false;
     row.classList.remove("unread");
+    refreshChipCounts();
     const res = await inboxPost({ id: it.id });
     if (res && typeof res.unread === "number") setInboxBadge(res.unread);
     if (inboxUnread <= 0) markAll.style.display = "none";
@@ -277,15 +323,61 @@ async function inbox(v) {
     row.appendChild(body);
 
     let open = false;
-    rowHead.onclick = async () => {
-      open = !open;
+    const setOpen = async (want) => {
+      if (want === open) return;
+      open = want;
       body.classList.toggle("hidden", !open);
       row.classList.toggle("open", open);
       // Expanding an unread item marks it read on the server.
       if (open) await markItemRead(it, row);
     };
+    rowHead.onclick = () => setOpen(!open);
+    if (it.id != null) rowCtl.set(it.id, { row, openRow: () => setOpen(true) });
     return row;
   }
+
+  /* -- rail: "This week" digest ------------------------------------------- */
+  // The latest week's items grouped by category; each line jumps to (and
+  // expands) the matching row in the main list, marking it read via the
+  // same path as a normal row click.
+  const digest = el("div", "card");
+  digest.appendChild(el("h2", "", "This week"));
+  const allItems = data.items || [];
+  if (!allItems.length) {
+    digest.appendChild(el("p", "muted", "No messages yet - advance the week."));
+  } else {
+    const latest = allItems[0]; // items arrive newest-first
+    const wkKey = `${latest.season}-${latest.week}`;
+    digest.appendChild(el("div", "microlabel", `S${latest.season} - W${latest.week}`));
+    const catOrder = INBOX_CATEGORIES.map(([k]) => k);
+    const catRank = (c) => {
+      const i = catOrder.indexOf(c);
+      return i < 0 ? catOrder.length : i;
+    };
+    const wkItems = allItems
+      .filter((it) => `${it.season}-${it.week}` === wkKey)
+      .sort((a, b) => catRank(a.category) - catRank(b.category));
+    for (const it of wkItems) {
+      const cat = it.category || "news";
+      const line = el("div", "inbox-row-head");
+      line.title = "Open in list";
+      const chip = el("span", `inbox-cat cat-${cat}`);
+      chip.textContent = INBOX_CAT_LABEL[cat] || cat;
+      const title = el("span", "inbox-title");
+      title.textContent = it.title || "";
+      line.append(chip, title);
+      line.onclick = () => {
+        // Make sure the target row is rendered before jumping to it.
+        if (inboxFilter !== "all" && inboxFilter !== it.category) setFilter("all");
+        const ctl = rowCtl.get(it.id);
+        if (!ctl) return;
+        ctl.openRow();
+        ctl.row.scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+      digest.appendChild(line);
+    }
+  }
+  rail.appendChild(digest);
 
   drawList();
 }

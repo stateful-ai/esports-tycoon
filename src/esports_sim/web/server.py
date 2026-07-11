@@ -632,6 +632,13 @@ def _fogged(gs: GameState, pid: str, attr: str, true_val: float, sigma: float) -
     return float(min(99.0, max(1.0, round(true_val + r.uniform(-1, 1) * sigma))))
 
 
+def _language_views(p: Player) -> list[dict]:
+    """A player's spoken tongues in the profile overlay's wire shape
+    ({lang, level}) — public identity facts, reused by the market rows so
+    comms fit is visible at the signing decision."""
+    return [{"lang": l.lang, "level": round(l.level)} for l in p.languages]
+
+
 def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
     attrs = {
         k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
@@ -641,6 +648,9 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         if attrs
         else round(market.player_quality(p), 1)
     )
+    # One classification for the whole app: the profile's stream_status
+    # helper decides what counts as "heavy" — the bool is just that read.
+    stream_status = social.stream_status(p.stream_load)
     return {
         "id": p.id,
         "handle": p.handle,
@@ -661,7 +671,8 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         # Streaming (public, like followers): how much they stream, the org's
         # weekly cut, and the practice/growth cost of it.
         "stream_load": round(p.stream_load, 1),
-        "stream_status": social.stream_status(p.stream_load),
+        "stream_status": stream_status,
+        "stream_heavy": stream_status == "heavy streamer",
         "stream_income": economy.player_stream_income(p),
         "stream_growth_mult": round(training.stream_practice_mult(p), 2),
         "dev_focus": p.dev_focus,
@@ -1352,9 +1363,11 @@ def _league_leaders(gs: GameState, n: int = 3) -> list[dict]:
     top = sorted(elig, key=lambda kv: (-kv[1].rating, kv[0]))[:n]
     out = []
     for pid, st in top:
-        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
         out.append({
-            "pid": pid, "handle": gs.players[pid].handle, "team": team,
+            "pid": pid, "handle": gs.players[pid].handle,
+            "team": team.name if team else "",
+            "team_id": team.id if team else None,
             "rating": round(st.rating, 2), "kills": st.kills,
         })
     return out
@@ -1736,6 +1749,7 @@ def roster(team_id: str) -> dict:
                 upcoming = {
                     "fixture_id": fx.id,
                     "opponent": gs.teams[opp].name,
+                    "opponent_id": opp,
                     "best_of": fx.best_of,
                     "maps": [
                         {
@@ -1747,6 +1761,14 @@ def roster(team_id: str) -> dict:
                         for m in fx.maps
                     ],
                 }
+        # Locker-room pairs (own club only): handle pairs for display plus the
+        # matching player-id pairs so the UI can link the names — both views
+        # come from the SAME duos_and_feuds read, so they can't drift.
+        pair_map = (
+            relationships.duos_and_feuds(gs, team_id)
+            if team_id == gs.acting_team_id
+            else {"duos": [], "feuds": []}
+        )
         return {
             "team": _team_view(gs.teams[team_id], gs),
             "players": players,
@@ -1773,10 +1795,16 @@ def roster(team_id: str) -> dict:
                     for a, b in pairs
                     if a in gs.players and b in gs.players
                 ]
-                for kind, pairs in relationships.duos_and_feuds(gs, team_id).items()
-            }
-            if team_id == gs.acting_team_id
-            else {"duos": [], "feuds": []},
+                for kind, pairs in pair_map.items()
+            },
+            "chemistry_pair_ids": {
+                kind: [
+                    [a, b]
+                    for a, b in pairs
+                    if a in gs.players and b in gs.players
+                ]
+                for kind, pairs in pair_map.items()
+            },
         }
 
 
@@ -1800,6 +1828,7 @@ def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
         out.append({
             "week": f.week,
             "opponent": gs.teams[opp].name if opp in gs.teams else opp,
+            "opponent_id": opp if opp in gs.teams else None,
             "opp_rank": wr,
             "difficulty": diff,
         })
@@ -1822,6 +1851,7 @@ def _wonderkid_watch(gs: GameState, n: int = 6) -> list[dict]:
             "id": p.id, "handle": p.handle, "age": p.age, "role": str(p.role),
             "potential_stars": round(pot, 1),
             "team": team.name if team else "free agent",
+            "team_id": team.id if team else None,
         })
     return out
 
@@ -1844,10 +1874,12 @@ def _challengers_standouts(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     out = []
     for pid, st in top:
         p = gs.players[pid]
-        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
         out.append({
             "id": pid, "handle": p.handle, "age": p.age, "role": str(p.role),
-            "team": team, "rating": round(st.rating, 2),
+            "team": team.name if team else "",
+            "team_id": team.id if team else None,
+            "rating": round(st.rating, 2),
         })
     return out
 
@@ -2148,9 +2180,11 @@ def _team_of_week(gs: GameState, n: int = 5) -> dict:
         if maps == 0 or pid not in gs.players:
             continue
         p = gs.players[pid]
-        team = next((t.name for t in gs.teams.values() if pid in t.player_ids), "")
+        team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
         rows.append({
-            "id": pid, "handle": p.handle, "role": str(p.role), "team": team,
+            "id": pid, "handle": p.handle, "role": str(p.role),
+            "team": team.name if team else "",
+            "team_id": team.id if team else None,
             "rating": round(rsum / maps, 2),
             "kd": round(k / d, 2) if d else float(k),
             "maps": int(maps),
@@ -2562,7 +2596,8 @@ def _contract_watch(gs: GameState, tid: str, weeks: int = 8, n: int = 5) -> dict
     rivals.sort(key=lambda pt: (-market.player_quality(pt[0]), pt[0].id))
     market_watch = [
         {"id": p.id, "handle": p.handle, "role": str(p.role),
-         "team": t.name, "weeks_left": p.contract_weeks_left}
+         "team": t.name, "team_id": t.id,
+         "weeks_left": p.contract_weeks_left}
         for p, t in rivals[:n]
     ]
     return {"expiring_own": own, "market_watch": market_watch}
@@ -2651,6 +2686,7 @@ def market_search(q: str = "") -> dict:
                 "transfer_ask": market.transfer_ask(gs, pid) if rival else None,
                 "buyout": market.buyout_fee(gs, pid) if rival else None,
                 "portrait": _portrait_url(pid, str(p.role)),
+                "languages": _language_views(p),
             })
         rows.sort(key=lambda r: (-r["overall"], r["handle"]))
         return {"results": rows[:30]}
@@ -2671,6 +2707,9 @@ def market_view() -> dict:
         for p in fas:
             ok, why = market.can_sign(gs, gs.acting_team_id, p.id)
             view = _player_view(p, gs, fog=6.0 * (1.0 - progress))
+            # Spoken languages: public facts, so the comms-fit read is
+            # available at the decision point regardless of market fog.
+            view["languages"] = _language_views(p)
             report = development.scout_report(gs, p, progress)
             view["scout"] = {
                 "ca_stars": report["ca_stars"],
@@ -2724,12 +2763,12 @@ def market_view() -> dict:
 
 def _season_stat_row(gs: GameState, pid: str, st: PlayerSeasonStats, tier: int) -> dict:
     p = gs.players[pid]
+    _team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
     row = {
         "player_id": pid,
         "handle": p.handle,
-        "team": next(
-            (t.name for t in gs.teams.values() if pid in t.player_ids), "FA"
-        ),
+        "team": _team.name if _team else "FA",
+        "team_id": _team.id if _team else None,
         "maps": st.maps,
         "rounds": st.rounds,
         "kills": st.kills,
@@ -3204,6 +3243,7 @@ def social_view() -> dict:
                     "player_id": p.id,
                     "handle": p.handle,
                     "team_tag": tag,
+                    "team_id": tid,
                     "followers": p.followers,
                     "is_user": tid == gs.acting_team_id,
                 }
@@ -3484,7 +3524,8 @@ def _tactics_fit(gs: GameState, team: Team) -> dict:
         names = [reg[a].display_name if a in reg else a for a in attr_ids]
         pfits = [tactics_fit.player_fit(p.attr(a) for a in attr_ids) for p in roster]
         scored = [
-            {"handle": p.handle, "playstyle": str(p.playstyle), "score": round(pf)}
+            {"id": p.id, "handle": p.handle, "playstyle": str(p.playstyle),
+             "score": round(pf)}
             for p, pf in zip(roster, pfits)
         ]
         scored.sort(key=lambda s: -s["score"])
@@ -4740,6 +4781,11 @@ def player_profile(pid: str) -> dict:
                 "portrait": _portrait_url(p.id, str(p.role)),
                 "is_user_team": own,
                 "is_free_agent": is_fa,
+                # Weeks at the current club (the loyalty clock; 0 for a free
+                # agent). Season length varies with world shape, so there is
+                # no honest weeks-per-season divisor — the raw weeks ship and
+                # the UI renders them as-is.
+                "tenure_weeks": p.tenure_weeks,
                 # A rival's contracted player is biddable: the seller's ask, so
                 # the profile overlay can open the package builder.
                 "transfer_ask": (

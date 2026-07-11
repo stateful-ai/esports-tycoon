@@ -59,8 +59,8 @@ function feedLabel(pid) {
   const icon = src
     ? `<img class="feed-agent" src="${src}" onerror="this.style.display='none'" alt="">`
     : "";
-  if (!name) return `${icon}<b class="feed-name">${handle}</b>`;
-  return `${icon}<b class="feed-name">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
+  if (!name) return `${icon}<b class="feed-name plink" data-pid="${pid}">${handle}</b>`;
+  return `${icon}<b class="feed-name plink" data-pid="${pid}">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
 }
 
 /* -- parsing ---------------------------------------------------------------- */
@@ -932,7 +932,7 @@ function buildLineup() {
             `<span class="lu-handle muted">${handleOf(pid)}</span></div>`;
         })
         .join("");
-      return `<div class="lu-team"><div class="lu-team-name ${cls}">${V.names[tid]}</div>${rows}</div>`;
+      return `<div class="lu-team"><div class="lu-team-name ${cls} tlink" data-tid="${tid}">${V.names[tid]}</div>${rows}</div>`;
     })
     .join("");
   side.insertBefore(el, document.getElementById("v-feed"));
@@ -1038,7 +1038,7 @@ async function openReplay(fixtureId, mapIndex) {
   isoBtn.style.display = V.floor ? "" : "none";
   isoBtn.textContent = V.iso ? "2D" : "ISO";
   document.getElementById("v-title").innerHTML =
-    `<b>${names[data.team_a]}</b> vs <b>${names[data.team_b]}</b> · ${data.map.display_name}`;
+    `<b class="tlink" data-tid="${data.team_a}">${names[data.team_a]}</b> vs <b class="tlink" data-tid="${data.team_b}">${names[data.team_b]}</b> · ${data.map.display_name}`;
   buildLineup();
   buildTimeline();
   buildMatchSummary();

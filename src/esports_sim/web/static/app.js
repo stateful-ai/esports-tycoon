@@ -11,6 +11,41 @@ const money = (n) => (n == null ? "—" : n.toLocaleString() + " cr");
 // Prettify a snake_case tag/trait id ("team_player" -> "Team Player") for display.
 const humanize = (s) => (s || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+// HTML-escape untrusted text destined for an innerHTML string.
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* Entity links. profile.js turns any [data-pid]/[data-tid]/[data-sid] into a
+   profile-overlay link via one delegated listener — these helpers are the ONE
+   way to render a linked name, so coverage and affordance can't drift. */
+const plink = (id, text, cls = "") =>
+  id ? `<span class="plink ${cls}" data-pid="${esc(id)}">${esc(text)}</span>` : esc(text);
+const tlink = (id, text, cls = "") =>
+  id ? `<span class="tlink ${cls}" data-tid="${esc(id)}">${esc(text)}</span>` : esc(text);
+const slink = (id, text, cls = "") =>
+  id ? `<span class="slink ${cls}" data-sid="${esc(id)}">${esc(text)}</span>` : esc(text);
+
+/* Screen header band: title · segmented sub-tabs · right-side extras.
+   subtabs: [{id, label}], active id, onPick(id). Returns the band element. */
+function screenHead(title, opts = {}) {
+  const head = el("div", "screen-head");
+  head.appendChild(el("span", "screen-title", esc(title)));
+  if (opts.sub) head.appendChild(el("span", "screen-sub", opts.sub));
+  if ((opts.subtabs || []).length) {
+    const seg = el("div", "seg");
+    for (const t of opts.subtabs) {
+      const b = el("button", "seg-btn" + (t.id === opts.active ? " on" : ""), esc(t.label));
+      b.onclick = () => opts.onPick && opts.onPick(t.id);
+      seg.appendChild(b);
+    }
+    head.appendChild(seg);
+  }
+  head.appendChild(el("span", "spacer"));
+  for (const node of opts.right || []) head.appendChild(node);
+  return head;
+}
+
 function toast(msg) {
   const t = el("div", "t", msg);
   $("#toast").appendChild(t);
@@ -57,6 +92,11 @@ document.addEventListener("click", (e) => {
   if (!table || !tbody || "nosort" in table.dataset) return;
   if (table.classList.contains("es-h2hm")) return; // matrix: keep alignment
   const col = th.cellIndex;
+  // Expanded detail rows (roster attrs, market FA attrs, stats per-map) are
+  // transient children of their parent row — drop them before sorting so
+  // they can't be orphaned into the wrong slot. Row-click closures guard
+  // with isConnected and recreate them on demand.
+  for (const d of tbody.querySelectorAll("tr[data-detail]")) d.remove();
   const rows = [...tbody.rows];
   if (rows.length < 2) return;
   // First click sorts numeric columns high-to-low (top performers first) and
@@ -413,14 +453,36 @@ document.querySelectorAll(".tab").forEach((b) => {
   };
 });
 
+// Old tab ids -> [new tab, Season sub-tab]. The Standings and Schedule tabs
+// merged into the Season workspace; dashGoTab() and render() both consult
+// this map so pre-merge deep links (inbox "Go to", stale App.tab values,
+// old onclick handlers) land on the right Season sub-tab.
+const TAB_ALIASES = {
+  standings: ["season", "league"],
+  schedule: ["season", "fixtures"],
+};
+
 function render() {
   if (!App.state) return;
+  // Merged-tab alias: a stale App.tab from before the Standings+Schedule
+  // merge lands on Season with the right sub-tab preselected (and the nav
+  // highlight follows, since no button carries the old id anymore).
+  const alias = TAB_ALIASES[App.tab];
+  if (alias) {
+    App.seasonTab = alias[1];
+    App.tab = alias[0];
+    const b = document.querySelector(`#tabs [data-tab="${alias[0]}"]`);
+    if (b && !b.classList.contains("active")) {
+      document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+      b.classList.add("active");
+    }
+  }
   // Each render gets a fresh container; a slower, superseded async render
   // finishes into a detached node instead of double-appending.
   const container = el("div");
   $("#view").replaceChildren(container);
   // Office screen is parked for now (office.js stays on disk, unloaded).
-  ({ inbox, dashboard, roster, tactics, standings, schedule, market, scouting, stats, social, finances })[App.tab](container);
+  ({ inbox, dashboard, roster, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -434,6 +496,15 @@ function bar(value, opts = {}) {
 
 function stylePill(p) {
   return `<span class="pill-pair"><span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span></span>`;
+}
+
+// Spoken-language chips for a player row — comms fit is visible right at the
+// signing decision. The proficiency rides each chip's title. Server sends a
+// list of {lang, level}; a missing/empty list degrades to "".
+function langChips(langs) {
+  return (langs || [])
+    .map((l) => `<span class="chip" title="${esc(l.lang)} — proficiency ${esc(l.level)}">${esc(l.lang)}</span>`)
+    .join(" ");
 }
 
 // `sm` gives a 20px chip for inline use in buttons/veto text; the default
@@ -514,7 +585,11 @@ function statTile(label, value, opts = {}) {
 }
 
 // Jump to a top-nav tab by name (same effect as the user clicking it).
+// Pre-merge names route through TAB_ALIASES — the Season sub-tab must be
+// set BEFORE the click, because the click triggers the render.
 function dashGoTab(name) {
+  const alias = TAB_ALIASES[name];
+  if (alias) { App.seasonTab = alias[1]; name = alias[0]; }
   const b = document.querySelector(`#tabs [data-tab="${name}"]`);
   if (b) b.click();
 }
@@ -548,25 +623,12 @@ function renderJobMarket(v, careerState) {
   v.appendChild(panel);
 }
 
-// The contract strip on the legacy dashboard: goal, term, board patience.
-function careerStrip(careerState) {
-  const c = careerState.contract;
-  if (!c) return null;
-  const tone = c.patience >= 60 ? "good" : c.patience >= 30 ? "warn" : "bad";
-  const strip = el("div", "row es-career-strip", "");
-  strip.style.cssText = "gap:10px;align-items:center;flex-wrap:wrap";
-  strip.appendChild(
-    el("span", "pill", (careerState.seat.archetype || "manager").replace(/_/g, " "))
-  );
-  strip.appendChild(
-    el("span", "muted", `Board goal: <b>${c.goal}</b> · contract through S${c.end_season}`)
-  );
-  strip.appendChild(
-    el("span", "pill " + tone, `Board patience · ${Math.round(c.patience)}`)
-  );
-  return strip;
-}
-
+/* -- dashboard: the weekly command center ----------------------------------
+   One viewport, three zones: a status strip (the org's vitals), a main column
+   (next match + match review — the two things a manager reads every week),
+   and a rail (decisions pending, objectives, form, league context, news,
+   career). Every entity name is a profile link; every module that outgrows
+   its panel scrolls inside it. */
 async function dashboard(v) {
   const s = App.state;
   // A dismissed legacy manager sees the job market, nothing else.
@@ -580,12 +642,13 @@ async function dashboard(v) {
   const oppId = fix ? (fix.team_a === myId ? fix.team_b : fix.team_a) : null;
 
   // Every endpoint below already exists in the running server.
-  const [sched, table, myRoster, oppRoster, career] = await Promise.all([
+  const [sched, table, myRoster, oppRoster, career, gameplan] = await Promise.all([
     api("/api/schedule").catch(() => null),
     api("/api/standings").catch(() => null),
     api(`/api/roster/${myId}`).catch(() => null),
     oppId ? api(`/api/roster/${oppId}`).catch(() => null) : Promise.resolve(null),
     api("/api/career").catch(() => null),
+    fix ? api("/api/gameplan").catch(() => null) : Promise.resolve(null),
   ]);
 
   // League position + record + region for any broadcast (tier-1) team.
@@ -642,22 +705,143 @@ async function dashboard(v) {
   };
 
   const oppName = fix ? (fix.team_a === myId ? fix.team_b_name : fix.team_a_name) : "";
+  const badgeStrip = (bs) => (bs || []).map((bd) =>
+    ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
 
-  /* -- 0. Legacy career strip (contract + board patience) ------------------ */
-  if (s.career && s.career.mode === "legacy" && s.career.contract) {
-    const strip = careerStrip(s.career);
-    if (strip) v.appendChild(strip);
+  v.appendChild(screenHead("Dashboard", {
+    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+
+  /* -- 1. STATUS STRIP: the org's vitals in one saccade --------------------- */
+  const strip = el("div", "card ws-12 es-status");
+  const tiles = el("div", "es-tiles");
+  const rec = me.record;
+  if (rec) {
+    tiles.appendChild(statTile("Record", `${rec.wins}–${rec.losses}`, {
+      sub: `${rec.diff > 0 ? "+" : ""}${rec.diff} rd`,
+    }));
+  }
+  if (posOf[myId]) {
+    tiles.appendChild(statTile("League", ordinal(posOf[myId]), {
+      sub: cap(regionOf[myId] || me.region || ""),
+      onClick: () => dashGoTab("standings"),
+      title: "Open standings",
+    }));
+  }
+  const streak = streakOf(myId);
+  if (streak) tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
+  // Legacy job security: the sack-race stake stays readable, not hover-only.
+  if (s.board) {
+    const b = s.board;
+    const tone = b.band === "secure" || b.band === "stable" ? "good"
+      : b.band === "under pressure" ? "warn" : "bad";
+    const term = b.seasons_left
+      ? `${b.seasons_left} season${b.seasons_left > 1 ? "s" : ""} left`
+      : "final season";
+    tiles.appendChild(statTile("Board", cap(b.band), {
+      tone,
+      sub: `${b.goal} · ${(b.goal_state || "").replace(/_/g, " ")} · ${term}`,
+      title: `Board goal: ${b.goal}`,
+    }));
+  }
+  tiles.appendChild(statTile("Balance", money(me.balance), {
+    onClick: () => dashGoTab("finances"),
+    title: "Open finances",
+  }));
+  if (myRoster && myRoster.players.length) {
+    const avg = (k) =>
+      myRoster.players.reduce((a, p) => a + (p[k] || 0), 0) / myRoster.players.length;
+    const mor = avg("morale"), cond = avg("stamina");
+    tiles.appendChild(statTile("Morale", Math.round(mor), { tone: statTone(mor) }));
+    tiles.appendChild(statTile("Condition", Math.round(cond), { tone: statTone(cond) }));
+  }
+  if (me.chemistry != null) tiles.appendChild(statTile("Chemistry", Math.round(me.chemistry)));
+  if (s.scout && s.scout.target) {
+    tiles.appendChild(statTile("Scout", `${Math.round((s.scout.progress || 0) * 100)}%`, {
+      sub: s.scout.target_name || "",
+      onClick: () => dashGoTab("scouting"),
+      title: "Open the scouting desk",
+    }));
+  }
+  tiles.appendChild(statTile("Training", cap(s.training_focus), { sub: "weekly focus" }));
+  strip.appendChild(tiles);
+  // Weekly training focus setter — an every-week call, so it lives on the strip.
+  const trainRow = el("div", "row", `<span class="microlabel">Training focus</span>`);
+  for (const o of s.focus_options ?? []) {
+    const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
+    b.onclick = async () => {
+      await api("/api/actions/training", { focus: o });
+      toast(`Training focus: ${o}`);
+      refresh();
+    };
+    trainRow.appendChild(b);
+  }
+  trainRow.style.marginTop = "8px";
+  strip.appendChild(trainRow);
+  ws.appendChild(strip);
+
+  /* -- 2. ACTION BAND: offers + suggested five (only when actionable) ------- */
+  const sug = s.suggested_lineup;
+  if ((s.transfer_offers ?? []).length || (sug && sug.changed)) {
+    const ac = el("div", "card ws-12 alert");
+    ac.appendChild(el("h2", "", "Action required"));
+    for (const o of s.transfer_offers ?? []) {
+      const bits = [];
+      if ((o.offer_players ?? []).length) {
+        bits.push(o.offer_players.map((pl) => `<b>${plink(pl.id, pl.handle)}</b>`).join(" + "));
+      }
+      if (o.cash_to_seller) bits.push(`<b class="mono">${money(o.cash_to_seller)}</b>`);
+      if (o.cash_to_buyer) bits.push(`<span class="muted">(you send back ${money(o.cash_to_buyer)})</span>`);
+      const gets = bits.length ? bits.join(" + ") : `<b class="mono">${money(o.fee)}</b>`;
+      const row = el("div", "row offer-row",
+        `<span><b>${tlink(o.to_team, o.to_team_name)}</b> offer ${gets} for <b>${plink(o.player_id, o.handle)}</b></span>
+         <span class="muted">expires week ${o.expires_week}</span><span class="spacer"></span>`);
+      const sell = el("button", "btn btn-sm", "Accept");
+      sell.onclick = async () => {
+        if (!confirm(`Accept ${o.to_team_name}'s offer for ${o.handle}?`)) return;
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: true });
+        toast(r.message); refresh();
+      };
+      const keep = el("button", "btn btn-sm", "Decline");
+      keep.onclick = async () => {
+        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: false });
+        toast(r.message); refresh();
+      };
+      row.appendChild(sell);
+      row.appendChild(keep);
+      ac.appendChild(row);
+    }
+    // Suggested five: only surfaced when it diverges from the dressed five.
+    if (sug && sug.changed) {
+      const row = el("div", "row offer-row", `<span class="microlabel">Suggested five</span>`);
+      for (const p of sug.players) {
+        row.appendChild(el("span", "pill",
+          `${plink(p.id, p.handle)} <b class="mono">${p.quality}</b>` +
+          (p.dressed ? "" : ' <span class="trend-up">▲ in</span>')));
+      }
+      const go = el("button", "btn btn-sm", "Set lineup ▸");
+      go.onclick = () => dashGoTab("roster");
+      row.appendChild(el("span", "spacer"));
+      row.appendChild(go);
+      ac.appendChild(row);
+    }
+    ws.appendChild(ac);
   }
 
-  /* -- 1. NEXT MATCH spotlight -------------------------------------------- */
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  /* -- 3. NEXT MATCH spotlight (main) --------------------------------------- */
   const spot = el("div", "card es-spotlight");
   spot.appendChild(el("h2", "", "Next match"));
   if (fix) {
     const region = cap(regionOf[myId] || me.region || "");
     const stageTxt =
-      fix.stage === "regular"
-        ? `${region} League`
-        : stageLabel(fix.stage).toUpperCase();
+      fix.stage === "regular" ? `${region} League` : stageLabel(fix.stage).toUpperCase();
 
     const teamBlock = (tid, name, logo, side) => {
       const sub = [posOf[tid] ? ordinal(posOf[tid]) : null, recOf[tid]]
@@ -665,134 +849,120 @@ async function dashboard(v) {
         .join(" · ");
       return `<div class="es-vs-team ${side}">
         ${logo ? `<img class="logo lg" src="${logo}" alt="" onerror="this.style.display='none'">` : ""}
-        <span class="es-vs-name tlink" data-tid="${tid}">${name}</span>
+        ${tlink(tid, name, "es-vs-name")}
         ${sub ? `<span class="es-vs-sub muted">${sub}</span>` : ""}
       </div>`;
     };
     const oppLogo = oppRoster?.team?.logo || "";
-    spot.appendChild(
-      el(
-        "div",
-        "es-vs",
-        teamBlock(myId, me.name, me.logo, "left") +
-          `<div class="es-vs-mid">
-            <div class="es-vs-x">VS</div>
-            <div class="es-vs-ctx">S${s.season} · W${fix.week}</div>
-            <div class="es-vs-ctx">${stageTxt}</div>
-            <span class="pill es-bo">Best of ${fix.best_of}</span>
-            ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
-          </div>` +
-          teamBlock(oppId, oppName, oppLogo, "right")
-      )
-    );
+    spot.appendChild(el("div", "es-vs",
+      teamBlock(myId, me.name, me.logo, "left") +
+        `<div class="es-vs-mid">
+          <div class="es-vs-x">VS</div>
+          <div class="es-vs-ctx">S${s.season} · W${fix.week}</div>
+          <div class="es-vs-ctx">${stageTxt}</div>
+          <span class="pill es-bo">Best of ${fix.best_of}</span>
+          ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
+        </div>` +
+        teamBlock(oppId, oppName, oppLogo, "right")));
 
-    // Head-to-head this season vs the upcoming opponent (server attaches it
-    // only when they've already met — see /api/state).
+    const cols = el("div", "es-snap-cols");
+    const colL = el("div", "es-snap-col");
+    const colR = el("div", "es-snap-col");
+
+    // Head-to-head this season vs the upcoming opponent.
     if (fix.h2h) {
       const h = fix.h2h;
       const lead = h.wins === h.losses ? "level" : h.you_lead ? "you lead" : "you trail";
-      const streak =
+      const hstreak =
         h.streak_len > 1 ? ` · ${h.streak_team === myId ? "W" : "L"}${h.streak_len}` : "";
-      spot.appendChild(
-        el(
-          "div",
-          "es-h2h muted",
-          `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${streak}`
-        )
-      );
+      colL.appendChild(el("div", "es-h2h muted",
+        `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${hstreak}`));
     }
-
-    // Grounded prose preview synthesising form / series / stakes / danger man.
+    // Grounded prose preview.
     if ((fix.preview || []).length) {
-      spot.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
+      colL.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
     }
-
+    // Game-plan state: the natural moment to set one is when reading this card.
+    {
+      const has = !!(gameplan && gameplan.plan);
+      const row = el("div", "row");
+      row.appendChild(el("span", "pill" + (has ? " gp-live" : ""), has ? "Game plan: set" : "Game plan: none"));
+      const go = el("button", "btn btn-sm", has ? "Review plan ▸" : "Set a plan ▸");
+      go.onclick = () => { App.tacticsTab = "gameplan"; dashGoTab("tactics"); };
+      row.appendChild(go);
+      colL.appendChild(row);
+    }
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
       const vr = el("div", "es-maps");
       vr.appendChild(el("span", "es-maps-lab muted", "Veto"));
       for (const entry of fix.veto) {
         const mapId = entry.trim().split(" ").pop();
-        vr.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${entry}`));
+        vr.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${esc(entry)}`));
       }
-      spot.appendChild(vr);
+      colL.appendChild(vr);
     } else if (fix.maps && fix.maps.length) {
       const mr = el("div", "es-maps");
-      mr.appendChild(
-        el("span", "es-maps-lab muted", fix.maps.length > 1 ? "Map pool" : "Map")
-      );
+      mr.appendChild(el("span", "es-maps-lab muted", fix.maps.length > 1 ? "Map pool" : "Map"));
       for (const mid of fix.maps) {
-        mr.appendChild(
-          el(
-            "figure",
-            "es-map",
-            `<img src="/assets/maps/${mid}.webp" alt="${mid}" onerror="this.style.display='none'">` +
-              `<figcaption>${mid}</figcaption>`
-          )
-        );
+        mr.appendChild(el("figure", "es-map",
+          `<img src="/assets/maps/${mid}.webp" alt="${mid}" onerror="this.style.display='none'">` +
+            `<figcaption>${mid}</figcaption>`));
       }
-      spot.appendChild(mr);
+      colL.appendChild(mr);
+    }
+    // Run-in: the next few weeks at a glance.
+    if ((s.run_in || []).length) {
+      const wrap = el("div", "");
+      wrap.appendChild(el("span", "es-scout-lab muted", "Run-in"));
+      const strip2 = el("div", "es-runin");
+      for (const f of s.run_in) {
+        strip2.appendChild(el("span", `es-runin-chip diff-${f.difficulty}`,
+          `<span class="muted">W${f.week}</span> ${tlink(f.opponent_id, f.opponent)}`));
+      }
+      wrap.appendChild(strip2);
+      colL.appendChild(wrap);
     }
 
-    // Opponent scouting: last-5 form + danger men.
+    // Opponent scouting: last-5 form + danger men + coaching read.
     if (oppId) {
-      const scout = el("div", "es-scout");
       const oppGames = playedFor(oppId).slice(-5);
       if (oppGames.length) {
         const col = el("div", "es-scout-col");
-        col.appendChild(
-          el("span", "es-scout-lab muted", `${oppName} — last ${oppGames.length}`)
-        );
-        const strip = el("span", "es-form-strip");
+        col.appendChild(el("span", "es-scout-lab muted", `${esc(oppName)} — last ${oppGames.length}`));
+        const strip3 = el("span", "es-form-strip");
         for (const g of oppGames) {
           const ln = lineFor(g, oppId);
-          strip.appendChild(
-            formSquare(ln.res, `vs ${ln.oppName}${ln.score ? " · " + ln.score : ""}`)
-          );
+          strip3.appendChild(formSquare(ln.res, `vs ${ln.oppName}${ln.score ? " · " + ln.score : ""}`));
         }
-        col.appendChild(strip);
-        scout.appendChild(col);
+        col.appendChild(strip3);
+        colR.appendChild(col);
       }
       if (oppRoster && oppRoster.players.length) {
         const fog = oppRoster.fog > 0;
-        const stars = [...oppRoster.players]
-          .sort((a, b) => b.overall - a.overall)
-          .slice(0, 3);
+        const stars = [...oppRoster.players].sort((a, b) => b.overall - a.overall).slice(0, 3);
         const col = el("div", "es-scout-col");
         col.appendChild(el("span", "es-scout-lab muted", "Danger men"));
         const names = el("span", "es-stars");
         for (const p of stars) {
-          names.appendChild(
-            el(
-              "span",
-              "es-star",
-              `<span class="plink" data-pid="${p.id}">${p.handle}</span>` +
-                `<span class="pill">${p.role}</span>` +
-                `<span class="mono muted">${fog ? "~" : ""}${Math.round(p.overall)}</span>`
-            )
-          );
+          names.appendChild(el("span", "es-star",
+            plink(p.id, p.handle) +
+              `<span class="pill">${esc(p.role)}</span>` +
+              `<span class="mono muted">${fog ? "~" : ""}${Math.round(p.overall)}</span>`));
         }
         col.appendChild(names);
-        scout.appendChild(col);
+        colR.appendChild(col);
       }
-      // Coaching style — shown once you've scouted them enough to read it
-      // (server sends identity/tendencies only past the scout threshold).
       if (oppRoster && (oppRoster.identity || (oppRoster.tendencies ?? []).length)) {
         const col = el("div", "es-scout-col");
         col.appendChild(el("span", "es-scout-lab muted", "Playstyle"));
-        if (oppRoster.identity) {
-          col.appendChild(el("span", "pill es-identity", oppRoster.identity));
-        }
+        if (oppRoster.identity) col.appendChild(el("span", "pill es-identity", esc(oppRoster.identity)));
         if ((oppRoster.tendencies ?? []).length) {
-          col.appendChild(
-            el("span", "es-tendencies muted", oppRoster.tendencies.join(" · "))
-          );
+          col.appendChild(el("span", "es-tendencies muted", oppRoster.tendencies.map(esc).join(" · ")));
         }
-        scout.appendChild(col);
+        colR.appendChild(col);
       }
-      if (scout.childElementCount) spot.appendChild(scout);
     }
-
     // Map pool & veto: your map win rates + a suggested ban/pick vs this opp.
     const mp = fix.map_pool;
     if (mp && (mp.maps.length || mp.veto)) {
@@ -824,228 +994,184 @@ async function dashboard(v) {
       const wrap = el("div", "es-spot-sub");
       wrap.appendChild(el("span", "es-scout-lab muted", "Map pool & veto"));
       wrap.appendChild(board);
-      spot.appendChild(wrap);
+      colR.appendChild(wrap);
     }
+
+    if (colL.childElementCount) cols.appendChild(colL);
+    if (colR.childElementCount) cols.appendChild(colR);
+    if (cols.childElementCount) spot.appendChild(cols);
   } else {
-    spot.appendChild(el("p", "muted", `No fixture scheduled — ${s.phase}.`));
+    spot.appendChild(el("p", "muted", `No fixture scheduled — ${esc(String(s.phase || ""))}.`));
   }
-  v.appendChild(spot);
+  main.appendChild(spot);
 
-  /* -- 1b. SEASON SNAPSHOT: league leaders + your roster's movers ---------- */
-  const leaders = s.leaders || [], movers = s.movers || [];
-  if (leaders.length || movers.length) {
-    const snap = el("div", "card es-snapshot");
-    snap.appendChild(el("h2", "", "This season"));
-    const cols = el("div", "es-snap-cols");
-    if (leaders.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Rating leaders"));
-      const ol = el("ol", "es-leaders");
-      for (const l of leaders) {
-        ol.appendChild(el("li", "",
-          `<span class="plink" data-pid="${l.pid}">${l.handle}</span> ` +
-          `<span class="muted tlink-soft">${l.team}</span> ` +
-          `<b class="mono">${l.rating.toFixed(2)}</b>`));
-      }
-      col.appendChild(ol);
-      cols.appendChild(col);
-    }
-    if (movers.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Your movers · this week"));
-      const list = el("div", "es-movers");
-      for (const m of movers) {
-        const up = m.delta > 0;
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${m.pid}">${m.handle}</span> ` +
-          `<span class="mover-delta ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(m.delta).toFixed(1)}</span>`));
-      }
-      col.appendChild(list);
-      cols.appendChild(col);
-    }
-    snap.appendChild(cols);
-    v.appendChild(snap);
-  }
-
-  /* -- 1c. RUN-IN + ON THIS DAY ------------------------------------------- */
-  const runIn = s.run_in || [], otd = s.on_this_day || [];
-  if (runIn.length || otd.length) {
+  /* -- 4. MATCH REVIEW (main): why you won/lost + what to tweak ------------- */
+  const lmr = s.last_match_review;
+  const debrief = s.debrief || {};
+  if (lmr || debrief.result || s.press) {
     const card = el("div", "card");
-    const cols = el("div", "es-snap-cols");
-    if (runIn.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Run-in"));
-      const strip = el("div", "es-runin");
-      for (const f of runIn) {
-        strip.appendChild(el("span", `es-runin-chip diff-${f.difficulty}`,
-          `<span class="muted">W${f.week}</span> <span class="tlink-soft">${f.opponent}</span>`));
-      }
-      col.appendChild(strip);
-      cols.appendChild(col);
-    }
-    if (otd.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "On this day"));
-      const list = el("div", "es-otd");
-      for (const o of otd) {
-        list.appendChild(el("div", "muted",
-          `<b class="mono">${o.seasons_ago}yr</b> ${o.text}`));
-      }
-      col.appendChild(list);
-      cols.appendChild(col);
-    }
-    card.appendChild(el("h2", "", "Looking ahead & back"));
-    card.appendChild(cols);
-    v.appendChild(card);
-  }
-
-  /* -- 1d. MANAGER'S DESK: debrief + objectives + burnout ----------------- */
-  const debrief = s.debrief || {}, objectives = s.objectives_hub || [];
-  const burnt = (s.rotation || []).filter((r) => r.burnout);
-  const board = s.board, sug = s.suggested_lineup;
-  if (debrief.result || objectives.length || burnt.length || s.press || board || (sug && sug.changed)) {
-    const card = el("div", "card");
-    card.appendChild(el("h2", "", "Manager's desk"));
+    card.appendChild(el("h2", "", "Match review"));
+    // Last-time-out debrief + pundit line lead the card (relocated from the
+    // old Manager's desk so the whole post-match read lives in one place).
     if (debrief.result) {
-      const parts = [`<b class="${debrief.won ? "wl-w" : "wl-l"}">${debrief.result}</b>.`];
-      if (debrief.standout) parts.push(`Standout: ${debrief.standout}.`);
-      if (debrief.underperformer) parts.push(`Off-colour: ${debrief.underperformer}.`);
+      const parts = [`<b class="${debrief.won ? "wl-w" : "wl-l"}">${esc(debrief.result)}</b>.`];
+      if (debrief.standout) parts.push(`Standout: ${esc(debrief.standout)}.`);
+      if (debrief.underperformer) parts.push(`Off-colour: ${esc(debrief.underperformer)}.`);
       card.appendChild(el("p", "muted", "Last time out — " + parts.join(" ")));
     }
-    if (s.press) card.appendChild(el("p", "es-press", `“${s.press}”`));
-    // Legacy job security: board goal + patience band.
-    if (board) {
-      const bcls = board.band === "secure" || board.band === "stable" ? "good"
-        : board.band === "under pressure" ? "warn" : "bad";
-      card.appendChild(el("p", "es-board",
-        `<span class="pill obj ${bcls}">Board: ${board.band}</span> ` +
-        `Goal — ${board.goal} <span class="muted">(${(board.goal_state || "").replace("_", " ")}` +
-        `${board.seasons_left ? " · " + board.seasons_left + " season" + (board.seasons_left > 1 ? "s" : "") + " left" : ", final season"})</span>`));
-    }
-    const cols = el("div", "es-snap-cols");
-    // Suggested XI: only surfaced when it diverges from the dressed five.
-    if (sug && sug.changed) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Suggested five"));
-      const list = el("div", "es-movers");
-      for (const p of sug.players) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
-          `<b class="mono">${p.quality}</b> ` +
-          (p.dressed ? '<span class="muted">dressed</span>' : '<span class="trend-up">▲ in</span>')));
+    if (s.press) card.appendChild(el("p", "es-press", `“${esc(s.press)}”`));
+    if (lmr) {
+      const scoreTxt = lmr.best_of > 1
+        ? `${lmr.your_maps}–${lmr.their_maps}`
+        : `${lmr.your_rounds}–${lmr.their_rounds}`;
+      card.appendChild(el("div", "row es-review-head",
+        `<span class="pill ${lmr.won ? "win" : "loss"}">${lmr.won ? "W" : "L"}</span>` +
+        `<span class="es-review-opp">vs ${tlink(lmr.opp_id, lmr.opp_name)}</span>` +
+        `<span class="spacer"></span>` +
+        `<b class="mono es-review-score">${scoreTxt}</b>`));
+      if (lmr.potm) {
+        card.appendChild(el("div", "potm-chip",
+          `<span class="potm-star">★</span> POTM ${plink(lmr.potm.player_id, lmr.potm.handle)}` +
+          badgeStrip(lmr.potm.badges)));
       }
-      col.appendChild(list);
-      cols.appendChild(col);
+      if (!lmr.contested) {
+        card.appendChild(el("p", "muted", "Match not contested — no breakdown."));
+      } else {
+        const mkCol = (label, points) => {
+          const col = el("div", "es-snap-col");
+          col.appendChild(el("span", "es-scout-lab muted", label));
+          const list = el("div", "es-review-list");
+          if (!points.length) list.appendChild(el("div", "muted es-review-d", "—"));
+          for (const p of points) {
+            const note = p.dev_note ? `<span class="es-review-d muted">${esc(p.dev_note)}</span>` : "";
+            const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
+              `<b class="es-review-h">${esc(p.headline)}${badgeStrip(p.badges)}</b>` +
+              `<span class="es-review-d muted">${esc(p.detail)}</span>` + note);
+            if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
+            list.appendChild(pt);
+          }
+          col.appendChild(list);
+          return col;
+        };
+        const cols2 = el("div", "es-snap-cols");
+        cols2.appendChild(mkCol("What worked", lmr.working));
+        cols2.appendChild(mkCol("Where it broke down", lmr.breaking));
+        card.appendChild(cols2);
+        if (lmr.levers && lmr.levers.length) {
+          card.appendChild(el("span", "es-scout-lab muted", "What to tweak"));
+          const tabOf = { tactics: "tactics", training: "roster", roster: "roster" };
+          const ll = el("div", "es-review-levers");
+          for (const lv of lmr.levers) {
+            const row = el("div", "es-review-lever" + (lv.on_focus ? " on-focus" : ""),
+              `<span class="es-review-arrow">▸</span> ${esc(lv.text)}`);
+            row.onclick = () => dashGoTab(tabOf[lv.tab] || "tactics");
+            ll.appendChild(row);
+          }
+          card.appendChild(ll);
+        } else if (lmr.coach && !lmr.coach.present) {
+          card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
+        }
+        if (lmr.locked && lmr.locked_hint) {
+          card.appendChild(el("p", "muted es-review-d", esc(lmr.locked_hint)));
+        }
+      }
+    }
+    main.appendChild(card);
+  }
+
+  /* -- 5. RAIL: decisions first, then context ------------------------------- */
+
+  // 5a. Action items: everything waiting on the manager, deep-linked.
+  {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Action items"));
+    const list = el("div", "es-obj");
+    const item = (html, go) => {
+      const row = el("div", "es-obj-row es-action", `<span class="es-review-arrow">▸</span> ${html}`);
+      if (go) { row.style.cursor = "pointer"; row.onclick = go; }
+      list.appendChild(row);
+    };
+    for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
+      item(`${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
+        () => dashGoTab("roster"));
+    }
+    for (const o of s.transfer_offers ?? []) {
+      item(`Offer in for ${plink(o.player_id, o.handle)} — expires W${o.expires_week}`, null);
+    }
+    if (s.scout && s.scout.target && (s.scout.progress || 0) >= 1) {
+      item(`Scout report ready — ${esc(s.scout.target_name || "target")}`, () => dashGoTab("scouting"));
+    }
+    if (fix && gameplan && !gameplan.plan) {
+      item(`No game plan set for W${fix.week}`, () => { App.tacticsTab = "gameplan"; dashGoTab("tactics"); });
+    }
+    const unread = (typeof inboxUnread !== "undefined" && inboxUnread) ? inboxUnread : 0;
+    if (unread > 0) {
+      item(`${unread} unread inbox message${unread > 1 ? "s" : ""}`, () => dashGoTab("inbox"));
+    }
+    if (!list.childElementCount) {
+      list.appendChild(el("div", "muted", "All clear — advance when ready."));
+    }
+    card.appendChild(list);
+    rail.appendChild(card);
+  }
+
+  // 5b. Objectives: board line + what to chase.
+  const objectives = s.objectives_hub || [];
+  if (s.board || objectives.length) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Objectives"));
+    if (s.board) {
+      const bcls = s.board.band === "secure" || s.board.band === "stable" ? "good"
+        : s.board.band === "under pressure" ? "warn" : "bad";
+      card.appendChild(el("p", "es-board",
+        `<span class="pill obj ${bcls}">Board: ${esc(s.board.band)}</span> ` +
+        `Goal — ${esc(s.board.goal)} <span class="muted">(${esc((s.board.goal_state || "").replace("_", " "))}` +
+        `${s.board.seasons_left ? " · " + s.board.seasons_left + " season" + (s.board.seasons_left > 1 ? "s" : "") + " left" : ", final season"})</span>`));
     }
     if (objectives.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "What to chase"));
       const list = el("div", "es-obj");
       for (const o of objectives.slice(0, 6)) {
         const cls = o.state === "achieved" || o.state === "on_track" || o.state === "leading" ? "good"
           : o.state === "missed" ? "bad" : "warn";
         list.appendChild(el("div", "es-obj-row",
-          `<span class="pill obj ${cls}">${o.kind}</span> ${o.label} ` +
-          `<span class="muted">${(o.state || "").replace("_", " ")}${o.detail ? " · " + o.detail : ""}</span>`));
+          `<span class="pill obj ${cls}">${esc(o.kind)}</span> ${esc(o.label)} ` +
+          `<span class="muted">${esc((o.state || "").replace("_", " "))}${o.detail ? " · " + esc(o.detail) : ""}</span>`));
       }
-      col.appendChild(list);
-      cols.appendChild(col);
+      card.appendChild(list);
+    }
+    rail.appendChild(card);
+  }
+
+  // 5c. Form & fitness: movers, burnout, the season's shape.
+  const movers = s.movers || [];
+  const burnt = (s.rotation || []).filter((r) => r.burnout);
+  const trend = s.form_trend || [];
+  if (movers.length || burnt.length || trend.length >= 2) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Form & fitness"));
+    if (movers.length) {
+      card.appendChild(el("span", "es-scout-lab muted", "Your movers · this week"));
+      const list = el("div", "es-movers");
+      for (const m of movers) {
+        const up = m.delta > 0;
+        list.appendChild(el("div", "es-mover",
+          `${plink(m.pid, m.handle)} ` +
+          `<span class="mover-delta ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(m.delta).toFixed(1)}</span>`));
+      }
+      card.appendChild(list);
     }
     if (burnt.length) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Burnout watch"));
+      card.appendChild(el("span", "es-scout-lab muted", "Burnout watch"));
       const list = el("div", "es-movers");
       for (const r of burnt) {
         list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${r.id}">${r.handle}</span> ` +
+          `${plink(r.id, r.handle)} ` +
           `<span class="muted">${r.maps} maps</span> <b class="mono trend-down">${r.stamina} sta</b>`));
       }
-      col.appendChild(list);
-      cols.appendChild(col);
+      card.appendChild(list);
     }
-    if (cols.childElementCount) card.appendChild(cols);
-    v.appendChild(card);
-  }
-
-  /* -- 1d2. MATCH REVIEW: why you won/lost + what to tweak ---------------- */
-  const lmr = s.last_match_review;
-  if (lmr) {
-    const card = el("div", "card");
-    card.appendChild(el("h2", "", "Match review"));
-    // Public badges (Clutch Master, Choker, ...) as emoji chips — same look as
-    // the roster's badge pills, so a carry or a stigma reads at a glance.
-    const badgeStrip = (bs) => (bs || []).map((bd) =>
-      ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${bd.name}: ${bd.blurb}">${bd.emoji}</span>`).join("");
-    const scoreTxt = lmr.best_of > 1
-      ? `${lmr.your_maps}–${lmr.their_maps}`
-      : `${lmr.your_rounds}–${lmr.their_rounds}`;
-    card.appendChild(el("div", "row es-review-head",
-      `<span class="pill ${lmr.won ? "win" : "loss"}">${lmr.won ? "W" : "L"}</span>` +
-      `<span class="es-review-opp">vs <span class="tlink" data-tid="${lmr.opp_id}">${lmr.opp_name}</span></span>` +
-      `<span class="spacer"></span>` +
-      `<b class="mono es-review-score">${scoreTxt}</b>`));
-    if (lmr.potm) {
-      card.appendChild(el("div", "potm-chip",
-        `<span class="potm-star">★</span> POTM ` +
-        `<span class="plink" data-pid="${lmr.potm.player_id}">${lmr.potm.handle}</span>` +
-        badgeStrip(lmr.potm.badges)));
-    }
-    if (!lmr.contested) {
-      card.appendChild(el("p", "muted", "Match not contested — no breakdown."));
-      v.appendChild(card);
-    } else {
-      const mkCol = (label, points) => {
-        const col = el("div", "es-snap-col");
-        col.appendChild(el("span", "es-scout-lab muted", label));
-        const list = el("div", "es-review-list");
-        if (!points.length) list.appendChild(el("div", "muted es-review-d", "—"));
-        for (const p of points) {
-          const note = p.dev_note ? `<span class="es-review-d muted">${p.dev_note}</span>` : "";
-          const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
-            `<b class="es-review-h">${p.headline}${badgeStrip(p.badges)}</b>` +
-            `<span class="es-review-d muted">${p.detail}</span>` + note);
-          if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
-          list.appendChild(pt);
-        }
-        col.appendChild(list);
-        return col;
-      };
-      const cols = el("div", "es-snap-cols");
-      cols.appendChild(mkCol("What worked", lmr.working));
-      cols.appendChild(mkCol("Where it broke down", lmr.breaking));
-      card.appendChild(cols);
-      // What to tweak: coach-gated levers, each jumping to the right screen.
-      if (lmr.levers && lmr.levers.length) {
-        card.appendChild(el("span", "es-scout-lab muted", "What to tweak"));
-        const tabOf = { tactics: "tactics", training: "roster", roster: "roster" };
-        const ll = el("div", "es-review-levers");
-        for (const lv of lmr.levers) {
-          const row = el("div", "es-review-lever" + (lv.on_focus ? " on-focus" : ""),
-            `<span class="es-review-arrow">▸</span> ${lv.text}`);
-          row.onclick = () => dashGoTab(tabOf[lv.tab] || "tactics");
-          ll.appendChild(row);
-        }
-        card.appendChild(ll);
-      } else if (lmr.coach && !lmr.coach.present) {
-        card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
-      }
-      if (lmr.locked && lmr.locked_hint) {
-        card.appendChild(el("p", "muted es-review-d", lmr.locked_hint));
-      }
-      v.appendChild(card);
-    }
-  }
-
-  /* -- 1e. FORM TREND + SQUAD PROFILE ------------------------------------- */
-  const trend = s.form_trend || [], sp = s.squad_profile;
-  if (trend.length >= 2 || sp) {
-    const card = el("div", "card");
-    card.appendChild(el("h2", "", "Season shape"));
-    const cols = el("div", "es-snap-cols");
     if (trend.length >= 2) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", "Cumulative wins"));
-      // Inline SVG sparkline of cumulative wins over played games.
+      card.appendChild(el("span", "es-scout-lab muted", "Cumulative wins"));
       const W = 220, H = 46, maxW = trend[trend.length - 1].wins || 1;
       const pts = trend.map((p, i) => {
         const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
@@ -1057,180 +1183,23 @@ async function dashboard(v) {
         const y = H - 4 - (p.wins / maxW) * (H - 8);
         return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" class="${p.won ? "es-spark-w" : "es-spark-l"}"/>`;
       }).join("");
-      const spark = document.createElement("div");
-      spark.className = "es-spark";
-      spark.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="cumulative wins">` +
+      const spark = el("div", "es-spark",
+        `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="cumulative wins">` +
         `<polyline points="${pts}" fill="none" class="es-spark-line"/>${dots}</svg>` +
-        `<span class="muted">${maxW}W in ${trend.length} played</span>`;
-      col.appendChild(spark);
-      cols.appendChild(col);
+        `<span class="muted">${maxW}W in ${trend.length} played</span>`);
+      card.appendChild(spark);
     }
-    if (sp) {
-      const col = el("div", "es-snap-col");
-      col.appendChild(el("span", "es-scout-lab muted", `Squad profile — avg age ${sp.avg_age}`));
-      const b = sp.buckets || {};
-      const bar = el("div", "es-roles");
-      bar.appendChild(el("span", "pill", `youth ${b.youth || 0}`));
-      bar.appendChild(el("span", "pill", `prime ${b.prime || 0}`));
-      bar.appendChild(el("span", "pill", `vet ${b.veteran || 0}`));
-      col.appendChild(bar);
-      const soon = (sp.expiries || []).filter((e) => e.weeks_left > 0).slice(0, 3);
-      if (soon.length) {
-        const list = el("div", "es-movers");
-        for (const e of soon) {
-          list.appendChild(el("div", "es-mover",
-            `<span class="plink" data-pid="${e.id}">${e.handle}</span> ` +
-            `<span class="muted">${e.age}y</span> <b class="mono ${e.weeks_left <= 8 ? "trend-down" : ""}">${e.weeks_left}w</b>`));
-        }
-        col.appendChild(list);
-      }
-      cols.appendChild(col);
-    }
-    if (cols.childElementCount) card.appendChild(cols);
-    v.appendChild(card);
+    rail.appendChild(card);
   }
 
-  /* -- 2. TEAM STATUS tiles ----------------------------------------------- */
-  const status = el("div", "card es-status");
-  status.appendChild(el("h2", "", "Team status"));
-  const tiles = el("div", "es-tiles");
-  const rec = me.record;
-
-  tiles.appendChild(statTile("Balance", money(me.balance)));
-  if (rec) {
-    tiles.appendChild(
-      statTile("Record", `${rec.wins}–${rec.losses}`, {
-        sub: `${rec.diff > 0 ? "+" : ""}${rec.diff} rd`,
-      })
-    );
-  }
-  if (posOf[myId]) {
-    tiles.appendChild(
-      statTile("League", ordinal(posOf[myId]), {
-        sub: cap(regionOf[myId] || me.region || ""),
-        onClick: () => dashGoTab("standings"),
-        title: "Open standings",
-      })
-    );
-  }
-  const streak = streakOf(myId);
-  if (streak) {
-    tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
-  }
-  if (myRoster && myRoster.players.length) {
-    const avg = (k) =>
-      myRoster.players.reduce((a, p) => a + (p[k] || 0), 0) / myRoster.players.length;
-    const mor = avg("morale"), cond = avg("stamina");
-    tiles.appendChild(statTile("Morale", Math.round(mor), { tone: statTone(mor) }));
-    tiles.appendChild(statTile("Condition", Math.round(cond), { tone: statTone(cond) }));
-  }
-  if (me.chemistry != null) tiles.appendChild(statTile("Chemistry", Math.round(me.chemistry)));
-  if (me.world_rank != null) tiles.appendChild(statTile("World rank", `#${me.world_rank}`));
-  if (me.reputation != null) tiles.appendChild(statTile("Reputation", Math.round(me.reputation)));
-  if (me.fan_count != null) tiles.appendChild(statTile("Fans", me.fan_count.toLocaleString()));
-  if (s.scout && s.scout.target) {
-    tiles.appendChild(
-      statTile("Scout", `${Math.round((s.scout.progress || 0) * 100)}%`, {
-        sub: s.scout.target_name || "",
-        onClick: () => dashGoTab("scouting"),
-        title: "Open the scouting desk",
-      })
-    );
-  }
-  tiles.appendChild(statTile("Training", cap(s.training_focus)));
-  status.appendChild(tiles);
-
-  // Weekly training focus lives here now (the office screen is parked).
-  const trainRow = el("div", "row", `<span class="muted">Training focus:</span>`);
-  for (const o of s.focus_options ?? []) {
-    const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
-    b.onclick = async () => {
-      await api("/api/actions/training", { focus: o });
-      toast(`Training focus: ${o}`);
-      refresh();
-    };
-    trainRow.appendChild(b);
-  }
-  status.appendChild(trainRow);
-  v.appendChild(status);
-
-  /* -- 3. Transfer offers (actionable — carried over intact) -------------- */
-  if ((s.transfer_offers ?? []).length) {
-    const oc = el("div", "card");
-    oc.appendChild(el("h2", "", "Transfer offers"));
-    for (const o of s.transfer_offers) {
-      // Build the "what you get" description: cash and/or incoming players.
-      const bits = [];
-      if ((o.offer_players ?? []).length) {
-        bits.push(o.offer_players.map(pl =>
-          `<b class="plink" data-pid="${pl.id}">${pl.handle}</b>`).join(" + "));
-      }
-      if (o.cash_to_seller) bits.push(`<b class="mono">${money(o.cash_to_seller)}</b>`);
-      if (o.cash_to_buyer) bits.push(`<span class="muted">(you send back ${money(o.cash_to_buyer)})</span>`);
-      const gets = bits.length ? bits.join(" + ") : `<b class="mono">${money(o.fee)}</b>`;
-      const row = el(
-        "div",
-        "row",
-        `<span style="min-width:280px"><b>${o.to_team_name}</b> offer
-        ${gets} for <b class="plink" data-pid="${o.player_id}">${o.handle}</b></span>
-        <span class="muted">expires week ${o.expires_week}</span>`
-      );
-      const sell = el("button", "btn btn-sm", "Accept");
-      sell.onclick = async () => {
-        if (!confirm(`Accept ${o.to_team_name}'s offer for ${o.handle}?`)) return;
-        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: true });
-        toast(r.message); refresh();
-      };
-      const keep = el("button", "btn btn-sm", "Decline");
-      keep.onclick = async () => {
-        const r = await api("/api/actions/transfer_offer", { player_id: o.player_id, to_team: o.to_team, accept: false });
-        toast(r.message); refresh();
-      };
-      row.appendChild(sell);
-      row.appendChild(keep);
-      oc.appendChild(row);
-    }
-    v.appendChild(oc);
-  }
-
-  /* -- 4. Two-column band: RECENT RESULTS | NEWS -------------------------- */
+  // 5d. League + recent results: a two-up band at the bottom of the main
+  // column (the rail keeps the always-on modules; these two are context).
   const band = el("div", "grid2");
-
-  const rc = el("div", "card");
-  rc.appendChild(el("h2", "", "Recent results"));
-  const myGames = playedFor(myId).slice(-5).reverse();
-  if (myGames.length) {
-    for (const f of myGames) {
-      const ln = lineFor(f, myId);
-      const thumbs = ln.maps.map((m) => mapThumb(m, "sm")).join("");
-      rc.appendChild(
-        el(
-          "div",
-          "row es-result",
-          `<span class="pill ${ln.res === "W" ? "win" : "loss"}">${ln.res}</span>` +
-            `<span class="es-result-opp tlink" data-tid="${ln.opp}">${ln.oppName}</span>` +
-            `<span class="spacer"></span>` +
-            `<b class="mono es-result-score">${ln.score}</b>` +
-            `<span class="es-result-maps">${thumbs}</span>`
-        )
-      );
-    }
-  } else {
-    rc.appendChild(el("p", "muted", "No matches played yet this season."));
-  }
-  band.appendChild(rc);
-
-  const news = el("div", "card");
-  news.appendChild(el("h2", "", "News"));
-  if ((s.news ?? []).length) {
-    for (const n of s.news) news.appendChild(el("div", "newsline", n));
-  } else {
-    news.appendChild(el("p", "muted", "No news yet."));
-  }
-  band.appendChild(news);
-  v.appendChild(band);
-
-  /* -- 5. League mini-table (carries the old "Top of the table") ---------- */
+  const bandL = el("div", "ws-col");
+  const bandR = el("div", "ws-col");
+  band.appendChild(bandL);
+  band.appendChild(bandR);
+  main.appendChild(band);
   let rows = null;
   if (table) {
     const reg = table.regions.find((r) => r.is_user) || table.regions[0];
@@ -1240,82 +1209,154 @@ async function dashboard(v) {
       id: r.team_id, name: r.name, wins: r.wins, losses: r.losses, diff: r.diff,
     }));
   }
-  if (rows && rows.length) {
-    const lc = el("div", "card");
-    lc.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
-    const t = el("table");
-    t.innerHTML =
-      `<thead><tr><th>#</th><th>Team</th><th class="num">W</th>` +
-      `<th class="num">L</th><th class="num">+/-</th></tr></thead>`;
-    const tb = el("tbody");
-    const myIdx = rows.findIndex((r) => r.id === myId);
-    const show = new Set();
-    rows.forEach((_, i) => { if (i < 4) show.add(i); });
-    if (myIdx >= 0) { if (myIdx > 0) show.add(myIdx - 1); show.add(myIdx); }
-    const idxs = [...show].sort((a, b) => a - b);
-    let prev = -1;
-    for (const i of idxs) {
-      if (i - prev > 1) tb.appendChild(el("tr", "es-gap", `<td colspan="5" class="muted">…</td>`));
-      const r = rows[i];
-      const d = r.diff ?? 0;
-      tb.appendChild(
-        el(
-          "tr",
-          r.id === myId ? "me" : "",
+  {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
+    if (rows && rows.length) {
+      const t = el("table");
+      t.dataset.nosort = "1";
+      t.innerHTML =
+        `<thead><tr><th>#</th><th>Team</th><th class="num">W</th>` +
+        `<th class="num">L</th><th class="num">+/-</th></tr></thead>`;
+      const tb = el("tbody");
+      const myIdx = rows.findIndex((r) => r.id === myId);
+      const show = new Set();
+      rows.forEach((_, i) => { if (i < 4) show.add(i); });
+      if (myIdx >= 0) { if (myIdx > 0) show.add(myIdx - 1); show.add(myIdx); }
+      const idxs = [...show].sort((a, b) => a - b);
+      let prev = -1;
+      for (const i of idxs) {
+        if (i - prev > 1) tb.appendChild(el("tr", "es-gap", `<td colspan="5" class="muted">…</td>`));
+        const r = rows[i];
+        const d = r.diff ?? 0;
+        tb.appendChild(el("tr", r.id === myId ? "me" : "",
           `<td>${i + 1}</td>` +
-            `<td><span class="tlink" data-tid="${r.id}">${r.name}</span></td>` +
+            `<td>${tlink(r.id, r.name)}</td>` +
             `<td class="num">${r.wins}</td><td class="num">${r.losses}</td>` +
-            `<td class="num">${d > 0 ? "+" : ""}${d}</td>`
-        )
-      );
-      prev = i;
+            `<td class="num">${d > 0 ? "+" : ""}${d}</td>`));
+        prev = i;
+      }
+      t.appendChild(tb);
+      card.appendChild(t);
     }
-    t.appendChild(tb);
-    lc.appendChild(t);
-    v.appendChild(lc);
+    // Rating leaders (league-wide top performers).
+    if ((s.leaders || []).length) {
+      card.appendChild(el("span", "es-scout-lab muted", "Rating leaders"));
+      const list = el("div", "es-movers");
+      for (const l of s.leaders) {
+        list.appendChild(el("div", "es-mover",
+          `<span>${plink(l.pid, l.handle)} <span class="muted">${tlink(l.team_id, l.team)}</span></span> ` +
+          `<b class="mono">${l.rating.toFixed(2)}</b>`));
+      }
+      card.appendChild(list);
+    }
+    // Org standing one-liner (fans/world rank/reputation live here, not tiles).
+    const orgBits = [];
+    if (me.world_rank != null) orgBits.push(`World <b class="mono">#${me.world_rank}</b>`);
+    if (me.reputation != null) orgBits.push(`Rep <b class="mono">${Math.round(me.reputation)}</b>`);
+    if (me.fan_count != null) orgBits.push(`Fans <b class="mono">${fmtFollowers(me.fan_count)}</b>`);
+    if (orgBits.length) card.appendChild(el("p", "muted es-org-line", orgBits.join(" · ")));
+    const full = el("button", "btn btn-sm", "Full table ▸");
+    full.onclick = () => dashGoTab("standings");
+    card.appendChild(full);
+    bandL.appendChild(card);
   }
 
-  // Manager career snapshot — surfaces the /api/career chronicle read
-  // (both game modes carry a manager seat, so this always has data).
+  // 5e. Recent results.
+  {
+    const rc = el("div", "card");
+    rc.appendChild(el("h2", "", "Recent results"));
+    const myGames = playedFor(myId).slice(-5).reverse();
+    if (myGames.length) {
+      for (const f of myGames) {
+        const ln = lineFor(f, myId);
+        const thumbs = ln.maps.map((m) => mapThumb(m, "sm")).join("");
+        rc.appendChild(el("div", "row es-result",
+          `<span class="pill ${ln.res === "W" ? "win" : "loss"}">${ln.res}</span>` +
+            `${tlink(ln.opp, ln.oppName, "es-result-opp")}` +
+            `<span class="spacer"></span>` +
+            `<b class="mono es-result-score">${ln.score}</b>` +
+            `<span class="es-result-maps">${thumbs}</span>`));
+      }
+    } else {
+      rc.appendChild(el("p", "muted", "No matches played yet this season."));
+    }
+    bandR.appendChild(rc);
+  }
+
+  // 5f. News + on this day.
+  {
+    const news = el("div", "card");
+    news.appendChild(el("h2", "", "News"));
+    const scroll = el("div", "card-scroll");
+    scroll.style.setProperty("--scroll-max", "300px");
+    if ((s.news ?? []).length) {
+      for (const n of s.news) scroll.appendChild(el("div", "newsline", n));
+    } else {
+      scroll.appendChild(el("p", "muted", "No news yet."));
+    }
+    news.appendChild(scroll);
+    if ((s.on_this_day || []).length) {
+      news.appendChild(el("span", "es-scout-lab muted", "On this day"));
+      const list = el("div", "es-otd");
+      for (const o of s.on_this_day) {
+        list.appendChild(el("div", "muted", `<b class="mono">${o.seasons_ago}yr</b> ${esc(o.text)}`));
+      }
+      news.appendChild(list);
+    }
+    rail.appendChild(news);
+  }
+
+  // 5g. Manager career — the chronicle in brief; detail one click away.
   if (career && career.name) {
     const cc = el("div", "card es-career");
     cc.appendChild(el("h2", "", "Manager career"));
-    const sub = [career.name, career.archetype ? cap(career.archetype) : null]
+    const sub = [career.name, career.archetype ? cap(career.archetype.replace(/_/g, " ")) : null]
       .filter(Boolean)
       .join(" · ");
-    cc.appendChild(el("div", "muted es-career-sub", sub));
-    // Board season-goal, and how it's tracking right now (legacy contracts).
+    cc.appendChild(el("div", "muted es-career-sub", esc(sub)));
     if (career.contract && career.contract.goal) {
       const gst = career.contract.goal_status || {};
       const st = gst.state || "pending";
-      const cls = st === "achieved" || st === "on_track" ? "good"
-        : st === "missed" ? "bad" : "warn";
+      const cls = st === "achieved" || st === "on_track" ? "good" : st === "missed" ? "bad" : "warn";
       cc.appendChild(el("div", "es-goal",
-        `Board goal: <b>${career.contract.goal}</b> · ` +
-        `<span class="goal-${cls}">${st.replace("_", " ")}</span>` +
-        (gst.detail ? ` <span class="muted">(${gst.detail})</span>` : "")));
+        `Board goal: <b>${esc(career.contract.goal)}</b> · ` +
+        `<span class="goal-${cls}">${esc(st.replace("_", " "))}</span>` +
+        (gst.detail ? ` <span class="muted">(${esc(gst.detail)})</span>` : "")));
     }
-    const tile = (label, val) =>
-      `<div class="es-ctile"><div class="es-ctile-v">${val}</div>` +
-      `<div class="es-ctile-l muted">${label}</div></div>`;
-    const tiles = el("div", "es-career-tiles");
-    tiles.innerHTML =
-      tile("Titles", (career.titles || []).length) +
-      tile("Developed", career.players_developed ?? 0) +
-      tile("Debuts", career.debuts_given ?? 0) +
-      tile("Signings", career.signings ?? 0);
-    cc.appendChild(tiles);
+    cc.appendChild(el("p", "es-career-line",
+      `Titles <b class="mono">${(career.titles || []).length}</b> · ` +
+      `Developed <b class="mono">${career.players_developed ?? 0}</b> · ` +
+      `Debuts <b class="mono">${career.debuts_given ?? 0}</b> · ` +
+      `Signings <b class="mono">${career.signings ?? 0}</b>`));
+    // Reputation axes — the numbers that gate career offers.
+    if (career.reputation && Object.keys(career.reputation).length) {
+      cc.appendChild(el("span", "es-scout-lab muted", "Reputation"));
+      const list = el("div", "es-mb");
+      for (const [axis, val] of Object.entries(career.reputation)) {
+        list.appendChild(el("div", "rowbar",
+          `<span class="muted">${esc(humanize(axis))}</span>` +
+          `<span class="bar"><i style="width:${Math.max(2, Math.min(100, val))}%"></i></span>` +
+          `<span class="rowbar-val">${Math.round(val)}</span>`));
+      }
+      cc.appendChild(list);
+    }
     const tagRow = (label, items) => {
       const vals = (items || []).map((x) => x && (x.name || x)).filter(Boolean);
       if (!vals.length) return;
       const row = el("div", "es-career-tags");
       row.appendChild(el("span", "muted es-career-lab", label));
-      for (const val of vals) row.appendChild(el("span", "pill", val));
+      for (const val of vals) row.appendChild(el("span", "pill", esc(val)));
       cc.appendChild(row);
     };
     tagRow("Known for", career.known_for);
     tagRow("Philosophy", career.philosophies);
-    v.appendChild(cc);
+    if (typeof openManagerProfile === "function") {
+      const btn = el("button", "btn btn-sm", "Career ▸");
+      btn.onclick = () => openManagerProfile(career);
+      cc.appendChild(btn);
+    }
+    rail.appendChild(cc);
   }
 }
 
@@ -1330,61 +1371,14 @@ function fmtFollowers(n) {
 async function roster(v) {
   const teamId = App.rosterTeam ?? App.state.user_team.id;
   const data = await api(`/api/roster/${teamId}`);
-  const card = el("div", "card");
-  const fogNote = data.fog > 0
-    ? ` <span class="muted">— scouted estimates ±${data.fog}</span>`
-    : "";
+  const s = App.state;
+  const cols = App.rosterCols ?? "overview";
+  const overview = cols !== "development";
   const cap = data.roster_max ?? 5;
-  card.innerHTML = `<h2>Roster — <span class="tlink" data-tid="${data.team.id}">${data.team.name}</span> (${data.players.length}/${cap})${fogNote}</h2>`;
-  if (data.is_user_team && data.players.length < (data.roster_min ?? 5)) {
-    card.appendChild(el("p", "warn",
-      `⚠ You need ${data.roster_min ?? 5} players to advance the week — sign ${(data.roster_min ?? 5) - data.players.length} more.`));
-  } else if (data.is_user_team && data.players.length < 6) {
-    card.appendChild(el("p", "muted",
-      "Tip: a 6-man roster is advised for tournaments (register a bench)."));
-  }
-  if (data.identity || (data.tendencies ?? []).length) {
-    const bits = [];
-    if (data.identity) bits.push(`<b>${data.identity}</b>`);
-    if ((data.tendencies ?? []).length) bits.push(data.tendencies.join(" · "));
-    card.appendChild(el("p", "muted", `Scouting book: ${bits.join(" — ")}`));
-  }
-  const cp = data.chemistry_pairs ?? { duos: [], feuds: [] };
-  if (cp.duos.length || cp.feuds.length) {
-    const bits = [
-      ...cp.duos.map(([a, b]) => `🤝 ${a} + ${b}`),
-      ...cp.feuds.map(([a, b]) => `⚡ ${a} vs ${b}`),
-    ];
-    card.appendChild(el("p", "muted", `Locker room: ${bits.join(" · ")}`));
-  }
-  if (data.comms_cohesion != null) {
-    const cc = data.comms_cohesion;
-    const tone = cc >= 75 ? "good" : cc >= 50 ? "" : cc >= 35 ? "warn" : "bad";
-    card.appendChild(el("p", "muted",
-      `<span class="pill ${tone}" title="pairwise language overlap — pairs with no common tongue never fully gel">Comms ${Math.round(cc)}</span> ` +
-      `shared languages across the roster feed chemistry.`));
-  }
-  if (!data.is_user_team) {
-    const row = el("div", "row");
-    const back = el("button", "btn btn-sm", "← My team");
-    back.onclick = () => { App.rosterTeam = null; render(); };
-    row.appendChild(back);
-    const scout = el(
-      "button", "btn btn-sm",
-      data.scouting_this
-        ? `Scouting… ${Math.round(data.scout_progress * 100)}%`
-        : "Assign scout"
-    );
-    scout.disabled = data.scouting_this && data.scout_progress >= 1;
-    scout.onclick = async () => {
-      const r = await api("/api/actions/scout", { team_id: teamId });
-      toast(r.message); render();
-    };
-    row.appendChild(scout);
-    card.appendChild(row);
-  }
-  // Default-lineup editor: with a bench, the manager names the five who
-  // dress by default (per-map overrides live on the upcoming-fixture card).
+  const handleOf = Object.fromEntries(data.players.map((p) => [p.id, p.handle]));
+
+  // Default-lineup working set: with a bench, the manager names the five who
+  // dress by default (per-map overrides live on the map-lineups band).
   const hasBench = data.is_user_team && data.players.length > 5;
   const lineup = new Set(data.players.filter((p) => p.starter).map((p) => p.id));
   let lineupBar = null;
@@ -1394,95 +1388,170 @@ async function roster(v) {
     lineupBar.querySelector("b").textContent = `${n}/5`;
     lineupBar.querySelector("button").disabled = n !== 5;
   };
+
+  /* -- screen head: title · team · view seg · right-side actions ------------ */
+  const right = [];
   if (hasBench) {
     lineupBar = el("div", "row",
-      `<span class="muted">Default five: <b class="mono">${lineup.size}/5</b> —
-       toggle ★ to change who dresses. Bench players scrim (reduced growth) and
-       good ones want minutes.</span>`);
+      `<span class="microlabel" title="Toggle ★ in the table to change who dresses. Bench players scrim (reduced growth) and good ones want minutes.">Default five</span> <b class="mono">${lineup.size}/5</b>`);
     const save = el("button", "btn btn-sm btn-primary", "Save lineup");
     save.onclick = async () => {
       const r = await api("/api/actions/lineup", { lineup_ids: [...lineup] });
       toast(r.message); render();
     };
     lineupBar.appendChild(save);
-    card.appendChild(lineupBar);
+    right.push(lineupBar);
     paintLineupBar();
   }
+  if (!data.is_user_team) {
+    const back = el("button", "btn btn-sm", "← My team");
+    back.onclick = () => { App.rosterTeam = null; render(); };
+    right.push(back);
+    const scout = el("button", "btn btn-sm",
+      data.scouting_this
+        ? `Scouting… ${Math.round(data.scout_progress * 100)}%`
+        : "Assign scout");
+    scout.disabled = data.scouting_this && data.scout_progress >= 1;
+    scout.onclick = async () => {
+      const r = await api("/api/actions/scout", { team_id: teamId });
+      toast(r.message); render();
+    };
+    right.push(scout);
+  }
+  const fogSub = data.fog > 0 ? ` · <span class="muted">±${data.fog} fog</span>` : "";
+  v.appendChild(screenHead("Roster", {
+    sub: `${tlink(data.team.id, data.team.name)} <span class="muted">· ${data.players.length}/${cap}</span>${fogSub}`,
+    subtabs: [
+      { id: "overview", label: "Overview" },
+      { id: "development", label: "Development" },
+    ],
+    active: cols,
+    onPick: (id) => { App.rosterCols = id; render(); },
+    right,
+  }));
 
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-9");
+  const rail = el("div", "ws-3 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  /* -- main ws-9: the roster table ----------------------------------------- */
+  const card = el("div", "card");
+  if (data.is_user_team && data.players.length < (data.roster_min ?? 5)) {
+    card.appendChild(el("p", "warn",
+      `⚠ You need ${data.roster_min ?? 5} players to advance the week — sign ${(data.roster_min ?? 5) - data.players.length} more.`));
+  } else if (data.is_user_team && data.players.length < 6) {
+    card.appendChild(el("p", "muted",
+      "Tip: a 6-man roster is advised for tournaments (register a bench)."));
+  }
+
+  const starTh = hasBench ? "<th>★</th>" : "";
   const t = el("table");
-  t.innerHTML = `<thead><tr>
-    ${hasBench ? "<th>★</th>" : ""}<th>Player</th><th>Role</th><th>Agent</th><th class="num">Age</th><th class="num">OVR</th>
-    <th>Ceiling</th>
-    <th>Form</th><th>Morale</th><th>Stamina</th><th>Conf</th>
-    ${data.is_user_team ? "<th>Dev plan</th>" : ""}
-    <th class="num">Salary</th><th class="num">Contract</th><th></th></tr></thead>`;
+  t.innerHTML = overview
+    ? `<thead><tr>${starTh}<th>Player</th><th>Role</th><th>Agent</th>
+       <th class="num">Age</th><th class="num">OVR</th><th>Ceiling</th>
+       <th>Form</th><th>Morale</th><th class="num">Sta</th><th>Conf</th>
+       <th class="num">Salary</th><th class="num">Wks</th><th></th></tr></thead>`
+    : `<thead><tr>${starTh}<th>Player</th><th class="num">Age</th><th class="num">OVR</th>
+       <th>Ceiling</th><th>Form</th><th>Conf</th>
+       <th>Dev focus</th><th>Intensity</th><th>Mentor</th></tr></thead>`;
+  // Detail-row colspan must match the ACTUAL current column count.
+  const ncols = t.querySelector("thead tr").children.length;
   const tb = el("tbody");
+
   for (const p of data.players) {
     const fogged = p.fog > 0;
     const ovr = fogged ? `~${Math.round(p.overall)}` : p.overall;
-    const actions = data.is_user_team
-      ? `<button class="btn btn-sm" data-act="talk">Talk</button>
-         <button class="btn btn-sm" data-act="renew">Renew</button>
-         <button class="btn btn-sm" data-act="release">Release</button>`
-      : p.buyout != null
-        // Tier-2 contract: the buyout clause is the fast lane — pay it and
-        // the player arrives, no negotiation, the org can't refuse.
-        ? `<button class="btn btn-sm" data-act="buyout" title="trigger the buyout clause — the org can't refuse">Buy out ${money(p.buyout)}</button>`
-        : p.transfer_ask != null
-          ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
-             <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
-          : "";
-    const starCell = hasBench
-      ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
-      : "";
-    // Mentorship: older, higher-rated teammates can mentor this player. Sorted
-    // by hidden teaching ability (mentor_skill) so the best teacher is first —
-    // a strong mentor raises the protege's ceiling on their own best skills.
-    const eligibleMentors = data.is_user_team
-      ? data.players
-          .filter((q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0))
-          .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
-      : [];
-    const mentorSel = (eligibleMentors.length || p.mentor_id)
-      ? `<select data-act="mentor" title="pair with a veteran mentor: faster growth + a higher ceiling on the mentor's best skills (teach = teaching ability)">
-           <option value="">no mentor</option>
-           ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${q.handle}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
-         </select>`
-      : "";
-    const devCell = data.is_user_team
-      ? `<td class="dev-plan">
-           <select data-act="focus" title="training focus (auto = team week)">
-             ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""}>${o}</option>`).join("")}
-           </select>
-           <select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
-             ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
-           </select>
-           ${mentorSel}
-         </td>`
-      : "";
-    const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
     // Own-club condition trend arrows (server sends condition_trend only for
     // your roster, and only once there are two dev-history points).
     const ct = p.condition_trend || {};
     const tArrow = (d) =>
       d === "up" ? ' <span class="trend-up" title="trending up">▲</span>'
         : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
-    const tr = el("tr", "", `
-      ${starCell}
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${(p.badges || []).map((bd) => ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${bd.name}: ${bd.blurb}">${bd.emoji}</span>`).join("")}${benchPill}</td>
-      <td>${stylePill(p)}</td>
-      <td>${p.planned_agent
-        ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${p.planned_agent}${p.planned_locked ? "" : " ?"}</span>`
-        : '<span class="muted">scout</span>'}</td>
-      <td class="num">${p.age}</td>
-      <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
-      <td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>
-      <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
-      <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
-      ${devCell}
-      <td class="num">${money(p.salary)}/wk</td>
-      <td class="num">${p.contract_weeks_left}w</td>
-      <td>${actions}</td>`);
+    const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
+    // Heavy-streamer chip: streaming slows this player's development.
+    const streamChip = p.stream_heavy
+      ? ' <span class="chip" title="heavy streaming slows this player\'s development">📺</span>'
+      : "";
+    const badges = (p.badges || []).map((bd) =>
+      ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
+    const starCell = hasBench
+      ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
+      : "";
+    const playerCell = `<td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${badges}${benchPill}${streamChip}</td>`;
+    const ceilingCell = `<td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>`;
+
+    let rowHtml;
+    if (overview) {
+      const actions = data.is_user_team
+        ? `<button class="btn btn-sm" data-act="talk">Talk</button>
+           <button class="btn btn-sm" data-act="renew">Renew</button>
+           <button class="btn btn-sm" data-act="release">Release</button>`
+        : p.buyout != null
+          // Tier-2 contract: the buyout clause is the fast lane — pay it and
+          // the player arrives, no negotiation, the org can't refuse.
+          ? `<button class="btn btn-sm" data-act="buyout" title="trigger the buyout clause — the org can't refuse">Buy out ${money(p.buyout)}</button>`
+          : p.transfer_ask != null
+            ? `<button class="btn btn-sm" data-act="bid" title="buy out this contract">Bid ${money(p.transfer_ask)}</button>
+               <button class="btn btn-sm" data-act="offer" title="offer players and/or cash">Offer…</button>`
+            : "";
+      rowHtml = `
+        ${starCell}
+        ${playerCell}
+        <td>${stylePill(p)}</td>
+        <td>${p.planned_agent
+          ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${esc(p.planned_agent)}${p.planned_locked ? "" : " ?"}</span>`
+          : '<span class="muted">scout</span>'}</td>
+        <td class="num">${p.age}</td>
+        <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
+        ${ceilingCell}
+        <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
+        <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
+        <td class="num">${money(p.salary)}/wk</td>
+        <td class="num">${p.contract_weeks_left}w</td>
+        <td>${actions}</td>`;
+    } else {
+      // Development view: the per-player weekly plan, one interaction each.
+      // Mentorship: older, higher-rated teammates can mentor this player,
+      // sorted by hidden teaching ability (mentor_skill) so the best teacher
+      // is first — a strong mentor raises the protege's ceiling.
+      const eligibleMentors = data.is_user_team
+        ? data.players
+            .filter((q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0))
+            .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
+        : [];
+      const focusSel = data.is_user_team
+        ? `<select data-act="focus" title="training focus (auto = team week)">
+             ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""}>${o}</option>`).join("")}
+           </select>`
+        : '<span class="muted">—</span>';
+      const intSel = data.is_user_team
+        ? `<select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
+             ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
+           </select>`
+        : '<span class="muted">—</span>';
+      const mentorSel = data.is_user_team && (eligibleMentors.length || p.mentor_id)
+        ? `<select data-act="mentor" title="pair with a veteran mentor: faster growth + a higher ceiling on the mentor's best skills (teach = teaching ability)">
+             <option value="">no mentor</option>
+             ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${esc(q.handle)}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
+           </select>`
+        : '<span class="muted">—</span>';
+      rowHtml = `
+        ${starCell}
+        ${playerCell}
+        <td class="num">${p.age}</td>
+        <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
+        ${ceilingCell}
+        <td>${bar(p.form)}${tArrow(ct.form)}</td>
+        <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
+        <td class="dev-plan">${focusSel}</td>
+        <td class="dev-plan">${intSel}</td>
+        <td class="dev-plan">${mentorSel}</td>`;
+    }
+    const tr = el("tr", "", rowHtml);
+
     if (hasBench) {
       tr.querySelector('[data-act="star"]').onclick = (e) => {
         e.stopPropagation();
@@ -1494,17 +1563,15 @@ async function roster(v) {
         paintLineupBar();
       };
     }
-    if (data.is_user_team) {
+    if (!overview && data.is_user_team) {
       const post = async (field, value) => {
         const r = await api("/api/actions/dev_plan", { player_id: p.id, [field]: value });
         toast(r.message);
       };
       const fSel = tr.querySelector('[data-act="focus"]');
-      fSel.onclick = (e) => e.stopPropagation();
-      fSel.onchange = () => post("dev_focus", fSel.value);
+      if (fSel) { fSel.onclick = (e) => e.stopPropagation(); fSel.onchange = () => post("dev_focus", fSel.value); }
       const iSel = tr.querySelector('[data-act="intensity"]');
-      iSel.onclick = (e) => e.stopPropagation();
-      iSel.onchange = () => post("training_intensity", iSel.value);
+      if (iSel) { iSel.onclick = (e) => e.stopPropagation(); iSel.onchange = () => post("training_intensity", iSel.value); }
       const mSel = tr.querySelector('[data-act="mentor"]');
       if (mSel) {
         mSel.onclick = (e) => e.stopPropagation();
@@ -1518,14 +1585,14 @@ async function roster(v) {
         };
       }
     }
-    if (!data.is_user_team && p.buyout != null) {
+    if (overview && !data.is_user_team && p.buyout != null) {
       tr.querySelector('[data-act="buyout"]').onclick = async (e) => {
         e.stopPropagation();
         if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}? ${data.team.name} can't refuse.`)) return;
         const r = await api("/api/actions/buyout", { player_id: p.id });
         toast(r.message); refresh(); render();
       };
-    } else if (!data.is_user_team && p.transfer_ask != null) {
+    } else if (overview && !data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
         e.stopPropagation();
         if (!confirm(`Buy ${p.handle} from ${data.team.name} for ${money(p.transfer_ask)}?`)) return;
@@ -1537,7 +1604,7 @@ async function roster(v) {
         openOffer({ id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: data.team.name });
       };
     }
-    if (data.is_user_team) {
+    if (overview && data.is_user_team) {
       tr.querySelector('[data-act="talk"]').onclick = (e) => {
         e.stopPropagation();
         openTalk(p);
@@ -1557,17 +1624,124 @@ async function roster(v) {
     let detail = null;
     tr.onclick = (e) => {
       if (e.target.tagName === "SELECT" || e.target.tagName === "OPTION") return;
-      if (detail) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="15">${attrDetail(p)}</td>`);
+      // isConnected: the sort delegate removes detail rows before sorting,
+      // so a stale reference means "recreate", not "collapse".
+      if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
+      detail = el("tr", "", `<td colspan="${ncols}">${attrDetail(p)}</td>`);
+      detail.dataset.detail = "1";
       tr.after(detail);
     };
     tb.appendChild(tr);
   }
   t.appendChild(tb);
-  card.appendChild(t);
-  v.appendChild(card);
+  // The wide roster table scrolls horizontally inside its card rather than
+  // pushing the page — it stays on-screen in the ws-9 cell.
+  const tScroll = el("div", "table-scroll");
+  tScroll.appendChild(t);
+  card.appendChild(tScroll);
+  main.appendChild(card);
 
-  if (data.is_user_team && data.upcoming) v.appendChild(mapLineupCard(data));
+  /* -- rail ws-3: squad profile · scouting book · locker room · map lineups - */
+
+  // Squad profile: avg age + youth/prime/vet buckets. Ages are public, so
+  // computed from the roster; the server's rounded avg is preferred for the
+  // user team when present.
+  {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Squad profile"));
+    const ages = data.players.map((p) => p.age);
+    const buckets = { youth: 0, prime: 0, veteran: 0 };
+    for (const a of ages) {
+      if (a <= 21) buckets.youth++;
+      else if (a <= 26) buckets.prime++;
+      else buckets.veteran++;
+    }
+    const sp = data.is_user_team ? (s.squad_profile || null) : null;
+    const avgAge = sp?.avg_age ?? (ages.length ? Math.round((ages.reduce((x, y) => x + y, 0) / ages.length) * 10) / 10 : 0);
+    const bk = sp?.buckets ?? buckets;
+    const total = data.players.length || 1;
+    c.appendChild(el("p", "muted", `Average age <b class="mono">${avgAge}</b>`));
+    const bucketRow = (label, n) => el("div", "rowbar",
+      `<span class="muted">${label}</span>` +
+      `<span class="bar"><i style="width:${Math.max(2, (n / total) * 100)}%"></i></span>` +
+      `<span class="rowbar-val">${n}</span>`);
+    c.appendChild(bucketRow("Youth ≤21", bk.youth));
+    c.appendChild(bucketRow("Prime 22–26", bk.prime));
+    c.appendChild(bucketRow("Veteran 27+", bk.veteran));
+    rail.appendChild(c);
+  }
+
+  // Scouting book: coaching identity + tendencies, own club or a scouted rival.
+  if (data.identity || (data.tendencies ?? []).length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Scouting book"));
+    if (data.identity) c.appendChild(el("p", "", `<b>${esc(data.identity)}</b>`));
+    if ((data.tendencies ?? []).length) {
+      c.appendChild(el("p", "muted", data.tendencies.map(esc).join(" · ")));
+    }
+    rail.appendChild(c);
+  }
+
+  // Locker room: duos/feuds (linked via chemistry_pair_ids) + comms cohesion.
+  {
+    const cpi = data.chemistry_pair_ids ?? { duos: [], feuds: [] };
+    const cc = data.comms_cohesion;
+    if (cpi.duos.length || cpi.feuds.length || cc != null) {
+      const c = el("div", "card");
+      c.appendChild(el("h2", "", "Locker room"));
+      if (cpi.duos.length || cpi.feuds.length) {
+        for (const [a, b] of cpi.duos) {
+          c.appendChild(el("div", "entity",
+            `<span>🤝 ${plink(a, handleOf[a] || a)} <span class="muted">+</span> ${plink(b, handleOf[b] || b)}</span>`));
+        }
+        for (const [a, b] of cpi.feuds) {
+          c.appendChild(el("div", "entity",
+            `<span>⚡ ${plink(a, handleOf[a] || a)} <span class="muted">vs</span> ${plink(b, handleOf[b] || b)}</span>`));
+        }
+      } else if (data.is_user_team) {
+        c.appendChild(el("p", "muted", "No standout duos or feuds."));
+      }
+      if (cc != null) {
+        const tone = cc >= 75 ? "tone-good" : cc >= 50 ? "" : cc >= 35 ? "tone-warn" : "tone-bad";
+        c.appendChild(el("p", "muted",
+          `<span class="chip ${tone}" title="pairwise language overlap — pairs with no common tongue never fully gel">Comms ${Math.round(cc)}</span> ` +
+          `shared languages feed chemistry.`));
+      }
+      rail.appendChild(c);
+    }
+  }
+
+  // Map-lineups: a compact per-map summary in the rail; the full chip editor
+  // rides a ws-12 band below the grid (only when a bench makes it a choice).
+  if (hasBench && data.upcoming) {
+    const up = data.upcoming;
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Map lineups"));
+    c.appendChild(el("p", "muted",
+      `vs ${up.opponent_id ? tlink(up.opponent_id, up.opponent) : esc(up.opponent)} · Bo${up.best_of}`));
+    for (const m of up.maps) {
+      c.appendChild(el("div", "row",
+        `<span class="microlabel">${esc(m.map_id)}</span> ` +
+        `<span class="chip ${m.has_override ? "tone-accent" : ""}" title="${m.has_override ? "custom five" : "uses your default five"}">${m.has_override ? "custom" : "default"}</span>`));
+      c.appendChild(el("div", "muted",
+        (m.dressed || []).map((id) => plink(id, handleOf[id] || id)).join(" · ")));
+    }
+    const edit = el("button", "btn btn-sm", "Edit ▸");
+    edit.onclick = () => {
+      const band = document.getElementById("es-maplineups");
+      if (band) band.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    c.appendChild(edit);
+    rail.appendChild(c);
+
+    // The full editor as a ws-12 band on row 2 of the same grid (.ws-col so
+    // the card takes the grid's rhythm, not its own bottom margin).
+    const cell = el("div", "ws-12 ws-col");
+    const mlc = mapLineupCard(data);
+    mlc.id = "es-maplineups";
+    cell.appendChild(mlc);
+    ws.appendChild(cell);
+  }
 }
 
 // Per-map "dressed five" picker for the upcoming fixture (only shown when the
@@ -1703,17 +1877,48 @@ function dialImpact(fit, value) {
 }
 
 function poleChips(fit, styles) {
-  // Roster members whose playstyle suits this pole, tagged with their score.
+  // Roster members whose playstyle suits this pole, each a profile link. The
+  // fit payload now carries the player id, so the chip routes to the overlay.
   const set = new Set(styles);
   const hits = (fit?.players ?? []).filter((p) => set.has(p.playstyle));
   if (!hits.length) return "";
-  return hits
-    .map((p) => `<span class="tac-who" title="${p.playstyle} · ${p.score}">${p.handle}</span>`)
-    .join("");
+  return hits.map((p) => plink(p.id, p.handle, "tac-who")).join("");
 }
 
 async function tactics(v) {
+  const s = App.state;
+  const sub = App.tacticsTab ?? "strategy";
+  v.appendChild(screenHead("Tactics", {
+    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+    subtabs: [
+      { id: "strategy", label: "Strategy" },
+      { id: "gameplan", label: "Game plan" },
+    ],
+    active: sub,
+    onPick: (id) => { App.tacticsTab = id; render(); },
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
   const data = await api("/api/tactics");
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  if (sub === "gameplan") {
+    // Main = the one-match prep; rail = this week's agent locks (match prep,
+    // so they live with the plan, not the standing strategy).
+    await gameplanPanel(main);
+    lineupCard(rail, data.lineup);
+  } else {
+    tacticsStrategy(main, rail, data);
+  }
+}
+
+/* -- Tactics · Strategy: the standing coaching identity ----------------------
+   Main holds the execution-edge banner + dial cards; the rail holds the
+   site-focus segment and the (dirty-aware) "Set strategy" save. */
+function tacticsStrategy(main, rail, data) {
   const tac = data.tactics;
   const f = data.fit;
   const chem = f.chemistry;
@@ -1722,13 +1927,21 @@ async function tactics(v) {
   for (const d of TACTIC_DIALS) values[d.key] = tac[d.key];
   let siteVal = tac.site_focus;
   const pending = {};
+  // Loaded snapshot: the save button lights amber (.save-dirty) whenever any
+  // dial or the site focus differs from what was fetched.
+  const loaded = { ...values, site_focus: siteVal };
+  const save = el("button", "btn btn-primary", "Set strategy");
+  const paintDirty = () => {
+    let dirty = siteVal !== loaded.site_focus;
+    for (const d of TACTIC_DIALS) if (values[d.key] !== loaded[d.key]) dirty = true;
+    save.classList.toggle("save-dirty", dirty);
+  };
 
   const card = el("div", "card", `<h2>Coaching strategy</h2>`);
-  const intro = el("p", "muted",
+  card.appendChild(el("p", "muted",
     `The identity your squad plays with. Every dial sits neutral at <b>50</b> —
      push it off centre and the match engine rewards a roster built for that
-     style and punishes one that isn't. Team chemistry is <b class="mono">${Math.round(chem)}</b>.`);
-  card.appendChild(intro);
+     style and punishes one that isn't. Team chemistry is <b class="mono">${Math.round(chem)}</b>.`));
 
   // Live "execution edge" summary — the clamped sum of every dial's duel term.
   const edge = el("div", "tac-edge");
@@ -1830,20 +2043,20 @@ async function tactics(v) {
       pending[d.key] = values[d.key];
       paint();
       refreshEdge();
+      paintDirty();
     };
     paint();
     dialsWrap.appendChild(block);
   }
   refreshEdge();
   card.appendChild(dialsWrap);
+  main.appendChild(card);
 
-  // Site focus as a segmented control — cohesive with the dial blocks.
-  const siteBlock = el("div", "tac-dial");
-  siteBlock.appendChild(el("div", "tac-head",
-    `<span class="tac-name">Site focus</span>
-     <span class="tac-desc mid">${SITE_FOCUS.find((s) => s[0] === siteVal)[1]}</span>`));
+  /* -- rail: site focus + save --------------------------------------------- */
+  const siteCard = el("div", "card", `<h2>Site focus</h2>`);
+  siteCard.appendChild(el("p", "muted",
+    "Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels."));
   const seg = el("div", "tac-seg");
-  const segDesc = siteBlock.querySelector(".tac-desc");
   for (const [val, label, note] of SITE_FOCUS) {
     const b = el("button", "tac-seg-btn", label);
     b.title = note;
@@ -1853,32 +2066,30 @@ async function tactics(v) {
       pending.site_focus = val;
       seg.querySelectorAll(".tac-seg-btn").forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
-      segDesc.textContent = label;
+      paintDirty();
     };
     seg.appendChild(b);
   }
-  siteBlock.appendChild(seg);
-  siteBlock.appendChild(el("p", "muted tac-site-note",
-    "Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels."));
-  dialsWrap.appendChild(siteBlock);
+  siteCard.appendChild(seg);
+  rail.appendChild(siteCard);
 
-  // Save bar.
-  const barRow = el("div", "tac-savebar");
-  const save = el("button", "btn btn-primary", "Set strategy");
+  const saveCard = el("div", "card", `<h2>Set strategy</h2>`);
+  saveCard.appendChild(el("p", "muted",
+    "Scout a rival to 50%+ to read their coaching identity on their roster page."));
   save.onclick = async () => {
     if (!Object.keys(pending).length) { toast("no changes"); return; }
     const r = await api("/api/actions/tactics", pending);
     toast(r.message);
     for (const k of Object.keys(pending)) delete pending[k];
+    // Rebase the loaded snapshot to the just-saved state and clear the flag.
+    for (const d of TACTIC_DIALS) loaded[d.key] = values[d.key];
+    loaded.site_focus = siteVal;
+    paintDirty();
   };
-  barRow.appendChild(save);
-  barRow.appendChild(el("span", "muted",
-    "Scout a rival to 50%+ to read their coaching identity on their roster page."));
-  card.appendChild(barRow);
-  v.appendChild(card);
-
-  lineupCard(v, data.lineup);
-  await gameplanPanel(v);
+  const saveRow = el("div", "row");
+  saveRow.appendChild(save);
+  saveCard.appendChild(saveRow);
+  rail.appendChild(saveCard);
 }
 
 // This week's committed agents — one lock per player, chosen before you know
@@ -1914,7 +2125,7 @@ function lineupCard(v, lineup) {
       mCell.className = "num" + (o && o.mastery < 40 ? " bad" : "");
     };
     const tr = el("tr");
-    tr.appendChild(el("td", "", `<b class="plink" data-pid="${p.id}">${p.handle}</b>`));
+    tr.appendChild(el("td", "", `<b>${plink(p.id, p.handle)}</b>`));
     tr.appendChild(el("td", "", stylePill(p)));
     const aCell = el("td");
     aCell.appendChild(sel);
@@ -1987,8 +2198,22 @@ async function gameplanPanel(v) {
     if (plan && plan[d.key] != null) state.dials[d.key] = plan[d.key];
   }
 
-  card.innerHTML = `<h2>Game plan — vs <b class="tlink" data-tid="${opp.id}">${opp.name}</b>
-    <span class="pill">${opp.tag}</span>
+  // Dirty tracking: the save button lights amber (.save-dirty) whenever the
+  // working plan diverges from what was loaded. Declared here so every input
+  // handler below can flag it; wired to its POST at the save bar.
+  const saveBtn = el("button", "btn btn-primary", plan ? "Update game plan" : "Lock in game plan");
+  const gpSig = () => JSON.stringify({
+    dials: Object.fromEntries(TACTIC_DIALS.map((d) => [d.key, state.dials[d.key] ?? null])),
+    site: state.site_focus,
+    target: state.focus_target,
+    starters: [...state.starters].sort(),
+    talk: state.team_talk,
+  });
+  const loadedGpSig = gpSig();
+  const paintGpDirty = () => saveBtn.classList.toggle("save-dirty", gpSig() !== loadedGpSig);
+
+  card.innerHTML = `<h2>Game plan — vs <b>${tlink(opp.id, opp.name)}</b>
+    <span class="pill">${esc(opp.tag)}</span>
     ${plan ? '<span class="pill gp-live">plan set</span>' : ""}</h2>`;
   card.appendChild(el("p", "muted",
     `${stageLabel(fx.stage)} · best of ${fx.best_of} · ${fx.maps.join(", ")}
@@ -2017,7 +2242,7 @@ async function gameplanPanel(v) {
   const noneRow = el("tr", "", `<td><input type="radio" name="gp-tgt"
     ${state.focus_target == null ? "checked" : ""}></td>
     <td colspan="6" class="muted">No target — play our own game</td>`);
-  noneRow.querySelector("input").onchange = () => { state.focus_target = null; };
+  noneRow.querySelector("input").onchange = () => { state.focus_target = null; paintGpDirty(); };
   tb.appendChild(noneRow);
   for (const r of gp.opponent_roster.filter((r) => r.is_starter)) {
     const fogp = r.fogged ? "~" : "";
@@ -2025,11 +2250,11 @@ async function gameplanPanel(v) {
       ? ' <span class="pill gp-sug">scout&#39;s pick</span>' : "";
     const tr = el("tr", "", `
       <td><input type="radio" name="gp-tgt" ${state.focus_target === r.player_id ? "checked" : ""}></td>
-      <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b>${sug}</td>
-      <td>${r.role}</td><td>${r.playstyle}</td>
+      <td><b>${plink(r.player_id, r.handle)}</b>${sug}</td>
+      <td>${esc(r.role)}</td><td>${esc(r.playstyle)}</td>
       <td class="num mono">${fogp}${Math.round(r.overall)}</td>
       <td class="num mono">${fogp}${Math.round(r.form)}</td><td></td>`);
-    tr.querySelector("input").onchange = () => { state.focus_target = r.player_id; };
+    tr.querySelector("input").onchange = () => { state.focus_target = r.player_id; paintGpDirty(); };
     tb.appendChild(tr);
   }
   tgtTable.appendChild(tb);
@@ -2058,8 +2283,12 @@ async function gameplanPanel(v) {
     slider.disabled = !cb.checked;
     const val = el("span", "gp-dial-val mono",
       `${Math.round(slider.value)}${cb.checked ? "" : " (book)"}`);
+    // Ghost reference: while a dial is overridden, show the standing "book: N"
+    // it's deviating from (the payload carries both).
+    const book = el("span", "microlabel", `book ${Math.round(standing)}`);
     const paint = () => {
       val.textContent = `${Math.round(slider.value)}${cb.checked ? "" : " (book)"}`;
+      book.hidden = !cb.checked;
       row.classList.toggle("on", cb.checked);
     };
     cb.onchange = () => {
@@ -2071,9 +2300,10 @@ async function gameplanPanel(v) {
         slider.value = standing; // "(book)" must show the book's number
       }
       paint();
+      paintGpDirty();
     };
-    slider.oninput = () => { state.dials[d.key] = parseFloat(slider.value); paint(); };
-    row.appendChild(cb); row.appendChild(lab); row.appendChild(slider); row.appendChild(val);
+    slider.oninput = () => { state.dials[d.key] = parseFloat(slider.value); paint(); paintGpDirty(); };
+    row.appendChild(cb); row.appendChild(lab); row.appendChild(slider); row.appendChild(val); row.appendChild(book);
     ovWrap.appendChild(row);
     paint();
   }
@@ -2090,6 +2320,7 @@ async function gameplanPanel(v) {
       state.site_focus = valKey === "" ? null : valKey;
       seg.querySelectorAll(".tac-seg-btn").forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
+      paintGpDirty();
     };
     seg.appendChild(b);
   }
@@ -2120,7 +2351,7 @@ async function gameplanPanel(v) {
       chip.onclick = () => {
         if (state.starters.has(r.player_id)) state.starters.delete(r.player_id);
         else state.starters.add(r.player_id);
-        paint(); paintCount();
+        paint(); paintCount(); paintGpDirty();
       };
       paint();
       chips.appendChild(chip);
@@ -2131,7 +2362,7 @@ async function gameplanPanel(v) {
     clearLu.onclick = () => {
       state.starters.clear();
       chips.querySelectorAll(".gp-chip").forEach((c) => c.classList.remove("on"));
-      paintCount();
+      paintCount(); paintGpDirty();
     };
     luFoot.appendChild(clearLu);
     luFoot.appendChild(count);
@@ -2159,6 +2390,7 @@ async function gameplanPanel(v) {
       state.team_talk = val || null;
       talkRow.querySelectorAll("button").forEach((x) => x.classList.remove("active"));
       b.classList.add("active");
+      paintGpDirty();
     };
     talkRow.appendChild(b);
   }
@@ -2167,7 +2399,6 @@ async function gameplanPanel(v) {
 
   // Save / clear.
   const barRow2 = el("div", "tac-savebar");
-  const saveBtn = el("button", "btn btn-primary", plan ? "Update game plan" : "Lock in game plan");
   saveBtn.onclick = async () => {
     const n = state.starters.size;
     if (n !== 0 && n !== 5) { toast("pick exactly five, or none"); return; }
@@ -2196,7 +2427,7 @@ async function gameplanPanel(v) {
   v.appendChild(card);
 }
 
-// Last-5 W/L chips for the standings table (oldest first, most recent
+// Last-5 W/L chips for the league tables (oldest first, most recent
 // rightmost). Each chip tips to its scoreline — the sim's own record.
 const formSquares = (form) =>
   (form || [])
@@ -2206,13 +2437,140 @@ const formSquares = (form) =>
     )
     .join("") || '<span class="muted">—</span>';
 
-async function standings(v) {
-  const [data, records, power, league] = await Promise.all([
-    api("/api/standings"),
-    api("/api/records").catch(() => null),
-    api("/api/power").catch(() => null),
-    api("/api/league").catch(() => null),
-  ]);
+const STAGE_LABELS = {
+  regular: "league",
+  semi: "semifinal",
+  final: "regional final",
+  masters_qf: "Masters QF",
+  masters_sf: "Masters semi",
+  masters_final: "MASTERS FINAL",
+  champ_qf: "Champions QF",
+  champ_sf: "Champions semi",
+  champ_final: "CHAMPIONS FINAL",
+};
+const stageLabel = (s) => STAGE_LABELS[s] ?? s;
+
+/* -- season: league · fixtures · playoffs · records --------------------------
+   One workspace replacing the old Standings + Schedule tabs (the old tab ids
+   alias here via TAB_ALIASES). Sub-tab state lives on App.seasonTab; each
+   sub-tab fetches exactly the endpoints its content needs — between them the
+   four cover every call the two old screens made. */
+
+const SEASON_TABS = [
+  { id: "league", label: "League" },
+  { id: "fixtures", label: "Fixtures" },
+  { id: "playoffs", label: "Playoffs" },
+  { id: "records", label: "Records" },
+];
+
+// team id -> region name, from the standings payload (both tiers). Fixtures
+// carry no region field, so team regions are the payload-true source — this
+// also works for roster-pack worlds whose fixture ids embed no region code.
+function teamRegionMap(table) {
+  const of = {};
+  for (const reg of table?.regions ?? []) {
+    for (const r of reg.rows ?? []) of[r.id] = reg.region;
+    for (const r of reg.tier2_rows ?? []) of[r.id] = reg.region;
+  }
+  return of;
+}
+
+async function season(v) {
+  const s = App.state;
+  const sub = App.seasonTab ?? "league";
+  v.appendChild(screenHead("Season", {
+    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+    subtabs: SEASON_TABS,
+    active: sub,
+    onPick: (id) => { App.seasonTab = id; render(); },
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  if (sub === "fixtures") {
+    const [sched, table] = await Promise.all([
+      api("/api/schedule"),
+      api("/api/standings").catch(() => null),
+    ]);
+    seasonFixtures(ws, sched, table);
+  } else if (sub === "playoffs") {
+    const [sched, table] = await Promise.all([
+      api("/api/schedule"),
+      api("/api/standings").catch(() => null),
+    ]);
+    seasonPlayoffs(ws, sched, table);
+  } else if (sub === "records") {
+    const records = await api("/api/records").catch(() => null);
+    seasonRecords(ws, records);
+  } else {
+    const [table, league, power] = await Promise.all([
+      api("/api/standings"),
+      api("/api/league").catch(() => null),
+      api("/api/power").catch(() => null),
+    ]);
+    seasonLeague(ws, table, league, power);
+  }
+}
+
+/* -- Season · League: the tables + this-season context ---------------------- */
+
+function seasonLeague(ws, data, league, power) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  // Regional tables, user's region first (the server orders regions that
+  // way). Ranked tables opt out of the th-sort delegate — the baked "#"
+  // column must stay aligned with the standings order.
+  const mkTable = (rows, cut) => {
+    const t = el("table");
+    t.dataset.nosort = "1";
+    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
+      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
+    const tb = el("tbody");
+    rows.forEach((r, i) => {
+      const outTag = r.eliminated
+        ? ' <span class="pill elim-pill" title="Cannot reach the top-4 playoff cut">OUT</span>'
+        : "";
+      const dynTag = r.dynasty
+        ? ` <span class="pill dynasty-pill" title="Dynasty index — recent-title dominance">${esc(r.dynasty)}</span>`
+        : "";
+      const cls = [r.id === App.state.user_team.id ? "me" : "", r.eliminated ? "elim" : ""]
+        .filter(Boolean)
+        .join(" ");
+      tb.appendChild(el("tr", cls, `
+        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b>${tlink(r.id, r.name)}</b> <span class="pill">${esc(r.tag)}</span>${dynTag}${outTag}</td>
+        <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
+        <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
+        <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
+        <td class="num">${r.reputation}</td>
+        <td class="form-cell">${formSquares(r.recent_form)}</td>`));
+      // The top-4 playoff cutoff line inside the tier-1 table during the
+      // regular season (server sends the cut + phase; rows are ranked).
+      if (cut && i === cut - 1 && i < rows.length - 1) {
+        tb.appendChild(el("tr", "playoff-cut", `<td colspan="9">Playoff cutoff</td>`));
+      }
+    });
+    t.appendChild(tb);
+    return t;
+  };
+
+  for (const lg of data.regions) {
+    const card = el("div", "card");
+    card.innerHTML = `<h2>${esc(lg.region.toUpperCase())} league${lg.is_user ? " — your region" : ""}</h2>`;
+    const cut = data.in_regular_season ? data.playoff_cut : 0;
+    card.appendChild(mkTable(lg.rows, cut));
+    // Challengers underneath: the tier-2 development circuit.
+    if ((lg.tier2_rows ?? []).length) {
+      const h = el("h2", "", `${esc(lg.region.toUpperCase())} Challengers <span class="muted" style="font-weight:400">— the tier-2 development circuit</span>`);
+      h.style.marginTop = "14px";
+      card.appendChild(h);
+      card.appendChild(mkTable(lg.tier2_rows, 0));
+    }
+    main.appendChild(card);
+  }
+
+  /* rail: this-season context — TotW, projection, power, H2H, results. */
 
   // Team of the Week: the best five of the latest completed match week.
   const totw = league?.team_of_week;
@@ -2222,64 +2580,68 @@ async function standings(v) {
     const list = el("div", "es-totw");
     for (const p of totw.players) {
       list.appendChild(el("div", "es-totw-row",
-        `<span class="pill">${p.role}</span>` +
-        `<span class="plink" data-pid="${p.id}">${p.handle}</span>` +
-        `<span class="muted es-totw-team">${p.team}</span>` +
+        `<span class="pill">${esc(p.role)}</span>` +
+        plink(p.id, p.handle) +
+        `<span class="muted es-totw-team">${p.team_id ? tlink(p.team_id, p.team) : esc(p.team)}</span>` +
         `<b class="mono">${p.rating.toFixed(2)}</b>`));
     }
     c.appendChild(list);
-    v.appendChild(c);
+    rail.appendChild(c);
   }
 
-  // Playoff bracket (during the postseason) or a form-hold table projection
-  // (during the regular season).
-  const bracket = league?.bracket || [];
-  if (bracket.length) {
+  // Form-hold projection (regular season only; playoffs live on their tab).
+  if (league?.in_regular_season && (league?.projection || []).length) {
     const c = el("div", "card");
-    c.appendChild(el("h2", "", "Playoff bracket"));
-    const cols = el("div", "es-bracket");
-    for (const round of bracket) {
-      const col = el("div", "es-bracket-col");
-      col.appendChild(el("span", "es-scout-lab muted", round.label));
-      for (const m of round.matches) {
-        const aWon = m.played && m.winner_id === m.team_a_id;
-        const bWon = m.played && m.winner_id === m.team_b_id;
-        col.appendChild(el("div", "es-bracket-m",
-          `<div class="${aWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_a_id}">${m.team_a}</span> <b class="mono">${m.score_a}</b></div>` +
-          `<div class="${bWon ? "bw-win" : m.played ? "bw-out" : ""}"><span class="tlink" data-tid="${m.team_b_id}">${m.team_b}</span> <b class="mono">${m.score_b}</b></div>`));
-      }
-      cols.appendChild(col);
-    }
-    c.appendChild(cols);
-    v.appendChild(c);
-  } else if (league?.in_regular_season && (league?.projection || []).length) {
-    const proj = league.projection;
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Projected finish <span class=\"muted\" style=\"font-weight:400\">— if current form holds</span>"));
+    c.appendChild(el("h2", "", `Projected finish <span class="muted" style="font-weight:400">— if current form holds</span>`));
+    const scroll = el("div", "card-scroll");
     const t = el("table", "es-proj");
-    t.innerHTML = "<thead><tr><th>#</th><th>Team</th><th class=\"num\">W</th><th class=\"num\">Rem</th><th class=\"num\">Proj W</th></tr></thead>";
+    t.dataset.nosort = "1";
+    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">Rem</th><th class="num">Proj W</th></tr></thead>`;
     const tb = el("tbody");
-    for (const r of proj) {
+    for (const r of league.projection) {
       tb.appendChild(el("tr", "",
         `<td class="mono">${r.proj_pos}</td>` +
-        `<td><span class="tlink" data-tid="${r.team_id}">${r.name}</span></td>` +
+        `<td>${tlink(r.team_id, r.name)}</td>` +
         `<td class="num mono">${r.wins}</td>` +
         `<td class="num mono muted">${r.remaining}</td>` +
         `<td class="num mono"><b>${r.proj_wins}</b></td>`));
     }
     t.appendChild(tb);
-    c.appendChild(t);
-    v.appendChild(c);
+    scroll.appendChild(t);
+    c.appendChild(scroll);
+    rail.appendChild(c);
+  }
+
+  // Global pundit power ranking (across regions), with movement vs world rank.
+  const pr = power?.rankings || [];
+  if (pr.length) {
+    const pc = el("div", "card");
+    pc.appendChild(el("h2", "", `Power rankings <span class="muted" style="font-weight:400">— global form book</span>`));
+    const list = el("div", "es-power");
+    for (const r of pr.slice(0, 10)) {
+      const mv = r.movement;
+      const arrow = mv == null ? "" : mv > 0
+        ? `<span class="trend-up">▲${mv}</span>` : mv < 0
+        ? `<span class="trend-down">▼${-mv}</span>` : '<span class="muted">–</span>';
+      list.appendChild(el("div", "es-power-row",
+        `<span class="es-power-rank mono">${r.rank}</span>` +
+        tlink(r.team_id, r.name) +
+        `<span class="muted">${esc((r.region || "").toUpperCase())}</span>` +
+        `<span class="es-power-mv">${arrow}</span>`));
+    }
+    pc.appendChild(list);
+    rail.appendChild(pc);
   }
 
   // Head-to-head matrix: each team's series record vs every other this season.
   const mx = league?.h2h_matrix;
   if (mx && mx.teams.length > 1) {
     const c = el("div", "card");
-    c.appendChild(el("h2", "", "Head-to-head <span class=\"muted\" style=\"font-weight:400\">— series record</span>"));
+    c.appendChild(el("h2", "", `Head-to-head <span class="muted" style="font-weight:400">— series record</span>`));
+    const scroll = el("div", "card-scroll");
     const wrap = el("div", "es-h2hm-wrap");
     const t = el("table", "es-h2hm");
-    const head = mx.teams.map((tm) => `<th title="${tm.name}">${tm.name.slice(0, 3).toUpperCase()}</th>`).join("");
+    const head = mx.teams.map((tm) => `<th title="${esc(tm.name)}">${esc(tm.name.slice(0, 3).toUpperCase())}</th>`).join("");
     t.innerHTML = `<thead><tr><th></th>${head}</tr></thead>`;
     const tb = el("tbody");
     mx.rows.forEach((row, i) => {
@@ -2290,12 +2652,13 @@ async function standings(v) {
         return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
       }).join("");
       tb.appendChild(el("tr", "",
-        `<th class="es-h2hm-row"><span class="tlink" data-tid="${row.team_id}">${mx.teams[i].name.slice(0, 3).toUpperCase()}</span></th>${cells}`));
+        `<th class="es-h2hm-row">${tlink(row.team_id, mx.teams[i].name.slice(0, 3).toUpperCase())}</th>${cells}`));
     });
     t.appendChild(tb);
     wrap.appendChild(t);
-    c.appendChild(wrap);
-    v.appendChild(c);
+    scroll.appendChild(wrap);
+    c.appendChild(scroll);
+    rail.appendChild(c);
   }
 
   // Results archive: recent played fixtures in the region, newest first.
@@ -2303,362 +2666,493 @@ async function standings(v) {
   if (results.length) {
     const c = el("div", "card");
     c.appendChild(el("h2", "", "Recent results"));
+    const scroll = el("div", "card-scroll");
     const list = el("div", "es-results");
     for (const r of results) {
       const aWon = r.winner_id === r.team_a_id;
-      list.appendChild(el("div", "es-result",
+      list.appendChild(el("div", "es-result-line",
         `<span class="muted es-result-wk">W${r.week}</span>` +
-        `<span class="es-result-t ${aWon ? "good" : ""}" ><span class="tlink" data-tid="${r.team_a_id}">${r.team_a}</span></span>` +
+        `<span class="es-result-t ${aWon ? "good" : ""}">${tlink(r.team_a_id, r.team_a)}</span>` +
         `<b class="mono es-result-score">${r.score_a}-${r.score_b}</b>` +
-        `<span class="es-result-t ${!aWon ? "good" : ""}" style="text-align:right"><span class="tlink" data-tid="${r.team_b_id}">${r.team_b}</span></span>`));
+        `<span class="es-result-t ${!aWon ? "good" : ""}" style="text-align:right">${tlink(r.team_b_id, r.team_b)}</span>`));
     }
-    c.appendChild(list);
-    v.appendChild(c);
-  }
-
-  // Global pundit power ranking (across regions), with movement vs world rank.
-  const pr = power?.rankings || [];
-  if (pr.length) {
-    const pc = el("div", "card");
-    pc.appendChild(el("h2", "", "Power rankings <span class=\"muted\" style=\"font-weight:400\">— global form book</span>"));
-    const list = el("div", "es-power");
-    for (const r of pr.slice(0, 10)) {
-      const mv = r.movement;
-      const arrow = mv == null ? "" : mv > 0
-        ? `<span class="trend-up">▲${mv}</span>` : mv < 0
-        ? `<span class="trend-down">▼${-mv}</span>` : '<span class="muted">–</span>';
-      list.appendChild(el("div", "es-power-row",
-        `<span class="es-power-rank mono">${r.rank}</span>` +
-        `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>` +
-        `<span class="muted">${(r.region || "").toUpperCase()}</span>` +
-        `<span class="es-power-mv">${arrow}</span>`));
-    }
-    pc.appendChild(list);
-    v.appendChild(pc);
-  }
-
-  // All-time record book + current dynasties, above the tables.
-  if (records && (records.records?.length || records.dynasties?.length)) {
-    const rc = el("div", "card es-records");
-    rc.appendChild(el("h2", "", "Record book"));
-    if (records.records?.length) {
-      const grid = el("div", "es-rec-grid");
-      for (const r of records.records) {
-        const who = r.team_id
-          ? `<span class="tlink" data-tid="${r.team_id}">${r.name}</span>`
-          : `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>`;
-        grid.appendChild(el("div", "es-rec",
-          `<div class="es-rec-lab muted">${r.label}</div>` +
-          `<div class="es-rec-val">${who} <b class="mono">${r.count}</b></div>`));
-      }
-      rc.appendChild(grid);
-    }
-    if (records.dynasties?.length) {
-      const row = el("div", "es-career-tags");
-      row.appendChild(el("span", "muted es-career-lab", "Dynasties"));
-      for (const d of records.dynasties) {
-        row.appendChild(el("span", "pill dynasty-pill",
-          `<span class="tlink" data-tid="${d.team_id}">${d.name}</span> · ${d.label || "Rising"}`));
-      }
-      rc.appendChild(row);
-    }
-    if (records.parity && records.parity.titles > 0) {
-      const p = records.parity;
-      rc.appendChild(el("div", "muted es-parity",
-        `Parity: ${p.distinct_champions} distinct champion${p.distinct_champions !== 1 ? "s" : ""} ` +
-        `across ${p.titles} title${p.titles !== 1 ? "s" : ""} · ` +
-        `top team's share ${Math.round(p.top_share * 100)}%`));
-    }
-    v.appendChild(rc);
-  }
-
-  for (const league of data.regions) {
-    const card = el("div", "card");
-    card.innerHTML = `<h2>${league.region.toUpperCase()} league${league.is_user ? " — your region" : ""}</h2>`;
-    const t = el("table");
-    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
-      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
-    const tb = el("tbody");
-    const rowFor = (r, i) => {
-      const outTag = r.eliminated
-        ? ' <span class="pill elim-pill" title="Cannot reach the top-4 playoff cut">OUT</span>'
-        : "";
-      const dynTag = r.dynasty
-        ? ` <span class="pill dynasty-pill" title="Dynasty index — recent-title dominance">${r.dynasty}</span>`
-        : "";
-      const cls = [r.id === App.state.user_team.id ? "me" : "", r.eliminated ? "elim" : ""]
-        .filter(Boolean)
-        .join(" ");
-      const tr = el("tr", cls, `
-        <td>${i + 1}</td><td><img class="logo" src="${r.logo}" alt=""><b class="tlink" data-tid="${r.id}">${r.name}</b> <span class="pill">${r.tag}</span>${dynTag}${outTag}</td>
-        <td class="num">${r.wins}</td><td class="num">${r.losses}</td>
-        <td class="num">${r.rounds_won}</td><td class="num">${r.rounds_lost}</td>
-        <td class="num">${r.diff > 0 ? "+" : ""}${r.diff}</td>
-        <td class="num">${r.reputation}</td>
-        <td class="form-cell">${formSquares(r.recent_form)}</td>`);
-      tr.style.cursor = "pointer";
-      tr.title = "view roster";
-      tr.onclick = () => {
-        App.rosterTeam = r.id === App.state.user_team.id ? null : r.id;
-        document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
-        document.querySelector('[data-tab="roster"]').classList.add("active");
-        App.tab = "roster";
-        render();
-      };
-      return tr;
-    };
-    // Draw the top-4 playoff cutoff line inside the tier-1 table during the
-    // regular season (server sends the cut + phase; rows are ranked).
-    const cut = data.in_regular_season ? data.playoff_cut : 0;
-    league.rows.forEach((r, i) => {
-      tb.appendChild(rowFor(r, i));
-      if (cut && i === cut - 1 && i < league.rows.length - 1) {
-        tb.appendChild(
-          el("tr", "playoff-cut", `<td colspan="9">Playoff cutoff</td>`)
-        );
-      }
-    });
-    t.appendChild(tb);
-    card.appendChild(t);
-
-    // Challengers underneath: the development circuit scouts live in.
-    if ((league.tier2_rows ?? []).length) {
-      const h = el("h2", "", `${league.region.toUpperCase()} Challengers <span class="muted" style="font-weight:400">— tier 2, click through to scout</span>`);
-      h.style.marginTop = "14px";
-      card.appendChild(h);
-      const t2 = el("table");
-      t2.innerHTML = t.querySelector("thead").outerHTML;
-      const tb2 = el("tbody");
-      league.tier2_rows.forEach((r, i) => tb2.appendChild(rowFor(r, i)));
-      t2.appendChild(tb2);
-      card.appendChild(t2);
-    }
-    v.appendChild(card);
+    scroll.appendChild(list);
+    c.appendChild(scroll);
+    rail.appendChild(c);
   }
 }
 
-const REGION_CODES = { am: "Americas", em: "EMEA", pa: "Pacific", ch: "China" };
-const STAGE_LABELS = {
-  regular: "league",
-  semi: "semifinal",
-  final: "regional final",
-  masters_qf: "Masters QF",
-  masters_sf: "Masters semi",
-  masters_final: "MASTERS FINAL",
-};
-const stageLabel = (s) => STAGE_LABELS[s] ?? s;
+/* -- Season · Fixtures: the week-by-week fixture browser -------------------- */
 
-function bracketNode(f) {
-  if (!f) return el("div", "bracket-node muted", "TBD");
-  const line = (tid, name) => {
-    const winner = f.played && f.winner_id === tid;
-    const score = f.played
-      ? (tid === f.team_a ? f.map_score[0] : f.map_score[1])
-      : "";
-    return `<div class="bracket-team ${winner ? "w" : ""}">
-      <span>${name}</span><b class="mono">${score}</b></div>`;
+function seasonFixtures(ws, sched, table) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  const myId = App.state.user_team.id;
+  const regionOf = teamRegionMap(table);
+  const filter = App.seasonFixFilter ?? "mine";
+  const cw = sched.current_week;
+
+  // One fixture line: stage pill · teams · score · per-map chips (the Replay
+  // button renders ONLY where the payload says a replay survives — replays
+  // are kept for the latest week only, so old rows get plain score chips).
+  const appendFixture = (box, f) => {
+    const mine = f.team_a === myId || f.team_b === myId;
+    let score = "";
+    if (f.played) {
+      score = f.best_of > 1
+        ? `<b class="mono">${f.map_score[0]}–${f.map_score[1]}</b>`
+        : f.results.length
+          ? `<b class="mono">${f.results[0].score_a}–${f.results[0].score_b}</b>`
+          : "";
+    }
+    const line = el("div", "row", `
+      <span class="pill">${esc(stageLabel(f.stage))}</span>
+      <span style="min-width:340px">${mine ? "<b>" : ""}${tlink(f.team_a, f.team_a_name)} vs ${tlink(f.team_b, f.team_b_name)}${mine ? "</b>" : ""}</span>
+      ${score}`);
+    for (let i = 0; i < f.results.length; i++) {
+      const r = f.results[i];
+      if (r.has_replay) {
+        const b = el("button", "btn btn-sm",
+          `${mapThumb(r.map_id, "sm")}${esc(r.map_id)} ${r.score_a}–${r.score_b} ▶`);
+        b.title = "watch replay";
+        b.onclick = () => openReplay(f.id, i);
+        line.appendChild(b);
+      } else {
+        line.appendChild(el("span", "pill",
+          `${mapThumb(r.map_id, "sm")}${esc(r.map_id)} ${r.score_a}–${r.score_b}`));
+      }
+    }
+    // Player of the Match — the series' standout box-score line (server
+    // derives it; plink opens the profile overlay).
+    if (f.played && f.potm) {
+      const p = f.potm;
+      line.appendChild(el("span", "potm-chip",
+        `<span class="potm-star">★</span> POTM ` +
+        `<b>${plink(p.player_id, p.handle)}</b> ` +
+        `<span class="muted">${p.rating.toFixed(2)} · ${p.kills}K</span>`));
+    }
+    box.appendChild(line);
+    if ((f.veto ?? []).length) {
+      const vetoRow = el("div", "veto-row");
+      vetoRow.appendChild(el("span", "muted", "veto:"));
+      for (const entry of f.veto) {
+        const mapId = entry.trim().split(" ").pop();
+        vetoRow.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${esc(entry)}`));
+      }
+      box.appendChild(vetoRow);
+    }
   };
-  const n = el("div", "bracket-node",
-    line(f.team_a, f.team_a_name) + line(f.team_b, f.team_b_name));
-  if (f.played) {
-    n.style.cursor = "pointer";
-    n.title = "see schedule for maps";
-  }
-  return n;
-}
 
-function bracketCard(title, columns) {
-  // columns: list of fixture-lists, left to right (TBD-padded).
-  if (!columns[0]?.some(Boolean)) return null;
-  const card = el("div", "card");
-  card.innerHTML = `<h2>${title}</h2>`;
-  const wrap = el("div", "bracket");
-  for (const colFixtures of columns) {
-    const col = el("div", "bracket-col");
-    for (const f of colFixtures) col.appendChild(bracketNode(f));
-    wrap.appendChild(col);
-  }
-  card.appendChild(wrap);
-  return card;
-}
+  // Filter chips: My matches / All / one per region in the league. Regions
+  // come from the standings payload's team->region map, not fixture ids.
+  const userRegion = regionOf[myId] || App.state.user_team.region || "";
+  const regions = [...new Set(
+    sched.fixtures.flatMap((f) => [regionOf[f.team_a], regionOf[f.team_b]]).filter(Boolean))];
+  regions.sort((a, b) => (a === userRegion ? -1 : b === userRegion ? 1 : a < b ? -1 : 1));
+  const filterCard = el("div", "card");
+  const chips = el("div", "row");
+  const mkChip = (id, label) => {
+    const b = el("button", "btn btn-sm" + (filter === id ? " active" : ""), esc(label));
+    b.onclick = () => { App.seasonFixFilter = id; render(); };
+    chips.appendChild(b);
+  };
+  mkChip("mine", "My matches");
+  mkChip("all", "All");
+  for (const r of regions) mkChip("r:" + r, cap(r));
+  filterCard.appendChild(chips);
+  main.appendChild(filterCard);
 
-function regionCodeOf(fixtureId) {
-  const m = fixtureId.match(/^s\d+(am|em|pa|ch)(semi|final)/);
-  return m ? m[1] : null;
-}
+  const matches = (f) =>
+    filter === "all" ? true
+      : filter === "mine" ? f.team_a === myId || f.team_b === myId
+      : regionOf[f.team_a] === filter.slice(2) || regionOf[f.team_b] === filter.slice(2);
+  const shown = sched.fixtures.filter(matches);
 
-async function schedule(v) {
-  const data = await api("/api/schedule");
-
-  // Masters bracket (QF -> SF -> Final), once it exists.
-  const mqf = data.fixtures.filter((f) => f.stage === "masters_qf");
-  const msf = data.fixtures.filter((f) => f.stage === "masters_sf");
-  const mf = data.fixtures.filter((f) => f.stage === "masters_final");
-  if (mqf.length) {
-    const card = bracketCard("MASTERS — world championship", [
-      mqf, msf.length ? msf : [null, null], mf.length ? mf : [null],
-    ]);
-    if (card) v.appendChild(card);
-  }
-
-  // One regional bracket per league, user's region first.
-  const regional = data.fixtures.filter((f) => regionCodeOf(f.id));
-  const codes = [...new Set(regional.map((f) => regionCodeOf(f.id)))];
-  const userRegion = (App.state.user_team.region || "").slice(0, 2);
-  codes.sort((a, b) => (a === userRegion ? -1 : b === userRegion ? 1 : a < b ? -1 : 1));
-  for (const code of codes) {
-    const rf = regional.filter((f) => regionCodeOf(f.id) === code);
-    const semis = rf.filter((f) => f.stage === "semi");
-    const final = rf.filter((f) => f.stage === "final");
-    const card = bracketCard(
-      `${REGION_CODES[code] ?? code} playoffs`,
-      [semis, final.length ? final : [null]],
-    );
-    if (card) v.appendChild(card);
-  }
   const byWeek = new Map();
-  for (const f of data.fixtures) {
+  for (const f of shown) {
     if (!byWeek.has(f.week)) byWeek.set(f.week, []);
     byWeek.get(f.week).push(f);
   }
-  for (const [week, fixtures] of byWeek) {
+  const weeks = [...byWeek.keys()].sort((a, b) => a - b);
+  const upcoming = weeks.filter((w) => w >= cw); // current week first, ascending
+  const past = weeks.filter((w) => w < cw).reverse(); // newest played first
+
+  if (!weeks.length) {
+    main.appendChild(el("div", "card", `<p class="muted">No fixtures match this filter.</p>`));
+  }
+  for (const w of upcoming) {
     const card = el("div", "card");
-    const tag = week === data.current_week ? " — this week" : "";
-    card.innerHTML = `<h2>Week ${week}${tag}</h2>`;
-    for (const f of fixtures) {
-      const mine = [f.team_a, f.team_b].includes(App.state.user_team.id);
-      const line = el("div", "row", "");
-      let score = "";
-      if (f.played) {
-        score = f.best_of > 1
-          ? `<b class="mono">${f.map_score[0]}–${f.map_score[1]}</b>`
-          : `<b class="mono">${f.results[0].score_a}–${f.results[0].score_b}</b>`;
-      }
-      line.innerHTML = `
-        <span class="pill">${stageLabel(f.stage)}</span>
-        <span style="min-width:340px">${mine ? "<b>" : ""}<span class="tlink" data-tid="${f.team_a}">${f.team_a_name}</span> vs <span class="tlink" data-tid="${f.team_b}">${f.team_b_name}</span>${mine ? "</b>" : ""}</span>
-        ${score}`;
-      for (let i = 0; i < f.results.length; i++) {
-        const r = f.results[i];
-        const b = el(
-          "button", "btn btn-sm",
-          `${mapThumb(r.map_id, "sm")}${r.map_id} ${r.score_a}–${r.score_b}${r.has_replay ? " ▶" : ""}`
-        );
-        b.disabled = !r.has_replay;
-        b.title = r.has_replay ? "watch replay" : "replay only kept for the latest week";
-        b.onclick = () => openReplay(f.id, i);
-        line.appendChild(b);
-      }
-      // Player of the Match — the series' standout box-score line (server
-      // derives it; .plink/data-pid opens the profile overlay).
-      if (f.played && f.potm) {
-        const p = f.potm;
-        line.appendChild(
-          el(
-            "span",
-            "potm-chip",
-            `<span class="potm-star">★</span> POTM ` +
-              `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ` +
-              `<span class="muted">${p.rating.toFixed(2)} · ${p.kills}K</span>`
-          )
-        );
-      }
-      card.appendChild(line);
-      if (f.veto.length) {
-        const vetoRow = el("div", "veto-row");
-        vetoRow.appendChild(el("span", "muted", "veto:"));
-        for (const entry of f.veto) {
-          const mapId = entry.trim().split(" ").pop();
-          vetoRow.appendChild(el("span", "veto-chip", `${mapThumb(mapId, "sm")}${entry}`));
-        }
-        card.appendChild(vetoRow);
-      }
+    card.innerHTML = `<h2>Week ${w}${w === cw ? " — this week" : ""}</h2>`;
+    for (const f of byWeek.get(w)) appendFixture(card, f);
+    main.appendChild(card);
+  }
+  if (past.length) {
+    const wrap = el("details", "card");
+    const sum = el("summary");
+    sum.appendChild(el("h2", "", `Played weeks <span class="muted" style="font-weight:400">— ${past.length} week${past.length > 1 ? "s" : ""}</span>`));
+    wrap.appendChild(sum);
+    past.forEach((w, i) => {
+      const d = el("details");
+      d.open = i === 0; // latest played week open
+      d.appendChild(el("summary", "", `<b>Week ${w}</b> <span class="muted">· ${byWeek.get(w).length} match${byWeek.get(w).length > 1 ? "es" : ""}</span>`));
+      for (const f of byWeek.get(w)) appendFixture(d, f);
+      wrap.appendChild(d);
+    });
+    main.appendChild(wrap);
+  }
+
+  /* rail: your next fixture + this week across the league. */
+  const tw = el("div", "card");
+  tw.appendChild(el("h2", "", "This week"));
+  const fix = App.state.next_fixture;
+  if (fix) {
+    const oppId = fix.team_a === myId ? fix.team_b : fix.team_a;
+    const oppName = fix.team_a === myId ? fix.team_b_name : fix.team_a_name;
+    tw.appendChild(el("div", "row",
+      `<span class="pill">W${fix.week}</span> <b>vs ${tlink(oppId, oppName)}</b> ` +
+      `<span class="muted">Bo${fix.best_of} · ${esc(stageLabel(fix.stage))}</span>`));
+  } else {
+    tw.appendChild(el("p", "muted", "No fixture scheduled for you."));
+  }
+  const thisWeek = sched.fixtures.filter((f) => f.week === cw);
+  if (thisWeek.length) {
+    tw.appendChild(el("span", "es-scout-lab muted", "Across the league"));
+    const scroll = el("div", "card-scroll");
+    const list = el("div", "es-results");
+    for (const f of thisWeek) {
+      const scoreTxt = !f.played ? "vs"
+        : f.best_of > 1 ? `${f.map_score[0]}–${f.map_score[1]}`
+        : f.results.length ? `${f.results[0].score_a}–${f.results[0].score_b}` : "—";
+      const aWon = f.played && f.winner_id === f.team_a;
+      const bWon = f.played && f.winner_id === f.team_b;
+      list.appendChild(el("div", "es-result-line",
+        `<span class="muted es-result-wk">${esc(stageLabel(f.stage)).slice(0, 6)}</span>` +
+        `<span class="es-result-t ${aWon ? "good" : ""}">${tlink(f.team_a, f.team_a_name)}</span>` +
+        `<b class="mono es-result-score">${scoreTxt}</b>` +
+        `<span class="es-result-t ${bWon ? "good" : ""}" style="text-align:right">${tlink(f.team_b, f.team_b_name)}</span>`));
     }
-    v.appendChild(card);
+    scroll.appendChild(list);
+    tw.appendChild(scroll);
+  }
+  rail.appendChild(tw);
+}
+
+/* -- Season · Playoffs: every bracket through ONE renderer ------------------- */
+
+// The one bracket renderer. rounds = [{label, matches: [m|null, ...]}] where
+// m = {team_a_id, team_a, score_a, team_b_id, team_b, score_b, played,
+// winner_id} and null renders a TBD slot.
+function esBracket(rounds) {
+  const cols = el("div", "es-bracket");
+  for (const round of rounds) {
+    const col = el("div", "es-bracket-col");
+    col.appendChild(el("span", "es-scout-lab muted", esc(round.label)));
+    for (const m of round.matches) {
+      if (!m) { col.appendChild(el("div", "es-bracket-m muted", "TBD")); continue; }
+      const aWon = m.played && m.winner_id === m.team_a_id;
+      const bWon = m.played && m.winner_id === m.team_b_id;
+      col.appendChild(el("div", "es-bracket-m",
+        `<div class="${aWon ? "bw-win" : m.played ? "bw-out" : ""}">${tlink(m.team_a_id, m.team_a)} <b class="mono">${m.score_a ?? ""}</b></div>` +
+        `<div class="${bWon ? "bw-win" : m.played ? "bw-out" : ""}">${tlink(m.team_b_id, m.team_b)} <b class="mono">${m.score_b ?? ""}</b></div>`));
+    }
+    cols.appendChild(col);
+  }
+  return cols;
+}
+
+// Adapt a schedule fixture into the bracket-match shape above.
+const bracketMatch = (f) => f && {
+  team_a_id: f.team_a, team_a: f.team_a_name,
+  team_b_id: f.team_b, team_b: f.team_b_name,
+  score_a: f.played ? f.map_score[0] : "",
+  score_b: f.played ? f.map_score[1] : "",
+  played: f.played, winner_id: f.winner_id,
+};
+
+function seasonPlayoffs(ws, sched, table) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  const myId = App.state.user_team.id;
+  const regionOf = teamRegionMap(table);
+  const stageF = (st) => sched.fixtures.filter((f) => f.stage === st);
+  const pad = (arr, n) => (arr.length ? arr : Array(n).fill(null));
+  const bracketCardEl = (title, rounds) => {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", title));
+    c.appendChild(esBracket(rounds));
+    return c;
+  };
+
+  // Regional playoffs, user's region first (regional playoff fixtures pair
+  // teams of one region, so team_a's region names the bracket).
+  const semis = stageF("semi");
+  const finals = stageF("final");
+  const userRegion = regionOf[myId] || App.state.user_team.region || "";
+  const regions = [...new Set([...semis, ...finals].map((f) => regionOf[f.team_a]).filter(Boolean))];
+  regions.sort((a, b) => (a === userRegion ? -1 : b === userRegion ? 1 : a < b ? -1 : 1));
+  for (const r of regions) {
+    const rs = semis.filter((f) => regionOf[f.team_a] === r);
+    const rf = finals.filter((f) => regionOf[f.team_a] === r);
+    main.appendChild(bracketCardEl(`${esc(cap(r))} playoffs`, [
+      { label: "Semifinals", matches: pad(rs.map(bracketMatch), 2) },
+      { label: "Final", matches: pad(rf.map(bracketMatch), 1) },
+    ]));
+  }
+
+  // Masters — the mid-season international (QF -> SF -> Final).
+  const mqf = stageF("masters_qf");
+  if (mqf.length) {
+    main.appendChild(bracketCardEl("Masters — world championship", [
+      { label: "Quarterfinals", matches: mqf.map(bracketMatch) },
+      { label: "Semifinals", matches: pad(stageF("masters_sf").map(bracketMatch), 2) },
+      { label: "Final", matches: pad(stageF("masters_final").map(bracketMatch), 1) },
+    ]));
+  }
+
+  // Champions — the season finale (QF -> SF -> Final).
+  const cqf = stageF("champ_qf");
+  if (cqf.length) {
+    main.appendChild(bracketCardEl("Champions — season finale", [
+      { label: "Quarterfinals", matches: cqf.map(bracketMatch) },
+      { label: "Semifinals", matches: pad(stageF("champ_sf").map(bracketMatch), 2) },
+      { label: "Final", matches: pad(stageF("champ_final").map(bracketMatch), 1) },
+    ]));
+  }
+
+  // Pre-playoffs: no bracket fixtures exist yet — say when they will.
+  if (!semis.length && !mqf.length && !cqf.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Playoffs"));
+    const regWeeks = sched.fixtures.filter((f) => f.stage === "regular").map((f) => f.week);
+    const lastReg = regWeeks.length ? Math.max(...regWeeks) : 0;
+    const cut = table?.playoff_cut;
+    c.appendChild(el("p", "muted", lastReg
+      ? `Playoffs lock at W${lastReg}${cut ? ` — the top ${cut} in each region advance` : ""}. The projected finish on the League tab shows who's in the hunt.`
+      : "Playoffs begin after the regular season."));
+    main.appendChild(c);
+  }
+
+  // Champions history — every crowned season, newest first.
+  const champs = App.state.champions ?? [];
+  const hc = el("div", "card");
+  hc.appendChild(el("h2", "", "Champions history"));
+  if (champs.length) {
+    const scroll = el("div", "card-scroll");
+    for (const c of [...champs].reverse()) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">S${c.season}</span> <b>${tlink(c.team_id, c.team_name)}</b>`));
+    }
+    hc.appendChild(scroll);
+  } else {
+    hc.appendChild(el("p", "muted", "No champion crowned yet."));
+  }
+  rail.appendChild(hc);
+}
+
+/* -- Season · Records: the all-time book -------------------------------------- */
+
+function seasonRecords(ws, records) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  const rc = el("div", "card es-records");
+  rc.appendChild(el("h2", "", "Record book"));
+  if (records?.records?.length) {
+    const grid = el("div", "es-rec-grid");
+    for (const r of records.records) {
+      const who = r.team_id ? tlink(r.team_id, r.name) : plink(r.player_id, r.handle);
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${esc(r.label)}</div>` +
+        `<div class="es-rec-val">${who} <b class="mono">${r.count}</b></div>`));
+    }
+    rc.appendChild(grid);
+  } else {
+    rc.appendChild(el("p", "muted", "No records yet — history is written one season at a time."));
+  }
+  main.appendChild(rc);
+
+  if (records?.dynasties?.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Dynasties"));
+    const row = el("div", "es-career-tags");
+    for (const d of records.dynasties) {
+      row.appendChild(el("span", "pill dynasty-pill",
+        `${tlink(d.team_id, d.name)} · ${esc(d.label || "Rising")}`));
+    }
+    c.appendChild(row);
+    rail.appendChild(c);
+  }
+
+  if (records?.parity && records.parity.titles > 0) {
+    const p = records.parity;
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Parity"));
+    c.appendChild(el("div", "muted es-parity",
+      `${p.distinct_champions} distinct champion${p.distinct_champions !== 1 ? "s" : ""} ` +
+      `across ${p.titles} title${p.titles !== 1 ? "s" : ""} · ` +
+      `top team's share ${Math.round(p.top_share * 100)}%`));
+    rail.appendChild(c);
   }
 }
 
+// Segmented [Players | Staff] shared by both market desks; each desk builds
+// its own screen-head so the head can carry desk-specific right-side extras
+// (the players desk adds a signing-headroom chip).
+const MARKET_TABS = [
+  { id: "players", label: "Players" },
+  { id: "staff", label: "Staff" },
+];
+
 async function market(v) {
-  // Two desks: players (free agents + transfers) and backroom staff.
+  // Two desks: players (free agents + transfers) and backroom staff. Thin
+  // dispatcher — the sub-screen owns the head + workspace.
   const sub = App.marketTab ?? "players";
-  const tabs = el("div", "row subtabs");
-  for (const [key, label] of [["players", "Players"], ["staff", "Staff"]]) {
-    const b = el("button", "btn btn-sm" + (sub === key ? " active" : ""), label);
-    b.onclick = () => { App.marketTab = key; render(); };
-    tabs.appendChild(b);
-  }
-  v.appendChild(tabs);
   if (sub === "staff") return marketStaff(v);
   return marketPlayers(v);
 }
 
 async function marketStaff(v) {
   const data = await api("/api/staff");
-  const hiredCard = el("div", "card");
-  hiredCard.innerHTML = `<h2>Your backroom — ${money(data.weekly_cost)}/wk</h2>
-    <p class="muted">Analytics department: tier ${data.analytics.tier} — ${data.analytics.label}${
-      data.analytics.next_unlock ? ` · next unlock: ${data.analytics.next_unlock}` : ""
-    }</p>`;
+
+  v.appendChild(screenHead("Market", {
+    subtabs: MARKET_TABS,
+    active: "staff",
+    onPick: (id) => { App.marketTab = id; render(); },
+  }));
+
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  /* -- main ws-8: the free-agent staff pool, filtered by role -------------- */
+  const poolCard = el("div", "card");
+  poolCard.appendChild(el("h2", "",
+    `Staff market <span class="muted" style="font-weight:400">— ${data.pool.length} free agents</span>`));
+  poolCard.appendChild(el("p", "muted",
+    `One shared pool — in a shared world, rival managers hire from the same market. ` +
+    `Hiring replaces your current ${esc(data.roles.join("/"))} in that role (they return ` +
+    `to the pool). Click a name for the full profile.`));
+
+  const rolePlural = { coach: "Coaches", analyst: "Analysts", physio: "Physios" };
+  // Role filter chips (client-only): "All" plus one per role. Repaints the
+  // tables area in place — no re-fetch, tables keep their sortable headers.
+  let activeRole = "all";
+  const chipRow = el("div", "seg");
+  const chips = [];
+  const mkChip = (id, label) => {
+    const b = el("button", "seg-btn" + (activeRole === id ? " on" : ""), label);
+    b.onclick = () => { activeRole = id; paint(); };
+    chips.push([id, b]);
+    chipRow.appendChild(b);
+  };
+  mkChip("all", "All");
+  for (const role of data.roles) mkChip(role, rolePlural[role] ?? cap(role));
+  poolCard.appendChild(chipRow);
+
+  const tablesBox = el("div", "");
+  const paint = () => {
+    for (const [id, b] of chips) b.classList.toggle("on", id === activeRole);
+    tablesBox.innerHTML = "";
+    for (const role of data.roles) {
+      if (activeRole !== "all" && role !== activeRole) continue;
+      const members = data.pool.filter((m) => m.role === role);
+      if (!members.length) continue;
+      tablesBox.appendChild(el("h2", "",
+        `${rolePlural[role] ?? cap(role)} <span class="muted" style="font-weight:400">— ${esc(data.blurbs[role])}</span>`));
+      const t = el("table");
+      t.innerHTML = `<thead><tr><th>Name</th><th class="num">Age</th><th>Region</th>
+        <th>Specialty</th><th>Quality</th><th class="num">Salary</th>
+        <th class="num">Exp</th><th></th></tr></thead>`;
+      const tb = el("tbody");
+      for (const m of members) {
+        const tr = el("tr", "", `
+          <td><b>${slink(m.id, m.name)}</b>${
+            (m.titles ?? []).length ? ` <span class="pill" title="${esc(m.titles.join(", "))}">🏆 ${m.titles.length}</span>` : ""
+          }</td>
+          <td class="num">${m.age}</td>
+          <td>${esc(m.region || "—")}</td>
+          <td title="${esc(m.specialty_blurb || "")}"><span class="pill">${esc(m.specialty || "—")}</span></td>
+          <td>${bar(m.quality)}</td>
+          <td class="num">${money(m.salary)}/wk</td>
+          <td class="num">${m.seasons_experience}s</td>
+          <td><button class="btn btn-sm">Hire</button></td>`);
+        tr.querySelector("button").onclick = async (e) => {
+          e.stopPropagation();
+          const r = await api("/api/actions/hire_staff", { candidate_id: m.id });
+          toast(r.message); refresh(); render();
+        };
+        tb.appendChild(tr);
+      }
+      t.appendChild(tb);
+      const scroll = el("div", "table-scroll");
+      scroll.appendChild(t);
+      tablesBox.appendChild(scroll);
+    }
+    if (!tablesBox.childElementCount) tablesBox.appendChild(el("p", "muted", "No free agents in this role."));
+  };
+  paint();
+  poolCard.appendChild(tablesBox);
+  main.appendChild(poolCard);
+
+  /* -- rail ws-4: current backroom + analytics-tier ladder ----------------- */
+  const backroom = el("div", "card");
+  backroom.appendChild(el("h2", "",
+    `Your backroom <span class="muted" style="font-weight:400">— ${money(data.weekly_cost)}/wk</span>`));
   for (const role of data.roles) {
-    const row = el("div", "row", "");
     const hired = data.hired[role];
-    const head = `<span style="min-width:340px"><span class="pill">${role}</span> `;
+    const block = el("div", "");
     if (hired) {
-      const fx = (hired.effects || []).map((e) => `<span class="pill obj good staff-fx">${e}</span>`).join(" ");
-      row.innerHTML = `${head}<b class="slink" data-sid="${hired.id}">${hired.name}</b>
-        <span class="muted">q${Math.round(hired.quality)} · ${hired.specialty || "—"} ·
-        ${money(hired.salary)}/wk</span> ${fx}</span>`;
+      const row = el("div", "entity",
+        `<span class="pill">${esc(role)}</span> <span class="entity-name"><b>${slink(hired.id, hired.name)}</b></span>`);
       const rel = el("button", "btn btn-sm", "Release");
+      rel.style.marginLeft = "auto";
       rel.onclick = async () => {
         const r = await api("/api/actions/release_staff", { role });
         toast(r.message); render();
       };
       row.appendChild(rel);
+      block.appendChild(row);
+      block.appendChild(el("div", "muted",
+        `q${Math.round(hired.quality)} · ${esc(hired.specialty || "—")} · ${money(hired.salary)}/wk`));
+      const fx = (hired.effects || []);
+      if (fx.length) {
+        block.appendChild(el("div", "",
+          fx.map((e) => `<span class="chip tone-good">${esc(e)}</span>`).join(" ")));
+      }
     } else {
-      row.innerHTML = `${head}<span class="muted">vacant — ${data.blurbs[role]}</span></span>`;
+      block.appendChild(el("div", "entity",
+        `<span class="pill">${esc(role)}</span> <span class="entity-meta">vacant</span>`));
+      block.appendChild(el("div", "muted", esc(data.blurbs[role])));
     }
-    hiredCard.appendChild(row);
+    backroom.appendChild(block);
   }
-  v.appendChild(hiredCard);
+  rail.appendChild(backroom);
 
-  const poolCard = el("div", "card");
-  poolCard.innerHTML = `<h2>Staff market (${data.pool.length} free agents)</h2>
-    <p class="muted">One shared pool — in a shared world, rival managers hire from the
-    same market. Hiring replaces your current ${data.roles.join("/")} in that role
-    (they return to the pool). Click a name for the full profile.</p>`;
-  const rolePlural = { coach: "Coaches", analyst: "Analysts", physio: "Physios" };
-  for (const role of data.roles) {
-    const members = data.pool.filter((m) => m.role === role);
-    if (!members.length) continue;
-    poolCard.appendChild(el("h2", "", `${rolePlural[role] ?? cap(role)} <span class="muted" style="font-weight:400">— ${data.blurbs[role]}</span>`));
-    const t = el("table");
-    t.innerHTML = `<thead><tr><th>Name</th><th class="num">Age</th><th>Region</th>
-      <th>Specialty</th><th>Quality</th><th class="num">Salary</th>
-      <th class="num">Exp</th><th></th></tr></thead>`;
-    const tb = el("tbody");
-    for (const m of members) {
-      const tr = el("tr", "", `
-        <td><b class="slink" data-sid="${m.id}">${m.name}</b>${
-          (m.titles ?? []).length ? ` <span class="pill" title="${m.titles.join(", ")}">🏆 ${m.titles.length}</span>` : ""
-        }</td>
-        <td class="num">${m.age}</td>
-        <td>${m.region || "—"}</td>
-        <td title="${m.specialty_blurb || ""}"><span class="pill">${m.specialty || "—"}</span></td>
-        <td>${bar(m.quality)}</td>
-        <td class="num">${money(m.salary)}/wk</td>
-        <td class="num">${m.seasons_experience}s</td>
-        <td><button class="btn btn-sm">Hire</button></td>`);
-      tr.querySelector("button").onclick = async (e) => {
-        e.stopPropagation();
-        const r = await api("/api/actions/hire_staff", { candidate_id: m.id });
-        toast(r.message); refresh(); render();
-      };
-      tb.appendChild(tr);
-    }
-    t.appendChild(tb);
-    poolCard.appendChild(t);
+  // Analytics-tier ladder: how deep the stat views go, and what unlocks next.
+  const an = data.analytics || {};
+  if (an.tier != null) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Analytics department"));
+    c.appendChild(el("div", "rowbar",
+      `<span class="muted">Tier</span>` +
+      `<span class="bar"><i style="width:${Math.max(6, Math.min(100, (an.tier / 3) * 100))}%"></i></span>` +
+      `<span class="rowbar-val">${an.tier}/3</span>`));
+    c.appendChild(el("p", "", `<b>${esc(an.label ?? "—")}</b>`));
+    c.appendChild(el("p", "muted",
+      an.next_unlock ? `Next unlock: ${esc(an.next_unlock)}` : "Deepest stat views unlocked."));
+    rail.appendChild(c);
   }
-  v.appendChild(poolCard);
 }
 
 // Search any player league-wide by handle/real name; act on the result
@@ -2698,10 +3192,12 @@ function playerSearchCard() {
         : p.transfer_ask != null ? money(p.transfer_ask) : "—";
       const club = p.is_free_agent
         ? '<span class="pill">free agent</span>'
-        : `<span class="tlink" data-tid="${p.team_id}">${p.team_name}</span>${p.mine ? ' <span class="pill">yours</span>' : ""}`;
+        : `${tlink(p.team_id, p.team_name)}${p.mine ? ' <span class="pill">yours</span>' : ""}`;
+      const langs = langChips(p.languages);
       const tr = el("tr", "", `
-        <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b>
-          ${p.real_name ? `<span class="muted"> ${p.real_name}</span>` : ""}</td>
+        <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>
+          ${p.real_name ? `<span class="muted"> ${esc(p.real_name)}</span>` : ""}${
+            langs ? `<div class="es-langs">${langs}</div>` : ""}</td>
         <td>${stylePill(p)}</td>
         <td class="num">${p.age}</td>
         <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
@@ -2741,135 +3237,38 @@ function playerSearchCard() {
 
 async function marketPlayers(v) {
   const data = await api("/api/market");
-
-  v.appendChild(playerSearchCard());
-
-  // Squad intelligence: where you're thin, who to sign, contracts running down.
-  const needs = data.squad_needs, targets = data.target_suggestions || [];
-  const cw = data.contract_watch || {};
-  if (needs) {
-    const aid = el("div", "card");
-    aid.appendChild(el("h2", "", "Squad intelligence"));
-    const cols = el("div", "es-aid-cols");
-
-    const c1 = el("div", "es-snap-col");
-    c1.appendChild(el("span", "es-scout-lab muted", "Role balance"));
-    const rolebar = el("div", "es-roles");
-    for (const [role, n] of Object.entries(needs.role_counts || {})) {
-      const gap = (needs.gaps || []).includes(role);
-      rolebar.appendChild(el("span", "pill" + (gap ? " elim-pill" : ""), `${role} ${n}`));
-    }
-    c1.appendChild(rolebar);
-    if (needs.weakest_role) {
-      c1.appendChild(el("div", "muted",
-        `Weakest: ${needs.weakest_role.role} (${needs.weakest_role.quality})`));
-    }
-    cols.appendChild(c1);
-
-    if (targets.length) {
-      const c2 = el("div", "es-snap-col");
-      c2.appendChild(el("span", "es-scout-lab muted", "Suggested signings"));
-      const list = el("div", "es-movers");
-      for (const t of targets) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${t.id}">${t.handle}</span> ` +
-          `<span class="muted">${t.role}</span> <b class="mono">${t.quality}</b>` +
-          (t.affordable ? "" : ' <span class="muted" title="over budget">✗</span>')));
-      }
-      c2.appendChild(list);
-      cols.appendChild(c2);
-    }
-
-    const own = cw.expiring_own || [], watch = cw.market_watch || [];
-    if (own.length || watch.length) {
-      const c3 = el("div", "es-snap-col");
-      c3.appendChild(el("span", "es-scout-lab muted", "Contracts running down"));
-      const list = el("div", "es-movers");
-      for (const p of own) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
-          `<span class="muted">yours · ${p.role}</span> <b class="mono trend-down">${p.weeks_left}w</b>`));
-      }
-      for (const p of watch) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
-          `<span class="muted">${p.team} · ${p.role}</span> <b class="mono">${p.weeks_left}w</b>`));
-      }
-      c3.appendChild(list);
-      cols.appendChild(c3);
-    }
-    const rumors = data.rumors || [];
-    if (rumors.length) {
-      const c4 = el("div", "es-snap-col");
-      c4.appendChild(el("span", "es-scout-lab muted", "Rumour mill"));
-      const list = el("div", "es-rumors");
-      for (const r of rumors) {
-        list.appendChild(el("div", `es-rumor muted ${r.kind}`, r.text));
-      }
-      c4.appendChild(list);
-      cols.appendChild(c4);
-    }
-    aid.appendChild(cols);
-    v.appendChild(aid);
-  }
-
-  // Scouting & budget: the "next big thing" watch, the region's Challengers
-  // form book, and how much wage the org can take on before the runway floor.
-  const wk = data.wonderkids || [], chal = data.challengers || [];
   const head = data.signing_headroom || {};
-  if (wk.length || chal.length || head.balance != null) {
-    const scoutCard = el("div", "card");
-    scoutCard.appendChild(el("h2", "", "Prospects & budget"));
-    const cols = el("div", "es-aid-cols");
 
-    if (wk.length) {
-      const c = el("div", "es-snap-col");
-      c.appendChild(el("span", "es-scout-lab muted", "Wonderkid watch (≤20)"));
-      const list = el("div", "es-movers");
-      for (const p of wk) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
-          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
-          `<b class="mono">${"★".repeat(Math.round(p.potential_stars))}</b>`));
-      }
-      c.appendChild(list);
-      cols.appendChild(c);
-    }
-
-    if (chal.length) {
-      const c = el("div", "es-snap-col");
-      c.appendChild(el("span", "es-scout-lab muted", "Challengers standouts"));
-      const list = el("div", "es-movers");
-      for (const p of chal) {
-        list.appendChild(el("div", "es-mover",
-          `<span class="plink" data-pid="${p.id}">${p.handle}</span> ` +
-          `<span class="muted">${p.age}y · ${p.role} · ${p.team}</span> ` +
-          `<b class="mono">${p.rating.toFixed(2)}</b>`));
-      }
-      c.appendChild(list);
-      cols.appendChild(c);
-    }
-
-    if (head.balance != null) {
-      const c = el("div", "es-snap-col");
-      c.appendChild(el("span", "es-scout-lab muted", "Signing headroom"));
-      const box = el("div", "es-head");
-      const runway = head.runway_weeks == null ? "stable"
-        : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
-      const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
-      box.innerHTML =
-        `<div>Weekly net <b class="mono ${netCls}">${money(head.weekly_net)}</b></div>` +
-        `<div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>` +
-        `<div class="muted">${runway}</div>`;
-      c.appendChild(box);
-      cols.appendChild(c);
-    }
-    scoutCard.appendChild(cols);
-    v.appendChild(scoutCard);
+  // Screen head: [Players | Staff] + an optional signing-headroom chip
+  // (defensive — hidden if the payload doesn't carry finances).
+  const right = [];
+  if (head.balance != null) {
+    const runway = head.runway_weeks == null ? "stable"
+      : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+    const tone = head.runway_weeks === 0 ? "tone-bad"
+      : (head.runway_weeks != null && head.runway_weeks <= 6) ? "tone-warn" : "tone-good";
+    right.push(el("span", `chip ${tone}`,
+      `~${money(head.affordable_wage)}/wk free · ${runway}`));
   }
+  v.appendChild(screenHead("Market", {
+    subtabs: MARKET_TABS,
+    active: "players",
+    onPick: (id) => { App.marketTab = id; render(); },
+    right,
+  }));
+
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  /* -- main ws-8: search card, then the free-agent table (the primary object) */
+  main.appendChild(playerSearchCard());
 
   const card = el("div", "card");
-  card.innerHTML = `<h2>Free agents (${data.free_agents.length})</h2>` +
+  card.innerHTML = `<h2>Free agents <span class="muted" style="font-weight:400">— ${data.free_agents.length}</span></h2>` +
     (data.market_scouting < 1
       ? `<p class="muted">Market coverage ${Math.round(data.market_scouting * 100)}% —
          numbers below are estimates${data.market_scouting === 0 ? "; assign your scout to the market to see ceilings" : ""}.</p>`
@@ -2886,8 +3285,10 @@ async function marketPlayers(v) {
   const locked = data.phase === "playoffs";
   for (const p of data.free_agents) {
     const fogged = p.fog > 0;
+    const langs = langChips(p.languages);
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b class="plink" data-pid="${p.id}">${p.handle}</b></td><td>${stylePill(p)}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${
+        langs ? `<div class="es-langs">${langs}</div>` : ""}</td><td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
       <td>${starsRange(p.scout?.ca_stars)}</td>
@@ -2927,15 +3328,133 @@ async function marketPlayers(v) {
     tr.style.cursor = "pointer";
     tr.onclick = (e) => {
       if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT" || e.target.tagName === "OPTION") return;
-      if (detail) { detail.remove(); detail = null; return; }
+      // isConnected: the sort delegate removes detail rows before sorting,
+      // so a stale reference means "recreate", not "collapse".
+      if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
       detail = el("tr", "", `<td colspan="9">${attrDetail(p)}</td>`);
+      detail.dataset.detail = "1";
       tr.after(detail);
     };
     tb.appendChild(tr);
   }
   t.appendChild(tb);
-  card.appendChild(t);
-  v.appendChild(card);
+  // The wide FA table scrolls horizontally inside its card, staying in the cell.
+  const tScroll = el("div", "table-scroll");
+  tScroll.appendChild(t);
+  card.appendChild(tScroll);
+  main.appendChild(card);
+
+  /* -- rail ws-4: the advisory cards that used to stack above the table ----- */
+  const needs = data.squad_needs, targets = data.target_suggestions || [];
+  const cw = data.contract_watch || {};
+
+  // Squad intelligence: role balance + the thinnest position.
+  if (needs) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Squad intelligence"));
+    const rolebar = el("div", "es-roles");
+    for (const [role, n] of Object.entries(needs.role_counts || {})) {
+      const gap = (needs.gaps || []).includes(role);
+      rolebar.appendChild(el("span", "pill" + (gap ? " elim-pill" : ""), `${role} ${n}`));
+    }
+    c.appendChild(rolebar);
+    if (needs.weakest_role) {
+      c.appendChild(el("p", "muted",
+        `Weakest: ${esc(needs.weakest_role.role)} (${needs.weakest_role.quality})`));
+    }
+    rail.appendChild(c);
+  }
+
+  // Signing headroom: the wage the org can absorb + runway.
+  if (head.balance != null) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Signing headroom"));
+    const box = el("div", "es-head");
+    const runway = head.runway_weeks == null ? "stable"
+      : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+    const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
+    box.innerHTML =
+      `<div>Weekly net <b class="mono ${netCls}">${money(head.weekly_net)}</b></div>` +
+      `<div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>` +
+      `<div class="muted">${runway}</div>`;
+    c.appendChild(box);
+    rail.appendChild(c);
+  }
+
+  // Suggested signings: quick fits for the thin spots.
+  if (targets.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Suggested signings"));
+    for (const tgt of targets) {
+      c.appendChild(el("div", "entity",
+        `<span class="entity-name"><b>${plink(tgt.id, tgt.handle)}</b></span>` +
+        `<span class="entity-meta">${esc(tgt.role)}</span>` +
+        `<b class="entity-num">${tgt.quality}${tgt.affordable ? "" : ' <span class="muted" title="over budget">✗</span>'}</b>`));
+    }
+    rail.appendChild(c);
+  }
+
+  // Contract watch: your expiries (renewal urgency) + rivals nearing free agency.
+  const own = cw.expiring_own || [], watch = cw.market_watch || [];
+  if (own.length || watch.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Contract watch"));
+    for (const p of own) {
+      c.appendChild(el("div", "entity",
+        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
+        `<span class="entity-meta">yours · ${esc(p.role)}</span>` +
+        `<b class="entity-num trend-down">${p.weeks_left}w</b>`));
+    }
+    for (const p of watch) {
+      c.appendChild(el("div", "entity",
+        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
+        `<span class="entity-meta">${tlink(p.team_id, p.team)} · ${esc(p.role)}</span>` +
+        `<b class="entity-num">${p.weeks_left}w</b>`));
+    }
+    rail.appendChild(c);
+  }
+
+  // Wonderkids: the league-wide "next big thing" watch (≤20).
+  const wk = data.wonderkids || [], chal = data.challengers || [];
+  if (wk.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", `Wonderkids <span class="muted" style="font-weight:400">— ≤20</span>`));
+    for (const p of wk) {
+      c.appendChild(el("div", "entity",
+        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
+        `<span class="entity-meta">${p.age}y · ${esc(p.role)} · ${tlink(p.team_id, p.team)}</span>` +
+        `<b class="entity-num stars">${"★".repeat(Math.round(p.potential_stars))}</b>`));
+    }
+    rail.appendChild(c);
+  }
+
+  // Challengers standouts: the region's tier-2 form book.
+  if (chal.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Challengers standouts"));
+    for (const p of chal) {
+      c.appendChild(el("div", "entity",
+        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
+        `<span class="entity-meta">${p.age}y · ${esc(p.role)} · ${tlink(p.team_id, p.team)}</span>` +
+        `<b class="entity-num">${p.rating.toFixed(2)}</b>`));
+    }
+    rail.appendChild(c);
+  }
+
+  // Rumour mill: plain-text whispers (server sends no ids). The long list
+  // scrolls inside its card so the rail stays near one viewport.
+  const rumors = data.rumors || [];
+  if (rumors.length) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", "", "Rumour mill"));
+    const scroll = el("div", "card-scroll");
+    scroll.style.setProperty("--scroll-max", "260px");
+    for (const r of rumors) {
+      scroll.appendChild(el("div", `es-rumor muted ${r.kind}`, esc(r.text)));
+    }
+    c.appendChild(scroll);
+    rail.appendChild(c);
+  }
 }
 
 // Package-deal builder: offer any of my players + cash (either way) for a rival.
@@ -2950,7 +3469,7 @@ async function openOffer(target) {
   const ov = el("div", "overlay");
   const panel = el("div", "panel");
   panel.innerHTML = `<button class="btn btn-sm offer-close" style="float:right">✕</button>
-    <h2>Offer for ${target.handle}</h2>
+    <h2>Offer for ${plink(target.id, target.handle)}</h2>
     <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value —
     but they run <i>their own</i> numbers on your players. A scout who rates your
     guys sees a rich package; one who doesn't will want more cash on top.</p>`;
@@ -3033,7 +3552,7 @@ async function openNegotiation(target) {
   const panel = el("div", "panel");
   const title = neg.kind === "renew" ? "Contract talks" : "Free-agent talks";
   panel.innerHTML = `<button class="btn btn-sm neg-close" style="float:right">✕</button>
-    <h2>${title} — ${neg.handle}</h2>` +
+    <h2>${title} — ${plink(target.id, neg.handle)}</h2>` +
     (neg.kind === "renew"
       ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w left.</p>`
       : "");
@@ -3109,29 +3628,55 @@ function scoutTier(p) {
 
 async function scouting(v) {
   const data = await api("/api/scouting");
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Scouting desk</h2>
-    <p class="muted">One scout, one assignment: cover a <b>team</b> (steady, ~3 weeks),
-    sweep the <b>market</b> (slower, wider), attend a <b>match</b> (one-shot intel on both
-    sides), or build the <b>book on one player</b> (fastest — and it goes deeper: comfort
-    picks, how they play, their mentality, the full verdict).</p>`;
+  const s = App.state;
 
-  // -- current assignment ----------------------------------------------------
+  // Next opponent (from the state payload) powers the "Scout next opponent"
+  // quick-assign — defensive: no fixture (bye/offseason) hides the button.
+  const nf = s && s.next_fixture;
+  const myId = s && s.user_team && s.user_team.id;
+  const nextOppId = nf ? (nf.team_a === myId ? nf.team_b : nf.team_a) : null;
+  const nextOppName = nf ? (nf.team_a === myId ? nf.team_b_name : nf.team_a_name) : null;
+
+  v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
+
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-7 ws-col");
+  const rail = el("div", "ws-5 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  /* -- main ws-7: the scout desk (assignment + active job) ------------------ */
+  const card = el("div", "card");
+  card.appendChild(el("h2", "", "Scout desk"));
+  card.appendChild(el("p", "muted",
+    "One scout, one assignment: cover a team (steady, ~3 weeks), sweep the " +
+    "market (slower, wider), attend a match (one-shot intel on both sides), or " +
+    "build the book on one player (fastest — and it goes deeper: comfort picks, " +
+    "how they play, their mentality, the full verdict)."));
+
+  // Current assignment: the team name LINKS when covering a team (id in scope).
   if (data.target) {
-    const kindLabel = { team: "covering", market: "sweeping", player: "deep-diving", match: "attending" };
-    const status = el("p", "", "");
+    const kindLabel = { team: "Covering", market: "Sweeping", player: "Deep-diving", match: "Attending" };
+    const name = data.target_kind === "team"
+      ? tlink(data.target, data.target_name ?? data.target)
+      : esc(data.target_name ?? data.target);
+    const status = el("p", "");
     status.innerHTML =
-      `<span class="pill good">${kindLabel[data.target_kind] ?? "on"} ${data.target_name ?? data.target}</span> ` +
+      `<span class="chip tone-good">${kindLabel[data.target_kind] ?? "On"}</span> <b>${name}</b> ` +
       (data.target_kind === "match"
-        ? '<span class="muted">intel lands after the match is played</span>'
-        : `<span class="muted">coverage ${Math.round(data.progress * 100)}%` +
+        ? '<span class="muted">— intel lands after the match is played</span>'
+        : `<span class="muted">— coverage ${Math.round(data.progress * 100)}%` +
           (data.target_kind === "player" ? ` · ${scoutTier(data.progress)}` : "") + "</span>");
     card.appendChild(status);
+    if (data.target_kind !== "match") {
+      card.appendChild(el("div", "", bar(Math.round(data.progress * 100))));
+    }
   } else {
     card.appendChild(el("p", "muted", "Nobody is being watched."));
   }
 
-  // -- assignment pickers ------------------------------------------------------
+  // -- assignment pickers ----------------------------------------------------
   const row = el("div", "row");
   const sel = el("select");
   sel.appendChild(el("option", "", "— cover a team / market —"));
@@ -3193,7 +3738,7 @@ async function scouting(v) {
       for (const p of r.results.slice(0, 6)) {
         if (p.mine) continue;
         const b = el("button", "btn btn-sm",
-          `${p.handle} <span class="muted">${p.team_name ?? "free agent"}</span>`);
+          `${esc(p.handle)} <span class="muted">${esc(p.team_name ?? "free agent")}</span>`);
         b.onclick = async () => {
           const res = await api("/api/actions/scout", { player_id: p.id });
           toast(res.message);
@@ -3206,73 +3751,76 @@ async function scouting(v) {
   };
   card.appendChild(prow);
   card.appendChild(pbox);
-  v.appendChild(card);
+  main.appendChild(card);
 
-  // -- player deep-dive: one rich, tiered report ------------------------------
+  /* -- main ws-7: the report(s). CRITICAL FIX — the desk (above) and any
+     report BOTH render; a deep-dive no longer early-returns and hides the
+     team-coverage table. reports[] is single-kind, so it's one or the other. */
   if (data.target_kind === "player" && data.reports.length) {
     const r = data.reports[0];
     const dc = el("div", "card");
-    dc.innerHTML = `<h2>The book on <span class="plink" data-pid="${r.player_id}">${r.handle}</span>
+    dc.innerHTML = `<h2>The book on <b>${plink(r.player_id, r.handle)}</b>
       <span class="muted" style="font-weight:400">— ${scoutTier(data.progress)} (${Math.round(data.progress * 100)}%)</span></h2>`;
     const lines = [];
     const proj = (r.pa_projection ?? []).length === 2
       ? ` <span class="muted" title="A ceiling is a projection, never an exact read — and it keeps moving.">(proj. ${r.pa_projection[0]}–${r.pa_projection[1]})</span>`
       : "";
-    lines.push(`<div><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span>
+    lines.push(`<div><span class="pill">${esc(r.role)}</span> <span class="pill">${esc(r.playstyle)}</span>
       <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}${proj}</div>`);
     if ((r.agent_comfort ?? []).length) {
       lines.push(`<div><b>Comfort picks:</b> ` + r.agent_comfort
-        .map((a) => `<span class="pill">${a.agent_id} ${a.mastery}</span>`).join(" ") + `</div>`);
+        .map((a) => `<span class="pill">${esc(a.agent_id)} ${a.mastery}</span>`).join(" ") + `</div>`);
     } else {
       lines.push(`<div class="muted">Comfort picks unlock at 25%.</div>`);
     }
     lines.push(r.style_read
-      ? `<div><b>How they play:</b> ${r.style_read}</div>`
+      ? `<div><b>How they play:</b> ${esc(r.style_read)}</div>`
       : `<div class="muted">Style read unlocks at 50%.</div>`);
     lines.push(r.mental_read
-      ? `<div><b>Mentality:</b> ${r.mental_read}</div>`
+      ? `<div><b>Mentality:</b> ${esc(r.mental_read)}</div>`
       : `<div class="muted">Mental read unlocks at 75%.</div>`);
     if ((r.traits ?? []).length || r.traits_hidden) {
       lines.push(`<div><b>Character:</b> ` + r.traits
-        .map((t) => `<span class="pill" title="${t.blurb}">${humanize(t.id)}</span>`).join(" ") +
+        .map((t) => `<span class="pill" title="${esc(t.blurb)}">${humanize(t.id)}</span>`).join(" ") +
         (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden} unknown</span>` : "") + `</div>`);
     }
     if ((r.strengths ?? []).length) {
-      lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
-        ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") + `</span></div>`);
+      lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` +
+        ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` : "") + `</span></div>`);
     }
     if ((r.ceiling_reads ?? []).length) {
       lines.push(`<div><b>Ceilings:</b> ` + r.ceiling_reads
-        .map((c) => `<span class="pill" title="how much room this skill has left to its ceiling">${humanize(c.attr)}: ${c.read}</span>`).join(" ") + `</div>`);
+        .map((c) => `<span class="pill" title="how much room this skill has left to its ceiling">${humanize(c.attr)}: ${esc(c.read)}</span>`).join(" ") + `</div>`);
     }
     lines.push(r.verdict
-      ? `<div><b>Verdict:</b> ${r.verdict}</div>`
+      ? `<div><b>Verdict:</b> ${esc(r.verdict)}</div>`
       : `<div class="muted">The verdict lands with the complete book.</div>`);
     dc.appendChild(el("div", "es-obj", lines.join("")));
-    v.appendChild(dc);
-    return; // deep-dive replaces the table view
-  }
-
-  if (data.reports.length) {
+    main.appendChild(dc);
+  } else if (data.reports.length) {
     const rc = el("div", "card");
-    rc.innerHTML = `<h2>Reports — ${data.target_name}</h2>`;
+    // Heading links when covering a team (data.target is the team id here).
+    const heading = data.target_kind === "team"
+      ? tlink(data.target, data.target_name)
+      : esc(data.target_name);
+    rc.innerHTML = `<h2>Reports <span class="muted" style="font-weight:400">— ${heading}</span></h2>`;
     const t = el("table");
     t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
       <th>Ability</th><th>Ceiling</th><th>Character</th><th>Read</th></tr></thead>`;
     const tb = el("tbody");
     for (const r of data.reports) {
       const traits = r.traits
-        .map((t) => `<span class="pill" title="${t.blurb}">${humanize(t.id)}</span>`)
+        .map((t) => `<span class="pill" title="${esc(t.blurb)}">${humanize(t.id)}</span>`)
         .join(" ") +
         (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden}?</span>` : "");
       const read = r.strengths.length
-        ? `<span class="muted">+${r.strengths.map((s) => s.replaceAll("_", " ")).join(", ")}` +
-          (r.weaknesses.length ? ` · −${r.weaknesses.map((s) => s.replaceAll("_", " ")).join(", ")}` : "") +
+        ? `<span class="muted">+${r.strengths.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` +
+          (r.weaknesses.length ? ` · −${r.weaknesses.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` : "") +
           `</span>`
         : `<span class="muted">needs more time</span>`;
       tb.appendChild(el("tr", "", `
-        <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
-        <td><span class="pill">${r.role}</span> <span class="pill">${r.playstyle}</span></td>
+        <td><b>${plink(r.player_id, r.handle)}</b></td>
+        <td><span class="pill">${esc(r.role)}</span> <span class="pill">${esc(r.playstyle)}</span></td>
         <td class="num">${r.age}</td>
         <td>${starsRange(r.ca_stars)}</td>
         <td>${starsRange(r.pa_stars)}</td>
@@ -3280,9 +3828,62 @@ async function scouting(v) {
         <td>${read}</td>`));
     }
     t.appendChild(tb);
-    rc.appendChild(t);
-    v.appendChild(rc);
+    const scroll = el("div", "table-scroll");
+    scroll.appendChild(t);
+    rc.appendChild(scroll);
+    main.appendChild(rc);
   }
+
+  /* -- rail ws-5: intel-tier ladder + quick-assign buttons ------------------ */
+  const ladder = el("div", "card");
+  ladder.appendChild(el("h2", "", "Player intel tiers"));
+  const active = data.target_kind === "player";
+  const prog = active ? data.progress : 0;
+  if (active) {
+    ladder.appendChild(el("p", "muted",
+      `Deep-diving ${esc(data.target_name)} — ${scoutTier(prog)} (${Math.round(prog * 100)}%)`));
+    ladder.appendChild(el("div", "", bar(Math.round(prog * 100))));
+  } else {
+    ladder.appendChild(el("p", "muted", "What a player deep-dive reveals, stage by stage."));
+  }
+  const stages = [
+    [0, "First looks", "role, ability band"],
+    [0.25, "Basics", "comfort picks (agents + mastery)"],
+    [0.5, "Style read", "how they play"],
+    [0.75, "Mental read", "mentality under pressure"],
+    [0.95, "Complete book", "the verdict + full ceilings"],
+  ];
+  for (const [thr, name, desc] of stages) {
+    const reached = active && prog >= thr;
+    ladder.appendChild(el("div", "entity",
+      `<span class="entity-name"><b>${reached ? "✓ " : ""}${esc(name)}</b></span>` +
+      `<span class="entity-meta">${esc(desc)}</span>` +
+      `<span class="entity-num ${reached ? "trend-up" : "muted"}">${Math.round(thr * 100)}%</span>`));
+  }
+  rail.appendChild(ladder);
+
+  // Quick assign: point the scout at the next opponent or the market in a click.
+  const qa = el("div", "card");
+  qa.appendChild(el("h2", "", "Quick assign"));
+  // Each button on its own line (block wrapper) so long labels don't crowd.
+  const addQuick = (btn) => { const w = el("div", ""); w.appendChild(btn); qa.appendChild(w); };
+  if (nextOppId) {
+    const b = el("button", "btn btn-sm" + (data.target === nextOppId ? " active" : ""),
+      `Scout next opponent — ${esc(nextOppName ?? "")}`);
+    b.onclick = async () => {
+      const r = await api("/api/actions/scout", { team_id: nextOppId });
+      toast(r.message); render();
+    };
+    addQuick(b);
+  }
+  const bm = el("button", "btn btn-sm" + (data.target === "market" ? " active" : ""),
+    "Sweep the free-agent market");
+  bm.onclick = async () => {
+    const r = await api("/api/actions/scout", { team_id: "market" });
+    toast(r.message); render();
+  };
+  addQuick(bm);
+  rail.appendChild(qa);
 }
 
 // Player-table columns per analytics tier. The server already dropped the
@@ -3312,105 +3913,52 @@ const STAT_COLS = [
   { k: "defuses", h: "Df" },
 ];
 
+const STATS_TABS = [
+  { id: "leaders", label: "Leaders" },
+  { id: "races", label: "Races & Awards" },
+  { id: "meta", label: "Meta" },
+  { id: "history", label: "History" },
+];
+
+/* -- Stats: four task tabs over the analytics endpoints. The split
+   (season/map/agent) and league-tier controls live in the screen-head right
+   slot and set ONLY App.statsSplit / App.statsTier — never App.statsTab — so
+   re-rendering after a split/tier change keeps you on the sub-tab you were
+   reading. Every sub-tab fetches exactly what it needs (races/meta/perf are
+   only pulled on their own tab). */
 async function stats(v) {
+  const sub = App.statsTab ?? "leaders";
   const split = App.statsSplit; // {kind, key} | null
   const lgTier = App.statsTier ?? 1; // 1 = top flight, 2 = Challengers
   const parts = [`league_tier=${lgTier}`];
   if (split) parts.push(`split=${split.kind}`, `key=${encodeURIComponent(split.key)}`);
   const qs = "?" + parts.join("&");
-  const [data, racesResp, metaResp] = await Promise.all([
+  const [data, racesResp, metaResp, perf] = await Promise.all([
     api("/api/stats" + qs),
-    api("/api/races").catch(() => null),
-    api("/api/meta").catch(() => null),
+    sub === "races" ? api("/api/races").catch(() => null) : Promise.resolve(null),
+    sub === "meta" ? api("/api/meta").catch(() => null) : Promise.resolve(null),
+    sub === "history" ? api("/api/perf").catch(() => null) : Promise.resolve(null),
   ]);
   const tier = data.analytics.tier;
 
-  // Live agent meta: latest patch, active buffs/nerfs, usage tier list.
-  if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
-    const mc = el("div", "card");
-    mc.appendChild(el("h2", "", "Agent meta"));
-    const lp = metaResp.latest_patch;
-    if (lp) {
-      mc.appendChild(el("p", "muted",
-        `Patch ${lp.version} (S${lp.season} W${lp.week}) — ${lp.lines.join("; ")}`));
-    }
-    const patched = metaResp.patched_agents || [];
-    if (patched.length) {
-      const chips = el("div", "es-meta-chips");
-      for (const a of patched) {
-        chips.appendChild(el("span", `es-meta-chip ${a.direction}`,
-          `${a.name} ${a.direction === "buff" ? "▲" : a.direction === "nerf" ? "▼" : "–"}`));
-      }
-      mc.appendChild(chips);
-    }
-    const tl = metaResp.tier_list || [];
-    if (tl.length) {
-      const list = el("div", "es-meta-tier");
-      const top = tl[0].maps || 1;
-      for (const a of tl) {
-        const w = Math.round(100 * a.maps / top);
-        list.appendChild(el("div", "es-meta-row",
-          `<span class="es-meta-name">${a.name}</span>` +
-          `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
-          `<span class="mono muted">${a.pick_rate}%</span>`));
-      }
-      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
-      mc.appendChild(list);
-    }
-    v.appendChild(mc);
-  }
-
-  // Impact leaderboards: clutches / multikills / aces / first bloods.
-  const impact = data.impact || {};
-  const impactCats = Object.entries(impact).filter(([, c]) => c.leaders?.length);
-  if (impactCats.length) {
-    const ic = el("div", "card");
-    ic.appendChild(el("h2", "", `Impact leaders${lgTier === 2 ? " — Challengers" : ""}`));
-    const grid = el("div", "es-rec-grid");
-    for (const [, cat] of impactCats) {
-      const rows = cat.leaders.map((l, i) =>
-        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
-        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
-        `<b class="mono">${l.value}</b></div>`).join("");
-      grid.appendChild(el("div", "es-rec",
-        `<div class="es-rec-lab muted">${cat.label}</div>${rows}`));
-    }
-    ic.appendChild(grid);
-    v.appendChild(ic);
-  }
-
-  // Award races: who's in contention for each season award right now.
-  const races = racesResp?.races || {};
-  if (Object.keys(races).length) {
-    const rc = el("div", "card");
-    rc.appendChild(el("h2", "", "Award races"));
-    const grid = el("div", "es-rec-grid");
-    for (const [award, leaders] of Object.entries(races)) {
-      const rows = leaders.map((l, i) =>
-        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
-        `<span class="plink" data-pid="${l.player_id}">${l.handle}</span>` +
-        `<b class="mono">${l.value}</b></div>`).join("");
-      grid.appendChild(el("div", "es-rec",
-        `<div class="es-rec-lab muted">${award}</div>${rows}`));
-    }
-    rc.appendChild(grid);
-    v.appendChild(rc);
-  }
-
-  // Analytics banner: what your department can compile, and what's next.
-  const banner = el("div", "card");
-  banner.innerHTML = `<h2>Analytics department — tier ${tier}</h2>
-    <p class="muted">${data.analytics.label}${
-      data.analytics.next_unlock
-        ? ` · hire a better analyst / upgrade the analytics suite to unlock: <b>${data.analytics.next_unlock}</b>`
-        : " · everything unlocked"
-    }</p>`;
-  // Split picker (tier 3): season / per-map / per-agent player tables.
+  // Right slot: league-tier segmented control + (tier-3) split picker. Both
+  // handlers touch only App.statsSplit / App.statsTier, so App.statsTab
+  // survives the render() they trigger — the sub-tab never resets.
+  const right = [];
+  const tierSeg = el("div", "seg");
+  const mkTier = (label, tval) => {
+    const b = el("button", "seg-btn" + (lgTier === tval ? " on" : ""), label);
+    b.onclick = () => { App.statsTier = tval; render(); };
+    tierSeg.appendChild(b);
+  };
+  mkTier("Tier 1", 1);
+  mkTier("Challengers", 2);
+  right.push(tierSeg);
   if (data.split_keys) {
-    const row = el("div", "row");
+    const splitRow = el("div", "row");
     const seasonBtn = el("button", "btn btn-sm" + (split ? "" : " active"), "Season");
     seasonBtn.onclick = () => { App.statsSplit = null; render(); };
-    row.appendChild(seasonBtn);
+    splitRow.appendChild(seasonBtn);
     const mkSel = (label, kind, keys) => {
       const sel = el("select");
       sel.appendChild(el("option", "", label));
@@ -3420,75 +3968,40 @@ async function stats(v) {
         if (split && split.kind === kind && split.key === k) o.selected = true;
         sel.appendChild(o);
       }
-      sel.onchange = () => {
-        if (sel.value) { App.statsSplit = { kind, key: sel.value }; render(); }
-      };
+      sel.onchange = () => { if (sel.value) { App.statsSplit = { kind, key: sel.value }; render(); } };
       return sel;
     };
-    row.appendChild(mkSel("— by map —", "map", data.split_keys.maps));
-    row.appendChild(mkSel("— by agent —", "agent", data.split_keys.agents));
-    banner.appendChild(row);
-  }
-  v.appendChild(banner);
-
-  // Balance patches: public info, straight from the notes.
-  if ((data.patches ?? []).length) {
-    const pc = el("div", "card");
-    pc.innerHTML = `<h2>Patch notes</h2>
-      <p class="muted">The meta moves twice a season — mid-split and over the break.
-      Rosters built around a nerfed kit feel it.</p>` +
-      data.patches.map((n) => `<div class="newsline">
-        <span class="pill">Patch ${n.version}</span>
-        <span class="muted">S${n.season} W${n.week}</span> —
-        ${n.lines.join("; ")}</div>`).join("");
-    v.appendChild(pc);
+    splitRow.appendChild(mkSel("— by map —", "map", data.split_keys.maps));
+    splitRow.appendChild(mkSel("— by agent —", "agent", data.split_keys.agents));
+    right.push(splitRow);
   }
 
-  const champs = App.state.champions ?? [];
-  if (champs.length) {
-    const hc = el("div", "card");
-    hc.innerHTML = `<h2>Champions</h2>` + [...champs].reverse()
-      .map((c) => `<div class="newsline"><span class="pill">S${c.season}</span> <b>${c.team_name}</b></div>`)
-      .join("");
-    v.appendChild(hc);
-  }
+  v.appendChild(screenHead("Stats", {
+    sub: `Season ${App.state.season} · analytics tier ${tier}`,
+    subtabs: STATS_TABS,
+    active: sub,
+    onPick: (id) => { App.statsTab = id; render(); },
+    right,
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
 
-  if (data.awards.length) {
-    const aw = el("div", "card");
-    aw.innerHTML = `<h2>Awards</h2>` + data.awards
-      .map((a) => `<div class="newsline"><span class="pill">S${a.season}</span>
-        <b>${a.award}</b> — ${a.handle} (${a.team_name}), ${a.value}</div>`)
-      .join("");
-    v.appendChild(aw);
-  }
+  if (sub === "races") statsRaces(ws, data, racesResp);
+  else if (sub === "meta") statsMeta(ws, data, metaResp, tier);
+  else if (sub === "history") statsHistory(ws, data, perf);
+  else statsLeaders(ws, data, tier, split, lgTier);
+}
 
-  // The Hall of Fame — careers the save remembers (inducted at
-  // retirement; server-scored from the chronicle).
-  if ((data.hall_of_fame ?? []).length) {
-    const hf = el("div", "card");
-    hf.innerHTML = `<h2>Hall of Fame</h2>` + data.hall_of_fame
-      .map((h) => `<div class="newsline"><span class="pill">S${h.season}</span>
-        <b>${h.handle}</b>${h.team_name ? ` (${h.team_name})` : ""} — ${h.blurb}</div>`)
-      .join("");
-    v.appendChild(hf);
-  }
-
-  const lead = el("div", "card");
-  const splitLabel = split ? ` — ${split.kind}: ${split.key}` : "";
+/* Stats · Leaders: the season leaderboard table first (full width — it's the
+   primary read; server-gated columns via STAT_COLS), then the analytics-
+   department context line. Team column tlinks via the row's team_id (degrades
+   to plain text when absent). */
+function statsLeaders(ws, data, tier, split, lgTier) {
+  const lead = el("div", "card ws-12");
+  const splitLabel = split ? ` — ${split.kind}: ${esc(split.key)}` : "";
   lead.innerHTML = `<h2>${lgTier === 2 ? "Challengers leaders" : "League leaders"} — season ${App.state.season}${splitLabel}</h2>`;
-  // Tier tabs: the top flight and the Challengers circuit are separate
-  // player groups — the server filters, the client only picks.
-  const tierRow = el("div", "row", "");
-  const mkTier = (label, tval) => {
-    const b = el("button", "btn btn-sm" + (lgTier === tval ? " btn-primary" : ""), label);
-    b.onclick = () => { App.statsTier = tval; render(); };
-    tierRow.appendChild(b);
-  };
-  mkTier("Tier 1", 1);
-  mkTier("Tier 2 (Challengers)", 2);
-  lead.appendChild(tierRow);
   if (!data.players.length) {
-    lead.innerHTML += `<p class="muted">No maps played yet.</p>`;
+    lead.appendChild(el("p", "muted", "No maps played yet."));
   } else {
     const cols = STAT_COLS.filter((c) => data.players[0][c.k] !== undefined);
     const wrap = el("div", "table-scroll");
@@ -3502,8 +4015,8 @@ async function stats(v) {
         .map((c) => `<td class="num">${c.f ? c.f(r[c.k]) : r[c.k]}</td>`)
         .join("");
       tb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td>${i + 1}</td><td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
-        <td class="muted">${r.team}</td>${cells}`));
+        <td>${i + 1}</td><td><b>${plink(r.player_id, r.handle)}</b></td>
+        <td class="muted">${tlink(r.team_id, r.team)}</td>${cells}`));
     });
     t.appendChild(tb);
     wrap.appendChild(t);
@@ -3513,7 +4026,131 @@ async function stats(v) {
         "Per-map and per-agent leaderboards need a tier-3 analytics department."));
     }
   }
-  v.appendChild(lead);
+  ws.appendChild(lead);
+
+  const banner = el("div", "card ws-12");
+  banner.innerHTML = `<h2>Analytics department — tier ${data.analytics.tier}</h2>
+    <p class="muted">${esc(data.analytics.label)}${
+      data.analytics.next_unlock
+        ? ` · hire a better analyst / upgrade the analytics suite to unlock: <b>${esc(data.analytics.next_unlock)}</b>`
+        : " · everything unlocked"
+    }</p>`;
+  ws.appendChild(banner);
+}
+
+/* Stats · Races & Awards: live award races + impact leaderboards (main),
+   with the full awards history in the rail (player plinked via player_id;
+   team stays plain text). */
+function statsRaces(ws, data, racesResp) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  const races = racesResp?.races || {};
+  const raceKeys = Object.keys(races);
+  if (raceKeys.length) {
+    const rc = el("div", "card");
+    rc.appendChild(el("h2", "", "Award races"));
+    const grid = el("div", "es-rec-grid");
+    for (const [award, leaders] of Object.entries(races)) {
+      const rows = leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        plink(l.player_id, l.handle) +
+        `<b class="mono">${esc(l.value)}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${esc(award)}</div>${rows}`));
+    }
+    rc.appendChild(grid);
+    main.appendChild(rc);
+  }
+
+  const impact = data.impact || {};
+  const impactCats = Object.entries(impact).filter(([, c]) => c.leaders?.length);
+  if (impactCats.length) {
+    const ic = el("div", "card");
+    ic.appendChild(el("h2", "", `Impact leaders${data.league_tier === 2 ? " — Challengers" : ""}`));
+    const grid = el("div", "es-rec-grid");
+    for (const [, cat] of impactCats) {
+      const rows = cat.leaders.map((l, i) =>
+        `<div class="es-race-row"><span class="mono muted">${i + 1}</span>` +
+        plink(l.player_id, l.handle) +
+        `<b class="mono">${esc(l.value)}</b></div>`).join("");
+      grid.appendChild(el("div", "es-rec",
+        `<div class="es-rec-lab muted">${esc(cat.label)}</div>${rows}`));
+    }
+    ic.appendChild(grid);
+    main.appendChild(ic);
+  }
+
+  if (!raceKeys.length && !impactCats.length) {
+    main.appendChild(el("div", "card",
+      `<h2>Award races</h2><p class="muted">No races yet — play some matches to seed the leaderboards.</p>`));
+  }
+
+  const aw = el("div", "card");
+  aw.appendChild(el("h2", "", "Awards history"));
+  if (data.awards.length) {
+    const scroll = el("div", "card-scroll");
+    for (const a of data.awards) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">S${a.season}</span> <b>${esc(a.award)}</b> — ` +
+        `${plink(a.player_id, a.handle)} <span class="muted">(${esc(a.team_name)})</span>, ${esc(a.value)}`));
+    }
+    aw.appendChild(scroll);
+  } else {
+    aw.appendChild(el("p", "muted", "No awards handed out yet."));
+  }
+  rail.appendChild(aw);
+}
+
+/* Stats · Meta: agent meta + team tendencies (main), patch-notes history
+   (rail). Tendency rows expand to a per-map record; the detail row is tagged
+   data-detail so the th-sort delegate drops it before sorting, and the row-
+   click closure guards on isConnected (a dropped row means "recreate", not
+   "collapse"). */
+function statsMeta(ws, data, metaResp, tier) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
+    const mc = el("div", "card");
+    mc.appendChild(el("h2", "", "Agent meta"));
+    const lp = metaResp.latest_patch;
+    if (lp) {
+      mc.appendChild(el("p", "muted",
+        `Patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
+    }
+    const patched = metaResp.patched_agents || [];
+    if (patched.length) {
+      const chips = el("div", "es-meta-chips");
+      for (const a of patched) {
+        chips.appendChild(el("span", `es-meta-chip ${a.direction}`,
+          `${esc(a.name)} ${a.direction === "buff" ? "▲" : a.direction === "nerf" ? "▼" : "–"}`));
+      }
+      mc.appendChild(chips);
+    }
+    const tl = metaResp.tier_list || [];
+    if (tl.length) {
+      const list = el("div", "es-meta-tier");
+      const top = tl[0].maps || 1;
+      for (const a of tl) {
+        const w = Math.round(100 * a.maps / top);
+        list.appendChild(el("div", "es-meta-row",
+          `<span class="es-meta-name">${esc(a.name)}</span>` +
+          `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
+          `<span class="mono muted">${a.pick_rate}%</span>`));
+      }
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(list);
+    }
+    main.appendChild(mc);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Agent meta</h2><p class="muted">No meta data compiled yet.</p>`));
+  }
 
   if (data.teams.length) {
     const tc = el("div", "card");
@@ -3526,7 +4163,7 @@ async function stats(v) {
     const tb = el("tbody");
     for (const r of data.teams) {
       const tr = el("tr", r.is_user ? "me" : "", `
-        <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b></td><td class="num">${r.maps}</td>
+        <td><b>${tlink(r.team_id, r.name)}</b></td><td class="num">${r.maps}</td>
         <td class="num">${r.atk_pct}</td><td class="num">${r.def_pct}</td>
         <td class="num">${r.pistol_pct}</td>`);
       if ((r.maps_detail ?? []).length) {
@@ -3534,9 +4171,11 @@ async function stats(v) {
         let detail = null;
         tr.onclick = (e) => {
           if (e.target.closest("[data-tid]")) return;
-          if (detail) { detail.remove(); detail = null; return; }
+          // isConnected: the sort delegate removes detail rows before sorting,
+          // so a stale reference means "recreate", not "collapse".
+          if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
           const rows = r.maps_detail
-            .map((m) => `<tr><td>${mapThumb(m.map_id, "sm")}${m.map_id}</td>
+            .map((m) => `<tr><td>${mapThumb(m.map_id, "sm")}${esc(m.map_id)}</td>
               <td class="num">${m.maps}</td><td class="num">${m.wins}</td>
               <td class="num">${m.win_pct}%</td><td class="num">${m.atk_pct}%</td>
               <td class="num">${m.def_pct}%</td></tr>`)
@@ -3545,6 +4184,7 @@ async function stats(v) {
             <thead><tr><th>Map</th><th class="num">Played</th><th class="num">W</th>
             <th class="num">Win%</th><th class="num">ATK%</th><th class="num">DEF%</th></tr></thead>
             <tbody>${rows}</tbody></table></td>`);
+          detail.dataset.detail = "1";
           tr.after(detail);
         };
       }
@@ -3552,59 +4192,119 @@ async function stats(v) {
     }
     t.appendChild(tb);
     tc.appendChild(t);
-    v.appendChild(tc);
+    main.appendChild(tc);
   }
 
-  // Performance observability (this server session): tick-time trend
-  // against state growth, phase breakdown, save cost, slowest endpoints.
-  // Read-only view of /api/perf — the sink never touches the sim.
-  try {
-    const perf = await api("/api/perf");
-    const ticks = perf.ticks || [];
+  if ((data.patches ?? []).length) {
     const pc = el("div", "card");
-    pc.innerHTML = `<h2>Performance <span class="muted" style="font-weight:400">— this session, resets on restart</span></h2>`;
-    if (!ticks.length) {
-      pc.appendChild(el("p", "muted", "No weeks advanced this session yet."));
-    } else {
-      const last = ticks[ticks.length - 1];
-      // Tick-time trend: bar per tick, so slowdown-over-weeks is visible.
-      const maxMs = Math.max(...ticks.map((t) => t.total_ms), 1);
-      const bars = ticks.slice(-40).map((t) =>
-        `<span title="S${t.season} W${t.week}: ${t.total_ms}ms" style="display:inline-block;width:7px;margin-right:1px;vertical-align:bottom;height:${Math.max(2, Math.round(36 * t.total_ms / maxMs))}px;background:var(--es-color-accent,#4fd8c0)"></span>`
-      ).join("");
-      pc.appendChild(el("p", "", `Advance time, last ${Math.min(ticks.length, 40)} weeks
-        (peak ${Math.round(maxMs)}ms):<br>${bars}`));
-      // Last tick's phase breakdown + the size gauges next to it.
-      const phases = Object.entries(last.phases || {}).sort((a, b) => b[1] - a[1]);
-      const pt = el("table");
-      pt.innerHTML = `<thead><tr><th>Phase (last tick: ${last.total_ms}ms)</th><th class="num">ms</th></tr></thead>`;
-      const ptb = el("tbody");
-      for (const [name, ms] of phases) {
-        ptb.appendChild(el("tr", "", `<td>${name}</td><td class="num">${ms}</td>`));
-      }
-      pt.appendChild(ptb);
-      pc.appendChild(pt);
-      const sizes = Object.entries(last.sizes || {})
-        .map(([k, n]) => `${k} ${n.toLocaleString()}`).join(" · ");
-      const saveB = perf.gauges?.["save.bytes"];
-      pc.appendChild(el("p", "muted",
-        `State growth: ${sizes}${saveB ? ` · save ${(saveB / 1024 / 1024).toFixed(1)}MB` : ""}`));
+    pc.innerHTML = `<h2>Patch notes</h2>
+      <p class="muted">The meta moves twice a season — mid-split and over the break.
+      Rosters built around a nerfed kit feel it.</p>`;
+    const scroll = el("div", "card-scroll");
+    for (const n of data.patches) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">Patch ${esc(n.version)}</span> ` +
+        `<span class="muted">S${n.season} W${n.week}</span> — ${esc(n.lines.join("; "))}`));
     }
+    pc.appendChild(scroll);
+    rail.appendChild(pc);
+  } else {
+    rail.appendChild(el("div", "card",
+      `<h2>Patch notes</h2><p class="muted">No balance patches yet this save.</p>`));
+  }
+}
+
+/* Stats · History: champions + Hall of Fame (main). Champions tlink their team
+   via team_id; HoF names stay PLAIN TEXT — retirees are deleted from
+   gs.players, so a profile link would always dead-end. The perf/dev-telemetry
+   card lives in the rail, collapsed inside a <details> so it stops dominating
+   the screen. */
+function statsHistory(ws, data, perf) {
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
+
+  const champs = App.state.champions ?? [];
+  const cc = el("div", "card");
+  cc.appendChild(el("h2", "", "Champions"));
+  if (champs.length) {
+    const scroll = el("div", "card-scroll");
+    for (const c of [...champs].reverse()) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">S${c.season}</span> <b>${tlink(c.team_id, c.team_name)}</b>`));
+    }
+    cc.appendChild(scroll);
+  } else {
+    cc.appendChild(el("p", "muted", "No champion crowned yet."));
+  }
+  main.appendChild(cc);
+
+  if ((data.hall_of_fame ?? []).length) {
+    const hf = el("div", "card");
+    hf.appendChild(el("h2", "", "Hall of Fame"));
+    const scroll = el("div", "card-scroll");
+    for (const h of data.hall_of_fame) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">S${h.season}</span> <b>${esc(h.handle)}</b>` +
+        `${h.team_name ? ` <span class="muted">(${esc(h.team_name)})</span>` : ""} — ${esc(h.blurb)}`));
+    }
+    hf.appendChild(scroll);
+    main.appendChild(hf);
+  }
+
+  // Performance observability (this server session): read-only view of
+  // /api/perf, best-effort. Collapsed by default so it never dominates.
+  const pc = el("div", "card");
+  const det = el("details");
+  det.appendChild(el("summary", "es-details-summary",
+    "Performance — this session, resets on restart"));
+  const ticks = perf?.ticks || [];
+  if (!perf) {
+    det.appendChild(el("p", "muted", "Performance telemetry unavailable."));
+  } else if (!ticks.length) {
+    det.appendChild(el("p", "muted", "No weeks advanced this session yet."));
+  } else {
+    const last = ticks[ticks.length - 1];
+    const maxMs = Math.max(...ticks.map((t) => t.total_ms), 1);
+    const bars = ticks.slice(-40).map((t) =>
+      `<span title="S${t.season} W${t.week}: ${t.total_ms}ms" style="display:inline-block;width:7px;margin-right:1px;vertical-align:bottom;height:${Math.max(2, Math.round(36 * t.total_ms / maxMs))}px;background:var(--es-color-accent,#4fd8c0)"></span>`
+    ).join("");
+    det.appendChild(el("p", "", `Advance time, last ${Math.min(ticks.length, 40)} weeks
+      (peak ${Math.round(maxMs)}ms):<br>${bars}`));
+    const phases = Object.entries(last.phases || {}).sort((a, b) => b[1] - a[1]);
+    const pt = el("table");
+    pt.dataset.nosort = "1";
+    pt.innerHTML = `<thead><tr><th>Phase (last tick: ${last.total_ms}ms)</th><th class="num">ms</th></tr></thead>`;
+    const ptb = el("tbody");
+    for (const [name, ms] of phases) {
+      ptb.appendChild(el("tr", "", `<td>${esc(name)}</td><td class="num">${ms}</td>`));
+    }
+    pt.appendChild(ptb);
+    det.appendChild(pt);
+    const sizes = Object.entries(last.sizes || {})
+      .map(([k, n]) => `${k} ${n.toLocaleString()}`).join(" · ");
+    const saveB = perf.gauges?.["save.bytes"];
+    det.appendChild(el("p", "muted",
+      `State growth: ${esc(sizes)}${saveB ? ` · save ${(saveB / 1024 / 1024).toFixed(1)}MB` : ""}`));
+  }
+  if (perf) {
     const api5 = Object.entries(perf.spans || {})
       .filter(([k]) => k.startsWith("api."))
       .sort((a, b) => b[1].p95_ms - a[1].p95_ms).slice(0, 5);
     if (api5.length) {
-      pc.appendChild(el("p", "muted",
+      det.appendChild(el("p", "muted",
         "Slowest endpoints (p95): " + api5
-          .map(([k, s]) => `${k.slice(4)} ${s.p95_ms}ms×${s.count}`).join(" · ")));
+          .map(([k, s]) => `${esc(k.slice(4))} ${s.p95_ms}ms×${s.count}`).join(" · ")));
     }
     const save = perf.spans?.["save.write"];
     if (save) {
-      pc.appendChild(el("p", "muted",
+      det.appendChild(el("p", "muted",
         `Save write: last ${save.last_ms}ms · p95 ${save.p95_ms}ms · ${save.count} writes`));
     }
-    v.appendChild(pc);
-  } catch { /* perf view is best-effort */ }
+  }
+  pc.appendChild(det);
+  rail.appendChild(pc);
 }
 
 /* -- social: the feed + follower economy ----------------------------------- */
@@ -3621,54 +4321,102 @@ async function social(v) {
   const mood = data.your_sentiment ?? 50;
   const moodWord = data.your_mood?.word ?? "neutral";
   const moodTone = data.your_mood?.tone ?? "";
-  const head = el("div", "card");
-  head.innerHTML = `<h2>Social — your reach</h2>
-    <div class="row">
-      <span class="pill">roster reach ${fmtFollowers(data.your_reach)}</span>
-      <span class="pill">org fans ${fmtFollowers(data.fan_count)}</span>
-      <span class="pill" title="the org's weekly cut of the roster's streaming income">streaming ${money(data.your_stream_income || 0)}/wk</span>
-      <span class="pill ${moodTone}">fanbase ${moodWord} (${Math.round(mood)})</span>
-      <span class="muted">Reach feeds sponsor marketability; streaming pays the org a cut
-      (but heavy streamers develop slower — rein one in with a 1:1); the crowd's mood
-      leaks into the locker room, and brands read the room too.</span>
-    </div>`;
-  const rosterRow = el("div", "row");
-  for (const p of data.your_roster) {
-    rosterRow.appendChild(el("span", "pill",
-      `<b class="plink" data-pid="${p.player_id}">${p.handle}</b> ${fmtFollowers(p.followers)}` +
-      ` <span class="muted" title="${p.stream_status} — org cut ${money(p.stream_income)}/wk">· ${money(p.stream_income)}/wk</span>`));
-  }
-  head.appendChild(rosterRow);
-  v.appendChild(head);
 
-  const band = el("div", "grid2");
+  v.appendChild(screenHead("Social", {
+    sub: `S${App.state.season} · W${App.state.week}`,
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-8 ws-col");
+  const rail = el("div", "ws-4 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
 
+  /* -- main ws-8: the feed, scrolling inside its own card -------------------- */
   const feedCard = el("div", "card");
   feedCard.appendChild(el("h2", "", "Feed"));
   if (!data.feed.length) {
     feedCard.appendChild(el("p", "muted", "Nothing posted yet — play a week."));
   } else {
+    const scroll = el("div", "card-scroll");
+    scroll.style.setProperty("--scroll-max", "70vh");
     for (const post of data.feed) {
       const who = post.author_kind === "player"
-        ? `<b class="plink" data-pid="${post.author_id}">@${post.author}</b>`
+        ? `<b>${plink(post.author_id, "@" + post.author)}</b>`
         : post.author_kind === "team"
-          ? `<b class="tlink" data-tid="${post.author_id}">@${post.author}</b>`
-          : `<b>${post.author}</b>`;
+          ? `<b>${tlink(post.author_id, "@" + post.author)}</b>`
+          : `<b>${esc(post.author)}</b>`;
       const node = el("div", "post",
         `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
            <span class="muted">S${post.season} W${post.week}</span></div>
          <div class="post-body">${post.text}</div>
          <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`);
-      // LLM-ghost-written posts keep the grounded fact on hover; the
-      // server only ever rephrases real outcomes (web/llm_social.py).
+      // LLM-ghost-written posts keep the grounded fact on hover; the server
+      // only ever rephrases real outcomes (web/llm_social.py).
       if (post.ai && post.fact) {
         node.querySelector(".post-body").title = post.fact;
       }
-      feedCard.appendChild(node);
+      scroll.appendChild(node);
     }
+    feedCard.appendChild(scroll);
   }
-  band.appendChild(feedCard);
+  main.appendChild(feedCard);
 
+  /* -- rail ws-4: org reach, fanbase mood, reach board, movement ------------- */
+
+  // Org card: reach + fan mood + the streaming-income line (→ Finances), then
+  // the roster's individual streamers.
+  const org = el("div", "card");
+  org.appendChild(el("h2", "", "Your reach"));
+  org.appendChild(el("div", "row",
+    `<span class="chip">roster reach ${fmtFollowers(data.your_reach)}</span>` +
+    `<span class="chip">org fans ${fmtFollowers(data.fan_count)}</span>` +
+    `<span class="pill ${moodTone}">fanbase ${esc(moodWord)} (${Math.round(mood)})</span>`));
+  const streamRow = el("div", "row",
+    `<span class="microlabel">Streaming</span> <b class="mono">${money(data.your_stream_income || 0)}/wk</b> ` +
+    `<span class="muted">org cut</span><span class="spacer"></span>`);
+  const finBtn = el("button", "btn btn-sm", "→ Finances");
+  finBtn.onclick = () => dashGoTab("finances");
+  streamRow.appendChild(finBtn);
+  org.appendChild(streamRow);
+  org.appendChild(el("p", "muted",
+    "Reach feeds sponsor marketability; streaming pays the org a cut (heavy streamers " +
+    "develop slower — rein one in with a 1:1); the crowd's mood leaks into the locker " +
+    "room, and brands read the room too."));
+  if (data.your_roster.length) {
+    org.appendChild(el("span", "es-scout-lab muted", "Your streamers"));
+    const rr = el("div", "row offer-row");
+    for (const p of data.your_roster) {
+      rr.appendChild(el("span", "pill",
+        `<b>${plink(p.player_id, p.handle)}</b> ${fmtFollowers(p.followers)} ` +
+        `<span class="muted" title="${esc(p.stream_status)} — org cut ${money(p.stream_income)}/wk">· ${money(p.stream_income)}/wk</span>`));
+    }
+    org.appendChild(rr);
+  }
+  rail.appendChild(org);
+
+  // Community mood board: whose fans are euphoric, whose are done.
+  if ((data.sentiment ?? []).length) {
+    const sc = el("div", "card");
+    sc.appendChild(el("h2", "", "Fanbase mood"));
+    const st = el("table");
+    st.innerHTML = `<thead><tr><th>Team</th><th class="num">Mood</th></tr></thead>`;
+    const stb = el("tbody");
+    const hot = data.sentiment.slice(0, 5);
+    const cold = data.sentiment.slice(-3);
+    const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
+    for (const r of rows) {
+      stb.appendChild(el("tr", r.is_user ? "me" : "", `
+        <td><b>${tlink(r.team_id, r.name)}</b> <span class="pill">${esc(r.tag)}</span></td>
+        <td class="num ${r.tone ?? ""}">${Math.round(r.sentiment)}
+          <span class="muted">${esc(r.word ?? "")}</span></td>`));
+    }
+    st.appendChild(stb);
+    sc.appendChild(st);
+    rail.appendChild(sc);
+  }
+
+  // Reach leaderboard — the most-followed players; team column tlinks.
   const lb = el("div", "card");
   lb.appendChild(el("h2", "", "Most followed"));
   const t = el("table");
@@ -3678,34 +4426,17 @@ async function social(v) {
   data.leaderboard.forEach((r, i) => {
     tb.appendChild(el("tr", r.is_user ? "me" : "", `
       <td>${i + 1}</td>
-      <td><b class="plink" data-pid="${r.player_id}">${r.handle}</b></td>
-      <td class="muted">${r.team_tag}</td>
+      <td><b>${plink(r.player_id, r.handle)}</b></td>
+      <td class="muted">${tlink(r.team_id, r.team_tag)}</td>
       <td class="num">${fmtFollowers(r.followers)}</td>`));
   });
   t.appendChild(tb);
   lb.appendChild(t);
+  rail.appendChild(lb);
 
-  // Community mood board: whose fans are euphoric, whose are done.
-  if ((data.sentiment ?? []).length) {
-    lb.appendChild(el("h2", "", "Fanbase mood"));
-    const st = el("table");
-    st.innerHTML = `<thead><tr><th>Team</th><th class="num">Mood</th></tr></thead>`;
-    const stb = el("tbody");
-    const hot = data.sentiment.slice(0, 5);
-    const cold = data.sentiment.slice(-3);
-    const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
-    for (const r of rows) {
-      stb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td><b class="tlink" data-tid="${r.team_id}">${r.name}</b>
-          <span class="pill">${r.tag}</span></td>
-        <td class="num ${r.tone ?? ""}">${Math.round(r.sentiment)}
-          <span class="muted">${r.word ?? ""}</span></td>`));
-    }
-    st.appendChild(stb);
-    lb.appendChild(st);
-  }
   // Movement tracker: every signing/release/renewal/transfer league-wide —
-  // including AI-to-AI moves — straight off the chronicle.
+  // including AI-to-AI moves — straight off the chronicle. Names are regex-
+  // plinked in the prose; the team tag becomes a tlink via the row's team_id.
   const moves = data.movement || [];
   if (moves.length) {
     const mv = el("div", "card");
@@ -3716,24 +4447,25 @@ async function social(v) {
       signing: ["signing", "good"], release: ["release", "bad"],
       renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
     };
+    const scroll = el("div", "card-scroll");
+    scroll.style.setProperty("--scroll-max", "340px");
     const list = el("div", "es-movement");
     for (const m of moves) {
       const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
       const text = m.player_id
         ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
-            `<span class="plink" data-pid="${m.player_id}">$1</span>`)
+            `<span class="plink" data-pid="${esc(m.player_id)}">$1</span>`)
         : m.text;
+      const teamPill = m.team_tag ? `<span class="pill">${tlink(m.team_id, m.team_tag)}</span> ` : "";
       list.appendChild(el("div", "es-move" + (m.mine ? " mine" : ""),
         `<span class="pill ${tone}">${label}</span> ` +
         `<span class="muted mono">S${m.season}·W${m.week}</span> ` +
-        (m.team_tag ? `<span class="pill">${m.team_tag}</span> ` : "") + text));
+        teamPill + text));
     }
-    mv.appendChild(list);
-    lb.appendChild(mv);
+    scroll.appendChild(list);
+    mv.appendChild(scroll);
+    rail.appendChild(mv);
   }
-  band.appendChild(lb);
-
-  v.appendChild(band);
 }
 
 function dealLine(d) {
@@ -3756,42 +4488,20 @@ const FACILITY_LABELS = {
 
 async function finances(v) {
   const data = await api("/api/finances");
+  const b = data.breakdown;
 
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Finances</h2>
-    <table><tbody>
-      <tr><td>Balance</td><td class="num">${money(data.balance)}</td></tr>
-      <tr><td>Weekly payroll</td><td class="num">${money(data.weekly_payroll)}</td></tr>
-      <tr><td>Last week income</td><td class="num">${money(data.last_week_income)}</td></tr>
-      <tr><td>Last week expenses</td><td class="num">${money(data.last_week_expenses)}</td></tr>
-    </tbody></table>
-    <p class="muted" style="margin-top:8px">Income = base sponsorship + slot deals + merch + tickets + streaming + prize money. Expenses = payroll + staff + facility upkeep + severance.</p>`;
-  v.appendChild(card);
+  v.appendChild(screenHead("Finances", {
+    sub: `${money(data.balance)} banked · net ${b.net >= 0 ? "+" : ""}${money(b.net)}/wk`,
+  }));
+  const ws = el("div", "ws");
+  v.appendChild(ws);
+  const main = el("div", "ws-7 ws-col");
+  const rail = el("div", "ws-5 ws-col");
+  ws.appendChild(main);
+  ws.appendChild(rail);
 
-  // -- marketability breakdown ---------------------------------------------
-  const mb = data.marketability_breakdown;
-  if (mb && mb.drivers?.length) {
-    const mbCard = el("div", "card");
-    mbCard.innerHTML = `<h2>Brand value
-      <span class="muted" style="font-weight:400">— marketability ${mb.score} (facility x${mb.facility_mult})</span></h2>`;
-    const list = el("div", "es-mb");
-    const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
-    for (const d of mb.drivers) {
-      const pos = d.contrib >= 0;
-      const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
-      list.appendChild(el("div", "es-mb-row",
-        `<span class="es-mb-lab">${d.label}</span>` +
-        `<span class="es-mb-track"><span class="es-mb-fill ${pos ? "pos" : "neg"}" style="width:${w}%"></span></span>` +
-        `<span class="mono ${pos ? "trend-up" : "trend-down"}">${pos ? "+" : ""}${d.contrib}</span>`));
-    }
-    mbCard.appendChild(list);
-    v.appendChild(mbCard);
-  }
-
-  // -- sponsor slots -------------------------------------------------------
-  const slotsCard = el("div", "card");
-  slotsCard.innerHTML = `<h2>Sponsorship slots
-    <span class="muted" style="font-weight:400">— marketability ${data.marketability ?? "?"}</span></h2>`;
+  // Objective chips (shared by active deals + market offers): visible label +
+  // bonus, tone from met/live-status, tip from the server's status detail.
   const objChips = (objs) => (objs ?? [])
     .map((o) => {
       const mark = o.met === true ? "✓ " : o.met === false ? "✗ " : "";
@@ -3805,31 +4515,47 @@ async function finances(v) {
         prog = ` · ${st.replace("_", " ")}`;
       }
       const tip = o.status?.detail || money(o.bonus);
-      return `<span class="pill obj ${cls}" title="${tip}">${mark}${o.label} → ${money(o.bonus)}${prog}</span>`;
+      return `<span class="pill obj ${cls}" title="${esc(tip)}">${mark}${esc(o.label)} → ${money(o.bonus)}${prog}</span>`;
     })
     .join(" ");
+
+  /* -- main ws-7: sponsorship slots (restructured — state chip + brand +
+     terms + objective chips + action row per slot; no <br> layout) --------- */
+  const slotsCard = el("div", "card");
+  slotsCard.appendChild(el("h2", "",
+    `Sponsorships <span class="muted" style="font-weight:400">— marketability ${data.marketability ?? "?"}</span>`));
   for (const slot of ["title", "jersey", "peripheral", "stream", "apparel"]) {
     const s = data.slots[slot];
     if (!s) continue;
-    const row = el("div", "slot-row");
+    const block = el("div", "slot-row");
+    let stateChip, brand;
     if (s.deal) {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
-        <b>${s.deal.name}</b> <span class="pill">${s.deal.kind}</span><br>
-        <span class="muted">${dealLine(s.deal)}</span><br>${objChips(s.objective_labels_deal)}`;
+      stateChip = `<span class="chip tone-good">active</span>`;
+      brand = `<b>${esc(s.deal.name)}</b> <span class="chip">${esc(s.deal.kind)}</span>`;
     } else if (!s.unlocked) {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
-        <span class="muted">locked — ${s.locked_reason ?? "unavailable"}</span>`;
+      stateChip = `<span class="chip">locked</span>`;
+      brand = `<span class="muted">${esc(s.locked_reason ?? "unavailable")}</span>`;
     } else {
-      row.innerHTML = `<span class="pill">${SLOT_LABELS[slot] ?? slot}</span>
-        <span class="muted">no active deal — ${s.market.length ? "offers below" : "no suitors yet"}</span>`;
+      stateChip = `<span class="chip tone-info">open</span>`;
+      brand = `<span class="muted">no active deal — ${s.market.length ? "offers below" : "no suitors yet"}</span>`;
     }
-    slotsCard.appendChild(row);
+    block.appendChild(el("div", "row",
+      `${stateChip}<span class="microlabel">${esc(SLOT_LABELS[slot] ?? slot)}</span> ${brand}`));
+    if (s.deal) {
+      block.appendChild(el("div", "row", `<span class="muted">${esc(dealLine(s.deal))}</span>`));
+      const oc = objChips(s.objective_labels_deal);
+      if (oc) block.appendChild(el("div", "row offer-row", oc));
+    }
+    slotsCard.appendChild(block);
 
     // Legacy single-offer (old saves).
     if (s.offer) {
-      const box = el("div", "row");
-      box.innerHTML = `<span><b>Offer: ${s.offer.name}</b> <span class="pill">${s.offer.kind}</span><br>
-        <span class="muted">${dealLine(s.offer)} — expires if unanswered this week</span></span>`;
+      const box = el("div", "slot-row");
+      box.appendChild(el("div", "row",
+        `<span class="chip tone-info">offer</span><b>${esc(s.offer.name)}</b> ` +
+        `<span class="chip">${esc(s.offer.kind)}</span> ` +
+        `<span class="muted">${esc(dealLine(s.offer))} — expires if unanswered this week</span>`));
+      const actions = el("div", "row offer-row");
       const yes = el("button", "btn btn-primary btn-sm", "Accept");
       yes.onclick = async () => {
         const r = await api("/api/actions/sponsor", { slot, accept: true });
@@ -3840,32 +4566,36 @@ async function finances(v) {
         const r = await api("/api/actions/sponsor", { slot, accept: false });
         toast(r.message); render();
       };
-      box.appendChild(yes);
-      box.appendChild(no);
+      actions.appendChild(yes);
+      actions.appendChild(no);
+      box.appendChild(actions);
       slotsCard.appendChild(box);
     }
 
     // The market: competing brands, pick a payment structure.
     for (const o of s.market ?? []) {
-      const box = el("div", "row offer-row");
+      const box = el("div", "slot-row");
       const relTag = o.relation > 55 ? " · warm relations" : o.relation < 45 ? " · cool relations" : "";
-      box.innerHTML = `<span style="min-width:340px"><b>${o.brand}</b>
-        <span class="muted">${o.weeks}w · until wk ${o.expires_week}${relTag}</span><br>
-        ${objChips(o.objective_labels)}</span>`;
+      box.appendChild(el("div", "row",
+        `<span class="chip tone-info">offer</span><b>${esc(o.brand)}</b> ` +
+        `<span class="muted">${o.weeks}w · until wk ${o.expires_week}${esc(relTag)}</span>`));
+      const oc = objChips(o.objective_labels);
+      if (oc) box.appendChild(el("div", "row offer-row", oc));
+      const actions = el("div", "row offer-row");
       const structures = [
         ["upfront", `${money(o.upfront.signing_bonus)} now + ${money(o.upfront.weekly)}/wk`],
         ["steady", `${money(o.steady.weekly)}/wk`],
         ["performance", `${money(o.performance.weekly)}/wk + ${money(o.performance.per_win)}/win`],
       ];
       for (const [structure, label] of structures) {
-        const b = el("button", "btn btn-sm", `${structure}: ${label}`);
-        b.disabled = !!s.deal;
-        b.title = s.deal ? "slot occupied" : "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4";
-        b.onclick = async () => {
+        const btn = el("button", "btn btn-sm", `${structure}: ${label}`);
+        btn.disabled = !!s.deal;
+        btn.title = s.deal ? "slot occupied" : "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4";
+        btn.onclick = async () => {
           const r = await api("/api/actions/sponsor", { slot, accept: true, brand: o.brand, structure });
           toast(r.message); refresh(); render();
         };
-        box.appendChild(b);
+        actions.appendChild(btn);
       }
       const no = el("button", "btn btn-sm", "✕");
       no.title = "decline (the brand remembers)";
@@ -3873,21 +4603,24 @@ async function finances(v) {
         const r = await api("/api/actions/sponsor", { slot, accept: false, brand: o.brand });
         toast(r.message); render();
       };
-      box.appendChild(no);
+      actions.appendChild(no);
+      box.appendChild(actions);
       slotsCard.appendChild(box);
     }
   }
-  v.appendChild(slotsCard);
+  main.appendChild(slotsCard);
 
-  // -- facilities ------------------------------------------------------------
+  /* -- main ws-7: facilities ------------------------------------------------- */
   const facCard = el("div", "card");
-  facCard.innerHTML = `<h2>Facilities</h2>`;
+  facCard.appendChild(el("h2", "", "Facilities"));
   for (const name of ["training_center", "analytics_suite", "marketing_office"]) {
     const f = data.facilities[name];
     if (!f) continue;
     const row = el("div", "row facility-row");
-    row.innerHTML = `<span style="min-width:240px"><b>${FACILITY_LABELS[name]}</b><br>
-      <span class="muted">level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span></span>`;
+    row.appendChild(el("span", "",
+      `<b>${esc(FACILITY_LABELS[name])}</b> ` +
+      `<span class="muted">level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span>`));
+    row.appendChild(el("span", "spacer"));
     if (f.next_cost != null) {
       const affordable = data.balance >= f.next_cost;
       const btn = el("button", "btn btn-sm", `Upgrade — ${money(f.next_cost)}`);
@@ -3903,42 +4636,111 @@ async function finances(v) {
     }
     facCard.appendChild(row);
   }
-  v.appendChild(facCard);
+  main.appendChild(facCard);
 
-  // -- itemized weekly breakdown ----------------------------------------------
-  const b = data.breakdown;
+  /* -- rail ws-5: tiles, run-rate, projection, brand value ------------------- */
+
+  // Balance + weekly-net tiles (plus last week's realised figures).
+  const tilesCard = el("div", "card");
+  tilesCard.appendChild(el("h2", "", "This week"));
+  const tiles = el("div", "es-tiles");
+  tiles.appendChild(statTile("Balance", money(data.balance)));
+  tiles.appendChild(statTile("Net / wk", `${b.net >= 0 ? "+" : ""}${money(b.net)}`,
+    { tone: b.net >= 0 ? "good" : "bad" }));
+  tiles.appendChild(statTile("Income", money(b.income_total), { tone: "good" }));
+  tiles.appendChild(statTile("Expenses", money(b.expense_total), { tone: "bad" }));
+  if (data.last_week_income != null) tiles.appendChild(statTile("Last income", money(data.last_week_income)));
+  if (data.last_week_expenses != null) tiles.appendChild(statTile("Last exp.", money(data.last_week_expenses)));
+  tilesCard.appendChild(tiles);
+  rail.appendChild(tilesCard);
+
+  // Itemized weekly run-rate; payroll links to Roster, streaming to Social.
   const bkCard = el("div", "card");
-  bkCard.innerHTML = `<h2>This week's run rate</h2>
-    <table><tbody>
-      <tr><td>Base sponsorship</td><td class="num">${money(b.sponsors_base)}</td></tr>
-      <tr><td>Title sponsor</td><td class="num">${money(b.sponsors_by_slot.title || 0)}</td></tr>
-      <tr><td>Jersey sponsor</td><td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td></tr>
-      <tr><td>Peripheral sponsor</td><td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td></tr>
-      <tr><td>Merchandise</td><td class="num">${money(b.merch)}</td></tr>
-      <tr><td>Ticket sales</td><td class="num">${money(b.tickets)}</td></tr>
-      <tr><td title="the org's cut of the roster's streaming income">Streaming</td><td class="num">${money(b.streaming || 0)}</td></tr>
-      <tr><td>Prize money</td><td class="num">${money(b.prizes)}</td></tr>
-      <tr><td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td></tr>
-      <tr><td>Salaries</td><td class="num">-${money(b.salaries)}</td></tr>
-      <tr><td>Staff</td><td class="num">-${money(b.staff)}</td></tr>
-      <tr><td>Facility upkeep</td><td class="num">-${money(b.facility_upkeep)}</td></tr>
-      <tr><td class="mono"><b>Expense total</b></td><td class="num mono"><b>-${money(b.expense_total)}</b></td></tr>
-      <tr><td><b>Net</b></td><td class="num"><b>${b.net >= 0 ? "+" : ""}${money(b.net)}</b></td></tr>
-    </tbody></table>
-    <p class="muted" style="margin-top:8px">A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.</p>`;
-  v.appendChild(bkCard);
+  bkCard.appendChild(el("h2", "", "This week's run rate"));
+  const rt = el("table");
+  rt.dataset.nosort = "1";
+  rt.innerHTML = `<thead><tr><th>Item</th><th class="num">cr / wk</th></tr></thead>`;
+  const rtb = el("tbody");
+  const line = (label, val, link) => {
+    const tr = el("tr", "", `<td>${label}</td><td class="num">${val}</td>`);
+    if (link) {
+      tr.cells[0].appendChild(document.createTextNode(" "));
+      const btn = el("button", "btn btn-sm", link.label);
+      btn.onclick = link.onClick;
+      tr.cells[0].appendChild(btn);
+    }
+    return tr;
+  };
+  rtb.appendChild(line("Base sponsorship", money(b.sponsors_base)));
+  rtb.appendChild(line("Title sponsor", money(b.sponsors_by_slot.title || 0)));
+  rtb.appendChild(line("Jersey sponsor", money(b.sponsors_by_slot.jersey || 0)));
+  rtb.appendChild(line("Peripheral sponsor", money(b.sponsors_by_slot.peripheral || 0)));
+  rtb.appendChild(line("Merchandise", money(b.merch)));
+  rtb.appendChild(line("Ticket sales", money(b.tickets)));
+  rtb.appendChild(line("Streaming", money(b.streaming || 0),
+    { label: "→ Social", onClick: () => dashGoTab("social") }));
+  rtb.appendChild(line("Prize money", money(b.prizes)));
+  rtb.appendChild(el("tr", "", `<td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td>`));
+  rtb.appendChild(line("Salaries", `-${money(b.salaries)}`,
+    { label: "→ Roster", onClick: () => dashGoTab("roster") }));
+  rtb.appendChild(line("Staff", `-${money(b.staff)}`));
+  rtb.appendChild(line("Facility upkeep", `-${money(b.facility_upkeep)}`));
+  rtb.appendChild(el("tr", "", `<td class="mono"><b>Expense total</b></td><td class="num mono"><b>-${money(b.expense_total)}</b></td>`));
+  rtb.appendChild(el("tr", "", `<td><b>Net</b></td><td class="num"><b>${b.net >= 0 ? "+" : ""}${money(b.net)}</b></td>`));
+  rt.appendChild(rtb);
+  bkCard.appendChild(rt);
+  bkCard.appendChild(el("p", "muted",
+    "A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week."));
+  rail.appendChild(bkCard);
 
-  // -- 8-week cash projection -----------------------------------------------
+  // 8-week cash projection + a tiny balance sparkline.
   const projCard = el("div", "card");
-  const rows = data.projection.map((p) => `
-    <tr><td>W${p.week}</td>
-      <td class="num">${p.net >= 0 ? "+" : ""}${money(p.net)}</td>
-      <td class="num">${money(p.balance)}</td></tr>`).join("");
-  projCard.innerHTML = `<h2>8-week cash projection</h2>
-    <table><thead><tr><th>Week</th><th class="num">Net</th><th class="num">Balance</th></tr></thead>
-    <tbody>${rows}</tbody></table>
-    <p class="muted" style="margin-top:8px">Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.</p>`;
-  v.appendChild(projCard);
+  projCard.appendChild(el("h2", "", "8-week cash projection"));
+  const proj = data.projection || [];
+  if (proj.length >= 2) {
+    const W = 220, H = 46;
+    const bals = proj.map((p) => p.balance);
+    const lo = Math.min(...bals), hi = Math.max(...bals), span = (hi - lo) || 1;
+    const pts = proj.map((p, i) => {
+      const x = (i / (proj.length - 1)) * (W - 4) + 2;
+      const y = H - 4 - ((p.balance - lo) / span) * (H - 8);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+    projCard.appendChild(el("div", "es-spark",
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="projected balance">` +
+      `<polyline points="${pts}" fill="none" class="es-spark-line"/></svg>` +
+      `<span class="muted">${money(proj[proj.length - 1].balance)} in ${proj.length}w</span>`));
+  }
+  const pt = el("table");
+  pt.dataset.nosort = "1";
+  pt.innerHTML = `<thead><tr><th>Week</th><th class="num">Net</th><th class="num">Balance</th></tr></thead>` +
+    `<tbody>${proj.map((p) => `<tr><td>W${p.week}</td>` +
+      `<td class="num">${p.net >= 0 ? "+" : ""}${money(p.net)}</td>` +
+      `<td class="num">${money(p.balance)}</td></tr>`).join("")}</tbody>`;
+  projCard.appendChild(pt);
+  projCard.appendChild(el("p", "muted",
+    "Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled."));
+  rail.appendChild(projCard);
+
+  // Brand value / marketability drivers.
+  const mb = data.marketability_breakdown;
+  if (mb && mb.drivers?.length) {
+    const mbCard = el("div", "card");
+    mbCard.appendChild(el("h2", "",
+      `Brand value <span class="muted" style="font-weight:400">— marketability ${mb.score} (facility ×${mb.facility_mult})</span>`));
+    const list = el("div", "es-mb");
+    const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
+    for (const d of mb.drivers) {
+      const pos = d.contrib >= 0;
+      const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
+      list.appendChild(el("div", "es-mb-row",
+        `<span class="es-mb-lab">${esc(d.label)}</span>` +
+        `<span class="es-mb-track"><span class="es-mb-fill ${pos ? "pos" : "neg"}" style="width:${w}%"></span></span>` +
+        `<span class="mono ${pos ? "trend-up" : "trend-down"}">${pos ? "+" : ""}${d.contrib}</span>`));
+    }
+    mbCard.appendChild(list);
+    rail.appendChild(mbCard);
+  }
 }
 
 /* -- talk 1:1 ---------------------------------------------------------------------- */
@@ -4051,9 +4853,9 @@ function showReport(rep) {
     const score = f.best_of > 1
       ? `${f.map_score[0]}–${f.map_score[1]}`
       : f.results.length ? `${f.results[0].score_a}–${f.results[0].score_b}` : "";
-    row.innerHTML = `<span class="pill">${stageLabel(f.stage)}</span>
-      <span style="min-width:320px">${mine ? "<b>" : ""}${f.team_a_name} vs ${f.team_b_name}${mine ? "</b>" : ""}</span>
-      <b class="mono">${score}</b>`;
+    row.innerHTML = `<span class="pill">${esc(stageLabel(f.stage))}</span>
+      <span style="min-width:320px">${mine ? "<b>" : ""}${tlink(f.team_a, f.team_a_name)} vs ${tlink(f.team_b, f.team_b_name)}${mine ? "</b>" : ""}</span>
+      <b class="mono">${esc(score)}</b>`;
     for (let i = 0; i < f.results.length; i++) {
       const r = f.results[i];
       if (r.has_replay) {

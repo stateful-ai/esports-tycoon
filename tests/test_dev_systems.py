@@ -398,6 +398,8 @@ def test_stats_gating_follows_analytics_tier(campaign, game_data) -> None:
     assert out["analytics"]["tier"] == 0
     row = out["players"][0]
     assert "acs" not in row and "kast_pct" not in row
+    # Team column is a profile link: id ships alongside the name at every tier.
+    assert "team_id" in row
 
     # An elite analyst + a maxed suite unlock everything.
     analyst = max(
