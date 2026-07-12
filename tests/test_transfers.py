@@ -538,6 +538,10 @@ def test_role_promise_changes_required_salary(campaign) -> None:
     ok, why, neg = market.open_negotiation(gs, pid)
     assert ok, why
     neg.demand_role = "starter"
+    # Isolate the role lever: this seed's starter also demands a no-transfer
+    # clause, and honoring it would otherwise offset the role downgrade. Drop
+    # it so the offer differs from their ask ONLY in the promised role.
+    neg.demand_no_transfer = False
     status, _msg, neg = market.negotiate_offer(
         gs, pid, neg.demand_salary, neg.demand_weeks, role="bench"
     )

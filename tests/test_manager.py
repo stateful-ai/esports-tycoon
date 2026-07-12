@@ -163,12 +163,16 @@ def test_market_sign_and_release(campaign: GameState) -> None:
 
     victim = team.player_ids[0]
     balance_before = campaign.teams[tid].balance
-    salary = campaign.players[victim].salary
+    # Severance honors a negotiated release clause when the player carries one
+    # (the opening-world starters do), else falls back to SEVERANCE_WEEKS of
+    # salary. Read the rule the engine uses instead of assuming the fallback.
+    vp = campaign.players[victim]
+    severance = vp.release_fee or vp.salary * market.SEVERANCE_WEEKS
     ok, _ = release_player(campaign, tid, victim)
     assert ok
     assert len(team.player_ids) == market.ROSTER_MAX - 1
     assert victim in campaign.free_agent_ids
-    assert campaign.teams[tid].balance == balance_before - salary * 6
+    assert campaign.teams[tid].balance == balance_before - severance
     # The default five heals after the departure (stale ids filter out).
     from esports_sim.manager.campaign import default_five
 
