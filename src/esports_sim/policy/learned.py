@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Iterable, Literal
 
@@ -17,17 +18,39 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim.policy.base import Action, ActionType, PlayerPolicy
-from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import CommunicationAction, PlayerObservation
 from esports_sim.schemas.communication import ClaimKind, ClaimValue
 
 
-POLICY_VERSION = "learned-player-v1"
-ENCODER_VERSION = 1
+POLICY_VERSION = "learned-player-v2"
+ENCODER_VERSION = 2
 OBSERVATION_VERSION = 1
 ACTION_VOCAB = tuple(sorted(ActionType, key=str))
 CLAIM_KIND_VOCAB = tuple(sorted(ClaimKind, key=str))
 CLAIM_VALUE_VOCAB = tuple(sorted(ClaimValue, key=str))
+ORDER_VERB_VOCAB = ("buy", "defuse", "goto", "hold", "plant", "wait")
+TACTICAL_ROLE_VOCAB = (
+    "anchor",
+    "carrier",
+    "entry",
+    "flex",
+    "holder",
+    "lurker",
+    "support",
+)
+TARGET_SITE_VOCAB = ("a", "b", "c")
+TIMEOUT_VOCAB = ("pressure", "retake", "stabilize")
+PLAYER_ROLE_VOCAB = ("controller", "duelist", "flex", "initiator", "sentinel")
+PLAYSTYLE_VOCAB = ("anchor", "awper", "entry", "igl", "lurker", "support")
+WEAPON_VOCAB = (
+    "classic",
+    "ghost",
+    "operator",
+    "phantom",
+    "sheriff",
+    "spectre",
+    "vandal",
+)
 
 
 class PlayerDecisionTraceV1(BaseModel):
@@ -57,6 +80,17 @@ def _stable_bucket(text: str | None, buckets: int) -> np.ndarray:
     return out
 
 
+def _one_hot(text: str | None, vocabulary: tuple[str, ...]) -> np.ndarray:
+    """Collision-free categorical encoding with an explicit unknown slot."""
+    out = np.zeros(len(vocabulary) + 1, dtype=np.float64)
+    try:
+        index = vocabulary.index(text) if text is not None else len(vocabulary)
+    except ValueError:
+        index = len(vocabulary)
+    out[index] = 1.0
+    return out
+
+
 def _mean(values: Iterable[float]) -> float:
     rows = list(values)
     return float(sum(rows) / len(rows)) if rows else 0.0
@@ -65,6 +99,17 @@ def _mean(values: Iterable[float]) -> float:
 def encode_observation(obs: PlayerObservation) -> np.ndarray:
     """Fixed-size actor-visible state encoder; contains no hidden truth."""
     self_state = obs.self_state
+    order_verb, _, order_target = (obs.igl_call or "hold").partition(":")
+    teammates_here = sum(
+        teammate.callout_id == self_state.callout_id
+        for teammate in obs.teammates
+        if self_state.callout_id is not None
+    )
+    fresh_enemy_reads = [
+        enemy
+        for enemy in obs.enemies
+        if enemy.last_seen_tick is not None and obs.tick - enemy.last_seen_tick <= 12
+    ]
     values = [
         self_state.hp / 100.0,
         self_state.armor / 50.0,
@@ -81,14 +126,23 @@ def encode_observation(obs: PlayerObservation) -> np.ndarray:
         len(obs.team_whiteboard) / 12.0,
         _mean(belief.confidence for belief in obs.team_whiteboard),
         len(obs.adjacent_callouts) / 6.0,
+        obs.tactical_aggression / 100.0,
+        teammates_here / 4.0,
+        len(fresh_enemy_reads) / 5.0,
+        _mean(enemy.confidence for enemy in fresh_enemy_reads),
     ]
     return np.concatenate(
         (
             np.asarray(values, dtype=np.float64),
             _stable_bucket(obs.igl_call, 6),
+            _one_hot(order_verb, ORDER_VERB_VOCAB),
+            _stable_bucket(order_target, 6),
             _stable_bucket(self_state.callout_id, 6),
             _stable_bucket(self_state.agent_id, 4),
-            _stable_bucket(self_state.weapon_id, 4),
+            _one_hot(self_state.weapon_id, WEAPON_VOCAB),
+            _one_hot(obs.role, TACTICAL_ROLE_VOCAB),
+            _one_hot(obs.team_target, TARGET_SITE_VOCAB),
+            _one_hot(obs.timeout_directive, TIMEOUT_VOCAB),
         )
     )
 
@@ -125,8 +179,8 @@ def encode_condition(obs: PlayerObservation) -> np.ndarray:
     return np.concatenate(
         (
             numeric,
-            _stable_bucket(str(condition.role), 3),
-            _stable_bucket(str(condition.playstyle), 3),
+            _one_hot(str(condition.role), PLAYER_ROLE_VOCAB),
+            _one_hot(str(condition.playstyle), PLAYSTYLE_VOCAB),
             trait_buckets,
         )
     )
@@ -147,7 +201,7 @@ def _action_features(action: Action) -> np.ndarray:
             np.asarray([float(action.type == kind) for kind in ACTION_VOCAB]),
             _stable_bucket(action.callout_id, 6),
             _stable_bucket(action.target_player_id, 4),
-            _stable_bucket(action.weapon_id, 4),
+            _one_hot(action.weapon_id, WEAPON_VOCAB),
             _stable_bucket(action.ability_id, 4),
             np.asarray([action.armor / 50.0, len(action.abilities) / 4.0]),
         )
@@ -337,9 +391,11 @@ class LearnedPlayerPolicy:
         legal: list[Action],
         rng: np.random.Generator,
     ) -> Action:
-        del rng  # deterministic argmax, matching learned-manager inference
         ranked = self.action_probabilities(obs, legal)
-        return max(ranked, key=lambda item: (item[1], item[0].model_dump_json()))[0]
+        probabilities = np.asarray([probability for _, probability in ranked])
+        # Sampling preserves the stochastic expert's tactical variety.  The
+        # injected per-player RNG keeps the choice byte-identical on replay.
+        return ranked[int(rng.choice(len(ranked), p=probabilities))][0]
 
     def communicate(
         self,
@@ -347,13 +403,12 @@ class LearnedPlayerPolicy:
         legal: list[CommunicationAction],
         rng: np.random.Generator,
     ) -> CommunicationAction:
-        del rng
         ordered = _sorted_comms(legal)
         state = conditioned_features(obs)
         matrix = np.stack([_communication_features(action) for action in ordered])
         scores = matrix @ self.model.communication_weights @ state
-        index = max(range(len(ordered)), key=lambda i: (float(scores[i]), ordered[i].model_dump_json()))
-        return ordered[index]
+        probabilities = _softmax(scores)
+        return ordered[int(rng.choice(len(ordered), p=probabilities))]
 
 
 class RecordingPlayerPolicy:
@@ -401,24 +456,139 @@ class RecordingPlayerPolicy:
 def imitation_metrics(
     model: LearnedPlayerModel,
     traces: Iterable[PlayerDecisionTraceV1],
-) -> dict[str, float]:
+) -> dict[str, float | dict[str, int] | dict[str, float]]:
     policy = model.make_policy()
     rows = list(traces)
     if not rows:
-        return {"examples": 0.0, "action_accuracy": 0.0, "legal_rate": 0.0}
+        return {
+            "examples": 0.0,
+            "action_accuracy": 0.0,
+            "legal_rate": 0.0,
+            "majority_baseline": 0.0,
+            "macro_action_recall": 0.0,
+            "non_hold_accuracy": 0.0,
+            "mean_selected_probability": 0.0,
+            "expected_non_hold_rate": 0.0,
+            "action_counts": {},
+            "predicted_action_counts": {},
+            "expected_action_counts": {},
+            "per_action_recall": {},
+        }
     correct = 0
     legal_count = 0
-    eval_rng = RngTree(0).derive("learned-player", "imitation-metrics")
+    selected_counts: dict[str, int] = {}
+    predicted_counts: dict[str, int] = {}
+    correct_by_action: dict[str, int] = {}
+    expected_counts: Counter[str] = Counter()
+    selected_probability = 0.0
     for trace in rows:
-        selected = policy.decide(
-            trace.observation,
-            list(trace.legal_actions),
-            eval_rng,
+        ranked = policy.action_probabilities(
+            trace.observation, list(trace.legal_actions)
         )
+        for candidate, probability in ranked:
+            expected_counts[str(candidate.type)] += probability
+            if candidate == trace.selected_action:
+                selected_probability += probability
+        selected = max(
+            ranked, key=lambda item: (item[1], item[0].model_dump_json())
+        )[0]
         correct += selected == trace.selected_action
         legal_count += selected in trace.legal_actions
+        target = str(trace.selected_action.type)
+        predicted = str(selected.type)
+        selected_counts[target] = selected_counts.get(target, 0) + 1
+        predicted_counts[predicted] = predicted_counts.get(predicted, 0) + 1
+        correct_by_action[target] = correct_by_action.get(target, 0) + int(
+            selected == trace.selected_action
+        )
+    per_action_recall = {
+        action: round(correct_by_action.get(action, 0) / count, 4)
+        for action, count in sorted(selected_counts.items())
+    }
+    non_hold_total = sum(
+        count for action, count in selected_counts.items() if action != str(ActionType.HOLD)
+    )
+    non_hold_correct = sum(
+        correct_by_action.get(action, 0)
+        for action in selected_counts
+        if action != str(ActionType.HOLD)
+    )
     return {
         "examples": float(len(rows)),
         "action_accuracy": round(correct / len(rows), 4),
         "legal_rate": round(legal_count / len(rows), 4),
+        "majority_baseline": round(max(selected_counts.values()) / len(rows), 4),
+        "macro_action_recall": round(
+            sum(per_action_recall.values()) / len(per_action_recall), 4
+        ),
+        "non_hold_accuracy": round(
+            non_hold_correct / non_hold_total if non_hold_total else 0.0, 4
+        ),
+        "mean_selected_probability": round(selected_probability / len(rows), 4),
+        "expected_non_hold_rate": round(
+            sum(
+                count
+                for action, count in expected_counts.items()
+                if action != str(ActionType.HOLD)
+            )
+            / len(rows),
+            4,
+        ),
+        "action_counts": dict(sorted(selected_counts.items())),
+        "predicted_action_counts": dict(sorted(predicted_counts.items())),
+        "expected_action_counts": {
+            action: round(count, 2)
+            for action, count in sorted(expected_counts.items())
+        },
+        "per_action_recall": per_action_recall,
+    }
+
+
+def communication_imitation_metrics(
+    model: LearnedPlayerModel,
+    traces: Iterable[CommunicationDecisionTraceV1],
+) -> dict[str, float | dict[str, int]]:
+    """Held-out diagnostics for the separate speak/withhold policy head."""
+    rows = list(traces)
+    if not rows:
+        return {
+            "examples": 0.0,
+            "accuracy": 0.0,
+            "macro_speak_recall": 0.0,
+            "selected_counts": {},
+            "predicted_counts": {},
+        }
+    selected_counts: Counter[str] = Counter()
+    predicted_counts: Counter[str] = Counter()
+    correct_counts: Counter[str] = Counter()
+    correct = 0
+    for trace in rows:
+        ordered = _sorted_comms(trace.legal_actions)
+        state = conditioned_features(trace.observation)
+        matrix = np.stack([_communication_features(action) for action in ordered])
+        scores = matrix @ model.communication_weights @ state
+        selected = ordered[
+            max(
+                range(len(ordered)),
+                key=lambda index: (
+                    float(scores[index]),
+                    ordered[index].model_dump_json(),
+                ),
+            )
+        ]
+        target = "speak" if trace.selected_action.speak else "silent"
+        predicted = "speak" if selected.speak else "silent"
+        selected_counts[target] += 1
+        predicted_counts[predicted] += 1
+        correct += selected == trace.selected_action
+        correct_counts[target] += int(selected == trace.selected_action)
+    recalls = [
+        correct_counts[label] / count for label, count in sorted(selected_counts.items())
+    ]
+    return {
+        "examples": float(len(rows)),
+        "accuracy": round(correct / len(rows), 4),
+        "macro_speak_recall": round(sum(recalls) / len(recalls), 4),
+        "selected_counts": dict(sorted(selected_counts.items())),
+        "predicted_counts": dict(sorted(predicted_counts.items())),
     }

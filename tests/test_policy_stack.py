@@ -19,7 +19,11 @@ from esports_sim.policy.base import (
     CoachProfile,
     TimeoutDirective,
 )
-from esports_sim.policy.heuristic import HeuristicCoachPolicy, HeuristicTeamPolicy
+from esports_sim.policy.heuristic import (
+    HeuristicCoachPolicy,
+    HeuristicPolicy,
+    HeuristicTeamPolicy,
+)
 from esports_sim.registry import GameData
 from esports_sim.sim import MatchPolicies, simulate_match_result
 from esports_sim.sim import constants as C
@@ -82,8 +86,9 @@ def test_timeout_is_the_only_live_coach_event(game_data: GameData) -> None:
         policies=MatchPolicies(coach_by_team={"team_nexus": _ImmediateTimeout()}),
     )
     timeouts = [event for event in result.events if event.type == "round.timeout"]
-    assert len(timeouts) == 1
-    timeout = timeouts[0]
+    nexus_timeouts = [event for event in timeouts if event.team_id == "team_nexus"]
+    assert len(nexus_timeouts) == 1
+    timeout = nexus_timeouts[0]
     assert timeout.team_id == "team_nexus"
     assert timeout.tick == 0
     assert timeout.directive == "pressure"
@@ -116,6 +121,44 @@ def test_player_stats_choose_the_attack_roles(game_data: GameData) -> None:
     )
     assert plan.spike_carrier_id == carrier.id
     assert plan.roles[entry.id] == "entry"
+    assert plan.roles[carrier.id] == "carrier"
+
+
+def test_player_peek_risk_responds_to_tactical_responsibility(
+    game_data: GameData,
+) -> None:
+    policy = HeuristicPolicy(game_data, game_data.maps["haven"])
+    player_id = game_data.teams["team_nexus"].player_ids[0]
+    common = dict(
+        tactical_aggression=50.0,
+        timeout_directive=None,
+        tick=80,
+        spike_planted=False,
+        is_attacking=True,
+        teammates_alive=5,
+    )
+    entry = policy._peek_probability(player_id, role="entry", **common)
+    carrier = policy._peek_probability(player_id, role="carrier", **common)
+    assert entry > carrier
+
+    postplant_attack = policy._peek_probability(
+        player_id,
+        role="support",
+        **(common | {"spike_planted": True}),
+    )
+    retake_defense = policy._peek_probability(
+        player_id,
+        role="support",
+        **(common | {"spike_planted": True, "is_attacking": False}),
+    )
+    assert retake_defense > postplant_attack
+
+    isolated = policy._peek_probability(
+        player_id,
+        role="entry",
+        **(common | {"teammates_alive": 2}),
+    )
+    assert isolated < entry
 
 
 def test_coach_quality_controls_timeout_decision() -> None:

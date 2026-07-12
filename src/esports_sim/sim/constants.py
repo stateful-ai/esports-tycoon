@@ -40,6 +40,24 @@ FLANK_MALUS = 8.0
 # losing fights more often (jiggle bait).
 PEEK_PROB = 0.02  # per tick baseline; playstyle/reactivity add to it
 PEEK_PROB_AGGRO = 0.03  # extra for entry/awper playstyles
+PEEK_PROB_CAP = 0.25
+PEEK_AGGRESSION_DIV = 166.0
+PEEK_TIMEOUT_PRESSURE_MULT = 1.35
+PEEK_TIMEOUT_STABILIZE_MULT = 0.75
+PEEK_ROLE_MULTIPLIERS = {
+    "entry": 1.35,
+    "lurker": 1.12,
+    "flex": 1.0,
+    "support": 0.88,
+    "holder": 0.84,
+    "anchor": 0.82,
+    "carrier": 0.72,
+}
+PEEK_POSTPLANT_ATTACK_MULT = 0.78
+PEEK_RETAKE_DEFENSE_MULT = 1.25
+PEEK_LOW_NUMBERS_MULT = 0.84
+PEEK_LATE_ATTACK_MULT = 1.30
+PEEK_LATE_ATTACK_TICK = 140
 PEEK_INITIATIVE = 5.0
 PEEK_FIZZLE_MULT = 2.0
 PEEK_FLASH_PROB = 0.5  # chance a peeker with a flash charge pops it

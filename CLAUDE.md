@@ -29,6 +29,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | RL episode export (save -> transitions/actions/chronicle JSONL) | `... scripts\export_telemetry.py <save-or-dir> [stem]` |
 | Manager policy rollouts (traces/runs/evaluation) | `... scripts\run_manager_rollouts.py [seeds] [profiles] [weeks] [stem]` |
 | Train learned manager policy (seed-split imitation) | `... scripts\train_manager_policy.py [train-seeds] [val-seeds] [profiles] [weeks] [checkpoint]` |
+| Generate/train learned player policy (cross-map seed split) | `... scripts\train_player_policy.py <checkpoint> [--map all --seeds N --validation-seeds N --dataset runs\...jsonl]` |
 | Improve manager policy (online simulation + promotion gate) | `... scripts\online_train_manager_policy.py <checkpoint> [--train-seeds N --eval-seeds N --profiles N --weeks N]` |
 | Match token corpus (world-model data; pinned vocab) | `... scripts\dump_season_tokens.py [n] [seed] [stem]` |
 | Play-pattern report (feature usage across saves) | `... scripts\telemetry_report.py [saves-dir]` |
