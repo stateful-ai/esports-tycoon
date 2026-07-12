@@ -90,8 +90,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   pass-through for the game-plan/sentiment/patch fields; v5 adds the
   Chronicle + legacy fields, backfilling a skeleton history from
   champions/awards/retired; v6/v7 are pass-throughs for the career-stat/
-  mentorship and tenure/language/negotiation fields; v8 is a pass-through
-  for the telemetry fields), `telemetry.py` (analytics substrate: `action_log` records
+  mentorship and tenure/language/negotiation fields; migrations now continue
+  through v13 for newer campaign, telemetry, and roster-management state),
+  `telemetry.py` (analytics substrate: `action_log` records
   every HUMAN decision at the web/CLI layer — never AI moves, they
   re-derive from the seed — so seed + action_log fully determines a
   career; `telemetry_snaps` appends a post-tick org feature vector per
@@ -219,3 +220,29 @@ Published at github.com/stateful-ai/esports-tycoon.
   transform the viewer uses (`render_map_guide.py` prints it), and the
   painted backdrop `<image>` is pinned at those same viewBox coords —
   change one side and the other must follow or paint/positions shear.
+
+## Learned policy workflow
+
+- `src/esports_sim/policy/` owns engine-facing player policies. The engine is
+  the resolver: policies rank typed, engine-supplied legal actions from a
+  fog-safe `PlayerObservation`. `heuristic.py` owns baseline player, IGL, and
+  coach behavior; `learned.py` adds version-pinned NumPy action and
+  communication rankers. Sampling always receives the engine's per-player RNG.
+- Manager policies consume only `decision_env.manager_observation` and its
+  legal-action mask. `learned_manager_policy.py` provides deterministic
+  imitation checkpoints; `online_manager_learning.py` fine-tunes only the
+  action head through simulated exploration and promotes only on disjoint-seed
+  completion, legality, reward, balance, wins, and profile-TV gates.
+- Learned-policy checkpoints are schema contracts, not loose JSON: pin policy,
+  observation, encoder, vocabulary, and profile versions; retain train and
+  held-out seed lists in metadata; never overwrite a champion with an
+  unpromoted candidate.
+- A detached worktree may not have `.venv-win`. When reusing the primary
+  checkout's venv, first set `$env:PYTHONPATH=(Resolve-Path 'src').Path`;
+  otherwise subprocess CLIs can import the primary checkout instead of the
+  worktree under test.
+
+Use `/learning` for player or manager policy work. The command table includes
+`scripts/train_player_policy.py`, `scripts/train_manager_policy.py`, and
+`scripts/online_train_manager_policy.py`; run focused resolver/policy tests and
+held-out evaluation before publishing a checkpoint.

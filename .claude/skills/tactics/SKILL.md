@@ -93,6 +93,22 @@ never a bare `python`/`pytest` (see CLAUDE.md).
    `test_*_is_wired` / directional tests for the pattern) — this is where
    dial movement is actually enforced.
 
+## One-match counter-strats
+
+`TeamMatchPlan` overrides are explicit one-fixture responses, not a sixth
+permanent tactics dial. Keep their signed, bounded calculation in
+`sim/tactics_fit.counter_strat_edge`, shared by campaign resolution and server
+serialization. Only explicitly overridden dials count; a blank override means
+"play our book".
+
+- Opposite non-neutral deviations can earn an edge; matching deviations can
+  incur the equal-sized malus; either side at 50 is exactly zero.
+- Keep the cap/span in `sim/constants.py`, never inline in campaign or engine.
+- Surface the computed preview from the server. JavaScript may display it but
+  must not recreate the formula.
+- Add both a signed/bounded unit test and an integration assertion that the
+  correct plan changes an actual fixture outcome.
+
 ## Gotchas
 
 - Reviewers (and past bugs) have caught: crediting the wrong side, stale
