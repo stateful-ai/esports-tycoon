@@ -1312,7 +1312,8 @@ async function dashboard(v) {
     for (const o of s.transfer_offers ?? []) {
       item(`Offer in for ${plink(o.player_id, o.handle)} — expires W${o.expires_week}`, null);
     }
-    if (s.scout && s.scout.target && (s.scout.progress || 0) >= 1) {
+    if (s.scout && s.scout.target &&
+        (s.scout.progress || 0) >= (s.scout.cap || 1)) {
       item(`Scout report ready — ${esc(s.scout.target_name || "target")}`, () => dashGoTab("scouting"));
     }
     if (fix && gameplan && !gameplan.plan) {
@@ -1623,9 +1624,11 @@ async function roster(v) {
     right.push(back);
     const scout = el("button", "btn btn-sm",
       data.scouting_this
-        ? `Scouting… ${Math.round(data.scout_progress * 100)}%`
+        ? (data.scout_progress >= data.scout_cap
+            ? "Broad survey complete"
+            : `Scouting… ${Math.round(data.scout_progress * 100)}%`)
         : "Assign scout");
-    scout.disabled = data.scouting_this && data.scout_progress >= 1;
+    scout.disabled = data.scouting_this && data.scout_progress >= data.scout_cap;
     scout.onclick = async () => {
       const r = await api("/api/actions/scout", { team_id: teamId });
       toast(r.message); render();
@@ -4008,14 +4011,13 @@ function scoutTier(p) {
 
 async function scouting(v) {
   const data = await api("/api/scouting");
-  const s = App.state;
+  const surveyPct = Math.round((data.caps?.survey ?? 0) * 100);
+  const matchPct = Math.round((data.caps?.match ?? 0) * 100);
+  const deepPct = Math.round((data.caps?.deep_dive ?? 0) * 100);
 
-  // Next opponent (from the state payload) powers the "Scout next opponent"
-  // quick-assign — defensive: no fixture (bye/offseason) hides the button.
-  const nf = s && s.next_fixture;
-  const myId = s && s.user_team && s.user_team.id;
-  const nextOppId = nf ? (nf.team_a === myId ? nf.team_b : nf.team_a) : null;
-  const nextOppName = nf ? (nf.team_a === myId ? nf.team_b_name : nf.team_a_name) : null;
+  // Preparation target comes from the server: the opponent after the match
+  // currently being planned. No following fixture (bye/offseason) hides it.
+  const planningOpp = data.planning_opponent;
 
   v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
 
@@ -4030,9 +4032,9 @@ async function scouting(v) {
   const card = el("div", "card scout-desk");
   card.appendChild(el("h2", "", "Scout desk"));
   card.appendChild(el("p", "muted",
-    "One scout, one assignment: cover a team (steady, ~3 weeks), sweep the " +
-    "market (slower, wider), attend a match (one-shot intel on both sides), or " +
-    "build the book on one player (fastest — and it goes deeper: comfort picks, " +
+    `One scout, one assignment: survey a team or the market (broad read, capped ` +
+    `at ${surveyPct}%), attend a match (behavioral intel up to ${matchPct}%), or build the book on ` +
+    `one player (${deepPct}% information depth — still not own-roster certainty): comfort picks, ` +
     "how they play, their mentality, the full verdict)."));
   card.appendChild(el("div", "scout-one-note",
     `<span class="chip tone-accent">One active job</span>` +
@@ -4065,7 +4067,7 @@ async function scouting(v) {
   const coverageChoice = el("div", "tile scout-choice");
   coverageChoice.appendChild(el("div", "scout-choice-head",
     `<span class="chip">1</span><b>Cover a beat</b>`));
-  coverageChoice.appendChild(el("span", "muted scout-choice-copy", "Build team or market coverage over time."));
+  coverageChoice.appendChild(el("span", "muted scout-choice-copy", `Survey everyone on the beat up to ${surveyPct}% information.`));
   const sel = el("select", "select");
   sel.appendChild(el("option", "", "— cover a team / market —"));
   const mkt = el("option", "", "Free-agent market");
@@ -4091,7 +4093,7 @@ async function scouting(v) {
   const matchChoice = el("div", "tile scout-choice");
   matchChoice.appendChild(el("div", "scout-choice-head",
     `<span class="chip">2</span><b>Attend a match</b>`));
-  matchChoice.appendChild(el("span", "muted scout-choice-copy", "One-shot intel on both teams after they play."));
+  matchChoice.appendChild(el("span", "muted scout-choice-copy", `One-shot behavioral intel on both teams, up to ${matchPct}%.`));
   const fsel = el("select", "select");
   fsel.appendChild(el("option", "", (data.upcoming ?? []).length
     ? "— choose a fixture —" : "No attendable matches"));
@@ -4117,7 +4119,7 @@ async function scouting(v) {
   const playerChoice = el("div", "tile scout-choice");
   playerChoice.appendChild(el("div", "scout-choice-head",
     `<span class="chip">3</span><b>Deep-dive a player</b>`));
-  playerChoice.appendChild(el("span", "muted scout-choice-copy", "Fastest route to comfort, style and mentality reads."));
+  playerChoice.appendChild(el("span", "muted scout-choice-copy", "External full books stay uncertain; own-player books add weekly training guidance."));
   const pin = el("input", "field mono");
   pin.placeholder = "deep-dive a player: search by name…";
   playerChoice.appendChild(pin);
@@ -4133,9 +4135,8 @@ async function scouting(v) {
       try { r = await api("/api/market/search?q=" + encodeURIComponent(q)); }
       catch { return; }
       for (const p of r.results.slice(0, 6)) {
-        if (p.mine) continue;
         const b = el("button", "btn btn-sm",
-          `${esc(p.handle)} <span class="muted">${esc(p.team_name ?? "free agent")}</span>`);
+          `${esc(p.handle)} <span class="muted">${p.mine ? "our player · development" : esc(p.team_name ?? "free agent")}</span>`);
         b.onclick = async () => {
           const res = await api("/api/actions/scout", { player_id: p.id });
           toast(res.message);
@@ -4195,6 +4196,13 @@ async function scouting(v) {
       : `<div class="muted">Mental read unlocks at 75%.</div>`);
     if (r.curve_read) {
       lines.push(`<div><b>Development path:</b> ${esc(r.curve_read)}</div>`);
+    }
+    if (r.training_hint) {
+      lines.push(`<div><b>Training recommendation:</b> <span class="pill">${esc(r.training_hint.focus)}</span> ` +
+        `${esc(r.training_hint.reason)}</div>`);
+      if (r.own_player) {
+        lines.push(`<div class="muted">Match this player's focus this week for the active-scout development bonus.</div>`);
+      }
     }
     if ((r.traits ?? []).length || r.traits_hidden) {
       lines.push(`<div><b>Character:</b> ` + r.traits
@@ -4267,7 +4275,7 @@ async function scouting(v) {
     [0, "First looks", "role, ability band"],
     [0.25, "Basics", "comfort picks (agents + mastery)"],
     [0.5, "Style read", "how they play"],
-    [0.75, "Mental read", "mentality under pressure"],
+    [0.75, "Mental read", "mentality, development fit"],
     [0.95, "Complete book", "the verdict + full ceilings"],
   ];
   for (const [thr, name, desc] of stages) {
@@ -4284,11 +4292,11 @@ async function scouting(v) {
   qa.appendChild(el("h2", "", "Quick assign"));
   // Each button on its own line (block wrapper) so long labels don't crowd.
   const addQuick = (btn) => { const w = el("div", ""); w.appendChild(btn); qa.appendChild(w); };
-  if (nextOppId) {
-    const b = el("button", "btn btn-sm" + (data.target === nextOppId ? " active" : ""),
-      `Scout next opponent — ${esc(nextOppName ?? "")}`);
+  if (planningOpp) {
+    const b = el("button", "btn btn-sm" + (data.target === planningOpp.id ? " active" : ""),
+      `Scout next week's opponent — ${esc(planningOpp.name)} (W${planningOpp.week})`);
     b.onclick = async () => {
-      const r = await api("/api/actions/scout", { team_id: nextOppId });
+      const r = await api("/api/actions/scout", { team_id: planningOpp.id });
       toast(r.message); render();
     };
     addQuick(b);

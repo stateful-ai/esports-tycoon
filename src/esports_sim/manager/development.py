@@ -836,7 +836,7 @@ def current_ability_projection(p: Player, progress: float = 1.0) -> tuple[float,
     return round(lo, 1), round(hi, 1)
 
 
-def scout_report(gs, p: Player, progress: float) -> dict:
+def scout_report(gs, p: Player, progress: float, *, own_player: bool = False) -> dict:
     """Banded CA/PA view + progressively revealed traits. The band CENTER
     is a stable per-player offset (scouts have priors, not dice), and the
     band tightens as progress rises."""
@@ -863,8 +863,16 @@ def scout_report(gs, p: Player, progress: float) -> dict:
     known = sorted(p.personality_tags)[:known_n]
     strengths = sorted(p.attributes, key=lambda a: -p.attributes[a])[:2]
     weaknesses = sorted(p.attributes, key=lambda a: p.attributes[a])[:2]
+    # Own-player work interprets a path the manager already observes every day,
+    # so guidance unlocks earlier than it does for an external recruitment read.
+    # Local import avoids an import-time cycle (training imports development).
+    from esports_sim.manager import training
+
+    hint_at = training.SCOUT_GUIDANCE_UNLOCK if own_player else 0.75
+    training_hint = training.scouting_guidance(p) if progress >= hint_at else None
     return {
         "player_id": p.id,
+        "own_player": own_player,
         "handle": p.handle,
         "age": p.age,
         "role": str(p.role),
@@ -900,6 +908,7 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         "style_read": _style_read(p) if progress >= 0.5 else "",
         "mental_read": _mental_read(p) if progress >= 0.75 else "",
         "curve_read": curve_read(p) if progress >= 0.75 else "",
+        "training_hint": training_hint,
         "verdict": _scout_verdict(p, ca, progress) if progress >= 0.95 else "",
         "progress": round(progress, 2),
     }

@@ -53,6 +53,7 @@ PLAYER_TOP = {
     "splits",
     "charts",
     "relationships",
+    "scouting",
     "career",
     "career_totals",
     "career_arc",
@@ -301,6 +302,38 @@ def test_rival_player_profile_fog(env) -> None:
     assert prof["relationships"] == []
     # Season box scores are public broadcast data — not fogged.
     assert prof["season"]["matches"] >= 1
+
+
+def test_full_external_deep_dive_retains_residual_fog(env) -> None:
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    gs.set_acting(h.user_team)
+    for pid in (h.rival_pid, h.tier2_pid, h.fa_pid):
+        gs.scout_progress[f"player:{pid}"] = 1.0
+        prof = _player(gs, gd, pid)
+        assert prof["scouting"]["progress"] == 1.0
+        assert prof["scouting"]["report"]["curve_read"]
+        assert prof["scouting"]["report"]["training_hint"]
+        assert prof["scouting"]["report"]["verdict"]
+        assert prof["overview"]["fogged"] is True
+        assert prof["overview"]["ovr"] is None
+        assert all(a["value"] is None for a in prof["attributes"])
+
+
+def test_own_player_profile_surfaces_active_scout_guidance(env) -> None:
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    gs.set_acting(h.user_team)
+    key = f"player:{h.user_pid}"
+    gs.scout_target = key
+    gs.scout_progress[key] = 0.3
+    hint = server_mod.training.scouting_guidance(gs.players[h.user_pid])
+    gs.players[h.user_pid].dev_focus = str(hint["focus"])
+    prof = _player(gs, gd, h.user_pid)
+    assert prof["scouting"]["active"] is True
+    assert prof["scouting"]["report"] is None
+    assert prof["scouting"]["guidance"]["focus"] == hint["focus"]
+    assert prof["scouting"]["guidance"]["bonus_active"] is True
 
 
 def test_free_agent_profile(env) -> None:
@@ -1020,6 +1053,26 @@ def test_completed_match_scout_returns_grounded_report(env):
     }
     gs.teams[fixture.team_a].tactics.aggression = 100
     assert server_mod.scouting_view()["match_report"]["team_a_tendencies"] == []
+
+
+def test_scouting_quick_target_is_following_week_opponent(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    current = gs.team_fixture(h.user_team, gs.week)
+    following = gs.team_fixture(h.user_team, gs.week + 1)
+    view = server_mod.scouting_view()
+    if following is None:
+        assert view["planning_opponent"] is None
+        return
+    expected = following.team_b if following.team_a == h.user_team else following.team_a
+    assert view["planning_opponent"] == {
+        "id": expected,
+        "name": gs.teams[expected].name,
+        "week": gs.week + 1,
+        "fixture_id": following.id,
+    }
+    if current is not None:
+        assert view["planning_opponent"]["fixture_id"] != current.id
 
 
 def test_rival_prices_carry_reconciled_breakdowns(env):

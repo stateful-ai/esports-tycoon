@@ -84,6 +84,63 @@ def test_match_scouting_grants_both_teams_and_clears() -> None:
     gs.set_acting(None)
 
 
+def test_broad_and_match_scouting_stop_at_distinct_information_caps() -> None:
+    from esports_sim.manager import campaign as camp
+    from esports_sim.manager.campaign import WeekReport
+    from esports_sim.manager.state import Fixture
+
+    _, gs = _campaign()
+    rivals = [t.id for t in gs.teams.values() if t.id != gs.user_team_id][:2]
+    gs.set_acting(gs.user_team_id)
+    gs.scout_target = rivals[0]
+    gs.set_acting(None)
+    empty = WeekReport(season=1, week=1, phase="regular")
+    for _ in range(5):
+        camp._tick_scouting(gs, empty)
+    gs.set_acting(gs.user_team_id)
+    assert gs.scout_progress[rivals[0]] == camp.SCOUT_SURVEY_CAP
+
+    fx = Fixture(
+        id="capmatch", week=gs.week, stage="regular",
+        team_a=rivals[0], team_b=rivals[1], maps=["bind"], played=True,
+        winner_id=rivals[0],
+    )
+    gs.fixtures.append(fx)
+    gs.scout_target = "match:capmatch"
+    gs.set_acting(None)
+    report = WeekReport(season=1, week=gs.week, phase="regular", fixtures=[fx])
+    camp._tick_scouting(gs, report)
+    gs.set_acting(gs.user_team_id)
+    assert gs.scout_progress[rivals[0]] == camp.SCOUT_MATCH_CAP
+    assert gs.scout_progress[rivals[1]] <= camp.SCOUT_MATCH_CAP
+    gs.set_acting(None)
+
+
+def test_own_player_deep_dive_unlocks_contextual_training_guidance() -> None:
+    from esports_sim.manager import campaign as camp
+    from esports_sim.manager.campaign import WeekReport
+
+    _, gs = _campaign()
+    pid = gs.teams[gs.user_team_id].player_ids[0]
+    gs.set_acting(gs.user_team_id)
+    gs.scout_target = f"player:{pid}"
+    gs.set_acting(None)
+    weekly = WeekReport(season=1, week=1, phase="regular")
+    camp._tick_scouting(gs, weekly)
+    camp._tick_scouting(gs, weekly)
+    gs.set_acting(gs.user_team_id)
+    progress = gs.scout_progress[f"player:{pid}"]
+    report = development.scout_report(
+        gs, gs.players[pid], progress, own_player=True
+    )
+    assert progress >= camp.training.SCOUT_GUIDANCE_UNLOCK
+    assert report["training_hint"]["focus"] in camp.training.DEV_FOCUS_OPTIONS
+    assert camp._active_scout_guidance(gs, gs.user_team_id) == {
+        pid: report["training_hint"]["focus"]
+    }
+    gs.set_acting(None)
+
+
 # -- insolvency ---------------------------------------------------------------
 
 def test_debt_penalises_reputation_and_morale_and_warns_user() -> None:
