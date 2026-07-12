@@ -2500,6 +2500,14 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     _rookie_classes(gs, gd, rng, n_retired)
     social.seed_followers(gs)  # rookies arrive with a baseline audience
 
+    # Retirements just opened AI seats; refill them from the (now rookie-fed)
+    # free-agent pool so every AI side starts the new season legal at
+    # ROSTER_SIZE instead of carrying the gap into week 1. Humans keep their
+    # open seat and sign for themselves. A dedicated rng stream leaves the
+    # offseason's other draws — aging, retirements, tactics — byte-identical.
+    refill_rng = tree.derive("season", gs.season, "offseason", "refill")
+    market.ai_fill_rosters(gs, gd, refill_rng)
+
     # Season-in-review: one grounded paragraph over the season's records
     # (champion, MVP, biggest riser, marquee retirement, tactical era),
     # read while gs.season still names the season that just ended.
