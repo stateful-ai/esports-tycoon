@@ -295,6 +295,20 @@ def test_staff_hire_and_effects(campaign: GameState) -> None:
     assert staff.analytics_tier(campaign) >= 1
 
 
+def test_staff_pool_includes_curated_real_vct_staff(campaign: GameState) -> None:
+    from esports_sim.manager import staff
+
+    assert len(staff._REAL_VCT_STAFF) >= 100
+    expected = {
+        "vct_nbs", "vct_engr", "vct_alecks", "vct_ed101",
+        "vct_robert_yip", "vct_strong", "vct_fayde",
+    }
+    assert expected <= {member.id for member in campaign.staff_pool}
+    staff.seed_pool(campaign)
+    ids = [member.id for member in campaign.staff_pool]
+    assert len(ids) == len(set(ids))
+
+
 def test_staff_pool_never_mints_doppelgangers(campaign: GameState) -> None:
     """A hired member's id must stay taken: a lazy top-up can't create a
     different person under the same id (the profile page would lie)."""

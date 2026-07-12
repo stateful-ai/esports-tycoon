@@ -89,6 +89,141 @@ _AGE_RANGE = {
 }
 _REGIONS = ["americas", "emea", "pacific"]
 
+# Curated VCT market identities. The first four fields are stable game ids,
+# display handles, the closest supported role, and the region; the final field
+# is provenance displayed in the staff profile. Current staff are sourced from
+# VLR team/transaction pages (2026-07-12); the explicit Free agent entries are
+# recent, publicly announced departures. Game ratings/traits are deterministic
+# balance values, not real-world assessments.
+_REAL_VCT_STAFF: tuple[tuple[str, str, str, str, str], ...] = (
+    # Americas
+    ("vct_nbs", "nbs", "coach", "americas", "Head coach, 100 Thieves (VCT 2026)"),
+    ("vct_d00mbr0s", "d00mbr0s", "coach", "americas", "Assistant coach, 100 Thieves (VCT 2026)"),
+    ("vct_immi", "Immi", "coach", "americas", "Head coach, Cloud9 (VCT 2026)"),
+    ("vct_veer", "Veer", "coach", "americas", "Assistant coach, Cloud9 (VCT 2026)"),
+    ("vct_potter", "potter", "coach", "americas", "Head coach, Evil Geniuses (VCT 2026)"),
+    ("vct_faded", "Faded", "coach", "americas", "Assistant coach, Evil Geniuses (VCT 2026)"),
+    ("vct_stunner", "stunner", "coach", "americas", "Head coach, ENVY (VCT 2026)"),
+    ("vct_wkn", "wkn", "coach", "americas", "Coach, ENVY (VCT 2026)"),
+    ("vct_shaw", "shaw", "coach", "americas", "Head coach, FURIA (VCT 2026)"),
+    ("vct_kamino", "kamino", "coach", "americas", "Assistant coach, FURIA (VCT 2026)"),
+    ("vct_joshrt", "JoshRT", "coach", "americas", "Head coach, G2 Esports (VCT 2026)"),
+    ("vct_shhhack", "shhhack", "coach", "americas", "Assistant coach, G2 Esports (VCT 2026)"),
+    ("vct_robert_yip", "Robert", "performance_coach", "americas", "Performance coach, G2 Esports (VCT 2026)"),
+    ("vct_zonyk", "zonyk", "coach", "americas", "Head coach, KRÜ Esports (VCT 2026)"),
+    ("vct_fadeout", "Fadeout", "analyst", "americas", "Analyst, KRÜ Esports (VCT 2026)"),
+    ("vct_onur", "Onur", "coach", "americas", "Head coach, LEVIATÁN (VCT 2026)"),
+    ("vct_jhein", "Jhein", "coach", "americas", "Assistant coach, LEVIATÁN (VCT 2026)"),
+    ("vct_romanilly", "Romanilly", "coach", "americas", "Head coach, LOUD (VCT 2026)"),
+    ("vct_bati", "Bati", "coach", "americas", "Assistant coach, LOUD (VCT 2026)"),
+    ("vct_bajerski", "Bajerski", "performance_coach", "americas", "Performance coach, LOUD (VCT 2026)"),
+    ("vct_frod", "fRoD", "coach", "americas", "Head coach, MIBR (VCT 2026)"),
+    ("vct_happy", "Happy", "coach", "americas", "Assistant coach, MIBR (VCT 2026)"),
+    ("vct_bonkar", "bonkar", "coach", "americas", "Head coach, NRG (VCT 2026)"),
+    ("vct_mitch", "mitch", "coach", "americas", "Assistant coach, NRG (VCT 2026)"),
+    ("vct_ewok", "Ewok", "coach", "americas", "Head coach, Sentinels (VCT 2026)"),
+    ("vct_gunter", "Gunter", "coach", "americas", "Assistant coach, Sentinels (VCT 2026)"),
+    # EMEA
+    ("vct_key", "KEY", "coach", "emea", "Head coach, BBL Esports (VCT 2026)"),
+    ("vct_viento", "Viento", "coach", "emea", "Assistant coach, BBL Esports (VCT 2026)"),
+    ("vct_vlad", "Vlad", "coach", "emea", "Head coach, FUT Esports (VCT 2026)"),
+    ("vct_bambino", "Bambino", "coach", "emea", "Assistant coach, FUT Esports (VCT 2026)"),
+    ("vct_engr", "ENGH", "coach", "emea", "Head coach, FNATIC (VCT 2026)"),
+    ("vct_desmo", "Desmo", "coach", "emea", "Assistant coach, FNATIC (VCT 2026)"),
+    ("vct_szed", "Szed", "performance_coach", "emea", "Performance coach, FNATIC (VCT 2026)"),
+    ("vct_pipson", "pipsoN", "coach", "emea", "Head coach, GIANTX (VCT 2026)"),
+    ("vct_waylander", "wayLander", "coach", "emea", "Assistant coach, GIANTX (VCT 2026)"),
+    ("vct_mew", "Mew", "performance_coach", "emea", "Performance coach, GIANTX (VCT 2026)"),
+    ("vct_kundikundi", "KUNDIKUNDI", "coach", "emea", "Head coach, Gentle Mates (VCT 2026)"),
+    ("vct_mavera", "Mavera", "coach", "emea", "Assistant coach, Gentle Mates (VCT 2026)"),
+    ("vct_ze1sh", "ZE1SH", "coach", "emea", "Head coach, Karmine Corp (VCT 2026)"),
+    ("vct_lohan", "LohaN", "coach", "emea", "Head coach, Team Liquid (VCT 2026)"),
+    ("vct_yaotzin", "yaotziN", "coach", "emea", "Assistant coach, Team Liquid (VCT 2026)"),
+    ("vct_bacon9", "Bacon9", "analyst", "emea", "Analyst, Team Liquid (VCT 2026)"),
+    ("vct_ange1", "ANGE1", "coach", "emea", "Head coach, NAVI (VCT 2026)"),
+    ("vct_salah", "salah", "coach", "emea", "Assistant coach, NAVI (VCT 2026)"),
+    ("vct_flynn", "Flynn", "analyst", "emea", "Analyst, NAVI (VCT 2026)"),
+    ("vct_zuzanna", "Zuzanna", "performance_coach", "emea", "Performance coach, NAVI (VCT 2026)"),
+    ("vct_xirreth", "Xirreth", "performance_coach", "emea", "Performance coach, NAVI (VCT 2026)"),
+    ("vct_neilzinho", "neilzinho", "coach", "emea", "Head coach, Team Heretics (VCT 2026)"),
+    ("vct_weber", "weber", "coach", "emea", "Assistant coach, Team Heretics (VCT 2026)"),
+    ("vct_rob", "Rob", "performance_coach", "emea", "Performance coach, Team Heretics (VCT 2026)"),
+    ("vct_beni", "Beni", "analyst", "emea", "Analyst, Team Heretics (VCT 2026)"),
+    ("vct_pal", "PAL", "coach", "emea", "Coach, Team Vitality (VCT 2026)"),
+    ("vct_scuttt", "Scuttt", "coach", "emea", "Coach, Team Vitality (VCT 2026)"),
+    ("vct_slk", "slk", "analyst", "emea", "Analyst, Team Vitality (VCT 2026)"),
+    ("vct_thinkii", "thinkii", "coach", "emea", "Head coach, PCIFIC Esport (VCT 2026)"),
+    ("vct_zaes", "ZaeS", "coach", "emea", "Assistant coach, PCIFIC Esport (VCT 2026)"),
+    ("vct_koyo", "Koyo", "analyst", "emea", "Analyst, PCIFIC Esport (VCT 2026)"),
+    ("vct_afronfire", "afr0nfire", "coach", "emea", "Head coach, Eternal Fire (VCT 2026)"),
+    ("vct_l7", "L7", "coach", "emea", "Assistant coach, Eternal Fire (VCT 2026)"),
+    ("vct_castell0", "casteLL0", "coach", "emea", "Assistant coach, Eternal Fire (VCT 2026)"),
+    # Pacific
+    ("vct_alecks", "alecks", "coach", "pacific", "Head coach, Paper Rex (VCT 2026)"),
+    ("vct_wendler", "Wendler", "coach", "pacific", "Assistant coach, Paper Rex (VCT 2026)"),
+    ("vct_panda", "Panda", "performance_coach", "pacific", "Performance coach, Paper Rex (VCT 2026)"),
+    ("vct_solo", "solo", "coach", "pacific", "Head coach, Gen.G (VCT 2026)"),
+    ("vct_hsk", "HSK", "coach", "pacific", "Coach, Gen.G (VCT 2026)"),
+    ("vct_peri", "peri", "coach", "pacific", "Coach, Gen.G (VCT 2026)"),
+    ("vct_termi", "termi", "coach", "pacific", "Head coach, KIWOOM DRX (VCT 2026)"),
+    ("vct_glow", "glow", "coach", "pacific", "Coach, KIWOOM DRX (VCT 2026)"),
+    ("vct_argency", "Argency", "coach", "pacific", "Coach, KIWOOM DRX (VCT 2026)"),
+    ("vct_jovi", "Jovi", "coach", "pacific", "Head coach, Rex Regum Qeon (VCT 2026)"),
+    ("vct_warbirds", "Warbirds", "coach", "pacific", "Assistant coach, Rex Regum Qeon (VCT 2026)"),
+    ("vct_rebecca", "Rebecca", "performance_coach", "pacific", "Performance coach, Rex Regum Qeon (VCT 2026)"),
+    ("vct_kdg", "KDG", "coach", "pacific", "Head coach, T1 (VCT 2026)"),
+    ("vct_cheonggak", "CheongGak", "coach", "pacific", "Coach, T1 (VCT 2026)"),
+    ("vct_frost", "Frost", "coach", "pacific", "Head coach, FULL SENSE (VCT 2026)"),
+    ("vct_theelovefamily", "theeLoveFamily", "coach", "pacific", "Coach, FULL SENSE (VCT 2026)"),
+    ("vct_sushiboys", "Sushiboys", "coach", "pacific", "Assistant coach, FULL SENSE (VCT 2026)"),
+    ("vct_platoon", "Platoon", "coach", "pacific", "Head coach, Global Esports (VCT 2026)"),
+    ("vct_vladk0r", "vladk0r", "coach", "pacific", "Assistant coach, Global Esports (VCT 2026)"),
+    ("vct_skye", "Skye", "analyst", "pacific", "Analyst, Team Secret (VCT 2026)"),
+    ("vct_ryota", "ryota-", "coach", "pacific", "Head coach, ZETA DIVISION (VCT 2026)"),
+    ("vct_xqq", "XQQ", "coach", "pacific", "Assistant coach, ZETA DIVISION (VCT 2026)"),
+    ("vct_gya9", "gya9", "analyst", "pacific", "Analyst, ZETA DIVISION (VCT 2026)"),
+    ("vct_mini", "mini", "coach", "pacific", "Staff coach, ZETA DIVISION (VCT 2026)"),
+    ("vct_vorz", "Vorz", "coach", "pacific", "Head coach, DetonatioN FocusMe (VCT 2026)"),
+    ("vct_melofovia", "Melofovia", "coach", "pacific", "Coach, DetonatioN FocusMe (VCT 2026)"),
+    ("vct_northernlights", "NorthernLights", "coach", "pacific", "Coach, DetonatioN FocusMe (VCT 2026)"),
+    ("vct_silkanon", "SilkAn0n", "coach", "pacific", "Head coach, Nongshim RedForce (VCT 2026)"),
+    ("vct_yoman", "Yoman", "coach", "pacific", "Coach, Nongshim RedForce (VCT 2026)"),
+    ("vct_sungmin", "Sungmin", "coach", "pacific", "Coach, Nongshim RedForce (VCT 2026)"),
+    ("vct_tk9", "TK9", "coach", "pacific", "Head coach, VARREL (VCT 2026)"),
+    ("vct_r3thme", "r3thme", "analyst", "pacific", "Analyst, VARREL (VCT 2026)"),
+    # China (current roster records where available; history avoids a claim
+    # that a fast-moving staff assignment remains current after the source date).
+    ("vct_ed101", "ED101", "coach", "china", "Head coach, All Gamers (VCT 2026)"),
+    ("vct_septem7", "Septem7", "coach", "china", "Assistant coach, All Gamers (VCT 2026)"),
+    ("vct_muggle", "Muggle", "coach", "china", "Head coach, Bilibili Gaming (VCT 2026)"),
+    ("vct_jexen", "Jexen", "coach", "china", "Coach, Bilibili Gaming (VCT 2026)"),
+    ("vct_nathand", "NaThanD", "coach", "china", "Head coach, Dragon Ranger Gaming (VCT 2026)"),
+    ("vct_lt", "Lt", "coach", "china", "Assistant coach, Dragon Ranger Gaming (VCT 2026)"),
+    ("vct_autumn", "Autumn", "coach", "china", "Head coach, EDward Gaming (VCT 2026)"),
+    ("vct_indigo", "indigo", "coach", "china", "Assistant coach, EDward Gaming (VCT 2026)"),
+    ("vct_legija", "LEGIJA", "coach", "china", "Head coach, FunPlus Phoenix (VCT 2026)"),
+    ("vct_york", "York", "coach", "china", "Assistant coach, FunPlus Phoenix (VCT 2026)"),
+    ("vct_bail", "Bail", "coach", "china", "Head coach, JD Gaming (VCT 2026)"),
+    ("vct_desire", "Desire", "coach", "china", "Assistant coach, JD Gaming (VCT 2026)"),
+    ("vct_24k", "24K", "coach", "china", "Head coach, Nova Esports (VCT 2026)"),
+    ("vct_destroyer", "destroyer", "coach", "china", "Head coach, Trace Esports (VCT 2026)"),
+    ("vct_yiyee", "Yiyee", "coach", "china", "Coach, Trace Esports (VCT 2026)"),
+    ("vct_after", "AFTER", "coach", "china", "Head coach, Titan Esports Club (VCT 2026)"),
+    ("vct_3water", "3water", "coach", "china", "Assistant coach, Titan Esports Club (VCT 2026)"),
+    ("vct_hypnotizing", "hypnotizing", "coach", "china", "Head coach, TYLOO (VCT 2026)"),
+    ("vct_billyo", "billyo", "coach", "china", "Assistant coach, TYLOO (VCT 2026)"),
+    ("vct_sword9", "sword9", "coach", "china", "Coach, TYLOO (VCT 2026)"),
+    ("vct_alexrr", "alexRr", "coach", "china", "Head coach, Wolves Esports (VCT 2026)"),
+    ("vct_hvoya", "hVoya", "coach", "china", "Head coach, Xi Lai Gaming (VCT 2026)"),
+    # Recent, explicitly announced departures: free-agent market candidates.
+    ("vct_strong", "Strong", "coach", "emea", "Free agent — assistant coach, NRG (departed 2026)"),
+    ("vct_anderzz", "Anderzz", "coach", "americas", "Free agent — assistant coach, G2 Esports (departed 2025)"),
+    ("vct_chippy", "chippy", "coach", "emea", "Free agent — assistant coach, NAVI (departed 2026)"),
+    ("vct_milan", "Milan", "coach", "emea", "Free agent — head coach, FNATIC (departed 2026)"),
+    ("vct_fayde", "Fayde", "coach", "china", "Free agent — head coach, Wolves Esports (departed 2026)"),
+    ("vct_r1cklee", "R1ckLee", "coach", "china", "Free agent — coach, Wolves Esports (departed 2026)"),
+)
+
 # Extra ticks a coach's specialty adds when the week's focus matches it.
 SPECIALTY_GROWTH_BONUS = 0.15
 
@@ -130,6 +265,46 @@ def _make_member(seed: int, sid: str, role: str) -> StaffMember:
     )
 
 
+def needs_real_vct_staff(gs: GameState) -> bool:
+    """Whether this save has not yet received the curated real VCT cohort."""
+    present = {m.id for m in gs.staff_pool}
+    for team_staff in gs.staff_by.values():
+        present.update(m.id for m in team_staff.values())
+    return any(spec[0] not in present for spec in _REAL_VCT_STAFF)
+
+
+def _make_real_vct_member(spec: tuple[str, str, str, str, str]) -> StaffMember:
+    """Build a stable, balance-tuned market member from a real identity."""
+    staff_id, name, role, region, history = spec
+    rng = RngTree(2026).derive("real-vct-staff", staff_id)
+    lo, hi = _AGE_RANGE[role]
+    quality_floor = {"coach": 65.0, "analyst": 58.0, "performance_coach": 60.0}[role]
+    quality = float(np.round(rng.uniform(quality_floor, 90.0), 1))
+    salary = max(1_500, int(np.round((quality ** 1.5) * 8 / 100) * 100))
+    traits = sorted(str(t) for t in rng.choice(_TRAIT_POOL, size=2, replace=False))
+    return StaffMember(
+        id=staff_id,
+        name=name,
+        role=role,
+        quality=quality,
+        salary=salary,
+        age=int(rng.integers(lo, hi)),
+        region=region,
+        specialty=str(rng.choice(SPECIALTIES[role])),
+        traits=traits,
+        history=[history],
+        seasons_experience=int(rng.integers(2, 10)),
+    )
+
+
+def _seed_real_vct_staff(gs: GameState, taken: set[str]) -> None:
+    for spec in _REAL_VCT_STAFF:
+        if spec[0] in taken:
+            continue
+        gs.staff_pool.append(_make_real_vct_member(spec))
+        taken.add(spec[0])
+
+
 def seed_pool(gs: GameState) -> None:
     """Fill the shared staff market up to POOL_MIN. Deterministic — each
     member is a pure function of (campaign seed, member id) — and every id
@@ -139,8 +314,12 @@ def seed_pool(gs: GameState) -> None:
     taken = {m.id for m in gs.staff_pool}
     for staff in gs.staff_by.values():
         taken.update(m.id for m in staff.values())
+    _seed_real_vct_staff(gs, taken)
     i = 0
-    while len(gs.staff_pool) < POOL_MIN:
+    while (
+        len(gs.staff_pool) < POOL_MIN
+        or any(role not in {m.role for m in gs.staff_pool} for role in ROLES)
+    ):
         sid = f"staff_s{gs.season}_{i}"
         role = _POOL_ROLE_CYCLE[i % len(_POOL_ROLE_CYCLE)]
         i += 1
