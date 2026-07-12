@@ -64,6 +64,7 @@ from esports_sim.manager.training import (
     DEV_FOCUS_OPTIONS,
     FOCUS_OPTIONS,
     INTENSITY_OPTIONS,
+    LANGUAGE_OPTIONS,
 )
 from esports_sim.registry import roster_admin, roster_workbench
 from esports_sim.registry.loader import GameData, load_all, load_geometry
@@ -727,6 +728,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "stream_growth_mult": round(training.stream_practice_mult(p), 2),
         "dev_focus": p.dev_focus,
         "training_intensity": p.training_intensity,
+        "learning_language": p.learning_language,
         "attributes": attrs,
         "overall": overall,
         "fog": round(fog, 1),
@@ -1985,6 +1987,8 @@ def roster(team_id: str) -> dict:
             "upcoming": upcoming,
             "dev_focus_options": DEV_FOCUS_OPTIONS,
             "intensity_options": INTENSITY_OPTIONS,
+            "language_options": LANGUAGE_OPTIONS,
+            "has_language_coach": "language_coach" in gs.staff,
             "fog": round(fog, 1),
             "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
@@ -3507,6 +3511,11 @@ def _staff_effect_lines(m) -> list[str]:
             f"+{m.quality / 70.0:.1f}/wk form upkeep for out-of-form players "
             "(pull toward neutral)"
         ]
+    if m.role == "language_coach":
+        return [
+            f"+{staff_mod.language_learning_rate_for_quality(m.quality):.1f} fluency "
+            "per weekly language session"
+        ]
     # physio (and any future recovery role): stamina.
     return [f"+{m.quality / 18.0:.1f} stamina per player per week"]
 
@@ -3645,6 +3654,7 @@ class DevPlanBody(BaseModel):
     player_id: str
     dev_focus: str | None = None
     training_intensity: str | None = None
+    learning_language: str | None = None
 
 
 class AssignmentBody(BaseModel):
@@ -3685,12 +3695,23 @@ def dev_plan_action(body: DevPlanBody) -> dict:
         if body.player_id not in team.player_ids:
             raise HTTPException(409, "player is not on your roster")
         p = gs.players[body.player_id]
+        focus = body.dev_focus if body.dev_focus is not None else p.dev_focus
+        language = body.learning_language if body.learning_language is not None else p.learning_language
         if body.dev_focus is not None:
-            if body.dev_focus not in DEV_FOCUS_OPTIONS:
+            if focus not in DEV_FOCUS_OPTIONS:
                 raise HTTPException(
                     422, f"dev_focus must be one of {DEV_FOCUS_OPTIONS}"
                 )
-            p.dev_focus = body.dev_focus
+        if body.learning_language is not None:
+            if language not in LANGUAGE_OPTIONS:
+                raise HTTPException(422, f"learning_language must be one of {LANGUAGE_OPTIONS}")
+        if focus == "language":
+            if "language_coach" not in gs.staff:
+                raise HTTPException(409, "hire a language coach before assigning language practice")
+            if not language:
+                raise HTTPException(422, "choose a language for language practice")
+        p.dev_focus = focus
+        p.learning_language = language
         if body.training_intensity is not None:
             if body.training_intensity not in INTENSITY_OPTIONS:
                 raise HTTPException(
@@ -3703,12 +3724,13 @@ def dev_plan_action(body: DevPlanBody) -> dict:
                 "player_id": body.player_id,
                 "dev_focus": p.dev_focus,
                 "intensity": p.training_intensity,
+                "learning_language": p.learning_language,
             },
         )
         S.save()
         return {
             "ok": True,
-            "message": f"{p.handle}: {p.dev_focus} focus, "
+            "message": f"{p.handle}: {p.dev_focus}{' (' + p.learning_language + ')' if p.dev_focus == 'language' else ''} focus, "
             f"{p.training_intensity} intensity",
         }
 

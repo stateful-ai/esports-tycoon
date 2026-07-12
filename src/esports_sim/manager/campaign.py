@@ -527,6 +527,7 @@ def advance_week(
             gs.teams[tid], roster, focus, week_rng, mult,
             mentor_mults=_mentor_mults(gs, tid),
             support_bonuses=_development_support_bonuses(gs, tid),
+            language_rate=staff.language_learning_rate(gs) if gs.is_human(tid) else 0.0,
         )
     gs.set_acting(None)
 

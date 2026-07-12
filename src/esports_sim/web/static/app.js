@@ -1503,7 +1503,7 @@ async function roster(v) {
        <th class="num">Salary</th><th class="num">Wks</th><th></th></tr></thead>`
     : `<thead><tr>${starTh}<th>Player</th><th class="num">Age</th><th class="num">OVR</th>
        <th>Ceiling</th><th>Form</th><th>Conf</th>
-       <th>Dev focus</th><th>Intensity</th><th>Mentor</th></tr></thead>`;
+       <th>Dev focus</th><th>Language</th><th>Intensity</th><th>Mentor</th></tr></thead>`;
   // Detail-row colspan must match the ACTUAL current column count.
   const ncols = t.querySelector("thead tr").children.length;
   const tb = el("tbody");
@@ -1571,7 +1571,13 @@ async function roster(v) {
         : [];
       const focusSel = data.is_user_team
         ? `<select data-act="focus" title="training focus (auto = team week)">
-             ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""}>${o}</option>`).join("")}
+             ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""} ${o === "language" && !data.has_language_coach ? "disabled" : ""}>${o}</option>`).join("")}
+           </select>`
+        : '<span class="muted">—</span>';
+      const languageSel = data.is_user_team
+        ? `<select data-act="language" title="language to practise; it replaces game-skill training for the week" ${data.has_language_coach ? "" : "disabled"}>
+             <option value="">choose language</option>
+             ${(data.language_options ?? []).map((o) => `<option value="${o}" ${o === p.learning_language ? "selected" : ""}>${o.toUpperCase()}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
       const intSel = data.is_user_team
@@ -1594,6 +1600,7 @@ async function roster(v) {
         <td>${bar(p.form)}${tArrow(ct.form)}</td>
         <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
         <td class="dev-plan">${focusSel}</td>
+        <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
         <td class="dev-plan">${mentorSel}</td>`;
     }
@@ -1617,6 +1624,8 @@ async function roster(v) {
       };
       const fSel = tr.querySelector('[data-act="focus"]');
       if (fSel) { fSel.onclick = (e) => e.stopPropagation(); fSel.onchange = () => post("dev_focus", fSel.value); }
+      const lSel = tr.querySelector('[data-act="language"]');
+      if (lSel) { lSel.onclick = (e) => e.stopPropagation(); lSel.onchange = () => post("learning_language", lSel.value); }
       const iSel = tr.querySelector('[data-act="intensity"]');
       if (iSel) { iSel.onclick = (e) => e.stopPropagation(); iSel.onchange = () => post("training_intensity", iSel.value); }
       const mSel = tr.querySelector('[data-act="mentor"]');

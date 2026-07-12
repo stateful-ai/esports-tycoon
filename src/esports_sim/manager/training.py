@@ -16,14 +16,15 @@ from __future__ import annotations
 import numpy as np
 
 from esports_sim.manager import development
-from esports_sim.schemas import Player, Team
+from esports_sim.schemas import LanguageSkill, Player, Team
 from esports_sim.schemas.attributes import AttributeCategory
 
 FOCUS_OPTIONS = ["mechanical", "tactical", "mental", "team", "rest"]
 
 # Per-player plan knobs (Player.dev_focus / Player.training_intensity).
-DEV_FOCUS_OPTIONS = ["auto", "mechanical", "tactical", "mental", "team"]
+DEV_FOCUS_OPTIONS = ["auto", "mechanical", "tactical", "mental", "team", "language"]
 INTENSITY_OPTIONS = ["light", "normal", "intense"]
+LANGUAGE_OPTIONS = ["ar", "de", "en", "es", "fr", "id", "ja", "ko", "ms", "pt", "ru", "th", "tl", "tr", "vi", "zh"]
 _INTENSITY_GROWTH = {"light": 0.6, "normal": 1.0, "intense": 1.4}
 _INTENSITY_DRAIN = {"light": 3.0, "normal": 6.0, "intense": 10.0}
 
@@ -113,6 +114,7 @@ def apply_training(
     growth_mult: float = 1.0,  # coaching staff boost (user team)
     mentor_mults: dict[str, float] | None = None,
     support_bonuses: dict[str, float] | None = None,
+    language_rate: float = 0.0,
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -134,6 +136,29 @@ def apply_training(
         # Individual plan: a pinned focus overrides the team's category
         # (a team "rest" week still rests everyone, handled above).
         p_focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else focus
+        if p.dev_focus == "language":
+            # Language practice always replaces game-skill reps. A plan left
+            # behind after the coach is released simply pauses until a new
+            # language coach is hired.
+            if p.learning_language and language_rate > 0:
+                intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
+                gain = language_rate * intensity * stream_practice_mult(p)
+                index = next(
+                    (i for i, skill in enumerate(p.languages) if skill.lang == p.learning_language),
+                    None,
+                )
+                current = p.languages[index].level if index is not None else 0.0
+                learned = LanguageSkill(
+                    lang=p.learning_language,
+                    level=round(min(100.0, current + gain), 1),
+                )
+                if index is None:
+                    p.languages.append(learned)
+                    p.languages.sort(key=lambda skill: skill.lang)
+                else:
+                    p.languages[index] = learned
+                p.stamina = max(0.0, p.stamina - _INTENSITY_DRAIN.get(p.training_intensity, 6.0))
+            continue
         attrs = _CATEGORY_ATTRS.get(p_focus, _CATEGORY_ATTRS["tactical"])
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
         # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
