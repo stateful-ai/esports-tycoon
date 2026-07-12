@@ -11,7 +11,9 @@ gates never see this code.
 from __future__ import annotations
 
 from collections.abc import Iterable
+from collections.abc import Mapping
 
+from esports_sim.schemas.team import TeamTactics
 from esports_sim.sim import constants as C
 
 # Each attribute-fit dial → the roster attributes that make it work. eco_greed
@@ -25,6 +27,10 @@ DIAL_FIT_ATTRS: dict[str, tuple[str, ...]] = {
 # The HIGH side of these two is the coordination-heavy read, so the engine
 # additionally gates it on team chemistry (see ``_execution_mod``).
 CHEM_GATED = frozenset({"map_control", "util_discipline"})
+
+# Economy and site choice have their own outcome channels. These are the four
+# identity dials where a manager can deliberately lean against an opponent.
+COUNTER_DIALS = ("aggression", "pace", "util_discipline", "map_control")
 
 
 def player_fit(scores: Iterable[float]) -> float:
@@ -62,3 +68,36 @@ def chem_edge(chemistry: float) -> float:
     sharpens the system, below it makes it misfire. The engine multiplies this
     by each gated dial's above-neutral deviation, so it too is 0 at neutral."""
     return (chemistry - C.EXEC_CHEM_BASELINE) / C.EXEC_CHEM_DIV
+
+
+def counter_strat_edge(
+    overrides: Mapping[str, float | None],
+    opponent_tactics: TeamTactics | Mapping[str, float],
+) -> float:
+    """Signed duel edge from one-match overrides versus an opponent identity.
+
+    Only explicitly overridden dials count: leaving a box unchecked means
+    "play our book", not "we prepared this counter". Opposite poles earn an
+    edge, matching poles incur the same-sized malus, and either side at neutral
+    contributes exactly zero. Averaging over all four dials makes a full,
+    coherent read more valuable than guessing one slider.
+
+    ``opponent_tactics`` may be a TeamTactics model or a public-meta mapping;
+    keeping this calculation here lets the campaign resolver and serializers
+    share one source of truth without mirroring the formula in JavaScript.
+    """
+    total = 0.0
+    for dial in COUNTER_DIALS:
+        value = overrides.get(dial)
+        if value is None:
+            continue
+        opponent_value = (
+            opponent_tactics.get(dial, 50.0)
+            if isinstance(opponent_tactics, Mapping)
+            else getattr(opponent_tactics, dial)
+        )
+        own_dev = (float(value) - 50.0) / 50.0
+        opponent_dev = (float(opponent_value) - 50.0) / 50.0
+        total -= own_dev * opponent_dev
+    edge = total / len(COUNTER_DIALS) * C.COUNTER_STRAT_SPAN
+    return max(-C.COUNTER_STRAT_CAP, min(C.COUNTER_STRAT_CAP, edge))

@@ -117,11 +117,14 @@ class TeamMatchPlan:
         else (over-indexing prep on one man has a cost).
     prep_edge: scouting-driven duel bonus for the prepared side; the
         campaign computes it from scout knowledge, the engine only clamps.
+    counter_edge: signed matchup bonus from deliberate dial overrides; a
+        correct anti-strat helps and leaning into the opponent's identity hurts.
     """
 
     tactics: TeamTactics | None = None
     focus_target: str | None = None
     prep_edge: float = 0.0
+    counter_edge: float = 0.0
     coach: CoachProfile | None = None
 
 
@@ -256,11 +259,22 @@ class _MatchSim:
             team_a: 0.0,
             team_b: 0.0,
         }
+        self._counter: dict[str, float] = {
+            team_a: 0.0,
+            team_b: 0.0,
+        }
         for tid in (team_a, team_b):
             plan = self._plans.get(tid)
             if plan is not None:
                 self._prep[tid] = float(
                     np.clip(plan.prep_edge, 0.0, C.PREP_EDGE_CAP)
+                )
+                self._counter[tid] = float(
+                    np.clip(
+                        plan.counter_edge,
+                        -C.COUNTER_STRAT_CAP,
+                        C.COUNTER_STRAT_CAP,
+                    )
                 )
 
         # Roster: the week's committed starters, sorted for deterministic
@@ -2471,9 +2485,11 @@ class _MatchSim:
         s += self.day_form[pid] + self.tactic_form[ps.team_id]
         s += self.exec_mod[ps.team_id]
         # Game-plan reach (zero for the bare-engine gates — no plan, no
-        # term): scouting prep is a flat edge; a focus target is a real
-        # bonus against the hunted opponent, a small tax against others.
+        # term): scouting prep is a flat edge; a correct counter-strat is a
+        # signed matchup edge; a focus target is a real bonus against the
+        # hunted opponent, paid for with a small tax against everyone else.
         s += self._prep[ps.team_id]
+        s += self._counter[ps.team_id]
         plan = self._plans.get(ps.team_id)
         if plan is not None and plan.focus_target is not None and opp_pid is not None:
             if opp_pid == plan.focus_target:

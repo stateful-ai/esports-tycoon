@@ -3876,6 +3876,54 @@ _PLAN_DIAL_FIELDS = (
 )
 
 
+def _gameplan_counter_reads(gs: GameState, fx, plan: GamePlan | None) -> dict:
+    """Server-computed counter-strat reads without leaking private identity.
+
+    The map-meta comparison is public. The opponent comparison stays hidden
+    until the same 50% scouting threshold that reveals their standing tactics,
+    and it deliberately compares against the standing book rather than a
+    private one-match override another human manager may have committed.
+    """
+    tid = gs.acting_team_id
+    opp_id = fx.team_b if fx.team_a == tid else fx.team_a
+    overrides = {
+        dial: getattr(plan, dial) if plan is not None else None
+        for dial in _PLAN_DIAL_FIELDS
+    }
+    know = gs.scout_progress.get(opp_id, 0.0)
+    opponent_edge = (
+        tactics_fit.counter_strat_edge(overrides, gs.teams[opp_id].tactics)
+        if know >= 0.5
+        else None
+    )
+
+    tactic_sums = {dial: 0.0 for dial in tactics_fit.COUNTER_DIALS}
+    team_maps = 0
+    for map_id in fx.maps[: fx.best_of]:
+        trend = gs.map_meta_stats.get(map_id)
+        if trend is None or trend.team_maps <= 0:
+            continue
+        team_maps += trend.team_maps
+        for dial in tactics_fit.COUNTER_DIALS:
+            tactic_sums[dial] += trend.tactic_sums.get(dial, 0.0)
+    meta_tactics = (
+        {dial: tactic_sums[dial] / team_maps for dial in tactics_fit.COUNTER_DIALS}
+        if team_maps
+        else None
+    )
+    return {
+        "opponent_edge": round(opponent_edge, 2) if opponent_edge is not None else None,
+        "meta_edge": (
+            round(tactics_fit.counter_strat_edge(overrides, meta_tactics), 2)
+            if meta_tactics is not None
+            else None
+        ),
+        "max_edge": C.COUNTER_STRAT_CAP,
+        "opponent_revealed": know >= 0.5,
+        "meta_team_maps": team_maps,
+    }
+
+
 @app.get("/api/gameplan")
 def gameplan_view() -> dict:
     """The coach's desk for the NEXT fixture: opponent intel (fogged by
@@ -3987,6 +4035,7 @@ def gameplan_view() -> dict:
             "prep_edge_max": round(
                 min(PREP_EDGE_BASE + PREP_EDGE_SPAN, C.PREP_EDGE_CAP), 2
             ),
+            "counter": _gameplan_counter_reads(gs, fx, plan),
             "opponent_roster": opp_rows,
             "suggested_target": suggested,
             "own_roster": own_rows,

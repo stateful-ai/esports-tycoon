@@ -67,6 +67,7 @@ from esports_sim.manager.state import (
     ChampionRecord,
     DevSnap,
     Fixture,
+    GamePlan,
     GameState,
     MapMetaStats,
     MapResult,
@@ -82,6 +83,7 @@ from esports_sim.registry.loader import GameData
 from esports_sim.rng.tree import RngTree
 from esports_sim.manager.match_review import build_match_review
 from esports_sim.sim import simulate_match_result
+from esports_sim.sim import tactics_fit
 from esports_sim.policy.base import CoachProfile
 from esports_sim.sim.engine import TeamMatchPlan
 from esports_sim.sim.stats import compute_match_stats
@@ -1413,6 +1415,16 @@ def _fixture_plans(
     counterplay to an anti-strat."""
     plans: dict[str, TeamMatchPlan] = {}
     lineups: dict[str, list[str]] = {}
+    stored: dict[str, GamePlan] = {}
+    overrides_by: dict[str, dict[str, object]] = {}
+    resolved_tactics = {
+        f.team_a: gs.teams[f.team_a].tactics,
+        f.team_b: gs.teams[f.team_b].tactics,
+    }
+
+    # Resolve both identities first. Counter-strat scoring is simultaneous:
+    # if both human managers change their book for this fixture, each side is
+    # measured against what the opponent will actually bring to the server.
     for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
         coach = _match_coach_profile(gs, tid)
         # Every campaign side has a coach profile.  Without a hired coach it
@@ -1429,11 +1441,16 @@ def _fixture_plans(
             for k in _PLAN_DIALS
             if getattr(plan, k) is not None
         }
-        tactics = (
-            gs.teams[tid].tactics.model_copy(update=overrides)
-            if overrides
-            else None
-        )
+        stored[tid] = plan
+        overrides_by[tid] = overrides
+        if overrides:
+            resolved_tactics[tid] = gs.teams[tid].tactics.model_copy(update=overrides)
+
+    for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
+        plan = stored.get(tid)
+        if plan is None:
+            continue
+        overrides = overrides_by[tid]
         target = plan.focus_target
         if target is not None and target not in gs.teams[opp].player_ids:
             target = None
@@ -1443,10 +1460,17 @@ def _fixture_plans(
         # plan (no prep, no payoff). The engine clamps the total.
         book = knowledge.prep_bonus(gs, tid, opp, list(f.maps))
         plans[tid] = TeamMatchPlan(
-            tactics=tactics,
+            tactics=resolved_tactics[tid] if overrides else None,
             focus_target=target,
             prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book,
-            coach=coach,
+            counter_edge=tactics_fit.counter_strat_edge(
+                {
+                    dial: getattr(plan, dial)
+                    for dial in tactics_fit.COUNTER_DIALS
+                },
+                resolved_tactics[opp],
+            ),
+            coach=_match_coach_profile(gs, tid),
         )
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:

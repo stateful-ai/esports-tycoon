@@ -2239,7 +2239,7 @@ async function gameplanPanel(v) {
      A plan is one match's prep — consumed when the match sims; your standing
      strategy above is untouched.`));
 
-  // Prep meter: setting ANY plan brings the edge; scouting raises it.
+  // Prep meter: setting a plan brings the baseline edge; scouting raises it.
   const pct = Math.round(gp.scout_knowledge * 100);
   const prep = el("div", "gp-prep");
   prep.innerHTML = `<span class="gp-prep-lab">Prep edge</span>
@@ -2247,6 +2247,28 @@ async function gameplanPanel(v) {
     <span class="gp-prep-sub">duel points while a plan is set. ${opp.name} is
     ${pct}% scouted — deeper scouting raises this (max +${gp.prep_edge_max.toFixed(1)}).</span>`;
   card.appendChild(prep);
+
+  // Matchup-aware counter read. The server owns the formula and withholds the
+  // opponent-specific number behind scouting; public map-meta is always safe.
+  const counter = gp.counter;
+  const shownCounter = counter.opponent_revealed
+    ? counter.opponent_edge : counter.meta_edge;
+  const fmtCounter = (value) => value == null
+    ? "—" : `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
+  const counterTone = shownCounter == null || Math.abs(shownCounter) < 0.05
+    ? "" : shownCounter > 0 ? "good" : "bad";
+  const counterRead = el("div", "gp-prep");
+  const source = counter.opponent_revealed
+    ? `against ${opp.name}'s scouted standing identity`
+    : counter.meta_team_maps > 0
+      ? `against the public meta on these maps (${counter.meta_team_maps} team-maps)`
+      : "public map-meta needs completed matches";
+  counterRead.innerHTML = `<span class="gp-prep-lab">Counter-strat</span>
+    <span class="gp-prep-val mono ${counterTone}">${fmtCounter(shownCounter)}</span>
+    <span class="gp-prep-sub">duel points ${source}. Opposing their dial lean helps;
+    matching it reinforces their strength. Range ±${counter.max_edge.toFixed(1)}.
+    ${counter.opponent_revealed ? "" : `Scout ${opp.name} to 50% for their private read.`}</span>`;
+  card.appendChild(counterRead);
 
   // Focus target: hunt one opponent — an edge on him, a small tax elsewhere.
   const tgtWrap = el("div", "gp-block");

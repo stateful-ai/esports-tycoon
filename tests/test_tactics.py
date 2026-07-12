@@ -19,8 +19,36 @@ import hashlib
 from esports_sim.registry import load_all
 from esports_sim.schemas.team import TeamTactics
 from esports_sim.sim import simulate_match
+from esports_sim.sim import constants as C
+from esports_sim.sim import tactics_fit
 
 A, B, MAP = "team_nexus", "team_vanguard", "lotus"  # 2 entries/site, 3 mids
+
+
+def test_counter_strat_is_signed_bounded_and_override_only() -> None:
+    opponent = TeamTactics(
+        aggression=90.0, pace=90.0, util_discipline=90.0, map_control=90.0
+    )
+    assert tactics_fit.counter_strat_edge({}, opponent) == 0.0
+    assert tactics_fit.counter_strat_edge(
+        {dial: 50.0 for dial in tactics_fit.COUNTER_DIALS}, opponent
+    ) == 0.0
+
+    correct = tactics_fit.counter_strat_edge(
+        {dial: 0.0 for dial in tactics_fit.COUNTER_DIALS}, opponent
+    )
+    mirror = tactics_fit.counter_strat_edge(
+        {dial: 100.0 for dial in tactics_fit.COUNTER_DIALS}, opponent
+    )
+    assert correct > 0.0
+    assert mirror == -correct
+
+    extreme = TeamTactics(
+        aggression=100.0, pace=100.0, util_discipline=100.0, map_control=100.0
+    )
+    assert tactics_fit.counter_strat_edge(
+        {dial: 0.0 for dial in tactics_fit.COUNTER_DIALS}, extreme
+    ) == C.COUNTER_STRAT_CAP
 
 
 def _sim(seed: int, **dials):
