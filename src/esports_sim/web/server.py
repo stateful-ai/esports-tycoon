@@ -328,25 +328,38 @@ class Lobby:
                     raise HTTPException(
                         422, f"unknown roster pack '{pack_id}'"
                     ) from None
-            # Validate the pick BEFORE building the world: new_campaign
-            # now creates the manager seat (indexing gs.teams[team_id]),
-            # so an unknown id must 422 here, not 500 in there.
-            known = (
-                {t.id for t in pack.teams.values()}
-                if pack is not None
-                else set(self.gd.teams)
-            )
+            # Validate the pick BEFORE building the final world: new_campaign
+            # creates the manager seat (indexing gs.teams[team_id]), so an
+            # unknown id must 422 here, not 500 in there. Pack worlds carry
+            # their ids in the pack data, but FICTIONAL worlds GENERATE their
+            # teams from the seed (ids like team_adriatic_sirens that are NOT
+            # in the static registry `self.gd.teams`), so validate those
+            # against a same-seed preview — exactly the world this call will
+            # build. user_team_id doesn't affect which ids get generated, so
+            # any valid placeholder works; legacy reuses the same preview.
+            preview = None
+            if pack is not None:
+                known = {t.id for t in pack.teams.values()}
+            else:
+                preview = new_campaign(
+                    self.gd, seed=seed, mode="sandbox",
+                    user_team_id=_preview_team(self.gd, None),
+                )
+                known = set(preview.teams)
             if team_id not in known:
                 raise HTTPException(422, f"unknown team '{team_id}'")
             offer = None
             if game_mode == "legacy":
                 # Re-derive the founding seat's offer slate server-side and
                 # demand the pick comes from it — the lobby showed exactly
-                # this set (same seed, seat 0), so nothing can drift.
-                preview = new_campaign(
-                    self.gd, seed=seed, pack=pack, mode="sandbox",
-                    user_team_id=_preview_team(self.gd, pack),
-                )
+                # this set (same seed, seat 0), so nothing can drift. The
+                # fictional-world preview above already used the same seed,
+                # so reuse it; only pack worlds still need a build here.
+                if preview is None:
+                    preview = new_campaign(
+                        self.gd, seed=seed, pack=pack, mode="sandbox",
+                        user_team_id=_preview_team(self.gd, pack),
+                    )
                 offers = career.new_game_offers(preview, 0)
                 offer = next(
                     (o for o in offers if o.team_id == team_id), None
@@ -1109,6 +1122,17 @@ def lobby() -> dict:
         "packs": _pack_options(),
         "worlds": _LOBBY.worlds_for(_current_sid()),
     }
+
+
+@app.get("/api/lobby/preview")
+def lobby_preview(seed: int = 2026) -> dict:
+    """The fictional (non-pack) world's team roster for a given seed. The
+    generated league changes with the seed, so the lobby re-fetches this
+    whenever the seed box changes — otherwise a solo start at a random seed
+    would build a different world than the teams shown, and the pick would
+    422 in create_game. Roster-pack teams are static (seed-independent), so
+    the client renders those straight from the packs payload."""
+    return {"teams": _team_options(new_campaign(_LOBBY.gd, seed=seed), taken=set())}
 
 
 _PACK_OPTIONS_CACHE: list[dict] | None = None
