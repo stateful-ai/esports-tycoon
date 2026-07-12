@@ -8,8 +8,12 @@ means adding partial-observability is additive, not structural.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
+from esports_sim.schemas.communication import TeamBelief
+from esports_sim.schemas.decision import PlayerConditionV1
 from esports_sim.schemas.match import PlayerRoundState
 
 
@@ -25,6 +29,8 @@ class EnemyReadout(BaseModel):
     last_seen_tick: int | None = None
     weapon_guess: str | None = None
     alive_guess: bool = True
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    source: Literal["seen", "remembered", "heard"] = "seen"
 
 
 class PlayerObservation(BaseModel):
@@ -34,8 +40,11 @@ class PlayerObservation(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    schema_version: Literal[1] = 1
+
     # Who am I?
     self_state: PlayerRoundState
+    player_condition: PlayerConditionV1 | None = None
     # What round is this, and what do I need to know about the clock?
     round_num: int
     tick: int
@@ -48,6 +57,11 @@ class PlayerObservation(BaseModel):
     # What I believe about enemies. Filled by the match engine based on
     # sightlines, comms, and what I've been told.
     enemies: list[EnemyReadout] = Field(default_factory=list)
+
+    # Fallible shared knowledge reconstructed for this receiver. These are
+    # claims, not truth: no correctness bit or pristine source perception is
+    # exposed to the policy.
+    team_whiteboard: list[TeamBelief] = Field(default_factory=list)
 
     # Map topology — the policy can ask "what's adjacent to my callout?"
     adjacent_callouts: list[str] = Field(default_factory=list)

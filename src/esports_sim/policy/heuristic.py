@@ -26,7 +26,13 @@ from esports_sim.policy.base import (
     TimeoutDirective,
 )
 from esports_sim.registry.loader import GameData
-from esports_sim.schemas import Map, Player, PlayerObservation, Playstyle
+from esports_sim.schemas import (
+    CommunicationAction,
+    Map,
+    Player,
+    PlayerObservation,
+    Playstyle,
+)
 from esports_sim.schemas.map import CalloutZone, Site
 from esports_sim.sim import constants as C
 
@@ -237,6 +243,30 @@ class HeuristicPolicy:
         if rng.random() < max(0.0, min(0.25, p_peek)):
             return _PEEK_ACTION
         return _HOLD_ACTION
+
+    def communicate(
+        self,
+        obs: PlayerObservation,
+        legal: list[CommunicationAction],
+        rng: np.random.Generator,
+    ) -> CommunicationAction:
+        """Choose whether to pass on a useful structured call."""
+        silence = next((action for action in legal if not action.speak), None)
+        claims = [action for action in legal if action.speak]
+        if not claims:
+            return silence or CommunicationAction()
+        player = self._gd.players[obs.self_state.player_id]
+        speak_prob = float(
+            np.clip(
+                C.COMMS_SPEAK_BASE
+                + player.attr("comms_quality") / C.COMMS_SPEAK_QUALITY_DIV,
+                C.COMMS_SPEAK_MIN,
+                C.COMMS_SPEAK_MAX,
+            )
+        )
+        if rng.random() >= speak_prob:
+            return silence or CommunicationAction()
+        return claims[0]
 
     def _decide(self, obs, legal, rng: np.random.Generator) -> Action:
         legal_types = {a.type for a in legal}

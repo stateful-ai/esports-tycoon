@@ -23,6 +23,7 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim._compat import StrEnum
+from esports_sim.schemas.communication import CommunicationAction
 from esports_sim.schemas.observation import PlayerObservation
 from esports_sim.schemas.player import Player
 from esports_sim.schemas.team import TeamTactics
@@ -218,3 +219,14 @@ class PlayerPolicy(Protocol):
         legal: list[Action],
         rng: np.random.Generator,
     ) -> Action: ...
+
+
+class CommunicationPolicy(Protocol):
+    """Optional parallel head for structured, rate-limited team comms."""
+
+    def communicate(
+        self,
+        obs: PlayerObservation,
+        legal: list[CommunicationAction],
+        rng: np.random.Generator,
+    ) -> CommunicationAction: ...
