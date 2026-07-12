@@ -694,9 +694,11 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
             if fog <= 0
             else [{"id": "?", "blurb": "scout to reveal"}]
         ),
-        # Own club knows its players' ceilings; rivals' PA stays scouted-only.
+        # Even an own-club read is an outcome projection, not a revealed cap.
         "potential_stars": (
-            development.stars(development.potential_of(p)) if fog <= 0 else None
+            development.stars(
+                sum(development.potential_projection(p, own=True)) / 2.0
+            ) if fog <= 0 else None
         ),
         "ca_stars": development.stars(overall),
         "is_free_agent": p.id in gs.free_agent_ids,
@@ -1874,13 +1876,12 @@ def _fixture_run_in(gs: GameState, tid: str, n: int = 5) -> list[dict]:
 
 
 def _wonderkid_watch(gs: GameState, n: int = 6) -> list[dict]:
-    """League-wide young prospects (age <= 20) by potential star band — the
-    'next big thing' watch. Star bands are the coarse public read, so no
-    exact ceiling leaks. Pure read."""
+    """League-wide young prospects by projected peak, never hidden PA."""
     cands = []
     for p in gs.players.values():
         if p.age <= 20:
-            cands.append((p, development.stars(development.potential_of(p))))
+            projection = development.potential_projection(p, own=True)
+            cands.append((p, development.stars(sum(projection) / 2.0)))
     cands.sort(key=lambda pc: (-pc[1], pc[0].id))
     out = []
     for p, pot in cands[:n]:
@@ -1929,6 +1930,9 @@ def _dev_progress(gs: GameState, tid: str) -> list[dict]:
     an exact number — and it moves on monumental moments and mentorship. Also
     carries each player's hidden mentor_skill so the manager can pick a teacher
     worth pairing a prospect with."""
+    from esports_sim.manager.campaign import _development_support_bonuses
+
+    supports = _development_support_bonuses(gs, tid) or {}
     out = []
     for pid in gs.teams[tid].player_ids:
         p = gs.players.get(pid)
@@ -1936,7 +1940,7 @@ def _dev_progress(gs: GameState, tid: str) -> list[dict]:
             continue
         ca = development.overall(p)
         lo, hi = development.potential_projection(p, own=True)
-        est = max(ca, round((lo + hi) / 2.0, 1))  # the shown estimate, not truth
+        est = round((lo + hi) / 2.0, 1)  # shown forecast, which CA may exceed
         pct = min(100, round(100.0 * ca / est)) if est > 0 else 100
         snaps = gs.dev_history.get(pid, [])
         traj = "steady"
@@ -1944,11 +1948,15 @@ def _dev_progress(gs: GameState, tid: str) -> list[dict]:
             d = snaps[-1].ca - snaps[-3].ca
             traj = "climbing" if d > 0.3 else "declining" if d < -0.3 else "steady"
         cs = gs.career_stats.get(pid)
+        overperforming = ca > development.potential_of(p) + 0.05
         out.append({
             "id": pid, "handle": p.handle, "age": p.age,
             "ca": round(ca), "potential": round(est),
             "potential_band": [round(lo), round(hi)], "progress_pct": pct,
-            "trajectory": traj, "maxed": pct >= 97,
+            "trajectory": traj, "maxed": pct >= 97 and not overperforming,
+            "overperforming": overperforming,
+            "curve_read": development.curve_read(p),
+            "support_bonus": supports.get(pid, 0.0),
             "mentor_skill": round(development.mentor_skill(p, cs.seasons if cs else 0)),
         })
     out.sort(key=lambda r: (-r["potential"], r["handle"]))
@@ -4744,26 +4752,26 @@ def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
 def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
     fogged = fog > 0.0
     ovr = None if fogged else int(round(development.overall(p)))
-    # The overall/ceiling NUMBER is the source of truth in the profile; the
+    # The overall/peak forecast is the source of truth in the profile; the
     # star rating rides along only as a coarse quick-glance. A fogged rival
     # can't be read exactly, so their ceiling stays the scout's banded tier
     # text and the star sub is withheld.
     potential_band: list[int] | None = None
-    skill_ceilings: dict[str, int] | None = None
+    skill_ceilings: dict[str, list[float]] | None = None
     if fogged:
         potential: int | str = _potential_text(gs, p, fogged, progress)
         pot_stars = None
     else:
-        # Own club: the ceiling is still a projection, not a measurement. Show
-        # a band (firms up with age) and the estimate's tier; per-skill
-        # ceilings are the payoff of the per-attribute potential model.
+        # Own club: peak ability remains a projection, not a measurement. Show
+        # an outcome band and per-skill bands rather than hidden exact values.
         lo, hi = development.potential_projection(p, own=True)
-        est = max(development.overall(p), (lo + hi) / 2.0)
+        est = (lo + hi) / 2.0
         potential = int(round(est))
         pot_stars = development.stars(est)
         potential_band = [round(lo), round(hi)]
         skill_ceilings = {
-            a: round(development.skill_ceiling(p, a)) for a in sorted(p.attributes)
+            a: list(development.skill_potential_projection(p, a))
+            for a in sorted(p.attributes)
         }
     return {
         "ovr": ovr,

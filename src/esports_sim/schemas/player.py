@@ -82,16 +82,18 @@ class Player(BaseModel):
     agent_pool: list[AgentMastery] = Field(default_factory=list)
     map_pool: list[MapMastery] = Field(default_factory=list)
 
-    # Hidden ceiling (EHM-style Potential Ability, 1-99 like attributes).
-    # 0 = not assigned; manager/development.py derives a stable fallback.
+    # Hidden upside forecast (Potential Ability, 1-99 like attributes). It is
+    # not a hard cap: a player's hidden realization curve may fall short, while
+    # exceptional mentorship, relationships, and morale can produce a CA above
+    # the original number. 0 = unassigned; development.py derives a fallback.
     potential: float = Field(default=0.0, ge=0.0, le=99.0)
 
-    # Per-skill ceilings (EHM per-attribute Potential Ability). Sparse: keyed
+    # Per-skill upside forecasts (per-attribute Potential Ability). Sparse: keyed
     # by attribute-registry id, value 0-99. EMPTY by default and on old saves;
     # development.skill_ceiling derives a stable per-skill ceiling from the
     # scalar `potential` plus a blake2 spread when a key is absent, so the
     # default growth math is unchanged. Mentorship and monumental moments
-    # WRITE specific entries here to raise the ceiling on chosen skills — the
+    # WRITE specific entries here to raise the forecast on chosen skills — the
     # only mutable per-skill state a scalar `potential` couldn't carry.
     skill_potential: dict[str, float] = Field(default_factory=dict)
 

@@ -258,6 +258,21 @@ International Success
 Pressure Handling
 Organizations recruit based on these reputations.
 
+Player Potential and Career Curves
+
+Potential is a forecast of upside, not a hard attribute cap. Young players
+carry hidden, deterministic career curves which vary in arrival time,
+development volatility, peak duration, decline timing, and how much of their
+upside they naturally realize. This keeps a broad population of plausible
+stars without guaranteeing that every high-potential prospect becomes one.
+
+Scouting reports show outcome bands and qualitative curve clues, never an
+exact maximum. Strong environments can change the outcome: mentorship, close
+duos, morale, confidence, and locker-room cohesion add development headroom.
+In exceptional cases Current Ability can exceed the original potential
+forecast, recording an outlier career rather than silently raising the old
+forecast to match it.
+
 Career Profile
 Rather than displaying only trophies, the game builds a complete coaching biography.
 

@@ -41,7 +41,45 @@ def test_headroom_gates_development() -> None:
 def test_traits_shift_decline_age() -> None:
     assert development.decline_age(_player(20, 60, ["prodigy"])) == 26
     assert development.decline_age(_player(20, 60, ["late_bloomer"])) == 31
-    assert development.decline_age(_player(20, 60, [])) == 28
+
+
+def test_hidden_curves_are_deterministic_and_diverse() -> None:
+    players = [_full(18, 50.0, potential=90.0, pid=f"curve_{i}") for i in range(80)]
+    curves = [development.development_curve(p) for p in players]
+    assert {c.archetype for c in curves} == {"flash", "early", "steady", "late"}
+    assert max(c.decline_age for c in curves) - min(c.decline_age for c in curves) >= 7
+    assert max(c.peak_years for c in curves) - min(c.peak_years for c in curves) >= 4
+    assert development.development_curve(players[0]) == curves[0]
+
+
+def test_high_potential_does_not_guarantee_the_same_maximum() -> None:
+    players = [
+        _full(18, 50.0, potential=90.0, pid=f"realise_{i}")
+        for i in range(100)
+    ]
+    outcomes = [development.natural_potential(p) for p in players]
+    assert max(outcomes) - min(outcomes) >= 10.0
+    assert min(outcomes) < 80.0 < max(outcomes)
+
+
+def test_context_can_push_current_ability_past_potential() -> None:
+    p = _full(20, 69.0, potential=70.0, pid="supported_outlier")
+    p.morale, p.confidence, p.form = 100.0, 95.0, 90.0
+    bonus = development.contextual_ceiling_bonus(
+        p, mentor_strength=1.0, duo_affinity=96.0, team_chemistry=95.0
+    )
+    assert development.development_ceiling(p, "aim_precision", bonus) > p.potential
+    team = _fake_team()
+    for week in range(100):
+        p.stamina = 100.0
+        training.apply_training(
+            team,
+            [p],
+            "mechanical",
+            np.random.default_rng(week),
+            support_bonuses={p.id: bonus},
+        )
+    assert development.overall(p) > p.potential
 
 
 def test_workhorse_outgrows_lazy() -> None:
@@ -110,15 +148,25 @@ def test_skill_ceiling_default_override_and_floor() -> None:
     assert development.skill_ceiling(p, "movement") == p.attr("movement")
 
 
-def test_adjust_potential_raises_capped_and_never_below_ca() -> None:
+def test_adjust_potential_raises_and_soft_caps_without_rewriting_ca() -> None:
     p = _full(20, 60.0, potential=70.0)
     d = development.adjust_potential(p, 2.0, attrs=["aim_precision"])
     assert d > 0 and p.potential > 70.0
     assert "aim_precision" in p.skill_potential
-    assert p.potential >= development.overall(p)
+    assert p.potential >= 70.0
     top = _full(20, 90.0, potential=94.0)
     development.adjust_potential(top, 12.0)
     assert top.potential <= 95.0                      # soft cap holds
+
+
+def test_curve_shape_changes_when_growth_arrives() -> None:
+    players = [_full(18, 55.0, potential=88.0, pid=f"timing_{i}") for i in range(100)]
+    flash = next(p for p in players if development.development_curve(p).archetype == "flash")
+    late = next(p for p in players if development.development_curve(p).archetype == "late")
+    flash.age = late.age = 18
+    assert development.curve_growth_multiplier(flash) > development.curve_growth_multiplier(late)
+    flash.age = late.age = 25
+    assert development.curve_growth_multiplier(late) > development.curve_growth_multiplier(flash)
 
 
 def test_moment_bump_scales_down_with_age() -> None:

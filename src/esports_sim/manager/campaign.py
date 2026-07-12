@@ -500,6 +500,7 @@ def advance_week(
         training.apply_training(
             gs.teams[tid], roster, focus, week_rng, mult,
             mentor_mults=_mentor_mults(gs, tid),
+            support_bonuses=_development_support_bonuses(gs, tid),
         )
     gs.set_acting(None)
 
@@ -1303,10 +1304,25 @@ def _apply_match_development(gs: GameState, stats) -> None:
     """Minutes are development: every played line becomes attribute reps
     (see training.apply_match_experience). Deterministic — no rng."""
     n_rounds = len(stats.rounds)
+    pid_to_tid = {
+        pid: tid
+        for tid in sorted(gs.teams)
+        for pid in gs.teams[tid].player_ids
+    }
+    playing_teams = sorted(
+        {pid_to_tid[pid] for pid in stats.lines if pid in pid_to_tid}
+    )
+    supports = {
+        tid: _development_support_bonuses(gs, tid) or {}
+        for tid in playing_teams
+    }
     for pid in sorted(stats.lines):
         p = gs.players.get(pid)
         if p is not None:
-            training.apply_match_experience(p, stats.lines[pid], n_rounds)
+            tid = pid_to_tid.get(pid, "")
+            training.apply_match_experience(
+                p, stats.lines[pid], n_rounds, supports.get(tid, {}).get(pid, 0.0)
+            )
 
 
 def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
@@ -1321,10 +1337,11 @@ def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
         played = week_dressed.get(tid)
         if not played:
             continue
+        supports = _development_support_bonuses(gs, tid) or {}
         for p in gs.roster(tid):
             if p.id in played:
                 continue
-            training.apply_scrim_reps(p)
+            training.apply_scrim_reps(p, supports.get(p.id, 0.0))
             p.stamina = round(min(100.0, p.stamina + 6.0), 1)
             drain = (
                 2.0
@@ -1936,6 +1953,64 @@ def _mentor_mults(gs: GameState, tid: str) -> dict[str, float] | None:
         for pid, mentor_id in gs.mentorships.items()
         if pid in roster and mentorship_valid(gs, pid, mentor_id)
     }
+    return out or None
+
+
+def _development_support_bonuses(
+    gs: GameState, tid: str
+) -> dict[str, float] | None:
+    """Contextual headroom for every player, with AI parity.
+
+    Explicit manager mentorship is strongest, but AI teams and hands-off
+    players can still benefit from an obvious senior teammate. Named duos,
+    individual morale/confidence/form, and team chemistry apply equally to
+    every organization.
+    """
+    roster = sorted(gs.roster(tid), key=lambda p: p.id)
+    if not roster:
+        return None
+    out: dict[str, float] = {}
+    for p in roster:
+        explicit = gs.mentorships.get(p.id)
+        mentor_strength = 1.0 if explicit and mentorship_valid(gs, p.id, explicit) else 0.0
+        if mentor_strength == 0.0:
+            candidates = [
+                q for q in roster
+                if q.id != p.id
+                and q.age >= p.age + 5
+                and development.overall(q) > development.overall(p)
+            ]
+            if candidates:
+                best = max(
+                    candidates,
+                    key=lambda q: (
+                        development.mentor_skill(
+                            q,
+                            gs.career_stats.get(q.id).seasons
+                            if gs.career_stats.get(q.id) else 0,
+                        ),
+                        q.id,
+                    ),
+                )
+                skill = development.mentor_skill(
+                    best,
+                    gs.career_stats.get(best.id).seasons
+                    if gs.career_stats.get(best.id) else 0,
+                )
+                if skill >= 55.0:
+                    mentor_strength = 0.55 * (skill / 99.0)
+        duo_affinity = max(
+            (relationships.get(gs, p.id, q.id) for q in roster if q.id != p.id),
+            default=50.0,
+        )
+        bonus = development.contextual_ceiling_bonus(
+            p,
+            mentor_strength=mentor_strength,
+            duo_affinity=duo_affinity,
+            team_chemistry=gs.teams[tid].chemistry,
+        )
+        if bonus > 0.0:
+            out[p.id] = bonus
     return out or None
 
 

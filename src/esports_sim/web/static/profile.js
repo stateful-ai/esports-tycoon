@@ -334,15 +334,15 @@ function renderPlayerProfile(data) {
   const tiles = el("div", "pf-tiles");
   const ovrSub = ov.fogged ? "scouted" : pfStars(ov.ovr_stars);
   tiles.appendChild(pfTile("OVR", (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), ovrSub));
-  // Ceiling: a PROJECTION band even for your own club (it firms up with age
-  // and moves on big moments); a fogged rival shows the scout's banded tier.
+  // Peak: a PROJECTION band even for your own club. It can be missed or beaten;
+  // a fogged rival shows the scout's banded tier.
   const potIsNum = typeof ov.potential === "number";
   const potBand = ov.potential_band;
   tiles.appendChild(pfTile(
     "Potential",
     potBand ? `${potBand[0]}–${potBand[1]}`
       : (potIsNum ? pfNum(ov.potential) : (ov.potential || "—")),
-    potBand ? "projected ceiling"
+    potBand ? "peak forecast"
       : (potIsNum ? pfStars(ov.potential_stars) : "scouted")
   ));
   tiles.appendChild(pfTile("Form", pfNum(ov.form)));
@@ -385,8 +385,10 @@ function renderPlayerProfile(data) {
       if (a.value != null) {
         // Per-skill ceiling: show remaining headroom on the skill (own club).
         const ceil = (ov.skill_ceilings || {})[a.key];
-        const ceilTxt = (ceil != null && ceil > Math.round(a.value) + 1)
-          ? ` <span class="muted" title="projected ceiling for this skill">→${ceil}</span>`
+        const ceilHi = Array.isArray(ceil) ? ceil[1] : ceil;
+        const ceilLabel = Array.isArray(ceil) ? `${ceil[0]}–${ceil[1]}` : ceil;
+        const ceilTxt = (ceilHi != null && ceilHi > Math.round(a.value) + 1)
+          ? ` <span class="muted" title="projected outcome range for this skill">→${ceilLabel}</span>`
           : "";
         list.appendChild(
           el(
@@ -966,24 +968,26 @@ function renderTeamProfile(data) {
   }
 
   // Development headroom ------------------------------------------------------
-  // Own-club only: how close each player is to their ceiling and which way
-  // they're trending. A progress bar of CA / potential.
+  // Own-club only: how current ability compares with the peak forecast and
+  // which way it is trending. The forecast may be missed or exceeded.
   const dev = data.dev_progress;
   if (dev && dev.length) {
     const sec = pfSection("Development");
     const list = el("div", "pf-dev");
     for (const d of dev) {
-      const arrow = d.maxed ? "◆" : d.trajectory === "climbing" ? "▲"
+      const arrow = d.overperforming ? "★" : d.maxed ? "◆" : d.trajectory === "climbing" ? "▲"
         : d.trajectory === "declining" ? "▼" : "—";
-      const acls = d.maxed ? "trend-flat" : d.trajectory === "climbing" ? "trend-up"
+      const acls = d.overperforming ? "trend-up" : d.maxed ? "trend-flat" : d.trajectory === "climbing" ? "trend-up"
         : d.trajectory === "declining" ? "trend-down" : "muted";
       const row = el("div", "pf-dev-row");
       const ceilTxt = d.potential_band
         ? `${d.potential_band[0]}–${d.potential_band[1]}` : d.potential;
       const teach = d.mentor_skill >= 55 ? ` · <span title="strong mentor — worth pairing with a prospect">🎓${d.mentor_skill}</span>` : "";
+      const above = d.overperforming ? ` · <span class="trend-up">above original projection</span>` : "";
+      const support = d.support_bonus > 0 ? ` · support +${d.support_bonus.toFixed(1)}` : "";
       row.innerHTML =
         `<span class="plink pf-dev-name" data-pid="${d.id}">${d.handle}</span>` +
-        `<span class="muted pf-dev-meta">${d.age}y · CA ${d.ca} · ceil ${ceilTxt}${teach}</span>` +
+        `<span class="muted pf-dev-meta" title="${esc(d.curve_read)}">${d.age}y · CA ${d.ca} · peak ${ceilTxt}${above}${support}${teach}</span>` +
         `<span class="pf-dev-bar"><span class="pf-dev-fill" style="width:${d.progress_pct}%"></span></span>` +
         `<span class="mono ${acls}">${d.progress_pct}% ${arrow}</span>`;
       list.appendChild(row);

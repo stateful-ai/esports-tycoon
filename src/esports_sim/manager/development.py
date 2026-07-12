@@ -1,9 +1,14 @@
-"""Player development: potential, traits, and scout assessment.
+"""Player development: potential, career curves, traits, and scouting.
 
-EHM-style model: every player has a Current Ability (their attributes)
-and a hidden Potential Ability ceiling. Development speed depends on the
-CA→PA gap, age, traits, and coaching. Scouts don't see truth — they see
-bands that tighten with scouting effort, and traits reveal one by one.
+Potential is an upside forecast, not a hard cap.  Every player has a hidden,
+stable career curve which controls when growth arrives, how long their peak
+lasts, how volatile the path is, and how much of the forecast they naturally
+realise.  Context (mentors, close duos, morale, confidence, and the wider
+locker room) can unlock more of that upside and can even carry Current Ability
+past the original forecast.
+
+Scouts never see the hidden curve or a final maximum.  They see outcome bands
+which remain uncertain even with a complete book.
 
 Determinism: every derived number comes from blake2 hashes of stable ids
 or from the campaign RngTree — never Python's salted hash(), never
@@ -13,6 +18,8 @@ wall-clock anything.
 from __future__ import annotations
 
 import hashlib
+import math
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -44,15 +51,163 @@ def overall(p: Player) -> float:
     return sum(p.attributes.values()) / len(p.attributes)
 
 
+@dataclass(frozen=True)
+class DevelopmentCurve:
+    """Hidden shape of one career, derived from stable player identity.
+
+    ``growth_peak_age`` is when training is absorbed fastest. ``decline_age``
+    is the end of the player's competitive peak, not their maximum possible
+    rating. ``realization`` is how much of the headline potential tends to be
+    reached without an unusually good environment.
+    """
+
+    archetype: str
+    growth_peak_age: int
+    growth_width: float
+    peak_years: int
+    decline_age: int
+    realization: float
+    volatility: float
+
+
+def _unit(*parts) -> float:
+    return (_h(*parts) % 10_000) / 10_000.0
+
+
+def development_curve(p: Player) -> DevelopmentCurve:
+    """Return a deterministic, hidden career curve for ``p``.
+
+    IDs, rather than generation order, own the curve. Old saves therefore gain
+    the system without a schema migration and the same player keeps the same
+    career shape through transfers and save/load cycles.
+    """
+    shape = _unit(p.id, "devcurve", "shape")
+    timing = _unit(p.id, "devcurve", "timing")
+    length = _unit(p.id, "devcurve", "length")
+    if shape < 0.22:
+        archetype, peak, width = "flash", 18 + round(2 * timing), 1.5 + timing
+        peak_years = 1 + round(2 * length)
+    elif shape < 0.48:
+        archetype, peak, width = "early", 20 + round(2 * timing), 2.2 + timing
+        peak_years = 2 + round(2 * length)
+    elif shape < 0.78:
+        archetype, peak, width = "steady", 22 + round(2 * timing), 3.0 + 1.2 * timing
+        peak_years = 4 + round(2 * length)
+    else:
+        archetype, peak, width = "late", 24 + round(2 * timing), 3.8 + 1.2 * timing
+        peak_years = 3 + round(3 * length)
+
+    # Traits are visible clues, not the whole answer. They pin the broad turn
+    # while the hidden width, realization, volatility, and peak duration still
+    # distinguish two prodigies or two late bloomers.
+    tagged_turn = trait_value(p, "decline_age", 0)
+    if "prodigy" in p.personality_tags:
+        archetype, peak, peak_years = "flash", min(peak, 20), min(peak_years, 2)
+    elif "late_bloomer" in p.personality_tags:
+        archetype, peak, peak_years = "late", max(peak, 24), max(peak_years, 4)
+    decline = int(tagged_turn) if tagged_turn else max(24, peak + 4 + peak_years)
+
+    # Skew toward plausible success while leaving a meaningful population of
+    # high-upside players who never realise the headline number.
+    realization_roll = _unit(p.id, "devcurve", "realization")
+    realization = 0.62 + 0.38 * math.sqrt(realization_roll)
+    volatility = 0.78 + 0.48 * _unit(p.id, "devcurve", "volatility")
+    return DevelopmentCurve(
+        archetype=archetype,
+        growth_peak_age=int(peak),
+        growth_width=round(width, 2),
+        peak_years=int(peak_years),
+        decline_age=decline,
+        realization=round(realization, 3),
+        volatility=round(volatility, 3),
+    )
+
+
 def decline_age(p: Player) -> int:
-    return int(trait_value(p, "decline_age", 28))
+    return development_curve(p).decline_age
 
 
-def dev_multiplier(p: Player) -> float:
-    """Development speed from the CA→PA gap and traits. A player at
-    their ceiling only maintains; a raw prospect with a big gap flies."""
-    gap = potential_of(p) - overall(p)
-    gap_mult = float(np.clip(gap / 15.0, 0.1, 1.5))
+def curve_growth_multiplier(p: Player) -> float:
+    """How strongly this player absorbs development at their current age.
+
+    The broad bell gives early surges, steady builders, and late arrivals
+    genuinely different paths. A stable age-specific pulse makes progress
+    lumpy without consuming RNG or changing when other campaign draws happen.
+    """
+    curve = development_curve(p)
+    distance = abs(p.age - curve.growth_peak_age)
+    bell = math.exp(-0.5 * (distance / curve.growth_width) ** 2)
+    if p.age <= curve.growth_peak_age:
+        shape = 0.45 + 0.95 * bell
+    elif p.age < curve.decline_age:
+        shape = 0.22 + 0.78 * bell
+    else:
+        shape = 0.08
+    pulse = 0.78 + 0.44 * _unit(p.id, "devcurve", "year", p.age)
+    return round(float(np.clip(shape * pulse * curve.volatility, 0.08, 1.65)), 3)
+
+
+def curve_decline_multiplier(p: Player) -> float:
+    """Decline severity: short peaks fade faster, long peaks erode slowly."""
+    curve = development_curve(p)
+    longevity = float(np.clip(1.35 - curve.peak_years * 0.10, 0.65, 1.25))
+    year_pulse = 0.85 + 0.30 * _unit(p.id, "decline", p.age)
+    return round(longevity * year_pulse, 3)
+
+
+_REALIZATION_FLOOR = 45.0
+
+
+def natural_potential(p: Player) -> float:
+    """Likely peak in an ordinary environment, deliberately hidden from UI."""
+    pa = potential_of(p)
+    realised = (
+        _REALIZATION_FLOOR
+        + (pa - _REALIZATION_FLOOR) * development_curve(p).realization
+    )
+    return round(float(max(overall(p), min(99.0, realised))), 2)
+
+
+def contextual_ceiling_bonus(
+    p: Player,
+    *,
+    mentor_strength: float = 0.0,
+    duo_affinity: float = 50.0,
+    team_chemistry: float = 70.0,
+) -> float:
+    """Extra development headroom supplied by a player's environment.
+
+    This is intentionally capable of carrying ability past headline potential:
+    potential is what scouts thought the player might become, while a great
+    mentor, trusted duo, and thriving player can produce an outlier career.
+    """
+    morale = max(0.0, (p.morale - 70.0) / 30.0) * 3.0
+    belief = max(0.0, (p.confidence - 55.0) / 40.0) * 1.5
+    form = max(0.0, (p.form - 55.0) / 45.0) * 0.8
+    mentor = float(np.clip(mentor_strength, 0.0, 1.0)) * 2.5
+    duo = max(0.0, (duo_affinity - 75.0) / 25.0) * 2.7
+    room = max(0.0, (team_chemistry - 72.0) / 28.0) * 1.2
+    total = morale + belief + form + mentor + duo + room
+    return round(float(np.clip(total, 0.0, 10.0)), 2)
+
+
+def development_ceiling(p: Player, attr_id: str, support_bonus: float = 0.0) -> float:
+    """Reachable skill level now: hidden realization plus contextual upside."""
+    cur = p.attr(attr_id)
+    full = raw_skill_potential(p, attr_id)
+    realised = (
+        _REALIZATION_FLOOR
+        + (full - _REALIZATION_FLOOR) * development_curve(p).realization
+    )
+    return round(float(min(99.0, max(cur, realised + max(0.0, support_bonus)))), 2)
+
+
+def dev_multiplier(p: Player, support_bonus: float = 0.0) -> float:
+    """Development speed from reachable headroom, curve, and traits."""
+    targets = [development_ceiling(p, a, support_bonus) for a in p.attributes]
+    target = sum(targets) / len(targets) if targets else natural_potential(p)
+    gap = target - overall(p)
+    gap_mult = float(np.clip(gap / 15.0, 0.08, 1.5))
     return gap_mult * trait_value(p, "dev_mult", 1.0)
 
 
@@ -88,11 +243,20 @@ def potential_of(p: Player) -> float:
 
 
 def assign_potential(p: Player, rng: np.random.Generator) -> None:
-    """Roll PA at generation time (gen.py / rookies). Ceiling-rounded so
-    PA >= CA survives the 1-decimal store; soft-capped so few reach the top."""
+    """Roll generous upside at generation time.
+
+    More young players can plausibly become stars than will actually do so;
+    their hidden realization and career environment decide which forecasts
+    become careers.
+    """
     ca = overall(p)
     youth = max(0, 25 - p.age)
-    raw = ca + youth * rng.uniform(1.0, 3.2) + rng.normal(0, 2)
+    raw = ca + youth * rng.uniform(1.1, 3.7) + rng.normal(0, 2.8)
+    # Dream-upside texture is ID-derived so potential assignment consumes the
+    # exact same two RNG draws as before; contract/personality generation later
+    # on the shared stream must not shift when this distribution changes.
+    if p.age <= 21 and _unit(p.id, "dream_upside") < 0.32:
+        raw += 3.0 + 6.0 * _unit(p.id, "dream_upside", "size")
     p.potential = float(np.ceil(max(ca, _soft_cap_potential(raw)) * 10.0) / 10.0)
 
 
@@ -109,17 +273,39 @@ def assign_potential(p: Player, rng: np.random.Generator) -> None:
 _SKILL_SPREAD = 13.0  # peak-to-peak spread of the derived per-skill ceilings
 
 
-def skill_ceiling(p: Player, attr_id: str) -> float:
-    """Ceiling for one attribute. An explicit skill_potential entry wins;
-    otherwise derive PA +/- a stable per-(player, skill) spread, floored at the
-    current value (a ceiling never sits below where the skill already is)."""
-    cur = p.attr(attr_id)
+def raw_skill_potential(p: Player, attr_id: str) -> float:
+    """Unfloored possibility for one skill (hidden forecast input)."""
     stored = p.skill_potential.get(attr_id)
     if stored is not None:
-        return float(min(99.0, max(cur, stored)))
+        return float(min(99.0, max(0.0, stored)))
     pa = potential_of(p)
     spread = ((_h(p.id, "skillpa", attr_id) % 1000) / 1000.0 - 0.5) * _SKILL_SPREAD
-    return float(min(99.0, max(cur, pa + spread)))
+    return float(min(99.0, max(0.0, pa + spread)))
+
+
+def skill_ceiling(p: Player, attr_id: str) -> float:
+    """Headline skill potential, floored at demonstrated current ability.
+
+    Kept as the public compatibility entry point. Growth uses
+    :func:`development_ceiling`, which applies hidden realization and support.
+    """
+    return float(max(p.attr(attr_id), raw_skill_potential(p, attr_id)))
+
+
+def skill_potential_projection(p: Player, attr_id: str) -> tuple[float, float]:
+    """Uncertain outcome band for one skill, including supported upside."""
+    cur = p.attr(attr_id)
+    raw = raw_skill_potential(p, attr_id)
+    curve = development_curve(p)
+    realised = _REALIZATION_FLOOR + (raw - _REALIZATION_FLOOR) * curve.realization
+    uncertainty = (
+        3.0
+        + (1.0 - curve.realization) * 8.0
+        + abs(curve.volatility - 1.0) * 4.0
+    )
+    lo = max(cur, realised - uncertainty)
+    hi = min(99.0, max(cur, raw + uncertainty * 0.5 + 3.0))
+    return round(lo, 1), round(hi, 1)
 
 
 def _raise_toward(value: float, delta: float, cap: float, softness: float) -> float:
@@ -134,15 +320,14 @@ def _raise_toward(value: float, delta: float, cap: float, softness: float) -> fl
 
 def adjust_potential(p: Player, delta: float, attrs=None) -> float:
     """The SECOND writer of potential (assign_potential is the first). Raise the
-    scalar ceiling by `delta` (already scaled by the caller), diminishing near
-    the cap and never below current ability, and optionally lift the same into
+    scalar forecast by `delta` (already scaled by the caller), diminishing near
+    the cap without ratcheting it up to current ability, and optionally lift it into
     specific skill ceilings. Returns the applied scalar delta. Deterministic —
     no rng; the magnitude is the caller's responsibility."""
     if delta <= 0.0:
         return 0.0
-    ca = overall(p)
     old = potential_of(p)
-    new = round(min(99.0, max(ca, _raise_toward(old, delta, _PA_CAP, 6.0))), 1)
+    new = round(min(99.0, _raise_toward(old, delta, _PA_CAP, 6.0)), 1)
     p.potential = new
     if attrs:
         for a in sorted(set(attrs)):
@@ -180,24 +365,44 @@ def moment_potential_bump(p: Player, base: float, *, skills: int = 2) -> float:
 # band always contains the real ceiling and repeated looks converge, never
 # collapse to a point.
 
-_PROJ_FLOOR = 1.5  # irreducible half-width — the ceiling is never fully known
+_PROJ_FLOOR = 3.0  # irreducible outcome uncertainty, even for a full book
 
 
 def potential_projection(
     p: Player, progress: float = 1.0, own: bool = False
 ) -> tuple[float, float]:
-    """A ceiling estimate as a (lo, hi) band that always contains true PA."""
+    """A peak-outcome estimate which never collapses to a known maximum."""
     pa = potential_of(p)
     ca = overall(p)
+    curve = development_curve(p)
     youth = float(np.clip((26 - p.age) / 8.0, 0.0, 1.0))
     gap = max(0.0, pa - ca)
-    half = _PROJ_FLOOR + youth * 6.0 + min(gap, 15.0) * 0.20
+    curve_uncertainty = (
+        (1.0 - curve.realization) * 9.0
+        + abs(curve.volatility - 1.0) * 5.0
+    )
+    half = _PROJ_FLOOR + youth * 7.0 + min(gap, 18.0) * 0.20 + curve_uncertainty
     if not own:
         half += (1.0 - float(np.clip(progress, 0.0, 1.0))) * 10.0
     off = ((_h(p.id, "paresid") % 1000) / 1000.0 - 0.5) * 0.7 * half
-    lo = max(ca, pa + off - half)
-    hi = min(99.0, pa + off + half)
+    lo = max(1.0, pa + off - half)
+    # Strong environments can create genuine over-performance, so the upper
+    # end extends beyond the original PA forecast rather than treating it as a
+    # law of nature.
+    hi = min(99.0, pa + off + half + 3.0)
     return round(lo, 1), round(hi, 1)
+
+
+def curve_read(p: Player) -> str:
+    """Qualitative scouting clue without exposing exact hidden curve values."""
+    curve = development_curve(p)
+    reads = {
+        "flash": "development may arrive in an early burst; the peak could be brief",
+        "early": "looks likely to mature early, but sustaining the peak is uncertain",
+        "steady": "projects as a gradual builder with a potentially durable peak",
+        "late": "may need a long runway; the best years could arrive late",
+    }
+    return reads[curve.archetype]
 
 
 # ---------------------------------------------------------------------------
@@ -404,7 +609,8 @@ def _clamp_stat(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 def _bump_attr(p: Player, attr_id: str, amount: float) -> None:
     cur = p.attr(attr_id)
-    ceil = skill_ceiling(p, attr_id)
+    support = contextual_ceiling_bonus(p)
+    ceil = development_ceiling(p, attr_id, support)
     headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
     p.attributes[attr_id] = round(min(cur + amount * headroom, max(cur, ceil)), 2)
 
@@ -595,7 +801,7 @@ def scout_report(gs, p: Player, progress: float) -> dict:
     """Banded CA/PA view + progressively revealed traits. The band CENTER
     is a stable per-player offset (scouts have priors, not dice), and the
     band tightens as progress rises."""
-    ca, pa = overall(p), potential_of(p)
+    ca = overall(p)
     # A better analyst doesn't just read faster (progress) — they read more
     # ACCURATELY: an elite analyst shrinks the residual floor WIDTH, so their
     # bands hug the truth tighter at the same progress. The per-player bias is
@@ -607,12 +813,11 @@ def scout_report(gs, p: Player, progress: float) -> dict:
 
     sm = staff.scout_multiplier(gs)  # 1.0 (none) .. ~1.9 (elite)
     width_ca = 22.0 * (1.0 - progress) + 4.0 / sm
-    width_pa = width_ca + 8.0
     # Stable offset in [-0.35, +0.35] of width — truth is always in-band, and
     # analyst-independent so a tighter band only shrinks, never shifts.
     off = ((_h(gs.seed, p.id, "scoutoff") % 1000) / 1000.0 - 0.5) * 0.7
     ca_lo = max(1.0, ca + off * width_ca - width_ca / 2.0)
-    pa_lo = max(ca_lo, pa + off * width_pa - width_pa / 2.0)
+    proj_lo, proj_hi = potential_projection(p, progress, own=False)
     known_n = int(round(progress * len(p.personality_tags) + 1e-9))
     known = sorted(p.personality_tags)[:known_n]
     strengths = sorted(p.attributes, key=lambda a: -p.attributes[a])[:2]
@@ -624,11 +829,11 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         "role": str(p.role),
         "playstyle": str(p.playstyle),
         "ca_stars": [stars(ca_lo), stars(ca_lo + width_ca)],
-        "pa_stars": [stars(pa_lo), stars(pa_lo + width_pa)],
+        "pa_stars": [stars(proj_lo), stars(proj_hi)],
         # A numeric ceiling PROJECTION band. Always a range, never a point —
         # the future can't be read exactly — and it never closes below an
         # irreducible floor even at a full book (see potential_projection).
-        "pa_projection": list(potential_projection(p, progress, own=False)),
+        "pa_projection": [proj_lo, proj_hi],
         "traits": [
             {"id": t, "blurb": TRAITS.get(t, {}).get("blurb", "")} for t in known
         ],
@@ -651,6 +856,7 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         ),
         "style_read": _style_read(p) if progress >= 0.5 else "",
         "mental_read": _mental_read(p) if progress >= 0.75 else "",
+        "curve_read": curve_read(p) if progress >= 0.75 else "",
         "verdict": _scout_verdict(p, ca, progress) if progress >= 0.95 else "",
         "progress": round(progress, 2),
     }
@@ -676,8 +882,9 @@ def _ceiling_reads(p: Player, attrs: list[str]) -> list[dict]:
         if a in seen:
             continue
         seen.add(a)
+        lo, hi = skill_potential_projection(p, a)
         out.append(
-            {"attr": a, "read": _ceiling_tier(skill_ceiling(p, a) - p.attr(a))}
+            {"attr": a, "read": _ceiling_tier((lo + hi) / 2.0 - p.attr(a))}
         )
     return out
 

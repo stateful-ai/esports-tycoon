@@ -794,13 +794,16 @@ def test_dev_progress_shape(env):
     for d in dev:
         assert set(d) == {
             "id", "handle", "age", "ca", "potential", "potential_band",
-            "progress_pct", "trajectory", "maxed", "mentor_skill",
+            "progress_pct", "trajectory", "maxed", "overperforming",
+            "curve_read", "support_bonus", "mentor_skill",
         }
         assert 0 <= d["progress_pct"] <= 100
         assert d["potential_band"][0] <= d["potential_band"][1]
         assert 0 <= d["mentor_skill"] <= 99
         assert d["trajectory"] in ("climbing", "declining", "steady")
-        assert d["ca"] <= d["potential"] + 1  # CA never exceeds ceiling
+        assert isinstance(d["overperforming"], bool)
+        assert d["curve_read"]
+        assert 0 <= d["support_bonus"] <= 10
     # Sorted by potential descending, then handle.
     pots = [d["potential"] for d in dev]
     assert pots == sorted(pots, reverse=True)
