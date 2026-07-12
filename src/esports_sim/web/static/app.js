@@ -886,25 +886,12 @@ async function dashboard(v) {
   }
   tiles.appendChild(statTile("Training", cap(s.training_focus), { sub: "weekly focus" }));
   strip.appendChild(tiles);
-  // Weekly training focus setter — an every-week call, so it lives on the strip.
-  const trainRow = el("div", "row", `<span class="microlabel">Training focus</span>`);
-  for (const o of s.focus_options ?? []) {
-    const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
-    b.onclick = async () => {
-      await api("/api/actions/training", { focus: o });
-      toast(`Training focus: ${o}`);
-      refresh();
-    };
-    trainRow.appendChild(b);
-  }
-  trainRow.style.marginTop = "8px";
-  strip.appendChild(trainRow);
   ws.appendChild(strip);
 
-  /* -- 2. ACTION BAND: offers + suggested five (only when actionable) ------- */
+  /* -- 2. ACTION BAND: transfer offers (match prep lives in the hero) -------- */
   const sug = s.suggested_lineup;
   const flavor = s.flavor_event;
-  if (flavor || (s.transfer_offers ?? []).length || (sug && sug.changed)) {
+  if (flavor || (s.transfer_offers ?? []).length) {
     const ac = el("div", "card ws-12 alert");
     ac.appendChild(el("h2", "", "Action required"));
     if (flavor) {
@@ -960,20 +947,6 @@ async function dashboard(v) {
       row.appendChild(keep);
       ac.appendChild(row);
     }
-    // Suggested five: only surfaced when it diverges from the dressed five.
-    if (sug && sug.changed) {
-      const row = el("div", "row offer-row", `<span class="microlabel">Suggested five</span>`);
-      for (const p of sug.players) {
-        row.appendChild(el("span", "pill",
-          `${plink(p.id, p.handle)} <b class="mono">${p.quality}</b>` +
-          (p.dressed ? "" : ' <span class="trend-up">▲ in</span>')));
-      }
-      const go = el("button", "btn btn-sm", "Set lineup ▸");
-      go.onclick = () => dashGoTab("roster");
-      row.appendChild(el("span", "spacer"));
-      row.appendChild(go);
-      ac.appendChild(row);
-    }
     ws.appendChild(ac);
   }
 
@@ -982,13 +955,27 @@ async function dashboard(v) {
   ws.appendChild(main);
   ws.appendChild(rail);
 
-  /* -- 3. NEXT MATCH spotlight (main) --------------------------------------- */
-  const spot = el("div", "card es-spotlight");
-  spot.appendChild(el("h2", "", "Next match"));
+  /* -- 3. MATCH DAY hero: the staff's one-stop prep briefing ---------------- */
+  const spot = el("div", "card ws-12 es-spotlight es-matchday");
   if (fix) {
     const region = cap(regionOf[myId] || me.region || "");
     const stageTxt =
       fix.stage === "regular" ? `${region} League` : stageLabel(fix.stage).toUpperCase();
+    const burnoutWatch = (s.rotation || []).filter((r) => r.burnout);
+    const scoutOnOpponent = s.scout && s.scout.target === oppId;
+    const scoutPct = scoutOnOpponent ? Math.round((s.scout.progress || 0) * 100) : 0;
+    const planSet = !!(gameplan && gameplan.plan);
+
+    const heroTop = el("div", "es-matchday-top");
+    heroTop.appendChild(el("div", "",
+      `<span class="es-matchday-kicker">W${fix.week} · Staff briefing</span>` +
+      `<h2>Match day</h2>` +
+      `<p class="muted">Everything to settle before you advance the week.</p>`));
+    heroTop.appendChild(el("div", "es-readiness",
+      `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
+      `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
+      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`));
+    spot.appendChild(heroTop);
 
     const teamBlock = (tid, name, logo, side) => {
       const sub = [posOf[tid] ? ordinal(posOf[tid]) : null, recOf[tid]]
@@ -1012,6 +999,80 @@ async function dashboard(v) {
         </div>` +
         teamBlock(oppId, oppName, oppLogo, "right")));
 
+    // Staff briefing: facts already computed by the campaign/server become
+    // concise decisions here. Each recommendation deep-links to its owner.
+    const prep = el("div", "es-prep");
+    prep.appendChild(el("div", "es-prep-head",
+      `<div><span class="microlabel">Today's prep</span><b>${esc(oppName)} in W${fix.week}</b></div>` +
+      `<span class="muted">Set the five, build the plan, sharpen the week.</span>`));
+    const prepGrid = el("div", "es-prep-grid");
+    const prepCard = (role, title, copy, status, tone, action, onClick) => {
+      const card = el("div", `es-prep-card ${tone || ""}`,
+        `<div class="es-prep-role"><span>${role}</span><span class="pill ${tone === "urgent" ? "warn" : tone === "ready" ? "good" : ""}">${status}</span></div>` +
+        `<b class="es-prep-title">${title}</b>` +
+        `<p class="muted">${copy}</p>`);
+      const go = el("button", "btn btn-sm", action + " ▸");
+      go.onclick = onClick;
+      card.appendChild(go);
+      prepGrid.appendChild(card);
+      return card;
+    };
+
+    const lineupIns = (sug?.players || []).filter((p) => !p.dressed);
+    const rosterTitle = sug?.changed ? "Review the suggested five"
+      : burnoutWatch.length ? `Protect ${esc(burnoutWatch[0].handle)}'s legs`
+      : "Keep the match five settled";
+    const rosterCopy = sug?.changed
+      ? `${lineupIns.map((p) => plink(p.id, p.handle)).join(" and ")} rate among your best available options. Confirm the five and any map overrides.`
+      : burnoutWatch.length
+        ? `${plink(burnoutWatch[0].id, burnoutWatch[0].handle)} is carrying a heavy map load. Check the rotation before locking the lineup.`
+        : "No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.";
+    prepCard("Assistant coach", rosterTitle, rosterCopy, sug?.changed || burnoutWatch.length ? "Review" : "Stable",
+      sug?.changed || burnoutWatch.length ? "urgent" : "ready", "Open roster", () => {
+        App.rosterCols = "overview"; dashGoTab("roster");
+      });
+
+    prepCard("Head coach", planSet ? "Pressure-test the game plan" : "Turn the brief into a game plan",
+      planSet ? "The plan is locked. Recheck the approach, target, map ideas, and match-day team talk."
+        : "No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.",
+      planSet ? "Set" : "Priority", planSet ? "ready" : "urgent", planSet ? "Review plan" : "Build plan", () => {
+        App.tacticsTab = "gameplan"; dashGoTab("tactics");
+      });
+
+    prepCard("Analyst", scoutOnOpponent ? `Turn ${scoutPct}% coverage into edges` : `Put the book on ${esc(oppName)}`,
+      scoutOnOpponent
+        ? (scoutPct >= 50 ? "The identity read is coming into focus. Review tendencies, danger players, and map evidence before finalizing the plan."
+          : "Coverage is building. Keep the assignment active, then use verified reads instead of guessing at their setup.")
+        : `Your scout is not assigned to ${esc(oppName)}. Switch coverage if this match is the priority.`,
+      scoutOnOpponent ? `${scoutPct}%` : "Unassigned", scoutPct >= 50 ? "ready" : "urgent", "Scouting desk", () => dashGoTab("scouting"));
+
+    const devPlayer = (s.movers || []).find((m) => m.delta < 0) || (s.movers || [])[0];
+    const devTitle = burnoutWatch.length ? "Ease the load, keep growth targeted"
+      : devPlayer ? `Check ${esc(devPlayer.handle)}'s development plan`
+      : `Align development with ${cap(s.training_focus)}`;
+    const devCopy = burnoutWatch.length
+      ? "Balance individual intensity against match readiness, then choose the team focus for the week."
+      : devPlayer
+        ? `${plink(devPlayer.pid, devPlayer.handle)} moved ${devPlayer.delta > 0 ? "up" : "down"} this week. Confirm focus, intensity, and mentorship while setting team training.`
+        : "Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.";
+    const devCard = prepCard("Performance", devTitle, devCopy, cap(s.training_focus),
+      burnoutWatch.length ? "urgent" : "", "Development plans", () => {
+        App.rosterCols = "development"; dashGoTab("roster");
+      });
+    const trainRow = el("div", "es-prep-focus");
+    for (const o of s.focus_options ?? []) {
+      const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
+      b.onclick = async () => {
+        await api("/api/actions/training", { focus: o });
+        toast(`Training focus: ${o}`);
+        refresh();
+      };
+      trainRow.appendChild(b);
+    }
+    devCard.insertBefore(trainRow, devCard.lastElementChild);
+    prep.appendChild(prepGrid);
+    spot.appendChild(prep);
+
     const cols = el("div", "es-snap-cols");
     const colL = el("div", "es-snap-col");
     const colR = el("div", "es-snap-col");
@@ -1028,16 +1089,6 @@ async function dashboard(v) {
     // Grounded prose preview.
     if ((fix.preview || []).length) {
       colL.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
-    }
-    // Game-plan state: the natural moment to set one is when reading this card.
-    {
-      const has = !!(gameplan && gameplan.plan);
-      const row = el("div", "row");
-      row.appendChild(el("span", "pill" + (has ? " gp-live" : ""), has ? "Game plan: set" : "Game plan: none"));
-      const go = el("button", "btn btn-sm", has ? "Review plan ▸" : "Set a plan ▸");
-      go.onclick = () => { App.tacticsTab = "gameplan"; dashGoTab("tactics"); };
-      row.appendChild(go);
-      colL.appendChild(row);
     }
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
@@ -1149,11 +1200,18 @@ async function dashboard(v) {
 
     if (colL.childElementCount) cols.appendChild(colL);
     if (colR.childElementCount) cols.appendChild(colR);
-    if (cols.childElementCount) spot.appendChild(cols);
+    if (cols.childElementCount) {
+      const intel = el("div", "es-intel");
+      intel.appendChild(el("div", "es-intel-head",
+        `<span class="microlabel">Match intelligence</span><span class="muted">Opponent, form, maps and run-in</span>`));
+      intel.appendChild(cols);
+      spot.appendChild(intel);
+    }
   } else {
+    spot.appendChild(el("h2", "", "Match day"));
     spot.appendChild(el("p", "muted", `No fixture scheduled — ${esc(String(s.phase || ""))}.`));
   }
-  main.appendChild(spot);
+  ws.insertBefore(spot, main);
 
   /* -- 4. MATCH REVIEW (main): why you won/lost + what to tweak ------------- */
   const lmr = s.last_match_review;
