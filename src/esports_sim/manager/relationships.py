@@ -218,6 +218,90 @@ def duos_and_feuds(gs: GameState, team_id: str) -> dict[str, list[tuple[str, str
     return out
 
 
+def locker_room_fit(gs: GameState, pid: str, team_id: str) -> dict[str, object]:
+    """Read a player's existing history with a prospective locker room.
+
+    A player has no opinion about strangers (50, professional courtesy), but
+    old teammates carry their relationship across moves.  This is deliberately
+    a pure read: market, contract, and transfer code can all make the same
+    decision without adding another mutable personality system.
+    """
+    mates = [
+        mate_id for mate_id in sorted(gs.teams[team_id].player_ids)
+        if mate_id != pid and mate_id in gs.players
+    ]
+    values = [(mate_id, get(gs, pid, mate_id)) for mate_id in mates]
+    average = sum(value for _, value in values) / len(values) if values else 50.0
+    friends = [mate_id for mate_id, value in values if value >= FRIEND_BAR]
+    feuds = [mate_id for mate_id, value in values if value <= FEUD_BAR]
+    worst_id, worst = min(values, key=lambda item: (item[1], item[0]), default=(None, 50.0))
+    return {
+        "average": round(average, 1),
+        "friends": friends,
+        "feuds": feuds,
+        "worst_id": worst_id,
+        "worst": round(worst, 1),
+    }
+
+
+def signing_veto(gs: GameState, pid: str, team_id: str) -> str | None:
+    """A player will not voluntarily join an active locker-room feud."""
+    fit = locker_room_fit(gs, pid, team_id)
+    if fit["feuds"]:
+        rival = gs.players[fit["worst_id"]]
+        return f"{gs.players[pid].handle} refuses to share a locker room with {rival.handle}"
+    return None
+
+
+def renewal_veto(gs: GameState, pid: str, team_id: str) -> str | None:
+    """An unhappy player in a sustained feud will not extend their deal."""
+    fit = locker_room_fit(gs, pid, team_id)
+    if fit["feuds"] and (fit["average"] <= 42.0 or gs.players[pid].morale <= 40.0):
+        rival = gs.players[fit["worst_id"]]
+        return f"{gs.players[pid].handle} will not renew while {rival.handle} remains"
+    return None
+
+
+def contract_fit_multiplier(gs: GameState, pid: str, team_id: str) -> float:
+    """Salary multiplier from team history, capped to keep the market sane."""
+    fit = locker_room_fit(gs, pid, team_id)
+    # +/- 15% between a toxic and a beloved group; neutral history is exact 1.
+    return 1.0 - max(-0.15, min(0.15, (float(fit["average"]) - 50.0) * 0.005))
+
+
+def transfer_reaction(gs: GameState, pid: str, from_team_id: str, to_team_id: str) -> str | None:
+    """Apply the immediate human consequence of a forced transfer.
+
+    A fee can compel a move that a free agent would refuse.  Feuding arrivals
+    lose morale, while a move between bitter rival orgs additionally gives an
+    ambitious player a short-term prove-them-wrong confidence spark.
+    """
+    from esports_sim.manager import personality, rivalries
+
+    p = gs.players[pid]
+    fit = locker_room_fit(gs, pid, to_team_id)
+    rivalry_heat = rivalries.get(gs, from_team_id, to_team_id)
+    morale_delta = 6.0
+    notes: list[str] = []
+    if fit["friends"]:
+        morale_delta += min(5.0, 2.0 * len(fit["friends"]))
+        notes.append("reunites with a trusted teammate")
+    if fit["feuds"]:
+        morale_delta -= min(18.0, 8.0 + 4.0 * len(fit["feuds"]))
+        rival = gs.players[fit["worst_id"]]
+        notes.append(f"is furious about joining {rival.handle}")
+    if rivalry_heat >= rivalries.RIVALRY_BAR:
+        morale_delta -= min(8.0, rivalry_heat / 12.5)
+        # Ambitious personalities can channel a hostile move into focus; this
+        # is campaign confidence, never match-engine randomness.
+        spark = max(0.0, personality.dev(p, "ambition")) * 8.0
+        if spark:
+            p.confidence = round(min(100.0, p.confidence + spark), 1)
+            notes.append("takes the rivalry move personally")
+    p.morale = round(min(100.0, max(0.0, p.morale + morale_delta)), 1)
+    return "; ".join(notes) if notes else None
+
+
 def _prune(gs: GameState, cap: int = 800) -> None:
     """Keep the graph sparse: drop the least-informative entries (closest
     to neutral) once the dict outgrows the cap."""

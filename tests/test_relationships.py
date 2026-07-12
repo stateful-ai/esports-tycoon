@@ -95,6 +95,55 @@ def test_departure_ripple_hits_best_friend(campaign: GameState) -> None:
     assert gs.players[b].morale < morale_before
 
 
+def test_feuds_block_voluntary_signings_and_renewals(campaign: GameState) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    teammate = gs.teams[tid].player_ids[0]
+    free_agent = gs.free_agent_ids[0]
+    gs.relationships[relationships.key(teammate, free_agent)] = 20.0
+
+    ok, why = market.can_sign(gs, tid, free_agent)
+    assert not ok
+    assert "refuses to share" in why
+
+    incumbent = gs.teams[tid].player_ids[1]
+    gs.relationships[relationships.key(teammate, incumbent)] = 20.0
+    gs.players[incumbent].morale = 35.0
+    ok, why = market.renew_contract(gs, tid, incumbent)
+    assert not ok
+    assert "will not renew" in why
+
+
+def test_transfer_into_feud_has_a_morale_cost(campaign: GameState) -> None:
+    gs = campaign
+    seller_id = next(tid for tid in gs.teams if tid != gs.user_team_id)
+    pid = gs.teams[seller_id].player_ids[0]
+    teammate = gs.teams[gs.user_team_id].player_ids[0]
+    gs.relationships[relationships.key(pid, teammate)] = 20.0
+    gs.teams[gs.user_team_id].balance = 10_000_000
+    before = gs.players[pid].morale
+
+    ok, _ = market.execute_transfer(gs, pid, gs.user_team_id, fee=10_000)
+    assert ok
+    assert gs.players[pid].morale < before
+
+
+def test_transfer_between_rival_clubs_has_a_morale_cost(campaign: GameState) -> None:
+    from esports_sim.manager import rivalries
+
+    gs = campaign
+    buyer_id = gs.user_team_id
+    seller_id = next(tid for tid in gs.teams if tid != buyer_id)
+    pid = gs.teams[seller_id].player_ids[0]
+    gs.rivalries[rivalries.key(seller_id, buyer_id)] = 100.0
+    gs.teams[buyer_id].balance = 10_000_000
+    before = gs.players[pid].morale
+
+    ok, _ = market.execute_transfer(gs, pid, buyer_id, fee=10_000)
+    assert ok
+    assert gs.players[pid].morale < before
+
+
 def test_relationships_tick_in_campaign_and_stay_bounded(
     campaign: GameState, game_data: GameData
 ) -> None:
