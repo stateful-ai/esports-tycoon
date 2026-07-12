@@ -343,7 +343,10 @@ class HeuristicTeamPolicy:
         if request.average_credits >= C.FULL_BUY_THRESHOLD:
             return "full"
         greed = request.tactics.eco_greed
-        if request.average_credits >= C.FORCE_BUY_THRESHOLD * (1.15 - greed / 250.0):
+        force_mult = C.ECO_FORCE_BASE_MULT - (
+            (greed - 50.0) / 50.0 * C.ECO_FORCE_MULT_SPAN
+        )
+        if request.average_credits >= C.FORCE_BUY_THRESHOLD * force_mult:
             return "force"
         return "eco"
 
@@ -404,6 +407,9 @@ class HeuristicTeamPolicy:
                 go_tick -= shift
             elif request.timeout.kind == "stabilize":
                 go_tick += shift
+        go_tick -= round(
+            (tactics.pace - 50.0) / 50.0 * C.PACE_GO_TICK_SPAN
+        )
         go_tick = min(C.FORCE_GO_TICK, max(1, go_tick))
 
         carrier = max(

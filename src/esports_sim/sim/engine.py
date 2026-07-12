@@ -43,6 +43,7 @@ from esports_sim.registry.loader import GameData, load_geometry
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.schemas import (
     Ability,
+    AbilityEffect,
     BuyEvent,
     Event,
     Gimmick,
@@ -156,6 +157,7 @@ class _PState:
     bonus: float = 0.0
     no_engage_until: int = -1  # disengage grace while falling back
     peek_until: int = -1  # player-policy selected swing window
+    mobility_until: int = -1  # dash/blast/teleport speeds the next move
     # Unit vector this player is pre-aiming down while stationary.
     watch: tuple[float, float] | None = None
     has_spike: bool = False
@@ -190,6 +192,16 @@ class _FastObservation:
     igl_call: str | None
     tactical_aggression: float
     timeout_directive: str | None
+
+
+@dataclass(slots=True)
+class _PendingFlash:
+    """One flash waiting for a duel at its intended site."""
+
+    target_side: str
+    target_site: str
+    owner_id: str | None
+    expires_at: int
 
 
 class _MatchSim:
@@ -332,16 +344,26 @@ class _MatchSim:
             pl = self._player(pid)
             # Volatile personalities swing harder day to day; ice runs flat.
             sigma = (
-                12.0
-                - pl.attr("composure") / 20.0
+                C.DAY_FORM_BASE_SIGMA
+                - pl.attr("composure") / C.DAY_FORM_COMPOSURE_DIV
                 + trait_value(pl, "day_sigma", 0.0)
             )
             self.day_form[pid] = float(
-                np.clip(df_rng.normal(0.0, max(sigma, 2.5)), -18.0, 18.0)
+                np.clip(
+                    df_rng.normal(0.0, max(sigma, C.DAY_FORM_MIN_SIGMA)),
+                    -C.DAY_FORM_CAP,
+                    C.DAY_FORM_CAP,
+                )
             )
         self.tactic_form: dict[str, float] = {
-            team_a: float(df_rng.normal(0.0, 6.5)),
-            team_b: float(df_rng.normal(0.0, 6.5)),
+            team_a: float(np.clip(
+                df_rng.normal(0.0, C.TEAM_FORM_SIGMA),
+                -C.TEAM_FORM_CAP, C.TEAM_FORM_CAP,
+            )),
+            team_b: float(np.clip(
+                df_rng.normal(0.0, C.TEAM_FORM_SIGMA),
+                -C.TEAM_FORM_CAP, C.TEAM_FORM_CAP,
+            )),
         }
         # How well each team's roster + chemistry can EXECUTE its coach's
         # system. Zero at neutral tactics (see _execution_mod), so it never
@@ -364,14 +386,12 @@ class _MatchSim:
         }
 
         # Round-scoped scratch, reset in _play_round.
-        self._flashed = False
-        self._flash_side = "defense"  # which side eats the pending flash
-        self._flash_owner: str | None = None  # who threw it (assist credit)
+        self._pending_flashes: list[_PendingFlash] = []
         # Per-team setup credit: (top utility contributor, valid-until tick)
         # from the last execute/retake — kills converted inside that window
         # count as their assist (the sim's stand-in for damage assists).
         self._setup_owner: dict[str, tuple[str, int]] = {}
-        self._smoke_until = -1
+        self._smoke_until_by_site: dict[str, int] = {}
         self._spike_dropped_at: str | None = None
         self._retake_popped = False
         self._info_rotate_used = False
@@ -734,11 +754,9 @@ class _MatchSim:
         self._buy_phase(round_num, seed_path, rng)
 
         # -- per-round reset ---------------------------------------------------
-        self._flashed = False
-        self._flash_side = "defense"
-        self._flash_owner = None
+        self._pending_flashes = []
         self._setup_owner = {}
-        self._smoke_until = -1
+        self._smoke_until_by_site = {}
         self._spike_dropped_at = None
         self._retake_popped = False
         self._info_rotate_used = False
@@ -758,6 +776,7 @@ class _MatchSim:
             ps.bonus = 0.0
             ps.no_engage_until = -1
             ps.peek_until = -1
+            ps.mobility_until = -1
             ps.watch = None
             ps.has_spike = False
 
@@ -896,7 +915,9 @@ class _MatchSim:
                     ]
                     if on_site_dfn:
                         self._execute_utility(
-                            on_site_dfn, tick, seed_path, flash_side="attack", rng=rng
+                            on_site_dfn, tick, seed_path,
+                            flash_side="attack", target_site=target_site,
+                            intent="stall", rng=rng,
                         )
                     off_site = [
                         q
@@ -915,10 +936,10 @@ class _MatchSim:
                         pl = self._player(leaner)
                         delay = max(
                             2,
-                            12
+                            C.ROTATE_DELAY_BASE
                             - int(
                                 (pl.attr("game_sense") + pl.attr("comms_quality"))
-                                / 20.0
+                                / C.ROTATE_SKILL_DIV
                             ),
                         )
                         rotate_at[leaner] = tick + delay
@@ -961,7 +982,11 @@ class _MatchSim:
                 # and its flank instead of committing to the site — then
                 # strikes in as a late second wave once the hit has landed.
                 pushers = [q for q in alive_atk if q not in self._lurkers]
-                self._execute_utility(pushers or alive_atk, tick, seed_path, flash_side="defense", rng=rng)
+                self._execute_utility(
+                    pushers or alive_atk, tick, seed_path,
+                    flash_side="defense", target_site=target_site,
+                    intent="execute", rng=rng,
+                )
                 site_cs = self._site_callouts(target_site)
                 for i, q in enumerate(pushers):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
@@ -1202,7 +1227,9 @@ class _MatchSim:
                 ]
                 if on_site_dfn:
                     stall_power = self._execute_utility(
-                        on_site_dfn, tick, seed_path, flash_side="attack", rng=rng
+                        on_site_dfn, tick, seed_path,
+                        flash_side="attack", target_site=target_site,
+                        intent="stall", rng=rng,
                     )
                     # Defensive util STALLS the hit: mollies and setups
                     # make attackers path around, buying rotation time.
@@ -1399,6 +1426,12 @@ class _MatchSim:
                 ticks += C.DOOR_BREAK_TICKS
                 self._doors_closed.discard(gimmick.id)  # open for the round
                 self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "broken")
+
+        if ps.mobility_until >= tick and (
+            gimmick is None or gimmick.type != GimmickType.TELEPORTER
+        ):
+            ticks = max(C.MIN_MOVE_TICKS, round(ticks * C.MOBILITY_MOVE_MULT))
+            ps.mobility_until = -1  # one dash/blast/step opens one move
 
         ps.move_dest = dest
         ps.move_eta = tick + ticks
@@ -1753,28 +1786,61 @@ class _MatchSim:
 
     # -- utility model ------------------------------------------------------------------
 
-    def _ability_power(self, ab: Ability) -> float:
-        power = 0.0
+    @staticmethod
+    def _utility_effects(ab: Ability) -> frozenset[AbilityEffect]:
+        """Explicit effect metadata, with a compatible legacy-flag fallback."""
+        effects = set(ab.effects)
         if ab.blocks_sight:
-            power = max(power, C.UTIL_POWER_SMOKE)
+            effects.add(AbilityEffect.SMOKE)
         if ab.flashes:
-            power = max(power, C.UTIL_POWER_FLASH)
+            effects.add(AbilityEffect.FLASH)
         if ab.damages:
-            power = max(power, C.UTIL_POWER_DAMAGE)
+            effects.add(AbilityEffect.DAMAGE)
         if ab.info:
-            power = max(power, C.UTIL_POWER_INFO)
-        return power
+            effects.add(AbilityEffect.INFO)
+        return frozenset(effects)
 
-    def _best_ability(self, ps: _PState) -> Ability | None:
+    def _ability_power(self, ab: Ability) -> float:
+        """Credit every effect carried by a utility, rather than only its
+        strongest flag (a drone that scouts and damages is not just one of
+        those things)."""
+        power_by_effect = {
+            AbilityEffect.SMOKE: C.UTIL_POWER_SMOKE,
+            AbilityEffect.FLASH: C.UTIL_POWER_FLASH,
+            AbilityEffect.DAMAGE: C.UTIL_POWER_DAMAGE,
+            AbilityEffect.INFO: C.UTIL_POWER_INFO,
+            AbilityEffect.MOBILITY: C.UTIL_POWER_MOBILITY,
+        }
+        return sum(power_by_effect[effect] for effect in self._utility_effects(ab))
+
+    def _best_ability(self, ps: _PState, intent: str) -> Ability | None:
+        """Choose a charged utility for the situation, not a kit-wide
+        generic power ranking. Signatures break otherwise-equal ties so a
+        player uses their distinctive tool before a bought duplicate."""
         best: Ability | None = None
-        best_power = 0.0
+        best_score = 0.0
+        weights = C.UTILITY_INTENT_WEIGHTS[intent]
         for ab in self.gd.agents[ps.agent_id].abilities:
             if ab.type == "ultimate" or ps.charges.get(ab.id, 0) <= 0:
                 continue
-            power = self._ability_power(ab)
-            if power > best_power:
-                best, best_power = ab, power
+            score = sum(
+                weights.get(effect.value, 0.0)
+                for effect in self._utility_effects(ab)
+            )
+            if ab.type == "signature":
+                score += C.UTILITY_SIGNATURE_PRIORITY
+            if score > best_score:
+                best, best_score = ab, score
         return best
+
+    def _utility_target_callout(self, site: str) -> str | None:
+        """Stable representative target for event/replay consumers."""
+        callouts = sorted(
+            callout.id
+            for callout in self.map.callouts.values()
+            if str(callout.site) == site and callout.zone == CalloutZone.SITE
+        )
+        return callouts[0] if callouts else None
 
     def _execute_utility(
         self,
@@ -1782,6 +1848,8 @@ class _MatchSim:
         tick: int,
         seed_path: tuple[str, ...],
         flash_side: str,
+        target_site: str,
+        intent: str,
         rng: np.random.Generator | None = None,
     ) -> float:
         """Coarse execute/retake: everyone throws their best util; total
@@ -1791,8 +1859,8 @@ class _MatchSim:
         of dumping everything on one hit."""
         power = 0.0
         smoked = False
-        flashed = False
         flash_owner: str | None = None
+        target_callout = self._utility_target_callout(target_site)
         if pids:
             # Neutral (50) throws everything, like the engine always did;
             # only genuinely disciplined books hold charges back.
@@ -1803,33 +1871,43 @@ class _MatchSim:
         for pid in pids:
             ps = self.p[pid]
             pl = self._player(pid)
-            ab = self._best_ability(ps)
+            ab = self._best_ability(ps, intent)
             if ab is not None:
                 ps.charges[ab.id] -= 1
+                # Utility usage is the player's mechanical baseline; the
+                # team book changes whether the lineup is cleanly prepared.
+                # The coaching term is centered at 50 so neutral tactics
+                # preserve the canonical match log exactly.
                 fail_p = min(
                     C.UTIL_FAIL_MAX,
                     max(
                         0.03,
                         C.UTIL_FAIL_BASE
-                        + (55.0 - pl.attr("utility_usage")) / 250.0,
+                        + (55.0 - pl.attr("utility_usage")) / 250.0
+                        + (50.0 - disc) / 50.0 * C.UTIL_DISCIPLINE_FAIL_SPAN,
                     ),
                 )
                 failed = rng is not None and rng.random() < fail_p
                 if not failed:
+                    effects = self._utility_effects(ab)
                     contrib = self._ability_power(ab) * (
                         pl.attr("utility_usage") / 100.0
                     )
                     power += contrib
                     if best_contrib is None or contrib > best_contrib[0]:
                         best_contrib = (contrib, pid)
-                    smoked = smoked or ab.blocks_sight
-                    if ab.flashes and not flashed:
+                    smoked = smoked or AbilityEffect.SMOKE in effects
+                    if AbilityEffect.FLASH in effects and flash_owner is None:
                         flash_owner = pid  # first flasher gets the assist
-                    flashed = flashed or ab.flashes
+                    if AbilityEffect.MOBILITY in effects:
+                        ps.mobility_until = max(
+                            ps.mobility_until, tick + C.MOBILITY_TICKS
+                        )
                 self._emit(
                     UtilityUsedEvent(
                         tick=tick, seed_path=seed_path,
-                        player_id=pid, ability_id=ab.id, failed=failed,
+                        player_id=pid, ability_id=ab.id,
+                        target_callout=target_callout, failed=failed,
                     )
                 )
             ult = next(
@@ -1842,11 +1920,20 @@ class _MatchSim:
             )
             if ult is not None and ult.ult_points and ps.ult_points >= ult.ult_points:
                 ps.ult_points = 0
-                power += C.UTIL_POWER_ULT * (pl.attr("utility_usage") / 100.0)
+                effects = self._utility_effects(ult)
+                power += max(C.UTIL_POWER_ULT, self._ability_power(ult)) * (
+                    pl.attr("utility_usage") / 100.0
+                )
+                smoked = smoked or AbilityEffect.SMOKE in effects
+                if AbilityEffect.FLASH in effects and flash_owner is None:
+                    flash_owner = pid
+                if AbilityEffect.MOBILITY in effects:
+                    ps.mobility_until = max(ps.mobility_until, tick + C.MOBILITY_TICKS)
                 self._emit(
                     UtilityUsedEvent(
                         tick=tick, seed_path=seed_path,
                         player_id=pid, ability_id=ult.id,
+                        target_callout=target_callout,
                     )
                 )
         bonus = min(C.ENTRY_BONUS_MAX, 2.0 * power)
@@ -1860,13 +1947,18 @@ class _MatchSim:
                 tick + C.ENTRY_BONUS_TICKS,
             )
         if smoked:
-            self._smoke_until = tick + C.ENTRY_BONUS_TICKS
-        # Flash lands on the first target-site duel; flash_side names the
-        # side that eats it.
-        if flashed:
-            self._flashed = True
-            self._flash_side = flash_side
-            self._flash_owner = flash_owner
+            self._smoke_until_by_site[target_site] = tick + C.ENTRY_BONUS_TICKS
+        # A flash lands on the next duel AT ITS TARGET SITE. It expires if
+        # the hit never materializes, rather than blinding a later rotate.
+        if flash_owner is not None:
+            self._pending_flashes.append(
+                _PendingFlash(
+                    target_side=flash_side,
+                    target_site=target_site,
+                    owner_id=flash_owner,
+                    expires_at=tick + C.ENTRY_BONUS_TICKS,
+                )
+            )
         return power
 
     def _recon_recall(
@@ -1885,7 +1977,11 @@ class _MatchSim:
         for pid in alive_atk:
             ps = self.p[pid]
             for ab in self.gd.agents[ps.agent_id].abilities:
-                if ab.info and ab.type != "ultimate" and ps.charges.get(ab.id, 0) > 0:
+                if (
+                    AbilityEffect.INFO in self._utility_effects(ab)
+                    and ab.type != "ultimate"
+                    and ps.charges.get(ab.id, 0) > 0
+                ):
                     scout = (pid, ab)
                     break
             if scout:
@@ -1907,6 +2003,7 @@ class _MatchSim:
         self._emit(
             UtilityUsedEvent(
                 tick=tick, seed_path=seed_path, player_id=pid, ability_id=ab.id,
+                target_callout=self._utility_target_callout(target_site),
             )
         )
         others = sorted(
@@ -1942,8 +2039,17 @@ class _MatchSim:
         # so the post-plant is a util battle, not a free defender win.
         if not self._retake_popped:
             self._retake_popped = True
-            self._execute_utility(sorted(alive_dfn), tick, seed_path, flash_side="attack", rng=rng)
-            self._execute_utility(sorted(alive_atk), tick, seed_path, flash_side="defense", rng=rng)
+            target_site = self._callout_site(planted_at)
+            self._execute_utility(
+                sorted(alive_dfn), tick, seed_path,
+                flash_side="attack", target_site=target_site,
+                intent="retake", rng=rng,
+            )
+            self._execute_utility(
+                sorted(alive_atk), tick, seed_path,
+                flash_side="defense", target_site=target_site,
+                intent="retake", rng=rng,
+            )
         defuser = sorted(on_spike)[0]
         # Post-plant denial: attackers' damage util can kill the defuser.
         denial_power = 0.0
@@ -1951,7 +2057,11 @@ class _MatchSim:
         for q in alive_atk:
             qs = self.p[q]
             for ab in self.gd.agents[qs.agent_id].abilities:
-                if ab.damages and ab.type != "ultimate" and qs.charges.get(ab.id, 0) > 0:
+                if (
+                    AbilityEffect.DAMAGE in self._utility_effects(ab)
+                    and ab.type != "ultimate"
+                    and qs.charges.get(ab.id, 0) > 0
+                ):
                     denial_power += C.UTIL_POWER_DAMAGE * (
                         self._player(q).attr("utility_usage") / 100.0
                     )
@@ -1964,6 +2074,7 @@ class _MatchSim:
             self._emit(
                 UtilityUsedEvent(
                     tick=tick, seed_path=seed_path, player_id=q, ability_id=ab.id,
+                    target_callout=planted_at,
                 )
             )
             self._kill(q, defuser, ab.id, tick, seed_path, rng)
@@ -2063,9 +2174,29 @@ class _MatchSim:
 
     def _flash_ability(self, ps: _PState) -> Ability | None:
         for ab in self.gd.agents[ps.agent_id].abilities:
-            if ab.flashes and ab.type != "ultimate" and ps.charges.get(ab.id, 0) > 0:
+            if (
+                AbilityEffect.FLASH in self._utility_effects(ab)
+                and ab.type != "ultimate"
+                and ps.charges.get(ab.id, 0) > 0
+            ):
                 return ab
         return None
+
+    def _apply_pending_flashes(
+        self, attacker: _PState, defender: _PState, duel_site: str, tick: int
+    ) -> None:
+        """Apply only flashes aimed at this duel's site and retain the rest."""
+        remaining_flashes: list[_PendingFlash] = []
+        for pending in self._pending_flashes:
+            if pending.expires_at < tick:
+                continue
+            if pending.target_site == duel_site:
+                hit = defender if pending.target_side == "defense" else attacker
+                hit.flash_until = tick + C.FLASH_TICKS
+                hit.flashed_by = pending.owner_id
+            else:
+                remaining_flashes.append(pending)
+        self._pending_flashes = remaining_flashes
 
     def _micro_move(
         self,
@@ -2135,9 +2266,15 @@ class _MatchSim:
         if wc == "sniper":
             raw = (dist - C.RANGE_SNIPER_PIVOT) * C.RANGE_SNIPER_SLOPE
             return max(-C.RANGE_SNIPER_CAP, min(C.RANGE_SNIPER_CAP, raw))
-        if wc in ("smg", "pistol", "shotgun"):
-            raw = (C.RANGE_CQC_PIVOT - dist) * C.RANGE_CQC_SLOPE
-            return max(-C.RANGE_CQC_CAP, min(C.RANGE_CQC_CAP, raw))
+        if wc == "pistol":
+            raw = (C.RANGE_PISTOL_PIVOT - dist) * C.RANGE_PISTOL_SLOPE
+            return max(-C.RANGE_PISTOL_CAP, min(C.RANGE_PISTOL_CAP, raw))
+        if wc == "smg":
+            raw = (C.RANGE_SMG_PIVOT - dist) * C.RANGE_SMG_SLOPE
+            return max(-C.RANGE_SMG_CAP, min(C.RANGE_SMG_CAP, raw))
+        if wc == "shotgun":
+            raw = (C.RANGE_SHOTGUN_PIVOT - dist) * C.RANGE_SHOTGUN_SLOPE
+            return max(-C.RANGE_SHOTGUN_CAP, min(C.RANGE_SHOTGUN_CAP, raw))
         return 0.0  # rifles shoot flat everywhere
 
     def _duel_score(
@@ -2159,14 +2296,26 @@ class _MatchSim:
         ps = self.p[pid]
         pl = self._player(pid)
         s = (
-            0.40 * pl.attr("aim_precision")
-            + 0.25 * pl.attr("aim_reactivity")
-            + 0.15 * pl.attr("movement")
-            + 0.20 * pl.attr("positioning" if holder else "game_sense")
+            C.DUEL_AIM_PRECISION_WEIGHT * pl.attr("aim_precision")
+            + C.DUEL_AIM_REACTIVITY_WEIGHT * pl.attr("aim_reactivity")
+            + C.DUEL_MOVEMENT_WEIGHT * pl.attr("movement")
+            + (
+                C.DUEL_POSITIONING_WEIGHT * pl.attr("positioning")
+                if holder
+                else C.DUEL_GAME_SENSE_WEIGHT * pl.attr("game_sense")
+            )
         )
         s += self._condition(pid, pl)
         weapon = self.gd.weapons[ps.weapon]
-        s += (weapon.accuracy_base - 0.6) * 20.0
+        s += (weapon.accuracy_base - 0.6) * C.WEAPON_ACCURACY_SCORE
+        s += max(
+            -C.WEAPON_DAMAGE_CAP,
+            min(
+                C.WEAPON_DAMAGE_CAP,
+                (weapon.dmg_body - C.WEAPON_DAMAGE_PIVOT)
+                * C.WEAPON_DAMAGE_SCORE,
+            ),
+        )
         s += (pl.agent_mastery(ps.agent_id, 50.0) - 50.0) / 25.0
         for m in pl.map_pool:
             if m.map_id == self.map.id:
@@ -2267,6 +2416,11 @@ class _MatchSim:
                     continue
                 same = pa.callout == pd.callout
                 p_engage = C.ENGAGE_PROB_SAME_CALLOUT if same else C.ENGAGE_PROB
+                aggression = (
+                    (self._tactics(pa.team_id).aggression - 50.0)
+                    + (self._tactics(pd.team_id).aggression - 50.0)
+                ) / 100.0
+                p_engage *= 1.0 + aggression * C.AGGRO_ENGAGE_SPAN
                 # Positional line of sight: a full-height box between the
                 # two ACTUAL positions breaks the angle — even inside one
                 # room (dancing around the mid box).
@@ -2291,19 +2445,16 @@ class _MatchSim:
                         # symmetric attrition favors whichever side has
                         # more bodies to spend, i.e. the attackers pre-hit.
                         p_engage *= 0.05
-                if rng.random() >= p_engage:
+                if rng.random() >= min(1.0, max(0.0, p_engage)):
                     continue
                 engaged.add(a_pid)
                 engaged.add(d_pid)
 
                 duel_site = self._callout_site(pd.callout)
 
-                # Pending flash pops on the first site duel.
-                if self._flashed and duel_site == target_site:
-                    hit = pd if self._flash_side == "defense" else pa
-                    hit.flash_until = tick + C.FLASH_TICKS
-                    hit.flashed_by = self._flash_owner
-                    self._flashed = False
+                # Pending flashes pop only on a duel at the site they were
+                # thrown for. A late rotate cannot inherit an old flash.
+                self._apply_pending_flashes(pa, pd, duel_site, tick)
 
                 # A peeker with a flash in the pocket swings behind it.
                 # Disciplined books hold a flash back for exactly this;
@@ -2323,6 +2474,7 @@ class _MatchSim:
                             UtilityUsedEvent(
                                 tick=tick, seed_path=seed_path,
                                 player_id=peeker.pid, ability_id=flash_ab.id,
+                                target_callout=mark.callout,
                             )
                         )
 
@@ -2355,8 +2507,8 @@ class _MatchSim:
                     # callout has the angle on whoever walked in.
                     adv_a = a_holder and not d_holder
                     adv_d = d_holder and not a_holder
-                if self._smoke_until >= tick:
-                    adv_a = adv_d = False  # utility neutralizes angles
+                if self._smoke_until_by_site.get(duel_site, -1) >= tick:
+                    adv_a = adv_d = False  # smoke neutralizes this site's angles
                 if angle_broken:
                     adv_a = adv_d = False  # can't hold an angle through a box
                 # The fight happens at the real distance between the two
@@ -2580,7 +2732,8 @@ class _MatchSim:
                     (
                         a
                         for a in self.gd.agents[ps.agent_id].abilities
-                        if a.info and a.type != "ultimate"
+                        if AbilityEffect.INFO in self._utility_effects(a)
+                        and a.type != "ultimate"
                         and ps.charges.get(a.id, 0) > 0
                     ),
                     None,
@@ -2591,8 +2744,9 @@ class _MatchSim:
                     info_bonus = C.INFO_ROTATE_BONUS
                     self._emit(
                         UtilityUsedEvent(
-                            tick=tick, seed_path=seed_path,
-                            player_id=q, ability_id=ab.id,
+                            tick=tick, seed_path=seed_path, player_id=q,
+                            ability_id=ab.id,
+                            target_callout=self._utility_target_callout(target_site),
                         )
                     )
                     break
@@ -2616,8 +2770,11 @@ class _MatchSim:
             pl = self._player(q)
             delay = max(
                 2,
-                12
-                - int((pl.attr("game_sense") + pl.attr("comms_quality")) / 20.0)
+                C.ROTATE_DELAY_BASE
+                - int(
+                    (pl.attr("game_sense") + pl.attr("comms_quality"))
+                    / C.ROTATE_SKILL_DIV
+                )
                 - info_bonus
                 - pace_rotate,
             )

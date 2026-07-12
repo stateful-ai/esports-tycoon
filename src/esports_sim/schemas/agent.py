@@ -1,7 +1,8 @@
 """Valorant agents (the in-game characters: Jett, Raze, Omen, etc.).
 
-Deliberately sparse for MVP — abilities have names + types but no mechanics
-yet. Mechanics land when the match engine starts using them.
+Ability flags and optional explicit effect metadata feed the engine's
+contextual, site-targeted utility model. Legacy roster packs remain valid
+because their original flags are still a complete effect fallback.
 """
 
 from __future__ import annotations
@@ -18,6 +19,21 @@ class AbilityType(StrEnum):
     ULTIMATE = "ultimate"  # charges over rounds/kills/orbs
 
 
+class AbilityEffect(StrEnum):
+    """Concrete utility affordances the match engine can resolve.
+
+    ``effects`` supplements the original coarse boolean flags. Keeping the
+    flags makes older roster packs and viewer consumers compatible while
+    letting newer agent data distinguish, for example, a dash from a smoke.
+    """
+
+    SMOKE = "smoke"
+    FLASH = "flash"
+    DAMAGE = "damage"
+    INFO = "info"
+    MOBILITY = "mobility"
+
+
 class Ability(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -27,11 +43,13 @@ class Ability(BaseModel):
     charges: int = 1
     cost: int = 0  # creds for basic/signature, 0 for ult
     ult_points: int | None = None  # for ultimates
-    # Mechanical flags for the future match engine. Consumed later.
+    # Legacy mechanical flags. The engine derives effects from these when an
+    # older roster pack does not provide explicit ``effects`` metadata.
     blocks_sight: bool = False
     flashes: bool = False
     damages: bool = False
     info: bool = False  # reveals enemy positions
+    effects: tuple[AbilityEffect, ...] = ()
 
 
 class Agent(BaseModel):
