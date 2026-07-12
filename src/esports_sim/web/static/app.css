@@ -1481,6 +1481,25 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 }
 .roster-support > .card { margin-bottom: 0; }
 
+/* Development report: a season summary followed by player-level skill deltas. */
+.dev-report-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.dev-report-head h2, .dev-report-head p { margin-bottom: 2px; }
+.dev-report-summary { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.dev-report-table { min-width: 850px; }
+.dev-report-table th:last-child, .dev-report-table td:last-child { width: 44%; }
+.dev-change-list { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip.dev-gain {
+  color: var(--es-color-text-success, #4fc6a0);
+  border-color: color-mix(in srgb, var(--es-color-text-success, #4fc6a0) 45%, transparent);
+}
+.chip.dev-loss {
+  color: var(--es-color-text-danger, #ff6b78);
+  border-color: color-mix(in srgb, var(--es-color-text-danger, #ff6b78) 45%, transparent);
+}
+
 /* Weekly agent locks: fixed columns and compact labels keep the table inside
    its rail card instead of letting option text define the card width. */
 .lineup-card { overflow: hidden; }

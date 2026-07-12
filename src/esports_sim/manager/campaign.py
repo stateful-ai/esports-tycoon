@@ -289,6 +289,7 @@ def new_campaign(
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)
+    _record_dev_snapshots(gs, week=0)
     return gs
 
 
@@ -1115,21 +1116,7 @@ def advance_week(
             )
         )
         del hist[:-60]
-    for tid in sorted(gs.human_team_ids):
-        for p in gs.roster(tid):
-            dh = gs.dev_history.setdefault(p.id, [])
-            dh.append(
-                DevSnap(
-                    season=gs.season,
-                    week=gs.week,
-                    ca=round(development.overall(p), 1),
-                    confidence=p.confidence,
-                    form=p.form,
-                    morale=p.morale,
-                    followers=p.followers,
-                )
-            )
-            del dh[:-80]
+    _record_dev_snapshots(gs)
 
     # 6e. Legacy mode: board patience drifts with streaks; a manager deep
     # under the floor is sacked mid-season. The news lands BEFORE the
@@ -2079,6 +2066,35 @@ def _snapshot_season_start_ca(gs: GameState) -> None:
     }
 
 
+def _record_dev_snapshots(gs: GameState, week: int | None = None) -> None:
+    """Record the private human-roster development series.
+
+    Week zero is used at campaign/season creation so a season report measures
+    from the settled opening roster, before the first training tick. Players
+    who join later start tracking on their first week at the club.
+    """
+    snap_week = gs.week if week is None else week
+    for tid in sorted(gs.human_team_ids):
+        for p in gs.roster(tid):
+            dh = gs.dev_history.setdefault(p.id, [])
+            dh.append(
+                DevSnap(
+                    season=gs.season,
+                    week=snap_week,
+                    ca=round(development.overall(p), 1),
+                    confidence=p.confidence,
+                    form=p.form,
+                    morale=p.morale,
+                    followers=p.followers,
+                    attributes={
+                        aid: round(value, 1)
+                        for aid, value in sorted(p.attributes.items())
+                    },
+                )
+            )
+            del dh[:-80]
+
+
 CAREER_KILL_BARS = (500, 1000, 1500, 2000, 3000, 5000)
 
 
@@ -2612,6 +2628,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)  # baseline for next season's Most Improved
+    _record_dev_snapshots(gs, week=0)
     # Inbox for the offseason tick, per manager: retirements, rookie class,
     # award slate. `report` still carries the pre-rollover (season, week) the
     # offseason news was labelled with, so generate_inbox reads the right lines.

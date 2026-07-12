@@ -629,6 +629,41 @@ def test_condition_trend_reads_direction():
     assert tr["form"] == "down"      # -5 < -1.5
 
 
+def test_development_report_uses_current_season_attribute_snapshots(env):
+    gs, gd, h = env
+    pid = gs.teams[h.user_team].player_ids[0]
+    p = gs.players[pid]
+    attrs = dict(p.attributes)
+    aid = sorted(attrs)[0]
+    earlier = dict(attrs)
+    earlier[aid] = attrs[aid] - 1.5
+    gs.dev_history[pid] = [
+        DevSnap(
+            season=gs.season, week=0, ca=70.0, confidence=50, form=50,
+            morale=50, followers=1000, attributes=earlier,
+        ),
+        DevSnap(
+            season=gs.season, week=4, ca=70.4, confidence=50, form=50,
+            morale=50, followers=1000, attributes=attrs,
+        ),
+        # Prior-season points must not become this season's baseline.
+        DevSnap(
+            season=gs.season - 1, week=20, ca=60.0, confidence=50, form=50,
+            morale=50, followers=1000, attributes=earlier,
+        ),
+    ]
+
+    report = server_mod._development_report(
+        gs, h.user_team, gd.attributes.definitions
+    )
+    row = next(r for r in report["players"] if r["id"] == pid)
+    assert report["season"] == gs.season
+    assert row["start_week"] == 0 and row["end_week"] == 4
+    assert row["overall_delta"] == 0.4 and row["status"] == "grown"
+    assert row["changes"][0]["id"] == aid
+    assert row["changes"][0]["delta"] == 1.5
+
+
 def test_league_leaders_top_by_rating_tier1_only():
     teams = {
         "nxs": Team(id="nxs", name="Nexus", tag="NXS", tier=1, player_ids=["a", "b"]),
