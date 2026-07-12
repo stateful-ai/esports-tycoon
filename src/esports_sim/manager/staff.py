@@ -22,7 +22,7 @@ from esports_sim.manager.gen import _FIRST_NAMES, _LAST_NAMES, _TEAM_NAMES
 from esports_sim.manager.state import GameState, StaffMember
 from esports_sim.rng.tree import RngTree
 
-ROLES = ["coach", "analyst", "physio", "psychologist", "performance_coach"]
+ROLES = ["coach", "analyst", "physio", "psychologist", "performance_coach", "language_coach"]
 
 # A healthy market: at least this many free agents at all times. The two
 # department roles (psychologist / performance coach) are rarer — a full
@@ -31,7 +31,7 @@ POOL_MIN = 54
 _POOL_ROLE_CYCLE = [
     "coach", "analyst", "physio", "coach", "analyst",
     "physio", "psychologist", "coach", "analyst", "physio",
-    "coach", "performance_coach",
+    "coach", "performance_coach", "language_coach",
 ]
 
 ROLE_BLURB = {
@@ -40,6 +40,7 @@ ROLE_BLURB = {
     "physio": "weekly stamina recovery",
     "psychologist": "confidence stability (shaken players recover faster)",
     "performance_coach": "form upkeep between matches",
+    "language_coach": "weekly language fluency training",
 }
 
 SPECIALTIES: dict[str, list[str]] = {
@@ -48,6 +49,7 @@ SPECIALTIES: dict[str, list[str]] = {
     "physio": ["recovery", "longevity", "prevention"],
     "psychologist": ["pressure", "confidence", "cohesion"],
     "performance_coach": ["routines", "consistency", "peaking"],
+    "language_coach": ["conversation", "callouts", "immersion"],
 }
 
 SPECIALTY_BLURB = {
@@ -67,6 +69,9 @@ SPECIALTY_BLURB = {
     "routines": "week-in, week-out preparation",
     "consistency": "flattening the form rollercoaster",
     "peaking": "arriving at playoffs in top gear",
+    "conversation": "everyday conversation and team-room confidence",
+    "callouts": "fast, clear in-game callouts",
+    "immersion": "practical immersion and vocabulary building",
 }
 
 _TRAIT_POOL = [
@@ -80,6 +85,7 @@ _AGE_RANGE = {
     "physio": (26, 52),
     "psychologist": (30, 58),
     "performance_coach": (27, 50),
+    "language_coach": (25, 60),
 }
 _REGIONS = ["americas", "emea", "pacific"]
 
@@ -271,6 +277,17 @@ def form_upkeep(gs: GameState) -> float:
     Same shape as confidence_support — a pull toward neutral, not a buff."""
     pc = gs.staff.get("performance_coach")
     return pc.quality / 70.0 if pc else 0.0  # up to ~1.3/wk
+
+
+def language_learning_rate_for_quality(quality: float) -> float:
+    """Fluency points a language coach delivers in one normal weekly session."""
+    return 0.35 + quality / 90.0
+
+
+def language_learning_rate(gs: GameState) -> float:
+    """Weekly fluency points from the dedicated language coach (zero without one)."""
+    coach = gs.staff.get("language_coach")
+    return language_learning_rate_for_quality(coach.quality) if coach else 0.0
 
 
 # -- coaching tree --------------------------------------------------------------

@@ -148,7 +148,10 @@ class Player(BaseModel):
     # Individual development plan, user-set (AI players stay on defaults).
     # dev_focus: "auto" follows the team's weekly focus, otherwise pins one
     # training category for this player every week.
-    dev_focus: str = "auto"  # auto | mechanical | tactical | mental | team
+    dev_focus: str = "auto"  # auto | mechanical | tactical | mental | team | language
+    # The language to study when dev_focus is "language". Empty means this
+    # player is not currently on a language plan.
+    learning_language: str = ""
     # Intensity trades growth for stamina (and burnout risk at "intense").
     training_intensity: str = "normal"  # light | normal | intense
 

@@ -9,7 +9,7 @@ import pytest
 
 from esports_sim.manager import development, market, social, staff, training
 from esports_sim.manager.campaign import advance_week, new_campaign, runtime_gamedata
-from esports_sim.manager.state import SCHEMA_VERSION, GameState
+from esports_sim.manager.state import SCHEMA_VERSION, GameState, StaffMember
 from esports_sim.registry import load_all
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import (
@@ -169,6 +169,34 @@ def test_intensity_trades_growth_for_stamina(campaign) -> None:
     s_light, s_intense = light.stamina, intense.stamina
     training.apply_training(team, roster, "tactical", RngTree(2).derive("t"))
     assert s_light - light.stamina < s_intense - intense.stamina
+
+
+def test_language_practice_replaces_skill_training(campaign) -> None:
+    tid = campaign.user_team_id
+    team = campaign.teams[tid]
+    player = campaign.roster(tid)[0]
+    player.dev_focus = "language"
+    player.learning_language = "ja"
+    before_attrs = dict(player.attributes)
+    before_langs = {entry.lang: entry.level for entry in player.languages}
+
+    training.apply_training(
+        team, campaign.roster(tid), "tactical", RngTree(3).derive("language"),
+        language_rate=1.0,
+    )
+
+    assert player.attributes == before_attrs
+    after_langs = {entry.lang: entry.level for entry in player.languages}
+    assert after_langs["ja"] > before_langs.get("ja", 0.0)
+
+
+def test_language_coach_rate_requires_the_role(campaign) -> None:
+    assert staff.language_learning_rate(campaign) == 0.0
+    campaign.staff["language_coach"] = StaffMember(
+        id="language_coach_test", name="Mina Park", role="language_coach",
+        quality=72.0, salary=3_000, specialty="callouts",
+    )
+    assert staff.language_learning_rate(campaign) > 0.0
 
 
 def test_match_experience_scales_with_youth_and_line() -> None:

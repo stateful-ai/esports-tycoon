@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 15
+SCHEMA_VERSION = 16
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -282,6 +282,11 @@ def _migrate_v14_to_v15(data: dict) -> dict:
     return data
 
 
+def _migrate_v15_to_v16(data: dict) -> dict:
+    """v16 adds defaulted player language-study targets and a staff role."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -297,6 +302,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     12: _migrate_v12_to_v13,
     13: _migrate_v13_to_v14,
     14: _migrate_v14_to_v15,
+    15: _migrate_v15_to_v16,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -676,7 +682,7 @@ class StaffMember(BaseModel):
 
     id: str
     name: str
-    role: str  # coach | analyst | physio
+    role: str  # coach | analyst | physio | psychologist | performance_coach | language_coach
     quality: float
     salary: int  # per week
     age: int = 38

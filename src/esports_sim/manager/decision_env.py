@@ -115,6 +115,7 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
         "followers": p.followers,
         "dev_focus": p.dev_focus,
         "training_intensity": p.training_intensity,
+        "learning_language": p.learning_language,
         "stats": _player_stats(gs, pid),
     }
 
@@ -163,6 +164,8 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "player_ids": roster,
         "focus_options": list(training.DEV_FOCUS_OPTIONS),
         "intensity_options": list(training.INTENSITY_OPTIONS),
+        "language_options": list(training.LANGUAGE_OPTIONS),
+        "has_language_coach": "language_coach" in gs.staff,
     }
     mentor_pairs = [
         {"protege_id": protege, "mentor_id": mentor}
@@ -463,13 +466,23 @@ class HeadlessManagerEnv:
                 intensity = str(
                     params.get("training_intensity", self.gs.players[pid].training_intensity)
                 )
+                language = str(
+                    params.get("learning_language", self.gs.players[pid].learning_language)
+                )
                 if focus not in training.DEV_FOCUS_OPTIONS:
                     raise InvalidManagerAction(f"unknown development focus {focus!r}")
                 if intensity not in training.INTENSITY_OPTIONS:
                     raise InvalidManagerAction(f"unknown training intensity {intensity!r}")
+                if language and language not in training.LANGUAGE_OPTIONS:
+                    raise InvalidManagerAction(f"unknown language {language!r}")
+                if focus == "language" and "language_coach" not in self.gs.staff:
+                    raise InvalidManagerAction("hire a language coach before assigning language practice")
+                if focus == "language" and not language:
+                    raise InvalidManagerAction("choose a language for language practice")
                 self.gs.players[pid].dev_focus = focus
                 self.gs.players[pid].training_intensity = intensity
-                params = {"player_id": pid, "dev_focus": focus, "intensity": intensity}
+                self.gs.players[pid].learning_language = language
+                params = {"player_id": pid, "dev_focus": focus, "intensity": intensity, "learning_language": language}
                 message = f"development plan updated for {self.gs.players[pid].handle}"
             elif kind == "mentor":
                 protege = str(params.get("protege_id", ""))
