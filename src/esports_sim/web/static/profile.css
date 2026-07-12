@@ -9,9 +9,11 @@
 /* -- overlay + panel ------------------------------------------------------- */
 /* Sit above the match viewer (both are .overlay at --es-z-modal). */
 #profile.overlay { z-index: calc(var(--es-z-modal, 1000) + 10); }
-.pf-panel {
+/* Wider than the generic .overlay .panel (min(720px,92vw)); the two-column
+   body + agent pool needs the room. Scoped to .overlay to out-specify it. */
+.overlay .pf-panel {
   position: relative;
-  width: min(760px, 94vw);
+  width: min(880px, 94vw);
   max-height: 90vh;
   overflow: auto;
   padding: 0;
@@ -166,13 +168,14 @@
 /* -- attributes ------------------------------------------------------------ */
 .pf-attrs { display: flex; flex-direction: column; gap: 5px; }
 .pf-attr {
-  display: grid; grid-template-columns: 108px 1fr 30px; align-items: center; gap: 8px;
+  display: grid; grid-template-columns: 108px 1fr auto; align-items: center; gap: 8px;
 }
 .pf-attr-label {
   font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6);
   text-transform: capitalize;
 }
-.pf-attr-val { font-size: var(--es-text-xs, 11px); text-align: right; }
+/* Value + optional ceiling projection (→lo–hi) stay on one line. */
+.pf-attr-val { font-size: var(--es-text-xs, 11px); text-align: right; white-space: nowrap; }
 .pf-attr-band { grid-column: 2 / 4; }
 .pf-band {
   display: inline-block; padding: 1px 8px; border-radius: var(--es-radius-full, 99px);
@@ -203,6 +206,16 @@
   font-size: var(--es-text-xs, 11px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .pf-agent-mv { font-size: var(--es-text-xs, 11px); text-align: right; color: var(--es-color-text-secondary, #a2aec6); }
+/* Beyond the top-of-role picks: hidden until "Show all" toggles the list. */
+.pf-agent-extra { display: none; }
+.pf-agents-expanded .pf-agent-extra { display: grid; }
+.pf-agent-toggle {
+  margin-top: 8px; padding: 0; font: inherit;
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
+  background: none; border: none; cursor: pointer;
+  color: var(--es-color-accent, #4fd8c0);
+}
+.pf-agent-toggle:hover { color: var(--es-color-text-primary, #e9edf6); }
 
 /* -- season line ----------------------------------------------------------- */
 .pf-season-line { font-size: var(--es-text-xs, 11px); margin: 0 0 12px; }

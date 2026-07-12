@@ -12,7 +12,7 @@
                    contract_weeks,playstyle,fogged},
          traits:[{name,desc,revealed}],
          attributes:[{key,label,value,band}]   (value null + band when fogged),
-         agents:[{agent_id,name,icon,mastery}],
+         agents:[{agent_id,name,icon,mastery,role}]  (sorted by desc mastery),
          season:{matches,kills,deaths,assists,kd,acs,first_kills,clutches},
          weekly:[{season,week,opponent,result,kills,deaths,acs}]  (oldest first),
          relationships:[{pid,handle,kind,strength}],
@@ -441,14 +441,26 @@ function renderPlayerProfile(data) {
   const agents = data.agents || [];
   if (agents.length) {
     const list = el("div", "pf-agents");
+    // Collapsed view = the player's top masteries within their own role (top 5
+    // overall for a flex); "Show all" expands to the full pool. The server
+    // sends agents pre-sorted by descending mastery, so the top-of-role picks
+    // are just the first matches, and off-role rows stay in their mastery slots
+    // when expanded. Extra rows render hidden and toggle via a CSS class.
+    const pRole = (p.role || "").toLowerCase();
+    const roled = pRole && pRole !== "flex";
+    const primary = roled ? agents.filter((a) => (a.role || "").toLowerCase() === pRole) : agents;
+    const visible = new Set(primary.slice(0, 5).map((a) => a.agent_id));
+    let hidden = 0;
     for (const a of agents) {
+      const shown = visible.has(a.agent_id);
+      if (!shown) hidden++;
       const icon = a.icon
         ? `<img class="pf-agent-icon" src="${a.icon}" alt="" onerror="this.style.visibility='hidden'">`
         : `<span class="pf-agent-icon"></span>`;
       list.appendChild(
         el(
           "div",
-          "pf-agent",
+          "pf-agent" + (shown ? "" : " pf-agent-extra"),
           icon +
             `<span class="pf-agent-name">${a.name || a.agent_id || ""}</span>` +
             `<span class="pf-agent-bar">${pfBar(a.mastery, 100)}</span>` +
@@ -457,6 +469,14 @@ function renderPlayerProfile(data) {
       );
     }
     agentSec.appendChild(list);
+    if (hidden > 0) {
+      const toggle = el("button", "pf-agent-toggle", `Show all (${agents.length})`);
+      toggle.onclick = () => {
+        const open = list.classList.toggle("pf-agents-expanded");
+        toggle.textContent = open ? "Show fewer" : `Show all (${agents.length})`;
+      };
+      agentSec.appendChild(toggle);
+    }
   } else {
     agentSec.appendChild(pfEmpty("No agent pool data."));
   }
