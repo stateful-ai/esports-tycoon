@@ -76,6 +76,17 @@ class HeuristicManagerPolicy:
                 "params": {"team_id": legal["accept_job"]["team_ids"][0]},
             }
 
+        # Flavor outcomes are hidden from every manager, including this
+        # baseline. Pick a stable visible option so rollouts cannot deadlock on
+        # a human-only choice gate.
+        if legal["resolve_flavor"]["enabled"]:
+            choices = legal["resolve_flavor"]["choice_ids"]
+            pick = choices[int(self.profile.risk * len(choices)) % len(choices)]
+            return {
+                "kind": "resolve_flavor",
+                "params": {"event_id": legal["resolve_flavor"]["event_id"], "choice_id": pick},
+            }
+
         if len(obs["roster"]) < 5 and legal["sign"]["enabled"]:
             signable = set(legal["sign"]["player_ids"])
             candidates = [p for p in obs["free_agents"] if p["player_id"] in signable]

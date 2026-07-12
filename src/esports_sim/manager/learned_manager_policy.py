@@ -563,6 +563,11 @@ class LearnedManagerPolicy:
             }
         elif kind == "talk":
             params = dict(legal["options"][0])
+        elif kind == "resolve_flavor":
+            params = {
+                "event_id": legal["event_id"],
+                "choice_id": legal["choice_ids"][0],
+            }
         elif kind == "negotiate_offer":
             option = legal["options"][0]
             neg = obs["negotiations"][option["player_id"]]

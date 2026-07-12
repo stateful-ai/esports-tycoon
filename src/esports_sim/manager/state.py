@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 17
+SCHEMA_VERSION = 18
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -293,6 +293,13 @@ def _migrate_v16_to_v17(data: dict) -> dict:
     return data
 
 
+def _migrate_v17_to_v18(data: dict) -> dict:
+    """v18 adds queued, choice-gated campaign flavor events. Old saves begin
+    with no pending prompt and receive their first deterministic roll when the
+    next week is queued."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -310,6 +317,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     14: _migrate_v14_to_v15,
     15: _migrate_v15_to_v16,
     16: _migrate_v16_to_v17,
+    17: _migrate_v17_to_v18,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1019,6 +1027,50 @@ class InboxItem(BaseModel):
     tab: str | None = None
 
 
+class FlavorOutcome(BaseModel):
+    """One hidden resolution of a flavor-event choice.
+
+    Outcomes are persisted with the event so a pending decision keeps its
+    exact consequences across a save/load even if event content is extended in
+    a later build. The web serializer deliberately never exposes this model
+    until a manager has selected that choice.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+    effects: dict[str, float] = Field(default_factory=dict)
+
+
+class FlavorChoice(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    outcomes: list[FlavorOutcome] = Field(default_factory=list)
+
+
+class FlavorEvent(BaseModel):
+    """A pending, team- or player-specific manager choice.
+
+    The fallback title/prompt are template-generated and deterministic. An
+    optional serving-layer LLM may rephrase only those visible strings; it
+    never changes this stored event or its hidden consequence table.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    season: int
+    week: int
+    team_id: str
+    player_id: str = ""
+    type_id: str
+    title: str
+    prompt: str
+    choices: list[FlavorChoice] = Field(default_factory=list)
+
+
 class GameState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1069,6 +1121,13 @@ class GameState(BaseModel):
     # Weekly inbox feed (oldest first), per human manager. Populated at the end
     # of each tick. Reached via the `inbox` property (acting manager's feed).
     inboxes: dict[str, list[InboxItem]] = Field(default_factory=dict)
+    # At most one unresolved flavor decision per human manager. These are not
+    # inbox notices: a pending event blocks ready-up until its choice is made.
+    flavor_events_by: dict[str, FlavorEvent] = Field(default_factory=dict)
+    # Most recently resolved/auto-resolved template ids per team. This small
+    # memory keeps the weekly 50% roll varied without making outcomes depend on
+    # incidental RNG draw order.
+    flavor_event_recent_by: dict[str, list[str]] = Field(default_factory=dict)
     champions: list[ChampionRecord] = Field(default_factory=list)
     retired: list[RetiredRecord] = Field(default_factory=list)
     fa_counter: int = 0  # monotonic id counter for generated free agents
