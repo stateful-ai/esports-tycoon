@@ -267,6 +267,20 @@ def new_campaign(
     )
     staff.seed_pool(gs)
     social.seed_followers(gs)
+    # Seed realistic complete contracts after audience sizes exist. The same
+    # quality order already supplies default_five, so role labels document the
+    # existing depth chart rather than changing who plays.
+    for tid in sorted(gs.teams):
+        team = gs.teams[tid]
+        starters = set(default_five(gs, tid))
+        for pid in team.player_ids:
+            p = gs.players[pid]
+            role = (
+                "starter" if pid in starters
+                else "academy" if p.age <= 20
+                else "bench"
+            )
+            market.seed_existing_contract_terms(gs, tid, p, role)
     social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)

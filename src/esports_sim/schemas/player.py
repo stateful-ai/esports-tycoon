@@ -103,6 +103,14 @@ class Player(BaseModel):
     # Career / contract
     salary: int = 0  # per week
     contract_weeks_left: int = 0
+    # Negotiated commercial/protection terms. The player keeps the streaming
+    # share; the org receives the remainder. Release fee is owed when the org
+    # terminates the deal. A zero buyout means no public clause.
+    stream_revenue_share: float = Field(default=0.70, ge=0.0, le=1.0)
+    release_fee: int = Field(default=0, ge=0)
+    buyout_clause: int = Field(default=0, ge=0)
+    no_transfer_clause: bool = False
+    roster_role: str = "bench"  # starter | bench | academy
     # Weeks at the current club (ticks weekly, resets when they move).
     # Feeds loyalty: tenured players are pricier to pry away and protected
     # from AI churn. 0 on old saves — heals as weeks tick.

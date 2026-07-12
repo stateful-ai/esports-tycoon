@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 13
+SCHEMA_VERSION = 14
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -219,6 +219,63 @@ def _migrate_v12_to_v13(data: dict) -> dict:
     return data
 
 
+def _migrate_v13_to_v14(data: dict) -> dict:
+    """v14 adds complete player contracts and seeds realistic role/audience/
+    tier based terms. Existing no-transfer clauses are deliberately cleared."""
+    players = data.get("players") or {}
+    roster_owner: dict[str, tuple[int, str]] = {}
+    for team in (data.get("teams") or {}).values():
+        tier = int(team.get("tier", 1))
+        ids = team.get("player_ids") or []
+        lineup = team.get("lineup_ids") or []
+        if not lineup:
+            lineup = sorted(
+                ids,
+                key=lambda pid: (
+                    -sum((players.get(pid, {}).get("attributes") or {}).values())
+                    / max(len(players.get(pid, {}).get("attributes") or {}), 1),
+                    pid,
+                ),
+            )[:5]
+        for pid in ids:
+            raw = players.get(pid, {})
+            role = "starter" if pid in lineup else (
+                "academy" if int(raw.get("age", 20)) <= 20 else "bench"
+            )
+            raw["roster_role"] = role
+            roster_owner[pid] = (tier, role)
+    for pid, p in players.items():
+        p["no_transfer_clause"] = False
+        if pid not in roster_owner:
+            continue
+        tier, role = roster_owner[pid]
+        if role not in ("starter", "bench", "academy"):
+            role = "bench"
+        followers = int(p.get("followers", 0))
+        tags = p.get("personality_tags") or []
+        keep = {"starter": 70, "bench": 68, "academy": 66}[role]
+        keep += min(15, followers // 250_000)
+        keep += 5 if "streamer" in tags else 0
+        p["stream_revenue_share"] = min(90, max(65, keep)) / 100.0
+        salary = max(0, int(p.get("salary", 0)))
+        release_weeks = {"starter": 12, "bench": 8, "academy": 4}[role]
+        if int(p.get("age", 20)) >= 28:
+            release_weeks += 2
+        p["release_fee"] = max(
+            1_000, int(round(salary * release_weeks / 1000) * 1000)
+        )
+        base = max(15_000, salary * 40)
+        mult = (
+            {"starter": 2.2, "bench": 1.6, "academy": 1.25}[role]
+            if tier == 2
+            else {"starter": 3.0, "bench": 2.2, "academy": 1.6}[role]
+        )
+        p["buyout_clause"] = max(
+            15_000, int(round(base * mult / 1000) * 1000)
+        )
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -232,6 +289,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     10: _migrate_v10_to_v11,
     11: _migrate_v11_to_v12,
     12: _migrate_v12_to_v13,
+    13: _migrate_v13_to_v14,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -717,6 +775,11 @@ class Negotiation(BaseModel):
     rounds: int = 0  # offers already rejected
     demand_salary: int = 0  # their CURRENT ask (concedes as rounds go)
     demand_weeks: int = 0
+    demand_stream_share: int = 70  # percent of gross retained by player
+    demand_release_fee: int = 0
+    demand_buyout: int = 0
+    demand_no_transfer: bool = False
+    demand_role: str = "bench"  # starter | bench | academy
 
 
 class TransferOffer(BaseModel):

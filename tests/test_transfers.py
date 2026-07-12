@@ -38,6 +38,20 @@ def test_transfer_value_prices_youth_and_expiry(campaign) -> None:
     assert market.transfer_value(old) < v_now
 
 
+def test_existing_rosters_open_with_realistic_contract_terms(campaign) -> None:
+    contracted = [p for tid in sorted(campaign.teams) for p in campaign.roster(tid)]
+    assert contracted
+    assert all(0.65 <= p.stream_revenue_share <= 0.90 for p in contracted)
+    assert all(p.release_fee > 0 for p in contracted)
+    assert all(p.buyout_clause >= 15_000 for p in contracted)
+    assert all(p.roster_role in ("starter", "bench", "academy") for p in contracted)
+    assert not any(p.no_transfer_clause for p in contracted)
+    # The defaults are not one cloned template: squad status changes both
+    # release protection and the buyout multiple.
+    assert len({p.release_fee for p in contracted}) > 1
+    assert len({p.buyout_clause for p in contracted}) > 1
+
+
 def test_execute_transfer_moves_player_and_money(campaign) -> None:
     gs = campaign
     seller = next(
@@ -326,8 +340,7 @@ def test_two_for_one_package_to_ai_seller(campaign) -> None:
 
 def test_tier2_buyout_clause(campaign) -> None:
     """A tier-1 org triggers a tier-2 player's buyout clause: the fee is a
-    stable per-player multiple of value, the player moves instantly, and
-    tier-1 players carry no clause."""
+    stable per-player multiple of value and the player moves instantly."""
     gs = campaign
     buyer = gs.user_team_id
     gs.set_acting(buyer)
@@ -343,12 +356,12 @@ def test_tier2_buyout_clause(campaign) -> None:
     assert ok, msg
     assert pid in gs.teams[buyer].player_ids
     assert pid not in t2.player_ids
-    # Tier-1 players carry no clause.
+    # Opening tier-1 contracts now carry negotiated clauses too.
     t1 = next(
         t for t in gs.teams.values()
         if t.tier == 1 and t.id != buyer and t.player_ids
     )
-    assert market.buyout_fee(gs, t1.player_ids[0]) is None
+    assert market.buyout_fee(gs, t1.player_ids[0]) is not None
 
 
 def test_transfer_ask_breakdown_reconciles(campaign) -> None:
@@ -381,6 +394,20 @@ def test_subjective_valuation_differs_by_viewer(campaign) -> None:
     assert len({round(r, 3) for r in reads}) > 1
     # And every read stays within the documented blur.
     assert all(abs(r - truth) <= market.VALUATION_BLUR for r in reads)
+
+
+def test_staff_valuation_opinions_reconcile_to_package_value(campaign) -> None:
+    """The trade-room disagreement is texture around the exact valuation the
+    org (and AI package evaluator) actually uses."""
+    gs = campaign
+    viewer = gs.user_team_id
+    rival = next(t for t in gs.teams.values() if t.id != viewer and t.player_ids)
+    p = gs.players[rival.player_ids[0]]
+    views = market.valuation_opinions(gs, viewer, p)
+    assert set(views) == {"coach", "analyst", "consensus"}
+    assert views["consensus"] == market.perceived_value(gs, viewer, p)
+    assert views["coach"] + views["analyst"] == 2 * views["consensus"]
+    assert market.package_value(gs, [p.id], 0, viewer_id=viewer) == views["consensus"]
 
 
 def test_ai_buyer_protects_new_signings(campaign) -> None:
@@ -493,7 +520,52 @@ def test_negotiation_fa_signing_uses_negotiated_terms(campaign) -> None:
     p = gs.players[fa]
     assert p.salary == neg.demand_salary
     assert p.contract_weeks_left == neg.demand_weeks
+    assert round(p.stream_revenue_share * 100) == neg.demand_stream_share
+    assert p.release_fee == neg.demand_release_fee
+    assert p.buyout_clause == neg.demand_buyout
+    assert p.no_transfer_clause == neg.demand_no_transfer
+    assert p.roster_role == neg.demand_role
     gs.set_acting(None)
+
+
+def test_role_promise_changes_required_salary(campaign) -> None:
+    """A player asking to start rejects starter money paired with a bench
+    promise, but a meaningful wage premium can compensate for that downgrade."""
+    gs = campaign
+    tid = gs.user_team_id
+    gs.set_acting(tid)
+    pid = gs.teams[tid].player_ids[0]
+    ok, why, neg = market.open_negotiation(gs, pid)
+    assert ok, why
+    neg.demand_role = "starter"
+    status, _msg, neg = market.negotiate_offer(
+        gs, pid, neg.demand_salary, neg.demand_weeks, role="bench"
+    )
+    assert status == "countered"
+    status, msg, _ = market.negotiate_offer(
+        gs, pid, int(neg.demand_salary * 1.15), neg.demand_weeks, role="bench"
+    )
+    assert status == "accepted", msg
+    assert gs.players[pid].roster_role == "bench"
+    gs.set_acting(None)
+
+
+def test_contract_protections_control_release_and_transfer(campaign) -> None:
+    gs = campaign
+    seller = gs.user_team_id
+    pid = gs.teams[seller].player_ids[0]
+    p = gs.players[pid]
+    p.release_fee = 123_000
+    before = gs.teams[seller].balance
+    ok, msg = market.release_player(gs, seller, pid)
+    assert ok, msg
+    assert gs.teams[seller].balance == before - 123_000
+
+    protected = gs.teams[seller].player_ids[0]
+    gs.players[protected].no_transfer_clause = True
+    buyer = next(t.id for t in gs.teams.values() if t.id != seller)
+    ok, msg = market.execute_transfer(gs, protected, buyer, 0)
+    assert not ok and "no-transfer" in msg
 
 
 def test_offer_accept_blocked_in_playoffs(campaign) -> None:

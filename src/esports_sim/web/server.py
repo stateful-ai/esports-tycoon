@@ -2810,6 +2810,101 @@ def market_view() -> dict:
         }
 
 
+def _trade_asset_view(gs: GameState, pid: str, viewer_id: str) -> dict:
+    """One frozen trade-room row. All estimates and valuations are computed
+    here; the browser only lays out the returned numbers."""
+    p = gs.players[pid]
+    owner = market.team_of(gs, pid)
+    own = owner == viewer_id
+    progress = 1.0 if own else max(
+        gs.scout_progress.get(owner or "market", 0.0),
+        gs.scout_progress.get(f"player:{pid}", 0.0),
+    )
+    lo, hi = development.potential_projection(p, progress=progress, own=own)
+    opinions = market.valuation_opinions(gs, viewer_id, p)
+    return {
+        "id": p.id,
+        "handle": p.handle,
+        "role": str(p.role),
+        "age": p.age,
+        "team_id": owner,
+        "team_name": gs.teams[owner].name if owner else None,
+        "overall": round(market.perceived_quality(gs, viewer_id, p)),
+        "overall_estimated": not own,
+        "potential": {
+            "low": round(lo), "high": round(hi), "scouted": round(progress, 2)
+        },
+        "contract": {"salary": p.salary, "weeks_left": p.contract_weeks_left},
+        "stream_revenue": economy.player_stream_income(p),
+        "value": opinions,
+        "portrait": _portrait_url(p.id, str(p.role)),
+    }
+
+
+class TradePreviewBody(BaseModel):
+    target_pid: str
+    out_pids: list[str] = []
+    cash_out: int = 0
+    cash_in: int = 0
+
+
+@app.post("/api/trade/preview")
+def trade_preview(body: TradePreviewBody) -> dict:
+    """Live, read-only trade-room opinion for the acting org."""
+    with S.lock:
+        gs = S.require_gs()
+        viewer = gs.acting_team_id
+        if body.target_pid not in gs.players:
+            raise HTTPException(404, "unknown player")
+        target_owner = market.team_of(gs, body.target_pid)
+        if target_owner is None or target_owner == viewer:
+            raise HTTPException(422, "pick a rival contracted player")
+        out_ids = list(dict.fromkeys(body.out_pids))
+        if any(pid not in gs.teams[viewer].player_ids for pid in out_ids):
+            raise HTTPException(422, "you can only offer your own players")
+        cash_out = max(0, int(body.cash_out))
+        cash_in = max(0, int(body.cash_in))
+        if cash_out >= cash_in:
+            cash_out, cash_in = cash_out - cash_in, 0
+        else:
+            cash_out, cash_in = 0, cash_in - cash_out
+        incoming = market.valuation_opinions(
+            gs, viewer, gs.players[body.target_pid]
+        )
+        outgoing_players = [
+            market.valuation_opinions(gs, viewer, gs.players[pid])
+            for pid in out_ids
+        ]
+        sides = {}
+        for key in ("coach", "analyst", "consensus"):
+            sides[key] = {
+                "receive": incoming[key] + cash_in,
+                "send": sum(v[key] for v in outgoing_players) + cash_out,
+            }
+            sides[key]["difference"] = sides[key]["receive"] - sides[key]["send"]
+        receive, send = sides["consensus"]["receive"], sides["consensus"]["send"]
+        total = max(receive + send, 1)
+        balance_pct = round(send / total * 100, 1)
+        coach = gs.staff_by.get(viewer, {}).get("coach")
+        analyst = gs.staff_by.get(viewer, {}).get("analyst")
+        return {
+            "target": _trade_asset_view(gs, body.target_pid, viewer),
+            "offered_players": [_trade_asset_view(gs, pid, viewer) for pid in out_ids],
+            "cash": {"send": cash_out, "receive": cash_in},
+            "opinions": sides,
+            "balance_pct": balance_pct,
+            "verdict": (
+                "You are giving up more value" if send > receive * 1.08
+                else "You are receiving more value" if receive > send * 1.08
+                else "The deal looks balanced"
+            ),
+            "staff": {
+                "coach": coach.name if coach else "Coaching staff",
+                "analyst": analyst.name if analyst else "Analytics staff",
+            },
+        }
+
+
 # ---------------------------------------------------------------------------
 # Stats hub. Column depth is gated by the org's ANALYTICS department (the
 # analyst's quality + the analytics-suite facility, see staff.analytics_tier):
@@ -4252,17 +4347,37 @@ class NegotiationOfferBody(BaseModel):
     player_id: str
     salary: int
     weeks: int
+    stream_share: int = 70
+    release_fee: int = 0
+    buyout: int = 0
+    no_transfer: bool = False
+    role: str = "bench"
 
 
 def _negotiation_view(gs: GameState, neg) -> dict:
     p = gs.players[neg.player_id]
     fit = relationships.locker_room_fit(gs, neg.player_id, gs.acting_team_id)
+    role_goals = {
+        "starter": "Start most matches, compete now, and be paid as a core player.",
+        "bench": "A real rotation path, useful minutes, and fair security.",
+        "academy": "Development time, a reachable promotion path, and freedom to move.",
+    }
     return {
         "player_id": neg.player_id,
         "handle": p.handle,
         "kind": neg.kind,
         "demand_salary": neg.demand_salary,
         "demand_weeks": neg.demand_weeks,
+        "demand_stream_share": neg.demand_stream_share,
+        "demand_release_fee": neg.demand_release_fee,
+        "demand_buyout": neg.demand_buyout,
+        "demand_no_transfer": neg.demand_no_transfer,
+        "demand_role": neg.demand_role,
+        "role_goal": role_goals[neg.demand_role],
+        "opening_line": (
+            f"I see myself as a {neg.demand_role}. {role_goals[neg.demand_role]} "
+            f"I want to keep {neg.demand_stream_share}% of my streaming revenue."
+        ),
         "rounds_used": neg.rounds,
         "rounds_left": market.NEGOTIATION_MAX_ROUNDS - neg.rounds,
         "current_salary": p.salary if neg.kind == "renew" else None,
@@ -4272,6 +4387,13 @@ def _negotiation_view(gs: GameState, neg) -> dict:
             "duos": len(fit["friends"]),
             "feuds": len(fit["feuds"]),
         },
+        "current_terms": ({
+            "stream_share": round(p.stream_revenue_share * 100),
+            "release_fee": p.release_fee,
+            "buyout": p.buyout_clause,
+            "no_transfer": p.no_transfer_clause,
+            "role": p.roster_role,
+        } if neg.kind == "renew" else None),
     }
 
 
@@ -4297,7 +4419,12 @@ def negotiation_offer(body: NegotiationOfferBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         status, msg, neg = market.negotiate_offer(
-            gs, body.player_id, body.salary, body.weeks
+            gs, body.player_id, body.salary, body.weeks,
+            stream_share=body.stream_share,
+            release_fee=body.release_fee,
+            buyout=body.buyout,
+            no_transfer=body.no_transfer,
+            role=body.role,
         )
         if status != "error":
             telemetry.record_action(
@@ -4306,6 +4433,11 @@ def negotiation_offer(body: NegotiationOfferBody) -> dict:
                     "player_id": body.player_id,
                     "salary": body.salary,
                     "weeks": body.weeks,
+                    "stream_share": body.stream_share,
+                    "release_fee": body.release_fee,
+                    "buyout": body.buyout,
+                    "no_transfer": body.no_transfer,
+                    "role": body.role,
                     "status": status,
                 },
             )
@@ -4648,6 +4780,13 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
         "market_value": market.transfer_value(p),
         "salary": p.salary,
         "contract_weeks": p.contract_weeks_left,
+        "contract_terms": {
+            "stream_share": round(p.stream_revenue_share * 100),
+            "release_fee": p.release_fee,
+            "buyout": p.buyout_clause,
+            "no_transfer": p.no_transfer_clause,
+            "roster_role": p.roster_role,
+        },
         "playstyle": str(p.playstyle),
         "fogged": fogged,
     }
