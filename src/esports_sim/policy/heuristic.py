@@ -192,6 +192,11 @@ class HeuristicPolicy:
         rng: np.random.Generator,
         tactical_aggression: float = 50.0,
         timeout_directive: str | None = None,
+        role: str = "flex",
+        tick: int = 0,
+        spike_planted: bool = False,
+        is_attacking: bool = False,
+        teammates_alive: int = 5,
     ) -> Action:
         """Allocation-free hot path for the shipped heuristic only.
 
@@ -229,20 +234,60 @@ class HeuristicPolicy:
 
         # Fast legal actions always include PEEK (BUY returned above), so no
         # per-tick action-type set is needed on this built-in path.
-        player = self._gd.players[player_id]
-        p_peek = C.PEEK_PROB
-        if player.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
-            p_peek += C.PEEK_PROB_AGGRO
-        p_peek += max(0.0, player.attr("aim_reactivity") - 60.0) / 2000.0
-        p_peek *= 1.0 + (player.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
-        p_peek *= 1.0 + (tactical_aggression - 50.0) / 166.0
-        if timeout_directive == "pressure":
-            p_peek *= 1.0 + 0.35
-        elif timeout_directive == "stabilize":
-            p_peek *= 1.0 - 0.25
-        if rng.random() < max(0.0, min(0.25, p_peek)):
+        p_peek = self._peek_probability(
+            player_id,
+            tactical_aggression=tactical_aggression,
+            timeout_directive=timeout_directive,
+            role=role,
+            tick=tick,
+            spike_planted=spike_planted,
+            is_attacking=is_attacking,
+            teammates_alive=teammates_alive,
+        )
+        if rng.random() < p_peek:
             return _PEEK_ACTION
         return _HOLD_ACTION
+
+    def _peek_probability(
+        self,
+        player_id: str,
+        *,
+        tactical_aggression: float,
+        timeout_directive: str | None,
+        role: str,
+        tick: int,
+        spike_planted: bool,
+        is_attacking: bool,
+        teammates_alive: int,
+    ) -> float:
+        """Actor-visible risk selection for a voluntary angle challenge."""
+        player = self._gd.players[player_id]
+        probability = C.PEEK_PROB
+        if player.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
+            probability += C.PEEK_PROB_AGGRO
+        probability += max(0.0, player.attr("aim_reactivity") - 60.0) / 2000.0
+        probability *= 1.0 + (
+            player.confidence - 50.0
+        ) / C.CONFIDENCE_PEEK_DIV
+        probability *= 1.0 + (
+            tactical_aggression - 50.0
+        ) / C.PEEK_AGGRESSION_DIV
+        probability *= C.PEEK_ROLE_MULTIPLIERS.get(role, 1.0)
+        if timeout_directive == "pressure":
+            probability *= C.PEEK_TIMEOUT_PRESSURE_MULT
+        elif timeout_directive == "stabilize":
+            probability *= C.PEEK_TIMEOUT_STABILIZE_MULT
+        if teammates_alive <= 2:
+            probability *= C.PEEK_LOW_NUMBERS_MULT
+        if spike_planted:
+            probability *= (
+                C.PEEK_POSTPLANT_ATTACK_MULT
+                if is_attacking
+                else C.PEEK_RETAKE_DEFENSE_MULT
+            )
+        elif is_attacking and tick >= C.PEEK_LATE_ATTACK_TICK:
+            probability *= C.PEEK_LATE_ATTACK_MULT
+        return max(0.0, min(C.PEEK_PROB_CAP, probability))
 
     def communicate(
         self,
@@ -296,18 +341,17 @@ class HeuristicPolicy:
         # decision, based on their own style, reaction, confidence, the
         # team's standing aggression, and (if present) a timeout instruction.
         if ActionType.PEEK in legal_types:
-            player = self._gd.players[obs.self_state.player_id]
-            p_peek = C.PEEK_PROB
-            if player.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
-                p_peek += C.PEEK_PROB_AGGRO
-            p_peek += max(0.0, player.attr("aim_reactivity") - 60.0) / 2000.0
-            p_peek *= 1.0 + (player.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
-            p_peek *= 1.0 + (obs.tactical_aggression - 50.0) / 166.0
-            if obs.timeout_directive == "pressure":
-                p_peek *= 1.0 + 0.35
-            elif obs.timeout_directive == "stabilize":
-                p_peek *= 1.0 - 0.25
-            if rng.random() < max(0.0, min(0.25, p_peek)):
+            p_peek = self._peek_probability(
+                obs.self_state.player_id,
+                tactical_aggression=obs.tactical_aggression,
+                timeout_directive=obs.timeout_directive,
+                role=obs.role,
+                tick=obs.tick,
+                spike_planted=obs.spike_planted,
+                is_attacking=obs.is_attacking,
+                teammates_alive=len(obs.teammates) + 1,
+            )
+            if rng.random() < p_peek:
                 return _PEEK_ACTION
 
         return _HOLD_ACTION
@@ -466,9 +510,22 @@ class HeuristicTeamPolicy:
             width = max(1, round(len(entries) * tactics.map_control / C.STACK_MIN_CONTROL))
         use_entries = entries[:width] or entries
         stackers = [p for p in players if p != lurker]
+        entry_candidates = [player for player in stackers if player.id != carrier.id]
+        entry = max(
+            entry_candidates or stackers,
+            key=lambda p: (p.attr("aim_reactivity") + p.attr("movement"), p.id),
+        )
+        ordered_stackers = [entry]
+        ordered_stackers.extend(
+            player
+            for player in stackers
+            if player.id not in (entry.id, carrier.id)
+        )
+        if carrier in stackers and carrier.id != entry.id:
+            ordered_stackers.append(carrier)
         staging_orders = {
             player.id: f"goto:{use_entries[index % len(use_entries)]}"
-            for index, player in enumerate(stackers)
+            for index, player in enumerate(ordered_stackers)
         }
         if lurker is not None:
             mids = sorted(
@@ -479,10 +536,6 @@ class HeuristicTeamPolicy:
 
         roles = {player.id: "support" for player in players}
         roles[carrier.id] = "carrier"
-        entry = max(
-            stackers,
-            key=lambda p: (p.attr("aim_reactivity") + p.attr("movement"), p.id),
-        )
         roles[entry.id] = "entry"
         if lurker is not None:
             roles[lurker.id] = "lurker"

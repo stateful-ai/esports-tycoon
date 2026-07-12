@@ -157,10 +157,13 @@ def test_learned_player_model_trains_checkpoints_and_replays(tmp_path) -> None:
     )
     traces = recorder.traces[:180]
     comms = recorder.communication_traces
+    assert all(trace.selected_action in trace.legal_actions for trace in traces)
     model = LearnedPlayerModel.train(traces, comms)
     metrics = imitation_metrics(model, traces)
     assert metrics["legal_rate"] == 1.0
     assert metrics["action_accuracy"] >= 0.45
+    assert metrics["macro_action_recall"] >= 0.2
+    assert metrics["majority_baseline"] > 0.0
     assert model.communication_examples == len(comms)
 
     path = tmp_path / "player-policy.json"
@@ -206,3 +209,26 @@ def test_conditioned_encoder_changes_with_player_identity() -> None:
     left = observations[0]
     right = left.model_copy(update={"player_condition": observations[1].player_condition})
     assert not np.array_equal(conditioned_features(left), conditioned_features(right))
+
+
+def test_conditioned_encoder_includes_live_tactical_context() -> None:
+    gd = load_all()
+    recorder = RecordingPlayerPolicy(HeuristicPolicy(gd, gd.maps["haven"]))
+    simulate_match_result(
+        gd, "team_nexus", "team_vanguard", "haven", 41,
+        policies=_policies(gd, recorder, comms=False),
+    )
+    observation = next(trace.observation for trace in recorder.traces if trace.observation.tick)
+    base = conditioned_features(observation)
+    variants = (
+        observation.model_copy(
+            update={"role": "entry" if observation.role != "entry" else "carrier"}
+        ),
+        observation.model_copy(
+            update={"team_target": "a" if observation.team_target != "a" else "c"}
+        ),
+        observation.model_copy(update={"timeout_directive": "pressure"}),
+        observation.model_copy(update={"tactical_aggression": 90.0}),
+    )
+    for variant in variants:
+        assert not np.array_equal(base, conditioned_features(variant))

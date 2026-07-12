@@ -676,11 +676,12 @@ class _MatchSim:
                         self._policy_rng(round_num, pid),
                     )
                 else:
+                    legal = self._buy_legal_actions(ps)
                     fast_decide = getattr(policy, "decide_fast", None)
                     if callable(fast_decide):
                         action = fast_decide(
                             self._fast_observe(pid, 0, f"buy:{call}"),
-                            self._fast_buy_legal,
+                            tuple(legal),
                             self._policy_rng(round_num, pid),
                         )
                     else:
@@ -689,7 +690,7 @@ class _MatchSim:
                         )
                         action = policy.decide(
                             obs,
-                            [Action(type=ActionType.BUY)],
+                            legal,
                             self._policy_rng(round_num, pid),
                         )
                 weapon = self.gd.weapons.get(action.weapon_id or "classic")
@@ -732,6 +733,31 @@ class _MatchSim:
                         spent=spent,
                     )
                 )
+
+    def _buy_legal_actions(self, ps: _PState) -> list[Action]:
+        """Enumerate concrete affordable candidates for learned policies."""
+        candidates: dict[str, Action] = {}
+        for weapon_id in sorted(self.gd.weapons):
+            weapon = self.gd.weapons[weapon_id]
+            if weapon_id != ps.weapon and weapon.price > ps.credits:
+                continue
+            armor_options = [0]
+            can_have_armor = ps.armor > 0 or (
+                weapon_id == ps.weapon and ps.credits >= C.ARMOR_PRICE
+            ) or (
+                weapon_id != ps.weapon
+                and weapon.price + C.ARMOR_PRICE <= ps.credits
+            )
+            if can_have_armor:
+                armor_options.append(C.ARMOR_VALUE)
+            for armor in armor_options:
+                action = Action(
+                    type=ActionType.BUY,
+                    weapon_id=weapon_id,
+                    armor=armor,
+                )
+                candidates[action.model_dump_json()] = action
+        return [candidates[key] for key in sorted(candidates)]
 
     # -- round -------------------------------------------------------------------
 
@@ -1132,6 +1158,11 @@ class _MatchSim:
                         self._policy_rng(round_num, pid),
                         self._tactics(ps.team_id).aggression,
                         directive.kind if directive is not None else None,
+                        ps.role,
+                        tick,
+                        spike_planted,
+                        ps.team_id == atk,
+                        len(alive_atk if ps.team_id == atk else alive_dfn),
                     )
                 else:
                     fast_decide = getattr(policy, "decide_fast", None)
