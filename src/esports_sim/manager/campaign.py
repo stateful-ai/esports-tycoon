@@ -29,6 +29,7 @@ from esports_sim.manager import (
     meta,
     narrative,
     relationships,
+    role_fit,
     rivalries,
     social,
     sponsors,
@@ -371,13 +372,30 @@ def _dressed_gamedata(
     teams = dict(gs.teams)
     for tid, pids in dressed.items():
         teams[tid] = gs.teams[tid].model_copy(update={"player_ids": list(pids)})
+    # A player keeps their raw attributes in GameState. The match only sees a
+    # derived view: job-weighted ability plus the execution cost of unfamiliar
+    # role/style assignments. This makes the hidden rating mechanically real
+    # without rewriting development, scouting, or roster data.
+    players = dict(gs.players)
+    for pids in dressed.values():
+        for pid in pids:
+            player = gs.players[pid]
+            raw = development.overall(player)
+            delta = role_fit.current_ability(player) - raw
+            if abs(delta) > 1e-9:
+                players[pid] = player.model_copy(update={
+                    "attributes": {
+                        attr: max(1.0, min(99.0, value + delta))
+                        for attr, value in player.attributes.items()
+                    }
+                })
     return GameData(
         attributes=gd.attributes,
         agents=gd.agents,
         weapons=gd.weapons,
         maps=gd.maps,
         teams=teams,
-        players=gs.players,
+        players=players,
     )
 
 
@@ -482,6 +500,12 @@ def advance_week(
     }
 
     _cp.mark("matches")
+
+    # Assignment comfort is earned through a week of preparation and matches.
+    # It is deliberately after this week's fixtures, so a last-minute switch
+    # cannot be fully comfortable on the same match day.
+    for p in gs.players.values():
+        role_fit.build_comfort(p)
 
     # 2. Training (human focus is whatever each manager set; AI picks its own,
     # and each human's coach/facility multiplier comes from their own org).

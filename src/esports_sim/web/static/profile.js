@@ -235,6 +235,28 @@ function pfDevChart(series) {
 
 /* -- player profile --------------------------------------------------------- */
 
+async function pfChangeAssignment(p) {
+  const roles = ["duelist", "controller", "initiator", "sentinel", "flex"];
+  const styles = ["entry", "igl", "anchor", "lurker", "awper", "support"];
+  const role = window.prompt(`Role (${roles.join(", ")})`, p.role || "");
+  if (role == null) return;
+  const style = window.prompt(`Style (${styles.join(", ")})`, p.playstyle || "");
+  if (style == null) return;
+  const normalizedRole = role.trim().toLowerCase();
+  const normalizedStyle = style.trim().toLowerCase();
+  if (!roles.includes(normalizedRole) || !styles.includes(normalizedStyle)) {
+    toast("Choose one of the listed roles and styles.");
+    return;
+  }
+  try {
+    const res = await api("/api/actions/assignment", {
+      player_id: p.id, role: normalizedRole, playstyle: normalizedStyle,
+    });
+    toast(res.message || "Assignment updated.");
+    openPlayerProfile(p.id);
+  } catch { /* api() already surfaced the error */ }
+}
+
 function renderPlayerProfile(data) {
   const frag = document.createDocumentFragment();
   const p = data.player || {};
@@ -319,6 +341,12 @@ function renderPlayerProfile(data) {
     };
     header.appendChild(rein);
   }
+  if (p.can_change_assignment) {
+    const assignment = el("button", "btn btn-sm", "Change role/styleâ€¦");
+    assignment.title = "A new assignment changes current ability and starts at low comfort";
+    assignment.onclick = () => pfChangeAssignment(p);
+    header.appendChild(assignment);
+  }
   if (isAdminMode()) {
     const slot = el("div", "pf-admin-slot");
     const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
@@ -334,6 +362,12 @@ function renderPlayerProfile(data) {
   const tiles = el("div", "pf-tiles");
   const ovrSub = ov.fogged ? "scouted" : pfStars(ov.ovr_stars);
   tiles.appendChild(pfTile("OVR", (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), ovrSub));
+  const caBand = ov.current_ability_band;
+  tiles.appendChild(pfTile(
+    "Current ability",
+    Array.isArray(caBand) ? `${Math.round(caBand[0])}â€“${Math.round(caBand[1])}` : "â€”",
+    ov.comfort != null ? `${Math.round(ov.comfort)} comfort` : "scouted"
+  ));
   // Peak: a PROJECTION band even for your own club. It can be missed or beaten;
   // a fogged rival shows the scout's banded tier.
   const potIsNum = typeof ov.potential === "number";

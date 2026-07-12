@@ -24,6 +24,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from esports_sim.schemas import Player
+from esports_sim.manager import role_fit
 
 # ---------------------------------------------------------------------------
 # Trait catalog. Tags already on players (authored + talk module) keep
@@ -797,10 +798,27 @@ def stars(value: float) -> float:
     return 0.5
 
 
+def current_ability_projection(p: Player, progress: float = 1.0) -> tuple[float, float]:
+    """A scouted range for hidden role/style current ability.
+
+    Unlike raw overall, this is never exposed as an exact number: even a full
+    book leaves a small uncertainty margin around role execution and comfort.
+    """
+    value = role_fit.current_ability(p)
+    progress = float(np.clip(progress, 0.0, 1.0))
+    width = 14.0 * (1.0 - progress) + 3.0
+    off = ((_h(p.id, "role-ca-scout") % 1000) / 1000.0 - 0.5) * 0.35
+    lo = max(1.0, value + off * width - width / 2.0)
+    hi = min(99.0, lo + width)
+    return round(lo, 1), round(hi, 1)
+
+
 def scout_report(gs, p: Player, progress: float) -> dict:
     """Banded CA/PA view + progressively revealed traits. The band CENTER
     is a stable per-player offset (scouts have priors, not dice), and the
     band tightens as progress rises."""
+    # Keep the legacy CA star band anchored to public raw overall. The new
+    # assignment-aware number is separately hidden behind its own projection.
     ca = overall(p)
     # A better analyst doesn't just read faster (progress) — they read more
     # ACCURATELY: an elite analyst shrinks the residual floor WIDTH, so their
@@ -829,6 +847,8 @@ def scout_report(gs, p: Player, progress: float) -> dict:
         "role": str(p.role),
         "playstyle": str(p.playstyle),
         "ca_stars": [stars(ca_lo), stars(ca_lo + width_ca)],
+        "current_ability_projection": list(current_ability_projection(p, progress)),
+        "comfort": round(role_fit.assignment_comfort(p)),
         "pa_stars": [stars(proj_lo), stars(proj_hi)],
         # A numeric ceiling PROJECTION band. Always a range, never a point —
         # the future can't be read exactly — and it never closes below an

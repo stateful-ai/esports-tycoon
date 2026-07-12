@@ -80,6 +80,7 @@ PLAYER_BLOCK = {
     "stream_income",
     "stream_growth_mult",
     "can_rein_streaming",
+    "can_change_assignment",
     "confidence",
     "is_starter",
     "dev_focus",
@@ -90,6 +91,8 @@ PLAYER_BLOCK = {
 OVERVIEW = {
     "ovr",
     "ovr_stars",
+    "current_ability_band",
+    "comfort",
     "potential",
     "potential_stars",
     "potential_band",
@@ -240,9 +243,13 @@ def test_user_player_profile(env) -> None:
         "heavy streamer", "balanced", "practice-focused"
     )
     assert isinstance(prof["player"]["can_rein_streaming"], bool)
+    assert prof["player"]["can_change_assignment"] is True
 
     ov = prof["overview"]
     assert ov["fogged"] is False
+    assert len(ov["current_ability_band"]) == 2
+    assert ov["current_ability_band"][0] < ov["current_ability_band"][1]
+    assert ov["comfort"] is not None
     assert isinstance(ov["ovr"], int)  # exact for own club
     assert ov["form"] is not None and ov["morale"] is not None
     assert isinstance(ov["market_value"], int)
