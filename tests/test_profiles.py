@@ -894,6 +894,9 @@ def test_market_rows_carry_languages(env):
     assert mv["free_agents"], "campaign should have free agents to shop"
     for row in mv["free_agents"]:
         assert isinstance(row["languages"], list)
+        assert isinstance(row["is_igl"], bool)
+        assert isinstance(row["stream_income"], int)
+        assert row["is_igl"] == (row["playstyle"] == "igl")
         for l in row["languages"]:
             assert set(l) == {"lang", "level"}
     # Search rows carry the same public language read.

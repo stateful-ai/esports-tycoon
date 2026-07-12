@@ -709,6 +709,9 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "age": p.age,
         "role": str(p.role),
         "playstyle": str(p.playstyle),
+        # IGL is a public player identity flag. Keep it explicit in views so
+        # clients can filter without encoding roster semantics themselves.
+        "is_igl": str(p.playstyle) == "igl",
         "region": str(p.region),
         "salary": p.salary,
         "contract_weeks_left": p.contract_weeks_left,
