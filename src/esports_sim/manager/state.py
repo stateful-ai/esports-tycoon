@@ -1063,10 +1063,8 @@ class GameState(BaseModel):
     news: list[str] = Field(default_factory=list)
     # Per-manager PRIVATE news: subsystem events that belong to one manager
     # (scout reports completing, sponsor-objective outcomes, a player on YOUR
-    # roster retiring). push_private_news keeps the line in the shared `news`
-    # feed too (so the CLI panel + broadcast ticker are unchanged), but also
-    # records it here keyed by owner, so in a shared world each manager's inbox
-    # only surfaces their own private events, never a rival's.
+    # roster retiring). These never enter the shared `news` feed: that feed is
+    # rendered on the dashboard and contains world-visible information only.
     private_news_by: dict[str, list[str]] = Field(default_factory=dict)
     # Weekly inbox feed (oldest first), per human manager. Populated at the end
     # of each tick. Reached via the `inbox` property (acting manager's feed).
@@ -1413,12 +1411,12 @@ class GameState(BaseModel):
         del self.news[:-60]
 
     def push_private_news(self, msg: str, owner: str | None = None) -> None:
-        """A news line that belongs to ONE manager. It still lands in the
-        shared `news` feed (the CLI panel and broadcast ticker keep showing it),
-        but is ALSO recorded against `owner` (defaults to the acting manager) so
-        only that manager's inbox surfaces it in a shared world. Stamped with
-        the same [Sx Wy] label as push_news so the inbox's week filter works."""
-        self.push_news(msg)
+        """Record a line visible only to one manager.
+
+        Private operational information never reaches the dashboard's shared
+        news feed. The timestamp lets the owner's inbox collect this week's
+        events alongside their public updates.
+        """
         bucket = self.private_news_by.setdefault(owner or self.acting_team_id, [])
         bucket.append(f"[S{self.season} W{self.week}] {msg}")
         del bucket[:-60]

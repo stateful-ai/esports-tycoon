@@ -187,7 +187,7 @@ def weekly_milestones(gs: "GameState") -> list[tuple[str, str]]:
                 ca = int(band * MILESTONE_BAND)
                 msg = (
                     f"Milestone: {p.handle} breaks the {ca} CA barrier "
-                    f"for the first time this save."
+                    "for the first time."
                 )
                 record(
                     gs,
