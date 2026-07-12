@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import advance_week, chronicle, new_campaign, training
+from esports_sim.manager import advance_week, chronicle, development, new_campaign, training
 from esports_sim.manager.campaign import _adapt_ai_tactics, _process_retirements
 from esports_sim.manager.narrative import _tactic_flavor
 from esports_sim.manager.state import GameState
@@ -282,6 +282,31 @@ def test_mentorship_boosts_protege_growth_same_seed():
     training.apply_training(team, [boosted], "mechanical", np.random.default_rng(0),
                             mentor_mults={"y": training.MENTOR_GROWTH_MULT})
     assert ca(boosted) > ca(base)  # identical rng, only the mentor mult differs
+
+
+def test_duo_mentor_and_morale_create_support_headroom():
+    from esports_sim.manager import relationships
+    from esports_sim.manager.campaign import _development_support_bonuses
+
+    young = _mp("young", 19, 69.0, potential=70.0)
+    young.morale, young.confidence, young.form = 96.0, 88.0, 75.0
+    veteran = _mp("vet", 30, 82.0, role=Role.CONTROLLER)
+    veteran.personality_tags = ["veteran", "leader"]
+    team = Team(
+        id="nxs", name="Nexus", tag="NXS", tier=1,
+        player_ids=[young.id, veteran.id], chemistry=92.0,
+    )
+    gs = GameState(
+        seed=1, season=1, week=1, user_team_id="nxs",
+        teams={"nxs": team}, players={young.id: young, veteran.id: veteran},
+        mentorships={young.id: veteran.id},
+    )
+    relationships.nudge(gs, young.id, veteran.id, 46.0)  # 50 -> 96: named duo
+    bonuses = _development_support_bonuses(gs, "nxs")
+    assert bonuses and bonuses[young.id] >= 7.0
+    assert development.development_ceiling(
+        young, "aim_precision", bonuses[young.id]
+    ) > young.potential
 
 
 def test_team_talk_nudges_dressed_confidence_and_is_bounded():

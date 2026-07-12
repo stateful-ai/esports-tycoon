@@ -3896,6 +3896,9 @@ async function scouting(v) {
     lines.push(r.mental_read
       ? `<div><b>Mentality:</b> ${esc(r.mental_read)}</div>`
       : `<div class="muted">Mental read unlocks at 75%.</div>`);
+    if (r.curve_read) {
+      lines.push(`<div><b>Development path:</b> ${esc(r.curve_read)}</div>`);
+    }
     if ((r.traits ?? []).length || r.traits_hidden) {
       lines.push(`<div><b>Character:</b> ` + r.traits
         .map((t) => `<span class="pill" title="${esc(t.blurb)}">${humanize(t.id)}</span>`).join(" ") +

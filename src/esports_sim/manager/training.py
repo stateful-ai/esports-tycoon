@@ -3,9 +3,9 @@
 The manager picks one focus per week per team — and, per player, an
 individual development plan: a pinned focus category (`Player.dev_focus`,
 "auto" = follow the team week) and a training intensity that trades
-growth for stamina. Growth is age-gated — teenagers develop fast, players
-past 27 mostly fight decline (which is applied in the offseason, not
-here). Matches are the other half of development: `apply_match_experience`
+growth for stamina. Growth follows a hidden player-specific curve rather
+than one universal age ladder. Matches are the other half of development:
+`apply_match_experience`
 turns what a player actually DID on the server into reps, so playing time
 (and how they play) shapes who they become. AI players stay on the
 defaults ("auto"/"normal"), so the plans are a purely human lever.
@@ -71,15 +71,17 @@ def growth_rate(age: int) -> float:
     return 0.08
 
 
-def _player_rate(p: Player) -> float:
-    """Age curve × the EHM layer: CA→PA headroom and traits. A player at
-    their ceiling maintains; a raw prospect flies; late bloomers keep a
-    floor under the age curve into their late twenties."""
+def _player_rate(p: Player, support_bonus: float = 0.0) -> float:
+    """Broad age rate x hidden curve x reachable headroom and traits."""
     base = growth_rate(p.age)
     floor = development.trait_value(p, "growth_floor", 0.0)
     if floor > 0 and p.age <= development.decline_age(p) - 1:
         base = max(base, floor)
-    return base * development.dev_multiplier(p)
+    return (
+        base
+        * development.curve_growth_multiplier(p)
+        * development.dev_multiplier(p, support_bonus)
+    )
 
 
 # Streaming eats practice time: a player pouring their week into the camera
@@ -110,6 +112,7 @@ def apply_training(
     rng: np.random.Generator,
     growth_mult: float = 1.0,  # coaching staff boost (user team)
     mentor_mults: dict[str, float] | None = None,
+    support_bonuses: dict[str, float] | None = None,
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -135,8 +138,9 @@ def apply_training(
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
         # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
         mentor = mentor_mults.get(p.id, 1.0) if mentor_mults else 1.0
+        support = support_bonuses.get(p.id, 0.0) if support_bonuses else 0.0
         rate = (
-            _player_rate(p) * _system_fit_mult(team, p) * intensity * mentor
+            _player_rate(p, support) * _system_fit_mult(team, p) * intensity * mentor
             * stream_practice_mult(p)
         )
         # Tired players learn worse; below 35 stamina they barely absorb.
@@ -147,10 +151,10 @@ def apply_training(
             gain = rate * fatigue_mult * growth_mult * (1.0 if i == 0 else 0.5)
             gain *= float(rng.uniform(0.6, 1.4))
             cur = p.attr(attr_id)
-            ceil = development.skill_ceiling(p, attr_id)
-            # Diminishing returns near the ceiling; hard-stop at the per-skill
-            # ceiling (the anchor stays 95 for a default ceiling, so growth
-            # SPEED is unchanged — only the plateau point moves).
+            ceil = development.development_ceiling(p, attr_id, support)
+            # Diminishing returns near the currently reachable outcome. The
+            # outcome may sit below headline potential for an unrealised
+            # prospect or above it when the player's environment is exceptional.
             headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
             p.attributes[attr_id] = round(
                 min(cur + gain * headroom, max(cur, ceil)), 2
@@ -180,14 +184,18 @@ _MATCH_XP_CAP = 0.25
 _MATCH_XP_PER_REP = 0.02
 
 
-def apply_match_experience(p: Player, line, n_rounds: int) -> None:
+def apply_match_experience(
+    p: Player, line, n_rounds: int, support_bonus: float | None = None
+) -> None:
     """Turn one map's box-score line into attribute reps: what a player
     actually DID on the server is what improves. Deterministic — derived
     from the line only, no rng — and scaled by the same age/PA-gap rate
     as training, so a prospect grows from minutes and a veteran at their
     ceiling mostly just logs them. Bench players get none of this (see
     apply_scrim_reps): playing time is a real development decision."""
-    rate = _player_rate(p) * stream_practice_mult(p)
+    if support_bonus is None:
+        support_bonus = development.contextual_ceiling_bonus(p)
+    rate = _player_rate(p, support_bonus) * stream_practice_mult(p)
     clutch_n = line.clutch_1v1 + line.clutch_1v2 + line.clutch_1v3
     reps = {
         "aim_precision": line.kills * 0.5 + line.headshots * 0.5,
@@ -203,21 +211,21 @@ def apply_match_experience(p: Player, line, n_rounds: int) -> None:
         if r <= 0:
             continue
         cur = p.attr(attr_id)
-        ceil = development.skill_ceiling(p, attr_id)
+        ceil = development.development_ceiling(p, attr_id, support_bonus)
         headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
         gain = min(_MATCH_XP_CAP, _MATCH_XP_PER_REP * r) * rate * headroom
         if gain > 0:
             p.attributes[attr_id] = round(min(cur + gain, max(cur, ceil)), 2)
 
 
-def apply_scrim_reps(p: Player) -> None:
+def apply_scrim_reps(p: Player, support_bonus: float = 0.0) -> None:
     """A benched player's week: scrims and VOD, a fraction of real minutes.
     Keeps prospects on the bench from flat-lining without making the bench
     a substitute for playing."""
-    rate = _player_rate(p) * 0.25
+    rate = _player_rate(p, support_bonus) * 0.25
     for attr_id in sorted(("game_sense", "positioning")):
         cur = p.attr(attr_id)
-        ceil = development.skill_ceiling(p, attr_id)
+        ceil = development.development_ceiling(p, attr_id, support_bonus)
         headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
         p.attributes[attr_id] = round(
             min(cur + 0.05 * rate * headroom, max(cur, ceil)), 2
@@ -260,13 +268,17 @@ def ai_pick_focus(
 
 
 def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
-    """One year older: young players get a bump, veterans decline. The
-    turn happens at a trait-driven age — prodigies burn out at 26, late
-    bloomers hold their peak until 31."""
+    """One year older along the player's hidden peak and decline curve."""
     p.age += 1
-    turn = development.decline_age(p)
+    curve = development.development_curve(p)
+    turn = curve.decline_age
     if p.age >= turn:
-        decline = (p.age - (turn - 1)) * 0.8
+        # Short peaks fall away more sharply; long-peak players erode slowly.
+        decline = (
+            (p.age - (turn - 1))
+            * 0.8
+            * development.curve_decline_multiplier(p)
+        )
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
             p.attributes[attr_id] = round(
                 max(1.0, p.attr(attr_id) - decline * float(rng.uniform(0.7, 1.3))), 2
@@ -275,10 +287,8 @@ def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
         for attr_id in ("game_sense", "composure"):
             p.attributes[attr_id] = round(min(99.0, p.attr(attr_id) + 0.4), 2)
     elif p.age <= 22:
-        pa3 = development.potential_of(p) + 3.0  # scalar PA gates the bump too
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
-            # ...and so does the per-skill ceiling, whichever is tighter.
-            cap = min(pa3, development.skill_ceiling(p, attr_id))
+            cap = development.development_ceiling(p, attr_id)
             p.attributes[attr_id] = round(
                 min(99.0, cap, p.attr(attr_id) + float(rng.uniform(0.3, 1.2))), 2
             )
