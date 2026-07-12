@@ -451,6 +451,23 @@ def list_documents(data_dir: Path | None = None) -> list[dict[str, Any]]:
     return out
 
 
+def library_revision(data_dir: Path | None = None) -> tuple[tuple[str, int], ...]:
+    """Return a cheap installed-pack fingerprint for cross-process caches.
+
+    Roster Studio runs in the web process, while the MCP server normally runs
+    as a separate stdio process. Atomic installation replaces ``pack.yaml``;
+    these mtimes let a live Play lobby see either writer's changes.
+    """
+    root = (data_dir or DEFAULT_DATA_DIR) / "rosters"
+    if not root.is_dir():
+        return ()
+    return tuple(
+        (directory.name, (directory / "pack.yaml").stat().st_mtime_ns)
+        for directory in sorted(root.iterdir())
+        if directory.is_dir() and (directory / "pack.yaml").is_file()
+    )
+
+
 def example_document() -> dict[str, Any]:
     """A small valid document agents can copy and mutate."""
     players = [

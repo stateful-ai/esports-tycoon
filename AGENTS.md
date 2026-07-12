@@ -33,6 +33,8 @@ Quick orientation for any agent:
 - Skill/agent index: `SKILLS.md` (repo skills `/ship`, `/tactics`,
   `/art-pass`, `/maps`, `/web-screen`, `/campaign`; custom agents
   map-author, sim-tuner, art-generator).
+- Roster authoring: use `/build-roster-packs` and the `esports-rosters` MCP
+  server for draft-first add/edit/remove operations and atomic installation.
 
 ## Learning addendum
 

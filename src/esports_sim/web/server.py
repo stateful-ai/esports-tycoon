@@ -1175,16 +1175,17 @@ def lobby_preview(seed: int = 2026) -> dict:
     return {"teams": _team_options(new_campaign(_LOBBY.gd, seed=seed), taken=set())}
 
 
-_PACK_OPTIONS_CACHE: list[dict] | None = None
+_PACK_OPTIONS_CACHE: tuple[tuple[tuple[str, int], ...], list[dict]] | None = None
 
 
 def _pack_options() -> list[dict]:
     """Installed roster packs with their pickable (tier-1) teams — straight
-    from pack data, no campaign build needed. Cached until Roster Studio
-    successfully installs a pack, which invalidates this view immediately."""
+    from pack data, no campaign build needed. The filesystem revision makes
+    writes from Roster Studio or the separate MCP process visible live."""
     global _PACK_OPTIONS_CACHE
-    if _PACK_OPTIONS_CACHE is not None:
-        return _PACK_OPTIONS_CACHE
+    revision = roster_workbench.library_revision()
+    if _PACK_OPTIONS_CACHE is not None and _PACK_OPTIONS_CACHE[0] == revision:
+        return _PACK_OPTIONS_CACHE[1]
     out = []
     for meta in list_roster_packs():
         pack = load_roster_pack(meta.id)
@@ -1209,7 +1210,7 @@ def _pack_options() -> list[dict]:
                 ],
             }
         )
-    _PACK_OPTIONS_CACHE = out
+    _PACK_OPTIONS_CACHE = (revision, out)
     return out
 
 

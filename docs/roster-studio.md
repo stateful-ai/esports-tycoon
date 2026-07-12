@@ -60,3 +60,19 @@ teams may be partial; the deterministic builder fills their open academy slots.
 A partial world may author only favorite teams: the campaign generator fills
 the remaining regional league slots requested by `world.teams_per_region` and
 `world.tier2_per_region`.
+
+## MCP server
+
+Install the MCP extra and let the project `.mcp.json` register the
+`esports-rosters` stdio server:
+
+```powershell
+.venv-win\Scripts\python.exe -m pip install -e ".[dev,web,mcp]"
+.venv-win\Scripts\python.exe -m esports_sim.mcp.roster_server
+```
+
+The MCP offers schema/catalog inspection, installed-pack and draft listing,
+draft creation, pack metadata and team edits, add/edit/remove tools for team
+players and free agents, validation, and explicit atomic installation. Drafts
+live under `data/rosters/.drafts/` and are ignored by Git; no mutation changes
+the playable library until `install_draft` succeeds.
