@@ -48,21 +48,36 @@ def test_default_plan_is_a_noop(game_data) -> None:
     assert _events_blob(base) == _events_blob(planned)
 
 
-def test_prep_edge_shifts_outcomes(game_data) -> None:
-    """A prepared side wins more maps across seeds — prep is real but the
-    engine clamp keeps it a colour, not a decider."""
-    base_wins = planned_wins = 0
-    plans = {"team_nexus": TeamMatchPlan(prep_edge=1.5)}
-    for seed in range(30):
-        r0 = simulate_match_result(
-            game_data, "team_nexus", "team_vanguard", "haven", seed
-        )
-        r1 = simulate_match_result(
-            game_data, "team_nexus", "team_vanguard", "haven", seed, plans=plans
-        )
-        base_wins += r0.winner_id == "team_nexus"
-        planned_wins += r1.winner_id == "team_nexus"
-    assert planned_wins > base_wins
+def test_prep_edge_reaches_the_attack_policy(game_data) -> None:
+    """Preparation is now a policy input, not merely a hidden duel term.
+
+    The old 30-map win-count assertion was an accidental calibration pin for
+    the engine-owned IGL.  With site selection now made by a policy, assert
+    the durable contract instead: a fully prepared side receives a scout read
+    and selects a different deterministic opening route.  The exact duel-term
+    test below still verifies that preparation affects combat outcomes too.
+    """
+    base = simulate_match_result(
+        game_data, "team_nexus", "team_vanguard", "haven", 0
+    )
+    prepared = simulate_match_result(
+        game_data,
+        "team_nexus",
+        "team_vanguard",
+        "haven",
+        0,
+        plans={"team_nexus": TeamMatchPlan(prep_edge=1.5)},
+    )
+
+    def opening_routes(events):
+        return [
+            (event.player_id, event.to_callout)
+            for event in events
+            if event.type == "round.move"
+            and event.from_callout == "attacker_spawn"
+        ][:5]
+
+    assert opening_routes(prepared.events) != opening_routes(base.events)
 
 
 def _mk_sim(gd, plans=None):

@@ -99,13 +99,15 @@ Two factors decide how well a system is actually executed: roster fit (does the 
 
 The AI is not frozen: each rival coach derives a season identity from its roster and then adapts it in-season --- winners entrench their identity, strugglers drift back toward vanilla, and pistol-round form nudges their eco appetite --- so the league feels reactive over a season.
 
-The load-bearing design rule: every numeric dial's effect is an exact no-op at the neutral value 50 (and site focus is neutral at balanced). A default team plays exactly like the pre-tactics engine, so the coach's identity reaches all the way into round micro without ever destabilising the balance or golden gates (which run neutral tactics). This is what let the tactics system get deep in small, low-risk increments; it's documented as ADR-007.
+The load-bearing design rule: every numeric dial's effect is an exact no-op at the neutral value 50 (and site focus is neutral at balanced). A default team plays exactly like the pre-tactics engine, so the pre-match strategy identity can reach round micro without destabilising the balance or golden gates (which run neutral tactics). The live coach does not steer ticks: their only in-map input is a timeout, whose advice is consumed by the next team-policy plan. This is what lets tactics stay deep in small, low-risk increments; it's documented as ADR-007.
 
 4. The match simulation
 This is the part of the game the manager mostly watches, but it's where almost all of the engineering lives, because it's the thing that has to convincingly justify every result the management layer reports.
 
 4.1 What a match is
-A best-of-1 (or, in playoffs, one map of a BO3) plays out as first to 13 rounds, halftime side swap at 12, overtime if tied 12--12 (win by 2, capped). Each round is simulated tick by tick (1 tick = 0.5 game-seconds) through: a buy phase, live round play, post-plant (if the spike goes down), and round end. A full match resolves in roughly 50 milliseconds and produces a canonical, replayable event log.
+A best-of-1 (or, in playoffs, one map of a BO3) plays out as first to 13 rounds, halftime side swap at 12, overtime if tied 12--12 (win by 2, capped). Each round is simulated tick by tick (1 tick = 0.5 game-seconds) through: a buy phase, live round play, post-plant (if the spike goes down), and round end. A full match resolves well under a second and produces a canonical, replayable event log.
+
+The match engine is a referee, not an invisible coach. Every available player receives a legal-action decision on every live tick; a team policy turns the five players' attributes and the standing strategy into the round plan (economy, site, pace, carrier, roles, defensive setup, and rotation holdback). Coaches are deliberately thin: one coach per side may call one timeout between rounds, and the resulting instruction only changes the next policy plan. It never becomes a direct aim, duel, or hidden combat modifier.
 
 4.2 The map: a floor plan, not just a graph
 Under the hood, a map is a directed graph of named callouts ("A Site", "Mid Courtyard", "B Long") with traversal edges and sightlines --- this is the sim's decision vocabulary, and it's what keeps the tactical AI and the eventual RL/world-model work legible (an agent reasons in terms of "hold A short" or "rotate to B," not raw pixels).

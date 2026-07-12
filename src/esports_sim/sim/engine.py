@@ -1,10 +1,9 @@
-"""Tick-level match engine.
+"""Tick-level match referee.
 
-The engine is the *coach and referee*: it decides team-level strategy
-(site calls, go timing, rotations), hands each player a per-player order,
-and consults that player's `PlayerPolicy` to turn orders into concrete
-actions. It also resolves everything physical — movement, duels, utility,
-the spike — and emits typed events.
+The engine enforces legality, movement, utility resolution, combat, the
+spike, and typed event emission.  Policies make the tactical decisions: one
+player policy per dressed player, a team policy per side, and a thin coach
+policy that may speak only through a timeout between rounds.
 
 Determinism contract: every random draw comes from a per-round generator
 derived from (match, round) labels on the RngTree, and all iteration is in
@@ -21,8 +20,25 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from esports_sim.events.log import EventLog
-from esports_sim.policy.base import Action, ActionType
-from esports_sim.policy.heuristic import HeuristicPolicy
+from esports_sim.policy.base import (
+    Action,
+    ActionType,
+    AttackRoundRequest,
+    BuyPlanRequest,
+    CoachObservation,
+    CoachPolicy,
+    CoachProfile,
+    DefenseRoundRequest,
+    PlayerPolicy,
+    RotationPlanRequest,
+    TeamPolicy,
+    TimeoutDirective,
+)
+from esports_sim.policy.heuristic import (
+    HeuristicCoachPolicy,
+    HeuristicPolicy,
+    HeuristicTeamPolicy,
+)
 from esports_sim.registry.loader import GameData, load_geometry
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.schemas import (
@@ -40,11 +56,11 @@ from esports_sim.schemas import (
     Player,
     PlayerObservation,
     PlayerRoundState,
-    Playstyle,
     RoundEndEvent,
     RoundStartEvent,
     SpikeDefuseEvent,
     SpikePlantEvent,
+    TimeoutEvent,
     UtilityUsedEvent,
 )
 from esports_sim.rng.tree import RngTree
@@ -68,12 +84,27 @@ class MatchResult:
     events: list[Event]
 
 
+@dataclass
+class MatchPolicies:
+    """Optional replacements for the heuristic policy stack.
+
+    Missing entries use the deterministic in-repo heuristics, which lets an
+    RL or playtest policy replace one player (or one layer) without having to
+    supply the other nine actors.
+    """
+
+    player_by_id: dict[str, PlayerPolicy] = field(default_factory=dict)
+    team_by_id: dict[str, TeamPolicy] = field(default_factory=dict)
+    coach_by_team: dict[str, CoachPolicy] = field(default_factory=dict)
+
+
 @dataclass(frozen=True)
 class TeamMatchPlan:
-    """Per-match coaching overrides, supplied by the campaign layer (a
-    manager's pre-match game plan). The bare-engine gates never construct
-    one, and an all-defaults plan is an exact no-op, so this can't move
-    the golden/balance gates:
+    """Per-match inputs supplied by the campaign layer.
+
+    ``tactics`` is a pre-match identity selected by the manager; it is read
+    by the team policy rather than used as live coach input.  ``coach`` is a
+    thin match projection of campaign staff and can act only at a timeout.
 
     tactics: replaces the standing TeamTactics for THIS match only (the
         dials themselves stay neutral-safe per ADR-007).
@@ -87,6 +118,7 @@ class TeamMatchPlan:
     tactics: TeamTactics | None = None
     focus_target: str | None = None
     prep_edge: float = 0.0
+    coach: CoachProfile | None = None
 
 
 @dataclass
@@ -112,7 +144,7 @@ class _PState:
     # Waypoints still ahead on the current move (excludes current pos).
     path: list[tuple[float, float]] = field(default_factory=list)
     order: str = "hold"
-    order_dirty: bool = True  # consult policy when set
+    role: str = "flex"
     move_dest: str | None = None
     move_eta: int = -1
     planting_until: int = -1
@@ -123,6 +155,7 @@ class _PState:
     bonus_until: int = -1
     bonus: float = 0.0
     no_engage_until: int = -1  # disengage grace while falling back
+    peek_until: int = -1  # player-policy selected swing window
     # Unit vector this player is pre-aiming down while stationary.
     watch: tuple[float, float] | None = None
     has_spike: bool = False
@@ -137,6 +170,28 @@ class _PState:
         )
 
 
+@dataclass(slots=True)
+class _FastPlayerState:
+    """Minimal, allocation-cheap state consumed by the shipped heuristic."""
+
+    player_id: str
+    credits: int
+    weapon_id: str
+    armor: int
+    callout_id: str | None
+
+
+@dataclass(slots=True)
+class _FastObservation:
+    """Private hot-path counterpart to the public PlayerObservation schema."""
+
+    self_state: _FastPlayerState
+    tick: int
+    igl_call: str | None
+    tactical_aggression: float
+    timeout_directive: str | None
+
+
 class _MatchSim:
     def __init__(
         self,
@@ -147,6 +202,7 @@ class _MatchSim:
         seed: int,
         log: EventLog | None = None,
         plans: dict[str, TeamMatchPlan] | None = None,
+        policies: MatchPolicies | None = None,
     ):
         self.gd = gd
         self.map: Map = gd.maps[map_id]
@@ -156,6 +212,26 @@ class _MatchSim:
         self.rng_tree = RngTree(root_seed=seed)
         self.seed = seed
         self.log = log if log is not None else EventLog()
+        hold = Action.model_construct(type=ActionType.HOLD)
+        wait = Action.model_construct(type=ActionType.WAIT)
+        peek = Action.model_construct(type=ActionType.PEEK)
+        self._fast_legal_by_callout: dict[str, tuple[Action, ...]] = {
+            callout: (
+                hold,
+                wait,
+                peek,
+                *(
+                    Action.model_construct(
+                        type=ActionType.MOVE_TO, callout_id=neighbor
+                    )
+                    for neighbor in sorted(self.map.neighbors(callout))
+                ),
+            )
+            for callout in sorted(self.map.callouts)
+        }
+        self._fast_buy_legal = (Action.model_construct(type=ActionType.BUY),)
+        self._fast_plant_action = Action.model_construct(type=ActionType.PLANT_SPIKE)
+        self._fast_defuse_action = Action.model_construct(type=ActionType.DEFUSE_SPIKE)
 
         # Game plans (campaign-fed; None for the bare-engine gates). Must
         # be bound BEFORE exec_mod below — _execution_mod reads tactics
@@ -172,8 +248,6 @@ class _MatchSim:
                     np.clip(plan.prep_edge, 0.0, C.PREP_EDGE_CAP)
                 )
 
-        self.policy = HeuristicPolicy(gd, self.map)
-
         # Roster: the week's committed starters, sorted for deterministic
         # iteration. Default (no lineup set) = the whole roster, so this stays
         # byte-identical to the pre-lineup engine (see sim/lineup.py). The
@@ -189,6 +263,35 @@ class _MatchSim:
                 pl = gd.players[pid]
                 agent = lineup_resolve.resolve_agent(gd.teams[tid], pl, gd.agents)
                 self.p[pid] = _PState(pid=pid, team_id=tid, agent_id=agent)
+
+        supplied = policies or MatchPolicies()
+        self.team_policies: dict[str, TeamPolicy] = {
+            tid: supplied.team_by_id.get(tid, HeuristicTeamPolicy(gd, self.map))
+            for tid in (team_a, team_b)
+        }
+        self.player_policies: dict[str, PlayerPolicy] = {
+            pid: supplied.player_by_id.get(pid, HeuristicPolicy(gd, self.map))
+            for pid in sorted(self.p)
+        }
+        self.coach_policies: dict[str, CoachPolicy] = {
+            tid: supplied.coach_by_team.get(tid, HeuristicCoachPolicy())
+            for tid in (team_a, team_b)
+        }
+        self.coaches: dict[str, CoachProfile] = {}
+        for tid in (team_a, team_b):
+            plan = self._plans.get(tid)
+            self.coaches[tid] = (
+                plan.coach
+                if plan is not None and plan.coach is not None
+                else CoachProfile(id=f"{tid}:coach")
+            )
+        self._timeout_used = {team_a: False, team_b: False}
+        self._timeout_directive: dict[str, TimeoutDirective | None] = {
+            team_a: None,
+            team_b: None,
+        }
+        self._round_target: dict[str, str | None] = {team_a: None, team_b: None}
+        self._round_policy_rngs: dict[str, np.random.Generator] = {}
 
         self.score = {team_a: 0, team_b: 0}
         self.loss_streak = {team_a: 0, team_b: 0}
@@ -333,38 +436,6 @@ class _MatchSim:
             and bool(self._lurkers)
         )
 
-    def _lurk_callout(self, target_site: str, sites: list[str]) -> str:
-        """Where a peeled-off lurker sets up: a mid callout if the map has
-        one, otherwise an entry toward a different site — anywhere that
-        threatens a flank or a rotator away from the main hit. Deterministic
-        so the pick is replay-stable."""
-        mids = sorted(
-            c.id for c in self.map.callouts.values() if c.zone == CalloutZone.MID
-        )
-        if mids:
-            return mids[len(mids) // 2]
-        for s in sorted(s for s in sites if s != target_site):
-            ent = self._entry_callouts(s)
-            if ent:
-                return ent[0]
-        ent = self._entry_callouts(target_site)
-        return ent[0] if ent else self.map.attacker_spawn
-
-    def _holder_spots(self, site: str) -> list[str]:
-        """Defense-advantaged callouts overlooking the site. Only
-        defender-side ground counts — a "holder spot" on an attacker-side
-        callout would park a lone defender in the path of five attackers."""
-        spots: set[str] = set()
-        sites = set(self._site_callouts(site))
-        for sl in self.map.sightlines:
-            if sl.to_callout in sites and sl.advantaged_side == "defense":
-                if sl.from_callout in sites:
-                    continue
-                zone = self.map.callouts[sl.from_callout].zone
-                if zone in (CalloutZone.DEFENDER_SIDE, CalloutZone.DEFENDER_SPAWN):
-                    spots.add(sl.from_callout)
-        return sorted(spots)
-
     def _callout_site(self, callout_id: str) -> str:
         return str(self.map.callouts[callout_id].site)
 
@@ -392,6 +463,64 @@ class _MatchSim:
 
     def _emit(self, ev: Event) -> None:
         self.log.append(ev)
+
+    def _policy_rng(self, round_num: int, pid: str) -> np.random.Generator:
+        """Independent deterministic stream for one player's decision.
+
+        A policy's draw budget must not perturb another player's choices or
+        the referee's combat rolls.  One generator is retained per player per
+        round, so a player can sample on every tick without repeatedly hashing
+        and constructing a fresh NumPy generator.
+        """
+        rng = self._round_policy_rngs.get(pid)
+        if rng is None:
+            rng = self.rng_tree.derive(
+                "match", self.match_id, "round", round_num, "player", pid, "policy"
+            )
+            self._round_policy_rngs[pid] = rng
+        return rng
+
+    def _maybe_call_timeouts(
+        self,
+        round_num: int,
+        atk: str,
+        dfn: str,
+        seed_path: tuple[str, ...],
+    ) -> None:
+        """Give each coach one between-round, timeout-only input window."""
+        for tid in (self.team_a, self.team_b):
+            self._timeout_directive[tid] = None
+            if self._timeout_used[tid]:
+                continue
+            directive = self.coach_policies[tid].call_timeout(
+                CoachObservation(
+                    team_id=tid,
+                    round_num=round_num,
+                    score_for=self.score[tid],
+                    score_against=self.score[dfn if tid == atk else atk],
+                    loss_streak=self.loss_streak[tid],
+                    is_attacking=tid == atk,
+                    profile=self.coaches[tid],
+                ),
+                self.rng_tree.derive(
+                    "match", self.match_id, "round", round_num, "coach", tid
+                ),
+            )
+            if directive is None:
+                continue
+            self._timeout_used[tid] = True
+            self._timeout_directive[tid] = directive
+            self._emit(
+                TimeoutEvent(
+                    tick=0,
+                    seed_path=seed_path,
+                    round_num=round_num,
+                    team_id=tid,
+                    coach_id=self.coaches[tid].id,
+                    directive=directive.kind,
+                    clarity=directive.clarity,
+                )
+            )
 
     # -- match loop ----------------------------------------------------------
 
@@ -477,27 +606,38 @@ class _MatchSim:
                 ps.armor = 0
             ps.credits = min(ps.credits, C.CREDIT_CAP)
 
-    def _team_buy_call(self, tid: str, round_num: int) -> str:
-        if round_num in (1, C.ROUNDS_PER_HALF + 1):
-            return "pistol"
-        avg = sum(self.p[pid].credits for pid in self.roster[tid]) / 5.0
-        if avg >= C.FULL_BUY_THRESHOLD:
-            return "full"
-        # Greedy coaches force on rounds a disciplined book would save.
-        greed = self._tactics(tid).eco_greed
-        if avg >= C.FORCE_BUY_THRESHOLD * (1.15 - greed / 250.0):
-            return "force"
-        return "eco"
-
     def _buy_phase(
         self, round_num: int, seed_path: tuple[str, ...], rng: np.random.Generator
     ) -> None:
         for tid in sorted(self.roster):
-            call = self._team_buy_call(tid, round_num)
+            avg = sum(self.p[pid].credits for pid in self.roster[tid]) / 5.0
+            call = self.team_policies[tid].choose_buy(
+                BuyPlanRequest(
+                    team_id=tid,
+                    round_num=round_num,
+                    average_credits=avg,
+                    tactics=self._tactics(tid),
+                )
+            )
             for pid in self.roster[tid]:
                 ps = self.p[pid]
-                obs = self._observe(pid, round_num, 0, False, True, f"buy:{call}")
-                action = self.policy.decide(obs, [Action(type=ActionType.BUY)], rng)
+                policy = self.player_policies[pid]
+                fast_decide = getattr(policy, "decide_fast", None)
+                if callable(fast_decide):
+                    action = fast_decide(
+                        self._fast_observe(pid, 0, f"buy:{call}"),
+                        self._fast_buy_legal,
+                        self._policy_rng(round_num, pid),
+                    )
+                else:
+                    obs = self._observe(
+                        pid, round_num, 0, False, True, f"buy:{call}"
+                    )
+                    action = policy.decide(
+                        obs,
+                        [Action(type=ActionType.BUY)],
+                        self._policy_rng(round_num, pid),
+                    )
                 weapon = self.gd.weapons.get(action.weapon_id or "classic")
                 if weapon is None:
                     weapon = self.gd.weapons["classic"]
@@ -545,6 +685,18 @@ class _MatchSim:
         atk, dfn = self._sides(round_num)
         rng = self.rng_tree.derive("match", self.match_id, "round", round_num)
         seed_path = ("match", self.match_id, "round", str(round_num))
+        self._round_policy_rngs = {
+            pid: self.rng_tree.derive(
+                "match", self.match_id, "round", round_num, "player", pid, "policy"
+            )
+            for pid in sorted(self.p)
+        }
+        self._round_target[atk] = None
+        self._round_target[dfn] = None
+
+        # Coaches have no live control.  Their one chance to speak is here,
+        # between rounds, before the two team policies form fresh plans.
+        self._maybe_call_timeouts(round_num, atk, dfn, seed_path)
 
         # Defense setup: shut breakable doors (usually).
         self._doors_closed = {
@@ -582,7 +734,6 @@ class _MatchSim:
             ps = self.p[pid]
             ps.alive = True
             ps.order = "hold"
-            ps.order_dirty = True
             ps.move_dest = None
             ps.move_eta = -1
             ps.planting_until = -1
@@ -592,46 +743,75 @@ class _MatchSim:
             ps.bonus_until = -1
             ps.bonus = 0.0
             ps.no_engage_until = -1
+            ps.peek_until = -1
             ps.watch = None
             ps.has_spike = False
 
         attackers = self.roster[atk]
         defenders = self.roster[dfn]
-        # Spike carrier: best game_sense (steady hands, good decisions).
-        carrier = max(
-            attackers, key=lambda pid: (self._player(pid).attr("game_sense"), pid)
-        )
-        self.p[carrier].has_spike = True
-
-        # -- strategy ------------------------------------------------------------
-        # The coach's book: site focus biases the call, pace decides how
-        # often the hit is a fast execute vs a slow default.
+        # -- policy-owned round plans -------------------------------------------
+        # The standing book is an input; the player/team policies make the
+        # actual site, pace, roles, carrier, and defensive-deployment choices.
         tac = self._tactics(atk)
         sites = [str(s) for s in self.map.sites if s != Site.MID]
-        weights = np.array(
-            [
-                (1.0 + 0.35 * self.site_wins.get(s, 0))
-                * (1.6 if tac.site_focus == s else 1.0)
-                for s in sites
-            ],
-            dtype=float,
+        defense_plan = self.team_policies[dfn].plan_defense(
+            DefenseRoundRequest(
+                team_id=dfn,
+                opponent_id=atk,
+                players=tuple(self._player(pid) for pid in sorted(defenders)),
+                tactics=self._tactics(dfn),
+                sites=tuple(sites),
+                timeout=self._timeout_directive[dfn],
+            ),
+            self.rng_tree.derive("match", self.match_id, "round", round_num, "team", dfn),
         )
-        weights /= weights.sum()
-        target_site = sites[int(rng.choice(len(sites), p=weights))]
-        # 0.35 slow book … 0.75 fast; 50 pace = the engine's old 0.55.
-        p_execute = 0.35 + tac.pace / 250.0
-        p_execute += self._eco_tempo_shift(atk, round_num)
-        p_execute = min(0.9, max(0.05, p_execute))
-        strat = "execute" if rng.random() < p_execute else "default"
-        if strat == "execute":
-            go_tick = C.EXECUTE_GO_EARLIEST + int(rng.integers(0, 15))
-        else:
-            go_tick = int(rng.integers(C.DEFAULT_GO_EARLIEST, C.DEFAULT_GO_LATEST))
-        go_tick = min(go_tick, C.FORCE_GO_TICK)
-
-        # -- defender setup --------------------------------------------------------
-        assignment = self._assign_defense(defenders, sites, rng)
+        assignment = defense_plan.assignments
+        scouted_site_load: dict[str, float] = {}
+        if self._prep[atk] > 0.0:
+            actual = {
+                site: float(
+                    sum(
+                        1 for pid in defenders
+                        if self._callout_site(assignment[pid]) == site
+                    )
+                )
+                for site in sites
+            }
+            mean_load = sum(actual.values()) / max(len(actual), 1)
+            clarity = min(1.0, self._prep[atk] / C.PREP_EDGE_CAP)
+            scouted_site_load = {
+                site: mean_load + (load - mean_load) * clarity
+                for site, load in actual.items()
+            }
+        attack_plan = self.team_policies[atk].plan_attack(
+            AttackRoundRequest(
+                team_id=atk,
+                opponent_id=dfn,
+                players=tuple(self._player(pid) for pid in sorted(attackers)),
+                captain_id=self.gd.teams[atk].captain_id,
+                round_num=round_num,
+                sites=tuple(sites),
+                site_wins=dict(self.site_wins),
+                tactics=tac,
+                under_gunned=self._under_gunned(atk),
+                prep_edge=self._prep[atk],
+                scouted_site_load=scouted_site_load,
+                timeout=self._timeout_directive[atk],
+            ),
+            self.rng_tree.derive("match", self.match_id, "round", round_num, "team", atk),
+        )
+        target_site = attack_plan.target_site
+        go_tick = attack_plan.go_tick
+        self._round_target[atk] = target_site
+        self._round_target[dfn] = target_site
         defender_site = {pid: self._callout_site(assignment[pid]) for pid in defenders}
+        self.p[attack_plan.spike_carrier_id].has_spike = True
+        if attack_plan.lurker_id is not None:
+            self._lurkers.add(attack_plan.lurker_id)
+        for pid in attackers:
+            self.p[pid].role = attack_plan.roles.get(pid, "support")
+        for pid in defenders:
+            self.p[pid].role = defense_plan.roles.get(pid, "flex")
 
         # Round-start placements: attackers spread across spawn, defenders
         # take tactical slots (cover/doorway angles) at their assignment.
@@ -642,34 +822,10 @@ class _MatchSim:
             self._place(pid, assignment[pid], "hold", seed_path)
             self._set_watch(self.p[pid], atk)
 
-        # -- attacker staging ---------------------------------------------------------
-        # Map control bends the shape of the default. Below neutral the team
-        # funnels onto fewer entries (a hard stack); above neutral it may
-        # peel a lurker off the hit to threaten a flank. Neutral (50) stages
-        # exactly like the pre-tactics engine.
+        # -- player-addressed staging orders -------------------------------------
         entries = self._entry_callouts(target_site)
-        mc = tac.map_control
-        if mc > C.LURK_MIN_CONTROL:
-            p_lurk = (
-                (mc - C.LURK_MIN_CONTROL)
-                / (100.0 - C.LURK_MIN_CONTROL)
-                * C.LURK_MAX_PROB
-            )
-            if rng.random() < p_lurk:
-                pool = [q for q in attackers if not self.p[q].has_spike]
-                if pool:
-                    self._lurkers.add(
-                        max(pool, key=lambda q: (self._player(q).attr("game_sense"), q))
-                    )
-        width = len(entries)
-        if mc < C.STACK_MIN_CONTROL:
-            width = max(1, round(len(entries) * mc / C.STACK_MIN_CONTROL))
-        use_entries = entries[:width] or entries
-        stackers = [pid for pid in attackers if pid not in self._lurkers]
-        for i, pid in enumerate(stackers):
-            self._order(pid, f"goto:{use_entries[i % len(use_entries)]}")
-        for pid in self._lurkers:
-            self._order(pid, f"goto:{self._lurk_callout(target_site, sites)}")
+        for pid in attackers:
+            self._order(pid, attack_plan.staging_orders.get(pid, "hold"))
 
         # -- round tick loop --------------------------------------------------------------
         spike_planted = False
@@ -846,7 +1002,6 @@ class _MatchSim:
                     ps.callout = ps.move_dest or ps.callout
                     ps.move_dest = None
                     ps.move_eta = -1
-                    ps.order_dirty = True
                     self._set_watch(ps, atk)  # settle onto the new angle
 
             # -- dropped-spike pickup ------------------------------------------------------
@@ -882,24 +1037,46 @@ class _MatchSim:
                                 self._order(q, f"goto:{dest}")
                         break
 
-            # -- coach re-orders --------------------------------------------------------------
+            # -- referee reacts to objective state --------------------------------------------
             self._update_orders(
                 tick, alive_atk, alive_dfn, target_site,
                 spike_planted, planted_at, plant_tick, went, rotate_at,
                 post_plant_spots,
             )
 
-            # -- policy decisions ---------------------------------------------------------------
+            # -- player decisions ---------------------------------------------------------------
+            # Every alive, available player receives a fresh legal-action
+            # decision each tick.  Orders are team-policy recommendations,
+            # not an engine-owned action queue.
+            round_states: dict[str, PlayerRoundState] | None = None
             for pid in sorted(self.p):
                 ps = self.p[pid]
-                if not ps.alive or ps.busy or not ps.order_dirty:
+                if not ps.alive or ps.busy:
                     continue
-                ps.order_dirty = False
-                legal = self._legal_actions(ps, atk, spike_planted, planted_at, target_site, tick)
-                obs = self._observe(
-                    pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order
-                )
-                act = self.policy.decide(obs, legal, rng)
+                policy = self.player_policies[pid]
+                fast_decide = getattr(policy, "decide_fast", None)
+                if callable(fast_decide):
+                    act = fast_decide(
+                        self._fast_observe(pid, tick, ps.order),
+                        self._fast_legal_actions(
+                            ps, atk, spike_planted, planted_at, target_site, tick
+                        ),
+                        self._policy_rng(round_num, pid),
+                    )
+                else:
+                    if round_states is None:
+                        round_states = {
+                            q: self._round_state(self.p[q])
+                            for q in sorted(self.p)
+                        }
+                    legal = self._legal_actions(
+                        ps, atk, spike_planted, planted_at, target_site, tick
+                    )
+                    obs = self._observe(
+                        pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order,
+                        round_states=round_states,
+                    )
+                    act = policy.decide(obs, legal, self._policy_rng(round_num, pid))
                 # Holders (defenders, post-plant attackers) settle into
                 # cover/angle slots; pushing players spread through rooms.
                 prefer = (
@@ -952,9 +1129,6 @@ class _MatchSim:
                             x=round(ps.x, 2), y=round(ps.y, 2),
                         )
                     )
-                    for q in sorted(self.p):
-                        self.p[q].order_dirty = True
-
             # -- defuse channel ---------------------------------------------------------------------
             for pid in sorted(self.p):
                 ps = self.p[pid]
@@ -1083,53 +1257,6 @@ class _MatchSim:
                 round_num=round_num, winner_id=winner, reason=reason,
             )
         )
-
-    # -- defense setup ---------------------------------------------------------
-
-    def _assign_defense(
-        self, defenders: list[str], sites: list[str], rng: np.random.Generator
-    ) -> dict[str, str]:
-        """Spread 5 defenders across sites: anchors on site, others on
-        defense-advantaged holder spots.
-
-        Aggression bends the setup depth: an aggressive coach sets up
-        forward on the overlooks to steal early picks (holder spots first);
-        a passive coach abandons the forward angles and anchors the site
-        proper for the retake. Neutral (45-55) keeps the pre-tactics
-        ordering (site then holders) exactly, so the golden log holds."""
-        counts = {s: 5 // len(sites) for s in sites}
-        remainder = 5 - sum(counts.values())
-        for idx in list(rng.permutation(len(sites)))[:remainder]:
-            counts[sites[int(idx)]] += 1
-
-        def anchor_key(pid: str) -> tuple:
-            pl = self._player(pid)
-            is_anchor = pl.playstyle in (Playstyle.ANCHOR, Playstyle.SUPPORT)
-            return (not is_anchor, -pl.attr("positioning"), pid)
-
-        aggr = self._tactics(self.p[defenders[0]].team_id).aggression if defenders else 50.0
-        forward = aggr > 55.0
-        passive = aggr < 45.0
-        pool = sorted(defenders, key=anchor_key)
-        assignment: dict[str, str] = {}
-        i = 0
-        for s in sites:
-            site_cs = self._site_callouts(s)
-            holders = self._holder_spots(s)
-            if forward and holders:
-                spots = holders + site_cs
-            elif passive:
-                spots = site_cs  # anchor the site, cede the forward angles
-            else:
-                spots = site_cs + holders
-            for k in range(counts[s]):
-                if i >= len(pool):
-                    break
-                assignment[pool[i]] = spots[k % len(spots)]
-                i += 1
-        for pid in pool[i:]:
-            assignment[pid] = self.map.defender_spawn
-        return assignment
 
     # -- continuous movement --------------------------------------------------
 
@@ -1328,7 +1455,6 @@ class _MatchSim:
         ps = self.p[pid]
         if ps.order != order:
             ps.order = order
-            ps.order_dirty = True
 
     def _update_orders(
         self,
@@ -1440,6 +1566,35 @@ class _MatchSim:
                 if due is not None and tick >= due:
                     self._order(q, f"goto:{self.map.defender_spawn}")
 
+    def _fast_legal_actions(
+        self,
+        ps: _PState,
+        atk: str,
+        spike_planted: bool,
+        planted_at: str | None,
+        target_site: str,
+        tick: int,
+    ) -> tuple[Action, ...]:
+        """Reuse immutable legal-action objects for the built-in heuristic."""
+        legal = self._fast_legal_by_callout.get(ps.callout, ())
+        if (
+            ps.team_id == atk
+            and ps.has_spike
+            and not spike_planted
+            and self.map.callouts[ps.callout].zone == CalloutZone.SITE
+            and self._callout_site(ps.callout) == target_site
+            and tick + C.PLANT_TICKS <= C.ROUND_TICKS
+        ):
+            return (*legal, self._fast_plant_action)
+        if (
+            ps.team_id != atk
+            and spike_planted
+            and planted_at is not None
+            and ps.callout == planted_at
+        ):
+            return (*legal, self._fast_defuse_action)
+        return legal
+
     def _legal_actions(
         self,
         ps: _PState,
@@ -1449,7 +1604,11 @@ class _MatchSim:
         target_site: str,
         tick: int,
     ) -> list[Action]:
-        legal = [Action(type=ActionType.HOLD), Action(type=ActionType.WAIT)]
+        legal = [
+            Action(type=ActionType.HOLD),
+            Action(type=ActionType.WAIT),
+            Action(type=ActionType.PEEK),
+        ]
         for nb in sorted(self.map.neighbors(ps.callout)):
             legal.append(Action(type=ActionType.MOVE_TO, callout_id=nb))
         if (
@@ -1481,9 +1640,30 @@ class _MatchSim:
             ps.planting_until = tick + C.PLANT_TICKS
         elif act.type == ActionType.DEFUSE_SPIKE:
             ps.defusing_until = tick + C.DEFUSE_TICKS
+        elif act.type == ActionType.PEEK:
+            ps.peek_until = tick
         # HOLD / WAIT: nothing to do.
 
     # -- observation -----------------------------------------------------------------
+
+    def _fast_observe(
+        self, pid: str, tick: int, order: str
+    ) -> _FastObservation:
+        ps = self.p[pid]
+        directive = self._timeout_directive[ps.team_id]
+        return _FastObservation(
+            self_state=_FastPlayerState(
+                player_id=ps.pid,
+                credits=ps.credits,
+                weapon_id=ps.weapon,
+                armor=ps.armor,
+                callout_id=ps.callout or None,
+            ),
+            tick=tick,
+            igl_call=order,
+            tactical_aggression=self._tactics(ps.team_id).aggression,
+            timeout_directive=directive.kind if directive is not None else None,
+        )
 
     def _observe(
         self,
@@ -1493,15 +1673,19 @@ class _MatchSim:
         spike_planted: bool,
         is_attacking: bool,
         order: str,
+        round_states: dict[str, PlayerRoundState] | None = None,
     ) -> PlayerObservation:
         ps = self.p[pid]
         mates = [
-            self._round_state(self.p[q])
+            round_states[q] if round_states is not None else self._round_state(self.p[q])
             for q in self.roster[ps.team_id]
             if q != pid and self.p[q].alive
         ]
-        return PlayerObservation(
-            self_state=self._round_state(ps),
+        # This is an internal, already-valid snapshot on the hot per-tick
+        # path.  ``model_construct`` preserves the public Pydantic contract
+        # for policies without paying validation ten times every half-second.
+        return PlayerObservation.model_construct(
+            self_state=(round_states[pid] if round_states is not None else self._round_state(ps)),
             round_num=round_num,
             tick=tick,
             spike_planted=spike_planted,
@@ -1512,10 +1696,18 @@ class _MatchSim:
             if ps.callout
             else [],
             igl_call=order,
+            role=ps.role,
+            team_target=self._round_target.get(ps.team_id),
+            timeout_directive=(
+                self._timeout_directive[ps.team_id].kind
+                if self._timeout_directive[ps.team_id] is not None
+                else None
+            ),
+            tactical_aggression=self._tactics(ps.team_id).aggression,
         )
 
     def _round_state(self, ps: _PState) -> PlayerRoundState:
-        return PlayerRoundState(
+        return PlayerRoundState.model_construct(
             player_id=ps.pid,
             agent_id=ps.agent_id,
             alive=ps.alive,
@@ -1838,22 +2030,6 @@ class _MatchSim:
         total += complexity * tactics_fit.chem_edge(chem)
         return float(np.clip(total, -C.EXEC_MOD_CAP, C.EXEC_MOD_CAP))
 
-    def _peek_prob(self, pid: str) -> float:
-        pl = self._player(pid)
-        p = C.PEEK_PROB
-        if pl.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
-            p += C.PEEK_PROB_AGGRO
-        p += max(0.0, pl.attr("aim_reactivity") - 60.0) / 2000.0
-        p *= trait_value(pl, "peek_mult", 1.0)
-        # Confidence is a tendency, not just a stat line: a player riding
-        # high swings angles they'd otherwise hold (exactly neutral at 50;
-        # in-match momentum amplifies the lean, never creates one).
-        p *= 1.0 + self._conf_dev(pid) / C.CONFIDENCE_PEEK_DIV
-        # The coach's identity: aggressive systems green-light swings
-        # (50 = exactly neutral).
-        aggr = self._tactics(self.p[pid].team_id).aggression
-        return p * (1.0 + (aggr - 50.0) / 166.0)
-
     def _flash_ability(self, ps: _PState) -> Ability | None:
         for ab in self.gd.agents[ps.agent_id].abilities:
             if ab.flashes and ab.type != "ultimate" and ps.charges.get(ab.id, 0) > 0:
@@ -2069,20 +2245,14 @@ class _MatchSim:
                 if angle_broken:
                     p_engage *= C.SIGHT_BLOCK_ENGAGE_FACTOR
                 # Pre-commit poking is rare; committed pushes force fights.
-                # A deliberate PEEK breaks a stalemate: an aggressive
-                # player swings the angle with initiative instead of
-                # waiting for the coin-flip poke.
+                # A deliberate PEEK is now selected by each player policy,
+                # not rolled by the referee at combat resolution.
                 a_committed = pa.move_eta >= 0 or pa.bonus_until >= tick
                 d_committed = pd.move_eta >= 0
-                peek_a = peek_d = False
+                peek_a = pa.peek_until >= tick
+                peek_d = pd.peek_until >= tick
                 if not same and not a_committed and not d_committed:
-                    p_peek_a = self._peek_prob(a_pid)
-                    p_peek_d = self._peek_prob(d_pid)
-                    if rng.random() < p_peek_a:
-                        peek_a = True
-                        p_engage = 1.0
-                    elif rng.random() < p_peek_d:
-                        peek_d = True
+                    if peek_a or peek_d:
                         p_engage = 1.0
                     else:
                         # Pre-commit pokes stay rare on purpose: raising
@@ -2395,9 +2565,16 @@ class _MatchSim:
                         )
                     )
                     break
-        # The best-positioned off-site defender stays home to watch flank.
-        off_site.sort(key=lambda q: (-self._player(q).attr("positioning"), q))
-        stay = off_site[0] if len(off_site) > 1 else None
+        # Which defender holds the flank is a team-policy decision.  The
+        # referee still applies timing, information utility, and movement.
+        team_id = self.p[defenders[0]].team_id if defenders else ""
+        stay = self.team_policies[team_id].choose_rotation_holdback(
+            RotationPlanRequest(
+                team_id=team_id,
+                off_site_ids=tuple(sorted(off_site)),
+                players_by_id={q: self._player(q) for q in sorted(off_site)},
+            )
+        ) if team_id else None
         # Defensive tempo: a fast book shaves ticks off every rotation, a
         # slow book plays it patient. Neutral pace is a no-op.
         def_pace = self._tactics(self.p[defenders[0]].team_id).pace if defenders else 50.0
@@ -2428,11 +2605,14 @@ def simulate_match_result(
     seed: int,
     log: EventLog | None = None,
     plans: dict[str, TeamMatchPlan] | None = None,
+    policies: MatchPolicies | None = None,
 ) -> MatchResult:
     """`plans` carries per-match coaching overrides (game plans) from the
     campaign layer; None — the only thing the match gates ever pass — is
     exactly the pre-plan engine."""
-    sim = _MatchSim(gd, team_a, team_b, map_id, seed, log=log, plans=plans)
+    sim = _MatchSim(
+        gd, team_a, team_b, map_id, seed, log=log, plans=plans, policies=policies
+    )
     return sim.run()
 
 
@@ -2443,6 +2623,9 @@ def simulate_match(
     map_id: str,
     seed: int,
     log: EventLog | None = None,
+    policies: MatchPolicies | None = None,
 ) -> list[Event]:
     """Simulate one BO1 and return its event list (the canonical record)."""
-    return simulate_match_result(gd, team_a, team_b, map_id, seed, log=log).events
+    return simulate_match_result(
+        gd, team_a, team_b, map_id, seed, log=log, policies=policies
+    ).events

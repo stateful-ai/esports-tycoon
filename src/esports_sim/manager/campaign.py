@@ -82,6 +82,7 @@ from esports_sim.registry.loader import GameData
 from esports_sim.rng.tree import RngTree
 from esports_sim.manager.match_review import build_match_review
 from esports_sim.sim import simulate_match_result
+from esports_sim.policy.base import CoachProfile
 from esports_sim.sim.engine import TeamMatchPlan
 from esports_sim.sim.stats import compute_match_stats
 
@@ -1351,6 +1352,24 @@ _PLAN_DIALS = (
 )
 
 
+def _match_coach_profile(gs: GameState, tid: str) -> CoachProfile:
+    """Project campaign staff into the match's timeout-only coach contract.
+
+    AI sides deliberately receive the league-average fallback.  Human sides
+    gain the real quality/specialty/traits only when they have actually hired
+    a coach; no match code reaches into the campaign staff market directly.
+    """
+    coach = gs.staff_by.get(tid, {}).get("coach")
+    if coach is None:
+        return CoachProfile(id=f"{tid}:coach")
+    return CoachProfile(
+        id=coach.id,
+        quality=coach.quality,
+        specialty=coach.specialty,
+        traits=tuple(sorted(coach.traits)),
+    )
+
+
 def _fixture_plans(
     gs: GameState, f: Fixture
 ) -> tuple[dict[str, TeamMatchPlan], dict[str, list[str]]]:
@@ -1364,6 +1383,11 @@ def _fixture_plans(
     plans: dict[str, TeamMatchPlan] = {}
     lineups: dict[str, list[str]] = {}
     for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
+        coach = _match_coach_profile(gs, tid)
+        # Every campaign side has a coach profile.  Without a hired coach it
+        # is the league-average fallback; its only possible live input is a
+        # timeout, never an always-on engine modifier.
+        plans[tid] = TeamMatchPlan(coach=coach)
         if not gs.is_human(tid):
             continue
         plan = gs.game_plans_by.get(tid)
@@ -1391,6 +1415,7 @@ def _fixture_plans(
             tactics=tactics,
             focus_target=target,
             prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book,
+            coach=coach,
         )
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:

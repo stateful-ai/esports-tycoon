@@ -89,7 +89,7 @@ Why it's load-bearing: every layer that needs to know "who this player is" goes 
 ### C3 — Tick match engine
 
 Owned layer: match. Status: scaffolding exists (src/esports_sim/schemas, rng, events).
-Responsibility: deterministic tick-level sim of a single best-of-one match. Emits typed events; state is reconstructable from events. Already designed around a seed tree for reproducibility.
+Responsibility: deterministic tick-level referee for a single best-of-one match. All available players receive a policy decision each live tick; team policies form round plans and coaches can enter only through timeout directives between rounds. Emits typed events; state is reconstructable from events. Already designed around a seed tree for reproducibility.
 Inputs: `MatchConfig` (map, team lineups with PPVs, economy, patch era).
 Outputs: event log (JSONL) + terminal `MatchState`.
 Used as: (a) RL training environment, (b) ground-truth generator for world-model training, (c) replay source for the game until the world model takes over.

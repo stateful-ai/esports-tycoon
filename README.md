@@ -165,9 +165,10 @@ New-NetFirewallRule -DisplayName 'esports-sim web (TCP 8420)' -Direction Inbound
   elevation — and its signature gimmick: Bind's teleporter, Lotus's
   rotating door, Ascent's breakable door), and starter teams, all YAML —
   add an agent or a map without touching code.
-- **Policy interface** (`policy/`): in-match player decisions go through a
-  `PlayerPolicy` protocol; the shipped heuristic can be swapped for RL
-  agents or LLM playtesters.
+- **Policy interface** (`policy/`): all ten available players make live-tick
+  decisions through `PlayerPolicy`; a `TeamPolicy` forms round plans and a
+  `CoachPolicy` may intervene only with a between-round timeout. The shipped
+  heuristics can be swapped independently for RL agents or LLM playtesters.
 
 ## Tuning
 
