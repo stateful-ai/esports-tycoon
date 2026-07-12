@@ -22,7 +22,7 @@ import threading
 from pathlib import Path
 from types import SimpleNamespace
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -64,7 +64,7 @@ from esports_sim.manager.training import (
     FOCUS_OPTIONS,
     INTENSITY_OPTIONS,
 )
-from esports_sim.registry import roster_admin
+from esports_sim.registry import roster_admin, roster_workbench
 from esports_sim.registry.loader import GameData, load_all, load_geometry
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas import (
@@ -1140,8 +1140,8 @@ _PACK_OPTIONS_CACHE: list[dict] | None = None
 
 def _pack_options() -> list[dict]:
     """Installed roster packs with their pickable (tier-1) teams — straight
-    from pack data, no campaign build needed. Cached for the process:
-    packs are static data (rebuilding one means restarting the server)."""
+    from pack data, no campaign build needed. Cached until Roster Studio
+    successfully installs a pack, which invalidates this view immediately."""
     global _PACK_OPTIONS_CACHE
     if _PACK_OPTIONS_CACHE is not None:
         return _PACK_OPTIONS_CACHE
@@ -1171,6 +1171,100 @@ def _pack_options() -> list[dict]:
         )
     _PACK_OPTIONS_CACHE = out
     return out
+
+
+# ---------------------------------------------------------------------------
+# Roster Studio
+
+
+_ROSTER_PACK_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def _roster_pack_id(pack_id: str) -> str:
+    if not _ROSTER_PACK_ID_RE.fullmatch(pack_id):
+        raise HTTPException(422, "invalid roster pack id")
+    return pack_id
+
+
+@app.get("/api/roster-studio/schema")
+def roster_studio_schema() -> dict:
+    """Frozen JSON Schema + game catalog for agent and UI clients."""
+    return roster_workbench.schema_bundle(_LOBBY.gd)
+
+
+@app.get("/api/roster-studio/packs")
+def roster_studio_packs() -> dict:
+    return {"packs": roster_workbench.list_documents()}
+
+
+@app.get("/api/roster-studio/packs/{pack_id}")
+def roster_studio_pack(pack_id: str) -> dict:
+    pack_id = _roster_pack_id(pack_id)
+    try:
+        document = roster_workbench.load_document(pack_id)
+    except FileNotFoundError:
+        raise HTTPException(404, f"unknown roster pack '{pack_id}'") from None
+    except ValueError as exc:
+        raise HTTPException(422, f"pack is not editable in Roster Studio: {exc}") from exc
+    return {"document": document.model_dump(mode="json")}
+
+
+@app.post("/api/roster-studio/validate")
+def roster_studio_validate(body: dict) -> dict:
+    # Deliberately returns a 200 with field errors: incomplete documents are a
+    # normal state while the visual editor or an agent is drafting.
+    return roster_workbench.validate_document(body, _LOBBY.gd)
+
+
+@app.post("/api/roster-studio/parse")
+def roster_studio_parse(body: dict) -> dict:
+    text = body.get("text")
+    if not isinstance(text, str):
+        raise HTTPException(422, "text must be a YAML or JSON string")
+    try:
+        document = roster_workbench.parse_document(text)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    return {
+        "document": document,
+        "validation": roster_workbench.validate_document(document, _LOBBY.gd),
+    }
+
+
+@app.put("/api/roster-studio/packs/{pack_id}")
+def roster_studio_save(pack_id: str, body: dict) -> dict:
+    global _PACK_OPTIONS_CACHE
+    pack_id = _roster_pack_id(pack_id)
+    if body.get("id") != pack_id:
+        raise HTTPException(422, "URL pack id must match document id")
+    try:
+        result = roster_workbench.install_document(body)
+    except (ValueError, SystemExit) as exc:
+        raise HTTPException(422, str(exc)) from exc
+    # Roster Studio is a live authoring surface, so newly installed/updated
+    # packs must appear in the Play lobby without restarting the server.
+    _PACK_OPTIONS_CACHE = None
+    return result
+
+
+@app.get("/api/roster-studio/packs/{pack_id}/export")
+def roster_studio_export(pack_id: str) -> Response:
+    pack_id = _roster_pack_id(pack_id)
+    try:
+        text = roster_workbench.dump_document(
+            roster_workbench.load_document(pack_id)
+        )
+    except FileNotFoundError:
+        raise HTTPException(404, f"unknown roster pack '{pack_id}'") from None
+    return Response(
+        content=text,
+        media_type="application/yaml",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{pack_id}.roster-pack.yaml"'
+            )
+        },
+    )
 
 
 @app.get("/api/lobby/teams")
