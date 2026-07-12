@@ -96,7 +96,11 @@ def main() -> int:
     challenger_eval = evaluate_model(
         gd, challenger, seeds=eval_seeds, profiles=profiles, weeks=args.weeks
     )
-    promotion = promotion_decision(incumbent_eval, challenger_eval)
+    promotion = promotion_decision(
+        incumbent_eval,
+        challenger_eval,
+        training_failures=len(training["rollout_failures"]),
+    )
     report = {
         "base_checkpoint": str(args.base_checkpoint),
         "candidate_checkpoint": str(candidate_path),

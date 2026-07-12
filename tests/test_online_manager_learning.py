@@ -7,6 +7,7 @@ import copy
 import numpy as np
 import pytest
 
+import esports_sim.manager.online_manager_learning as online_learning
 from esports_sim.manager.learned_manager_policy import LearnedManagerModel
 from esports_sim.manager.manager_policy import generate_profile
 from esports_sim.manager.online_manager_learning import (
@@ -147,3 +148,37 @@ def test_held_out_evaluation_and_promotion_gates(game_data, online_setup):
     assert not rejected["promoted"]
     assert "zero_invalid_actions" in rejected["failed_checks"]
     assert "reward_guard" in rejected["failed_checks"]
+
+
+def test_online_training_records_failed_exploration_without_promoting(
+    game_data, online_setup, monkeypatch
+):
+    profiles, incumbent = online_setup
+    original = online_learning.run_rollout
+    calls = 0
+
+    def flaky_rollout(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise RuntimeError("exploration policy cannot recover a blocked week")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(online_learning, "run_rollout", flaky_rollout)
+    _, training = fine_tune_online(
+        game_data,
+        incumbent,
+        seeds=[2101],
+        profiles=profiles,
+        weeks=1,
+        config=OnlineLearningConfig(iterations=1, max_actions_per_week=8),
+    )
+    assert len(training["rollout_failures"]) == 1
+    assert training["iterations"][0]["rollout_failures"] == 1
+
+    metrics = evaluate_model(
+        game_data, incumbent, seeds=[2102], profiles=profiles, weeks=1
+    )
+    rejected = promotion_decision(metrics, metrics, training_failures=1)
+    assert not rejected["promoted"]
+    assert "training_rollouts_complete" in rejected["failed_checks"]

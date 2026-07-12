@@ -175,6 +175,7 @@ def fine_tune_online(
     challenger = incumbent.clone()
     anchor = incumbent.action_weights.copy()
     iteration_reports: list[dict[str, Any]] = []
+    rollout_failures: list[dict[str, Any]] = []
 
     for iteration in range(config.iterations):
         episodes: list[tuple[RolloutResult, ExploringLearnedManagerPolicy]] = []
@@ -189,18 +190,37 @@ def fine_tune_online(
                     temperature=config.temperature,
                     max_actions_per_week=config.max_actions_per_week,
                 )
-                run = run_rollout(
-                    gd,
-                    seed=campaign_seed,
-                    weeks=weeks,
-                    profile=profile,
-                    policy=policy,
-                    # A forced recovery may be needed before the following
-                    # forced advance, so leave two deterministic recovery
-                    # slots beyond the sampler's normal action budget.
-                    max_decisions_per_week=config.max_actions_per_week + 2,
-                )
+                try:
+                    run = run_rollout(
+                        gd,
+                        seed=campaign_seed,
+                        weeks=weeks,
+                        profile=profile,
+                        policy=policy,
+                        # A forced recovery may be needed before the following
+                        # forced advance, so leave two deterministic recovery
+                        # slots beyond the sampler's normal action budget.
+                        max_decisions_per_week=config.max_actions_per_week + 2,
+                    )
+                except RuntimeError as exc:
+                    # A campaign can enter a manager-visible but irrecoverable
+                    # state (for example, no legal route to repair a blocked
+                    # advance). Keep the batch deterministic and auditable;
+                    # never turn one failed exploration episode into a crashed
+                    # overnight run or a promoted candidate.
+                    rollout_failures.append(
+                        {
+                            "iteration": iteration + 1,
+                            "seed": campaign_seed,
+                            "profile_id": profile.id,
+                            "error": str(exc),
+                        }
+                    )
+                    continue
                 episodes.append((run, policy))
+
+        if not episodes:
+            raise RuntimeError("all exploratory manager rollouts failed")
 
         rewards = np.asarray(
             [run.total_reward for run, _ in episodes], dtype=np.float64
@@ -245,6 +265,10 @@ def fine_tune_online(
                     float(np.linalg.norm(challenger.action_weights - anchor)), 8
                 ),
                 "invalid_actions": sum(run.invalid_actions for run, _ in episodes),
+                "rollout_failures": sum(
+                    1 for failure in rollout_failures
+                    if failure["iteration"] == iteration + 1
+                ),
             }
         )
 
@@ -255,6 +279,7 @@ def fine_tune_online(
         "profiles": [profile.id for profile in profile_list],
         "weeks": weeks,
         "iterations": iteration_reports,
+        "rollout_failures": rollout_failures,
     }
     challenger.metadata = {**challenger.metadata, "online_learning": report}
     return challenger, report
@@ -321,6 +346,8 @@ def promotion_decision(
     incumbent: dict[str, Any],
     challenger: dict[str, Any],
     gate: PromotionGate | None = None,
+    *,
+    training_failures: int = 0,
 ) -> dict[str, Any]:
     """Apply auditable safety and regression gates to held-out evaluations."""
     gate = gate or PromotionGate()
@@ -335,6 +362,7 @@ def promotion_decision(
         if int(challenger.get("profile_count", 0)) > 1 else 0.0
     )
     checks = {
+        "training_rollouts_complete": training_failures == 0,
         "incumbent_evaluation_complete": (
             incumbent.get("successful_runs") == incumbent.get("expected_runs")
             and not incumbent.get("failures")
