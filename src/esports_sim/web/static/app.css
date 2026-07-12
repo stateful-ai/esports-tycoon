@@ -117,7 +117,7 @@ body {
     var(--es-color-bg-surface, #0f1520) 64px);
   border: 1px solid var(--es-color-border-primary, #26324a);
   border-radius: var(--es-radius-xl, 12px);
-  padding: 14px 16px; margin-bottom: 14px;
+  padding: 14px 16px; margin-bottom: 12px;
   box-shadow: var(--es-shadow-md, 0 2px 8px rgba(2, 4, 10, 0.55));
 }
 /* Section title — the skewed-red-tick header. .sec-title is the primitive;
@@ -140,7 +140,7 @@ body {
   border: 1px solid var(--es-color-border-secondary, #1c2536);
   border-radius: var(--es-radius-md, 6px);
 }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .row { display: flex; gap: 10px; align-items: center; }
 
 table { width: 100%; border-collapse: collapse; }
@@ -1428,11 +1428,13 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .roster-actions { display: flex; align-items: center; gap: 3px; flex-wrap: nowrap; }
 .roster-actions .btn { flex: none; }
 .roster-card .ask-breakdown { margin-top: 4px; }
-@media (min-width: 1500px) {
-  .roster-ws { grid-template-columns: repeat(16, minmax(0, 1fr)); }
-  .roster-main { grid-column: span 12; }
-  .roster-rail { grid-column: span 4; }
+/* Roster: the table is the hero at full width (all columns visible, no
+   horizontal scroll on desktop); the supporting cards tile in a row below. */
+.roster-support {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px; align-items: start;
 }
+.roster-support > .card { margin-bottom: 0; }
 
 /* Weekly agent locks: fixed columns and compact labels keep the table inside
    its rail card instead of letting option text define the card width. */

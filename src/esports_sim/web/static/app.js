@@ -969,8 +969,11 @@ async function dashboard(v) {
       }
     }
     // Map pool & veto: your map win rates + a suggested ban/pick vs this opp.
+    // Guard on ACTUAL content — early in a season there are no map win rates
+    // and no veto ban/pick yet, so the section (and its label) must stay hidden
+    // rather than render an empty box.
     const mp = fix.map_pool;
-    if (mp && (mp.maps.length || mp.veto)) {
+    if (mp && (mp.maps.length || (mp.veto && (mp.veto.ban || mp.veto.pick)))) {
       const board = el("div", "es-mappool");
       if (mp.veto && (mp.veto.ban || mp.veto.pick)) {
         const vr = el("div", "es-veto");
@@ -1443,8 +1446,11 @@ async function roster(v) {
 
   const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
-  const main = el("div", "ws-9 roster-main");
-  const rail = el("div", "ws-3 ws-col roster-rail");
+  // The roster table is wide (13 columns) — give it the full content width so
+  // every column, including the actions, is visible without a horizontal
+  // scroll. The supporting cards tile in a row beneath it (.roster-support).
+  const main = el("div", "ws-12 roster-main");
+  const rail = el("div", "ws-12 roster-support");
   ws.appendChild(main);
   ws.appendChild(rail);
 
@@ -3356,8 +3362,11 @@ async function marketPlayers(v) {
     tb.appendChild(tr);
   }
   t.appendChild(tb);
-  // The wide FA table scrolls horizontally inside its card, staying in the cell.
-  const tScroll = el("div", "table-scroll");
+  // The full free-agent list (~90 rows) scrolls INSIDE its panel — vertically
+  // (bounded height, sticky header) and horizontally — so it never grows the
+  // page into a giant scroll. Keeps the advisory rail in view alongside it.
+  const tScroll = el("div", "card-scroll table-scroll");
+  tScroll.style.setProperty("--scroll-max", "62vh");
   tScroll.appendChild(t);
   card.appendChild(tScroll);
   main.appendChild(card);
