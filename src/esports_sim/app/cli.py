@@ -16,7 +16,15 @@ from rich.panel import Panel
 from rich.rule import Rule
 from rich.table import Table
 
-from esports_sim.manager import advance_week, career, new_campaign, telemetry
+from esports_sim.manager import (
+    advance_week,
+    career,
+    new_campaign,
+    play_policy_week,
+    telemetry,
+)
+from esports_sim.manager.learned_manager_policy import LearnedManagerModel
+from esports_sim.manager.manager_policy import generate_profile
 from esports_sim.manager.market import (
     ROSTER_MIN,
     asking_salary,
@@ -38,6 +46,7 @@ from esports_sim.schemas import Player
 console = Console()
 SAVE_DIR = Path("saves")
 DEFAULT_SAVE = SAVE_DIR / "campaign.json"
+DEFAULT_MANAGER_MODEL = Path("telemetry/manager_policy_champion.json")
 
 
 def ask(prompt: str = "> ") -> str:
@@ -563,13 +572,33 @@ def hub(gs: GameState, gd: GameData) -> None:
 
 
 def auto_play(
-    gd: GameData, weeks: int, seed: int, team: str, roster: str | None = None
-) -> None:
+    gd: GameData,
+    weeks: int,
+    seed: int,
+    team: str,
+    roster: str | None = None,
+    manager_model: Path | None = None,
+) -> GameState:
     pack = load_roster_pack(roster) if roster else None
     gs = new_campaign(gd, seed, user_team_id=team, pack=pack)
+    policy = None
+    profile = None
+    if manager_model is not None:
+        policy = LearnedManagerModel.load(manager_model).make_policy(
+            generate_profile(seed, f"autoplay-{team}")
+        )
+        profile = policy.profile
+        console.print(f"[cyan]manager AI:[/] {manager_model}")
     # A hands-off manager who at least renews contracts, keeps a legal roster,
     # and rests the team.
     for _ in range(weeks):
+        if policy is not None and profile is not None:
+            result = play_policy_week(gs, gd, policy, profile=profile, team_id=team)
+            console.print(
+                f"S{result.observation['season']} W{result.observation['week']:2d} "
+                f"[cyan]AI[/] {result.message}"
+            )
+            continue
         for p in gs.roster(gs.user_team_id):
             if 0 < p.contract_weeks_left <= 4:
                 renew_contract(gs, gs.user_team_id, p.id)
@@ -623,6 +652,12 @@ def auto_play(
 def main() -> None:
     parser = argparse.ArgumentParser(prog="esports_sim")
     parser.add_argument("--auto", type=int, default=0, help="headless: play N weeks")
+    parser.add_argument(
+        "--manager-model",
+        type=Path,
+        default=DEFAULT_MANAGER_MODEL if DEFAULT_MANAGER_MODEL.is_file() else None,
+        help="with --auto: learned manager checkpoint (defaults to the installed champion)",
+    )
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")
     parser.add_argument(
@@ -687,7 +722,14 @@ def main() -> None:
         return
 
     if args.auto > 0:
-        gs = auto_play(gd, args.auto, args.seed, args.team, roster=args.roster)
+        gs = auto_play(
+            gd,
+            args.auto,
+            args.seed,
+            args.team,
+            roster=args.roster,
+            manager_model=args.manager_model,
+        )
         if args.report:
             import json
 

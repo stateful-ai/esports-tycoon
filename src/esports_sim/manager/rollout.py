@@ -40,6 +40,61 @@ class RolloutResult:
         return out
 
 
+def _recovery_action(observation: dict[str, Any]) -> dict[str, Any]:
+    """Choose a legal final-step repair before a policy rollout gives up."""
+    legal = observation["legal_actions"]
+    if legal["advance"]["enabled"]:
+        return {"kind": "advance", "params": {}}
+    if legal["accept_job"]["enabled"]:
+        return {"kind": "accept_job", "params": {"team_id": legal["accept_job"]["team_ids"][0]}}
+    if legal["sign"]["enabled"]:
+        return {"kind": "sign", "params": {"player_id": legal["sign"]["player_ids"][0]}}
+    raise RuntimeError(
+        "manager policy cannot recover a blocked week: "
+        f"{legal['advance'].get('reason', 'no legal recovery action')}"
+    )
+
+
+def play_policy_week(
+    gs: Any,
+    gd: GameData,
+    policy: Any,
+    *,
+    profile: ManagerProfile,
+    team_id: str | None = None,
+    max_decisions: int = 16,
+) -> Any:
+    """Let a masked manager policy complete exactly one live campaign week.
+
+    This is the runtime counterpart to ``run_rollout``: it uses the same
+    manager-visible observation and domain action resolver, so a checkpoint
+    cannot reach hidden campaign state or invent an action. Manual UI play
+    calls no policy; callers opt into this helper for autoplay.
+    """
+    team_id = team_id or gs.user_team_id
+    env = HeadlessManagerEnv(
+        gs,
+        gd,
+        team_id,
+        manager_profile=profile.to_dict(),
+        policy_version=policy.version,
+    )
+    for decision in range(max_decisions):
+        observation = env.observe()
+        action = (
+            _recovery_action(observation)
+            if decision >= max_decisions - 2
+            else policy.choose_action(observation)
+        )
+        try:
+            result = env.step(action)
+        except InvalidManagerAction as exc:
+            raise RuntimeError(f"manager policy selected an invalid action: {exc}") from exc
+        if result.advanced:
+            return result
+    raise RuntimeError(f"manager policy failed to advance after {max_decisions} decisions")
+
+
 def run_rollout(
     gd: GameData,
     *,

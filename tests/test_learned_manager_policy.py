@@ -12,7 +12,8 @@ from esports_sim.manager.learned_manager_policy import (
     imitation_metrics,
 )
 from esports_sim.manager.manager_policy import generate_profile
-from esports_sim.manager.rollout import run_rollout
+from esports_sim.manager.campaign import new_campaign
+from esports_sim.manager.rollout import play_policy_week, run_rollout
 
 
 def _demonstrations(game_data):
@@ -79,3 +80,21 @@ def test_learned_policy_runs_legally_and_replays(game_data):
     assert all(t["policy_version"] == "learned-manager-v1" for t in a.traces)
     assert all("policy_diagnostics" in t for t in a.traces)
     assert all(t["policy_diagnostics"]["top_actions"] for t in a.traces)
+
+
+def test_learned_policy_can_autoplay_a_live_campaign_week(game_data):
+    profiles, traces = _demonstrations(game_data)
+    model = LearnedManagerModel.train(traces)
+    profile = generate_profile(111, "autoplay")
+    gs = new_campaign(game_data, seed=1000)
+    before = (gs.season, gs.week)
+    result = play_policy_week(
+        gs,
+        game_data,
+        model.make_policy(profile),
+        profile=profile,
+    )
+    assert result.advanced
+    assert (gs.season, gs.week) != before
+    assert gs.action_log
+    assert all(action.source == "agent" for action in gs.action_log)
