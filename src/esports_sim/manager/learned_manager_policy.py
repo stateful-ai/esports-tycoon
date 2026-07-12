@@ -11,6 +11,7 @@ JSON and pin the observation, encoder, action-vocabulary, and policy versions.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from dataclasses import dataclass, field
@@ -299,6 +300,23 @@ class LearnedManagerModel:
     def make_policy(self, profile: ManagerProfile) -> "LearnedManagerPolicy":
         return LearnedManagerPolicy(self, profile)
 
+    def clone(self) -> "LearnedManagerModel":
+        """Return an independent in-memory checkpoint copy."""
+        return LearnedManagerModel(
+            action_weights=self.action_weights.copy(),
+            categorical_weights={
+                key: value.copy() for key, value in self.categorical_weights.items()
+            },
+            categorical_labels=dict(self.categorical_labels),
+            tactic_weights=(
+                self.tactic_weights.copy() if self.tactic_weights is not None else None
+            ),
+            candidate_weights={
+                key: value.copy() for key, value in self.candidate_weights.items()
+            },
+            metadata=copy.deepcopy(self.metadata),
+        )
+
     def save(self, path: Path, *, metadata: dict[str, Any] | None = None) -> None:
         payload = {
             "policy_version": POLICY_VERSION,
@@ -442,7 +460,9 @@ class LearnedManagerPolicy:
             return max(rows, key=lambda item: (item[1][0], item[0]))[0]
         return max(rows, key=lambda item: (float(weight @ item[1]), item[0]))[0]
 
-    def action_probabilities(self, obs: dict[str, Any]) -> dict[str, float]:
+    def _action_distribution(
+        self, obs: dict[str, Any], *, temperature: float = 1.0
+    ) -> tuple[dict[str, Any], np.ndarray, np.ndarray, np.ndarray]:
         obs = self._profiled(obs)
         x = conditioned_features(obs)
         mask = _legal_mask(obs, ACTION_VOCAB)
@@ -451,13 +471,19 @@ class LearnedManagerPolicy:
         for i, kind in enumerate(ACTION_VOCAB):
             if kind in used and kind not in ("advance", "sign", "negotiate_offer"):
                 mask[i] = False
-        probs = _softmax(self.model.action_weights @ x, mask)
+        logits = self.model.action_weights @ x
+        probs = _softmax(logits / max(float(temperature), 1e-6), mask)
+        return obs, x, mask, probs
+
+    def action_probabilities(self, obs: dict[str, Any]) -> dict[str, float]:
+        _, _, _, probs = self._action_distribution(obs)
         return {kind: round(float(probs[i]), 6) for i, kind in enumerate(ACTION_VOCAB)}
 
     def choose_action(self, obs: dict[str, Any]) -> dict[str, Any]:
-        obs = self._profiled(obs)
-        x = conditioned_features(obs)
-        probabilities = self.action_probabilities(obs)
+        obs, x, _, probs = self._action_distribution(obs)
+        probabilities = {
+            kind: round(float(probs[i]), 6) for i, kind in enumerate(ACTION_VOCAB)
+        }
         kind = max(ACTION_VOCAB, key=lambda name: (probabilities[name], name))
         week = (int(obs["season"]), int(obs["week"]))
         self._used.setdefault(week, set()).add(kind)
