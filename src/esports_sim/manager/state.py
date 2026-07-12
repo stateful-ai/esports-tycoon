@@ -840,7 +840,7 @@ class ActionRecord(BaseModel):
     kind: str
     # Compact stringly-typed args (pid, dial values, approach, ...).
     params: dict[str, str] = Field(default_factory=dict)
-    source: str = "web"  # web | cli
+    source: str = "web"  # web | cli | agent
 
 
 class TelemetrySnap(BaseModel):

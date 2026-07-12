@@ -4055,6 +4055,9 @@ def scout(body: ScoutBody) -> dict:
             if body.player_id in gs.teams[gs.acting_team_id].player_ids:
                 raise HTTPException(422, "you already know your own player")
             gs.scout_target = f"player:{body.player_id}"
+            telemetry.record_action(
+                gs, "set_scout", {"target": f"player:{body.player_id}"}
+            )
             S.save()
             return {"ok": True, "message": f"scout is building the book on {p.handle}"}
         if body.fixture_id is not None:
@@ -4064,6 +4067,9 @@ def scout(body: ScoutBody) -> dict:
             if fx.played:
                 raise HTTPException(422, "that match has already been played")
             gs.scout_target = f"match:{body.fixture_id}"
+            telemetry.record_action(
+                gs, "set_scout", {"target": f"match:{body.fixture_id}"}
+            )
             S.save()
             a = gs.teams[fx.team_a].name if fx.team_a in gs.teams else fx.team_a
             b = gs.teams[fx.team_b].name if fx.team_b in gs.teams else fx.team_b

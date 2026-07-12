@@ -95,7 +95,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   single source of truth for RL episodes — `scripts/export_telemetry.py`
   emits (state, actions, reward) JSONL, `scripts/dump_season_tokens.py`
   a match token corpus with a PINNED vocab, `scripts/telemetry_report.py`
-  the cross-save feature-usage report). Player
+  the cross-save feature-usage report); `decision_env.py` exposes the shared,
+  manager-visible decision observation, legal action masks, and a deterministic
+  framework-agnostic headless policy environment. Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game
