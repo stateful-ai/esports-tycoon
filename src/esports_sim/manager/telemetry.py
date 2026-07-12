@@ -60,6 +60,8 @@ ACTION_KINDS = frozenset(
         "set_game_plan",
         "clear_game_plan",
         "talk",
+        "flavor_choice",
+        "resolve_flavor",
         "rein_streaming",
         "accept_job",
     }

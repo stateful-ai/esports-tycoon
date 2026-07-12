@@ -22,6 +22,7 @@ from esports_sim.manager import (
     chronicle,
     development,
     economy,
+    flavor_events,
     hof,
     inbox,
     knowledge,
@@ -1182,6 +1183,8 @@ def advance_week(
     })
 
     gs.week += 1
+    # A fresh, isolated roll queues a decision for the newly opened week.
+    flavor_events.queue_weekly_events(gs)
     return report
 
 
@@ -2629,4 +2632,5 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # The offseason tick's snapshot is the new season's baseline (season
     # already rolled, standings reset) — the episode boundary marker.
     telemetry.weekly_snapshots(gs)
+    flavor_events.queue_weekly_events(gs)
     return report

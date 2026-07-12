@@ -903,9 +903,37 @@ async function dashboard(v) {
 
   /* -- 2. ACTION BAND: offers + suggested five (only when actionable) ------- */
   const sug = s.suggested_lineup;
-  if ((s.transfer_offers ?? []).length || (sug && sug.changed)) {
+  const flavor = s.flavor_event;
+  if (flavor || (s.transfer_offers ?? []).length || (sug && sug.changed)) {
     const ac = el("div", "card ws-12 alert");
     ac.appendChild(el("h2", "", "Action required"));
+    if (flavor) {
+      const event = el("div", "flavor-event");
+      event.appendChild(el("div", "microlabel", "Team moment"));
+      event.appendChild(el("h3", "", flavor.title || "A decision is waiting"));
+      event.appendChild(el("p", "", flavor.prompt || "Choose how to respond."));
+      const choices = el("div", "row flavor-choices");
+      for (const choice of flavor.choices ?? []) {
+        const button = el("button", "btn btn-sm", choice.label || "Respond");
+        button.onclick = async () => {
+          const all = [...choices.querySelectorAll("button")];
+          all.forEach((b) => (b.disabled = true));
+          try {
+            const r = await api("/api/actions/flavor_event", {
+              event_id: flavor.id,
+              choice_id: choice.id,
+            });
+            toast(r.message || "Your response is out in the world.");
+            refresh();
+          } catch (_e) {
+            all.forEach((b) => (b.disabled = false));
+          }
+        };
+        choices.appendChild(button);
+      }
+      event.appendChild(choices);
+      ac.appendChild(event);
+    }
     for (const o of s.transfer_offers ?? []) {
       const bits = [];
       if ((o.offer_players ?? []).length) {

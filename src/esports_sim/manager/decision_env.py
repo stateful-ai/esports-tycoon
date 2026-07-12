@@ -19,6 +19,7 @@ from esports_sim.manager import (
     career,
     development,
     economy,
+    flavor_events,
     market,
     sponsors,
     staff,
@@ -30,7 +31,7 @@ from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 2
+OBSERVATION_VERSION = 3
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
@@ -52,6 +53,7 @@ SUPPORTED_ACTIONS = frozenset(
         "set_game_plan",
         "clear_game_plan",
         "talk",
+        "resolve_flavor",
         "rein_streaming",
         "negotiate_open",
         "negotiate_offer",
@@ -156,6 +158,10 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         + [f"match:{fid}" for fid in fixtures]
     )
     ready, ready_reason = market.roster_ready(gs, team_id)
+    pending_flavor = flavor_events.pending_for(gs, team_id)
+    if pending_flavor is not None:
+        ready = False
+        ready_reason = "resolve the pending flavor event before advancing"
     if career.blocked_seats(gs):
         ready = False
         ready_reason = "a manager must accept a job before the world can advance"
@@ -271,6 +277,11 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         },
         "clear_game_plan": {"enabled": gs.game_plan is not None},
         "talk": {"enabled": bool(talk_options), "options": talk_options},
+        "resolve_flavor": {
+            "enabled": pending_flavor is not None,
+            "event_id": pending_flavor.id if pending_flavor is not None else "",
+            "choice_ids": [c.id for c in pending_flavor.choices] if pending_flavor is not None else [],
+        },
         "rein_streaming": {"enabled": bool(rein_targets), "player_ids": rein_targets},
         "negotiate_open": {"enabled": bool(negotiable), "player_ids": negotiable},
         "negotiate_offer": {"enabled": bool(live_negotiations), "options": live_negotiations},
@@ -579,6 +590,15 @@ class HeadlessManagerEnv:
                 ok, message, _ = talk.resolve(self.gs, pid, option)
                 if not ok:
                     raise InvalidManagerAction(message)
+            elif kind == "resolve_flavor":
+                event_id = str(params.get("event_id", ""))
+                choice_id = str(params.get("choice_id", ""))
+                pending = flavor_events.pending_for(self.gs, self.team_id)
+                if pending is None or pending.id != event_id:
+                    raise InvalidManagerAction("no matching flavor event is waiting")
+                ok, message, _ = flavor_events.resolve(self.gs, self.team_id, choice_id)
+                if not ok:
+                    raise InvalidManagerAction(message)
             elif kind == "rein_streaming":
                 pid = str(params.get("player_id", ""))
                 ok, message, _ = talk.rein_in_streaming(self.gs, pid)
@@ -638,6 +658,8 @@ class HeadlessManagerEnv:
             else:  # advance
                 if career.blocked_seats(self.gs):
                     raise InvalidManagerAction("a manager must accept a job before advancing")
+                if flavor_events.pending_for(self.gs, self.team_id) is not None:
+                    raise InvalidManagerAction("resolve the pending flavor event before advancing")
                 ok, why = market.roster_ready(self.gs, self.team_id)
                 if not ok:
                     raise InvalidManagerAction(why)

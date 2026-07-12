@@ -32,6 +32,7 @@ from esports_sim.manager import (
     chronicle,
     development,
     economy,
+    flavor_events,
     inbox as inbox_mod,
     knowledge as knowledge_mod,
     market,
@@ -83,7 +84,7 @@ from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import momentum as momentum_mod
 from esports_sim.sim import tactics_fit
-from esports_sim.web import llm_social, review_history
+from esports_sim.web import llm_flavor, llm_social, review_history
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -1628,6 +1629,11 @@ def state() -> dict:
             next_fixture["map_pool"] = _map_pool_board(
                 gs, gs.acting_team_id, opp_id
             )
+        pending_flavor = flavor_events.pending_for(gs)
+        flavor_view = flavor_events.to_api(pending_flavor) if pending_flavor else None
+        if flavor_view is not None:
+            flavor_view = llm_flavor.overlay(S.code, flavor_view)
+            llm_flavor.enqueue(S.code, flavor_view)
         return {
             "season": gs.season,
             "week": gs.week,
@@ -1698,6 +1704,9 @@ def state() -> dict:
                 and o.player_id in gs.players
                 and o.to_team in gs.teams
             ],
+            # A queued flavor event is a real choice gate. Its server view
+            # intentionally has no outcomes/effects until a choice resolves.
+            "flavor_event": flavor_view,
             # Legacy-mode career state for the acting seat: contract +
             # patience while employed; pending offers while between jobs
             # (the dashboard renders the job market off this).
@@ -4865,6 +4874,33 @@ def package(body: PackageBody) -> dict:
         return {"ok": True, "message": msg}
 
 
+class FlavorEventChoiceBody(BaseModel):
+    event_id: str
+    choice_id: str
+
+
+@app.post("/api/actions/flavor_event")
+def resolve_flavor_event(body: FlavorEventChoiceBody) -> dict:
+    """Resolve the acting manager's one pending flavor choice."""
+    with S.lock:
+        gs = S.require_gs()
+        event = flavor_events.pending_for(gs)
+        if event is None or event.id != body.event_id:
+            raise HTTPException(409, "That flavor event is no longer waiting.")
+        ok, message, _effects = flavor_events.resolve(
+            gs, gs.acting_team_id, body.choice_id
+        )
+        if not ok:
+            raise HTTPException(422, message)
+        telemetry.record_action(
+            gs,
+            "flavor_choice",
+            {"event_id": body.event_id, "choice_id": body.choice_id},
+        )
+        S.save()
+        return {"ok": True, "message": message}
+
+
 @app.post("/api/actions/advance")
 def advance() -> dict:
     """Ready-up: mark the acting manager ready to advance. The week only ticks
@@ -4874,6 +4910,12 @@ def advance() -> dict:
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
+        pending = flavor_events.pending_for(gs, me)
+        if pending is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending flavor event in Action required before advancing",
+            )
         # Legacy mode: a dismissed manager must take a job before anyone
         # advances — the world doesn't move while a seat is empty.
         blocked = career.blocked_seats(gs)
