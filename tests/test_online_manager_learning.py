@@ -64,6 +64,35 @@ def test_exploration_is_legal_bounded_and_reproducible(game_data, online_setup):
     assert all(trace["policy_diagnostics"]["sampled"] for trace in left.traces)
 
 
+def test_exploration_recovers_a_roster_block_before_forcing_advance(
+    game_data, online_setup
+):
+    profiles, model = online_setup
+    source = run_rollout(game_data, seed=1802, weeks=1, profile=profiles[0])
+    blocked = copy.deepcopy(source.traces[0]["observation"])
+    blocked["legal_actions"]["advance"] = {"enabled": False, "reason": "roster"}
+    blocked["legal_actions"]["sign"] = {
+        "enabled": True,
+        "player_ids": [blocked["free_agents"][0]["player_id"]],
+    }
+    policy = ExploringLearnedManagerPolicy(
+        model,
+        profiles[0],
+        exploration_seed=8124,
+        max_actions_per_week=2,
+    )
+    policy._decision_counts[(int(blocked["season"]), int(blocked["week"]))] = 1
+    recovery = policy.choose_action(blocked)
+    assert recovery["kind"] == "sign"
+    assert policy.last_decision["forced_recovery"]
+
+    ready = copy.deepcopy(blocked)
+    ready["legal_actions"]["advance"] = {"enabled": True, "reason": ""}
+    advance = policy.choose_action(ready)
+    assert advance["kind"] == "advance"
+    assert policy.last_decision["forced_advance"]
+
+
 def test_online_update_is_deterministic_and_does_not_mutate_champion(
     game_data, online_setup
 ):
