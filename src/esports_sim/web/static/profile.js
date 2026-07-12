@@ -257,6 +257,15 @@ async function pfChangeAssignment(p) {
   } catch { /* api() already surfaced the error */ }
 }
 
+async function pfAssignIgl(p) {
+  if (!window.confirm(`Make ${p.handle || "this player"} the team's IGL? Their calling experience will build only in matches they play.`)) return;
+  try {
+    const res = await api("/api/actions/igl", { player_id: p.id });
+    toast(res.message || "IGL updated.");
+    openPlayerProfile(p.id);
+  } catch { /* api() already surfaced the error */ }
+}
+
 function renderPlayerProfile(data) {
   const frag = document.createDocumentFragment();
   const p = data.player || {};
@@ -280,6 +289,7 @@ function renderPlayerProfile(data) {
     .join(" · ");
   const meta = [
     p.role ? `<span class="pill">${p.role}</span>` : "",
+    p.is_igl ? `<span class="pill">IGL</span>` : "",
     ov.playstyle ? `<span class="pill">${ov.playstyle}</span>` : "",
     p.country ? `<span class="pill" title="nationality">${p.country}</span>` : "",
     langBit ? `<span class="pill" title="spoken languages (fluency)">${langBit}</span>` : "",
@@ -353,6 +363,12 @@ function renderPlayerProfile(data) {
     assignment.onclick = () => pfChangeAssignment(p);
     header.appendChild(assignment);
   }
+  if (p.can_assign_igl && !p.is_igl) {
+    const igl = el("button", "btn btn-sm", "Make IGL");
+    igl.title = "Assign shot-calling to this player; effectiveness uses skills and match experience";
+    igl.onclick = () => pfAssignIgl(p);
+    header.appendChild(igl);
+  }
   if (isAdminMode()) {
     const slot = el("div", "pf-admin-slot");
     const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
@@ -374,6 +390,13 @@ function renderPlayerProfile(data) {
     Array.isArray(caBand) ? `${Math.round(caBand[0])}â€“${Math.round(caBand[1])}` : "â€”",
     ov.comfort != null ? `${Math.round(ov.comfort)} comfort` : "scouted"
   ));
+  if (ov.igl_effectiveness != null) {
+    tiles.appendChild(pfTile(
+      "IGL effectiveness",
+      pfNum(ov.igl_effectiveness),
+      `${Math.round(ov.igl_experience || 0)} calling experience`
+    ));
+  }
   // Peak: a PROJECTION band even for your own club. It can be missed or beaten;
   // a fogged rival shows the scout's banded tier.
   const potIsNum = typeof ov.potential === "number";

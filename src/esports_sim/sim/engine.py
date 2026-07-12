@@ -885,7 +885,13 @@ class _MatchSim:
                 team_id=atk,
                 opponent_id=dfn,
                 players=tuple(self._player(pid) for pid in sorted(attackers)),
-                captain_id=self.gd.teams[atk].captain_id,
+                captain_id=(
+                    self.gd.teams[atk].captain_id
+                    if self.gd.teams[atk].captain_id in attackers else None
+                ),
+                captain_experience=self.gd.teams[atk].igl_experience.get(
+                    self.gd.teams[atk].captain_id or "", 100.0
+                ) if self.gd.teams[atk].captain_id in attackers else 100.0,
                 round_num=round_num,
                 sites=tuple(sites),
                 site_wins=dict(self.site_wins),

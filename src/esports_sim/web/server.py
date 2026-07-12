@@ -3663,6 +3663,10 @@ class AssignmentBody(BaseModel):
     playstyle: Playstyle
 
 
+class IglBody(BaseModel):
+    player_id: str
+
+
 @app.post("/api/actions/assignment")
 def assignment_action(body: AssignmentBody) -> dict:
     """Change an own player's role/style; comfort must then be rebuilt."""
@@ -3683,6 +3687,27 @@ def assignment_action(body: AssignmentBody) -> dict:
             "ok": True,
             "message": f"{p.handle} moved to {p.role}/{p.playstyle}; comfort must build over time.",
             "comfort": round(role_fit.assignment_comfort(p)),
+        }
+
+
+@app.post("/api/actions/igl")
+def igl_action(body: IglBody) -> dict:
+    """Assign the team's active IGL; shot-calling experience then builds in matches."""
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.player_id not in team.player_ids:
+            raise HTTPException(409, "player is not on your roster")
+        p = gs.players[body.player_id]
+        role_fit.assign_igl(team, p.id)
+        experience = role_fit.igl_experience(team, p.id)
+        telemetry.record_action(gs, "set_igl", {"player_id": p.id})
+        S.save()
+        return {
+            "ok": True,
+            "message": f"{p.handle} is now the IGL; calling experience starts at {experience:.0f}.",
+            "experience": round(experience),
+            "effectiveness": round(role_fit.igl_effectiveness(p, experience)),
         }
 
 
@@ -5017,6 +5042,9 @@ def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
 
 def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
     fogged = fog > 0.0
+    team_id = market.team_of(gs, p.id)
+    team = gs.teams.get(team_id) if team_id else None
+    is_igl = bool(team and team.captain_id == p.id)
     ovr = None if fogged else int(round(development.overall(p)))
     # The overall/peak forecast is the source of truth in the profile; the
     # star rating rides along only as a coarse quick-glance. A fogged rival
@@ -5049,6 +5077,13 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
             development.current_ability_projection(p, 1.0 if not fogged else progress)
         ),
         "comfort": None if fogged else round(role_fit.assignment_comfort(p)),
+        "igl_experience": (
+            round(role_fit.igl_experience(team, p.id)) if (not fogged and is_igl) else None
+        ),
+        "igl_effectiveness": (
+            round(role_fit.igl_effectiveness(p, role_fit.igl_experience(team, p.id)))
+            if (not fogged and is_igl) else None
+        ),
         "potential": potential,
         "potential_stars": pot_stars,
         "potential_band": potential_band,
@@ -5369,6 +5404,8 @@ def player_profile(pid: str) -> dict:
                     talk.can_rein_streaming(gs, pid)[0] if own else False
                 ),
                 "can_change_assignment": own,
+                "can_assign_igl": own,
+                "is_igl": bool(team and team.captain_id == p.id),
                 "confidence": None if fog > 0 else round(p.confidence, 1),
                 "is_starter": (
                     pid in default_five(gs, team_id) if team_id else None

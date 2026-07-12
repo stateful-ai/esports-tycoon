@@ -8,7 +8,8 @@ and has no RNG of its own.
 
 from __future__ import annotations
 
-from esports_sim.schemas import Player, Playstyle, Role
+from esports_sim.schemas import Player, Playstyle, Role, Team
+from esports_sim.sim.igl import effectiveness as igl_effectiveness
 
 
 # The first group is the job's core; the style overlay gives a player a way to
@@ -33,6 +34,8 @@ STYLE_WEIGHTS: dict[str, dict[str, float]] = {
 
 NEW_ASSIGNMENT_COMFORT = 40.0
 COMFORT_GAIN_PER_WEEK = 8.0
+NEW_IGL_EXPERIENCE = 40.0
+IGL_EXPERIENCE_GAIN_PER_WEEK = 8.0
 
 
 def assignment_key(p: Player) -> str:
@@ -84,3 +87,32 @@ def change_assignment(p: Player, role: Role, playstyle: Playstyle) -> None:
 def build_comfort(p: Player) -> None:
     key = assignment_key(p)
     p.role_style_comfort[key] = round(min(100.0, assignment_comfort(p) + COMFORT_GAIN_PER_WEEK), 1)
+
+
+def igl_experience(team: Team, player_id: str) -> float:
+    """Experience as this team's caller; legacy captains start established."""
+    return float(team.igl_experience.get(
+        player_id, 100.0 if player_id == team.captain_id else NEW_IGL_EXPERIENCE
+    ))
+
+
+def assign_igl(team: Team, player_id: str) -> None:
+    """Make a rostered player the IGL while retaining prior calling reps."""
+    if team.captain_id:
+        team.igl_experience[team.captain_id] = round(
+            igl_experience(team, team.captain_id), 1
+        )
+    team.captain_id = player_id
+    team.igl_experience[player_id] = min(
+        100.0, team.igl_experience.get(player_id, NEW_IGL_EXPERIENCE)
+    )
+
+
+def build_igl_experience(team: Team, active_ids: set[str]) -> None:
+    """A caller gains reps only when they actually dress for the week."""
+    captain = team.captain_id
+    if captain is None or captain not in active_ids:
+        return
+    team.igl_experience[captain] = round(min(
+        100.0, igl_experience(team, captain) + IGL_EXPERIENCE_GAIN_PER_WEEK
+    ), 1)

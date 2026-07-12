@@ -35,6 +35,7 @@ from esports_sim.schemas import (
 )
 from esports_sim.schemas.map import CalloutZone, Site
 from esports_sim.sim import constants as C
+from esports_sim.sim.igl import effectiveness as igl_effectiveness
 
 
 # These actions are immutable by convention and reused on the hot policy path.
@@ -459,7 +460,7 @@ class HeuristicTeamPolicy:
         # The standing pace dial is the preference.  The actual choice is a
         # player-led IGL call: game sense and comms make an early execute more
         # likely, while the timeout can deliberately speed up or steady it.
-        call_quality = (captain.attr("game_sense") + captain.attr("comms_quality")) / 2.0
+        call_quality = igl_effectiveness(captain, request.captain_experience)
         p_execute = 0.35 + tactics.pace / 250.0
         p_execute += (call_quality - 50.0) / 50.0 * C.POLICY_IGL_EXECUTE_SPAN
         if request.under_gunned and request.round_num not in (1, C.ROUNDS_PER_HALF + 1):
