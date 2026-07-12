@@ -3462,7 +3462,7 @@ def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict
 def staff_view() -> dict:
     with S.lock:
         gs = S.require_gs()
-        if len(gs.staff_pool) < 20:
+        if len(gs.staff_pool) < 20 or staff_mod.needs_real_vct_staff(gs):
             # Pre-v3 saves arrive with a near-empty market: build it lazily
             # (each member is a pure function of seed + id, so no drift).
             # A healthy pool thins as managers hire and replenishes at the
