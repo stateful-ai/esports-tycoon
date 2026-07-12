@@ -73,6 +73,7 @@ def test_milestone_arms_then_fires_once(campaign):
     owner, msg = fired[0]
     assert owner == gs.user_team_id
     assert "Milestone:" in msg and p.handle in msg
+    assert "save" not in msg.lower()
     assert [e for e in gs.chronicle if e.kind == "milestone"]
     # Same state again: the band was celebrated, nothing re-fires.
     assert chronicle.weekly_milestones(gs) == []

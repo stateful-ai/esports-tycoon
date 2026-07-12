@@ -4418,7 +4418,7 @@ function statsMeta(ws, data, metaResp, tier) {
     rail.appendChild(pc);
   } else {
     rail.appendChild(el("div", "card",
-      `<h2>Patch notes</h2><p class="muted">No balance patches yet this save.</p>`));
+      `<h2>Patch notes</h2><p class="muted">No balance patches yet this season.</p>`));
   }
 }
 

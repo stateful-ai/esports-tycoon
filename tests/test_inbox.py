@@ -389,7 +389,7 @@ def test_declining_sponsor_via_action_resolves_and_drops_future_actions(
 
 # ---------------------------------------------------------------------------
 # (h) shared world: private events (scouting / sponsors / retirements) stay
-#     with their owner and never leak into another manager's inbox
+#     with their owner and never leak into another manager's inbox or news feed
 
 
 def test_private_events_do_not_leak_across_managers(campaign: GameState) -> None:
@@ -407,9 +407,9 @@ def test_private_events_do_not_leak_across_managers(campaign: GameState) -> None
     gs.push_private_news("Objective met - ZZ Testworks pay 100,000 cr (make playoffs).")
     gs.set_acting(None)
 
-    # Both lines are in the SHARED feed (CLI panel + broadcast ticker unchanged).
-    assert any("Scouting report on" in n for n in gs.news)
-    assert any("Objective met" in n for n in gs.news)
+    # Neither line reaches the shared dashboard feed.
+    assert not any("Scouting report on" in n for n in gs.news)
+    assert not any("Objective met" in n for n in gs.news)
 
     # But each manager's inbox detectors only surface their OWN event.
     gs.set_acting(a)
