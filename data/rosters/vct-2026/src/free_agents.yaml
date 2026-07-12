@@ -11,14 +11,14 @@ free_agents:
   languages:
   - lang: en
     level: 100.0
-  role: duelist
+  role: sentinel
   playstyle: igl
   igl: true
   quality: 74
   agents:
-  - jett
-  - reyna
-  - chamber
+  - killjoy
+  - cypher
+  - breach
 - handle: Subroza
   real_name: Yassine Taoufik
   age: 29
@@ -101,14 +101,14 @@ free_agents:
     level: 100.0
   - lang: ko
     level: 20.0
-  role: initiator
-  playstyle: support
+  role: controller
+  playstyle: lurker
   igl: false
   quality: 56
   agents:
-  - sova
-  - skye
-  - breach
+  - omen
+  - miks
+  - viper
 - handle: Wardell
   real_name: Matthew Yu
   age: 28
