@@ -10,8 +10,7 @@
     the launcher restarts its owned server before opening the browser.
 
 .PARAMETER Port
-    Private local port for the taskbar instance. Defaults to 8421 so the
-    repository's normal 8420 development preview can run at the same time.
+    LAN playing port for the taskbar instance. Defaults to 8420.
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .\scripts\install_taskbar_launcher.ps1
@@ -19,7 +18,7 @@
 [CmdletBinding()]
 param(
     [ValidateRange(1, 65535)]
-    [int]$Port = 8421,
+    [int]$Port = 8420,
 
     [string]$InstallRoot = (Join-Path $env:LOCALAPPDATA 'ESports Simulator'),
 
