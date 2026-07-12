@@ -334,6 +334,12 @@ function renderPlayerProfile(data) {
     const rein = el("button", "btn btn-sm", "Rein in streaming…");
     rein.title = "Spend this week's 1:1 telling them to stream less and practice more";
     rein.onclick = async () => {
+      const confirmed = confirm(
+        `Rein in ${p.handle}'s streaming? This spends your only 1:1 for the week, ` +
+        "reduces their streaming revenue, and may lower their morale. In return, " +
+        "they will spend more time practicing and develop faster."
+      );
+      if (!confirmed) return;
       try {
         await api("/api/actions/rein_streaming", { player_id: p.id });
         openPlayerProfile(p.id);  // refresh: new load/status, button now gone
