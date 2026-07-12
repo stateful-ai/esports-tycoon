@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roster Studio - esports-sim</title>
+  <link rel="stylesheet" href="/ds/tokens.css">
+  <link rel="stylesheet" href="/roster-studio.css">
+</head>
+<body>
+  <header class="studio-topbar">
+    <a class="brand" href="/">ESPORTS<span>SIM</span></a>
+    <div class="title-block">
+      <b>Roster Studio</b>
+      <span>Build once. Edit visually. Hand the same file to any agent.</span>
+    </div>
+    <div class="spacer"></div>
+    <span id="save-state" class="status-chip">No pack loaded</span>
+    <button id="ai-brief" class="btn">AI handoff</button>
+    <button id="import-btn" class="btn">Import file</button>
+    <button id="draft-btn" class="btn">Download draft</button>
+    <button id="export-btn" class="btn" disabled>Export installed</button>
+    <button id="save-btn" class="btn primary" disabled>Save &amp; install</button>
+    <input id="file-input" type="file" accept=".yaml,.yml,.json" hidden>
+  </header>
+
+  <main class="studio-shell">
+    <aside class="packs-panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow">Library</span>
+          <h1>Roster packs</h1>
+        </div>
+        <button id="new-btn" class="icon-btn" title="Create a new pack">+</button>
+      </div>
+      <div id="pack-list" class="pack-list"></div>
+      <div class="agent-card">
+        <span class="eyebrow">Agent-ready</span>
+        <p>Portable YAML/JSON, strict schema, deterministic build, and CLI/API validation.</p>
+        <button id="schema-btn" class="text-btn">Download schema bundle</button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-mark">RS</div>
+        <h2>Your roster, without spreadsheet archaeology.</h2>
+        <p>Open an installed pack, import a file from an agent, or start from the valid example.</p>
+        <button id="empty-new" class="btn primary">Create roster pack</button>
+      </div>
+
+      <div id="editor" class="editor hidden">
+        <section class="meta-card">
+          <div class="meta-grid">
+            <label class="field"><span>Pack ID</span><input id="meta-id" class="mono" autocomplete="off"></label>
+            <label class="field wide"><span>Name</span><input id="meta-name" autocomplete="off"></label>
+            <label class="field"><span>Regions</span><input id="meta-regions" class="mono" autocomplete="off"></label>
+            <label class="field"><span>Tier-1 / region</span><input id="meta-t1" type="number" min="4" max="16"></label>
+            <label class="field"><span>Tier-2 / region</span><input id="meta-t2" type="number" min="0" max="16"></label>
+            <label class="field full"><span>Description</span><input id="meta-description" autocomplete="off"></label>
+          </div>
+        </section>
+
+        <div class="editor-grid">
+          <nav class="entity-panel">
+            <div class="entity-head">
+              <div>
+                <span class="eyebrow">World contents</span>
+                <h2>Teams &amp; talent</h2>
+              </div>
+              <button id="add-team" class="icon-btn" title="Add team">+</button>
+            </div>
+            <div id="entity-list" class="entity-list"></div>
+            <button id="free-agents-nav" class="free-agent-nav"></button>
+          </nav>
+
+          <section id="detail-panel" class="detail-panel"></section>
+
+          <aside class="check-panel">
+            <div class="check-head">
+              <span class="eyebrow">Build check</span>
+              <span id="validity-dot" class="validity-dot"></span>
+            </div>
+            <div id="summary" class="summary-grid"></div>
+            <div id="validation" class="validation-list">
+              <p class="muted">Change a field to run validation.</p>
+            </div>
+            <div class="install-note">
+              <b>What Save does</b>
+              <p>Validates the document, expands attributes and mastery from stable hashes, loads the compiled pack, then swaps it into the game library.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="ai-dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><span class="eyebrow">Copy into your favorite agent</span><h2>AI handoff</h2></div>
+        <button class="icon-btn" value="cancel">x</button>
+      </div>
+      <p>The brief includes the format rules and your current document. The complete JSON Schema is available separately for tool calling.</p>
+      <textarea id="ai-text" class="mono" readonly></textarea>
+      <div class="dialog-actions">
+        <button id="copy-ai" type="button" class="btn primary">Copy brief</button>
+        <button value="cancel" class="btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" aria-live="polite"></div>
+  <script src="/roster-studio.js"></script>
+</body>
+</html>

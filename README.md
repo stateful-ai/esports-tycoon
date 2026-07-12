@@ -55,7 +55,9 @@ Two worlds ship in the box:
   Custom **roster packs** are just a directory of YAML under
   `data/rosters/` — `scripts/build_roster_pack.py` expands a compact
   per-player spec (handle, role, playstyle, quality, signature agents)
-  into full rosters.
+  into full rosters. **Roster Studio** on the Play screen adds a visual
+  editor plus a portable YAML/JSON, JSON Schema, CLI, and HTTP workflow for
+  agent-built packs; see [docs/roster-studio.md](docs/roster-studio.md).
 
 Headless demo (a hands-off season, no UI):
 

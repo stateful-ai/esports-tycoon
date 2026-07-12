@@ -250,7 +250,8 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     out_dir = pack_dir / "teams"
     # free_agents.yaml is the FA spec, not a region sheet — handled below.
     specs = sorted(
-        f for f in src_dir.glob("*.yaml") if f.name != "free_agents.yaml"
+        f for f in src_dir.glob("*.yaml")
+        if f.name not in {"free_agents.yaml", "pack.yaml"}
     )
     if not specs:
         raise SystemExit(f"no spec files under {src_dir}")
@@ -366,23 +367,64 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
             {"free_agents": out_fas}, sort_keys=False, width=88
         )
 
-    # Floor 4: the regional playoff bracket needs four qualifiers.
-    teams_per_region = max(4, max(tier1_counts.values()))
+    # Optional source metadata lets a partial/custom pack keep its friendly
+    # name and request generated fill beyond the authored clubs. Older packs
+    # without src/pack.yaml retain the original derived defaults.
+    author_meta_file = src_dir / "pack.yaml"
+    author_meta = (
+        yaml.safe_load(author_meta_file.read_text(encoding="utf-8")) or {}
+        if author_meta_file.is_file()
+        else {}
+    )
+    author_world = author_meta.get("world", {})
+    declared_id = author_meta.get("id")
+    if declared_id is not None and str(declared_id) != pack_id:
+        raise SystemExit(
+            f"src/pack.yaml id {declared_id!r} does not match {pack_id!r}"
+        )
+    declared_regions = author_world.get("league_regions")
+    if declared_regions is not None:
+        authored_regions = [str(Region(region)) for region in declared_regions]
+        if (
+            set(authored_regions) != set(regions)
+            or len(authored_regions) != len(regions)
+        ):
+            raise SystemExit(
+                "src/pack.yaml league_regions must match the region sheets"
+            )
+        regions = authored_regions
+
+    # Floor 4: the regional playoff bracket needs four qualifiers. Empty
+    # authored regions are legal in a partial pack; new_campaign fills them.
+    authored_t1_max = max(tier1_counts.values(), default=0)
+    requested_t1 = int(author_world.get("teams_per_region", authored_t1_max))
+    teams_per_region = max(4, requested_t1, authored_t1_max)
+    if teams_per_region > 16:
+        raise SystemExit("teams_per_region must be between 4 and 16")
+    tier2_per_region = int(author_world.get("tier2_per_region", 6))
+    if not 0 <= tier2_per_region <= 16:
+        raise SystemExit("tier2_per_region must be between 0 and 16")
     if len(set(tier1_counts.values())) > 1:
         print(f"WARN: uneven tier-1 regions {tier1_counts} — "
               f"shorter regions get generated fill at new-game.")
     meta = {
         "id": pack_id,
-        "name": raw_meta_name(pack_id),
-        "description": (
-            "Imported real-world rosters. Attributes are estimates expanded "
-            "deterministically from the src/ sheets by "
-            "scripts/build_roster_pack.py."
+        "name": _require_ascii(
+            str(author_meta.get("name", raw_meta_name(pack_id))), "pack name"
+        ),
+        "description": _require_ascii(
+            str(author_meta.get(
+                "description",
+                "Imported real-world rosters. Attributes are estimates "
+                "expanded deterministically from the src/ sheets by "
+                "scripts/build_roster_pack.py.",
+            )),
+            "pack description",
         ),
         "world": {
             "league_regions": regions,
             "teams_per_region": teams_per_region,
-            "tier2_per_region": 6,
+            "tier2_per_region": tier2_per_region,
         },
     }
     pack_yaml = yaml.safe_dump(meta, sort_keys=False)
