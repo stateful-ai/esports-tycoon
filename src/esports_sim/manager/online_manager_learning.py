@@ -89,11 +89,28 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
         week = (int(obs["season"]), int(obs["week"]))
         count = self._decision_counts.get(week, 0)
         advance_index = ACTION_VOCAB.index("advance")
-        forced_advance = (
-            count >= self.max_actions_per_week - 1 and bool(mask[advance_index])
-        )
+        forced_action = count >= self.max_actions_per_week - 1
+        forced_advance = forced_action and bool(mask[advance_index])
+        forced_recovery = False
         if forced_advance:
             selected_index = advance_index
+        elif forced_action:
+            # Exploration can legally release a player, which temporarily
+            # makes ``advance`` illegal until the roster is repaired. Recover
+            # through a manager-visible legal action rather than sampling
+            # unrelated actions until the rollout's decision budget expires.
+            recovery = next(
+                (
+                    ACTION_VOCAB.index(kind)
+                    for kind in ("accept_job", "sign")
+                    if mask[ACTION_VOCAB.index(kind)]
+                ),
+                None,
+            )
+            if recovery is None:
+                raise RuntimeError("exploration policy cannot recover a blocked week")
+            selected_index = recovery
+            forced_recovery = True
         else:
             selected_index = int(self.rng.choice(len(ACTION_VOCAB), p=probs))
         kind = ACTION_VOCAB[selected_index]
@@ -105,7 +122,7 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
                 features=x.copy(),
                 probabilities=probs.copy(),
                 selected_index=selected_index,
-                trainable=not forced_advance,
+                trainable=not forced_action,
             )
         )
         probabilities = {
@@ -116,6 +133,7 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
             "probability": probabilities[kind],
             "sampled": True,
             "forced_advance": forced_advance,
+            "forced_recovery": forced_recovery,
             "legal_action_count": int(mask.sum()),
             "profile": self.profile.to_dict(),
             "top_actions": sorted(
@@ -177,7 +195,10 @@ def fine_tune_online(
                     weeks=weeks,
                     profile=profile,
                     policy=policy,
-                    max_decisions_per_week=config.max_actions_per_week,
+                    # A forced recovery may be needed before the following
+                    # forced advance, so leave two deterministic recovery
+                    # slots beyond the sampler's normal action budget.
+                    max_decisions_per_week=config.max_actions_per_week + 2,
                 )
                 episodes.append((run, policy))
 
