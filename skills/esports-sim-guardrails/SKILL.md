@@ -177,6 +177,14 @@ Before declaring any sim-touching task done, walk this list. If any line fails, 
 
 ---
 
+## Offline learning exception
+
+The direct-NumPy-RNG prohibition applies to simulation state. Offline policy
+training may construct a generator only from a blake2 hash of stable
+run/profile/iteration ids. It must not mutate `GameState`, depend on wall-clock
+state, or bypass the resolver's legal-action mask. Player-policy sampling still
+uses the engine-provided RNG.
+
 ## When in doubt
 
 Ask rather than guess. The project's design choices are deliberate — if something feels awkward to implement, it's often because the proposed shape violates an invariant, not because the invariant is wrong. Surface the tension and let the human pick the fork.

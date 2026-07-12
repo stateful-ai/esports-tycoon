@@ -16,6 +16,14 @@ mirror of it.
 | `campaign` | Add a campaign-layer (manager/) feature: determinism rules, save migration, snowball gate, inbox surfacing |
 | `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
 
+## Learning policy work
+
+Use `.claude/skills/learning/SKILL.md` for learned player or manager policies:
+fog-safe observations, resolver-provided legal actions, deterministic seed
+splits, version-pinned checkpoints, and champion/challenger promotion. The
+repo-root guardrails retain their strict simulation rules while documenting the
+narrow stable-hash RNG exception for offline training.
+
 ## Custom agents (`.claude/agents/`)
 
 | Agent | Scope |

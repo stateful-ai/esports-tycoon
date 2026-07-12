@@ -54,6 +54,24 @@ with it (they train, poach, adapt tactics, work the market). An
 unanswered player-only lever is a difficulty leak; document it if
 intentional.
 
+## Learned manager policies
+
+- `decision_env.manager_observation` is the training boundary. It contains
+  manager-visible features plus legal actions; do not give a manager model a
+  `GameState`, opponent hidden truth, or a hand-built action outside the mask.
+- Keep imitation and online checkpoints version-pinned (observation, encoder,
+  action vocabulary, and profile schema). A mismatch is a hard load error, not
+  an opportunity for silent feature drift.
+- Online training needs deterministic stable-id exploration seeds, fresh train
+  and held-out evaluation seed ranges, and a champion/challenger gate. The
+  incumbent survives any failed rollout, invalid action, incomplete evaluation,
+  reward/balance/wins regression, or collapsed profile behavior.
+- Exploratory policies need a deterministic recovery action for a blocked week
+  (for example, sign a player before advancing after a release). Never rely on
+  repeated random samples to escape an illegal advance state.
+- Add the focused decision-environment, manager-rollout, learned-policy, and
+  online-policy tests; run held-out evaluation before publishing a checkpoint.
+
 ## Checklist before /ship
 
 1. Full pytest green (campaign tests + API contract tests).

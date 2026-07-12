@@ -33,3 +33,18 @@ Quick orientation for any agent:
 - Skill/agent index: `SKILLS.md` (repo skills `/ship`, `/tactics`,
   `/art-pass`, `/maps`, `/web-screen`, `/campaign`; custom agents
   map-author, sim-tuner, art-generator).
+
+## Learning addendum
+
+- Learned player policies consume typed `PlayerObservation` plus engine-supplied
+  legal actions; manager policies consume only `decision_env.manager_observation`
+  plus its legal-action mask. Never train against hidden state or invent an
+  action outside those contracts.
+- Online manager learning is champion/challenger only: use disjoint train and
+  held-out seeds, retain the incumbent on any failure, and promote only after
+  completion, legality, reward, balance, wins, and profile-distinctness gates.
+- A detached worktree may lack `.venv-win`. When reusing the primary checkout's
+  venv, set `$env:PYTHONPATH=(Resolve-Path 'src').Path` so subprocess scripts
+  import this worktree rather than the primary checkout.
+- Use the `/learning` skill for checkpoint compatibility, trace generation,
+  online improvement, and promotion.
