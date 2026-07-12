@@ -3136,19 +3136,11 @@ def facility_upgrade(body: FacilityBody) -> dict:
         gs = S.require_gs()
         if body.facility not in economy.FACILITY_NAMES:
             raise HTTPException(422, f"facility must be one of {economy.FACILITY_NAMES}")
-        team = gs.teams[gs.acting_team_id]
         level = gs.facilities.get(body.facility, 0)
         cost = economy.facility_upgrade_cost(level)
-        if cost is None:
-            raise HTTPException(409, "already at max level")
-        if team.balance < cost:
-            raise HTTPException(409, f"need {cost:,} cr banked for the upgrade")
-        team.balance -= cost
-        gs.facilities[body.facility] = level + 1
-        gs.push_news(
-            f"{team.name} upgrade {body.facility.replace('_', ' ')} to "
-            f"level {level + 1} ({cost:,} cr)."
-        )
+        ok, message = economy.upgrade_facility(gs, body.facility)
+        if not ok:
+            raise HTTPException(409, message)
         telemetry.record_action(
             gs, "facility_upgrade",
             {"facility": body.facility, "level": level + 1, "cost": cost},
@@ -3156,7 +3148,7 @@ def facility_upgrade(body: FacilityBody) -> dict:
         S.save()
         return {
             "ok": True,
-            "message": f"{body.facility.replace('_', ' ')} upgraded to level {level + 1}",
+            "message": message,
             "level": level + 1,
         }
 

@@ -13,14 +13,25 @@ it safe to evolve under the explicit ``OBSERVATION_VERSION`` contract.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
-from esports_sim.manager import career, development, market, telemetry, training
-from esports_sim.manager.campaign import advance_week
-from esports_sim.manager.state import GameState
+from esports_sim.manager import (
+    career,
+    development,
+    economy,
+    market,
+    sponsors,
+    staff,
+    talk,
+    telemetry,
+    training,
+)
+from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
+from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 1
+OBSERVATION_VERSION = 2
+TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
         "advance",
@@ -32,6 +43,20 @@ SUPPORTED_ACTIONS = frozenset(
         "release",
         "renew",
         "swap",
+        "set_dev_plan",
+        "mentor",
+        "hire_staff",
+        "release_staff",
+        "facility_upgrade",
+        "sponsor_respond",
+        "set_game_plan",
+        "clear_game_plan",
+        "talk",
+        "rein_streaming",
+        "negotiate_open",
+        "negotiate_offer",
+        "negotiate_cancel",
+        "accept_job",
     }
 )
 _TACTIC_DIALS = (
@@ -133,6 +158,81 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     if career.blocked_seats(gs):
         ready = False
         ready_reason = "a manager must accept a job before the world can advance"
+    dev_plans = {
+        "enabled": bool(roster),
+        "player_ids": roster,
+        "focus_options": list(training.DEV_FOCUS_OPTIONS),
+        "intensity_options": list(training.INTENSITY_OPTIONS),
+    }
+    mentor_pairs = [
+        {"protege_id": protege, "mentor_id": mentor}
+        for protege in roster
+        for mentor in roster
+        if development.mentorship_valid(gs, protege, mentor)
+    ]
+    hireable = [
+        m.id for m in sorted(gs.staff_pool, key=lambda m: m.id)
+        if gs.teams[team_id].balance >= m.salary * 8
+    ]
+    facility_options = []
+    for name in economy.FACILITY_NAMES:
+        level = gs.facilities.get(name, 0)
+        cost = economy.facility_upgrade_cost(level)
+        if cost is not None and gs.teams[team_id].balance >= cost:
+            facility_options.append({"facility": name, "next_level": level + 1, "cost": cost})
+    sponsor_options = []
+    for slot in sponsors.SLOT_ORDER:
+        for offer in sorted(gs.sponsor_market.get(slot, []), key=lambda o: o.brand):
+            sponsor_options.append(
+                {
+                    "slot": slot,
+                    "brand": offer.brand,
+                    "accept": False,
+                    "structure": "",
+                }
+            )
+            if slot not in gs.sponsor_slots:
+                for structure in sponsors.STRUCTURES:
+                    sponsor_options.append(
+                        {
+                            "slot": slot,
+                            "brand": offer.brand,
+                            "accept": True,
+                            "structure": structure,
+                        }
+                    )
+    live_negotiations = [
+        {
+            "player_id": pid,
+            "salary_range": [800, max(800, neg.demand_salary * 2)],
+            "weeks_range": [market.MIN_CONTRACT_WEEKS, market.MAX_CONTRACT_WEEKS],
+        }
+        for pid, neg in sorted(gs.negotiations.items())
+    ]
+    negotiable = []
+    for pid in sorted(set(roster + free_agents)):
+        kind, _ = market.negotiation_kind(gs, pid)
+        if kind is not None and gs.talks_cooldown.get(pid, 0) <= gs.week:
+            negotiable.append(pid)
+    talk_options = []
+    rein_targets = []
+    for pid in roster:
+        if talk.can_talk(gs, pid)[0]:
+            topic = talk.topic_for(gs, pid)
+            for option in topic.options:
+                talk_options.append({"player_id": pid, "option_id": option.id})
+        if talk.can_rein_streaming(gs, pid)[0]:
+            rein_targets.append(pid)
+    fixture = gs.team_fixture(team_id)
+    plan_enabled = fixture is not None and not fixture.played
+    opponent_ids: list[str] = []
+    if plan_enabled:
+        opponent_id = fixture.team_b if fixture.team_a == team_id else fixture.team_a
+        opponent_ids = sorted(gs.teams[opponent_id].player_ids)
+    seat = gs.seat_for_session(team_id)
+    job_offers = []
+    if seat is not None:
+        job_offers = [o.team_id for o in gs.career_offers_by.get(seat.id, [])]
     return {
         "advance": {"enabled": ready, "reason": "" if ready else ready_reason},
         "set_training": {"enabled": True, "options": list(training.FOCUS_OPTIONS)},
@@ -151,6 +251,30 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "release": {"enabled": bool(roster), "player_ids": roster},
         "renew": {"enabled": bool(roster), "player_ids": roster},
         "swap": {"enabled": bool(swaps), "pairs": swaps},
+        "set_dev_plan": dev_plans,
+        "mentor": {"enabled": bool(roster), "pairs": mentor_pairs, "clear_ids": roster},
+        "hire_staff": {"enabled": bool(hireable), "candidate_ids": hireable},
+        "release_staff": {"enabled": bool(gs.staff), "roles": sorted(gs.staff)},
+        "facility_upgrade": {"enabled": bool(facility_options), "options": facility_options},
+        "sponsor_respond": {"enabled": bool(sponsor_options), "options": sponsor_options},
+        "set_game_plan": {
+            "enabled": plan_enabled,
+            "fixture_id": fixture.id if fixture is not None else "",
+            "focus_target_ids": opponent_ids,
+            "starter_ids": roster,
+            "team_talk_options": list(TEAM_TALK_APPROACHES),
+            "site_focus": ["balanced", "a", "b", "c"],
+            "dials": {dial: [0.0, 100.0] for dial in _TACTIC_DIALS},
+        },
+        "clear_game_plan": {"enabled": gs.game_plan is not None},
+        "talk": {"enabled": bool(talk_options), "options": talk_options},
+        "rein_streaming": {"enabled": bool(rein_targets), "player_ids": rein_targets},
+        "negotiate_open": {"enabled": bool(negotiable), "player_ids": negotiable},
+        "negotiate_offer": {"enabled": bool(live_negotiations), "options": live_negotiations},
+        "negotiate_cancel": {
+            "enabled": bool(gs.negotiations), "player_ids": sorted(gs.negotiations)
+        },
+        "accept_job": {"enabled": bool(job_offers), "team_ids": sorted(job_offers)},
     }
 
 
@@ -202,6 +326,25 @@ def manager_observation(
             "tactics": team.tactics.model_dump(),
             "lineup_ids": list(team.lineup_ids),
             "scout_target": gs.scout_target,
+            "staff": {
+                role: member.model_dump() for role, member in sorted(gs.staff.items())
+            },
+            "staff_candidates": [
+                member.model_dump() for member in sorted(gs.staff_pool, key=lambda m: m.id)
+            ],
+            "facilities": dict(sorted(gs.facilities.items())),
+            "sponsor_market": {
+                slot: [offer.model_dump() for offer in sorted(offers, key=lambda o: o.brand)]
+                for slot, offers in sorted(gs.sponsor_market.items())
+            },
+            "negotiations": {
+                pid: neg.model_dump() for pid, neg in sorted(gs.negotiations.items())
+            },
+            "game_plan": gs.game_plan.model_dump() if gs.game_plan is not None else None,
+            "career_offers": (
+                [o.model_dump() for o in gs.career_offers_by.get(gs.seat_for_session(team_id).id, [])]
+                if gs.seat_for_session(team_id) is not None else []
+            ),
             "roster": [_own_player(gs, pid) for pid in sorted(team.player_ids)],
             "free_agents": [
                 _scouted_player(gs, team_id, pid) for pid in sorted(gs.free_agent_ids)
@@ -236,6 +379,8 @@ class HeadlessManagerEnv:
         *,
         manager_profile: dict[str, float] | None = None,
         record_actions: bool = True,
+        trace_sink: Callable[[dict[str, Any]], None] | None = None,
+        policy_version: str = "unversioned",
     ) -> None:
         self.gs = gs
         self.gd = gd
@@ -244,6 +389,8 @@ class HeadlessManagerEnv:
             raise KeyError(f"unknown team {self.team_id!r}")
         self.manager_profile = dict(manager_profile or {})
         self.record_actions = record_actions
+        self.trace_sink = trace_sink
+        self.policy_version = policy_version
 
     def observe(self) -> dict[str, Any]:
         return manager_observation(
@@ -255,6 +402,7 @@ class HeadlessManagerEnv:
             telemetry.record_action(self.gs, kind, params, team_id=self.team_id, source="agent")
 
     def step(self, action: dict[str, Any]) -> StepResult:
+        decision_observation = self.observe()
         kind = str(action.get("kind", ""))
         params = action.get("params", {})
         if kind not in SUPPORTED_ACTIONS:
@@ -307,6 +455,150 @@ class HeadlessManagerEnv:
                 self.gs.teams[self.team_id].lineup_ids = picks
                 params = {"player_ids": picks}
                 message = "default lineup updated"
+            elif kind == "set_dev_plan":
+                pid = str(params.get("player_id", ""))
+                if pid not in self.gs.teams[self.team_id].player_ids:
+                    raise InvalidManagerAction("player is not on the roster")
+                focus = str(params.get("dev_focus", self.gs.players[pid].dev_focus))
+                intensity = str(
+                    params.get("training_intensity", self.gs.players[pid].training_intensity)
+                )
+                if focus not in training.DEV_FOCUS_OPTIONS:
+                    raise InvalidManagerAction(f"unknown development focus {focus!r}")
+                if intensity not in training.INTENSITY_OPTIONS:
+                    raise InvalidManagerAction(f"unknown training intensity {intensity!r}")
+                self.gs.players[pid].dev_focus = focus
+                self.gs.players[pid].training_intensity = intensity
+                params = {"player_id": pid, "dev_focus": focus, "intensity": intensity}
+                message = f"development plan updated for {self.gs.players[pid].handle}"
+            elif kind == "mentor":
+                protege = str(params.get("protege_id", ""))
+                mentor = str(params.get("mentor_id", ""))
+                if protege not in self.gs.teams[self.team_id].player_ids:
+                    raise InvalidManagerAction("protege is not on the roster")
+                if not mentor:
+                    self.gs.mentorships.pop(protege, None)
+                elif development.mentorship_valid(self.gs, protege, mentor):
+                    self.gs.mentorships[protege] = mentor
+                else:
+                    raise InvalidManagerAction("mentor must be an older, higher-rated teammate")
+                params = {"protege_id": protege, "mentor_id": mentor}
+                message = "mentorship updated"
+            elif kind == "hire_staff":
+                candidate = str(params.get("candidate_id", ""))
+                ok, message = staff.hire(self.gs, candidate)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "release_staff":
+                role = str(params.get("role", ""))
+                ok, message = staff.release(self.gs, role)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "facility_upgrade":
+                facility = str(params.get("facility", ""))
+                ok, message = economy.upgrade_facility(self.gs, facility)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                params = {
+                    "facility": facility,
+                    "level": self.gs.facilities[facility],
+                }
+            elif kind == "sponsor_respond":
+                slot = str(params.get("slot", ""))
+                brand = str(params.get("brand", ""))
+                accept = bool(params.get("accept", False))
+                structure = str(params.get("structure", "steady"))
+                if accept:
+                    ok, message = sponsors.sign_market_offer(
+                        self.gs, slot, brand, structure
+                    )
+                else:
+                    ok, message = sponsors.decline_market_offer(self.gs, slot, brand)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "set_game_plan":
+                fixture = self.gs.team_fixture(self.team_id)
+                if fixture is None or fixture.played:
+                    raise InvalidManagerAction("no upcoming fixture to plan for")
+                opponent = fixture.team_b if fixture.team_a == self.team_id else fixture.team_a
+                target = str(params.get("focus_target", "")) or None
+                starters = list(params.get("starter_ids", []))
+                site = str(params.get("site_focus", "")) or None
+                team_talk = str(params.get("team_talk", "")) or None
+                if target is not None and target not in self.gs.teams[opponent].player_ids:
+                    raise InvalidManagerAction("focus target is not on the opponent roster")
+                if starters and (
+                    len(starters) != market.ROSTER_SIZE
+                    or len(set(starters)) != market.ROSTER_SIZE
+                    or any(pid not in self.gs.teams[self.team_id].player_ids for pid in starters)
+                ):
+                    raise InvalidManagerAction("one-match lineup must name five roster players")
+                if site is not None and site not in ("balanced", "a", "b", "c"):
+                    raise InvalidManagerAction("invalid site focus")
+                if team_talk is not None and team_talk not in TEAM_TALK_APPROACHES:
+                    raise InvalidManagerAction("invalid team talk")
+                dials: dict[str, float | None] = {}
+                for dial in _TACTIC_DIALS:
+                    raw = params.get(dial)
+                    if raw is None:
+                        dials[dial] = None
+                    else:
+                        value = float(raw)
+                        if not 0.0 <= value <= 100.0:
+                            raise InvalidManagerAction(f"{dial} must be between 0 and 100")
+                        dials[dial] = value
+                self.gs.game_plan = GamePlan(
+                    fixture_id=fixture.id,
+                    site_focus=site,
+                    focus_target=target,
+                    starter_ids=starters,
+                    team_talk=team_talk,
+                    **dials,
+                )
+                params = self.gs.game_plan.model_dump()
+                message = "game plan set"
+            elif kind == "clear_game_plan":
+                self.gs.game_plan = None
+                message = "game plan cleared"
+            elif kind == "talk":
+                pid = str(params.get("player_id", ""))
+                option = str(params.get("option_id", ""))
+                ok, message, _ = talk.resolve(self.gs, pid, option)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "rein_streaming":
+                pid = str(params.get("player_id", ""))
+                ok, message, _ = talk.rein_in_streaming(self.gs, pid)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "negotiate_open":
+                pid = str(params.get("player_id", ""))
+                ok, message, _ = market.open_negotiation(self.gs, pid)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "negotiate_offer":
+                pid = str(params.get("player_id", ""))
+                status, message, _ = market.negotiate_offer(
+                    self.gs, pid, int(params.get("salary", 0)), int(params.get("weeks", 0))
+                )
+                if status == "error":
+                    raise InvalidManagerAction(message)
+                params = {**params, "status": status}
+            elif kind == "negotiate_cancel":
+                pid = str(params.get("player_id", ""))
+                if pid not in self.gs.negotiations:
+                    raise InvalidManagerAction("no talks are open with that player")
+                market.cancel_negotiation(self.gs, pid)
+                message = "negotiation cancelled"
+            elif kind == "accept_job":
+                seat = self.gs.seat_for_session(self.team_id)
+                if seat is None:
+                    raise InvalidManagerAction("no manager seat controls this environment")
+                new_team = str(params.get("team_id", ""))
+                ok, message = career.accept_offer(self.gs, seat.id, new_team)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                self.team_id = new_team
             elif kind == "set_scout":
                 target = str(params.get("target", ""))
                 legal = self.observe()["legal_actions"]["set_scout"]["targets"]
@@ -359,7 +651,7 @@ class HeadlessManagerEnv:
         )
         reward = float(components.pop("reward", 0.0)) if components else 0.0
         done = dismissed
-        return StepResult(
+        result = StepResult(
             observation=self.observe(),
             reward=reward,
             reward_components=components,
@@ -367,3 +659,22 @@ class HeadlessManagerEnv:
             done=done,
             message=message,
         )
+        if self.trace_sink is not None:
+            self.trace_sink(
+                {
+                    "trace_version": TRACE_VERSION,
+                    "policy_version": self.policy_version,
+                    "season": decision_observation["season"],
+                    "week": decision_observation["week"],
+                    "team_id": decision_observation["team_id"],
+                    "manager_profile": dict(sorted(self.manager_profile.items())),
+                    "observation": decision_observation,
+                    "action": {"kind": kind, "params": params},
+                    "reward": result.reward,
+                    "reward_components": result.reward_components,
+                    "advanced": result.advanced,
+                    "done": result.done,
+                    "message": result.message,
+                }
+            )
+        return result

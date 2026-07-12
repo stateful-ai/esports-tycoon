@@ -159,6 +159,26 @@ def facility_upgrade_cost(current_level: int) -> int | None:
     return FACILITY_UPGRADE_COST[target]
 
 
+def upgrade_facility(gs: GameState, name: str) -> tuple[bool, str]:
+    """Upgrade one facility for the acting org through a shared domain path."""
+    if name not in FACILITY_NAMES:
+        return False, f"unknown facility {name}"
+    team = gs.teams[gs.acting_team_id]
+    level = gs.facilities.get(name, 0)
+    cost = facility_upgrade_cost(level)
+    if cost is None:
+        return False, "already at max level"
+    if team.balance < cost:
+        return False, f"need {cost:,} cr banked for the upgrade"
+    team.balance -= cost
+    gs.facilities[name] = level + 1
+    gs.push_news(
+        f"{team.name} upgrade {name.replace('_', ' ')} to "
+        f"level {level + 1} ({cost:,} cr)."
+    )
+    return True, f"{name.replace('_', ' ')} upgraded to level {level + 1}"
+
+
 def facility_weekly_upkeep(facilities: dict[str, int]) -> int:
     return sum(
         FACILITY_UPKEEP_PER_LEVEL.get(name, 0) * level
