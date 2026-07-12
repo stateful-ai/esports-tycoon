@@ -27,6 +27,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |
 | Dynasty gate (title concentration over N seasons) | `... scripts\dynasty_report.py [seasons] [seed]` (exit 1 = fail) |
 | RL episode export (save -> transitions/actions/chronicle JSONL) | `... scripts\export_telemetry.py <save-or-dir> [stem]` |
+| Manager policy rollouts (traces/runs/evaluation) | `... scripts\run_manager_rollouts.py [seeds] [profiles] [weeks] [stem]` |
 | Match token corpus (world-model data; pinned vocab) | `... scripts\dump_season_tokens.py [n] [seed] [stem]` |
 | Play-pattern report (feature usage across saves) | `... scripts\telemetry_report.py [saves-dir]` |
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
@@ -97,7 +98,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   a match token corpus with a PINNED vocab, `scripts/telemetry_report.py`
   the cross-save feature-usage report); `decision_env.py` exposes the shared,
   manager-visible decision observation, legal action masks, and a deterministic
-  framework-agnostic headless policy environment. Player
+  framework-agnostic headless policy environment; `manager_policy.py` and
+  `rollout.py` provide generated manager profiles, a masked heuristic baseline,
+  decision traces, batch evaluation, and training-data exports. Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game
