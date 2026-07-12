@@ -146,7 +146,9 @@ class HeuristicPolicy:
                 spend_weapon = weapons["operator"].price + C.ARMOR_PRICE
             elif credits >= C.FULL_BUY_THRESHOLD:
                 # Rifle preference: slight lean by aim profile, tiny rng.
-                lean = player.attr("aim_precision") - player.attr("movement")
+                lean = (
+                    player.attr("aim_precision") - player.attr("movement")
+                ) * C.RIFLE_PREFERENCE_ATTRIBUTE_SCALE
                 pick = "vandal" if lean + rng.uniform(-10, 10) >= 0 else "phantom"
                 weapon_id, armor = pick, C.ARMOR_VALUE
                 spend_weapon = weapons[pick].price + C.ARMOR_PRICE
