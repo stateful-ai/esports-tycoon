@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "esports-rosters": {
+      "type": "stdio",
+      "command": ".venv-win/Scripts/python.exe",
+      "args": ["-m", "esports_sim.mcp.roster_server"]
+    }
+  }
+}

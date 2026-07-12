@@ -1,0 +1,11 @@
+interface:
+  display_name: "Build Roster Packs"
+  short_description: "Create and edit playable roster packs"
+  default_prompt: "Use $build-roster-packs to create a validated, playable roster pack with the roster MCP tools."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "esports-rosters"
+      description: "Draft, validate, and install esports-sim roster packs"
+      transport: "stdio"

@@ -14,6 +14,7 @@ mirror of it.
 | `maps` | Change map geometry/graphs end-to-end: audit → pacing/balance → guides → repaint check → thumbs → re-bless |
 | `web-screen` | Add or rework a web UI screen the repo way (thin serializer, no sim logic in JS, tokens, profile links) |
 | `campaign` | Add a campaign-layer (manager/) feature: determinism rules, save migration, snowball gate, inbox surfacing |
+| `build-roster-packs` | Build or correct roster packs through portable drafts, schema validation, and the `esports-rosters` MCP tools |
 | `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
 
 ## Learning policy work

@@ -13,6 +13,7 @@ from esports_sim.registry.roster_workbench import (
     dump_document,
     example_document,
     install_document,
+    library_revision,
     load_document,
     parse_document,
     validate_document,
@@ -54,12 +55,14 @@ def test_validation_reports_structural_and_game_catalog_errors():
 
 
 def test_install_compiles_partial_world_and_preserves_authored_meta(tmp_path: Path):
+    before_revision = library_revision(tmp_path)
     raw = example_document()
     raw["name"] = "Agents United"
     raw["description"] = "A portable custom pack."
     raw["world"]["league_regions"] = ["pacific", "americas", "emea"]
     raw["teams"][0]["region"] = "pacific"
     result = install_document(raw, tmp_path)
+    assert library_revision(tmp_path) != before_revision
 
     assert result["compiled"]["teams"] == 1
     assert result["compiled"]["players"] == 5

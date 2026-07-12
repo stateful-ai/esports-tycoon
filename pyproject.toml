@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 esports-sim = "esports_sim.app.cli:main"
+esports-roster-mcp = "esports_sim.mcp.roster_server:main"
 
 [project.optional-dependencies]
 dev = [
@@ -26,6 +27,10 @@ dev = [
 web = [
   "fastapi>=0.111",
   "uvicorn>=0.30",
+]
+mcp = [
+  # v2 is still pre-release as of 2026-07; keep the stable SDK contract.
+  "mcp>=1.27,<2",
 ]
 
 [tool.hatch.build.targets.wheel]
