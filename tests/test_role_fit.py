@@ -1,7 +1,7 @@
 """Role/style current ability is hidden, deterministic, and comfort-aware."""
 
 from esports_sim.manager import development, role_fit
-from esports_sim.schemas import Player, Playstyle, Role
+from esports_sim.schemas import Player, Playstyle, Role, Team
 
 
 def _player() -> Player:
@@ -47,3 +47,18 @@ def test_returning_to_an_old_assignment_keeps_earned_comfort():
     role_fit.change_assignment(p, Role.DUELIST, Playstyle.ENTRY)
     role_fit.change_assignment(p, Role.SENTINEL, Playstyle.ANCHOR)
     assert role_fit.assignment_comfort(p) == 48.0
+
+
+def test_igl_assignment_uses_calling_skills_and_builds_match_experience():
+    caller = _player()
+    teammate = _player().model_copy(update={"id": "teammate"})
+    team = Team(id="t", name="Test", tag="T", player_ids=[caller.id, teammate.id])
+    role_fit.assign_igl(team, caller.id)
+    low_exp = role_fit.igl_effectiveness(caller, role_fit.igl_experience(team, caller.id))
+    for _ in range(8):
+        role_fit.build_igl_experience(team, {caller.id})
+    assert role_fit.igl_experience(team, caller.id) == 100.0
+    assert role_fit.igl_effectiveness(caller, 100.0) > low_exp
+    assert role_fit.igl_effectiveness(caller, 100.0) == round(
+        (caller.attr("game_sense") + caller.attr("comms_quality")) / 2.0, 2
+    )

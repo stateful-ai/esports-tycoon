@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -287,6 +287,12 @@ def _migrate_v15_to_v16(data: dict) -> dict:
     return data
 
 
+def _migrate_v16_to_v17(data: dict) -> dict:
+    """v17 adds defaulted per-team IGL experience. Existing captains remain
+    established callers until a manager assigns someone new."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -303,6 +309,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     13: _migrate_v13_to_v14,
     14: _migrate_v14_to_v15,
     15: _migrate_v15_to_v16,
+    16: _migrate_v16_to_v17,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]

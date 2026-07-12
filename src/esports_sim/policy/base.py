@@ -128,6 +128,7 @@ class AttackRoundRequest:
     prep_edge: float = 0.0
     scouted_site_load: dict[str, float] = field(default_factory=dict)
     timeout: TimeoutDirective | None = None
+    captain_experience: float = 100.0
 
 
 @dataclass(frozen=True)

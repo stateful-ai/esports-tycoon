@@ -81,6 +81,8 @@ PLAYER_BLOCK = {
     "stream_growth_mult",
     "can_rein_streaming",
     "can_change_assignment",
+    "can_assign_igl",
+    "is_igl",
     "confidence",
     "is_starter",
     "dev_focus",
@@ -93,6 +95,8 @@ OVERVIEW = {
     "ovr_stars",
     "current_ability_band",
     "comfort",
+    "igl_experience",
+    "igl_effectiveness",
     "potential",
     "potential_stars",
     "potential_band",
@@ -135,7 +139,7 @@ SEASON = {
 }
 WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
 ATTR_ITEM = {"key", "label", "value", "band"}
-AGENT_ITEM = {"agent_id", "name", "icon", "mastery"}
+AGENT_ITEM = {"agent_id", "name", "icon", "mastery", "role"}
 REL_ITEM = {"pid", "handle", "kind", "strength"}
 
 TEAM_TOP = {
@@ -244,12 +248,16 @@ def test_user_player_profile(env) -> None:
     )
     assert isinstance(prof["player"]["can_rein_streaming"], bool)
     assert prof["player"]["can_change_assignment"] is True
+    assert isinstance(prof["player"]["can_assign_igl"], bool)
 
     ov = prof["overview"]
     assert ov["fogged"] is False
     assert len(ov["current_ability_band"]) == 2
     assert ov["current_ability_band"][0] < ov["current_ability_band"][1]
     assert ov["comfort"] is not None
+    if prof["player"]["is_igl"]:
+        assert ov["igl_experience"] is not None
+        assert ov["igl_effectiveness"] is not None
     assert isinstance(ov["ovr"], int)  # exact for own club
     assert ov["form"] is not None and ov["morale"] is not None
     assert isinstance(ov["market_value"], int)

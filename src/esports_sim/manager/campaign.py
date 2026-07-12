@@ -506,6 +506,8 @@ def advance_week(
     # cannot be fully comfortable on the same match day.
     for p in gs.players.values():
         role_fit.build_comfort(p)
+    for tid, team in gs.teams.items():
+        role_fit.build_igl_experience(team, week_dressed.get(tid, set()))
 
     # 2. Training (human focus is whatever each manager set; AI picks its own,
     # and each human's coach/facility multiplier comes from their own org).
@@ -2274,10 +2276,10 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
             if entries
             else 50.0
         )
-        igl_sense = max(
-            (p.attr("game_sense") for p in roster if str(p.playstyle) == "igl"),
-            default=55.0,
-        )
+        captain = next((p for p in roster if p.id == gs.teams[tid].captain_id), None)
+        igl_sense = role_fit.igl_effectiveness(
+            captain, role_fit.igl_experience(gs.teams[tid], captain.id)
+        ) if captain else 55.0
         clamp = lambda v: float(np.clip(v, 15.0, 85.0))  # noqa: E731
         tac.aggression = round(clamp(50 + (avg_reac - 60) * 0.8 + rng.normal(0, 8)), 1)
         tac.pace = round(clamp(50 + (entry_q - 60) * 0.7 + rng.normal(0, 8)), 1)

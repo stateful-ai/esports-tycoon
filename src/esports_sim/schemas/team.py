@@ -75,6 +75,9 @@ class Team(BaseModel):
     # (ROSTER_MAX) and campaign.dressed_for.
     player_ids: list[str] = Field(default_factory=list)
     captain_id: str | None = None  # the designated IGL
+    # Per-player shot-calling experience, keyed by player id. Empty legacy
+    # maps treat the established captain as fully experienced.
+    igl_experience: dict[str, float] = Field(default_factory=dict)
     # Default starting five (ordered) the team dresses when no per-map lineup
     # override is set. Empty == "auto top-five by quality". Ignored while the
     # roster is exactly five (everyone dresses), which keeps the match gates
