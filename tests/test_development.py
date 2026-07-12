@@ -194,6 +194,35 @@ def test_potential_projection_contains_truth_and_narrows_with_age() -> None:
     assert (yhi - ylo) > (ohi - olo)                  # youth reads wider
 
 
+def test_potential_projection_uses_center_upper_and_lower_anchors() -> None:
+    modes = set()
+    for i in range(100):
+        p = _full(24, 60.0, potential=75.0, pid=f"projection_anchor_{i}")
+        pa = development.potential_of(p)
+        lo, hi = development.potential_projection(p, own=True)
+        if lo == pa:
+            modes.add("lower")
+        elif hi == pa:
+            modes.add("upper")
+        elif round(pa - lo, 1) == round(hi - pa, 1):
+            modes.add("center")
+    assert modes == {"center", "upper", "lower"}
+
+
+def test_good_performance_coach_tightens_own_roster_projection() -> None:
+    p = _full(21, 60.0, potential=75.0, pid="coach_projection")
+    baseline = development.potential_projection(p, own=True)
+    coached = development.potential_projection(
+        p, own=True, performance_coach_quality=90.0
+    )
+    assert coached[1] - coached[0] < baseline[1] - baseline[0]
+    assert coached[0] <= development.potential_of(p) <= coached[1]
+    # Performance staff do not improve reads of players outside their roster.
+    assert development.potential_projection(
+        p, progress=0.5, own=False, performance_coach_quality=90.0
+    ) == development.potential_projection(p, progress=0.5, own=False)
+
+
 def test_scout_verdict_projects_a_band_not_a_number(game_data: GameData) -> None:
     gs = new_campaign(game_data, seed=5)
     p = gs.players[sorted(gs.free_agent_ids)[0]]

@@ -29,6 +29,7 @@ from esports_sim.manager.state import (
     MapResult,
     PlayerLineSnap,
     PlayerSeasonStats,
+    StaffMember,
     TeamRecord,
 )
 from esports_sim.registry import GameData
@@ -857,6 +858,36 @@ def test_dev_progress_shape(env):
     # Sorted by potential descending, then handle.
     pots = [d["potential"] for d in dev]
     assert pots == sorted(pots, reverse=True)
+
+
+def test_performance_coach_tightens_roster_potential_windows(env):
+    gs, gd, h = env
+    gs.staff_by[h.user_team].pop("performance_coach", None)
+    baseline = {
+        row["id"]: row["potential_band"][1] - row["potential_band"][0]
+        for row in server_mod._dev_progress(gs, h.user_team)
+    }
+    hidden_potential = {
+        pid: gs.players[pid].potential for pid in gs.teams[h.user_team].player_ids
+    }
+
+    gs.staff_by[h.user_team]["performance_coach"] = StaffMember(
+        id="precision_pc",
+        name="Precise Coach",
+        role="performance_coach",
+        quality=90.0,
+        salary=1,
+    )
+    coached = {
+        row["id"]: row["potential_band"][1] - row["potential_band"][0]
+        for row in server_mod._dev_progress(gs, h.user_team)
+    }
+
+    assert all(coached[pid] <= baseline[pid] for pid in baseline)
+    assert any(coached[pid] < baseline[pid] for pid in baseline)
+    assert {
+        pid: gs.players[pid].potential for pid in gs.teams[h.user_team].player_ids
+    } == hidden_potential
 
 
 def test_map_pool_board_shape(env):

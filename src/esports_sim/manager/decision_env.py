@@ -98,6 +98,7 @@ def _player_stats(gs: GameState, pid: str) -> dict[str, float]:
 
 def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
     p = gs.players[pid]
+    performance_coach = gs.staff.get("performance_coach")
     return {
         "id": p.id,
         "handle": p.handle,
@@ -106,7 +107,13 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
         "playstyle": str(p.playstyle),
         "attributes": {k: float(v) for k, v in sorted(p.attributes.items())},
         "ca": round(development.overall(p), 3),
-        "pa_projection": list(development.potential_projection(p, own=True)),
+        "pa_projection": list(development.potential_projection(
+            p,
+            own=True,
+            performance_coach_quality=(
+                performance_coach.quality if performance_coach is not None else None
+            ),
+        )),
         "salary": p.salary,
         "contract_weeks": p.contract_weeks_left,
         "tenure_weeks": p.tenure_weeks,
