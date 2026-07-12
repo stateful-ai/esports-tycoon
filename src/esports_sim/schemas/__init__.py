@@ -2,7 +2,7 @@
 
 from esports_sim.schemas.common import Role, Playstyle, Side, Region, TournamentTier
 from esports_sim.schemas.attributes import AttributeDefinition, AttributeRegistry
-from esports_sim.schemas.agent import Agent, Ability, AbilityType
+from esports_sim.schemas.agent import Agent, Ability, AbilityEffect, AbilityType
 from esports_sim.schemas.weapon import Weapon, WeaponClass
 from esports_sim.schemas.map import Callout, Gimmick, GimmickType, Map, SightLine
 from esports_sim.schemas.player import Player, AgentMastery, LanguageSkill, MapMastery
@@ -38,6 +38,7 @@ __all__ = [
     "AttributeRegistry",
     "Agent",
     "Ability",
+    "AbilityEffect",
     "AbilityType",
     "Weapon",
     "WeaponClass",

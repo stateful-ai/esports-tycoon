@@ -224,7 +224,22 @@ UTIL_POWER_SMOKE = 2.0
 UTIL_POWER_FLASH = 1.5
 UTIL_POWER_DAMAGE = 1.0
 UTIL_POWER_INFO = 1.0
+UTIL_POWER_MOBILITY = 1.2
 UTIL_POWER_ULT = 2.0
+# One ability can have several effects (for example a Boom Bot scouts and
+# damages). These tables make utility choice phase-aware instead of treating
+# every kit as one generic strongest button. Keys are AbilityEffect values so
+# tuning remains data/config driven without a schema import in this module.
+UTILITY_INTENT_WEIGHTS = {
+    "execute": {"smoke": 4.0, "flash": 3.5, "info": 3.0, "damage": 2.0, "mobility": 3.0},
+    "stall": {"smoke": 3.0, "flash": 3.5, "info": 2.5, "damage": 4.0, "mobility": 1.0},
+    "retake": {"smoke": 3.0, "flash": 4.0, "info": 3.5, "damage": 3.0, "mobility": 2.0},
+}
+UTILITY_SIGNATURE_PRIORITY = 0.15
+# A dash/blast/teleport only accelerates the move it opens. It is deliberately
+# bounded: mobility gets an entry angle, not an instantaneous site take.
+MOBILITY_MOVE_MULT = 0.72
+MOBILITY_TICKS = 12
 # Chance per unit of post-plant damage-util power to kill the first defuser.
 POST_PLANT_DENIAL_PROB = 0.12
 # Max ticks a site's defensive utility can delay incoming attackers when a
