@@ -8,6 +8,7 @@ from esports_sim.manager.campaign import (
 )
 from esports_sim.manager.decision_env import HeadlessManagerEnv, manager_observation
 from esports_sim.manager.manager_policy import ManagerProfile, generate_profile
+from esports_sim.manager.learned_manager_policy import LearnedManagerModel
 from esports_sim.manager.rollout import evaluate_rollouts, run_batch, run_rollout
 from esports_sim.manager.state import Fixture, GameState, MapResult, TeamRecord
 
@@ -20,6 +21,7 @@ __all__ = [
     "manager_observation",
     "ManagerProfile",
     "generate_profile",
+    "LearnedManagerModel",
     "run_rollout",
     "run_batch",
     "evaluate_rollouts",

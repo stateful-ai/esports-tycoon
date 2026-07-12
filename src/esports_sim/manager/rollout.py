@@ -46,20 +46,22 @@ def run_rollout(
     seed: int,
     weeks: int,
     profile: ManagerProfile | None = None,
+    policy: Any | None = None,
     user_team_id: str = "team_nexus",
     max_decisions_per_week: int = 16,
 ) -> RolloutResult:
     """Run one reproducible manager episode and retain decision-time traces."""
     profile = profile or generate_profile(seed, f"manager-{seed}")
-    policy = HeuristicManagerPolicy(profile)
+    policy = policy or HeuristicManagerPolicy(profile)
     traces: list[dict[str, Any]] = []
+    run_id = f"seed-{seed}-{profile.id}"
     gs = new_campaign(gd, seed=seed, user_team_id=user_team_id)
     env = HeadlessManagerEnv(
         gs,
         gd,
         user_team_id,
         manager_profile=profile.to_dict(),
-        trace_sink=traces.append,
+        trace_sink=lambda trace: traces.append({"run_id": run_id, **trace}),
         policy_version=policy.version,
     )
     rewards: list[float] = []
@@ -71,10 +73,14 @@ def run_rollout(
         action = policy.choose_action(obs)
         try:
             result = env.step(action)
+            diagnostics = getattr(policy, "last_decision", None)
+            if diagnostics and traces:
+                traces[-1]["policy_diagnostics"] = diagnostics
         except InvalidManagerAction as exc:
             invalid += 1
             traces.append(
                 {
+                    "run_id": run_id,
                     "trace_version": 1,
                     "policy_version": policy.version,
                     "season": obs["season"],
@@ -106,7 +112,7 @@ def run_rollout(
     counts = Counter(t["action"]["kind"] for t in traces)
     behavior = Counter(_behavior_token(t) for t in traces)
     return RolloutResult(
-        run_id=f"seed-{seed}-{profile.id}",
+        run_id=run_id,
         seed=seed,
         profile_id=profile.id,
         profile=profile.to_dict(),
@@ -154,7 +160,11 @@ def _behavior_token(trace: dict[str, Any]) -> str:
         )
     if kind == "set_scout":
         target = str(params.get("target", ""))
-        category = "market" if target == "market" else target.split(":", 1)[0]
+        category = (
+            "market" if target == "market"
+            else target.split(":", 1)[0] if ":" in target
+            else "team"
+        )
         return f"{kind}:{category}"
     for field in ("facility", "structure", "dev_focus", "team_talk", "option_id"):
         if field in params and params[field]:

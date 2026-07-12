@@ -28,6 +28,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Dynasty gate (title concentration over N seasons) | `... scripts\dynasty_report.py [seasons] [seed]` (exit 1 = fail) |
 | RL episode export (save -> transitions/actions/chronicle JSONL) | `... scripts\export_telemetry.py <save-or-dir> [stem]` |
 | Manager policy rollouts (traces/runs/evaluation) | `... scripts\run_manager_rollouts.py [seeds] [profiles] [weeks] [stem]` |
+| Train learned manager policy (seed-split imitation) | `... scripts\train_manager_policy.py [train-seeds] [val-seeds] [profiles] [weeks] [checkpoint]` |
 | Match token corpus (world-model data; pinned vocab) | `... scripts\dump_season_tokens.py [n] [seed] [stem]` |
 | Play-pattern report (feature usage across saves) | `... scripts\telemetry_report.py [saves-dir]` |
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
@@ -100,7 +101,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   manager-visible decision observation, legal action masks, and a deterministic
   framework-agnostic headless policy environment; `manager_policy.py` and
   `rollout.py` provide generated manager profiles, a masked heuristic baseline,
-  decision traces, batch evaluation, and training-data exports. Player
+  decision traces, batch evaluation, and training-data exports;
+  `learned_manager_policy.py` adds the NumPy set encoder, profile-conditioned
+  imitation heads, JSON checkpoints, and deterministic learned-policy replay. Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game
