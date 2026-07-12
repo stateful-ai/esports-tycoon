@@ -26,6 +26,19 @@ python -m venv .venv-win
 .venv-win\Scripts\python -m esports_sim
 ```
 
+### Windows taskbar launcher
+
+Install a local launcher that updates **main**, starts the server in the
+background, and opens the game without a PowerShell window:
+
+    powershell -ExecutionPolicy Bypass -File .\scripts\install_taskbar_launcher.ps1
+
+Then open Start, right-click **ESports Simulator**, and choose **Pin to
+taskbar**. Each launch runs a safe fast-forward-only pull from **origin/main**.
+If the checked-out commit or Python dependencies changed, it restarts its
+background server before opening the browser. The taskbar instance uses port
+8421 by default so the normal port-8420 development preview can coexist.
+
 `New game` → pick a seed, a **world**, and a team → weekly loop: set
 training, scout a rival, work the market, talk to a player, advance the
 week, watch replays. The terminal CLI autosaves to `saves/campaign.json`;
