@@ -314,6 +314,23 @@ function setupLobby(lob) {
         .catch(() => (grid.innerHTML = '<span class="muted">Offer fetch failed.</span>'));
       return;
     }
+    if (world === null) {
+      // Fictional-world teams are GENERATED from the seed, so re-fetch at
+      // the CURRENT seed — otherwise a solo start at a random seed builds a
+      // different league than the grid shows (and the pick 422s). Pack
+      // worlds are static data, so they keep using the packs payload.
+      const grid = $("#ng-teams");
+      grid.innerHTML = '<span class="muted">Generating league…</span>';
+      const seed = parseInt($("#ng-seed").value) || 2026;
+      api(`/api/lobby/preview?seed=${seed}`)
+        .then((r) =>
+          renderTeamGrid(grid, r.teams, (t) => createGame(t.id, shared_, world))
+        )
+        .catch(
+          () => (grid.innerHTML = '<span class="muted">Team fetch failed.</span>')
+        );
+      return;
+    }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
       createGame(t.id, shared_, world)
     );
