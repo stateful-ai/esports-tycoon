@@ -17,9 +17,9 @@ HALF_DEFUSE_TICKS = 7  # progress checkpoint
 MOVE_TICKS_PER_EDGE = 6  # legacy fallback pacing (no-geometry maps)
 
 # Continuous movement: players hold real positions and travel at speed.
-# 2.4 grid units/tick makes a typical door-to-door hop ~4-9 ticks, which
-# keeps overall round pacing near the old fixed 6-tick hops.
-PLAYER_SPEED = 2.4  # grid units per tick at movement=50
+# 2.5 grid units/tick keeps a typical door-to-door hop brisk without
+# compressing the pacing gate's 8-18s staging and 25-35s long rotates.
+PLAYER_SPEED = 2.5  # grid units per tick at movement=50
 MIN_MOVE_TICKS = 2
 # Positional cover: a stationary holder hugging a crate that sits between
 # them and the shooter is simply harder to kill.
@@ -78,13 +78,13 @@ DOOR_BREAK_TICKS = 8  # shooting a shut door open (4 s, very loud)
 # rotation trigger — which is also exactly why fakes work.
 
 # Default-strat attackers commit somewhere in this window (uniform draw).
-DEFAULT_GO_EARLIEST = 90
-DEFAULT_GO_LATEST = 130
+DEFAULT_GO_EARLIEST = 75
+DEFAULT_GO_LATEST = 115
 # Execute-strat attackers commit as soon as everyone is staged, but not
 # before this tick (utility setup time).
-EXECUTE_GO_EARLIEST = 30
+EXECUTE_GO_EARLIEST = 24
 # If nothing has happened by here, force the hit regardless of strat.
-FORCE_GO_TICK = ROUND_TICKS - 70
+FORCE_GO_TICK = ROUND_TICKS - 80
 
 # ---------------------------------------------------------------------------
 # Policy / timeout layer
@@ -156,7 +156,14 @@ DUEL_FIZZLE_PROB = 0.10
 # a 5v5 round, so a 20-pt attribute gap should mean ~57% per duel, not
 # 70%+. Blowout scorelines killed the league before this was softened
 # (see scripts/snowball_report.py).
-DUEL_ELO_SCALE = 90.0
+DUEL_ELO_SCALE = 86.0
+# Attribute mix for the base duel score. Precision is the primary separator;
+# movement still matters but is more valuable in routing than raw aim duels.
+DUEL_AIM_PRECISION_WEIGHT = 0.48
+DUEL_AIM_REACTIVITY_WEIGHT = 0.27
+DUEL_MOVEMENT_WEIGHT = 0.12
+DUEL_POSITIONING_WEIGHT = 0.13
+DUEL_GAME_SENSE_WEIGHT = 0.19
 # Flat bonus for holding a defense-advantaged sightline (negated by smokes).
 # Sized against DUEL_ELO_SCALE: at scale 90 this is ~57% for the holder —
 # the angle matters, structure beats raw aim, but it's not a free kill.
@@ -180,6 +187,13 @@ OPERATOR_CLOSE_MALUS = 6.0
 # You can op on anyone; you only get the buff on these.
 OPERATOR_AGENT_AFFINITY = 2.5
 
+# Weapon model. Accuracy and body damage establish a weapon's floor; range
+# then determines where it is allowed to express that strength.
+WEAPON_ACCURACY_SCORE = 15.0
+WEAPON_DAMAGE_PIVOT = 30.0
+WEAPON_DAMAGE_SCORE = 0.10
+WEAPON_DAMAGE_CAP = 2.5
+
 # Range model (needs map floor geometry; neutral without it). Duels are
 # fought at the straight-line distance between the two rooms' centers
 # (same room = point blank). Snipers want long, SMGs/pistols want close,
@@ -189,9 +203,24 @@ RANGE_POINT_BLANK = 4.0  # assumed distance for same-room fights
 RANGE_SNIPER_PIVOT = 18.0  # ops break even here, gain beyond, lose inside
 RANGE_SNIPER_SLOPE = 0.35
 RANGE_SNIPER_CAP = 7.0
-RANGE_CQC_PIVOT = 14.0  # smg/pistol break-even
-RANGE_CQC_SLOPE = 0.30
-RANGE_CQC_CAP = 5.0
+RANGE_PISTOL_PIVOT = 12.0
+RANGE_PISTOL_SLOPE = 0.33
+RANGE_PISTOL_CAP = 5.0
+RANGE_SMG_PIVOT = 16.0
+RANGE_SMG_SLOPE = 0.25
+RANGE_SMG_CAP = 4.0
+RANGE_SHOTGUN_PIVOT = 10.0
+RANGE_SHOTGUN_SLOPE = 0.50
+RANGE_SHOTGUN_CAP = 6.0
+
+# Match form produces upsets, but it cannot routinely erase a clear skill
+# edge. Composure narrows an individual's spread; team form is correlated.
+DAY_FORM_BASE_SIGMA = 10.0
+DAY_FORM_COMPOSURE_DIV = 25.0
+DAY_FORM_MIN_SIGMA = 2.0
+DAY_FORM_CAP = 14.0
+TEAM_FORM_SIGMA = 4.0
+TEAM_FORM_CAP = 8.0
 
 # Map detail (props + elevation, from floor geometry):
 # High ground: duel bonus per unit of floor-height difference, capped.
@@ -266,17 +295,26 @@ FALLBACK_GRACE_TICKS = 8  # covers the retreat hop out of the crossfire
 # hunt the trade, passive teams give up some refrags for safer spacing.
 # Scales the trade probability by +/- this fraction across the full dial.
 AGGRO_TRADE_SPAN = 0.30
+# Both aggressive teams take more live fights; two passive teams let more
+# contact fizzle or wait. Neutral aggression remains an exact no-op.
+AGGRO_ENGAGE_SPAN = 0.18
 
 # Utility discipline shapes flash-for-peek: a disciplined player keeps a
 # flash in the pocket to pop on a swing instead of dumping it on the group
 # execute. Scales PEEK_FLASH_PROB by +/- this fraction across the dial.
 DISC_PEEK_FLASH_SPAN = 0.50
+# Good utility books turn difficult lineups into fewer whiffs. The sign is
+# deliberately centered at 50 so neutral tactic fixtures stay unchanged.
+UTIL_DISCIPLINE_FAIL_SPAN = 0.05
 
 # Pace shapes commitment on a floundering hit: fast books ram the entry
 # through, slow books pull out and re-default. Shifts the abort threshold
 # (attackers-down minus defenders-down) by +/- this many bodies. At pace 0
 # the team pulls out at -1, at pace 100 it only bails at -3.
 PACE_ABORT_SPAN = 1
+# Pace shifts the actual call time in addition to choosing execute vs default.
+# At the poles this creates a 10s early/late separation; 50 is exact no-op.
+PACE_GO_TICK_SPAN = 10
 
 # Map control (attack default): stack tight onto one entry and hit as five,
 # or spread wide for map presence and peel a lurker onto a flank. Neutral
@@ -361,9 +399,17 @@ FOCUS_OFF_MALUS = 0.5  # duel points given up vs everyone else
 # slow for picks and the exit. Shifts the execute probability by +/- this
 # on non-full-buy rounds only; neutral eco_greed leaves it untouched.
 ECO_EXECUTE_SPAN = 0.30
+# Keep the previous neutral force-buy threshold (0.95x) while making the
+# high/low identities visibly different on real eco rounds.
+ECO_FORCE_BASE_MULT = 0.95
+ECO_FORCE_MULT_SPAN = 0.20
 
 # Pace also has a defensive dimension — tempo, not appetite. A fast book
 # rotates onto a hit sooner and commits the retake without waiting for a
 # partner; a slow book plays patient and grouped. Shifts each rotator's
 # delay by +/- this many ticks across the dial; neutral pace is unchanged.
 PACE_ROTATE_SPAN = 3
+# Expose the non-dial rotation timing in the tuning table. These values keep
+# the existing base behavior; pace contributes the neutral-safe span above.
+ROTATE_DELAY_BASE = 12
+ROTATE_SKILL_DIV = 20.0

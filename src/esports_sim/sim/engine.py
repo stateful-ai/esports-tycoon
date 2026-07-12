@@ -344,16 +344,26 @@ class _MatchSim:
             pl = self._player(pid)
             # Volatile personalities swing harder day to day; ice runs flat.
             sigma = (
-                12.0
-                - pl.attr("composure") / 20.0
+                C.DAY_FORM_BASE_SIGMA
+                - pl.attr("composure") / C.DAY_FORM_COMPOSURE_DIV
                 + trait_value(pl, "day_sigma", 0.0)
             )
             self.day_form[pid] = float(
-                np.clip(df_rng.normal(0.0, max(sigma, 2.5)), -18.0, 18.0)
+                np.clip(
+                    df_rng.normal(0.0, max(sigma, C.DAY_FORM_MIN_SIGMA)),
+                    -C.DAY_FORM_CAP,
+                    C.DAY_FORM_CAP,
+                )
             )
         self.tactic_form: dict[str, float] = {
-            team_a: float(df_rng.normal(0.0, 6.5)),
-            team_b: float(df_rng.normal(0.0, 6.5)),
+            team_a: float(np.clip(
+                df_rng.normal(0.0, C.TEAM_FORM_SIGMA),
+                -C.TEAM_FORM_CAP, C.TEAM_FORM_CAP,
+            )),
+            team_b: float(np.clip(
+                df_rng.normal(0.0, C.TEAM_FORM_SIGMA),
+                -C.TEAM_FORM_CAP, C.TEAM_FORM_CAP,
+            )),
         }
         # How well each team's roster + chemistry can EXECUTE its coach's
         # system. Zero at neutral tactics (see _execution_mod), so it never
@@ -926,10 +936,10 @@ class _MatchSim:
                         pl = self._player(leaner)
                         delay = max(
                             2,
-                            12
+                            C.ROTATE_DELAY_BASE
                             - int(
                                 (pl.attr("game_sense") + pl.attr("comms_quality"))
-                                / 20.0
+                                / C.ROTATE_SKILL_DIV
                             ),
                         )
                         rotate_at[leaner] = tick + delay
@@ -1864,12 +1874,17 @@ class _MatchSim:
             ab = self._best_ability(ps, intent)
             if ab is not None:
                 ps.charges[ab.id] -= 1
+                # Utility usage is the player's mechanical baseline; the
+                # team book changes whether the lineup is cleanly prepared.
+                # The coaching term is centered at 50 so neutral tactics
+                # preserve the canonical match log exactly.
                 fail_p = min(
                     C.UTIL_FAIL_MAX,
                     max(
                         0.03,
                         C.UTIL_FAIL_BASE
-                        + (55.0 - pl.attr("utility_usage")) / 250.0,
+                        + (55.0 - pl.attr("utility_usage")) / 250.0
+                        + (50.0 - disc) / 50.0 * C.UTIL_DISCIPLINE_FAIL_SPAN,
                     ),
                 )
                 failed = rng is not None and rng.random() < fail_p
@@ -2251,9 +2266,15 @@ class _MatchSim:
         if wc == "sniper":
             raw = (dist - C.RANGE_SNIPER_PIVOT) * C.RANGE_SNIPER_SLOPE
             return max(-C.RANGE_SNIPER_CAP, min(C.RANGE_SNIPER_CAP, raw))
-        if wc in ("smg", "pistol", "shotgun"):
-            raw = (C.RANGE_CQC_PIVOT - dist) * C.RANGE_CQC_SLOPE
-            return max(-C.RANGE_CQC_CAP, min(C.RANGE_CQC_CAP, raw))
+        if wc == "pistol":
+            raw = (C.RANGE_PISTOL_PIVOT - dist) * C.RANGE_PISTOL_SLOPE
+            return max(-C.RANGE_PISTOL_CAP, min(C.RANGE_PISTOL_CAP, raw))
+        if wc == "smg":
+            raw = (C.RANGE_SMG_PIVOT - dist) * C.RANGE_SMG_SLOPE
+            return max(-C.RANGE_SMG_CAP, min(C.RANGE_SMG_CAP, raw))
+        if wc == "shotgun":
+            raw = (C.RANGE_SHOTGUN_PIVOT - dist) * C.RANGE_SHOTGUN_SLOPE
+            return max(-C.RANGE_SHOTGUN_CAP, min(C.RANGE_SHOTGUN_CAP, raw))
         return 0.0  # rifles shoot flat everywhere
 
     def _duel_score(
@@ -2275,14 +2296,26 @@ class _MatchSim:
         ps = self.p[pid]
         pl = self._player(pid)
         s = (
-            0.40 * pl.attr("aim_precision")
-            + 0.25 * pl.attr("aim_reactivity")
-            + 0.15 * pl.attr("movement")
-            + 0.20 * pl.attr("positioning" if holder else "game_sense")
+            C.DUEL_AIM_PRECISION_WEIGHT * pl.attr("aim_precision")
+            + C.DUEL_AIM_REACTIVITY_WEIGHT * pl.attr("aim_reactivity")
+            + C.DUEL_MOVEMENT_WEIGHT * pl.attr("movement")
+            + (
+                C.DUEL_POSITIONING_WEIGHT * pl.attr("positioning")
+                if holder
+                else C.DUEL_GAME_SENSE_WEIGHT * pl.attr("game_sense")
+            )
         )
         s += self._condition(pid, pl)
         weapon = self.gd.weapons[ps.weapon]
-        s += (weapon.accuracy_base - 0.6) * 20.0
+        s += (weapon.accuracy_base - 0.6) * C.WEAPON_ACCURACY_SCORE
+        s += max(
+            -C.WEAPON_DAMAGE_CAP,
+            min(
+                C.WEAPON_DAMAGE_CAP,
+                (weapon.dmg_body - C.WEAPON_DAMAGE_PIVOT)
+                * C.WEAPON_DAMAGE_SCORE,
+            ),
+        )
         s += (pl.agent_mastery(ps.agent_id, 50.0) - 50.0) / 25.0
         for m in pl.map_pool:
             if m.map_id == self.map.id:
@@ -2383,6 +2416,11 @@ class _MatchSim:
                     continue
                 same = pa.callout == pd.callout
                 p_engage = C.ENGAGE_PROB_SAME_CALLOUT if same else C.ENGAGE_PROB
+                aggression = (
+                    (self._tactics(pa.team_id).aggression - 50.0)
+                    + (self._tactics(pd.team_id).aggression - 50.0)
+                ) / 100.0
+                p_engage *= 1.0 + aggression * C.AGGRO_ENGAGE_SPAN
                 # Positional line of sight: a full-height box between the
                 # two ACTUAL positions breaks the angle — even inside one
                 # room (dancing around the mid box).
@@ -2407,7 +2445,7 @@ class _MatchSim:
                         # symmetric attrition favors whichever side has
                         # more bodies to spend, i.e. the attackers pre-hit.
                         p_engage *= 0.05
-                if rng.random() >= p_engage:
+                if rng.random() >= min(1.0, max(0.0, p_engage)):
                     continue
                 engaged.add(a_pid)
                 engaged.add(d_pid)
@@ -2732,8 +2770,11 @@ class _MatchSim:
             pl = self._player(q)
             delay = max(
                 2,
-                12
-                - int((pl.attr("game_sense") + pl.attr("comms_quality")) / 20.0)
+                C.ROTATE_DELAY_BASE
+                - int(
+                    (pl.attr("game_sense") + pl.attr("comms_quality"))
+                    / C.ROTATE_SKILL_DIV
+                )
                 - info_bonus
                 - pace_rotate,
             )
