@@ -39,6 +39,7 @@ from esports_sim.manager import (
     meta as meta_mod,
     narrative,
     relationships,
+    role_fit,
     rivalries as rivalries_mod,
     social,
     sponsors,
@@ -3646,6 +3647,35 @@ class DevPlanBody(BaseModel):
     training_intensity: str | None = None
 
 
+class AssignmentBody(BaseModel):
+    player_id: str
+    role: Role
+    playstyle: Playstyle
+
+
+@app.post("/api/actions/assignment")
+def assignment_action(body: AssignmentBody) -> dict:
+    """Change an own player's role/style; comfort must then be rebuilt."""
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams[gs.acting_team_id]
+        if body.player_id not in team.player_ids:
+            raise HTTPException(409, "player is not on your roster")
+        p = gs.players[body.player_id]
+        if p.role == body.role and p.playstyle == body.playstyle:
+            return {"ok": True, "message": f"{p.handle} is already in that assignment"}
+        role_fit.change_assignment(p, body.role, body.playstyle)
+        telemetry.record_action(gs, "set_assignment", {
+            "player_id": p.id, "role": str(p.role), "playstyle": str(p.playstyle),
+        })
+        S.save()
+        return {
+            "ok": True,
+            "message": f"{p.handle} moved to {p.role}/{p.playstyle}; comfort must build over time.",
+            "comfort": round(role_fit.assignment_comfort(p)),
+        }
+
+
 @app.post("/api/actions/dev_plan")
 def dev_plan_action(body: DevPlanBody) -> dict:
     """Set a player's individual development plan (own roster only)."""
@@ -4990,6 +5020,13 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
     return {
         "ovr": ovr,
         "ovr_stars": None if fogged else development.stars(development.overall(p)),
+        # Role/style current ability is intentionally a range for everyone,
+        # including your own roster. It is a hidden execution estimate rather
+        # than the visible arithmetic overall.
+        "current_ability_band": list(
+            development.current_ability_projection(p, 1.0 if not fogged else progress)
+        ),
+        "comfort": None if fogged else round(role_fit.assignment_comfort(p)),
         "potential": potential,
         "potential_stars": pot_stars,
         "potential_band": potential_band,
@@ -5308,6 +5345,7 @@ def player_profile(pid: str) -> dict:
                 "can_rein_streaming": (
                     talk.can_rein_streaming(gs, pid)[0] if own else False
                 ),
+                "can_change_assignment": own,
                 "confidence": None if fog > 0 else round(p.confidence, 1),
                 "is_starter": (
                     pid in default_five(gs, team_id) if team_id else None

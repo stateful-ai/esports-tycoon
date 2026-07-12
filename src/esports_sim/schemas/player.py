@@ -72,6 +72,10 @@ class Player(BaseModel):
     # Role / style
     role: Role
     playstyle: Playstyle
+    # Experience is assignment-specific: a player can retain some familiarity
+    # with an old job, but frequent role/style changes prevent settling in.
+    # Empty means an established legacy assignment (100 comfort).
+    role_style_comfort: dict[str, float] = Field(default_factory=dict)
 
     # Attributes: dict keyed by attribute-registry id. Sim code reads by id
     # with a default if a key is missing, so adding attributes is non-breaking.
