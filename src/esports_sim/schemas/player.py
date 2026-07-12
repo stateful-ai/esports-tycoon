@@ -150,3 +150,9 @@ class Player(BaseModel):
             if m.agent_id == agent_id:
                 return m.mastery
         return default
+
+    def map_mastery(self, map_id: str, default: float = 0.0) -> float:
+        for mastery in self.map_pool:
+            if mastery.map_id == map_id:
+                return mastery.mastery
+        return default

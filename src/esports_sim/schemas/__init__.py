@@ -8,7 +8,15 @@ from esports_sim.schemas.map import Callout, Gimmick, GimmickType, Map, SightLin
 from esports_sim.schemas.player import Player, AgentMastery, LanguageSkill, MapMastery
 from esports_sim.schemas.team import Team, TeamLineup, TeamTactics
 from esports_sim.schemas.match import MatchState, RoundState, PlayerRoundState, RoundPhase
-from esports_sim.schemas.observation import PlayerObservation
+from esports_sim.schemas.observation import EnemyReadout, PlayerObservation
+from esports_sim.schemas.communication import (
+    ClaimKind,
+    ClaimValue,
+    CommunicationAction,
+    TeamBelief,
+    TeamClaim,
+)
+from esports_sim.schemas.decision import PlayerConditionV1
 from esports_sim.schemas.events import (
     Event,
     MatchStartEvent,
@@ -59,6 +67,13 @@ __all__ = [
     "PlayerRoundState",
     "RoundPhase",
     "PlayerObservation",
+    "EnemyReadout",
+    "ClaimKind",
+    "ClaimValue",
+    "CommunicationAction",
+    "TeamBelief",
+    "TeamClaim",
+    "PlayerConditionV1",
     "Event",
     "MatchStartEvent",
     "MatchEndEvent",

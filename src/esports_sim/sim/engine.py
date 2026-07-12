@@ -28,16 +28,12 @@ from esports_sim.policy.base import (
     CoachObservation,
     CoachPolicy,
     CoachProfile,
+    CommunicationPolicy,
     DefenseRoundRequest,
     PlayerPolicy,
     RotationPlanRequest,
     TeamPolicy,
     TimeoutDirective,
-)
-from esports_sim.policy.heuristic import (
-    HeuristicCoachPolicy,
-    HeuristicPolicy,
-    HeuristicTeamPolicy,
 )
 from esports_sim.registry.loader import GameData, load_geometry
 from esports_sim.sim import lineup as lineup_resolve
@@ -45,6 +41,10 @@ from esports_sim.schemas import (
     Ability,
     AbilityEffect,
     BuyEvent,
+    ClaimKind,
+    ClaimValue,
+    CommunicationAction,
+    EnemyReadout,
     Event,
     Gimmick,
     GimmickType,
@@ -55,6 +55,7 @@ from esports_sim.schemas import (
     MatchStartEvent,
     MoveEvent,
     Player,
+    PlayerConditionV1,
     PlayerObservation,
     PlayerRoundState,
     RoundEndEvent,
@@ -70,6 +71,7 @@ from esports_sim.schemas.map import CalloutZone, Site
 from esports_sim.schemas.team import TeamTactics
 from esports_sim.schemas.traits import trait_value
 from esports_sim.sim import constants as C
+from esports_sim.sim.comms import TeamWhiteboard
 from esports_sim.sim import tactics_fit
 
 
@@ -95,6 +97,7 @@ class MatchPolicies:
     """
 
     player_by_id: dict[str, PlayerPolicy] = field(default_factory=dict)
+    communication_by_id: dict[str, CommunicationPolicy] = field(default_factory=dict)
     team_by_id: dict[str, TeamPolicy] = field(default_factory=dict)
     coach_by_team: dict[str, CoachPolicy] = field(default_factory=dict)
 
@@ -276,6 +279,15 @@ class _MatchSim:
                 agent = lineup_resolve.resolve_agent(gd.teams[tid], pl, gd.agents)
                 self.p[pid] = _PState(pid=pid, team_id=tid, agent_id=agent)
 
+        # Local import keeps policy.heuristic independently importable even
+        # though it reads sim constants and sim.__init__ exposes this engine.
+        from esports_sim.policy.heuristic import (
+            HeuristicCoachPolicy,
+            HeuristicPolicy,
+            HeuristicTeamPolicy,
+        )
+
+        self._heuristic_player_type = HeuristicPolicy
         supplied = policies or MatchPolicies()
         self.team_policies: dict[str, TeamPolicy] = {
             tid: supplied.team_by_id.get(tid, HeuristicTeamPolicy(gd, self.map))
@@ -285,6 +297,7 @@ class _MatchSim:
             pid: supplied.player_by_id.get(pid, HeuristicPolicy(gd, self.map))
             for pid in sorted(self.p)
         }
+        self.communication_policies = dict(supplied.communication_by_id)
         self.coach_policies: dict[str, CoachPolicy] = {
             tid: supplied.coach_by_team.get(tid, HeuristicCoachPolicy())
             for tid in (team_a, team_b)
@@ -304,6 +317,13 @@ class _MatchSim:
         }
         self._round_target: dict[str, str | None] = {team_a: None, team_b: None}
         self._round_policy_rngs: dict[str, np.random.Generator] = {}
+        self._whiteboard = TeamWhiteboard(
+            self.rng_tree, self.match_id, self.map, gd.players
+        )
+        self._enemy_memory: dict[str, dict[str, EnemyReadout]] = {
+            pid: {} for pid in self.p
+        }
+        self._round_num = 0
 
         self.score = {team_a: 0, team_b: 0}
         self.loss_streak = {team_a: 0, team_b: 0}
@@ -644,7 +664,7 @@ class _MatchSim:
                 policy = self.player_policies[pid]
                 # The shipped heuristic gets primitives directly. Custom
                 # policies retain the public observation contract below.
-                if type(policy) is HeuristicPolicy:
+                if type(policy) is self._heuristic_player_type:
                     action = policy.decide_fast_state(
                         pid,
                         ps.credits,
@@ -716,6 +736,10 @@ class _MatchSim:
     # -- round -------------------------------------------------------------------
 
     def _play_round(self, round_num: int) -> None:
+        self._round_num = round_num
+        self._whiteboard.reset()
+        for memory in self._enemy_memory.values():
+            memory.clear()
         atk, dfn = self._sides(round_num)
         rng = self.rng_tree.derive("match", self.match_id, "round", round_num)
         seed_path = ("match", self.match_id, "round", str(round_num))
@@ -1093,7 +1117,7 @@ class _MatchSim:
                 if not ps.alive or ps.busy:
                     continue
                 policy = self.player_policies[pid]
-                if type(policy) is HeuristicPolicy:
+                if type(policy) is self._heuristic_player_type:
                     directive = self._timeout_directive[ps.team_id]
                     act = policy.decide_fast_state(
                         pid,
@@ -1750,24 +1774,103 @@ class _MatchSim:
         # for policies without paying validation ten times every half-second.
         return PlayerObservation.model_construct(
             self_state=(round_states[pid] if round_states is not None else self._round_state(ps)),
+            player_condition=self._player_condition(pid),
             round_num=round_num,
             tick=tick,
             spike_planted=spike_planted,
             is_attacking=is_attacking,
             teammates=mates,
-            enemies=[],
+            enemies=self._enemy_readouts(pid, tick),
+            team_whiteboard=self._whiteboard.view(ps.team_id, pid, tick),
             adjacent_callouts=sorted(self.map.neighbors(ps.callout))
             if ps.callout
             else [],
             igl_call=order,
             role=ps.role,
-            team_target=self._round_target.get(ps.team_id),
+            # Attackers know their own called site. Defenders must infer it
+            # through private perception and the fallible team whiteboard.
+            team_target=(self._round_target.get(ps.team_id) if is_attacking else None),
             timeout_directive=(
                 self._timeout_directive[ps.team_id].kind
                 if self._timeout_directive[ps.team_id] is not None
                 else None
             ),
             tactical_aggression=self._tactics(ps.team_id).aggression,
+        )
+
+    def _enemy_readouts(self, pid: str, tick: int) -> list[EnemyReadout]:
+        """Current sight plus the observer's own decaying private memory."""
+        if tick <= 0:
+            return []
+        observer = self.p[pid]
+        memory = self._enemy_memory[pid]
+        for enemy_id in sorted(self.p):
+            enemy = self.p[enemy_id]
+            if enemy.team_id == observer.team_id or not enemy.alive:
+                continue
+            visible = bool(observer.callout and enemy.callout)
+            if visible:
+                visible, _ = self._sightline(observer.callout, enemy.callout)
+            visible = (
+                visible
+                and observer.flash_until < tick
+                and not (
+                    self._smoke_until_by_site.get(
+                        self._callout_site(observer.callout), -1
+                    ) >= tick
+                    and observer.callout != enemy.callout
+                )
+            )
+            if visible:
+                memory[enemy_id] = EnemyReadout(
+                    player_id=enemy_id,
+                    last_seen_callout=enemy.callout,
+                    last_seen_tick=tick,
+                    weapon_guess=enemy.weapon,
+                    alive_guess=True,
+                    confidence=1.0,
+                    source="seen",
+                )
+
+        out: list[EnemyReadout] = []
+        for enemy_id in sorted(memory):
+            readout = memory[enemy_id]
+            age = max(0, tick - (readout.last_seen_tick or 0))
+            confidence = 0.5 ** (age / C.PRIVATE_ENEMY_MEMORY_HALF_LIFE)
+            if confidence < C.PRIVATE_ENEMY_FORGET_CONFIDENCE:
+                continue
+            out.append(
+                readout.model_copy(
+                    update={
+                        "confidence": confidence,
+                        "source": "seen" if age == 0 else "remembered",
+                    }
+                )
+            )
+        return out
+
+    def _player_condition(self, pid: str) -> PlayerConditionV1:
+        player = self._player(pid)
+        ps = self.p[pid]
+        return PlayerConditionV1(
+            role=player.role,
+            playstyle=player.playstyle,
+            personality_tags=tuple(sorted(player.personality_tags)),
+            aim_precision=player.attr("aim_precision"),
+            aim_reactivity=player.attr("aim_reactivity"),
+            movement=player.attr("movement"),
+            game_sense=player.attr("game_sense"),
+            utility_usage=player.attr("utility_usage"),
+            positioning=player.attr("positioning"),
+            clutch_factor=player.attr("clutch_factor"),
+            tilt_resistance=player.attr("tilt_resistance"),
+            composure=player.attr("composure"),
+            comms_quality=player.attr("comms_quality"),
+            agent_mastery=player.agent_mastery(ps.agent_id, 50.0),
+            map_mastery=player.map_mastery(self.map.id, 50.0),
+            confidence=player.confidence,
+            form=player.form,
+            stamina=player.stamina,
         )
 
     def _round_state(self, ps: _PState) -> PlayerRoundState:
@@ -2685,43 +2788,116 @@ class _MatchSim:
         if not off_site:
             return
 
-        # Comms quality decides whether the rotate call is clean. Crossed
-        # comms stall everyone; a sharp caller is pure feed flavor (the
-        # speed benefit already lives in each rotator's delay formula).
+        # A communication policy may choose whether to publish a structured
+        # call. With no supplied comms head, retain the byte-identical legacy
+        # behavior while populating the whiteboard in shadow mode.
         alive = [q for q in defenders if self.p[q].alive]
-        avg_comms = sum(
-            self._player(q).attr("comms_quality") for q in alive
-        ) / max(len(alive), 1)
         caller = max(
             alive, key=lambda q: (self._player(q).attr("comms_quality"), q)
         )
+        site_callouts = sorted(
+            cid for cid in self.map.callouts
+            if self._callout_site(cid) == target_site
+            and self.map.callouts[cid].zone == CalloutZone.SITE
+        )
+        callout_id = site_callouts[0] if site_callouts else None
+        offered = CommunicationAction(
+            speak=True,
+            kind=ClaimKind.ENEMY_INTENT,
+            value=ClaimValue.EXECUTING,
+            callout_id=callout_id,
+            expressed_confidence=0.9,
+        )
         miscomm_extra = 0
-        if rng is not None and avg_comms < C.MISCOMM_COMMS_THRESHOLD:
-            p_mis = min(
-                C.MISCOMM_MAX_PROB,
-                (C.MISCOMM_COMMS_THRESHOLD - avg_comms) / 80.0,
+        comm_policy = self.communication_policies.get(caller)
+        if comm_policy is not None:
+            legal_comms = [CommunicationAction(), offered]
+            comm_action = comm_policy.communicate(
+                self._observe(
+                    caller,
+                    self._round_num,
+                    tick,
+                    False,
+                    False,
+                    self.p[caller].order,
+                ),
+                legal_comms,
+                self.rng_tree.derive(
+                    "match", self.match_id, "round", self._round_num,
+                    "tick", tick, "player", caller, "communication",
+                ),
             )
-            if rng.random() < p_mis:
+            if comm_action not in legal_comms:
+                comm_action = CommunicationAction()
+            claim = self._whiteboard.publish(
+                self.p[caller].team_id,
+                caller,
+                comm_action,
+                tick,
+                self._round_num,
+            )
+            if claim is None or claim.callout_id != callout_id:
                 miscomm_extra = C.MISCOMM_DELAY
-                garbled = min(
-                    alive,
-                    key=lambda q: (self._player(q).attr("comms_quality"), q),
-                )
+            else:
+                miscomm_extra = claim.delivered_tick - tick
+            if claim is not None and miscomm_extra == 0:
                 self._emit(
                     CommsEvent(
                         tick=tick, seed_path=seed_path,
                         team_id=self.p[caller].team_id,
-                        player_id=garbled, kind="miscomm",
+                        player_id=caller, kind="call",
                     )
                 )
-        if miscomm_extra == 0 and avg_comms >= C.CALL_COMMS_THRESHOLD:
-            self._emit(
-                CommsEvent(
-                    tick=tick, seed_path=seed_path,
-                    team_id=self.p[caller].team_id,
-                    player_id=caller, kind="call",
+            elif comm_action.speak:
+                self._emit(
+                    CommsEvent(
+                        tick=tick, seed_path=seed_path,
+                        team_id=self.p[caller].team_id,
+                        player_id=caller, kind="miscomm",
+                    )
                 )
-            )
+        else:
+            avg_comms = sum(
+                self._player(q).attr("comms_quality") for q in alive
+            ) / max(len(alive), 1)
+            legacy_action: CommunicationAction | None = None
+            if rng is not None and avg_comms < C.MISCOMM_COMMS_THRESHOLD:
+                p_mis = min(
+                    C.MISCOMM_MAX_PROB,
+                    (C.MISCOMM_COMMS_THRESHOLD - avg_comms) / 80.0,
+                )
+                if rng.random() < p_mis:
+                    miscomm_extra = C.MISCOMM_DELAY
+                    garbled = min(
+                        alive,
+                        key=lambda q: (self._player(q).attr("comms_quality"), q),
+                    )
+                    caller = garbled
+                    legacy_action = offered
+                    self._emit(
+                        CommsEvent(
+                            tick=tick, seed_path=seed_path,
+                            team_id=self.p[caller].team_id,
+                            player_id=garbled, kind="miscomm",
+                        )
+                    )
+            if miscomm_extra == 0 and avg_comms >= C.CALL_COMMS_THRESHOLD:
+                legacy_action = offered
+                self._emit(
+                    CommsEvent(
+                        tick=tick, seed_path=seed_path,
+                        team_id=self.p[caller].team_id,
+                        player_id=caller, kind="call",
+                    )
+                )
+            if legacy_action is not None:
+                self._whiteboard.publish(
+                    self.p[caller].team_id,
+                    caller,
+                    legacy_action,
+                    tick,
+                    self._round_num,
+                )
         # An initiator burning an info charge calls the hit early — the
         # whole rotation leaves sooner. Once per round.
         info_bonus = 0

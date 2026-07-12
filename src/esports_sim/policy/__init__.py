@@ -3,9 +3,15 @@ from esports_sim.policy.base import (
     ActionType,
     CoachPolicy,
     CoachProfile,
+    CommunicationPolicy,
     PlayerPolicy,
     TeamPolicy,
     TimeoutDirective,
+)
+from esports_sim.policy.learned import (
+    LearnedPlayerModel,
+    LearnedPlayerPolicy,
+    RecordingPlayerPolicy,
 )
 
 __all__ = [
@@ -13,7 +19,11 @@ __all__ = [
     "ActionType",
     "CoachPolicy",
     "CoachProfile",
+    "CommunicationPolicy",
     "PlayerPolicy",
     "TeamPolicy",
     "TimeoutDirective",
+    "LearnedPlayerModel",
+    "LearnedPlayerPolicy",
+    "RecordingPlayerPolicy",
 ]
