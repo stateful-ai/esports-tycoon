@@ -1654,7 +1654,7 @@ async function roster(v) {
             .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
         : [];
       const focusSel = data.is_user_team
-        ? `<select data-act="focus" title="training focus (auto = team week)">
+        ? `<select data-act="focus" title="training focus (auto = team week; rest = recover instead)">
              ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""} ${o === "language" && !data.has_language_coach ? "disabled" : ""}>${o}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';

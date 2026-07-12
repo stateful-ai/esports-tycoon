@@ -643,9 +643,10 @@ def weekly_dev_events(gs, rng) -> list[dict]:
 
 def _fire_event(gs, tid: str, p: Player, rng) -> tuple[str, str]:
     """Pick and apply one event. An 'intense' training plan adds burnout
-    to the table — the risk that pays for the extra growth."""
+    to the table — the risk that pays for extra growth — unless the player
+    has opted out to rest that week."""
     roll = rng.random()
-    if p.training_intensity == "intense" and roll < 0.22:
+    if p.dev_focus != "rest" and p.training_intensity == "intense" and roll < 0.22:
         p.stamina = _clamp_stat(p.stamina - 30.0)
         p.morale = _clamp_stat(p.morale - 8.0)
         p.confidence = _clamp_stat(p.confidence - 6.0, 5.0, 95.0)
