@@ -22,7 +22,9 @@ from esports_sim.schemas.attributes import AttributeCategory
 FOCUS_OPTIONS = ["mechanical", "tactical", "mental", "team", "rest"]
 
 # Per-player plan knobs (Player.dev_focus / Player.training_intensity).
-DEV_FOCUS_OPTIONS = ["auto", "mechanical", "tactical", "mental", "team", "language"]
+DEV_FOCUS_OPTIONS = [
+    "auto", "mechanical", "tactical", "mental", "team", "language", "rest",
+]
 INTENSITY_OPTIONS = ["light", "normal", "intense"]
 LANGUAGE_OPTIONS = ["ar", "de", "en", "es", "fr", "id", "ja", "ko", "ms", "pt", "ru", "th", "tl", "tr", "vi", "zh"]
 _INTENSITY_GROWTH = {"light": 0.6, "normal": 1.0, "intense": 1.4}
@@ -133,6 +135,15 @@ def apply_training(
         return
 
     for p in roster:
+        # Individual rest overrides the team's training category. It uses the
+        # same recovery as a team rest week, but only for the opted-out player.
+        # This gives a manager a deterministic way to nurse a tweaked wrist or
+        # a drained starter without shelving the rest of the roster's practice.
+        if p.dev_focus == "rest":
+            p.stamina = min(100.0, p.stamina + 18.0)
+            p.morale = min(100.0, p.morale + 1.5)
+            continue
+
         # Individual plan: a pinned focus overrides the team's category
         # (a team "rest" week still rests everyone, handled above).
         p_focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else focus

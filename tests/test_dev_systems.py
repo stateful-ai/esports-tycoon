@@ -199,6 +199,44 @@ def test_language_coach_rate_requires_the_role(campaign) -> None:
     assert staff.language_learning_rate(campaign) > 0.0
 
 
+def test_individual_rest_overrides_team_training_and_recovers(campaign) -> None:
+    tid = campaign.user_team_id
+    team = campaign.teams[tid]
+    resting = campaign.roster(tid)[0]
+    resting.dev_focus = "rest"
+    resting.training_intensity = "intense"  # ignored while resting
+    resting.stamina = 50.0
+    resting.morale = 60.0
+    before = dict(resting.attributes)
+
+    training.apply_training(team, campaign.roster(tid), "mechanical", RngTree(3).derive("t"))
+
+    assert resting.attributes == before
+    assert resting.stamina == 68.0
+    # Weekly regression runs before recovery, then rest adds 1.5 morale.
+    assert resting.morale == 61.5
+
+
+def test_resting_player_cannot_trigger_intense_training_burnout(campaign) -> None:
+    class FixedRng:
+        def random(self):
+            return 0.1
+
+        def uniform(self, low, high):
+            return low
+
+    tid = campaign.user_team_id
+    resting = campaign.roster(tid)[0]
+    resting.dev_focus = "rest"
+    resting.training_intensity = "intense"
+    resting.stamina = 55.0
+
+    kind, _ = development._fire_event(campaign, tid, resting, FixedRng())
+
+    assert kind == "breakthrough"
+    assert resting.stamina == 55.0
+
+
 def test_match_experience_scales_with_youth_and_line() -> None:
     gd = load_all()
     gs = new_campaign(gd, seed=99)

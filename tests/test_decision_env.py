@@ -44,6 +44,7 @@ def test_legal_masks_match_domain_rules(game_data):
     assert legal["set_training"]["options"] == [
         "mechanical", "tactical", "mental", "team", "rest"
     ]
+    assert "rest" in legal["set_dev_plan"]["focus_options"]
     assert legal["set_lineup"]["player_ids"] == sorted(gs.teams[gs.user_team_id].player_ids)
     assert set(legal["sign"]["player_ids"]).issubset(gs.free_agent_ids)
     for pair in legal["swap"]["pairs"]:
@@ -74,6 +75,12 @@ def test_extended_manager_actions_use_shared_domain_rules(game_data):
     })
     assert gs.players[pid].dev_focus == "mechanical"
     assert gs.players[pid].training_intensity == "light"
+
+    env.step({
+        "kind": "set_dev_plan",
+        "params": {"player_id": pid, "dev_focus": "rest"},
+    })
+    assert gs.players[pid].dev_focus == "rest"
 
     candidate = env.observe()["legal_actions"]["hire_staff"]["candidate_ids"][0]
     role = next(m.role for m in gs.staff_pool if m.id == candidate)
