@@ -6,6 +6,7 @@ from __future__ import annotations
 import pytest
 
 from esports_sim.registry import GameData
+from esports_sim.registry import loader
 from esports_sim.registry.loader import load_geometry
 
 
@@ -75,3 +76,25 @@ def test_hop_and_sight_distances_positive(game_data: GameData) -> None:
             assert geo.hop_distance(a, b) > 0
     for sl in m.sightlines:
         assert geo.sight_distance(sl.from_callout, sl.to_callout) > 0
+
+
+def test_geometry_loader_reuses_unchanged_floor_plan(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Repeated matches should not reparse the same immutable map YAML."""
+    loader._load_geometry_cached.cache_clear()
+    real_load_yaml = loader._load_yaml
+    calls = 0
+
+    def counted_load_yaml(path):
+        nonlocal calls
+        calls += 1
+        return real_load_yaml(path)
+
+    monkeypatch.setattr(loader, "_load_yaml", counted_load_yaml)
+    try:
+        first = load_geometry("haven")
+        second = load_geometry("haven")
+    finally:
+        loader._load_geometry_cached.cache_clear()
+
+    assert first is second
+    assert calls == 1

@@ -83,10 +83,29 @@ class HeuristicPolicy:
     def _choose_buy(
         self, obs: PlayerObservation, rng: np.random.Generator
     ) -> Action:
-        credits = obs.self_state.credits
-        call = obs.igl_call or "buy:full"
+        state = obs.self_state
+        return self._choose_buy_state(
+            state.player_id,
+            state.credits,
+            state.weapon_id,
+            state.armor,
+            obs.igl_call,
+            rng,
+        )
+
+    def _choose_buy_state(
+        self,
+        player_id: str,
+        credits: int,
+        owned: str,
+        current_armor: int,
+        call: str | None,
+        rng: np.random.Generator,
+    ) -> Action:
+        """Buy selection shared by the public and allocation-free paths."""
+        call = call or "buy:full"
         tier = call.split(":", 1)[1] if ":" in call else "full"
-        player = self._gd.players[obs.self_state.player_id]
+        player = self._gd.players[player_id]
         weapons = self._gd.weapons
 
         weapon_id = "classic"
@@ -129,10 +148,9 @@ class HeuristicPolicy:
                 spend_weapon = weapons["spectre"].price + C.ARMOR_PRICE
 
         # Keep the weapon we already own if it's better than what we'd buy.
-        owned = obs.self_state.weapon_id
         if owned not in ("classic",) and weapons[owned].price >= spend_weapon:
             weapon_id = owned
-            armor = max(armor, obs.self_state.armor and C.ARMOR_VALUE or 0)
+            armor = max(armor, current_armor and C.ARMOR_VALUE or 0)
 
         return Action(type=ActionType.BUY, weapon_id=weapon_id, armor=armor)
 
@@ -155,6 +173,70 @@ class HeuristicPolicy:
         through ``decide`` unchanged.
         """
         return self._decide(obs, legal, rng)
+
+    def decide_fast_state(
+        self,
+        player_id: str,
+        credits: int,
+        weapon_id: str,
+        armor: int,
+        callout_id: str | None,
+        order: str,
+        legal: tuple[Action, ...],
+        rng: np.random.Generator,
+        tactical_aggression: float = 50.0,
+        timeout_directive: str | None = None,
+    ) -> Action:
+        """Allocation-free hot path for the shipped heuristic only.
+
+        ``decide`` and ``decide_fast`` remain the external-facing policy
+        interfaces.  The referee knows the concrete built-in policy and can
+        pass its already-held primitives here instead of materializing an
+        observation object for every player on every tick.
+        """
+        if legal[0].type == ActionType.BUY:
+            return self._choose_buy_state(
+                player_id, credits, weapon_id, armor, order, rng
+            )
+
+        last_type = legal[-1].type
+        if (
+            (order == "plant" or order.startswith("plant:"))
+            and last_type == ActionType.PLANT_SPIKE
+        ):
+            return legal[-1]
+        if (
+            (order == "defuse" or order.startswith("defuse:"))
+            and last_type == ActionType.DEFUSE_SPIKE
+        ):
+            return legal[-1]
+
+        if order.startswith("goto:"):
+            destination = order[5:]
+            if callout_id == destination or callout_id is None:
+                return _HOLD_ACTION
+            step = self.next_hop(callout_id, destination)
+            if step is not None:
+                for action in legal:
+                    if action.type == ActionType.MOVE_TO and action.callout_id == step:
+                        return action
+
+        # Fast legal actions always include PEEK (BUY returned above), so no
+        # per-tick action-type set is needed on this built-in path.
+        player = self._gd.players[player_id]
+        p_peek = C.PEEK_PROB
+        if player.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
+            p_peek += C.PEEK_PROB_AGGRO
+        p_peek += max(0.0, player.attr("aim_reactivity") - 60.0) / 2000.0
+        p_peek *= 1.0 + (player.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
+        p_peek *= 1.0 + (tactical_aggression - 50.0) / 166.0
+        if timeout_directive == "pressure":
+            p_peek *= 1.0 + 0.35
+        elif timeout_directive == "stabilize":
+            p_peek *= 1.0 - 0.25
+        if rng.random() < max(0.0, min(0.25, p_peek)):
+            return _PEEK_ACTION
+        return _HOLD_ACTION
 
     def _decide(self, obs, legal, rng: np.random.Generator) -> Action:
         legal_types = {a.type for a in legal}

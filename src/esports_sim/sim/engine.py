@@ -622,22 +622,36 @@ class _MatchSim:
             for pid in self.roster[tid]:
                 ps = self.p[pid]
                 policy = self.player_policies[pid]
-                fast_decide = getattr(policy, "decide_fast", None)
-                if callable(fast_decide):
-                    action = fast_decide(
-                        self._fast_observe(pid, 0, f"buy:{call}"),
+                # The shipped heuristic gets primitives directly. Custom
+                # policies retain the public observation contract below.
+                if type(policy) is HeuristicPolicy:
+                    action = policy.decide_fast_state(
+                        pid,
+                        ps.credits,
+                        ps.weapon,
+                        ps.armor,
+                        ps.callout or None,
+                        f"buy:{call}",
                         self._fast_buy_legal,
                         self._policy_rng(round_num, pid),
                     )
                 else:
-                    obs = self._observe(
-                        pid, round_num, 0, False, True, f"buy:{call}"
-                    )
-                    action = policy.decide(
-                        obs,
-                        [Action(type=ActionType.BUY)],
-                        self._policy_rng(round_num, pid),
-                    )
+                    fast_decide = getattr(policy, "decide_fast", None)
+                    if callable(fast_decide):
+                        action = fast_decide(
+                            self._fast_observe(pid, 0, f"buy:{call}"),
+                            self._fast_buy_legal,
+                            self._policy_rng(round_num, pid),
+                        )
+                    else:
+                        obs = self._observe(
+                            pid, round_num, 0, False, True, f"buy:{call}"
+                        )
+                        action = policy.decide(
+                            obs,
+                            [Action(type=ActionType.BUY)],
+                            self._policy_rng(round_num, pid),
+                        )
                 weapon = self.gd.weapons.get(action.weapon_id or "classic")
                 if weapon is None:
                     weapon = self.gd.weapons["classic"]
@@ -1054,29 +1068,46 @@ class _MatchSim:
                 if not ps.alive or ps.busy:
                     continue
                 policy = self.player_policies[pid]
-                fast_decide = getattr(policy, "decide_fast", None)
-                if callable(fast_decide):
-                    act = fast_decide(
-                        self._fast_observe(pid, tick, ps.order),
+                if type(policy) is HeuristicPolicy:
+                    directive = self._timeout_directive[ps.team_id]
+                    act = policy.decide_fast_state(
+                        pid,
+                        ps.credits,
+                        ps.weapon,
+                        ps.armor,
+                        ps.callout or None,
+                        ps.order,
                         self._fast_legal_actions(
                             ps, atk, spike_planted, planted_at, target_site, tick
                         ),
                         self._policy_rng(round_num, pid),
+                        self._tactics(ps.team_id).aggression,
+                        directive.kind if directive is not None else None,
                     )
                 else:
-                    if round_states is None:
-                        round_states = {
-                            q: self._round_state(self.p[q])
-                            for q in sorted(self.p)
-                        }
-                    legal = self._legal_actions(
-                        ps, atk, spike_planted, planted_at, target_site, tick
-                    )
-                    obs = self._observe(
-                        pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order,
-                        round_states=round_states,
-                    )
-                    act = policy.decide(obs, legal, self._policy_rng(round_num, pid))
+                    fast_decide = getattr(policy, "decide_fast", None)
+                    if callable(fast_decide):
+                        act = fast_decide(
+                            self._fast_observe(pid, tick, ps.order),
+                            self._fast_legal_actions(
+                                ps, atk, spike_planted, planted_at, target_site, tick
+                            ),
+                            self._policy_rng(round_num, pid),
+                        )
+                    else:
+                        if round_states is None:
+                            round_states = {
+                                q: self._round_state(self.p[q])
+                                for q in sorted(self.p)
+                            }
+                        legal = self._legal_actions(
+                            ps, atk, spike_planted, planted_at, target_site, tick
+                        )
+                        obs = self._observe(
+                            pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order,
+                            round_states=round_states,
+                        )
+                        act = policy.decide(obs, legal, self._policy_rng(round_num, pid))
                 # Holders (defenders, post-plant attackers) settle into
                 # cover/angle slots; pushing players spread through rooms.
                 prefer = (

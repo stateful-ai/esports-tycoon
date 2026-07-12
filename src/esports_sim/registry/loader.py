@@ -7,6 +7,7 @@ so a typo in a data file fails loudly at load time.
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from esports_sim.schemas import (
     Team,
     Weapon,
 )
+from esports_sim.schemas.geometry import MapGeometry
 
 
 # Resolve `data/` relative to the repo root (two parents up from this file
@@ -66,17 +68,34 @@ def load_map(map_id: str, data_dir: Path | None = None) -> Map:
     return Map(**raw)
 
 
-def load_geometry(map_id: str, data_dir: Path | None = None):
-    """Floor-plan geometry for a map, or None when not authored yet
-    (viewer falls back to the plain graph view)."""
-    from esports_sim.schemas.geometry import MapGeometry
+@lru_cache(maxsize=32)
+def _load_geometry_cached(path: Path, _mtime_ns: int) -> MapGeometry:
+    """Parse one version of a geometry file.
 
-    data_dir = data_dir or DEFAULT_DATA_DIR
-    path = data_dir / "maps" / "geometry" / f"{map_id}.yaml"
-    if not path.exists():
-        return None
+    The modification time is intentionally part of the cache key. This keeps
+    repeated match simulations off the YAML parser while allowing an authored
+    geometry edit to take effect without a process restart.
+    """
     raw = _load_yaml(path)
     return MapGeometry(**raw)
+
+
+def load_geometry(map_id: str, data_dir: Path | None = None) -> MapGeometry | None:
+    """Floor-plan geometry for a map, or None when not authored yet
+    (viewer falls back to the plain graph view).
+
+    Geometry is immutable authored data shared by match simulations. Cache it
+    by resolved file path and modification time so a campaign sweep does not
+    repeatedly parse and validate the same YAML floor plan.
+    """
+
+    data_dir = (data_dir or DEFAULT_DATA_DIR).resolve()
+    path = data_dir / "maps" / "geometry" / f"{map_id}.yaml"
+    try:
+        mtime_ns = path.stat().st_mtime_ns
+    except FileNotFoundError:
+        return None
+    return _load_geometry_cached(path, mtime_ns)
 
 
 def load_team(team_id: str, data_dir: Path | None = None) -> tuple[Team, list[Player]]:
