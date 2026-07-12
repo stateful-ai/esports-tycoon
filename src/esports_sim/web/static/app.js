@@ -72,6 +72,90 @@ async function api(path, body) {
 
 const App = { tab: "dashboard", state: null, mp: null };
 
+const MARKET_FILTER_DEFAULTS = Object.freeze({
+  caMax: "", potentialMax: "", language: "", languageMin: "",
+  streamRevenueMin: "", role: "", style: "", igl: "",
+});
+
+function marketFilters() {
+  if (!App.marketFilters) App.marketFilters = { ...MARKET_FILTER_DEFAULTS };
+  return App.marketFilters;
+}
+
+function filteredMarketPlayers(players, filters) {
+  const underStarCap = (band, cap) =>
+    cap === "" || (Array.isArray(band) && Number(band[1]) <= Number(cap));
+  const aboveMinimum = (value, minimum) =>
+    minimum === "" || Number(value || 0) >= Number(minimum);
+
+  return players.filter((p) => {
+    const speaksLanguage = !filters.language || (p.languages || []).some((l) =>
+      l.lang === filters.language && aboveMinimum(l.level, filters.languageMin));
+    return underStarCap(p.scout?.ca_stars, filters.caMax) &&
+      underStarCap(p.scout?.pa_stars, filters.potentialMax) &&
+      speaksLanguage &&
+      aboveMinimum(p.stream_income, filters.streamRevenueMin) &&
+      (!filters.role || p.role === filters.role) &&
+      (!filters.style || p.playstyle === filters.style) &&
+      (!filters.igl || (filters.igl === "yes" ? p.is_igl : !p.is_igl));
+  });
+}
+
+function marketFilterControls(players, filters) {
+  const controls = el("div", "market-filters");
+  controls.appendChild(el("b", "market-filters-title", "Filter free agents"));
+
+  const options = (values) => [...new Set(values.filter(Boolean))]
+    .sort((a, b) => String(a).localeCompare(String(b)));
+  const addSelect = (key, label, values, anyLabel = "Any") => {
+    const wrap = el("label", "market-filter");
+    wrap.appendChild(el("span", "muted", label));
+    const input = el("select", "select");
+    input.appendChild(el("option", "", anyLabel));
+    for (const value of values) input.appendChild(el("option", "", humanize(value)));
+    input.value = filters[key];
+    input.onchange = () => { filters[key] = input.value; render(); };
+    wrap.appendChild(input);
+    controls.appendChild(wrap);
+    return input;
+  };
+  const addNumber = (key, label, placeholder, attrs = {}) => {
+    const wrap = el("label", "market-filter");
+    wrap.appendChild(el("span", "muted", label));
+    const input = el("input", "field mono");
+    input.type = "number";
+    input.placeholder = placeholder;
+    Object.assign(input, attrs);
+    input.value = filters[key];
+    input.onchange = () => { filters[key] = input.value; render(); };
+    wrap.appendChild(input);
+    controls.appendChild(wrap);
+    return input;
+  };
+
+  addSelect("caMax", "CA stars at most", ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"], "No cap");
+  addSelect("potentialMax", "Potential stars at most", ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"], "No cap");
+  const language = addSelect("language", "Language", options(players.flatMap((p) => (p.languages || []).map((l) => l.lang))));
+  const languageMin = addNumber("languageMin", "Language minimum", "0-100", { min: 0, max: 100, step: 1 });
+  languageMin.disabled = !filters.language;
+  language.onchange = () => {
+    filters.language = language.value;
+    if (!language.value) filters.languageMin = "";
+    render();
+  };
+  addNumber("streamRevenueMin", "Min stream revenue", "cr / wk", { min: 0, step: 100 });
+  addSelect("role", "Role", options(players.map((p) => p.role)));
+  addSelect("style", "Style", options(players.map((p) => p.playstyle)));
+  addSelect("igl", "IGL", ["yes", "no"], "Any");
+
+  if (Object.values(filters).some((value) => value !== "")) {
+    const reset = el("button", "btn btn-sm market-filter-reset", "Clear filters");
+    reset.onclick = () => { App.marketFilters = { ...MARKET_FILTER_DEFAULTS }; render(); };
+    controls.appendChild(reset);
+  }
+  return controls;
+}
+
 /* -- sortable tables --------------------------------------------------------
    Click any column header to sort its table (first click: numbers high-to-low,
    text A-to-Z; click again to flip). One delegated listener covers every
@@ -3321,6 +3405,8 @@ function playerSearchCard() {
 async function marketPlayers(v) {
   const data = await api("/api/market");
   const head = data.signing_headroom || {};
+  const filters = marketFilters();
+  const freeAgents = filteredMarketPlayers(data.free_agents, filters);
 
   // Screen head: [Players | Staff] + an optional signing-headroom chip
   // (defensive — hidden if the payload doesn't carry finances).
@@ -3351,11 +3437,14 @@ async function marketPlayers(v) {
   main.appendChild(playerSearchCard());
 
   const card = el("div", "card");
-  card.innerHTML = `<h2>Free agents <span class="muted" style="font-weight:400">— ${data.free_agents.length}</span></h2>` +
+  const filterActive = Object.values(filters).some((value) => value !== "");
+  const count = filterActive ? `${freeAgents.length} of ${data.free_agents.length}` : data.free_agents.length;
+  card.innerHTML = `<h2>Free agents <span class="muted" style="font-weight:400">— ${count}</span></h2>` +
     (data.market_scouting < 1
       ? `<p class="muted">Market coverage ${Math.round(data.market_scouting * 100)}% —
          numbers below are estimates${data.market_scouting === 0 ? "; assign your scout to the market to see ceilings" : ""}.</p>`
       : "");
+  card.appendChild(marketFilterControls(data.free_agents, filters));
   const cap = data.roster_max ?? 5;
   card.appendChild(el("p", "muted",
     `Squad ${data.roster_count}/${cap}. ${data.phase === "playoffs"
@@ -3363,21 +3452,22 @@ async function marketPlayers(v) {
   const t = el("table");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
     <th class="num">OVR</th><th>Ability</th><th>Ceiling</th>
-    <th class="num">Asking</th><th></th><th>Swap out</th></tr></thead>`;
+    <th>Languages</th><th class="num">Stream revenue</th><th class="num">Asking</th><th></th><th>Swap out</th></tr></thead>`;
   const tb = el("tbody");
   const locked = data.phase === "playoffs";
-  for (const p of data.free_agents) {
+  for (const p of freeAgents) {
     const fogged = p.fog > 0;
     const langs = langChips(p.languages);
     const fit = p.locker_room_fit;
     const roomFit = fit ? `<div class="muted" title="Existing player history with your current roster">Room fit ${Math.round(fit.score)}${fit.duos ? ` · ${fit.duos} duo` : ""}${fit.feuds ? ` · ${fit.feuds} feud` : ""}</div>` : "";
     const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${
-        langs ? `<div class="es-langs">${langs}</div>` : ""}${roomFit}</td><td>${stylePill(p)}</td>
+      <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${roomFit}</td><td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
       <td>${starsRange(p.scout?.ca_stars)}</td>
       <td>${starsRange(p.scout?.pa_stars)}</td>
+      <td>${langs || '<span class="muted">—</span>'}</td>
+      <td class="num">${money(p.stream_income)}/wk</td>
       <td class="num">${money(p.asking_salary)}/wk</td>
       <td><button class="btn btn-sm" data-act="sign" ${p.can_sign ? "" : "disabled"}
         title="${p.block_reason || "open contract talks — their ask is an opening number"}">Negotiate…</button></td>
@@ -3416,11 +3506,14 @@ async function marketPlayers(v) {
       // isConnected: the sort delegate removes detail rows before sorting,
       // so a stale reference means "recreate", not "collapse".
       if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="9">${attrDetail(p)}</td>`);
+      detail = el("tr", "", `<td colspan="11">${attrDetail(p)}</td>`);
       detail.dataset.detail = "1";
       tr.after(detail);
     };
     tb.appendChild(tr);
+  }
+  if (!freeAgents.length) {
+    tb.appendChild(el("tr", "", '<td colspan="11" class="muted">No free agents match these filters.</td>'));
   }
   t.appendChild(tb);
   // The full free-agent list (~90 rows) scrolls INSIDE its panel — vertically

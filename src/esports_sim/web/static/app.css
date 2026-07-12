@@ -1438,6 +1438,24 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .table-scroll { overflow-x: auto; }
 .table-scroll table { min-width: 100%; }
 
+/* Free-agency filtering stays dense enough to keep the market table primary. */
+.market-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 10px;
+  background: var(--es-color-bg-sunken, #0b1019);
+  border: 1px solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-sm, 4px);
+}
+.market-filters-title { width: 100%; font-size: var(--es-text-xs, 11px); }
+.market-filter { display: grid; gap: 3px; min-width: 100px; }
+.market-filter .field, .market-filter .select { width: 100%; }
+.market-filter-reset { margin-left: auto; }
+@media (max-width: 640px) { .market-filter-reset { margin-left: 0; } }
+
 /* Roster lineup + development plan controls. */
 .starter-toggle { min-width: 34px; }
 .starter-toggle.active {
