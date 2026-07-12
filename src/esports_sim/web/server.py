@@ -5125,6 +5125,7 @@ def _profile_agents(p: Player) -> list[dict]:
                 "name": agent.display_name if agent else m.agent_id,
                 "icon": _agent_icon_url(m.agent_id),
                 "mastery": m.mastery,
+                "role": str(agent.role) if agent else None,
             }
         )
     return out
