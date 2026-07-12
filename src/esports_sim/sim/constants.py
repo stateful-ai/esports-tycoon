@@ -87,6 +87,36 @@ EXECUTE_GO_EARLIEST = 30
 FORCE_GO_TICK = ROUND_TICKS - 70
 
 # ---------------------------------------------------------------------------
+# Policy / timeout layer
+
+# The IGL is a player, not a hidden engine modifier.  Their game sense and
+# comms bend whether a team turns its standing book into an early execute.
+# This is deliberately small: the static tactics dial remains the dominant
+# preference, while the five-player policy supplies the actual decision.
+POLICY_IGL_EXECUTE_SPAN = 0.08
+
+# A timeout is the only live coach intervention.  A coach who has watched at
+# least this many consecutive lost rounds may use the team's one map timeout
+# if their quality plus the current urgency clears the threshold.
+TIMEOUT_MIN_LOSS_STREAK = 3
+TIMEOUT_URGENCY_PER_LOSS = 8.0
+TIMEOUT_SCORE_DEFICIT_WEIGHT = 2.0
+TIMEOUT_CALL_THRESHOLD = 65.0
+
+# Timeout instructions affect the next policy plan only; they never add a
+# direct combat modifier.  Quality determines how clearly the players can
+# turn the timeout into a plan.
+TIMEOUT_PRESSURE_EXECUTE_SPAN = 0.16
+TIMEOUT_STABILIZE_EXECUTE_SPAN = 0.16
+TIMEOUT_GO_TICK_SHIFT = 12
+
+# Scouting preparation belongs in the team policy as well as the existing
+# small duel term: a prepared side reads the opponent's likely deployment and
+# avoids its heaviest site. Campaign-only game plans supply this value, so the
+# bare engine's neutral gates remain unaffected.
+PREP_POLICY_SITE_READ_SPAN = 0.45
+
+# ---------------------------------------------------------------------------
 # Economy (credits)
 
 STARTING_CREDITS = 800  # pistol round

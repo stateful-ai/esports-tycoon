@@ -19,6 +19,8 @@ Usage:
 
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
+import os
 import sys
 
 from esports_sim.registry import load_all
@@ -75,8 +77,23 @@ def measure(dial: str | None, value: float) -> tuple[float, float]:
     return atk_wins / atk_rounds, plants / atk_rounds
 
 
+def _measure_task(task: tuple[str | None, float]) -> tuple[float, float]:
+    """Picklable worker entry point for Windows process spawning."""
+    return measure(*task)
+
+
 def main() -> int:
-    neutral_atk, neutral_plant = measure(None, 50.0)
+    settings: list[tuple[str | None, float]] = [(None, 50.0)]
+    settings.extend(
+        (dial, value) for dial, (lo, hi) in DIALS.items() for value in (lo, hi)
+    )
+    # Each setting is an independent deterministic sweep. Four workers keeps
+    # the gate responsive on a developer machine without over-subscribing the
+    # same CPU that may be serving the web preview.
+    workers = min(4, os.cpu_count() or 1, len(settings))
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        measurements = list(pool.map(_measure_task, settings))
+    neutral_atk, neutral_plant = measurements[0]
     print(
         f"{'dial':16s} {'setting':>8s} {'atk%':>7s} {'plant%':>7s} {'d-atk':>7s}"
     )
@@ -84,20 +101,19 @@ def main() -> int:
         f"{'(neutral)':16s} {'50':>8s} {neutral_atk:7.1%} {neutral_plant:7.1%} {'--':>7s}"
     )
     bad: list[str] = []
-    for dial, (lo, hi) in DIALS.items():
-        for value in (lo, hi):
-            atk, plant = measure(dial, value)
-            flag = ""
-            if not (SANITY_ATK[0] <= atk <= SANITY_ATK[1]):
-                flag = "  <-- ATK OUT OF SANITY BAND"
-                bad.append(f"{dial}={value:.0f} atk {atk:.1%}")
-            if plant < MIN_PLANT_RATE:
-                flag += "  <-- PLANTS COLLAPSED"
-                bad.append(f"{dial}={value:.0f} plant {plant:.1%}")
-            print(
-                f"{dial:16s} {value:>8.0f} {atk:7.1%} {plant:7.1%} "
-                f"{atk - neutral_atk:+7.1%}{flag}"
-            )
+    for (dial, value), (atk, plant) in zip(settings[1:], measurements[1:]):
+        assert dial is not None
+        flag = ""
+        if not (SANITY_ATK[0] <= atk <= SANITY_ATK[1]):
+            flag = "  <-- ATK OUT OF SANITY BAND"
+            bad.append(f"{dial}={value:.0f} atk {atk:.1%}")
+        if plant < MIN_PLANT_RATE:
+            flag += "  <-- PLANTS COLLAPSED"
+            bad.append(f"{dial}={value:.0f} plant {plant:.1%}")
+        print(
+            f"{dial:16s} {value:>8.0f} {atk:7.1%} {plant:7.1%} "
+            f"{atk - neutral_atk:+7.1%}{flag}"
+        )
     print()
     print(f"sanity band: attack {SANITY_ATK[0]:.0%}-{SANITY_ATK[1]:.0%}, "
           f"plant rate >= {MIN_PLANT_RATE:.0%}")

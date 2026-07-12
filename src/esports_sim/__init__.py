@@ -9,9 +9,10 @@ Design invariants this package enforces:
    inside sim code. Same seed -> byte-identical event log.
 3. Every state mutation emits a typed `Event`. The event log is canonical;
    state is derivable from events.
-4. Each alive player in a match is queried via the `PlayerPolicy` protocol.
-   Heuristics (MVP), RL agents (later), and LLM playtesters all implement
-   the same interface.
+4. Every available player is queried through `PlayerPolicy` on every live
+   tick. A `TeamPolicy` forms round plans, while a `CoachPolicy` may enter
+   a live map only through a timeout between rounds. Heuristics (MVP), RL
+   agents (later), and LLM playtesters all implement these same interfaces.
 """
 
 __version__ = "0.0.1"

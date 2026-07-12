@@ -54,3 +54,10 @@ class PlayerObservation(BaseModel):
 
     # IGL call this round (e.g. "hit_a", "default", "b_lurk"). None = no call.
     igl_call: str | None = None
+
+    # The team policy's current context. These are recommendations, not hidden
+    # referee state: a PlayerPolicy may use, ignore, or reinterpret them.
+    role: str = "flex"
+    team_target: str | None = None
+    timeout_directive: str | None = None
+    tactical_aggression: float = 50.0

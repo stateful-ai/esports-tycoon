@@ -1,12 +1,10 @@
-"""Default heuristic policy.
+"""Baseline player, team, and timeout-coach policies.
 
-The engine acts as the coach: each decision point it hands the player a
-per-player order via `obs.igl_call` (e.g. "goto:a_site", "hold", "plant",
-"buy:full"). The policy is the player's hands — it translates the order
-into a concrete legal Action, choosing weapons and routes itself.
-
-RL agents and LLM playtesters replace this class without touching the
-engine; they receive the same observations and legal-action lists.
+The engine is a referee.  It passes legal actions to every player policy,
+asks one team policy per side to make a round plan, and lets a coach policy
+intervene only at a timeout.  The classes here are deliberately conventional
+heuristics, so a learned policy can replace one layer without replacing the
+simulator.
 """
 
 from __future__ import annotations
@@ -15,14 +13,38 @@ from collections import deque
 
 import numpy as np
 
-from esports_sim.policy.base import Action, ActionType
+from esports_sim.policy.base import (
+    Action,
+    ActionType,
+    AttackRoundPlan,
+    AttackRoundRequest,
+    BuyPlanRequest,
+    CoachObservation,
+    DefenseRoundPlan,
+    DefenseRoundRequest,
+    RotationPlanRequest,
+    TimeoutDirective,
+)
 from esports_sim.registry.loader import GameData
-from esports_sim.schemas import Map, PlayerObservation, Playstyle
+from esports_sim.schemas import Map, Player, PlayerObservation, Playstyle
+from esports_sim.schemas.map import CalloutZone, Site
 from esports_sim.sim import constants as C
 
 
+# These actions are immutable by convention and reused on the hot policy path.
+# Pydantic's public Action model remains the external contract; constructing a
+# new HOLD object tens of thousands of times per map is simply needless work.
+_HOLD_ACTION = Action.model_construct(type=ActionType.HOLD)
+_PEEK_ACTION = Action.model_construct(type=ActionType.PEEK)
+
+
 class HeuristicPolicy:
-    """Order-following baseline. One instance per match (holds the map)."""
+    """One player's baseline policy.
+
+    The policy receives a team recommendation but owns the concrete legal
+    action: purchases, route steps, planting/defusing, and voluntary peeks.
+    A player is queried every live tick, even when their answer is ``HOLD``.
+    """
 
     def __init__(self, gd: GameData, game_map: Map):
         self._gd = gd
@@ -122,6 +144,19 @@ class HeuristicPolicy:
         legal: list[Action],
         rng: np.random.Generator,
     ) -> Action:
+        return self._decide(obs, legal, rng)
+
+    def decide_fast(self, obs, legal, rng: np.random.Generator) -> Action:
+        """Fast internal equivalent of :meth:`decide`.
+
+        The referee calls this for the built-in heuristic with a tiny
+        structural observation instead of allocating Pydantic snapshots every
+        half-second. Third-party policies keep receiving ``PlayerObservation``
+        through ``decide`` unchanged.
+        """
+        return self._decide(obs, legal, rng)
+
+    def _decide(self, obs, legal, rng: np.random.Generator) -> Action:
         legal_types = {a.type for a in legal}
 
         if ActionType.BUY in legal_types:
@@ -140,10 +175,292 @@ class HeuristicPolicy:
             if here == arg or here is None:
                 return Action(type=ActionType.HOLD)
             step = self.next_hop(here, arg)
-            if step is not None and any(
-                a.type == ActionType.MOVE_TO and a.callout_id == step
-                for a in legal
-            ):
-                return Action(type=ActionType.MOVE_TO, callout_id=step)
+            if step is not None:
+                for action in legal:
+                    if action.type == ActionType.MOVE_TO and action.callout_id == step:
+                        return action
 
-        return Action(type=ActionType.HOLD)
+        # A peek is no longer a hidden engine roll.  The player owns the
+        # decision, based on their own style, reaction, confidence, the
+        # team's standing aggression, and (if present) a timeout instruction.
+        if ActionType.PEEK in legal_types:
+            player = self._gd.players[obs.self_state.player_id]
+            p_peek = C.PEEK_PROB
+            if player.playstyle in (Playstyle.ENTRY, Playstyle.AWPER):
+                p_peek += C.PEEK_PROB_AGGRO
+            p_peek += max(0.0, player.attr("aim_reactivity") - 60.0) / 2000.0
+            p_peek *= 1.0 + (player.confidence - 50.0) / C.CONFIDENCE_PEEK_DIV
+            p_peek *= 1.0 + (obs.tactical_aggression - 50.0) / 166.0
+            if obs.timeout_directive == "pressure":
+                p_peek *= 1.0 + 0.35
+            elif obs.timeout_directive == "stabilize":
+                p_peek *= 1.0 - 0.25
+            if rng.random() < max(0.0, min(0.25, p_peek)):
+                return _PEEK_ACTION
+
+        return _HOLD_ACTION
+
+
+class HeuristicTeamPolicy:
+    """Shared decision-making for the five player policies on one side.
+
+    This is not a live coach.  It is the side's on-server tactical policy:
+    it reads the five players' attributes, the pre-match team identity, and
+    any *already-issued* timeout directive to make a round plan.
+    """
+
+    def __init__(self, gd: GameData, game_map: Map):
+        self._gd = gd
+        self._map = game_map
+
+    def _site_callouts(self, site: str) -> list[str]:
+        return sorted(
+            c.id
+            for c in self._map.callouts.values()
+            if c.site == site and c.zone == CalloutZone.SITE
+        )
+
+    def _entry_callouts(self, site: str) -> list[str]:
+        entries: set[str] = set()
+        for callout in self._site_callouts(site):
+            for neighbor in self._map.neighbors(callout):
+                if self._map.callouts[neighbor].zone in (
+                    CalloutZone.ATTACKER_SIDE,
+                    CalloutZone.MID,
+                ):
+                    entries.add(neighbor)
+        return sorted(entries) or self._site_callouts(site)
+
+    def _holder_spots(self, site: str) -> list[str]:
+        sites = set(self._site_callouts(site))
+        spots: set[str] = set()
+        for sightline in self._map.sightlines:
+            if (
+                sightline.to_callout in sites
+                and sightline.advantaged_side == "defense"
+                and sightline.from_callout not in sites
+                and self._map.callouts[sightline.from_callout].zone
+                in (CalloutZone.DEFENDER_SIDE, CalloutZone.DEFENDER_SPAWN)
+            ):
+                spots.add(sightline.from_callout)
+        return sorted(spots)
+
+    @staticmethod
+    def _captain(players: tuple[Player, ...], captain_id: str | None) -> Player:
+        for player in players:
+            if player.id == captain_id:
+                return player
+        return max(
+            players,
+            key=lambda p: (p.attr("game_sense") + p.attr("comms_quality"), p.id),
+        )
+
+    def choose_buy(self, request: BuyPlanRequest) -> str:
+        if request.round_num in (1, C.ROUNDS_PER_HALF + 1):
+            return "pistol"
+        if request.average_credits >= C.FULL_BUY_THRESHOLD:
+            return "full"
+        greed = request.tactics.eco_greed
+        if request.average_credits >= C.FORCE_BUY_THRESHOLD * (1.15 - greed / 250.0):
+            return "force"
+        return "eco"
+
+    def plan_attack(
+        self, request: AttackRoundRequest, rng: np.random.Generator
+    ) -> AttackRoundPlan:
+        players = tuple(sorted(request.players, key=lambda p: p.id))
+        captain = self._captain(players, request.captain_id)
+        tactics = request.tactics
+        sites = list(request.sites)
+        weights = np.array(
+            [
+                (1.0 + 0.35 * request.site_wins.get(site, 0))
+                * (1.6 if tactics.site_focus == site else 1.0)
+                for site in sites
+            ],
+            dtype=float,
+        )
+        if request.scouted_site_load and request.prep_edge > 0.0:
+            # Scouting is a partial read of the defensive setup.  At the
+            # engine cap it is exact; below it, the estimate stays close to
+            # a flat split.  The policy favors the under-loaded site rather
+            # than receiving a direct combat bonus for "being prepared".
+            mean_load = sum(request.scouted_site_load.values()) / max(len(sites), 1)
+            clarity = min(1.0, request.prep_edge / C.PREP_EDGE_CAP)
+            for index, site in enumerate(sites):
+                load = request.scouted_site_load.get(site, mean_load)
+                weights[index] *= max(
+                    0.1,
+                    1.0
+                    + clarity * C.PREP_POLICY_SITE_READ_SPAN * (mean_load - load),
+                )
+        weights /= weights.sum()
+        target_site = sites[int(rng.choice(len(sites), p=weights))]
+
+        # The standing pace dial is the preference.  The actual choice is a
+        # player-led IGL call: game sense and comms make an early execute more
+        # likely, while the timeout can deliberately speed up or steady it.
+        call_quality = (captain.attr("game_sense") + captain.attr("comms_quality")) / 2.0
+        p_execute = 0.35 + tactics.pace / 250.0
+        p_execute += (call_quality - 50.0) / 50.0 * C.POLICY_IGL_EXECUTE_SPAN
+        if request.under_gunned and request.round_num not in (1, C.ROUNDS_PER_HALF + 1):
+            p_execute += (tactics.eco_greed - 50.0) / 50.0 * C.ECO_EXECUTE_SPAN
+        if request.timeout is not None:
+            if request.timeout.kind == "pressure":
+                p_execute += C.TIMEOUT_PRESSURE_EXECUTE_SPAN * request.timeout.clarity
+            elif request.timeout.kind == "stabilize":
+                p_execute -= C.TIMEOUT_STABILIZE_EXECUTE_SPAN * request.timeout.clarity
+        p_execute = min(0.9, max(0.05, p_execute))
+        strategy: str = "execute" if rng.random() < p_execute else "default"
+        if strategy == "execute":
+            go_tick = C.EXECUTE_GO_EARLIEST + int(rng.integers(0, 15))
+        else:
+            go_tick = int(rng.integers(C.DEFAULT_GO_EARLIEST, C.DEFAULT_GO_LATEST))
+        if request.timeout is not None:
+            shift = round(C.TIMEOUT_GO_TICK_SHIFT * request.timeout.clarity)
+            if request.timeout.kind == "pressure":
+                go_tick -= shift
+            elif request.timeout.kind == "stabilize":
+                go_tick += shift
+        go_tick = min(C.FORCE_GO_TICK, max(1, go_tick))
+
+        carrier = max(
+            players,
+            key=lambda p: (p.attr("game_sense") + 0.35 * p.attr("composure"), p.id),
+        )
+        lurker: Player | None = None
+        if tactics.map_control > C.LURK_MIN_CONTROL:
+            chance = (
+                (tactics.map_control - C.LURK_MIN_CONTROL)
+                / (100.0 - C.LURK_MIN_CONTROL)
+                * C.LURK_MAX_PROB
+            )
+            candidates = [p for p in players if p.id != carrier.id]
+            if candidates and rng.random() < chance:
+                lurker = max(
+                    candidates,
+                    key=lambda p: (p.attr("game_sense") + p.attr("positioning"), p.id),
+                )
+
+        entries = self._entry_callouts(target_site)
+        width = len(entries)
+        if tactics.map_control < C.STACK_MIN_CONTROL:
+            width = max(1, round(len(entries) * tactics.map_control / C.STACK_MIN_CONTROL))
+        use_entries = entries[:width] or entries
+        stackers = [p for p in players if p != lurker]
+        staging_orders = {
+            player.id: f"goto:{use_entries[index % len(use_entries)]}"
+            for index, player in enumerate(stackers)
+        }
+        if lurker is not None:
+            mids = sorted(
+                c.id for c in self._map.callouts.values() if c.zone == CalloutZone.MID
+            )
+            lurk_dest = mids[len(mids) // 2] if mids else use_entries[0]
+            staging_orders[lurker.id] = f"goto:{lurk_dest}"
+
+        roles = {player.id: "support" for player in players}
+        roles[carrier.id] = "carrier"
+        entry = max(
+            stackers,
+            key=lambda p: (p.attr("aim_reactivity") + p.attr("movement"), p.id),
+        )
+        roles[entry.id] = "entry"
+        if lurker is not None:
+            roles[lurker.id] = "lurker"
+        return AttackRoundPlan(
+            target_site=target_site,
+            strategy=strategy,  # type: ignore[arg-type]
+            go_tick=go_tick,
+            spike_carrier_id=carrier.id,
+            lurker_id=lurker.id if lurker is not None else None,
+            staging_orders=staging_orders,
+            roles=roles,
+        )
+
+    def plan_defense(
+        self, request: DefenseRoundRequest, rng: np.random.Generator
+    ) -> DefenseRoundPlan:
+        players = tuple(sorted(request.players, key=lambda p: p.id))
+        counts = {site: 5 // len(request.sites) for site in request.sites}
+        remainder = 5 - sum(counts.values())
+        for index in list(rng.permutation(len(request.sites)))[:remainder]:
+            counts[request.sites[int(index)]] += 1
+
+        def anchor_key(player: Player) -> tuple:
+            is_anchor = player.playstyle in (Playstyle.ANCHOR, Playstyle.SUPPORT)
+            return (not is_anchor, -player.attr("positioning"), player.id)
+
+        forward = request.tactics.aggression > 55.0
+        passive = request.tactics.aggression < 45.0
+        # The timeout's retake instruction is advice to anchor the sites,
+        # not a direct hold/duel bonus.
+        if request.timeout is not None and request.timeout.kind == "retake":
+            passive = True
+            forward = False
+        pool = sorted(players, key=anchor_key)
+        assignments: dict[str, str] = {}
+        roles: dict[str, str] = {}
+        player_index = 0
+        for site in request.sites:
+            site_callouts = self._site_callouts(site)
+            holders = self._holder_spots(site)
+            if forward and holders:
+                spots = holders + site_callouts
+            elif passive:
+                spots = site_callouts
+            else:
+                spots = site_callouts + holders
+            for spot_index in range(counts[site]):
+                if player_index >= len(pool):
+                    break
+                player = pool[player_index]
+                assignment = spots[spot_index % len(spots)]
+                assignments[player.id] = assignment
+                roles[player.id] = "holder" if assignment in holders else "anchor"
+                player_index += 1
+        for player in pool[player_index:]:
+            assignments[player.id] = self._map.defender_spawn
+            roles[player.id] = "flex"
+        return DefenseRoundPlan(assignments=assignments, roles=roles)
+
+    def choose_rotation_holdback(self, request: RotationPlanRequest) -> str | None:
+        if len(request.off_site_ids) <= 1:
+            return None
+        return max(
+            request.off_site_ids,
+            key=lambda pid: (request.players_by_id[pid].attr("positioning"), pid),
+        )
+
+
+class HeuristicCoachPolicy:
+    """Thin timeout-only coach baseline.
+
+    Coach quality determines whether the coach recognizes an urgent slide in
+    time; specialty and traits choose the advice.  The advice changes only
+    the next team-policy plan, never the referee's combat maths directly.
+    """
+
+    def call_timeout(
+        self, observation: CoachObservation, rng: np.random.Generator
+    ) -> TimeoutDirective | None:
+        if observation.loss_streak < C.TIMEOUT_MIN_LOSS_STREAK:
+            return None
+        urgency = (
+            (observation.loss_streak - C.TIMEOUT_MIN_LOSS_STREAK + 1)
+            * C.TIMEOUT_URGENCY_PER_LOSS
+            + max(0, observation.score_against - observation.score_for)
+            * C.TIMEOUT_SCORE_DEFICIT_WEIGHT
+        )
+        if observation.profile.quality + urgency < C.TIMEOUT_CALL_THRESHOLD:
+            return None
+
+        traits = set(observation.profile.traits)
+        if observation.profile.specialty == "mental" or "players_coach" in traits:
+            kind: str = "stabilize"
+        elif observation.profile.specialty == "tactical" or "innovator" in traits:
+            kind = "pressure" if observation.is_attacking else "retake"
+        else:
+            kind = "pressure" if observation.is_attacking else "retake"
+        clarity = max(0.25, min(1.0, observation.profile.quality / 100.0))
+        return TimeoutDirective(kind=kind, clarity=clarity)  # type: ignore[arg-type]

@@ -76,6 +76,22 @@ class RoundEndEvent(Event):
     reason: Literal["elim", "spike_detonation", "spike_defused", "time"]
 
 
+class TimeoutEvent(Event):
+    """A coach timeout between rounds.
+
+    It is deliberately observable because it is the coach's only live match
+    input.  ``directive`` is advice received by the next round's team policy,
+    never a direct stat modifier.
+    """
+
+    type: Literal["round.timeout"] = "round.timeout"
+    round_num: int
+    team_id: str
+    coach_id: str
+    directive: Literal["stabilize", "pressure", "retake"]
+    clarity: float
+
+
 # ---------------------------------------------------------------------------
 # In-round events
 
@@ -197,6 +213,7 @@ EventUnion = Annotated[
         MatchEndEvent,
         RoundStartEvent,
         RoundEndEvent,
+        TimeoutEvent,
         BuyEvent,
         KillEvent,
         SpikePlantEvent,
