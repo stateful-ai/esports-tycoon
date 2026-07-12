@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 19
+SCHEMA_VERSION = 20
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -306,6 +306,26 @@ def _migrate_v18_to_v19(data: dict) -> dict:
     Existing snapshots remain useful for their overall/condition history; the
     new defaulted mapping begins filling on the next campaign tick.
     """
+
+    return data
+
+
+def _migrate_v19_to_v20(data: dict) -> dict:
+    """v20 separates broad, match, and deep-dive scouting ceilings.
+
+    Old broad reports could reach 100%.  Preserve their earned match-level
+    knowledge while restoring the new epistemic boundary: market surveys cap
+    at 50%, team knowledge at 75%, and player-specific books remain untouched.
+    Match-observation payload values are tactics, not percentages, so they must
+    not be clamped.
+    """
+    team_ids = set((data.get("teams") or {}).keys())
+    for progress in (data.get("scout_progress_by") or {}).values():
+        if "market" in progress:
+            progress["market"] = min(0.50, float(progress["market"]))
+        for tid in team_ids:
+            if tid in progress:
+                progress[tid] = min(0.75, float(progress[tid]))
     return data
 
 
@@ -328,6 +348,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     16: _migrate_v16_to_v17,
     17: _migrate_v17_to_v18,
     18: _migrate_v18_to_v19,
+    19: _migrate_v19_to_v20,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]

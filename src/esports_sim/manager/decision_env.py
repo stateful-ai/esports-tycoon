@@ -161,7 +161,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     scout_targets = (
         ["market"]
         + [tid for tid in sorted(gs.teams) if tid != team_id]
-        + [f"player:{pid}" for pid in sorted(gs.players) if pid not in roster]
+        + [f"player:{pid}" for pid in sorted(gs.players)]
         + [f"match:{fid}" for fid in fixtures]
     )
     ready, ready_reason = market.roster_ready(gs, team_id)

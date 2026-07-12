@@ -369,6 +369,20 @@ function renderPlayerProfile(data) {
     igl.onclick = () => pfAssignIgl(p);
     header.appendChild(igl);
   }
+  const scoutCtx = data.scouting || {};
+  const deepDive = el("button", "btn btn-sm", scoutCtx.active
+    ? `Deep-diving ${Math.round((scoutCtx.progress || 0) * 100)}%`
+    : (p.is_user_team ? "Scout development" : "Deep-dive player"));
+  deepDive.title = p.is_user_team
+    ? "Retask the scout to map this player's development path and weekly training fit"
+    : "Retask the scout to build a full information book; external uncertainty remains";
+  deepDive.disabled = !!scoutCtx.active;
+  deepDive.onclick = async () => {
+    const r = await api("/api/actions/scout", { player_id: p.id });
+    toast(r.message);
+    openPlayerProfile(p.id);
+  };
+  header.appendChild(deepDive);
   if (isAdminMode()) {
     const slot = el("div", "pf-admin-slot");
     const editBtn = el("button", "btn btn-sm", "🛠 Correct data");
@@ -414,6 +428,46 @@ function renderPlayerProfile(data) {
   tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve"));
   tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—"));
   frag.appendChild(tiles);
+
+  if (p.is_user_team) {
+    const sec = pfSection("Scout development guidance");
+    const guide = scoutCtx.guidance;
+    if (guide) {
+      sec.appendChild(el("p", "",
+        `<span class="pill">${guide.focus}</span> ${guide.reason}`));
+      sec.appendChild(el("p", guide.bonus_active ? "trend-up" : "muted",
+        scoutCtx.active
+          ? (guide.bonus_active
+              ? `Active this week: matching focus earns ×${guide.bonus_mult.toFixed(2)} development.`
+              : `Set this player's focus to ${guide.focus} to earn ×${guide.bonus_mult.toFixed(2)} development this week.`)
+          : "Keep the scout assigned to this player to activate the matching-focus weekly bonus."));
+    } else {
+      sec.appendChild(pfEmpty(
+        `Deep-dive this player to ${Math.round((scoutCtx.guidance_unlock || 0) * 100)}% ` +
+        `for a contextual training recommendation and ×${(scoutCtx.bonus_mult || 1).toFixed(2)} weekly bonus.`
+      ));
+    }
+    frag.appendChild(sec);
+  } else if (scoutCtx.report) {
+    const report = scoutCtx.report;
+    const sec = pfSection(`Scouting book · ${Math.round(scoutCtx.progress * 100)}% information`);
+    const lines = [];
+    if (report.style_read) lines.push(`<p><b>Style:</b> ${esc(report.style_read)}</p>`);
+    if (report.mental_read) lines.push(`<p><b>Mentality:</b> ${esc(report.mental_read)}</p>`);
+    if (report.curve_read) lines.push(`<p><b>Development path:</b> ${esc(report.curve_read)}</p>`);
+    if (report.training_hint) {
+      lines.push(`<p><b>Development fit:</b> <span class="pill">${report.training_hint.focus}</span> ` +
+        `${esc(report.training_hint.reason)}</p>`);
+    }
+    if ((report.ceiling_reads || []).length) {
+      lines.push(`<p><b>Skill ceilings:</b> ${report.ceiling_reads.map((c) =>
+        `<span class="pill">${humanize(c.attr)}: ${esc(c.read)}</span>`).join(" ")}</p>`);
+    }
+    if (report.verdict) lines.push(`<p><b>Verdict:</b> ${esc(report.verdict)}</p>`);
+    sec.appendChild(el("div", "", lines.join("") ||
+      `<p class="muted">Broader reads unlock as information moves toward 75% and a full deep dive.</p>`));
+    frag.appendChild(sec);
+  }
 
   // Badges — rolled, decaying honours (and stigmas) that move a player.
   const badges = data.badges || [];

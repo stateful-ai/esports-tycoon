@@ -53,6 +53,9 @@ from esports_sim.manager import (
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
     PREP_EDGE_SPAN,
+    SCOUT_DEEP_CAP,
+    SCOUT_MATCH_CAP,
+    SCOUT_SURVEY_CAP,
     TEAM_TALK_APPROACHES,
     WeekReport,
     advance_week,
@@ -1691,6 +1694,21 @@ def state() -> dict:
         if flavor_view is not None:
             flavor_view = llm_flavor.overlay(S.code, flavor_view)
             llm_flavor.enqueue(S.code, flavor_view)
+        scout_target = gs.scout_target
+        scout_label = None
+        scout_cap = SCOUT_DEEP_CAP
+        if scout_target == "market":
+            scout_label = "Free-agent market"
+            scout_cap = SCOUT_SURVEY_CAP
+        elif scout_target in gs.teams:
+            scout_label = gs.teams[scout_target].name
+            scout_cap = SCOUT_SURVEY_CAP
+        elif scout_target and scout_target.startswith("player:"):
+            watched = gs.players.get(scout_target[len("player:"):])
+            scout_label = watched.handle if watched else "Player"
+        elif scout_target and scout_target.startswith("match:"):
+            scout_label = "Match assignment"
+            scout_cap = SCOUT_MATCH_CAP
         return {
             "season": gs.season,
             "week": gs.week,
@@ -1723,15 +1741,10 @@ def state() -> dict:
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
             "scout": {
-                "target": gs.scout_target,
-                "target_name": (
-                    "Free-agent market"
-                    if gs.scout_target == "market"
-                    else gs.teams[gs.scout_target].name
-                    if gs.scout_target in gs.teams
-                    else None
-                ),
-                "progress": gs.scout_progress.get(gs.scout_target or "", 0.0),
+                "target": scout_target,
+                "target_name": scout_label,
+                "progress": gs.scout_progress.get(scout_target or "", 0.0),
+                "cap": scout_cap,
             },
             "standings_top": [
                 {"team_id": tid, "name": gs.teams[tid].name, **gs.standings[tid].model_dump()}
@@ -1949,7 +1962,10 @@ def roster(team_id: str) -> dict:
         if team_id not in gs.teams:
             raise HTTPException(404, "unknown team")
         fog = _team_fog(gs, team_id)
-        players = [_player_view(p, gs, fog) for p in gs.roster(team_id)]
+        players = [
+            _player_view(p, gs, _player_fog(gs, p.id)[0])
+            for p in gs.roster(team_id)
+        ]
         team = gs.teams[team_id]
         own = team_id == gs.acting_team_id
         # Own club always sees its locks; a rival's leak once you've scouted them
@@ -2069,6 +2085,7 @@ def roster(team_id: str) -> dict:
             "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
             "scout_progress": gs.scout_progress.get(team_id, 0.0),
+            "scout_cap": SCOUT_SURVEY_CAP,
             "tendencies": tendencies,
             "identity": identity,
             # Comms cohesion (0-100): how well this roster can actually
@@ -3068,7 +3085,7 @@ def market_view() -> dict:
         progress = gs.scout_progress.get("market", 0.0)
         for p in fas:
             ok, why = market.can_sign(gs, gs.acting_team_id, p.id)
-            view = _player_view(p, gs, fog=6.0 * (1.0 - progress))
+            view = _player_view(p, gs, fog=_player_fog(gs, p.id)[0])
             # Spoken languages: public facts, so the comms-fit read is
             # available at the decision point regardless of market fog.
             view["languages"] = _language_views(p)
@@ -4593,14 +4610,17 @@ def scout(body: ScoutBody) -> dict:
             p = gs.players.get(body.player_id)
             if p is None:
                 raise HTTPException(404, "unknown player")
-            if body.player_id in gs.teams[gs.acting_team_id].player_ids:
-                raise HTTPException(422, "you already know your own player")
             gs.scout_target = f"player:{body.player_id}"
             telemetry.record_action(
                 gs, "set_scout", {"target": f"player:{body.player_id}"}
             )
             S.save()
-            return {"ok": True, "message": f"scout is building the book on {p.handle}"}
+            own = body.player_id in gs.teams[gs.acting_team_id].player_ids
+            message = (
+                f"scout is mapping {p.handle}'s development path"
+                if own else f"scout is building the book on {p.handle}"
+            )
+            return {"ok": True, "message": message}
         if body.fixture_id is not None:
             fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
             if fx is None:
@@ -4661,7 +4681,10 @@ def scouting_view() -> dict:
                 target_name = p.handle
                 # The deep dive stacks with whatever team coverage exists.
                 _fog, progress, _fa = _player_fog(gs, pid)
-                reports = [development.scout_report(gs, p, progress)]
+                own = pid in gs.teams[gs.acting_team_id].player_ids
+                reports = [
+                    development.scout_report(gs, p, progress, own_player=own)
+                ]
         elif target and target.startswith("match:"):
             fid = target[len("match:"):]
             fx = next((f for f in gs.fixtures if f.id == fid), None)
@@ -4703,6 +4726,24 @@ def scouting_view() -> dict:
         match_report = _match_scout_report(gs, max(
             completed, key=lambda f: (f.week, f.id), default=None
         ))
+        # The quick assignment is preparation, not a post-match autopsy: point
+        # it at the opponent AFTER the fixture currently being planned.  One
+        # advance then lands the first week of coverage before that matchup.
+        following = gs.team_fixture(gs.acting_team_id, gs.week + 1)
+        planning_opponent = None
+        if following is not None:
+            opp_id = (
+                following.team_b
+                if following.team_a == gs.acting_team_id
+                else following.team_a
+            )
+            if opp_id in gs.teams:
+                planning_opponent = {
+                    "id": opp_id,
+                    "name": gs.teams[opp_id].name,
+                    "week": following.week,
+                    "fixture_id": following.id,
+                }
         return {
             "target": target,
             "target_kind": target_kind,
@@ -4716,6 +4757,12 @@ def scouting_view() -> dict:
                 if tid != gs.acting_team_id
             ],
             "upcoming": upcoming,
+            "planning_opponent": planning_opponent,
+            "caps": {
+                "survey": SCOUT_SURVEY_CAP,
+                "match": SCOUT_MATCH_CAP,
+                "deep_dive": SCOUT_DEEP_CAP,
+            },
         }
 
 
@@ -5201,21 +5248,69 @@ def _potential_text(gs: GameState, p: Player, fogged: bool, progress: float) -> 
 def _player_fog(gs: GameState, pid: str) -> tuple[float, float, bool]:
     """Return (sigma, scout_progress, is_free_agent) for a player. Own-team
     players get sigma 0; rivals scale with team scout progress; free agents
-    ride the lighter market fog (matching /api/market). A player-targeted
-    deep dive ("player:<pid>" progress) cuts through BOTH — the whole point
-    of sending your scout after one name."""
+    use the market survey as their broad information source. A player-targeted
+    deep dive ("player:<pid>" progress) cuts through either broad source toward
+    that player's residual uncertainty floor — never all the way to own-roster
+    knowledge."""
     deep = gs.scout_progress.get(f"player:{pid}", 0.0)
-    if pid in gs.free_agent_ids:
-        progress = max(gs.scout_progress.get("market", 0.0), deep)
-        return 6.0 * (1.0 - progress), progress, True
+    is_fa = pid in gs.free_agent_ids
+    if is_fa:
+        progress = market.scouting_progress_for(
+            gs, gs.acting_team_id, gs.players[pid]
+        )
+        fog = FOG_BASE_SIGMA * market.scout_uncertainty_factor(
+            gs, gs.acting_team_id, gs.players[pid]
+        )
+        return fog, progress, True
     team_id = market.team_of(gs, pid)
     if team_id is None:
         return 0.0, 1.0, False  # unrostered non-FA (e.g. mid-transfer): treat as known
     if team_id == gs.acting_team_id:
-        return 0.0, 1.0, False
-    fog = _team_fog(gs, team_id) * (1.0 - deep)
-    progress = max(gs.scout_progress.get(team_id, 0.0), deep)
+        # Own attributes are known, but the deep-dive book is a separate read
+        # used for development guidance and its weekly practice bonus.
+        return 0.0, deep, False
+    progress = market.scouting_progress_for(
+        gs, gs.acting_team_id, gs.players[pid]
+    )
+    fog = FOG_BASE_SIGMA * market.scout_uncertainty_factor(
+        gs, gs.acting_team_id, gs.players[pid]
+    )
     return fog, progress, False
+
+
+def _player_scouting_context(
+    gs: GameState, p: Player, own: bool, info_progress: float
+) -> dict:
+    """Assignment depth plus the own-player weekly development payoff."""
+    key = f"player:{p.id}"
+    progress = gs.scout_progress.get(key, 0.0)
+    active = gs.scout_target == key
+    guidance = None
+    if own and progress >= training.SCOUT_GUIDANCE_UNLOCK:
+        guidance = training.scouting_guidance(p)
+        selected = (
+            p.dev_focus
+            if p.dev_focus in training.DEV_FOCUS_OPTIONS and p.dev_focus != "auto"
+            else gs.training_focus.get(gs.acting_team_id, "tactical")
+        )
+        guidance = {
+            **guidance,
+            "selected_focus": selected,
+            "bonus_mult": training.SCOUT_GUIDANCE_MULT,
+            "bonus_active": active and selected == guidance["focus"],
+        }
+    return {
+        "progress": round(progress if own else info_progress, 2),
+        "active": active,
+        "guidance": guidance,
+        "guidance_unlock": training.SCOUT_GUIDANCE_UNLOCK,
+        "bonus_mult": training.SCOUT_GUIDANCE_MULT,
+        "report": (
+            development.scout_report(gs, p, info_progress)
+            if not own and info_progress > 0
+            else None
+        ),
+    }
 
 
 def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> dict:
@@ -5611,6 +5706,7 @@ def player_profile(pid: str) -> dict:
             "splits": _profile_splits(gs, pid),
             "charts": _profile_charts(gs, pid, own),
             "relationships": _profile_relationships(gs, pid),
+            "scouting": _player_scouting_context(gs, p, own, progress),
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
             "career": [],

@@ -517,10 +517,57 @@ def _hash01(*parts: object) -> float:
 
 
 # How far (in ability points) an org's read of a RIVAL player can sit from
-# the truth. Scouting shrinks it (humans: their scout progress on the
-# owner's club; AI orgs carry the full blur — they run their own flawed
-# models).
+# the truth. Human broad/deep scouting shrinks it toward a player-specific
+# residual floor; AI orgs carry the full blur — they run their own flawed
+# models.
 VALUATION_BLUR = 6.0
+
+
+def scouting_progress_for(gs: GameState, viewer_id: str, p: Player) -> float:
+    """Best information depth VIEWER has on ``p`` across broad and deep work."""
+    progress = gs.scout_progress_by.get(viewer_id, {})
+    owner = team_of(gs, p.id)
+    broad_key = owner if owner is not None else "market"
+    return max(
+        0.0,
+        min(
+            1.0,
+            max(
+                progress.get(broad_key, 0.0),
+                progress.get(f"player:{p.id}", 0.0),
+            ),
+        ),
+    )
+
+
+def scout_uncertainty_floor(gs: GameState, viewer_id: str, p: Player) -> float:
+    """Residual fraction of fog left at a 100% information book.
+
+    External evaluation never becomes own-roster knowledge.  The floor varies
+    stably by player and rises for cross-region players, Challengers players,
+    and free agents whose day-to-day context is harder to observe.
+    """
+    owner = team_of(gs, p.id)
+    if owner == viewer_id:
+        return 0.0
+    floor = 0.14 + 0.08 * _hash01(gs.seed, viewer_id, p.id, "scout-opacity")
+    viewer = gs.teams.get(viewer_id)
+    observed = gs.teams.get(owner) if owner else None
+    if observed is None:
+        floor += 0.14
+    else:
+        if viewer is not None and observed.region != viewer.region:
+            floor += 0.10
+        if observed.tier == 2:
+            floor += 0.12
+    return min(0.50, floor)
+
+
+def scout_uncertainty_factor(gs: GameState, viewer_id: str, p: Player) -> float:
+    """Fog multiplier after applying information depth and its residual floor."""
+    progress = scouting_progress_for(gs, viewer_id, p)
+    floor = scout_uncertainty_floor(gs, viewer_id, p)
+    return floor + (1.0 - floor) * (1.0 - progress)
 
 
 def perceived_quality(gs: GameState, viewer_id: str | None, p: Player) -> float:
@@ -535,8 +582,8 @@ def perceived_quality(gs: GameState, viewer_id: str | None, p: Player) -> float:
     if owner == viewer_id:
         return q
     blur = VALUATION_BLUR
-    if gs.is_human(viewer_id) and owner is not None:
-        blur *= 1.0 - gs.scout_progress.get(owner, 0.0)
+    if gs.is_human(viewer_id):
+        blur *= scout_uncertainty_factor(gs, viewer_id, p)
     bias = (_hash01(gs.seed, viewer_id, p.id, "val") * 2.0 - 1.0) * blur
     return q + bias
 

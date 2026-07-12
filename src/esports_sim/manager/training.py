@@ -30,12 +30,60 @@ LANGUAGE_OPTIONS = ["ar", "de", "en", "es", "fr", "id", "ja", "ko", "ms", "pt", 
 _INTENSITY_GROWTH = {"light": 0.6, "normal": 1.0, "intense": 1.4}
 _INTENSITY_DRAIN = {"light": 3.0, "normal": 6.0, "intense": 10.0}
 
+# An actively assigned scout can turn a sufficiently deep own-player book into
+# a small, one-week practice edge.  It is intentionally modest: the important
+# payoff is the contextual recommendation; the multiplier rewards acting on it
+# without making scouting mandatory for development.
+SCOUT_GUIDANCE_UNLOCK = 0.25
+SCOUT_GUIDANCE_MULT = 1.05
+
 _CATEGORY_ATTRS: dict[str, list[str]] = {
     "mechanical": ["aim_precision", "aim_reactivity", "movement"],
     "tactical": ["game_sense", "utility_usage", "positioning"],
     "mental": ["clutch_factor", "tilt_resistance", "composure"],
     "team": ["comms_quality"],
 }
+
+
+def scouting_guidance(p: Player) -> dict[str, str | float]:
+    """Return the best current development focus for ``p``.
+
+    This is the single source of truth for both the scout report and training
+    bonus.  It reads the player's hidden, moving per-skill outcomes but exposes
+    only a contextual hint: which practice category has the most reachable
+    upside and which skill is driving that read.
+    """
+    scored: list[tuple[float, str, str]] = []
+    for focus, attrs in sorted(_CATEGORY_ATTRS.items()):
+        by_value = sorted(attrs, key=lambda a: (p.attr(a), a))
+        score = 0.0
+        for i, attr_id in enumerate(by_value):
+            headroom = max(
+                0.0,
+                development.development_ceiling(p, attr_id) - p.attr(attr_id),
+            )
+            score += headroom * (1.0 if i == 0 else 0.5)
+        lead = max(
+            attrs,
+            key=lambda a: (
+                development.development_ceiling(p, a) - p.attr(a),
+                a,
+            ),
+        )
+        scored.append((score, focus, lead))
+    score, focus, lead = max(scored, key=lambda row: (row[0], row[1]))
+    lead_label = lead.replace("_", " ")
+    if score <= 1.0:
+        reason = (
+            f"The current path is nearly mature; {focus} work, especially "
+            f"{lead_label}, is the best marginal bet."
+        )
+    else:
+        reason = (
+            f"The clearest reachable upside is in {focus} work, led by "
+            f"{lead_label}."
+        )
+    return {"focus": focus, "lead_attr": lead, "reason": reason}
 
 # System fit: a player whose playstyle suits the coach's system gets more
 # meaningful reps and develops faster; a mismatch develops slower. Each
@@ -117,6 +165,7 @@ def apply_training(
     mentor_mults: dict[str, float] | None = None,
     support_bonuses: dict[str, float] | None = None,
     language_rate: float = 0.0,
+    scout_guidance: dict[str, str] | None = None,
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -179,6 +228,11 @@ def apply_training(
             _player_rate(p, support) * _system_fit_mult(team, p) * intensity * mentor
             * stream_practice_mult(p)
         )
+        # The scout must be actively deep-diving this own player, and the
+        # manager must follow the recommended category this week.  Passing no
+        # guidance is an exact no-op for AI teams and existing callers.
+        if scout_guidance and scout_guidance.get(p.id) == p_focus:
+            rate *= SCOUT_GUIDANCE_MULT
         # Tired players learn worse; below 35 stamina they barely absorb.
         fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.

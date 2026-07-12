@@ -237,6 +237,27 @@ def test_resting_player_cannot_trigger_intense_training_burnout(campaign) -> Non
     assert resting.stamina == 55.0
 
 
+def test_scout_guidance_gives_small_bonus_only_to_matching_focus(campaign) -> None:
+    team = campaign.teams[campaign.user_team_id].model_copy(deep=True)
+    base = campaign.roster(campaign.user_team_id)[0].model_copy(deep=True)
+    guided = base.model_copy(deep=True)
+    focus = str(training.scouting_guidance(base)["focus"])
+    base.dev_focus = guided.dev_focus = focus
+    before = dict(base.attributes)
+    training.apply_training(
+        team.model_copy(deep=True), [base], "tactical",
+        RngTree(77).derive("scout-guidance"),
+    )
+    training.apply_training(
+        team.model_copy(deep=True), [guided], "tactical",
+        RngTree(77).derive("scout-guidance"),
+        scout_guidance={guided.id: focus},
+    )
+    plain_gain = sum(base.attr(a) - before[a] for a in before)
+    guided_gain = sum(guided.attr(a) - before[a] for a in before)
+    assert guided_gain > plain_gain > 0
+
+
 def test_match_experience_scales_with_youth_and_line() -> None:
     gd = load_all()
     gs = new_campaign(gd, seed=99)
@@ -447,6 +468,28 @@ def test_v7_save_migrates_to_v8(campaign, tmp_path) -> None:
     loaded = GameState.load(path)
     assert loaded.schema_version == SCHEMA_VERSION
     assert all(isinstance(p.skill_potential, dict) for p in loaded.players.values())
+
+
+def test_v14_scouting_migration_restores_information_caps(campaign, tmp_path) -> None:
+    data = json.loads(campaign.model_dump_json())
+    data["schema_version"] = 14
+    viewer = campaign.user_team_id
+    rival = next(tid for tid in sorted(campaign.teams) if tid != viewer)
+    pid = campaign.teams[rival].player_ids[0]
+    data["scout_progress_by"][viewer] = {
+        "market": 1.0,
+        rival: 1.0,
+        f"player:{pid}": 1.0,
+        f"matchobs:x:{rival}:aggression": 70.0,
+    }
+    path = tmp_path / "v14.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    loaded = GameState.load(path)
+    progress = loaded.scout_progress_by[viewer]
+    assert progress["market"] == 0.5
+    assert progress[rival] == 0.75
+    assert progress[f"player:{pid}"] == 1.0
+    assert progress[f"matchobs:x:{rival}:aggression"] == 70.0
 
 
 # ---------------------------------------------------------------------------

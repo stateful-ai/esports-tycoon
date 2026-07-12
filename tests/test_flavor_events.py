@@ -9,7 +9,7 @@ from fastapi import HTTPException
 
 from esports_sim.manager import flavor_events, new_campaign
 from esports_sim.manager.decision_env import HeadlessManagerEnv, InvalidManagerAction
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import SCHEMA_VERSION, GameState
 from esports_sim.rng.tree import RngTree
 import esports_sim.web.server as server_mod
 
@@ -105,7 +105,7 @@ def test_flavor_fields_migrate_from_v17_and_round_trip(campaign, tmp_path) -> No
     old_path = tmp_path / "v17.json"
     old_path.write_text(json.dumps(old), encoding="utf-8")
     migrated = GameState.load(old_path)
-    assert migrated.schema_version == 18
+    assert migrated.schema_version == SCHEMA_VERSION
     assert migrated.flavor_events_by == {}
     assert migrated.flavor_event_recent_by == {}
 

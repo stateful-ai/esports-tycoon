@@ -532,6 +532,7 @@ def advance_week(
             mentor_mults=_mentor_mults(gs, tid),
             support_bonuses=_development_support_bonuses(gs, tid),
             language_rate=staff.language_learning_rate(gs) if gs.is_human(tid) else 0.0,
+            scout_guidance=_active_scout_guidance(gs, tid),
         )
     gs.set_acting(None)
 
@@ -1801,7 +1802,15 @@ def _team_map_mastery(
     return out
 
 
-SCOUT_WEEKLY_GAIN = 0.34  # ~3 weeks of scouting for full team knowledge
+SCOUT_WEEKLY_GAIN = 0.34
+# Assignment ceilings are deliberately different kinds of knowledge.  A broad
+# survey identifies the shape of a market/team, watching real matches adds
+# behavioral context, and only a named-player deep dive can compile a full
+# book.  "Full" is information depth, not omniscience; web/market views retain
+# player-specific residual uncertainty even at 1.0.
+SCOUT_SURVEY_CAP = 0.50
+SCOUT_MATCH_CAP = 0.75
+SCOUT_DEEP_CAP = 1.00
 # A single player is a focused beat, but reading a CEILING is slow, careful
 # work — a deep-dive book is a multi-week investment, not a one-week glance
 # (and even a full book only ever yields a projection BAND, never an exact
@@ -1815,6 +1824,23 @@ SCOUT_PLAYER_WEEK_CAP = 0.30
 # One-shot match intel: attending a fixture grants this much knowledge of
 # BOTH participants (a weekend at the venue ~= a week and a half of tape).
 SCOUT_MATCH_INTEL = 0.5
+
+
+def _active_scout_guidance(gs: GameState, tid: str) -> dict[str, str] | None:
+    """The one own-player recommendation eligible for this week's bonus."""
+    progress = gs.scout_progress_by.get(tid, {})
+    target = gs.scout_targets.get(tid)
+    if not target or not target.startswith("player:"):
+        return None
+    pid = target[len("player:"):]
+    if pid not in gs.teams[tid].player_ids:
+        return None
+    if progress.get(target, 0.0) < training.SCOUT_GUIDANCE_UNLOCK:
+        return None
+    p = gs.players.get(pid)
+    if p is None:
+        return None
+    return {pid: str(training.scouting_guidance(p)["focus"])}
 
 # Monumental-moment ceiling revisions: a career peak (an international title, a
 # league award, a record) revises a player's ceiling UP — most for the young
@@ -1882,7 +1908,7 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
                     "a new assignment."
                 )
             return
-        gained = min(1.0, round(SCOUT_MATCH_INTEL * mult, 2))
+        gained = min(SCOUT_MATCH_CAP, round(SCOUT_MATCH_INTEL * mult, 2))
         # Keep a completion marker in the existing prefixed progress store.
         # The active assignment still clears below; the scouting serializer
         # uses this key to derive the latest post-match report from Fixture.
@@ -1903,7 +1929,9 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
             if tid == gs.acting_team_id or tid not in gs.teams:
                 continue
             cur = gs.scout_progress.get(tid, 0.0)
-            gs.scout_progress[tid] = min(1.0, round(cur + gained, 2))
+            gs.scout_progress[tid] = min(
+                SCOUT_MATCH_CAP, round(cur + gained, 2)
+            )
             names.append(gs.teams[tid].name)
         gs.scout_target = None  # one-shot: the scout comes home
         if names:
@@ -1933,7 +1961,7 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
         )
         if played:
             gain += SCOUT_LIVE_WATCH_BONUS
-        after = min(1.0, round(cur + gain, 2))
+        after = min(SCOUT_DEEP_CAP, round(cur + gain, 2))
         gs.scout_progress[target] = after
         if after >= 1.0 and cur < 1.0:
             gs.push_private_news(
@@ -1949,16 +1977,16 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
     # The market is a bigger beat than one team: slower coverage.
     if target == "market":
         gain *= 0.6
-    after = min(1.0, round(cur + gain, 2))
+    after = min(SCOUT_SURVEY_CAP, round(cur + gain, 2))
     gs.scout_progress[target] = after
-    if after >= 1.0 and cur < 1.0:
+    if after >= SCOUT_SURVEY_CAP and cur < SCOUT_SURVEY_CAP:
         label = (
             "the free-agent market"
             if target == "market"
             else gs.teams[target].name
         )
         # Private to this manager (their scout desk) — see push_private_news.
-        gs.push_private_news(f"Scouting report on {label} complete.")
+        gs.push_private_news(f"Broad scouting survey of {label} complete.")
 
 
 def _update_world_ranks(gs: GameState) -> None:
