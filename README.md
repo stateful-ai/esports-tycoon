@@ -36,8 +36,8 @@ background, and opens the game without a PowerShell window:
 Then open Start, right-click **ESports Simulator**, and choose **Pin to
 taskbar**. Each launch runs a safe fast-forward-only pull from **origin/main**.
 If the checked-out commit or Python dependencies changed, it restarts its
-background server before opening the browser. The taskbar instance uses port
-8421 by default so the normal port-8420 development preview can coexist.
+background server before opening the browser. The taskbar instance binds to
+the LAN on the standard playing port, 8420; use 8421 for development tests.
 
 `New game` → pick a seed, a **world**, and a team → weekly loop: set
 training, scout a rival, work the market, talk to a player, advance the
