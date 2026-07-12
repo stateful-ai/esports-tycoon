@@ -6,6 +6,7 @@ from esports_sim.manager.campaign import (
     new_campaign,
     runtime_gamedata,
 )
+from esports_sim.manager.decision_env import HeadlessManagerEnv, manager_observation
 from esports_sim.manager.state import Fixture, GameState, MapResult, TeamRecord
 
 __all__ = [
@@ -13,6 +14,8 @@ __all__ = [
     "advance_week",
     "new_campaign",
     "runtime_gamedata",
+    "HeadlessManagerEnv",
+    "manager_observation",
     "Fixture",
     "GameState",
     "MapResult",

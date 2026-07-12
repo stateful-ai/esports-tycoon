@@ -4,10 +4,10 @@ looked like when they did it.
 Two artifacts, both on GameState so they save/load and stay
 campaign-deterministic:
 
-- `action_log` (ActionRecord): every HUMAN action, recorded by the
-  web/CLI layer the moment it is applied. AI decisions are deliberately
-  excluded — they re-derive from the seed, so logging them would only
-  bloat the save with redundancy. seed + action_log fully determines a
+- `action_log` (ActionRecord): every HUMAN-seat action, recorded by the
+  web/CLI/agent layer the moment it is applied. Autonomous rule-AI decisions
+  are deliberately excluded — they re-derive from the seed, so logging them
+  would only bloat the save with redundancy. seed + action_log fully determines a
   career, which makes any finished save a replayable input trace for
   RL/imitation work, and an honest record of which features real
   players touch (feature ideation reads it via
@@ -122,6 +122,7 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
     order = gs.standings_order(str(team.region), tier=team.tier)
     position = float(order.index(team_id) + 1) if team_id in order else 0.0
 
+    previous = gs.acting_team_id
     gs.set_acting(team_id)
     try:
         staff_q = {
@@ -132,7 +133,7 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
         scout_mean = mean(gs.scout_progress.values()) if gs.scout_progress else 0.0
         n_sponsor_deals = float(len(gs.sponsor_slots))
     finally:
-        gs.set_acting(None)
+        gs.set_acting(previous)
 
     seat = gs.manager_for(team_id)
     patience = (
