@@ -362,17 +362,25 @@ def moment_potential_bump(p: Player, base: float, *, skills: int = 2) -> float:
 # never resolves the ceiling to an exact number — the future is a projection.
 # The band narrows as a player ages toward their ceiling (a settled veteran is
 # nearly known, a teenager a wide range) and, for a scouted rival, as scouting
-# progress rises. Centered on truth with a stable per-player residual, so the
-# band always contains the real ceiling and repeated looks converge, never
-# collapse to a point.
+# progress rises. A stable per-player anchor makes some reads symmetrical and
+# others put the hidden ceiling at either edge. Repeated looks stay consistent
+# without implying that uncertainty is always evenly distributed.
 
 _PROJ_FLOOR = 3.0  # irreducible outcome uncertainty, even for a full book
+_PERFORMANCE_COACH_MAX_TIGHTEN = 0.45
 
 
 def potential_projection(
-    p: Player, progress: float = 1.0, own: bool = False
+    p: Player,
+    progress: float = 1.0,
+    own: bool = False,
+    performance_coach_quality: float | None = None,
 ) -> tuple[float, float]:
-    """A peak-outcome estimate which never collapses to a known maximum."""
+    """A peak-outcome estimate which never collapses to a known maximum.
+
+    A strong performance coach tightens only an own-roster read. The coach
+    does not move hidden potential; they reduce the uncertainty around it.
+    """
     pa = potential_of(p)
     ca = overall(p)
     curve = development_curve(p)
@@ -385,12 +393,26 @@ def potential_projection(
     half = _PROJ_FLOOR + youth * 7.0 + min(gap, 18.0) * 0.20 + curve_uncertainty
     if not own:
         half += (1.0 - float(np.clip(progress, 0.0, 1.0))) * 10.0
-    off = ((_h(p.id, "paresid") % 1000) / 1000.0 - 0.5) * 0.7 * half
-    lo = max(1.0, pa + off - half)
-    # Strong environments can create genuine over-performance, so the upper
-    # end extends beyond the original PA forecast rather than treating it as a
-    # law of nature.
-    hi = min(99.0, pa + off + half + 3.0)
+    elif performance_coach_quality is not None:
+        # Quality below 40 supplies no extra insight. From 40 to 100 the read
+        # tightens smoothly, reaching 45% narrower at the very top end.
+        precision = float(np.clip(
+            (performance_coach_quality - 40.0) / 60.0, 0.0, 1.0
+        ))
+        half *= 1.0 - _PERFORMANCE_COACH_MAX_TIGHTEN * precision
+
+    # Stable player identity owns the shape: centered, true value at the
+    # upper edge, or true value at the lower edge. This is random-looking but
+    # remains byte-identical across save/load and repeated reads.
+    anchor = _h(p.id, "pa-window-anchor") % 3
+    if anchor == 0:
+        lo, hi = pa - half, pa + half
+    elif anchor == 1:
+        lo, hi = pa - 2.0 * half, pa
+    else:
+        lo, hi = pa, pa + 2.0 * half
+    lo = max(1.0, lo)
+    hi = min(99.0, hi)
     return round(lo, 1), round(hi, 1)
 
 

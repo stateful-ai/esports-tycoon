@@ -692,6 +692,21 @@ def _language_views(p: Player) -> list[dict]:
     return [{"lang": l.lang, "level": round(l.level)} for l in p.languages]
 
 
+def _roster_potential_projection(
+    gs: GameState, p: Player, team_id: str | None = None
+) -> tuple[float, float]:
+    """Own-roster potential read, tightened by that org's performance coach."""
+    tid = team_id or gs.acting_team_id
+    performance_coach = gs.staff_by.get(tid, {}).get("performance_coach")
+    return development.potential_projection(
+        p,
+        own=True,
+        performance_coach_quality=(
+            performance_coach.quality if performance_coach is not None else None
+        ),
+    )
+
+
 def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
     attrs = {
         k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
@@ -752,7 +767,11 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         # Even an own-club read is an outcome projection, not a revealed cap.
         "potential_stars": (
             development.stars(
-                sum(development.potential_projection(p, own=True)) / 2.0
+                sum(
+                    _roster_potential_projection(gs, p)
+                    if market.team_of(gs, p.id) == gs.acting_team_id
+                    else development.potential_projection(p, own=True)
+                ) / 2.0
             ) if fog <= 0 else None
         ),
         "ca_stars": development.stars(overall),
@@ -949,7 +968,11 @@ def _player_developing(gs: GameState, pl: Player) -> tuple[bool, list[int]]:
     """Is this player still climbing toward a higher ceiling (so an off week is
     a development call, not a drop call)? Reads the potential PROJECTION band —
     young + real headroom == developing. Returns (developing, [lo, hi])."""
-    lo, hi = development.potential_projection(pl, own=True)
+    lo, hi = (
+        _roster_potential_projection(gs, pl)
+        if market.team_of(gs, pl.id) == gs.acting_team_id
+        else development.potential_projection(pl, own=True)
+    )
     ovr = development.overall(pl)
     developing = pl.age <= 23 and (hi - ovr) >= 4.0
     return developing, [round(lo), round(hi)]
@@ -2162,7 +2185,7 @@ def _dev_progress(gs: GameState, tid: str) -> list[dict]:
         if p is None:
             continue
         ca = development.overall(p)
-        lo, hi = development.potential_projection(p, own=True)
+        lo, hi = _roster_potential_projection(gs, p, tid)
         est = round((lo + hi) / 2.0, 1)  # shown forecast, which CA may exceed
         pct = min(100, round(100.0 * ca / est)) if est > 0 else 100
         snaps = gs.dev_history.get(pid, [])
@@ -3112,7 +3135,15 @@ def _trade_asset_view(gs: GameState, pid: str, viewer_id: str) -> dict:
         gs.scout_progress.get(owner or "market", 0.0),
         gs.scout_progress.get(f"player:{pid}", 0.0),
     )
-    lo, hi = development.potential_projection(p, progress=progress, own=own)
+    performance_coach = gs.staff_by.get(viewer_id, {}).get("performance_coach")
+    lo, hi = development.potential_projection(
+        p,
+        progress=progress,
+        own=own,
+        performance_coach_quality=(
+            performance_coach.quality if own and performance_coach is not None else None
+        ),
+    )
     opinions = market.valuation_opinions(gs, viewer_id, p)
     return {
         "id": p.id,
@@ -5205,7 +5236,11 @@ def _profile_overview(gs: GameState, p: Player, fog: float, progress: float) -> 
     else:
         # Own club: peak ability remains a projection, not a measurement. Show
         # an outcome band and per-skill bands rather than hidden exact values.
-        lo, hi = development.potential_projection(p, own=True)
+        lo, hi = (
+            _roster_potential_projection(gs, p)
+            if market.team_of(gs, p.id) == gs.acting_team_id
+            else development.potential_projection(p, own=True)
+        )
         est = (lo + hi) / 2.0
         potential = int(round(est))
         pot_stars = development.stars(est)
