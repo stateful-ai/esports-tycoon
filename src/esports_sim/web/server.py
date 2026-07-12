@@ -1980,6 +1980,11 @@ def roster(team_id: str) -> dict:
                     v["mentor_skill"] = round(
                         development.mentor_skill(pv, _cs.seasons if _cs else 0)
                     )
+        development_report = (
+            _development_report(gs, team_id, S.gd.attributes.definitions)
+            if own
+            else None
+        )
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
         starters = set(default_five(gs, team_id))
@@ -2036,6 +2041,7 @@ def roster(team_id: str) -> dict:
             "intensity_options": INTENSITY_OPTIONS,
             "language_options": LANGUAGE_OPTIONS,
             "has_language_coach": "language_coach" in gs.staff,
+            "development_report": development_report,
             "fog": round(fog, 1),
             "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
@@ -2178,6 +2184,67 @@ def _dev_progress(gs: GameState, tid: str) -> list[dict]:
         })
     out.sort(key=lambda r: (-r["potential"], r["handle"]))
     return out
+
+
+def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
+    """Current-season growth report for the manager's present roster.
+
+    This is a pure read of stored development snapshots. Attribute deltas are
+    only emitted when both endpoints contain that attribute, which lets an old
+    save begin tracking cleanly without pretending its current values were the
+    season-opening baseline.
+    """
+    rows = []
+    for pid in gs.teams[tid].player_ids:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        snaps = [s for s in gs.dev_history.get(pid, []) if s.season == gs.season]
+        if not snaps:
+            continue
+        first, last = snaps[0], snaps[-1]
+        delta = round(last.ca - first.ca, 1)
+        status = "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        changes = []
+        for aid in sorted(set(first.attributes) & set(last.attributes)):
+            change = round(last.attributes[aid] - first.attributes[aid], 1)
+            if abs(change) < 0.1:
+                continue
+            definition = attr_defs.get(aid)
+            changes.append({
+                "id": aid,
+                "name": definition.display_name if definition else aid.replace("_", " ").title(),
+                "category": str(definition.category) if definition else None,
+                "start": first.attributes[aid],
+                "current": last.attributes[aid],
+                "delta": change,
+            })
+        changes.sort(key=lambda item: (-abs(item["delta"]), item["name"]))
+        rows.append({
+            "id": pid,
+            "handle": p.handle,
+            "start_week": first.week,
+            "end_week": last.week,
+            "tracked_points": len(snaps),
+            "overall_start": first.ca,
+            "overall_current": last.ca,
+            "overall_delta": delta,
+            "status": status,
+            "attribute_tracking": bool(first.attributes and last.attributes),
+            "changes": changes,
+        })
+    rows.sort(key=lambda row: (-row["overall_delta"], row["handle"].lower(), row["id"]))
+    deltas = [row["overall_delta"] for row in rows]
+    return {
+        "season": gs.season,
+        "start_week": min((row["start_week"] for row in rows), default=None),
+        "end_week": max((row["end_week"] for row in rows), default=None),
+        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else 0.0,
+        "grown": sum(row["status"] == "grown" for row in rows),
+        "regressed": sum(row["status"] == "regressed" for row in rows),
+        "steady": sum(row["status"] == "steady" for row in rows),
+        "players": rows,
+    }
 
 
 def _signing_headroom(gs: GameState, tid: str) -> dict:

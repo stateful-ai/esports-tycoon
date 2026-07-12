@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from esports_sim.schemas import Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 18
+SCHEMA_VERSION = 19
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -300,6 +300,15 @@ def _migrate_v17_to_v18(data: dict) -> dict:
     return data
 
 
+def _migrate_v18_to_v19(data: dict) -> dict:
+    """v19 adds per-attribute values to development snapshots.
+
+    Existing snapshots remain useful for their overall/condition history; the
+    new defaulted mapping begins filling on the next campaign tick.
+    """
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -318,6 +327,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     15: _migrate_v15_to_v16,
     16: _migrate_v16_to_v17,
     17: _migrate_v17_to_v18,
+    18: _migrate_v18_to_v19,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -610,6 +620,10 @@ class DevSnap(BaseModel):
     form: float
     morale: float
     followers: int
+    # Exact own-roster skill values at this point in time. Older saves have
+    # overall history only and begin attribute-level tracking on their next
+    # weekly snapshot.
+    attributes: dict[str, float] = Field(default_factory=dict)
 
 
 class SocialPost(BaseModel):

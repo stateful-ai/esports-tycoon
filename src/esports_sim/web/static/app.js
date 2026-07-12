@@ -1547,7 +1547,7 @@ async function roster(v) {
 
   /* -- screen head: title · team · view seg · right-side actions ------------ */
   const right = [];
-  if (hasBench) {
+  if (hasBench && overview) {
     lineupBar = el("div", "row",
       `<span class="microlabel" title="Toggle ★ in the table to change who dresses. Bench players scrim (reduced growth) and good ones want minutes.">Default five</span> <b class="mono">${lineup.size}/5</b>`);
     const save = el("button", "btn btn-sm btn-primary", "Save lineup");
@@ -1606,7 +1606,7 @@ async function roster(v) {
       "Tip: a 6-man roster is advised for tournaments (register a bench)."));
   }
 
-  const starTh = hasBench ? "<th>★</th>" : "";
+  const starTh = hasBench && overview ? "<th>★</th>" : "";
   const t = el("table", "roster-table");
   t.innerHTML = overview
     ? `<thead><tr>${starTh}<th>Player</th><th>Role</th><th>Agent</th>
@@ -1629,14 +1629,14 @@ async function roster(v) {
     const tArrow = (d) =>
       d === "up" ? ' <span class="trend-up" title="trending up">▲</span>'
         : d === "down" ? ' <span class="trend-down" title="trending down">▼</span>' : "";
-    const benchPill = hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
+    const benchPill = overview && hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
     // Heavy-streamer chip: streaming slows this player's development.
     const streamChip = p.stream_heavy
       ? ' <span class="chip" title="heavy streaming slows this player\'s development">📺</span>'
       : "";
     const badges = (p.badges || []).map((bd) =>
       ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
-    const starCell = hasBench
+    const starCell = hasBench && overview
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
     const playerCell = `<td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${badges}${benchPill}${streamChip}</td>`;
@@ -1718,7 +1718,7 @@ async function roster(v) {
     }
     const tr = el("tr", "", rowHtml);
 
-    if (hasBench) {
+    if (hasBench && overview) {
       tr.querySelector('[data-act="star"]').onclick = (e) => {
         e.stopPropagation();
         const btn = e.currentTarget;
@@ -1882,7 +1882,7 @@ async function roster(v) {
 
   // Map-lineups: a compact per-map summary in the rail; the full chip editor
   // rides a ws-12 band below the grid (only when a bench makes it a choice).
-  if (hasBench && data.upcoming) {
+  if (overview && hasBench && data.upcoming) {
     const up = data.upcoming;
     const c = el("div", "card");
     c.appendChild(el("h2", "", "Map lineups"));
@@ -1911,6 +1911,63 @@ async function roster(v) {
     cell.appendChild(mlc);
     ws.appendChild(cell);
   }
+
+  // Season-long development accounting belongs at the bottom of the
+  // Development view. Deltas come from persisted server-side snapshots.
+  if (!overview && data.is_user_team && data.development_report) {
+    const reportCell = el("div", "ws-12 ws-col");
+    reportCell.appendChild(developmentReportCard(data.development_report));
+    ws.appendChild(reportCell);
+  }
+}
+
+function developmentReportCard(report) {
+  const card = el("div", "card development-report");
+  const signed = (value) => `${value > 0 ? "+" : ""}${Number(value).toFixed(1)}`;
+  const range = report.start_week == null
+    ? "No tracked weeks yet"
+    : `Week ${report.start_week} to Week ${report.end_week}`;
+  card.innerHTML = `<div class="dev-report-head">
+      <div><h2>Development Report</h2><p class="muted">Season ${report.season} · ${range}</p></div>
+      <div class="dev-report-summary">
+        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">Squad OVR ${signed(report.overall_delta)}</span>
+        <span class="chip tone-good">${report.grown} grown</span>
+        <span class="chip tone-bad">${report.regressed} regressed</span>
+        <span class="chip">${report.steady} steady</span>
+      </div>
+    </div>`;
+
+  if (!(report.players || []).length) {
+    card.appendChild(el("p", "muted", "Development tracking begins after this roster records its first season snapshot."));
+    return card;
+  }
+
+  const table = el("table", "dev-report-table");
+  table.innerHTML = `<thead><tr><th>Player</th><th>Tracked</th><th class="num">Start</th><th class="num">Now</th><th class="num">Change</th><th>Skills changed</th></tr></thead>`;
+  const body = el("tbody");
+  for (const p of report.players) {
+    const tone = p.status === "grown" ? "trend-up" : p.status === "regressed" ? "trend-down" : "muted";
+    let changes = (p.changes || []).map((change) => {
+      const cls = change.delta > 0 ? "dev-gain" : "dev-loss";
+      return `<span class="chip ${cls}" title="${esc(change.category || "attribute")} · ${change.start} to ${change.current}">${esc(change.name)} ${signed(change.delta)}</span>`;
+    }).join(" ");
+    if (!p.attribute_tracking) {
+      changes = '<span class="muted">Skill tracking starts with the next snapshot</span>';
+    } else if (!changes) {
+      changes = '<span class="muted">No skill movement yet</span>';
+    }
+    body.appendChild(el("tr", "", `<td><b>${plink(p.id, p.handle)}</b></td>
+      <td class="muted">W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts</td>
+      <td class="num">${Number(p.overall_start).toFixed(1)}</td>
+      <td class="num">${Number(p.overall_current).toFixed(1)}</td>
+      <td class="num"><span class="${tone}">${signed(p.overall_delta)}</span></td>
+      <td><div class="dev-change-list">${changes}</div></td>`));
+  }
+  table.appendChild(body);
+  const scroll = el("div", "table-scroll");
+  scroll.appendChild(table);
+  card.appendChild(scroll);
+  return card;
 }
 
 // Per-map "dressed five" picker for the upcoming fixture (only shown when the
