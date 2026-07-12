@@ -217,13 +217,18 @@ function setupLobby(lob) {
     const list = $("#resume-list");
     list.innerHTML = "";
     for (const w of worlds) {
+      const row = el("span", "resume-world");
       const b = el(
         "button",
         "btn",
         `<b>${w.team_name}</b> <span class="pill">${w.code} · ${w.mode}</span>`
       );
       b.onclick = () => resumeGame(w.code);
-      list.appendChild(b);
+      const del = el("button", "btn resume-world-delete", "Delete");
+      del.title = `Permanently delete ${w.team_name}`;
+      del.onclick = () => deleteWorld(w);
+      row.append(b, del);
+      list.appendChild(row);
     }
   } else {
     resume.classList.add("hidden");
@@ -407,6 +412,14 @@ async function resumeGame(code) {
   $("#worlds-btn").classList.remove("hidden");
   await refresh();
   toast(`Resumed world ${r.code}.`);
+}
+
+async function deleteWorld(world) {
+  const label = `${world.team_name} (${world.code})`;
+  if (!confirm(`Permanently delete ${label}? This cannot be undone.`)) return;
+  await api("/api/delete_world", { code: world.code });
+  toast(`Deleted ${label}.`);
+  setupLobby(await api("/api/lobby"));
 }
 
 async function refresh() {

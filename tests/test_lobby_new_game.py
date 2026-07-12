@@ -48,3 +48,30 @@ def test_new_game_still_rejects_unknown_team(tmp_path, monkeypatch) -> None:
     with pytest.raises(HTTPException) as exc:
         lobby.create_game("sid-bad", "team_not_a_real_id", seed=2026, shared=False)
     assert exc.value.status_code == 422
+
+
+def test_delete_saved_world_removes_files_and_history(tmp_path, monkeypatch) -> None:
+    lobby = _fresh_lobby(tmp_path, monkeypatch)
+    game = lobby.create_game("sid-owner", "team_nexus", seed=2026, shared=False)
+    code = game.code
+    lobby.leave("sid-owner")
+
+    assert server._save_path_for(code).exists()
+    assert lobby.delete_world("sid-owner", code) is None
+    assert not server._save_path_for(code).exists()
+    assert not server._meta_path_for(code).exists()
+    assert lobby.worlds_for("sid-owner") == []
+
+
+def test_delete_saved_shared_world_requires_everyone_to_leave(tmp_path, monkeypatch) -> None:
+    lobby = _fresh_lobby(tmp_path, monkeypatch)
+    game = lobby.create_game("sid-owner", "team_nexus", seed=2026, shared=True)
+    code = game.code
+    other_team = next(tid for tid in game.gs.teams if tid != "team_nexus")
+    joined, err = lobby.join_game("sid-guest", code, other_team)
+    assert joined is game
+    assert err is None
+    lobby.leave("sid-owner")
+
+    assert "cannot be deleted" in (lobby.delete_world("sid-owner", code) or "")
+    assert server._save_path_for(code).exists()
