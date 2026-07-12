@@ -3302,9 +3302,11 @@ async function marketPlayers(v) {
   for (const p of data.free_agents) {
     const fogged = p.fog > 0;
     const langs = langChips(p.languages);
+    const fit = p.locker_room_fit;
+    const roomFit = fit ? `<div class="muted" title="Existing player history with your current roster">Room fit ${Math.round(fit.score)}${fit.duos ? ` · ${fit.duos} duo` : ""}${fit.feuds ? ` · ${fit.feuds} feud` : ""}</div>` : "";
     const tr = el("tr", "", `
       <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${
-        langs ? `<div class="es-langs">${langs}</div>` : ""}</td><td>${stylePill(p)}</td>
+        langs ? `<div class="es-langs">${langs}</div>` : ""}${roomFit}</td><td>${stylePill(p)}</td>
       <td class="num">${p.age}</td>
       <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
       <td>${starsRange(p.scout?.ca_stars)}</td>
@@ -3573,6 +3575,10 @@ async function openNegotiation(target) {
     (neg.kind === "renew"
       ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w left.</p>`
       : "");
+  if (neg.locker_room_fit) {
+    const fit = neg.locker_room_fit;
+    panel.appendChild(el("p", "muted", `Locker-room fit: ${Math.round(fit.score)}/100${fit.duos ? ` · ${fit.duos} existing duo${fit.duos === 1 ? "" : "s"}` : ""}${fit.feuds ? ` · ${fit.feuds} active feud${fit.feuds === 1 ? "" : "s"}` : ""}.`));
+  }
   const demand = el("p", "", "");
   const log = el("div", "es-obj");
   const rounds = el("p", "muted", "");

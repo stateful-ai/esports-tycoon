@@ -91,6 +91,9 @@ def can_sign(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
         return False, "rosters are locked during the playoffs"
     if player_id not in gs.free_agent_ids:
         return False, "player is not a free agent"
+    veto = relationships.signing_veto(gs, player_id, team_id)
+    if veto:
+        return False, veto
     cap = roster_cap(gs, team_id)
     if len(team.player_ids) >= cap:
         return False, f"roster is full ({cap}); release someone first"
@@ -171,6 +174,9 @@ def renew_contract(
     team = gs.teams[team_id]
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
+    veto = relationships.renewal_veto(gs, player_id, team_id)
+    if veto:
+        return False, veto
     p = gs.players[player_id]
     # Memory moves the table a nudge: a player whose career was MADE here
     # (debut, milestones, a title run) re-signs a shade under market; one
@@ -319,7 +325,10 @@ def ai_fill_rosters(gs: GameState, gd, rng: np.random.Generator) -> None:
             )
             picked = None
             for cand in pool:
-                if team.balance >= asking_salary(cand) * 8:
+                if (
+                    team.balance >= asking_salary(cand) * 8
+                    and relationships.signing_veto(gs, cand.id, tid) is None
+                ):
                     picked = cand
                     break
             if picked is None:
@@ -367,6 +376,8 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
             if gs.is_human(tid):
                 continue
             team = gs.teams[tid]
+            if relationships.signing_veto(gs, cand.id, tid) is not None:
+                continue
             if len(team.player_ids) < ROSTER_SIZE:
                 if team.balance >= asking_salary(cand) * 8:
                     suitors.append((tid, None))
@@ -736,6 +747,10 @@ def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
             mult -= 0.05  # part of the furniture: friendlier table
         if p.morale <= 40:
             mult += 0.10  # unhappy: pay me to stay
+    # Existing relationships travel with a player. A friendly reunion takes
+    # a little heat out of the table; a frosty room makes the player charge
+    # for the risk. Hard feuds are handled as vetoes before talks open.
+    mult *= relationships.contract_fit_multiplier(gs, pid, gs.acting_team_id)
     jitter = (_hash01(gs.seed, pid, gs.season, "negsal") - 0.5) * 0.10
     salary = max(1_000, int(round(base * (mult + jitter) / 100) * 100))
     if p.age <= 20:
@@ -769,6 +784,13 @@ def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
     kind, why = negotiation_kind(gs, pid)
     if kind is None:
         return False, why, None
+    veto = (
+        relationships.renewal_veto(gs, pid, gs.acting_team_id)
+        if kind == "renew"
+        else relationships.signing_veto(gs, pid, gs.acting_team_id)
+    )
+    if veto:
+        return False, veto, None
     if kind == "sign" and gs.phase == "playoffs" and gs.is_human(gs.acting_team_id):
         return False, "rosters are locked during the playoffs", None
     until = gs.talks_cooldown.get(pid, 0)
@@ -1005,12 +1027,12 @@ def execute_transfer(
         buyer.captain_id = pid
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
-    p.morale = round(min(100.0, p.morale + 6.0), 1)
+    reaction = relationships.transfer_reaction(gs, pid, seller_id, buyer_id)
     p.tenure_weeks = 0
-    gs.push_news(
-        f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} "
-        f"for {fee:,} cr."
-    )
+    news = f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} for {fee:,} cr."
+    if reaction:
+        news += f" {p.handle} {reaction}."
+    gs.push_news(news)
     chronicle.record(
         gs, "transfer",
         f"{p.handle} joins {buyer.name} from {seller.name}.",
@@ -1064,7 +1086,7 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
         dst.captain_id = pid
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
-    p.morale = round(min(100.0, p.morale + 6.0), 1)
+    relationships.transfer_reaction(gs, pid, from_id, to_id)
     p.tenure_weeks = 0
 
 

@@ -2764,7 +2764,17 @@ def market_view() -> dict:
                 "traits": report["traits"],
                 "traits_hidden": report["traits_hidden"],
             }
-            out.append({**view, "can_sign": ok, "block_reason": why})
+            fit = relationships.locker_room_fit(gs, p.id, gs.acting_team_id)
+            out.append({
+                **view,
+                "can_sign": ok,
+                "block_reason": why,
+                "locker_room_fit": {
+                    "score": fit["average"],
+                    "duos": len(fit["friends"]),
+                    "feuds": len(fit["feuds"]),
+                },
+            })
         me = gs.acting_team_id
         needs = _squad_needs(gs, me)
         return {
@@ -4254,6 +4264,7 @@ class NegotiationOfferBody(BaseModel):
 
 def _negotiation_view(gs: GameState, neg) -> dict:
     p = gs.players[neg.player_id]
+    fit = relationships.locker_room_fit(gs, neg.player_id, gs.acting_team_id)
     return {
         "player_id": neg.player_id,
         "handle": p.handle,
@@ -4264,6 +4275,11 @@ def _negotiation_view(gs: GameState, neg) -> dict:
         "rounds_left": market.NEGOTIATION_MAX_ROUNDS - neg.rounds,
         "current_salary": p.salary if neg.kind == "renew" else None,
         "contract_weeks_left": p.contract_weeks_left if neg.kind == "renew" else None,
+        "locker_room_fit": {
+            "score": fit["average"],
+            "duos": len(fit["friends"]),
+            "feuds": len(fit["feuds"]),
+        },
     }
 
 
