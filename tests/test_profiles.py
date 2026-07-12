@@ -100,6 +100,7 @@ OVERVIEW = {
     "market_value",
     "salary",
     "contract_weeks",
+    "contract_terms",
     "playstyle",
     "fogged",
 }
@@ -207,6 +208,9 @@ def _assert_player_contract(prof: dict) -> None:
     assert set(prof) == PLAYER_TOP
     assert set(prof["player"]) == PLAYER_BLOCK
     assert set(prof["overview"]) == OVERVIEW
+    assert set(prof["overview"]["contract_terms"]) == {
+        "stream_share", "release_fee", "buyout", "no_transfer", "roster_role"
+    }
     assert set(prof["season"]) == SEASON
     for item in prof["attributes"]:
         assert set(item) == ATTR_ITEM
@@ -878,6 +882,33 @@ def test_market_rows_carry_languages(env):
     fa = gs.players[sorted(gs.free_agent_ids)[0]]
     res = server_mod.market_search(q=fa.handle)["results"]
     assert res and all(isinstance(r["languages"], list) for r in res)
+
+
+def test_trade_preview_returns_staff_balanced_asset_cards(env):
+    gs, gd, h = env
+    _bind(gs, gd)
+    gs.set_acting(h.user_team)
+    target = gs.teams[h.rival_team].player_ids[0]
+    offered = gs.teams[h.user_team].player_ids[0]
+    view = server_mod.trade_preview(server_mod.TradePreviewBody(
+        target_pid=target, out_pids=[offered], cash_out=25_000,
+    ))
+    assert set(view) == {
+        "target", "offered_players", "cash", "opinions", "balance_pct",
+        "verdict", "staff",
+    }
+    for asset in [view["target"], *view["offered_players"]]:
+        assert set(asset) == {
+            "id", "handle", "role", "age", "team_id", "team_name",
+            "overall", "overall_estimated", "potential", "contract",
+            "stream_revenue", "value", "portrait",
+        }
+        assert set(asset["value"]) == {"coach", "analyst", "consensus"}
+        assert set(asset["contract"]) == {"salary", "weeks_left"}
+        assert set(asset["potential"]) == {"low", "high", "scouted"}
+    assert view["cash"] == {"send": 25_000, "receive": 0}
+    assert 0 <= view["balance_pct"] <= 100
+    gs.set_acting(None)
 
 
 def test_completed_match_scout_returns_grounded_report(env):

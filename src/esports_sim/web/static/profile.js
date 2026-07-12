@@ -280,6 +280,12 @@ function renderPlayerProfile(data) {
   const contract = p.is_free_agent
     ? "Free agent — unsigned"
     : `${ov.contract_weeks != null ? ov.contract_weeks + "w left" : "—"} · ${money(ov.salary)}/wk`;
+  const contractDetail = ov.contract_terms;
+  const contractTerms = (!p.is_free_agent && contractDetail)
+    ? `${contractDetail.stream_share}% streams · ${money(contractDetail.release_fee)} release · ` +
+      `${contractDetail.buyout ? money(contractDetail.buyout) + " buyout" : "no buyout"} · ${contractDetail.roster_role}` +
+      `${contractDetail.no_transfer ? " · no-transfer" : ""}`
+    : "";
   header.innerHTML =
     portrait +
     `<div class="pf-id">` +
@@ -287,6 +293,7 @@ function renderPlayerProfile(data) {
     (data.epithet ? `<div class="pf-epithet">${data.epithet}</div>` : "") +
     `<div class="pf-meta">${meta}${teamBit}</div>` +
     `<div class="pf-contract muted">${contract}</div>` +
+    (contractTerms ? `<div class="pf-contract muted">${contractTerms}</div>` : "") +
     `</div>`;
   // Rival contracted player → offer a package (players and/or cash).
   if (!p.is_free_agent && !p.is_user_team && p.transfer_ask != null

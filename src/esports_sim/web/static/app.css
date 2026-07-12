@@ -1328,6 +1328,40 @@ tr.es-gap:hover td { background: none; }
 /* Roster depth: lineups, swaps, package offers */
 p.warn, .warn { color: var(--es-color-text-warning, #e5a53a); }
 p.good, .good { color: var(--es-color-text-success, #46a758); }
+.trade-overlay { align-items: flex-start; overflow-y: auto; padding: 3vh 2vw; }
+.trade-room { width: min(1040px, 96vw); max-height: none; }
+.trade-kicker { color: var(--es-color-accent, #4fd8c0); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.trade-deal { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+.trade-side { min-width: 0; padding: 12px; border: 1px solid var(--es-color-border-primary, #26324a); background: var(--es-color-bg-surface, #0f1520); }
+.trade-side h3 { margin-top: 0; }
+.trade-pick { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--es-color-border-secondary, #1c2536); }
+.trade-cash { display: grid; gap: 6px; margin-top: 10px; }
+.trade-cash .row { justify-content: space-between; }
+.trade-asset { margin-top: 10px; padding: 10px; border-left: 3px solid var(--es-color-accent, #4fd8c0); background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 6%, transparent); }
+.trade-asset-head { display: flex; align-items: center; gap: 8px; }
+.trade-asset-head .pill { margin-left: auto; }
+.trade-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 9px; color: var(--es-color-text-secondary, #a2aec6); font-size: 11px; }
+.trade-stats span { display: flex; justify-content: space-between; gap: 8px; }
+.trade-value { margin-top: 9px; padding-top: 7px; border-top: 1px solid var(--es-color-border-secondary, #1c2536); display: flex; justify-content: space-between; }
+.trade-cash-chip { margin-top: 9px; padding: 8px; color: var(--es-color-accent-warm, #efb54a); border: 1px dashed currentColor; text-align: center; font-weight: 700; }
+.trade-summary { margin: 12px 0; padding: 12px; border: 1px solid var(--es-color-border-primary, #26324a); }
+.trade-balance-head, .trade-opinions { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.trade-balance-head span, .trade-opinions { color: var(--es-color-text-secondary, #a2aec6); font-size: 11px; }
+.trade-balance { position: relative; height: 12px; margin: 10px 0; border-radius: 99px; overflow: hidden; background: var(--es-color-accent, #4fd8c0); }
+.trade-balance i { display: block; height: 100%; background: var(--es-color-accent-warm, #efb54a); }
+.trade-balance span { position: absolute; top: -3px; width: 2px; height: 18px; background: var(--es-color-text-primary, #e6ebf4); }
+@media (max-width: 760px) { .trade-deal { grid-template-columns: 1fr; } }
+.contract-overlay { align-items: flex-start; overflow-y: auto; padding: 3vh 2vw; }
+.contract-room { width: min(780px, 96vw); max-height: none; }
+.contract-dialogue { display: grid; gap: 8px; margin: 12px 0; }
+.contract-bubble { max-width: 82%; padding: 10px 12px; border-radius: var(--es-radius-md, 7px); line-height: 1.45; }
+.contract-bubble.player { justify-self: start; background: var(--es-color-bg-surface, #0f1520); border: 1px solid var(--es-color-border-primary, #26324a); }
+.contract-bubble.manager { justify-self: end; background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 13%, transparent); border: 1px solid var(--es-color-accent, #4fd8c0); }
+.contract-ask { margin-top: 7px; color: var(--es-color-accent-warm, #efb54a); font-size: 11px; }
+.contract-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; padding: 12px; background: var(--es-color-bg-surface, #0f1520); border: 1px solid var(--es-color-border-primary, #26324a); }
+.contract-terms .row { justify-content: space-between; }
+.contract-goal { grid-column: 1 / -1; margin: 3px 0 0; border-top: 1px solid var(--es-color-border-secondary, #1c2536); padding-top: 8px; }
+@media (max-width: 640px) { .contract-terms { grid-template-columns: 1fr; } .contract-goal { grid-column: auto; } }
 /* Select base — one form-control skin; the size variants below keep their
    own metrics. */
 .field, .select, .sel-sm, .dev-plan select {

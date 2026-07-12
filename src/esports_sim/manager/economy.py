@@ -65,7 +65,8 @@ def player_stream_income(p: Player) -> int:
     """The ORG's cut of one player's streaming gross (the player keeps the
     rest). This is what lands on the org's books and drives the trade-value
     premium (market.py)."""
-    return int(player_stream_gross(p) * STREAM_ORG_CUT)
+    org_cut = round(1.0 - p.stream_revenue_share, 4)
+    return int(player_stream_gross(p) * org_cut)
 
 
 def roster_stream_income(roster: list[Player]) -> int:

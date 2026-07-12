@@ -3484,50 +3484,69 @@ async function openOffer(target) {
     mine = mkt.my_roster ?? [];
   } catch { return; }
 
-  const ov = el("div", "overlay");
-  const panel = el("div", "panel");
+  const ov = el("div", "overlay trade-overlay");
+  const panel = el("div", "panel trade-room");
   panel.innerHTML = `<button class="btn btn-sm offer-close" style="float:right">✕</button>
-    <h2>Offer for ${plink(target.id, target.handle)}</h2>
-    <p class="muted">${target.team_name} want about <b>${money(target.ask)}</b> of value —
-    but they run <i>their own</i> numbers on your players. A scout who rates your
-    guys sees a rich package; one who doesn't will want more cash on top.</p>`;
+    <div class="trade-kicker">Trade room</div><h2>${plink(target.id, target.handle)} <span class="muted">· ${esc(target.team_name)}</span></h2>
+    <p class="muted">Build the deal in players and cash. The balance is your coach and analyst's
+    internal valuation; ${esc(target.team_name)} decide using their own scouting and economics.</p>`;
   panel.insertAdjacentHTML("beforeend", askBreakdown(target.ask_breakdown));
+  const deal = el("div", "trade-deal");
+  const sendSide = el("section", "trade-side");
+  const receiveSide = el("section", "trade-side");
+  sendSide.appendChild(el("h3", "", "You send"));
+  receiveSide.appendChild(el("h3", "", "You receive"));
+  deal.append(sendSide, receiveSide);
+  panel.appendChild(deal);
   const list = el("div", "");
   const chosen = new Set();
   for (const p of mine) {
-    const row = el("label", "row");
+    const row = el("label", "trade-pick");
     row.style.cursor = "pointer";
     const cb = el("input");
     cb.type = "checkbox";
     cb.onchange = () => { cb.checked ? chosen.add(p.id) : chosen.delete(p.id); recompute(); };
-    row.append(cb, el("span", "", `${p.handle} — OVR ${p.overall} · ${money(p.value)}`));
+    row.append(cb, el("span", "", `${p.handle} · OVR ${p.overall}`), el("b", "", money(p.value)));
     list.appendChild(row);
   }
-  panel.appendChild(el("h3", "", "Players you send"));
-  panel.appendChild(list);
+  sendSide.appendChild(list);
 
   const cashOut = el("input"); cashOut.type = "number"; cashOut.min = "0"; cashOut.value = "0"; cashOut.className = "sel-sm";
   const cashIn = el("input"); cashIn.type = "number"; cashIn.min = "0"; cashIn.value = "0"; cashIn.className = "sel-sm";
   cashOut.oninput = recompute; cashIn.oninput = recompute;
-  const cashWrap = el("div", "");
+  const cashWrap = el("div", "trade-cash");
   const oL = el("label", "row"); oL.append(el("span", "", "Cash you send: "), cashOut);
   const iL = el("label", "row"); iL.append(el("span", "", "Cash you want back: "), cashIn);
   cashWrap.append(oL, iL);
-  panel.appendChild(cashWrap);
+  sendSide.appendChild(cashWrap);
 
-  const meter = el("p", "");
-  panel.appendChild(meter);
-  function recompute() {
-    const players = mine.filter(p => chosen.has(p.id)).reduce((s, p) => s + p.value, 0);
+  const summary = el("div", "trade-summary");
+  panel.appendChild(summary);
+  let previewSeq = 0;
+  const assetCard = (p) => `<article class="trade-asset">
+    <div class="trade-asset-head"><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b><span class="pill">${esc(p.role)}</span></div>
+    <div class="trade-stats"><span>OVR <b>${p.overall_estimated ? "~" : ""}${p.overall}</b></span><span>POT <b>${p.potential.low}-${p.potential.high}</b></span>
+    <span>Contract <b>${money(p.contract.salary)}/wk · ${p.contract.weeks_left}w</b></span><span>Stream <b>${money(p.stream_revenue)}/wk</b></span></div>
+    <div class="trade-value">Staff value <b>${money(p.value.consensus)}</b></div></article>`;
+  async function recompute() {
+    const seq = ++previewSeq;
     const co = Math.max(0, parseInt(cashOut.value || "0", 10));
     const ci = Math.max(0, parseInt(cashIn.value || "0", 10));
-    const value = players + co - ci;
-    const ok = value >= target.ask;
-    meter.className = ok ? "good" : "warn";
-    // "By your numbers" on purpose: the seller prices your players with
-    // their own scouting, so a package that clears on paper can still
-    // bounce — and a "short" one can land if they rate your guys.
-    meter.textContent = `Package value ${money(value)} vs ask ${money(target.ask)} — ${ok ? "looks fair by your numbers" : "short by your numbers"}`;
+    let p;
+    try { p = await api("/api/trade/preview", { target_pid: target.id, out_pids: [...chosen], cash_out: co, cash_in: ci }); }
+    catch { return; }
+    if (seq !== previewSeq) return;
+    receiveSide.querySelectorAll(".trade-asset,.trade-cash-chip").forEach((n) => n.remove());
+    receiveSide.insertAdjacentHTML("beforeend", assetCard(p.target));
+    if (p.cash.receive) receiveSide.insertAdjacentHTML("beforeend", `<div class="trade-cash-chip">+ ${money(p.cash.receive)} cash</div>`);
+    sendSide.querySelectorAll(".trade-asset-selected,.trade-cash-chip").forEach((n) => n.remove());
+    for (const a of p.offered_players) sendSide.insertAdjacentHTML("beforeend", `<div class="trade-asset-selected">${assetCard(a)}</div>`);
+    if (p.cash.send) sendSide.insertAdjacentHTML("beforeend", `<div class="trade-cash-chip">+ ${money(p.cash.send)} cash</div>`);
+    const o = p.opinions;
+    summary.innerHTML = `<div class="trade-balance-head"><b>${esc(p.verdict)}</b><span>Give ${money(o.consensus.send)} · Receive ${money(o.consensus.receive)}</span></div>
+      <div class="trade-balance"><i style="width:${p.balance_pct}%"></i><span style="left:${p.balance_pct}%"></span></div>
+      <div class="trade-opinions"><span>${esc(p.staff.coach)}: <b>${money(o.coach.receive - o.coach.send)}</b></span>
+      <span>${esc(p.staff.analyst)}: <b>${money(o.analyst.receive - o.analyst.send)}</b></span></div>`;
   }
   recompute();
 
@@ -3567,24 +3586,29 @@ async function openNegotiation(target) {
     neg = r.negotiation;
   } catch { return; } // api() toasted the reason (cooldown, wrong target...)
 
-  const ov = el("div", "overlay");
-  const panel = el("div", "panel");
+  const ov = el("div", "overlay contract-overlay");
+  const panel = el("div", "panel contract-room");
   const title = neg.kind === "renew" ? "Contract talks" : "Free-agent talks";
   panel.innerHTML = `<button class="btn btn-sm neg-close" style="float:right">✕</button>
     <h2>${title} — ${plink(target.id, neg.handle)}</h2>` +
     (neg.kind === "renew"
-      ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w left.</p>`
+      ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w ·
+        ${neg.current_terms.stream_share}% streams · ${money(neg.current_terms.release_fee)} release ·
+        ${neg.current_terms.buyout ? money(neg.current_terms.buyout) + " buyout" : "no buyout"} ·
+        ${esc(neg.current_terms.role)}${neg.current_terms.no_transfer ? " · no-transfer clause" : ""}.</p>`
       : "");
   if (neg.locker_room_fit) {
     const fit = neg.locker_room_fit;
     panel.appendChild(el("p", "muted", `Locker-room fit: ${Math.round(fit.score)}/100${fit.duos ? ` · ${fit.duos} existing duo${fit.duos === 1 ? "" : "s"}` : ""}${fit.feuds ? ` · ${fit.feuds} active feud${fit.feuds === 1 ? "" : "s"}` : ""}.`));
   }
-  const demand = el("p", "", "");
-  const log = el("div", "es-obj");
+  const demand = el("div", "contract-dialogue", "");
+  const log = el("div", "contract-dialogue");
   const rounds = el("p", "muted", "");
   const paint = () => {
-    demand.innerHTML = `Their ask: <b class="mono">${money(neg.demand_salary)}/wk</b>
-      on <b class="mono">${neg.demand_weeks} weeks</b>`;
+    demand.innerHTML = `<div class="contract-bubble player"><span class="microlabel">${esc(neg.handle)}</span>
+      ${esc(neg.opening_line)}<div class="contract-ask"><b>${money(neg.demand_salary)}/wk</b> · ${neg.demand_weeks}w ·
+      ${neg.demand_stream_share}% streams · ${money(neg.demand_release_fee)} release ·
+      ${neg.demand_buyout ? money(neg.demand_buyout) + " buyout" : "no buyout"}${neg.demand_no_transfer ? " · no-transfer clause" : ""}</div></div>`;
     rounds.textContent = `${neg.rounds_left} offer${neg.rounds_left !== 1 ? "s" : ""} before they walk away.`;
   };
   paint();
@@ -3594,9 +3618,27 @@ async function openNegotiation(target) {
   sal.value = String(neg.demand_salary); sal.className = "sel-sm mono";
   const wks = el("input"); wks.type = "number"; wks.min = "16"; wks.max = "80";
   wks.value = String(neg.demand_weeks); wks.className = "sel-sm mono";
+  const stream = el("input"); stream.type = "number"; stream.min = "0"; stream.max = "100";
+  stream.value = String(neg.demand_stream_share); stream.className = "sel-sm mono";
+  const releaseFee = el("input"); releaseFee.type = "number"; releaseFee.min = "0"; releaseFee.step = "1000";
+  releaseFee.value = String(neg.demand_release_fee); releaseFee.className = "sel-sm mono";
+  const buyout = el("input"); buyout.type = "number"; buyout.min = "0"; buyout.step = "1000";
+  buyout.value = String(neg.demand_buyout); buyout.className = "sel-sm mono";
+  const ntc = el("input"); ntc.type = "checkbox"; ntc.checked = neg.demand_no_transfer;
+  const role = el("select", "sel-sm");
+  for (const [id, label] of [["starter", "Starter"], ["bench", "Bench / rotation"], ["academy", "Academy / youth"]]) {
+    const o = el("option", "", label); o.value = id; o.selected = id === neg.demand_role; role.appendChild(o);
+  }
   const sL = el("label", "row"); sL.append(el("span", "", "Salary/wk: "), sal);
   const wL = el("label", "row"); wL.append(el("span", "", "Weeks: "), wks);
-  panel.append(sL, wL);
+  const stL = el("label", "row"); stL.append(el("span", "", "Player keeps streaming: "), stream, el("span", "muted", "%"));
+  const rfL = el("label", "row"); rfL.append(el("span", "", "Release fee: "), releaseFee);
+  const boL = el("label", "row"); boL.append(el("span", "", "Buyout for other teams: "), buyout);
+  const ntL = el("label", "row"); ntL.append(el("span", "", "No-transfer clause: "), ntc);
+  const roL = el("label", "row"); roL.append(el("span", "", "Promised role: "), role);
+  const terms = el("div", "contract-terms"); terms.append(sL, wL, stL, rfL, boL, ntL, roL);
+  terms.appendChild(el("p", "muted contract-goal", neg.role_goal));
+  panel.appendChild(terms);
 
   const offerBtn = el("button", "btn btn-primary", "Make the offer");
   const walkBtn = el("button", "btn btn-sm", "Leave the table");
@@ -3607,6 +3649,11 @@ async function openNegotiation(target) {
         player_id: target.id,
         salary: Math.max(0, parseInt(sal.value || "0", 10)),
         weeks: Math.max(16, parseInt(wks.value || "40", 10)),
+        stream_share: Math.max(0, Math.min(100, parseInt(stream.value || "0", 10))),
+        release_fee: Math.max(0, parseInt(releaseFee.value || "0", 10)),
+        buyout: Math.max(0, parseInt(buyout.value || "0", 10)),
+        no_transfer: ntc.checked,
+        role: role.value,
       });
     } catch { return; } // error keeps the table open; reason toasted
     if (r.status === "accepted") {
@@ -3614,14 +3661,18 @@ async function openNegotiation(target) {
       return;
     }
     if (r.status === "collapsed") {
-      log.appendChild(el("div", "es-obj-row",
-        `<span class="pill bad">walked</span> ${r.message}`));
+      log.appendChild(el("div", "contract-bubble player bad", esc(r.message)));
       offerBtn.disabled = true; walkBtn.textContent = "Close";
       return;
     }
     neg = r.negotiation;
-    log.appendChild(el("div", "es-obj-row",
-      `<span class="pill warn">counter</span> ${r.message}`));
+    log.appendChild(el("div", "contract-bubble manager",
+      `We offer ${money(parseInt(sal.value || "0", 10))}/wk as a ${esc(role.value)}.`));
+    log.appendChild(el("div", "contract-bubble player", esc(r.message)));
+    sal.value = String(neg.demand_salary); wks.value = String(neg.demand_weeks);
+    stream.value = String(neg.demand_stream_share);
+    releaseFee.value = String(neg.demand_release_fee); buyout.value = String(neg.demand_buyout);
+    ntc.checked = neg.demand_no_transfer; role.value = neg.demand_role;
     paint();
   };
   walkBtn.onclick = async () => {

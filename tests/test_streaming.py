@@ -52,6 +52,17 @@ def test_player_stream_income_scales_with_followers_and_load() -> None:
     assert economy.player_stream_income(half) < economy.player_stream_income(star)
 
 
+def test_negotiated_stream_split_changes_org_income() -> None:
+    p = _player("split", 75, followers=1_000_000, load=100.0)
+    p.stream_revenue_share = 0.90
+    player_friendly = economy.player_stream_income(p)
+    p.stream_revenue_share = 0.50
+    org_friendly = economy.player_stream_income(p)
+    assert player_friendly == int(economy.player_stream_gross(p) * 0.10)
+    assert org_friendly == int(economy.player_stream_gross(p) * 0.50)
+    assert org_friendly > player_friendly
+
+
 def test_apply_weekly_finance_counts_streaming(game_data: GameData) -> None:
     gs = new_campaign(game_data, seed=11)
     tid = gs.user_team_id
@@ -281,3 +292,27 @@ def test_v10_save_migrates_to_current(game_data: GameData, tmp_path) -> None:
     loaded = GameState.load(path)
     assert loaded.schema_version == SCHEMA_VERSION
     assert all(p.stream_load == 0.0 for p in loaded.players.values())
+
+
+def test_v11_save_backfills_contract_terms(game_data: GameData, tmp_path) -> None:
+    gs = new_campaign(game_data, seed=6)
+    raw = gs.model_dump(mode="json")
+    raw["schema_version"] = 11
+    for p in raw["players"].values():
+        for key in (
+            "stream_revenue_share", "release_fee", "buyout_clause",
+            "no_transfer_clause", "roster_role",
+        ):
+            p.pop(key, None)
+    path = tmp_path / "v11.json"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    loaded = GameState.load(path)
+    assert loaded.schema_version == SCHEMA_VERSION
+    contracted = [p for t in loaded.teams.values() for p in loaded.roster(t.id)]
+    assert all(0.65 <= p.stream_revenue_share <= 0.90 for p in contracted)
+    assert all(p.release_fee > 0 and p.buyout_clause > 0 for p in contracted)
+    assert not any(p.no_transfer_clause for p in loaded.players.values())
+    assert all(
+        p.roster_role in ("starter", "bench", "academy")
+        for p in loaded.players.values()
+    )
