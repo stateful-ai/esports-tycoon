@@ -292,20 +292,45 @@ const svgEl = (tag, attrs) => {
   return n;
 };
 
+// A small deterministic offset so several abilities thrown at the SAME target
+// callout spread into a little cluster instead of stacking on one point.
+function utilJitter(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (Math.imul(h, 31) + seed.charCodeAt(i)) | 0;
+  const ang = ((h >>> 0) % 628) / 100;
+  const rad = S(0.8 + (((h >>> 5) >>> 0) % 90) / 100);
+  return [Math.cos(ang) * rad, Math.sin(ang) * rad];
+}
+
 // Utility markers: recomputed from scratch every frame (deterministic in
 // (round, tick)), so their fade/pulse is plain JS math rather than a CSS
 // animation — the transient layer is fully rebuilt every frame and a
-// keyframe animation would just restart each time.
+// keyframe animation would just restart each time. The effect is drawn where
+// the ability LANDS (its target callout), with a short throw line back to the
+// caster so you can read who deployed it and where it's going.
 function drawUtilityMarkers(round, t) {
   const abilities = V.abilities || {};
   for (const u of round.utility) {
     const age = t - u.tick;
     if (age < 0 || age > UTIL_MARKER_TICKS) continue;
-    const p = playerPos(round, u.player_id, u.tick);
-    if (!p) continue;
-    const [x, y] = p;
+    const cast = playerPos(round, u.player_id, u.tick);
+    const land = u.target_callout && V.map.callouts[u.target_callout]
+      ? pos(u.target_callout)
+      : cast;
+    if (!land) continue;
+    const [jx, jy] = utilJitter(u.player_id + u.ability_id);
+    const x = land[0] + jx, y = land[1] + jy;
     const fade = 1 - age / UTIL_MARKER_TICKS;
     const kind = abilityKind(abilities[u.ability_id]);
+    // The throw: a brief dashed line from the caster to the landing spot.
+    if (cast && land !== cast && age <= 3) {
+      V.dyn.appendChild(svgEl("line", {
+        x1: cast[0].toFixed(2), y1: cast[1].toFixed(2),
+        x2: x.toFixed(2), y2: y.toFixed(2),
+        class: `util-throw util-throw-${kind}`,
+        opacity: ((1 - age / 3) * 0.7).toFixed(2),
+      }));
+    }
     switch (kind) {
       case "smoke":
         V.dyn.appendChild(svgEl("circle", {
@@ -345,6 +370,106 @@ function drawUtilityMarkers(round, t) {
           cx: x, cy: y, r: S(1.6), class: "util-marker util-generic", opacity: (fade * 0.5).toFixed(2),
         }));
     }
+  }
+}
+
+/* -- vision cones ----------------------------------------------------------- */
+
+const CONE_R = 9;         // sight-cone length in world units (scaled by S)
+const CONE_HALF = 0.42;   // half-angle of the wedge (~24 deg each side)
+const FACE_RECENT = 5;    // ticks a frag/utility keeps steering the gaze
+const FACE_LERP = 0.28;   // per-frame ease toward the target angle (0..1)
+
+// Everyone alive right now, with screen position, team, and move heading.
+// One pass per frame feeds both the cones and the nearest-enemy gaze fallback.
+function livePositions(round, t) {
+  const out = {};
+  for (const pid of Object.keys(V.players)) {
+    if (!(pid in round.placements)) continue;
+    const death = deathOf(round, pid);
+    if (death && death.tick <= t) continue;
+    const mi = playerMoveInfo(round, pid, t);
+    if (!mi) continue;
+    out[pid] = { pos: mi.pos, moving: mi.moving, from: mi.from, team: V.players[pid].team_id };
+  }
+  return out;
+}
+
+// Where a player is looking, in SCREEN radians — derived entirely from the
+// event log, in priority order: heading while moving, then the target of a
+// recent frag, then a recently-thrown ability's landing spot, then (idle) the
+// nearest live opponent. Returns null when nothing gives a direction.
+function facingAngle(round, pid, t, live) {
+  const me = live[pid];
+  if (!me) return null;
+  const [px, py] = me.pos;
+  const ang = (x, y) => Math.atan2(y - py, x - px);
+
+  if (me.moving && me.from) {
+    const dx = px - me.from[0], dy = py - me.from[1];
+    if (dx * dx + dy * dy > 0.04) return Math.atan2(dy, dx);
+  }
+  // Most recent frag by this player -> look at where the victim fell.
+  let frag = null;
+  for (const k of round.kills) {
+    if (k.killer_id !== pid || k.victim_x == null) continue;
+    if (t < k.tick || t - k.tick > FACE_RECENT) continue;
+    if (!frag || k.tick > frag.tick) frag = k;
+  }
+  if (frag) {
+    const [vx, vy] = gpoint(frag.victim_x, frag.victim_y, zOf(frag.callout_id));
+    return ang(vx, vy);
+  }
+  // Most recent ability -> look toward where it's going.
+  let cast = null;
+  for (const u of round.utility) {
+    if (u.player_id !== pid || !u.target_callout || !V.map.callouts[u.target_callout]) continue;
+    if (t < u.tick || t - u.tick > FACE_RECENT) continue;
+    if (!cast || u.tick > cast.tick) cast = u;
+  }
+  if (cast) {
+    const [tx, ty] = pos(cast.target_callout);
+    return ang(tx, ty);
+  }
+  // Idle: hold the angle toward the nearest live opponent.
+  let best = Infinity, bang = null;
+  for (const q of Object.values(live)) {
+    if (q.team === me.team) continue;
+    const dx = q.pos[0] - px, dy = q.pos[1] - py, d = dx * dx + dy * dy;
+    if (d > 0.04 && d < best) { best = d; bang = Math.atan2(dy, dx); }
+  }
+  return bang;
+}
+
+// Translucent sight wedge per living player. Drawn on the transient layer
+// beneath the player dots; the gaze eases between frames (V.facing) so it
+// swings smoothly instead of snapping. Reset when the round changes.
+function drawVisionCones(round, t) {
+  if (V._facingRound !== V.roundIdx) { V.facing = {}; V._facingRound = V.roundIdx; }
+  const live = livePositions(round, t);
+  const r = S(CONE_R);
+  for (const [pid, me] of Object.entries(live)) {
+    const target = facingAngle(round, pid, t, live);
+    if (target == null) continue;
+    let cur = V.facing[pid];
+    if (cur == null) cur = target;
+    else {
+      let diff = target - cur;
+      while (diff > Math.PI) diff -= 2 * Math.PI;
+      while (diff < -Math.PI) diff += 2 * Math.PI;
+      cur += diff * FACE_LERP;
+    }
+    V.facing[pid] = cur;
+    const [px, py] = me.pos;
+    const a1 = cur - CONE_HALF, a2 = cur + CONE_HALF;
+    const e1x = px + Math.cos(a1) * r, e1y = py + Math.sin(a1) * r;
+    const e2x = px + Math.cos(a2) * r, e2y = py + Math.sin(a2) * r;
+    const teamCls = me.team === V.teamA ? "a" : "b";
+    V.dyn.appendChild(svgEl("path", {
+      d: `M${px.toFixed(2)} ${py.toFixed(2)} L${e1x.toFixed(2)} ${e1y.toFixed(2)} ` +
+        `A ${r.toFixed(2)} ${r.toFixed(2)} 0 0 1 ${e2x.toFixed(2)} ${e2y.toFixed(2)} Z`,
+      class: "vision-cone " + teamCls,
+    }));
   }
 }
 
@@ -711,7 +836,9 @@ function drawFrame() {
   V.dyn.innerHTML = "";
 
   // Transient overlays first so player dots (persistent layer, drawn after
-  // V.dyn in the DOM) render on top of them.
+  // V.dyn in the DOM) render on top of them. Vision cones lead so every other
+  // marker (utility, kill flashes, spike) sits above the translucent wedges.
+  if (V.cones) drawVisionCones(round, t);
   drawGimmicks(round, t);
   drawKillFlashes(round, t);
   drawWhiffs(round, t);
@@ -1039,6 +1166,9 @@ async function openReplay(fixtureId, mapIndex) {
     lastTs: null,
     mapId: data.map.id || null,
     painted: null,
+    cones: true,       // sight cones on by default
+    facing: {},        // pid -> eased gaze angle (screen radians)
+    _facingRound: -1,  // round the facing map belongs to (reset on change)
   };
   // Probe once for a painted backdrop; absent => plain geometry (unchanged).
   V.painted = V.mapId ? await probePainted(V.mapId) : null;
@@ -1081,6 +1211,14 @@ document.getElementById("v-view").onclick = () => {
   V.iso = !V.iso;
   document.getElementById("v-view").textContent = V.iso ? "2D" : "ISO";
   drawStatic(); // rebuilds persist/dyn layers for the new projection
+  drawFrame();
+};
+document.getElementById("v-cones").onclick = () => {
+  if (!V) return;
+  V.cones = !V.cones;
+  const b = document.getElementById("v-cones");
+  b.classList.toggle("active", V.cones);
+  b.setAttribute("aria-pressed", V.cones ? "true" : "false");
   drawFrame();
 };
 document.getElementById("v-prev").onclick = () => V && setRound(V.roundIdx - 1);

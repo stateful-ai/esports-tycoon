@@ -477,6 +477,27 @@ svg.iso .plabel { font-size: 2.4px; }
   70%, 100% { transform: scale(1.9); opacity: 0; }
 }
 
+/* Vision cones — a translucent sight wedge per living player showing where
+   they're looking (facing derived from the event log in viewer.js). Team-
+   coloured to match the player dots; kept faint so the map reads through. */
+.vision-cone { pointer-events: none; fill-opacity: .13; stroke-width: .28; stroke-opacity: .55; }
+.vision-cone.a { fill: var(--es-color-side-attack, #ff8f4d); stroke: var(--es-color-side-attack, #ff8f4d); }
+.vision-cone.b { fill: var(--es-color-side-defense, #52a9ff); stroke: var(--es-color-side-defense, #52a9ff); }
+#v-map.has-paint .vision-cone { fill-opacity: .17; }
+
+/* Utility throw line — caster -> landing spot for the first ticks of a cast,
+   so the deployment reads as a motion, not a teleport. */
+.util-throw {
+  fill: none; stroke: var(--es-color-text-secondary, #a2aec6);
+  stroke-width: .4; stroke-dasharray: 1.4 1; stroke-linecap: round;
+  pointer-events: none;
+}
+.util-throw-smoke { stroke: var(--es-color-role-flex, #9ba3af); }
+.util-throw-flash { stroke: #fff; }
+.util-throw-damage { stroke: var(--es-color-side-attack, #d06142); }
+.util-throw-info { stroke: var(--es-viz-3, #3fb59b); }
+.util-throw-ult { stroke: var(--es-color-brand, #ff4655); }
+
 /* Utility markers — deterministic per-tick fade/pulse computed in JS, so
    these are plain static styles (color, shape) rather than animations. */
 .util-marker { pointer-events: none; }
