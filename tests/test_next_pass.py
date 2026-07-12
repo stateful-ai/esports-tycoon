@@ -95,7 +95,7 @@ def test_focus_and_prep_terms_are_exact_in_duel_score(game_data) -> None:
 
     victim, other, *_ = sorted(game_data.teams["team_vanguard"].player_ids)
     att = sorted(game_data.teams["team_nexus"].player_ids)[0]
-    plan = TeamMatchPlan(focus_target=victim, prep_edge=1.0)
+    plan = TeamMatchPlan(focus_target=victim, prep_edge=1.0, counter_edge=0.75)
     sim0 = _mk_sim(game_data)
     sim1 = _mk_sim(game_data, {"team_nexus": plan})
 
@@ -104,13 +104,21 @@ def test_focus_and_prep_terms_are_exact_in_duel_score(game_data) -> None:
     base_vs_other = sim0._duel_score(att, *args, opp_pid=other)
     hunted = sim1._duel_score(att, *args, opp_pid=victim)
     off = sim1._duel_score(att, *args, opp_pid=other)
-    assert hunted - base_vs_victim == pytest.approx(1.0 + C.FOCUS_TARGET_EDGE)
-    assert off - base_vs_other == pytest.approx(1.0 - C.FOCUS_OFF_MALUS)
+    assert hunted - base_vs_victim == pytest.approx(
+        1.0 + 0.75 + C.FOCUS_TARGET_EDGE
+    )
+    assert off - base_vs_other == pytest.approx(
+        1.0 + 0.75 - C.FOCUS_OFF_MALUS
+    )
     # The engine clamp holds even if the campaign hands in nonsense.
     sim2 = _mk_sim(
         game_data, {"team_nexus": TeamMatchPlan(prep_edge=99.0)}
     )
     assert sim2._prep["team_nexus"] == pytest.approx(C.PREP_EDGE_CAP)
+    sim3 = _mk_sim(
+        game_data, {"team_nexus": TeamMatchPlan(counter_edge=-99.0)}
+    )
+    assert sim3._counter["team_nexus"] == pytest.approx(-C.COUNTER_STRAT_CAP)
 
 
 def test_momentum_is_invisible_at_default_confidence(game_data) -> None:
@@ -391,14 +399,16 @@ def test_fixture_plans_revalidate_against_live_state(campaign) -> None:
     target = sorted(opp.player_ids)[0]
     gone = "player_who_left"
     gs.game_plans_by[uid] = GamePlan(
-        fixture_id=fx.id, focus_target=target,
+        fixture_id=fx.id, focus_target=target, pace=0.0,
         starter_ids=[gone] + sorted(gs.teams[uid].player_ids)[:4],
     )
+    gs.teams[opp_id].tactics.pace = 100.0
     gs.scout_progress_by.setdefault(uid, {})[opp_id] = 0.5
     plans, lineups = _fixture_plans(gs, fx)
     assert plans[uid].focus_target == target
     assert uid not in lineups, "a lineup with a departed player is discarded"
     assert plans[uid].prep_edge == pytest.approx(PREP_EDGE_BASE + PREP_EDGE_SPAN * 0.5)
+    assert plans[uid].counter_edge == pytest.approx(1.875)
 
     # Same plan after the target leaves the roster entirely: nulled.
     opp.player_ids.remove(target)
@@ -509,6 +519,8 @@ def test_gameplan_endpoints(campaign, game_data) -> None:
     assert out["fixture"] is not None
     assert out["plan"] is None
     assert out["prep_edge"] >= 0.3
+    assert out["counter"]["opponent_edge"] is None
+    assert out["counter"]["max_edge"] > 0.0
     assert len([r for r in out["opponent_roster"] if r["is_starter"]]) == 5
 
     opp = out["fixture"]["opponent"]["id"]
@@ -518,6 +530,12 @@ def test_gameplan_endpoints(campaign, game_data) -> None:
     assert r["ok"]
     out = server_mod.gameplan_view()
     assert out["plan"] is not None and out["plan"]["pace"] == 75.0
+    assert "meta_edge" in out["counter"]
+    assert out["counter"]["opponent_edge"] is None
+    gs.scout_progress[opp] = 0.5
+    revealed = server_mod.gameplan_view()["counter"]
+    assert revealed["opponent_revealed"] is True
+    assert revealed["opponent_edge"] is not None
 
     r = server_mod.set_gameplan(server_mod.GamePlanBody(clear=True))
     assert r["ok"]

@@ -427,6 +427,15 @@ PREP_EDGE_CAP = 1.5
 FOCUS_TARGET_EDGE = 2.5  # duel points vs the hunted player
 FOCUS_OFF_MALUS = 0.5  # duel points given up vs everyone else
 
+# A one-match dial override becomes a real counter-strat only when it leans
+# against the opponent's actual identity. Each of the four execution dials is
+# compared at [-1, +1] around neutral; matching their lean is a penalty and
+# opposing it is a bonus. The average is multiplied by this span, then capped,
+# so a coherent four-dial counter can move a close matchup without bridging an
+# elite-vs-50-overall talent gap by itself.
+COUNTER_STRAT_SPAN = 7.5
+COUNTER_STRAT_CAP = 3.0
+
 # Eco discipline: on a save/force round eco_greed decides whether the team
 # runs it down (a fast aggressive hit to catch the buy off-guard) or plays
 # slow for picks and the exit. Shifts the execute probability by +/- this
