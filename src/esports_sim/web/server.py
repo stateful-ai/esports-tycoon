@@ -36,6 +36,7 @@ from esports_sim.manager import (
     inbox as inbox_mod,
     knowledge as knowledge_mod,
     market,
+    match_review as match_review_mod,
     memories as memories_mod,
     meta as meta_mod,
     narrative,
@@ -1101,18 +1102,51 @@ def _last_match_review(
                     else f"{handle} is off-colour — consider a bench or agent "
                     "swap on the Roster screen."
                 )
+            adjustment = match_review_mod.tactic_adjustment(
+                gs.teams[gs.acting_team_id].tactics,
+                p.lever_code,
+                coach.quality,
+                tier,
+            )
+            if adjustment is not None:
+                if adjustment["at_limit"]:
+                    text = (
+                        f"Keep {adjustment['label']} at {adjustment['target']} — "
+                        "this slider is already at the coach's recommended limit. "
+                        "If the issue persists, the remaining fix is execution or training."
+                    )
+                else:
+                    text = (
+                        f"Set {adjustment['label']} to {adjustment['target']} "
+                        f"(currently {adjustment['current']}) — "
+                        f"{adjustment['reason']}"
+                    )
             cand.append((
                 0 if spec["specialty"] == coach.specialty else 1,
                 {
                     "code": p.lever_code,
-                    "tab": spec["tab"],
+                    "tab": "tactics" if adjustment is not None else spec["tab"],
                     "specialty": spec["specialty"],
                     "on_focus": spec["specialty"] == coach.specialty,
                     "text": text,
+                    "adjustment": adjustment,
                 },
             ))
         cand.sort(key=lambda t: t[0])  # specialty-matches first; stable otherwise
-        levers = [c[1] for c in cand[:cap]]
+        # One clear target per slider. Several symptoms can diagnose the same
+        # dial (e.g. weak trades and leaky setups both point to map control),
+        # but repeating the same move is not additional coaching value.
+        used_dials: set[str] = set()
+        for _priority, item in cand:
+            adjustment = item["adjustment"]
+            dial = adjustment["dial"] if adjustment else ""
+            if dial and dial in used_dials:
+                continue
+            if dial:
+                used_dials.add(dial)
+            levers.append(item)
+            if len(levers) >= cap:
+                break
     out["levers"] = levers
     out["coach"] = {
         "present": coach is not None,

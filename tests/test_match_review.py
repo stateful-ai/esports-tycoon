@@ -6,9 +6,10 @@ import pytest
 
 from esports_sim.manager import advance_week, new_campaign
 from esports_sim.manager.market import release_player
-from esports_sim.manager.match_review import build_match_review
+from esports_sim.manager.match_review import build_match_review, tactic_adjustment
 from esports_sim.manager.state import GameState, StaffMember
 from esports_sim.registry import GameData
+from esports_sim.schemas import TeamTactics
 
 
 def _play(gd: GameData, seed: int, weeks: int = 4) -> GameState:
@@ -105,6 +106,50 @@ def test_levers_gated_by_coach(game_data: GameData) -> None:
     assert 1 <= len(levers) <= 3
     if any(lv["specialty"] == "tactical" for lv in levers):
         assert levers[0]["specialty"] == "tactical"  # specialty floats to top
+    slider_levers = [lv for lv in levers if lv["adjustment"] is not None]
+    assert slider_levers
+    assert all(lv["tab"] == "tactics" for lv in slider_levers)
+    assert all(
+        lv["text"].startswith(("Set ", "Keep ")) for lv in slider_levers
+    )
+
+
+def test_tactic_adjustment_uses_staff_skill_and_current_slider() -> None:
+    tactics = TeamTactics(pace=51, map_control=50)
+
+    # A developing coach makes a conservative call and a basic analyst rounds
+    # it to a broad ten-point target.
+    basic = tactic_adjustment(tactics, "atk_tempo", 35.0, 0)
+    assert basic == {
+        "dial": "pace",
+        "label": "Pace",
+        "current": 51,
+        "target": 60,
+        "at_limit": False,
+        "reason": "Speed up the attack timing and commit to earlier executes.",
+        "coach_step": 10,
+        "analyst_precision": 10,
+    }
+
+    # An elite coach makes a bolder adjustment; a deep analyst preserves the
+    # calibrated point target instead of rounding it away.
+    elite = tactic_adjustment(tactics, "atk_tempo", 85.0, 2)
+    assert elite["target"] == 71
+    assert elite["coach_step"] == 20
+    assert elite["analyst_precision"] == 1
+
+
+def test_tactic_adjustment_calls_out_when_slider_is_already_at_limit() -> None:
+    rec = tactic_adjustment(
+        TeamTactics(map_control=18), "def_setups", 85.0, 3
+    )
+    assert rec["target"] == 18
+    assert rec["at_limit"] is True
+    coarse = tactic_adjustment(
+        TeamTactics(map_control=18), "def_setups", 35.0, 0
+    )
+    assert coarse["target"] == 18  # "keep" never disguises a rounded move
+    assert tactic_adjustment(TeamTactics(), "aim_training", 85.0, 3) is None
 
 
 def test_forfeit_is_thin_review(game_data: GameData) -> None:

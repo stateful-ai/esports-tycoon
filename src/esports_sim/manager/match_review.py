@@ -20,8 +20,100 @@ under-gunned / isolation reads as `sim.stats`, so the round-context denominators
 from __future__ import annotations
 
 from esports_sim.manager.state import MatchReview, ReviewPoint
+from esports_sim.schemas import Event, TeamTactics
 from esports_sim.sim.stats import PISTOL_ROUNDS, RIFLE_TIER, MatchStats
-from esports_sim.schemas import Event
+
+
+# A diagnosed review lever can point at one concrete standing-tactics change.
+# This is advice, not an engine formula: the match review remains raw and the
+# recommendation is derived from the team's CURRENT tactics and staff whenever
+# the dashboard is opened. Hiring better staff therefore deepens an old review,
+# while following last week's advice advances the target instead of repeating
+# the same vague instruction forever.
+_TACTIC_ADVICE = {
+    "atk_tempo": (
+        "pace", 1, "Speed up the attack timing and commit to earlier executes."
+    ),
+    "def_setups": (
+        "map_control", -1, "Stack more tightly and simplify the defensive setup."
+    ),
+    "pistol_prep": (
+        "eco_greed",
+        -1,
+        "Save more often so pistol losses do not distort the buy cycle.",
+    ),
+    "entry_support": (
+        "aggression", -1, "Use safer spacing so the entry has a closer trade."
+    ),
+    "trade_discipline": (
+        "map_control", -1, "Play closer together and shorten the trade distance."
+    ),
+    "eco_discipline": (
+        "eco_greed",
+        -1,
+        "Reduce low-percentage force-buys and rebuild full purchases.",
+    ),
+    "retake_util": (
+        "util_discipline", 1, "Hold more utility for coordinated retakes."
+    ),
+    "util_discipline": (
+        "util_discipline",
+        1,
+        "Bank utility for planned combinations instead of early dumps.",
+    ),
+}
+
+_TACTIC_LABELS = {
+    "aggression": "Aggression",
+    "pace": "Pace",
+    "util_discipline": "Utility discipline",
+    "eco_greed": "Eco greed",
+    "map_control": "Map control",
+}
+
+
+def tactic_adjustment(
+    tactics: TeamTactics,
+    lever_code: str,
+    coach_quality: float,
+    analyst_tier: int,
+) -> dict | None:
+    """Return a concrete, staff-scaled slider target for a review lever.
+
+    A developing coach makes a conservative 10-point call, an established one
+    15, and an elite one 20. Analyst depth controls whether that target is only
+    directional (nearest 10), calibrated (nearest 5), or point-precise. Advice
+    stays inside 20..80: one series should not prescribe a degenerate extreme.
+    """
+    spec = _TACTIC_ADVICE.get(lever_code)
+    if spec is None:
+        return None
+    dial, direction, reason = spec
+    current = float(getattr(tactics, dial))
+    step = 10 if coach_quality < 40.0 else 15 if coach_quality < 70.0 else 20
+    limit = 80.0 if direction > 0 else 20.0
+    at_limit = current >= limit if direction > 0 else current <= limit
+    raw_target = current if at_limit else (
+        min(limit, current + step)
+        if direction > 0
+        else max(limit, current - step)
+    )
+    quantum = 10 if analyst_tier <= 0 else 5 if analyst_tier == 1 else 1
+    target = (
+        int(round(current))
+        if at_limit
+        else int(round(raw_target / quantum) * quantum)
+    )
+    return {
+        "dial": dial,
+        "label": _TACTIC_LABELS[dial],
+        "current": int(round(current)),
+        "target": target,
+        "at_limit": at_limit,
+        "reason": reason,
+        "coach_step": step,
+        "analyst_precision": quantum,
+    }
 
 # Neutral value for weighting (the "even" reference each rate is measured from)
 # and a per-category priority (how decisive it is to the result). weight =
