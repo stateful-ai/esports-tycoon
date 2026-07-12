@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections import Counter, defaultdict
+
 import pytest
 
 from esports_sim.registry import GameData
@@ -51,6 +53,75 @@ def test_kills_and_buys_are_plausible(game_data: GameData) -> None:
     for e in res.events:
         if e.type == "round.buy":
             assert e.spent >= 0
+
+
+def test_saved_rifle_buys_beat_pistols_and_lead_kill_counts(
+    game_data: GameData,
+) -> None:
+    """Even teams should bank for rifles, and gun advantages should convert.
+
+    This is deliberately a round-level outcome check rather than only a duel
+    coefficient assertion: routing, utility, trades, and saves all get a chance
+    to overcome the gun gap, but they must not erase it consistently.
+    """
+    even = game_data.model_copy(deep=True)
+    for player in even.players.values():
+        player.attributes = {name: 70.0 for name in player.attributes}
+    for team in even.teams.values():
+        team.chemistry = 80.0
+
+    team_a, team_b = "team_nexus", "team_vanguard"
+    player_team = {
+        **{pid: team_a for pid in even.teams[team_a].player_ids},
+        **{pid: team_b for pid in even.teams[team_b].player_ids},
+    }
+    gun_diff_rounds = 0
+    rifle_wins = 0
+    top_weapon_classes: Counter[str] = Counter()
+
+    for seed in range(12):
+        result = simulate_match_result(even, team_a, team_b, "haven", seed + 700)
+        buys: dict[str, str] = {}
+        player_kills: defaultdict[str, Counter[str]] = defaultdict(Counter)
+
+        for event in result.events:
+            if event.type == "round.start":
+                buys = {}
+            elif event.type == "round.buy":
+                buys[event.player_id] = event.weapon_id
+            elif event.type == "round.kill":
+                weapon = even.weapons.get(event.weapon_id)
+                if weapon is not None:
+                    player_kills[event.killer_id][str(weapon.weapon_class)] += 1
+            elif event.type == "round.end":
+                classes = {
+                    team_id: Counter(
+                        str(even.weapons[buys[pid]].weapon_class)
+                        for pid, owner in player_team.items()
+                        if owner == team_id
+                    )
+                    for team_id in (team_a, team_b)
+                }
+                for pistol_team, rifle_team in (
+                    (team_a, team_b),
+                    (team_b, team_a),
+                ):
+                    rifle_count = (
+                        classes[rifle_team]["rifle"]
+                        + classes[rifle_team]["sniper"]
+                    )
+                    if classes[pistol_team]["pistol"] >= 3 and rifle_count >= 3:
+                        gun_diff_rounds += 1
+                        rifle_wins += event.winner_id == rifle_team
+
+        for kills in player_kills.values():
+            top_weapon_classes[kills.most_common(1)[0][0]] += 1
+
+    assert gun_diff_rounds >= 20
+    assert rifle_wins / gun_diff_rounds >= 0.70
+    assert top_weapon_classes["rifle"] + top_weapon_classes["sniper"] > (
+        top_weapon_classes["smg"] + top_weapon_classes["pistol"]
+    )
 
 
 def test_stronger_roster_wins_majority(game_data: GameData) -> None:

@@ -182,7 +182,12 @@ ARMOR_VALUE = 50
 # Buy-tier thresholds used by the IGL's team call and the heuristic policy.
 FULL_BUY_THRESHOLD = 3900  # rifle + armor + some util
 FORCE_BUY_THRESHOLD = 2400
-OPERATOR_THRESHOLD = 5700  # op + armor
+# A dedicated AWPer may buy the Operator without armor; the buy resolver adds
+# armor whenever the player can afford the full 5700-credit package.
+OPERATOR_THRESHOLD = 4700
+# Aim profile nudges rifle preference without making high-precision authored
+# players pick the Vandal almost exclusively.
+RIFLE_PREFERENCE_ATTRIBUTE_SCALE = 0.5
 
 # ---------------------------------------------------------------------------
 # Match format
@@ -240,10 +245,10 @@ OPERATOR_AGENT_AFFINITY = 2.5
 
 # Weapon model. Accuracy and body damage establish a weapon's floor; range
 # then determines where it is allowed to express that strength.
-WEAPON_ACCURACY_SCORE = 15.0
+WEAPON_ACCURACY_SCORE = 50.0
 WEAPON_DAMAGE_PIVOT = 30.0
-WEAPON_DAMAGE_SCORE = 0.10
-WEAPON_DAMAGE_CAP = 2.5
+WEAPON_DAMAGE_SCORE = 1.0
+WEAPON_DAMAGE_CAP = 12.0
 
 # Range model (needs map floor geometry; neutral without it). Duels are
 # fought at the straight-line distance between the two rooms' centers
@@ -459,9 +464,10 @@ COUNTER_STRAT_CAP = 3.0
 # slow for picks and the exit. Shifts the execute probability by +/- this
 # on non-full-buy rounds only; neutral eco_greed leaves it untouched.
 ECO_EXECUTE_SPAN = 0.30
-# Keep the previous neutral force-buy threshold (0.95x) while making the
-# high/low identities visibly different on real eco rounds.
-ECO_FORCE_BASE_MULT = 0.95
+# Neutral teams save until they are just short of a full rifle buy instead of
+# chaining Spectre forces after ordinary losses.  Eco-greedy teams still open
+# a meaningful force window; disciplined teams bank for the next rifle round.
+ECO_FORCE_BASE_MULT = 1.55
 ECO_FORCE_MULT_SPAN = 0.20
 
 # Pace also has a defensive dimension — tempo, not appetite. A fast book
