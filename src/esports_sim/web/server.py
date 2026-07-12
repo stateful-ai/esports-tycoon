@@ -487,6 +487,40 @@ class Lobby:
             self._save_sessions()
             return game, None
 
+    def delete_world(self, sid: str, code: str) -> str | None:
+        """Permanently remove one of this browser's saved worlds.
+
+        A shared world cannot be removed while another browser has a seat in
+        it. This prevents one manager from deleting an active campaign out
+        from under the rest of the group.
+        """
+        with self._lock:
+            if not any(row[0] == code for row in self.history.get(sid, [])):
+                return "that world isn't in this browser's history"
+            if any(world_code == code for world_code, _ in self.sessions.values()):
+                return "leave the world before deleting it; shared worlds cannot be deleted while a manager is playing"
+
+            game = self.games.get(code)
+            if game is not None:
+                # No session is bound to this game, but an in-flight request
+                # may still be reading it. Wait before removing its files.
+                with game.lock:
+                    self.games.pop(code, None)
+
+            try:
+                _save_path_for(code).unlink(missing_ok=True)
+                _meta_path_for(code).unlink(missing_ok=True)
+                # This cache has no value without its campaign. Match-review
+                # JSONL is intentionally retained as an offline corpus.
+                llm_social._cache_path(code).unlink(missing_ok=True)
+            except OSError:
+                return "could not delete that world's saved files"
+
+            for history_sid, rows in self.history.items():
+                self.history[history_sid] = [row for row in rows if row[0] != code]
+            self._save_sessions()
+            return None
+
     def worlds_for(self, sid: str) -> list[dict]:
         """This browser's resumable worlds (history entries whose save still
         exists), newest first. No save-loading — history carries the label."""
@@ -1412,6 +1446,19 @@ def resume_game(body: ResumeBody) -> dict:
         "team_id": m[1] if m else None,
         "mode": game.mode,
     }
+
+
+class DeleteWorldBody(BaseModel):
+    code: str
+
+
+@app.post("/api/delete_world")
+def delete_world(body: DeleteWorldBody) -> dict:
+    """Delete a saved world from the requesting browser's lobby list."""
+    err = _LOBBY.delete_world(_current_sid(), body.code.upper())
+    if err is not None:
+        raise HTTPException(409, err)
+    return {"ok": True, "code": body.code.upper()}
 
 
 # ---------------------------------------------------------------------------

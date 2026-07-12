@@ -281,6 +281,12 @@ tr.me td:first-child { box-shadow: inset 2px 0 0 var(--es-color-brand, #ff4655);
 .team-pick:hover { border-color: var(--es-color-brand, #ff4655); }
 .team-pick.taken { opacity: 0.45; cursor: not-allowed; }
 .team-pick.taken:hover { border-color: var(--es-color-border-primary, #262a35); }
+.resume-world { display: inline-flex; gap: 4px; align-items: stretch; }
+.resume-world-delete {
+  color: var(--es-color-text-danger, #FF6B6B);
+  border-color: color-mix(in srgb, var(--es-color-text-danger, #FF6B6B) 45%, var(--es-color-border-primary, #262a35));
+}
+.resume-world-delete:hover { border-color: var(--es-color-text-danger, #FF6B6B); }
 
 #toast {
   position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
