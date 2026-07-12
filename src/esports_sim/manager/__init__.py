@@ -16,7 +16,12 @@ from esports_sim.manager.online_manager_learning import (
     fine_tune_online,
     promotion_decision,
 )
-from esports_sim.manager.rollout import evaluate_rollouts, run_batch, run_rollout
+from esports_sim.manager.rollout import (
+    evaluate_rollouts,
+    play_policy_week,
+    run_batch,
+    run_rollout,
+)
 from esports_sim.manager.state import Fixture, GameState, MapResult, TeamRecord
 
 __all__ = [
@@ -35,6 +40,7 @@ __all__ = [
     "evaluate_model",
     "promotion_decision",
     "run_rollout",
+    "play_policy_week",
     "run_batch",
     "evaluate_rollouts",
     "Fixture",

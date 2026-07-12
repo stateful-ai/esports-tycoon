@@ -31,6 +31,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Train learned manager policy (seed-split imitation) | `... scripts\train_manager_policy.py [train-seeds] [val-seeds] [profiles] [weeks] [checkpoint]` |
 | Generate/train learned player policy (cross-map seed split) | `... scripts\train_player_policy.py <checkpoint> [--map all --seeds N --validation-seeds N --dataset runs\...jsonl]` |
 | Improve manager policy (online simulation + promotion gate) | `... scripts\online_train_manager_policy.py <checkpoint> [--train-seeds N --eval-seeds N --profiles N --weeks N]` |
+| Autoplay with installed manager AI | `python -m esports_sim --auto N --manager-model telemetry\manager_policy_champion.json` |
 | Match token corpus (world-model data; pinned vocab) | `... scripts\dump_season_tokens.py [n] [seed] [stem]` |
 | Play-pattern report (feature usage across saves) | `... scripts\telemetry_report.py [saves-dir]` |
 | Tactics-dial sweep gate (each numeric dial at its poles) | `... scripts\tactics_report.py` (exit 1 = fail) |
