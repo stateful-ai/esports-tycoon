@@ -71,6 +71,7 @@ function Start-VllmServer {
         [switch]$NoVllm
     )
     
+    $script:VllmAvailable = $false
     $startVllm = Get-EnvVariable -Name 'START_VLLM' -Default 'true'
     if ($NoVllm -or $startVllm.ToLower() -eq 'false' -or $startVllm -eq '0') {
         Write-Line '[vllm] Startup skipped (disabled by parameter or config).'
@@ -94,6 +95,7 @@ function Start-VllmServer {
     }
 
     if ($portInUse) {
+        $script:VllmAvailable = $true
         Write-Line "[vllm] Port $vllmPort is already in use. Assuming vLLM server is already running."
         return
     }
@@ -120,7 +122,38 @@ function Start-VllmServer {
         '--port', $vllmPort
     )
     Start-Process -FilePath $PythonExe -ArgumentList $vllmArgs -WorkingDirectory $RepoRoot -WindowStyle Minimized
+    $script:VllmAvailable = $true
     Write-Line '[vllm] vLLM server started in background.'
+}
+
+function Enable-VllmFlavor {
+    <# See scripts/serve.ps1. The taskbar's Python child inherits these
+    values, so local prose uses vLLM with no API key or save mutation. #>
+    param(
+        [string]$Model,
+        [string]$Port
+    )
+
+    $baseUrl = "http://127.0.0.1:$Port/v1"
+    $socialMode = Get-EnvVariable -Name 'SOCIAL_LLM' -Default ''
+    if ([string]::IsNullOrWhiteSpace($socialMode)) {
+        $env:SOCIAL_LLM = 'local'
+        $env:SOCIAL_LLM_BASE_URL = $baseUrl
+        $env:SOCIAL_LLM_LOCAL_MODEL = $Model
+        Write-Line "[vllm] Social posts and 1:1 replies will use $baseUrl."
+    } else {
+        Write-Line '[vllm] Keeping explicit SOCIAL_LLM configuration.'
+    }
+
+    $flavorMode = Get-EnvVariable -Name 'FLAVOR_LLM' -Default ''
+    if ([string]::IsNullOrWhiteSpace($flavorMode)) {
+        $env:FLAVOR_LLM = 'local'
+        $env:FLAVOR_LLM_BASE_URL = $baseUrl
+        $env:FLAVOR_LLM_LOCAL_MODEL = $Model
+        Write-Line "[vllm] Campaign decision copy will use $baseUrl."
+    } else {
+        Write-Line '[vllm] Keeping explicit FLAVOR_LLM configuration.'
+    }
 }
 
 function Show-LauncherError {
@@ -371,7 +404,12 @@ try {
         throw "Port $port is already in use by another application. Close that application, then launch again."
     }
 
+    $vllmPort = Get-EnvVariable -Name 'VLLM_PORT' -Default '8000'
+    $vllmModel = Get-EnvVariable -Name 'VLLM_MODEL' -Default 'Qwen/Qwen2.5-7B-Instruct'
     Start-VllmServer -PythonExe $python -RepoRoot $repoRoot -NoVllm $false
+    if ($script:VllmAvailable) {
+        Enable-VllmFlavor -Model $vllmModel -Port $vllmPort
+    }
 
     $arguments = @(
         '-m', 'esports_sim', '--web',
