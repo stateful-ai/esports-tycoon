@@ -94,14 +94,18 @@ function pfSection(title) {
   return s;
 }
 
-function pfTile(label, value, sub) {
-  return el(
+function pfTile(label, value, sub, tooltip) {
+  const tile = el(
     "div",
     "pf-tile",
     `<div class="pf-tile-val mono">${value}</div>` +
       `<div class="pf-tile-label">${label}</div>` +
       (sub ? `<div class="pf-tile-sub">${sub}</div>` : "")
   );
+  if (tooltip) {
+    tile.setAttribute("data-tooltip", tooltip);
+  }
+  return tile;
 }
 
 // Small quiet placeholder for a section that has no data yet.
@@ -397,18 +401,25 @@ function renderPlayerProfile(data) {
   // Overview stat tiles -----------------------------------------------------
   const tiles = el("div", "pf-tiles");
   const ovrSub = ov.fogged ? "scouted" : pfStars(ov.ovr_stars);
-  tiles.appendChild(pfTile("OVR", (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), ovrSub));
+  tiles.appendChild(pfTile(
+    "OVR", 
+    (ov.fogged && ov.ovr != null ? "~" : "") + pfNum(ov.ovr), 
+    ovrSub,
+    "<h4>Overall Rating (OVR)</h4><div class='tooltip-desc'>A quick-glance aggregation of this player's active attributes. Higher is better.</div>"
+  ));
   const caBand = ov.current_ability_band;
   tiles.appendChild(pfTile(
     "Current ability",
-    Array.isArray(caBand) ? `${Math.round(caBand[0])}â€“${Math.round(caBand[1])}` : "â€”",
-    ov.comfort != null ? `${Math.round(ov.comfort)} comfort` : "scouted"
+    Array.isArray(caBand) ? `${Math.round(caBand[0])}–${Math.round(caBand[1])}` : "—",
+    ov.comfort != null ? `${Math.round(ov.comfort)} comfort` : "scouted",
+    "<h4>Current Ability (CA)</h4><div class='tooltip-desc'>The player's active skill level in matches. Comfort modulates this based on role and playstyle alignment.</div>"
   ));
   if (ov.igl_effectiveness != null) {
     tiles.appendChild(pfTile(
       "IGL effectiveness",
       pfNum(ov.igl_effectiveness),
-      `${Math.round(ov.igl_experience || 0)} calling experience`
+      `${Math.round(ov.igl_experience || 0)} calling experience`,
+      "<h4>IGL Effectiveness</h4><div class='tooltip-desc'>How effectively this player calls strategies when set as the In-Game Leader. Scales with calling experience and tactical/comms skills.</div>"
     ));
   }
   // Peak: a PROJECTION band even for your own club. It can be missed or beaten;
@@ -420,13 +431,14 @@ function renderPlayerProfile(data) {
     potBand ? `${potBand[0]}–${potBand[1]}`
       : (potIsNum ? pfNum(ov.potential) : (ov.potential || "—")),
     potBand ? "peak forecast"
-      : (potIsNum ? pfStars(ov.potential_stars) : "scouted")
+      : (potIsNum ? pfStars(ov.potential_stars) : "scouted"),
+    "<h4>Potential (PA)</h4><div class='tooltip-desc'>A projection of the player's peak capability. Dynamic; players can fall short or exceed their forecast based on training, development focus, and play time.</div>"
   ));
-  tiles.appendChild(pfTile("Form", pfNum(ov.form)));
-  tiles.appendChild(pfTile("Morale", pfNum(ov.morale)));
-  tiles.appendChild(pfTile("Condition", pfNum(ov.condition)));
-  tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve"));
-  tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—"));
+  tiles.appendChild(pfTile("Form", pfNum(ov.form), null, "<h4>Form</h4><div class='tooltip-desc'>Recent match performance rating on a 0-100 scale. Affects short-term confidence and training growth rate.</div>"));
+  tiles.appendChild(pfTile("Morale", pfNum(ov.morale), null, "<h4>Morale</h4><div class='tooltip-desc'>How happy the player is. High morale accelerates attribute growth; low morale slows growth and makes them more prone to tilt.</div>"));
+  tiles.appendChild(pfTile("Condition", pfNum(ov.condition), null, "<h4>Condition</h4><div class='tooltip-desc'>Physical fitness. Heavy training intensity and playing back-to-back matches drains condition. Rest them when low to prevent exhaustion or injury.</div>"));
+  tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve", "<h4>Confidence</h4><div class='tooltip-desc'>The player's mental state in round duels. Stacks with aim; confident players win more 50-50 duels and clutch scenarios. Regresses towards 50 weekly.</div>"));
+  tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—", null, "<h4>Market Value</h4><div class='tooltip-desc'>Estimated valuation on the transfer market. Unsigned free agents have no valuation. Rival teams will demand more or less than this based on their stance.</div>"));
   frag.appendChild(tiles);
 
   if (p.is_user_team) {
@@ -499,6 +511,7 @@ function renderPlayerProfile(data) {
     const list = el("div", "pf-attrs");
     for (const a of attrs) {
       const lbl = a.label || a.key || "";
+      const tooltipText = `<h4>${lbl}</h4><div class='tooltip-desc'>${a.description || ""}</div>`;
       if (a.value != null) {
         // Per-skill ceiling: show remaining headroom on the skill (own club).
         const ceil = (ov.skill_ceilings || {})[a.key];
@@ -507,24 +520,24 @@ function renderPlayerProfile(data) {
         const ceilTxt = (ceilHi != null && ceilHi > Math.round(a.value) + 1)
           ? ` <span class="muted" title="projected outcome range for this skill">→${ceilLabel}</span>`
           : "";
-        list.appendChild(
-          el(
-            "div",
-            "pf-attr",
-            `<span class="pf-attr-label">${lbl}</span>` +
-              `<span class="pf-attr-bar">${pfBar(a.value, 100)}</span>` +
-              `<span class="pf-attr-val mono">${Math.round(a.value)}${ceilTxt}</span>`
-          )
+        const item = el(
+          "div",
+          "pf-attr",
+          `<span class="pf-attr-label">${lbl}</span>` +
+            `<span class="pf-attr-bar">${pfBar(a.value, 100)}</span>` +
+            `<span class="pf-attr-val mono">${Math.round(a.value)}${ceilTxt}</span>`
         );
+        item.setAttribute("data-tooltip", tooltipText);
+        list.appendChild(item);
       } else {
-        list.appendChild(
-          el(
-            "div",
-            "pf-attr",
-            `<span class="pf-attr-label">${lbl}</span>` +
-              `<span class="pf-attr-band"><span class="pf-band" title="scouting estimate">${a.band ?? "?"}</span></span>`
-          )
+        const item = el(
+          "div",
+          "pf-attr",
+          `<span class="pf-attr-label">${lbl}</span>` +
+            `<span class="pf-attr-band"><span class="pf-band">${a.band ?? "?"}</span></span>`
         );
+        item.setAttribute("data-tooltip", tooltipText + "<br><div class='tooltip-sub'>Estimate is based on scout observations. Deep-dive to improve accuracy.</div>");
+        list.appendChild(item);
       }
     }
     attrSec.appendChild(list);

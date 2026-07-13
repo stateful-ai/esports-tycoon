@@ -915,7 +915,11 @@ function statTile(label, value, opts = {}) {
       `<div class="es-tile-label">${label}</div>` +
       (opts.sub ? `<div class="es-tile-sub">${opts.sub}</div>` : "")
   );
-  if (opts.title) tile.title = opts.title;
+  if (opts.tooltip) {
+    tile.setAttribute("data-tooltip", opts.tooltip);
+  } else if (opts.title) {
+    tile.title = opts.title;
+  }
   if (opts.onClick) {
     tile.tabIndex = 0;
     tile.setAttribute("role", "button");
@@ -1069,13 +1073,14 @@ async function dashboard(v) {
   if (rec) {
     tiles.appendChild(statTile("Record", `${rec.wins}–${rec.losses}`, {
       sub: `${rec.diff > 0 ? "+" : ""}${rec.diff} rd`,
+      tooltip: "<h4>Match Record</h4><div class='tooltip-desc'>Your team's current win-loss record for the regular season, plus total round differential.</div>"
     }));
   }
   if (posOf[myId]) {
     tiles.appendChild(statTile("League", ordinal(posOf[myId]), {
       sub: cap(regionOf[myId] || me.region || ""),
       onClick: () => dashGoTab("standings"),
-      title: "Open standings",
+      tooltip: "<h4>League Standing</h4><div class='tooltip-desc'>Your current position in the regional league standings. Click to view the full Season table.</div>"
     }));
   }
   // Season stake: the board's sack-race band in legacy, else the live streak.
@@ -1089,25 +1094,33 @@ async function dashboard(v) {
     tiles.appendChild(statTile("Board", cap(b.band), {
       tone,
       sub: `${b.goal} · ${(b.goal_state || "").replace(/_/g, " ")} · ${term}`,
-      title: `Board goal: ${b.goal}`,
+      tooltip: `<h4>Board Confidence</h4><div class='tooltip-desc'>The board's patience level: <b>${b.band}</b>. Expectation: <b>${b.goal}</b> (${b.goal_state}). If patience runs out, you may be dismissed.</div>`
     }));
   } else {
     const streak = streakOf(myId);
-    if (streak) tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
+    if (streak) {
+      tiles.appendChild(statTile("Streak", streak.txt, {
+        tone: streak.won ? "good" : "bad",
+        tooltip: "<h4>Win/Loss Streak</h4><div class='tooltip-desc'>Your team's consecutive wins (W) or losses (L) streak.</div>"
+      }));
+    }
   }
   tiles.appendChild(statTile("Balance", money(me.balance), {
     onClick: () => dashGoTab("finances"),
-    title: "Open finances",
+    tooltip: "<h4>Financial Balance</h4><div class='tooltip-desc'>Your club's total funds. Running out of money can lead to insolvency. Click to manage sponsors and finances.</div>"
   }));
   if (myRoster && myRoster.players.length) {
     const avg = (k) =>
       myRoster.players.reduce((a, p) => a + (p[k] || 0), 0) / myRoster.players.length;
     const mor = avg("morale"), cond = avg("stamina");
-    tiles.appendChild(statTile("Morale", Math.round(mor), { tone: statTone(mor) }));
+    tiles.appendChild(statTile("Morale", Math.round(mor), {
+      tone: statTone(mor),
+      tooltip: "<h4>Average Morale</h4><div class='tooltip-desc'>The squad's average happiness. Morale affects player confidence and responsiveness to dev plans.</div>"
+    }));
     tiles.appendChild(statTile("Condition", Math.round(cond), {
       tone: statTone(cond),
       onClick: () => { App.clubTab = "squad"; dashGoTab("club"); },
-      title: "Open the squad",
+      tooltip: "<h4>Average Condition</h4><div class='tooltip-desc'>The squad's average physical state. Lower condition (exhaustion) degrades in-match performance. Click to manage player training plans.</div>"
     }));
   }
   strip.appendChild(tiles);
@@ -1313,9 +1326,19 @@ async function dashboard(v) {
       burnoutWatch.length ? "urgent" : "", "Development plans", () => {
         App.clubTab = "development"; dashGoTab("club");
       });
+    const TRAINING_FOCUS_DESCRIPTIONS = {
+      mechanical: "<h4>Mechanical Focus</h4><div class='tooltip-desc'>Train aim precision, aim reactivity, and movement. Crucial for winning physical duel engagements.</div>",
+      tactical: "<h4>Tactical Focus</h4><div class='tooltip-desc'>Train game sense, positioning, and utility usage. Enhances spacing, rotation speeds, and utility impact.</div>",
+      mental: "<h4>Mental Focus</h4><div class='tooltip-desc'>Train composure, tilt resistance, and clutch factor. Helps players stay steady in tense late-round situations.</div>",
+      team: "<h4>Team Focus</h4><div class='tooltip-desc'>Train comms quality. High communication makes players callout enemy positions earlier, aiding the whole squad.</div>",
+      rest: "<h4>Rest Focus</h4><div class='tooltip-desc'>Spend the week resting. Dramatically recovers player stamina/condition and lowers burnout risk, at the cost of development.</div>"
+    };
+
     const trainRow = el("div", "es-prep-focus");
     for (const o of s.focus_options ?? []) {
       const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
+      const desc = TRAINING_FOCUS_DESCRIPTIONS[o.toLowerCase()] || "";
+      if (desc) b.setAttribute("data-tooltip", desc);
       b.onclick = async () => {
         await api("/api/actions/training", { focus: o });
         toast(`Training focus: ${o}`);
@@ -2024,23 +2047,23 @@ async function roster(v, opts = {}) {
             .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
         : [];
       const focusSel = data.is_user_team
-        ? `<select data-act="focus" title="training focus (auto = team week; rest = recover instead)">
+        ? `<select data-act="focus" data-tooltip="<h4>Training Focus</h4><div class='tooltip-desc'>Set the skill area this player trains. <b>auto</b> matches the team training focus; <b>rest</b> helps recover stamina; <b>language</b> practises communication.</div>">
              ${(data.dev_focus_options ?? []).map((o) => `<option value="${o}" ${o === p.dev_focus ? "selected" : ""} ${o === "language" && !data.has_language_coach ? "disabled" : ""}>${o}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
       const languageSel = data.is_user_team
-        ? `<select data-act="language" title="language to practise; it replaces game-skill training for the week" ${data.has_language_coach ? "" : "disabled"}>
+        ? `<select data-act="language" data-tooltip="<h4>Language Training</h4><div class='tooltip-desc'>Choose a language to learn. Requires a language coach. Replaces game-skill training but builds chemistry for multinational rosters.</div>" ${data.has_language_coach ? "" : "disabled"}>
              <option value="">choose language</option>
              ${(data.language_options ?? []).map((o) => `<option value="${o}" ${o === p.learning_language ? "selected" : ""}>${o.toUpperCase()}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
       const intSel = data.is_user_team
-        ? `<select data-act="intensity" title="intensity: light spares legs, intense grows faster but risks burnout">
+        ? `<select data-act="intensity" data-tooltip="<h4>Training Intensity</h4><div class='tooltip-desc'><b>light</b>: slows growth, spares legs (recovers condition).<br><b>normal</b>: default growth.<br><b>intense</b>: accelerates growth, but drains condition and risks burnout.</div>">
              ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
       const mentorSel = data.is_user_team && (eligibleMentors.length || p.mentor_id)
-        ? `<select data-act="mentor" title="pair with a veteran mentor: faster growth + a higher ceiling on the mentor's best skills (teach = teaching ability)">
+        ? `<select data-act="mentor" data-tooltip="<h4>Mentorship</h4><div class='tooltip-desc'>Pair this player with a veteran mentor. Accelerates growth and increases skill ceilings based on the mentor's stats and teaching ability (teach).</div>">
              <option value="">no mentor</option>
              ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${esc(q.handle)}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
            </select>`
@@ -2531,11 +2554,20 @@ function tacticsStrategy(main, rail, data) {
       (neutral = 0, capped ±${f.mod_cap})</span>`;
   };
 
+  const DIAL_DESCRIPTIONS = {
+    aggression: "Aggression controls how aggressively your team takes duel engagements. High = peek/swing hard and trade actively; Low = anchor sites patiently and play spacing.",
+    pace: "Pace controls execution tempo and rotation speed. High = fast executes, early timings; Low = slow defaults, pulling off bad hits to wait it out.",
+    util_discipline: "Utility discipline governs utility timing. High = bank utility for retakes and pop-flashes; Low = spend all utility entering the site.",
+    eco_greed: "Eco greed controls buying behavior when money is low. High = gamble on force-buys and retakes; Low = save credits disciplinedly when broke.",
+    map_control: "Map control governs team spacing. High = spread across map to hold flank presence and lurk; Low = stack and hit sites together as five."
+  };
+
   for (const d of TACTIC_DIALS) {
     const fit = fitBy[d.key];
     const block = el("div", "tac-dial");
 
-    const head = el("div", "tac-head", `<span class="tac-name">${d.label}</span>`);
+    const tooltipText = `<h4>${d.label}</h4><div class='tooltip-desc'>${DIAL_DESCRIPTIONS[d.key]}</div>`;
+    const head = el("div", "tac-head", `<span class="tac-name">${d.label} <span class="info-btn" data-tooltip="${tooltipText}">i</span></span>`);
     const desc = el("span", "tac-desc");
     const valBadge = el("span", "tac-val mono");
     head.appendChild(desc);
@@ -2623,13 +2655,13 @@ function tacticsStrategy(main, rail, data) {
   main.appendChild(card);
 
   /* -- rail: site focus + save --------------------------------------------- */
-  const siteCard = el("div", "card", `<h2>Site focus</h2>`);
+  const siteCard = el("div", "card", `<h2>Site focus <span class="info-btn" data-tooltip="<h4>Site Focus</h4><div class='tooltip-desc'>Biases which bomb site your team targets on attack. Balanced has no bias. Commit A/B/C will heavily favor that site.</div>">i</span></h2>`);
   siteCard.appendChild(el("p", "muted",
     "Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels."));
   const seg = el("div", "tac-seg");
   for (const [val, label, note] of SITE_FOCUS) {
     const b = el("button", "tac-seg-btn", label);
-    b.title = note;
+    b.setAttribute("data-tooltip", `<h4>Site Focus: ${label}</h4><div class='tooltip-desc'>${note}</div>`);
     if (val === siteVal) b.classList.add("on");
     b.onclick = () => {
       siteVal = val;
@@ -5643,5 +5675,101 @@ function closeReport() {
   $("#report").classList.add("hidden");
   render();
 }
+
+/* -- Global Tooltip System ---------------------------------------------------- */
+(function initTooltipSystem() {
+  let tooltipEl = document.getElementById("es-tooltip");
+  if (!tooltipEl) {
+    tooltipEl = document.createElement("div");
+    tooltipEl.id = "es-tooltip";
+    document.body.appendChild(tooltipEl);
+  }
+
+  let activeTooltipTarget = null;
+
+  function showTooltip(target, html) {
+    if (!html) return;
+    activeTooltipTarget = target;
+    tooltipEl.innerHTML = html;
+    tooltipEl.classList.add("active");
+    positionTooltip(target);
+  }
+
+  function hideTooltip() {
+    activeTooltipTarget = null;
+    tooltipEl.classList.remove("active");
+  }
+
+  function positionTooltip(target) {
+    if (activeTooltipTarget !== target) return;
+    const rect = target.getBoundingClientRect();
+    
+    // Temporarily set display to measure height/width
+    tooltipEl.style.visibility = "hidden";
+    tooltipEl.style.display = "block";
+    const tooltipRect = tooltipEl.getBoundingClientRect();
+    tooltipEl.style.display = "";
+    tooltipEl.style.visibility = "";
+    
+    let top = rect.top - tooltipRect.height - 8;
+    let left = rect.left + (rect.width - tooltipRect.width) / 2;
+    
+    // If off the top of screen, show below target instead
+    if (top < 8) {
+      top = rect.bottom + 8;
+    }
+    
+    // Constraint boundaries
+    if (left < 8) {
+      left = 8;
+    } else if (left + tooltipRect.width > window.innerWidth - 8) {
+      left = window.innerWidth - tooltipRect.width - 8;
+    }
+    
+    tooltipEl.style.top = `${top + window.scrollY}px`;
+    tooltipEl.style.left = `${left + window.scrollX}px`;
+  }
+
+  // Event Delegation for mouse hover
+  document.addEventListener("mouseover", (e) => {
+    const target = e.target.closest("[data-tooltip], [title]");
+    if (!target) return;
+
+    let html = target.getAttribute("data-tooltip");
+    
+    // Auto-intercept standard browser title and elevate to custom tooltip styling
+    if (!html && target.hasAttribute("title")) {
+      const titleVal = target.getAttribute("title");
+      if (titleVal && titleVal.trim()) {
+        html = `<div class="tooltip-desc">${esc(titleVal)}</div>`;
+        target.setAttribute("data-tooltip", html);
+      }
+      target.removeAttribute("title"); // remove native tooltip
+    }
+
+    if (html) {
+      showTooltip(target, html);
+    }
+  });
+
+  document.addEventListener("mouseout", (e) => {
+    const target = e.target.closest("[data-tooltip]");
+    if (!target) return;
+    
+    // Ensure we are genuinely leaving the target boundary
+    if (!e.relatedTarget || !target.contains(e.relatedTarget)) {
+      hideTooltip();
+    }
+  });
+
+  // Keep positioning accurate during viewport actions
+  window.addEventListener("scroll", () => {
+    if (activeTooltipTarget) positionTooltip(activeTooltipTarget);
+  }, { passive: true });
+
+  window.addEventListener("resize", () => {
+    if (activeTooltipTarget) positionTooltip(activeTooltipTarget);
+  }, { passive: true });
+})();
 
 boot();
