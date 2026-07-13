@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 22
+SCHEMA_VERSION = 23
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -346,6 +346,15 @@ def _migrate_v21_to_v22(data: dict) -> dict:
     return data
 
 
+def _migrate_v22_to_v23(data: dict) -> dict:
+    """v23 adds defaulted staff-delegation policies and durable media state.
+
+    Existing careers keep manual responsibilities, neutral player trust, and
+    no pending media decision until the next contextual queue roll.
+    """
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -368,6 +377,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     19: _migrate_v19_to_v20,
     20: _migrate_v20_to_v21,
     21: _migrate_v21_to_v22,
+    22: _migrate_v22_to_v23,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1154,6 +1164,86 @@ class FlavorEvent(BaseModel):
     choices: list[FlavorChoice] = Field(default_factory=list)
 
 
+class DelegationPolicy(BaseModel):
+    """Human-manager staff responsibilities; automation, never extra power."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    auto_renew_core: bool = False
+    renewal_salary_min: int = Field(default=800, ge=800, le=100_000)
+    renewal_salary_max: int = Field(default=8_000, ge=800, le=100_000)
+    renewal_trigger_weeks: int = Field(default=8, ge=1, le=16)
+    auto_scout: bool = False
+    scout_region: str = "pacific"
+    scout_roles: list[str] = Field(default_factory=lambda: ["initiator"])
+    scout_max_age: int = Field(default=21, ge=16, le=40)
+    alert_level: str = "tier1_ready"
+
+
+class DelegationReport(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    season: int
+    week: int
+    renewed_player_ids: list[str] = Field(default_factory=list)
+    scout_player_id: str = ""
+    alerts: list[str] = Field(default_factory=list)
+    exceptions: list[str] = Field(default_factory=list)
+
+
+class MediaChoice(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    impact: str
+
+
+class MediaEvent(BaseModel):
+    """One grounded, contextual and consequence-stable media decision."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    season: int
+    week: int
+    team_id: str
+    type_id: str
+    title: str
+    prompt: str
+    player_id: str = ""
+    fixture_id: str = ""
+    choices: list[MediaChoice] = Field(default_factory=list)
+
+
+class MediaCommitment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    event_id: str
+    team_id: str
+    fixture_id: str
+    choice_id: str
+    player_id: str = ""
+
+
+class MediaDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    event_id: str
+    season: int
+    week: int
+    team_id: str
+    type_id: str
+    choice_id: str
+    player_id: str = ""
+    fixture_id: str = ""
+    summary: str
+    sentiment_delta: float = 0.0
+    sponsor_delta: float = 0.0
+    trust_delta: float = 0.0
+    settlement: str = ""
+
+
 class GameState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1217,6 +1307,20 @@ class GameState(BaseModel):
     # memory keeps the weekly 50% roll varied without making outcomes depend on
     # incidental RNG draw order.
     flavor_event_recent_by: dict[str, list[str]] = Field(default_factory=dict)
+    # Time-saving staff policies use the same renewal/scouting actions and
+    # capacity a human would. Reports are capped operational history; alerts
+    # remember who already crossed the configured information threshold.
+    delegation_policies_by: dict[str, DelegationPolicy] = Field(default_factory=dict)
+    delegation_reports_by: dict[str, list[DelegationReport]] = Field(default_factory=dict)
+    delegation_alerted_players_by: dict[str, list[str]] = Field(default_factory=dict)
+    # High-stakes media decisions never stack with flavor prompts. Player trust
+    # and sponsor relations persist; the append-only Chronicle keeps the career
+    # history while this bounded list powers the current manager screen.
+    media_events_by: dict[str, MediaEvent] = Field(default_factory=dict)
+    media_commitments_by: dict[str, MediaCommitment] = Field(default_factory=dict)
+    media_history_by: dict[str, list[MediaDecision]] = Field(default_factory=dict)
+    media_last_week_by: dict[str, int] = Field(default_factory=dict)
+    manager_player_trust_by: dict[str, dict[str, float]] = Field(default_factory=dict)
     champions: list[ChampionRecord] = Field(default_factory=list)
     retired: list[RetiredRecord] = Field(default_factory=list)
     fa_counter: int = 0  # monotonic id counter for generated free agents

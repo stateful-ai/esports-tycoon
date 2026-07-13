@@ -71,6 +71,9 @@ ACTION_KINDS = frozenset(
         "series_directive",
         "set_leadership",
         "culture_session",
+        "set_delegation",
+        "media_choice",
+        "resolve_media",
     }
 )
 

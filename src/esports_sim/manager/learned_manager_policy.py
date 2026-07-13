@@ -568,6 +568,11 @@ class LearnedManagerPolicy:
                 "event_id": legal["event_id"],
                 "choice_id": legal["choice_ids"][0],
             }
+        elif kind == "resolve_media":
+            params = {
+                "event_id": legal["event_id"],
+                "choice_id": legal["choice_ids"][0],
+            }
         elif kind == "negotiate_offer":
             option = legal["options"][0]
             neg = obs["negotiations"][option["player_id"]]
@@ -609,6 +614,18 @@ class LearnedManagerPolicy:
             }
         elif kind == "culture_session":
             params = {"action": "reset"}
+        elif kind == "set_delegation":
+            params = {
+                "auto_renew_core": True,
+                "renewal_salary_min": 800,
+                "renewal_salary_max": 8_000,
+                "renewal_trigger_weeks": 8,
+                "auto_scout": True,
+                "scout_region": "pacific",
+                "scout_roles": ["initiator"],
+                "scout_max_age": 21,
+                "alert_level": "tier1_ready",
+            }
         return {"kind": kind, "params": params}
 
 

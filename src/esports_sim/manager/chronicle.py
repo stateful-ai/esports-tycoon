@@ -51,6 +51,7 @@ KIND_IMPORTANCE: dict[str, float] = {
     "all_star": 50.0,
     "badge": 55.0,
     "badge_lost": 30.0,
+    "media": 30.0,
 }
 
 

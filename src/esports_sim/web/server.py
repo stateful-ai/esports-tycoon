@@ -33,12 +33,14 @@ from esports_sim.manager import (
     career,
     chronicle,
     culture,
+    delegation,
     development,
     economy,
     flavor_events,
     inbox as inbox_mod,
     knowledge as knowledge_mod,
     market,
+    media_events,
     match_review as match_review_mod,
     memories as memories_mod,
     meta as meta_mod,
@@ -1802,6 +1804,10 @@ def state() -> dict:
             # A queued flavor event is a real choice gate. Its server view
             # intentionally has no outcomes/effects until a choice resolves.
             "flavor_event": flavor_view,
+            "media_event": (
+                media_events.to_api(gs, media_events.pending_for(gs))
+                if media_events.pending_for(gs) is not None else None
+            ),
             # Legacy-mode career state for the acting seat: contract +
             # patience while employed; pending offers while between jobs
             # (the dashboard renders the job market off this).
@@ -1904,6 +1910,8 @@ def _club_view(gs: GameState) -> dict:
         "culture": culture_view,
         "principles": list(culture.PRINCIPLES),
         "culture_sessions": culture.session_status(gs, tid),
+        "delegation": delegation.view(gs, tid),
+        "media": media_events.view(gs, tid),
     }
 
 
@@ -1951,6 +1959,35 @@ def academy_upgrade() -> dict:
         telemetry.record_action(gs, "academy_upgrade", {})
         S.save()
         return {"ok": True, "message": msg}
+
+
+class DelegationPolicyBody(BaseModel):
+    auto_renew_core: bool = False
+    renewal_salary_min: int = 800
+    renewal_salary_max: int = 8_000
+    renewal_trigger_weeks: int = 8
+    auto_scout: bool = False
+    scout_region: str = "pacific"
+    scout_roles: list[str] = ["initiator"]
+    scout_max_age: int = 21
+    alert_level: str = "tier1_ready"
+
+
+@app.post("/api/actions/delegation_policy")
+def delegation_policy_action(body: DelegationPolicyBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        try:
+            policy = delegation.configure(
+                gs, gs.acting_team_id, body.model_dump(mode="json")
+            )
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        telemetry.record_action(
+            gs, "set_delegation", policy.model_dump(mode="json")
+        )
+        S.save()
+        return {"ok": True, "message": "staff responsibilities updated"}
 
 
 class PreparationBody(BaseModel):
@@ -5366,6 +5403,32 @@ def resolve_flavor_event(body: FlavorEventChoiceBody) -> dict:
         return {"ok": True, "message": message}
 
 
+class MediaEventChoiceBody(BaseModel):
+    event_id: str
+    choice_id: str
+
+
+@app.post("/api/actions/media_event")
+def resolve_media_event(body: MediaEventChoiceBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        event = media_events.pending_for(gs)
+        if event is None or event.id != body.event_id:
+            raise HTTPException(409, "That media decision is no longer waiting.")
+        ok, message, effects = media_events.resolve(
+            gs, gs.acting_team_id, body.choice_id
+        )
+        if not ok:
+            raise HTTPException(422, message)
+        telemetry.record_action(
+            gs,
+            "media_choice",
+            {"event_id": body.event_id, "choice_id": body.choice_id},
+        )
+        S.save()
+        return {"ok": True, "message": message, "effects": effects}
+
+
 @app.post("/api/actions/advance")
 def advance() -> dict:
     """Ready-up: mark the acting manager ready to advance. The week only ticks
@@ -5380,6 +5443,12 @@ def advance() -> dict:
             raise HTTPException(
                 409,
                 "resolve the pending flavor event in Action required before advancing",
+            )
+        pending_media = media_events.pending_for(gs, me)
+        if pending_media is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending media decision in Action required before advancing",
             )
         # Legacy mode: a dismissed manager must take a job before anyone
         # advances — the world doesn't move while a seat is empty.

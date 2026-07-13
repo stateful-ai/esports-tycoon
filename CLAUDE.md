@@ -79,7 +79,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   minutes-based growth), `preparation.py` (scrim/bootcamp plans -> grounded
   reports + org knowledge), `series_management.py` (tournament sixes and
   conditional between-map responses), `culture.py` (captain/council,
-  principles and bounded relationship arcs), `economy.py`
+  principles and bounded relationship arcs), `delegation.py` (human staff
+  policies over existing renewal/scouting capacity), `media_events.py` (rare
+  contextual choices with persistent trust/sponsor/sentiment effects), `economy.py`
   (finances + insolvency), `sponsors.py`, `staff.py` (ONE shared 50+
   free-agent staff pool with rich identities; coach specialty boosts the
   matching focus; `analytics_tier` gates stat-view depth), `social.py`
@@ -98,8 +100,8 @@ Published at github.com/stateful-ai/esports-tycoon.
   Chronicle + legacy fields, backfilling a skeleton history from
   champions/awards/retired; v6/v7 are pass-throughs for the career-stat/
   mentorship and tenure/language/negotiation fields; migrations now continue
-  through v15 for newer campaign, telemetry, complete contracts, and the
-  club-depth state above),
+  through v23 for newer campaign, telemetry, complete contracts, club-depth,
+  delegation, and durable media state),
   `telemetry.py` (analytics substrate: `action_log` records
   every HUMAN decision at the web/CLI layer — never AI moves, they
   re-derive from the seed — so seed + action_log fully determines a

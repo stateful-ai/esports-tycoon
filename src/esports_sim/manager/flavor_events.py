@@ -265,7 +265,9 @@ def queue_weekly_events(gs: "GameState") -> None:
     """
     tree = RngTree(gs.seed)
     for team_id in sorted(gs.teams):
-        if gs.is_human(team_id) and team_id in gs.flavor_events_by:
+        if gs.is_human(team_id) and (
+            team_id in gs.flavor_events_by or team_id in gs.media_events_by
+        ):
             continue
         rng = tree.derive("season", gs.season, "week", gs.week, "flavor", team_id)
         if float(rng.random()) >= WEEKLY_CHANCE:

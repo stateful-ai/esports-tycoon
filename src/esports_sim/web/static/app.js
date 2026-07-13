@@ -754,6 +754,54 @@ async function club(v) {
   }
   ws.appendChild(sc);
 
+  // Staff policies automate existing renewal/scouting work, not extra output.
+  const dc = el("div", "card ws-12");
+  const dp = d.delegation.policy;
+  dc.innerHTML = `<h2>Staff responsibilities</h2><p class="muted">Delegate repeatable work; staff return only exceptions and the prospect alerts you request.</p>`;
+  const renewOn = el("input"); renewOn.type = "checkbox"; renewOn.checked = dp.auto_renew_core;
+  const scoutOn = el("input"); scoutOn.type = "checkbox"; scoutOn.checked = dp.auto_scout;
+  const salaryMin = el("input", "sel-sm"); salaryMin.type = "number"; salaryMin.min = "800"; salaryMin.value = dp.renewal_salary_min;
+  const salaryMax = el("input", "sel-sm"); salaryMax.type = "number"; salaryMax.min = "800"; salaryMax.value = dp.renewal_salary_max;
+  const trigger = el("input", "sel-sm"); trigger.type = "number"; trigger.min = "1"; trigger.max = "16"; trigger.value = dp.renewal_trigger_weeks;
+  const region = el("select", "sel-sm");
+  for (const x of d.delegation.regions) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === dp.scout_region; region.appendChild(o); }
+  const role = el("select", "sel-sm");
+  for (const x of d.delegation.roles) { const o = el("option", "", humanize(x)); o.value = x; o.selected = dp.scout_roles.includes(x); role.appendChild(o); }
+  const age = el("input", "sel-sm"); age.type = "number"; age.min = "16"; age.max = "40"; age.value = dp.scout_max_age;
+  const alert = el("select", "sel-sm");
+  for (const x of d.delegation.alert_levels) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === dp.alert_level; alert.appendChild(o); }
+  const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left â‰¤"), trigger);
+  const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age â‰¤"), age, el("span", "muted", "alert"), alert);
+  const savePolicy = el("button", "btn btn-primary", "Save staff policies");
+  savePolicy.onclick = async () => {
+    const r = await api("/api/actions/delegation_policy", {
+      auto_renew_core: renewOn.checked,
+      renewal_salary_min: Number(salaryMin.value),
+      renewal_salary_max: Number(salaryMax.value),
+      renewal_trigger_weeks: Number(trigger.value),
+      auto_scout: scoutOn.checked,
+      scout_region: region.value,
+      scout_roles: [role.value],
+      scout_max_age: Number(age.value),
+      alert_level: alert.value,
+    });
+    toast(r.message); refresh();
+  };
+  dc.append(renewRow, scoutRow, savePolicy);
+  dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` Â· active assignment set` : ""}.`));
+  const dr = d.delegation.latest_report;
+  if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals Â· ${dr.alerts.length} alerts Â· ${dr.exceptions.length} exceptions.`));
+  ws.appendChild(dc);
+
+  const mc = el("div", "card ws-12");
+  mc.innerHTML = `<h2>Media trust</h2><p class="muted">Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.</p>`;
+  const trustRow = el("div", "row");
+  for (const p of d.media.player_trust || []) trustRow.appendChild(el("span", "pill", `${p.handle} ${Math.round(p.trust)}`));
+  mc.appendChild(trustRow);
+  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> Â· ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
+  if (d.media.commitment) mc.appendChild(el("p", "muted", "A public derby expectation will settle after the fixture."));
+  ws.appendChild(mc);
+
   // Leadership group and culture sessions.
   const cc = el("div", "card ws-12");
   const c = d.culture;
@@ -1023,9 +1071,38 @@ async function dashboard(v) {
   /* -- 2. ACTION BAND: transfer offers (match prep lives in the hero) -------- */
   const sug = s.suggested_lineup;
   const flavor = s.flavor_event;
-  if (flavor || (s.transfer_offers ?? []).length) {
+  const media = s.media_event;
+  if (media || flavor || (s.transfer_offers ?? []).length) {
     const ac = el("div", "card ws-12 alert");
     ac.appendChild(el("h2", "", "Action required"));
+    if (media) {
+      const event = el("div", "flavor-event");
+      event.appendChild(el("div", "microlabel", `High-stakes media Â· ${media.outlet || "press wire"}`));
+      event.appendChild(el("h3", "", media.title));
+      event.appendChild(el("p", "", media.prompt));
+      const choices = el("div", "row flavor-choices");
+      for (const choice of media.choices ?? []) {
+        const wrap = el("div", "tile");
+        const button = el("button", "btn btn-sm", choice.label);
+        button.onclick = async () => {
+          const all = [...choices.querySelectorAll("button")];
+          all.forEach((b) => (b.disabled = true));
+          try {
+            const r = await api("/api/actions/media_event", {
+              event_id: media.id,
+              choice_id: choice.id,
+            });
+            toast(r.message); refresh();
+          } catch (_e) {
+            all.forEach((b) => (b.disabled = false));
+          }
+        };
+        wrap.append(button, el("div", "muted", choice.impact));
+        choices.appendChild(wrap);
+      }
+      event.appendChild(choices);
+      ac.appendChild(event);
+    }
     if (flavor) {
       const event = el("div", "flavor-event");
       event.appendChild(el("div", "microlabel", "Team moment"));

@@ -22,6 +22,7 @@ from esports_sim.manager import (
     career,
     chronicle,
     culture,
+    delegation,
     development,
     economy,
     flavor_events,
@@ -29,6 +30,7 @@ from esports_sim.manager import (
     inbox,
     knowledge,
     market,
+    media_events,
     meta,
     narrative,
     preparation,
@@ -527,6 +529,7 @@ def advance_week(
     # The academy is the existing simulated Challengers affiliate, so its
     # bounded coaching gain reads the tier-2 results that just actually played.
     academy.weekly_tick(gs)
+    media_events.settle_commitments(gs, report)
 
     # Per-map lineups are single-use: drop the entries for fixtures just played
     # so `map_lineups` can't grow unbounded across a season.
@@ -693,12 +696,14 @@ def advance_week(
     _cp.mark("finances")
 
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
+    delegation.begin_week(gs)
     market.tick_contracts(gs, week_rng)
     academy.ai_manage(gs)
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
     market.ai_poach_free_agents(gs, gd, week_rng)
     _tick_scouting(gs, report)
+    delegation.finalize_week(gs)
 
     # 4b. Stale game plans (fixture gone or already played — the consumed
     # case is handled at sim time in _sim_fixture) quietly expire.
@@ -1212,7 +1217,9 @@ def advance_week(
     })
 
     gs.week += 1
-    # A fresh, isolated roll queues a decision for the newly opened week.
+    # Fresh isolated rolls queue at most one decision for the newly opened
+    # week. Contextual media takes precedence so prompts never stack.
+    media_events.queue_weekly_events(gs)
     flavor_events.queue_weekly_events(gs)
     return report
 
@@ -2854,5 +2861,6 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # The offseason tick's snapshot is the new season's baseline (season
     # already rolled, standings reset) — the episode boundary marker.
     telemetry.weekly_snapshots(gs)
+    media_events.queue_weekly_events(gs)
     flavor_events.queue_weekly_events(gs)
     return report

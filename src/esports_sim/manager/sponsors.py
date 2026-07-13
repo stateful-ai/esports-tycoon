@@ -209,6 +209,15 @@ def _bump_relation(gs: GameState, brand: str, delta: float) -> None:
     )
 
 
+def nudge_relation(
+    gs: GameState, brand: str, delta: float, *, team_id: str | None = None
+) -> None:
+    """Adjust one brand relationship for an explicit manager seat."""
+    owner = team_id or gs.acting_team_id
+    book = gs.sponsor_relations_by.setdefault(owner, {})
+    book[brand] = round(min(100.0, max(0.0, book.get(brand, 50.0) + delta)), 1)
+
+
 def _relation_mult(gs: GameState, brand: str) -> float:
     """0.85 at relation 0 → 1.35 at relation 100."""
     return 0.85 + relation(gs, brand) / 200.0

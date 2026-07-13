@@ -130,6 +130,9 @@ scrim/bootcamp preparation lab, tournament-six registration and conditional
 between-map substitutions/responses, leverage-driven contract talks, opening +
 mid-split transfer windows, and captain/council/culture arcs. These decisions
 are exposed through the web and headless legal-action contracts with AI parity.
+The follow-up management-friction pass added bounded staff policies for core
+renewals and profile-based scouting plus rare contextual media decisions with
+durable player-trust, sponsor, and sentiment consequences.
 Still open:
 
 - AI orgs setting game plans / carrying benches (documented parity choice)
