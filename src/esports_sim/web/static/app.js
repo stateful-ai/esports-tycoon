@@ -266,7 +266,7 @@ async function boot() {
 // under "Your worlds") and drop back to the lobby to resume/create/join.
 $("#worlds-btn").onclick = async () => {
   const code = App.mp && App.mp.code ? ` (${App.mp.code})` : "";
-  if (!confirm(`Back to the lobby? This world${code} stays saved — resume it anytime from "Your worlds".`)) return;
+  if (!confirm(`Return to the lobby? This world${code} remains saved and can be resumed from "Your worlds".`)) return;
   await api("/api/leave", {});
   location.reload();
 };
@@ -423,7 +423,7 @@ function setupLobby(lob) {
       // Career offers come from the server (same seed/pack derivation
       // the create call validates against). Repaint on seed edits.
       const grid = $("#ng-teams");
-      grid.innerHTML = '<span class="muted">Fetching offers…</span>';
+      grid.innerHTML = '<span class="muted">Loading offers…</span>';
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(
         `/api/lobby/offers?seed=${seed}` +
@@ -434,7 +434,7 @@ function setupLobby(lob) {
             createGame(o.team_id, shared_, world, "legacy")
           )
         )
-        .catch(() => (grid.innerHTML = '<span class="muted">Offer fetch failed.</span>'));
+        .catch(() => (grid.innerHTML = '<span class="muted">Could not load offers.</span>'));
       return;
     }
     if (world === null) {
@@ -443,14 +443,14 @@ function setupLobby(lob) {
       // different league than the grid shows (and the pick 422s). Pack
       // worlds are static data, so they keep using the packs payload.
       const grid = $("#ng-teams");
-      grid.innerHTML = '<span class="muted">Generating league…</span>';
+      grid.innerHTML = '<span class="muted">Preparing league…</span>';
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
         .then((r) =>
           renderTeamGrid(grid, r.teams, (t) => createGame(t.id, shared_, world))
         )
         .catch(
-          () => (grid.innerHTML = '<span class="muted">Team fetch failed.</span>')
+          () => (grid.innerHTML = '<span class="muted">Could not load teams.</span>')
         );
       return;
     }
@@ -769,7 +769,7 @@ async function clubOps(v, sub) {
 
   // Preparation lab: every selectable value is server-supplied.
   const pc = el("div", "card ws-6");
-  pc.innerHTML = `<h2>Preparation lab</h2>`;
+  pc.innerHTML = `<h2>Match preparation</h2>`;
   const pr = d.preparation;
   if (!pr.fixture) {
     pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
@@ -814,7 +814,7 @@ async function clubOps(v, sub) {
 
   // Conditional between-map response.
   const sc = el("div", "card ws-6");
-  sc.innerHTML = `<h2>Series card</h2><p class="muted">Pre-commit a response that fires after map one if its condition is met.</p>`;
+  sc.innerHTML = `<h2>Series plan</h2><p class="muted">Set a between-map response that applies after map one when its condition is met.</p>`;
   if (!d.series.fixture) {
     sc.appendChild(el("p", "muted", "No upcoming best-of-three is on the calendar."));
   } else {
@@ -1324,7 +1324,7 @@ async function dashboard(v) {
     tiles.appendChild(statTile("Board", cap(b.band), {
       tone,
       sub: `${b.goal} · ${(b.goal_state || "").replace(/_/g, " ")} · ${term}`,
-      tooltip: `<h4>Board Confidence</h4><div class='tooltip-desc'>The board's patience level: <b>${b.band}</b>. Expectation: <b>${b.goal}</b> (${b.goal_state}). If patience runs out, you may be dismissed.</div>`
+      tooltip: `<h4>Board confidence</h4><div class='tooltip-desc'>The board's current patience: <b>${b.band}</b>. Target: <b>${b.goal}</b> (${b.goal_state}). If it runs out, you may be dismissed.</div>`
     }));
   } else {
     const streak = streakOf(myId);
@@ -1337,7 +1337,7 @@ async function dashboard(v) {
   }
   tiles.appendChild(statTile("Balance", money(me.balance), {
     onClick: () => dashGoTab("finances"),
-    tooltip: "<h4>Financial Balance</h4><div class='tooltip-desc'>Your club's total funds. Running out of money can lead to insolvency. Click to manage sponsors and finances.</div>"
+    tooltip: "<h4>Club balance</h4><div class='tooltip-desc'>Total club funds. Running out of money can lead to insolvency. Open Finances to manage sponsors and costs.</div>"
   }));
   if (myRoster && myRoster.players.length) {
     const avg = (k) =>
@@ -1345,12 +1345,12 @@ async function dashboard(v) {
     const mor = avg("morale"), cond = avg("stamina");
     tiles.appendChild(statTile("Morale", Math.round(mor), {
       tone: statTone(mor),
-      tooltip: "<h4>Average Morale</h4><div class='tooltip-desc'>The squad's average happiness. Morale affects player confidence and responsiveness to dev plans.</div>"
+      tooltip: "<h4>Squad morale</h4><div class='tooltip-desc'>Average squad morale. It affects player confidence and response to development plans.</div>"
     }));
     tiles.appendChild(statTile("Condition", Math.round(cond), {
       tone: statTone(cond),
       onClick: () => { App.clubTab = "squad"; dashGoTab("club"); },
-      tooltip: "<h4>Average Condition</h4><div class='tooltip-desc'>The squad's average physical state. Lower condition (exhaustion) degrades in-match performance. Click to manage player training plans.</div>"
+      tooltip: "<h4>Squad condition</h4><div class='tooltip-desc'>Average physical condition. Low condition reduces match performance. Open Club to adjust training plans.</div>"
     }));
   }
   strip.appendChild(tiles);
@@ -2262,7 +2262,7 @@ async function roster(v, opts = {}) {
         <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
         ${ceilingCell}
         <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
-        <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
+        <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
         <td class="num">${money(p.salary)}/wk</td>
         <td class="num">${p.contract_weeks_left}w</td>
         <td><div class="roster-actions">${actions}</div>${askBreakdown(p.ask_breakdown)}</td>`;
@@ -2307,7 +2307,7 @@ async function roster(v, opts = {}) {
         <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
         ${ceilingCell}
         <td>${bar(p.form)}${tArrow(ct.form)}</td>
-        <td title="confidence — feeds duels, peeks and clutch nerve">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
+        <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
         <td class="dev-plan">${focusSel}</td>
         <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
@@ -2472,7 +2472,7 @@ async function roster(v, opts = {}) {
       if (cc != null) {
         const tone = cc >= 75 ? "tone-good" : cc >= 50 ? "" : cc >= 35 ? "tone-warn" : "tone-bad";
         c.appendChild(el("p", "muted",
-          `<span class="chip ${tone}" title="pairwise language overlap — pairs with no common tongue never fully gel">Comms ${Math.round(cc)}</span> ` +
+          `<span class="chip ${tone}" title="Shared language affects comms. Pairs without a common language rarely reach full chemistry.">Comms ${Math.round(cc)}</span> ` +
           `shared languages feed chemistry.`));
       }
       rail.appendChild(c);

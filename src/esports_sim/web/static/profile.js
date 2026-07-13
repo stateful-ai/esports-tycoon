@@ -394,16 +394,16 @@ const AdminSlot = ({ kind, id, onDone }) => {
           setFields(info.fields);
           setNote(info.note || "");
         } else {
-          setReason((info && info.reason) || "Not editable — no roster-pack sheet for this entry.");
+          setReason((info && info.reason) || "This entry has no editable roster source.");
         }
       })
       .catch(() => {
         setLoading(false);
-        setReason("Not editable — check API.");
+        setReason("This entry is unavailable for editing right now.");
       });
   }, [kind, id]);
 
-  if (loading) return html`<p class="muted">Checking roster-pack sheet…</p>`;
+  if (loading) return html`<p class="muted">Checking roster source…</p>`;
   if (!editable) return html`<p class="muted">${reason}</p>`;
 
   const handleSubmit = async (e) => {
@@ -440,9 +440,9 @@ const AdminSlot = ({ kind, id, onDone }) => {
 
   return html`
     <div class="pf-admin-box">
-      <div class="pf-admin-title">Correct roster-pack data</div>
+      <div class="pf-admin-title">Correct roster data</div>
       <p class="muted pf-admin-note">
-        Writes to the pack's src sheet and rebuilds it. Campaign-managed fields (salary, contract, morale, form, finances) are left alone.
+        Updates the roster source for future campaigns. Live career details such as salary, contract, morale, form, and finances stay untouched.
         ${note ? ` ${note}` : ""}
       </p>
       <form class="pf-admin-form" onSubmit=${handleSubmit}>
@@ -661,8 +661,8 @@ const PlayerProfile = ({ data }) => {
         ${p.can_assign_igl && !p.is_igl && html`
           <button class="btn btn-sm" title="Assign shot-calling to this player; effectiveness uses skills and match experience" onClick=${() => pfAssignIgl(p)}>Make IGL</button>
         `}
-        <button class="btn btn-sm" disabled=${!!scoutCtx.active} title=${p.is_user_team ? "Retask the scout to map this player's development path and weekly training fit" : "Retask the scout to build a full information book; external uncertainty remains"} onClick=${handleScout}>
-          ${scoutCtx.active ? `Deep-diving ${Math.round((scoutCtx.progress || 0) * 100)}%` : (p.is_user_team ? "Scout development" : "Deep-dive player")}
+        <button class="btn btn-sm" disabled=${!!scoutCtx.active} title=${p.is_user_team ? "Assign the scout to assess this player's development path and weekly training fit" : "Assign the scout to build a full player report; external uncertainty remains"} onClick=${handleScout}>
+          ${scoutCtx.active ? `Scouting ${Math.round((scoutCtx.progress || 0) * 100)}%` : (p.is_user_team ? "Scout development" : "Scout player")}
         </button>
         ${isAdminMode() && html`
           <button class="btn btn-sm" onClick=${() => setShowAdminEdit(!showAdminEdit)}>🛠 Correct data</button>
@@ -731,7 +731,7 @@ const PlayerProfile = ({ data }) => {
 
       ${p.is_user_team && html`
         <div class="pf-section">
-          <h3 class="pf-section-title">Scout development guidance</h3>
+          <h3 class="pf-section-title">Development report</h3>
           ${guide ? html`
             <p><span class="pill">${guide.focus}</span> ${guide.reason}</p>
             <p class=${guide.bonus_active ? "trend-up" : "muted"}>
@@ -743,7 +743,7 @@ const PlayerProfile = ({ data }) => {
             </p>
           ` : html`
             <p class="pf-empty muted">
-              Deep-dive this player to ${Math.round((scoutCtx.guidance_unlock || 0) * 100)}% for a contextual training recommendation and ×${(scoutCtx.bonus_mult || 1).toFixed(2)} weekly bonus.
+              Scout this player to ${Math.round((scoutCtx.guidance_unlock || 0) * 100)}% coverage to receive a training recommendation and ×${(scoutCtx.bonus_mult || 1).toFixed(2)} weekly bonus.
             </p>
           `}
         </div>
@@ -762,7 +762,7 @@ const PlayerProfile = ({ data }) => {
             `}
             ${report.verdict && html`<p><b>Verdict:</b> ${report.verdict}</p>`}
             ${(!report.style_read && !report.mental_read && !report.curve_read && !report.training_hint && (!report.ceiling_reads || !report.ceiling_reads.length) && !report.verdict) && html`
-              <p class="muted">Broader reads unlock as information moves toward 75% and a full deep dive.</p>
+              <p class="muted">Deeper reads arrive as scouting coverage improves and the full report comes in.</p>
             `}
           </div>
         </div>
@@ -810,7 +810,7 @@ const PlayerProfile = ({ data }) => {
                   `;
                 } else {
                   return html`
-                    <div key=${a.key} class="pf-attr" data-tooltip=${tooltipText + "<br><div class='tooltip-sub'>Estimate is based on scout observations. Deep-dive to improve accuracy.</div>"}>
+                    <div key=${a.key} class="pf-attr" data-tooltip=${tooltipText + "<br><div class='tooltip-sub'>This is an early scout estimate. More coverage sharpens the read.</div>"}>
                       <span class="pf-attr-label">${lbl}</span>
                       <span class="pf-attr-band"><span class="pf-band">${a.band ?? "?"}</span></span>
                     </div>
