@@ -15,3 +15,6 @@ class ManagerPromise(BaseModel):
     created_week: int
     created_season: int
     status: str = "active"  # "active", "kept", "broken"
+    dressed_count: int = 0
+    initial_duration: int = 0
+

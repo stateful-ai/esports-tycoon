@@ -7,10 +7,6 @@ if TYPE_CHECKING:
     from esports_sim.manager.state import GameState
     from esports_sim.schemas.promise import ManagerPromise
 
-# Module level tracker for playtime promises to maintain precise statistics
-_playtime_tracker: dict[str, dict[str, int]] = {}
-
-
 def create_promise(gs: GameState, team_id: str, player_id: str, promise_type: str, target_value: int = 0, duration: int = 0) -> ManagerPromise:
     """Construct a ManagerPromise and append it to gs.promises. Return the promise.
 
@@ -40,16 +36,11 @@ def create_promise(gs: GameState, team_id: str, player_id: str, promise_type: st
         weeks_left=duration,
         created_week=getattr(gs, "week", 1),
         created_season=getattr(gs, "season", 1),
-        status="active"
+        status="active",
+        dressed_count=0,
+        initial_duration=duration
     )
     gs.promises.append(promise)
-
-    # Initialize tracking
-    _playtime_tracker[promise_id] = {
-        "dressed_count": 0,
-        "weeks_passed": 0,
-        "initial_duration": duration
-    }
 
     return promise
 
@@ -101,9 +92,6 @@ def resolve_promise(gs: GameState, promise: ManagerPromise, success: bool) -> No
 
     promise.weeks_left = 4
 
-    if promise.id in _playtime_tracker:
-        _playtime_tracker.pop(promise.id, None)
-
 
 def weekly_tick(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
     """Evaluate active manager promises, decrement duration, and clean up expired ones."""
@@ -119,7 +107,7 @@ def weekly_tick(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
             continue
 
         if promise.promise_type == "play_time":
-            if promise.id not in _playtime_tracker:
+            if promise.initial_duration <= 0:
                 curr_week = getattr(gs, "week", 1)
                 curr_season = getattr(gs, "season", 1)
                 p_week = promise.created_week
@@ -130,17 +118,11 @@ def weekly_tick(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
                 except Exception:
                     n_weeks = 12
                 weeks_passed = max(0, curr_week - p_week + (curr_season - p_season) * n_weeks)
-                initial_duration = promise.weeks_left + weeks_passed + 1
-                _playtime_tracker[promise.id] = {
-                    "dressed_count": 0,
-                    "weeks_passed": weeks_passed,
-                    "initial_duration": initial_duration
-                }
+                promise.initial_duration = promise.weeks_left + weeks_passed + 1
 
             played = week_dressed.get(promise.team_id, set())
             if promise.player_id in played:
-                _playtime_tracker[promise.id]["dressed_count"] += 1
-            _playtime_tracker[promise.id]["weeks_passed"] += 1
+                promise.dressed_count += 1
 
             # Compute required dressed weeks
             target = promise.target_value if promise.target_value is not None else 100
@@ -150,11 +132,11 @@ def weekly_tick(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
                 except ValueError:
                     target = 100
             
-            D = _playtime_tracker[promise.id]["initial_duration"]
+            D = promise.initial_duration
             import math
             R = math.ceil(D * target / 100.0)
 
-            dressed_count = _playtime_tracker[promise.id]["dressed_count"]
+            dressed_count = promise.dressed_count
             weeks_left = promise.weeks_left
 
             if dressed_count + weeks_left < R:

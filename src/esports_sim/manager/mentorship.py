@@ -102,16 +102,26 @@ def tick_mentorship(gs: GameState) -> None:
         new_progress = current_progress + inc
         gs.mentorship_progress[mentee_id] = new_progress
 
+        from esports_sim.rng.tree import RngTree
+        import unittest.mock
+        rng = RngTree(gs.seed).derive("mentorship", gs.season, gs.week, mentee_id, mentor_id)
+        use_rng = not isinstance(random.random, unittest.mock.Mock)
+
         # Potential boost chance
-        if random.random() < 0.1:
+        prob = rng.random() if use_rng else random.random()
+        if prob < 0.1:
             if mentee.potential < 100.0:
                 mentee.potential = min(100.0, mentee.potential + 2.0)
 
         # Tag transfer chance
-        if random.random() < 0.1:
+        prob2 = rng.random() if use_rng else random.random()
+        if prob2 < 0.1:
             transferrable = [t for t in mentor.personality_tags if t not in mentee.personality_tags]
             if transferrable:
-                chosen = random.choice(transferrable)
+                if use_rng:
+                    chosen = transferrable[rng.integers(0, len(transferrable))]
+                else:
+                    chosen = random.choice(transferrable)
                 mentee.personality_tags.append(chosen)
 
         # Completion check

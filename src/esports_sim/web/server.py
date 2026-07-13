@@ -4359,24 +4359,157 @@ class TalkChatBody(BaseModel):
 
 @app.post("/api/talk/chat")
 def talk_chat(body: TalkChatBody) -> dict:
+    # 1. Read state under lock to prepare prompt and candidates
     with S.lock:
         gs = S.require_gs()
         if body.player_id not in gs.players:
             raise HTTPException(404, "unknown player")
+        
+        ok, why = talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+            
+        topic = talk.topic_for(gs, body.player_id)
+        candidate_ids = [o.id for o in topic.options]
+        if talk.can_rein_streaming(gs, body.player_id)[0]:
+            candidate_ids.append("streaming")
+            
+        cfg = llm_talk.provider()
+        payload = None
+        
+        if cfg is not None:
+            from esports_sim.manager import personality
+            p = gs.players[body.player_id]
+            ax = personality.axes(p)
+            moods = []
+            if ax["ego"] >= 62: moods.append("cocky")
+            if ax["ego"] <= 38: moods.append("humble")
+            if ax["sociability"] >= 62: moods.append("chatty")
+            if ax["sociability"] <= 38: moods.append("terse")
+            if ax["professionalism"] >= 62: moods.append("professional")
+            tone = ", ".join(moods) or "even-keeled"
+            persona = f"{p.handle} (personality: {tone}; tags: {', '.join(p.personality_tags) or 'none'})"
+
+            options_desc = []
+            for cid in candidate_ids:
+                if cid == "streaming":
+                    label = "Ask the player to cut back on streaming and focus on practice"
+                else:
+                    opt = next((o for o in topic.options if o.id == cid), None)
+                    label = opt.label if opt else ""
+                options_desc.append(f"- {cid}: {label}")
+
+            system_msg = (
+                "You are an AI classifier and writer for an esports manager game.\n"
+                "Your task is to classify the manager's chat message into one of the available options (intent).\n"
+                "Then, write two character-accurate replies from the player's perspective:\n"
+                "- reply_positive: prose if they take the approach well or if the outcome is positive.\n"
+                "- reply_negative: prose if they bristle or if the outcome is negative/bristled.\n"
+                "Respond with STRICT JSON format matching this schema:\n"
+                '{"intent": "option_id", "reply_positive": "prose if accepted/positive", "reply_negative": "prose if bristled/negative"}\n'
+                "Do not include any other text or formatting. Only return valid JSON."
+            )
+
+            user_msg = (
+                f"Player: {persona}\n"
+                f"Topic context: {topic.text}\n"
+                f"Available options/intents:\n"
+                + "\n".join(options_desc) + "\n\n"
+                f"Manager's message: \"{body.text}\"\n\n"
+                f"Select the option ID that best matches the manager's message from the available options. "
+                f"Then write the player's response for both positive and negative outcomes."
+            )
+
+            payload = {
+                "model": cfg["model"],
+                "messages": [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+                "temperature": 0.2,
+            }
+
+    # 2. Call the LLM provider OUTSIDE the lock
+    ai_success = False
+    intent = None
+    reply_positive = ""
+    reply_negative = ""
+    
+    if cfg is not None and payload is not None:
         try:
-            result = llm_talk.process_chat(gs, body.player_id, body.text, S.code)
-        except ValueError as e:
-            raise HTTPException(409, str(e))
+            parsed = llm_talk._call(cfg, payload)
+            if parsed is not None:
+                intent = parsed["intent"]
+                reply_positive = parsed["reply_positive"]
+                reply_negative = parsed["reply_negative"]
+                ai_success = True
+        except Exception:
+            # Fall back silently to keyword matching
+            pass
+
+    # 3. Re-lock, re-validate and resolve the state
+    with S.lock:
+        gs = S.require_gs()
+        ok, why = talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+
+        # Re-evaluate candidate list under lock
+        topic = talk.topic_for(gs, body.player_id)
+        candidate_ids = [o.id for o in topic.options]
+        if talk.can_rein_streaming(gs, body.player_id)[0]:
+            candidate_ids.append("streaming")
+
+        if ai_success:
+            if intent not in candidate_ids:
+                intent = candidate_ids[0]
+        else:
+            intent = llm_talk.deterministic_intent(body.text, candidate_ids)
+
+        if intent == "streaming":
+            ok, resolve_msg, effects = talk.rein_in_streaming(gs, body.player_id)
+        else:
+            ok, resolve_msg, effects = talk.resolve(gs, body.player_id, intent)
+
+        if not ok:
+            raise HTTPException(409, resolve_msg)
+
+        if ai_success:
+            is_negative = effects.get("morale", 0.0) < 0 or effects.get("chemistry", 0.0) < 0 or "bristle" in resolve_msg.lower()
+            chosen_message = reply_negative if is_negative else reply_positive
+            ai = True
+        else:
+            chosen_message = resolve_msg
+            ai = False
+
+        # Cache under lock
+        cache_key = f"{gs.season}_{gs.week}_{gs.acting_team_id}_{body.player_id}"
+        history_dict = {
+            "intent": intent,
+            "message": chosen_message,
+            "effects": effects,
+            "ai": ai
+        }
+        cache = llm_talk.load_talk_cache(S.code)
+        cache[cache_key] = history_dict
+        llm_talk._save_talk_cache(S.code, cache)
+
         telemetry.record_action(
             gs, "talk_chat",
             {
                 "player_id": body.player_id,
-                "intent": result["intent"],
-                "ai": result["ai"],
+                "intent": intent,
+                "ai": str(ai),
             }
         )
         S.save()
-        return result
+        return {
+            "ok": True,
+            "message": chosen_message,
+            "effects": effects,
+            "intent": intent,
+            "ai": ai
+        }
 
 
 class TalkBody(BaseModel):
