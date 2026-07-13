@@ -1,0 +1,504 @@
+id: team_world_game_star
+name: World Game Star
+tag: WGS
+region: pacific
+tier: 2
+captain_id: team_world_game_star_irdy
+balance: 243000
+reputation: 61.0
+fan_count: 55815
+chemistry: 80.0
+players:
+- id: team_world_game_star_irdy
+  handle: iRdy
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 22
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 58.2
+    aim_reactivity: 55.1
+    movement: 68.6
+    game_sense: 82.0
+    utility_usage: 77.5
+    positioning: 66.3
+    clutch_factor: 65.8
+    tilt_resistance: 71.8
+    composure: 77.8
+    comms_quality: 84.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 86.9
+  - agent_id: brimstone
+    mastery: 70.6
+  - agent_id: astra
+    mastery: 64.5
+  - agent_id: clove
+    mastery: 57.3
+  - agent_id: harbor
+    mastery: 56.6
+  - agent_id: miks
+    mastery: 61.0
+  - agent_id: viper
+    mastery: 61.0
+  - agent_id: breach
+    mastery: 41.0
+  - agent_id: chamber
+    mastery: 43.3
+  - agent_id: cypher
+    mastery: 49.4
+  - agent_id: deadlock
+    mastery: 48.0
+  - agent_id: fade
+    mastery: 52.1
+  - agent_id: gekko
+    mastery: 6.5
+  - agent_id: iso
+    mastery: 48.0
+  - agent_id: jett
+    mastery: 42.8
+  - agent_id: kayo
+    mastery: 50.1
+  - agent_id: killjoy
+    mastery: 49.1
+  - agent_id: neon
+    mastery: 41.8
+  - agent_id: phoenix
+    mastery: 43.8
+  - agent_id: raze
+    mastery: 54.1
+  - agent_id: reyna
+    mastery: 43.4
+  - agent_id: sage
+    mastery: 44.9
+  - agent_id: skye
+    mastery: 47.1
+  - agent_id: sova
+    mastery: 43.3
+  - agent_id: tejo
+    mastery: 46.7
+  - agent_id: veto
+    mastery: 47.9
+  - agent_id: vyse
+    mastery: 47.9
+  - agent_id: waylay
+    mastery: 45.4
+  - agent_id: yoru
+    mastery: 33.6
+  map_pool:
+  - map_id: ascent
+    mastery: 73.6
+  - map_id: bind
+    mastery: 73.5
+  - map_id: haven
+    mastery: 65.4
+  - map_id: lotus
+    mastery: 76.4
+  - map_id: split
+    mastery: 69.4
+  salary: 4900
+  contract_weeks_left: 45
+  morale: 80.9
+  stamina: 91.8
+  form: 45.4
+  personality_tags:
+  - team_player
+  potential: 75.9
+- id: team_world_game_star_hann
+  handle: HANN
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 78.0
+    aim_reactivity: 73.6
+    movement: 78.3
+    game_sense: 57.0
+    utility_usage: 59.6
+    positioning: 68.7
+    clutch_factor: 61.6
+    tilt_resistance: 63.6
+    composure: 67.8
+    comms_quality: 69.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 81.6
+  - agent_id: raze
+    mastery: 76.4
+  - agent_id: iso
+    mastery: 59.7
+  - agent_id: neon
+    mastery: 53.7
+  - agent_id: phoenix
+    mastery: 54.9
+  - agent_id: reyna
+    mastery: 53.2
+  - agent_id: waylay
+    mastery: 59.1
+  - agent_id: yoru
+    mastery: 66.3
+  - agent_id: astra
+    mastery: 47.2
+  - agent_id: breach
+    mastery: 37.8
+  - agent_id: brimstone
+    mastery: 49.1
+  - agent_id: chamber
+    mastery: 48.0
+  - agent_id: clove
+    mastery: 48.6
+  - agent_id: cypher
+    mastery: 44.2
+  - agent_id: deadlock
+    mastery: 49.1
+  - agent_id: fade
+    mastery: 49.0
+  - agent_id: gekko
+    mastery: 51.5
+  - agent_id: harbor
+    mastery: 50.6
+  - agent_id: kayo
+    mastery: 43.9
+  - agent_id: killjoy
+    mastery: 55.8
+  - agent_id: miks
+    mastery: 49.6
+  - agent_id: omen
+    mastery: 49.0
+  - agent_id: sage
+    mastery: 44.9
+  - agent_id: skye
+    mastery: 46.2
+  - agent_id: sova
+    mastery: 50.4
+  - agent_id: tejo
+    mastery: 45.0
+  - agent_id: veto
+    mastery: 35.5
+  - agent_id: viper
+    mastery: 60.0
+  - agent_id: vyse
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 84.6
+  - map_id: bind
+    mastery: 76.6
+  - map_id: haven
+    mastery: 70.4
+  - map_id: lotus
+    mastery: 76.4
+  - map_id: split
+    mastery: 73.4
+  salary: 5100
+  contract_weeks_left: 41
+  morale: 61.6
+  stamina: 99.4
+  form: 52.6
+  personality_tags:
+  - grinder
+  - quiet
+  potential: 81.5
+- id: team_world_game_star_jinboonge
+  handle: JinboongE
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 22
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 63.9
+    aim_reactivity: 66.5
+    movement: 64.0
+    game_sense: 84.4
+    utility_usage: 57.5
+    positioning: 71.3
+    clutch_factor: 71.8
+    tilt_resistance: 65.0
+    composure: 67.4
+    comms_quality: 57.7
+  agent_pool:
+  - agent_id: sage
+    mastery: 74.5
+  - agent_id: omen
+    mastery: 71.3
+  - agent_id: astra
+    mastery: 45.1
+  - agent_id: breach
+    mastery: 47.2
+  - agent_id: brimstone
+    mastery: 56.8
+  - agent_id: chamber
+    mastery: 40.2
+  - agent_id: clove
+    mastery: 44.9
+  - agent_id: cypher
+    mastery: 47.5
+  - agent_id: deadlock
+    mastery: 45.2
+  - agent_id: fade
+    mastery: 53.7
+  - agent_id: gekko
+    mastery: 48.0
+  - agent_id: harbor
+    mastery: 44.6
+  - agent_id: iso
+    mastery: 50.5
+  - agent_id: jett
+    mastery: 47.0
+  - agent_id: kayo
+    mastery: 46.4
+  - agent_id: killjoy
+    mastery: 39.5
+  - agent_id: miks
+    mastery: 51.0
+  - agent_id: neon
+    mastery: 52.0
+  - agent_id: phoenix
+    mastery: 52.5
+  - agent_id: raze
+    mastery: 37.7
+  - agent_id: reyna
+    mastery: 48.9
+  - agent_id: skye
+    mastery: 44.8
+  - agent_id: sova
+    mastery: 42.8
+  - agent_id: tejo
+    mastery: 60.0
+  - agent_id: veto
+    mastery: 5.3
+  - agent_id: viper
+    mastery: 45.5
+  - agent_id: vyse
+    mastery: 43.5
+  - agent_id: waylay
+    mastery: 44.8
+  - agent_id: yoru
+    mastery: 49.3
+  map_pool:
+  - map_id: ascent
+    mastery: 66.8
+  - map_id: bind
+    mastery: 76.2
+  - map_id: haven
+    mastery: 77.7
+  - map_id: lotus
+    mastery: 74.8
+  - map_id: split
+    mastery: 75.0
+  salary: 4900
+  contract_weeks_left: 33
+  morale: 61.3
+  stamina: 98.9
+  form: 56.2
+  personality_tags:
+  - independent
+  potential: 73.4
+- id: team_world_game_star_xpp
+  handle: Xpp
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 55.8
+    aim_reactivity: 61.2
+    movement: 64.6
+    game_sense: 66.8
+    utility_usage: 76.5
+    positioning: 66.5
+    clutch_factor: 66.8
+    tilt_resistance: 62.8
+    composure: 68.4
+    comms_quality: 76.8
+  agent_pool:
+  - agent_id: sova
+    mastery: 78.3
+  - agent_id: breach
+    mastery: 72.6
+  - agent_id: fade
+    mastery: 50.0
+  - agent_id: gekko
+    mastery: 57.2
+  - agent_id: kayo
+    mastery: 55.5
+  - agent_id: skye
+    mastery: 60.5
+  - agent_id: tejo
+    mastery: 52.7
+  - agent_id: astra
+    mastery: 0.5
+  - agent_id: brimstone
+    mastery: 1.5
+  - agent_id: chamber
+    mastery: 52.5
+  - agent_id: clove
+    mastery: 6.2
+  - agent_id: cypher
+    mastery: 52.6
+  - agent_id: deadlock
+    mastery: 46.6
+  - agent_id: harbor
+    mastery: 40.1
+  - agent_id: iso
+    mastery: 35.5
+  - agent_id: jett
+    mastery: 41.6
+  - agent_id: killjoy
+    mastery: 42.7
+  - agent_id: miks
+    mastery: 53.2
+  - agent_id: neon
+    mastery: 43.8
+  - agent_id: omen
+    mastery: 55.8
+  - agent_id: phoenix
+    mastery: 52.1
+  - agent_id: raze
+    mastery: 41.1
+  - agent_id: reyna
+    mastery: 48.7
+  - agent_id: sage
+    mastery: 46.7
+  - agent_id: veto
+    mastery: 44.1
+  - agent_id: viper
+    mastery: 39.1
+  - agent_id: vyse
+    mastery: 38.8
+  - agent_id: waylay
+    mastery: 47.3
+  - agent_id: yoru
+    mastery: 39.8
+  map_pool:
+  - map_id: ascent
+    mastery: 67.4
+  - map_id: bind
+    mastery: 78.0
+  - map_id: haven
+    mastery: 64.8
+  - map_id: lotus
+    mastery: 77.4
+  - map_id: split
+    mastery: 73.4
+  salary: 4800
+  contract_weeks_left: 49
+  morale: 81.9
+  stamina: 81.2
+  form: 58.3
+  personality_tags:
+  - analytical
+  - fan_favorite
+  potential: 78.9
+- id: team_world_game_star_has1ra14
+  handle: Has1ra14
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 21
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 65.7
+    aim_reactivity: 64.0
+    movement: 64.7
+    game_sense: 62.7
+    utility_usage: 72.8
+    positioning: 76.6
+    clutch_factor: 61.7
+    tilt_resistance: 72.8
+    composure: 66.4
+    comms_quality: 68.7
+  agent_pool:
+  - agent_id: cypher
+    mastery: 76.1
+  - agent_id: killjoy
+    mastery: 71.5
+  - agent_id: chamber
+    mastery: 60.1
+  - agent_id: deadlock
+    mastery: 64.9
+  - agent_id: sage
+    mastery: 55.1
+  - agent_id: veto
+    mastery: 64.1
+  - agent_id: vyse
+    mastery: 56.4
+  - agent_id: astra
+    mastery: 49.1
+  - agent_id: breach
+    mastery: 48.1
+  - agent_id: brimstone
+    mastery: 40.1
+  - agent_id: clove
+    mastery: 50.9
+  - agent_id: fade
+    mastery: 44.4
+  - agent_id: gekko
+    mastery: 49.1
+  - agent_id: harbor
+    mastery: 37.4
+  - agent_id: iso
+    mastery: 48.9
+  - agent_id: jett
+    mastery: 45.1
+  - agent_id: kayo
+    mastery: 33.8
+  - agent_id: miks
+    mastery: 40.9
+  - agent_id: neon
+    mastery: 44.0
+  - agent_id: omen
+    mastery: 43.9
+  - agent_id: phoenix
+    mastery: 41.8
+  - agent_id: raze
+    mastery: 38.4
+  - agent_id: reyna
+    mastery: 45.1
+  - agent_id: skye
+    mastery: 36.2
+  - agent_id: sova
+    mastery: 40.1
+  - agent_id: tejo
+    mastery: 47.9
+  - agent_id: viper
+    mastery: 36.0
+  - agent_id: waylay
+    mastery: 40.2
+  - agent_id: yoru
+    mastery: 38.0
+  map_pool:
+  - map_id: ascent
+    mastery: 86.6
+  - map_id: bind
+    mastery: 72.2
+  - map_id: haven
+    mastery: 72.5
+  - map_id: lotus
+    mastery: 80.5
+  - map_id: split
+    mastery: 75.9
+  salary: 4800
+  contract_weeks_left: 73
+  morale: 63.8
+  stamina: 80.2
+  form: 58.2
+  personality_tags:
+  - grinder
+  - team_player
+  potential: 76.9

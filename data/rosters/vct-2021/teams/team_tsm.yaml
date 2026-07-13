@@ -303,200 +303,201 @@ players:
   personality_tags:
   - perfectionist
   potential: 77.4
-- id: team_tsm_drone
-  handle: drone
+- id: team_tsm_leviathanag
+  handle: LeviathanAG
   real_name: ''
   region: americas
   country: ''
   languages: []
-  age: 24
+  age: 20
   role: initiator
   playstyle: support
   attributes:
-    aim_precision: 66.7
-    aim_reactivity: 71.5
-    movement: 72.5
-    game_sense: 73.8
-    utility_usage: 78.3
-    positioning: 79.1
-    clutch_factor: 71.7
-    tilt_resistance: 66.3
-    composure: 78.3
-    comms_quality: 82.2
+    aim_precision: 59.1
+    aim_reactivity: 65.1
+    movement: 64.2
+    game_sense: 69.1
+    utility_usage: 82.0
+    positioning: 69.0
+    clutch_factor: 65.5
+    tilt_resistance: 64.3
+    composure: 70.3
+    comms_quality: 80.9
   agent_pool:
   - agent_id: sova
-    mastery: 82.7
-  - agent_id: breach
-    mastery: 83.5
-  - agent_id: fade
-    mastery: 64.2
-  - agent_id: gekko
-    mastery: 70.0
-  - agent_id: kayo
-    mastery: 64.5
+    mastery: 82.9
   - agent_id: skye
-    mastery: 59.0
+    mastery: 76.7
+  - agent_id: breach
+    mastery: 55.6
+  - agent_id: fade
+    mastery: 59.1
+  - agent_id: gekko
+    mastery: 58.4
+  - agent_id: kayo
+    mastery: 61.1
   - agent_id: tejo
-    mastery: 58.6
+    mastery: 60.1
   - agent_id: astra
-    mastery: 55.8
+    mastery: 43.2
   - agent_id: brimstone
-    mastery: 0.6
+    mastery: 50.3
   - agent_id: chamber
-    mastery: 50.7
+    mastery: 54.5
   - agent_id: clove
-    mastery: 54.1
+    mastery: 42.5
   - agent_id: cypher
-    mastery: 57.7
+    mastery: 49.7
   - agent_id: deadlock
-    mastery: 47.6
+    mastery: 54.0
   - agent_id: harbor
-    mastery: 57.0
+    mastery: 54.0
   - agent_id: iso
-    mastery: 53.6
+    mastery: 49.5
   - agent_id: jett
-    mastery: 50.7
+    mastery: 50.3
   - agent_id: killjoy
-    mastery: 58.8
+    mastery: 42.3
   - agent_id: miks
-    mastery: 60.0
+    mastery: 52.9
   - agent_id: neon
-    mastery: 48.1
+    mastery: 1.6
   - agent_id: omen
-    mastery: 47.0
+    mastery: 53.5
   - agent_id: phoenix
-    mastery: 53.8
+    mastery: 43.1
   - agent_id: raze
-    mastery: 53.9
+    mastery: 7.4
   - agent_id: reyna
-    mastery: 48.7
+    mastery: 54.9
   - agent_id: sage
-    mastery: 55.4
+    mastery: 43.6
   - agent_id: veto
-    mastery: 49.1
+    mastery: 42.6
   - agent_id: viper
-    mastery: 59.4
+    mastery: 47.2
   - agent_id: vyse
-    mastery: 55.0
+    mastery: 49.4
   - agent_id: waylay
-    mastery: 3.8
+    mastery: 44.8
   - agent_id: yoru
-    mastery: 53.8
+    mastery: 39.1
   map_pool:
   - map_id: ascent
-    mastery: 82.4
+    mastery: 72.5
   - map_id: bind
-    mastery: 70.3
+    mastery: 80.2
   - map_id: haven
-    mastery: 80.3
+    mastery: 78.4
   - map_id: lotus
-    mastery: 80.5
+    mastery: 80.7
   - map_id: split
-    mastery: 83.1
-  salary: 5600
-  contract_weeks_left: 53
-  morale: 64.2
-  stamina: 92.1
-  form: 51.2
+    mastery: 77.9
+  salary: 5100
+  contract_weeks_left: 51
+  morale: 70.4
+  stamina: 80.0
+  form: 53.0
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 74.9
-- id: team_tsm_cutler
-  handle: cutler
+  - quiet
+  - streamer
+  potential: 90.1
+- id: team_tsm_bang
+  handle: bang
   real_name: ''
   region: americas
   country: ''
   languages: []
-  age: 27
-  role: sentinel
-  playstyle: anchor
+  age: 18
+  role: controller
+  playstyle: lurker
   attributes:
-    aim_precision: 70.5
-    aim_reactivity: 63.2
-    movement: 61.4
-    game_sense: 64.5
-    utility_usage: 74.0
-    positioning: 75.9
-    clutch_factor: 72.2
-    tilt_resistance: 71.6
-    composure: 79.7
-    comms_quality: 72.9
+    aim_precision: 74.4
+    aim_reactivity: 74.5
+    movement: 77.3
+    game_sense: 84.3
+    utility_usage: 66.6
+    positioning: 79.3
+    clutch_factor: 74.4
+    tilt_resistance: 72.0
+    composure: 66.7
+    comms_quality: 58.7
   agent_pool:
-  - agent_id: cypher
-    mastery: 78.6
-  - agent_id: killjoy
-    mastery: 76.4
-  - agent_id: chamber
-    mastery: 60.6
-  - agent_id: deadlock
-    mastery: 55.3
-  - agent_id: sage
-    mastery: 59.9
-  - agent_id: veto
-    mastery: 61.8
-  - agent_id: vyse
-    mastery: 58.8
-  - agent_id: astra
-    mastery: 48.1
-  - agent_id: breach
-    mastery: 45.8
-  - agent_id: brimstone
-    mastery: 5.2
-  - agent_id: clove
-    mastery: 7.6
-  - agent_id: fade
-    mastery: 59.8
-  - agent_id: gekko
-    mastery: 45.4
-  - agent_id: harbor
-    mastery: 42.4
-  - agent_id: iso
-    mastery: 50.7
-  - agent_id: jett
-    mastery: 42.0
-  - agent_id: kayo
-    mastery: 47.1
-  - agent_id: miks
-    mastery: 47.6
-  - agent_id: neon
-    mastery: 53.9
   - agent_id: omen
-    mastery: 42.3
-  - agent_id: phoenix
-    mastery: 53.3
-  - agent_id: raze
-    mastery: 55.4
-  - agent_id: reyna
-    mastery: 45.6
-  - agent_id: skye
-    mastery: 41.2
-  - agent_id: sova
-    mastery: 48.3
-  - agent_id: tejo
-    mastery: 47.9
+    mastery: 84.0
+  - agent_id: astra
+    mastery: 76.5
+  - agent_id: brimstone
+    mastery: 63.2
+  - agent_id: clove
+    mastery: 61.4
+  - agent_id: harbor
+    mastery: 60.8
+  - agent_id: miks
+    mastery: 64.5
   - agent_id: viper
-    mastery: 47.9
+    mastery: 62.2
+  - agent_id: breach
+    mastery: 51.7
+  - agent_id: chamber
+    mastery: 49.2
+  - agent_id: cypher
+    mastery: 53.6
+  - agent_id: deadlock
+    mastery: 48.7
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 58.1
+  - agent_id: iso
+    mastery: 2.1
+  - agent_id: jett
+    mastery: 44.1
+  - agent_id: kayo
+    mastery: 3.7
+  - agent_id: killjoy
+    mastery: 58.3
+  - agent_id: neon
+    mastery: 43.5
+  - agent_id: phoenix
+    mastery: 47.7
+  - agent_id: raze
+    mastery: 4.1
+  - agent_id: reyna
+    mastery: 53.4
+  - agent_id: sage
+    mastery: 53.9
+  - agent_id: skye
+    mastery: 46.2
+  - agent_id: sova
+    mastery: 47.5
+  - agent_id: tejo
+    mastery: 47.4
+  - agent_id: veto
+    mastery: 5.5
+  - agent_id: vyse
+    mastery: 50.7
   - agent_id: waylay
-    mastery: 51.1
+    mastery: 47.7
   - agent_id: yoru
-    mastery: 49.3
+    mastery: 54.6
   map_pool:
   - map_id: ascent
-    mastery: 72.4
+    mastery: 79.1
   - map_id: bind
-    mastery: 75.3
+    mastery: 82.3
   - map_id: haven
-    mastery: 75.8
+    mastery: 73.4
   - map_id: lotus
-    mastery: 95.6
+    mastery: 88.1
   - map_id: split
-    mastery: 67.4
-  salary: 5000
-  contract_weeks_left: 33
-  morale: 83.7
-  stamina: 85.7
-  form: 48.5
+    mastery: 88.5
+  salary: 5500
+  contract_weeks_left: 65
+  morale: 70.9
+  stamina: 92.3
+  form: 55.6
   personality_tags:
-  - clutch_gene
-  potential: 71.8
+  - flashy
+  - rookie
+  potential: 87.1

@@ -1,6 +1,7 @@
 id: vct-2021
 name: VCT 2021
-description: Early VCT-era roster snapshot, curated from the supplied 2021 event archive.
+description: Latest shared 2021 lineups for each selected VCT-era team, with archive
+  players seeded into free agency.
 start_year: 2021
 world:
   league_regions:

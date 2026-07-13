@@ -298,8 +298,9 @@ def _make_real_vct_member(spec: tuple[str, str, str, str, str]) -> StaffMember:
 
 
 def _seed_real_vct_staff(gs: GameState, taken: set[str]) -> None:
+    player_names = _player_identity_keys(gs)
     for spec in _REAL_VCT_STAFF:
-        if spec[0] in taken:
+        if spec[0] in taken or _identity_key(spec[1]) in player_names:
             continue
         gs.staff_pool.append(_make_real_vct_member(spec))
         taken.add(spec[0])
@@ -312,12 +313,19 @@ def seed_pool(gs: GameState) -> None:
     doppelganger holding the same id. Called at campaign start, at every
     offseason after churn, and lazily when the market runs thin."""
     taken = {m.id for m in gs.staff_pool}
+    staff_names = {_identity_key(m.name) for m in gs.staff_pool}
     for staff in gs.staff_by.values():
         taken.update(m.id for m in staff.values())
+        staff_names.update(_identity_key(m.name) for m in staff.values())
     _seed_real_vct_staff(gs, taken)
+    staff_names.update(_identity_key(m.name) for m in gs.staff_pool)
     i = 0
+    player_names = _player_identity_keys(gs)
+    # A historical expanded world needs more choice than the original small
+    # default league. Keep a 24-person cushion above one candidate per team.
+    pool_target = max(POOL_MIN, len(gs.teams) + 24)
     while (
-        len(gs.staff_pool) < POOL_MIN
+        len(gs.staff_pool) < pool_target
         or any(role not in {m.role for m in gs.staff_pool} for role in ROLES)
     ):
         sid = f"staff_s{gs.season}_{i}"
@@ -326,8 +334,98 @@ def seed_pool(gs: GameState) -> None:
         if sid in taken:
             continue
         taken.add(sid)
-        gs.staff_pool.append(_make_member(gs.seed, sid, role))
+        member = _make_member(gs.seed, sid, role)
+        identity = _identity_key(member.name)
+        if identity in player_names or identity in staff_names:
+            # Stable id still advances, so the replacement name is just as
+            # deterministic and no player can also appear as market staff.
+            continue
+        gs.staff_pool.append(member)
+        staff_names.add(identity)
     gs.staff_pool.sort(key=lambda m: m.id)
+
+
+_VCT_2021_COACHES = (
+    ("team_100_thieves", "frost"), ("team_cloud9_blue", "autumn"),
+    ("team_version1", "immi"), ("team_tsm", "tailored"),
+    ("team_faze_clan", "trippy"), ("team_xset", "syykont"),
+    ("team_kru_esports", "onur"), ("team_furia_esports", "carlao"),
+    ("team_fnatic", "mini"), ("team_team_liquid", "sliggy"),
+    ("team_acend", "nbs"), ("team_gambit_esports", "engh"),
+    ("team_funplus_phoenix", "d00mbr0s"), ("team_guild_esports", "barbarr"),
+    ("team_team_heretics", "johnta"), ("team_supermassive_blaze", "9999"),
+    ("team_team_bds", "wallax"), ("team_vision_strikers", "termi"),
+    ("team_nuturn_gaming", "jaemin"), ("team_x10_esports", "0bi"),
+    ("team_crazy_raccoon", "mun"), ("team_paper_rex", "alecks"),
+    ("team_bren_esports", "gibo"),
+    ("team_f4q", "locomotive"), ("team_zeta_division", "xqq"),
+    ("team_northeption", "vorz"),
+    # Later-2021 team records used where the first pass had no named coach.
+    ("team_team_envy", "chet"), ("team_gen_g_esports", "doolb"),
+    ("team_immortals", "jamezirl"), ("team_rise", "ohai"),
+    ("team_luminosity_gaming", "piggye"), ("team_t1", "david denis"),
+    ("team_ninjas_in_pyjamas", "emil"), ("team_giants_gaming", "pipson"),
+    ("team_futbolist", "paura"), ("team_wave_esports", "mrsnooze"),
+    ("team_alliance", "prycyy"), ("team_team_finest", "physiq"),
+    ("team_damwon_gaming", "j1n"), ("team_tnl_esports", "sunday"),
+    ("team_prince", "soma"), ("team_boom_esports", "mushi"),
+    ("team_fennel", "hnt"),
+)
+
+
+def _identity_key(value: str) -> str:
+    return "".join(ch for ch in value.lower() if ch.isalnum())
+
+
+def _player_identity_keys(gs: GameState) -> set[str]:
+    """All real-player identities, including hidden future arrivals."""
+    names = {_identity_key(p.handle) for p in gs.players.values()}
+    names.update(
+        _identity_key(prospect.player.handle)
+        for prospect in gs.future_prospects.values()
+    )
+    return names
+
+
+def seed_vct_2021_staff(gs: GameState) -> None:
+    """Seed every historical team with a distinct, non-player head coach."""
+    player_names = _player_identity_keys(gs)
+    researched = dict(_VCT_2021_COACHES)
+    for team_id in sorted(gs.teams):
+        handle = researched.get(team_id)
+        if handle is not None and _identity_key(handle) in player_names:
+            # A real coach who is also a rostered competitor cannot wear both
+            # hats in this pack; give the team a deterministic staff record.
+            handle = None
+        if handle is not None:
+            # Prefer the era-specific assignment over a duplicate of the same
+            # real person in the generic/current staff market.
+            key = _identity_key(handle)
+            gs.staff_pool = [m for m in gs.staff_pool if _identity_key(m.name) != key]
+        staff_id = (
+            f"vct2021_{_identity_key(handle)}"
+            if handle is not None else f"vct2021_generated_{team_id}"
+        )
+        if any(m.id == staff_id for m in gs.staff_pool):
+            continue
+        member = _make_member(2021, staff_id, "coach")
+        if handle is not None:
+            member.name = handle
+        existing_staff_names = {
+            _identity_key(m.name) for m in gs.staff_pool
+        }
+        for staff in gs.staff_by.values():
+            existing_staff_names.update(_identity_key(m.name) for m in staff.values())
+        if (
+            _identity_key(member.name) in player_names
+            or _identity_key(member.name) in existing_staff_names
+        ):
+            continue
+        member.region = str(gs.teams[team_id].region)
+        provenance = "2021 coach" if handle is not None else "generated 2021 staff record"
+        member.history = [f"{provenance}, {gs.teams[team_id].name}"]
+        member.last_org = team_id
+        gs.staff_by.setdefault(team_id, {})["coach"] = member
 
 
 def offseason_churn(gs: GameState) -> None:

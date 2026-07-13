@@ -304,104 +304,104 @@ players:
   - fan_favorite
   - hot_head
   potential: 88.7
-- id: team_faze_clan_marved
-  handle: Marved
+- id: team_faze_clan_babyj
+  handle: BabyJ
   real_name: ''
   region: americas
   country: ''
   languages: []
-  age: 21
-  role: controller
-  playstyle: lurker
+  age: 22
+  role: sentinel
+  playstyle: anchor
   attributes:
-    aim_precision: 73.0
-    aim_reactivity: 72.2
-    movement: 77.3
-    game_sense: 80.9
-    utility_usage: 70.8
-    positioning: 80.2
-    clutch_factor: 79.8
-    tilt_resistance: 78.9
-    composure: 66.7
-    comms_quality: 67.8
+    aim_precision: 69.6
+    aim_reactivity: 67.5
+    movement: 57.0
+    game_sense: 63.8
+    utility_usage: 74.8
+    positioning: 80.5
+    clutch_factor: 69.9
+    tilt_resistance: 71.0
+    composure: 77.3
+    comms_quality: 70.1
   agent_pool:
-  - agent_id: omen
-    mastery: 94.1
-  - agent_id: viper
-    mastery: 80.7
-  - agent_id: astra
-    mastery: 66.1
-  - agent_id: brimstone
-    mastery: 73.4
-  - agent_id: clove
-    mastery: 67.4
-  - agent_id: harbor
-    mastery: 69.7
-  - agent_id: miks
-    mastery: 71.2
-  - agent_id: breach
-    mastery: 53.4
-  - agent_id: chamber
-    mastery: 53.0
   - agent_id: cypher
-    mastery: 54.9
-  - agent_id: deadlock
-    mastery: 52.4
-  - agent_id: fade
-    mastery: 55.8
-  - agent_id: gekko
-    mastery: 60.0
-  - agent_id: iso
-    mastery: 51.5
-  - agent_id: jett
-    mastery: 54.8
-  - agent_id: kayo
-    mastery: 59.2
+    mastery: 83.5
   - agent_id: killjoy
-    mastery: 5.9
-  - agent_id: neon
-    mastery: 58.8
-  - agent_id: phoenix
-    mastery: 51.6
-  - agent_id: raze
-    mastery: 57.0
-  - agent_id: reyna
-    mastery: 48.8
+    mastery: 75.0
+  - agent_id: chamber
+    mastery: 59.8
+  - agent_id: deadlock
+    mastery: 55.3
   - agent_id: sage
-    mastery: 60.0
-  - agent_id: skye
-    mastery: 60.0
-  - agent_id: sova
-    mastery: 55.1
-  - agent_id: tejo
-    mastery: 60.0
+    mastery: 62.6
   - agent_id: veto
-    mastery: 7.1
+    mastery: 60.9
   - agent_id: vyse
-    mastery: 59.7
+    mastery: 61.0
+  - agent_id: astra
+    mastery: 55.8
+  - agent_id: breach
+    mastery: 48.0
+  - agent_id: brimstone
+    mastery: 43.8
+  - agent_id: clove
+    mastery: 41.5
+  - agent_id: fade
+    mastery: 49.1
+  - agent_id: gekko
+    mastery: 56.7
+  - agent_id: harbor
+    mastery: 1.4
+  - agent_id: iso
+    mastery: 50.5
+  - agent_id: jett
+    mastery: 42.7
+  - agent_id: kayo
+    mastery: 44.6
+  - agent_id: miks
+    mastery: 39.2
+  - agent_id: neon
+    mastery: 48.3
+  - agent_id: omen
+    mastery: 49.2
+  - agent_id: phoenix
+    mastery: 41.1
+  - agent_id: raze
+    mastery: 47.5
+  - agent_id: reyna
+    mastery: 48.2
+  - agent_id: skye
+    mastery: 48.6
+  - agent_id: sova
+    mastery: 45.5
+  - agent_id: tejo
+    mastery: 46.9
+  - agent_id: viper
+    mastery: 58.0
   - agent_id: waylay
-    mastery: 53.8
+    mastery: 51.5
   - agent_id: yoru
-    mastery: 54.9
+    mastery: 49.2
   map_pool:
   - map_id: ascent
-    mastery: 80.3
+    mastery: 81.2
   - map_id: bind
-    mastery: 83.4
+    mastery: 80.5
   - map_id: haven
-    mastery: 84.3
+    mastery: 79.8
   - map_id: lotus
-    mastery: 88.6
+    mastery: 76.0
   - map_id: split
-    mastery: 86.3
-  salary: 6100
-  contract_weeks_left: 79
-  morale: 79.1
-  stamina: 95.9
-  form: 56.8
+    mastery: 67.7
+  salary: 5100
+  contract_weeks_left: 70
+  morale: 64.7
+  stamina: 80.4
+  form: 57.1
   personality_tags:
-  - flashy
-  potential: 85.4
+  - clutch_gene
+  potential: 74.3
 - id: team_faze_clan_zachareee
   handle: ZachaREEE
   real_name: ''

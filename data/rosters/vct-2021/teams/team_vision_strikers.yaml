@@ -3,14 +3,14 @@ name: Vision Strikers
 tag: VS
 region: pacific
 tier: 1
-captain_id: team_vision_strikers_k1ng
+captain_id: team_vision_strikers_stax
 balance: 810000
 reputation: 85.0
 fan_count: 650250
 chemistry: 79.9
 players:
-- id: team_vision_strikers_k1ng
-  handle: k1Ng
+- id: team_vision_strikers_mako
+  handle: MaKo
   real_name: ''
   region: pacific
   country: KR
@@ -19,99 +19,98 @@ players:
     level: 100.0
   - lang: en
     level: 45.0
-  age: 21
+  age: 20
   role: controller
-  playstyle: igl
+  playstyle: support
   attributes:
-    aim_precision: 75.3
-    aim_reactivity: 67.7
-    movement: 71.2
-    game_sense: 91.9
-    utility_usage: 84.8
-    positioning: 72.4
-    clutch_factor: 73.7
-    tilt_resistance: 76.7
-    composure: 86.9
-    comms_quality: 93.4
+    aim_precision: 71.2
+    aim_reactivity: 68.9
+    movement: 80.6
+    game_sense: 83.8
+    utility_usage: 92.4
+    positioning: 76.7
+    clutch_factor: 74.9
+    tilt_resistance: 72.7
+    composure: 80.3
+    comms_quality: 83.8
   agent_pool:
   - agent_id: omen
-    mastery: 85.8
-  - agent_id: brimstone
-    mastery: 87.0
-  - agent_id: astra
-    mastery: 64.5
-  - agent_id: clove
-    mastery: 71.8
-  - agent_id: harbor
-    mastery: 65.2
-  - agent_id: miks
-    mastery: 70.4
+    mastery: 93.4
   - agent_id: viper
-    mastery: 57.6
+    mastery: 92.6
+  - agent_id: astra
+    mastery: 69.9
+  - agent_id: brimstone
+    mastery: 72.1
+  - agent_id: clove
+    mastery: 64.3
+  - agent_id: harbor
+    mastery: 65.4
+  - agent_id: miks
+    mastery: 69.0
   - agent_id: breach
-    mastery: 54.1
+    mastery: 60.0
   - agent_id: chamber
-    mastery: 59.2
+    mastery: 59.4
   - agent_id: cypher
-    mastery: 47.1
+    mastery: 56.9
   - agent_id: deadlock
-    mastery: 52.8
+    mastery: 57.5
   - agent_id: fade
-    mastery: 51.0
+    mastery: 47.3
   - agent_id: gekko
-    mastery: 49.6
+    mastery: 53.6
   - agent_id: iso
-    mastery: 54.8
+    mastery: 60.0
   - agent_id: jett
-    mastery: 50.2
+    mastery: 50.6
   - agent_id: kayo
-    mastery: 49.8
+    mastery: 53.4
   - agent_id: killjoy
-    mastery: 52.2
+    mastery: 6.7
   - agent_id: neon
-    mastery: 60.0
+    mastery: 53.3
   - agent_id: phoenix
-    mastery: 55.3
-  - agent_id: raze
-    mastery: 56.5
-  - agent_id: reyna
-    mastery: 57.1
-  - agent_id: sage
-    mastery: 56.5
-  - agent_id: skye
     mastery: 60.0
-  - agent_id: sova
-    mastery: 53.8
-  - agent_id: tejo
-    mastery: 59.5
-  - agent_id: veto
+  - agent_id: raze
     mastery: 56.8
+  - agent_id: reyna
+    mastery: 56.4
+  - agent_id: sage
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 0.3
+  - agent_id: sova
+    mastery: 57.9
+  - agent_id: tejo
+    mastery: 57.5
+  - agent_id: veto
+    mastery: 57.2
   - agent_id: vyse
-    mastery: 50.7
+    mastery: 54.7
   - agent_id: waylay
-    mastery: 54.6
+    mastery: 58.2
   - agent_id: yoru
-    mastery: 47.7
+    mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 87.3
+    mastery: 81.7
   - map_id: bind
-    mastery: 83.7
+    mastery: 87.3
   - map_id: haven
-    mastery: 92.6
+    mastery: 94.2
   - map_id: lotus
-    mastery: 86.1
+    mastery: 91.8
   - map_id: split
-    mastery: 88.8
-  salary: 6100
-  contract_weeks_left: 79
-  morale: 77.4
-  stamina: 97.6
-  form: 51.9
+    mastery: 84.8
+  salary: 6400
+  contract_weeks_left: 35
+  morale: 81.0
+  stamina: 89.5
+  form: 52.7
   personality_tags:
-  - analytical
-  - independent
-  potential: 83.1
+  - streamer
+  potential: 90.4
 - id: team_vision_strikers_stax
   handle: stax
   real_name: ''
@@ -124,18 +123,18 @@ players:
     level: 45.0
   age: 21
   role: initiator
-  playstyle: support
+  playstyle: igl
   attributes:
-    aim_precision: 73.3
-    aim_reactivity: 78.1
+    aim_precision: 71.3
+    aim_reactivity: 76.1
     movement: 80.0
-    game_sense: 84.0
-    utility_usage: 90.0
+    game_sense: 92.0
+    utility_usage: 86.0
     positioning: 77.5
     clutch_factor: 82.1
     tilt_resistance: 78.6
-    composure: 80.6
-    comms_quality: 92.3
+    composure: 82.6
+    comms_quality: 96.3
   agent_pool:
   - agent_id: sova
     mastery: 93.8
@@ -214,7 +213,7 @@ players:
   personality_tags:
   - flashy
   - independent
-  potential: 89.8
+  potential: 90.1
 - id: team_vision_strikers_rb
   handle: Rb
   real_name: ''
@@ -421,8 +420,8 @@ players:
   - grinder
   - rookie
   potential: 91.8
-- id: team_vision_strikers_zest
-  handle: Zest
+- id: team_vision_strikers_lakia
+  handle: Lakia
   real_name: ''
   region: pacific
   country: KR
@@ -432,94 +431,94 @@ players:
   - lang: en
     level: 45.0
   age: 21
-  role: sentinel
-  playstyle: anchor
+  role: initiator
+  playstyle: support
   attributes:
-    aim_precision: 74.7
-    aim_reactivity: 68.2
-    movement: 70.4
-    game_sense: 71.6
-    utility_usage: 76.2
-    positioning: 80.0
-    clutch_factor: 69.7
-    tilt_resistance: 83.3
-    composure: 85.3
-    comms_quality: 70.7
+    aim_precision: 72.9
+    aim_reactivity: 71.0
+    movement: 77.2
+    game_sense: 84.9
+    utility_usage: 85.7
+    positioning: 79.1
+    clutch_factor: 73.6
+    tilt_resistance: 77.2
+    composure: 87.2
+    comms_quality: 88.0
   agent_pool:
-  - agent_id: cypher
-    mastery: 86.7
-  - agent_id: killjoy
-    mastery: 79.6
-  - agent_id: chamber
-    mastery: 67.5
-  - agent_id: deadlock
-    mastery: 65.0
-  - agent_id: sage
-    mastery: 68.9
-  - agent_id: veto
-    mastery: 59.0
-  - agent_id: vyse
-    mastery: 61.5
-  - agent_id: astra
-    mastery: 46.4
-  - agent_id: breach
-    mastery: 55.0
-  - agent_id: brimstone
-    mastery: 50.6
-  - agent_id: clove
-    mastery: 49.8
-  - agent_id: fade
-    mastery: 49.0
-  - agent_id: gekko
-    mastery: 48.0
-  - agent_id: harbor
-    mastery: 52.9
-  - agent_id: iso
-    mastery: 51.7
-  - agent_id: jett
-    mastery: 59.2
-  - agent_id: kayo
-    mastery: 54.7
-  - agent_id: miks
-    mastery: 53.2
-  - agent_id: neon
-    mastery: 4.4
-  - agent_id: omen
-    mastery: 57.0
-  - agent_id: phoenix
-    mastery: 49.7
-  - agent_id: raze
-    mastery: 42.5
-  - agent_id: reyna
-    mastery: 54.7
-  - agent_id: skye
-    mastery: 49.3
   - agent_id: sova
-    mastery: 59.0
+    mastery: 87.8
+  - agent_id: breach
+    mastery: 92.2
+  - agent_id: fade
+    mastery: 74.0
+  - agent_id: gekko
+    mastery: 69.8
+  - agent_id: kayo
+    mastery: 66.7
+  - agent_id: skye
+    mastery: 66.1
   - agent_id: tejo
-    mastery: 54.4
+    mastery: 64.4
+  - agent_id: astra
+    mastery: 58.2
+  - agent_id: brimstone
+    mastery: 52.8
+  - agent_id: chamber
+    mastery: 56.5
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 49.4
+  - agent_id: deadlock
+    mastery: 55.8
+  - agent_id: harbor
+    mastery: 59.9
+  - agent_id: iso
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 51.1
+  - agent_id: killjoy
+    mastery: 54.9
+  - agent_id: miks
+    mastery: 60.0
+  - agent_id: neon
+    mastery: 56.4
+  - agent_id: omen
+    mastery: 55.3
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 53.4
+  - agent_id: reyna
+    mastery: 46.1
+  - agent_id: sage
+    mastery: 59.9
+  - agent_id: veto
+    mastery: 60.0
   - agent_id: viper
-    mastery: 45.5
+    mastery: 56.0
+  - agent_id: vyse
+    mastery: 58.8
   - agent_id: waylay
-    mastery: 59.0
+    mastery: 58.0
   - agent_id: yoru
-    mastery: 57.4
+    mastery: 54.4
   map_pool:
   - map_id: ascent
-    mastery: 82.8
+    mastery: 81.2
   - map_id: bind
-    mastery: 86.9
-  - map_id: haven
     mastery: 81.3
+  - map_id: haven
+    mastery: 82.1
   - map_id: lotus
-    mastery: 84.9
+    mastery: 89.1
   - map_id: split
-    mastery: 71.3
-  salary: 5700
-  contract_weeks_left: 32
-  morale: 74.9
-  stamina: 85.7
-  form: 49.5
+    mastery: 74.0
+  salary: 6100
+  contract_weeks_left: 51
+  morale: 73.7
+  stamina: 99.8
+  form: 56.9
   personality_tags:
-  - flashy
-  potential: 83.9
+  - independent
+  potential: 90.4

@@ -83,6 +83,11 @@ def slugify(name: str) -> str:
     return re.sub(r"_+", "_", s)
 
 
+def identity_key(name: str) -> str:
+    """Canonical human identity used to keep historical imports deduplicated."""
+    return re.sub(r"[^a-z0-9]", "", name.lower())
+
+
 def _rng_for(pack_id: str, label: str) -> np.random.Generator:
     h = hashlib.blake2b(f"{pack_id}:{label}".encode("ascii"), digest_size=8)
     return np.random.default_rng(int.from_bytes(h.digest(), "big"))
@@ -252,10 +257,14 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     pack_dir = (data_dir or DEFAULT_DATA_DIR) / "rosters" / pack_id
     src_dir = pack_dir / "src"
     out_dir = pack_dir / "teams"
-    # free_agents.yaml is the FA spec, not a region sheet — handled below.
+    # Market/prospect intake sheets are not region sheets — handled below.
     specs = sorted(
         f for f in src_dir.glob("*.yaml")
-        if f.name not in {"free_agents.yaml", "future_prospects.yaml", "pack.yaml"}
+        if f.name not in {
+            "free_agents.yaml", "future_prospects.yaml",
+            "future_archive_free_agents.yaml", "future_archive_prospects.yaml",
+            "pack.yaml",
+        }
     )
     if not specs:
         raise SystemExit(f"no spec files under {src_dir}")
@@ -267,6 +276,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     tier2_counts: dict[str, int] = {}
     n_players = 0
     used_slugs: set[str] = set()
+    active_identities: set[str] = set()
     team_yaml: dict[str, str] = {}  # slug -> rendered yaml text
 
     for spec_file in specs:
@@ -309,6 +319,12 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
             players = []
             captain_id = None
             for p in pspecs:
+                identity = identity_key(str(p["handle"]))
+                if identity in active_identities:
+                    raise SystemExit(
+                        f"duplicate active-player handle {p['handle']!r}"
+                    )
+                active_identities.add(identity)
                 pid = f"{slug}_{slugify(str(p['handle']))}"
                 players.append(
                     expand_player(pack_id, pid, p, region, gd, slug)
@@ -350,19 +366,33 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     # Optional real free agents: src/free_agents.yaml carries unrostered
     # players (each entry is the same compact spec plus a `region:`), which
     # expand exactly like rostered players and seed the campaign FA pool.
-    fa_src = src_dir / "free_agents.yaml"
+    fa_sources = [
+        src_dir / "free_agents.yaml",
+        src_dir / "future_archive_free_agents.yaml",
+    ]
     n_fas = 0
     fa_yaml: str | None = None
-    if fa_src.is_file():
-        raw_fas = yaml.safe_load(fa_src.read_text(encoding="utf-8")) or {}
+    if any(source.is_file() for source in fa_sources):
         out_fas = []
         seen_fa: set[str] = set()
-        for spec in raw_fas.get("free_agents", []):
+        seen_fa_identities: set[str] = set()
+        specs_fa = []
+        for source in fa_sources:
+            if source.is_file():
+                raw_fas = yaml.safe_load(source.read_text(encoding="utf-8")) or {}
+                specs_fa.extend(raw_fas.get("free_agents", []))
+        for spec in specs_fa:
             region = str(Region(spec["region"]))
             pid = "fa_" + slugify(str(spec["handle"]))
             if pid in seen_fa:
                 raise SystemExit(f"duplicate free-agent handle {spec['handle']!r}")
+            identity = identity_key(str(spec["handle"]))
+            if identity in active_identities or identity in seen_fa_identities:
+                raise SystemExit(
+                    f"free-agent handle duplicates active/imported player {spec['handle']!r}"
+                )
             seen_fa.add(pid)
+            seen_fa_identities.add(identity)
             player = expand_player(pack_id, pid, spec, region, gd, "fa")
             player["contract_weeks_left"] = 0  # signable from day one
             out_fas.append(player)
@@ -441,14 +471,21 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     # Their source sheet supplies a birth year; the starting age and debut year
     # are derived from pack start_year so a copied prospect cannot drift.
     future_yaml: str | None = None
-    future_src = src_dir / "future_prospects.yaml"
-    if future_src.is_file():
+    future_sources = [
+        src_dir / "future_prospects.yaml",
+        src_dir / "future_archive_prospects.yaml",
+    ]
+    if any(source.is_file() for source in future_sources):
         if start_year is None:
             raise SystemExit("future_prospects.yaml requires src/pack.yaml start_year")
-        raw_future = yaml.safe_load(future_src.read_text(encoding="utf-8")) or {}
         future_out = []
         seen_future: set[str] = set()
-        for spec in raw_future.get("future_prospects", []):
+        specs_future = []
+        for source in future_sources:
+            if source.is_file():
+                raw_future = yaml.safe_load(source.read_text(encoding="utf-8")) or {}
+                specs_future.extend(raw_future.get("future_prospects", []))
+        for spec in specs_future:
             birth_year = int(spec["birth_year"])
             age = start_year - birth_year
             if not 0 <= age < 17:
