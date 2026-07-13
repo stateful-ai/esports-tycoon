@@ -140,7 +140,7 @@ SEASON = {
     "kills_by_weapon",
 }
 WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
-ATTR_ITEM = {"key", "label", "value", "band"}
+ATTR_ITEM = {"key", "label", "value", "band", "description"}
 AGENT_ITEM = {"agent_id", "name", "icon", "mastery", "role"}
 REL_ITEM = {"pid", "handle", "kind", "strength"}
 
