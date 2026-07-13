@@ -24,7 +24,7 @@ from esports_sim.manager import (
     telemetry,
 )
 from esports_sim.manager.learned_manager_policy import LearnedManagerModel
-from esports_sim.manager.manager_policy import generate_profile
+from esports_sim.manager.manager_policy import HeuristicManagerPolicy, generate_profile
 from esports_sim.manager.market import (
     ROSTER_MIN,
     asking_salary,
@@ -46,7 +46,6 @@ from esports_sim.schemas import Player
 console = Console()
 SAVE_DIR = Path("saves")
 DEFAULT_SAVE = SAVE_DIR / "campaign.json"
-DEFAULT_MANAGER_MODEL = Path("telemetry/manager_policy_champion.json")
 
 
 def ask(prompt: str = "> ") -> str:
@@ -581,65 +580,24 @@ def auto_play(
 ) -> GameState:
     pack = load_roster_pack(roster) if roster else None
     gs = new_campaign(gd, seed, user_team_id=team, pack=pack)
-    policy = None
-    profile = None
+    profile = generate_profile(seed, f"autoplay-{team}")
+    policy = HeuristicManagerPolicy(profile)
     if manager_model is not None:
-        policy = LearnedManagerModel.load(manager_model).make_policy(
-            generate_profile(seed, f"autoplay-{team}")
-        )
-        profile = policy.profile
-        console.print(f"[cyan]manager AI:[/] {manager_model}")
-    # A hands-off manager who at least renews contracts, keeps a legal roster,
-    # and rests the team.
+        try:
+            policy = LearnedManagerModel.load(manager_model).make_policy(profile)
+            console.print(f"[cyan]manager AI:[/] {manager_model}")
+        except (OSError, KeyError, TypeError, ValueError) as exc:
+            console.print(
+                f"[yellow]manager AI checkpoint unavailable ({exc}); using heuristic-manager-v2[/]"
+            )
+    else:
+        console.print("[cyan]manager AI:[/] heuristic-manager-v2")
     for _ in range(weeks):
-        if policy is not None and profile is not None:
-            result = play_policy_week(gs, gd, policy, profile=profile, team_id=team)
-            console.print(
-                f"S{result.observation['season']} W{result.observation['week']:2d} "
-                f"[cyan]AI[/] {result.message}"
-            )
-            continue
-        for p in gs.roster(gs.user_team_id):
-            if 0 < p.contract_weeks_left <= 4:
-                renew_contract(gs, gs.user_team_id, p.id)
-        # Never tick a match week short-handed: fill empty seats with the best
-        # affordable free agent (mirrors the roster-min invariant).
-        while len(gs.teams[team].player_ids) < ROSTER_MIN and gs.free_agent_ids:
-            best = max(
-                (gs.players[pid] for pid in gs.free_agent_ids),
-                key=lambda p: (player_quality(p), p.id),
-            )
-            ok, _ = sign_player(gs, team, best.id)
-            if not ok:
-                break
-        avg_stamina = sum(p.stamina for p in gs.roster(gs.user_team_id)) / max(
-            len(gs.teams[gs.user_team_id].player_ids), 1
+        result = play_policy_week(gs, gd, policy, profile=profile, team_id=team)
+        console.print(
+            f"S{result.observation['season']} W{result.observation['week']:2d} "
+            f"[cyan]AI[/] {result.message}"
         )
-        gs.training_focus[gs.user_team_id] = "rest" if avg_stamina < 60 else "tactical"
-        report = advance_week(gs, gd)
-        mine = next(
-            (f for f in report.fixtures if gs.user_team_id in (f.team_a, f.team_b)),
-            None,
-        )
-        if mine is not None:
-            a, b = mine.map_score
-            score = (
-                f"{a}-{b}"
-                if mine.best_of == 3
-                else (
-                    f"{mine.results[0].score_a}-{mine.results[0].score_b}"
-                    if mine.results
-                    else "w/o"
-                )
-            )
-            won = mine.winner_id == gs.user_team_id
-            console.print(
-                f"S{report.season} W{report.week:2d} "
-                f"[{'green' if won else 'red'}]{'W' if won else 'L'}[/] "
-                f"{team_name(gs, mine.team_a)} {score} {team_name(gs, mine.team_b)}"
-            )
-        for note in report.notes:
-            console.print(f"  [yellow]{note}[/]")
     t = gs.teams[gs.user_team_id]
     console.print(
         f"\nfinal: rank #{t.world_rank}, balance {fmt_cr(t.balance)}, "
@@ -655,8 +613,8 @@ def main() -> None:
     parser.add_argument(
         "--manager-model",
         type=Path,
-        default=DEFAULT_MANAGER_MODEL if DEFAULT_MANAGER_MODEL.is_file() else None,
-        help="with --auto: learned manager checkpoint (defaults to the installed champion)",
+        default=None,
+        help="with --auto: optional learned manager checkpoint; default is heuristic-manager-v2",
     )
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")
