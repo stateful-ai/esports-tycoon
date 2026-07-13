@@ -6,16 +6,24 @@
 
 body {
   background: var(--es-color-bg-page, #0a0e17);
-  /* Faint teal-and-red stage light from above — ties the chrome to the
-     painted scenes without costing readability. */
   background-image:
     radial-gradient(1200px 380px at 18% -80px, rgba(79, 216, 192, 0.05), transparent 70%),
-    radial-gradient(1000px 340px at 85% -100px, rgba(255, 70, 85, 0.04), transparent 70%);
+    radial-gradient(1000px 340px at 85% -100px, rgba(255, 70, 85, 0.04), transparent 70%),
+    linear-gradient(180deg, var(--es-color-bg-surface, #0f1520) 0%, var(--es-color-bg-page, #0a0e17) 100%);
   background-attachment: fixed;
   color: var(--es-color-text-primary, #e9edf6);
   font-family: var(--es-font-sans, sans-serif);
   font-size: var(--es-text-md, 13px);
   line-height: var(--es-leading-normal, 1.45);
+  transition: background-color var(--es-duration-slow) var(--es-ease-in-out),
+              color var(--es-duration-slow) var(--es-ease-in-out);
+}
+
+#app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: transparent;
 }
 
 ::selection { background: color-mix(in srgb, var(--es-color-brand, #ff4655) 35%, transparent); }
@@ -32,19 +40,55 @@ body {
 .hidden { display: none !important; }
 .spacer { flex: 1; }
 
+/* -- animations & transitions -------------------------------------------- */
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-panel-active {
+  animation: tab-fade-in var(--es-duration-base, 180ms) var(--es-ease-out) forwards;
+}
+
+@keyframes pulse-fade {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.loading, .pf-loading, .loading-state {
+  animation: pulse-fade 1.5s var(--es-ease-in-out) infinite;
+  color: var(--es-color-text-secondary, #a2aec6);
+  text-align: center;
+  padding: var(--es-space-10, 48px) 0;
+}
+
 /* -- chrome -------------------------------------------------------------- */
 
 #topbar {
   display: flex; align-items: center; gap: var(--es-space-6, 16px);
   padding: var(--es-space-4, 10px) var(--es-space-6, 16px);
-  background: color-mix(in srgb, var(--es-color-bg-surface, #0f1520) 88%, transparent);
+  background: color-mix(in srgb, var(--es-color-bg-surface, #0f1520) 90%, transparent);
   border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--es-shadow-md);
+  transition: background var(--es-duration-slow) var(--es-ease-in-out),
+              border-color var(--es-duration-slow) var(--es-ease-in-out);
 }
 .brand {
   font-family: var(--es-font-display, inherit);
   font-weight: 700; font-size: 17px; letter-spacing: .1em;
   padding-left: var(--es-space-4, 10px); position: relative;
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out);
+}
+.brand:hover {
+  transform: scale(1.02);
 }
 .brand::before {
   /* The slash mark: a small skewed brand bar, Valorant-style. */
@@ -53,13 +97,22 @@ body {
   transform: skewX(-12deg); border-radius: var(--es-radius-xs, 1px);
 }
 .brand span { color: var(--es-color-brand, #ff4655); }
-.context { color: var(--es-color-text-secondary, #a2aec6); }
+.context {
+  color: var(--es-color-text-secondary, #a2aec6);
+  font-size: var(--es-text-sm, 12px);
+  font-family: var(--es-font-sans, sans-serif);
+  letter-spacing: var(--es-tracking-wide, 0.04em);
+  display: flex; align-items: center; gap: var(--es-space-3, 6px);
+}
 .balance { font-size: var(--es-text-lg, 15px); }
 
 #tabs {
   display: flex; gap: var(--es-space-1, 2px); padding: 0 var(--es-space-6, 16px);
   background: var(--es-color-bg-surface, #0f1520);
   border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  box-shadow: var(--es-shadow-sm);
+  transition: background-color var(--es-duration-slow) var(--es-ease-in-out),
+              border-color var(--es-duration-slow) var(--es-ease-in-out);
 }
 .tab {
   padding: var(--es-space-3, 9px) var(--es-space-5, 13px) var(--es-space-3, 7px); border: 0; background: none; cursor: pointer;
@@ -68,14 +121,24 @@ body {
   font-size: 13px; font-weight: 600;
   text-transform: uppercase; letter-spacing: .07em;
   border-bottom: var(--es-border-thick, 2px) solid transparent;
-  transition: color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
-    border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+  transition: color var(--es-duration-quick, 120ms) var(--es-ease-out),
+              border-color var(--es-duration-quick, 120ms) var(--es-ease-out),
+              text-shadow var(--es-duration-quick, 120ms) var(--es-ease-out),
+              transform var(--es-duration-quick, 120ms) var(--es-ease-out);
 }
-.tab:hover { color: var(--es-color-text-primary, #e9edf6); }
+.tab:hover {
+  color: var(--es-color-text-primary, #e9edf6);
+  border-bottom-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 40%, transparent);
+  transform: translateY(-0.5px);
+}
+.tab:active {
+  transform: translateY(0);
+}
 .tab.active {
   color: var(--es-color-text-primary, #e9edf6);
   border-bottom-color: var(--es-color-brand, #ff4655);
   text-shadow: 0 0 var(--es-space-5, 12px) color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+  transform: none;
 }
 
 /* Keep every screen aligned to one fluid content rail. A fixed pixel cap
@@ -1999,4 +2062,55 @@ td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
   border-color: var(--es-color-accent, #4fd8c0);
   background-color: var(--es-color-bg-hover, #1b2536);
   transform: scale(1.05);
+}
+
+@keyframes bar-grow {
+  from { width: 0%; }
+  to { width: var(--target-width); }
+}
+
+.pf-attr-bar i, .bar i, .pf-hbar i, .pf-str-fill, .pf-dev-fill {
+  width: var(--target-width);
+  animation: bar-grow var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out) forwards;
+}
+
+/* --- Overhaul: Hover Elevations, Active-Deal Glows, and Animations --- */
+
+/* Card hover elevations and smooth transitions */
+.card {
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+              box-shadow var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+              border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--es-color-border-focus, var(--es-color-accent, #4fd8c0));
+  box-shadow: var(--es-shadow-lg, 0 12px 32px rgba(2, 4, 10, 0.65));
+}
+
+/* Active sponsor deals with teal accent border and drop-shadow glow */
+.slot-row {
+  transition: border-color var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out),
+              box-shadow var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out);
+}
+
+.slot-row.active-deal {
+  border-left: 3px solid var(--es-color-accent, #4fd8c0);
+  box-shadow: inset 8px 0 16px -8px rgba(79, 216, 192, 0.08), 
+              0 2px 8px rgba(79, 216, 192, 0.1);
+}
+
+/* Hover background fade for facility rows */
+.facility-row {
+  transition: background-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+
+.facility-row:hover {
+  background-color: var(--es-color-bg-hover, #1b2536);
+}
+
+/* Hover effect on table rows in free agent table */
+tbody tr {
+  transition: background-color var(--es-duration-instant, 60ms) var(--es-ease-out, ease-out);
 }

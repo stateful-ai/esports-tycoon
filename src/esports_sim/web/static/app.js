@@ -1,13 +1,23 @@
 /* Campaign hub. Pure API consumer — all state lives server-side. */
 
+import { h, render } from 'https://esm.sh/preact@10.19.2';
+import { useState, useEffect, useMemo, useRef } from 'https://esm.sh/preact@10.19.2/hooks';
+import htm from 'https://esm.sh/htm@3.1.1';
+const html = htm.bind(h);
+
 const $ = (s) => document.querySelector(s);
-const el = (tag, cls, html) => {
+const el = (tag, cls, htmlContent) => {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
-  if (html !== undefined) n.innerHTML = html;
+  if (htmlContent !== undefined) n.innerHTML = htmlContent;
   return n;
 };
 const money = (n) => (n == null ? "—" : n.toLocaleString() + " cr");
+
+window.$ = $;
+window.el = el;
+window.money = money;
+
 const askBreakdown = (parts) => !parts?.length ? "" :
   `<details class="ask-breakdown"><summary class="chip">Why this price?</summary>` +
   parts.map((p) => `<div class="rowbar"><span>${esc(p.label)}</span>` +
@@ -72,6 +82,26 @@ async function api(path, body) {
 
 const App = { tab: "dashboard", state: null, mp: null };
 
+window.askBreakdown = askBreakdown;
+window.humanize = humanize;
+window.esc = esc;
+window.plink = plink;
+window.tlink = tlink;
+window.slink = slink;
+window.screenHead = screenHead;
+window.toast = toast;
+window.api = api;
+window.App = App;
+window.render = renderApp;
+window.fmtFollowers = fmtFollowers;
+window.refresh = refresh;
+window.dashGoTab = dashGoTab;
+window.advanceWeek = async () => {
+  const btn = document.getElementById("advance-btn");
+  if (btn) btn.click();
+};
+
+
 const MARKET_FILTER_DEFAULTS = Object.freeze({
   caMax: "", potentialMax: "", language: "", languageMin: "",
   streamRevenueMin: "", role: "", style: "", igl: "",
@@ -114,7 +144,7 @@ function marketFilterControls(players, filters) {
     input.appendChild(el("option", "", anyLabel));
     for (const value of values) input.appendChild(el("option", "", humanize(value)));
     input.value = filters[key];
-    input.onchange = () => { filters[key] = input.value; render(); };
+    input.onchange = () => { filters[key] = input.value; renderApp(); };
     wrap.appendChild(input);
     controls.appendChild(wrap);
     return input;
@@ -127,7 +157,7 @@ function marketFilterControls(players, filters) {
     input.placeholder = placeholder;
     Object.assign(input, attrs);
     input.value = filters[key];
-    input.onchange = () => { filters[key] = input.value; render(); };
+    input.onchange = () => { filters[key] = input.value; renderApp(); };
     wrap.appendChild(input);
     controls.appendChild(wrap);
     return input;
@@ -141,7 +171,7 @@ function marketFilterControls(players, filters) {
   language.onchange = () => {
     filters.language = language.value;
     if (!language.value) filters.languageMin = "";
-    render();
+    renderApp();
   };
   addNumber("streamRevenueMin", "Min stream revenue", "cr / wk", { min: 0, step: 100 });
   addSelect("role", "Role", options(players.map((p) => p.role)));
@@ -150,7 +180,7 @@ function marketFilterControls(players, filters) {
 
   if (Object.values(filters).some((value) => value !== "")) {
     const reset = el("button", "btn btn-sm market-filter-reset", "Clear filters");
-    reset.onclick = () => { App.marketFilters = { ...MARKET_FILTER_DEFAULTS }; render(); };
+    reset.onclick = () => { App.marketFilters = { ...MARKET_FILTER_DEFAULTS }; renderApp(); };
     controls.appendChild(reset);
   }
   return controls;
@@ -514,7 +544,7 @@ async function refresh() {
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
-  render();
+  renderApp();
 }
 
 // Topbar save controls: the explicit Save button (dot = unsaved changes)
@@ -568,13 +598,13 @@ document.querySelectorAll(".tab").forEach((b) => {
     document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
     b.classList.add("active");
     App.tab = b.dataset.tab;
-    render();
+    renderApp();
   };
 });
 
 // Old/absorbed tab ids -> [new tab, App sub-tab field, sub-tab id]. Several
 // screens merged into workspaces: Standings/Schedule into Season, Roster into
-// Club, Scouting into Market. dashGoTab(), render() and inboxGoTab() consult
+// Club, Scouting into Market. dashGoTab(), renderApp() and inboxGoTab() consult
 // this map so every pre-merge deep link (inbox "Go to", stale App.tab values,
 // old onclick handlers) lands on the right host tab AND sub-tab.
 const TAB_ALIASES = {
@@ -583,7 +613,7 @@ const TAB_ALIASES = {
   scouting: ["market", "marketTab", "scouting"],
 };
 
-function render() {
+function renderApp() {
   if (!App.state) return;
   // Merged-tab alias: a stale App.tab from before a screen merge lands on its
   // host tab with the right sub-tab preselected (and the nav highlight
@@ -602,7 +632,7 @@ function render() {
   }
   // Each render gets a fresh container; a slower, superseded async render
   // finishes into a detached node instead of double-appending.
-  const container = el("div");
+  const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
   // Office screen is parked for now (office.js stays on disk, unloaded).
   ({ inbox, dashboard, roster, club, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
@@ -685,7 +715,7 @@ async function clubOps(v, sub) {
     sub: `S${App.state.season} · W${App.state.week}`,
     subtabs: CLUB_TABS,
     active: sub,
-    onPick: (id) => { App.clubTab = id; render(); },
+    onPick: (id) => { App.clubTab = id; renderApp(); },
   }));
 
   // The transfer window gates academy promotions and releases — surface it on
@@ -2073,7 +2103,7 @@ async function roster(v, opts = {}) {
     const save = el("button", "btn btn-sm btn-primary", "Save lineup");
     save.onclick = async () => {
       const r = await api("/api/actions/lineup", { lineup_ids: [...lineup] });
-      toast(r.message); render();
+      toast(r.message); renderApp();
     };
     lineupBar.appendChild(save);
     right.push(lineupBar);
@@ -2092,7 +2122,7 @@ async function roster(v, opts = {}) {
     scout.disabled = data.scouting_this && data.scout_progress >= data.scout_cap;
     scout.onclick = async () => {
       const r = await api("/api/actions/scout", { team_id: teamId });
-      toast(r.message); render();
+      toast(r.message); renderApp();
     };
     right.push(scout);
   }
@@ -2104,7 +2134,7 @@ async function roster(v, opts = {}) {
       sub: `${tlink(data.team.id, data.team.name)} <span class="muted">· ${data.players.length}/${cap}</span>${fogSub}`,
       subtabs: CLUB_TABS,
       active: App.clubTab ?? "squad",
-      onPick: (id) => { App.clubTab = id; render(); },
+      onPick: (id) => { App.clubTab = id; renderApp(); },
       right,
     }));
   } else {
@@ -2115,7 +2145,7 @@ async function roster(v, opts = {}) {
         { id: "development", label: "Development" },
       ],
       active: cols,
-      onPick: (id) => { App.rosterCols = id; render(); },
+      onPick: (id) => { App.rosterCols = id; renderApp(); },
       right,
     }));
   }
@@ -2285,7 +2315,7 @@ async function roster(v, opts = {}) {
             mentor_id: mSel.value || null,
           });
           toast(r.message);
-          if (App.tab === "roster" || App.tab === "club") render();
+          if (App.tab === "roster" || App.tab === "club") renderApp();
         };
       }
     }
@@ -2294,14 +2324,14 @@ async function roster(v, opts = {}) {
         e.stopPropagation();
         if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}? ${data.team.name} can't refuse.`)) return;
         const r = await api("/api/actions/buyout", { player_id: p.id });
-        toast(r.message); refresh(); render();
+        toast(r.message); refresh(); renderApp();
       };
     } else if (overview && !data.is_user_team && p.transfer_ask != null) {
       tr.querySelector('[data-act="bid"]').onclick = async (e) => {
         e.stopPropagation();
         if (!confirm(`Buy ${p.handle} from ${data.team.name} for ${money(p.transfer_ask)}?`)) return;
         const r = await api("/api/actions/bid", { player_id: p.id });
-        toast(r.message); refresh(); render();
+        toast(r.message); refresh(); renderApp();
       };
       tr.querySelector('[data-act="offer"]').onclick = (e) => {
         e.stopPropagation();
@@ -2324,7 +2354,7 @@ async function roster(v, opts = {}) {
         if (!canRelease) return;
         if (!confirm(`Release ${p.handle}? Severance = 6 weeks salary.`)) return;
         const r = await api("/api/actions/release", { player_id: p.id });
-        toast(r.message); refresh(); render();
+        toast(r.message); refresh(); renderApp();
       };
     }
     tr.style.cursor = "pointer";
@@ -2548,12 +2578,12 @@ function mapLineupCard(data) {
   dflt.appendChild(chipRow(data.lineup_ids ?? [], async (ids) => {
     if (ids.length && ids.length !== 5) { toast("pick exactly 5 (or none for auto)"); return; }
     const r = await api("/api/actions/lineup", { lineup_ids: ids });
-    toast(r.message); render();
+    toast(r.message); renderApp();
   }));
   const auto = el("button", "btn btn-sm", "Clear (auto top-5)");
   auto.onclick = async () => {
     const r = await api("/api/actions/lineup", { lineup_ids: [] });
-    toast(r.message); render();
+    toast(r.message); renderApp();
   };
   dflt.appendChild(auto);
   card.appendChild(dflt);
@@ -2565,7 +2595,7 @@ function mapLineupCard(data) {
     box.appendChild(chipRow(m.dressed, async (ids) => {
       if (ids.length !== 5) { toast("dress exactly 5 for a map"); return; }
       const r = await api("/api/actions/lineup", { fixture_id: up.fixture_id, map_id: m.map_id, player_ids: ids });
-      toast(r.message); render();
+      toast(r.message); renderApp();
     }));
     card.appendChild(box);
   }
@@ -2659,7 +2689,7 @@ async function tactics(v) {
       { id: "gameplan", label: "Game plan" },
     ],
     active: sub,
-    onPick: (id) => { App.tacticsTab = id; render(); },
+    onPick: (id) => { App.tacticsTab = id; renderApp(); },
   }));
   const ws = el("div", "ws");
   v.appendChild(ws);
@@ -3206,7 +3236,7 @@ async function gameplanPanel(v) {
     for (const d of TACTIC_DIALS) body[d.key] = state.dials[d.key] ?? null;
     const r = await api("/api/actions/gameplan", body);
     toast(r.message);
-    render();
+    renderApp();
   };
   barRow2.appendChild(saveBtn);
   if (plan) {
@@ -3214,7 +3244,7 @@ async function gameplanPanel(v) {
     clearBtn.onclick = async () => {
       const r = await api("/api/actions/gameplan", { clear: true });
       toast(r.message);
-      render();
+      renderApp();
     };
     barRow2.appendChild(clearBtn);
   }
@@ -3277,7 +3307,7 @@ async function season(v) {
     sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
     subtabs: SEASON_TABS,
     active: sub,
-    onPick: (id) => { App.seasonTab = id; render(); },
+    onPick: (id) => { App.seasonTab = id; renderApp(); },
   }));
   const ws = el("div", "ws");
   v.appendChild(ws);
@@ -3555,7 +3585,7 @@ function seasonFixtures(ws, sched, table) {
   const chips = el("div", "row");
   const mkChip = (id, label) => {
     const b = el("button", "btn btn-sm" + (filter === id ? " active" : ""), esc(label));
-    b.onclick = () => { App.seasonFixFilter = id; render(); };
+    b.onclick = () => { App.seasonFixFilter = id; renderApp(); };
     chips.appendChild(b);
   };
   mkChip("mine", "My matches");
@@ -3812,476 +3842,906 @@ const MARKET_TABS = [
 ];
 
 async function market(v) {
-  // Three desks: players (free agents + transfers), the scouting desk, and
-  // backroom staff. Thin dispatcher — each sub-screen owns the head + ws.
-  const sub = App.marketTab ?? "players";
-  if (sub === "staff") return marketStaff(v);
-  if (sub === "scouting") return scouting(v, { host: "market" });
-  return marketPlayers(v);
+  v.innerHTML = "";
+  render(html`<${MarketTab} />`, v);
 }
 
-async function marketStaff(v) {
-  const data = await api("/api/staff");
+const ProgressBar = ({ value, invert = false }) => {
+  const cls = invert
+    ? value < 35 ? "good" : value < 65 ? "warn" : "bad"
+    : value < 35 ? "bad" : value < 65 ? "warn" : "good";
+  const cappedValue = Math.max(2, Math.min(100, value));
+  return html`
+    <div class=${`bar ${cls}`} title=${Math.round(value)}>
+      <i style=${{ '--target-width': `${cappedValue}%` }}></i>
+    </div>
+  `;
+};
 
-  v.appendChild(screenHead("Market", {
-    subtabs: MARKET_TABS,
-    active: "staff",
-    onPick: (id) => { App.marketTab = id; render(); },
-  }));
+const MarketHeader = ({ activeTab, onPick, head, windowData }) => {
+  return html`
+    <div class="screen-head">
+      <span class="screen-title">Market</span>
+      <div class="seg">
+        ${MARKET_TABS.map(t => html`
+          <button 
+            class=${`seg-btn ${activeTab === t.id ? "on" : ""}`} 
+            onClick=${() => onPick(t.id)}
+            key=${t.id}
+          >
+            ${t.label}
+          </button>
+        `)}
+      </div>
+      <span class="spacer"></span>
+      ${head && head.balance != null && (() => {
+        const runway = head.runway_weeks == null ? "stable"
+          : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+        const tone = head.runway_weeks === 0 ? "tone-bad"
+          : (head.runway_weeks != null && head.runway_weeks <= 6) ? "tone-warn" : "tone-good";
+        return html`<span class=${`chip ${tone}`}>~${money(head.affordable_wage)}/wk free · ${runway}</span>`;
+      })()}
+      ${windowData && html`
+        <span class=${`chip ${windowData.open ? "tone-good" : "tone-warn"}`}>
+          ${windowData.label} · ${windowData.detail}
+        </span>
+      `}
+    </div>
+  `;
+};
 
-  const ws = el("div", "ws");
-  v.appendChild(ws);
-  const main = el("div", "ws-8 ws-col");
-  const rail = el("div", "ws-4 ws-col");
-  ws.appendChild(main);
-  ws.appendChild(rail);
+const StylePill = ({ player }) => html`
+  <span class="pill-pair">
+    <span class="pill">${player.role}</span>
+    <span class="pill">${player.playstyle}</span>
+  </span>
+`;
 
-  /* -- main ws-8: the free-agent staff pool, filtered by role -------------- */
-  const poolCard = el("div", "card");
-  poolCard.appendChild(el("h2", "",
-    `Staff market <span class="muted" style="font-weight:400">— ${data.pool.length} free agents</span>`));
-  poolCard.appendChild(el("p", "muted",
-    `One shared pool — in a shared world, rival managers hire from the same market. ` +
-    `Hiring replaces your current ${data.roles.map((r) => humanize(r)).join(" / ")} in that role (they return ` +
-    `to the pool). Click a name for the full profile.`));
+const LangChips = ({ langs }) => html`
+  ${(langs || []).map((l, idx) => html`
+    <span class="chip" title="${l.lang} — proficiency ${l.level}" key=${idx}>${l.lang}</span>
+  `)}
+`;
+
+const PlayerSearch = ({ myRoster, triggerRefresh }) => {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const timerRef = useRef(null);
+
+  const performSearch = async (q) => {
+    if (q.trim().length < 2) {
+      setResults([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const r = await api("/api/market/search?q=" + encodeURIComponent(q.trim()));
+      setResults(r.results || []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      performSearch(query);
+    }, 250);
+    return () => clearTimeout(timerRef.current);
+  }, [query]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      performSearch(query);
+    }
+  };
+
+  const handleBuyout = async (p) => {
+    if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}?`)) return;
+    try {
+      const res = await api("/api/actions/buyout", { player_id: p.id });
+      toast(res.message);
+      triggerRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return html`
+    <div class="card">
+      <h2>Find a player</h2>
+      <div class="row">
+        <input 
+          class="field mono player-search-input" 
+          placeholder="search by handle or real name…" 
+          value=${query}
+          onInput=${(e) => setQuery(e.target.value)}
+          onKeyDown=${handleKeyDown}
+        />
+      </div>
+      <div>
+        ${loading && html`<p class="muted">Searching...</p>`}
+        ${!loading && query.trim().length >= 2 && results.length === 0 && html`
+          <p class="muted">no players match</p>
+        `}
+        ${!loading && results.length > 0 && html`
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Role</th>
+                <th class="num">Age</th>
+                <th class="num">OVR</th>
+                <th>Club</th>
+                <th class="num">Price</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${results.map(p => {
+                const price = p.is_free_agent
+                  ? `${money(p.asking_salary)}/wk`
+                  : p.buyout != null ? money(p.buyout)
+                    : p.transfer_ask != null ? money(p.transfer_ask) : "—";
+                const club = p.is_free_agent
+                  ? html`<span class="pill">free agent</span>`
+                  : html`
+                      <span>
+                        <span class="tlink" data-tid=${p.team_id}>${p.team_name}</span>
+                        ${p.mine && html` <span class="pill">yours</span>`}
+                      </span>
+                    `;
+                return html`
+                  <tr key=${p.id}>
+                    <td>
+                      <img class="portrait" src=${p.portrait} alt="" />
+                      <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                      ${p.real_name && html`<span class="muted"> ${p.real_name}</span>`}
+                      ${p.languages && p.languages.length > 0 && html`
+                        <div class="es-langs">
+                          <${LangChips} langs=${p.languages} />
+                        </div>
+                      `}
+                    </td>
+                    <td><${StylePill} player=${p} /></td>
+                    <td class="num">${p.age}</td>
+                    <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
+                    <td>${club}</td>
+                    <td class="num">
+                      <div>${price}</div>
+                      ${p.seller_stance && html`
+                        <div><span class="pill">${p.seller_stance}</span></div>
+                      `}
+                      ${p.ask_breakdown && p.ask_breakdown.length > 0 && html`
+                        <details class="ask-breakdown">
+                          <summary class="chip">Why this price?</summary>
+                          ${p.ask_breakdown.map((b_item, idx) => html`
+                            <div class="rowbar" key=${idx}>
+                              <span>${b_item.label}</span>
+                              <span class="rowbar-val mono">
+                                ${b_item.delta >= 0 ? "+" : "−"}${money(Math.abs(b_item.delta))}
+                              </span>
+                            </div>
+                          `)}
+                        </details>
+                      `}
+                    </td>
+                    <td>
+                      ${p.is_free_agent && html`
+                        <button class="btn btn-sm" onClick=${() => window.openNegotiation({ id: p.id, handle: p.handle })}>Negotiate…</button>
+                      `}
+                      ${!p.mine && p.buyout != null && html`
+                        <button 
+                          class="btn btn-sm" 
+                          title="trigger the buyout clause — the org can't refuse"
+                          onClick=${() => handleBuyout(p)}
+                        >
+                          Buy out
+                        </button>
+                      `}
+                      ${!p.mine && p.transfer_ask != null && html`
+                        <button 
+                          class="btn btn-sm" 
+                          onClick=${() => window.openOffer({
+                            id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
+                            ask_breakdown: p.ask_breakdown, seller_stance: p.seller_stance,
+                          })}
+                        >
+                          Offer…
+                        </button>
+                      `}
+                    </td>
+                  </tr>
+                `;
+              })}
+            </tbody>
+          </table>
+        `}
+      </div>
+    </div>
+  `;
+};
+
+const MarketFilters = ({ players, filters, onChange }) => {
+  const options = (values) => [...new Set(values.filter(Boolean))]
+    .sort((a, b) => String(a).localeCompare(String(b)));
+
+  const handleSelectChange = (key, val) => {
+    let newFilters = { ...filters, [key]: val };
+    if (key === "language" && !val) {
+      newFilters.languageMin = "";
+    }
+    onChange(newFilters);
+  };
+
+  const handleNumberChange = (key, val) => {
+    onChange({ ...filters, [key]: val });
+  };
+
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
+
+  return html`
+    <div class="market-filters">
+      <b class="market-filters-title">Filter free agents</b>
+      
+      <label class="market-filter">
+        <span class="muted">CA stars at most</span>
+        <select class="select" value=${filters.caMax} onChange=${(e) => handleSelectChange("caMax", e.target.value)}>
+          <option value="">No cap</option>
+          ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
+        </select>
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Potential stars at most</span>
+        <select class="select" value=${filters.potentialMax} onChange=${(e) => handleSelectChange("potentialMax", e.target.value)}>
+          <option value="">No cap</option>
+          ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
+        </select>
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Language</span>
+        <select class="select" value=${filters.language} onChange=${(e) => handleSelectChange("language", e.target.value)}>
+          <option value="">Any</option>
+          ${options(players.flatMap((p) => (p.languages || []).map((l) => l.lang))).map(lang => html`
+            <option key=${lang} value=${lang}>${humanize(lang)}</option>
+          `)}
+        </select>
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Language minimum</span>
+        <input 
+          type="number" 
+          class="field mono" 
+          placeholder="0-100" 
+          min="0" 
+          max="100" 
+          step="1"
+          disabled=${!filters.language}
+          value=${filters.languageMin} 
+          onChange=${(e) => handleNumberChange("languageMin", e.target.value)} 
+        />
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Min stream revenue</span>
+        <input 
+          type="number" 
+          class="field mono" 
+          placeholder="cr / wk" 
+          min="0" 
+          step="100"
+          value=${filters.streamRevenueMin} 
+          onChange=${(e) => handleNumberChange("streamRevenueMin", e.target.value)} 
+        />
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Role</span>
+        <select class="select" value=${filters.role} onChange=${(e) => handleSelectChange("role", e.target.value)}>
+          <option value="">Any</option>
+          ${options(players.map((p) => p.role)).map(r => html`
+            <option key=${r} value=${r}>${humanize(r)}</option>
+          `)}
+        </select>
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">Style</span>
+        <select class="select" value=${filters.style} onChange=${(e) => handleSelectChange("style", e.target.value)}>
+          <option value="">Any</option>
+          ${options(players.map((p) => p.playstyle)).map(s => html`
+            <option key=${s} value=${s}>${humanize(s)}</option>
+          `)}
+        </select>
+      </label>
+
+      <label class="market-filter">
+        <span class="muted">IGL</span>
+        <select class="select" value=${filters.igl} onChange=${(e) => handleSelectChange("igl", e.target.value)}>
+          <option value="">Any</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </label>
+
+      ${hasActiveFilters && html`
+        <button class="btn btn-sm market-filter-reset" onClick=${() => onChange({ ...MARKET_FILTER_DEFAULTS })}>
+          Clear filters
+        </button>
+      `}
+    </div>
+  `;
+};
+
+const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
+  const [expandedPlayerId, setExpandedPlayerId] = useState(null);
+  const [swapSelections, setSwapSelections] = useState({});
+
+  const locked = data.window ? !data.window.open : data.phase === "playoffs";
+
+  const handleRowClick = (e, playerId) => {
+    if (e.target.closest("button") || e.target.closest("select") || e.target.closest("option") || e.target.closest(".plink")) return;
+    setExpandedPlayerId(prev => (prev === playerId ? null : playerId));
+  };
+
+  const handleSwapChange = (faId, dropId) => {
+    setSwapSelections(prev => ({ ...prev, [faId]: dropId }));
+  };
+
+  const handleSwapSubmit = async (fa) => {
+    const dropId = swapSelections[fa.id];
+    if (!dropId) {
+      toast("choose a player to drop");
+      return;
+    }
+    const dropPlayer = data.my_roster.find(x => x.id === dropId);
+    const dropName = dropPlayer ? dropPlayer.handle : "player";
+    if (!confirm(`Drop ${dropName} and sign ${fa.handle}?`)) return;
+
+    try {
+      const r = await api("/api/actions/swap", { sign_id: fa.id, drop_id: dropId });
+      toast(r.message);
+      triggerRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return html`
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Role</th>
+          <th class="num">Age</th>
+          <th class="num">OVR</th>
+          <th>Ability</th>
+          <th>Ceiling</th>
+          <th>Languages</th>
+          <th class="num">Stream revenue</th>
+          <th class="num">Asking</th>
+          <th></th>
+          <th>Swap out</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${freeAgents.map(p => {
+          const fogged = p.fog > 0;
+          const isExpanded = expandedPlayerId === p.id;
+          
+          return html`
+            <tr key=${p.id} onClick=${(e) => handleRowClick(e, p.id)} style=${{ cursor: 'pointer' }}>
+              <td>
+                <img class="portrait" src=${p.portrait} alt="" />
+                <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                ${p.locker_room_fit && (() => {
+                  const fit = p.locker_room_fit;
+                  return html`
+                    <div class="muted" title="Existing player history with your current roster">
+                      Room fit ${Math.round(fit.score)}${fit.duos ? ` · ${fit.duos} duo` : ""}${fit.feuds ? ` · ${fit.feuds} feud` : ""}
+                    </div>
+                  `;
+                })()}
+              </td>
+              <td><${StylePill} player=${p} /></td>
+              <td class="num">${p.age}</td>
+              <td class="num" title=${fogged ? `estimate ±${p.fog}` : "exact"}>
+                ${fogged ? `~${Math.round(p.overall)}` : p.overall}
+              </td>
+              <td dangerouslySetInnerHTML=${{ __html: starsRange(p.scout?.ca_stars) }}></td>
+              <td dangerouslySetInnerHTML=${{ __html: starsRange(p.scout?.pa_stars) }}></td>
+              <td>
+                ${p.languages && p.languages.length > 0
+                  ? html`<${LangChips} langs=${p.languages} />`
+                  : html`<span class="muted">—</span>`
+                }
+              </td>
+              <td class="num">${money(p.stream_income)}/wk</td>
+              <td class="num">${money(p.asking_salary)}/wk</td>
+              <td>
+                <button 
+                  class="btn btn-sm" 
+                  disabled=${!p.can_sign}
+                  title=${p.block_reason || "open contract talks — their ask is an opening number"}
+                  onClick=${() => window.openNegotiation({ id: p.id, handle: p.handle })}
+                >
+                  Negotiate…
+                </button>
+              </td>
+              <td>
+                ${locked ? html`
+                  <span class="muted">locked</span>
+                ` : html`
+                  <div style=${{ display: 'flex', gap: '4px' }}>
+                    <select 
+                      class="sel-sm" 
+                      value=${swapSelections[p.id] || ""} 
+                      onChange=${(e) => handleSwapChange(p.id, e.target.value)}
+                    >
+                      <option value="">— drop —</option>
+                      ${data.my_roster.map(mine => html`
+                        <option key=${mine.id} value=${mine.id}>${mine.handle} (${mine.overall})</option>
+                      `)}
+                    </select>
+                    <button class="btn btn-sm" onClick=${() => handleSwapSubmit(p)}>Swap</button>
+                  </div>
+                `}
+              </td>
+            </tr>
+            ${isExpanded && html`
+              <tr key=${`${p.id}-detail`}>
+                <td colspan="11" dangerouslySetInnerHTML=${{ __html: window.attrDetail(p) }}></td>
+              </tr>
+            `}
+          `;
+        })}
+        ${freeAgents.length === 0 && html`
+          <tr>
+            <td colspan="11" class="muted">No free agents match these filters.</td>
+          </tr>
+        `}
+      </tbody>
+    </table>
+  `;
+};
+
+const PlayerRecruitment = ({ data, triggerRefresh }) => {
+  const [filters, setFilters] = useState({ ...MARKET_FILTER_DEFAULTS });
+  
+  const freeAgents = useMemo(() => {
+    return filteredMarketPlayers(data.free_agents, filters);
+  }, [data.free_agents, filters]);
+
+  const filterActive = Object.values(filters).some((value) => value !== "");
+  const count = filterActive ? `${freeAgents.length} of ${data.free_agents.length}` : data.free_agents.length;
+
+  const needs = data.squad_needs;
+  const targets = data.target_suggestions || [];
+  const cw = data.contract_watch || {};
+  const wk = data.wonderkids || [];
+  const chal = data.challengers || [];
+  const rumors = data.rumors || [];
+
+  return html`
+    <div class="ws">
+      <div class="ws-8 ws-col">
+        <${PlayerSearch} myRoster=${data.my_roster} triggerRefresh=${triggerRefresh} />
+        
+        <div class="card">
+          <h2>Free agents <span class="muted" style=${{ fontWeight: 400 }}>— ${count}</span></h2>
+          ${data.market_scouting < 1 && html`
+            <p class="muted">
+              Market coverage ${Math.round(data.market_scouting * 100)}% — estimates only
+              ${data.market_scouting === 0 && "; assign your scout to the market to see ceilings"}.
+            </p>
+          `}
+          
+          <${MarketFilters} 
+            players=${data.free_agents} 
+            filters=${filters} 
+            onChange=${setFilters} 
+          />
+          
+          <p class="muted">
+            Squad ${data.roster_count}/${data.roster_max ?? 5}.
+            ${data.window && !data.window.open 
+              ? data.window.detail 
+              : "Sign to fill a slot, or swap to add + drop in one move."}
+          </p>
+          
+          <div class="card-scroll table-scroll" style=${{ '--scroll-max': '62vh' }}>
+            <${FreeAgentTable} 
+              data=${data} 
+              freeAgents=${freeAgents} 
+              triggerRefresh=${triggerRefresh} 
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div class="ws-4 ws-col">
+        ${needs && html`
+          <div class="card">
+            <h2>Squad intelligence</h2>
+            <div class="es-roles">
+              ${Object.entries(needs.role_counts || {}).map(([role, n]) => {
+                const gap = (needs.gaps || []).includes(role);
+                return html`
+                  <span class=${`pill ${gap ? "elim-pill" : ""}`} key=${role}>
+                    ${role} ${n}
+                  </span>
+                `;
+              })}
+            </div>
+            ${needs.weakest_role && html`
+              <p class="muted">
+                Weakest: ${needs.weakest_role.role} (${needs.weakest_role.quality})
+              </p>
+            `}
+          </div>
+        `}
+        
+        ${data.signing_headroom && data.signing_headroom.balance != null && (() => {
+          const head = data.signing_headroom;
+          const runway = head.runway_weeks == null ? "stable"
+            : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
+          const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
+          return html`
+            <div class="card">
+              <h2>Signing headroom</h2>
+              <div class="es-head">
+                <div>Weekly net <b class=${`mono ${netCls}`}>${money(head.weekly_net)}</b></div>
+                <div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>
+                <div class="muted">${runway}</div>
+              </div>
+            </div>
+          `;
+        })()}
+        
+        ${targets.length > 0 && html`
+          <div class="card">
+            <h2>Suggested signings</h2>
+            ${targets.map(tgt => html`
+              <div class="entity" key=${tgt.id}>
+                <span class="entity-name"><b class="plink" data-pid=${tgt.id}>${tgt.handle}</b></span>
+                <span class="entity-meta">${tgt.role}</span>
+                <b class="entity-num">
+                  ${tgt.quality}
+                  ${!tgt.affordable && html` <span class="muted" title="over budget">✗</span>`}
+                </b>
+              </div>
+            `)}
+          </div>
+        `}
+        
+        ${(cw.expiring_own?.length > 0 || cw.market_watch?.length > 0) && html`
+          <div class="card">
+            <h2>Contract watch</h2>
+            ${(cw.expiring_own || []).map(p => html`
+              <div class="entity" key=${p.id}>
+                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-meta">yours · ${p.role}</span>
+                <b class="entity-num trend-down">${p.weeks_left}w</b>
+              </div>
+            `)}
+            ${(cw.market_watch || []).map(p => html`
+              <div class="entity" key=${p.id}>
+                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-meta">
+                  <span class="tlink" data-tid=${p.team_id}>${p.team}</span> · ${p.role}
+                </span>
+                <b class="entity-num">${p.weeks_left}w</b>
+              </div>
+            `)}
+          </div>
+        `}
+        
+        ${wk.length > 0 && html`
+          <div class="card">
+            <h2>Wonderkids <span class="muted" style=${{ fontWeight: 400 }}>— ≤20</span></h2>
+            ${wk.map(p => html`
+              <div class="entity" key=${p.id}>
+                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-meta">
+                  ${p.age}y · ${p.role} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
+                </span>
+                <b class="entity-num stars">${"★".repeat(Math.round(p.potential_stars))}</b>
+              </div>
+            `)}
+          </div>
+        `}
+        
+        ${chal.length > 0 && html`
+          <div class="card">
+            <h2>Challengers standouts</h2>
+            ${chal.map(p => html`
+              <div class="entity" key=${p.id}>
+                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-meta">
+                  ${p.age}y · ${p.role} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
+                </span>
+                <b class="entity-num">${p.rating.toFixed(2)}</b>
+              </div>
+            `)}
+          </div>
+        `}
+        
+        ${rumors.length > 0 && html`
+          <div class="card">
+            <h2>Rumour mill</h2>
+            <div class="card-scroll" style=${{ '--scroll-max': '260px' }}>
+              ${rumors.map((r, idx) => html`
+                <div class=${`es-rumor muted ${r.kind}`} key=${idx}>
+                  ${r.text}
+                </div>
+              `)}
+            </div>
+          </div>
+        `}
+      </div>
+    </div>
+  `;
+};
+
+const BackroomStaff = ({ data, triggerRefresh }) => {
+  const [activeRole, setActiveRole] = useState("all");
 
   const rolePlural = {
     coach: "Coaches", analyst: "Analysts", physio: "Physios",
     psychologist: "Psychologists", performance_coach: "Performance coaches",
   };
-  // Role filter chips (client-only): "All" plus one per role. Repaints the
-  // tables area in place — no re-fetch, tables keep their sortable headers.
-  let activeRole = "all";
-  const chipRow = el("div", "seg");
-  const chips = [];
-  const mkChip = (id, label) => {
-    const b = el("button", "seg-btn" + (activeRole === id ? " on" : ""), label);
-    b.onclick = () => { activeRole = id; paint(); };
-    chips.push([id, b]);
-    chipRow.appendChild(b);
-  };
-  mkChip("all", "All");
-  for (const role of data.roles) mkChip(role, rolePlural[role] ?? cap(role));
-  poolCard.appendChild(chipRow);
 
-  const tablesBox = el("div", "staff-tables");
-  const paint = () => {
-    for (const [id, b] of chips) b.classList.toggle("on", id === activeRole);
-    tablesBox.innerHTML = "";
-    for (const role of data.roles) {
-      if (activeRole !== "all" && role !== activeRole) continue;
-      const members = data.pool.filter((m) => m.role === role);
-      if (!members.length) continue;
-      tablesBox.appendChild(el("h2", "staff-section-title",
-        `${rolePlural[role] ?? cap(role)} <span class="muted" style="font-weight:400">— ${esc(data.blurbs[role])}</span>`));
-      const t = el("table");
-      t.innerHTML = `<thead><tr><th>Name</th><th class="num">Age</th><th>Region</th>
-        <th>Specialty</th><th>Quality</th><th class="num">Salary</th>
-        <th class="num">Exp</th><th></th></tr></thead>`;
-      const tb = el("tbody");
-      for (const m of members) {
-        const tr = el("tr", "", `
-          <td><b>${slink(m.id, m.name)}</b>${
-            (m.titles ?? []).length ? ` <span class="pill" title="${esc(m.titles.join(", "))}">🏆 ${m.titles.length}</span>` : ""
-          }</td>
-          <td class="num">${m.age}</td>
-          <td>${esc(m.region || "—")}</td>
-          <td title="${esc(m.specialty_blurb || "")}"><span class="pill">${esc(m.specialty || "—")}</span></td>
-          <td>${bar(m.quality)}</td>
-          <td class="num">${money(m.salary)}/wk</td>
-          <td class="num">${m.seasons_experience}s</td>
-          <td><button class="btn btn-sm">Hire</button></td>`);
-        tr.querySelector("button").onclick = async (e) => {
-          e.stopPropagation();
-          const r = await api("/api/actions/hire_staff", { candidate_id: m.id });
-          toast(r.message); refresh(); render();
-        };
-        tb.appendChild(tr);
-      }
-      t.appendChild(tb);
-      const scroll = el("div", "table-scroll");
-      scroll.appendChild(t);
-      tablesBox.appendChild(scroll);
+  const handleHire = async (mId) => {
+    try {
+      const r = await api("/api/actions/hire_staff", { candidate_id: mId });
+      toast(r.message);
+      triggerRefresh();
+    } catch (e) {
+      console.error(e);
     }
-    if (!tablesBox.childElementCount) tablesBox.appendChild(el("p", "muted", "No free agents in this role."));
   };
-  paint();
-  poolCard.appendChild(tablesBox);
-  main.appendChild(poolCard);
 
-  /* -- rail ws-4: current backroom + analytics-tier ladder ----------------- */
-  const backroom = el("div", "card");
-  backroom.appendChild(el("h2", "",
-    `Your backroom <span class="muted" style="font-weight:400">— ${money(data.weekly_cost)}/wk</span>`));
-  for (const role of data.roles) {
-    const hired = data.hired[role];
-    const block = el("div", "");
-    if (hired) {
-      const row = el("div", "entity",
-        `<span class="pill">${humanize(role)}</span> <span class="entity-name"><b>${slink(hired.id, hired.name)}</b></span>`);
-      const rel = el("button", "btn btn-sm", "Release");
-      rel.style.marginLeft = "auto";
-      rel.onclick = async () => {
-        const r = await api("/api/actions/release_staff", { role });
-        toast(r.message); render();
-      };
-      row.appendChild(rel);
-      block.appendChild(row);
-      block.appendChild(el("div", "muted",
-        `q${Math.round(hired.quality)} · ${esc(hired.specialty || "—")} · ${money(hired.salary)}/wk`));
-      const fx = (hired.effects || []);
-      if (fx.length) {
-        block.appendChild(el("div", "",
-          fx.map((e) => `<span class="chip tone-good">${esc(e)}</span>`).join(" ")));
-      }
+  const handleRelease = async (role) => {
+    try {
+      const r = await api("/api/actions/release_staff", { role });
+      toast(r.message);
+      triggerRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const renderedRoles = activeRole === "all" ? data.roles : [activeRole];
+  const hasFA = data.pool.some(m => activeRole === "all" || m.role === activeRole);
+
+  return html`
+    <div class="ws">
+      <div class="ws-8 ws-col">
+        <div class="card">
+          <h2>
+            Staff market <span class="muted" style=${{ fontWeight: 400 }}>— ${data.pool.length} free agents</span>
+          </h2>
+          <p class="muted">
+            One shared pool — in a shared world, rival managers hire from the same market. 
+            Hiring replaces your current ${data.roles.map(r => humanize(r)).join(" / ")} in that role (they return to the pool). 
+            Click a name for the full profile.
+          </p>
+
+          <div class="seg">
+            <button class=${`seg-btn ${activeRole === "all" ? "on" : ""}`} onClick=${() => setActiveRole("all")}>All</button>
+            ${data.roles.map(role => html`
+              <button 
+                class=${`seg-btn ${activeRole === role ? "on" : ""}`} 
+                onClick=${() => setActiveRole(role)}
+                key=${role}
+              >
+                ${rolePlural[role] || humanize(role)}
+              </button>
+            `)}
+          </div>
+
+          <div class="staff-tables">
+            ${renderedRoles.map(role => {
+              const members = data.pool.filter(m => m.role === role);
+              if (members.length === 0) return null;
+              
+              return html`
+                <div key=${role}>
+                  <h2 class="staff-section-title">
+                    ${rolePlural[role] || humanize(role)} 
+                    <span class="muted" style=${{ fontWeight: 400 }}> — ${data.blurbs[role]}</span>
+                  </h2>
+                  <div class="table-scroll">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th class="num">Age</th>
+                          <th>Region</th>
+                          <th>Specialty</th>
+                          <th>Quality</th>
+                          <th class="num">Salary</th>
+                          <th class="num">Exp</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${members.map(m => html`
+                          <tr key=${m.id}>
+                            <td>
+                              <b class="slink" data-sid=${m.id}>${m.name}</b>
+                              ${m.titles && m.titles.length > 0 && html`
+                                <span class="pill" title=${m.titles.join(", ")}>🏆 ${m.titles.length}</span>
+                              `}
+                            </td>
+                            <td class="num">${m.age}</td>
+                            <td>${m.region || "—"}</td>
+                            <td title=${m.specialty_blurb || ""}><span class="pill">${m.specialty || "—"}</span></td>
+                            <td><${ProgressBar} value=${m.quality} /></td>
+                            <td class="num">${money(m.salary)}/wk</td>
+                            <td class="num">${m.seasons_experience}s</td>
+                            <td>
+                              <button class="btn btn-sm" onClick=${() => handleHire(m.id)}>Hire</button>
+                            </td>
+                          </tr>
+                        `)}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              `;
+            })}
+            ${!hasFA && html`<p class="muted">No free agents in this role.</p>`}
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-4 ws-col">
+        <div class="card">
+          <h2>
+            Your backroom <span class="muted" style=${{ fontWeight: 400 }}>— ${money(data.weekly_cost)}/wk</span>
+          </h2>
+          ${data.roles.map(role => {
+            const hired = data.hired[role];
+            return html`
+              <div key=${role} style=${{ marginBottom: '12px' }}>
+                ${hired ? html`
+                  <div>
+                    <div class="entity" style=${{ display: 'flex', alignItems: 'center' }}>
+                      <span class="pill">${humanize(role)}</span>
+                      <span class="entity-name">
+                        <b class="slink" data-sid=${hired.id}>${hired.name}</b>
+                      </span>
+                      <button class="btn btn-sm" style=${{ marginLeft: 'auto' }} onClick=${() => handleRelease(role)}>Release</button>
+                    </div>
+                    <div class="muted">
+                      q${Math.round(hired.quality)} · ${hired.specialty || "—"} · ${money(hired.salary)}/wk
+                    </div>
+                    ${hired.effects && hired.effects.length > 0 && html`
+                      <div style=${{ marginTop: '4px' }}>
+                        ${hired.effects.map((e, idx) => html`
+                          <span class="chip tone-good" key=${idx} style=${{ marginRight: '4px' }}>${e}</span>
+                        `)}
+                      </div>
+                    `}
+                  </div>
+                ` : html`
+                  <div>
+                    <div class="entity">
+                      <span class="pill">${humanize(role)}</span>
+                      <span class="entity-meta">vacant</span>
+                    </div>
+                    <div class="muted">${data.blurbs[role]}</div>
+                  </div>
+                `}
+              </div>
+            `;
+          })}
+        </div>
+
+        ${data.analytics && data.analytics.tier != null && (() => {
+          const an = data.analytics;
+          const pct = Math.max(6, Math.min(100, (an.tier / 3) * 100));
+          return html`
+            <div class="card">
+              <h2>Analytics department</h2>
+              <div class="rowbar">
+                <span class="muted">Tier</span>
+                <span class="bar"><i style=${{ '--target-width': `${pct}%` }}></i></span>
+                <span class="rowbar-val">${an.tier}/3</span>
+              </div>
+              <p><b>${an.label || "—"}</b></p>
+              <p class="muted">
+                ${an.next_unlock ? `Next unlock: ${an.next_unlock}` : "Deepest stat views unlocked."}
+              </p>
+            </div>
+          `;
+        })()}
+      </div>
+    </div>
+  `;
+};
+
+const MarketTab = () => {
+  const [marketTab, setMarketTab] = useState(App.marketTab ?? "players");
+  const [data, setData] = useState(null);
+  const [staffData, setStaffData] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  useEffect(() => {
+    App.marketTab = marketTab;
+  }, [marketTab]);
+
+  useEffect(() => {
+    if (marketTab === "players") {
+      api("/api/market").then(setData).catch(console.error);
+    } else if (marketTab === "staff") {
+      api("/api/staff").then(setStaffData).catch(console.error);
+    }
+  }, [marketTab, refreshTrigger]);
+
+  const triggerRefresh = () => {
+    if (window.refresh) {
+      window.refresh().then(() => {
+        setRefreshTrigger(prev => prev + 1);
+      });
     } else {
-      block.appendChild(el("div", "entity",
-        `<span class="pill">${humanize(role)}</span> <span class="entity-meta">vacant</span>`));
-      block.appendChild(el("div", "muted", esc(data.blurbs[role])));
+      setRefreshTrigger(prev => prev + 1);
     }
-    backroom.appendChild(block);
-  }
-  rail.appendChild(backroom);
-
-  // Analytics-tier ladder: how deep the stat views go, and what unlocks next.
-  const an = data.analytics || {};
-  if (an.tier != null) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Analytics department"));
-    c.appendChild(el("div", "rowbar",
-      `<span class="muted">Tier</span>` +
-      `<span class="bar"><i style="width:${Math.max(6, Math.min(100, (an.tier / 3) * 100))}%"></i></span>` +
-      `<span class="rowbar-val">${an.tier}/3</span>`));
-    c.appendChild(el("p", "", `<b>${esc(an.label ?? "—")}</b>`));
-    c.appendChild(el("p", "muted",
-      an.next_unlock ? `Next unlock: ${esc(an.next_unlock)}` : "Deepest stat views unlocked."));
-    rail.appendChild(c);
-  }
-}
-
-// Search any player league-wide by handle/real name; act on the result
-// (Sign a free agent, open the package-offer flow on a rival).
-function playerSearchCard() {
-  const card = el("div", "card");
-  card.innerHTML = `<h2>Find a player</h2>`;
-  const row = el("div", "row", "");
-  const inp = el("input", "field mono player-search-input");
-  inp.placeholder = "search by handle or real name…";
-  row.appendChild(inp);
-  card.appendChild(row);
-  const box = el("div", "");
-  card.appendChild(box);
-  let timer = null, seq = 0;
-  const run = async () => {
-    const q = inp.value.trim();
-    const my = ++seq;
-    if (q.length < 2) { box.innerHTML = ""; return; }
-    let r;
-    try { r = await api("/api/market/search?q=" + encodeURIComponent(q)); }
-    catch { return; }
-    if (my !== seq) return; // a newer query superseded this one
-    box.innerHTML = "";
-    if (!r.results.length) {
-      box.appendChild(el("p", "muted", "no players match"));
-      return;
-    }
-    const t = el("table");
-    t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
-      <th class="num">OVR</th><th>Club</th><th class="num">Price</th><th data-nosort></th></tr></thead>`;
-    const tb = el("tbody");
-    for (const p of r.results) {
-      const price = p.is_free_agent
-        ? `${money(p.asking_salary)}/wk`
-        : p.buyout != null ? money(p.buyout)
-          : p.transfer_ask != null ? money(p.transfer_ask) : "—";
-      const club = p.is_free_agent
-        ? '<span class="pill">free agent</span>'
-        : `${tlink(p.team_id, p.team_name)}${p.mine ? ' <span class="pill">yours</span>' : ""}`;
-      const langs = langChips(p.languages);
-      const tr = el("tr", "", `
-        <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>
-          ${p.real_name ? `<span class="muted"> ${esc(p.real_name)}</span>` : ""}${
-            langs ? `<div class="es-langs">${langs}</div>` : ""}</td>
-        <td>${stylePill(p)}</td>
-        <td class="num">${p.age}</td>
-        <td class="num">${p.fogged ? "~" : ""}${p.overall}</td>
-        <td>${club}</td>
-        <td class="num">${price}${p.seller_stance ? `<div><span class="pill">${esc(p.seller_stance)}</span></div>` : ""}${askBreakdown(p.ask_breakdown)}</td>
-        <td data-act></td>`);
-      const actCell = tr.querySelector("[data-act]");
-      if (p.is_free_agent) {
-        const b = el("button", "btn btn-sm", "Negotiate…");
-        b.onclick = () => openNegotiation({ id: p.id, handle: p.handle });
-        actCell.appendChild(b);
-      } else if (!p.mine && p.buyout != null) {
-        const b = el("button", "btn btn-sm", "Buy out");
-        b.title = "trigger the buyout clause — the org can't refuse";
-        b.onclick = async () => {
-          if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}?`)) return;
-          const res = await api("/api/actions/buyout", { player_id: p.id });
-          toast(res.message); refresh(); render();
-        };
-        actCell.appendChild(b);
-      } else if (!p.mine && p.transfer_ask != null) {
-        const b = el("button", "btn btn-sm", "Offer…");
-        b.onclick = () => openOffer({
-          id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
-          ask_breakdown: p.ask_breakdown, seller_stance: p.seller_stance,
-        });
-        actCell.appendChild(b);
-      }
-      tb.appendChild(tr);
-    }
-    t.appendChild(tb);
-    box.appendChild(t);
   };
-  inp.oninput = () => { clearTimeout(timer); timer = setTimeout(run, 250); };
-  inp.onkeydown = (e) => { if (e.key === "Enter") { clearTimeout(timer); run(); } };
-  return card;
-}
 
-async function marketPlayers(v) {
-  const data = await api("/api/market");
-  const head = data.signing_headroom || {};
-  const filters = marketFilters();
-  const freeAgents = filteredMarketPlayers(data.free_agents, filters);
+  const handleTabPick = (tabId) => {
+    setMarketTab(tabId);
+  };
 
-  // Screen head: [Players | Staff] + an optional signing-headroom chip
-  // (defensive — hidden if the payload doesn't carry finances).
-  const right = [];
-  if (head.balance != null) {
-    const runway = head.runway_weeks == null ? "stable"
-      : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
-    const tone = head.runway_weeks === 0 ? "tone-bad"
-      : (head.runway_weeks != null && head.runway_weeks <= 6) ? "tone-warn" : "tone-good";
-    right.push(el("span", `chip ${tone}`,
-      `~${money(head.affordable_wage)}/wk free · ${runway}`));
-  }
-  if (data.window) {
-    right.push(el("span", `chip ${data.window.open ? "tone-good" : "tone-warn"}`,
-      `${esc(data.window.label)} · ${esc(data.window.detail)}`));
-  }
-  v.appendChild(screenHead("Market", {
-    subtabs: MARKET_TABS,
-    active: "players",
-    onPick: (id) => { App.marketTab = id; render(); },
-    right,
-  }));
-
-  const ws = el("div", "ws");
-  v.appendChild(ws);
-  const main = el("div", "ws-8 ws-col");
-  const rail = el("div", "ws-4 ws-col");
-  ws.appendChild(main);
-  ws.appendChild(rail);
-
-  /* -- main ws-8: search card, then the free-agent table (the primary object) */
-  main.appendChild(playerSearchCard());
-
-  const card = el("div", "card");
-  const filterActive = Object.values(filters).some((value) => value !== "");
-  const count = filterActive ? `${freeAgents.length} of ${data.free_agents.length}` : data.free_agents.length;
-  card.innerHTML = `<h2>Free agents <span class="muted" style="font-weight:400">— ${count}</span></h2>` +
-    (data.market_scouting < 1
-      ? `<p class="muted">Market coverage ${Math.round(data.market_scouting * 100)}% —
-         numbers below are estimates${data.market_scouting === 0 ? "; assign your scout to the market to see ceilings" : ""}.</p>`
-      : "");
-  card.appendChild(marketFilterControls(data.free_agents, filters));
-  const cap = data.roster_max ?? 5;
-  card.appendChild(el("p", "muted",
-    `Squad ${data.roster_count}/${cap}. ${data.window && !data.window.open
-      ? esc(data.window.detail) : "Sign to fill a slot, or swap to add + drop in one move."}`));
-  const t = el("table");
-  t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
-    <th class="num">OVR</th><th>Ability</th><th>Ceiling</th>
-    <th>Languages</th><th class="num">Stream revenue</th><th class="num">Asking</th><th></th><th>Swap out</th></tr></thead>`;
-  const tb = el("tbody");
-  const locked = data.window ? !data.window.open : data.phase === "playoffs";
-  for (const p of freeAgents) {
-    const fogged = p.fog > 0;
-    const langs = langChips(p.languages);
-    const fit = p.locker_room_fit;
-    const roomFit = fit ? `<div class="muted" title="Existing player history with your current roster">Room fit ${Math.round(fit.score)}${fit.duos ? ` · ${fit.duos} duo` : ""}${fit.feuds ? ` · ${fit.feuds} feud` : ""}</div>` : "";
-    const tr = el("tr", "", `
-      <td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${roomFit}</td><td>${stylePill(p)}</td>
-      <td class="num">${p.age}</td>
-      <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${fogged ? "~" + Math.round(p.overall) : p.overall}</td>
-      <td>${starsRange(p.scout?.ca_stars)}</td>
-      <td>${starsRange(p.scout?.pa_stars)}</td>
-      <td>${langs || '<span class="muted">—</span>'}</td>
-      <td class="num">${money(p.stream_income)}/wk</td>
-      <td class="num">${money(p.asking_salary)}/wk</td>
-      <td><button class="btn btn-sm" data-act="sign" ${p.can_sign ? "" : "disabled"}
-        title="${p.block_reason || "open contract talks — their ask is an opening number"}">Negotiate…</button></td>
-      <td data-swap></td>`);
-    tr.querySelector('[data-act="sign"]').onclick = () => {
-      // Signing is a negotiation now — the ask column is their OPENING
-      // number, not the price.
-      openNegotiation({ id: p.id, handle: p.handle });
-    };
-    // Swap: pick one of your players to drop, then sign this FA in one move.
-    const swapCell = tr.querySelector("[data-swap]");
-    if (locked) {
-      swapCell.appendChild(el("span", "muted", "locked"));
-    } else {
-      const sel = el("select", "sel-sm");
-      sel.appendChild(el("option", "", "— drop —"));
-      for (const mine of data.my_roster) {
-        const o = el("option", "", `${mine.handle} (${mine.overall})`);
-        o.value = mine.id;
-        sel.appendChild(o);
+  if (marketTab === "scouting") {
+    const containerRef = useRef(null);
+    useEffect(() => {
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
+        window.scouting(containerRef.current, { host: "market" });
       }
-      const go = el("button", "btn btn-sm", "Swap");
-      go.onclick = async () => {
-        if (!sel.value) { toast("choose a player to drop"); return; }
-        const dropName = data.my_roster.find(x => x.id === sel.value)?.handle ?? "player";
-        if (!confirm(`Drop ${dropName} and sign ${p.handle}?`)) return;
-        const r = await api("/api/actions/swap", { sign_id: p.id, drop_id: sel.value });
-        toast(r.message); refresh(); render();
-      };
-      swapCell.append(sel, go);
-    }
-    let detail = null;
-    tr.style.cursor = "pointer";
-    tr.onclick = (e) => {
-      if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT" || e.target.tagName === "OPTION") return;
-      // isConnected: the sort delegate removes detail rows before sorting,
-      // so a stale reference means "recreate", not "collapse".
-      if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
-      detail = el("tr", "", `<td colspan="11">${attrDetail(p)}</td>`);
-      detail.dataset.detail = "1";
-      tr.after(detail);
-    };
-    tb.appendChild(tr);
-  }
-  if (!freeAgents.length) {
-    tb.appendChild(el("tr", "", '<td colspan="11" class="muted">No free agents match these filters.</td>'));
-  }
-  t.appendChild(tb);
-  // The full free-agent list (~90 rows) scrolls INSIDE its panel — vertically
-  // (bounded height, sticky header) and horizontally — so it never grows the
-  // page into a giant scroll. Keeps the advisory rail in view alongside it.
-  const tScroll = el("div", "card-scroll table-scroll");
-  tScroll.style.setProperty("--scroll-max", "62vh");
-  tScroll.appendChild(t);
-  card.appendChild(tScroll);
-  main.appendChild(card);
-
-  /* -- rail ws-4: the advisory cards that used to stack above the table ----- */
-  const needs = data.squad_needs, targets = data.target_suggestions || [];
-  const cw = data.contract_watch || {};
-
-  // Squad intelligence: role balance + the thinnest position.
-  if (needs) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Squad intelligence"));
-    const rolebar = el("div", "es-roles");
-    for (const [role, n] of Object.entries(needs.role_counts || {})) {
-      const gap = (needs.gaps || []).includes(role);
-      rolebar.appendChild(el("span", "pill" + (gap ? " elim-pill" : ""), `${role} ${n}`));
-    }
-    c.appendChild(rolebar);
-    if (needs.weakest_role) {
-      c.appendChild(el("p", "muted",
-        `Weakest: ${esc(needs.weakest_role.role)} (${needs.weakest_role.quality})`));
-    }
-    rail.appendChild(c);
+    }, []);
+    return html`
+      <div>
+        <${MarketHeader} activeTab="scouting" onPick=${handleTabPick} />
+        <div ref=${containerRef}></div>
+      </div>
+    `;
   }
 
-  // Signing headroom: the wage the org can absorb + runway.
-  if (head.balance != null) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Signing headroom"));
-    const box = el("div", "es-head");
-    const runway = head.runway_weeks == null ? "stable"
-      : head.runway_weeks === 0 ? "insolvent now" : `${head.runway_weeks}w runway`;
-    const netCls = head.weekly_net >= 0 ? "trend-up" : "trend-down";
-    box.innerHTML =
-      `<div>Weekly net <b class="mono ${netCls}">${money(head.weekly_net)}</b></div>` +
-      `<div>Affordable wage <b class="mono">${money(head.affordable_wage)}/wk</b></div>` +
-      `<div class="muted">${runway}</div>`;
-    c.appendChild(box);
-    rail.appendChild(c);
+  if (marketTab === "staff") {
+    if (!staffData) return html`<div class="loading">Loading staff market...</div>`;
+    return html`
+      <div>
+        <${MarketHeader} activeTab="staff" onPick=${handleTabPick} />
+        <${BackroomStaff} data=${staffData} triggerRefresh=${triggerRefresh} />
+      </div>
+    `;
   }
 
-  // Suggested signings: quick fits for the thin spots.
-  if (targets.length) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Suggested signings"));
-    for (const tgt of targets) {
-      c.appendChild(el("div", "entity",
-        `<span class="entity-name"><b>${plink(tgt.id, tgt.handle)}</b></span>` +
-        `<span class="entity-meta">${esc(tgt.role)}</span>` +
-        `<b class="entity-num">${tgt.quality}${tgt.affordable ? "" : ' <span class="muted" title="over budget">✗</span>'}</b>`));
-    }
-    rail.appendChild(c);
-  }
+  if (!data) return html`<div class="loading">Loading player market...</div>`;
 
-  // Contract watch: your expiries (renewal urgency) + rivals nearing free agency.
-  const own = cw.expiring_own || [], watch = cw.market_watch || [];
-  if (own.length || watch.length) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Contract watch"));
-    for (const p of own) {
-      c.appendChild(el("div", "entity",
-        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
-        `<span class="entity-meta">yours · ${esc(p.role)}</span>` +
-        `<b class="entity-num trend-down">${p.weeks_left}w</b>`));
-    }
-    for (const p of watch) {
-      c.appendChild(el("div", "entity",
-        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
-        `<span class="entity-meta">${tlink(p.team_id, p.team)} · ${esc(p.role)}</span>` +
-        `<b class="entity-num">${p.weeks_left}w</b>`));
-    }
-    rail.appendChild(c);
-  }
-
-  // Wonderkids: the league-wide "next big thing" watch (≤20).
-  const wk = data.wonderkids || [], chal = data.challengers || [];
-  if (wk.length) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", `Wonderkids <span class="muted" style="font-weight:400">— ≤20</span>`));
-    for (const p of wk) {
-      c.appendChild(el("div", "entity",
-        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
-        `<span class="entity-meta">${p.age}y · ${esc(p.role)} · ${tlink(p.team_id, p.team)}</span>` +
-        `<b class="entity-num stars">${"★".repeat(Math.round(p.potential_stars))}</b>`));
-    }
-    rail.appendChild(c);
-  }
-
-  // Challengers standouts: the region's tier-2 form book.
-  if (chal.length) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Challengers standouts"));
-    for (const p of chal) {
-      c.appendChild(el("div", "entity",
-        `<span class="entity-name"><b>${plink(p.id, p.handle)}</b></span>` +
-        `<span class="entity-meta">${p.age}y · ${esc(p.role)} · ${tlink(p.team_id, p.team)}</span>` +
-        `<b class="entity-num">${p.rating.toFixed(2)}</b>`));
-    }
-    rail.appendChild(c);
-  }
-
-  // Rumour mill: plain-text whispers (server sends no ids). The long list
-  // scrolls inside its card so the rail stays near one viewport.
-  const rumors = data.rumors || [];
-  if (rumors.length) {
-    const c = el("div", "card");
-    c.appendChild(el("h2", "", "Rumour mill"));
-    const scroll = el("div", "card-scroll");
-    scroll.style.setProperty("--scroll-max", "260px");
-    for (const r of rumors) {
-      scroll.appendChild(el("div", `es-rumor muted ${r.kind}`, esc(r.text)));
-    }
-    c.appendChild(scroll);
-    rail.appendChild(c);
-  }
-}
-
-// Package-deal builder: offer any of my players + cash (either way) for a rival.
-async function openOffer(target) {
+  return html`
+    <div>
+      <${MarketHeader} 
+        activeTab="players" 
+        onPick=${handleTabPick} 
+        head=${data.signing_headroom} 
+        windowData=${data.window} 
+      />
+      <${PlayerRecruitment} data=${data} triggerRefresh=${triggerRefresh} />
+    </div>
+  `;
+};
+\n\nasync function openOffer(target) {
   let mine = [];
   try {
     const mkt = await api("/api/market");
@@ -4366,7 +4826,7 @@ async function openOffer(target) {
         cash_out: co,
         cash_in: ci,
       });
-      toast(r.message); close(); refresh(); render();
+      toast(r.message); close(); refresh(); renderApp();
     } catch { /* api() already toasted the reason */ }
   };
   const actions = el("div", "row");
@@ -4468,7 +4928,7 @@ async function openNegotiation(target) {
       });
     } catch { return; } // error keeps the table open; reason toasted
     if (r.status === "accepted") {
-      toast(r.message); close(); refresh(); render();
+      toast(r.message); close(); refresh(); renderApp();
       return;
     }
     if (r.status === "collapsed") {
@@ -4529,7 +4989,7 @@ async function scouting(v, opts = {}) {
       sub: "One scout · one assignment",
       subtabs: MARKET_TABS,
       active: "scouting",
-      onPick: (id) => { App.marketTab = id; render(); },
+      onPick: (id) => { App.marketTab = id; renderApp(); },
     }));
   } else {
     v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
@@ -4598,7 +5058,7 @@ async function scouting(v, opts = {}) {
     if (!sel.value) return;
     const r = await api("/api/actions/scout", { team_id: sel.value });
     toast(r.message);
-    render();
+    renderApp();
   };
   coverageChoice.appendChild(sel);
   choices.appendChild(coverageChoice);
@@ -4623,7 +5083,7 @@ async function scouting(v, opts = {}) {
       if (!fsel.value) return;
       const r = await api("/api/actions/scout", { fixture_id: fsel.value });
       toast(r.message);
-      render();
+      renderApp();
     };
   }
   matchChoice.appendChild(fsel);
@@ -4654,7 +5114,7 @@ async function scouting(v, opts = {}) {
         b.onclick = async () => {
           const res = await api("/api/actions/scout", { player_id: p.id });
           toast(res.message);
-          render();
+          renderApp();
         };
         pbox.appendChild(b);
       }
@@ -4811,7 +5271,7 @@ async function scouting(v, opts = {}) {
       `Scout next week's opponent — ${esc(planningOpp.name)} (W${planningOpp.week})`);
     b.onclick = async () => {
       const r = await api("/api/actions/scout", { team_id: planningOpp.id });
-      toast(r.message); render();
+      toast(r.message); renderApp();
     };
     addQuick(b);
   }
@@ -4819,7 +5279,7 @@ async function scouting(v, opts = {}) {
     "Sweep the free-agent market");
   bm.onclick = async () => {
     const r = await api("/api/actions/scout", { team_id: "market" });
-    toast(r.message); render();
+    toast(r.message); renderApp();
   };
   addQuick(bm);
   rail.appendChild(qa);
@@ -4885,12 +5345,12 @@ async function stats(v) {
 
   // Right slot: league-tier segmented control + (tier-3) split picker. Both
   // handlers touch only App.statsSplit / App.statsTier, so App.statsTab
-  // survives the render() they trigger — the sub-tab never resets.
+  // survives the renderApp() they trigger — the sub-tab never resets.
   const right = [];
   const tierSeg = el("div", "seg");
   const mkTier = (label, tval) => {
     const b = el("button", "seg-btn" + (lgTier === tval ? " on" : ""), label);
-    b.onclick = () => { App.statsTier = tval; render(); };
+    b.onclick = () => { App.statsTier = tval; renderApp(); };
     tierSeg.appendChild(b);
   };
   mkTier("Tier 1", 1);
@@ -4899,7 +5359,7 @@ async function stats(v) {
   if (data.split_keys) {
     const splitRow = el("div", "row");
     const seasonBtn = el("button", "btn btn-sm" + (split ? "" : " active"), "Season");
-    seasonBtn.onclick = () => { App.statsSplit = null; render(); };
+    seasonBtn.onclick = () => { App.statsSplit = null; renderApp(); };
     splitRow.appendChild(seasonBtn);
     const mkSel = (label, kind, keys) => {
       const sel = el("select");
@@ -4910,7 +5370,7 @@ async function stats(v) {
         if (split && split.kind === kind && split.key === k) o.selected = true;
         sel.appendChild(o);
       }
-      sel.onchange = () => { if (sel.value) { App.statsSplit = { kind, key: sel.value }; render(); } };
+      sel.onchange = () => { if (sel.value) { App.statsSplit = { kind, key: sel.value }; renderApp(); } };
       return sel;
     };
     splitRow.appendChild(mkSel("— by map —", "map", data.split_keys.maps));
@@ -4922,7 +5382,7 @@ async function stats(v) {
     sub: `Season ${App.state.season} · analytics tier ${tier}`,
     subtabs: STATS_TABS,
     active: sub,
-    onPick: (id) => { App.statsTab = id; render(); },
+    onPick: (id) => { App.statsTab = id; renderApp(); },
     right,
   }));
   const ws = el("div", "ws");
@@ -5458,263 +5918,455 @@ const FACILITY_LABELS = {
 };
 
 async function finances(v) {
-  const data = await api("/api/finances");
-  const b = data.breakdown;
-
-  v.appendChild(screenHead("Finances", {
-    sub: `${money(data.balance)} banked · net ${b.net >= 0 ? "+" : ""}${money(b.net)}/wk`,
-  }));
-  const ws = el("div", "ws");
-  v.appendChild(ws);
-  const main = el("div", "ws-7 ws-col");
-  const rail = el("div", "ws-5 ws-col");
-  ws.appendChild(main);
-  ws.appendChild(rail);
-
-  // Objective chips (shared by active deals + market offers): visible label +
-  // bonus, tone from met/live-status, tip from the server's status detail.
-  const objChips = (objs) => (objs ?? [])
-    .map((o) => {
-      const mark = o.met === true ? "✓ " : o.met === false ? "✗ " : "";
-      let cls = o.met === true ? "good" : o.met === false ? "bad" : "";
-      let prog = "";
-      // Undecided objectives show their live in-season status (server aid).
-      if (o.met == null && o.status) {
-        const st = o.status.state;
-        cls = st === "achieved" || st === "on_track" ? "good"
-          : st === "missed" ? "bad" : "warn";
-        prog = ` · ${st.replace("_", " ")}`;
-      }
-      const tip = o.status?.detail || money(o.bonus);
-      return `<span class="pill obj ${cls}" title="${esc(tip)}">${mark}${esc(o.label)} → ${money(o.bonus)}${prog}</span>`;
-    })
-    .join(" ");
-
-  /* -- main ws-7: sponsorship slots (restructured — state chip + brand +
-     terms + objective chips + action row per slot; no <br> layout) --------- */
-  const slotsCard = el("div", "card");
-  slotsCard.appendChild(el("h2", "",
-    `Sponsorships <span class="muted" style="font-weight:400">— marketability ${data.marketability ?? "?"}</span>`));
-  for (const slot of ["title", "jersey", "peripheral", "stream", "apparel"]) {
-    const s = data.slots[slot];
-    if (!s) continue;
-    const block = el("div", "slot-row");
-    let stateChip, brand;
-    if (s.deal) {
-      stateChip = `<span class="chip tone-good">active</span>`;
-      brand = `<b>${esc(s.deal.name)}</b> <span class="chip">${esc(s.deal.kind)}</span>`;
-    } else if (!s.unlocked) {
-      stateChip = `<span class="chip">locked</span>`;
-      brand = `<span class="muted">${esc(s.locked_reason ?? "unavailable")}</span>`;
-    } else {
-      stateChip = `<span class="chip tone-info">open</span>`;
-      brand = `<span class="muted">no active deal — ${s.market.length ? "offers below" : "no suitors yet"}</span>`;
-    }
-    block.appendChild(el("div", "row",
-      `${stateChip}<span class="microlabel">${esc(SLOT_LABELS[slot] ?? slot)}</span> ${brand}`));
-    if (s.deal) {
-      block.appendChild(el("div", "row", `<span class="muted">${esc(dealLine(s.deal))}</span>`));
-      const oc = objChips(s.objective_labels_deal);
-      if (oc) block.appendChild(el("div", "row offer-row", oc));
-    }
-    slotsCard.appendChild(block);
-
-    // Legacy single-offer (old saves).
-    if (s.offer) {
-      const box = el("div", "slot-row");
-      box.appendChild(el("div", "row",
-        `<span class="chip tone-info">offer</span><b>${esc(s.offer.name)}</b> ` +
-        `<span class="chip">${esc(s.offer.kind)}</span> ` +
-        `<span class="muted">${esc(dealLine(s.offer))} — expires if unanswered this week</span>`));
-      const actions = el("div", "row offer-row");
-      const yes = el("button", "btn btn-primary btn-sm", "Accept");
-      yes.onclick = async () => {
-        const r = await api("/api/actions/sponsor", { slot, accept: true });
-        toast(r.message); refresh(); render();
-      };
-      const no = el("button", "btn btn-sm", "Decline");
-      no.onclick = async () => {
-        const r = await api("/api/actions/sponsor", { slot, accept: false });
-        toast(r.message); render();
-      };
-      actions.appendChild(yes);
-      actions.appendChild(no);
-      box.appendChild(actions);
-      slotsCard.appendChild(box);
-    }
-
-    // The market: competing brands, pick a payment structure.
-    for (const o of s.market ?? []) {
-      const box = el("div", "slot-row");
-      const relTag = o.relation > 55 ? " · warm relations" : o.relation < 45 ? " · cool relations" : "";
-      box.appendChild(el("div", "row",
-        `<span class="chip tone-info">offer</span><b>${esc(o.brand)}</b> ` +
-        `<span class="muted">${o.weeks}w · until wk ${o.expires_week}${esc(relTag)}</span>`));
-      const oc = objChips(o.objective_labels);
-      if (oc) box.appendChild(el("div", "row offer-row", oc));
-      const actions = el("div", "row offer-row");
-      const structures = [
-        ["upfront", `${money(o.upfront.signing_bonus)} now + ${money(o.upfront.weekly)}/wk`],
-        ["steady", `${money(o.steady.weekly)}/wk`],
-        ["performance", `${money(o.performance.weekly)}/wk + ${money(o.performance.per_win)}/win`],
-      ];
-      for (const [structure, label] of structures) {
-        const btn = el("button", "btn btn-sm", `${structure}: ${label}`);
-        btn.disabled = !!s.deal;
-        btn.title = s.deal ? "slot occupied" : "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4";
-        btn.onclick = async () => {
-          const r = await api("/api/actions/sponsor", { slot, accept: true, brand: o.brand, structure });
-          toast(r.message); refresh(); render();
-        };
-        actions.appendChild(btn);
-      }
-      const no = el("button", "btn btn-sm", "✕");
-      no.title = "decline (the brand remembers)";
-      no.onclick = async () => {
-        const r = await api("/api/actions/sponsor", { slot, accept: false, brand: o.brand });
-        toast(r.message); render();
-      };
-      actions.appendChild(no);
-      box.appendChild(actions);
-      slotsCard.appendChild(box);
-    }
-  }
-  main.appendChild(slotsCard);
-
-  /* -- main ws-7: facilities ------------------------------------------------- */
-  const facCard = el("div", "card");
-  facCard.appendChild(el("h2", "", "Facilities"));
-  for (const name of ["training_center", "analytics_suite", "marketing_office"]) {
-    const f = data.facilities[name];
-    if (!f) continue;
-    const row = el("div", "row facility-row");
-    row.appendChild(el("span", "",
-      `<b>${esc(FACILITY_LABELS[name])}</b> ` +
-      `<span class="muted">level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span>`));
-    row.appendChild(el("span", "spacer"));
-    if (f.next_cost != null) {
-      const affordable = data.balance >= f.next_cost;
-      const btn = el("button", "btn btn-sm", `Upgrade — ${money(f.next_cost)}`);
-      btn.disabled = !affordable;
-      btn.title = affordable ? "" : "not enough banked";
-      btn.onclick = async () => {
-        const r = await api("/api/actions/facility_upgrade", { facility: name });
-        toast(r.message); refresh(); render();
-      };
-      row.appendChild(btn);
-    } else {
-      row.appendChild(el("span", "pill", "max level"));
-    }
-    facCard.appendChild(row);
-  }
-  main.appendChild(facCard);
-
-  /* -- rail ws-5: tiles, run-rate, projection, brand value ------------------- */
-
-  // Balance + weekly-net tiles (plus last week's realised figures).
-  const tilesCard = el("div", "card");
-  tilesCard.appendChild(el("h2", "", "This week"));
-  const tiles = el("div", "es-tiles");
-  tiles.appendChild(statTile("Balance", money(data.balance)));
-  tiles.appendChild(statTile("Net / wk", `${b.net >= 0 ? "+" : ""}${money(b.net)}`,
-    { tone: b.net >= 0 ? "good" : "bad" }));
-  tiles.appendChild(statTile("Income", money(b.income_total), { tone: "good" }));
-  tiles.appendChild(statTile("Expenses", money(b.expense_total), { tone: "bad" }));
-  if (data.last_week_income != null) tiles.appendChild(statTile("Last income", money(data.last_week_income)));
-  if (data.last_week_expenses != null) tiles.appendChild(statTile("Last exp.", money(data.last_week_expenses)));
-  tilesCard.appendChild(tiles);
-  rail.appendChild(tilesCard);
-
-  // Itemized weekly run-rate; payroll links to Roster, streaming to Social.
-  const bkCard = el("div", "card");
-  bkCard.appendChild(el("h2", "", "This week's run rate"));
-  const rt = el("table");
-  rt.dataset.nosort = "1";
-  rt.innerHTML = `<thead><tr><th>Item</th><th class="num">cr / wk</th></tr></thead>`;
-  const rtb = el("tbody");
-  const line = (label, val, link) => {
-    const tr = el("tr", "", `<td>${label}</td><td class="num">${val}</td>`);
-    if (link) {
-      tr.cells[0].appendChild(document.createTextNode(" "));
-      const btn = el("button", "btn btn-sm", link.label);
-      btn.onclick = link.onClick;
-      tr.cells[0].appendChild(btn);
-    }
-    return tr;
-  };
-  rtb.appendChild(line("Base sponsorship", money(b.sponsors_base)));
-  rtb.appendChild(line("Title sponsor", money(b.sponsors_by_slot.title || 0)));
-  rtb.appendChild(line("Jersey sponsor", money(b.sponsors_by_slot.jersey || 0)));
-  rtb.appendChild(line("Peripheral sponsor", money(b.sponsors_by_slot.peripheral || 0)));
-  rtb.appendChild(line("Merchandise", money(b.merch)));
-  rtb.appendChild(line("Ticket sales", money(b.tickets)));
-  rtb.appendChild(line("Streaming", money(b.streaming || 0),
-    { label: "→ Social", onClick: () => dashGoTab("social") }));
-  rtb.appendChild(line("Prize money", money(b.prizes)));
-  rtb.appendChild(el("tr", "", `<td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td>`));
-  rtb.appendChild(line("Salaries", `-${money(b.salaries)}`,
-    { label: "→ Squad", onClick: () => { App.clubTab = "squad"; dashGoTab("club"); } }));
-  rtb.appendChild(line("Staff", `-${money(b.staff)}`));
-  rtb.appendChild(line("Facility upkeep", `-${money(b.facility_upkeep)}`));
-  rtb.appendChild(el("tr", "", `<td class="mono"><b>Expense total</b></td><td class="num mono"><b>-${money(b.expense_total)}</b></td>`));
-  rtb.appendChild(el("tr", "", `<td><b>Net</b></td><td class="num"><b>${b.net >= 0 ? "+" : ""}${money(b.net)}</b></td>`));
-  rt.appendChild(rtb);
-  bkCard.appendChild(rt);
-  bkCard.appendChild(el("p", "muted",
-    "A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week."));
-  rail.appendChild(bkCard);
-
-  // 8-week cash projection + a tiny balance sparkline.
-  const projCard = el("div", "card");
-  projCard.appendChild(el("h2", "", "8-week cash projection"));
-  const proj = data.projection || [];
-  if (proj.length >= 2) {
-    const W = 220, H = 46;
-    const bals = proj.map((p) => p.balance);
-    const lo = Math.min(...bals), hi = Math.max(...bals), span = (hi - lo) || 1;
-    const pts = proj.map((p, i) => {
-      const x = (i / (proj.length - 1)) * (W - 4) + 2;
-      const y = H - 4 - ((p.balance - lo) / span) * (H - 8);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(" ");
-    projCard.appendChild(el("div", "es-spark",
-      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="projected balance">` +
-      `<polyline points="${pts}" fill="none" class="es-spark-line"/></svg>` +
-      `<span class="muted">${money(proj[proj.length - 1].balance)} in ${proj.length}w</span>`));
-  }
-  const pt = el("table");
-  pt.dataset.nosort = "1";
-  pt.innerHTML = `<thead><tr><th>Week</th><th class="num">Net</th><th class="num">Balance</th></tr></thead>` +
-    `<tbody>${proj.map((p) => `<tr><td>W${p.week}</td>` +
-      `<td class="num">${p.net >= 0 ? "+" : ""}${money(p.net)}</td>` +
-      `<td class="num">${money(p.balance)}</td></tr>`).join("")}</tbody>`;
-  projCard.appendChild(pt);
-  projCard.appendChild(el("p", "muted",
-    "Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled."));
-  rail.appendChild(projCard);
-
-  // Brand value / marketability drivers.
-  const mb = data.marketability_breakdown;
-  if (mb && mb.drivers?.length) {
-    const mbCard = el("div", "card");
-    mbCard.appendChild(el("h2", "",
-      `Brand value <span class="muted" style="font-weight:400">— marketability ${mb.score} (facility ×${mb.facility_mult})</span>`));
-    const list = el("div", "es-mb");
-    const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
-    for (const d of mb.drivers) {
-      const pos = d.contrib >= 0;
-      const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
-      list.appendChild(el("div", "es-mb-row",
-        `<span class="es-mb-lab">${esc(d.label)}</span>` +
-        `<span class="es-mb-track"><span class="es-mb-fill ${pos ? "pos" : "neg"}" style="width:${w}%"></span></span>` +
-        `<span class="mono ${pos ? "trend-up" : "trend-down"}">${pos ? "+" : ""}${d.contrib}</span>`));
-    }
-    mbCard.appendChild(list);
-    rail.appendChild(mbCard);
-  }
+  v.innerHTML = "";
+  render(html`<${FinancesTab} />`, v);
 }
 
-/* -- talk 1:1 ---------------------------------------------------------------------- */
+const ObjectiveChip = ({ obj }) => {
+  const mark = obj.met === true ? "✓ " : obj.met === false ? "✗ " : "";
+  let cls = obj.met === true ? "good" : obj.met === false ? "bad" : "";
+  let prog = "";
+  if (obj.met == null && obj.status) {
+    const st = obj.status.state;
+    cls = st === "achieved" || st === "on_track" ? "good"
+      : st === "missed" ? "bad" : "warn";
+    prog = ` · ${st.replace("_", " ")}`;
+  }
+  const tip = obj.status?.detail || money(obj.bonus);
+  return html`
+    <span class=${`pill obj ${cls}`} title=${tip}>
+      ${mark}${obj.label} → ${money(obj.bonus)}${prog}
+    </span>
+  `;
+};
+
+const ObjectiveChipsList = ({ objs }) => {
+  if (!objs || objs.length === 0) return null;
+  return html`
+    <div class="row offer-row">
+      ${objs.map((o, idx) => html`<${ObjectiveChip} obj=${o} key=${idx} />`)}
+    </div>
+  `;
+};
+
+const StatTile = ({ label, value, tone, sub, tooltip, onClick }) => {
+  const cls = "es-tile" + (tone ? " tone-" + tone : "") + (onClick ? " es-tile-btn" : "");
+  return html`
+    <div class=${cls} title=${tooltip} onClick=${onClick} style=${onClick ? { cursor: 'pointer' } : undefined}>
+      <div class="es-tile-val mono">${value}</div>
+      <div class="es-tile-label">${label}</div>
+      ${sub && html`<div class="es-tile-sub">${sub}</div>`}
+    </div>
+  `;
+};
+
+const CashProjectionSparkline = ({ projection }) => {
+  if (!projection || projection.length < 2) return null;
+  const W = 220, H = 46;
+  const bals = projection.map((p) => p.balance);
+  const lo = Math.min(...bals), hi = Math.max(...bals), span = (hi - lo) || 1;
+  const pts = projection.map((p, i) => {
+    const x = (i / (projection.length - 1)) * (W - 4) + 2;
+    const y = H - 4 - ((p.balance - lo) / span) * (H - 8);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+
+  return html`
+    <div class="es-spark">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="projected balance">
+        <polyline points=${pts} fill="none" class="es-spark-line" />
+      </svg>
+      <span class="muted">${money(projection[projection.length - 1].balance)} in ${projection.length}w</span>
+    </div>
+  `;
+};
+
+const FinancesTab = () => {
+  const [data, setData] = useState(null);
+  const [actionInProgress, setActionInProgress] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const res = await api("/api/finances");
+      setData(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleSponsorAction = async (slot, accept, brand, structure) => {
+    const actionKey = `sponsor-${slot}-${brand || 'decline'}`;
+    setActionInProgress(actionKey);
+    try {
+      const payload = { slot, accept };
+      if (brand) payload.brand = brand;
+      if (structure) payload.structure = structure;
+      
+      const r = await api("/api/actions/sponsor", payload);
+      toast(r.message);
+      
+      if (window.refresh) {
+        await window.refresh();
+      }
+      await fetchData();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  const handleUpgradeAction = async (name) => {
+    const actionKey = `upgrade-${name}`;
+    setActionInProgress(actionKey);
+    try {
+      const r = await api("/api/actions/facility_upgrade", { facility: name });
+      toast(r.message);
+      
+      if (window.refresh) {
+        await window.refresh();
+      }
+      await fetchData();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  if (!data) return html`<div class="loading">Loading finances...</div>`;
+
+  const b = data.breakdown;
+  const SLOT_LABELS = {
+    title: "Title", jersey: "Jersey", peripheral: "Peripheral",
+    stream: "Stream", apparel: "Apparel",
+  };
+  const FACILITY_LABELS = {
+    training_center: "Training center",
+    analytics_suite: "Analytics suite",
+    marketing_office: "Marketing office",
+  };
+
+  return html`
+    <div>
+      <div class="screen-head">
+        <span class="screen-title">Finances</span>
+        <span class="screen-sub">${money(data.balance)} banked · net ${b.net >= 0 ? "+" : ""}${money(b.net)}/wk</span>
+      </div>
+      
+      <div class="ws">
+        <div class="ws-7 ws-col">
+          <div class="card">
+            <h2>
+              Sponsorships <span class="muted" style=${{ fontWeight: 400 }}>— marketability ${data.marketability ?? "?"}</span>
+            </h2>
+            ${["title", "jersey", "peripheral", "stream", "apparel"].map(slot => {
+              const s = data.slots[slot];
+              if (!s) return null;
+
+              let stateChip, brand, rowClass = "slot-row";
+              if (s.deal) {
+                stateChip = html`<span class="chip tone-good">active</span>`;
+                brand = html`<b>${s.deal.name}</b> <span class="chip">${s.deal.kind}</span>`;
+                rowClass = "slot-row active-deal";
+              } else if (!s.unlocked) {
+                stateChip = html`<span class="chip">locked</span>`;
+                brand = html`<span class="muted">${s.locked_reason ?? "unavailable"}</span>`;
+              } else {
+                stateChip = html`<span class="chip tone-info">open</span>`;
+                brand = html`<span class="muted">no active deal — ${s.market && s.market.length ? "offers below" : "no suitors yet"}</span>`;
+              }
+
+              return html`
+                <div key=${slot} class=${rowClass}>
+                  <div class="row">
+                    ${stateChip}
+                    <span class="microlabel">${SLOT_LABELS[slot] || slot}</span>
+                    ${brand}
+                  </div>
+                  ${s.deal && html`
+                    <div class="row">
+                      <span class="muted">${dealLine(s.deal)}</span>
+                    </div>
+                    <${ObjectiveChipsList} objs=${s.objective_labels_deal} />
+                  `}
+
+                  ${s.offer && (() => {
+                    const isBusy = actionInProgress && actionInProgress.startsWith(`sponsor-${slot}`);
+                    return html`
+                      <div class="slot-row" style=${{ borderLeft: 'none', paddingLeft: 0, paddingRight: 0 }}>
+                        <div class="row">
+                          <span class="chip tone-info">offer</span>
+                          <b>${s.offer.name}</b> 
+                          <span class="chip">${s.offer.kind}</span> 
+                          <span class="muted">${dealLine(s.offer)} — expires if unanswered this week</span>
+                        </div>
+                        <div class="row offer-row">
+                          <button 
+                            class="btn btn-primary btn-sm" 
+                            disabled=${isBusy}
+                            onClick=${() => handleSponsorAction(slot, true)}
+                          >
+                            ${isBusy ? "Saving..." : "Accept"}
+                          </button>
+                          <button 
+                            class="btn btn-sm" 
+                            disabled=${isBusy}
+                            onClick=${() => handleSponsorAction(slot, false)}
+                          >
+                            ${isBusy ? "..." : "Decline"}
+                          </button>
+                        </div>
+                      </div>
+                    `;
+                  })()}
+
+                  ${s.market && s.market.map(o => {
+                    const relationTag = o.relation > 55 ? " · warm relations" : o.relation < 45 ? " · cool relations" : "";
+                    const structures = [
+                      ["upfront", `${money(o.upfront.signing_bonus)} now + ${money(o.upfront.weekly)}/wk`],
+                      ["steady", `${money(o.steady.weekly)}/wk`],
+                      ["performance", `${money(o.performance.weekly)}/wk + ${money(o.performance.per_win)}/win`],
+                    ];
+                    const isBusy = actionInProgress && actionInProgress.startsWith(`sponsor-${slot}-${o.brand}`);
+                    
+                    return html`
+                      <div class="slot-row" key=${o.brand} style=${{ borderLeft: 'none', paddingLeft: 0, paddingRight: 0 }}>
+                        <div class="row">
+                          <span class="chip tone-info">offer</span>
+                          <b>${o.brand}</b> 
+                          <span class="muted">${o.weeks}w · until wk ${o.expires_week}${relationTag}</span>
+                        </div>
+                        <${ObjectiveChipsList} objs=${o.objective_labels} />
+                        <div class="row offer-row">
+                          ${structures.map(([structure, label]) => {
+                            const btnTitle = s.deal ? "slot occupied" : "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4";
+                            return html`
+                              <button 
+                                class="btn btn-sm" 
+                                disabled=${!!s.deal || isBusy}
+                                title=${btnTitle}
+                                onClick=${() => handleSponsorAction(slot, true, o.brand, structure)}
+                                key=${structure}
+                              >
+                                ${isBusy ? "Saving..." : `${structure}: ${label}`}
+                              </button>
+                            `;
+                          })}
+                          <button 
+                            class="btn btn-sm" 
+                            title="decline (the brand remembers)"
+                            disabled=${isBusy}
+                            onClick=${() => handleSponsorAction(slot, false, o.brand)}
+                          >
+                            ${isBusy ? "..." : "✕"}
+                          </button>
+                        </div>
+                      </div>
+                    `;
+                  })}
+                </div>
+              `;
+            })}
+          </div>
+
+          <div class="card">
+            <h2>Facilities</h2>
+            ${["training_center", "analytics_suite", "marketing_office"].map(name => {
+              const f = data.facilities[name];
+              if (!f) return null;
+              const affordable = data.balance >= f.next_cost;
+              const isBusy = actionInProgress === `upgrade-${name}`;
+
+              return html`
+                <div class="row facility-row" key=${name}>
+                  <span>
+                    <b>${FACILITY_LABELS[name]}</b> 
+                    <span class="muted"> level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span>
+                  </span>
+                  <span class="spacer"></span>
+                  ${f.next_cost != null ? html`
+                    <button 
+                      class="btn btn-sm" 
+                      disabled=${!affordable || isBusy}
+                      title=${affordable ? "" : "not enough banked"}
+                      onClick=${() => handleUpgradeAction(name)}
+                    >
+                      ${isBusy ? "Upgrading..." : `Upgrade — ${money(f.next_cost)}`}
+                    </button>
+                  ` : html`
+                    <span class="pill">max level</span>
+                  `}
+                </div>
+              `;
+            })}
+          </div>
+        </div>
+
+        <div class="ws-5 ws-col">
+          <div class="card">
+            <h2>This week</h2>
+            <div class="es-tiles">
+              <${StatTile} label="Balance" value=${money(data.balance)} />
+              <${StatTile} 
+                label="Net / wk" 
+                value=${`${b.net >= 0 ? "+" : ""}${money(b.net)}`} 
+                tone=${b.net >= 0 ? "good" : "bad"} 
+              />
+              <${StatTile} label="Income" value=${money(b.income_total)} tone="good" />
+              <${StatTile} label="Expenses" value=${money(b.expense_total)} tone="bad" />
+              ${data.last_week_income != null && html`
+                <${StatTile} label="Last income" value=${money(data.last_week_income)} />
+              `}
+              ${data.last_week_expenses != null && html`
+                <${StatTile} label="Last exp." value=${money(data.last_week_expenses)} />
+              `}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>This week's run rate</h2>
+            <table data-nosort="1">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th class="num">cr / wk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Base sponsorship</td>
+                  <td class="num">${money(b.sponsors_base)}</td>
+                </tr>
+                <tr>
+                  <td>Title sponsor</td>
+                  <td class="num">${money(b.sponsors_by_slot.title || 0)}</td>
+                </tr>
+                <tr>
+                  <td>Jersey sponsor</td>
+                  <td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td>
+                </tr>
+                <tr>
+                  <td>Peripheral sponsor</td>
+                  <td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td>
+                </tr>
+                <tr>
+                  <td>Merchandise</td>
+                  <td class="num">${money(b.merch)}</td>
+                </tr>
+                <tr>
+                  <td>Ticket sales</td>
+                  <td class="num">${money(b.tickets)}</td>
+                </tr>
+                <tr>
+                  <td>
+                    Streaming 
+                    <button class="btn btn-sm" onClick=${() => window.dashGoTab("social")}>→ Social</button>
+                  </td>
+                  <td class="num">${money(b.streaming || 0)}</td>
+                </tr>
+                <tr>
+                  <td>Prize money</td>
+                  <td class="num">${money(b.prizes)}</td>
+                </tr>
+                <tr>
+                  <td class="mono"><b>Income total</b></td>
+                  <td class="num mono"><b>${money(b.income_total)}</b></td>
+                </tr>
+                <tr>
+                  <td>
+                    Salaries 
+                    <button class="btn btn-sm" onClick=${() => { App.clubTab = "squad"; window.dashGoTab("club"); }}>→ Squad</button>
+                  </td>
+                  <td class="num">-${money(b.salaries)}</td>
+                </tr>
+                <tr>
+                  <td>Staff</td>
+                  <td class="num">-${money(b.staff)}</td>
+                </tr>
+                <tr>
+                  <td>Facility upkeep</td>
+                  <td class="num">-${money(b.facility_upkeep)}</td>
+                </tr>
+                <tr>
+                  <td class="mono"><b>Expense total</b></td>
+                  <td class="num mono"><b>-${money(b.expense_total)}</b></td>
+                </tr>
+                <tr>
+                  <td><b>Net</b></td>
+                  <td class="num"><b>${b.net >= 0 ? "+" : ""}${money(b.net)}</b></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="muted">
+              A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.
+            </p>
+          </div>
+
+          <div class="card">
+            <h2>8-week cash projection</h2>
+            <${CashProjectionSparkline} projection=${data.projection} />
+            <table data-nosort="1">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th class="num">Net</th>
+                  <th class="num">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.projection && data.projection.map(p => html`
+                  <tr key=${p.week}>
+                    <td>W${p.week}</td>
+                    <td class="num">${p.net >= 0 ? "+" : ""}${money(p.net)}</td>
+                    <td class="num">${money(p.balance)}</td>
+                  </tr>
+                `)}
+              </tbody>
+            </table>
+            <p class="muted">
+              Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.
+            </p>
+          </div>
+
+          ${data.marketability_breakdown && data.marketability_breakdown.drivers && data.marketability_breakdown.drivers.length > 0 && (() => {
+            const mb = data.marketability_breakdown;
+            const maxAbs = Math.max(...mb.drivers.map((d) => Math.abs(d.contrib)), 0.01);
+            return html`
+              <div class="card">
+                <h2>
+                  Brand value <span class="muted" style=${{ fontWeight: 400 }}>— marketability ${mb.score} (facility ×${mb.facility_mult})</span>
+                </h2>
+                <div class="es-mb">
+                  ${mb.drivers.map(d => {
+                    const pos = d.contrib >= 0;
+                    const w = Math.round(100 * Math.abs(d.contrib) / maxAbs);
+                    return html`
+                      <div class="es-mb-row" key=${d.label}>
+                        <span class="es-mb-lab">${d.label}</span>
+                        <span class="es-mb-track">
+                          <span class=${`es-mb-fill ${pos ? "pos" : "neg"}`} style=${{ width: `${w}%` }}></span>
+                        </span>
+                        <span class=${`mono ${pos ? "trend-up" : "trend-down"}`}>
+                          ${pos ? "+" : ""}${d.contrib}
+                        </span>
+                      </div>
+                    `;
+                  })}
+                </div>
+              </div>
+            `;
+          })()}
+        </div>
+      </div>
+    </div>
+  `;
+};
+\n\n/* -- talk 1:1 ---------------------------------------------------------------------- */
 
 async function openTalk(p) {
   const data = await api(`/api/talk/${p.id}`);
@@ -5736,7 +6388,7 @@ async function openTalk(p) {
         .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
         .join(", ");
       toast(`${r.message}${fx ? " (" + fx + ")" : ""}`);
-      render();
+      renderApp();
     };
     box.appendChild(b);
   }
@@ -5746,6 +6398,7 @@ async function openTalk(p) {
 function closeTalk() {
   $("#talk").classList.add("hidden");
 }
+window.closeTalk = closeTalk;
 
 /* -- advance week ------------------------------------------------------------------ */
 
@@ -5847,8 +6500,10 @@ function showReport(rep) {
 
 function closeReport() {
   $("#report").classList.add("hidden");
-  render();
+  renderApp();
 }
+window.closeReport = closeReport;
+window.render = render;
 
 /* -- Global Tooltip System ---------------------------------------------------- */
 (function initTooltipSystem() {

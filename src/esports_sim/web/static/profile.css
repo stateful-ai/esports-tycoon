@@ -32,7 +32,7 @@
   max-height: 90vh;
   overflow: auto;
   padding: 0;
-  transform: scale(0.95) translateY(10px);
+  transform: scale(0.96) translateY(20px);
   opacity: 0;
   transition: transform var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out),
               opacity var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out);
@@ -497,4 +497,24 @@
 .pf-honour-detail {
   font-size: var(--es-text-xs, 11px);
   margin-left: auto; text-align: right;
+}
+
+@keyframes bar-grow {
+  from { width: 0%; }
+  to { width: var(--target-width); }
+}
+
+.pf-attr-bar i, .bar i, .pf-hbar i, .pf-str-fill, .pf-dev-fill {
+  width: var(--target-width);
+  animation: bar-grow var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out) forwards;
+}
+
+@keyframes fade-out-up {
+  0% { opacity: 1; transform: translate(-50%, -50%); }
+  10% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -80%); }
+}
+
+.fade-out-badge {
+  animation: fade-out-up 1.6s forwards;
 }
