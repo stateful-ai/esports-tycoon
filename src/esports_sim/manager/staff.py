@@ -29,9 +29,8 @@ ROLES = ["coach", "analyst", "physio", "psychologist", "performance_coach", "lan
 # competitive-intelligence department is a late-game build.
 POOL_MIN = 54
 _POOL_ROLE_CYCLE = [
-    "coach", "analyst", "physio", "coach", "analyst",
-    "physio", "psychologist", "coach", "analyst", "physio",
-    "coach", "performance_coach", "language_coach",
+    "coach", "analyst", "physio", "psychologist",
+    "performance_coach", "language_coach",
 ]
 
 ROLE_BLURB = {
@@ -267,6 +266,11 @@ def _make_member(seed: int, sid: str, role: str) -> StaffMember:
 
 def needs_real_vct_staff(gs: GameState) -> bool:
     """Whether this save has not yet received the curated real VCT cohort."""
+    # The curated cohort is a start-of-save import, not an immortal source of
+    # staff. Once a campaign reaches a second season, departures and
+    # retirements must remain permanent.
+    if gs.season > 1:
+        return False
     present = {m.id for m in gs.staff_pool}
     for team_staff in gs.staff_by.values():
         present.update(m.id for m in team_staff.values())
@@ -306,7 +310,25 @@ def _seed_real_vct_staff(gs: GameState, taken: set[str]) -> None:
         taken.add(spec[0])
 
 
-def seed_pool(gs: GameState) -> None:
+def pool_role_targets(team_count: int) -> dict[str, int]:
+    """Minimum market depth by role for a league of ``team_count`` clubs.
+
+    Coaches have a rich real-world pool, while support disciplines are often
+    omitted from public team pages.  These targets deliberately give managers
+    viable alternatives in every department instead of merely one token hire.
+    """
+    teams = max(1, team_count)
+    return {
+        "coach": max(12, (teams + 2) // 3),
+        "analyst": max(12, (teams + 1) // 2),
+        "physio": max(8, (teams + 2) // 3),
+        "psychologist": max(6, (teams + 3) // 4),
+        "performance_coach": max(10, (teams + 2) // 3),
+        "language_coach": max(6, (teams + 3) // 4),
+    }
+
+
+def seed_pool(gs: GameState, *, include_real: bool = True) -> None:
     """Fill the shared staff market up to POOL_MIN. Deterministic — each
     member is a pure function of (campaign seed, member id) — and every id
     ever employed stays taken, so a hire can never be 'replaced' by a
@@ -317,16 +339,21 @@ def seed_pool(gs: GameState) -> None:
     for staff in gs.staff_by.values():
         taken.update(m.id for m in staff.values())
         staff_names.update(_identity_key(m.name) for m in staff.values())
-    _seed_real_vct_staff(gs, taken)
+    if include_real:
+        _seed_real_vct_staff(gs, taken)
     staff_names.update(_identity_key(m.name) for m in gs.staff_pool)
     i = 0
     player_names = _player_identity_keys(gs)
     # A historical expanded world needs more choice than the original small
     # default league. Keep a 24-person cushion above one candidate per team.
     pool_target = max(POOL_MIN, len(gs.teams) + 24)
+    role_targets = pool_role_targets(len(gs.teams))
     while (
         len(gs.staff_pool) < pool_target
-        or any(role not in {m.role for m in gs.staff_pool} for role in ROLES)
+        or any(
+            sum(m.role == role for m in gs.staff_pool) < minimum
+            for role, minimum in role_targets.items()
+        )
     ):
         sid = f"staff_s{gs.season}_{i}"
         role = _POOL_ROLE_CYCLE[i % len(_POOL_ROLE_CYCLE)]
@@ -428,25 +455,64 @@ def seed_vct_2021_staff(gs: GameState) -> None:
         gs.staff_by.setdefault(team_id, {})["coach"] = member
 
 
+def _retirement_chance(member: StaffMember) -> float:
+    """Retirement likelihood after the member ages at an offseason."""
+    return 1.0 if member.age >= 62 else max(0.0, (member.age - 55) * 0.12)
+
+
+def _replacement_member(
+    gs: GameState, team_id: str, role: str, used_names: set[str],
+) -> StaffMember:
+    """Create a deterministic new hire when an assigned staffer retires."""
+    player_names = _player_identity_keys(gs)
+    base = f"staff_s{gs.season}_replacement_{team_id}_{role}"
+    for attempt in range(100):
+        staff_id = base if attempt == 0 else f"{base}_{attempt}"
+        member = _make_member(gs.seed, staff_id, role)
+        identity = _identity_key(member.name)
+        if identity not in player_names and identity not in used_names:
+            member.region = str(gs.teams[team_id].region)
+            member.history = [f"S{gs.season}: new {role}, {gs.teams[team_id].name}"]
+            member.last_org = team_id
+            used_names.add(identity)
+            return member
+    raise RuntimeError("could not generate a distinct staff replacement")
+
+
 def offseason_churn(gs: GameState) -> None:
-    """Careers move on over the break: everyone ages a year, the oldest
-    pool members retire, hired staff bank a season of experience, then the
-    pool refills to POOL_MIN with the new season's class."""
+    """Age and retire staff, then produce a fresh market class each season."""
     rng = RngTree(gs.seed).derive("staffpool", gs.season, "churn")
-    for m in gs.staff_pool:
+    for m in sorted(gs.staff_pool, key=lambda member: member.id):
         m.age += 1
-    # Retirement: hard at 62+, increasingly likely from the late 50s.
     keep: list[StaffMember] = []
-    for m in gs.staff_pool:
-        p_retire = 1.0 if m.age >= 62 else max(0.0, (m.age - 55) * 0.12)
-        if rng.random() >= p_retire:
+    for m in sorted(gs.staff_pool, key=lambda member: member.id):
+        if rng.random() >= _retirement_chance(m):
             keep.append(m)
-    gs.staff_pool = keep
-    for staff in gs.staff_by.values():
-        for m in staff.values():
-            m.age += 1
-            m.seasons_experience += 1
-    seed_pool(gs)
+    gs.staff_pool = sorted(keep, key=lambda member: member.id)
+
+    used_names = {_identity_key(m.name) for m in gs.staff_pool}
+    retired_human_staff: list[tuple[str, str]] = []
+    for team_id in sorted(gs.staff_by):
+        team_staff = gs.staff_by[team_id]
+        retiring_roles: list[str] = []
+        for role, member in sorted(team_staff.items()):
+            member.age += 1
+            member.seasons_experience += 1
+            if rng.random() < _retirement_chance(member):
+                retiring_roles.append(role)
+                if team_id in gs.human_team_ids:
+                    retired_human_staff.append((member.name, role))
+            else:
+                used_names.add(_identity_key(member.name))
+        for role in retiring_roles:
+            del team_staff[role]
+            team_staff[role] = _replacement_member(gs, team_id, role, used_names)
+
+    # This is deliberately a new-season class; don't resurrect retired real
+    # staff from the initial curated cohort.
+    seed_pool(gs, include_real=False)
+    for name, role in retired_human_staff:
+        gs.push_news(f"{name} retired from the {role} role; a replacement has joined.")
 
 
 def find_member(gs: GameState, staff_id: str) -> tuple[StaffMember | None, str | None]:
