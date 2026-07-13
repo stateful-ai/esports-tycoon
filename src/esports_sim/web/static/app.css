@@ -1844,3 +1844,76 @@ td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
 /* Language proficiency chips shown as a subline in market Player cells
    (comms fit at the point of signing). */
 .es-langs { margin-top: 3px; display: flex; flex-wrap: wrap; gap: 3px; }
+
+/* Custom Tooltip Styling */
+#es-tooltip {
+  position: fixed;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  color: var(--es-color-text-primary, #e9edf6);
+  font-family: var(--es-font-sans, sans-serif);
+  font-size: var(--es-text-sm, 12px);
+  padding: 8px 12px;
+  border-radius: var(--es-radius-md, 6px);
+  box-shadow: var(--es-shadow-lg, 0 12px 32px rgba(2, 4, 10, 0.65));
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1)), transform 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
+  max-width: 250px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+#es-tooltip.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+#es-tooltip h4 {
+  margin: 0 0 4px 0;
+  font-family: var(--es-font-display, inherit);
+  font-size: var(--es-text-md, 13px);
+  font-weight: var(--es-weight-bold, 700);
+  color: var(--es-color-accent, #4fd8c0);
+  text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wide, 0.04em);
+}
+#es-tooltip .tooltip-desc {
+  color: var(--es-color-text-primary, #e9edf6);
+  font-size: var(--es-text-xs, 11px);
+}
+#es-tooltip .tooltip-sub {
+  margin-top: 6px;
+  color: var(--es-color-text-secondary, #a2aec6);
+  font-size: var(--es-text-2xs, 10px);
+  border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+  padding-top: 4px;
+}
+
+/* Info Button Styling */
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: var(--es-text-2xs, 10px);
+  font-weight: var(--es-weight-bold, 700);
+  color: var(--es-color-text-tertiary, #67748f);
+  border: 1px solid var(--es-color-text-tertiary, #67748f);
+  border-radius: 50%;
+  margin-left: 6px;
+  cursor: help;
+  vertical-align: middle;
+  transition: all 0.15s ease;
+  user-select: none;
+  opacity: 0.7;
+}
+.info-btn:hover {
+  opacity: 1;
+  color: var(--es-color-accent, #4fd8c0);
+  border-color: var(--es-color-accent, #4fd8c0);
+  background-color: var(--es-color-bg-hover, #1b2536);
+  transform: scale(1.05);
+}

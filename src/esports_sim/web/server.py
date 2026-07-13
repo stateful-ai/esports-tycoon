@@ -5767,9 +5767,18 @@ def _profile_attributes(gs: GameState, p: Player, fog: float) -> list[dict]:
     for key in sorted(p.attributes):
         true_val = p.attributes[key]
         label = reg[key].display_name if key in reg else key
+        desc = reg[key].description if key in reg else ""
         if fogged:
             shown = _fogged(gs, p.id, key, true_val, fog)
-            out.append({"key": key, "label": label, "value": None, "band": _attr_band(shown)})
+            out.append(
+                {
+                    "key": key,
+                    "label": label,
+                    "value": None,
+                    "band": _attr_band(shown),
+                    "description": desc,
+                }
+            )
         else:
             out.append(
                 {
@@ -5777,6 +5786,7 @@ def _profile_attributes(gs: GameState, p: Player, fog: float) -> list[dict]:
                     "label": label,
                     "value": round(true_val, 1),
                     "band": _attr_band(true_val),
+                    "description": desc,
                 }
             )
     return out
