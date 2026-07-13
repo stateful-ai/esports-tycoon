@@ -38,6 +38,9 @@ taskbar**. Each launch runs a safe fast-forward-only pull from **origin/main**.
 If the checked-out commit or Python dependencies changed, it restarts its
 background server before opening the browser. The taskbar instance binds to
 the LAN on the standard playing port, 8420; use 8421 for development tests.
+If the launcher was installed before LAN play became the default, run the
+install command above once more; subsequent launcher-runtime updates refresh
+themselves automatically after the normal pull.
 
 `New game` → pick a seed, a **world**, and a team → weekly loop: set
 training, scout a rival, work the market, talk to a player, advance the

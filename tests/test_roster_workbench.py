@@ -135,3 +135,25 @@ def test_roster_studio_schema_and_draft_validation_api():
         "text": dump_document(example_document())
     })
     assert parsed["document"]["id"] == "my-roster-pack"
+
+
+def test_roster_pack_admin_routes_are_loopback_only():
+    pytest.importorskip("fastapi")
+    from fastapi import HTTPException
+    from esports_sim.web import server
+
+    for host in ("127.0.0.1", "::1"):
+        token = server._client_host_ctx.set(host)
+        try:
+            server._require_local_admin()
+        finally:
+            server._client_host_ctx.reset(token)
+
+    for host in ("192.168.1.44", "10.0.0.8", ""):
+        token = server._client_host_ctx.set(host)
+        try:
+            with pytest.raises(HTTPException) as exc:
+                server._require_local_admin()
+            assert exc.value.status_code == 403
+        finally:
+            server._client_host_ctx.reset(token)
