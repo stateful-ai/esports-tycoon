@@ -95,7 +95,7 @@ from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import momentum as momentum_mod
 from esports_sim.sim import tactics_fit
-from esports_sim.web import llm_flavor, llm_social, review_history
+from esports_sim.web import llm_flavor, llm_social, review_history, llm_talk
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -946,6 +946,8 @@ _REVIEW_COPY = {
               "{num} miscalls in {den} rounds ({pct}%)."),
     "utility": ("Utility on point", "Utility whiffing",
                 "{num}/{den} abilities whiffed ({pct}%)."),
+    "xde_clutch": ("{handle} clutched duels", "{handle} clutched duels", "{num}/{den} duels won (+{val} xDE)."),
+    "xde_struggle": ("{handle} struggled in duels", "{handle} struggled in duels", "{num}/{den} duels won ({val} xDE)."),
 }
 
 # lever_code -> where the fix lives + the coach specialty that owns it + copy.
@@ -3600,6 +3602,9 @@ def _season_stat_row(gs: GameState, pid: str, st: PlayerSeasonStats, tier: int) 
             aces=st.aces,
             clutches=st.clutch_1v1 + st.clutch_1v2 + st.clutch_1v3,
             pistol_kills=st.pistol_kills,
+            xduel_expected_wins=round(st.xduel_expected_wins, 2),
+            xduel_actual_wins=st.xduel_actual_wins,
+            xde=round(st.xde, 2),
         )
     if tier >= 2:
         row.update(
@@ -4325,14 +4330,185 @@ def talk_topic(player_id: str) -> dict:
         gs = S.require_gs()
         if player_id not in gs.players:
             raise HTTPException(404, "unknown player")
+        active_roster = player_id in gs.teams[gs.acting_team_id].player_ids
         ok, why = talk.can_talk(gs, player_id)
         if not ok:
+            if active_roster and gs.talked_week == talk.week_key(gs):
+                cache = llm_talk.load_talk_cache(S.code)
+                cache_key = f"{gs.season}_{gs.week}_{gs.acting_team_id}_{player_id}"
+                history_dict = cache.get(cache_key)
+                if history_dict is not None:
+                    return {
+                        "available": False,
+                        "reason": "you already held this week's 1:1",
+                        "history": history_dict,
+                    }
             return {"available": False, "reason": why}
         t = talk.topic_for(gs, player_id)
         return {
             "available": True,
             "topic": {"id": t.id, "text": t.text},
             "options": [{"id": o.id, "label": o.label} for o in t.options],
+        }
+
+
+class TalkChatBody(BaseModel):
+    player_id: str
+    text: str
+
+
+@app.post("/api/talk/chat")
+def talk_chat(body: TalkChatBody) -> dict:
+    # 1. Read state under lock to prepare prompt and candidates
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        
+        ok, why = talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+            
+        topic = talk.topic_for(gs, body.player_id)
+        candidate_ids = [o.id for o in topic.options]
+        if talk.can_rein_streaming(gs, body.player_id)[0]:
+            candidate_ids.append("streaming")
+            
+        cfg = llm_talk.provider()
+        payload = None
+        
+        if cfg is not None:
+            from esports_sim.manager import personality
+            p = gs.players[body.player_id]
+            ax = personality.axes(p)
+            moods = []
+            if ax["ego"] >= 62: moods.append("cocky")
+            if ax["ego"] <= 38: moods.append("humble")
+            if ax["sociability"] >= 62: moods.append("chatty")
+            if ax["sociability"] <= 38: moods.append("terse")
+            if ax["professionalism"] >= 62: moods.append("professional")
+            tone = ", ".join(moods) or "even-keeled"
+            persona = f"{p.handle} (personality: {tone}; tags: {', '.join(p.personality_tags) or 'none'})"
+
+            options_desc = []
+            for cid in candidate_ids:
+                if cid == "streaming":
+                    label = "Ask the player to cut back on streaming and focus on practice"
+                else:
+                    opt = next((o for o in topic.options if o.id == cid), None)
+                    label = opt.label if opt else ""
+                options_desc.append(f"- {cid}: {label}")
+
+            system_msg = (
+                "You are an AI classifier and writer for an esports manager game.\n"
+                "Your task is to classify the manager's chat message into one of the available options (intent).\n"
+                "Then, write two character-accurate replies from the player's perspective:\n"
+                "- reply_positive: prose if they take the approach well or if the outcome is positive.\n"
+                "- reply_negative: prose if they bristle or if the outcome is negative/bristled.\n"
+                "Respond with STRICT JSON format matching this schema:\n"
+                '{"intent": "option_id", "reply_positive": "prose if accepted/positive", "reply_negative": "prose if bristled/negative"}\n'
+                "Do not include any other text or formatting. Only return valid JSON."
+            )
+
+            user_msg = (
+                f"Player: {persona}\n"
+                f"Topic context: {topic.text}\n"
+                f"Available options/intents:\n"
+                + "\n".join(options_desc) + "\n\n"
+                f"Manager's message: \"{body.text}\"\n\n"
+                f"Select the option ID that best matches the manager's message from the available options. "
+                f"Then write the player's response for both positive and negative outcomes."
+            )
+
+            payload = {
+                "model": cfg["model"],
+                "messages": [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+                "temperature": 0.2,
+            }
+
+    # 2. Call the LLM provider OUTSIDE the lock
+    ai_success = False
+    intent = None
+    reply_positive = ""
+    reply_negative = ""
+    
+    if cfg is not None and payload is not None:
+        try:
+            parsed = llm_talk._call(cfg, payload)
+            if parsed is not None:
+                intent = parsed["intent"]
+                reply_positive = parsed["reply_positive"]
+                reply_negative = parsed["reply_negative"]
+                ai_success = True
+        except Exception:
+            # Fall back silently to keyword matching
+            pass
+
+    # 3. Re-lock, re-validate and resolve the state
+    with S.lock:
+        gs = S.require_gs()
+        ok, why = talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+
+        # Re-evaluate candidate list under lock
+        topic = talk.topic_for(gs, body.player_id)
+        candidate_ids = [o.id for o in topic.options]
+        if talk.can_rein_streaming(gs, body.player_id)[0]:
+            candidate_ids.append("streaming")
+
+        if ai_success:
+            if intent not in candidate_ids:
+                intent = candidate_ids[0]
+        else:
+            intent = llm_talk.deterministic_intent(body.text, candidate_ids)
+
+        if intent == "streaming":
+            ok, resolve_msg, effects = talk.rein_in_streaming(gs, body.player_id)
+        else:
+            ok, resolve_msg, effects = talk.resolve(gs, body.player_id, intent)
+
+        if not ok:
+            raise HTTPException(409, resolve_msg)
+
+        if ai_success:
+            is_negative = effects.get("morale", 0.0) < 0 or effects.get("chemistry", 0.0) < 0 or "bristle" in resolve_msg.lower()
+            chosen_message = reply_negative if is_negative else reply_positive
+            ai = True
+        else:
+            chosen_message = resolve_msg
+            ai = False
+
+        # Cache under lock
+        cache_key = f"{gs.season}_{gs.week}_{gs.acting_team_id}_{body.player_id}"
+        history_dict = {
+            "intent": intent,
+            "message": chosen_message,
+            "effects": effects,
+            "ai": ai
+        }
+        cache = llm_talk.load_talk_cache(S.code)
+        cache[cache_key] = history_dict
+        llm_talk._save_talk_cache(S.code, cache)
+
+        telemetry.record_action(
+            gs, "talk_chat",
+            {
+                "player_id": body.player_id,
+                "intent": intent,
+                "ai": str(ai),
+            }
+        )
+        S.save()
+        return {
+            "ok": True,
+            "message": chosen_message,
+            "effects": effects,
+            "intent": intent,
+            "ai": ai
         }
 
 
@@ -5843,6 +6019,9 @@ def _profile_season(gs: GameState, pid: str) -> dict:
         "multikills": None,
         "aces": None,
         "kills_by_weapon": None,
+        "xduel_expected_wins": None,
+        "xduel_actual_wins": None,
+        "xde": None,
     }
     if empty:
         return out
@@ -5856,6 +6035,9 @@ def _profile_season(gs: GameState, pid: str) -> dict:
             multikills=st.multikills,
             aces=st.aces,
             pistol_kills=st.pistol_kills,
+            xduel_expected_wins=round(st.xduel_expected_wins, 2),
+            xduel_actual_wins=st.xduel_actual_wins,
+            xde=round(st.xde, 2),
         )
     if tier >= 2:
         out.update(

@@ -492,6 +492,38 @@ def apply_mentorship_growth(gs) -> list[dict]:
         if not mentorship_valid(gs, pid, mentor_id):
             continue
         pro, men = gs.players[pid], gs.players[mentor_id]
+        
+        # Check practice week veteran-rookie mentorship breakthrough
+        if men.age >= 25 and pro.age <= 20:
+            from esports_sim.rng.tree import RngTree
+            rng = RngTree(gs.seed).derive("season", gs.season, "week", gs.week, "mentorship", pid)
+            team_id = _team_of(gs, pid)
+            week_fixtures = gs.fixtures_for_week()
+            is_practice_week = not any(f.team_a == team_id or f.team_b == team_id for f in week_fixtures)
+            
+            breakthrough_chance = 0.30 if is_practice_week else 0.05
+            if rng.random() < breakthrough_chance:
+                roll = rng.random()
+                if roll < 0.5:
+                    bump = float(rng.uniform(1.0, 2.0))
+                    adjust_potential(pro, bump)
+                else:
+                    pos_tags = ["workhorse", "student", "calm", "reliable", "team_player", "patient", "analytical", "grinder"]
+                    candidate_tags = [t for t in pos_tags if t in men.personality_tags and t not in pro.personality_tags]
+                    if candidate_tags:
+                        candidate_tags.sort()
+                        chosen_tag = rng.choice(candidate_tags)
+                        pro.personality_tags.append(chosen_tag)
+                        pro.personality_tags.sort()
+                        
+                        if chosen_tag == "calm" and "hot_head" in pro.personality_tags:
+                            pro.personality_tags.remove("hot_head")
+                        if chosen_tag == "reliable" and "volatile" in pro.personality_tags:
+                            pro.personality_tags.remove("volatile")
+                    else:
+                        bump = float(rng.uniform(1.0, 2.0))
+                        adjust_potential(pro, bump)
+
         cs = gs.career_stats.get(mentor_id)
         msk = mentor_skill(men, cs.seasons if cs else 0)
         if msk < MENTOR_MIN_SKILL:

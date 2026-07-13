@@ -64,6 +64,8 @@ class PlayerLine:
     save_kills: int = 0  # kills on a personal sidearm save
     kills_by_weapon: dict[str, int] = field(default_factory=dict)
     rating: float = 0.0
+    xduel_expected_wins: float = 0.0
+    xduel_actual_wins: int = 0
 
 
 @dataclass
@@ -223,6 +225,15 @@ def compute_match_stats(
                         len(a) for t, a in alive.items() if t != vteam
                     )
                     isolated[vteam] = (last, enemies)
+        elif e.type == "round.duel_telemetry":
+            att = line(e.attacker_id)
+            def_ = line(e.defender_id)
+            att.xduel_expected_wins += e.expected_win_prob
+            def_.xduel_expected_wins += (1.0 - e.expected_win_prob)
+            if e.winner_id == e.attacker_id:
+                att.xduel_actual_wins += 1
+            elif e.winner_id == e.defender_id:
+                def_.xduel_actual_wins += 1
         elif e.type == "round.spike_plant":
             line(e.player_id).plants += 1
         elif e.type == "round.spike_defuse":

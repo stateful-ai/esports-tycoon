@@ -397,6 +397,25 @@ def build_match_review(
             add("bad", "player_under", "player", 0, low_r, 0, 0, 1.0, player_id=low,
                 lever_code="player_form")
 
+        # -- xDuel expected wins / xDE analysis (tier 1) ----------------------
+        player_xduel: dict[str, tuple[int, float]] = {}
+        for stats, events, team_of in per_map_bundles:
+            for pid, ln in stats.lines.items():
+                if team_of.get(pid) == team_id:
+                    actual, expected = player_xduel.get(pid, (0, 0.0))
+                    player_xduel[pid] = (
+                        actual + getattr(ln, "xduel_actual_wins", 0),
+                        expected + getattr(ln, "xduel_expected_wins", 0.0)
+                    )
+        for pid in ours:
+            actual, expected = player_xduel.get(pid, (0, 0.0))
+            xde = float(actual) - expected
+            if xde >= 1.5:
+                add("good", "xde_clutch", "player", 1, xde, actual, int(round(expected)), 0.0, player_id=pid)
+            elif xde <= -1.5:
+                add("bad", "xde_struggle", "player", 1, xde, actual, int(round(expected)), 0.0, player_id=pid,
+                    lever_code="aim_training")
+
     # -- duels / impact (tier 1) ---------------------------------------------
     if fk + fd >= 8:
         v = _rate(fk, fk + fd)

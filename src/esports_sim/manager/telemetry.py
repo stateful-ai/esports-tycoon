@@ -74,6 +74,7 @@ ACTION_KINDS = frozenset(
         "set_delegation",
         "media_choice",
         "resolve_media",
+        "talk_chat",
     }
 )
 

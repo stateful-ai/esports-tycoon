@@ -331,6 +331,17 @@ def renew_contract(
     )
     _record_value_decision(gs, "renew", "completed", player_id, team_id,
                            reason="contract renewed")
+
+    from esports_sim.manager import promises
+    for promise in gs.promises:
+        if (
+            promise.status == "active"
+            and promise.promise_type == "renew_contract"
+            and promise.player_id == player_id
+            and promise.team_id == team_id
+        ):
+            promises.resolve_promise(gs, promise, success=True)
+
     return True, f"renewed {p.handle} at {new_salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
@@ -833,28 +844,64 @@ def _record_value_decision(
 def _departure_consequences(gs: GameState, team_id: str, pid: str) -> dict[str, int]:
     """Apply bounded supporter and locker-room cost before a player leaves.
     Ordinary departures are neutral; icons make an org feel their absence."""
+    from esports_sim.manager import locker_room
+
     view = org_player_valuation(gs, team_id, pid, "retain")
     stance = str(view["stance"])
-    if stance not in ("club pillar", "not for sale"):
-        return {"fans_lost": 0, "sentiment_lost": 0}
     p = gs.players[pid]
     team = gs.teams[team_id]
-    severe = stance == "not for sale"
-    fan_rate = 0.035 if severe else 0.015
-    if "fan_favorite" in p.personality_tags:
-        fan_rate += 0.015
-    fans_lost = min(75_000, int(team.fan_count * fan_rate))
+    
+    role = locker_room.get_hierarchy_role(gs, pid, team_id)
+    
+    if role in ("leader", "incumbent_leader", "council_member"):
+        sentiment_lost = 6.0
+        morale_hit = 8.0
+        chem_hit = 5.0
+    elif role in ("influential", "key_influencer", "loyal_lieutenant"):
+        sentiment_lost = 3.0
+        morale_hit = 4.0
+        chem_hit = 2.5
+    elif role == "rookie":
+        sentiment_lost = 1.0
+        morale_hit = 0.5
+        chem_hit = 0.0
+    else:
+        if stance in ("club pillar", "not for sale"):
+            severe = stance == "not for sale"
+            sentiment_lost = 6.0 if severe else 3.0
+            morale_hit = 5.0 if severe else 2.0
+            chem_hit = 0.0
+        else:
+            sentiment_lost = 0.0
+            morale_hit = 0.0
+            chem_hit = 0.0
+
+    if stance in ("club pillar", "not for sale") or role in ("leader", "incumbent_leader", "council_member", "influential", "key_influencer", "loyal_lieutenant"):
+        severe_fan = stance == "not for sale" or role in ("leader", "incumbent_leader", "council_member")
+        fan_rate = 0.035 if severe_fan else 0.015
+        if "fan_favorite" in p.personality_tags:
+            fan_rate += 0.015
+        fans_lost = min(75_000, int(team.fan_count * fan_rate))
+    else:
+        fans_lost = 0
+
     team.fan_count = max(0, team.fan_count - fans_lost)
-    sentiment_lost = 6 if severe else 3
-    gs.team_sentiment[team_id] = max(
-        0.0, round(gs.sentiment(team_id) - sentiment_lost, 1)
-    )
-    morale_hit = 5.0 if severe else 2.0
-    for teammate_id in team.player_ids:
-        if teammate_id != pid:
-            mate = gs.players[teammate_id]
-            mate.morale = max(0.0, round(mate.morale - morale_hit, 1))
-    return {"fans_lost": fans_lost, "sentiment_lost": sentiment_lost}
+    
+    if sentiment_lost > 0:
+        gs.team_sentiment[team_id] = max(
+            0.0, round(gs.sentiment(team_id) - sentiment_lost, 1)
+        )
+        
+    if morale_hit > 0:
+        for teammate_id in team.player_ids:
+            if teammate_id != pid:
+                mate = gs.players[teammate_id]
+                mate.morale = max(0.0, round(mate.morale - morale_hit, 1))
+                
+    if chem_hit > 0:
+        team.chemistry = max(0.0, round(team.chemistry - chem_hit, 1))
+        
+    return {"fans_lost": fans_lost, "sentiment_lost": int(sentiment_lost)}
 
 
 def valuation_opinions(

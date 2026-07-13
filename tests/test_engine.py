@@ -213,3 +213,36 @@ def test_composure_reduces_but_never_removes_day_form(game_data: GameData) -> No
     assert abs(steady.day_form[pid]) < abs(cold.day_form[pid])
     assert all(abs(form) <= C.DAY_FORM_CAP for form in cold.day_form.values())
     assert all(abs(form) <= C.TEAM_FORM_CAP for form in cold.tactic_form.values())
+
+
+def test_duel_score_return_breakdown(game_data: GameData) -> None:
+    """_duel_score with return_breakdown=True must return float and a matching dictionary breakdown."""
+    from esports_sim.sim.engine import _MatchSim
+    sim = _MatchSim(game_data, "team_nexus", "team_vanguard", "haven", 1)
+    pid = sorted(game_data.teams["team_nexus"].player_ids)[0]
+    opp_pid = sorted(game_data.teams["team_vanguard"].player_ids)[0]
+    args = (False, False, False, 0, 5, 5, 20.0, 0.0, False, 0.0, False, opp_pid)
+    score, breakdown = sim._duel_score(pid, *args, return_breakdown=True)
+    assert isinstance(score, float)
+    assert isinstance(breakdown, dict)
+    expected_keys = {"aim", "positioning", "cover", "high_ground", "tactics_fit", "weapon", "mastery", "status"}
+    assert set(breakdown.keys()) == expected_keys
+    total = sum(breakdown.values())
+    assert total == pytest.approx(score, abs=1e-3)
+
+
+def test_duel_telemetry_event_emission(game_data: GameData) -> None:
+    """Simulated match must emit round.duel_telemetry events in the log."""
+    res = simulate_match_result(game_data, "team_nexus", "team_vanguard", "haven", seed=42)
+    telemetry_events = [e for e in res.events if e.type == "round.duel_telemetry"]
+    assert len(telemetry_events) > 0
+    ev = telemetry_events[0]
+    assert ev.attacker_id is not None
+    assert ev.defender_id is not None
+    assert ev.attacker_score is not None
+    assert ev.defender_score is not None
+    assert 0.0 <= ev.expected_win_prob <= 1.0
+    assert ev.winner_id in (ev.attacker_id, ev.defender_id)
+    assert len(ev.attacker_breakdown) == 8
+    assert len(ev.defender_breakdown) == 8
+

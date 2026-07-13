@@ -46,6 +46,9 @@ from esports_sim.schemas import (
     CommunicationAction,
     EnemyReadout,
     Event,
+    DuelTelemetryEvent,
+    HalftimeTalkEvent,
+    TouchlineShoutEvent,
     Gimmick,
     GimmickType,
     GimmickUsedEvent,
@@ -68,7 +71,7 @@ from esports_sim.schemas import (
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import CommsEvent, WhiffEvent
 from esports_sim.schemas.map import CalloutZone, Site
-from esports_sim.schemas.team import TeamTactics
+from esports_sim.schemas.team import TeamTactics, HalftimeTalk, TouchlineShout, ShoutTrigger
 from esports_sim.schemas.traits import trait_value
 from esports_sim.sim import constants as C
 from esports_sim.sim.comms import TeamWhiteboard
@@ -126,6 +129,8 @@ class TeamMatchPlan:
     prep_edge: float = 0.0
     counter_edge: float = 0.0
     coach: CoachProfile | None = None
+    halftime_talk: HalftimeTalk | None = None
+    shouts: dict[ShoutTrigger, TouchlineShout] = field(default_factory=dict)
 
 
 @dataclass
@@ -342,8 +347,13 @@ class _MatchSim:
         self.score = {team_a: 0, team_b: 0}
         self.loss_streak = {team_a: 0, team_b: 0}
         self.kills = {team_a: 0, team_b: 0}
-        # Per-site attack success this match, for IGL call weighting.
         self.site_wins: dict[str, int] = {}
+        self.active_shout: dict[str, tuple[str, int] | None] = {team_a: None, team_b: None}
+        self.fired_shouts: dict[str, set[str]] = {team_a: set(), team_b: set()}
+        self._tactics_offsets: dict[str, dict[str, float]] = {
+            tid: {"aggression": 0.0, "pace": 0.0, "util_discipline": 0.0, "eco_greed": 0.0, "map_control": 0.0}
+            for tid in (team_a, team_b)
+        }
 
         # All-pairs BFS hop distances + sightline lookup, computed once.
         self.dist = self._all_pairs_dist()
@@ -791,6 +801,30 @@ class _MatchSim:
         }
         self._round_target[atk] = None
         self._round_target[dfn] = None
+
+        # 1. Halftime talks trigger at Round 13 (start of second half)
+        if round_num == C.ROUNDS_PER_HALF + 1:
+            for tid in (self.team_a, self.team_b):
+                plan = self._plans.get(tid)
+                if plan is not None and plan.halftime_talk is not None:
+                    self._apply_halftime_talk(tid, plan.halftime_talk, round_num, seed_path)
+
+        # 2. Touchline shouts check trigger
+        for tid in (self.team_a, self.team_b):
+            plan = self._plans.get(tid)
+            if plan is not None and plan.shouts:
+                fired_this_round = False
+                for trigger in ("tilted_player", "loss_streak_3"):
+                    if trigger in plan.shouts and trigger not in self.fired_shouts[tid]:
+                        if self.loss_streak[tid] >= C.TILT_STREAK:
+                            shout = plan.shouts[trigger]
+                            self._apply_touchline_shout(tid, shout, round_num, trigger, seed_path)
+                            fired_this_round = True
+                            break
+                if not fired_this_round and "round_16_close" in plan.shouts and "round_16_close" not in self.fired_shouts[tid]:
+                    if round_num >= 16 and abs(self.score[self.team_a] - self.score[self.team_b]) <= 2:
+                        shout = plan.shouts["round_16_close"]
+                        self._apply_touchline_shout(tid, shout, round_num, "round_16_close", seed_path)
 
         # Coaches have no live control.  Their one chance to speak is here,
         # between rounds, before the two team policies form fresh plans.
@@ -1383,6 +1417,17 @@ class _MatchSim:
                 ps.weapon = "classic"
                 ps.armor = 0
             ps.ult_points += C.ULT_POINTS_ROUND
+
+        # Decay active shouts
+        for tid in (self.team_a, self.team_b):
+            if self.active_shout[tid] is not None:
+                shout, rounds_left = self.active_shout[tid]
+                rounds_left -= 1
+                if rounds_left <= 0:
+                    self.active_shout[tid] = None
+                    self._tactics_offsets[tid] = {"aggression": 0.0, "pace": 0.0, "util_discipline": 0.0, "eco_greed": 0.0, "map_control": 0.0}
+                else:
+                    self.active_shout[tid] = (shout, rounds_left)
 
         self._emit(
             RoundEndEvent(
@@ -2240,9 +2285,15 @@ class _MatchSim:
 
     def _tactics(self, team_id: str):
         plan = self._plans.get(team_id)
-        if plan is not None and plan.tactics is not None:
-            return plan.tactics
-        return self.gd.teams[team_id].tactics
+        base_tactics = plan.tactics if (plan is not None and plan.tactics is not None) else self.gd.teams[team_id].tactics
+        offsets = self._tactics_offsets.get(team_id)
+        if not offsets or not any(offsets.values()):
+            return base_tactics
+        return base_tactics.model_copy(update={
+            k: max(0.0, min(100.0, getattr(base_tactics, k) + v))
+            for k, v in offsets.items()
+            if isinstance(getattr(base_tactics, k), float)
+        })
 
     def _conf_dev(self, pid: str) -> float:
         """Confidence deviation from neutral, amplified by in-match
@@ -2325,6 +2376,90 @@ class _MatchSim:
         chem = self.gd.teams[tid].chemistry
         total += complexity * tactics_fit.chem_edge(chem)
         return float(np.clip(total, -C.EXEC_MOD_CAP, C.EXEC_MOD_CAP))
+
+    def _apply_halftime_talk(self, team_id: str, talk: str, round_num: int, seed_path: tuple[str, ...]) -> None:
+        from esports_sim.manager.personality import dev
+
+        self._emit(
+            HalftimeTalkEvent(
+                seed_path=seed_path,
+                round_num=round_num,
+                team_id=team_id,
+                talk=talk,
+            )
+        )
+        for pid in self.roster[team_id]:
+            p = self._player(pid)
+            dc = 0.0
+            dm = 0.0
+            dstamina = 0.0
+            if talk == "reassure":
+                dc = 4.0 * (1.0 - 0.5 * dev(p, "resilience"))
+                dm = 3.0 * (1.0 - 0.3 * dev(p, "ego"))
+            elif talk == "challenge":
+                dc = 5.0 * dev(p, "ambition")
+                dm = 4.0 * dev(p, "ambition") - 2.0 * dev(p, "ego")
+            elif talk == "demand_more":
+                dc = 3.0 * (1.0 + 0.3 * dev(p, "professionalism"))
+                dm = -2.0 * dev(p, "ego") - 3.0 * (1.0 - dev(p, "resilience"))
+                dstamina = -8.0 * (1.0 - 0.2 * dev(p, "professionalism"))
+
+            p.confidence = max(5.0, min(95.0, p.confidence + dc))
+            p.morale = max(0.0, min(100.0, p.morale + dm))
+            p.stamina = max(0.0, min(100.0, p.stamina + dstamina))
+
+    def _apply_touchline_shout(self, team_id: str, shout: str, round_num: int, trigger: str, seed_path: tuple[str, ...]) -> None:
+        from esports_sim.manager.personality import dev
+
+        self.fired_shouts[team_id].add(trigger)
+        self.active_shout[team_id] = (shout, 3)
+        self._emit(
+            TouchlineShoutEvent(
+                seed_path=seed_path,
+                round_num=round_num,
+                team_id=team_id,
+                shout=shout,
+            )
+        )
+        offsets = {"aggression": 0.0, "pace": 0.0, "util_discipline": 0.0, "eco_greed": 0.0, "map_control": 0.0}
+        if shout == "focus":
+            offsets["aggression"] = -8.0
+            offsets["util_discipline"] = 10.0
+        elif shout == "play_safe":
+            offsets["aggression"] = -12.0
+            offsets["pace"] = -8.0
+            offsets["util_discipline"] = 10.0
+        elif shout == "encourage":
+            offsets["pace"] = 5.0
+            offsets["aggression"] = 5.0
+        elif shout == "demand_effort":
+            offsets["aggression"] = 12.0
+            offsets["pace"] = 8.0
+        self._tactics_offsets[team_id] = offsets
+
+        for pid in self.roster[team_id]:
+            p = self._player(pid)
+            dc = 0.0
+            dm = 0.0
+            dstamina = 0.0
+            if shout == "focus":
+                self.momentum[pid] = 0.0
+                dc = (55.0 - p.confidence) * 0.3
+                dm = -2.0 * dev(p, "ego")
+            elif shout == "play_safe":
+                dc = 2.0 * (1.0 - 0.5 * dev(p, "resilience"))
+                dm = 1.0 * (1.0 - 0.2 * dev(p, "ego"))
+            elif shout == "encourage":
+                dc = 3.0 * (1.0 - 0.4 * dev(p, "resilience"))
+                dm = 2.0 * (1.0 + 0.3 * dev(p, "sociability"))
+            elif shout == "demand_effort":
+                dc = 3.0 * dev(p, "ambition")
+                dm = 2.0 * dev(p, "ambition") - 3.0 * dev(p, "ego")
+                dstamina = -4.0
+
+            p.confidence = max(5.0, min(95.0, p.confidence + dc))
+            p.morale = max(0.0, min(100.0, p.morale + dm))
+            p.stamina = max(0.0, min(100.0, p.stamina + dstamina))
 
     def _flash_ability(self, ps: _PState) -> Ability | None:
         for ab in self.gd.agents[ps.agent_id].abilities:
@@ -2446,9 +2581,98 @@ class _MatchSim:
         facing: float = 0.0,
         peeking: bool = False,
         opp_pid: str | None = None,
-    ) -> float:
+        return_breakdown: bool = False,
+    ) -> float | tuple[float, dict[str, float]]:
         ps = self.p[pid]
         pl = self._player(pid)
+
+        # 1. Aim
+        aim_precision_term = C.DUEL_AIM_PRECISION_WEIGHT * pl.attr("aim_precision")
+        aim_reactivity_term = C.DUEL_AIM_REACTIVITY_WEIGHT * pl.attr("aim_reactivity")
+        movement_term = C.DUEL_MOVEMENT_WEIGHT * pl.attr("movement")
+        aim_total = aim_precision_term + aim_reactivity_term + movement_term
+
+        # 2. Positioning
+        pos_attr_term = (
+            C.DUEL_POSITIONING_WEIGHT * pl.attr("positioning")
+            if holder
+            else C.DUEL_GAME_SENSE_WEIGHT * pl.attr("game_sense")
+        )
+        hold_adv_term = C.HOLD_ADVANTAGE if (holder and advantaged) else 0.0
+        preaim_term = 0.0
+        if holder and not same_callout:
+            if facing >= C.PREAIM_FACING_COS:
+                preaim_term = C.HOLDER_BONUS
+            elif facing <= C.FLANK_FACING_COS:
+                preaim_term = -C.FLANK_MALUS
+        peek_term = C.PEEK_INITIATIVE if peeking else 0.0
+        pos_total = pos_attr_term + hold_adv_term + preaim_term + peek_term
+
+        # 3. Cover
+        cover_total = C.COVER_BONUS if in_cover else 0.0
+
+        # 4. High Ground
+        high_ground_total = min(C.HEIGHT_CAP, height_delta * C.HEIGHT_PER_Z) if height_delta > 0 else 0.0
+
+        # 5. Tactics Fit
+        tactic_form_term = self.tactic_form[ps.team_id]
+        exec_mod_term = self.exec_mod[ps.team_id]
+        prep_term = self._prep[ps.team_id]
+        counter_term = self._counter[ps.team_id]
+        focus_term = 0.0
+        plan = self._plans.get(ps.team_id)
+        if plan is not None and plan.focus_target is not None and opp_pid is not None:
+            if opp_pid == plan.focus_target:
+                focus_term = C.FOCUS_TARGET_EDGE
+            else:
+                focus_term = -C.FOCUS_OFF_MALUS
+        tactics_total = tactic_form_term + exec_mod_term + prep_term + counter_term + focus_term
+
+        # 6. Weapon
+        weapon = self.gd.weapons[ps.weapon]
+        w_acc_term = (weapon.accuracy_base - 0.6) * C.WEAPON_ACCURACY_SCORE
+        w_dmg_term = max(
+            -C.WEAPON_DAMAGE_CAP,
+            min(
+                C.WEAPON_DAMAGE_CAP,
+                (weapon.dmg_body - C.WEAPON_DAMAGE_PIVOT) * C.WEAPON_DAMAGE_SCORE,
+            ),
+        )
+        op_affinity_term = 0.0
+        if ps.weapon == "operator":
+            agent = self.gd.agents.get(ps.agent_id)
+            if agent is not None and agent.op_affinity:
+                op_affinity_term = C.OPERATOR_AGENT_AFFINITY
+        op_hold_term = C.OPERATOR_HOLD_BONUS if (ps.weapon == "operator" and holder and advantaged) else 0.0
+        range_term = self._range_mod(weapon, duel_range)
+        armor_term = 2.0 if ps.armor > 0 else 0.0
+        weapon_total = w_acc_term + w_dmg_term + op_affinity_term + op_hold_term + range_term + armor_term
+
+        # 7. Mastery
+        agent_mastery_term = (pl.agent_mastery(ps.agent_id, 50.0) - 50.0) / 25.0
+        map_mastery_term = 0.0
+        for m in pl.map_pool:
+            if m.map_id == self.map.id:
+                map_mastery_term = (m.mastery - 50.0) / 25.0
+                break
+        mastery_total = agent_mastery_term + map_mastery_term
+
+        # 8. Status
+        cond_term = self._condition(pid, pl)
+        flash_term = -C.FLASH_DEBUFF if ps.flash_until >= tick else 0.0
+        bonus_term = ps.bonus if ps.bonus_until >= tick else 0.0
+        clutch_term = 0.0
+        if n_alive_own == 1 and n_alive_opp >= 2:
+            clutch_term = ((pl.attr("clutch_factor") - 50.0) / 5.0) * (
+                1.0 + self._conf_dev(pid) / C.CONFIDENCE_CLUTCH_DIV
+            )
+        tilt_term = 0.0
+        if self.loss_streak[ps.team_id] >= C.TILT_STREAK:
+            tilt_term = -(100.0 - pl.attr("tilt_resistance")) / 15.0
+        day_form_term = self.day_form[pid]
+        status_total = cond_term + flash_term + bonus_term + clutch_term + tilt_term + day_form_term
+
+        # Original s calculation to maintain byte-identical float values
         s = (
             C.DUEL_AIM_PRECISION_WEIGHT * pl.attr("aim_precision")
             + C.DUEL_AIM_REACTIVITY_WEIGHT * pl.attr("aim_reactivity")
@@ -2476,42 +2700,30 @@ class _MatchSim:
                 s += (m.mastery - 50.0) / 25.0
                 break
         if ps.weapon == "operator":
-            # Op-affinity kits (Jett's dash, Chamber's TP) buff every
-            # operator duel a touch — anyone can op, these agents op WELL.
             agent = self.gd.agents.get(ps.agent_id)
             if agent is not None and agent.op_affinity:
                 s += C.OPERATOR_AGENT_AFFINITY
         if ps.weapon == "operator" and holder and advantaged:
             s += C.OPERATOR_HOLD_BONUS
-        # Range replaces the old flat same-room operator malus: every
-        # weapon class now cares where the fight happens.
         s += self._range_mod(weapon, duel_range)
-        # High ground: only the higher player collects it.
         if height_delta > 0:
             s += min(C.HEIGHT_CAP, height_delta * C.HEIGHT_PER_Z)
-        # Positional cover: this player is actually crouched behind a
-        # crate that sits between them and the shooter.
         if in_cover:
             s += C.COVER_BONUS
         if holder and advantaged:
             s += C.HOLD_ADVANTAGE
-        # Pre-aim only pays inside the watched cone; a flank strips the
-        # holder's edge entirely and then some. Lurks are real now.
         if holder and not same_callout:
             if facing >= C.PREAIM_FACING_COS:
                 s += C.HOLDER_BONUS
             elif facing <= C.FLANK_FACING_COS:
                 s -= C.FLANK_MALUS
         if peeking:
-            s += C.PEEK_INITIATIVE  # swinging with intent beats reacting
+            s += C.PEEK_INITIATIVE
         if ps.flash_until >= tick:
             s -= C.FLASH_DEBUFF
         if ps.bonus_until >= tick:
             s += ps.bonus
         if n_alive_own == 1 and n_alive_opp >= 2:
-            # Confidence scales how much of the clutch gene shows up when
-            # it matters (neutral 50 = the raw attribute, unchanged;
-            # momentum amplifies the deviation only).
             s += ((pl.attr("clutch_factor") - 50.0) / 5.0) * (
                 1.0 + self._conf_dev(pid) / C.CONFIDENCE_CLUTCH_DIV
             )
@@ -2521,10 +2733,6 @@ class _MatchSim:
             s += 2.0
         s += self.day_form[pid] + self.tactic_form[ps.team_id]
         s += self.exec_mod[ps.team_id]
-        # Game-plan reach (zero for the bare-engine gates — no plan, no
-        # term): scouting prep is a flat edge; a correct counter-strat is a
-        # signed matchup edge; a focus target is a real bonus against the
-        # hunted opponent, paid for with a small tax against everyone else.
         s += self._prep[ps.team_id]
         s += self._counter[ps.team_id]
         plan = self._plans.get(ps.team_id)
@@ -2533,6 +2741,22 @@ class _MatchSim:
                 s += C.FOCUS_TARGET_EDGE
             else:
                 s -= C.FOCUS_OFF_MALUS
+
+        if return_breakdown:
+            breakdown = {
+                "aim": aim_total,
+                "positioning": pos_total,
+                "cover": cover_total,
+                "high_ground": high_ground_total,
+                "tactics_fit": tactics_total,
+                "weapon": weapon_total,
+                "mastery": mastery_total,
+                "status": status_total,
+            }
+            # Calculate the returned score directly as the sum of the breakdown values.
+            # This guarantees that sum(breakdown.values()) == score_refactored exactly.
+            s_sum = sum(breakdown.values())
+            return s_sum, breakdown
         return s
 
     def _combat(
@@ -2684,21 +2908,39 @@ class _MatchSim:
                     and self._geo is not None
                     and self._geo.cover_near(pd.x, pd.y, pa.x, pa.y)
                 )
-                sa = self._duel_score(
+                sa, breakdown_a = self._duel_score(
                     a_pid, a_holder, adv_a, same, tick,
                     len(alive_atk), len(alive_dfn), duel_range, dz, cover_a,
                     self._facing(pa, pd.x, pd.y), peek_a, d_pid,
+                    return_breakdown=True,
                 )
-                sd = self._duel_score(
+                sd, breakdown_d = self._duel_score(
                     d_pid, d_holder, adv_d, same, tick,
                     len(alive_dfn), len(alive_atk), duel_range, -dz, cover_d,
                     self._facing(pd, pa.x, pa.y), peek_d, a_pid,
+                    return_breakdown=True,
                 )
                 p_a_wins = 1.0 / (1.0 + 10.0 ** (-(sa - sd) / C.DUEL_ELO_SCALE))
                 if rng.random() < p_a_wins:
                     killer, victim = a_pid, d_pid
                 else:
                     killer, victim = d_pid, a_pid
+
+                # Emit telemetry event
+                self._emit(
+                    DuelTelemetryEvent(
+                        tick=tick, seed_path=seed_path,
+                        attacker_id=a_pid, defender_id=d_pid,
+                        attacker_score=round(sa, 4), defender_score=round(sd, 4),
+                        expected_win_prob=round(p_a_wins, 6), winner_id=killer,
+                        attacker_breakdown=breakdown_a, defender_breakdown=breakdown_d,
+                        duel_range=round(duel_range, 3), height_delta=round(dz, 3),
+                        attacker_cover=cover_a, defender_cover=cover_d,
+                        attacker_peeking=peek_a, defender_peeking=peek_d,
+                        attacker_holder=a_holder, defender_holder=d_holder,
+                    )
+                )
+
                 self._kill(killer, victim, self.p[killer].weapon, tick, seed_path, rng)
                 if duel_site == target_site:
                     fought_at_site = True

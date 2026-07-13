@@ -257,7 +257,7 @@ def test_v22_migration_and_round_trip(campaign: GameState, tmp_path) -> None:
     old_path = tmp_path / "v22.json"
     old_path.write_text(json.dumps(old), encoding="utf-8")
     migrated = GameState.load(old_path)
-    assert migrated.schema_version == SCHEMA_VERSION == 23
+    assert migrated.schema_version == SCHEMA_VERSION == 26
     assert migrated.delegation_policies_by == {}
     assert migrated.media_history_by == {}
 
