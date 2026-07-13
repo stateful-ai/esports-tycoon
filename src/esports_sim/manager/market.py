@@ -314,8 +314,7 @@ def renew_contract(
     if salary is not None:
         new_salary = max(800, int(salary))
     else:
-        new_salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
-        new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
+        new_salary = renewal_salary(gs, team_id, player_id)
     p.salary = new_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     # A direct/AI renewal preserves the player's existing negotiated clauses
@@ -333,6 +332,27 @@ def renew_contract(
     _record_value_decision(gs, "renew", "completed", player_id, team_id,
                            reason="contract renewed")
     return True, f"renewed {p.handle} at {new_salary:,}/wk for {p.contract_weeks_left} weeks"
+
+
+def renewal_salary(gs: GameState, team_id: str, player_id: str) -> int:
+    """Return the direct-renewal number without mutating state.
+
+    Delegated policies use this same calculation before deciding whether the
+    deal sits inside their salary band; the automation never receives a
+    cheaper or hidden contract path.
+    """
+    from esports_sim.manager import memories
+
+    from esports_sim.manager import media_events
+
+    p = gs.players[player_id]
+    loyalty = memories.loyalty_bias(gs, player_id, team_id)
+    salary = max(asking_salary(p), int(p.salary * 1.1 / 100) * 100)
+    trust_adjustment = (media_events.trust(gs, team_id, player_id) - 50.0) / 1000.0
+    return max(
+        800,
+        int(salary * (1.0 - loyalty / 100.0 - trust_adjustment) / 100) * 100,
+    )
 
 
 def can_swap(
@@ -988,8 +1008,16 @@ def _negotiation_leverage(
     fit = relationships.locker_room_fit(gs, pid, team.id)
     interest += (float(fit["average"]) - 50.0) * 0.25
     if kind == "renew":
+        from esports_sim.manager import media_events
+
         interest += memories.loyalty_bias(gs, pid, team.id) * 0.6
         interest += min(10.0, p.tenure_weeks / 20.0)
+        public_trust = media_events.trust(gs, team.id, pid)
+        interest += (public_trust - 50.0) * 0.20
+        if public_trust >= 65.0:
+            reasons.append("manager has earned public trust")
+        elif public_trust <= 35.0:
+            reasons.append("public trust has eroded")
         if p.morale < 45:
             interest -= 12.0
             reasons.append("unhappy at the club")
@@ -1021,6 +1049,8 @@ def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
     if p.confidence >= 65:
         mult += 0.05
     if kind == "renew":
+        from esports_sim.manager import media_events
+
         # Renewals anchor on the current deal — nobody re-signs for less
         # than they're on without a reason.
         base = max(base, int(p.salary * 1.05))
@@ -1030,6 +1060,7 @@ def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
             mult -= 0.05  # part of the furniture: friendlier table
         if p.morale <= 40:
             mult += 0.10  # unhappy: pay me to stay
+        mult += (50.0 - media_events.trust(gs, gs.acting_team_id, pid)) / 1000.0
     # Existing relationships travel with a player. A friendly reunion takes
     # a little heat out of the table; a frosty room makes the player charge
     # for the risk. Hard feuds are handled as vetoes before talks open.

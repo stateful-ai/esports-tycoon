@@ -24,7 +24,7 @@ def test_observation_is_json_safe_visible_and_restores_acting_team(game_data):
 
     json.dumps(obs, sort_keys=True)
     assert gs.acting_team_id == tid
-    assert obs["observation_version"] == 3
+    assert obs["observation_version"] == 4
     assert obs["manager_profile"] == {"risk": 0.25}
     assert len(obs["roster"]) == 5
     assert "attributes" in obs["roster"][0]
@@ -124,7 +124,7 @@ def test_game_plan_talk_and_trace_capture(game_data):
     env.step({"kind": "talk", "params": option})
     assert len(traces) == 2
     assert traces[0]["policy_version"] == "test-policy-v1"
-    assert traces[0]["observation"]["observation_version"] == 3
+    assert traces[0]["observation"]["observation_version"] == 4
     assert traces[0]["action"]["kind"] == "set_game_plan"
 
 

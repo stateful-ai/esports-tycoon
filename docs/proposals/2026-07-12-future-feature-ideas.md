@@ -11,13 +11,14 @@ changed, and what followed. A later research extension can run deterministic
 counterfactuals (for example, keep a player instead of selling) without
 pretending the alternate history is canonical.
 
-## Delegation policies
+## Delegation policies â€” implemented 2026-07-12
 
 Let managers define bounded staff rules: automatically scout players matching
 a profile, renew rotation players inside a salary band, or alert only when a
 prospect crosses a readiness threshold. Depth should not require repetitive
-weekly clicks. Delegation must use the same legal-action contract and record
-the policy that authorized each move.
+weekly clicks. The shipped policy uses the same renewal salary calculation and
+single-scout capacity as manual play, records each run and its exceptions, and
+supports profile-based prospect alerts without exposing hidden ability.
 
 ## Dynamic league governance
 
@@ -26,12 +27,13 @@ format adjustments, roster-rule changes, and Tier-2 promotion pathways. Rules
 must be deterministic, versioned on GameState, and understood by schedule,
 market, AI, and headless-policy layers before they affect a live save.
 
-## High-stakes media choices
+## High-stakes media choices â€” implemented 2026-07-12
 
 Occasional grounded choices—defend a rookie, cool a transfer rumor, set derby
 expectations—could feed existing sentiment, sponsor, memory, and relationship
-systems. Avoid weekly dialogue spam and arbitrary morale quizzes; every option
-needs a visible constituency and a durable consequence.
+systems. The shipped layer is contextual, has a six-week cooldown, never
+stacks with a flavor prompt, and applies deterministic player-trust, sponsor,
+and sentiment consequences. Derby expectations settle from the real result.
 
 ## Wider career formats
 

@@ -19,10 +19,12 @@ from esports_sim.manager import (
     academy,
     career,
     culture,
+    delegation,
     development,
     economy,
     flavor_events,
     market,
+    media_events,
     preparation,
     series_management,
     sponsors,
@@ -35,7 +37,7 @@ from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 3
+OBSERVATION_VERSION = 4
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
@@ -70,6 +72,8 @@ SUPPORTED_ACTIONS = frozenset(
         "series_directive",
         "set_leadership",
         "culture_session",
+        "set_delegation",
+        "resolve_media",
     }
 )
 _TACTIC_DIALS = (
@@ -180,6 +184,10 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     if pending_flavor is not None:
         ready = False
         ready_reason = "resolve the pending flavor event before advancing"
+    pending_media = media_events.pending_for(gs, team_id)
+    if pending_media is not None:
+        ready = False
+        ready_reason = "resolve the pending media decision before advancing"
     market_open = bool(market.market_window_status(gs)["open"])
     if career.blocked_seats(gs):
         ready = False
@@ -331,6 +339,12 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "event_id": pending_flavor.id if pending_flavor is not None else "",
             "choice_ids": [c.id for c in pending_flavor.choices] if pending_flavor is not None else [],
         },
+        "resolve_media": {
+            "enabled": pending_media is not None,
+            "event_id": pending_media.id if pending_media is not None else "",
+            "choice_ids": [c.id for c in pending_media.choices]
+            if pending_media is not None else [],
+        },
         "rein_streaming": {"enabled": bool(rein_targets), "player_ids": rein_targets},
         "negotiate_open": {"enabled": bool(negotiable), "player_ids": negotiable},
         "negotiate_offer": {"enabled": bool(live_negotiations), "options": live_negotiations},
@@ -373,6 +387,12 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "enabled": bool(culture_status["available_actions"]),
             "actions": list(culture_status["available_actions"]),
             "player_ids": list(culture_status["welcome_player_ids"]),
+        },
+        "set_delegation": {
+            "enabled": True,
+            "regions": list(delegation.view(gs, team_id)["regions"]),
+            "roles": list(delegation.view(gs, team_id)["roles"]),
+            "alert_levels": list(delegation.ALERT_LEVELS),
         },
     }
 
@@ -429,6 +449,8 @@ def manager_observation(
                 "academy": academy.academy_view(gs, team_id),
                 "preparation": preparation.view(gs, team_id),
                 "culture": culture.culture_snapshot(gs, team_id),
+                "delegation": delegation.view(gs, team_id),
+                "media": media_events.view(gs, team_id),
                 "tournament_roster": series_management.registration_for(gs, team_id),
                 "series_directive": (
                     gs.series_directives_by[team_id].model_dump(mode="json")
@@ -695,6 +717,17 @@ class HeadlessManagerEnv:
                 ok, message, _ = flavor_events.resolve(self.gs, self.team_id, choice_id)
                 if not ok:
                     raise InvalidManagerAction(message)
+            elif kind == "resolve_media":
+                event_id = str(params.get("event_id", ""))
+                choice_id = str(params.get("choice_id", ""))
+                pending = media_events.pending_for(self.gs, self.team_id)
+                if pending is None or pending.id != event_id:
+                    raise InvalidManagerAction("no matching media decision is waiting")
+                ok, message, _ = media_events.resolve(
+                    self.gs, self.team_id, choice_id
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
             elif kind == "rein_streaming":
                 pid = str(params.get("player_id", ""))
                 ok, message, _ = talk.rein_in_streaming(self.gs, pid)
@@ -790,6 +823,13 @@ class HeadlessManagerEnv:
                 )
                 if not ok:
                     raise InvalidManagerAction(message)
+            elif kind == "set_delegation":
+                try:
+                    policy = delegation.configure(self.gs, self.team_id, params)
+                except ValueError as exc:
+                    raise InvalidManagerAction(str(exc)) from exc
+                params = policy.model_dump(mode="json")
+                message = "staff responsibilities updated"
             elif kind == "set_scout":
                 target = str(params.get("target", ""))
                 legal = self.observe()["legal_actions"]["set_scout"]["targets"]
@@ -818,6 +858,8 @@ class HeadlessManagerEnv:
                     raise InvalidManagerAction("a manager must accept a job before advancing")
                 if flavor_events.pending_for(self.gs, self.team_id) is not None:
                     raise InvalidManagerAction("resolve the pending flavor event before advancing")
+                if media_events.pending_for(self.gs, self.team_id) is not None:
+                    raise InvalidManagerAction("resolve the pending media decision before advancing")
                 ok, why = market.roster_ready(self.gs, self.team_id)
                 if not ok:
                     raise InvalidManagerAction(why)
