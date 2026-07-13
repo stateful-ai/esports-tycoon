@@ -580,6 +580,35 @@ class LearnedManagerPolicy:
             params = {"player_id": legal["player_ids"][0]}
         elif kind == "accept_job":
             params = {"team_id": legal["team_ids"][0]}
+        elif kind == "academy_move":
+            params = dict(legal["options"][0])
+        elif kind == "academy_upgrade":
+            params = {}
+        elif kind == "set_preparation":
+            params = {
+                "fixture_id": legal["fixture_id"],
+                "partner_id": legal["partner_ids"][0],
+                "map_id": legal["map_ids"][0],
+                "objective": legal["objectives"][0],
+                "intensity": legal["intensities"][0],
+            }
+        elif kind == "tournament_registration":
+            params = {"player_ids": legal["player_ids"][:6]}
+        elif kind == "series_directive":
+            params = {
+                "fixture_id": legal["fixture_id"],
+                "trigger": "trailing",
+                "response": "stabilize",
+            }
+        elif kind == "set_leadership":
+            players = legal["player_ids"]
+            params = {
+                "captain_id": players[0],
+                "council_ids": players[1:3],
+                "principle": "balanced",
+            }
+        elif kind == "culture_session":
+            params = {"action": "reset"}
         return {"kind": kind, "params": params}
 
 

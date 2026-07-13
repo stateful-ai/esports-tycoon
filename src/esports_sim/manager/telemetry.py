@@ -64,6 +64,13 @@ ACTION_KINDS = frozenset(
         "resolve_flavor",
         "rein_streaming",
         "accept_job",
+        "academy_move",
+        "academy_upgrade",
+        "set_preparation",
+        "tournament_registration",
+        "series_directive",
+        "set_leadership",
+        "culture_session",
     }
 )
 

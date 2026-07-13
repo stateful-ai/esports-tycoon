@@ -28,9 +28,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from esports_sim.manager import (
+    academy,
     analytics,
     career,
     chronicle,
+    culture,
     development,
     economy,
     flavor_events,
@@ -41,12 +43,14 @@ from esports_sim.manager import (
     memories as memories_mod,
     meta as meta_mod,
     narrative,
+    preparation,
     relationships,
     role_fit,
     rivalries as rivalries_mod,
     social,
     sponsors,
     staff as staff_mod,
+    series_management,
     talk,
     telemetry,
     training,
@@ -883,6 +887,7 @@ def _fixture_view(f, gs: GameState) -> dict:
         "maps": f.maps,
         "map_thumbs": {mid: _map_thumb_url(mid) for mid in f.maps},
         "veto": f.veto,
+        "series_notes": list(f.series_notes),
         "played": f.played,
         "winner_id": f.winner_id,
         "map_score": list(f.map_score),
@@ -1732,6 +1737,7 @@ def state() -> dict:
             "season": gs.season,
             "week": gs.week,
             "phase": gs.phase,
+            "window": market.market_window_status(gs),
             "user_team": _team_view(user, gs),
             "next_fixture": next_fixture,
             # Dashboard hub extras: this season's rating leaders (league-wide)
@@ -1819,6 +1825,261 @@ def state() -> dict:
                 "autosave_every_weeks": gs.autosave_every_weeks,
             },
         }
+
+
+def _club_view(gs: GameState) -> dict:
+    tid = gs.acting_team_id
+    team = gs.teams[tid]
+    fixture = gs.team_fixture(tid)
+    opponent = None
+    if fixture is not None:
+        opponent = fixture.team_b if fixture.team_a == tid else fixture.team_a
+    prep = preparation.view(gs, tid)
+    partners = [
+        {"id": other, "name": gs.teams[other].name}
+        for other in sorted(gs.teams)
+        if other not in (tid, opponent) and gs.teams[other].player_ids
+    ]
+    culture_view = culture.culture_snapshot(gs, tid)
+    culture_view["players"] = [
+        {
+            "id": pid,
+            "handle": gs.players[pid].handle,
+            "age": gs.players[pid].age,
+            "tenure_weeks": gs.players[pid].tenure_weeks,
+            "leadership": culture.leadership_score(gs, tid, pid),
+        }
+        for pid in sorted(team.player_ids)
+    ]
+    directive = gs.series_directives_by.get(tid)
+    series_fixture = next(
+        (
+            f for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+            if not f.played and f.best_of >= 3 and tid in (f.team_a, f.team_b)
+        ),
+        None,
+    )
+    registration = series_management.registration_for(gs, tid)
+    if not registration:
+        registration = series_management.auto_registration(gs, tid)
+    series_starters = (
+        series_management.starting_five(gs, tid, series_fixture)
+        if series_fixture else []
+    )
+    academy_view = academy.academy_view(gs, tid)
+    return {
+        "market_window": market.market_window_status(gs),
+        "academy": academy_view,
+        "preparation": {
+            **prep,
+            "fixture": _fixture_view(fixture, gs) if fixture else None,
+            "opponent_id": opponent,
+            "maps": list(fixture.maps) if fixture else [],
+            "partners": partners,
+            "objectives": list(preparation.OBJECTIVES),
+            "intensities": list(preparation.INTENSITIES),
+        },
+        "registration": {
+            "player_ids": registration,
+            "locked": gs.phase != "regular",
+            "limit": market.TOURNAMENT_REGISTER,
+            "players": [
+                {
+                    "id": pid,
+                    "handle": gs.players[pid].handle,
+                    "age": gs.players[pid].age,
+                    "role": gs.players[pid].roster_role,
+                }
+                for pid in sorted(team.player_ids)
+            ],
+        },
+        "series": {
+            "fixture": _fixture_view(series_fixture, gs) if series_fixture else None,
+            "directive": directive.model_dump(mode="json") if directive else None,
+            "triggers": list(series_management.TRIGGERS),
+            "responses": list(series_management.RESPONSES),
+            "starter_ids": series_starters,
+            "bench_ids": [pid for pid in registration if pid not in series_starters],
+        },
+        "culture": culture_view,
+        "principles": list(culture.PRINCIPLES),
+        "culture_sessions": culture.session_status(gs, tid),
+    }
+
+
+@app.get("/api/club")
+def club_view() -> dict:
+    with S.lock:
+        return _club_view(S.require_gs())
+
+
+class AcademyMoveBody(BaseModel):
+    player_id: str
+    direction: str
+
+
+@app.post("/api/actions/academy_move")
+def academy_move(body: AcademyMoveBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = academy.move_player(
+            gs,
+            gs.acting_team_id,
+            body.player_id,
+            body.direction,
+            window_check=lambda state, team_id: market.market_move_allowed(
+                state, team_id, emergency_ok=False
+            ),
+        )
+        if not ok:
+            raise HTTPException(422, msg)
+        culture.ensure_leadership(gs)
+        telemetry.record_action(
+            gs, "academy_move", {"player_id": body.player_id, "direction": body.direction}
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+@app.post("/api/actions/academy_upgrade")
+def academy_upgrade() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = academy.upgrade(gs, gs.acting_team_id)
+        if not ok:
+            raise HTTPException(422, msg)
+        telemetry.record_action(gs, "academy_upgrade", {})
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class PreparationBody(BaseModel):
+    fixture_id: str
+    partner_id: str
+    map_id: str
+    objective: str
+    intensity: str
+
+
+@app.post("/api/actions/preparation")
+def preparation_action(body: PreparationBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        try:
+            plan = preparation.schedule(
+                gs, gs.acting_team_id, body.fixture_id, body.partner_id,
+                body.map_id, body.objective, body.intensity,
+            )
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        telemetry.record_action(gs, "set_preparation", plan.model_dump(mode="json"))
+        S.save()
+        return {"ok": True, "message": "preparation session booked"}
+
+
+class RegistrationBody(BaseModel):
+    player_ids: list[str]
+
+
+@app.post("/api/actions/tournament_registration")
+def tournament_registration(body: RegistrationBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = series_management.register_roster(
+            gs, gs.acting_team_id, body.player_ids
+        )
+        if not ok:
+            raise HTTPException(422, msg)
+        telemetry.record_action(
+            gs, "tournament_registration", {"player_ids": ",".join(body.player_ids)}
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class SeriesDirectiveBody(BaseModel):
+    fixture_id: str = ""
+    trigger: str = "trailing"
+    response: str = "steady"
+    substitute_in: str | None = None
+    substitute_out: str | None = None
+    clear: bool = False
+
+
+@app.post("/api/actions/series_directive")
+def series_directive(body: SeriesDirectiveBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.clear:
+            series_management.clear_directive(gs, gs.acting_team_id)
+            msg = "between-map instruction cleared"
+        else:
+            ok, msg = series_management.set_directive(
+                gs, gs.acting_team_id, body.fixture_id,
+                trigger=body.trigger, response=body.response,
+                substitute_in=body.substitute_in,
+                substitute_out=body.substitute_out,
+            )
+            if not ok:
+                raise HTTPException(422, msg)
+        telemetry.record_action(
+            gs, "series_directive",
+            {"fixture_id": body.fixture_id, "trigger": body.trigger,
+             "response": body.response,
+             "substitute_in": body.substitute_in or "",
+             "substitute_out": body.substitute_out or "",
+             "clear": body.clear},
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class LeadershipBody(BaseModel):
+    captain_id: str
+    council_ids: list[str]
+    principle: str
+
+
+@app.post("/api/actions/leadership")
+def leadership_action(body: LeadershipBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = culture.set_leadership(
+            gs, gs.acting_team_id, body.captain_id,
+            body.council_ids, body.principle,
+        )
+        if not ok:
+            raise HTTPException(422, msg)
+        telemetry.record_action(
+            gs, "set_leadership",
+            {"captain_id": body.captain_id,
+             "council_ids": ",".join(body.council_ids),
+             "principle": body.principle},
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class CultureSessionBody(BaseModel):
+    action: str
+    player_id: str | None = None
+
+
+@app.post("/api/actions/culture_session")
+def culture_session_action(body: CultureSessionBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg, effects = culture.culture_session(
+            gs, gs.acting_team_id, body.action, body.player_id
+        )
+        if not ok:
+            raise HTTPException(422, msg)
+        telemetry.record_action(
+            gs, "culture_session", {"action": body.action,
+                                    "player_id": body.player_id or ""},
+        )
+        S.save()
+        return {"ok": True, "message": msg, "effects": effects}
 
 
 class SaveSettingsBody(BaseModel):
@@ -3135,6 +3396,7 @@ def market_view() -> dict:
             "roster_max": market.roster_cap(gs, me),
             "roster_count": len(gs.roster(me)),
             "phase": gs.phase,
+            "window": market.market_window_status(gs),
             # Decision aids: where the squad is thin, who to sign, and whose
             # contracts are running down (yours + rivals'). All pure reads.
             "squad_needs": needs,
@@ -4889,7 +5151,12 @@ def _negotiation_view(gs: GameState, neg) -> dict:
             f"I want to keep {neg.demand_stream_share}% of my streaming revenue."
         ),
         "rounds_used": neg.rounds,
-        "rounds_left": market.NEGOTIATION_MAX_ROUNDS - neg.rounds,
+        "rounds_left": market.negotiation_round_limit(neg) - neg.rounds,
+        "leverage": neg.leverage,
+        "interest": neg.interest,
+        "competing_clubs": neg.competing_clubs,
+        "deadline_week": neg.deadline_week,
+        "leverage_reasons": list(neg.leverage_reasons),
         "current_salary": p.salary if neg.kind == "renew" else None,
         "contract_weeks_left": p.contract_weeks_left if neg.kind == "renew" else None,
         "locker_room_fit": {

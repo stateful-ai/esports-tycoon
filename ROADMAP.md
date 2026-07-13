@@ -2,7 +2,7 @@
 
 **Project:** esports-sim — Valorant-inspired tycoon + RL substrate + world-model research target
 **Format:** Now / Next / Later. Avoids false precision for a solo long-horizon project.
-**Last updated:** 2026-07-09
+**Last updated:** 2026-07-12
 
 ---
 
@@ -122,9 +122,16 @@ media voices, the coaching tree (retirees into the staff pool),
 organizational knowledge (playbooks/anti-strats/methodology feeding the
 game-plan prep edge, guarded by the new dynasty gate), a psychologist +
 performance-coach department with weekly analytics briefings, and
-strategy diffusion with chronicled meta eras. Still open:
+strategy diffusion with chronicled meta eras.
 
-- Mid-series (between-map) substitutions — lineups are per-match today
+The 2026-07-12 club-depth pass also shipped real tier-2 academy affiliates
+(intake, promotion/send-down, investment and minutes-based development), a
+scrim/bootcamp preparation lab, tournament-six registration and conditional
+between-map substitutions/responses, leverage-driven contract talks, opening +
+mid-split transfer windows, and captain/council/culture arcs. These decisions
+are exposed through the web and headless legal-action contracts with AI parity.
+Still open:
+
 - AI orgs setting game plans / carrying benches (documented parity choice)
 - Memories/relationship arcs beyond loyalty (grudges, mentor bonds)
 
@@ -189,6 +196,12 @@ Explicit non-goals. Calling these out so we don't drift.
 ---
 
 ## Changelog
+
+- **2026-07-12 (club depth)** — shipped academy affiliates over the simulated
+  Challengers circuit, opponent-specific preparation, tournament registration
+  and conditional between-map management, negotiation leverage/deadlines,
+  transfer windows and roster locks, and culture/leadership arcs; added a Club
+  workspace plus headless action support and schema v15 migration.
 
 - **2026-07-09 (Legacy Mode)** — GDD section 10 shipped in one pass,
   phases P0-P5 on a chronicle-first architecture (see

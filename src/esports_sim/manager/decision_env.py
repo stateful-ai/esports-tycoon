@@ -16,11 +16,15 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 from esports_sim.manager import (
+    academy,
     career,
+    culture,
     development,
     economy,
     flavor_events,
     market,
+    preparation,
+    series_management,
     sponsors,
     staff,
     talk,
@@ -59,6 +63,13 @@ SUPPORTED_ACTIONS = frozenset(
         "negotiate_offer",
         "negotiate_cancel",
         "accept_job",
+        "academy_move",
+        "academy_upgrade",
+        "set_preparation",
+        "tournament_registration",
+        "series_directive",
+        "set_leadership",
+        "culture_session",
     }
 )
 _TACTIC_DIALS = (
@@ -169,6 +180,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     if pending_flavor is not None:
         ready = False
         ready_reason = "resolve the pending flavor event before advancing"
+    market_open = bool(market.market_window_status(gs)["open"])
     if career.blocked_seats(gs):
         ready = False
         ready_reason = "a manager must accept a job before the world can advance"
@@ -227,8 +239,8 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     ]
     negotiable = []
     for pid in sorted(set(roster + free_agents)):
-        kind, _ = market.negotiation_kind(gs, pid)
-        if kind is not None and gs.talks_cooldown.get(pid, 0) <= gs.week:
+        can_open, _why, _kind = market.can_open_negotiation(gs, pid)
+        if can_open:
             negotiable.append(pid)
     talk_options = []
     rein_targets = []
@@ -249,6 +261,33 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     job_offers = []
     if seat is not None:
         job_offers = [o.team_id for o in gs.career_offers_by.get(seat.id, [])]
+    affiliate_id = academy.affiliate_for(gs, team_id)
+    academy_moves = []
+    if affiliate_id is not None:
+        for pid in sorted(gs.teams[affiliate_id].player_ids):
+            if academy.can_move(
+                gs, team_id, pid, "promote", window_check=market.market_move_allowed
+            )[0]:
+                academy_moves.append({"player_id": pid, "direction": "promote"})
+        for pid in roster:
+            if academy.can_move(
+                gs, team_id, pid, "send_down", window_check=market.market_move_allowed
+            )[0]:
+                academy_moves.append({"player_id": pid, "direction": "send_down"})
+    prep_partners = []
+    if fixture is not None and not fixture.played:
+        prep_partners = [
+            tid for tid in sorted(gs.teams)
+            if tid not in (team_id, opponent_id) and gs.teams[tid].player_ids
+        ]
+    series_fixture = next(
+        (f for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+         if not f.played and f.best_of >= 3 and team_id in (f.team_a, f.team_b)),
+        None,
+    )
+    academy_view = academy.academy_view(gs, team_id)
+    academy_cost = academy_view.get("next_upgrade_cost")
+    culture_status = culture.session_status(gs, team_id)
     return {
         "advance": {"enabled": ready, "reason": "" if ready else ready_reason},
         "set_training": {"enabled": True, "options": list(training.FOCUS_OPTIONS)},
@@ -264,7 +303,10 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         },
         "set_scout": {"enabled": bool(scout_targets), "targets": scout_targets},
         "sign": {"enabled": bool(signable), "player_ids": signable},
-        "release": {"enabled": bool(roster), "player_ids": roster},
+        "release": {
+            "enabled": bool(roster) and market_open,
+            "player_ids": roster if market_open else [],
+        },
         "renew": {"enabled": bool(roster), "player_ids": roster},
         "swap": {"enabled": bool(swaps), "pairs": swaps},
         "set_dev_plan": dev_plans,
@@ -296,6 +338,42 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "enabled": bool(gs.negotiations), "player_ids": sorted(gs.negotiations)
         },
         "accept_job": {"enabled": bool(job_offers), "team_ids": sorted(job_offers)},
+        "academy_move": {"enabled": bool(academy_moves), "options": academy_moves},
+        "academy_upgrade": {
+            "enabled": academy_cost is not None and gs.teams[team_id].balance >= academy_cost,
+            "cost": academy_cost,
+        },
+        "set_preparation": {
+            "enabled": bool(fixture and prep_partners and fixture.maps),
+            "fixture_id": fixture.id if fixture else "",
+            "partner_ids": prep_partners,
+            "map_ids": list(fixture.maps) if fixture else [],
+            "objectives": list(preparation.OBJECTIVES),
+            "intensities": list(preparation.INTENSITIES),
+        },
+        "tournament_registration": {
+            "enabled": gs.phase == "regular" and len(roster) >= market.ROSTER_MIN,
+            "player_ids": roster,
+            "counts": [market.ROSTER_MIN, market.TOURNAMENT_REGISTER],
+        },
+        "series_directive": {
+            "enabled": series_fixture is not None,
+            "fixture_id": series_fixture.id if series_fixture else "",
+            "player_ids": series_management.eligible_pool(gs, team_id, series_fixture)
+            if series_fixture else [],
+            "triggers": list(series_management.TRIGGERS),
+            "responses": list(series_management.RESPONSES),
+        },
+        "set_leadership": {
+            "enabled": bool(roster) and gs.leadership_last_change.get(team_id) != gs.season * 100 + gs.week,
+            "player_ids": roster,
+            "principles": list(culture.PRINCIPLES),
+        },
+        "culture_session": {
+            "enabled": bool(culture_status["available_actions"]),
+            "actions": list(culture_status["available_actions"]),
+            "player_ids": list(culture_status["welcome_player_ids"]),
+        },
     }
 
 
@@ -346,6 +424,17 @@ def manager_observation(
             "training_focus": gs.training_focus.get(team_id, "tactical"),
             "tactics": team.tactics.model_dump(),
             "lineup_ids": list(team.lineup_ids),
+            "club": {
+                "market_window": market.market_window_status(gs),
+                "academy": academy.academy_view(gs, team_id),
+                "preparation": preparation.view(gs, team_id),
+                "culture": culture.culture_snapshot(gs, team_id),
+                "tournament_roster": series_management.registration_for(gs, team_id),
+                "series_directive": (
+                    gs.series_directives_by[team_id].model_dump(mode="json")
+                    if team_id in gs.series_directives_by else None
+                ),
+            },
             "scout_target": gs.scout_target,
             "staff": {
                 role: member.model_dump() for role, member in sorted(gs.staff.items())
@@ -639,6 +728,68 @@ class HeadlessManagerEnv:
                 if not ok:
                     raise InvalidManagerAction(message)
                 self.team_id = new_team
+            elif kind == "academy_move":
+                pid = str(params.get("player_id", ""))
+                direction = str(params.get("direction", ""))
+                ok, message = academy.move_player(
+                    self.gs, self.team_id, pid, direction,
+                    window_check=market.market_move_allowed,
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
+                culture.ensure_leadership(self.gs)
+            elif kind == "academy_upgrade":
+                ok, message = academy.upgrade(self.gs, self.team_id)
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "set_preparation":
+                fixture_id = str(params.get("fixture_id", ""))
+                partner_id = str(params.get("partner_id", ""))
+                map_id = str(params.get("map_id", ""))
+                objective = str(params.get("objective", ""))
+                intensity = str(params.get("intensity", ""))
+                try:
+                    preparation.schedule(
+                        self.gs, self.team_id, fixture_id, partner_id,
+                        map_id, objective, intensity,
+                    )
+                except ValueError as exc:
+                    raise InvalidManagerAction(str(exc)) from exc
+                message = "preparation session booked"
+            elif kind == "tournament_registration":
+                picks = list(params.get("player_ids", []))
+                ok, message = series_management.register_roster(
+                    self.gs, self.team_id, picks
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "series_directive":
+                ok, message = series_management.set_directive(
+                    self.gs, self.team_id, str(params.get("fixture_id", "")),
+                    trigger=str(params.get("trigger", "trailing")),
+                    response=str(params.get("response", "steady")),
+                    substitute_in=str(params.get("substitute_in", "")) or None,
+                    substitute_out=str(params.get("substitute_out", "")) or None,
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "set_leadership":
+                ok, message = culture.set_leadership(
+                    self.gs, self.team_id,
+                    str(params.get("captain_id", "")),
+                    list(params.get("council_ids", [])),
+                    str(params.get("principle", "balanced")),
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
+            elif kind == "culture_session":
+                ok, message, _effects = culture.culture_session(
+                    self.gs, self.team_id,
+                    str(params.get("action", "")),
+                    str(params.get("player_id", "")) or None,
+                )
+                if not ok:
+                    raise InvalidManagerAction(message)
             elif kind == "set_scout":
                 target = str(params.get("target", ""))
                 legal = self.observe()["legal_actions"]["set_scout"]["targets"]

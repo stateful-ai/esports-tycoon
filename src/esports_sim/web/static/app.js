@@ -601,7 +601,7 @@ function render() {
   const container = el("div");
   $("#view").replaceChildren(container);
   // Office screen is parked for now (office.js stays on disk, unloaded).
-  ({ inbox, dashboard, roster, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
+  ({ inbox, dashboard, roster, club, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -644,6 +644,138 @@ function starsRange(band) {
 }
 
 /* -- screens --------------------------------------------------------------------- */
+
+/* -- club: academy, preparation, tournament six, and culture ------------------ */
+async function club(v) {
+  const d = await api("/api/club");
+  v.appendChild(screenHead("Club", { sub: "Development, preparation and leadership" }));
+
+  const windowCard = el("div", `card ${d.market_window.open ? "" : "alert"}`);
+  windowCard.innerHTML = `<h3>${esc(d.market_window.label)}</h3><p class="muted">${esc(d.market_window.detail)}</p>`;
+  v.appendChild(windowCard);
+
+  const ws = el("div", "ws");
+
+  // Academy: the affiliate is a real tier-2 team with real results and minutes.
+  const ac = el("div", "card ws-6");
+  const a = d.academy;
+  ac.innerHTML = `<h2>Academy <span class="pill">level ${a.level}</span></h2>` +
+    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}. Promotions and send-downs obey the market window.</p>`;
+  if (a.next_upgrade_cost) {
+    const up = el("button", "btn btn-sm", `Upgrade · ${money(a.next_upgrade_cost)}`);
+    up.onclick = async () => { const r = await api("/api/actions/academy_upgrade", {}); toast(r.message); refresh(); };
+    ac.appendChild(up);
+  }
+  const academyRows = el("div", "card-scroll");
+  for (const p of a.roster || []) {
+    const row = el("div", "entity");
+    row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(p.role)} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
+    const b = el("button", "btn btn-sm", "Promote");
+    b.disabled = !p.owned;
+    b.title = p.owned ? "Promote to the first team" : "Another parent organization holds this pathway";
+    b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "promote" }); toast(r.message); refresh(); };
+    row.appendChild(b); academyRows.appendChild(row);
+  }
+  ac.appendChild(academyRows);
+  const eligibleDown = (d.registration.players || []).filter((p) => p.age <= 23);
+  if (eligibleDown.length) {
+    ac.appendChild(el("p", "microlabel", "First team pathways"));
+    for (const p of eligibleDown) {
+      const row = el("div", "entity");
+      row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(p.role)}</span>`;
+      const b = el("button", "btn btn-sm", "Send down");
+      b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "send_down" }); toast(r.message); refresh(); };
+      row.appendChild(b); ac.appendChild(row);
+    }
+  }
+  ws.appendChild(ac);
+
+  // Preparation lab: every selectable value is server-supplied.
+  const pc = el("div", "card ws-6");
+  pc.innerHTML = `<h2>Preparation lab</h2>`;
+  const pr = d.preparation;
+  if (!pr.fixture) {
+    pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
+  } else {
+    pc.appendChild(el("p", "muted", `Next: ${esc(pr.fixture.team_a_name)} vs ${esc(pr.fixture.team_b_name)} · week ${pr.fixture.week}`));
+    const partner = el("select", "sel-sm");
+    for (const x of pr.partners) { const o = el("option", "", x.name); o.value = x.id; partner.appendChild(o); }
+    const map = el("select", "sel-sm");
+    for (const x of pr.maps) { const o = el("option", "", humanize(x)); o.value = x; map.appendChild(o); }
+    const obj = el("select", "sel-sm");
+    for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
+    const intensity = el("select", "sel-sm");
+    for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
+    const form = el("div", "row"); form.append(partner, map, obj, intensity);
+    const book = el("button", "btn btn-primary", "Book session");
+    book.onclick = async () => {
+      const r = await api("/api/actions/preparation", { fixture_id: pr.fixture.id, partner_id: partner.value, map_id: map.value, objective: obj.value, intensity: intensity.value });
+      toast(r.message); refresh();
+    };
+    pc.append(form, book);
+  }
+  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${pr.current.intensity}).`));
+  if (pr.last) pc.appendChild(el("div", "newsline", `<b>Last report:</b> ${esc(pr.last.finding)} <span class="muted">Knowledge +${pr.last.knowledge_gain}; stamina −${pr.last.stamina_cost}.</span>`));
+  ws.appendChild(pc);
+
+  // Tournament roster registration.
+  const rc = el("div", "card ws-6");
+  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Five starters plus one between-map substitute.</p>`;
+  const chosen = new Set(d.registration.player_ids || []);
+  for (const p of d.registration.players) {
+    const lab = el("label", "entity");
+    const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
+    cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
+    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${p.role}`)); rc.appendChild(lab);
+  }
+  if (!d.registration.locked) {
+    const save = el("button", "btn btn-primary", "Submit roster");
+    save.onclick = async () => { const r = await api("/api/actions/tournament_registration", { player_ids: [...chosen] }); toast(r.message); refresh(); };
+    rc.appendChild(save);
+  }
+  ws.appendChild(rc);
+
+  // Conditional between-map response.
+  const sc = el("div", "card ws-6");
+  sc.innerHTML = `<h2>Series card</h2><p class="muted">Pre-commit a response that fires after map one if its condition is met.</p>`;
+  if (!d.series.fixture) {
+    sc.appendChild(el("p", "muted", "No upcoming best-of-three is on the calendar."));
+  } else {
+    const trigger = el("select", "sel-sm"), response = el("select", "sel-sm");
+    for (const x of d.series.triggers) { const o = el("option", "", humanize(x)); o.value = x; trigger.appendChild(o); }
+    for (const x of d.series.responses) { const o = el("option", "", humanize(x)); o.value = x; response.appendChild(o); }
+    const sin = el("select", "sel-sm"), sout = el("select", "sel-sm");
+    for (const [sel, ids] of [[sin, d.series.bench_ids], [sout, d.series.starter_ids]]) { const none = el("option", "", "No substitution"); none.value = ""; sel.appendChild(none); for (const p of d.registration.players.filter((x) => ids.includes(x.id))) { const o = el("option", "", p.handle); o.value = p.id; sel.appendChild(o); } }
+    const row = el("div", "row"); row.append(trigger, response, sin, sout);
+    const save = el("button", "btn btn-primary", "Save series card");
+    save.onclick = async () => { const r = await api("/api/actions/series_directive", { fixture_id: d.series.fixture.id, trigger: trigger.value, response: response.value, substitute_in: sin.value || null, substitute_out: sout.value || null }); toast(r.message); refresh(); };
+    sc.append(row, save);
+    if (d.series.directive) sc.appendChild(el("p", "muted", `Current: ${humanize(d.series.directive.trigger)} → ${humanize(d.series.directive.response)}.`));
+  }
+  ws.appendChild(sc);
+
+  // Leadership group and culture sessions.
+  const cc = el("div", "card ws-12");
+  const c = d.culture;
+  cc.innerHTML = `<h2>Culture & leadership</h2><div class="row"><span class="pill">overall ${c.overall}</span><span class="pill">cohesion ${c.cohesion}</span><span class="pill">leadership ${c.leadership}</span><span class="pill">stability ${c.stability}</span></div>`;
+  const capSel = el("select", "sel-sm"), c1 = el("select", "sel-sm"), c2 = el("select", "sel-sm"), principle = el("select", "sel-sm");
+  for (const p of c.players) {
+    for (const sel of [capSel, c1, c2]) { const o = el("option", "", `${p.handle} · ${p.leadership}`); o.value = p.id; sel.appendChild(o); }
+  }
+  capSel.value = c.captain_id || ""; c1.value = c.council_ids?.[0] || ""; c2.value = c.council_ids?.[1] || "";
+  for (const x of d.principles) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === c.principle; principle.appendChild(o); }
+  const controls = el("div", "row"); controls.append(capSel, c1, c2, principle);
+  const saveLeaders = el("button", "btn btn-primary", "Set leadership group");
+  saveLeaders.onclick = async () => { const council_ids = [...new Set([c1.value, c2.value])].filter((x) => x && x !== capSel.value); const r = await api("/api/actions/leadership", { captain_id: capSel.value, council_ids, principle: principle.value }); toast(r.message); refresh(); };
+  const sessions = el("div", "row");
+  const welcomeIds = d.culture_sessions.welcome_player_ids || [];
+  const newcomer = [...c.players].filter((p) => welcomeIds.includes(p.id)).sort((a, b) => a.tenure_weeks - b.tenure_weeks || a.id.localeCompare(b.id))[0];
+  for (const x of d.culture_sessions.available_actions || []) { const b = el("button", "btn btn-sm", humanize(x)); b.onclick = async () => { const r = await api("/api/actions/culture_session", { action: x, player_id: x === "welcome" ? newcomer?.id : null }); toast(r.message); refresh(); }; sessions.appendChild(b); }
+  if (d.culture_sessions.cooldown_weeks) sessions.appendChild(el("span", "muted", `${d.culture_sessions.cooldown_weeks}w cooldown`));
+  cc.append(controls, saveLeaders, el("p", "microlabel", "Culture session"), sessions);
+  ws.appendChild(cc);
+  v.appendChild(ws);
+}
 
 /* -- dashboard: the "what do I do now" hub --------------------------------
    Aggregates several read endpoints that already exist in the running server
@@ -1587,6 +1719,7 @@ async function roster(v) {
   const teamId = App.rosterTeam ?? App.state.user_team.id;
   const data = await api(`/api/roster/${teamId}`);
   const s = App.state;
+  const canRelease = !s.window || s.window.open;
   const cols = App.rosterCols ?? "overview";
   const overview = cols !== "development";
   const cap = data.roster_max ?? 5;
@@ -1708,7 +1841,7 @@ async function roster(v) {
       const actions = data.is_user_team
         ? `<button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
-           <button class="btn btn-sm" data-act="release">Release</button>`
+           <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
         : p.buyout != null
           // Tier-2 contract: the buyout clause is the fast lane — pay it and
           // the player arrives, no negotiation, the org can't refuse.
@@ -1843,8 +1976,10 @@ async function roster(v) {
         e.stopPropagation();
         openNegotiation({ id: p.id, handle: p.handle }); // a table, not a button
       };
-      tr.querySelector('[data-act="release"]').onclick = async (e) => {
+      const releaseBtn = tr.querySelector('[data-act="release"]');
+      releaseBtn.onclick = async (e) => {
         e.stopPropagation();
+        if (!canRelease) return;
         if (!confirm(`Release ${p.handle}? Severance = 6 weeks salary.`)) return;
         const r = await api("/api/actions/release", { player_id: p.id });
         toast(r.message); refresh(); render();
@@ -3053,6 +3188,10 @@ function seasonFixtures(ws, sched, table) {
       }
       box.appendChild(vetoRow);
     }
+    if ((f.series_notes ?? []).length) {
+      box.appendChild(el("div", "veto-row",
+        `<span class="muted">between maps:</span> ${f.series_notes.map((n) => `<span class="chip">${esc(n)}</span>`).join(" ")}`));
+    }
   };
 
   // Filter chips: My matches / All / one per region in the league. Regions
@@ -3565,6 +3704,10 @@ async function marketPlayers(v) {
     right.push(el("span", `chip ${tone}`,
       `~${money(head.affordable_wage)}/wk free · ${runway}`));
   }
+  if (data.window) {
+    right.push(el("span", `chip ${data.window.open ? "tone-good" : "tone-warn"}`,
+      `${esc(data.window.label)} · ${esc(data.window.detail)}`));
+  }
   v.appendChild(screenHead("Market", {
     subtabs: MARKET_TABS,
     active: "players",
@@ -3593,14 +3736,14 @@ async function marketPlayers(v) {
   card.appendChild(marketFilterControls(data.free_agents, filters));
   const cap = data.roster_max ?? 5;
   card.appendChild(el("p", "muted",
-    `Squad ${data.roster_count}/${cap}. ${data.phase === "playoffs"
-      ? "Rosters are locked during the playoffs." : "Sign to fill a slot, or swap to add + drop in one move."}`));
+    `Squad ${data.roster_count}/${cap}. ${data.window && !data.window.open
+      ? esc(data.window.detail) : "Sign to fill a slot, or swap to add + drop in one move."}`));
   const t = el("table");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th class="num">Age</th>
     <th class="num">OVR</th><th>Ability</th><th>Ceiling</th>
     <th>Languages</th><th class="num">Stream revenue</th><th class="num">Asking</th><th></th><th>Swap out</th></tr></thead>`;
   const tb = el("tbody");
-  const locked = data.phase === "playoffs";
+  const locked = data.window ? !data.window.open : data.phase === "playoffs";
   for (const p of freeAgents) {
     const fogged = p.fog > 0;
     const langs = langChips(p.languages);
@@ -3910,6 +4053,12 @@ async function openNegotiation(target) {
     const fit = neg.locker_room_fit;
     panel.appendChild(el("p", "muted", `Locker-room fit: ${Math.round(fit.score)}/100${fit.duos ? ` · ${fit.duos} existing duo${fit.duos === 1 ? "" : "s"}` : ""}${fit.feuds ? ` · ${fit.feuds} active feud${fit.feuds === 1 ? "" : "s"}` : ""}.`));
   }
+  panel.appendChild(el("div", "contract-leverage",
+    `<span class="pill ${neg.leverage >= 75 ? "bad" : ""}">Leverage ${neg.leverage}/100</span> ` +
+    `<span class="pill">Interest ${neg.interest}/100</span> ` +
+    `<span class="pill">${neg.competing_clubs} alternative${neg.competing_clubs === 1 ? "" : "s"}</span> ` +
+    `<span class="pill">deadline W${neg.deadline_week}</span>` +
+    ((neg.leverage_reasons || []).length ? `<p class="muted">Why: ${neg.leverage_reasons.map(esc).join(" · ")}.</p>` : "")));
   const demand = el("div", "contract-dialogue", "");
   const log = el("div", "contract-dialogue");
   const rounds = el("p", "muted", "");

@@ -19,8 +19,9 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 
 from esports_sim.schemas import FutureProspect, Player, Team
 from esports_sim.schemas.common import Region
+from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 21
+SCHEMA_VERSION = 22
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -336,6 +337,15 @@ def _migrate_v20_to_v21(data: dict) -> dict:
     return data
 
 
+def _migrate_v21_to_v22(data: dict) -> dict:
+    """v22 adds defaulted club-management state: affiliates and academy
+    investment, preparation plans/reports, tournament registrations and
+    between-map directives, plus leadership/culture choices. Existing saves
+    start with empty choices and seed/heal them deterministically on the next
+    campaign tick."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -357,6 +367,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     18: _migrate_v18_to_v19,
     19: _migrate_v19_to_v20,
     20: _migrate_v20_to_v21,
+    21: _migrate_v21_to_v22,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -423,6 +434,10 @@ class Fixture(BaseModel):
     played: bool = False
     results: list[MapResult] = Field(default_factory=list)
     winner_id: str | None = None
+    # Grounded record of conditional between-map instructions that actually
+    # fired (substitution / response). Kept on the fixture so the series page
+    # can explain what the manager changed without reconstructing intent.
+    series_notes: list[str] = Field(default_factory=list)
 
     @property
     def map_score(self) -> tuple[int, int]:
@@ -851,6 +866,31 @@ class Negotiation(BaseModel):
     demand_buyout: int = 0
     demand_no_transfer: bool = False
     demand_role: str = "bench"  # starter | bench | academy
+    # Player leverage is visible and causal: alternatives, contract timing,
+    # form and club fit shape patience and concessions at the table. These are
+    # snapshotted when talks open so the UI can explain the position exactly.
+    leverage: int = 50
+    interest: int = 50
+    competing_clubs: int = 0
+    deadline_week: int = 0
+    leverage_reasons: list[str] = Field(default_factory=list)
+
+
+class SeriesDirective(BaseModel):
+    """A conditional between-map instruction for one upcoming BO3/BO5.
+
+    The weekly campaign still resolves atomically, so the manager commits the
+    response before advancing: if the trigger occurs after map one, the engine
+    applies the response and optional registered substitute to later maps.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    fixture_id: str
+    trigger: str = "trailing"  # trailing | after_loss | always
+    response: str = "steady"  # steady | press | stabilize | reset
+    substitute_in: str | None = None
+    substitute_out: str | None = None
 
 
 class TransferOffer(BaseModel):
@@ -1240,6 +1280,37 @@ class GameState(BaseModel):
     # lineup / auto top-five (see campaign.dressed_for). Cleared per season at
     # offseason and pruned as fixtures are played.
     map_lineups: dict[str, list[str]] = Field(default_factory=dict)
+
+    # Tournament registration and conditional between-map instructions.
+    # Registrations are editable in the regular season and become the legal
+    # five/six-player pool for BO3/BO5 play. One directive per manager is
+    # consumed with its fixture.
+    tournament_rosters: dict[str, list[str]] = Field(default_factory=dict)
+    series_directives_by: dict[str, SeriesDirective] = Field(default_factory=dict)
+
+    # Academy/affiliate layer. Every tier-1 org is paired to an actually
+    # simulated regional Challengers team; levels 0..3 shape intake and
+    # development. Reports are compact grounded records from academy.py.
+    academy_affiliates: dict[str, str] = Field(default_factory=dict)
+    academy_levels: dict[str, int] = Field(default_factory=dict)
+    academy_reports_by: dict[str, list[dict]] = Field(default_factory=dict)
+    # A shared affiliate can serve several parent orgs in compact worlds;
+    # rights identify which parent may promote each prospect.
+    academy_player_rights: dict[str, str] = Field(default_factory=dict)
+
+    # One scheduled scrim/bootcamp and the last grounded report per org. The
+    # plan resolves before that week's matches and grows existing org knowledge
+    # rather than introducing a parallel engine modifier.
+    preparation_plans_by: dict[str, PrepPlan] = Field(default_factory=dict)
+    preparation_reports_by: dict[str, PrepReport] = Field(default_factory=dict)
+
+    # Captaincy is stored on Team; these fields add the supporting leadership
+    # group, the manager's long-running culture principle, and the cooldown
+    # stamp for deliberate culture sessions.
+    leadership_groups: dict[str, list[str]] = Field(default_factory=dict)
+    culture_principles: dict[str, str] = Field(default_factory=dict)
+    culture_last_action: dict[str, int] = Field(default_factory=dict)
+    leadership_last_change: dict[str, int] = Field(default_factory=dict)
 
     # Pairwise player relationships ("pidA|pidB" sorted → 0-100). Sparse;
     # pruned toward the most-informative entries. Survives transfers.
