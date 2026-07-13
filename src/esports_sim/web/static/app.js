@@ -4098,6 +4098,8 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
 };
 
 const MarketFilters = ({ players, filters, onChange }) => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   const options = (values) => [...new Set(values.filter(Boolean))]
     .sort((a, b) => String(a).localeCompare(String(b)));
 
@@ -4116,96 +4118,105 @@ const MarketFilters = ({ players, filters, onChange }) => {
   const hasActiveFilters = Object.values(filters).some((value) => value !== "");
 
   return html`
-    <div class="market-filters">
-      <b class="market-filters-title">Filter free agents</b>
+    <div class="market-filters-container">
+      <div class="market-filters-trigger" onClick=${() => setIsCollapsed(!isCollapsed)}>
+        <span class="market-filters-label">
+          🛠️ Filter free agents ${hasActiveFilters && html`<span class="pill win" style="margin-left:8px; font-size:10px; padding:2px 6px;">Active</span>`}
+        </span>
+        <button class="btn btn-sm">${isCollapsed ? "Show Filters ▾" : "Hide Filters ▴"}</button>
+      </div>
       
-      <label class="market-filter">
-        <span class="muted">CA stars at most</span>
-        <select class="select" value=${filters.caMax} onChange=${(e) => handleSelectChange("caMax", e.target.value)}>
-          <option value="">No cap</option>
-          ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
-        </select>
-      </label>
+      ${!isCollapsed && html`
+        <div class="market-filters">
+          <label class="market-filter">
+            <span class="muted">CA stars at most</span>
+            <select class="select" value=${filters.caMax} onChange=${(e) => handleSelectChange("caMax", e.target.value)}>
+              <option value="">No cap</option>
+              ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
+            </select>
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Potential stars at most</span>
-        <select class="select" value=${filters.potentialMax} onChange=${(e) => handleSelectChange("potentialMax", e.target.value)}>
-          <option value="">No cap</option>
-          ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
-        </select>
-      </label>
+          <label class="market-filter">
+            <span class="muted">Potential stars at most</span>
+            <select class="select" value=${filters.potentialMax} onChange=${(e) => handleSelectChange("potentialMax", e.target.value)}>
+              <option value="">No cap</option>
+              ${["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5"].map(v => html`<option key=${v} value=${v}>${v}</option>`)}
+            </select>
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Language</span>
-        <select class="select" value=${filters.language} onChange=${(e) => handleSelectChange("language", e.target.value)}>
-          <option value="">Any</option>
-          ${options(players.flatMap((p) => (p.languages || []).map((l) => l.lang))).map(lang => html`
-            <option key=${lang} value=${lang}>${humanize(lang)}</option>
-          `)}
-        </select>
-      </label>
+          <label class="market-filter">
+            <span class="muted">Language</span>
+            <select class="select" value=${filters.language} onChange=${(e) => handleSelectChange("language", e.target.value)}>
+              <option value="">Any</option>
+              ${options(players.flatMap((p) => (p.languages || []).map((l) => l.lang))).map(lang => html`
+                <option key=${lang} value=${lang}>${humanize(lang)}</option>
+              `)}
+            </select>
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Language minimum</span>
-        <input 
-          type="number" 
-          class="field mono" 
-          placeholder="0-100" 
-          min="0" 
-          max="100" 
-          step="1"
-          disabled=${!filters.language}
-          value=${filters.languageMin} 
-          onChange=${(e) => handleNumberChange("languageMin", e.target.value)} 
-        />
-      </label>
+          <label class="market-filter">
+            <span class="muted">Language minimum</span>
+            <input 
+              type="number" 
+              class="field mono" 
+              placeholder="0-100" 
+              min="0" 
+              max="100" 
+              step="1"
+              disabled=${!filters.language}
+              value=${filters.languageMin} 
+              onChange=${(e) => handleNumberChange("languageMin", e.target.value)} 
+            />
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Min stream revenue</span>
-        <input 
-          type="number" 
-          class="field mono" 
-          placeholder="cr / wk" 
-          min="0" 
-          step="100"
-          value=${filters.streamRevenueMin} 
-          onChange=${(e) => handleNumberChange("streamRevenueMin", e.target.value)} 
-        />
-      </label>
+          <label class="market-filter">
+            <span class="muted">Min stream revenue</span>
+            <input 
+              type="number" 
+              class="field mono" 
+              placeholder="cr / wk" 
+              min="0" 
+              step="100"
+              value=${filters.streamRevenueMin} 
+              onChange=${(e) => handleNumberChange("streamRevenueMin", e.target.value)} 
+            />
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Role</span>
-        <select class="select" value=${filters.role} onChange=${(e) => handleSelectChange("role", e.target.value)}>
-          <option value="">Any</option>
-          ${options(players.map((p) => p.role)).map(r => html`
-            <option key=${r} value=${r}>${humanize(r)}</option>
-          `)}
-        </select>
-      </label>
+          <label class="market-filter">
+            <span class="muted">Role</span>
+            <select class="select" value=${filters.role} onChange=${(e) => handleSelectChange("role", e.target.value)}>
+              <option value="">Any</option>
+              ${options(players.map((p) => p.role)).map(r => html`
+                <option key=${r} value=${r}>${humanize(r)}</option>
+              `)}
+            </select>
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">Style</span>
-        <select class="select" value=${filters.style} onChange=${(e) => handleSelectChange("style", e.target.value)}>
-          <option value="">Any</option>
-          ${options(players.map((p) => p.playstyle)).map(s => html`
-            <option key=${s} value=${s}>${humanize(s)}</option>
-          `)}
-        </select>
-      </label>
+          <label class="market-filter">
+            <span class="muted">Style</span>
+            <select class="select" value=${filters.style} onChange=${(e) => handleSelectChange("style", e.target.value)}>
+              <option value="">Any</option>
+              ${options(players.map((p) => p.playstyle)).map(s => html`
+                <option key=${s} value=${s}>${humanize(s)}</option>
+              `)}
+            </select>
+          </label>
 
-      <label class="market-filter">
-        <span class="muted">IGL</span>
-        <select class="select" value=${filters.igl} onChange=${(e) => handleSelectChange("igl", e.target.value)}>
-          <option value="">Any</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </label>
+          <label class="market-filter">
+            <span class="muted">IGL</span>
+            <select class="select" value=${filters.igl} onChange=${(e) => handleSelectChange("igl", e.target.value)}>
+              <option value="">Any</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </label>
 
-      ${hasActiveFilters && html`
-        <button class="btn btn-sm market-filter-reset" onClick=${() => onChange({ ...MARKET_FILTER_DEFAULTS })}>
-          Clear filters
-        </button>
+          ${hasActiveFilters && html`
+            <button class="btn btn-sm market-filter-reset" onClick=${() => onChange({ ...MARKET_FILTER_DEFAULTS })}>
+              Clear filters
+            </button>
+          `}
+        </div>
       `}
     </div>
   `;
@@ -4523,6 +4534,13 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
 
 const BackroomStaff = ({ data, triggerRefresh }) => {
   const [activeRole, setActiveRole] = useState("all");
+  const [filters, setFilters] = useState({
+    qualityMin: "",
+    salaryMax: "",
+    specialty: "",
+    region: ""
+  });
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(true);
 
   const rolePlural = {
     coach: "Coaches", analyst: "Analysts", physio: "Physios",
@@ -4549,8 +4567,32 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
     }
   };
 
-  const renderedRoles = activeRole === "all" ? data.roles : [activeRole];
-  const hasFA = data.pool.some(m => activeRole === "all" || m.role === activeRole);
+  const filteredPool = useMemo(() => {
+    return data.pool.filter(m => {
+      // 1. Role filter
+      if (activeRole !== "all" && m.role !== activeRole) return false;
+      // 2. Quality min
+      if (filters.qualityMin && m.quality < Number(filters.qualityMin)) return false;
+      // 3. Salary max
+      if (filters.salaryMax && m.salary > Number(filters.salaryMax)) return false;
+      // 4. Specialty
+      if (filters.specialty && m.specialty !== filters.specialty) return false;
+      // 5. Region
+      if (filters.region && m.region !== filters.region) return false;
+      return true;
+    });
+  }, [data.pool, activeRole, filters]);
+
+  const specialties = useMemo(() => {
+    return [...new Set(data.pool.map(m => m.specialty).filter(Boolean))].sort();
+  }, [data.pool]);
+
+  const regions = useMemo(() => {
+    return [...new Set(data.pool.map(m => m.region).filter(Boolean))].sort();
+  }, [data.pool]);
+
+  const hasActiveFilters = filters.qualityMin !== "" || filters.salaryMax !== "" || filters.specialty !== "" || filters.region !== "";
+  const hasFA = filteredPool.length > 0;
 
   return html`
     <div class="ws">
@@ -4578,58 +4620,111 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
             `)}
           </div>
 
+          <div class="market-filters-container">
+            <div class="market-filters-trigger" onClick=${() => setIsFiltersCollapsed(!isFiltersCollapsed)}>
+              <span class="market-filters-label">
+                🛠️ Filter staff candidates ${hasActiveFilters && html`<span class="pill win" style="margin-left:8px; font-size:10px; padding:2px 6px;">Active</span>`}
+              </span>
+              <button class="btn btn-sm">${isFiltersCollapsed ? "Show Filters ▾" : "Hide Filters ▴"}</button>
+            </div>
+            
+            ${!isFiltersCollapsed && html`
+              <div class="market-filters">
+                <label class="market-filter">
+                  <span class="muted">Min Quality</span>
+                  <select class="select" value=${filters.qualityMin} onChange=${(e) => setFilters({ ...filters, qualityMin: e.target.value })}>
+                    <option value="">No min</option>
+                    ${["50", "60", "70", "80", "90"].map(v => html`<option key=${v} value=${v}>${v}+</option>`)}
+                  </select>
+                </label>
+
+                <label class="market-filter">
+                  <span class="muted">Max Salary</span>
+                  <input 
+                    type="number" 
+                    class="field mono" 
+                    placeholder="cr / wk" 
+                    min="0"
+                    value=${filters.salaryMax} 
+                    onChange=${(e) => setFilters({ ...filters, salaryMax: e.target.value })} 
+                  />
+                </label>
+
+                <label class="market-filter">
+                  <span class="muted">Specialty</span>
+                  <select class="select" value=${filters.specialty} onChange=${(e) => setFilters({ ...filters, specialty: e.target.value })}>
+                    <option value="">Any</option>
+                    ${specialties.map(spec => html`
+                      <option key=${spec} value=${spec}>${spec}</option>
+                    `)}
+                  </select>
+                </label>
+
+                <label class="market-filter">
+                  <span class="muted">Region</span>
+                  <select class="select" value=${filters.region} onChange=${(e) => setFilters({ ...filters, region: e.target.value })}>
+                    <option value="">Any</option>
+                    ${regions.map(r => html`
+                      <option key=${r} value=${r}>${r}</option>
+                    `)}
+                  </select>
+                </label>
+
+                <button 
+                  class="btn btn-sm market-filter-reset" 
+                  disabled=${!hasActiveFilters}
+                  onClick=${() => setFilters({ qualityMin: "", salaryMax: "", specialty: "", region: "" })}
+                >
+                  Reset
+                </button>
+              </div>
+            `}
+          </div>
+
           <div class="staff-tables">
-            ${renderedRoles.map(role => {
-              const members = data.pool.filter(m => m.role === role);
-              if (members.length === 0) return null;
-              
-              return html`
-                <div key=${role}>
-                  <h2 class="staff-section-title">
-                    ${rolePlural[role] || humanize(role)} 
-                    <span class="muted" style=${{ fontWeight: 400 }}> — ${data.blurbs[role]}</span>
-                  </h2>
-                  <div class="table-scroll">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th class="num">Age</th>
-                          <th>Region</th>
-                          <th>Specialty</th>
-                          <th>Quality</th>
-                          <th class="num">Salary</th>
-                          <th class="num">Exp</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${members.map(m => html`
-                          <tr key=${m.id}>
-                            <td>
-                              <b class="slink" data-sid=${m.id}>${m.name}</b>
-                              ${m.titles && m.titles.length > 0 && html`
-                                <span class="pill" title=${m.titles.join(", ")}>🏆 ${m.titles.length}</span>
-                              `}
-                            </td>
-                            <td class="num">${m.age}</td>
-                            <td>${m.region || "—"}</td>
-                            <td title=${m.specialty_blurb || ""}><span class="pill">${m.specialty || "—"}</span></td>
-                            <td><${ProgressBar} value=${m.quality} /></td>
-                            <td class="num">${money(m.salary)}/wk</td>
-                            <td class="num">${m.seasons_experience}s</td>
-                            <td>
-                              <button class="btn btn-sm" onClick=${() => handleHire(m.id)}>Hire</button>
-                            </td>
-                          </tr>
-                        `)}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              `;
-            })}
-            ${!hasFA && html`<p class="muted">No free agents in this role.</p>`}
+            <div class="table-scroll" style=${{ marginTop: '16px', '--scroll-max': '62vh' }}>
+              ${!hasFA ? html`
+                <p class="muted" style=${{ padding: '16px 0' }}>No staff candidates match your active filters.</p>
+              ` : html`
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Role</th>
+                      <th>Name</th>
+                      <th class="num">Age</th>
+                      <th>Region</th>
+                      <th>Specialty</th>
+                      <th>Quality</th>
+                      <th class="num">Salary</th>
+                      <th class="num">Exp</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${filteredPool.map(m => html`
+                      <tr key=${m.id}>
+                        <td><span class="pill">${humanize(m.role)}</span></td>
+                        <td>
+                          <b class="slink" data-sid=${m.id}>${m.name}</b>
+                          ${m.titles && m.titles.length > 0 && html`
+                            <span class="pill" title=${m.titles.join(", ")}>🏆 ${m.titles.length}</span>
+                          `}
+                        </td>
+                        <td class="num">${m.age}</td>
+                        <td>${m.region || "—"}</td>
+                        <td title=${m.specialty_blurb || ""}><span class="pill">${m.specialty || "—"}</span></td>
+                        <td><${ProgressBar} value=${m.quality} /></td>
+                        <td class="num">${money(m.salary)}/wk</td>
+                        <td class="num">${m.seasons_experience}s</td>
+                        <td>
+                          <button class="btn btn-sm" onClick=${() => handleHire(m.id)}>Hire</button>
+                        </td>
+                      </tr>
+                    `)}
+                  </tbody>
+                </table>
+              `}
+            </div>
           </div>
         </div>
       </div>

@@ -1679,19 +1679,44 @@ p.good, .good { color: var(--es-color-text-success, #46a758); }
 .table-scroll table { min-width: 100%; }
 
 /* Free-agency filtering stays dense enough to keep the market table primary. */
+.market-filters-container {
+  margin: 16px 0;
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-xl, 12px);
+  background: color-mix(in srgb, var(--es-color-bg-elevated, #161e2e) 30%, transparent);
+  overflow: hidden;
+  box-shadow: var(--es-shadow-md);
+}
+.market-filters-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--es-space-5, 16px);
+  cursor: pointer;
+  background: color-mix(in srgb, var(--es-color-bg-elevated, #161e2e) 60%, transparent);
+  transition: background var(--es-duration-quick) var(--es-ease-out);
+}
+.market-filters-trigger:hover {
+  background: var(--es-color-bg-hover, #1b2536);
+}
+.market-filters-label {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+}
 .market-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 8px;
-  margin: 12px 0;
-  padding: 10px;
-  background: var(--es-color-bg-sunken, #0b1019);
-  border: 1px solid var(--es-color-border-secondary, #1c2536);
-  border-radius: var(--es-radius-sm, 4px);
+  gap: var(--es-space-3, 12px);
+  padding: 16px;
+  border-top: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  background: transparent;
 }
-.market-filters-title { width: 100%; font-size: var(--es-text-xs, 11px); }
-.market-filter { display: grid; gap: 3px; min-width: 100px; }
+.market-filter { display: grid; gap: 4px; min-width: 110px; }
 .market-filter .field, .market-filter .select { width: 100%; }
 .market-filter-reset { margin-left: auto; }
 @media (max-width: 640px) { .market-filter-reset { margin-left: 0; } }
