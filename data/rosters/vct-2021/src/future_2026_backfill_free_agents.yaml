@@ -1,0 +1,50 @@
+Exit code: 0
+Wall time: 0.7 seconds
+Output:
+# 2026 identities absent from the 2021 source universe.  Ages and quality
+# are rewound five years; under-17 players remain off-screen prospects.
+free_agents:
+  - {handle: AcMe, role: sentinel, playstyle: anchor, igl: false, quality: 55, agents: [killjoy, cypher], region: china, age: 18}
+  - {handle: Ask, region: pacific, role: initiator, playstyle: support, igl: false, quality: 49, agents: [sova, skye, breach], age: 17}
+  - {handle: Awayk, role: controller, playstyle: igl, igl: true, quality: 49, agents: [omen, clove], region: pacific, age: 17}
+  - {handle: bazz, role: controller, playstyle: igl, igl: true, quality: 54, agents: [omen, viper], region: pacific, age: 20}
+  - {handle: bethany, region: pacific, role: initiator, playstyle: support, igl: false, quality: 47, agents: [sova, skye, breach], age: 17}
+  - {handle: Boni, role: sentinel, playstyle: anchor, igl: false, quality: 57, agents: [killjoy, cypher], region: americas, age: 17}
+  - {handle: BRIAN, role: controller, playstyle: igl, igl: true, quality: 51, agents: [omen, clove], region: pacific, age: 17}
+  - {handle: CabezA, role: flex, playstyle: igl, igl: true, quality: 53, agents: [skye, omen], region: pacific, age: 20}
+  - {handle: Chadi, region: emea, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, reyna, raze], age: 18}
+  - {handle: Click, region: emea, role: duelist, playstyle: entry, igl: false, quality: 52, agents: [jett, raze, reyna], age: 17}
+  - {handle: cxyy, region: china, role: sentinel, playstyle: anchor, igl: false, quality: 45, agents: [cypher, killjoy, chamber], age: 20}
+  - {handle: Czester, region: emea, role: initiator, playstyle: support, igl: false, quality: 45, agents: [sova, skye, breach], age: 17}
+  - {handle: Docent, role: controller, playstyle: igl, igl: true, quality: 56, agents: [omen, viper], region: emea, age: 21}
+  - {handle: erde, role: controller, playstyle: igl, igl: true, quality: 74, agents: [omen, breach], region: americas, age: 18}
+  - {handle: exa, role: duelist, playstyle: entry, igl: false, quality: 55, agents: [jett, raze], region: americas, age: 17}
+  - {handle: FFs, role: controller, playstyle: igl, igl: true, quality: 53, agents: [omen], region: china, age: 19}
+  - {handle: Guran, role: sentinel, playstyle: anchor, igl: false, quality: 50, agents: [cypher, killjoy], region: china, age: 17}
+  - {handle: heybay, role: initiator, playstyle: igl, igl: true, quality: 59, agents: [sova, skye], region: china, age: 20}
+  - {handle: influx, role: sentinel, playstyle: anchor, igl: false, quality: 50, agents: [cypher, killjoy], region: emea, age: 17}
+  - {handle: KEN, role: initiator, playstyle: support, igl: false, quality: 52, agents: [sova, skye], region: pacific, age: 17}
+  - {handle: Loss, role: flex, playstyle: support, igl: false, quality: 51, agents: [omen, sova], region: americas, age: 17}
+  - {handle: Meep, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 45, agents: [cypher, killjoy, viper], age: 17}
+  - {handle: Mephisto, region: americas, role: controller, playstyle: support, igl: false, quality: 44, agents: [omen, viper, clove], age: 17}
+  - {handle: MerSa, role: duelist, playstyle: entry, igl: false, quality: 53, agents: [jett, raze], region: emea, age: 17}
+  - {handle: Midnight, role: controller, playstyle: igl, igl: true, quality: 53, agents: [omen], region: china, age: 18}
+  - {handle: nightz, region: americas, role: controller, playstyle: support, igl: false, quality: 45, agents: [omen, viper, clove], age: 18}
+  - {handle: nobita, role: flex, playstyle: support, igl: false, quality: 51, agents: [viper, skye], region: pacific, age: 18}
+  - {handle: Paincakes, role: initiator, playstyle: igl, igl: true, quality: 62, agents: [sova, skye], region: americas, age: 18}
+  - {handle: Potter, role: initiator, playstyle: support, igl: false, quality: 55, agents: [sova, skye], region: china, age: 19}
+  - {handle: Ramgi, role: initiator, playstyle: support, igl: false, quality: 52, agents: [sova, skye], region: pacific, age: 18}
+  - {handle: RgLMeister, role: flex, playstyle: support, igl: false, quality: 49, agents: [omen, killjoy], region: americas, age: 17}
+  - {handle: seph1roth, role: flex, playstyle: support, igl: false, quality: 61, agents: [viper, killjoy, phoenix], region: pacific, age: 17}
+  - {handle: Septem7, region: china, role: controller, playstyle: igl, igl: true, quality: 48, agents: [omen, viper, clove], age: 22}
+  - {handle: shinnok, role: sentinel, playstyle: anchor, igl: false, quality: 50, agents: [killjoy, cypher], region: emea, age: 17}
+  - {handle: shu, role: duelist, playstyle: entry, igl: false, quality: 52, agents: [jett, raze], region: pacific, age: 17}
+  - {handle: spike, role: duelist, playstyle: entry, igl: false, quality: 71, agents: [jett, omen], region: americas, age: 17}
+  - {handle: SpYzera, role: duelist, playstyle: entry, igl: false, quality: 57, agents: [jett, raze], region: emea, age: 17}
+  - {handle: Tarik, region: americas, role: initiator, playstyle: support, igl: false, quality: 56, agents: [sova, skye, breach], age: 27}
+  - {handle: tdawgg, region: americas, role: initiator, playstyle: support, igl: false, quality: 47, agents: [sova, skye, breach], age: 19}
+  - {handle: toozy, role: sentinel, playstyle: anchor, igl: false, quality: 52, agents: [killjoy, cypher], region: americas, age: 17}
+  - {handle: Wolverine, role: duelist, playstyle: entry, igl: false, quality: 52, agents: [jett, raze], region: pacific, age: 17}
+  - {handle: Yassien, role: controller, playstyle: igl, igl: true, quality: 53, agents: [omen, viper], region: emea, age: 18}
+  - {handle: Ying, role: controller, playstyle: igl, igl: true, quality: 52, agents: [omen, viper], region: china, age: 18}
+  - {handle: Yoyo, role: duelist, playstyle: entry, igl: false, quality: 59, agents: [jett, raze], region: china, age: 19}
