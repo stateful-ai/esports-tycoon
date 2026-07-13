@@ -311,7 +311,7 @@ async function inbox(v) {
     rowHead.append(chip, title, week, dot);
     row.appendChild(rowHead);
 
-    const body = el("div", "inbox-body hidden");
+    const body = el("div", "inbox-body collapsed");
     const text = el("div", "inbox-body-text");
     text.textContent = it.body || "";           // textContent preserves newlines
     body.appendChild(text);
@@ -330,7 +330,7 @@ async function inbox(v) {
     const setOpen = async (want) => {
       if (want === open) return;
       open = want;
-      body.classList.toggle("hidden", !open);
+      body.classList.toggle("collapsed", !open);
       row.classList.toggle("open", open);
       // Expanding an unread item marks it read on the server.
       if (open) await markItemRead(it, row);

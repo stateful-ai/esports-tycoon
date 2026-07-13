@@ -5695,9 +5695,11 @@ function closeReport() {
     positionTooltip(target);
   }
 
-  function hideTooltip() {
-    activeTooltipTarget = null;
-    tooltipEl.classList.remove("active");
+  function hideTooltip(target) {
+    if (activeTooltipTarget === target) {
+      activeTooltipTarget = null;
+      tooltipEl.classList.remove("active");
+    }
   }
 
   function positionTooltip(target) {
@@ -5726,8 +5728,8 @@ function closeReport() {
       left = window.innerWidth - tooltipRect.width - 8;
     }
     
-    tooltipEl.style.top = `${top + window.scrollY}px`;
-    tooltipEl.style.left = `${left + window.scrollX}px`;
+    tooltipEl.style.top = `${top}px`;
+    tooltipEl.style.left = `${left}px`;
   }
 
   // Event Delegation for mouse hover
@@ -5758,7 +5760,7 @@ function closeReport() {
     
     // Ensure we are genuinely leaving the target boundary
     if (!e.relatedTarget || !target.contains(e.relatedTarget)) {
-      hideTooltip();
+      hideTooltip(target);
     }
   });
 
