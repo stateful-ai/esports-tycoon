@@ -847,8 +847,8 @@ async function clubOps(v, sub) {
   const age = el("input", "sel-sm"); age.type = "number"; age.min = "16"; age.max = "40"; age.value = dp.scout_max_age;
   const alert = el("select", "sel-sm");
   for (const x of d.delegation.alert_levels) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === dp.alert_level; alert.appendChild(o); }
-  const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left â‰¤"), trigger);
-  const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age â‰¤"), age, el("span", "muted", "alert"), alert);
+  const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left \u2264"), trigger);
+  const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age \u2264"), age, el("span", "muted", "alert"), alert);
   const savePolicy = el("button", "btn btn-primary", "Save staff policies");
   savePolicy.onclick = async () => {
     const r = await api("/api/actions/delegation_policy", {
@@ -865,9 +865,9 @@ async function clubOps(v, sub) {
     toast(r.message); refresh();
   };
   dc.append(renewRow, scoutRow, savePolicy);
-  dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` Â· active assignment set` : ""}.`));
+  dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` \u00b7 active assignment set` : ""}.`));
   const dr = d.delegation.latest_report;
-  if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals Â· ${dr.alerts.length} alerts Â· ${dr.exceptions.length} exceptions.`));
+  if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals \u00b7 ${dr.alerts.length} alerts \u00b7 ${dr.exceptions.length} exceptions.`));
   ws.appendChild(dc);
   } // end operations
 
