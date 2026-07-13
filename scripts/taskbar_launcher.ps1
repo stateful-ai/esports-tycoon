@@ -9,6 +9,19 @@ if (-not (Test-Path -LiteralPath $configPath)) {
 $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
 $repoRoot = [string]$config.repo_root
 $port = [int]$config.port
+$configVersion = if ($null -ne $config.schema_version) { [int]$config.schema_version } else { 1 }
+if ($configVersion -lt 2) {
+    # v1 had no way to distinguish an explicitly selected 8421 from its old
+    # default. Migrate that legacy default to the standard LAN playing port;
+    # users who intentionally want 8421 can reinstall with -Port 8421.
+    if ($port -eq 8421) { $port = 8420 }
+    @{
+        schema_version = 2
+        repo_root = $repoRoot
+        port = $port
+        port_is_default = $true
+    } | ConvertTo-Json | Set-Content -LiteralPath $configPath -Encoding UTF8
+}
 $python = Join-Path $PSScriptRoot 'venv\Scripts\python.exe'
 $url = "http://127.0.0.1:$port/"
 $stdoutLog = Join-Path $PSScriptRoot 'server.stdout.log'
@@ -107,6 +120,25 @@ function Update-LocalMain {
         throw "The updated game commit could not be identified.$([Environment]::NewLine)$([Environment]::NewLine)$($commitResult.Output)"
     }
     return $commitResult.Output
+}
+
+function Sync-InstalledLauncherRuntime {
+    $runtimeSource = Join-Path $repoRoot 'scripts\taskbar_launcher.ps1'
+    if (-not (Test-Path -LiteralPath $runtimeSource)) {
+        throw "The updated launcher source is missing: $runtimeSource"
+    }
+
+    $sourcePath = [IO.Path]::GetFullPath($runtimeSource)
+    $runningPath = [IO.Path]::GetFullPath($PSCommandPath)
+    if ($sourcePath.Equals($runningPath, [StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    $sourceHash = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
+    $runningHash = (Get-FileHash -LiteralPath $runningPath -Algorithm SHA256).Hash
+    if ($sourceHash -eq $runningHash) { return $false }
+
+    Copy-Item -LiteralPath $sourcePath -Destination $runningPath -Force
+    return $true
 }
 
 function Get-LauncherDependencyState {
@@ -216,6 +248,14 @@ try {
     }
 
     $currentCommit = Update-LocalMain
+    if (Sync-InstalledLauncherRuntime) {
+        # PowerShell parsed this script before the replacement. Start the fresh
+        # copy now; it will wait briefly for this process to release the mutex.
+        $powershell = Join-Path $PSHOME 'powershell.exe'
+        $relaunchArgs = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}"' -f $PSCommandPath
+        Start-Process -FilePath $powershell -ArgumentList $relaunchArgs -WindowStyle Hidden
+        exit 0
+    }
     $dependencyState = Get-LauncherDependencyState
     $dependenciesChanged = $dependencyState.Changed
 

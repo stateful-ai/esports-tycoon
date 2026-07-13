@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import contextvars
 import hashlib
+import ipaddress
 import json
 import math
 import random
@@ -565,10 +566,27 @@ _ctx: contextvars.ContextVar[_ReqCtx] = contextvars.ContextVar("req_ctx")
 # The requesting browser's cookie id — lobby endpoints (create/join) need it to
 # record membership. Set alongside `_ctx`.
 _sid_ctx: contextvars.ContextVar[str] = contextvars.ContextVar("req_sid")
+# The peer address comes from the ASGI server socket, not from a spoofable
+# Host/X-Forwarded-For header.  Roster-pack correction mutates repository
+# source files, so those routes must remain a host-machine-only tool even when
+# the game itself is intentionally served to the LAN.
+_client_host_ctx: contextvars.ContextVar[str] = contextvars.ContextVar(
+    "req_client_host", default=""
+)
 
 
 def _current_sid() -> str:
     return _sid_ctx.get()
+
+
+def _require_local_admin() -> None:
+    """Reject repository-mutating roster tools from non-loopback peers."""
+    try:
+        is_loopback = ipaddress.ip_address(_client_host_ctx.get()).is_loopback
+    except ValueError:
+        is_loopback = False
+    if not is_loopback:
+        raise HTTPException(403, "roster-pack corrections are local-only")
 
 
 class _GameProxy:
@@ -1336,6 +1354,7 @@ def roster_studio_parse(body: dict) -> dict:
 @app.put("/api/roster-studio/packs/{pack_id}")
 def roster_studio_save(pack_id: str, body: dict) -> dict:
     global _PACK_OPTIONS_CACHE
+    _require_local_admin()
     pack_id = _roster_pack_id(pack_id)
     if body.get("id") != pack_id:
         raise HTTPException(422, "URL pack id must match document id")
@@ -6126,9 +6145,9 @@ def team_profile(tid: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Admin data-correction toggle. The client's toggle is purely a UI reveal —
-# these routes always exist (this app has no auth model beyond the LAN game
-# code), but they only ever touch REAL players/teams that trace back to a
+# Admin data-correction toggle. The client's toggle is purely a UI reveal, so
+# these routes enforce a loopback peer at the server boundary. They only ever
+# touch REAL players/teams that trace back to a
 # roster pack's src/ sheet (see registry/roster_admin.py); generated fill
 # entities 404 as not-editable. Persists to disk (the pack sheet, rebuilt)
 # AND patches the live save's identity/skill fields — never the
@@ -6173,6 +6192,7 @@ class TeamAdminEditBody(BaseModel):
 
 @app.get("/api/admin/player/{pid}")
 def admin_player_editable(pid: str) -> dict:
+    _require_local_admin()
     with S.lock:
         gs = S.require_gs()
         p = gs.players.get(pid)
@@ -6210,6 +6230,7 @@ def admin_player_editable(pid: str) -> dict:
 
 @app.post("/api/admin/player/{pid}")
 def admin_edit_player(pid: str, body: PlayerAdminEditBody) -> dict:
+    _require_local_admin()
     with S.lock:
         gs = S.require_gs()
         p = gs.players.get(pid)
@@ -6238,6 +6259,7 @@ def admin_edit_player(pid: str, body: PlayerAdminEditBody) -> dict:
 
 @app.get("/api/admin/team/{tid}")
 def admin_team_editable(tid: str) -> dict:
+    _require_local_admin()
     with S.lock:
         gs = S.require_gs()
         t = gs.teams.get(tid)
@@ -6277,6 +6299,7 @@ def admin_team_editable(tid: str) -> dict:
 
 @app.post("/api/admin/team/{tid}")
 def admin_edit_team(tid: str, body: TeamAdminEditBody) -> dict:
+    _require_local_admin()
     with S.lock:
         gs = S.require_gs()
         t = gs.teams.get(tid)
@@ -6559,6 +6582,8 @@ class SessionMiddleware:
 
         ctx_token = _ctx.set(_ReqCtx(game, team_id))
         sid_token = _sid_ctx.set(sid)
+        client = scope.get("client")
+        client_host_token = _client_host_ctx.set(client[0] if client else "")
         try:
             if path.startswith("/api/"):
                 # Per-endpoint latency: bucket by the first two path
@@ -6572,6 +6597,7 @@ class SessionMiddleware:
         finally:
             _ctx.reset(ctx_token)
             _sid_ctx.reset(sid_token)
+            _client_host_ctx.reset(client_host_token)
 
 
 app.add_middleware(SessionMiddleware, lobby=_LOBBY)

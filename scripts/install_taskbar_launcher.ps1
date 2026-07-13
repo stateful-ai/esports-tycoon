@@ -26,6 +26,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$portWasExplicit = $PSBoundParameters.ContainsKey('Port')
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $runtimeSource = Join-Path $PSScriptRoot 'taskbar_launcher.ps1'
 $csharpSource = Join-Path $PSScriptRoot 'taskbar_launcher.cs'
@@ -101,7 +102,12 @@ if ($uvCommand) {
 }
 
 Copy-Item -LiteralPath $runtimeSource -Destination $runtimeTarget -Force
-@{ repo_root = $repoRoot; port = $Port } |
+@{
+    schema_version = 2
+    repo_root = $repoRoot
+    port = $Port
+    port_is_default = (-not $portWasExplicit)
+} |
     ConvertTo-Json |
     Set-Content -LiteralPath $configTarget -Encoding UTF8
 
