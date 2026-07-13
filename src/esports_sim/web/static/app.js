@@ -648,7 +648,7 @@ function bar(value, opts = {}) {
   const cls = opts.invert
     ? value < 35 ? "good" : value < 65 ? "warn" : "bad"
     : value < 35 ? "bad" : value < 65 ? "warn" : "good";
-  return `<div class="bar ${cls}" title="${Math.round(value)}"><i style="width:${Math.max(2, Math.min(100, value))}%"></i></div>`;
+  return `<div class="bar ${cls}" title="${Math.round(value)}"><i style="--target-width:${Math.max(2, Math.min(100, value))}%; width:${Math.max(2, Math.min(100, value))}%"></i></div>`;
 }
 
 function stylePill(p) {
@@ -933,61 +933,88 @@ async function clubOps(v, sub) {
     }
     
     const groupDiv = el("div", "row", null);
-    groupDiv.style.cssText = "display:flex; flex-wrap:wrap; gap:16px;";
+    groupDiv.style.cssText = "display:flex; flex-wrap:wrap; gap:16px; align-items:stretch;";
     for (const [gName, pList] of Object.entries(groups)) {
-      const col = el("div", "card ws-3", null);
-      col.style.cssText = "flex:1; min-width:200px; padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
-      col.innerHTML = `<h3>${gName}</h3>`;
+      const col = el("div", "card", null);
+      col.style.cssText = "flex:1; min-width:220px; margin-bottom:0; display:flex; flex-direction:column;";
+      col.innerHTML = `<h3 style="border-bottom:1px solid var(--es-color-border-primary, #26324a); padding-bottom:8px; margin-bottom:12px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em;">${gName}</h3>`;
+      
+      const listContainer = el("div", "", null);
+      listContainer.style.cssText = "flex:1; display:flex; flex-direction:column; gap:12px;";
+      
       if (!pList.length) {
-        col.appendChild(el("p", "muted", "None"));
+        listContainer.appendChild(el("p", "muted", "None"));
       } else {
         for (const p of pList) {
-          const roleLabel = p.hierarchy_role.replace(/_/g, " ");
+          const roleLabel = humanize(p.hierarchy_role);
           const isDanger = ["volatile_rebel", "outcast"].includes(p.hierarchy_role);
-          const color = isDanger ? "var(--es-color-danger, #ff4655)" : "var(--es-color-text, #e2e8f0)";
-          col.innerHTML += `<div style="margin-bottom:8px;">` +
-            `<strong>${plink(p.id, p.handle)}</strong><br>` +
-            `<span style="font-size:0.85em; color:${color}; text-transform:uppercase;">${roleLabel}</span>` +
-          `</div>`;
+          const isLeader = ["incumbent_leader", "council_member"].includes(p.hierarchy_role);
+          const isInfluential = ["key_influencer", "loyal_lieutenant"].includes(p.hierarchy_role);
+          
+          let toneClass = "muted";
+          if (isDanger) toneClass = "loss";
+          else if (isLeader) toneClass = "win";
+          else if (isInfluential) toneClass = "warn";
+          
+          const item = el("div", "", `
+            <div style="font-weight:600; font-size:14px; margin-bottom:4px;">${plink(p.id, p.handle)}</div>
+            <div><span class="pill ${toneClass}" style="font-size:10px; padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
+          `);
+          listContainer.appendChild(item);
         }
       }
+      col.appendChild(listContainer);
       groupDiv.appendChild(col);
     }
     lrc.appendChild(groupDiv);
     
     const relSec = el("div", "", null);
-    relSec.style.cssText = "margin-top:20px;";
-    relSec.innerHTML = `<h3>Relationships & Cliques</h3>`;
+    relSec.style.cssText = "margin-top:24px;";
+    relSec.innerHTML = `<h2 style="margin-bottom:16px;">Relationships & Cliques</h2>`;
     
     const rels = rd.relationships || { duos: [], feuds: [] };
     const duosList = rels.duos || [];
     const feudsList = rels.feuds || [];
     
     const relDiv = el("div", "row", null);
-    relDiv.style.cssText = "display:flex; gap:16px;";
+    relDiv.style.cssText = "display:flex; flex-wrap:wrap; gap:16px;";
     
     const duosCard = el("div", "card ws-6", null);
-    duosCard.innerHTML = `<h4>Duos <span class="pill win" style="background:#28a745; color:#fff;">Active</span></h4>`;
+    duosCard.style.cssText = "flex:1; min-width:300px; margin-bottom:0;";
+    duosCard.innerHTML = `<h3 style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--es-color-border-primary, #26324a); padding-bottom:8px;">Duos <span class="pill win">Active</span></h3>`;
     if (!duosList.length) {
       duosCard.appendChild(el("p", "muted", "No close duos in the squad."));
     } else {
+      const list = el("div", "", null);
+      list.style.cssText = "display:flex; flex-direction:column; gap:8px;";
       for (const pair of duosList) {
         const p1 = rd.players.find(p => p.id === pair[0]) || { handle: pair[0] };
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
-        duosCard.innerHTML += `<div style="margin-bottom:6px;">${plink(p1.id, p1.handle)} &harr; ${plink(p2.id, p2.handle)} <span class="muted" style="color:#28a745;">(Friendship Bond)</span></div>`;
+        list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
+          `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
+          `<span class="pill win" style="font-size:10px; margin-left:auto;">Friendship Bond</span>` +
+          `</div>`;
       }
+      duosCard.appendChild(list);
     }
     
     const feudsCard = el("div", "card ws-6", null);
-    feudsCard.innerHTML = `<h4>Feuds <span class="pill loss" style="background:#dc3545; color:#fff;">Tension</span></h4>`;
+    feudsCard.style.cssText = "flex:1; min-width:300px; margin-bottom:0;";
+    feudsCard.innerHTML = `<h3 style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--es-color-border-primary, #26324a); padding-bottom:8px;">Feuds <span class="pill loss">Tension</span></h3>`;
     if (!feudsList.length) {
       feudsCard.appendChild(el("p", "muted", "No active feuds in the squad."));
     } else {
+      const list = el("div", "", null);
+      list.style.cssText = "display:flex; flex-direction:column; gap:8px;";
       for (const pair of feudsList) {
         const p1 = rd.players.find(p => p.id === pair[0]) || { handle: pair[0] };
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
-        feudsCard.innerHTML += `<div style="margin-bottom:6px; color:var(--es-color-danger, #ff4655);">${plink(p1.id, p1.handle)} &harr; ${plink(p2.id, p2.handle)} <span class="muted" style="color:var(--es-color-danger, #ff4655);">(Grave Friction)</span></div>`;
+        list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
+          `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
+          `<span class="pill loss" style="font-size:10px; margin-left:auto;">Grave Friction</span>` +
+          `</div>`;
       }
+      feudsCard.appendChild(list);
     }
     
     relDiv.appendChild(duosCard);
@@ -2037,7 +2064,7 @@ async function dashboard(v) {
       for (const [axis, val] of Object.entries(career.reputation)) {
         list.appendChild(el("div", "rowbar",
           `<span class="muted">${esc(humanize(axis))}</span>` +
-          `<span class="bar"><i style="width:${Math.max(2, Math.min(100, val))}%"></i></span>` +
+          `<span class="bar"><i style="--target-width:${Math.max(2, Math.min(100, val))}%; width:${Math.max(2, Math.min(100, val))}%"></i></span>` +
           `<span class="rowbar-val">${Math.round(val)}</span>`));
       }
       cc.appendChild(list);
@@ -2404,7 +2431,7 @@ async function roster(v, opts = {}) {
     c.appendChild(el("p", "muted", `Average age <b class="mono">${avgAge}</b>`));
     const bucketRow = (label, n) => el("div", "rowbar",
       `<span class="muted">${label}</span>` +
-      `<span class="bar"><i style="width:${Math.max(2, (n / total) * 100)}%"></i></span>` +
+      `<span class="bar"><i style="--target-width:${Math.max(2, (n / total) * 100)}%; width:${Math.max(2, (n / total) * 100)}%"></i></span>` +
       `<span class="rowbar-val">${n}</span>`);
     c.appendChild(bucketRow("Youth ≤21", bk.youth));
     c.appendChild(bucketRow("Prime 22–26", bk.prime));
