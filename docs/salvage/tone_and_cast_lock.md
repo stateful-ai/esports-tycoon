@@ -12,6 +12,11 @@ summary: >-
 
 # Tone + Cast Lock — esports-tycoon M0 (Week 6 of 8)
 
+> **Historical prototype reference - not current game voice guidance.** The
+> active standard is [Game voice: competitive, credible, online](../game-voice.md).
+> Its Vector Strike terminology and dry-mockumentary voice must not be used for
+> new game copy.
+
 This is the **1-pager that the whole slice builds on**. Prompts, templates, the
 match resolver's narration, and the Chirper feed all inherit from here. Per the
 red team, casting and tone are *hard prerequisites* — narration work does not

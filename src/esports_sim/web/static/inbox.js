@@ -98,7 +98,7 @@ async function inboxAfterAdvance() {
   const before = inboxUnread;
   const after = await refreshInboxBadge();
   const gained = after - before;
-  if (gained > 0) toast(`${gained} new inbox message${gained === 1 ? "" : "s"}`);
+  if (gained > 0) toast(`${gained} new inbox item${gained === 1 ? "" : "s"}`);
 }
 
 // Jump to another screen by clicking its tab button (same mechanism the
@@ -168,7 +168,7 @@ async function inbox(v) {
 
   const head = el("div", "inbox-head");
   head.appendChild(el("h2", "", "Inbox"));
-  const markAll = el("button", "btn btn-sm", "Mark all read");
+  const markAll = el("button", "btn btn-sm", "Mark all as read");
   markAll.onclick = async () => {
     const res = await inboxPost({ all: true });
     if (res && typeof res.unread === "number") setInboxBadge(res.unread);
@@ -229,8 +229,8 @@ async function inbox(v) {
     const items = all.filter((it) => inboxFilter === "all" || it.category === inboxFilter);
     if (!items.length) {
       const msg = all.length
-        ? "No messages in this category."
-        : "No messages yet - advance the week.";
+        ? "Nothing in this category."
+        : "No inbox items yet. Advance the week to continue.";
       listWrap.appendChild(el("p", "inbox-empty muted", msg));
       return;
     }
@@ -281,7 +281,7 @@ async function inbox(v) {
         btns.forEach((x) => (x.disabled = true));
         try {
           const r = await api(act.endpoint, act.payload); // toasts + throws on 4xx
-          toast((r && r.message) || `${act.label} done`);
+          toast((r && r.message) || `${act.label} confirmed.`);
           await markItemRead(it, row);
           settle("Resolved", "ok");
           await inboxSyncState(); // keep Market/Finances/Dashboard in agreement
@@ -316,7 +316,7 @@ async function inbox(v) {
     text.textContent = it.body || "";           // textContent preserves newlines
     body.appendChild(text);
     if (it.tab) {
-      const go = el("button", "btn btn-sm inbox-goto", `Go to ${inboxCap(it.tab)}`);
+      const go = el("button", "btn btn-sm inbox-goto", `Open ${inboxCap(it.tab)}`);
       go.onclick = (e) => { e.stopPropagation(); inboxGoTab(it.tab); };
       body.appendChild(go);
     }
@@ -348,7 +348,7 @@ async function inbox(v) {
   digest.appendChild(el("h2", "", "This week"));
   const allItems = data.items || [];
   if (!allItems.length) {
-    digest.appendChild(el("p", "muted", "No messages yet - advance the week."));
+    digest.appendChild(el("p", "muted", "No inbox items yet. Advance the week to continue."));
   } else {
     const latest = allItems[0]; // items arrive newest-first
     const wkKey = `${latest.season}-${latest.week}`;
@@ -364,7 +364,7 @@ async function inbox(v) {
     for (const it of wkItems) {
       const cat = it.category || "news";
       const line = el("div", "inbox-row-head");
-      line.title = "Open in list";
+      line.title = "Open item";
       const chip = el("span", `inbox-cat cat-${cat}`);
       chip.textContent = INBOX_CAT_LABEL[cat] || cat;
       const title = el("span", "inbox-title");
@@ -393,19 +393,19 @@ function inboxMockData() {
   const week = App.state?.week ?? 6;
   const items = [
     { id: "m1", season, week, category: "match", tab: "schedule", unread: true,
-      title: "Match report: you beat Sentinels 2-1",
-      body: "A tense series on Ascent decided it.\nWatch the replay from the Schedule tab." },
+      title: "Match report: 2-1 over Sentinels",
+      body: "Ascent decided a close series.\nReview the replay in Fixtures." },
     { id: "m2", season, week, category: "sponsor", tab: "finances", unread: true,
-      title: "New jersey sponsor offer",
-      body: "A brand is interested in your jersey slot.\nReview the structures in Finances." },
+      title: "Jersey sponsor offer",
+      body: "A brand is interested in the jersey placement.\nReview the terms in Finances." },
     { id: "m3", season, week, category: "talk", tab: "roster", unread: true,
-      title: "A player wants a word",
-      body: "Morale is dipping. Hold your weekly 1:1 from the Roster tab." },
+      title: "Player meeting requested",
+      body: "Morale is slipping. Use this week's 1:1 from Squad." },
     { id: "m4", season, week: week - 1, category: "board", tab: null, unread: false,
-      title: "Board: on track",
-      body: "The board is content with the current trajectory." },
+      title: "Board update: on track",
+      body: "The board is satisfied with the club's current direction." },
     { id: "m5", season, week: week - 1, category: "news", tab: null, unread: false,
-      title: "Roster shakeups across the league",
+      title: "League market activity",
       body: "Several rivals made moves in the market this week." },
   ];
   return { unread: items.filter((i) => i.unread).length, items };

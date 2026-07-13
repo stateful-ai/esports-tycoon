@@ -90,9 +90,9 @@ def _build_event(gs: "GameState", team_id: str, rng) -> MediaEvent | None:
             f"the result will settle the promise after the match."
         )
         choices = [
-            _choice("set_high_bar", "Say you expect to win", "More sponsor and fan upside; a loss will be remembered."),
+            _choice("set_high_bar", "Set winning as the public standard", "More sponsor and fan upside; a loss will be remembered."),
             _choice("respect_rival", "Respect the rival, back the group", "Builds trust with a smaller result-dependent swing."),
-            _choice("shield_group", "Refuse to turn it into a referendum", "Protects player trust but cools sponsor excitement."),
+            _choice("shield_group", "Keep the focus inside the club", "Protects player trust but cools sponsor excitement."),
         ]
     elif kind == "roster_rumor":
         assert player is not None
@@ -103,8 +103,8 @@ def _build_event(gs: "GameState", team_id: str, rng) -> MediaEvent | None:
         )
         choices = [
             _choice("deny_and_back", "Call the player part of the plan", "Strong player trust; modest sponsor cost."),
-            _choice("acknowledge_market", "Confirm every offer is considered", "Commercial credibility; player trust falls."),
-            _choice("no_comment", "Give the rumor no oxygen", "Avoids sponsor friction; supporters and the player get less reassurance."),
+            _choice("acknowledge_market", "Confirm the club will consider offers", "Commercial credibility; player trust falls."),
+            _choice("no_comment", "Decline to comment", "Avoids sponsor friction; supporters and the player get less reassurance."),
         ]
     elif kind == "protect_rookie":
         assert player is not None
@@ -116,7 +116,7 @@ def _build_event(gs: "GameState", team_id: str, rng) -> MediaEvent | None:
         choices = [
             _choice("take_responsibility", "Put the responsibility on yourself", "Large trust and sentiment gain; sponsors prefer a cleaner line."),
             _choice("standards_apply", "Say the standards apply to everyone", "Sponsors approve; rookie trust falls."),
-            _choice("redirect_to_team", "Redirect the question to team process", "Some trust protection with less public momentum."),
+            _choice("redirect_to_team", "Return the focus to the team", "Some trust protection with less public momentum."),
         ]
     else:
         assert player is not None
@@ -127,8 +127,8 @@ def _build_event(gs: "GameState", team_id: str, rng) -> MediaEvent | None:
         )
         choices = [
             _choice("defend_publicly", "Defend the player publicly", "Player trust and fan sentiment rise; sponsors absorb some controversy."),
-            _choice("demand_response", "Demand a response on the server", "Sponsors like the accountability; player trust falls."),
-            _choice("keep_internal", "Keep the conversation inside", "Small trust protection; supporters read the silence cautiously."),
+            _choice("demand_response", "Set a public performance standard", "Sponsors like the accountability; player trust falls."),
+            _choice("keep_internal", "Keep the response inside the room", "Small trust protection; supporters read the silence cautiously."),
         ]
     return MediaEvent(
         id=_id(gs, team_id, kind, player_id or fixture_id),
@@ -156,7 +156,7 @@ _EFFECTS: dict[tuple[str, str], tuple[str, float, float, float]] = {
     ("roster_rumor", "no_comment"): ("The club leaves the rumor unanswered.", -2, 0, -2),
     ("derby_expectations", "set_high_bar"): ("The manager publicly sets winning as the derby standard.", 2, 1, 1),
     ("derby_expectations", "respect_rival"): ("The manager backs the group without dismissing the rival.", 1, 0, 3),
-    ("derby_expectations", "shield_group"): ("The manager refuses to make the derby a public referendum.", -1, -1, 4),
+    ("derby_expectations", "shield_group"): ("The manager keeps the derby from becoming a public test.", -1, -1, 4),
 }
 
 
