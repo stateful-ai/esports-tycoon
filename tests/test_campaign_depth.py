@@ -174,6 +174,12 @@ class _AlwaysRetireRng:
 
 def test_retirement_tribute_for_a_decorated_career() -> None:
     gs = _decorated_veteran()
+    team = gs.teams["nxs"]
+    team.lineup_ids = ["star"]
+    team.lineup.starters = ["star"]
+    team.lineup.agents = {"star": "jett"}
+    gs.academy_player_rights["star"] = "nxs"
+    gs.leadership_groups["nxs"] = ["star"]
     n = _process_retirements(gs, _AlwaysRetireRng())
     assert n == 1
     # A decorated retiree earns their own sendoff line...
@@ -185,6 +191,11 @@ def test_retirement_tribute_for_a_decorated_career() -> None:
     ret = [e for e in gs.chronicle if e.kind == "retirement" and e.player_id == "star"]
     assert ret and "pro seasons" in ret[0].text and "MVP" in ret[0].text
     assert ret[0].importance > 40.0
+    assert team.lineup_ids == []
+    assert team.lineup.starters == []
+    assert team.lineup.agents == {}
+    assert "star" not in gs.academy_player_rights
+    assert "star" not in gs.leadership_groups["nxs"]
 
 
 def test_undecorated_retiree_gets_no_tribute() -> None:

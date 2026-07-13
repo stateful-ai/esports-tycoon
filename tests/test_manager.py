@@ -100,7 +100,14 @@ def test_full_season_lifecycle(campaign: GameState, game_data: GameData) -> None
     # AI rosters stayed legal all season.
     for tid, team in campaign.teams.items():
         if tid != campaign.user_team_id:
-            assert len(team.player_ids) == 5, f"{tid} has {len(team.player_ids)}"
+            if team.tier == 2:
+                # Academy affiliates may carry prospects beyond the five
+                # who dress; the first team remains lean.
+                assert 5 <= len(team.player_ids) <= 10, (
+                    f"{tid} has {len(team.player_ids)}"
+                )
+            else:
+                assert len(team.player_ids) == 5, f"{tid} has {len(team.player_ids)}"
 
 
 def test_campaign_determinism(game_data: GameData) -> None:

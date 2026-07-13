@@ -17,9 +17,11 @@ import numpy as np
 from esports_sim import perf
 
 from esports_sim.manager import (
+    academy,
     badges,
     career,
     chronicle,
+    culture,
     development,
     economy,
     flavor_events,
@@ -29,12 +31,14 @@ from esports_sim.manager import (
     market,
     meta,
     narrative,
+    preparation,
     relationships,
     role_fit,
     rivalries,
     social,
     sponsors,
     staff,
+    series_management,
     telemetry,
     training,
 )
@@ -294,6 +298,8 @@ def new_campaign(
             )
             market.seed_existing_contract_terms(gs, tid, p, role)
     social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
+    academy.seed_affiliates(gs)
+    culture.ensure_leadership(gs)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)
@@ -320,12 +326,17 @@ def runtime_gamedata(gs: GameState, gd: GameData) -> GameData:
     )
 
 
-def _resolve_five(gs: GameState, team_id: str, primary: list[str]) -> list[str]:
+def _resolve_five(
+    gs: GameState,
+    team_id: str,
+    primary: list[str],
+    eligible: list[str] | None = None,
+) -> list[str]:
     """Resolve exactly five dressed players: honour `primary` (an ordered lineup
     preference) first, filtering stale ids, then top up with the best remaining
     players by quality. Assumes the roster has more than five (callers short-
     circuit at five-or-fewer). Order is irrelevant — the engine re-sorts by id."""
-    roster = list(gs.teams[team_id].player_ids)
+    roster = list(eligible if eligible is not None else gs.teams[team_id].player_ids)
     chosen: list[str] = []
     seen: set[str] = set()
     for pid in primary:
@@ -365,12 +376,12 @@ def dressed_for(
 
     The engine re-sorts the roster by id, so the returned order is irrelevant to
     match output — only the SET of five matters."""
-    roster = list(gs.teams[team_id].player_ids)
+    roster = series_management.eligible_pool(gs, team_id, fixture)
     if len(roster) <= market.ROSTER_SIZE:
         return roster
     key = f"{team_id}|{fixture.id}|{map_id}"
     primary = gs.map_lineups.get(key) or gs.teams[team_id].lineup_ids
-    return _resolve_five(gs, team_id, primary)
+    return _resolve_five(gs, team_id, primary, roster)
 
 
 def _dressed_gamedata(
@@ -435,6 +446,9 @@ def advance_week(
     for p in gs.players.values():
         backfill_agent_baselines(p, gd)
         gen_assign_identity(p)
+    if not gs.academy_affiliates:
+        academy.seed_affiliates(gs)
+    culture.ensure_leadership(gs)
     _cp.mark("heal")
 
     if gs.phase == "offseason":
@@ -465,6 +479,14 @@ def advance_week(
             knowledge.on_patch(gs)  # setups date when the numbers move
 
     rt_gd = runtime_gamedata(gs, gd)
+
+    # Manager-booked scrims/bootcamps resolve before kickoff. A dedicated RNG
+    # stream only selects restrained report phrasing; all gameplay effects are
+    # stored campaign tradeoffs and organizational knowledge.
+    preparation.weekly_tick(
+        gs, tree.derive("season", gs.season, "week", gs.week, "preparation")
+    )
+    series_management.auto_directives(gs)
 
     # 1. Matches. Challengers games sim fully (development, stats,
     # scouting) but never capture replay logs — nobody broadcasts tier 2.
@@ -499,6 +521,10 @@ def advance_week(
     # First professional appearances (pending rookies only) go into the
     # chronicle while the week's dressed sets are still in hand.
     chronicle.record_debuts(gs, week_dressed)
+
+    # The academy is the existing simulated Challengers affiliate, so its
+    # bounded coaching gain reads the tier-2 results that just actually played.
+    academy.weekly_tick(gs)
 
     # Per-map lineups are single-use: drop the entries for fixtures just played
     # so `map_lineups` can't grow unbounded across a season.
@@ -618,6 +644,10 @@ def advance_week(
         user_won=bool(user_fx and user_fx.winner_id == gs.user_team_id),
         won_by_team=won_by_team,
     )
+    culture.ai_manage(gs)
+    culture.weekly_tick(
+        gs, tree.derive("season", gs.season, "week", gs.week, "culture")
+    )
 
     _cp.mark("training_dev")
 
@@ -662,6 +692,7 @@ def advance_week(
 
     # 4. Contracts + transfer window + AI roster upkeep + scouting.
     market.tick_contracts(gs, week_rng)
+    academy.ai_manage(gs)
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
     market.ai_poach_free_agents(gs, gd, week_rng)
@@ -1380,17 +1411,17 @@ def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
 
 
 def _nudge_tournament_registration(gs: GameState) -> None:
-    """Soft, advisory reminder that a tournament roster is nominally six deep.
-    Fires as the playoffs are set; never blocks (rosters may already be locked
-    by now) — a heads-up plus a paper trail in each manager's inbox."""
+    """Freeze submitted registrations (or deterministic automatic ones) as
+    the playoff bracket is drawn, then tell each human what was locked."""
+    series_management.lock_all(gs)
     for tid in sorted(gs.human_team_ids):
-        n = len(gs.teams[tid].player_ids)
-        if n < market.TOURNAMENT_REGISTER:
-            gs.push_private_news(
-                f"Playoffs: {gs.teams[tid].name} enter with {n} players — a "
-                f"{market.TOURNAMENT_REGISTER}-man tournament roster is advised.",
-                owner=tid,
-            )
+        registered = series_management.registration_for(gs, tid)
+        names = ", ".join(gs.players[pid].handle for pid in registered)
+        gs.push_private_news(
+            f"Roster lock: {gs.teams[tid].name} register "
+            f"{len(registered)} players for tournament play ({names}).",
+            owner=tid,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -1543,6 +1574,35 @@ def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
         p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
 
 
+def _between_map_plan(
+    gs: GameState, tid: str, base: TeamMatchPlan, response: str
+) -> TeamMatchPlan:
+    """Project one conditional series response into the optional match-plan
+    seam. This never mutates the standing team tactics and is only reachable
+    after a manager's directive fires."""
+    tactics = base.tactics or gs.teams[tid].tactics
+    update: dict[str, float] = {}
+    if response == "press":
+        update = {
+            "aggression": min(100.0, tactics.aggression + 12.0),
+            "pace": min(100.0, tactics.pace + 10.0),
+            "map_control": min(100.0, tactics.map_control + 6.0),
+        }
+    elif response == "stabilize":
+        update = {
+            "aggression": max(0.0, tactics.aggression - 6.0),
+            "pace": max(0.0, tactics.pace - 10.0),
+            "util_discipline": min(100.0, tactics.util_discipline + 10.0),
+        }
+    return TeamMatchPlan(
+        tactics=tactics.model_copy(update=update) if update else base.tactics,
+        focus_target=base.focus_target,
+        prep_edge=base.prep_edge,
+        counter_edge=base.counter_edge,
+        coach=base.coach,
+    )
+
+
 def _sim_fixture(
     gs: GameState,
     rt_gd: GameData,
@@ -1638,10 +1698,54 @@ def _sim_fixture(
     # still alive (they are transient — dropped once the week rolls over).
     review_bundles: list[tuple] = []
     review_weapon_class: dict[str, str] = {}
+    active_series_responses: dict[str, str] = {}
+    fired_directives: set[str] = set()
     for map_index, map_id in enumerate(f.maps):
         a_wins, b_wins = f.map_score
         if a_wins >= need or b_wins >= need:
             break
+
+        # Conditional between-map card. Once it fires, the response persists
+        # for the rest of this series; a substitution rewrites each remaining
+        # map's dressed-five override. The fixture note is the grounded audit
+        # trail shown by the UI.
+        for tid in (f.team_a, f.team_b):
+            directive = gs.series_directives_by.get(tid)
+            if (
+                tid not in fired_directives
+                and directive is not None
+                and directive.fixture_id == f.id
+                and series_management.should_fire(directive, f, tid, map_index)
+            ):
+                current = dressed_for(gs, tid, f, map_id)
+                changed = series_management.adjusted_lineup(current, directive)
+                if changed != current:
+                    for remaining_map in f.maps[map_index:]:
+                        gs.map_lineups[f"{tid}|{f.id}|{remaining_map}"] = list(changed)
+                    in_name = gs.players[directive.substitute_in].handle
+                    out_name = gs.players[directive.substitute_out].handle
+                    f.series_notes.append(
+                        f"{gs.teams[tid].tag}: {in_name} replaces {out_name} after map {map_index}."
+                    )
+                active_series_responses[tid] = directive.response
+                if directive.response == "reset":
+                    for pid in changed:
+                        p = gs.players[pid]
+                        p.confidence = round(min(95.0, p.confidence + 2.0), 1)
+                elif directive.response == "press":
+                    for pid in changed:
+                        gs.players[pid].stamina = round(
+                            max(0.0, gs.players[pid].stamina - 2.0), 1
+                        )
+                if directive.response != "steady":
+                    f.series_notes.append(
+                        f"{gs.teams[tid].tag}: {directive.response} response after map {map_index}."
+                    )
+                fired_directives.add(tid)
+
+        map_plans = dict(plans)
+        for tid, response in sorted(active_series_responses.items()):
+            map_plans[tid] = _between_map_plan(gs, tid, map_plans[tid], response)
         seed = tree.derive_seed(
             "season", gs.season, "week", f.week, "fixture", f.id, "map", map_index
         )
@@ -1651,7 +1755,7 @@ def _sim_fixture(
         }
         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
         res = simulate_match_result(
-            map_gd, f.team_a, f.team_b, map_id, seed, plans=plans or None
+            map_gd, f.team_a, f.team_b, map_id, seed, plans=map_plans or None
         )
         # The dressed five per side (bench players have no line), plus the
         # weapon registry's class map for the economy splits (eco/save kills).
@@ -1667,8 +1771,8 @@ def _sim_fixture(
             stats,
             {
                 tid: (
-                    plans[tid].tactics
-                    if tid in plans and plans[tid].tactics is not None
+                    map_plans[tid].tactics
+                    if tid in map_plans and map_plans[tid].tactics is not None
                     else gs.teams[tid].tactics
                 )
                 for tid in (f.team_a, f.team_b)
@@ -1726,6 +1830,9 @@ def _sim_fixture(
         plan = gs.game_plans_by.get(tid)
         if plan is not None and plan.fixture_id == f.id:
             del gs.game_plans_by[tid]
+        directive = gs.series_directives_by.get(tid)
+        if directive is not None and directive.fixture_id == f.id:
+            del gs.series_directives_by[tid]
 
     a_wins, b_wins = f.map_score
     f.winner_id = f.team_a if a_wins > b_wins else f.team_b
@@ -2192,6 +2299,9 @@ def _process_retirements(gs: GameState, rng) -> int:
         team = next((t for t in gs.teams.values() if pid in t.player_ids), None)
         if team is not None:
             team.player_ids.remove(pid)
+            team.lineup_ids = [q for q in team.lineup_ids if q != pid]
+            team.lineup.starters = [q for q in team.lineup.starters if q != pid]
+            team.lineup.agents.pop(pid, None)
             if team.captain_id == pid:
                 team.captain_id = team.player_ids[0] if team.player_ids else None
             if gs.is_human(team.id):
@@ -2263,6 +2373,11 @@ def _process_retirements(gs: GameState, rng) -> int:
         staff.retire_into_staff(gs, p, ca, team.name if team else "")
         if ca >= 62 or p.age >= 31:
             notable.append(f"{p.handle} ({p.age})")
+        gs.academy_player_rights.pop(pid, None)
+        for team_id in sorted(gs.leadership_groups):
+            gs.leadership_groups[team_id] = [
+                q for q in gs.leadership_groups[team_id] if q != pid
+            ]
         del gs.players[pid]
     del gs.retired[:-40]
 
@@ -2679,8 +2794,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.masters_seeds = []
     gs.champions_seeds = []
     gs.transfer_offers = []
+    gs.negotiations_by = {}
+    gs.talks_cooldown_by = {}
     gs.map_lineups = {}
     gs.game_plans_by = {}
+    gs.tournament_rosters = {}
+    gs.series_directives_by = {}
+    gs.preparation_plans_by = {}
     # Grudges cool over the break; the faint ones are forgotten.
     rivalries.offseason_decay(gs)
     # Institutional knowledge fades: anti-strats gut (their roster moved),
@@ -2705,6 +2825,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         gs.teams, sorted(gd.maps), gs.season, gs.league_regions
     )
     gs.standings = {tid: TeamRecord() for tid in gs.teams}
+    academy.offseason_intake(gs)
+    culture.ensure_leadership(gs)
     gs.push_news(f"Season {gs.season} begins.")
     report.notes.append(f"Offseason complete — Season {gs.season} starts now.")
     _update_world_ranks(gs)

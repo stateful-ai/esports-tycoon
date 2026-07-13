@@ -38,6 +38,62 @@ NEW_SIGNING_PROTECT_WEEKS = 12
 TRANSFER_QUIET_WEEKS = 4
 
 
+def market_window_status(gs: GameState) -> dict[str, object]:
+    """The shared roster calendar. Free-agent signings and contracted-player
+    moves use the same opening and mid-split windows; renewals remain open all
+    year. An under-five roster always receives an emergency exception."""
+    if gs.phase == "offseason":
+        return {
+            "open": True, "kind": "offseason", "label": "Offseason market",
+            "detail": "All signings and transfers are open.",
+        }
+    if gs.phase == "playoffs":
+        return {
+            "open": False, "kind": "roster_lock", "label": "Tournament lock",
+            "detail": "Playoff rosters are frozen until the offseason.",
+        }
+    last_week = max(
+        (f.week for f in gs.fixtures if f.stage == "regular" and f.tier == 1),
+        default=max(gs.week, 7),
+    )
+    opening_end = min(TRANSFER_QUIET_WEEKS + 1, last_week)
+    mid_start = max(opening_end + 1, last_week // 2)
+    mid_end = min(last_week, mid_start + 1)
+    if gs.week <= opening_end:
+        return {
+            "open": True, "kind": "opening", "label": "Opening window",
+            "detail": f"Closes after week {opening_end}.",
+            "closes_week": opening_end,
+        }
+    if mid_start <= gs.week <= mid_end:
+        return {
+            "open": True, "kind": "mid_split", "label": "Mid-split window",
+            "detail": f"Final roster moves close after week {mid_end}.",
+            "closes_week": mid_end,
+        }
+    next_open = mid_start if gs.week < mid_start else None
+    detail = (
+        f"Closed until the mid-split window in week {next_open}."
+        if next_open is not None
+        else "The transfer deadline has passed; only emergency free agents are available."
+    )
+    return {
+        "open": False, "kind": "closed", "label": "Window closed",
+        "detail": detail, "next_open_week": next_open,
+    }
+
+
+def market_move_allowed(
+    gs: GameState, team_id: str, *, emergency_ok: bool = False
+) -> tuple[bool, str]:
+    status = market_window_status(gs)
+    if bool(status["open"]):
+        return True, ""
+    if emergency_ok and len(gs.teams[team_id].player_ids) < ROSTER_MIN:
+        return True, "emergency roster exception"
+    return False, str(status["detail"])
+
+
 def roster_cap(gs: GameState, team_id: str) -> int:
     """How many players this org may carry. Everyone may hold a bench up to
     ROSTER_MAX — for AI orgs that headroom only ever fills through trades
@@ -85,10 +141,9 @@ def asking_salary(p: Player) -> int:
 
 def can_sign(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
     team = gs.teams[team_id]
-    # Rosters lock for a human org during the playoffs. AI upkeep still fills
-    # (it never runs "signings" the user sees) so tier-1 sides stay legal.
-    if gs.phase == "playoffs" and gs.is_human(team_id):
-        return False, "rosters are locked during the playoffs"
+    allowed, why = market_move_allowed(gs, team_id, emergency_ok=True)
+    if not allowed:
+        return False, why
     if player_id not in gs.free_agent_ids:
         return False, "player is not a free agent"
     veto = relationships.signing_veto(gs, player_id, team_id)
@@ -125,10 +180,10 @@ def _apply_contract_terms(
     team = gs.teams[team_id]
     lineup = [pid for pid in team.lineup_ids if pid != p.id and pid in team.player_ids]
     if p.roster_role == "starter":
-        lineup.append(p.id)
-        lineup = sorted(
+        supporting = sorted(
             lineup, key=lambda pid: (-player_quality(gs.players[pid]), pid)
-        )[:5]
+        )[:4]
+        lineup = supporting + [p.id]
     team.lineup_ids = lineup
 
 
@@ -177,7 +232,12 @@ def sign_player(
         return False, why
     team = gs.teams[team_id]
     p = gs.players[player_id]
-    p.salary = asking_salary(p) if salary is None else max(800, int(salary))
+    negotiated_salary = asking_salary(p) if salary is None else max(800, int(salary))
+    if team.balance < negotiated_salary * 8:
+        return False, (
+            f"need {negotiated_salary * 8:,} cr in the bank to cover the negotiated deal"
+        )
+    p.salary = negotiated_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     _apply_contract_terms(gs, team_id, p, contract_terms)
     p.morale = min(100.0, p.morale + 8.0)
@@ -199,6 +259,9 @@ def sign_player(
 
 
 def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
+    allowed, why = market_move_allowed(gs, team_id)
+    if not allowed:
+        return False, why
     team = gs.teams[team_id]
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
@@ -255,7 +318,10 @@ def renew_contract(
         new_salary = max(800, int(new_salary * (1.0 - loyalty / 100.0) / 100) * 100)
     p.salary = new_salary
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
-    _apply_contract_terms(gs, team_id, p, contract_terms)
+    # A direct/AI renewal preserves the player's existing negotiated clauses
+    # and role. Only an explicit negotiation package rewrites those promises.
+    if contract_terms is not None:
+        _apply_contract_terms(gs, team_id, p, contract_terms)
     p.morale = min(100.0, p.morale + 5.0 + loyalty * 0.2)
     gs.push_news(f"{p.handle} re-signs with {team.name} at {new_salary:,}/wk.")
     chronicle.record(
@@ -278,8 +344,9 @@ def can_swap(
     `can_sign` (free agent, phase, funds). Affordability is checked on the net:
     the drop's severance is spent before the new wage commitment."""
     team = gs.teams[team_id]
-    if gs.phase == "playoffs" and gs.is_human(team_id):
-        return False, "rosters are locked during the playoffs"
+    allowed, why = market_move_allowed(gs, team_id)
+    if not allowed:
+        return False, why
     if drop_id not in team.player_ids:
         return False, "the player to drop is not on this roster"
     if sign_id not in gs.free_agent_ids:
@@ -328,6 +395,24 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
     """Contracts count down weekly. AI teams renew their good players
     before expiry; anyone hitting zero walks to free agency. User players
     in form want an early extension — ignoring them costs morale weekly."""
+    # Negotiation deadlines are real calendar pressure. Expire them before the
+    # roster contract pass so the inbox/news for this tick reflects the missed
+    # table even if the player's underlying deal also reaches zero.
+    for owner in sorted(gs.negotiations_by):
+        live = gs.negotiations_by[owner]
+        for pid in sorted(list(live)):
+            neg = live[pid]
+            if neg.deadline_week and gs.week > neg.deadline_week:
+                player = gs.players.get(pid)
+                del live[pid]
+                if player is not None:
+                    if neg.kind == "renew":
+                        player.morale = round(max(0.0, player.morale - 3.0), 1)
+                    gs.push_private_news(
+                        f"Contract talks with {player.handle} expire; their agent "
+                        "moves on to other options.",
+                        owner=owner,
+                    )
     for tid in sorted(gs.teams):
         team = gs.teams[tid]
         is_ai = not gs.is_human(tid)
@@ -426,6 +511,8 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
     weakest same-role player — so the user competes for marquee talent
     instead of grabbing it for free. At most one poach per week keeps it
     measured; deterministic from the passed rng."""
+    if not bool(market_window_status(gs)["open"]):
+        return
     pool = sorted(
         (gs.players[pid] for pid in gs.free_agent_ids),
         key=lambda p: (player_quality(p), p.id),
@@ -855,6 +942,69 @@ NEGOTIATION_COOLDOWN_SIGN = 4  # ...and a walked free agent
 NEGOTIATION_CONCESSION = 0.35
 
 
+def _negotiation_leverage(
+    gs: GameState, pid: str, kind: str
+) -> tuple[int, int, int, list[str]]:
+    """Snapshot alternatives and club interest so leverage is visible and
+    causally changes patience and concessions."""
+    p = gs.players[pid]
+    team = gs.teams[gs.acting_team_id]
+    q = player_quality(p)
+    leverage = 42.0 + (q - 55.0) * 1.15
+    reasons: list[str] = []
+    if p.form >= 60:
+        leverage += 8.0
+        reasons.append("strong recent form")
+    if p.followers >= 300_000:
+        leverage += min(10.0, p.followers / 150_000)
+        reasons.append("commercial pull")
+    if kind == "renew" and p.contract_weeks_left <= 8:
+        leverage += 12.0
+        reasons.append("contract close to expiry")
+    if q >= 72:
+        reasons.append("elite market level")
+
+    competing = 0
+    ask = asking_salary(p)
+    for rival in sorted(gs.teams.values(), key=lambda t: t.id):
+        if rival.id == team.id or rival.tier != team.tier or rival.balance < ask * 10:
+            continue
+        weakest = min(
+            (player_quality(x) for x in gs.roster(rival.id)), default=0.0
+        )
+        if q >= weakest + 3.0:
+            competing += 1
+    competing = min(3, competing)
+    if competing:
+        leverage += competing * 6.0
+        reasons.append(
+            f"{competing} credible alternative{'s' if competing != 1 else ''}"
+        )
+
+    interest = 45.0 + (team.reputation - 50.0) * 0.45
+    if p.region == team.region:
+        interest += 8.0
+        reasons.append("regional fit")
+    fit = relationships.locker_room_fit(gs, pid, team.id)
+    interest += (float(fit["average"]) - 50.0) * 0.25
+    if kind == "renew":
+        interest += memories.loyalty_bias(gs, pid, team.id) * 0.6
+        interest += min(10.0, p.tenure_weeks / 20.0)
+        if p.morale < 45:
+            interest -= 12.0
+            reasons.append("unhappy at the club")
+    interest_i = int(np.clip(round(interest), 5, 95))
+    leverage -= (interest_i - 50) * 0.15
+    return int(np.clip(round(leverage), 5, 95)), interest_i, competing, reasons
+
+
+def negotiation_round_limit(neg) -> int:
+    # The UI promise remains three formal offers. Leverage changes the deadline,
+    # acceptance threshold, and concession rate rather than hiding a different
+    # click budget behind the same negotiation room.
+    return NEGOTIATION_MAX_ROUNDS
+
+
 def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
     """The player's OPENING ask: (salary/wk, contract weeks). Form and
     confidence inflate it; loyalty (memories) and long tenure soften a
@@ -938,11 +1088,7 @@ def negotiation_kind(gs: GameState, pid: str) -> tuple[str | None, str]:
     return None, "player is under contract elsewhere — bid or buy out instead"
 
 
-def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
-    """Sit down with a player (or return the live table). Returns
-    (ok, why, Negotiation | None)."""
-    from esports_sim.manager.state import Negotiation
-
+def can_open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, str | None]:
     p = gs.players.get(pid)
     if p is None:
         return False, "unknown player", None
@@ -955,19 +1101,40 @@ def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
         else relationships.signing_veto(gs, pid, gs.acting_team_id)
     )
     if veto:
-        return False, veto, None
-    if kind == "sign" and gs.phase == "playoffs" and gs.is_human(gs.acting_team_id):
-        return False, "rosters are locked during the playoffs", None
+        return False, veto, kind
+    if kind == "sign":
+        allowed, why = market_move_allowed(
+            gs, gs.acting_team_id, emergency_ok=True
+        )
+        if not allowed:
+            return False, why, kind
     until = gs.talks_cooldown.get(pid, 0)
     if until > gs.week:
         return False, (
             f"{p.handle} isn't taking your calls after the last talks "
             f"collapsed (week {until})"
-        ), None
+        ), kind
+    return True, "", kind
+
+
+def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
+    """Sit down with a player (or return the live table). Returns
+    (ok, why, Negotiation | None)."""
+    from esports_sim.manager.state import Negotiation
+
+    p = gs.players.get(pid)
+    ok, why, kind = can_open_negotiation(gs, pid)
+    if not ok:
+        return False, why, None
+    assert p is not None and kind is not None
     live = gs.negotiations.get(pid)
     if live is not None and live.kind == kind:
+        if live.deadline_week and gs.week > live.deadline_week:
+            del gs.negotiations[pid]
+            return False, f"{p.handle}'s deadline passed; their agent closed talks", None
         return True, "", live
     terms = contract_term_demands(gs, pid, kind)
+    leverage, interest, competing, reasons = _negotiation_leverage(gs, pid, kind)
     neg = Negotiation(
         player_id=pid, kind=kind,
         demand_salary=terms["salary"], demand_weeks=terms["weeks"],
@@ -976,6 +1143,11 @@ def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
         demand_buyout=terms["buyout"],
         demand_no_transfer=terms["no_transfer"],
         demand_role=terms["role"],
+        leverage=leverage,
+        interest=interest,
+        competing_clubs=competing,
+        deadline_week=gs.week + (2 if leverage >= 75 else 3 if leverage >= 45 else 4),
+        leverage_reasons=reasons,
     )
     gs.negotiations[pid] = neg
     return True, "", neg
@@ -1001,6 +1173,9 @@ def negotiate_offer(
     if p is None or kind != neg.kind:
         del gs.negotiations[pid]
         return "error", "the situation changed — talks are off", None
+    if neg.deadline_week and gs.week > neg.deadline_week:
+        del gs.negotiations[pid]
+        return "collapsed", f"{p.handle}'s deadline passed; they pursue other options", None
     salary = max(0, int(salary))
     weeks = int(np.clip(int(weeks), MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
     stream_share = int(np.clip(
@@ -1056,7 +1231,11 @@ def negotiate_offer(
             f"{p.handle}'s agent hangs up — that number was an insult. "
             "They won't talk to you for a while."
         )
-    threshold = 0.97 - 0.02 * neg.rounds  # they wear down a little
+    threshold = (
+        0.97 - 0.02 * neg.rounds
+        + (neg.leverage - 50) / 500.0
+        - (neg.interest - 50) / 700.0
+    )
     if score >= threshold:
         # Deal. Settle it through the normal channels with the NEGOTIATED
         # terms; the affordability rules still apply.
@@ -1080,16 +1259,21 @@ def negotiate_offer(
         gs.talks_cooldown.pop(pid, None)
         return "accepted", msg, None
     neg.rounds += 1
-    if neg.rounds >= NEGOTIATION_MAX_ROUNDS:
+    round_limit = negotiation_round_limit(neg)
+    if neg.rounds >= round_limit:
         return _collapse(
-            f"{p.handle} is done negotiating — three offers, no deal. "
+            f"{p.handle} is done negotiating — {round_limit} offers, no deal. "
             "They walk away from the table."
         )
     # Counter: concede toward the offer, never below it.
+    concession = float(np.clip(
+        NEGOTIATION_CONCESSION + (50 - neg.leverage) / 250.0,
+        0.18, 0.52,
+    ))
     neg.demand_salary = max(
         salary,
         int(round(
-            (neg.demand_salary - (neg.demand_salary - salary) * NEGOTIATION_CONCESSION)
+            (neg.demand_salary - (neg.demand_salary - salary) * concession)
             / 100
         ) * 100),
     )
@@ -1107,7 +1291,7 @@ def negotiate_offer(
     neg.demand_buyout = int(round(
         (neg.demand_buyout + (buyout - neg.demand_buyout) * 0.2) / 1000
     ) * 1000)
-    left = NEGOTIATION_MAX_ROUNDS - neg.rounds
+    left = round_limit - neg.rounds
     return "countered", (
         f"{p.handle} counters: {neg.demand_salary:,}/wk on "
         f"{neg.demand_weeks} weeks, {neg.demand_stream_share}% stream share, "
@@ -1158,8 +1342,9 @@ def buy_out_player(gs: GameState, buyer_id: str, pid: str) -> tuple[bool, str]:
     """A tier-1 org triggers a tier-2 player's buyout clause: pay the fee,
     the player moves this week. The selling org has no say — the clause was
     the price of signing the player to a tier-2 deal in the first place."""
-    if gs.phase == "playoffs" and gs.is_human(buyer_id):
-        return False, "rosters are locked during the playoffs"
+    allowed, why = market_move_allowed(gs, buyer_id)
+    if not allowed:
+        return False, why
     if gs.teams[buyer_id].tier != 1:
         return False, "only a tier-1 org can trigger a buyout clause"
     fee = buyout_fee(gs, pid)
@@ -1188,6 +1373,9 @@ def execute_transfer(
     seller_id = team_of(gs, pid)
     if seller_id is None or seller_id == buyer_id:
         return False, "player is not transferable"
+    allowed, why = market_move_allowed(gs, buyer_id)
+    if not allowed:
+        return False, why
     seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
     p = gs.players[pid]
     if p.no_transfer_clause:
@@ -1219,6 +1407,9 @@ def execute_transfer(
             reason=f"made room for transfer target {pid}", effects=effects,
         )
         buyer.player_ids.remove(weakest.id)
+        buyer.lineup_ids = [q for q in buyer.lineup_ids if q != weakest.id]
+        buyer.lineup.starters = [q for q in buyer.lineup.starters if q != weakest.id]
+        buyer.lineup.agents.pop(weakest.id, None)
         weakest.contract_weeks_left = 0
         gs.free_agent_ids.append(weakest.id)
         if buyer.captain_id == weakest.id:
@@ -1246,7 +1437,11 @@ def execute_transfer(
     buyer.player_ids.append(pid)
     seller.lineup_ids = [q for q in seller.lineup_ids if q != pid]
     if p.roster_role == "starter":
-        buyer.lineup_ids = [q for q in buyer.lineup_ids if q != pid] + [pid]
+        buyer.lineup_ids = [
+            q
+            for q in buyer.lineup_ids
+            if q != pid and q in buyer.player_ids and q in gs.players
+        ] + [pid]
         buyer.lineup_ids = sorted(
             buyer.lineup_ids,
             key=lambda q: (-player_quality(gs.players[q]), q),
@@ -1317,7 +1512,11 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
     dst.player_ids.append(pid)
     src.lineup_ids = [q for q in src.lineup_ids if q != pid]
     if p.roster_role == "starter":
-        dst.lineup_ids = [q for q in dst.lineup_ids if q != pid] + [pid]
+        dst.lineup_ids = [
+            q
+            for q in dst.lineup_ids
+            if q != pid and q in dst.player_ids and q in gs.players
+        ] + [pid]
         dst.lineup_ids = sorted(
             dst.lineup_ids,
             key=lambda q: (-player_quality(gs.players[q]), q),
@@ -1348,6 +1547,9 @@ def execute_package(
     seller_id = team_of(gs, target_pid)
     if seller_id is None or seller_id == buyer_id:
         return False, "player is not transferable"
+    allowed, why = market_move_allowed(gs, buyer_id)
+    if not allowed:
+        return False, why
     seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
     for pid in out_pids:
         if pid not in buyer.player_ids:
@@ -1415,8 +1617,9 @@ def propose_package(
     offer on their desk. Rosters lock in the playoffs (freeze both signings and
     transfers)."""
     buyer_id = gs.acting_team_id
-    if gs.phase == "playoffs" and gs.is_human(buyer_id):
-        return False, "rosters are locked during the playoffs"
+    allowed, why = market_move_allowed(gs, buyer_id)
+    if not allowed:
+        return False, why
     seller_id = team_of(gs, target_pid)
     if seller_id is None:
         return False, "player is a free agent — sign them instead"
@@ -1502,8 +1705,9 @@ def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
     for an AI org's player executes instantly; a bid for ANOTHER human's player
     lands on that manager's desk as a transfer offer they must accept."""
     buyer_id = gs.acting_team_id
-    if gs.phase == "playoffs" and gs.is_human(buyer_id):
-        return False, "rosters are locked during the playoffs"
+    allowed, why = market_move_allowed(gs, buyer_id)
+    if not allowed:
+        return False, why
     seller_id = team_of(gs, pid)
     if seller_id is None:
         return False, "player is a free agent — sign them instead"
@@ -1565,8 +1769,10 @@ def respond_offer(
     # Rosters lock in the playoffs: a human seller can't complete a sale (they'd
     # drop a player they then can't replace under the advance gate). Accepting is
     # refused and the offer stays live; declining is still allowed.
-    if accept and gs.phase == "playoffs" and gs.is_human(seller_id):
-        return False, "rosters are locked during the playoffs"
+    if accept:
+        allowed, why = market_move_allowed(gs, offer.to_team)
+        if not allowed:
+            return False, why
     gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]
     p = gs.players[player_id]
     if not accept:
@@ -1602,6 +1808,8 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
         o for o in gs.transfer_offers if o.expires_week > gs.week
     ]
     if gs.phase != "regular":
+        return
+    if not bool(market_window_status(gs)["open"]):
         return
     moves = 0
     # Rosters settle before the wheeling starts: the opening weeks see
