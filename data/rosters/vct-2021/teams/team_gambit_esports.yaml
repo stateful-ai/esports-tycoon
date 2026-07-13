@@ -1,0 +1,526 @@
+id: team_gambit_esports
+name: Gambit Esports
+tag: GMB
+region: emea
+tier: 1
+captain_id: team_gambit_esports_redgar
+balance: 810000
+reputation: 85.0
+fan_count: 650250
+chemistry: 61.4
+players:
+- id: team_gambit_esports_redgar
+  handle: Redgar
+  real_name: ''
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 24
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 69.4
+    aim_reactivity: 62.2
+    movement: 74.5
+    game_sense: 86.6
+    utility_usage: 79.8
+    positioning: 74.1
+    clutch_factor: 76.5
+    tilt_resistance: 78.0
+    composure: 81.7
+    comms_quality: 94.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 84.8
+  - agent_id: brimstone
+    mastery: 90.7
+  - agent_id: astra
+    mastery: 69.2
+  - agent_id: clove
+    mastery: 74.6
+  - agent_id: harbor
+    mastery: 69.4
+  - agent_id: miks
+    mastery: 70.0
+  - agent_id: viper
+    mastery: 72.0
+  - agent_id: breach
+    mastery: 54.2
+  - agent_id: chamber
+    mastery: 52.0
+  - agent_id: cypher
+    mastery: 51.0
+  - agent_id: deadlock
+    mastery: 53.7
+  - agent_id: fade
+    mastery: 6.9
+  - agent_id: gekko
+    mastery: 52.3
+  - agent_id: iso
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: kayo
+    mastery: 51.6
+  - agent_id: killjoy
+    mastery: 48.7
+  - agent_id: neon
+    mastery: 58.9
+  - agent_id: phoenix
+    mastery: 7.6
+  - agent_id: raze
+    mastery: 47.6
+  - agent_id: reyna
+    mastery: 56.2
+  - agent_id: sage
+    mastery: 57.6
+  - agent_id: skye
+    mastery: 49.7
+  - agent_id: sova
+    mastery: 42.8
+  - agent_id: tejo
+    mastery: 59.4
+  - agent_id: veto
+    mastery: 48.4
+  - agent_id: vyse
+    mastery: 49.6
+  - agent_id: waylay
+    mastery: 50.2
+  - agent_id: yoru
+    mastery: 55.5
+  map_pool:
+  - map_id: ascent
+    mastery: 78.2
+  - map_id: bind
+    mastery: 94.7
+  - map_id: haven
+    mastery: 87.0
+  - map_id: lotus
+    mastery: 89.7
+  - map_id: split
+    mastery: 82.1
+  salary: 6100
+  contract_weeks_left: 52
+  morale: 81.3
+  stamina: 82.9
+  form: 50.5
+  personality_tags:
+  - perfectionist
+  - streamer
+  potential: 77.7
+- id: team_gambit_esports_nats
+  handle: nAts
+  real_name: ''
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 19
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 82.3
+    aim_reactivity: 77.5
+    movement: 79.5
+    game_sense: 80.1
+    utility_usage: 85.2
+    positioning: 94.5
+    clutch_factor: 79.6
+    tilt_resistance: 89.4
+    composure: 89.5
+    comms_quality: 80.6
+  agent_pool:
+  - agent_id: cypher
+    mastery: 94.5
+  - agent_id: viper
+    mastery: 86.2
+  - agent_id: chamber
+    mastery: 77.0
+  - agent_id: deadlock
+    mastery: 77.0
+  - agent_id: killjoy
+    mastery: 68.6
+  - agent_id: sage
+    mastery: 77.6
+  - agent_id: veto
+    mastery: 73.8
+  - agent_id: vyse
+    mastery: 72.1
+  - agent_id: astra
+    mastery: 60.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 55.7
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 3.2
+  - agent_id: iso
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: kayo
+    mastery: 60.0
+  - agent_id: miks
+    mastery: 60.0
+  - agent_id: neon
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 2.7
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 53.2
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: tejo
+    mastery: 60.0
+  - agent_id: waylay
+    mastery: 60.0
+  - agent_id: yoru
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 97.3
+  - map_id: bind
+    mastery: 86.9
+  - map_id: haven
+    mastery: 82.6
+  - map_id: lotus
+    mastery: 96.4
+  - map_id: split
+    mastery: 88.6
+  salary: 6900
+  contract_weeks_left: 73
+  morale: 82.5
+  stamina: 84.1
+  form: 53.0
+  personality_tags:
+  - analytical
+  - hot_head
+  potential: 92.2
+- id: team_gambit_esports_chronicle
+  handle: Chronicle
+  real_name: ''
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 19
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 79.6
+    aim_reactivity: 81.1
+    movement: 82.6
+    game_sense: 96.4
+    utility_usage: 83.0
+    positioning: 86.2
+    clutch_factor: 99.0
+    tilt_resistance: 80.2
+    composure: 79.6
+    comms_quality: 78.2
+  agent_pool:
+  - agent_id: viper
+    mastery: 98.9
+  - agent_id: sage
+    mastery: 95.4
+  - agent_id: astra
+    mastery: 60.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 53.3
+  - agent_id: deadlock
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 59.1
+  - agent_id: harbor
+    mastery: 60.0
+  - agent_id: iso
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 57.0
+  - agent_id: kayo
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 57.2
+  - agent_id: miks
+    mastery: 56.6
+  - agent_id: neon
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 51.5
+  - agent_id: raze
+    mastery: 60.0
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: tejo
+    mastery: 60.0
+  - agent_id: veto
+    mastery: 46.4
+  - agent_id: vyse
+    mastery: 57.4
+  - agent_id: waylay
+    mastery: 60.0
+  - agent_id: yoru
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 92.2
+  - map_id: bind
+    mastery: 90.3
+  - map_id: haven
+    mastery: 91.3
+  - map_id: lotus
+    mastery: 87.0
+  - map_id: split
+    mastery: 90.4
+  salary: 6900
+  contract_weeks_left: 40
+  morale: 78.8
+  stamina: 93.8
+  form: 53.3
+  personality_tags:
+  - fan_favorite
+  - team_player
+  potential: 95.0
+- id: team_gambit_esports_d3ffo
+  handle: d3ffo
+  real_name: ''
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 82.3
+    aim_reactivity: 91.1
+    movement: 85.9
+    game_sense: 73.4
+    utility_usage: 70.3
+    positioning: 82.5
+    clutch_factor: 76.3
+    tilt_resistance: 77.0
+    composure: 79.7
+    comms_quality: 75.3
+  agent_pool:
+  - agent_id: jett
+    mastery: 86.6
+  - agent_id: raze
+    mastery: 81.5
+  - agent_id: iso
+    mastery: 68.7
+  - agent_id: neon
+    mastery: 72.8
+  - agent_id: phoenix
+    mastery: 66.6
+  - agent_id: reyna
+    mastery: 72.9
+  - agent_id: waylay
+    mastery: 67.0
+  - agent_id: yoru
+    mastery: 68.5
+  - agent_id: astra
+    mastery: 60.0
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 56.0
+  - agent_id: chamber
+    mastery: 60.0
+  - agent_id: clove
+    mastery: 60.0
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: deadlock
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 52.3
+  - agent_id: harbor
+    mastery: 60.0
+  - agent_id: kayo
+    mastery: 53.8
+  - agent_id: killjoy
+    mastery: 57.5
+  - agent_id: miks
+    mastery: 6.4
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: sage
+    mastery: 58.1
+  - agent_id: skye
+    mastery: 60.0
+  - agent_id: sova
+    mastery: 60.0
+  - agent_id: tejo
+    mastery: 58.4
+  - agent_id: veto
+    mastery: 59.2
+  - agent_id: viper
+    mastery: 2.4
+  - agent_id: vyse
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 91.1
+  - map_id: bind
+    mastery: 86.1
+  - map_id: haven
+    mastery: 88.5
+  - map_id: lotus
+    mastery: 84.3
+  - map_id: split
+    mastery: 80.5
+  salary: 6500
+  contract_weeks_left: 35
+  morale: 64.9
+  stamina: 84.4
+  form: 51.1
+  personality_tags:
+  - quiet
+  - streamer
+  potential: 94.7
+- id: team_gambit_esports_sheydos
+  handle: Sheydos
+  real_name: ''
+  region: emea
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
+  - lang: en
+    level: 70.0
+  age: 20
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 73.3
+    aim_reactivity: 74.4
+    movement: 73.4
+    game_sense: 85.5
+    utility_usage: 86.1
+    positioning: 75.4
+    clutch_factor: 82.0
+    tilt_resistance: 78.5
+    composure: 86.8
+    comms_quality: 86.2
+  agent_pool:
+  - agent_id: sova
+    mastery: 93.9
+  - agent_id: skye
+    mastery: 85.2
+  - agent_id: breach
+    mastery: 62.5
+  - agent_id: fade
+    mastery: 70.9
+  - agent_id: gekko
+    mastery: 67.8
+  - agent_id: kayo
+    mastery: 71.5
+  - agent_id: tejo
+    mastery: 70.3
+  - agent_id: astra
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 54.9
+  - agent_id: chamber
+    mastery: 53.5
+  - agent_id: clove
+    mastery: 1.6
+  - agent_id: cypher
+    mastery: 59.6
+  - agent_id: deadlock
+    mastery: 0.5
+  - agent_id: harbor
+    mastery: 54.0
+  - agent_id: iso
+    mastery: 59.7
+  - agent_id: jett
+    mastery: 6.4
+  - agent_id: killjoy
+    mastery: 57.9
+  - agent_id: miks
+    mastery: 59.5
+  - agent_id: neon
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 53.3
+  - agent_id: raze
+    mastery: 58.5
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: sage
+    mastery: 59.7
+  - agent_id: veto
+    mastery: 51.3
+  - agent_id: viper
+    mastery: 59.3
+  - agent_id: vyse
+    mastery: 60.0
+  - agent_id: waylay
+    mastery: 57.4
+  - agent_id: yoru
+    mastery: 60.0
+  map_pool:
+  - map_id: ascent
+    mastery: 93.1
+  - map_id: bind
+    mastery: 89.3
+  - map_id: haven
+    mastery: 94.2
+  - map_id: lotus
+    mastery: 90.2
+  - map_id: split
+    mastery: 88.2
+  salary: 6400
+  contract_weeks_left: 65
+  morale: 62.9
+  stamina: 87.8
+  form: 55.7
+  personality_tags:
+  - flashy
+  - team_player
+  potential: 92.2

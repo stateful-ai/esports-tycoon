@@ -1,0 +1,508 @@
+id: team_dwg_kia
+name: DWG KIA
+tag: DWG
+region: pacific
+tier: 2
+captain_id: team_dwg_kia_prospect1
+balance: 237000
+reputation: 59.0
+fan_count: 52215
+chemistry: 73.7
+players:
+- id: team_dwg_kia_prospect1
+  handle: prospect1
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 17
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 44.0
+    aim_reactivity: 48.5
+    movement: 55.7
+    game_sense: 60.5
+    utility_usage: 57.8
+    positioning: 54.0
+    clutch_factor: 56.6
+    tilt_resistance: 58.7
+    composure: 64.2
+    comms_quality: 68.5
+  agent_pool:
+  - agent_id: astra
+    mastery: 63.3
+  - agent_id: brimstone
+    mastery: 64.9
+  - agent_id: clove
+    mastery: 44.2
+  - agent_id: harbor
+    mastery: 42.2
+  - agent_id: miks
+    mastery: 49.5
+  - agent_id: omen
+    mastery: 46.1
+  - agent_id: viper
+    mastery: 47.5
+  - agent_id: breach
+    mastery: 39.1
+  - agent_id: chamber
+    mastery: 34.6
+  - agent_id: cypher
+    mastery: 34.5
+  - agent_id: deadlock
+    mastery: 29.1
+  - agent_id: fade
+    mastery: 30.3
+  - agent_id: gekko
+    mastery: 30.0
+  - agent_id: iso
+    mastery: 4.4
+  - agent_id: jett
+    mastery: 30.0
+  - agent_id: kayo
+    mastery: 22.4
+  - agent_id: killjoy
+    mastery: 33.5
+  - agent_id: neon
+    mastery: 35.2
+  - agent_id: phoenix
+    mastery: 41.8
+  - agent_id: raze
+    mastery: 33.9
+  - agent_id: reyna
+    mastery: 36.2
+  - agent_id: sage
+    mastery: 31.3
+  - agent_id: skye
+    mastery: 35.2
+  - agent_id: sova
+    mastery: 24.0
+  - agent_id: tejo
+    mastery: 37.2
+  - agent_id: veto
+    mastery: 29.5
+  - agent_id: vyse
+    mastery: 35.7
+  - agent_id: waylay
+    mastery: 26.1
+  - agent_id: yoru
+    mastery: 32.6
+  map_pool:
+  - map_id: ascent
+    mastery: 63.2
+  - map_id: bind
+    mastery: 57.0
+  - map_id: haven
+    mastery: 54.4
+  - map_id: lotus
+    mastery: 58.7
+  - map_id: split
+    mastery: 59.6
+  salary: 3400
+  contract_weeks_left: 62
+  morale: 60.3
+  stamina: 98.4
+  form: 46.0
+  personality_tags:
+  - fan_favorite
+  - rookie
+  - team_player
+  potential: 78.3
+- id: team_dwg_kia_prospect2
+  handle: prospect2
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 20
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 56.3
+    aim_reactivity: 60.5
+    movement: 57.7
+    game_sense: 45.8
+    utility_usage: 35.2
+    positioning: 42.5
+    clutch_factor: 43.3
+    tilt_resistance: 37.5
+    composure: 43.7
+    comms_quality: 48.8
+  agent_pool:
+  - agent_id: iso
+    mastery: 60.4
+  - agent_id: jett
+    mastery: 50.4
+  - agent_id: neon
+    mastery: 41.0
+  - agent_id: phoenix
+    mastery: 37.9
+  - agent_id: raze
+    mastery: 40.6
+  - agent_id: reyna
+    mastery: 42.8
+  - agent_id: waylay
+    mastery: 38.6
+  - agent_id: yoru
+    mastery: 41.1
+  - agent_id: astra
+    mastery: 25.6
+  - agent_id: breach
+    mastery: 18.3
+  - agent_id: brimstone
+    mastery: 23.2
+  - agent_id: chamber
+    mastery: 27.4
+  - agent_id: clove
+    mastery: 32.1
+  - agent_id: cypher
+    mastery: 26.3
+  - agent_id: deadlock
+    mastery: 1.5
+  - agent_id: fade
+    mastery: 30.1
+  - agent_id: gekko
+    mastery: 27.1
+  - agent_id: harbor
+    mastery: 21.7
+  - agent_id: kayo
+    mastery: 30.6
+  - agent_id: killjoy
+    mastery: 30.0
+  - agent_id: miks
+    mastery: 22.6
+  - agent_id: omen
+    mastery: 23.4
+  - agent_id: sage
+    mastery: 32.9
+  - agent_id: skye
+    mastery: 27.5
+  - agent_id: sova
+    mastery: 19.3
+  - agent_id: tejo
+    mastery: 21.1
+  - agent_id: veto
+    mastery: 28.8
+  - agent_id: viper
+    mastery: 32.6
+  - agent_id: vyse
+    mastery: 1.4
+  map_pool:
+  - map_id: ascent
+    mastery: 50.9
+  - map_id: bind
+    mastery: 53.2
+  - map_id: haven
+    mastery: 59.3
+  - map_id: lotus
+    mastery: 53.0
+  - map_id: split
+    mastery: 61.2
+  salary: 2800
+  contract_weeks_left: 39
+  morale: 77.5
+  stamina: 96.4
+  form: 56.0
+  personality_tags:
+  - perfectionist
+  - slow_starter
+  potential: 56.2
+- id: team_dwg_kia_prospect3
+  handle: prospect3
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 19
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 53.7
+    aim_reactivity: 50.3
+    movement: 54.3
+    game_sense: 51.4
+    utility_usage: 65.7
+    positioning: 51.2
+    clutch_factor: 50.9
+    tilt_resistance: 51.2
+    composure: 53.1
+    comms_quality: 63.6
+  agent_pool:
+  - agent_id: breach
+    mastery: 67.4
+  - agent_id: fade
+    mastery: 64.1
+  - agent_id: gekko
+    mastery: 41.6
+  - agent_id: kayo
+    mastery: 38.9
+  - agent_id: skye
+    mastery: 39.6
+  - agent_id: sova
+    mastery: 44.9
+  - agent_id: tejo
+    mastery: 44.8
+  - agent_id: astra
+    mastery: 29.6
+  - agent_id: brimstone
+    mastery: 30.7
+  - agent_id: chamber
+    mastery: 28.1
+  - agent_id: clove
+    mastery: 26.4
+  - agent_id: cypher
+    mastery: 30.3
+  - agent_id: deadlock
+    mastery: 32.7
+  - agent_id: harbor
+    mastery: 28.4
+  - agent_id: iso
+    mastery: 29.3
+  - agent_id: jett
+    mastery: 32.6
+  - agent_id: killjoy
+    mastery: 17.9
+  - agent_id: miks
+    mastery: 33.5
+  - agent_id: neon
+    mastery: 31.6
+  - agent_id: omen
+    mastery: 28.0
+  - agent_id: phoenix
+    mastery: 32.5
+  - agent_id: raze
+    mastery: 32.9
+  - agent_id: reyna
+    mastery: 35.6
+  - agent_id: sage
+    mastery: 35.0
+  - agent_id: veto
+    mastery: 1.0
+  - agent_id: viper
+    mastery: 25.3
+  - agent_id: vyse
+    mastery: 31.3
+  - agent_id: waylay
+    mastery: 32.5
+  - agent_id: yoru
+    mastery: 4.8
+  map_pool:
+  - map_id: ascent
+    mastery: 48.2
+  - map_id: bind
+    mastery: 56.8
+  - map_id: haven
+    mastery: 64.7
+  - map_id: lotus
+    mastery: 59.1
+  - map_id: split
+    mastery: 69.7
+  salary: 3200
+  contract_weeks_left: 71
+  morale: 62.6
+  stamina: 88.0
+  form: 56.0
+  personality_tags:
+  - analytical
+  - grinder
+  potential: 79.0
+- id: team_dwg_kia_prospect4
+  handle: prospect4
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 17
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 55.3
+    aim_reactivity: 49.5
+    movement: 42.6
+    game_sense: 53.3
+    utility_usage: 59.3
+    positioning: 70.2
+    clutch_factor: 51.5
+    tilt_resistance: 62.7
+    composure: 67.0
+    comms_quality: 54.2
+  agent_pool:
+  - agent_id: chamber
+    mastery: 70.4
+  - agent_id: cypher
+    mastery: 68.4
+  - agent_id: deadlock
+    mastery: 48.4
+  - agent_id: killjoy
+    mastery: 51.0
+  - agent_id: sage
+    mastery: 41.1
+  - agent_id: veto
+    mastery: 46.9
+  - agent_id: vyse
+    mastery: 41.1
+  - agent_id: astra
+    mastery: 33.1
+  - agent_id: breach
+    mastery: 24.4
+  - agent_id: brimstone
+    mastery: 34.4
+  - agent_id: clove
+    mastery: 24.0
+  - agent_id: fade
+    mastery: 33.8
+  - agent_id: gekko
+    mastery: 40.9
+  - agent_id: harbor
+    mastery: 32.3
+  - agent_id: iso
+    mastery: 1.5
+  - agent_id: jett
+    mastery: 28.2
+  - agent_id: kayo
+    mastery: 36.1
+  - agent_id: miks
+    mastery: 1.9
+  - agent_id: neon
+    mastery: 29.0
+  - agent_id: omen
+    mastery: 41.8
+  - agent_id: phoenix
+    mastery: 35.3
+  - agent_id: raze
+    mastery: 34.3
+  - agent_id: reyna
+    mastery: 33.6
+  - agent_id: skye
+    mastery: 25.8
+  - agent_id: sova
+    mastery: 35.6
+  - agent_id: tejo
+    mastery: 38.7
+  - agent_id: viper
+    mastery: 29.5
+  - agent_id: waylay
+    mastery: 34.4
+  - agent_id: yoru
+    mastery: 28.9
+  map_pool:
+  - map_id: ascent
+    mastery: 55.9
+  - map_id: bind
+    mastery: 58.1
+  - map_id: haven
+    mastery: 66.2
+  - map_id: lotus
+    mastery: 53.4
+  - map_id: split
+    mastery: 61.1
+  salary: 3400
+  contract_weeks_left: 67
+  morale: 65.0
+  stamina: 85.5
+  form: 46.3
+  personality_tags:
+  - independent
+  - perfectionist
+  - rookie
+  potential: 85.0
+- id: team_dwg_kia_prospect5
+  handle: prospect5
+  real_name: ''
+  region: pacific
+  country: ''
+  languages: []
+  age: 18
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 66.2
+    aim_reactivity: 60.0
+    movement: 56.2
+    game_sense: 54.4
+    utility_usage: 42.4
+    positioning: 59.2
+    clutch_factor: 61.7
+    tilt_resistance: 56.4
+    composure: 52.9
+    comms_quality: 46.5
+  agent_pool:
+  - agent_id: iso
+    mastery: 71.6
+  - agent_id: jett
+    mastery: 66.6
+  - agent_id: neon
+    mastery: 45.8
+  - agent_id: phoenix
+    mastery: 47.2
+  - agent_id: raze
+    mastery: 44.5
+  - agent_id: reyna
+    mastery: 48.9
+  - agent_id: waylay
+    mastery: 46.3
+  - agent_id: yoru
+    mastery: 45.7
+  - agent_id: astra
+    mastery: 42.4
+  - agent_id: breach
+    mastery: 31.8
+  - agent_id: brimstone
+    mastery: 30.7
+  - agent_id: chamber
+    mastery: 27.4
+  - agent_id: clove
+    mastery: 30.3
+  - agent_id: cypher
+    mastery: 39.3
+  - agent_id: deadlock
+    mastery: 26.6
+  - agent_id: fade
+    mastery: 25.1
+  - agent_id: gekko
+    mastery: 30.4
+  - agent_id: harbor
+    mastery: 25.7
+  - agent_id: kayo
+    mastery: 35.8
+  - agent_id: killjoy
+    mastery: 33.5
+  - agent_id: miks
+    mastery: 31.6
+  - agent_id: omen
+    mastery: 33.2
+  - agent_id: sage
+    mastery: 27.3
+  - agent_id: skye
+    mastery: 23.3
+  - agent_id: sova
+    mastery: 26.2
+  - agent_id: tejo
+    mastery: 19.0
+  - agent_id: veto
+    mastery: 3.7
+  - agent_id: viper
+    mastery: 38.5
+  - agent_id: vyse
+    mastery: 26.5
+  map_pool:
+  - map_id: ascent
+    mastery: 62.2
+  - map_id: bind
+    mastery: 64.6
+  - map_id: haven
+    mastery: 65.1
+  - map_id: lotus
+    mastery: 73.8
+  - map_id: split
+    mastery: 62.7
+  salary: 3400
+  contract_weeks_left: 47
+  morale: 81.3
+  stamina: 95.6
+  form: 51.0
+  personality_tags:
+  - hot_head
+  - rookie
+  potential: 68.1
