@@ -25,7 +25,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim.registry.loader import DEFAULT_DATA_DIR
-from esports_sim.schemas import Player, Team
+from esports_sim.schemas import FutureProspect, Player, Team
 from esports_sim.schemas.common import Region
 
 
@@ -50,6 +50,9 @@ class PackMeta(BaseModel):
     id: str
     name: str
     description: str = ""
+    # Real-world calendar year represented by Season 1. Optional so existing
+    # custom packs remain valid; required when a pack ships future prospects.
+    start_year: int | None = Field(default=None, ge=2021, le=2100)
     world: PackWorld = Field(default_factory=PackWorld)
 
 
@@ -62,6 +65,7 @@ class RosterPack:
     # streamers) who seed the campaign's free-agent pool. Kept OUT of
     # `players` so roster maths never counts them.
     free_agents: dict[str, Player] = field(default_factory=dict)
+    future_prospects: dict[str, FutureProspect] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
@@ -129,8 +133,22 @@ def load_roster_pack(pack_id: str, data_dir: Path | None = None) -> RosterPack:
                 )
             free_agents[p.id] = p
 
+    future_prospects: dict[str, FutureProspect] = {}
+    prospect_file = d / "future_prospects.yaml"
+    if prospect_file.is_file():
+        raw = yaml.safe_load(prospect_file.read_text(encoding="utf-8")) or {}
+        for entry in raw.get("future_prospects", []):
+            prospect = FutureProspect(**entry)
+            p = prospect.player
+            if p.id in players or p.id in free_agents or p.id in future_prospects:
+                raise ValueError(
+                    f"pack {pack_id!r}: future prospect {p.id!r} duplicates a player id"
+                )
+            future_prospects[p.id] = prospect
+
     pack = RosterPack(
-        meta=meta, teams=teams, players=players, free_agents=free_agents
+        meta=meta, teams=teams, players=players, free_agents=free_agents,
+        future_prospects=future_prospects,
     )
     _validate(pack)
     return pack
@@ -146,6 +164,10 @@ def _validate(pack: RosterPack) -> None:
     if len(set(w.league_regions)) != len(w.league_regions):
         raise ValueError(f"pack {pack.id!r}: duplicate league regions")
     region_set = set(w.league_regions)
+    if pack.future_prospects and pack.meta.start_year is None:
+        raise ValueError(
+            f"pack {pack.id!r}: future prospects require pack.yaml start_year"
+        )
     for t in pack.teams.values():
         if t.region not in region_set:
             raise ValueError(
@@ -170,4 +192,17 @@ def _validate(pack: RosterPack) -> None:
             raise ValueError(
                 f"pack {pack.id!r}: {n1} tier-1 teams in {region} exceeds "
                 f"teams_per_region={w.teams_per_region}"
+            )
+    for prospect in pack.future_prospects.values():
+        if prospect.player.region not in region_set:
+            raise ValueError(
+                f"pack {pack.id!r}: future prospect {prospect.player.id!r} has an invalid region"
+            )
+        if prospect.player.age >= 17:
+            raise ValueError(
+                f"pack {pack.id!r}: future prospect {prospect.player.id!r} is already 17"
+            )
+        if prospect.debut_year <= pack.meta.start_year:
+            raise ValueError(
+                f"pack {pack.id!r}: future prospect {prospect.player.id!r} must debut after start_year"
             )

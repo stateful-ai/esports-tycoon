@@ -17,10 +17,10 @@ from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 
-from esports_sim.schemas import Player, Team
+from esports_sim.schemas import FutureProspect, Player, Team
 from esports_sim.schemas.common import Region
 
-SCHEMA_VERSION = 20
+SCHEMA_VERSION = 21
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -329,6 +329,13 @@ def _migrate_v19_to_v20(data: dict) -> dict:
     return data
 
 
+def _migrate_v20_to_v21(data: dict) -> dict:
+    """v21 adds optional historical-calendar and off-screen prospect state."""
+    data.setdefault("calendar_year", None)
+    data.setdefault("future_prospects", {})
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -349,6 +356,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     17: _migrate_v17_to_v18,
     18: _migrate_v18_to_v19,
     19: _migrate_v19_to_v20,
+    20: _migrate_v20_to_v21,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1112,6 +1120,9 @@ class GameState(BaseModel):
     schema_version: int = SCHEMA_VERSION
     seed: int
     season: int = 1
+    # Real-world calendar year for historical packs. None keeps the timeless
+    # fictional campaign behaviour.
+    calendar_year: int | None = Field(default=None, ge=2021, le=2100)
     week: int = 1
     phase: str = "regular"  # regular | playoffs | offseason
     # The "primary" human manager (host / single player). Kept for back-compat
@@ -1142,6 +1153,9 @@ class GameState(BaseModel):
     teams: dict[str, Team] = Field(default_factory=dict)
     players: dict[str, Player] = Field(default_factory=dict)
     free_agent_ids: list[str] = Field(default_factory=list)
+    # Under-17 real players who age/develop every offseason but are hidden
+    # from every market and roster query until their scheduled debut.
+    future_prospects: dict[str, FutureProspect] = Field(default_factory=dict)
 
     fixtures: list[Fixture] = Field(default_factory=list)
     standings: dict[str, TeamRecord] = Field(default_factory=dict)
