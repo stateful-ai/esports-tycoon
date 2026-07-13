@@ -305,105 +305,106 @@ players:
   - independent
   - quiet
   potential: 88.1
-- id: team_cloud9_blue_poiz
-  handle: poiz
+- id: team_cloud9_blue_leaf
+  handle: leaf
   real_name: ''
   region: americas
   country: ''
   languages: []
-  age: 19
+  age: 18
   role: duelist
   playstyle: entry
   attributes:
-    aim_precision: 77.9
-    aim_reactivity: 80.7
-    movement: 75.5
-    game_sense: 63.6
-    utility_usage: 65.4
-    positioning: 70.5
-    clutch_factor: 73.7
-    tilt_resistance: 63.2
-    composure: 67.8
-    comms_quality: 69.1
+    aim_precision: 84.0
+    aim_reactivity: 90.9
+    movement: 92.1
+    game_sense: 66.0
+    utility_usage: 70.3
+    positioning: 79.5
+    clutch_factor: 77.3
+    tilt_resistance: 74.9
+    composure: 88.1
+    comms_quality: 68.6
   agent_pool:
-  - agent_id: jett
-    mastery: 86.2
   - agent_id: raze
-    mastery: 75.7
+    mastery: 90.1
+  - agent_id: jett
+    mastery: 85.9
   - agent_id: iso
-    mastery: 65.9
+    mastery: 70.4
   - agent_id: neon
-    mastery: 56.5
+    mastery: 68.9
   - agent_id: phoenix
-    mastery: 53.0
+    mastery: 71.1
   - agent_id: reyna
-    mastery: 60.3
+    mastery: 65.1
   - agent_id: waylay
-    mastery: 63.0
+    mastery: 66.7
   - agent_id: yoru
-    mastery: 64.7
+    mastery: 73.3
   - agent_id: astra
-    mastery: 49.6
+    mastery: 56.9
   - agent_id: breach
-    mastery: 40.3
-  - agent_id: brimstone
-    mastery: 48.9
-  - agent_id: chamber
-    mastery: 56.1
-  - agent_id: clove
-    mastery: 52.6
-  - agent_id: cypher
-    mastery: 43.6
-  - agent_id: deadlock
-    mastery: 49.4
-  - agent_id: fade
-    mastery: 55.0
-  - agent_id: gekko
-    mastery: 48.6
-  - agent_id: harbor
-    mastery: 46.5
-  - agent_id: kayo
-    mastery: 58.8
-  - agent_id: killjoy
-    mastery: 54.2
-  - agent_id: miks
-    mastery: 48.5
-  - agent_id: omen
-    mastery: 1.8
-  - agent_id: sage
-    mastery: 46.0
-  - agent_id: skye
-    mastery: 45.5
-  - agent_id: sova
-    mastery: 46.8
-  - agent_id: tejo
-    mastery: 53.1
-  - agent_id: veto
-    mastery: 44.2
-  - agent_id: viper
     mastery: 58.7
+  - agent_id: brimstone
+    mastery: 58.1
+  - agent_id: chamber
+    mastery: 55.6
+  - agent_id: clove
+    mastery: 48.7
+  - agent_id: cypher
+    mastery: 60.0
+  - agent_id: deadlock
+    mastery: 56.2
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 57.4
+  - agent_id: kayo
+    mastery: 57.4
+  - agent_id: killjoy
+    mastery: 56.7
+  - agent_id: miks
+    mastery: 60.0
+  - agent_id: omen
+    mastery: 59.3
+  - agent_id: sage
+    mastery: 53.4
+  - agent_id: skye
+    mastery: 3.1
+  - agent_id: sova
+    mastery: 53.8
+  - agent_id: tejo
+    mastery: 44.8
+  - agent_id: veto
+    mastery: 56.5
+  - agent_id: viper
+    mastery: 59.7
   - agent_id: vyse
-    mastery: 52.8
+    mastery: 54.3
   map_pool:
   - map_id: ascent
-    mastery: 73.8
+    mastery: 91.3
   - map_id: bind
-    mastery: 82.2
+    mastery: 99.0
   - map_id: haven
-    mastery: 83.0
+    mastery: 86.1
   - map_id: lotus
-    mastery: 82.1
+    mastery: 79.6
   - map_id: split
-    mastery: 72.4
-  salary: 5400
-  contract_weeks_left: 32
-  morale: 60.7
-  stamina: 90.2
-  form: 52.1
+    mastery: 76.5
+  salary: 6400
+  contract_weeks_left: 55
+  morale: 68.1
+  stamina: 93.3
+  form: 45.6
   personality_tags:
-  - hot_head
-  - independent
-  potential: 85.0
+  - analytical
+  - clutch_gene
+  - rookie
+  potential: 92.0
 - id: team_cloud9_blue_floppy
   handle: floppy
   real_name: ''

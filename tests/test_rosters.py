@@ -257,6 +257,8 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert len(pack.teams) == 48
     assert sum(1 for team in pack.teams.values() if team.tier == 1) == 30
     assert sum(1 for team in pack.teams.values() if team.tier == 2) == 18
+    assert len(pack.free_agents) == 467
+    assert len(pack.future_prospects) == 298
     assert all(len(team.player_ids) == 5 for team in pack.teams.values())
     assert any(meta.id == "vct-2021" for meta in list_roster_packs())
 
@@ -266,3 +268,32 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert gs1.calendar_year == 2021
     assert gs1.model_dump_json() == gs2.model_dump_json()
     assert gs1.players["team_sentinels_tenz"].handle == "TenZ"
+    assert "fa_sinatraa" in gs1.free_agent_ids and "fa_yay" not in gs1.free_agent_ids
+    assert "future_alfajer" not in gs1.players
+    assert "future_alfajer" in gs1.future_prospects
+    staff_members = [
+        member
+        for team_staff in gs1.staff_by.values()
+        for member in team_staff.values()
+    ] + list(gs1.staff_pool)
+    staff_names = {
+        "".join(ch for ch in member.name.lower() if ch.isalnum())
+        for member in staff_members
+    }
+    player_names = {
+        "".join(ch for ch in player.handle.lower() if ch.isalnum())
+        for player in gs1.players.values()
+    }
+    player_names.update(
+        "".join(ch for ch in prospect.player.handle.lower() if ch.isalnum())
+        for prospect in gs1.future_prospects.values()
+    )
+    assert not staff_names & player_names
+    assert len(staff_names) == len(staff_members)
+    assert len(gs1.staff_by) == len(pack.teams)
+    assert all("coach" in team_staff for team_staff in gs1.staff_by.values())
+    assert len(gs1.staff_pool) >= len(pack.teams) + 24
+    assert {member.role for member in gs1.staff_pool} >= {
+        "coach", "analyst", "physio", "psychologist", "performance_coach", "language_coach",
+    }
+    assert gs1.staff_by["team_fnatic"]["coach"].name == "mini"

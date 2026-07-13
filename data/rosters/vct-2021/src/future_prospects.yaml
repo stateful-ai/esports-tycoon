@@ -1,0 +1,8 @@
+# Real players known from later roster/stat files. They remain off-screen until 17.
+future_prospects:
+  - {handle: Alfajer, birth_year: 2005, region: emea, role: duelist, playstyle: entry, igl: false, quality: 61, agents: [raze, jett]}
+  - {handle: wo0t, birth_year: 2006, region: emea, role: initiator, playstyle: support, igl: false, quality: 59, agents: [sova, breach]}
+  - {handle: OXY, birth_year: 2005, region: americas, role: duelist, playstyle: entry, igl: false, quality: 60, agents: [jett, raze]}
+  - {handle: monyet, birth_year: 2005, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 60, agents: [jett, raze]}
+  - {handle: Flashback, birth_year: 2005, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 60, agents: [jett, raze]}
+  - {handle: HYUNMIN, birth_year: 2006, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 59, agents: [jett, raze]}

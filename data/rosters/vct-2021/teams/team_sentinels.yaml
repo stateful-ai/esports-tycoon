@@ -424,33 +424,33 @@ players:
   role: duelist
   playstyle: entry
   attributes:
-    aim_precision: 90.0
+    aim_precision: 88.0
     aim_reactivity: 99.0
-    movement: 92.1
-    game_sense: 77.1
-    utility_usage: 74.3
-    positioning: 82.3
-    clutch_factor: 88.7
-    tilt_resistance: 79.8
-    composure: 80.4
-    comms_quality: 83.1
+    movement: 90.1
+    game_sense: 75.1
+    utility_usage: 72.3
+    positioning: 80.3
+    clutch_factor: 86.7
+    tilt_resistance: 77.8
+    composure: 78.4
+    comms_quality: 81.1
   agent_pool:
   - agent_id: jett
     mastery: 99.0
   - agent_id: reyna
-    mastery: 92.2
+    mastery: 90.2
   - agent_id: iso
-    mastery: 79.3
+    mastery: 77.3
   - agent_id: neon
-    mastery: 78.3
+    mastery: 76.3
   - agent_id: phoenix
     mastery: 80.0
   - agent_id: raze
-    mastery: 78.4
+    mastery: 76.4
   - agent_id: waylay
     mastery: 80.0
   - agent_id: yoru
-    mastery: 78.9
+    mastery: 76.9
   - agent_id: astra
     mastery: 60.0
   - agent_id: breach
@@ -464,11 +464,11 @@ players:
   - agent_id: cypher
     mastery: 60.0
   - agent_id: deadlock
-    mastery: 55.1
+    mastery: 53.1
   - agent_id: fade
     mastery: 60.0
   - agent_id: gekko
-    mastery: 60.0
+    mastery: 59.3
   - agent_id: harbor
     mastery: 60.0
   - agent_id: kayo
@@ -476,15 +476,15 @@ players:
   - agent_id: killjoy
     mastery: 60.0
   - agent_id: miks
-    mastery: 55.4
+    mastery: 53.4
   - agent_id: omen
-    mastery: 60.0
+    mastery: 58.6
   - agent_id: sage
     mastery: 60.0
   - agent_id: skye
     mastery: 5.3
   - agent_id: sova
-    mastery: 58.5
+    mastery: 56.5
   - agent_id: tejo
     mastery: 60.0
   - agent_id: veto
@@ -495,16 +495,16 @@ players:
     mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 93.6
+    mastery: 91.6
   - map_id: bind
-    mastery: 83.4
+    mastery: 81.4
   - map_id: haven
-    mastery: 80.2
+    mastery: 78.2
   - map_id: lotus
-    mastery: 97.4
+    mastery: 95.4
   - map_id: split
-    mastery: 91.1
-  salary: 7500
+    mastery: 89.1
+  salary: 7200
   contract_weeks_left: 61
   morale: 84.2
   stamina: 90.5
@@ -512,4 +512,4 @@ players:
   personality_tags:
   - grinder
   - slow_starter
-  potential: 94.1
+  potential: 93.1

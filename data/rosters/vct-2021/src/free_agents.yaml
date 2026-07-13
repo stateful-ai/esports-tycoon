@@ -1,0 +1,102 @@
+# Real 2021 competitors not assigned to the curated top-division snapshot.
+# Source anchors: supplied VLR 2021 aggregate and event-stat archive.
+free_agents:
+  - {handle: Sacy, age: 24, region: americas, role: initiator, playstyle: support, igl: false, quality: 79, agents: [sova, breach]}
+  - {handle: Saadhak, age: 24, region: americas, role: controller, playstyle: igl, igl: true, quality: 77, agents: [omen, viper]}
+  - {handle: heat, age: 18, region: americas, role: duelist, playstyle: entry, igl: false, quality: 76, agents: [jett, raze]}
+  - {handle: mwzera, age: 20, region: americas, role: duelist, playstyle: entry, igl: false, quality: 78, agents: [jett, reyna]}
+  - {handle: M3C, age: 22, region: emea, role: flex, playstyle: lurker, igl: false, quality: 71, agents: [sage, omen]}
+  - {handle: Jinggg, age: 18, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 76, agents: [raze, phoenix]}
+  - {handle: xccurate, age: 23, region: pacific, role: duelist, playstyle: awper, igl: false, quality: 74, agents: [jett, sova]}
+  - {handle: mixwell, age: 26, region: emea, role: duelist, playstyle: awper, igl: false, quality: 77, agents: [jett, sova]}
+  - {handle: keloqz, age: 18, region: emea, role: duelist, playstyle: entry, igl: false, quality: 74, agents: [jett, raze]}
+  - {handle: dimasick, age: 25, region: emea, role: flex, playstyle: lurker, igl: false, quality: 72, agents: [sage, omen]}
+  - {handle: ade, age: 24, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
+  - {handle: Daa, age: 22, region: pacific, role: flex, playstyle: lurker, igl: false, quality: 69, agents: [sage, omen]}
+  - {handle: GodDead, age: 24, region: pacific, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, viper]}
+  # Korea Stage 1 Masters archive: competitors not retained in a full,
+  # deduplicated 2021 team snapshot.
+  - {handle: k1Ng, age: 21, region: pacific, role: controller, playstyle: igl, igl: true, quality: 76, agents: [omen, brimstone]}
+  - {handle: Zest, age: 21, region: pacific, role: sentinel, playstyle: anchor, igl: false, quality: 73, agents: [cypher, killjoy]}
+  - {handle: glow, age: 24, region: pacific, role: controller, playstyle: igl, igl: true, quality: 72, agents: [omen, brimstone]}
+  - {handle: Chibab, age: 21, region: pacific, role: initiator, playstyle: support, igl: false, quality: 68, agents: [sova, breach]}
+  - {handle: Kelly, age: 22, region: pacific, role: flex, playstyle: lurker, igl: false, quality: 68, agents: [sage, omen]}
+  - {handle: Zeus, age: 23, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+  - {handle: Harry, age: 21, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 67, agents: [jett, raze]}
+  - {handle: GANA, age: 22, region: pacific, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+  - {handle: 10X, age: 21, region: pacific, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+  - {handle: WIX, age: 22, region: pacific, role: controller, playstyle: igl, igl: true, quality: 66, agents: [omen, brimstone]}
+  - {handle: Sound, age: 21, region: pacific, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: ParkJJong, age: 22, region: pacific, role: sentinel, playstyle: anchor, igl: false, quality: 65, agents: [cypher, killjoy]}
+  # EMEA 2021 competitors: supplied Stage 2 statistics and Europe Stage 2
+  # open-qualifier archive.  They remain in the market unless a curated
+  # roster above has a corroborated shared five.
+  - {handle: XiSTOU, age: 24, region: emea, role: initiator, playstyle: support, igl: false, quality: 71, agents: [sova, breach]}
+  - {handle: toronto, age: 26, region: emea, role: controller, playstyle: igl, igl: true, quality: 68, agents: [omen, brimstone]}
+  - {handle: m1tez, age: 23, region: emea, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+  - {handle: AsLanM4shadoW, age: 25, region: emea, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+  - {handle: glovee, age: 24, region: emea, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: kero, age: 20, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 65, agents: [cypher, killjoy]}
+  - {handle: paTiTek, age: 22, region: emea, role: flex, playstyle: lurker, igl: false, quality: 73, agents: [sage, omen]}
+  - {handle: ec1s, age: 21, region: emea, role: controller, playstyle: igl, igl: true, quality: 72, agents: [omen, viper]}
+  - {handle: RUBINO, age: 28, region: emea, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+  - {handle: al0rante, age: 21, region: emea, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+  - {handle: Belvid, age: 24, region: emea, role: controller, playstyle: lurker, igl: false, quality: 66, agents: [omen, brimstone]}
+  - {handle: MONSTEERR, age: 21, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
+  - {handle: Amilwa, age: 24, region: emea, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+  - {handle: ozzy, age: 21, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 65, agents: [cypher, killjoy]}
+  - {handle: pyth, age: 28, region: emea, role: initiator, playstyle: support, igl: false, quality: 69, agents: [sova, breach]}
+  - {handle: HyP, age: 25, region: emea, role: controller, playstyle: lurker, igl: false, quality: 68, agents: [omen, viper]}
+  - {handle: Art1st, age: 23, region: emea, role: duelist, playstyle: entry, igl: false, quality: 67, agents: [jett, raze]}
+  - {handle: dinkzj, age: 22, region: emea, role: flex, playstyle: lurker, igl: false, quality: 65, agents: [sage, omen]}
+  - {handle: vakk, age: 22, region: emea, role: duelist, playstyle: entry, igl: false, quality: 65, agents: [jett, raze]}
+  - {handle: cho, age: 22, region: emea, role: initiator, playstyle: support, igl: false, quality: 65, agents: [sova, breach]}
+  - {handle: l0udly, age: 22, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 65, agents: [cypher, killjoy]}
+  - {handle: Boo, age: 21, region: emea, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
+  # Supplied 2021 North America event-stat pages: players not retained by a
+  # latest-2021 curated team are intentionally available on the market.
+  - {handle: sinatraa, age: 20, region: americas, role: duelist, playstyle: entry, igl: false, quality: 82, agents: [raze, sova]}
+  - {handle: dicey, age: 21, region: americas, role: duelist, playstyle: awper, igl: false, quality: 73, agents: [jett, sova]}
+  - {handle: food, age: 24, region: americas, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [phoenix, omen]}
+  - {handle: kaboose, age: 25, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 69, agents: [cypher, killjoy]}
+  - {handle: poiz, age: 19, region: americas, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
+  - {handle: drone, age: 24, region: americas, role: initiator, playstyle: support, igl: false, quality: 72, agents: [sova, breach]}
+  - {handle: cutler, age: 27, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
+  - {handle: thief, age: 25, region: americas, role: duelist, playstyle: awper, igl: false, quality: 68, agents: [jett, sova]}
+  - {handle: stellar, age: 25, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 70, agents: [cypher, killjoy]}
+  - {handle: mummAy, age: 26, region: americas, role: duelist, playstyle: awper, igl: false, quality: 70, agents: [jett, sova]}
+  - {handle: Wedid, age: 25, region: americas, role: flex, playstyle: lurker, igl: false, quality: 67, agents: [sage, omen]}
+  - {handle: mada, age: 19, region: americas, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
+  - {handle: vice, age: 24, region: americas, role: initiator, playstyle: support, igl: false, quality: 69, agents: [sova, skye]}
+  - {handle: seb, age: 22, region: americas, role: flex, playstyle: lurker, igl: false, quality: 67, agents: [sage, omen]}
+  - {handle: vanity, age: 23, region: americas, role: controller, playstyle: igl, igl: true, quality: 72, agents: [omen, viper]}
+  # International-event archive coverage: players not on an authored final-2021 team.
+  - {handle: Aleko, age: 22, region: americas, role: duelist, playstyle: entry, igl: false, quality: 66, agents: [jett, raze]}
+  - {handle: AmbitioN, age: 22, region: americas, role: controller, playstyle: anchor, igl: false, quality: 67, agents: [omen, viper]}
+  - {handle: DeNaro, age: 23, region: americas, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+  - {handle: fra, age: 22, region: americas, role: initiator, playstyle: support, igl: false, quality: 68, agents: [sova, breach]}
+  - {handle: frz, age: 23, region: americas, role: controller, playstyle: anchor, igl: false, quality: 70, agents: [omen, viper]}
+  - {handle: gaabxx, age: 23, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
+  - {handle: gtnziN, age: 22, region: americas, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
+  - {handle: Inspire, age: 22, region: americas, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: JhoW, age: 22, region: americas, role: flex, playstyle: lurker, igl: false, quality: 69, agents: [sage, omen]}
+  - {handle: light, age: 22, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+  - {handle: murizzz, age: 22, region: americas, role: controller, playstyle: support, igl: false, quality: 68, agents: [omen, viper]}
+  - {handle: ntk, age: 23, region: americas, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+  - {handle: prozin, age: 22, region: americas, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+  - {handle: Seraph, age: 23, region: americas, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+  - {handle: sutecas, age: 23, region: americas, role: controller, playstyle: igl, igl: true, quality: 71, agents: [omen, viper]}
+  - {handle: v1xen, age: 22, region: americas, role: controller, playstyle: anchor, igl: false, quality: 68, agents: [omen, viper]}
+  - {handle: Jammyz, age: 22, region: emea, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: Kryptix, age: 24, region: emea, role: sentinel, playstyle: anchor, igl: false, quality: 71, agents: [cypher, killjoy]}
+  - {handle: LEGOO, age: 22, region: emea, role: controller, playstyle: support, igl: false, quality: 66, agents: [omen, viper]}
+  - {handle: Krain, age: 21, region: pacific, role: controller, playstyle: anchor, igl: false, quality: 66, agents: [omen, viper]}
+  - {handle: Liazzi, age: 22, region: pacific, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: Luke, age: 21, region: pacific, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
+  - {handle: Makiba, age: 21, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 67, agents: [jett, raze]}
+  - {handle: Myssen, age: 22, region: pacific, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+  - {handle: Nagzet, age: 22, region: pacific, role: duelist, playstyle: awper, igl: false, quality: 67, agents: [jett, sova]}
+  - {handle: Pleets, age: 21, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 66, agents: [jett, raze]}
+  - {handle: Rion, age: 22, region: pacific, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+  - {handle: Shion, age: 21, region: pacific, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
+  - {handle: Zepher, age: 21, region: pacific, role: controller, playstyle: support, igl: false, quality: 67, agents: [omen, viper]}

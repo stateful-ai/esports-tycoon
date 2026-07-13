@@ -193,11 +193,10 @@ def _validate(pack: RosterPack) -> None:
                 f"pack {pack.id!r}: {n1} tier-1 teams in {region} exceeds "
                 f"teams_per_region={w.teams_per_region}"
             )
+    # Prospects may be imported from an unplayed region (for example China in
+    # the 2021 historical pack). They enter the global free-agent market at
+    # their debut, so unlike a team they do not require a scheduled league.
     for prospect in pack.future_prospects.values():
-        if prospect.player.region not in region_set:
-            raise ValueError(
-                f"pack {pack.id!r}: future prospect {prospect.player.id!r} has an invalid region"
-            )
         if prospect.player.age >= 17:
             raise ValueError(
                 f"pack {pack.id!r}: future prospect {prospect.player.id!r} is already 17"

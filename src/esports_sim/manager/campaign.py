@@ -282,6 +282,8 @@ def new_campaign(
         f"of league play, then playoffs and Masters."
     )
     staff.seed_pool(gs)
+    if pack is not None and pack.id == "vct-2021":
+        staff.seed_vct_2021_staff(gs)
     social.seed_followers(gs)
     # Seed realistic complete contracts after audience sizes exist. The same
     # quality order already supplies default_five, so role labels document the

@@ -17,7 +17,8 @@ teams:
       - {handle: ScreaM, age: 27, role: duelist, playstyle: entry, igl: false, quality: 82, agents: [reyna, jett], country: BE, languages: [{lang: fr, level: 100}, {lang: en, level: 90}]}
       - {handle: Jamppi, age: 20, role: duelist, playstyle: awper, igl: false, quality: 78, agents: [jett, sova], country: FI, languages: [{lang: fi, level: 100}, {lang: en, level: 90}]}
       - {handle: soulcas, age: 21, role: initiator, playstyle: support, igl: false, quality: 73, agents: [skye, breach], country: GB, languages: [{lang: en, level: 100}]}
-      - {handle: Kryptix, age: 25, role: sentinel, playstyle: anchor, igl: false, quality: 71, agents: [cypher, killjoy], country: GB, languages: [{lang: en, level: 100}]}
+      # Nivera replaced Kryptix before the final 2021 international event.
+      - {handle: Nivera, age: 20, role: controller, playstyle: lurker, igl: false, quality: 76, agents: [viper, omen], country: BE, languages: [{lang: fr, level: 100}, {lang: en, level: 90}]}
   - name: Acend
     tag: ACE
     prestige: 84
@@ -70,8 +71,9 @@ teams:
       - {handle: ex6tenz, age: 31, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
       - {handle: CREA, age: 22, role: duelist, playstyle: entry, igl: false, quality: 72, agents: [jett, raze]}
       - {handle: rhyme, age: 24, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [sage, omen]}
-      - {handle: Fearoth, age: 25, role: initiator, playstyle: support, igl: false, quality: 69, agents: [sova, breach]}
-      - {handle: eMIL, age: 25, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+      # 2021 Europe Stage 2 shared five; eMIL is represented as staff.
+      - {handle: chiwawa, age: 23, role: duelist, playstyle: entry, igl: false, quality: 69, agents: [jett, raze]}
+      - {handle: Jady, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
   - name: SuperMassive Blaze
     tag: SMB
     prestige: 78
@@ -93,36 +95,61 @@ teams:
   - name: Giants Gaming
     tag: GIA
     tier: 2
-    partial: true
     prestige: 65
-    players: []
-  - name: BBL Esports
-    tag: BBL
+    players:
+      - {handle: Davidp, age: 26, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, viper]}
+      - {handle: Fit1nho, age: 25, role: duelist, playstyle: entry, igl: false, quality: 71, agents: [jett, raze]}
+      - {handle: hoody, age: 23, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [sage, omen]}
+      - {handle: Meddo, age: 20, role: initiator, playstyle: support, igl: false, quality: 70, agents: [sova, breach]}
+      - {handle: Ambi, age: 21, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+  - name: Futbolist
+    tag: FUT
     tier: 2
-    partial: true
     prestige: 64
-    players: []
+    players:
+      - {handle: qRaxs, age: 25, role: controller, playstyle: igl, igl: true, quality: 69, agents: [omen, brimstone]}
+      - {handle: STERBEN, age: 22, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
+      - {handle: SasuKe, age: 23, role: flex, playstyle: lurker, igl: false, quality: 68, agents: [sage, omen]}
+      - {handle: mag0o, age: 21, role: initiator, playstyle: support, igl: false, quality: 69, agents: [sova, breach]}
+      - {handle: mojj, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
+  # Full, documented EMEA rosters retained as the expanded 2021 tier two.
+  - name: WAVE Esports
+    tag: WAVE
+    tier: 2
+    prestige: 62
+    players:
+      - {handle: Zik, age: 22, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
+      - {handle: nico, age: 22, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+      - {handle: Carcass, age: 21, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+      - {handle: murii, age: 21, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+      - {handle: xTribune, age: 20, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
   - name: Alliance
     tag: ALL
     tier: 2
-    partial: true
-    prestige: 62
-    players: []
-  - name: BIG
-    tag: BIG
+    prestige: 63
+    players:
+      - {handle: Fearoth, age: 25, role: initiator, playstyle: igl, igl: true, quality: 69, agents: [sova, breach]}
+      - {handle: hype, age: 24, role: controller, playstyle: lurker, igl: false, quality: 67, agents: [omen, brimstone]}
+      - {handle: kAdavra, age: 23, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
+      - {handle: luckeRRR, age: 25, role: duelist, playstyle: awper, igl: false, quality: 68, agents: [jett, sova]}
+      - {handle: xms, age: 24, role: flex, playstyle: lurker, igl: false, quality: 68, agents: [sage, omen]}
+  - name: HONK
+    tag: HONK
     tier: 2
-    partial: true
     prestige: 61
-    players: []
-  - name: Wave Esports
-    tag: WAVE
+    players:
+      - {handle: Destrian, age: 24, role: flex, playstyle: igl, igl: true, quality: 66, agents: [sage, omen]}
+      - {handle: ShonP, age: 22, role: duelist, playstyle: entry, igl: false, quality: 66, agents: [jett, raze]}
+      - {handle: trexx, age: 17, role: initiator, playstyle: support, igl: false, quality: 74, agents: [sova, breach]}
+      - {handle: Dreamas, age: 21, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
+      - {handle: synsi, age: 20, role: controller, playstyle: lurker, igl: false, quality: 67, agents: [omen, brimstone]}
+  - name: Team Finest
+    tag: FINEST
     tier: 2
-    partial: true
-    prestige: 59
-    players: []
-  - name: CGN Esports
-    tag: CGN
-    tier: 2
-    partial: true
-    prestige: 58
-    players: []
+    prestige: 62
+    players:
+      - {handle: RECIDENT, age: 24, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
+      - {handle: ALIVE, age: 23, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
+      - {handle: ponkt, age: 22, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
+      - {handle: Jeremy9000, age: 21, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
+      - {handle: mizuN, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
