@@ -73,10 +73,14 @@ def test_player_profile_endpoint_contract(test_env) -> None:
 
 def test_post_actions_endpoints(test_env) -> None:
     gs = test_env
+    # Find a valid unplayed fixture in the campaign
+    valid_fx = next((f for f in gs.fixtures if not f.played), None)
+    assert valid_fx is not None, "No active fixture found for test"
+    fixture_id = valid_fx.id
     
     # 1. Halftime Pep Talk
     req = server_mod.PepTalkBody(
-        fixture_id="s1w1m0",
+        fixture_id=fixture_id,
         talk_type="reassure",
         relative_score=-2
     )
@@ -87,7 +91,7 @@ def test_post_actions_endpoints(test_env) -> None:
     # 2. Touchline Shout
     player_id = gs.teams[gs.user_team_id].player_ids[0]
     req2 = server_mod.ShoutBody(
-        fixture_id="s1w1m0",
+        fixture_id=fixture_id,
         shout_type="demand_focus",
         target_player_id=player_id,
         loss_streak=3

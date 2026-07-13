@@ -452,8 +452,16 @@ function renderPlayerProfile(data) {
   tiles.appendChild(pfTile("Morale", pfNum(ov.morale), null, "<h4>Morale</h4><div class='tooltip-desc'>How happy the player is. High morale accelerates attribute growth; low morale slows growth and makes them more prone to tilt.</div>"));
   tiles.appendChild(pfTile("Condition", pfNum(ov.condition), null, "<h4>Condition</h4><div class='tooltip-desc'>Physical fitness. Heavy training intensity and playing back-to-back matches drains condition. Rest them when low to prevent exhaustion or injury.</div>"));
   tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve", "<h4>Confidence</h4><div class='tooltip-desc'>The player's mental state in round duels. Stacks with aim; confident players win more 50-50 duels and clutch scenarios. Regresses towards 50 weekly.</div>"));
-  tiles.appendChild(pfTile("xDuel", `${pfNum(p.xduel_actual_wins)} / ${pfNum(p.xduel_expected_wins, 1)}`, "actual / expected wins", "<h4>xDuel (Expected Duel Wins)</h4><div class='tooltip-desc'>The player's actual round duel wins compared to their expected wins based on statistical matchups.</div>"));
-  tiles.appendChild(pfTile("xDE", (p.xde >= 0 ? "+" : "") + pfNum(p.xde, 2), "expected duel edge", "<h4>xDE (Expected Duel Edge)</h4><div class='tooltip-desc'>Calculated as actual duel wins minus expected duel wins. A positive edge indicates that the player outperforms statistical expectations.</div>"));
+  const season = data.season || {};
+  const xdAct = season.xduel_actual_wins;
+  const xdExp = season.xduel_expected_wins;
+  const xdEdge = season.xde;
+  const xdActStr = xdAct != null ? pfNum(xdAct) : "—";
+  const xdExpStr = xdExp != null ? pfNum(xdExp, 1) : "—";
+  const xdEdgeStr = xdEdge != null ? (xdEdge >= 0 ? "+" : "") + pfNum(xdEdge, 2) : "—";
+
+  tiles.appendChild(pfTile("xDuel", `${xdActStr} / ${xdExpStr}`, "actual / expected wins", "<h4>xDuel (Expected Duel Wins)</h4><div class='tooltip-desc'>The player's actual round duel wins compared to their expected wins based on statistical matchups.</div>"));
+  tiles.appendChild(pfTile("xDE", xdEdgeStr, "expected duel edge", "<h4>xDE (Expected Duel Edge)</h4><div class='tooltip-desc'>Calculated as actual duel wins minus expected duel wins. A positive edge indicates that the player outperforms statistical expectations.</div>"));
   tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—", null, "<h4>Market Value</h4><div class='tooltip-desc'>Estimated valuation on the transfer market. Unsigned free agents have no valuation. Rival teams will demand more or less than this based on their stance.</div>"));
   frag.appendChild(tiles);
 

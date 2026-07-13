@@ -4276,12 +4276,22 @@ def mentor_action(body: MentorBody) -> dict:
     pairing when mentor_id is null."""
     with S.lock:
         gs = S.require_gs()
+        team = gs.teams.get(gs.acting_team_id)
+        if not team:
+            raise HTTPException(404, "acting team not found")
+        if body.protege_id not in team.player_ids:
+            raise HTTPException(409, "protege is not on your roster")
+        
         if body.mentor_id is None:
             gs.mentorships.pop(body.protege_id, None)
             if hasattr(gs, "mentorship_progress"):
                 gs.mentorship_progress.pop(body.protege_id, None)
             S.save()
             return {"ok": True, "message": "Mentorship cleared"}
+            
+        if body.mentor_id not in team.player_ids:
+            raise HTTPException(409, "mentor is not on your roster")
+            
         success = mentorship.pair_mentorship(gs, body.protege_id, body.mentor_id)
         if not success:
             raise HTTPException(409, "Invalid mentorship pairing constraints")
@@ -4299,6 +4309,12 @@ class PepTalkBody(BaseModel):
 def pep_talk_action(body: PepTalkBody) -> dict:
     with S.lock:
         gs = S.require_gs()
+        fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+        if not fx:
+            raise HTTPException(404, "unknown fixture")
+        if fx.played:
+            raise HTTPException(409, "action rejected because this match is already completed")
+            
         team_id = gs.acting_team_id
         pep_talk.apply_pep_talk(gs, team_id, body.talk_type, body.relative_score)
         S.save()
@@ -4316,6 +4332,12 @@ class ShoutBody(BaseModel):
 def shout_action(body: ShoutBody) -> dict:
     with S.lock:
         gs = S.require_gs()
+        fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+        if not fx:
+            raise HTTPException(404, "unknown fixture")
+        if fx.played:
+            raise HTTPException(409, "action rejected because this match is already completed")
+            
         team_id = gs.acting_team_id
         if not shouts.can_trigger_shout(body.shout_type, body.loss_streak):
             raise HTTPException(409, "Trigger conditions for this shout are not satisfied.")

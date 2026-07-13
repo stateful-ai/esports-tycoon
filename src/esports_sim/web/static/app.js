@@ -1031,7 +1031,6 @@ async function clubOps(v, sub) {
       }
       histDiv.appendChild(histList);
     }
-    histDiv.appendChild(histList);
     prc.appendChild(histDiv);
     ws.appendChild(prc);
   }
