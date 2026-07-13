@@ -78,7 +78,7 @@ def provider() -> dict | None:
             "url": "https://openrouter.ai/api/v1/chat/completions",
             "key": key,
             "model": os.environ.get(
-                "SOCIAL_LLM_MODEL", "google/gemini-2.0-flash-001"
+                "SOCIAL_LLM_MODEL", "google/gemini-2.5-flash"
             ),
         }
     if mode == "local" or (mode == "auto" and base):

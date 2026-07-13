@@ -87,7 +87,7 @@ def provider() -> dict | None:
             # fast model (~20-30x lower output cost than a 70B) to stretch the
             # budget. Override with SOCIAL_LLM_MODEL for higher-quality prose.
             "model": os.environ.get(
-                "SOCIAL_LLM_MODEL", "google/gemini-2.0-flash-001"
+                "SOCIAL_LLM_MODEL", "google/gemini-2.5-flash"
             ),
         }
     if mode == "local" or (mode == "auto" and base):

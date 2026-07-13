@@ -61,7 +61,7 @@ def test_provider_resolution(monkeypatch):
     assert cfg is not None
     assert cfg["url"] == "https://openrouter.ai/api/v1/chat/completions"
     assert cfg["key"] == "sk-test-key"
-    assert cfg["model"] == "google/gemini-2.0-flash-001"
+    assert cfg["model"] == "google/gemini-2.5-flash"
     
     # OpenRouter custom model
     monkeypatch.setenv("SOCIAL_LLM_MODEL", "meta-llama/llama-3.3-70b-instruct")
@@ -147,7 +147,7 @@ def test_process_chat_llm_mock(gs, tmp_path, monkeypatch):
     monkeypatch.setattr(llm_talk, "provider", lambda: {
         "url": "https://openrouter.ai/api/v1/chat/completions",
         "key": "sk-mock-key",
-        "model": "google/gemini-2.0-flash-001"
+        "model": "google/gemini-2.5-flash"
     })
     
     player_id = gs.teams[gs.acting_team_id].player_ids[0]
@@ -227,6 +227,12 @@ def test_server_endpoints(game_data, tmp_path, monkeypatch):
         assert res_get["available"] is True
         assert "topic" in res_get
         assert "options" in res_get
+        # Test intermediate choice generation
+        gen_body = server.GenerateChoicesBody(player_id=player_id, history=[])
+        res_gen = server.talk_generate_choices(gen_body)
+        assert res_gen["ok"] is True
+        assert "player_response" in res_gen
+        assert len(res_gen["choices"]) == 3
         
         # 2. POST /api/talk/chat normal execution
         body = server.TalkChatBody(player_id=player_id, text="Let's banter")
