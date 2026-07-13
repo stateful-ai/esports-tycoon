@@ -17,6 +17,7 @@ from esports_sim.registry.rosters import (
     load_roster_pack,
 )
 from esports_sim.registry import roster_admin
+from esports_sim.manager.staff import offseason_churn, pool_role_targets
 from esports_sim.schemas import AgentMastery, FutureProspect, MapMastery, Player, Team
 from esports_sim.schemas.common import Playstyle, Region, Role
 
@@ -240,6 +241,13 @@ def test_vct_2026_campaign_builds_deterministically():
     gs2 = new_campaign(GD, seed=42, user_team_id=team, pack=pack)
     assert gs1.model_dump_json() == gs2.model_dump_json()
     assert gs1.teams_per_region == pack.meta.world.teams_per_region
+    staff_counts = {}
+    for member in gs1.staff_pool:
+        staff_counts[member.role] = staff_counts.get(member.role, 0) + 1
+    assert all(
+        staff_counts.get(role, 0) >= minimum
+        for role, minimum in pool_role_targets(len(gs1.teams)).items()
+    )
     # One full playable week out of the box.
     r = advance_week(gs1, GD)
     assert r.fixtures, "week 1 must schedule matches"
@@ -297,7 +305,43 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert len(gs1.staff_by) == len(pack.teams)
     assert all("coach" in team_staff for team_staff in gs1.staff_by.values())
     assert len(gs1.staff_pool) >= len(pack.teams) + 24
-    assert {member.role for member in gs1.staff_pool} >= {
-        "coach", "analyst", "physio", "psychologist", "performance_coach", "language_coach",
-    }
+    staff_counts = {}
+    for member in gs1.staff_pool:
+        staff_counts[member.role] = staff_counts.get(member.role, 0) + 1
+    assert all(
+        staff_counts.get(role, 0) >= minimum
+        for role, minimum in pool_role_targets(len(gs1.teams)).items()
+    )
     assert gs1.staff_by["team_fnatic"]["coach"].name == "mini"
+
+
+def test_staff_offseason_retires_and_replaces_the_historical_cohort():
+    pack = load_roster_pack("vct-2021")
+    gs1 = new_campaign(GD, seed=211, user_team_id="team_sentinels", pack=pack)
+    gs2 = new_campaign(GD, seed=211, user_team_id="team_sentinels", pack=pack)
+    original_ids = {
+        member.id
+        for team_staff in gs1.staff_by.values()
+        for member in team_staff.values()
+    } | {member.id for member in gs1.staff_pool}
+    for gs in (gs1, gs2):
+        gs.season = 2
+        for member in gs.staff_pool:
+            member.age = 61
+        for team_staff in gs.staff_by.values():
+            for member in team_staff.values():
+                member.age = 61
+        offseason_churn(gs)
+
+    remaining_ids = {
+        member.id
+        for team_staff in gs1.staff_by.values()
+        for member in team_staff.values()
+    } | {member.id for member in gs1.staff_pool}
+    assert not original_ids & remaining_ids
+    assert all(
+        staff["coach"].id.startswith("staff_s2_replacement_")
+        for staff in gs1.staff_by.values()
+    )
+    assert any(member.id.startswith("staff_s2_") for member in gs1.staff_pool)
+    assert gs1.model_dump_json() == gs2.model_dump_json()
