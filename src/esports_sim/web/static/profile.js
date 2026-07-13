@@ -1044,6 +1044,7 @@ const PlayerProfile = ({ data }) => {
               `;
             })}
           </div>
+        </div>
       `}
 
       ${p.team_id && html`<${TeammateCompare} playerId=${p.id} teamId=${p.team_id} attributes=${attrs} />`}
