@@ -174,3 +174,17 @@ class Player(BaseModel):
             if mastery.map_id == map_id:
                 return mastery.mastery
         return default
+
+
+class FutureProspect(BaseModel):
+    """A real player developing off-screen until their 17th birthday.
+
+    Prospects are deliberately kept out of ``GameState.players`` until their
+    debut year. They still carry the full Player profile, so the same
+    deterministic age/development curve applies before and after entry.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    player: Player
+    debut_year: int = Field(ge=2021, le=2100)

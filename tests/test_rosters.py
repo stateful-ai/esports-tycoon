@@ -16,7 +16,7 @@ from esports_sim.registry.rosters import (
     list_roster_packs,
     load_roster_pack,
 )
-from esports_sim.schemas import AgentMastery, MapMastery, Player, Team
+from esports_sim.schemas import AgentMastery, FutureProspect, MapMastery, Player, Team
 from esports_sim.schemas.common import Playstyle, Region, Role
 
 GD = load_all()
@@ -148,6 +148,36 @@ def test_partial_pack_gets_generated_fill():
         assert len(t1) == 6 and len(t2) == 2
     # Every roster (pack or generated) is a playable five.
     assert all(len(t.player_ids) == 5 for t in gs.teams.values())
+
+
+def test_historical_future_prospect_develops_then_debuts_at_17():
+    pack = _mk_pack(FOUR_REGIONS, 4)
+    pack.meta.start_year = 2021
+    prospect = _mk_player("future_known", Region.AMERICAS, 1, 52.0)
+    prospect.age = 16
+    prospect.handle = "FutureKnown"
+    pack.future_prospects[prospect.id] = FutureProspect(
+        player=prospect, debut_year=2022
+    )
+
+    gs = new_campaign(GD, seed=71, user_team_id="pk_americas_0", pack=pack)
+    gs_same_seed = new_campaign(
+        GD, seed=71, user_team_id="pk_americas_0", pack=pack
+    )
+    assert prospect.id not in gs.players
+    assert prospect.id in gs.future_prospects
+    for _ in range(40):
+        advance_week(gs, GD)
+        advance_week(gs_same_seed, GD)
+        if gs.season == 2:
+            break
+
+    assert gs.calendar_year == 2022
+    assert prospect.id in gs.players
+    assert prospect.id in gs.free_agent_ids
+    assert gs.players[prospect.id].age == 17
+    assert prospect.id not in gs.future_prospects
+    assert gs.model_dump_json() == gs_same_seed.model_dump_json()
 
 
 def test_loader_rejects_bad_packs(tmp_path: Path):

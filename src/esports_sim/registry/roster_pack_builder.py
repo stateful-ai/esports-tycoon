@@ -31,6 +31,10 @@ Spec shape per src file:
               aim_precision: 92   # archetype shape, for deliberately lopsided
               game_sense: 34      # players (elite aim / weak IQ, and so on)
 
+``src/future_prospects.yaml`` is optional. Entries use the same player fields
+plus ``birth_year`` and ``region``; their age and debut year are derived from
+the pack's ``src/pack.yaml:start_year``. They remain off-screen until age 17.
+
 CLI usage: python scripts/build_roster_pack.py vct-2026
 
 This module is also imported by `esports_sim.registry.roster_admin` so the
@@ -251,7 +255,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     # free_agents.yaml is the FA spec, not a region sheet — handled below.
     specs = sorted(
         f for f in src_dir.glob("*.yaml")
-        if f.name not in {"free_agents.yaml", "pack.yaml"}
+        if f.name not in {"free_agents.yaml", "future_prospects.yaml", "pack.yaml"}
     )
     if not specs:
         raise SystemExit(f"no spec files under {src_dir}")
@@ -376,6 +380,9 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
         if author_meta_file.is_file()
         else {}
     )
+    start_year = author_meta.get("start_year")
+    if start_year is not None:
+        start_year = int(start_year)
     author_world = author_meta.get("world", {})
     declared_id = author_meta.get("id")
     if declared_id is not None and str(declared_id) != pack_id:
@@ -421,6 +428,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
             )),
             "pack description",
         ),
+        "start_year": start_year,
         "world": {
             "league_regions": regions,
             "teams_per_region": teams_per_region,
@@ -428,6 +436,36 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
         },
     }
     pack_yaml = yaml.safe_dump(meta, sort_keys=False)
+
+    # Future real players stay outside the active market until they turn 17.
+    # Their source sheet supplies a birth year; the starting age and debut year
+    # are derived from pack start_year so a copied prospect cannot drift.
+    future_yaml: str | None = None
+    future_src = src_dir / "future_prospects.yaml"
+    if future_src.is_file():
+        if start_year is None:
+            raise SystemExit("future_prospects.yaml requires src/pack.yaml start_year")
+        raw_future = yaml.safe_load(future_src.read_text(encoding="utf-8")) or {}
+        future_out = []
+        seen_future: set[str] = set()
+        for spec in raw_future.get("future_prospects", []):
+            birth_year = int(spec["birth_year"])
+            age = start_year - birth_year
+            if not 0 <= age < 17:
+                raise SystemExit(
+                    f"future prospect {spec.get('handle', '?')!r}: age {age} is not under 17 at {start_year}"
+                )
+            pid = "future_" + slugify(str(spec["handle"]))
+            if pid in seen_future or pid in used_slugs:
+                raise SystemExit(f"duplicate future prospect id {pid!r}")
+            seen_future.add(pid)
+            prospect_spec = {k: v for k, v in spec.items() if k != "birth_year"}
+            prospect_spec["age"] = age
+            player = expand_player(pack_id, pid, prospect_spec, str(Region(spec["region"])), gd, "future")
+            future_out.append({"player": player, "debut_year": birth_year + 17})
+        future_yaml = yaml.safe_dump(
+            {"future_prospects": future_out}, sort_keys=False, width=88
+        )
 
     # Every team expanded and validated cleanly -> commit to disk now.
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -437,6 +475,11 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
         (out_dir / f"{slug}.yaml").write_text(text, encoding="ascii")
     if fa_yaml is not None:
         (pack_dir / "free_agents.yaml").write_text(fa_yaml, encoding="ascii")
+    future_out_file = pack_dir / "future_prospects.yaml"
+    if future_yaml is not None:
+        future_out_file.write_text(future_yaml, encoding="ascii")
+    elif future_out_file.exists():
+        future_out_file.unlink()
     (pack_dir / "pack.yaml").write_text(pack_yaml, encoding="ascii")
 
     summary = (

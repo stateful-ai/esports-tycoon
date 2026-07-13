@@ -213,12 +213,18 @@ def new_campaign(
     # pros, org-less veterans, notable names); generation only tops up any
     # shortfall so the market still has some fictional depth.
     pack_fas: list = []
+    future_prospects = {}
     if pack is not None and pack.free_agents:
         for pid in sorted(pack.free_agents):
             p = pack.free_agents[pid].model_copy(deep=True)
             p.contract_weeks_left = 0
             players[p.id] = p
             pack_fas.append(p)
+    if pack is not None and pack.future_prospects:
+        future_prospects = {
+            pid: prospect.model_copy(deep=True)
+            for pid, prospect in sorted(pack.future_prospects.items())
+        }
     fas = generate_free_agents(rng, gd, n=max(4, 18 - len(pack_fas)))
     for p in fas:
         players[p.id] = p
@@ -256,9 +262,11 @@ def new_campaign(
         teams_per_region=teams_per_region,
         tier2_per_region=tier2_per_region,
         roster_pack=pack.id if pack is not None else None,
+        calendar_year=pack.meta.start_year if pack is not None else None,
         teams=teams,
         players=players,
         free_agent_ids=[p.id for p in fas],
+        future_prospects=future_prospects,
         fixtures=_build_all_leagues(teams, sorted(gd.maps), 1, regions),
         standings={tid: TeamRecord() for tid in teams},
         training_focus={tid: "tactical" for tid in teams},
@@ -2269,7 +2277,45 @@ def _process_retirements(gs: GameState, rng) -> int:
     return len(retiring)
 
 
-def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
+def _release_future_prospects(gs: GameState) -> dict[str, int]:
+    """Publish eligible historical prospects without consuming RNG draws."""
+    if gs.calendar_year is None:
+        return {}
+    next_year = gs.calendar_year + 1
+    released: dict[str, int] = {}
+    released_ids: list[str] = []
+    for pid in sorted(gs.future_prospects):
+        prospect = gs.future_prospects[pid]
+        if prospect.debut_year > next_year:
+            continue
+        p = prospect.player
+        if p.age < 17:
+            raise ValueError(
+                f"future prospect {pid!r} debuts in {next_year} at age {p.age}"
+            )
+        p.contract_weeks_left = 0
+        p.personality_tags = sorted({*p.personality_tags, "rookie"})
+        gs.players[pid] = p
+        gs.free_agent_ids.append(pid)
+        chronicle.mark_debut_pending(gs, pid)
+        region = str(p.region)
+        released[region] = released.get(region, 0) + 1
+        released_ids.append(pid)
+    for pid in released_ids:
+        del gs.future_prospects[pid]
+    if released_ids:
+        names = [gs.players[pid].handle for pid in released_ids]
+        gs.push_news(
+            f"Historical class of {next_year} enters free agency: "
+            f"{', '.join(names[:4])}."
+        )
+    return released
+
+
+def _rookie_classes(
+    gs: GameState, gd: GameData, rng, n_retired: int,
+    historical_debuts: dict[str, int] | None = None,
+) -> None:
     """Each region graduates a rookie class into free agency — the talent
     pipeline that replaces retiring careers. Class size breathes with how
     many careers just ended."""
@@ -2277,8 +2323,9 @@ def _rookie_classes(gs: GameState, gd: GameData, rng, n_retired: int) -> None:
 
     per_region = 2 + max(0, n_retired) // (len(gs.league_regions) * 2)
     headliners: list[str] = []
+    historical_debuts = historical_debuts or {}
     for region in gs.league_regions:
-        for _ in range(per_region):
+        for _ in range(max(0, per_region - historical_debuts.get(str(region), 0))):
             style, role = _FA_SLOTS[gs.fa_counter % len(_FA_SLOTS)]
             gs.fa_counter += 1
             pid = f"fa_gen_{gs.fa_counter}"
@@ -2563,6 +2610,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
 
     for pid in sorted(gs.players):
         training.apply_offseason_aging(gs.players[pid], rng)
+    prospect_rng = tree.derive("season", gs.season, "offseason", "future-prospects")
+    for pid in sorted(gs.future_prospects):
+        training.apply_offseason_aging(gs.future_prospects[pid].player, prospect_rng)
 
     # Badges decay: a fallen-off skill or a badge gone stale is lost — its CA
     # edge reverts, the ceiling it earned is kept. rng-free; every org.
@@ -2571,7 +2621,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # Careers end: a year older, some hang it up. Then the next
     # generation arrives as regional rookie classes.
     n_retired = _process_retirements(gs, rng)
-    _rookie_classes(gs, gd, rng, n_retired)
+    historical_debuts = _release_future_prospects(gs)
+    _rookie_classes(gs, gd, rng, n_retired, historical_debuts)
     social.seed_followers(gs)  # rookies arrive with a baseline audience
 
     # Retirements just opened AI seats; refill them from the (now rookie-fed)
@@ -2642,6 +2693,8 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         for tid, v in sorted(gs.team_sentiment.items())
     }
     gs.season += 1
+    if gs.calendar_year is not None:
+        gs.calendar_year += 1
     # Staff market churn: retirements out, the new season's class in
     # (one shared pool — no per-manager refresh).
     staff.offseason_churn(gs)
