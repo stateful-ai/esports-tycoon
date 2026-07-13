@@ -67,8 +67,17 @@ def _pack_dir(pack_id: str, data_dir: Path | None = None) -> Path:
 
 
 def _region_specs(pack_dir: Path) -> list[Path]:
+    """Return only team-region source sheets, excluding market/prospect input."""
+    non_region_sources = {
+        "free_agents.yaml",
+        "future_prospects.yaml",
+        "future_archive_free_agents.yaml",
+        "future_archive_prospects.yaml",
+        "pack.yaml",
+    }
     return sorted(
-        f for f in (pack_dir / "src").glob("*.yaml") if f.name != "free_agents.yaml"
+        f for f in (pack_dir / "src").glob("*.yaml")
+        if f.name not in non_region_sources
     )
 
 
