@@ -933,16 +933,21 @@ function renderTeamProfile(data) {
       : "") +
     (recBits.length ? `<div class="pf-contract mono">${recBits.join("  ·  ")}</div>` : "") +
     `</div>`;
-  // Jump straight to this team's roster screen (own team = the default view,
-  // matching the standings-row convention in app.js).
+  // Jump straight to this team's roster. Your own squad now lives inside the
+  // Club workspace (Squad sub-tab); an opponent opens the standalone roster
+  // view (App.tab "roster", which render() deliberately leaves un-aliased).
   const rosterBtn = el("button", "btn btn-sm", "View roster ▸");
   rosterBtn.onclick = () => {
-    if (typeof App === "object") {
-      App.rosterTeam = t.is_user_team ? null : t.id;
-    }
     closeProfile();
-    const tab = document.querySelector('#tabs [data-tab="roster"]');
-    if (tab) tab.click();
+    if (t.is_user_team) {
+      if (typeof App === "object") { App.rosterTeam = null; App.clubTab = "squad"; }
+      const tab = document.querySelector('#tabs [data-tab="club"]');
+      if (tab) tab.click();
+    } else if (typeof App === "object") {
+      App.rosterTeam = t.id;
+      App.tab = "roster";
+      if (typeof render === "function") render();
+    }
   };
   header.appendChild(rosterBtn);
   // Rival orgs: point the scout at them from here (api() toasts errors).

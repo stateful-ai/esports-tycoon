@@ -106,16 +106,20 @@ async function inboxAfterAdvance() {
 // Retired tabs alias to their new home as [target tab, App.seasonTab value];
 // App.seasonTab is set BEFORE the click so the season render picks it up.
 // The alias never depends on the old Standings/Schedule buttons existing.
+// [host tab, App sub-tab field, sub-tab id] — mirrors TAB_ALIASES in app.js.
+// Roster folded into Club (Squad), Scouting into Market.
 const INBOX_TAB_ALIAS = {
-  standings: ["season", "league"],
-  schedule: ["season", "fixtures"],
+  standings: ["season", "seasonTab", "league"],
+  schedule: ["season", "seasonTab", "fixtures"],
+  roster: ["club", "clubTab", "squad"],
+  scouting: ["market", "marketTab", "scouting"],
 };
 function inboxGoTab(tab) {
   const alias = INBOX_TAB_ALIAS[tab];
   const target = alias ? alias[0] : tab;
   const btn = document.querySelector(`#tabs [data-tab="${target}"]`);
   if (!btn) return; // unknown tab: silent no-op, same as before
-  if (alias && typeof App !== "undefined") App.seasonTab = alias[1];
+  if (alias && typeof App !== "undefined") App[alias[1]] = alias[2];
   btn.click();
 }
 

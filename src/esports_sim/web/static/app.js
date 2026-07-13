@@ -572,23 +572,27 @@ document.querySelectorAll(".tab").forEach((b) => {
   };
 });
 
-// Old tab ids -> [new tab, Season sub-tab]. The Standings and Schedule tabs
-// merged into the Season workspace; dashGoTab() and render() both consult
-// this map so pre-merge deep links (inbox "Go to", stale App.tab values,
-// old onclick handlers) land on the right Season sub-tab.
+// Old/absorbed tab ids -> [new tab, App sub-tab field, sub-tab id]. Several
+// screens merged into workspaces: Standings/Schedule into Season, Roster into
+// Club, Scouting into Market. dashGoTab(), render() and inboxGoTab() consult
+// this map so every pre-merge deep link (inbox "Go to", stale App.tab values,
+// old onclick handlers) lands on the right host tab AND sub-tab.
 const TAB_ALIASES = {
-  standings: ["season", "league"],
-  schedule: ["season", "fixtures"],
+  standings: ["season", "seasonTab", "league"],
+  schedule: ["season", "seasonTab", "fixtures"],
+  scouting: ["market", "marketTab", "scouting"],
 };
 
 function render() {
   if (!App.state) return;
-  // Merged-tab alias: a stale App.tab from before the Standings+Schedule
-  // merge lands on Season with the right sub-tab preselected (and the nav
-  // highlight follows, since no button carries the old id anymore).
+  // Merged-tab alias: a stale App.tab from before a screen merge lands on its
+  // host tab with the right sub-tab preselected (and the nav highlight
+  // follows, since no button carries the old id anymore). "roster" is
+  // deliberately NOT aliased — a bare roster route still renders the
+  // standalone (other-team) roster view opened from a team profile.
   const alias = TAB_ALIASES[App.tab];
   if (alias) {
-    App.seasonTab = alias[1];
+    App[alias[1]] = alias[2];
     App.tab = alias[0];
     const b = document.querySelector(`#tabs [data-tab="${alias[0]}"]`);
     if (b && !b.classList.contains("active")) {
@@ -645,17 +649,54 @@ function starsRange(band) {
 
 /* -- screens --------------------------------------------------------------------- */
 
-/* -- club: academy, preparation, tournament six, and culture ------------------ */
-async function club(v) {
-  const d = await api("/api/club");
-  v.appendChild(screenHead("Club", { sub: "Development, preparation and leadership" }));
+/* -- club: the squad HQ ------------------------------------------------------
+   One workspace for everything about your own org, split into four sub-tabs:
+     Squad        — the roster (overview) + lineup + support cards
+     Development  — the roster's per-player development plans
+     Culture      — leadership group + media trust
+     Operations   — academy, preparation, tournament six, series, delegation
+   Squad/Development are the roster() screen hosted here (host: "club"); the
+   other two read /api/club. Absorbed the old top-level Roster tab. */
+const CLUB_TABS = [
+  { id: "squad", label: "Squad" },
+  { id: "development", label: "Development" },
+  { id: "culture", label: "Culture" },
+  { id: "operations", label: "Operations" },
+];
 
-  const windowCard = el("div", `card ${d.market_window.open ? "" : "alert"}`);
-  windowCard.innerHTML = `<h3>${esc(d.market_window.label)}</h3><p class="muted">${esc(d.market_window.detail)}</p>`;
-  v.appendChild(windowCard);
+async function club(v) {
+  const sub = App.clubTab ?? "squad";
+  if (sub === "squad" || sub === "development") {
+    // Club always shows YOUR squad; a stale opponent-roster selection (from a
+    // team profile's "View roster") must not leak into the Club workspace.
+    App.rosterTeam = null;
+    App.rosterCols = sub === "development" ? "development" : "overview";
+    return roster(v, { host: "club" });
+  }
+  return clubOps(v, sub);
+}
+
+// Culture / Operations sub-tabs: the leadership, media and match-prep cards.
+async function clubOps(v, sub) {
+  const d = await api("/api/club");
+  v.appendChild(screenHead("Club", {
+    sub: `S${App.state.season} · W${App.state.week}`,
+    subtabs: CLUB_TABS,
+    active: sub,
+    onPick: (id) => { App.clubTab = id; render(); },
+  }));
+
+  // The transfer window gates academy promotions and releases — surface it on
+  // Operations (where those live), not on the Culture view.
+  if (sub === "operations") {
+    const windowCard = el("div", `card ${d.market_window.open ? "" : "alert"}`);
+    windowCard.innerHTML = `<h3>${esc(d.market_window.label)}</h3><p class="muted">${esc(d.market_window.detail)}</p>`;
+    v.appendChild(windowCard);
+  }
 
   const ws = el("div", "ws");
 
+  if (sub === "operations") {
   // Academy: the affiliate is a real tier-2 team with real results and minutes.
   const ac = el("div", "card ws-6");
   const a = d.academy;
@@ -792,7 +833,9 @@ async function club(v) {
   const dr = d.delegation.latest_report;
   if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals Â· ${dr.alerts.length} alerts Â· ${dr.exceptions.length} exceptions.`));
   ws.appendChild(dc);
+  } // end operations
 
+  if (sub === "culture") {
   const mc = el("div", "card ws-12");
   mc.innerHTML = `<h2>Media trust</h2><p class="muted">Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.</p>`;
   const trustRow = el("div", "row");
@@ -822,6 +865,7 @@ async function club(v) {
   if (d.culture_sessions.cooldown_weeks) sessions.appendChild(el("span", "muted", `${d.culture_sessions.cooldown_weeks}w cooldown`));
   cc.append(controls, saveLeaders, el("p", "microlabel", "Culture session"), sessions);
   ws.appendChild(cc);
+  } // end culture
   v.appendChild(ws);
 }
 
@@ -884,11 +928,11 @@ function statTile(label, value, opts = {}) {
 }
 
 // Jump to a top-nav tab by name (same effect as the user clicking it).
-// Pre-merge names route through TAB_ALIASES — the Season sub-tab must be
+// Pre-merge names route through TAB_ALIASES — the host sub-tab must be
 // set BEFORE the click, because the click triggers the render.
 function dashGoTab(name) {
   const alias = TAB_ALIASES[name];
-  if (alias) { App.seasonTab = alias[1]; name = alias[0]; }
+  if (alias) { App[alias[1]] = alias[2]; name = alias[0]; }
   const b = document.querySelector(`#tabs [data-tab="${name}"]`);
   if (b) b.click();
 }
@@ -1013,7 +1057,12 @@ async function dashboard(v) {
   const ws = el("div", "ws");
   v.appendChild(ws);
 
-  /* -- 1. STATUS STRIP: the org's vitals in one saccade --------------------- */
+  /* -- 1. STATUS STRIP: six core vitals in one saccade ----------------------
+     Deliberately lean — Record, League, the season stake (Board in legacy,
+     else current Streak), Balance, Morale, Condition. Chemistry, scout
+     progress and the training focus each have a fuller home below (Club squad
+     profile, the match-day readiness pills / action items, and the match-day
+     development card), so they're not duplicated as tiles here. */
   const strip = el("div", "card ws-12 es-status");
   const tiles = el("div", "es-tiles");
   const rec = me.record;
@@ -1029,9 +1078,7 @@ async function dashboard(v) {
       title: "Open standings",
     }));
   }
-  const streak = streakOf(myId);
-  if (streak) tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
-  // Legacy job security: the sack-race stake stays readable, not hover-only.
+  // Season stake: the board's sack-race band in legacy, else the live streak.
   if (s.board) {
     const b = s.board;
     const tone = b.band === "secure" || b.band === "stable" ? "good"
@@ -1044,6 +1091,9 @@ async function dashboard(v) {
       sub: `${b.goal} · ${(b.goal_state || "").replace(/_/g, " ")} · ${term}`,
       title: `Board goal: ${b.goal}`,
     }));
+  } else {
+    const streak = streakOf(myId);
+    if (streak) tiles.appendChild(statTile("Streak", streak.txt, { tone: streak.won ? "good" : "bad" }));
   }
   tiles.appendChild(statTile("Balance", money(me.balance), {
     onClick: () => dashGoTab("finances"),
@@ -1054,17 +1104,12 @@ async function dashboard(v) {
       myRoster.players.reduce((a, p) => a + (p[k] || 0), 0) / myRoster.players.length;
     const mor = avg("morale"), cond = avg("stamina");
     tiles.appendChild(statTile("Morale", Math.round(mor), { tone: statTone(mor) }));
-    tiles.appendChild(statTile("Condition", Math.round(cond), { tone: statTone(cond) }));
-  }
-  if (me.chemistry != null) tiles.appendChild(statTile("Chemistry", Math.round(me.chemistry)));
-  if (s.scout && s.scout.target) {
-    tiles.appendChild(statTile("Scout", `${Math.round((s.scout.progress || 0) * 100)}%`, {
-      sub: s.scout.target_name || "",
-      onClick: () => dashGoTab("scouting"),
-      title: "Open the scouting desk",
+    tiles.appendChild(statTile("Condition", Math.round(cond), {
+      tone: statTone(cond),
+      onClick: () => { App.clubTab = "squad"; dashGoTab("club"); },
+      title: "Open the squad",
     }));
   }
-  tiles.appendChild(statTile("Training", cap(s.training_focus), { sub: "weekly focus" }));
   strip.appendChild(tiles);
   ws.appendChild(strip);
 
@@ -1238,7 +1283,7 @@ async function dashboard(v) {
         : "No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.";
     prepCard("Assistant coach", rosterTitle, rosterCopy, sug?.changed || burnoutWatch.length ? "Review" : "Stable",
       sug?.changed || burnoutWatch.length ? "urgent" : "ready", "Open roster", () => {
-        App.rosterCols = "overview"; dashGoTab("roster");
+        App.clubTab = "squad"; dashGoTab("club");
       });
 
     prepCard("Head coach", planSet ? "Pressure-test the game plan" : "Turn the brief into a game plan",
@@ -1266,7 +1311,7 @@ async function dashboard(v) {
         : "Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.";
     const devCard = prepCard("Performance", devTitle, devCopy, cap(s.training_focus),
       burnoutWatch.length ? "urgent" : "", "Development plans", () => {
-        App.rosterCols = "development"; dashGoTab("roster");
+        App.clubTab = "development"; dashGoTab("club");
       });
     const trainRow = el("div", "es-prep-focus");
     for (const o of s.focus_options ?? []) {
@@ -1482,12 +1527,18 @@ async function dashboard(v) {
         card.appendChild(cols2);
         if (lmr.levers && lmr.levers.length) {
           card.appendChild(el("span", "es-scout-lab muted", "What to tweak"));
-          const tabOf = { tactics: "tactics", training: "roster", roster: "roster" };
+          // Lever -> destination. "training"/"roster" both land in the Club
+          // squad HQ (development plans / squad); "tactics" is standalone.
+          const goOf = {
+            tactics: () => dashGoTab("tactics"),
+            training: () => { App.clubTab = "development"; dashGoTab("club"); },
+            roster: () => { App.clubTab = "squad"; dashGoTab("club"); },
+          };
           const ll = el("div", "es-review-levers");
           for (const lv of lmr.levers) {
             const row = el("div", "es-review-lever" + (lv.on_focus ? " on-focus" : ""),
               `<span class="es-review-arrow">▸</span> ${esc(lv.text)}`);
-            row.onclick = () => dashGoTab(tabOf[lv.tab] || "tactics");
+            row.onclick = goOf[lv.tab] || goOf.tactics;
             ll.appendChild(row);
           }
           card.appendChild(ll);
@@ -1516,7 +1567,7 @@ async function dashboard(v) {
     };
     for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
       item(`${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
-        () => dashGoTab("roster"));
+        () => { App.clubTab = "squad"; dashGoTab("club"); });
     }
     for (const o of s.transfer_offers ?? []) {
       item(`Offer in for ${plink(o.player_id, o.handle)} — expires W${o.expires_week}`, null);
@@ -1792,8 +1843,16 @@ function fmtFollowers(n) {
   return String(n);
 }
 
-async function roster(v) {
-  const teamId = App.rosterTeam ?? App.state.user_team.id;
+// Roster screen. Two host contexts:
+//   - standalone (opts.host absent): reached from a team profile's "View
+//     roster" for an OPPONENT — renders its own "Roster" head with an
+//     Overview/Development segment and the back / scout actions.
+//   - hosted in Club (opts.host === "club"): always your own squad; the head
+//     is the shared Club workspace head and the Squad/Development split rides
+//     the Club sub-tabs, so no second segment is drawn.
+async function roster(v, opts = {}) {
+  const clubHost = opts.host === "club";
+  const teamId = clubHost ? App.state.user_team.id : (App.rosterTeam ?? App.state.user_team.id);
   const data = await api(`/api/roster/${teamId}`);
   const s = App.state;
   const canRelease = !s.window || s.window.open;
@@ -1829,8 +1888,8 @@ async function roster(v) {
     paintLineupBar();
   }
   if (!data.is_user_team) {
-    const back = el("button", "btn btn-sm", "← My team");
-    back.onclick = () => { App.rosterTeam = null; render(); };
+    const back = el("button", "btn btn-sm", "← My squad");
+    back.onclick = () => { App.rosterTeam = null; App.clubTab = "squad"; dashGoTab("club"); };
     right.push(back);
     const scout = el("button", "btn btn-sm",
       data.scouting_this
@@ -1846,16 +1905,28 @@ async function roster(v) {
     right.push(scout);
   }
   const fogSub = data.fog > 0 ? ` · <span class="muted">±${data.fog} fog</span>` : "";
-  v.appendChild(screenHead("Roster", {
-    sub: `${tlink(data.team.id, data.team.name)} <span class="muted">· ${data.players.length}/${cap}</span>${fogSub}`,
-    subtabs: [
-      { id: "overview", label: "Overview" },
-      { id: "development", label: "Development" },
-    ],
-    active: cols,
-    onPick: (id) => { App.rosterCols = id; render(); },
-    right,
-  }));
+  if (clubHost) {
+    // Hosted in Club: the Squad/Development split is carried by the Club
+    // sub-tabs, so the head shows those instead of a second Overview/Dev seg.
+    v.appendChild(screenHead("Club", {
+      sub: `${tlink(data.team.id, data.team.name)} <span class="muted">· ${data.players.length}/${cap}</span>${fogSub}`,
+      subtabs: CLUB_TABS,
+      active: App.clubTab ?? "squad",
+      onPick: (id) => { App.clubTab = id; render(); },
+      right,
+    }));
+  } else {
+    v.appendChild(screenHead("Roster", {
+      sub: `${tlink(data.team.id, data.team.name)} <span class="muted">· ${data.players.length}/${cap}</span>${fogSub}`,
+      subtabs: [
+        { id: "overview", label: "Overview" },
+        { id: "development", label: "Development" },
+      ],
+      active: cols,
+      onPick: (id) => { App.rosterCols = id; render(); },
+      right,
+    }));
+  }
 
   const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
@@ -2020,7 +2091,7 @@ async function roster(v) {
             mentor_id: mSel.value || null,
           });
           toast(r.message);
-          if (App.tab === "roster") render();
+          if (App.tab === "roster" || App.tab === "club") render();
         };
       }
     }
@@ -3533,14 +3604,16 @@ function seasonRecords(ws, records) {
 // (the players desk adds a signing-headroom chip).
 const MARKET_TABS = [
   { id: "players", label: "Players" },
+  { id: "scouting", label: "Scouting" },
   { id: "staff", label: "Staff" },
 ];
 
 async function market(v) {
-  // Two desks: players (free agents + transfers) and backroom staff. Thin
-  // dispatcher — the sub-screen owns the head + workspace.
+  // Three desks: players (free agents + transfers), the scouting desk, and
+  // backroom staff. Thin dispatcher — each sub-screen owns the head + ws.
   const sub = App.marketTab ?? "players";
   if (sub === "staff") return marketStaff(v);
+  if (sub === "scouting") return scouting(v, { host: "market" });
   return marketPlayers(v);
 }
 
@@ -4235,7 +4308,10 @@ function scoutTier(p) {
   return "first looks";
 }
 
-async function scouting(v) {
+// Scouting desk. Standalone head by default; when hosted in Market
+// (opts.host === "market") it renders the shared Market workspace head with
+// the Players / Scouting / Staff segment.
+async function scouting(v, opts = {}) {
   const data = await api("/api/scouting");
   const surveyPct = Math.round((data.caps?.survey ?? 0) * 100);
   const matchPct = Math.round((data.caps?.match ?? 0) * 100);
@@ -4245,7 +4321,16 @@ async function scouting(v) {
   // currently being planned. No following fixture (bye/offseason) hides it.
   const planningOpp = data.planning_opponent;
 
-  v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
+  if (opts.host === "market") {
+    v.appendChild(screenHead("Market", {
+      sub: "One scout · one assignment",
+      subtabs: MARKET_TABS,
+      active: "scouting",
+      onPick: (id) => { App.marketTab = id; render(); },
+    }));
+  } else {
+    v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
+  }
 
   const ws = el("div", "ws");
   v.appendChild(ws);
@@ -5362,7 +5447,7 @@ async function finances(v) {
   rtb.appendChild(line("Prize money", money(b.prizes)));
   rtb.appendChild(el("tr", "", `<td class="mono"><b>Income total</b></td><td class="num mono"><b>${money(b.income_total)}</b></td>`));
   rtb.appendChild(line("Salaries", `-${money(b.salaries)}`,
-    { label: "→ Roster", onClick: () => dashGoTab("roster") }));
+    { label: "→ Squad", onClick: () => { App.clubTab = "squad"; dashGoTab("club"); } }));
   rtb.appendChild(line("Staff", `-${money(b.staff)}`));
   rtb.appendChild(line("Facility upkeep", `-${money(b.facility_upkeep)}`));
   rtb.appendChild(el("tr", "", `<td class="mono"><b>Expense total</b></td><td class="num mono"><b>-${money(b.expense_total)}</b></td>`));
