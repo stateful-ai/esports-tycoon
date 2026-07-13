@@ -16,6 +16,7 @@ from esports_sim.registry.rosters import (
     list_roster_packs,
     load_roster_pack,
 )
+from esports_sim.registry import roster_admin
 from esports_sim.schemas import AgentMastery, FutureProspect, MapMastery, Player, Team
 from esports_sim.schemas.common import Playstyle, Region, Role
 
@@ -261,6 +262,9 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert len(pack.future_prospects) == 298
     assert all(len(team.player_ids) == 5 for team in pack.teams.values())
     assert any(meta.id == "vct-2021" for meta in list_roster_packs())
+    sinatraa_source = roster_admin.find_player("vct-2021", "fa_sinatraa")
+    assert sinatraa_source is not None and sinatraa_source.is_free_agent
+    assert sinatraa_source.src_file.name == "free_agents.yaml"
 
     team = "team_sentinels"
     gs1 = new_campaign(GD, seed=2021, user_team_id=team, pack=pack)
