@@ -67,10 +67,23 @@ def provider() -> dict | None:
     """Resolve the active provider config, or None when off."""
     _load_env()
     mode = os.environ.get("SOCIAL_LLM", "auto").lower()
-    key = os.environ.get("OPENROUTER_API_KEY", "")
-    base = os.environ.get("SOCIAL_LLM_BASE_URL", "")
     if mode == "off":
         return None
+        
+    start_vllm = os.environ.get("START_VLLM", "false").lower() == "true"
+    base = os.environ.get("SOCIAL_LLM_BASE_URL", "")
+    vllm_port = os.environ.get("VLLM_PORT", "8000")
+    
+    if mode == "local" or (mode == "auto" and (start_vllm or base)):
+        local_base = base if base else f"http://localhost:{vllm_port}/v1"
+        local_model = os.environ.get("VLLM_MODEL", os.environ.get("SOCIAL_LLM_LOCAL_MODEL", "llama3.2"))
+        return {
+            "url": local_base.rstrip("/") + "/chat/completions",
+            "key": "",
+            "model": local_model,
+        }
+        
+    key = os.environ.get("OPENROUTER_API_KEY", "")
     if mode == "openrouter" or (mode == "auto" and key):
         if not key:
             return None
@@ -81,14 +94,7 @@ def provider() -> dict | None:
                 "SOCIAL_LLM_MODEL", "google/gemini-2.5-flash"
             ),
         }
-    if mode == "local" or (mode == "auto" and base):
-        if not base:
-            return None
-        return {
-            "url": base.rstrip("/") + "/chat/completions",
-            "key": "",
-            "model": os.environ.get("SOCIAL_LLM_LOCAL_MODEL", "llama3.2"),
-        }
+        
     return None
 
 
