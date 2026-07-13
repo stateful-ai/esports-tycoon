@@ -96,6 +96,10 @@ window.render = renderApp;
 window.fmtFollowers = fmtFollowers;
 window.refresh = refresh;
 window.dashGoTab = dashGoTab;
+window.openNegotiation = (...args) => openNegotiation(...args);
+window.openOffer = (...args) => openOffer(...args);
+window.attrDetail = (...args) => attrDetail(...args);
+window.scouting = (...args) => scouting(...args);
 window.advanceWeek = async () => {
   const btn = document.getElementById("advance-btn");
   if (btn) btn.click();
@@ -4032,7 +4036,7 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
                     </td>
                     <td>
                       ${p.is_free_agent && html`
-                        <button class="btn btn-sm" onClick=${() => window.openNegotiation({ id: p.id, handle: p.handle })}>Negotiate…</button>
+                        <button class="btn btn-sm" onClick=${() => openNegotiation({ id: p.id, handle: p.handle })}>Negotiate…</button>
                       `}
                       ${!p.mine && p.buyout != null && html`
                         <button 
@@ -4046,7 +4050,7 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
                       ${!p.mine && p.transfer_ask != null && html`
                         <button 
                           class="btn btn-sm" 
-                          onClick=${() => window.openOffer({
+                          onClick=${() => openOffer({
                             id: p.id, handle: p.handle, ask: p.transfer_ask, team_name: p.team_name,
                             ask_breakdown: p.ask_breakdown, seller_stance: p.seller_stance,
                           })}
@@ -4270,7 +4274,7 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
                   class="btn btn-sm" 
                   disabled=${!p.can_sign}
                   title=${p.block_reason || "open contract talks — their ask is an opening number"}
-                  onClick=${() => window.openNegotiation({ id: p.id, handle: p.handle })}
+                  onClick=${() => openNegotiation({ id: p.id, handle: p.handle })}
                 >
                   Negotiate…
                 </button>
@@ -4297,7 +4301,7 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
             </tr>
             ${isExpanded && html`
               <tr key=${`${p.id}-detail`}>
-                <td colspan="11" dangerouslySetInnerHTML=${{ __html: window.attrDetail(p) }}></td>
+                <td colspan="11" dangerouslySetInnerHTML=${{ __html: attrDetail(p) }}></td>
               </tr>
             `}
           `;
@@ -4706,7 +4710,7 @@ const MarketTab = () => {
     useEffect(() => {
       if (containerRef.current) {
         containerRef.current.innerHTML = "";
-        window.scouting(containerRef.current, { host: "market" });
+        scouting(containerRef.current, { host: "market" });
       }
     }, []);
     return html`
@@ -4741,7 +4745,9 @@ const MarketTab = () => {
     </div>
   `;
 };
-\n\nasync function openOffer(target) {
+
+
+async function openOffer(target) {
   let mine = [];
   try {
     const mkt = await api("/api/market");
@@ -6366,7 +6372,9 @@ const FinancesTab = () => {
     </div>
   `;
 };
-\n\n/* -- talk 1:1 ---------------------------------------------------------------------- */
+
+
+/* -- talk 1:1 ---------------------------------------------------------------------- */
 
 async function openTalk(p) {
   const data = await api(`/api/talk/${p.id}`);

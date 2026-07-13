@@ -1169,7 +1169,7 @@ const TeamProfile = ({ data }) => {
     } else if (typeof App === "object") {
       App.rosterTeam = t.id;
       App.tab = "roster";
-      if (typeof render === "function") render();
+      if (typeof window.render === "function") window.render();
     }
   };
 
