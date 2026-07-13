@@ -847,8 +847,8 @@ async function clubOps(v, sub) {
   const age = el("input", "sel-sm"); age.type = "number"; age.min = "16"; age.max = "40"; age.value = dp.scout_max_age;
   const alert = el("select", "sel-sm");
   for (const x of d.delegation.alert_levels) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === dp.alert_level; alert.appendChild(o); }
-  const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left â‰¤"), trigger);
-  const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age â‰¤"), age, el("span", "muted", "alert"), alert);
+  const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left \u2264"), trigger);
+  const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age \u2264"), age, el("span", "muted", "alert"), alert);
   const savePolicy = el("button", "btn btn-primary", "Save staff policies");
   savePolicy.onclick = async () => {
     const r = await api("/api/actions/delegation_policy", {
@@ -865,9 +865,9 @@ async function clubOps(v, sub) {
     toast(r.message); refresh();
   };
   dc.append(renewRow, scoutRow, savePolicy);
-  dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` Â· active assignment set` : ""}.`));
+  dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` \u00b7 active assignment set` : ""}.`));
   const dr = d.delegation.latest_report;
-  if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals Â· ${dr.alerts.length} alerts Â· ${dr.exceptions.length} exceptions.`));
+  if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals \u00b7 ${dr.alerts.length} alerts \u00b7 ${dr.exceptions.length} exceptions.`));
   ws.appendChild(dc);
   } // end operations
 
@@ -6500,13 +6500,10 @@ async function openTalk(p) {
   
   const textEl = $("#talk-text");
   const logBox = $("#talk-chat-logs");
-  const inputEl = $("#talk-chat-input");
-  const sendBtn = $("#talk-chat-send");
+  const choicesEl = $("#talk-chat-choices");
   
   logBox.innerHTML = "";
-  inputEl.value = "";
-  inputEl.disabled = false;
-  sendBtn.disabled = false;
+  choicesEl.innerHTML = "";
 
   if (!data.available) {
     if (data.history) {
@@ -6517,7 +6514,7 @@ async function openTalk(p) {
       
       const reply = data.history.message || "";
       const playerBubble = el("div", "contract-bubble player");
-      playerBubble.innerHTML = `<span class="microlabel">${esc(p.handle)}</span>${esc(reply)}`;
+      playerBubble.innerHTML = `<span class="microlabel" style="display:block;margin-bottom:4px;">${esc(p.handle)}</span>${esc(reply)}`;
       logBox.appendChild(playerBubble);
       
       if (data.history.effects) {
@@ -6532,79 +6529,114 @@ async function openTalk(p) {
         }
       }
       
-      inputEl.disabled = true;
-      sendBtn.disabled = true;
-      inputEl.placeholder = "Talk session resolved for this week.";
+      choicesEl.innerHTML = `<div class="muted" style="text-align:center;padding:8px;">Talk session resolved for this week.</div>`;
     } else {
       toast(data.reason);
       return;
     }
-  } else {
-    textEl.textContent = `Topic: ${data.topic.text}`;
-    inputEl.placeholder = `Type a message to ${p.handle}...`;
+    $("#talk").classList.remove("hidden");
+    return;
   }
 
-  const handleSend = async () => {
-    const text = inputEl.value.trim();
-    if (!text) return;
-    
-    inputEl.disabled = true;
-    sendBtn.disabled = true;
-    
-    const mBubble = el("div", "contract-bubble manager", esc(text));
-    logBox.appendChild(mBubble);
-    logBox.scrollTop = logBox.scrollHeight;
-    
-    const typingBubble = el("div", "contract-bubble player muted", "Typing...");
-    logBox.appendChild(typingBubble);
-    logBox.scrollTop = logBox.scrollHeight;
-    
-    try {
-      const res = await api("/api/talk/chat", { player_id: p.id, text: text });
-      typingBubble.remove();
-      
-      if (res && res.ok) {
-        const reply = res.message || "";
-        const pBubble = el("div", "contract-bubble player");
-        pBubble.innerHTML = `<span class="microlabel">${esc(p.handle)}</span>${esc(reply)}`;
-        logBox.appendChild(pBubble);
-        
-        const fx = Object.entries(res.effects)
-          .filter(([, v]) => v !== 0)
-          .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
-          .join(", ");
-        if (fx) {
-          const sysMsg = el("div", "muted", `System: Resolve effects (${fx})`);
-          sysMsg.style.cssText = "font-size:11px;text-align:center;margin:4px 0;";
-          logBox.appendChild(sysMsg);
-        }
-        
-        inputEl.value = "";
-        inputEl.placeholder = "Talk session resolved for this week.";
-        toast("1:1 conversation resolved!");
-        renderApp();
-      } else {
-        toast("Failed to get response.");
-        inputEl.disabled = false;
-        sendBtn.disabled = false;
-      }
-    } catch (err) {
-      typingBubble.remove();
-      toast("Error communicating with player.");
-      inputEl.disabled = false;
-      sendBtn.disabled = false;
-    }
-    
-    logBox.scrollTop = logBox.scrollHeight;
-  };
+  textEl.textContent = `Topic: ${data.topic.text}`;
   
-  sendBtn.onclick = handleSend;
-  inputEl.onkeydown = (e) => {
-    if (e.key === "Enter") handleSend();
+  let history = [];
+  
+  const renderChoices = (choices, isFinal) => {
+    choicesEl.innerHTML = "";
+    for (const choice of choices) {
+      const btn = el("button", "btn btn-primary", choice.text);
+      btn.style.cssText = "text-align:left;padding:8px 12px;font-size:12px;white-space:normal;display:block;width:100%;";
+      btn.onclick = async () => {
+        choicesEl.innerHTML = "";
+        const mBubble = el("div", "contract-bubble manager", esc(choice.text));
+        logBox.appendChild(mBubble);
+        logBox.scrollTop = logBox.scrollHeight;
+        
+        history.push({ sender: "manager", text: choice.text });
+        
+        const typingBubble = el("div", "contract-bubble player muted", "Typing...");
+        logBox.appendChild(typingBubble);
+        logBox.scrollTop = logBox.scrollHeight;
+        
+        try {
+          if (!isFinal) {
+            const res = await api("/api/talk/generate_choices", { player_id: p.id, history: history });
+            typingBubble.remove();
+            
+            if (res && res.ok) {
+              const reply = res.player_response || "";
+              const pBubble = el("div", "contract-bubble player");
+              pBubble.innerHTML = `<span class="microlabel" style="display:block;margin-bottom:4px;">${esc(p.handle)}</span>${esc(reply)}`;
+              logBox.appendChild(pBubble);
+              
+              history.push({ sender: "player", text: reply });
+              logBox.scrollTop = logBox.scrollHeight;
+              
+              renderChoices(res.choices, true);
+            } else {
+              typingBubble.remove();
+              toast("Failed to get player reply.");
+            }
+          } else {
+            const res = await api("/api/talk/chat", { player_id: p.id, text: choice.text, intent: choice.intent });
+            typingBubble.remove();
+            
+            if (res && res.ok) {
+              const reply = res.message || "";
+              const pBubble = el("div", "contract-bubble player");
+              pBubble.innerHTML = `<span class="microlabel" style="display:block;margin-bottom:4px;">${esc(p.handle)}</span>${esc(reply)}`;
+              logBox.appendChild(pBubble);
+              
+              const fx = Object.entries(res.effects)
+                .filter(([, v]) => v !== 0)
+                .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
+                .join(", ");
+              if (fx) {
+                const sysMsg = el("div", "muted", `System: Resolve effects (${fx})`);
+                sysMsg.style.cssText = "font-size:11px;text-align:center;margin:4px 0;";
+                logBox.appendChild(sysMsg);
+              }
+              
+              logBox.scrollTop = logBox.scrollHeight;
+              choicesEl.innerHTML = `<div class="muted" style="text-align:center;padding:8px;">Talk session resolved for this week.</div>`;
+              toast("1:1 conversation resolved!");
+              renderApp();
+            } else {
+              typingBubble.remove();
+              toast("Failed to resolve conversation.");
+            }
+          }
+        } catch (err) {
+          typingBubble.remove();
+          toast("Error communicating with player.");
+        }
+      };
+      choicesEl.appendChild(btn);
+    }
   };
 
+  choicesEl.innerHTML = `<div class="muted" style="text-align:center;padding:8px;">Generating dialogue...</div>`;
   $("#talk").classList.remove("hidden");
-  setTimeout(() => { logBox.scrollTop = logBox.scrollHeight; }, 50);
+  
+  try {
+    const res = await api("/api/talk/generate_choices", { player_id: p.id, history: [] });
+    if (res && res.ok) {
+      const greeting = res.player_response || "";
+      const pBubble = el("div", "contract-bubble player");
+      pBubble.innerHTML = `<span class="microlabel" style="display:block;margin-bottom:4px;">${esc(p.handle)}</span>${esc(greeting)}`;
+      logBox.appendChild(pBubble);
+      
+      history.push({ sender: "player", text: greeting });
+      logBox.scrollTop = logBox.scrollHeight;
+      
+      renderChoices(res.choices, false);
+    } else {
+      choicesEl.innerHTML = `<div class="muted" style="text-align:center;padding:8px;color:var(--es-color-danger);">Failed to load dialogue.</div>`;
+    }
+  } catch (err) {
+    choicesEl.innerHTML = `<div class="muted" style="text-align:center;padding:8px;color:var(--es-color-danger);">Error generating dialogue.</div>`;
+  }
 }
 
 function closeTalk() {

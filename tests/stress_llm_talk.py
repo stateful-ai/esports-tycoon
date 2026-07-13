@@ -165,7 +165,7 @@ def test_byte_for_byte_determinism(game_data, tmp_path, monkeypatch):
     monkeypatch.setattr(llm_talk, "provider", lambda: {
         "url": "https://openrouter.ai/api/v1/chat/completions",
         "key": "sk-mock-key",
-        "model": "google/gemini-2.0-flash-001"
+        "model": "google/gemini-2.5-flash"
     })
     
     # Mock LLM response to match same intent but provide custom dialogue text

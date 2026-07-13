@@ -31,8 +31,21 @@ def _provider() -> dict | None:
     mode = os.environ.get("FLAVOR_LLM", "auto").lower()
     if mode == "off":
         return None
-    key = os.environ.get("OPENROUTER_API_KEY", "")
+        
+    start_vllm = os.environ.get("START_VLLM", "false").lower() == "true"
     base = os.environ.get("FLAVOR_LLM_BASE_URL", "")
+    vllm_port = os.environ.get("VLLM_PORT", "8000")
+    
+    if mode == "local" or (mode == "auto" and (start_vllm or base)):
+        local_base = base if base else f"http://localhost:{vllm_port}/v1"
+        local_model = os.environ.get("VLLM_MODEL", os.environ.get("FLAVOR_LLM_LOCAL_MODEL", "llama3.2"))
+        return {
+            "url": local_base.rstrip("/") + "/chat/completions",
+            "key": "",
+            "model": local_model,
+        }
+        
+    key = os.environ.get("OPENROUTER_API_KEY", "")
     if mode == "openrouter" or (mode == "auto" and key):
         if not key:
             return None
@@ -40,17 +53,10 @@ def _provider() -> dict | None:
             "url": "https://openrouter.ai/api/v1/chat/completions",
             "key": key,
             "model": os.environ.get(
-                "FLAVOR_LLM_MODEL", "google/gemini-2.0-flash-001"
+                "FLAVOR_LLM_MODEL", "google/gemini-2.5-flash"
             ),
         }
-    if mode == "local" or (mode == "auto" and base):
-        if not base:
-            return None
-        return {
-            "url": base.rstrip("/") + "/chat/completions",
-            "key": "",
-            "model": os.environ.get("FLAVOR_LLM_LOCAL_MODEL", "llama3.2"),
-        }
+        
     return None
 
 
