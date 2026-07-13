@@ -201,6 +201,7 @@ def test_loader_rejects_bad_packs(tmp_path: Path):
 
 VCT = Path(__file__).resolve().parents[1] / "data" / "rosters" / "vct-2026"
 VCT_2021 = Path(__file__).resolve().parents[1] / "data" / "rosters" / "vct-2021"
+VCT_2026 = Path(__file__).resolve().parents[1] / "data" / "rosters" / "vct-2026"
 
 
 @pytest.mark.skipif(
@@ -258,6 +259,7 @@ def test_vct_2026_campaign_builds_deterministically():
 )
 def test_vct_2021_pack_is_selectable_and_era_seeded():
     pack = load_roster_pack("vct-2021")
+    pack_2026 = load_roster_pack("vct-2026")
     assert pack.meta.start_year == 2021
     assert pack.meta.world.teams_per_region == 10
     assert {str(r) for r in pack.meta.world.league_regions} == {
@@ -266,8 +268,24 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert len(pack.teams) == 48
     assert sum(1 for team in pack.teams.values() if team.tier == 1) == 30
     assert sum(1 for team in pack.teams.values() if team.tier == 2) == 18
-    assert len(pack.free_agents) == 467
-    assert len(pack.future_prospects) == 298
+    assert len(pack.free_agents) == 511
+    assert len(pack.future_prospects) == 360
+    # Later-pack identities must exist somewhere in the 2021 universe: as
+    # immediately hireable free agents when already 17, otherwise prospects.
+    identity = lambda handle: "".join(ch for ch in handle.lower() if ch.isalnum())
+    universe_2021 = {
+        identity(player.handle)
+        for player in list(pack.players.values()) + list(pack.free_agents.values())
+    }
+    universe_2021.update(
+        identity(prospect.player.handle) for prospect in pack.future_prospects.values()
+    )
+    universe_2026 = {
+        identity(player.handle)
+        for player in list(pack_2026.players.values()) + list(pack_2026.free_agents.values())
+        if not player.handle.lower().startswith("prospect")
+    }
+    assert universe_2026 <= universe_2021
     assert all(len(team.player_ids) == 5 for team in pack.teams.values())
     assert any(meta.id == "vct-2021" for meta in list_roster_packs())
     sinatraa_source = roster_admin.find_player("vct-2021", "fa_sinatraa")

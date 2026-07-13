@@ -1,0 +1,63 @@
+future_prospects:
+  - {handle: avey, role: controller, playstyle: support, igl: false, quality: 48, agents: [omen, viper], region: emea, birth_year: 2006}
+  - {handle: B1SK, role: duelist, playstyle: entry, igl: false, quality: 51, agents: [jett, raze], region: emea, birth_year: 2006}
+  - {handle: basic, role: flex, playstyle: support, igl: false, quality: 57, agents: [sova, skye, omen], region: americas, birth_year: 2005}
+  - {handle: Ben1Ley, role: duelist, playstyle: entry, igl: false, quality: 55, agents: [jett, raze], region: china, birth_year: 2005}
+  - {handle: chloric, role: initiator, playstyle: igl, igl: true, quality: 64, agents: [sova, skye], region: emea, birth_year: 2005}
+  - {handle: chubizin, role: sentinel, playstyle: anchor, igl: false, quality: 49, agents: [killjoy, cypher], region: americas, birth_year: 2008}
+  - {handle: Cloudy, role: sentinel, playstyle: anchor, igl: false, quality: 48, agents: [killjoy, cypher], region: pacific, birth_year: 2006}
+  - {handle: crownfisher, role: duelist, playstyle: entry, igl: false, quality: 54, agents: [raze, jett], region: china, birth_year: 2007}
+  - {handle: dannyy, role: initiator, playstyle: support, igl: false, quality: 49, agents: [sova, skye], region: china, birth_year: 2005}
+  - {handle: Darxcioo, role: initiator, playstyle: support, igl: false, quality: 46, agents: [skye, breach], region: emea, birth_year: 2007}
+  - {handle: deviceHP, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, raze, reyna], birth_year: 2006}
+  - {handle: ecco, region: pacific, role: controller, playstyle: support, igl: false, quality: 44, agents: [omen, viper, clove], birth_year: 2005}
+  - {handle: endoist, region: pacific, role: controller, playstyle: support, igl: false, quality: 44, agents: [omen, viper, clove], birth_year: 2005}
+  - {handle: FireBallOps, role: sentinel, playstyle: anchor, igl: false, quality: 55, agents: [killjoy, cypher, omen], region: americas, birth_year: 2007}
+  - {handle: Flicker, role: duelist, playstyle: entry, igl: false, quality: 56, agents: [jett, raze], region: pacific, birth_year: 2006}
+  - {handle: florescent, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 62, agents: [jett, raze, reyna], birth_year: 2007}
+  - {handle: free1ng, role: flex, playstyle: entry, igl: false, quality: 58, agents: [jett, sova], region: pacific, birth_year: 2007}
+  - {handle: FT, role: duelist, playstyle: entry, igl: false, quality: 55, agents: [phoenix, jett], region: china, birth_year: 2007}
+  - {handle: glacier, role: duelist, playstyle: entry, igl: false, quality: 59, agents: [jett, raze], region: china, birth_year: 2006}
+  - {handle: Jackk, role: initiator, playstyle: support, igl: false, quality: 58, agents: [sova, skye], region: americas, birth_year: 2006}
+  - {handle: Javelin, role: initiator, playstyle: igl, igl: true, quality: 50, agents: [sova, skye], region: emea, birth_year: 2005}
+  - {handle: JaXe, role: sentinel, playstyle: anchor, igl: false, quality: 47, agents: [killjoy, cypher], region: pacific, birth_year: 2006}
+  - {handle: Jerrwin, role: duelist, playstyle: entry, igl: false, quality: 58, agents: [jett, raze], region: americas, birth_year: 2007}
+  - {handle: Kally, role: controller, playstyle: support, igl: false, quality: 49, agents: [omen, clove], region: pacific, birth_year: 2005}
+  - {handle: Kolosha, role: duelist, playstyle: entry, igl: false, quality: 54, agents: [jett, raze], region: emea, birth_year: 2007}
+  - {handle: koshmaras, role: flex, playstyle: awper, igl: false, quality: 66, agents: [jett, chamber], region: emea, birth_year: 2007}
+  - {handle: kozzy, region: emea, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, raze, reyna], birth_year: 2005}
+  - {handle: Nakya, role: flex, playstyle: support, igl: false, quality: 46, agents: [skye, killjoy], region: pacific, birth_year: 2006}
+  - {handle: NIZ, role: flex, playstyle: support, igl: false, quality: 50, agents: [viper, skye], region: pacific, birth_year: 2005}
+  - {handle: Notexxd, role: controller, playstyle: support, igl: false, quality: 60, agents: [omen], region: americas, birth_year: 2007}
+  - {handle: oroni, role: duelist, playstyle: entry, igl: false, quality: 49, agents: [raze, phoenix], region: emea, birth_year: 2006}
+  - {handle: Pa1ze, role: initiator, playstyle: support, igl: false, quality: 49, agents: [sova, skye], region: emea, birth_year: 2005}
+  - {handle: RaxcaL, role: duelist, playstyle: entry, igl: false, quality: 52, agents: [jett, raze], region: pacific, birth_year: 2008}
+  - {handle: Ray, role: initiator, playstyle: support, igl: false, quality: 50, agents: [sova, skye], region: pacific, birth_year: 2005}
+  - {handle: Rimuru, role: duelist, playstyle: entry, igl: false, quality: 56, agents: [jett, reyna], region: pacific, birth_year: 2005}
+  - {handle: Satellite, role: flex, playstyle: support, igl: false, quality: 51, agents: [omen, sova], region: americas, birth_year: 2006}
+  - {handle: Satoshi, role: controller, playstyle: support, igl: false, quality: 52, agents: [omen], region: china, birth_year: 2005}
+  - {handle: Sayonara, role: flex, playstyle: lurker, igl: false, quality: 74, agents: [sova, viper, phoenix], region: emea, birth_year: 2007}
+  - {handle: Serial, role: duelist, playstyle: entry, igl: false, quality: 53, agents: [jett, raze], region: emea, birth_year: 2006}
+  - {handle: sibeastw0w, role: duelist, playstyle: entry, igl: false, quality: 51, agents: [jett, reyna], region: china, birth_year: 2005}
+  - {handle: SimonD4rk, role: flex, playstyle: support, igl: false, quality: 50, agents: [viper, skye], region: emea, birth_year: 2005}
+  - {handle: sizo, role: sentinel, playstyle: anchor, igl: false, quality: 47, agents: [killjoy, cypher], region: emea, birth_year: 2007}
+  - {handle: Smoke, role: sentinel, playstyle: anchor, igl: false, quality: 52, agents: [killjoy, cypher], region: americas, birth_year: 2005}
+  - {handle: sonofcar, role: flex, playstyle: support, igl: false, quality: 50, agents: [omen, killjoy], region: americas, birth_year: 2005}
+  - {handle: Sota, region: pacific, role: initiator, playstyle: igl, igl: true, quality: 44, agents: [sova, killjoy, cypher], birth_year: 2006}
+  - {handle: spaz, role: flex, playstyle: support, igl: false, quality: 55, agents: [omen, killjoy], region: americas, birth_year: 2005}
+  - {handle: stunna, role: duelist, playstyle: entry, igl: false, quality: 52, agents: [jett, raze], region: americas, birth_year: 2005}
+  - {handle: swagzor, role: duelist, playstyle: entry, igl: false, quality: 65, agents: [jett, chamber, raze], region: china, birth_year: 2005}
+  - {handle: teasohot, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, raze, reyna], birth_year: 2005}
+  - {handle: TITOUNE, region: emea, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, raze, reyna], birth_year: 2006}
+  - {handle: Verse, role: controller, playstyle: support, igl: false, quality: 59, agents: [omen], region: china, birth_year: 2006}
+  - {handle: wezzy, role: initiator, playstyle: support, igl: false, quality: 50, agents: [sova, skye], region: emea, birth_year: 2005}
+  - {handle: whzy, role: duelist, playstyle: entry, igl: false, quality: 67, agents: [raze, phoenix, chamber], region: china, birth_year: 2006}
+  - {handle: xan, role: flex, playstyle: support, igl: false, quality: 55, agents: [omen, jett], region: pacific, birth_year: 2007}
+  - {handle: Xiesta, role: flex, playstyle: entry, igl: false, quality: 56, agents: [jett, omen], region: pacific, birth_year: 2005}
+  - {handle: Xlele, role: flex, playstyle: support, igl: false, quality: 62, agents: [jett, phoenix, omen], region: china, birth_year: 2005}
+  - {handle: Yong, role: sentinel, playstyle: awper, igl: false, quality: 59, agents: [chamber, cypher], region: pacific, birth_year: 2006}
+  - {handle: Youze, region: china, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [raze, jett, phoenix], birth_year: 2008}
+  - {handle: Yowamu, region: pacific, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [raze, jett, phoenix], birth_year: 2005}
+  - {handle: yutaro, role: sentinel, playstyle: anchor, igl: false, quality: 49, agents: [killjoy, cypher], region: pacific, birth_year: 2005}
+  - {handle: zenox, region: emea, role: duelist, playstyle: entry, igl: false, quality: 44, agents: [jett, raze, reyna], birth_year: 2005}
+  - {handle: zerona, role: flex, playstyle: lurker, igl: false, quality: 60, agents: [viper, phoenix], region: americas, birth_year: 2006}

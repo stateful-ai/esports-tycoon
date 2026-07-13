@@ -73,6 +73,8 @@ def _region_specs(pack_dir: Path) -> list[Path]:
         "future_prospects.yaml",
         "future_archive_free_agents.yaml",
         "future_archive_prospects.yaml",
+        "future_2026_backfill_free_agents.yaml",
+        "future_2026_backfill_prospects.yaml",
         "pack.yaml",
     }
     return sorted(
@@ -100,8 +102,7 @@ def find_player(
                         is_free_agent=False, team_spec=tspec,
                         player_spec=pspec, region=region, team_slug=slug,
                     )
-    fa_file = pack_dir / "src" / "free_agents.yaml"
-    if fa_file.is_file():
+    for fa_file in sorted((pack_dir / "src").glob("*free_agents.yaml")):
         doc = yaml.safe_load(fa_file.read_text(encoding="utf-8")) or {}
         for pspec in doc.get("free_agents", []):
             region = str(Region(pspec["region"]))

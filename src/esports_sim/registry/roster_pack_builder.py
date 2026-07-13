@@ -263,6 +263,8 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
         if f.name not in {
             "free_agents.yaml", "future_prospects.yaml",
             "future_archive_free_agents.yaml", "future_archive_prospects.yaml",
+            "future_2026_backfill_free_agents.yaml",
+            "future_2026_backfill_prospects.yaml",
             "pack.yaml",
         }
     )
@@ -369,6 +371,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     fa_sources = [
         src_dir / "free_agents.yaml",
         src_dir / "future_archive_free_agents.yaml",
+        src_dir / "future_2026_backfill_free_agents.yaml",
     ]
     n_fas = 0
     fa_yaml: str | None = None
@@ -474,6 +477,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     future_sources = [
         src_dir / "future_prospects.yaml",
         src_dir / "future_archive_prospects.yaml",
+        src_dir / "future_2026_backfill_prospects.yaml",
     ]
     if any(source.is_file() for source in future_sources):
         if start_year is None:
