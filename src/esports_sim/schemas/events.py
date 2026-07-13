@@ -203,6 +203,43 @@ class MoveEvent(Event):
     arrive_tick: int | None = None
 
 
+from esports_sim.schemas.team import HalftimeTalk, TouchlineShout
+
+
+class HalftimeTalkEvent(Event):
+    type: Literal["round.halftime_talk"] = "round.halftime_talk"
+    round_num: int
+    team_id: str
+    talk: HalftimeTalk
+
+
+class TouchlineShoutEvent(Event):
+    type: Literal["round.touchline_shout"] = "round.touchline_shout"
+    round_num: int
+    team_id: str
+    shout: TouchlineShout
+
+
+class DuelTelemetryEvent(Event):
+    type: Literal["round.duel_telemetry"] = "round.duel_telemetry"
+    attacker_id: str
+    defender_id: str
+    attacker_score: float
+    defender_score: float
+    expected_win_prob: float
+    winner_id: str
+    attacker_breakdown: dict[str, float]
+    defender_breakdown: dict[str, float]
+    duel_range: float
+    height_delta: float
+    attacker_cover: bool
+    defender_cover: bool
+    attacker_peeking: bool
+    defender_peeking: bool
+    attacker_holder: bool
+    defender_holder: bool
+
+
 # ---------------------------------------------------------------------------
 # Discriminated union for parsing from JSONL
 
@@ -223,6 +260,17 @@ EventUnion = Annotated[
         GimmickUsedEvent,
         WhiffEvent,
         CommsEvent,
+        HalftimeTalkEvent,
+        TouchlineShoutEvent,
+        DuelTelemetryEvent,
     ],
     Field(discriminator="type"),
 ]
+
+
+class ChronicleEvent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    season: int
+    week: int
+    message: str
+

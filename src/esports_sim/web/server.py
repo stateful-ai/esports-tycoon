@@ -95,7 +95,7 @@ from esports_sim.sim import constants as C
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.sim import momentum as momentum_mod
 from esports_sim.sim import tactics_fit
-from esports_sim.web import llm_flavor, llm_social, review_history
+from esports_sim.web import llm_flavor, llm_social, review_history, llm_talk
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 SAVE_DIR = Path("saves")
@@ -946,6 +946,8 @@ _REVIEW_COPY = {
               "{num} miscalls in {den} rounds ({pct}%)."),
     "utility": ("Utility on point", "Utility whiffing",
                 "{num}/{den} abilities whiffed ({pct}%)."),
+    "xde_clutch": ("{handle} clutched duels", "{handle} clutched duels", "{num}/{den} duels won (+{val} xDE)."),
+    "xde_struggle": ("{handle} struggled in duels", "{handle} struggled in duels", "{num}/{den} duels won ({val} xDE)."),
 }
 
 # lever_code -> where the fix lives + the coach specialty that owns it + copy.
@@ -3600,6 +3602,9 @@ def _season_stat_row(gs: GameState, pid: str, st: PlayerSeasonStats, tier: int) 
             aces=st.aces,
             clutches=st.clutch_1v1 + st.clutch_1v2 + st.clutch_1v3,
             pistol_kills=st.pistol_kills,
+            xduel_expected_wins=round(st.xduel_expected_wins, 2),
+            xduel_actual_wins=st.xduel_actual_wins,
+            xde=round(st.xde, 2),
         )
     if tier >= 2:
         row.update(
@@ -4325,8 +4330,19 @@ def talk_topic(player_id: str) -> dict:
         gs = S.require_gs()
         if player_id not in gs.players:
             raise HTTPException(404, "unknown player")
+        active_roster = player_id in gs.teams[gs.acting_team_id].player_ids
         ok, why = talk.can_talk(gs, player_id)
         if not ok:
+            if active_roster and gs.talked_week == talk.week_key(gs):
+                cache = llm_talk.load_talk_cache(S.code)
+                cache_key = f"{gs.season}_{gs.week}_{gs.acting_team_id}_{player_id}"
+                history_dict = cache.get(cache_key)
+                if history_dict is not None:
+                    return {
+                        "available": False,
+                        "reason": "you already held this week's 1:1",
+                        "history": history_dict,
+                    }
             return {"available": False, "reason": why}
         t = talk.topic_for(gs, player_id)
         return {
@@ -4334,6 +4350,33 @@ def talk_topic(player_id: str) -> dict:
             "topic": {"id": t.id, "text": t.text},
             "options": [{"id": o.id, "label": o.label} for o in t.options],
         }
+
+
+class TalkChatBody(BaseModel):
+    player_id: str
+    text: str
+
+
+@app.post("/api/talk/chat")
+def talk_chat(body: TalkChatBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        if body.player_id not in gs.players:
+            raise HTTPException(404, "unknown player")
+        try:
+            result = llm_talk.process_chat(gs, body.player_id, body.text, S.code)
+        except ValueError as e:
+            raise HTTPException(409, str(e))
+        telemetry.record_action(
+            gs, "talk_chat",
+            {
+                "player_id": body.player_id,
+                "intent": result["intent"],
+                "ai": result["ai"],
+            }
+        )
+        S.save()
+        return result
 
 
 class TalkBody(BaseModel):
@@ -5843,6 +5886,9 @@ def _profile_season(gs: GameState, pid: str) -> dict:
         "multikills": None,
         "aces": None,
         "kills_by_weapon": None,
+        "xduel_expected_wins": None,
+        "xduel_actual_wins": None,
+        "xde": None,
     }
     if empty:
         return out
@@ -5856,6 +5902,9 @@ def _profile_season(gs: GameState, pid: str) -> dict:
             multikills=st.multikills,
             aces=st.aces,
             pistol_kills=st.pistol_kills,
+            xduel_expected_wins=round(st.xduel_expected_wins, 2),
+            xduel_actual_wins=st.xduel_actual_wins,
+            xde=round(st.xde, 2),
         )
     if tier >= 2:
         out.update(

@@ -3,9 +3,16 @@ and a proper chemistry graph are a post-MVP addition."""
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim.schemas.common import Region
+
+HalftimeTalk = Literal["reassure", "challenge", "demand_more"]
+TouchlineShout = Literal["focus", "play_safe", "encourage", "demand_effort"]
+ShoutTrigger = Literal["tilted_player", "loss_streak_3", "round_16_close"]
+
 
 
 class TeamTactics(BaseModel):

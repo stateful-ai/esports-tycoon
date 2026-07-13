@@ -705,6 +705,9 @@ def advance_week(
     _tick_scouting(gs, report)
     delegation.finalize_week(gs)
 
+    from esports_sim.manager import promises
+    promises.weekly_tick(gs, week_dressed)
+
     # 4b. Stale game plans (fixture gone or already played — the consumed
     # case is handled at sim time in _sim_fixture) quietly expire.
     for tid in sorted(list(gs.game_plans_by)):
@@ -1160,6 +1163,8 @@ def advance_week(
                 kast_pct=round(100.0 * wp["kast"] / max(wp["rounds"], 1), 1),
                 kills=wp["kills"],
                 deaths=wp["deaths"],
+                xduel_expected_wins=round(wp.get("xduel_expected_wins", 0.0), 4),
+                xduel_actual_wins=wp.get("xduel_actual_wins", 0),
             )
         )
         del hist[:-60]
@@ -1262,6 +1267,8 @@ def _fold_line(ps: PlayerSeasonStats, line, n_rounds: int) -> None:
     ps.pistol_kills += line.pistol_kills
     ps.eco_kills += line.eco_kills
     ps.save_kills += line.save_kills
+    ps.xduel_expected_wins += line.xduel_expected_wins
+    ps.xduel_actual_wins += line.xduel_actual_wins
     for wid in sorted(line.kills_by_weapon):
         ps.kills_by_weapon[wid] = (
             ps.kills_by_weapon.get(wid, 0) + line.kills_by_weapon[wid]
@@ -1337,6 +1344,7 @@ def _aggregate_stats(
             {
                 "maps": 0, "rounds": 0, "kills": 0, "deaths": 0,
                 "rating_sum": 0.0, "cs": 0.0, "kast": 0,
+                "xduel_expected_wins": 0.0, "xduel_actual_wins": 0,
             },
         )
         wp["maps"] += 1
@@ -1346,6 +1354,8 @@ def _aggregate_stats(
         wp["rating_sum"] += line.rating
         wp["cs"] += line.combat_score
         wp["kast"] += line.kast_rounds
+        wp["xduel_expected_wins"] += line.xduel_expected_wins
+        wp["xduel_actual_wins"] += line.xduel_actual_wins
 
 
 _META_DIALS = ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
@@ -1398,6 +1408,8 @@ def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
     anyone who dressed no map (while the team played) gets scrim reps, a
     stamina refund, and a minutes-morale drain scaled by how good they are.
     Teams with no fixture this week are skipped entirely."""
+    from esports_sim.manager import locker_room
+
     for tid in sorted(gs.human_team_ids):
         team = gs.teams[tid]
         if len(team.player_ids) <= market.ROSTER_SIZE:
@@ -1406,17 +1418,42 @@ def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
         if not played:
             continue
         supports = _development_support_bonuses(gs, tid) or {}
+        benched_roles = []
         for p in gs.roster(tid):
             if p.id in played:
                 continue
             training.apply_scrim_reps(p, supports.get(p.id, 0.0))
             p.stamina = round(min(100.0, p.stamina + 6.0), 1)
-            drain = (
-                2.0
-                if market.player_quality(p) >= 60
-                else 0.5 if p.age <= 20 else 1.2
-            )
+            
+            role = locker_room.get_hierarchy_role(gs, p.id, tid)
+            benched_roles.append((p.id, role))
+            
+            if role in ("leader", "incumbent_leader", "council_member"):
+                drain = 5.0
+            elif role in ("influential", "key_influencer", "loyal_lieutenant"):
+                drain = 3.0
+            elif role == "rookie":
+                drain = 0.5
+            else:
+                drain = (
+                    2.0
+                    if market.player_quality(p) >= 60
+                    else 0.5 if p.age <= 20 else 1.2
+                )
             p.morale = round(max(0.0, p.morale - drain), 1)
+
+        # Apply team-wide effects
+        for pid, role in benched_roles:
+            if role in ("leader", "incumbent_leader", "council_member"):
+                team.chemistry = round(max(0.0, team.chemistry - 3.0), 1)
+                for mate in gs.roster(tid):
+                    if mate.id != pid:
+                        mate.morale = round(max(0.0, mate.morale - 4.0), 1)
+            elif role in ("influential", "key_influencer", "loyal_lieutenant"):
+                team.chemistry = round(max(0.0, team.chemistry - 1.5), 1)
+                for mate in gs.roster(tid):
+                    if mate.id != pid:
+                        mate.morale = round(max(0.0, mate.morale - 2.0), 1)
 
 
 def _nudge_tournament_registration(gs: GameState) -> None:
@@ -1537,6 +1574,8 @@ def _fixture_plans(
                 resolved_tactics[opp],
             ),
             coach=_match_coach_profile(gs, tid),
+            halftime_talk=plan.halftime_talk,
+            shouts=plan.shouts,
         )
         lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
@@ -1766,6 +1805,13 @@ def _sim_fixture(
         res = simulate_match_result(
             map_gd, f.team_a, f.team_b, map_id, seed, plans=map_plans or None
         )
+        for tid in (f.team_a, f.team_b):
+            for pid in dressed[tid]:
+                source_p = map_gd.players[pid]
+                target_p = gs.players[pid]
+                target_p.morale = round(source_p.morale, 1)
+                target_p.confidence = round(source_p.confidence, 1)
+                target_p.stamina = round(source_p.stamina, 1)
         # The dressed five per side (bench players have no line), plus the
         # weapon registry's class map for the economy splits (eco/save kills).
         team_of = {

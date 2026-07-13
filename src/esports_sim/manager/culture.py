@@ -262,6 +262,17 @@ def set_leadership(
         data={"principle": principle, "council": ",".join(council)},
     )
     gs.leadership_last_change[team_id] = now
+
+    from esports_sim.manager import promises
+    for promise in gs.promises:
+        if (
+            promise.status == "active"
+            and promise.promise_type == "make_captain"
+            and promise.player_id == captain_id
+            and promise.team_id == team_id
+        ):
+            promises.resolve_promise(gs, promise, success=True)
+
     return True, f"{captain.handle} will lead a {principle.replace('_', ' ')} group"
 
 

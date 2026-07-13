@@ -138,6 +138,9 @@ SEASON = {
     "multikills",
     "aces",
     "kills_by_weapon",
+    "xduel_expected_wins",
+    "xduel_actual_wins",
+    "xde",
 }
 WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
 ATTR_ITEM = {"key", "label", "value", "band", "description"}

@@ -58,6 +58,7 @@ def topic_for(gs: GameState, pid: str) -> Topic:
                 TalkOption("reassure", "Back them publicly — the slump isn't on them"),
                 TalkOption("challenge", "Be blunt — the level isn't good enough"),
                 TalkOption("listen", "Ask what's actually going on and listen"),
+                TalkOption("promise_playtime", "Promise starting play time for the next 3 weeks"),
             ],
         )
     if 0 < p.contract_weeks_left <= 8:
@@ -91,6 +92,7 @@ def topic_for(gs: GameState, pid: str) -> Topic:
                 TalkOption("film", "Do a film session together on the losses"),
                 TalkOption("back", "Tell them the spot is safe regardless"),
                 TalkOption("bench_threat", "Make clear the spot has to be earned"),
+                TalkOption("promise_playtime", "Promise starting play time for the next 3 weeks"),
             ],
         )
     return Topic(
@@ -100,6 +102,7 @@ def topic_for(gs: GameState, pid: str) -> Topic:
             TalkOption("praise", "Call out what they've done well lately"),
             TalkOption("goals", "Set a concrete goal for the next block"),
             TalkOption("banter", "Keep it social — no shop talk"),
+            TalkOption("promise_captain", "Promise they will be captain within 4 weeks"),
         ],
     )
 
@@ -152,6 +155,68 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
         msg = f"{p.handle} takes it well."
         if loyalty >= 5.0:
             msg = f"{p.handle} takes it well. This club means something to them."
+        
+        if option_id == "commit":
+            from esports_sim.schemas.promise import ManagerPromise
+            import hashlib
+            promise_type = "renew_contract"
+            key = f"{gs.season}|{gs.week}|{pid}|{promise_type}"
+            promise_id = f"promise_{hashlib.blake2b(key.encode('utf-8'), digest_size=8).hexdigest()}"
+            promise = ManagerPromise(
+                id=promise_id,
+                team_id=gs.acting_team_id,
+                player_id=pid,
+                promise_type=promise_type,
+                weeks_left=4,
+                created_week=gs.week,
+                created_season=gs.season,
+                status="active"
+            )
+            gs.promises = [pr for pr in gs.promises if not (pr.player_id == pid and pr.promise_type == promise_type and pr.status == "active")]
+            gs.promises.append(promise)
+
+    elif option_id == "promise_playtime":
+        d_morale = 5.0
+        msg = f"{p.handle} is pleased with the promise of playtime."
+        from esports_sim.schemas.promise import ManagerPromise
+        import hashlib
+        promise_type = "play_time"
+        key = f"{gs.season}|{gs.week}|{pid}|{promise_type}"
+        promise_id = f"promise_{hashlib.blake2b(key.encode('utf-8'), digest_size=8).hexdigest()}"
+        promise = ManagerPromise(
+            id=promise_id,
+            team_id=gs.acting_team_id,
+            player_id=pid,
+            promise_type=promise_type,
+            weeks_left=3,
+            created_week=gs.week,
+            created_season=gs.season,
+            status="active"
+        )
+        gs.promises = [pr for pr in gs.promises if not (pr.player_id == pid and pr.promise_type == promise_type and pr.status == "active")]
+        gs.promises.append(promise)
+
+    elif option_id == "promise_captain":
+        d_morale = 8.0
+        msg = f"{p.handle} is excited about the prospect of leading the team."
+        from esports_sim.schemas.promise import ManagerPromise
+        import hashlib
+        promise_type = "make_captain"
+        key = f"{gs.season}|{gs.week}|{pid}|{promise_type}"
+        promise_id = f"promise_{hashlib.blake2b(key.encode('utf-8'), digest_size=8).hexdigest()}"
+        promise = ManagerPromise(
+            id=promise_id,
+            team_id=gs.acting_team_id,
+            player_id=pid,
+            promise_type=promise_type,
+            weeks_left=4,
+            created_week=gs.week,
+            created_season=gs.season,
+            status="active"
+        )
+        gs.promises = [pr for pr in gs.promises if not (pr.player_id == pid and pr.promise_type == promise_type and pr.status == "active")]
+        gs.promises.append(promise)
+
     elif option_id in ("challenge", "bench_threat", "push"):
         if rng.random() < bristle_p:
             d_morale = -5.0

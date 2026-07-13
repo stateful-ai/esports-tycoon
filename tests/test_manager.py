@@ -225,7 +225,7 @@ def test_talk_once_per_week_and_deterministic(campaign: GameState) -> None:
     ok, _ = talk.can_talk(campaign, pid)
     assert ok
     topic = talk.topic_for(campaign, pid)
-    assert len(topic.options) == 3
+    assert len(topic.options) in (3, 4)
 
     before = campaign.players[pid].morale
     ok, msg, effects = talk.resolve(campaign, pid, topic.options[0].id)

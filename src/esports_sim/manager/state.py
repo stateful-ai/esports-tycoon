@@ -17,11 +17,11 @@ from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 
-from esports_sim.schemas import FutureProspect, Player, Team
+from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, HalftimeTalk, TouchlineShout, ShoutTrigger
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 23
+SCHEMA_VERSION = 26
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -355,6 +355,25 @@ def _migrate_v22_to_v23(data: dict) -> dict:
     return data
 
 
+def _migrate_v23_to_v24(data: dict) -> dict:
+    """v24 adds the manager promises tracking list to GameState."""
+    data.setdefault("promises", [])
+    return data
+
+
+def _migrate_v24_to_v25(data: dict) -> dict:
+    """v25 adds halftime_talk and shouts fields to GamePlan objects."""
+    for plan in data.get("game_plans_by", {}).values():
+        plan.setdefault("halftime_talk", None)
+        plan.setdefault("shouts", {})
+    return data
+
+
+def _migrate_v25_to_v26(data: dict) -> dict:
+    """v26 adds xduel_expected_wins and xduel_actual_wins to PlayerSeasonStats and StatSnap."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -378,6 +397,9 @@ _MIGRATIONS: dict[int, "callable"] = {
     20: _migrate_v20_to_v21,
     21: _migrate_v21_to_v22,
     22: _migrate_v22_to_v23,
+    23: _migrate_v23_to_v24,
+    24: _migrate_v24_to_v25,
+    25: _migrate_v25_to_v26,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -557,6 +579,12 @@ class PlayerSeasonStats(BaseModel):
     eco_kills: int = 0  # kills while the team was under-gunned
     save_kills: int = 0  # kills on a personal save loadout (sidearm round)
     kills_by_weapon: dict[str, int] = Field(default_factory=dict)
+    xduel_expected_wins: float = 0.0
+    xduel_actual_wins: int = 0
+
+    @property
+    def xde(self) -> float:
+        return float(self.xduel_actual_wins) - self.xduel_expected_wins
 
     @property
     def rating(self) -> float:
@@ -634,6 +662,12 @@ class StatSnap(BaseModel):
     kast_pct: float
     kills: int
     deaths: int
+    xduel_expected_wins: float = 0.0
+    xduel_actual_wins: int = 0
+
+    @property
+    def xde(self) -> float:
+        return float(self.xduel_actual_wins) - self.xduel_expected_wins
 
 
 class CareerStats(BaseModel):
@@ -722,6 +756,8 @@ class GamePlan(BaseModel):
     # personality-modulated confidence nudge for the dressed five, applied
     # once when the fixture sims. Opt-in, so hands-off sims never set it.
     team_talk: str | None = None
+    halftime_talk: HalftimeTalk | None = None
+    shouts: dict[ShoutTrigger, TouchlineShout] = Field(default_factory=dict)
 
 
 class PatchChange(BaseModel):
@@ -1287,6 +1323,7 @@ class GameState(BaseModel):
     # from every market and roster query until their scheduled debut.
     future_prospects: dict[str, FutureProspect] = Field(default_factory=dict)
 
+    promises: list[ManagerPromise] = Field(default_factory=list)
     fixtures: list[Fixture] = Field(default_factory=list)
     standings: dict[str, TeamRecord] = Field(default_factory=dict)
     training_focus: dict[str, str] = Field(default_factory=dict)
@@ -1804,6 +1841,10 @@ class GameState(BaseModel):
     # Empty by default (hands-off sims never set one, so the balance gates
     # are byte-identical); additive/defaulted, pruned at the offseason.
     mentorships: dict[str, str] = Field(default_factory=dict)
+    mentorship_progress: dict[str, float] = Field(default_factory=dict)
+    chronicles: dict[str, list] = Field(default_factory=dict)
+    telemetry_logs: list = Field(default_factory=list)
+
 
     # -- Telemetry (v8) --------------------------------------------------------
     # Every HUMAN decision (manager/telemetry.py): the input half of the

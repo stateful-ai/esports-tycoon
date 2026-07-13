@@ -8,7 +8,7 @@ from esports_sim.schemas.map import Callout, Gimmick, GimmickType, Map, SightLin
 from esports_sim.schemas.player import (
     Player, AgentMastery, FutureProspect, LanguageSkill, MapMastery,
 )
-from esports_sim.schemas.team import Team, TeamLineup, TeamTactics
+from esports_sim.schemas.team import Team, TeamLineup, TeamTactics, HalftimeTalk, TouchlineShout, ShoutTrigger
 from esports_sim.schemas.match import MatchState, RoundState, PlayerRoundState, RoundPhase
 from esports_sim.schemas.observation import EnemyReadout, PlayerObservation
 from esports_sim.schemas.communication import (
@@ -19,6 +19,7 @@ from esports_sim.schemas.communication import (
     TeamClaim,
 )
 from esports_sim.schemas.decision import PlayerConditionV1
+from esports_sim.schemas.promise import ManagerPromise
 from esports_sim.schemas.events import (
     Event,
     MatchStartEvent,
@@ -35,6 +36,9 @@ from esports_sim.schemas.events import (
     GimmickUsedEvent,
     WhiffEvent,
     CommsEvent,
+    HalftimeTalkEvent,
+    TouchlineShoutEvent,
+    DuelTelemetryEvent,
     EventUnion,
 )
 
@@ -65,6 +69,9 @@ __all__ = [
     "Team",
     "TeamLineup",
     "TeamTactics",
+    "HalftimeTalk",
+    "TouchlineShout",
+    "ShoutTrigger",
     "MatchState",
     "RoundState",
     "PlayerRoundState",
@@ -77,6 +84,7 @@ __all__ = [
     "TeamBelief",
     "TeamClaim",
     "PlayerConditionV1",
+    "ManagerPromise",
     "Event",
     "MatchStartEvent",
     "MatchEndEvent",
@@ -92,5 +100,8 @@ __all__ = [
     "GimmickUsedEvent",
     "WhiffEvent",
     "CommsEvent",
+    "HalftimeTalkEvent",
+    "TouchlineShoutEvent",
+    "DuelTelemetryEvent",
     "EventUnion",
 ]
