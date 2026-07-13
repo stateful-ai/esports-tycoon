@@ -660,6 +660,8 @@ function starsRange(band) {
 const CLUB_TABS = [
   { id: "squad", label: "Squad" },
   { id: "development", label: "Development" },
+  { id: "locker_room", label: "Locker Room" },
+  { id: "promises", label: "Promises" },
   { id: "culture", label: "Culture" },
   { id: "operations", label: "Operations" },
 ];
@@ -864,8 +866,175 @@ async function clubOps(v, sub) {
   for (const x of d.culture_sessions.available_actions || []) { const b = el("button", "btn btn-sm", humanize(x)); b.onclick = async () => { const r = await api("/api/actions/culture_session", { action: x, player_id: x === "welcome" ? newcomer?.id : null }); toast(r.message); refresh(); }; sessions.appendChild(b); }
   if (d.culture_sessions.cooldown_weeks) sessions.appendChild(el("span", "muted", `${d.culture_sessions.cooldown_weeks}w cooldown`));
   cc.append(controls, saveLeaders, el("p", "microlabel", "Culture session"), sessions);
+  cc.appendChild(el("p", "microlabel", "Culture session"));
   ws.appendChild(cc);
   } // end culture
+
+  if (sub === "locker_room") {
+    // Render Locker Room
+    const lrc = el("div", "card ws-12");
+    lrc.innerHTML = `<h2>Locker Room</h2><p class="muted">Check the squad hierarchy, cliques, duos and feuds.</p>`;
+    
+    const rosterTeamId = App.state.user_team.id;
+    const rd = await api(`/api/roster/${rosterTeamId}`);
+    
+    const groups = {
+      "Team Leaders": [],
+      "Influential": [],
+      "Core & Rookies": [],
+      "Rebels & Outcasts": []
+    };
+    
+    for (const p of rd.players || []) {
+      const role = p.hierarchy_role || "core";
+      if (role === "incumbent_leader" || role === "council_member") {
+        groups["Team Leaders"].push(p);
+      } else if (role === "key_influencer" || role === "loyal_lieutenant") {
+        groups["Influential"].push(p);
+      } else if (role === "volatile_rebel" || role === "outcast") {
+        groups["Rebels & Outcasts"].push(p);
+      } else {
+        groups["Core & Rookies"].push(p);
+      }
+    }
+    
+    const groupDiv = el("div", "row", null);
+    groupDiv.style.cssText = "display:flex; flex-wrap:wrap; gap:16px;";
+    for (const [gName, pList] of Object.entries(groups)) {
+      const col = el("div", "card ws-3", null);
+      col.style.cssText = "flex:1; min-width:200px; padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
+      col.innerHTML = `<h3>${gName}</h3>`;
+      if (!pList.length) {
+        col.appendChild(el("p", "muted", "None"));
+      } else {
+        for (const p of pList) {
+          const roleLabel = p.hierarchy_role.replace(/_/g, " ");
+          const isDanger = ["volatile_rebel", "outcast"].includes(p.hierarchy_role);
+          const color = isDanger ? "var(--es-color-danger, #ff4655)" : "var(--es-color-text, #e2e8f0)";
+          col.innerHTML += `<div style="margin-bottom:8px;">` +
+            `<strong>${plink(p.id, p.handle)}</strong><br>` +
+            `<span style="font-size:0.85em; color:${color}; text-transform:uppercase;">${roleLabel}</span>` +
+          `</div>`;
+        }
+      }
+      groupDiv.appendChild(col);
+    }
+    lrc.appendChild(groupDiv);
+    
+    const relSec = el("div", "", null);
+    relSec.style.cssText = "margin-top:20px;";
+    relSec.innerHTML = `<h3>Relationships & Cliques</h3>`;
+    
+    const rels = rd.relationships || { duos: [], feuds: [] };
+    const duosList = rels.duos || [];
+    const feudsList = rels.feuds || [];
+    
+    const relDiv = el("div", "row", null);
+    relDiv.style.cssText = "display:flex; gap:16px;";
+    
+    const duosCard = el("div", "card ws-6", null);
+    duosCard.innerHTML = `<h4>Duos <span class="pill win" style="background:#28a745; color:#fff;">Active</span></h4>`;
+    if (!duosList.length) {
+      duosCard.appendChild(el("p", "muted", "No close duos in the squad."));
+    } else {
+      for (const pair of duosList) {
+        const p1 = rd.players.find(p => p.id === pair[0]) || { handle: pair[0] };
+        const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
+        duosCard.innerHTML += `<div style="margin-bottom:6px;">${plink(p1.id, p1.handle)} &harr; ${plink(p2.id, p2.handle)} <span class="muted" style="color:#28a745;">(Friendship Bond)</span></div>`;
+      }
+    }
+    
+    const feudsCard = el("div", "card ws-6", null);
+    feudsCard.innerHTML = `<h4>Feuds <span class="pill loss" style="background:#dc3545; color:#fff;">Tension</span></h4>`;
+    if (!feudsList.length) {
+      feudsCard.appendChild(el("p", "muted", "No active feuds in the squad."));
+    } else {
+      for (const pair of feudsList) {
+        const p1 = rd.players.find(p => p.id === pair[0]) || { handle: pair[0] };
+        const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
+        feudsCard.innerHTML += `<div style="margin-bottom:6px; color:var(--es-color-danger, #ff4655);">${plink(p1.id, p1.handle)} &harr; ${plink(p2.id, p2.handle)} <span class="muted" style="color:var(--es-color-danger, #ff4655);">(Grave Friction)</span></div>`;
+      }
+    }
+    
+    relDiv.appendChild(duosCard);
+    relDiv.appendChild(feudsCard);
+    relSec.appendChild(relDiv);
+    lrc.appendChild(relSec);
+    ws.appendChild(lrc);
+  }
+
+  if (sub === "promises") {
+    // Render Promises
+    const prc = el("div", "card ws-12");
+    prc.innerHTML = `<h2>Promises</h2><p class="muted">Monitor active manager promises, kept/broken history and morale/chemistry outcomes.</p>`;
+    
+    const rosterTeamId = App.state.user_team.id;
+    const rd = await api(`/api/roster/${rosterTeamId}`);
+    const promisesList = rd.promises || [];
+    
+    const active = promisesList.filter(p => p.status === "active");
+    const history = promisesList.filter(p => p.status !== "active");
+    
+    const activeDiv = el("div", "", null);
+    activeDiv.innerHTML = `<h3>Active Promises</h3>`;
+    if (!active.length) {
+      activeDiv.appendChild(el("p", "muted", "No active promises at the moment."));
+    } else {
+      const activeGrid = el("div", "row", null);
+      activeGrid.style.cssText = "display:flex; flex-wrap:wrap; gap:12px;";
+      for (const prom of active) {
+        const duration = prom.initial_duration || 1;
+        const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: prom.player_id };
+        
+        let progressInfo = "";
+        if (prom.promise_type === "play_time") {
+          progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
+        }
+        
+        const card = el("div", "card ws-4", null);
+        card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
+        card.innerHTML = `<div>` +
+          `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
+          `<span style="text-transform:uppercase; font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${prom.promise_type.replace(/_/g, " ")}</span>` +
+        `</div>` +
+        `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
+        `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
+          `<span>Progress</span><span>${prom.weeks_left} weeks left</span>` +
+        `</div>` +
+        `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;">` +
+          `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
+        `</div>`;
+        activeGrid.appendChild(card);
+      }
+      activeDiv.appendChild(activeGrid);
+    }
+    prc.appendChild(activeDiv);
+    
+    const histDiv = el("div", "", null);
+    histDiv.style.cssText = "margin-top:20px;";
+    histDiv.innerHTML = `<h3>Promise History</h3>`;
+    if (!history.length) {
+      histDiv.appendChild(el("p", "muted", "No resolved promise history."));
+    } else {
+      const histList = el("div", "card-scroll", null);
+      for (const prom of history) {
+        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: prom.player_id };
+        const isKept = prom.status === "kept";
+        const badgeClass = isKept ? "win" : "loss";
+        const color = isKept ? "#28a745" : "var(--es-color-danger, #ff4655)";
+        
+        const row = el("div", "entity", null);
+        row.innerHTML = `<span class="entity-name">${plink(pPlayer.id, pPlayer.handle)} &middot; ${prom.promise_type.replace(/_/g, " ")}</span>` +
+          `<span class="pill ${badgeClass}" style="background:${color}; color:#fff; text-transform:uppercase;">${prom.status}</span>`;
+        histList.appendChild(row);
+      }
+      histDiv.appendChild(histList);
+    }
+    prc.appendChild(histDiv);
+    ws.appendChild(prc);
+  }
+
   v.appendChild(ws);
 }
 
@@ -2041,9 +2210,9 @@ async function roster(v, opts = {}) {
       // Mentorship: older, higher-rated teammates can mentor this player,
       // sorted by hidden teaching ability (mentor_skill) so the best teacher
       // is first — a strong mentor raises the protege's ceiling.
-      const eligibleMentors = data.is_user_team
+      const eligibleMentors = (data.is_user_team && p.age <= 20)
         ? data.players
-            .filter((q) => q.id !== p.id && q.age > p.age && (q.overall ?? 0) > (p.overall ?? 0))
+            .filter((q) => q.id !== p.id && q.age >= 25 && (q.age - p.age) >= 3)
             .sort((a, b) => (b.mentor_skill ?? 0) - (a.mentor_skill ?? 0))
         : [];
       const focusSel = data.is_user_team
@@ -2068,6 +2237,8 @@ async function roster(v, opts = {}) {
              ${eligibleMentors.map((q) => `<option value="${q.id}" ${q.id === p.mentor_id ? "selected" : ""}>🎓 ${esc(q.handle)}${q.mentor_skill != null ? ` (teach ${q.mentor_skill})` : ""}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
+      const progressPercent = p.mentor_progress != null ? Math.round(p.mentor_progress) : 0;
+      const progressBar = p.mentor_id ? `<div class="pf-hbar" style="height:4px; margin-top:4px; background:var(--es-color-bg, #05070a);"><i style="display:block; height:100%; width:${progressPercent}%; background:var(--es-color-accent, #00f0ff);"></i></div><span style="font-size:0.75em; display:block;" class="muted">${progressPercent}% complete</span>` : "";
       rowHtml = `
         ${starCell}
         ${playerCell}
@@ -2079,7 +2250,7 @@ async function roster(v, opts = {}) {
         <td class="dev-plan">${focusSel}</td>
         <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
-        <td class="dev-plan">${mentorSel}</td>`;
+        <td class="dev-plan">${mentorSel}${progressBar}</td>`;
     }
     const tr = el("tr", "", rowHtml);
 
@@ -4677,6 +4848,9 @@ const STAT_COLS = [
   { k: "pistol_kills", h: "Pistol K" },
   { k: "eco_kills", h: "Eco K", t: "kills while your side was under-gunned" },
   { k: "save_kills", h: "Save K", t: "kills on a sidearm save" },
+  { k: "xduel_expected_wins", h: "xDuel Exp" },
+  { k: "xduel_actual_wins", h: "xDuel Act" },
+  { k: "xde", h: "xDE", f: (v) => v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2) },
   { k: "plants", h: "Pl" },
   { k: "defuses", h: "Df" },
 ];

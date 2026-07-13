@@ -1,0 +1,111 @@
+from __future__ import annotations
+
+import pytest
+
+fastapi = pytest.importorskip("fastapi")
+
+import esports_sim.web.server as server_mod
+from esports_sim.manager import new_campaign, advance_week
+from esports_sim.registry import GameData
+
+@pytest.fixture(scope="module")
+def test_env(game_data: GameData):
+    # Create a real GameState and advance it to generate stats and relationships
+    gs = new_campaign(game_data, seed=2026, user_team_id="team_nexus")
+    advance_week(gs, game_data)
+    
+    # Create the _Game instance
+    game = server_mod._Game(game_data, "TESTC", gs=gs)
+    
+    # Bind context
+    server_mod._ctx.set(server_mod._ReqCtx(game, gs.user_team_id))
+    
+    return gs
+
+def test_roster_endpoint_contract(test_env) -> None:
+    gs = test_env
+    team_id = gs.user_team_id
+    
+    # Direct function call
+    data = server_mod.roster(team_id)
+    
+    # Verify the new keys exist in the response
+    assert "hierarchy" in data
+    assert "relationships" in data
+    assert "promises" in data
+    
+    # Verify hierarchy structure mapping pid -> role
+    hierarchy = data["hierarchy"]
+    assert isinstance(hierarchy, dict)
+    for p in gs.roster(team_id):
+        assert p.id in hierarchy
+        
+    # Verify relationships duos and feuds
+    rels = data["relationships"]
+    assert "duos" in rels
+    assert "feuds" in rels
+    assert isinstance(rels["duos"], list)
+    assert isinstance(rels["feuds"], list)
+    
+    # Verify promises list
+    assert isinstance(data["promises"], list)
+
+def test_player_profile_endpoint_contract(test_env) -> None:
+    gs = test_env
+    player_id = gs.teams[gs.user_team_id].player_ids[0]
+    
+    # Direct function call
+    data = server_mod.player_profile(player_id)
+    
+    # Verify player block contains hierarchy_role and mentorship info
+    player_block = data["player"]
+    assert "hierarchy_role" in player_block
+    assert "mentor_id" in player_block or "mentor_progress" in player_block
+    
+    # Verify promises block is present in player block
+    assert "promises" in player_block
+    
+    # Verify xDuel and xDE data are present in the season block
+    season_block = data["season"]
+    assert "xduel_expected_wins" in season_block
+    assert "xduel_actual_wins" in season_block
+    assert "xde" in season_block
+
+def test_post_actions_endpoints(test_env) -> None:
+    gs = test_env
+    # Find a valid unplayed fixture in the campaign
+    valid_fx = next((f for f in gs.fixtures if not f.played), None)
+    assert valid_fx is not None, "No active fixture found for test"
+    fixture_id = valid_fx.id
+    
+    # 1. Halftime Pep Talk
+    req = server_mod.PepTalkBody(
+        fixture_id=fixture_id,
+        talk_type="reassure",
+        relative_score=-2
+    )
+    res_data = server_mod.pep_talk_action(req)
+    assert res_data["ok"] is True
+    assert "message" in res_data
+    
+    # 2. Touchline Shout
+    player_id = gs.teams[gs.user_team_id].player_ids[0]
+    req2 = server_mod.ShoutBody(
+        fixture_id=fixture_id,
+        shout_type="demand_focus",
+        target_player_id=player_id,
+        loss_streak=3
+    )
+    res_data = server_mod.shout_action(req2)
+    assert res_data["ok"] is True
+    assert "message" in res_data
+    
+    # 3. LLM Chat
+    req3 = server_mod.LLMChatBody(
+        player_id=player_id,
+        text="Keep up the good work!"
+    )
+    res_data = server_mod.llm_chat(req3)
+    assert res_data["ok"] is True
+    assert "response" in res_data
+    assert ("effects" in res_data or res_data.get("offline") is True)

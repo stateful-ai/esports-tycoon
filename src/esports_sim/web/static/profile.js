@@ -291,6 +291,17 @@ function renderPlayerProfile(data) {
   const langBit = (p.languages || [])
     .map((l) => `${(l.lang || "").toUpperCase()} ${l.level}`)
     .join(" · ");
+  const hierarchyLabel = (p.hierarchy_role || "core").replace(/_/g, " ");
+  let hierarchyColor = "var(--es-color-muted, #808080)";
+  if (["incumbent_leader", "council_member"].includes(p.hierarchy_role)) {
+    hierarchyColor = "var(--es-color-accent, #00f0ff)";
+  } else if (["volatile_rebel", "outcast"].includes(p.hierarchy_role)) {
+    hierarchyColor = "var(--es-color-danger, #ff4655)";
+  } else if (["key_influencer", "loyal_lieutenant"].includes(p.hierarchy_role)) {
+    hierarchyColor = "var(--es-color-accent-warm, #ffb000)";
+  }
+  const hierarchyBadge = `<span class="pill" style="border: 1px solid ${hierarchyColor}; color: ${hierarchyColor}; text-transform: uppercase; font-size: 0.75em; margin-left: 8px; vertical-align: middle;">${hierarchyLabel}</span>`;
+
   const meta = [
     p.role ? `<span class="pill">${p.role}</span>` : "",
     p.is_igl ? `<span class="pill">IGL</span>` : "",
@@ -304,6 +315,9 @@ function renderPlayerProfile(data) {
       : "",
     p.stream_load != null && p.stream_load > 5
       ? `<span class="pill" title="org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}">🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>`
+      : "",
+    p.mentor_id
+      ? `<span class="pill" title="Mentored by ${p.mentor_id}">Mentor: ${p.mentor_id}${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}</span>`
       : "",
     // Long tenure = a club fixture (serializer sends raw weeks; render-only).
     p.tenure_weeks != null && p.tenure_weeks >= 26
@@ -325,7 +339,7 @@ function renderPlayerProfile(data) {
   header.innerHTML =
     portrait +
     `<div class="pf-id">` +
-    `<div class="pf-handle">${p.handle ?? "Unknown"}</div>` +
+    `<div class="pf-handle">${p.handle ?? "Unknown"}${hierarchyBadge}</div>` +
     (data.epithet ? `<div class="pf-epithet">${data.epithet}</div>` : "") +
     `<div class="pf-meta">${meta}${teamBit}</div>` +
     `<div class="pf-contract muted">${contract}</div>` +
@@ -438,6 +452,16 @@ function renderPlayerProfile(data) {
   tiles.appendChild(pfTile("Morale", pfNum(ov.morale), null, "<h4>Morale</h4><div class='tooltip-desc'>How happy the player is. High morale accelerates attribute growth; low morale slows growth and makes them more prone to tilt.</div>"));
   tiles.appendChild(pfTile("Condition", pfNum(ov.condition), null, "<h4>Condition</h4><div class='tooltip-desc'>Physical fitness. Heavy training intensity and playing back-to-back matches drains condition. Rest them when low to prevent exhaustion or injury.</div>"));
   tiles.appendChild(pfTile("Confidence", pfNum(p.confidence), "drives duels & nerve", "<h4>Confidence</h4><div class='tooltip-desc'>The player's mental state in round duels. Stacks with aim; confident players win more 50-50 duels and clutch scenarios. Regresses towards 50 weekly.</div>"));
+  const season = data.season || {};
+  const xdAct = season.xduel_actual_wins;
+  const xdExp = season.xduel_expected_wins;
+  const xdEdge = season.xde;
+  const xdActStr = xdAct != null ? pfNum(xdAct) : "—";
+  const xdExpStr = xdExp != null ? pfNum(xdExp, 1) : "—";
+  const xdEdgeStr = xdEdge != null ? (xdEdge >= 0 ? "+" : "") + pfNum(xdEdge, 2) : "—";
+
+  tiles.appendChild(pfTile("xDuel", `${xdActStr} / ${xdExpStr}`, "actual / expected wins", "<h4>xDuel (Expected Duel Wins)</h4><div class='tooltip-desc'>The player's actual round duel wins compared to their expected wins based on statistical matchups.</div>"));
+  tiles.appendChild(pfTile("xDE", xdEdgeStr, "expected duel edge", "<h4>xDE (Expected Duel Edge)</h4><div class='tooltip-desc'>Calculated as actual duel wins minus expected duel wins. A positive edge indicates that the player outperforms statistical expectations.</div>"));
   tiles.appendChild(pfTile("Value", ov.market_value != null ? money(ov.market_value) : "—", null, "<h4>Market Value</h4><div class='tooltip-desc'>Estimated valuation on the transfer market. Unsigned free agents have no valuation. Rival teams will demand more or less than this based on their stance.</div>"));
   frag.appendChild(tiles);
 
@@ -860,6 +884,124 @@ function renderPlayerProfile(data) {
     }
 
     frag.appendChild(sec);
+  }
+
+  // Active Promises rendering
+  const promList = p.promises || [];
+  if (promList.length) {
+    const promSec = pfSection("Active Promises");
+    const promDiv = el("div", "pf-promises-container", null);
+    for (const prom of promList) {
+      const duration = prom.initial_duration || 1;
+      const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+      
+      let progressInfo = "";
+      if (prom.promise_type === "play_time") {
+        progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
+      }
+      
+      const pDiv = el(
+        "div",
+        "pf-promise-item",
+        `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">` +
+          `<strong>${prom.promise_type.replace(/_/g, " ").toUpperCase()}</strong>` +
+          `<span class="muted">${prom.weeks_left} weeks left</span>` +
+        `</div>` +
+        `<div style="font-size:0.9em; margin-bottom:4px;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
+        `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg-alt, #151b26); border-radius:3px; overflow:hidden;">` +
+          `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
+        `</div>`
+      );
+      promDiv.appendChild(pDiv);
+    }
+    promSec.appendChild(promDiv);
+    frag.appendChild(promSec);
+  }
+
+  // LLM Chat rendering
+  if (p.is_user_team && p.can_talk) {
+    const chatSec = pfSection("Talk 1:1");
+    const chatContainer = el("div", "pf-chat-container");
+    chatContainer.style.cssText = "border:1px solid var(--es-color-border, #1f2a3d); padding:10px; border-radius:4px; background:var(--es-color-bg-alt, #0b0e14); margin-bottom:15px; position:relative;";
+    
+    const logsOverlay = el("div", "pf-chat-logs");
+    logsOverlay.style.cssText = "height:120px; overflow-y:auto; border-bottom:1px solid var(--es-color-border, #1f2a3d); margin-bottom:10px; padding-bottom:5px; font-size:0.9em;";
+    logsOverlay.innerHTML = `<div class="muted">Start a conversation with ${p.handle}...</div>`;
+    
+    const inputRow = el("div", "");
+    inputRow.style.cssText = "display:flex; gap:8px;";
+    
+    const chatInput = el("input", "btn-sm");
+    chatInput.type = "text";
+    chatInput.placeholder = `Type a message to ${p.handle}...`;
+    chatInput.style.cssText = "flex:1; background:var(--es-color-bg, #05070a); border:1px solid var(--es-color-border, #1f2a3d); color:var(--es-color-text, #e2e8f0); padding:4px 8px; border-radius:4px;";
+    
+    const sendBtn = el("button", "btn btn-primary btn-sm", "Send");
+    
+    const sendChat = async () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      chatInput.disabled = true;
+      sendBtn.disabled = true;
+      
+      const userBubble = el("div", "chat-bubble user-bubble");
+      userBubble.style.cssText = "margin-bottom:6px; color:var(--es-color-accent-warm, #ffb000);";
+      userBubble.innerHTML = `<strong>You:</strong> ${esc(text)}`;
+      logsOverlay.appendChild(userBubble);
+      logsOverlay.scrollTop = logsOverlay.scrollHeight;
+      
+      chatInput.value = "";
+      
+      try {
+        const res = await api("/api/talk/llm_chat", { player_id: p.id, text: text });
+        if (res && res.ok) {
+          const replyBubble = el("div", "chat-bubble reply-bubble");
+          replyBubble.style.cssText = "margin-bottom:6px; color:var(--es-color-accent, #00f0ff);";
+          replyBubble.innerHTML = `<strong>${p.handle}:</strong> ${esc(res.response)}`;
+          logsOverlay.appendChild(replyBubble);
+          
+          if (res.effects) {
+            const effectLines = [];
+            for (const [attr, val] of Object.entries(res.effects)) {
+              if (val !== 0) {
+                const sign = val > 0 ? "+" : "";
+                effectLines.push(`${attr} ${sign}${val}`);
+              }
+            }
+            if (effectLines.length) {
+              const effectBadge = el("div", "floating-badge");
+              effectBadge.style.cssText = "position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); background:var(--es-color-accent-warm, #ffb000); color:#000; padding:12px 24px; border-radius:6px; font-weight:bold; font-size:1.2em; box-shadow:0 8px 24px rgba(0,0,0,0.6); z-index:10000; transition: opacity 1.5s ease-out, transform 1.5s ease-out;";
+              chatContainer.appendChild(effectBadge);
+              setTimeout(() => {
+                effectBadge.style.opacity = "0";
+                effectBadge.style.transform = "translate(-50%, -80%)";
+              }, 100);
+              setTimeout(() => effectBadge.remove(), 1600);
+            }
+          }
+          toast("Chat conversation resolved!");
+        }
+      } catch (err) {
+        const errBubble = el("div", "chat-bubble error-bubble");
+        errBubble.style.cssText = "margin-bottom:6px; color:var(--es-color-danger, #ff4655);";
+        errBubble.textContent = "Error communicating with player.";
+        logsOverlay.appendChild(errBubble);
+      } finally {
+        logsOverlay.scrollTop = logsOverlay.scrollHeight;
+      }
+    };
+    
+    sendBtn.onclick = sendChat;
+    chatInput.onkeydown = (e) => {
+      if (e.key === "Enter") sendChat();
+    };
+    
+    inputRow.appendChild(chatInput);
+    inputRow.appendChild(sendBtn);
+    chatContainer.appendChild(logsOverlay);
+    chatContainer.appendChild(inputRow);
+    chatSec.appendChild(chatContainer);
+    frag.appendChild(chatSec);
   }
 
   // Compare -----------------------------------------------------------------

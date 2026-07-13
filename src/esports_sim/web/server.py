@@ -56,6 +56,13 @@ from esports_sim.manager import (
     talk,
     telemetry,
     training,
+    locker_room,
+    mentorship,
+    promises,
+    pep_talk,
+    shouts,
+    llm_talk as manager_llm_talk,
+    xduel,
 )
 from esports_sim.manager.campaign import (
     PREP_EDGE_BASE,
@@ -735,6 +742,12 @@ def _roster_potential_projection(
 
 
 def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
+    team_id = market.team_of(gs, p.id)
+    hierarchy_role = locker_room.get_hierarchy_role(gs, p.id, team_id) if team_id else "core"
+    mentor_id = gs.mentorships.get(p.id) if hasattr(gs, "mentorships") else None
+    mentor_progress = gs.mentorship_progress.get(p.id) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
+    player_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
+
     attrs = {
         k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
     }
@@ -807,6 +820,10 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "portrait": _portrait_url(p.id, str(p.role)),
         # Badges are public (earned at public moments) — shown for any player.
         "badges": _badge_views(p),
+        "hierarchy_role": hierarchy_role,
+        "mentor_id": mentor_id,
+        "mentor_progress": mentor_progress,
+        "promises": player_promises,
     }
 
 
@@ -2395,6 +2412,9 @@ def roster(team_id: str) -> dict:
             "roster_min": market.ROSTER_MIN,
             "roster_max": market.roster_cap(gs, team_id),
             "upcoming": upcoming,
+            "hierarchy": locker_room.calculate_hierarchy(gs, team_id),
+            "promises": [p.model_dump() for p in gs.promises if p.team_id == team_id] if hasattr(gs, "promises") else [],
+            "relationships": relationships.duos_and_feuds(gs, team_id),
             "dev_focus_options": DEV_FOCUS_OPTIONS,
             "intensity_options": INTENSITY_OPTIONS,
             "language_options": LANGUAGE_OPTIONS,
@@ -4253,39 +4273,172 @@ class MentorBody(BaseModel):
 @app.post("/api/actions/mentor")
 def mentor_action(body: MentorBody) -> dict:
     """Pair a young player with a veteran teammate (own roster), or clear the
-    pairing when mentor_id is null. A protege under a mentor develops faster
-    (training.MENTOR_GROWTH_MULT) AND, gated by the mentor's hidden mentor_skill,
-    slowly gains a higher CEILING on the mentor's best skills
-    (development.apply_mentorship_growth)."""
-    from esports_sim.manager.campaign import mentorship_valid
+    pairing when mentor_id is null."""
+    with S.lock:
+        gs = S.require_gs()
+        team = gs.teams.get(gs.acting_team_id)
+        if not team:
+            raise HTTPException(404, "acting team not found")
+        if body.protege_id not in team.player_ids:
+            raise HTTPException(409, "protege is not on your roster")
+        
+        if body.mentor_id is None:
+            gs.mentorships.pop(body.protege_id, None)
+            if hasattr(gs, "mentorship_progress"):
+                gs.mentorship_progress.pop(body.protege_id, None)
+            S.save()
+            return {"ok": True, "message": "Mentorship cleared"}
+            
+        if body.mentor_id not in team.player_ids:
+            raise HTTPException(409, "mentor is not on your roster")
+            
+        success = mentorship.pair_mentorship(gs, body.protege_id, body.mentor_id)
+        if not success:
+            raise HTTPException(409, "Invalid mentorship pairing constraints")
+        S.save()
+        return {"ok": True, "message": "Mentorship paired successfully"}
+
+
+class PepTalkBody(BaseModel):
+    fixture_id: str
+    talk_type: str  # "reassure" | "fire_up" | "focus"
+    relative_score: int
+
+
+@app.post("/api/actions/pep_talk")
+def pep_talk_action(body: PepTalkBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+        if not fx:
+            raise HTTPException(404, "unknown fixture")
+        if fx.played:
+            raise HTTPException(409, "action rejected because this match is already completed")
+            
+        team_id = gs.acting_team_id
+        pep_talk.apply_pep_talk(gs, team_id, body.talk_type, body.relative_score)
+        S.save()
+        return {"ok": True, "message": f"Pep talk '{body.talk_type}' applied"}
+
+
+class ShoutBody(BaseModel):
+    fixture_id: str
+    shout_type: str  # "demand_focus" | "encourage" | "demand_effort"
+    target_player_id: str | None = None
+    loss_streak: int
+
+
+@app.post("/api/actions/shout")
+def shout_action(body: ShoutBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        fx = next((f for f in gs.fixtures if f.id == body.fixture_id), None)
+        if not fx:
+            raise HTTPException(404, "unknown fixture")
+        if fx.played:
+            raise HTTPException(409, "action rejected because this match is already completed")
+            
+        team_id = gs.acting_team_id
+        if not shouts.can_trigger_shout(body.shout_type, body.loss_streak):
+            raise HTTPException(409, "Trigger conditions for this shout are not satisfied.")
+        shouts_applied = getattr(gs, "shouts_applied_this_round", set())
+        if team_id in shouts_applied:
+            raise HTTPException(409, "Shout already applied this round.")
+        shouts.apply_touchline_shout(
+            gs, team_id, body.shout_type, body.target_player_id, body.loss_streak
+        )
+        S.save()
+        return {"ok": True, "message": f"Shout '{body.shout_type}' applied to touchline."}
+
+
+class LLMChatBody(BaseModel):
+    player_id: str
+    text: str
+
+
+def query_llm(cfg: dict, context: str, text: str) -> str:
+    import urllib.request
+    import json
+    system_msg = (
+        "You are an AI assistant in an esports manager game. The user is a coach talking to a player.\n"
+        "Analyze the context and coach's input. Classify the coach's intent into one of: "
+        "'reassure', 'challenge', 'rein_streaming', 'play_time_promise', 'contract_promise', or 'banter'.\n"
+        "Then generate a character-accurate reply from the player.\n"
+        "Return a JSON object with keys:\n"
+        "- 'intent': one of the classified intents above\n"
+        "- 'reply': the text reply from the player\n"
+        "Only output the JSON object, nothing else."
+    )
+    user_msg = f"Player Context:\n{context}\n\nCoach says: \"{text}\""
+    payload = {
+        "model": cfg["model"],
+        "messages": [
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg}
+        ],
+        "temperature": 0.3
+    }
+    headers = {
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://github.com/stateful-ai/esports-tycoon",
+        "X-Title": "esports-sim"
+    }
+    if cfg.get("key"):
+        headers["Authorization"] = f"Bearer {cfg['key']}"
+    
+    req = urllib.request.Request(
+        cfg["url"],
+        data=json.dumps(payload).encode("utf-8"),
+        headers=headers,
+        method="POST"
+    )
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        body = json.loads(resp.read().decode("utf-8"))
+    return body["choices"][0]["message"]["content"]
+
+
+@app.post("/api/talk/llm_chat")
+def llm_chat(body: LLMChatBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, why = manager_llm_talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+            
+        cfg = llm_talk.provider()
+        if cfg is None:
+            res = manager_llm_talk.process_chat_offline(gs, body.player_id, body.text)
+            S.save()
+            return {
+                "ok": True, 
+                "response": "Understood, coach. I will keep working.", 
+                "intent": res.get("intent") if res else "banter", 
+                "offline": True
+            }
+            
+        context = manager_llm_talk.build_talk_context(gs, body.player_id)
+        
+    try:
+        raw_response = query_llm(cfg, context, body.text)
+        parsed = llm_talk.parse_chat_response(raw_response)
+        intent = parsed.get("intent", "banter")
+        reply = parsed.get("reply", "Understood, coach.")
+    except Exception:
+        with S.lock:
+            res = manager_llm_talk.process_chat_offline(S.require_gs(), body.player_id, body.text)
+            S.save()
+            return {"ok": True, "response": "Understood.", "intent": res.get("intent") if res else "banter", "offline": True}
 
     with S.lock:
         gs = S.require_gs()
-        team = gs.teams[gs.acting_team_id]
-        if body.protege_id not in team.player_ids:
-            raise HTTPException(409, "player is not on your roster")
-        pro = gs.players[body.protege_id]
-        if body.mentor_id is None:
-            gs.mentorships.pop(body.protege_id, None)
-            telemetry.record_action(
-                gs, "mentor", {"protege_id": body.protege_id, "mentor_id": ""}
-            )
-            S.save()
-            return {"ok": True, "message": f"{pro.handle}'s mentorship cleared"}
-        if body.mentor_id not in team.player_ids:
-            raise HTTPException(409, "the mentor is not on your roster")
-        if not mentorship_valid(gs, body.protege_id, body.mentor_id):
-            raise HTTPException(
-                409, "a mentor must be an older, higher-rated teammate"
-            )
-        gs.mentorships[body.protege_id] = body.mentor_id
-        telemetry.record_action(
-            gs, "mentor",
-            {"protege_id": body.protege_id, "mentor_id": body.mentor_id},
-        )
+        ok, why = manager_llm_talk.can_talk(gs, body.player_id)
+        if not ok:
+            raise HTTPException(409, why)
+            
+        manager_llm_talk.apply_chat_adjustment(gs, body.player_id, intent)
+        manager_llm_talk.process_chat_resolution(gs, body.player_id, reply, intent)
         S.save()
-        men = gs.players[body.mentor_id]
-        return {"ok": True, "message": f"{men.handle} now mentors {pro.handle}"}
+        return {"ok": True, "response": reply, "intent": intent, "offline": False}
 
 
 class HireBody(BaseModel):
@@ -6182,6 +6335,26 @@ def player_profile(pid: str) -> dict:
         team_id = None if is_fa else market.team_of(gs, pid)
         team = gs.teams.get(team_id) if team_id else None
         own = team_id == gs.acting_team_id
+
+        hierarchy_role = locker_room.get_hierarchy_role(gs, pid, team_id) if team_id else "core"
+        mentor_id = gs.mentorships.get(pid) if hasattr(gs, "mentorships") else None
+        mentor_progress = gs.mentorship_progress.get(pid) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
+        active_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
+
+        st = gs.player_stats.get(pid)
+        if st is not None:
+            xduel_expected_wins = round(st.xduel_expected_wins, 2)
+            xduel_actual_wins = st.xduel_actual_wins
+            xde = round(st.xde, 2)
+        else:
+            xduel_expected_wins = 0.0
+            xduel_actual_wins = 0
+            xde = 0.0
+
+        can_talk_val = False
+        if own:
+            can_talk_val, _ = manager_llm_talk.can_talk(gs, pid)
+
         return {
             "player": {
                 "id": p.id,
@@ -6194,6 +6367,11 @@ def player_profile(pid: str) -> dict:
                 "portrait": _portrait_url(p.id, str(p.role)),
                 "is_user_team": own,
                 "is_free_agent": is_fa,
+                "can_talk": can_talk_val,
+                "hierarchy_role": hierarchy_role,
+                "mentor_id": mentor_id,
+                "mentor_progress": mentor_progress,
+                "promises": active_promises,
                 # Weeks at the current club (the loyalty clock; 0 for a free
                 # agent). Season length varies with world shape, so there is
                 # no honest weeks-per-season divisor — the raw weeks ship and
@@ -6996,6 +7174,9 @@ def replay(fixture_id: str, map_index: int) -> dict:
                     "team_id": players.get(ln.player_id, {}).get("team_id"),
                     "kills": ln.kills, "deaths": ln.deaths,
                     "rating": round(ln.rating, 2),
+                    "xduel_expected_wins": getattr(ln, "xduel_expected_wins", 0.0),
+                    "xduel_actual_wins": getattr(ln, "xduel_actual_wins", 0),
+                    "xde": getattr(ln, "xde", 0.0),
                 }
                 for ln in fixture.results[map_index].lines
             ),
