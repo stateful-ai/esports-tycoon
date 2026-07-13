@@ -91,6 +91,11 @@ PLAYER_BLOCK = {
     "training_intensity",
     "country",
     "languages",
+    "can_talk",
+    "hierarchy_role",
+    "mentor_id",
+    "mentor_progress",
+    "promises",
 }
 OVERVIEW = {
     "ovr",

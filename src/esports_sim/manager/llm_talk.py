@@ -273,3 +273,9 @@ def load_talk_cache(campaign_id: str, key: str) -> str | None:
             return data.get(key)
         except Exception:
             return None
+
+
+def provider() -> dict | None:
+    """Resolve the active provider config, or None when off."""
+    from esports_sim.web.llm_talk import provider as web_provider
+    return web_provider()

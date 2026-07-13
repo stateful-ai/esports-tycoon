@@ -1008,8 +1008,16 @@ function loop(ts) {
   const round = V.rounds[V.roundIdx];
   if (V.tick > round.maxTick + 6) {
     if (V.roundIdx < V.rounds.length - 1) {
+      if (V.roundIdx === 11 && !V.pepTalkTriggered) {
+        V.pepTalkTriggered = true;
+        V.playing = false;
+        updatePlayBtn();
+        showPepTalkModal();
+        return;
+      }
       V.roundIdx++;
       V.tick = 0;
+      buildShouts();
     } else {
       V.playing = false;
       updatePlayBtn();
@@ -1029,6 +1037,7 @@ function setRound(idx) {
   V.tick = 0;
   drawFrame();
   markTimeline();
+  buildShouts();
 }
 
 /* -- public api ------------------------------------------------------------------ */
@@ -1127,9 +1136,10 @@ function buildMatchSummary() {
     .slice(0, 5)
     .map((r) => {
       const cls = r.team_id === V.teamA ? "a" : "b";
+      const xdeText = r.xde != null ? ` <span class="muted" style="font-size:0.8em; margin-left: 4px;">(xDE: ${r.xde >= 0 ? "+" : ""}${r.xde.toFixed(2)})</span>` : "";
       return `<div class="v-sum-row"><span class="v-sum-dot ${cls}"></span>` +
         `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>` +
-        `<span class="mono muted">${r.kills}/${r.deaths}</span>` +
+        `<span class="mono muted">${r.kills}/${r.deaths}${xdeText}</span>` +
         `<b class="mono">${r.rating.toFixed(2)}</b></div>`;
     })
     .join("");
@@ -1139,24 +1149,173 @@ function buildMatchSummary() {
   side.insertBefore(el, document.getElementById("v-feed"));
 }
 
+function showPepTalkModal() {
+  const existing = document.getElementById("pep-talk-modal");
+  if (existing) existing.remove();
+
+  const modal = document.createElement("div");
+  modal.id = "pep-talk-modal";
+  modal.className = "overlay";
+  modal.style.zIndex = "100000";
+  
+  const summary = V.summaries[11] || { score_a: 0, score_b: 0 };
+  const userTeamId = App.state.user_team.id;
+  const isA = V.teamA === userTeamId;
+  const userScore = isA ? summary.score_a : summary.score_b;
+  const oppScore = isA ? summary.score_b : summary.score_a;
+  const relativeScore = userScore - oppScore;
+
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.innerHTML = `
+    <h2>Halftime Pep Talk</h2>
+    <p class="muted">Halftime score: ${userScore} - ${oppScore} (relative: ${relativeScore >= 0 ? "+" : ""}${relativeScore})</p>
+    <p>Choose your strategy to address the team:</p>
+    <div style="display:flex; flex-direction:column; gap:8px; margin:16px 0;">
+      <button class="btn" data-type="reassure"><b>Reassure:</b> Focus on stabilizing morale.</button>
+      <button class="btn" data-type="fire_up"><b>Fire Up:</b> Boost confidence and aggression.</button>
+      <button class="btn" data-type="focus"><b>Focus:</b> Normalize confidence back to baseline.</button>
+    </div>
+  `;
+
+  panel.querySelectorAll("button").forEach(btn => {
+    btn.onclick = async () => {
+      const talkType = btn.dataset.type;
+      try {
+        await api("/api/actions/pep_talk", {
+          fixture_id: V.fixtureId || "",
+          talk_type: talkType,
+          relative_score: relativeScore
+        });
+        toast(`Applied halftime pep talk: ${talkType}`);
+      } catch (err) {
+        toast("Could not apply pep talk.");
+      }
+      modal.remove();
+      V.playing = true;
+      updatePlayBtn();
+      requestAnimationFrame(loop);
+    };
+  });
+
+  modal.appendChild(panel);
+  document.body.appendChild(modal);
+}
+
+function buildShouts() {
+  const side = document.querySelector(".viewer-side");
+  if (!side) return;
+  const existing = document.getElementById("v-shouts");
+  if (existing) existing.remove();
+
+  const userTeamId = App.state.user_team.id;
+  let lossStreak = 0;
+  for (let idx = 0; idx <= V.roundIdx; idx++) {
+    const s = V.summaries[idx];
+    if (s) {
+      if (s.winner_id !== userTeamId) {
+        lossStreak++;
+      } else {
+        lossStreak = 0;
+      }
+    }
+  }
+
+  const elWidget = document.createElement("div");
+  elWidget.id = "v-shouts";
+  elWidget.className = "card";
+  elWidget.style.cssText = "margin-top:10px; padding:10px;";
+  elWidget.innerHTML = `
+    <h4>Touchline Shouts</h4>
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+      <button class="btn btn-sm" id="shout-focus" title="Demand Focus on a specific player">Focus (Demand Focus)</button>
+      <button class="btn btn-sm" id="shout-encourage" title="Encourage the team (Requires loss streak >= 3)">Encourage (streak: ${lossStreak})</button>
+      <button class="btn btn-sm" id="shout-effort" title="Demand Effort (Boosts aggression but drains stamina)">Demand Effort</button>
+    </div>
+  `;
+
+  const appliedThisRound = V.shoutAppliedThisRound === V.roundIdx;
+  const focusBtn = elWidget.querySelector("#shout-focus");
+  const encourageBtn = elWidget.querySelector("#shout-encourage");
+  const effortBtn = elWidget.querySelector("#shout-effort");
+
+  if (appliedThisRound) {
+    focusBtn.disabled = true;
+    encourageBtn.disabled = true;
+    effortBtn.disabled = true;
+    focusBtn.textContent += " (Cooldown)";
+  }
+
+  if (lossStreak < 3) {
+    encourageBtn.disabled = true;
+    encourageBtn.title = "Requires team to have lost 3+ consecutive rounds.";
+  }
+
+  const sendShout = async (type, targetPid = null) => {
+    try {
+      await api("/api/actions/shout", {
+        fixture_id: V.fixtureId,
+        shout_type: type,
+        target_player_id: targetPid,
+        loss_streak: lossStreak
+      });
+      V.shoutAppliedThisRound = V.roundIdx;
+      toast(`Shout '${type}' applied!`);
+      buildShouts();
+    } catch (err) {
+      toast("Could not apply touchline shout.");
+    }
+  };
+
+  focusBtn.onclick = () => {
+    const players = Object.keys(V.players).filter(pid => V.players[pid].team_id === userTeamId);
+    const pNames = players.map(pid => `<button class="btn btn-sm" data-pid="${pid}">${handleOf(pid)}</button>`).join(" ");
+    
+    const popup = document.createElement("div");
+    popup.className = "overlay";
+    popup.style.zIndex = "100000";
+    popup.innerHTML = `
+      <div class="panel">
+        <h3>Select Player to Focus</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin:14px 0;">${pNames}</div>
+        <button class="btn" id="close-popup">Cancel</button>
+      </div>
+    `;
+    popup.querySelectorAll("button[data-pid]").forEach(btn => {
+      btn.onclick = () => {
+        sendShout("demand_focus", btn.dataset.pid);
+        popup.remove();
+      };
+    });
+    popup.querySelector("#close-popup").onclick = () => popup.remove();
+    document.body.appendChild(popup);
+  };
+
+  encourageBtn.onclick = () => sendShout("encourage");
+  effortBtn.onclick = () => sendShout("demand_effort");
+
+  side.insertBefore(elWidget, document.getElementById("v-feed"));
+}
+
 async function openReplay(fixtureId, mapIndex) {
   const data = await api(`/api/replay/${fixtureId}/${mapIndex}`);
   const names = {};
   names[data.team_a] = data.fixture.team_a_name;
   names[data.team_b] = data.fixture.team_b_name;
   V = {
+    fixtureId,
     map: data.map,
     floor: data.map.floor || null,
-    iso: !!data.map.floor, // isometric by default when geometry exists
+    iso: !!data.map.floor,
     players: data.players,
     teamA: data.team_a,
     teamB: data.team_b,
     names,
-    abilities: data.abilities || {}, // guard: older payloads may omit this
+    abilities: data.abilities || {},
     rounds: parseReplay(data),
-    summaries: data.round_summaries || [], // server-computed round result strip
-    momentum: data.momentum || [], // event-log-derived mental runs
-    boxScore: data.box_score || [], // per-map box score (top performers)
+    summaries: data.round_summaries || [],
+    momentum: data.momentum || [],
+    boxScore: data.box_score || [],
     mvp: data.mvp || null,
     _tlRound: -1,
     roundIdx: 0,
@@ -1166,11 +1325,10 @@ async function openReplay(fixtureId, mapIndex) {
     lastTs: null,
     mapId: data.map.id || null,
     painted: null,
-    cones: true,       // sight cones on by default
-    facing: {},        // pid -> eased gaze angle (screen radians)
-    _facingRound: -1,  // round the facing map belongs to (reset on change)
+    cones: true,
+    facing: {},
+    _facingRound: -1,
   };
-  // Probe once for a painted backdrop; absent => plain geometry (unchanged).
   V.painted = V.mapId ? await probePainted(V.mapId) : null;
   const isoBtn = document.getElementById("v-view");
   isoBtn.style.display = V.floor ? "" : "none";
@@ -1179,6 +1337,7 @@ async function openReplay(fixtureId, mapIndex) {
     `<b class="tlink" data-tid="${data.team_a}">${names[data.team_a]}</b> vs <b class="tlink" data-tid="${data.team_b}">${names[data.team_b]}</b> · ${data.map.display_name}`;
   buildLineup();
   buildTimeline();
+  buildShouts();
   buildMatchSummary();
   drawStatic();
   drawFrame();
@@ -1194,6 +1353,8 @@ function closeViewer() {
   if (lineup) lineup.remove();
   const timeline = document.getElementById("v-timeline");
   if (timeline) timeline.remove();
+  const shouts = document.getElementById("v-shouts");
+  if (shouts) shouts.remove();
   const summary = document.getElementById("v-summary");
   if (summary) summary.remove();
   document.getElementById("viewer").classList.add("hidden");
