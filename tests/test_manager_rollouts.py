@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import json
 
-from esports_sim.manager.manager_policy import ManagerProfile, generate_profile
+from esports_sim.manager import delegation, series_management
+from esports_sim.manager.decision_env import HeadlessManagerEnv
+from esports_sim.manager.manager_policy import (
+    HeuristicManagerPolicy,
+    ManagerProfile,
+    generate_profile,
+)
 from esports_sim.manager.rollout import evaluate_rollouts, export_rollouts, run_rollout
 
 
@@ -24,7 +30,7 @@ def test_rollout_and_traces_are_deterministic(game_data):
     assert a.traces == b.traces
     assert a.invalid_actions == 0
     assert a.action_counts["advance"] == 1
-    assert all(t["policy_version"] == "heuristic-manager-v1" for t in a.traces)
+    assert all(t["policy_version"] == "heuristic-manager-v2" for t in a.traces)
 
 
 def test_profiles_produce_distinct_management_styles(game_data):
@@ -59,5 +65,58 @@ def test_rollout_export_contract(tmp_path, game_data):
     evaluation = json.loads(paths["evaluation"].read_text())
     assert traces and traces[-1]["advanced"]
     assert traces[0]["run_id"] == result.run_id
-    assert runs[0]["policy_version"] == "heuristic-manager-v1"
+    assert runs[0]["policy_version"] == "heuristic-manager-v2"
     assert evaluation["runs"] == 1
+
+
+def test_analytical_baseline_books_visible_preparation(game_data):
+    """A configured manager turns public fixture information into a legal plan."""
+    from esports_sim.manager.campaign import new_campaign
+
+    gs = new_campaign(game_data, seed=811)
+    tid = gs.user_team_id
+    delegation.configure(gs, tid, {
+        "auto_renew_core": True,
+        "renewal_salary_min": 800,
+        "renewal_salary_max": 8_000,
+        "renewal_trigger_weeks": 8,
+        "auto_scout": True,
+        "scout_region": "pacific",
+        "scout_roles": ["initiator"],
+        "scout_max_age": 21,
+        "alert_level": "tier1_ready",
+    })
+    series_management.register_roster(gs, tid, list(gs.teams[tid].player_ids))
+    # Isolate the fixture-planning decision from optional transfer-market work.
+    gs.free_agent_ids = []
+    profile = ManagerProfile(
+        id="analytical-prep", risk=0.4, youth=0.2, loyalty=0.4,
+        analytics=0.95, investment=0.4, experimentation=0.3,
+    )
+    env = HeadlessManagerEnv(gs, game_data)
+    action = HeuristicManagerPolicy(profile).choose_action(env.observe())
+
+    assert action["kind"] == "set_preparation"
+    assert action["params"]["objective"] == "anti_exec"
+    env.step(action)
+    assert gs.preparation_plans_by[tid].objective == "anti_exec"
+
+
+def test_stale_learned_checkpoint_falls_back_to_the_default_manager(
+    tmp_path, game_data, monkeypatch,
+):
+    """Autoplay remains usable while an older learned checkpoint is retrained."""
+    from esports_sim.app import cli
+
+    stale = tmp_path / "stale-manager.json"
+    stale.write_text('{"policy_version": "learned-manager-v0"}', encoding="utf-8")
+    monkeypatch.setattr(cli, "save", lambda _gs: None)
+
+    gs = cli.auto_play(
+        game_data,
+        weeks=1,
+        seed=812,
+        team="team_nexus",
+        manager_model=stale,
+    )
+    assert gs.week != 1 or gs.phase != "regular"
