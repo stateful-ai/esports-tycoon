@@ -14,27 +14,43 @@
 </head>
 <body>
 
-<header id="topbar">
-  <div class="brand">ESPORTS<span>SIM</span></div>
-  <div id="context" class="context"></div>
-  <div class="spacer"></div>
-  <div id="balance" class="balance mono"></div>
-  <span id="mp-chip" class="pill hidden" title="shared game — click to copy the join code"></span>
-  <button id="save-btn" class="btn hidden" title="save the world to disk now">Save</button>
-  <select id="autosave-sel" class="hidden" title="autosave: write the save after every Nth week (off = only the Save button writes)">
-    <option value="0">autosave off</option>
-    <option value="1">autosave 1w</option>
-    <option value="2">autosave 2w</option>
-    <option value="3">autosave 3w</option>
-    <option value="5">autosave 5w</option>
-    <option value="8">autosave 8w</option>
-  </select>
-  <button id="worlds-btn" class="btn hidden" title="leave to the lobby — this world stays saved and resumable">Worlds</button>
-  <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
-  <button id="admin-toggle" class="btn" title="Admin: reveal data-correction controls on player/team profiles (edits write back to the roster-pack sheet on disk)" aria-pressed="false">🛠️</button>
-  <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
-  <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
-</header>
+<div id="app-wrapper">
+  <header id="topbar">
+    <div class="brand">ESPORTS<span>SIM</span></div>
+    <div id="context" class="context"></div>
+    <div class="spacer"></div>
+    <div id="balance" class="balance mono"></div>
+    <span id="mp-chip" class="pill hidden" title="shared game — click to copy the join code"></span>
+    <button id="save-btn" class="btn hidden" title="save the world to disk now">Save</button>
+    <select id="autosave-sel" class="hidden" title="autosave: write the save after every Nth week (off = only the Save button writes)">
+      <option value="0">autosave off</option>
+      <option value="1">autosave 1w</option>
+      <option value="2">autosave 2w</option>
+      <option value="3">autosave 3w</option>
+      <option value="5">autosave 5w</option>
+      <option value="8">autosave 8w</option>
+    </select>
+    <button id="worlds-btn" class="btn hidden" title="leave to the lobby — this world stays saved and resumable">Worlds</button>
+    <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+    <button id="admin-toggle" class="btn" title="Admin: reveal data-correction controls on player/team profiles (edits write back to the roster-pack sheet on disk)" aria-pressed="false">🛠️</button>
+    <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
+    <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
+  </header>
+
+  <nav id="tabs">
+    <button data-tab="dashboard" class="tab active">Dashboard</button>
+    <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="inbox-badge hidden">0</span></button>
+    <button data-tab="club" class="tab">Club</button>
+    <button data-tab="tactics" class="tab">Tactics</button>
+    <button data-tab="season" class="tab">Season</button>
+    <button data-tab="market" class="tab">Market</button>
+    <button data-tab="stats" class="tab">Stats</button>
+    <button data-tab="social" class="tab">Social</button>
+    <button data-tab="finances" class="tab">Finances</button>
+  </nav>
+
+  <main id="view"></main>
+</div>
 
 <!-- help -->
 <div id="help" class="overlay hidden">
@@ -51,20 +67,6 @@
     <button class="btn btn-primary" onclick="document.getElementById('help').classList.add('hidden')">Got it</button>
   </div>
 </div>
-
-<nav id="tabs">
-  <button data-tab="dashboard" class="tab active">Dashboard</button>
-  <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="inbox-badge hidden">0</span></button>
-  <button data-tab="club" class="tab">Club</button>
-  <button data-tab="tactics" class="tab">Tactics</button>
-  <button data-tab="season" class="tab">Season</button>
-  <button data-tab="market" class="tab">Market</button>
-  <button data-tab="stats" class="tab">Stats</button>
-  <button data-tab="social" class="tab">Social</button>
-  <button data-tab="finances" class="tab">Finances</button>
-</nav>
-
-<main id="view"></main>
 
 <!-- lobby overlay (new / join a campaign) -->
 <div id="newgame" class="overlay hidden">
@@ -167,8 +169,8 @@
 <div id="toast"></div>
 
 <script src="/viewer.js"></script>
-<script src="/app.js"></script>
-<script src="/profile.js"></script>
+<script type="module" src="/app.js"></script>
+<script type="module" src="/profile.js"></script>
 <script src="/audio.js"></script>
 <script src="/inbox.js"></script>
 </body>
