@@ -1,0 +1,527 @@
+id: team_nuturn_gaming
+name: NUTURN Gaming
+tag: NUT
+region: pacific
+tier: 1
+captain_id: team_nuturn_gaming_solo
+balance: 768000
+reputation: 78.0
+fan_count: 547560
+chemistry: 79.8
+players:
+- id: team_nuturn_gaming_solo
+  handle: solo
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 40.0
+  age: 32
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 61.3
+    aim_reactivity: 55.1
+    movement: 71.5
+    game_sense: 93.8
+    utility_usage: 79.1
+    positioning: 67.8
+    clutch_factor: 72.2
+    tilt_resistance: 63.3
+    composure: 76.0
+    comms_quality: 86.1
+  agent_pool:
+  - agent_id: omen
+    mastery: 90.1
+  - agent_id: brimstone
+    mastery: 79.8
+  - agent_id: astra
+    mastery: 62.4
+  - agent_id: clove
+    mastery: 64.0
+  - agent_id: harbor
+    mastery: 62.5
+  - agent_id: miks
+    mastery: 61.6
+  - agent_id: viper
+    mastery: 60.5
+  - agent_id: breach
+    mastery: 53.5
+  - agent_id: chamber
+    mastery: 50.8
+  - agent_id: cypher
+    mastery: 55.7
+  - agent_id: deadlock
+    mastery: 52.4
+  - agent_id: fade
+    mastery: 57.3
+  - agent_id: gekko
+    mastery: 46.1
+  - agent_id: iso
+    mastery: 55.9
+  - agent_id: jett
+    mastery: 40.9
+  - agent_id: kayo
+    mastery: 51.3
+  - agent_id: killjoy
+    mastery: 43.9
+  - agent_id: neon
+    mastery: 50.6
+  - agent_id: phoenix
+    mastery: 60.0
+  - agent_id: raze
+    mastery: 58.2
+  - agent_id: reyna
+    mastery: 51.6
+  - agent_id: sage
+    mastery: 43.3
+  - agent_id: skye
+    mastery: 54.1
+  - agent_id: sova
+    mastery: 55.6
+  - agent_id: tejo
+    mastery: 49.1
+  - agent_id: veto
+    mastery: 43.6
+  - agent_id: vyse
+    mastery: 51.7
+  - agent_id: waylay
+    mastery: 56.7
+  - agent_id: yoru
+    mastery: 48.7
+  map_pool:
+  - map_id: ascent
+    mastery: 72.0
+  - map_id: bind
+    mastery: 82.9
+  - map_id: haven
+    mastery: 88.5
+  - map_id: lotus
+    mastery: 71.7
+  - map_id: split
+    mastery: 81.2
+  salary: 5500
+  contract_weeks_left: 72
+  morale: 78.8
+  stamina: 83.8
+  form: 48.3
+  personality_tags:
+  - clutch_gene
+  - perfectionist
+  - veteran
+  potential: 78.6
+- id: team_nuturn_gaming_suggest
+  handle: Suggest
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 40.0
+  age: 19
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 87.8
+    aim_reactivity: 85.2
+    movement: 85.2
+    game_sense: 64.1
+    utility_usage: 68.2
+    positioning: 80.7
+    clutch_factor: 74.4
+    tilt_resistance: 63.6
+    composure: 78.0
+    comms_quality: 74.0
+  agent_pool:
+  - agent_id: jett
+    mastery: 88.8
+  - agent_id: raze
+    mastery: 85.3
+  - agent_id: iso
+    mastery: 65.8
+  - agent_id: neon
+    mastery: 73.1
+  - agent_id: phoenix
+    mastery: 64.7
+  - agent_id: reyna
+    mastery: 68.8
+  - agent_id: waylay
+    mastery: 63.6
+  - agent_id: yoru
+    mastery: 65.4
+  - agent_id: astra
+    mastery: 54.8
+  - agent_id: breach
+    mastery: 46.0
+  - agent_id: brimstone
+    mastery: 51.2
+  - agent_id: chamber
+    mastery: 52.9
+  - agent_id: clove
+    mastery: 50.6
+  - agent_id: cypher
+    mastery: 53.4
+  - agent_id: deadlock
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 53.2
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 1.1
+  - agent_id: kayo
+    mastery: 56.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: miks
+    mastery: 58.1
+  - agent_id: omen
+    mastery: 59.0
+  - agent_id: sage
+    mastery: 58.1
+  - agent_id: skye
+    mastery: 55.4
+  - agent_id: sova
+    mastery: 53.0
+  - agent_id: tejo
+    mastery: 51.3
+  - agent_id: veto
+    mastery: 46.8
+  - agent_id: viper
+    mastery: 51.2
+  - agent_id: vyse
+    mastery: 5.9
+  map_pool:
+  - map_id: ascent
+    mastery: 84.0
+  - map_id: bind
+    mastery: 80.7
+  - map_id: haven
+    mastery: 87.8
+  - map_id: lotus
+    mastery: 79.4
+  - map_id: split
+    mastery: 87.9
+  salary: 6000
+  contract_weeks_left: 56
+  morale: 60.2
+  stamina: 93.4
+  form: 46.5
+  personality_tags:
+  - fan_favorite
+  - quiet
+  potential: 90.4
+- id: team_nuturn_gaming_peri
+  handle: peri
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 40.0
+  age: 22
+  role: duelist
+  playstyle: awper
+  attributes:
+    aim_precision: 86.8
+    aim_reactivity: 84.1
+    movement: 72.2
+    game_sense: 69.8
+    utility_usage: 61.1
+    positioning: 78.9
+    clutch_factor: 81.1
+    tilt_resistance: 75.2
+    composure: 75.1
+    comms_quality: 61.6
+  agent_pool:
+  - agent_id: jett
+    mastery: 86.6
+  - agent_id: reyna
+    mastery: 82.1
+  - agent_id: iso
+    mastery: 68.2
+  - agent_id: neon
+    mastery: 62.5
+  - agent_id: phoenix
+    mastery: 61.8
+  - agent_id: raze
+    mastery: 59.6
+  - agent_id: waylay
+    mastery: 72.6
+  - agent_id: yoru
+    mastery: 66.5
+  - agent_id: astra
+    mastery: 44.8
+  - agent_id: breach
+    mastery: 55.6
+  - agent_id: brimstone
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 49.5
+  - agent_id: clove
+    mastery: 47.9
+  - agent_id: cypher
+    mastery: 47.2
+  - agent_id: deadlock
+    mastery: 47.3
+  - agent_id: fade
+    mastery: 50.6
+  - agent_id: gekko
+    mastery: 53.3
+  - agent_id: harbor
+    mastery: 51.4
+  - agent_id: kayo
+    mastery: 54.6
+  - agent_id: killjoy
+    mastery: 57.5
+  - agent_id: miks
+    mastery: 56.7
+  - agent_id: omen
+    mastery: 53.1
+  - agent_id: sage
+    mastery: 60.0
+  - agent_id: skye
+    mastery: 52.6
+  - agent_id: sova
+    mastery: 55.4
+  - agent_id: tejo
+    mastery: 44.2
+  - agent_id: veto
+    mastery: 49.1
+  - agent_id: viper
+    mastery: 47.7
+  - agent_id: vyse
+    mastery: 52.8
+  map_pool:
+  - map_id: ascent
+    mastery: 82.4
+  - map_id: bind
+    mastery: 81.5
+  - map_id: haven
+    mastery: 72.9
+  - map_id: lotus
+    mastery: 82.0
+  - map_id: split
+    mastery: 75.4
+  salary: 5600
+  contract_weeks_left: 72
+  morale: 64.5
+  stamina: 86.3
+  form: 59.3
+  personality_tags:
+  - flashy
+  - grinder
+  potential: 83.8
+- id: team_nuturn_gaming_allow
+  handle: allow
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 40.0
+  age: 23
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 69.6
+    aim_reactivity: 62.0
+    movement: 67.5
+    game_sense: 73.2
+    utility_usage: 68.1
+    positioning: 75.6
+    clutch_factor: 79.8
+    tilt_resistance: 68.8
+    composure: 71.3
+    comms_quality: 65.9
+  agent_pool:
+  - agent_id: raze
+    mastery: 86.0
+  - agent_id: omen
+    mastery: 84.1
+  - agent_id: astra
+    mastery: 56.0
+  - agent_id: breach
+    mastery: 52.6
+  - agent_id: brimstone
+    mastery: 57.0
+  - agent_id: chamber
+    mastery: 46.5
+  - agent_id: clove
+    mastery: 48.7
+  - agent_id: cypher
+    mastery: 58.9
+  - agent_id: deadlock
+    mastery: 44.9
+  - agent_id: fade
+    mastery: 49.9
+  - agent_id: gekko
+    mastery: 45.0
+  - agent_id: harbor
+    mastery: 4.3
+  - agent_id: iso
+    mastery: 59.0
+  - agent_id: jett
+    mastery: 53.4
+  - agent_id: kayo
+    mastery: 47.4
+  - agent_id: killjoy
+    mastery: 52.8
+  - agent_id: miks
+    mastery: 52.8
+  - agent_id: neon
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 48.4
+  - agent_id: reyna
+    mastery: 54.9
+  - agent_id: sage
+    mastery: 49.6
+  - agent_id: skye
+    mastery: 51.2
+  - agent_id: sova
+    mastery: 46.8
+  - agent_id: tejo
+    mastery: 51.4
+  - agent_id: veto
+    mastery: 49.8
+  - agent_id: viper
+    mastery: 5.1
+  - agent_id: vyse
+    mastery: 1.7
+  - agent_id: waylay
+    mastery: 51.0
+  - agent_id: yoru
+    mastery: 50.2
+  map_pool:
+  - map_id: ascent
+    mastery: 84.3
+  - map_id: bind
+    mastery: 77.2
+  - map_id: haven
+    mastery: 83.8
+  - map_id: lotus
+    mastery: 78.0
+  - map_id: split
+    mastery: 73.6
+  salary: 5500
+  contract_weeks_left: 57
+  morale: 81.5
+  stamina: 90.1
+  form: 46.8
+  personality_tags:
+  - slow_starter
+  - streamer
+  potential: 76.4
+- id: team_nuturn_gaming_lakia
+  handle: Lakia
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 40.0
+  age: 21
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 75.5
+    aim_reactivity: 69.3
+    movement: 82.7
+    game_sense: 78.5
+    utility_usage: 93.1
+    positioning: 73.0
+    clutch_factor: 77.7
+    tilt_resistance: 76.5
+    composure: 92.1
+    comms_quality: 88.5
+  agent_pool:
+  - agent_id: sova
+    mastery: 94.0
+  - agent_id: breach
+    mastery: 85.7
+  - agent_id: fade
+    mastery: 69.6
+  - agent_id: gekko
+    mastery: 63.9
+  - agent_id: kayo
+    mastery: 66.3
+  - agent_id: skye
+    mastery: 75.2
+  - agent_id: tejo
+    mastery: 71.6
+  - agent_id: astra
+    mastery: 56.5
+  - agent_id: brimstone
+    mastery: 51.8
+  - agent_id: chamber
+    mastery: 57.7
+  - agent_id: clove
+    mastery: 50.4
+  - agent_id: cypher
+    mastery: 59.9
+  - agent_id: deadlock
+    mastery: 54.0
+  - agent_id: harbor
+    mastery: 56.4
+  - agent_id: iso
+    mastery: 60.0
+  - agent_id: jett
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 60.0
+  - agent_id: miks
+    mastery: 46.8
+  - agent_id: neon
+    mastery: 44.2
+  - agent_id: omen
+    mastery: 55.7
+  - agent_id: phoenix
+    mastery: 55.7
+  - agent_id: raze
+    mastery: 59.4
+  - agent_id: reyna
+    mastery: 60.0
+  - agent_id: sage
+    mastery: 60.0
+  - agent_id: veto
+    mastery: 53.1
+  - agent_id: viper
+    mastery: 60.0
+  - agent_id: vyse
+    mastery: 60.0
+  - agent_id: waylay
+    mastery: 55.1
+  - agent_id: yoru
+    mastery: 56.0
+  map_pool:
+  - map_id: ascent
+    mastery: 84.4
+  - map_id: bind
+    mastery: 92.6
+  - map_id: haven
+    mastery: 80.5
+  - map_id: lotus
+    mastery: 85.7
+  - map_id: split
+    mastery: 85.4
+  salary: 6100
+  contract_weeks_left: 63
+  morale: 60.0
+  stamina: 93.9
+  form: 46.8
+  personality_tags:
+  - clutch_gene
+  - grinder
+  potential: 87.2

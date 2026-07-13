@@ -1,0 +1,523 @@
+id: team_crazy_raccoon
+name: Crazy Raccoon
+tag: CR
+region: pacific
+tier: 1
+captain_id: team_crazy_raccoon_munchkin
+balance: 744000
+reputation: 74.0
+fan_count: 492840
+chemistry: 60.0
+players:
+- id: team_crazy_raccoon_munchkin
+  handle: Munchkin
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 23
+  role: controller
+  playstyle: igl
+  attributes:
+    aim_precision: 65.4
+    aim_reactivity: 59.5
+    movement: 68.7
+    game_sense: 83.6
+    utility_usage: 81.3
+    positioning: 75.7
+    clutch_factor: 73.1
+    tilt_resistance: 72.0
+    composure: 83.9
+    comms_quality: 81.2
+  agent_pool:
+  - agent_id: omen
+    mastery: 85.7
+  - agent_id: brimstone
+    mastery: 78.8
+  - agent_id: astra
+    mastery: 72.1
+  - agent_id: clove
+    mastery: 67.8
+  - agent_id: harbor
+    mastery: 59.0
+  - agent_id: miks
+    mastery: 60.9
+  - agent_id: viper
+    mastery: 62.4
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 55.8
+  - agent_id: cypher
+    mastery: 53.9
+  - agent_id: deadlock
+    mastery: 50.7
+  - agent_id: fade
+    mastery: 51.1
+  - agent_id: gekko
+    mastery: 55.6
+  - agent_id: iso
+    mastery: 49.9
+  - agent_id: jett
+    mastery: 51.1
+  - agent_id: kayo
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 51.9
+  - agent_id: neon
+    mastery: 51.7
+  - agent_id: phoenix
+    mastery: 51.4
+  - agent_id: raze
+    mastery: 56.8
+  - agent_id: reyna
+    mastery: 45.1
+  - agent_id: sage
+    mastery: 43.8
+  - agent_id: skye
+    mastery: 58.7
+  - agent_id: sova
+    mastery: 55.3
+  - agent_id: tejo
+    mastery: 54.6
+  - agent_id: veto
+    mastery: 49.7
+  - agent_id: vyse
+    mastery: 60.0
+  - agent_id: waylay
+    mastery: 54.3
+  - agent_id: yoru
+    mastery: 57.3
+  map_pool:
+  - map_id: ascent
+    mastery: 69.6
+  - map_id: bind
+    mastery: 78.3
+  - map_id: haven
+    mastery: 76.6
+  - map_id: lotus
+    mastery: 75.7
+  - map_id: split
+    mastery: 82.8
+  salary: 5700
+  contract_weeks_left: 60
+  morale: 64.5
+  stamina: 85.2
+  form: 54.3
+  personality_tags:
+  - fan_favorite
+  - grinder
+  potential: 84.4
+- id: team_crazy_raccoon_bazzi
+  handle: Bazzi
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 21
+  role: duelist
+  playstyle: entry
+  attributes:
+    aim_precision: 86.4
+    aim_reactivity: 92.7
+    movement: 82.2
+    game_sense: 70.8
+    utility_usage: 63.5
+    positioning: 74.0
+    clutch_factor: 75.9
+    tilt_resistance: 74.7
+    composure: 75.2
+    comms_quality: 74.9
+  agent_pool:
+  - agent_id: jett
+    mastery: 88.3
+  - agent_id: raze
+    mastery: 80.5
+  - agent_id: iso
+    mastery: 70.2
+  - agent_id: neon
+    mastery: 64.4
+  - agent_id: phoenix
+    mastery: 65.0
+  - agent_id: reyna
+    mastery: 59.4
+  - agent_id: waylay
+    mastery: 67.3
+  - agent_id: yoru
+    mastery: 63.7
+  - agent_id: astra
+    mastery: 49.8
+  - agent_id: breach
+    mastery: 60.0
+  - agent_id: brimstone
+    mastery: 60.0
+  - agent_id: chamber
+    mastery: 49.2
+  - agent_id: clove
+    mastery: 49.6
+  - agent_id: cypher
+    mastery: 51.3
+  - agent_id: deadlock
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 58.1
+  - agent_id: gekko
+    mastery: 42.6
+  - agent_id: harbor
+    mastery: 53.6
+  - agent_id: kayo
+    mastery: 54.8
+  - agent_id: killjoy
+    mastery: 4.3
+  - agent_id: miks
+    mastery: 56.1
+  - agent_id: omen
+    mastery: 6.1
+  - agent_id: sage
+    mastery: 57.0
+  - agent_id: skye
+    mastery: 56.3
+  - agent_id: sova
+    mastery: 51.9
+  - agent_id: tejo
+    mastery: 60.0
+  - agent_id: veto
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 7.0
+  - agent_id: vyse
+    mastery: 56.1
+  map_pool:
+  - map_id: ascent
+    mastery: 82.3
+  - map_id: bind
+    mastery: 81.7
+  - map_id: haven
+    mastery: 87.3
+  - map_id: lotus
+    mastery: 76.2
+  - map_id: split
+    mastery: 84.4
+  salary: 6000
+  contract_weeks_left: 45
+  morale: 65.1
+  stamina: 99.4
+  form: 55.0
+  personality_tags:
+  - independent
+  - slow_starter
+  potential: 82.2
+- id: team_crazy_raccoon_medusa
+  handle: Medusa
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 23
+  role: flex
+  playstyle: lurker
+  attributes:
+    aim_precision: 67.1
+    aim_reactivity: 69.8
+    movement: 69.8
+    game_sense: 81.5
+    utility_usage: 66.4
+    positioning: 79.0
+    clutch_factor: 75.3
+    tilt_resistance: 70.6
+    composure: 65.4
+    comms_quality: 64.0
+  agent_pool:
+  - agent_id: reyna
+    mastery: 81.6
+  - agent_id: omen
+    mastery: 80.1
+  - agent_id: astra
+    mastery: 45.8
+  - agent_id: breach
+    mastery: 51.5
+  - agent_id: brimstone
+    mastery: 52.6
+  - agent_id: chamber
+    mastery: 57.4
+  - agent_id: clove
+    mastery: 51.0
+  - agent_id: cypher
+    mastery: 47.8
+  - agent_id: deadlock
+    mastery: 45.9
+  - agent_id: fade
+    mastery: 52.1
+  - agent_id: gekko
+    mastery: 60.0
+  - agent_id: harbor
+    mastery: 51.8
+  - agent_id: iso
+    mastery: 56.4
+  - agent_id: jett
+    mastery: 41.3
+  - agent_id: kayo
+    mastery: 48.7
+  - agent_id: killjoy
+    mastery: 34.2
+  - agent_id: miks
+    mastery: 53.0
+  - agent_id: neon
+    mastery: 49.1
+  - agent_id: phoenix
+    mastery: 52.8
+  - agent_id: raze
+    mastery: 41.0
+  - agent_id: sage
+    mastery: 53.5
+  - agent_id: skye
+    mastery: 52.6
+  - agent_id: sova
+    mastery: 48.0
+  - agent_id: tejo
+    mastery: 4.2
+  - agent_id: veto
+    mastery: 52.0
+  - agent_id: viper
+    mastery: 3.1
+  - agent_id: vyse
+    mastery: 5.7
+  - agent_id: waylay
+    mastery: 50.0
+  - agent_id: yoru
+    mastery: 56.5
+  map_pool:
+  - map_id: ascent
+    mastery: 82.2
+  - map_id: bind
+    mastery: 76.9
+  - map_id: haven
+    mastery: 66.6
+  - map_id: lotus
+    mastery: 77.3
+  - map_id: split
+    mastery: 83.7
+  salary: 5400
+  contract_weeks_left: 70
+  morale: 84.6
+  stamina: 99.0
+  form: 45.1
+  personality_tags: []
+  potential: 75.2
+- id: team_crazy_raccoon_fisker
+  handle: Fisker
+  real_name: ''
+  region: pacific
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  - lang: en
+    level: 55.0
+  age: 23
+  role: initiator
+  playstyle: support
+  attributes:
+    aim_precision: 61.3
+    aim_reactivity: 62.1
+    movement: 66.8
+    game_sense: 73.6
+    utility_usage: 81.4
+    positioning: 66.8
+    clutch_factor: 68.6
+    tilt_resistance: 72.8
+    composure: 77.6
+    comms_quality: 75.7
+  agent_pool:
+  - agent_id: sova
+    mastery: 81.6
+  - agent_id: breach
+    mastery: 77.6
+  - agent_id: fade
+    mastery: 55.5
+  - agent_id: gekko
+    mastery: 64.4
+  - agent_id: kayo
+    mastery: 62.9
+  - agent_id: skye
+    mastery: 63.6
+  - agent_id: tejo
+    mastery: 65.7
+  - agent_id: astra
+    mastery: 44.4
+  - agent_id: brimstone
+    mastery: 50.7
+  - agent_id: chamber
+    mastery: 51.6
+  - agent_id: clove
+    mastery: 46.6
+  - agent_id: cypher
+    mastery: 54.1
+  - agent_id: deadlock
+    mastery: 39.7
+  - agent_id: harbor
+    mastery: 51.2
+  - agent_id: iso
+    mastery: 51.6
+  - agent_id: jett
+    mastery: 47.3
+  - agent_id: killjoy
+    mastery: 47.8
+  - agent_id: miks
+    mastery: 49.4
+  - agent_id: neon
+    mastery: 42.8
+  - agent_id: omen
+    mastery: 44.2
+  - agent_id: phoenix
+    mastery: 44.8
+  - agent_id: raze
+    mastery: 53.5
+  - agent_id: reyna
+    mastery: 50.0
+  - agent_id: sage
+    mastery: 53.8
+  - agent_id: veto
+    mastery: 48.4
+  - agent_id: viper
+    mastery: 54.2
+  - agent_id: vyse
+    mastery: 52.9
+  - agent_id: waylay
+    mastery: 44.8
+  - agent_id: yoru
+    mastery: 42.6
+  map_pool:
+  - map_id: ascent
+    mastery: 70.9
+  - map_id: bind
+    mastery: 87.6
+  - map_id: haven
+    mastery: 72.0
+  - map_id: lotus
+    mastery: 80.1
+  - map_id: split
+    mastery: 86.3
+  salary: 5300
+  contract_weeks_left: 68
+  morale: 65.5
+  stamina: 93.2
+  form: 58.6
+  personality_tags:
+  - grinder
+  - quiet
+  potential: 80.9
+- id: team_crazy_raccoon_makiba
+  handle: makiba
+  real_name: ''
+  region: pacific
+  country: JP
+  languages:
+  - lang: ja
+    level: 100.0
+  - lang: en
+    level: 50.0
+  age: 24
+  role: sentinel
+  playstyle: anchor
+  attributes:
+    aim_precision: 66.6
+    aim_reactivity: 63.7
+    movement: 61.1
+    game_sense: 68.4
+    utility_usage: 74.2
+    positioning: 77.2
+    clutch_factor: 70.4
+    tilt_resistance: 74.5
+    composure: 78.9
+    comms_quality: 71.1
+  agent_pool:
+  - agent_id: cypher
+    mastery: 80.4
+  - agent_id: killjoy
+    mastery: 83.1
+  - agent_id: chamber
+    mastery: 57.4
+  - agent_id: deadlock
+    mastery: 55.4
+  - agent_id: sage
+    mastery: 57.8
+  - agent_id: veto
+    mastery: 54.1
+  - agent_id: vyse
+    mastery: 57.4
+  - agent_id: astra
+    mastery: 54.9
+  - agent_id: breach
+    mastery: 49.8
+  - agent_id: brimstone
+    mastery: 0.7
+  - agent_id: clove
+    mastery: 54.1
+  - agent_id: fade
+    mastery: 51.2
+  - agent_id: gekko
+    mastery: 46.4
+  - agent_id: harbor
+    mastery: 36.2
+  - agent_id: iso
+    mastery: 41.7
+  - agent_id: jett
+    mastery: 43.5
+  - agent_id: kayo
+    mastery: 50.6
+  - agent_id: miks
+    mastery: 38.1
+  - agent_id: neon
+    mastery: 35.0
+  - agent_id: omen
+    mastery: 47.0
+  - agent_id: phoenix
+    mastery: 39.8
+  - agent_id: raze
+    mastery: 44.9
+  - agent_id: reyna
+    mastery: 50.4
+  - agent_id: skye
+    mastery: 47.4
+  - agent_id: sova
+    mastery: 52.5
+  - agent_id: tejo
+    mastery: 49.3
+  - agent_id: viper
+    mastery: 49.7
+  - agent_id: waylay
+    mastery: 56.5
+  - agent_id: yoru
+    mastery: 46.5
+  map_pool:
+  - map_id: ascent
+    mastery: 78.7
+  - map_id: bind
+    mastery: 76.5
+  - map_id: haven
+    mastery: 80.9
+  - map_id: lotus
+    mastery: 71.2
+  - map_id: split
+    mastery: 77.5
+  salary: 5100
+  contract_weeks_left: 35
+  morale: 81.0
+  stamina: 82.6
+  form: 49.7
+  personality_tags:
+  - fan_favorite
+  potential: 72.7

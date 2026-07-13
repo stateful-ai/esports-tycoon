@@ -198,6 +198,7 @@ def test_loader_rejects_bad_packs(tmp_path: Path):
 
 
 VCT = Path(__file__).resolve().parents[1] / "data" / "rosters" / "vct-2026"
+VCT_2021 = Path(__file__).resolve().parents[1] / "data" / "rosters" / "vct-2021"
 
 
 @pytest.mark.skipif(
@@ -241,3 +242,27 @@ def test_vct_2026_campaign_builds_deterministically():
     # One full playable week out of the box.
     r = advance_week(gs1, GD)
     assert r.fixtures, "week 1 must schedule matches"
+
+
+@pytest.mark.skipif(
+    not (VCT_2021 / "pack.yaml").is_file(), reason="vct-2021 pack not built"
+)
+def test_vct_2021_pack_is_selectable_and_era_seeded():
+    pack = load_roster_pack("vct-2021")
+    assert pack.meta.start_year == 2021
+    assert pack.meta.world.teams_per_region == 10
+    assert {str(r) for r in pack.meta.world.league_regions} == {
+        "americas", "emea", "pacific"
+    }
+    assert len(pack.teams) == 48
+    assert sum(1 for team in pack.teams.values() if team.tier == 1) == 30
+    assert sum(1 for team in pack.teams.values() if team.tier == 2) == 18
+    assert all(len(team.player_ids) == 5 for team in pack.teams.values())
+    assert any(meta.id == "vct-2021" for meta in list_roster_packs())
+
+    team = "team_sentinels"
+    gs1 = new_campaign(GD, seed=2021, user_team_id=team, pack=pack)
+    gs2 = new_campaign(GD, seed=2021, user_team_id=team, pack=pack)
+    assert gs1.calendar_year == 2021
+    assert gs1.model_dump_json() == gs2.model_dump_json()
+    assert gs1.players["team_sentinels_tenz"].handle == "TenZ"
