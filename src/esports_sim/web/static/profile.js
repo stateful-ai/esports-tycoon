@@ -290,93 +290,6 @@ const FloatingBadge = ({ text }) => {
   `;
 };
 
-const PlayerChat = ({ p }) => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [badge, setBadge] = useState(null);
-  const logsRef = useRef(null);
-
-  useEffect(() => {
-    if (logsRef.current) {
-      logsRef.current.scrollTop = logsRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  const handleSend = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
-    setLoading(true);
-
-    const userMessage = { sender: 'You', text: text, isUser: true };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-
-    try {
-      const res = await api("/api/talk/llm_chat", { player_id: p.id, text: text });
-      if (res && res.ok) {
-        const replyMessage = { sender: p.handle, text: res.response, isUser: false };
-        setMessages((prev) => [...prev, replyMessage]);
-
-        if (res.effects) {
-          const effectLines = [];
-          for (const [attr, val] of Object.entries(res.effects)) {
-            if (val !== 0) {
-              const sign = val > 0 ? "+" : "";
-              effectLines.push(`${attr} ${sign}${val}`);
-            }
-          }
-          if (effectLines.length) {
-            setBadge({ text: effectLines.join(", "), id: Date.now() });
-          }
-        }
-        toast("Chat conversation resolved!");
-      }
-    } catch (err) {
-      setMessages((prev) => [...prev, { sender: 'Error', text: "Error communicating with player.", isError: true }]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") handleSend();
-  };
-
-  return html`
-    <div class="pf-section">
-      <h3 class="pf-section-title">Talk 1:1</h3>
-      <div class="pf-chat-container" style=${{ border: "1px solid var(--es-color-border, #1f2a3d)", padding: "10px", borderRadius: "4px", backgroundColor: "var(--es-color-bg-alt, #0b0e14)", marginBottom: "15px", position: "relative" }}>
-        
-        <div ref=${logsRef} class="pf-chat-logs" style=${{ height: "120px", overflowY: "auto", borderBottom: "1px solid var(--es-color-border, #1f2a3d)", marginBottom: "10px", paddingBottom: "5px", fontSize: "0.9em" }}>
-          ${messages.length === 0 ? html`
-            <div class="muted">Start a conversation with ${p.handle}...</div>
-          ` : messages.map((m, i) => html`
-            <div key=${i} class=${`chat-bubble ${m.isUser ? 'user-bubble' : m.isError ? 'error-bubble' : 'reply-bubble'}`} style=${{ marginBottom: "6px", color: m.isUser ? "var(--es-color-accent-warm, #ffb000)" : m.isError ? "var(--es-color-danger, #ff4655)" : "var(--es-color-accent, #00f0ff)" }}>
-              <strong>${m.sender}:</strong> ${m.text}
-            </div>
-          `)}
-        </div>
-
-        <div style=${{ display: "flex", gap: "8px" }}>
-          <input 
-            type="text" 
-            class="btn-sm" 
-            placeholder=${`Type a message to ${p.handle}...`}
-            value=${input}
-            disabled=${loading}
-            onInput=${(e) => setInput(e.target.value)}
-            onKeyDown=${handleKeyPress}
-            style=${{ flex: 1, backgroundColor: "var(--es-color-bg, #05070a)", border: "1px solid var(--es-color-border, #1f2a3d)", color: "var(--es-color-text, #e2e8f0)", padding: "4px 8px", borderRadius: "4px" }}
-          />
-          <button class="btn btn-primary btn-sm" disabled=${loading || !input.trim()} onClick=${handleSend}>Send</button>
-        </div>
-
-        ${badge && html`<${FloatingBadge} key=${badge.id} text=${badge.text} />`}
-      </div>
-    </div>
-  `;
-};
 
 const AdminSlot = ({ kind, id, onDone }) => {
   const [loading, setLoading] = useState(true);
@@ -1131,10 +1044,7 @@ const PlayerProfile = ({ data }) => {
               `;
             })}
           </div>
-        </div>
       `}
-
-      ${p.is_user_team && p.can_talk && html`<${PlayerChat} p=${p} />`}
 
       ${p.team_id && html`<${TeammateCompare} playerId=${p.id} teamId=${p.team_id} attributes=${attrs} />`}
     </div>

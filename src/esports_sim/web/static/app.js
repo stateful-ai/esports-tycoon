@@ -6495,29 +6495,116 @@ const FinancesTab = () => {
 
 async function openTalk(p) {
   const data = await api(`/api/talk/${p.id}`);
-  if (!data.available) {
-    toast(data.reason);
-    return;
-  }
+  
   $("#talk-title").textContent = `1:1 — ${p.handle}`;
-  $("#talk-text").textContent = data.topic.text;
-  const box = $("#talk-options");
-  box.innerHTML = "";
-  for (const o of data.options) {
-    const b = el("button", "btn", o.label);
-    b.onclick = async () => {
-      const r = await api("/api/actions/talk", { player_id: p.id, option_id: o.id });
-      closeTalk();
-      const fx = Object.entries(r.effects)
-        .filter(([, v]) => v !== 0)
-        .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
-        .join(", ");
-      toast(`${r.message}${fx ? " (" + fx + ")" : ""}`);
-      renderApp();
-    };
-    box.appendChild(b);
+  
+  const textEl = $("#talk-text");
+  const logBox = $("#talk-chat-logs");
+  const inputEl = $("#talk-chat-input");
+  const sendBtn = $("#talk-chat-send");
+  
+  logBox.innerHTML = "";
+  inputEl.value = "";
+  inputEl.disabled = false;
+  sendBtn.disabled = false;
+
+  if (!data.available) {
+    if (data.history) {
+      textEl.textContent = "You already held this week's 1:1 with this player.";
+      
+      const managerBubble = el("div", "contract-bubble manager", "You initiated 1:1 conversation.");
+      logBox.appendChild(managerBubble);
+      
+      const reply = data.history.message || "";
+      const playerBubble = el("div", "contract-bubble player");
+      playerBubble.innerHTML = `<span class="microlabel">${esc(p.handle)}</span>${esc(reply)}`;
+      logBox.appendChild(playerBubble);
+      
+      if (data.history.effects) {
+        const fx = Object.entries(data.history.effects)
+          .filter(([, v]) => v !== 0)
+          .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
+          .join(", ");
+        if (fx) {
+          const sysMsg = el("div", "muted", `System: Resolve effects (${fx})`);
+          sysMsg.style.cssText = "font-size:11px;text-align:center;margin:4px 0;";
+          logBox.appendChild(sysMsg);
+        }
+      }
+      
+      inputEl.disabled = true;
+      sendBtn.disabled = true;
+      inputEl.placeholder = "Talk session resolved for this week.";
+    } else {
+      toast(data.reason);
+      return;
+    }
+  } else {
+    textEl.textContent = `Topic: ${data.topic.text}`;
+    inputEl.placeholder = `Type a message to ${p.handle}...`;
   }
+
+  const handleSend = async () => {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    
+    const mBubble = el("div", "contract-bubble manager", esc(text));
+    logBox.appendChild(mBubble);
+    logBox.scrollTop = logBox.scrollHeight;
+    
+    const typingBubble = el("div", "contract-bubble player muted", "Typing...");
+    logBox.appendChild(typingBubble);
+    logBox.scrollTop = logBox.scrollHeight;
+    
+    try {
+      const res = await api("/api/talk/chat", { player_id: p.id, text: text });
+      typingBubble.remove();
+      
+      if (res && res.ok) {
+        const reply = res.message || "";
+        const pBubble = el("div", "contract-bubble player");
+        pBubble.innerHTML = `<span class="microlabel">${esc(p.handle)}</span>${esc(reply)}`;
+        logBox.appendChild(pBubble);
+        
+        const fx = Object.entries(res.effects)
+          .filter(([, v]) => v !== 0)
+          .map(([k, v]) => `${k} ${v > 0 ? "+" : ""}${v}`)
+          .join(", ");
+        if (fx) {
+          const sysMsg = el("div", "muted", `System: Resolve effects (${fx})`);
+          sysMsg.style.cssText = "font-size:11px;text-align:center;margin:4px 0;";
+          logBox.appendChild(sysMsg);
+        }
+        
+        inputEl.value = "";
+        inputEl.placeholder = "Talk session resolved for this week.";
+        toast("1:1 conversation resolved!");
+        renderApp();
+      } else {
+        toast("Failed to get response.");
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+      }
+    } catch (err) {
+      typingBubble.remove();
+      toast("Error communicating with player.");
+      inputEl.disabled = false;
+      sendBtn.disabled = false;
+    }
+    
+    logBox.scrollTop = logBox.scrollHeight;
+  };
+  
+  sendBtn.onclick = handleSend;
+  inputEl.onkeydown = (e) => {
+    if (e.key === "Enter") handleSend();
+  };
+
   $("#talk").classList.remove("hidden");
+  setTimeout(() => { logBox.scrollTop = logBox.scrollHeight; }, 50);
 }
 
 function closeTalk() {
