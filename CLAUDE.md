@@ -152,8 +152,12 @@ Published at github.com/stateful-ai/esports-tycoon.
   (`saves/social_llm_<code>.json`) keyed by post id — so campaign
   determinism is untouched. Providers via .env: `OPENROUTER_API_KEY`
   (OpenRouter) or `SOCIAL_LLM_BASE_URL` (any local OpenAI-compatible
-  server, e.g. Ollama); `SOCIAL_LLM=off` disables. The model REPHRASES
-  facts we hand it, never invents events (grounded like narrative).
+  server, e.g. Ollama); `SOCIAL_LLM=off` disables. When `serve.ps1` or
+  the taskbar launcher starts vLLM, it automatically points the social
+  writer, 1:1 replies, and campaign flavor-event copy at the local
+  OpenAI-compatible endpoint unless those provider settings were explicitly
+  configured. The model REPHRASES facts we hand it, never invents events
+  (grounded like narrative).
   Screens: app.js (tabs incl. dashboard hub, tactics, market with a
   Players|Staff split, stats hub, social feed), viewer.js
   (painted-backdrop isometric replay), inbox.js, profile.js
