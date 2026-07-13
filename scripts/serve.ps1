@@ -61,13 +61,101 @@ param(
 
     # Internal: used by the self-elevation path to add ONLY the firewall rule.
     [switch]$AddFirewallRuleOnly,
-    [string]$StatusFile
+    [string]$StatusFile,
+    [switch]$NoVllm
 )
 
 # ------------------------------------------------------------------ helpers
 function Write-Line {
     param([string]$Message = '')
     Write-Host $Message
+}
+
+function Get-EnvVariable {
+    param (
+        [string]$Name,
+        [string]$Default
+    )
+    $envPath = Join-Path $repoRoot '.env'
+    if (Test-Path -LiteralPath $envPath) {
+        $lines = Get-Content -LiteralPath $envPath -ErrorAction SilentlyContinue
+        if ($null -ne $lines) {
+            foreach ($line in $lines) {
+                $line = $line.Trim()
+                if ($line.StartsWith('#') -or $line -notlike '*=*') { continue }
+                $parts = $line.Split('=', 2)
+                $k = $parts[0].Trim()
+                $v = $parts[1].Trim().Trim("'").Trim('"')
+                if ($k -eq $Name) {
+                    return $v
+                }
+            }
+        }
+    }
+    $envVal = [System.Environment]::GetEnvironmentVariable($Name)
+    if ($null -ne $envVal -and $envVal -ne "") {
+        return $envVal
+    }
+    return $Default
+}
+
+function Start-VllmServer {
+    param (
+        [string]$PythonExe,
+        [string]$RepoRoot,
+        [switch]$NoVllm
+    )
+    
+    $startVllm = Get-EnvVariable -Name 'START_VLLM' -Default 'true'
+    if ($NoVllm -or $startVllm.ToLower() -eq 'false' -or $startVllm -eq '0') {
+        Write-Line '[vllm] Startup skipped (disabled by parameter or config).'
+        return
+    }
+
+    $vllmModel = Get-EnvVariable -Name 'VLLM_MODEL' -Default 'Qwen/Qwen2.5-7B-Instruct'
+    $vllmPort = Get-EnvVariable -Name 'VLLM_PORT' -Default '8000'
+
+    $portInUse = $false
+    try {
+        $connection = [System.Net.Sockets.TcpClient]::new()
+        $ar = $connection.BeginConnect('127.0.0.1', [int]$vllmPort, $null, $null)
+        $wait = $ar.AsyncWaitHandle.WaitOne(200)
+        if ($connection.Connected) {
+            $portInUse = $true
+            $connection.Close()
+        }
+    } catch {
+        # ignore
+    }
+
+    if ($portInUse) {
+        Write-Line "[vllm] Port $vllmPort is already in use. Assuming vLLM server is already running."
+        return
+    }
+
+    $hasVllm = $false
+    try {
+        $result = Start-Process -FilePath $PythonExe -ArgumentList @('-c', 'import vllm') -NoNewWindow -Wait -PassThru -ErrorAction SilentlyContinue
+        if ($result.ExitCode -eq 0) {
+            $hasVllm = $true
+        }
+    } catch {
+        # ignore
+    }
+
+    if (-not $hasVllm) {
+        Write-Line '[vllm] vLLM module not found in Python environment. Skipping startup.'
+        return
+    }
+
+    Write-Line "[vllm] Starting vLLM server with model '$vllmModel' on port $vllmPort..."
+    $vllmArgs = @(
+        '-m', 'vllm.entrypoints.openai.api_server',
+        '--model', $vllmModel,
+        '--port', $vllmPort
+    )
+    Start-Process -FilePath $PythonExe -ArgumentList $vllmArgs -WorkingDirectory $RepoRoot -WindowStyle Minimized
+    Write-Line '[vllm] vLLM server started in background.'
 }
 
 function Get-RuleName {
@@ -388,6 +476,7 @@ if ($OpenFirewall) {
 }
 
 # -------------------------------------------------------------- launch
+Start-VllmServer -PythonExe $py.Exe -RepoRoot $repoRoot -NoVllm $NoVllm
 Write-Line ' Starting server... press Ctrl+C to stop.'
 Write-Line $bar
 
