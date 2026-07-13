@@ -5,7 +5,7 @@ straight from GameState / MatchStats fields. Templates vary phrasing, never
 facts. Variant choice is seeded from stable string parts (salvaged
 templated-content pattern), so the same week renders the same copy.
 
-Tone (docs/salvage/tone_and_cast_lock.md): dry, understated, no hype.
+Voice (docs/game-voice.md): grounded desk language; restrained colour, no hype.
 """
 
 from __future__ import annotations
@@ -277,13 +277,13 @@ def press_reaction(gs: GameState, team_id: str | None = None) -> str | None:
     pos = order.index(team_id) + 1 if team_id in order else None
     name = gs.teams[team_id].name
     if won and run >= 3:
-        return f"The press have {name} among the form teams on a {run}-game tear."
+        return f"{name} are one of the form teams on a {run}-match run."
     if won and pos is not None and pos <= 3:
-        return f"Pundits like {name}'s title credentials from {_ordinal(pos)}."
+        return f"{name} have put themselves in the title picture from {_ordinal(pos)}."
     if not won and run >= 3:
-        return f"Questions are being asked of {name} after {run} straight defeats."
+        return f"{run} straight losses have put {name}'s approach under review."
     if not won and pos is not None and pos > len(order) - 3:
-        return f"The columns are circling {name} down in {_ordinal(pos)}."
+        return f"{name} are down in {_ordinal(pos)} and running out of easy weeks."
     return None
 
 
@@ -435,8 +435,8 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
             rng,
             [
                 "{score} over {opp} on {maps}.{star}",
-                "Business as usual: {opp} dealt with, {score}.{star}",
-                "A win against {opp} ({score}).{star}",
+                "{opp} fall {score}; {maps} decided it.{star}",
+                "{score} win over {opp}.{star}",
             ],
             score=score, opp=opp, maps=maps_txt, star=star_txt,
         )
@@ -445,8 +445,8 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
             rng,
             [
                 "{score} loss to {opp} on {maps}.{star}",
-                "{opp} had answers. {score}.{star}",
-                "Dropped the series to {opp}, {score}.{star}",
+                "{opp} take the series {score}.{star}",
+                "{score} against {opp}. They found the better answers.{star}",
             ],
             score=score, opp=opp, maps=maps_txt, star=star_txt,
         )

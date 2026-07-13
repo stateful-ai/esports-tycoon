@@ -5,7 +5,7 @@ first); the manager picks one of three approaches; the outcome depends on
 the player's personality tags with a deterministic roll from the campaign
 seed. Small numbers on purpose: a talk is a nudge, not a lever you crank.
 
-Tone follows docs/salvage/tone_and_cast_lock.md: dry, no melodrama.
+Voice follows docs/game-voice.md: professional room language, no melodrama.
 """
 
 from __future__ import annotations

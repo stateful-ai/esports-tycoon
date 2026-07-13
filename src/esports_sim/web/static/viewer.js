@@ -926,8 +926,8 @@ function drawFrame() {
   document.getElementById("v-round").textContent =
     `Round ${round.num} · ATK ${atkName}`;
   document.getElementById("v-banner").textContent = ended
-    ? `${V.names[round.end.winner_id]} win — ${round.end.reason.replaceAll("_", " ")}`
-    : planted ? "SPIKE PLANTED" : "";
+    ? `${V.names[round.end.winner_id]} take the round — ${round.end.reason.replaceAll("_", " ")}`
+    : planted ? "Spike planted" : "";
 
   // Clock: 100s round, 45s post-plant.
   let secs;
@@ -1168,13 +1168,13 @@ function showPepTalkModal() {
   const panel = document.createElement("div");
   panel.className = "panel";
   panel.innerHTML = `
-    <h2>Halftime Pep Talk</h2>
-    <p class="muted">Halftime score: ${userScore} - ${oppScore} (relative: ${relativeScore >= 0 ? "+" : ""}${relativeScore})</p>
-    <p>Choose your strategy to address the team:</p>
+    <h2>Halftime message</h2>
+    <p class="muted">Halftime score: ${userScore} - ${oppScore} (${relativeScore >= 0 ? "+" : ""}${relativeScore})</p>
+    <p>Set the message for the second half:</p>
     <div style="display:flex; flex-direction:column; gap:8px; margin:16px 0;">
-      <button class="btn" data-type="reassure"><b>Reassure:</b> Focus on stabilizing morale.</button>
-      <button class="btn" data-type="fire_up"><b>Fire Up:</b> Boost confidence and aggression.</button>
-      <button class="btn" data-type="focus"><b>Focus:</b> Normalize confidence back to baseline.</button>
+      <button class="btn" data-type="reassure"><b>Settle the group:</b> Protect morale and reset.</button>
+      <button class="btn" data-type="fire_up"><b>Raise the urgency:</b> Push confidence and aggression.</button>
+      <button class="btn" data-type="focus"><b>Refocus:</b> Bring confidence back to baseline.</button>
     </div>
   `;
 
@@ -1187,9 +1187,9 @@ function showPepTalkModal() {
           talk_type: talkType,
           relative_score: relativeScore
         });
-        toast(`Applied halftime pep talk: ${talkType}`);
+        toast("Halftime message delivered.");
       } catch (err) {
-        toast("Could not apply pep talk.");
+        toast("Halftime message could not be delivered.");
       }
       modal.remove();
       V.playing = true;
@@ -1226,11 +1226,11 @@ function buildShouts() {
   elWidget.className = "card";
   elWidget.style.cssText = "margin-top:10px; padding:10px;";
   elWidget.innerHTML = `
-    <h4>Touchline Shouts</h4>
+    <h4>In-round calls</h4>
     <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
-      <button class="btn btn-sm" id="shout-focus" title="Demand Focus on a specific player">Focus (Demand Focus)</button>
-      <button class="btn btn-sm" id="shout-encourage" title="Encourage the team (Requires loss streak >= 3)">Encourage (streak: ${lossStreak})</button>
-      <button class="btn btn-sm" id="shout-effort" title="Demand Effort (Boosts aggression but drains stamina)">Demand Effort</button>
+      <button class="btn btn-sm" id="shout-focus" title="Ask one player to refocus">Refocus player</button>
+      <button class="btn btn-sm" id="shout-encourage" title="Steady the group after three consecutive lost rounds">Steady the group (${lossStreak} lost)</button>
+      <button class="btn btn-sm" id="shout-effort" title="Raise aggression at a stamina cost">Raise the pressure</button>
     </div>
   `;
 
@@ -1243,12 +1243,12 @@ function buildShouts() {
     focusBtn.disabled = true;
     encourageBtn.disabled = true;
     effortBtn.disabled = true;
-    focusBtn.textContent += " (Cooldown)";
+    focusBtn.textContent += " (Used this round)";
   }
 
   if (lossStreak < 3) {
     encourageBtn.disabled = true;
-    encourageBtn.title = "Requires team to have lost 3+ consecutive rounds.";
+    encourageBtn.title = "Available after three consecutive lost rounds.";
   }
 
   const sendShout = async (type, targetPid = null) => {
@@ -1260,10 +1260,10 @@ function buildShouts() {
         loss_streak: lossStreak
       });
       V.shoutAppliedThisRound = V.roundIdx;
-      toast(`Shout '${type}' applied!`);
+      toast("In-round call delivered.");
       buildShouts();
     } catch (err) {
-      toast("Could not apply touchline shout.");
+      toast("In-round call could not be delivered.");
     }
   };
 
@@ -1276,7 +1276,7 @@ function buildShouts() {
     popup.style.zIndex = "100000";
     popup.innerHTML = `
       <div class="panel">
-        <h3>Select Player to Focus</h3>
+        <h3>Select a player to refocus</h3>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin:14px 0;">${pNames}</div>
         <button class="btn" id="close-popup">Cancel</button>
       </div>

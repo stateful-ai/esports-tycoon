@@ -192,7 +192,7 @@ function officeOpenFocusPicker(stage) {
       e.stopPropagation();
       await api("/api/actions/training", { focus: o });
       App.state.training_focus = o;
-      toast(`Training focus set: ${o}`);
+      toast(`Training focus updated: ${o}`);
       officeCloseFocusPicker();
     };
     pop.appendChild(b);
@@ -399,8 +399,8 @@ async function office(v) {
   } catch (e) { /* pre-campaign */ }
 
   const card = el("div", "card office-card");
-  card.innerHTML = `<h2>Headquarters
-    <span class="muted" style="text-transform:none;letter-spacing:0">— click a room to jump to its desk</span></h2>
+  card.innerHTML = `<h2>Club headquarters
+    <span class="muted" style="text-transform:none;letter-spacing:0">— select a room to open its workspace</span></h2>
     <div class="office-head">
       <img class="logo" src="${s.user_team.logo}" alt="">
       <b>${s.user_team.name}</b>
@@ -572,7 +572,7 @@ async function office(v) {
     const label = osvg("text", { x: lx, y: ly + 1.2, class: "office-label lot" }, g);
     label.textContent = `+ ${a.label}`;
     const sub = osvg("text", { x: lx, y: ly + 3.8, class: "office-sub" }, g);
-    sub.textContent = "build in Finances";
+    sub.textContent = "Upgrade through Finances";
     g.onclick = (e) => { e.stopPropagation(); officeGoTab("finances"); };
   }
 

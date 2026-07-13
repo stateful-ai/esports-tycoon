@@ -159,7 +159,7 @@ def test_press_reaction_hot_streak_names_team():
     ]
     gs = _gs(fixtures, week=4)
     txt = press_reaction(gs, "nxs")
-    assert txt and "Nexus" in txt and "tear" in txt
+    assert txt and "Nexus" in txt and "run" in txt
 
 
 def test_press_reaction_cold_streak_names_team():
@@ -170,7 +170,7 @@ def test_press_reaction_cold_streak_names_team():
     ]
     gs = _gs(fixtures, week=4)
     txt = press_reaction(gs, "nxs")
-    assert txt and "Nexus" in txt and "defeat" in txt
+    assert txt and "Nexus" in txt and "loss" in txt
 
 
 def test_press_reaction_too_early_is_none():

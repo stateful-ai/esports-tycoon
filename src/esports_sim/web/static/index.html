@@ -20,19 +20,19 @@
     <div id="context" class="context"></div>
     <div class="spacer"></div>
     <div id="balance" class="balance mono"></div>
-    <span id="mp-chip" class="pill hidden" title="shared game — click to copy the join code"></span>
-    <button id="save-btn" class="btn hidden" title="save the world to disk now">Save</button>
-    <select id="autosave-sel" class="hidden" title="autosave: write the save after every Nth week (off = only the Save button writes)">
-      <option value="0">autosave off</option>
-      <option value="1">autosave 1w</option>
-      <option value="2">autosave 2w</option>
-      <option value="3">autosave 3w</option>
-      <option value="5">autosave 5w</option>
-      <option value="8">autosave 8w</option>
+    <span id="mp-chip" class="pill hidden" title="Shared campaign — copy the join code"></span>
+    <button id="save-btn" class="btn hidden" title="Save your campaign">Save</button>
+    <select id="autosave-sel" class="hidden" title="Choose how often the campaign saves automatically. When off, save it yourself.">
+      <option value="0">Autosave off</option>
+      <option value="1">Every week</option>
+      <option value="2">Every 2 weeks</option>
+      <option value="3">Every 3 weeks</option>
+      <option value="5">Every 5 weeks</option>
+      <option value="8">Every 8 weeks</option>
     </select>
-    <button id="worlds-btn" class="btn hidden" title="leave to the lobby — this world stays saved and resumable">Worlds</button>
+  <button id="worlds-btn" class="btn hidden" title="Return to your campaign list. This career will be waiting there.">Campaigns</button>
     <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
-    <button id="admin-toggle" class="btn" title="Admin: reveal data-correction controls on player/team profiles (edits write back to the roster-pack sheet on disk)" aria-pressed="false">🛠️</button>
+  <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
     <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
     <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
   </header>
@@ -63,7 +63,7 @@
     <div class="newsline"><b>Market</b> — sign free agents (5 start, bench up to 7), scout the field, and hire backroom staff (coach, analyst, physio) from a shared pool.</div>
     <div class="newsline"><b>Finances</b> — sponsorship offers expire after one week; pick the shape that fits your season.</div>
     <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
-    <p class="muted" style="margin-top:10px">Same campaign seed + same decisions = the same season, every time.</p>
+    <p class="muted" style="margin-top:10px">The same setup and decisions will always produce the same season.</p>
     <button class="btn btn-primary" onclick="document.getElementById('help').classList.add('hidden')">Got it</button>
   </div>
 </div>
@@ -79,9 +79,9 @@
     </div>
 
     <div class="row" style="gap:8px;flex-wrap:wrap">
-      <button id="mode-solo" class="btn btn-primary">Solo game</button>
-      <button id="mode-shared" class="btn">Create shared game</button>
-      <button id="mode-join" class="btn">Join a game</button>
+      <button id="mode-solo" class="btn btn-primary">New campaign</button>
+      <button id="mode-shared" class="btn">Create shared campaign</button>
+      <button id="mode-join" class="btn">Join campaign</button>
       <a class="btn" href="/roster-studio.html" style="text-decoration:none">Roster Studio</a>
     </div>
 
@@ -146,7 +146,7 @@
     <div class="viewer-head">
       <div id="v-title"></div>
       <div id="v-score" class="mono"></div>
-      <button class="btn active" id="v-cones" title="toggle sight cones (where players are looking)" aria-pressed="true">👁 Vision</button>
+      <button class="btn active" id="v-cones" title="Show or hide player sight lines" aria-pressed="true">Vision</button>
       <button class="btn" id="v-view" title="toggle isometric / top-down">2D</button>
       <button class="btn" onclick="closeViewer()">✕ Close</button>
     </div>

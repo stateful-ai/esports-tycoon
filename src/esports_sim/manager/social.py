@@ -31,40 +31,40 @@ MILESTONES = [
 MILESTONE_POST_FLOOR = 100_000
 
 _FLAVOR_POSTS = [
-    "Lock in.",
-    "New week. Back to work.",
-    "Scrims felt different today.",
+    "New week. Scrims start Monday.",
+    "Back in the server tomorrow.",
+    "Scrims had a moment. The VOD is classified.",
     "We're not done yet.",
-    "practice server down AGAIN. someone's getting blamed and it won't be me",
-    "ranked is a warcrime tonight",
-    "chat i can't say what happened in scrims but WOW",
-    "petition to make Mondays illegal during split",
+    "practice server down again. somebody owns a restart.",
+    "ranked is not a recovery plan tonight.",
+    "can't say much about scrims. can say we have film.",
+    "Monday during split should be optional.",
 ]
 
 # Milestone post variants (hash-picked per player+landmark — no rng draw).
 _MILESTONE_POSTS = [
     "{label}. Thank you all, honestly.",
-    "{label}?? who let this happen. love you all",
-    "{label} of you now. no refunds.",
-    "hit {label}. mom i made it",
+    "{label}? That does not feel real. Thank you.",
+    "{label} of you now. Still processing it.",
+    "Hit {label}. Appreciate every one of you.",
 ]
 
 # Salty-loser lines after a decided series (hash-picked, star of the losing
 # side). Grounded: only fires on a real played fixture.
 _SALT_POSTS = [
     "gg. don't @ me.",
-    "we win that series 9 times out of 10.",
-    "deleting my VOD review notes. starting over.",
+    "That series stays in the VOD room.",
+    "deleting the first draft of the VOD notes. starting over.",
     "not going to say what I want to say. gn.",
-    "refund my anti-strat sessions.",
+    "Anti-strat did not travel today.",
 ]
 
 # Meme-account reactions to an upset (winner's tag, loser's tag).
 _UPSET_POSTS = [
-    "{w} just ended {l}'s whole career. timeline in SHAMBLES.",
-    "{l} fans logging off in real time. {w} what was that??",
-    "no because how did {w} just do that to {l}.",
-    "{w} beating {l} was NOT on my bingo card.",
+    "{w} just took down {l}. The timeline is working overtime.",
+    "{l} fans are closing the app in real time. {w}, what was that?",
+    "{w} had the better series over {l}. Nobody saw it coming.",
+    "{w} over {l} was not on this week's card.",
 ]
 
 
@@ -322,7 +322,7 @@ def weekly_tick(
             _likes(rng, bp.followers * 2),
         )
 
-    # Human orgs post their result (dry, team-account voice).
+    # Human orgs post their result in a controlled team-account voice.
     for tid in sorted(gs.human_team_ids):
         f = next((x for x in report.fixtures if tid in (x.team_a, x.team_b)), None)
         if f is None or not f.played:
@@ -332,9 +332,12 @@ def weekly_tick(
         us, them = (a, b) if f.team_a == tid else (b, a)
         team = gs.teams[tid]
         text = (
-            f"GGs @{gs.teams[opp].tag} — {us}-{them}."
+            f"Series secured: {us}-{them} over @{gs.teams[opp].tag}."
             if f.winner_id == tid
-            else f"Not our week. {us}-{them} vs {gs.teams[opp].tag}. Back to the lab."
+            else (
+                f"Not enough this week: {us}-{them} vs @{gs.teams[opp].tag}. "
+                "VOD first thing Monday."
+            )
         )
         _post(
             gs, season, week, "result", "team", tid, team.tag, text,

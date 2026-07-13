@@ -38,11 +38,11 @@ _TEMPLATES = (
             "match. The question is about {team}'s expectations this split."
         ),
         "choices": (
-            ("team_first", "Keep it team-first", (
+            ("team_first", "Keep the answer team-first", (
                 ("The answer lands as composed and the room settles.", {"player_morale": 2, "team_sentiment": 1}),
                 ("The safe answer disappears into the media cycle.", {"player_confidence": -1, "team_sentiment": -1}),
             )),
-            ("swing_big", "Set a bold target", (
+            ("swing_big", "Set a public target", (
                 ("The clip travels well and fans buy into the ambition.", {"player_confidence": 2, "player_followers": 1200, "team_sentiment": 2}),
                 ("The headline becomes bulletin-board material for a rival.", {"player_confidence": -2, "team_sentiment": -2}),
             )),
@@ -134,11 +134,11 @@ _TEMPLATES = (
                 ("The response reads confident without feeding the story.", {"player_confidence": 1, "team_sentiment": 1}),
                 ("The clipped answer sounds flatter than intended.", {"player_confidence": -1}),
             )),
-            ("fire_back", "Fire back", (
+            ("fire_back", "Answer sharply", (
                 ("The comeback has teeth and the fanbase rallies around it.", {"player_confidence": 2, "player_followers": 1000, "team_sentiment": 2}),
                 ("The exchange keeps growing and becomes an unwanted distraction.", {"player_form": -2, "team_sentiment": -2}),
             )),
-            ("no_comment", "Give it no oxygen", (
+            ("no_comment", "Decline to engage", (
                 ("The story expires quickly and focus stays on the server.", {"player_form": 1, "player_stamina": 1}),
                 ("Some supporters wish the team had shown more edge.", {"team_sentiment": -1}),
             )),

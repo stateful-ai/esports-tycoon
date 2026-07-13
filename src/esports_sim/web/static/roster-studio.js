@@ -82,11 +82,11 @@ function paintSaveState() {
   const chip = $("#save-state");
   chip.className = "status-chip";
   if (!Studio.doc) {
-    chip.textContent = "No pack loaded";
+    chip.textContent = "No pack open";
     return;
   }
   if (Studio.dirty) {
-    chip.textContent = "Draft changes";
+    chip.textContent = "Unsaved changes";
     chip.classList.add("dirty");
   } else {
     chip.textContent = Studio.installedId ? "Installed" : "Draft";
@@ -123,14 +123,14 @@ function renderPackList() {
       <b>${esc(pack.name)}</b>
       <span>${esc(pack.regions.join(" / "))} - ${pack.teams_per_region} per region</span>
     </button>
-  `).join("") || '<p class="muted">No installed packs yet.</p>';
+  `).join("") || '<p class="muted">No installed packs.</p>';
   for (const button of list.querySelectorAll("[data-pack]")) {
     button.onclick = () => loadPack(button.dataset.pack);
   }
 }
 
 async function loadPack(packId) {
-  if (Studio.dirty && !confirm("Open another pack and replace the current local draft?")) return;
+  if (Studio.dirty && !confirm("Open another pack? Your current local draft will be replaced.")) return;
   try {
     const response = await request(`/api/roster-studio/packs/${encodeURIComponent(packId)}`);
     openDocument(response.document, packId, false);
@@ -236,7 +236,7 @@ function renderTeam() {
   const team = Studio.doc.teams[Studio.selectedIndex];
   if (!team) {
     panel.innerHTML = `
-      <div class="empty-state"><h2>No team selected</h2><p>Add a team to begin.</p>
+      <div class="empty-state"><h2>No team selected</h2><p>Add a team to begin the roster.</p>
       <button id="detail-add-team" class="btn primary">Add team</button></div>`;
     $("#detail-add-team").onclick = addTeam;
     return;
@@ -244,7 +244,7 @@ function renderTeam() {
   const regions = Studio.doc.world.league_regions || [];
   panel.innerHTML = `
     <div class="detail-head">
-      <div><span class="eyebrow">Team ${Studio.selectedIndex + 1}</span><h2>${esc(team.name || "Untitled team")}</h2></div>
+      <div><span class="eyebrow">Team ${Studio.selectedIndex + 1}</span><h2>${esc(team.name || "Unnamed team")}</h2></div>
       <div class="spacer"></div>
       <div class="detail-actions"><button id="duplicate-team" class="btn">Duplicate</button><button id="delete-team" class="btn danger">Delete</button></div>
     </div>
@@ -274,7 +274,7 @@ function renderTeam() {
   bind("#team-prestige", "prestige", true);
   $("#team-partial").onchange = (e) => { team.partial = e.target.value === "true"; setDirty(); };
   $("#delete-team").onclick = () => {
-    if (!confirm(`Delete ${team.name || "this team"}?`)) return;
+    if (!confirm(`Remove ${team.name || "this team"} from this pack?`)) return;
     Studio.doc.teams.splice(Studio.selectedIndex, 1);
     Studio.selectedIndex = Math.max(0, Studio.selectedIndex - 1);
     Studio.selectedPlayer = 0;
@@ -298,7 +298,7 @@ function renderPlayerStrip(players, canAdd) {
       <b>${esc(player.handle || "New player")}${player.igl ? " (IGL)" : ""}</b>
       <span>${esc(player.role || "flex")} - Q${esc(player.quality ?? 60)}</span>
     </button>
-  `).join("") + (canAdd && players.length < 5 ? '<button id="add-player" class="player-card"><b>+ Add player</b><span>Fill this roster</span></button>' : "");
+  `).join("") + (canAdd && players.length < 5 ? '<button id="add-player" class="player-card"><b>+ Add player</b><span>Complete the starting five</span></button>' : "");
   for (const button of strip.querySelectorAll("[data-player-index]")) {
     button.onclick = () => {
       Studio.selectedPlayer = Number(button.dataset.playerIndex);
@@ -314,7 +314,7 @@ function renderPlayerStrip(players, canAdd) {
   }
   const editor = $("#player-editor");
   if (editor) {
-    editor.innerHTML = players.length ? playerForm(players[Studio.selectedPlayer], false) : '<p class="muted">Add a player to edit their profile.</p>';
+    editor.innerHTML = players.length ? playerForm(players[Studio.selectedPlayer], false) : '<p class="muted">Add a player to begin the player record.</p>';
     if (players.length) bindPlayerForm(players, Studio.selectedPlayer, false);
   }
 }
@@ -337,7 +337,7 @@ function renderFreeAgents() {
     <button class="player-card${Studio.selectedPlayer === index ? " active" : ""}" data-player-index="${index}">
       <b>${esc(player.handle || "New player")}</b><span>${esc(player.region || "")} - Q${esc(player.quality ?? 60)}</span>
     </button>
-  `).join("") || '<p class="muted">No free agents. Add notable unsigned players if you want them in the opening market.</p>';
+  `).join("") || '<p class="muted">No free agents listed. Add unsigned players for the opening market.</p>';
   for (const button of strip.querySelectorAll("[data-player-index]")) {
     button.onclick = () => { Studio.selectedPlayer = Number(button.dataset.playerIndex); renderFreeAgents(); };
   }
@@ -453,17 +453,17 @@ function renderValidation() {
   const messages = [];
   for (const error of result?.errors || []) messages.push(`<div class="validation-item"><b>${esc(error.path)}</b>${esc(error.message)}</div>`);
   for (const warning of result?.warnings || []) messages.push(`<div class="validation-item warn">${esc(warning)}</div>`);
-  if (!messages.length) messages.push('<div class="validation-item" style="border-color:var(--es-color-fill-success-strong);background:var(--es-color-fill-success)">Ready to compile and install.</div>');
+  if (!messages.length) messages.push('<div class="validation-item" style="border-color:var(--es-color-fill-success-strong);background:var(--es-color-fill-success)">Roster check passed. Ready to install.</div>');
   $("#validation").innerHTML = messages.join("");
   $("#save-btn").disabled = !result?.valid;
 }
 
 async function save() {
   await validate();
-  if (!Studio.validation?.valid) return toast("Fix the build-check errors before installing.");
+  if (!Studio.validation?.valid) return toast("Resolve the roster-check issues before installing.");
   const button = $("#save-btn");
   button.disabled = true;
-  button.textContent = "Compiling...";
+  button.textContent = "Installing...";
   try {
     const result = await request(`/api/roster-studio/packs/${encodeURIComponent(Studio.doc.id)}`, {
       method: "PUT", body: Studio.doc,
@@ -475,7 +475,7 @@ async function save() {
     await refreshPacks();
     renderAll();
     renderValidation();
-    toast("Roster pack installed. It is ready in the Play lobby.");
+    toast("Roster pack installed. Select it from the Play lobby.");
   } catch (error) {
     toast(error.message);
   } finally {
@@ -486,10 +486,7 @@ async function save() {
 
 function makeAiBrief() {
   return `${Studio.bundle.agent_instructions}\n\n` +
-    `Useful endpoints while the game server is running:\n` +
-    `- GET /api/roster-studio/schema\n- POST /api/roster-studio/validate\n` +
-    `- PUT /api/roster-studio/packs/{id}\n\n` +
-    `Current RosterPackDocument (return the complete edited document):\n` +
+    `Current roster pack (return the complete edited pack):\n` +
     `${JSON.stringify(Studio.doc || Studio.bundle.example, null, 2)}\n`;
 }
 
@@ -501,7 +498,7 @@ async function importFile(file) {
     openDocument(response.document, null, true);
     Studio.validation = response.validation;
     renderValidation();
-    toast(response.validation.valid ? "File loaded and ready." : "File loaded with issues to fix.");
+    toast(response.validation.valid ? "File loaded. Roster check passed." : "File loaded with roster-check issues.");
   } catch (error) {
     toast(error.message);
   }
@@ -521,7 +518,7 @@ async function boot() {
 }
 
 $("#new-btn").onclick = $("#empty-new").onclick = () => {
-  if (Studio.dirty && !confirm("Replace the current local draft?")) return;
+  if (Studio.dirty && !confirm("Create a new pack? Your current local draft will be replaced.")) return;
   openDocument(Studio.bundle.example, null, true);
 };
 $("#add-team").onclick = addTeam;
@@ -547,7 +544,7 @@ $("#ai-brief").onclick = () => {
 };
 $("#copy-ai").onclick = async () => {
   await navigator.clipboard.writeText($("#ai-text").value);
-  toast("AI brief copied.");
+  toast("Roster brief copied.");
 };
 window.addEventListener("beforeunload", (event) => {
   if (!Studio.dirty) return;
