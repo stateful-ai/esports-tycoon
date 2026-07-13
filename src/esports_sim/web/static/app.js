@@ -4391,12 +4391,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             onChange=${setFilters} 
           />
           
-          <p class="muted">
-            Squad ${data.roster_count}/${data.roster_max ?? 5}.
-            ${data.window && !data.window.open 
-              ? data.window.detail 
-              : "Sign to fill a slot, or swap to add + drop in one move."}
-          </p>
+          <div style=${{ height: '12px' }}></div>
           
           <div class="card-scroll table-scroll" style=${{ '--scroll-max': '62vh' }}>
             <${FreeAgentTable} 
@@ -4682,7 +4677,7 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
           </div>
 
           <div class="staff-tables">
-            <div class="table-scroll" style=${{ marginTop: '16px', '--scroll-max': '62vh' }}>
+            <div class="card-scroll table-scroll" style=${{ marginTop: '16px', '--scroll-max': '62vh' }}>
               ${!hasFA ? html`
                 <p class="muted" style=${{ padding: '16px 0' }}>No staff candidates match your active filters.</p>
               ` : html`
