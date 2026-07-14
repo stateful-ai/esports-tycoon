@@ -297,14 +297,13 @@ players:
   - map_id: split
     mastery: 70.3
   salary: 5300
-  contract_weeks_left: 54
-  morale: 69.6
-  stamina: 87.5
-  form: 53.3
+  contract_weeks_left: 66
+  morale: 72.3
+  stamina: 87.7
+  form: 50.6
   personality_tags:
-  - analytical
-  - team_player
-  potential: 87.2
+  - rookie
+  potential: 82.4
 - id: team_northeption_seoldam
   handle: Seoldam
   real_name: ''
@@ -396,14 +395,13 @@ players:
   - map_id: split
     mastery: 84.2
   salary: 5400
-  contract_weeks_left: 63
-  morale: 64.9
-  stamina: 88.9
-  form: 56.9
+  contract_weeks_left: 54
+  morale: 76.5
+  stamina: 84.0
+  form: 51.6
   personality_tags:
-  - flashy
-  - team_player
-  potential: 81.6
+  - rookie
+  potential: 84.1
 - id: team_northeption_kr1stal
   handle: Kr1stal
   real_name: ''

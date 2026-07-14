@@ -34,19 +34,19 @@ players:
     composure: 83.4
     comms_quality: 93.2
   agent_pool:
-  - agent_id: omen
+  - agent_id: astra
     mastery: 88.5
   - agent_id: viper
     mastery: 79.8
-  - agent_id: astra
-    mastery: 69.4
   - agent_id: brimstone
-    mastery: 70.7
+    mastery: 69.4
   - agent_id: clove
-    mastery: 73.5
+    mastery: 70.7
   - agent_id: harbor
-    mastery: 73.1
+    mastery: 73.5
   - agent_id: miks
+    mastery: 73.1
+  - agent_id: omen
     mastery: 69.0
   - agent_id: breach
     mastery: 59.3
@@ -139,7 +139,7 @@ players:
   agent_pool:
   - agent_id: jett
     mastery: 92.2
-  - agent_id: raze
+  - agent_id: reyna
     mastery: 90.8
   - agent_id: iso
     mastery: 69.1
@@ -147,7 +147,7 @@ players:
     mastery: 77.2
   - agent_id: phoenix
     mastery: 77.4
-  - agent_id: reyna
+  - agent_id: raze
     mastery: 73.4
   - agent_id: waylay
     mastery: 73.8
@@ -207,15 +207,14 @@ players:
   - map_id: split
     mastery: 94.0
   salary: 6800
-  contract_weeks_left: 37
-  morale: 61.5
-  stamina: 99.2
-  form: 50.2
+  contract_weeks_left: 70
+  morale: 63.8
+  stamina: 81.2
+  form: 59.4
   personality_tags:
-  - fan_favorite
-  - flashy
+  - pure_aimer
   - rookie
-  potential: 93.6
+  potential: 91.8
 - id: team_x10_esports_foxz
   handle: foxz
   real_name: ''
@@ -343,47 +342,47 @@ players:
     composure: 76.2
     comms_quality: 68.0
   agent_pool:
-  - agent_id: sage
+  - agent_id: breach
     mastery: 89.6
-  - agent_id: omen
+  - agent_id: kayo
     mastery: 84.0
   - agent_id: astra
     mastery: 57.3
-  - agent_id: breach
-    mastery: 60.0
   - agent_id: brimstone
-    mastery: 50.7
+    mastery: 60.0
   - agent_id: chamber
-    mastery: 59.7
+    mastery: 50.7
   - agent_id: clove
-    mastery: 55.2
-  - agent_id: cypher
-    mastery: 56.8
-  - agent_id: deadlock
     mastery: 59.7
+  - agent_id: cypher
+    mastery: 55.2
+  - agent_id: deadlock
+    mastery: 56.8
   - agent_id: fade
-    mastery: 57.7
+    mastery: 59.7
   - agent_id: gekko
-    mastery: 57.1
+    mastery: 57.7
   - agent_id: harbor
-    mastery: 49.8
+    mastery: 57.1
   - agent_id: iso
-    mastery: 42.2
+    mastery: 49.8
   - agent_id: jett
-    mastery: 51.7
-  - agent_id: kayo
-    mastery: 52.0
+    mastery: 42.2
   - agent_id: killjoy
-    mastery: 48.3
+    mastery: 51.7
   - agent_id: miks
-    mastery: 57.6
+    mastery: 52.0
   - agent_id: neon
-    mastery: 59.5
+    mastery: 48.3
+  - agent_id: omen
+    mastery: 57.6
   - agent_id: phoenix
-    mastery: 54.1
+    mastery: 59.5
   - agent_id: raze
-    mastery: 57.0
+    mastery: 54.1
   - agent_id: reyna
+    mastery: 57.0
+  - agent_id: sage
     mastery: 46.3
   - agent_id: skye
     mastery: 49.6
