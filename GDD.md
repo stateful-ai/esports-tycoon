@@ -1,5 +1,7 @@
 Game Design Document --- ESports Simulator
-Working title: ESports Simulator (repo: esports-tycoon) Genre: Esports management sim / tycoon, tick-level tactical shooter sim underneath Reference point: Esports Manager 2026 (Steam #2749950), Valorant (setting/flavor), Football Manager (management-depth ambition) Status: Playable, multi-season, browser + terminal. Actively in development. Last updated: 2026-07-09
+Working title: ESports Simulator (repo: esports-tycoon) Genre: Esports management sim / tycoon, tick-level tactical shooter sim underneath Reference point: Esports Manager 2026 (Steam #2749950), Valorant (setting/flavor), Football Manager (management-depth ambition) Status: Playable, multi-season, browser + terminal. Actively in development. Last updated: 2026-07-14
+
+This document holds design intent and the reasoning behind it. For the shipped inventory --- the ordered weekly tick, every campaign system, and the module that owns each --- see docs/game-systems.md, which is kept in sync with campaign.advance_week rather than with the design narrative.
 
 1. Vision
 You run a professional Valorant-flavored esports organization. You don't aim, peek, or spray --- your players do that, and how well they do it is a function of who you signed, how you trained them, how tired and happy they are, what utility they popped, and where they were standing when the fight started. Your job is everything around the ten minutes of a round: scouting and signing talent, building a training program, managing morale and burnout, calling in a coach, negotiating contracts, chasing sponsors, picking (and banning) maps, and reading the story the season tells through its results.
@@ -102,6 +104,30 @@ Two factors decide how well a system is actually executed: roster fit (does the 
 The AI is not frozen: each rival team derives a season identity from its roster and its concrete coach's preferred system, then adapts it in-season --- winners entrench their identity, strugglers drift toward what is working, adaptable coaches move more freely, and pistol-round form nudges eco appetite --- so coaching changes visibly alter how clubs play.
 
 The load-bearing design rule: every numeric dial's effect is an exact no-op at the neutral value 50 (and site focus is neutral at balanced). A default team plays exactly like the pre-tactics engine, so the pre-match strategy identity can reach round micro without destabilising the balance or golden gates (which run neutral tactics). The live coach does not steer ticks: their only in-map input is a timeout, whose advice is consumed by the next team-policy plan. This is what lets tactics stay deep in small, low-risk increments; it's documented as ADR-007.
+
+3.12 Squad, people, and the locker room
+The Talk module (§3.7) is the oldest of a family of people systems that now surround it, all of them bounded nudges rather than levers:
+
+Culture --- a captain and a leadership council, team principles, and bounded relationship arcs. Culture sessions are a manager action; AI orgs manage their own.
+Mentorship --- a manager-set mentor/protege pair raises the protege's ceiling on the mentor's best skills (a great aimer lifts a young player's aim ceiling), gated by the mentor's hidden mentor_skill. It moves the forecast, not the current ability.
+Promises --- commitments made to a player (minutes, a signing, a role) that settle against what actually happened. Breaking one costs trust durably.
+Transfer requests --- a benched player good enough to start elsewhere will ask out. Bench treatment is keyed off who actually dressed, so a per-map rotation counts as minutes.
+Pep talks and shouts --- a pre-match team talk and in-series shouts, alongside the weekly 1:1.
+Role fit --- assignment comfort and IGL experience accrue with reps, and accrue after the week's fixtures, so a last-minute switch is never fully comfortable on match day.
+Academy --- tier-one parents sit over the real tier-two Challengers affiliates: intake, promotion and send-down, and minutes-based growth that reads the affiliate's actual results.
+Player development is a forecast, not a cap: hidden deterministic career curves vary arrival time, volatility, peak duration, and decline, and a strong environment (mentorship, morale, confidence, cohesion) adds real headroom. Current ability can exceed the original potential forecast --- that records an outlier career rather than quietly rewriting the old forecast.
+
+3.13 Organizational operations
+Facilities --- six upgrade tracks (Training Centre, VOD Review Room, Media Department, Recovery Suite, Strategy Lab, Team House), each a menu-based card showing its staff operator, current benefit, next-level gain, build cost, and upkeep. Wellbeing benefits only pull players toward a neutral 50; they never inflate an already-healthy squad.
+Preparation --- scrim and bootcamp plans that resolve before kickoff into grounded reports and organizational knowledge, paid for in physical load.
+Series management --- tournament sixes and conditional between-map responses inside a BO3.
+Delegation --- human staff policies over the existing renewal, scouting, and training capacity. This is the deliberate pressure valve on a weekly action surface that has grown past forty distinct decisions: the manager chooses how much of it they personally own.
+Media events --- rare contextual choices with persistent trust, sponsor, and sentiment consequences.
+Social --- follower counts and a deterministic weekly feed; roster reach feeds sponsor marketability, and a per-team community sentiment chases weekly results and feeds back into confidence, morale, and sponsor pressure.
+Badges --- grounded milestone and feat badges rolled from real box scores and development events, for players and staff alike. Evidence of accomplishment, not another power stack.
+
+3.14 The weekly attention problem (known, open)
+The systems above are each individually correct in restraining their effect size --- a talk is a nudge, wellbeing pulls only toward neutral, mentorship moves a ceiling slowly. In aggregate they create a real design tension: the manager is offered roughly forty decisions a week and can perceive the consequence of only a few of them, because every effect is bounded and the feedback arrives a week later underneath match variance and day form. The depth is not the problem; the feedback bandwidth is. Three defences are in place or planned --- delegation (choose your surface), the match review card (why you won or lost), and the inbox digest --- but the inbox currently reports events rather than ranking the week's decisions by leverage, and the match review explains the team's result in engine terms rather than attributing it to the manager's decisions. Closing that attribution loop is the highest-value open design work on the management layer.
 
 4. The match simulation
 This is the part of the game the manager mostly watches, but it's where almost all of the engineering lives, because it's the thing that has to convincingly justify every result the management layer reports.
