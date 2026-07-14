@@ -23,7 +23,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from esports_sim.schemas import Player
+from esports_sim.schemas import Player, DevelopmentCurveModel
 from esports_sim.manager import role_fit
 
 # ---------------------------------------------------------------------------
@@ -82,6 +82,18 @@ def development_curve(p: Player) -> DevelopmentCurve:
     the system without a schema migration and the same player keeps the same
     career shape through transfers and save/load cycles.
     """
+    if p.development_curve is not None:
+        dc = p.development_curve
+        return DevelopmentCurve(
+            archetype=dc.archetype,
+            growth_peak_age=dc.growth_peak_age,
+            growth_width=dc.growth_width,
+            peak_years=dc.peak_years,
+            decline_age=dc.decline_age,
+            realization=dc.realization,
+            volatility=dc.volatility,
+        )
+
     shape = _unit(p.id, "devcurve", "shape")
     timing = _unit(p.id, "devcurve", "timing")
     length = _unit(p.id, "devcurve", "length")
@@ -114,6 +126,118 @@ def development_curve(p: Player) -> DevelopmentCurve:
     realization = 0.62 + 0.38 * math.sqrt(realization_roll)
     volatility = 0.78 + 0.48 * _unit(p.id, "devcurve", "volatility")
     return DevelopmentCurve(
+        archetype=archetype,
+        growth_peak_age=int(peak),
+        growth_width=round(width, 2),
+        peak_years=int(peak_years),
+        decline_age=decline,
+        realization=round(realization, 3),
+        volatility=round(volatility, 3),
+    )
+
+
+def initialize_player_seed_variance(p: Player, campaign_seed: int) -> None:
+    """Initialize deterministic potential variance and hidden curve based on campaign seed."""
+    base_pa = p.potential if p.potential > 0.0 else potential_of(p)
+
+    if p.age <= 21 or "prodigy" in p.personality_tags or "rookie" in p.personality_tags:
+        max_swing = 6.0
+    elif p.age >= 26 or "veteran" in p.personality_tags:
+        max_swing = 0.0
+    else:
+        max_swing = 6.0 * (26.0 - p.age) / (26.0 - 21.0)
+
+    swing = 0.0
+    if max_swing > 0.0:
+        pot_seed = _h(campaign_seed, p.id, "potential_swing")
+        rng_pot = np.random.default_rng(pot_seed)
+        swing = rng_pot.uniform(-max_swing, max_swing)
+
+    p.potential = float(max(overall(p), np.round(np.clip(base_pa + swing, overall(p), 99.0), 1)))
+
+    is_veteran = p.age >= 26 or "veteran" in p.personality_tags
+    if is_veteran:
+        player_curve_seed = _h(p.id, "curve")
+    else:
+        player_curve_seed = _h(campaign_seed, p.id, "curve")
+
+    p.dev_seed = player_curve_seed
+
+    rng_curve = np.random.default_rng(player_curve_seed)
+    shape = rng_curve.uniform(0.0, 1.0)
+    timing = rng_curve.uniform(0.0, 1.0)
+    length = rng_curve.uniform(0.0, 1.0)
+    decline_roll = rng_curve.uniform(0.0, 1.0)
+    realization_roll = rng_curve.uniform(0.0, 1.0)
+    volatility_roll = rng_curve.uniform(0.0, 1.0)
+
+    if shape < 0.22:
+        archetype, peak, width = "flash", 18 + round(2 * timing), 1.5 + timing
+        peak_years = 1 + round(2 * length)
+    elif shape < 0.48:
+        archetype, peak, width = "early", 20 + round(2 * timing), 2.2 + timing
+        peak_years = 2 + round(2 * length)
+    elif shape < 0.78:
+        archetype, peak, width = "steady", 22 + round(2 * timing), 3.0 + 1.2 * timing
+        peak_years = 4 + round(2 * length)
+    else:
+        archetype, peak, width = "late", 24 + round(2 * timing), 3.8 + 1.2 * timing
+        peak_years = 3 + round(3 * length)
+
+    tagged_turn = trait_value(p, "decline_age", 0)
+    if "prodigy" in p.personality_tags:
+        archetype, peak, peak_years = "flash", min(peak, 20), min(peak_years, 2)
+    elif "late_bloomer" in p.personality_tags:
+        archetype, peak, peak_years = "late", max(peak, 24), max(peak_years, 4)
+    decline = int(tagged_turn) if tagged_turn else max(24, peak + 4 + peak_years)
+
+    realization = 0.62 + 0.38 * math.sqrt(realization_roll)
+    volatility = 0.78 + 0.48 * volatility_roll
+
+    p.development_curve = DevelopmentCurveModel(
+        archetype=archetype,
+        growth_peak_age=int(peak),
+        growth_width=round(width, 2),
+        peak_years=int(peak_years),
+        decline_age=decline,
+        realization=round(realization, 3),
+        volatility=round(volatility, 3),
+    )
+
+
+def assign_development_curve(p: Player, rng: np.random.Generator) -> None:
+    """Generate and assign the development curve using the passed rng."""
+    shape = float(rng.uniform(0.0, 1.0))
+    timing = float(rng.uniform(0.0, 1.0))
+    length = float(rng.uniform(0.0, 1.0))
+    decline_roll = float(rng.uniform(0.0, 1.0))
+    realization_roll = float(rng.uniform(0.0, 1.0))
+    volatility_roll = float(rng.uniform(0.0, 1.0))
+
+    if shape < 0.22:
+        archetype, peak, width = "flash", 18 + round(2 * timing), 1.5 + timing
+        peak_years = 1 + round(2 * length)
+    elif shape < 0.48:
+        archetype, peak, width = "early", 20 + round(2 * timing), 2.2 + timing
+        peak_years = 2 + round(2 * length)
+    elif shape < 0.78:
+        archetype, peak, width = "steady", 22 + round(2 * timing), 3.0 + 1.2 * timing
+        peak_years = 4 + round(2 * length)
+    else:
+        archetype, peak, width = "late", 24 + round(2 * timing), 3.8 + 1.2 * timing
+        peak_years = 3 + round(3 * length)
+
+    tagged_turn = trait_value(p, "decline_age", 0)
+    if "prodigy" in p.personality_tags:
+        archetype, peak, peak_years = "flash", min(peak, 20), min(peak_years, 2)
+    elif "late_bloomer" in p.personality_tags:
+        archetype, peak, peak_years = "late", max(peak, 24), max(peak_years, 4)
+    decline = int(tagged_turn) if tagged_turn else max(24, peak + 4 + peak_years)
+
+    realization = 0.62 + 0.38 * math.sqrt(realization_roll)
+    volatility = 0.78 + 0.48 * volatility_roll
+
+    p.development_curve = DevelopmentCurveModel(
         archetype=archetype,
         growth_peak_age=int(peak),
         growth_width=round(width, 2),

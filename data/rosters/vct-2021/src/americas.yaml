@@ -10,24 +10,24 @@ teams:
       - {handle: SicK, age: 23, role: flex, playstyle: lurker, igl: false, quality: 78, agents: [phoenix, sage], country: US, languages: [{lang: en, level: 100}]}
       - {handle: zombs, age: 23, role: controller, playstyle: anchor, igl: false, quality: 74, agents: [omen, viper], country: CA, languages: [{lang: en, level: 100}]}
       - {handle: dapr, age: 24, role: sentinel, playstyle: anchor, igl: false, quality: 75, agents: [cypher, killjoy], country: US, languages: [{lang: en, level: 100}]}
-      - {handle: TenZ, age: 20, role: duelist, playstyle: entry, igl: false, quality: 84, agents: [jett, reyna], country: CA, languages: [{lang: en, level: 100}]}
+      - {handle: TenZ, age: 20, role: duelist, playstyle: entry, igl: false, quality: 84, agents: [jett, reyna], country: CA, languages: [{lang: en, level: 100}], potential: 94.0, tags: [grinder, slow_starter, prodigy]}
   - name: 100 Thieves
     tag: 100T
     prestige: 86
     players:
       - {handle: nitr0, age: 26, role: controller, playstyle: igl, igl: true, quality: 75, agents: [omen, brimstone], country: US, languages: [{lang: en, level: 100}]}
-      - {handle: Asuna, age: 18, role: duelist, playstyle: entry, igl: false, quality: 80, agents: [raze, reyna], country: US, languages: [{lang: en, level: 100}]}
-      - {handle: Hiko, age: 31, role: initiator, playstyle: support, igl: false, quality: 72, agents: [sova, breach], country: US, languages: [{lang: en, level: 100}]}
+      - {handle: Asuna, age: 18, role: duelist, playstyle: entry, igl: false, quality: 80, agents: [raze, reyna], country: US, languages: [{lang: en, level: 100}], potential: 92.0, tags: [perfectionist, rookie, slow_starter]}
+      - {handle: Hiko, age: 31, role: initiator, playstyle: support, igl: false, quality: 72, agents: [sova, breach], country: US, languages: [{lang: en, level: 100}], potential: 77.0, tags: [analytical, quiet, veteran]}
       - {handle: Ethan, age: 21, role: initiator, playstyle: support, igl: false, quality: 77, agents: [sova, skye], country: US, languages: [{lang: en, level: 100}]}
       - {handle: b0i, age: 24, role: sentinel, playstyle: anchor, igl: false, quality: 69, agents: [cypher, killjoy], country: US, languages: [{lang: en, level: 100}]}
   - name: Team Envy
     tag: NV
-    prestige: 81
+    prestige: 84
     players:
-      - {handle: FNS, age: 29, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, brimstone], country: CA, languages: [{lang: en, level: 100}]}
+      - {handle: FNS, age: 29, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, brimstone], country: CA, languages: [{lang: en, level: 100}], potential: 77.0, tags: [team_player, veteran]}
       - {handle: crashies, age: 24, role: initiator, playstyle: support, igl: false, quality: 79, agents: [sova, breach], country: US, languages: [{lang: en, level: 100}]}
       - {handle: Victor, age: 25, role: duelist, playstyle: entry, igl: false, quality: 78, agents: [raze, phoenix], country: US, languages: [{lang: en, level: 100}]}
-      - {handle: yay, age: 23, role: duelist, playstyle: awper, igl: false, quality: 80, agents: [jett, sova], country: US, languages: [{lang: en, level: 100}]}
+      - {handle: yay, age: 23, role: duelist, playstyle: awper, igl: false, quality: 83, agents: [jett, sova], country: US, languages: [{lang: en, level: 100}], potential: 95.0, tags: [perfectionist, clutch_gene]}
       - {handle: Marved, age: 21, role: controller, playstyle: lurker, igl: false, quality: 76, agents: [omen, viper], country: CA, languages: [{lang: en, level: 100}]}
   - name: Version1
     tag: V1
@@ -70,13 +70,13 @@ teams:
     prestige: 74
     players:
       - {handle: dephh, age: 29, role: controller, playstyle: igl, igl: true, quality: 71, agents: [omen, viper]}
-      - {handle: zekken, age: 17, role: duelist, playstyle: entry, igl: false, quality: 75, agents: [jett, raze]}
+      - {handle: zekken, age: 17, role: duelist, playstyle: entry, igl: false, quality: 75, agents: [jett, raze], potential: 95.0, tags: [prodigy, rookie]}
       - {handle: BcJ, age: 21, role: initiator, playstyle: support, igl: false, quality: 74, agents: [sova, skye]}
       - {handle: AYRIN, age: 24, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [sage, omen]}
       - {handle: PureR, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
   - name: KRU Esports
     tag: KRU
-    prestige: 79
+    prestige: 83
     players:
       - {handle: Klaus, age: 25, role: controller, playstyle: igl, igl: true, quality: 74, agents: [omen, brimstone]}
       - {handle: keznit, age: 20, role: duelist, playstyle: entry, igl: false, quality: 80, agents: [jett, raze]}

@@ -200,13 +200,12 @@ players:
   - map_id: split
     mastery: 77.9
   salary: 6000
-  contract_weeks_left: 68
-  morale: 62.5
-  stamina: 94.5
-  form: 54.0
+  contract_weeks_left: 58
+  morale: 79.2
+  stamina: 82.0
+  form: 55.9
   personality_tags:
-  - flashy
-  - perfectionist
+  - prodigy
   - rookie
   potential: 95.0
 - id: team_xset_bcj

@@ -187,9 +187,13 @@ def expand_player(
         for mid in sorted(gd.maps)
     ]
 
-    tags = {str(t) for t in rng.choice(_TAG_POOL, size=2, replace=False)}
-    tags.discard("veteran")
-    tags.discard("rookie")
+    if "personality_tags" in spec or "tags" in spec:
+        spec_tags = spec.get("personality_tags") or spec.get("tags") or []
+        tags = {str(t) for t in spec_tags}
+    else:
+        tags = {str(t) for t in rng.choice(_TAG_POOL, size=2, replace=False)}
+        tags.discard("veteran")
+        tags.discard("rookie")
     if age >= 28:
         tags.add("veteran")
     if age <= 18:
@@ -224,12 +228,14 @@ def expand_player(
         "form": round(float(rng.uniform(45, 60)), 1),
         "personality_tags": sorted(tags),
     }
-    # Hidden ceiling via the same curve world-gen uses (age-aware).
-    from esports_sim.schemas import Player
-
-    p = Player(**player)
-    development.assign_potential(p, rng)
-    player["potential"] = p.potential
+    if "potential" in spec:
+        player["potential"] = float(spec["potential"])
+    else:
+        # Hidden ceiling via the same curve world-gen uses (age-aware).
+        from esports_sim.schemas import Player
+        p = Player(**player)
+        development.assign_potential(p, rng)
+        player["potential"] = p.potential
     return player
 
 

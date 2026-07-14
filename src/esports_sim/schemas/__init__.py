@@ -6,7 +6,7 @@ from esports_sim.schemas.agent import Agent, Ability, AbilityEffect, AbilityType
 from esports_sim.schemas.weapon import Weapon, WeaponClass
 from esports_sim.schemas.map import Callout, Gimmick, GimmickType, Map, SightLine
 from esports_sim.schemas.player import (
-    Player, AgentMastery, FutureProspect, LanguageSkill, MapMastery,
+    Player, AgentMastery, FutureProspect, LanguageSkill, MapMastery, DevelopmentCurveModel,
 )
 from esports_sim.schemas.team import Team, TeamLineup, TeamTactics, HalftimeTalk, TouchlineShout, ShoutTrigger
 from esports_sim.schemas.match import MatchState, RoundState, PlayerRoundState, RoundPhase
@@ -66,6 +66,7 @@ __all__ = [
     "AgentMastery",
     "LanguageSkill",
     "MapMastery",
+    "DevelopmentCurveModel",
     "Team",
     "TeamLineup",
     "TeamTactics",

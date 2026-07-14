@@ -4,152 +4,675 @@ teams:
     tag: FNC
     prestige: 88
     players:
-      - {handle: Boaster, age: 25, role: controller, playstyle: igl, igl: true, quality: 76, agents: [omen, viper], country: GB, languages: [{lang: en, level: 100}]}
-      - {handle: Derke, age: 18, role: duelist, playstyle: entry, igl: false, quality: 84, agents: [jett, raze], country: FI, languages: [{lang: fi, level: 100}, {lang: en, level: 90}]}
-      - {handle: Doma, age: 18, role: initiator, playstyle: support, igl: false, quality: 75, agents: [sova, breach], country: HR, languages: [{lang: hr, level: 100}, {lang: en, level: 85}]}
-      - {handle: Mistic, age: 23, role: flex, playstyle: lurker, igl: false, quality: 74, agents: [sage, brimstone], country: GB, languages: [{lang: en, level: 100}]}
-      - {handle: Magnum, age: 20, role: sentinel, playstyle: anchor, igl: false, quality: 75, agents: [cypher, killjoy], country: CZ, languages: [{lang: cs, level: 100}, {lang: en, level: 85}]}
+      - handle: Boaster
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [omen, viper]
+        country: GB
+        languages: [{lang: en, level: 100}]
+        potential: 82.0
+        tags: [streamer, analytical, team_player]
+      - handle: Derke
+        age: 18
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 84
+        agents: [jett, raze]
+        country: FI
+        languages: [{lang: fi, level: 100}, {lang: en, level: 90}]
+        potential: 95.0
+        tags: [prodigy, rookie]
+      - handle: Doma
+        age: 18
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 75
+        agents: [sova, breach]
+        country: HR
+        languages: [{lang: hr, level: 100}, {lang: en, level: 85}]
+      - handle: Mistic
+        age: 23
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 74
+        agents: [sage, brimstone]
+        country: GB
+        languages: [{lang: en, level: 100}]
+      - handle: Magnum
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 75
+        agents: [cypher, killjoy]
+        country: CZ
+        languages: [{lang: cs, level: 100}, {lang: en, level: 85}]
   - name: Team Liquid
     tag: TL
     prestige: 87
     players:
-      - {handle: L1NK, age: 23, role: controller, playstyle: igl, igl: true, quality: 75, agents: [omen, viper], country: GB, languages: [{lang: en, level: 100}]}
-      - {handle: ScreaM, age: 27, role: duelist, playstyle: entry, igl: false, quality: 82, agents: [reyna, jett], country: BE, languages: [{lang: fr, level: 100}, {lang: en, level: 90}]}
-      - {handle: Jamppi, age: 20, role: duelist, playstyle: awper, igl: false, quality: 78, agents: [jett, sova], country: FI, languages: [{lang: fi, level: 100}, {lang: en, level: 90}]}
-      - {handle: soulcas, age: 21, role: initiator, playstyle: support, igl: false, quality: 73, agents: [skye, breach], country: GB, languages: [{lang: en, level: 100}]}
-      # Nivera replaced Kryptix before the final 2021 international event.
-      - {handle: Nivera, age: 20, role: controller, playstyle: lurker, igl: false, quality: 76, agents: [viper, omen], country: BE, languages: [{lang: fr, level: 100}, {lang: en, level: 90}]}
+      - handle: L1NK
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 75
+        agents: [omen, viper]
+        country: GB
+        languages: [{lang: en, level: 100}]
+      - handle: ScreaM
+        age: 27
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 82
+        agents: [reyna, jett]
+        country: BE
+        languages: [{lang: fr, level: 100}, {lang: en, level: 90}]
+      - handle: Jamppi
+        age: 20
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 78
+        agents: [jett, sova]
+        country: FI
+        languages: [{lang: fi, level: 100}, {lang: en, level: 90}]
+      - handle: soulcas
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 73
+        agents: [skye, breach]
+        country: GB
+        languages: [{lang: en, level: 100}]
+      - handle: Nivera
+        age: 20
+        role: controller
+        playstyle: lurker
+        igl: false
+        quality: 76
+        agents: [viper, omen]
+        country: BE
+        languages: [{lang: fr, level: 100}, {lang: en, level: 90}]
   - name: Acend
     tag: ACE
-    prestige: 84
+    prestige: 90
     players:
-      - {handle: Bonecold, age: 23, role: controller, playstyle: igl, igl: true, quality: 76, agents: [omen, viper], country: FI, languages: [{lang: fi, level: 100}, {lang: en, level: 90}]}
-      - {handle: cNed, age: 19, role: duelist, playstyle: awper, igl: false, quality: 85, agents: [jett, reyna], country: TR, languages: [{lang: tr, level: 100}, {lang: en, level: 75}]}
-      - {handle: zeek, age: 20, role: flex, playstyle: lurker, igl: false, quality: 77, agents: [raze, sage], country: PL, languages: [{lang: pl, level: 100}, {lang: en, level: 80}]}
-      - {handle: starxo, age: 20, role: initiator, playstyle: support, igl: false, quality: 77, agents: [skye, sova], country: SE, languages: [{lang: sv, level: 100}, {lang: en, level: 90}]}
-      - {handle: Kiles, age: 23, role: sentinel, playstyle: anchor, igl: false, quality: 72, agents: [cypher, killjoy], country: ES, languages: [{lang: es, level: 100}, {lang: en, level: 80}]}
+      - handle: Bonecold
+        age: 23
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [omen, viper]
+        country: FI
+        languages: [{lang: fi, level: 100}, {lang: en, level: 90}]
+      - handle: cNed
+        age: 19
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 85
+        agents: [jett, reyna]
+        country: TR
+        languages: [{lang: tr, level: 100}, {lang: en, level: 75}]
+      - handle: zeek
+        age: 20
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 77
+        agents: [raze, sage]
+        country: PL
+        languages: [{lang: pl, level: 100}, {lang: en, level: 80}]
+      - handle: starxo
+        age: 20
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 77
+        agents: [skye, sova]
+        country: SE
+        languages: [{lang: sv, level: 100}, {lang: en, level: 90}]
+      - handle: Kiles
+        age: 23
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 72
+        agents: [cypher, killjoy]
+        country: ES
+        languages: [{lang: es, level: 100}, {lang: en, level: 80}]
   - name: Gambit Esports
     tag: GMB
-    prestige: 85
+    prestige: 91
     players:
-      - {handle: Redgar, age: 24, role: controller, playstyle: igl, igl: true, quality: 76, agents: [omen, brimstone], country: RU, languages: [{lang: ru, level: 100}, {lang: en, level: 70}]}
-      - {handle: nAts, age: 19, role: sentinel, playstyle: anchor, igl: false, quality: 82, agents: [cypher, viper], country: RU, languages: [{lang: ru, level: 100}, {lang: en, level: 70}]}
-      - {handle: Chronicle, age: 19, role: flex, playstyle: lurker, igl: false, quality: 82, agents: [viper, sage], country: RU, languages: [{lang: ru, level: 100}, {lang: en, level: 70}]}
-      - {handle: d3ffo, age: 20, role: duelist, playstyle: entry, igl: false, quality: 79, agents: [jett, raze], country: RU, languages: [{lang: ru, level: 100}, {lang: en, level: 70}]}
-      - {handle: Sheydos, age: 20, role: initiator, playstyle: support, igl: false, quality: 78, agents: [sova, skye], country: RU, languages: [{lang: ru, level: 100}, {lang: en, level: 70}]}
+      - handle: Redgar
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [omen, brimstone]
+        country: RU
+        languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+      - handle: nAts
+        age: 19
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 82
+        agents: [cypher, viper]
+        country: RU
+        languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+      - handle: Chronicle
+        age: 19
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 82
+        agents: [viper, sage]
+        country: RU
+        languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+      - handle: d3ffo
+        age: 20
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 79
+        agents: [jett, raze]
+        country: RU
+        languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+      - handle: Sheydos
+        age: 20
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 78
+        agents: [sova, skye]
+        country: RU
+        languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
   - name: FunPlus Phoenix
     tag: FPX
     prestige: 79
     players:
-      - {handle: ANGE1, age: 32, role: controller, playstyle: igl, igl: true, quality: 76, agents: [omen, viper]}
-      - {handle: ardiis, age: 23, role: duelist, playstyle: entry, igl: false, quality: 78, agents: [jett, raze]}
-      - {handle: Shao, age: 21, role: initiator, playstyle: support, igl: false, quality: 77, agents: [sova, breach]}
-      - {handle: Zyppan, age: 19, role: flex, playstyle: lurker, igl: false, quality: 76, agents: [sage, omen]}
-      - {handle: ShadoW, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 72, agents: [cypher, killjoy]}
+      - handle: ANGE1
+        age: 32
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 76
+        agents: [omen, viper]
+      - handle: ardiis
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 78
+        agents: [jett, raze]
+      - handle: Shao
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 77
+        agents: [sova, breach]
+      - handle: Zyppan
+        age: 19
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 76
+        agents: [sage, omen]
+      - handle: ShadoW
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 72
+        agents: [cypher, killjoy]
   - name: Guild Esports
     tag: GUILD
     prestige: 77
     players:
-      - {handle: bonkar, age: 25, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, brimstone]}
-      - {handle: Yacine, age: 25, role: duelist, playstyle: entry, igl: false, quality: 76, agents: [jett, raze]}
-      - {handle: draken, age: 25, role: duelist, playstyle: awper, igl: false, quality: 73, agents: [jett, sova]}
-      - {handle: Leo, age: 18, role: initiator, playstyle: support, igl: false, quality: 78, agents: [sova, breach]}
-      - {handle: Sayf, age: 21, role: sentinel, playstyle: anchor, igl: false, quality: 75, agents: [cypher, killjoy]}
+      - handle: bonkar
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [omen, brimstone]
+      - handle: Yacine
+        age: 25
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 76
+        agents: [jett, raze]
+      - handle: draken
+        age: 25
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 73
+        agents: [jett, sova]
+      - handle: Leo
+        age: 18
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 78
+        agents: [sova, breach]
+      - handle: Sayf
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 75
+        agents: [cypher, killjoy]
   - name: Team Heretics
     tag: TH
     prestige: 76
     players:
-      - {handle: pAura, age: 25, role: controller, playstyle: igl, igl: true, quality: 72, agents: [omen, viper]}
-      - {handle: nukkye, age: 24, role: duelist, playstyle: entry, igl: false, quality: 78, agents: [raze, jett]}
-      - {handle: AvovA, age: 23, role: controller, playstyle: lurker, igl: false, quality: 75, agents: [omen, brimstone]}
-      - {handle: Koldamenta, age: 27, role: initiator, playstyle: support, igl: false, quality: 72, agents: [sova, breach]}
-      - {handle: lowel, age: 25, role: sentinel, playstyle: anchor, igl: false, quality: 71, agents: [cypher, killjoy]}
+      - handle: pAura
+        age: 25
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 72
+        agents: [omen, viper]
+      - handle: nukkye
+        age: 24
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 78
+        agents: [raze, jett]
+      - handle: AvovA
+        age: 23
+        role: controller
+        playstyle: lurker
+        igl: false
+        quality: 75
+        agents: [omen, brimstone]
+      - handle: Koldamenta
+        age: 27
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [sova, breach]
+      - handle: lowel
+        age: 25
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 71
+        agents: [cypher, killjoy]
   - name: Ninjas in Pyjamas
     tag: NIP
     prestige: 73
     players:
-      - {handle: ex6tenz, age: 31, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
-      - {handle: CREA, age: 22, role: duelist, playstyle: entry, igl: false, quality: 72, agents: [jett, raze]}
-      - {handle: rhyme, age: 24, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [sage, omen]}
-      # 2021 Europe Stage 2 shared five; eMIL is represented as staff.
-      - {handle: chiwawa, age: 23, role: duelist, playstyle: entry, igl: false, quality: 69, agents: [jett, raze]}
-      - {handle: Jady, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+      - handle: ex6tenz
+        age: 31
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, brimstone]
+      - handle: CREA
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [jett, raze]
+      - handle: rhyme
+        age: 24
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 70
+        agents: [sage, omen]
+      - handle: chiwawa
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 69
+        agents: [jett, raze]
+      - handle: Jady
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [cypher, killjoy]
   - name: SuperMassive Blaze
     tag: SMB
     prestige: 78
     players:
-      - {handle: Turko, age: 24, role: controller, playstyle: igl, igl: true, quality: 73, agents: [omen, brimstone]}
-      - {handle: Brave, age: 25, role: duelist, playstyle: entry, igl: false, quality: 76, agents: [jett, raze]}
-      - {handle: Izzy, age: 23, role: flex, playstyle: lurker, igl: false, quality: 73, agents: [sage, omen]}
-      - {handle: AimDLL, age: 22, role: initiator, playstyle: support, igl: false, quality: 72, agents: [sova, breach]}
-      - {handle: russ, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 70, agents: [cypher, killjoy]}
+      - handle: Turko
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 73
+        agents: [omen, brimstone]
+      - handle: Brave
+        age: 25
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 76
+        agents: [jett, raze]
+      - handle: Izzy
+        age: 23
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 73
+        agents: [sage, omen]
+      - handle: AimDLL
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 72
+        agents: [sova, breach]
+      - handle: russ
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 70
+        agents: [cypher, killjoy]
   - name: Team BDS
     tag: BDS
     prestige: 72
     players:
-      - {handle: logan, age: 24, role: controller, playstyle: igl, igl: true, quality: 69, agents: [omen, viper]}
-      - {handle: rodeN, age: 23, role: duelist, playstyle: entry, igl: false, quality: 72, agents: [jett, raze]}
-      - {handle: AKUMAAAAA, age: 21, role: flex, playstyle: lurker, igl: false, quality: 69, agents: [sage, omen]}
-      - {handle: TakaS, age: 22, role: initiator, playstyle: support, igl: false, quality: 68, agents: [sova, breach]}
-      - {handle: hopi, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
+      - handle: logan
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 69
+        agents: [omen, viper]
+      - handle: rodeN
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 72
+        agents: [jett, raze]
+      - handle: AKUMAAAAA
+        age: 21
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 69
+        agents: [sage, omen]
+      - handle: TakaS
+        age: 22
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 68
+        agents: [sova, breach]
+      - handle: hopi
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 67
+        agents: [cypher, killjoy]
   - name: Giants Gaming
     tag: GIA
     tier: 2
     prestige: 65
     players:
-      - {handle: Davidp, age: 26, role: controller, playstyle: igl, igl: true, quality: 70, agents: [omen, viper]}
-      - {handle: Fit1nho, age: 25, role: duelist, playstyle: entry, igl: false, quality: 71, agents: [jett, raze]}
-      - {handle: hoody, age: 23, role: flex, playstyle: lurker, igl: false, quality: 70, agents: [sage, omen]}
-      - {handle: Meddo, age: 20, role: initiator, playstyle: support, igl: false, quality: 70, agents: [sova, breach]}
-      - {handle: Ambi, age: 21, role: sentinel, playstyle: anchor, igl: false, quality: 68, agents: [cypher, killjoy]}
+      - handle: Davidp
+        age: 26
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 70
+        agents: [omen, viper]
+      - handle: Fit1nho
+        age: 25
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 71
+        agents: [jett, raze]
+      - handle: hoody
+        age: 23
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 70
+        agents: [sage, omen]
+      - handle: Meddo
+        age: 20
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 70
+        agents: [sova, breach]
+      - handle: Ambi
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 68
+        agents: [cypher, killjoy]
   - name: Futbolist
     tag: FUT
     tier: 2
     prestige: 64
     players:
-      - {handle: qRaxs, age: 25, role: controller, playstyle: igl, igl: true, quality: 69, agents: [omen, brimstone]}
-      - {handle: STERBEN, age: 22, role: duelist, playstyle: entry, igl: false, quality: 70, agents: [jett, raze]}
-      - {handle: SasuKe, age: 23, role: flex, playstyle: lurker, igl: false, quality: 68, agents: [sage, omen]}
-      - {handle: mag0o, age: 21, role: initiator, playstyle: support, igl: false, quality: 69, agents: [sova, breach]}
-      - {handle: mojj, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 67, agents: [cypher, killjoy]}
-  # Full, documented EMEA rosters retained as the expanded 2021 tier two.
+      - handle: qRaxs
+        age: 21
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 69.0
+        agents: [omen, brimstone]
+        real_name: ''
+        country: DE
+      - handle: STERBEN
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 70
+        agents: [jett, raze]
+      - handle: SasuKe
+        age: 23
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 68
+        agents: [sage, omen]
+      - handle: mag0o
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 69
+        agents: [sova, breach]
+      - handle: mojj
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 67
+        agents: [cypher, killjoy]
   - name: WAVE Esports
     tag: WAVE
     tier: 2
     prestige: 62
     players:
-      - {handle: Zik, age: 22, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
-      - {handle: nico, age: 22, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
-      - {handle: Carcass, age: 21, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
-      - {handle: murii, age: 21, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
-      - {handle: xTribune, age: 20, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
+      - handle: Zik
+        age: 22
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, brimstone]
+      - handle: nico
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 68
+        agents: [jett, raze]
+      - handle: Carcass
+        age: 21
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 66
+        agents: [sage, omen]
+      - handle: murii
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 67
+        agents: [sova, breach]
+      - handle: xTribune
+        age: 20
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 66
+        agents: [cypher, killjoy]
   - name: Alliance
     tag: ALL
     tier: 2
     prestige: 63
     players:
-      - {handle: Fearoth, age: 25, role: initiator, playstyle: igl, igl: true, quality: 69, agents: [sova, breach]}
-      - {handle: hype, age: 24, role: controller, playstyle: lurker, igl: false, quality: 67, agents: [omen, brimstone]}
-      - {handle: kAdavra, age: 23, role: initiator, playstyle: support, igl: false, quality: 66, agents: [sova, breach]}
-      - {handle: luckeRRR, age: 25, role: duelist, playstyle: awper, igl: false, quality: 68, agents: [jett, sova]}
-      - {handle: xms, age: 24, role: flex, playstyle: lurker, igl: false, quality: 68, agents: [sage, omen]}
+      - handle: Fearoth
+        age: 25
+        role: initiator
+        playstyle: igl
+        igl: true
+        quality: 69
+        agents: [sova, breach]
+      - handle: hype
+        age: 24
+        role: controller
+        playstyle: lurker
+        igl: false
+        quality: 67
+        agents: [omen, brimstone]
+      - handle: kAdavra
+        age: 23
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 66
+        agents: [sova, breach]
+      - handle: luckeRRR
+        age: 25
+        role: duelist
+        playstyle: awper
+        igl: false
+        quality: 68
+        agents: [jett, sova]
+      - handle: xms
+        age: 24
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 68
+        agents: [sage, omen]
   - name: HONK
     tag: HONK
     tier: 2
     prestige: 61
     players:
-      - {handle: Destrian, age: 24, role: flex, playstyle: igl, igl: true, quality: 66, agents: [sage, omen]}
-      - {handle: ShonP, age: 22, role: duelist, playstyle: entry, igl: false, quality: 66, agents: [jett, raze]}
-      - {handle: trexx, age: 17, role: initiator, playstyle: support, igl: false, quality: 74, agents: [sova, breach]}
-      - {handle: Dreamas, age: 21, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
-      - {handle: synsi, age: 20, role: controller, playstyle: lurker, igl: false, quality: 67, agents: [omen, brimstone]}
+      - handle: Destrian
+        age: 24
+        role: flex
+        playstyle: igl
+        igl: true
+        quality: 66
+        agents: [sage, omen]
+      - handle: ShonP
+        age: 22
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 66
+        agents: [jett, raze]
+      - handle: trexx
+        age: 17
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 74
+        agents: [sova, breach]
+      - handle: Dreamas
+        age: 21
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 66
+        agents: [cypher, killjoy]
+      - handle: synsi
+        age: 20
+        role: controller
+        playstyle: lurker
+        igl: false
+        quality: 67
+        agents: [omen, brimstone]
   - name: Team Finest
     tag: FINEST
     tier: 2
     prestige: 62
     players:
-      - {handle: RECIDENT, age: 24, role: controller, playstyle: igl, igl: true, quality: 67, agents: [omen, brimstone]}
-      - {handle: ALIVE, age: 23, role: duelist, playstyle: entry, igl: false, quality: 68, agents: [jett, raze]}
-      - {handle: ponkt, age: 22, role: flex, playstyle: lurker, igl: false, quality: 66, agents: [sage, omen]}
-      - {handle: Jeremy9000, age: 21, role: initiator, playstyle: support, igl: false, quality: 67, agents: [sova, breach]}
-      - {handle: mizuN, age: 22, role: sentinel, playstyle: anchor, igl: false, quality: 66, agents: [cypher, killjoy]}
+      - handle: RECIDENT
+        age: 24
+        role: controller
+        playstyle: igl
+        igl: true
+        quality: 67
+        agents: [omen, brimstone]
+      - handle: ALIVE
+        age: 23
+        role: duelist
+        playstyle: entry
+        igl: false
+        quality: 68
+        agents: [jett, raze]
+      - handle: ponkt
+        age: 22
+        role: flex
+        playstyle: lurker
+        igl: false
+        quality: 66
+        agents: [sage, omen]
+      - handle: Jeremy9000
+        age: 21
+        role: initiator
+        playstyle: support
+        igl: false
+        quality: 67
+        agents: [sova, breach]
+      - handle: mizuN
+        age: 22
+        role: sentinel
+        playstyle: anchor
+        igl: false
+        quality: 66
+        agents: [cypher, killjoy]

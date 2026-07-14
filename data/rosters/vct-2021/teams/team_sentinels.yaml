@@ -505,11 +505,12 @@ players:
   - map_id: split
     mastery: 89.1
   salary: 7200
-  contract_weeks_left: 61
-  morale: 84.2
-  stamina: 90.5
-  form: 46.7
+  contract_weeks_left: 77
+  morale: 75.9
+  stamina: 99.4
+  form: 52.8
   personality_tags:
   - grinder
+  - prodigy
   - slow_starter
-  potential: 93.1
+  potential: 94.0

@@ -201,15 +201,15 @@ players:
   - map_id: split
     mastery: 85.4
   salary: 6700
-  contract_weeks_left: 74
-  morale: 70.0
-  stamina: 82.2
-  form: 55.2
+  contract_weeks_left: 56
+  morale: 82.1
+  stamina: 88.0
+  form: 46.7
   personality_tags:
   - perfectionist
   - rookie
   - slow_starter
-  potential: 95.0
+  potential: 92.0
 - id: team_100_thieves_hiko
   handle: Hiko
   real_name: ''
@@ -303,15 +303,15 @@ players:
   - map_id: split
     mastery: 77.4
   salary: 5600
-  contract_weeks_left: 70
-  morale: 80.0
-  stamina: 90.3
-  form: 46.0
+  contract_weeks_left: 37
+  morale: 80.4
+  stamina: 96.0
+  form: 52.7
   personality_tags:
   - analytical
   - quiet
   - veteran
-  potential: 77.9
+  potential: 77.0
 - id: team_100_thieves_ethan
   handle: Ethan
   real_name: ''

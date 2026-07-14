@@ -79,6 +79,7 @@ def test_provider_resolution(monkeypatch):
     assert llm_talk.provider() is None
     
     # Local mode
+    monkeypatch.delenv("VLLM_MODEL", raising=False)
     monkeypatch.setenv("SOCIAL_LLM", "local")
     monkeypatch.setenv("SOCIAL_LLM_BASE_URL", "http://localhost:11434/v1")
     cfg = llm_talk.provider()

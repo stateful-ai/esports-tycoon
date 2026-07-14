@@ -311,6 +311,12 @@ def new_campaign(
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)
     _record_dev_snapshots(gs, week=0)
+
+    for p in gs.players.values():
+        development.initialize_player_seed_variance(p, seed)
+    for prospect in gs.future_prospects.values():
+        development.initialize_player_seed_variance(prospect.player, seed)
+
     return gs
 
 

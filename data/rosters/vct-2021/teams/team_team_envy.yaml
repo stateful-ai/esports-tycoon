@@ -4,9 +4,9 @@ tag: NV
 region: americas
 tier: 1
 captain_id: team_team_envy_fns
-balance: 786000
-reputation: 81.0
-fan_count: 590490
+balance: 804000
+reputation: 84.0
+fan_count: 635040
 chemistry: 72.1
 players:
 - id: team_team_envy_fns
@@ -102,15 +102,14 @@ players:
   - map_id: split
     mastery: 86.5
   salary: 5400
-  contract_weeks_left: 42
-  morale: 79.6
-  stamina: 93.5
-  form: 45.9
+  contract_weeks_left: 55
+  morale: 66.4
+  stamina: 95.7
+  form: 55.1
   personality_tags:
-  - grinder
   - team_player
   - veteran
-  potential: 74.4
+  potential: 77.0
 - id: team_team_envy_crashies
   handle: crashies
   real_name: ''
@@ -325,39 +324,39 @@ players:
   role: duelist
   playstyle: awper
   attributes:
-    aim_precision: 97.4
-    aim_reactivity: 84.5
-    movement: 79.4
-    game_sense: 82.8
-    utility_usage: 67.6
-    positioning: 85.4
-    clutch_factor: 83.9
-    tilt_resistance: 79.7
-    composure: 76.9
-    comms_quality: 74.0
+    aim_precision: 99.0
+    aim_reactivity: 87.5
+    movement: 82.4
+    game_sense: 85.8
+    utility_usage: 70.6
+    positioning: 88.4
+    clutch_factor: 86.9
+    tilt_resistance: 82.7
+    composure: 79.9
+    comms_quality: 77.0
   agent_pool:
   - agent_id: jett
-    mastery: 91.4
+    mastery: 94.4
   - agent_id: sova
-    mastery: 91.5
+    mastery: 94.5
   - agent_id: iso
-    mastery: 75.3
+    mastery: 78.3
   - agent_id: neon
-    mastery: 65.8
+    mastery: 68.8
   - agent_id: phoenix
     mastery: 80.0
   - agent_id: raze
-    mastery: 74.6
+    mastery: 77.6
   - agent_id: reyna
-    mastery: 72.5
+    mastery: 75.5
   - agent_id: waylay
-    mastery: 76.2
+    mastery: 79.2
   - agent_id: yoru
-    mastery: 74.2
+    mastery: 77.2
   - agent_id: astra
     mastery: 60.0
   - agent_id: breach
-    mastery: 53.9
+    mastery: 56.9
   - agent_id: brimstone
     mastery: 60.0
   - agent_id: chamber
@@ -365,54 +364,55 @@ players:
   - agent_id: clove
     mastery: 2.8
   - agent_id: cypher
-    mastery: 58.7
+    mastery: 60.0
   - agent_id: deadlock
-    mastery: 58.8
+    mastery: 60.0
   - agent_id: fade
     mastery: 3.3
   - agent_id: gekko
-    mastery: 53.4
+    mastery: 56.4
   - agent_id: harbor
-    mastery: 52.9
+    mastery: 55.9
   - agent_id: kayo
-    mastery: 58.2
+    mastery: 60.0
   - agent_id: killjoy
-    mastery: 59.3
+    mastery: 60.0
   - agent_id: miks
-    mastery: 59.8
+    mastery: 60.0
   - agent_id: omen
-    mastery: 59.7
+    mastery: 60.0
   - agent_id: sage
     mastery: 60.0
   - agent_id: skye
     mastery: 60.0
   - agent_id: tejo
-    mastery: 58.4
+    mastery: 60.0
   - agent_id: veto
     mastery: 60.0
   - agent_id: viper
-    mastery: 58.6
+    mastery: 60.0
   - agent_id: vyse
     mastery: 60.0
   map_pool:
   - map_id: ascent
-    mastery: 76.0
+    mastery: 79.0
   - map_id: bind
-    mastery: 92.1
+    mastery: 95.1
   - map_id: haven
-    mastery: 85.2
-  - map_id: lotus
     mastery: 88.2
+  - map_id: lotus
+    mastery: 91.2
   - map_id: split
-    mastery: 84.8
-  salary: 6700
-  contract_weeks_left: 30
-  morale: 77.2
-  stamina: 96.5
-  form: 58.2
+    mastery: 87.8
+  salary: 7100
+  contract_weeks_left: 50
+  morale: 60.0
+  stamina: 93.7
+  form: 57.4
   personality_tags:
-  - fan_favorite
-  potential: 84.5
+  - clutch_gene
+  - perfectionist
+  potential: 95.0
 - id: team_team_envy_marved
   handle: Marved
   real_name: ''
