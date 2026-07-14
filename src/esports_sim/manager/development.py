@@ -125,6 +125,14 @@ def development_curve(p: Player) -> DevelopmentCurve:
     realization_roll = _unit(p.id, "devcurve", "realization")
     realization = 0.62 + 0.38 * math.sqrt(realization_roll)
     volatility = 0.78 + 0.48 * _unit(p.id, "devcurve", "volatility")
+
+    if "pure_aimer" in p.personality_tags:
+        archetype = "flash"
+        peak = max(18, min(20, peak))
+        realization = max(0.9, realization)
+        decline_roll = _unit(p.id, "devcurve", "decline_roll")
+        decline = 23 if decline_roll < 0.5 else 24
+
     return DevelopmentCurve(
         archetype=archetype,
         growth_peak_age=int(peak),
@@ -194,6 +202,12 @@ def initialize_player_seed_variance(p: Player, campaign_seed: int) -> None:
     realization = 0.62 + 0.38 * math.sqrt(realization_roll)
     volatility = 0.78 + 0.48 * volatility_roll
 
+    if "pure_aimer" in p.personality_tags:
+        archetype = "flash"
+        peak = max(18, min(20, peak))
+        realization = max(0.9, realization)
+        decline = 23 if decline_roll < 0.5 else 24
+
     p.development_curve = DevelopmentCurveModel(
         archetype=archetype,
         growth_peak_age=int(peak),
@@ -236,6 +250,12 @@ def assign_development_curve(p: Player, rng: np.random.Generator) -> None:
 
     realization = 0.62 + 0.38 * math.sqrt(realization_roll)
     volatility = 0.78 + 0.48 * volatility_roll
+
+    if "pure_aimer" in p.personality_tags:
+        archetype = "flash"
+        peak = max(18, min(20, peak))
+        realization = max(0.9, realization)
+        decline = 23 if decline_roll < 0.5 else 24
 
     p.development_curve = DevelopmentCurveModel(
         archetype=archetype,

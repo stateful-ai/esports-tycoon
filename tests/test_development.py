@@ -276,3 +276,115 @@ def test_offseason_trait_unlock_fires_once(game_data: GameData) -> None:
     development.offseason_trait_unlocks(gs)            # idempotent
     assert p.personality_tags.count("clutch_gene") == 1
     assert p.potential == pa1                          # no second ceiling bump
+
+
+def test_pure_aimer_development_curve_and_offseason_aging() -> None:
+    # 1. Curve Parameters
+    for seed in range(50):
+        p = _full(18, 60.0, tags=["pure_aimer"], potential=85.0, pid=f"pa_{seed}")
+        
+        # Test development_curve function directly
+        dc = development.development_curve(p)
+        assert dc.archetype == "flash"
+        assert 18 <= dc.growth_peak_age <= 20
+        assert dc.realization >= 0.9
+        assert dc.decline_age in (23, 24)
+        
+        # Test initialize_player_seed_variance
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        dc2 = p.development_curve
+        assert dc2.archetype == "flash"
+        assert 18 <= dc2.growth_peak_age <= 20
+        assert dc2.realization >= 0.9
+        assert dc2.decline_age in (23, 24)
+
+        # Test assign_development_curve
+        p3 = _full(18, 60.0, tags=["pure_aimer"], potential=85.0, pid=f"pa3_{seed}")
+        rng = np.random.default_rng(seed)
+        development.assign_development_curve(p3, rng)
+        dc3 = p3.development_curve
+        assert dc3.archetype == "flash"
+        assert 18 <= dc3.growth_peak_age <= 20
+        assert dc3.realization >= 0.9
+        assert dc3.decline_age in (23, 24)
+
+    # 2. Offseason aging decay
+    p = _full(22, 80.0, tags=["pure_aimer"], potential=95.0, pid="pa_decay")
+    dc = development.development_curve(p)
+    turn = dc.decline_age
+    p.age = turn - 1  # will become turn during apply_offseason_aging
+    
+    original_attrs = {a: p.attr(a) for a in _ALL_ATTRS}
+    
+    rng = np.random.default_rng(42)
+    training.apply_offseason_aging(p, rng)
+    
+    assert p.age == turn
+    decline_val = (p.age - (turn - 1)) * 0.8 * development.curve_decline_multiplier(p)
+    
+    aim_attrs = ["aim_precision", "aim_reactivity"]
+    other_attrs = [
+        "movement", "game_sense", "positioning", "utility_usage",
+        "clutch_factor", "tilt_resistance", "composure", "comms_quality"
+    ]
+    
+    for a in aim_attrs:
+        decay = original_attrs[a] - p.attr(a)
+        base_decay = decay / 0.15
+        ratio = base_decay / decline_val
+        assert 0.7 - 1e-5 <= ratio <= 1.3 + 1e-5
+        
+    for a in other_attrs:
+        decay = original_attrs[a] - p.attr(a)
+        base_decay = decay / 1.5
+        ratio = base_decay / decline_val
+        assert 0.7 - 1e-5 <= ratio <= 1.3 + 1e-5
+
+
+def test_seed_based_volatility_distribution() -> None:
+    # Young players: +/- 6 swing
+    young_swings = []
+    for seed in range(200):
+        p = _full(20, 50.0, potential=80.0, pid=f"young_{seed}")
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        swing = p.potential - 80.0
+        assert -6.0 - 1e-5 <= swing <= 6.0 + 1e-5
+        young_swings.append(swing)
+        
+    # Rookie players: +/- 6 swing
+    rookie_swings = []
+    for seed in range(200):
+        p = _full(24, 50.0, tags=["rookie"], potential=80.0, pid=f"rookie_{seed}")
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        swing = p.potential - 80.0
+        assert -6.0 - 1e-5 <= swing <= 6.0 + 1e-5
+        rookie_swings.append(swing)
+        
+    # Prodigy players: +/- 6 swing
+    prodigy_swings = []
+    for seed in range(200):
+        p = _full(25, 50.0, tags=["prodigy"], potential=80.0, pid=f"prodigy_{seed}")
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        swing = p.potential - 80.0
+        assert -6.0 - 1e-5 <= swing <= 6.0 + 1e-5
+        prodigy_swings.append(swing)
+        
+    # Verify they actually vary (are not all 0)
+    assert len(set(young_swings)) > 10
+    assert len(set(rookie_swings)) > 10
+    assert len(set(prodigy_swings)) > 10
+    
+    # Veteran players: 0 swing
+    for seed in range(50):
+        p = _full(26, 50.0, potential=80.0, pid=f"vet_{seed}")
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        swing = p.potential - 80.0
+        assert abs(swing) < 1e-5
+
+    # Player with veteran tag: 0 swing
+    for seed in range(50):
+        p = _full(22, 50.0, tags=["veteran"], potential=80.0, pid=f"vet_tag_{seed}")
+        development.initialize_player_seed_variance(p, campaign_seed=seed)
+        swing = p.potential - 80.0
+        assert abs(swing) < 1e-5
+

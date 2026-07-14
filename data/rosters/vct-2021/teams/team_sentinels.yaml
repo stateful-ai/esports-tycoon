@@ -102,14 +102,13 @@ players:
   - map_id: split
     mastery: 88.8
   salary: 6300
-  contract_weeks_left: 51
-  morale: 74.8
-  stamina: 90.2
-  form: 50.2
+  contract_weeks_left: 79
+  morale: 70.9
+  stamina: 91.8
+  form: 52.6
   personality_tags:
-  - perfectionist
-  - slow_starter
-  potential: 84.7
+  - veteran
+  potential: 81.7
 - id: team_sentinels_sick
   handle: SicK
   real_name: ''

@@ -75,6 +75,7 @@ teams:
         agents: [reyna, jett]
         country: BE
         languages: [{lang: fr, level: 100}, {lang: en, level: 90}]
+        tags: [pure_aimer]
       - handle: Jamppi
         age: 20
         role: duelist

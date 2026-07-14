@@ -16,73 +16,73 @@ players:
   country: ''
   languages: []
   age: 24
-  role: controller
-  playstyle: igl
+  role: sentinel
+  playstyle: anchor
   attributes:
-    aim_precision: 64.3
-    aim_reactivity: 61.6
-    movement: 68.7
-    game_sense: 86.4
-    utility_usage: 79.7
-    positioning: 70.8
+    aim_precision: 72.3
+    aim_reactivity: 65.6
+    movement: 62.7
+    game_sense: 72.4
+    utility_usage: 77.7
+    positioning: 82.8
     clutch_factor: 70.1
-    tilt_resistance: 71.4
+    tilt_resistance: 79.4
     composure: 76.2
-    comms_quality: 81.7
+    comms_quality: 67.7
   agent_pool:
-  - agent_id: omen
+  - agent_id: killjoy
     mastery: 82.3
-  - agent_id: viper
-    mastery: 79.1
-  - agent_id: astra
-    mastery: 62.7
-  - agent_id: brimstone
-    mastery: 64.3
-  - agent_id: clove
-    mastery: 63.5
-  - agent_id: harbor
-    mastery: 60.9
-  - agent_id: miks
-    mastery: 57.2
-  - agent_id: breach
-    mastery: 56.2
-  - agent_id: chamber
-    mastery: 46.6
   - agent_id: cypher
-    mastery: 53.4
+    mastery: 79.1
+  - agent_id: chamber
+    mastery: 62.7
   - agent_id: deadlock
+    mastery: 64.3
+  - agent_id: sage
+    mastery: 63.5
+  - agent_id: veto
+    mastery: 60.9
+  - agent_id: vyse
+    mastery: 57.2
+  - agent_id: astra
+    mastery: 56.2
+  - agent_id: breach
+    mastery: 46.6
+  - agent_id: brimstone
+    mastery: 53.4
+  - agent_id: clove
     mastery: 55.9
   - agent_id: fade
     mastery: 50.5
   - agent_id: gekko
     mastery: 54.7
-  - agent_id: iso
+  - agent_id: harbor
     mastery: 46.4
-  - agent_id: jett
+  - agent_id: iso
     mastery: 48.7
-  - agent_id: kayo
+  - agent_id: jett
     mastery: 54.7
-  - agent_id: killjoy
+  - agent_id: kayo
     mastery: 48.6
-  - agent_id: neon
+  - agent_id: miks
     mastery: 47.8
-  - agent_id: phoenix
+  - agent_id: neon
     mastery: 45.0
-  - agent_id: raze
+  - agent_id: omen
     mastery: 56.7
-  - agent_id: reyna
+  - agent_id: phoenix
     mastery: 59.2
-  - agent_id: sage
+  - agent_id: raze
     mastery: 4.1
-  - agent_id: skye
+  - agent_id: reyna
     mastery: 48.8
-  - agent_id: sova
+  - agent_id: skye
     mastery: 56.6
-  - agent_id: tejo
+  - agent_id: sova
     mastery: 49.3
-  - agent_id: veto
+  - agent_id: tejo
     mastery: 41.8
-  - agent_id: vyse
+  - agent_id: viper
     mastery: 51.5
   - agent_id: waylay
     mastery: 46.9
@@ -106,7 +106,7 @@ players:
   form: 45.8
   personality_tags:
   - independent
-  potential: 75.1
+  potential: 74.7
 - id: team_cloud9_blue_xeta
   handle: xeta
   real_name: ''
@@ -114,45 +114,45 @@ players:
   country: ''
   languages: []
   age: 24
-  role: sentinel
-  playstyle: anchor
+  role: initiator
+  playstyle: support
   attributes:
-    aim_precision: 78.6
-    aim_reactivity: 65.7
-    movement: 66.8
-    game_sense: 73.2
-    utility_usage: 84.1
-    positioning: 83.1
+    aim_precision: 72.6
+    aim_reactivity: 63.7
+    movement: 72.8
+    game_sense: 79.2
+    utility_usage: 90.1
+    positioning: 71.1
     clutch_factor: 73.7
-    tilt_resistance: 85.0
-    composure: 85.8
-    comms_quality: 73.5
+    tilt_resistance: 77.0
+    composure: 83.8
+    comms_quality: 83.5
   agent_pool:
-  - agent_id: cypher
+  - agent_id: sova
     mastery: 93.1
-  - agent_id: killjoy
+  - agent_id: breach
     mastery: 81.7
-  - agent_id: chamber
+  - agent_id: fade
     mastery: 59.0
-  - agent_id: deadlock
+  - agent_id: gekko
     mastery: 64.6
-  - agent_id: sage
+  - agent_id: kayo
     mastery: 66.3
-  - agent_id: veto
+  - agent_id: skye
     mastery: 65.6
-  - agent_id: vyse
+  - agent_id: tejo
     mastery: 64.9
   - agent_id: astra
     mastery: 53.3
-  - agent_id: breach
-    mastery: 55.7
   - agent_id: brimstone
+    mastery: 55.7
+  - agent_id: chamber
     mastery: 54.3
   - agent_id: clove
     mastery: 56.9
-  - agent_id: fade
+  - agent_id: cypher
     mastery: 57.1
-  - agent_id: gekko
+  - agent_id: deadlock
     mastery: 60.0
   - agent_id: harbor
     mastery: 1.9
@@ -160,7 +160,7 @@ players:
     mastery: 54.3
   - agent_id: jett
     mastery: 52.2
-  - agent_id: kayo
+  - agent_id: killjoy
     mastery: 59.8
   - agent_id: miks
     mastery: 53.2
@@ -174,13 +174,13 @@ players:
     mastery: 48.2
   - agent_id: reyna
     mastery: 52.4
-  - agent_id: skye
+  - agent_id: sage
     mastery: 51.7
-  - agent_id: sova
+  - agent_id: veto
     mastery: 55.9
-  - agent_id: tejo
-    mastery: 51.3
   - agent_id: viper
+    mastery: 51.3
+  - agent_id: vyse
     mastery: 46.8
   - agent_id: waylay
     mastery: 58.6
@@ -205,7 +205,7 @@ players:
   personality_tags:
   - flashy
   - quiet
-  potential: 79.4
+  potential: 79.2
 - id: team_cloud9_blue_xeppaa
   handle: Xeppaa
   real_name: ''
@@ -412,7 +412,7 @@ players:
   country: ''
   languages: []
   age: 22
-  role: initiator
+  role: controller
   playstyle: support
   attributes:
     aim_precision: 62.7
@@ -426,57 +426,57 @@ players:
     composure: 79.7
     comms_quality: 72.0
   agent_pool:
-  - agent_id: sova
-    mastery: 69.4
-  - agent_id: breach
-    mastery: 84.3
-  - agent_id: fade
-    mastery: 63.2
-  - agent_id: gekko
-    mastery: 55.2
-  - agent_id: kayo
-    mastery: 64.3
-  - agent_id: skye
-    mastery: 63.4
-  - agent_id: tejo
-    mastery: 60.8
   - agent_id: astra
-    mastery: 43.2
+    mastery: 69.4
+  - agent_id: omen
+    mastery: 84.3
   - agent_id: brimstone
-    mastery: 53.8
-  - agent_id: chamber
-    mastery: 51.7
+    mastery: 63.2
   - agent_id: clove
-    mastery: 46.4
-  - agent_id: cypher
-    mastery: 45.4
-  - agent_id: deadlock
-    mastery: 46.5
+    mastery: 55.2
   - agent_id: harbor
-    mastery: 43.7
+    mastery: 64.3
+  - agent_id: miks
+    mastery: 63.4
+  - agent_id: viper
+    mastery: 60.8
+  - agent_id: breach
+    mastery: 43.2
+  - agent_id: chamber
+    mastery: 53.8
+  - agent_id: cypher
+    mastery: 51.7
+  - agent_id: deadlock
+    mastery: 46.4
+  - agent_id: fade
+    mastery: 45.4
+  - agent_id: gekko
+    mastery: 46.5
   - agent_id: iso
-    mastery: 52.3
+    mastery: 43.7
   - agent_id: jett
+    mastery: 52.3
+  - agent_id: kayo
     mastery: 41.0
   - agent_id: killjoy
     mastery: 50.6
-  - agent_id: miks
-    mastery: 48.7
   - agent_id: neon
-    mastery: 49.0
-  - agent_id: omen
-    mastery: 54.8
+    mastery: 48.7
   - agent_id: phoenix
-    mastery: 39.4
+    mastery: 49.0
   - agent_id: raze
-    mastery: 56.7
+    mastery: 54.8
   - agent_id: reyna
-    mastery: 48.2
+    mastery: 39.4
   - agent_id: sage
+    mastery: 56.7
+  - agent_id: skye
+    mastery: 48.2
+  - agent_id: sova
     mastery: 45.7
-  - agent_id: veto
+  - agent_id: tejo
     mastery: 52.1
-  - agent_id: viper
+  - agent_id: veto
     mastery: 45.6
   - agent_id: vyse
     mastery: 47.5

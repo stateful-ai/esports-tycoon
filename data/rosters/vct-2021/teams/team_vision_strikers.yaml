@@ -19,7 +19,7 @@ players:
     level: 100.0
   - lang: en
     level: 45.0
-  age: 20
+  age: 19
   role: controller
   playstyle: support
   attributes:
@@ -110,7 +110,7 @@ players:
   form: 52.7
   personality_tags:
   - streamer
-  potential: 90.4
+  potential: 91.4
 - id: team_vision_strikers_stax
   handle: stax
   real_name: ''
