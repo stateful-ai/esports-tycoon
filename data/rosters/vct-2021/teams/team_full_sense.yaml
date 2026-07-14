@@ -16,7 +16,7 @@ players:
   country: ''
   languages: []
   age: 25
-  role: controller
+  role: initiator
   playstyle: igl
   attributes:
     aim_precision: 59.5
@@ -30,57 +30,57 @@ players:
     composure: 80.1
     comms_quality: 85.3
   agent_pool:
-  - agent_id: omen
-    mastery: 88.8
-  - agent_id: viper
-    mastery: 85.4
-  - agent_id: astra
-    mastery: 71.5
-  - agent_id: brimstone
-    mastery: 61.8
-  - agent_id: clove
-    mastery: 65.5
-  - agent_id: harbor
-    mastery: 55.0
-  - agent_id: miks
-    mastery: 60.9
   - agent_id: breach
-    mastery: 44.4
-  - agent_id: chamber
-    mastery: 45.9
-  - agent_id: cypher
-    mastery: 46.9
-  - agent_id: deadlock
-    mastery: 46.0
+    mastery: 88.8
+  - agent_id: skye
+    mastery: 85.4
   - agent_id: fade
-    mastery: 47.4
+    mastery: 71.5
   - agent_id: gekko
-    mastery: 52.2
-  - agent_id: iso
-    mastery: 53.6
-  - agent_id: jett
-    mastery: 44.4
+    mastery: 61.8
   - agent_id: kayo
+    mastery: 65.5
+  - agent_id: sova
+    mastery: 55.0
+  - agent_id: tejo
+    mastery: 60.9
+  - agent_id: astra
+    mastery: 44.4
+  - agent_id: brimstone
+    mastery: 45.9
+  - agent_id: chamber
+    mastery: 46.9
+  - agent_id: clove
+    mastery: 46.0
+  - agent_id: cypher
+    mastery: 47.4
+  - agent_id: deadlock
+    mastery: 52.2
+  - agent_id: harbor
+    mastery: 53.6
+  - agent_id: iso
+    mastery: 44.4
+  - agent_id: jett
     mastery: 51.4
   - agent_id: killjoy
     mastery: 50.6
-  - agent_id: neon
+  - agent_id: miks
     mastery: 56.9
-  - agent_id: phoenix
+  - agent_id: neon
     mastery: 55.4
-  - agent_id: raze
+  - agent_id: omen
     mastery: 60.0
-  - agent_id: reyna
+  - agent_id: phoenix
     mastery: 50.0
-  - agent_id: sage
+  - agent_id: raze
     mastery: 45.8
-  - agent_id: skye
+  - agent_id: reyna
     mastery: 56.2
-  - agent_id: sova
+  - agent_id: sage
     mastery: 48.9
-  - agent_id: tejo
-    mastery: 55.1
   - agent_id: veto
+    mastery: 55.1
+  - agent_id: viper
     mastery: 1.3
   - agent_id: vyse
     mastery: 50.3
@@ -131,7 +131,7 @@ players:
   agent_pool:
   - agent_id: jett
     mastery: 83.3
-  - agent_id: raze
+  - agent_id: skye
     mastery: 82.6
   - agent_id: iso
     mastery: 74.3
@@ -139,74 +139,74 @@ players:
     mastery: 68.8
   - agent_id: phoenix
     mastery: 68.2
-  - agent_id: reyna
+  - agent_id: raze
     mastery: 74.0
-  - agent_id: waylay
+  - agent_id: reyna
     mastery: 73.5
-  - agent_id: yoru
+  - agent_id: waylay
     mastery: 67.3
+  - agent_id: yoru
+    mastery: 62.4
   - agent_id: astra
-    mastery: 53.2
+    mastery: 49.7
   - agent_id: breach
-    mastery: 50.9
+    mastery: 59.9
   - agent_id: brimstone
-    mastery: 59.1
+    mastery: 51.3
   - agent_id: chamber
-    mastery: 60.0
+    mastery: 56.1
   - agent_id: clove
-    mastery: 45.4
+    mastery: 58.1
   - agent_id: cypher
-    mastery: 59.0
+    mastery: 59.8
   - agent_id: deadlock
-    mastery: 57.0
-  - agent_id: fade
-    mastery: 59.1
-  - agent_id: gekko
-    mastery: 50.3
-  - agent_id: harbor
-    mastery: 58.4
-  - agent_id: kayo
-    mastery: 48.6
-  - agent_id: killjoy
-    mastery: 54.5
-  - agent_id: miks
-    mastery: 55.2
-  - agent_id: omen
-    mastery: 57.8
-  - agent_id: sage
-    mastery: 57.0
-  - agent_id: skye
-    mastery: 58.2
-  - agent_id: sova
-    mastery: 51.1
-  - agent_id: tejo
-    mastery: 58.8
-  - agent_id: veto
-    mastery: 52.9
-  - agent_id: viper
     mastery: 53.4
+  - agent_id: fade
+    mastery: 50.0
+  - agent_id: gekko
+    mastery: 53.9
+  - agent_id: harbor
+    mastery: 59.7
+  - agent_id: kayo
+    mastery: 60.0
+  - agent_id: killjoy
+    mastery: 49.6
+  - agent_id: miks
+    mastery: 56.1
+  - agent_id: omen
+    mastery: 58.6
+  - agent_id: sage
+    mastery: 52.5
+  - agent_id: sova
+    mastery: 52.5
+  - agent_id: tejo
+    mastery: 55.1
+  - agent_id: veto
+    mastery: 60.0
+  - agent_id: viper
+    mastery: 53.6
   - agent_id: vyse
-    mastery: 54.7
+    mastery: 51.7
   map_pool:
   - map_id: ascent
-    mastery: 88.2
+    mastery: 82.4
   - map_id: bind
-    mastery: 88.4
+    mastery: 88.2
   - map_id: haven
-    mastery: 90.0
-  - map_id: lotus
-    mastery: 73.8
-  - map_id: split
     mastery: 88.4
+  - map_id: lotus
+    mastery: 90.0
+  - map_id: split
+    mastery: 73.8
   salary: 6100
-  contract_weeks_left: 59
-  morale: 66.8
-  stamina: 81.4
-  form: 59.9
+  contract_weeks_left: 71
+  morale: 74.6
+  stamina: 85.4
+  form: 46.1
   personality_tags:
-  - clutch_gene
-  - team_player
-  potential: 78.9
+  - analytical
+  - fan_favorite
+  potential: 78.2
 - id: team_full_sense_chalalala
   handle: ChAlalala
   real_name: ''
@@ -228,47 +228,47 @@ players:
     composure: 69.8
     comms_quality: 69.4
   agent_pool:
-  - agent_id: sage
-    mastery: 88.6
-  - agent_id: omen
-    mastery: 80.7
-  - agent_id: astra
-    mastery: 46.5
-  - agent_id: breach
-    mastery: 4.5
-  - agent_id: brimstone
-    mastery: 57.2
-  - agent_id: chamber
-    mastery: 55.9
-  - agent_id: clove
-    mastery: 55.4
   - agent_id: cypher
-    mastery: 57.4
+    mastery: 88.6
+  - agent_id: astra
+    mastery: 80.7
+  - agent_id: breach
+    mastery: 46.5
+  - agent_id: brimstone
+    mastery: 4.5
+  - agent_id: chamber
+    mastery: 57.2
+  - agent_id: clove
+    mastery: 55.9
   - agent_id: deadlock
-    mastery: 52.8
+    mastery: 55.4
   - agent_id: fade
-    mastery: 40.1
+    mastery: 57.4
   - agent_id: gekko
-    mastery: 46.3
+    mastery: 52.8
   - agent_id: harbor
-    mastery: 50.3
+    mastery: 40.1
   - agent_id: iso
-    mastery: 57.0
+    mastery: 46.3
   - agent_id: jett
-    mastery: 55.0
+    mastery: 50.3
   - agent_id: kayo
-    mastery: 56.9
+    mastery: 57.0
   - agent_id: killjoy
-    mastery: 0.8
+    mastery: 55.0
   - agent_id: miks
-    mastery: 49.4
+    mastery: 56.9
   - agent_id: neon
-    mastery: 48.0
+    mastery: 0.8
+  - agent_id: omen
+    mastery: 49.4
   - agent_id: phoenix
-    mastery: 50.4
+    mastery: 48.0
   - agent_id: raze
-    mastery: 56.5
+    mastery: 50.4
   - agent_id: reyna
+    mastery: 56.5
+  - agent_id: sage
     mastery: 56.6
   - agent_id: skye
     mastery: 42.2
@@ -328,15 +328,15 @@ players:
   agent_pool:
   - agent_id: sova
     mastery: 79.2
-  - agent_id: breach
-    mastery: 73.8
-  - agent_id: fade
-    mastery: 58.0
-  - agent_id: gekko
-    mastery: 58.4
-  - agent_id: kayo
-    mastery: 59.2
   - agent_id: skye
+    mastery: 73.8
+  - agent_id: breach
+    mastery: 58.0
+  - agent_id: fade
+    mastery: 58.4
+  - agent_id: gekko
+    mastery: 59.2
+  - agent_id: kayo
     mastery: 64.9
   - agent_id: tejo
     mastery: 60.5
@@ -424,22 +424,24 @@ players:
     composure: 78.0
     comms_quality: 67.6
   agent_pool:
-  - agent_id: cypher
+  - agent_id: astra
     mastery: 83.2
-  - agent_id: killjoy
+  - agent_id: viper
     mastery: 79.9
   - agent_id: chamber
     mastery: 62.6
-  - agent_id: deadlock
+  - agent_id: cypher
     mastery: 61.3
-  - agent_id: sage
+  - agent_id: deadlock
     mastery: 60.9
-  - agent_id: veto
+  - agent_id: killjoy
     mastery: 61.8
-  - agent_id: vyse
+  - agent_id: sage
     mastery: 63.2
-  - agent_id: astra
-    mastery: 46.8
+  - agent_id: veto
+    mastery: 58.9
+  - agent_id: vyse
+    mastery: 59.3
   - agent_id: breach
     mastery: 52.2
   - agent_id: brimstone
@@ -476,29 +478,27 @@ players:
     mastery: 51.2
   - agent_id: tejo
     mastery: 48.1
-  - agent_id: viper
-    mastery: 46.1
   - agent_id: waylay
-    mastery: 49.4
+    mastery: 46.1
   - agent_id: yoru
-    mastery: 55.0
+    mastery: 49.4
   map_pool:
   - map_id: ascent
-    mastery: 82.9
+    mastery: 77.0
   - map_id: bind
-    mastery: 73.3
+    mastery: 84.2
   - map_id: haven
-    mastery: 86.5
+    mastery: 82.9
   - map_id: lotus
-    mastery: 84.5
+    mastery: 73.3
   - map_id: split
-    mastery: 71.5
+    mastery: 86.5
   salary: 5300
-  contract_weeks_left: 37
-  morale: 63.0
-  stamina: 98.8
-  form: 59.3
+  contract_weeks_left: 63
+  morale: 71.5
+  stamina: 83.0
+  form: 46.8
   personality_tags:
-  - analytical
-  - team_player
-  potential: 76.4
+  - clutch_gene
+  - streamer
+  potential: 82.6

@@ -34,19 +34,19 @@ players:
     composure: 80.3
     comms_quality: 83.8
   agent_pool:
-  - agent_id: omen
+  - agent_id: astra
     mastery: 93.4
   - agent_id: viper
     mastery: 92.6
-  - agent_id: astra
-    mastery: 69.9
   - agent_id: brimstone
-    mastery: 72.1
+    mastery: 69.9
   - agent_id: clove
-    mastery: 64.3
+    mastery: 72.1
   - agent_id: harbor
-    mastery: 65.4
+    mastery: 64.3
   - agent_id: miks
+    mastery: 65.4
+  - agent_id: omen
     mastery: 69.0
   - agent_id: breach
     mastery: 60.0
@@ -104,13 +104,13 @@ players:
   - map_id: split
     mastery: 84.8
   salary: 6400
-  contract_weeks_left: 35
-  morale: 81.0
-  stamina: 89.5
-  form: 52.7
+  contract_weeks_left: 51
+  morale: 62.6
+  stamina: 96.8
+  form: 52.1
   personality_tags:
-  - streamer
-  potential: 91.4
+  - rookie
+  potential: 91.1
 - id: team_vision_strikers_stax
   handle: stax
   real_name: ''
@@ -136,9 +136,9 @@ players:
     composure: 82.6
     comms_quality: 96.3
   agent_pool:
-  - agent_id: sova
-    mastery: 93.8
   - agent_id: breach
+    mastery: 93.8
+  - agent_id: skye
     mastery: 80.9
   - agent_id: fade
     mastery: 72.2
@@ -146,7 +146,7 @@ players:
     mastery: 66.4
   - agent_id: kayo
     mastery: 75.9
-  - agent_id: skye
+  - agent_id: sova
     mastery: 65.9
   - agent_id: tejo
     mastery: 70.4
@@ -206,14 +206,13 @@ players:
   - map_id: split
     mastery: 87.9
   salary: 6500
-  contract_weeks_left: 46
-  morale: 77.0
-  stamina: 91.6
-  form: 46.9
+  contract_weeks_left: 63
+  morale: 68.0
+  stamina: 93.6
+  form: 53.7
   personality_tags:
-  - flashy
-  - independent
-  potential: 90.1
+  - rookie
+  potential: 83.7
 - id: team_vision_strikers_rb
   handle: Rb
   real_name: ''
@@ -241,7 +240,7 @@ players:
   agent_pool:
   - agent_id: raze
     mastery: 95.5
-  - agent_id: omen
+  - agent_id: sova
     mastery: 86.6
   - agent_id: astra
     mastery: 60.0
@@ -275,15 +274,15 @@ players:
     mastery: 57.1
   - agent_id: neon
     mastery: 58.3
+  - agent_id: omen
+    mastery: 60.0
   - agent_id: phoenix
-    mastery: 60.0
-  - agent_id: reyna
     mastery: 56.5
-  - agent_id: sage
+  - agent_id: reyna
     mastery: 49.3
-  - agent_id: skye
+  - agent_id: sage
     mastery: 60.0
-  - agent_id: sova
+  - agent_id: skye
     mastery: 60.0
   - agent_id: tejo
     mastery: 60.0
@@ -309,13 +308,13 @@ players:
   - map_id: split
     mastery: 88.8
   salary: 6400
-  contract_weeks_left: 50
-  morale: 79.7
-  stamina: 96.1
-  form: 56.1
+  contract_weeks_left: 49
+  morale: 70.4
+  stamina: 95.7
+  form: 57.1
   personality_tags:
-  - independent
-  potential: 89.3
+  - rookie
+  potential: 95.0
 - id: team_vision_strikers_buzz
   handle: BuZz
   real_name: ''
@@ -411,15 +410,14 @@ players:
   - map_id: split
     mastery: 91.0
   salary: 6300
-  contract_weeks_left: 74
-  morale: 81.1
-  stamina: 96.1
-  form: 55.9
+  contract_weeks_left: 33
+  morale: 82.1
+  stamina: 96.8
+  form: 57.0
   personality_tags:
-  - fan_favorite
-  - grinder
+  - pure_aimer
   - rookie
-  potential: 91.8
+  potential: 95.0
 - id: team_vision_strikers_lakia
   handle: Lakia
   real_name: ''
@@ -447,78 +445,78 @@ players:
   agent_pool:
   - agent_id: sova
     mastery: 87.8
-  - agent_id: breach
+  - agent_id: raze
     mastery: 92.2
-  - agent_id: fade
+  - agent_id: breach
     mastery: 74.0
-  - agent_id: gekko
+  - agent_id: fade
     mastery: 69.8
-  - agent_id: kayo
+  - agent_id: gekko
     mastery: 66.7
-  - agent_id: skye
+  - agent_id: kayo
     mastery: 66.1
-  - agent_id: tejo
+  - agent_id: skye
     mastery: 64.4
+  - agent_id: tejo
+    mastery: 65.8
   - agent_id: astra
-    mastery: 58.2
+    mastery: 54.0
   - agent_id: brimstone
-    mastery: 52.8
+    mastery: 58.7
   - agent_id: chamber
-    mastery: 56.5
+    mastery: 56.1
   - agent_id: clove
-    mastery: 60.0
+    mastery: 57.0
   - agent_id: cypher
-    mastery: 49.4
+    mastery: 54.3
   - agent_id: deadlock
-    mastery: 55.8
+    mastery: 60.0
   - agent_id: harbor
-    mastery: 59.9
+    mastery: 60.0
   - agent_id: iso
-    mastery: 60.0
+    mastery: 56.2
   - agent_id: jett
-    mastery: 51.1
+    mastery: 55.7
   - agent_id: killjoy
-    mastery: 54.9
+    mastery: 57.9
   - agent_id: miks
-    mastery: 60.0
+    mastery: 54.4
   - agent_id: neon
-    mastery: 56.4
+    mastery: 51.6
   - agent_id: omen
-    mastery: 55.3
+    mastery: 60.0
   - agent_id: phoenix
     mastery: 60.0
-  - agent_id: raze
-    mastery: 53.4
   - agent_id: reyna
-    mastery: 46.1
+    mastery: 49.4
   - agent_id: sage
-    mastery: 59.9
+    mastery: 7.5
   - agent_id: veto
-    mastery: 60.0
+    mastery: 49.0
   - agent_id: viper
-    mastery: 56.0
+    mastery: 56.3
   - agent_id: vyse
-    mastery: 58.8
+    mastery: 54.7
   - agent_id: waylay
-    mastery: 58.0
+    mastery: 54.3
   - agent_id: yoru
-    mastery: 54.4
+    mastery: 3.4
   map_pool:
   - map_id: ascent
-    mastery: 81.2
+    mastery: 86.4
   - map_id: bind
-    mastery: 81.3
+    mastery: 82.2
   - map_id: haven
     mastery: 82.1
   - map_id: lotus
-    mastery: 89.1
+    mastery: 81.2
   - map_id: split
-    mastery: 74.0
+    mastery: 81.3
   salary: 6100
-  contract_weeks_left: 51
-  morale: 73.7
-  stamina: 99.8
-  form: 56.9
+  contract_weeks_left: 53
+  morale: 83.9
+  stamina: 89.1
+  form: 50.2
   personality_tags:
-  - independent
-  potential: 90.4
+  - rookie
+  potential: 84.2

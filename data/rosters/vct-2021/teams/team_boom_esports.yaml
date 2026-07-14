@@ -199,14 +199,13 @@ players:
   - map_id: split
     mastery: 67.3
   salary: 5500
-  contract_weeks_left: 50
-  morale: 84.0
-  stamina: 88.5
-  form: 51.8
+  contract_weeks_left: 30
+  morale: 70.3
+  stamina: 99.2
+  form: 51.4
   personality_tags:
-  - grinder
-  - slow_starter
-  potential: 87.8
+  - rookie
+  potential: 86.1
 - id: team_boom_esports_adrnking
   handle: adrnking
   real_name: ''
@@ -397,14 +396,13 @@ players:
   - map_id: split
     mastery: 77.2
   salary: 5000
-  contract_weeks_left: 68
-  morale: 65.7
-  stamina: 87.7
-  form: 57.0
+  contract_weeks_left: 58
+  morale: 79.1
+  stamina: 84.6
+  form: 50.8
   personality_tags:
-  - perfectionist
-  - slow_starter
-  potential: 82.3
+  - rookie
+  potential: 85.7
 - id: team_boom_esports_asteriskk
   handle: Asteriskk
   real_name: ''
@@ -496,11 +494,10 @@ players:
   - map_id: split
     mastery: 77.3
   salary: 4900
-  contract_weeks_left: 37
-  morale: 74.2
-  stamina: 83.0
-  form: 47.7
+  contract_weeks_left: 59
+  morale: 63.6
+  stamina: 91.3
+  form: 47.2
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 83.6
+  - rookie
+  potential: 84.7

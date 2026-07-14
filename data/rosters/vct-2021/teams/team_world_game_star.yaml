@@ -198,14 +198,13 @@ players:
   - map_id: split
     mastery: 73.4
   salary: 5100
-  contract_weeks_left: 41
-  morale: 61.6
-  stamina: 99.4
-  form: 52.6
+  contract_weeks_left: 38
+  morale: 66.0
+  stamina: 81.3
+  form: 59.6
   personality_tags:
-  - grinder
-  - quiet
-  potential: 81.5
+  - rookie
+  potential: 82.4
 - id: team_world_game_star_jinboonge
   handle: JinboongE
   real_name: ''
@@ -395,14 +394,13 @@ players:
   - map_id: split
     mastery: 73.4
   salary: 4800
-  contract_weeks_left: 49
-  morale: 81.9
-  stamina: 81.2
-  form: 58.3
+  contract_weeks_left: 65
+  morale: 69.7
+  stamina: 97.5
+  form: 45.9
   personality_tags:
-  - analytical
-  - fan_favorite
-  potential: 78.9
+  - rookie
+  potential: 82.2
 - id: team_world_game_star_has1ra14
   handle: Has1ra14
   real_name: ''
@@ -494,11 +492,10 @@ players:
   - map_id: split
     mastery: 75.9
   salary: 4800
-  contract_weeks_left: 73
-  morale: 63.8
-  stamina: 80.2
-  form: 58.2
+  contract_weeks_left: 53
+  morale: 81.7
+  stamina: 83.0
+  form: 45.1
   personality_tags:
-  - grinder
-  - team_player
-  potential: 76.9
+  - rookie
+  potential: 82.5

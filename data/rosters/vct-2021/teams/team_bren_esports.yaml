@@ -1,6 +1,6 @@
 id: team_bren_esports
 name: Bren Esports
-tag: BRE
+tag: BREN
 region: pacific
 tier: 1
 captain_id: team_bren_esports_jessievash
@@ -16,7 +16,7 @@ players:
   country: ''
   languages: []
   age: 31
-  role: controller
+  role: initiator
   playstyle: igl
   attributes:
     aim_precision: 68.8
@@ -30,83 +30,81 @@ players:
     composure: 76.1
     comms_quality: 85.3
   agent_pool:
-  - agent_id: omen
-    mastery: 79.4
-  - agent_id: brimstone
-    mastery: 73.3
-  - agent_id: astra
-    mastery: 70.7
-  - agent_id: clove
-    mastery: 64.3
-  - agent_id: harbor
-    mastery: 58.6
-  - agent_id: miks
-    mastery: 62.3
-  - agent_id: viper
-    mastery: 60.9
-  - agent_id: breach
-    mastery: 52.2
-  - agent_id: chamber
-    mastery: 57.2
-  - agent_id: cypher
-    mastery: 43.6
-  - agent_id: deadlock
-    mastery: 54.1
-  - agent_id: fade
-    mastery: 55.9
-  - agent_id: gekko
-    mastery: 44.6
-  - agent_id: iso
-    mastery: 46.5
-  - agent_id: jett
-    mastery: 60.0
-  - agent_id: kayo
-    mastery: 42.5
-  - agent_id: killjoy
-    mastery: 4.5
-  - agent_id: neon
-    mastery: 54.9
-  - agent_id: phoenix
-    mastery: 54.4
-  - agent_id: raze
-    mastery: 51.1
-  - agent_id: reyna
-    mastery: 49.7
-  - agent_id: sage
-    mastery: 51.5
-  - agent_id: skye
-    mastery: 51.0
   - agent_id: sova
-    mastery: 49.5
+    mastery: 79.4
+  - agent_id: sage
+    mastery: 73.3
+  - agent_id: breach
+    mastery: 70.7
+  - agent_id: fade
+    mastery: 64.3
+  - agent_id: gekko
+    mastery: 58.6
+  - agent_id: kayo
+    mastery: 62.3
+  - agent_id: skye
+    mastery: 60.9
   - agent_id: tejo
-    mastery: 60.0
+    mastery: 65.2
+  - agent_id: astra
+    mastery: 56.8
+  - agent_id: brimstone
+    mastery: 54.3
+  - agent_id: chamber
+    mastery: 57.4
+  - agent_id: clove
+    mastery: 53.6
+  - agent_id: cypher
+    mastery: 55.8
+  - agent_id: deadlock
+    mastery: 52.4
+  - agent_id: harbor
+    mastery: 54.8
+  - agent_id: iso
+    mastery: 48.1
+  - agent_id: jett
+    mastery: 49.2
+  - agent_id: killjoy
+    mastery: 45.2
+  - agent_id: miks
+    mastery: 47.1
+  - agent_id: neon
+    mastery: 4.3
+  - agent_id: omen
+    mastery: 56.8
+  - agent_id: phoenix
+    mastery: 40.1
+  - agent_id: raze
+    mastery: 49.0
+  - agent_id: reyna
+    mastery: 51.7
   - agent_id: veto
-    mastery: 54.0
+    mastery: 48.1
+  - agent_id: viper
+    mastery: 0.2
   - agent_id: vyse
-    mastery: 1.2
+    mastery: 54.2
   - agent_id: waylay
-    mastery: 46.1
+    mastery: 49.5
   - agent_id: yoru
-    mastery: 49.1
+    mastery: 46.5
   map_pool:
   - map_id: ascent
-    mastery: 73.4
-  - map_id: bind
     mastery: 84.2
-  - map_id: haven
+  - map_id: bind
     mastery: 84.9
-  - map_id: lotus
+  - map_id: haven
     mastery: 80.2
-  - map_id: split
+  - map_id: lotus
     mastery: 78.8
+  - map_id: split
+    mastery: 78.3
   salary: 5600
-  contract_weeks_left: 62
+  contract_weeks_left: 35
   morale: 78.4
   stamina: 81.7
   form: 49.3
   personality_tags:
-  - grinder
-  - streamer
   - veteran
   potential: 77.1
 - id: team_bren_esports_dubstep
@@ -200,14 +198,14 @@ players:
   - map_id: split
     mastery: 90.7
   salary: 6300
-  contract_weeks_left: 73
-  morale: 80.1
-  stamina: 95.0
-  form: 52.5
+  contract_weeks_left: 44
+  morale: 81.9
+  stamina: 96.0
+  form: 56.2
   personality_tags:
-  - fan_favorite
-  - hot_head
-  potential: 78.6
+  - pure_aimer
+  - veteran
+  potential: 80.8
 - id: team_bren_esports_witz
   handle: witz
   real_name: ''
@@ -229,9 +227,9 @@ players:
     composure: 71.2
     comms_quality: 65.2
   agent_pool:
-  - agent_id: raze
+  - agent_id: reyna
     mastery: 78.9
-  - agent_id: omen
+  - agent_id: skye
     mastery: 75.4
   - agent_id: astra
     mastery: 2.2
@@ -265,13 +263,13 @@ players:
     mastery: 53.9
   - agent_id: neon
     mastery: 50.3
-  - agent_id: phoenix
+  - agent_id: omen
     mastery: 48.2
-  - agent_id: reyna
+  - agent_id: phoenix
     mastery: 52.8
-  - agent_id: sage
+  - agent_id: raze
     mastery: 5.0
-  - agent_id: skye
+  - agent_id: sage
     mastery: 1.1
   - agent_id: sova
     mastery: 59.7
@@ -314,7 +312,7 @@ players:
   country: ''
   languages: []
   age: 24
-  role: initiator
+  role: controller
   playstyle: support
   attributes:
     aim_precision: 73.7
@@ -328,57 +326,57 @@ players:
     composure: 79.9
     comms_quality: 76.2
   agent_pool:
-  - agent_id: sova
+  - agent_id: viper
     mastery: 88.6
-  - agent_id: breach
-    mastery: 90.3
-  - agent_id: fade
-    mastery: 72.4
-  - agent_id: gekko
-    mastery: 63.5
-  - agent_id: kayo
-    mastery: 63.6
-  - agent_id: skye
-    mastery: 62.2
-  - agent_id: tejo
-    mastery: 66.2
   - agent_id: astra
-    mastery: 52.0
+    mastery: 90.3
   - agent_id: brimstone
-    mastery: 50.1
-  - agent_id: chamber
-    mastery: 53.8
+    mastery: 72.4
   - agent_id: clove
-    mastery: 53.6
-  - agent_id: cypher
-    mastery: 53.6
-  - agent_id: deadlock
-    mastery: 54.5
+    mastery: 63.5
   - agent_id: harbor
-    mastery: 46.5
+    mastery: 63.6
+  - agent_id: miks
+    mastery: 62.2
+  - agent_id: omen
+    mastery: 66.2
+  - agent_id: breach
+    mastery: 52.0
+  - agent_id: chamber
+    mastery: 50.1
+  - agent_id: cypher
+    mastery: 53.8
+  - agent_id: deadlock
+    mastery: 53.6
+  - agent_id: fade
+    mastery: 53.6
+  - agent_id: gekko
+    mastery: 54.5
   - agent_id: iso
-    mastery: 58.4
+    mastery: 46.5
   - agent_id: jett
+    mastery: 58.4
+  - agent_id: kayo
     mastery: 51.1
   - agent_id: killjoy
     mastery: 48.4
-  - agent_id: miks
-    mastery: 53.6
   - agent_id: neon
-    mastery: 48.4
-  - agent_id: omen
-    mastery: 47.8
+    mastery: 53.6
   - agent_id: phoenix
-    mastery: 54.2
+    mastery: 48.4
   - agent_id: raze
-    mastery: 49.5
+    mastery: 47.8
   - agent_id: reyna
-    mastery: 53.7
+    mastery: 54.2
   - agent_id: sage
+    mastery: 49.5
+  - agent_id: skye
+    mastery: 53.7
+  - agent_id: sova
     mastery: 46.2
-  - agent_id: veto
+  - agent_id: tejo
     mastery: 47.4
-  - agent_id: viper
+  - agent_id: veto
     mastery: 54.4
   - agent_id: vyse
     mastery: 51.6
