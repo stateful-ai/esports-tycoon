@@ -626,7 +626,12 @@ class HeuristicCoachPolicy:
             + max(0, observation.score_against - observation.score_for)
             * C.TIMEOUT_SCORE_DEFICIT_WEIGHT
         )
-        if observation.profile.quality + urgency < C.TIMEOUT_CALL_THRESHOLD:
+        recognition = (
+            observation.profile.quality * 0.35
+            + observation.profile.tactical_knowledge * 0.45
+            + observation.profile.analysis * 0.20
+        )
+        if recognition + urgency < C.TIMEOUT_CALL_THRESHOLD:
             return None
 
         traits = set(observation.profile.traits)
@@ -636,5 +641,11 @@ class HeuristicCoachPolicy:
             kind = "pressure" if observation.is_attacking else "retake"
         else:
             kind = "pressure" if observation.is_attacking else "retake"
-        clarity = max(0.25, min(1.0, observation.profile.quality / 100.0))
+        clarity_score = (
+            observation.profile.tactical_knowledge * 0.35
+            + observation.profile.people_management * 0.30
+            + observation.profile.motivation * 0.20
+            + observation.profile.system_fit * 0.15
+        )
+        clarity = max(0.25, min(1.0, clarity_score / 100.0))
         return TimeoutDirective(kind=kind, clarity=clarity)  # type: ignore[arg-type]

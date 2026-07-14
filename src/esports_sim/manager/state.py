@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 27
+SCHEMA_VERSION = 28
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -379,6 +379,61 @@ def _migrate_v26_to_v27(data: dict) -> dict:
     return data
 
 
+def _migrate_v27_to_v28(data: dict) -> dict:
+    """v28 expands staff from one quality rating into a full profile.
+
+    Attribute variation is a stable hash of campaign seed, staff id, and
+    attribute id.  Old saves therefore preserve the old overall strength while
+    gaining distinct profiles without consuming or shifting any RNG stream.
+    """
+    import hashlib
+
+    attributes = (
+        "expertise", "tactical_knowledge", "analysis", "teaching",
+        "people_management", "motivation", "adaptability",
+    )
+    styles = (
+        "fast_pressure", "structured_control", "utility_first",
+        "map_control", "pragmatic",
+    )
+    style_values = {
+        "fast_pressure": {"aggression": 76.0, "pace": 78.0, "util_discipline": 42.0, "eco_greed": 62.0, "map_control": 35.0},
+        "structured_control": {"aggression": 38.0, "pace": 34.0, "util_discipline": 72.0, "eco_greed": 42.0, "map_control": 68.0},
+        "utility_first": {"aggression": 48.0, "pace": 44.0, "util_discipline": 82.0, "eco_greed": 36.0, "map_control": 62.0},
+        "map_control": {"aggression": 52.0, "pace": 38.0, "util_discipline": 66.0, "eco_greed": 45.0, "map_control": 82.0},
+        "pragmatic": {"aggression": 52.0, "pace": 50.0, "util_discipline": 55.0, "eco_greed": 50.0, "map_control": 54.0},
+    }
+    seed = int(data.get("seed", 0))
+
+    def stable_int(staff_id: str, key: str) -> int:
+        raw = f"{seed}|{staff_id}|{key}".encode("utf-8")
+        return int.from_bytes(hashlib.blake2b(raw, digest_size=4).digest(), "big")
+
+    def enrich(member: dict) -> None:
+        staff_id = str(member.get("id", "staff"))
+        quality = float(member.get("quality", 50.0))
+        member.setdefault("attributes", {
+            key: round(min(99.0, max(1.0, quality + (stable_int(staff_id, key) % 21) - 10)), 1)
+            for key in attributes
+        })
+        if member.get("role") == "coach":
+            style = member.get("style_identity") or styles[stable_int(staff_id, "style") % len(styles)]
+            member["style_identity"] = style
+            member.setdefault("style_preferences", dict(style_values[style]))
+        else:
+            member.setdefault("style_identity", "")
+            member.setdefault("style_preferences", {})
+        member.setdefault("badges", [])
+        member.setdefault("career_stats", {})
+
+    for member in data.get("staff_pool") or []:
+        enrich(member)
+    for team_staff in (data.get("staff_by") or {}).values():
+        for member in (team_staff or {}).values():
+            enrich(member)
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -406,6 +461,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     24: _migrate_v24_to_v25,
     25: _migrate_v25_to_v26,
     26: _migrate_v26_to_v27,
+    27: _migrate_v27_to_v28,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -796,8 +852,8 @@ class PatchNote(BaseModel):
 class StaffMember(BaseModel):
     """Backroom staff. Quality (1-99) scales the slot's effect:
     coach → training growth, analyst → scouting speed + stat depth,
-    physio → stamina recovery. Human orgs only; AI orgs' staff stay
-    abstract (their baked-in multipliers assume a league-average bench).
+    physio → stamina recovery. Every tier-one org stores a concrete coach;
+    AI support departments remain abstract.
 
     v3 members carry a full identity (age, region, specialty, career) so
     they get a profile page like players do; v2 saves load with the
@@ -826,6 +882,15 @@ class StaffMember(BaseModel):
     last_org: str = ""
     # Non-empty for coaching-tree members: the player id they used to be.
     former_player_id: str = ""
+    # v28 staff depth. Attributes are the source of truth for effects and the
+    # role-weighted overall; quality remains as a compatibility/display anchor.
+    attributes: dict[str, float] = Field(default_factory=dict)
+    style_identity: str = ""
+    style_preferences: dict[str, float] = Field(default_factory=dict)
+    # Grounded career markers and counters. Badges carry no extra power; they
+    # are evidence of what this person actually accomplished in the save.
+    badges: list[str] = Field(default_factory=list)
+    career_stats: dict[str, float] = Field(default_factory=dict)
 
 
 class SponsorObjective(BaseModel):

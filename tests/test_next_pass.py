@@ -386,6 +386,7 @@ def test_fixture_plans_revalidate_against_live_state(campaign) -> None:
         PREP_EDGE_SPAN,
         _fixture_plans,
     )
+    from esports_sim.manager import staff
 
     gs = campaign
     uid = gs.user_team_id
@@ -407,7 +408,12 @@ def test_fixture_plans_revalidate_against_live_state(campaign) -> None:
     plans, lineups = _fixture_plans(gs, fx)
     assert plans[uid].focus_target == target
     assert uid not in lineups, "a lineup with a departed player is discarded"
-    assert plans[uid].prep_edge == pytest.approx(PREP_EDGE_BASE + PREP_EDGE_SPAN * 0.5)
+    assert plans[uid].prep_edge == pytest.approx(
+        PREP_EDGE_BASE + PREP_EDGE_SPAN * 0.5
+        + staff.coach_prep_bonus(
+            gs, uid, gs.teams[uid].tactics.model_copy(update={"pace": 0.0})
+        )
+    )
     assert plans[uid].counter_edge == pytest.approx(1.875)
 
     # Same plan after the target leaves the roster entirely: nulled.
@@ -419,7 +425,12 @@ def test_fixture_plans_revalidate_against_live_state(campaign) -> None:
     # Prep edge scales with scouting: unscouted opponent = the baseline.
     gs.scout_progress_by[uid][opp_id] = 0.0
     plans, _ = _fixture_plans(gs, fx)
-    assert plans[uid].prep_edge == pytest.approx(PREP_EDGE_BASE)
+    assert plans[uid].prep_edge == pytest.approx(
+        PREP_EDGE_BASE
+        + staff.coach_prep_bonus(
+            gs, uid, gs.teams[uid].tactics.model_copy(update={"pace": 0.0})
+        )
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -62,6 +62,8 @@ def _bump(gs: GameState, tid: str, key: str, amount: float) -> None:
 
 def on_week(gs: GameState, report) -> None:
     """Accrue from this week's play (rng-free, every org)."""
+    from esports_sim.manager import staff_effects
+
     for f in sorted(report.fixtures, key=lambda x: x.id):
         if not f.played:
             continue
@@ -71,15 +73,10 @@ def on_week(gs: GameState, report) -> None:
             for r in f.results:
                 _bump(gs, tid, f"playbook:{r.map_id}", PLAYBOOK_PER_MAP_PLAYED)
             _bump(gs, tid, f"antistrat:{opp}", ANTISTRAT_PER_MEETING)
-    # Methodology compounds under a good coach (human orgs hold real
-    # staff; AI orgs accrue at the league-average coach the engine
-    # assumes for them, so the stock stays comparable).
+    # Methodology compounds under the concrete coach employed by each club.
     for tid in sorted(gs.teams):
-        if gs.is_human(tid):
-            coach = gs.staff_by.get(tid, {}).get("coach")
-            q = coach.quality if coach is not None else 0.0
-        else:
-            q = 55.0
+        coach = gs.staff_by.get(tid, {}).get("coach")
+        q = staff_effects.overall(coach) if coach is not None else 0.0
         if q > 0:
             _bump(gs, tid, "methodology", METHODOLOGY_PER_WEEK_COACHED * q / 100.0)
 

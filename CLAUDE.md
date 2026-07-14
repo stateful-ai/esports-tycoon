@@ -83,8 +83,11 @@ Published at github.com/stateful-ai/esports-tycoon.
   policies over existing renewal/scouting capacity), `media_events.py` (rare
   contextual choices with persistent trust/sponsor/sentiment effects), `economy.py`
   (finances + insolvency), `sponsors.py`, `staff.py` (ONE shared 50+
-  free-agent staff pool with rich identities; coach specialty boosts the
-  matching focus; `analytics_tier` gates stat-view depth), `social.py`
+  free-agent staff pool with seven attributes, mechanical role traits,
+  grounded career badges/stats, and role-weighted overall; every tier-one
+  club has a concrete coach whose tactical identity/system fit shapes
+  training, preparation, timeout advice and AI adaptation; `analytics_tier`
+  gates stat-view depth), `social.py`
   (follower counts + deterministic weekly feed; roster reach feeds
   sponsor marketability; per-team community SENTIMENT chases weekly
   outcomes and feeds back into confidence/morale + sponsor pressure),

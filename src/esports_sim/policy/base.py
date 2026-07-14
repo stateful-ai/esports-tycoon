@@ -75,6 +75,13 @@ class CoachProfile:
     quality: float = 50.0
     specialty: str = ""
     traits: tuple[str, ...] = ()
+    tactical_knowledge: float = 50.0
+    analysis: float = 50.0
+    people_management: float = 50.0
+    motivation: float = 50.0
+    adaptability: float = 50.0
+    # Fifty preserves the legacy fallback coach's timeout clarity exactly.
+    system_fit: float = 50.0
 
 
 @dataclass(frozen=True)

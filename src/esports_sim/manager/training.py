@@ -166,6 +166,7 @@ def apply_training(
     support_bonuses: dict[str, float] | None = None,
     language_rate: float = 0.0,
     scout_guidance: dict[str, str] | None = None,
+    coach_player_mults: dict[str, float] | None = None,
 ) -> None:
     # Weekly regression to the mean: streaks fade unless re-earned.
     # Without this, form/morale lock at 100 for winners and the league
@@ -228,6 +229,8 @@ def apply_training(
             _player_rate(p, support) * _system_fit_mult(team, p) * intensity * mentor
             * stream_practice_mult(p)
         )
+        if coach_player_mults:
+            rate *= coach_player_mults.get(p.id, 1.0)
         # The scout must be actively deep-diving this own player, and the
         # manager must follow the recommended category this week.  Passing no
         # guidance is an exact no-op for AI teams and existing callers.

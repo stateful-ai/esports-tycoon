@@ -644,10 +644,12 @@ def philosophies(gs: GameState, mid: str) -> list[str]:
         out.append("big_match")
     seat = gs.managers.get(mid)
     if seat is not None and seat.team_id:
+        from esports_sim.manager import staff_effects
+
         # Read the department directly off the per-team maps — never
         # touch the acting pointer from inside a read helper.
         analyst = gs.staff_by.get(seat.team_id, {}).get("analyst")
-        score = (analyst.quality if analyst else 0.0) + 15.0 * gs.facilities_by.get(
+        score = (staff_effects.role_effect_score(analyst) if analyst else 0.0) + 15.0 * gs.facilities_by.get(
             seat.team_id, {}
         ).get("analytics_suite", 0)
         if score >= 55.0:

@@ -4560,10 +4560,11 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
   });
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(true);
 
-  const rolePlural = {
-    coach: "Coaches", analyst: "Analysts", physio: "Physios",
-    psychologist: "Psychologists", performance_coach: "Performance coaches",
-  };
+    const rolePlural = {
+      coach: "Coaches", analyst: "Analysts", physio: "Physios",
+      psychologist: "Psychologists", performance_coach: "Performance coaches",
+      language_coach: "Language coaches",
+    };
 
   const handleHire = async (mId) => {
     try {
@@ -4590,7 +4591,7 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
       // 1. Role filter
       if (activeRole !== "all" && m.role !== activeRole) return false;
       // 2. Quality min
-      if (filters.qualityMin && m.quality < Number(filters.qualityMin)) return false;
+        if (filters.qualityMin && (m.overall ?? m.quality) < Number(filters.qualityMin)) return false;
       // 3. Salary max
       if (filters.salaryMax && m.salary > Number(filters.salaryMax)) return false;
       // 4. Specialty
@@ -4649,7 +4650,7 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
             ${!isFiltersCollapsed && html`
               <div class="market-filters">
                 <label class="market-filter">
-                  <span class="muted">Min Quality</span>
+                    <span class="muted">Min Overall</span>
                   <select class="select" value=${filters.qualityMin} onChange=${(e) => setFilters({ ...filters, qualityMin: e.target.value })}>
                     <option value="">No min</option>
                     ${["50", "60", "70", "80", "90"].map(v => html`<option key=${v} value=${v}>${v}+</option>`)}
@@ -4712,7 +4713,8 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
                       <th class="num">Age</th>
                       <th>Region</th>
                       <th>Specialty</th>
-                      <th>Quality</th>
+                        <th>Identity / strengths</th>
+                        <th>OVR</th>
                       <th class="num">Salary</th>
                       <th class="num">Exp</th>
                       <th></th>
@@ -4722,16 +4724,27 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
                     ${filteredPool.map(m => html`
                       <tr key=${m.id}>
                         <td><span class="pill">${humanize(m.role)}</span></td>
-                        <td>
-                          <b class="slink" data-sid=${m.id}>${m.name}</b>
-                          ${m.titles && m.titles.length > 0 && html`
-                            <span class="pill" title=${m.titles.join(", ")}>🏆 ${m.titles.length}</span>
-                          `}
-                        </td>
+                          <td>
+                            <b class="slink" data-sid=${m.id}>${m.name}</b>
+                            ${m.titles && m.titles.length > 0 && html`
+                              <span class="pill" title=${m.titles.join(", ")}>🏆 ${m.titles.length}</span>
+                            `}
+                            ${m.comparison?.current_id && html`
+                              <div class=${`muted ${Number(m.comparison.overall_delta || 0) > 0 ? "tone-good" : Number(m.comparison.overall_delta || 0) < 0 ? "tone-bad" : ""}`}>
+                                ${Number(m.comparison.overall_delta || 0) >= 0 ? "+" : ""}${Number(m.comparison.overall_delta || 0).toFixed(1)} OVR vs current
+                              </div>
+                            `}
+                          </td>
                         <td class="num">${m.age}</td>
-                        <td>${m.region || "—"}</td>
-                        <td title=${m.specialty_blurb || ""}><span class="pill">${m.specialty || "—"}</span></td>
-                        <td><${ProgressBar} value=${m.quality} /></td>
+                          <td>${m.region || "—"}</td>
+                          <td title=${m.specialty_blurb || ""}><span class="pill">${m.specialty || "—"}</span></td>
+                          <td>
+                            ${m.style ? html`
+                              <span class="pill">${m.style.label}</span> <span class="mono">fit ${Math.round(m.style.fit)}</span>
+                            ` : (m.attributes_view || []).slice().sort((a, b) => b.value - a.value).slice(0, 2)
+                              .map(a => `${a.label} ${Math.round(a.value)}`).join(" · ") || "—"}
+                          </td>
+                          <td><${ProgressBar} value=${m.overall ?? m.quality} /></td>
                         <td class="num">${money(m.salary)}/wk</td>
                         <td class="num">${m.seasons_experience}s</td>
                         <td>
@@ -4765,9 +4778,9 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
                       </span>
                       <button class="btn btn-sm" style=${{ marginLeft: 'auto' }} onClick=${() => handleRelease(role)}>Release</button>
                     </div>
-                    <div class="muted">
-                      q${Math.round(hired.quality)} · ${hired.specialty || "—"} · ${money(hired.salary)}/wk
-                    </div>
+                      <div class="muted">
+                        OVR ${Math.round(hired.overall ?? hired.quality)} · ${hired.specialty || "—"}${hired.style ? ` · ${hired.style.label} (${Math.round(hired.style.fit)} fit)` : ""} · ${money(hired.salary)}/wk
+                      </div>
                     ${hired.effects && hired.effects.length > 0 && html`
                       <div style=${{ marginTop: '4px' }}>
                         ${hired.effects.map((e, idx) => html`
