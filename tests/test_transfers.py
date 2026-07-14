@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from esports_sim.manager import market
+from esports_sim.manager import market, transfer_requests
 from esports_sim.manager.campaign import advance_week, new_campaign
 from esports_sim.manager.state import GameState, TransferOffer
 from esports_sim.registry import GameData
@@ -127,6 +127,167 @@ def test_ai_transfer_window_executes_a_clear_upgrade(
 
     assert target in buyer.player_ids and target not in seller.player_ids
     assert any("TRANSFER:" in news for news in gs.news)
+
+
+def test_ai_transfer_window_ranks_candidates_by_full_value_score(
+    campaign, game_data: GameData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A large valuation surplus can outweigh one point of raw upgrade."""
+    gs = campaign
+    gs.week = market.TRANSFER_QUIET_WEEKS + 1
+    buyer = next(
+        t for t in sorted(gs.teams.values(), key=lambda team: team.id)
+        if t.tier == 1 and not gs.is_human(t.id)
+    )
+    sellers = [
+        t for t in sorted(gs.teams.values(), key=lambda team: team.id)
+        if t.tier == 1 and not gs.is_human(t.id) and t.id != buyer.id
+    ][:2]
+    assert len(sellers) == 2
+    target_a, target_b = (seller.player_ids[0] for seller in sellers)
+    buyer.balance = 20_000_000
+
+    # Leave exactly two transferable candidates, encountered in A-then-B
+    # order. A is a 6-point upgrade with 400k surplus (score 10); B is a
+    # 7-point upgrade at fair value (score 7).
+    for team in gs.teams.values():
+        if team.id == buyer.id:
+            continue
+        for pid in team.player_ids:
+            gs.players[pid].no_transfer_clause = True
+    gs.players[target_a].no_transfer_clause = False
+    gs.players[target_b].no_transfer_clause = False
+
+    monkeypatch.setattr(market, "market_window_status", lambda _gs: {"open": True})
+    monkeypatch.setattr(
+        market.gm_personalities, "archetype_for", lambda _seed, _tid: "analyst"
+    )
+    monkeypatch.setattr(market, "player_quality", lambda _player: 50.0)
+    monkeypatch.setattr(market.role_fit, "current_ability", lambda _player: 50.0)
+    monkeypatch.setattr(market, "_ai_continuity_hurdle", lambda *_args: 0.0)
+    monkeypatch.setattr(
+        market,
+        "perceived_quality",
+        lambda _gs, _viewer, player: (
+            56.0 if player.id == target_a else 57.0 if player.id == target_b else 50.0
+        ),
+    )
+
+    def valuation(_gs, viewer_id, pid, _context):
+        value = 500_000 if viewer_id == buyer.id and pid == target_a else 100_000
+        return {
+            "stance": "available",
+            "market_value": 100_000,
+            "value": value,
+            "components": {"base value": value},
+        }
+
+    monkeypatch.setattr(market, "org_player_valuation", valuation)
+
+    class EagerBuyer:
+        @staticmethod
+        def random() -> float:
+            return 0.0
+
+    market.ai_transfer_window(gs, game_data, EagerBuyer())
+
+    assert target_a in buyer.player_ids
+    assert target_b not in buyer.player_ids
+
+
+def _prepare_multi_move_market(gs, monkeypatch):
+    buyers = [
+        team for team in sorted(gs.teams.values(), key=lambda team: team.id)
+        if team.tier == 1 and not gs.is_human(team.id)
+    ][:3]
+    sellers = [
+        team for team in sorted(gs.teams.values(), key=lambda team: team.id)
+        if team.tier == 2 and not gs.is_human(team.id)
+    ][:3]
+    assert len(buyers) == len(sellers) == 3
+    targets = [seller.player_ids[0] for seller in sellers]
+
+    for team in gs.teams.values():
+        if team.tier == 1 and not gs.is_human(team.id):
+            team.balance = 20_000_000 if team in buyers else 0
+        for pid in team.player_ids:
+            gs.players[pid].no_transfer_clause = True
+    for buyer in buyers:
+        for pid in buyer.player_ids:
+            gs.players[pid].attributes = {
+                key: 30.0 for key in gs.players[pid].attributes
+            }
+    for pid in targets:
+        gs.players[pid].no_transfer_clause = False
+        gs.players[pid].attributes = {
+            key: 95.0 for key in gs.players[pid].attributes
+        }
+    monkeypatch.setattr(market, "buyout_fee", lambda _gs, _pid: 10_000)
+    monkeypatch.setattr(
+        market.gm_personalities, "archetype_for", lambda _seed, _tid: "analyst"
+    )
+    return buyers, targets
+
+
+def test_ai_transfer_window_allows_three_clubs_to_move(
+    campaign, game_data: GameData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    gs = campaign
+    gs.week = market.TRANSFER_QUIET_WEEKS + 1
+    buyers, targets = _prepare_multi_move_market(gs, monkeypatch)
+
+    class EagerBuyers:
+        @staticmethod
+        def random() -> float:
+            return 0.0
+
+    market.ai_transfer_window(gs, game_data, EagerBuyers())
+
+    moved = [pid for pid in targets if any(pid in buyer.player_ids for buyer in buyers)]
+    assert len(moved) == 3
+    assert all(sum(pid in buyer.player_ids for pid in targets) == 1 for buyer in buyers)
+
+
+def test_ai_transfer_window_keeps_one_move_cap_while_season_settles(
+    campaign, game_data: GameData, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    gs = campaign
+    gs.week = market.TRANSFER_QUIET_WEEKS
+    buyers, targets = _prepare_multi_move_market(gs, monkeypatch)
+
+    class EagerBuyers:
+        @staticmethod
+        def random() -> float:
+            return 0.0
+
+    market.ai_transfer_window(gs, game_data, EagerBuyers())
+
+    moved = [pid for pid in targets if any(pid in buyer.player_ids for buyer in buyers)]
+    assert len(moved) == 1
+
+
+def test_ai_continuity_hurdle_values_comfort_and_tenure(campaign) -> None:
+    gs = campaign
+    team = next(
+        team for team in gs.teams.values()
+        if team.tier == 1 and not gs.is_human(team.id)
+    )
+    player = market._ai_release_candidate(gs, team.id)
+    assert player is not None
+    pid = player.id
+    key = market.role_fit.assignment_key(player)
+    player.role_style_comfort[key] = 40.0
+    player.tenure_weeks = 12
+    if team.captain_id == pid:
+        team.captain_id = team.player_ids[0]
+    low = market._ai_continuity_hurdle(gs, team.id, pid)
+
+    player.role_style_comfort[key] = 100.0
+    player.tenure_weeks = 156
+    team.captain_id = pid
+    high = market._ai_continuity_hurdle(gs, team.id, pid)
+
+    assert high > low + 1.0
 
 
 def test_user_offer_accept_and_decline(campaign) -> None:
@@ -427,6 +588,7 @@ def test_ai_buyer_protects_new_signings(campaign) -> None:
     settled_weakest = min(
         (p for p in ps if p.id != weakest.id), key=market.player_quality
     )
+    transfer_requests.issue(gs, settled_weakest.id, "wants a new challenge")
     seller = next(
         t for t in gs.teams.values()
         if t.id != buyer.id and t.tier == 1 and t.player_ids
@@ -437,6 +599,8 @@ def test_ai_buyer_protects_new_signings(campaign) -> None:
     assert ok, msg
     assert weakest.id in buyer.player_ids  # the new arrival was protected
     assert settled_weakest.id not in buyer.player_ids  # the settled one went
+    assert settled_weakest.id in gs.free_agent_ids
+    assert settled_weakest.id not in gs.transfer_requests_by
 
 
 def test_negotiation_haggle_counter_accept(campaign) -> None:

@@ -122,3 +122,37 @@ def test_staff_market_serializer_exposes_server_computed_fit_and_comparison() ->
         "current_id", "overall_delta", "fit_delta", "salary_delta",
     }
     assert view["effects"]
+
+
+def test_ai_offseason_hiring_compares_salary_cost_on_both_coaches(
+    monkeypatch,
+) -> None:
+    gs = new_campaign(load_all(), seed=8805)
+    team_id = next(
+        tid for tid in sorted(gs.teams)
+        if gs.teams[tid].tier == 1 and not gs.is_human(tid)
+    )
+    incumbent = gs.staff_by[team_id]["coach"]
+    candidate = next(member for member in gs.staff_pool if member.role == "coach")
+    incumbent.salary = 50_000
+    candidate.salary = 5_000
+    gs.staff_pool = [candidate]
+
+    # Gross scores: incumbent 62, candidate 70. Net of salary: 52 and 69.
+    # The candidate clears an 8-point improvement only when both sides use
+    # the same salary-adjusted score.
+    monkeypatch.setattr(
+        staff_effects,
+        "overall",
+        lambda member: 50.0 if member.id == incumbent.id else 60.0,
+    )
+    monkeypatch.setattr(
+        staff_effects,
+        "system_fit",
+        lambda member, _tactics: 48.0 if member.id == incumbent.id else 40.0,
+    )
+
+    staff.ai_offseason_coach_hiring(gs)
+
+    assert gs.staff_by[team_id]["coach"].id == candidate.id
+    assert incumbent in gs.staff_pool

@@ -11,7 +11,14 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager import advance_week, chronicle, development, new_campaign, training
+from esports_sim.manager import (
+    advance_week,
+    chronicle,
+    development,
+    new_campaign,
+    training,
+    transfer_requests,
+)
 from esports_sim.manager.campaign import _adapt_ai_tactics, _process_retirements
 from esports_sim.manager.narrative import _tactic_flavor
 from esports_sim.manager.state import GameState
@@ -180,6 +187,7 @@ def test_retirement_tribute_for_a_decorated_career() -> None:
     team.lineup.agents = {"star": "jett"}
     gs.academy_player_rights["star"] = "nxs"
     gs.leadership_groups["nxs"] = ["star"]
+    transfer_requests.issue(gs, "star", "wants a final move")
     n = _process_retirements(gs, _AlwaysRetireRng())
     assert n == 1
     # A decorated retiree earns their own sendoff line...
@@ -196,6 +204,7 @@ def test_retirement_tribute_for_a_decorated_career() -> None:
     assert team.lineup.agents == {}
     assert "star" not in gs.academy_player_rights
     assert "star" not in gs.leadership_groups["nxs"]
+    assert "star" not in gs.transfer_requests_by
 
 
 def test_undecorated_retiree_gets_no_tribute() -> None:

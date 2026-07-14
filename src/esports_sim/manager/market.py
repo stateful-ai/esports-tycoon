@@ -14,7 +14,7 @@ import numpy as np
 
 from esports_sim.manager import (
     chronicle, development, economy, gm_personalities, market_history, memories,
-    relationships, transfer_requests,
+    relationships, role_fit, transfer_requests,
 )
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
@@ -37,6 +37,16 @@ MAX_CONTRACT_WEEKS = 80
 NEW_SIGNING_PROTECT_WEEKS = 12
 # The AI transfer window stays quiet while the season settles.
 TRANSFER_QUIET_WEEKS = 4
+AI_TRANSFER_WEEKLY_CAP = 3
+AI_TRANSFER_QUIET_WEEKLY_CAP = 1
+# Ability-point hurdle layered onto each GM archetype's normal upgrade bar.
+# The actual outgoing player's role comfort, org attachment, and locker-room
+# fit make continuity valuable without making established rosters immovable.
+AI_CONTINUITY_BASE = 0.75
+AI_CONTINUITY_COMFORT_MAX = 0.75
+AI_CONTINUITY_RETENTION_SCALE = 4.0
+AI_CONTINUITY_LOCKER_ROOM_MAX = 1.5
+AI_CONTINUITY_CAP = 6.0
 TRANSFER_REQUEST_ASK_MULT = 0.78
 
 
@@ -857,6 +867,44 @@ def retention_value(gs: GameState, team_id: str, pid: str) -> int:
     return int(org_player_valuation(gs, team_id, pid, "retain")["value"])
 
 
+def _ai_release_candidate(gs: GameState, team_id: str) -> Player | None:
+    """Return the player an AI club would actually drop to make room.
+
+    New arrivals get a real trial period. Among settled players, the club uses
+    its full retention valuation rather than raw ability, so tenure, captaincy,
+    sporting importance, and supporter value can all protect continuity.
+    """
+    roster = gs.roster(team_id)
+    if not roster:
+        return None
+    settled = [
+        player for player in roster
+        if player.tenure_weeks >= NEW_SIGNING_PROTECT_WEEKS
+    ]
+    return min(
+        settled or roster,
+        key=lambda player: (retention_value(gs, team_id, player.id), player.id),
+    )
+
+
+def _ai_continuity_hurdle(gs: GameState, team_id: str, pid: str) -> float:
+    """Extra upgrade required before an AI breaks up an established slot."""
+    player = gs.players[pid]
+    view = org_player_valuation(gs, team_id, pid, "retain")
+    base = max(int(view["market_value"]), 1)
+    retention_premium = max(0.0, int(view["value"]) / base - 1.0)
+    comfort = role_fit.assignment_comfort(player) / 100.0
+    locker_room = relationships.locker_room_fit(gs, pid, team_id)
+    locker_fit = float(locker_room.get("average", 50.0))
+    hurdle = (
+        AI_CONTINUITY_BASE
+        + comfort * AI_CONTINUITY_COMFORT_MAX
+        + retention_premium * AI_CONTINUITY_RETENTION_SCALE
+        + max(0.0, locker_fit - 50.0) / 50.0 * AI_CONTINUITY_LOCKER_ROOM_MAX
+    )
+    return round(min(AI_CONTINUITY_CAP, hurdle), 3)
+
+
 def _record_value_decision(
     gs: GameState, kind: str, outcome: str, pid: str, actor: str,
     *, counterparty: str = "", context: str = "retain", fee: int = 0,
@@ -1517,14 +1565,9 @@ def execute_transfer(
         # packages — see roster_cap). Fresh arrivals are protected — the
         # org won't flip a player it just signed/bought (falls back to the
         # overall weakest only if the WHOLE roster is new).
-        settled = [
-            gs.players[q] for q in buyer.player_ids
-            if gs.players[q].tenure_weeks >= NEW_SIGNING_PROTECT_WEEKS
-        ]
-        weakest = min(
-            settled or (gs.players[q] for q in buyer.player_ids),
-            key=lambda q: (retention_value(gs, buyer_id, q.id), q.id),
-        )
+        weakest = _ai_release_candidate(gs, buyer_id)
+        if weakest is None:
+            return False, "buyer has no player available to make room"
         effects = _departure_consequences(gs, buyer_id, weakest.id)
         _record_value_decision(
             gs, "release", "completed", weakest.id, buyer_id,
@@ -1535,6 +1578,8 @@ def execute_transfer(
         buyer.lineup.starters = [q for q in buyer.lineup.starters if q != weakest.id]
         buyer.lineup.agents.pop(weakest.id, None)
         weakest.contract_weeks_left = 0
+        weakest.tenure_weeks = 0
+        transfer_requests.clear(gs, weakest.id)
         gs.free_agent_ids.append(weakest.id)
         if buyer.captain_id == weakest.id:
             buyer.captain_id = buyer.player_ids[0] if buyer.player_ids else None
@@ -1928,7 +1973,7 @@ def respond_offer(
 
 
 def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
-    """Weekly AI transfer activity: a couple of orgs go shopping. Tier-1
+    """Weekly AI transfer activity: several orgs can go shopping. Tier-1
     money raids tier-2 breakouts (the promotion pipeline) and makes the
     occasional lateral move; bids for user players land on the user's
     desk instead of resolving."""
@@ -1941,16 +1986,18 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
     if not bool(market_window_status(gs)["open"]):
         return
     moves = 0
-    # Rosters settle before the wheeling starts: the opening weeks see
-    # almost no AI shopping, and never more than one move league-wide per
-    # week after that (transfers should read as events, not noise).
+    # Rosters settle before the wheeling starts. After that, several distinct
+    # buyers can act, but each buyer still gets only this one pass per week.
     quiet = gs.week <= TRANSFER_QUIET_WEEKS
+    weekly_cap = (
+        AI_TRANSFER_QUIET_WEEKLY_CAP if quiet else AI_TRANSFER_WEEKLY_CAP
+    )
     buyers = sorted(
         (t for t in gs.teams.values() if t.tier == 1 and not gs.is_human(t.id)),
         key=lambda t: t.id,
     )
     for buyer in buyers:
-        if moves >= 1:
+        if moves >= weekly_cap:
             break
         archetype = gm_personalities.archetype_for(gs.seed, buyer.id)
         appetite = gm_personalities.transfer_appetite(archetype, quiet=quiet)
@@ -1959,7 +2006,11 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
         roster = gs.roster(buyer.id)
         if len(roster) < ROSTER_SIZE:
             continue  # holes get filled from free agency, not transfers
-        weakest_q = min(player_quality(p) for p in roster)
+        outgoing = _ai_release_candidate(gs, buyer.id)
+        if outgoing is None:
+            continue
+        outgoing_q = role_fit.current_ability(outgoing)
+        continuity_hurdle = _ai_continuity_hurdle(gs, buyer.id, outgoing.id)
         best: tuple[float, int, str, str] | None = None
         for seller in sorted(gs.teams.values(), key=lambda t: t.id):
             if seller.id == buyer.id:
@@ -1968,18 +2019,30 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                 p = gs.players[pid]
                 if p.no_transfer_clause and not transfer_requests.active(gs, pid, seller.id):
                     continue
+                # A player who just moved this week cannot be flipped by the
+                # next buyer in the same multi-move window.
+                if (
+                    seller.tier == 1
+                    and p.tenure_weeks < NEW_SIGNING_PROTECT_WEEKS
+                    and not transfer_requests.active(gs, pid, seller.id)
+                ):
+                    continue
                 # The buyer shops on ITS OWN read of the player — an org
                 # that over-rates someone will overpay for them (and one
                 # that under-rates a gem walks right past).
                 q = perceived_quality(gs, buyer.id, p)
-                upgrade = q - weakest_q
+                perceived_role_q = q + role_fit.current_ability(p) - player_quality(p)
+                upgrade = perceived_role_q - outgoing_q
                 upgrade += gm_personalities.target_bonus(
                     archetype, age=p.age, followers=p.followers,
                 )
                 # Tier-2 targets: buy the future, not just the present.
                 if seller.tier == 2:
                     upgrade += max(0.0, development.potential_of(p) - q) * 0.5
-                if upgrade < gm_personalities.upgrade_threshold(archetype):
+                if upgrade < (
+                    gm_personalities.upgrade_threshold(archetype)
+                    + continuity_hurdle
+                ):
                     continue
                 seller_view = org_player_valuation(gs, seller.id, pid, "sell")
                 if (
@@ -2007,9 +2070,10 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                 if buyer.balance < fee + asking_salary(p) * 10:
                     continue
                 surplus = int(buyer_view["value"]) - fee
-                key = (upgrade + surplus / 100_000.0, -fee, pid, seller.id)
+                score = upgrade + surplus / 100_000.0
+                key = (score, -fee, pid, seller.id)
                 if best is None or key > (best[0], -best[1], best[2], best[3]):
-                    best = (upgrade, fee, pid, seller.id)
+                    best = (score, fee, pid, seller.id)
         if best is None:
             continue
         _, fee, pid, seller_id = best
