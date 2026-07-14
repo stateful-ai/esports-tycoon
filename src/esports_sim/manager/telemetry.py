@@ -52,6 +52,7 @@ ACTION_KINDS = frozenset(
         "negotiate_cancel",
         "save_settings",
         "sponsor_respond",
+        "sponsor_demand_respond",
         "facility_upgrade",
         "hire_staff",
         "release_staff",

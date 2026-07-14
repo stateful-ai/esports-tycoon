@@ -21,13 +21,16 @@ cleanly, so old saves land softly.
 
 from __future__ import annotations
 
+import hashlib
+
 import numpy as np
 
-from esports_sim.manager import development, economy
+from esports_sim.manager import development, economy, rivalries
 from esports_sim.manager.schedule import regular_season_weeks
 from esports_sim.manager.state import (
     GameState,
     SponsorDeal,
+    SponsorDemand,
     SponsorObjective,
     SponsorOffer,
     SponsorPackage,
@@ -37,6 +40,10 @@ SLOT_ORDER: tuple[str, ...] = ("title", "jersey", "peripheral", "stream", "appar
 STRUCTURES: tuple[str, ...] = ("upfront", "steady", "performance")
 MARKET_CAP_PER_SLOT = 3
 OFFER_SHELF_LIFE = 2  # weeks on the table
+DEMAND_CHANCE = 0.22
+DEMAND_HISTORY_CAP = 24
+ROOKIE_MAX_AGE = 21
+ROOKIE_MAX_CAREER_MAPS = 10
 
 # Money component ranges, scaled by slot mult × marketability × relation.
 _BASE_UPFRONT_BONUS = (120, 240)  # * scale, * 1000
@@ -125,6 +132,11 @@ OBJECTIVE_LABELS = {
     "win_champions": "win CHAMPIONS",
     "beat_top4": "beat a world top-4 team (per win)",
     "field_youth": "field an under-21 talent",
+}
+
+DEMAND_LABELS = {
+    "field_rookie": "Field the named rookie",
+    "win_rivalry": "Win the rivalry match",
 }
 
 
@@ -388,6 +400,249 @@ def decline_market_offer(gs: GameState, slot: str, brand: str) -> tuple[bool, st
     gs.sponsor_market[slot] = [o for o in offers if o.brand != brand]
     _bump_relation(gs, brand, -3.0)
     return True, f"declined {brand} ({slot})"
+
+
+# ---------------------------------------------------------------------------
+# Complex demands: exact fixture obligations from active partners
+
+
+def _stable_demand_id(gs: GameState, fixture_id: str, brand: str, kind: str, player_id: str) -> str:
+    raw = "|".join((
+        gs.acting_team_id, str(gs.season), str(gs.week), fixture_id,
+        brand, kind, player_id,
+    )).encode("utf-8")
+    return hashlib.blake2b(raw, digest_size=8).hexdigest()
+
+
+def rookie_maps(gs: GameState, player_id: str) -> int:
+    """Public career maps used by both eligibility and display."""
+    career_maps = gs.career_stats.get(player_id).maps if player_id in gs.career_stats else 0
+    season_maps = gs.player_stats.get(player_id).maps if player_id in gs.player_stats else 0
+    return int(career_maps + season_maps)
+
+
+def rookie_candidates(gs: GameState, team_id: str | None = None) -> list[str]:
+    tid = team_id or gs.acting_team_id
+    return sorted(
+        p.id for p in gs.roster(tid)
+        if p.age <= ROOKIE_MAX_AGE and rookie_maps(gs, p.id) <= ROOKIE_MAX_CAREER_MAPS
+    )
+
+
+def _next_demand_fixture(gs: GameState, team_id: str):
+    return next((
+        fixture for fixture in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+        if not fixture.played
+        and fixture.week > gs.week
+        and team_id in (fixture.team_a, fixture.team_b)
+    ), None)
+
+
+def _demand_money(deal: SponsorDeal, kind: str) -> tuple[int, int]:
+    base = max(5_000, deal.weekly + deal.per_win)
+    if kind == "win_rivalry":
+        reward = min(250_000, max(15_000, base * 3))
+        penalty = min(125_000, max(7_500, base * 3 // 2))
+    else:
+        reward = min(180_000, max(10_000, base * 2))
+        penalty = min(90_000, max(5_000, base))
+    return reward, penalty
+
+
+def maybe_demand(gs: GameState, rng: np.random.Generator) -> SponsorDemand | None:
+    """Possibly issue one request for the next fixture.
+
+    The caller supplies a demand-only RNG stream, so adding or tuning this
+    system cannot shift match, market, or other campaign outcomes.
+    """
+    if any(d.status in ("pending", "accepted") for d in gs.sponsor_demands):
+        return None
+    tid = gs.acting_team_id
+    fixture = _next_demand_fixture(gs, tid)
+    if fixture is None:
+        return None
+    weeks_until = max(1, fixture.week - gs.week)
+    deals = [
+        (slot, gs.sponsor_slots[slot]) for slot in SLOT_ORDER
+        if slot in gs.sponsor_slots and gs.sponsor_slots[slot].weeks_left >= weeks_until
+    ]
+    if not deals:
+        return None
+    opponent = fixture.team_b if fixture.team_a == tid else fixture.team_a
+    rookies = rookie_candidates(gs, tid)
+    kinds = []
+    if rookies:
+        kinds.append("field_rookie")
+    if rivalries.get(gs, tid, opponent) >= rivalries.RIVALRY_BAR:
+        kinds.append("win_rivalry")
+    if not kinds or rng.random() >= DEMAND_CHANCE:
+        return None
+
+    slot, deal = deals[int(rng.integers(0, len(deals)))]
+    kind = kinds[int(rng.integers(0, len(kinds)))]
+    player_id = (
+        rookies[int(rng.integers(0, len(rookies)))]
+        if kind == "field_rookie" else ""
+    )
+    reward, penalty = _demand_money(deal, kind)
+    demand = SponsorDemand(
+        id=_stable_demand_id(gs, fixture.id, deal.name, kind, player_id),
+        brand=deal.name,
+        slot=slot,
+        kind=kind,
+        fixture_id=fixture.id,
+        opponent_id=opponent,
+        player_id=player_id,
+        issued_season=gs.season,
+        issued_week=gs.week,
+        deadline_week=fixture.week,
+        reward=reward,
+        penalty=penalty,
+    )
+    gs.sponsor_demands.append(demand)
+    view = demand_view(gs, demand, tid)
+    gs.push_private_news(
+        f"Sponsor demand issued — {deal.name}: {view['requirement']}. "
+        f"Accept for {reward:,} cr upside; failure costs {penalty:,} cr. "
+        f"Decision due before week {fixture.week}."
+    )
+    return demand
+
+
+def respond_demand(gs: GameState, demand_id: str, accept: bool) -> tuple[bool, str]:
+    demand = next((d for d in gs.sponsor_demands if d.id == demand_id), None)
+    if demand is None:
+        return False, "that sponsor demand no longer exists"
+    if demand.status != "pending":
+        return False, "that sponsor demand has already been answered"
+    fixture = next((f for f in gs.fixtures if f.id == demand.fixture_id), None)
+    if (
+        fixture is None or fixture.played
+        or gs.season != demand.issued_season
+        or gs.week > demand.deadline_week
+    ):
+        return False, "that sponsor demand is no longer actionable"
+    if accept:
+        demand.status = "accepted"
+        message = f"accepted {demand.brand}'s demand"
+    else:
+        demand.status = "declined"
+        demand.resolved_season = gs.season
+        demand.resolved_week = gs.week
+        _bump_relation(gs, demand.brand, -3.0)
+        message = f"declined {demand.brand}'s demand; relations cooled"
+    gs.push_private_news(message[0].upper() + message[1:] + ".")
+    return True, message
+
+
+def settle_demands(gs: GameState, week_dressed: dict[str, set[str]]) -> int:
+    """Resolve requests whose named fixture has just been played.
+
+    Returns the signed balance delta for the weekly finance report.
+    """
+    tid = gs.acting_team_id
+    total = 0
+    fixtures = {f.id: f for f in gs.fixtures}
+    for demand in gs.sponsor_demands:
+        if demand.status not in ("pending", "accepted"):
+            continue
+        fixture = fixtures.get(demand.fixture_id)
+        deadline_passed = (
+            gs.season > demand.issued_season
+            or (gs.season == demand.issued_season and gs.week > demand.deadline_week)
+        )
+        if fixture is None or not fixture.played:
+            if not deadline_passed:
+                continue
+            demand.resolved_season = gs.season
+            demand.resolved_week = gs.week
+            was_pending = demand.status == "pending"
+            demand.status = "expired"
+            if was_pending:
+                _bump_relation(gs, demand.brand, -2.0)
+            gs.push_private_news(
+                f"Sponsor demand expired — {demand.brand}'s named fixture passed "
+                "without a result."
+            )
+            continue
+        if fixture.week > gs.week:
+            continue
+        demand.resolved_season = gs.season
+        demand.resolved_week = gs.week
+        if demand.status == "pending":
+            demand.status = "expired"
+            _bump_relation(gs, demand.brand, -2.0)
+            gs.push_private_news(
+                f"Sponsor demand expired — {demand.brand}'s request went unanswered. "
+                "Relations cooled."
+            )
+            continue
+        met = (
+            demand.player_id in week_dressed.get(tid, set())
+            if demand.kind == "field_rookie"
+            else fixture.winner_id == tid
+        )
+        if met:
+            demand.status = "met"
+            total += demand.reward
+            gs.teams[tid].balance += demand.reward
+            _bump_relation(gs, demand.brand, +5.0)
+            gs.push_private_news(
+                f"Sponsor demand met — {demand.brand} pay {demand.reward:,} cr."
+            )
+        else:
+            demand.status = "missed"
+            total -= demand.penalty
+            gs.teams[tid].balance -= demand.penalty
+            _bump_relation(gs, demand.brand, -8.0)
+            gs.push_private_news(
+                f"Sponsor demand missed — {demand.brand} charge {demand.penalty:,} cr. "
+                "Relations deteriorated."
+            )
+    if len(gs.sponsor_demands) > DEMAND_HISTORY_CAP:
+        gs.sponsor_demands = gs.sponsor_demands[-DEMAND_HISTORY_CAP:]
+    return total
+
+
+def demand_view(gs: GameState, demand: SponsorDemand, team_id: str | None = None) -> dict:
+    tid = team_id or gs.acting_team_id
+    opponent = gs.teams.get(demand.opponent_id)
+    player = gs.players.get(demand.player_id)
+    fixture = next((f for f in gs.fixtures if f.id == demand.fixture_id), None)
+    opponent_name = opponent.name if opponent is not None else demand.opponent_id
+    if demand.kind == "field_rookie" and player is not None:
+        requirement = f"Play {player.handle} against {opponent_name}"
+        detail = (
+            f"{player.handle} is age {player.age} with {rookie_maps(gs, player.id)} "
+            f"career maps (rookie limit: {ROOKIE_MAX_CAREER_MAPS})."
+        )
+    else:
+        requirement = f"Beat rivals {opponent_name}"
+        detail = (
+            f"Rivalry heat: {rivalries.get(gs, tid, demand.opponent_id):.0f}/100."
+        )
+    return {
+        **demand.model_dump(mode="json"),
+        "label": DEMAND_LABELS.get(demand.kind, demand.kind),
+        "requirement": requirement,
+        "detail": detail,
+        "opponent_name": opponent_name,
+        "player_name": player.handle if player is not None else "",
+        "relation": gs.sponsor_relations_by.get(tid, {}).get(demand.brand, 50.0),
+        "can_respond": (
+            demand.status == "pending"
+            and demand.issued_season == gs.season
+            and demand.deadline_week >= gs.week
+            and fixture is not None
+            and not fixture.played
+        ),
+    }
+
+
+def demand_views(gs: GameState, team_id: str | None = None) -> list[dict]:
+    tid = team_id or gs.acting_team_id
+    demands = gs.sponsor_demands_by.get(tid, [])
+    return [demand_view(gs, demand, tid) for demand in reversed(demands[-8:])]
 
 
 def _describe(deal: SponsorDeal) -> str:

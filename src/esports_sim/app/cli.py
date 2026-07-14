@@ -588,10 +588,10 @@ def auto_play(
             console.print(f"[cyan]manager AI:[/] {manager_model}")
         except (OSError, KeyError, TypeError, ValueError) as exc:
             console.print(
-                f"[yellow]manager AI checkpoint unavailable ({exc}); using heuristic-manager-v3[/]"
+                f"[yellow]manager AI checkpoint unavailable ({exc}); using heuristic-manager-v4[/]"
             )
     else:
-        console.print("[cyan]manager AI:[/] heuristic-manager-v3")
+        console.print("[cyan]manager AI:[/] heuristic-manager-v4")
     for _ in range(weeks):
         result = play_policy_week(gs, gd, policy, profile=profile, team_id=team)
         console.print(
@@ -614,7 +614,7 @@ def main() -> None:
         "--manager-model",
         type=Path,
         default=None,
-        help="with --auto: optional learned manager checkpoint; default is heuristic-manager-v3",
+        help="with --auto: optional learned manager checkpoint; default is heuristic-manager-v4",
     )
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--team", type=str, default="team_nexus")

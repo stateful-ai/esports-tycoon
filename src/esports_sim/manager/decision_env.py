@@ -39,7 +39,7 @@ from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 7
+OBSERVATION_VERSION = 8
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
@@ -58,6 +58,7 @@ SUPPORTED_ACTIONS = frozenset(
         "release_staff",
         "facility_upgrade",
         "sponsor_respond",
+        "sponsor_demand_respond",
         "set_game_plan",
         "clear_game_plan",
         "talk",
@@ -251,6 +252,19 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
                             "structure": structure,
                         }
                     )
+    demand_options = []
+    unplayed_fixture_ids = {f.id for f in gs.fixtures if not f.played}
+    for demand in gs.sponsor_demands:
+        if (
+            demand.status == "pending"
+            and demand.issued_season == gs.season
+            and demand.deadline_week >= gs.week
+            and demand.fixture_id in unplayed_fixture_ids
+        ):
+            demand_options.extend((
+                {"demand_id": demand.id, "accept": True},
+                {"demand_id": demand.id, "accept": False},
+            ))
     live_negotiations = [
         {
             "player_id": pid,
@@ -345,6 +359,9 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "release_staff": {"enabled": bool(gs.staff), "roles": sorted(gs.staff)},
         "facility_upgrade": {"enabled": bool(facility_options), "options": facility_options},
         "sponsor_respond": {"enabled": bool(sponsor_options), "options": sponsor_options},
+        "sponsor_demand_respond": {
+            "enabled": bool(demand_options), "options": demand_options,
+        },
         "set_game_plan": {
             "enabled": plan_enabled,
             "fixture_id": fixture.id if fixture is not None else "",
@@ -473,6 +490,7 @@ def manager_observation(
                 "culture": culture.culture_snapshot(gs, team_id),
                 "delegation": delegation.view(gs, team_id),
                 "media": media_events.view(gs, team_id),
+                "sponsor_demands": sponsors.demand_views(gs, team_id),
                 "tournament_roster": series_management.registration_for(gs, team_id),
                 "series_directive": (
                     gs.series_directives_by[team_id].model_dump(mode="json")
@@ -682,6 +700,13 @@ class HeadlessManagerEnv:
                     ok, message = sponsors.decline_market_offer(self.gs, slot, brand)
                 if not ok:
                     raise InvalidManagerAction(message)
+            elif kind == "sponsor_demand_respond":
+                demand_id = str(params.get("demand_id", ""))
+                accept = bool(params.get("accept", False))
+                ok, message = sponsors.respond_demand(self.gs, demand_id, accept)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                params = {"demand_id": demand_id, "accept": accept}
             elif kind == "set_game_plan":
                 fixture = self.gs.team_fixture(self.team_id)
                 if fixture is None or fixture.played:

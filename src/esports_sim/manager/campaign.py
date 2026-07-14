@@ -735,10 +735,16 @@ def advance_week(
         gs.set_acting(tid)
         fx = gs.team_fixture(tid)
         won = bool(fx and fx.winner_id == tid)
-        report.income_by[tid] = report.income_by.get(tid, 0) + sponsors.weekly_tick(
-            gs, won
-        )
+        sponsor_delta = sponsors.settle_demands(gs, week_dressed)
+        sponsor_delta += sponsors.weekly_tick(gs, won)
+        report.income_by[tid] = report.income_by.get(tid, 0) + sponsor_delta
         sponsors.maybe_offer(gs, week_rng)
+        sponsors.maybe_demand(
+            gs,
+            tree.derive(
+                "season", gs.season, "week", gs.week, "sponsor-demands", tid
+            ),
+        )
     gs.set_acting(None)
 
     # Primary human mirrors into the legacy single-manager report fields.

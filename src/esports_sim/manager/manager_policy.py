@@ -59,7 +59,7 @@ class HeuristicManagerPolicy:
     parameters come from ``manager_observation`` and its legal action mask.
     """
 
-    version = "heuristic-manager-v3"
+    version = "heuristic-manager-v4"
 
     def __init__(self, profile: ManagerProfile) -> None:
         self.profile = profile
@@ -91,13 +91,26 @@ class HeuristicManagerPolicy:
         )
 
     def _lineup(self, obs: dict[str, Any]) -> list[str]:
-        return [
+        lineup = [
             player["id"]
             for player in sorted(
                 obs["roster"],
                 key=lambda player: (-self._roster_score(player), player["id"]),
             )[:5]
         ]
+        accepted = next((
+            demand for demand in obs.get("club", {}).get("sponsor_demands", [])
+            if demand.get("status") == "accepted"
+            and demand.get("kind") == "field_rookie"
+            and demand.get("player_id")
+        ), None)
+        if accepted is not None and accepted["player_id"] not in lineup:
+            roster = {player["id"]: player for player in obs["roster"]}
+            target = accepted["player_id"]
+            if target in roster and lineup:
+                weakest = min(lineup, key=lambda pid: (self._roster_score(roster[pid]), pid))
+                lineup[lineup.index(weakest)] = target
+        return lineup
 
     def _site_focus(self) -> str:
         if self.profile.experimentation < 0.62:
@@ -373,6 +386,21 @@ class HeuristicManagerPolicy:
         )
         if expiring and self.profile.loyalty >= 0.45 and self._once(obs, "renew"):
             return {"kind": "renew", "params": {"player_id": expiring[0]["id"]}}
+
+        if legal["sponsor_demand_respond"]["enabled"] and self._once(obs, "sponsor_demand"):
+            options = legal["sponsor_demand_respond"]["options"]
+            demand_id = options[0]["demand_id"]
+            view = next(
+                demand for demand in obs.get("club", {}).get("sponsor_demands", [])
+                if demand["id"] == demand_id
+            )
+            reward_ratio = float(view["reward"]) / max(float(view["penalty"]), 1.0)
+            if view["kind"] == "field_rookie":
+                accept = self.profile.youth >= 0.35 or reward_ratio >= 1.75
+            else:
+                accept = self.profile.risk >= 0.25 or reward_ratio >= 1.9
+            pick = next(o for o in options if o["accept"] is accept)
+            return {"kind": "sponsor_demand_respond", "params": pick}
 
         if legal["sponsor_respond"]["enabled"] and self._once(obs, "sponsor"):
             accepts = [o for o in legal["sponsor_respond"]["options"] if o["accept"]]
