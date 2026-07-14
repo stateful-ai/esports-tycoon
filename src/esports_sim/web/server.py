@@ -3889,6 +3889,7 @@ def finances() -> dict:
             if gs.sponsor_offer
             else None,
             "slots": slots,
+            "demands": sponsors.demand_views(gs, gs.acting_team_id),
             "facilities": facilities,
             "breakdown": economy.weekly_breakdown(gs, staff_cost=staff_cost),
             "projection": economy.cash_projection(gs, staff_cost=staff_cost),
@@ -3938,6 +3939,27 @@ def sponsor_action(body: SponsorBody) -> dict:
         if not ok:
             raise HTTPException(409, msg)
         return {"ok": True, "message": msg}
+
+
+class SponsorDemandBody(BaseModel):
+    demand_id: str
+    accept: bool
+
+
+@app.post("/api/actions/sponsor_demand")
+def sponsor_demand_action(body: SponsorDemandBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        ok, message = sponsors.respond_demand(gs, body.demand_id, body.accept)
+        if not ok:
+            raise HTTPException(409, message)
+        telemetry.record_action(
+            gs,
+            "sponsor_demand_respond",
+            {"demand_id": body.demand_id, "accept": body.accept},
+        )
+        S.save()
+        return {"ok": True, "message": message}
 
 
 class FacilityBody(BaseModel):

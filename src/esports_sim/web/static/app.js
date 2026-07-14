@@ -6218,6 +6218,23 @@ const FinancesTab = () => {
     team_house: "Team House",
   };
 
+  const handleDemandAction = async (demandId, accept) => {
+    const actionKey = `demand-${demandId}`;
+    setActionInProgress(actionKey);
+    try {
+      const r = await api("/api/actions/sponsor_demand", {
+        demand_id: demandId, accept,
+      });
+      toast(r.message);
+      if (window.refresh) await window.refresh();
+      await fetchData();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
   return html`
     <div>
       <div class="screen-head">
@@ -6231,6 +6248,58 @@ const FinancesTab = () => {
             <h2>
               Sponsorships <span class="muted" style=${{ fontWeight: 400 }}>— marketability ${data.marketability ?? "?"}</span>
             </h2>
+            ${data.demands && data.demands.length > 0 && html`
+              <div class="slot-row" style=${{ borderLeftColor: "var(--es-color-accent-warm)" }}>
+                <div class="row">
+                  <span class="microlabel">Sponsor demands</span>
+                  <span class="muted">specific match obligations with real financial stakes</span>
+                </div>
+                ${data.demands.map(d => {
+                  const isBusy = actionInProgress === `demand-${d.id}`;
+                  const tone = d.status === "met" ? "tone-good"
+                    : d.status === "missed" || d.status === "expired" ? "tone-bad"
+                    : d.status === "accepted" ? "tone-info" : "";
+                  return html`
+                    <div class="slot-row" key=${d.id} style=${{ borderLeft: "none", paddingLeft: 0, paddingRight: 0 }}>
+                      <div class="row">
+                        <span class=${`chip ${tone}`}>${d.status}</span>
+                        <b>${d.brand}</b>
+                        <span class="chip">${SLOT_LABELS[d.slot] || d.slot}</span>
+                        <span class="muted">week ${d.deadline_week}</span>
+                      </div>
+                      <div>
+                        <b>
+                          ${d.kind === "field_rookie" ? html`
+                            Play <span data-pid=${d.player_id}>${d.player_name}</span>
+                            against <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                          ` : html`
+                            Beat rivals <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                          `}
+                        </b>
+                      </div>
+                      <div class="muted">${d.detail}</div>
+                      <div class="row">
+                        <span class="chip tone-good">reward ${money(d.reward)}</span>
+                        <span class="chip tone-bad">failure -${money(d.penalty)}</span>
+                        <span class="muted">brand relation ${d.relation}</span>
+                      </div>
+                      ${d.can_respond && html`
+                        <div class="row offer-row">
+                          <button class="btn btn-primary btn-sm" disabled=${isBusy}
+                            onClick=${() => handleDemandAction(d.id, true)}>
+                            ${isBusy ? "Saving..." : "Accept demand"}
+                          </button>
+                          <button class="btn btn-sm" disabled=${isBusy}
+                            onClick=${() => handleDemandAction(d.id, false)}>
+                            ${isBusy ? "..." : "Decline"}
+                          </button>
+                        </div>
+                      `}
+                    </div>
+                  `;
+                })}
+              </div>
+            `}
             ${["title", "jersey", "peripheral", "stream", "apparel"].map(slot => {
               const s = data.slots[slot];
               if (!s) return null;

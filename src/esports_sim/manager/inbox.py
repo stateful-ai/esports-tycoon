@@ -47,7 +47,8 @@ CONTRACT_MILESTONES = (12, 8, 4, 2, 1)  # weeks-left values worth a reminder
 # Per-category ceilings so no single beat floods a week.
 _CAT_CAP = {
     "match": 1, "transfer": 3, "board": 3, "talk": 2,
-    "sponsor_offer": 3, "sponsor_obj": 2, "scouting": 2, "analytics": 1,
+    "sponsor_offer": 3, "sponsor_demand": 2, "sponsor_obj": 2,
+    "scouting": 2, "analytics": 1,
     "development": 3, "news": 3,
 }
 
@@ -55,6 +56,7 @@ _CAT_CAP = {
 # overflows PER_WEEK_CAP, and shown first within a week).
 _P_TRANSFER = 0
 _P_BOARD = 1
+_P_SPONSOR_DEMAND = 1
 _P_SPONSOR_OFFER = 2
 _P_TALK = 3
 _P_DEV_URGENT = 3
@@ -326,6 +328,25 @@ def _describe_offer(o, slot: str) -> str:
 
 def _sponsor_items(gs: "GameState", season: int, week: int):
     out = []
+    demands = []
+    for demand in gs.sponsor_demands:
+        if demand.issued_season != season or demand.issued_week != week:
+            continue
+        view = sponsors.demand_view(gs, demand)
+        body = (
+            f"{demand.brand} want you to {view['requirement'].lower()}.\n"
+            f"{view['detail']}\n"
+            f"Reward: {demand.reward:,} cr. Failure penalty: {demand.penalty:,} cr. "
+            f"Respond before week {demand.deadline_week}."
+        )
+        demands.append((
+            _P_SPONSOR_DEMAND,
+            _make(
+                season, week, "sponsor", f"demand|{demand.id}",
+                f"{demand.brand} issue a match demand", body, "finances",
+            ),
+        ))
+    out.extend(demands[: _CAT_CAP["sponsor_demand"]])
     # Fresh market offers — surfaced only the week they appear (their shelf
     # life is fixed, so expires_week pins the arrival week).
     offers = []
@@ -342,7 +363,13 @@ def _sponsor_items(gs: "GameState", season: int, week: int):
     # Objective outcomes (paid or missed) — private to THIS manager's book.
     objs = []
     for msg in _week_private_news(gs, season, week):
-        if msg.startswith("Objective met") or "missed objective" in msg:
+        if (
+            msg.startswith("Objective met")
+            or "missed objective" in msg
+            or msg.startswith("Sponsor demand met")
+            or msg.startswith("Sponsor demand missed")
+            or msg.startswith("Sponsor demand expired")
+        ):
             objs.append((
                 _P_SPONSOR_OBJ,
                 _make(season, week, "sponsor", f"obj|{_hash_id(msg)}",
@@ -654,6 +681,20 @@ def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
 
 
 def _sponsor_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    for demand in gs.sponsor_demands:
+        subject = f"demand|{demand.id}"
+        if _hash_id(it.season, it.week, "sponsor", subject) != it.id:
+            continue
+        if not sponsors.demand_view(gs, demand)["can_respond"]:
+            return []
+        return [
+            {"id": "accept", "label": "Accept demand",
+             "endpoint": "/api/actions/sponsor_demand",
+             "payload": {"demand_id": demand.id, "accept": True}},
+            {"id": "decline", "label": "Decline",
+             "endpoint": "/api/actions/sponsor_demand",
+             "payload": {"demand_id": demand.id, "accept": False}},
+        ]
     for slot in sponsors.SLOT_ORDER:
         for o in gs.sponsor_market.get(slot, []):
             # Only the market-offer items are actionable; objective-outcome

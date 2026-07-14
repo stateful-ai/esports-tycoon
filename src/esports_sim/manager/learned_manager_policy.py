@@ -555,6 +555,8 @@ class LearnedManagerPolicy:
                 if option["accept"] and option["structure"] == structure
             ]
             params = dict(accepts[0] if accepts else legal["options"][0])
+        elif kind == "sponsor_demand_respond":
+            params = dict(legal["options"][0])
         elif kind == "set_game_plan":
             params = {
                 "team_talk": self._predict_head("team_talk", x, "focus"),

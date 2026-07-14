@@ -100,7 +100,7 @@ def test_crisis_mistake_creates_a_real_transfer_request(game_data, tmp_path) -> 
     gs.save(path)
     loaded = GameState.load(path)
     assert loaded.transfer_requests_by[pid].reason == "manager issued a bench ultimatum"
-    assert loaded.schema_version == 29
+    assert loaded.schema_version == 30
 
 
 def test_ai_gm_archetypes_are_stable_and_scapegoater_changes_course(game_data) -> None:
@@ -143,6 +143,6 @@ def test_v26_save_migrates_new_management_state(game_data, tmp_path) -> None:
     path = tmp_path / "v26.json"
     path.write_text(json.dumps(raw), encoding="utf-8")
     loaded = GameState.load(path)
-    assert loaded.schema_version == 29
+    assert loaded.schema_version == 30
     assert loaded.transfer_requests_by == {}
     assert loaded.ai_gm_coach_changes_by == {}

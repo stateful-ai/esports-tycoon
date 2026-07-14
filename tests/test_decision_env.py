@@ -24,7 +24,7 @@ def test_observation_is_json_safe_visible_and_restores_acting_team(game_data):
 
     json.dumps(obs, sort_keys=True)
     assert gs.acting_team_id == tid
-    assert obs["observation_version"] == 7
+    assert obs["observation_version"] == 8
     assert obs["manager_profile"] == {"risk": 0.25}
     assert len(obs["roster"]) == 5
     assert "attributes" in obs["roster"][0]
@@ -52,7 +52,8 @@ def test_legal_masks_match_domain_rules(game_data):
         assert pair["drop_id"] in gs.teams[gs.user_team_id].player_ids
     for kind in (
         "set_dev_plan", "mentor", "hire_staff", "release_staff",
-        "facility_upgrade", "sponsor_respond", "set_game_plan", "talk",
+        "facility_upgrade", "sponsor_respond", "sponsor_demand_respond",
+        "set_game_plan", "talk",
         "negotiate_open", "accept_job",
     ):
         assert kind in legal
@@ -124,7 +125,7 @@ def test_game_plan_talk_and_trace_capture(game_data):
     env.step({"kind": "talk", "params": option})
     assert len(traces) == 2
     assert traces[0]["policy_version"] == "test-policy-v1"
-    assert traces[0]["observation"]["observation_version"] == 7
+    assert traces[0]["observation"]["observation_version"] == 8
     assert traces[0]["action"]["kind"] == "set_game_plan"
 
 

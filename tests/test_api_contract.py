@@ -6,6 +6,7 @@ fastapi = pytest.importorskip("fastapi")
 
 import esports_sim.web.server as server_mod
 from esports_sim.manager import new_campaign, advance_week
+from esports_sim.manager.state import SponsorDemand
 from esports_sim.registry import GameData
 
 @pytest.fixture(scope="module")
@@ -69,6 +70,34 @@ def test_facilities_endpoint_contract(test_env) -> None:
         facility for facility in data["facilities"]
         if facility["id"] == "analytics_suite"
     )["label"] == "VOD Review Room"
+
+
+def test_sponsor_demand_finances_and_action_contract(test_env) -> None:
+    gs = test_env
+    tid = gs.user_team_id
+    fixture = next(
+        f for f in sorted(gs.fixtures, key=lambda row: (row.week, row.id))
+        if not f.played and f.week >= gs.week and tid in (f.team_a, f.team_b)
+    )
+    opponent = fixture.team_b if fixture.team_a == tid else fixture.team_a
+    player_id = gs.teams[tid].player_ids[0]
+    demand = SponsorDemand(
+        id="api-demand", brand="Contract Corp", slot="jersey",
+        kind="field_rookie", fixture_id=fixture.id, opponent_id=opponent,
+        player_id=player_id, issued_season=gs.season, issued_week=gs.week,
+        deadline_week=fixture.week, reward=30_000, penalty=15_000,
+    )
+    gs.sponsor_demands.append(demand)
+
+    data = server_mod.finances()
+    assert data["demands"][0]["id"] == demand.id
+    assert data["demands"][0]["can_respond"] is True
+    result = server_mod.sponsor_demand_action(
+        server_mod.SponsorDemandBody(demand_id=demand.id, accept=True)
+    )
+    assert result["ok"] is True
+    assert demand.status == "accepted"
+    assert gs.action_log[-1].kind == "sponsor_demand_respond"
 
 
 def test_player_profile_endpoint_contract(test_env) -> None:

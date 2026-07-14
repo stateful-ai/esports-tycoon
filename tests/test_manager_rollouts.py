@@ -30,7 +30,7 @@ def test_rollout_and_traces_are_deterministic(game_data):
     assert a.traces == b.traces
     assert a.invalid_actions == 0
     assert a.action_counts["advance"] == 1
-    assert all(t["policy_version"] == "heuristic-manager-v3" for t in a.traces)
+    assert all(t["policy_version"] == "heuristic-manager-v4" for t in a.traces)
 
 
 def test_profiles_produce_distinct_management_styles(game_data):
@@ -65,7 +65,7 @@ def test_rollout_export_contract(tmp_path, game_data):
     evaluation = json.loads(paths["evaluation"].read_text())
     assert traces and traces[-1]["advanced"]
     assert traces[0]["run_id"] == result.run_id
-    assert runs[0]["policy_version"] == "heuristic-manager-v3"
+    assert runs[0]["policy_version"] == "heuristic-manager-v4"
     assert evaluation["runs"] == 1
 
 

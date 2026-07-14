@@ -101,7 +101,7 @@ def test_v26_save_migrates_staff_profiles_deterministically(tmp_path) -> None:
     path.write_text(json.dumps(raw), encoding="utf-8")
     first = GameState.load(path)
     second = GameState.load(path)
-    assert first.schema_version == 29
+    assert first.schema_version == 30
     assert first.model_dump_json() == second.model_dump_json()
     assert all(member.attributes for member in first.staff_pool)
 

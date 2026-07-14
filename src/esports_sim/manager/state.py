@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 29
+SCHEMA_VERSION = 30
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -446,6 +446,17 @@ def _migrate_v28_to_v29(data: dict) -> dict:
     return data
 
 
+def _migrate_v29_to_v30(data: dict) -> dict:
+    """v30 adds per-manager complex sponsor demands.
+
+    Existing careers begin with no demand history. New requests are generated
+    deterministically from active deals and future fixtures after the next
+    weekly tick.
+    """
+    data.setdefault("sponsor_demands_by", {})
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -475,6 +486,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     26: _migrate_v26_to_v27,
     27: _migrate_v27_to_v28,
     28: _migrate_v28_to_v29,
+    29: _migrate_v29_to_v30,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -932,6 +944,32 @@ class SponsorDeal(BaseModel):
     per_win: int = 0
     weeks_left: int = 0
     objectives: list[SponsorObjective] = Field(default_factory=list)
+
+
+class SponsorDemand(BaseModel):
+    """A time-limited request made by one active sponsor.
+
+    Unlike broad deal objectives, a demand names the exact fixture and, for a
+    rookie request, the exact player who must actually be dressed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    brand: str
+    slot: str
+    kind: str  # field_rookie | win_rivalry
+    fixture_id: str
+    opponent_id: str
+    player_id: str = ""
+    issued_season: int
+    issued_week: int
+    deadline_week: int
+    reward: int
+    penalty: int
+    status: str = "pending"  # pending | accepted | declined | met | missed | expired
+    resolved_season: int | None = None
+    resolved_week: int | None = None
 
 
 class SponsorPackage(BaseModel):
@@ -1719,6 +1757,14 @@ class GameState(BaseModel):
         self.sponsor_relations_by[self.acting_team_id] = value
 
     @property
+    def sponsor_demands(self) -> list["SponsorDemand"]:
+        return self.sponsor_demands_by.setdefault(self.acting_team_id, [])
+
+    @sponsor_demands.setter
+    def sponsor_demands(self, value: list["SponsorDemand"]) -> None:
+        self.sponsor_demands_by[self.acting_team_id] = value
+
+    @property
     def facilities(self) -> dict[str, int]:
         return self.facilities_by.setdefault(self.acting_team_id, {})
 
@@ -1903,6 +1949,8 @@ class GameState(BaseModel):
     # completed deals raise it, failures and snubs lower it; it scales the
     # money that brand offers next time.
     sponsor_relations_by: dict[str, dict[str, float]] = Field(default_factory=dict)
+    # Bounded history of specific fixture demands from active sponsors.
+    sponsor_demands_by: dict[str, list[SponsorDemand]] = Field(default_factory=dict)
     # Upgradeable org facilities, level 0-3 (missing key == level 0):
     # "training_center", "analytics_suite", "marketing_office".
     facilities_by: dict[str, dict[str, int]] = Field(default_factory=dict)
