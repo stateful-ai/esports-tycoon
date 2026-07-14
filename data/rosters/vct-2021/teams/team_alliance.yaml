@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 73.7
   salary: 5300
-  contract_weeks_left: 74
-  morale: 71.7
-  stamina: 94.3
-  form: 58.3
+  contract_weeks_left: 56
+  morale: 82.5
+  stamina: 89.3
+  form: 55.7
   personality_tags:
-  - quiet
   - team_player
-  potential: 72.9
+  potential: 79.0
 - id: team_alliance_hype
   handle: hype
   real_name: ''
@@ -206,14 +205,14 @@ players:
   personality_tags:
   - flashy
   - team_player
-  potential: 78.0
+  potential: 77.0
 - id: team_alliance_kadavra
   handle: kAdavra
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 23
+  age: 21
   role: initiator
   playstyle: support
   attributes:
@@ -298,14 +297,13 @@ players:
   - map_id: split
     mastery: 74.3
   salary: 4900
-  contract_weeks_left: 61
-  morale: 76.2
-  stamina: 87.8
-  form: 51.2
+  contract_weeks_left: 60
+  morale: 75.7
+  stamina: 93.0
+  form: 50.9
   personality_tags:
-  - flashy
-  - perfectionist
-  potential: 69.6
+  - rookie
+  potential: 82.0
 - id: team_alliance_luckerrr
   handle: luckeRRR
   real_name: ''
@@ -403,7 +401,7 @@ players:
   form: 58.3
   personality_tags:
   - hot_head
-  potential: 71.0
+  potential: 78.0
 - id: team_alliance_xms
   handle: xms
   real_name: ''
@@ -502,4 +500,4 @@ players:
   personality_tags:
   - grinder
   - slow_starter
-  potential: 71.6
+  potential: 79.0

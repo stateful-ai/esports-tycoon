@@ -1,6 +1,6 @@
 id: team_guild_esports
 name: Guild Esports
-tag: GUILD
+tag: GLD
 region: emea
 tier: 1
 captain_id: team_guild_esports_bonkar
@@ -15,7 +15,7 @@ players:
   region: emea
   country: ''
   languages: []
-  age: 25
+  age: 26
   role: controller
   playstyle: igl
   attributes:
@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 78.6
   salary: 5400
-  contract_weeks_left: 71
-  morale: 77.5
-  stamina: 88.9
-  form: 48.3
+  contract_weeks_left: 30
+  morale: 80.8
+  stamina: 94.0
+  form: 51.7
   personality_tags:
-  - analytical
-  - grinder
-  potential: 76.8
+  - veteran
+  potential: 76.0
 - id: team_guild_esports_yacine
   handle: Yacine
   real_name: ''
@@ -206,14 +205,14 @@ players:
   personality_tags:
   - analytical
   - slow_starter
-  potential: 78.0
+  potential: 83.0
 - id: team_guild_esports_draken
   handle: draken
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 25
+  age: 26
   role: duelist
   playstyle: awper
   attributes:
@@ -298,13 +297,13 @@ players:
   - map_id: split
     mastery: 75.2
   salary: 5700
-  contract_weeks_left: 35
-  morale: 82.3
-  stamina: 88.7
-  form: 52.7
+  contract_weeks_left: 36
+  morale: 63.0
+  stamina: 97.8
+  form: 51.5
   personality_tags:
-  - streamer
-  potential: 77.4
+  - veteran
+  potential: 80.0
 - id: team_guild_esports_leo
   handle: Leo
   real_name: ''
@@ -396,22 +395,21 @@ players:
   - map_id: split
     mastery: 81.1
   salary: 6400
-  contract_weeks_left: 58
-  morale: 70.8
-  stamina: 92.3
-  form: 55.2
+  contract_weeks_left: 74
+  morale: 74.1
+  stamina: 88.7
+  form: 54.2
   personality_tags:
-  - clutch_gene
-  - fan_favorite
+  - prodigy
   - rookie
-  potential: 89.8
+  potential: 92.0
 - id: team_guild_esports_sayf
   handle: Sayf
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 21
+  age: 20
   role: sentinel
   playstyle: anchor
   attributes:
@@ -496,11 +494,10 @@ players:
   - map_id: split
     mastery: 83.8
   salary: 6000
-  contract_weeks_left: 70
-  morale: 72.5
-  stamina: 95.7
-  form: 52.2
+  contract_weeks_left: 71
+  morale: 80.3
+  stamina: 90.0
+  form: 56.8
   personality_tags:
-  - flashy
-  - grinder
-  potential: 83.1
+  - rookie
+  potential: 89.0

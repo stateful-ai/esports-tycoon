@@ -17,7 +17,7 @@ players:
   languages:
   - lang: en
     level: 100.0
-  age: 23
+  age: 22
   role: controller
   playstyle: igl
   attributes:
@@ -102,14 +102,13 @@ players:
   - map_id: split
     mastery: 79.3
   salary: 6000
-  contract_weeks_left: 54
-  morale: 78.0
-  stamina: 90.6
-  form: 53.4
+  contract_weeks_left: 42
+  morale: 72.4
+  stamina: 94.4
+  form: 53.0
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 81.4
+  - team_player
+  potential: 84.0
 - id: team_team_liquid_scream
   handle: ScreaM
   real_name: ''
@@ -211,7 +210,8 @@ players:
   form: 55.1
   personality_tags:
   - pure_aimer
-  potential: 85.8
+  - veteran
+  potential: 86.0
 - id: team_team_liquid_jamppi
   handle: Jamppi
   real_name: ''
@@ -307,14 +307,14 @@ players:
   - map_id: split
     mastery: 88.8
   salary: 6400
-  contract_weeks_left: 51
-  morale: 71.9
-  stamina: 85.2
-  form: 54.7
+  contract_weeks_left: 53
+  morale: 70.7
+  stamina: 89.5
+  form: 48.9
   personality_tags:
-  - slow_starter
-  - team_player
-  potential: 92.7
+  - prodigy
+  - rookie
+  potential: 91.0
 - id: team_team_liquid_soulcas
   handle: soulcas
   real_name: ''
@@ -408,14 +408,13 @@ players:
   - map_id: split
     mastery: 81.5
   salary: 5700
-  contract_weeks_left: 61
-  morale: 74.2
-  stamina: 95.0
-  form: 54.0
+  contract_weeks_left: 32
+  morale: 75.5
+  stamina: 91.4
+  form: 56.3
   personality_tags:
-  - grinder
-  - independent
-  potential: 86.9
+  - rookie
+  potential: 85.0
 - id: team_team_liquid_nivera
   handle: Nivera
   real_name: ''
@@ -511,10 +510,11 @@ players:
   - map_id: split
     mastery: 85.3
   salary: 6100
-  contract_weeks_left: 57
-  morale: 80.6
-  stamina: 91.3
-  form: 45.1
+  contract_weeks_left: 64
+  morale: 73.9
+  stamina: 96.5
+  form: 53.5
   personality_tags:
-  - independent
-  potential: 86.9
+  - prodigy
+  - rookie
+  potential: 88.0

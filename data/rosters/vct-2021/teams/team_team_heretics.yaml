@@ -1,6 +1,6 @@
 id: team_team_heretics
 name: Team Heretics
-tag: TH
+tag: HER
 region: emea
 tier: 1
 captain_id: team_team_heretics_paura
@@ -15,7 +15,7 @@ players:
   region: emea
   country: ''
   languages: []
-  age: 25
+  age: 24
   role: controller
   playstyle: igl
   attributes:
@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 78.1
   salary: 5600
-  contract_weeks_left: 56
-  morale: 68.0
-  stamina: 90.3
-  form: 46.3
+  contract_weeks_left: 36
+  morale: 73.5
+  stamina: 86.4
+  form: 52.7
   personality_tags:
-  - streamer
   - team_player
-  potential: 75.6
+  potential: 81.0
 - id: team_team_heretics_nukkye
   handle: nukkye
   real_name: ''
@@ -206,7 +205,7 @@ players:
   personality_tags:
   - perfectionist
   - team_player
-  potential: 83.3
+  potential: 85.0
 - id: team_team_heretics_avova
   handle: AvovA
   real_name: ''
@@ -305,14 +304,14 @@ players:
   personality_tags:
   - grinder
   - team_player
-  potential: 81.7
+  potential: 83.0
 - id: team_team_heretics_koldamenta
   handle: Koldamenta
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 27
+  age: 28
   role: initiator
   playstyle: support
   attributes:
@@ -397,13 +396,13 @@ players:
   - map_id: split
     mastery: 82.9
   salary: 5600
-  contract_weeks_left: 79
-  morale: 81.6
-  stamina: 97.8
-  form: 50.1
+  contract_weeks_left: 64
+  morale: 84.7
+  stamina: 97.3
+  form: 58.4
   personality_tags:
-  - independent
-  potential: 75.4
+  - veteran
+  potential: 78.0
 - id: team_team_heretics_lowel
   handle: lowel
   real_name: ''
@@ -501,4 +500,4 @@ players:
   form: 55.0
   personality_tags:
   - hot_head
-  potential: 74.1
+  potential: 80.0

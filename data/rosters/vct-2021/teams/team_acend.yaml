@@ -104,14 +104,13 @@ players:
   - map_id: split
     mastery: 81.1
   salary: 6100
-  contract_weeks_left: 79
-  morale: 68.0
-  stamina: 85.7
-  form: 59.0
+  contract_weeks_left: 43
+  morale: 84.9
+  stamina: 86.4
+  form: 49.2
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 86.0
+  - team_player
+  potential: 83.0
 - id: team_acend_cned
   handle: cNed
   real_name: ''
@@ -207,12 +206,13 @@ players:
   - map_id: split
     mastery: 84.7
   salary: 7300
-  contract_weeks_left: 57
-  morale: 60.1
-  stamina: 85.5
-  form: 53.7
+  contract_weeks_left: 48
+  morale: 73.6
+  stamina: 80.1
+  form: 49.1
   personality_tags:
-  - analytical
+  - prodigy
+  - rookie
   potential: 95.0
 - id: team_acend_zeek
   handle: zeek
@@ -309,13 +309,12 @@ players:
   - map_id: split
     mastery: 89.6
   salary: 6300
-  contract_weeks_left: 50
-  morale: 68.0
-  stamina: 89.6
-  form: 49.7
+  contract_weeks_left: 37
+  morale: 70.4
+  stamina: 86.4
+  form: 52.2
   personality_tags:
-  - fan_favorite
-  - streamer
+  - rookie
   potential: 91.0
 - id: team_acend_starxo
   handle: starxo
@@ -412,13 +411,13 @@ players:
   - map_id: split
     mastery: 79.7
   salary: 6300
-  contract_weeks_left: 57
-  morale: 76.5
-  stamina: 93.8
-  form: 50.2
+  contract_weeks_left: 65
+  morale: 73.6
+  stamina: 93.2
+  form: 55.3
   personality_tags:
-  - analytical
-  potential: 91.7
+  - rookie
+  potential: 91.0
 - id: team_acend_kiles
   handle: Kiles
   real_name: ''
@@ -514,11 +513,10 @@ players:
   - map_id: split
     mastery: 78.8
   salary: 5600
-  contract_weeks_left: 34
-  morale: 62.2
-  stamina: 86.9
-  form: 54.7
+  contract_weeks_left: 61
+  morale: 62.3
+  stamina: 81.7
+  form: 50.2
   personality_tags:
-  - grinder
-  - independent
-  potential: 74.1
+  - team_player
+  potential: 81.0

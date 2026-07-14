@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 79.5
   salary: 5300
-  contract_weeks_left: 52
-  morale: 74.5
-  stamina: 98.8
-  form: 58.1
+  contract_weeks_left: 59
+  morale: 71.1
+  stamina: 91.6
+  form: 59.1
   personality_tags:
-  - perfectionist
-  - streamer
-  potential: 79.7
+  - rookie
+  potential: 82.0
 - id: team_futbolist_sterben
   handle: STERBEN
   real_name: ''
@@ -206,7 +205,7 @@ players:
   personality_tags:
   - flashy
   - slow_starter
-  potential: 80.2
+  potential: 79.0
 - id: team_futbolist_sasuke
   handle: SasuKe
   real_name: ''
@@ -305,14 +304,14 @@ players:
   personality_tags:
   - flashy
   - slow_starter
-  potential: 75.1
+  potential: 78.0
 - id: team_futbolist_mag0o
   handle: mag0o
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 21
+  age: 22
   role: initiator
   playstyle: support
   attributes:
@@ -404,14 +403,14 @@ players:
   personality_tags:
   - grinder
   - independent
-  potential: 85.8
+  potential: 77.0
 - id: team_futbolist_mojj
   handle: mojj
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 22
+  age: 21
   role: sentinel
   playstyle: anchor
   attributes:
@@ -496,11 +495,10 @@ players:
   - map_id: split
     mastery: 78.7
   salary: 5000
-  contract_weeks_left: 71
-  morale: 75.0
-  stamina: 83.9
-  form: 57.3
+  contract_weeks_left: 56
+  morale: 80.7
+  stamina: 92.0
+  form: 47.9
   personality_tags:
-  - slow_starter
-  - team_player
-  potential: 75.5
+  - rookie
+  potential: 80.0

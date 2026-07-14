@@ -15,7 +15,7 @@ players:
   region: emea
   country: ''
   languages: []
-  age: 24
+  age: 23
   role: controller
   playstyle: igl
   attributes:
@@ -100,20 +100,20 @@ players:
   - map_id: split
     mastery: 79.8
   salary: 5300
-  contract_weeks_left: 79
-  morale: 62.7
-  stamina: 81.7
-  form: 48.0
+  contract_weeks_left: 45
+  morale: 84.6
+  stamina: 82.2
+  form: 46.2
   personality_tags:
-  - streamer
-  potential: 77.8
+  - team_player
+  potential: 78.0
 - id: team_team_bds_roden
   handle: rodeN
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 23
+  age: 24
   role: duelist
   playstyle: entry
   attributes:
@@ -205,7 +205,7 @@ players:
   personality_tags:
   - clutch_gene
   - grinder
-  potential: 82.9
+  potential: 80.0
 - id: team_team_bds_akumaaaaa
   handle: AKUMAAAAA
   real_name: ''
@@ -297,21 +297,20 @@ players:
   - map_id: split
     mastery: 82.3
   salary: 5300
-  contract_weeks_left: 35
-  morale: 84.3
-  stamina: 81.3
-  form: 46.7
+  contract_weeks_left: 44
+  morale: 62.6
+  stamina: 99.4
+  form: 46.0
   personality_tags:
-  - flashy
-  - hot_head
-  potential: 77.5
+  - rookie
+  potential: 80.0
 - id: team_team_bds_takas
   handle: TakaS
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 22
+  age: 21
   role: initiator
   playstyle: support
   attributes:
@@ -396,14 +395,13 @@ players:
   - map_id: split
     mastery: 71.0
   salary: 5100
-  contract_weeks_left: 76
-  morale: 84.6
-  stamina: 80.0
-  form: 56.4
+  contract_weeks_left: 68
+  morale: 83.5
+  stamina: 99.6
+  form: 45.0
   personality_tags:
-  - flashy
-  - quiet
-  potential: 76.2
+  - rookie
+  potential: 82.0
 - id: team_team_bds_hopi
   handle: hopi
   real_name: ''
@@ -502,4 +500,4 @@ players:
   personality_tags:
   - slow_starter
   - team_player
-  potential: 70.1
+  potential: 76.0

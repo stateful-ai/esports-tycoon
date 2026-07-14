@@ -100,21 +100,20 @@ players:
   - map_id: split
     mastery: 83.6
   salary: 5000
-  contract_weeks_left: 49
-  morale: 62.1
-  stamina: 84.8
-  form: 54.7
+  contract_weeks_left: 51
+  morale: 69.9
+  stamina: 81.7
+  form: 48.6
   personality_tags:
-  - flashy
   - veteran
-  potential: 68.7
+  potential: 74.0
 - id: team_ninjas_in_pyjamas_crea
   handle: CREA
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 22
+  age: 23
   role: duelist
   playstyle: entry
   attributes:
@@ -206,7 +205,7 @@ players:
   personality_tags:
   - fan_favorite
   - independent
-  potential: 83.4
+  potential: 79.0
 - id: team_ninjas_in_pyjamas_rhyme
   handle: rhyme
   real_name: ''
@@ -312,7 +311,7 @@ players:
   region: emea
   country: ''
   languages: []
-  age: 23
+  age: 24
   role: duelist
   playstyle: entry
   attributes:
@@ -404,14 +403,14 @@ players:
   personality_tags:
   - grinder
   - independent
-  potential: 76.7
+  potential: 78.0
 - id: team_ninjas_in_pyjamas_jady
   handle: Jady
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 22
+  age: 18
   role: sentinel
   playstyle: anchor
   attributes:
@@ -496,11 +495,10 @@ players:
   - map_id: split
     mastery: 79.1
   salary: 5100
-  contract_weeks_left: 37
-  morale: 69.2
-  stamina: 93.9
-  form: 50.8
+  contract_weeks_left: 67
+  morale: 63.6
+  stamina: 87.4
+  form: 55.4
   personality_tags:
-  - analytical
-  - fan_favorite
-  potential: 77.9
+  - rookie
+  potential: 86.0

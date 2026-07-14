@@ -17,7 +17,7 @@ players:
   languages:
   - lang: en
     level: 100.0
-  age: 25
+  age: 26
   role: controller
   playstyle: igl
   attributes:
@@ -110,6 +110,7 @@ players:
   - analytical
   - streamer
   - team_player
+  - veteran
   potential: 82.0
 - id: team_fnatic_derke
   handle: Derke
@@ -309,15 +310,13 @@ players:
   - map_id: split
     mastery: 92.8
   salary: 6000
-  contract_weeks_left: 38
-  morale: 79.6
-  stamina: 96.3
-  form: 59.9
+  contract_weeks_left: 63
+  morale: 64.2
+  stamina: 95.7
+  form: 57.2
   personality_tags:
-  - fan_favorite
-  - independent
   - rookie
-  potential: 84.1
+  potential: 86.0
 - id: team_fnatic_mistic
   handle: Mistic
   real_name: ''
@@ -326,7 +325,7 @@ players:
   languages:
   - lang: en
     level: 100.0
-  age: 23
+  age: 20
   role: flex
   playstyle: lurker
   attributes:
@@ -411,13 +410,13 @@ players:
   - map_id: split
     mastery: 81.2
   salary: 5900
-  contract_weeks_left: 54
-  morale: 64.8
-  stamina: 94.3
-  form: 57.2
+  contract_weeks_left: 45
+  morale: 72.5
+  stamina: 83.9
+  form: 55.7
   personality_tags:
-  - hot_head
-  potential: 74.2
+  - rookie
+  potential: 84.0
 - id: team_fnatic_magnum
   handle: Magnum
   real_name: ''
@@ -513,11 +512,10 @@ players:
   - map_id: split
     mastery: 80.6
   salary: 6000
-  contract_weeks_left: 33
-  morale: 77.8
-  stamina: 93.3
-  form: 59.4
+  contract_weeks_left: 31
+  morale: 61.9
+  stamina: 94.3
+  form: 55.0
   personality_tags:
-  - flashy
-  - grinder
-  potential: 83.8
+  - rookie
+  potential: 86.0
