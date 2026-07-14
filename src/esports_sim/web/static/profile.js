@@ -931,8 +931,8 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Relationships</h3>
           <div class="pf-chips">
             ${rels.map((r, i) => html`
-              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${r.kind ?? "bond"} · strength ${Math.round(r.strength)}` : ""}>
-                ${r.handle ?? "—"}<span class="pf-rel-kind">${r.kind ?? ""}</span>
+              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${(r.arc || r.kind || "bond").replace("_", " ")} · strength ${Math.round(r.strength)}` : ""}>
+                ${r.handle ?? "—"}<span class="pf-rel-kind">${(r.arc || r.kind || "").replace("_", " ")}</span>
               </span>
             `)}
           </div>

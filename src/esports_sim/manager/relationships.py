@@ -38,6 +38,8 @@ _KINDRED: list[tuple[str, str, float]] = [
 
 FRIEND_BAR = 78.0
 FEUD_BAR = 26.0
+MENTOR_BOND_BAR = 70.0
+GRUDGE_BAR = 14.0
 
 # Playstyles that compete for the spotlight: two players who both want to
 # be the star entry / AWPer / shotcaller grate on each other — one role,
@@ -97,6 +99,56 @@ def nudge(gs: GameState, a: str, b: str, delta: float) -> None:
     _set(gs, a, b, get(gs, a, b) + delta)
 
 
+def arc_for_pair(gs: GameState, a: str, b: str) -> str | None:
+    """The scarce, readable label for a real relationship state.
+
+    This derives from the existing graph and mentorship contract, not a
+    second affinity meter. The same relationship already reaches chemistry,
+    locker-room retention, and contextual development support.
+    """
+    from esports_sim.manager import development
+
+    relation = get(gs, a, b)
+    if (
+        relation >= MENTOR_BOND_BAR
+        and (
+            development.mentorship_valid(gs, a, b)
+            or development.mentorship_valid(gs, b, a)
+        )
+    ):
+        return "mentor_bond"
+    if relation <= GRUDGE_BAR:
+        return "grudge"
+    if relation <= FEUD_BAR:
+        return "friction"
+    return None
+
+
+def _record_arc_transition(
+    gs: GameState, tid: str, a: str, b: str, previous: str | None
+) -> None:
+    """Chronicle a newly active relationship arc, once per transition."""
+    from esports_sim.manager import chronicle
+
+    current = arc_for_pair(gs, a, b)
+    if current is None or current == previous:
+        return
+    pa, pb = gs.players[a], gs.players[b]
+    text_by_arc = {
+        "mentor_bond": f"{pa.handle} and {pb.handle} turn their mentorship into a trusted bond.",
+        "friction": f"Friction between {pa.handle} and {pb.handle} starts to shape the room.",
+        "grudge": f"{pa.handle} and {pb.handle} carry a real locker-room grudge.",
+    }
+    text = text_by_arc[current]
+    entry = chronicle.record(
+        gs, "relationship", text, team_id=tid, player_id=a,
+        importance={"mentor_bond": 30.0, "friction": 35.0, "grudge": 45.0}[current],
+        data={"arc": current, "other_id": b},
+    )
+    if entry is not None and gs.is_human(tid):
+        gs.push_private_news(text, owner=tid)
+
+
 def affinity_target(pa: Player, pb: Player) -> float:
     """Where a pair naturally settles after enough time together."""
     from esports_sim.manager import personality
@@ -153,6 +205,7 @@ def weekly_tick(
             for b in roster[i + 1:]:
                 pa, pb = gs.players[a], gs.players[b]
                 cur = get(gs, a, b)
+                previous_arc = arc_for_pair(gs, a, b)
                 target = affinity_target(pa, pb)
                 if won is True:
                     target += 4.0
@@ -160,6 +213,7 @@ def weekly_tick(
                     target -= 3.0
                 nxt = cur + (target - cur) * 0.08 + float(rng.normal(0, 0.6))
                 _set(gs, a, b, nxt)
+                _record_arc_transition(gs, tid, a, b, previous_arc)
                 if gs.is_human(tid):
                     if cur < FRIEND_BAR <= nxt:
                         gs.push_news(

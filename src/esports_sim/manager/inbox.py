@@ -530,6 +530,42 @@ def _news_items(gs: "GameState", season: int, week: int):
     return out
 
 
+def _relationship_items(gs: "GameState", season: int, week: int):
+    """One private inbox read when a real arc turns this week.
+
+    The Chronicle owns the history; this is only a bounded reader of that
+    transition, so no parallel relationship state can drift from it.
+    """
+    arcs = [
+        entry for entry in gs.chronicle
+        if entry.kind == "relationship"
+        and entry.team_id == gs.acting_team_id
+        and entry.season == season and entry.week == week
+    ]
+    if not arcs:
+        return []
+    rank = {"grudge": 0, "friction": 1, "mentor_bond": 2}
+    entry = sorted(
+        arcs,
+        key=lambda e: (rank.get(e.data.get("arc", ""), 9), e.player_id, e.data.get("other_id", "")),
+    )[0]
+    arc = entry.data.get("arc", "relationship")
+    title = {
+        "mentor_bond": "Mentor bond taking hold",
+        "friction": "Locker-room friction to manage",
+        "grudge": "A locker-room grudge is forming",
+    }.get(arc, "Locker-room relationship update")
+    body = entry.text + {
+        "mentor_bond": " Their trust can support the protege's development.",
+        "friction": " Keep an eye on confidence and contract conversations.",
+        "grudge": " It can weigh on confidence and make retention harder.",
+    }.get(arc, "")
+    return [(
+        _P_TALK,
+        _make(season, week, "talk", f"relationship|{entry.id}", title, body, "roster"),
+    )]
+
+
 def _department_items(gs: "GameState", season: int, week: int):
     """The analytics department's weekly opponent report (GDD section 10:
     departments generate actionable reads). Tier-gated like the stat
@@ -621,6 +657,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _department_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
+    candidates += _relationship_items(gs, season, week)
     candidates += _news_items(gs, season, week)
 
     # Dedupe by id (against the batch and the existing feed), then keep the
