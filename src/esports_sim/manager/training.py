@@ -372,13 +372,36 @@ def apply_offseason_aging(p: Player, rng: np.random.Generator) -> None:
             * 0.8
             * development.curve_decline_multiplier(p)
         )
-        for attr_id in _CATEGORY_ATTRS["mechanical"]:
-            p.attributes[attr_id] = round(
-                max(1.0, p.attr(attr_id) - decline * float(rng.uniform(0.7, 1.3))), 2
-            )
-        # Experience partially compensates.
-        for attr_id in ("game_sense", "composure"):
-            p.attributes[attr_id] = round(min(99.0, p.attr(attr_id) + 0.4), 2)
+        if "pure_aimer" in p.personality_tags:
+            aim_attrs = ["aim_precision", "aim_reactivity"]
+            other_attrs = [
+                "movement",
+                "game_sense",
+                "positioning",
+                "utility_usage",
+                "clutch_factor",
+                "tilt_resistance",
+                "composure",
+                "comms_quality",
+            ]
+            for attr_id in aim_attrs:
+                base_decay = decline * float(rng.uniform(0.7, 1.3))
+                p.attributes[attr_id] = round(
+                    max(1.0, p.attr(attr_id) - base_decay * 0.15), 2
+                )
+            for attr_id in other_attrs:
+                base_decay = decline * float(rng.uniform(0.7, 1.3))
+                p.attributes[attr_id] = round(
+                    max(1.0, p.attr(attr_id) - base_decay * 1.5), 2
+                )
+        else:
+            for attr_id in _CATEGORY_ATTRS["mechanical"]:
+                p.attributes[attr_id] = round(
+                    max(1.0, p.attr(attr_id) - decline * float(rng.uniform(0.7, 1.3))), 2
+                )
+            # Experience partially compensates.
+            for attr_id in ("game_sense", "composure"):
+                p.attributes[attr_id] = round(min(99.0, p.attr(attr_id) + 0.4), 2)
     elif p.age <= 22:
         for attr_id in _CATEGORY_ATTRS["mechanical"]:
             cap = development.development_ceiling(p, attr_id)

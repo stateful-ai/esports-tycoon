@@ -4,9 +4,9 @@ tag: TSM
 region: americas
 tier: 1
 captain_id: team_tsm_hazed
-balance: 780000
-reputation: 80.0
-fan_count: 576000
+balance: 744000
+reputation: 74.0
+fan_count: 492840
 chemistry: 62.1
 players:
 - id: team_tsm_hazed
@@ -16,7 +16,7 @@ players:
   country: ''
   languages: []
   age: 25
-  role: controller
+  role: sentinel
   playstyle: igl
   attributes:
     aim_precision: 61.4
@@ -30,59 +30,59 @@ players:
     composure: 80.7
     comms_quality: 88.1
   agent_pool:
-  - agent_id: omen
+  - agent_id: killjoy
     mastery: 88.5
-  - agent_id: brimstone
-    mastery: 77.7
-  - agent_id: astra
-    mastery: 69.3
-  - agent_id: clove
-    mastery: 65.2
-  - agent_id: harbor
-    mastery: 63.3
-  - agent_id: miks
-    mastery: 68.7
-  - agent_id: viper
-    mastery: 63.5
-  - agent_id: breach
-    mastery: 44.1
-  - agent_id: chamber
-    mastery: 55.0
   - agent_id: cypher
-    mastery: 44.4
+    mastery: 77.7
+  - agent_id: chamber
+    mastery: 69.3
   - agent_id: deadlock
+    mastery: 65.2
+  - agent_id: sage
+    mastery: 63.3
+  - agent_id: veto
+    mastery: 68.7
+  - agent_id: vyse
+    mastery: 63.5
+  - agent_id: astra
+    mastery: 44.1
+  - agent_id: breach
+    mastery: 55.0
+  - agent_id: brimstone
+    mastery: 44.4
+  - agent_id: clove
     mastery: 1.6
   - agent_id: fade
     mastery: 59.3
   - agent_id: gekko
     mastery: 53.1
-  - agent_id: iso
+  - agent_id: harbor
     mastery: 47.9
-  - agent_id: jett
+  - agent_id: iso
     mastery: 49.1
-  - agent_id: kayo
+  - agent_id: jett
     mastery: 51.9
-  - agent_id: killjoy
+  - agent_id: kayo
     mastery: 41.1
-  - agent_id: neon
+  - agent_id: miks
     mastery: 51.8
-  - agent_id: phoenix
+  - agent_id: neon
     mastery: 49.4
-  - agent_id: raze
+  - agent_id: omen
     mastery: 51.2
-  - agent_id: reyna
+  - agent_id: phoenix
     mastery: 44.4
-  - agent_id: sage
+  - agent_id: raze
     mastery: 50.2
-  - agent_id: skye
+  - agent_id: reyna
     mastery: 50.4
-  - agent_id: sova
+  - agent_id: skye
     mastery: 49.9
-  - agent_id: tejo
+  - agent_id: sova
     mastery: 55.2
-  - agent_id: veto
+  - agent_id: tejo
     mastery: 50.2
-  - agent_id: vyse
+  - agent_id: viper
     mastery: 53.1
   - agent_id: waylay
     mastery: 49.6
@@ -129,7 +129,7 @@ players:
   agent_pool:
   - agent_id: jett
     mastery: 93.6
-  - agent_id: sova
+  - agent_id: sage
     mastery: 85.0
   - agent_id: iso
     mastery: 80.0
@@ -173,9 +173,9 @@ players:
     mastery: 54.7
   - agent_id: omen
     mastery: 60.0
-  - agent_id: sage
-    mastery: 54.0
   - agent_id: skye
+    mastery: 54.0
+  - agent_id: sova
     mastery: 60.0
   - agent_id: tejo
     mastery: 58.1
@@ -197,14 +197,13 @@ players:
   - map_id: split
     mastery: 88.3
   salary: 6500
-  contract_weeks_left: 73
-  morale: 77.4
-  stamina: 81.3
-  form: 53.7
+  contract_weeks_left: 33
+  morale: 82.0
+  stamina: 93.9
+  form: 46.0
   personality_tags:
-  - grinder
-  - slow_starter
-  potential: 85.7
+  - pure_aimer
+  potential: 87.0
 - id: team_tsm_subroza
   handle: Subroza
   real_name: ''

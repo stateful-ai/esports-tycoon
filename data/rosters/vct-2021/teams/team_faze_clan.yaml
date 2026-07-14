@@ -100,13 +100,13 @@ players:
   - map_id: split
     mastery: 70.6
   salary: 5400
-  contract_weeks_left: 74
-  morale: 83.3
-  stamina: 93.8
-  form: 55.6
+  contract_weeks_left: 51
+  morale: 82.1
+  stamina: 98.6
+  form: 55.3
   personality_tags:
-  - grinder
-  potential: 80.4
+  - veteran
+  potential: 73.8
 - id: team_faze_clan_babybay
   handle: babybay
   real_name: ''
@@ -198,13 +198,14 @@ players:
   - map_id: split
     mastery: 83.5
   salary: 6300
-  contract_weeks_left: 74
-  morale: 78.3
-  stamina: 84.2
-  form: 49.4
+  contract_weeks_left: 52
+  morale: 82.0
+  stamina: 94.6
+  form: 48.2
   personality_tags:
-  - slow_starter
-  potential: 80.3
+  - pure_aimer
+  - veteran
+  potential: 80.5
 - id: team_faze_clan_corey
   handle: corey
   real_name: ''
@@ -213,30 +214,30 @@ players:
   languages: []
   age: 22
   role: duelist
-  playstyle: awper
+  playstyle: entry
   attributes:
-    aim_precision: 91.8
-    aim_reactivity: 79.1
-    movement: 82.5
-    game_sense: 74.2
+    aim_precision: 87.8
+    aim_reactivity: 83.1
+    movement: 92.5
+    game_sense: 68.2
     utility_usage: 66.3
-    positioning: 84.3
-    clutch_factor: 84.1
-    tilt_resistance: 77.5
+    positioning: 78.3
+    clutch_factor: 78.1
+    tilt_resistance: 73.5
     composure: 74.9
-    comms_quality: 71.4
+    comms_quality: 75.4
   agent_pool:
-  - agent_id: jett
+  - agent_id: raze
     mastery: 80.6
-  - agent_id: reyna
+  - agent_id: phoenix
     mastery: 78.5
   - agent_id: iso
     mastery: 65.6
-  - agent_id: neon
+  - agent_id: jett
     mastery: 68.1
-  - agent_id: phoenix
+  - agent_id: neon
     mastery: 65.6
-  - agent_id: raze
+  - agent_id: reyna
     mastery: 63.1
   - agent_id: waylay
     mastery: 65.5
@@ -303,7 +304,7 @@ players:
   personality_tags:
   - fan_favorite
   - hot_head
-  potential: 88.7
+  potential: 88.3
 - id: team_faze_clan_babyj
   handle: BabyJ
   real_name: ''

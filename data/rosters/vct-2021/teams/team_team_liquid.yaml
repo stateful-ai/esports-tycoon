@@ -205,14 +205,13 @@ players:
   - map_id: split
     mastery: 89.7
   salary: 6900
-  contract_weeks_left: 73
-  morale: 73.1
-  stamina: 93.5
-  form: 49.3
+  contract_weeks_left: 34
+  morale: 81.7
+  stamina: 90.5
+  form: 55.1
   personality_tags:
-  - quiet
-  - streamer
-  potential: 86.1
+  - pure_aimer
+  potential: 85.8
 - id: team_team_liquid_jamppi
   handle: Jamppi
   real_name: ''
