@@ -590,8 +590,6 @@ def offseason_churn(gs: GameState) -> None:
 
 def ai_offseason_coach_hiring(gs: GameState) -> None:
     """Struggling AI clubs use the shared market to seek a better-fit coach."""
-    from esports_sim.manager import knowledge
-
     for team_id in sorted(gs.teams):
         if gs.is_human(team_id) or gs.teams[team_id].tier != 1:
             continue
@@ -603,32 +601,57 @@ def ai_offseason_coach_hiring(gs: GameState) -> None:
         fit = staff_effects.system_fit(coach, gs.teams[team_id].tactics)
         if position <= max(1, len(order) // 2) and fit >= 60.0:
             continue
-        incumbent_score = staff_effects.overall(coach) + fit * 0.25
-        candidates = [m for m in gs.staff_pool if m.role == "coach"]
-        if not candidates:
-            continue
-        candidate = max(candidates, key=lambda m: (
-            staff_effects.overall(m)
-            + staff_effects.system_fit(m, gs.teams[team_id].tactics) * 0.25
-            - m.salary / 5_000.0,
-            m.id,
-        ))
-        candidate_score = (
-            staff_effects.overall(candidate)
-            + staff_effects.system_fit(candidate, gs.teams[team_id].tactics) * 0.25
-            - candidate.salary / 5_000.0
-        )
-        if candidate_score < incumbent_score + 8.0:
-            continue
-        gs.staff_pool.remove(candidate)
-        coach.last_org = team_id
-        gs.staff_pool.append(coach)
-        gs.staff_pool.sort(key=lambda m: m.id)
-        if candidate.last_org:
-            knowledge.on_staff_move(gs, candidate.last_org, team_id)
-        candidate.history.append(f"S{gs.season}: head coach, {gs.teams[team_id].name}")
-        candidate.last_org = ""
-        gs.staff_by[team_id]["coach"] = candidate
+        replace_ai_coach(gs, team_id, min_improvement=8.0)
+
+
+def _coach_market_score(gs: GameState, team_id: str, member: StaffMember) -> float:
+    tactics = gs.teams[team_id].tactics
+    return (
+        staff_effects.overall(member)
+        + staff_effects.system_fit(member, tactics) * 0.25
+        - member.salary / 5_000.0
+    )
+
+
+def replace_ai_coach(
+    gs: GameState,
+    team_id: str,
+    *,
+    min_improvement: float | None = None,
+) -> tuple[StaffMember, StaffMember] | None:
+    """Swap an AI club's coach through the same shared staff market.
+
+    Both incumbent and candidates use the same quality, fit, and salary score.
+    ``min_improvement=None`` models an impatient in-season firing; offseason
+    hiring requires a real upgrade before creating churn.
+    """
+    from esports_sim.manager import knowledge
+
+    incumbent = gs.staff_by.get(team_id, {}).get("coach")
+    candidates = [member for member in gs.staff_pool if member.role == "coach"]
+    if incumbent is None or not candidates:
+        return None
+    candidate = max(
+        candidates,
+        key=lambda member: (_coach_market_score(gs, team_id, member), member.id),
+    )
+    if (
+        min_improvement is not None
+        and _coach_market_score(gs, team_id, candidate)
+        < _coach_market_score(gs, team_id, incumbent) + min_improvement
+    ):
+        return None
+
+    gs.staff_pool.remove(candidate)
+    incumbent.last_org = team_id
+    gs.staff_pool.append(incumbent)
+    gs.staff_pool.sort(key=lambda member: member.id)
+    if candidate.last_org:
+        knowledge.on_staff_move(gs, candidate.last_org, team_id)
+    candidate.history.append(f"S{gs.season}: head coach, {gs.teams[team_id].name}")
+    candidate.last_org = ""
+    gs.staff_by[team_id]["coach"] = candidate
+    return incumbent, candidate
 
 
 def find_member(gs: GameState, staff_id: str) -> tuple[StaffMember | None, str | None]:

@@ -45,6 +45,7 @@ from esports_sim.manager import (
     series_management,
     telemetry,
     training,
+    transfer_requests,
 )
 from esports_sim.manager.economy import (
     apply_weekly_finance,
@@ -2460,6 +2461,7 @@ def _process_retirements(gs: GameState, rng) -> int:
                 )
         if pid in gs.free_agent_ids:
             gs.free_agent_ids.remove(pid)
+        transfer_requests.clear(gs, pid)
         ca = development.overall(p)
         gs.retired.append(
             RetiredRecord(

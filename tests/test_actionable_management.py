@@ -125,10 +125,15 @@ def test_ai_gm_archetypes_are_stable_and_scapegoater_changes_course(game_data) -
         fixture.played = True
         fixture.winner_id = opponent
     before = gs.teams[scapegoater].tactics.model_dump()
+    old_coach = gs.staff_by[scapegoater]["coach"]
     gm_personalities.weekly_tick(gs, np.random.default_rng(12))
     assert gs.ai_gm_coach_changes_by[scapegoater] == 1
     assert gs.teams[scapegoater].tactics.model_dump() != before
-    assert any("part with their coach" in line for line in gs.news)
+    new_coach = gs.staff_by[scapegoater]["coach"]
+    assert new_coach.id != old_coach.id
+    assert old_coach in gs.staff_pool
+    assert new_coach not in gs.staff_pool
+    assert any(old_coach.name in line and new_coach.name in line for line in gs.news)
     gm_personalities.weekly_tick(gs, np.random.default_rng(12))
     assert gs.ai_gm_coach_changes_by[scapegoater] == 1
 

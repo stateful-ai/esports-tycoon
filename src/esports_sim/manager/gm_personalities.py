@@ -137,6 +137,8 @@ def _loss_streak(gs: GameState, team_id: str) -> int:
 
 def weekly_tick(gs: GameState, rng: np.random.Generator) -> None:
     """Apply rare, visible front-office consequences after the week's games."""
+    from esports_sim.manager import staff
+
     now = (gs.season - 1) * 100 + gs.week
     dials = ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
     for team_id in sorted(gs.teams):
@@ -155,9 +157,18 @@ def weekly_tick(gs: GameState, rng: np.random.Generator) -> None:
         for dial in dials:
             setattr(team.tactics, dial, round(float(np.clip(50 + rng.normal(0, 9), 25, 75)), 1))
         gs.ai_gm_last_action_week_by[team_id] = now
+        replacement = staff.replace_ai_coach(gs, team_id)
+        if replacement is None:
+            gs.push_news(
+                f"{team.name} overhaul their coaching direction after a "
+                f"{_loss_streak(gs, team_id)}-match losing streak."
+            )
+            continue
+        old_coach, new_coach = replacement
         gs.ai_gm_coach_changes_by[team_id] = (
             gs.ai_gm_coach_changes_by.get(team_id, 0) + 1
         )
         gs.push_news(
-            f"{team.name} part with their coach after a {_loss_streak(gs, team_id)}-match losing streak."
+            f"{team.name} part with {old_coach.name} and appoint {new_coach.name} "
+            f"after a {_loss_streak(gs, team_id)}-match losing streak."
         )
