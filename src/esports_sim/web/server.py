@@ -6682,7 +6682,13 @@ def _profile_relationships(gs: GameState, pid: str) -> list[dict]:
             kind = "feud"
         else:
             kind = "neutral"
-        out.append({"pid": other, "handle": op.handle, "kind": kind, "strength": round(v, 1)})
+        out.append({
+            "pid": other,
+            "handle": op.handle,
+            "kind": kind,
+            "arc": relationships.arc_for_pair(gs, pid, other),
+            "strength": round(v, 1),
+        })
     out.sort(key=lambda r: (-r["strength"], r["pid"]))
     return out
 
@@ -6804,7 +6810,7 @@ def player_profile(pid: str) -> dict:
             "career_totals": _profile_career_totals(gs, pid),
             # The player's career as a per-season chronicle timeline (debut,
             # awards, milestones, moves), newest season first.
-            "career_arc": analytics.career_arc(gs, pid),
+            "career_arc": analytics.career_arc(gs, pid, include_relationships=own),
             # The trophy cabinet: individual season awards this player has
             # won, newest first. A clean structured read of the chronicle's
             # award entries (the cleanly player-attributable honours; team
@@ -6818,7 +6824,7 @@ def player_profile(pid: str) -> dict:
             # What this player remembers — their defining chronicle
             # entries (debut, titles, milestones, moves), newest-important
             # first. Pure chronicle read (manager/memories.py).
-            "memories": memories_mod.memory_lines(gs, pid),
+            "memories": memories_mod.memory_lines(gs, pid, include_relationships=own),
         }
 
 

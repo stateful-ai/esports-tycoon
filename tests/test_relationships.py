@@ -155,3 +155,32 @@ def test_relationships_tick_in_campaign_and_stay_bounded(
     assert len(gs.relationships) <= 800
     # Determinism piggybacks on the campaign test; sanity: values in range.
     assert all(0.0 <= v <= 100.0 for v in gs.relationships.values())
+
+
+def test_relationship_arc_is_derived_and_chronicled(campaign: GameState) -> None:
+    """Arcs are readable names for graph states, not another stored meter."""
+    gs = campaign
+    tid = gs.user_team_id
+    a, b = sorted(gs.teams[tid].player_ids)[:2]
+    gs.relationships[relationships.key(a, b)] = 0.0
+    relationships._record_arc_transition(gs, tid, a, b, None)
+
+    assert relationships.arc_for_pair(gs, a, b) == "grudge"
+    entries = [e for e in gs.chronicle if e.kind == "relationship"]
+    assert len(entries) == 1
+    assert entries[0].data == {"arc": "grudge", "other_id": b}
+    assert gs.private_news_by[tid][-1].endswith("locker-room grudge.")
+    relationships._record_arc_transition(gs, tid, a, b, None)
+    assert len(gs.private_news_by[tid]) == 1
+
+
+def test_mentor_bond_uses_existing_mentorship_and_relationship(campaign: GameState) -> None:
+    gs = campaign
+    protege, mentor = sorted(gs.teams[gs.user_team_id].player_ids)[:2]
+    gs.players[protege].age = 18
+    gs.players[mentor].age = 30
+    for attr in gs.players[mentor].attributes:
+        gs.players[mentor].attributes[attr] = 90.0
+    gs.mentorships[protege] = mentor
+    gs.relationships[relationships.key(protege, mentor)] = 75.0
+    assert relationships.arc_for_pair(gs, protege, mentor) == "mentor_bond"

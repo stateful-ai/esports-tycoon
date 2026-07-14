@@ -207,10 +207,16 @@ def test_career_arc_groups_by_season_newest_first():
     gs.season = 4
     chronicle.record(gs, "award", "P1 wins Season MVP (1.2).", player_id="p1",
                      data={"award": "Season MVP"})
+    chronicle.record(
+        gs, "relationship", "P1 and P2 carry a real locker-room grudge.",
+        player_id="p1", data={"arc": "grudge", "other_id": "p2"},
+    )
     gs.season = 5
     arc = analytics.career_arc(gs, "p1")
     assert [y["season"] for y in arc] == [4, 2]  # newest first
-    assert arc[0]["events"][0]["kind"] == "award"
+    assert [e["kind"] for e in arc[0]["events"]] == ["award", "relationship"]
+    public_arc = analytics.career_arc(gs, "p1", include_relationships=False)
+    assert [e["kind"] for e in public_arc[0]["events"]] == ["award"]
 
 
 def test_parity_counts_distinct_champions_and_top_share():

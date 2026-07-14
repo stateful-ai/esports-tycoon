@@ -28,11 +28,17 @@ _RENEWED_HERE = 1.0
 BIAS_CAP = 10.0
 
 
-def memories_for(gs: GameState, pid: str, cap: int = MEMORY_CAP) -> list[ChronicleEntry]:
+def memories_for(
+    gs: GameState, pid: str, cap: int = MEMORY_CAP, *, include_relationships: bool = True
+) -> list[ChronicleEntry]:
     """A player's defining memories: their chronicle entries, most
     important first, recency breaking ties. Capped — people keep the
     landmarks, not the noise."""
-    mine = [e for e in gs.chronicle if e.player_id == pid]
+    mine = [
+        e for e in gs.chronicle
+        if e.player_id == pid
+        and (include_relationships or e.kind != "relationship")
+    ]
     mine.sort(key=lambda e: (-e.importance, -e.season, -e.week, e.id))
     return mine[:cap]
 
@@ -66,10 +72,12 @@ def loyalty_bias(gs: GameState, pid: str, tid: str) -> float:
     return float(max(-BIAS_CAP, min(BIAS_CAP, bias)))
 
 
-def memory_lines(gs: GameState, pid: str) -> list[str]:
+def memory_lines(
+    gs: GameState, pid: str, *, include_relationships: bool = True
+) -> list[str]:
     """Display strings for profiles/talks ("remembers ...")."""
     out = []
-    for e in memories_for(gs, pid):
+    for e in memories_for(gs, pid, include_relationships=include_relationships):
         out.append(f"S{e.season}: {e.text}")
     return out
 

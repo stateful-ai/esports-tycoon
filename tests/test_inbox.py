@@ -10,7 +10,7 @@ import json
 
 import pytest
 
-from esports_sim.manager import advance_week, inbox, market, new_campaign, sponsors
+from esports_sim.manager import advance_week, chronicle, inbox, market, new_campaign, sponsors
 from esports_sim.manager.state import (
     GameState,
     InboxItem,
@@ -91,6 +91,21 @@ def test_items_generated_and_well_formed(season: GameState) -> None:
     cats = {it.category for it in campaign.inbox}
     assert "match" in cats
     assert len(cats) >= 3
+
+
+def test_relationship_arc_becomes_one_private_roster_inbox_item(campaign: GameState) -> None:
+    tid = campaign.user_team_id
+    a, b = sorted(campaign.teams[tid].player_ids)[:2]
+    chronicle.record(
+        campaign, "relationship", "A and B carry a real locker-room grudge.",
+        team_id=tid, player_id=a, data={"arc": "grudge", "other_id": b},
+    )
+    items = inbox._relationship_items(campaign, campaign.season, campaign.week)
+    assert len(items) == 1
+    _priority, item = items[0]
+    assert item.category == "talk"
+    assert item.tab == "roster"
+    assert "grudge" in item.title.lower()
 
 
 def test_per_week_and_total_bounds(season: GameState) -> None:

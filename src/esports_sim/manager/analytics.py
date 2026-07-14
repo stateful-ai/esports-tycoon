@@ -217,14 +217,19 @@ def season_report(gs: "GameState", season: int | None = None) -> dict:
     }
 
 
-def career_arc(gs: "GameState", pid: str) -> list[dict]:
+def career_arc(
+    gs: "GameState", pid: str, *, include_relationships: bool = True
+) -> list[dict]:
     """A player's career as a per-season timeline from the chronicle — their
-    debut, awards, milestones, and moves grouped by season, newest first.
+    debut, awards, milestones, moves, and relationship arcs grouped by season,
+    newest first.
     Pure chronicle read (team titles carry a team_id not a player_id, so they
     live on the team timeline, not here)."""
     by_season: dict[int, list[dict]] = {}
     for e in gs.chronicle:
-        if e.player_id != pid:
+        if e.kind == "relationship" and not include_relationships:
+            continue
+        if e.player_id != pid and e.data.get("other_id") != pid:
             continue
         by_season.setdefault(e.season, []).append({"kind": e.kind, "text": e.text})
     return [
