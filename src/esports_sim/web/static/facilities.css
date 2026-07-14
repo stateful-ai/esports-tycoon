@@ -1,0 +1,133 @@
+.facilities-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--es-space-7, 24px);
+  margin-bottom: var(--es-space-5, 14px);
+  border-left: 3px solid var(--es-color-brand, #ff4655);
+}
+.facilities-intro h2 { margin: 2px 0 4px; }
+.facilities-intro p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--es-color-text-secondary, #9aa3b5);
+}
+.facilities-summary { display: flex; gap: var(--es-space-6, 18px); }
+.facilities-summary > span { display: grid; text-align: right; }
+.facilities-summary b { font-size: var(--es-text-xl, 20px); }
+.facilities-summary small {
+  color: var(--es-color-text-secondary, #9aa3b5);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--es-space-5, 14px);
+  align-items: start;
+}
+.facility-card {
+  position: relative;
+  display: grid;
+  gap: var(--es-space-4, 10px);
+  overflow: hidden;
+}
+.facility-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--es-color-accent, #55d6be);
+}
+.facility-card:nth-child(2)::before { background: var(--es-color-brand, #ff4655); }
+.facility-card:nth-child(3)::before { background: var(--es-color-accent-warm, #f0b45a); }
+.facility-card:nth-child(5)::before { background: var(--es-color-brand, #ff4655); }
+.facility-card:nth-child(6)::before { background: var(--es-color-accent-warm, #f0b45a); }
+.facility-card-head,
+.facility-next-head,
+.facility-upgrade-row,
+.facility-operator,
+.facility-benefit,
+.facility-maxed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--es-space-3, 8px);
+}
+.facility-card-head { align-items: flex-start; }
+.facility-card-head h2 { margin: 2px 0 0; }
+.facility-level-name { color: var(--es-color-text-secondary, #9aa3b5); }
+.facility-level-badge {
+  display: flex;
+  align-items: baseline;
+  min-width: 58px;
+  justify-content: flex-end;
+  color: var(--es-color-text-secondary, #9aa3b5);
+}
+.facility-level-badge strong {
+  font-size: 32px;
+  line-height: 1;
+  color: var(--es-color-text-primary, #e9edf6);
+}
+.facility-level-pips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.facility-level-pips i {
+  height: 5px;
+  border-radius: 2px;
+  background: var(--es-color-border-primary, #26324a);
+}
+.facility-level-pips i.on { background: var(--es-color-brand, #ff4655); }
+.facility-description {
+  min-height: 58px;
+  margin: 0;
+  color: var(--es-color-text-secondary, #9aa3b5);
+  line-height: 1.45;
+}
+.facility-operator {
+  padding: var(--es-space-3, 8px);
+  border-radius: var(--es-radius-md, 6px);
+  background: var(--es-color-bg-sunken, #0b1019);
+}
+.facility-operator > span:first-child { display: grid; }
+.facility-operator small,
+.facility-upgrade-row small {
+  color: var(--es-color-text-secondary, #9aa3b5);
+}
+.facility-benefits,
+.facility-next { display: grid; gap: 6px; }
+.facility-benefit {
+  align-items: baseline;
+  padding: 7px 8px;
+  border: 1px solid var(--es-color-border-tertiary, #1c2536);
+  border-radius: var(--es-radius-md, 6px);
+}
+.facility-benefit > div { display: grid; gap: 2px; }
+.facility-benefit small { color: var(--es-color-text-secondary, #9aa3b5); }
+.facility-benefit strong { color: var(--es-color-accent, #55d6be); text-align: right; }
+.facility-benefit.next strong { color: var(--es-color-accent-warm, #f0b45a); }
+.facility-next {
+  margin-top: 2px;
+  padding-top: var(--es-space-4, 10px);
+  border-top: 1px solid var(--es-color-border-secondary, #1c2536);
+}
+.facility-next-head { align-items: baseline; }
+.facility-upgrade-row > span { display: grid; }
+.facility-upgrade { min-width: 94px; }
+.facility-shortfall { color: var(--es-color-accent-warm, #f0b45a); }
+.facility-maxed {
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--es-color-accent, #55d6be) 45%, transparent);
+  border-radius: var(--es-radius-md, 6px);
+  color: var(--es-color-accent, #55d6be);
+}
+
+@media (max-width: 1050px) {
+  .facilities-grid { grid-template-columns: 1fr; }
+  .facility-description { min-height: 0; }
+}
+@media (max-width: 650px) {
+  .facilities-intro { align-items: flex-start; flex-direction: column; }
+  .facilities-summary { width: 100%; justify-content: flex-start; }
+  .facilities-summary > span { text-align: left; }
+  .facility-benefit { align-items: flex-start; }
+}

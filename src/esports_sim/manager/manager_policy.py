@@ -59,7 +59,7 @@ class HeuristicManagerPolicy:
     parameters come from ``manager_observation`` and its legal action mask.
     """
 
-    version = "heuristic-manager-v2"
+    version = "heuristic-manager-v3"
 
     def __init__(self, profile: ManagerProfile) -> None:
         self.profile = profile
@@ -298,13 +298,27 @@ class HeuristicManagerPolicy:
                 }))
 
         if legal["facility_upgrade"]["enabled"] and self.profile.investment >= 0.72:
-            preference = (
-                "analytics_suite" if self.profile.analytics >= 0.6
-                else "training_center" if self.profile.youth >= 0.6
-                else "marketing_office"
-            )
             options = legal["facility_upgrade"]["options"]
-            choice = next((option for option in options if option["facility"] == preference), options[0])
+            available = {option["facility"]: option for option in options}
+            priorities: list[str] = []
+            if self._mean(roster, "stamina") < 60:
+                priorities.append("recovery_suite")
+            if min(
+                self._mean(roster, "confidence"), self._mean(roster, "morale")
+            ) < 50:
+                priorities.append("team_house")
+            if self.profile.analytics >= 0.78:
+                priorities.extend(("strategy_lab", "analytics_suite"))
+            elif self.profile.analytics >= 0.6:
+                priorities.extend(("analytics_suite", "strategy_lab"))
+            if self.profile.youth >= 0.6:
+                priorities.append("training_center")
+            priorities.append("marketing_office")
+            preference = next(
+                (facility for facility in priorities if facility in available),
+                options[0]["facility"],
+            )
+            choice = available[preference]
             candidates.append((48.0 + self.profile.investment * 18, "facility_upgrade", {
                 "facility": choice["facility"],
             }))

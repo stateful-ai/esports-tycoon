@@ -329,7 +329,9 @@ def _knowledge_key(plan: PrepPlan) -> str:
     return "methodology"
 
 
-def _knowledge_gain(plan: PrepPlan, ev: PrepEvidence) -> float:
+def _knowledge_gain(gs: "GameState", plan: PrepPlan, ev: PrepEvidence) -> float:
+    from esports_sim.manager import economy
+
     gain = _KNOWLEDGE_BASE[plan.intensity]
     # A proven sparring partner makes the reps more useful, while scouting
     # improves anti-strat interpretation without revealing hidden state.
@@ -338,13 +340,20 @@ def _knowledge_gain(plan: PrepPlan, ev: PrepEvidence) -> float:
         gain *= 0.75 + 0.5 * ev.scouting_confidence
     elif plan.objective == "mental_reset":
         gain *= 0.65
+    gain *= economy.facility_prep_knowledge_mult(gs, plan.team_id)
     return round(gain, 2)
 
 
 def _apply_tradeoffs(
     gs: "GameState", plan: PrepPlan, participant_ids: list[str]
 ) -> tuple[float, float]:
-    cost = _STAMINA_COST[plan.intensity]
+    from esports_sim.manager import economy
+
+    cost = max(
+        0.0,
+        _STAMINA_COST[plan.intensity]
+        - economy.facility_prep_stamina_reduction(gs, plan.team_id),
+    )
     total_stamina = 0.0
     total_morale = 0.0
     if plan.objective == "mental_reset":
@@ -432,7 +441,7 @@ def _resolve(
     )
     code, finding = _finding(plan, evidence, variant)
     key = _knowledge_key(plan)
-    gain = _knowledge_gain(plan, evidence)
+    gain = _knowledge_gain(gs, plan, evidence)
     book = gs.org_knowledge.setdefault(plan.team_id, {})
     before_knowledge = min(_CAP, max(0.0, book.get(key, 0.0)))
     after_knowledge = round(min(_CAP, before_knowledge + gain), 2)

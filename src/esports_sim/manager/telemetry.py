@@ -190,7 +190,14 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
     }
     for role in staff.ROLES:
         feats[f"staff_{role}"] = staff_q.get(role, 0.0)
-    for fac in ("training_center", "analytics_suite", "marketing_office"):
+    for fac in (
+        "training_center",
+        "analytics_suite",
+        "marketing_office",
+        "recovery_suite",
+        "strategy_lab",
+        "team_house",
+    ):
         feats[f"facility_{fac}"] = float(facilities.get(fac, 0))
     return dict(sorted(feats.items()))
 

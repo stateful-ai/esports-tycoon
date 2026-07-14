@@ -39,7 +39,7 @@ from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 6
+OBSERVATION_VERSION = 7
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {

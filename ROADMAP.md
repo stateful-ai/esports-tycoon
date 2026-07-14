@@ -2,7 +2,7 @@
 
 **Project:** esports-sim — Valorant-inspired tycoon + RL substrate + world-model research target
 **Format:** Now / Next / Later. Avoids false precision for a solo long-horizon project.
-**Last updated:** 2026-07-12
+**Last updated:** 2026-07-13
 
 ---
 
@@ -221,6 +221,12 @@ Explicit non-goals. Calling these out so we don't drift.
   memories; rivalries, Hall of Fame, living history, per-save media
   voices; coaching tree, org knowledge + dynasty gate, expanded
   backroom department; strategy diffusion + chronicled meta eras.
+- **2026-07-13 (Interactive facilities)** — added a menu-based infrastructure
+  screen with six upgrade tracks: Training, VOD review, Media, Recovery,
+  Strategy, and Team House. Each exposes staff-linked effects,
+  current-versus-next benefits, build cost, and upkeep with in-place upgrades.
+  New tracks feed bounded weekly condition/wellbeing recovery and scheduled
+  preparation efficiency. The painted office remains parked for a later pass.
 - **2026-07-09** — The game grew past the MVP frame: Sprint 2 and the
   whole "Next" block shipped (web app + isometric viewer, narrative,
   analytics, veto/fog), then kept going — floor geometry with

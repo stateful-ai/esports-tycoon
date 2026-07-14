@@ -431,6 +431,61 @@ def _dressed_gamedata(
 # Weekly tick
 
 
+def _apply_backroom_effects(gs: GameState) -> None:
+    """Apply bounded staff and facility recovery for every managed org."""
+    backroom_teams = sorted(set(gs.staff_by) | set(gs.facilities_by))
+    for tid in backroom_teams:
+        gs.set_acting(tid)
+        recovery = staff.physio_recovery(gs)
+        facility_recovery = economy.facility_recovery_bonus(gs, tid)
+        support = staff.confidence_support(gs)
+        wellbeing = economy.facility_wellbeing_bonus(gs, tid)
+        upkeep = staff.form_upkeep(gs)
+        for player in gs.roster(tid):
+            if recovery > 0:
+                before = player.stamina
+                player.stamina = round(min(100.0, player.stamina + recovery), 1)
+                staff.add_contribution(
+                    gs,
+                    tid,
+                    "physio",
+                    "stamina_restored",
+                    player.stamina - before,
+                )
+            if facility_recovery > 0:
+                player.stamina = round(
+                    min(100.0, player.stamina + facility_recovery), 1
+                )
+            if support > 0 and player.confidence < 50.0:
+                before = player.confidence
+                player.confidence = round(min(50.0, player.confidence + support), 1)
+                staff.add_contribution(
+                    gs,
+                    tid,
+                    "psychologist",
+                    "confidence_restored",
+                    player.confidence - before,
+                )
+            if wellbeing > 0:
+                if player.confidence < 50.0:
+                    player.confidence = round(
+                        min(50.0, player.confidence + wellbeing), 1
+                    )
+                if player.morale < 50.0:
+                    player.morale = round(min(50.0, player.morale + wellbeing), 1)
+            if upkeep > 0 and player.form < 50.0:
+                before = player.form
+                player.form = round(min(50.0, player.form + upkeep), 1)
+                staff.add_contribution(
+                    gs,
+                    tid,
+                    "performance_coach",
+                    "form_restored",
+                    player.form - before,
+                )
+    gs.set_acting(None)
+
+
 def advance_week(
     gs: GameState,
     gd: GameData,
@@ -592,30 +647,11 @@ def advance_week(
     # no-op there and the balance gates stay byte-identical.
     development.apply_mentorship_growth(gs)
 
-    # 2b. Backroom department effects: physio restores
-    # stamina; psychologist pulls shaken confidence back toward neutral;
-    # performance coach does the same for slumped form. The department
-    # roles are pulls toward 50, never boosts past it — support staff
-    # steady a roster, they don't inflate one.
-    for tid in sorted(gs.staff_by):
-        gs.set_acting(tid)
-        recovery = staff.physio_recovery(gs)
-        support = staff.confidence_support(gs)
-        upkeep = staff.form_upkeep(gs)
-        for p in gs.roster(tid):
-            if recovery > 0:
-                before = p.stamina
-                p.stamina = round(min(100.0, p.stamina + recovery), 1)
-                staff.add_contribution(gs, tid, "physio", "stamina_restored", p.stamina - before)
-            if support > 0 and p.confidence < 50.0:
-                before = p.confidence
-                p.confidence = round(min(50.0, p.confidence + support), 1)
-                staff.add_contribution(gs, tid, "psychologist", "confidence_restored", p.confidence - before)
-            if upkeep > 0 and p.form < 50.0:
-                before = p.form
-                p.form = round(min(50.0, p.form + upkeep), 1)
-                staff.add_contribution(gs, tid, "performance_coach", "form_restored", p.form - before)
-    gs.set_acting(None)
+    # 2b. Backroom department effects: physios and recovery facilities restore
+    # stamina; psychologists and the team house steady confidence and morale;
+    # performance coaches do the same for slumped form. Confidence, morale,
+    # and form recovery are pulls toward 50, never boosts past it.
+    _apply_backroom_effects(gs)
     staff.record_week(gs, report)
 
     # 2b'. Bench minutes: players who did NOT dress a single map this week

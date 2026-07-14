@@ -638,8 +638,7 @@ function renderApp() {
   // finishes into a detached node instead of double-appending.
   const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
-  // Office screen is parked for now (office.js stays on disk, unloaded).
-  ({ inbox, dashboard, roster, club, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
+  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -6074,9 +6073,12 @@ const SLOT_LABELS = {
   stream: "Stream", apparel: "Apparel",
 };
 const FACILITY_LABELS = {
-  training_center: "Training center",
-  analytics_suite: "Analytics suite",
-  marketing_office: "Marketing office",
+  training_center: "Training Centre",
+  analytics_suite: "VOD Review Room",
+  marketing_office: "Media Department",
+  recovery_suite: "Recovery Suite",
+  strategy_lab: "Strategy Lab",
+  team_house: "Team House",
 };
 
 async function finances(v) {
@@ -6208,9 +6210,12 @@ const FinancesTab = () => {
     stream: "Stream", apparel: "Apparel",
   };
   const FACILITY_LABELS = {
-    training_center: "Training center",
-    analytics_suite: "Analytics suite",
-    marketing_office: "Marketing office",
+    training_center: "Training Centre",
+    analytics_suite: "VOD Review Room",
+    marketing_office: "Media Department",
+    recovery_suite: "Recovery Suite",
+    strategy_lab: "Strategy Lab",
+    team_house: "Team House",
   };
 
   return html`
@@ -6338,7 +6343,10 @@ const FinancesTab = () => {
 
           <div class="card">
             <h2>Facilities</h2>
-            ${["training_center", "analytics_suite", "marketing_office"].map(name => {
+            ${[
+              "training_center", "analytics_suite", "marketing_office",
+              "recovery_suite", "strategy_lab", "team_house",
+            ].map(name => {
               const f = data.facilities[name];
               if (!f) return null;
               const affordable = data.balance >= f.next_cost;
