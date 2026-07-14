@@ -15,7 +15,7 @@ players:
   region: emea
   country: ''
   languages: []
-  age: 26
+  age: 27
   role: controller
   playstyle: igl
   attributes:
@@ -100,20 +100,20 @@ players:
   - map_id: split
     mastery: 78.0
   salary: 5400
-  contract_weeks_left: 38
-  morale: 63.6
-  stamina: 92.1
-  form: 48.4
+  contract_weeks_left: 74
+  morale: 64.3
+  stamina: 82.9
+  form: 54.1
   personality_tags:
-  - clutch_gene
-  potential: 73.2
+  - veteran
+  potential: 78.0
 - id: team_giants_gaming_fit1nho
   handle: Fit1nho
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 25
+  age: 21
   role: duelist
   playstyle: entry
   attributes:
@@ -198,14 +198,13 @@ players:
   - map_id: split
     mastery: 74.8
   salary: 5500
-  contract_weeks_left: 40
-  morale: 73.3
-  stamina: 84.7
-  form: 49.4
+  contract_weeks_left: 44
+  morale: 65.1
+  stamina: 90.6
+  form: 48.5
   personality_tags:
-  - hot_head
-  - quiet
-  potential: 76.1
+  - rookie
+  potential: 85.0
 - id: team_giants_gaming_hoody
   handle: hoody
   real_name: ''
@@ -302,14 +301,14 @@ players:
   stamina: 85.8
   form: 59.6
   personality_tags: []
-  potential: 77.1
+  potential: 81.0
 - id: team_giants_gaming_meddo
   handle: Meddo
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 20
+  age: 21
   role: initiator
   playstyle: support
   attributes:
@@ -394,21 +393,20 @@ players:
   - map_id: split
     mastery: 70.4
   salary: 5400
-  contract_weeks_left: 35
-  morale: 83.7
-  stamina: 86.6
-  form: 51.2
+  contract_weeks_left: 30
+  morale: 62.8
+  stamina: 99.0
+  form: 50.0
   personality_tags:
-  - analytical
-  - grinder
-  potential: 77.7
+  - rookie
+  potential: 84.0
 - id: team_giants_gaming_ambi
   handle: Ambi
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 21
+  age: 20
   role: sentinel
   playstyle: anchor
   attributes:
@@ -493,10 +491,10 @@ players:
   - map_id: split
     mastery: 76.1
   salary: 5100
-  contract_weeks_left: 56
-  morale: 60.6
-  stamina: 94.5
-  form: 50.1
+  contract_weeks_left: 78
+  morale: 73.3
+  stamina: 80.5
+  form: 55.8
   personality_tags:
-  - slow_starter
-  potential: 82.8
+  - rookie
+  potential: 82.0

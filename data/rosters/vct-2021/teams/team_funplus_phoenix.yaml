@@ -100,15 +100,13 @@ players:
   - map_id: split
     mastery: 81.2
   salary: 6100
-  contract_weeks_left: 49
-  morale: 67.0
-  stamina: 96.6
-  form: 58.9
+  contract_weeks_left: 55
+  morale: 70.0
+  stamina: 85.6
+  form: 57.5
   personality_tags:
-  - fan_favorite
-  - team_player
   - veteran
-  potential: 78.4
+  potential: 79.0
 - id: team_funplus_phoenix_ardiis
   handle: ardiis
   real_name: ''
@@ -207,7 +205,7 @@ players:
   personality_tags:
   - hot_head
   - perfectionist
-  potential: 87.7
+  potential: 86.0
 - id: team_funplus_phoenix_shao
   handle: Shao
   real_name: ''
@@ -299,12 +297,13 @@ players:
   - map_id: split
     mastery: 90.9
   salary: 6300
-  contract_weeks_left: 48
-  morale: 84.7
-  stamina: 95.5
-  form: 50.8
-  personality_tags: []
-  potential: 91.2
+  contract_weeks_left: 47
+  morale: 69.5
+  stamina: 99.8
+  form: 56.6
+  personality_tags:
+  - rookie
+  potential: 88.0
 - id: team_funplus_phoenix_zyppan
   handle: Zyppan
   real_name: ''
@@ -396,14 +395,13 @@ players:
   - map_id: split
     mastery: 76.9
   salary: 6100
-  contract_weeks_left: 78
-  morale: 82.4
-  stamina: 92.3
-  form: 54.4
+  contract_weeks_left: 75
+  morale: 84.4
+  stamina: 97.9
+  form: 54.3
   personality_tags:
-  - clutch_gene
-  - flashy
-  potential: 90.0
+  - rookie
+  potential: 89.0
 - id: team_funplus_phoenix_shadow
   handle: ShadoW
   real_name: ''
@@ -502,4 +500,4 @@ players:
   personality_tags:
   - analytical
   - independent
-  potential: 78.4
+  potential: 82.0

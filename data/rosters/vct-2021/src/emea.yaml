@@ -5,7 +5,7 @@ teams:
     prestige: 88
     players:
       - handle: Boaster
-        age: 25
+        age: 26
         role: controller
         playstyle: igl
         igl: true
@@ -14,7 +14,7 @@ teams:
         country: GB
         languages: [{lang: en, level: 100}]
         potential: 82.0
-        tags: [streamer, analytical, team_player]
+        tags: [streamer, analytical, team_player, veteran]
       - handle: Derke
         age: 18
         role: duelist
@@ -35,8 +35,10 @@ teams:
         agents: [sova, breach]
         country: HR
         languages: [{lang: hr, level: 100}, {lang: en, level: 85}]
+        potential: 86.0
+        tags: [rookie]
       - handle: Mistic
-        age: 23
+        age: 20
         role: flex
         playstyle: lurker
         igl: false
@@ -44,6 +46,8 @@ teams:
         agents: [sage, brimstone]
         country: GB
         languages: [{lang: en, level: 100}]
+        potential: 84.0
+        tags: [rookie]
       - handle: Magnum
         age: 20
         role: sentinel
@@ -53,12 +57,14 @@ teams:
         agents: [cypher, killjoy]
         country: CZ
         languages: [{lang: cs, level: 100}, {lang: en, level: 85}]
+        potential: 86.0
+        tags: [rookie]
   - name: Team Liquid
     tag: TL
     prestige: 87
     players:
       - handle: L1NK
-        age: 23
+        age: 22
         role: controller
         playstyle: igl
         igl: true
@@ -66,6 +72,8 @@ teams:
         agents: [omen, viper]
         country: GB
         languages: [{lang: en, level: 100}]
+        potential: 84.0
+        tags: [team_player]
       - handle: ScreaM
         age: 27
         role: duelist
@@ -75,7 +83,8 @@ teams:
         agents: [reyna, jett]
         country: BE
         languages: [{lang: fr, level: 100}, {lang: en, level: 90}]
-        tags: [pure_aimer]
+        potential: 86.0
+        tags: [pure_aimer, veteran]
       - handle: Jamppi
         age: 20
         role: duelist
@@ -85,6 +94,8 @@ teams:
         agents: [jett, sova]
         country: FI
         languages: [{lang: fi, level: 100}, {lang: en, level: 90}]
+        potential: 91.0
+        tags: [prodigy, rookie]
       - handle: soulcas
         age: 21
         role: initiator
@@ -94,6 +105,8 @@ teams:
         agents: [skye, breach]
         country: GB
         languages: [{lang: en, level: 100}]
+        potential: 85.0
+        tags: [rookie]
       - handle: Nivera
         age: 20
         role: controller
@@ -103,6 +116,8 @@ teams:
         agents: [viper, omen]
         country: BE
         languages: [{lang: fr, level: 100}, {lang: en, level: 90}]
+        potential: 88.0
+        tags: [prodigy, rookie]
   - name: Acend
     tag: ACE
     prestige: 90
@@ -116,6 +131,8 @@ teams:
         agents: [omen, viper]
         country: FI
         languages: [{lang: fi, level: 100}, {lang: en, level: 90}]
+        potential: 83.0
+        tags: [team_player]
       - handle: cNed
         age: 19
         role: duelist
@@ -125,6 +142,8 @@ teams:
         agents: [jett, reyna]
         country: TR
         languages: [{lang: tr, level: 100}, {lang: en, level: 75}]
+        potential: 95.0
+        tags: [prodigy, rookie]
       - handle: zeek
         age: 20
         role: flex
@@ -134,6 +153,8 @@ teams:
         agents: [raze, sage]
         country: PL
         languages: [{lang: pl, level: 100}, {lang: en, level: 80}]
+        potential: 91.0
+        tags: [rookie]
       - handle: starxo
         age: 20
         role: initiator
@@ -143,6 +164,8 @@ teams:
         agents: [skye, sova]
         country: SE
         languages: [{lang: sv, level: 100}, {lang: en, level: 90}]
+        potential: 91.0
+        tags: [rookie]
       - handle: Kiles
         age: 23
         role: sentinel
@@ -152,6 +175,8 @@ teams:
         agents: [cypher, killjoy]
         country: ES
         languages: [{lang: es, level: 100}, {lang: en, level: 80}]
+        potential: 81.0
+        tags: [team_player]
   - name: Gambit Esports
     tag: GMB
     prestige: 91
@@ -165,6 +190,8 @@ teams:
         agents: [omen, brimstone]
         country: RU
         languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+        potential: 85.0
+        tags: [team_player]
       - handle: nAts
         age: 19
         role: sentinel
@@ -174,6 +201,8 @@ teams:
         agents: [cypher, viper]
         country: RU
         languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+        potential: 94.0
+        tags: [prodigy, rookie]
       - handle: Chronicle
         age: 19
         role: flex
@@ -183,6 +212,8 @@ teams:
         agents: [viper, sage]
         country: RU
         languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+        potential: 93.0
+        tags: [prodigy, rookie]
       - handle: d3ffo
         age: 20
         role: duelist
@@ -192,6 +223,8 @@ teams:
         agents: [jett, raze]
         country: RU
         languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+        potential: 89.0
+        tags: [rookie]
       - handle: Sheydos
         age: 20
         role: initiator
@@ -201,6 +234,8 @@ teams:
         agents: [sova, skye]
         country: RU
         languages: [{lang: ru, level: 100}, {lang: en, level: 70}]
+        potential: 90.0
+        tags: [rookie]
   - name: FunPlus Phoenix
     tag: FPX
     prestige: 79
@@ -212,6 +247,8 @@ teams:
         igl: true
         quality: 76
         agents: [omen, viper]
+        potential: 79.0
+        tags: [veteran]
       - handle: ardiis
         age: 23
         role: duelist
@@ -219,6 +256,7 @@ teams:
         igl: false
         quality: 78
         agents: [jett, raze]
+        potential: 86.0
       - handle: Shao
         age: 21
         role: initiator
@@ -226,6 +264,8 @@ teams:
         igl: false
         quality: 77
         agents: [sova, breach]
+        potential: 88.0
+        tags: [rookie]
       - handle: Zyppan
         age: 19
         role: flex
@@ -233,6 +273,8 @@ teams:
         igl: false
         quality: 76
         agents: [sage, omen]
+        potential: 89.0
+        tags: [rookie]
       - handle: ShadoW
         age: 22
         role: sentinel
@@ -240,17 +282,20 @@ teams:
         igl: false
         quality: 72
         agents: [cypher, killjoy]
+        potential: 82.0
   - name: Guild Esports
-    tag: GUILD
+    tag: GLD
     prestige: 77
     players:
       - handle: bonkar
-        age: 25
+        age: 26
         role: controller
         playstyle: igl
         igl: true
         quality: 70
         agents: [omen, brimstone]
+        potential: 76.0
+        tags: [veteran]
       - handle: Yacine
         age: 25
         role: duelist
@@ -258,13 +303,16 @@ teams:
         igl: false
         quality: 76
         agents: [jett, raze]
+        potential: 83.0
       - handle: draken
-        age: 25
+        age: 26
         role: duelist
         playstyle: awper
         igl: false
         quality: 73
         agents: [jett, sova]
+        potential: 80.0
+        tags: [veteran]
       - handle: Leo
         age: 18
         role: initiator
@@ -272,24 +320,30 @@ teams:
         igl: false
         quality: 78
         agents: [sova, breach]
+        potential: 92.0
+        tags: [prodigy, rookie]
       - handle: Sayf
-        age: 21
+        age: 20
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 75
         agents: [cypher, killjoy]
+        potential: 89.0
+        tags: [rookie]
   - name: Team Heretics
-    tag: TH
+    tag: HER
     prestige: 76
     players:
       - handle: pAura
-        age: 25
+        age: 24
         role: controller
         playstyle: igl
         igl: true
         quality: 72
         agents: [omen, viper]
+        potential: 81.0
+        tags: [team_player]
       - handle: nukkye
         age: 24
         role: duelist
@@ -297,6 +351,7 @@ teams:
         igl: false
         quality: 78
         agents: [raze, jett]
+        potential: 85.0
       - handle: AvovA
         age: 23
         role: controller
@@ -304,13 +359,16 @@ teams:
         igl: false
         quality: 75
         agents: [omen, brimstone]
+        potential: 83.0
       - handle: Koldamenta
-        age: 27
+        age: 28
         role: initiator
         playstyle: support
         igl: false
         quality: 72
         agents: [sova, breach]
+        potential: 78.0
+        tags: [veteran]
       - handle: lowel
         age: 25
         role: sentinel
@@ -318,6 +376,7 @@ teams:
         igl: false
         quality: 71
         agents: [cypher, killjoy]
+        potential: 80.0
   - name: Ninjas in Pyjamas
     tag: NIP
     prestige: 73
@@ -329,13 +388,16 @@ teams:
         igl: true
         quality: 67
         agents: [omen, brimstone]
+        potential: 74.0
+        tags: [veteran]
       - handle: CREA
-        age: 22
+        age: 23
         role: duelist
         playstyle: entry
         igl: false
         quality: 72
         agents: [jett, raze]
+        potential: 79.0
       - handle: rhyme
         age: 24
         role: flex
@@ -343,31 +405,37 @@ teams:
         igl: false
         quality: 70
         agents: [sage, omen]
+        potential: 78.0
       - handle: chiwawa
-        age: 23
+        age: 24
         role: duelist
         playstyle: entry
         igl: false
         quality: 69
         agents: [jett, raze]
+        potential: 78.0
       - handle: Jady
-        age: 22
+        age: 18
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 68
         agents: [cypher, killjoy]
+        potential: 86.0
+        tags: [rookie]
   - name: SuperMassive Blaze
     tag: SMB
     prestige: 78
     players:
       - handle: Turko
-        age: 24
+        age: 23
         role: controller
         playstyle: igl
         igl: true
         quality: 73
         agents: [omen, brimstone]
+        potential: 81.0
+        tags: [team_player]
       - handle: Brave
         age: 25
         role: duelist
@@ -375,13 +443,16 @@ teams:
         igl: false
         quality: 76
         agents: [jett, raze]
+        potential: 83.0
       - handle: Izzy
-        age: 23
+        age: 20
         role: flex
         playstyle: lurker
         igl: false
         quality: 73
         agents: [sage, omen]
+        potential: 84.0
+        tags: [rookie]
       - handle: AimDLL
         age: 22
         role: initiator
@@ -389,31 +460,36 @@ teams:
         igl: false
         quality: 72
         agents: [sova, breach]
+        potential: 81.0
       - handle: russ
-        age: 22
+        age: 23
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 70
         agents: [cypher, killjoy]
+        potential: 78.0
   - name: Team BDS
     tag: BDS
     prestige: 72
     players:
       - handle: logan
-        age: 24
+        age: 23
         role: controller
         playstyle: igl
         igl: true
         quality: 69
         agents: [omen, viper]
+        potential: 78.0
+        tags: [team_player]
       - handle: rodeN
-        age: 23
+        age: 24
         role: duelist
         playstyle: entry
         igl: false
         quality: 72
         agents: [jett, raze]
+        potential: 80.0
       - handle: AKUMAAAAA
         age: 21
         role: flex
@@ -421,13 +497,17 @@ teams:
         igl: false
         quality: 69
         agents: [sage, omen]
+        potential: 80.0
+        tags: [rookie]
       - handle: TakaS
-        age: 22
+        age: 21
         role: initiator
         playstyle: support
         igl: false
         quality: 68
         agents: [sova, breach]
+        potential: 82.0
+        tags: [rookie]
       - handle: hopi
         age: 22
         role: sentinel
@@ -435,25 +515,30 @@ teams:
         igl: false
         quality: 67
         agents: [cypher, killjoy]
+        potential: 76.0
   - name: Giants Gaming
     tag: GIA
     tier: 2
     prestige: 65
     players:
       - handle: Davidp
-        age: 26
+        age: 27
         role: controller
         playstyle: igl
         igl: true
         quality: 70
         agents: [omen, viper]
+        potential: 78.0
+        tags: [veteran]
       - handle: Fit1nho
-        age: 25
+        age: 21
         role: duelist
         playstyle: entry
         igl: false
         quality: 71
         agents: [jett, raze]
+        potential: 85.0
+        tags: [rookie]
       - handle: hoody
         age: 23
         role: flex
@@ -461,20 +546,25 @@ teams:
         igl: false
         quality: 70
         agents: [sage, omen]
+        potential: 81.0
       - handle: Meddo
-        age: 20
+        age: 21
         role: initiator
         playstyle: support
         igl: false
         quality: 70
         agents: [sova, breach]
+        potential: 84.0
+        tags: [rookie]
       - handle: Ambi
-        age: 21
+        age: 20
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 68
         agents: [cypher, killjoy]
+        potential: 82.0
+        tags: [rookie]
   - name: Futbolist
     tag: FUT
     tier: 2
@@ -489,6 +579,8 @@ teams:
         agents: [omen, brimstone]
         real_name: ''
         country: DE
+        potential: 82.0
+        tags: [rookie]
       - handle: STERBEN
         age: 22
         role: duelist
@@ -496,6 +588,7 @@ teams:
         igl: false
         quality: 70
         agents: [jett, raze]
+        potential: 79.0
       - handle: SasuKe
         age: 23
         role: flex
@@ -503,20 +596,24 @@ teams:
         igl: false
         quality: 68
         agents: [sage, omen]
+        potential: 78.0
       - handle: mag0o
-        age: 21
+        age: 22
         role: initiator
         playstyle: support
         igl: false
         quality: 69
         agents: [sova, breach]
+        potential: 77.0
       - handle: mojj
-        age: 22
+        age: 21
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 67
         agents: [cypher, killjoy]
+        potential: 80.0
+        tags: [rookie]
   - name: WAVE Esports
     tag: WAVE
     tier: 2
@@ -529,13 +626,17 @@ teams:
         igl: true
         quality: 67
         agents: [omen, brimstone]
+        potential: 77.0
+        tags: [team_player]
       - handle: nico
-        age: 22
+        age: 20
         role: duelist
         playstyle: entry
         igl: false
         quality: 68
         agents: [jett, raze]
+        potential: 81.0
+        tags: [rookie]
       - handle: Carcass
         age: 21
         role: flex
@@ -543,13 +644,16 @@ teams:
         igl: false
         quality: 66
         agents: [sage, omen]
+        potential: 80.0
+        tags: [rookie]
       - handle: murii
-        age: 21
+        age: 22
         role: initiator
         playstyle: support
         igl: false
         quality: 67
         agents: [sova, breach]
+        potential: 77.0
       - handle: xTribune
         age: 20
         role: sentinel
@@ -557,6 +661,8 @@ teams:
         igl: false
         quality: 66
         agents: [cypher, killjoy]
+        potential: 79.0
+        tags: [rookie]
   - name: Alliance
     tag: ALL
     tier: 2
@@ -569,6 +675,8 @@ teams:
         igl: true
         quality: 69
         agents: [sova, breach]
+        potential: 79.0
+        tags: [team_player]
       - handle: hype
         age: 24
         role: controller
@@ -576,13 +684,16 @@ teams:
         igl: false
         quality: 67
         agents: [omen, brimstone]
+        potential: 77.0
       - handle: kAdavra
-        age: 23
+        age: 21
         role: initiator
         playstyle: support
         igl: false
         quality: 66
         agents: [sova, breach]
+        potential: 82.0
+        tags: [rookie]
       - handle: luckeRRR
         age: 25
         role: duelist
@@ -590,6 +701,7 @@ teams:
         igl: false
         quality: 68
         agents: [jett, sova]
+        potential: 78.0
       - handle: xms
         age: 24
         role: flex
@@ -597,6 +709,7 @@ teams:
         igl: false
         quality: 68
         agents: [sage, omen]
+        potential: 79.0
   - name: HONK
     tag: HONK
     tier: 2
@@ -609,6 +722,8 @@ teams:
         igl: true
         quality: 66
         agents: [sage, omen]
+        potential: 76.0
+        tags: [team_player]
       - handle: ShonP
         age: 22
         role: duelist
@@ -616,6 +731,7 @@ teams:
         igl: false
         quality: 66
         agents: [jett, raze]
+        potential: 75.0
       - handle: trexx
         age: 17
         role: initiator
@@ -623,13 +739,16 @@ teams:
         igl: false
         quality: 74
         agents: [sova, breach]
+        potential: 90.0
+        tags: [prodigy, rookie]
       - handle: Dreamas
-        age: 21
+        age: 23
         role: sentinel
         playstyle: anchor
         igl: false
         quality: 66
         agents: [cypher, killjoy]
+        potential: 74.0
       - handle: synsi
         age: 20
         role: controller
@@ -637,6 +756,8 @@ teams:
         igl: false
         quality: 67
         agents: [omen, brimstone]
+        potential: 80.0
+        tags: [rookie]
   - name: Team Finest
     tag: FINEST
     tier: 2
@@ -649,6 +770,8 @@ teams:
         igl: true
         quality: 67
         agents: [omen, brimstone]
+        potential: 76.0
+        tags: [team_player]
       - handle: ALIVE
         age: 23
         role: duelist
@@ -656,6 +779,7 @@ teams:
         igl: false
         quality: 68
         agents: [jett, raze]
+        potential: 78.0
       - handle: ponkt
         age: 22
         role: flex
@@ -663,6 +787,7 @@ teams:
         igl: false
         quality: 66
         agents: [sage, omen]
+        potential: 75.0
       - handle: Jeremy9000
         age: 21
         role: initiator
@@ -670,6 +795,8 @@ teams:
         igl: false
         quality: 67
         agents: [sova, breach]
+        potential: 79.0
+        tags: [rookie]
       - handle: mizuN
         age: 22
         role: sentinel
@@ -677,3 +804,4 @@ teams:
         igl: false
         quality: 66
         agents: [cypher, killjoy]
+        potential: 74.0

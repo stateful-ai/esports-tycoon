@@ -104,14 +104,13 @@ players:
   - map_id: split
     mastery: 82.1
   salary: 6100
-  contract_weeks_left: 52
-  morale: 81.3
-  stamina: 82.9
-  form: 50.5
+  contract_weeks_left: 36
+  morale: 71.4
+  stamina: 97.0
+  form: 47.2
   personality_tags:
-  - perfectionist
-  - streamer
-  potential: 77.7
+  - team_player
+  potential: 85.0
 - id: team_gambit_esports_nats
   handle: nAts
   real_name: ''
@@ -207,14 +206,14 @@ players:
   - map_id: split
     mastery: 88.6
   salary: 6900
-  contract_weeks_left: 73
-  morale: 82.5
-  stamina: 84.1
-  form: 53.0
+  contract_weeks_left: 43
+  morale: 81.6
+  stamina: 98.0
+  form: 48.1
   personality_tags:
-  - analytical
-  - hot_head
-  potential: 92.2
+  - prodigy
+  - rookie
+  potential: 94.0
 - id: team_gambit_esports_chronicle
   handle: Chronicle
   real_name: ''
@@ -310,14 +309,14 @@ players:
   - map_id: split
     mastery: 90.4
   salary: 6900
-  contract_weeks_left: 40
-  morale: 78.8
-  stamina: 93.8
-  form: 53.3
+  contract_weeks_left: 55
+  morale: 65.2
+  stamina: 95.0
+  form: 55.3
   personality_tags:
-  - fan_favorite
-  - team_player
-  potential: 95.0
+  - prodigy
+  - rookie
+  potential: 93.0
 - id: team_gambit_esports_d3ffo
   handle: d3ffo
   real_name: ''
@@ -414,13 +413,12 @@ players:
     mastery: 80.5
   salary: 6500
   contract_weeks_left: 35
-  morale: 64.9
-  stamina: 84.4
-  form: 51.1
+  morale: 62.6
+  stamina: 83.9
+  form: 48.3
   personality_tags:
-  - quiet
-  - streamer
-  potential: 94.7
+  - rookie
+  potential: 89.0
 - id: team_gambit_esports_sheydos
   handle: Sheydos
   real_name: ''
@@ -516,11 +514,10 @@ players:
   - map_id: split
     mastery: 88.2
   salary: 6400
-  contract_weeks_left: 65
-  morale: 62.9
-  stamina: 87.8
-  form: 55.7
+  contract_weeks_left: 70
+  morale: 78.0
+  stamina: 82.3
+  form: 50.9
   personality_tags:
-  - flashy
-  - team_player
-  potential: 92.2
+  - rookie
+  potential: 90.0

@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 77.4
   salary: 4900
-  contract_weeks_left: 78
-  morale: 73.8
-  stamina: 96.2
-  form: 58.2
+  contract_weeks_left: 36
+  morale: 84.1
+  stamina: 91.0
+  form: 57.2
   personality_tags:
-  - flashy
-  - streamer
-  potential: 69.0
+  - team_player
+  potential: 76.0
 - id: team_honk_shonp
   handle: ShonP
   real_name: ''
@@ -206,7 +205,7 @@ players:
   personality_tags:
   - clutch_gene
   - quiet
-  potential: 76.4
+  potential: 75.0
 - id: team_honk_trexx
   handle: trexx
   real_name: ''
@@ -298,22 +297,21 @@ players:
   - map_id: split
     mastery: 87.2
   salary: 5900
-  contract_weeks_left: 39
-  morale: 62.7
-  stamina: 91.7
-  form: 56.3
+  contract_weeks_left: 53
+  morale: 64.8
+  stamina: 82.1
+  form: 53.8
   personality_tags:
-  - analytical
+  - prodigy
   - rookie
-  - team_player
-  potential: 90.4
+  potential: 90.0
 - id: team_honk_dreamas
   handle: Dreamas
   real_name: ''
   region: emea
   country: ''
   languages: []
-  age: 21
+  age: 23
   role: sentinel
   playstyle: anchor
   attributes:
@@ -405,7 +403,7 @@ players:
   personality_tags:
   - quiet
   - streamer
-  potential: 69.5
+  potential: 74.0
 - id: team_honk_synsi
   handle: synsi
   real_name: ''
@@ -497,11 +495,10 @@ players:
   - map_id: split
     mastery: 75.7
   salary: 5000
-  contract_weeks_left: 43
-  morale: 60.6
-  stamina: 99.6
-  form: 47.1
+  contract_weeks_left: 44
+  morale: 66.9
+  stamina: 80.5
+  form: 59.7
   personality_tags:
-  - hot_head
-  - perfectionist
-  potential: 80.7
+  - rookie
+  potential: 80.0

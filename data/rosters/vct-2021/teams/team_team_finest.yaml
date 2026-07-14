@@ -100,14 +100,13 @@ players:
   - map_id: split
     mastery: 74.9
   salary: 5000
-  contract_weeks_left: 40
-  morale: 72.9
-  stamina: 95.3
-  form: 47.4
+  contract_weeks_left: 38
+  morale: 65.3
+  stamina: 90.3
+  form: 56.5
   personality_tags:
-  - quiet
   - team_player
-  potential: 70.6
+  potential: 76.0
 - id: team_team_finest_alive
   handle: ALIVE
   real_name: ''
@@ -206,7 +205,7 @@ players:
   personality_tags:
   - grinder
   - hot_head
-  potential: 75.6
+  potential: 78.0
 - id: team_team_finest_ponkt
   handle: ponkt
   real_name: ''
@@ -305,7 +304,7 @@ players:
   personality_tags:
   - independent
   - quiet
-  potential: 77.5
+  potential: 75.0
 - id: team_team_finest_jeremy9000
   handle: Jeremy9000
   real_name: ''
@@ -397,14 +396,13 @@ players:
   - map_id: split
     mastery: 72.3
   salary: 5000
-  contract_weeks_left: 53
-  morale: 61.6
-  stamina: 93.8
-  form: 48.1
+  contract_weeks_left: 72
+  morale: 72.0
+  stamina: 81.2
+  form: 55.3
   personality_tags:
-  - clutch_gene
-  - grinder
-  potential: 85.5
+  - rookie
+  potential: 79.0
 - id: team_team_finest_mizun
   handle: mizuN
   real_name: ''
@@ -503,4 +501,4 @@ players:
   personality_tags:
   - flashy
   - grinder
-  potential: 76.0
+  potential: 74.0
