@@ -2252,6 +2252,9 @@ async function roster(v, opts = {}) {
     const streamChip = p.stream_heavy
       ? ' <span class="chip" title="heavy streaming slows this player\'s development">📺</span>'
       : "";
+    const requestChip = p.transfer_request
+      ? ' <span class="chip tone-bad" title="This player has submitted a transfer request">TRANSFER REQUEST</span>'
+      : "";
     const badges = (p.badges || []).map((bd) =>
       ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
     const starCell = hasBench && overview
@@ -2263,7 +2266,7 @@ async function roster(v, opts = {}) {
     let rowHtml;
     if (overview) {
       const actions = data.is_user_team
-        ? `<button class="btn btn-sm" data-act="talk">Talk</button>
+        ? `${requestChip}<button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
            <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
         : p.buyout != null

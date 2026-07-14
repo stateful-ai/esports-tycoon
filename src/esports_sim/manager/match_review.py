@@ -56,6 +56,9 @@ _TACTIC_ADVICE = {
     "retake_util": (
         "util_discipline", 1, "Hold more utility for coordinated retakes."
     ),
+    "retake_site": (
+        "util_discipline", 1, "Hold more utility for coordinated retakes."
+    ),
     "util_discipline": (
         "util_discipline",
         1,
@@ -115,6 +118,85 @@ def tactic_adjustment(
         "analyst_precision": quantum,
     }
 
+
+def analyst_digest(gs, team_id: str) -> dict | None:
+    """Turn the latest visible diagnosis into one grounded action memo.
+
+    The stored review owns every number; this function only selects the most
+    useful visible breakdown and connects its existing lever to the team's
+    current tactics. It draws no RNG and never invents a causal claim.
+    """
+    from esports_sim.manager import staff
+
+    review = gs.last_review_by.get(team_id)
+    if review is None or not review.contested:
+        return None
+    previous = gs.acting_team_id
+    gs.set_acting(team_id)
+    try:
+        tier = staff.analytics_tier(gs)
+        if tier <= 0:
+            return None
+        visible = [p for p in review.breaking if p.min_tier <= tier]
+        if not visible:
+            return None
+        # Site-specific reads are the most actionable version of a broader
+        # retake problem; otherwise preserve the diagnosis weight order.
+        point = next((p for p in visible if p.code == "retake_site"), visible[0])
+        coach = gs.staff.get("coach")
+        adjustment = tactic_adjustment(
+            gs.teams[team_id].tactics,
+            point.lever_code,
+            coach.quality if coach is not None else 0.0,
+            tier,
+        )
+        if point.code in ("retake", "retake_site"):
+            lost = max(0, point.den - point.num)
+            pct = round(100.0 * lost / max(point.den, 1))
+            where = f"{point.site}-site " if point.site else ""
+            finding = (
+                f"We lost {lost}/{point.den} ({pct}%) of {where}retakes in the "
+                "latest series."
+            )
+        elif point.code == "utility":
+            finding = (
+                f"{point.num}/{point.den} utility uses failed "
+                f"({round(point.value * 100)}%)."
+            )
+        elif point.code == "opening":
+            finding = (
+                f"We won only {point.num}/{point.den} opening duels "
+                f"({round(point.value * 100)}%)."
+            )
+        elif point.code == "trades":
+            finding = (
+                f"Only {point.num}/{point.den} deaths were traded "
+                f"({round(point.value * 100)}%)."
+            )
+        else:
+            finding = (
+                f"The strongest negative signal was {point.code.replace('_', ' ')} "
+                f"({point.num}/{point.den})."
+            )
+        action = "Review the match breakdown before the next fixture."
+        tab = "stats"
+        if adjustment is not None:
+            direction = "keep" if adjustment["at_limit"] else "move"
+            action = (
+                f"{adjustment['label']} is {adjustment['current']}; {direction} it "
+                f"toward {adjustment['target']}. {adjustment['reason']}"
+            )
+            tab = "tactics"
+        return {
+            "subject": f"{review.fixture_id}|{point.code}|{point.site}",
+            "title": "Analyst: one change for the next match",
+            "body": f"{finding}\nRecommendation: {action}",
+            "tab": tab,
+            "code": point.code,
+        }
+    finally:
+        gs.set_acting(previous)
+
 # Neutral value for weighting (the "even" reference each rate is measured from)
 # and a per-category priority (how decisive it is to the result). weight =
 # |value - neutral| * priority, so side-of-ball and pistols float to the top.
@@ -160,6 +242,7 @@ def _walk_map(
     opp_id: str,
     weapon_class_of: dict,
     c: dict[str, int],
+    site_retakes: dict[str, list[int]],
 ) -> None:
     """Fold one map's round context into the team-perspective accumulator `c`.
     Only the attacking team can plant, so a plant's team == the round's
@@ -172,6 +255,7 @@ def _walk_map(
     attacker = ""
     loadout: dict[str, tuple[str, int]] = {}
     planted_by = ""
+    planted_site = ""
     round_num = 0
 
     for e in events:
@@ -180,10 +264,13 @@ def _walk_map(
             round_num = e.round_num
             loadout = {}
             planted_by = ""
+            planted_site = ""
         elif e.type == "round.buy":
             loadout[e.player_id] = (e.weapon_id, e.armor)
         elif e.type == "round.spike_plant":
             planted_by = team_of.get(e.player_id, "")
+            if e.callout_id.endswith("_site") and e.callout_id[:1] in ("a", "b", "c"):
+                planted_site = e.callout_id[0].upper()
         elif e.type == "round.comms":
             if e.team_id == team_id:
                 if e.kind == "miscomm":
@@ -212,6 +299,10 @@ def _walk_map(
             elif planted_by == opp_id:
                 c["opp_plants"] += 1
                 c["retakes_won"] += 1 if won else 0
+                if planted_site:
+                    site = site_retakes.setdefault(planted_site, [0, 0])
+                    site[1] += 1
+                    site[0] += 1 if won else 0
             # Eco round = we were under-gunned on a gun round; did we steal it?
             if round_num not in PISTOL_ROUNDS and _under_gunned(
                 ours, loadout, weapon_class_of
@@ -261,6 +352,7 @@ def _emit(
     tone: str,
     player_id: str = "",
     lever_code: str = "",
+    site: str = "",
 ) -> None:
     weight = round(abs(value - neutral) * _PRIORITY[category], 4)
     points.append(
@@ -275,6 +367,7 @@ def _emit(
             weight=weight,
             player_id=player_id,
             lever_code=lever_code,
+            site=site,
         )
     )
 
@@ -303,6 +396,7 @@ def build_match_review(
         )
 
     c: dict[str, int] = {}
+    site_retakes: dict[str, list[int]] = {}
     for k in (
         "atk_rounds", "atk_won", "def_rounds", "def_won",
         "pistol_played", "pistol_won", "plants", "plants_won",
@@ -348,7 +442,10 @@ def build_match_review(
             elif tid == opp_id:
                 their_combat += ln.combat_score
 
-        _walk_map(stats, events, team_of, team_id, opp_id, weapon_class_of, c)
+        _walk_map(
+            stats, events, team_of, team_id, opp_id, weapon_class_of, c,
+            site_retakes,
+        )
         _clutch_pass(events, team_of, team_id, c)
 
     won = your_maps > their_maps
@@ -464,6 +561,16 @@ def build_match_review(
         elif v <= 0.10 and c["opp_plants"] >= 5:
             add("bad", "retake", "retake", 2, v, c["retakes_won"], c["opp_plants"], 0.25,
                 lever_code="retake_util")
+    for site, (won_site, plants_site) in sorted(site_retakes.items()):
+        if plants_site < 3:
+            continue
+        v = _rate(won_site, plants_site)
+        if v <= 0.25:
+            add(
+                "bad", "retake_site", "retake", 2, v,
+                won_site, plants_site, 0.25,
+                lever_code="retake_site", site=site,
+            )
     if c["eco_rounds"] >= 4:
         v = _rate(c["eco_won"], c["eco_rounds"])
         if v >= 0.35:

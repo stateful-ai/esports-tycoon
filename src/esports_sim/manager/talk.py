@@ -49,6 +49,31 @@ def can_talk(gs: GameState, pid: str) -> tuple[bool, str]:
 def topic_for(gs: GameState, pid: str) -> Topic:
     """The player's most pressing issue, by priority."""
     p = gs.players[pid]
+    from esports_sim.manager import transfer_requests
+
+    if transfer_requests.active(gs, pid, gs.acting_team_id):
+        return Topic(
+            "transfer_request",
+            f"{p.handle} has asked to leave. Morale is {p.morale:.0f}; this is "
+            "now about whether any trust can be repaired.",
+            [
+                TalkOption("accept_exit", "Accept the request and promise a fair exit"),
+                TalkOption("repair_trust", "Own the damage and offer one last reset"),
+                TalkOption("refuse_exit", "Refuse - the contract still belongs to the club"),
+            ],
+        )
+    if p.morale <= 20:
+        return Topic(
+            "crisis",
+            f"{p.handle} asks for an urgent meeting. Morale has hit {p.morale:.0f}; "
+            "one wrong answer could end their time at the club.",
+            [
+                TalkOption("take_responsibility", "Take responsibility and ask what must change"),
+                TalkOption("listen_then_plan", "Listen, then agree a concrete two-week reset"),
+                TalkOption("public_challenge", "Challenge them to answer the criticism publicly"),
+                TalkOption("bench_ultimatum", "Tell them to accept the bench or find another club"),
+            ],
+        )
     if p.morale < 50:
         return Topic(
             "morale",
@@ -147,8 +172,76 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
     d_form = 0.0
     d_chem = 0.0
     msg = ""
+    transfer_requested = False
 
-    if option_id in ("reassure", "back", "commit", "praise"):
+    if topic.id == "crisis":
+        from esports_sim.manager import transfer_requests
+
+        if option_id == "take_responsibility":
+            d_morale = 7.0 + max(0.0, loyalty) * 0.1
+            d_chem = 1.0
+            msg = f"{p.handle} stays in the room. The reset has a chance."
+        elif option_id == "listen_then_plan":
+            d_morale = 5.0
+            d_form = 1.0
+            msg = f"{p.handle} agrees to a two-week reset before deciding anything."
+        elif option_id == "public_challenge":
+            axes = personality.axes(p)
+            request_p = min(
+                0.95,
+                max(
+                    0.25,
+                    0.55
+                    + (axes["ego"] - 50.0) / 160.0
+                    + (50.0 - axes["resilience"]) / 200.0,
+                ),
+            )
+            if rng.random() < request_p:
+                d_morale = -6.0
+                d_chem = -2.0
+                transfer_requests.issue(gs, pid, "manager escalated a morale crisis publicly")
+                transfer_requested = True
+                msg = f"{p.handle} ends the meeting and submits a transfer request."
+            else:
+                d_morale = 1.0
+                d_form = 2.0
+                msg = f"{p.handle} accepts the challenge, narrowly."
+        else:  # bench_ultimatum
+            d_morale = -8.0
+            d_chem = -3.0
+            transfer_requests.issue(gs, pid, "manager issued a bench ultimatum")
+            transfer_requested = True
+            msg = f"{p.handle} asks to leave immediately."
+    elif topic.id == "transfer_request":
+        from esports_sim.manager import transfer_requests
+
+        if option_id == "accept_exit":
+            d_morale = 2.0
+            msg = f"{p.handle} appreciates the straight answer. The request remains active."
+        elif option_id == "repair_trust":
+            axes = personality.axes(p)
+            repair_p = min(
+                0.8,
+                max(
+                    0.15,
+                    0.35
+                    + max(0.0, loyalty) / 50.0
+                    + (axes["resilience"] - 50.0) / 250.0,
+                ),
+            )
+            if rng.random() < repair_p:
+                transfer_requests.withdraw(gs, pid)
+                d_morale = 8.0
+                d_chem = 1.0
+                msg = f"{p.handle} withdraws the request and agrees to the reset."
+            else:
+                d_morale = -2.0
+                msg = f"{p.handle} hears the apology but keeps the request in."
+        else:  # refuse_exit
+            d_morale = -5.0
+            d_chem = -1.0
+            msg = f"{p.handle} leaves angry. The transfer request remains active."
+    elif option_id in ("reassure", "back", "commit", "praise"):
         d_morale = 4.0 + (1.5 if young else 0.0) + loyalty * 0.15
         if steady:
             d_morale -= 1.0  # veterans don't need the pep talk
@@ -267,7 +360,12 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
     gs.talked_week = week_key(gs)
     if abs(d_morale) >= 4.0:
         gs.push_news(f"1:1 with {p.handle}: {msg}")
-    effects = {"morale": d_morale, "form": d_form, "chemistry": d_chem}
+    effects = {
+        "morale": d_morale,
+        "form": d_form,
+        "chemistry": d_chem,
+        "transfer_request": 1.0 if transfer_requested else 0.0,
+    }
     return True, msg, effects
 
 

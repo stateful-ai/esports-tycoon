@@ -33,12 +33,13 @@ from esports_sim.manager import (
     talk,
     telemetry,
     training,
+    transfer_requests,
 )
 from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 5
+OBSERVATION_VERSION = 6
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
@@ -142,6 +143,7 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
         "dev_focus": p.dev_focus,
         "training_intensity": p.training_intensity,
         "learning_language": p.learning_language,
+        "transfer_request": transfer_requests.active(gs, pid, gs.acting_team_id),
         "stats": _player_stats(gs, pid),
     }
 
@@ -327,7 +329,15 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "enabled": bool(roster) and market_open,
             "player_ids": roster if market_open else [],
         },
-        "renew": {"enabled": bool(roster), "player_ids": roster},
+        "renew": {
+            "enabled": any(
+                not transfer_requests.active(gs, pid, team_id) for pid in roster
+            ),
+            "player_ids": [
+                pid for pid in roster
+                if not transfer_requests.active(gs, pid, team_id)
+            ],
+        },
         "swap": {"enabled": bool(swaps), "pairs": swaps},
         "set_dev_plan": dev_plans,
         "mentor": {"enabled": bool(roster), "pairs": mentor_pairs, "clear_ids": roster},

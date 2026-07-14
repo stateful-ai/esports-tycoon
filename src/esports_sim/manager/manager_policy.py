@@ -349,8 +349,12 @@ class HeuristicManagerPolicy:
             pick = max(candidates, key=lambda p: (p["perceived_quality"], p["player_id"]))
             return {"kind": "sign", "params": {"player_id": pick["player_id"]}}
 
+        renewable = set(legal["renew"]["player_ids"])
         expiring = sorted(
-            (p for p in obs["roster"] if p["contract_weeks"] <= 6),
+            (
+                p for p in obs["roster"]
+                if p["contract_weeks"] <= 6 and p["id"] in renewable
+            ),
             key=lambda p: (p["contract_weeks"], -self._roster_score(p), p["id"]),
         )
         if expiring and self.profile.loyalty >= 0.45 and self._once(obs, "renew"):

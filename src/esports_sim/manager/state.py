@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 28
+SCHEMA_VERSION = 29
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -434,6 +434,18 @@ def _migrate_v27_to_v28(data: dict) -> dict:
     return data
 
 
+def _migrate_v28_to_v29(data: dict) -> dict:
+    """v29 adds critical-talk transfer requests and AI GM coaching history.
+
+    Both stores are defaulted and begin empty for existing careers. Match-review
+    points also gain a defaulted site label, so old diagnoses remain valid.
+    """
+    data.setdefault("transfer_requests_by", {})
+    data.setdefault("ai_gm_coach_changes_by", {})
+    data.setdefault("ai_gm_last_action_week_by", {})
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -462,6 +474,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     25: _migrate_v25_to_v26,
     26: _migrate_v26_to_v27,
     27: _migrate_v27_to_v28,
+    28: _migrate_v28_to_v29,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -560,6 +573,7 @@ class ReviewPoint(BaseModel):
     weight: float = 0.0  # ranking score (decisiveness), rounded
     player_id: str = ""  # player-scoped points resolve their handle at serve
     lever_code: str = ""  # candidate fix key (breaking points only)
+    site: str = ""  # optional A/B/C label for site-specific round context
 
 
 class MatchReview(BaseModel):
@@ -1205,6 +1219,23 @@ class MarketDecision(BaseModel):
     reason: str = ""
 
 
+class TransferRequest(BaseModel):
+    """An active player demand to leave after a relationship-breaking event.
+
+    Requests are public roster facts and materially reduce the seller's
+    leverage. They clear only when the player leaves or explicitly withdraws
+    the request through a later crisis conversation.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    player_id: str
+    team_id: str
+    season: int
+    week: int
+    reason: str
+
+
 class InboxItem(BaseModel):
     """One weekly inbox/notification entry. Generated at the end of a tick
     from real subsystem outcomes (see manager/inbox.py); the model lives
@@ -1219,7 +1250,7 @@ class InboxItem(BaseModel):
     id: str
     season: int
     week: int
-    # news | talk | transfer | sponsor | scouting | development | match | board
+    # news | talk | transfer | sponsor | scouting | analytics | development | match | board
     category: str
     title: str  # short, <= 70 chars
     body: str  # plain text, may be multi-line
@@ -1483,10 +1514,18 @@ class GameState(BaseModel):
 
     # Talk module: one 1:1 per week, per manager. Holds "s{season}w{week}".
     talked_weeks: dict[str, str] = Field(default_factory=dict)
+    # A critical 1:1 can end with an immediate demand to leave. Active
+    # requests are keyed by player id and feed renewal/valuation/roster views.
+    transfer_requests_by: dict[str, TransferRequest] = Field(default_factory=dict)
 
     # Incoming transfer bids for user players (AI↔AI moves resolve
     # instantly and only leave news lines).
     transfer_offers: list[TransferOffer] = Field(default_factory=list)
+
+    # AI GM personality history. Archetypes themselves are pure functions of
+    # seed + team id; only consequential coaching changes need persistence.
+    ai_gm_coach_changes_by: dict[str, int] = Field(default_factory=dict)
+    ai_gm_last_action_week_by: dict[str, int] = Field(default_factory=dict)
 
     # Per-map dressed lineups. Key = "{team_id}|{fixture_id}|{map_id}" -> the
     # five player ids that dress for that map. Absent -> the team's default

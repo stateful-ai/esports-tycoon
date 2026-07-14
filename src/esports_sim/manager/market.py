@@ -13,7 +13,8 @@ from __future__ import annotations
 import numpy as np
 
 from esports_sim.manager import (
-    chronicle, development, economy, market_history, memories, relationships,
+    chronicle, development, economy, gm_personalities, market_history, memories,
+    relationships, transfer_requests,
 )
 from esports_sim.manager.gen import generate_player, _FA_SLOTS  # noqa: F401
 from esports_sim.manager.state import GameState, TransferOffer
@@ -36,6 +37,7 @@ MAX_CONTRACT_WEEKS = 80
 NEW_SIGNING_PROTECT_WEEKS = 12
 # The AI transfer window stays quiet while the season settles.
 TRANSFER_QUIET_WEEKS = 4
+TRANSFER_REQUEST_ASK_MULT = 0.78
 
 
 def market_window_status(gs: GameState) -> dict[str, object]:
@@ -279,6 +281,7 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     p.contract_weeks_left = 0
     p.morale = max(0.0, p.morale - 15.0)
     p.tenure_weeks = 0
+    transfer_requests.clear(gs, player_id)
     gs.free_agent_ids.append(player_id)
     gs.push_news(f"{team.name} release {p.handle} (severance {severance:,} cr).")
     chronicle.record(
@@ -300,6 +303,8 @@ def renew_contract(
     team = gs.teams[team_id]
     if player_id not in team.player_ids:
         return False, "player is not on this roster"
+    if transfer_requests.active(gs, player_id, team_id):
+        return False, f"{gs.players[player_id].handle} has submitted a transfer request"
     veto = relationships.renewal_veto(gs, player_id, team_id)
     if veto:
         return False, veto
@@ -480,6 +485,7 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
                 team.player_ids.remove(pid)
                 if team.captain_id == pid:
                     team.captain_id = team.player_ids[0] if team.player_ids else None
+                transfer_requests.clear(gs, pid)
                 gs.free_agent_ids.append(pid)
                 gs.push_news(
                     f"{p.handle}'s contract with {team.name} expires — free agent."
@@ -496,6 +502,9 @@ def ai_fill_rosters(gs: GameState, gd, rng: np.random.Generator) -> None:
         while len(team.player_ids) < ROSTER_SIZE:
             have_styles = {gs.players[pid].playstyle for pid in team.player_ids}
             pool = [gs.players[pid] for pid in gs.free_agent_ids]
+            rookie_ids = {
+                p.id for p in pool if "rookie" in p.personality_tags
+            }
             pool.sort(
                 key=lambda p: (
                     p.playstyle not in have_styles,  # missing style first
@@ -505,6 +514,12 @@ def ai_fill_rosters(gs: GameState, gd, rng: np.random.Generator) -> None:
             )
             picked = None
             for cand in pool:
+                # Keep one member of the announced rookie class visible on the
+                # market. If retirements create more holes than the class can
+                # fill, generate an additional replacement instead of erasing
+                # the entire prospect pipeline before the new season opens.
+                if cand.id in rookie_ids and len(rookie_ids) <= 1:
+                    continue
                 if (
                     team.balance >= asking_salary(cand) * 8
                     and relationships.signing_veto(gs, cand.id, tid) is None
@@ -588,12 +603,29 @@ def ai_poach_free_agents(gs: GameState, gd, rng: np.random.Generator) -> None:
                 suitors.append((tid, weakest.id))
         if not suitors:
             continue
-        if rng.random() >= POACH_PROB:
+        suitors.sort(
+            key=lambda row: (
+                -gm_personalities.poach_priority(
+                    gm_personalities.archetype_for(gs.seed, row[0])
+                ),
+                row[0],
+            )
+        )
+        tid, drop = suitors[0]
+        archetype = gm_personalities.archetype_for(gs.seed, tid)
+        poach_prob = 0.80 if archetype == "spender" else POACH_PROB
+        if rng.random() >= poach_prob:
             return  # the league lets this one sit this week
-        tid, drop = suitors[int(rng.integers(0, len(suitors)))]
         if drop is not None:
             release_player(gs, tid, drop)
-        sign_player(gs, tid, cand.id, weeks=int(rng.integers(32, 64)))
+        salary = int(round(
+            asking_salary(cand)
+            * gm_personalities.free_agent_salary_multiplier(archetype)
+            / 100
+        ) * 100)
+        sign_player(
+            gs, tid, cand.id, weeks=int(rng.integers(32, 64)), salary=salary,
+        )
         return  # one measured move per week
 
 
@@ -975,7 +1007,10 @@ def transfer_ask(gs: GameState, pid: str) -> int:
     seller_id = team_of(gs, pid)
     if seller_id is None:
         return transfer_value(gs.players[pid])
-    return int(org_player_valuation(gs, seller_id, pid, "sell")["value"])
+    value = int(org_player_valuation(gs, seller_id, pid, "sell")["value"])
+    if transfer_requests.active(gs, pid, seller_id):
+        value = max(1_000, int(round(value * TRANSFER_REQUEST_ASK_MULT / 1000) * 1000))
+    return value
 
 
 def transfer_ask_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]]:
@@ -985,10 +1020,16 @@ def transfer_ask_breakdown(gs: GameState, pid: str) -> list[dict[str, int | str]
     if seller_id is None:
         return [{"label": "base value", "delta": transfer_value(p)}]
     view = org_player_valuation(gs, seller_id, pid, "sell")
-    return [
+    rows = [
         {"label": label, "delta": delta}
         for label, delta in view["components"].items()
     ]
+    if transfer_requests.active(gs, pid, seller_id):
+        rows.append({
+            "label": "active transfer request",
+            "delta": transfer_ask(gs, pid) - int(view["value"]),
+        })
+    return rows
     # Loyalty: the club digs in for players who've been part of the
     # furniture — more so when they're playing well right now.
     # Streaming: a revenue engine costs more to prise away, cash-amplified.
@@ -1173,6 +1214,8 @@ def can_open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, str | None
     kind, why = negotiation_kind(gs, pid)
     if kind is None:
         return False, why, None
+    if kind == "renew" and transfer_requests.active(gs, pid, gs.acting_team_id):
+        return False, f"{p.handle} will not discuss a renewal while the transfer request is active", kind
     veto = (
         relationships.renewal_veto(gs, pid, gs.acting_team_id)
         if kind == "renew"
@@ -1393,7 +1436,10 @@ def buyout_fee(gs: GameState, pid: str) -> int | None:
     value retain the old deterministic fallback. No-transfer protection wins
     over a clause."""
     owner = team_of(gs, pid)
-    if owner is None or gs.players[pid].no_transfer_clause:
+    if owner is None or (
+        gs.players[pid].no_transfer_clause
+        and not transfer_requests.active(gs, pid, owner)
+    ):
         return None
     p = gs.players[pid]
     if p.buyout_clause > 0:
@@ -1456,7 +1502,7 @@ def execute_transfer(
         return False, why
     seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
     p = gs.players[pid]
-    if p.no_transfer_clause:
+    if p.no_transfer_clause and not transfer_requests.active(gs, pid, seller_id):
         return False, f"{p.handle} has a no-transfer clause"
     if buyer.balance < fee:
         return False, "buyer cannot afford the fee"
@@ -1530,6 +1576,7 @@ def execute_transfer(
         buyer.captain_id = pid
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
+    transfer_requests.clear(gs, pid)
     reaction = relationships.transfer_reaction(gs, pid, seller_id, buyer_id)
     p.tenure_weeks = 0
     news = f"TRANSFER: {p.handle} joins {buyer.name} from {seller.name} for {fee:,} cr."
@@ -1605,6 +1652,7 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
         dst.captain_id = pid
     p.salary = max(1_200, int(asking_salary(p) * 1.1 / 100) * 100)
     p.contract_weeks_left = int(np.clip(weeks, MIN_CONTRACT_WEEKS, MAX_CONTRACT_WEEKS))
+    transfer_requests.clear(gs, pid)
     relationships.transfer_reaction(gs, pid, from_id, to_id)
     p.tenure_weeks = 0
 
@@ -1703,7 +1751,10 @@ def propose_package(
         return False, "player is a free agent — sign them instead"
     if seller_id == buyer_id:
         return False, "that's your own player"
-    if gs.players[target_pid].no_transfer_clause:
+    if (
+        gs.players[target_pid].no_transfer_clause
+        and not transfer_requests.active(gs, target_pid, seller_id)
+    ):
         return False, f"{gs.players[target_pid].handle} has a no-transfer clause"
     buyer, seller = gs.teams[buyer_id], gs.teams[seller_id]
     out_pids = list(dict.fromkeys(out_pids))  # de-dupe, preserve order
@@ -1794,7 +1845,7 @@ def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
     ask = transfer_ask(gs, pid)
     team = gs.teams[buyer_id]
     p = gs.players[pid]
-    if p.no_transfer_clause:
+    if p.no_transfer_clause and not transfer_requests.active(gs, pid, seller_id):
         return False, f"{p.handle} has a no-transfer clause"
     if team.balance < ask + asking_salary(p) * 8:
         return False, f"need {ask + asking_salary(p) * 8:,} cr to cover fee + wages"
@@ -1812,7 +1863,7 @@ def user_bid(gs: GameState, pid: str) -> tuple[bool, str]:
         )
         return True, f"bid sent to {gs.teams[seller_id].name} for {p.handle}"
     stance = str(org_player_valuation(gs, seller_id, pid, "sell")["stance"])
-    if stance == "not for sale":
+    if stance == "not for sale" and not transfer_requests.active(gs, pid, seller_id):
         _record_value_decision(
             gs, "bid", "rejected", pid, seller_id,
             counterparty=buyer_id, context="sell", fee=ask,
@@ -1894,7 +1945,6 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
     # almost no AI shopping, and never more than one move league-wide per
     # week after that (transfers should read as events, not noise).
     quiet = gs.week <= TRANSFER_QUIET_WEEKS
-    appetite = 0.04 if quiet else 0.12
     buyers = sorted(
         (t for t in gs.teams.values() if t.tier == 1 and not gs.is_human(t.id)),
         key=lambda t: t.id,
@@ -1902,6 +1952,8 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
     for buyer in buyers:
         if moves >= 1:
             break
+        archetype = gm_personalities.archetype_for(gs.seed, buyer.id)
+        appetite = gm_personalities.transfer_appetite(archetype, quiet=quiet)
         if rng.random() > appetite:
             continue
         roster = gs.roster(buyer.id)
@@ -1914,32 +1966,45 @@ def ai_transfer_window(gs: GameState, gd, rng: np.random.Generator) -> None:
                 continue
             for pid in seller.player_ids:
                 p = gs.players[pid]
-                if p.no_transfer_clause:
+                if p.no_transfer_clause and not transfer_requests.active(gs, pid, seller.id):
                     continue
                 # The buyer shops on ITS OWN read of the player — an org
                 # that over-rates someone will overpay for them (and one
                 # that under-rates a gem walks right past).
                 q = perceived_quality(gs, buyer.id, p)
                 upgrade = q - weakest_q
+                upgrade += gm_personalities.target_bonus(
+                    archetype, age=p.age, followers=p.followers,
+                )
                 # Tier-2 targets: buy the future, not just the present.
                 if seller.tier == 2:
                     upgrade += max(0.0, development.potential_of(p) - q) * 0.5
-                if upgrade < 5.0:
+                if upgrade < gm_personalities.upgrade_threshold(archetype):
                     continue
                 seller_view = org_player_valuation(gs, seller.id, pid, "sell")
-                if seller.tier == 1 and seller_view["stance"] == "not for sale":
+                if (
+                    seller.tier == 1
+                    and seller_view["stance"] == "not for sale"
+                    and not transfer_requests.active(gs, pid, seller.id)
+                ):
                     continue
                 # Tier-2 contracts settle at the buyout clause — no
                 # negotiation. Tier-1 targets pay the seller's ask.
-                fee = (
+                base_fee = (
                     buyout_fee(gs, pid) if seller.tier == 2 else None
                 ) or transfer_ask(gs, pid)
-                if buyer.balance < fee + asking_salary(p) * 10:
-                    continue
                 buyer_view = org_player_valuation(gs, buyer.id, pid, "buy")
                 # Commercial stars can justify a smaller pure-ability upgrade,
                 # but an AI never pays above its own total valuation.
-                if int(buyer_view["value"]) < fee:
+                if int(buyer_view["value"]) < base_fee:
+                    continue
+                fee = base_fee
+                if archetype == "spender" and seller.tier == 1:
+                    fee = min(
+                        int(round(base_fee * gm_personalities.bid_multiplier(archetype) / 1000) * 1000),
+                        int(round(int(buyer_view["value"]) * 1.10 / 1000) * 1000),
+                    )
+                if buyer.balance < fee + asking_salary(p) * 10:
                     continue
                 surplus = int(buyer_view["value"]) - fee
                 key = (upgrade + surplus / 100_000.0, -fee, pid, seller.id)
