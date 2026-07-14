@@ -1956,7 +1956,7 @@ class GameState(BaseModel):
     facilities_by: dict[str, dict[str, int]] = Field(default_factory=dict)
 
     # -- coaching + meta depth (v4) -------------------------------------------
-    # Pre-match game plans, per human manager (reached via `game_plan`).
+    # Pre-match game plans, per manager (reached via `game_plan`).
     # At most one live plan per manager — for their next fixture.
     game_plans_by: dict[str, GamePlan] = Field(default_factory=dict)
     # Community sentiment per team (0-100, 50 = neutral; missing = 50).

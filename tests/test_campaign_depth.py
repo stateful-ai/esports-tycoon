@@ -376,3 +376,69 @@ def test_team_talk_recipients_follow_a_per_map_override():
     # Override rotates 'f' in for 'e' -> the recipients follow.
     gs.map_lineups["nxs|s1w1m0|ascent"] = ["a", "b", "c", "d", "f"]
     assert _talk_recipients(gs, "nxs", fx) == ["a", "b", "c", "d", "f"]
+
+
+def test_ai_fixture_plan_uses_shared_resolver_and_rotates_a_rested_bench():
+    """AI plans are stored GamePlans, not an invisible match-only modifier."""
+    from esports_sim.manager.campaign import (
+        _apply_bench_week,
+        _book_ai_fixture_plans,
+        _fixture_plans,
+        default_five,
+    )
+
+    _gd, gs = _campaign(88)
+    fixture = next(
+        f for f in gs.fixtures
+        if f.team_a != gs.user_team_id and f.team_b != gs.user_team_id
+    )
+    ai, opponent = fixture.team_a, fixture.team_b
+    bench_id = max(gs.free_agent_ids, key=lambda pid: (sum(gs.players[pid].attributes.values()), pid))
+    gs.free_agent_ids.remove(bench_id)
+    gs.teams[ai].player_ids.append(bench_id)
+    for attr in gs.players[bench_id].attributes:
+        gs.players[bench_id].attributes[attr] = 99.0
+    gs.players[bench_id].stamina = 100.0
+    old_five = default_five(gs, ai)
+    for pid in old_five:
+        gs.players[pid].stamina = 30.0
+    gs.teams[ai].tactics.pace = 85.0
+    gs.teams[opponent].tactics.aggression = 85.0
+
+    _book_ai_fixture_plans(gs, [fixture])
+
+    plan = gs.game_plans_by[ai]
+    plans, lineups = _fixture_plans(gs, fixture)
+    assert {fixture.team_a, fixture.team_b} <= set(gs.game_plans_by)
+    assert plan.fixture_id == fixture.id
+    assert plan.aggression == 40.0
+    assert bench_id in lineups[ai]
+    assert plans[ai].counter_edge > 0.0
+    assert any("counter-plan" in note and gs.teams[ai].tag in note for note in fixture.series_notes)
+
+    sat_out = next(pid for pid in old_five if pid not in lineups[ai])
+    before = gs.players[sat_out].stamina
+    _apply_bench_week(gs, {ai: set(lineups[ai])})
+    assert gs.players[sat_out].stamina == before + 6.0
+
+
+def test_ai_rotation_and_fixture_plan_respect_tournament_registration():
+    """A playoff plan cannot claim an unregistered sixth player starts."""
+    from esports_sim.manager.campaign import _ai_match_lineup, _fixture_plans, default_five
+    from esports_sim.manager.state import GamePlan
+
+    _gd, gs = _campaign(89)
+    fixture = next(f for f in gs.fixtures if f.team_a != gs.user_team_id)
+    ai = fixture.team_a
+    bench_id = max(gs.free_agent_ids, key=lambda pid: (sum(gs.players[pid].attributes.values()), pid))
+    gs.free_agent_ids.remove(bench_id)
+    gs.teams[ai].player_ids.append(bench_id)
+    old_five = default_five(gs, ai)
+    fixture.best_of = 3
+    fixture.maps = ["ascent", "bind", "haven"]
+    gs.tournament_rosters[ai] = list(old_five)
+
+    assert _ai_match_lineup(gs, ai, fixture) == []
+    gs.game_plans_by[ai] = GamePlan(fixture_id=fixture.id, starter_ids=[*old_five[:4], bench_id])
+    _plans, lineups = _fixture_plans(gs, fixture)
+    assert ai not in lineups

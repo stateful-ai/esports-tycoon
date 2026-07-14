@@ -566,6 +566,7 @@ def advance_week(
     # bench treatment below: with per-map overrides a rotated-in player is
     # NOT benched even though they sit outside the default five.
     week_dressed: dict[str, set[str]] = {}
+    _book_ai_fixture_plans(gs, week_fixtures)
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f,
@@ -1476,13 +1477,13 @@ def _apply_match_development(gs: GameState, stats) -> None:
 
 
 def _apply_bench_week(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
-    """One week of bench life for every human roster deeper than five:
+    """One week of bench life for every roster deeper than five:
     anyone who dressed no map (while the team played) gets scrim reps, a
     stamina refund, and a minutes-morale drain scaled by how good they are.
     Teams with no fixture this week are skipped entirely."""
     from esports_sim.manager import locker_room
 
-    for tid in sorted(gs.human_team_ids):
+    for tid in sorted(gs.teams):
         team = gs.teams[tid]
         if len(team.player_ids) <= market.ROSTER_SIZE:
             continue
@@ -1548,9 +1549,8 @@ def _nudge_tournament_registration(gs: GameState) -> None:
 # Scouting-driven prep: a manager who set a game plan brings a small duel
 # edge — a baseline for having prepped at all, plus the real payoff for
 # scout knowledge of THIS opponent (0..1). The engine clamps the total
-# (sim/constants.PREP_EDGE_CAP). AI orgs don't set plans — their weekly
-# tactic adaptation is the AI's version of prep (documented parity choice,
-# same shape as the human-only bench in market.py).
+# (sim/constants.PREP_EDGE_CAP). AI orgs use the same stored GamePlan path,
+# with a bounded tactical read and the same bench-minute tradeoff.
 PREP_EDGE_BASE = 0.3
 PREP_EDGE_SPAN = 1.0
 
@@ -1558,6 +1558,105 @@ _PLAN_DIALS = (
     "aggression", "pace", "util_discipline", "eco_greed", "map_control",
     "site_focus",
 )
+
+# AI fixture plans are deliberately narrower than a human's full control
+# panel: one counter dial, one standout to target, and at most one freshness
+# substitution. They are campaign-layer tuning, never bare-engine inputs.
+AI_COUNTER_MIN_DEVIATION = 8.0
+AI_COUNTER_LOW = 40.0
+AI_COUNTER_HIGH = 60.0
+AI_FOCUS_QUALITY_GAP = 4.0
+AI_BENCH_STAMINA_WEIGHT = 0.20
+AI_BENCH_ROTATION_EDGE = 1.5
+
+
+def _ai_match_lineup(gs: GameState, tid: str, fixture: Fixture) -> list[str]:
+    """Return a one-match AI rotation when a rested bench player earns it."""
+    roster = sorted(series_management.eligible_pool(gs, tid, fixture))
+    if len(roster) <= market.ROSTER_SIZE:
+        return []
+    starters = _resolve_five(gs, tid, gs.teams[tid].lineup_ids, roster)
+    bench = [pid for pid in roster if pid not in starters]
+    if not bench:
+        return []
+
+    def score(pid: str) -> tuple[float, str]:
+        player = gs.players[pid]
+        return (
+            market.player_quality(player) + AI_BENCH_STAMINA_WEIGHT * (player.stamina - 50.0),
+            pid,
+        )
+
+    incoming = max(bench, key=score)
+    outgoing = min(starters, key=score)
+    if score(incoming)[0] < score(outgoing)[0] + AI_BENCH_ROTATION_EDGE:
+        return []
+    return [incoming if pid == outgoing else pid for pid in starters]
+
+
+def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
+    """Book AI plans into the same GamePlan/map_lineups seams humans use.
+
+    This is a pure read of saved tactical identities, roster quality, and
+    stamina. Sorted fixtures/ids make the result byte-identical for a save;
+    ``_fixture_plans`` resolves both sides simultaneously at match time.
+    """
+    for fixture in sorted(fixtures, key=lambda f: f.id):
+        if fixture.played:
+            continue
+        for tid, opp in ((fixture.team_a, fixture.team_b), (fixture.team_b, fixture.team_a)):
+            if gs.is_human(tid) or tid in gs.game_plans_by:
+                continue
+            opponent_tactics = gs.teams[opp].tactics
+            dial = max(
+                tactics_fit.COUNTER_DIALS,
+                key=lambda key: (abs(getattr(opponent_tactics, key) - 50.0), key),
+            )
+            overrides: dict[str, float] = {}
+            opponent_value = float(getattr(opponent_tactics, dial))
+            if abs(opponent_value - 50.0) >= AI_COUNTER_MIN_DEVIATION:
+                overrides[dial] = AI_COUNTER_LOW if opponent_value > 50.0 else AI_COUNTER_HIGH
+
+            opponent_roster = sorted(gs.teams[opp].player_ids)
+            target = None
+            if opponent_roster:
+                target = max(
+                    opponent_roster,
+                    key=lambda pid: (market.player_quality(gs.players[pid]), pid),
+                )
+                average = sum(
+                    market.player_quality(gs.players[pid]) for pid in opponent_roster
+                ) / len(opponent_roster)
+                if market.player_quality(gs.players[target]) < average + AI_FOCUS_QUALITY_GAP:
+                    target = None
+
+            starters = _ai_match_lineup(gs, tid, fixture)
+            if not overrides and target is None and not starters:
+                continue
+            gs.game_plans_by[tid] = GamePlan(
+                fixture_id=fixture.id,
+                focus_target=target,
+                starter_ids=starters,
+                **overrides,
+            )
+            details = []
+            if overrides:
+                details.append(f"counter-plan on {dial.replace('_', ' ')}")
+            if target is not None:
+                details.append(f"targeting {gs.players[target].handle}")
+            if starters:
+                default = set(_resolve_five(
+                    gs,
+                    tid,
+                    gs.teams[tid].lineup_ids,
+                    series_management.eligible_pool(gs, tid, fixture),
+                ))
+                incoming = next(pid for pid in starters if pid not in default)
+                outgoing = next(pid for pid in default if pid not in starters)
+                details.append(
+                    f"{gs.players[incoming].handle} starts for {gs.players[outgoing].handle}"
+                )
+            fixture.series_notes.append(f"{gs.teams[tid].tag}: {', '.join(details)}.")
 
 
 def _match_coach_profile(gs: GameState, tid: str, tactics=None) -> CoachProfile:
@@ -1589,7 +1688,7 @@ def _match_coach_profile(gs: GameState, tid: str, tactics=None) -> CoachProfile:
 def _fixture_plans(
     gs: GameState, f: Fixture
 ) -> tuple[dict[str, TeamMatchPlan], dict[str, list[str]]]:
-    """Resolve each human side's game plan for this fixture into (engine
+    """Resolve each side's game plan for this fixture into (engine
     plans, per-match lineup overrides). Stored plans are RE-VALIDATED here
     — rosters move under them (transfers, retirements), so ids are never
     trusted at rest. A focus target only has to be on the opponent's
@@ -1606,7 +1705,7 @@ def _fixture_plans(
     }
 
     # Resolve both identities first. Counter-strat scoring is simultaneous:
-    # if both human managers change their book for this fixture, each side is
+    # if both managers change their book for this fixture, each side is
     # measured against what the opponent will actually bring to the server.
     for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
         coach = _match_coach_profile(gs, tid)
@@ -1614,8 +1713,6 @@ def _fixture_plans(
         # uses the legacy neutral fallback; either way the only live input is
         # a timeout, never an always-on engine modifier.
         plans[tid] = TeamMatchPlan(coach=coach)
-        if not gs.is_human(tid):
-            continue
         plan = gs.game_plans_by.get(tid)
         if plan is None or plan.fixture_id != f.id:
             continue
@@ -1660,7 +1757,8 @@ def _fixture_plans(
             halftime_talk=plan.halftime_talk,
             shouts=plan.shouts,
         )
-        lineup = [pid for pid in plan.starter_ids if pid in gs.teams[tid].player_ids]
+        eligible = set(series_management.eligible_pool(gs, tid, f))
+        lineup = [pid for pid in plan.starter_ids if pid in eligible]
         if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
             lineups[tid] = lineup
     return plans, lineups
