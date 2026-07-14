@@ -55,8 +55,26 @@ class PlayerBadge(BaseModel):
     last_qualified: int = 0
 
 
+class DevelopmentCurveModel(BaseModel):
+    """Hidden career development curve model for serialization."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    archetype: str
+    growth_peak_age: int
+    growth_width: float
+    peak_years: int
+    decline_age: int
+    realization: float
+    volatility: float
+
+
 class Player(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+    dev_seed: int = Field(default=0)
+    development_curve: DevelopmentCurveModel | None = Field(default=None)
+
 
     # Identity
     id: str

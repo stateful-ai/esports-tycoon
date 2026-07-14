@@ -102,14 +102,15 @@ players:
   - map_id: split
     mastery: 85.7
   salary: 6100
-  contract_weeks_left: 63
-  morale: 77.1
-  stamina: 83.3
-  form: 45.2
+  contract_weeks_left: 35
+  morale: 76.9
+  stamina: 93.6
+  form: 47.5
   personality_tags:
   - analytical
   - streamer
-  potential: 79.4
+  - team_player
+  potential: 82.0
 - id: team_fnatic_derke
   handle: Derke
   real_name: ''
@@ -205,13 +206,12 @@ players:
   - map_id: split
     mastery: 97.2
   salary: 7200
-  contract_weeks_left: 50
-  morale: 84.4
-  stamina: 83.8
-  form: 49.1
+  contract_weeks_left: 57
+  morale: 70.3
+  stamina: 99.5
+  form: 47.8
   personality_tags:
-  - grinder
-  - perfectionist
+  - prodigy
   - rookie
   potential: 95.0
 - id: team_fnatic_doma

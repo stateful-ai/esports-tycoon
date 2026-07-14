@@ -240,6 +240,17 @@ def test_resting_player_cannot_trigger_intense_training_burnout(campaign) -> Non
 def test_scout_guidance_gives_small_bonus_only_to_matching_focus(campaign) -> None:
     team = campaign.teams[campaign.user_team_id].model_copy(deep=True)
     base = campaign.roster(campaign.user_team_id)[0].model_copy(deep=True)
+    base.potential = 99.0
+    from esports_sim.schemas.player import DevelopmentCurveModel
+    base.development_curve = DevelopmentCurveModel(
+        archetype="steady",
+        growth_peak_age=25,
+        growth_width=4.0,
+        peak_years=5,
+        decline_age=30,
+        realization=1.0,
+        volatility=1.0,
+    )
     guided = base.model_copy(deep=True)
     focus = str(training.scouting_guidance(base)["focus"])
     base.dev_focus = guided.dev_focus = focus

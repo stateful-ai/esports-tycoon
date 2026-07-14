@@ -13,9 +13,9 @@ players:
   handle: qRaxs
   real_name: ''
   region: emea
-  country: ''
+  country: DE
   languages: []
-  age: 25
+  age: 21
   role: controller
   playstyle: igl
   attributes:
@@ -107,7 +107,7 @@ players:
   personality_tags:
   - perfectionist
   - streamer
-  potential: 70.6
+  potential: 79.7
 - id: team_futbolist_sterben
   handle: STERBEN
   real_name: ''

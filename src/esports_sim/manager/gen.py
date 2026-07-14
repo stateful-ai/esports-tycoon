@@ -401,6 +401,8 @@ def generate_player(
         personality_tags=tags,
     )
     development.assign_potential(p, rng)
+    p.dev_seed = int(rng.integers(0, 2**31 - 1))
+    development.assign_development_curve(p, rng)
     assign_identity(p)  # hash-based: no rng draw
     return p
 
