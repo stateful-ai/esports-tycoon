@@ -3627,7 +3627,7 @@ function seasonFixtures(ws, sched, table) {
     }
     if ((f.series_notes ?? []).length) {
       box.appendChild(el("div", "veto-row",
-        `<span class="muted">between maps:</span> ${f.series_notes.map((n) => `<span class="chip">${esc(n)}</span>`).join(" ")}`));
+        `<span class="muted">series notes:</span> ${f.series_notes.map((n) => `<span class="chip">${esc(n)}</span>`).join(" ")}`));
     }
   };
 
