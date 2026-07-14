@@ -120,7 +120,7 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
     (their own roster is unfogged; no rival hidden attributes leak into
     the episode), so a policy trained on it is playing the same game a
     human does."""
-    from esports_sim.manager import development, staff
+    from esports_sim.manager import development, staff, staff_effects
 
     team = gs.teams.get(team_id)
     if team is None:
@@ -140,7 +140,7 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
     gs.set_acting(team_id)
     try:
         staff_q = {
-            role: float(m.quality) for role, m in sorted(gs.staff.items())
+            role: float(staff_effects.overall(m)) for role, m in sorted(gs.staff.items())
         }
         facilities = dict(gs.facilities)
         payroll = sum(p.salary for p in roster) + staff.weekly_cost(gs)

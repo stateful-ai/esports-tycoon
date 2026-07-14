@@ -29,6 +29,7 @@ from esports_sim.manager import (
     series_management,
     sponsors,
     staff,
+    staff_effects,
     talk,
     telemetry,
     training,
@@ -37,7 +38,7 @@ from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
 
-OBSERVATION_VERSION = 4
+OBSERVATION_VERSION = 5
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
     {
@@ -126,7 +127,8 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
             p,
             own=True,
             performance_coach_quality=(
-                performance_coach.quality if performance_coach is not None else None
+                staff_effects.role_effect_score(performance_coach)
+                if performance_coach is not None else None
             ),
         )),
         "salary": p.salary,
@@ -142,6 +144,16 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
         "learning_language": p.learning_language,
         "stats": _player_stats(gs, pid),
     }
+
+
+def _staff_observation(gs: GameState, member) -> dict[str, Any]:
+    view = member.model_dump(mode="json")
+    view["overall"] = staff_effects.overall(member)
+    view["system_fit"] = (
+        staff_effects.system_fit(member, gs.teams[gs.acting_team_id].tactics)
+        if member.role == "coach" else 100.0
+    )
+    return view
 
 
 def _scouted_player(gs: GameState, team_id: str, pid: str) -> dict[str, Any]:
@@ -459,10 +471,12 @@ def manager_observation(
             },
             "scout_target": gs.scout_target,
             "staff": {
-                role: member.model_dump() for role, member in sorted(gs.staff.items())
+                role: _staff_observation(gs, member)
+                for role, member in sorted(gs.staff.items())
             },
             "staff_candidates": [
-                member.model_dump() for member in sorted(gs.staff_pool, key=lambda m: m.id)
+                _staff_observation(gs, member)
+                for member in sorted(gs.staff_pool, key=lambda m: m.id)
             ],
             "facilities": dict(sorted(gs.facilities.items())),
             "sponsor_market": {

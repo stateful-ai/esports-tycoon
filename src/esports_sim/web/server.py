@@ -52,6 +52,7 @@ from esports_sim.manager import (
     social,
     sponsors,
     staff as staff_mod,
+    staff_effects,
     series_management,
     talk,
     telemetry,
@@ -736,7 +737,8 @@ def _roster_potential_projection(
         p,
         own=True,
         performance_coach_quality=(
-            performance_coach.quality if performance_coach is not None else None
+            staff_effects.role_effect_score(performance_coach)
+            if performance_coach is not None else None
         ),
     )
 
@@ -1147,7 +1149,8 @@ def _last_match_review(
     coach = gs.staff.get("coach")
     levers: list[dict] = []
     if coach is not None:
-        cap = 1 if coach.quality < 40 else 2 if coach.quality < 70 else 3
+        coach_quality = staff_effects.overall(coach)
+        cap = 1 if coach_quality < 40 else 2 if coach_quality < 70 else 3
         seen: set[str] = set()
         cand = []
         for p in vis_breaking:
@@ -1175,7 +1178,7 @@ def _last_match_review(
             adjustment = match_review_mod.tactic_adjustment(
                 gs.teams[gs.acting_team_id].tactics,
                 p.lever_code,
-                coach.quality,
+                coach_quality,
                 tier,
             )
             if adjustment is not None:
@@ -3511,7 +3514,8 @@ def _trade_asset_view(gs: GameState, pid: str, viewer_id: str) -> dict:
         progress=progress,
         own=own,
         performance_coach_quality=(
-            performance_coach.quality if own and performance_coach is not None else None
+            staff_effects.role_effect_score(performance_coach)
+            if own and performance_coach is not None else None
         ),
     )
     opinions = market.valuation_opinions(gs, viewer_id, p)
@@ -3993,12 +3997,59 @@ def set_training(body: TrainingBody) -> dict:
 
 
 def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict:
+    comparison_team = gs.acting_team_id
+    tactics = gs.teams[comparison_team].tactics
+    overall = staff_effects.overall(m)
+    fit = staff_effects.system_fit(m, tactics) if m.role == "coach" else 100.0
+    current = gs.staff_by.get(comparison_team, {}).get(m.role)
+    current_overall = staff_effects.overall(current) if current is not None else 0.0
+    current_fit = (
+        staff_effects.system_fit(current, tactics)
+        if current is not None and current.role == "coach" else 100.0 if current else 0.0
+    )
+    style = None
+    if m.role == "coach":
+        preferences = staff_effects.style_preferences(m)
+        style = {
+            "id": staff_effects.style_identity(m),
+            "label": staff_effects.STYLE_LABELS[staff_effects.style_identity(m)],
+            "fit": fit,
+            "preferences": [
+                {
+                    "dial": dial,
+                    "label": dial.replace("_", " ").title(),
+                    "preferred": preferred,
+                    "current": float(getattr(tactics, dial)),
+                }
+                for dial, preferred in sorted(preferences.items())
+            ],
+        }
     return {
         **m.model_dump(),
+        "overall": overall,
+        "attributes_view": [
+            {
+                "id": key,
+                "label": label,
+                "value": staff_effects.attr(m, key),
+                "description": staff_effects.ATTRIBUTE_DESCRIPTIONS[key],
+            }
+            for key, label in staff_effects.ATTRIBUTE_LABELS.items()
+        ],
+        "style": style,
+        "traits_detail": staff_effects.trait_views(m),
+        "badges_detail": staff_effects.badge_views(m),
+        "career_stats": dict(sorted(m.career_stats.items())),
         "specialty_blurb": staff_mod.SPECIALTY_BLURB.get(m.specialty, ""),
         # Concrete contribution lines so hired staff show their impact inline
         # (not just on their profile overlay). Server-computed, never re-derived.
-        "effects": _staff_effect_lines(m),
+        "effects": _staff_effect_lines(m, gs, comparison_team),
+        "comparison": {
+            "current_id": current.id if current is not None else None,
+            "overall_delta": round(overall - current_overall, 1),
+            "fit_delta": round(fit - current_fit, 1),
+            "salary_delta": m.salary - (current.salary if current is not None else 0),
+        },
         "employer_id": employer_id,
         "employer_name": gs.teams[employer_id].name if employer_id else None,
     }
@@ -4015,7 +4066,7 @@ def staff_view() -> dict:
             # offseason churn — hiring is not instantly backfilled.
             staff_mod.seed_pool(gs)
             S.save()
-        pool = sorted(gs.staff_pool, key=lambda m: (m.role, -m.quality, m.id))
+        pool = sorted(gs.staff_pool, key=lambda m: (m.role, -staff_effects.overall(m), m.id))
         return {
             "hired": {
                 r: _staff_member_view(gs, m, gs.acting_team_id)
@@ -4029,11 +4080,21 @@ def staff_view() -> dict:
         }
 
 
-def _staff_effect_lines(m) -> list[str]:
+def _staff_effect_lines(m, gs: GameState | None = None, team_id: str | None = None) -> list[str]:
     """What this member does for the org, in plain lines (server-computed —
     the client never re-derives an effect formula)."""
     if m.role == "coach":
-        lines = [f"+{m.quality / 2:.0f}% weekly training growth"]
+        if gs is not None and team_id is not None:
+            tactics = gs.teams[team_id].tactics
+            mult = staff_effects.coach_training_multiplier(m, tactics, None)
+            fit = staff_effects.system_fit(m, tactics)
+        else:
+            mult = 1.0 + staff_effects.overall(m) / 200.0
+            fit = 100.0
+        lines = [
+            f"+{(mult - 1.0) * 100:.0f}% weekly training growth in this system",
+            f"{fit:.0f}/100 fit with your current tactical identity",
+        ]
         if m.specialty:
             lines.append(
                 f"+{int(staff_mod.SPECIALTY_GROWTH_BONUS * 100)}% extra on "
@@ -4041,29 +4102,33 @@ def _staff_effect_lines(m) -> list[str]:
             )
         return lines
     if m.role == "analyst":
+        score = staff_effects.role_effect_score(m)
         return [
-            f"+{m.quality:.0f}% scouting speed",
+            f"+{score:.0f}% base scouting speed",
             "deeper stat views (analytics tier, with the analytics suite)",
         ]
     # Department roles each drive a DIFFERENT recovery axis — mirror the
     # canonical staff.py formulas so the hiring UI doesn't mislabel them.
     if m.role == "psychologist":
+        score = staff_effects.role_effect_score(m)
         return [
-            f"+{m.quality / 60.0:.1f}/wk confidence recovery for shaken players "
+            f"+{score / 60.0:.1f}/wk confidence recovery for shaken players "
             "(pull toward neutral, never a hype boost)"
         ]
     if m.role == "performance_coach":
+        score = staff_effects.role_effect_score(m)
         return [
-            f"+{m.quality / 70.0:.1f}/wk form upkeep for out-of-form players "
+            f"+{score / 70.0:.1f}/wk form upkeep for out-of-form players "
             "(pull toward neutral)"
         ]
     if m.role == "language_coach":
+        score = staff_effects.role_effect_score(m)
         return [
-            f"+{staff_mod.language_learning_rate_for_quality(m.quality):.1f} fluency "
+            f"+{staff_mod.language_learning_rate_for_quality(score):.1f} fluency "
             "per weekly language session"
         ]
     # physio (and any future recovery role): stamina.
-    return [f"+{m.quality / 18.0:.1f} stamina per player per week"]
+    return [f"+{staff_effects.role_effect_score(m) / 18.0:.1f} stamina per player per week"]
 
 
 @app.get("/api/staff/{staff_id}/profile")
@@ -4077,7 +4142,7 @@ def staff_profile(staff_id: str) -> dict:
             raise HTTPException(404, "unknown staff member")
         return {
             "member": _staff_member_view(gs, m, employer),
-            "effects": _staff_effect_lines(m),
+            "effects": _staff_effect_lines(m, gs, gs.acting_team_id),
             "role_blurb": staff_mod.ROLE_BLURB.get(m.role, ""),
             "hire_cost_note": f"{m.salary * 8:,} cr banked to hire",
             "is_yours": employer == gs.acting_team_id,

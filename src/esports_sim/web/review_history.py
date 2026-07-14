@@ -57,6 +57,8 @@ def _team_ca(gs: GameState, tid: str) -> float:
 
 
 def append_reviews(gs: GameState, code: str, seen: set[tuple[str, str]]) -> None:
+    from esports_sim.manager import staff_effects
+
     """Append reviews from `gs.last_review_by` not yet in `seen` to the corpus.
     Context (analyst tier, coach, strength) is resolved per team — the acting
     pointer is switched per team and restored, so this is safe to call whatever
@@ -77,7 +79,7 @@ def append_reviews(gs: GameState, code: str, seen: set[tuple[str, str]]) -> None
                     world_code=code,
                     review=rv,
                     analyst_tier=analytics_tier(gs),
-                    coach_quality=round(coach.quality, 1) if coach else 0.0,
+                    coach_quality=staff_effects.overall(coach) if coach else 0.0,
                     coach_specialty=coach.specialty if coach else "",
                     team_ca=_team_ca(gs, tid),
                     opp_ca=_team_ca(gs, rv.opp_id),

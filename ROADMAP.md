@@ -133,6 +133,12 @@ are exposed through the web and headless legal-action contracts with AI parity.
 The follow-up management-friction pass added bounded staff policies for core
 renewals and profile-based scouting plus rare contextual media decisions with
 durable player-trust, sponsor, and sentiment consequences.
+The staff-depth pass then replaced single-rating backroom hires with seven
+attributes, role-weighted overall, mechanical role traits, career records and
+grounded badges. Every tier-one club now has a concrete coach whose tactical
+identity and system fit shape training, preparation, timeouts, AI adaptation,
+and offseason coaching changes; the market and profiles explain those effects
+without duplicating formulas in the browser.
 Still open:
 
 - AI orgs setting game plans / carrying benches (documented parity choice)

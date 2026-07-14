@@ -40,6 +40,7 @@ from esports_sim.manager import (
     social,
     sponsors,
     staff,
+    staff_effects,
     series_management,
     telemetry,
     training,
@@ -286,6 +287,7 @@ def new_campaign(
     staff.seed_pool(gs)
     if pack is not None and pack.id == "vct-2021":
         staff.seed_vct_2021_staff(gs)
+    staff.seed_team_coaches(gs)
     social.seed_followers(gs)
     # Seed realistic complete contracts after audience sizes exist. The same
     # quality order already supplies default_five, so role labels document the
@@ -552,28 +554,34 @@ def advance_week(
 
     # 2. Training (human focus is manager-set unless weekly training is
     # delegated; AI and delegated coaches use the same roster-aware picker.
-    # Each human's coach/facility multiplier still comes from their own org).
+    # Every club's concrete coach contributes attributes, system fit, and
+    # player-handling traits; human-only facilities/philosophies retain their
+    # existing boundary.
     for tid in sorted(gs.teams):
         roster = gs.roster(tid)
+        gs.set_acting(tid)
         if gs.is_human(tid):
-            gs.set_acting(tid)
             focus = delegation.pick_training_focus(gs, tid, roster, week_rng)
-            mult = (
-                staff.coach_multiplier(gs, focus)
-                * economy.facility_training_mult(gs)
-                * career.philosophy_training_mult(gs, tid)
-            )
         else:
             focus = training.ai_pick_focus(roster, week_rng, gs.teams[tid])
             gs.training_focus[tid] = focus
-            mult = 1.0
+        mult = staff.coach_multiplier(gs, focus)
+        if gs.is_human(tid):
+            mult *= economy.facility_training_mult(gs) * career.philosophy_training_mult(gs, tid)
+        before_attrs = sum(sum(p.attributes.values()) for p in roster)
+        before_fluency = sum(sum(skill.level for skill in p.languages) for p in roster)
         training.apply_training(
             gs.teams[tid], roster, focus, week_rng, mult,
             mentor_mults=_mentor_mults(gs, tid),
             support_bonuses=_development_support_bonuses(gs, tid),
-            language_rate=staff.language_learning_rate(gs) if gs.is_human(tid) else 0.0,
+            language_rate=staff.language_learning_rate(gs),
             scout_guidance=_active_scout_guidance(gs, tid),
+            coach_player_mults=staff.coach_player_multipliers(gs),
         )
+        after_attrs = sum(sum(p.attributes.values()) for p in roster)
+        after_fluency = sum(sum(skill.level for skill in p.languages) for p in roster)
+        staff.add_contribution(gs, tid, "coach", "training_gain", after_attrs - before_attrs)
+        staff.add_contribution(gs, tid, "language_coach", "fluency_taught", after_fluency - before_fluency)
     gs.set_acting(None)
 
     # 2a'. Mentorship, the CEILING half: a valid, manager-set mentorship slowly
@@ -583,24 +591,31 @@ def advance_week(
     # no-op there and the balance gates stay byte-identical.
     development.apply_mentorship_growth(gs)
 
-    # 2b. Backroom department effects, per human org: physio restores
+    # 2b. Backroom department effects: physio restores
     # stamina; psychologist pulls shaken confidence back toward neutral;
     # performance coach does the same for slumped form. The department
     # roles are pulls toward 50, never boosts past it — support staff
     # steady a roster, they don't inflate one.
-    for tid in sorted(gs.human_team_ids):
+    for tid in sorted(gs.staff_by):
         gs.set_acting(tid)
         recovery = staff.physio_recovery(gs)
         support = staff.confidence_support(gs)
         upkeep = staff.form_upkeep(gs)
         for p in gs.roster(tid):
             if recovery > 0:
+                before = p.stamina
                 p.stamina = round(min(100.0, p.stamina + recovery), 1)
+                staff.add_contribution(gs, tid, "physio", "stamina_restored", p.stamina - before)
             if support > 0 and p.confidence < 50.0:
+                before = p.confidence
                 p.confidence = round(min(50.0, p.confidence + support), 1)
+                staff.add_contribution(gs, tid, "psychologist", "confidence_restored", p.confidence - before)
             if upkeep > 0 and p.form < 50.0:
+                before = p.form
                 p.form = round(min(50.0, p.form + upkeep), 1)
+                staff.add_contribution(gs, tid, "performance_coach", "form_restored", p.form - before)
     gs.set_acting(None)
+    staff.record_week(gs, report)
 
     # 2b'. Bench minutes: players who did NOT dress a single map this week
     # (while the team played) scrim instead — a fraction of real reps,
@@ -1489,21 +1504,29 @@ _PLAN_DIALS = (
 )
 
 
-def _match_coach_profile(gs: GameState, tid: str) -> CoachProfile:
+def _match_coach_profile(gs: GameState, tid: str, tactics=None) -> CoachProfile:
     """Project campaign staff into the match's timeout-only coach contract.
 
-    AI sides deliberately receive the league-average fallback.  Human sides
-    gain the real quality/specialty/traits only when they have actually hired
-    a coach; no match code reaches into the campaign staff market directly.
+    Every tier-one campaign side carries a concrete coach. No match code
+    reaches into the campaign staff market directly; this is the typed
+    projection boundary for timeout decisions.
     """
     coach = gs.staff_by.get(tid, {}).get("coach")
     if coach is None:
         return CoachProfile(id=f"{tid}:coach")
     return CoachProfile(
         id=coach.id,
-        quality=coach.quality,
+        quality=staff_effects.overall(coach),
         specialty=coach.specialty,
         traits=tuple(sorted(coach.traits)),
+        tactical_knowledge=staff_effects.attr(coach, "tactical_knowledge"),
+        analysis=staff_effects.attr(coach, "analysis"),
+        people_management=staff_effects.attr(coach, "people_management"),
+        motivation=staff_effects.attr(coach, "motivation"),
+        adaptability=staff_effects.attr(coach, "adaptability"),
+        system_fit=staff_effects.system_fit(
+            coach, tactics or gs.teams[tid].tactics
+        ),
     )
 
 
@@ -1531,9 +1554,9 @@ def _fixture_plans(
     # measured against what the opponent will actually bring to the server.
     for tid, opp in ((f.team_a, f.team_b), (f.team_b, f.team_a)):
         coach = _match_coach_profile(gs, tid)
-        # Every campaign side has a coach profile.  Without a hired coach it
-        # is the league-average fallback; its only possible live input is a
-        # timeout, never an always-on engine modifier.
+        # Every campaign side has a coach profile. A deliberately vacant chair
+        # uses the legacy neutral fallback; either way the only live input is
+        # a timeout, never an always-on engine modifier.
         plans[tid] = TeamMatchPlan(coach=coach)
         if not gs.is_human(tid):
             continue
@@ -1566,7 +1589,10 @@ def _fixture_plans(
         plans[tid] = TeamMatchPlan(
             tactics=resolved_tactics[tid] if overrides else None,
             focus_target=target,
-            prep_edge=PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book,
+            prep_edge=(
+                PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book
+                + staff.coach_prep_bonus(gs, tid, resolved_tactics[tid])
+            ),
             counter_edge=tactics_fit.counter_strat_edge(
                 {
                     dial: getattr(plan, dial)
@@ -1574,7 +1600,7 @@ def _fixture_plans(
                 },
                 resolved_tactics[opp],
             ),
-            coach=_match_coach_profile(gs, tid),
+            coach=_match_coach_profile(gs, tid, resolved_tactics[tid]),
             halftime_talk=plan.halftime_talk,
             shouts=plan.shouts,
         )
@@ -2084,6 +2110,9 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
         # The active assignment still clears below; the scouting serializer
         # uses this key to derive the latest post-match report from Fixture.
         gs.scout_progress[target] = gained
+        staff.add_contribution(
+            gs, gs.acting_team_id, "analyst", "scouting_progress", gained
+        )
         for observed_tid in (fx.team_a, fx.team_b):
             team = gs.teams.get(observed_tid)
             if team is None:
@@ -2134,6 +2163,9 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
             gain += SCOUT_LIVE_WATCH_BONUS
         after = min(SCOUT_DEEP_CAP, round(cur + gain, 2))
         gs.scout_progress[target] = after
+        staff.add_contribution(
+            gs, gs.acting_team_id, "analyst", "scouting_progress", after - cur
+        )
         if after >= 1.0 and cur < 1.0:
             gs.push_private_news(
                 f"The full book on {p.handle} is compiled — style, "
@@ -2150,6 +2182,9 @@ def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
         gain *= 0.6
     after = min(SCOUT_SURVEY_CAP, round(cur + gain, 2))
     gs.scout_progress[target] = after
+    staff.add_contribution(
+        gs, gs.acting_team_id, "analyst", "scouting_progress", after - cur
+    )
     if after >= SCOUT_SURVEY_CAP and cur < SCOUT_SURVEY_CAP:
         label = (
             "the free-agent market"
@@ -2553,6 +2588,18 @@ def _assign_ai_tactics(gs: GameState, rng) -> None:
         # Map control tracks the IGL's read of the game: sharp IGLs spread
         # and lurk for picks, blunt ones stack and hit as five.
         tac.map_control = round(clamp(50 + (igl_sense - 55) * 0.6 + rng.normal(0, 9)), 1)
+        coach = gs.staff_by.get(tid, {}).get("coach")
+        if coach is not None:
+            preferences = staff_effects.style_preferences(coach)
+            identity_weight = 0.15 + 0.20 * staff_effects.attr(
+                coach, "tactical_knowledge"
+            ) / 100.0
+            for dial in sorted(preferences):
+                current = getattr(tac, dial)
+                preferred = preferences[dial]
+                setattr(tac, dial, round(clamp(
+                    current + (preferred - current) * identity_weight
+                ), 1))
         tac.site_focus = (
             "balanced"
             if rng.random() < 0.65
@@ -2622,6 +2669,12 @@ def _adapt_ai_tactics(gs: GameState, rng) -> None:
         rwr = (ts.atk_won + ts.def_won) / rounds
         winning, losing = rwr >= 0.52, rwr <= 0.45
         tac = gs.teams[tid].tactics
+        coach = gs.staff_by.get(tid, {}).get("coach")
+        coach_preferences = staff_effects.style_preferences(coach) if coach else {}
+        coach_pull = (
+            0.02 + (100.0 - staff_effects.attr(coach, "adaptability")) * 0.0003
+            if coach else 0.0
+        )
         for dial in _ADAPT_DIALS:
             v = getattr(tac, dial)
             if winning and v != 50.0:
@@ -2633,10 +2686,17 @@ def _adapt_ai_tactics(gs: GameState, rng) -> None:
                     target += (meta_id[dial] - 50.0) * _DIFFUSION_PULL
                 v += (target - v) * _ADAPT_SHRINK
             v += float(rng.normal(0, _ADAPT_NOISE))
+            if dial in coach_preferences:
+                v += (coach_preferences[dial] - v) * coach_pull
             setattr(tac, dial, round(clamp(v), 1))
         if ts.pistols >= 2:
             pwr = ts.pistols_won / ts.pistols
             tac.eco_greed = round(clamp(tac.eco_greed + (pwr - 0.5) * _ADAPT_PISTOL), 1)
+        if "eco_greed" in coach_preferences:
+            tac.eco_greed = round(clamp(
+                tac.eco_greed
+                + (coach_preferences["eco_greed"] - tac.eco_greed) * coach_pull
+            ), 1)
 
 
 # A dial whose league-wide mean ends a season this far from neutral marks
@@ -2874,6 +2934,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # Staff market churn: retirements out, the new season's class in
     # (one shared pool — no per-manager refresh).
     staff.offseason_churn(gs)
+    staff.ai_offseason_coach_hiring(gs)
     gs.week = 1
     gs.phase = "regular"
     _assign_ai_tactics(gs, rng)  # new rosters, new coaching identities

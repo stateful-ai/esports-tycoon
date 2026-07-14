@@ -9,9 +9,9 @@ Hiring happens against ONE shared, world-level free-agent pool
 (gs.staff_pool) — in a shared world managers compete for the same staff.
 The pool is seeded 50+ deep at campaign start and churned every offseason
 so the ecosystem stays healthy. Hiring is instant, releasing is free
-(staff contracts are at-will in this economy). Human orgs only: AI teams'
-staff stay abstract — their training/scouting multipliers assume a
-league-average bench, which is the documented difficulty lever.
+(staff contracts are at-will in this economy). Every tier-one club carries a
+concrete head coach. AI support departments remain abstract, which is the
+documented economy boundary for this pass.
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ from __future__ import annotations
 import numpy as np
 
 from esports_sim.manager.gen import _FIRST_NAMES, _LAST_NAMES, _TEAM_NAMES
+from esports_sim.manager import staff_effects
 from esports_sim.manager.state import GameState, StaffMember
 from esports_sim.rng.tree import RngTree
 
@@ -73,10 +74,17 @@ SPECIALTY_BLURB = {
     "immersion": "practical immersion and vocabulary building",
 }
 
-_TRAIT_POOL = [
-    "players_coach", "disciplinarian", "innovator", "old_school",
-    "networker", "quiet", "demanding", "developer", "grinder",
-]
+_ROLE_TRAITS: dict[str, list[str]] = {
+    "coach": [
+        "developer", "players_coach", "disciplinarian", "innovator",
+        "system_builder", "pragmatist",
+    ],
+    "analyst": ["opponent_specialist", "talent_spotter", "data_purist"],
+    "physio": ["recovery_specialist", "preventive"],
+    "psychologist": ["confidence_builder", "pressure_specialist"],
+    "performance_coach": ["consistency", "routines"],
+    "language_coach": ["callout_specialist", "immersion"],
+}
 
 _AGE_RANGE = {
     "coach": (30, 56),
@@ -227,6 +235,28 @@ _REAL_VCT_STAFF: tuple[tuple[str, str, str, str, str], ...] = (
 SPECIALTY_GROWTH_BONUS = 0.15
 
 
+def _attribute_profile(rng, quality: float, role: str) -> dict[str, float]:
+    """Create a distinct but quality-anchored seven-attribute profile."""
+    weights = staff_effects.ROLE_WEIGHTS[role]
+    values: dict[str, float] = {}
+    for key in staff_effects.ATTRIBUTE_LABELS:
+        role_lift = 5.0 if key in weights and weights[key] >= 0.18 else 0.0
+        value = quality + role_lift + float(rng.normal(0.0, 7.0))
+        values[key] = round(float(np.clip(value, 1.0, 99.0)), 1)
+    return values
+
+
+def _style_profile(rng, role: str) -> tuple[str, dict[str, float]]:
+    if role != "coach":
+        return "", {}
+    identity = str(rng.choice(sorted(staff_effects.STYLE_ARCHETYPES)))
+    preferences = {
+        dial: round(float(np.clip(value + rng.normal(0.0, 3.0), 10.0, 90.0)), 1)
+        for dial, value in sorted(staff_effects.STYLE_ARCHETYPES[identity].items())
+    }
+    return identity, preferences
+
+
 def _make_member(seed: int, sid: str, role: str) -> StaffMember:
     # Identity is a pure function of (campaign seed, member id): top-ups at
     # different times can never mint clones or shift each other's draws.
@@ -237,10 +267,12 @@ def _make_member(seed: int, sid: str, role: str) -> StaffMember:
     lo, hi = _AGE_RANGE[role]
     age = int(rng.integers(lo, hi))
     specialty = str(rng.choice(SPECIALTIES[role]))
-    n_traits = int(rng.integers(1, 3))
+    n_traits = min(len(_ROLE_TRAITS[role]), int(rng.integers(1, 3)))
     traits = sorted(
-        str(t) for t in rng.choice(_TRAIT_POOL, size=n_traits, replace=False)
+        str(t) for t in rng.choice(_ROLE_TRAITS[role], size=n_traits, replace=False)
     )
+    attributes = _attribute_profile(rng, quality, role)
+    style_identity, style_preferences = _style_profile(rng, role)
     # A paper trail proportional to age: journeymen arrive with history.
     seasons = max(0, int((age - lo) * 0.6 + rng.integers(0, 3)))
     history: list[str] = []
@@ -261,6 +293,9 @@ def _make_member(seed: int, sid: str, role: str) -> StaffMember:
         traits=traits,
         history=history,
         seasons_experience=seasons,
+        attributes=attributes,
+        style_identity=style_identity,
+        style_preferences=style_preferences,
     )
 
 
@@ -285,7 +320,9 @@ def _make_real_vct_member(spec: tuple[str, str, str, str, str]) -> StaffMember:
     quality_floor = {"coach": 65.0, "analyst": 58.0, "performance_coach": 60.0}[role]
     quality = float(np.round(rng.uniform(quality_floor, 90.0), 1))
     salary = max(1_500, int(np.round((quality ** 1.5) * 8 / 100) * 100))
-    traits = sorted(str(t) for t in rng.choice(_TRAIT_POOL, size=2, replace=False))
+    traits = sorted(str(t) for t in rng.choice(_ROLE_TRAITS[role], size=2, replace=False))
+    attributes = _attribute_profile(rng, quality, role)
+    style_identity, style_preferences = _style_profile(rng, role)
     return StaffMember(
         id=staff_id,
         name=name,
@@ -298,6 +335,9 @@ def _make_real_vct_member(spec: tuple[str, str, str, str, str]) -> StaffMember:
         traits=traits,
         history=[history],
         seasons_experience=int(rng.integers(2, 10)),
+        attributes=attributes,
+        style_identity=style_identity,
+        style_preferences=style_preferences,
     )
 
 
@@ -370,6 +410,38 @@ def seed_pool(gs: GameState, *, include_real: bool = True) -> None:
         gs.staff_pool.append(member)
         staff_names.add(identity)
     gs.staff_pool.sort(key=lambda m: m.id)
+
+
+def seed_team_coaches(gs: GameState) -> None:
+    """Give every tier-one club a concrete, deterministic head coach.
+
+    Roster packs may already assign historical coaches. Generated incumbents
+    never enter the free-agent pool until replaced, and their identities are
+    checked against every player and staff name in the world.
+    """
+    used = {_identity_key(m.name) for m in gs.staff_pool}
+    for team_staff in gs.staff_by.values():
+        used.update(_identity_key(m.name) for m in team_staff.values())
+    used.update(_player_identity_keys(gs))
+    for team_id in sorted(gs.teams):
+        if gs.teams[team_id].tier != 1:
+            continue
+        team_staff = gs.staff_by.setdefault(team_id, {})
+        if "coach" in team_staff:
+            continue
+        for attempt in range(100):
+            sid = f"staff_incumbent_{team_id}" + (f"_{attempt}" if attempt else "")
+            member = _make_member(gs.seed, sid, "coach")
+            identity = _identity_key(member.name)
+            if identity in used:
+                continue
+            member.region = str(gs.teams[team_id].region)
+            member.history = [f"S{gs.season}: head coach, {gs.teams[team_id].name}"]
+            team_staff["coach"] = member
+            used.add(identity)
+            break
+        else:
+            raise RuntimeError(f"could not generate distinct coach for {team_id}")
 
 
 _VCT_2021_COACHES = (
@@ -503,6 +575,7 @@ def offseason_churn(gs: GameState) -> None:
                 if team_id in gs.human_team_ids:
                     retired_human_staff.append((member.name, role))
             else:
+                _develop_employed_member(member)
                 used_names.add(_identity_key(member.name))
         for role in retiring_roles:
             del team_staff[role]
@@ -513,6 +586,49 @@ def offseason_churn(gs: GameState) -> None:
     seed_pool(gs, include_real=False)
     for name, role in retired_human_staff:
         gs.push_news(f"{name} retired from the {role} role; a replacement has joined.")
+
+
+def ai_offseason_coach_hiring(gs: GameState) -> None:
+    """Struggling AI clubs use the shared market to seek a better-fit coach."""
+    from esports_sim.manager import knowledge
+
+    for team_id in sorted(gs.teams):
+        if gs.is_human(team_id) or gs.teams[team_id].tier != 1:
+            continue
+        coach = gs.staff_by.get(team_id, {}).get("coach")
+        if coach is None:
+            continue
+        order = gs.standings_order(str(gs.teams[team_id].region), tier=1)
+        position = order.index(team_id) + 1 if team_id in order else len(order)
+        fit = staff_effects.system_fit(coach, gs.teams[team_id].tactics)
+        if position <= max(1, len(order) // 2) and fit >= 60.0:
+            continue
+        incumbent_score = staff_effects.overall(coach) + fit * 0.25
+        candidates = [m for m in gs.staff_pool if m.role == "coach"]
+        if not candidates:
+            continue
+        candidate = max(candidates, key=lambda m: (
+            staff_effects.overall(m)
+            + staff_effects.system_fit(m, gs.teams[team_id].tactics) * 0.25
+            - m.salary / 5_000.0,
+            m.id,
+        ))
+        candidate_score = (
+            staff_effects.overall(candidate)
+            + staff_effects.system_fit(candidate, gs.teams[team_id].tactics) * 0.25
+            - candidate.salary / 5_000.0
+        )
+        if candidate_score < incumbent_score + 8.0:
+            continue
+        gs.staff_pool.remove(candidate)
+        coach.last_org = team_id
+        gs.staff_pool.append(coach)
+        gs.staff_pool.sort(key=lambda m: m.id)
+        if candidate.last_org:
+            knowledge.on_staff_move(gs, candidate.last_org, team_id)
+        candidate.history.append(f"S{gs.season}: head coach, {gs.teams[team_id].name}")
+        candidate.last_org = ""
+        gs.staff_by[team_id]["coach"] = candidate
 
 
 def find_member(gs: GameState, staff_id: str) -> tuple[StaffMember | None, str | None]:
@@ -573,6 +689,80 @@ def record_title(gs: GameState, team_id: str, title: str) -> None:
     """Silverware sticks to the staff who were in the building for it."""
     for m in gs.staff_by.get(team_id, {}).values():
         m.titles.append(title)
+        _evaluate_badges(m)
+
+
+def _career_add(member: StaffMember, key: str, amount: float) -> None:
+    member.career_stats[key] = round(member.career_stats.get(key, 0.0) + amount, 3)
+    _evaluate_badges(member)
+
+
+def _evaluate_badges(member: StaffMember) -> None:
+    stats = member.career_stats
+    earned = set(member.badges)
+    if member.titles:
+        earned.add("champion")
+    if len(member.titles) >= 3:
+        earned.add("dynasty_architect")
+    if stats.get("weeks", 0.0) >= 100:
+        earned.add("veteran_operator")
+    if stats.get("training_gain", 0.0) >= 25:
+        earned.add("talent_developer")
+    if (
+        stats.get("maps", 0.0) >= 50
+        and stats.get("series_wins", 0.0) / max(stats.get("series", 0.0), 1.0) >= 0.60
+    ):
+        earned.add("master_strategist")
+    if stats.get("scouting_progress", 0.0) >= 10:
+        earned.add("opposition_expert")
+    if stats.get("stamina_restored", 0.0) >= 500:
+        earned.add("iron_squad")
+    if stats.get("confidence_restored", 0.0) >= 100:
+        earned.add("stabilizer")
+    if stats.get("form_restored", 0.0) >= 100:
+        earned.add("consistency_architect")
+    if stats.get("fluency_taught", 0.0) >= 50:
+        earned.add("polyglot_program")
+    member.badges = sorted(earned)
+
+
+def add_contribution(
+    gs: GameState, team_id: str, role: str, key: str, amount: float,
+) -> None:
+    if amount <= 0:
+        return
+    member = gs.staff_by.get(team_id, {}).get(role)
+    if member is not None:
+        _career_add(member, key, amount)
+
+
+def record_week(gs: GameState, report) -> None:
+    """Ground staff career totals in the fixtures actually played this week."""
+    for team_id in sorted(gs.staff_by):
+        team_staff = gs.staff_by[team_id]
+        for member in team_staff.values():
+            _career_add(member, "weeks", 1.0)
+        coach = team_staff.get("coach")
+        if coach is None:
+            continue
+        fixtures = [
+            f for f in report.fixtures
+            if team_id in (f.team_a, f.team_b) and f.id in report.match_stats
+        ]
+        maps = sum(len(report.match_stats.get(f.id, [])) for f in fixtures)
+        _career_add(coach, "maps", float(maps))
+        _career_add(coach, "series", float(len(fixtures)))
+        _career_add(coach, "series_wins", float(sum(f.winner_id == team_id for f in fixtures)))
+
+
+def _develop_employed_member(member: StaffMember) -> None:
+    """Small deterministic experience growth; staff knowledge does not age like aim."""
+    if member.career_stats.get("weeks", 0.0) < 20 or member.age >= 52:
+        return
+    for key in ("teaching", "people_management", "tactical_knowledge"):
+        if key in member.attributes:
+            member.attributes[key] = round(min(99.0, member.attributes[key] + 0.2), 1)
+    member.quality = staff_effects.overall(member)
 
 
 # -- weekly effect hooks -------------------------------------------------------
@@ -589,22 +779,49 @@ def coach_multiplier(gs: GameState, focus: str | None = None) -> float:
     coach = gs.staff.get("coach")
     if coach is None:
         return 1.0
-    mult = 1.0 + coach.quality / 200.0
-    if focus is not None and focus == coach.specialty:
-        mult += SPECIALTY_GROWTH_BONUS
-    return mult
+    return staff_effects.coach_training_multiplier(
+        coach, gs.teams[gs.acting_team_id].tactics, focus
+    )
+
+
+def coach_player_multipliers(gs: GameState) -> dict[str, float]:
+    coach = gs.staff.get("coach")
+    if coach is None:
+        return {}
+    tactics = gs.teams[gs.acting_team_id].tactics
+    return {
+        player.id: staff_effects.coach_player_multiplier(coach, player, tactics)
+        for player in gs.roster(gs.acting_team_id)
+    }
+
+
+def coach_prep_bonus(gs: GameState, team_id: str, tactics=None) -> float:
+    coach = gs.staff_by.get(team_id, {}).get("coach")
+    if coach is None:
+        return 0.0
+    resolved = tactics or gs.teams[team_id].tactics
+    return staff_effects.coach_prep_bonus(coach, resolved)
 
 
 def scout_multiplier(gs: GameState) -> float:
     """Scouting speed multiplier: up to ~1.9 with an elite analyst."""
     analyst = gs.staff.get("analyst")
-    return 1.0 + (analyst.quality / 100.0) if analyst else 1.0
+    if analyst is None:
+        return 1.0
+    score = staff_effects.role_effect_score(analyst)
+    traits = set(analyst.traits)
+    target = gs.scout_target
+    if target == "market" and "talent_spotter" in traits:
+        score *= 1.08
+    elif target not in (None, "market") and "opponent_specialist" in traits:
+        score *= 1.08
+    return 1.0 + score / 100.0
 
 
 def physio_recovery(gs: GameState) -> float:
     """Extra stamina per player per week."""
     physio = gs.staff.get("physio")
-    return physio.quality / 18.0 if physio else 0.0  # up to ~5.4/wk
+    return staff_effects.role_effect_score(physio) / 18.0 if physio else 0.0
 
 
 def confidence_support(gs: GameState) -> float:
@@ -612,14 +829,14 @@ def confidence_support(gs: GameState) -> float:
     players recover toward neutral faster. Zero without one, and never
     inflates confidence past 50 (support, not a hype machine)."""
     psych = gs.staff.get("psychologist")
-    return psych.quality / 60.0 if psych else 0.0  # up to ~1.5/wk
+    return staff_effects.role_effect_score(psych) / 60.0 if psych else 0.0
 
 
 def form_upkeep(gs: GameState) -> float:
     """Performance coach: weekly form floor maintenance for sub-50 form.
     Same shape as confidence_support — a pull toward neutral, not a buff."""
     pc = gs.staff.get("performance_coach")
-    return pc.quality / 70.0 if pc else 0.0  # up to ~1.3/wk
+    return staff_effects.role_effect_score(pc) / 70.0 if pc else 0.0
 
 
 def language_learning_rate_for_quality(quality: float) -> float:
@@ -630,7 +847,7 @@ def language_learning_rate_for_quality(quality: float) -> float:
 def language_learning_rate(gs: GameState) -> float:
     """Weekly fluency points from the dedicated language coach (zero without one)."""
     coach = gs.staff.get("language_coach")
-    return language_learning_rate_for_quality(coach.quality) if coach else 0.0
+    return language_learning_rate_for_quality(staff_effects.role_effect_score(coach)) if coach else 0.0
 
 
 # -- coaching tree --------------------------------------------------------------
@@ -663,6 +880,16 @@ def retire_into_staff(gs: GameState, p, ca: float, team_name: str) -> "StaffMemb
     else:
         return None
     quality = float(np.round(min(88.0, 30.0 + ca * 0.55 + (8.0 if is_igl else 0.0)), 1))
+    seed_rng = RngTree(gs.seed).derive("retired-staff", p.id)
+    attributes = _attribute_profile(seed_rng, quality, role)
+    # Playing careers carry forward into the most legible staff attributes.
+    attributes["tactical_knowledge"] = round(min(99.0, max(
+        attributes["tactical_knowledge"], game_sense,
+    )), 1)
+    attributes["people_management"] = round(min(99.0, max(
+        attributes["people_management"], comms,
+    )), 1)
+    style_identity, style_preferences = _style_profile(seed_rng, role)
     member = StaffMember(
         id=f"staff_ex_{p.id}",
         name=p.real_name or p.handle,
@@ -676,6 +903,9 @@ def retire_into_staff(gs: GameState, p, ca: float, team_name: str) -> "StaffMemb
         history=[f"pro career as {p.handle}" + (f", last of {team_name}" if team_name else "")],
         seasons_experience=0,
         former_player_id=p.id,
+        attributes=attributes,
+        style_identity=style_identity,
+        style_preferences=style_preferences,
     )
     if any(m.id == member.id for m in gs.staff_pool):
         return None  # already in the pool (can't happen twice, but cheap)
@@ -705,7 +935,10 @@ def analytics_tier(gs: GameState) -> int:
     Score = analyst quality + 15/level; tiers at 1 / 55 / 95 — an average
     analyst alone reaches tier 1-2, elite-plus-suite reaches 3."""
     analyst = gs.staff.get("analyst")
-    score = (analyst.quality if analyst else 0.0) + 15.0 * gs.facilities.get(
+    score = (staff_effects.role_effect_score(analyst) if analyst else 0.0)
+    if analyst is not None and "data_purist" in analyst.traits:
+        score += 5.0
+    score += 15.0 * gs.facilities.get(
         "analytics_suite", 0
     )
     if score >= 95.0:

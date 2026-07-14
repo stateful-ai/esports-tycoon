@@ -286,7 +286,11 @@ class HeuristicManagerPolicy:
             ]
             if options:
                 best = max(options, key=lambda member: (
-                    float(member["quality"]) - float(member["salary"]) / 3_000,
+                    float(member.get("overall", member["quality"]))
+                    + (float(member.get("system_fit", 100.0)) - 75.0) * (
+                        0.18 if member["role"] == "coach" else 0.0
+                    )
+                    - float(member["salary"]) / 3_000,
                     member["id"],
                 ))
                 candidates.append((54.0 + self.profile.investment * 20, "hire_staff", {

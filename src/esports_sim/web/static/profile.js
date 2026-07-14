@@ -1383,7 +1383,10 @@ const StaffProfile = ({ data }) => {
     : "Free agent";
 
   const effects = data.effects || [];
-  const traits = (m.traits || []).filter(Boolean);
+  const attributes = m.attributes_view || [];
+  const traits = (m.traits_detail || []).filter(Boolean);
+  const badges = (m.badges_detail || []).filter(Boolean);
+  const careerStats = Object.entries(m.career_stats || {});
   const honors = (m.titles || []).filter(Boolean);
   const history = (m.history || []).filter(Boolean);
 
@@ -1400,9 +1403,15 @@ const StaffProfile = ({ data }) => {
 
       <div class="pf-tiles">
         <div class="pf-tile">
-          <div class="pf-tile-val mono">${pfNum(m.quality)}</div>
-          <div class="pf-tile-label">Quality</div>
+          <div class="pf-tile-val mono">${pfNum(m.overall ?? m.quality)}</div>
+          <div class="pf-tile-label">Overall</div>
         </div>
+        ${m.style?.fit != null && html`
+          <div class="pf-tile">
+            <div class="pf-tile-val mono">${pfNum(m.style.fit)}/100</div>
+            <div class="pf-tile-label">System fit</div>
+          </div>
+        `}
         <div class="pf-tile">
           <div class="pf-tile-val mono">${pfNum(m.seasons_experience)}s</div>
           <div class="pf-tile-label">Experience</div>
@@ -1412,6 +1421,38 @@ const StaffProfile = ({ data }) => {
           <div class="pf-tile-label">Titles</div>
         </div>
       </div>
+
+      ${attributes.length > 0 && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Attributes</h3>
+          <div class="pf-attrs">
+            ${attributes.map((a) => html`
+              <div class="pf-attr" key=${a.key || a.label}>
+                <span class="pf-attr-label" title=${a.description || ""}>${a.label}</span>
+                <span class="pf-attr-bar"><${PfBar} value=${a.value} /></span>
+                <span class="pf-attr-val mono">${pfNum(a.value)}</span>
+              </div>
+            `)}
+          </div>
+        </div>
+      `}
+
+      ${m.style && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Coaching identity</h3>
+          <p><span class="pill">${m.style.label}</span> <b>${pfNum(m.style.fit)}/100</b> fit with your current system.</p>
+          <div class="pf-attrs">
+            ${(m.style.preferences || []).map((pref) => html`
+              <div class="pf-attr" key=${pref.key || pref.label}>
+                <span class="pf-attr-label">${pref.label}</span>
+                <span class="pf-attr-bar"><${PfBar} value=${pref.preferred} /></span>
+                <span class="pf-attr-val mono">${pfNum(pref.preferred)}</span>
+                <span class="muted">you ${pfNum(pref.current)}</span>
+              </div>
+            `)}
+          </div>
+        </div>
+      `}
 
       <div class="pf-section">
         <h3 class="pf-section-title">What they do</h3>
@@ -1425,7 +1466,34 @@ const StaffProfile = ({ data }) => {
         <div class="pf-section">
           <h3 class="pf-section-title">Style</h3>
           <div class="pf-chips">
-            ${traits.map((t, i) => html`<span key=${i} class="pf-chip">${t.replaceAll("_", " ")}</span>`)}
+            ${traits.map((t, i) => html`
+              <span key=${i} class="pf-chip"><b>${t.label}</b><span class="muted">${t.desc}</span></span>
+            `)}
+          </div>
+        </div>
+      `}
+
+      ${badges.length > 0 && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Badges</h3>
+          <div class="pf-chips">
+            ${badges.map((b, i) => html`
+              <span key=${i} class="pf-chip"><b>${b.label}</b><span class="muted">${b.desc}</span></span>
+            `)}
+          </div>
+        </div>
+      `}
+
+      ${careerStats.length > 0 && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Career record</h3>
+          <div class="pf-attrs">
+            ${careerStats.map(([key, value]) => html`
+              <div class="pf-attr" key=${key}>
+                <span class="pf-attr-label">${humanize(key)}</span>
+                <span class="pf-attr-val mono">${pfNum(value)}</span>
+              </div>
+            `)}
           </div>
         </div>
       `}
