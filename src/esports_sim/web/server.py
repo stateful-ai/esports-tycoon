@@ -1784,6 +1784,9 @@ def state() -> dict:
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
+            "training_delegated": delegation.policy_for(
+                gs, gs.acting_team_id
+            ).auto_training,
             "focus_options": FOCUS_OPTIONS,
             "news": list(reversed(gs.news[-12:])),
             "scout": {
@@ -1981,6 +1984,7 @@ def academy_upgrade() -> dict:
 
 
 class DelegationPolicyBody(BaseModel):
+    auto_training: bool | None = None
     auto_renew_core: bool = False
     renewal_salary_min: int = 800
     renewal_salary_max: int = 8_000
@@ -1997,8 +2001,13 @@ def delegation_policy_action(body: DelegationPolicyBody) -> dict:
     with S.lock:
         gs = S.require_gs()
         try:
+            values = body.model_dump(mode="json", exclude_none=True)
+            if body.auto_training is None:
+                values["auto_training"] = delegation.policy_for(
+                    gs, gs.acting_team_id
+                ).auto_training
             policy = delegation.configure(
-                gs, gs.acting_team_id, body.model_dump(mode="json")
+                gs, gs.acting_team_id, values
             )
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
@@ -2184,11 +2193,15 @@ def save_settings(body: SaveSettingsBody) -> dict:
 def inbox_view() -> dict:
     with S.lock:
         gs = S.require_gs()
+        ordered = inbox_mod.sorted_items(gs)
+        actionable, league_feed = inbox_mod.split_items(gs, ordered)
         return {
-            "unread": inbox_mod.unread_count(gs),
+            **inbox_mod.unread_counts(gs),
             # Pass gs so offer items whose offer is still live carry Accept/
             # Decline actions (existing mutation endpoints) inline in the feed.
-            "items": [inbox_mod.to_api(it, gs) for it in inbox_mod.sorted_items(gs)],
+            "items": [inbox_mod.to_api(it, gs) for it in ordered],
+            "actionable_items": [inbox_mod.to_api(it, gs) for it in actionable],
+            "league_feed": [inbox_mod.to_api(it, gs) for it in league_feed],
         }
 
 
@@ -2208,7 +2221,7 @@ def inbox_read(body: InboxReadBody) -> dict:
         else:
             unread = inbox_mod.unread_count(gs)
         S.save()
-        return {"unread": unread}
+        return {**inbox_mod.unread_counts(gs), "unread": unread}
 
 
 FOG_BASE_SIGMA = 12.0
@@ -3936,19 +3949,47 @@ def facility_upgrade(body: FacilityBody) -> dict:
 
 
 class TrainingBody(BaseModel):
-    focus: str
+    focus: str | None = None
+    delegate_to_coach: bool | None = None
 
 
 @app.post("/api/actions/training")
 def set_training(body: TrainingBody) -> dict:
     with S.lock:
         gs = S.require_gs()
-        if body.focus not in FOCUS_OPTIONS:
+        if body.focus is None and body.delegate_to_coach is None:
+            raise HTTPException(422, "provide a focus or delegate_to_coach")
+        if body.focus is not None and body.focus not in FOCUS_OPTIONS:
             raise HTTPException(422, f"focus must be one of {FOCUS_OPTIONS}")
-        gs.training_focus[gs.acting_team_id] = body.focus
-        telemetry.record_action(gs, "set_training", {"focus": body.focus})
+        if body.focus is not None:
+            gs.training_focus[gs.acting_team_id] = body.focus
+        if body.delegate_to_coach is not None:
+            current = delegation.policy_for(gs, gs.acting_team_id)
+            delegation.configure(
+                gs,
+                gs.acting_team_id,
+                current.model_copy(
+                    update={"auto_training": body.delegate_to_coach}
+                ).model_dump(mode="json"),
+            )
+        telemetry.record_action(
+            gs,
+            "set_training",
+            {
+                "focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
+                "delegate_to_coach": delegation.policy_for(
+                    gs, gs.acting_team_id
+                ).auto_training,
+            },
+        )
         S.save()
-        return {"ok": True, "focus": body.focus}
+        return {
+            "ok": True,
+            "focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
+            "delegate_to_coach": delegation.policy_for(
+                gs, gs.acting_team_id
+            ).auto_training,
+        }
 
 
 def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict:

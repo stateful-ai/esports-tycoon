@@ -28,6 +28,7 @@ def campaign(game_data) -> GameState:
 
 def _policy(**overrides) -> dict:
     values = {
+        "auto_training": False,
         "auto_renew_core": True,
         "renewal_salary_min": 800,
         "renewal_salary_max": 20_000,
@@ -40,6 +41,27 @@ def _policy(**overrides) -> dict:
     }
     values.update(overrides)
     return values
+
+
+def test_delegated_training_uses_roster_aware_coach_and_manual_is_noop(
+    campaign: GameState, monkeypatch,
+) -> None:
+    tid = campaign.user_team_id
+    roster = campaign.roster(tid)
+    campaign.training_focus[tid] = "mental"
+
+    def should_not_run(*_args):
+        raise AssertionError("manual training must not draw from the coach picker")
+
+    monkeypatch.setattr(delegation.training, "ai_pick_focus", should_not_run)
+    assert delegation.pick_training_focus(campaign, tid, roster, object()) == "mental"
+
+    delegation.configure(campaign, tid, _policy(auto_training=True))
+    monkeypatch.setattr(
+        delegation.training, "ai_pick_focus", lambda players, rng, team: "rest"
+    )
+    assert delegation.pick_training_focus(campaign, tid, roster, object()) == "rest"
+    assert campaign.training_focus[tid] == "rest"
 
 
 def test_delegated_renewal_uses_real_salary_path_and_preserves_terms(
@@ -257,7 +279,7 @@ def test_v22_migration_and_round_trip(campaign: GameState, tmp_path) -> None:
     old_path = tmp_path / "v22.json"
     old_path.write_text(json.dumps(old), encoding="utf-8")
     migrated = GameState.load(old_path)
-    assert migrated.schema_version == SCHEMA_VERSION == 26
+    assert migrated.schema_version == SCHEMA_VERSION == 27
     assert migrated.delegation_policies_by == {}
     assert migrated.media_history_by == {}
 
@@ -273,6 +295,11 @@ def test_web_contract_exposes_policy_and_resolves_media(campaign, game_data) -> 
     club = server_mod.club_view()
     assert club["delegation"]["policy"]["alert_level"] == "tier1_ready"
     assert "player_trust" in club["media"]
+    training_result = server_mod.set_training(
+        server_mod.TrainingBody(delegate_to_coach=True)
+    )
+    assert training_result["delegate_to_coach"] is True
+    assert server_mod.state()["training_delegated"] is True
 
     _only_struggling_player(campaign)
     event = media_events._build_event(

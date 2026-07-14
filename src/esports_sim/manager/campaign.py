@@ -550,13 +550,14 @@ def advance_week(
     for tid, team in gs.teams.items():
         role_fit.build_igl_experience(team, week_dressed.get(tid, set()))
 
-    # 2. Training (human focus is whatever each manager set; AI picks its own,
-    # and each human's coach/facility multiplier comes from their own org).
+    # 2. Training (human focus is manager-set unless weekly training is
+    # delegated; AI and delegated coaches use the same roster-aware picker.
+    # Each human's coach/facility multiplier still comes from their own org).
     for tid in sorted(gs.teams):
         roster = gs.roster(tid)
         if gs.is_human(tid):
             gs.set_acting(tid)
-            focus = gs.training_focus.get(tid, "tactical")
+            focus = delegation.pick_training_focus(gs, tid, roster, week_rng)
             mult = (
                 staff.coach_multiplier(gs, focus)
                 * economy.facility_training_mult(gs)
