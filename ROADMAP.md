@@ -26,8 +26,11 @@ committed item — everything below it in "Next" shipped.
 
 Also open, smaller: Scenario-API sampling of the trained `esports-sim-diorama`
 LoRA (works from the Scenario web UI; the legacy inference endpoints 500 —
-see `assets/office/style/lora/STATUS.md`), development-milestone inbox
-items, viewer camera follow/zoom, animated office characters.
+see `assets/office/style/lora/STATUS.md`), viewer camera follow/zoom, and
+animated office characters.
+
+The deferred viewer, AI-parity, relationship, and sponsor-lifecycle polish
+slate is maintained in [docs/feature-polish-plan.md](docs/feature-polish-plan.md).
 
 Previously in Now — all done: Sprint 0 (schemas/RNG/events/tests), design
 system v0, engineering guardrails skill, heuristic policy v0, and
