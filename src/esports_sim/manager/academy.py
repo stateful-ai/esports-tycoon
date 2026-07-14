@@ -415,8 +415,19 @@ def offseason_intake(gs: "GameState") -> list[dict[str, Any]]:
             affiliate = gs.teams[affiliate_tid]
             if len(affiliate.player_ids) >= roster_max:
                 continue
+            candidates = set(eligible)
+            rookie_ids = {
+                pid for pid in eligible
+                if "rookie" in gs.players[pid].personality_tags
+            }
+            if len(rookie_ids) == 1:
+                # The announced rookie class must remain visible to the open
+                # market; academies can draft around its final representative.
+                candidates -= rookie_ids
+            if not candidates:
+                continue
             player_id = min(
-                eligible, key=lambda pid: _prospect_key(gs, parent_tid, pid)
+                candidates, key=lambda pid: _prospect_key(gs, parent_tid, pid)
             )
             player = gs.players[player_id]
             affiliate.player_ids.append(player_id)

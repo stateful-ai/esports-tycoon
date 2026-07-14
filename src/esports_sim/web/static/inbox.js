@@ -26,6 +26,7 @@ const INBOX_CATEGORIES = [
   ["transfer", "Transfers"],
   ["sponsor", "Sponsors"],
   ["scouting", "Scouting"],
+  ["analytics", "Analytics"],
   ["development", "Development"],
   ["match", "Matches"],
   ["board", "Board"],
@@ -34,7 +35,7 @@ const INBOX_CATEGORIES = [
 // Chip label per item category (singular; the filter bar uses the plurals above).
 const INBOX_CAT_LABEL = {
   news: "News", talk: "Talk", transfer: "Transfer", sponsor: "Sponsor",
-  scouting: "Scouting", development: "Development", match: "Match", board: "Board",
+  scouting: "Scouting", analytics: "Analyst", development: "Development", match: "Match", board: "Board",
 };
 
 let inboxSection = "actionable"; // primary work queue or secondary league feed

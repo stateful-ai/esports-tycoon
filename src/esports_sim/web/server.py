@@ -37,6 +37,7 @@ from esports_sim.manager import (
     development,
     economy,
     flavor_events,
+    gm_personalities,
     inbox as inbox_mod,
     knowledge as knowledge_mod,
     market,
@@ -57,6 +58,7 @@ from esports_sim.manager import (
     talk,
     telemetry,
     training,
+    transfer_requests,
     locker_room,
     mentorship,
     promises,
@@ -826,6 +828,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "mentor_id": mentor_id,
         "mentor_progress": mentor_progress,
         "promises": player_promises,
+        "transfer_request": transfer_requests.active(gs, p.id, team_id),
     }
 
 
@@ -961,6 +964,8 @@ _REVIEW_COPY = {
                    "{num}/{den} planted rounds won ({pct}%)."),
     "retake": ("Retakes landing", "Retakes failing",
                "{num}/{den} enemy plants retaken ({pct}%)."),
+    "retake_site": ("Site retakes landing", "{site}-site retakes failing",
+                    "{num}/{den} {site}-site plants retaken ({pct}%)."),
     "comms": ("Clean comms", "Crossed comms",
               "{num} miscalls in {den} rounds ({pct}%)."),
     "utility": ("Utility on point", "Utility whiffing",
@@ -1001,6 +1006,9 @@ _REVIEW_LEVERS = {
     "retake_util": {"tab": "tactics", "specialty": "tactical",
                     "text": "Retakes are failing — raise utility discipline to "
                             "coordinate the retake."},
+    "retake_site": {"tab": "tactics", "specialty": "tactical",
+                    "text": "One site is repeatedly breaking - raise utility discipline "
+                            "and drill that retake."},
     "comms_cohesion": {"tab": "roster", "specialty": "team",
                        "text": "Crossed comms stall rotations — build cohesion "
                                "(chemistry/lineup) on the Roster screen."},
@@ -1043,10 +1051,13 @@ def _review_point_view(gs: GameState, p) -> dict:
         good_head, bad_head, tmpl = _REVIEW_COPY.get(
             p.code, (p.code, p.code, "{num}/{den}")
         )
-        head = (good_head if p.tone == "good" else bad_head).format(handle=handle)
+        head = (good_head if p.tone == "good" else bad_head).format(
+            handle=handle, site=p.site,
+        )
         pct = int(round(p.value * 100))
         detail = tmpl.format(
-            num=p.num, den=p.den, pct=pct, val=round(p.value, 2), handle=handle
+            num=p.num, den=p.den, pct=pct, val=round(p.value, 2), handle=handle,
+            site=p.site,
         )
     out = {
         "code": p.code,
@@ -1056,6 +1067,7 @@ def _review_point_view(gs: GameState, p) -> dict:
         "detail": detail,
         "player_id": p.player_id or None,
         "handle": handle or None,
+        "site": p.site or None,
         # Badges are public — surface the relevant honours/stigmas on the line
         # (a Choker off-colour or a Clutch Master carry reads instantly).
         "badges": _badge_views(pl) if pl else [],
@@ -7138,6 +7150,11 @@ def team_profile(tid: str) -> dict:
                 _team_tendencies(t.tactics)
                 if (own_team or gs.scout_progress.get(tid, 0.0) >= 0.5)
                 else []
+            ),
+            "gm": (
+                gm_personalities.profile(gs, tid)
+                if not gs.is_human(tid) and t.tier == 1
+                else None
             ),
             # Named rivalries (manager/rivalries.py), hottest first.
             "rivals": [

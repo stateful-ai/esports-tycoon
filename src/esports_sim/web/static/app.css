@@ -746,6 +746,7 @@ svg.iso .plabel { font-size: 2.4px; }
 .cat-transfer    { --c: var(--es-viz-5, #D9A441); }
 .cat-sponsor     { --c: var(--es-viz-6, #E87BA1); }
 .cat-scouting    { --c: var(--es-viz-4, #8A6BE0); }
+.cat-analytics   { --c: var(--es-color-accent, #4FD8C0); }
 .cat-development { --c: var(--es-color-text-success, #4FC6A0); }
 .cat-match       { --c: var(--es-viz-2, #D06142); }
 .cat-board       { --c: var(--es-color-role-flex, #9BA3AF); }

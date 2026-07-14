@@ -155,7 +155,7 @@ REL_ITEM = {"pid", "handle", "kind", "strength"}
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
     "identity", "tendencies", "rivals", "knowledge", "chemistry",
-    "dev_progress", "strength", "agent_pool",
+    "dev_progress", "strength", "agent_pool", "gm",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -413,6 +413,7 @@ def test_user_team_profile(env) -> None:
     assert [f["week"] for f in prof["form"]] == sorted(f["week"] for f in prof["form"])
     # Players are ordered best-first (acs is untracked -> rating fallback).
     assert prof["players"], "user team should list its roster"
+    assert prof["gm"] is None
 
 
 def test_rival_team_profile(env) -> None:
@@ -423,6 +424,9 @@ def test_rival_team_profile(env) -> None:
     assert prof["team"]["league_tier"] == 1
     # Team-level box scores stay public even for a rival.
     assert prof["record"]["wins"] + prof["record"]["losses"] >= 1
+    assert set(prof["gm"]) == {
+        "id", "label", "description", "behavior", "coach_changes",
+    }
 
 
 def test_tier2_team_profile(env) -> None:
@@ -433,6 +437,7 @@ def test_tier2_team_profile(env) -> None:
     assert prof["team"]["is_user_team"] is False
     assert prof["record"]["wins"] + prof["record"]["losses"] >= 1
     assert prof["maps"], "tier-2 team is simmed and should have map records"
+    assert prof["gm"] is None
 
 
 # ---------------------------------------------------------------------------

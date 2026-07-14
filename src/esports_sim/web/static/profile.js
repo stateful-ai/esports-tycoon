@@ -1092,6 +1092,7 @@ const TeamProfile = ({ data }) => {
   };
 
   const tend = data.tendencies || [];
+  const gm = data.gm;
 
   const sp = data.splits || {};
   const atk = pfPct(sp.attack_round_rate);
@@ -1143,6 +1144,17 @@ const TeamProfile = ({ data }) => {
         <div class="pf-section">
           <h3 class="pf-section-title">Playstyle</h3>
           <p class="muted">${tend.join(" · ")}</p>
+        </div>
+      `}
+
+      ${gm && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">General manager</h3>
+          <p><b>${gm.label}</b> <span class="pill">${gm.behavior}</span></p>
+          <p class="muted">${gm.description}</p>
+          ${gm.coach_changes > 0 && html`
+            <p class="muted mono">${gm.coach_changes} coaching change${gm.coach_changes === 1 ? "" : "s"} this career</p>
+          `}
         </div>
       `}
 

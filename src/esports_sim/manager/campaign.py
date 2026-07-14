@@ -26,6 +26,7 @@ from esports_sim.manager import (
     development,
     economy,
     flavor_events,
+    gm_personalities,
     hof,
     inbox,
     knowledge,
@@ -1120,6 +1121,12 @@ def advance_week(
     # tactics, so this must run BEFORE the coaches adapt below — otherwise a
     # recap could credit a style the team only shifted to after the match.
     narrative.weekly_news(gs, report, week_kills)
+
+    # AI front offices react through their stable GM archetype. This uses a
+    # dedicated stream and existing public results/tactics only.
+    gm_personalities.weekly_tick(
+        gs, tree.derive("season", gs.season, "week", gs.week, "ai-gm")
+    )
 
     # 6b. AI coaches review the week and adapt their identity for next week —
     # winners entrench, strugglers drift back toward vanilla. Deliberately

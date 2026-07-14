@@ -29,7 +29,7 @@ from __future__ import annotations
 import hashlib
 from typing import TYPE_CHECKING
 
-from esports_sim.manager import development, sponsors, talk
+from esports_sim.manager import development, match_review, sponsors, talk
 
 if TYPE_CHECKING:  # avoid import cycle at runtime (campaign imports this)
     from esports_sim.manager.campaign import WeekReport
@@ -37,7 +37,7 @@ if TYPE_CHECKING:  # avoid import cycle at runtime (campaign imports this)
 
 CATEGORIES = (
     "news", "talk", "transfer", "sponsor",
-    "scouting", "development", "match", "board",
+    "scouting", "analytics", "development", "match", "board",
 )
 
 MAX_ITEMS = 200          # rolling cap on the whole feed
@@ -47,7 +47,7 @@ CONTRACT_MILESTONES = (12, 8, 4, 2, 1)  # weeks-left values worth a reminder
 # Per-category ceilings so no single beat floods a week.
 _CAT_CAP = {
     "match": 1, "transfer": 3, "board": 3, "talk": 2,
-    "sponsor_offer": 3, "sponsor_obj": 2, "scouting": 2,
+    "sponsor_offer": 3, "sponsor_obj": 2, "scouting": 2, "analytics": 1,
     "development": 3, "news": 3,
 }
 
@@ -58,6 +58,7 @@ _P_BOARD = 1
 _P_SPONSOR_OFFER = 2
 _P_TALK = 3
 _P_DEV_URGENT = 3
+_P_ANALYTICS = 3
 _P_SCOUTING = 4
 _P_MATCH = 5
 _P_DEV = 6
@@ -267,19 +268,42 @@ def _talk_items(gs: "GameState", season: int, week: int):
         if p is None:
             continue
         topic = talk.topic_for(gs, pid)
-        if topic.id in metric:
-            sev = getattr(p, metric[topic.id])
+        if topic.id in metric or topic.id in ("crisis", "transfer_request"):
+            sev = (
+                p.morale - 100.0
+                if topic.id in ("crisis", "transfer_request")
+                else getattr(p, metric[topic.id])
+            )
             cands.append((sev, pid, p, topic))
     cands.sort(key=lambda c: (c[0], c[1]))  # lowest metric == most acute
     out = []
     for _sev, pid, p, topic in cands[: _CAT_CAP["talk"]]:
-        title = f"{p.handle} could use a word"
+        if topic.id == "transfer_request":
+            title = f"Transfer request: {p.handle} wants out"
+        elif topic.id == "crisis":
+            title = f"Urgent meeting: {p.handle} is at breaking point"
+        else:
+            title = f"{p.handle} could use a word"
         body = topic.text + "\nHold a 1:1 from the roster screen."
         out.append((
             _P_TALK,
             _make(season, week, "talk", f"talk|{pid}|{topic.id}", title, body, "roster"),
         ))
     return out
+
+
+def _analytics_items(gs: "GameState", season: int, week: int):
+    """One synthesized, event-grounded action memo from the analyst desk."""
+    digest = match_review.analyst_digest(gs, gs.acting_team_id)
+    if digest is None:
+        return []
+    return [(
+        _P_ANALYTICS,
+        _make(
+            season, week, "analytics", digest["subject"],
+            digest["title"], digest["body"], digest["tab"],
+        ),
+    )]
 
 
 def _describe_offer(o, slot: str) -> str:
@@ -566,6 +590,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _sponsor_items(gs, season, week)
         candidates += _scouting_items(gs, season, week)
         candidates += _rotation_items(gs, season, week)
+        candidates += _analytics_items(gs, season, week)
         candidates += _department_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
