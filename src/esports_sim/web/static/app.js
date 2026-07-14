@@ -835,6 +835,7 @@ async function clubOps(v, sub) {
   const dc = el("div", "card ws-12");
   const dp = d.delegation.policy;
   dc.innerHTML = `<h2>Staff responsibilities</h2><p class="muted">Delegate repeatable work; staff return only exceptions and the prospect alerts you request.</p>`;
+  const trainOn = el("input"); trainOn.type = "checkbox"; trainOn.checked = dp.auto_training;
   const renewOn = el("input"); renewOn.type = "checkbox"; renewOn.checked = dp.auto_renew_core;
   const scoutOn = el("input"); scoutOn.type = "checkbox"; scoutOn.checked = dp.auto_scout;
   const salaryMin = el("input", "sel-sm"); salaryMin.type = "number"; salaryMin.min = "800"; salaryMin.value = dp.renewal_salary_min;
@@ -847,11 +848,13 @@ async function clubOps(v, sub) {
   const age = el("input", "sel-sm"); age.type = "number"; age.min = "16"; age.max = "40"; age.value = dp.scout_max_age;
   const alert = el("select", "sel-sm");
   for (const x of d.delegation.alert_levels) { const o = el("option", "", humanize(x)); o.value = x; o.selected = x === dp.alert_level; alert.appendChild(o); }
+  const trainPolicyRow = el("div", "row"); trainPolicyRow.append(trainOn, el("span", "", "Delegate weekly training to coach"), el("span", "muted", "Roster-aware focus; rests the squad when needed"));
   const renewRow = el("div", "row"); renewRow.append(renewOn, el("span", "", "Renew core starters automatically"), el("span", "muted", "salary band"), salaryMin, salaryMax, el("span", "muted", "weeks left \u2264"), trigger);
   const scoutRow = el("div", "row"); scoutRow.append(scoutOn, el("span", "", "Scout all"), region, role, el("span", "muted", "age \u2264"), age, el("span", "muted", "alert"), alert);
   const savePolicy = el("button", "btn btn-primary", "Save staff policies");
   savePolicy.onclick = async () => {
     const r = await api("/api/actions/delegation_policy", {
+      auto_training: trainOn.checked,
       auto_renew_core: renewOn.checked,
       renewal_salary_min: Number(salaryMin.value),
       renewal_salary_max: Number(salaryMax.value),
@@ -864,7 +867,7 @@ async function clubOps(v, sub) {
     });
     toast(r.message); refresh();
   };
-  dc.append(renewRow, scoutRow, savePolicy);
+  dc.append(trainPolicyRow, renewRow, scoutRow, savePolicy);
   dc.appendChild(el("p", "muted", `${d.delegation.matching_count} players match the current scouting rule${d.delegation.active_scout_player_id ? ` \u00b7 active assignment set` : ""}.`));
   const dr = d.delegation.latest_report;
   if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals \u00b7 ${dr.alerts.length} alerts \u00b7 ${dr.exceptions.length} exceptions.`));
@@ -1567,6 +1570,7 @@ async function dashboard(v) {
     const trainRow = el("div", "es-prep-focus");
     for (const o of s.focus_options ?? []) {
       const b = el("button", "btn btn-sm" + (o === s.training_focus ? " active" : ""), cap(o));
+      b.disabled = !!s.training_delegated;
       const desc = TRAINING_FOCUS_DESCRIPTIONS[o.toLowerCase()] || "";
       if (desc) b.setAttribute("data-tooltip", desc);
       b.onclick = async () => {
@@ -1576,7 +1580,26 @@ async function dashboard(v) {
       };
       trainRow.appendChild(b);
     }
+    const delegateLabel = el("label", "row");
+    const delegateTraining = el("input");
+    delegateTraining.type = "checkbox";
+    delegateTraining.checked = !!s.training_delegated;
+    delegateTraining.onchange = async () => {
+      await api("/api/actions/training", { delegate_to_coach: delegateTraining.checked });
+      toast(delegateTraining.checked
+        ? "Weekly training delegated to the coach."
+        : "Weekly training returned to manual control.");
+      refresh();
+    };
+    delegateLabel.append(
+      delegateTraining,
+      el("span", "", "Delegate to Coach"),
+      el("span", "muted", s.training_delegated
+        ? "Coach chooses the focus when the week advances"
+        : "Keep choosing the weekly focus yourself"),
+    );
     devCard.insertBefore(trainRow, devCard.lastElementChild);
+    devCard.insertBefore(delegateLabel, devCard.lastElementChild);
     prep.appendChild(prepGrid);
     spot.appendChild(prep);
 

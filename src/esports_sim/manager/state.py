@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 26
+SCHEMA_VERSION = 27
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -374,6 +374,11 @@ def _migrate_v25_to_v26(data: dict) -> dict:
     return data
 
 
+def _migrate_v26_to_v27(data: dict) -> dict:
+    """v27 adds the default-off delegated weekly-training policy."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -400,6 +405,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     23: _migrate_v23_to_v24,
     24: _migrate_v24_to_v25,
     25: _migrate_v25_to_v26,
+    26: _migrate_v26_to_v27,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1205,6 +1211,7 @@ class DelegationPolicy(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    auto_training: bool = False
     auto_renew_core: bool = False
     renewal_salary_min: int = Field(default=800, ge=800, le=100_000)
     renewal_salary_max: int = Field(default=8_000, ge=800, le=100_000)

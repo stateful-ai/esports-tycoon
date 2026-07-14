@@ -661,6 +661,46 @@ def actions_for(gs: "GameState", it: "InboxItem") -> list[dict]:
     return []
 
 
+def is_actionable(gs: "GameState", it: "InboxItem") -> bool:
+    """Whether an item belongs on the manager's primary work queue.
+
+    Offer buttons are derived live, so resolved or expired offers naturally
+    fall back to the League Feed. Contract and talk reminders always need a
+    manager response, as do the two urgent roster-development notices.
+    """
+    if actions_for(gs, it):
+        return True
+    if it.category in ("board", "talk"):
+        return True
+    return it.title.startswith((
+        "A player on your roster retires",
+        "Rotation: fresh legs available",
+    ))
+
+
+def split_items(
+    gs: "GameState", items: list["InboxItem"] | None = None,
+) -> tuple[list["InboxItem"], list["InboxItem"]]:
+    """Partition newest-first mail into the work queue and secondary feed."""
+    ordered = sorted_items(gs) if items is None else items
+    actionable: list["InboxItem"] = []
+    league_feed: list["InboxItem"] = []
+    for it in ordered:
+        (actionable if is_actionable(gs, it) else league_feed).append(it)
+    return actionable, league_feed
+
+
+def unread_counts(gs: "GameState") -> dict[str, int]:
+    actionable, league_feed = split_items(gs)
+    actionable_unread = sum(1 for it in actionable if it.unread)
+    league_unread = sum(1 for it in league_feed if it.unread)
+    return {
+        "unread": actionable_unread + league_unread,
+        "actionable_unread": actionable_unread,
+        "league_unread": league_unread,
+    }
+
+
 def to_api(it: "InboxItem", gs: "GameState | None" = None) -> dict:
     """The wire shape for one item. When `gs` is supplied, offer items whose
     underlying offer is still live also carry an `actions` list (Accept /

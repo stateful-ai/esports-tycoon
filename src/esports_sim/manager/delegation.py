@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from esports_sim.manager import market
+from esports_sim.manager import market, training
 from esports_sim.manager.state import DelegationPolicy, DelegationReport
 from esports_sim.schemas.common import Region, Role
 
@@ -39,6 +39,21 @@ def configure(gs: "GameState", team_id: str, values: dict) -> DelegationPolicy:
     policy.scout_roles = roles
     gs.delegation_policies_by[team_id] = policy
     return policy
+
+
+def pick_training_focus(gs: "GameState", team_id: str, roster, rng) -> str:
+    """Return this week's human focus, letting the coach choose when asked.
+
+    Delegation uses the existing roster-aware AI coaching read and the week's
+    campaign RNG. With the policy off this is an exact no-op: the manager's
+    persisted focus is returned without drawing randomness.
+    """
+    current = gs.training_focus.get(team_id, "tactical")
+    if not policy_for(gs, team_id).auto_training:
+        return current
+    focus = training.ai_pick_focus(roster, rng, gs.teams[team_id])
+    gs.training_focus[team_id] = focus
+    return focus
 
 
 def _core_ids(gs: "GameState", team_id: str) -> set[str]:

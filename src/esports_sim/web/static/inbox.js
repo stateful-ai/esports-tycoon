@@ -6,10 +6,10 @@
    used to drive the tab badge).
 
    Contract (backend built to this exactly):
-     GET  /api/inbox            -> { unread:int, items:[{id, season, week,
-            category, title, body, unread, tab}] }  (items newest first)
-     POST /api/inbox/read {id}     -> { unread:int }
-     POST /api/inbox/read {all:true} -> { unread:int }
+     GET  /api/inbox            -> { unread:int, actionable_unread:int,
+            league_unread:int, actionable_items:[...], league_feed:[...] }
+     POST /api/inbox/read {id}     -> the same unread-count fields
+     POST /api/inbox/read {all:true} -> the same unread-count fields
 
    Before the backend exists the GET simply 404s; we swallow that silently
    (no toast, no console noise) and render the empty state with the badge
@@ -37,8 +37,10 @@ const INBOX_CAT_LABEL = {
   scouting: "Scouting", development: "Development", match: "Match", board: "Board",
 };
 
-let inboxFilter = "all";   // transient: active category filter
-let inboxUnread = 0;       // transient: last unread count seen from the server
+let inboxSection = "actionable"; // primary work queue or secondary league feed
+let inboxFilter = "all";          // transient category filter inside that section
+let inboxUnread = 0;       // actionable unread count; drives the primary badge
+let inboxLeagueUnread = 0; // secondary feed count; shown only inside the screen
 
 const inboxCap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
@@ -51,11 +53,17 @@ async function inboxFetch() {
   if (INBOX_MOCK) return inboxMockData();
   try {
     const r = await fetch("/api/inbox");
-    if (!r.ok) return { unread: 0, items: [] };
+    if (!r.ok) return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [] };
     const d = await r.json();
-    return { unread: d.unread || 0, items: Array.isArray(d.items) ? d.items : [] };
+    return {
+      unread: d.unread || 0,
+      actionable_unread: d.actionable_unread || 0,
+      league_unread: d.league_unread || 0,
+      actionable_items: Array.isArray(d.actionable_items) ? d.actionable_items : [],
+      league_feed: Array.isArray(d.league_feed) ? d.league_feed : [],
+    };
   } catch {
-    return { unread: 0, items: [] };
+    return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [] };
   }
 }
 
@@ -88,7 +96,8 @@ function setInboxBadge(n) {
 // Hooked on app load (boot) and after read actions.
 async function refreshInboxBadge() {
   const d = await inboxFetch();
-  setInboxBadge(d.unread || 0);
+  inboxLeagueUnread = d.league_unread || 0;
+  setInboxBadge(d.actionable_unread || 0);
   return inboxUnread;
 }
 
@@ -152,7 +161,8 @@ async function inboxSyncState() {
 
 async function inbox(v) {
   const data = await inboxFetch();
-  setInboxBadge(data.unread || 0);
+  inboxLeagueUnread = data.league_unread || 0;
+  setInboxBadge(data.actionable_unread || 0);
 
   // Workspace layout: main column = header + filter chips + the list
   // (scrolling INSIDE its card); rail = a "This week" digest whose lines
@@ -167,15 +177,20 @@ async function inbox(v) {
   main.appendChild(card);
 
   const head = el("div", "inbox-head");
-  head.appendChild(el("h2", "", "Inbox"));
+  const sectionTitle = el("h2", "", inboxSection === "actionable" ? "Actionable Items" : "League Feed");
+  head.appendChild(sectionTitle);
   const markAll = el("button", "btn btn-sm", "Mark all as read");
   markAll.onclick = async () => {
     const res = await inboxPost({ all: true });
-    if (res && typeof res.unread === "number") setInboxBadge(res.unread);
+    if (res && typeof res.actionable_unread === "number") {
+      setInboxBadge(res.actionable_unread);
+      inboxLeagueUnread = res.league_unread || 0;
+    }
     // Flip the local flags too, so re-renders (filter switches) and the
     // per-category chip counts agree with the server.
-    for (const it of data.items || []) it.unread = false;
+    for (const it of [...(data.actionable_items || []), ...(data.league_feed || [])]) it.unread = false;
     refreshChipCounts();
+    refreshSectionCounts();
     card.querySelectorAll(".inbox-item.unread")
       .forEach((n) => n.classList.remove("unread"));
     markAll.style.display = "none";
@@ -184,14 +199,55 @@ async function inbox(v) {
   head.appendChild(markAll);
   card.appendChild(head);
 
+  // Primary/secondary split comes from the server's live classification.
+  // The primary badge ignores League Feed unread items, so generic results
+  // never recreate the notification noise this screen is meant to remove.
+  const sections = el("div", "inbox-filters");
+  const sectionButtons = {};
+  const sectionDefs = [
+    ["actionable", "Actionable Items"],
+    ["league", "League Feed"],
+  ];
+  const selectedItems = () => inboxSection === "actionable"
+    ? (data.actionable_items || [])
+    : (data.league_feed || []);
+  function refreshSectionCounts() {
+    for (const [key, label] of sectionDefs) {
+      const items = key === "actionable" ? data.actionable_items : data.league_feed;
+      const n = (items || []).filter((it) => it.unread).length;
+      sectionButtons[key].textContent = n > 0 ? `${label} (${n})` : label;
+    }
+  }
+  function setSection(key) {
+    inboxSection = key;
+    inboxFilter = "all";
+    sectionTitle.textContent = key === "actionable" ? "Actionable Items" : "League Feed";
+    for (const k in sectionButtons) sectionButtons[k].classList.toggle("active", k === key);
+    refreshChipCounts();
+    drawList();
+    drawDigest();
+  }
+  for (const [key, label] of sectionDefs) {
+    const n = key === "actionable" ? data.actionable_unread : data.league_unread;
+    const b = el("button", "inbox-chip" + (inboxSection === key ? " active" : ""), n > 0 ? `${label} (${n})` : label);
+    b.onclick = () => setSection(key);
+    sectionButtons[key] = b;
+    sections.appendChild(b);
+  }
+  card.appendChild(sections);
+
   // Category filter chips (pure client-side) with live unread counts.
   const unreadIn = (key) =>
-    (data.items || []).filter(
+    selectedItems().filter(
       (it) => it.unread && (key === "all" || it.category === key)).length;
   function refreshChipCounts() {
+    const visibleCategories = new Set(selectedItems().map((it) => it.category));
     for (const [key, label] of INBOX_CATEGORIES) {
       const n = unreadIn(key);
       chipEls[key].textContent = n > 0 ? `${label} (${n})` : label;
+      chipEls[key].classList.toggle(
+        "hidden", key !== "all" && !visibleCategories.has(key),
+      );
     }
   }
   function setFilter(key) {
@@ -225,12 +281,14 @@ async function inbox(v) {
   function drawList() {
     rowCtl.clear();
     listWrap.replaceChildren();
-    const all = data.items || [];
+    const all = selectedItems();
     const items = all.filter((it) => inboxFilter === "all" || it.category === inboxFilter);
     if (!items.length) {
       const msg = all.length
         ? "Nothing in this category."
-        : "No inbox items yet. Advance the week to continue.";
+        : inboxSection === "actionable"
+          ? "Nothing needs your attention. New offers, contracts, and urgent talks will appear here."
+          : "No league updates yet. Advance the week to continue.";
       listWrap.appendChild(el("p", "inbox-empty muted", msg));
       return;
     }
@@ -254,9 +312,13 @@ async function inbox(v) {
     it.unread = false;
     row.classList.remove("unread");
     refreshChipCounts();
+    refreshSectionCounts();
     const res = await inboxPost({ id: it.id });
-    if (res && typeof res.unread === "number") setInboxBadge(res.unread);
-    if (inboxUnread <= 0) markAll.style.display = "none";
+    if (res && typeof res.actionable_unread === "number") {
+      setInboxBadge(res.actionable_unread);
+      inboxLeagueUnread = res.league_unread || 0;
+    }
+    if (res && res.unread <= 0) markAll.style.display = "none";
   }
 
   // Accept/Decline row for transfer/sponsor offer items. Each action is a
@@ -345,45 +407,53 @@ async function inbox(v) {
   // expands) the matching row in the main list, marking it read via the
   // same path as a normal row click.
   const digest = el("div", "card");
-  digest.appendChild(el("h2", "", "This week"));
-  const allItems = data.items || [];
-  if (!allItems.length) {
-    digest.appendChild(el("p", "muted", "No inbox items yet. Advance the week to continue."));
-  } else {
-    const latest = allItems[0]; // items arrive newest-first
-    const wkKey = `${latest.season}-${latest.week}`;
-    digest.appendChild(el("div", "microlabel", `S${latest.season} - W${latest.week}`));
-    const catOrder = INBOX_CATEGORIES.map(([k]) => k);
-    const catRank = (c) => {
-      const i = catOrder.indexOf(c);
-      return i < 0 ? catOrder.length : i;
-    };
-    const wkItems = allItems
-      .filter((it) => `${it.season}-${it.week}` === wkKey)
-      .sort((a, b) => catRank(a.category) - catRank(b.category));
-    for (const it of wkItems) {
-      const cat = it.category || "news";
-      const line = el("div", "inbox-row-head");
-      line.title = "Open item";
-      const chip = el("span", `inbox-cat cat-${cat}`);
-      chip.textContent = INBOX_CAT_LABEL[cat] || cat;
-      const title = el("span", "inbox-title");
-      title.textContent = it.title || "";
-      line.append(chip, title);
-      line.onclick = () => {
-        // Make sure the target row is rendered before jumping to it.
-        if (inboxFilter !== "all" && inboxFilter !== it.category) setFilter("all");
-        const ctl = rowCtl.get(it.id);
-        if (!ctl) return;
-        ctl.openRow();
-        ctl.row.scrollIntoView({ behavior: "smooth", block: "center" });
+  const digestTitle = el("h2", "", "This week");
+  digest.appendChild(digestTitle);
+  function drawDigest() {
+    digest.querySelectorAll(":scope > :not(h2)").forEach((node) => node.remove());
+    digestTitle.textContent = inboxSection === "actionable" ? "This week's priorities" : "This week's league feed";
+    const allItems = selectedItems();
+    if (!allItems.length) {
+      digest.appendChild(el("p", "muted", inboxSection === "actionable"
+        ? "No pending manager decisions."
+        : "No league updates this week."));
+    } else {
+      const latest = allItems[0]; // items arrive newest-first
+      const wkKey = `${latest.season}-${latest.week}`;
+      digest.appendChild(el("div", "microlabel", `S${latest.season} - W${latest.week}`));
+      const catOrder = INBOX_CATEGORIES.map(([k]) => k);
+      const catRank = (c) => {
+        const i = catOrder.indexOf(c);
+        return i < 0 ? catOrder.length : i;
       };
-      digest.appendChild(line);
+      const wkItems = allItems
+        .filter((it) => `${it.season}-${it.week}` === wkKey)
+        .sort((a, b) => catRank(a.category) - catRank(b.category));
+      for (const it of wkItems) {
+        const cat = it.category || "news";
+        const line = el("div", "inbox-row-head");
+        line.title = "Open item";
+        const chip = el("span", `inbox-cat cat-${cat}`);
+        chip.textContent = INBOX_CAT_LABEL[cat] || cat;
+        const title = el("span", "inbox-title");
+        title.textContent = it.title || "";
+        line.append(chip, title);
+        line.onclick = () => {
+          // Make sure the target row is rendered before jumping to it.
+          if (inboxFilter !== "all" && inboxFilter !== it.category) setFilter("all");
+          const ctl = rowCtl.get(it.id);
+          if (!ctl) return;
+          ctl.openRow();
+          ctl.row.scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+        digest.appendChild(line);
+      }
     }
   }
   rail.appendChild(digest);
 
   drawList();
+  drawDigest();
 }
 
 /* -- dev mock (INBOX_MOCK only) -------------------------------------------- */
@@ -408,5 +478,13 @@ function inboxMockData() {
       title: "League market activity",
       body: "Several rivals made moves in the market this week." },
   ];
-  return { unread: items.filter((i) => i.unread).length, items };
+  const actionable_items = items.filter((i) => ["talk", "board", "sponsor"].includes(i.category));
+  const league_feed = items.filter((i) => !actionable_items.includes(i));
+  return {
+    unread: items.filter((i) => i.unread).length,
+    actionable_unread: actionable_items.filter((i) => i.unread).length,
+    league_unread: league_feed.filter((i) => i.unread).length,
+    actionable_items,
+    league_feed,
+  };
 }

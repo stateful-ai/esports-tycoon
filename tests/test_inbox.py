@@ -191,6 +191,42 @@ def test_wire_shape_is_frozen(campaign: GameState, game_data: GameData) -> None:
                 assert isinstance(a["payload"], dict)
 
 
+def test_primary_queue_is_split_from_secondary_league_feed(
+    campaign: GameState,
+) -> None:
+    actionable = [
+        InboxItem(
+            id="contract", season=1, week=1, category="board",
+            title="Contract expires next week", body="Renew it.", tab="roster",
+        ),
+        InboxItem(
+            id="talk", season=1, week=1, category="talk",
+            title="Player could use a word", body="Talk to them.", tab="roster",
+        ),
+    ]
+    league = [
+        InboxItem(
+            id="result", season=1, week=1, category="news",
+            title="Upset in the league", body="A rival lost.", tab="standings",
+        ),
+        InboxItem(
+            id="match", season=1, week=1, category="match",
+            title="Won 2-0 vs Rivals", body="Match report.", tab="standings",
+        ),
+    ]
+    campaign.inbox = actionable + league
+
+    primary, feed = inbox.split_items(campaign)
+
+    assert {it.id for it in primary} == {"contract", "talk"}
+    assert {it.id for it in feed} == {"result", "match"}
+    assert inbox.unread_counts(campaign) == {
+        "unread": 4,
+        "actionable_unread": 2,
+        "league_unread": 2,
+    }
+
+
 # ---------------------------------------------------------------------------
 # (c) save/load round-trips items + unread; old saves without inbox load
 
