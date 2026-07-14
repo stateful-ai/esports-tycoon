@@ -50,6 +50,27 @@ def test_roster_endpoint_contract(test_env) -> None:
     # Verify promises list
     assert isinstance(data["promises"], list)
 
+
+def test_facilities_endpoint_contract(test_env) -> None:
+    data = server_mod.facilities_view()
+
+    assert set(data) == {
+        "balance", "total_upkeep", "built_count", "total_levels", "facilities",
+    }
+    assert [facility["id"] for facility in data["facilities"]] == [
+        "training_center",
+        "analytics_suite",
+        "marketing_office",
+        "recovery_suite",
+        "strategy_lab",
+        "team_house",
+    ]
+    assert next(
+        facility for facility in data["facilities"]
+        if facility["id"] == "analytics_suite"
+    )["label"] == "VOD Review Room"
+
+
 def test_player_profile_endpoint_contract(test_env) -> None:
     gs = test_env
     player_id = gs.teams[gs.user_team_id].player_ids[0]

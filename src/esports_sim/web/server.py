@@ -36,6 +36,7 @@ from esports_sim.manager import (
     delegation,
     development,
     economy,
+    facilities as facilities_mod,
     flavor_events,
     gm_personalities,
     inbox as inbox_mod,
@@ -3795,6 +3796,12 @@ def stats_view(
                 h.model_dump() for h in reversed(gs.hall_of_fame)
             ],
         }
+
+
+@app.get("/api/facilities")
+def facilities_view() -> dict:
+    with S.lock:
+        return facilities_mod.menu_view(S.require_gs())
 
 
 @app.get("/api/finances")

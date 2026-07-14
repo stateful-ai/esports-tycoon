@@ -126,6 +126,33 @@ def test_anti_exec_uses_public_map_sample_and_grows_bounded_knowledge(
     assert gs.org_knowledge[gs.user_team_id][key] == 100.0
 
 
+def test_strategy_lab_improves_prep_learning_and_reduces_condition_cost(
+    campaign: GameState,
+) -> None:
+    raw = campaign.model_dump(mode="json")
+    baseline = GameState.model_validate(raw)
+    upgraded = GameState.model_validate(raw)
+    upgraded.facilities_by.setdefault(upgraded.user_team_id, {})["strategy_lab"] = 3
+
+    reports = []
+    for gs in (baseline, upgraded):
+        fixture, _opponent, partner, map_id = _booking_parts(gs)
+        gs.week = fixture.week
+        for player in gs.roster(gs.user_team_id):
+            player.stamina = 80.0
+        preparation.schedule(
+            gs, gs.user_team_id, fixture.id, partner, map_id, "retakes", "normal"
+        )
+        reports.append(next(
+            report for report in preparation.weekly_tick(gs)
+            if report.team_id == gs.user_team_id
+        ))
+
+    standard, lab = reports
+    assert lab.knowledge_gain == round(standard.knowledge_gain * 1.3, 2)
+    assert lab.stamina_cost == standard.stamina_cost - 1.5
+
+
 def test_determinism_and_ai_playoff_parity(campaign: GameState) -> None:
     raw = campaign.model_dump(mode="json")
     a = GameState.model_validate(raw)

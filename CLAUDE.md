@@ -165,8 +165,12 @@ Published at github.com/stateful-ai/esports-tycoon.
   Players|Staff split, stats hub, social feed), viewer.js
   (painted-backdrop isometric replay), inbox.js, profile.js
   (player/team/staff overlays via `[data-pid]`/`[data-tid]`/`[data-sid]`
-  delegation on any name). office.js is PARKED — unloaded from
-  index.html, kept on disk.
+  delegation on any name). `facilities.js` is the live menu-based upgrade
+  screen; `/api/facilities` serializes all six departments, levels, effects,
+  staff operators, costs, and next-level previews, so JavaScript owns no
+  facility formulas. Recovery, strategy-prep, and wellbeing benefits resolve
+  in the campaign layer and remain bounded by stamina/knowledge/neutral caps.
+  `office.js` and the painted office assets are parked and unloaded.
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
   pydantic (`extra="forbid"`): typos fail loudly. `data/rosters/<id>/` =
   roster packs (importable worlds, e.g. the real VCT 2026): `pack.yaml`

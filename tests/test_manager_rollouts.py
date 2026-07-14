@@ -30,7 +30,7 @@ def test_rollout_and_traces_are_deterministic(game_data):
     assert a.traces == b.traces
     assert a.invalid_actions == 0
     assert a.action_counts["advance"] == 1
-    assert all(t["policy_version"] == "heuristic-manager-v2" for t in a.traces)
+    assert all(t["policy_version"] == "heuristic-manager-v3" for t in a.traces)
 
 
 def test_profiles_produce_distinct_management_styles(game_data):
@@ -65,7 +65,7 @@ def test_rollout_export_contract(tmp_path, game_data):
     evaluation = json.loads(paths["evaluation"].read_text())
     assert traces and traces[-1]["advanced"]
     assert traces[0]["run_id"] == result.run_id
-    assert runs[0]["policy_version"] == "heuristic-manager-v2"
+    assert runs[0]["policy_version"] == "heuristic-manager-v3"
     assert evaluation["runs"] == 1
 
 
@@ -100,6 +100,34 @@ def test_analytical_baseline_books_visible_preparation(game_data):
     assert action["params"]["objective"] == "anti_exec"
     env.step(action)
     assert gs.preparation_plans_by[tid].objective == "anti_exec"
+
+
+def test_baseline_prioritizes_recovery_facility_for_a_tired_roster(game_data):
+    from esports_sim.manager.campaign import new_campaign
+
+    gs = new_campaign(game_data, seed=813)
+    for player in gs.roster(gs.user_team_id):
+        player.stamina = 45.0
+    obs = HeadlessManagerEnv(gs, game_data).observe()
+    for kind, contract in obs["legal_actions"].items():
+        if kind != "facility_upgrade" and "enabled" in contract:
+            contract["enabled"] = False
+    profile = ManagerProfile(
+        id="recovery-investor",
+        risk=0.4,
+        youth=0.4,
+        loyalty=0.4,
+        analytics=0.4,
+        investment=0.95,
+        experimentation=0.4,
+    )
+
+    action = HeuristicManagerPolicy(profile)._initiative(obs)
+
+    assert action == {
+        "kind": "facility_upgrade",
+        "params": {"facility": "recovery_suite"},
+    }
 
 
 def test_stale_learned_checkpoint_falls_back_to_the_default_manager(

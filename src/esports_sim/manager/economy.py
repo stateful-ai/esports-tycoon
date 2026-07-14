@@ -134,6 +134,9 @@ FACILITY_NAMES: tuple[str, ...] = (
     "training_center",
     "analytics_suite",
     "marketing_office",
+    "recovery_suite",
+    "strategy_lab",
+    "team_house",
 )
 FACILITY_MAX_LEVEL = 3
 FACILITY_UPGRADE_COST: dict[int, int] = {1: 150_000, 2: 350_000, 3: 700_000}
@@ -141,7 +144,26 @@ FACILITY_UPKEEP_PER_LEVEL: dict[str, int] = {
     "training_center": 1_800,
     "analytics_suite": 2_200,
     "marketing_office": 1_500,
+    "recovery_suite": 1_700,
+    "strategy_lab": 2_500,
+    "team_house": 1_300,
 }
+
+FACILITY_RECOVERY_PER_LEVEL = 1.5
+FACILITY_PREP_KNOWLEDGE_PER_LEVEL = 0.10
+FACILITY_PREP_STAMINA_REDUCTION_PER_LEVEL = 0.5
+FACILITY_WELLBEING_PER_LEVEL = 0.5
+
+
+def facility_level(gs: GameState, name: str, team_id: str | None = None) -> int:
+    """Return a bounded facility level without changing the acting team."""
+    tid = team_id if team_id is not None else gs.acting_team_id
+    if not tid:
+        return 0
+    return max(
+        0,
+        min(FACILITY_MAX_LEVEL, gs.facilities_by.get(tid, {}).get(name, 0)),
+    )
 
 
 def facility_marketing_mult(gs: GameState) -> float:
@@ -201,6 +223,30 @@ def facility_scout_mult(gs: GameState) -> float:
     weekly scouting step (multiplied onto the scout-progress gain alongside
     the analyst multiplier)."""
     return 1.0 + 0.08 * gs.facilities.get("analytics_suite", 0)
+
+
+def facility_recovery_bonus(gs: GameState, team_id: str | None = None) -> float:
+    """Flat weekly stamina recovery from the recovery suite."""
+    return FACILITY_RECOVERY_PER_LEVEL * facility_level(gs, "recovery_suite", team_id)
+
+
+def facility_prep_knowledge_mult(gs: GameState, team_id: str) -> float:
+    """Organizational-knowledge multiplier supplied by the strategy lab."""
+    return 1.0 + FACILITY_PREP_KNOWLEDGE_PER_LEVEL * facility_level(
+        gs, "strategy_lab", team_id
+    )
+
+
+def facility_prep_stamina_reduction(gs: GameState, team_id: str) -> float:
+    """Per-player preparation stamina reduction supplied by the strategy lab."""
+    return FACILITY_PREP_STAMINA_REDUCTION_PER_LEVEL * facility_level(
+        gs, "strategy_lab", team_id
+    )
+
+
+def facility_wellbeing_bonus(gs: GameState, team_id: str | None = None) -> float:
+    """Weekly confidence and morale pull toward neutral from the team house."""
+    return FACILITY_WELLBEING_PER_LEVEL * facility_level(gs, "team_house", team_id)
 
 
 # ---------------------------------------------------------------------------

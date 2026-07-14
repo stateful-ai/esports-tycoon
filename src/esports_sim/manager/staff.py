@@ -930,17 +930,16 @@ ANALYTICS_TIER_LABEL = {
 }
 
 
-def analytics_tier(gs: GameState) -> int:
-    """0-3, from the analyst's quality plus the analytics suite facility.
-    Score = analyst quality + 15/level; tiers at 1 / 55 / 95 — an average
-    analyst alone reaches tier 1-2, elite-plus-suite reaches 3."""
-    analyst = gs.staff.get("analyst")
+def analytics_tier_for(analyst: StaffMember | None, facility_level: int) -> int:
+    """Resolve analytics access for a staff/facility combination.
+
+    Keeping the hypothetical-level calculation here lets serializers preview
+    an upgrade without copying this campaign formula into the browser.
+    """
     score = (staff_effects.role_effect_score(analyst) if analyst else 0.0)
     if analyst is not None and "data_purist" in analyst.traits:
         score += 5.0
-    score += 15.0 * gs.facilities.get(
-        "analytics_suite", 0
-    )
+    score += 15.0 * max(0, facility_level)
     if score >= 95.0:
         return 3
     if score >= 55.0:
@@ -948,3 +947,12 @@ def analytics_tier(gs: GameState) -> int:
     if score >= 1.0:
         return 1
     return 0
+
+
+def analytics_tier(gs: GameState) -> int:
+    """0-3, from the analyst's quality plus the analytics suite facility.
+    Score = analyst quality + 15/level; tiers at 1 / 55 / 95 — an average
+    analyst alone reaches tier 1-2, elite-plus-suite reaches 3."""
+    return analytics_tier_for(
+        gs.staff.get("analyst"), gs.facilities.get("analytics_suite", 0)
+    )
