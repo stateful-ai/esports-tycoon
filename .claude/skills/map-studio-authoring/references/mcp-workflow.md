@@ -18,9 +18,9 @@ using the repository's Windows virtual environment, then restart the MCP host.
 | Stage | Tools | Notes |
 |---|---|---|
 | Discover | `get_map_schema`, `list_maps` | Read schemas before making elements. |
-| Begin | `create_map`, `open_map_for_editing` | Both return the full document and revision hash. |
+| Begin | `create_map`, `open_map_for_editing`, `fork_map` | All return the full document and revision hash. Forking leaves the source untouched. |
 | Inspect | `get_map`, `validate_map` | `get_map` is the conflict-reconciliation source. |
-| Structure | `update_map_metadata`, `upsert_walkable_surface`, `upsert_semantic_zone` | Pass and advance `if_match_hash` after every call. |
+| Structure | `apply_map_patch`, `update_map_metadata`, `upsert_walkable_surface`, `upsert_semantic_zone` | Batch coherent generated slices; pass and advance `if_match_hash` after every call. |
 | Gameplay | `upsert_traversal_link`, `upsert_prop`, `upsert_wall`, `set_sightlines` | Use stable ids and validate coherent batches. |
 | Repair | `remove_map_element` | No cascade; fix references yourself. |
 | Test | `probe_map_geometry` | Check floor, collision, LOS, clearance, and reachability. |
@@ -39,6 +39,12 @@ Every mutation is compare-and-swap:
 Do not cache hashes across tasks and do not guess whether another editor has
 saved. A mutation result deliberately omits the full document to reduce token
 use; call `get_map` whenever whole-document context is needed.
+
+`apply_map_patch` performs removals, typed upserts, metadata, optional
+sightline replacement, and optional adjacency-override replacement in one
+compare-and-swap save. Pass `adjacency_overrides={}` when replacing a forked
+legacy layout with traversal links. Use the batch when otherwise a single
+coherent layout would spend many calls in misleading invalid states.
 
 ## Authoring model
 

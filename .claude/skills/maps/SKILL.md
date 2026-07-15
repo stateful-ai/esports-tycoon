@@ -24,10 +24,15 @@ that source into FOUR coupled artifacts that must stay in sync:
    → exit 0. Plates touch on every adjacency, callout centers on their own
    plate, path polylines on the plate union. Teleporter edges exempt (the
    engine collapses those moves to endpoints — players beam, never walk).
+   For a published experiment outside the live rotation, add
+   `--maps <id> [<id> ...]`; the default gate intentionally checks the live
+   rotation only.
 3. **Sim gates**: `scripts\pacing_report.py` (25–35s attacker rotate via
    spawn, 8–18s spawn→entry stage, defender interior strictly faster) and
    `scripts\balance_report.py 300` (45–65% attack, aim 52–60). Geometry is
-   gameplay: moving a room changes duel ranges and rotate times.
+   gameplay: moving a room changes duel ranges and rotate times. Both accept
+   `--maps <id> [<id> ...]` for experiments. If an experiment fails, keep the
+   Studio draft for iteration and do not commit its compiled runtime artifacts.
 4. **Regenerate the guide**: `scripts\render_map_guide.py --map <id>`.
    Guides rasterize at the exact viewer transform (the script prints the
    constants + per-map content bounds) — the painted backdrop `<image>` in

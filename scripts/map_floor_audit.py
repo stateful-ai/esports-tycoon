@@ -5,13 +5,27 @@ Thin wrapper importing the logic from src/esports_sim/registry/map_audit.py.
 
 from __future__ import annotations
 
+import argparse
+
 from esports_sim.registry import load_all
 from esports_sim.registry.loader import load_geometry
 from esports_sim.registry.map_audit import audit_map
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--maps",
+        nargs="+",
+        metavar="MAP_ID",
+        help="audit specific published map ids instead of the live rotation",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
-    gd = load_all()
+    args = parse_args()
+    gd = load_all(map_ids=args.maps)
     total = 0
     for mid in sorted(gd.maps):
         m = gd.maps[mid]

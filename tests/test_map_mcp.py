@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import shutil
 import sys
@@ -87,6 +88,72 @@ def test_human_save_forces_ai_to_reconcile(
     assert latest["document"]["display_name"] == "Human Saved Name"
 
 
+def test_fork_and_batch_patch_keep_variant_work_coherent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    monkeypatch.setenv("ESPORTS_MAP_DATA_DIR", str(data_dir))
+    source = ops.create_map("source-map", "Source Map", template="two-site")
+
+    forked = ops.fork_map("source-map", "variant-map", "Variant Map")
+    assert forked["validation"]["valid"] is True
+    assert forked["document"]["id"] == "variant-map"
+    assert forked["document"]["editor_state"]["test_players"] == []
+
+    patched = ops.apply_map_patch(
+        "variant-map",
+        forked["revision_hash"],
+        metadata={"display_name": "Reference Variant"},
+        walkable_surfaces=[{
+            "id": "surf_a_entry",
+            "polygon": [(8, 20), (50, 20), (50, 40), (8, 40)],
+            "elevation": 0,
+        }],
+        semantic_zones=[{
+            "id": "a_entry",
+            "display_name": "A Entry",
+            "kind": "callout",
+            "polygon": [(8, 20), (50, 20), (50, 40), (8, 40)],
+            "surface_ids": ["surf_a_entry"],
+            "label_position": (29, 30),
+            "site_id": "a",
+            "legacy_zone": "attacker_side",
+        }],
+        props=[{
+            "id": "a_entry_box",
+            "surface_id": "surf_a_entry",
+            "footprint": [(12, 26), (16, 26), (16, 30), (12, 30)],
+            "height": "half",
+        }],
+    )
+    assert patched["changed"]["operation"] == "batch_patch"
+    assert patched["changed"]["upserted"] == {
+        "surfaces": 1,
+        "zones": 1,
+        "props": 1,
+        "walls": 0,
+        "links": 0,
+        "sightlines": None,
+        "adjacency_overrides": None,
+        "prop_support_exemptions": None,
+    }
+    assert patched["validation"]["valid"] is True
+    assert ops.get_map("source-map")["document"]["props"] == []
+    assert ops.get_map("variant-map")["document"]["props"][0]["id"] == "a_entry_box"
+
+    with pytest.raises(ops.MapMcpError, match="stale revision"):
+        ops.apply_map_patch("variant-map", forked["revision_hash"], metadata={})
+    with pytest.raises(ops.MapMcpError, match="duplicate prop ids"):
+        ops.apply_map_patch(
+            "variant-map",
+            patched["revision_hash"],
+            props=[
+                {"id": "dup", "surface_id": "surf_a_site", "footprint": [(20, 45), (22, 45), (22, 47), (20, 47)]},
+                {"id": "dup", "surface_id": "surf_a_site", "footprint": [(24, 45), (26, 45), (26, 47), (24, 47)]},
+            ],
+        )
+
+
 def test_legacy_materialization_checks_synthetic_revision(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -148,6 +215,8 @@ def test_stdio_mcp_exposes_typed_map_tools_and_creates_shared_draft(
                 required = {
                     "get_map_schema",
                     "create_map",
+                    "fork_map",
+                    "apply_map_patch",
                     "open_map_for_editing",
                     "get_map",
                     "upsert_walkable_surface",
@@ -172,8 +241,34 @@ def test_stdio_mcp_exposes_typed_map_tools_and_creates_shared_draft(
                     },
                 )
                 assert result.isError is not True
+                created = json.loads(result.content[0].text)
+                patched = await session.call_tool(
+                    "apply_map_patch",
+                    arguments={
+                        "map_id": "protocol-map",
+                        "if_match_hash": created["revision_hash"],
+                        "props": [{
+                            "id": "protocol-box",
+                            "surface_id": "surf_a_site",
+                            "footprint": [[20, 48], [23, 48], [23, 51], [20, 51]],
+                            "height": "half",
+                        }],
+                    },
+                )
+                assert patched.isError is not True
+                forked = await session.call_tool(
+                    "fork_map",
+                    arguments={
+                        "source_map_id": "protocol-map",
+                        "new_map_id": "protocol-fork",
+                    },
+                )
+                assert forked.isError is not True
 
     asyncio.run(scenario())
     assert (
         tmp_path / "data" / "maps" / "studio" / "protocol-map.yaml"
+    ).is_file()
+    assert (
+        tmp_path / "data" / "maps" / "studio" / "protocol-fork.yaml"
     ).is_file()
