@@ -204,3 +204,26 @@
   justify-content: flex-end;
   gap: var(--es-space-3);
 }
+
+/* Layout overrides to make the map canvas larger than the properties panel */
+.editor-grid {
+  grid-template-columns: minmax(420px, 1fr) 380px 285px;
+}
+
+@media (max-width: 1180px) {
+  .editor-grid {
+    grid-template-columns: minmax(400px, 1fr) 350px;
+  }
+}
+
+@media (max-width: 800px) {
+  .editor-grid {
+    grid-template-columns: 1fr;
+  }
+  .canvas-panel {
+    grid-column: 1 / -1;
+    min-height: auto;
+    max-height: none;
+  }
+}
+
