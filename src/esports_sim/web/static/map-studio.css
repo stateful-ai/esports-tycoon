@@ -1,0 +1,206 @@
+/* Map Studio CSS Extensions */
+
+.canvas-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--es-color-bg-surface);
+  border: 1px solid var(--es-color-border-primary);
+  border-radius: var(--es-radius-md);
+  min-height: calc(100vh - 222px);
+  max-height: calc(100vh - 222px);
+  overflow: hidden;
+}
+
+.canvas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--es-space-3);
+  padding: var(--es-space-3);
+  background: var(--es-color-bg-elevated);
+  border-bottom: 1px solid var(--es-color-border-secondary);
+}
+
+.tool-btn {
+  border: 1px solid var(--es-color-border-primary);
+  border-radius: var(--es-radius-sm);
+  background: var(--es-color-bg-elevated);
+  padding: var(--es-space-2) var(--es-space-4);
+  font-size: var(--es-text-xs);
+  font-weight: 600;
+  transition: all var(--es-duration-quick) var(--es-ease-out);
+}
+
+.tool-btn:hover {
+  background: var(--es-color-bg-hover);
+  border-color: var(--es-color-border-focus);
+}
+
+.tool-btn.active {
+  background: var(--es-color-brand);
+  border-color: var(--es-color-brand);
+  color: white;
+}
+
+.svg-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--es-color-map-bg);
+  overflow: auto;
+  position: relative;
+}
+
+#studio-canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+/* Canvas element styling */
+.walkable-surface {
+  fill: color-mix(in srgb, var(--es-color-text-secondary) 45%, transparent);
+  stroke: color-mix(in srgb, var(--es-color-border-primary) 20%, transparent);
+  stroke-width: 0.5px;
+  cursor: pointer;
+  transition: all var(--es-duration-quick);
+}
+
+.walkable-surface:hover {
+  fill: color-mix(in srgb, var(--es-color-text-secondary) 60%, transparent);
+  stroke: color-mix(in srgb, var(--es-color-text-primary) 40%, transparent);
+}
+
+.walkable-surface.selected {
+  stroke: var(--es-color-accent);
+  stroke-width: 1.2px;
+  fill: color-mix(in srgb, var(--es-color-accent) 25%, transparent);
+}
+
+.wall-line {
+  stroke: var(--es-color-border-primary);
+  stroke-linecap: round;
+  cursor: pointer;
+}
+
+.wall-line:hover {
+  stroke: var(--es-color-border-focus);
+}
+
+.wall-line.selected {
+  stroke: var(--es-color-accent-warm);
+}
+
+.semantic-zone {
+  fill: color-mix(in srgb, var(--es-color-text-secondary) 12%, transparent);
+  stroke: color-mix(in srgb, var(--es-color-text-secondary) 30%, transparent);
+  stroke-width: 0.6px;
+  stroke-dasharray: 2, 2;
+  cursor: pointer;
+}
+
+.semantic-zone.selected {
+  stroke: var(--es-color-accent);
+  fill: color-mix(in srgb, var(--es-color-accent) 8%, transparent);
+}
+
+.zone-label-anchor {
+  fill: var(--es-color-accent);
+  cursor: move;
+}
+
+.prop-rect {
+  fill: color-mix(in srgb, var(--es-color-accent-warm) 70%, transparent);
+  stroke: var(--es-color-accent-warm);
+  stroke-width: 0.5px;
+  cursor: pointer;
+}
+
+.prop-rect:hover {
+  fill: color-mix(in srgb, var(--es-color-accent-warm) 80%, transparent);
+}
+
+.prop-rect.selected {
+  stroke: var(--es-color-accent);
+  stroke-width: 1.2px;
+}
+
+.traversal-link-line {
+  stroke: var(--es-color-accent-warm);
+  stroke-width: 1px;
+  stroke-dasharray: 4, 3;
+  cursor: pointer;
+}
+
+.traversal-link-line.selected {
+  stroke: var(--es-color-accent);
+  stroke-width: 1.8px;
+}
+
+.handle-circle {
+  fill: var(--es-color-bg-page);
+  stroke: var(--es-color-accent);
+  stroke-width: 1.2px;
+  cursor: move;
+}
+
+.handle-circle:hover {
+  fill: var(--es-color-accent);
+}
+
+.vision-cone {
+  fill: color-mix(in srgb, var(--es-color-accent) 15%, transparent);
+  stroke: var(--es-color-accent);
+  stroke-width: 0.6px;
+  stroke-dasharray: 2, 2;
+}
+
+.probe-point {
+  fill: var(--es-color-brand);
+  stroke: var(--es-color-bg-page);
+  stroke-width: 0.8px;
+}
+
+/* Art status */
+.art-status-grid {
+  display: grid;
+  gap: var(--es-space-3);
+  margin-top: var(--es-space-4);
+  font-size: var(--es-text-xs);
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--es-color-border-secondary);
+  padding-bottom: var(--es-space-2);
+}
+
+.stat-line span {
+  color: var(--es-color-text-tertiary);
+}
+
+.status-indicator {
+  color: var(--es-color-accent);
+}
+
+.status-indicator.stale {
+  color: var(--es-color-accent-warm);
+}
+
+.dialog-card {
+  background: var(--es-color-bg-surface);
+  border: 1px solid var(--es-color-border-primary);
+  border-radius: var(--es-radius-md);
+  padding: var(--es-space-6);
+  width: 420px;
+  color: var(--es-color-text-primary);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--es-space-3);
+}

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Map Studio - esports-sim</title>
+  <link rel="stylesheet" href="/ds/tokens.css">
+  <link rel="stylesheet" href="/roster-studio.css">
+  <link rel="stylesheet" href="/map-studio.css">
+</head>
+<body>
+  <header class="studio-topbar">
+    <a class="brand" href="/">ESPORTS<span>SIM</span></a>
+    <div class="title-block">
+      <b>Map Studio</b>
+      <span>Create and review continuous map geometries before publishing to legacy match runtimes.</span>
+    </div>
+    <div class="spacer"></div>
+    <span id="save-state" class="status-chip">No map open</span>
+    <button id="validate-btn" class="btn" disabled>Validate</button>
+    <button id="publish-btn" class="btn" disabled>Publish Runtime</button>
+    <button id="save-btn" class="btn primary" disabled>Save Draft</button>
+  </header>
+
+  <main class="studio-shell">
+    <aside class="packs-panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow">Maps Library</span>
+          <h1>All Maps</h1>
+        </div>
+        <button id="new-map-btn" class="icon-btn" title="Create a new map">+</button>
+      </div>
+      <div id="map-list" class="pack-list"></div>
+      
+      <div class="agent-card">
+        <span class="eyebrow">Art Status</span>
+        <div id="art-status-panel" class="art-status-grid">
+          <div class="stat-line"><span>Draft Rev:</span> <b id="hash-draft" class="mono">-</b></div>
+          <div class="stat-line"><span>Compiled Rev:</span> <b id="hash-compiled" class="mono">-</b></div>
+          <div class="stat-line"><span>Paint Status:</span> <b id="paint-status" class="status-indicator">-</b></div>
+        </div>
+        <button id="toggle-paint-btn" class="btn" style="width: 100%; margin-top: var(--es-space-4);">Toggle 50% Paint Overlay</button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-mark">MS</div>
+        <h2>Start a map draft.</h2>
+        <p>Open an existing map or create a new draft to begin drawing walkable surfaces, walls, and callouts.</p>
+        <button id="empty-new" class="btn primary">Create New Map</button>
+      </div>
+
+      <div id="editor" class="editor hidden">
+        <section class="meta-card">
+          <div class="meta-grid">
+            <label class="field"><span>Map ID</span><input id="meta-id" class="mono" autocomplete="off" readonly></label>
+            <label class="field wide"><span>Display Name</span><input id="meta-name" autocomplete="off"></label>
+            <label class="field"><span>Sites</span><input id="meta-sites" class="mono" autocomplete="off" placeholder="a,b"></label>
+            <label class="field"><span>Attacker Spawn</span><input id="meta-atk-spawn" class="mono" autocomplete="off"></label>
+            <label class="field"><span>Defender Spawn</span><input id="meta-def-spawn" class="mono" autocomplete="off"></label>
+          </div>
+        </section>
+
+        <div class="editor-grid">
+          <!-- Canvas & Tools -->
+          <div class="canvas-panel">
+            <div class="canvas-toolbar">
+              <button class="tool-btn active" data-tool="select" title="Select & Edit elements">Select</button>
+              <button class="tool-btn" data-tool="surface" title="Draw walkable surface polygon">Walkable Surface</button>
+              <button class="tool-btn" data-tool="wall" title="Draw wall segment">Wall</button>
+              <button class="tool-btn" data-tool="zone" title="Add semantic zone / callout">Semantic Zone</button>
+              <button class="tool-btn" data-tool="prop" title="Place crate or sight blocker prop">Prop</button>
+              <button class="tool-btn" data-tool="link" title="Add traversal link (teleporter, door, rope)">Traversal Link</button>
+              <button class="tool-btn" data-tool="player" title="Place test player for visibility/collision tests">Test Player</button>
+              <button class="tool-btn" data-tool="probe" title="Collision & sightline probe">Probe</button>
+              <div class="spacer"></div>
+              <button id="view-toggle" class="btn">View: 2D Top-Down</button>
+              <button id="undo-btn" class="btn" title="Undo">↶</button>
+              <button id="redo-btn" class="btn" title="Redo">↷</button>
+            </div>
+
+            <div class="svg-container">
+              <svg id="studio-canvas" viewBox="-110 -12 220 128" preserveAspectRatio="xMidYMid meet">
+                <!-- Background Grid -->
+                <defs>
+                  <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+                    <path d="M 5 0 L 0 0 0 5" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.2"/>
+                  </pattern>
+                </defs>
+                <rect x="-110" y="-12" width="220" height="128" fill="var(--es-color-map-bg)" />
+                <rect x="-110" y="-12" width="220" height="128" fill="url(#grid)" />
+                
+                <!-- Under-layers (Paint backdrop if toggle enabled) -->
+                <image id="backdrop-image" x="-110" y="-12" width="220" height="128" opacity="0" style="pointer-events: none;" />
+                
+                <!-- Active layers (rendered by js) -->
+                <g id="layer-surfaces"></g>
+                <g id="layer-zones"></g>
+                <g id="layer-walls"></g>
+                <g id="layer-props"></g>
+                <g id="layer-links"></g>
+                <g id="layer-players"></g>
+                <g id="layer-probes"></g>
+                <g id="layer-handles"></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Inspector Panel -->
+          <div id="inspector-panel" class="detail-panel">
+            <span class="eyebrow">Properties</span>
+            <div id="inspector-content">
+              <p class="muted">Select an element on the canvas to inspect and edit details.</p>
+            </div>
+          </div>
+
+          <!-- Diagnostics/Audit panel -->
+          <aside class="check-panel">
+            <div class="check-head">
+              <span class="eyebrow">Audits & Warnings</span>
+              <span id="validity-dot" class="validity-dot"></span>
+            </div>
+            <div id="diagnostics-list" class="validation-list">
+              <p class="muted">Draw elements and save drafts to run validation audits.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="new-map-dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><span class="eyebrow">Create Map</span><h2>New Map Draft</h2></div>
+        <button class="icon-btn" value="cancel">x</button>
+      </div>
+      <p>Enter an ID (slug, lowercase-hyphen only) and display name for the new map.</p>
+      <div style="display: flex; flex-direction: column; gap: var(--es-space-4);">
+        <label class="field"><span>Map ID</span><input id="new-map-id" class="mono" placeholder="my-new-map" autocomplete="off"></label>
+        <label class="field"><span>Display Name</span><input id="new-map-name" placeholder="My New Map" autocomplete="off"></label>
+      </div>
+      <div class="dialog-actions" style="margin-top: var(--es-space-6);">
+        <button id="confirm-new-btn" type="button" class="btn primary">Create Draft</button>
+        <button value="cancel" class="btn">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" aria-live="polite"></div>
+  <script src="/map-transform.js"></script>
+  <script src="/map-studio.js"></script>
+</body>
+</html>
