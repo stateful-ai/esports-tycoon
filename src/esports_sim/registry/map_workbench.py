@@ -128,6 +128,7 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
     semantic_zones = []
     props = []
     links = []
+    prop_support_exemptions: list[str] = []
     
     # Reconstruct surfaces and zones from geometry regions
     regions = geo_raw.get("regions", {})
@@ -156,11 +157,17 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
 
         semantic_zones.append(SemanticZone(
             id=cid,
+            display_name=co.get("display_name"),
             kind=zone_kind,
             polygon=[(rx, ry), (rx + rw, ry), (rx + rw, ry + rh), (rx, ry + rh)],
             surface_ids=[surf_id],
             label_position=(co.get("x", rx + rw/2), co.get("y", ry + rh/2)),
             site_id=co.get("site", "none"),
+            legacy_zone=(
+                legacy_zone
+                if legacy_zone in {zone.value for zone in CalloutZone}
+                else None
+            ),
         ))
         
     # Reconstruct links from corridors
@@ -182,6 +189,8 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
                 from_pos=from_pt,
                 to_pos=to_pt,
                 via=via,
+                path_mode="corridor",
+                include_endpoints_in_path=False,
             ))
             
     # Reconstruct links from gimmicks
@@ -195,21 +204,55 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
             from_pt = (r1["x"] + r1["w"]/2, r1["y"] + r1["h"]/2, f"surf_{c1}")
             to_pt = (r2["x"] + r2["w"]/2, r2["y"] + r2["h"]/2, f"surf_{c2}")
             
-            links.append(TraversalLink(
-                id=gim.get("id") or f"gim_{idx}",
-                kind="door" if gim["type"] == "breakable_door" else "teleporter",
-                from_pos=from_pt,
-                to_pos=to_pt,
-                noise_radius=gim.get("noise_radius", 25.0),
-                start_closed_prob=gim.get("start_closed_prob", 0.7),
-            ))
+            kind_by_gimmick = {
+                GimmickType.BREAKABLE_DOOR.value: "door",
+                GimmickType.ROTATING_DOOR.value: "rotating_door",
+                GimmickType.TELEPORTER.value: "teleporter",
+            }
+            link_kind = kind_by_gimmick.get(gim.get("type"))
+            if link_kind is None:
+                raise ValueError(f"Unsupported legacy gimmick type: {gim.get('type')}")
+            update = {
+                "id": gim.get("id") or f"gim_{idx}",
+                "kind": link_kind,
+                "noise_radius": gim.get("noise_radius", 25.0),
+                "start_closed_prob": gim.get("start_closed_prob", 0.7),
+            }
+            pair = {f"surf_{c1}", f"surf_{c2}"}
+            matching_index = next(
+                (
+                    link_index
+                    for link_index, existing in enumerate(links)
+                    if {existing.from_pos[2], existing.to_pos[2]} == pair
+                ),
+                None,
+            )
+            if matching_index is not None:
+                links[matching_index] = links[matching_index].model_copy(update=update)
+            else:
+                links.append(TraversalLink(
+                    **update,
+                    from_pos=from_pt,
+                    to_pos=to_pt,
+                    path_mode="portal",
+                    include_endpoints_in_path=False,
+                ))
 
     # Reconstruct props
     for idx, p in enumerate(geo_raw.get("props", [])):
         reg = p.get("region")
         px, py, pw, ph = p["x"], p["y"], p["w"], p["h"]
+        prop_id = f"prop_{reg}_{idx}"
+        region = regions.get(reg)
+        if region is not None and not (
+            region["x"] < px
+            and region["y"] < py
+            and px + pw < region["x"] + region["w"]
+            and py + ph < region["y"] + region["h"]
+        ):
+            prop_support_exemptions.append(prop_id)
         props.append(StudioProp(
-            id=f"prop_{reg}_{idx}",
+            id=prop_id,
             surface_id=f"surf_{reg}",
             footprint=[(px, py), (px + pw, py), (px + pw, py + ph), (px, py + ph)],
             height=p.get("height", "half"),
@@ -221,11 +264,13 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
     legacy = LegacyCompilationConfig(
         adjacency_overrides=map_raw.get("adjacency", {}),
         sightline_overrides=map_raw.get("sightlines", []),
+        prop_support_exemptions=prop_support_exemptions,
     )
     
     return MapStudioDocumentV1(
         id=map_id,
         display_name=map_raw.get("display_name", map_id),
+        sites=map_raw.get("sites", []),
         walkable_surfaces=surfaces,
         props=props,
         semantic_zones=semantic_zones,
@@ -306,11 +351,20 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
     corridors: list[GeoCorridor] = []
     props: list[GeoProp] = []
     
-    # 1. Compile Walkable Surfaces -> Regions
-    # Map from surface id to matching semantic zone id
+    # 1. Compile Walkable Surfaces -> Regions. Plant polygons are semantic
+    # overlays on a navigational site surface; they must never overwrite the
+    # callout region that player pathing consumes.
     surf_to_zone: dict[str, str] = {}
     for zone in doc.semantic_zones:
+        if zone.kind == "plant":
+            continue
         for sid in zone.surface_ids:
+            previous = surf_to_zone.get(sid)
+            if previous is not None and previous != zone.id:
+                raise ValueError(
+                    f"Walkable surface '{sid}' maps to multiple navigational "
+                    f"zones ('{previous}', '{zone.id}')"
+                )
             surf_to_zone[sid] = zone.id
 
     for surf in doc.walkable_surfaces:
@@ -325,6 +379,11 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
         zone_id = surf_to_zone.get(surf.id)
         if not zone_id:
             raise ValueError(f"Walkable surface '{surf.id}' is not mapped to any Semantic Zone")
+        if zone_id in regions:
+            raise ValueError(
+                f"Semantic zone '{zone_id}' maps to multiple walkable surfaces; "
+                "the current runtime requires one rectangular surface per callout"
+            )
             
         regions[zone_id] = GeoRegion(
             x=min_x,
@@ -336,13 +395,31 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
 
     # 2. Compile Semantic Zones -> Callouts
     for zone in doc.semantic_zones:
-        if zone.kind not in ("callout", "site", "spawn", "plant"):
+        if zone.kind == "plant":
             continue
+        if zone.id not in regions:
+            raise ValueError(
+                f"Semantic zone '{zone.id}' is not mapped to a runtime walkable surface"
+            )
+        if zone.id == doc.attacker_spawn:
+            runtime_zone = CalloutZone.ATTACKER_SPAWN
+        elif zone.id == doc.defender_spawn:
+            runtime_zone = CalloutZone.DEFENDER_SPAWN
+        elif zone.legacy_zone is not None:
+            runtime_zone = CalloutZone(zone.legacy_zone)
+        elif zone.kind == "site":
+            runtime_zone = CalloutZone.SITE
+        elif zone.site_id == "mid":
+            runtime_zone = CalloutZone.MID
+        else:
+            raise ValueError(
+                f"Semantic zone '{zone.id}' needs a tactical runtime zone"
+            )
         callouts[zone.id] = Callout(
             id=zone.id,
-            display_name=zone.id.replace("_", " ").title(),
+            display_name=zone.display_name or zone.id.replace("_", " ").title(),
             site=Site(zone.site_id) if zone.site_id in [s.value for s in Site] else Site.NONE,
-            zone=CalloutZone(zone.kind) if zone.kind in [z.value for z in CalloutZone] else CalloutZone.SITE,
+            zone=runtime_zone,
             x=zone.label_position[0],
             y=zone.label_position[1],
         )
@@ -354,7 +431,10 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
         zone_f = surf_to_zone.get(fsid)
         zone_t = surf_to_zone.get(tsid)
         if not zone_f or not zone_t:
-            continue
+            raise ValueError(
+                f"Traversal link '{link.id}' endpoint is not mapped to a "
+                "navigational zone"
+            )
             
         # Compile as breakable door or teleporter gimmicks
         if link.kind == "door":
@@ -365,6 +445,13 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
                 noise_radius=link.noise_radius,
                 start_closed_prob=link.start_closed_prob,
             ))
+        elif link.kind == "rotating_door":
+            gimmicks.append(Gimmick(
+                id=link.id,
+                type=GimmickType.ROTATING_DOOR,
+                between=(zone_f, zone_t),
+                noise_radius=link.noise_radius,
+            ))
         elif link.kind == "teleporter":
             gimmicks.append(Gimmick(
                 id=link.id,
@@ -372,15 +459,23 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
                 between=(zone_f, zone_t),
                 noise_radius=link.noise_radius,
             ))
-        else:
-            # Build corridor between them
+        if link.path_mode == "corridor":
+            # Preserve authored endpoints and bends. These become the exact
+            # motor-route polyline between the two semantic callouts.
+            via = (
+                [(fx, fy), *link.via, (tx, ty)]
+                if link.include_endpoints_in_path
+                else list(link.via)
+            )
             corridors.append(GeoCorridor(
                 between=(zone_f, zone_t),
-                via=[(fx, fy), (tx, ty)],
+                via=via,
             ))
 
     # 4. Compile Props
     for prop in doc.props:
+        if not prop.collision:
+            continue
         zone_id = surf_to_zone.get(prop.surface_id)
         if not zone_id:
             continue
@@ -400,6 +495,56 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
             height=prop.height,
         ))
 
+    # 5. Compile axis-aligned Studio walls into full-height runtime blockers.
+    # MapGeometry already treats full props as wall segments for point LOS;
+    # using that representation also keeps the guide/viewer contract intact.
+    surface_bounds: dict[str, tuple[float, float, float, float]] = {}
+    for surface in doc.walkable_surfaces:
+        xs = [point[0] for point in surface.polygon]
+        ys = [point[1] for point in surface.polygon]
+        surface_bounds[surface.id] = (min(xs), min(ys), max(xs), max(ys))
+    for wall_index, wall in enumerate(doc.walls):
+        for segment_index, ((x1, y1), (x2, y2)) in enumerate(
+            zip(wall.polyline, wall.polyline[1:])
+        ):
+            if x1 == x2 and y1 == y2:
+                continue
+            midpoint = ((x1 + x2) / 2.0, (y1 + y2) / 2.0)
+            candidates = sorted(
+                sid
+                for sid, (min_x, min_y, max_x, max_y) in surface_bounds.items()
+                if min_x - 0.01 <= midpoint[0] <= max_x + 0.01
+                and min_y - 0.01 <= midpoint[1] <= max_y + 0.01
+                and sid in surf_to_zone
+            )
+            if not candidates:
+                raise ValueError(
+                    f"Wall {wall_index} segment {segment_index} is not on a "
+                    "navigational surface"
+                )
+            thickness = wall.thickness
+            if abs(x1 - x2) <= 1e-6:
+                rx, ry = x1 - thickness / 2.0, min(y1, y2)
+                rw, rh = thickness, abs(y2 - y1)
+            elif abs(y1 - y2) <= 1e-6:
+                rx, ry = min(x1, x2), y1 - thickness / 2.0
+                rw, rh = abs(x2 - x1), thickness
+            else:
+                raise ValueError(
+                    f"Wall {wall_index} segment {segment_index} is diagonal; "
+                    "runtime walls must be axis-aligned"
+                )
+            props.append(
+                GeoProp(
+                    region=surf_to_zone[candidates[0]],
+                    x=rx,
+                    y=ry,
+                    w=rw,
+                    h=rh,
+                    height="full",
+                )
+            )
+
     # Apply legacy overrides
     adjacency = doc.legacy.adjacency_overrides.copy()
     
@@ -411,17 +556,27 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
             adjacency.setdefault(zf, []).append(zt)
             adjacency.setdefault(zt, []).append(zf)
             
-    # Remove duplicates from adjacency
+    # Remove duplicates without reordering authored neighbors. Neighbor order
+    # is part of deterministic policy tie-breaking, so sorting here changes
+    # match outcomes after an otherwise no-op Studio round trip.
     for k in list(adjacency.keys()):
-        adjacency[k] = sorted(list(set(adjacency[k])))
+        adjacency[k] = list(dict.fromkeys(adjacency[k]))
         
     for s in doc.legacy.sightline_overrides:
         sightlines.append(SightLine(**s))
 
+    inferred_sites = {
+        zone.site_id
+        for zone in doc.semantic_zones
+        if zone.kind in ("site", "plant")
+        and zone.site_id in {site.value for site in Site}
+        and zone.site_id not in (Site.NONE.value, Site.MID.value)
+    }
+    runtime_sites = list(dict.fromkeys([*doc.sites, *sorted(inferred_sites - set(doc.sites))]))
     map_obj = Map(
         id=doc.id,
         display_name=doc.display_name,
-        sites=[Site(s) for s in doc.sites if s in [st.value for st in Site]],
+        sites=[Site(site) for site in runtime_sites if site in {s.value for s in Site}],
         callouts=callouts,
         adjacency=adjacency,
         sightlines=sightlines,
@@ -440,6 +595,31 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
     return map_obj, geo_obj
 
 
+def validate_document(
+    doc: MapStudioDocumentV1,
+) -> tuple[Map | None, MapGeometry | None, list[dict[str, str]]]:
+    """Validate both the Studio source and the exact runtime artifacts.
+
+    The dry-run API and transactional publisher share this function so a
+    green Validate result means Publish will not uncover a separate geometry
+    compatibility failure.
+    """
+    errors = [
+        {"path": "continuous", "message": message}
+        for message in audit_continuous(doc)
+    ]
+    try:
+        map_obj, geo_obj = compile_document(doc)
+    except ValueError as exc:
+        errors.append({"path": "compilation", "message": str(exc)})
+        return None, None, errors
+    errors.extend(
+        {"path": "legacy", "message": message}
+        for message in audit_map(map_obj, geo_obj)
+    )
+    return map_obj, geo_obj, errors
+
+
 def publish_document(map_id: str, data_dir: Path | None = None) -> dict[str, Any]:
     """Compiles in-memory structures, validates schemas, runs audits,
     renders guide, and performs a locked transactional promotion of all files.
@@ -453,16 +633,10 @@ def publish_document(map_id: str, data_dir: Path | None = None) -> dict[str, Any
     # Read draft doc
     doc = MapStudioDocumentV1(**yaml.safe_load(studio_path.read_text(encoding="utf-8")))
     
-    # Compile
-    map_obj, geo_obj = compile_document(doc)
-    
-    # Audits
-    continuous_errors = audit_continuous(doc)
-    legacy_errors = audit_map(map_obj, geo_obj)
-    all_errors = continuous_errors + legacy_errors
-    
-    if all_errors:
-        raise ValueError(f"Publish failed audits: {all_errors[0]}")
+    map_obj, geo_obj, errors = validate_document(doc)
+    if errors:
+        raise ValueError(f"Publish failed audits: {errors[0]['message']}")
+    assert map_obj is not None and geo_obj is not None
         
     # Render guide
     img, info = render_legacy_guide(map_obj, geo_obj)

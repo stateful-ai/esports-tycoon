@@ -292,8 +292,8 @@ def render_continuous_preview(doc: MapStudioDocumentV1) -> tuple[Image.Image, di
 
     # Render walls as thin elevated line segments (optional, or just for visual guide)
     for wall in doc.walls:
-        polyline = wall.get("polyline")
-        thickness = wall.get("thickness", 1.0)
+        polyline = wall.polyline
+        thickness = wall.thickness
         # draw a simple line in iso projection
         for i in range(1, len(polyline)):
             p1 = polyline[i-1]

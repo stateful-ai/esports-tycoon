@@ -21,6 +21,7 @@ const Editor = {
   
   // Drawing temporary states
   drawingPoints: [],
+  linkStart: null,
   dragState: null,    // { type, index, pointIndex, startX, startY }
   renderRequested: false, // Throttling helper
   
@@ -311,6 +312,40 @@ function bindCanvasEvents() {
       updateToolActive();
       renderCanvas();
       updateInspector();
+    } else if (Editor.selectedTool === "link") {
+      const surface = surfaceAt(pt);
+      if (!surface) {
+        toast("Traversal endpoints must be placed on walkable surfaces.");
+        return;
+      }
+      if (!Editor.linkStart) {
+        Editor.linkStart = [pt[0], pt[1], surface.id];
+        toast("Traversal start set. Click the destination surface.");
+      } else {
+        pushState();
+        const linkId = `link_${Date.now()}`;
+        Editor.doc.traversal_links.push({
+          id: linkId,
+          kind: "ramp",
+          from_pos: Editor.linkStart,
+          to_pos: [pt[0], pt[1], surface.id],
+          via: [],
+          path_mode: "corridor",
+          include_endpoints_in_path: true,
+          noise_radius: 0.0,
+          start_closed_prob: 0.0
+        });
+        Editor.selectedItem = {
+          type: "link",
+          id: linkId,
+          index: Editor.doc.traversal_links.length - 1
+        };
+        Editor.linkStart = null;
+        Editor.selectedTool = "select";
+        updateToolActive();
+        renderCanvas();
+        updateInspector();
+      }
     } else if (Editor.selectedTool === "player") {
       pushState();
       const pid = `player_${Date.now()}`;
@@ -397,13 +432,16 @@ function bindCanvasEvents() {
         const xs = Editor.drawingPoints.map(p => p[0]);
         const ys = Editor.drawingPoints.map(p => p[1]);
         const labelPos = [sum(xs)/xs.length, sum(ys)/ys.length];
+        const surface = surfaceAt(labelPos);
         Editor.doc.semantic_zones.push({
           id: zid,
+          display_name: zid.replaceAll("_", " "),
           kind: "callout",
           polygon: Editor.drawingPoints,
-          surface_ids: [],
+          surface_ids: surface ? [surface.id] : [],
           label_position: labelPos,
-          site_id: "none"
+          site_id: "none",
+          legacy_zone: "mid"
         });
         Editor.selectedItem = { type: "zone", id: zid, index: Editor.doc.semantic_zones.length - 1 };
       } else if (Editor.selectedTool === "wall") {
@@ -424,6 +462,7 @@ function bindCanvasEvents() {
       Editor.probePos = null;
       Editor.probeRay = null;
       Editor.probeResult = null;
+      Editor.linkStart = null;
       renderCanvas();
     }
   });
@@ -531,19 +570,23 @@ function renderCanvas() {
     const fe = fs ? fs.elevation : 0.0;
     const te = ts ? ts.elevation : 0.0;
     
-    const p1 = MapTransform.project(link.from_pos[0], link.from_pos[1], fe, isIso);
-    const p2 = MapTransform.project(link.to_pos[0], link.to_pos[1], te, isIso);
-    
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", p1[0]);
-    line.setAttribute("y1", p1[1]);
-    line.setAttribute("x2", p2[0]);
-    line.setAttribute("y2", p2[1]);
-    line.setAttribute("class", `traversal-link-line ${isSelected ? "selected" : ""}`);
-    $("#layer-links").appendChild(line);
+    const worldPoints = [link.from_pos, ...(link.via || []), link.to_pos];
+    const projected = worldPoints.map((point, pointIndex) => {
+      const progress = worldPoints.length === 1 ? 0 : pointIndex / (worldPoints.length - 1);
+      const elevation = fe + (te - fe) * progress;
+      return MapTransform.project(point[0], point[1], elevation, isIso);
+    });
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", projected.map((point, pointIndex) =>
+      `${pointIndex === 0 ? "M" : "L"} ${point[0]} ${point[1]}`
+    ).join(" "));
+    path.setAttribute("class", `traversal-link-line ${isSelected ? "selected" : ""}`);
+    path.setAttribute("fill", "none");
+    $("#layer-links").appendChild(path);
     
     // Draw midpoint indicator of link type
-    const mid = [(p1[0] + p2[0])/2, (p1[1] + p2[1])/2];
+    const mid = projected[Math.floor(projected.length / 2)];
     const indicator = document.createElementNS("http://www.w3.org/2000/svg", "text");
     indicator.setAttribute("x", mid[0]);
     indicator.setAttribute("y", mid[1] + 1);
@@ -605,6 +648,8 @@ function renderCanvas() {
       elevation = surf ? surf.elevation : 0.0;
     } else if (item.type === "wall") {
       pts = Editor.doc.walls[item.index].polyline;
+    } else if (item.type === "link") {
+      pts = linkPoints(Editor.doc.traversal_links[item.index]);
     }
     
     pts.forEach((pt, pIdx) => {
@@ -719,6 +764,8 @@ function findHandle(pt, e) {
     elevation = surf ? surf.elevation : 0.0;
   } else if (item.type === "wall") {
     pts = Editor.doc.walls[item.index].polyline;
+  } else if (item.type === "link") {
+    pts = linkPoints(Editor.doc.traversal_links[item.index]);
   }
   
   let mouseX, mouseY;
@@ -762,6 +809,27 @@ function findElementAt(pt) {
     }
   }
 
+  // Links and walls must be picked before their containing zone/surface.
+  for (let i = 0; i < Editor.doc.traversal_links.length; i++) {
+    const link = Editor.doc.traversal_links[i];
+    const points = linkPoints(link);
+    for (let pointIndex = 1; pointIndex < points.length; pointIndex++) {
+      if (pointSegmentDistance(pt, points[pointIndex - 1], points[pointIndex]) < 1.5) {
+        return { type: "link", id: link.id, index: i };
+      }
+    }
+  }
+
+  for (let i = 0; i < Editor.doc.walls.length; i++) {
+    const wall = Editor.doc.walls[i];
+    const points = wall.polyline || [];
+    for (let pointIndex = 1; pointIndex < points.length; pointIndex++) {
+      if (pointSegmentDistance(pt, points[pointIndex - 1], points[pointIndex]) < Math.max(1.0, wall.thickness || 1.0)) {
+        return { type: "wall", id: `wall_${i}`, index: i };
+      }
+    }
+  }
+
   // Check semantic zones
   for (let i = 0; i < Editor.doc.semantic_zones.length; i++) {
     const zone = Editor.doc.semantic_zones[i];
@@ -793,6 +861,26 @@ function isPointInPolygon(pt, poly) {
   return inside;
 }
 
+function surfaceAt(pt) {
+  return Editor.doc.walkable_surfaces.find(surface =>
+    isPointInPolygon(pt, surface.polygon)
+  ) || null;
+}
+
+function linkPoints(link) {
+  return [link.from_pos, ...(link.via || []), link.to_pos];
+}
+
+function pointSegmentDistance(point, start, end) {
+  const dx = end[0] - start[0];
+  const dy = end[1] - start[1];
+  if (dx === 0 && dy === 0) return Math.hypot(point[0] - start[0], point[1] - start[1]);
+  const t = Math.max(0, Math.min(1,
+    ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / (dx * dx + dy * dy)
+  ));
+  return Math.hypot(point[0] - (start[0] + t * dx), point[1] - (start[1] + t * dy));
+}
+
 // ---------------------------------------------------------------------------
 // Drags & Moves
 
@@ -806,10 +894,17 @@ function movePoint(type, index, ptIdx, dx, dy) {
     pts = Editor.doc.props[index].footprint;
   } else if (type === "wall") {
     pts = Editor.doc.walls[index].polyline;
+  } else if (type === "link") {
+    const link = Editor.doc.traversal_links[index];
+    pts = linkPoints(link);
   }
   if (pts[ptIdx]) {
     pts[ptIdx][0] = Math.round((pts[ptIdx][0] + dx) * 100) / 100;
     pts[ptIdx][1] = Math.round((pts[ptIdx][1] + dy) * 100) / 100;
+    if (type === "link" && (ptIdx === 0 || ptIdx === pts.length - 1)) {
+      const surface = surfaceAt(pts[ptIdx]);
+      if (surface) pts[ptIdx][2] = surface.id;
+    }
   }
 }
 
@@ -834,12 +929,21 @@ function moveElement(type, index, dx, dy) {
     pts = Editor.doc.props[index].footprint;
   } else if (type === "wall") {
     pts = Editor.doc.walls[index].polyline;
+  } else if (type === "link") {
+    pts = linkPoints(Editor.doc.traversal_links[index]);
   }
   
   pts.forEach(pt => {
     pt[0] = Math.round((pt[0] + dx) * 100) / 100;
     pt[1] = Math.round((pt[1] + dy) * 100) / 100;
   });
+  if (type === "link") {
+    const link = Editor.doc.traversal_links[index];
+    const fromSurface = surfaceAt(link.from_pos);
+    const toSurface = surfaceAt(link.to_pos);
+    if (fromSurface) link.from_pos[2] = fromSurface.id;
+    if (toSurface) link.to_pos[2] = toSurface.id;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -871,6 +975,7 @@ function updateInspector() {
       <h3>Semantic Zone</h3>
       <div style="display: grid; gap: var(--es-space-4); margin-top: var(--es-space-4);">
         <label class="field"><span>Zone ID</span><input type="text" value="${esc(zone.id)}" onchange="updateSelectedField('id', this.value)"></label>
+        <label class="field"><span>Display Name</span><input type="text" value="${esc(zone.display_name || '')}" placeholder="Generated from ID" onchange="updateSelectedField('display_name', this.value || null)"></label>
         <label class="field"><span>Kind</span>
           <select onchange="updateSelectedField('kind', this.value)">
             <option value="callout" ${zone.kind === "callout" ? "selected" : ""}>Callout</option>
@@ -880,6 +985,15 @@ function updateInspector() {
           </select>
         </label>
         <label class="field"><span>Site ID</span><input type="text" value="${esc(zone.site_id)}" onchange="updateSelectedField('site_id', this.value)"></label>
+        <label class="field"><span>Tactical Runtime Zone</span>
+          <select onchange="updateSelectedField('legacy_zone', this.value || null)">
+            <option value="" ${!zone.legacy_zone ? "selected" : ""}>Select tactical zone...</option>
+            ${["attacker_spawn", "defender_spawn", "attacker_side", "defender_side", "mid", "site"].map(value =>
+              `<option value="${value}" ${zone.legacy_zone === value ? "selected" : ""}>${value.replaceAll("_", " ")}</option>`
+            ).join("")}
+          </select>
+        </label>
+        <label class="field"><span>Walkable Surface IDs</span><input type="text" value="${esc((zone.surface_ids || []).join(', '))}" onchange="updateSelectedStringList('surface_ids', this.value)"></label>
         <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Zone</button>
       </div>
     `;
@@ -914,6 +1028,38 @@ function updateInspector() {
         <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Wall</button>
       </div>
     `;
+  } else if (item.type === "link") {
+    const link = Editor.doc.traversal_links[item.index];
+    const via = (link.via || []).map(point => `${point[0]}, ${point[1]}`).join("; ");
+    html = `
+      <h3>Traversal Link</h3>
+      <div style="display: grid; gap: var(--es-space-4); margin-top: var(--es-space-4);">
+        <label class="field"><span>Link ID</span><input type="text" value="${esc(link.id)}" onchange="updateSelectedField('id', this.value)"></label>
+        <label class="field"><span>Kind</span>
+          <select onchange="updateSelectedField('kind', this.value)">
+            ${["ramp", "rope", "door", "rotating_door", "teleporter", "drop"].map(value =>
+              `<option value="${value}" ${link.kind === value ? "selected" : ""}>${value}</option>`
+            ).join("")}
+          </select>
+        </label>
+        <label class="field"><span>Runtime Path</span>
+          <select onchange="updateSelectedField('path_mode', this.value)">
+            <option value="corridor" ${link.path_mode !== "portal" ? "selected" : ""}>Authored corridor</option>
+            <option value="portal" ${link.path_mode === "portal" ? "selected" : ""}>Shared room portal</option>
+          </select>
+        </label>
+        <label class="field"><span>Include link endpoints in route</span>
+          <select onchange="updateSelectedField('include_endpoints_in_path', this.value === 'true')">
+            <option value="true" ${link.include_endpoints_in_path !== false ? "selected" : ""}>Yes</option>
+            <option value="false" ${link.include_endpoints_in_path === false ? "selected" : ""}>No (legacy route)</option>
+          </select>
+        </label>
+        <label class="field"><span>Via points (x,y; x,y)</span><input type="text" value="${esc(via)}" onchange="updateLinkVia(this.value)"></label>
+        <label class="field"><span>Noise Radius</span><input type="number" min="0" step="1" value="${link.noise_radius || 0}" onchange="updateSelectedField('noise_radius', parseFloat(this.value))"></label>
+        <label class="field"><span>Starts Closed Probability</span><input type="number" min="0" max="1" step="0.05" value="${link.start_closed_prob || 0}" onchange="updateSelectedField('start_closed_prob', parseFloat(this.value))"></label>
+        <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Link</button>
+      </div>
+    `;
   } else if (item.type === "player") {
     const player = Editor.doc.editor_state.test_players[item.index];
     html = `
@@ -935,16 +1081,91 @@ function updateSelectedField(field, value) {
   pushState();
   const item = Editor.selectedItem;
   if (item.type === "surface") {
-    Editor.doc.walkable_surfaces[item.index][field] = value;
+    const surface = Editor.doc.walkable_surfaces[item.index];
+    const oldId = surface.id;
+    surface[field] = value;
+    if (field === "id" && value !== oldId) {
+      renameSurfaceReferences(oldId, value);
+      Editor.selectedItem.id = value;
+    }
   } else if (item.type === "zone") {
-    Editor.doc.semantic_zones[item.index][field] = value;
+    const zone = Editor.doc.semantic_zones[item.index];
+    const oldId = zone.id;
+    zone[field] = value;
+    if (field === "id" && value !== oldId) {
+      renameZoneReferences(oldId, value);
+      Editor.selectedItem.id = value;
+    }
+    if (field === "kind" && value === "site") zone.legacy_zone = "site";
   } else if (item.type === "prop") {
     Editor.doc.props[item.index][field] = value;
   } else if (item.type === "wall") {
     Editor.doc.walls[item.index][field] = value;
+  } else if (item.type === "link") {
+    Editor.doc.traversal_links[item.index][field] = value;
   } else if (item.type === "player") {
     Editor.doc.editor_state.test_players[item.index][field] = value;
   }
+  renderCanvas();
+}
+
+function renameSurfaceReferences(oldId, newId) {
+  Editor.doc.semantic_zones.forEach(zone => {
+    zone.surface_ids = (zone.surface_ids || []).map(id => id === oldId ? newId : id);
+  });
+  Editor.doc.props.forEach(prop => {
+    if (prop.surface_id === oldId) prop.surface_id = newId;
+  });
+  Editor.doc.traversal_links.forEach(link => {
+    if (link.from_pos[2] === oldId) link.from_pos[2] = newId;
+    if (link.to_pos[2] === oldId) link.to_pos[2] = newId;
+  });
+}
+
+function renameZoneReferences(oldId, newId) {
+  if (Editor.doc.attacker_spawn === oldId) Editor.doc.attacker_spawn = newId;
+  if (Editor.doc.defender_spawn === oldId) Editor.doc.defender_spawn = newId;
+  const adjacency = Editor.doc.legacy.adjacency_overrides || {};
+  if (Object.hasOwn(adjacency, oldId)) {
+    adjacency[newId] = adjacency[oldId];
+    delete adjacency[oldId];
+  }
+  Object.keys(adjacency).forEach(fromZone => {
+    adjacency[fromZone] = adjacency[fromZone].map(
+      toZone => toZone === oldId ? newId : toZone
+    );
+  });
+  (Editor.doc.legacy.sightline_overrides || []).forEach(sightline => {
+    if (sightline.from_callout === oldId) sightline.from_callout = newId;
+    if (sightline.to_callout === oldId) sightline.to_callout = newId;
+  });
+}
+
+function updateSelectedStringList(field, value) {
+  if (!Editor.doc || !Editor.selectedItem || Editor.selectedItem.type !== "zone") return;
+  pushState();
+  Editor.doc.semantic_zones[Editor.selectedItem.index][field] = value
+    .split(",").map(item => item.trim()).filter(Boolean);
+  renderCanvas();
+}
+
+function updateLinkVia(value) {
+  if (!Editor.doc || !Editor.selectedItem || Editor.selectedItem.type !== "link") return;
+  let invalidPoint = null;
+  const via = value.trim() === "" ? [] : value.split(";").map(rawPoint => {
+    const coordinates = rawPoint.split(",").map(raw => Number(raw.trim()));
+    if (coordinates.length !== 2 || coordinates.some(coordinate => !Number.isFinite(coordinate))) {
+      invalidPoint = rawPoint;
+    }
+    return coordinates;
+  });
+  if (invalidPoint !== null) {
+    toast(`Invalid via point: ${invalidPoint}`);
+    updateInspector();
+    return;
+  }
+  pushState();
+  Editor.doc.traversal_links[Editor.selectedItem.index].via = via;
   renderCanvas();
 }
 
@@ -960,6 +1181,8 @@ function deleteSelectedItem() {
     Editor.doc.props.splice(item.index, 1);
   } else if (item.type === "wall") {
     Editor.doc.walls.splice(item.index, 1);
+  } else if (item.type === "link") {
+    Editor.doc.traversal_links.splice(item.index, 1);
   } else if (item.type === "player") {
     Editor.doc.editor_state.test_players.splice(item.index, 1);
   }
@@ -1097,6 +1320,7 @@ function bindToolbarEvents() {
       
       // reset temp points
       Editor.drawingPoints = [];
+      Editor.linkStart = null;
       Editor.probePos = null;
       Editor.probeRay = null;
       Editor.probeResult = null;

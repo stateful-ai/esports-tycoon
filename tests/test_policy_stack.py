@@ -34,6 +34,7 @@ class _HoldProbe:
 
     def __init__(self) -> None:
         self.live_calls: dict[str, int] = {}
+        self.motor_calls: dict[str, int] = {}
 
     def decide(self, obs, legal, rng):
         pid = obs.self_state.player_id
@@ -42,6 +43,12 @@ class _HoldProbe:
         if any(action.type == ActionType.BUY for action in legal):
             return Action(type=ActionType.BUY, weapon_id="classic")
         return Action(type=ActionType.HOLD)
+
+    def control(self, obs, legal, rng):
+        pid = obs.self_state.player_id
+        if obs.tick > 0:
+            self.motor_calls[pid] = self.motor_calls.get(pid, 0) + 1
+        return next(control for control in legal if control.turn_degrees == 0.0)
 
 
 class _ImmediateTimeout:
@@ -74,6 +81,7 @@ def test_all_ten_player_policies_decide_each_live_tick(game_data: GameData) -> N
     rounds = result.score_a + result.score_b
     assert rounds == C.MAX_ROUNDS
     assert probe.live_calls == {pid: C.ROUND_TICKS * rounds for pid in player_ids}
+    assert probe.motor_calls == {pid: C.ROUND_TICKS * rounds for pid in player_ids}
 
 
 def test_timeout_is_the_only_live_coach_event(game_data: GameData) -> None:

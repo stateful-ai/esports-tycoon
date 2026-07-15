@@ -17,15 +17,24 @@ from typing import Iterable, Literal
 import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
-from esports_sim.policy.base import Action, ActionType, PlayerPolicy
+from esports_sim.policy.base import (
+    Action,
+    ActionType,
+    MotorControl,
+    MotorMovement,
+    MovementPace,
+    PlayerPolicy,
+)
 from esports_sim.schemas import CommunicationAction, PlayerObservation
 from esports_sim.schemas.communication import ClaimKind, ClaimValue
 
 
-POLICY_VERSION = "learned-player-v2"
-ENCODER_VERSION = 2
-OBSERVATION_VERSION = 1
+POLICY_VERSION = "learned-player-v3"
+ENCODER_VERSION = 3
+OBSERVATION_VERSION = 2
 ACTION_VOCAB = tuple(sorted(ActionType, key=str))
+MOTOR_MOVEMENT_VOCAB = tuple(sorted(MotorMovement, key=str))
+MOVEMENT_PACE_VOCAB = tuple(sorted(MovementPace, key=str))
 CLAIM_KIND_VOCAB = tuple(sorted(ClaimKind, key=str))
 CLAIM_VALUE_VOCAB = tuple(sorted(ClaimValue, key=str))
 ORDER_VERB_VOCAB = ("buy", "defuse", "goto", "hold", "plant", "wait")
@@ -69,6 +78,15 @@ class CommunicationDecisionTraceV1(BaseModel):
     observation: PlayerObservation
     legal_actions: tuple[CommunicationAction, ...]
     selected_action: CommunicationAction
+
+
+class MotorDecisionTraceV1(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    schema_version: Literal[1] = 1
+    observation: PlayerObservation
+    legal_controls: tuple[MotorControl, ...]
+    selected_control: MotorControl
 
 
 def _stable_bucket(text: str | None, buckets: int) -> np.ndarray:
@@ -130,6 +148,21 @@ def encode_observation(obs: PlayerObservation) -> np.ndarray:
         teammates_here / 4.0,
         len(fresh_enemy_reads) / 5.0,
         _mean(enemy.confidence for enemy in fresh_enemy_reads),
+        self_state.x / 100.0,
+        self_state.y / 100.0,
+        np.sin(np.deg2rad(self_state.heading_degrees)),
+        np.cos(np.deg2rad(self_state.heading_degrees)),
+        float(self_state.is_moving),
+        float(self_state.has_active_route),
+        float(self_state.movement_pace == "walk"),
+        (
+            np.sin(np.deg2rad(obs.navigation_heading_degrees))
+            if obs.navigation_heading_degrees is not None else 0.0
+        ),
+        (
+            np.cos(np.deg2rad(obs.navigation_heading_degrees))
+            if obs.navigation_heading_degrees is not None else 0.0
+        ),
     ]
     return np.concatenate(
         (
@@ -230,6 +263,20 @@ def _communication_features(action: CommunicationAction) -> np.ndarray:
     )
 
 
+def _motor_features(control: MotorControl) -> np.ndarray:
+    return np.concatenate(
+        (
+            np.asarray(
+                [float(control.movement == movement) for movement in MOTOR_MOVEMENT_VOCAB]
+            ),
+            np.asarray(
+                [float(control.pace == pace) for pace in MOVEMENT_PACE_VOCAB]
+            ),
+            np.asarray([control.turn_degrees / 45.0]),
+        )
+    )
+
+
 def _softmax(scores: np.ndarray) -> np.ndarray:
     shifted = scores - np.max(scores)
     exps = np.exp(np.clip(shifted, -60.0, 0.0))
@@ -265,14 +312,20 @@ def _sorted_comms(actions: Iterable[CommunicationAction]) -> list[CommunicationA
     return sorted(actions, key=lambda action: action.model_dump_json())
 
 
+def _sorted_controls(controls: Iterable[MotorControl]) -> list[MotorControl]:
+    return sorted(controls, key=lambda control: control.model_dump_json())
+
+
 class LearnedPlayerModel(BaseModel):
-    """Serializable shared action and communication candidate rankers."""
+    """Serializable shared tactical, motor, and communication rankers."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
 
     action_weights: np.ndarray
+    motor_weights: np.ndarray
     communication_weights: np.ndarray
     training_examples: int = Field(ge=1)
+    motor_examples: int = Field(ge=0)
     communication_examples: int = Field(ge=0)
 
     @classmethod
@@ -280,6 +333,7 @@ class LearnedPlayerModel(BaseModel):
         cls,
         traces: Iterable[PlayerDecisionTraceV1],
         communication_traces: Iterable[CommunicationDecisionTraceV1] = (),
+        motor_traces: Iterable[MotorDecisionTraceV1] = (),
     ) -> "LearnedPlayerModel":
         action_rows = []
         for trace in traces:
@@ -301,9 +355,24 @@ class LearnedPlayerModel(BaseModel):
             candidates = [_communication_features(action) for action in legal]
             comm_rows.append((state, candidates, legal.index(trace.selected_action)))
 
+        motor_rows = []
+        for trace in motor_traces:
+            legal = _sorted_controls(trace.legal_controls)
+            if trace.selected_control not in legal:
+                continue
+            state = conditioned_features(trace.observation)
+            candidates = [_motor_features(control) for control in legal]
+            motor_rows.append((state, candidates, legal.index(trace.selected_control)))
+
         state_dim = len(action_rows[0][0])
         action_dim = len(action_rows[0][1][0])
         action_weights = _fit_ranker(action_rows, action_dim, state_dim)
+        motor_dim = len(_motor_features(MotorControl()))
+        motor_weights = (
+            _fit_ranker(motor_rows, motor_dim, state_dim)
+            if motor_rows
+            else np.zeros((motor_dim, state_dim), dtype=np.float64)
+        )
         comm_dim = len(_communication_features(CommunicationAction()))
         communication_weights = (
             _fit_ranker(comm_rows, comm_dim, state_dim)
@@ -312,8 +381,10 @@ class LearnedPlayerModel(BaseModel):
         )
         return cls(
             action_weights=action_weights,
+            motor_weights=motor_weights,
             communication_weights=communication_weights,
             training_examples=len(action_rows),
+            motor_examples=len(motor_rows),
             communication_examples=len(comm_rows),
         )
 
@@ -326,11 +397,15 @@ class LearnedPlayerModel(BaseModel):
             "observation_version": OBSERVATION_VERSION,
             "encoder_version": ENCODER_VERSION,
             "action_vocab": [str(kind) for kind in ACTION_VOCAB],
+            "motor_movement_vocab": [str(kind) for kind in MOTOR_MOVEMENT_VOCAB],
+            "movement_pace_vocab": [str(kind) for kind in MOVEMENT_PACE_VOCAB],
             "claim_kind_vocab": [str(kind) for kind in CLAIM_KIND_VOCAB],
             "claim_value_vocab": [str(value) for value in CLAIM_VALUE_VOCAB],
             "action_weights": self.action_weights.tolist(),
+            "motor_weights": self.motor_weights.tolist(),
             "communication_weights": self.communication_weights.tolist(),
             "training_examples": self.training_examples,
+            "motor_examples": self.motor_examples,
             "communication_examples": self.communication_examples,
         }
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -352,6 +427,14 @@ class LearnedPlayerModel(BaseModel):
             str(kind) for kind in ACTION_VOCAB
         ):
             raise ValueError("checkpoint action vocabulary is incompatible")
+        if tuple(payload.get("motor_movement_vocab", ())) != tuple(
+            str(kind) for kind in MOTOR_MOVEMENT_VOCAB
+        ):
+            raise ValueError("checkpoint motor-movement vocabulary is incompatible")
+        if tuple(payload.get("movement_pace_vocab", ())) != tuple(
+            str(kind) for kind in MOVEMENT_PACE_VOCAB
+        ):
+            raise ValueError("checkpoint movement-pace vocabulary is incompatible")
         if tuple(payload.get("claim_kind_vocab", ())) != tuple(
             str(kind) for kind in CLAIM_KIND_VOCAB
         ):
@@ -362,10 +445,12 @@ class LearnedPlayerModel(BaseModel):
             raise ValueError("checkpoint claim-value vocabulary is incompatible")
         return cls(
             action_weights=np.asarray(payload["action_weights"], dtype=np.float64),
+            motor_weights=np.asarray(payload["motor_weights"], dtype=np.float64),
             communication_weights=np.asarray(
                 payload["communication_weights"], dtype=np.float64
             ),
             training_examples=int(payload["training_examples"]),
+            motor_examples=int(payload["motor_examples"]),
             communication_examples=int(payload["communication_examples"]),
         )
 
@@ -397,6 +482,43 @@ class LearnedPlayerPolicy:
         # injected per-player RNG keeps the choice byte-identical on replay.
         return ranked[int(rng.choice(len(ranked), p=probabilities))][0]
 
+    def control_probabilities(
+        self, obs: PlayerObservation, legal: list[MotorControl]
+    ) -> list[tuple[MotorControl, float]]:
+        ordered = _sorted_controls(legal)
+        state = conditioned_features(obs)
+        matrix = np.stack([_motor_features(control) for control in ordered])
+        probabilities = _softmax(matrix @ self.model.motor_weights @ state)
+        return list(zip(ordered, (float(value) for value in probabilities)))
+
+    def control(
+        self,
+        obs: PlayerObservation,
+        legal: list[MotorControl],
+        rng: np.random.Generator,
+    ) -> MotorControl:
+        del rng  # low-level steering should not twitch between tied frames
+        if self.model.motor_examples == 0:
+            desired_movement = (
+                MotorMovement.ADVANCE
+                if obs.self_state.has_active_route else MotorMovement.HOLD
+            )
+            compatible = [
+                control for control in legal
+                if control.movement == desired_movement
+                and control.pace == MovementPace.RUN
+            ]
+            return min(
+                compatible or legal,
+                key=lambda control: (
+                    abs(control.turn_degrees), control.model_dump_json()
+                ),
+            )
+        ranked = self.control_probabilities(obs, legal)
+        return max(
+            ranked, key=lambda item: (item[1], item[0].model_dump_json())
+        )[0]
+
     def communicate(
         self,
         obs: PlayerObservation,
@@ -417,6 +539,7 @@ class RecordingPlayerPolicy:
     def __init__(self, delegate: PlayerPolicy):
         self.delegate = delegate
         self.traces: list[PlayerDecisionTraceV1] = []
+        self.motor_traces: list[MotorDecisionTraceV1] = []
         self.communication_traces: list[CommunicationDecisionTraceV1] = []
 
     def decide(
@@ -431,6 +554,23 @@ class RecordingPlayerPolicy:
                 observation=obs,
                 legal_actions=tuple(legal),
                 selected_action=selected,
+            )
+        )
+        return selected
+
+    def control(
+        self,
+        obs: PlayerObservation,
+        legal: list[MotorControl],
+        rng: np.random.Generator,
+    ) -> MotorControl:
+        choose = getattr(self.delegate, "control", None)
+        selected = choose(obs, legal, rng) if callable(choose) else legal[0]
+        self.motor_traces.append(
+            MotorDecisionTraceV1(
+                observation=obs,
+                legal_controls=tuple(legal),
+                selected_control=selected,
             )
         )
         return selected
@@ -589,6 +729,47 @@ def communication_imitation_metrics(
         "examples": float(len(rows)),
         "accuracy": round(correct / len(rows), 4),
         "macro_speak_recall": round(sum(recalls) / len(recalls), 4),
+        "selected_counts": dict(sorted(selected_counts.items())),
+        "predicted_counts": dict(sorted(predicted_counts.items())),
+    }
+
+
+def motor_imitation_metrics(
+    model: LearnedPlayerModel,
+    traces: Iterable[MotorDecisionTraceV1],
+) -> dict[str, float | dict[str, int]]:
+    """Held-out legality and exact-command accuracy for the motor head."""
+    rows = list(traces)
+    if not rows:
+        return {
+            "examples": 0.0,
+            "accuracy": 0.0,
+            "legal_rate": 0.0,
+            "selected_counts": {},
+            "predicted_counts": {},
+        }
+    policy = model.make_policy()
+    selected_counts: Counter[str] = Counter()
+    predicted_counts: Counter[str] = Counter()
+    correct = 0
+    legal_count = 0
+    for trace in rows:
+        ranked = policy.control_probabilities(
+            trace.observation, list(trace.legal_controls)
+        )
+        selected = max(
+            ranked, key=lambda item: (item[1], item[0].model_dump_json())
+        )[0]
+        target = f"{trace.selected_control.movement}:{trace.selected_control.pace}"
+        predicted = f"{selected.movement}:{selected.pace}"
+        selected_counts[target] += 1
+        predicted_counts[predicted] += 1
+        correct += selected == trace.selected_control
+        legal_count += selected in trace.legal_controls
+    return {
+        "examples": float(len(rows)),
+        "accuracy": round(correct / len(rows), 4),
+        "legal_rate": round(legal_count / len(rows), 4),
         "selected_counts": dict(sorted(selected_counts.items())),
         "predicted_counts": dict(sorted(predicted_counts.items())),
     }

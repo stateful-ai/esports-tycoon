@@ -7758,25 +7758,13 @@ def map_studio_save(map_id: str, body: dict, request: Request) -> dict:
 @app.post("/api/map-studio/validate")
 def map_studio_validate(body: dict) -> dict:
     from esports_sim.registry import map_workbench
-    from esports_sim.registry.map_audit import audit_continuous
     from esports_sim.schemas.studio import MapStudioDocumentV1
     try:
         doc = MapStudioDocumentV1(**body)
-        continuous_errors = audit_continuous(doc)
-        
-        comp_errors = []
-        try:
-            map_workbench.compile_document(doc)
-        except ValueError as exc:
-            comp_errors.append(str(exc))
-            
+        _, _, errors = map_workbench.validate_document(doc)
         return {
-            "valid": len(continuous_errors) == 0 and len(comp_errors) == 0,
-            "errors": [
-                {"path": "continuous", "message": err} for err in continuous_errors
-            ] + [
-                {"path": "compilation", "message": err} for err in comp_errors
-            ]
+            "valid": not errors,
+            "errors": errors,
         }
     except Exception as exc:
         return {"valid": False, "errors": [{"path": "schema", "message": str(exc)}]}

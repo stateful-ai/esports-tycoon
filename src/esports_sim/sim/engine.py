@@ -14,6 +14,7 @@ tests/test_determinism.py).
 from __future__ import annotations
 
 import hashlib
+import math
 from collections import deque
 from dataclasses import dataclass, field
 
@@ -31,6 +32,9 @@ from esports_sim.policy.base import (
     CommunicationPolicy,
     DefenseRoundRequest,
     PlayerPolicy,
+    MotorControl,
+    MotorMovement,
+    MovementPace,
     RotationPlanRequest,
     TeamPolicy,
     TimeoutDirective,
@@ -57,6 +61,7 @@ from esports_sim.schemas import (
     MatchEndEvent,
     MatchStartEvent,
     MoveEvent,
+    MotorControlEvent,
     Player,
     PlayerConditionV1,
     PlayerObservation,
@@ -171,6 +176,10 @@ class _PState:
     mobility_until: int = -1  # dash/blast/teleport speeds the next move
     # Unit vector this player is pre-aiming down while stationary.
     watch: tuple[float, float] | None = None
+    heading_degrees: float = 0.0
+    movement_pace: MovementPace = MovementPace.RUN
+    motor_movement: MotorMovement = MotorMovement.HOLD
+    last_motor_signature: tuple[str, str, float] | None = None
     has_spike: bool = False
     charges: dict[str, int] = field(default_factory=dict)
 
@@ -215,6 +224,21 @@ class _PendingFlash:
     expires_at: int
 
 
+_STATIONARY_MOTOR_CONTROLS = tuple(
+    MotorControl.model_construct(
+        movement=MotorMovement.HOLD,
+        pace=MovementPace.RUN,
+        turn_degrees=turn,
+    )
+    for turn in C.MOTOR_TURN_CANDIDATES
+)
+_MOVING_MOTOR_CONTROLS = _STATIONARY_MOTOR_CONTROLS + tuple(
+    MotorControl.model_construct(movement=MotorMovement.ADVANCE, pace=pace, turn_degrees=turn)
+    for pace in (MovementPace.WALK, MovementPace.RUN)
+    for turn in C.MOTOR_TURN_CANDIDATES
+)
+
+
 class _MatchSim:
     def __init__(
         self,
@@ -226,6 +250,7 @@ class _MatchSim:
         log: EventLog | None = None,
         plans: dict[str, TeamMatchPlan] | None = None,
         policies: MatchPolicies | None = None,
+        capture_control_events: bool = True,
     ):
         self.gd = gd
         self.map: Map = gd.maps[map_id]
@@ -235,6 +260,7 @@ class _MatchSim:
         self.rng_tree = RngTree(root_seed=seed)
         self.seed = seed
         self.log = log if log is not None else EventLog()
+        self.capture_control_events = capture_control_events
         hold = Action.model_construct(type=ActionType.HOLD)
         wait = Action.model_construct(type=ActionType.WAIT)
         peek = Action.model_construct(type=ActionType.PEEK)
@@ -335,7 +361,7 @@ class _MatchSim:
             team_b: None,
         }
         self._round_target: dict[str, str | None] = {team_a: None, team_b: None}
-        self._round_policy_rngs: dict[str, np.random.Generator] = {}
+        self._round_policy_rngs: dict[tuple[str, str], np.random.Generator] = {}
         self._whiteboard = TeamWhiteboard(
             self.rng_tree, self.match_id, self.map, gd.players
         )
@@ -528,7 +554,9 @@ class _MatchSim:
     def _emit(self, ev: Event) -> None:
         self.log.append(ev)
 
-    def _policy_rng(self, round_num: int, pid: str) -> np.random.Generator:
+    def _policy_rng(
+        self, round_num: int, pid: str, channel: str = "action"
+    ) -> np.random.Generator:
         """Independent deterministic stream for one player's decision.
 
         A policy's draw budget must not perturb another player's choices or
@@ -536,12 +564,19 @@ class _MatchSim:
         round, so a player can sample on every tick without repeatedly hashing
         and constructing a fresh NumPy generator.
         """
-        rng = self._round_policy_rngs.get(pid)
+        key = (pid, channel)
+        rng = self._round_policy_rngs.get(key)
         if rng is None:
-            rng = self.rng_tree.derive(
-                "match", self.match_id, "round", round_num, "player", pid, "policy"
+            labels = (
+                ("match", self.match_id, "round", round_num, "player", pid, "policy")
+                if channel == "action"
+                else (
+                    "match", self.match_id, "round", round_num,
+                    "player", pid, "policy", channel,
+                )
             )
-            self._round_policy_rngs[pid] = rng
+            rng = self.rng_tree.derive(*labels)
+            self._round_policy_rngs[key] = rng
         return rng
 
     def _maybe_call_timeouts(
@@ -794,7 +829,7 @@ class _MatchSim:
         rng = self.rng_tree.derive("match", self.match_id, "round", round_num)
         seed_path = ("match", self.match_id, "round", str(round_num))
         self._round_policy_rngs = {
-            pid: self.rng_tree.derive(
+            (pid, "action"): self.rng_tree.derive(
                 "match", self.match_id, "round", round_num, "player", pid, "policy"
             )
             for pid in sorted(self.p)
@@ -876,6 +911,9 @@ class _MatchSim:
             ps.peek_until = -1
             ps.mobility_until = -1
             ps.watch = None
+            ps.movement_pace = MovementPace.RUN
+            ps.motor_movement = MotorMovement.HOLD
+            ps.last_motor_signature = None
             ps.has_spike = False
 
         attackers = self.roster[atk]
@@ -1134,8 +1172,70 @@ class _MatchSim:
                     for i, q in enumerate(pushers):
                         self._order(q, f"goto:{entries[i % len(entries)]}")
 
-            # -- movement: continuous stepping, then arrivals ----------------------------
-            self._advance_movers(tick)
+            # -- motor control: every live player owns movement/facing each tick ---------
+            # Tactical MOVE_TO actions still select a route for this first pass. The
+            # player policy now decides whether to traverse it, at what pace, and how
+            # to turn on every simulation tick. Objective channels temporarily lock
+            # motor input just as they do in the game.
+            motor_round_states: dict[str, PlayerRoundState] | None = None
+            motor_observations: dict[str, PlayerObservation] = {}
+            needs_motor_observations = any(
+                type(self.player_policies[q]) is not self._heuristic_player_type
+                and callable(getattr(self.player_policies[q], "control", None))
+                for q in sorted(self.p)
+                if self.p[q].alive
+            )
+            if needs_motor_observations:
+                motor_round_states = {
+                    q: self._round_state(self.p[q]) for q in sorted(self.p)
+                }
+            for pid in sorted(self.p):
+                ps = self.p[pid]
+                if (
+                    not ps.alive
+                    or ps.planting_until >= 0
+                    or ps.defusing_until >= 0
+                ):
+                    continue
+                policy = self.player_policies[pid]
+                legal_controls = self._motor_legal_controls(ps)
+                if type(policy) is self._heuristic_player_type:
+                    control = policy.control_fast_state(
+                        ps.move_eta >= 0,
+                        ps.heading_degrees,
+                        self._navigation_heading(ps),
+                        legal_controls,
+                        self._policy_rng(round_num, pid, "motor"),
+                    )
+                else:
+                    choose_control = getattr(policy, "control", None)
+                    if callable(choose_control):
+                        motor_observation = self._observe(
+                            pid,
+                            round_num,
+                            tick,
+                            spike_planted,
+                            ps.team_id == atk,
+                            ps.order,
+                            round_states=motor_round_states,
+                        )
+                        motor_observations[pid] = motor_observation
+                        control = choose_control(
+                            motor_observation,
+                            list(legal_controls),
+                            self._policy_rng(round_num, pid, "motor"),
+                        )
+                    else:
+                        # Compatibility for action-only policies authored before
+                        # the motor channel: preserve their legacy run/hold behavior.
+                        control = self._legacy_motor_control(ps, legal_controls)
+                self._apply_motor_control(
+                    ps, control, legal_controls, tick, seed_path
+                )
+                if getattr(control, "turn_degrees", 0.0) != 0.0:
+                    motor_observations.pop(pid, None)
+
+            # -- arrivals ---------------------------------------------------------------
             for pid in sorted(self.p):
                 ps = self.p[pid]
                 if ps.alive and 0 <= ps.move_eta <= tick:
@@ -1229,18 +1329,21 @@ class _MatchSim:
                             self._policy_rng(round_num, pid),
                         )
                     else:
-                        if round_states is None:
-                            round_states = {
-                                q: self._round_state(self.p[q])
-                                for q in sorted(self.p)
-                            }
                         legal = self._legal_actions(
                             ps, atk, spike_planted, planted_at, target_site, tick
                         )
-                        obs = self._observe(
-                            pid, round_num, tick, spike_planted, ps.team_id == atk, ps.order,
-                            round_states=round_states,
-                        )
+                        obs = motor_observations.get(pid)
+                        if obs is None or obs.self_state.has_active_route:
+                            if round_states is None:
+                                round_states = {
+                                    q: self._round_state(self.p[q])
+                                    for q in sorted(self.p)
+                                }
+                            obs = self._observe(
+                                pid, round_num, tick, spike_planted,
+                                ps.team_id == atk, ps.order,
+                                round_states=round_states,
+                            )
                         act = policy.decide(obs, legal, self._policy_rng(round_num, pid))
                 # Holders (defenders, post-plant attackers) settle into
                 # cover/angle slots; pushing players spread through rooms.
@@ -1266,7 +1369,7 @@ class _MatchSim:
                     dx, dy = sx - hs.x, sy - hs.y
                     norm = (dx * dx + dy * dy) ** 0.5
                     if norm > 0 and hs.move_eta < 0:
-                        hs.watch = (dx / norm, dy / norm)
+                        self._set_heading(hs, math.degrees(math.atan2(dy, dx)))
                 if mover_team == atk and not spike_planted:
                     sound_site = self._callout_site(dest_room)
                     if sound_site in sites:
@@ -1469,7 +1572,27 @@ class _MatchSim:
         c = self.map.callouts[enemy_spawn]
         dx, dy = c.x - ps.x, c.y - ps.y
         norm = (dx * dx + dy * dy) ** 0.5
-        ps.watch = (dx / norm, dy / norm) if norm > 0 else None
+        if norm > 0:
+            ps.heading_degrees = math.degrees(math.atan2(dy, dx)) % 360.0
+            ps.watch = (dx / norm, dy / norm)
+        else:
+            ps.watch = None
+
+    @staticmethod
+    def _navigation_heading(ps: _PState) -> float | None:
+        if not ps.path:
+            return None
+        x, y = ps.path[0]
+        dx, dy = x - ps.x, y - ps.y
+        if dx == 0.0 and dy == 0.0:
+            return None
+        return math.degrees(math.atan2(dy, dx)) % 360.0
+
+    @staticmethod
+    def _set_heading(ps: _PState, heading_degrees: float) -> None:
+        ps.heading_degrees = heading_degrees % 360.0
+        radians = math.radians(ps.heading_degrees)
+        ps.watch = (math.cos(radians), math.sin(radians))
 
     def _facing(self, ps: _PState, ex: float, ey: float) -> float:
         """cos(angle) between this player's watch direction and the enemy
@@ -1556,7 +1679,7 @@ class _MatchSim:
         ps.move_dest = dest
         ps.move_eta = tick + ticks
         ps.path = pts[1:]
-        ps.watch = None  # no pre-aim while running
+        ps.movement_pace = MovementPace.RUN
         self._emit(
             MoveEvent(
                 tick=tick,
@@ -1608,30 +1731,119 @@ class _MatchSim:
             )
         )
 
-    def _advance_movers(self, tick: int) -> None:
-        """Step every moving player along their path so that they land on
-        the final waypoint exactly at move_eta (stall-aware re-pacing)."""
-        for pid in sorted(self.p):
-            ps = self.p[pid]
-            if not ps.alive or ps.move_eta < 0 or not ps.path:
-                continue
-            remaining_ticks = ps.move_eta - tick
-            if remaining_ticks <= 0:
-                ps.x, ps.y = ps.path[-1]
-                ps.path = []
-                continue
-            step = self._poly_len([(ps.x, ps.y), *ps.path]) / (remaining_ticks + 1)
-            while step > 0 and ps.path:
-                nx, ny = ps.path[0]
-                d = ((nx - ps.x) ** 2 + (ny - ps.y) ** 2) ** 0.5
-                if d <= step:
-                    ps.x, ps.y = nx, ny
-                    ps.path.pop(0)
-                    step -= d
-                else:
-                    ps.x += (nx - ps.x) / d * step
-                    ps.y += (ny - ps.y) / d * step
-                    step = 0.0
+    @staticmethod
+    def _step_path(ps: _PState, step: float) -> None:
+        while step > 0 and ps.path:
+            nx, ny = ps.path[0]
+            distance = math.hypot(nx - ps.x, ny - ps.y)
+            if distance <= step:
+                ps.x, ps.y = nx, ny
+                ps.path.pop(0)
+                step -= distance
+            else:
+                ps.x += (nx - ps.x) / distance * step
+                ps.y += (ny - ps.y) / distance * step
+                step = 0.0
+
+    def _advance_mover(self, ps: _PState, tick: int, pace: MovementPace) -> None:
+        """Advance one player while preserving the legacy RUN cadence."""
+        if ps.move_eta < 0 or not ps.path:
+            return
+        remaining_ticks = ps.move_eta - tick
+        if remaining_ticks <= 0:
+            ps.x, ps.y = ps.path[-1]
+            ps.path = []
+            return
+        remaining_distance = self._poly_len([(ps.x, ps.y), *ps.path])
+        step = remaining_distance / (remaining_ticks + 1)
+        if pace == MovementPace.WALK:
+            step *= C.MOTOR_WALK_SPEED_MULT
+            revised_ticks = max(
+                1,
+                math.ceil(
+                    max(0.0, remaining_distance - step)
+                    / (self._speed(ps.pid) * C.MOTOR_WALK_SPEED_MULT)
+                ),
+            )
+            ps.move_eta = max(ps.move_eta, tick + revised_ticks)
+        self._step_path(ps, step)
+
+    def _motor_legal_controls(self, ps: _PState) -> tuple[MotorControl, ...]:
+        return _MOVING_MOTOR_CONTROLS if ps.move_eta >= 0 else _STATIONARY_MOTOR_CONTROLS
+
+    @staticmethod
+    def _legacy_motor_control(
+        ps: _PState, legal: tuple[MotorControl, ...]
+    ) -> MotorControl:
+        movement = MotorMovement.ADVANCE if ps.move_eta >= 0 else MotorMovement.HOLD
+        for control in legal:
+            if (
+                control.movement == movement
+                and control.pace == MovementPace.RUN
+                and control.turn_degrees == 0.0
+            ):
+                return control
+        return legal[0]
+
+    def _apply_motor_control(
+        self,
+        ps: _PState,
+        control: MotorControl,
+        legal: tuple[MotorControl, ...],
+        tick: int,
+        seed_path: tuple[str, ...],
+    ) -> None:
+        """Validate and resolve a single player-issued motor command."""
+        if control not in legal:
+            control = self._legacy_motor_control(ps, legal)
+
+        route_active = ps.move_eta >= 0
+        path_head = ps.path[0] if ps.path else None
+
+        if control.turn_degrees:
+            self._set_heading(ps, ps.heading_degrees + control.turn_degrees)
+
+        if ps.move_eta >= 0:
+            if control.movement == MotorMovement.ADVANCE:
+                ps.movement_pace = control.pace
+                self._advance_mover(ps, tick, control.pace)
+            else:
+                # Pausing a route must also pause its authoritative ETA.
+                ps.move_eta += 1
+        ps.motor_movement = control.movement
+
+        signature = (
+            str(control.movement),
+            str(control.pace),
+            float(control.turn_degrees),
+        )
+        crossed_waypoint = path_head is not None and (
+            not ps.path or ps.path[0] != path_head
+        )
+        if (
+            self.capture_control_events
+            and (
+                signature != ps.last_motor_signature
+                or crossed_waypoint
+            )
+        ):
+            self._emit(
+                MotorControlEvent.model_construct(
+                    tick=tick,
+                    seed_path=seed_path,
+                    player_id=ps.pid,
+                    movement=str(control.movement),
+                    pace=str(control.pace),
+                    turn_degrees=control.turn_degrees,
+                    heading_degrees=round(ps.heading_degrees, 3),
+                    x=round(ps.x, 3),
+                    y=round(ps.y, 3),
+                    route_active=route_active,
+                    callout_id=ps.callout or None,
+                    route_target_callout=ps.move_dest,
+                )
+            )
+        ps.last_motor_signature = signature
 
     # -- orders / actions ---------------------------------------------------------
 
@@ -1881,6 +2093,7 @@ class _MatchSim:
             adjacent_callouts=sorted(self.map.neighbors(ps.callout))
             if ps.callout
             else [],
+            navigation_heading_degrees=self._navigation_heading(ps),
             igl_call=order,
             role=ps.role,
             # Attackers know their own called site. Defenders must infer it
@@ -1922,11 +2135,33 @@ class _MatchSim:
                     player_id=enemy_id,
                     last_seen_callout=enemy.callout,
                     last_seen_tick=tick,
+                    last_seen_x=round(enemy.x, 3),
+                    last_seen_y=round(enemy.y, 3),
                     weapon_guess=enemy.weapon,
                     alive_guess=True,
                     confidence=1.0,
                     source="seen",
                 )
+            elif (
+                enemy.motor_movement == MotorMovement.ADVANCE
+                and enemy.movement_pace == MovementPace.RUN
+            ):
+                distance = math.hypot(enemy.x - observer.x, enemy.y - observer.y)
+                if distance <= C.RUN_FOOTSTEP_RADIUS:
+                    proximity = 1.0 - distance / C.RUN_FOOTSTEP_RADIUS
+                    confidence = C.RUN_FOOTSTEP_MIN_CONFIDENCE + proximity * (
+                        C.RUN_FOOTSTEP_MAX_CONFIDENCE
+                        - C.RUN_FOOTSTEP_MIN_CONFIDENCE
+                    )
+                    memory[enemy_id] = EnemyReadout(
+                        player_id=enemy_id,
+                        last_seen_callout=enemy.callout,
+                        last_seen_tick=tick,
+                        weapon_guess=None,
+                        alive_guess=True,
+                        confidence=confidence,
+                        source="heard",
+                    )
 
         out: list[EnemyReadout] = []
         for enemy_id in sorted(memory):
@@ -1939,7 +2174,7 @@ class _MatchSim:
                 readout.model_copy(
                     update={
                         "confidence": confidence,
-                        "source": "seen" if age == 0 else "remembered",
+                        "source": readout.source if age == 0 else "remembered",
                     }
                 )
             )
@@ -1979,6 +2214,14 @@ class _MatchSim:
             credits=ps.credits,
             weapon_id=ps.weapon,
             callout_id=ps.callout or None,
+            x=ps.x,
+            y=ps.y,
+            heading_degrees=ps.heading_degrees,
+            has_active_route=ps.move_eta >= 0,
+            is_moving=(
+                ps.move_eta >= 0 and ps.motor_movement == MotorMovement.ADVANCE
+            ),
+            movement_pace=str(ps.movement_pace),
             ability_charges=dict(sorted(ps.charges.items())),
             ult_points=ps.ult_points,
         )
@@ -2522,7 +2765,7 @@ class _MatchSim:
         ps.move_dest = room  # same-room shuffle; callout is unchanged
         ps.move_eta = tick + max(1, round(dist / self._speed(ps.pid)))
         ps.path = [(tx, ty)]
-        ps.watch = None
+        ps.movement_pace = MovementPace.RUN
         self._emit(
             MoveEvent(
                 tick=tick,
@@ -3265,12 +3508,21 @@ def simulate_match_result(
     log: EventLog | None = None,
     plans: dict[str, TeamMatchPlan] | None = None,
     policies: MatchPolicies | None = None,
+    capture_control_events: bool = True,
 ) -> MatchResult:
     """`plans` carries per-match coaching overrides (game plans) from the
     campaign layer; None — the only thing the match gates ever pass — is
     exactly the pre-plan engine."""
     sim = _MatchSim(
-        gd, team_a, team_b, map_id, seed, log=log, plans=plans, policies=policies
+        gd,
+        team_a,
+        team_b,
+        map_id,
+        seed,
+        log=log,
+        plans=plans,
+        policies=policies,
+        capture_control_events=capture_control_events,
     )
     return sim.run()
 

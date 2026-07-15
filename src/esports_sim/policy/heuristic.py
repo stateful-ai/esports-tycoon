@@ -22,6 +22,9 @@ from esports_sim.policy.base import (
     CoachObservation,
     DefenseRoundPlan,
     DefenseRoundRequest,
+    MotorControl,
+    MotorMovement,
+    MovementPace,
     RotationPlanRequest,
     TimeoutDirective,
 )
@@ -43,6 +46,11 @@ from esports_sim.sim.igl import effectiveness as igl_effectiveness
 # new HOLD object tens of thousands of times per map is simply needless work.
 _HOLD_ACTION = Action.model_construct(type=ActionType.HOLD)
 _PEEK_ACTION = Action.model_construct(type=ActionType.PEEK)
+
+
+def _signed_angle_delta(target: float, current: float) -> float:
+    """Smallest signed rotation from current heading to target heading."""
+    return (target - current + 180.0) % 360.0 - 180.0
 
 
 class HeuristicPolicy:
@@ -172,6 +180,56 @@ class HeuristicPolicy:
         rng: np.random.Generator,
     ) -> Action:
         return self._decide(obs, legal, rng)
+
+    def control(
+        self,
+        obs: PlayerObservation,
+        legal: list[MotorControl],
+        rng: np.random.Generator,
+    ) -> MotorControl:
+        """Keep following an active route and turn toward its next waypoint."""
+        return self.control_fast_state(
+            obs.self_state.has_active_route,
+            obs.self_state.heading_degrees,
+            obs.navigation_heading_degrees,
+            tuple(legal),
+            rng,
+        )
+
+    def control_fast_state(
+        self,
+        has_active_route: bool,
+        heading_degrees: float,
+        navigation_heading_degrees: float | None,
+        legal: tuple[MotorControl, ...],
+        rng: np.random.Generator,
+    ) -> MotorControl:
+        """Allocation-cheap motor head used by the engine's built-in policy."""
+        del rng  # deterministic baseline; learned policies may rank stochastically
+        movement = (
+            MotorMovement.ADVANCE if has_active_route else MotorMovement.HOLD
+        )
+        pace = MovementPace.RUN
+        desired_turn = (
+            _signed_angle_delta(navigation_heading_degrees, heading_degrees)
+            if has_active_route and navigation_heading_degrees is not None
+            else 0.0
+        )
+        candidates = [
+            control
+            for control in legal
+            if control.movement == movement and control.pace == pace
+        ]
+        if not candidates:
+            candidates = list(legal)
+        return min(
+            candidates,
+            key=lambda control: (
+                abs(desired_turn - control.turn_degrees),
+                abs(control.turn_degrees),
+                control.model_dump_json(),
+            ),
+        )
 
     def decide_fast(self, obs, legal, rng: np.random.Generator) -> Action:
         """Fast internal equivalent of :meth:`decide`.

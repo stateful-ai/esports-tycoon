@@ -203,6 +203,26 @@ class MoveEvent(Event):
     arrive_tick: int | None = None
 
 
+class MotorControlEvent(Event):
+    """Observable change in a player's per-tick motor command.
+
+    Repeated identical commands are intentionally coalesced. Training traces
+    may retain every decision while replay logs only need state transitions.
+    """
+
+    type: Literal["round.control"] = "round.control"
+    player_id: str
+    movement: Literal["hold", "advance"]
+    pace: Literal["walk", "run"]
+    turn_degrees: float = 0.0
+    heading_degrees: float = 0.0
+    x: float
+    y: float
+    route_active: bool = False
+    callout_id: str | None = None
+    route_target_callout: str | None = None
+
+
 from esports_sim.schemas.team import HalftimeTalk, TouchlineShout
 
 
@@ -257,6 +277,7 @@ EventUnion = Annotated[
         SpikeDefuseEvent,
         UtilityUsedEvent,
         MoveEvent,
+        MotorControlEvent,
         GimmickUsedEvent,
         WhiffEvent,
         CommsEvent,

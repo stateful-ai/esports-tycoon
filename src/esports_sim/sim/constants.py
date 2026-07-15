@@ -21,6 +21,16 @@ MOVE_TICKS_PER_EDGE = 6  # legacy fallback pacing (no-geometry maps)
 # compressing the pacing gate's 8-18s staging and 25-35s long rotates.
 PLAYER_SPEED = 2.5  # grid units per tick at movement=50
 MIN_MOVE_TICKS = 2
+# Walking is deliberately slower than the route's normal run cadence. Noise
+# propagation will consume this same authored pace in the next interaction
+# pass; keeping it explicit now avoids encoding pace in raw coordinate deltas.
+MOTOR_WALK_SPEED_MULT = 0.55
+MOTOR_TURN_CANDIDATES = (-45.0, -15.0, -5.0, 0.0, 5.0, 15.0, 45.0)
+# Running advertises a coarse location to nearby enemy observations; walking
+# deliberately produces no footstep readout in this first motor pass.
+RUN_FOOTSTEP_RADIUS = 24.0
+RUN_FOOTSTEP_MIN_CONFIDENCE = 0.55
+RUN_FOOTSTEP_MAX_CONFIDENCE = 0.85
 # Positional cover: a stationary holder hugging a crate that sits between
 # them and the shooter is simply harder to kill.
 COVER_BONUS = 4.0

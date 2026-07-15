@@ -4,6 +4,8 @@ take shape without pinning the match engine's internal representation.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim._compat import StrEnum
@@ -33,6 +35,14 @@ class PlayerRoundState(BaseModel):
     weapon_id: str = "classic"
     # Current callout. None = spawn / not yet moved.
     callout_id: str | None = None
+    # Authoritative continuous pose. Callouts remain semantic labels rather
+    # than movement anchors for policies that consume observation v2.
+    x: float = 0.0
+    y: float = 0.0
+    heading_degrees: float = 0.0
+    has_active_route: bool = False
+    is_moving: bool = False
+    movement_pace: Literal["walk", "run"] = "run"
     # Remaining ability charges keyed by ability id.
     ability_charges: dict[str, int] = Field(default_factory=dict)
     ult_points: int = 0

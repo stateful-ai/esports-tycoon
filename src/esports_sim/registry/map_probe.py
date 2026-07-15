@@ -43,7 +43,7 @@ def probe_map(
             
     if curr_surface_id:
         for zone in doc.semantic_zones:
-            if curr_surface_id in zone.surface_ids:
+            if zone.kind != "plant" and curr_surface_id in zone.surface_ids:
                 curr_zone_id = zone.id
                 break
 
@@ -56,7 +56,7 @@ def probe_map(
     
     # Add walls
     for idx, wall in enumerate(doc.walls):
-        poly = wall.get("polyline", [])
+        poly = wall.polyline
         for i in range(1, len(poly)):
             blocking_segments.append((poly[i-1], poly[i], f"wall_{idx}", "wall"))
             
@@ -195,7 +195,7 @@ def probe_map(
         # Full height props and walls block sight
         sight_blocking_segments = []
         for idx, wall in enumerate(doc.walls):
-            poly = wall.get("polyline", [])
+            poly = wall.polyline
             for i in range(1, len(poly)):
                 sight_blocking_segments.append((poly[i-1], poly[i], f"wall_{idx}", "wall"))
         for prop in doc.props:
@@ -225,6 +225,8 @@ def probe_map(
                     adj[zone1.id].add(zone2.id)
         surf_to_zone: dict[str, str] = {}
         for zone in doc.semantic_zones:
+            if zone.kind == "plant":
+                continue
             for sid in zone.surface_ids:
                 surf_to_zone[sid] = zone.id
 

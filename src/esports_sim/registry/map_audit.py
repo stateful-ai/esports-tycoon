@@ -94,6 +94,42 @@ def segments_intersect(p1: tuple[float, float], p2: tuple[float, float], q1: tup
     return ccw(p1, q1, q2) != ccw(p2, q1, q2) and ccw(p1, p2, q1) != ccw(p1, p2, q2)
 
 
+def point_segment_distance(
+    point: tuple[float, float],
+    start: tuple[float, float],
+    end: tuple[float, float],
+) -> float:
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    if dx == 0.0 and dy == 0.0:
+        return ((point[0] - start[0]) ** 2 + (point[1] - start[1]) ** 2) ** 0.5
+    t = max(
+        0.0,
+        min(
+            1.0,
+            ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy)
+            / (dx * dx + dy * dy),
+        ),
+    )
+    px, py = start[0] + t * dx, start[1] + t * dy
+    return ((point[0] - px) ** 2 + (point[1] - py) ** 2) ** 0.5
+
+
+def segment_distance(
+    a1: tuple[float, float],
+    a2: tuple[float, float],
+    b1: tuple[float, float],
+    b2: tuple[float, float],
+) -> float:
+    if segments_intersect(a1, a2, b1, b2):
+        return 0.0
+    return min(
+        point_segment_distance(a1, b1, b2),
+        point_segment_distance(a2, b1, b2),
+        point_segment_distance(b1, a1, a2),
+        point_segment_distance(b2, a1, a2),
+    )
+
+
 def is_point_in_polygon(pt: tuple[float, float], poly: list[tuple[float, float]]) -> bool:
     # Ray-casting algorithm
     x, y = pt
@@ -156,6 +192,9 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
     # 1. Walkable surfaces: polygon validity
     surfaces_by_id: dict[str, WalkableSurface] = {}
     for surf in doc.walkable_surfaces:
+        if surf.id in surfaces_by_id:
+            findings.append(f"Duplicate walkable surface id '{surf.id}'")
+            continue
         surfaces_by_id[surf.id] = surf
         errors = check_polygon_valid(surf.polygon)
         for err in errors:
@@ -164,6 +203,9 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
     # 2. Semantic zones: polygon validity & containment
     zones_by_id: dict[str, SemanticZone] = {}
     for zone in doc.semantic_zones:
+        if zone.id in zones_by_id:
+            findings.append(f"Duplicate semantic zone id '{zone.id}'")
+            continue
         zones_by_id[zone.id] = zone
         errors = check_polygon_valid(zone.polygon)
         for err in errors:
@@ -175,13 +217,29 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
                 findings.append(f"Semantic zone '{zone.id}' references missing surface '{sid}'")
             else:
                 surf = surfaces_by_id[sid]
-                # Zone polygon should overlap or be supported by walkable surface
-                # (For loose containment, check if label position is on the surface)
                 if not is_point_in_polygon(zone.label_position, surf.polygon):
-                    pass  # warning only, or label placement check
+                    findings.append(
+                        f"Semantic zone '{zone.id}' label position is outside "
+                        f"walkable surface '{sid}'"
+                    )
+
+    for side, spawn_id in (
+        ("attacker", doc.attacker_spawn),
+        ("defender", doc.defender_spawn),
+    ):
+        spawn = zones_by_id.get(spawn_id)
+        if spawn is None:
+            findings.append(f"{side.title()} spawn references missing zone '{spawn_id}'")
+        elif spawn.kind != "spawn":
+            findings.append(f"{side.title()} spawn zone '{spawn_id}' must have kind 'spawn'")
 
     # 3. Traversal links: endpoints supported & reachable
+    link_ids: set[str] = set()
     for link in doc.traversal_links:
+        if link.id in link_ids:
+            findings.append(f"Duplicate traversal link id '{link.id}'")
+            continue
+        link_ids.add(link.id)
         # from pos
         fx, fy, fsid = link.from_pos
         if fsid not in surfaces_by_id:
@@ -199,13 +257,63 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             if not is_point_in_polygon((tx, ty), surf.polygon):
                 findings.append(f"Traversal link '{link.id}' to_pos ({tx}, {ty}) is outside walkable surface '{tsid}'")
 
+        # A Studio-authored corridor is the motor controller's exact route
+        # core. Reject it if a player-sized capsule would clip authored walls
+        # or colliding props; the current match sim deliberately trusts this
+        # validated path rather than running a second pathfinder every tick.
+        if link.path_mode == "corridor" and link.include_endpoints_in_path:
+            route = [link.from_pos[:2], *link.via, link.to_pos[:2]]
+            blockers: list[
+                tuple[str, tuple[float, float], tuple[float, float], float]
+            ] = []
+            for wall_index, wall in enumerate(doc.walls):
+                for point_index in range(1, len(wall.polyline)):
+                    blockers.append((
+                        f"wall_{wall_index}",
+                        wall.polyline[point_index - 1],
+                        wall.polyline[point_index],
+                        1.0 + wall.thickness / 2.0,
+                    ))
+            for prop in doc.props:
+                if not prop.collision:
+                    continue
+                for point_index in range(len(prop.footprint)):
+                    blockers.append((
+                        prop.id,
+                        prop.footprint[point_index],
+                        prop.footprint[(point_index + 1) % len(prop.footprint)],
+                        1.0,
+                    ))
+            collision = next(
+                (
+                    blocker_id
+                    for route_start, route_end in zip(route, route[1:])
+                    for blocker_id, block_start, block_end, clearance in blockers
+                    if segment_distance(route_start, route_end, block_start, block_end)
+                    < clearance
+                ),
+                None,
+            )
+            if collision is not None:
+                findings.append(
+                    f"Traversal link '{link.id}' lacks player clearance at '{collision}'"
+                )
+
     # 4. Object support (props)
+    prop_ids: set[str] = set()
     for prop in doc.props:
+        if prop.id in prop_ids:
+            findings.append(f"Duplicate prop id '{prop.id}'")
+            continue
+        prop_ids.add(prop.id)
         if prop.surface_id not in surfaces_by_id:
             findings.append(f"Prop '{prop.id}' references missing surface '{prop.surface_id}'")
         else:
             surf = surfaces_by_id[prop.surface_id]
-            if not polygon_contains_polygon(surf.polygon, prop.footprint):
+            if (
+                prop.id not in doc.legacy.prop_support_exemptions
+                and not polygon_contains_polygon(surf.polygon, prop.footprint)
+            ):
                 findings.append(f"Prop '{prop.id}' footprint is not fully supported by surface '{prop.surface_id}'")
 
     # 5. Overlapping surfaces / elevation audit
@@ -261,9 +369,20 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
                 adj[zone1.id].add(zone2.id)
                 adj[zone2.id].add(zone1.id)
 
+    # Synthesized legacy documents retain the complete runtime graph here.
+    # It is just as traversable as an explicitly drawn Studio link.
+    for from_zone, neighbors in doc.legacy.adjacency_overrides.items():
+        if from_zone not in adj:
+            continue
+        for to_zone in neighbors:
+            if to_zone in adj:
+                adj[from_zone].add(to_zone)
+
     # Connect zones via traversal links
     surf_to_zone: dict[str, str] = {}
     for zone in doc.semantic_zones:
+        if zone.kind == "plant":
+            continue
         for sid in zone.surface_ids:
             surf_to_zone[sid] = zone.id
 
