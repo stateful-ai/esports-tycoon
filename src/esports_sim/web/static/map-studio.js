@@ -121,11 +121,11 @@ function getCanvasCoords(e) {
   if (Editor.isIso) {
     const x = (rawX + 2 * rawY) / 2;
     const y = rawX + 100 - x;
-    return [Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y))];
+    return [x, y];
   } else {
     const x = rawX;
     const y = 100 - rawY;
-    return [Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y))];
+    return [x, y];
   }
 }
 
@@ -196,7 +196,7 @@ async function openMap(mapId) {
 
 function updateOverlayImage() {
   const img = $("#backdrop-image");
-  if (Editor.showOverlay && Editor.doc) {
+  if (Editor.showOverlay && Editor.isIso && Editor.doc) {
     img.setAttribute("href", `/assets/maps/painted/${Editor.doc.id}.webp`);
     img.style.opacity = "0.5";
   } else {
@@ -478,6 +478,14 @@ function sum(arr) {
 function renderCanvas() {
   if (!Editor.doc) return;
   const isIso = Editor.isIso;
+
+  // Center maps by updating viewBox dynamically based on projection
+  const svg = $("#studio-canvas");
+  if (isIso) {
+    svg.setAttribute("viewBox", "-110 -12 220 128");
+  } else {
+    svg.setAttribute("viewBox", "-6 -6 112 112");
+  }
 
   // Clear layers
   const layers = ["surfaces", "zones", "walls", "props", "links", "players", "probes", "handles"];
