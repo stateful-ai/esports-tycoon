@@ -1,0 +1,4 @@
+interface:
+  display_name: "Map Studio Authoring"
+  short_description: "Build and co-edit validated simulator maps"
+  default_prompt: "Use $map-studio-authoring to create or co-edit a validated Map Studio map through the esports-maps MCP server."

@@ -32,6 +32,9 @@ const Editor = {
   showOverlay: false,
   viewBox: null,      // Dynamic pan/zoom viewBox state
   panState: null,     // Mouse tracking for dynamic pan
+  externalChangePending: false,
+  pollingRevision: false,
+  revisionTimer: null,
 };
 
 function toast(msg) {
@@ -52,7 +55,9 @@ async function request(path, options = {}) {
   const response = await fetch(path, init);
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: response.statusText }));
-    throw new Error(error.detail || "Request failed");
+    const requestError = new Error(error.detail || "Request failed");
+    requestError.status = response.status;
+    throw requestError;
   }
   return response.json();
 }
@@ -95,6 +100,11 @@ function paintSaveState() {
   chip.className = "status-chip";
   if (!Editor.doc) {
     chip.textContent = "No map open";
+    return;
+  }
+  if (Editor.externalChangePending) {
+    chip.textContent = "External changes";
+    chip.classList.add("dirty");
     return;
   }
   if (Editor.dirty) {
@@ -154,12 +164,14 @@ function paintMapList() {
   `).join("");
 }
 
-async function openMap(mapId) {
+async function openMap(mapId, options = {}) {
   try {
+    const preservedViewBox = options.preserveView ? clone(Editor.viewBox) : null;
     const res = await request(`/api/map-studio/maps/${encodeURIComponent(mapId)}`);
     Editor.doc = res.document;
     Editor.hash = res.hash;
     Editor.dirty = false;
+    Editor.externalChangePending = false;
     Editor.undoStack = [];
     Editor.redoStack = [];
     Editor.selectedItem = null;
@@ -177,6 +189,7 @@ async function openMap(mapId) {
     $("#validate-btn").disabled = false;
     $("#publish-btn").disabled = false;
     $("#save-btn").disabled = false;
+    $("#reload-btn").disabled = true;
     
     // Update Art status
     $("#hash-draft").textContent = Editor.hash.substring(0, 8);
@@ -184,7 +197,9 @@ async function openMap(mapId) {
     $("#paint-status").textContent = "unknown";
     
     // Initialize viewBox state
-    if (Editor.isIso) {
+    if (preservedViewBox) {
+      Editor.viewBox = preservedViewBox;
+    } else if (Editor.isIso) {
       Editor.viewBox = { x: -110, y: -12, w: 220, h: 128 };
     } else {
       Editor.viewBox = { x: -6, y: -6, w: 112, h: 112 };
@@ -198,9 +213,58 @@ async function openMap(mapId) {
     if (Editor.showOverlay) {
       updateOverlayImage();
     }
+    return true;
   } catch (err) {
     toast(`Failed to load map: ${err.message}`);
+    return false;
   }
+}
+
+function markExternalChange() {
+  if (!Editor.externalChangePending) {
+    toast("This map changed outside the editor. Reload and reconcile before saving.");
+  }
+  Editor.externalChangePending = true;
+  $("#reload-btn").disabled = false;
+  paintSaveState();
+}
+
+async function checkExternalRevision() {
+  if (!Editor.doc || Editor.pollingRevision) return;
+  Editor.pollingRevision = true;
+  const mapId = Editor.doc.id;
+  try {
+    const res = await request(`/api/map-studio/maps/${encodeURIComponent(mapId)}/revision`);
+    if (!Editor.doc || Editor.doc.id !== mapId || res.hash === Editor.hash) return;
+    if (Editor.dirty) {
+      markExternalChange();
+    } else {
+      if (await openMap(mapId, { preserveView: true })) {
+        toast("Reloaded external map changes.");
+      }
+    }
+  } catch (err) {
+    // A transient poll failure should not interrupt active editing.
+  } finally {
+    Editor.pollingRevision = false;
+  }
+}
+
+async function reloadLatest() {
+  if (!Editor.doc) return;
+  if (Editor.dirty && !window.confirm("Discard your unsaved edits and reload the latest shared draft?")) {
+    return;
+  }
+  const mapId = Editor.doc.id;
+  if (await openMap(mapId, { preserveView: true })) {
+    toast("Loaded the latest shared draft.");
+  }
+}
+
+function startRevisionPolling() {
+  if (Editor.revisionTimer !== null || typeof window.setInterval !== "function") return;
+  Editor.revisionTimer = window.setInterval(checkExternalRevision, 3000);
+  Editor.revisionTimer?.unref?.();
 }
 
 function updateOverlayImage() {
@@ -447,7 +511,7 @@ function bindCanvasEvents() {
   });
 
   svg.addEventListener("mouseup", (e) => {
-    if (e.button === 2) {
+    if (e?.button === 2) {
       if (Editor.panState) Editor.panState = null;
       return;
     }
@@ -530,12 +594,15 @@ function bindCanvasEvents() {
         });
         Editor.selectedItem = { type: "zone", id: zid, index: Editor.doc.semantic_zones.length - 1 };
       } else if (Editor.selectedTool === "wall") {
+        const wallId = `wall_${Date.now()}`;
         Editor.doc.walls.push({
+          id: wallId,
           polyline: Editor.drawingPoints,
           thickness: 1.0,
           height: 3.2,
           penetrability: 1.0
         });
+        Editor.selectedItem = { type: "wall", id: wallId, index: Editor.doc.walls.length - 1 };
       }
       Editor.drawingPoints = [];
       Editor.selectedTool = "select";
@@ -921,7 +988,7 @@ function findElementAt(pt) {
     const points = wall.polyline || [];
     for (let pointIndex = 1; pointIndex < points.length; pointIndex++) {
       if (pointSegmentDistance(pt, points[pointIndex - 1], points[pointIndex]) < Math.max(1.0, wall.thickness || 1.0)) {
-        return { type: "wall", id: `wall_${i}`, index: i };
+        return { type: "wall", id: wall.id || `wall_${i}`, index: i };
       }
     }
   }
@@ -1119,6 +1186,7 @@ function updateInspector() {
     html = `
       <h3>Wall Segment</h3>
       <div style="display: grid; gap: var(--es-space-4); margin-top: var(--es-space-4);">
+        <label class="field"><span>Wall ID</span><input type="text" value="${esc(wall.id || `wall_${item.index}`)}" onchange="updateSelectedField('id', this.value)"></label>
         <label class="field"><span>Thickness</span><input type="number" step="0.2" value="${wall.thickness || 1.0}" onchange="updateSelectedField('thickness', parseFloat(this.value))"></label>
         <label class="field"><span>Height</span><input type="number" step="0.5" value="${wall.height || 3.2}" onchange="updateSelectedField('height', parseFloat(this.value))"></label>
         <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Wall</button>
@@ -1197,6 +1265,7 @@ function updateSelectedField(field, value) {
     Editor.doc.props[item.index][field] = value;
   } else if (item.type === "wall") {
     Editor.doc.walls[item.index][field] = value;
+    if (field === "id") Editor.selectedItem.id = value;
   } else if (item.type === "link") {
     Editor.doc.traversal_links[item.index][field] = value;
   } else if (item.type === "player") {
@@ -1376,23 +1445,31 @@ async function saveDraft() {
     if (res.valid) {
       Editor.hash = res.hash;
       Editor.dirty = false;
+      Editor.externalChangePending = false;
+      $("#reload-btn").disabled = true;
       paintSaveState();
       $("#hash-draft").textContent = Editor.hash.substring(0, 8);
-      toast("Draft draft saved successfully.");
+      toast("Draft saved successfully.");
       validateDraft();
     } else {
       toast(`Failed to save: ${res.errors[0].message}`);
     }
   } catch (err) {
+    if (err.status === 409) markExternalChange();
     toast(`Save failed: ${err.message}`);
   }
 }
 
 async function publishRuntime() {
   if (!Editor.doc) return;
+  if (Editor.dirty || Editor.externalChangePending) {
+    toast("Save or reconcile the shared draft before publishing.");
+    return;
+  }
   try {
     const res = await request(`/api/map-studio/maps/${encodeURIComponent(Editor.doc.id)}/publish`, {
-      method: "POST"
+      method: "POST",
+      headers: Editor.hash ? { "if-match": Editor.hash } : {}
     });
     if (res.valid) {
       toast("Map published successfully! Legacy configs and guide regenerated.");
@@ -1401,6 +1478,7 @@ async function publishRuntime() {
       $("#paint-status").className = "status-indicator";
     }
   } catch (err) {
+    if (err.status === 409) markExternalChange();
     toast(`Publish failed: ${err.message}`);
   }
 }
@@ -1440,6 +1518,7 @@ function bindToolbarEvents() {
   $("#redo-btn").onclick = redo;
 
   $("#save-btn").onclick = saveDraft;
+  $("#reload-btn").onclick = reloadLatest;
   $("#validate-btn").onclick = validateDraft;
   $("#publish-btn").onclick = publishRuntime;
 
@@ -1498,10 +1577,13 @@ function bindDialogEvents() {
 // ---------------------------------------------------------------------------
 // Init
 
-window.onload = () => {
-  initLibrary();
+window.onload = async () => {
   bindToolbarEvents();
   bindDialogEvents();
   bindCanvasEvents();
   bindMetaEvents();
+  startRevisionPolling();
+  await initLibrary();
+  const requestedMap = new URLSearchParams(window.location?.search || "").get("map");
+  if (requestedMap) await openMap(requestedMap);
 };

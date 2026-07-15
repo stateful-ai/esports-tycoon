@@ -39,6 +39,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
 | Rebuild a roster pack from its src/ sheets | `... scripts\build_roster_pack.py <pack-id>` |
 | Roster-pack MCP (stdio) | `... -m esports_sim.mcp.roster_server` |
+| Map Studio MCP (stdio) | `... -m esports_sim.mcp.map_server` |
 | Map guide rasterizer (viewer-transform-exact) | `... scripts\render_map_guide.py [--map <id>]` |
 | Painted map thumbnails (crop from backdrops) | `... scripts\render_map_thumbs.py` |
 | Office guide rasterizer | `... scripts\render_office_guide.py` |
@@ -184,7 +185,7 @@ Published at github.com/stateful-ai/esports-tycoon.
   (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
   (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index
   of skills/agents). Skills: `/ship`, `/tactics`, `/art-pass`, `/maps`,
-  `/web-screen`, `/campaign`, `/build-roster-packs`.
+  `/map-studio-authoring`, `/web-screen`, `/campaign`, `/build-roster-packs`.
 
 ## Non-negotiable invariants
 

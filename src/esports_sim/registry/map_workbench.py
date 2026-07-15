@@ -6,13 +6,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import tempfile
 import threading
+import time
 import uuid
 import re
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 import yaml
 from pydantic import ValidationError
@@ -34,6 +37,8 @@ from esports_sim.schemas.studio import (
 
 _INSTALL_LOCK = threading.Lock()
 _MAP_ID_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
+_DOCUMENT_LOCK_TIMEOUT_SECONDS = 10.0
+_DOCUMENT_LOCK_STALE_SECONDS = 300.0
 
 
 def _resolve_paths(data_dir: Path | None = None) -> tuple[Path, Path, Path, Path]:
@@ -54,6 +59,70 @@ def _resolve_paths(data_dir: Path | None = None) -> tuple[Path, Path, Path, Path
 
 def _hash_content(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+@contextmanager
+def _document_lock(map_id: str, data_dir: Path | None = None) -> Iterator[None]:
+    """Coordinate Studio mutations across the web and MCP processes."""
+    if not _MAP_ID_RE.fullmatch(map_id):
+        raise ValueError("invalid map id format")
+    studio_dir, _, _, _ = _resolve_paths(data_dir)
+    lock_dir = studio_dir / ".locks"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = lock_dir / f"{map_id}.lock"
+    deadline = time.monotonic() + _DOCUMENT_LOCK_TIMEOUT_SECONDS
+
+    while True:
+        try:
+            descriptor = os.open(
+                lock_path,
+                os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+            )
+            try:
+                os.write(descriptor, f"pid={os.getpid()}\n".encode("ascii"))
+            finally:
+                os.close(descriptor)
+            break
+        except FileExistsError:
+            try:
+                age = time.time() - lock_path.stat().st_mtime
+                if age > _DOCUMENT_LOCK_STALE_SECONDS:
+                    lock_path.unlink(missing_ok=True)
+                    continue
+            except FileNotFoundError:
+                continue
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"timed out waiting to edit map '{map_id}'")
+            time.sleep(0.05)
+
+    try:
+        yield
+    finally:
+        lock_path.unlink(missing_ok=True)
+
+
+def _write_studio_document(target_path: Path, doc: MapStudioDocumentV1) -> str:
+    """Serialize and atomically replace one Studio source document."""
+    text = yaml.safe_dump(doc.model_dump(mode="json"), sort_keys=False)
+    temp_file = target_path.with_name(f".{target_path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        temp_file.write_text(text, encoding="utf-8")
+        temp_file.replace(target_path)
+    finally:
+        temp_file.unlink(missing_ok=True)
+    return _hash_content(text)
+
+
+def _current_document_hash(map_id: str, data_dir: Path | None = None) -> str | None:
+    studio_dir, runtime_dir, _, _ = _resolve_paths(data_dir)
+    target_path = studio_dir / f"{map_id}.yaml"
+    if target_path.exists():
+        return _hash_content(target_path.read_text(encoding="utf-8"))
+    if (runtime_dir / f"{map_id}.yaml").exists():
+        doc = synthesize_document(map_id, data_dir)
+        text = yaml.safe_dump(doc.model_dump(mode="json"), sort_keys=False)
+        return _hash_content(text)
+    return None
 
 
 def _is_rectangle(poly: list[tuple[float, float]]) -> bool:
@@ -308,34 +377,54 @@ def save_document(
     studio_dir, _, _, _ = _resolve_paths(data_dir)
     target_path = studio_dir / f"{map_id}.yaml"
     
-    # Lock for file writing
-    with _INSTALL_LOCK:
-        # Check If-Match hash
-        if if_match_hash is not None and target_path.exists():
-            curr_text = target_path.read_text(encoding="utf-8")
-            curr_hash = _hash_content(curr_text)
-            if curr_hash != if_match_hash:
+    try:
+        doc = MapStudioDocumentV1(**doc_dict)
+    except ValidationError as exc:
+        return {
+            "valid": False,
+            "errors": [
+                {"path": ".".join(map(str, error["loc"])), "message": error["msg"]}
+                for error in exc.errors()
+            ],
+        }
+
+    with _document_lock(map_id, data_dir), _INSTALL_LOCK:
+        if if_match_hash is not None:
+            current_hash = _current_document_hash(map_id, data_dir)
+            if current_hash != if_match_hash:
                 raise ValueError("stale revision hash (409 conflict)")
-                
-        # Validate Pydantic schema
-        try:
-            doc = MapStudioDocumentV1(**doc_dict)
-        except ValidationError as exc:
-            return {"valid": False, "errors": [{"path": ".".join(map(str, e["loc"])), "message": e["msg"]} for e in exc.errors()]}
-            
-        # Write YAML atomically
-        temp_file = target_path.with_suffix(".tmp")
-        try:
-            text = yaml.safe_dump(doc.model_dump(mode="json"), sort_keys=False)
-            temp_file.write_text(text, encoding="utf-8")
-            if target_path.exists():
-                target_path.unlink()
-            temp_file.rename(target_path)
-        finally:
-            if temp_file.exists():
-                temp_file.unlink()
-                
-        return {"valid": True, "id": map_id, "hash": _hash_content(text)}
+        new_hash = _write_studio_document(target_path, doc)
+        return {"valid": True, "id": map_id, "hash": new_hash}
+
+
+def create_document(
+    map_id: str,
+    doc_dict: dict[str, Any],
+    data_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Create a new Studio document without racing another editor process."""
+    if not _MAP_ID_RE.fullmatch(map_id):
+        raise ValueError("invalid map id format")
+    if doc_dict.get("id") != map_id:
+        raise ValueError("map id must match document id")
+    try:
+        doc = MapStudioDocumentV1(**doc_dict)
+    except ValidationError as exc:
+        return {
+            "valid": False,
+            "errors": [
+                {"path": ".".join(map(str, error["loc"])), "message": error["msg"]}
+                for error in exc.errors()
+            ],
+        }
+
+    studio_dir, runtime_dir, _, _ = _resolve_paths(data_dir)
+    target_path = studio_dir / f"{map_id}.yaml"
+    with _document_lock(map_id, data_dir), _INSTALL_LOCK:
+        if target_path.exists() or (runtime_dir / f"{map_id}.yaml").exists():
+            raise FileExistsError(f"map '{map_id}' already exists")
+        new_hash = _write_studio_document(target_path, doc)
+        return {"valid": True, "id": map_id, "hash": new_hash}
 
 
 def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
@@ -620,7 +709,7 @@ def validate_document(
     return map_obj, geo_obj, errors
 
 
-def publish_document(map_id: str, data_dir: Path | None = None) -> dict[str, Any]:
+def _publish_document_locked(map_id: str, data_dir: Path | None = None) -> dict[str, Any]:
     """Compiles in-memory structures, validates schemas, runs audits,
     renders guide, and performs a locked transactional promotion of all files.
     """
@@ -720,3 +809,16 @@ def publish_document(map_id: str, data_dir: Path | None = None) -> dict[str, Any
             raise RuntimeError(f"failed transactional promotion: {exc}") from exc
         finally:
             shutil.rmtree(temp_root, ignore_errors=True)
+
+
+def publish_document(
+    map_id: str,
+    data_dir: Path | None = None,
+    if_match_hash: str | None = None,
+) -> dict[str, Any]:
+    """Publish the exact revision requested while excluding concurrent edits."""
+    with _document_lock(map_id, data_dir):
+        current_hash = _current_document_hash(map_id, data_dir)
+        if if_match_hash is not None and current_hash != if_match_hash:
+            raise ValueError("stale revision hash (409 conflict)")
+        return _publish_document_locked(map_id, data_dir)

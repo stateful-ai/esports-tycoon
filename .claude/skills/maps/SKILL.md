@@ -5,7 +5,9 @@ description: Change map content end-to-end — callout graph, floor geometry, gi
 
 # Maps — geometry + paint change workflow
 
-A map is FOUR coupled artifacts that must stay in sync:
+A map is authored in the shared `data/maps/studio/<id>.yaml` source through
+Map Studio or the revision-safe `esports-maps` MCP tools. Publishing compiles
+that source into FOUR coupled artifacts that must stay in sync:
 `data/maps/<id>.yaml` (callout graph + gimmicks) →
 `data/maps/geometry/<id>.yaml` (floor plates, corridors, props, elevation) →
 `assets/maps/guides/<id>.png` (rasterized structure guide) →
@@ -14,11 +16,10 @@ A map is FOUR coupled artifacts that must stay in sync:
 
 ## Order of operations
 
-1. **Edit the data.** Delegate pure authoring to the `map-author` agent
-   (it owns the YAML conventions and never touches engine code). For the
-   graph: adjacency must be symmetric; gimmicks sit on adjacency edges.
-   For geometry: rooms within gap 4.0 auto-portal, otherwise author a
-   corridor with via-waypoints; props inside their rooms (pad 2).
+1. **Edit the Studio source.** Use `/map-studio-authoring` or delegate pure
+   authoring to the `map-author` agent. Do not directly edit compiled map and
+   geometry YAML: publish the validated Studio revision. Preserve the MCP
+   revision hash so concurrent human UI edits cannot be overwritten.
 2. **Floor audit**: `.venv-win\Scripts\python.exe scripts\map_floor_audit.py`
    → exit 0. Plates touch on every adjacency, callout centers on their own
    plate, path polylines on the plate union. Teleporter edges exempt (the

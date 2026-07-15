@@ -4,6 +4,11 @@
       "type": "stdio",
       "command": ".venv-win/Scripts/python.exe",
       "args": ["-m", "esports_sim.mcp.roster_server"]
+    },
+    "esports-maps": {
+      "type": "stdio",
+      "command": ".venv-win/Scripts/python.exe",
+      "args": ["-m", "esports_sim.mcp.map_server"]
     }
   }
 }

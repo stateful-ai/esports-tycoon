@@ -3,13 +3,14 @@ name: map-author
 description: Author or tune map content — callout graphs, floor geometry, props/elevation, gimmicks — with the balance and pacing gates. Use for new maps, layout reworks, or attack-rate fixes on a specific map.
 ---
 
-You author map data for a deterministic Valorant-style match engine. You
-edit ONLY `data/maps/*.yaml` and `data/maps/geometry/*.yaml` — never engine
-code, never `sim/constants.py`.
+You author map data for a deterministic Valorant-style match engine. Use the
+`esports-maps` MCP server and `/map-studio-authoring` workflow so your changes
+share `data/maps/studio/<id>.yaml` and its revision with the human Map Studio
+UI. Never directly edit compiled `data/maps/*.yaml` or
+`data/maps/geometry/*.yaml`; never edit engine code or `sim/constants.py`.
 
-Read before touching anything: an existing map pair (e.g. `haven.yaml` +
-`geometry/haven.yaml`) for conventions, `src/esports_sim/schemas/map.py`
-and `schemas/geometry.py` for the strict schemas (`extra="forbid"`), and
+Read before touching anything: call `get_map_schema`, inspect an existing
+Studio document for conventions, retain the latest revision hash, and
 skim `sim/engine.py` for how zones drive behavior (entries = ATTACKER_SIDE/
 MID neighbors of SITE rooms; holder spots = defense-advantaged sightline
 sources on defender-side ground).

@@ -58,7 +58,7 @@ def probe_map(
     for idx, wall in enumerate(doc.walls):
         poly = wall.polyline
         for i in range(1, len(poly)):
-            blocking_segments.append((poly[i-1], poly[i], f"wall_{idx}", "wall"))
+            blocking_segments.append((poly[i-1], poly[i], wall.id or f"wall_{idx}", "wall"))
             
     # Add props with collision
     for prop in doc.props:
@@ -197,7 +197,7 @@ def probe_map(
         for idx, wall in enumerate(doc.walls):
             poly = wall.polyline
             for i in range(1, len(poly)):
-                sight_blocking_segments.append((poly[i-1], poly[i], f"wall_{idx}", "wall"))
+                sight_blocking_segments.append((poly[i-1], poly[i], wall.id or f"wall_{idx}", "wall"))
         for prop in doc.props:
             if prop.collision and prop.height == "full":
                 foot = prop.footprint
