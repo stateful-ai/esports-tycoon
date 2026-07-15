@@ -27,6 +27,8 @@ class EnemyReadout(BaseModel):
     player_id: str
     last_seen_callout: str | None = None
     last_seen_tick: int | None = None
+    last_seen_x: float | None = None
+    last_seen_y: float | None = None
     weapon_guess: str | None = None
     alive_guess: bool = True
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
@@ -40,7 +42,7 @@ class PlayerObservation(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1] = 1
+    schema_version: Literal[2] = 2
 
     # Who am I?
     self_state: PlayerRoundState
@@ -65,6 +67,11 @@ class PlayerObservation(BaseModel):
 
     # Map topology — the policy can ask "what's adjacent to my callout?"
     adjacent_callouts: list[str] = Field(default_factory=list)
+
+    # Direction of the next engine-authored route waypoint, when moving.
+    # The policy still chooses from legal turn increments rather than being
+    # handed a hidden or unconstrained steering command.
+    navigation_heading_degrees: float | None = None
 
     # IGL call this round (e.g. "hit_a", "default", "b_lurk"). None = no call.
     igl_call: str | None = None

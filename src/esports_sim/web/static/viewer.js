@@ -1,6 +1,6 @@
 /* 2D match replay. Pure consumer of one event log — no sim logic here.
-   Positions come from round.move events (placement + arrivals); a move
-   takes MOVE_TICKS (6) ticks, so dots interpolate over [arrival-6, arrival]. */
+   New logs carry authoritative control-frame position/facing poles;
+   round.move remains the route contract and old-log fallback. */
 
 const MOVE_TICKS = 6;
 const TICKS_PER_SEC = 2; // 1 tick = 0.5 s of game time
@@ -74,7 +74,7 @@ function parseReplay(data) {
       case "round.start":
         cur = {
           num: e.round_num, attacker: e.attacking_team_id,
-          placements: {}, placeXY: {}, moves: {}, kills: [], utility: [],
+          placements: {}, placeXY: {}, moves: {}, controls: {}, kills: [], utility: [],
           whiffs: [], comms: [],
           gimmicks: [], closedDoors: new Set(e.closed_doors || []),
           plant: null, defuse: null, end: null,
@@ -101,6 +101,11 @@ function parseReplay(data) {
           });
           cur.maxTick = Math.max(cur.maxTick, isNew ? e.arrive_tick : e.tick);
         }
+        break;
+      case "round.control":
+        if (!cur) break;
+        (cur.controls[e.player_id] ??= []).push(e);
+        cur.maxTick = Math.max(cur.maxTick, e.tick);
         break;
       case "round.kill":
         cur.kills.push(e);
@@ -225,6 +230,54 @@ function gpoint(x, y, z) {
   return [p[0], p[1] - (V.iso ? z || 0 : 0)];
 }
 
+function motorAt(round, pid, t) {
+  let latest = null;
+  for (const control of round.controls?.[pid] ?? []) {
+    if (control.tick > t) break;
+    latest = control;
+  }
+  return latest;
+}
+
+// Interpolate only between server-emitted control poles. Pace, pauses, and
+// path resolution remain engine facts; the viewer never mirrors them.
+function motorSample(round, pid, t) {
+  const controls = round.controls?.[pid] ?? [];
+  let index = -1;
+  for (let i = 0; i < controls.length; i++) {
+    if (controls[i].tick > t) break;
+    index = i;
+  }
+  if (index < 0) return null;
+  const current = controls[index];
+  const next = controls[index + 1] ?? null;
+  const fraction = next && next.tick > current.tick
+    ? Math.min(1, Math.max(0, (t - current.tick) / (next.tick - current.tick)))
+    : 0;
+  const x = next ? current.x + (next.x - current.x) * fraction : current.x;
+  const y = next ? current.y + (next.y - current.y) * fraction : current.y;
+  const backFraction = Math.max(0, fraction - TRAIL_SPAN);
+  const backX = next
+    ? current.x + (next.x - current.x) * backFraction
+    : current.x;
+  const backY = next
+    ? current.y + (next.y - current.y) * backFraction
+    : current.y;
+  const headingDelta = next
+    ? ((next.heading_degrees - current.heading_degrees + 540) % 360) - 180
+    : 0;
+  const heading = (current.heading_degrees + headingDelta * fraction + 360) % 360;
+  return {
+    ...current,
+    x,
+    y,
+    heading_degrees: heading,
+    backX,
+    backY,
+    advancing: current.movement === "advance" || next?.movement === "advance",
+  };
+}
+
 function playerMoveInfo(round, pid, t) {
   // Resting spot: room + (for new logs) the exact placement coordinate.
   let atRoom = round.placements[pid] ?? null;
@@ -239,6 +292,19 @@ function playerMoveInfo(round, pid, t) {
     } else {
       flight = m; // latest event governs (stall re-pacing)
     }
+  }
+  const motor = motorSample(round, pid, t);
+  if (motor) {
+    const z = zOf(motor.callout_id || atRoom);
+    const p = gpoint(motor.x, motor.y, z);
+    const back = gpoint(motor.backX, motor.backY, z);
+    const displaced = Math.hypot(p[0] - back[0], p[1] - back[1]) > 0.02;
+    return {
+      pos: p,
+      moving: !!motor.route_active && motor.advancing && displaced,
+      from: back,
+      f: 1,
+    };
   }
   if (flight) {
     const m = flight;
@@ -403,6 +469,16 @@ function facingAngle(round, pid, t, live) {
   if (!me) return null;
   const [px, py] = me.pos;
   const ang = (x, y) => Math.atan2(y - py, x - px);
+
+  // New logs make facing a player-issued, engine-resolved fact. Transform
+  // the world-space heading through the same projection as the map.
+  const control = motorSample(round, pid, t) || motorAt(round, pid, t);
+  if (control && Number.isFinite(control.heading_degrees)) {
+    const radians = control.heading_degrees * Math.PI / 180;
+    const origin = P(0, 0);
+    const tip = P(Math.cos(radians), -Math.sin(radians));
+    return Math.atan2(tip[1] - origin[1], tip[0] - origin[0]);
+  }
 
   if (me.moving && me.from) {
     const dx = px - me.from[0], dy = py - me.from[1];

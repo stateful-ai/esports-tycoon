@@ -156,15 +156,19 @@ def test_learned_player_model_trains_checkpoints_and_replays(tmp_path) -> None:
         policies=_policies(gd, recorder),
     )
     traces = recorder.traces[:180]
+    motors = recorder.motor_traces[:180]
     comms = recorder.communication_traces
     assert all(trace.selected_action in trace.legal_actions for trace in traces)
-    model = LearnedPlayerModel.train(traces, comms)
+    assert any(trace.observation.self_state.is_moving for trace in motors)
+    assert all(trace.selected_control in trace.legal_controls for trace in motors)
+    model = LearnedPlayerModel.train(traces, comms, motors)
     metrics = imitation_metrics(model, traces)
     assert metrics["legal_rate"] == 1.0
     assert metrics["action_accuracy"] >= 0.45
     assert metrics["macro_action_recall"] >= 0.2
     assert metrics["majority_baseline"] > 0.0
     assert model.communication_examples == len(comms)
+    assert model.motor_examples == len(motors)
 
     path = tmp_path / "player-policy.json"
     model.save(path)
@@ -177,6 +181,12 @@ def test_learned_player_model_trains_checkpoints_and_replays(tmp_path) -> None:
         example.observation, list(example.legal_actions)
     )
     assert before == after
+    motor_example = motors[-1]
+    assert model.make_policy().control_probabilities(
+        motor_example.observation, list(motor_example.legal_controls)
+    ) == loaded.make_policy().control_probabilities(
+        motor_example.observation, list(motor_example.legal_controls)
+    )
     assert path.read_text(encoding="utf-8").endswith("\n")
 
     # The live model is a legal deterministic match policy, not only an

@@ -62,6 +62,37 @@ class Action(BaseModel):
     abilities: list[str] = Field(default_factory=list)
 
 
+class MotorMovement(StrEnum):
+    """Per-tick translation intent supplied separately from tactical actions."""
+
+    HOLD = "hold"
+    ADVANCE = "advance"
+
+
+class MovementPace(StrEnum):
+    """Movement speed/noise tradeoff. Sound propagation lands in a later pass."""
+
+    WALK = "walk"
+    RUN = "run"
+
+
+class MotorControl(BaseModel):
+    """One engine-authored, policy-ranked motor command for a live tick.
+
+    A tactical action can start a route; this control decides whether the
+    player advances on it and how far they rotate this tick.  The engine
+    supplies the legal candidates, so learned policies never invent speeds or
+    arbitrary turn rates.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    schema_version: Literal[1] = 1
+    movement: MotorMovement = MotorMovement.HOLD
+    pace: MovementPace = MovementPace.RUN
+    turn_degrees: float = 0.0
+
+
 @dataclass(frozen=True)
 class CoachProfile:
     """The match-facing projection of a coach.
@@ -227,6 +258,17 @@ class PlayerPolicy(Protocol):
         legal: list[Action],
         rng: np.random.Generator,
     ) -> Action: ...
+
+
+class MotorPolicy(Protocol):
+    """Optional per-tick movement/facing head on a player policy."""
+
+    def control(
+        self,
+        obs: PlayerObservation,
+        legal: list[MotorControl],
+        rng: np.random.Generator,
+    ) -> MotorControl: ...
 
 
 class CommunicationPolicy(Protocol):
