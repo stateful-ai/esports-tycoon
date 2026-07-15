@@ -152,8 +152,7 @@ const world = (cid) => {
 };
 
 function P(x, y) {
-  if (!V.iso) return [x, y];
-  return [x - y, (x + y) / 2];
+  return MapTransform.project(x, 100 - y, 0, V.iso);
 }
 const PP = (pt) => P(pt[0], pt[1]);
 // Marker/dot sizes read smaller on the iso viewBox (it's ~2x wider) — scale.

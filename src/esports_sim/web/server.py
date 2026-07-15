@@ -1340,12 +1340,19 @@ def _pack_options() -> list[dict]:
 
 
 _ROSTER_PACK_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_MAP_STUDIO_ID_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 
 
 def _roster_pack_id(pack_id: str) -> str:
     if not _ROSTER_PACK_ID_RE.fullmatch(pack_id):
         raise HTTPException(422, "invalid roster pack id")
     return pack_id
+
+
+def _map_studio_id(map_id: str) -> str:
+    if not _MAP_STUDIO_ID_RE.fullmatch(map_id):
+        raise HTTPException(422, "invalid map id")
+    return map_id
 
 
 @app.get("/api/roster-studio/schema")
@@ -7681,6 +7688,130 @@ class SessionMiddleware:
             _ctx.reset(ctx_token)
             _sid_ctx.reset(sid_token)
             _client_host_ctx.reset(client_host_token)
+
+
+@app.get("/api/map-studio/maps")
+def map_studio_maps() -> dict:
+    from esports_sim.registry import map_workbench
+    return {"maps": map_workbench.list_documents()}
+
+
+@app.get("/api/map-studio/maps/{map_id}")
+def map_studio_map(map_id: str) -> dict:
+    from esports_sim.registry import map_workbench
+    map_id = _map_studio_id(map_id)
+    try:
+        doc, doc_hash = map_workbench.load_document(map_id)
+    except FileNotFoundError:
+        raise HTTPException(404, f"unknown map '{map_id}'") from None
+    return {"document": doc.model_dump(mode="json"), "hash": doc_hash}
+
+
+@app.post("/api/map-studio/maps")
+def map_studio_create(body: dict) -> dict:
+    from esports_sim.registry import map_workbench
+    _require_local_admin()
+    map_id = body.get("id")
+    if not map_id:
+        raise HTTPException(422, "invalid map id")
+    map_id = _map_studio_id(map_id)
+    
+    studio_dir, runtime_dir, _, _ = map_workbench._resolve_paths()
+    if (studio_dir / f"{map_id}.yaml").exists() or (runtime_dir / f"{map_id}.yaml").exists():
+        raise HTTPException(409, f"map '{map_id}' already exists")
+        
+    doc_dict = {
+        "schema_version": 1,
+        "id": map_id,
+        "display_name": body.get("display_name", map_id),
+        "walkable_surfaces": [],
+        "walls": [],
+        "props": [],
+        "semantic_zones": [],
+        "traversal_links": [],
+        "legacy": {"adjacency_overrides": {}, "sightline_overrides": []},
+        "editor_state": {"test_players": [], "viewport": {}, "selected_tool": ""}
+    }
+    
+    res = map_workbench.save_document(map_id, doc_dict)
+    if not res.get("valid"):
+        raise HTTPException(422, "failed to create initial draft")
+    return res
+
+
+@app.put("/api/map-studio/maps/{map_id}")
+def map_studio_save(map_id: str, body: dict, request: Request) -> dict:
+    from esports_sim.registry import map_workbench
+    _require_local_admin()
+    map_id = _map_studio_id(map_id)
+    
+    if_match = request.headers.get("if-match")
+    try:
+        res = map_workbench.save_document(map_id, body, if_match_hash=if_match)
+    except ValueError as exc:
+        if "stale revision" in str(exc):
+            raise HTTPException(409, str(exc)) from exc
+        raise HTTPException(422, str(exc)) from exc
+    return res
+
+
+@app.post("/api/map-studio/validate")
+def map_studio_validate(body: dict) -> dict:
+    from esports_sim.registry import map_workbench
+    from esports_sim.registry.map_audit import audit_continuous
+    from esports_sim.schemas.studio import MapStudioDocumentV1
+    try:
+        doc = MapStudioDocumentV1(**body)
+        continuous_errors = audit_continuous(doc)
+        
+        comp_errors = []
+        try:
+            map_workbench.compile_document(doc)
+        except ValueError as exc:
+            comp_errors.append(str(exc))
+            
+        return {
+            "valid": len(continuous_errors) == 0 and len(comp_errors) == 0,
+            "errors": [
+                {"path": "continuous", "message": err} for err in continuous_errors
+            ] + [
+                {"path": "compilation", "message": err} for err in comp_errors
+            ]
+        }
+    except Exception as exc:
+        return {"valid": False, "errors": [{"path": "schema", "message": str(exc)}]}
+
+
+@app.post("/api/map-studio/maps/{map_id}/publish")
+def map_studio_publish(map_id: str) -> dict:
+    from esports_sim.registry import map_workbench
+    _require_local_admin()
+    map_id = _map_studio_id(map_id)
+    try:
+        res = map_workbench.publish_document(map_id)
+    except Exception as exc:
+        raise HTTPException(422, str(exc)) from exc
+    return res
+
+
+@app.post("/api/map-studio/probe")
+def map_studio_probe(body: dict) -> dict:
+    from esports_sim.registry import map_probe
+    from esports_sim.schemas.studio import MapStudioDocumentV1
+    doc_dict = body.get("doc")
+    from_pos = body.get("from_pos")
+    to_pos = body.get("to_pos")
+    radius = body.get("radius", 1.0)
+    
+    if not doc_dict or not from_pos:
+        raise HTTPException(422, "missing doc or from_pos")
+        
+    try:
+        doc = MapStudioDocumentV1(**doc_dict)
+        res = map_probe.probe_map(doc, tuple(from_pos), tuple(to_pos) if to_pos else None, radius)
+        return res
+    except Exception as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 app.add_middleware(SessionMiddleware, lobby=_LOBBY)
