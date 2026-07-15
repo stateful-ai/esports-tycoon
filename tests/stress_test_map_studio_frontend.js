@@ -164,6 +164,7 @@ global.undo = undo;
 global.redo = redo;
 if (!global.updateInspector) global.updateInspector = updateInspector;
 global.pushState = pushState;
+global.requestErrorMessage = requestErrorMessage;
 `);
 
 // Verify window onload binding and initialize
@@ -173,6 +174,11 @@ window.onload();
 // Let's verify each test case
 async function runTests() {
   console.log("Starting Frontend Logic Verification...\n");
+
+  assert.strictEqual(
+    global.requestErrorMessage({ detail: [{ loc: ["query", "request"], msg: "Field required" }] }),
+    "query.request: Field required"
+  );
 
   // --- Test Case 1: Coordinate mapping and ViewBox transforms ---
   console.log("1. Testing ViewBox coordinate calculations under scaling...");

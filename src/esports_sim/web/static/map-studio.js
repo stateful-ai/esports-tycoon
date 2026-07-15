@@ -45,6 +45,20 @@ function toast(msg) {
   setTimeout(() => node.remove(), 3000);
 }
 
+function requestErrorMessage(error, fallback = "Request failed") {
+  const detail = error?.detail;
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    return detail.map((item) => {
+      const location = Array.isArray(item?.loc) ? item.loc.join(".") : "";
+      const message = item?.msg || JSON.stringify(item);
+      return `${location ? `${location}: ` : ""}${message}`;
+    }).join("; ");
+  }
+  if (detail && typeof detail === "object") return JSON.stringify(detail);
+  return fallback;
+}
+
 async function request(path, options = {}) {
   const init = { method: options.method || "GET" };
   if (options.headers) init.headers = options.headers;
@@ -55,7 +69,7 @@ async function request(path, options = {}) {
   const response = await fetch(path, init);
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: response.statusText }));
-    const requestError = new Error(error.detail || "Request failed");
+    const requestError = new Error(requestErrorMessage(error, response.statusText));
     requestError.status = response.status;
     throw requestError;
   }

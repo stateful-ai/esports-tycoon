@@ -6,13 +6,14 @@ import os
 from pathlib import Path
 from typing import Any, Callable, Literal
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 from esports_sim.registry import map_probe, map_workbench
 from esports_sim.registry.loader import DEFAULT_DATA_DIR
 from esports_sim.schemas.map import SightLine
 from esports_sim.schemas.studio import (
     MapStudioDocumentV1,
+    EditorState,
     Prop,
     SemanticZone,
     TraversalLink,
@@ -25,6 +26,15 @@ ElementType = Literal["surface", "zone", "prop", "wall", "link"]
 
 class MapMcpError(ValueError):
     """A safe, actionable error for a Map Studio MCP caller."""
+
+
+class MapRemoval(BaseModel):
+    """One stable-id element removal inside a transactional map patch."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    element_type: ElementType
+    element_id: str
 
 
 def _data_dir() -> Path:
@@ -144,6 +154,44 @@ def _upsert(
     return {"operation": "added", "type": collection, "id": element_id}
 
 
+def _remove(raw: dict[str, Any], element_type: ElementType, element_id: str) -> None:
+    collections = {
+        "surface": "walkable_surfaces",
+        "zone": "semantic_zones",
+        "prop": "props",
+        "wall": "walls",
+        "link": "traversal_links",
+    }
+    collection = collections[element_type]
+    rows = raw[collection]
+    matches = [
+        index for index, row in enumerate(rows)
+        if (row.get("id") or (f"wall_{index}" if collection == "walls" else None))
+        == element_id
+    ]
+    if not matches:
+        raise MapMcpError(f"{element_type} {element_id!r} does not exist")
+    rows.pop(matches[0])
+
+
+def _unique_ids(label: str, elements: list[BaseModel]) -> None:
+    ids = [str(getattr(element, "id", "")) for element in elements]
+    duplicates = sorted({element_id for element_id in ids if ids.count(element_id) > 1})
+    if duplicates:
+        raise MapMcpError(f"duplicate {label} ids in patch: {duplicates}")
+
+
+def _removal_sort_key(removal: MapRemoval) -> tuple[int, int]:
+    """Remove synthetic legacy walls back-to-front so indexes stay stable."""
+    if (
+        removal.element_type == "wall"
+        and removal.element_id.startswith("wall_")
+        and removal.element_id[5:].isdigit()
+    ):
+        return (0, -int(removal.element_id[5:]))
+    return (1, 0)
+
+
 def _empty_document(map_id: str, display_name: str) -> MapStudioDocumentV1:
     return MapStudioDocumentV1(id=map_id, display_name=display_name)
 
@@ -240,6 +288,7 @@ def get_map_schema() -> dict[str, Any]:
             "prop": Prop.model_json_schema(),
             "traversal_link": TraversalLink.model_json_schema(),
             "sightline": SightLine.model_json_schema(),
+            "removal": MapRemoval.model_json_schema(),
         },
         "authoring_contract": {
             "source_of_truth": "data/maps/studio/<map_id>.yaml",
@@ -259,6 +308,12 @@ def get_map_schema() -> dict[str, Any]:
                 "Pass the latest revision_hash as if_match_hash on every mutation. "
                 "On a stale-revision error, call get_map and reconcile; never blind-retry."
             ),
+            "recommended_workflow": [
+                "fork_map for a non-destructive variant or create_map for a new layout",
+                "apply_map_patch for each coherent generated slice",
+                "validate_map and probe_map_geometry before human review",
+                "publish_map only after explicit approval and runtime gates",
+            ],
         },
     }
 
@@ -283,6 +338,25 @@ def create_map(
         )
     except (FileExistsError, TimeoutError, ValueError) as exc:
         raise MapMcpError(str(exc)) from exc
+    return _view(doc, result["hash"], include_document=True)
+
+
+def fork_map(
+    source_map_id: str,
+    new_map_id: str,
+    display_name: str | None = None,
+) -> dict[str, Any]:
+    """Create a non-destructive Studio variant from a draft or legacy map."""
+    source, _ = _read(source_map_id)
+    raw = source.model_dump(mode="json")
+    raw["id"] = new_map_id
+    raw["display_name"] = display_name or f"{source.display_name} Variant"
+    raw["editor_state"] = EditorState().model_dump(mode="json")
+    try:
+        result = map_workbench.create_document(new_map_id, raw, _data_dir())
+    except (FileExistsError, TimeoutError, ValueError) as exc:
+        raise MapMcpError(str(exc)) from exc
+    doc = MapStudioDocumentV1.model_validate(raw)
     return _view(doc, result["hash"], include_document=True)
 
 
@@ -327,6 +401,106 @@ def update_map_metadata(
     def change(raw: dict[str, Any]) -> dict[str, Any]:
         raw.update(changes)
         return {"operation": "metadata", "fields": sorted(changes)}
+
+    return _mutate(map_id, if_match_hash, change)
+
+
+def apply_map_patch(
+    map_id: str,
+    if_match_hash: str,
+    metadata: dict[str, Any] | None = None,
+    walkable_surfaces: list[WalkableSurface | dict[str, Any]] | None = None,
+    semantic_zones: list[SemanticZone | dict[str, Any]] | None = None,
+    props: list[Prop | dict[str, Any]] | None = None,
+    walls: list[Wall | dict[str, Any]] | None = None,
+    traversal_links: list[TraversalLink | dict[str, Any]] | None = None,
+    sightlines: list[SightLine | dict[str, Any]] | None = None,
+    adjacency_overrides: dict[str, list[str]] | None = None,
+    prop_support_exemptions: list[str] | None = None,
+    removals: list[MapRemoval | dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Apply a coherent typed element batch in one revision-locked save."""
+    metadata = metadata or {}
+    allowed_metadata = {"display_name", "sites", "attacker_spawn", "defender_spawn"}
+    unknown = set(metadata) - allowed_metadata
+    if unknown:
+        raise MapMcpError(f"unsupported metadata fields: {sorted(unknown)}")
+
+    parsed_surfaces = [
+        _parse(WalkableSurface, value) for value in (walkable_surfaces or [])
+    ]
+    parsed_zones = [_parse(SemanticZone, value) for value in (semantic_zones or [])]
+    parsed_props = [_parse(Prop, value) for value in (props or [])]
+    parsed_walls = [_parse(Wall, value) for value in (walls or [])]
+    parsed_links = [
+        _parse(TraversalLink, value) for value in (traversal_links or [])
+    ]
+    parsed_sightlines = (
+        [_parse(SightLine, value) for value in sightlines]
+        if sightlines is not None
+        else None
+    )
+    parsed_removals = [_parse(MapRemoval, value) for value in (removals or [])]
+
+    for wall in parsed_walls:
+        if not isinstance(wall, Wall) or not wall.id:
+            raise MapMcpError("wall.id is required for MCP co-editing")
+    _unique_ids("surface", parsed_surfaces)
+    _unique_ids("zone", parsed_zones)
+    _unique_ids("prop", parsed_props)
+    _unique_ids("wall", parsed_walls)
+    _unique_ids("link", parsed_links)
+
+    def change(raw: dict[str, Any]) -> dict[str, Any]:
+        raw.update(metadata)
+        ordered_removals = sorted(parsed_removals, key=_removal_sort_key)
+        for removal in ordered_removals:
+            assert isinstance(removal, MapRemoval)
+            _remove(raw, removal.element_type, removal.element_id)
+        batches = [
+            ("walkable_surfaces", parsed_surfaces),
+            ("semantic_zones", parsed_zones),
+            ("props", parsed_props),
+            ("walls", parsed_walls),
+            ("traversal_links", parsed_links),
+        ]
+        for collection, elements in batches:
+            for element in elements:
+                element_id = str(getattr(element, "id"))
+                _upsert(raw, collection, element.model_dump(mode="json"), element_id)
+        if parsed_sightlines is not None:
+            raw["legacy"]["sightline_overrides"] = [
+                item.model_dump(mode="json") for item in parsed_sightlines
+            ]
+        if adjacency_overrides is not None:
+            raw["legacy"]["adjacency_overrides"] = adjacency_overrides
+        if prop_support_exemptions is not None:
+            raw["legacy"]["prop_support_exemptions"] = prop_support_exemptions
+        return {
+            "operation": "batch_patch",
+            "metadata_fields": sorted(metadata),
+            "upserted": {
+                "surfaces": len(parsed_surfaces),
+                "zones": len(parsed_zones),
+                "props": len(parsed_props),
+                "walls": len(parsed_walls),
+                "links": len(parsed_links),
+                "sightlines": (
+                    len(parsed_sightlines) if parsed_sightlines is not None else None
+                ),
+                "adjacency_overrides": (
+                    len(adjacency_overrides)
+                    if adjacency_overrides is not None
+                    else None
+                ),
+                "prop_support_exemptions": (
+                    len(prop_support_exemptions)
+                    if prop_support_exemptions is not None
+                    else None
+                ),
+            },
+            "removed": len(parsed_removals),
+        }
 
     return _mutate(map_id, if_match_hash, change)
 
@@ -389,25 +563,8 @@ def remove_map_element(
     element_id: str,
     if_match_hash: str,
 ) -> dict[str, Any]:
-    collections = {
-        "surface": "walkable_surfaces",
-        "zone": "semantic_zones",
-        "prop": "props",
-        "wall": "walls",
-        "link": "traversal_links",
-    }
-    collection = collections[element_type]
-
     def change(raw: dict[str, Any]) -> dict[str, Any]:
-        rows = raw[collection]
-        matches = [
-            index for index, row in enumerate(rows)
-            if (row.get("id") or (f"wall_{index}" if collection == "walls" else None))
-            == element_id
-        ]
-        if not matches:
-            raise MapMcpError(f"{element_type} {element_id!r} does not exist")
-        rows.pop(matches[0])
+        _remove(raw, element_type, element_id)
         return {"operation": "removed", "type": element_type, "id": element_id}
 
     return _mutate(map_id, if_match_hash, change)

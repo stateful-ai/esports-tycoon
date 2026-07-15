@@ -19,10 +19,14 @@ Read [references/mcp-workflow.md](references/mcp-workflow.md) before authoring.
    - `create_map` with `template="two-site"` for a valid connected starting
      point or `template="empty"` for a deliberate blank canvas; or
    - `open_map_for_editing` to materialize a legacy map into the Studio source.
+   - `fork_map` to make a non-destructive variant of an existing draft or
+     legacy map without materializing or modifying the source map.
 3. Keep the returned `revision_hash`. Pass it as `if_match_hash` to every
    mutation, and replace it with the hash returned by that mutation.
 4. Work in coherent slices: surface, navigational semantic zone, connections,
-   then blockers/cover. Use stable, descriptive ids.
+   then blockers/cover. Use `apply_map_patch` for a complete room group or a
+   full generated layout so the slice lands in one revision. Keep individual
+   upserts for small interactive corrections. Use stable, descriptive ids.
 5. Call `validate_map` after each slice. Invalid intermediate drafts are
    allowed, but do not leave the map incomplete or publish it invalid.
 6. Use `probe_map_geometry` at spawns, entries, sites, chokes, and long LOS
@@ -57,8 +61,9 @@ change warning when the human has unsaved work, so both editors retain control.
   cover. Keep colliding props strictly supported by their surface.
 - Give walls an explicit stable `id`; legacy ID-less walls can be read but new
   MCP walls may not omit it.
-- Prefer typed upsert tools over broad rewrites. Removal does not cascade, so
-  repair references explicitly and validate immediately.
+- Prefer typed upserts or `apply_map_patch` over untyped document rewrites.
+  Batch removals do not cascade, so repair references in the same patch and
+  validate immediately.
 
 ## Completion
 

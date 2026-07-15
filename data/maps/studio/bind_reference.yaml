@@ -1,0 +1,818 @@
+schema_version: 1
+id: bind_reference
+display_name: Bind Reference
+sites:
+- a
+- b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+walkable_surfaces:
+- id: surf_attacker_spawn
+  polygon:
+  - - 42.0
+    - 86.0
+  - - 58.0
+    - 86.0
+  - - 58.0
+    - 98.0
+  - - 42.0
+    - 98.0
+  elevation: 0.0
+- id: surf_a_lobby
+  polygon:
+  - - 24.0
+    - 72.0
+  - - 42.0
+    - 72.0
+  - - 42.0
+    - 92.0
+  - - 24.0
+    - 92.0
+  elevation: 0.0
+- id: surf_b_fountain
+  polygon:
+  - - 58.0
+    - 72.0
+  - - 76.0
+    - 72.0
+  - - 76.0
+    - 92.0
+  - - 58.0
+    - 92.0
+  elevation: 0.0
+- id: surf_a_showers
+  polygon:
+  - - 10.0
+    - 56.0
+  - - 28.0
+    - 56.0
+  - - 28.0
+    - 72.0
+  - - 10.0
+    - 72.0
+  elevation: 0.0
+- id: surf_a_short
+  polygon:
+  - - 28.0
+    - 56.0
+  - - 42.0
+    - 56.0
+  - - 42.0
+    - 72.0
+  - - 28.0
+    - 72.0
+  elevation: 0.0
+- id: surf_b_window
+  polygon:
+  - - 58.0
+    - 56.0
+  - - 72.0
+    - 56.0
+  - - 72.0
+    - 72.0
+  - - 58.0
+    - 72.0
+  elevation: 0.0
+- id: surf_b_long
+  polygon:
+  - - 72.0
+    - 56.0
+  - - 90.0
+    - 56.0
+  - - 90.0
+    - 72.0
+  - - 72.0
+    - 72.0
+  elevation: 0.0
+- id: surf_a_site
+  polygon:
+  - - 14.0
+    - 38.0
+  - - 34.0
+    - 38.0
+  - - 34.0
+    - 56.0
+  - - 14.0
+    - 56.0
+  elevation: 0.0
+- id: surf_a_lamps
+  polygon:
+  - - 34.0
+    - 26.0
+  - - 42.0
+    - 26.0
+  - - 42.0
+    - 44.0
+  - - 34.0
+    - 44.0
+  elevation: 0.0
+- id: surf_a_uhall
+  polygon:
+  - - 14.0
+    - 26.0
+  - - 26.0
+    - 26.0
+  - - 26.0
+    - 38.0
+  - - 14.0
+    - 38.0
+  elevation: 0.0
+- id: surf_b_site
+  polygon:
+  - - 66.0
+    - 38.0
+  - - 86.0
+    - 38.0
+  - - 86.0
+    - 56.0
+  - - 66.0
+    - 56.0
+  elevation: 0.0
+- id: surf_b_elbow
+  polygon:
+  - - 58.0
+    - 26.0
+  - - 72.0
+    - 26.0
+  - - 72.0
+    - 38.0
+  - - 58.0
+    - 38.0
+  elevation: 0.0
+- id: surf_b_hall
+  polygon:
+  - - 72.0
+    - 26.0
+  - - 86.0
+    - 26.0
+  - - 86.0
+    - 38.0
+  - - 72.0
+    - 38.0
+  elevation: 0.0
+- id: surf_defender_spawn
+  polygon:
+  - - 42.0
+    - 16.0
+  - - 58.0
+    - 16.0
+  - - 58.0
+    - 28.0
+  - - 42.0
+    - 28.0
+  elevation: 0.0
+walls: []
+props:
+- id: a_triple
+  surface_id: surf_a_site
+  footprint:
+  - - 20.0
+    - 45.0
+  - - 24.0
+    - 45.0
+  - - 24.0
+    - 50.0
+  - - 20.0
+    - 50.0
+  height: half
+  collision: true
+  destructible: false
+- id: a_lamps_box
+  surface_id: surf_a_lamps
+  footprint:
+  - - 36.0
+    - 34.0
+  - - 39.0
+    - 34.0
+  - - 39.0
+    - 38.0
+  - - 36.0
+    - 38.0
+  height: full
+  collision: true
+  destructible: false
+- id: b_tube
+  surface_id: surf_b_site
+  footprint:
+  - - 76.0
+    - 45.0
+  - - 80.0
+    - 45.0
+  - - 80.0
+    - 50.0
+  - - 76.0
+    - 50.0
+  height: full
+  collision: true
+  destructible: false
+semantic_zones:
+- id: attacker_spawn
+  display_name: Attacker Spawn
+  kind: spawn
+  polygon:
+  - - 42.0
+    - 86.0
+  - - 58.0
+    - 86.0
+  - - 58.0
+    - 98.0
+  - - 42.0
+    - 98.0
+  surface_ids:
+  - surf_attacker_spawn
+  label_position:
+  - 50.0
+  - 92.0
+  site_id: none
+  legacy_zone: attacker_spawn
+- id: a_lobby
+  display_name: A Lobby
+  kind: callout
+  polygon:
+  - - 24.0
+    - 72.0
+  - - 42.0
+    - 72.0
+  - - 42.0
+    - 92.0
+  - - 24.0
+    - 92.0
+  surface_ids:
+  - surf_a_lobby
+  label_position:
+  - 33.0
+  - 82.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: b_fountain
+  display_name: B Fountain
+  kind: callout
+  polygon:
+  - - 58.0
+    - 72.0
+  - - 76.0
+    - 72.0
+  - - 76.0
+    - 92.0
+  - - 58.0
+    - 92.0
+  surface_ids:
+  - surf_b_fountain
+  label_position:
+  - 67.0
+  - 82.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: a_showers
+  display_name: Showers
+  kind: callout
+  polygon:
+  - - 10.0
+    - 56.0
+  - - 28.0
+    - 56.0
+  - - 28.0
+    - 72.0
+  - - 10.0
+    - 72.0
+  surface_ids:
+  - surf_a_showers
+  label_position:
+  - 19.0
+  - 64.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_short
+  display_name: A Short
+  kind: callout
+  polygon:
+  - - 28.0
+    - 56.0
+  - - 42.0
+    - 56.0
+  - - 42.0
+    - 72.0
+  - - 28.0
+    - 72.0
+  surface_ids:
+  - surf_a_short
+  label_position:
+  - 35.0
+  - 64.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: b_window
+  display_name: Hookah
+  kind: callout
+  polygon:
+  - - 58.0
+    - 56.0
+  - - 72.0
+    - 56.0
+  - - 72.0
+    - 72.0
+  - - 58.0
+    - 72.0
+  surface_ids:
+  - surf_b_window
+  label_position:
+  - 65.0
+  - 64.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: b_long
+  display_name: B Long
+  kind: callout
+  polygon:
+  - - 72.0
+    - 56.0
+  - - 90.0
+    - 56.0
+  - - 90.0
+    - 72.0
+  - - 72.0
+    - 72.0
+  surface_ids:
+  - surf_b_long
+  label_position:
+  - 81.0
+  - 64.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: a_site
+  display_name: A Site
+  kind: site
+  polygon:
+  - - 14.0
+    - 38.0
+  - - 34.0
+    - 38.0
+  - - 34.0
+    - 56.0
+  - - 14.0
+    - 56.0
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 24.0
+  - 47.0
+  site_id: a
+  legacy_zone: site
+- id: a_plant
+  display_name: A Plant
+  kind: plant
+  polygon:
+  - - 19.0
+    - 42.5
+  - - 29.0
+    - 42.5
+  - - 29.0
+    - 51.5
+  - - 19.0
+    - 51.5
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 24.0
+  - 47.0
+  site_id: a
+  legacy_zone: null
+- id: a_lamps
+  display_name: Lamps
+  kind: callout
+  polygon:
+  - - 34.0
+    - 26.0
+  - - 42.0
+    - 26.0
+  - - 42.0
+    - 44.0
+  - - 34.0
+    - 44.0
+  surface_ids:
+  - surf_a_lamps
+  label_position:
+  - 38.0
+  - 35.0
+  site_id: a
+  legacy_zone: defender_side
+- id: a_uhall
+  display_name: U-Hall
+  kind: callout
+  polygon:
+  - - 14.0
+    - 26.0
+  - - 26.0
+    - 26.0
+  - - 26.0
+    - 38.0
+  - - 14.0
+    - 38.0
+  surface_ids:
+  - surf_a_uhall
+  label_position:
+  - 20.0
+  - 32.0
+  site_id: a
+  legacy_zone: defender_side
+- id: b_site
+  display_name: B Site
+  kind: site
+  polygon:
+  - - 66.0
+    - 38.0
+  - - 86.0
+    - 38.0
+  - - 86.0
+    - 56.0
+  - - 66.0
+    - 56.0
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 76.0
+  - 47.0
+  site_id: b
+  legacy_zone: site
+- id: b_plant
+  display_name: B Plant
+  kind: plant
+  polygon:
+  - - 71.0
+    - 42.5
+  - - 81.0
+    - 42.5
+  - - 81.0
+    - 51.5
+  - - 71.0
+    - 51.5
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 76.0
+  - 47.0
+  site_id: b
+  legacy_zone: null
+- id: b_elbow
+  display_name: B Elbow
+  kind: callout
+  polygon:
+  - - 58.0
+    - 26.0
+  - - 72.0
+    - 26.0
+  - - 72.0
+    - 38.0
+  - - 58.0
+    - 38.0
+  surface_ids:
+  - surf_b_elbow
+  label_position:
+  - 65.0
+  - 32.0
+  site_id: b
+  legacy_zone: defender_side
+- id: b_hall
+  display_name: B Hall
+  kind: callout
+  polygon:
+  - - 72.0
+    - 26.0
+  - - 86.0
+    - 26.0
+  - - 86.0
+    - 38.0
+  - - 72.0
+    - 38.0
+  surface_ids:
+  - surf_b_hall
+  label_position:
+  - 79.0
+  - 32.0
+  site_id: b
+  legacy_zone: defender_side
+- id: defender_spawn
+  display_name: Defender Spawn
+  kind: spawn
+  polygon:
+  - - 42.0
+    - 16.0
+  - - 58.0
+    - 16.0
+  - - 58.0
+    - 28.0
+  - - 42.0
+    - 28.0
+  surface_ids:
+  - surf_defender_spawn
+  label_position:
+  - 50.0
+  - 22.0
+  site_id: none
+  legacy_zone: defender_spawn
+traversal_links:
+- id: link_attacker_spawn_a_lobby
+  kind: ramp
+  from_pos:
+  - 42.75
+  - 89.0
+  - surf_attacker_spawn
+  to_pos:
+  - 41.25
+  - 89.0
+  - surf_a_lobby
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_attacker_spawn_b_fountain
+  kind: ramp
+  from_pos:
+  - 57.25
+  - 89.0
+  - surf_attacker_spawn
+  to_pos:
+  - 58.75
+  - 89.0
+  - surf_b_fountain
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_lobby_a_showers
+  kind: ramp
+  from_pos:
+  - 26.0
+  - 72.75
+  - surf_a_lobby
+  to_pos:
+  - 26.0
+  - 71.25
+  - surf_a_showers
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_lobby_a_short
+  kind: ramp
+  from_pos:
+  - 35.0
+  - 72.75
+  - surf_a_lobby
+  to_pos:
+  - 35.0
+  - 71.25
+  - surf_a_short
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_showers_a_site
+  kind: ramp
+  from_pos:
+  - 21.0
+  - 56.75
+  - surf_a_showers
+  to_pos:
+  - 21.0
+  - 55.25
+  - surf_a_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_short_a_site
+  kind: ramp
+  from_pos:
+  - 31.0
+  - 56.75
+  - surf_a_short
+  to_pos:
+  - 31.0
+  - 55.25
+  - surf_a_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_site_a_uhall
+  kind: ramp
+  from_pos:
+  - 20.0
+  - 38.75
+  - surf_a_site
+  to_pos:
+  - 20.0
+  - 37.25
+  - surf_a_uhall
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_site_a_lamps
+  kind: ramp
+  from_pos:
+  - 33.25
+  - 41.0
+  - surf_a_site
+  to_pos:
+  - 34.75
+  - 41.0
+  - surf_a_lamps
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_lamps_defender_spawn
+  kind: ramp
+  from_pos:
+  - 41.25
+  - 27.0
+  - surf_a_lamps
+  to_pos:
+  - 42.75
+  - 27.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_fountain_b_window
+  kind: ramp
+  from_pos:
+  - 65.0
+  - 72.75
+  - surf_b_fountain
+  to_pos:
+  - 65.0
+  - 71.25
+  - surf_b_window
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_fountain_b_long
+  kind: ramp
+  from_pos:
+  - 74.0
+  - 72.75
+  - surf_b_fountain
+  to_pos:
+  - 74.0
+  - 71.25
+  - surf_b_long
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_window_b_site
+  kind: ramp
+  from_pos:
+  - 69.0
+  - 56.75
+  - surf_b_window
+  to_pos:
+  - 69.0
+  - 55.25
+  - surf_b_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_long_b_site
+  kind: ramp
+  from_pos:
+  - 79.0
+  - 56.75
+  - surf_b_long
+  to_pos:
+  - 79.0
+  - 55.25
+  - surf_b_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_site_b_elbow
+  kind: ramp
+  from_pos:
+  - 69.0
+  - 38.75
+  - surf_b_site
+  to_pos:
+  - 69.0
+  - 37.25
+  - surf_b_elbow
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_site_b_hall
+  kind: ramp
+  from_pos:
+  - 79.0
+  - 38.75
+  - surf_b_site
+  to_pos:
+  - 79.0
+  - 37.25
+  - surf_b_hall
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_elbow_b_hall
+  kind: ramp
+  from_pos:
+  - 71.25
+  - 32.0
+  - surf_b_elbow
+  to_pos:
+  - 72.75
+  - 32.0
+  - surf_b_hall
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_elbow_defender_spawn
+  kind: ramp
+  from_pos:
+  - 58.75
+  - 27.0
+  - surf_b_elbow
+  to_pos:
+  - 57.25
+  - 27.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: tp_short_window
+  kind: teleporter
+  from_pos:
+  - 35.0
+  - 64.0
+  - surf_a_short
+  to_pos:
+  - 65.0
+  - 64.0
+  - surf_b_window
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 30.0
+  start_closed_prob: 0.0
+- id: tp_long_uhall
+  kind: teleporter
+  from_pos:
+  - 81.0
+  - 64.0
+  - surf_b_long
+  to_pos:
+  - 20.0
+  - 32.0
+  - surf_a_uhall
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 30.0
+  start_closed_prob: 0.0
+legacy:
+  adjacency_overrides: {}
+  sightline_overrides:
+  - from_callout: a_uhall
+    to_callout: a_showers
+    advantaged_side: defense
+  - from_callout: a_lamps
+    to_callout: a_short
+    advantaged_side: defense
+  - from_callout: b_hall
+    to_callout: b_window
+    advantaged_side: defense
+  - from_callout: b_elbow
+    to_callout: b_long
+    advantaged_side: defense
+  prop_support_exemptions: []
+editor_state:
+  test_players: []
+  viewport: {}
+  selected_tool: ''

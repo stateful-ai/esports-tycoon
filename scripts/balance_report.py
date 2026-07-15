@@ -14,7 +14,7 @@ simulated outcomes only — no golden re-bless.
 
 from __future__ import annotations
 
-import sys
+import argparse
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 
@@ -28,7 +28,7 @@ REQUIRED_REASONS = {"elim", "spike_detonation", "spike_defused"}
 
 def _simulate_map(map_id: str, n: int) -> tuple[str, Counter, Counter, float, int]:
     """Independent deterministic map sweep, safe to run in a worker."""
-    gd = load_all()
+    gd = load_all(map_ids=[map_id])
     wins: Counter[str] = Counter()
     reasons: Counter[str] = Counter()
     atk_wins = total = 0
@@ -57,9 +57,22 @@ def _simulate_map(map_id: str, n: int) -> tuple[str, Counter, Counter, float, in
     return map_id, wins, reasons, atk_rate, med
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("n_matches", nargs="?", type=int, default=30)
+    parser.add_argument(
+        "--maps",
+        nargs="+",
+        metavar="MAP_ID",
+        help="check specific published map ids instead of the live rotation",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
-    n = int(sys.argv[1]) if len(sys.argv) > 1 else 30
-    map_ids = sorted(load_all().maps)
+    args = parse_args()
+    n = args.n_matches
+    map_ids = sorted(args.maps or load_all().maps)
     with ProcessPoolExecutor(max_workers=len(map_ids)) as pool:
         futures = [pool.submit(_simulate_map, map_id, n) for map_id in map_ids]
         results = [future.result() for future in futures]

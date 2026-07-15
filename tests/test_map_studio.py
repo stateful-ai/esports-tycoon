@@ -16,7 +16,38 @@ from esports_sim.registry.map_guide_renderer import iso
 from esports_sim.schemas.map import CalloutZone, Site
 from esports_sim.schemas.studio import MapStudioDocumentV1
 from esports_sim.sim import engine
-from esports_sim.web.server import map_studio_create, map_studio_validate
+from esports_sim.web.server import app, map_studio_create, map_studio_validate
+
+
+def test_map_studio_mutation_routes_inject_the_http_request():
+    """FastAPI must not mistake the Request object for a query parameter."""
+    schema = app.openapi()
+    for path, method in (
+        ("/api/map-studio/maps/{map_id}", "put"),
+        ("/api/map-studio/maps/{map_id}/publish", "post"),
+    ):
+        parameters = schema["paths"][path][method].get("parameters", [])
+        assert "request" not in {item["name"] for item in parameters}
+
+
+@pytest.mark.parametrize(
+    "map_id",
+    [
+        "ascent_reference",
+        "bind_reference",
+        "breeze_reference",
+        "haven_reference",
+        "lotus_reference",
+    ],
+)
+def test_reference_map_drafts_remain_compilable(map_id: str):
+    doc, revision_hash = map_workbench.load_document(map_id)
+    map_obj, geometry, errors = map_workbench.validate_document(doc)
+
+    assert revision_hash
+    assert errors == []
+    assert map_obj is not None
+    assert geometry is not None
 
 
 def test_transform_parity_with_node():

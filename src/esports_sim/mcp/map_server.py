@@ -8,6 +8,7 @@ from typing import Any, Literal
 from mcp.server.fastmcp import FastMCP
 
 from esports_sim.registry import map_mcp_ops as ops
+from esports_sim.registry.map_mcp_ops import MapRemoval
 from esports_sim.schemas.map import SightLine
 from esports_sim.schemas.studio import (
     Prop,
@@ -21,9 +22,10 @@ mcp = FastMCP(
     "ESports Map Studio",
     instructions=(
         "Build and co-edit maps in the same Studio source used by the visual UI. "
-        "Read the schema, create or open a map, retain revision_hash, and pass it "
+        "Read the schema, create/open/fork a map, retain revision_hash, and pass it "
         "as if_match_hash on every mutation. On a stale revision, get_map and "
-        "reconcile instead of blind-retrying. Validate frequently. Publish only "
+        "reconcile instead of blind-retrying. Batch coherent generated slices with "
+        "apply_map_patch, validate frequently, and publish only "
         "when the user explicitly asks to replace runtime map artifacts."
     ),
     json_response=True,
@@ -71,6 +73,16 @@ def create_map(
 
 
 @mcp.tool()
+def fork_map(
+    source_map_id: str,
+    new_map_id: str,
+    display_name: str | None = None,
+) -> dict[str, Any]:
+    """Create a non-destructive Studio variant from a draft or legacy map."""
+    return ops.fork_map(source_map_id, new_map_id, display_name)
+
+
+@mcp.tool()
 def open_map_for_editing(map_id: str) -> dict[str, Any]:
     """Open a map and materialize legacy-only data into the shared Studio source."""
     return ops.open_map_for_editing(map_id)
@@ -96,6 +108,38 @@ def update_map_metadata(
 ) -> dict[str, Any]:
     """Patch display name, site ids, or spawn-zone ids at an exact revision."""
     return ops.update_map_metadata(map_id, changes, if_match_hash)
+
+
+@mcp.tool()
+def apply_map_patch(
+    map_id: str,
+    if_match_hash: str,
+    metadata: dict[str, Any] | None = None,
+    walkable_surfaces: list[WalkableSurface] | None = None,
+    semantic_zones: list[SemanticZone] | None = None,
+    props: list[Prop] | None = None,
+    walls: list[Wall] | None = None,
+    traversal_links: list[TraversalLink] | None = None,
+    sightlines: list[SightLine] | None = None,
+    adjacency_overrides: dict[str, list[str]] | None = None,
+    prop_support_exemptions: list[str] | None = None,
+    removals: list[MapRemoval] | None = None,
+) -> dict[str, Any]:
+    """Apply a coherent typed batch in one compare-and-swap revision."""
+    return ops.apply_map_patch(
+        map_id,
+        if_match_hash,
+        metadata,
+        walkable_surfaces,
+        semantic_zones,
+        props,
+        walls,
+        traversal_links,
+        sightlines,
+        adjacency_overrides,
+        prop_support_exemptions,
+        removals,
+    )
 
 
 @mcp.tool()
