@@ -30,6 +30,8 @@ const Editor = {
   probeRay: null,     // [x, y]
   probeResult: null,
   showOverlay: false,
+  viewBox: null,      // Dynamic pan/zoom viewBox state
+  panState: null,     // Mouse tracking for dynamic pan
 };
 
 function toast(msg) {
@@ -181,6 +183,13 @@ async function openMap(mapId) {
     $("#hash-compiled").textContent = "-";
     $("#paint-status").textContent = "unknown";
     
+    // Initialize viewBox state
+    if (Editor.isIso) {
+      Editor.viewBox = { x: -110, y: -12, w: 220, h: 128 };
+    } else {
+      Editor.viewBox = { x: -6, y: -6, w: 112, h: 112 };
+    }
+
     paintMapList();
     paintSaveState();
     renderCanvas();
@@ -244,8 +253,25 @@ function bindMetaEvents() {
 function bindCanvasEvents() {
   const svg = $("#studio-canvas");
   
+  svg.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
+  
   svg.addEventListener("mousedown", (e) => {
     if (!Editor.doc) return;
+    
+    // Right click for panning
+    if (e.button === 2) {
+      e.preventDefault();
+      Editor.panState = {
+        startX: e.clientX,
+        startY: e.clientY,
+        viewBoxX: Editor.viewBox.x,
+        viewBoxY: Editor.viewBox.y
+      };
+      return;
+    }
+    
     const pt = getCanvasCoords(e);
     
     if (Editor.selectedTool === "select") {
@@ -375,6 +401,20 @@ function bindCanvasEvents() {
 
   svg.addEventListener("mousemove", (e) => {
     if (!Editor.doc) return;
+    
+    if (Editor.panState) {
+      const dxScreen = e.clientX - Editor.panState.startX;
+      const dyScreen = e.clientY - Editor.panState.startY;
+      const rect = svg.getBoundingClientRect();
+      const svgDx = dxScreen * (Editor.viewBox.w / rect.width);
+      const svgDy = dyScreen * (Editor.viewBox.h / rect.height);
+      
+      Editor.viewBox.x = Editor.panState.viewBoxX - svgDx;
+      Editor.viewBox.y = Editor.panState.viewBoxY - svgDy;
+      svg.setAttribute("viewBox", `${Editor.viewBox.x} ${Editor.viewBox.y} ${Editor.viewBox.w} ${Editor.viewBox.h}`);
+      return;
+    }
+    
     const pt = getCanvasCoords(e);
     
     if (Editor.dragState) {
@@ -406,13 +446,58 @@ function bindCanvasEvents() {
     }
   });
 
-  svg.addEventListener("mouseup", () => {
+  svg.addEventListener("mouseup", (e) => {
+    if (e.button === 2) {
+      if (Editor.panState) Editor.panState = null;
+      return;
+    }
     if (Editor.dragState) {
       Editor.dragState = null;
       renderCanvas();
       updateInspector();
     }
   });
+
+  window.addEventListener("mouseup", (e) => {
+    if (Editor.panState) {
+      Editor.panState = null;
+    }
+  });
+
+  svg.addEventListener("wheel", (e) => {
+    if (!Editor.doc) return;
+    e.preventDefault();
+    
+    const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+    const rect = svg.getBoundingClientRect();
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return;
+    const svgPt = pt.matrixTransform(ctm.inverse());
+    const mx = svgPt.x;
+    const my = svgPt.y;
+    
+    const oldW = Editor.viewBox.w;
+    const oldH = Editor.viewBox.h;
+    
+    const nextW = oldW / zoomFactor;
+    if (nextW < 5 || nextW > 1100) return;
+    
+    const newW = nextW;
+    const newH = oldH / zoomFactor;
+    
+    const fractionX = (mx - Editor.viewBox.x) / oldW;
+    const fractionY = (my - Editor.viewBox.y) / oldH;
+    
+    Editor.viewBox.x = mx - fractionX * newW;
+    Editor.viewBox.y = my - fractionY * newH;
+    Editor.viewBox.w = newW;
+    Editor.viewBox.h = newH;
+    
+    svg.setAttribute("viewBox", `${Editor.viewBox.x} ${Editor.viewBox.y} ${Editor.viewBox.w} ${Editor.viewBox.h}`);
+  }, { passive: false });
 
   // End polygon on Enter key
   window.addEventListener("keydown", (e) => {
@@ -479,13 +564,16 @@ function renderCanvas() {
   if (!Editor.doc) return;
   const isIso = Editor.isIso;
 
-  // Center maps by updating viewBox dynamically based on projection
+  // Set viewBox dynamically based on current zoom/pan state
   const svg = $("#studio-canvas");
-  if (isIso) {
-    svg.setAttribute("viewBox", "-110 -12 220 128");
-  } else {
-    svg.setAttribute("viewBox", "-6 -6 112 112");
+  if (!Editor.viewBox) {
+    if (isIso) {
+      Editor.viewBox = { x: -110, y: -12, w: 220, h: 128 };
+    } else {
+      Editor.viewBox = { x: -6, y: -6, w: 112, h: 112 };
+    }
   }
+  svg.setAttribute("viewBox", `${Editor.viewBox.x} ${Editor.viewBox.y} ${Editor.viewBox.w} ${Editor.viewBox.h}`);
 
   // Clear layers
   const layers = ["surfaces", "zones", "walls", "props", "links", "players", "probes", "handles"];
@@ -1339,7 +1427,13 @@ function bindToolbarEvents() {
   $("#view-toggle").onclick = () => {
     Editor.isIso = !Editor.isIso;
     $("#view-toggle").textContent = Editor.isIso ? "View: 3D Isometric" : "View: 2D Top-Down";
+    if (Editor.isIso) {
+      Editor.viewBox = { x: -110, y: -12, w: 220, h: 128 };
+    } else {
+      Editor.viewBox = { x: -6, y: -6, w: 112, h: 112 };
+    }
     renderCanvas();
+    updateOverlayImage();
   };
 
   $("#undo-btn").onclick = undo;
