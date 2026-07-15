@@ -7707,6 +7707,18 @@ def map_studio_map(map_id: str) -> dict:
     return {"document": doc.model_dump(mode="json"), "hash": doc_hash}
 
 
+@app.get("/api/map-studio/maps/{map_id}/revision")
+def map_studio_revision(map_id: str) -> dict:
+    """Cheap polling contract for human/AI co-edit awareness."""
+    from esports_sim.registry import map_workbench
+    map_id = _map_studio_id(map_id)
+    try:
+        _, doc_hash = map_workbench.load_document(map_id)
+    except FileNotFoundError:
+        raise HTTPException(404, f"unknown map '{map_id}'") from None
+    return {"id": map_id, "hash": doc_hash}
+
+
 @app.post("/api/map-studio/maps")
 def map_studio_create(body: dict) -> dict:
     from esports_sim.registry import map_workbench
@@ -7716,10 +7728,6 @@ def map_studio_create(body: dict) -> dict:
         raise HTTPException(422, "invalid map id")
     map_id = _map_studio_id(map_id)
     
-    studio_dir, runtime_dir, _, _ = map_workbench._resolve_paths()
-    if (studio_dir / f"{map_id}.yaml").exists() or (runtime_dir / f"{map_id}.yaml").exists():
-        raise HTTPException(409, f"map '{map_id}' already exists")
-        
     doc_dict = {
         "schema_version": 1,
         "id": map_id,
@@ -7733,7 +7741,12 @@ def map_studio_create(body: dict) -> dict:
         "editor_state": {"test_players": [], "viewport": {}, "selected_tool": ""}
     }
     
-    res = map_workbench.save_document(map_id, doc_dict)
+    try:
+        res = map_workbench.create_document(map_id, doc_dict)
+    except FileExistsError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    except TimeoutError as exc:
+        raise HTTPException(409, str(exc)) from exc
     if not res.get("valid"):
         raise HTTPException(422, "failed to create initial draft")
     return res
@@ -7748,8 +7761,10 @@ def map_studio_save(map_id: str, body: dict, request: Request) -> dict:
     if_match = request.headers.get("if-match")
     try:
         res = map_workbench.save_document(map_id, body, if_match_hash=if_match)
-    except ValueError as exc:
+    except (TimeoutError, ValueError) as exc:
         if "stale revision" in str(exc):
+            raise HTTPException(409, str(exc)) from exc
+        if "timed out waiting" in str(exc):
             raise HTTPException(409, str(exc)) from exc
         raise HTTPException(422, str(exc)) from exc
     return res
@@ -7771,12 +7786,20 @@ def map_studio_validate(body: dict) -> dict:
 
 
 @app.post("/api/map-studio/maps/{map_id}/publish")
-def map_studio_publish(map_id: str) -> dict:
+def map_studio_publish(map_id: str, request: Request) -> dict:
     from esports_sim.registry import map_workbench
     _require_local_admin()
     map_id = _map_studio_id(map_id)
     try:
-        res = map_workbench.publish_document(map_id)
+        res = map_workbench.publish_document(
+            map_id, if_match_hash=request.headers.get("if-match")
+        )
+    except (TimeoutError, ValueError) as exc:
+        if "stale revision" in str(exc):
+            raise HTTPException(409, str(exc)) from exc
+        if "timed out waiting" in str(exc):
+            raise HTTPException(409, str(exc)) from exc
+        raise HTTPException(422, str(exc)) from exc
     except Exception as exc:
         raise HTTPException(422, str(exc)) from exc
     return res

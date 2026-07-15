@@ -15,6 +15,7 @@ mirror of it.
 | `web-screen` | Add or rework a web UI screen the repo way (thin serializer, no sim logic in JS, tokens, profile links) |
 | `campaign` | Add a campaign-layer (manager/) feature: determinism rules, save migration, snowball gate, inbox surfacing |
 | `build-roster-packs` | Build or correct roster packs through portable drafts, schema validation, and the `esports-rosters` MCP tools |
+| `map-studio-authoring` | Create or co-edit shared Studio maps through revision-safe `esports-maps` MCP tools |
 | `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
 
 ## Learning policy work
@@ -29,7 +30,7 @@ narrow stable-hash RNG exception for offline training.
 
 | Agent | Scope |
 |---|---|
-| `map-author` | Map content only (graphs, geometry, props, gimmicks) with balance + pacing gates baked in |
+| `map-author` | Shared Map Studio content only (floors, zones, props, links) with revision and gate rules baked in |
 | `art-generator` | Asset generation via the validated Ludo / Google AI Studio / Scenario recipes, with structure gating |
 | `sim-tuner` | Engine balance/pacing tuning with the measurement stack and the do-not-retread lesson bank |
 

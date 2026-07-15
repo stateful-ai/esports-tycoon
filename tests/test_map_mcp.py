@@ -1,0 +1,179 @@
+"""Shared-draft operations and real stdio coverage for the Map Studio MCP."""
+
+from __future__ import annotations
+
+import asyncio
+import os
+import shutil
+import sys
+from pathlib import Path
+
+import pytest
+import yaml
+
+from esports_sim.registry import map_mcp_ops as ops
+from esports_sim.registry import map_workbench
+from esports_sim.registry.loader import DEFAULT_DATA_DIR
+
+
+def test_two_site_workflow_is_valid_revisioned_and_publishable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    monkeypatch.setenv("ESPORTS_MAP_DATA_DIR", str(data_dir))
+
+    created = ops.create_map("coedit-map", "Coedit Map", template="two-site")
+    assert created["validation"] == {"valid": True, "errors": []}
+    assert created["document"]["sites"] == ["a", "b"]
+    first_hash = created["revision_hash"]
+    assert created["ui_path"] == "/map-studio.html?map=coedit-map"
+
+    changed = ops.upsert_wall(
+        "coedit-map",
+        {
+            "id": "wall_a_heaven",
+            "polyline": [(18, 45), (18, 57)],
+            "thickness": 1.0,
+            "height": 3.2,
+            "penetrability": 0.5,
+        },
+        first_hash,
+    )
+    second_hash = changed["revision_hash"]
+    assert second_hash != first_hash
+    assert changed["changed"]["id"] == "wall_a_heaven"
+
+    with pytest.raises(ops.MapMcpError, match="stale revision"):
+        ops.update_map_metadata(
+            "coedit-map", {"display_name": "Stale Name"}, first_hash
+        )
+    with pytest.raises(ops.MapMcpError, match="stale revision"):
+        ops.publish_map("coedit-map", first_hash)
+
+    current = ops.get_map("coedit-map")
+    assert current["revision_hash"] == second_hash
+    assert current["document"]["walls"][0]["id"] == "wall_a_heaven"
+    assert ops.probe_map_geometry("coedit-map", (25, 50))["probe"]["zone_id"] == "a_site"
+
+    published = ops.publish_map("coedit-map", second_hash)
+    assert published["status"] == "published"
+    assert (data_dir / "maps" / "coedit-map.yaml").is_file()
+    assert (data_dir / "maps" / "geometry" / "coedit-map.yaml").is_file()
+    assert (tmp_path / "assets" / "maps" / "guides" / "coedit-map.png").is_file()
+
+
+def test_human_save_forces_ai_to_reconcile(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    monkeypatch.setenv("ESPORTS_MAP_DATA_DIR", str(data_dir))
+    created = ops.create_map("shared-map", "Shared Map")
+
+    doc, revision_hash = map_workbench.load_document("shared-map", data_dir)
+    raw = doc.model_dump(mode="json")
+    raw["display_name"] = "Human Saved Name"
+    human_save = map_workbench.save_document(
+        "shared-map", raw, if_match_hash=revision_hash, data_dir=data_dir
+    )
+
+    with pytest.raises(ops.MapMcpError, match="reconcile"):
+        ops.update_map_metadata(
+            "shared-map",
+            {"display_name": "AI Blind Overwrite"},
+            created["revision_hash"],
+        )
+    latest = ops.get_map("shared-map")
+    assert latest["revision_hash"] == human_save["hash"]
+    assert latest["document"]["display_name"] == "Human Saved Name"
+
+
+def test_legacy_materialization_checks_synthetic_revision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    runtime_dir = data_dir / "maps"
+    geometry_dir = runtime_dir / "geometry"
+    runtime_dir.mkdir(parents=True)
+    geometry_dir.mkdir(parents=True)
+    shutil.copy2(DEFAULT_DATA_DIR / "maps" / "ascent.yaml", runtime_dir / "ascent.yaml")
+    shutil.copy2(
+        DEFAULT_DATA_DIR / "maps" / "geometry" / "ascent.yaml",
+        geometry_dir / "ascent.yaml",
+    )
+    monkeypatch.setenv("ESPORTS_MAP_DATA_DIR", str(data_dir))
+
+    _, old_hash = map_workbench.load_document("ascent", data_dir)
+    runtime_path = runtime_dir / "ascent.yaml"
+    runtime = yaml.safe_load(runtime_path.read_text(encoding="utf-8"))
+    runtime["display_name"] = "Human Changed Legacy"
+    runtime_path.write_text(yaml.safe_dump(runtime, sort_keys=False), encoding="utf-8")
+
+    stale_doc = map_workbench.synthesize_document("ascent", data_dir)
+    with pytest.raises(ValueError, match="stale revision"):
+        map_workbench.save_document(
+            "ascent",
+            stale_doc.model_dump(mode="json"),
+            if_match_hash=old_hash,
+            data_dir=data_dir,
+        )
+
+    opened = ops.open_map_for_editing("ascent")
+    assert opened["document"]["display_name"] == "Human Changed Legacy"
+    assert (data_dir / "maps" / "studio" / "ascent.yaml").is_file()
+
+
+def test_stdio_mcp_exposes_typed_map_tools_and_creates_shared_draft(
+    tmp_path: Path,
+) -> None:
+    pytest.importorskip("mcp")
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+
+    repo = Path(__file__).resolve().parents[1]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(repo / "src")
+    env["ESPORTS_MAP_DATA_DIR"] = str(tmp_path / "data")
+
+    async def scenario() -> None:
+        params = StdioServerParameters(
+            command=sys.executable,
+            args=["-m", "esports_sim.mcp.map_server"],
+            env=env,
+        )
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                listed = await session.list_tools()
+                by_name = {tool.name: tool for tool in listed.tools}
+                required = {
+                    "get_map_schema",
+                    "create_map",
+                    "open_map_for_editing",
+                    "get_map",
+                    "upsert_walkable_surface",
+                    "upsert_semantic_zone",
+                    "upsert_wall",
+                    "upsert_prop",
+                    "upsert_traversal_link",
+                    "remove_map_element",
+                    "probe_map_geometry",
+                    "publish_map",
+                }
+                assert required <= set(by_name)
+                wall_schema = by_name["upsert_wall"].inputSchema["properties"]["wall"]
+                assert "$ref" in wall_schema or "properties" in wall_schema
+
+                result = await session.call_tool(
+                    "create_map",
+                    arguments={
+                        "map_id": "protocol-map",
+                        "display_name": "Protocol Map",
+                        "template": "two-site",
+                    },
+                )
+                assert result.isError is not True
+
+    asyncio.run(scenario())
+    assert (
+        tmp_path / "data" / "maps" / "studio" / "protocol-map.yaml"
+    ).is_file()

@@ -41,6 +41,9 @@ class SemanticZone(BaseModel):
 class Wall(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
+    # Optional for backward compatibility with drafts created before walls
+    # became independently addressable by Studio/MCP co-editors.
+    id: str | None = None
     polyline: list[tuple[float, float]] = Field(min_length=2)
     thickness: float = Field(default=1.0, gt=0.0)
     height: float = Field(default=3.2, gt=0.0)

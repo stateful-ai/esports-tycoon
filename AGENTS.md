@@ -31,8 +31,10 @@ Quick orientation for any agent:
   contract are in `docs/art-pipeline.md`; API keys are in the gitignored
   `.env`.
 - Skill/agent index: `SKILLS.md` (repo skills `/ship`, `/tactics`,
-  `/art-pass`, `/maps`, `/web-screen`, `/campaign`; custom agents
+  `/art-pass`, `/maps`, `/map-studio-authoring`, `/web-screen`, `/campaign`; custom agents
   map-author, sim-tuner, art-generator).
+- Map authoring: use `/map-studio-authoring` and the `esports-maps` MCP
+  server so AI and human edits share the same revisioned Studio source.
 - Roster authoring: use `/build-roster-packs` and the `esports-rosters` MCP
   server for draft-first add/edit/remove operations and atomic installation.
 
