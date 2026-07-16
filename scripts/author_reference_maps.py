@@ -28,6 +28,7 @@ class Room:
     bounds: tuple[float, float, float, float]
     site_id: str = "none"
     legacy_zone: str = "mid"
+    elevation: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -58,8 +59,9 @@ def room(
     bounds: tuple[float, float, float, float],
     site_id: str = "none",
     legacy_zone: str = "mid",
+    elevation: float = 0.0,
 ) -> Room:
-    return Room(room_id, display_name, bounds, site_id, legacy_zone)
+    return Room(room_id, display_name, bounds, site_id, legacy_zone, elevation)
 
 
 def edge(
@@ -348,9 +350,276 @@ def breeze_spec() -> MapSpec:
     )
 
 
+def sunset_spec() -> MapSpec:
+    rooms = (
+        room("attacker_spawn", "Attacker Spawn", (42, 88, 58, 98), legacy_zone="attacker_spawn"),
+        room("a_lobby", "A Lobby", (18, 78, 42, 92), "a", "attacker_side"),
+        room("mid_bottom", "Mid Bottom", (42, 70, 58, 88), "mid", "mid"),
+        room("b_lobby", "B Lobby", (58, 78, 82, 92), "b", "attacker_side"),
+        room("a_main", "A Main", (14, 62, 30, 78), "a", "attacker_side"),
+        room("a_elbow", "A Elbow", (30, 60, 42, 74), "a", "attacker_side"),
+        room("mid_courtyard", "Mid Courtyard", (42, 54, 58, 70), "mid", "mid"),
+        room("b_main", "B Main", (70, 60, 86, 78), "b", "attacker_side"),
+        room("a_site", "A Site", (8, 42, 30, 62), "a", "site"),
+        room("a_link", "A Link", (30, 42, 42, 60), "a", "defender_side"),
+        room("mid_top", "Mid Top", (42, 38, 58, 54), "mid", "mid"),
+        room("b_market", "B Market", (58, 42, 72, 60), "b", "defender_side"),
+        room("b_site", "B Site", (72, 40, 92, 60), "b", "site"),
+        room("a_back", "A Back", (12, 28, 30, 42), "a", "defender_side"),
+        room("defender_link", "Defender Link", (30, 26, 72, 38), "none", "defender_side"),
+        room("b_back", "B Back", (72, 28, 88, 40), "b", "defender_side"),
+        room("defender_spawn", "Defender Spawn", (42, 14, 58, 26), legacy_zone="defender_spawn"),
+    )
+    edges = (
+        edge("attacker_spawn", "a_lobby"), edge("attacker_spawn", "mid_bottom"),
+        edge("attacker_spawn", "b_lobby"), edge("a_lobby", "a_main"),
+        edge("a_lobby", "mid_bottom"), edge("mid_bottom", "b_lobby"),
+        edge("mid_bottom", "mid_courtyard"), edge("b_lobby", "b_main"),
+        edge("a_main", "a_elbow"), edge("a_main", "a_site"),
+        edge("a_elbow", "a_link"), edge("a_elbow", "mid_courtyard"),
+        edge("a_site", "a_link"), edge("a_site", "a_back"),
+        edge("a_link", "mid_top"), edge("mid_courtyard", "mid_top"),
+        edge("mid_courtyard", "b_market"), edge("b_main", "b_market"),
+        edge("b_main", "b_site"), edge("b_market", "b_site"),
+        edge("mid_top", "b_market", kind="door", edge_id="sunset_market_door", noise_radius=24, start_closed_prob=0.65),
+        edge("a_back", "defender_link"), edge("mid_top", "defender_link"),
+        edge("b_site", "b_back"), edge("b_back", "defender_link"),
+        edge("defender_link", "defender_spawn"),
+    )
+    return MapSpec(
+        "sunset_reference", "Sunset Reference", None, ("a", "b"), rooms, edges,
+        (
+            prop("a_site_stack", "a_site", (15, 48, 19, 53), "full"),
+            prop("mid_crate", "mid_courtyard", (48, 60, 52, 64), "half"),
+            prop("b_site_box", "b_site", (81, 47, 85, 52), "full"),
+        ),
+        (
+            ("a_back", "a_main", "defense"), ("mid_top", "mid_bottom", None),
+            ("b_market", "b_main", "defense"), ("b_back", "b_main", "defense"),
+        ),
+    )
+
+
+def icebox_spec() -> MapSpec:
+    rooms = (
+        room("attacker_spawn", "Attacker Spawn", (42, 90, 58, 98), legacy_zone="attacker_spawn"),
+        room("a_lobby", "A Lobby", (22, 78, 42, 92), "a", "attacker_side"),
+        room("mid_blue", "Mid Blue", (42, 72, 58, 90), "mid", "mid"),
+        room("b_lobby", "B Lobby", (58, 78, 78, 92), "b", "attacker_side"),
+        room("a_belt", "A Belt", (12, 64, 28, 78), "a", "attacker_side", 4.0),
+        room("a_main", "A Main", (28, 62, 42, 78), "a", "attacker_side"),
+        room("mid_kitchen", "Mid Kitchen", (42, 54, 58, 72), "mid", "mid"),
+        room("b_green", "B Green", (58, 62, 72, 78), "b", "attacker_side"),
+        room("b_yellow", "B Yellow", (72, 62, 88, 78), "b", "attacker_side"),
+        room("a_site", "A Site", (12, 44, 28, 64), "a", "site"),
+        room("a_nest", "A Nest", (28, 46, 42, 62), "a", "defender_side", 4.0),
+        room("mid_boiler", "Mid Boiler", (42, 38, 58, 54), "mid", "defender_side"),
+        room("b_orange", "B Orange", (58, 48, 72, 62), "b", "defender_side"),
+        room("b_site", "B Site", (72, 42, 92, 62), "b", "site"),
+        room("a_rafters", "A Rafters", (12, 32, 28, 44), "a", "defender_side", 4.0),
+        room("a_screen", "A Screen", (28, 28, 42, 46), "a", "defender_side"),
+        room("defender_link", "Defender Link", (42, 24, 72, 38), "none", "defender_side"),
+        room("b_snowman", "B Snowman", (72, 28, 88, 42), "b", "defender_side"),
+        room("defender_spawn", "Defender Spawn", (42, 12, 58, 24), legacy_zone="defender_spawn"),
+    )
+    edges = (
+        edge("attacker_spawn", "a_lobby"), edge("attacker_spawn", "mid_blue"),
+        edge("attacker_spawn", "b_lobby"), edge("a_lobby", "a_belt", kind="rope"),
+        edge("a_lobby", "a_main"), edge("a_lobby", "mid_blue"),
+        edge("a_belt", "a_main", kind="rope"), edge("a_belt", "a_site", kind="rope"),
+        edge("a_main", "a_site"), edge("a_main", "a_nest", kind="rope"),
+        edge("a_main", "mid_kitchen"), edge("a_site", "a_nest", kind="rope"),
+        edge("a_site", "a_rafters", kind="rope"), edge("a_nest", "a_screen", kind="rope"),
+        edge("a_nest", "mid_boiler", kind="rope"), edge("a_rafters", "a_screen", kind="rope"),
+        edge("mid_blue", "mid_kitchen"), edge("mid_blue", "b_lobby"),
+        edge("mid_kitchen", "mid_boiler"), edge("mid_kitchen", "b_green"),
+        edge("mid_kitchen", "b_orange"), edge("b_lobby", "b_green"),
+        edge("b_lobby", "b_yellow"), edge("b_green", "b_yellow"),
+        edge("b_green", "b_orange"), edge("b_yellow", "b_site"),
+        edge("b_orange", "b_site"), edge("mid_boiler", "b_orange"),
+        edge("a_screen", "defender_link"), edge("mid_boiler", "defender_link"),
+        edge("b_site", "b_snowman"), edge("b_snowman", "defender_link"),
+        edge("defender_link", "defender_spawn"),
+    )
+    return MapSpec(
+        "icebox_reference", "Icebox Reference", None, ("a", "b"), rooms, edges,
+        (
+            prop("a_generator", "a_site", (17, 50, 22, 55), "full"),
+            prop("kitchen_box", "mid_kitchen", (48, 61, 52, 65), "half"),
+            prop("b_yellow_container", "b_yellow", (78, 67, 84, 72), "full"),
+            prop("b_site_container", "b_site", (81, 49, 87, 54), "full"),
+        ),
+        (
+            ("a_rafters", "a_main", "defense"), ("a_nest", "a_lobby", "defense"),
+            ("mid_boiler", "mid_blue", "defense"), ("b_snowman", "b_yellow", "defense"),
+        ),
+    )
+
+
+def pearl_spec() -> MapSpec:
+    rooms = (
+        room("attacker_spawn", "Attacker Spawn", (42, 88, 58, 98), legacy_zone="attacker_spawn"),
+        room("a_lobby", "A Lobby", (20, 78, 42, 92), "a", "attacker_side"),
+        room("mid_shops", "Mid Shops", (42, 70, 58, 88), "mid", "mid"),
+        room("b_lobby", "B Lobby", (58, 78, 80, 92), "b", "attacker_side"),
+        room("a_art", "A Art", (20, 64, 34, 78), "a", "attacker_side"),
+        room("a_main", "A Main", (6, 58, 20, 76), "a", "attacker_side"),
+        room("mid_plaza", "Mid Plaza", (34, 56, 50, 70), "mid", "mid"),
+        room("b_club", "B Club", (58, 62, 72, 78), "b", "attacker_side"),
+        room("a_link", "A Link", (20, 48, 34, 64), "a", "defender_side"),
+        room("mid_connector", "Mid Connector", (34, 44, 50, 56), "mid", "mid"),
+        room("b_ramp", "B Ramp", (50, 50, 64, 62), "b", "attacker_side"),
+        room("b_main", "B Main", (64, 48, 90, 62), "b", "attacker_side"),
+        room("a_site", "A Site", (6, 38, 20, 58), "a", "site"),
+        room("a_dugout", "A Dugout", (20, 34, 34, 48), "a", "defender_side"),
+        room("mid_top", "Mid Top", (34, 30, 50, 44), "mid", "defender_side"),
+        room("b_hall", "B Hall", (50, 30, 64, 50), "b", "defender_side"),
+        room("b_site", "B Site", (72, 30, 92, 48), "b", "site"),
+        room("a_secret", "A Secret", (10, 24, 24, 38), "a", "defender_side"),
+        room("defender_link", "Defender Link", (24, 18, 64, 30), "none", "defender_side"),
+        room("b_tower", "B Tower", (64, 20, 80, 30), "b", "defender_side"),
+        room("defender_spawn", "Defender Spawn", (42, 8, 58, 18), legacy_zone="defender_spawn"),
+    )
+    edges = (
+        edge("attacker_spawn", "a_lobby"), edge("attacker_spawn", "mid_shops"),
+        edge("attacker_spawn", "b_lobby"), edge("a_lobby", "a_art"),
+        edge("a_lobby", "mid_shops"), edge("a_art", "a_main"),
+        edge("a_art", "a_link"), edge("a_art", "mid_plaza"),
+        edge("a_main", "a_link"), edge("a_main", "a_site"),
+        edge("a_link", "a_site"), edge("a_link", "a_dugout"),
+        edge("a_link", "mid_connector"), edge("a_site", "a_secret"),
+        edge("a_site", "a_dugout"), edge("a_secret", "defender_link"),
+        edge("mid_shops", "mid_plaza"), edge("mid_shops", "b_lobby"),
+        edge("mid_shops", "b_club"), edge("mid_plaza", "mid_connector"),
+        edge("mid_plaza", "b_ramp"), edge("mid_connector", "mid_top"),
+        edge("mid_connector", "b_hall"), edge("mid_top", "b_hall"),
+        edge("mid_top", "defender_link"), edge("b_lobby", "b_club"),
+        edge("b_club", "b_ramp"), edge("b_club", "b_main"),
+        edge("b_ramp", "b_main"), edge("b_ramp", "b_hall"),
+        edge("b_main", "b_site"), edge("b_hall", "defender_link"),
+        edge("b_site", "b_tower"),
+        edge("b_tower", "defender_link"), edge("defender_link", "defender_spawn"),
+    )
+    return MapSpec(
+        "pearl_reference", "Pearl Reference", None, ("a", "b"), rooms, edges,
+        (
+            prop("a_site_sculpture", "a_site", (10, 45, 15, 50), "full"),
+            prop("mid_plaza_box", "mid_plaza", (40, 61, 44, 65), "half"),
+            prop("b_long_box", "b_main", (75, 53, 80, 57), "half"),
+            prop("b_site_screen", "b_site", (81, 36, 86, 40), "full"),
+        ),
+        (
+            ("a_secret", "a_main", "defense"), ("mid_top", "mid_shops", "defense"),
+            ("b_tower", "b_main", "defense"), ("b_site", "b_main", "defense"),
+        ),
+    )
+
+
+def split_spec() -> MapSpec:
+    rooms = (
+        room("attacker_spawn", "Attacker Spawn", (42, 90, 58, 98), legacy_zone="attacker_spawn"),
+        room("a_lobby", "A Lobby", (24, 80, 42, 92), "a", "attacker_side"),
+        room("mid_bottom", "Mid Bottom", (42, 72, 58, 90), "mid", "mid"),
+        room("b_lobby", "B Lobby", (58, 80, 76, 92), "b", "attacker_side"),
+        room("a_sewer", "A Sewer", (16, 68, 30, 80), "a", "attacker_side"),
+        room("a_main", "A Main", (30, 64, 42, 80), "a", "attacker_side"),
+        room("mid_mail", "Mid Mail", (42, 56, 58, 72), "mid", "mid"),
+        room("b_garage", "B Garage", (58, 64, 74, 80), "b", "attacker_side"),
+        room("b_main", "B Main", (74, 58, 88, 74), "b", "attacker_side"),
+        room("a_site", "A Site", (12, 48, 30, 68), "a", "site"),
+        room("a_ramps", "A Ramps", (30, 48, 42, 64), "a", "attacker_side"),
+        room("mid_vents", "Mid Vents", (42, 42, 58, 56), "mid", "defender_side", 4.0),
+        room("b_heaven", "B Heaven", (58, 48, 74, 64), "b", "defender_side", 4.0),
+        room("b_site", "B Site", (74, 38, 92, 58), "b", "site"),
+        room("a_heaven", "A Heaven", (12, 34, 30, 48), "a", "defender_side", 4.0),
+        room("a_tower", "A Tower", (30, 30, 42, 48), "a", "defender_side", 4.0),
+        room("defender_link", "Defender Link", (42, 28, 74, 42), "none", "defender_side"),
+        room("defender_spawn", "Defender Spawn", (48, 16, 64, 28), legacy_zone="defender_spawn"),
+    )
+    edges = (
+        edge("attacker_spawn", "a_lobby"), edge("attacker_spawn", "mid_bottom"),
+        edge("attacker_spawn", "b_lobby"), edge("a_lobby", "a_sewer"),
+        edge("a_lobby", "a_main"), edge("a_lobby", "mid_bottom"),
+        edge("a_sewer", "a_main"), edge("a_sewer", "a_site"),
+        edge("a_main", "a_site"), edge("a_main", "a_ramps"),
+        edge("a_main", "mid_bottom"), edge("a_site", "a_ramps"),
+        edge("a_site", "a_heaven", kind="rope"), edge("a_ramps", "a_tower", kind="rope"),
+        edge("a_heaven", "a_tower", kind="rope"), edge("a_tower", "mid_vents", kind="rope"),
+        edge("a_tower", "defender_link", kind="rope"), edge("mid_bottom", "mid_mail"),
+        edge("mid_bottom", "b_lobby"), edge("mid_mail", "mid_vents", kind="rope"),
+        edge("mid_mail", "b_garage"), edge("mid_vents", "b_heaven", kind="rope"),
+        edge("mid_vents", "defender_link", kind="rope"), edge("b_lobby", "b_garage"),
+        edge("b_garage", "b_main"), edge("b_garage", "b_heaven", kind="rope"),
+        edge("b_main", "b_heaven", kind="rope"), edge("b_main", "b_site"),
+        edge("b_heaven", "b_site", kind="rope"), edge("b_site", "defender_link"),
+        edge("defender_link", "defender_spawn"),
+    )
+    return MapSpec(
+        "split_reference", "Split Reference", "split", ("a", "b"), rooms, edges,
+        (
+            prop("a_site_box", "a_site", (18, 55, 22, 60), "full"),
+            prop("mid_mail_box", "mid_mail", (48, 62, 52, 66), "half"),
+            prop("b_site_box", "b_site", (81, 45, 86, 50), "full"),
+        ),
+        (
+            ("a_heaven", "a_main", "defense"), ("a_tower", "a_ramps", "defense"),
+            ("mid_vents", "mid_bottom", "defense"), ("b_heaven", "b_main", "defense"),
+        ),
+    )
+
+
+def fracture_spec() -> MapSpec:
+    rooms = (
+        room("attacker_spawn", "Attacker Spawn", (42, 88, 58, 98), legacy_zone="attacker_spawn"),
+        room("south_bridge", "South Bridge", (30, 74, 70, 88), "none", "attacker_side"),
+        room("a_arc_south", "A Arcade South", (18, 62, 30, 78), "a", "attacker_side"),
+        room("b_arc_south", "B Arcade South", (70, 62, 82, 78), "b", "attacker_side"),
+        room("a_site", "A Site", (6, 42, 24, 62), "a", "site"),
+        room("a_link", "A Link", (24, 46, 38, 58), "a", "defender_side"),
+        room("defender_spawn", "Defender Spawn", (38, 42, 62, 62), legacy_zone="defender_spawn"),
+        room("b_link", "B Link", (62, 46, 76, 58), "b", "defender_side"),
+        room("b_site", "B Site", (76, 42, 94, 62), "b", "site"),
+        room("a_drop", "A Drop", (30, 30, 38, 46), "a", "attacker_side", 4.0),
+        room("b_drop", "B Drop", (62, 30, 70, 46), "b", "attacker_side", 4.0),
+        room("a_arc_north", "A Arcade North", (18, 26, 30, 42), "a", "attacker_side"),
+        room("b_arc_north", "B Arcade North", (70, 26, 82, 42), "b", "attacker_side"),
+        room("north_bridge", "North Bridge", (30, 12, 70, 30), "none", "attacker_side"),
+        room("attacker_bridge", "Attacker Bridge", (42, 2, 58, 12), "none", "attacker_side"),
+    )
+    edges = (
+        edge("attacker_spawn", "south_bridge", kind="rope"),
+        edge("south_bridge", "a_arc_south"), edge("south_bridge", "b_arc_south"),
+        edge("a_arc_south", "a_site"), edge("b_arc_south", "b_site"),
+        edge("a_site", "a_link"), edge("a_site", "a_arc_north"),
+        edge("a_link", "defender_spawn"), edge("a_link", "a_drop", kind="rope"),
+        edge("b_link", "defender_spawn"), edge("b_link", "b_drop", kind="rope"),
+        edge("b_site", "b_link"), edge("b_site", "b_arc_north"),
+        edge("a_arc_north", "a_drop", kind="rope"), edge("a_arc_north", "north_bridge"),
+        edge("a_drop", "defender_spawn", kind="rope"),
+        edge("b_arc_north", "b_drop", kind="rope"), edge("b_arc_north", "north_bridge"),
+        edge("b_drop", "defender_spawn", kind="rope"),
+        edge("north_bridge", "attacker_bridge", kind="rope"),
+    )
+    return MapSpec(
+        "fracture_reference", "Fracture Reference", None, ("a", "b"), rooms, edges,
+        (
+            prop("a_site_generator", "a_site", (12, 49, 17, 54), "full"),
+            prop("defender_center_box", "defender_spawn", (47, 49, 53, 55), "full"),
+            prop("b_site_generator", "b_site", (83, 49, 88, 54), "full"),
+        ),
+        (
+            ("a_link", "a_arc_south", "defense"), ("a_drop", "a_site", "attack"),
+            ("b_link", "b_arc_south", "defense"), ("b_drop", "b_site", "attack"),
+        ),
+    )
+
+
 SPECS = {
     spec.id: spec
-    for spec in (ascent_spec(), bind_spec(), haven_spec(), lotus_spec(), breeze_spec())
+    for spec in (
+        ascent_spec(), bind_spec(), haven_spec(), lotus_spec(), breeze_spec(),
+        sunset_spec(), icebox_spec(), pearl_spec(), split_spec(), fracture_spec(),
+    )
 }
 
 
@@ -391,7 +660,7 @@ def build_patch(spec: MapSpec) -> dict[str, Any]:
         surfaces.append({
             "id": f"surf_{item.id}",
             "polygon": polygon(item.bounds),
-            "elevation": 0.0,
+            "elevation": item.elevation,
         })
         if item.legacy_zone in {"attacker_spawn", "defender_spawn"}:
             kind = "spawn"
@@ -595,7 +864,7 @@ def parse_args() -> argparse.Namespace:
         nargs="*",
         choices=sorted(SPECS),
         default=sorted(SPECS),
-        help="Variant ids to author (defaults to all five).",
+        help="Variant ids to author (defaults to every reference variant).",
     )
     parser.add_argument(
         "--publish",
