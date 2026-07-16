@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
 from esports_sim.manager import market, transfer_requests
@@ -67,14 +68,37 @@ def test_execute_transfer_moves_player_and_money(campaign) -> None:
     fee = market.transfer_ask(gs, pid)
     s_before, b_before = seller.balance, buyer.balance
     n_before = len(buyer.player_ids)
+    seller.lineup.starters = [pid]
+    seller.lineup.agents[pid] = "duelist"
     ok, _ = market.execute_transfer(gs, pid, buyer.id, fee)
     assert ok
     assert pid in buyer.player_ids and pid not in seller.player_ids
+    assert pid not in seller.lineup_ids
+    assert pid not in seller.lineup.starters
+    assert pid not in seller.lineup.agents
     assert seller.balance == s_before + fee
     assert buyer.balance == b_before - fee
     # Full buyer auto-released someone: roster size unchanged.
     assert len(buyer.player_ids) == n_before
     assert gs.players[pid].contract_weeks_left >= market.MIN_CONTRACT_WEEKS
+
+
+def test_expired_contract_clears_all_lineup_references(campaign) -> None:
+    gs = campaign
+    team = gs.teams[gs.user_team_id]
+    pid = team.player_ids[0]
+    gs.players[pid].contract_weeks_left = 1
+    team.lineup_ids = [pid, *[other for other in team.player_ids if other != pid]]
+    team.lineup.starters = list(team.lineup_ids)
+    team.lineup.agents[pid] = "duelist"
+
+    market.tick_contracts(gs, np.random.default_rng(1))
+
+    assert pid not in team.player_ids
+    assert pid not in team.lineup_ids
+    assert pid not in team.lineup.starters
+    assert pid not in team.lineup.agents
+    assert pid in gs.free_agent_ids
 
 
 def test_ai_transfer_window_executes_a_clear_upgrade(
