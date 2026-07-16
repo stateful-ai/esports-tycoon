@@ -270,6 +270,13 @@ def sign_player(
     return True, f"signed {p.handle} at {p.salary:,}/wk for {p.contract_weeks_left} weeks"
 
 
+def _remove_from_lineup(team, player_id: str) -> None:
+    """Remove a departed player from every persisted lineup assignment."""
+    team.lineup_ids = [pid for pid in team.lineup_ids if pid != player_id]
+    team.lineup.starters = [pid for pid in team.lineup.starters if pid != player_id]
+    team.lineup.agents.pop(player_id, None)
+
+
 def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
     allowed, why = market_move_allowed(gs, team_id)
     if not allowed:
@@ -285,7 +292,7 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     team.balance -= severance
     relationships.on_departure(gs, player_id, team_id)
     team.player_ids.remove(player_id)
-    team.lineup_ids = [pid for pid in team.lineup_ids if pid != player_id]
+    _remove_from_lineup(team, player_id)
     if team.captain_id == player_id:
         team.captain_id = team.player_ids[0] if team.player_ids else None
     p.contract_weeks_left = 0
@@ -492,7 +499,9 @@ def tick_contracts(gs: GameState, rng: np.random.Generator) -> None:
                     gs, "expire", "expired", pid, tid,
                     reason="contract reached zero without renewal", effects=effects,
                 )
+                relationships.on_departure(gs, pid, tid)
                 team.player_ids.remove(pid)
+                _remove_from_lineup(team, pid)
                 if team.captain_id == pid:
                     team.captain_id = team.player_ids[0] if team.player_ids else None
                 transfer_requests.clear(gs, pid)
@@ -1574,9 +1583,7 @@ def execute_transfer(
             reason=f"made room for transfer target {pid}", effects=effects,
         )
         buyer.player_ids.remove(weakest.id)
-        buyer.lineup_ids = [q for q in buyer.lineup_ids if q != weakest.id]
-        buyer.lineup.starters = [q for q in buyer.lineup.starters if q != weakest.id]
-        buyer.lineup.agents.pop(weakest.id, None)
+        _remove_from_lineup(buyer, weakest.id)
         weakest.contract_weeks_left = 0
         weakest.tenure_weeks = 0
         transfer_requests.clear(gs, weakest.id)
@@ -1604,7 +1611,7 @@ def execute_transfer(
     relationships.on_departure(gs, pid, seller_id)
     seller.player_ids.remove(pid)
     buyer.player_ids.append(pid)
-    seller.lineup_ids = [q for q in seller.lineup_ids if q != pid]
+    _remove_from_lineup(seller, pid)
     if p.roster_role == "starter":
         buyer.lineup_ids = [
             q
@@ -1680,7 +1687,7 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
     relationships.on_departure(gs, pid, from_id)
     src.player_ids.remove(pid)
     dst.player_ids.append(pid)
-    src.lineup_ids = [q for q in src.lineup_ids if q != pid]
+    _remove_from_lineup(src, pid)
     if p.roster_role == "starter":
         dst.lineup_ids = [
             q
