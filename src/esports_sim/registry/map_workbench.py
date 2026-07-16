@@ -480,7 +480,14 @@ def delete_document(
                     held.rename(target)
             raise RuntimeError(f"failed transactional map deletion: {exc}") from exc
         else:
-            shutil.rmtree(holding_dir)
+            # The deletion is already committed once every artifact has moved
+            # out of its live location.  A Windows handle can keep the
+            # temporary directory from being removed briefly; that must not
+            # turn a completed deletion into a misleading 500 response.
+            try:
+                shutil.rmtree(holding_dir, ignore_errors=True)
+            except OSError:
+                pass
             return {
                 "valid": True,
                 "status": "deleted",
@@ -488,7 +495,13 @@ def delete_document(
                 "deleted_artifacts": [kind for kind, _ in existing],
             }
         finally:
-            shutil.rmtree(holding_dir, ignore_errors=True)
+            try:
+                shutil.rmtree(holding_dir, ignore_errors=True)
+            except OSError:
+                # Cleanup is best-effort after a successful commit or a
+                # completed rollback.  Leaving only the private temporary
+                # directory is safer than masking the real operation result.
+                pass
 
 
 def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
