@@ -1,0 +1,863 @@
+schema_version: 1
+id: fracture_reference
+display_name: Fracture Reference
+sites:
+- a
+- b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+walkable_surfaces:
+- id: surf_attacker_spawn
+  polygon:
+  - - 42.0
+    - 88.0
+  - - 58.0
+    - 88.0
+  - - 58.0
+    - 98.0
+  - - 42.0
+    - 98.0
+  elevation: 0.0
+- id: surf_south_bridge
+  polygon:
+  - - 30.0
+    - 74.0
+  - - 70.0
+    - 74.0
+  - - 70.0
+    - 88.0
+  - - 30.0
+    - 88.0
+  elevation: 0.0
+- id: surf_a_arc_south
+  polygon:
+  - - 18.0
+    - 62.0
+  - - 30.0
+    - 62.0
+  - - 30.0
+    - 78.0
+  - - 18.0
+    - 78.0
+  elevation: 0.0
+- id: surf_b_arc_south
+  polygon:
+  - - 70.0
+    - 62.0
+  - - 82.0
+    - 62.0
+  - - 82.0
+    - 78.0
+  - - 70.0
+    - 78.0
+  elevation: 0.0
+- id: surf_a_site
+  polygon:
+  - - 6.0
+    - 42.0
+  - - 24.0
+    - 42.0
+  - - 24.0
+    - 62.0
+  - - 6.0
+    - 62.0
+  elevation: 0.0
+- id: surf_a_link
+  polygon:
+  - - 24.0
+    - 46.0
+  - - 38.0
+    - 46.0
+  - - 38.0
+    - 58.0
+  - - 24.0
+    - 58.0
+  elevation: 0.0
+- id: surf_defender_spawn
+  polygon:
+  - - 38.0
+    - 42.0
+  - - 62.0
+    - 42.0
+  - - 62.0
+    - 62.0
+  - - 38.0
+    - 62.0
+  elevation: 0.0
+- id: surf_b_link
+  polygon:
+  - - 62.0
+    - 46.0
+  - - 76.0
+    - 46.0
+  - - 76.0
+    - 58.0
+  - - 62.0
+    - 58.0
+  elevation: 0.0
+- id: surf_b_site
+  polygon:
+  - - 76.0
+    - 42.0
+  - - 94.0
+    - 42.0
+  - - 94.0
+    - 62.0
+  - - 76.0
+    - 62.0
+  elevation: 0.0
+- id: surf_a_drop
+  polygon:
+  - - 30.0
+    - 30.0
+  - - 38.0
+    - 30.0
+  - - 38.0
+    - 46.0
+  - - 30.0
+    - 46.0
+  elevation: 4.0
+- id: surf_b_drop
+  polygon:
+  - - 62.0
+    - 30.0
+  - - 70.0
+    - 30.0
+  - - 70.0
+    - 46.0
+  - - 62.0
+    - 46.0
+  elevation: 4.0
+- id: surf_a_arc_north
+  polygon:
+  - - 18.0
+    - 26.0
+  - - 30.0
+    - 26.0
+  - - 30.0
+    - 42.0
+  - - 18.0
+    - 42.0
+  elevation: 0.0
+- id: surf_b_arc_north
+  polygon:
+  - - 70.0
+    - 26.0
+  - - 82.0
+    - 26.0
+  - - 82.0
+    - 42.0
+  - - 70.0
+    - 42.0
+  elevation: 0.0
+- id: surf_north_bridge
+  polygon:
+  - - 30.0
+    - 12.0
+  - - 70.0
+    - 12.0
+  - - 70.0
+    - 30.0
+  - - 30.0
+    - 30.0
+  elevation: 0.0
+- id: surf_attacker_bridge
+  polygon:
+  - - 42.0
+    - 2.0
+  - - 58.0
+    - 2.0
+  - - 58.0
+    - 12.0
+  - - 42.0
+    - 12.0
+  elevation: 0.0
+walls: []
+props:
+- id: a_site_generator
+  surface_id: surf_a_site
+  footprint:
+  - - 12.0
+    - 49.0
+  - - 17.0
+    - 49.0
+  - - 17.0
+    - 54.0
+  - - 12.0
+    - 54.0
+  height: full
+  collision: true
+  destructible: false
+- id: defender_center_box
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 47.0
+    - 49.0
+  - - 53.0
+    - 49.0
+  - - 53.0
+    - 55.0
+  - - 47.0
+    - 55.0
+  height: full
+  collision: true
+  destructible: false
+- id: b_site_generator
+  surface_id: surf_b_site
+  footprint:
+  - - 83.0
+    - 49.0
+  - - 88.0
+    - 49.0
+  - - 88.0
+    - 54.0
+  - - 83.0
+    - 54.0
+  height: full
+  collision: true
+  destructible: false
+semantic_zones:
+- id: attacker_spawn
+  display_name: Attacker Spawn
+  kind: spawn
+  polygon:
+  - - 42.0
+    - 88.0
+  - - 58.0
+    - 88.0
+  - - 58.0
+    - 98.0
+  - - 42.0
+    - 98.0
+  surface_ids:
+  - surf_attacker_spawn
+  label_position:
+  - 50.0
+  - 93.0
+  site_id: none
+  legacy_zone: attacker_spawn
+- id: south_bridge
+  display_name: South Bridge
+  kind: callout
+  polygon:
+  - - 30.0
+    - 74.0
+  - - 70.0
+    - 74.0
+  - - 70.0
+    - 88.0
+  - - 30.0
+    - 88.0
+  surface_ids:
+  - surf_south_bridge
+  label_position:
+  - 50.0
+  - 81.0
+  site_id: none
+  legacy_zone: attacker_side
+- id: a_arc_south
+  display_name: A Arcade South
+  kind: callout
+  polygon:
+  - - 18.0
+    - 62.0
+  - - 30.0
+    - 62.0
+  - - 30.0
+    - 78.0
+  - - 18.0
+    - 78.0
+  surface_ids:
+  - surf_a_arc_south
+  label_position:
+  - 24.0
+  - 70.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: b_arc_south
+  display_name: B Arcade South
+  kind: callout
+  polygon:
+  - - 70.0
+    - 62.0
+  - - 82.0
+    - 62.0
+  - - 82.0
+    - 78.0
+  - - 70.0
+    - 78.0
+  surface_ids:
+  - surf_b_arc_south
+  label_position:
+  - 76.0
+  - 70.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: a_site
+  display_name: A Site
+  kind: site
+  polygon:
+  - - 6.0
+    - 42.0
+  - - 24.0
+    - 42.0
+  - - 24.0
+    - 62.0
+  - - 6.0
+    - 62.0
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 15.0
+  - 52.0
+  site_id: a
+  legacy_zone: site
+- id: a_plant
+  display_name: A Plant
+  kind: plant
+  polygon:
+  - - 10.5
+    - 47.0
+  - - 19.5
+    - 47.0
+  - - 19.5
+    - 57.0
+  - - 10.5
+    - 57.0
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 15.0
+  - 52.0
+  site_id: a
+  legacy_zone: null
+- id: a_link
+  display_name: A Link
+  kind: callout
+  polygon:
+  - - 24.0
+    - 46.0
+  - - 38.0
+    - 46.0
+  - - 38.0
+    - 58.0
+  - - 24.0
+    - 58.0
+  surface_ids:
+  - surf_a_link
+  label_position:
+  - 31.0
+  - 52.0
+  site_id: a
+  legacy_zone: defender_side
+- id: defender_spawn
+  display_name: Defender Spawn
+  kind: spawn
+  polygon:
+  - - 38.0
+    - 42.0
+  - - 62.0
+    - 42.0
+  - - 62.0
+    - 62.0
+  - - 38.0
+    - 62.0
+  surface_ids:
+  - surf_defender_spawn
+  label_position:
+  - 50.0
+  - 52.0
+  site_id: none
+  legacy_zone: defender_spawn
+- id: b_link
+  display_name: B Link
+  kind: callout
+  polygon:
+  - - 62.0
+    - 46.0
+  - - 76.0
+    - 46.0
+  - - 76.0
+    - 58.0
+  - - 62.0
+    - 58.0
+  surface_ids:
+  - surf_b_link
+  label_position:
+  - 69.0
+  - 52.0
+  site_id: b
+  legacy_zone: defender_side
+- id: b_site
+  display_name: B Site
+  kind: site
+  polygon:
+  - - 76.0
+    - 42.0
+  - - 94.0
+    - 42.0
+  - - 94.0
+    - 62.0
+  - - 76.0
+    - 62.0
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 85.0
+  - 52.0
+  site_id: b
+  legacy_zone: site
+- id: b_plant
+  display_name: B Plant
+  kind: plant
+  polygon:
+  - - 80.5
+    - 47.0
+  - - 89.5
+    - 47.0
+  - - 89.5
+    - 57.0
+  - - 80.5
+    - 57.0
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 85.0
+  - 52.0
+  site_id: b
+  legacy_zone: null
+- id: a_drop
+  display_name: A Drop
+  kind: callout
+  polygon:
+  - - 30.0
+    - 30.0
+  - - 38.0
+    - 30.0
+  - - 38.0
+    - 46.0
+  - - 30.0
+    - 46.0
+  surface_ids:
+  - surf_a_drop
+  label_position:
+  - 34.0
+  - 38.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: b_drop
+  display_name: B Drop
+  kind: callout
+  polygon:
+  - - 62.0
+    - 30.0
+  - - 70.0
+    - 30.0
+  - - 70.0
+    - 46.0
+  - - 62.0
+    - 46.0
+  surface_ids:
+  - surf_b_drop
+  label_position:
+  - 66.0
+  - 38.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: a_arc_north
+  display_name: A Arcade North
+  kind: callout
+  polygon:
+  - - 18.0
+    - 26.0
+  - - 30.0
+    - 26.0
+  - - 30.0
+    - 42.0
+  - - 18.0
+    - 42.0
+  surface_ids:
+  - surf_a_arc_north
+  label_position:
+  - 24.0
+  - 34.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: b_arc_north
+  display_name: B Arcade North
+  kind: callout
+  polygon:
+  - - 70.0
+    - 26.0
+  - - 82.0
+    - 26.0
+  - - 82.0
+    - 42.0
+  - - 70.0
+    - 42.0
+  surface_ids:
+  - surf_b_arc_north
+  label_position:
+  - 76.0
+  - 34.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: north_bridge
+  display_name: North Bridge
+  kind: callout
+  polygon:
+  - - 30.0
+    - 12.0
+  - - 70.0
+    - 12.0
+  - - 70.0
+    - 30.0
+  - - 30.0
+    - 30.0
+  surface_ids:
+  - surf_north_bridge
+  label_position:
+  - 50.0
+  - 21.0
+  site_id: none
+  legacy_zone: attacker_side
+- id: attacker_bridge
+  display_name: Attacker Bridge
+  kind: callout
+  polygon:
+  - - 42.0
+    - 2.0
+  - - 58.0
+    - 2.0
+  - - 58.0
+    - 12.0
+  - - 42.0
+    - 12.0
+  surface_ids:
+  - surf_attacker_bridge
+  label_position:
+  - 50.0
+  - 7.0
+  site_id: none
+  legacy_zone: attacker_side
+traversal_links:
+- id: link_attacker_spawn_south_bridge
+  kind: rope
+  from_pos:
+  - 50.0
+  - 88.75
+  - surf_attacker_spawn
+  to_pos:
+  - 50.0
+  - 87.25
+  - surf_south_bridge
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_south_bridge_a_arc_south
+  kind: ramp
+  from_pos:
+  - 30.75
+  - 76.0
+  - surf_south_bridge
+  to_pos:
+  - 29.25
+  - 76.0
+  - surf_a_arc_south
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_south_bridge_b_arc_south
+  kind: ramp
+  from_pos:
+  - 69.25
+  - 76.0
+  - surf_south_bridge
+  to_pos:
+  - 70.75
+  - 76.0
+  - surf_b_arc_south
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_arc_south_a_site
+  kind: ramp
+  from_pos:
+  - 21.0
+  - 62.75
+  - surf_a_arc_south
+  to_pos:
+  - 21.0
+  - 61.25
+  - surf_a_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_arc_south_b_site
+  kind: ramp
+  from_pos:
+  - 79.0
+  - 62.75
+  - surf_b_arc_south
+  to_pos:
+  - 79.0
+  - 61.25
+  - surf_b_site
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_site_a_link
+  kind: ramp
+  from_pos:
+  - 23.25
+  - 52.0
+  - surf_a_site
+  to_pos:
+  - 24.75
+  - 52.0
+  - surf_a_link
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_site_a_arc_north
+  kind: ramp
+  from_pos:
+  - 21.0
+  - 42.75
+  - surf_a_site
+  to_pos:
+  - 21.0
+  - 41.25
+  - surf_a_arc_north
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_link_defender_spawn
+  kind: ramp
+  from_pos:
+  - 37.25
+  - 52.0
+  - surf_a_link
+  to_pos:
+  - 38.75
+  - 52.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_link_a_drop
+  kind: rope
+  from_pos:
+  - 34.0
+  - 46.75
+  - surf_a_link
+  to_pos:
+  - 34.0
+  - 45.25
+  - surf_a_drop
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_link_defender_spawn
+  kind: ramp
+  from_pos:
+  - 62.75
+  - 52.0
+  - surf_b_link
+  to_pos:
+  - 61.25
+  - 52.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_link_b_drop
+  kind: rope
+  from_pos:
+  - 66.0
+  - 46.75
+  - surf_b_link
+  to_pos:
+  - 66.0
+  - 45.25
+  - surf_b_drop
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_site_b_link
+  kind: ramp
+  from_pos:
+  - 76.75
+  - 52.0
+  - surf_b_site
+  to_pos:
+  - 75.25
+  - 52.0
+  - surf_b_link
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_site_b_arc_north
+  kind: ramp
+  from_pos:
+  - 79.0
+  - 42.75
+  - surf_b_site
+  to_pos:
+  - 79.0
+  - 41.25
+  - surf_b_arc_north
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_arc_north_a_drop
+  kind: rope
+  from_pos:
+  - 29.25
+  - 36.0
+  - surf_a_arc_north
+  to_pos:
+  - 30.75
+  - 36.0
+  - surf_a_drop
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_arc_north_north_bridge
+  kind: ramp
+  from_pos:
+  - 29.25
+  - 28.0
+  - surf_a_arc_north
+  to_pos:
+  - 30.75
+  - 28.0
+  - surf_north_bridge
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_a_drop_defender_spawn
+  kind: rope
+  from_pos:
+  - 37.25
+  - 44.0
+  - surf_a_drop
+  to_pos:
+  - 38.75
+  - 44.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_arc_north_b_drop
+  kind: rope
+  from_pos:
+  - 70.75
+  - 36.0
+  - surf_b_arc_north
+  to_pos:
+  - 69.25
+  - 36.0
+  - surf_b_drop
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_arc_north_north_bridge
+  kind: ramp
+  from_pos:
+  - 70.75
+  - 28.0
+  - surf_b_arc_north
+  to_pos:
+  - 69.25
+  - 28.0
+  - surf_north_bridge
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_b_drop_defender_spawn
+  kind: rope
+  from_pos:
+  - 62.75
+  - 44.0
+  - surf_b_drop
+  to_pos:
+  - 61.25
+  - 44.0
+  - surf_defender_spawn
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+- id: link_north_bridge_attacker_bridge
+  kind: rope
+  from_pos:
+  - 50.0
+  - 12.75
+  - surf_north_bridge
+  to_pos:
+  - 50.0
+  - 11.25
+  - surf_attacker_bridge
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+legacy:
+  adjacency_overrides: {}
+  sightline_overrides:
+  - from_callout: a_link
+    to_callout: a_arc_south
+    advantaged_side: defense
+  - from_callout: a_drop
+    to_callout: a_site
+    advantaged_side: attack
+  - from_callout: b_link
+    to_callout: b_arc_south
+    advantaged_side: defense
+  - from_callout: b_drop
+    to_callout: b_site
+    advantaged_side: attack
+  prop_support_exemptions: []
+editor_state:
+  test_players: []
+  viewport: {}
+  selected_tool: ''

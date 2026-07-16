@@ -36,8 +36,13 @@ def test_map_studio_mutation_routes_inject_the_http_request():
         "ascent_reference",
         "bind_reference",
         "breeze_reference",
+        "fracture_reference",
         "haven_reference",
+        "icebox_reference",
         "lotus_reference",
+        "pearl_reference",
+        "split_reference",
+        "sunset_reference",
     ],
 )
 def test_reference_map_drafts_remain_compilable(map_id: str):
