@@ -205,6 +205,24 @@
   gap: var(--es-space-3);
 }
 
+.btn.danger-action {
+  color: var(--es-color-text-danger);
+  background: var(--es-color-fill-danger);
+  border-color: var(--es-color-fill-danger-strong);
+}
+
+.btn.danger-action:hover:not(:disabled) {
+  color: white;
+  background: var(--es-color-fill-danger-strong);
+}
+
+.delete-warning {
+  padding: var(--es-space-4);
+  color: var(--es-color-text-danger);
+  background: var(--es-color-fill-danger);
+  border-left: var(--es-border-thick) solid var(--es-color-fill-danger-strong);
+}
+
 /* Layout overrides to make the map canvas larger than the properties panel */
 #editor .editor-grid {
   grid-template-columns: minmax(420px, 1fr) 380px 285px;

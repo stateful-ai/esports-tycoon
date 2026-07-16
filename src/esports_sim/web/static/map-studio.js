@@ -178,6 +178,41 @@ function paintMapList() {
   `).join("");
 }
 
+function closeOpenMap() {
+  Editor.doc = null;
+  Editor.hash = null;
+  Editor.dirty = false;
+  Editor.externalChangePending = false;
+  Editor.undoStack = [];
+  Editor.redoStack = [];
+  Editor.selectedItem = null;
+  Editor.drawingPoints = [];
+  Editor.linkStart = null;
+  Editor.probePos = null;
+  Editor.probeRay = null;
+  Editor.probeResult = null;
+
+  $("#editor").classList.add("hidden");
+  $("#empty-state").classList.remove("hidden");
+  $("#validate-btn").disabled = true;
+  $("#publish-btn").disabled = true;
+  $("#delete-map-btn").disabled = true;
+  $("#save-btn").disabled = true;
+  $("#reload-btn").disabled = true;
+  $("#hash-draft").textContent = "-";
+  $("#hash-compiled").textContent = "-";
+  $("#paint-status").textContent = "-";
+  updateOverlayImage();
+  paintMapList();
+  paintSaveState();
+
+  if (window.history?.replaceState && window.location) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("map");
+    window.history.replaceState({}, "", url);
+  }
+}
+
 async function openMap(mapId, options = {}) {
   try {
     const preservedViewBox = options.preserveView ? clone(Editor.viewBox) : null;
@@ -202,6 +237,7 @@ async function openMap(mapId, options = {}) {
     // Enable top bar actions
     $("#validate-btn").disabled = false;
     $("#publish-btn").disabled = false;
+    $("#delete-map-btn").disabled = false;
     $("#save-btn").disabled = false;
     $("#reload-btn").disabled = true;
     
@@ -1497,6 +1533,44 @@ async function publishRuntime() {
   }
 }
 
+function openDeleteMapDialog() {
+  if (!Editor.doc) return;
+  $("#delete-map-name").textContent = Editor.doc.display_name || Editor.doc.id;
+  $("#delete-map-id").textContent = Editor.doc.id;
+  $("#delete-map-confirm").value = "";
+  $("#confirm-delete-map-btn").disabled = true;
+  $("#delete-map-dialog").showModal();
+}
+
+async function deleteMapPermanently() {
+  if (!Editor.doc || !Editor.hash) return;
+  const mapId = Editor.doc.id;
+  const confirmation = $("#delete-map-confirm").value.trim();
+  if (confirmation !== mapId) {
+    toast(`Type ${mapId} exactly to confirm deletion.`);
+    return;
+  }
+
+  $("#confirm-delete-map-btn").disabled = true;
+  try {
+    const res = await request(`/api/map-studio/maps/${encodeURIComponent(mapId)}`, {
+      method: "DELETE",
+      headers: { "if-match": Editor.hash },
+      body: { confirm_map_id: confirmation },
+    });
+    if (res.valid) {
+      $("#delete-map-dialog").close();
+      closeOpenMap();
+      await initLibrary();
+      toast(`${mapId} was permanently deleted.`);
+    }
+  } catch (err) {
+    if (err.status === 409) markExternalChange();
+    toast(`Delete failed: ${err.message}`);
+    $("#confirm-delete-map-btn").disabled = confirmation !== Editor.doc?.id;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Tool Switchers
 
@@ -1535,6 +1609,7 @@ function bindToolbarEvents() {
   $("#reload-btn").onclick = reloadLatest;
   $("#validate-btn").onclick = validateDraft;
   $("#publish-btn").onclick = publishRuntime;
+  $("#delete-map-btn").onclick = openDeleteMapDialog;
 
   $("#toggle-paint-btn").onclick = () => {
     Editor.showOverlay = !Editor.showOverlay;
@@ -1586,6 +1661,11 @@ function bindDialogEvents() {
       toast(`Failed to create map: ${err.message}`);
     }
   };
+
+  $("#delete-map-confirm").oninput = (event) => {
+    $("#confirm-delete-map-btn").disabled = event.target.value.trim() !== Editor.doc?.id;
+  };
+  $("#confirm-delete-map-btn").onclick = deleteMapPermanently;
 }
 
 // ---------------------------------------------------------------------------

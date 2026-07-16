@@ -7770,6 +7770,33 @@ def map_studio_save(map_id: str, body: dict, request: Request) -> dict:
     return res
 
 
+@app.delete("/api/map-studio/maps/{map_id}")
+def map_studio_delete(map_id: str, body: dict, request: Request) -> dict:
+    """Permanently remove a Studio map and all of its published artifacts."""
+    from esports_sim.registry import map_workbench
+    _require_local_admin()
+    map_id = _map_studio_id(map_id)
+    if body.get("confirm_map_id") != map_id:
+        raise HTTPException(422, "typed map id confirmation does not match")
+
+    if_match = request.headers.get("if-match")
+    if not if_match:
+        raise HTTPException(428, "current revision hash is required")
+    try:
+        return map_workbench.delete_document(
+            map_id,
+            if_match_hash=if_match,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except (TimeoutError, ValueError) as exc:
+        if "stale revision" in str(exc) or "timed out waiting" in str(exc):
+            raise HTTPException(409, str(exc)) from exc
+        raise HTTPException(422, str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(500, str(exc)) from exc
+
+
 @app.post("/api/map-studio/validate")
 def map_studio_validate(body: dict) -> dict:
     from esports_sim.registry import map_workbench

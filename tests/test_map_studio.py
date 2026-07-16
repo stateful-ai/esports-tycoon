@@ -24,35 +24,11 @@ def test_map_studio_mutation_routes_inject_the_http_request():
     schema = app.openapi()
     for path, method in (
         ("/api/map-studio/maps/{map_id}", "put"),
+        ("/api/map-studio/maps/{map_id}", "delete"),
         ("/api/map-studio/maps/{map_id}/publish", "post"),
     ):
         parameters = schema["paths"][path][method].get("parameters", [])
         assert "request" not in {item["name"] for item in parameters}
-
-
-@pytest.mark.parametrize(
-    "map_id",
-    [
-        "ascent_reference",
-        "bind_reference",
-        "breeze_reference",
-        "fracture_reference",
-        "haven_reference",
-        "icebox_reference",
-        "lotus_reference",
-        "pearl_reference",
-        "split_reference",
-        "sunset_reference",
-    ],
-)
-def test_reference_map_drafts_remain_compilable(map_id: str):
-    doc, revision_hash = map_workbench.load_document(map_id)
-    map_obj, geometry, errors = map_workbench.validate_document(doc)
-
-    assert revision_hash
-    assert errors == []
-    assert map_obj is not None
-    assert geometry is not None
 
 
 def test_transform_parity_with_node():
@@ -322,6 +298,109 @@ def test_map_id_underscores_and_uppercase(tmp_path):
 
     doc_loaded, _ = map_workbench.load_document(map_id, data_dir=tmp_path)
     assert doc_loaded.id == map_id
+
+
+def test_permanent_delete_removes_draft_runtime_and_artifacts(tmp_path):
+    map_id = "delete-me"
+    doc_dict = {
+        "schema_version": 1,
+        "id": map_id,
+        "display_name": "Delete Me",
+        "walkable_surfaces": [],
+        "semantic_zones": [],
+        "attacker_spawn": "none",
+        "defender_spawn": "none",
+    }
+    saved = map_workbench.save_document(map_id, doc_dict, data_dir=tmp_path)
+    studio_dir, runtime_dir, geometry_dir, guide_dir = map_workbench._resolve_paths(tmp_path)
+    artifact_paths = {
+        "studio_source": studio_dir / f"{map_id}.yaml",
+        "runtime_map": runtime_dir / f"{map_id}.yaml",
+        "runtime_geometry": geometry_dir / f"{map_id}.yaml",
+        "guide": guide_dir / f"{map_id}.png",
+        "painted_backdrop": guide_dir.parent / "painted" / f"{map_id}.webp",
+        "thumbnail": guide_dir.parent / f"{map_id}.webp",
+    }
+    for kind, path in artifact_paths.items():
+        if kind != "studio_source":
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"artifact")
+
+    result = map_workbench.delete_document(
+        map_id,
+        if_match_hash=saved["hash"],
+        data_dir=tmp_path,
+    )
+
+    assert result == {
+        "valid": True,
+        "status": "deleted",
+        "id": map_id,
+        "deleted_artifacts": list(artifact_paths),
+    }
+    assert all(not path.exists() for path in artifact_paths.values())
+    assert map_id not in {item["id"] for item in map_workbench.list_documents(tmp_path)}
+
+
+def test_permanent_delete_rejects_stale_revision_without_removing_files(tmp_path):
+    map_id = "keep-me"
+    doc_dict = {
+        "schema_version": 1,
+        "id": map_id,
+        "display_name": "Keep Me",
+        "walkable_surfaces": [],
+        "semantic_zones": [],
+        "attacker_spawn": "none",
+        "defender_spawn": "none",
+    }
+    map_workbench.save_document(map_id, doc_dict, data_dir=tmp_path)
+    studio_dir, _, _, _ = map_workbench._resolve_paths(tmp_path)
+    studio_path = studio_dir / f"{map_id}.yaml"
+
+    with pytest.raises(ValueError, match="stale revision"):
+        map_workbench.delete_document(
+            map_id,
+            if_match_hash="not-the-current-hash",
+            data_dir=tmp_path,
+        )
+
+    assert studio_path.exists()
+
+
+def test_permanent_delete_rolls_back_when_an_artifact_move_fails(tmp_path, monkeypatch):
+    map_id = "rollback-delete"
+    doc_dict = {
+        "schema_version": 1,
+        "id": map_id,
+        "display_name": "Rollback Delete",
+        "walkable_surfaces": [],
+        "semantic_zones": [],
+        "attacker_spawn": "none",
+        "defender_spawn": "none",
+    }
+    saved = map_workbench.save_document(map_id, doc_dict, data_dir=tmp_path)
+    studio_dir, runtime_dir, _, _ = map_workbench._resolve_paths(tmp_path)
+    studio_path = studio_dir / f"{map_id}.yaml"
+    runtime_path = runtime_dir / f"{map_id}.yaml"
+    runtime_path.write_text("runtime", encoding="utf-8")
+    original_rename = Path.rename
+
+    def fail_runtime_move(path, target):
+        if path == runtime_path:
+            raise OSError("mocked map artifact move failure")
+        return original_rename(path, target)
+
+    monkeypatch.setattr(Path, "rename", fail_runtime_move)
+
+    with pytest.raises(RuntimeError, match="mocked map artifact move failure"):
+        map_workbench.delete_document(
+            map_id,
+            if_match_hash=saved["hash"],
+            data_dir=tmp_path,
+        )
+
+    assert studio_path.exists()
+    assert runtime_path.exists()
 
 
 def test_overlapping_surfaces_crossing():

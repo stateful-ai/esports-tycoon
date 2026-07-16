@@ -38,6 +38,10 @@ class MockElement {
     // No-op for testing structure
   }
 
+  remove() {
+    this.removed = true;
+  }
+
   showModal() {
     this.modalShown = true;
   }
@@ -115,10 +119,15 @@ global.window = {
     global.window.listeners[event] = callback;
   }
 };
-global.fetch = async (url, init) => {
+const fetchCalls = [];
+global.fetch = async (url, init = {}) => {
+  fetchCalls.push({ url, init });
   return {
     ok: true,
     json: async () => {
+      if (init.method === "DELETE") {
+        return { valid: true, status: "deleted", id: "ascent" };
+      }
       if (url.includes("/api/map-studio/maps/ascent")) {
         return {
           hash: "test-hash-value-123456789",
@@ -165,6 +174,8 @@ global.redo = redo;
 if (!global.updateInspector) global.updateInspector = updateInspector;
 global.pushState = pushState;
 global.requestErrorMessage = requestErrorMessage;
+global.openDeleteMapDialog = openDeleteMapDialog;
+global.deleteMapPermanently = deleteMapPermanently;
 `);
 
 // Verify window onload binding and initialize
@@ -411,7 +422,37 @@ async function runTests() {
   
   console.log("  [PASS] Spacing aligns with the 4px token system (no hardcoded px values for spacing).");
 
-  console.log("\nAll 6 verification cases PASSED successfully!");
+  // --- Test Case 7: Permanent map deletion confirmation ---
+  console.log("\n7. Testing typed permanent map deletion flow...");
+
+  await openMap("ascent");
+  global.openDeleteMapDialog();
+  const deleteDialog = globalDocument.querySelector("#delete-map-dialog");
+  const deleteInput = globalDocument.querySelector("#delete-map-confirm");
+  const confirmDelete = globalDocument.querySelector("#confirm-delete-map-btn");
+  assert.strictEqual(deleteDialog.modalShown, true);
+  assert.strictEqual(confirmDelete.disabled, true);
+
+  deleteInput.value = "wrong-map";
+  deleteInput.oninput({ target: deleteInput });
+  assert.strictEqual(confirmDelete.disabled, true);
+  deleteInput.value = "ascent";
+  deleteInput.oninput({ target: deleteInput });
+  assert.strictEqual(confirmDelete.disabled, false);
+
+  await global.deleteMapPermanently();
+  const deleteRequest = fetchCalls.find(call => call.init.method === "DELETE");
+  assert.ok(deleteRequest);
+  assert.strictEqual(deleteRequest.url, "/api/map-studio/maps/ascent");
+  assert.strictEqual(deleteRequest.init.headers["if-match"], "test-hash-value-123456789");
+  assert.deepStrictEqual(JSON.parse(deleteRequest.init.body), { confirm_map_id: "ascent" });
+  assert.strictEqual(Editor.doc, null);
+  assert.strictEqual(deleteDialog.modalShown, false);
+  assert.strictEqual(globalDocument.querySelector("#editor").classList.contains("hidden"), true);
+  assert.strictEqual(globalDocument.querySelector("#empty-state").classList.contains("hidden"), false);
+  console.log("  [PASS] Typed confirmation sends the exact revision and resets the editor after deletion.");
+
+  console.log("\nAll 7 verification cases PASSED successfully!");
 }
 
 runTests().catch(err => {
