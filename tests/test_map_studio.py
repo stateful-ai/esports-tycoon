@@ -403,6 +403,39 @@ def test_permanent_delete_rolls_back_when_an_artifact_move_fails(tmp_path, monke
     assert runtime_path.exists()
 
 
+def test_permanent_delete_succeeds_when_holding_cleanup_is_locked(tmp_path, monkeypatch):
+    map_id = "cleanup-locked"
+    doc_dict = {
+        "schema_version": 1,
+        "id": map_id,
+        "display_name": "Cleanup Locked",
+        "walkable_surfaces": [],
+        "semantic_zones": [],
+        "attacker_spawn": "none",
+        "defender_spawn": "none",
+    }
+    saved = map_workbench.save_document(map_id, doc_dict, data_dir=tmp_path)
+    studio_dir, _, _, _ = map_workbench._resolve_paths(tmp_path)
+    studio_path = studio_dir / f"{map_id}.yaml"
+    original_rmtree = map_workbench.shutil.rmtree
+
+    def locked_holding_cleanup(path, *args, **kwargs):
+        if "map-delete-" in Path(path).name:
+            raise OSError("mocked Windows file lock")
+        return original_rmtree(path, *args, **kwargs)
+
+    monkeypatch.setattr(map_workbench.shutil, "rmtree", locked_holding_cleanup)
+
+    result = map_workbench.delete_document(
+        map_id,
+        if_match_hash=saved["hash"],
+        data_dir=tmp_path,
+    )
+
+    assert result["status"] == "deleted"
+    assert not studio_path.exists()
+
+
 def test_overlapping_surfaces_crossing():
     from esports_sim.registry.map_audit import audit_continuous
     doc = MapStudioDocumentV1(
