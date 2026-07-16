@@ -427,6 +427,70 @@ def create_document(
         return {"valid": True, "id": map_id, "hash": new_hash}
 
 
+def delete_document(
+    map_id: str,
+    *,
+    if_match_hash: str,
+    data_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Permanently delete a Studio map and every published map artifact.
+
+    Deletion uses the same document lock and compare-and-swap revision contract
+    as saving and publishing. Existing files are first moved into a temporary
+    holding directory so a failed move can be rolled back before anything is
+    discarded permanently.
+    """
+    if not _MAP_ID_RE.fullmatch(map_id):
+        raise ValueError("invalid map id format")
+    if not if_match_hash:
+        raise ValueError("revision hash required for permanent deletion")
+
+    studio_dir, runtime_dir, geometry_dir, guide_dir = _resolve_paths(data_dir)
+    map_assets_dir = guide_dir.parent
+    targets = {
+        "studio_source": studio_dir / f"{map_id}.yaml",
+        "runtime_map": runtime_dir / f"{map_id}.yaml",
+        "runtime_geometry": geometry_dir / f"{map_id}.yaml",
+        "guide": guide_dir / f"{map_id}.png",
+        "painted_backdrop": map_assets_dir / "painted" / f"{map_id}.webp",
+        "thumbnail": map_assets_dir / f"{map_id}.webp",
+    }
+
+    with _document_lock(map_id, data_dir), _INSTALL_LOCK:
+        current_hash = _current_document_hash(map_id, data_dir)
+        if current_hash is None:
+            raise FileNotFoundError(f"unknown map '{map_id}'")
+        if current_hash != if_match_hash:
+            raise ValueError("stale revision hash (409 conflict)")
+
+        existing = [(kind, path) for kind, path in targets.items() if path.exists()]
+        holding_dir = Path(
+            tempfile.mkdtemp(prefix=f"map-delete-{map_id}-", dir=runtime_dir.parent)
+        )
+        moved: list[tuple[Path, Path]] = []
+        try:
+            for index, (_, target) in enumerate(existing):
+                held = holding_dir / f"{index}-{target.name}"
+                target.rename(held)
+                moved.append((target, held))
+        except Exception as exc:
+            for target, held in reversed(moved):
+                if held.exists() and not target.exists():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    held.rename(target)
+            raise RuntimeError(f"failed transactional map deletion: {exc}") from exc
+        else:
+            shutil.rmtree(holding_dir)
+            return {
+                "valid": True,
+                "status": "deleted",
+                "id": map_id,
+                "deleted_artifacts": [kind for kind, _ in existing],
+            }
+        finally:
+            shutil.rmtree(holding_dir, ignore_errors=True)
+
+
 def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
     """Compile continuous studio geometry to legacy rectangular representations.
     Fails with ValueError if information loss occurs (e.g. non-rectangular elements).

@@ -20,6 +20,7 @@
     <button id="reload-btn" class="btn" disabled>Reload Latest</button>
     <button id="validate-btn" class="btn" disabled>Validate</button>
     <button id="publish-btn" class="btn" disabled>Publish Runtime</button>
+    <button id="delete-map-btn" class="btn danger-action" disabled>Delete Map</button>
     <button id="save-btn" class="btn primary" disabled>Save Draft</button>
   </header>
 
@@ -145,6 +146,28 @@
       </div>
       <div class="dialog-actions" style="margin-top: var(--es-space-6);">
         <button id="confirm-new-btn" type="button" class="btn primary">Create Draft</button>
+        <button value="cancel" class="btn">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="delete-map-dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><span class="eyebrow">Permanent Action</span><h2>Delete Map</h2></div>
+        <button class="icon-btn" value="cancel">x</button>
+      </div>
+      <p class="delete-warning">
+        This permanently removes <b id="delete-map-name"></b>, including its
+        Studio draft and any published runtime geometry or map art.
+      </p>
+      <p>Type <code id="delete-map-id" class="mono"></code> to confirm.</p>
+      <label class="field">
+        <span>Map ID</span>
+        <input id="delete-map-confirm" class="mono" autocomplete="off">
+      </label>
+      <div class="dialog-actions" style="margin-top: var(--es-space-6);">
+        <button id="confirm-delete-map-btn" type="button" class="btn danger-action" disabled>Delete Permanently</button>
         <button value="cancel" class="btn">Cancel</button>
       </div>
     </form>
