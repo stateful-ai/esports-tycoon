@@ -87,8 +87,10 @@ function Add-CertToStore {
             $Certificate.Thumbprint, $false)
         if ($already.Count -eq 0) {
             # Add only the public certificate (no private key) to trust stores.
-            $public = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2(
-                $Certificate.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))
+            # Wrap the byte[] as a single ArgumentList element so PowerShell does
+            # not splat it into one argument per byte.
+            $bytes = $Certificate.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert)
+            $public = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList @(, $bytes)
             $store.Add($public)
             Write-Host ("  Trusted certificate in CurrentUser\{0}." -f $StoreName)
         }
@@ -163,28 +165,47 @@ Write-Host ("  Certificate : {0}" -f $cert.Subject)
 Write-Host ("  Thumbprint  : {0}" -f $cert.Thumbprint)
 
 # ---- Sign --------------------------------------------------------------
-$signArgs = @{
-    FilePath      = $ExePath
-    Certificate   = $cert
-    HashAlgorithm = 'SHA256'
-}
-
-$result = $null
-try {
-    $result = Set-AuthenticodeSignature @signArgs -TimestampServer $TimestampServer
-    if ($result.Status -ne 'Valid') {
-        throw $result.StatusMessage
+# Sign in a FRESH child process. Windows' trust provider caches the root
+# store at process start, so a process that just added the signing cert to
+# CurrentUser\Root still sees the chain as untrusted -- which makes both
+# timestamping and post-sign verification fail even though the signature is
+# fine. A new process reads the trust store cleanly, so timestamp and
+# verification both succeed.
+$childScript = {
+    param($ExePath, $Thumbprint, $TimestampServer)
+    $ErrorActionPreference = 'Stop'
+    $c = Get-ChildItem -Path Cert:\CurrentUser\My |
+        Where-Object { $_.Thumbprint -eq $Thumbprint } |
+        Select-Object -First 1
+    if (-not $c) { Write-Output 'ERROR|signing certificate not found'; exit 1 }
+    $a = @{ FilePath = $ExePath; Certificate = $c; HashAlgorithm = 'SHA256' }
+    $r = $null
+    try {
+        $r = Set-AuthenticodeSignature @a -TimestampServer $TimestampServer
+    } catch {
+        $r = $null
     }
-} catch {
-    Write-Warning ("Timestamping failed ({0}); signing without a timestamp." -f $_.Exception.Message)
-    $result = Set-AuthenticodeSignature @signArgs
+    if (-not $r -or $r.Status -ne 'Valid') {
+        # Timestamp server unreachable (offline): sign without a countersignature.
+        $r = Set-AuthenticodeSignature @a
+    }
+    Write-Output ("{0}|{1}" -f $r.Status, [bool]$r.TimeStamperCertificate)
 }
 
-if ($result.Status -ne 'Valid') {
-    throw ("Signing failed: {0}" -f $result.StatusMessage)
+$powershellExe = (Get-Command -Name powershell.exe -CommandType Application |
+    Select-Object -First 1).Source
+$childOutput = & $powershellExe -NoProfile -ExecutionPolicy Bypass -Command $childScript `
+    -args $ExePath, $cert.Thumbprint, $TimestampServer
+$childLine = ($childOutput | Where-Object { $_ -match '\|' } | Select-Object -Last 1)
+$status, $timestamped = ($childLine -split '\|', 2)
+
+if ($status -ne 'Valid') {
+    throw ("Signing failed: {0}" -f $childLine)
 }
 
-Write-Host ("Signature status: {0}" -f $result.Status)
-if ($result.TimeStamperCertificate) {
+Write-Host ("Signature status: {0}" -f $status)
+if ($timestamped -eq 'True') {
     Write-Host 'Signature is timestamped.'
+} else {
+    Write-Host 'Signature is not timestamped (timestamp server unreachable).'
 }
