@@ -141,6 +141,26 @@ body {
   transform: none;
 }
 
+/* Nav clusters: "Weekly" (the loop you touch every week) vs "Org" (the club
+   you're building). Purely visual — a microlabel plus a hairline divider
+   between groups; buttons dispatch by data-tab exactly as before. */
+.tab-group {
+  display: flex; align-items: stretch; gap: var(--es-space-1, 2px);
+}
+.tab-group + .tab-group {
+  margin-left: var(--es-space-4, 10px);
+  padding-left: var(--es-space-5, 14px);
+  border-left: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+}
+.tab-group-label {
+  align-self: center;
+  margin-right: var(--es-space-2, 4px);
+  font-size: var(--es-text-2xs, 10px);
+  text-transform: uppercase; letter-spacing: var(--es-tracking-wider, .08em);
+  color: var(--es-color-text-tertiary, #67748f);
+  user-select: none;
+}
+
 /* Keep every screen aligned to one fluid content rail. A fixed pixel cap
    became only ~60% of the usable width under browser zoom / high-DPI scaling,
    even though the tab bar continued across the viewport. */

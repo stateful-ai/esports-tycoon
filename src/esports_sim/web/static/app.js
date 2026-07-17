@@ -663,6 +663,9 @@ const TAB_ALIASES = {
   // "tactics" so old links keep working, and this alias lets new code say
   // dashGoTab("match") without caring about the internal id.
   match: ["tactics", "tacticsTab", "strategy"],
+  // Social folded into Finances as the "Brand" section; App.financesTab is a
+  // scroll hint the FinancesTab component consumes (and clears) on mount.
+  social: ["finances", "financesTab", "brand"],
 };
 
 function renderApp() {
@@ -686,7 +689,7 @@ function renderApp() {
   // finishes into a detached node instead of double-appending.
   const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
-  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, social, finances })[App.tab](container);
+  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -6235,169 +6238,201 @@ function statsHistory(ws, data, perf) {
   rail.appendChild(pc);
 }
 
-/* -- social: the feed + follower economy ----------------------------------- */
+/* -- brand: the social feed + follower economy, on Finances ----------------- */
 
 const POST_KIND_ICON = {
   result: "🏁", hype: "🔥", viral: "📈", drama: "⚡", milestone: "🎉", transfer: "✍",
 };
 
-async function social(v) {
-  const data = await api("/api/social");
+/* The old standalone Social tab folded into Finances as the "Brand" section
+   (TAB_ALIASES routes "social" here). Same /api/social read, ported to compact
+   htm components. Link markup (plink/tlink) arrives as HTML strings, so rows
+   render via dangerouslySetInnerHTML — the document-level [data-pid]/[data-tid]
+   delegation in profile.js picks the links up like everywhere else. */
 
+const BrandFeedPost = ({ post }) => {
+  const who = post.author_kind === "player"
+    ? `<b>${plink(post.author_id, "@" + post.author)}</b>`
+    : post.author_kind === "team"
+      ? `<b>${tlink(post.author_id, "@" + post.author)}</b>`
+      : `<b>${esc(post.author)}</b>`;
+  // LLM-ghost-written posts keep the grounded fact on hover; the server only
+  // ever rephrases real outcomes (web/llm_social.py).
+  const fact = post.ai && post.fact ? ` title="${esc(post.fact)}"` : "";
+  const inner =
+    `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
+       <span class="muted">S${post.season} W${post.week}</span></div>
+     <div class="post-body"${fact}>${post.text}</div>
+     <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`;
+  return html`<div class="post" dangerouslySetInnerHTML=${{ __html: inner }}></div>`;
+};
+
+const BrandReachCard = ({ data }) => {
   // Mood word/tone come from the server (social.mood_view) — the UI never
   // re-derives sim thresholds.
   const mood = data.your_sentiment ?? 50;
   const moodWord = data.your_mood?.word ?? "neutral";
   const moodTone = data.your_mood?.tone ?? "";
+  return html`
+    <div class="card">
+      <h2>Your reach</h2>
+      <div class="row">
+        <span class="chip">roster reach ${fmtFollowers(data.your_reach)}</span>
+        <span class="chip">org fans ${fmtFollowers(data.fan_count)}</span>
+        <span class=${`pill ${moodTone}`}>fanbase ${moodWord} (${Math.round(mood)})</span>
+      </div>
+      <div class="tile stream-income-tile">
+        <span class="stream-income-icon">↗</span>
+        <span>
+          <span class="microlabel">Streamer revenue</span>
+          <b class="mono stream-income-value">${money(data.your_stream_income || 0)}/wk</b>
+          <span class="muted">direct weekly org income</span>
+        </span>
+      </div>
+      <p class="muted">
+        Reach feeds sponsor marketability; streaming pays the org a cut (heavy streamers
+        develop slower — rein one in with a 1:1); the crowd's mood leaks into the locker
+        room, and brands read the room too.
+      </p>
+      ${data.your_roster.length > 0 && html`
+        <span class="es-scout-lab muted">Your streamers</span>
+        <div class="row offer-row">
+          ${data.your_roster.map((p) => html`
+            <span class="pill" key=${p.player_id} dangerouslySetInnerHTML=${{ __html:
+              `<b>${plink(p.player_id, p.handle)}</b> ${fmtFollowers(p.followers)} ` +
+              `<span class="muted" title="${esc(p.stream_status)} — org cut ${money(p.stream_income)}/wk">· ${money(p.stream_income)}/wk</span>` }}></span>
+          `)}
+        </div>
+      `}
+    </div>
+  `;
+};
 
-  v.appendChild(screenHead("Social", {
-    sub: `S${App.state.season} · W${App.state.week}`,
-  }));
-  const ws = el("div", "ws");
-  v.appendChild(ws);
-  const main = el("div", "ws-8 ws-col");
-  const rail = el("div", "ws-4 ws-col");
-  ws.appendChild(main);
-  ws.appendChild(rail);
-
-  /* -- main ws-8: the feed, scrolling inside its own card -------------------- */
-  const feedCard = el("div", "card");
-  feedCard.appendChild(el("h2", "", "Feed"));
-  if (!data.feed.length) {
-    feedCard.appendChild(el("p", "muted", "Nothing posted yet — play a week."));
-  } else {
-    const scroll = el("div", "card-scroll");
-    scroll.style.setProperty("--scroll-max", "70vh");
-    for (const post of data.feed) {
-      const who = post.author_kind === "player"
-        ? `<b>${plink(post.author_id, "@" + post.author)}</b>`
-        : post.author_kind === "team"
-          ? `<b>${tlink(post.author_id, "@" + post.author)}</b>`
-          : `<b>${esc(post.author)}</b>`;
-      const node = el("div", "post",
-        `<div class="post-head">${POST_KIND_ICON[post.kind] ?? "·"} ${who}
-           <span class="muted">S${post.season} W${post.week}</span></div>
-         <div class="post-body">${post.text}</div>
-         <div class="post-likes muted">♥ ${fmtFollowers(post.likes)}</div>`);
-      // LLM-ghost-written posts keep the grounded fact on hover; the server
-      // only ever rephrases real outcomes (web/llm_social.py).
-      if (post.ai && post.fact) {
-        node.querySelector(".post-body").title = post.fact;
-      }
-      scroll.appendChild(node);
-    }
-    feedCard.appendChild(scroll);
-  }
-  main.appendChild(feedCard);
-
-  /* -- rail ws-4: org reach, fanbase mood, reach board, movement ------------- */
-
-  // Org card: reach + fan mood + the streaming-income line (→ Finances), then
-  // the roster's individual streamers.
-  const org = el("div", "card");
-  org.appendChild(el("h2", "", "Your reach"));
-  org.appendChild(el("div", "row",
-    `<span class="chip">roster reach ${fmtFollowers(data.your_reach)}</span>` +
-    `<span class="chip">org fans ${fmtFollowers(data.fan_count)}</span>` +
-    `<span class="pill ${moodTone}">fanbase ${esc(moodWord)} (${Math.round(mood)})</span>`));
-  const streamRow = el("div", "tile stream-income-tile",
-    `<span class="stream-income-icon">↗</span>` +
-    `<span><span class="microlabel">Streamer revenue</span>` +
-    `<b class="mono stream-income-value">${money(data.your_stream_income || 0)}/wk</b>` +
-    `<span class="muted">direct weekly org income</span></span><span class="spacer"></span>`);
-  const finBtn = el("button", "btn btn-sm", "→ Finances");
-  finBtn.onclick = () => dashGoTab("finances");
-  streamRow.appendChild(finBtn);
-  org.appendChild(streamRow);
-  org.appendChild(el("p", "muted",
-    "Reach feeds sponsor marketability; streaming pays the org a cut (heavy streamers " +
-    "develop slower — rein one in with a 1:1); the crowd's mood leaks into the locker " +
-    "room, and brands read the room too."));
-  if (data.your_roster.length) {
-    org.appendChild(el("span", "es-scout-lab muted", "Your streamers"));
-    const rr = el("div", "row offer-row");
-    for (const p of data.your_roster) {
-      rr.appendChild(el("span", "pill",
-        `<b>${plink(p.player_id, p.handle)}</b> ${fmtFollowers(p.followers)} ` +
-        `<span class="muted" title="${esc(p.stream_status)} — org cut ${money(p.stream_income)}/wk">· ${money(p.stream_income)}/wk</span>`));
-    }
-    org.appendChild(rr);
-  }
-  rail.appendChild(org);
-
+const BrandMoodCard = ({ sentiment }) => {
   // Community mood board: whose fans are euphoric, whose are done.
-  if ((data.sentiment ?? []).length) {
-    const sc = el("div", "card");
-    sc.appendChild(el("h2", "", "Fanbase mood"));
-    const st = el("table");
-    st.innerHTML = `<thead><tr><th>Team</th><th class="num">Mood</th></tr></thead>`;
-    const stb = el("tbody");
-    const hot = data.sentiment.slice(0, 5);
-    const cold = data.sentiment.slice(-3);
-    const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
-    for (const r of rows) {
-      stb.appendChild(el("tr", r.is_user ? "me" : "", `
-        <td><b>${tlink(r.team_id, r.name)}</b> <span class="pill">${esc(r.tag)}</span></td>
-        <td class="num ${r.tone ?? ""}">${Math.round(r.sentiment)}
-          <span class="muted">${esc(r.word ?? "")}</span></td>`));
-    }
-    st.appendChild(stb);
-    sc.appendChild(st);
-    rail.appendChild(sc);
-  }
+  if (!sentiment.length) return null;
+  const hot = sentiment.slice(0, 5);
+  const cold = sentiment.slice(-3);
+  const rows = [...hot, ...cold.filter((r) => !hot.includes(r))];
+  return html`
+    <div class="card">
+      <h2>Fanbase mood</h2>
+      <table>
+        <thead><tr><th>Team</th><th class="num">Mood</th></tr></thead>
+        <tbody>
+          ${rows.map((r) => html`
+            <tr class=${r.is_user ? "me" : ""} key=${r.team_id} dangerouslySetInnerHTML=${{ __html: `
+              <td><b>${tlink(r.team_id, r.name)}</b> <span class="pill">${esc(r.tag)}</span></td>
+              <td class="num ${r.tone ?? ""}">${Math.round(r.sentiment)}
+                <span class="muted">${esc(r.word ?? "")}</span></td>` }}></tr>
+          `)}
+        </tbody>
+      </table>
+    </div>
+  `;
+};
 
-  // Reach leaderboard — the most-followed players; team column tlinks.
-  const lb = el("div", "card");
-  lb.appendChild(el("h2", "", "Most followed"));
-  const t = el("table");
-  t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>
-    <th class="num">Followers</th></tr></thead>`;
-  const tb = el("tbody");
-  data.leaderboard.forEach((r, i) => {
-    tb.appendChild(el("tr", r.is_user ? "me" : "", `
-      <td>${i + 1}</td>
-      <td><b>${plink(r.player_id, r.handle)}</b></td>
-      <td class="muted">${tlink(r.team_id, r.team_tag)}</td>
-      <td class="num">${fmtFollowers(r.followers)}</td>`));
-  });
-  t.appendChild(tb);
-  lb.appendChild(t);
-  rail.appendChild(lb);
+const BrandLeaderboardCard = ({ leaderboard }) => html`
+  <div class="card">
+    <h2>Most followed</h2>
+    <table>
+      <thead><tr><th>#</th><th>Player</th><th>Team</th>
+        <th class="num">Followers</th></tr></thead>
+      <tbody>
+        ${leaderboard.map((r, i) => html`
+          <tr class=${r.is_user ? "me" : ""} key=${r.player_id} dangerouslySetInnerHTML=${{ __html: `
+            <td>${i + 1}</td>
+            <td><b>${plink(r.player_id, r.handle)}</b></td>
+            <td class="muted">${tlink(r.team_id, r.team_tag)}</td>
+            <td class="num">${fmtFollowers(r.followers)}</td>` }}></tr>
+        `)}
+      </tbody>
+    </table>
+  </div>
+`;
 
+const BrandMovementCard = ({ moves }) => {
   // Movement tracker: every signing/release/renewal/transfer league-wide —
   // including AI-to-AI moves — straight off the chronicle. Names are regex-
   // plinked in the prose; the team tag becomes a tlink via the row's team_id.
-  const moves = data.movement || [];
-  if (moves.length) {
-    const mv = el("div", "card");
-    mv.appendChild(el("h2", "", "Movement tracker"));
-    mv.appendChild(el("p", "muted",
-      "Every move in the league, newest first — watch what rival orgs are doing."));
-    const KIND_BADGE = {
-      signing: ["signing", "good"], release: ["release", "bad"],
-      renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
-      dismissal: ["sacked", "bad"], appointment: ["hired", "good"],
-    };
-    const scroll = el("div", "card-scroll");
-    scroll.style.setProperty("--scroll-max", "340px");
-    const list = el("div", "es-movement");
-    for (const m of moves) {
-      const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
-      const text = m.player_id
-        ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
-            `<span class="plink" data-pid="${esc(m.player_id)}">$1</span>`)
-        : m.text;
-      const teamPill = m.team_tag ? `<span class="pill">${tlink(m.team_id, m.team_tag)}</span> ` : "";
-      list.appendChild(el("div", "es-move" + (m.mine ? " mine" : ""),
-        `<span class="pill ${tone}">${label}</span> ` +
-        `<span class="muted mono">S${m.season}·W${m.week}</span> ` +
-        teamPill + text));
+  if (!moves.length) return null;
+  const KIND_BADGE = {
+    signing: ["signing", "good"], release: ["release", "bad"],
+    renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
+    dismissal: ["sacked", "bad"], appointment: ["hired", "good"],
+  };
+  return html`
+    <div class="card">
+      <h2>Movement tracker</h2>
+      <p class="muted">Every move in the league, newest first — watch what rival orgs are doing.</p>
+      <div class="card-scroll" style=${{ "--scroll-max": "340px" }}>
+        <div class="es-movement">
+          ${moves.map((m, i) => {
+            const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
+            const text = m.player_id
+              ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
+                  `<span class="plink" data-pid="${esc(m.player_id)}">$1</span>`)
+              : m.text;
+            const teamPill = m.team_tag ? `<span class="pill">${tlink(m.team_id, m.team_tag)}</span> ` : "";
+            return html`
+              <div class=${"es-move" + (m.mine ? " mine" : "")} key=${i} dangerouslySetInnerHTML=${{ __html:
+                `<span class="pill ${tone}">${label}</span> ` +
+                `<span class="muted mono">S${m.season}·W${m.week}</span> ` +
+                teamPill + text }}></div>
+            `;
+          })}
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+const BrandSection = () => {
+  const [soc, setSoc] = useState(null);
+
+  useEffect(() => {
+    api("/api/social").then(setSoc).catch(console.error);
+  }, []);
+
+  // Deep links to the retired Social tab land here: the alias sets
+  // App.financesTab = "brand" and this scrolls the section into view once.
+  useEffect(() => {
+    if (soc && App.financesTab === "brand") {
+      App.financesTab = null;
+      document.getElementById("fin-brand")?.scrollIntoView({ behavior: "smooth" });
     }
-    scroll.appendChild(list);
-    mv.appendChild(scroll);
-    rail.appendChild(mv);
-  }
-}
+  }, [soc]);
+
+  if (!soc) return null;
+  return html`
+    <div id="fin-brand">
+      <div class="screen-head">
+        <span class="screen-title">Brand</span>
+        <span class="screen-sub">reach ${fmtFollowers(soc.your_reach)} · ${fmtFollowers(soc.fan_count)} fans</span>
+      </div>
+      <div class="ws">
+        <div class="ws-7 ws-col">
+          <div class="card">
+            <h2>Feed</h2>
+            ${soc.feed.length === 0
+              ? html`<p class="muted">Nothing posted yet — play a week.</p>`
+              : html`
+                <div class="card-scroll" style=${{ "--scroll-max": "48vh" }}>
+                  ${soc.feed.map((post, i) => html`<${BrandFeedPost} post=${post} key=${i} />`)}
+                </div>
+              `}
+          </div>
+        </div>
+        <div class="ws-5 ws-col">
+          <${BrandReachCard} data=${soc} />
+          <${BrandMoodCard} sentiment=${soc.sentiment ?? []} />
+          <${BrandLeaderboardCard} leaderboard=${soc.leaderboard} />
+          <${BrandMovementCard} moves=${soc.movement || []} />
+        </div>
+      </div>
+    </div>
+  `;
+};
 
 function dealLine(d) {
   const bits = [];
@@ -6773,8 +6808,8 @@ const FinancesTab = () => {
                 </tr>
                 <tr>
                   <td>
-                    Streaming 
-                    <button class="btn btn-sm" onClick=${() => window.dashGoTab("social")}>→ Social</button>
+                    Streaming
+                    <button class="btn btn-sm" onClick=${() => document.getElementById("fin-brand")?.scrollIntoView({ behavior: "smooth" })}>→ Brand</button>
                   </td>
                   <td class="num">${money(b.streaming || 0)}</td>
                 </tr>
@@ -6875,6 +6910,8 @@ const FinancesTab = () => {
           })()}
         </div>
       </div>
+
+      <${BrandSection} />
     </div>
   `;
 };
