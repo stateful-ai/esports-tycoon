@@ -38,17 +38,24 @@
     <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
   </header>
 
+  <!-- Two visual clusters: the weekly loop vs. the org you're building.
+       Purely presentational — every button still dispatches by data-tab. -->
   <nav id="tabs">
-    <button data-tab="dashboard" class="tab active">Dashboard</button>
-    <button data-tab="facilities" class="tab">Facilities</button>
-    <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="inbox-badge hidden">0</span></button>
-    <button data-tab="club" class="tab">Club</button>
-    <button data-tab="tactics" class="tab">Tactics</button>
-    <button data-tab="season" class="tab">Season</button>
-    <button data-tab="market" class="tab">Market</button>
-    <button data-tab="stats" class="tab">Stats</button>
-    <button data-tab="social" class="tab">Social</button>
-    <button data-tab="finances" class="tab">Finances</button>
+    <span class="tab-group" aria-label="Weekly">
+      <span class="tab-group-label">Weekly</span>
+      <button data-tab="dashboard" class="tab active">Dashboard</button>
+      <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="tab-badge hidden">0</span></button>
+      <button data-tab="tactics" class="tab">Match</button>
+    </span>
+    <span class="tab-group" aria-label="Org">
+      <span class="tab-group-label">Org</span>
+      <button data-tab="club" class="tab">Club</button>
+      <button data-tab="facilities" class="tab">Facilities</button>
+      <button data-tab="season" class="tab">Season</button>
+      <button data-tab="market" class="tab">Market</button>
+      <button data-tab="stats" class="tab">Stats</button>
+      <button data-tab="finances" class="tab">Finances</button>
+    </span>
   </nav>
 
   <main id="view"></main>
@@ -59,12 +66,13 @@
   <div class="panel">
     <h1>How to play</h1>
     <p class="muted">You run the org. Each week:</p>
-    <div class="newsline"><b>Club</b> — your squad HQ: watch form/morale/confidence, set each player's development plan (focus + intensity), name your starting five, renew contracts, hold your weekly 1:1 (Talk), and run the academy, culture and match prep.</div>
-    <div class="newsline"><b>Dashboard</b> — set the team training focus (rest when the team is gassed).</div>
+    <div class="newsline"><b>Dashboard</b> — your weekly hub: what needs you now, the next fixture, form and the week's headlines at a glance.</div>
+    <div class="newsline"><b>Match</b> — everything about the next game: tactics dials, the per-fixture game plan, and scouting prep on your opponent.</div>
+    <div class="newsline"><b>Club</b> — your squad HQ: watch form/morale/confidence, set the team training focus and each player's development plan, name your starting five, renew contracts, hold your weekly 1:1 (Talk), and run the academy and culture.</div>
     <div class="newsline"><b>Facilities</b> — build permanent club departments, compare current and next-level benefits, and manage their weekly upkeep.</div>
     <div class="newsline"><b>Season</b> — league tables, fixtures, playoffs and records; click any team name for their profile.</div>
     <div class="newsline"><b>Market</b> — sign free agents (5 start, bench up to 7), scout the field, and hire backroom staff (coach, analyst, physio) from a shared pool.</div>
-    <div class="newsline"><b>Finances</b> — sponsorship offers expire after one week; pick the shape that fits your season.</div>
+    <div class="newsline"><b>Finances</b> — sponsorship offers expire after one week; pick the shape that fits your season. The Brand section below tracks your reach, fanbase mood and the social feed.</div>
     <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
     <p class="muted" style="margin-top:10px">The same setup and decisions will always produce the same season.</p>
     <button class="btn btn-primary" onclick="document.getElementById('help').classList.add('hidden')">Got it</button>
