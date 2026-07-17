@@ -85,6 +85,7 @@ def test_items_generated_and_well_formed(season: GameState) -> None:
         assert it.tab in (
             None, "market", "roster", "scouting", "finances", "standings",
             "stats", "social",  # the movement-wire digest deep-links here
+            "tactics",          # F7 scrim proposal / prep report -> Match . Prep
         )
 
     # A real campaign surfaces more than one kind of thing over a season.
@@ -394,9 +395,19 @@ def test_sponsor_offer_item_carries_accept_decline_actions(
 
 def test_non_offer_items_have_no_actions(season: GameState) -> None:
     campaign = season
-    non_offer = [it for it in campaign.inbox if it.category not in ("transfer", "sponsor")]
-    assert non_offer  # a full season surfaces plenty of non-offer notices
-    for it in non_offer:
+    # transfer/sponsor OFFERS are actionable, and F3/F7 add the only other
+    # actionable items: a bench-minutes demand (category "board") and the coach's
+    # scrim proposal (category "development"). Every OTHER item is a read-only
+    # notice and must carry no buttons. actions_for gates board/development on a
+    # LIVE bench/scrim decision, and the actionable shape is pinned by
+    # test_wire_shape_is_frozen + the dedicated bench/scrim action tests, so we
+    # assert the read-only remainder here.
+    read_only = [
+        it for it in campaign.inbox
+        if it.category not in ("transfer", "sponsor", "board", "development")
+    ]
+    assert read_only  # a full season surfaces plenty of read-only notices
+    for it in read_only:
         assert inbox.actions_for(campaign, it) == []
         assert "actions" not in inbox.to_api(it, campaign)
 
