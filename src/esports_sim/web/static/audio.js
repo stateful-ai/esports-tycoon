@@ -1,6 +1,6 @@
-/* audio.js — first audio: main theme + office ambiance.
-   Self-contained: no edits to app.js. Loaded after app.js so the
-   `App` global (top-level const) is in scope for the initial tab check. */
+/* audio.js — first audio: the main theme.
+   (The office ambiance track retired with the parked office screen — no tab
+   plays it any more.) Self-contained: no edits to app.js. */
 (function () {
   "use strict";
 
@@ -11,20 +11,7 @@
   theme.volume = 0.25;
   theme.preload = "none";
 
-  var ambiance = new Audio("/assets/audio/office_ambiance.mp3");
-  ambiance.loop = true;
-  ambiance.volume = 0.4;
-  ambiance.preload = "none";
-
   var enabled = false;
-
-  function activeTab() {
-    try {
-      if (typeof App !== "undefined" && App && typeof App.tab === "string") return App.tab;
-    } catch (e) { /* App not defined yet */ }
-    var b = document.querySelector("#tabs .tab.active");
-    return b ? b.dataset.tab : null;
-  }
 
   function paint() {
     var btn = document.getElementById("audio-toggle");
@@ -34,23 +21,16 @@
     btn.setAttribute("aria-pressed", enabled ? "true" : "false");
   }
 
-  /* Reconcile playback with (enabled, active tab). Safe to call any time. */
+  /* Reconcile playback with the enabled flag. Safe to call any time. */
   function sync() {
     if (enabled) {
       theme.play().catch(function () {
         /* Autoplay blocked (no user gesture yet) — silently fall back to off. */
         enabled = false;
-        ambiance.pause();
         paint();
       });
-      if (activeTab() === "office") {
-        ambiance.play().catch(function () {});
-      } else {
-        ambiance.pause();
-      }
     } else {
       theme.pause();
-      ambiance.pause();
     }
     paint();
   }
@@ -69,22 +49,6 @@
     toggle.addEventListener("click", function () {
       setEnabled(!enabled, true);
     });
-  }
-
-  /* Tab changes: delegated click on #tabs ... */
-  var tabs = document.getElementById("tabs");
-  if (tabs) {
-    tabs.addEventListener("click", function (e) {
-      if (e.target.closest && e.target.closest("[data-tab]")) {
-        setTimeout(sync, 0); /* let app.js update App.tab first */
-      }
-    });
-    /* ... plus a class observer, since app.js also switches tabs
-       programmatically (e.g. office "go to roster" shortcuts). */
-    if (window.MutationObserver) {
-      new MutationObserver(function () { sync(); })
-        .observe(tabs, { attributes: true, subtree: true, attributeFilter: ["class"] });
-    }
   }
 
   /* Restore persisted preference; if the browser blocks autoplay the
