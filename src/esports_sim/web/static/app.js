@@ -658,6 +658,10 @@ const TAB_ALIASES = {
   standings: ["season", "seasonTab", "league"],
   schedule: ["season", "seasonTab", "fixtures"],
   scouting: ["market", "marketTab", "scouting"],
+  // "Match" is the visible label for the tactics tab; the internal key stays
+  // "tactics" so old links keep working, and this alias lets new code say
+  // dashGoTab("match") without caring about the internal id.
+  match: ["tactics", "tacticsTab", "strategy"],
 };
 
 function renderApp() {
@@ -730,7 +734,7 @@ function starsRange(band) {
      Squad        — the roster (overview) + lineup + support cards
      Development  — the roster's per-player development plans
      Culture      — leadership group + media trust
-     Operations   — academy, preparation, tournament six, series, delegation
+     Operations   — academy + staff delegation (match prep moved to Match · Prep)
    Squad/Development are the roster() screen hosted here (host: "club"); the
    other two read /api/club. Absorbed the old top-level Roster tab. */
 const CLUB_TABS = [
@@ -754,7 +758,9 @@ async function club(v) {
   return clubOps(v, sub);
 }
 
-// Culture / Operations sub-tabs: the leadership, media and match-prep cards.
+// Culture / Operations sub-tabs: leadership, media, academy and delegation.
+// (Match preparation, the tournament six and the series card moved to the
+// Match tab's Prep sub-tab — tacticsPrep().)
 async function clubOps(v, sub) {
   const d = await api("/api/club");
   v.appendChild(screenHead("Club", {
@@ -808,70 +814,6 @@ async function clubOps(v, sub) {
     }
   }
   ws.appendChild(ac);
-
-  // Preparation lab: every selectable value is server-supplied.
-  const pc = el("div", "card ws-6");
-  pc.innerHTML = `<h2>Match preparation</h2>`;
-  const pr = d.preparation;
-  if (!pr.fixture) {
-    pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
-  } else {
-    pc.appendChild(el("p", "muted", `Next: ${esc(pr.fixture.team_a_name)} vs ${esc(pr.fixture.team_b_name)} · week ${pr.fixture.week}`));
-    const partner = el("select", "sel-sm");
-    for (const x of pr.partners) { const o = el("option", "", x.name); o.value = x.id; partner.appendChild(o); }
-    const map = el("select", "sel-sm");
-    for (const x of pr.maps) { const o = el("option", "", humanize(x)); o.value = x; map.appendChild(o); }
-    const obj = el("select", "sel-sm");
-    for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
-    const intensity = el("select", "sel-sm");
-    for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
-    const form = el("div", "row"); form.append(partner, map, obj, intensity);
-    const book = el("button", "btn btn-primary", "Book session");
-    book.onclick = async () => {
-      const r = await api("/api/actions/preparation", { fixture_id: pr.fixture.id, partner_id: partner.value, map_id: map.value, objective: obj.value, intensity: intensity.value });
-      toast(r.message); refresh();
-    };
-    pc.append(form, book);
-  }
-  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${pr.current.intensity}).`));
-  if (pr.last) pc.appendChild(el("div", "newsline", `<b>Last report:</b> ${esc(pr.last.finding)} <span class="muted">Knowledge +${pr.last.knowledge_gain}; stamina −${pr.last.stamina_cost}.</span>`));
-  ws.appendChild(pc);
-
-  // Tournament roster registration.
-  const rc = el("div", "card ws-6");
-  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Five starters plus one between-map substitute.</p>`;
-  const chosen = new Set(d.registration.player_ids || []);
-  for (const p of d.registration.players) {
-    const lab = el("label", "entity");
-    const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
-    cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${p.role}`)); rc.appendChild(lab);
-  }
-  if (!d.registration.locked) {
-    const save = el("button", "btn btn-primary", "Submit roster");
-    save.onclick = async () => { const r = await api("/api/actions/tournament_registration", { player_ids: [...chosen] }); toast(r.message); refresh(); };
-    rc.appendChild(save);
-  }
-  ws.appendChild(rc);
-
-  // Conditional between-map response.
-  const sc = el("div", "card ws-6");
-  sc.innerHTML = `<h2>Series plan</h2><p class="muted">Set a between-map response that applies after map one when its condition is met.</p>`;
-  if (!d.series.fixture) {
-    sc.appendChild(el("p", "muted", "No upcoming best-of-three is on the calendar."));
-  } else {
-    const trigger = el("select", "sel-sm"), response = el("select", "sel-sm");
-    for (const x of d.series.triggers) { const o = el("option", "", humanize(x)); o.value = x; trigger.appendChild(o); }
-    for (const x of d.series.responses) { const o = el("option", "", humanize(x)); o.value = x; response.appendChild(o); }
-    const sin = el("select", "sel-sm"), sout = el("select", "sel-sm");
-    for (const [sel, ids] of [[sin, d.series.bench_ids], [sout, d.series.starter_ids]]) { const none = el("option", "", "No substitution"); none.value = ""; sel.appendChild(none); for (const p of d.registration.players.filter((x) => ids.includes(x.id))) { const o = el("option", "", p.handle); o.value = p.id; sel.appendChild(o); } }
-    const row = el("div", "row"); row.append(trigger, response, sin, sout);
-    const save = el("button", "btn btn-primary", "Save series card");
-    save.onclick = async () => { const r = await api("/api/actions/series_directive", { fixture_id: d.series.fixture.id, trigger: trigger.value, response: response.value, substitute_in: sin.value || null, substitute_out: sout.value || null }); toast(r.message); refresh(); };
-    sc.append(row, save);
-    if (d.series.directive) sc.appendChild(el("p", "muted", `Current: ${humanize(d.series.directive.trigger)} → ${humanize(d.series.directive.response)}.`));
-  }
-  ws.appendChild(sc);
 
   // Staff policies automate existing renewal/scouting work, not extra output.
   const dc = el("div", "card ws-12");
@@ -3047,17 +2989,25 @@ function poleChips(fit, styles) {
 async function tactics(v) {
   const s = App.state;
   const sub = App.tacticsTab ?? "strategy";
-  v.appendChild(screenHead("Tactics", {
+  v.appendChild(screenHead("Match", {
     sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
     subtabs: [
       { id: "strategy", label: "Strategy" },
       { id: "gameplan", label: "Game plan" },
+      { id: "prep", label: "Prep" },
     ],
     active: sub,
     onPick: (id) => { App.tacticsTab = id; renderApp(); },
   }));
   const ws = el("div", "ws");
   v.appendChild(ws);
+
+  if (sub === "prep") {
+    // The week's match logistics (scrims, tournament six, series card) —
+    // moved here from Club · Operations so all match prep lives on one tab.
+    return tacticsPrep(ws);
+  }
+
   const data = await api("/api/tactics");
   const main = el("div", "ws-8 ws-col");
   const rail = el("div", "ws-4 ws-col");
@@ -3072,6 +3022,78 @@ async function tactics(v) {
   } else {
     tacticsStrategy(main, rail, data);
   }
+}
+
+/* -- Match · Prep: the week's logistics around the fixture -------------------
+   Scrim/bootcamp booking, tournament-six registration and the between-map
+   series card. Reads /api/club (these are campaign-layer prep systems);
+   moved out of Club · Operations so match prep has a single home. */
+async function tacticsPrep(ws) {
+  const d = await api("/api/club");
+
+  // Preparation lab: every selectable value is server-supplied.
+  const pc = el("div", "card ws-6");
+  pc.innerHTML = `<h2>Match preparation</h2>`;
+  const pr = d.preparation;
+  if (!pr.fixture) {
+    pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
+  } else {
+    pc.appendChild(el("p", "muted", `Next: ${esc(pr.fixture.team_a_name)} vs ${esc(pr.fixture.team_b_name)} · week ${pr.fixture.week}`));
+    const partner = el("select", "sel-sm");
+    for (const x of pr.partners) { const o = el("option", "", x.name); o.value = x.id; partner.appendChild(o); }
+    const map = el("select", "sel-sm");
+    for (const x of pr.maps) { const o = el("option", "", humanize(x)); o.value = x; map.appendChild(o); }
+    const obj = el("select", "sel-sm");
+    for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
+    const intensity = el("select", "sel-sm");
+    for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
+    const form = el("div", "row"); form.append(partner, map, obj, intensity);
+    const book = el("button", "btn btn-primary", "Book session");
+    book.onclick = async () => {
+      const r = await api("/api/actions/preparation", { fixture_id: pr.fixture.id, partner_id: partner.value, map_id: map.value, objective: obj.value, intensity: intensity.value });
+      toast(r.message); refresh();
+    };
+    pc.append(form, book);
+  }
+  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${pr.current.intensity}).`));
+  if (pr.last) pc.appendChild(el("div", "newsline", `<b>Last report:</b> ${esc(pr.last.finding)} <span class="muted">Knowledge +${pr.last.knowledge_gain}; stamina −${pr.last.stamina_cost}.</span>`));
+  ws.appendChild(pc);
+
+  // Tournament roster registration.
+  const rc = el("div", "card ws-6");
+  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Five starters plus one between-map substitute.</p>`;
+  const chosen = new Set(d.registration.player_ids || []);
+  for (const p of d.registration.players) {
+    const lab = el("label", "entity");
+    const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
+    cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
+    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${p.role}`)); rc.appendChild(lab);
+  }
+  if (!d.registration.locked) {
+    const save = el("button", "btn btn-primary", "Submit roster");
+    save.onclick = async () => { const r = await api("/api/actions/tournament_registration", { player_ids: [...chosen] }); toast(r.message); refresh(); };
+    rc.appendChild(save);
+  }
+  ws.appendChild(rc);
+
+  // Conditional between-map response.
+  const sc = el("div", "card ws-6");
+  sc.innerHTML = `<h2>Series plan</h2><p class="muted">Set a between-map response that applies after map one when its condition is met.</p>`;
+  if (!d.series.fixture) {
+    sc.appendChild(el("p", "muted", "No upcoming best-of-three is on the calendar."));
+  } else {
+    const trigger = el("select", "sel-sm"), response = el("select", "sel-sm");
+    for (const x of d.series.triggers) { const o = el("option", "", humanize(x)); o.value = x; trigger.appendChild(o); }
+    for (const x of d.series.responses) { const o = el("option", "", humanize(x)); o.value = x; response.appendChild(o); }
+    const sin = el("select", "sel-sm"), sout = el("select", "sel-sm");
+    for (const [sel, ids] of [[sin, d.series.bench_ids], [sout, d.series.starter_ids]]) { const none = el("option", "", "No substitution"); none.value = ""; sel.appendChild(none); for (const p of d.registration.players.filter((x) => ids.includes(x.id))) { const o = el("option", "", p.handle); o.value = p.id; sel.appendChild(o); } }
+    const row = el("div", "row"); row.append(trigger, response, sin, sout);
+    const save = el("button", "btn btn-primary", "Save series card");
+    save.onclick = async () => { const r = await api("/api/actions/series_directive", { fixture_id: d.series.fixture.id, trigger: trigger.value, response: response.value, substitute_in: sin.value || null, substitute_out: sout.value || null }); toast(r.message); refresh(); };
+    sc.append(row, save);
+    if (d.series.directive) sc.appendChild(el("p", "muted", `Current: ${humanize(d.series.directive.trigger)} → ${humanize(d.series.directive.response)}.`));
+  }
+  ws.appendChild(sc);
 }
 
 /* -- Tactics · Strategy: the standing coaching identity ----------------------
