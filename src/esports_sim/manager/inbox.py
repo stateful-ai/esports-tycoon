@@ -23,6 +23,13 @@ Determinism: every item id is a blake2 hash of stable strings
 wall-clock. All iteration is over sorted collections, and no RNG is drawn:
 each title/body is a direct format of real GameState data, so the same
 seed replays a byte-identical inbox.
+
+Leverage ranking ("This week's calls"): top_calls() ranks the feed's
+PENDING decisions by a heuristic LEVERAGE table so the digest can lead
+with the two or three calls that actually swing the org. Scores are
+derived live at read time (same invariant as item actions) — nothing is
+stored on the item, so resolved offers and renewed contracts drop out of
+the ranking on the next read with no bookkeeping.
 """
 
 from __future__ import annotations
@@ -67,6 +74,56 @@ _P_MATCH = 5
 _P_DEV = 6
 _P_SPONSOR_OBJ = 6
 _P_NEWS = 7
+
+
+# ---------------------------------------------------------------------------
+# Leverage — how much a PENDING decision swings the org.
+#
+# HEURISTIC pending empirical calibration: nothing in the stored data yet
+# grades decision impact by type, so the base scores below encode design
+# intent instead — job security > an open starter seat > talent/money
+# commitments > morale maintenance. Revisit once the decision-ledger corpus
+# (manager/decision_ledger.py) is deep enough to fit real swing sizes.
+#
+# Scores are computed LIVE at read time from current GameState — the same
+# invariant as item actions (never stored) — so an offer that resolved or a
+# contract that got renewed simply stops ranking on the next read.
+LEVERAGE = {
+    "board_warning": 90.0,    # dismissal / board ultimatum: the seat itself
+    "retire_seat": 72.0,      # a rostered player retires — plan the seat
+    "contract": 55.0,         # expiring deal (+ player quality, + urgency)
+    "transfer_offer": 50.0,   # incoming bid (+ fee, + player quality)
+    "media": 42.0,            # media choice w/ persistent trust/sponsor fx
+    "sponsor_demand": 40.0,   # bounded reward/penalty wager (+ stake)
+    "academy": 38.0,          # promotion/send-down: development minutes
+    "sponsor_offer": 30.0,    # new income line (+ weekly value)
+    "talk": 22.0,             # 1:1 morale maintenance (+ crisis boost)
+    "rotation": 18.0,         # gassed starter with a fresh bench body
+}
+# NOTE: "media" and "academy" are reserved tiers — those decisions resolve on
+# their own screens today and emit no inbox item yet; the entries pin where
+# they slot into the ladder the day they do land in the feed.
+
+TOP_CALLS = 3                 # the digest leads with at most this many calls
+
+# Live-modifier scales/caps, sized so no single fee/quality read can leapfrog
+# a base tier by more than about one step.
+_LEV_QUALITY_SCALE = 4.0      # per star of player CA (0.5..5.0 -> 2..20)
+_LEV_FEE_CAP = 15.0           # transfer-fee modifier ceiling
+_LEV_FEE_UNIT = 100_000.0     # fee (cr) that buys one point of leverage
+_LEV_VALUE_CAP = 10.0         # sponsor weekly-value / demand-stake ceiling
+_LEV_WEEKLY_UNIT = 600.0      # sponsor weekly cr per point of leverage
+_LEV_STAKE_UNIT = 20_000.0    # demand stake cr per point of leverage
+_LEV_URGENT_TALK = 15.0       # crisis / transfer-request talk boost
+_LEV_CONTRACT_URGENCY = 1.5   # per week under the earliest reminder milestone
+
+# Soft prompts re-validate poorly (a talk nudge has no live offer to check),
+# so they only qualify as calls in the newest week of the feed — stale nudges
+# never crowd out real decisions. Offer/contract kinds verify live instead
+# and qualify at any age: an unanswered bid from last week is still a call.
+_SOFT_KINDS = frozenset({"talk", "rotation", "retire_seat", "media", "academy"})
+
+_URGENT_TALK_TITLES = ("Transfer request:", "Urgent meeting:")
 
 
 # ---------------------------------------------------------------------------
@@ -734,31 +791,58 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
 # so the actions attached to a given feed are deterministic for a seed.
 
 
-def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+def _live_transfer_offer(gs: "GameState", it: "InboxItem"):
+    """The still-live transfer offer an item was written about, or None.
+    Single source of the id reconstruction shared by actions + leverage."""
     for o in gs.transfer_offers:
         if o.player_id not in gs.players or o.to_team not in gs.teams:
             continue
         subject = f"{o.player_id}|{o.to_team}"
-        if _hash_id(it.season, it.week, "transfer", subject) != it.id:
-            continue
-        return [
-            # to_team pins WHICH buyer's bid this resolves (a manager may hold
-            # several bids for one player) and is validated server-side.
-            {"id": "accept", "label": "Accept",
-             "endpoint": "/api/actions/transfer_offer",
-             "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": True}},
-            {"id": "decline", "label": "Decline",
-             "endpoint": "/api/actions/transfer_offer",
-             "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": False}},
-        ]
-    return []
+        if _hash_id(it.season, it.week, "transfer", subject) == it.id:
+            return o
+    return None
+
+
+def _live_sponsor_demand(gs: "GameState", it: "InboxItem"):
+    for demand in gs.sponsor_demands:
+        subject = f"demand|{demand.id}"
+        if _hash_id(it.season, it.week, "sponsor", subject) == it.id:
+            return demand
+    return None
+
+
+def _live_sponsor_offer(gs: "GameState", it: "InboxItem"):
+    """(slot, offer) for a still-live market offer item, or None. Objective-
+    outcome items share the "sponsor" category but reconstruct no id match."""
+    for slot in sponsors.SLOT_ORDER:
+        for o in gs.sponsor_market.get(slot, []):
+            if o.expires_week - sponsors.OFFER_SHELF_LIFE != it.week:
+                continue
+            subject = f"offer|{slot}|{o.brand}"
+            if _hash_id(it.season, it.week, "sponsor", subject) == it.id:
+                return slot, o
+    return None
+
+
+def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    o = _live_transfer_offer(gs, it)
+    if o is None:
+        return []
+    return [
+        # to_team pins WHICH buyer's bid this resolves (a manager may hold
+        # several bids for one player) and is validated server-side.
+        {"id": "accept", "label": "Accept",
+         "endpoint": "/api/actions/transfer_offer",
+         "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": True}},
+        {"id": "decline", "label": "Decline",
+         "endpoint": "/api/actions/transfer_offer",
+         "payload": {"player_id": o.player_id, "to_team": o.to_team, "accept": False}},
+    ]
 
 
 def _sponsor_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
-    for demand in gs.sponsor_demands:
-        subject = f"demand|{demand.id}"
-        if _hash_id(it.season, it.week, "sponsor", subject) != it.id:
-            continue
+    demand = _live_sponsor_demand(gs, it)
+    if demand is not None:
         if not sponsors.demand_view(gs, demand)["can_respond"]:
             return []
         return [
@@ -769,25 +853,19 @@ def _sponsor_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
              "endpoint": "/api/actions/sponsor_demand",
              "payload": {"demand_id": demand.id, "accept": False}},
         ]
-    for slot in sponsors.SLOT_ORDER:
-        for o in gs.sponsor_market.get(slot, []):
-            # Only the market-offer items are actionable; objective-outcome
-            # items share the "sponsor" category but reconstruct no id match.
-            if o.expires_week - sponsors.OFFER_SHELF_LIFE != it.week:
-                continue
-            subject = f"offer|{slot}|{o.brand}"
-            if _hash_id(it.season, it.week, "sponsor", subject) != it.id:
-                continue
-            return [
-                {"id": "accept", "label": "Accept",
-                 "endpoint": "/api/actions/sponsor",
-                 "payload": {"slot": slot, "accept": True,
-                             "brand": o.brand, "structure": "steady"}},
-                {"id": "decline", "label": "Decline",
-                 "endpoint": "/api/actions/sponsor",
-                 "payload": {"slot": slot, "accept": False, "brand": o.brand}},
-            ]
-    return []
+    found = _live_sponsor_offer(gs, it)
+    if found is None:
+        return []
+    slot, o = found
+    return [
+        {"id": "accept", "label": "Accept",
+         "endpoint": "/api/actions/sponsor",
+         "payload": {"slot": slot, "accept": True,
+                     "brand": o.brand, "structure": "steady"}},
+        {"id": "decline", "label": "Decline",
+         "endpoint": "/api/actions/sponsor",
+         "payload": {"slot": slot, "accept": False, "brand": o.brand}},
+    ]
 
 
 def actions_for(gs: "GameState", it: "InboxItem") -> list[dict]:
@@ -816,6 +894,125 @@ def is_actionable(gs: "GameState", it: "InboxItem") -> bool:
         "A player on your roster retires",
         "Rotation: fresh legs available",
     ))
+
+
+# ---------------------------------------------------------------------------
+# Leverage ranking — "This week's calls" (see the LEVERAGE table above)
+
+
+def _live_contract_player(gs: "GameState", it: "InboxItem"):
+    """The roster player a contract-countdown item was written about, or None
+    (sold, released, retired — the call settled itself). Reconstructs the
+    item's deterministic id from the current roster, like the offer matchers."""
+    team = gs.teams.get(gs.acting_team_id)
+    if team is None:
+        return None
+    for pid in sorted(team.player_ids):
+        if _hash_id(it.season, it.week, "board", f"contract|{pid}") == it.id:
+            return gs.players.get(pid)
+    return None
+
+
+def _quality_bonus(gs: "GameState", pid: str) -> float:
+    p = gs.players.get(pid)
+    if p is None:
+        return 0.0
+    return development.stars(development.overall(p)) * _LEV_QUALITY_SCALE
+
+
+def leverage_for(gs: "GameState", it: "InboxItem") -> tuple[str, float] | None:
+    """Classify a PENDING-DECISION item and score its leverage.
+
+    Returns (kind, score) — kind is a LEVERAGE key — or None for purely
+    informational items and for decisions that already settled. Everything
+    derives live from current GameState, mirroring actions_for: an offer
+    that resolved or a contract that got renewed stops qualifying on the
+    next read. Pure and rng-free, so a seed replays identical scores.
+    """
+    if it.category == "transfer":
+        o = _live_transfer_offer(gs, it)
+        if o is None:
+            return None  # resolved/expired bid, or the movement-wire digest
+        score = (
+            LEVERAGE["transfer_offer"]
+            + min(_LEV_FEE_CAP, o.fee / _LEV_FEE_UNIT)
+            + _quality_bonus(gs, o.player_id)
+        )
+        return "transfer_offer", score
+    if it.category == "sponsor":
+        demand = _live_sponsor_demand(gs, it)
+        if demand is not None:
+            if not sponsors.demand_view(gs, demand)["can_respond"]:
+                return None
+            stake = (demand.reward + demand.penalty) / 2.0
+            return "sponsor_demand", LEVERAGE["sponsor_demand"] + min(
+                _LEV_VALUE_CAP, stake / _LEV_STAKE_UNIT
+            )
+        found = _live_sponsor_offer(gs, it)
+        if found is None:
+            return None  # objective-outcome notice, or the offer lapsed
+        _slot, o = found
+        weekly = o.steady.weekly + o.upfront.weekly + o.performance.weekly
+        return "sponsor_offer", LEVERAGE["sponsor_offer"] + min(
+            _LEV_VALUE_CAP, weekly / _LEV_WEEKLY_UNIT
+        )
+    if it.category == "board":
+        if "contract expires" in it.title:
+            p = _live_contract_player(gs, it)
+            if p is None or p.contract_weeks_left > max(CONTRACT_MILESTONES):
+                return None  # renewed or gone: nothing left to decide
+            urgency = (
+                max(CONTRACT_MILESTONES) - p.contract_weeks_left
+            ) * _LEV_CONTRACT_URGENCY
+            return "contract", (
+                LEVERAGE["contract"]
+                + urgency
+                + development.stars(development.overall(p)) * _LEV_QUALITY_SCALE
+            )
+        # Any other board notice is the board itself talking (dismissal,
+        # ultimatums) — the highest-stakes call on the desk.
+        return "board_warning", LEVERAGE["board_warning"]
+    if it.category == "talk":
+        score = LEVERAGE["talk"]
+        if it.title.startswith(_URGENT_TALK_TITLES):
+            score += _LEV_URGENT_TALK
+        return "talk", score
+    if it.category == "development":
+        if it.title.startswith("A player on your roster retires"):
+            return "retire_seat", LEVERAGE["retire_seat"]
+        if it.title.startswith("Rotation: fresh legs available"):
+            return "rotation", LEVERAGE["rotation"]
+    return None
+
+
+def top_calls(
+    gs: "GameState", items: list["InboxItem"] | None = None, n: int = TOP_CALLS,
+) -> list[dict]:
+    """The manager's highest-leverage pending decisions, ranked.
+
+    Returns [{"id", "kind", "leverage"}] — a marker list the endpoint serves
+    ALONGSIDE the items so the digest can lead with "This week's calls";
+    remaining items keep their existing order. Scores are never stored.
+    Ties break on feed position (newest-first), which is deterministic.
+    """
+    ordered = sorted_items(gs) if items is None else items
+    if not ordered:
+        return []
+    latest = (ordered[0].season, ordered[0].week)
+    ranked: list[tuple[float, int, "InboxItem", str, float]] = []
+    for idx, it in enumerate(ordered):
+        hit = leverage_for(gs, it)
+        if hit is None:
+            continue
+        kind, score = hit
+        if kind in _SOFT_KINDS and (it.season, it.week) != latest:
+            continue  # stale nudge from an older week
+        ranked.append((-score, idx, it, kind, score))
+    ranked.sort(key=lambda r: (r[0], r[1]))
+    return [
+        {"id": it.id, "kind": kind, "leverage": round(score, 1)}
+        for _neg, _idx, it, kind, score in ranked[:n]
+    ]
 
 
 def split_items(

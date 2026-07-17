@@ -2233,6 +2233,10 @@ def inbox_view() -> dict:
             "items": [inbox_mod.to_api(it, gs) for it in ordered],
             "actionable_items": [inbox_mod.to_api(it, gs) for it in actionable],
             "league_feed": [inbox_mod.to_api(it, gs) for it in league_feed],
+            # Leverage-ranked pending decisions ({id, kind, leverage}) for the
+            # digest's "This week's calls" header. Derived live per read, like
+            # item actions — never stored (see inbox.top_calls / LEVERAGE).
+            "calls": inbox_mod.top_calls(gs, ordered),
         }
 
 

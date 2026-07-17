@@ -159,3 +159,23 @@ def test_post_actions_endpoints(test_env) -> None:
     assert res_data["ok"] is True
     assert "response" in res_data
     assert ("effects" in res_data or res_data.get("offline") is True)
+
+
+def test_inbox_endpoint_serves_leverage_calls(test_env) -> None:
+    """GET /api/inbox carries a "calls" marker list ({id, kind, leverage})
+    for the digest's "This week's calls" header. Every call references an
+    item already in the feed — the ranking is derived live, never stored
+    (see inbox.top_calls / LEVERAGE)."""
+    from esports_sim.manager import inbox as inbox_mod
+
+    data = server_mod.inbox_view()
+    assert "calls" in data
+    assert isinstance(data["calls"], list)
+    assert len(data["calls"]) <= inbox_mod.TOP_CALLS
+    item_ids = {it["id"] for it in data["items"]}
+    scores = [c["leverage"] for c in data["calls"]]
+    assert scores == sorted(scores, reverse=True)
+    for c in data["calls"]:
+        assert set(c) == {"id", "kind", "leverage"}
+        assert c["id"] in item_ids
+        assert c["kind"] in inbox_mod.LEVERAGE

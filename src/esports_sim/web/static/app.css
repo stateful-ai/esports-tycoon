@@ -741,6 +741,21 @@ svg.iso .plabel { font-size: 2.4px; }
   background: color-mix(in srgb, var(--c) 16%, var(--es-color-bg-elevated, #161e2e));
   color: var(--c);
 }
+/* "This week's calls" — leverage-ranked pending decisions leading the inbox
+   digest rail. Distinct from plain digest lines: accent bar, rank, score. */
+.inbox-call {
+  border-left: 3px solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-sm, 4px);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 6%, transparent);
+  margin-bottom: var(--es-space-2, 4px);
+}
+.inbox-call-rank {
+  flex: none; min-width: 14px; text-align: center;
+  color: var(--es-color-accent, #4fd8c0); font-weight: 700;
+  font-size: var(--es-text-xs, 11px);
+}
+.inbox-call-score { flex: none; font-size: var(--es-text-2xs, 10px); }
+
 .cat-news        { --c: var(--es-viz-1, #3C7CC9); }
 .cat-talk        { --c: var(--es-viz-3, #3FB59B); }
 .cat-transfer    { --c: var(--es-viz-5, #D9A441); }

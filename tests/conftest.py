@@ -29,6 +29,7 @@ SLOW_TESTS = frozenset({
     "test_manager.py::test_campaign_determinism",
     "test_inbox.py::test_actions_are_deterministic_across_seeds",
     "test_inbox.py::test_determinism",
+    "test_inbox.py::test_top_calls_deterministic",
     "test_inbox.py::test_non_offer_items_have_no_actions",
     "test_inbox.py::test_save_load_roundtrip",
     "test_inbox.py::test_items_generated_and_well_formed",
