@@ -258,12 +258,84 @@ def parity(gs: "GameState") -> dict:
     }
 
 
+# Action kinds that are navigation or setup rather than management
+# decisions. Every played week records an "advance" (and sim-ahead batches
+# record one per tick), so scoring them would drown the legibility signal
+# in ticks that never had an outcome to settle.
+NON_DECISION_KINDS = frozenset({"advance", "sim_ahead", "scenario_start"})
+
+
+def decision_legibility(gs: "GameState") -> dict:
+    """How legible this save's decisions were: of every HUMAN action in
+    telemetry.action_log, how many later settled with an observable outcome
+    in the decision ledger (paid_off / neutral / backfired) and how many
+    offered no measurable outcome at all. The headline number is
+
+        legibility_score = settled_with_outcome / total_decisions
+
+    where total_decisions excludes NON_DECISION_KINDS (pure navigation).
+    Pure derived reader: it replays decision_ledger.settlements over each
+    acting team's recorded decision window, so nothing new is persisted and
+    a hands-off sim (empty action_log) scores an all-zero section. The
+    graders ground in data the save still stores — season stats and fixture
+    lines reset over an offseason, so long-finished seasons under-settle
+    rather than invent (silence beats invented drama)."""
+    from esports_sim.manager import decision_ledger
+
+    action_counts: dict[str, int] = {}
+    windows: dict[tuple[str, int], list[int]] = {}
+    total = 0
+    for rec in gs.action_log:
+        action_counts[rec.kind] = action_counts.get(rec.kind, 0) + 1
+        if rec.kind in NON_DECISION_KINDS:
+            continue
+        total += 1
+        if rec.team_id:
+            windows.setdefault((rec.team_id, rec.season), []).append(rec.week)
+
+    verdicts = {
+        decision_ledger.PAID_OFF: 0,
+        decision_ledger.NEUTRAL: 0,
+        decision_ledger.BACKFIRED: 0,
+    }
+    settled_by_kind: dict[str, int] = {}
+    for tid, season in sorted(windows):
+        weeks = windows[(tid, season)]
+        lo = max(1, min(weeks))
+        hi = max(weeks) + decision_ledger.LOOKBACK_WEEKS
+        if season == gs.season:
+            # This week's tick hasn't resolved yet — grade settled weeks only
+            # (the same boundary decision_ledger.latest_settlements uses).
+            hi = min(hi, gs.week - 1)
+        seen: set[str] = set()
+        for wk in range(lo, hi + 1):
+            for row in decision_ledger.settlements(gs, tid, season, wk):
+                if row["subject"] in seen:
+                    continue  # one outcome per decision unit (re-edits collapse)
+                seen.add(row["subject"])
+                verdicts[row["verdict"]] += 1
+                settled_by_kind[row["kind"]] = settled_by_kind.get(row["kind"], 0) + 1
+    settled = sum(verdicts.values())
+    unsettled = max(0, total - settled)
+    return {
+        "total_decisions": total,
+        "action_counts": dict(sorted(action_counts.items())),
+        "settled_with_outcome": settled,
+        "verdicts": verdicts,
+        "settled_by_kind": dict(sorted(settled_by_kind.items())),
+        "unsettled": unsettled,
+        "unsettled_share": round(unsettled / total, 3) if total else 0.0,
+        "legibility_score": round(settled / total, 3) if total else 0.0,
+    }
+
+
 def playtest_summary(gs: "GameState") -> dict:
     """A multi-season summary of a played save — the artifact a headless
     playtest / world-model pipeline consumes. All chronicle + career_stats,
     so it survives the per-season stat reset: title timelines, the award
     slate over time, meta eras, parity, the record book, and the most
-    decorated career arcs."""
+    decorated career arcs — plus the decision-legibility score derived from
+    action_log + the decision ledger (empty for hands-off sims)."""
 
     def _title_line(kind: str) -> list[dict]:
         return [
@@ -325,6 +397,7 @@ def playtest_summary(gs: "GameState") -> dict:
         "dynasties": recs["dynasties"],
         "records": recs["records"],
         "top_career_arcs": top_arcs,
+        "decision_legibility": decision_legibility(gs),
     }
 
 

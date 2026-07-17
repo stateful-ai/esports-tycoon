@@ -18,6 +18,7 @@ import pytest
 
 from esports_sim.manager import (
     advance_week,
+    analytics,
     decision_ledger,
     market,
     new_campaign,
@@ -195,12 +196,67 @@ def test_state_endpoint_serializes_ledger(scripted, game_data: GameData) -> None
     assert data["decision_ledger"] == match_rows
 
 
+@_SCRIPTED_GROUP
+def test_decision_legibility_scores_the_scripted_campaign(scripted) -> None:
+    """The playtest legibility section grades every recorded decision: the
+    three scripted calls all settled with an observable outcome, navigation
+    kinds are census-only, and an ungraded kind counts as unsettleable."""
+    import json
+
+    gs, _training_rows, _match_rows = scripted
+    leg = analytics.decision_legibility(gs)
+    assert set(leg) == {
+        "total_decisions", "action_counts", "settled_with_outcome",
+        "verdicts", "settled_by_kind", "unsettled", "unsettled_share",
+        "legibility_score",
+    }
+    assert leg["action_counts"] == {
+        "set_game_plan": 1, "set_lineup": 1, "set_training": 1,
+    }
+    assert leg["total_decisions"] == 3
+    assert leg["settled_with_outcome"] == 3
+    assert set(leg["verdicts"]) == VERDICTS
+    assert sum(leg["verdicts"].values()) == 3
+    assert leg["settled_by_kind"] == {
+        "focus_target": 1, "lineup": 1, "training": 1,
+    }
+    assert leg["unsettled"] == 0 and leg["unsettled_share"] == 0.0
+    assert leg["legibility_score"] == 1.0
+
+    # The playtest artifact carries the section verbatim, ASCII-safe.
+    pt = analytics.playtest_summary(gs)
+    assert pt["decision_legibility"] == leg
+    assert json.dumps(pt, ensure_ascii=True).isascii()
+
+    # A decision kind the ledger cannot grade counts as unsettleable...
+    telemetry.record_action(gs, "talk", {"topic": "morale"})
+    with_talk = analytics.decision_legibility(gs)
+    gs.action_log.pop()
+    assert with_talk["total_decisions"] == 4
+    assert with_talk["settled_with_outcome"] == 3
+    assert with_talk["unsettled"] == 1
+    assert with_talk["unsettled_share"] == 0.25
+    assert with_talk["legibility_score"] == 0.75
+
+    # ...while navigation kinds appear in the census but never in the score.
+    telemetry.record_action(gs, "advance", {})
+    with_advance = analytics.decision_legibility(gs)
+    gs.action_log.pop()
+    assert with_advance["action_counts"]["advance"] == 1
+    assert with_advance["total_decisions"] == 3
+    assert with_advance["legibility_score"] == 1.0
+
+
 def test_settlements_are_deterministic(game_data: GameData) -> None:
     gs_a, train_a, match_a = _scripted_campaign(game_data, seed=99)
     gs_b, train_b, match_b = _scripted_campaign(game_data, seed=99)
     assert train_a == train_b
     assert match_a == match_b
     assert gs_a.model_dump_json() == gs_b.model_dump_json()
+    # The legibility section re-derives identically from identical saves.
+    leg_a = analytics.decision_legibility(gs_a)
+    assert leg_a == analytics.decision_legibility(gs_b)
+    assert leg_a["total_decisions"] > 0
 
 
 def test_hands_off_campaign_settles_nothing(game_data: GameData) -> None:
