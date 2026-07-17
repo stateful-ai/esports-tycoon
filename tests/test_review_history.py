@@ -68,3 +68,31 @@ def test_load_dedups_by_key(game_data: GameData, tmp_path, monkeypatch) -> None:
 def test_missing_corpus_is_empty(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(review_history, "CORPUS_DIR", tmp_path)
     assert review_history.load_records("NOPE") == []
+
+
+def test_old_corpus_lines_without_calls_still_load(
+    game_data: GameData, tmp_path, monkeypatch
+) -> None:
+    """The JSONL schema is additive: lines written before the review gained
+    manager attribution (`calls`) must keep loading (calls defaults to None),
+    and new lines must round-trip the captured calls."""
+    import json
+
+    monkeypatch.setattr(review_history, "CORPUS_DIR", tmp_path)
+    gs = _played(game_data)
+    review_history.append_reviews(gs, "WRLD5", set())
+    path = tmp_path / "match_review_WRLD5.jsonl"
+    lines = path.read_text(encoding="utf-8").strip().splitlines()
+    assert lines
+    # New lines carry the attribution record.
+    assert all("calls" in json.loads(ln)["review"] for ln in lines)
+    # Rewrite the corpus in the PRE-calls shape and reload.
+    old_style = []
+    for ln in lines:
+        rec = json.loads(ln)
+        rec["review"].pop("calls", None)
+        old_style.append(json.dumps(rec))
+    path.write_text("\n".join(old_style) + "\n", encoding="utf-8")
+    recs = review_history.load_records("WRLD5")
+    assert len(recs) == len(lines)
+    assert all(r.review.calls is None for r in recs)

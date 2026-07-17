@@ -361,8 +361,42 @@ function setupLobby(lob) {
   // "sandbox" = classic (pick any org, manage forever);
   // "legacy" = career mode (offers, contracts, boards that fire you).
   let gameMode = "sandbox";
+  // null = the classic start; otherwise a sandbox scenario preset id
+  // (server-applied at creation — the client only picks and renders).
+  let scenario = null;
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
+  const renderScenarios = () => {
+    const row = $("#ng-scenario-row");
+    const box = $("#ng-scenarios");
+    const desc = $("#ng-scenario-desc");
+    const list = lob.scenarios || [];
+    if (gameMode !== "sandbox" || !list.length) {
+      scenario = null;
+      row.classList.add("hidden");
+      desc.classList.add("hidden");
+      return;
+    }
+    row.classList.remove("hidden");
+    box.innerHTML = "";
+    const mk = (label, id) => {
+      const b = el(
+        "button",
+        "btn" + (scenario === id ? " btn-primary" : ""),
+        label
+      );
+      b.onclick = () => {
+        scenario = id;
+        renderScenarios();
+      };
+      box.appendChild(b);
+    };
+    mk("Standard start", null);
+    for (const sc of list) mk(sc.name, sc.id);
+    const cur = list.find((x) => x.id === scenario);
+    desc.textContent = cur ? cur.blurb : "";
+    desc.classList.toggle("hidden", !cur);
+  };
   const renderModes = () => {
     const box = $("#ng-modes");
     box.innerHTML = "";
@@ -375,6 +409,7 @@ function setupLobby(lob) {
       b.onclick = () => {
         gameMode = id;
         renderModes();
+        renderScenarios();
         renderPick();
       };
       box.appendChild(b);
@@ -447,7 +482,9 @@ function setupLobby(lob) {
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
         .then((r) =>
-          renderTeamGrid(grid, r.teams, (t) => createGame(t.id, shared_, world))
+          renderTeamGrid(grid, r.teams, (t) =>
+            createGame(t.id, shared_, world, "sandbox", scenario)
+          )
         )
         .catch(
           () => (grid.innerHTML = '<span class="muted">Could not load teams.</span>')
@@ -455,7 +492,7 @@ function setupLobby(lob) {
       return;
     }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world)
+      createGame(t.id, shared_, world, "sandbox", scenario)
     );
   };
   $("#ng-seed").addEventListener("change", () => renderPick());
@@ -467,6 +504,7 @@ function setupLobby(lob) {
       ? "Pick your team. Others join with the code you'll get next."
       : "Pick your organisation. Seed controls the generated league.";
     renderModes();
+    renderScenarios();
     renderWorlds();
     renderPick();
   };
@@ -500,10 +538,12 @@ function setupLobby(lob) {
   showCreate(false); // default view
 }
 
-async function createGame(teamId, shared, pack = null, gameMode = "sandbox") {
+async function createGame(
+  teamId, shared, pack = null, gameMode = "sandbox", scenario = null
+) {
   const seed = parseInt($("#ng-seed").value) || 2026;
   const r = await api("/api/new", {
-    team_id: teamId, seed, shared, pack, game_mode: gameMode,
+    team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
   });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
@@ -583,6 +623,10 @@ function updateSaveControls(sv) {
 function updateMpChip(mp) {
   const chip = $("#mp-chip");
   if (!chip) return;
+  // Sim ahead is solo-only (the endpoint 409s in shared worlds, where the
+  // week advances by ready-up) — hide the control rather than tease it.
+  const sim = $("#simahead-btn");
+  if (sim) sim.classList.toggle("hidden", !!(mp && mp.mode === "shared"));
   if (!mp || mp.mode !== "shared") {
     chip.classList.add("hidden");
     return;
@@ -1173,6 +1217,197 @@ function dashGoTab(name) {
   if (b) b.click();
 }
 
+/* -- Match-day buildup overlay (#matchday) ----------------------------------
+   The full pre-match briefing: one composed GET /api/matchday read (enriched
+   fixture board, both sides' form + danger men, the opposing bench) laid out
+   on the workspace grid. Presentation only — every number arrives computed;
+   this renders, deep-links names, and hands off to the game-plan screen. */
+async function openMatchday() {
+  let md = null;
+  try { md = await api("/api/matchday"); } catch (_e) { return; }
+  const ov = $("#matchday");
+  if (!ov) return;
+  ov.innerHTML = "";
+  ov.classList.remove("hidden");
+  ov.onclick = (e) => { if (e.target === ov) closeMatchday(); };
+  const wrap = el("div", "md-wrap");
+  ov.appendChild(wrap);
+
+  const f = md && md.fixture;
+  if (!f) {
+    const empty = el("div", "card");
+    empty.appendChild(el("h2", "", "Match day"));
+    empty.appendChild(el("p", "muted", "No fixture scheduled this week."));
+    const btn = el("button", "btn", "Close");
+    btn.onclick = closeMatchday;
+    empty.appendChild(btn);
+    wrap.appendChild(empty);
+    return;
+  }
+  const you = md.you, them = md.them;
+  const season = App.state?.season;
+  const ws = el("div", "ws");
+  wrap.appendChild(ws);
+
+  // Last-5 form as W/L squares (oldest -> newest, the server's order).
+  const formStrip = (chips) => {
+    const strip = el("span", "es-form-strip");
+    if (!(chips || []).length) strip.appendChild(el("span", "muted", "No results yet"));
+    for (const c of chips || []) {
+      strip.appendChild(formSquare(c.result, `W${c.week} vs ${c.opponent}${c.score ? " · " + c.score : ""}`));
+    }
+    return strip;
+  };
+  // Season danger men: handle + role + rating over the map sample.
+  const dangerList = (rows) => {
+    const box = el("div", "es-stars md-danger");
+    if (!(rows || []).length) {
+      box.appendChild(el("span", "muted", "No season sample yet."));
+      return box;
+    }
+    for (const d of rows) {
+      box.appendChild(el("span", "es-star",
+        plink(d.player_id, d.handle) +
+        `<span class="pill">${esc(d.role)}</span>` +
+        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} maps</span>`));
+    }
+    return box;
+  };
+
+  // 1. Tale of the tape: VS header, rivalry flag, both form strips, h2h.
+  const head = el("div", "card es-matchday ws-12 md-head");
+  head.appendChild(el("div", "es-matchday-kicker",
+    `${esc(stageLabel(f.stage))}${season ? ` · S${season}` : ""} · W${f.week} · Pre-match briefing`));
+  head.appendChild(el("div", "es-vs",
+    `<div class="es-vs-team left">${tlink(you.id, you.name, "es-vs-name")}</div>` +
+    `<div class="es-vs-mid">
+      <div class="es-vs-x">VS</div>
+      <span class="pill es-bo">Best of ${f.best_of}</span>
+      ${f.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${f.rivalry}">⚔ RIVALRY</span>` : ""}
+    </div>` +
+    `<div class="es-vs-team right">${tlink(them.id, them.name, "es-vs-name")}</div>`));
+  const forms = el("div", "md-forms");
+  const fL = el("div", "md-form left");
+  fL.appendChild(el("span", "es-scout-lab muted", `Last ${(you.form || []).length || 0}`));
+  fL.appendChild(formStrip(you.form));
+  const fR = el("div", "md-form right");
+  fR.appendChild(el("span", "es-scout-lab muted", `Last ${(them.form || []).length || 0}`));
+  fR.appendChild(formStrip(them.form));
+  forms.append(fL, fR);
+  head.appendChild(forms);
+  if (f.h2h) {
+    const h = f.h2h;
+    const lead = h.wins === h.losses ? "level" : h.you_lead ? "you lead" : "you trail";
+    const hstreak = h.streak_len > 1 ? ` · ${h.streak_team === you.id ? "W" : "L"}${h.streak_len}` : "";
+    head.appendChild(el("div", "md-h2h muted",
+      `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${hstreak}`));
+  }
+  ws.appendChild(head);
+
+  // 2. Storylines: the grounded prose preview.
+  const story = el("div", "card ws-6");
+  story.appendChild(el("h2", "", "Storylines"));
+  if ((f.preview || []).length) {
+    for (const line of f.preview) story.appendChild(el("p", "es-preview muted", esc(line)));
+  } else {
+    story.appendChild(el("p", "muted", "Nothing on the wire yet — the season will write these."));
+  }
+  ws.appendChild(story);
+
+  // 3. Opposition read: manager persona, coach, scouted identity, danger men.
+  const opp = el("div", "card ws-6");
+  opp.appendChild(el("h2", "", `${esc(them.name)} — the read`));
+  if (f.opp_manager) {
+    opp.appendChild(el("div", "md-row",
+      `<span class="es-scout-lab muted">Manager</span>` +
+      `<span><b>${esc(f.opp_manager.name)}</b> <span class="pill es-identity">${esc(f.opp_manager.identity)}</span></span>`));
+  }
+  if (them.coach) {
+    opp.appendChild(el("div", "md-row",
+      `<span class="es-scout-lab muted">Coach</span>` +
+      `<span><b>${esc(them.coach.name)}</b> <span class="pill es-identity">${esc(them.coach.style)}</span> ` +
+      `<span class="muted">${esc(them.coach.specialty)} specialist</span></span>`));
+  }
+  if (them.identity || (them.tendencies || []).length) {
+    const row = el("div", "md-row");
+    row.appendChild(el("span", "es-scout-lab muted", "Playstyle"));
+    const body = el("span", "");
+    if (them.identity) body.appendChild(el("span", "pill es-identity", esc(them.identity)));
+    if ((them.tendencies || []).length) {
+      body.appendChild(el("span", "es-tendencies muted", " " + them.tendencies.map(esc).join(" · ")));
+    }
+    row.appendChild(body);
+    opp.appendChild(row);
+  } else if (!them.scouted) {
+    opp.appendChild(el("p", "muted", "Their tactical identity is unread — assign your scout to unlock it."));
+  }
+  opp.appendChild(el("span", "es-scout-lab muted", "Danger men"));
+  opp.appendChild(dangerList(them.danger_men));
+  ws.appendChild(opp);
+
+  // 4. Map pool & suggested veto (the server's board; hidden until it has data).
+  const mp = f.map_pool;
+  const maps = el("div", "card ws-6");
+  maps.appendChild(el("h2", "", "Map pool & veto"));
+  if (mp && mp.veto && (mp.veto.ban || mp.veto.pick)) {
+    const vr = el("div", "es-veto");
+    if (mp.veto.ban) {
+      vr.appendChild(el("span", "es-veto-chip ban",
+        `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.opponent} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+    }
+    if (mp.veto.pick) {
+      vr.appendChild(el("span", "es-veto-chip pick",
+        `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+    }
+    maps.appendChild(vr);
+  }
+  if (mp && mp.maps.length) {
+    const bars = el("div", "es-mapbars");
+    for (const m of mp.maps.slice(0, 7)) {
+      const wr = m.win_rate == null ? 0 : m.win_rate;
+      bars.appendChild(el("div", "es-mapbar",
+        `<span class="es-mapbar-name">${esc(m.map)}</span>` +
+        `<span class="es-mapbar-track"><span class="es-mapbar-fill" style="width:${wr}%"></span></span>` +
+        `<span class="mono es-mapbar-wr">${m.win_rate == null ? "—" : m.win_rate + "%"}</span>` +
+        `<span class="muted es-mapbar-n">${m.wins}/${m.played}</span>`));
+    }
+    maps.appendChild(bars);
+  }
+  if (maps.childElementCount <= 1) {
+    maps.appendChild(el("p", "muted", "No map record yet this season."));
+  }
+  ws.appendChild(maps);
+
+  // 5. Your side: who the opposition will be worrying about.
+  const mine = el("div", "card ws-6");
+  mine.appendChild(el("h2", "", `${esc(you.name)} — your threats`));
+  mine.appendChild(dangerList(you.danger_men));
+  ws.appendChild(mine);
+
+  // 6. Hand-off: into the game-plan screen, or back to the dashboard.
+  const foot = el("div", "card ws-12 md-foot");
+  foot.appendChild(el("span", "muted",
+    md.plan_set
+      ? "A game plan is locked for this fixture."
+      : "No opponent-specific plan is set yet — lock the approach before you advance."));
+  foot.appendChild(el("span", "spacer"));
+  const plan = el("button", "btn btn-primary",
+    (md.plan_set ? "Review game plan" : "Set game plan") + " ▸");
+  plan.onclick = () => { closeMatchday(); App.tacticsTab = "gameplan"; dashGoTab("tactics"); };
+  const cont = el("button", "btn", "Continue");
+  cont.onclick = closeMatchday;
+  foot.append(plan, cont);
+  ws.appendChild(foot);
+}
+
+function closeMatchday() {
+  const ov = $("#matchday");
+  if (!ov) return;
+  ov.classList.add("hidden");
+  ov.innerHTML = "";
+  ov.onclick = null;
+}
+
 // Legacy career: the job-market takeover panel a dismissed manager sees
 // instead of the normal hub. Accepting rebinds the session server-side,
 // so a full reload is the honest refresh.
@@ -1470,10 +1705,15 @@ async function dashboard(v) {
       `<span class="es-matchday-kicker">W${fix.week} · Staff briefing</span>` +
       `<h2>Match day</h2>` +
       `<p class="muted">Everything to settle before you advance the week.</p>`));
-    heroTop.appendChild(el("div", "es-readiness",
+    const readiness = el("div", "es-readiness",
       `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
       `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
-      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`));
+      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
+    const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
+    mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
+    mdBtn.onclick = openMatchday;
+    readiness.appendChild(mdBtn);
+    heroTop.appendChild(readiness);
     spot.appendChild(heroTop);
 
     const teamBlock = (tid, name, logo, side) => {
@@ -1495,6 +1735,7 @@ async function dashboard(v) {
           <div class="es-vs-ctx">${stageTxt}</div>
           <span class="pill es-bo">Best of ${fix.best_of}</span>
           ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
+          ${fix.opp_manager ? `<div class="es-vs-ctx es-opp-mgr" title="The manager across the aisle">vs ${esc(fix.opp_manager.name)} · <i>${esc(fix.opp_manager.identity)}</i></div>` : ""}
         </div>` +
         teamBlock(oppId, oppName, oppLogo, "right")));
 
@@ -1820,6 +2061,56 @@ async function dashboard(v) {
         } else if (lmr.coach && !lmr.coach.present) {
           card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
         }
+        // "Your calls" — the manager-attribution block. Every number arrives
+        // computed from the server (tactics_fit impact, prep edge, ratings);
+        // this only formats rows. Absent (null) when nothing was called.
+        const yc = lmr.your_calls;
+        if (yc) {
+          card.appendChild(el("span", "es-scout-lab muted", "Your calls"));
+          const yl = el("div", "es-review-calls");
+          const yrow = (html) => yl.appendChild(
+            el("div", "es-review-call", `<span class="es-review-arrow">▸</span> ${html}`));
+          for (const d of yc.dials || []) {
+            let imp = "";
+            if (d.impact_delta != null) {
+              const v = d.impact_delta;
+              const cls = v > 0 ? "wl-w" : v < 0 ? "wl-l" : "";
+              imp = ` <span class="${cls} mono">(${v > 0 ? "+" : ""}${v.toFixed(1)} execution)</span>`;
+            }
+            yrow(`${esc(d.label)} <b class="mono">${d.planned}</b> vs book <span class="mono">${d.base}</span>${imp}`);
+          }
+          if (yc.site_focus && yc.site_focus !== "balanced") {
+            yrow(`Site call: <b class="mono">${esc(String(yc.site_focus).toUpperCase())}</b>`);
+          }
+          if (yc.focus_target) {
+            yrow(`Focused prep on ${plink(yc.focus_target.player_id, yc.focus_target.handle)}`);
+          }
+          if (yc.team_talk) {
+            const t = yc.team_talk;
+            yrow(`${esc(t.label)} — confidence ${t.avg_delta >= 0 ? "+" : ""}${t.avg_delta.toFixed(1)} per starter`);
+          }
+          if (yc.lineup) {
+            if (yc.lineup.override) yrow("One-match lineup set for this fixture");
+            for (const p of yc.lineup.picked || []) {
+              const r = p.rating != null ? ` — went <b class="mono">${p.rating.toFixed(2)}</b>` : "";
+              yrow(`Dressed ${plink(p.player_id, p.handle)} over the suggested five${r}`);
+            }
+            if ((yc.lineup.benched || []).length) {
+              yrow(`Sat from the suggestion: ${yc.lineup.benched.map((p) => plink(p.player_id, p.handle)).join(", ")}`);
+            }
+            if (yc.lineup.followed && yc.lineup.override) {
+              yrow("Lineup matched the suggested five");
+            }
+          }
+          if (yc.prep) {
+            const bits = [];
+            if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
+            if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
+            if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+            if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
+          }
+          if (yl.childElementCount) card.appendChild(yl);
+        }
         if (lmr.locked && lmr.locked_hint) {
           card.appendChild(el("p", "muted es-review-d", esc(lmr.locked_hint)));
         }
@@ -1860,6 +2151,25 @@ async function dashboard(v) {
     }
     if (!list.childElementCount) {
       list.appendChild(el("div", "muted", "All clear — advance when ready."));
+    }
+    card.appendChild(list);
+    rail.appendChild(card);
+  }
+
+  // 5a'. Decisions settled: last week's calls graded against what actually
+  // happened. Rows arrive fully computed from the server (decision_ledger
+  // derives them from stored data) — the client only renders.
+  const ledger = s.decision_ledger || [];
+  if (ledger.length) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Decisions settled"));
+    const list = el("div", "es-obj");
+    const vcls = { paid_off: "good", backfired: "bad", neutral: "" };
+    const vlab = { paid_off: "paid off", backfired: "backfired", neutral: "neutral" };
+    for (const r of ledger.slice(0, 3)) {
+      list.appendChild(el("div", "es-obj-row",
+        `<span class="pill obj ${vcls[r.verdict] ?? ""}">${esc(vlab[r.verdict] || r.verdict)}</span> ` +
+        `<span>${esc(r.text)}</span>`));
     }
     card.appendChild(list);
     rail.appendChild(card);
@@ -6038,6 +6348,7 @@ async function social(v) {
     const KIND_BADGE = {
       signing: ["signing", "good"], release: ["release", "bad"],
       renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
+      dismissal: ["sacked", "bad"], appointment: ["hired", "good"],
     };
     const scroll = el("div", "card-scroll");
     scroll.style.setProperty("--scroll-max", "340px");
@@ -6777,12 +7088,42 @@ $("#advance-btn").onclick = async () => {
       pollForAdvance(prevWeek);
       return; // stay disabled; pollForAdvance re-enables when the week ticks
     }
-    showReport(rep);
+    // Refresh FIRST so the dashboard behind the reveal (and the reveal's
+    // "Decisions settled" stage) render the new week's state.
     await refresh();
+    if (!startWeekReveal(rep)) showReport(rep);
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
     if (!mpPolling) $("#advance-btn").disabled = false;
+  }
+};
+
+// Sim ahead: batch up to 4 weeks in one press; the server stops the moment a
+// trigger fires (playoff match up, expiring starter deal, incoming bid, board
+// or money trouble, pending decision, offseason). Toast the stop reason, then
+// stage the LAST advanced week through the usual reveal.
+$("#simahead-btn").onclick = async () => {
+  const btn = $("#simahead-btn");
+  btn.disabled = true;
+  $("#advance-btn").disabled = true;
+  try {
+    const res = await api("/api/actions/sim_ahead", {});
+    await refresh(); // reveal stages read fresh App.state (see advance-btn)
+    const label = res.stop_label;
+    if (res.weeks > 0) {
+      const n = `${res.weeks} week${res.weeks === 1 ? "" : "s"}`;
+      toast(label ? `Simmed ${n} — stopped: ${label}.` : `Simmed ${n}.`);
+    } else {
+      toast(label ? `Not simming ahead — ${label}.` : "Nothing to sim.");
+    }
+    if (res.report) {
+      if (!startWeekReveal(res.report)) showReport(res.report);
+    }
+    if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } finally {
+    btn.disabled = false;
+    $("#advance-btn").disabled = false;
   }
 };
 
@@ -6810,20 +7151,176 @@ function pollForAdvance(prevWeek) {
       // Show the played week's report (results + replay buttons) — the
       // manager whose ready-up ticked the world got it from advance();
       // everyone else fetches the same report here.
+      await refresh();
       try {
         const r = await api("/api/report");
-        if (r.report) showReport(r.report);
-        else toast(`Week ${s.week} — everyone advanced.`);
+        if (r.report) {
+          if (!startWeekReveal(r.report)) showReport(r.report);
+        } else toast(`Week ${s.week} — everyone advanced.`);
       } catch {
         toast(`Week ${s.week} — everyone advanced.`);
       }
-      await refresh();
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
       return;
     }
     setTimeout(tick, 2500);
   };
   setTimeout(tick, 2500);
+}
+
+/* -- advance-week staged reveal -----------------------------------------------
+   The advance beat, staged instead of dumped: (1) your own series result,
+   map scores counting up, (2) standings movement across the tick, (3) the
+   "Decisions settled" grades — then the dashboard. Pure presentation over
+   the advance payload (week_reveal is a thin server read) and the already-
+   refreshed App.state; one click anywhere skips straight to the dashboard.
+   Motion is CSS transitions — JS only schedules class flips + count-ups. */
+
+let wrCancels = [];
+
+function wrLater(fn, ms) {
+  const id = setTimeout(fn, ms);
+  wrCancels.push(() => clearTimeout(id));
+}
+
+function closeWeekReveal() {
+  for (const cancel of wrCancels) cancel();
+  wrCancels = [];
+  const ov = $("#week-reveal");
+  ov.classList.add("hidden");
+  ov.innerHTML = "";
+}
+
+// Tiny numeric count-up (the entrance motion itself is CSS).
+function wrCountUp(node, to, ms) {
+  if (to <= 0) { node.textContent = String(to); return; }
+  const steps = Math.max(1, Math.min(to, Math.round(ms / 40)));
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    node.textContent = String(Math.round((to * i) / steps));
+    if (i >= steps) clearInterval(iv);
+  }, ms / steps);
+  wrCancels.push(() => clearInterval(iv));
+}
+
+// Returns false when the week holds nothing to stage (no own played
+// fixture), so callers fall back to the classic report modal.
+function startWeekReveal(rep) {
+  const wr = rep.week_reveal;
+  const myId = App.state?.user_team?.id;
+  const f = wr && wr.fixture_id ? rep.fixtures.find((x) => x.id === wr.fixture_id) : null;
+  if (!f || !myId) return false;
+  closeWeekReveal(); // reset any prior run
+  const ov = $("#week-reveal");
+  ov.onclick = closeWeekReveal; // one click anywhere = skip to dashboard
+  const wrap = el("div", "wr-wrap");
+  ov.appendChild(wrap);
+
+  const mineIsA = f.team_a === myId;
+  const myName = mineIsA ? f.team_a_name : f.team_b_name;
+  const oppName = mineIsA ? f.team_b_name : f.team_a_name;
+  const won = f.winner_id === myId;
+
+  // Stage 1 — your result, map by map.
+  const s1 = el("div", "wr-stage");
+  s1.appendChild(el("div", "wr-kicker",
+    `${esc(stageLabel(f.stage))} · Season ${rep.season} · Week ${rep.week}`));
+  s1.appendChild(el("div", "wr-vs",
+    `${esc(myName)} <span class="wr-dim">vs</span> ${esc(oppName)}`));
+  const maps = el("div", "wr-maps");
+  s1.appendChild(maps);
+  const rows = [];
+  for (const r of f.results) {
+    const mine = mineIsA ? r.score_a : r.score_b;
+    const theirs = mineIsA ? r.score_b : r.score_a;
+    const row = el("div", "wr-map",
+      `<span>${esc(r.map_id)}</span>` +
+      `<span class="mono"><b class="wr-n1">0</b>–<b class="wr-n2">0</b></span>`);
+    maps.appendChild(row);
+    rows.push({ row, mine, theirs });
+  }
+  const myMaps = mineIsA ? f.map_score[0] : f.map_score[1];
+  const oppMaps = mineIsA ? f.map_score[1] : f.map_score[0];
+  const verdict = el("div", `wr-verdict ${won ? "good" : "bad"}`,
+    (won ? "Victory" : "Defeat") + (f.best_of > 1 ? ` ${myMaps}–${oppMaps}` : ""));
+  s1.appendChild(verdict);
+  wrap.appendChild(s1);
+
+  // Stage timings: stage 1 in, then one map row (with count-up) at a time,
+  // then the verdict, then the later stages.
+  wrLater(() => s1.classList.add("on"), 60);
+  rows.forEach((m, i) => {
+    wrLater(() => {
+      m.row.classList.add("on");
+      wrCountUp(m.row.querySelector(".wr-n1"), m.mine, 650);
+      wrCountUp(m.row.querySelector(".wr-n2"), m.theirs, 650);
+    }, 550 + i * 950);
+  });
+  let t = 550 + rows.length * 950;
+  wrLater(() => verdict.classList.add("on"), t);
+  t += 1000;
+
+  // Stage 2 — standings movement (regular season only; prev is unknown
+  // right after a server restart, so it degrades to just the position).
+  const st = wr.standings;
+  if (st) {
+    const s2 = el("div", "wr-stage");
+    s2.appendChild(el("div", "wr-kicker", "League position"));
+    let moveHtml;
+    if (st.prev && st.prev !== st.now) {
+      const up = st.now < st.prev;
+      moveHtml = `${esc(ordinal(st.prev))} <span class="${up ? "up" : "down"}">` +
+        `${up ? "▲" : "▼"} ${esc(ordinal(st.now))}</span> of ${st.of}`;
+    } else {
+      moveHtml = `${st.prev ? "Holding " : ""}${esc(ordinal(st.now))} of ${st.of}`;
+    }
+    s2.appendChild(el("div", "wr-move", moveHtml));
+    wrap.appendChild(s2);
+    wrLater(() => s2.classList.add("on"), t);
+    t += 1000;
+  }
+
+  // Stage 3 — decisions settled (from the refreshed dashboard state).
+  const ledger = App.state?.decision_ledger || [];
+  if (ledger.length) {
+    const s3 = el("div", "wr-stage");
+    s3.appendChild(el("div", "wr-kicker", "Decisions settled"));
+    const list = el("div", "es-obj wr-ledger");
+    const vcls = { paid_off: "good", backfired: "bad", neutral: "" };
+    const vlab = { paid_off: "paid off", backfired: "backfired", neutral: "neutral" };
+    for (const r of ledger.slice(0, 3)) {
+      list.appendChild(el("div", "es-obj-row",
+        `<span class="pill obj ${vcls[r.verdict] ?? ""}">${esc(vlab[r.verdict] || r.verdict)}</span> ` +
+        `<span>${esc(r.text)}</span>`));
+    }
+    s3.appendChild(list);
+    wrap.appendChild(s3);
+    wrLater(() => s3.classList.add("on"), t);
+    t += 1000;
+  }
+
+  // Final — continue to the dashboard, or open the classic full report.
+  const fin = el("div", "wr-stage wr-actions");
+  const cont = el("button", "btn btn-primary", "Continue");
+  cont.onclick = closeWeekReveal; // the overlay click would do it anyway
+  const full = el("button", "btn", "Full report");
+  full.onclick = (e) => {
+    e.stopPropagation();
+    closeWeekReveal();
+    showReport(rep);
+  };
+  fin.appendChild(cont);
+  fin.appendChild(full);
+  wrap.appendChild(fin);
+  wrLater(() => fin.classList.add("on"), t);
+
+  const hint = el("div", "wr-stage wr-skip", "click anywhere to skip");
+  wrap.appendChild(hint);
+  wrLater(() => hint.classList.add("on"), 1400);
+
+  ov.classList.remove("hidden");
+  return true;
 }
 
 function showReport(rep) {

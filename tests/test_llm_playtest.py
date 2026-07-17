@@ -34,6 +34,13 @@ def test_llm_playtest_captures_contract_trace_and_artifacts(tmp_path, game_data)
     assert result.action_counts["advance"] == 1
     assert result.traces[-1]["advanced"]
     assert result.critique.startswith("The action contract")
+    # The summary artifact carries the decision-legibility section: every
+    # env-stepped action lands in action_log, so its census matches the
+    # trace counts and the score stays a bounded ratio.
+    leg = result.playtest_summary["decision_legibility"]
+    assert leg["action_counts"] == result.action_counts
+    assert 0.0 <= leg["legibility_score"] <= 1.0
+    assert leg["total_decisions"] == leg["settled_with_outcome"] + leg["unsettled"]
     paths = write_artifacts(result, tmp_path)
     assert paths["summary"].exists() and paths["critique"].read_text().startswith("The action")
     assert len(paths["traces"].read_text().splitlines()) == result.decisions

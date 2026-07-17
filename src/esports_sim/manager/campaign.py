@@ -36,8 +36,10 @@ from esports_sim.manager import (
     narrative,
     preparation,
     relationships,
+    rival_managers,
     role_fit,
     rivalries,
+    scenarios,
     social,
     sponsors,
     staff,
@@ -84,6 +86,7 @@ from esports_sim.manager.state import (
     MapResult,
     MatchReview,
     PlayerLineSnap,
+    ReviewCalls,
     PlayerSeasonStats,
     StatSnap,
     TeamMapStats,
@@ -172,6 +175,7 @@ def new_campaign(
     mode: str = "sandbox",
     manager_name: str = "",
     career_offer=None,
+    scenario: str | None = None,
 ) -> GameState:
     """Build season 1. With a roster pack, the pack's teams/players replace
     the fictional starters and its world block sets the league shape;
@@ -180,7 +184,17 @@ def new_campaign(
     `mode` picks the game: "sandbox" (classic — no contracts, never
     fired) or "legacy" (career offers, board goals, dismissal;
     manager/career.py). `career_offer` carries the accepted CareerOffer
-    in legacy mode so the seat's contract matches what the lobby showed."""
+    in legacy mode so the seat's contract matches what the lobby showed.
+
+    `scenario` (sandbox-only, default None == the classic start) applies
+    one opt-in preset from manager/scenarios.py to the USER'S org —
+    deterministic, hash-based, no rng stream consumed — so the same
+    seed + scenario always builds the same world."""
+    if scenario is not None:
+        if scenario not in scenarios.SCENARIOS:
+            raise ValueError(f"unknown scenario '{scenario}'")
+        if mode != "sandbox":
+            raise ValueError("scenario starts are a sandbox-mode feature")
     rng = RngTree(seed).derive("campaign", "gen")
 
     if pack is not None:
@@ -308,6 +322,14 @@ def new_campaign(
     social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
     academy.seed_affiliates(gs)
     culture.ensure_leadership(gs)
+    # Every AI tier-1 org opens with a named manager persona (blake2 of
+    # stable ids, no rng draw). Founding managers just exist — no news.
+    rival_managers.ensure_personas(gs, chronicle_new=False)
+    # Scenario presets mutate the user's org only, BEFORE world ranks and
+    # the season-start CA/dev snapshots so both reflect the scenario, and
+    # AFTER contract/social seeding so wage bloat multiplies real deals.
+    if scenario is not None:
+        scenarios.apply(gs, scenario)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)
@@ -377,6 +399,27 @@ def default_five(gs: GameState, team_id: str) -> list[str]:
     if len(roster) <= market.ROSTER_SIZE:
         return roster
     return _resolve_five(gs, team_id, gs.teams[team_id].lineup_ids)
+
+
+def suggested_five(gs: GameState, team_id: str) -> list[str]:
+    """A read-only 'best available five' by quality + current form/confidence
+    — the SAME read the dashboard's suggested-lineup card shows (the web
+    serializer delegates here), shared so the match review can record what
+    the pre-match suggestion was against what actually dressed. Rosters of
+    five or fewer have nothing to pick: everyone plays."""
+    roster = list(gs.teams[team_id].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return sorted(roster)
+    scored = []
+    for pid in sorted(roster):
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        q = market.player_quality(p)
+        score = q + (p.form - 50.0) * 0.05 + (p.confidence - 50.0) * 0.05
+        scored.append((-score, pid))
+    scored.sort()
+    return [pid for _, pid in scored[: market.ROSTER_SIZE]]
 
 
 def dressed_for(
@@ -566,7 +609,7 @@ def advance_week(
     # bench treatment below: with per-map overrides a rotated-in player is
     # NOT benched even though they sit outside the default five.
     week_dressed: dict[str, set[str]] = {}
-    _book_ai_fixture_plans(gs, week_fixtures)
+    _book_ai_fixture_plans(gs, week_fixtures, tree)
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f,
@@ -1267,6 +1310,12 @@ def advance_week(
                 career.dismissal_inbox_item(gs, mid, gs.season, gs.week)
             )
 
+    # 7b. Rival-manager personas reconcile with the week's career moves:
+    # an org a human just vacated (mid-season sack) appoints a named AI
+    # manager; an org a human took over drops its persona. Idempotent and
+    # rng-free — a normal week is an exact no-op.
+    rival_managers.ensure_personas(gs)
+
     # 8. Telemetry: the post-tick org feature snapshot per human seat —
     # the state half of the RL episode stream. After dismissals, and
     # before the week counter rolls so snap N pairs with week N's actions.
@@ -1560,12 +1609,23 @@ _PLAN_DIALS = (
 )
 
 # AI fixture plans are deliberately narrower than a human's full control
-# panel: one counter dial, one standout to target, and at most one freshness
-# substitution. They are campaign-layer tuning, never bare-engine inputs.
+# panel: one counter dial stepped a bounded delta off the club's OWN season
+# identity, one standout picked from PUBLIC season stats, and at most one
+# freshness substitution. They are campaign-layer tuning, never bare-engine
+# inputs. The opponent-specific read rolls on the dedicated "ai_plans" rng
+# stream (better coaches prep more often); the freshness rotation is a pure
+# read so fatigue management never depends on a dice roll.
 AI_COUNTER_MIN_DEVIATION = 8.0
-AI_COUNTER_LOW = 40.0
-AI_COUNTER_HIGH = 60.0
-AI_FOCUS_QUALITY_GAP = 4.0
+AI_COUNTER_DELTA_BASE = 5.0  # dial step with a neutral coaching chair
+AI_COUNTER_DELTA_COACH = 5.0  # extra step earned by coach adaptability
+AI_COUNTER_MAX_DELTA = 10.0  # hard bound: a plan tweaks, never rebuilds
+AI_PLAN_CHANCE_BASE = 0.5  # odds an average coach preps a read this week
+AI_PLAN_CHANCE_COACH = 0.3  # scaled by the coach's overall deviation
+AI_PLAN_CHANCE_MIN = 0.2
+AI_PLAN_CHANCE_MAX = 0.85
+AI_FOCUS_MIN_MAPS = 3  # public sample floor per player (matches leaders)
+AI_FOCUS_MIN_BOOK = 3  # qualified opponents before the average means much
+AI_FOCUS_RATING_GAP = 0.10  # target must clear the public roster average
 AI_BENCH_STAMINA_WEIGHT = 0.20
 AI_BENCH_ROTATION_EDGE = 1.5
 
@@ -1594,12 +1654,80 @@ def _ai_match_lineup(gs: GameState, tid: str, fixture: Fixture) -> list[str]:
     return [incoming if pid == outgoing else pid for pid in starters]
 
 
-def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
+def _ai_plan_chance(gs: GameState, tid: str) -> float:
+    """How often this org preps an opponent-specific read. Anchored at a
+    coin flip for an average chair and scaled by the coach's overall — a
+    vacant chair preps at the floor. Bounded so no org preps always or
+    never; the actual roll lives on the dedicated "ai_plans" stream."""
+    coach = gs.staff_by.get(tid, {}).get("coach")
+    dev = 0.0 if coach is None else (staff_effects.overall(coach) - 50.0) / 50.0
+    chance = AI_PLAN_CHANCE_BASE + AI_PLAN_CHANCE_COACH * dev
+    return max(AI_PLAN_CHANCE_MIN, min(AI_PLAN_CHANCE_MAX, chance))
+
+
+def _ai_counter_override(gs: GameState, tid: str, opp: str) -> tuple[str, float] | None:
+    """Bounded counter read: answer the opponent's most extreme public dial
+    by stepping the club's OWN identity a small, coach-scaled delta in the
+    countering direction. Never a wholesale rebuild (the step is capped at
+    ``AI_COUNTER_MAX_DELTA``), and only booked when the step actually lands
+    on the countering side of neutral — declaring a counter you cannot
+    reach would pay the matching-pole malus in ``counter_strat_edge``."""
+    opponent_tactics = gs.teams[opp].tactics
+    dial = max(
+        tactics_fit.COUNTER_DIALS,
+        key=lambda key: (abs(getattr(opponent_tactics, key) - 50.0), key),
+    )
+    opponent_value = float(getattr(opponent_tactics, dial))
+    if abs(opponent_value - 50.0) < AI_COUNTER_MIN_DEVIATION:
+        return None
+    coach = gs.staff_by.get(tid, {}).get("coach")
+    adapt_dev = 0.0 if coach is None else max(
+        0.0, (staff_effects.attr(coach, "adaptability") - 50.0) / 50.0
+    )
+    delta = min(
+        AI_COUNTER_MAX_DELTA,
+        AI_COUNTER_DELTA_BASE + AI_COUNTER_DELTA_COACH * adapt_dev,
+    )
+    identity = float(getattr(gs.teams[tid].tactics, dial))
+    direction = -1.0 if opponent_value > 50.0 else 1.0
+    value = round(min(100.0, max(0.0, identity + direction * delta)), 1)
+    if (value - 50.0) * (opponent_value - 50.0) >= 0.0:
+        return None  # our book leans the same way; the small step can't cross
+    return dial, value
+
+
+def _ai_focus_target(gs: GameState, opp: str) -> str | None:
+    """Opponent standout chosen from PUBLIC box-score aggregates only — the
+    same season stats the league leaders and matchday danger-men read. AI
+    orgs never peek at fogged attributes: no public book (early season, or
+    a bench-heavy opponent) means no target, exactly like a human reading
+    the stats hub."""
+    roster = set(gs.teams[opp].player_ids)
+    qualified = [
+        (st.rating, pid)
+        for pid, st in sorted(gs.player_stats.items())
+        if pid in roster and st.maps >= AI_FOCUS_MIN_MAPS
+    ]
+    if len(qualified) < AI_FOCUS_MIN_BOOK:
+        return None
+    rating, target = max(qualified)
+    average = sum(r for r, _ in qualified) / len(qualified)
+    if rating < average + AI_FOCUS_RATING_GAP:
+        return None
+    return target
+
+
+def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture], tree: RngTree) -> None:
     """Book AI plans into the same GamePlan/map_lineups seams humans use.
 
-    This is a pure read of saved tactical identities, roster quality, and
-    stamina. Sorted fixtures/ids make the result byte-identical for a save;
-    ``_fixture_plans`` resolves both sides simultaneously at match time.
+    The freshness rotation is a pure read of roster quality and stamina.
+    The opponent-specific read (counter dial + focus target) rolls once per
+    side on the dedicated "ai_plans" stream — better coaches prep more
+    often — and is bounded to a small identity-anchored dial step plus a
+    standout picked from PUBLIC season stats (never fogged attributes).
+    Per-side derived streams and sorted fixtures/ids make the result
+    byte-identical for a save; ``_fixture_plans`` resolves both sides
+    simultaneously at match time.
     """
     for fixture in sorted(fixtures, key=lambda f: f.id):
         if fixture.played:
@@ -1607,32 +1735,19 @@ def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
         for tid, opp in ((fixture.team_a, fixture.team_b), (fixture.team_b, fixture.team_a)):
             if gs.is_human(tid) or tid in gs.game_plans_by:
                 continue
-            opponent_tactics = gs.teams[opp].tactics
-            dial = max(
-                tactics_fit.COUNTER_DIALS,
-                key=lambda key: (abs(getattr(opponent_tactics, key) - 50.0), key),
+            rng = tree.derive(
+                "season", gs.season, "week", gs.week, "ai_plans", fixture.id, tid
             )
-            overrides: dict[str, float] = {}
-            opponent_value = float(getattr(opponent_tactics, dial))
-            if abs(opponent_value - 50.0) >= AI_COUNTER_MIN_DEVIATION:
-                overrides[dial] = AI_COUNTER_LOW if opponent_value > 50.0 else AI_COUNTER_HIGH
-
-            opponent_roster = sorted(gs.teams[opp].player_ids)
+            counter = None
             target = None
-            if opponent_roster:
-                target = max(
-                    opponent_roster,
-                    key=lambda pid: (market.player_quality(gs.players[pid]), pid),
-                )
-                average = sum(
-                    market.player_quality(gs.players[pid]) for pid in opponent_roster
-                ) / len(opponent_roster)
-                if market.player_quality(gs.players[target]) < average + AI_FOCUS_QUALITY_GAP:
-                    target = None
+            if rng.random() < _ai_plan_chance(gs, tid):
+                counter = _ai_counter_override(gs, tid, opp)
+                target = _ai_focus_target(gs, opp)
 
             starters = _ai_match_lineup(gs, tid, fixture)
-            if not overrides and target is None and not starters:
+            if counter is None and target is None and not starters:
                 continue
+            overrides = {counter[0]: counter[1]} if counter is not None else {}
             gs.game_plans_by[tid] = GamePlan(
                 fixture_id=fixture.id,
                 focus_target=target,
@@ -1640,8 +1755,8 @@ def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
                 **overrides,
             )
             details = []
-            if overrides:
-                details.append(f"counter-plan on {dial.replace('_', ' ')}")
+            if counter is not None:
+                details.append(f"counter-plan on {counter[0].replace('_', ' ')}")
             if target is not None:
                 details.append(f"targeting {gs.players[target].handle}")
             if starters:
@@ -1777,7 +1892,7 @@ def _talk_recipients(gs: GameState, tid: str, f: Fixture) -> list[str]:
     )
 
 
-def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
+def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> float:
     """A pre-match team talk nudges the dressed five's confidence, modulated
     by personality and bounded to [5, 95] — the same range the rest of the
     campaign clamps confidence to. Deterministic (personality is a pure
@@ -1787,9 +1902,15 @@ def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
     - fire_up:  a lift, bigger for ambitious players (they ride motivation).
     - reassure: a lift, bigger for fragile (low-resilience) players.
     - focus:    settle everyone toward a steady 55 (calms tilt AND hubris).
+
+    Returns the mean confidence delta actually applied (post-clamp), so the
+    match review can attribute the talk's real effect — a pure by-product,
+    no extra state is read or mutated.
     """
     from esports_sim.manager import personality
 
+    applied = 0.0
+    nudged = 0
     for pid in five:
         p = gs.players.get(pid)
         if p is None:
@@ -1800,7 +1921,11 @@ def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
             delta = 3.0 * (1.0 - 0.4 * personality.dev(p, "resilience"))
         else:  # fire_up
             delta = 5.0 * (1.0 + 0.4 * personality.dev(p, "ambition"))
+        before = p.confidence
         p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
+        applied += p.confidence - before
+        nudged += 1
+    return round(applied / nudged, 2) if nudged else 0.0
 
 
 def _between_map_plan(
@@ -1908,6 +2033,53 @@ def _sim_fixture(
                 f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
             )
 
+    # "Your calls" capture for the match review: the pre-match facts the
+    # review attributes to the manager, recorded now because the plan is
+    # deleted the moment this fixture sims. Human sides only (reviews exist
+    # only for them) — pure reads, no rng, so AI/hands-off paths are
+    # untouched. The suggested five is read BEFORE the team talk lands
+    # (confidence feeds the suggestion; the manager saw the pre-talk read).
+    calls_by: dict[str, ReviewCalls] = {}
+    suggested_by: dict[str, list[str]] = {}
+    dressed_union: dict[str, set[str]] = {}
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        opp = f.team_b if tid == f.team_a else f.team_a
+        plan = gs.game_plans_by.get(tid)
+        if plan is not None and plan.fixture_id != f.id:
+            plan = None  # stale plan for another fixture: not this match's call
+        dials = (
+            {
+                k: float(getattr(plan, k))
+                for k in _PLAN_DIALS
+                if k != "site_focus" and getattr(plan, k) is not None
+            }
+            if plan is not None
+            else {}
+        )
+        calls_by[tid] = ReviewCalls(
+            plan_set=plan is not None,
+            dials=dials,
+            base_dials={
+                k: float(getattr(gs.teams[tid].tactics, k)) for k in sorted(dials)
+            },
+            site_focus=(plan.site_focus or "") if plan is not None else "",
+            focus_target=(
+                plan.focus_target
+                if plan is not None
+                and plan.focus_target in gs.teams[opp].player_ids
+                else ""
+            ),
+            team_talk=(plan.team_talk or "") if plan is not None else "",
+            lineup_override=tid in plan_lineups,
+            prep_edge=(
+                round(plans[tid].prep_edge, 3) if plan is not None else 0.0
+            ),
+        )
+        suggested_by[tid] = suggested_five(gs, tid)
+        dressed_union[tid] = set()
+
     # Pre-match team talks land on the players who will ACTUALLY dress, resolved
     # via dressed_for against the now-finalised map_lineups (explicit per-map
     # overrides included). So a rotation gives the talk to the rotated-in five,
@@ -1920,7 +2092,11 @@ def _sim_fixture(
         if plan is None or plan.fixture_id != f.id:
             continue
         if plan.team_talk in TEAM_TALK_APPROACHES:
-            _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
+            delta = _apply_team_talk(
+                gs, plan.team_talk, _talk_recipients(gs, tid, f)
+            )
+            if tid in calls_by:
+                calls_by[tid].talk_avg_delta = delta
 
     # Per-map (box score, event log, dressed roster) bundles, kept for the
     # post-series match-review synthesis while the full stats + events are
@@ -1982,6 +2158,8 @@ def _sim_fixture(
             f.team_a: dressed_for(gs, f.team_a, f, map_id),
             f.team_b: dressed_for(gs, f.team_b, f, map_id),
         }
+        for tid in dressed_union:
+            dressed_union[tid].update(dressed[tid])
         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
         res = simulate_match_result(
             map_gd, f.team_a, f.team_b, map_id, seed, plans=map_plans or None
@@ -2046,10 +2224,33 @@ def _sim_fixture(
     # side while the full box score + event log are still in hand. Only the
     # latest per team is kept on GameState (the dashboard card reads it); the
     # durable corpus is appended on disk at the web layer, off the tick.
+    played_maps = [r.map_id for r in f.results]
     for tid in (f.team_a, f.team_b):
         if not gs.is_human(tid):
             continue
         opp = f.team_b if tid == f.team_a else f.team_a
+        calls = calls_by.get(tid)
+        if calls is not None:
+            # Lineup call: what dressed (across the series) vs what the
+            # pre-match suggestion read said. Both sides empty = followed it.
+            suggested = set(suggested_by.get(tid, []))
+            dressed_set = dressed_union.get(tid, set())
+            if suggested and dressed_set:
+                calls.picked = sorted(dressed_set - suggested)
+                calls.benched = sorted(suggested - dressed_set)
+            # Prep only pays with a plan ("no plan, no payoff"), so the map
+            # attribution is only meaningful when one was set.
+            if calls.plan_set:
+                prepped = [
+                    m for m in f.maps
+                    if knowledge.get(gs, tid, f"playbook:{m}") > 0.0
+                ]
+                calls.prepped_maps_played = [
+                    m for m in prepped if m in played_maps
+                ]
+                calls.prepped_maps_missed = [
+                    m for m in prepped if m not in played_maps
+                ]
         gs.last_review_by[tid] = build_match_review(
             gs.season,
             f.week,
@@ -2059,6 +2260,7 @@ def _sim_fixture(
             f.best_of,
             review_bundles,
             review_weapon_class,
+            calls=calls,
         )
 
     # A plan is one match's prep: consumed when its fixture sims.
@@ -2967,6 +3169,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # inboxes generate at the end of this tick.
     board_dismissed = career.review_boards(gs)
 
+    # The AI boards hold their own reviews on the same final table: rival-
+    # manager patience follows the finish, strugglers at the bottom of the
+    # table make a change, and tenure anniversaries are chronicled. Runs
+    # BEFORE the standings reset below; rng-free (manager/rival_managers.py).
+    for line in rival_managers.offseason_tick(gs):
+        report.notes.append(line)
+
     # The big offseason balance patch — rolled BEFORE the per-agent splits
     # reset below (patch content reads this season's pick rates).
     note = meta.roll_patch(
@@ -3121,6 +3330,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(
             "The board has made a change - accept a new post to continue."
         )
+    # An org a human just vacated appoints a named AI manager for the new
+    # season (tenure starts now); orgs humans took over drop their persona.
+    rival_managers.ensure_personas(gs)
     # The offseason tick's snapshot is the new season's baseline (season
     # already rolled, standings reset) — the episode boundary marker.
     telemetry.weekly_snapshots(gs)

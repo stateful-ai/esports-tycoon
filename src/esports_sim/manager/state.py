@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 30
+SCHEMA_VERSION = 32
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -457,6 +457,25 @@ def _migrate_v29_to_v30(data: dict) -> dict:
     return data
 
 
+def _migrate_v30_to_v31(data: dict) -> dict:
+    """v31 adds manager-attribution facts (`calls`) to the stored match
+    review. The field defaults to None, so an old save's reviews load as
+    reviews without attribution — the dashboard simply omits the "Your
+    calls" block until the next series is played. Pure pass-through."""
+    return data
+
+
+def _migrate_v31_to_v32(data: dict) -> dict:
+    """v32 gives every AI-run tier-1 org a persistent, named manager
+    persona (`rival_managers`). Backfilled here deterministically from
+    the save's own stable ids — blake2 of (seed, team id), no rng — so
+    the same old save always meets the same league of managers. The
+    personas are presentation/narrative only (no match modifiers)."""
+    from esports_sim.manager import rival_managers
+
+    return rival_managers.migrate_backfill(data)
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -487,6 +506,8 @@ _MIGRATIONS: dict[int, "callable"] = {
     27: _migrate_v27_to_v28,
     28: _migrate_v28_to_v29,
     29: _migrate_v29_to_v30,
+    30: _migrate_v30_to_v31,
+    31: _migrate_v31_to_v32,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -588,6 +609,33 @@ class ReviewPoint(BaseModel):
     site: str = ""  # optional A/B/C label for site-specific round context
 
 
+class ReviewCalls(BaseModel):
+    """Manager-attribution facts for one series, captured at sim time while
+    the consumed game plan / prep inputs are still in hand (the plan is
+    deleted right after the fixture sims, so these facts exist nowhere else).
+    A pure RECORD of what the manager called and what the campaign resolved
+    it to — no engine number is duplicated here; the web serializer turns the
+    raw dial values into a tactics-fit impact live via sim/tactics_fit (the
+    same shared source of truth the tactics screen uses)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    plan_set: bool = False  # a game plan was consumed for this fixture
+    dials: dict[str, float] = Field(default_factory=dict)  # dial -> planned value
+    base_dials: dict[str, float] = Field(default_factory=dict)  # season identity at sim time
+    site_focus: str = ""  # "" = no site call
+    focus_target: str = ""  # validated opponent pid ("" if none / dropped)
+    team_talk: str = ""  # fire_up | reassure | focus | ""
+    talk_avg_delta: float = 0.0  # mean confidence nudge actually applied
+    lineup_override: bool = False  # the plan's one-match five was applied
+    picked: list[str] = Field(default_factory=list)  # dressed over the suggestion
+    benched: list[str] = Field(default_factory=list)  # suggested but sat
+    picked_ratings: dict[str, float] = Field(default_factory=dict)  # pid -> series rating
+    prep_edge: float = 0.0  # prep edge handed to the engine (0 without a plan)
+    prepped_maps_played: list[str] = Field(default_factory=list)  # played maps with a playbook
+    prepped_maps_missed: list[str] = Field(default_factory=list)  # scheduled+prepped, never played
+
+
 class MatchReview(BaseModel):
     """A synthesized 'why you won/lost' for a team's most recent series.
     Computed at sim time from the full box score + event log (both transient),
@@ -612,6 +660,8 @@ class MatchReview(BaseModel):
     contested: bool = True  # False for a forfeit / walkover (no breakdown)
     working: list[ReviewPoint] = Field(default_factory=list)
     breaking: list[ReviewPoint] = Field(default_factory=list)
+    # Manager attribution ("Your calls") — None on old saves and walkovers.
+    calls: "ReviewCalls | None" = None
 
 
 class TeamRecord(BaseModel):
@@ -1147,6 +1197,26 @@ class ManagerSeat(BaseModel):
     last_team_id: str = ""
 
 
+class RivalManager(BaseModel):
+    """A named, persistent manager persona for an AI-run tier-1 org — the
+    human antagonists a legacy career is measured against. Identity (name,
+    personality axes, one-word label) is a pure function of the persona id
+    (manager/rival_managers.py); only the employment facts persist here.
+    Presentation/narrative layer ONLY: personas never touch the match
+    engine. Hirings/firings/tenure milestones are chronicled append-only."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str  # "rm_" + blake2 of (seed, team_id, stint) — stable, rng-free
+    name: str
+    team_id: str
+    tenure_start: int  # first season in charge
+    stint: int = 0  # how many managers this org had before (name/id salt)
+    # Board-style patience (0-100): moves at the offseason review with the
+    # final table; hitting the floor in the bottom of the table is the sack.
+    patience: float = 70.0
+
+
 class CareerOffer(BaseModel):
     """One org courting a manager — at new game (legacy mode start) or on
     the job market after a dismissal. Deterministic from (seed, season,
@@ -1564,6 +1634,11 @@ class GameState(BaseModel):
     # seed + team id; only consequential coaching changes need persistence.
     ai_gm_coach_changes_by: dict[str, int] = Field(default_factory=dict)
     ai_gm_last_action_week_by: dict[str, int] = Field(default_factory=dict)
+
+    # Named manager personas for AI-run tier-1 orgs, keyed by team id
+    # (manager/rival_managers.py). Human-run orgs never hold an entry —
+    # their ManagerSeat is the manager. Narrative layer only.
+    rival_managers: dict[str, RivalManager] = Field(default_factory=dict)
 
     # Per-map dressed lineups. Key = "{team_id}|{fixture_id}|{map_id}" -> the
     # five player ids that dress for that map. Absent -> the team's default

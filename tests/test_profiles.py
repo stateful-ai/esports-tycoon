@@ -53,6 +53,7 @@ PLAYER_TOP = {
     "splits",
     "charts",
     "relationships",
+    "arcs",
     "scouting",
     "career",
     "career_totals",
@@ -151,11 +152,15 @@ WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
 ATTR_ITEM = {"key", "label", "value", "band", "description"}
 AGENT_ITEM = {"agent_id", "name", "icon", "mastery", "role"}
 REL_ITEM = {"pid", "handle", "kind", "arc", "strength"}
+ARC_ITEM = {"kind", "source", "pids", "handles", "text"}
 
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
     "identity", "tendencies", "rivals", "knowledge", "chemistry",
-    "dev_progress", "strength", "agent_pool", "gm",
+    "dev_progress", "strength", "agent_pool", "gm", "arcs", "manager",
+}
+MANAGER_BLOCK = {
+    "name", "human", "identity", "since", "seasons", "honours", "heat",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -237,6 +242,8 @@ def _assert_player_contract(prof: dict) -> None:
         assert set(item) == WEEKLY_ITEM
     for item in prof["relationships"]:
         assert set(item) == REL_ITEM
+    for item in prof["arcs"]:
+        assert set(item) == ARC_ITEM
     for tr in prof["traits"]:
         assert set(tr) == {"name", "desc", "revealed"}
 
@@ -393,6 +400,10 @@ def _assert_team_contract(prof: dict) -> None:
         assert set(p) == TEAM_PLAYER_ITEM
     for f in prof["form"]:
         assert set(f) == FORM_ITEM
+    for a in prof["arcs"]:
+        assert set(a) == ARC_ITEM
+    if prof["manager"] is not None:
+        assert set(prof["manager"]) == MANAGER_BLOCK
     assert isinstance(prof["honors"], list)
     assert all(isinstance(x, str) for x in prof["honors"])
 
@@ -414,6 +425,10 @@ def test_user_team_profile(env) -> None:
     # Players are ordered best-first (acs is untracked -> rating fallback).
     assert prof["players"], "user team should list its roster"
     assert prof["gm"] is None
+    # The user's own manager block is the human seat — no grudge with self.
+    assert prof["manager"] is not None
+    assert prof["manager"]["human"] is True
+    assert prof["manager"]["heat"] is None
 
 
 def test_rival_team_profile(env) -> None:
@@ -427,6 +442,11 @@ def test_rival_team_profile(env) -> None:
     assert set(prof["gm"]) == {
         "id", "label", "description", "behavior", "coach_changes",
     }
+    # Every AI tier-1 org has a named, persistent rival manager persona.
+    assert prof["manager"] is not None
+    assert prof["manager"]["human"] is False
+    assert prof["manager"]["name"]
+    assert prof["manager"]["identity"]
 
 
 def test_tier2_team_profile(env) -> None:
@@ -438,6 +458,7 @@ def test_tier2_team_profile(env) -> None:
     assert prof["record"]["wins"] + prof["record"]["losses"] >= 1
     assert prof["maps"], "tier-2 team is simmed and should have map records"
     assert prof["gm"] is None
+    assert prof["manager"] is None  # no named manager layer in tier 2
 
 
 # ---------------------------------------------------------------------------

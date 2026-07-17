@@ -248,6 +248,11 @@ def test_playtest_summary_multiseason_shape_and_determinism():
     assert pt["top_career_arcs"][0]["player_id"] == "p1"
     assert pt["top_career_arcs"][0]["honours"] == 2
     assert pt["parity"]["distinct_champions"] == 2
+    # No recorded human actions -> an all-zero legibility section.
+    leg = pt["decision_legibility"]
+    assert leg["total_decisions"] == 0 and leg["action_counts"] == {}
+    assert leg["settled_with_outcome"] == 0 and leg["legibility_score"] == 0.0
+    assert leg["unsettled"] == 0 and leg["unsettled_share"] == 0.0
     assert analytics.playtest_summary(gs) == analytics.playtest_summary(gs)
 
 

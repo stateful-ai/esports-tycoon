@@ -120,6 +120,16 @@ def test_per_week_and_total_bounds(season: GameState) -> None:
     assert len(campaign.inbox) <= inbox.MAX_ITEMS
 
 
+def test_hands_off_season_gets_no_decision_ledger_digest(season: GameState) -> None:
+    """The 'decisions settled' digest grades recorded HUMAN actions only
+    (manager/decision_ledger.py). A hands-off season records none, so the
+    ledger must be an exact no-op for it — the same property that keeps the
+    snowball/dynasty gates byte-identical."""
+    assert not [
+        it for it in season.inbox if it.title.startswith("Decisions settled")
+    ]
+
+
 def test_enforce_cap_drops_oldest_read_then_oldest() -> None:
     # 203 items, oldest-first. Index 1 and 4 are already read.
     items = [
@@ -436,6 +446,131 @@ def test_declining_sponsor_via_action_resolves_and_drops_future_actions(
     assert inbox.actions_for(campaign, it) == []
     assert "actions" not in inbox.to_api(it, campaign)
     assert all(i.id != it.id for _p, i in inbox._sponsor_items(campaign, season, week))
+
+
+# ---------------------------------------------------------------------------
+# (f2) leverage ranking — "This week's calls". Pending decisions are ranked
+#      by the heuristic LEVERAGE table; scores derive LIVE from current
+#      GameState (like item actions) and are never stored on the item.
+
+
+def test_leverage_table_covers_documented_decision_kinds() -> None:
+    # The heuristic table scores every pending-decision item type, including
+    # the reserved media/academy tiers (no inbox item emits them yet).
+    assert {
+        "board_warning", "retire_seat", "contract", "transfer_offer",
+        "sponsor_demand", "sponsor_offer", "media", "academy",
+        "talk", "rotation",
+    } <= set(inbox.LEVERAGE)
+
+
+def _inject_pending_calls(gs: GameState) -> dict[str, "InboxItem"]:
+    """One live decision of each classic kind: an incoming bid + an expiring
+    star contract (same player, so the contract MUST outrank the bid by the
+    table's construction) + a fresh sponsor offer. Returns items by kind."""
+    pid, rival, transfer_it = _inject_transfer(gs)
+    _slot, _brand, sponsor_it = _inject_sponsor(gs)
+    gs.players[pid].contract_weeks_left = 1  # a CONTRACT_MILESTONES week
+    board_it = next(
+        i for _p, i in inbox._board_items(gs, gs.season, gs.week)
+        if i.id == inbox._hash_id(gs.season, gs.week, "board", f"contract|{pid}")
+    )
+    news_it = InboxItem(
+        id="newsy", season=gs.season, week=gs.week, category="news",
+        title="Upset in the league", body="A rival lost.", tab="standings",
+    )
+    gs.inbox = [transfer_it, sponsor_it, board_it, news_it]
+    return {
+        "transfer_offer": transfer_it,
+        "sponsor_offer": sponsor_it,
+        "contract": board_it,
+        "news": news_it,
+    }
+
+
+def test_top_calls_rank_pending_decisions_by_leverage(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    by_kind = _inject_pending_calls(campaign)
+
+    calls = inbox.top_calls(campaign)
+
+    # Wire shape: bounded marker list of {id, kind, leverage} — the scores
+    # ride ALONGSIDE the items (to_api stays the frozen shape).
+    assert 0 < len(calls) <= inbox.TOP_CALLS
+    for c in calls:
+        assert set(c) == {"id", "kind", "leverage"}
+        assert c["kind"] in inbox.LEVERAGE
+        assert c["leverage"] >= inbox.LEVERAGE[c["kind"]]
+    # Ranked: an expiring last-week contract on the same player outranks the
+    # bid for him, which outranks a new sponsor line. News never qualifies.
+    assert [c["kind"] for c in calls] == ["contract", "transfer_offer", "sponsor_offer"]
+    assert calls[0]["id"] == by_kind["contract"].id
+    assert calls[1]["id"] == by_kind["transfer_offer"].id
+    assert calls[2]["id"] == by_kind["sponsor_offer"].id
+    scores = [c["leverage"] for c in calls]
+    assert scores == sorted(scores, reverse=True)
+    assert by_kind["news"].id not in {c["id"] for c in calls}
+
+
+def test_top_calls_derive_live_and_drop_settled_decisions(
+    campaign: GameState, game_data: GameData
+) -> None:
+    _advance(campaign, game_data, 1)
+    by_kind = _inject_pending_calls(campaign)
+    pid = campaign.transfer_offers[0].player_id
+    rival = campaign.transfer_offers[0].to_team
+    assert len(inbox.top_calls(campaign)) == 3
+
+    # Declining the bid settles it: the item stays in the feed but stops
+    # ranking on the very next read — nothing stored, nothing to clean up.
+    ok, _msg = market.respond_offer(campaign, player_id=pid, to_team=rival, accept=False)
+    assert ok
+    kinds = {c["kind"] for c in inbox.top_calls(campaign)}
+    assert "transfer_offer" not in kinds
+    assert {"contract", "sponsor_offer"} <= kinds
+
+    # Renewing the contract settles the countdown the same way.
+    campaign.players[pid].contract_weeks_left = 40
+    kinds = {c["kind"] for c in inbox.top_calls(campaign)}
+    assert kinds == {"sponsor_offer"}
+    assert inbox.top_calls(campaign)[0]["id"] == by_kind["sponsor_offer"].id
+
+
+def test_top_calls_skip_stale_soft_prompts(campaign: GameState) -> None:
+    old_talk = InboxItem(
+        id="oldtalk", season=1, week=3, category="talk",
+        title="Urgent meeting: X is at breaking point", body="b", tab="roster",
+    )
+    new_talk = InboxItem(
+        id="newtalk", season=1, week=5, category="talk",
+        title="Y could use a word", body="b", tab="roster",
+    )
+    news = InboxItem(
+        id="news", season=1, week=5, category="news",
+        title="Upset in the league", body="b", tab="standings",
+    )
+    campaign.inbox = [old_talk, new_talk, news]
+
+    calls = inbox.top_calls(campaign)
+
+    # Soft prompts only qualify from the newest week: the stale crisis nudge
+    # is skipped even though its raw score beats the fresh routine 1:1.
+    assert [c["id"] for c in calls] == ["newtalk"]
+    assert calls[0]["kind"] == "talk"
+    # And the urgent-title boost is real when the prompt IS current.
+    campaign.inbox = [
+        old_talk.model_copy(update={"week": 5}), new_talk, news,
+    ]
+    boosted = inbox.top_calls(campaign)
+    assert [c["id"] for c in boosted] == ["oldtalk", "newtalk"]
+    assert boosted[0]["leverage"] > boosted[1]["leverage"]
+
+
+def test_top_calls_deterministic(det_pair: tuple[GameState, GameState]) -> None:
+    a, b = det_pair
+    assert inbox.top_calls(a) == inbox.top_calls(b)
 
 
 # ---------------------------------------------------------------------------

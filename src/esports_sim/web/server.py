@@ -30,9 +30,11 @@ from pydantic import BaseModel
 from esports_sim.manager import (
     academy,
     analytics,
+    arcs as arcs_mod,
     career,
     chronicle,
     culture,
+    decision_ledger,
     delegation,
     development,
     economy,
@@ -49,8 +51,11 @@ from esports_sim.manager import (
     narrative,
     preparation,
     relationships,
+    rival_managers as rival_managers_mod,
     role_fit,
     rivalries as rivalries_mod,
+    scenarios as scenarios_mod,
+    sim_ahead as sim_ahead_mod,
     social,
     sponsors,
     staff as staff_mod,
@@ -80,6 +85,7 @@ from esports_sim.manager.campaign import (
     default_five,
     dressed_for,
     new_campaign,
+    suggested_five,
 )
 from esports_sim import perf
 from esports_sim.manager.state import GamePlan, GameState, PlayerSeasonStats
@@ -163,6 +169,12 @@ class _Game:
         # (team_id, fixture_id) keys already written to the on-disk match-review
         # corpus this session — skips byes / re-appends (see web.review_history).
         self.review_seen: set[tuple[str, str]] = set()
+        # Pre-tick league position per human team (captured by the advance
+        # endpoint right before the week resolves) so the report's
+        # week_reveal block can show standings movement. Session memory
+        # only, like last_report: after a restart the reveal simply omits
+        # the "from" position.
+        self.prev_positions: dict[str, dict | None] = {}
         # Save policy runtime: actions only MARK the world dirty (the full
         # GameState serializing on every click was the biggest per-action
         # cost — see /api/perf save.write); disk writes happen on the
@@ -339,6 +351,7 @@ class Lobby:
         pack_id: str | None = None,
         game_mode: str = "sandbox",
         manager_name: str = "",
+        scenario: str | None = None,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
@@ -396,8 +409,15 @@ class Lobby:
             gs = new_campaign(
                 self.gd, seed=seed, user_team_id=team_id, pack=pack,
                 mode=game_mode, manager_name=manager_name,
-                career_offer=offer,
+                career_offer=offer, scenario=scenario,
             )
+            if scenario:
+                # The scenario pick is a human decision like any other —
+                # the mutation itself is chronicled inside new_campaign.
+                telemetry.record_action(
+                    gs, "scenario_start", {"scenario": scenario},
+                    team_id=team_id, source="web",
+                )
             game = _Game(self.gd, code, gs=gs)
             game.mode = "shared" if shared else "solo"
             self.games[code] = game
@@ -1084,6 +1104,123 @@ def _review_point_view(gs: GameState, p) -> dict:
     return out
 
 
+_TALK_LABELS = {
+    "fire_up": "Fired the room up",
+    "reassure": "Reassured the room",
+    "focus": "Focused the room",
+}
+
+
+def _review_your_calls(gs: GameState, review, tier: int) -> dict | None:
+    """Serialize the review's manager-attribution block ("Your calls").
+
+    The stored `ReviewCalls` owns the raw facts (captured at sim time); this
+    turns them into display rows and computes each overridden dial's roster-fit
+    impact HERE, on the server, from the same code the engine runs
+    (sim/tactics_fit.py) — the client only renders. Gating follows the card's
+    convention: the calls themselves are tier 0 (the manager made them and the
+    outcomes are box-score-visible); the computed attribution numbers (fit
+    impact deltas, the applied prep edge) unlock with an analyst (tier >= 1).
+    None when nothing was called — the sub-block simply doesn't render."""
+    calls = review.calls
+    if calls is None:
+        return None
+    if not (calls.plan_set or calls.picked or calls.benched):
+        return None
+    team = gs.teams.get(review.team_id)
+
+    dial_rows = []
+    roster = (
+        [gs.players[pid] for pid in team.player_ids if pid in gs.players]
+        if team is not None
+        else []
+    )
+    chem = tactics_fit.chem_edge(team.chemistry) if team is not None else 0.0
+    for key in sorted(calls.dials):
+        planned = calls.dials[key]
+        base = calls.base_dials.get(
+            key, getattr(team.tactics, key) if team is not None else 50.0
+        )
+        impact = None
+        attr_ids = tactics_fit.DIAL_FIT_ATTRS.get(key)
+        if tier >= 1 and attr_ids and roster:
+            pfits = [
+                tactics_fit.player_fit(p.attr(a) for a in attr_ids)
+                for p in roster
+            ]
+            edge = tactics_fit.fit_edge(pfits)
+            hi = edge + (chem if key in tactics_fit.CHEM_GATED else 0.0)
+            imp_planned = (hi if planned > 50.0 else edge) * abs(planned - 50.0) / 50.0
+            imp_base = (hi if base > 50.0 else edge) * abs(base - 50.0) / 50.0
+            impact = round(imp_planned - imp_base, 4)
+        dial_rows.append(
+            {
+                "key": key,
+                "label": match_review_mod.DIAL_LABELS.get(key, key),
+                "planned": round(planned),
+                "base": round(base),
+                "impact_delta": impact,
+            }
+        )
+
+    target = None
+    if calls.focus_target:
+        p = gs.players.get(calls.focus_target)
+        target = {
+            "player_id": calls.focus_target,
+            "handle": p.handle if p is not None else calls.focus_target,
+        }
+
+    talk = None
+    if calls.team_talk:
+        talk = {
+            "approach": calls.team_talk,
+            "label": _TALK_LABELS.get(calls.team_talk, calls.team_talk),
+            "avg_delta": calls.talk_avg_delta,
+        }
+
+    def _prow(pid: str) -> dict:
+        p = gs.players.get(pid)
+        return {"player_id": pid, "handle": p.handle if p is not None else pid}
+
+    lineup = None
+    if calls.picked or calls.benched or calls.lineup_override:
+        lineup = {
+            "override": calls.lineup_override,
+            "followed": not calls.picked and not calls.benched,
+            "picked": [
+                {**_prow(pid), "rating": calls.picked_ratings.get(pid)}
+                for pid in calls.picked
+            ],
+            "benched": [_prow(pid) for pid in calls.benched],
+        }
+
+    def _map_name(mid: str) -> str:
+        return S.gd.maps[mid].display_name if mid in S.gd.maps else mid
+
+    prep = None
+    if calls.plan_set:
+        prep = {
+            "edge": (
+                round(min(calls.prep_edge, C.PREP_EDGE_CAP), 2)
+                if tier >= 1
+                else None
+            ),
+            "maps_played": [_map_name(m) for m in calls.prepped_maps_played],
+            "maps_missed": [_map_name(m) for m in calls.prepped_maps_missed],
+        }
+
+    return {
+        "plan_set": calls.plan_set,
+        "dials": dial_rows,
+        "site_focus": calls.site_focus or None,
+        "focus_target": target,
+        "team_talk": talk,
+        "lineup": lineup,
+        "prep": prep,
+    }
+
+
 def _last_match_review(
     gs: GameState, event_logs: dict[str, list[list[Event]]] | None = None
 ) -> dict | None:
@@ -1119,6 +1256,7 @@ def _last_match_review(
         "tier": tier,
         "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
         "momentum_beat": None,
+        "your_calls": _review_your_calls(gs, review, tier),
     }
     logs = (event_logs or {}).get(review.fixture_id, [])
     if logs:
@@ -1281,6 +1419,7 @@ def lobby() -> dict:
         "in_game": False,
         "teams": _team_options(preview, taken=set()),
         "packs": _pack_options(),
+        "scenarios": scenarios_mod.options(),
         "worlds": _LOBBY.worlds_for(_current_sid()),
     }
 
@@ -1461,16 +1600,25 @@ class NewGameBody(BaseModel):
     pack: str | None = None  # roster pack id; None -> generated world
     game_mode: str = "sandbox"  # "sandbox" | "legacy"
     manager_name: str = ""
+    # Optional sandbox scenario preset id (manager/scenarios.py);
+    # None/"" -> the classic start.
+    scenario: str | None = None
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
     if body.game_mode not in ("sandbox", "legacy"):
         raise HTTPException(422, "game_mode must be 'sandbox' or 'legacy'")
+    scenario = body.scenario or None
+    if scenario is not None:
+        if scenario not in scenarios_mod.SCENARIOS:
+            raise HTTPException(422, f"unknown scenario '{scenario}'")
+        if body.game_mode != "sandbox":
+            raise HTTPException(422, "scenario starts are sandbox-only")
     game = _LOBBY.create_game(
         _current_sid(), body.team_id, body.seed, body.shared,
         pack_id=body.pack, game_mode=body.game_mode,
-        manager_name=body.manager_name,
+        manager_name=body.manager_name, scenario=scenario,
     )
     return {
         "ok": True,
@@ -1722,41 +1870,46 @@ def _roster_movers(gs: GameState, tid: str, n: int = 4) -> list[dict]:
     return moves[:n]
 
 
+def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
+    """The acting team's upcoming fixture enriched with the pre-match reads:
+    this-season head-to-head (attached only when they've met — silence beats
+    a "0-0" line), the grounded prose preview, and the map pool + suggested
+    veto (which hides itself until both sides have prior maps). Shared by
+    GET /api/state and GET /api/matchday so the two surfaces can never
+    drift. Returns (view, opponent_id); (None, None) without a fixture."""
+    fixture = gs.team_fixture(gs.acting_team_id)
+    if fixture is None:
+        return None, None
+    view = _fixture_view(fixture, gs)
+    opp_id = (
+        fixture.team_b if fixture.team_a == gs.acting_team_id
+        else fixture.team_a
+    )
+    h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
+    if h["meetings"]:
+        view["h2h"] = {
+            "meetings": h["meetings"],
+            "wins": h["wins_a"],  # acting team's series wins
+            "losses": h["wins_b"],
+            "streak_team": h["streak_winner_id"],
+            "streak_len": h["streak_len"],
+            "you_lead": h["wins_a"] > h["wins_b"],
+        }
+    view["preview"] = narrative.match_preview(gs, fixture, gs.acting_team_id)
+    view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id)
+    # Who is across the aisle: the opponent's named manager (rival persona
+    # or human seat) — name + one-word identity, both public facts.
+    view["opp_manager"] = rival_managers_mod.spotlight_view(gs, opp_id)
+    return view, opp_id
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
         gs = S.require_gs()
         user = gs.teams[gs.acting_team_id]
-        fixture = gs.team_fixture(gs.acting_team_id)
         order = gs.standings_order(str(user.region))
-        # This-season head-to-head vs the upcoming opponent, from the acting
-        # team's perspective. Attached only when they've met (silence beats a
-        # "0-0" line); pure read of narrative.head_to_head.
-        next_fixture = _fixture_view(fixture, gs) if fixture else None
-        if next_fixture is not None:
-            opp_id = (
-                fixture.team_b if fixture.team_a == gs.acting_team_id
-                else fixture.team_a
-            )
-            h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
-            if h["meetings"]:
-                next_fixture["h2h"] = {
-                    "meetings": h["meetings"],
-                    "wins": h["wins_a"],  # acting team's series wins
-                    "losses": h["wins_b"],
-                    "streak_team": h["streak_winner_id"],
-                    "streak_len": h["streak_len"],
-                    "you_lead": h["wins_a"] > h["wins_b"],
-                }
-            # A grounded prose preview synthesising form / series / stakes.
-            next_fixture["preview"] = narrative.match_preview(
-                gs, fixture, gs.acting_team_id
-            )
-            # Map pool + a suggested veto vs this opponent (needs prior maps
-            # from both sides; the board simply hides its veto until then).
-            next_fixture["map_pool"] = _map_pool_board(
-                gs, gs.acting_team_id, opp_id
-            )
+        next_fixture, _next_opp = _next_fixture_board(gs)
         pending_flavor = flavor_events.pending_for(gs)
         flavor_view = flavor_events.to_api(pending_flavor) if pending_flavor else None
         if flavor_view is not None:
@@ -1797,6 +1950,13 @@ def state() -> dict:
             # The "why you won/lost" synthesis of the last match — working vs
             # breaking signals + coach-gated fixes, depth-gated by the analyst.
             "last_match_review": _last_match_review(gs, S.event_logs),
+            # Last week's decision settlements — recent manager calls graded
+            # against the stored numbers. Derived live (pure read, never
+            # persisted) by manager/decision_ledger.py; rows arrive fully
+            # computed so the client only renders.
+            "decision_ledger": decision_ledger.latest_settlements(
+                gs, gs.acting_team_id
+            ),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),
@@ -1875,6 +2035,86 @@ def state() -> dict:
                 "autosave_enabled": gs.autosave_enabled,
                 "autosave_every_weeks": gs.autosave_every_weeks,
             },
+        }
+
+
+# ---------------------------------------------------------------------------
+# Match-day buildup (GET /api/matchday)
+#
+# One composed pre-match read for the dashboard's "Match day" overlay: the
+# enriched next-fixture board (h2h / preview prose / map pool + veto /
+# rivalry flag, the exact object /api/state serves) plus both sides' recent
+# form squares and season danger men, and the opposing bench read. The
+# coach persona (name / specialty / style school) is a broadcast fact —
+# the shared staff market already shows every coach's style — while the
+# tactics-derived identity and tendencies keep the same >=0.5 scouting
+# gate the roster screen uses. Pure reads only; the client renders.
+
+
+def _danger_men(gs: GameState, tid: str, n: int = 3) -> list[dict]:
+    """A side's top-rated players this season (public box-score facts, the
+    same season stats the league leaders read): mean rating over >=3 maps.
+    Empty early in a season — the client hides the block."""
+    ids = set(gs.teams[tid].player_ids) if tid in gs.teams else set()
+    rows = [
+        (pid, st) for pid, st in sorted(gs.player_stats.items())
+        if pid in ids and st.maps >= 3 and pid in gs.players
+    ]
+    rows.sort(key=lambda kv: (-kv[1].rating, kv[0]))
+    return [
+        {
+            "player_id": pid,
+            "handle": gs.players[pid].handle,
+            "role": str(gs.players[pid].role),
+            "rating": round(st.rating, 2),
+            "maps": int(st.maps),
+        }
+        for pid, st in rows[:n]
+    ]
+
+
+@app.get("/api/matchday")
+def matchday() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        view, opp_id = _next_fixture_board(gs)
+        if view is None or opp_id not in gs.teams:
+            return {"fixture": None, "you": None, "them": None, "plan_set": False}
+        scouted = gs.scout_progress.get(opp_id, 0.0) >= 0.5
+        opp_tactics = gs.teams[opp_id].tactics
+        coach = gs.staff_by.get(opp_id, {}).get("coach")
+        plan = gs.game_plan
+        return {
+            "fixture": view,
+            "you": {
+                "id": me,
+                "name": gs.teams[me].name,
+                "form": _team_recent_form(gs, me),
+                "danger_men": _danger_men(gs, me),
+            },
+            "them": {
+                "id": opp_id,
+                "name": gs.teams[opp_id].name,
+                "form": _team_recent_form(gs, opp_id),
+                "danger_men": _danger_men(gs, opp_id),
+                "coach": (
+                    {
+                        "name": coach.name,
+                        "specialty": coach.specialty,
+                        "style": staff_effects.STYLE_LABELS[
+                            staff_effects.style_identity(coach)
+                        ],
+                    }
+                    if coach is not None else None
+                ),
+                "identity": _team_identity_label(opp_tactics) if scouted else None,
+                "tendencies": _team_tendencies(opp_tactics) if scouted else [],
+                "scouted": scouted,
+            },
+            # Whether a game plan is already set for THIS fixture — drives the
+            # overlay's CTA label ("Set game plan" vs "Review game plan").
+            "plan_set": plan is not None and plan.fixture_id == view["id"],
         }
 
 
@@ -2225,6 +2465,10 @@ def inbox_view() -> dict:
             "items": [inbox_mod.to_api(it, gs) for it in ordered],
             "actionable_items": [inbox_mod.to_api(it, gs) for it in actionable],
             "league_feed": [inbox_mod.to_api(it, gs) for it in league_feed],
+            # Leverage-ranked pending decisions ({id, kind, leverage}) for the
+            # digest's "This week's calls" header. Derived live per read, like
+            # item actions — never stored (see inbox.top_calls / LEVERAGE).
+            "calls": inbox_mod.top_calls(gs, ordered),
         }
 
 
@@ -4283,7 +4527,11 @@ def social_view() -> dict:
 
 # Chronicle kinds that count as market movement, and how the tracker tags
 # them. AI-to-AI moves show here too — that's the point (watch the league).
-_MOVEMENT_KINDS = ("signing", "release", "renewal", "transfer", "poach")
+# Manager-job moves (rival personas AND human seats) ride the same feed.
+_MOVEMENT_KINDS = (
+    "signing", "release", "renewal", "transfer", "poach",
+    "dismissal", "appointment",
+)
 
 
 def _movement_feed(gs: GameState, n: int = 40) -> list[dict]:
@@ -6192,6 +6440,12 @@ def advance() -> dict:
         # the RL episode's step boundary).
         for t in sorted(game.ready):
             telemetry.record_action(gs, "advance", team_id=t)
+        # Capture every human seat's pre-tick league position so the report's
+        # week_reveal can show the standings movement across this tick
+        # (session memory only, alongside last_report).
+        game.prev_positions = {
+            t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
+        }
         game.event_logs.clear()  # replays are for the freshly played week
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
@@ -6215,6 +6469,155 @@ def advance() -> dict:
         return _report_view(report, gs, me)
 
 
+class SimAheadBody(BaseModel):
+    max_weeks: int = sim_ahead_mod.DEFAULT_MAX_WEEKS
+
+
+@app.post("/api/actions/sim_ahead")
+def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
+    """Advance up to `max_weeks` weeks in one press, stopping the moment a
+    trigger fires (manager/sim_ahead.py: playoff-stage fixture, expiring
+    starter contract, incoming starter bid, board/insolvency trouble, pending
+    decision, offseason). Solo worlds only — a shared world advances by
+    ready-up so one manager can't sim past the others. Before any week ticks
+    this preserves the manual advance's 409 guards exactly (pending flavor/
+    media decision, blocked seats, roster size); once weeks have ticked, the
+    same conditions come back as stop reasons instead. Returns the LAST
+    advanced week's report (with its week_reveal) so the client can stage the
+    usual reveal, plus the stop reason slug + toast-ready label."""
+    max_weeks = sim_ahead_mod.DEFAULT_MAX_WEEKS if body is None else body.max_weeks
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        if len(gs.human_team_ids) > 1:
+            raise HTTPException(
+                409, "sim ahead is solo-only — shared worlds advance by ready-up"
+            )
+        if flavor_events.pending_for(gs, me) is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending flavor event in Action required before advancing",
+            )
+        if media_events.pending_for(gs, me) is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending media decision in Action required before advancing",
+            )
+        blocked = career.blocked_seats(gs)
+        if blocked:
+            names = ", ".join(gs.managers[m].name for m in blocked)
+            raise HTTPException(
+                409, f"waiting on a manager to accept a new post ({names})"
+            )
+        ok, why = market.roster_ready(gs, me)
+        if not ok:
+            raise HTTPException(409, why)
+        game = _ctx.get().game
+
+        def _before(gs_: GameState) -> None:
+            # Pre-tick standings, refreshed every week: after the batch this
+            # holds the "from" position across the LAST tick — exactly what
+            # the reveal's standings stage wants (session memory only, like
+            # the manual advance's capture).
+            game.prev_positions = {me: _pretick_position(gs_, me)}
+
+        def _after(report) -> None:
+            game.last_report = report
+            # Same serving-layer side effects as a manual advance, per week:
+            # the durable review corpus (never fatal) and the autosave policy.
+            try:
+                review_history.append_reviews(gs, game.code, game.review_seen)
+            except Exception:
+                pass
+            game.autosave_tick()
+
+        weeks, reason = sim_ahead_mod.advance_until(
+            gs,
+            S.gd,
+            team_id=me,
+            max_weeks=max_weeks,
+            events_out=game.event_logs,
+            before_week=_before,
+            after_week=_after,
+        )
+        game.ready.discard(me)
+        if weeks > 0:
+            llm_social.enqueue(game)
+        # Re-bind acting (advance_week churns the acting pointer internally),
+        # and make sure the recorded sim_ahead press itself gets persisted
+        # even when no week ticked.
+        gs.set_acting(me)
+        game.save()
+        return {
+            "advanced": weeks > 0,
+            "weeks": weeks,
+            "stop_reason": reason,
+            "stop_label": sim_ahead_mod.label_for(reason),
+            "report": (
+                _report_view(game.last_report, gs, me)
+                if weeks > 0 and game.last_report is not None
+                else None
+            ),
+        }
+
+
+def _league_position(gs: GameState, tid: str) -> dict | None:
+    """1-based region-table position plus the table size for a team, or None
+    when it isn't in a table. Pure read of standings_order."""
+    t = gs.teams.get(tid)
+    if t is None:
+        return None
+    order = gs.standings_order(str(t.region), tier=t.tier)
+    if tid not in order:
+        return None
+    return {"pos": order.index(tid) + 1, "of": len(order)}
+
+
+def _pretick_position(gs: GameState, tid: str) -> dict | None:
+    """_league_position for the reveal's pre-tick "from" capture, except None
+    while the team's region table is entirely unplayed (every record 0-0).
+    A pre-season table is ordered by tiebreak/id noise, so movement away
+    from it would stage a fabricated rise/drop on each season's first
+    played week; None makes the client fall back to the plain position."""
+    t = gs.teams.get(tid)
+    if t is None:
+        return None
+    order = gs.standings_order(str(t.region), tier=t.tier)
+    if not any(
+        gs.standings[o].wins or gs.standings[o].losses for o in order
+    ):
+        return None
+    return _league_position(gs, tid)
+
+
+def _week_reveal(report, gs: GameState, me: str) -> dict:
+    """The staged post-advance beat: which of the report's played fixtures is
+    the manager's own, plus their standings movement across the tick. Thin
+    presentation read — the fixture itself already sits in the report's
+    fixtures list, and the pre-tick position comes from the session memory
+    captured by the advance endpoint (None after a restart, so the client
+    just shows the new position without a "from")."""
+    fixture_id = next(
+        (
+            f.id
+            for f in report.fixtures
+            if me in (f.team_a, f.team_b) and f.played
+        ),
+        None,
+    )
+    standings = None
+    if report.phase == "regular":
+        now = _league_position(gs, me)
+        if now is not None:
+            prev = S.prev_positions.get(me)
+            standings = {
+                "prev": prev["pos"] if prev else None,
+                "now": now["pos"],
+                "of": now["of"],
+            }
+    return {"fixture_id": fixture_id, "standings": standings}
+
+
 def _report_view(report, gs: GameState, me: str) -> dict:
     """The week-report payload — shared by the advance response and
     /api/report so a waiting shared-world manager sees the same report
@@ -6228,6 +6631,9 @@ def _report_view(report, gs: GameState, me: str) -> dict:
         "user_income": report.income_by.get(me, 0),
         "user_expenses": report.expenses_by.get(me, 0),
         "notes": report.notes,
+        # Data for the client's staged advance beat (own result -> standings
+        # movement -> decisions settled) — presentation only, skippable.
+        "week_reveal": _week_reveal(report, gs, me),
     }
 
 
@@ -6700,6 +7106,15 @@ def _profile_relationships(gs: GameState, pid: str) -> list[dict]:
     return out
 
 
+def _profile_arcs(gs: GameState, pid: str) -> list[dict]:
+    """Active locker-room arcs involving this player (manager/arcs.py's
+    capped team list, filtered). Own-club intel only, mirroring
+    _profile_relationships — rival/free-agent profiles return []."""
+    if pid not in gs.teams[gs.acting_team_id].player_ids:
+        return []
+    return arcs_mod.player_arcs(gs, gs.acting_team_id, pid)
+
+
 @app.get("/api/players/{pid}/profile")
 def player_profile(pid: str) -> dict:
     with S.lock:
@@ -6807,6 +7222,9 @@ def player_profile(pid: str) -> dict:
             "splits": _profile_splits(gs, pid),
             "charts": _profile_charts(gs, pid, own),
             "relationships": _profile_relationships(gs, pid),
+            # The scarce active-arc chips (grudge/friction/mentor bond)
+            # involving this player — own club only (manager/arcs.py).
+            "arcs": _profile_arcs(gs, pid),
             "scouting": _player_scouting_context(gs, p, own, progress),
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
@@ -7004,28 +7422,27 @@ def _agent_pool_coverage(gs: GameState, tid: str) -> dict:
 def _suggested_lineup(gs: GameState, tid: str) -> dict | None:
     """A read-only 'best available five' by quality + current form/confidence,
     with a flag where it diverges from the dressed five. None when the roster
-    is five or fewer (everyone plays — nothing to pick)."""
+    is five or fewer (everyone plays — nothing to pick). The pick order lives
+    in campaign.suggested_five — the same read the match review records —
+    so the two surfaces can never disagree about who was suggested."""
     roster = list(gs.teams[tid].player_ids)
     if len(roster) <= market.ROSTER_SIZE:
         return None
     current = set(default_five(gs, tid))
-    scored = []
-    for pid in roster:
-        p = gs.players.get(pid)
-        if p is None:
-            continue
-        q = market.player_quality(p)
-        score = q + (p.form - 50.0) * 0.05 + (p.confidence - 50.0) * 0.05
-        scored.append((score, pid, p.handle, round(q)))
-    scored.sort(key=lambda s: (-s[0], s[1]))
-    picks = scored[:market.ROSTER_SIZE]
-    suggested_ids = {pid for _, pid, _, _ in picks}
+    picks = suggested_five(gs, tid)
     return {
         "players": [
-            {"id": pid, "handle": handle, "quality": q, "dressed": pid in current}
-            for _, pid, handle, q in picks
+            {
+                "id": pid,
+                "handle": gs.players[pid].handle if pid in gs.players else pid,
+                "quality": round(market.player_quality(gs.players[pid]))
+                if pid in gs.players
+                else 0,
+                "dressed": pid in current,
+            }
+            for pid in picks
         ],
-        "changed": suggested_ids != current,
+        "changed": set(picks) != current,
     }
 
 
@@ -7198,6 +7615,12 @@ def team_profile(tid: str) -> dict:
                 if not gs.is_human(tid) and t.tier == 1
                 else None
             ),
+            # The named manager (rival persona for AI orgs, the human seat
+            # for human orgs): name, one-word identity, tenure, honours in
+            # tenure, and manager-vs-manager heat with the viewer. All
+            # public broadcast facts — served fully computed
+            # (manager/rival_managers.py), the client only renders.
+            "manager": rival_managers_mod.profile_view(gs, tid),
             # Named rivalries (manager/rivalries.py), hottest first.
             "rivals": [
                 {
@@ -7216,6 +7639,9 @@ def team_profile(tid: str) -> dict:
             ),
             # Squad chemistry (bonds, frictions, cohesion) — own club only.
             "chemistry": _squad_chemistry(gs, tid) if own_team else None,
+            # The scarce active-arc list (at most arcs.MAX_ARCS): grudges,
+            # frictions and mentor bonds shaping the room — own club only.
+            "arcs": arcs_mod.team_arcs(gs, tid) if own_team else [],
             # Development headroom: each own player's CA vs ceiling and which
             # way they're trending. Private dev-history read → own club only.
             "dev_progress": _dev_progress(gs, tid) if own_team else None,

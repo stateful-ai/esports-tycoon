@@ -378,6 +378,40 @@
 }
 .pf-rel-chip.rel-feud .pf-rel-kind { color: var(--es-color-brand, #ff4655); }
 
+/* -- locker-room arcs (scarce grudge/friction/mentor-bond chips) ------------ */
+.pf-arclines { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
+.pf-arcline {
+  display: flex; align-items: baseline; gap: var(--es-space-3, 8px);
+  font-size: var(--es-text-sm, 12px);
+  color: var(--es-color-text-secondary, #a2aec6);
+}
+.pf-arc-pill {
+  flex: 0 0 auto;
+  padding: var(--es-space-1, 2px) var(--es-space-3, 8px);
+  border-radius: var(--es-radius-full, 99px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  color: var(--es-color-text-tertiary, #67748f);
+}
+.pf-arc-pill.arck-grudge {
+  border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+  color: var(--es-color-brand, #ff4655);
+}
+.pf-arc-pill.arck-friction {
+  border-color: color-mix(in srgb, var(--es-color-warning, #ffb000) 55%, transparent);
+  color: var(--es-color-warning, #ffb000);
+}
+.pf-arc-pill.arck-mentor_bond {
+  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent);
+  color: var(--es-color-accent, #4fd8c0);
+}
+.pf-arcline-who {
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .04em;
+  color: var(--es-color-text-tertiary, #67748f);
+  margin-left: var(--es-space-2, 4px);
+}
+
 /* -- honors ---------------------------------------------------------------- */
 .pf-honor {
   padding: var(--es-space-2, 4px) 0; font-size: var(--es-text-sm, 12px);

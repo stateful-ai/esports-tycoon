@@ -206,7 +206,7 @@ def test_v29_migration_and_round_trip(game_data, tmp_path):
     old_path = tmp_path / "v29.json"
     old_path.write_text(json.dumps(old), encoding="utf-8")
     migrated = GameState.load(old_path)
-    assert migrated.schema_version == SCHEMA_VERSION == 30
+    assert migrated.schema_version == SCHEMA_VERSION == 32
     assert migrated.sponsor_demands == []
 
 

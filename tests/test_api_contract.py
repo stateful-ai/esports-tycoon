@@ -159,3 +159,124 @@ def test_post_actions_endpoints(test_env) -> None:
     assert res_data["ok"] is True
     assert "response" in res_data
     assert ("effects" in res_data or res_data.get("offline") is True)
+
+
+def test_advance_response_carries_week_reveal(
+    game_data: GameData, tmp_path, monkeypatch
+) -> None:
+    """POST /api/actions/advance returns a week_reveal block for the client's
+    staged advance beat: the manager's own played fixture id plus prev/now
+    league positions (prev captured pre-tick in session memory). On a season's
+    FIRST played week prev is None — the pre-tick table is all 0-0, ordered by
+    tiebreak/id noise, and staging a "drop" away from it would be fiction.
+    /api/report serves the identical block for waiting shared-world
+    managers."""
+    from esports_sim.web import review_history
+
+    gs = new_campaign(game_data, seed=99, user_team_id="team_nexus")
+    gs.autosave_enabled = False  # keep the test off the real saves/ dir
+    game = server_mod._Game(game_data, "REVEALT", gs=gs)
+    token = server_mod._ctx.set(server_mod._ReqCtx(game, gs.user_team_id))
+    monkeypatch.setattr(review_history, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(server_mod.llm_social, "enqueue", lambda *_a, **_k: None)
+    try:
+        res = server_mod.advance()
+        assert res["advanced"] is True
+        wr = res["week_reveal"]
+        assert set(wr) == {"fixture_id", "standings"}
+
+        mine = [
+            f for f in res["fixtures"]
+            if gs.user_team_id in (f["team_a"], f["team_b"]) and f["played"]
+        ]
+        assert wr["fixture_id"] == (mine[0]["id"] if mine else None)
+
+        assert res["phase"] == "regular"
+        st = wr["standings"]
+        assert st is not None and set(st) == {"prev", "now", "of"}
+        # Week 1: the pre-tick table had no played games, so there is no
+        # meaningful "from" position — the client shows the plain position.
+        assert st["prev"] is None
+        assert 1 <= st["now"] <= st["of"]
+
+        # Waiting managers fetch the same reveal from /api/report.
+        rep2 = server_mod.last_week_report()["report"]
+        assert rep2["week_reveal"] == wr
+
+        # Week 2: last week's results are on the table, so the reveal now
+        # carries a real pre-tick position to move from.
+        res2 = server_mod.advance()
+        st2 = res2["week_reveal"]["standings"]
+        assert st2 is not None
+        assert 1 <= st2["prev"] <= st2["of"]
+        assert 1 <= st2["now"] <= st2["of"]
+    finally:
+        server_mod._ctx.reset(token)
+
+
+def test_inbox_endpoint_serves_leverage_calls(test_env) -> None:
+    """GET /api/inbox carries a "calls" marker list ({id, kind, leverage})
+    for the digest's "This week's calls" header. Every call references an
+    item already in the feed — the ranking is derived live, never stored
+    (see inbox.top_calls / LEVERAGE)."""
+    from esports_sim.manager import inbox as inbox_mod
+
+    data = server_mod.inbox_view()
+    assert "calls" in data
+    assert isinstance(data["calls"], list)
+    assert len(data["calls"]) <= inbox_mod.TOP_CALLS
+    item_ids = {it["id"] for it in data["items"]}
+    scores = [c["leverage"] for c in data["calls"]]
+    assert scores == sorted(scores, reverse=True)
+    for c in data["calls"]:
+        assert set(c) == {"id", "kind", "leverage"}
+        assert c["id"] in item_ids
+        assert c["kind"] in inbox_mod.LEVERAGE
+
+
+def test_matchday_endpoint_contract(test_env) -> None:
+    """GET /api/matchday composes the pre-match buildup entirely from
+    existing reads: the enriched next-fixture board (identical to
+    /api/state's next_fixture, both come from _next_fixture_board), both
+    sides' recent-form chips and season danger men, the opposing coach
+    persona, and the scout-gated identity/tendencies."""
+    gs = test_env
+
+    data = server_mod.matchday()
+    assert set(data) == {"fixture", "you", "them", "plan_set"}
+
+    fx = data["fixture"]
+    assert fx is not None  # week 2 of a regular season: a fixture exists
+    # Thin composition: the same enriched board /api/state serves.
+    assert {"preview", "map_pool", "rivalry", "opp_manager"} <= set(fx)
+    # The opponent is an AI org here, so its named rival manager shows.
+    assert set(fx["opp_manager"]) == {"name", "identity"}
+    assert server_mod.state()["next_fixture"] == fx
+
+    you, them = data["you"], data["them"]
+    assert set(you) == {"id", "name", "form", "danger_men"}
+    assert set(them) == {
+        "id", "name", "form", "danger_men",
+        "coach", "identity", "tendencies", "scouted",
+    }
+    assert you["id"] == gs.user_team_id
+    assert them["id"] in (fx["team_a"], fx["team_b"])
+    assert them["id"] != you["id"]
+
+    for side in (you, them):
+        for chip in side["form"]:
+            assert set(chip) == {"result", "opponent", "score", "week"}
+            assert chip["result"] in {"W", "L"}
+        for dm in side["danger_men"]:
+            assert set(dm) == {"player_id", "handle", "role", "rating", "maps"}
+            assert dm["maps"] >= 3
+
+    if them["coach"] is not None:
+        assert set(them["coach"]) == {"name", "specialty", "style"}
+    # Tactical reads stay hidden until the rival is scouted (>=0.5) — the
+    # same gate the roster screen uses. The coach persona is public.
+    if not them["scouted"]:
+        assert them["identity"] is None
+        assert them["tendencies"] == []
+
+    assert isinstance(data["plan_set"], bool)

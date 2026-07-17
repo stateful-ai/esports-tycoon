@@ -32,6 +32,7 @@
     </select>
   <button id="worlds-btn" class="btn hidden" title="Return to your campaign list. This career will be waiting there.">Campaigns</button>
     <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+    <button id="simahead-btn" class="btn" title="Sim up to 4 weeks under your delegation settings — stops the moment something needs you">Sim ahead ▸▸</button>
   <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
     <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
     <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
@@ -100,6 +101,11 @@
         <span id="ng-modes" class="row" style="gap:6px"></span>
       </div>
       <p class="muted" id="ng-mode-desc"></p>
+      <div class="row hidden" id="ng-scenario-row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <span class="muted">Scenario</span>
+        <span id="ng-scenarios" class="row" style="gap:6px;flex-wrap:wrap"></span>
+      </div>
+      <p class="muted hidden" id="ng-scenario-desc"></p>
       <p class="muted hidden" id="ng-world-desc"></p>
       <div id="ng-teams" class="team-grid"></div>
     </div>
@@ -115,6 +121,12 @@
     </div>
   </div>
 </div>
+
+<!-- advance-week staged reveal (presentation only; one click anywhere skips) -->
+<div id="week-reveal" class="overlay hidden" aria-live="polite"></div>
+
+<!-- match-day buildup: the full pre-match briefing (GET /api/matchday) -->
+<div id="matchday" class="overlay hidden" aria-live="polite"></div>
 
 <!-- week report modal -->
 <div id="report" class="overlay hidden">
@@ -151,6 +163,7 @@
       <div id="v-score" class="mono"></div>
       <button class="btn active" id="v-cones" title="Show or hide player sight lines" aria-pressed="true">Vision</button>
       <button class="btn" id="v-view" title="toggle isometric / top-down">2D</button>
+      <button class="btn" id="v-sound" title="Match sound: muted" aria-pressed="false">🔇</button>
       <button class="btn" onclick="closeViewer()">✕ Close</button>
     </div>
     <div class="viewer-main">
@@ -171,6 +184,8 @@
         <button class="btn speed" data-speed="16">16×</button>
         <button class="btn speed" data-speed="inst">▸▸</button>
       </div>
+      <button class="btn" id="v-evfollow" title="Action cam: auto-center briefly on kills and spike plants" aria-pressed="false">Action cam</button>
+      <button class="btn" id="v-reframe" title="Reset zoom and framing (releases player follow)">Reframe</button>
       <input id="v-scrub" type="range" min="0" max="200" value="0">
       <span id="v-clock" class="mono"></span>
     </div>

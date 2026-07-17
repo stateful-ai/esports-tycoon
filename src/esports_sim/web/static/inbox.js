@@ -7,7 +7,10 @@
 
    Contract (backend built to this exactly):
      GET  /api/inbox            -> { unread:int, actionable_unread:int,
-            league_unread:int, actionable_items:[...], league_feed:[...] }
+            league_unread:int, actionable_items:[...], league_feed:[...],
+            calls:[{id, kind, leverage}] }  // leverage-ranked pending
+            // decisions for the digest's "This week's calls" header; the
+            // server derives them live (inbox.top_calls), we only render.
      POST /api/inbox/read {id}     -> the same unread-count fields
      POST /api/inbox/read {all:true} -> the same unread-count fields
 
@@ -54,7 +57,7 @@ async function inboxFetch() {
   if (INBOX_MOCK) return inboxMockData();
   try {
     const r = await fetch("/api/inbox");
-    if (!r.ok) return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [] };
+    if (!r.ok) return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [], calls: [] };
     const d = await r.json();
     return {
       unread: d.unread || 0,
@@ -62,9 +65,10 @@ async function inboxFetch() {
       league_unread: d.league_unread || 0,
       actionable_items: Array.isArray(d.actionable_items) ? d.actionable_items : [],
       league_feed: Array.isArray(d.league_feed) ? d.league_feed : [],
+      calls: Array.isArray(d.calls) ? d.calls : [],
     };
   } catch {
-    return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [] };
+    return { unread: 0, actionable_unread: 0, league_unread: 0, actionable_items: [], league_feed: [], calls: [] };
   }
 }
 
@@ -410,6 +414,27 @@ async function inbox(v) {
   const digest = el("div", "card");
   const digestTitle = el("h2", "", "This week");
   digest.appendChild(digestTitle);
+  // One digest line (chip + title) that jumps to — and expands — the matching
+  // row in the main list. Shared by the calls section and the weekly listing.
+  function digestLine(it) {
+    const cat = it.category || "news";
+    const line = el("div", "inbox-row-head");
+    line.title = "Open item";
+    const chip = el("span", `inbox-cat cat-${cat}`);
+    chip.textContent = INBOX_CAT_LABEL[cat] || cat;
+    const title = el("span", "inbox-title");
+    title.textContent = it.title || "";
+    line.append(chip, title);
+    line.onclick = () => {
+      // Make sure the target row is rendered before jumping to it.
+      if (inboxFilter !== "all" && inboxFilter !== it.category) setFilter("all");
+      const ctl = rowCtl.get(it.id);
+      if (!ctl) return;
+      ctl.openRow();
+      ctl.row.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    return line;
+  }
   function drawDigest() {
     digest.querySelectorAll(":scope > :not(h2)").forEach((node) => node.remove());
     digestTitle.textContent = inboxSection === "actionable" ? "This week's priorities" : "This week's league feed";
@@ -418,37 +443,45 @@ async function inbox(v) {
       digest.appendChild(el("p", "muted", inboxSection === "actionable"
         ? "No pending manager decisions."
         : "No league updates this week."));
-    } else {
-      const latest = allItems[0]; // items arrive newest-first
-      const wkKey = `${latest.season}-${latest.week}`;
-      digest.appendChild(el("div", "microlabel", `S${latest.season} - W${latest.week}`));
-      const catOrder = INBOX_CATEGORIES.map(([k]) => k);
-      const catRank = (c) => {
-        const i = catOrder.indexOf(c);
-        return i < 0 ? catOrder.length : i;
-      };
-      const wkItems = allItems
-        .filter((it) => `${it.season}-${it.week}` === wkKey)
-        .sort((a, b) => catRank(a.category) - catRank(b.category));
-      for (const it of wkItems) {
-        const cat = it.category || "news";
-        const line = el("div", "inbox-row-head");
-        line.title = "Open item";
-        const chip = el("span", `inbox-cat cat-${cat}`);
-        chip.textContent = INBOX_CAT_LABEL[cat] || cat;
-        const title = el("span", "inbox-title");
-        title.textContent = it.title || "";
-        line.append(chip, title);
-        line.onclick = () => {
-          // Make sure the target row is rendered before jumping to it.
-          if (inboxFilter !== "all" && inboxFilter !== it.category) setFilter("all");
-          const ctl = rowCtl.get(it.id);
-          if (!ctl) return;
-          ctl.openRow();
-          ctl.row.scrollIntoView({ behavior: "smooth", block: "center" });
-        };
-        digest.appendChild(line);
+      return;
+    }
+    // "This week's calls": the server's leverage-ranked pending decisions
+    // (top 2-3), rendered as a distinct header section. Pure render of the
+    // {id, kind, leverage} markers — the ranking lives server-side.
+    const callIds = new Set();
+    if (inboxSection === "actionable" && data.calls.length) {
+      const byId = new Map(allItems.map((it) => [it.id, it]));
+      const callRows = data.calls
+        .map((c) => ({ c, it: byId.get(c.id) }))
+        .filter((r) => r.it);
+      if (callRows.length) {
+        digest.appendChild(el("div", "microlabel", "This week's calls"));
+        callRows.forEach(({ c, it }, i) => {
+          callIds.add(it.id);
+          const line = digestLine(it);
+          line.classList.add("inbox-call");
+          line.prepend(el("span", "inbox-call-rank mono", String(i + 1)));
+          line.appendChild(
+            el("span", "inbox-call-score mono muted", String(Math.round(c.leverage))));
+          digest.appendChild(line);
+        });
       }
+    }
+    // Remaining items keep the existing order below (latest week, by
+    // category), skipping anything already surfaced as a call.
+    const latest = allItems[0]; // items arrive newest-first
+    const wkKey = `${latest.season}-${latest.week}`;
+    const catOrder = INBOX_CATEGORIES.map(([k]) => k);
+    const catRank = (c) => {
+      const i = catOrder.indexOf(c);
+      return i < 0 ? catOrder.length : i;
+    };
+    const wkItems = allItems
+      .filter((it) => `${it.season}-${it.week}` === wkKey && !callIds.has(it.id))
+      .sort((a, b) => catRank(a.category) - catRank(b.category));
+    if (wkItems.length) {
+      digest.appendChild(el("div", "microlabel", `S${latest.season} - W${latest.week}`));
+      for (const it of wkItems) digest.appendChild(digestLine(it));
     }
   }
   rail.appendChild(digest);
@@ -487,5 +520,9 @@ function inboxMockData() {
     league_unread: league_feed.filter((i) => i.unread).length,
     actionable_items,
     league_feed,
+    calls: [
+      { id: "m2", kind: "sponsor_offer", leverage: 37.5 },
+      { id: "m3", kind: "talk", leverage: 22 },
+    ],
   };
 }

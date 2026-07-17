@@ -785,9 +785,11 @@ function isoContentViewBox() {
 function drawStatic() {
   const svg = document.getElementById("v-map");
   svg.innerHTML = "";
+  const vb = V.iso ? isoContentViewBox() : [-6, -6, 112, 112];
+  V.vb = vb;
   svg.setAttribute(
     "viewBox",
-    V.iso ? isoContentViewBox().map((n) => n.toFixed(1)).join(" ") : "-6 -6 112 112"
+    V.iso ? vb.map((n) => n.toFixed(1)).join(" ") : vb.join(" ")
   );
   svg.classList.toggle("iso", !!V.iso);
 
@@ -795,6 +797,14 @@ function drawStatic() {
   // everything else since drawStatic() wipes the whole svg subtree).
   V.defs = svgEl("defs", {});
   svg.appendChild(V.defs);
+
+  // Spectator camera: ONE outer group wraps the whole scene (backdrop paint,
+  // floors, transient + persistent layers). Zoom/pan/follow are a pure
+  // translate+scale on this group, so the viewBox and the pinned backdrop
+  // <image> coords (the guide->viewer transform contract) are never touched
+  // and paint/positions can't shear apart.
+  V.camEl = svgEl("g", { class: "cam" });
+  svg.appendChild(V.camEl);
 
   // Painted backdrop: bottom-most layer, iso only, placed at the exact
   // guide->viewer transform (scripts/render_map_guide.py). When present the
@@ -811,21 +821,21 @@ function drawStatic() {
     });
     bg.setAttributeNS("http://www.w3.org/1999/xlink", "href", paint);
     bg.setAttribute("href", paint);
-    svg.appendChild(bg);
+    V.camEl.appendChild(bg);
   }
 
-  if (V.floor) drawFloor(svg);
-  else drawGraph(svg);
+  if (V.floor) drawFloor(V.camEl);
+  else drawGraph(V.camEl);
 
   // V.dyn: transient layer, fully cleared + rebuilt every frame (markers,
   // kill flashes, motion trails, death marks).
   V.dyn = svgEl("g", {});
-  svg.appendChild(V.dyn);
+  V.camEl.appendChild(V.dyn);
 
   // V.persist: elements that live across frames (spike, player dots) so a
   // real CSS transition/animation can run instead of restarting each tick.
   V.persist = svgEl("g", {});
-  svg.appendChild(V.persist);
+  V.camEl.appendChild(V.persist);
   V.playerEls = {};
   V.spikeEl = svgEl("rect", { width: S(2.8), height: S(2.8), class: "spike" });
   V.spikeEl.style.display = "none";
@@ -833,6 +843,7 @@ function drawStatic() {
   V.spikeRingEl.style.display = "none";
   V.persist.appendChild(V.spikeRingEl);
   V.persist.appendChild(V.spikeEl);
+  camApply();
 }
 
 // Agent-icon dot radius. The tight per-map viewBox (isoContentViewBox) zooms
@@ -908,6 +919,7 @@ function getPlayerEls(pid) {
 function drawFrame() {
   const round = V.rounds[V.roundIdx];
   const t = V.tick;
+  camTick(round, t);
   V.dyn.innerHTML = "";
 
   // Transient overlays first so player dots (persistent layer, drawn after
@@ -963,9 +975,10 @@ function drawFrame() {
     const [x, y] = move.pos;
     const { ring, icon, fallback, label } = getPlayerEls(pid);
     const failed = icon.dataset.failed === "1";
+    const followCls = V.follow === pid ? " following" : "";
     ring.setAttribute("cx", x);
     ring.setAttribute("cy", y);
-    ring.setAttribute("class", "pdot-ring " + teamCls);
+    ring.setAttribute("class", "pdot-ring " + teamCls + followCls);
     ring.style.display = failed ? "none" : "";
     const iw = S(ICON_R * 2);
     icon.setAttribute("x", x - iw / 2);
@@ -973,7 +986,7 @@ function drawFrame() {
     icon.style.display = failed ? "none" : "";
     fallback.setAttribute("cx", x);
     fallback.setAttribute("cy", y);
-    fallback.setAttribute("class", "pdot " + teamCls);
+    fallback.setAttribute("class", "pdot " + teamCls + followCls);
     fallback.style.display = failed ? "" : "none";
     label.setAttribute("x", x);
     label.setAttribute("y", y - S(2.6));
@@ -1073,14 +1086,219 @@ function drawFrame() {
   document.getElementById("v-scrub").value = Math.min(t, round.maxTick);
 }
 
+/* -- spectator camera --------------------------------------------------------- */
+
+// Pure presentation layer: a translate+scale on V.camEl (the outer scene
+// group built by drawStatic). No coordinate math the guides depend on is
+// touched — at identity (z=1, tx=ty=0) the render is exactly the old one.
+const CAM_MAX_ZOOM = 10;
+const CAM_EASE = 0.18;      // per-frame ease toward follow/focus targets
+const FOLLOW_ZOOM = 2.4;    // default zoom when player-follow engages
+const EVENT_ZOOM = 1.9;     // zoom while the action cam holds an event
+const EVENT_HOLD_TICKS = 6; // how long an event holds the camera (3 s)
+
+function camApply() {
+  if (!V || !V.camEl) return;
+  const c = V.cam;
+  V.camEl.setAttribute(
+    "transform",
+    `translate(${c.tx.toFixed(3)} ${c.ty.toFixed(3)}) scale(${c.z.toFixed(4)})`
+  );
+}
+
+// Keep the scene covering the frame: at z=1 this pins tx/ty back to 0, so
+// the camera can never strand the map off-screen.
+function camClamp() {
+  const c = V.cam;
+  const [vx, vy, vw, vh] = V.vb || ISO_VIEWBOX;
+  c.z = Math.min(CAM_MAX_ZOOM, Math.max(1, c.z));
+  const loX = (vx + vw) * (1 - c.z), hiX = vx * (1 - c.z);
+  const loY = (vy + vh) * (1 - c.z), hiY = vy * (1 - c.z);
+  c.tx = Math.min(hiX, Math.max(loX, c.tx));
+  c.ty = Math.min(hiY, Math.max(loY, c.ty));
+}
+
+function camReset() {
+  if (!V) return;
+  V.cam = { z: 1, tx: 0, ty: 0 };
+  V.focus = null;
+  camApply();
+}
+
+// Pointer event -> svg user (viewBox) coords. The cam group is a CHILD of
+// the svg, so getScreenCTM() maps to the untransformed viewBox space — the
+// stable frame all camera math runs in.
+function camUserPoint(evt) {
+  const svg = document.getElementById("v-map");
+  const m = svg.getScreenCTM();
+  if (!m) return null;
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+  const p = pt.matrixTransform(m.inverse());
+  return [p.x, p.y];
+}
+
+// Zoom about a fixed frame point p (cursor or pinch midpoint): the world
+// point under p stays under p.
+function camZoomAt(p, factor) {
+  const c = V.cam;
+  const z2 = Math.min(CAM_MAX_ZOOM, Math.max(1, c.z * factor));
+  const k = z2 / c.z;
+  c.tx = p[0] - k * (p[0] - c.tx);
+  c.ty = p[1] - k * (p[1] - c.ty);
+  c.z = z2;
+  camClamp();
+  camApply();
+}
+
+// Ease the camera so scene point w sits at the frame centre at zoom zGoal.
+// ease=1 snaps (used while paused/scrubbing so the target never lags).
+function camCenterOn(w, zGoal, ease) {
+  const c = V.cam;
+  const [vx, vy, vw, vh] = V.vb || ISO_VIEWBOX;
+  const cx = vx + vw / 2, cy = vy + vh / 2;
+  c.z += (zGoal - c.z) * ease;
+  c.tx += (cx - c.z * w[0] - c.tx) * ease;
+  c.ty += (cy - c.z * w[1] - c.ty) * ease;
+  camClamp();
+  camApply();
+}
+
+// Per-frame camera update: player-follow wins, then the action-cam focus
+// (which eases home to its pre-focus framing once the hold expires).
+function camTick(round, t) {
+  if (!V.camEl) return;
+  const ease = V.playing ? CAM_EASE : 1;
+  if (V.follow) {
+    const p = playerPos(round, V.follow, t);
+    if (p) camCenterOn(p, V.followZoom, ease);
+    return;
+  }
+  const f = V.focus;
+  if (!f) return;
+  if (t < f.since) { V.focus = null; return; } // rewound / next round
+  if (t < f.until) {
+    camCenterOn(f.at, Math.max(EVENT_ZOOM, f.back.z), ease);
+    return;
+  }
+  // Hold expired: ease back to the framing the viewer had before the event.
+  const c = V.cam, b = f.back;
+  c.z += (b.z - c.z) * ease;
+  c.tx += (b.tx - c.tx) * ease;
+  c.ty += (b.ty - c.ty) * ease;
+  camClamp();
+  camApply();
+  if (Math.abs(c.z - b.z) < 0.01 && Math.abs(c.tx - b.tx) < 0.05 &&
+      Math.abs(c.ty - b.ty) < 0.05) V.focus = null;
+}
+
+// Action cam: brief auto-centre on a kill/plant. Chained events keep the
+// ORIGINAL pre-focus framing to return to. Player-follow outranks it.
+function evFocus(tick, at) {
+  if (!V.evFollow || V.follow || !at) return;
+  const back = V.focus ? V.focus.back : { ...V.cam };
+  V.focus = { at, since: tick, until: tick + EVENT_HOLD_TICKS, back };
+}
+
+function toggleFollow(pid) {
+  if (!V) return;
+  V.follow = V.follow === pid ? null : pid;
+  if (V.follow) {
+    V.focus = null;
+    V.followZoom = Math.max(V.cam.z, FOLLOW_ZOOM);
+  }
+  markFollow();
+  if (!V.playing) drawFrame(); // snap-centre immediately while paused
+}
+
+function markFollow() {
+  document.querySelectorAll("#v-lineup [data-follow]").forEach((r) => {
+    r.classList.toggle("following", !!V && r.dataset.follow === V.follow);
+  });
+}
+
+/* -- synthesized audio cues ---------------------------------------------------- */
+
+// WebAudio-only (no binary assets): a kill tick and a two-note round-end
+// stinger. Muted by default; the toggle persists in localStorage. Separate
+// from audio.js (music/ambiance), which keeps its own key + element.
+const SFX_KEY = "es-viewer-sfx";
+let sfxOn = false;
+try { sfxOn = localStorage.getItem(SFX_KEY) === "on"; } catch (e) { /* private mode */ }
+let sfxCtx = null;
+
+function sfxEnsure() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  if (!sfxCtx) sfxCtx = new AC();
+  if (sfxCtx.state === "suspended") sfxCtx.resume().catch(() => {});
+}
+
+function sfxBlip(freq, dur, at, peak) {
+  if (!sfxOn || !sfxCtx) return;
+  const t0 = sfxCtx.currentTime + (at || 0);
+  const osc = sfxCtx.createOscillator();
+  const gain = sfxCtx.createGain();
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(peak || 0.1, t0 + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(gain).connect(sfxCtx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur + 0.05);
+}
+
+const cueKill = (headshot) => sfxBlip(headshot ? 1560 : 1180, 0.07, 0, 0.08);
+function cueRoundEnd() {
+  sfxBlip(392, 0.16, 0, 0.1);      // G4 ...
+  sfxBlip(587.33, 0.26, 0.14, 0.1); // ... up to D5
+}
+
+function paintSfxBtn() {
+  const b = document.getElementById("v-sound");
+  if (!b) return;
+  b.textContent = sfxOn ? "\u{1F50A}" : "\u{1F507}";
+  b.title = sfxOn ? "Match sound: on" : "Match sound: muted";
+  b.classList.toggle("active", sfxOn);
+  b.setAttribute("aria-pressed", sfxOn ? "true" : "false");
+}
+
+// Playback-time event scan (prevTick, newTick]: audio cues + action-cam
+// focus. Only the rAF loop calls this, so scrubbing/jumping never fires a
+// burst of stale cues.
+function scanTickEvents(round, t0, t1) {
+  if (t1 <= t0) return;
+  const hit = (tick) => tick > t0 && tick <= t1;
+  for (const k of round.kills) {
+    if (!hit(k.tick)) continue;
+    cueKill(!!k.headshot);
+    const at = k.victim_x != null
+      ? gpoint(k.victim_x, k.victim_y, zOf(k.callout_id))
+      : (k.callout_id ? pos(k.callout_id) : null);
+    evFocus(k.tick, at);
+  }
+  if (round.plant && hit(round.plant.tick)) {
+    const pl = round.plant;
+    const at = pl.x != null
+      ? gpoint(pl.x, pl.y, zOf(pl.callout_id))
+      : (pl.callout_id ? pos(pl.callout_id) : null);
+    evFocus(pl.tick, at);
+  }
+  if (round.end && hit(round.end.tick)) cueRoundEnd();
+}
+
 /* -- playback ------------------------------------------------------------------ */
 
 function loop(ts) {
   if (!V || !V.playing) return;
   const dt = (ts - (V.lastTs ?? ts)) / 1000;
   V.lastTs = ts;
+  const prevTick = V.tick;
   V.tick += dt * TICKS_PER_SEC * V.speed;
   const round = V.rounds[V.roundIdx];
+  scanTickEvents(round, prevTick, V.tick);
   if (V.tick > round.maxTick + 6) {
     if (V.roundIdx < V.rounds.length - 1) {
       if (V.roundIdx === 11 && !V.pepTalkTriggered) {
@@ -1120,6 +1338,9 @@ function setRound(idx) {
 // Agent-forward lineup for the side panel: agent icon + agent name primary,
 // player handle secondary. The viewer HTML has no static scoreboard, so this
 // is injected dynamically (and removed/rebuilt per replay, torn down on close).
+// Clicking a row follows that player's dot with the spectator camera (click
+// again to unfollow); the handle keeps its profile link — profile.js handles
+// [data-pid] clicks in the capture phase, so the two never both fire.
 function buildLineup() {
   const side = document.querySelector(".viewer-side");
   if (!side) return;
@@ -1138,14 +1359,18 @@ function buildLineup() {
           const icon = src
             ? `<img class="lu-icon" src="${src}" onerror="this.style.visibility='hidden'" alt="">`
             : `<span class="lu-icon"></span>`;
-          return `<div class="lu-row plink" data-pid="${pid}">${icon}` +
+          return `<div class="lu-row" data-follow="${pid}" title="Follow ${handleOf(pid)} with the camera (click again to release)">${icon}` +
             `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
-            `<span class="lu-handle muted">${handleOf(pid)}</span></div>`;
+            `<span class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</span></div>`;
         })
         .join("");
       return `<div class="lu-team"><div class="lu-team-name ${cls} tlink" data-tid="${tid}">${V.names[tid]}</div>${rows}</div>`;
     })
     .join("");
+  el.addEventListener("click", (e) => {
+    const row = e.target.closest("[data-follow]");
+    if (row && V) toggleFollow(row.dataset.follow);
+  });
   side.insertBefore(el, document.getElementById("v-feed"));
 }
 
@@ -1403,6 +1628,14 @@ async function openReplay(fixtureId, mapIndex) {
     cones: true,
     facing: {},
     _facingRound: -1,
+    // Spectator camera (pure presentation, identity by default).
+    cam: { z: 1, tx: 0, ty: 0 },
+    vb: null,
+    camEl: null,
+    follow: null,
+    followZoom: FOLLOW_ZOOM,
+    evFollow: false,
+    focus: null,
   };
   V.painted = V.mapId ? await probePainted(V.mapId) : null;
   const isoBtn = document.getElementById("v-view");
@@ -1418,6 +1651,11 @@ async function openReplay(fixtureId, mapIndex) {
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
   updatePlayBtn();
+  paintEvBtn();
+  paintSfxBtn();
+  // openReplay runs inside a click handler, so a persisted sound preference
+  // can (re)create/resume the AudioContext within the user gesture.
+  if (sfxOn) sfxEnsure();
   requestAnimationFrame(loop);
 }
 
@@ -1446,6 +1684,10 @@ document.getElementById("v-view").onclick = () => {
   if (!V || !V.floor) return;
   V.iso = !V.iso;
   document.getElementById("v-view").textContent = V.iso ? "2D" : "ISO";
+  // The two projections use different viewBoxes, so a carried-over camera
+  // transform would misframe; follow re-engages via camTick after the swap.
+  V.cam = { z: 1, tx: 0, ty: 0 };
+  V.focus = null;
   drawStatic(); // rebuilds persist/dyn layers for the new projection
   drawFrame();
 };
@@ -1477,3 +1719,116 @@ document.querySelectorAll(".speed").forEach((b) => {
     }
   };
 });
+
+/* -- spectator controls (camera gestures + toggles) ---------------------------- */
+
+function paintEvBtn() {
+  const b = document.getElementById("v-evfollow");
+  if (!b) return;
+  const on = !!(V && V.evFollow);
+  b.classList.toggle("active", on);
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+}
+
+document.getElementById("v-evfollow").onclick = () => {
+  if (!V) return;
+  V.evFollow = !V.evFollow;
+  if (!V.evFollow) V.focus = null;
+  paintEvBtn();
+};
+
+document.getElementById("v-reframe").onclick = () => {
+  if (!V || !V.camEl) return;
+  V.follow = null;
+  camReset();
+  markFollow();
+  if (!V.playing) drawFrame();
+};
+
+document.getElementById("v-sound").onclick = () => {
+  sfxOn = !sfxOn;
+  try { localStorage.setItem(SFX_KEY, sfxOn ? "on" : "off"); } catch (e) { /* private mode */ }
+  if (sfxOn) sfxEnsure(); // the click IS the unlocking user gesture
+  paintSfxBtn();
+};
+paintSfxBtn();
+
+// Wheel zoom, anchored on the cursor. Wheel during follow just retunes the
+// follow zoom; any manual zoom dismisses an action-cam hold.
+const vmapEl = document.getElementById("v-map");
+vmapEl.addEventListener("wheel", (e) => {
+  if (!V || !V.camEl) return;
+  e.preventDefault();
+  const p = camUserPoint(e);
+  if (!p) return;
+  V.focus = null;
+  camZoomAt(p, Math.exp(-e.deltaY * 0.0016));
+  if (V.follow) V.followZoom = V.cam.z;
+  if (!V.playing) drawFrame();
+}, { passive: false });
+
+// Drag pan (one pointer) and pinch zoom (two pointers). All math runs in
+// the stable viewBox space, so stored pointer positions never go stale as
+// the camera moves. Manual panning takes the camera back from follow/focus.
+const camPtrs = new Map();
+let pinchDist = 0;
+let pinchMid = null;
+
+function pinchInit() {
+  const [a, b] = [...camPtrs.values()];
+  pinchDist = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  pinchMid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+}
+
+vmapEl.addEventListener("pointerdown", (e) => {
+  if (!V || !V.camEl || (e.pointerType === "mouse" && e.button !== 0)) return;
+  const p = camUserPoint(e);
+  if (!p) return;
+  camPtrs.set(e.pointerId, p);
+  try { vmapEl.setPointerCapture(e.pointerId); } catch (err) { /* already released */ }
+  if (camPtrs.size === 2) pinchInit();
+});
+
+vmapEl.addEventListener("pointermove", (e) => {
+  if (!V || !V.camEl || !camPtrs.has(e.pointerId)) return;
+  const p = camUserPoint(e);
+  if (!p) return;
+  if (camPtrs.size === 1) {
+    const prev = camPtrs.get(e.pointerId);
+    const dx = p[0] - prev[0], dy = p[1] - prev[1];
+    if (dx || dy) {
+      if (V.follow) { V.follow = null; markFollow(); }
+      V.focus = null;
+      V.cam.tx += dx;
+      V.cam.ty += dy;
+      camClamp();
+      camApply();
+    }
+  } else if (camPtrs.size === 2) {
+    camPtrs.set(e.pointerId, p);
+    const [a, b] = [...camPtrs.values()];
+    const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    if (pinchDist > 0.001) {
+      V.focus = null;
+      camZoomAt(mid, d / pinchDist);
+      V.cam.tx += mid[0] - pinchMid[0];
+      V.cam.ty += mid[1] - pinchMid[1];
+      camClamp();
+      camApply();
+      if (V.follow) V.followZoom = V.cam.z;
+    }
+    pinchDist = d;
+    pinchMid = mid;
+  }
+  camPtrs.set(e.pointerId, p);
+});
+
+function camPtrEnd(e) {
+  camPtrs.delete(e.pointerId);
+  pinchDist = 0;
+  pinchMid = null;
+  if (camPtrs.size === 2) pinchInit();
+}
+vmapEl.addEventListener("pointerup", camPtrEnd);
+vmapEl.addEventListener("pointercancel", camPtrEnd);

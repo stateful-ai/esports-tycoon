@@ -349,6 +349,91 @@ tr.me td:first-child { box-shadow: inset var(--es-border-thick, 2px) 0 0 var(--e
   font-size: var(--es-text-2xl, 22px); font-weight: 700;
   letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px;
 }
+
+/* Advance-week staged reveal (#week-reveal): the post-advance beat staged
+   over the dimmed backdrop — own result, standings movement, decisions
+   settled. Stages rise in via CSS transitions (JS only flips .on classes
+   and counts scores up); one click anywhere skips to the dashboard. */
+#week-reveal { flex-direction: column; cursor: pointer; user-select: none; }
+.wr-wrap {
+  width: min(520px, 92vw); text-align: center;
+  display: flex; flex-direction: column; gap: var(--es-space-6, 16px);
+}
+.wr-stage {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.wr-stage.on { opacity: 1; transform: none; }
+.wr-kicker {
+  font-size: var(--es-text-xs, 11px); letter-spacing: .14em;
+  text-transform: uppercase; color: var(--es-color-text-tertiary, #67748F);
+  margin-bottom: var(--es-space-2, 4px);
+}
+.wr-vs {
+  font-family: var(--es-font-display, inherit);
+  font-size: var(--es-text-2xl, 22px); font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.wr-dim { color: var(--es-color-text-tertiary, #67748F); }
+.wr-maps {
+  display: flex; flex-direction: column; gap: var(--es-space-2, 4px);
+  margin-top: var(--es-space-4, 10px);
+}
+.wr-map {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: var(--es-space-2, 4px) var(--es-space-6, 16px);
+  background: var(--es-color-bg-surface, #0f1520);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.wr-map.on { opacity: 1; transform: none; }
+.wr-map .mono { font-size: var(--es-text-lg, 16px); }
+.wr-verdict {
+  font-family: var(--es-font-display, inherit);
+  font-size: 30px; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; margin-top: var(--es-space-4, 10px);
+  opacity: 0; transform: scale(.92);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.wr-verdict.on { opacity: 1; transform: none; }
+.wr-verdict.good { color: var(--es-color-success, #7bd88f); }
+.wr-verdict.bad { color: var(--es-color-danger, #ff6b6b); }
+.wr-move { font-size: var(--es-text-lg, 16px); }
+.wr-move .up { color: var(--es-color-success, #7bd88f); }
+.wr-move .down { color: var(--es-color-danger, #ff6b6b); }
+.wr-ledger { text-align: left; }
+.wr-actions {
+  display: flex; gap: var(--es-space-4, 10px); justify-content: center;
+}
+.wr-skip {
+  font-size: var(--es-text-xs, 11px);
+  color: var(--es-color-text-tertiary, #67748F);
+}
+
+/* Match-day buildup overlay (#matchday): the full-width pre-match briefing
+   composed from GET /api/matchday, laid out on the workspace grid. It reuses
+   the dashboard's es-vs / form-square / map-bar / danger-men anatomy — only
+   the overlay shell and small layout rows are new here. */
+#matchday { align-items: flex-start; overflow-y: auto; }
+.md-wrap { width: min(1100px, 96vw); margin: 5vh auto; }
+.md-head .es-matchday-kicker { display: block; margin-bottom: var(--es-space-3, 8px); }
+.md-forms {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: var(--es-space-4, 10px); margin-top: var(--es-space-3, 8px);
+}
+.md-form { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
+.md-form.right { align-items: flex-end; }
+.md-h2h { text-align: center; margin-top: var(--es-space-3, 8px); }
+.md-row {
+  display: flex; flex-direction: column; gap: var(--es-space-1, 3px);
+  margin-bottom: var(--es-space-4, 10px);
+}
+.md-danger { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
+.md-foot { display: flex; gap: var(--es-space-3, 8px); align-items: center; }
+.md-open { margin-left: var(--es-space-2, 5px); }
+
 .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
 .team-pick {
   text-align: left; padding: 10px 12px; cursor: pointer;
@@ -741,6 +826,21 @@ svg.iso .plabel { font-size: 2.4px; }
   background: color-mix(in srgb, var(--c) 16%, var(--es-color-bg-elevated, #161e2e));
   color: var(--c);
 }
+/* "This week's calls" — leverage-ranked pending decisions leading the inbox
+   digest rail. Distinct from plain digest lines: accent bar, rank, score. */
+.inbox-call {
+  border-left: 3px solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-sm, 4px);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 6%, transparent);
+  margin-bottom: var(--es-space-2, 4px);
+}
+.inbox-call-rank {
+  flex: none; min-width: 14px; text-align: center;
+  color: var(--es-color-accent, #4fd8c0); font-weight: 700;
+  font-size: var(--es-text-xs, 11px);
+}
+.inbox-call-score { flex: none; font-size: var(--es-text-2xs, 10px); }
+
 .cat-news        { --c: var(--es-viz-1, #3C7CC9); }
 .cat-talk        { --c: var(--es-viz-3, #3FB59B); }
 .cat-transfer    { --c: var(--es-viz-5, #D9A441); }
@@ -884,6 +984,28 @@ svg.iso .plabel { font-size: 2.4px; }
   width: 15px; height: 15px; border-radius: 50%; object-fit: cover; flex: none;
   background: var(--es-color-bg-sunken, #0b0d12);
 }
+
+/* Spectator camera: the scene pans/zooms via an outer <g> transform, so the
+   svg itself only needs gesture plumbing (touch-action none hands pinch and
+   drag to pointer events) and a grab affordance. */
+#v-map { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+#v-map:active { cursor: grabbing; }
+
+/* Player follow: clicking a lineup row tracks that dot; the row and the
+   ring on the map both pick up the brand accent while tracked. */
+.v-lineup .lu-row { cursor: pointer; border-radius: 4px; }
+.v-lineup .lu-row:hover {
+  background: color-mix(in srgb, var(--es-color-text-tertiary, #6c7383) 12%, transparent);
+}
+.v-lineup .lu-row.following {
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 14%, transparent);
+}
+.v-lineup .lu-row.following .lu-agent::after {
+  content: " · CAM"; font-size: 9px; letter-spacing: .08em;
+  color: var(--es-color-brand, #ff4655);
+}
+.pdot-ring.following { stroke: var(--es-color-brand, #ff4655); stroke-width: .85; }
+.pdot.following { stroke: var(--es-color-brand, #ff4655); stroke-width: .5; }
 .v-lineup .lu-agent {
   font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -1310,6 +1432,8 @@ tr.elim td { opacity: .5; }
 .es-review-h { display: block; font-size: var(--es-text-xs, 11px); }
 .es-review-d { display: block; font-size: var(--es-text-2xs, 10px); }
 .es-review-levers { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.es-review-calls { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.es-review-call { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); }
 .es-review-lever { cursor: pointer; font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); padding: 5px 7px; border: 1px solid var(--es-color-border-secondary, #1c2536); border-radius: var(--es-radius-md, 6px); }
 .es-review-lever:hover { border-color: var(--es-color-accent, #4fd8c0); }
 .es-review-lever.on-focus { border-left: 2px solid var(--es-color-accent, #4fd8c0); }
