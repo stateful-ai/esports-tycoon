@@ -411,6 +411,29 @@ tr.me td:first-child { box-shadow: inset var(--es-border-thick, 2px) 0 0 var(--e
   font-size: var(--es-text-xs, 11px);
   color: var(--es-color-text-tertiary, #67748F);
 }
+
+/* Match-day buildup overlay (#matchday): the full-width pre-match briefing
+   composed from GET /api/matchday, laid out on the workspace grid. It reuses
+   the dashboard's es-vs / form-square / map-bar / danger-men anatomy — only
+   the overlay shell and small layout rows are new here. */
+#matchday { align-items: flex-start; overflow-y: auto; }
+.md-wrap { width: min(1100px, 96vw); margin: 5vh auto; }
+.md-head .es-matchday-kicker { display: block; margin-bottom: var(--es-space-3, 8px); }
+.md-forms {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: var(--es-space-4, 10px); margin-top: var(--es-space-3, 8px);
+}
+.md-form { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
+.md-form.right { align-items: flex-end; }
+.md-h2h { text-align: center; margin-top: var(--es-space-3, 8px); }
+.md-row {
+  display: flex; flex-direction: column; gap: var(--es-space-1, 3px);
+  margin-bottom: var(--es-space-4, 10px);
+}
+.md-danger { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
+.md-foot { display: flex; gap: var(--es-space-3, 8px); align-items: center; }
+.md-open { margin-left: var(--es-space-2, 5px); }
+
 .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
 .team-pick {
   text-align: left; padding: 10px 12px; cursor: pointer;

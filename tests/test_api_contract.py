@@ -219,3 +219,49 @@ def test_inbox_endpoint_serves_leverage_calls(test_env) -> None:
         assert set(c) == {"id", "kind", "leverage"}
         assert c["id"] in item_ids
         assert c["kind"] in inbox_mod.LEVERAGE
+
+
+def test_matchday_endpoint_contract(test_env) -> None:
+    """GET /api/matchday composes the pre-match buildup entirely from
+    existing reads: the enriched next-fixture board (identical to
+    /api/state's next_fixture, both come from _next_fixture_board), both
+    sides' recent-form chips and season danger men, the opposing coach
+    persona, and the scout-gated identity/tendencies."""
+    gs = test_env
+
+    data = server_mod.matchday()
+    assert set(data) == {"fixture", "you", "them", "plan_set"}
+
+    fx = data["fixture"]
+    assert fx is not None  # week 2 of a regular season: a fixture exists
+    # Thin composition: the same enriched board /api/state serves.
+    assert {"preview", "map_pool", "rivalry"} <= set(fx)
+    assert server_mod.state()["next_fixture"] == fx
+
+    you, them = data["you"], data["them"]
+    assert set(you) == {"id", "name", "form", "danger_men"}
+    assert set(them) == {
+        "id", "name", "form", "danger_men",
+        "coach", "identity", "tendencies", "scouted",
+    }
+    assert you["id"] == gs.user_team_id
+    assert them["id"] in (fx["team_a"], fx["team_b"])
+    assert them["id"] != you["id"]
+
+    for side in (you, them):
+        for chip in side["form"]:
+            assert set(chip) == {"result", "opponent", "score", "week"}
+            assert chip["result"] in {"W", "L"}
+        for dm in side["danger_men"]:
+            assert set(dm) == {"player_id", "handle", "role", "rating", "maps"}
+            assert dm["maps"] >= 3
+
+    if them["coach"] is not None:
+        assert set(them["coach"]) == {"name", "specialty", "style"}
+    # Tactical reads stay hidden until the rival is scouted (>=0.5) — the
+    # same gate the roster screen uses. The coach persona is public.
+    if not them["scouted"]:
+        assert them["identity"] is None
+        assert them["tendencies"] == []
+
+    assert isinstance(data["plan_set"], bool)

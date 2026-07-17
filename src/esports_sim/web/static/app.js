@@ -1173,6 +1173,192 @@ function dashGoTab(name) {
   if (b) b.click();
 }
 
+/* -- Match-day buildup overlay (#matchday) ----------------------------------
+   The full pre-match briefing: one composed GET /api/matchday read (enriched
+   fixture board, both sides' form + danger men, the opposing bench) laid out
+   on the workspace grid. Presentation only — every number arrives computed;
+   this renders, deep-links names, and hands off to the game-plan screen. */
+async function openMatchday() {
+  let md = null;
+  try { md = await api("/api/matchday"); } catch (_e) { return; }
+  const ov = $("#matchday");
+  if (!ov) return;
+  ov.innerHTML = "";
+  ov.classList.remove("hidden");
+  ov.onclick = (e) => { if (e.target === ov) closeMatchday(); };
+  const wrap = el("div", "md-wrap");
+  ov.appendChild(wrap);
+
+  const f = md && md.fixture;
+  if (!f) {
+    const empty = el("div", "card");
+    empty.appendChild(el("h2", "", "Match day"));
+    empty.appendChild(el("p", "muted", "No fixture scheduled this week."));
+    const btn = el("button", "btn", "Close");
+    btn.onclick = closeMatchday;
+    empty.appendChild(btn);
+    wrap.appendChild(empty);
+    return;
+  }
+  const you = md.you, them = md.them;
+  const season = App.state?.season;
+  const ws = el("div", "ws");
+  wrap.appendChild(ws);
+
+  // Last-5 form as W/L squares (oldest -> newest, the server's order).
+  const formStrip = (chips) => {
+    const strip = el("span", "es-form-strip");
+    if (!(chips || []).length) strip.appendChild(el("span", "muted", "No results yet"));
+    for (const c of chips || []) {
+      strip.appendChild(formSquare(c.result, `W${c.week} vs ${c.opponent}${c.score ? " · " + c.score : ""}`));
+    }
+    return strip;
+  };
+  // Season danger men: handle + role + rating over the map sample.
+  const dangerList = (rows) => {
+    const box = el("div", "es-stars md-danger");
+    if (!(rows || []).length) {
+      box.appendChild(el("span", "muted", "No season sample yet."));
+      return box;
+    }
+    for (const d of rows) {
+      box.appendChild(el("span", "es-star",
+        plink(d.player_id, d.handle) +
+        `<span class="pill">${esc(d.role)}</span>` +
+        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} maps</span>`));
+    }
+    return box;
+  };
+
+  // 1. Tale of the tape: VS header, rivalry flag, both form strips, h2h.
+  const head = el("div", "card es-matchday ws-12 md-head");
+  head.appendChild(el("div", "es-matchday-kicker",
+    `${esc(stageLabel(f.stage))}${season ? ` · S${season}` : ""} · W${f.week} · Pre-match briefing`));
+  head.appendChild(el("div", "es-vs",
+    `<div class="es-vs-team left">${tlink(you.id, you.name, "es-vs-name")}</div>` +
+    `<div class="es-vs-mid">
+      <div class="es-vs-x">VS</div>
+      <span class="pill es-bo">Best of ${f.best_of}</span>
+      ${f.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${f.rivalry}">⚔ RIVALRY</span>` : ""}
+    </div>` +
+    `<div class="es-vs-team right">${tlink(them.id, them.name, "es-vs-name")}</div>`));
+  const forms = el("div", "md-forms");
+  const fL = el("div", "md-form left");
+  fL.appendChild(el("span", "es-scout-lab muted", `Last ${(you.form || []).length || 0}`));
+  fL.appendChild(formStrip(you.form));
+  const fR = el("div", "md-form right");
+  fR.appendChild(el("span", "es-scout-lab muted", `Last ${(them.form || []).length || 0}`));
+  fR.appendChild(formStrip(them.form));
+  forms.append(fL, fR);
+  head.appendChild(forms);
+  if (f.h2h) {
+    const h = f.h2h;
+    const lead = h.wins === h.losses ? "level" : h.you_lead ? "you lead" : "you trail";
+    const hstreak = h.streak_len > 1 ? ` · ${h.streak_team === you.id ? "W" : "L"}${h.streak_len}` : "";
+    head.appendChild(el("div", "md-h2h muted",
+      `Head-to-head this season: <b>${h.wins}–${h.losses}</b> (${lead})${hstreak}`));
+  }
+  ws.appendChild(head);
+
+  // 2. Storylines: the grounded prose preview.
+  const story = el("div", "card ws-6");
+  story.appendChild(el("h2", "", "Storylines"));
+  if ((f.preview || []).length) {
+    for (const line of f.preview) story.appendChild(el("p", "es-preview muted", esc(line)));
+  } else {
+    story.appendChild(el("p", "muted", "Nothing on the wire yet — the season will write these."));
+  }
+  ws.appendChild(story);
+
+  // 3. Opposition read: coach persona, scouted identity, their danger men.
+  const opp = el("div", "card ws-6");
+  opp.appendChild(el("h2", "", `${esc(them.name)} — the read`));
+  if (them.coach) {
+    opp.appendChild(el("div", "md-row",
+      `<span class="es-scout-lab muted">Coach</span>` +
+      `<span><b>${esc(them.coach.name)}</b> <span class="pill es-identity">${esc(them.coach.style)}</span> ` +
+      `<span class="muted">${esc(them.coach.specialty)} specialist</span></span>`));
+  }
+  if (them.identity || (them.tendencies || []).length) {
+    const row = el("div", "md-row");
+    row.appendChild(el("span", "es-scout-lab muted", "Playstyle"));
+    const body = el("span", "");
+    if (them.identity) body.appendChild(el("span", "pill es-identity", esc(them.identity)));
+    if ((them.tendencies || []).length) {
+      body.appendChild(el("span", "es-tendencies muted", " " + them.tendencies.map(esc).join(" · ")));
+    }
+    row.appendChild(body);
+    opp.appendChild(row);
+  } else if (!them.scouted) {
+    opp.appendChild(el("p", "muted", "Their tactical identity is unread — assign your scout to unlock it."));
+  }
+  opp.appendChild(el("span", "es-scout-lab muted", "Danger men"));
+  opp.appendChild(dangerList(them.danger_men));
+  ws.appendChild(opp);
+
+  // 4. Map pool & suggested veto (the server's board; hidden until it has data).
+  const mp = f.map_pool;
+  const maps = el("div", "card ws-6");
+  maps.appendChild(el("h2", "", "Map pool & veto"));
+  if (mp && mp.veto && (mp.veto.ban || mp.veto.pick)) {
+    const vr = el("div", "es-veto");
+    if (mp.veto.ban) {
+      vr.appendChild(el("span", "es-veto-chip ban",
+        `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.opponent} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+    }
+    if (mp.veto.pick) {
+      vr.appendChild(el("span", "es-veto-chip pick",
+        `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+    }
+    maps.appendChild(vr);
+  }
+  if (mp && mp.maps.length) {
+    const bars = el("div", "es-mapbars");
+    for (const m of mp.maps.slice(0, 7)) {
+      const wr = m.win_rate == null ? 0 : m.win_rate;
+      bars.appendChild(el("div", "es-mapbar",
+        `<span class="es-mapbar-name">${esc(m.map)}</span>` +
+        `<span class="es-mapbar-track"><span class="es-mapbar-fill" style="width:${wr}%"></span></span>` +
+        `<span class="mono es-mapbar-wr">${m.win_rate == null ? "—" : m.win_rate + "%"}</span>` +
+        `<span class="muted es-mapbar-n">${m.wins}/${m.played}</span>`));
+    }
+    maps.appendChild(bars);
+  }
+  if (maps.childElementCount <= 1) {
+    maps.appendChild(el("p", "muted", "No map record yet this season."));
+  }
+  ws.appendChild(maps);
+
+  // 5. Your side: who the opposition will be worrying about.
+  const mine = el("div", "card ws-6");
+  mine.appendChild(el("h2", "", `${esc(you.name)} — your threats`));
+  mine.appendChild(dangerList(you.danger_men));
+  ws.appendChild(mine);
+
+  // 6. Hand-off: into the game-plan screen, or back to the dashboard.
+  const foot = el("div", "card ws-12 md-foot");
+  foot.appendChild(el("span", "muted",
+    md.plan_set
+      ? "A game plan is locked for this fixture."
+      : "No opponent-specific plan is set yet — lock the approach before you advance."));
+  foot.appendChild(el("span", "spacer"));
+  const plan = el("button", "btn btn-primary",
+    (md.plan_set ? "Review game plan" : "Set game plan") + " ▸");
+  plan.onclick = () => { closeMatchday(); App.tacticsTab = "gameplan"; dashGoTab("tactics"); };
+  const cont = el("button", "btn", "Continue");
+  cont.onclick = closeMatchday;
+  foot.append(plan, cont);
+  ws.appendChild(foot);
+}
+
+function closeMatchday() {
+  const ov = $("#matchday");
+  if (!ov) return;
+  ov.classList.add("hidden");
+  ov.innerHTML = "";
+  ov.onclick = null;
+}
+
 // Legacy career: the job-market takeover panel a dismissed manager sees
 // instead of the normal hub. Accepting rebinds the session server-side,
 // so a full reload is the honest refresh.
@@ -1470,10 +1656,15 @@ async function dashboard(v) {
       `<span class="es-matchday-kicker">W${fix.week} · Staff briefing</span>` +
       `<h2>Match day</h2>` +
       `<p class="muted">Everything to settle before you advance the week.</p>`));
-    heroTop.appendChild(el("div", "es-readiness",
+    const readiness = el("div", "es-readiness",
       `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
       `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
-      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`));
+      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
+    const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
+    mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
+    mdBtn.onclick = openMatchday;
+    readiness.appendChild(mdBtn);
+    heroTop.appendChild(readiness);
     spot.appendChild(heroTop);
 
     const teamBlock = (tid, name, logo, side) => {

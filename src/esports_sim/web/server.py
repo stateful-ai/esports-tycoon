@@ -1848,41 +1848,43 @@ def _roster_movers(gs: GameState, tid: str, n: int = 4) -> list[dict]:
     return moves[:n]
 
 
+def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
+    """The acting team's upcoming fixture enriched with the pre-match reads:
+    this-season head-to-head (attached only when they've met — silence beats
+    a "0-0" line), the grounded prose preview, and the map pool + suggested
+    veto (which hides itself until both sides have prior maps). Shared by
+    GET /api/state and GET /api/matchday so the two surfaces can never
+    drift. Returns (view, opponent_id); (None, None) without a fixture."""
+    fixture = gs.team_fixture(gs.acting_team_id)
+    if fixture is None:
+        return None, None
+    view = _fixture_view(fixture, gs)
+    opp_id = (
+        fixture.team_b if fixture.team_a == gs.acting_team_id
+        else fixture.team_a
+    )
+    h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
+    if h["meetings"]:
+        view["h2h"] = {
+            "meetings": h["meetings"],
+            "wins": h["wins_a"],  # acting team's series wins
+            "losses": h["wins_b"],
+            "streak_team": h["streak_winner_id"],
+            "streak_len": h["streak_len"],
+            "you_lead": h["wins_a"] > h["wins_b"],
+        }
+    view["preview"] = narrative.match_preview(gs, fixture, gs.acting_team_id)
+    view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id)
+    return view, opp_id
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
         gs = S.require_gs()
         user = gs.teams[gs.acting_team_id]
-        fixture = gs.team_fixture(gs.acting_team_id)
         order = gs.standings_order(str(user.region))
-        # This-season head-to-head vs the upcoming opponent, from the acting
-        # team's perspective. Attached only when they've met (silence beats a
-        # "0-0" line); pure read of narrative.head_to_head.
-        next_fixture = _fixture_view(fixture, gs) if fixture else None
-        if next_fixture is not None:
-            opp_id = (
-                fixture.team_b if fixture.team_a == gs.acting_team_id
-                else fixture.team_a
-            )
-            h = narrative.head_to_head(gs, gs.acting_team_id, opp_id)
-            if h["meetings"]:
-                next_fixture["h2h"] = {
-                    "meetings": h["meetings"],
-                    "wins": h["wins_a"],  # acting team's series wins
-                    "losses": h["wins_b"],
-                    "streak_team": h["streak_winner_id"],
-                    "streak_len": h["streak_len"],
-                    "you_lead": h["wins_a"] > h["wins_b"],
-                }
-            # A grounded prose preview synthesising form / series / stakes.
-            next_fixture["preview"] = narrative.match_preview(
-                gs, fixture, gs.acting_team_id
-            )
-            # Map pool + a suggested veto vs this opponent (needs prior maps
-            # from both sides; the board simply hides its veto until then).
-            next_fixture["map_pool"] = _map_pool_board(
-                gs, gs.acting_team_id, opp_id
-            )
+        next_fixture, _next_opp = _next_fixture_board(gs)
         pending_flavor = flavor_events.pending_for(gs)
         flavor_view = flavor_events.to_api(pending_flavor) if pending_flavor else None
         if flavor_view is not None:
@@ -2008,6 +2010,86 @@ def state() -> dict:
                 "autosave_enabled": gs.autosave_enabled,
                 "autosave_every_weeks": gs.autosave_every_weeks,
             },
+        }
+
+
+# ---------------------------------------------------------------------------
+# Match-day buildup (GET /api/matchday)
+#
+# One composed pre-match read for the dashboard's "Match day" overlay: the
+# enriched next-fixture board (h2h / preview prose / map pool + veto /
+# rivalry flag, the exact object /api/state serves) plus both sides' recent
+# form squares and season danger men, and the opposing bench read. The
+# coach persona (name / specialty / style school) is a broadcast fact —
+# the shared staff market already shows every coach's style — while the
+# tactics-derived identity and tendencies keep the same >=0.5 scouting
+# gate the roster screen uses. Pure reads only; the client renders.
+
+
+def _danger_men(gs: GameState, tid: str, n: int = 3) -> list[dict]:
+    """A side's top-rated players this season (public box-score facts, the
+    same season stats the league leaders read): mean rating over >=3 maps.
+    Empty early in a season — the client hides the block."""
+    ids = set(gs.teams[tid].player_ids) if tid in gs.teams else set()
+    rows = [
+        (pid, st) for pid, st in sorted(gs.player_stats.items())
+        if pid in ids and st.maps >= 3 and pid in gs.players
+    ]
+    rows.sort(key=lambda kv: (-kv[1].rating, kv[0]))
+    return [
+        {
+            "player_id": pid,
+            "handle": gs.players[pid].handle,
+            "role": str(gs.players[pid].role),
+            "rating": round(st.rating, 2),
+            "maps": int(st.maps),
+        }
+        for pid, st in rows[:n]
+    ]
+
+
+@app.get("/api/matchday")
+def matchday() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        view, opp_id = _next_fixture_board(gs)
+        if view is None or opp_id not in gs.teams:
+            return {"fixture": None, "you": None, "them": None, "plan_set": False}
+        scouted = gs.scout_progress.get(opp_id, 0.0) >= 0.5
+        opp_tactics = gs.teams[opp_id].tactics
+        coach = gs.staff_by.get(opp_id, {}).get("coach")
+        plan = gs.game_plan
+        return {
+            "fixture": view,
+            "you": {
+                "id": me,
+                "name": gs.teams[me].name,
+                "form": _team_recent_form(gs, me),
+                "danger_men": _danger_men(gs, me),
+            },
+            "them": {
+                "id": opp_id,
+                "name": gs.teams[opp_id].name,
+                "form": _team_recent_form(gs, opp_id),
+                "danger_men": _danger_men(gs, opp_id),
+                "coach": (
+                    {
+                        "name": coach.name,
+                        "specialty": coach.specialty,
+                        "style": staff_effects.STYLE_LABELS[
+                            staff_effects.style_identity(coach)
+                        ],
+                    }
+                    if coach is not None else None
+                ),
+                "identity": _team_identity_label(opp_tactics) if scouted else None,
+                "tendencies": _team_tendencies(opp_tactics) if scouted else [],
+                "scouted": scouted,
+            },
+            # Whether a game plan is already set for THIS fixture — drives the
+            # overlay's CTA label ("Set game plan" vs "Review game plan").
+            "plan_set": plan is not None and plan.fixture_id == view["id"],
         }
 
 
