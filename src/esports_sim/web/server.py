@@ -165,6 +165,12 @@ class _Game:
         # (team_id, fixture_id) keys already written to the on-disk match-review
         # corpus this session — skips byes / re-appends (see web.review_history).
         self.review_seen: set[tuple[str, str]] = set()
+        # Pre-tick league position per human team (captured by the advance
+        # endpoint right before the week resolves) so the report's
+        # week_reveal block can show standings movement. Session memory
+        # only, like last_report: after a restart the reveal simply omits
+        # the "from" position.
+        self.prev_positions: dict[str, dict | None] = {}
         # Save policy runtime: actions only MARK the world dirty (the full
         # GameState serializing on every click was the biggest per-action
         # cost — see /api/perf save.write); disk writes happen on the
@@ -6323,6 +6329,12 @@ def advance() -> dict:
         # the RL episode's step boundary).
         for t in sorted(game.ready):
             telemetry.record_action(gs, "advance", team_id=t)
+        # Capture every human seat's pre-tick league position so the report's
+        # week_reveal can show the standings movement across this tick
+        # (session memory only, alongside last_report).
+        game.prev_positions = {
+            t: _league_position(gs, t) for t in sorted(gs.human_team_ids)
+        }
         game.event_logs.clear()  # replays are for the freshly played week
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
@@ -6346,6 +6358,46 @@ def advance() -> dict:
         return _report_view(report, gs, me)
 
 
+def _league_position(gs: GameState, tid: str) -> dict | None:
+    """1-based region-table position plus the table size for a team, or None
+    when it isn't in a table. Pure read of standings_order."""
+    t = gs.teams.get(tid)
+    if t is None:
+        return None
+    order = gs.standings_order(str(t.region), tier=t.tier)
+    if tid not in order:
+        return None
+    return {"pos": order.index(tid) + 1, "of": len(order)}
+
+
+def _week_reveal(report, gs: GameState, me: str) -> dict:
+    """The staged post-advance beat: which of the report's played fixtures is
+    the manager's own, plus their standings movement across the tick. Thin
+    presentation read — the fixture itself already sits in the report's
+    fixtures list, and the pre-tick position comes from the session memory
+    captured by the advance endpoint (None after a restart, so the client
+    just shows the new position without a "from")."""
+    fixture_id = next(
+        (
+            f.id
+            for f in report.fixtures
+            if me in (f.team_a, f.team_b) and f.played
+        ),
+        None,
+    )
+    standings = None
+    if report.phase == "regular":
+        now = _league_position(gs, me)
+        if now is not None:
+            prev = S.prev_positions.get(me)
+            standings = {
+                "prev": prev["pos"] if prev else None,
+                "now": now["pos"],
+                "of": now["of"],
+            }
+    return {"fixture_id": fixture_id, "standings": standings}
+
+
 def _report_view(report, gs: GameState, me: str) -> dict:
     """The week-report payload — shared by the advance response and
     /api/report so a waiting shared-world manager sees the same report
@@ -6359,6 +6411,9 @@ def _report_view(report, gs: GameState, me: str) -> dict:
         "user_income": report.income_by.get(me, 0),
         "user_expenses": report.expenses_by.get(me, 0),
         "notes": report.notes,
+        # Data for the client's staged advance beat (own result -> standings
+        # movement -> decisions settled) — presentation only, skippable.
+        "week_reveal": _week_reveal(report, gs, me),
     }
 
 

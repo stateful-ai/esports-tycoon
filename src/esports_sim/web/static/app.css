@@ -349,6 +349,68 @@ tr.me td:first-child { box-shadow: inset var(--es-border-thick, 2px) 0 0 var(--e
   font-size: var(--es-text-2xl, 22px); font-weight: 700;
   letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px;
 }
+
+/* Advance-week staged reveal (#week-reveal): the post-advance beat staged
+   over the dimmed backdrop — own result, standings movement, decisions
+   settled. Stages rise in via CSS transitions (JS only flips .on classes
+   and counts scores up); one click anywhere skips to the dashboard. */
+#week-reveal { flex-direction: column; cursor: pointer; user-select: none; }
+.wr-wrap {
+  width: min(520px, 92vw); text-align: center;
+  display: flex; flex-direction: column; gap: var(--es-space-6, 16px);
+}
+.wr-stage {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.wr-stage.on { opacity: 1; transform: none; }
+.wr-kicker {
+  font-size: var(--es-text-xs, 11px); letter-spacing: .14em;
+  text-transform: uppercase; color: var(--es-color-text-tertiary, #67748F);
+  margin-bottom: var(--es-space-2, 4px);
+}
+.wr-vs {
+  font-family: var(--es-font-display, inherit);
+  font-size: var(--es-text-2xl, 22px); font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.wr-dim { color: var(--es-color-text-tertiary, #67748F); }
+.wr-maps {
+  display: flex; flex-direction: column; gap: var(--es-space-2, 4px);
+  margin-top: var(--es-space-4, 10px);
+}
+.wr-map {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: var(--es-space-2, 4px) var(--es-space-6, 16px);
+  background: var(--es-color-bg-surface, #0f1520);
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.wr-map.on { opacity: 1; transform: none; }
+.wr-map .mono { font-size: var(--es-text-lg, 16px); }
+.wr-verdict {
+  font-family: var(--es-font-display, inherit);
+  font-size: 30px; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; margin-top: var(--es-space-4, 10px);
+  opacity: 0; transform: scale(.92);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.wr-verdict.on { opacity: 1; transform: none; }
+.wr-verdict.good { color: var(--es-color-success, #7bd88f); }
+.wr-verdict.bad { color: var(--es-color-danger, #ff6b6b); }
+.wr-move { font-size: var(--es-text-lg, 16px); }
+.wr-move .up { color: var(--es-color-success, #7bd88f); }
+.wr-move .down { color: var(--es-color-danger, #ff6b6b); }
+.wr-ledger { text-align: left; }
+.wr-actions {
+  display: flex; gap: var(--es-space-4, 10px); justify-content: center;
+}
+.wr-skip {
+  font-size: var(--es-text-xs, 11px);
+  color: var(--es-color-text-tertiary, #67748F);
+}
 .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
 .team-pick {
   text-align: left; padding: 10px 12px; cursor: pointer;

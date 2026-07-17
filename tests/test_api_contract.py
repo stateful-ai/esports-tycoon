@@ -161,6 +161,46 @@ def test_post_actions_endpoints(test_env) -> None:
     assert ("effects" in res_data or res_data.get("offline") is True)
 
 
+def test_advance_response_carries_week_reveal(
+    game_data: GameData, tmp_path, monkeypatch
+) -> None:
+    """POST /api/actions/advance returns a week_reveal block for the client's
+    staged advance beat: the manager's own played fixture id plus prev/now
+    league positions (prev captured pre-tick in session memory). /api/report
+    serves the identical block for waiting shared-world managers."""
+    from esports_sim.web import review_history
+
+    gs = new_campaign(game_data, seed=99, user_team_id="team_nexus")
+    gs.autosave_enabled = False  # keep the test off the real saves/ dir
+    game = server_mod._Game(game_data, "REVEALT", gs=gs)
+    token = server_mod._ctx.set(server_mod._ReqCtx(game, gs.user_team_id))
+    monkeypatch.setattr(review_history, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(server_mod.llm_social, "enqueue", lambda *_a, **_k: None)
+    try:
+        res = server_mod.advance()
+        assert res["advanced"] is True
+        wr = res["week_reveal"]
+        assert set(wr) == {"fixture_id", "standings"}
+
+        mine = [
+            f for f in res["fixtures"]
+            if gs.user_team_id in (f["team_a"], f["team_b"]) and f["played"]
+        ]
+        assert wr["fixture_id"] == (mine[0]["id"] if mine else None)
+
+        assert res["phase"] == "regular"
+        st = wr["standings"]
+        assert st is not None and set(st) == {"prev", "now", "of"}
+        assert 1 <= st["prev"] <= st["of"]
+        assert 1 <= st["now"] <= st["of"]
+
+        # Waiting managers fetch the same reveal from /api/report.
+        rep2 = server_mod.last_week_report()["report"]
+        assert rep2["week_reveal"] == wr
+    finally:
+        server_mod._ctx.reset(token)
+
+
 def test_inbox_endpoint_serves_leverage_calls(test_env) -> None:
     """GET /api/inbox carries a "calls" marker list ({id, kind, leverage})
     for the digest's "This week's calls" header. Every call references an

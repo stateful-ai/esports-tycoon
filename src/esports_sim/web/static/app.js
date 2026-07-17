@@ -6846,8 +6846,10 @@ $("#advance-btn").onclick = async () => {
       pollForAdvance(prevWeek);
       return; // stay disabled; pollForAdvance re-enables when the week ticks
     }
-    showReport(rep);
+    // Refresh FIRST so the dashboard behind the reveal (and the reveal's
+    // "Decisions settled" stage) render the new week's state.
     await refresh();
+    if (!startWeekReveal(rep)) showReport(rep);
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
@@ -6879,20 +6881,176 @@ function pollForAdvance(prevWeek) {
       // Show the played week's report (results + replay buttons) — the
       // manager whose ready-up ticked the world got it from advance();
       // everyone else fetches the same report here.
+      await refresh();
       try {
         const r = await api("/api/report");
-        if (r.report) showReport(r.report);
-        else toast(`Week ${s.week} — everyone advanced.`);
+        if (r.report) {
+          if (!startWeekReveal(r.report)) showReport(r.report);
+        } else toast(`Week ${s.week} — everyone advanced.`);
       } catch {
         toast(`Week ${s.week} — everyone advanced.`);
       }
-      await refresh();
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
       return;
     }
     setTimeout(tick, 2500);
   };
   setTimeout(tick, 2500);
+}
+
+/* -- advance-week staged reveal -----------------------------------------------
+   The advance beat, staged instead of dumped: (1) your own series result,
+   map scores counting up, (2) standings movement across the tick, (3) the
+   "Decisions settled" grades — then the dashboard. Pure presentation over
+   the advance payload (week_reveal is a thin server read) and the already-
+   refreshed App.state; one click anywhere skips straight to the dashboard.
+   Motion is CSS transitions — JS only schedules class flips + count-ups. */
+
+let wrCancels = [];
+
+function wrLater(fn, ms) {
+  const id = setTimeout(fn, ms);
+  wrCancels.push(() => clearTimeout(id));
+}
+
+function closeWeekReveal() {
+  for (const cancel of wrCancels) cancel();
+  wrCancels = [];
+  const ov = $("#week-reveal");
+  ov.classList.add("hidden");
+  ov.innerHTML = "";
+}
+
+// Tiny numeric count-up (the entrance motion itself is CSS).
+function wrCountUp(node, to, ms) {
+  if (to <= 0) { node.textContent = String(to); return; }
+  const steps = Math.max(1, Math.min(to, Math.round(ms / 40)));
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    node.textContent = String(Math.round((to * i) / steps));
+    if (i >= steps) clearInterval(iv);
+  }, ms / steps);
+  wrCancels.push(() => clearInterval(iv));
+}
+
+// Returns false when the week holds nothing to stage (no own played
+// fixture), so callers fall back to the classic report modal.
+function startWeekReveal(rep) {
+  const wr = rep.week_reveal;
+  const myId = App.state?.user_team?.id;
+  const f = wr && wr.fixture_id ? rep.fixtures.find((x) => x.id === wr.fixture_id) : null;
+  if (!f || !myId) return false;
+  closeWeekReveal(); // reset any prior run
+  const ov = $("#week-reveal");
+  ov.onclick = closeWeekReveal; // one click anywhere = skip to dashboard
+  const wrap = el("div", "wr-wrap");
+  ov.appendChild(wrap);
+
+  const mineIsA = f.team_a === myId;
+  const myName = mineIsA ? f.team_a_name : f.team_b_name;
+  const oppName = mineIsA ? f.team_b_name : f.team_a_name;
+  const won = f.winner_id === myId;
+
+  // Stage 1 — your result, map by map.
+  const s1 = el("div", "wr-stage");
+  s1.appendChild(el("div", "wr-kicker",
+    `${esc(stageLabel(f.stage))} · Season ${rep.season} · Week ${rep.week}`));
+  s1.appendChild(el("div", "wr-vs",
+    `${esc(myName)} <span class="wr-dim">vs</span> ${esc(oppName)}`));
+  const maps = el("div", "wr-maps");
+  s1.appendChild(maps);
+  const rows = [];
+  for (const r of f.results) {
+    const mine = mineIsA ? r.score_a : r.score_b;
+    const theirs = mineIsA ? r.score_b : r.score_a;
+    const row = el("div", "wr-map",
+      `<span>${esc(r.map_id)}</span>` +
+      `<span class="mono"><b class="wr-n1">0</b>–<b class="wr-n2">0</b></span>`);
+    maps.appendChild(row);
+    rows.push({ row, mine, theirs });
+  }
+  const myMaps = mineIsA ? f.map_score[0] : f.map_score[1];
+  const oppMaps = mineIsA ? f.map_score[1] : f.map_score[0];
+  const verdict = el("div", `wr-verdict ${won ? "good" : "bad"}`,
+    (won ? "Victory" : "Defeat") + (f.best_of > 1 ? ` ${myMaps}–${oppMaps}` : ""));
+  s1.appendChild(verdict);
+  wrap.appendChild(s1);
+
+  // Stage timings: stage 1 in, then one map row (with count-up) at a time,
+  // then the verdict, then the later stages.
+  wrLater(() => s1.classList.add("on"), 60);
+  rows.forEach((m, i) => {
+    wrLater(() => {
+      m.row.classList.add("on");
+      wrCountUp(m.row.querySelector(".wr-n1"), m.mine, 650);
+      wrCountUp(m.row.querySelector(".wr-n2"), m.theirs, 650);
+    }, 550 + i * 950);
+  });
+  let t = 550 + rows.length * 950;
+  wrLater(() => verdict.classList.add("on"), t);
+  t += 1000;
+
+  // Stage 2 — standings movement (regular season only; prev is unknown
+  // right after a server restart, so it degrades to just the position).
+  const st = wr.standings;
+  if (st) {
+    const s2 = el("div", "wr-stage");
+    s2.appendChild(el("div", "wr-kicker", "League position"));
+    let moveHtml;
+    if (st.prev && st.prev !== st.now) {
+      const up = st.now < st.prev;
+      moveHtml = `${esc(ordinal(st.prev))} <span class="${up ? "up" : "down"}">` +
+        `${up ? "▲" : "▼"} ${esc(ordinal(st.now))}</span> of ${st.of}`;
+    } else {
+      moveHtml = `${st.prev ? "Holding " : ""}${esc(ordinal(st.now))} of ${st.of}`;
+    }
+    s2.appendChild(el("div", "wr-move", moveHtml));
+    wrap.appendChild(s2);
+    wrLater(() => s2.classList.add("on"), t);
+    t += 1000;
+  }
+
+  // Stage 3 — decisions settled (from the refreshed dashboard state).
+  const ledger = App.state?.decision_ledger || [];
+  if (ledger.length) {
+    const s3 = el("div", "wr-stage");
+    s3.appendChild(el("div", "wr-kicker", "Decisions settled"));
+    const list = el("div", "es-obj wr-ledger");
+    const vcls = { paid_off: "good", backfired: "bad", neutral: "" };
+    const vlab = { paid_off: "paid off", backfired: "backfired", neutral: "neutral" };
+    for (const r of ledger.slice(0, 3)) {
+      list.appendChild(el("div", "es-obj-row",
+        `<span class="pill obj ${vcls[r.verdict] ?? ""}">${esc(vlab[r.verdict] || r.verdict)}</span> ` +
+        `<span>${esc(r.text)}</span>`));
+    }
+    s3.appendChild(list);
+    wrap.appendChild(s3);
+    wrLater(() => s3.classList.add("on"), t);
+    t += 1000;
+  }
+
+  // Final — continue to the dashboard, or open the classic full report.
+  const fin = el("div", "wr-stage wr-actions");
+  const cont = el("button", "btn btn-primary", "Continue");
+  cont.onclick = closeWeekReveal; // the overlay click would do it anyway
+  const full = el("button", "btn", "Full report");
+  full.onclick = (e) => {
+    e.stopPropagation();
+    closeWeekReveal();
+    showReport(rep);
+  };
+  fin.appendChild(cont);
+  fin.appendChild(full);
+  wrap.appendChild(fin);
+  wrLater(() => fin.classList.add("on"), t);
+
+  const hint = el("div", "wr-stage wr-skip", "click anywhere to skip");
+  wrap.appendChild(hint);
+  wrLater(() => hint.classList.add("on"), 1400);
+
+  ov.classList.remove("hidden");
+  return true;
 }
 
 function showReport(rep) {
