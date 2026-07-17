@@ -180,6 +180,111 @@ const DevChart = ({ series }) => {
   `;
 };
 
+/* F2 — "not developing this week" copy. The reason string is computed
+   server-side (training.not_developing_reason); the client only maps it to
+   human text — no rule logic lives here. */
+function pfNotDevelopingLabel(reason) {
+  switch (reason) {
+    case "no_language_coach": return "no language coach";
+    case "exhausted": return "too exhausted";
+    case "at_ceiling": return "at ceiling";
+    default: return reason ? String(reason).replace(/_/g, " ") : "not developing";
+  }
+}
+function pfNotDevelopingText(reason) {
+  switch (reason) {
+    case "no_language_coach":
+      return "Studying a language with no language coach on staff — attributes barely move this week. Hire a language coach or switch the plan.";
+    case "exhausted":
+      return "Condition is critically low, so almost no training sticks this week. Rest them or ease the intensity.";
+    case "at_ceiling":
+      return "Already at their skill ceiling on the trained focus — little room left to grow.";
+    default:
+      return "Not developing this week.";
+  }
+}
+
+/* F1 — season growth: per-attribute deltas over the current season pulled
+   straight from dev_history snapshots (DevSnap.attributes), plus a trajectory
+   sparkline for the selected attribute. Delta = last-minus-first of the
+   season's snapshots, the same display-transform the CA summary line uses;
+   no engine/campaign formula is mirrored. */
+const SeasonGrowth = ({ series, labelMap }) => {
+  const [sel, setSel] = useState(null);
+  const seasonPts = useMemo(() => {
+    const withAttrs = (series || []).filter(
+      (s) => s && s.attributes && Object.keys(s.attributes).length
+    );
+    if (withAttrs.length < 2) return [];
+    const maxSeason = Math.max(...withAttrs.map((s) => s.season));
+    return withAttrs.filter((s) => s.season === maxSeason);
+  }, [series]);
+  const movers = useMemo(() => {
+    if (seasonPts.length < 2) return [];
+    const first = seasonPts[0].attributes;
+    const last = seasonPts[seasonPts.length - 1].attributes;
+    const out = [];
+    for (const k of Object.keys(last)) {
+      if (first[k] == null) continue;
+      out.push({ key: k, delta: last[k] - first[k], value: last[k] });
+    }
+    out.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || a.key.localeCompare(b.key));
+    return out;
+  }, [seasonPts]);
+
+  if (seasonPts.length < 2 || !movers.length) return null;
+  const top = movers.slice(0, 8);
+  const label = (k) => (labelMap && labelMap[k]) || humanize(k);
+  const selKey = sel && top.some((m) => m.key === sel) ? sel : top[0].key;
+  const anyMove = top.some((m) => Math.abs(m.delta) >= 0.05);
+
+  return html`
+    <div class="pf-growth">
+      <div class="pf-career-sub muted">Season growth</div>
+      <div class="pf-chart-box">
+        <div class="pf-chart-cap">${label(selKey)} this season</div>
+        <${MetricLine}
+          series=${seasonPts}
+          getValue=${(w) => (w.attributes ? w.attributes[selKey] : null)}
+          formatValue=${(v) => Number(v).toFixed(1)}
+          ariaLabel=${`${label(selKey)} trajectory this season`}
+        />
+      </div>
+      ${!anyMove
+        ? html`<p class="pf-season-line muted">No measurable attribute movement yet this season.</p>`
+        : html`
+          <div class="pf-attrs pf-growth-list">
+            ${top.map((m) => {
+              const up = m.delta > 0.05, down = m.delta < -0.05;
+              const cls = up ? "trend-up" : down ? "trend-down" : "muted";
+              const arrow = up ? "▲" : down ? "▼" : "—";
+              const sign = m.delta > 0 ? "+" : "";
+              const active = m.key === selKey;
+              return html`
+                <div key=${m.key} class="pf-attr pf-growth-row"
+                     role="button" tabindex="0"
+                     style=${{
+                       cursor: "pointer",
+                       background: active ? "var(--es-color-bg-alt, #151b26)" : "transparent",
+                       borderRadius: "4px",
+                     }}
+                     onClick=${() => setSel(m.key)}
+                     onKeyDown=${(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSel(m.key); } }}>
+                  <span class="pf-attr-label">${label(m.key)}</span>
+                  <span class="pf-attr-bar"><${PfBar} value=${m.value} /></span>
+                  <span class="pf-attr-val mono">
+                    ${Math.round(m.value)}
+                    <span class=${`pf-growth-delta ${cls}`} style=${{ marginLeft: "6px" }} title="change since the start of the season">${sign}${m.delta.toFixed(1)} ${arrow}</span>
+                  </span>
+                </div>
+              `;
+            })}
+          </div>
+        `}
+    </div>
+  `;
+};
+
 const TeammateCompare = ({ playerId, teamId, attributes }) => {
   const [teammates, setTeammates] = useState([]);
   const [selectedId, setSelectedId] = useState("");
@@ -557,6 +662,13 @@ const PlayerProfile = ({ data }) => {
             ${p.dev_focus && html`
               <span class="pill" title="development plan">${p.dev_focus} · ${p.training_intensity}</span>
             `}
+            ${p.is_user_team && p.not_developing && html`
+              <span class="pill pf-warn-pill" title=${pfNotDevelopingText(p.not_developing)}
+                    style=${{
+                      border: "1px solid var(--es-color-danger, #ff4655)",
+                      color: "var(--es-color-danger, #ff4655)",
+                    }}>⚠ ${pfNotDevelopingLabel(p.not_developing)}</span>
+            `}
             ${teamBit}
           </div>
           <div class="pf-contract muted">${contract}</div>
@@ -646,6 +758,16 @@ const PlayerProfile = ({ data }) => {
       ${p.is_user_team && html`
         <div class="pf-section">
           <h3 class="pf-section-title">Development report</h3>
+          ${p.not_developing && html`
+            <p class="pf-notdev-warn" style=${{
+              display: "flex", gap: "8px", alignItems: "baseline",
+              padding: "8px 10px", borderRadius: "4px", marginBottom: "8px",
+              border: "1px solid var(--es-color-danger, #ff4655)",
+            }}>
+              <span style=${{ color: "var(--es-color-danger, #ff4655)", fontWeight: "600" }}>Not developing this week</span>
+              <span class="muted">${pfNotDevelopingText(p.not_developing)}</span>
+            </p>
+          `}
           ${guide ? html`
             <p><span class="pill">${guide.focus}</span> ${guide.reason}</p>
             <p class=${guide.bonus_active ? "trend-up" : "muted"}>
@@ -753,6 +875,15 @@ const PlayerProfile = ({ data }) => {
 
           <div class="pf-section">
             <h3 class="pf-section-title">Agent pool</h3>
+            ${ov.comfort != null && html`
+              <div class="pf-attrs pf-comfort-block" style=${{ marginBottom: "var(--es-space-4, 8px)" }}>
+                <div class="pf-attr" title="Role & playstyle comfort grows as this player settles into an assignment; a fresh role/style resets it low.">
+                  <span class="pf-attr-label">Role comfort</span>
+                  <span class="pf-attr-bar"><${PfBar} value=${ov.comfort} /></span>
+                  <span class="pf-attr-val mono">${Math.round(ov.comfort)}</span>
+                </div>
+              </div>
+            `}
             ${agents.length > 0 ? html`
               <div>
                 <div class=${`pf-agents ${agentsExpanded ? 'pf-agents-expanded' : ''}`}>
@@ -761,12 +892,33 @@ const PlayerProfile = ({ data }) => {
                     const icon = a.icon
                       ? html`<img class="pf-agent-icon" src=${a.icon} alt="" onError=${(e) => { e.target.style.visibility = 'hidden'; }} />`
                       : html`<span class="pf-agent-icon"></span>`;
+                    // F6 — server-supplied, engine-unit cues (no JS formula):
+                    //  a.mastery_delta = mastery gained this season (growth arrow)
+                    //  a.edge          = duel edge on this pick in (mastery-50)/25 units
+                    const dLive = a.mastery_delta != null && Math.abs(a.mastery_delta) >= 0.05;
+                    const eLive = a.edge != null && Math.abs(a.edge) >= 0.05;
                     return html`
                       <div key=${a.agent_id} class=${`pf-agent ${shown ? '' : 'pf-agent-extra'}`}>
                         ${icon}
                         <span class="pf-agent-name">${a.name || a.agent_id || ""}</span>
                         <span class="pf-agent-bar"><${PfBar} value=${a.mastery} /></span>
                         <span class="pf-agent-mv mono">${pfNum(a.mastery)}</span>
+                        <span class="pf-agent-edge" style=${{
+                          display: "flex", gap: "6px", justifyContent: "flex-end",
+                          alignItems: "center", fontSize: "var(--es-text-xs, 11px)",
+                          minWidth: "48px",
+                        }}>
+                          ${dLive && html`
+                            <span class=${`mono pf-agent-grow ${a.mastery_delta > 0 ? 'trend-up' : 'trend-down'}`} title="mastery change this season">
+                              ${a.mastery_delta > 0 ? '+' : ''}${a.mastery_delta.toFixed(1)}${a.mastery_delta > 0 ? '▲' : '▼'}
+                            </span>
+                          `}
+                          ${eLive && html`
+                            <span class=${`mono pf-agent-edgeval ${a.edge > 0 ? 'trend-up' : 'trend-down'}`} title="duel edge from mastery on this pick (engine units)">
+                              ${a.edge > 0 ? '+' : ''}${a.edge.toFixed(1)}
+                            </span>
+                          `}
+                        </span>
                       </div>
                     `;
                   })}
@@ -879,6 +1031,11 @@ const PlayerProfile = ({ data }) => {
                 ${typeof fmtFollowers === "function" ? ` / ${fmtFollowers(last.followers)} followers` : ""}
               </p>
             `;
+          })()}
+          ${(() => {
+            const labelMap = {};
+            for (const a of attrs) { if (a && a.key) labelMap[a.key] = a.label || a.key; }
+            return html`<${SeasonGrowth} series=${devSeries} labelMap=${labelMap} />`;
           })()}
         </div>
       `}

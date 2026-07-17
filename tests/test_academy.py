@@ -171,7 +171,8 @@ def test_weekly_growth_uses_played_affiliate_lines_and_is_bounded(
         if player.attributes[attr] > value
     ]
     assert reports
-    assert len(changed) == 2
+    # F1: the affiliate-minutes bump now spreads across the 3 weakest attrs.
+    assert len(changed) == 3
     assert all(0 < gain <= academy.WEEKLY_GAIN_CAP for gain in changed)
 
     after = dict(player.attributes)

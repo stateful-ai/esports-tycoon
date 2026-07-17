@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 ACADEMY_MAX_AGE = 23
 ACADEMY_MAX_LEVEL = 3
 REPORT_LIMIT = 32
-WEEKLY_GAIN_CAP = 0.08
+WEEKLY_GAIN_CAP = 0.14  # F1: prospects actually develop from affiliate minutes
 UPGRADE_COST = {1: 120_000, 2: 300_000, 3: 650_000}
 
 WindowCheck = Callable[["GameState", str], bool | tuple[bool, str]]
@@ -576,9 +576,11 @@ def weekly_tick(gs: "GameState") -> list[dict[str, Any]]:
                 * (0.85 + 0.10 * mean_rating + 0.10 * win_rate),
             )
             applied = 0.0
+            # F1: spread the affiliate-minutes bump across the 3 weakest attrs
+            # (was 2) so a developing prospect closes more of their gap.
             weakest = sorted(
                 player.attributes, key=lambda attr: (player.attributes[attr], attr)
-            )[:2]
+            )[:3]
             for attr_id in weakest:
                 current = player.attr(attr_id)
                 ceiling = development.development_ceiling(player, attr_id)

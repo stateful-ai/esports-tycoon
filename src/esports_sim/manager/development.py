@@ -23,7 +23,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from esports_sim.schemas import Player, DevelopmentCurveModel
+from esports_sim.schemas import Player, AgentMastery, DevelopmentCurveModel
 from esports_sim.manager import role_fit
 
 # ---------------------------------------------------------------------------
@@ -283,9 +283,9 @@ def curve_growth_multiplier(p: Player) -> float:
     distance = abs(p.age - curve.growth_peak_age)
     bell = math.exp(-0.5 * (distance / curve.growth_width) ** 2)
     if p.age <= curve.growth_peak_age:
-        shape = 0.45 + 0.95 * bell
+        shape = 0.52 + 0.95 * bell
     elif p.age < curve.decline_age:
-        shape = 0.22 + 0.78 * bell
+        shape = 0.30 + 0.78 * bell
     else:
         shape = 0.08
     pulse = 0.78 + 0.44 * _unit(p.id, "devcurve", "year", p.age)
@@ -300,7 +300,12 @@ def curve_decline_multiplier(p: Player) -> float:
     return round(longevity * year_pulse, 3)
 
 
-_REALIZATION_FLOOR = 45.0
+# F1 growth retune: lift the reachable ceiling toward headline PA. realised =
+# FLOOR*(1-realization) + full*realization, so raising the floor raises every
+# reachable ceiling (development_ceiling / natural_potential) for players below
+# their potential — the campaign-layer lever that lets young talent close the
+# gap. Veteran/at-ceiling players are unaffected (they are already at/above it).
+_REALIZATION_FLOOR = 52.0
 
 
 def natural_potential(p: Player) -> float:
@@ -352,7 +357,10 @@ def dev_multiplier(p: Player, support_bonus: float = 0.0) -> float:
     targets = [development_ceiling(p, a, support_bonus) for a in p.attributes]
     target = sum(targets) / len(targets) if targets else natural_potential(p)
     gap = target - overall(p)
-    gap_mult = float(np.clip(gap / 15.0, 0.08, 1.5))
+    # F1: a smaller divisor lets the same headroom drive faster growth, so a
+    # young player with real upside actually moves. The 1.5 ceiling still caps
+    # the fastest path and veterans (tiny gap) are unchanged near the floor.
+    gap_mult = float(np.clip(gap / 11.0, 0.08, 1.5))
     return gap_mult * trait_value(p, "dev_mult", 1.0)
 
 
@@ -974,6 +982,175 @@ def weekly_mental_events(gs, rng) -> list[dict]:
             )
             if gs.is_human(tid):
                 gs.push_private_news(headline, owner=tid)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# F6: agent mastery growth (campaign-layer only — the engine reads
+# Player.agent_mastery((mastery-50)/25) but NEVER writes it, so the golden gate
+# stays byte-identical). Mastery accrues from maps actually played on an agent
+# (gs.player_agent_stats, season-cumulative) plus a matching coach's teaching
+# and scrim reps on the player's most-played agent. The XP ledger lives on
+# GameState (gs.agent_mastery_xp_by), NOT on the frozen Player model, so the
+# engine's Player schema stays byte-stable; growth REBUILDS the frozen
+# AgentMastery entries. Restricted by the caller to HUMAN rosters, so the
+# AI-only snowball/dynasty sims are untouched. Fully rng-free (stable counts).
+
+_AGENT_DEFAULT_MASTERY = 50.0    # matches engine's agent_mastery(..., 50.0) read
+_AGENT_XP_PER_MAP = 0.22         # maps-played dominant
+_AGENT_XP_COACH = 0.30           # matching-coach teaching, coach_teach in [0,1]
+_AGENT_XP_SCRIM = 0.12           # per scrim rep on the planned/main agent
+_AGENT_XP_SOFTNESS = 40.0        # headroom saturation toward 100
+_AGENT_XP_MAPS_CAP = 3.0         # per-week maps credited (guards catch-up spikes)
+_AGENT_MASTERY_MILESTONES = (60.0, 70.0, 80.0, 90.0)
+
+
+def _agent_maps_key(agent_id: str) -> str:
+    """Reserved ledger key holding the season-cumulative maps already credited
+    for one agent. Colon can never appear in an agent id, so it never collides
+    with a real agent entry in the same inner dict."""
+    return f"maps:{agent_id}"
+
+
+def agent_pick_edge(p: Player, agent_id: str) -> float:
+    """F6c: the mastery-derived duel edge for picking ``agent_id``, in the exact
+    ``(mastery-50)/25`` units the engine applies (engine.py ~2895). The single
+    source of this number — serialized for the lineup/agent-lock UI, NEVER
+    re-derived in JS. An unknown agent reads at the engine's neutral default."""
+    mastery = p.agent_mastery(agent_id, _AGENT_DEFAULT_MASTERY)
+    return round((mastery - _AGENT_DEFAULT_MASTERY) / 25.0, 2)
+
+
+def agent_mastery_gain(
+    p: Player,
+    agent_id: str,
+    maps_played: int,
+    coach_teach: float,
+    scrim_reps: float,
+) -> float:
+    """Pure per-agent mastery XP delta for one week. Maps-played dominant, with
+    matching-coach teaching and scrim reps layered on; the gain diminishes as
+    the agent's mastery nears 100 so it saturates rather than clipping. No side
+    effects, no rng — a deterministic function of the player and the counts."""
+    cur = p.agent_mastery(agent_id, _AGENT_DEFAULT_MASTERY)
+    headroom = max(0.0, 100.0 - cur)
+    reps = min(max(0.0, float(maps_played)), _AGENT_XP_MAPS_CAP)
+    raw = (
+        reps * _AGENT_XP_PER_MAP
+        + max(0.0, coach_teach) * _AGENT_XP_COACH
+        + max(0.0, scrim_reps) * _AGENT_XP_SCRIM
+    )
+    if raw <= 0.0:
+        return 0.0
+    gain = raw * (headroom / (headroom + _AGENT_XP_SOFTNESS))
+    return round(gain, 4)
+
+
+def _coach_teach_strength(gs, team_id: str) -> float:
+    """0..~1 teaching strength of ``team_id``'s head coach (0 without one). A
+    concrete coach on the roster can drill the player's main agent; abstract
+    AI departments have no member, so this is 0 for them."""
+    coach = gs.staff_by.get(team_id, {}).get("coach")
+    if coach is None:
+        return 0.0
+    from esports_sim.manager import staff_effects
+
+    return float(np.clip(staff_effects.role_effect_score(coach) / 100.0, 0.0, 1.0))
+
+
+def apply_agent_mastery_growth(gs, team_id: str) -> list[dict]:
+    """Weekly campaign-layer mastery growth for ONE roster (human-only by the
+    caller). Credits maps newly played this week per agent (diffing the
+    season-cumulative gs.player_agent_stats against a per-agent bookmark in the
+    XP ledger), adds a matching coach's teaching plus scrim reps to each
+    player's most-played agent, then REBUILDS the frozen AgentMastery entries in
+    Player.agent_pool. Returns milestone dicts and pushes private news to the
+    owning human. rng-free."""
+    team = gs.teams.get(team_id)
+    if team is None:
+        return []
+    coach_teach = _coach_teach_strength(gs, team_id)
+    out: list[dict] = []
+    for pid in sorted(team.player_ids):
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        season_maps = {
+            aid: int(stats.maps)
+            for aid, stats in gs.player_agent_stats.get(pid, {}).items()
+            if aid and aid != "unknown" and int(stats.maps) > 0
+        }
+        ledger = gs.agent_mastery_xp_by.setdefault(pid, {})
+
+        # Newly-played maps per agent = season total minus what we already
+        # credited; a season rollover resets the cumulative count, so a drop
+        # below the bookmark is read as a fresh season (credit the new total).
+        new_maps: dict[str, int] = {}
+        for aid in sorted(season_maps):
+            total = season_maps[aid]
+            seen = int(ledger.get(_agent_maps_key(aid), 0.0))
+            fresh = total if total < seen else total - seen
+            ledger[_agent_maps_key(aid)] = float(total)
+            if fresh > 0:
+                new_maps[aid] = fresh
+
+        # The player's "main" this week — the most-played agent, else their
+        # current best pooled agent — gets the coach teaching + a scrim rep
+        # (so a non-playing/bench week still trains their planned agent).
+        if new_maps:
+            main = min(sorted(new_maps), key=lambda a: (-new_maps[a], a))
+        elif p.agent_pool:
+            main = sorted(
+                p.agent_pool, key=lambda m: (-m.mastery, m.agent_id)
+            )[0].agent_id
+        else:
+            main = None
+
+        agents = set(new_maps)
+        if main is not None and (coach_teach > 0.0 or not new_maps):
+            agents.add(main)
+
+        gains: dict[str, float] = {}
+        for aid in sorted(agents):
+            maps_played = new_maps.get(aid, 0)
+            teach = coach_teach if aid == main else 0.0
+            scrim = 1.0 if (aid == main and maps_played == 0) else 0.0
+            delta = agent_mastery_gain(p, aid, maps_played, teach, scrim)
+            if delta > 0.0:
+                gains[aid] = delta
+
+        if not gains:
+            continue
+
+        pool = {m.agent_id: m.mastery for m in p.agent_pool}
+        crossed: list[tuple[str, float]] = []
+        for aid in sorted(gains):
+            before = pool.get(aid, _AGENT_DEFAULT_MASTERY)
+            ledger[aid] = round(ledger.get(aid, 0.0) + gains[aid], 4)
+            after = round(min(100.0, before + gains[aid]), 2)
+            pool[aid] = after
+            for bar in _AGENT_MASTERY_MILESTONES:
+                if before < bar <= after:
+                    crossed.append((aid, bar))
+        p.agent_pool = [
+            AgentMastery(agent_id=aid, mastery=pool[aid]) for aid in sorted(pool)
+        ]
+
+        for aid, bar in crossed:
+            out.append(
+                {
+                    "team_id": team_id,
+                    "player_id": pid,
+                    "agent_id": aid,
+                    "mastery": bar,
+                    "kind": "agent_mastery",
+                }
+            )
+            if gs.is_human(team_id):
+                gs.push_private_news(
+                    f"{p.handle} crosses {int(bar)} mastery on {aid} in practice.",
+                    owner=team_id,
+                )
     return out
 
 

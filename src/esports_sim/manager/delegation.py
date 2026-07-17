@@ -158,18 +158,27 @@ def begin_week(gs: "GameState") -> None:
         matches = matching_players(gs, team_id)
         if policy.auto_scout and matches:
             progress = gs.scout_progress_by.setdefault(team_id, {})
-            current = gs.scout_targets.get(team_id)
+            # Route the department's recruit deep-dive through the standing
+            # AMATEUR lane (scouting.tick reads scout_lanes_by now) instead of
+            # clobbering the single scout_targets slot the RL/decision-env path
+            # still owns. The pro lane stays free for the manager's own
+            # opponent/fill-gap directive.
+            lane = gs.scout_lanes_by.setdefault(team_id, {})
+            current = lane.get("amateur")
             current_pid = (
                 current.removeprefix("player:")
                 if current and current.startswith("player:")
                 else ""
             )
-            if current_pid not in matches or progress.get(current or "", 0.0) >= 1.0:
+            if (
+                current_pid not in matches
+                or progress.get(f"player:{current_pid}", 0.0) >= 1.0
+            ):
                 current_pid = min(
                     matches,
                     key=lambda pid: (progress.get(f"player:{pid}", 0.0), pid),
                 )
-                gs.scout_targets[team_id] = f"player:{current_pid}"
+                lane["amateur"] = f"player:{current_pid}"
             report.scout_player_id = current_pid
 
         rows = gs.delegation_reports_by.setdefault(team_id, [])
@@ -211,6 +220,18 @@ def finalize_week(gs: "GameState") -> None:
         gs.delegation_alerted_players_by[team_id] = sorted(alerted)
 
 
+def _active_amateur_pid(gs: "GameState", team_id: str) -> str:
+    """The player the auto-scout lane is currently deep-diving, if any.
+
+    Reads the standing amateur lane (where begin_week now parks the recruit)
+    and falls back to the legacy single slot for pre-migration saves."""
+    lane = gs.scout_lanes_by.get(team_id) or {}
+    value = lane.get("amateur") or ""
+    if not value.startswith("player:"):
+        value = gs.scout_targets.get(team_id, "") or ""
+    return value.removeprefix("player:") if value.startswith("player:") else ""
+
+
 def view(gs: "GameState", team_id: str) -> dict:
     policy = policy_for(gs, team_id)
     matches = matching_players(gs, team_id)
@@ -221,9 +242,6 @@ def view(gs: "GameState", team_id: str) -> dict:
         "roles": [str(role) for role in Role],
         "alert_levels": list(ALERT_LEVELS),
         "matching_count": len(matches),
-        "active_scout_player_id": (
-            gs.scout_targets.get(team_id, "").removeprefix("player:")
-            if gs.scout_targets.get(team_id, "").startswith("player:") else ""
-        ),
+        "active_scout_player_id": _active_amateur_pid(gs, team_id),
         "latest_report": latest[0].model_dump(mode="json") if latest else None,
     }

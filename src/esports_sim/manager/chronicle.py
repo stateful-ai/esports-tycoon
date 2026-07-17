@@ -54,6 +54,13 @@ KIND_IMPORTANCE: dict[str, float] = {
     "media": 30.0,
     "relationship": 35.0,
     "scenario": 55.0,  # sandbox scenario start (manager/scenarios.py)
+    # Culture identity commitments and their betrayals (manager/culture.py).
+    # A violation and an honor on the same tick for the same player must NOT
+    # collapse under record()'s dedup: _entry_id embeds the entry text, and
+    # register_choice authors distinct text per (source, type_id, choice_id),
+    # so distinct choices always yield distinct ids.
+    "culture_violation": 45.0,
+    "culture_commitment": 40.0,
 }
 
 

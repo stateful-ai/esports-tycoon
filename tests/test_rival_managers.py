@@ -234,7 +234,7 @@ def test_v31_save_backfills_personas(campaign: GameState, tmp_path) -> None:
     path = tmp_path / "v31.json"
     path.write_text(json.dumps(old), encoding="utf-8")
     loaded = GameState.load(path)
-    assert loaded.schema_version == SCHEMA_VERSION == 32
+    assert loaded.schema_version == SCHEMA_VERSION
     ai_t1 = {
         tid
         for tid, t in loaded.teams.items()

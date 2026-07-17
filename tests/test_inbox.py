@@ -209,10 +209,12 @@ def test_wire_shape_is_frozen(campaign: GameState, game_data: GameData) -> None:
         api = inbox.to_api(it, campaign)
         assert base <= set(api) <= base | {"actions"}
         if "actions" in api:
-            assert it.category in ("transfer", "sponsor")
+            # transfer/sponsor offers plus the F3 bench-minutes and F7 scrim
+            # proposals are the only actionable categories.
+            assert it.category in ("transfer", "sponsor", "board", "development")
             for a in api["actions"]:
                 assert set(a) == {"id", "label", "endpoint", "payload"}
-                assert a["id"] in ("accept", "decline")
+                assert a["id"] in ("accept", "decline", "promise")
                 assert isinstance(a["payload"], dict)
 
 

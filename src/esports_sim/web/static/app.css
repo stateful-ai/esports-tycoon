@@ -2269,3 +2269,88 @@ td.bad, .num.bad { color: var(--es-color-text-danger, #ff6b6b); }
 tbody tr {
   transition: background-color var(--es-duration-instant, 60ms) var(--es-ease-out, ease-out);
 }
+
+/* ==== FaZe mechanics batch: dev digest / pipeline / scouting lanes /
+   mastery edge / prep artifact / culture identity (app.js-owned) ======= */
+
+/* Trajectory sparkline (F1) — inline SVG; color follows trend. */
+.es-spark { display: inline-block; vertical-align: middle; }
+.es-spark polyline { stroke: var(--es-color-text-tertiary, #67748f); }
+.es-spark circle { fill: var(--es-color-text-tertiary, #67748f); }
+.es-spark.up polyline, .es-spark.up circle { stroke: var(--es-color-success, #3fb68b); fill: var(--es-color-success, #3fb68b); }
+.es-spark.down polyline, .es-spark.down circle { stroke: var(--es-color-danger, #ff4655); fill: var(--es-color-danger, #ff4655); }
+.es-spark-empty { font-size: 12px; }
+.es-spark-wrap { display: inline-flex; align-items: center; min-width: 74px; }
+
+/* F1 — dev digest + pipeline board */
+.dev-digest-head h2, .pipeline-board > h2 { margin-bottom: var(--es-space-1, 4px); }
+.dev-digest-grid, .pipeline-grid {
+  display: grid; gap: var(--es-space-3, 12px);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: var(--es-space-3, 12px);
+}
+.dev-digest-col, .pipeline-col {
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-sm, 6px);
+  padding: var(--es-space-3, 12px);
+}
+.dev-digest-col-h, .pipeline-col-h {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--es-color-text-tertiary, #67748f);
+  margin: 0 0 var(--es-space-2, 8px) 0;
+  border-bottom: var(--es-border-thin, 1px) solid var(--es-color-border-secondary, #1c2536);
+  padding-bottom: var(--es-space-1, 4px);
+}
+.dev-digest-row, .pipeline-card-row {
+  display: flex; align-items: center; gap: var(--es-space-2, 8px);
+  padding: var(--es-space-1, 4px) 0;
+}
+.dev-digest-row { justify-content: space-between; }
+.dev-digest-name { font-weight: 600; }
+.pipeline-card-row { flex-direction: column; align-items: stretch; gap: 2px;
+  border-bottom: var(--es-border-thin, 1px) solid var(--es-color-border-secondary, #1c2536); }
+.pipeline-card-row:last-child { border-bottom: none; }
+.pipeline-row-top, .pipeline-row-bot { display: flex; align-items: center; justify-content: space-between; gap: var(--es-space-2, 8px); }
+.pipeline-ca { font-weight: 700; }
+.pipeline-age { font-size: 12px; }
+.pipeline-stars { font-size: 11px; }
+
+/* F2 — "not developing" warn chip already uses .chip.tone-bad; small spacing */
+.dev-warn-chip { margin-left: var(--es-space-1, 4px); white-space: nowrap; }
+
+/* F6 — mastery-edge cell in the lineup table */
+.edge-cell.good { color: var(--es-color-success, #3fb68b); }
+.edge-cell.bad { color: var(--es-color-danger, #ff4655); }
+
+/* F7 — coach scrim proposal + prep artifact */
+.prep-proposal {
+  margin-top: var(--es-space-3, 12px);
+  padding: var(--es-space-3, 12px);
+  background: var(--es-color-bg-elevated, #161e2e);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  border-left: 3px solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-sm, 6px);
+}
+.prep-proposal-head { display: flex; align-items: center; gap: var(--es-space-2, 8px); margin-bottom: var(--es-space-1, 4px); }
+.prep-finding { font-size: 12px; margin-top: 2px; }
+.gp-prep-parts { display: inline-flex; gap: var(--es-space-3, 12px); margin: var(--es-space-1, 4px) 0; flex-wrap: wrap; }
+.gp-prep-part { font-size: 12px; }
+.gp-artifact { margin-top: var(--es-space-1, 4px); }
+
+/* F8 — culture identity + violation stream */
+.culture-identity {
+  margin-top: var(--es-space-4, 16px);
+  padding-top: var(--es-space-3, 12px);
+  border-top: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+}
+.culture-identity-h { display: flex; align-items: center; gap: var(--es-space-2, 8px); font-size: 13px;
+  text-transform: uppercase; letter-spacing: .05em; margin-bottom: var(--es-space-1, 4px); }
+.newsline.culture-violation { box-shadow: inset 3px 0 0 var(--es-color-danger, #ff4655); padding-left: var(--es-space-2, 8px); }
+
+/* F4/F5 — scouting lanes + shortlist */
+.scout-lanes-grid { display: grid; gap: var(--es-space-3, 12px);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: var(--es-space-2, 8px); }
+.scout-lane { display: flex; flex-direction: column; gap: var(--es-space-2, 8px); }
+.scout-lane-head { display: flex; align-items: center; gap: var(--es-space-2, 8px); }
+.scout-gap-row { display: flex; align-items: center; gap: var(--es-space-1, 4px); flex-wrap: wrap; }

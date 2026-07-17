@@ -241,6 +241,15 @@ def _resolve(gs: "GameState", event: FlavorEvent, choice_id: str) -> tuple[bool,
         return False, "That response has no outcome configured.", {}
     outcome = choice.outcomes[_stable_index(len(choice.outcomes), event.id, choice.id)]
     _apply_effects(gs, event, outcome.effects)
+    # F8: score this public choice against the team's committed identity. A
+    # no-op (returns None, no mutation, no rng) for uncommitted/AI teams, so it
+    # fires safely from the AI queue_weekly_events path too. Local import avoids
+    # an import cycle at module load (mirrors the media_events seam).
+    from esports_sim.manager import culture
+
+    culture.register_choice(
+        gs, event.team_id, "flavor", event.type_id, choice_id, event.player_id
+    )
     _remember(gs, event.team_id, event.type_id)
     return True, outcome.text, dict(outcome.effects)
 
