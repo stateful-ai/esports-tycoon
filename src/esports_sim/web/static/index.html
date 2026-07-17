@@ -163,6 +163,7 @@
       <div id="v-score" class="mono"></div>
       <button class="btn active" id="v-cones" title="Show or hide player sight lines" aria-pressed="true">Vision</button>
       <button class="btn" id="v-view" title="toggle isometric / top-down">2D</button>
+      <button class="btn" id="v-sound" title="Match sound: muted" aria-pressed="false">🔇</button>
       <button class="btn" onclick="closeViewer()">✕ Close</button>
     </div>
     <div class="viewer-main">
@@ -183,6 +184,8 @@
         <button class="btn speed" data-speed="16">16×</button>
         <button class="btn speed" data-speed="inst">▸▸</button>
       </div>
+      <button class="btn" id="v-evfollow" title="Action cam: auto-center briefly on kills and spike plants" aria-pressed="false">Action cam</button>
+      <button class="btn" id="v-reframe" title="Reset zoom and framing (releases player follow)">Reframe</button>
       <input id="v-scrub" type="range" min="0" max="200" value="0">
       <span id="v-clock" class="mono"></span>
     </div>

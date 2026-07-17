@@ -3,11 +3,18 @@
 This is the deferred companion to the LLM playtest harness. Work from the
 evidence it produces; do not treat the order as a promise of scope.
 
-## Next: match viewer spectator controls
+## Shipped: match viewer spectator controls
 
-Add selected-player follow, wheel/pinch zoom, pan, reset framing, and optional
-event-follow for kills and plants. Keep it entirely a consumer of replay
-events; no viewer-side simulation or coordinate authority.
+The replay viewer carries a spectator camera layered as a pure presentation
+transform (one outer scene group) over the untouched viewBox/backdrop
+contract: cursor-anchored wheel zoom, pinch zoom, drag pan with edge
+clamping, a Reframe reset, click-a-lineup-row player follow, and an
+optional action-cam toggle that briefly auto-centers on kills and spike
+plants before easing home. Audio cues are WebAudio-synthesized only (kill
+tick, round-end stinger), muted by default, with the toggle persisted in
+localStorage. The viewer remains a pure consumer of replay events — legacy
+logs replay unchanged — and the guide->viewer transform authority is pinned
+by tests/test_viewer_static.py.
 
 ## Shipped: AI organization planning parity
 

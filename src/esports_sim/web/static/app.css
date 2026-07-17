@@ -984,6 +984,28 @@ svg.iso .plabel { font-size: 2.4px; }
   width: 15px; height: 15px; border-radius: 50%; object-fit: cover; flex: none;
   background: var(--es-color-bg-sunken, #0b0d12);
 }
+
+/* Spectator camera: the scene pans/zooms via an outer <g> transform, so the
+   svg itself only needs gesture plumbing (touch-action none hands pinch and
+   drag to pointer events) and a grab affordance. */
+#v-map { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+#v-map:active { cursor: grabbing; }
+
+/* Player follow: clicking a lineup row tracks that dot; the row and the
+   ring on the map both pick up the brand accent while tracked. */
+.v-lineup .lu-row { cursor: pointer; border-radius: 4px; }
+.v-lineup .lu-row:hover {
+  background: color-mix(in srgb, var(--es-color-text-tertiary, #6c7383) 12%, transparent);
+}
+.v-lineup .lu-row.following {
+  background: color-mix(in srgb, var(--es-color-brand, #ff4655) 14%, transparent);
+}
+.v-lineup .lu-row.following .lu-agent::after {
+  content: " · CAM"; font-size: 9px; letter-spacing: .08em;
+  color: var(--es-color-brand, #ff4655);
+}
+.pdot-ring.following { stroke: var(--es-color-brand, #ff4655); stroke-width: .85; }
+.pdot.following { stroke: var(--es-color-brand, #ff4655); stroke-width: .5; }
 .v-lineup .lu-agent {
   font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
