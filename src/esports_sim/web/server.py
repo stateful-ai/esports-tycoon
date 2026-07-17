@@ -30,6 +30,7 @@ from pydantic import BaseModel
 from esports_sim.manager import (
     academy,
     analytics,
+    arcs as arcs_mod,
     career,
     chronicle,
     culture,
@@ -7080,6 +7081,15 @@ def _profile_relationships(gs: GameState, pid: str) -> list[dict]:
     return out
 
 
+def _profile_arcs(gs: GameState, pid: str) -> list[dict]:
+    """Active locker-room arcs involving this player (manager/arcs.py's
+    capped team list, filtered). Own-club intel only, mirroring
+    _profile_relationships — rival/free-agent profiles return []."""
+    if pid not in gs.teams[gs.acting_team_id].player_ids:
+        return []
+    return arcs_mod.player_arcs(gs, gs.acting_team_id, pid)
+
+
 @app.get("/api/players/{pid}/profile")
 def player_profile(pid: str) -> dict:
     with S.lock:
@@ -7187,6 +7197,9 @@ def player_profile(pid: str) -> dict:
             "splits": _profile_splits(gs, pid),
             "charts": _profile_charts(gs, pid, own),
             "relationships": _profile_relationships(gs, pid),
+            # The scarce active-arc chips (grudge/friction/mentor bond)
+            # involving this player — own club only (manager/arcs.py).
+            "arcs": _profile_arcs(gs, pid),
             "scouting": _player_scouting_context(gs, p, own, progress),
             # No per-season career archive is persisted (player_stats reset
             # each offseason), so only the current season exists -> [].
@@ -7595,6 +7608,9 @@ def team_profile(tid: str) -> dict:
             ),
             # Squad chemistry (bonds, frictions, cohesion) — own club only.
             "chemistry": _squad_chemistry(gs, tid) if own_team else None,
+            # The scarce active-arc list (at most arcs.MAX_ARCS): grudges,
+            # frictions and mentor bonds shaping the room — own club only.
+            "arcs": arcs_mod.team_arcs(gs, tid) if own_team else [],
             # Development headroom: each own player's CA vs ceiling and which
             # way they're trending. Private dev-history read → own club only.
             "dev_progress": _dev_progress(gs, tid) if own_team else None,

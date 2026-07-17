@@ -1210,6 +1210,14 @@ def contract_demands(gs: GameState, pid: str, kind: str) -> tuple[int, int]:
     # a little heat out of the table; a frosty room makes the player charge
     # for the risk. Hard feuds are handled as vetoes before talks open.
     mult *= relationships.contract_fit_multiplier(gs, pid, gs.acting_team_id)
+    # Active locker-room arcs move the table a nudge (manager/arcs.py): a
+    # player nursing a grudge against the org charges to stay; a bonded
+    # mentorship pair re-signs a shade friendlier. Bounded (+8%/-4%) and
+    # only reachable through an OPENED negotiation, so AI renewals
+    # (renewal_salary) and hands-off sims never touch it.
+    from esports_sim.manager import arcs
+
+    mult += arcs.renewal_bias(gs, pid, gs.acting_team_id)
     jitter = (_hash01(gs.seed, pid, gs.season, "negsal") - 0.5) * 0.10
     salary = max(1_000, int(round(base * (mult + jitter) / 100) * 100))
     if p.age <= 20:

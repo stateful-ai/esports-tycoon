@@ -673,6 +673,17 @@ def apply_mentorship_growth(gs) -> list[dict]:
         if msk < MENTOR_MIN_SKILL:
             continue
         youth = float(np.clip((25 - pro.age) / 7.0, 0.1, 1.0))
+        # A mentorship whose relationship grew into a real bond teaches
+        # deeper (manager/arcs.py mentor_bond arc). Bounded multiplier on
+        # the existing ceiling step — no rng, no new channel; still a
+        # no-op in hands-off sims because gs.mentorships stays empty.
+        from esports_sim.manager import arcs
+
+        bond_mult = (
+            arcs.MENTOR_BOND_STEP_MULT
+            if arcs.is_mentor_bond(gs, pid, mentor_id)
+            else 1.0
+        )
         best = sorted(men.attributes, key=lambda a: (-men.attributes[a], a))[:2]
         total_step, lifted = 0.0, []
         for a in best:
@@ -681,7 +692,7 @@ def apply_mentorship_growth(gs) -> list[dict]:
             cur_ceil = skill_ceiling(pro, a)
             if cap <= cur_ceil:
                 continue
-            step = MENTOR_CEILING_STEP * (msk / 99.0) * youth
+            step = MENTOR_CEILING_STEP * (msk / 99.0) * youth * bond_mult
             new_ceil = round(min(cap, cur_ceil + step), 2)
             pro.skill_potential[a] = new_ceil
             total_step += new_ceil - cur_ceil

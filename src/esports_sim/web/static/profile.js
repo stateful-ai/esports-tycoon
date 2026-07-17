@@ -513,6 +513,7 @@ const PlayerProfile = ({ data }) => {
   const agentSplits = splits.agents || [];
 
   const rels = data.relationships || [];
+  const arcsList = data.arcs || [];
 
   const ct = data.career_totals;
   const arc = data.career_arc || [];
@@ -926,6 +927,20 @@ const PlayerProfile = ({ data }) => {
         </div>
       `}
 
+      ${arcsList.length > 0 && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Arcs</h3>
+          <div class="pf-arclines">
+            ${arcsList.map((a, i) => html`
+              <div key=${i} class="pf-arcline">
+                <span class=${`pf-arc-pill arck-${a.kind}`}>${(a.kind || "").replace("_", " ")}</span>
+                <span class="pf-arcline-text">${a.text}</span>
+              </div>
+            `)}
+          </div>
+        </div>
+      `}
+
       ${rels.length > 0 && html`
         <div class="pf-section">
           <h3 class="pf-section-title">Relationships</h3>
@@ -1106,6 +1121,7 @@ const TeamProfile = ({ data }) => {
 
   const rivals = data.rivals || [];
   const chem = data.chemistry;
+  const teamArcs = data.arcs || [];
   const dev = data.dev_progress || [];
 
   const strength = data.strength || [];
@@ -1269,6 +1285,25 @@ const TeamProfile = ({ data }) => {
             ${!chem.bonds.length && !chem.frictions.length && html`
               <span class="muted">a settled, unremarkable dressing room</span>
             `}
+          </div>
+        </div>
+      `}
+
+      ${teamArcs.length > 0 && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Locker-room arcs</h3>
+          <div class="pf-arclines">
+            ${teamArcs.map((a, i) => html`
+              <div key=${i} class="pf-arcline">
+                <span class=${`pf-arc-pill arck-${a.kind}`}>${(a.kind || "").replace("_", " ")}</span>
+                <span class="pf-arcline-text">
+                  ${a.text}${" "}
+                  ${(a.pids || []).map((pid, j) => html`
+                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || pid}</span>
+                  `)}
+                </span>
+              </div>
+            `)}
           </div>
         </div>
       `}

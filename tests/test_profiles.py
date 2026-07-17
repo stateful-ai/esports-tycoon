@@ -53,6 +53,7 @@ PLAYER_TOP = {
     "splits",
     "charts",
     "relationships",
+    "arcs",
     "scouting",
     "career",
     "career_totals",
@@ -151,11 +152,12 @@ WEEKLY_ITEM = {"season", "week", "opponent", "result", "kills", "deaths", "acs"}
 ATTR_ITEM = {"key", "label", "value", "band", "description"}
 AGENT_ITEM = {"agent_id", "name", "icon", "mastery", "role"}
 REL_ITEM = {"pid", "handle", "kind", "arc", "strength"}
+ARC_ITEM = {"kind", "source", "pids", "handles", "text"}
 
 TEAM_TOP = {
     "team", "record", "splits", "maps", "players", "form", "honors",
     "identity", "tendencies", "rivals", "knowledge", "chemistry",
-    "dev_progress", "strength", "agent_pool", "gm",
+    "dev_progress", "strength", "agent_pool", "gm", "arcs",
 }
 TEAM_BLOCK = {"id", "name", "logo", "region", "league_tier", "is_user_team"}
 RECORD = {"wins", "losses", "round_diff", "position", "streak"}
@@ -237,6 +239,8 @@ def _assert_player_contract(prof: dict) -> None:
         assert set(item) == WEEKLY_ITEM
     for item in prof["relationships"]:
         assert set(item) == REL_ITEM
+    for item in prof["arcs"]:
+        assert set(item) == ARC_ITEM
     for tr in prof["traits"]:
         assert set(tr) == {"name", "desc", "revealed"}
 
@@ -393,6 +397,8 @@ def _assert_team_contract(prof: dict) -> None:
         assert set(p) == TEAM_PLAYER_ITEM
     for f in prof["form"]:
         assert set(f) == FORM_ITEM
+    for a in prof["arcs"]:
+        assert set(a) == ARC_ITEM
     assert isinstance(prof["honors"], list)
     assert all(isinstance(x, str) for x in prof["honors"])
 

@@ -17,6 +17,7 @@ Sources wired (module/state -> item category):
   gs.retired / rookie-class news         -> development (careers end, class arrives)
   curated broadcast news + gs.awards      -> news      (upsets, titles, milestones)
   action_log settlements (decision_ledger) -> analytics (decisions settled digest)
+  promises + lineup history (arcs)      -> talk     (org grudge forms/cools)
 
 Determinism: every item id is a blake2 hash of stable strings
 (season, week, category, subject) — never Python's salted hash(), never
@@ -624,6 +625,25 @@ def _relationship_items(gs: "GameState", season: int, week: int):
     )]
 
 
+def _arc_items(gs: "GameState", season: int, week: int):
+    """A rare relationship-arc beat: a grudge AGAINST THE CLUB forming or
+    cooling this tick (manager/arcs.py weekly_moments — a pure derived
+    read of promises + lineup history, nothing stored). Pairwise arc
+    formation already rides _relationship_items via the chronicle, so
+    this only covers the org-level signals. At most one item per week."""
+    from esports_sim.manager import arcs
+
+    moments = arcs.weekly_moments(gs, gs.acting_team_id, season, week)
+    if not moments:
+        return []
+    m = moments[0]  # weekly_moments sorts: formations first, then by player
+    return [(
+        _P_TALK,
+        _make(season, week, "talk", f"arc|{m['phase']}|{m['pid']}",
+              m["title"], m["text"], "roster"),
+    )]
+
+
 def _ledger_items(gs: "GameState", season: int, week: int):
     """The "decisions settled" digest: this manager's recent calls graded
     against the stored numbers (manager/decision_ledger.py, a pure derived
@@ -748,6 +768,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _rotation_items(gs, season, week)
         candidates += _analytics_items(gs, season, week)
         candidates += _ledger_items(gs, season, week)
+        candidates += _arc_items(gs, season, week)
         candidates += _department_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
