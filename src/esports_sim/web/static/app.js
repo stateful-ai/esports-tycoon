@@ -733,21 +733,25 @@ function starsRange(band) {
    One workspace for everything about your own org, split into four sub-tabs:
      Squad        — the roster (overview) + lineup + support cards
      Development  — the roster's per-player development plans
-     Culture      — leadership group + media trust
-     Operations   — academy + staff delegation (match prep moved to Match · Prep)
+     Locker Room  — hierarchy, cliques, duos/feuds + manager promises
+     Operations   — academy + staff delegation + culture/media
+                    (match prep moved to Match · Prep)
    Squad/Development are the roster() screen hosted here (host: "club"); the
    other two read /api/club. Absorbed the old top-level Roster tab. */
 const CLUB_TABS = [
   { id: "squad", label: "Squad" },
   { id: "development", label: "Development" },
   { id: "locker_room", label: "Locker Room" },
-  { id: "promises", label: "Promises" },
-  { id: "culture", label: "Culture" },
   { id: "operations", label: "Operations" },
 ];
 
+// Retired club sub-tab ids -> new home (promises folded into Locker Room,
+// culture into Operations). Keeps stale deep links / saved App state working.
+const CLUB_TAB_ALIAS = { promises: "locker_room", culture: "operations" };
+
 async function club(v) {
-  const sub = App.clubTab ?? "squad";
+  let sub = App.clubTab ?? "squad";
+  if (CLUB_TAB_ALIAS[sub]) { sub = CLUB_TAB_ALIAS[sub]; App.clubTab = sub; }
   if (sub === "squad" || sub === "development") {
     // Club always shows YOUR squad; a stale opponent-roster selection (from a
     // team profile's "View roster") must not leak into the Club workspace.
@@ -758,9 +762,10 @@ async function club(v) {
   return clubOps(v, sub);
 }
 
-// Culture / Operations sub-tabs: leadership, media, academy and delegation.
-// (Match preparation, the tournament six and the series card moved to the
-// Match tab's Prep sub-tab — tacticsPrep().)
+// Locker Room / Operations sub-tabs: hierarchy + promises, and academy,
+// delegation, media trust + leadership. (Match preparation, the tournament
+// six and the series card moved to the Match tab's Prep sub-tab —
+// tacticsPrep().)
 async function clubOps(v, sub) {
   const d = await api("/api/club");
   v.appendChild(screenHead("Club", {
@@ -771,7 +776,7 @@ async function clubOps(v, sub) {
   }));
 
   // The transfer window gates academy promotions and releases — surface it on
-  // Operations (where those live), not on the Culture view.
+  // Operations (where those live), not on the Locker Room view.
   if (sub === "operations") {
     const windowCard = el("div", `card ${d.market_window.open ? "" : "alert"}`);
     windowCard.innerHTML = `<h3>${esc(d.market_window.label)}</h3><p class="muted">${esc(d.market_window.detail)}</p>`;
@@ -856,9 +861,8 @@ async function clubOps(v, sub) {
   const dr = d.delegation.latest_report;
   if (dr) dc.appendChild(el("div", "newsline", `Last run: ${dr.renewed_player_ids.length} renewals \u00b7 ${dr.alerts.length} alerts \u00b7 ${dr.exceptions.length} exceptions.`));
   ws.appendChild(dc);
-  } // end operations
 
-  if (sub === "culture") {
+  // Media trust + leadership (moved here from the retired Culture sub-tab).
   const mc = el("div", "card ws-12");
   mc.innerHTML = `<h2>Media trust</h2><p class="muted">Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.</p>`;
   const trustRow = el("div", "row");
@@ -889,12 +893,12 @@ async function clubOps(v, sub) {
   cc.append(controls, saveLeaders, el("p", "microlabel", "Culture session"), sessions);
   cc.appendChild(el("p", "microlabel", "Culture session"));
   ws.appendChild(cc);
-  } // end culture
+  } // end operations
 
   if (sub === "locker_room") {
     // Render Locker Room
     const lrc = el("div", "card ws-12");
-    lrc.innerHTML = `<h2>Locker Room</h2><p class="muted">Check the squad hierarchy, cliques, duos and feuds.</p>`;
+    lrc.innerHTML = `<h2>Locker Room</h2><p class="muted">Check the squad hierarchy, cliques, duos, feuds and manager promises.</p>`;
     
     const rosterTeamId = App.state.user_team.id;
     const rd = await api(`/api/roster/${rosterTeamId}`);
@@ -1008,16 +1012,12 @@ async function clubOps(v, sub) {
     relDiv.appendChild(feudsCard);
     relSec.appendChild(relDiv);
     lrc.appendChild(relSec);
-    ws.appendChild(lrc);
-  }
 
-  if (sub === "promises") {
-    // Render Promises
-    const prc = el("div", "card ws-12");
-    prc.innerHTML = `<h2>Promises</h2><p class="muted">Monitor active manager promises, kept/broken history and morale/chemistry outcomes.</p>`;
-    
-    const rosterTeamId = App.state.user_team.id;
-    const rd = await api(`/api/roster/${rosterTeamId}`);
+    // Promises (moved here from the retired Promises sub-tab — promises are
+    // relationship state, so they live below the relationship graph).
+    const promSec = el("div", "", null);
+    promSec.style.cssText = "margin-top:24px;";
+    promSec.innerHTML = `<h2 style="margin-bottom:4px;">Promises</h2><p class="muted">Monitor active manager promises, kept/broken history and morale/chemistry outcomes.</p>`;
     const promisesList = rd.promises || [];
     
     const active = promisesList.filter(p => p.status === "active");
@@ -1057,7 +1057,7 @@ async function clubOps(v, sub) {
       }
       activeDiv.appendChild(activeGrid);
     }
-    prc.appendChild(activeDiv);
+    promSec.appendChild(activeDiv);
     
     const histDiv = el("div", "", null);
     histDiv.style.cssText = "margin-top:20px;";
@@ -1079,8 +1079,9 @@ async function clubOps(v, sub) {
       }
       histDiv.appendChild(histList);
     }
-    prc.appendChild(histDiv);
-    ws.appendChild(prc);
+    promSec.appendChild(histDiv);
+    lrc.appendChild(promSec);
+    ws.appendChild(lrc);
   }
 
   v.appendChild(ws);
