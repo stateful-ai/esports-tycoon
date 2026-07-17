@@ -33,6 +33,7 @@ from esports_sim.manager import (
     career,
     chronicle,
     culture,
+    decision_ledger,
     delegation,
     development,
     economy,
@@ -1797,6 +1798,13 @@ def state() -> dict:
             # The "why you won/lost" synthesis of the last match — working vs
             # breaking signals + coach-gated fixes, depth-gated by the analyst.
             "last_match_review": _last_match_review(gs, S.event_logs),
+            # Last week's decision settlements — recent manager calls graded
+            # against the stored numbers. Derived live (pure read, never
+            # persisted) by manager/decision_ledger.py; rows arrive fully
+            # computed so the client only renders.
+            "decision_ledger": decision_ledger.latest_settlements(
+                gs, gs.acting_team_id
+            ),
             "press": narrative.press_reaction(gs, gs.acting_team_id),
             # A read-only 'best available five' suggestion + legacy job security.
             "suggested_lineup": _suggested_lineup(gs, gs.acting_team_id),

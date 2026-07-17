@@ -120,6 +120,16 @@ def test_per_week_and_total_bounds(season: GameState) -> None:
     assert len(campaign.inbox) <= inbox.MAX_ITEMS
 
 
+def test_hands_off_season_gets_no_decision_ledger_digest(season: GameState) -> None:
+    """The 'decisions settled' digest grades recorded HUMAN actions only
+    (manager/decision_ledger.py). A hands-off season records none, so the
+    ledger must be an exact no-op for it — the same property that keeps the
+    snowball/dynasty gates byte-identical."""
+    assert not [
+        it for it in season.inbox if it.title.startswith("Decisions settled")
+    ]
+
+
 def test_enforce_cap_drops_oldest_read_then_oldest() -> None:
     # 203 items, oldest-first. Index 1 and 4 are already read.
     items = [

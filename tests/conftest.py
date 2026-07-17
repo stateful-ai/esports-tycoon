@@ -32,6 +32,7 @@ SLOW_TESTS = frozenset({
     "test_inbox.py::test_non_offer_items_have_no_actions",
     "test_inbox.py::test_save_load_roundtrip",
     "test_inbox.py::test_items_generated_and_well_formed",
+    "test_inbox.py::test_hands_off_season_gets_no_decision_ledger_digest",
     "test_inbox.py::test_per_week_and_total_bounds",
     "test_inbox.py::test_read_marking",
     "test_inbox.py::test_sorted_items_newest_first",

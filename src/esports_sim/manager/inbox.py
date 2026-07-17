@@ -16,6 +16,7 @@ Sources wired (module/state -> item category):
   scouting-complete news line            -> scouting (report cards ready)
   gs.retired / rookie-class news         -> development (careers end, class arrives)
   curated broadcast news + gs.awards      -> news      (upsets, titles, milestones)
+  action_log settlements (decision_ledger) -> analytics (decisions settled digest)
 
 Determinism: every item id is a blake2 hash of stable strings
 (season, week, category, subject) — never Python's salted hash(), never
@@ -566,6 +567,41 @@ def _relationship_items(gs: "GameState", season: int, week: int):
     )]
 
 
+def _ledger_items(gs: "GameState", season: int, week: int):
+    """The "decisions settled" digest: this manager's recent calls graded
+    against the stored numbers (manager/decision_ledger.py, a pure derived
+    reader over action_log + snapshots + fixture lines — nothing invented).
+    One bounded card, highest-signal settlements first. Hands-off sims
+    record no human actions, so this is an exact no-op for them."""
+    from esports_sim.manager import decision_ledger
+
+    rows = decision_ledger.settlements(gs, gs.acting_team_id, season, week)
+    if not rows:
+        return []
+    top = rows[: decision_ledger.MAX_DIGEST]
+    tag = {
+        decision_ledger.PAID_OFF: "[PAID OFF]",
+        decision_ledger.NEUTRAL: "[NEUTRAL]",
+        decision_ledger.BACKFIRED: "[BACKFIRED]",
+    }
+    lines = [f"- {tag.get(r['verdict'], '')} {r['text']}" for r in top]
+    n_paid = sum(1 for r in top if r["verdict"] == decision_ledger.PAID_OFF)
+    n_back = sum(1 for r in top if r["verdict"] == decision_ledger.BACKFIRED)
+    n_even = len(top) - n_paid - n_back
+    bits = []
+    if n_paid:
+        bits.append(f"{n_paid} paid off")
+    if n_back:
+        bits.append(f"{n_back} backfired")
+    if n_even:
+        bits.append(f"{n_even} neutral")
+    title = "Decisions settled: " + ", ".join(bits)
+    return [(
+        _P_ANALYTICS,
+        _make(season, week, "analytics", "ledger", title, "\n".join(lines), None),
+    )]
+
+
 def _department_items(gs: "GameState", season: int, week: int):
     """The analytics department's weekly opponent report (GDD section 10:
     departments generate actionable reads). Tier-gated like the stat
@@ -654,6 +690,7 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _scouting_items(gs, season, week)
         candidates += _rotation_items(gs, season, week)
         candidates += _analytics_items(gs, season, week)
+        candidates += _ledger_items(gs, season, week)
         candidates += _department_items(gs, season, week)
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)

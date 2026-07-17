@@ -1865,6 +1865,25 @@ async function dashboard(v) {
     rail.appendChild(card);
   }
 
+  // 5a'. Decisions settled: last week's calls graded against what actually
+  // happened. Rows arrive fully computed from the server (decision_ledger
+  // derives them from stored data) — the client only renders.
+  const ledger = s.decision_ledger || [];
+  if (ledger.length) {
+    const card = el("div", "card");
+    card.appendChild(el("h2", "", "Decisions settled"));
+    const list = el("div", "es-obj");
+    const vcls = { paid_off: "good", backfired: "bad", neutral: "" };
+    const vlab = { paid_off: "paid off", backfired: "backfired", neutral: "neutral" };
+    for (const r of ledger.slice(0, 3)) {
+      list.appendChild(el("div", "es-obj-row",
+        `<span class="pill obj ${vcls[r.verdict] ?? ""}">${esc(vlab[r.verdict] || r.verdict)}</span> ` +
+        `<span>${esc(r.text)}</span>`));
+    }
+    card.appendChild(list);
+    rail.appendChild(card);
+  }
+
   // 5b. Objectives: board line + what to chase.
   const objectives = s.objectives_hub || [];
   if (s.board || objectives.length) {
