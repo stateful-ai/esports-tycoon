@@ -137,6 +137,21 @@ Invoke-Checked -FilePath $csc -ArgumentList @(
     $csharpSource
 )
 
+# Authenticode-sign the freshly built launcher so Windows (SmartScreen /
+# Smart App Control / AV) trusts this machine's own binary. A self-signed
+# certificate is created once and trusted locally; see scripts/sign_launcher.ps1.
+$signScript = Join-Path $PSScriptRoot 'sign_launcher.ps1'
+if (Test-Path -LiteralPath $signScript) {
+    try {
+        & $signScript -ExePath $launcherExe
+    } catch {
+        Write-Warning ("Could not sign the launcher: {0}" -f $_.Exception.Message)
+        Write-Warning 'The launcher will still run but Windows may warn about an unknown publisher.'
+    }
+} else {
+    Write-Warning "Signing helper not found ($signScript); launcher left unsigned."
+}
+
 if (-not $SkipShortcut) {
     $shortcutPath = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\ESports Simulator.lnk'
     $shell = New-Object -ComObject WScript.Shell

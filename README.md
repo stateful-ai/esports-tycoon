@@ -42,6 +42,16 @@ If the launcher was installed before LAN play became the default, run the
 install command above once more; subsequent launcher-runtime updates refresh
 themselves automatically after the normal pull.
 
+The launcher `.exe` is compiled on your machine, so the installer also
+Authenticode-signs it — otherwise SmartScreen / Smart App Control / antivirus
+may quarantine it as an unknown-publisher binary and it silently stops
+launching. Signing uses a self-signed certificate that is created once and
+trusted locally (`scripts\sign_launcher.ps1`); the **first** install shows a
+one-time Windows prompt to trust that certificate — choose **Yes**. Re-running
+the installer reuses the same certificate and re-signs the rebuilt launcher. To
+sign with a real certificate instead, run `sign_launcher.ps1` with
+`-Thumbprint`, or `-PfxPath` / `-PfxPassword`.
+
 `New game` → pick a seed, a **world**, and a team → weekly loop: set
 training, scout a rival, work the market, talk to a player, advance the
 week, watch replays. The terminal CLI autosaves to `saves/campaign.json`;
