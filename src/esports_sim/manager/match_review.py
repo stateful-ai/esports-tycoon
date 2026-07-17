@@ -19,7 +19,7 @@ under-gunned / isolation reads as `sim.stats`, so the round-context denominators
 
 from __future__ import annotations
 
-from esports_sim.manager.state import MatchReview, ReviewPoint
+from esports_sim.manager.state import MatchReview, ReviewCalls, ReviewPoint
 from esports_sim.schemas import Event, TeamTactics
 from esports_sim.sim.stats import PISTOL_ROUNDS, RIFLE_TIER, MatchStats
 
@@ -73,6 +73,9 @@ _TACTIC_LABELS = {
     "eco_greed": "Eco greed",
     "map_control": "Map control",
 }
+# Public alias: the web serializer labels game-plan dial overrides with the
+# same display names the review levers use.
+DIAL_LABELS = _TACTIC_LABELS
 
 
 def tactic_adjustment(
@@ -381,9 +384,13 @@ def build_match_review(
     best_of: int,
     per_map_bundles: list[tuple[MatchStats, list[Event], dict[str, str]]],
     weapon_class_of: dict[str, str],
+    calls: ReviewCalls | None = None,
 ) -> MatchReview:
     """Synthesize the review for `team_id`'s series. `per_map_bundles` is one
-    (box score, event log, dressed roster map) tuple per played map."""
+    (box score, event log, dressed roster map) tuple per played map. `calls`
+    is the campaign-captured manager attribution (game plan, talk, lineup,
+    prep); this function only grounds its lineup picks with the series
+    ratings it already computes — it never invents a call."""
     if not per_map_bundles:
         return MatchReview(
             fixture_id=fixture_id,
@@ -393,6 +400,7 @@ def build_match_review(
             opp_id=opp_id,
             best_of=best_of,
             contested=False,
+            calls=calls,
         )
 
     c: dict[str, int] = {}
@@ -597,6 +605,15 @@ def build_match_review(
     working.sort(key=lambda p: (-p.weight, p.code))
     breaking.sort(key=lambda p: (-p.weight, p.code))
 
+    # Ground the manager's lineup picks with the series outcome: each player
+    # dressed over the suggestion gets their mean series rating attached.
+    if calls is not None and calls.picked:
+        calls.picked_ratings = {
+            pid: round(pr[pid][0] / pr[pid][1], 2)
+            for pid in calls.picked
+            if pid in pr and pr[pid][1]
+        }
+
     return MatchReview(
         fixture_id=fixture_id,
         season=season,
@@ -613,6 +630,7 @@ def build_match_review(
         contested=True,
         working=working,
         breaking=breaking,
+        calls=calls,
     )
 
 

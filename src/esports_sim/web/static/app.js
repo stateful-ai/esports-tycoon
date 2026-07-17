@@ -1820,6 +1820,56 @@ async function dashboard(v) {
         } else if (lmr.coach && !lmr.coach.present) {
           card.appendChild(el("p", "muted es-review-d", "Hire a coach for tailored fixes."));
         }
+        // "Your calls" — the manager-attribution block. Every number arrives
+        // computed from the server (tactics_fit impact, prep edge, ratings);
+        // this only formats rows. Absent (null) when nothing was called.
+        const yc = lmr.your_calls;
+        if (yc) {
+          card.appendChild(el("span", "es-scout-lab muted", "Your calls"));
+          const yl = el("div", "es-review-calls");
+          const yrow = (html) => yl.appendChild(
+            el("div", "es-review-call", `<span class="es-review-arrow">▸</span> ${html}`));
+          for (const d of yc.dials || []) {
+            let imp = "";
+            if (d.impact_delta != null) {
+              const v = d.impact_delta;
+              const cls = v > 0 ? "wl-w" : v < 0 ? "wl-l" : "";
+              imp = ` <span class="${cls} mono">(${v > 0 ? "+" : ""}${v.toFixed(1)} execution)</span>`;
+            }
+            yrow(`${esc(d.label)} <b class="mono">${d.planned}</b> vs book <span class="mono">${d.base}</span>${imp}`);
+          }
+          if (yc.site_focus && yc.site_focus !== "balanced") {
+            yrow(`Site call: <b class="mono">${esc(String(yc.site_focus).toUpperCase())}</b>`);
+          }
+          if (yc.focus_target) {
+            yrow(`Focused prep on ${plink(yc.focus_target.player_id, yc.focus_target.handle)}`);
+          }
+          if (yc.team_talk) {
+            const t = yc.team_talk;
+            yrow(`${esc(t.label)} — confidence ${t.avg_delta >= 0 ? "+" : ""}${t.avg_delta.toFixed(1)} per starter`);
+          }
+          if (yc.lineup) {
+            if (yc.lineup.override) yrow("One-match lineup set for this fixture");
+            for (const p of yc.lineup.picked || []) {
+              const r = p.rating != null ? ` — went <b class="mono">${p.rating.toFixed(2)}</b>` : "";
+              yrow(`Dressed ${plink(p.player_id, p.handle)} over the suggested five${r}`);
+            }
+            if ((yc.lineup.benched || []).length) {
+              yrow(`Sat from the suggestion: ${yc.lineup.benched.map((p) => plink(p.player_id, p.handle)).join(", ")}`);
+            }
+            if (yc.lineup.followed && yc.lineup.override) {
+              yrow("Lineup matched the suggested five");
+            }
+          }
+          if (yc.prep) {
+            const bits = [];
+            if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
+            if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
+            if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+            if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
+          }
+          if (yl.childElementCount) card.appendChild(yl);
+        }
         if (lmr.locked && lmr.locked_hint) {
           card.appendChild(el("p", "muted es-review-d", esc(lmr.locked_hint)));
         }

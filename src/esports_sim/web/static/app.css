@@ -1325,6 +1325,8 @@ tr.elim td { opacity: .5; }
 .es-review-h { display: block; font-size: var(--es-text-xs, 11px); }
 .es-review-d { display: block; font-size: var(--es-text-2xs, 10px); }
 .es-review-levers { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.es-review-calls { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.es-review-call { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); }
 .es-review-lever { cursor: pointer; font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #b7c0d0); padding: 5px 7px; border: 1px solid var(--es-color-border-secondary, #1c2536); border-radius: var(--es-radius-md, 6px); }
 .es-review-lever:hover { border-color: var(--es-color-accent, #4fd8c0); }
 .es-review-lever.on-focus { border-left: 2px solid var(--es-color-accent, #4fd8c0); }

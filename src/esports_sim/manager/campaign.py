@@ -84,6 +84,7 @@ from esports_sim.manager.state import (
     MapResult,
     MatchReview,
     PlayerLineSnap,
+    ReviewCalls,
     PlayerSeasonStats,
     StatSnap,
     TeamMapStats,
@@ -377,6 +378,27 @@ def default_five(gs: GameState, team_id: str) -> list[str]:
     if len(roster) <= market.ROSTER_SIZE:
         return roster
     return _resolve_five(gs, team_id, gs.teams[team_id].lineup_ids)
+
+
+def suggested_five(gs: GameState, team_id: str) -> list[str]:
+    """A read-only 'best available five' by quality + current form/confidence
+    — the SAME read the dashboard's suggested-lineup card shows (the web
+    serializer delegates here), shared so the match review can record what
+    the pre-match suggestion was against what actually dressed. Rosters of
+    five or fewer have nothing to pick: everyone plays."""
+    roster = list(gs.teams[team_id].player_ids)
+    if len(roster) <= market.ROSTER_SIZE:
+        return sorted(roster)
+    scored = []
+    for pid in sorted(roster):
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        q = market.player_quality(p)
+        score = q + (p.form - 50.0) * 0.05 + (p.confidence - 50.0) * 0.05
+        scored.append((-score, pid))
+    scored.sort()
+    return [pid for _, pid in scored[: market.ROSTER_SIZE]]
 
 
 def dressed_for(
@@ -1777,7 +1799,7 @@ def _talk_recipients(gs: GameState, tid: str, f: Fixture) -> list[str]:
     )
 
 
-def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
+def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> float:
     """A pre-match team talk nudges the dressed five's confidence, modulated
     by personality and bounded to [5, 95] — the same range the rest of the
     campaign clamps confidence to. Deterministic (personality is a pure
@@ -1787,9 +1809,15 @@ def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
     - fire_up:  a lift, bigger for ambitious players (they ride motivation).
     - reassure: a lift, bigger for fragile (low-resilience) players.
     - focus:    settle everyone toward a steady 55 (calms tilt AND hubris).
+
+    Returns the mean confidence delta actually applied (post-clamp), so the
+    match review can attribute the talk's real effect — a pure by-product,
+    no extra state is read or mutated.
     """
     from esports_sim.manager import personality
 
+    applied = 0.0
+    nudged = 0
     for pid in five:
         p = gs.players.get(pid)
         if p is None:
@@ -1800,7 +1828,11 @@ def _apply_team_talk(gs: GameState, approach: str, five: list[str]) -> None:
             delta = 3.0 * (1.0 - 0.4 * personality.dev(p, "resilience"))
         else:  # fire_up
             delta = 5.0 * (1.0 + 0.4 * personality.dev(p, "ambition"))
+        before = p.confidence
         p.confidence = round(min(95.0, max(5.0, p.confidence + delta)), 1)
+        applied += p.confidence - before
+        nudged += 1
+    return round(applied / nudged, 2) if nudged else 0.0
 
 
 def _between_map_plan(
@@ -1908,6 +1940,53 @@ def _sim_fixture(
                 f"{tid}|{f.id}|{map_id}", plan_lineups[tid]
             )
 
+    # "Your calls" capture for the match review: the pre-match facts the
+    # review attributes to the manager, recorded now because the plan is
+    # deleted the moment this fixture sims. Human sides only (reviews exist
+    # only for them) — pure reads, no rng, so AI/hands-off paths are
+    # untouched. The suggested five is read BEFORE the team talk lands
+    # (confidence feeds the suggestion; the manager saw the pre-talk read).
+    calls_by: dict[str, ReviewCalls] = {}
+    suggested_by: dict[str, list[str]] = {}
+    dressed_union: dict[str, set[str]] = {}
+    for tid in (f.team_a, f.team_b):
+        if not gs.is_human(tid):
+            continue
+        opp = f.team_b if tid == f.team_a else f.team_a
+        plan = gs.game_plans_by.get(tid)
+        if plan is not None and plan.fixture_id != f.id:
+            plan = None  # stale plan for another fixture: not this match's call
+        dials = (
+            {
+                k: float(getattr(plan, k))
+                for k in _PLAN_DIALS
+                if k != "site_focus" and getattr(plan, k) is not None
+            }
+            if plan is not None
+            else {}
+        )
+        calls_by[tid] = ReviewCalls(
+            plan_set=plan is not None,
+            dials=dials,
+            base_dials={
+                k: float(getattr(gs.teams[tid].tactics, k)) for k in sorted(dials)
+            },
+            site_focus=(plan.site_focus or "") if plan is not None else "",
+            focus_target=(
+                plan.focus_target
+                if plan is not None
+                and plan.focus_target in gs.teams[opp].player_ids
+                else ""
+            ),
+            team_talk=(plan.team_talk or "") if plan is not None else "",
+            lineup_override=tid in plan_lineups,
+            prep_edge=(
+                round(plans[tid].prep_edge, 3) if plan is not None else 0.0
+            ),
+        )
+        suggested_by[tid] = suggested_five(gs, tid)
+        dressed_union[tid] = set()
+
     # Pre-match team talks land on the players who will ACTUALLY dress, resolved
     # via dressed_for against the now-finalised map_lineups (explicit per-map
     # overrides included). So a rotation gives the talk to the rotated-in five,
@@ -1920,7 +1999,11 @@ def _sim_fixture(
         if plan is None or plan.fixture_id != f.id:
             continue
         if plan.team_talk in TEAM_TALK_APPROACHES:
-            _apply_team_talk(gs, plan.team_talk, _talk_recipients(gs, tid, f))
+            delta = _apply_team_talk(
+                gs, plan.team_talk, _talk_recipients(gs, tid, f)
+            )
+            if tid in calls_by:
+                calls_by[tid].talk_avg_delta = delta
 
     # Per-map (box score, event log, dressed roster) bundles, kept for the
     # post-series match-review synthesis while the full stats + events are
@@ -1982,6 +2065,8 @@ def _sim_fixture(
             f.team_a: dressed_for(gs, f.team_a, f, map_id),
             f.team_b: dressed_for(gs, f.team_b, f, map_id),
         }
+        for tid in dressed_union:
+            dressed_union[tid].update(dressed[tid])
         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
         res = simulate_match_result(
             map_gd, f.team_a, f.team_b, map_id, seed, plans=map_plans or None
@@ -2046,10 +2131,33 @@ def _sim_fixture(
     # side while the full box score + event log are still in hand. Only the
     # latest per team is kept on GameState (the dashboard card reads it); the
     # durable corpus is appended on disk at the web layer, off the tick.
+    played_maps = [r.map_id for r in f.results]
     for tid in (f.team_a, f.team_b):
         if not gs.is_human(tid):
             continue
         opp = f.team_b if tid == f.team_a else f.team_a
+        calls = calls_by.get(tid)
+        if calls is not None:
+            # Lineup call: what dressed (across the series) vs what the
+            # pre-match suggestion read said. Both sides empty = followed it.
+            suggested = set(suggested_by.get(tid, []))
+            dressed_set = dressed_union.get(tid, set())
+            if suggested and dressed_set:
+                calls.picked = sorted(dressed_set - suggested)
+                calls.benched = sorted(suggested - dressed_set)
+            # Prep only pays with a plan ("no plan, no payoff"), so the map
+            # attribution is only meaningful when one was set.
+            if calls.plan_set:
+                prepped = [
+                    m for m in f.maps
+                    if knowledge.get(gs, tid, f"playbook:{m}") > 0.0
+                ]
+                calls.prepped_maps_played = [
+                    m for m in prepped if m in played_maps
+                ]
+                calls.prepped_maps_missed = [
+                    m for m in prepped if m not in played_maps
+                ]
         gs.last_review_by[tid] = build_match_review(
             gs.season,
             f.week,
@@ -2059,6 +2167,7 @@ def _sim_fixture(
             f.best_of,
             review_bundles,
             review_weapon_class,
+            calls=calls,
         )
 
     # A plan is one match's prep: consumed when its fixture sims.

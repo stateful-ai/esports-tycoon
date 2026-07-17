@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 30
+SCHEMA_VERSION = 31
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -457,6 +457,14 @@ def _migrate_v29_to_v30(data: dict) -> dict:
     return data
 
 
+def _migrate_v30_to_v31(data: dict) -> dict:
+    """v31 adds manager-attribution facts (`calls`) to the stored match
+    review. The field defaults to None, so an old save's reviews load as
+    reviews without attribution — the dashboard simply omits the "Your
+    calls" block until the next series is played. Pure pass-through."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -487,6 +495,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     27: _migrate_v27_to_v28,
     28: _migrate_v28_to_v29,
     29: _migrate_v29_to_v30,
+    30: _migrate_v30_to_v31,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -588,6 +597,33 @@ class ReviewPoint(BaseModel):
     site: str = ""  # optional A/B/C label for site-specific round context
 
 
+class ReviewCalls(BaseModel):
+    """Manager-attribution facts for one series, captured at sim time while
+    the consumed game plan / prep inputs are still in hand (the plan is
+    deleted right after the fixture sims, so these facts exist nowhere else).
+    A pure RECORD of what the manager called and what the campaign resolved
+    it to — no engine number is duplicated here; the web serializer turns the
+    raw dial values into a tactics-fit impact live via sim/tactics_fit (the
+    same shared source of truth the tactics screen uses)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    plan_set: bool = False  # a game plan was consumed for this fixture
+    dials: dict[str, float] = Field(default_factory=dict)  # dial -> planned value
+    base_dials: dict[str, float] = Field(default_factory=dict)  # season identity at sim time
+    site_focus: str = ""  # "" = no site call
+    focus_target: str = ""  # validated opponent pid ("" if none / dropped)
+    team_talk: str = ""  # fire_up | reassure | focus | ""
+    talk_avg_delta: float = 0.0  # mean confidence nudge actually applied
+    lineup_override: bool = False  # the plan's one-match five was applied
+    picked: list[str] = Field(default_factory=list)  # dressed over the suggestion
+    benched: list[str] = Field(default_factory=list)  # suggested but sat
+    picked_ratings: dict[str, float] = Field(default_factory=dict)  # pid -> series rating
+    prep_edge: float = 0.0  # prep edge handed to the engine (0 without a plan)
+    prepped_maps_played: list[str] = Field(default_factory=list)  # played maps with a playbook
+    prepped_maps_missed: list[str] = Field(default_factory=list)  # scheduled+prepped, never played
+
+
 class MatchReview(BaseModel):
     """A synthesized 'why you won/lost' for a team's most recent series.
     Computed at sim time from the full box score + event log (both transient),
@@ -612,6 +648,8 @@ class MatchReview(BaseModel):
     contested: bool = True  # False for a forfeit / walkover (no breakdown)
     working: list[ReviewPoint] = Field(default_factory=list)
     breaking: list[ReviewPoint] = Field(default_factory=list)
+    # Manager attribution ("Your calls") — None on old saves and walkovers.
+    calls: "ReviewCalls | None" = None
 
 
 class TeamRecord(BaseModel):
