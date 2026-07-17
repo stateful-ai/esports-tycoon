@@ -1594,8 +1594,10 @@ const ManagerProfile = ({ career }) => {
   const con = c.contract;
   if (con) {
     if (con.goal) {
-      const st = con.goal_status && con.goal_status.state;
-      conBits.push(`Board goal: ${esc(con.goal)}` + (st ? ` (${esc(String(st).replace(/_/g, " "))})` : ""));
+      const gs = con.goal_status || {};
+      conBits.push(`Board goal: ${esc(con.goal)}`
+        + (gs.state ? ` (${esc(String(gs.state).replace(/_/g, " "))})` : "")
+        + (gs.detail ? ` — ${esc(gs.detail)}` : ""));
     }
     if (con.patience != null) conBits.push(`patience ${pfNum(con.patience)}`);
     if (con.seasons != null && con.start_season != null) {
