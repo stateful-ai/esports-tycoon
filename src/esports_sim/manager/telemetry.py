@@ -35,6 +35,7 @@ if TYPE_CHECKING:  # pragma: no cover
 ACTION_KINDS = frozenset(
     {
         "advance",
+        "sim_ahead",
         "set_training",
         "set_dev_plan",
         "sign",
@@ -58,6 +59,8 @@ ACTION_KINDS = frozenset(
         "release_staff",
         "set_tactics",
         "set_lineup",
+        "set_assignment",
+        "set_igl",
         "set_game_plan",
         "clear_game_plan",
         "talk",

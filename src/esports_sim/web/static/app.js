@@ -583,6 +583,10 @@ function updateSaveControls(sv) {
 function updateMpChip(mp) {
   const chip = $("#mp-chip");
   if (!chip) return;
+  // Sim ahead is solo-only (the endpoint 409s in shared worlds, where the
+  // week advances by ready-up) — hide the control rather than tease it.
+  const sim = $("#simahead-btn");
+  if (sim) sim.classList.toggle("hidden", !!(mp && mp.mode === "shared"));
   if (!mp || mp.mode !== "shared") {
     chip.classList.add("hidden");
     return;
@@ -7045,6 +7049,34 @@ $("#advance-btn").onclick = async () => {
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
     if (!mpPolling) $("#advance-btn").disabled = false;
+  }
+};
+
+// Sim ahead: batch up to 4 weeks in one press; the server stops the moment a
+// trigger fires (playoff match up, expiring starter deal, incoming bid, board
+// or money trouble, pending decision, offseason). Toast the stop reason, then
+// stage the LAST advanced week through the usual reveal.
+$("#simahead-btn").onclick = async () => {
+  const btn = $("#simahead-btn");
+  btn.disabled = true;
+  $("#advance-btn").disabled = true;
+  try {
+    const res = await api("/api/actions/sim_ahead", {});
+    await refresh(); // reveal stages read fresh App.state (see advance-btn)
+    const label = res.stop_label;
+    if (res.weeks > 0) {
+      const n = `${res.weeks} week${res.weeks === 1 ? "" : "s"}`;
+      toast(label ? `Simmed ${n} — stopped: ${label}.` : `Simmed ${n}.`);
+    } else {
+      toast(label ? `Not simming ahead — ${label}.` : "Nothing to sim.");
+    }
+    if (res.report) {
+      if (!startWeekReveal(res.report)) showReport(res.report);
+    }
+    if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } finally {
+    btn.disabled = false;
+    $("#advance-btn").disabled = false;
   }
 };
 

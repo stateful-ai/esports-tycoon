@@ -52,6 +52,7 @@ from esports_sim.manager import (
     relationships,
     role_fit,
     rivalries as rivalries_mod,
+    sim_ahead as sim_ahead_mod,
     social,
     sponsors,
     staff as staff_mod,
@@ -6438,6 +6439,98 @@ def advance() -> dict:
         # or never — the explicit Save button always works).
         game.autosave_tick()
         return _report_view(report, gs, me)
+
+
+class SimAheadBody(BaseModel):
+    max_weeks: int = sim_ahead_mod.DEFAULT_MAX_WEEKS
+
+
+@app.post("/api/actions/sim_ahead")
+def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
+    """Advance up to `max_weeks` weeks in one press, stopping the moment a
+    trigger fires (manager/sim_ahead.py: playoff-stage fixture, expiring
+    starter contract, incoming starter bid, board/insolvency trouble, pending
+    decision, offseason). Solo worlds only — a shared world advances by
+    ready-up so one manager can't sim past the others. Before any week ticks
+    this preserves the manual advance's 409 guards exactly (pending flavor/
+    media decision, blocked seats, roster size); once weeks have ticked, the
+    same conditions come back as stop reasons instead. Returns the LAST
+    advanced week's report (with its week_reveal) so the client can stage the
+    usual reveal, plus the stop reason slug + toast-ready label."""
+    max_weeks = sim_ahead_mod.DEFAULT_MAX_WEEKS if body is None else body.max_weeks
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        if len(gs.human_team_ids) > 1:
+            raise HTTPException(
+                409, "sim ahead is solo-only — shared worlds advance by ready-up"
+            )
+        if flavor_events.pending_for(gs, me) is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending flavor event in Action required before advancing",
+            )
+        if media_events.pending_for(gs, me) is not None:
+            raise HTTPException(
+                409,
+                "resolve the pending media decision in Action required before advancing",
+            )
+        blocked = career.blocked_seats(gs)
+        if blocked:
+            names = ", ".join(gs.managers[m].name for m in blocked)
+            raise HTTPException(
+                409, f"waiting on a manager to accept a new post ({names})"
+            )
+        ok, why = market.roster_ready(gs, me)
+        if not ok:
+            raise HTTPException(409, why)
+        game = _ctx.get().game
+
+        def _before(gs_: GameState) -> None:
+            # Pre-tick standings, refreshed every week: after the batch this
+            # holds the "from" position across the LAST tick — exactly what
+            # the reveal's standings stage wants (session memory only, like
+            # the manual advance's capture).
+            game.prev_positions = {me: _league_position(gs_, me)}
+
+        def _after(report) -> None:
+            game.last_report = report
+            # Same serving-layer side effects as a manual advance, per week:
+            # the durable review corpus (never fatal) and the autosave policy.
+            try:
+                review_history.append_reviews(gs, game.code, game.review_seen)
+            except Exception:
+                pass
+            game.autosave_tick()
+
+        weeks, reason = sim_ahead_mod.advance_until(
+            gs,
+            S.gd,
+            team_id=me,
+            max_weeks=max_weeks,
+            events_out=game.event_logs,
+            before_week=_before,
+            after_week=_after,
+        )
+        game.ready.discard(me)
+        if weeks > 0:
+            llm_social.enqueue(game)
+        # Re-bind acting (advance_week churns the acting pointer internally),
+        # and make sure the recorded sim_ahead press itself gets persisted
+        # even when no week ticked.
+        gs.set_acting(me)
+        game.save()
+        return {
+            "advanced": weeks > 0,
+            "weeks": weeks,
+            "stop_reason": reason,
+            "stop_label": sim_ahead_mod.label_for(reason),
+            "report": (
+                _report_view(game.last_report, gs, me)
+                if weeks > 0 and game.last_report is not None
+                else None
+            ),
+        }
 
 
 def _league_position(gs: GameState, tid: str) -> dict | None:
