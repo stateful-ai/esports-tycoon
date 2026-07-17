@@ -6436,7 +6436,7 @@ def advance() -> dict:
         # week_reveal can show the standings movement across this tick
         # (session memory only, alongside last_report).
         game.prev_positions = {
-            t: _league_position(gs, t) for t in sorted(gs.human_team_ids)
+            t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
         }
         game.event_logs.clear()  # replays are for the freshly played week
         report = advance_week(gs, S.gd, events_out=game.event_logs)
@@ -6511,7 +6511,7 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
             # holds the "from" position across the LAST tick — exactly what
             # the reveal's standings stage wants (session memory only, like
             # the manual advance's capture).
-            game.prev_positions = {me: _league_position(gs_, me)}
+            game.prev_positions = {me: _pretick_position(gs_, me)}
 
         def _after(report) -> None:
             game.last_report = report
@@ -6563,6 +6563,23 @@ def _league_position(gs: GameState, tid: str) -> dict | None:
     if tid not in order:
         return None
     return {"pos": order.index(tid) + 1, "of": len(order)}
+
+
+def _pretick_position(gs: GameState, tid: str) -> dict | None:
+    """_league_position for the reveal's pre-tick "from" capture, except None
+    while the team's region table is entirely unplayed (every record 0-0).
+    A pre-season table is ordered by tiebreak/id noise, so movement away
+    from it would stage a fabricated rise/drop on each season's first
+    played week; None makes the client fall back to the plain position."""
+    t = gs.teams.get(tid)
+    if t is None:
+        return None
+    order = gs.standings_order(str(t.region), tier=t.tier)
+    if not any(
+        gs.standings[o].wins or gs.standings[o].losses for o in order
+    ):
+        return None
+    return _league_position(gs, tid)
 
 
 def _week_reveal(report, gs: GameState, me: str) -> dict:

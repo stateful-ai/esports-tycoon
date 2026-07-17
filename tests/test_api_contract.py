@@ -166,8 +166,11 @@ def test_advance_response_carries_week_reveal(
 ) -> None:
     """POST /api/actions/advance returns a week_reveal block for the client's
     staged advance beat: the manager's own played fixture id plus prev/now
-    league positions (prev captured pre-tick in session memory). /api/report
-    serves the identical block for waiting shared-world managers."""
+    league positions (prev captured pre-tick in session memory). On a season's
+    FIRST played week prev is None — the pre-tick table is all 0-0, ordered by
+    tiebreak/id noise, and staging a "drop" away from it would be fiction.
+    /api/report serves the identical block for waiting shared-world
+    managers."""
     from esports_sim.web import review_history
 
     gs = new_campaign(game_data, seed=99, user_team_id="team_nexus")
@@ -191,12 +194,22 @@ def test_advance_response_carries_week_reveal(
         assert res["phase"] == "regular"
         st = wr["standings"]
         assert st is not None and set(st) == {"prev", "now", "of"}
-        assert 1 <= st["prev"] <= st["of"]
+        # Week 1: the pre-tick table had no played games, so there is no
+        # meaningful "from" position — the client shows the plain position.
+        assert st["prev"] is None
         assert 1 <= st["now"] <= st["of"]
 
         # Waiting managers fetch the same reveal from /api/report.
         rep2 = server_mod.last_week_report()["report"]
         assert rep2["week_reveal"] == wr
+
+        # Week 2: last week's results are on the table, so the reveal now
+        # carries a real pre-tick position to move from.
+        res2 = server_mod.advance()
+        st2 = res2["week_reveal"]["standings"]
+        assert st2 is not None
+        assert 1 <= st2["prev"] <= st2["of"]
+        assert 1 <= st2["now"] <= st2["of"]
     finally:
         server_mod._ctx.reset(token)
 
