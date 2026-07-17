@@ -26,6 +26,15 @@ views and event logs the server hands it — nothing else.
   live state (an inbox action derives its buttons from CURRENT offers, so
   a stale message can't fire a dead offer).
 
+## Screen placement (card budget)
+
+- The Dashboard has a HARD budget of 7 cards. A new campaign/web feature
+  surfaces as: an inbox item + a nav "needs you" badge (`computeNeedsYou`
+  in app.js) + a section on its OWNING tab — never a new Dashboard card
+  without removing one.
+- The Match tab is the single home for all match preparation (tactics,
+  game plans, series prep). Don't scatter prep UI across other tabs.
+
 ## Wiring checklist for a new screen/tab
 
 1. Serializer in `web/server.py` — exact key sets; use nulls, never

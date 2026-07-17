@@ -162,8 +162,11 @@ Published at github.com/stateful-ai/esports-tycoon.
   OpenAI-compatible endpoint unless those provider settings were explicitly
   configured. The model REPHRASES facts we hand it, never invents events
   (grounded like narrative).
-  Screens: app.js (tabs incl. dashboard hub, tactics, market with a
-  Players|Staff split, stats hub, social feed), viewer.js
+  Screens: app.js (nine tabs: dashboard hub, inbox, Match — the single
+  home for all match preparation incl. tactics/game plans, Club with four
+  sub-tabs Squad|Development|Locker Room|Operations, facilities, season,
+  market with a Players|Staff split, stats hub, and Finances incl. the
+  Brand section that absorbed the old Social tab), viewer.js
   (painted-backdrop isometric replay), inbox.js, profile.js
   (player/team/staff overlays via `[data-pid]`/`[data-tid]`/`[data-sid]`
   delegation on any name). `facilities.js` is the live menu-based upgrade
@@ -234,6 +237,11 @@ Published at github.com/stateful-ai/esports-tycoon.
   gates run before every push; CI (GitHub Actions) must stay green.
   Parallel sessions push to this repo — expect non-fast-forward rejects;
   `git pull --rebase origin main`, rerun the gates, then push.
+- Dashboard card budget: the Dashboard has a HARD budget of 7 cards. A new
+  campaign/web feature lands as an inbox item + a nav "needs you" badge
+  (`computeNeedsYou` in app.js) + a section on its OWNING tab — never a new
+  Dashboard card without removing one. The Match tab is the single home for
+  all match preparation.
 - Replays are captured at sim time and kept for the latest week only —
   rosters mutate immediately after, so stored seeds don't reproduce logs.
 - Browser screenshots via the preview tools wedge chronically on this
