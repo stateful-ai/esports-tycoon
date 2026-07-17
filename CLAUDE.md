@@ -165,7 +165,7 @@ Published at github.com/stateful-ai/esports-tycoon.
   Screens: app.js (nine tabs: dashboard hub, inbox, Match — the single
   home for all match preparation incl. tactics/game plans, Club with four
   sub-tabs Squad|Development|Locker Room|Operations, facilities, season,
-  market with a Players|Staff split, stats hub, and Finances incl. the
+  market with a Players|Scouting|Staff split, stats hub, and Finances incl. the
   Brand section that absorbed the old Social tab), viewer.js
   (painted-backdrop isometric replay), inbox.js, profile.js
   (player/team/staff overlays via `[data-pid]`/`[data-tid]`/`[data-sid]`

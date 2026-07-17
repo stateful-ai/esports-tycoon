@@ -872,7 +872,7 @@ async function clubOps(v, sub) {
   const trustRow = el("div", "row");
   for (const p of d.media.player_trust || []) trustRow.appendChild(el("span", "pill", `${p.handle} ${Math.round(p.trust)}`));
   mc.appendChild(trustRow);
-  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> Â· ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
+  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
   if (d.media.commitment) mc.appendChild(el("p", "muted", "A public derby expectation will settle after the fixture."));
   ws.appendChild(mc);
 
@@ -2333,13 +2333,15 @@ function teamTrainingFocusCard(s) {
   return card;
 }
 
-// Form & fitness — weekly movers + burnout watch beside the Club → Squad
-// roster (relocated from the dashboard; same serialized state, only
-// formatted here). Null when there's nothing to show.
+// Form & fitness — weekly movers, burnout watch, and the season's shape
+// (cumulative-wins sparkline) beside the Club → Squad roster (relocated from
+// the dashboard; same serialized state, only formatted here). Null when
+// there's nothing to show.
 function squadFormFitnessCard(s) {
   const movers = s.movers || [];
   const burnt = (s.rotation || []).filter((r) => r.burnout);
-  if (!movers.length && !burnt.length) return null;
+  const trend = s.form_trend || [];
+  if (!movers.length && !burnt.length && trend.length < 2) return null;
   const card = el("div", "card");
   card.appendChild(el("h2", "", "Form & fitness"));
   if (movers.length) {
@@ -2362,6 +2364,25 @@ function squadFormFitnessCard(s) {
         `<span class="muted">${r.maps} maps</span> <b class="mono trend-down">${r.stamina} sta</b>`));
     }
     card.appendChild(list);
+  }
+  if (trend.length >= 2) {
+    card.appendChild(el("span", "es-scout-lab muted", "Cumulative wins"));
+    const W = 220, H = 46, maxW = trend[trend.length - 1].wins || 1;
+    const pts = trend.map((p, i) => {
+      const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+      const y = H - 4 - (p.wins / maxW) * (H - 8);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+    const dots = trend.map((p, i) => {
+      const x = trend.length > 1 ? (i / (trend.length - 1)) * (W - 4) + 2 : 2;
+      const y = H - 4 - (p.wins / maxW) * (H - 8);
+      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" class="${p.won ? "es-spark-w" : "es-spark-l"}"/>`;
+    }).join("");
+    const spark = el("div", "es-spark",
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="cumulative wins">` +
+      `<polyline points="${pts}" fill="none" class="es-spark-line"/>${dots}</svg>` +
+      `<span class="muted">${maxW}W in ${trend.length} played</span>`);
+    card.appendChild(spark);
   }
   return card;
 }
