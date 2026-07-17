@@ -378,20 +378,28 @@ def test_team_talk_recipients_follow_a_per_map_override():
     assert _talk_recipients(gs, "nxs", fx) == ["a", "b", "c", "d", "f"]
 
 
-def test_ai_fixture_plan_uses_shared_resolver_and_rotates_a_rested_bench():
-    """AI plans are stored GamePlans, not an invisible match-only modifier."""
-    from esports_sim.manager.campaign import (
-        _apply_bench_week,
-        _book_ai_fixture_plans,
-        _fixture_plans,
-        default_five,
-    )
+class _ForcedTree:
+    """Minimal RngTree stand-in: pins the "ai_plans" prep roll to a fixed
+    value so tests exercise both branches without hunting for seeds."""
 
-    _gd, gs = _campaign(88)
-    fixture = next(
-        f for f in gs.fixtures
-        if f.team_a != gs.user_team_id and f.team_b != gs.user_team_id
-    )
+    def __init__(self, roll: float):
+        self._roll = roll
+
+    def derive(self, *labels):
+        roll = self._roll
+
+        class _G:
+            def random(self):
+                return roll
+
+        return _G()
+
+
+def _six_man_ai_side(gs, fixture):
+    """Give the fixture's AI side a monster rested sixth over a gassed five;
+    returns (ai, opponent, bench_id, old_five)."""
+    from esports_sim.manager.campaign import default_five
+
     ai, opponent = fixture.team_a, fixture.team_b
     bench_id = max(gs.free_agent_ids, key=lambda pid: (sum(gs.players[pid].attributes.values()), pid))
     gs.free_agent_ids.remove(bench_id)
@@ -402,16 +410,41 @@ def test_ai_fixture_plan_uses_shared_resolver_and_rotates_a_rested_bench():
     old_five = default_five(gs, ai)
     for pid in old_five:
         gs.players[pid].stamina = 30.0
-    gs.teams[ai].tactics.pace = 85.0
-    gs.teams[opponent].tactics.aggression = 85.0
+    return ai, opponent, bench_id, old_five
 
-    _book_ai_fixture_plans(gs, [fixture])
+
+def test_ai_fixture_plan_uses_shared_resolver_and_rotates_a_rested_bench():
+    """AI plans are stored GamePlans, not an invisible match-only modifier,
+    and the counter dial is a bounded step off the club's own identity."""
+    from esports_sim.manager.campaign import (
+        AI_COUNTER_MAX_DELTA,
+        _apply_bench_week,
+        _book_ai_fixture_plans,
+        _fixture_plans,
+    )
+    from esports_sim.sim import tactics_fit
+
+    _gd, gs = _campaign(88)
+    fixture = next(
+        f for f in gs.fixtures
+        if f.team_a != gs.user_team_id and f.team_b != gs.user_team_id
+    )
+    ai, opponent, bench_id, old_five = _six_man_ai_side(gs, fixture)
+    for dial in tactics_fit.COUNTER_DIALS:
+        setattr(gs.teams[opponent].tactics, dial, 50.0)
+    gs.teams[opponent].tactics.aggression = 85.0
+    gs.teams[ai].tactics.aggression = 52.0  # leans over; a small step crosses
+
+    _book_ai_fixture_plans(gs, [fixture], _ForcedTree(0.0))
 
     plan = gs.game_plans_by[ai]
     plans, lineups = _fixture_plans(gs, fixture)
-    assert {fixture.team_a, fixture.team_b} <= set(gs.game_plans_by)
     assert plan.fixture_id == fixture.id
-    assert plan.aggression == 40.0
+    # The counter answers aggression=85 from OUR book (52), never a rebuild.
+    assert plan.aggression is not None and plan.aggression < 50.0
+    assert abs(plan.aggression - 52.0) <= AI_COUNTER_MAX_DELTA
+    # No public box scores exist yet, so no target: attributes stay fogged.
+    assert plan.focus_target is None
     assert bench_id in lineups[ai]
     assert plans[ai].counter_edge > 0.0
     assert any("counter-plan" in note and gs.teams[ai].tag in note for note in fixture.series_notes)
@@ -420,6 +453,99 @@ def test_ai_fixture_plan_uses_shared_resolver_and_rotates_a_rested_bench():
     before = gs.players[sat_out].stamina
     _apply_bench_week(gs, {ai: set(lineups[ai])})
     assert gs.players[sat_out].stamina == before + 6.0
+
+
+def test_ai_prep_read_rolls_on_the_dedicated_stream_bench_stays_pure():
+    """A failed "ai_plans" roll skips the opponent-specific read, but the
+    freshness rotation still books — fatigue management is never a dice
+    roll."""
+    from esports_sim.manager.campaign import _PLAN_DIALS, _book_ai_fixture_plans
+    from esports_sim.sim import tactics_fit
+
+    _gd, gs = _campaign(88)
+    fixture = next(
+        f for f in gs.fixtures
+        if f.team_a != gs.user_team_id and f.team_b != gs.user_team_id
+    )
+    ai, opponent, bench_id, _old_five = _six_man_ai_side(gs, fixture)
+    for dial in tactics_fit.COUNTER_DIALS:
+        setattr(gs.teams[opponent].tactics, dial, 50.0)
+    gs.teams[opponent].tactics.aggression = 85.0
+    gs.teams[ai].tactics.aggression = 52.0
+
+    _book_ai_fixture_plans(gs, [fixture], _ForcedTree(0.99))
+
+    plan = gs.game_plans_by[ai]
+    assert bench_id in plan.starter_ids
+    assert plan.focus_target is None
+    assert all(getattr(plan, dial) is None for dial in _PLAN_DIALS)
+
+
+def test_ai_counter_is_bounded_and_skips_same_pole_books():
+    from esports_sim.manager.campaign import AI_COUNTER_MAX_DELTA, _ai_counter_override
+    from esports_sim.sim import tactics_fit
+
+    _gd, gs = _campaign(91)
+    ai, opp = sorted(t for t in gs.teams if t != gs.user_team_id)[:2]
+    for dial in tactics_fit.COUNTER_DIALS:
+        setattr(gs.teams[ai].tactics, dial, 50.0)
+        setattr(gs.teams[opp].tactics, dial, 50.0)
+    gs.teams[opp].tactics.aggression = 85.0
+
+    gs.teams[ai].tactics.aggression = 52.0
+    dial, value = _ai_counter_override(gs, ai, opp)
+    assert dial == "aggression" and value < 50.0
+    assert abs(value - 52.0) <= AI_COUNTER_MAX_DELTA
+
+    # Same-pole identity the small step cannot cross -> no counter booked.
+    gs.teams[ai].tactics.aggression = 70.0
+    assert _ai_counter_override(gs, ai, opp) is None
+
+    # A near-neutral opponent never triggers a read at all.
+    gs.teams[ai].tactics.aggression = 52.0
+    gs.teams[opp].tactics.aggression = 55.0
+    assert _ai_counter_override(gs, ai, opp) is None
+
+
+def test_ai_focus_target_reads_public_stats_only():
+    """The AI's anti-strat target comes from the public box score (the same
+    aggregates the league leaders read), never from fogged attributes."""
+    from esports_sim.manager.campaign import (
+        AI_FOCUS_MIN_MAPS,
+        _ai_focus_target,
+    )
+    from esports_sim.manager.state import PlayerSeasonStats
+
+    _gd, gs = _campaign(90)
+    opp = sorted(t for t in gs.teams if t != gs.user_team_id)[0]
+    roster = sorted(gs.teams[opp].player_ids)
+
+    # Fresh season: no public book -> no target, however stacked the roster.
+    assert _ai_focus_target(gs, opp) is None
+
+    star = max(roster, key=lambda pid: (sum(gs.players[pid].attributes.values()), pid))
+    standout = min(roster, key=lambda pid: (sum(gs.players[pid].attributes.values()), pid))
+    assert star != standout
+    others = [pid for pid in roster if pid not in (star, standout)][:2]
+    for pid in (star, *others):
+        gs.player_stats[pid] = PlayerSeasonStats(maps=5, rating_sum=5.0)  # 1.00
+    gs.player_stats[standout] = PlayerSeasonStats(maps=5, rating_sum=6.5)  # 1.30
+
+    # The weakest player on paper is the loudest on the stat sheet -> he,
+    # not the hidden-attribute star, is the read.
+    assert _ai_focus_target(gs, opp) == standout
+
+    # A standout inside the gap band is just a good team: no target.
+    gs.player_stats[standout] = PlayerSeasonStats(maps=5, rating_sum=5.25)  # 1.05
+    assert _ai_focus_target(gs, opp) is None
+
+    # Below the sample floor the book is too thin to call anyone out.
+    gs.player_stats[standout] = PlayerSeasonStats(
+        maps=AI_FOCUS_MIN_MAPS - 1, rating_sum=6.5
+    )
+    for pid in others:
+        del gs.player_stats[pid]
+    assert _ai_focus_target(gs, opp) is None
 
 
 def test_ai_rotation_and_fixture_plan_respect_tournament_registration():

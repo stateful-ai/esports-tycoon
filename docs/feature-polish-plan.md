@@ -9,12 +9,17 @@ Add selected-player follow, wheel/pinch zoom, pan, reset framing, and optional
 event-follow for kills and plants. Keep it entirely a consumer of replay
 events; no viewer-side simulation or coordinate authority.
 
-## Then: AI organization planning parity
+## Shipped: AI organization planning parity
 
-Allow AI clubs to create bounded opponent-specific game plans and use their
-bench through the same match-plan and lineup resolver as human clubs. Preserve
-the public/hidden information boundary and campaign determinism. Measure
-whether the change affects parity, snowball, and dynasty gates.
+AI clubs book bounded opponent-specific game plans and bench rotations
+through the same GamePlan/map_lineups seams humans use
+(`campaign._book_ai_fixture_plans`): a small identity-anchored counter-dial
+step scaled by the coach, a focus target read from public season stats only
+(never fogged attributes), and a stamina-driven freshness substitution. The
+prep read rolls per side on the dedicated "ai_plans" rng stream — better
+coaches prep more often — while the freshness rotation stays a pure read.
+Prep edge still flows only through the existing scouting/knowledge seam.
+Snowball and dynasty gates verified in-band.
 
 ## Relationship arcs
 

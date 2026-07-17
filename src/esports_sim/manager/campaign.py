@@ -605,7 +605,7 @@ def advance_week(
     # bench treatment below: with per-map overrides a rotated-in player is
     # NOT benched even though they sit outside the default five.
     week_dressed: dict[str, set[str]] = {}
-    _book_ai_fixture_plans(gs, week_fixtures)
+    _book_ai_fixture_plans(gs, week_fixtures, tree)
     for f in sorted(week_fixtures, key=lambda x: x.id):
         _sim_fixture(
             gs, rt_gd, tree, f,
@@ -1599,12 +1599,23 @@ _PLAN_DIALS = (
 )
 
 # AI fixture plans are deliberately narrower than a human's full control
-# panel: one counter dial, one standout to target, and at most one freshness
-# substitution. They are campaign-layer tuning, never bare-engine inputs.
+# panel: one counter dial stepped a bounded delta off the club's OWN season
+# identity, one standout picked from PUBLIC season stats, and at most one
+# freshness substitution. They are campaign-layer tuning, never bare-engine
+# inputs. The opponent-specific read rolls on the dedicated "ai_plans" rng
+# stream (better coaches prep more often); the freshness rotation is a pure
+# read so fatigue management never depends on a dice roll.
 AI_COUNTER_MIN_DEVIATION = 8.0
-AI_COUNTER_LOW = 40.0
-AI_COUNTER_HIGH = 60.0
-AI_FOCUS_QUALITY_GAP = 4.0
+AI_COUNTER_DELTA_BASE = 5.0  # dial step with a neutral coaching chair
+AI_COUNTER_DELTA_COACH = 5.0  # extra step earned by coach adaptability
+AI_COUNTER_MAX_DELTA = 10.0  # hard bound: a plan tweaks, never rebuilds
+AI_PLAN_CHANCE_BASE = 0.5  # odds an average coach preps a read this week
+AI_PLAN_CHANCE_COACH = 0.3  # scaled by the coach's overall deviation
+AI_PLAN_CHANCE_MIN = 0.2
+AI_PLAN_CHANCE_MAX = 0.85
+AI_FOCUS_MIN_MAPS = 3  # public sample floor per player (matches leaders)
+AI_FOCUS_MIN_BOOK = 3  # qualified opponents before the average means much
+AI_FOCUS_RATING_GAP = 0.10  # target must clear the public roster average
 AI_BENCH_STAMINA_WEIGHT = 0.20
 AI_BENCH_ROTATION_EDGE = 1.5
 
@@ -1633,12 +1644,80 @@ def _ai_match_lineup(gs: GameState, tid: str, fixture: Fixture) -> list[str]:
     return [incoming if pid == outgoing else pid for pid in starters]
 
 
-def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
+def _ai_plan_chance(gs: GameState, tid: str) -> float:
+    """How often this org preps an opponent-specific read. Anchored at a
+    coin flip for an average chair and scaled by the coach's overall — a
+    vacant chair preps at the floor. Bounded so no org preps always or
+    never; the actual roll lives on the dedicated "ai_plans" stream."""
+    coach = gs.staff_by.get(tid, {}).get("coach")
+    dev = 0.0 if coach is None else (staff_effects.overall(coach) - 50.0) / 50.0
+    chance = AI_PLAN_CHANCE_BASE + AI_PLAN_CHANCE_COACH * dev
+    return max(AI_PLAN_CHANCE_MIN, min(AI_PLAN_CHANCE_MAX, chance))
+
+
+def _ai_counter_override(gs: GameState, tid: str, opp: str) -> tuple[str, float] | None:
+    """Bounded counter read: answer the opponent's most extreme public dial
+    by stepping the club's OWN identity a small, coach-scaled delta in the
+    countering direction. Never a wholesale rebuild (the step is capped at
+    ``AI_COUNTER_MAX_DELTA``), and only booked when the step actually lands
+    on the countering side of neutral — declaring a counter you cannot
+    reach would pay the matching-pole malus in ``counter_strat_edge``."""
+    opponent_tactics = gs.teams[opp].tactics
+    dial = max(
+        tactics_fit.COUNTER_DIALS,
+        key=lambda key: (abs(getattr(opponent_tactics, key) - 50.0), key),
+    )
+    opponent_value = float(getattr(opponent_tactics, dial))
+    if abs(opponent_value - 50.0) < AI_COUNTER_MIN_DEVIATION:
+        return None
+    coach = gs.staff_by.get(tid, {}).get("coach")
+    adapt_dev = 0.0 if coach is None else max(
+        0.0, (staff_effects.attr(coach, "adaptability") - 50.0) / 50.0
+    )
+    delta = min(
+        AI_COUNTER_MAX_DELTA,
+        AI_COUNTER_DELTA_BASE + AI_COUNTER_DELTA_COACH * adapt_dev,
+    )
+    identity = float(getattr(gs.teams[tid].tactics, dial))
+    direction = -1.0 if opponent_value > 50.0 else 1.0
+    value = round(min(100.0, max(0.0, identity + direction * delta)), 1)
+    if (value - 50.0) * (opponent_value - 50.0) >= 0.0:
+        return None  # our book leans the same way; the small step can't cross
+    return dial, value
+
+
+def _ai_focus_target(gs: GameState, opp: str) -> str | None:
+    """Opponent standout chosen from PUBLIC box-score aggregates only — the
+    same season stats the league leaders and matchday danger-men read. AI
+    orgs never peek at fogged attributes: no public book (early season, or
+    a bench-heavy opponent) means no target, exactly like a human reading
+    the stats hub."""
+    roster = set(gs.teams[opp].player_ids)
+    qualified = [
+        (st.rating, pid)
+        for pid, st in sorted(gs.player_stats.items())
+        if pid in roster and st.maps >= AI_FOCUS_MIN_MAPS
+    ]
+    if len(qualified) < AI_FOCUS_MIN_BOOK:
+        return None
+    rating, target = max(qualified)
+    average = sum(r for r, _ in qualified) / len(qualified)
+    if rating < average + AI_FOCUS_RATING_GAP:
+        return None
+    return target
+
+
+def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture], tree: RngTree) -> None:
     """Book AI plans into the same GamePlan/map_lineups seams humans use.
 
-    This is a pure read of saved tactical identities, roster quality, and
-    stamina. Sorted fixtures/ids make the result byte-identical for a save;
-    ``_fixture_plans`` resolves both sides simultaneously at match time.
+    The freshness rotation is a pure read of roster quality and stamina.
+    The opponent-specific read (counter dial + focus target) rolls once per
+    side on the dedicated "ai_plans" stream — better coaches prep more
+    often — and is bounded to a small identity-anchored dial step plus a
+    standout picked from PUBLIC season stats (never fogged attributes).
+    Per-side derived streams and sorted fixtures/ids make the result
+    byte-identical for a save; ``_fixture_plans`` resolves both sides
+    simultaneously at match time.
     """
     for fixture in sorted(fixtures, key=lambda f: f.id):
         if fixture.played:
@@ -1646,32 +1725,19 @@ def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
         for tid, opp in ((fixture.team_a, fixture.team_b), (fixture.team_b, fixture.team_a)):
             if gs.is_human(tid) or tid in gs.game_plans_by:
                 continue
-            opponent_tactics = gs.teams[opp].tactics
-            dial = max(
-                tactics_fit.COUNTER_DIALS,
-                key=lambda key: (abs(getattr(opponent_tactics, key) - 50.0), key),
+            rng = tree.derive(
+                "season", gs.season, "week", gs.week, "ai_plans", fixture.id, tid
             )
-            overrides: dict[str, float] = {}
-            opponent_value = float(getattr(opponent_tactics, dial))
-            if abs(opponent_value - 50.0) >= AI_COUNTER_MIN_DEVIATION:
-                overrides[dial] = AI_COUNTER_LOW if opponent_value > 50.0 else AI_COUNTER_HIGH
-
-            opponent_roster = sorted(gs.teams[opp].player_ids)
+            counter = None
             target = None
-            if opponent_roster:
-                target = max(
-                    opponent_roster,
-                    key=lambda pid: (market.player_quality(gs.players[pid]), pid),
-                )
-                average = sum(
-                    market.player_quality(gs.players[pid]) for pid in opponent_roster
-                ) / len(opponent_roster)
-                if market.player_quality(gs.players[target]) < average + AI_FOCUS_QUALITY_GAP:
-                    target = None
+            if rng.random() < _ai_plan_chance(gs, tid):
+                counter = _ai_counter_override(gs, tid, opp)
+                target = _ai_focus_target(gs, opp)
 
             starters = _ai_match_lineup(gs, tid, fixture)
-            if not overrides and target is None and not starters:
+            if counter is None and target is None and not starters:
                 continue
+            overrides = {counter[0]: counter[1]} if counter is not None else {}
             gs.game_plans_by[tid] = GamePlan(
                 fixture_id=fixture.id,
                 focus_target=target,
@@ -1679,8 +1745,8 @@ def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture]) -> None:
                 **overrides,
             )
             details = []
-            if overrides:
-                details.append(f"counter-plan on {dial.replace('_', ' ')}")
+            if counter is not None:
+                details.append(f"counter-plan on {counter[0].replace('_', ' ')}")
             if target is not None:
                 details.append(f"targeting {gs.players[target].handle}")
             if starters:
