@@ -171,7 +171,9 @@ Published at github.com/stateful-ai/esports-tycoon.
   staff operators, costs, and next-level previews, so JavaScript owns no
   facility formulas. Recovery, strategy-prep, and wellbeing benefits resolve
   in the campaign layer and remain bounded by stamina/knowledge/neutral caps.
-  `office.js` and the painted office assets are parked and unloaded.
+  The office UI (`office.js`/`office.css`) was removed; `office_plan.json`
+  and `office_sprites.json` stay for the offline render scripts
+  (`render_office_guide.py`, `render_sprite_office.py`).
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
   pydantic (`extra="forbid"`): typos fail loudly. `data/rosters/<id>/` =
   roster packs (importable worlds, e.g. the real VCT 2026): `pack.yaml`

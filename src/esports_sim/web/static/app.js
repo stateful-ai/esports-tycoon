@@ -99,7 +99,6 @@ window.dashGoTab = dashGoTab;
 window.openNegotiation = (...args) => openNegotiation(...args);
 window.openOffer = (...args) => openOffer(...args);
 window.attrDetail = (...args) => attrDetail(...args);
-window.scouting = (...args) => scouting(...args);
 window.advanceWeek = async () => {
   const btn = document.getElementById("advance-btn");
   if (btn) btn.click();
@@ -682,7 +681,7 @@ function renderApp() {
   // finishes into a detached node instead of double-appending.
   const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
-  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, scouting, stats, social, finances })[App.tab](container);
+  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, social, finances })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -4133,20 +4132,15 @@ function seasonPlayoffs(ws, sched, table) {
     main.appendChild(c);
   }
 
-  // Champions history — every crowned season, newest first.
-  const champs = App.state.champions ?? [];
+  // Champions history lives on the Records sub-tab — link there instead of
+  // rendering the same list twice.
   const hc = el("div", "card");
-  hc.appendChild(el("h2", "", "Champions history"));
-  if (champs.length) {
-    const scroll = el("div", "card-scroll");
-    for (const c of [...champs].reverse()) {
-      scroll.appendChild(el("div", "newsline",
-        `<span class="pill">S${c.season}</span> <b>${tlink(c.team_id, c.team_name)}</b>`));
-    }
-    hc.appendChild(scroll);
-  } else {
-    hc.appendChild(el("p", "muted", "No champion crowned yet."));
-  }
+  const go = el("p", "muted");
+  const goLink = el("a", "", "Champions history in Records");
+  goLink.href = "#";
+  goLink.onclick = (e) => { e.preventDefault(); App.seasonTab = "records"; renderApp(); };
+  go.appendChild(goLink);
+  hc.appendChild(go);
   rail.appendChild(hc);
 }
 
@@ -4196,6 +4190,23 @@ function seasonRecords(ws, records) {
       `top team's share ${Math.round(p.top_share * 100)}%`));
     rail.appendChild(c);
   }
+
+  // Champions history — every crowned season, newest first (moved here from
+  // the Playoffs sub-tab; this is its only home).
+  const champs = App.state.champions ?? [];
+  const hc = el("div", "card");
+  hc.appendChild(el("h2", "", "Champions history"));
+  if (champs.length) {
+    const scroll = el("div", "card-scroll");
+    for (const c of [...champs].reverse()) {
+      scroll.appendChild(el("div", "newsline",
+        `<span class="pill">S${c.season}</span> <b>${tlink(c.team_id, c.team_name)}</b>`));
+    }
+    hc.appendChild(scroll);
+  } else {
+    hc.appendChild(el("p", "muted", "No champion crowned yet."));
+  }
+  rail.appendChild(hc);
 }
 
 // Segmented [Players | Staff] shared by both market desks; each desk builds
@@ -5175,7 +5186,7 @@ const MarketTab = () => {
     useEffect(() => {
       if (containerRef.current) {
         containerRef.current.innerHTML = "";
-        scouting(containerRef.current, { host: "market" });
+        scouting(containerRef.current);
       }
     }, []);
     return html`
@@ -5442,10 +5453,11 @@ function scoutTier(p) {
   return "first looks";
 }
 
-// Scouting desk. Standalone head by default; when hosted in Market
-// (opts.host === "market") it renders the shared Market workspace head with
-// the Players / Scouting / Staff segment.
-async function scouting(v, opts = {}) {
+// Scouting desk body. Only reachable as the Market tab's Scouting sub-tab
+// (the old standalone Scouting screen was removed; TAB_ALIASES routes the
+// old tab id to market/scouting). MarketTab renders the Market head with
+// the Players / Scouting / Staff segment, so this owns just the workspace.
+async function scouting(v) {
   const data = await api("/api/scouting");
   const surveyPct = Math.round((data.caps?.survey ?? 0) * 100);
   const matchPct = Math.round((data.caps?.match ?? 0) * 100);
@@ -5454,17 +5466,6 @@ async function scouting(v, opts = {}) {
   // Preparation target comes from the server: the opponent after the match
   // currently being planned. No following fixture (bye/offseason) hides it.
   const planningOpp = data.planning_opponent;
-
-  if (opts.host === "market") {
-    v.appendChild(screenHead("Market", {
-      sub: "One scout · one assignment",
-      subtabs: MARKET_TABS,
-      active: "scouting",
-      onPick: (id) => { App.marketTab = id; renderApp(); },
-    }));
-  } else {
-    v.appendChild(screenHead("Scouting", { sub: "One scout · one assignment" }));
-  }
 
   const ws = el("div", "ws");
   v.appendChild(ws);
@@ -6383,15 +6384,6 @@ const SLOT_LABELS = {
   title: "Title", jersey: "Jersey", peripheral: "Peripheral",
   stream: "Stream", apparel: "Apparel",
 };
-const FACILITY_LABELS = {
-  training_center: "Training Centre",
-  analytics_suite: "VOD Review Room",
-  marketing_office: "Media Department",
-  recovery_suite: "Recovery Suite",
-  strategy_lab: "Strategy Lab",
-  team_house: "Team House",
-};
-
 async function finances(v) {
   v.innerHTML = "";
   render(html`<${FinancesTab} />`, v);
@@ -6495,38 +6487,12 @@ const FinancesTab = () => {
     }
   };
 
-  const handleUpgradeAction = async (name) => {
-    const actionKey = `upgrade-${name}`;
-    setActionInProgress(actionKey);
-    try {
-      const r = await api("/api/actions/facility_upgrade", { facility: name });
-      toast(r.message);
-      
-      if (window.refresh) {
-        await window.refresh();
-      }
-      await fetchData();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setActionInProgress(null);
-    }
-  };
-
   if (!data) return html`<div class="loading">Loading finances...</div>`;
 
   const b = data.breakdown;
   const SLOT_LABELS = {
     title: "Title", jersey: "Jersey", peripheral: "Peripheral",
     stream: "Stream", apparel: "Apparel",
-  };
-  const FACILITY_LABELS = {
-    training_center: "Training Centre",
-    analytics_suite: "VOD Review Room",
-    marketing_office: "Media Department",
-    recovery_suite: "Recovery Suite",
-    strategy_lab: "Strategy Lab",
-    team_house: "Team House",
   };
 
   const handleDemandAction = async (demandId, accept) => {
@@ -6721,40 +6687,6 @@ const FinancesTab = () => {
             })}
           </div>
 
-          <div class="card">
-            <h2>Facilities</h2>
-            ${[
-              "training_center", "analytics_suite", "marketing_office",
-              "recovery_suite", "strategy_lab", "team_house",
-            ].map(name => {
-              const f = data.facilities[name];
-              if (!f) return null;
-              const affordable = data.balance >= f.next_cost;
-              const isBusy = actionInProgress === `upgrade-${name}`;
-
-              return html`
-                <div class="row facility-row" key=${name}>
-                  <span>
-                    <b>${FACILITY_LABELS[name]}</b> 
-                    <span class="muted"> level ${f.level}/${f.max_level} · ${money(f.upkeep)}/wk upkeep</span>
-                  </span>
-                  <span class="spacer"></span>
-                  ${f.next_cost != null ? html`
-                    <button 
-                      class="btn btn-sm" 
-                      disabled=${!affordable || isBusy}
-                      title=${affordable ? "" : "not enough banked"}
-                      onClick=${() => handleUpgradeAction(name)}
-                    >
-                      ${isBusy ? "Upgrading..." : `Upgrade — ${money(f.next_cost)}`}
-                    </button>
-                  ` : html`
-                    <span class="pill">max level</span>
-                  `}
-                </div>
-              `;
-            })}
-          </div>
         </div>
 
         <div class="ws-5 ws-col">
@@ -6839,7 +6771,10 @@ const FinancesTab = () => {
                   <td class="num">-${money(b.staff)}</td>
                 </tr>
                 <tr>
-                  <td>Facility upkeep</td>
+                  <td>
+                    Facility upkeep
+                    <button class="btn btn-sm" onClick=${() => window.dashGoTab("facilities")}>→ Facilities</button>
+                  </td>
                   <td class="num">-${money(b.facility_upkeep)}</td>
                 </tr>
                 <tr>

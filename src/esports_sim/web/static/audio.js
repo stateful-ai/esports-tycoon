@@ -1,5 +1,5 @@
 /* audio.js — first audio: main theme + office ambiance.
-   Self-contained: no edits to app.js/office.js. Loaded after app.js so the
+   Self-contained: no edits to app.js. Loaded after app.js so the
    `App` global (top-level const) is in scope for the initial tab check. */
 (function () {
   "use strict";
