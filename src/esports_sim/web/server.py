@@ -51,6 +51,7 @@ from esports_sim.manager import (
     narrative,
     preparation,
     relationships,
+    rival_managers as rival_managers_mod,
     role_fit,
     rivalries as rivalries_mod,
     scenarios as scenarios_mod,
@@ -1896,6 +1897,9 @@ def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
         }
     view["preview"] = narrative.match_preview(gs, fixture, gs.acting_team_id)
     view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id)
+    # Who is across the aisle: the opponent's named manager (rival persona
+    # or human seat) — name + one-word identity, both public facts.
+    view["opp_manager"] = rival_managers_mod.spotlight_view(gs, opp_id)
     return view, opp_id
 
 
@@ -4523,7 +4527,11 @@ def social_view() -> dict:
 
 # Chronicle kinds that count as market movement, and how the tracker tags
 # them. AI-to-AI moves show here too — that's the point (watch the league).
-_MOVEMENT_KINDS = ("signing", "release", "renewal", "transfer", "poach")
+# Manager-job moves (rival personas AND human seats) ride the same feed.
+_MOVEMENT_KINDS = (
+    "signing", "release", "renewal", "transfer", "poach",
+    "dismissal", "appointment",
+)
 
 
 def _movement_feed(gs: GameState, n: int = 40) -> list[dict]:
@@ -7607,6 +7615,12 @@ def team_profile(tid: str) -> dict:
                 if not gs.is_human(tid) and t.tier == 1
                 else None
             ),
+            # The named manager (rival persona for AI orgs, the human seat
+            # for human orgs): name, one-word identity, tenure, honours in
+            # tenure, and manager-vs-manager heat with the viewer. All
+            # public broadcast facts — served fully computed
+            # (manager/rival_managers.py), the client only renders.
+            "manager": rival_managers_mod.profile_view(gs, tid),
             # Named rivalries (manager/rivalries.py), hottest first.
             "rivals": [
                 {

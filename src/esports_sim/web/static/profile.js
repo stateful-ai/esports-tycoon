@@ -1108,6 +1108,7 @@ const TeamProfile = ({ data }) => {
 
   const tend = data.tendencies || [];
   const gm = data.gm;
+  const mgr = data.manager;
 
   const sp = data.splits || {};
   const atk = pfPct(sp.attack_round_rate);
@@ -1160,6 +1161,20 @@ const TeamProfile = ({ data }) => {
         <div class="pf-section">
           <h3 class="pf-section-title">Playstyle</h3>
           <p class="muted">${tend.join(" · ")}</p>
+        </div>
+      `}
+
+      ${mgr && html`
+        <div class="pf-section">
+          <h3 class="pf-section-title">Manager</h3>
+          <p>
+            <b>${mgr.name}</b>
+            <span class="pill pf-identity">${mgr.identity}</span>
+            ${mgr.heat != null && html` <span class="pill" title="Manager-vs-manager heat: the org rivalry, carried by how long you have both been in post">🔥 grudge ${mgr.heat}</span>`}
+          </p>
+          <p class="muted mono">
+            In charge since S${mgr.since} (season ${mgr.seasons})${mgr.honours > 0 ? ` · ${mgr.honours} title${mgr.honours === 1 ? "" : "s"} in tenure` : ""}
+          </p>
         </div>
       `}
 

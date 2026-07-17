@@ -248,7 +248,9 @@ def test_matchday_endpoint_contract(test_env) -> None:
     fx = data["fixture"]
     assert fx is not None  # week 2 of a regular season: a fixture exists
     # Thin composition: the same enriched board /api/state serves.
-    assert {"preview", "map_pool", "rivalry"} <= set(fx)
+    assert {"preview", "map_pool", "rivalry", "opp_manager"} <= set(fx)
+    # The opponent is an AI org here, so its named rival manager shows.
+    assert set(fx["opp_manager"]) == {"name", "identity"}
     assert server_mod.state()["next_fixture"] == fx
 
     you, them = data["you"], data["them"]

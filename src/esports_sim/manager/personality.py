@@ -64,9 +64,15 @@ def _axes_cached(pid: str, tags: tuple[str, ...]) -> dict[str, float]:
     return {a: round(min(95.0, max(5.0, v)), 1) for a, v in out.items()}
 
 
+def axes_for_id(pid: str, tags: tuple[str, ...] = ()) -> dict[str, float]:
+    """Personality axes for ANY stable id — the same pure function players
+    use, reusable for non-player characters (rival manager personas)."""
+    return dict(_axes_cached(pid, tuple(sorted(tags))))
+
+
 def axes(p: Player) -> dict[str, float]:
     """A player's personality axes — pure and deterministic."""
-    return dict(_axes_cached(p.id, tuple(sorted(p.personality_tags))))
+    return axes_for_id(p.id, tuple(p.personality_tags))
 
 
 def dev(p: Player, axis: str) -> float:

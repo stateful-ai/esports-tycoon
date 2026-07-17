@@ -1314,9 +1314,14 @@ async function openMatchday() {
   }
   ws.appendChild(story);
 
-  // 3. Opposition read: coach persona, scouted identity, their danger men.
+  // 3. Opposition read: manager persona, coach, scouted identity, danger men.
   const opp = el("div", "card ws-6");
   opp.appendChild(el("h2", "", `${esc(them.name)} — the read`));
+  if (f.opp_manager) {
+    opp.appendChild(el("div", "md-row",
+      `<span class="es-scout-lab muted">Manager</span>` +
+      `<span><b>${esc(f.opp_manager.name)}</b> <span class="pill es-identity">${esc(f.opp_manager.identity)}</span></span>`));
+  }
   if (them.coach) {
     opp.appendChild(el("div", "md-row",
       `<span class="es-scout-lab muted">Coach</span>` +
@@ -1730,6 +1735,7 @@ async function dashboard(v) {
           <div class="es-vs-ctx">${stageTxt}</div>
           <span class="pill es-bo">Best of ${fix.best_of}</span>
           ${fix.rivalry ? `<span class="pill es-rivalry" title="Grudge match — rivalry heat ${fix.rivalry}">⚔ RIVALRY</span>` : ""}
+          ${fix.opp_manager ? `<div class="es-vs-ctx es-opp-mgr" title="The manager across the aisle">vs ${esc(fix.opp_manager.name)} · <i>${esc(fix.opp_manager.identity)}</i></div>` : ""}
         </div>` +
         teamBlock(oppId, oppName, oppLogo, "right")));
 
@@ -6342,6 +6348,7 @@ async function social(v) {
     const KIND_BADGE = {
       signing: ["signing", "good"], release: ["release", "bad"],
       renewal: ["renewal", ""], transfer: ["transfer", "warn"], poach: ["poach", "bad"],
+      dismissal: ["sacked", "bad"], appointment: ["hired", "good"],
     };
     const scroll = el("div", "card-scroll");
     scroll.style.setProperty("--scroll-max", "340px");

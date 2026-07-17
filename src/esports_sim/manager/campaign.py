@@ -36,6 +36,7 @@ from esports_sim.manager import (
     narrative,
     preparation,
     relationships,
+    rival_managers,
     role_fit,
     rivalries,
     scenarios,
@@ -321,6 +322,9 @@ def new_campaign(
     social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
     academy.seed_affiliates(gs)
     culture.ensure_leadership(gs)
+    # Every AI tier-1 org opens with a named manager persona (blake2 of
+    # stable ids, no rng draw). Founding managers just exist — no news.
+    rival_managers.ensure_personas(gs, chronicle_new=False)
     # Scenario presets mutate the user's org only, BEFORE world ranks and
     # the season-start CA/dev snapshots so both reflect the scenario, and
     # AFTER contract/social seeding so wage bloat multiplies real deals.
@@ -1305,6 +1309,12 @@ def advance_week(
             gs.inboxes.setdefault(old, []).append(
                 career.dismissal_inbox_item(gs, mid, gs.season, gs.week)
             )
+
+    # 7b. Rival-manager personas reconcile with the week's career moves:
+    # an org a human just vacated (mid-season sack) appoints a named AI
+    # manager; an org a human took over drops its persona. Idempotent and
+    # rng-free — a normal week is an exact no-op.
+    rival_managers.ensure_personas(gs)
 
     # 8. Telemetry: the post-tick org feature snapshot per human seat —
     # the state half of the RL episode stream. After dismissals, and
@@ -3159,6 +3169,13 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     # inboxes generate at the end of this tick.
     board_dismissed = career.review_boards(gs)
 
+    # The AI boards hold their own reviews on the same final table: rival-
+    # manager patience follows the finish, strugglers at the bottom of the
+    # table make a change, and tenure anniversaries are chronicled. Runs
+    # BEFORE the standings reset below; rng-free (manager/rival_managers.py).
+    for line in rival_managers.offseason_tick(gs):
+        report.notes.append(line)
+
     # The big offseason balance patch — rolled BEFORE the per-agent splits
     # reset below (patch content reads this season's pick rates).
     note = meta.roll_patch(
@@ -3313,6 +3330,9 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
         report.notes.append(
             "The board has made a change - accept a new post to continue."
         )
+    # An org a human just vacated appoints a named AI manager for the new
+    # season (tenure starts now); orgs humans took over drop their persona.
+    rival_managers.ensure_personas(gs)
     # The offseason tick's snapshot is the new season's baseline (season
     # already rolled, standings reset) — the episode boundary marker.
     telemetry.weekly_snapshots(gs)

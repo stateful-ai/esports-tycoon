@@ -149,7 +149,7 @@ def test_v21_save_migrates_new_club_state(game_data, tmp_path) -> None:
 
     path.write_text(json.dumps(raw), encoding="utf-8")
     loaded = GameState.load(path)
-    assert loaded.schema_version == SCHEMA_VERSION == 31
+    assert loaded.schema_version == SCHEMA_VERSION == 32
     assert loaded.academy_affiliates == {}
     assert loaded.preparation_plans_by == {}
     assert loaded.leadership_groups == {}

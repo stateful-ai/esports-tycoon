@@ -221,7 +221,13 @@ Explicit non-goals. Calling these out so we don't drift.
   effects, AI planning parity through the human GamePlan seams, viewer
   spectator camera + synthesized audio cues, and decision-legibility
   scoring in the playtest summary. All pure reads or opt-in seams — no
-  schema bump beyond the v31 pass-through; named rival managers deferred.
+  schema bump beyond the v31 pass-through. Named rival managers landed as
+  the pass's follow-up (schema v32): every AI tier-1 org holds a
+  persistent, blake2-derived manager persona (region-flavoured name,
+  personality identity, tenure) with rng-free offseason board reviews,
+  chronicled hirings/firings/milestones in the movement feed, and
+  team-profile + matchday-spotlight surfaces — narrative layer only, no
+  match modifiers.
 
 - **2026-07-12 (club depth)** — shipped academy affiliates over the simulated
   Challengers circuit, opponent-specific preparation, tournament registration
