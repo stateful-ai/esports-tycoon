@@ -90,14 +90,18 @@ def _tick_one(gs: "GameState", tid: str, report: "WeekReport") -> None:
     lanes = gs.scout_lanes_by.get(tid) or {}
     pro = lanes.get("pro")
     amateur = lanes.get("amateur")
-    if not pro and not amateur:
-        # No standing directive: honour the legacy single slot as a fallback.
-        _advance_legacy(gs, report)
-        return
     if pro:
         _advance_pro_lane(gs, tid, pro, report)
     if amateur:
         _advance_amateur_lane(gs, tid, amateur, report)
+    # A one-off deep-dive / match-attend assignment (gs.scout_target, set via
+    # /api/actions/scout and shown as the "Deep-dive desk") advances ALONGSIDE
+    # any standing lanes; with no lane set it is the sole scouting job. This
+    # keeps the desk's advertised one-off work progressing instead of stalling
+    # whenever a standing lane is configured. _advance_legacy is a no-op when
+    # no one-off target is set, so the no-lane/no-target case is unchanged.
+    if gs.scout_target:
+        _advance_legacy(gs, report)
 
 
 def _advance_pro_lane(

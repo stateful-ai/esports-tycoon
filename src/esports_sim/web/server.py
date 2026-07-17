@@ -2067,9 +2067,12 @@ def state() -> dict:
                 "autosave_enabled": gs.autosave_enabled,
                 "autosave_every_weeks": gs.autosave_every_weeks,
             },
-            # F3/F4/F7/F8 pending-decision flags for computeNeedsYou — the new
-            # features badge the nav here rather than adding a Dashboard card.
-            "needs_you_flags": _needs_you_flags(gs, gs.acting_team_id),
+            # F3/F4/F7/F8 pending-decision flags for computeNeedsYou. Spread to
+            # the TOP level: computeNeedsYou reads s.promise_pending,
+            # s.scrim_proposal_pending, s.culture_violation_unack and
+            # s.scout_shortlist_ready directly off the state root, so the nav
+            # badges and Needs-you rows only fire when the flags are top-level.
+            **_needs_you_flags(gs, gs.acting_team_id),
         }
 
 
@@ -6398,6 +6401,14 @@ def scouting_view() -> dict:
                 )
         return {
             "desk": desk,
+            # F4/F5: the client reads the two standing lanes, the fill_gap
+            # shortlist, and the recommended deep dives at the TOP level (see
+            # scoutLanesCard / scoutShortlistCard / the recs block in app.js).
+            # Surface them from the desk so the standing-directive UI renders
+            # instead of falling back to the legacy single-slot desk only.
+            "lanes": {"pro": desk["pro"], "amateur": desk["amateur"]},
+            "shortlist": desk["pro"].get("shortlist", []),
+            "deep_dive_recommendations": desk["recommended"],
             "target": target,
             "target_kind": target_kind,
             "target_name": target_name,
