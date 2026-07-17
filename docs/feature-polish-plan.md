@@ -28,12 +28,17 @@ coaches prep more often — while the freshness rotation stays a pure read.
 Prep edge still flows only through the existing scouting/knowledge seam.
 Snowball and dynasty gates verified in-band.
 
-## Relationship arcs
+## Shipped: relationship arcs
 
-Turn existing chemistry, loyalty, mentorship, trust, culture, and Chronicle
-signals into scarce readable mentor-bond, friction, and grudge arcs. Surface
-them in profiles and occasional inbox moments; use bounded effects on renewal,
-development, or confidence rather than another detached meter.
+`manager/arcs.py` derives at most three scarce arcs per team (grudge,
+friction, mentor bond) as a pure read over stored state: pair chemistry
+bars, broken promises and sustained benchings for org grudges, spotlight
+friction between same-playstyle players trending down, and mentor bonds
+for registered mentorships past the bar. Effects ride existing channels
+only — a bounded renewal-demand bias in opened negotiations and a modest
+mentorship ceiling-step multiplier — so hands-off sims are byte-identical.
+Arcs surface as chips on own-club player/team profiles plus a rare inbox
+talk item when an org grudge forms or cools.
 
 ## Sponsor lifecycle
 

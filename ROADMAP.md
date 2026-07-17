@@ -2,7 +2,7 @@
 
 **Project:** esports-sim — Valorant-inspired tycoon + RL substrate + world-model research target
 **Format:** Now / Next / Later. Avoids false precision for a solo long-horizon project.
-**Last updated:** 2026-07-13
+**Last updated:** 2026-07-16
 
 ---
 
@@ -26,8 +26,8 @@ committed item — everything below it in "Next" shipped.
 
 Also open, smaller: Scenario-API sampling of the trained `esports-sim-diorama`
 LoRA (works from the Scenario web UI; the legacy inference endpoints 500 —
-see `assets/office/style/lora/STATUS.md`), viewer camera follow/zoom, and
-animated office characters.
+see `assets/office/style/lora/STATUS.md`) and animated office characters
+(viewer camera follow/zoom shipped 2026-07-16).
 
 The deferred viewer, AI-parity, relationship, and sponsor-lifecycle polish
 slate is maintained in [docs/feature-polish-plan.md](docs/feature-polish-plan.md).
@@ -208,6 +208,20 @@ Explicit non-goals. Calling these out so we don't drift.
 ---
 
 ## Changelog
+
+- **2026-07-16 (core-loop attribution + polish/depth batch)** — closed the
+  GDD 3.14 decide-simulate-see-the-consequence loop and shipped the
+  /loop-check polish slate in one 12-item pass: a decision ledger that
+  settles recent human calls with grounded verdicts (inbox digest +
+  dashboard rail), a leverage-ranked "this week's calls" inbox section,
+  match-review "Your calls" attribution (dials, focus, talk, lineup, prep),
+  a staged advance-week reveal, a pre-match buildup briefing screen,
+  sim-to-next-decision-point batching, four sandbox scenario starts,
+  scarce relationship arcs (grudge/friction/mentor bond) with bounded
+  effects, AI planning parity through the human GamePlan seams, viewer
+  spectator camera + synthesized audio cues, and decision-legibility
+  scoring in the playtest summary. All pure reads or opt-in seams — no
+  schema bump beyond the v31 pass-through; named rival managers deferred.
 
 - **2026-07-12 (club depth)** — shipped academy affiliates over the simulated
   Challengers circuit, opponent-specific preparation, tournament registration
