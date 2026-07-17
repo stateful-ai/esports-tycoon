@@ -52,6 +52,7 @@ from esports_sim.manager import (
     relationships,
     role_fit,
     rivalries as rivalries_mod,
+    scenarios as scenarios_mod,
     sim_ahead as sim_ahead_mod,
     social,
     sponsors,
@@ -348,6 +349,7 @@ class Lobby:
         pack_id: str | None = None,
         game_mode: str = "sandbox",
         manager_name: str = "",
+        scenario: str | None = None,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
@@ -405,8 +407,15 @@ class Lobby:
             gs = new_campaign(
                 self.gd, seed=seed, user_team_id=team_id, pack=pack,
                 mode=game_mode, manager_name=manager_name,
-                career_offer=offer,
+                career_offer=offer, scenario=scenario,
             )
+            if scenario:
+                # The scenario pick is a human decision like any other —
+                # the mutation itself is chronicled inside new_campaign.
+                telemetry.record_action(
+                    gs, "scenario_start", {"scenario": scenario},
+                    team_id=team_id, source="web",
+                )
             game = _Game(self.gd, code, gs=gs)
             game.mode = "shared" if shared else "solo"
             self.games[code] = game
@@ -1408,6 +1417,7 @@ def lobby() -> dict:
         "in_game": False,
         "teams": _team_options(preview, taken=set()),
         "packs": _pack_options(),
+        "scenarios": scenarios_mod.options(),
         "worlds": _LOBBY.worlds_for(_current_sid()),
     }
 
@@ -1588,16 +1598,25 @@ class NewGameBody(BaseModel):
     pack: str | None = None  # roster pack id; None -> generated world
     game_mode: str = "sandbox"  # "sandbox" | "legacy"
     manager_name: str = ""
+    # Optional sandbox scenario preset id (manager/scenarios.py);
+    # None/"" -> the classic start.
+    scenario: str | None = None
 
 
 @app.post("/api/new")
 def new_game(body: NewGameBody) -> dict:
     if body.game_mode not in ("sandbox", "legacy"):
         raise HTTPException(422, "game_mode must be 'sandbox' or 'legacy'")
+    scenario = body.scenario or None
+    if scenario is not None:
+        if scenario not in scenarios_mod.SCENARIOS:
+            raise HTTPException(422, f"unknown scenario '{scenario}'")
+        if body.game_mode != "sandbox":
+            raise HTTPException(422, "scenario starts are sandbox-only")
     game = _LOBBY.create_game(
         _current_sid(), body.team_id, body.seed, body.shared,
         pack_id=body.pack, game_mode=body.game_mode,
-        manager_name=body.manager_name,
+        manager_name=body.manager_name, scenario=scenario,
     )
     return {
         "ok": True,

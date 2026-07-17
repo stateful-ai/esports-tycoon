@@ -361,8 +361,42 @@ function setupLobby(lob) {
   // "sandbox" = classic (pick any org, manage forever);
   // "legacy" = career mode (offers, contracts, boards that fire you).
   let gameMode = "sandbox";
+  // null = the classic start; otherwise a sandbox scenario preset id
+  // (server-applied at creation — the client only picks and renders).
+  let scenario = null;
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
+  const renderScenarios = () => {
+    const row = $("#ng-scenario-row");
+    const box = $("#ng-scenarios");
+    const desc = $("#ng-scenario-desc");
+    const list = lob.scenarios || [];
+    if (gameMode !== "sandbox" || !list.length) {
+      scenario = null;
+      row.classList.add("hidden");
+      desc.classList.add("hidden");
+      return;
+    }
+    row.classList.remove("hidden");
+    box.innerHTML = "";
+    const mk = (label, id) => {
+      const b = el(
+        "button",
+        "btn" + (scenario === id ? " btn-primary" : ""),
+        label
+      );
+      b.onclick = () => {
+        scenario = id;
+        renderScenarios();
+      };
+      box.appendChild(b);
+    };
+    mk("Standard start", null);
+    for (const sc of list) mk(sc.name, sc.id);
+    const cur = list.find((x) => x.id === scenario);
+    desc.textContent = cur ? cur.blurb : "";
+    desc.classList.toggle("hidden", !cur);
+  };
   const renderModes = () => {
     const box = $("#ng-modes");
     box.innerHTML = "";
@@ -375,6 +409,7 @@ function setupLobby(lob) {
       b.onclick = () => {
         gameMode = id;
         renderModes();
+        renderScenarios();
         renderPick();
       };
       box.appendChild(b);
@@ -447,7 +482,9 @@ function setupLobby(lob) {
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
         .then((r) =>
-          renderTeamGrid(grid, r.teams, (t) => createGame(t.id, shared_, world))
+          renderTeamGrid(grid, r.teams, (t) =>
+            createGame(t.id, shared_, world, "sandbox", scenario)
+          )
         )
         .catch(
           () => (grid.innerHTML = '<span class="muted">Could not load teams.</span>')
@@ -455,7 +492,7 @@ function setupLobby(lob) {
       return;
     }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world)
+      createGame(t.id, shared_, world, "sandbox", scenario)
     );
   };
   $("#ng-seed").addEventListener("change", () => renderPick());
@@ -467,6 +504,7 @@ function setupLobby(lob) {
       ? "Pick your team. Others join with the code you'll get next."
       : "Pick your organisation. Seed controls the generated league.";
     renderModes();
+    renderScenarios();
     renderWorlds();
     renderPick();
   };
@@ -500,10 +538,12 @@ function setupLobby(lob) {
   showCreate(false); // default view
 }
 
-async function createGame(teamId, shared, pack = null, gameMode = "sandbox") {
+async function createGame(
+  teamId, shared, pack = null, gameMode = "sandbox", scenario = null
+) {
   const seed = parseInt($("#ng-seed").value) || 2026;
   const r = await api("/api/new", {
-    team_id: teamId, seed, shared, pack, game_mode: gameMode,
+    team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
   });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");

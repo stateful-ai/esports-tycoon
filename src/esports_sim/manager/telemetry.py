@@ -36,6 +36,7 @@ ACTION_KINDS = frozenset(
     {
         "advance",
         "sim_ahead",
+        "scenario_start",
         "set_training",
         "set_dev_plan",
         "sign",

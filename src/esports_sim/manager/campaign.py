@@ -38,6 +38,7 @@ from esports_sim.manager import (
     relationships,
     role_fit,
     rivalries,
+    scenarios,
     social,
     sponsors,
     staff,
@@ -173,6 +174,7 @@ def new_campaign(
     mode: str = "sandbox",
     manager_name: str = "",
     career_offer=None,
+    scenario: str | None = None,
 ) -> GameState:
     """Build season 1. With a roster pack, the pack's teams/players replace
     the fictional starters and its world block sets the league shape;
@@ -181,7 +183,17 @@ def new_campaign(
     `mode` picks the game: "sandbox" (classic — no contracts, never
     fired) or "legacy" (career offers, board goals, dismissal;
     manager/career.py). `career_offer` carries the accepted CareerOffer
-    in legacy mode so the seat's contract matches what the lobby showed."""
+    in legacy mode so the seat's contract matches what the lobby showed.
+
+    `scenario` (sandbox-only, default None == the classic start) applies
+    one opt-in preset from manager/scenarios.py to the USER'S org —
+    deterministic, hash-based, no rng stream consumed — so the same
+    seed + scenario always builds the same world."""
+    if scenario is not None:
+        if scenario not in scenarios.SCENARIOS:
+            raise ValueError(f"unknown scenario '{scenario}'")
+        if mode != "sandbox":
+            raise ValueError("scenario starts are a sandbox-mode feature")
     rng = RngTree(seed).derive("campaign", "gen")
 
     if pack is not None:
@@ -309,6 +321,11 @@ def new_campaign(
     social.seed_stream_load(gs)  # follower-driven streaming load, from week 1
     academy.seed_affiliates(gs)
     culture.ensure_leadership(gs)
+    # Scenario presets mutate the user's org only, BEFORE world ranks and
+    # the season-start CA/dev snapshots so both reflect the scenario, and
+    # AFTER contract/social seeding so wage bloat multiplies real deals.
+    if scenario is not None:
+        scenarios.apply(gs, scenario)
     _assign_ai_tactics(gs, rng)
     _update_world_ranks(gs)
     _snapshot_season_start_ca(gs)

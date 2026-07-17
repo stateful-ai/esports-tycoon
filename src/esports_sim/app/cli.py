@@ -21,6 +21,7 @@ from esports_sim.manager import (
     career,
     new_campaign,
     play_policy_week,
+    scenarios,
     telemetry,
 )
 from esports_sim.manager.learned_manager_policy import LearnedManagerModel
@@ -119,6 +120,16 @@ def new_game_screen(gd: GameData) -> GameState:
     console.print("Mode: 1) Sandbox - pick any org, manage forever")
     console.print("      2) Legacy - start from job offers; boards can fire you")
     mode = "legacy" if ask("Mode (blank = 1): ") == "2" else "sandbox"
+    # Sandbox-only scenario presets (opt-in; blank = the classic start).
+    scenario_id = None
+    if mode == "sandbox" and scenarios.SCENARIOS:
+        opts = list(scenarios.SCENARIOS.values())
+        console.print("Scenario: 0) Standard start")
+        for i, sc in enumerate(opts, 1):
+            console.print(f"          {i}) {sc.name} - {sc.blurb}")
+        c = ask("Scenario number (blank = 0): ")
+        if c.isdigit() and 1 <= int(c) <= len(opts):
+            scenario_id = opts[int(c) - 1].id
     # Build a preview campaign to show the actual league the seed produces.
     preview_team = (
         sorted(t.id for t in pack.teams.values() if t.tier == 1)[0]
@@ -179,7 +190,16 @@ def new_game_screen(gd: GameData) -> GameState:
     # Rebuild with the picked team so the human seat (human_team_ids, staff
     # market, scouting state) is initialised for the right org — determinism
     # makes this the same world, just seen from the picked chair.
-    gs = new_campaign(gd, seed, user_team_id=picked, pack=pack)
+    gs = new_campaign(gd, seed, user_team_id=picked, pack=pack, scenario=scenario_id)
+    if scenario_id:
+        telemetry.record_action(
+            gs, "scenario_start", {"scenario": scenario_id},
+            team_id=picked, source="cli",
+        )
+        console.print(
+            f"Scenario: {scenarios.SCENARIOS[scenario_id].name} - "
+            f"{scenarios.SCENARIOS[scenario_id].blurb}"
+        )
     console.print(
         f"[green]You are now managing {team_name(gs, gs.user_team_id)}.[/] "
         f"(seed {seed})"
@@ -577,9 +597,16 @@ def auto_play(
     team: str,
     roster: str | None = None,
     manager_model: Path | None = None,
+    scenario: str | None = None,
 ) -> GameState:
     pack = load_roster_pack(roster) if roster else None
-    gs = new_campaign(gd, seed, user_team_id=team, pack=pack)
+    gs = new_campaign(gd, seed, user_team_id=team, pack=pack, scenario=scenario)
+    if scenario:
+        telemetry.record_action(
+            gs, "scenario_start", {"scenario": scenario},
+            team_id=team, source="cli",
+        )
+        console.print(f"[cyan]scenario:[/] {scenarios.SCENARIOS[scenario].name}")
     profile = generate_profile(seed, f"autoplay-{team}")
     policy = HeuristicManagerPolicy(profile)
     if manager_model is not None:
@@ -626,6 +653,14 @@ def main() -> None:
         "default = generated fictional world",
     )
     parser.add_argument(
+        "--scenario",
+        type=str,
+        default=None,
+        choices=sorted(scenarios.SCENARIOS),
+        help="sandbox scenario preset applied to your org at creation "
+        "(deterministic per seed); default = the classic start",
+    )
+    parser.add_argument(
         "--report",
         action="store_true",
         help="with --auto: print a deterministic season-report JSON after the run "
@@ -664,7 +699,15 @@ def main() -> None:
         from esports_sim.manager import analytics
 
         pack = load_roster_pack(args.roster) if args.roster else None
-        gs = new_campaign(gd, args.seed, user_team_id=args.team, pack=pack)
+        gs = new_campaign(
+            gd, args.seed, user_team_id=args.team, pack=pack,
+            scenario=args.scenario,
+        )
+        if args.scenario:
+            telemetry.record_action(
+                gs, "scenario_start", {"scenario": args.scenario},
+                team_id=args.team, source="cli",
+            )
         # Hands-off: keep the user roster legal, let the world play out N seasons.
         while gs.season <= args.playtest:
             while len(gs.teams[args.team].player_ids) < ROSTER_MIN and gs.free_agent_ids:
@@ -687,6 +730,7 @@ def main() -> None:
             args.team,
             roster=args.roster,
             manager_model=args.manager_model,
+            scenario=args.scenario,
         )
         if args.report:
             import json
