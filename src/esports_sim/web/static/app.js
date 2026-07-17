@@ -587,6 +587,7 @@ async function refresh() {
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
+  refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
 }
 
@@ -2171,18 +2172,21 @@ function fmtFollowers(n) {
 // augmented with `gameplan` (the /api/gameplan payload) and `inbox_unread`
 // (a count) when the caller has them. Pure (no DOM, no fetches) so the
 // dashboard card and the nav badges can share it. Each item:
-//   { tab, subtab?, kind, label, detail, action } — label/detail may carry
-// plink/tlink HTML strings.
+//   { tab, subtab?, kind, label, detail, action, needs_action } — label/detail
+// may carry plink/tlink HTML strings. `needs_action` marks a genuine decision
+// waiting on the manager (an offer, an expiring contract, an unset game plan);
+// informational context (board posture, objective pacing) stays false so the
+// nav badges never light up for mere news.
 function computeNeedsYou(data) {
   const s = data || {};
   const items = [];
   if (s.media_event) {
-    items.push({ tab: "dashboard", kind: "media", action: "Respond",
+    items.push({ tab: "dashboard", kind: "media", action: "Respond", needs_action: true,
       label: `Media: ${esc(s.media_event.title || "the press wants an answer")}`,
       detail: esc(s.media_event.outlet || "press wire") });
   }
   if (s.flavor_event) {
-    items.push({ tab: "dashboard", kind: "flavor", action: "Respond",
+    items.push({ tab: "dashboard", kind: "flavor", action: "Respond", needs_action: true,
       label: esc(s.flavor_event.title || "A decision is waiting"),
       detail: "team moment" });
   }
@@ -2194,44 +2198,84 @@ function computeNeedsYou(data) {
     if (o.cash_to_seller) bits.push(`<b class="mono">${money(o.cash_to_seller)}</b>`);
     if (o.cash_to_buyer) bits.push(`<span class="muted">(you send back ${money(o.cash_to_buyer)})</span>`);
     const gets = bits.length ? bits.join(" + ") : `<b class="mono">${money(o.fee)}</b>`;
-    items.push({ tab: "dashboard", kind: "offer", action: "Decide", offer: o,
+    items.push({ tab: "dashboard", kind: "offer", action: "Decide", offer: o, needs_action: true,
       label: `${tlink(o.to_team, o.to_team_name)} offer ${gets} for <b>${plink(o.player_id, o.handle)}</b>`,
       detail: `expires W${o.expires_week}` });
   }
   for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
-    items.push({ tab: "club", subtab: "squad", kind: "contract", action: "Renew",
+    items.push({ tab: "club", subtab: "squad", kind: "contract", action: "Renew", needs_action: true,
       label: `${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
       detail: "" });
   }
   if (s.scout && s.scout.target && (s.scout.progress || 0) >= (s.scout.cap || 1)) {
-    items.push({ tab: "scouting", kind: "scout", action: "Read",
+    items.push({ tab: "scouting", kind: "scout", action: "Read", needs_action: true,
       label: `Scout report ready — ${esc(s.scout.target_name || "target")}`, detail: "" });
   }
   if (s.next_fixture && s.gameplan && !s.gameplan.plan) {
-    items.push({ tab: "tactics", subtab: "gameplan", kind: "gameplan", action: "Build",
+    items.push({ tab: "tactics", subtab: "gameplan", kind: "gameplan", action: "Build", needs_action: true,
       label: `No game plan set for W${s.next_fixture.week}`, detail: "" });
   }
   if ((s.inbox_unread || 0) > 0) {
-    items.push({ tab: "inbox", kind: "inbox", action: "Open",
+    items.push({ tab: "inbox", kind: "inbox", action: "Open", needs_action: true,
       label: `${s.inbox_unread} unread inbox message${s.inbox_unread > 1 ? "s" : ""}`,
       detail: "" });
   }
-  // Board + objectives appear only when they actually need attention.
+  // Board + objectives appear only when they actually need attention — but
+  // they're context, not decisions, so they never drive a nav badge.
   if (s.board && !(s.board.band === "secure" || s.board.band === "stable")) {
-    items.push({ tab: "standings", kind: "board", action: "Review",
+    items.push({ tab: "standings", kind: "board", action: "Review", needs_action: false,
       label: `Board ${esc(s.board.band)} — goal: ${esc(s.board.goal || "")}`,
       detail: esc((s.board.goal_state || "").replace(/_/g, " ")) });
   }
   for (const o of (s.objectives_hub ?? []).slice(0, 6)) {
     const ok = o.state === "achieved" || o.state === "on_track" || o.state === "leading";
     if (ok) continue;
-    items.push({ tab: "standings", kind: "objective", action: "Chase",
+    items.push({ tab: "standings", kind: "objective", action: "Chase", needs_action: false,
       label: esc(o.label),
       detail: `${esc(o.kind)} · ${esc((o.state || "").replace(/_/g, " "))}${o.detail ? " · " + esc(o.detail) : ""}` });
   }
   return items;
 }
 window.computeNeedsYou = computeNeedsYou;
+
+// One attention model: the SAME computeNeedsYou list that fills the Dashboard
+// "Needs you" card drives small count badges on the nav tab buttons. Only
+// items tagged needs_action count (a decision genuinely waiting) — board
+// posture and objective pacing never light a tab. The Inbox tab is skipped
+// entirely: its badge keeps its own unread-count source (inbox.js).
+function updateTabBadges(data) {
+  const counts = {};
+  for (const it of computeNeedsYou(data || {})) {
+    if (!it.needs_action) continue;
+    // Resolve merged-screen tabs (scouting -> market, standings -> season)
+    // to the nav button that actually exists.
+    const tab = TAB_ALIASES[it.tab] ? TAB_ALIASES[it.tab][0] : it.tab;
+    if (tab === "inbox") continue; // inbox.js owns that badge
+    counts[tab] = (counts[tab] || 0) + 1;
+  }
+  document.querySelectorAll("#tabs .tab").forEach((btn) => {
+    if (btn.dataset.tab === "inbox") return;
+    const n = counts[btn.dataset.tab] || 0;
+    let badge = btn.querySelector(".tab-badge");
+    if (!n) { if (badge) badge.remove(); return; }
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "tab-badge";
+      btn.appendChild(badge);
+    }
+    badge.textContent = n > 99 ? "99+" : String(n);
+  });
+}
+
+// Badge refresh rides every state refresh. The game-plan check needs
+// /api/gameplan (not part of /api/state), so pull it here — same payload the
+// dashboard card fetches — then repaint. Callers fire-and-forget: badges
+// land right after the screen render, never blocking it.
+async function refreshTabBadges(s) {
+  let gameplan = null;
+  if (s.next_fixture) { try { gameplan = await api("/api/gameplan"); } catch (_e) {} }
+  updateTabBadges(Object.assign({}, s, { gameplan }));
+}
 
 const TRAINING_FOCUS_DESCRIPTIONS = {
   mechanical: "<h4>Mechanical Focus</h4><div class='tooltip-desc'>Train aim precision, aim reactivity, and movement. Crucial for winning physical duel engagements.</div>",

@@ -703,8 +703,9 @@ svg.iso .plabel { font-size: 2.4px; }
 
 /* -- inbox tab: weekly notifications (inbox.js) ---------------------------- */
 
-/* Unread count pill on the Inbox tab button; .hidden zeroes it out. */
-.inbox-badge {
+/* Count pill on any nav tab button (inbox unread + "needs you" attention
+   badges, see updateTabBadges in app.js); .hidden zeroes it out. */
+.tab-badge {
   display: inline-block; margin-left: var(--es-space-3, 6px); vertical-align: middle;
   min-width: var(--es-space-6, 16px); height: var(--es-space-6, 16px); padding: 0 var(--es-space-2, 4px);
   border-radius: var(--es-radius-full, 999px);
