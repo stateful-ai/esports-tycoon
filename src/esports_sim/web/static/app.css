@@ -394,6 +394,61 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
   letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px;
 }
 
+/* Manager handbook: an onboarding checklist, screen-by-screen reference, and
+   glossary in one reusable overlay. It is intentionally denser than a toast
+   but lighter than adding permanent cards to the Dashboard. */
+.overlay .help-panel { width: min(980px, 94vw); }
+.help-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--es-space-6, 16px); }
+.help-title-row h1 { margin: var(--es-space-1, 3px) 0 var(--es-space-2, 4px); }
+.help-title-row p { margin: 0; max-width: 680px; }
+.help-sections { margin: var(--es-space-6, 16px) 0; width: fit-content; }
+.help-body { min-height: 280px; }
+.help-intro, .help-note {
+  display: grid; gap: var(--es-space-2, 4px);
+  padding: var(--es-space-5, 12px) var(--es-space-6, 16px);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #31384a);
+  border-left: var(--es-border-thick, 3px) solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-md, 6px);
+  background: var(--es-color-bg-elevated, #141925);
+}
+.help-note { margin-top: var(--es-space-5, 12px); border-left-color: var(--es-color-accent-warm, #ffb547); }
+.help-intro span, .help-note span { color: var(--es-color-text-secondary, #aab2c3); }
+.help-steps { list-style: none; margin: var(--es-space-5, 12px) 0 0; padding: 0; display: grid; gap: var(--es-space-3, 6px); }
+.help-steps li {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center;
+  gap: var(--es-space-4, 10px); padding: var(--es-space-4, 10px);
+  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39);
+}
+.help-steps p { margin: var(--es-space-1, 3px) 0 0; color: var(--es-color-text-secondary, #aab2c3); }
+.help-step-num {
+  display: inline-grid; place-items: center; width: 26px; height: 26px;
+  border-radius: 50%; color: var(--es-color-bg-surface, #090c12);
+  background: var(--es-color-accent, #4fd8c0); font-weight: var(--es-weight-bold, 700);
+}
+.help-screen-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--es-space-4, 10px); }
+.help-screen-card {
+  display: grid; align-content: start; gap: var(--es-space-3, 6px);
+  padding: var(--es-space-5, 12px); border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #31384a);
+  border-radius: var(--es-radius-md, 6px); background: var(--es-color-bg-elevated, #141925);
+}
+.help-screen-card.current { border-color: var(--es-color-accent, #4fd8c0); }
+.help-screen-card p { margin: 0; }
+.help-screen-card > div:not(.help-screen-head) { color: var(--es-color-text-secondary, #aab2c3); }
+.help-screen-card .microlabel { display: block; margin-bottom: var(--es-space-1, 3px); color: var(--es-color-accent, #4fd8c0); }
+.help-screen-card .btn { justify-self: start; margin-top: var(--es-space-2, 4px); }
+.help-screen-head { display: flex; justify-content: space-between; align-items: center; gap: var(--es-space-3, 6px); }
+.help-glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--es-space-3, 6px) var(--es-space-7, 20px); }
+.help-glossary > div { display: grid; gap: var(--es-space-1, 3px); padding: var(--es-space-4, 10px) 0; border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39); }
+.help-glossary span { color: var(--es-color-text-secondary, #aab2c3); }
+.help-footer { margin: var(--es-space-6, 16px) 0 0; }
+.screen-guide-btn { margin-left: var(--es-space-3, 6px); }
+
+@media (max-width: 720px) {
+  .help-screen-grid, .help-glossary { grid-template-columns: 1fr; }
+  .help-steps li { grid-template-columns: 28px minmax(0, 1fr); }
+  .help-steps li .btn { grid-column: 2; justify-self: start; }
+}
+
 /* Weekly tick processing. Unlike the staged result reveal this is not
    dismissible: the server is still resolving the authoritative campaign. */
 #week-loading { cursor: wait; backdrop-filter: blur(5px); }
@@ -2296,7 +2351,7 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
   opacity: 0;
   transform: translateY(var(--es-space-2, 4px));
   transition: opacity 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1)), transform 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
-  max-width: 250px;
+  max-width: min(330px, calc(100vw - 16px));
   line-height: 1.4;
   word-wrap: break-word;
   box-sizing: border-box;
@@ -2352,6 +2407,11 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
   background-color: var(--es-color-bg-hover, var(--es-color-bg-hover));
   transform: scale(1.05);
 }
+.info-btn:focus-visible, .roster-badge:focus-visible, .pf-badge:focus-visible {
+  outline: 2px solid var(--es-color-accent, #4fd8c0);
+  outline-offset: 2px;
+}
+[data-tooltip-key] { cursor: help; }
 
 @keyframes bar-grow {
   from { width: 0%; }

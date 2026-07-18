@@ -35,7 +35,7 @@
     <button id="simahead-btn" class="btn" title="Sim up to 4 weeks under your delegation settings — stops the moment something needs you">Sim ahead ▸▸</button>
   <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
     <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
-    <button id="help-open" class="btn" title="how to play" aria-label="How to play">?</button>
+    <button id="help-open" class="btn" title="Open the manager handbook and first-week guide" aria-label="Open manager handbook">Guide</button>
   </header>
 
   <!-- Two visual clusters: the weekly loop vs. the org you're building.
@@ -61,21 +61,25 @@
   <main id="view"></main>
 </div>
 
-<!-- help -->
-<div id="help" class="overlay hidden">
-  <div class="panel">
-    <h1>How to play</h1>
-    <p class="muted">You run the org. Each week:</p>
-    <div class="newsline"><b>Dashboard</b> — your weekly hub: what needs you now, the next fixture, form and the week's headlines at a glance.</div>
-    <div class="newsline"><b>Match</b> — everything about the next game: tactics dials, the per-fixture game plan, and scouting prep on your opponent.</div>
-    <div class="newsline"><b>Club</b> — your squad HQ: watch form/morale/confidence, set the team training focus and each player's development plan, name your starting five, renew contracts, hold your weekly 1:1 (Talk), and run the academy and culture.</div>
-    <div class="newsline"><b>Facilities</b> — build permanent club departments, compare current and next-level benefits, and manage their weekly upkeep.</div>
-    <div class="newsline"><b>Season</b> — league tables, fixtures, playoffs and records; click any team name for their profile.</div>
-    <div class="newsline"><b>Market</b> — sign free agents (5 start, bench up to 7), scout the field, and hire backroom staff (coach, analyst, physio) from a shared pool.</div>
-    <div class="newsline"><b>Company</b> — use Finances for sponsorships, cash flow and costs; use Brand for reach, fanbase mood and the social feed.</div>
-    <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
-    <p class="muted" style="margin-top:10px">The same setup and decisions will always produce the same season.</p>
-    <button id="help-close" class="btn btn-primary">Got it</button>
+<!-- Manager handbook. Content is rendered by app.js so current-screen links
+     stay aligned with the live navigation structure. -->
+<div id="help" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="help-title" aria-hidden="true">
+  <div class="panel help-panel">
+    <div class="help-title-row">
+      <div>
+        <span class="microlabel">Manager handbook</span>
+        <h1 id="help-title">Learn the job</h1>
+        <p class="muted">A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.</p>
+      </div>
+      <button id="help-close" class="btn" aria-label="Close manager handbook">Close</button>
+    </div>
+    <div class="seg help-sections" role="tablist" aria-label="Guide section">
+      <button class="seg-btn active" data-help-section="first-week" role="tab">First week</button>
+      <button class="seg-btn" data-help-section="screens" role="tab">Screen guide</button>
+      <button class="seg-btn" data-help-section="glossary" role="tab">Key terms</button>
+    </div>
+    <div id="help-body" class="help-body"></div>
+    <p class="muted help-footer">Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.</p>
   </div>
 </div>
 
@@ -232,11 +236,7 @@
 <script src="/inbox.js"></script>
 <script>
 /* Chrome-control wiring (was inline onclick). closeReport/closeTalk/closeViewer
-   are defined by the loaded scripts above; help open/close toggles the class. */
-document.getElementById("help-open").addEventListener("click", () =>
-  document.getElementById("help").classList.remove("hidden"));
-document.getElementById("help-close").addEventListener("click", () =>
-  document.getElementById("help").classList.add("hidden"));
+   are defined by the loaded scripts above; app.js owns the handbook. */
 document.getElementById("report-close").addEventListener("click", () => window.closeReport && window.closeReport());
 document.getElementById("talk-close").addEventListener("click", () => window.closeTalk && window.closeTalk());
 document.getElementById("viewer-close").addEventListener("click", () => window.closeViewer && window.closeViewer());
