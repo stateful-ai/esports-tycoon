@@ -16,6 +16,7 @@ from rich.panel import Panel
 from rich.rule import Rule
 from rich.table import Table
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager import (
     advance_week,
     career,
@@ -142,9 +143,9 @@ def new_game_screen(gd: GameData) -> GameState:
         console.print("Your offers:")
         for i, o in enumerate(offers, 1):
             t = gs.teams[o.team_id]
-            goal = career.GOAL_LABELS.get(o.goal, o.goal)
+            goal = career.GOAL_LABELS.get(o.goal, humanize_identifier(o.goal))
             console.print(
-                f"  {i}) {t.name} [{o.archetype.replace('_', ' ')}] - "
+                f"  {i}) {t.name} [{humanize_identifier(o.archetype)}] - "
                 f"{o.seasons}-season deal, board wants: {goal}"
             )
             console.print(f"     {o.blurb}")
@@ -512,10 +513,10 @@ def job_market_screen(gs: GameState) -> None:
             "Offers on the table:"
         )
         for i, o in enumerate(offers, 1):
-            goal = career.GOAL_LABELS.get(o.goal, o.goal)
+            goal = career.GOAL_LABELS.get(o.goal, humanize_identifier(o.goal))
             console.print(
                 f"  {i}) {team_name(gs, o.team_id)} "
-                f"[{o.archetype.replace('_', ' ')}] - {o.seasons}-season "
+                f"[{humanize_identifier(o.archetype)}] - {o.seasons}-season "
                 f"deal, board wants: {goal}"
             )
         while True:

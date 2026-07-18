@@ -188,7 +188,7 @@ function pfNotDevelopingLabel(reason) {
     case "no_language_coach": return "no language coach";
     case "exhausted": return "too exhausted";
     case "at_ceiling": return "at ceiling";
-    default: return reason ? String(reason).replace(/_/g, " ") : "not developing";
+    default: return reason ? humanize(reason) : "not developing";
   }
 }
 function pfNotDevelopingText(reason) {
@@ -473,13 +473,13 @@ const AdminSlot = ({ kind, id, onDone }) => {
           <label class="pf-admin-field">
             <span>Role</span>
             <select name="role">
-              ${PF_ROLES.map((r) => html`<option key=${r} value=${r} selected=${r === fields.role}>${r}</option>`)}
+              ${PF_ROLES.map((r) => html`<option key=${r} value=${r} selected=${r === fields.role}>${humanize(r)}</option>`)}
             </select>
           </label>
           <label class="pf-admin-field">
             <span>Playstyle</span>
             <select name="playstyle">
-              ${PF_PLAYSTYLES.map((s) => html`<option key=${s} value=${s} selected=${s === fields.playstyle}>${s}</option>`)}
+              ${PF_PLAYSTYLES.map((s) => html`<option key=${s} value=${s} selected=${s === fields.playstyle}>${humanize(s)}</option>`)}
             </select>
           </label>
           <label class="pf-admin-field"><span>Agents (comma-separated ids)</span><input name="agents" type="text" value=${(fields.agents || []).join(",")} /></label>
@@ -527,7 +527,7 @@ const PlayerProfile = ({ data }) => {
     .map((l) => `${(l.lang || "").toUpperCase()} ${l.level}`)
     .join(" · ");
 
-  const hierarchyLabel = (p.hierarchy_role || "core").replace(/_/g, " ");
+  const hierarchyLabel = humanize(p.hierarchy_role || "core");
   let hierarchyColor = "var(--es-color-muted, #808080)";
   if (["incumbent_leader", "council_member"].includes(p.hierarchy_role)) {
     hierarchyColor = "var(--es-color-accent, #00f0ff)";
@@ -640,9 +640,9 @@ const PlayerProfile = ({ data }) => {
           <div class="pf-handle">${p.handle ?? "Unknown"}${hierarchyBadge}</div>
           ${data.epithet && html`<div class="pf-epithet">${data.epithet}</div>`}
           <div class="pf-meta">
-            ${p.role && html`<span class="pill">${p.role}</span>`}
+            ${p.role && html`<span class="pill">${humanize(p.role)}</span>`}
             ${p.is_igl && html`<span class="pill">IGL</span>`}
-            ${ov.playstyle && html`<span class="pill">${ov.playstyle}</span>`}
+            ${ov.playstyle && html`<span class="pill">${humanize(ov.playstyle)}</span>`}
             ${p.country && html`<span class="pill" title="nationality">${p.country}</span>`}
             ${langBit && html`<span class="pill" title="spoken languages (fluency)">${langBit}</span>`}
             ${p.age != null && html`<span class="pf-age">age ${p.age}</span>`}
@@ -654,7 +654,9 @@ const PlayerProfile = ({ data }) => {
               <span class="pill" title=${`org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
             `}
             ${p.mentor_id && html`
-              <span class="pill" title=${`Mentored by ${p.mentor_id}`}>Mentor: ${p.mentor_id}${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}</span>
+              <span class="pill" title=${`Mentored by ${p.mentor_handle || humanize(p.mentor_id)}`}>
+                Mentor: <span class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</span>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
+              </span>
             `}
             ${p.tenure_weeks != null && p.tenure_weeks >= 26 && html`
               <span class="pill" title="long tenure builds loyalty — affects transfer asks and renewals">${pfNum(p.tenure_weeks)}w at club</span>
@@ -1096,7 +1098,7 @@ const PlayerProfile = ({ data }) => {
           <div class="pf-arclines">
             ${arcsList.map((a, i) => html`
               <div key=${i} class="pf-arcline">
-                <span class=${`pf-arc-pill arck-${a.kind}`}>${(a.kind || "").replace("_", " ")}</span>
+                <span class=${`pf-arc-pill arck-${a.kind}`}>${humanize(a.kind)}</span>
                 <span class="pf-arcline-text">${a.text}</span>
               </div>
             `)}
@@ -1109,8 +1111,8 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Relationships</h3>
           <div class="pf-chips">
             ${rels.map((r, i) => html`
-              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${(r.arc || r.kind || "bond").replace("_", " ")} · strength ${Math.round(r.strength)}` : ""}>
-                ${r.handle ?? "—"}<span class="pf-rel-kind">${(r.arc || r.kind || "").replace("_", " ")}</span>
+              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
+                ${r.handle ?? "—"}<span class="pf-rel-kind">${humanize(r.arc || r.kind || "")}</span>
               </span>
             `)}
           </div>
@@ -1211,7 +1213,7 @@ const PlayerProfile = ({ data }) => {
               return html`
                 <div key=${idx} class="pf-promise-item">
                   <div style=${{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                    <strong>${prom.promise_type.replace(/_/g, " ").toUpperCase()}</strong>
+                    <strong>${humanize(prom.promise_type)}</strong>
                     <span class="muted">${prom.weeks_left} weeks left</span>
                   </div>
                   <div style=${{ fontSize: "0.9em", marginBottom: "4px" }}>Target: ${prom.target_value || "N/A"}${progressInfo}</div>
@@ -1398,7 +1400,7 @@ const TeamProfile = ({ data }) => {
               ${players.map((pl) => html`
                 <tr key=${pl.pid} class="pf-rrow plink" data-pid=${pl.pid}>
                   <td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
-                  <td>${pl.role && html`<span class="pill">${pl.role}</span>`}</td>
+                  <td>${pl.role && html`<span class="pill">${humanize(pl.role)}</span>`}</td>
                   <td class="num">${pfNum(pl.matches)}</td>
                   <td class="num">${pfNum(pl.kd, 2)}</td>
                   <td class="pf-acs-cell">
@@ -1473,11 +1475,11 @@ const TeamProfile = ({ data }) => {
           <div class="pf-arclines">
             ${teamArcs.map((a, i) => html`
               <div key=${i} class="pf-arcline">
-                <span class=${`pf-arc-pill arck-${a.kind}`}>${(a.kind || "").replace("_", " ")}</span>
+                <span class=${`pf-arc-pill arck-${a.kind}`}>${humanize(a.kind)}</span>
                 <span class="pf-arcline-text">
                   ${a.text}${" "}
                   ${(a.pids || []).map((pid, j) => html`
-                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || pid}</span>
+                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</span>
                   `)}
                 </span>
               </div>
@@ -1597,7 +1599,7 @@ const StaffProfile = ({ data }) => {
   const initial = (m.name || "?").charAt(0).toUpperCase();
 
   const meta = [
-    m.role ? html`<span class="pill" key="role">${m.role}</span>` : "",
+    m.role ? html`<span class="pill" key="role">${humanize(m.role)}</span>` : "",
     m.specialty ? html`<span class="pill" title=${m.specialty_blurb || ""} key="spec">${m.specialty}</span>` : "",
     m.age != null ? html`<span class="pf-age" key="age">age ${m.age}</span>` : "",
     m.region ? html`<span class="pill" key="region">${m.region}</span>` : "",
@@ -1761,7 +1763,7 @@ const ManagerProfile = ({ career }) => {
     if (con.goal) {
       const gs = con.goal_status || {};
       conBits.push(`Board goal: ${esc(con.goal)}`
-        + (gs.state ? ` (${esc(String(gs.state).replace(/_/g, " "))})` : "")
+        + (gs.state ? ` (${esc(humanize(gs.state))})` : "")
         + (gs.detail ? ` — ${esc(gs.detail)}` : ""));
     }
     if (con.patience != null) conBits.push(`patience ${pfNum(con.patience)}`);

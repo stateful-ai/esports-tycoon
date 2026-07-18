@@ -48,7 +48,7 @@ function agentName(pid) {
     : "";
 }
 function handleOf(pid) {
-  return V.players[pid]?.handle ?? pid;
+  return V.players[pid]?.handle ?? viewerHumanize(pid);
 }
 // Feed/ticker label: small agent icon + agent name (primary), player handle
 // dimmed in parens (secondary) — e.g. "[icon] Jett (Vortex)".
@@ -62,6 +62,10 @@ function feedLabel(pid) {
   if (!name) return `${icon}<b class="feed-name plink" data-pid="${pid}">${handle}</b>`;
   return `${icon}<b class="feed-name plink" data-pid="${pid}">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
 }
+
+const viewerHumanize = (value) => window.humanize
+  ? window.humanize(value)
+  : String(value ?? "").replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
 /* -- parsing ---------------------------------------------------------------- */
 
@@ -1014,7 +1018,7 @@ function drawFrame() {
   document.getElementById("v-round").textContent =
     `Round ${round.num} · ATK ${atkName}`;
   document.getElementById("v-banner").textContent = ended
-    ? `${V.names[round.end.winner_id]} take the round — ${round.end.reason.replaceAll("_", " ")}`
+    ? `${V.names[round.end.winner_id]} take the round — ${viewerHumanize(round.end.reason)}`
     : planted ? "Spike planted" : "";
 
   // Clock: 100s round, 45s post-plant.
@@ -1033,7 +1037,7 @@ function drawFrame() {
     .map((k) => ({
       tick: k.tick,
       html: `<div class="k">${feedLabel(k.killer_id)} <span class="${k.headshot ? "hs" : ""}">${k.headshot ? "☠" : "→"}</span> ${feedLabel(k.victim_id)}` +
-        ` <span class="muted">${k.weapon_id}${k.is_trade ? " · trade" : ""}</span></div>`,
+        ` <span class="muted">${viewerHumanize(k.weapon_id)}${k.is_trade ? " · trade" : ""}</span></div>`,
     }))
     .concat(round.utility
       .filter((u) => u.tick <= t)

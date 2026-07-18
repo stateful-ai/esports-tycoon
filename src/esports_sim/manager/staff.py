@@ -16,6 +16,8 @@ documented economy boundary for this pass.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_phrase
+
 import numpy as np
 
 from esports_sim.manager.gen import _FIRST_NAMES, _LAST_NAMES, _TEAM_NAMES
@@ -935,7 +937,7 @@ def retire_into_staff(gs: GameState, p, ca: float, team_name: str) -> "StaffMemb
     gs.staff_pool.append(member)
     gs.staff_pool.sort(key=lambda m: m.id)
     gs.push_news(
-        f"{p.handle} moves into the backroom - available as a {role.replace('_', ' ')}."
+        f"{p.handle} moves into the backroom - available as a {humanize_phrase(role)}."
     )
     return member
 

@@ -38,6 +38,7 @@ from __future__ import annotations
 import hashlib
 from typing import TYPE_CHECKING
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager import development, match_review, sponsors, talk
 
 if TYPE_CHECKING:  # avoid import cycle at runtime (campaign imports this)
@@ -407,7 +408,7 @@ def _describe_offer(o, slot: str) -> str:
         )
     if o.objectives:
         objs = "; ".join(
-            sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind) for ob in o.objectives
+            sponsors.OBJECTIVE_LABELS.get(ob.kind, humanize_identifier(ob.kind)) for ob in o.objectives
         )
         parts.append(f"Objectives on offer: {objs}.")
     parts.append(f"On the table until week {o.expires_week}. Decide on the finances screen.")

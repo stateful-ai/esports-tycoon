@@ -139,6 +139,17 @@ Facility-state diff compositing (above) remains the fallback path for
 whole-scene sets and is still the right tool for map door/teleporter
 state patches.
 
+## Agent icon pass — COMPLETE (2026-07-18)
+
+The authored agent registry contains 29 agents and the runtime resolves icons
+by the stable path `assets/agents/<agent-id>.webp`. The missing 16 portraits
+were generated through the Ludo MCP `generateWithStyle` tool using the
+committed Jett portrait as the style reference, with per-agent prompts derived
+from `data/agents.yaml`. Each result was downloaded immediately because Ludo
+asset URLs expire after seven days. The final local pack contains one square
+portrait for every registry id; `tests/test_agent_icons.py` keeps the asset
+contract from regressing.
+
 ## Scenario LoRA — TRAINED (2026-07-09)
 
 Model `model_5ZuAoQQnRSMSeykEwaHjBKwm` ("esports-sim-diorama",

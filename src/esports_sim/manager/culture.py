@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from esports_sim.labels import humanize_phrase
 from esports_sim.manager import personality, relationships
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -273,7 +274,7 @@ def set_leadership(
         ):
             promises.resolve_promise(gs, promise, success=True)
 
-    return True, f"{captain.handle} will lead a {principle.replace('_', ' ')} group"
+    return True, f"{captain.handle} will lead a {humanize_phrase(principle)} group"
 
 
 def _principle_fit(gs: "GameState", team_id: str, principle: str) -> float:
@@ -507,7 +508,7 @@ def commit_principle(
     gs.culture_principles[team_id] = principle
     already = gs.culture_committed_since_by.get(team_id)
     if already is not None and old_principle == principle:
-        return True, f"{team.name} remains committed to a {principle.replace('_', ' ')} identity"
+        return True, f"{team.name} remains committed to a {humanize_phrase(principle)} identity"
 
     gs.culture_committed_since_by[team_id] = _week_stamp(gs)
     gs.culture_conviction_by[team_id] = _COMMIT_CONVICTION
@@ -517,11 +518,11 @@ def commit_principle(
     chronicle.record(
         gs,
         "culture_commitment",
-        f"{team.name} publicly commits to a {principle.replace('_', ' ')} identity.",
+        f"{team.name} publicly commits to a {humanize_phrase(principle)} identity.",
         team_id=team_id,
         data={"principle": principle},
     )
-    return True, f"{team.name} commits to a {principle.replace('_', ' ')} identity"
+    return True, f"{team.name} commits to a {humanize_phrase(principle)} identity"
 
 
 def register_choice(
@@ -607,7 +608,7 @@ def register_choice(
 
     from esports_sim.manager import chronicle
 
-    label = principle.replace("_", " ")
+    label = humanize_phrase(principle)
     chronicle.record(
         gs,
         "culture_violation",
@@ -939,7 +940,7 @@ def culture_session(
     chronicle.record(
         gs,
         "culture",
-        f"{team.name} held a {action.replace('_', ' ')} culture session.",
+        f"{team.name} held a {humanize_phrase(action)} culture session.",
         team_id=team_id,
         player_id=player_id or "",
         data={"action": action},

@@ -265,7 +265,7 @@ function draftRecent(d) {
         <span class="mono muted">R${r.round}·${r.overall + 1}</span>
         <span class="pill">${esc(r.tag)}</span>
         <span>${plink(r.player_id, r.handle)}</span>
-        <span class="muted">${esc(r.role)} · ${r.skill}</span>
+        <span class="muted">${esc(humanize(r.role))} · ${r.skill}</span>
       </div>`
     )
     .join("");
@@ -281,7 +281,7 @@ function draftPrefsCard(d) {
     .map(
       (s) =>
         `<button class="btn draft-strat${d.prefs.strategy === s ? " btn-primary" : ""}"
-           data-strat="${s}">${esc(s.replace("_", " "))}</button>`
+           data-strat="${s}">${esc(humanize(s))}</button>`
     )
     .join(" ");
   card.innerHTML = `
@@ -318,7 +318,7 @@ function draftRecRow(d, r, withReasons) {
   return `
     <div class="draft-rec">
       <div class="draft-rec-top">
-        <span>${draftPlayerName(r)} <span class="muted">${r.age}y · ${esc(r.role)}</span></span>
+        <span>${draftPlayerName(r)} <span class="muted">${r.age}y · ${esc(humanize(r.role))}</span></span>
         <span>
           <span class="mono" title="fit score under your preferences">${r.score}</span>
           ${d.your_turn ? `<button class="btn btn-primary btn-sm draft-pick-btn" data-draft-pid="${r.id}">Draft</button>` : ""}
@@ -365,7 +365,7 @@ function draftSquadCard(d) {
     <div class="draft-squad-row">
       <span class="pill">${esc(tag)}</span>
       <span>${draftPlayerName(p)}</span>
-      <span class="muted">${p.age}y · ${esc(p.playstyle)}</span>
+      <span class="muted">${p.age}y · ${esc(humanize(p.playstyle))}</span>
       <span class="mono">${p.skill}</span>
       ${draftStars(p.potential_stars)}
     </div>`;
@@ -436,8 +436,8 @@ function draftPoolCard(d) {
         <td>${d.your_turn ? `<button class="btn btn-primary btn-sm draft-pick-btn" data-draft-pid="${p.id}">Draft</button>` : ""}</td>
         <td>${draftPlayerName(p)}${p.is_igl ? ' <span class="pill">IGL</span>' : ""}</td>
         <td class="mono">${p.age}</td>
-        <td>${esc(p.role)}</td>
-        <td>${esc(p.playstyle)}</td>
+        <td>${esc(humanize(p.role))}</td>
+        <td>${esc(humanize(p.playstyle))}</td>
         <td class="mono">${p.skill}</td>
         <td>${draftStars(p.potential_stars)}</td>
         <td>${draftLangs(p.languages)}</td>

@@ -97,6 +97,7 @@ PLAYER_BLOCK = {
     "can_talk",
     "hierarchy_role",
     "mentor_id",
+    "mentor_handle",
     "mentor_progress",
     "promises",
 }

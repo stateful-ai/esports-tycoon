@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_phrase
+
 from typing import TYPE_CHECKING
 
 from esports_sim.manager import market, training
@@ -211,7 +213,7 @@ def finalize_week(gs: "GameState") -> None:
                 continue
             player = gs.players[player_id]
             message = (
-                f"Staff alert: {player.handle} is {readiness.replace('_', ' ')} "
+                f"Staff alert: {player.handle} is {humanize_phrase(readiness)} "
                 f"on the current {seen:.0%} scouting book."
             )
             reports[-1].alerts.append(message)

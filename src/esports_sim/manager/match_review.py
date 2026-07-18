@@ -19,6 +19,8 @@ under-gunned / isolation reads as `sim.stats`, so the round-context denominators
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_phrase
+
 from esports_sim.manager.state import MatchReview, ReviewCalls, ReviewPoint
 from esports_sim.schemas import Event, TeamTactics
 from esports_sim.sim.stats import PISTOL_ROUNDS, RIFLE_TIER, MatchStats
@@ -178,7 +180,7 @@ def analyst_digest(gs, team_id: str) -> dict | None:
             )
         else:
             finding = (
-                f"The strongest negative signal was {point.code.replace('_', ' ')} "
+                f"The strongest negative signal was {humanize_phrase(point.code)} "
                 f"({point.num}/{point.den})."
             )
         action = "Review the match breakdown before the next fixture."

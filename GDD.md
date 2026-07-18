@@ -3,6 +3,9 @@ Working title: ESports Simulator (repo: esports-tycoon) Genre: Esports managemen
 
 This document holds design intent and the reasoning behind it. It describes shipped player-facing systems as of the date above; planned work belongs in ROADMAP.md. For the ordered weekly tick, every campaign system, and the module that owns each, see docs/game-systems.md, which is kept in sync with campaign.advance_week rather than with the design narrative.
 
+Design-source contract
+The design record has three deliberately different layers. This document is the player-facing design and the rationale for it; docs/game-systems.md is the implementation inventory and weekly-tick contract; data/ and the typed schemas are the authoritative content and state vocabulary. A feature is not considered reflected in the project until the player-facing behavior, its owning system, and its visible surface agree across those layers. The inventory was audited against the current manager modules, web navigation, and content registries on 2026-07-18.
+
 1. Vision
 You run a professional Valorant-flavored esports organization. You don't aim, peek, or spray --- your players do that, and how well they do it is a function of who you signed, how you trained them, how tired and happy they are, what utility they popped, and where they were standing when the fight started. Your job is everything around the ten minutes of a round: scouting and signing talent, building a training program, managing morale and burnout, calling in a coach, negotiating contracts, chasing sponsors, picking (and banning) maps, and reading the story the season tells through its results.
 
@@ -216,7 +219,7 @@ The original interface --- a rich-based CLI (app/cli.py) --- remains fully suppo
 6. Content roster (current)
 Category Count Examples
 
-Agents 13 Jett, Raze, Reyna, Phoenix (duelists) · Omen, Viper, Clove (controllers) · Sova, Breach, Skye (initiators) · Killjoy, Cypher, Chamber (sentinels)
+Agents 29 Jett, Raze, Reyna, Phoenix, Neon, Waylay (duelists) · Omen, Viper, Clove, Brimstone, Astra, Harbor, Miks (controllers) · Sova, Breach, Skye, KAY/O, Fade, Gekko, Tejo (initiators) · Killjoy, Cypher, Chamber, Sage, Deadlock, Vyse, Veto (sentinels) · Yoru and Iso retain their duelist identity in the authored registry.
 
 Weapons 7 Classic, Ghost, Sheriff (pistols) · Spectre (SMG) · Phantom, Vandal (rifles) · Operator (sniper)
 
@@ -225,7 +228,7 @@ Maps 5 Haven, Ascent, Bind, Lotus, Split --- each with an authored floor-plan ge
 Attributes 10 Registry-driven; adding an 11th is a data change
 
 Teams Fictional default world plus deterministic league fill; roster packs can replace the world shape and clubs
-All of the above are YAML under data/. The shipped default world is original fictional content in a Valorant-flavored idiom --- no Riot Games assets, no real player likenesses.
+All of the above are YAML under data/. Every authored agent also has a matching UI portrait at assets/agents/<agent-id>.webp. The shipped default world is original fictional content in a Valorant-flavored idiom --- no Riot Games assets, no real player likenesses.
 
 Roster packs (data/rosters/<id>/) --- importable league worlds. A pack is a pack.yaml (name + world shape: which regions, how many teams per league) plus team files in the exact starter-team bundle format; at new-game it replaces the fictional starters, and generation only fills any shortfall. Packs are built from compact hand-editable research sheets by scripts/build_roster_pack.py, which expands each player (handle, role, playstyle, quality, signature agents) into full attributes deterministically (blake2-jittered per player id) --- so a pack player has the same sheet in every campaign at any seed. Two historical packs ship: VCT 2021 and VCT 2026. Since this game is private (see §9), real names are a personal-use convenience, attributes remain original estimates rather than scraped statistics, and no Riot assets are included.
 

@@ -47,6 +47,7 @@ let inboxUnread = 0;       // actionable unread count; drives the primary badge
 let inboxLeagueUnread = 0; // secondary feed count; shown only inside the screen
 
 const inboxCap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+const inboxLabel = (s) => window.humanize ? window.humanize(s) : inboxCap(s);
 
 /* -- silent transport ------------------------------------------------------
    Deliberately NOT the shared api() helper: api() toasts + throws on any
@@ -158,7 +159,7 @@ async function inboxSyncState() {
       const ctx = document.getElementById("context");
       if (ctx) {
         ctx.textContent =
-          `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
+          `Season ${s.season} · Week ${s.week} · ${inboxLabel(s.phase)}  —  ${s.user_team.name}`;
       }
       const bal = document.getElementById("balance");
       if (bal && typeof money === "function") bal.textContent = money(s.user_team.balance);
@@ -375,7 +376,7 @@ async function inbox(v) {
 
     const rowHead = el("div", "inbox-row-head");
     const chip = el("span", `inbox-cat cat-${cat}`);
-    chip.textContent = INBOX_CAT_LABEL[cat] || cat;
+    chip.textContent = INBOX_CAT_LABEL[cat] || inboxLabel(cat);
     const title = el("span", "inbox-title");
     title.textContent = it.title || "";
     const week = el("span", "inbox-week mono muted");
@@ -389,7 +390,7 @@ async function inbox(v) {
     text.textContent = it.body || "";           // textContent preserves newlines
     body.appendChild(text);
     if (it.tab) {
-      const go = el("button", "btn btn-sm inbox-goto", `Open ${inboxCap(it.tab)}`);
+      const go = el("button", "btn btn-sm inbox-goto", `Open ${inboxLabel(it.tab)}`);
       go.onclick = (e) => { e.stopPropagation(); inboxGoTab(it.tab); };
       body.appendChild(go);
     }
@@ -427,7 +428,7 @@ async function inbox(v) {
     const line = el("div", "inbox-row-head");
     line.title = "Open item";
     const chip = el("span", `inbox-cat cat-${cat}`);
-    chip.textContent = INBOX_CAT_LABEL[cat] || cat;
+    chip.textContent = INBOX_CAT_LABEL[cat] || inboxLabel(cat);
     const title = el("span", "inbox-title");
     title.textContent = it.title || "";
     line.append(chip, title);
