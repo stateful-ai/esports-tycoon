@@ -2356,3 +2356,33 @@ tbody tr {
 .scout-lane { display: flex; flex-direction: column; gap: var(--es-space-2, 8px); }
 .scout-lane-head { display: flex; align-items: center; gap: var(--es-space-2, 8px); }
 .scout-gap-row { display: flex; align-items: center; gap: var(--es-space-1, 4px); flex-wrap: wrap; }
+
+/* Fantasy draft (draft.js) */
+.draft-head-row { display: flex; justify-content: space-between; gap: var(--es-space-4, 12px); flex-wrap: wrap; }
+.draft-head-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--es-space-2, 8px); }
+.draft-onclock { color: var(--es-color-text-warning, #e5a53a); font-weight: 600; }
+.draft-order-strip { margin-top: var(--es-space-2, 8px); overflow-x: auto; white-space: nowrap;
+  padding-bottom: var(--es-space-1, 4px); font-size: var(--es-text-sm, 12px); }
+.draft-order-team { color: var(--es-color-text-secondary, #8b98ad); }
+.draft-order-team.now { color: var(--es-color-text-primary, #e8edf5); font-weight: 700; }
+.draft-order-team.you { color: var(--es-color-text-warning, #e5a53a); }
+.draft-feed-row { display: flex; align-items: center; gap: var(--es-space-2, 8px);
+  padding: var(--es-space-1, 4px) 0; font-size: var(--es-text-sm, 12px);
+  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536); }
+.draft-feed-row.you { box-shadow: inset 3px 0 0 var(--es-color-text-warning, #e5a53a); padding-left: var(--es-space-2, 8px); }
+.draft-rec { padding: var(--es-space-2, 8px) 0;
+  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536); }
+.draft-rec-top { display: flex; justify-content: space-between; align-items: center; gap: var(--es-space-2, 8px); }
+.draft-rec-line { display: flex; align-items: center; gap: var(--es-space-2, 8px); flex-wrap: wrap;
+  margin: var(--es-space-1, 4px) 0; }
+.draft-reason { display: inline-block; font-size: var(--es-text-xs, 11px);
+  color: var(--es-color-text-secondary, #8b98ad);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  border-radius: var(--es-radius-sm, 4px); padding: 1px var(--es-space-2, 6px); margin: 1px 0; }
+.draft-squad-row { display: flex; align-items: center; gap: var(--es-space-2, 8px);
+  padding: var(--es-space-1, 4px) 0; font-size: var(--es-text-sm, 12px); }
+.draft-squad-row .mono { margin-left: auto; }
+.draft-pool-controls { display: flex; align-items: center; gap: var(--es-space-3, 10px);
+  flex-wrap: wrap; margin-bottom: var(--es-space-3, 10px); }
+.draft-pool-controls input { min-width: 220px; }
+.draft-pool table td { white-space: nowrap; }

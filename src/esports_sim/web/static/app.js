@@ -363,6 +363,9 @@ function setupLobby(lob) {
   // null = the classic start; otherwise a sandbox scenario preset id
   // (server-applied at creation — the client only picks and renders).
   let scenario = null;
+  // Sandbox-only fantasy-draft start: tier-1 rosters enter one shared pool
+  // and every org (human + AI) snake-drafts its ten before week 1.
+  let fantasyDraft = false;
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
   const renderScenarios = () => {
@@ -396,6 +399,39 @@ function setupLobby(lob) {
     desc.textContent = cur ? cur.blurb : "";
     desc.classList.toggle("hidden", !cur);
   };
+  const renderDraftToggle = () => {
+    const row = $("#ng-draft-row");
+    const box = $("#ng-draft");
+    const desc = $("#ng-draft-desc");
+    if (gameMode !== "sandbox") {
+      fantasyDraft = false;
+      row.classList.add("hidden");
+      desc.classList.add("hidden");
+      return;
+    }
+    row.classList.remove("hidden");
+    box.innerHTML = "";
+    const mk = (label, on) => {
+      const b = el(
+        "button",
+        "btn" + (fantasyDraft === on ? " btn-primary" : ""),
+        label
+      );
+      b.onclick = () => {
+        fantasyDraft = on;
+        renderDraftToggle();
+        renderPick(); // the pick grid narrows to tier-1 orgs while drafting
+      };
+      box.appendChild(b);
+    };
+    mk("Existing rosters", false);
+    mk("Fantasy draft", true);
+    desc.textContent =
+      "Every pro enters one shared pool and all orgs — you and the AI — " +
+      "take turns drafting ten players each (five starters plus " +
+      "bench/academy depth) before the season starts.";
+    desc.classList.toggle("hidden", !fantasyDraft);
+  };
   const renderModes = () => {
     const box = $("#ng-modes");
     box.innerHTML = "";
@@ -409,6 +445,7 @@ function setupLobby(lob) {
         gameMode = id;
         renderModes();
         renderScenarios();
+        renderDraftToggle();
         renderPick();
       };
       box.appendChild(b);
@@ -481,8 +518,13 @@ function setupLobby(lob) {
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
         .then((r) =>
-          renderTeamGrid(grid, r.teams, (t) =>
-            createGame(t.id, shared_, world, "sandbox", scenario)
+          renderTeamGrid(
+            grid,
+            // The fantasy draft is a tier-1 event; Challengers clubs
+            // don't enter it, so hide them when the toggle is on.
+            fantasyDraft ? r.teams.filter((t) => t.tier === 1) : r.teams,
+            (t) =>
+              createGame(t.id, shared_, world, "sandbox", scenario, fantasyDraft)
           )
         )
         .catch(
@@ -491,7 +533,7 @@ function setupLobby(lob) {
       return;
     }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world, "sandbox", scenario)
+      createGame(t.id, shared_, world, "sandbox", scenario, fantasyDraft)
     );
   };
   $("#ng-seed").addEventListener("change", () => renderPick());
@@ -504,6 +546,7 @@ function setupLobby(lob) {
       : "Pick your organisation. Seed controls the generated league.";
     renderModes();
     renderScenarios();
+    renderDraftToggle();
     renderWorlds();
     renderPick();
   };
@@ -532,17 +575,23 @@ function setupLobby(lob) {
       );
       return;
     }
-    renderTeamGrid($("#join-teams"), r.teams, (t) => joinGame(code, t.id));
+    renderTeamGrid(
+      $("#join-teams"),
+      r.fantasy_draft_active ? r.teams.filter((t) => t.tier === 1) : r.teams,
+      (t) => joinGame(code, t.id)
+    );
   };
   showCreate(false); // default view
 }
 
 async function createGame(
-  teamId, shared, pack = null, gameMode = "sandbox", scenario = null
+  teamId, shared, pack = null, gameMode = "sandbox", scenario = null,
+  fantasyDraft = false
 ) {
   const seed = parseInt($("#ng-seed").value) || 2026;
   const r = await api("/api/new", {
     team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
+    fantasy_draft: fantasyDraft,
   });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
@@ -582,6 +631,20 @@ async function deleteWorld(world) {
 async function refresh() {
   App.state = await api("/api/state");
   const s = App.state;
+  // Fantasy draft in progress: the draft screen (draft.js) IS the app until
+  // the last pick resolves — rosters are mid-build, so no tab makes sense.
+  if (s.draft_active) {
+    $("#context").textContent =
+      `Season ${s.season} · Fantasy draft  —  ${s.user_team.name}`;
+    $("#balance").textContent = money(s.user_team.balance);
+    $("#tabs").classList.add("hidden");
+    updateMpChip(s.multiplayer);
+    updateSaveControls(s.save);
+    renderDraftScreen();
+    return;
+  }
+  $("#tabs").classList.remove("hidden");
+  if (typeof stopDraftPolling === "function") stopDraftPolling();
   $("#context").textContent =
     `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
   $("#balance").textContent = money(s.user_team.balance);
@@ -671,6 +734,7 @@ const TAB_ALIASES = {
 
 function renderApp() {
   if (!App.state) return;
+  if (App.state.draft_active) return renderDraftScreen();
   // Merged-tab alias: a stale App.tab from before a screen merge lands on its
   // host tab with the right sub-tab preselected (and the nav highlight
   // follows, since no button carries the old id anymore). "roster" is

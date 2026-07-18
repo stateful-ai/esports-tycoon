@@ -72,7 +72,13 @@ Published at github.com/stateful-ai/esports-tycoon.
   ROSTER_MAX=10 — only the dressed five play a map, resolved by
   `campaign.dressed_for` from per-map overrides -> `Team.lineup_ids` ->
   quality top-up, with agent locks via `sim/lineup.py`; bench players
-  scrim at reduced growth), `development.py` (traits/PA, scout
+  scrim at reduced growth), `fantasy_draft.py` (opt-in sandbox start:
+  every tier-1 roster + the FA pool + a generated draft class enter one
+  shared pool and all orgs snake-draft ten each before week 1; AI picks
+  and the human recommendation panel share ONE value function, AI leans
+  are blake2-derived, and the web layer gates advancing until the last
+  pick — after `_complete` the campaign is indistinguishable from a
+  classic start), `development.py` (traits/PA, scout
   precision, weekly random dev events on a dedicated rng stream),
   `training.py` (system-fit growth, per-player dev_focus/intensity plans,
   match-XP from box-score lines, bench scrim reps), `academy.py` (tier-1
