@@ -11,11 +11,14 @@ chemistry: 61.7
 players:
 - id: team_funplus_phoenix_ange1
   handle: ANGE1
-  real_name: ''
+  real_name: Kyrylo Karasov
   region: emea
-  country: ''
-  languages: []
+  country: UA
+  languages:
+  - lang: ru
+    level: 100.0
   age: 32
+  birth_year: 1989
   role: controller
   playstyle: igl
   attributes:
@@ -115,11 +118,14 @@ players:
   potential: 79.0
 - id: team_funplus_phoenix_ardiis
   handle: ardiis
-  real_name: ''
+  real_name: Ardis Svarenieks
   region: emea
-  country: ''
-  languages: []
+  country: LV
+  languages:
+  - lang: lv
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: entry
   attributes:
@@ -218,11 +224,14 @@ players:
   potential: 86.0
 - id: team_funplus_phoenix_shao
   handle: Shao
-  real_name: ''
+  real_name: Andrei Kiprskii
   region: emea
-  country: ''
-  languages: []
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -318,11 +327,14 @@ players:
   potential: 88.0
 - id: team_funplus_phoenix_zyppan
   handle: Zyppan
-  real_name: ''
+  real_name: Pontus Eek
   region: emea
-  country: ''
-  languages: []
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
   age: 19
+  birth_year: 2002
   role: flex
   playstyle: lurker
   attributes:
@@ -417,11 +429,14 @@ players:
   potential: 89.0
 - id: team_funplus_phoenix_shadow
   handle: ShadoW
-  real_name: ''
+  real_name: Tobias Flodström
   region: emea
-  country: ''
-  languages: []
-  age: 22
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
+  age: 26
+  birth_year: 1995
   role: sentinel
   playstyle: anchor
   attributes:

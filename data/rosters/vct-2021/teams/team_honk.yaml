@@ -11,11 +11,14 @@ chemistry: 70.5
 players:
 - id: team_honk_destrian
   handle: Destrian
-  real_name: ''
+  real_name: Tomas Linikas
   region: emea
   country: ''
-  languages: []
-  age: 24
+  languages:
+  - lang: ru
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: flex
   playstyle: igl
   attributes:
@@ -115,6 +118,7 @@ players:
   country: ''
   languages: []
   age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -210,11 +214,12 @@ players:
   potential: 75.0
 - id: team_honk_trexx
   handle: trexx
-  real_name: ''
+  real_name: Nikita Cherednichenko
   region: emea
-  country: ''
+  country: RU
   languages: []
   age: 17
+  birth_year: 2004
   role: initiator
   playstyle: support
   attributes:
@@ -310,11 +315,12 @@ players:
   potential: 90.0
 - id: team_honk_dreamas
   handle: Dreamas
-  real_name: ''
+  real_name: Aurimas Zablockis
   region: emea
   country: ''
   languages: []
   age: 23
+  birth_year: 1998
   role: sentinel
   playstyle: anchor
   attributes:
@@ -415,6 +421,7 @@ players:
   country: ''
   languages: []
   age: 20
+  birth_year: 2001
   role: controller
   playstyle: lurker
   attributes:

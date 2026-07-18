@@ -11,13 +11,14 @@ chemistry: 75.6
 players:
 - id: team_team_liquid_l1nk
   handle: L1NK
-  real_name: ''
+  real_name: Travis Mendoza
   region: emea
   country: GB
   languages:
   - lang: en
     level: 100.0
-  age: 22
+  age: 23
+  birth_year: 1998
   role: controller
   playstyle: igl
   attributes:
@@ -113,7 +114,7 @@ players:
   potential: 84.0
 - id: team_team_liquid_scream
   handle: ScreaM
-  real_name: ''
+  real_name: Adil Benrlitom
   region: emea
   country: BE
   languages:
@@ -122,6 +123,7 @@ players:
   - lang: en
     level: 90.0
   age: 27
+  birth_year: 1994
   role: duelist
   playstyle: entry
   attributes:
@@ -220,7 +222,7 @@ players:
   potential: 86.0
 - id: team_team_liquid_jamppi
   handle: Jamppi
-  real_name: ''
+  real_name: Elias Olkkonen
   region: emea
   country: FI
   languages:
@@ -229,6 +231,7 @@ players:
   - lang: en
     level: 90.0
   age: 20
+  birth_year: 2001
   role: duelist
   playstyle: awper
   attributes:
@@ -327,13 +330,14 @@ players:
   potential: 91.0
 - id: team_team_liquid_soulcas
   handle: soulcas
-  real_name: ''
+  real_name: Dom Sulcas
   region: emea
   country: GB
   languages:
   - lang: en
     level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -428,7 +432,7 @@ players:
   potential: 85.0
 - id: team_team_liquid_nivera
   handle: Nivera
-  real_name: ''
+  real_name: Nabil Benrlitom
   region: emea
   country: BE
   languages:
@@ -437,6 +441,7 @@ players:
   - lang: en
     level: 90.0
   age: 20
+  birth_year: 2001
   role: controller
   playstyle: lurker
   attributes:

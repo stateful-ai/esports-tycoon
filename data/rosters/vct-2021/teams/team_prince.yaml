@@ -11,11 +11,14 @@ chemistry: 78.8
 players:
 - id: team_prince_joxjo
   handle: JoXJo
-  real_name: ''
+  real_name: Cho Byung-yeon
   region: pacific
-  country: ''
-  languages: []
-  age: 23
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 24
+  birth_year: 1997
   role: initiator
   playstyle: igl
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 74.3
 - id: team_prince_lawrence
   handle: Lawrence
-  real_name: ''
+  real_name: Yoon Hyun
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: duelist
   playstyle: entry
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 83.9
 - id: team_prince_slash
   handle: Slash
-  real_name: ''
+  real_name: Park Jin-sol
   region: pacific
-  country: ''
-  languages: []
-  age: 22
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 23
+  birth_year: 1998
   role: flex
   playstyle: lurker
   attributes:
@@ -310,11 +319,14 @@ players:
   potential: 80.4
 - id: team_prince_halbae
   handle: Halbae
-  real_name: ''
+  real_name: Kim Jun-young
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: sentinel
   playstyle: anchor
   attributes:
@@ -409,11 +421,12 @@ players:
   potential: 85.0
 - id: team_prince_kobra
   handle: kobra
-  real_name: ''
+  real_name: Ha Suh-yeon
   region: pacific
-  country: ''
+  country: KR
   languages: []
   age: 22
+  birth_year: 1999
   role: controller
   playstyle: support
   attributes:

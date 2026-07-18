@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: pacific
   country: ''
-  languages: []
+  languages:
+  - lang: ja
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: controller
   playstyle: igl
   attributes:
@@ -116,6 +119,7 @@ players:
   country: ''
   languages: []
   age: 21
+  birth_year: 2000
   role: duelist
   playstyle: entry
   attributes:
@@ -215,6 +219,7 @@ players:
   country: ''
   languages: []
   age: 21
+  birth_year: 2000
   role: flex
   playstyle: lurker
   attributes:
@@ -309,11 +314,12 @@ players:
   potential: 83.9
 - id: team_fennel_clz
   handle: CLZ
-  real_name: ''
+  real_name: Hikaru Mizutani
   region: pacific
-  country: ''
+  country: JP
   languages: []
-  age: 22
+  age: 19
+  birth_year: 2002
   role: initiator
   playstyle: support
   attributes:
@@ -413,6 +419,7 @@ players:
   country: ''
   languages: []
   age: 21
+  birth_year: 2000
   role: sentinel
   playstyle: anchor
   attributes:

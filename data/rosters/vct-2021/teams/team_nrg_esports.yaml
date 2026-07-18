@@ -11,11 +11,14 @@ chemistry: 74.7
 players:
 - id: team_nrg_esports_daps
   handle: daps
-  real_name: ''
+  real_name: Damian Steele
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 28
+  birth_year: 1993
   role: sentinel
   playstyle: igl
   attributes:
@@ -112,11 +115,14 @@ players:
   potential: 70.4
 - id: team_nrg_esports_s0m
   handle: s0m
-  real_name: ''
+  real_name: Sam Oh
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 19
+  birth_year: 2002
   role: duelist
   playstyle: entry
   attributes:
@@ -212,11 +218,14 @@ players:
   potential: 87.9
 - id: team_nrg_esports_eeiu
   handle: eeiu
-  real_name: ''
+  real_name: Daniel Vucenovic
   region: americas
-  country: ''
-  languages: []
-  age: 21
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -312,11 +321,14 @@ players:
   potential: 86.9
 - id: team_nrg_esports_tex
   handle: tex
-  real_name: ''
+  real_name: Ian Botsch
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
+  birth_year: 1999
   role: duelist
   playstyle: awper
   attributes:
@@ -411,11 +423,12 @@ players:
   potential: 80.8
 - id: team_nrg_esports_android
   handle: ANDROID
-  real_name: ''
+  real_name: Bradley Fodor
   region: americas
-  country: ''
+  country: CA
   languages: []
   age: 27
+  birth_year: 1994
   role: duelist
   playstyle: entry
   attributes:

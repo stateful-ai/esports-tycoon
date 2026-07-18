@@ -11,11 +11,14 @@ chemistry: 69.9
 players:
 - id: team_luminosity_gaming_yaboidre
   handle: YaBoiDre
-  real_name: ''
+  real_name: Diondre Bond
   region: americas
-  country: ''
-  languages: []
-  age: 24
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 74.4
 - id: team_luminosity_gaming_tigg
   handle: TiGG
-  real_name: ''
+  real_name: Tanner Spanu
   region: americas
-  country: ''
-  languages: []
-  age: 20
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: controller
   playstyle: support
   attributes:
@@ -211,11 +217,14 @@ players:
   potential: 87.9
 - id: team_luminosity_gaming_aproto
   handle: aproto
-  real_name: ''
+  real_name: Alex Protopapas
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: sentinel
   playstyle: anchor
   attributes:
@@ -310,11 +319,12 @@ players:
   potential: 79.6
 - id: team_luminosity_gaming_moose
   handle: moose
-  real_name: ''
+  real_name: Kaleb Jayne
   region: americas
-  country: ''
+  country: CA
   languages: []
   age: 23
+  birth_year: 1998
   role: initiator
   playstyle: support
   attributes:
@@ -410,11 +420,12 @@ players:
   potential: 70.6
 - id: team_luminosity_gaming_dazzle
   handle: dazzLe
-  real_name: ''
+  real_name: Will Loafman
   region: americas
-  country: ''
+  country: US
   languages: []
-  age: 22
+  age: 26
+  birth_year: 1995
   role: flex
   playstyle: lurker
   attributes:

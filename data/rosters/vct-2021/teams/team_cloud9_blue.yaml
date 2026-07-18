@@ -11,11 +11,14 @@ chemistry: 66.2
 players:
 - id: team_cloud9_blue_mitch
   handle: mitch
-  real_name: ''
+  real_name: Mitchell Semago
   region: americas
   country: ''
-  languages: []
-  age: 24
+  languages:
+  - lang: en
+    level: 100.0
+  age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: anchor
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 74.7
 - id: team_cloud9_blue_xeta
   handle: xeta
-  real_name: ''
+  real_name: Son Seon-ho
   region: americas
-  country: ''
-  languages: []
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: initiator
   playstyle: support
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 79.2
 - id: team_cloud9_blue_xeppaa
   handle: Xeppaa
-  real_name: ''
+  real_name: Erick Bach
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: flex
   playstyle: lurker
   attributes:
@@ -311,11 +320,14 @@ players:
   potential: 87.0
 - id: team_cloud9_blue_leaf
   handle: leaf
-  real_name: ''
+  real_name: Nathan Orf
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -413,11 +425,12 @@ players:
   potential: 89.0
 - id: team_cloud9_blue_floppy
   handle: floppy
-  real_name: ''
+  real_name: Ricky Kemery
   region: americas
-  country: ''
+  country: US
   languages: []
   age: 22
+  birth_year: 1999
   role: controller
   playstyle: support
   attributes:

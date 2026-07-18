@@ -11,11 +11,14 @@ chemistry: 66.5
 players:
 - id: team_immortals_jcstani
   handle: jcStani
-  real_name: ''
+  real_name: Noah Smith
   region: americas
-  country: ''
-  languages: []
-  age: 24
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 21
+  birth_year: 2000
   role: controller
   playstyle: igl
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 79.7
 - id: team_immortals_shot_up
   handle: ShoT_UP
-  real_name: ''
+  real_name: Andrew Orlowski
   region: americas
-  country: ''
-  languages: []
-  age: 23
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: duelist
   playstyle: entry
   attributes:
@@ -211,11 +217,14 @@ players:
   potential: 73.4
 - id: team_immortals_kehmicals
   handle: Kehmicals
-  real_name: ''
+  real_name: Rhett Lynch
   region: americas
-  country: ''
-  languages: []
-  age: 23
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -309,11 +318,14 @@ players:
   potential: 73.8
 - id: team_immortals_genghsta
   handle: Genghsta
-  real_name: ''
+  real_name: Amgalan Nemekhbayar
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:
@@ -409,11 +421,12 @@ players:
   potential: 73.4
 - id: team_immortals_nature
   handle: NaturE
-  real_name: ''
+  real_name: Nicholas Garrison
   region: americas
-  country: ''
+  country: US
   languages: []
   age: 23
+  birth_year: 1998
   role: sentinel
   playstyle: anchor
   attributes:

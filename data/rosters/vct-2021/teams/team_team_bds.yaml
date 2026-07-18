@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: fr
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 78.0
 - id: team_team_bds_roden
   handle: rodeN
-  real_name: ''
+  real_name: Rodolphe Bianco
   region: emea
-  country: ''
-  languages: []
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: duelist
   playstyle: entry
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 80.0
 - id: team_team_bds_akumaaaaa
   handle: AKUMAAAAA
-  real_name: ''
+  real_name: Alex Bello
   region: emea
-  country: ''
-  languages: []
-  age: 21
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: flex
   playstyle: lurker
   attributes:
@@ -309,11 +318,12 @@ players:
   potential: 80.0
 - id: team_team_bds_takas
   handle: TakaS
-  real_name: ''
+  real_name: Jonathan Paupard
   region: emea
-  country: ''
+  country: FR
   languages: []
-  age: 21
+  age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -413,6 +423,7 @@ players:
   country: ''
   languages: []
   age: 22
+  birth_year: 1999
   role: sentinel
   playstyle: anchor
   attributes:

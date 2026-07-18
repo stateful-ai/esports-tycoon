@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: pacific
   country: ''
-  languages: []
+  languages:
+  - lang: ru
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 72.7
 - id: team_northeption_meteor
   handle: Meteor
-  real_name: ''
+  real_name: Kim Tae-oh
   region: pacific
-  country: ''
-  languages: []
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
   age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -213,11 +219,14 @@ players:
   potential: 87.0
 - id: team_northeption_jaemin
   handle: Jaemin
-  real_name: ''
+  real_name: Jeong Jae-min
   region: pacific
-  country: ''
-  languages: []
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: flex
   playstyle: lurker
   attributes:
@@ -312,11 +321,14 @@ players:
   potential: 82.4
 - id: team_northeption_seoldam
   handle: Seoldam
-  real_name: ''
+  real_name: Seo Sang-min
   region: pacific
-  country: ''
-  languages: []
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
   age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -411,11 +423,12 @@ players:
   potential: 84.1
 - id: team_northeption_kr1stal
   handle: Kr1stal
-  real_name: ''
+  real_name: Savva Fedorov
   region: pacific
-  country: ''
+  country: RU
   languages: []
-  age: 23
+  age: 18
+  birth_year: 2003
   role: sentinel
   playstyle: anchor
   attributes:

@@ -11,13 +11,14 @@ chemistry: 60.1
 players:
 - id: team_100_thieves_nitr0
   handle: nitr0
-  real_name: ''
+  real_name: Nicholas Cannella
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 26
+  birth_year: 1995
   role: controller
   playstyle: igl
   attributes:
@@ -112,14 +113,15 @@ players:
   potential: 79.2
 - id: team_100_thieves_asuna
   handle: Asuna
-  real_name: ''
+  real_name: Peter Mazuryk
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 18
-  role: duelist
+  birth_year: 2003
+  role: flex
   playstyle: entry
   attributes:
     aim_precision: 91.1
@@ -135,47 +137,43 @@ players:
   agent_pool:
   - agent_id: raze
     mastery: 99.0
-  - agent_id: reyna
-    mastery: 94.6
-  - agent_id: iso
-    mastery: 66.2
-  - agent_id: jett
-    mastery: 74.8
-  - agent_id: neon
-    mastery: 70.0
-  - agent_id: phoenix
-    mastery: 70.7
-  - agent_id: waylay
-    mastery: 69.0
-  - agent_id: yoru
-    mastery: 68.3
-  - agent_id: astra
-    mastery: 60.0
-  - agent_id: breach
-    mastery: 59.2
-  - agent_id: brimstone
-    mastery: 60.0
-  - agent_id: chamber
-    mastery: 60.0
-  - agent_id: clove
-    mastery: 55.4
-  - agent_id: cypher
-    mastery: 50.2
-  - agent_id: deadlock
-    mastery: 50.2
-  - agent_id: fade
-    mastery: 55.2
-  - agent_id: gekko
-    mastery: 59.9
-  - agent_id: harbor
-    mastery: 60.0
   - agent_id: kayo
-    mastery: 54.9
-  - agent_id: killjoy
+    mastery: 94.6
+  - agent_id: breach
+    mastery: 78.2
+  - agent_id: astra
+    mastery: 56.6
+  - agent_id: brimstone
+    mastery: 58.3
+  - agent_id: chamber
+    mastery: 55.3
+  - agent_id: clove
     mastery: 60.0
+  - agent_id: cypher
+    mastery: 59.2
+  - agent_id: deadlock
+    mastery: 60.0
+  - agent_id: fade
+    mastery: 60.0
+  - agent_id: gekko
+    mastery: 55.4
+  - agent_id: harbor
+    mastery: 50.2
+  - agent_id: iso
+    mastery: 50.2
+  - agent_id: jett
+    mastery: 55.2
+  - agent_id: killjoy
+    mastery: 59.9
   - agent_id: miks
-    mastery: 55.0
+    mastery: 60.0
+  - agent_id: neon
+    mastery: 54.9
   - agent_id: omen
+    mastery: 60.0
+  - agent_id: phoenix
+    mastery: 55.0
+  - agent_id: reyna
     mastery: 58.5
   - agent_id: sage
     mastery: 56.5
@@ -191,22 +189,26 @@ players:
     mastery: 60.0
   - agent_id: vyse
     mastery: 59.8
+  - agent_id: waylay
+    mastery: 55.9
+  - agent_id: yoru
+    mastery: 58.2
   map_pool:
   - map_id: ascent
-    mastery: 86.8
-  - map_id: bind
-    mastery: 83.1
-  - map_id: haven
-    mastery: 86.3
-  - map_id: lotus
-    mastery: 85.9
-  - map_id: split
     mastery: 85.4
+  - map_id: bind
+    mastery: 90.2
+  - map_id: haven
+    mastery: 87.4
+  - map_id: lotus
+    mastery: 91.8
+  - map_id: split
+    mastery: 78.5
   salary: 6700
-  contract_weeks_left: 56
-  morale: 82.1
-  stamina: 88.0
-  form: 46.7
+  contract_weeks_left: 32
+  morale: 84.9
+  stamina: 81.6
+  form: 53.3
   personality_tags:
   - perfectionist
   - rookie
@@ -215,13 +217,14 @@ players:
   potential: 92.0
 - id: team_100_thieves_hiko
   handle: Hiko
-  real_name: ''
+  real_name: Spencer Martin
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 31
+  birth_year: 1990
   role: initiator
   playstyle: support
   attributes:
@@ -318,13 +321,14 @@ players:
   potential: 77.0
 - id: team_100_thieves_ethan
   handle: Ethan
-  real_name: ''
+  real_name: Ethan Cole Arnold
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -421,13 +425,14 @@ players:
   potential: 89.0
 - id: team_100_thieves_b0i
   handle: b0i
-  real_name: ''
+  real_name: Aaron Thao
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
-  age: 24
+  age: 25
+  birth_year: 1996
   role: controller
   playstyle: support
   attributes:

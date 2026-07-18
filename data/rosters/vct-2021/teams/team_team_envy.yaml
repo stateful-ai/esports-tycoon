@@ -11,13 +11,14 @@ chemistry: 72.1
 players:
 - id: team_team_envy_fns
   handle: FNS
-  real_name: ''
+  real_name: Pujan Mehta
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 29
+  birth_year: 1992
   role: sentinel
   playstyle: igl
   attributes:
@@ -113,13 +114,14 @@ players:
   potential: 77.0
 - id: team_team_envy_crashies
   handle: crashies
-  real_name: ''
+  real_name: Austin Roberts
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 24
+  birth_year: 1997
   role: initiator
   playstyle: support
   attributes:
@@ -216,13 +218,14 @@ players:
   potential: 88.0
 - id: team_team_envy_victor
   handle: Victor
-  real_name: ''
+  real_name: Victor Wong
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 25
+  birth_year: 1996
   role: duelist
   playstyle: entry
   attributes:
@@ -319,13 +322,14 @@ players:
   potential: 87.0
 - id: team_team_envy_yay
   handle: yay
-  real_name: ''
+  real_name: Jaccob Whiteaker
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: awper
   attributes:
@@ -426,13 +430,14 @@ players:
   potential: 95.0
 - id: team_team_envy_marved
   handle: Marved
-  real_name: ''
+  real_name: Jimmy Nguyen
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 21
+  birth_year: 2000
   role: controller
   playstyle: lurker
   attributes:

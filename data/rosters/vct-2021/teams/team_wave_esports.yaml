@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: de
+    level: 100.0
   age: 22
+  birth_year: 1999
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 77.0
 - id: team_wave_esports_nico
   handle: nico
-  real_name: ''
+  real_name: Nico Neumann
   region: emea
-  country: ''
-  languages: []
-  age: 20
+  country: DE
+  languages:
+  - lang: lt
+    level: 100.0
+  age: 24
+  birth_year: 1997
   role: duelist
   playstyle: entry
   attributes:
@@ -209,11 +215,14 @@ players:
   potential: 81.0
 - id: team_wave_esports_carcass
   handle: Carcass
-  real_name: ''
+  real_name: Robertas Mikuckis
   region: emea
-  country: ''
-  languages: []
-  age: 21
+  country: LT
+  languages:
+  - lang: de
+    level: 100.0
+  age: 26
+  birth_year: 1995
   role: flex
   playstyle: lurker
   attributes:
@@ -313,6 +322,7 @@ players:
   country: ''
   languages: []
   age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:
@@ -408,11 +418,12 @@ players:
   potential: 77.0
 - id: team_wave_esports_xtribune
   handle: xTribune
-  real_name: ''
+  real_name: Gianluca Oehme
   region: emea
-  country: ''
+  country: DE
   languages: []
-  age: 20
+  age: 24
+  birth_year: 1997
   role: sentinel
   playstyle: anchor
   attributes:

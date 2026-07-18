@@ -11,11 +11,14 @@ chemistry: 75.5
 players:
 - id: team_guild_esports_bonkar
   handle: bonkar
-  real_name: ''
+  real_name: Malkolm Rench
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: sv
+    level: 100.0
   age: 26
+  birth_year: 1995
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 76.0
 - id: team_guild_esports_yacine
   handle: Yacine
-  real_name: ''
+  real_name: Yacine Laghmari
   region: emea
-  country: ''
-  languages: []
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
   age: 25
+  birth_year: 1996
   role: duelist
   playstyle: entry
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 83.0
 - id: team_guild_esports_draken
   handle: draken
-  real_name: ''
+  real_name: William Sundin
   region: emea
-  country: ''
-  languages: []
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
   age: 26
+  birth_year: 1995
   role: duelist
   playstyle: awper
   attributes:
@@ -309,11 +318,14 @@ players:
   potential: 80.0
 - id: team_guild_esports_leo
   handle: Leo
-  real_name: ''
+  real_name: Leo Jannesson
   region: emea
-  country: ''
-  languages: []
+  country: SE
+  languages:
+  - lang: sv
+    level: 100.0
   age: 18
+  birth_year: 2003
   role: initiator
   playstyle: support
   attributes:
@@ -413,11 +425,12 @@ players:
   potential: 92.0
 - id: team_guild_esports_sayf
   handle: Sayf
-  real_name: ''
+  real_name: Saif Jibraeel
   region: emea
-  country: ''
+  country: SE
   languages: []
   age: 20
+  birth_year: 2001
   role: sentinel
   playstyle: anchor
   attributes:

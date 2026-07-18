@@ -11,11 +11,14 @@ chemistry: 67.5
 players:
 - id: team_kru_esports_klaus
   handle: Klaus
-  real_name: ''
+  real_name: Nicolás Martin Ferrari
   region: americas
   country: ''
-  languages: []
-  age: 25
+  languages:
+  - lang: es
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: sentinel
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 76.9
 - id: team_kru_esports_keznit
   handle: keznit
-  real_name: ''
+  real_name: Angelo Mori
   region: americas
-  country: ''
-  languages: []
+  country: CL
+  languages:
+  - lang: es
+    level: 100.0
   age: 20
+  birth_year: 2001
   role: duelist
   playstyle: entry
   attributes:
@@ -211,11 +217,14 @@ players:
   potential: 88.0
 - id: team_kru_esports_nagz
   handle: NagZ
-  real_name: ''
+  real_name: Juan Pablo Lopez Miranda
   region: americas
-  country: ''
-  languages: []
+  country: CL
+  languages:
+  - lang: es
+    level: 100.0
   age: 25
+  birth_year: 1996
   role: duelist
   playstyle: awper
   attributes:
@@ -311,11 +320,14 @@ players:
   potential: 78.5
 - id: team_kru_esports_mazino
   handle: Mazino
-  real_name: ''
+  real_name: Roberto Francisco Rivas Bugueño
   region: americas
-  country: ''
-  languages: []
-  age: 21
+  country: CL
+  languages:
+  - lang: es
+    level: 100.0
+  age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -412,11 +424,12 @@ players:
   potential: 86.0
 - id: team_kru_esports_delz1k
   handle: delz1k
-  real_name: ''
+  real_name: Joaquín Ignacio Espinoza Soto
   region: americas
-  country: ''
+  country: CL
   languages: []
-  age: 24
+  age: 21
+  birth_year: 2000
   role: controller
   playstyle: anchor
   attributes:

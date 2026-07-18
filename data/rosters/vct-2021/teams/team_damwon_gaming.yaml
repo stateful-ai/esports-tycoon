@@ -11,11 +11,14 @@ chemistry: 61.2
 players:
 - id: team_damwon_gaming_eugene
   handle: Eugene
-  real_name: ''
+  real_name: Kim Su-yeong
   region: pacific
   country: ''
-  languages: []
-  age: 23
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: initiator
   playstyle: igl
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 75.8
 - id: team_damwon_gaming_t3xture
   handle: t3xture
-  real_name: ''
+  real_name: Kim Na-ra
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 19
+  birth_year: 2002
   role: duelist
   playstyle: entry
   attributes:
@@ -215,11 +221,14 @@ players:
   potential: 92.0
 - id: team_damwon_gaming_jeong_hi
   handle: Jeong Hi
-  real_name: ''
+  real_name: Lee Jeong-ha
   region: pacific
-  country: ''
-  languages: []
-  age: 23
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:
@@ -314,11 +323,14 @@ players:
   potential: 70.4
 - id: team_damwon_gaming_intro
   handle: iNTRO
-  real_name: ''
+  real_name: Kang Seung-gyun
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 17
+  birth_year: 2004
   role: controller
   playstyle: support
   attributes:
@@ -413,11 +425,12 @@ players:
   potential: 84.7
 - id: team_damwon_gaming_secret
   handle: Secret
-  real_name: ''
+  real_name: Kim Ha-jin
   region: pacific
-  country: ''
+  country: KR
   languages: []
   age: 21
+  birth_year: 2000
   role: sentinel
   playstyle: anchor
   attributes:

@@ -11,11 +11,14 @@ chemistry: 63.3
 players:
 - id: team_gen_g_esports_gmd
   handle: gMd
-  real_name: ''
+  real_name: Anthony Guimond
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: controller
   playstyle: igl
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 80.4
 - id: team_gen_g_esports_mkael
   handle: MkaeL
-  real_name: ''
+  real_name: Michael Luca
   region: americas
-  country: ''
-  languages: []
-  age: 22
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
+  age: 27
+  birth_year: 1994
   role: initiator
   playstyle: support
   attributes:
@@ -211,11 +217,14 @@ players:
   potential: 78.1
 - id: team_gen_g_esports_shawn
   handle: Shawn
-  real_name: ''
+  real_name: Shawn O'Riley
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -311,11 +320,12 @@ players:
   potential: 70.1
 - id: team_gen_g_esports_koosta
   handle: koosta
-  real_name: ''
+  real_name: Kenneth Suen
   region: americas
-  country: ''
+  country: US
   languages: []
   age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: anchor
   attributes:
@@ -411,11 +421,12 @@ players:
   potential: 71.3
 - id: team_gen_g_esports_huynh
   handle: huynh
-  real_name: ''
+  real_name: Danny Huynh
   region: americas
-  country: ''
+  country: CA
   languages: []
   age: 20
+  birth_year: 2001
   role: duelist
   playstyle: awper
   attributes:
