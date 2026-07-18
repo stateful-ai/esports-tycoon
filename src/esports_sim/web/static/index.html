@@ -138,6 +138,21 @@
 <!-- advance-week staged reveal (presentation only; one click anywhere skips) -->
 <div id="week-reveal" class="overlay hidden" aria-live="polite"></div>
 
+<!-- advance processing: stays visible while the synchronous weekly tick runs -->
+<div id="week-loading" class="overlay hidden" role="status" aria-live="polite" aria-busy="true">
+  <div class="week-loading-card">
+    <div class="week-loading-kicker">Campaign processing</div>
+    <div class="week-loading-spinner" aria-hidden="true"></div>
+    <h1 id="week-loading-title">Advancing week</h1>
+    <p id="week-loading-detail">Resolving fixtures across the league, then settling training, scouting, and finances.</p>
+    <div class="week-loading-track" aria-hidden="true"><span></span></div>
+    <div class="week-loading-foot">
+      <span>Building the next week</span>
+      <span id="week-loading-time" class="mono">0s</span>
+    </div>
+  </div>
+</div>
+
 <!-- match-day buildup: the full pre-match briefing (GET /api/matchday) -->
 <div id="matchday" class="overlay hidden" aria-live="polite"></div>
 

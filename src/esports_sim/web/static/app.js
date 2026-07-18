@@ -7688,10 +7688,34 @@ window.closeTalk = closeTalk;
 /* -- advance week ------------------------------------------------------------------ */
 
 let mpPolling = false;
+let weekLoadingTimer = null;
+
+function showWeekLoading({ simAhead = false } = {}) {
+  const overlay = $("#week-loading");
+  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : "Advancing week";
+  $("#week-loading-detail").textContent = simAhead
+    ? "Running up to four full league weeks. The sim will stop as soon as something needs you."
+    : "Resolving fixtures across the league, then settling training, scouting, and finances.";
+  const started = performance.now();
+  $("#week-loading-time").textContent = "0s";
+  overlay.classList.remove("hidden");
+  clearInterval(weekLoadingTimer);
+  weekLoadingTimer = setInterval(() => {
+    const seconds = Math.max(0, Math.floor((performance.now() - started) / 1000));
+    $("#week-loading-time").textContent = `${seconds}s`;
+  }, 250);
+}
+
+function hideWeekLoading() {
+  clearInterval(weekLoadingTimer);
+  weekLoadingTimer = null;
+  $("#week-loading").classList.add("hidden");
+}
 
 $("#advance-btn").onclick = async () => {
   $("#advance-btn").disabled = true;
   const prevWeek = App.state?.week;
+  showWeekLoading();
   try {
     const rep = await api("/api/actions/advance", {});
     if (rep.advanced === false) {
@@ -7709,6 +7733,7 @@ $("#advance-btn").onclick = async () => {
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
+    hideWeekLoading();
     if (!mpPolling) $("#advance-btn").disabled = false;
   }
 };
@@ -7721,6 +7746,7 @@ $("#simahead-btn").onclick = async () => {
   const btn = $("#simahead-btn");
   btn.disabled = true;
   $("#advance-btn").disabled = true;
+  showWeekLoading({ simAhead: true });
   try {
     const res = await api("/api/actions/sim_ahead", {});
     await refresh(); // reveal stages read fresh App.state (see advance-btn)
@@ -7736,6 +7762,7 @@ $("#simahead-btn").onclick = async () => {
     }
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
   } finally {
+    hideWeekLoading();
     btn.disabled = false;
     $("#advance-btn").disabled = false;
   }

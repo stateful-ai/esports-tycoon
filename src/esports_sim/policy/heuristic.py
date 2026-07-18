@@ -227,7 +227,14 @@ class HeuristicPolicy:
             key=lambda control: (
                 abs(desired_turn - control.turn_degrees),
                 abs(control.turn_degrees),
-                control.model_dump_json(),
+                # Match the old model_dump_json field order without paying
+                # for a Pydantic serialization on every player tick.  The
+                # engine authors these frozen controls, so this tuple is the
+                # complete stable identity used only for deterministic ties.
+                control.schema_version,
+                str(control.movement),
+                str(control.pace),
+                control.turn_degrees,
             ),
         )
 

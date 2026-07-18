@@ -370,6 +370,72 @@ tr.me td:first-child { box-shadow: inset var(--es-border-thick, 2px) 0 0 var(--e
   letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px;
 }
 
+/* Weekly tick processing. Unlike the staged result reveal this is not
+   dismissible: the server is still resolving the authoritative campaign. */
+#week-loading { cursor: wait; backdrop-filter: blur(5px); }
+.week-loading-card {
+  width: min(460px, 90vw);
+  padding: var(--es-space-10, 36px);
+  text-align: center;
+  background: linear-gradient(155deg,
+    var(--es-color-bg-elevated, #1c202b),
+    var(--es-color-bg-surface, #101621));
+  border: 1px solid var(--es-color-border-primary, #26324a);
+  border-top: 3px solid var(--es-color-brand, #ff4655);
+  border-radius: var(--es-radius-xl, 12px);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
+}
+.week-loading-kicker {
+  color: var(--es-color-brand, #ff4655);
+  font-size: var(--es-text-xs, 11px);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.week-loading-spinner {
+  width: 44px; height: 44px;
+  margin: var(--es-space-7, 20px) auto var(--es-space-5, 12px);
+  border: 3px solid var(--es-color-border-primary, #26324a);
+  border-top-color: var(--es-color-accent, #4fd8c0);
+  border-right-color: var(--es-color-brand, #ff4655);
+  border-radius: 50%;
+  animation: week-loading-spin .9s linear infinite;
+}
+.week-loading-card h1 { margin: 0 0 var(--es-space-3, 8px); }
+.week-loading-card p {
+  margin: 0 auto var(--es-space-7, 20px);
+  max-width: 38ch;
+  color: var(--es-color-text-secondary, #a2aec6);
+  line-height: 1.5;
+}
+.week-loading-track {
+  height: 4px; overflow: hidden;
+  background: var(--es-color-bg-sunken, #0b1019);
+  border-radius: var(--es-radius-full, 999px);
+}
+.week-loading-track span {
+  display: block; width: 42%; height: 100%;
+  background: linear-gradient(90deg,
+    var(--es-color-brand, #ff4655), var(--es-color-accent, #4fd8c0));
+  border-radius: inherit;
+  animation: week-loading-sweep 1.35s ease-in-out infinite;
+}
+.week-loading-foot {
+  display: flex; justify-content: space-between;
+  margin-top: var(--es-space-3, 8px);
+  color: var(--es-color-text-tertiary, #67748f);
+  font-size: var(--es-text-xs, 11px);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+@keyframes week-loading-spin { to { transform: rotate(360deg); } }
+@keyframes week-loading-sweep {
+  0% { transform: translateX(-110%); }
+  50%, 100% { transform: translateX(240%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .week-loading-spinner, .week-loading-track span { animation-duration: 3s; }
+}
+
 /* Advance-week staged reveal (#week-reveal): the post-advance beat staged
    over the dimmed backdrop — own result, standings movement, decisions
    settled. Stages rise in via CSS transitions (JS only flips .on classes
