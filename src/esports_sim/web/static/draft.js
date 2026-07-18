@@ -4,6 +4,100 @@
    with), projected lineup and language coverage arrive ready to render —
    this file only filters/sorts presentation-side and posts picks. */
 
+/* -- pre-draft interview ---------------------------------------------------
+   Runs inside the lobby (create or join). Pure presentation over two
+   endpoints: GET /api/lobby/interview (questions, server-owned copy) and
+   POST /api/lobby/interview_offers (the four org offers your answers
+   earned). onAccept(offer, answers) fires when a deal is signed. */
+
+async function runDraftInterview(container, opts, onAccept) {
+  let questions;
+  try {
+    const packQ = opts.pack ? `?pack=${encodeURIComponent(opts.pack)}` : "";
+    questions = (await api(`/api/lobby/interview${packQ}`)).questions;
+  } catch (e) {
+    container.innerHTML = '<span class="muted">Could not load the interview.</span>';
+    return;
+  }
+  const answers = {};
+  let step = 0;
+
+  const askNext = () => {
+    if (step >= questions.length) return showOffers();
+    const q = questions[step];
+    container.innerHTML = "";
+    const card = el("div", "card draft-interview");
+    card.innerHTML = `
+      <span class="microlabel">The interview · ${step + 1}/${questions.length}</span>
+      <h2>${esc(q.prompt)}</h2>
+      <div class="draft-iv-options"></div>`;
+    const box = card.querySelector(".draft-iv-options");
+    for (const o of q.options) {
+      const b = el(
+        "button",
+        "draft-iv-option",
+        `<b>${esc(o.label)}</b><br><span class="muted">${esc(o.blurb)}</span>`
+      );
+      b.onclick = () => {
+        answers[q.id] = o.id;
+        step += 1;
+        askNext();
+      };
+      box.appendChild(b);
+    }
+    container.appendChild(card);
+  };
+
+  const showOffers = async () => {
+    container.innerHTML = '<span class="muted">The orgs are talking it over…</span>';
+    let offers;
+    try {
+      const body = { answers };
+      if (opts.code) body.code = opts.code;
+      else {
+        body.seed = opts.getSeed();
+        if (opts.pack) body.pack = opts.pack;
+      }
+      offers = (await api("/api/lobby/interview_offers", body)).offers;
+    } catch (e) {
+      container.innerHTML = '<span class="muted">No org called back. Try again.</span>';
+      return;
+    }
+    container.innerHTML = "";
+    const head = el("div", "card");
+    head.innerHTML = `
+      <span class="microlabel">The offers are in</span>
+      <h2>${offers.length} orgs liked what they heard.</h2>
+      <p class="muted">Different money, different mandates — the draft pool is
+      the same either way. <a href="#" class="draft-iv-redo">Redo the interview</a></p>`;
+    head.querySelector(".draft-iv-redo").onclick = (ev) => {
+      ev.preventDefault();
+      step = 0;
+      askNext();
+    };
+    container.appendChild(head);
+    const grid = el("div", "draft-offer-grid");
+    for (const o of offers) {
+      const card = el("div", "card draft-offer");
+      card.innerHTML = `
+        <span class="microlabel">${esc(o.label)}</span>
+        <h3>${esc(o.name)} <span class="pill">${esc(o.tag)}</span></h3>
+        <p class="muted">${esc(o.region).toUpperCase()} · rep ${o.reputation} · ${money(o.balance)}${
+          o.balance_bonus ? ` <b>+${money(o.balance_bonus)} war chest</b>` : ""
+        }</p>
+        <p class="draft-offer-goal">“${esc(o.goal)}”</p>
+        <p class="muted">${esc(o.blurb)}</p>
+        <button class="btn btn-primary">Sign with ${esc(o.tag)} ▸</button>`;
+      card.querySelector("button").onclick = () => onAccept(o, answers);
+      grid.appendChild(card);
+    }
+    container.appendChild(grid);
+  };
+
+  askNext();
+}
+window.runDraftInterview = runDraftInterview;
+
 /* Client-only presentation state (search/filter/sort survive repaints). */
 const DraftUI = {
   data: null,
@@ -116,12 +210,17 @@ function draftHead(d) {
   const humans = (d.humans || [])
     .map((h) => `<span class="pill${h.is_you ? " you" : ""}">${esc(h.name)}</span>`)
     .join(" ");
+  const mandate = d.deal
+    ? `<p class="draft-mandate" title="${esc(d.deal.blurb)}">
+         <span class="pill">${esc(d.deal.label)}</span> “${esc(d.deal.goal)}”</p>`
+    : "";
   head.innerHTML = `
     <div class="draft-head-row">
       <div>
         <span class="microlabel">Fantasy draft</span>
         <h2>Round ${d.round}/${d.rounds} · Pick ${pickNo}/${d.total_picks}</h2>
         <p class="${d.your_turn ? "draft-onclock" : "muted"}">${draftStatusLine(d)}</p>
+        ${mandate}
       </div>
       <div class="draft-head-side">
         ${beginBtn}
@@ -215,30 +314,44 @@ function draftPrefsCard(d) {
   return card;
 }
 
+function draftRecRow(d, r, withReasons) {
+  return `
+    <div class="draft-rec">
+      <div class="draft-rec-top">
+        <span>${draftPlayerName(r)} <span class="muted">${r.age}y · ${esc(r.role)}</span></span>
+        <span>
+          <span class="mono" title="fit score under your preferences">${r.score}</span>
+          ${d.your_turn ? `<button class="btn btn-primary btn-sm draft-pick-btn" data-draft-pid="${r.id}">Draft</button>` : ""}
+        </span>
+      </div>
+      <div class="draft-rec-line">
+        <span class="mono">${r.skill}</span> ${draftStars(r.potential_stars)}
+        ${draftLangs(r.languages)}
+      </div>
+      ${withReasons
+        ? (r.reasons || []).map((x) => `<span class="draft-reason">${esc(x)}</span>`).join(" ")
+        : ""}
+    </div>`;
+}
+
 function draftRecsCard(d) {
   const card = el("div", "card");
+  // Two lanes: your interview-tuned board, and the no-opinions market read.
+  const styleLabel = d.prefs && d.prefs.identity
+    ? "Fits your style"
+    : "Recommended for your board";
   const rows = (d.recommendations || [])
-    .map(
-      (r) => `
-      <div class="draft-rec">
-        <div class="draft-rec-top">
-          <span>${draftPlayerName(r)} <span class="muted">${r.age}y · ${esc(r.role)}</span></span>
-          <span>
-            <span class="mono" title="fit score under your preferences">${r.score}</span>
-            ${d.your_turn ? `<button class="btn btn-primary btn-sm draft-pick-btn" data-draft-pid="${r.id}">Draft</button>` : ""}
-          </span>
-        </div>
-        <div class="draft-rec-line">
-          <span class="mono">${r.skill}</span> ${draftStars(r.potential_stars)}
-          ${draftLangs(r.languages)}
-        </div>
-        ${(r.reasons || []).map((x) => `<span class="draft-reason">${esc(x)}</span>`).join(" ")}
-      </div>`
-    )
+    .map((r) => draftRecRow(d, r, true))
+    .join("");
+  const bpa = (d.best_available || [])
+    .map((r) => draftRecRow(d, r, false))
     .join("");
   card.innerHTML = `
-    <span class="microlabel">Recommended for your board</span>
-    ${rows || '<p class="muted">The board opens with the draft.</p>'}`;
+    <span class="microlabel">${styleLabel}</span>
+    ${rows || '<p class="muted">The board opens with the draft.</p>'}
+    ${bpa
+      ? `<span class="microlabel" style="margin-top:8px" title="Pure talent, no philosophy — what the rest of the league sees.">Best player available</span>${bpa}`
+      : ""}`;
   return card;
 }
 

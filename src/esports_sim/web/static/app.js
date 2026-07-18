@@ -508,6 +508,21 @@ function setupLobby(lob) {
         .catch(() => (grid.innerHTML = '<span class="muted">Could not load offers.</span>'));
       return;
     }
+    if (fantasyDraft) {
+      // A fantasy-draft career starts with the interview, not a team
+      // grid: answer five questions, field four org offers, sign one.
+      const grid = $("#ng-teams");
+      grid.innerHTML = "";
+      runDraftInterview(
+        grid,
+        { pack: world, getSeed: () => parseInt($("#ng-seed").value) || 2026 },
+        (offer, answers) =>
+          createGame(
+            offer.team_id, shared_, world, "sandbox", null, true, answers
+          )
+      );
+      return;
+    }
     if (world === null) {
       // Fictional-world teams are GENERATED from the seed, so re-fetch at
       // the CURRENT seed — otherwise a solo start at a random seed builds a
@@ -518,13 +533,8 @@ function setupLobby(lob) {
       const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
         .then((r) =>
-          renderTeamGrid(
-            grid,
-            // The fantasy draft is a tier-1 event; Challengers clubs
-            // don't enter it, so hide them when the toggle is on.
-            fantasyDraft ? r.teams.filter((t) => t.tier === 1) : r.teams,
-            (t) =>
-              createGame(t.id, shared_, world, "sandbox", scenario, fantasyDraft)
+          renderTeamGrid(grid, r.teams, (t) =>
+            createGame(t.id, shared_, world, "sandbox", scenario)
           )
         )
         .catch(
@@ -533,7 +543,7 @@ function setupLobby(lob) {
       return;
     }
     renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world, "sandbox", scenario, fantasyDraft)
+      createGame(t.id, shared_, world, "sandbox", scenario)
     );
   };
   $("#ng-seed").addEventListener("change", () => renderPick());
@@ -575,23 +585,29 @@ function setupLobby(lob) {
       );
       return;
     }
-    renderTeamGrid(
-      $("#join-teams"),
-      r.fantasy_draft_active ? r.teams.filter((t) => t.tier === 1) : r.teams,
-      (t) => joinGame(code, t.id)
-    );
+    if (r.fantasy_draft_active) {
+      // Joining a mid-draft world: the joiner interviews too, and picks
+      // from THEIR four-org slate (unclaimed tier-1 seats only).
+      runDraftInterview(
+        $("#join-teams"),
+        { code },
+        (offer, answers) => joinGame(code, offer.team_id, answers)
+      );
+      return;
+    }
+    renderTeamGrid($("#join-teams"), r.teams, (t) => joinGame(code, t.id));
   };
   showCreate(false); // default view
 }
 
 async function createGame(
   teamId, shared, pack = null, gameMode = "sandbox", scenario = null,
-  fantasyDraft = false
+  fantasyDraft = false, interview = null
 ) {
   const seed = parseInt($("#ng-seed").value) || 2026;
   const r = await api("/api/new", {
     team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
-    fantasy_draft: fantasyDraft,
+    fantasy_draft: fantasyDraft, interview,
   });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
@@ -602,8 +618,8 @@ async function createGame(
   }
 }
 
-async function joinGame(code, teamId) {
-  const r = await api("/api/join", { code, team_id: teamId });
+async function joinGame(code, teamId, interview = null) {
+  const r = await api("/api/join", { code, team_id: teamId, interview });
   App.mp = { code: r.code, team_id: r.team_id, mode: r.mode };
   $("#newgame").classList.add("hidden");
   $("#worlds-btn").classList.remove("hidden");

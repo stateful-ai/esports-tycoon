@@ -76,6 +76,7 @@ from esports_sim.manager import (
     xduel,
 )
 from esports_sim.manager.campaign import (
+    LEAGUE_REGIONS,
     SCOUT_DEEP_CAP,
     SCOUT_MATCH_CAP,
     SCOUT_SURVEY_CAP,
@@ -358,6 +359,7 @@ class Lobby:
         manager_name: str = "",
         scenario: str | None = None,
         fantasy_draft: bool = False,
+        interview: dict | None = None,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
@@ -400,6 +402,22 @@ class Lobby:
                         "fantasy-draft starts need a tier-1 organisation — "
                         "Challengers clubs don't enter the draft",
                     )
+                if interview is not None:
+                    # Same contract as legacy career offers: the lobby
+                    # showed exactly this slate (same seed + answers), so
+                    # the accepted org must come from it.
+                    regions = (
+                        pack.meta.world.league_regions
+                        if pack is not None else LEAGUE_REGIONS
+                    )
+                    slate = fantasy_draft_mod.interview_offers(
+                        src, seed, interview, taken=set(), regions=regions
+                    )
+                    if team_id not in {o["team_id"] for o in slate}:
+                        raise HTTPException(
+                            422,
+                            "pick one of the orgs that liked your interview",
+                        )
             offer = None
             if game_mode == "legacy":
                 # Re-derive the founding seat's offer slate server-side and
@@ -426,6 +444,17 @@ class Lobby:
                 career_offer=offer, scenario=scenario,
                 fantasy_draft=fantasy_draft,
             )
+            if fantasy_draft and interview is not None:
+                # The interview lands BEFORE the board opens: prefs feed
+                # the rec panel from pick one, and the deal's war chest +
+                # news line belong to the world's birth, not mid-draft.
+                fantasy_draft_mod.apply_interview(
+                    gs, team_id, interview, taken=set()
+                )
+                telemetry.record_action(
+                    gs, "draft_interview", dict(interview),
+                    team_id=team_id, source="web",
+                )
             if fantasy_draft and not shared:
                 # Solo world: nobody else will claim a seat, so open the
                 # board immediately (AI picks resolve up to the host's first
@@ -451,7 +480,8 @@ class Lobby:
             return game
 
     def join_game(
-        self, sid: str, code: str, team_id: str
+        self, sid: str, code: str, team_id: str,
+        interview: dict | None = None,
     ) -> tuple[_Game | None, str | None]:
         with self._lock:
             game = self._get_game(code)
@@ -495,6 +525,22 @@ class Lobby:
                 gs.human_team_ids.append(team_id)
                 if gs.manager_for(team_id) is None:
                     career.create_seat(gs, team_id, offer=offer)
+                if (
+                    interview is not None
+                    and gs.fantasy_draft is not None
+                    and gs.fantasy_draft.active
+                ):
+                    # A joining manager interviews too: prefs for their
+                    # rec panel + their org deal, derived against the
+                    # already-claimed seats (same slate the lobby showed).
+                    fantasy_draft_mod.apply_interview(
+                        gs, team_id, interview,
+                        taken=set(gs.human_team_ids) - {team_id},
+                    )
+                    telemetry.record_action(
+                        gs, "draft_interview", dict(interview),
+                        team_id=team_id, source="web",
+                    )
             self.sessions[sid] = (code, team_id)
             self._remember(
                 sid, code, team_id, gs.teams[team_id].name, game.mode
@@ -1631,6 +1677,72 @@ def lobby_teams(code: str) -> dict:
         }
 
 
+@app.get("/api/lobby/interview")
+def lobby_interview(pack: str | None = None) -> dict:
+    """The pre-draft interview questions. Region options follow the world
+    being started (pack world block, or the fictional defaults)."""
+    regions = LEAGUE_REGIONS
+    if pack:
+        try:
+            regions = load_roster_pack(pack).meta.world.league_regions
+        except FileNotFoundError:
+            raise HTTPException(422, f"unknown roster pack '{pack}'") from None
+    return {"questions": fantasy_draft_mod.interview_questions(regions)}
+
+
+class InterviewOffersBody(BaseModel):
+    seed: int = 2026
+    pack: str | None = None
+    answers: dict[str, str] = {}
+    # Set when interviewing to JOIN an existing shared draft world: offers
+    # derive from that live world (minus claimed seats) instead of a
+    # same-seed preview.
+    code: str | None = None
+
+
+@app.post("/api/lobby/interview_offers")
+def lobby_interview_offers(body: InterviewOffersBody) -> dict:
+    """The four org offers earned by an interview. Deterministic from
+    (world, seed, answers, taken) — the create/join calls re-derive this
+    slate and enforce membership, exactly like legacy career offers."""
+    if body.code:
+        code = body.code.upper()
+        with _LOBBY._lock:
+            game = _LOBBY._get_game(code) if _CODE_RE.match(code) else None
+        if game is None or game.gs is None:
+            raise HTTPException(404, "no game with that code")
+        with game.lock:
+            gs = game.gs
+            if gs.fantasy_draft is None or not gs.fantasy_draft.active:
+                raise HTTPException(409, "that world isn't mid-draft")
+            return {
+                "offers": fantasy_draft_mod.interview_offers(
+                    gs.teams, gs.seed, body.answers,
+                    taken=set(gs.human_team_ids),
+                    regions=gs.league_regions,
+                )
+            }
+    if body.pack:
+        try:
+            pk = load_roster_pack(body.pack)
+        except FileNotFoundError:
+            raise HTTPException(
+                422, f"unknown roster pack '{body.pack}'"
+            ) from None
+        teams, regions = pk.teams, pk.meta.world.league_regions
+    else:
+        preview = new_campaign(
+            _LOBBY.gd, seed=body.seed,
+            user_team_id=_preview_team(_LOBBY.gd, None),
+        )
+        teams, regions = preview.teams, preview.league_regions
+    return {
+        "offers": fantasy_draft_mod.interview_offers(
+            teams, body.seed, body.answers, taken=set(), regions=regions
+        )
+    }
+
+
 class NewGameBody(BaseModel):
     team_id: str = "team_nexus"
     seed: int = 2026
@@ -1644,6 +1756,10 @@ class NewGameBody(BaseModel):
     # Fantasy-draft start (sandbox-only): tier-1 rosters are stripped into a
     # shared pool and every org snake-drafts its ten before week 1.
     fantasy_draft: bool = False
+    # Pre-draft interview answers ({question_id: option_id}). When present,
+    # the picked team must come from the interview's four-org offer slate,
+    # and the answers seed the manager's draft-board prefs + org deal.
+    interview: dict[str, str] | None = None
 
 
 @app.post("/api/new")
@@ -1668,6 +1784,7 @@ def new_game(body: NewGameBody) -> dict:
         pack_id=body.pack, game_mode=body.game_mode,
         manager_name=body.manager_name, scenario=scenario,
         fantasy_draft=body.fantasy_draft,
+        interview=body.interview if body.fantasy_draft else None,
     )
     return {
         "ok": True,
@@ -1738,12 +1855,15 @@ def _preview_team(gd: GameData, pack) -> str:
 class JoinBody(BaseModel):
     code: str
     team_id: str
+    # Pre-draft interview answers when joining a world mid-draft.
+    interview: dict[str, str] | None = None
 
 
 @app.post("/api/join")
 def join_game(body: JoinBody) -> dict:
     game, err = _LOBBY.join_game(
-        _current_sid(), body.code.upper(), body.team_id
+        _current_sid(), body.code.upper(), body.team_id,
+        interview=body.interview,
     )
     if err is not None:
         raise HTTPException(409, err)
@@ -2247,12 +2367,17 @@ def _draft_view(gs: GameState, d) -> dict:
     ]
 
     recs = []
+    bpa = []
     if d.active:
         for r in fantasy_draft_mod.recommendations(gs, me, limit=5):
             row = _draft_player_row(gs, gs.players[r["player_id"]])
             row["score"] = r["score"]
             row["reasons"] = r["reasons"]
             recs.append(row)
+        for r in fantasy_draft_mod.best_available(gs, limit=3):
+            row = _draft_player_row(gs, gs.players[r["player_id"]])
+            row["score"] = r["score"]
+            bpa.append(row)
 
     upcoming = []
     for k in range(overall, min(overall + 10, total)):
@@ -2318,9 +2443,18 @@ def _draft_view(gs: GameState, d) -> dict:
         "squad_langs": _draft_squad_langs(gs, my_pick_ids),
         "pool": pool_rows,
         "recommendations": recs,
+        "best_available": bpa,
+        # The accepted interview deal (None on pre-interview worlds): the
+        # mandate banner on the draft screen.
+        "deal": (
+            d.deals_by[me].model_dump() if me in d.deals_by else None
+        ),
         "prefs": {
             "strategy": prefs.strategy,
             "language_focus": prefs.language_focus,
+            "identity": prefs.identity,
+            "preferred_styles": prefs.preferred_styles,
+            "preferred_region": prefs.preferred_region,
         },
         "strategies": list(fantasy_draft_mod.STRATEGIES),
         "humans": [

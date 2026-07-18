@@ -23,7 +23,12 @@ from typing import TYPE_CHECKING
 
 from esports_sim.manager import development, market
 from esports_sim.manager.gen import _FA_SLOTS, generate_player
-from esports_sim.manager.state import DraftPick, DraftPrefs, FantasyDraftState
+from esports_sim.manager.state import (
+    DraftDeal,
+    DraftPick,
+    DraftPrefs,
+    FantasyDraftState,
+)
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas.common import Playstyle
 
@@ -50,6 +55,381 @@ def _h(*parts: object) -> int:
     joined = "|".join(str(p) for p in parts)
     return int.from_bytes(
         hashlib.blake2b(joined.encode(), digest_size=8).digest(), "big"
+    )
+
+
+# ---------------------------------------------------------------------------
+# The pre-draft interview. Server-owned copy: the client renders whatever
+# arrives, so tone lives here in one place. Realistic-ish questions with a
+# streak of gamer-culture meme — the ANSWERS have real teeth (they seed
+# DraftPrefs and pick the four org offers), the jokes are free.
+
+# identity -> (strategy, style-lane reason shown on fitting recommendations)
+_IDENTITY_META = {
+    "ring_hunter": ("win_now", "a proven piece for the trophy push"),
+    "prodigy_whisperer": ("youth", "raw clay for the prodigy pipeline"),
+    "moneyball": ("balanced", "market inefficiency, corrected"),
+}
+_STYLE_META = {
+    # answer -> (preferred playstyles, attribute focus, fit reason)
+    "w_key": (
+        ["entry", "awper"],
+        ["aim_reactivity", "aim_precision"],
+        "presses W like you preach",
+    ),
+    "big_brain": (
+        ["igl", "support"],
+        ["game_sense", "utility_usage"],
+        "plays the 200-IQ default you believe in",
+    ),
+    "clutch_or_kick": (
+        ["lurker", "anchor"],
+        ["clutch_factor", "composure"],
+        "ice in the veins, like you demand",
+    ),
+}
+_REGION_SUBTITLES = {
+    "americas": "Server: Texas. Ping: spicy. Belief: unlimited.",
+    "emea": "Tactics, tea, and a 12-man util lineup for A site.",
+    "pacific": "Aim gods, 40-bomb culture, scrims at 3am.",
+    "china": "Discipline, firepower, and total mystery scrims.",
+}
+
+
+def interview_questions(regions) -> list[dict]:
+    """The interview, in order. `regions` is the world's league regions so
+    the home-region question matches the pack being started."""
+    region_opts = [
+        {
+            "id": str(r),
+            "label": str(r).upper(),
+            "blurb": _REGION_SUBTITLES.get(
+                str(r), "Home is where the LAN is."
+            ),
+        }
+        for r in regions
+    ]
+    region_opts.append(
+        {
+            "id": "anywhere",
+            "label": "Wherever wins",
+            "blurb": "Passport ready. Loyalty is for fans; I have a job to do.",
+        }
+    )
+    return [
+        {
+            "id": "identity",
+            "prompt": "So. Why do you want this job?",
+            "options": [
+                {
+                    "id": "ring_hunter",
+                    "label": "Ring hunting",
+                    "blurb": (
+                        "I want a trophy before the meta shifts again. "
+                        "Vets, firepower, zero rebuild talk."
+                    ),
+                },
+                {
+                    "id": "prodigy_whisperer",
+                    "label": "The prodigy whisperer",
+                    "blurb": (
+                        "Give me five cracked teenagers and a bootcamp. "
+                        "We lose now so we win forever."
+                    ),
+                },
+                {
+                    "id": "moneyball",
+                    "label": "Moneyball, but for headshots",
+                    "blurb": (
+                        "Value picks, no egos, spreadsheets. The market is "
+                        "inefficient and I am the correction."
+                    ),
+                },
+            ],
+        },
+        {
+            "id": "style",
+            "prompt": "How should the game actually be played?",
+            "options": [
+                {
+                    "id": "w_key",
+                    "label": "W-key diplomacy",
+                    "blurb": (
+                        "First contact wins games. My five hit the site "
+                        "before the defenders finish buying."
+                    ),
+                },
+                {
+                    "id": "big_brain",
+                    "label": "The 200-IQ default",
+                    "blurb": (
+                        "Structure, mid-round calls, util for everything. "
+                        "Aim is a commodity; brains are the edge."
+                    ),
+                },
+                {
+                    "id": "clutch_or_kick",
+                    "label": "Clutch or kick",
+                    "blurb": (
+                        "Rounds are won 1v2 at 0:08 on a lurk timing. "
+                        "I collect players the enemy fears after the trade."
+                    ),
+                },
+            ],
+        },
+        {
+            "id": "region",
+            "prompt": "Where's home?",
+            "options": region_opts,
+        },
+        {
+            "id": "comms",
+            "prompt": "Comms philosophy?",
+            "options": [
+                {
+                    "id": "one_language",
+                    "label": "One language, full sentences",
+                    "blurb": (
+                        "Five people, one tongue, callouts like poetry. "
+                        "No 'he's... somewhere' on my watch."
+                    ),
+                },
+                {
+                    "id": "vibes",
+                    "label": "Broken English and vibes",
+                    "blurb": (
+                        "International mercenaries. If the crosshair "
+                        "placement is right, 'rush B' is a full sentence."
+                    ),
+                },
+            ],
+        },
+        {
+            "id": "org_life",
+            "prompt": "Pick your poison on org life:",
+            "options": [
+                {
+                    "id": "big_org",
+                    "label": "Big org, big expectations",
+                    "blurb": (
+                        "Content team, chef, and an owner who tweets "
+                        "through losses. The money is real, so is the heat."
+                    ),
+                },
+                {
+                    "id": "basement",
+                    "label": "Basement org, full control",
+                    "blurb": (
+                        "Two sponsors, one of them is an energy drink you've "
+                        "never heard of. But every decision is mine."
+                    ),
+                },
+                {
+                    "id": "content_house",
+                    "label": "The content house",
+                    "blurb": (
+                        "Fans first, fragging second-ish. We might lose the "
+                        "split but we will WIN the clip farm."
+                    ),
+                },
+            ],
+        },
+    ]
+
+
+def _answer(answers: dict, qid: str, valid: set[str], default: str) -> str:
+    got = str((answers or {}).get(qid, ""))
+    return got if got in valid else default
+
+
+def prefs_from_answers(answers: dict, regions) -> DraftPrefs:
+    """Fold the interview into concrete board preferences. Unknown or
+    missing answers fall back to neutral, so a hand-rolled API call can't
+    crash the lobby."""
+    identity = _answer(answers, "identity", set(_IDENTITY_META), "moneyball")
+    style = _answer(answers, "style", set(_STYLE_META), "big_brain")
+    region = _answer(
+        answers, "region", {str(r) for r in regions} | {"anywhere"}, "anywhere"
+    )
+    comms = _answer(answers, "comms", {"one_language", "vibes"}, "one_language")
+    org = _answer(
+        answers, "org_life",
+        {"big_org", "basement", "content_house"}, "basement",
+    )
+    styles, attrs, _reason = _STYLE_META[style]
+    return DraftPrefs(
+        strategy=_IDENTITY_META[identity][0],
+        language_focus=comms == "one_language",
+        identity=identity,
+        preferred_styles=list(styles),
+        attr_focus=list(attrs),
+        preferred_region="" if region == "anywhere" else region,
+        answers={
+            "identity": identity, "style": style, "region": region,
+            "comms": comms, "org_life": org,
+        },
+    )
+
+
+def interview_offers(
+    teams: dict, seed: int, answers: dict, taken: set[str], regions
+) -> list[dict]:
+    """Four contrasting org offers derived from the interview: the best
+    answer-fit org, the richest, the lowest-rep rebuild, and a blake2
+    wildcard. Pure function of (teams, seed, answers, taken) — no rng
+    stream — so the lobby can re-derive and the create call can enforce
+    membership, exactly like legacy career offers."""
+    prefs = prefs_from_answers(answers, regions)
+    avail = {
+        tid: t for tid, t in teams.items()
+        if t.tier == 1 and tid not in taken
+    }
+    if not avail:
+        return []
+    offers: list[dict] = []
+    used: set[str] = set()
+
+    def fit_score(tid: str) -> float:
+        t = avail[tid]
+        s = 0.0
+        if prefs.preferred_region and str(t.region) == prefs.preferred_region:
+            s += 100.0
+        org = prefs.answers.get("org_life", "basement")
+        if org == "big_org":
+            s += t.balance / 20_000 + t.reputation * 0.5
+        elif org == "content_house":
+            s += t.fan_count / 20_000
+        else:
+            s += (100 - t.reputation) * 0.5  # scrappy fits the basement
+        s += (_h(seed, "offer-fit", tid) % 100) / 100.0
+        return s
+
+    def take(tid: str, deal: DraftDeal) -> None:
+        t = avail[tid]
+        used.add(tid)
+        offers.append(
+            {
+                "team_id": tid,
+                "name": t.name,
+                "tag": t.tag,
+                "region": str(t.region),
+                "reputation": t.reputation,
+                "balance": t.balance,
+                "archetype": deal.archetype,
+                "label": deal.label,
+                "goal": deal.goal,
+                "blurb": deal.blurb,
+                "balance_bonus": deal.balance_bonus,
+            }
+        )
+
+    def best(key, exclude_used=True):
+        pool = [tid for tid in sorted(avail) if tid not in used or not exclude_used]
+        return max(pool, key=lambda tid: (key(tid), tid)) if pool else None
+
+    # 1. The Believer — the org that read your interview and loved it.
+    believer = best(fit_score)
+    if believer is not None:
+        take(
+            believer,
+            DraftDeal(
+                archetype="believer",
+                label="The Believer",
+                goal="Run YOUR blueprint — build the identity you pitched "
+                     "and make the playoffs with it.",
+                blurb="The owner quoted your interview back at you. "
+                      "Slightly concerning. Full buy-in though.",
+                balance_bonus=150_000,
+            ),
+        )
+    # 2. The Blank Check — the richest org still listening.
+    rich = best(lambda tid: avail[tid].balance)
+    if rich is not None:
+        take(
+            rich,
+            DraftDeal(
+                archetype="blank_check",
+                label="The Blank Check",
+                goal="Trophy THIS season, or the owner starts tweeting.",
+                blurb="Facilities, chef, content team, a war chest — and "
+                      "a fanbase that files a complaint per round loss.",
+                balance_bonus=0,
+            ),
+        )
+    # 3. The Project — the lowest-rep rebuild with real patience.
+    project = best(lambda tid: -avail[tid].reputation)
+    if project is not None:
+        take(
+            project,
+            DraftDeal(
+                archetype="project",
+                label="The Project",
+                goal="Nobody expects anything. Make them regret that "
+                     "within two seasons.",
+                blurb="The owner sold the office couch to fund your "
+                      "signing budget. There is no office. There is a budget.",
+                balance_bonus=400_000,
+            ),
+        )
+    # 4. The Wildcard — a blake2 spin, with the owner's personal beef.
+    rest = [tid for tid in sorted(avail) if tid not in used]
+    if rest:
+        wild = rest[_h(seed, "offer-wild", *sorted(answers.items())) % len(rest)]
+        rival_pool = [t for t in sorted(teams) if t != wild and teams[t].tier == 1]
+        rival = teams[
+            rival_pool[_h(seed, "offer-rival", wild) % len(rival_pool)]
+        ].name
+        take(
+            wild,
+            DraftDeal(
+                archetype="wildcard",
+                label="The Wildcard",
+                goal=f"Beat {rival} twice this season. The owner lost a "
+                     "bet and will not elaborate.",
+                blurb="Mid table, mid budget, immaculate vibes. The team "
+                      "dog has more followers than the roster.",
+                balance_bonus=100_000,
+            ),
+        )
+    return offers
+
+
+def apply_interview(
+    gs: "GameState", team_id: str, answers: dict, taken: set[str] | None = None
+) -> None:
+    """Land an accepted interview on the world: board prefs for the rec
+    panel, the deal's flavor + war-chest bonus on the org. Deterministic
+    given (gs, team_id, answers, taken) — the web layer records the
+    answers in action_log, so a replay re-applies the same deal. `taken`
+    must match what the offers endpoint excluded when the manager chose
+    (other humans' orgs), so the accepted card resolves identically."""
+    d = gs.fantasy_draft
+    if d is None:
+        return
+    prefs = prefs_from_answers(answers, gs.league_regions)
+    d.prefs_by[team_id] = prefs
+    offers = interview_offers(
+        gs.teams, gs.seed, answers,
+        taken=set(taken or ()) - {team_id}, regions=gs.league_regions,
+    )
+    offer = next((o for o in offers if o["team_id"] == team_id), None)
+    if offer is None:
+        # The picked org wasn't in this slate (host raced a joiner, or a
+        # hand-rolled call). Prefs still apply; no deal, no bonus.
+        return
+    deal = DraftDeal(
+        archetype=offer["archetype"],
+        label=offer["label"],
+        goal=offer["goal"],
+        blurb=offer["blurb"],
+        balance_bonus=offer["balance_bonus"],
+    )
+    d.deals_by[team_id] = deal
+    if deal.balance_bonus:
+        gs.teams[team_id].balance += deal.balance_bonus
+    gs.push_news(
+        f"{gs.teams[team_id].name} hand their new manager the keys: "
+        f"\"{deal.goal}\""
     )
 
 
@@ -242,6 +622,26 @@ def draft_value(
         elif shared <= 0.1:
             reasons.append("no working language in common yet")
 
+    # Interview-derived style identity. These fields stay empty for AI
+    # orgs and pre-interview prefs, so the base function is untouched
+    # there — the style lane is a purely human flavor of the same math.
+    if prefs.preferred_styles and str(p.playstyle) in prefs.preferred_styles:
+        score += 5.0
+        style = prefs.answers.get("style", "")
+        if style in _STYLE_META:
+            reasons.append(_STYLE_META[style][2])
+    if prefs.attr_focus:
+        edge = (
+            sum(p.attr(a) for a in prefs.attr_focus) / len(prefs.attr_focus)
+            - q
+        )
+        score += max(0.0, edge) * 0.4
+        if edge >= 6.0:
+            reasons.append("elite at exactly what you value")
+    if prefs.preferred_region and str(p.region) == prefs.preferred_region:
+        score += 2.0
+        reasons.append("homegrown for your region")
+
     if upside >= 12:
         reasons.append(f"big ceiling for a {p.age}-year-old")
     elif q >= 70:
@@ -265,6 +665,27 @@ def recommendations(gs: "GameState", team_id: str, limit: int = 5) -> list[dict]
     return [
         {"player_id": pid, "score": round(-neg, 1), "reasons": reasons[:3]}
         for neg, pid, reasons in scored[:limit]
+    ]
+
+
+def best_available(gs: "GameState", limit: int = 3) -> list[dict]:
+    """The no-opinions board: pure talent (current ability + age-realizable
+    upside at balanced weights), ignoring roles, comms, and the manager's
+    interview. Shown NEXT TO the style lane so a manager always sees what
+    the market thinks, not just what flatters their philosophy."""
+    d = gs.fantasy_draft
+    if d is None:
+        return []
+    scored = []
+    for pid in d.pool_ids:
+        p = gs.players[pid]
+        q = market.player_quality(p)
+        upside = max(0.0, development.potential_of(p) - q) * _age_upside_factor(p.age)
+        scored.append((-(q + upside * 0.9), pid))
+    scored.sort()
+    return [
+        {"player_id": pid, "score": round(-neg, 1)}
+        for neg, pid in scored[:limit]
     ]
 
 
