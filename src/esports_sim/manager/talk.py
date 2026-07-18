@@ -231,6 +231,11 @@ def resolve(gs: GameState, pid: str, option_id: str) -> tuple[bool, str, dict]:
             )
             if rng.random() < repair_p:
                 transfer_requests.withdraw(gs, pid)
+                # F3 SEAM B: repairing a transfer request is a deterministic
+                # play-time reset promise doorway (surfaced as an inbox item +
+                # Locker Room badge). Lazy import mirrors the market.py seam.
+                from esports_sim.manager import promises
+                promises.offer_from_transfer_reset(gs, gs.acting_team_id, pid)
                 d_morale = 8.0
                 d_chem = 1.0
                 msg = f"{p.handle} withdraws the request and agrees to the reset."

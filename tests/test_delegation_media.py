@@ -114,7 +114,10 @@ def test_scout_policy_rotates_existing_desk_and_only_alerts_at_threshold(
     delegation.configure(campaign, tid, _policy(auto_renew_core=False))
 
     delegation.begin_week(campaign)
-    assigned = campaign.scout_targets[tid]
+    # The department's recruit deep-dive now rides the standing AMATEUR lane
+    # (scout_lanes_by) instead of clobbering the single scout_targets slot the
+    # RL/decision-env path still owns.
+    assigned = campaign.scout_lanes_by[tid]["amateur"]
     assert assigned.startswith("player:")
     candidate = campaign.players[assigned.removeprefix("player:")]
     assert candidate.age <= 21
@@ -279,7 +282,7 @@ def test_v22_migration_and_round_trip(campaign: GameState, tmp_path) -> None:
     old_path = tmp_path / "v22.json"
     old_path.write_text(json.dumps(old), encoding="utf-8")
     migrated = GameState.load(old_path)
-    assert migrated.schema_version == SCHEMA_VERSION == 32
+    assert migrated.schema_version == SCHEMA_VERSION
     assert migrated.delegation_policies_by == {}
     assert migrated.media_history_by == {}
 

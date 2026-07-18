@@ -1,4 +1,5 @@
 from __future__ import annotations
+import hashlib
 import inspect
 import sys
 from typing import TYPE_CHECKING
@@ -7,10 +8,25 @@ if TYPE_CHECKING:
     from esports_sim.manager.state import GameState
     from esports_sim.schemas.promise import ManagerPromise
 
-def create_promise(gs: GameState, team_id: str, player_id: str, promise_type: str, target_value: int = 0, duration: int = 0) -> ManagerPromise:
+def create_promise(
+    gs: GameState,
+    team_id: str,
+    player_id: str,
+    promise_type: str,
+    target_value: int = 0,
+    duration: int = 0,
+    *,
+    source: str = "talk",
+) -> ManagerPromise:
     """Construct a ManagerPromise and append it to gs.promises. Return the promise.
 
-    If a duplicate active promise exists for the same player, type and target_value, update its duration.
+    THE single creation path for every promise doorway (talk, llm, and the
+    deterministic negotiation/transfer/bench/leadership seams). ``source``
+    records provenance for inbox copy + dedup. The id is a blake2b hash of
+    (season | week | player | type) so it is replay-stable and independent of
+    ``len(gs.promises)`` (which desyncs across prunes). If a duplicate active
+    promise exists for the same player, type and target_value, its duration is
+    updated in place instead of appending a second entry.
     """
     from esports_sim.schemas.promise import ManagerPromise
 
@@ -26,7 +42,11 @@ def create_promise(gs: GameState, team_id: str, player_id: str, promise_type: st
         existing.weeks_left = duration
         return existing
 
-    promise_id = f"p_{len(gs.promises)}_{player_id}_{promise_type}"
+    season = getattr(gs, "season", 1)
+    week = getattr(gs, "week", 1)
+    promise_id = hashlib.blake2b(
+        f"{season}|{week}|{player_id}|{promise_type}".encode("utf-8")
+    ).hexdigest()[:16]
     promise = ManagerPromise(
         id=promise_id,
         team_id=team_id,
@@ -34,15 +54,55 @@ def create_promise(gs: GameState, team_id: str, player_id: str, promise_type: st
         promise_type=promise_type,
         target_value=target_value,
         weeks_left=duration,
-        created_week=getattr(gs, "week", 1),
-        created_season=getattr(gs, "season", 1),
+        created_week=week,
+        created_season=season,
         status="active",
         dressed_count=0,
-        initial_duration=duration
+        initial_duration=duration,
+        source=source,
     )
     gs.promises.append(promise)
 
     return promise
+
+
+def offer_from_negotiation(
+    gs: GameState, team_id: str, player_id: str, role: str, weeks: int
+) -> ManagerPromise | None:
+    """F3 SEAM A: a settled contract that concedes a starter seat implies a
+    play-time commitment. Returns the created ``play_time`` promise (target ~60,
+    duration capped at 8 weeks, source='negotiation') when ``role == 'starter'``,
+    else None so renewals that don't concede a seat don't spam promises."""
+    if role != "starter":
+        return None
+    duration = max(1, min(int(weeks), 8))
+    return create_promise(
+        gs, team_id, player_id, "play_time",
+        target_value=60, duration=duration, source="negotiation",
+    )
+
+
+def offer_from_transfer_reset(
+    gs: GameState, team_id: str, player_id: str
+) -> ManagerPromise:
+    """F3 SEAM B: withdrawing/repairing a transfer request implies a fresh
+    play-time reset promise (target ~60, source='transfer_request')."""
+    return create_promise(
+        gs, team_id, player_id, "play_time",
+        target_value=60, duration=6, source="transfer_request",
+    )
+
+
+def offer_from_leadership(
+    gs: GameState, team_id: str, player_id: str
+) -> ManagerPromise:
+    """F3 SEAM D: the captaincy doorway creates a ``make_captain`` promise
+    (source='leadership') that resolves through the existing culture leadership
+    path once the player becomes captain."""
+    return create_promise(
+        gs, team_id, player_id, "make_captain",
+        target_value=0, duration=8, source="leadership",
+    )
 
 
 def resolve_promise(gs: GameState, promise: ManagerPromise, success: bool) -> None:

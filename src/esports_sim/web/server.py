@@ -55,6 +55,7 @@ from esports_sim.manager import (
     role_fit,
     rivalries as rivalries_mod,
     scenarios as scenarios_mod,
+    scouting,
     sim_ahead as sim_ahead_mod,
     social,
     sponsors,
@@ -74,8 +75,6 @@ from esports_sim.manager import (
     xduel,
 )
 from esports_sim.manager.campaign import (
-    PREP_EDGE_BASE,
-    PREP_EDGE_SPAN,
     SCOUT_DEEP_CAP,
     SCOUT_MATCH_CAP,
     SCOUT_SURVEY_CAP,
@@ -1903,6 +1902,39 @@ def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
     return view, opp_id
 
 
+def _needs_you_flags(gs: GameState, tid: str) -> dict:
+    """The pending-decision flags app.js computeNeedsYou badges without a new
+    Dashboard card (7-card budget). Pure read; all four derived from live state.
+
+    - promise_pending: a benched regular past the grudge arc with no active
+      play-time promise (a minutes commitment is waiting).
+    - scout_shortlist_ready: the pro fill_gap lane surfaced a market shortlist.
+    - scrim_proposal_pending: the coach has an unbooked scrim proposal.
+    - culture_violation_unack: a committed principle was violated THIS week.
+    """
+    team = gs.teams.get(tid)
+    promise_pending = False
+    if team is not None:
+        active_playtime = {
+            pr.player_id for pr in gs.promises
+            if pr.team_id == tid and pr.promise_type == "play_time"
+            and pr.status == "active"
+        }
+        for pid in sorted(team.player_ids):
+            if pid in active_playtime:
+                continue
+            if arcs_mod.bench_grudge_weeks(gs, tid, pid) >= arcs_mod.BENCH_ARC_WEEKS:
+                promise_pending = True
+                break
+    stamp = gs.season * 100 + gs.week
+    return {
+        "promise_pending": promise_pending,
+        "scout_shortlist_ready": bool(gs.scout_shortlist_by.get(tid)),
+        "scrim_proposal_pending": _scrim_proposal(gs, tid) is not None,
+        "culture_violation_unack": gs.culture_last_violation_by.get(tid) == stamp,
+    }
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -2035,6 +2067,12 @@ def state() -> dict:
                 "autosave_enabled": gs.autosave_enabled,
                 "autosave_every_weeks": gs.autosave_every_weeks,
             },
+            # F3/F4/F7/F8 pending-decision flags for computeNeedsYou. Spread to
+            # the TOP level: computeNeedsYou reads s.promise_pending,
+            # s.scrim_proposal_pending, s.culture_violation_unack and
+            # s.scout_shortlist_ready directly off the state root, so the nav
+            # badges and Needs-you rows only fire when the flags are top-level.
+            **_needs_you_flags(gs, gs.acting_team_id),
         }
 
 
@@ -2282,21 +2320,40 @@ def delegation_policy_action(body: DelegationPolicyBody) -> dict:
 
 
 class PreparationBody(BaseModel):
-    fixture_id: str
-    partner_id: str
-    map_id: str
-    objective: str
-    intensity: str
+    # All optional so an {accept:true} one-click can omit the manual fields.
+    fixture_id: str = ""
+    partner_id: str = ""
+    map_id: str = ""
+    objective: str = ""
+    intensity: str = ""
+    accept: bool = False
 
 
 @app.post("/api/actions/preparation")
 def preparation_action(body: PreparationBody) -> dict:
     with S.lock:
         gs = S.require_gs()
+        tid = gs.acting_team_id
+        # F7: one-click accept of the coach's proposed scrim plan — book from the
+        # deterministic proposal instead of the manual body fields.
+        if body.accept:
+            proposal = preparation.propose(gs, tid)
+            if proposal is None:
+                raise HTTPException(409, "no scrim proposal available to accept")
+            fixture_id = proposal.fixture_id
+            partner_id = proposal.partner_id
+            map_id = proposal.map_id
+            objective = proposal.objective
+            intensity = proposal.intensity
+        else:
+            fixture_id = body.fixture_id
+            partner_id = body.partner_id
+            map_id = body.map_id
+            objective = body.objective
+            intensity = body.intensity
         try:
             plan = preparation.schedule(
-                gs, gs.acting_team_id, body.fixture_id, body.partner_id,
-                body.map_id, body.objective, body.intensity,
+                gs, tid, fixture_id, partner_id, map_id, objective, intensity,
             )
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
@@ -2383,6 +2440,65 @@ def leadership_action(body: LeadershipBody) -> dict:
             {"captain_id": body.captain_id,
              "council_ids": ",".join(body.council_ids),
              "principle": body.principle},
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class CommitPrincipleBody(BaseModel):
+    principle: str
+
+
+@app.post("/api/actions/commit-principle")
+def commit_principle_action(body: CommitPrincipleBody) -> dict:
+    """F8: promote the club's culture principle to a STATED identity commitment.
+    Arms register_choice for this team (media/flavor choices can now honor or
+    violate it) and stamps a conviction baseline + chronicle entry."""
+    with S.lock:
+        gs = S.require_gs()
+        ok, msg = culture.commit_principle(gs, gs.acting_team_id, body.principle)
+        if not ok:
+            raise HTTPException(422, msg)
+        telemetry.record_action(
+            gs, "commit_principle", {"principle": body.principle}
+        )
+        S.save()
+        return {"ok": True, "message": msg}
+
+
+class PromiseBody(BaseModel):
+    kind: str  # bench_minutes | captaincy
+    player_id: str
+
+
+@app.post("/api/actions/promise")
+def promise_action(body: PromiseBody) -> dict:
+    """F3: deterministic promise doorway from a Locker Room / bench-grudge
+    prompt (no 1:1 required). 'bench_minutes' commits playing time to a benched
+    regular; 'captaincy' commits to making the player captain."""
+    with S.lock:
+        gs = S.require_gs()
+        tid = gs.acting_team_id
+        team = gs.teams.get(tid)
+        if team is None or body.player_id not in team.player_ids:
+            raise HTTPException(422, "player is not on your roster")
+        if body.kind == "bench_minutes":
+            pr = promises.create_promise(
+                gs, tid, body.player_id, "play_time",
+                target_value=60, duration=6, source="bench_demand",
+            )
+            handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
+            msg = f"You promised {handle} regular minutes."
+        elif body.kind == "captaincy":
+            pr = promises.offer_from_leadership(gs, tid, body.player_id)
+            handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
+            msg = f"You promised {handle} the captaincy."
+        else:
+            raise HTTPException(422, "kind must be bench_minutes or captaincy")
+        telemetry.record_action(
+            gs, "promise_respond",
+            {"kind": body.kind, "player_id": body.player_id,
+             "promise_type": pr.promise_type, "source": pr.source},
         )
         S.save()
         return {"ok": True, "message": msg}
@@ -2596,6 +2712,10 @@ def roster(team_id: str) -> dict:
                 # Distinguish a committed lock from the engine's likely auto-pick.
                 locked = team.lineup.agents.get(v["id"])
                 v["planned_locked"] = bool(locked and locked in S.gd.agents)
+                # F6: the mastery-derived duel edge for THIS pick, in the engine's
+                # own (mastery-50)/25 units — own club only (mastery is private).
+                if own:
+                    v["planned_agent_edge"] = development.agent_pick_edge(pl, aid)
         # Rival rosters are buyable: show the seller's ask per player, and
         # the buyout clause where one exists (tier-2 contracts) — the fast
         # lane that skips negotiation entirely.
@@ -2623,11 +2743,18 @@ def roster(team_id: str) -> dict:
         # private dev-history time series (empty -> None, no arrow shown),
         # plus who mentors them (if anyone) for the mentorship control.
         if own:
+            language_rate = staff_mod.language_learning_rate(gs)
             for v in players:
                 v["condition_trend"] = _condition_trend(gs, v["id"])
                 v["mentor_id"] = gs.mentorships.get(v["id"])
                 pv = gs.players.get(v["id"])
                 if pv is not None:
+                    # F2: why this player is barely growing this week (language
+                    # study with no coach, exhausted, or at their ceiling) — the
+                    # UI renders it as a warn chip; the reason is computed here.
+                    v["not_developing"] = training.not_developing_reason(
+                        pv, language_rate
+                    )
                     _cs = gs.career_stats.get(v["id"])
                     # Hidden teaching ability, so the manager can spot which
                     # veteran is worth pairing with a prospect (grows with age
@@ -2700,6 +2827,11 @@ def roster(team_id: str) -> dict:
             "language_options": LANGUAGE_OPTIONS,
             "has_language_coach": "language_coach" in gs.staff,
             "development_report": development_report,
+            # F1: the fortnightly "Future of the Org" dev digest + the pipeline
+            # funnel board (youth -> academy -> bench -> starters). Own club only;
+            # all deltas/sparkline series computed server-side (invariant 4).
+            "dev_digest": _dev_digest(gs, team_id) if own else None,
+            "pipeline": _pipeline_board(gs, team_id) if own else None,
             "fog": round(fog, 1),
             "lineup_revealed": lineup_revealed,
             "scouting_this": gs.scout_target == team_id,
@@ -2903,6 +3035,152 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
         "regressed": sum(row["status"] == "regressed" for row in rows),
         "steady": sum(row["status"] == "steady" for row in rows),
         "players": rows,
+    }
+
+
+def _ca_series(gs: GameState, pid: str, season: int | None = None) -> list[float]:
+    """This-season CA time-series for a player's dev-history sparkline. Pure
+    read — the client draws the line, this owns the numbers (invariant 4)."""
+    season = gs.season if season is None else season
+    return [
+        round(s.ca, 1)
+        for s in gs.dev_history.get(pid, [])
+        if s.season == season
+    ]
+
+
+def _dev_digest(gs: GameState, tid: str) -> dict:
+    """F1 'Future of the Org' digest: season-to-date risers, growth milestones,
+    academy standouts, and youth-prospect updates. Pure read of dev_history +
+    academy/prospect state; every magnitude is computed here so the client only
+    renders. Sorted iteration keeps it campaign-deterministic."""
+    empty = {"risers": [], "milestones": [], "academy_standouts": [], "prospect_updates": []}
+    team = gs.teams.get(tid)
+    if team is None:
+        return empty
+    attr_defs = S.gd.attributes.definitions
+    risers: list[dict] = []
+    milestones: list[dict] = []
+    for pid in sorted(team.player_ids):
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        snaps = [s for s in gs.dev_history.get(pid, []) if s.season == gs.season]
+        if len(snaps) < 2:
+            continue
+        first, last = snaps[0], snaps[-1]
+        delta = round(last.ca - first.ca, 1)
+        if delta >= 0.5:
+            risers.append({
+                "id": pid, "handle": p.handle, "age": p.age,
+                "delta": delta, "ca": round(last.ca, 1),
+                "series": [round(s.ca, 1) for s in snaps],
+            })
+        best_attr, best_change = None, 0.0
+        for aid in sorted(set(first.attributes) & set(last.attributes)):
+            change = last.attributes[aid] - first.attributes[aid]
+            if change > best_change:
+                best_change, best_attr = change, aid
+        if best_attr is not None and best_change >= 3.0:
+            adef = attr_defs.get(best_attr)
+            milestones.append({
+                "id": pid, "handle": p.handle,
+                "attribute": adef.display_name if adef
+                else best_attr.replace("_", " ").title(),
+                "delta": round(best_change, 1),
+            })
+    risers.sort(key=lambda r: (-r["delta"], r["handle"].lower(), r["id"]))
+    milestones.sort(key=lambda m: (-m["delta"], m["handle"].lower(), m["id"]))
+    academy_standouts = [
+        {
+            "id": row["id"], "handle": row["handle"], "age": row["age"],
+            "ability": row["ability"], "potential_band": row["potential_band"],
+            "rating": row["rating"], "maps": row["maps"],
+        }
+        for row in academy.academy_view(gs, tid).get("roster", [])[:5]
+    ]
+    region = str(team.region)
+    prospects = sorted(
+        (
+            (pid, fp) for pid, fp in gs.future_prospects.items()
+            if str(fp.player.region) == region
+        ),
+        key=lambda kv: (kv[1].debut_year, -development.overall(kv[1].player), kv[0]),
+    )
+    prospect_updates = []
+    for pid, fp in prospects[:5]:
+        lo, hi = development.potential_projection(fp.player, own=True)
+        prospect_updates.append({
+            "id": pid, "handle": fp.player.handle, "age": fp.player.age,
+            "debut_year": fp.debut_year,
+            "ability": round(development.overall(fp.player), 1),
+            "potential_band": [round(lo, 1), round(hi, 1)],
+        })
+    return {
+        "risers": risers[:6],
+        "milestones": milestones[:6],
+        "academy_standouts": academy_standouts,
+        "prospect_updates": prospect_updates,
+    }
+
+
+def _pipeline_board(gs: GameState, tid: str) -> dict:
+    """F1 development funnel youth -> academy -> bench -> starters. Each stage is
+    a list of {id, handle, age, ability, series} so the client renders a column
+    of CA sparklines. Pure read (dev_history for own roster, potential for
+    off-screen youth). Sorted iteration for determinism."""
+    empty = {"youth": [], "academy": [], "bench": [], "starters": []}
+    team = gs.teams.get(tid)
+    if team is None:
+        return empty
+    starters = list(default_five(gs, tid))
+    starter_set = set(starters)
+
+    def _row(pid: str) -> dict | None:
+        p = gs.players.get(pid)
+        if p is None:
+            return None
+        return {
+            "id": pid, "handle": p.handle, "age": p.age,
+            "ability": round(development.overall(p), 1),
+            "series": _ca_series(gs, pid),
+        }
+
+    starter_rows = [r for r in (_row(pid) for pid in starters) if r]
+    bench_rows = [
+        r for r in (
+            _row(pid) for pid in sorted(team.player_ids) if pid not in starter_set
+        ) if r
+    ]
+    academy_rows = [
+        {
+            "id": row["id"], "handle": row["handle"], "age": row["age"],
+            "ability": row["ability"], "series": _ca_series(gs, row["id"]),
+        }
+        for row in academy.academy_view(gs, tid).get("roster", [])
+        if row.get("owned")
+    ][:6]
+    region = str(team.region)
+    youth = sorted(
+        (
+            (pid, fp) for pid, fp in gs.future_prospects.items()
+            if str(fp.player.region) == region
+        ),
+        key=lambda kv: (kv[1].debut_year, -development.overall(kv[1].player), kv[0]),
+    )
+    youth_rows = [
+        {
+            "id": pid, "handle": fp.player.handle, "age": fp.player.age,
+            "ability": round(development.overall(fp.player), 1),
+            "debut_year": fp.debut_year, "series": [],
+        }
+        for pid, fp in youth[:6]
+    ]
+    return {
+        "youth": youth_rows,
+        "academy": academy_rows,
+        "bench": bench_rows,
+        "starters": starter_rows,
     }
 
 
@@ -5392,6 +5670,10 @@ def _lineup_view(gs: GameState, team: Team) -> dict:
                     "name": a.display_name,
                     "role": str(a.role),
                     "mastery": round(pl.agent_mastery(a.id, 0.0)),
+                    # F6: the server-computed duel edge for this pick, in the
+                    # engine's (mastery-50)/25 units — the client renders it, it
+                    # never re-derives the formula (invariant 4).
+                    "edge": development.agent_pick_edge(pl, a.id),
                 }
                 for a in agents.values()
             ),
@@ -5593,6 +5875,47 @@ def _gameplan_counter_reads(gs: GameState, fx, plan: GamePlan | None) -> dict:
     }
 
 
+def _scrim_proposal(gs: GameState, tid: str) -> dict | None:
+    """F7: the coach's recommended scrim plan for the next fixture, enriched with
+    display names, or None when a session is already booked. One-click accept via
+    POST /api/actions/preparation {accept:true}. Pure read (preparation.propose is
+    rng-free)."""
+    if gs.preparation_plans_by.get(tid) is not None:
+        return None  # already booked; nothing to propose
+    plan = preparation.propose(gs, tid)
+    if plan is None:
+        return None
+    partner = gs.teams.get(plan.partner_id)
+    opp = gs.teams.get(plan.opponent_id)
+    return {
+        **plan.model_dump(mode="json"),
+        "partner_name": partner.name if partner is not None else plan.partner_id,
+        "opponent_name": opp.name if opp is not None else plan.opponent_id,
+    }
+
+
+def _last_prep_artifact(gs: GameState, tid: str) -> dict | None:
+    """F7: the named artifact from this org's most recent resolved prep report
+    (e.g. 'Ascent anti-exec book +1.7'), plus the linked dev suggestion. None
+    until a session resolves. Pure read of gs.preparation_reports_by."""
+    rep = gs.preparation_reports_by.get(tid)
+    if rep is None or getattr(rep, "status", "") != "completed":
+        return None
+    label = getattr(rep, "artifact_label", "") or ""
+    if not label:
+        return None
+    return {
+        "season": rep.season,
+        "week": rep.week,
+        "artifact_label": label,
+        "prep_edge_contribution": round(
+            getattr(rep, "prep_edge_contribution", 0.0), 3
+        ),
+        "dev_suggestion": getattr(rep, "dev_suggestion", "") or "",
+        "dev_suggestion_player_id": getattr(rep, "dev_suggestion_player_id", "") or "",
+    }
+
+
 @app.get("/api/gameplan")
 def gameplan_view() -> dict:
     """The coach's desk for the NEXT fixture: opponent intel (fogged by
@@ -5700,10 +6023,20 @@ def gameplan_view() -> dict:
             "plan": plan.model_dump() if plan is not None else None,
             "tactics": team.tactics.model_dump(),
             "scout_knowledge": round(know, 2),
-            "prep_edge": round(PREP_EDGE_BASE + PREP_EDGE_SPAN * know, 2),
-            "prep_edge_max": round(
-                min(PREP_EDGE_BASE + PREP_EDGE_SPAN, C.PREP_EDGE_CAP), 2
+            # F7: the full per-source prep edge {scout, book, coach, total, cap}
+            # (mirrors campaign._fixture_plans) replaces the old scout-only number;
+            # kept `prep_edge` for the scalar the client already renders.
+            "prep_edge_breakdown": preparation.prep_edge_breakdown(
+                gs, tid, opp_id, list(fx.maps[: fx.best_of])
             ),
+            "prep_edge": preparation.prep_edge_breakdown(
+                gs, tid, opp_id, list(fx.maps[: fx.best_of])
+            )["total"],
+            "prep_edge_max": round(C.PREP_EDGE_CAP, 2),
+            # F7: the coach's one-click scrim proposal for this fixture (None when
+            # a session is already booked) + the last named prep artifact.
+            "scrim_proposal": _scrim_proposal(gs, tid),
+            "last_artifact": _last_prep_artifact(gs, tid),
             "counter": _gameplan_counter_reads(gs, fx, plan),
             "opponent_roster": opp_rows,
             "suggested_target": suggested,
@@ -5915,6 +6248,52 @@ def scout(body: ScoutBody) -> dict:
         return {"ok": True, "message": f"scout assigned to {label}"}
 
 
+class ScoutDirectiveBody(BaseModel):
+    lane: str  # pro | amateur
+    directive: str | None = None  # None clears the lane
+    role: str | None = None  # for pro fill_gap
+    caliber: str | None = None  # for pro fill_gap
+
+
+@app.post("/api/actions/scout-directive")
+def scout_directive_action(body: ScoutDirectiveBody) -> dict:
+    """F4: set a STANDING scouting directive per lane (pro/amateur). Replaces
+    the weekly single-slot re-pick — the department then advances that lane
+    every tick without another decision. The legacy /api/actions/scout single
+    slot stays for the RL single-slot action path."""
+    with S.lock:
+        gs = S.require_gs()
+        tid = gs.acting_team_id
+        if body.lane not in ("pro", "amateur"):
+            raise HTTPException(422, "lane must be 'pro' or 'amateur'")
+        directive = body.directive
+        if directive is not None:
+            if body.lane == "pro":
+                if directive == "fill_gap":
+                    role = (body.role or "").strip() or "any"
+                    caliber = (body.caliber or "any").strip() or "any"
+                    if caliber not in scouting.CALIBER_FLOOR:
+                        raise HTTPException(422, "unknown caliber")
+                    directive = f"fill_gap:{role}:{caliber}"
+                elif directive not in scouting.PRO_DIRECTIVES:
+                    raise HTTPException(422, "unknown pro directive")
+            else:  # amateur
+                if directive not in scouting.AMATEUR_DIRECTIVES:
+                    raise HTTPException(422, "unknown amateur directive")
+        lanes = gs.scout_lanes_by.setdefault(tid, {})
+        if directive is None:
+            lanes.pop(body.lane, None)
+        else:
+            lanes[body.lane] = directive
+        telemetry.record_action(
+            gs, "set_scout_directive",
+            {"lane": body.lane, "directive": directive or ""},
+        )
+        S.save()
+        label = directive or "cleared"
+        return {"ok": True, "message": f"{body.lane} scouting directive: {label}"}
+
+
 @app.get("/api/scouting")
 def scouting_view() -> dict:
     """The scout's desk: current assignment (team / market / one player /
@@ -6009,7 +6388,38 @@ def scouting_view() -> dict:
                     "week": following.week,
                     "fixture_id": following.id,
                 }
+        # F4/F5: the two parallel standing-directive lanes (pro + amateur), the
+        # market shortlist, recommended deep dives, and per-player uncertainty
+        # ranges — all computed server-side. Each shortlist eval gains a
+        # role-fit projection against the player's own role (F5's deepest tier).
+        desk = scouting.scout_desk_view(gs, me)
+        for ev in desk.get("player_evals", []):
+            pl = gs.players.get(ev["player_id"])
+            if pl is not None:
+                ev["role_fit"] = scouting.role_fit_projection(
+                    gs, me, ev["player_id"], str(pl.role)
+                )
         return {
+            "desk": desk,
+            # F4/F5: the client reads the two standing lanes, the fill_gap
+            # shortlist, and the recommended deep dives at the TOP level (see
+            # scoutLanesCard / scoutShortlistCard / the recs block in app.js).
+            # Surface them from the desk so the standing-directive UI renders
+            # instead of falling back to the legacy single-slot desk only.
+            "lanes": {
+                # The fill_gap picker must offer only filters the server accepts:
+                # roles are the canonical Role enum (str(p.role) is matched in
+                # _build_shortlist), calibers are the CALIBER_FLOOR keys. Shipped
+                # so the client never falls back to invalid values (igl/prospect).
+                "pro": {
+                    **desk["pro"],
+                    "role_options": [r.value for r in Role],
+                    "caliber_options": sorted(scouting.CALIBER_FLOOR),
+                },
+                "amateur": desk["amateur"],
+            },
+            "shortlist": desk["pro"].get("shortlist", []),
+            "deep_dive_recommendations": desk["recommended"],
             "target": target,
             "target_kind": target_kind,
             "target_name": target_name,

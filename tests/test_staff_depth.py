@@ -4,7 +4,7 @@ import json
 
 from esports_sim.manager import staff, staff_effects
 from esports_sim.manager.campaign import new_campaign
-from esports_sim.manager.state import GameState, StaffMember
+from esports_sim.manager.state import SCHEMA_VERSION, GameState, StaffMember
 from esports_sim.registry import load_all
 from esports_sim.schemas.team import TeamTactics
 
@@ -101,7 +101,7 @@ def test_v26_save_migrates_staff_profiles_deterministically(tmp_path) -> None:
     path.write_text(json.dumps(raw), encoding="utf-8")
     first = GameState.load(path)
     second = GameState.load(path)
-    assert first.schema_version == 32
+    assert first.schema_version == SCHEMA_VERSION
     assert first.model_dump_json() == second.model_dump_json()
     assert all(member.attributes for member in first.staff_pool)
 

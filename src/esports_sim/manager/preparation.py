@@ -99,6 +99,13 @@ class PrepReport(BaseModel):
     stamina_cost: float = 0.0
     morale_delta: float = 0.0
     chemistry_delta: float = 0.0
+    # F7: the concrete NAMED artifact this session produced, the marginal
+    # prep-edge it fed into the game-plan seam, and an optional development
+    # lead the scrims surfaced. Defaults keep older nested reports loadable.
+    artifact_label: str = ""
+    prep_edge_contribution: float = 0.0
+    dev_suggestion_player_id: str = ""
+    dev_suggestion: str = ""
 
 
 def _stable_id(*parts: object) -> str:
@@ -344,6 +351,66 @@ def _knowledge_gain(gs: "GameState", plan: PrepPlan, ev: PrepEvidence) -> float:
     return round(gain, 2)
 
 
+def _artifact_label(plan: PrepPlan, key: str, gain: float, ev: PrepEvidence) -> str:
+    """A concrete, human-readable name for what the session produced. Reads
+    from the knowledge key and the applied gain — never invents a fact."""
+    if key.startswith("antistrat:"):
+        return f"{plan.map_id} anti-exec book +{gain:.1f}"
+    if key.startswith("playbook:"):
+        if plan.objective == "lineup_test":
+            if ev.rotation_candidate_id:
+                return f"{plan.map_id} rotation notes (+{gain:.1f} playbook)"
+            return f"{plan.map_id} lineup confirmation (+{gain:.1f} playbook)"
+        return f"{plan.map_id} retake playbook +{gain:.1f}"
+    return f"Methodology +{gain:.1f}"
+
+
+def _prep_edge_contribution(key: str, gain: float) -> float:
+    """The marginal game-plan prep edge this artifact fed, using the same
+    EDGE_PER_* constants knowledge.prep_bonus applies. Treated single-map
+    (the plan is per-map), so it is the before/after delta for this one key.
+    Methodology does not feed the prep edge, so it contributes 0."""
+    from esports_sim.manager import knowledge
+
+    if key.startswith("playbook:"):
+        return round(gain * knowledge.EDGE_PER_PLAYBOOK, 4)
+    if key.startswith("antistrat:"):
+        return round(gain * knowledge.EDGE_PER_ANTISTRAT, 4)
+    return 0.0
+
+
+def _dev_suggestion(
+    gs: "GameState", plan: PrepPlan, ev: PrepEvidence
+) -> tuple[str, str]:
+    """Link a session to one grounded development lead: the bench rotation
+    candidate a lineup test surfaced, else the youngest starter carrying the
+    most untapped ceiling. Deterministic (public evidence + potential)."""
+    if ev.rotation_candidate_id and ev.rotation_candidate_id in gs.players:
+        p = gs.players[ev.rotation_candidate_id]
+        return ev.rotation_candidate_id, (
+            f"{p.handle} pushed the starters on {plan.map_id}; a focused "
+            "development block could make that rotation real."
+        )
+    best_pid = ""
+    best_gap = 0.0
+    for pid in _participants(gs, plan.team_id):
+        p = gs.players.get(pid)
+        if p is None or p.age > 23 or not p.attributes:
+            continue
+        ca = sum(p.attributes.values()) / len(p.attributes)
+        pa = p.potential if p.potential > 0 else ca
+        gap = pa - ca
+        if gap > best_gap:
+            best_gap, best_pid = gap, pid
+    if best_pid and best_gap >= 6.0:
+        p = gs.players[best_pid]
+        return best_pid, (
+            f"{p.handle} has ~{best_gap:.0f} points of untapped ceiling; a "
+            "targeted development focus would compound these reps."
+        )
+    return "", ""
+
+
 def _apply_tradeoffs(
     gs: "GameState", plan: PrepPlan, participant_ids: list[str]
 ) -> tuple[float, float]:
@@ -447,6 +514,9 @@ def _resolve(
     after_knowledge = round(min(_CAP, before_knowledge + gain), 2)
     book[key] = after_knowledge
     actual_gain = round(after_knowledge - before_knowledge, 2)
+    artifact_label = _artifact_label(plan, key, actual_gain, evidence)
+    edge_contribution = _prep_edge_contribution(key, actual_gain)
+    dev_pid, dev_text = _dev_suggestion(gs, plan, evidence)
 
     stamina_cost, morale_delta = _apply_tradeoffs(gs, plan, participants)
     chemistry_delta = _chemistry_delta(plan)
@@ -476,6 +546,10 @@ def _resolve(
         stamina_cost=stamina_cost,
         morale_delta=morale_delta,
         chemistry_delta=actual_chemistry,
+        artifact_label=artifact_label,
+        prep_edge_contribution=edge_contribution,
+        dev_suggestion_player_id=dev_pid,
+        dev_suggestion=dev_text,
     )
 
 
@@ -567,11 +641,114 @@ def weekly_tick(
     return reports
 
 
+def _next_fixture(gs: "GameState", team_id: str) -> "Fixture | None":
+    """The soonest unplayed fixture for team_id (this week or later) that has
+    a planned map pool. Deterministic (week then stable id)."""
+    upcoming = [
+        f
+        for f in gs.fixtures
+        if not f.played
+        and f.maps
+        and f.week >= gs.week
+        and team_id in (f.team_a, f.team_b)
+    ]
+    upcoming.sort(key=lambda f: (f.week, f.id))
+    return upcoming[0] if upcoming else None
+
+
+def propose(gs: "GameState", team_id: str) -> PrepPlan | None:
+    """A deterministic coach recommendation for team_id's next unplayed
+    fixture — mirrors auto_schedule_ai's objective/partner logic but RETURNS
+    a candidate plan without booking it. The web layer offers it as a
+    one-click accept. rng-free, sorted iteration."""
+    if team_id not in gs.teams:
+        return None
+    fixture = _next_fixture(gs, team_id)
+    if fixture is None or not fixture.maps:
+        return None
+    opponent_id = _opponent(fixture, team_id)
+    map_id = fixture.maps[0]
+    partner_id = _ai_partner(gs, team_id, opponent_id, map_id)
+    if not partner_id:
+        return None
+    roster = _participants(gs, team_id)
+    if not roster:
+        return None
+    average_morale = sum(gs.players[p].morale for p in roster) / len(roster)
+    average_stamina = sum(gs.players[p].stamina for p in roster) / len(roster)
+    own = gs.team_map_stats.get(team_id, {}).get(map_id)
+    if average_morale < 55.0 or average_stamina < 45.0:
+        objective = "mental_reset"
+    elif own is not None and _rate(own, "defense") < _rate(own, "attack"):
+        objective = "retakes"
+    else:
+        objective = "anti_exec"
+    intensity = "light" if average_stamina < 55.0 else "normal"
+    return PrepPlan(
+        id=_stable_id(
+            gs.seed,
+            gs.season,
+            gs.week,
+            team_id,
+            fixture.id,
+            partner_id,
+            map_id,
+            objective,
+            intensity,
+            "proposal",
+        ),
+        team_id=team_id,
+        fixture_id=fixture.id,
+        opponent_id=opponent_id,
+        partner_id=partner_id,
+        map_id=map_id,
+        objective=objective,
+        intensity=intensity,
+        created_season=gs.season,
+        created_week=gs.week,
+    )
+
+
+def prep_edge_breakdown(
+    gs: "GameState", team_id: str, opp_tid: str, map_ids: list[str]
+) -> dict:
+    """The authoritative pre-fixture prep edge, mirroring campaign._fixture_plans:
+    PREP_EDGE_BASE + PREP_EDGE_SPAN*scout_progress + knowledge.prep_bonus(book)
+    + staff.coach_prep_bonus, clamped to sim/constants.PREP_EDGE_CAP. Returns the
+    per-source split {scout, book, coach, total, cap} for the Match tab. The
+    'scout' term folds the base floor so scout+book+coach == total pre-clamp.
+
+    PREP_EDGE_* is imported lazily to avoid a preparation<->campaign cycle
+    (state.py imports preparation at module top)."""
+    from esports_sim.manager import knowledge, staff
+    from esports_sim.manager.campaign import PREP_EDGE_BASE, PREP_EDGE_SPAN
+    from esports_sim.sim import constants as C
+
+    scout_progress = gs.scout_progress_by.get(team_id, {}).get(opp_tid, 0.0)
+    book = knowledge.prep_bonus(gs, team_id, opp_tid, list(map_ids))
+    tactics = gs.teams[team_id].tactics if team_id in gs.teams else None
+    coach = staff.coach_prep_bonus(gs, team_id, tactics)
+    scout = PREP_EDGE_BASE + PREP_EDGE_SPAN * scout_progress
+    total = min(C.PREP_EDGE_CAP, scout + book + coach)
+    return {
+        "scout": round(scout, 3),
+        "book": round(book, 3),
+        "coach": round(coach, 3),
+        "total": round(total, 3),
+        "cap": round(C.PREP_EDGE_CAP, 3),
+    }
+
+
 def view(gs: "GameState", team_id: str) -> dict[str, dict | None]:
-    """Serializer-friendly current booking plus the latest resolved report."""
+    """Serializer-friendly current booking, latest resolved report, plus the
+    coach's proposal for the next fixture when nothing is booked."""
     current = gs.preparation_plans_by.get(team_id)
     last = gs.preparation_reports_by.get(team_id)
+    proposal = propose(gs, team_id) if current is None else None
     return {
         "current": current.model_dump(mode="json") if current is not None else None,
         "last": last.model_dump(mode="json") if last is not None else None,
+        "proposal": (
+            proposal.model_dump(mode="json") if proposal is not None else None
+        ),
     }

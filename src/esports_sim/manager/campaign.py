@@ -589,6 +589,10 @@ def advance_week(
         if note is not None:
             report.notes.append(f"Patch {note.version} shakes the meta.")
             knowledge.on_patch(gs)  # setups date when the numbers move
+            # F5: the fast team-playbook reads date on a patch too (mirrors the
+            # knowledge KEEP factor). Lazy import mirrors the scouting.tick site.
+            from esports_sim.manager import scouting
+            scouting.decay_on_patch(gs)
 
     rt_gd = runtime_gamedata(gs, gd)
 
@@ -697,6 +701,18 @@ def advance_week(
     # mentor_skill. gs.mentorships is empty in hands-off sims, so this is a
     # no-op there and the balance gates stay byte-identical.
     development.apply_mentorship_growth(gs)
+
+    # 2a''. Agent mastery (F6): a week of maps played on an agent (already
+    # folded into gs.player_agent_stats during the match loop), a matching
+    # coach's teaching, and scrim reps accrue into gs.agent_mastery_xp_by, then
+    # rebuild the frozen AgentMastery entries in each Player.agent_pool. Growth
+    # is derived from stable counts (rng-free) and RESTRICTED to human rosters:
+    # the bare-engine golden never runs it and every AI roster stays untouched.
+    # The snowball/dynasty gates carry one passively-managed human team, so F6
+    # does run there, but its mastery drift is too small to move the bands
+    # (isolation-verified: gate stats byte-identical with F6 disabled).
+    for tid in sorted(gs.human_team_ids):
+        development.apply_agent_mastery_growth(gs, tid)
 
     # 2b. Backroom department effects: physios and recovery facilities restore
     # stamina; psychologists and the team house steady confidence and morale;
@@ -812,7 +828,11 @@ def advance_week(
     market.ai_transfer_window(gs, gd, week_rng)
     market.ai_fill_rosters(gs, gd, week_rng)
     market.ai_poach_free_agents(gs, gd, week_rng)
-    _tick_scouting(gs, report)
+    # F4/F5: parallel standing scouting lanes (pro + amateur) replace the old
+    # single-slot _tick_scouting. Lazy import avoids the campaign<->scouting
+    # cycle (scouting reads campaign's SCOUT_* constants via a lazy _c import).
+    from esports_sim.manager import scouting
+    scouting.tick(gs, report)
     delegation.finalize_week(gs)
 
     from esports_sim.manager import promises
@@ -2422,133 +2442,17 @@ def _moment_team_bump(gs: GameState, tid: str, base: float) -> None:
 
 
 def _tick_scouting(gs: GameState, report: WeekReport) -> None:
-    """Advance each human manager's scout by one week (own desk, own
-    target/progress/staff/facilities). `report` carries this week's played
-    fixtures for match assignments and live-watch bonuses."""
-    for tid in sorted(gs.human_team_ids):
-        gs.set_acting(tid)
-        _tick_scouting_one(gs, report)
-    gs.set_acting(None)
+    """Back-compat single-slot scouting entry point.
 
-
-def _tick_scouting_one(gs: GameState, report: WeekReport) -> None:
-    """One manager's scout, by assignment type (all stored in the same
-    per-manager progress dict — team ids, "market", "player:<pid>",
-    "match:<fixture id>"):
-
-    * a rival TEAM — steady weekly coverage (the classic beat);
-    * the MARKET — slower, wider free-agent coverage;
-    * one PLAYER — a deep-dive book that fills ~1.5x faster, faster still
-      the weeks they actually play (progressive intel tiers: comfort picks,
-      style read, mental read, full verdict — see development.scout_report);
-    * one MATCH — the scout attends the fixture and comes home with a
-      one-shot intel packet on BOTH teams (then needs a new assignment)."""
-    target = gs.scout_target
-    if not target:
-        return
-    mult = staff.scout_multiplier(gs) * economy.facility_scout_mult(gs)
-
-    if target.startswith("match:"):
-        fid = target[len("match:"):]
-        fx = next((f for f in report.fixtures if f.id == fid and f.played), None)
-        if fx is None:
-            # Not played this tick. If it vanished from the calendar
-            # entirely, send the scout home; otherwise keep waiting.
-            if not any(f.id == fid for f in gs.fixtures):
-                gs.scout_target = None
-                gs.push_private_news(
-                    "Scouted fixture is off the calendar — the scout needs "
-                    "a new assignment."
-                )
-            return
-        gained = min(SCOUT_MATCH_CAP, round(SCOUT_MATCH_INTEL * mult, 2))
-        # Keep a completion marker in the existing prefixed progress store.
-        # The active assignment still clears below; the scouting serializer
-        # uses this key to derive the latest post-match report from Fixture.
-        gs.scout_progress[target] = gained
-        staff.add_contribution(
-            gs, gs.acting_team_id, "analyst", "scouting_progress", gained
-        )
-        for observed_tid in (fx.team_a, fx.team_b):
-            team = gs.teams.get(observed_tid)
-            if team is None:
-                continue
-            for dial in ("aggression", "pace", "eco_greed", "map_control"):
-                gs.scout_progress[
-                    f"matchobs:{fid}:{observed_tid}:{dial}"
-                ] = float(getattr(team.tactics, dial))
-            gs.scout_progress[
-                f"matchobs:{fid}:{observed_tid}:site:{team.tactics.site_focus}"
-            ] = 1.0
-        names = []
-        for tid in (fx.team_a, fx.team_b):
-            if tid == gs.acting_team_id or tid not in gs.teams:
-                continue
-            cur = gs.scout_progress.get(tid, 0.0)
-            gs.scout_progress[tid] = min(
-                SCOUT_MATCH_CAP, round(cur + gained, 2)
-            )
-            names.append(gs.teams[tid].name)
-        gs.scout_target = None  # one-shot: the scout comes home
-        if names:
-            gs.push_private_news(
-                f"Match intel: your scout's report from "
-                f"{gs.teams[fx.team_a].name} vs {gs.teams[fx.team_b].name} "
-                f"is in — coverage of {' and '.join(names)} jumps."
-            )
-        return
-
-    if target.startswith("player:"):
-        pid = target[len("player:"):]
-        p = gs.players.get(pid)
-        if p is None:
-            gs.scout_target = None
-            return
-        cur = gs.scout_progress.get(target, 0.0)
-        # A ceiling read is slow work: capped per week so no single week (even
-        # an elite analyst desk) compiles the full book — a deep dive is a
-        # multi-week commitment now, not a one-week reveal.
-        gain = min(SCOUT_PLAYER_WEEK_CAP, SCOUT_WEEKLY_GAIN * SCOUT_PLAYER_MULT * mult)
-        # They played this week: the scout watched it live.
-        played = any(
-            pid in stats.lines
-            for fid in report.match_stats
-            for stats in report.match_stats[fid]
-        )
-        if played:
-            gain += SCOUT_LIVE_WATCH_BONUS
-        after = min(SCOUT_DEEP_CAP, round(cur + gain, 2))
-        gs.scout_progress[target] = after
-        staff.add_contribution(
-            gs, gs.acting_team_id, "analyst", "scouting_progress", after - cur
-        )
-        if after >= 1.0 and cur < 1.0:
-            gs.push_private_news(
-                f"The full book on {p.handle} is compiled — style, "
-                "mentality, ceiling, the lot."
-            )
-        return
-
-    if target != "market" and target not in gs.teams:
-        return
-    cur = gs.scout_progress.get(target, 0.0)
-    gain = SCOUT_WEEKLY_GAIN * mult
-    # The market is a bigger beat than one team: slower coverage.
-    if target == "market":
-        gain *= 0.6
-    after = min(SCOUT_SURVEY_CAP, round(cur + gain, 2))
-    gs.scout_progress[target] = after
-    staff.add_contribution(
-        gs, gs.acting_team_id, "analyst", "scouting_progress", after - cur
-    )
-    if after >= SCOUT_SURVEY_CAP and cur < SCOUT_SURVEY_CAP:
-        label = (
-            "the free-agent market"
-            if target == "market"
-            else gs.teams[target].name
-        )
-        # Private to this manager (their scout desk) — see push_private_news.
-        gs.push_private_news(f"Broad scouting survey of {label} complete.")
+    The inline SCOUT_* single-slot implementation moved to
+    ``manager/scouting.py`` (the F4/F5 parallel-lane orchestration). This thin
+    wrapper delegates to ``scouting.tick``, whose legacy fallback honours a
+    per-manager ``gs.scout_target`` when no standing lane is set — byte-identical
+    to the old behaviour. ``advance_week`` calls ``scouting.tick`` directly; this
+    alias remains for callers that still drive one manager's single-slot desk.
+    """
+    from esports_sim.manager import scouting
+    scouting.tick(gs, report)
 
 
 def _update_world_ranks(gs: GameState) -> None:

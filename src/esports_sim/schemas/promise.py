@@ -17,4 +17,7 @@ class ManagerPromise(BaseModel):
     status: str = "active"  # "active", "kept", "broken"
     dressed_count: int = 0
     initial_duration: int = 0
+    # Provenance of this promise, for inbox copy + dedup:
+    # talk | llm | negotiation | transfer_request | bench_demand | leadership.
+    source: str = "talk"
 

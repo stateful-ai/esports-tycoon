@@ -1443,6 +1443,10 @@ def negotiate_offer(
             return "error", msg, neg  # e.g. can't afford it: table stays open
         del gs.negotiations[pid]
         gs.talks_cooldown.pop(pid, None)
+        # F3 SEAM A: conceding a starter seat is a deterministic play-time
+        # promise doorway (surfaced as an inbox item + Locker Room badge).
+        from esports_sim.manager import promises
+        promises.offer_from_negotiation(gs, gs.acting_team_id, pid, role, weeks)
         return "accepted", msg, None
     neg.rounds += 1
     round_limit = negotiation_round_limit(neg)

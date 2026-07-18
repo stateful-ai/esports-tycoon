@@ -55,14 +55,22 @@ MAX_ARCS = 3  # the scarce list: at most this many active arcs per team
 # consecutive matchweeks their team actually played.
 BENCH_ARC_WEEKS = 4
 
+# A break from a STATED culture identity (culture.register_choice) stays a live
+# locker-room arc for this many weeks after it was chronicled.
+CULTURE_ARC_WEEKS = 6
+
 # Bounded effect sizes (see module docstring for the channels).
 GRUDGE_RENEWAL_BIAS = 0.08        # org grudge: the player charges to stay
 MENTOR_BOND_RENEWAL_BIAS = -0.04  # bonded pair: a friendlier table
 MENTOR_BOND_STEP_MULT = 1.25      # bonded mentorship teaches deeper
 
 # Deterministic priority: lower ranks sort (and survive the cap) first.
-_KIND_RANK = {"grudge": 0, "friction": 1, "mentor_bond": 2}
-_SOURCE_RANK = {"promise": 0, "bench": 1, "pair": 2, "form": 3, "mentorship": 0}
+# identity_betrayal shares the grudge tier — a broken public identity costs the
+# room as much as a broken promise.
+_KIND_RANK = {"identity_betrayal": 0, "grudge": 0, "friction": 1, "mentor_bond": 2}
+_SOURCE_RANK = {
+    "culture": 0, "promise": 0, "bench": 1, "pair": 2, "form": 3, "mentorship": 0,
+}
 
 _PROMISE_LABEL = {
     "play_time": "playing-time",
@@ -177,6 +185,53 @@ def org_grudges(gs: "GameState", team_id: str) -> list[dict]:
     return out
 
 
+def culture_betrayal_arcs(gs: "GameState", team_id: str) -> list[dict]:
+    """A live arc for a recently broken STATED culture identity.
+
+    Pure read over the append-only chronicle: empty unless the team is
+    committed (culture.commit_principle stamped it) AND a culture_violation was
+    recorded within CULTURE_ARC_WEEKS. Uncommitted/AI teams never produce a
+    violation, so this is inert for them and for every pre-F8 save.
+    """
+    from esports_sim.manager import chronicle
+
+    team = gs.teams.get(team_id)
+    if team is None:
+        return []
+    if gs.culture_committed_since_by.get(team_id) is None:
+        return []
+    now = gs.season * 100 + gs.week
+    out: list[dict] = []
+    seen: set[str] = set()
+    for entry in reversed(chronicle.of_kinds(gs, {"culture_violation"})):
+        if entry.team_id != team_id:
+            continue
+        if now - (entry.season * 100 + entry.week) >= CULTURE_ARC_WEEKS:
+            break  # the chronicle is chronological; older ones only get older
+        principle = str(entry.data.get("principle", "identity")).replace("_", " ")
+        pid = entry.player_id
+        if pid and pid in gs.players and pid in team.player_ids:
+            if pid in seen:
+                continue
+            seen.add(pid)
+            handle = gs.players[pid].handle
+            out.append(_row(
+                "identity_betrayal", "culture", [pid], [handle],
+                f"{handle} is still weighing the club's break from its "
+                f"{principle} identity.",
+            ))
+        else:
+            if "" in seen:
+                continue
+            seen.add("")
+            out.append(_row(
+                "identity_betrayal", "culture", [], [],
+                f"{team.name}'s break from its {principle} identity still "
+                f"hangs over the room.",
+            ))
+    return out
+
+
 def _trending_down(gs: "GameState", pid: str) -> bool:
     """Two consecutive weekly performance points sliding, the latest below
     the league-average 1.0 line. Pure gs.stat_history read."""
@@ -233,6 +288,7 @@ def team_arcs(gs: "GameState", team_id: str) -> list[dict]:
         return []
     roster = sorted(pid for pid in team.player_ids if pid in gs.players)
     rows: list[dict] = []
+    rows += culture_betrayal_arcs(gs, team_id)
     rows += org_grudges(gs, team_id)
     # Pairwise grudge/friction from the existing single source of truth
     # (relationships.arc_for_pair — the same label the profile pair chips

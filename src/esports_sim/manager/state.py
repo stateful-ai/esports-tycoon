@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 32
+SCHEMA_VERSION = 33
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -476,6 +476,55 @@ def _migrate_v31_to_v32(data: dict) -> dict:
     return rival_managers.migrate_backfill(data)
 
 
+def _migrate_v32_to_v33(data: dict) -> dict:
+    """v33 adds the immersion-pass campaign state (dev/scouting/culture):
+
+    - F4 parallel scouting lanes (`scout_lanes_by`) + fast team-identity reads
+      (`scout_playbook_by`) + market-sweep shortlists (`scout_shortlist_by`).
+    - F6 continuous per-player per-agent mastery XP (`agent_mastery_xp_by`).
+    - F8 committed-culture meters (`culture_conviction_by`,
+      `culture_committed_since_by`, `culture_last_violation_by`).
+
+    Pure additive pass-through: every new container defaults to `{}` (no rng,
+    no wall-clock). One back-compat fold — a legacy single-slot
+    `scout_targets` entry seeds the matching lane in `scout_lanes_by` so the
+    old scouting choice carries forward, while `scout_targets` itself is left
+    untouched (the decision_env/RL single-slot action path + the lane-unset
+    fallback in scouting.tick still read it). `ManagerPromise.source` and the
+    new `PrepReport` fields fill from their pydantic defaults on load.
+    """
+    for field in (
+        "scout_lanes_by",
+        "scout_playbook_by",
+        "scout_shortlist_by",
+        "agent_mastery_xp_by",
+        "culture_conviction_by",
+        "culture_committed_since_by",
+        "culture_last_violation_by",
+    ):
+        data.setdefault(field, {})
+    lanes = data["scout_lanes_by"]
+    targets = data.get("scout_targets") or {}
+    for tid, value in sorted(targets.items()):
+        if not value or tid in lanes:
+            continue
+        # 'player:<pid>' or 'market' were amateur/market sweeps; a bare rival
+        # id or 'match:<fixture>' was a pro (opponent/team) watch.
+        if value.startswith("player:") or value == "market":
+            lanes[tid] = {"amateur": value}
+        else:
+            lanes[tid] = {"pro": value}
+        # Move, don't copy: the value now lives in the standing lane, and
+        # scouting._tick_one advances the lanes AND any leftover
+        # gs.scout_target. Leaving the slot populated would advance the same
+        # assignment twice on the first post-migration tick (inflating scout
+        # progress / match-attend coverage). The RL single-slot path re-sets
+        # its own target as an action, so clearing it here is safe.
+        targets[tid] = None
+    data["scout_targets"] = targets
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -508,6 +557,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     29: _migrate_v29_to_v30,
     30: _migrate_v30_to_v31,
     31: _migrate_v31_to_v32,
+    32: _migrate_v32_to_v33,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1592,6 +1642,12 @@ class GameState(BaseModel):
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)
     dev_history: dict[str, list[DevSnap]] = Field(default_factory=dict)
+    # F6: smooth per-player per-agent mastery XP ledger (pid -> agent_id -> xp),
+    # so agent mastery grows continuously and deterministically WITHOUT
+    # touching schemas/player.py (keeps the engine's Player model byte-stable).
+    # development.apply_agent_mastery_growth accrues here, then rebuilds the
+    # frozen AgentMastery entries in Player.agent_pool. Human rosters only.
+    agent_mastery_xp_by: dict[str, dict[str, float]] = Field(default_factory=dict)
     # The latest match-review diagnosis per human team ("why you won/lost"),
     # overwritten each week they play. Computed at sim time in _sim_fixture
     # while the full box score + event log are still alive; only the LATEST is
@@ -1606,6 +1662,22 @@ class GameState(BaseModel):
     # team is always 1.0). Reached via `scout_target` / `scout_progress`.
     scout_targets: dict[str, str | None] = Field(default_factory=dict)
     scout_progress_by: dict[str, dict[str, float]] = Field(default_factory=dict)
+    # F4: per-manager PARALLEL standing directives, replacing the single-slot
+    # behaviour of scout_targets for humans. Shape:
+    #   {tid: {'pro': 'scout_opponents'|'fill_gap:<role>:<caliber>'|None,
+    #          'amateur': 'track_academy'|None}}
+    # scouting.tick advances both lanes independently; a legacy scout_targets
+    # entry is honoured as a fallback when a lane is unset.
+    scout_lanes_by: dict[str, dict[str, str | None]] = Field(default_factory=dict)
+    # F5: per-manager FAST-decaying team-identity read,
+    #   {tid: {opp_tid: {'value': float, 'as_of_week': int, 'as_of_patch': int}}}
+    # A week of VOD yields last-week identity; decays on meta patch via
+    # scouting.decay_on_patch.
+    scout_playbook_by: dict[str, dict[str, dict]] = Field(default_factory=dict)
+    # F4: per-manager continuous market-sweep output for the pro 'fill_gap'
+    # directive — recommended player ids the department surfaces, rebuilt each
+    # tick (no re-pick).
+    scout_shortlist_by: dict[str, list[str]] = Field(default_factory=dict)
 
     # Contract negotiations, per human manager: live tables (player id ->
     # Negotiation) and post-collapse cooldowns (player id -> absolute week
@@ -1676,6 +1748,16 @@ class GameState(BaseModel):
     culture_principles: dict[str, str] = Field(default_factory=dict)
     culture_last_action: dict[str, int] = Field(default_factory=dict)
     leadership_last_change: dict[str, int] = Field(default_factory=dict)
+    # F8: committed-culture meters. `culture_conviction_by` is a per-team
+    # 0-100 conviction in the committed principle (absent reads as
+    # 50/uncommitted); `culture_committed_since_by` stamps the week
+    # (season*100+week) a principle became a STATED commitment — its presence
+    # is the gate for register_choice consequences, so AI/uncommitted teams
+    # stay inert and gate-safe; `culture_last_violation_by` stamps the last
+    # violation week for inbox de-dup / needs-you cooldown.
+    culture_conviction_by: dict[str, float] = Field(default_factory=dict)
+    culture_committed_since_by: dict[str, int] = Field(default_factory=dict)
+    culture_last_violation_by: dict[str, int] = Field(default_factory=dict)
 
     # Pairwise player relationships ("pidA|pidB" sorted → 0-100). Sparse;
     # pruned toward the most-informative entries. Survives transfers.
@@ -1758,6 +1840,14 @@ class GameState(BaseModel):
     @scout_target.setter
     def scout_target(self, value: str | None) -> None:
         self.scout_targets[self.acting_team_id] = value
+
+    @property
+    def scout_lanes(self) -> dict[str, str | None]:
+        return self.scout_lanes_by.setdefault(self.acting_team_id, {})
+
+    @scout_lanes.setter
+    def scout_lanes(self, value: dict[str, str | None]) -> None:
+        self.scout_lanes_by[self.acting_team_id] = value
 
     @property
     def scout_progress(self) -> dict[str, float]:

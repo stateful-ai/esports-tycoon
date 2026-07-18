@@ -110,13 +110,19 @@ def _system_fit_mult(team: Team, p: Player) -> float:
 
 
 def growth_rate(age: int) -> float:
-    """Weekly attribute gain baseline by age."""
+    """Weekly attribute gain baseline by age.
+
+    F1 retune (young-end only, conservative): the <=24 bands are lifted so a
+    high-potential prospect can move ~3-6 CA across a season, while the
+    veteran bands (<=27, else) are UNCHANGED — this widens the developed-vs-
+    undeveloped CA gap only at the young end, which is what keeps the
+    snowball/dynasty gates in band."""
     if age <= 19:
-        return 0.65
+        return 0.90
     if age <= 21:
-        return 0.5
+        return 0.70
     if age <= 24:
-        return 0.35
+        return 0.44
     if age <= 27:
         return 0.2
     return 0.08
@@ -154,6 +160,71 @@ def stream_practice_mult(p: Player) -> float:
 # opt-in: only a manager-set mentorship (empty in hands-off sims) supplies a
 # multiplier here, so the balance gates see rate * 1.0 == rate, unchanged.
 MENTOR_GROWTH_MULT = 1.15
+
+# F2: language study is a PARTIAL-time cost. A player pinned to "language"
+# still runs this fraction of their attribute reps, so a plan with no language
+# coach (or the player already fluent) no longer trains literally nothing.
+_LANGUAGE_ATTR_FRACTION = 0.6
+# Below this stamina a player barely absorbs practice (see fatigue_mult).
+_EXHAUSTED_STAMINA = 35.0
+# Headroom under this (ceiling - current) reads as "at ceiling" for the UI.
+_CEILING_EPS = 0.5
+
+
+def apply_language_study(p: Player, language_rate: float) -> float:
+    """F2: run the language branch as a partial-time cost and return the
+    fraction of attribute reps that still run (~0.6).
+
+    Language skill only accrues when a language coach is on staff
+    (``language_rate > 0``) and the player has a target language; a coachless
+    or paused plan simply skips the language accrual but the caller still
+    trains attributes at the returned fraction. Stamina is NOT drained here —
+    the single per-week drain stays at the attribute-training site so a
+    language week costs exactly one intensity drain, as before.
+    """
+    if p.learning_language and language_rate > 0:
+        intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
+        gain = language_rate * intensity * stream_practice_mult(p)
+        index = next(
+            (i for i, skill in enumerate(p.languages) if skill.lang == p.learning_language),
+            None,
+        )
+        current = p.languages[index].level if index is not None else 0.0
+        learned = LanguageSkill(
+            lang=p.learning_language,
+            level=round(min(100.0, current + gain), 1),
+        )
+        if index is None:
+            p.languages.append(learned)
+            p.languages.sort(key=lambda skill: skill.lang)
+        else:
+            p.languages[index] = learned
+    return _LANGUAGE_ATTR_FRACTION
+
+
+def not_developing_reason(p: Player, language_rate: float) -> str | None:
+    """F2 pure read for the roster warn chip: why a player is barely (or not)
+    growing this week. Returns one of 'no_language_coach' | 'exhausted' |
+    'at_ceiling' | None. No mutation, no rng — serialized server-side so the
+    client renders the chip without mirroring any formula (invariant 4)."""
+    if p.dev_focus == "rest":
+        # Deliberate recovery is not a warning.
+        return None
+    if p.dev_focus == "language" and (language_rate <= 0 or not p.learning_language):
+        return "no_language_coach"
+    if p.stamina < _EXHAUSTED_STAMINA:
+        return "exhausted"
+    if p.dev_focus in _CATEGORY_ATTRS:
+        attrs = _CATEGORY_ATTRS[p.dev_focus]
+    else:
+        attrs = sorted({a for group in _CATEGORY_ATTRS.values() for a in group})
+    max_headroom = max(
+        (development.development_ceiling(p, a) - p.attr(a) for a in attrs),
+        default=0.0,
+    )
+    if max_headroom <= _CEILING_EPS:
+        return "at_ceiling"
+    return None
 
 
 def apply_training(
@@ -197,29 +268,13 @@ def apply_training(
         # Individual plan: a pinned focus overrides the team's category
         # (a team "rest" week still rests everyone, handled above).
         p_focus = p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else focus
+        # F2: language study is now a PARTIAL-time cost, not a full replacement.
+        # apply_language_study accrues the language skill (when a coach is on
+        # staff) and returns the fraction of attribute reps to still run, so a
+        # coachless or paused language plan no longer trains literally nothing.
+        attr_fraction = 1.0
         if p.dev_focus == "language":
-            # Language practice always replaces game-skill reps. A plan left
-            # behind after the coach is released simply pauses until a new
-            # language coach is hired.
-            if p.learning_language and language_rate > 0:
-                intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
-                gain = language_rate * intensity * stream_practice_mult(p)
-                index = next(
-                    (i for i, skill in enumerate(p.languages) if skill.lang == p.learning_language),
-                    None,
-                )
-                current = p.languages[index].level if index is not None else 0.0
-                learned = LanguageSkill(
-                    lang=p.learning_language,
-                    level=round(min(100.0, current + gain), 1),
-                )
-                if index is None:
-                    p.languages.append(learned)
-                    p.languages.sort(key=lambda skill: skill.lang)
-                else:
-                    p.languages[index] = learned
-                p.stamina = max(0.0, p.stamina - _INTENSITY_DRAIN.get(p.training_intensity, 6.0))
-            continue
+            attr_fraction = apply_language_study(p, language_rate)
         attrs = _CATEGORY_ATTRS.get(p_focus, _CATEGORY_ATTRS["tactical"])
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
         # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
@@ -227,7 +282,7 @@ def apply_training(
         support = support_bonuses.get(p.id, 0.0) if support_bonuses else 0.0
         rate = (
             _player_rate(p, support) * _system_fit_mult(team, p) * intensity * mentor
-            * stream_practice_mult(p)
+            * stream_practice_mult(p) * attr_fraction
         )
         if coach_player_mults:
             rate *= coach_player_mults.get(p.id, 1.0)
@@ -248,7 +303,9 @@ def apply_training(
             # Diminishing returns near the currently reachable outcome. The
             # outcome may sit below headline potential for an unrealised
             # prospect or above it when the player's environment is exceptional.
-            headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+            # F1: /45 -> /32 so a prospect with real headroom converts reps
+            # faster (still clamps to the reachable ceiling).
+            headroom = max(0.0, (max(95.0, ceil) - cur) / 32.0)
             p.attributes[attr_id] = round(
                 min(cur + gain * headroom, max(cur, ceil)), 2
             )
@@ -273,8 +330,9 @@ def apply_training(
 # Match experience: playing time is the other half of development.
 
 # Per-attribute gain cap per map — a monster map is still one map.
-_MATCH_XP_CAP = 0.25
-_MATCH_XP_PER_REP = 0.02
+# F1: lifted so playing time is a stronger development lever for prospects.
+_MATCH_XP_CAP = 0.40
+_MATCH_XP_PER_REP = 0.03
 
 
 def apply_match_experience(
@@ -305,7 +363,7 @@ def apply_match_experience(
             continue
         cur = p.attr(attr_id)
         ceil = development.development_ceiling(p, attr_id, support_bonus)
-        headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+        headroom = max(0.0, (max(95.0, ceil) - cur) / 32.0)
         gain = min(_MATCH_XP_CAP, _MATCH_XP_PER_REP * r) * rate * headroom
         if gain > 0:
             p.attributes[attr_id] = round(min(cur + gain, max(cur, ceil)), 2)
@@ -315,11 +373,11 @@ def apply_scrim_reps(p: Player, support_bonus: float = 0.0) -> None:
     """A benched player's week: scrims and VOD, a fraction of real minutes.
     Keeps prospects on the bench from flat-lining without making the bench
     a substitute for playing."""
-    rate = _player_rate(p, support_bonus) * 0.25
+    rate = _player_rate(p, support_bonus) * 0.35
     for attr_id in sorted(("game_sense", "positioning")):
         cur = p.attr(attr_id)
         ceil = development.development_ceiling(p, attr_id, support_bonus)
-        headroom = max(0.0, (max(95.0, ceil) - cur) / 45.0)
+        headroom = max(0.0, (max(95.0, ceil) - cur) / 32.0)
         p.attributes[attr_id] = round(
             min(cur + 0.05 * rate * headroom, max(cur, ceil)), 2
         )

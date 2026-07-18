@@ -243,6 +243,13 @@ def resolve(
         player_id=event.player_id,
         data={"event": event.type_id, "choice": choice_id},
     )
+    # F8: score this public choice against the team's committed identity. A
+    # no-op (returns None, no mutation) for uncommitted/AI teams, so it fires
+    # safely from the AI queue_weekly_events path too. Local import avoids any
+    # import cycle at module load.
+    from esports_sim.manager import culture
+
+    culture.register_choice(gs, team_id, "media", event.type_id, choice_id, event.player_id)
     if announce:
         gs.push_news(summary)
     del gs.media_events_by[team_id]

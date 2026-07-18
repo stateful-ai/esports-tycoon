@@ -80,6 +80,9 @@ ACTION_KINDS = frozenset(
         "media_choice",
         "resolve_media",
         "talk_chat",
+        "set_scout_directive",
+        "promise_respond",
+        "commit_principle",
     }
 )
 

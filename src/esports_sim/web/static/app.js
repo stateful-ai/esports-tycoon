@@ -705,6 +705,32 @@ function stylePill(p) {
   return `<span class="pill-pair"><span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span></span>`;
 }
 
+// Tiny inline trajectory sparkline from a numeric series (e.g. a player's CA
+// across dev-history snapshots). Pure presentation — the server owns every
+// value; this only maps points into an SVG polyline. A rising line reads
+// green, falling red, flat neutral. Degrades to "" for <2 points.
+function sparkline(points, opts = {}) {
+  const pts = (points || []).filter((n) => n != null).map(Number);
+  if (pts.length < 2) return `<span class="es-spark-empty muted">—</span>`;
+  const w = opts.w ?? 72, hgt = opts.h ?? 20, pad = 2;
+  const lo = Math.min(...pts), hi = Math.max(...pts);
+  const span = hi - lo || 1;
+  const dx = (w - pad * 2) / (pts.length - 1);
+  const coords = pts.map((v, i) => {
+    const x = pad + i * dx;
+    const y = pad + (hgt - pad * 2) * (1 - (v - lo) / span);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const trend = pts[pts.length - 1] - pts[0];
+  const cls = Math.abs(trend) < 1e-6 ? "flat" : trend > 0 ? "up" : "down";
+  const last = coords[coords.length - 1].split(",");
+  return `<svg class="es-spark ${cls}" width="${w}" height="${hgt}" viewBox="0 0 ${w} ${hgt}" ` +
+    `preserveAspectRatio="none" aria-hidden="true">` +
+    `<polyline points="${coords.join(" ")}" fill="none" stroke-width="1.5" ` +
+    `stroke-linejoin="round" stroke-linecap="round"/>` +
+    `<circle cx="${last[0]}" cy="${last[1]}" r="1.8"/></svg>`;
+}
+
 // Spoken-language chips for a player row — comms fit is visible right at the
 // signing decision. The proficiency rides each chip's title. Server sends a
 // list of {lang, level}; a missing/empty list degrades to "".
@@ -896,6 +922,60 @@ async function clubOps(v, sub) {
   if (d.culture_sessions.cooldown_weeks) sessions.appendChild(el("span", "muted", `${d.culture_sessions.cooldown_weeks}w cooldown`));
   cc.append(controls, saveLeaders, el("p", "microlabel", "Culture session"), sessions);
   cc.appendChild(el("p", "microlabel", "Culture session"));
+
+  // F8 — team identity: a stated commitment to a principle that media and
+  // team-moment choices can honor or violate, with real trust/chemistry
+  // consequences. Conviction, commitment state and recent violations are all
+  // server-computed (culture.culture_snapshot).
+  const commitment = c.commitment;
+  if (commitment) {
+    const idBox = el("div", "culture-identity");
+    const conv = Math.round(commitment.conviction ?? 50);
+    const committed = !!commitment.committed;
+    const principleName = humanize(commitment.principle || c.principle || "balanced");
+    idBox.innerHTML = `<h3 class="culture-identity-h">Team identity` +
+      `${committed ? ` <span class="pill tone-good">committed</span>` : ` <span class="pill">uncommitted</span>`}</h3>` +
+      `<p class="muted">A committed identity is a promise the locker room holds you to. Choices that betray it cost trust, chemistry and morale; choices that honor it deepen conviction.</p>`;
+    if (committed) {
+      idBox.innerHTML += `<div class="rowbar"><span>Playing as <b>${esc(principleName)}</b></span>` +
+        `<span class="rowbar-val">conviction <b class="mono">${conv}</b></span></div>`;
+      const convBar = el("div", "");
+      convBar.innerHTML = bar(conv);
+      idBox.appendChild(convBar);
+      if (commitment.identity_betrayed) {
+        idBox.appendChild(el("p", "warn", "⚠ A recent public choice betrayed this identity — the room noticed."));
+      }
+    } else {
+      idBox.appendChild(el("p", "muted",
+        `Commit to <b>${esc(principleName)}</b> to make it a stated identity. "Balanced" stays uncommitted.`));
+    }
+    // Commit / re-commit action (disabled for the inert "balanced" principle).
+    const canCommit = (commitment.principle || c.principle) && (commitment.principle || c.principle) !== "balanced";
+    const commitBtn = el("button", "btn btn-sm" + (committed ? "" : " btn-primary"),
+      committed ? "Re-affirm identity" : "Commit to this identity");
+    commitBtn.disabled = !canCommit;
+    commitBtn.title = canCommit
+      ? "Publicly commit the current principle as your team identity"
+      : "Choose a principle other than Balanced first (set it in the leadership group above).";
+    commitBtn.onclick = async () => {
+      const r = await api("/api/actions/commit-principle", { principle: commitment.principle || c.principle });
+      toast(r.message); refresh();
+    };
+    idBox.appendChild(commitBtn);
+
+    const violations = commitment.recent_violations || c.recent_violations || [];
+    if (violations.length) {
+      idBox.appendChild(el("p", "microlabel", "Identity moments"));
+      for (const vln of violations) {
+        const honored = vln.honored || vln.kind === "honor";
+        idBox.appendChild(el("div", `newsline ${honored ? "" : "culture-violation"}`,
+          `<span class="chip ${honored ? "tone-good" : "tone-bad"}">${honored ? "honored" : "violated"}</span> ` +
+          `${esc(vln.text || vln.summary || `${humanize(vln.source || "")} · ${humanize(vln.choice_id || "")}`)}` +
+          `${vln.week != null ? ` <span class="muted">W${vln.week}</span>` : ""}`));
+      }
+    }
+    cc.appendChild(idBox);
+  }
   ws.appendChild(cc);
   } // end operations
 
@@ -2223,6 +2303,31 @@ function computeNeedsYou(data) {
       label: `${s.inbox_unread} unread inbox message${s.inbox_unread > 1 ? "s" : ""}`,
       detail: "" });
   }
+  // F3 — a player is owed a decision (a bench-minutes demand / promise
+  // doorway is open in the Locker Room).
+  if (s.promise_pending) {
+    const n = Number(s.promise_pending) || 1;
+    items.push({ tab: "club", subtab: "locker_room", kind: "promise", action: "Respond", needs_action: true,
+      label: `${n > 1 ? n + " players are" : "A player is"} waiting on a promise`, detail: "Locker Room" });
+  }
+  // F7 — the coach has a scrim plan proposed for the next fixture (one-click
+  // accept lives on Match · Prep).
+  if (s.scrim_proposal_pending) {
+    items.push({ tab: "tactics", subtab: "prep", kind: "scrim", action: "Accept", needs_action: true,
+      label: "Coach proposed a scrim plan", detail: "Match · Prep" });
+  }
+  // F8 — a public choice betrayed the committed team identity; acknowledge it
+  // on Operations.
+  if (s.culture_violation_unack) {
+    items.push({ tab: "club", subtab: "operations", kind: "culture", action: "Review", needs_action: true,
+      label: "A choice betrayed your team identity", detail: "Culture" });
+  }
+  // F4 — the pro fill-gap sweep produced a fresh shortlist (a recommendation,
+  // not a decision, so it surfaces without lighting a nav badge).
+  if (s.scout_shortlist_ready) {
+    items.push({ tab: "scouting", kind: "shortlist", action: "Review", needs_action: false,
+      label: "Scouting shortlist updated", detail: "Market · Scouting" });
+  }
   // Board + objectives appear only when they actually need attention — but
   // they're context, not decisions, so they never drive a nav badge.
   if (s.board && !(s.board.band === "secure" || s.board.band === "stable")) {
@@ -2605,6 +2710,18 @@ async function roster(v, opts = {}) {
         : '<span class="muted">—</span>';
       const progressPercent = p.mentor_progress != null ? Math.round(p.mentor_progress) : 0;
       const progressBar = p.mentor_id ? `<div class="pf-hbar" style="height:4px; margin-top:4px; background:var(--es-color-bg, #05070a);"><i style="display:block; height:100%; width:${progressPercent}%; background:var(--es-color-accent, #00f0ff);"></i></div><span style="font-size:0.75em; display:block;" class="muted">${progressPercent}% complete</span>` : "";
+      // F2 — "not developing this week" warning. The server decides the reason
+      // (language plan with no coach, exhausted legs, or already at ceiling);
+      // we only translate it to a chip so a silently-stalled plan is visible.
+      const NOT_DEV_LABEL = {
+        no_language_coach: "language study, no coach",
+        exhausted: "too exhausted to train",
+        at_ceiling: "at skill ceiling",
+      };
+      const ndReason = p.not_developing;
+      const notDevChip = ndReason
+        ? ` <span class="chip tone-bad dev-warn-chip" title="This week's plan isn't building attributes: ${esc(NOT_DEV_LABEL[ndReason] || ndReason)}.">⚠ ${esc(NOT_DEV_LABEL[ndReason] || humanize(ndReason))}</span>`
+        : "";
       rowHtml = `
         ${starCell}
         ${playerCell}
@@ -2613,7 +2730,7 @@ async function roster(v, opts = {}) {
         ${ceilingCell}
         <td>${bar(p.form)}${tArrow(ct.form)}</td>
         <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
-        <td class="dev-plan">${focusSel}</td>
+        <td class="dev-plan">${focusSel}${notDevChip}</td>
         <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
         <td class="dev-plan">${mentorSel}${progressBar}</td>`;
@@ -2816,6 +2933,20 @@ async function roster(v, opts = {}) {
     ws.appendChild(cell);
   }
 
+  // F1 — "Future of the Org": the fortnightly dev digest + the pipeline board
+  // (youth -> academy -> bench -> starters, each with a CA trajectory
+  // sparkline). Both are pure reads of server-computed values.
+  if (!overview && data.is_user_team && data.dev_digest) {
+    const digestCell = el("div", "ws-12 ws-col");
+    digestCell.appendChild(devDigestCard(data.dev_digest));
+    ws.appendChild(digestCell);
+  }
+  if (!overview && data.is_user_team && data.pipeline) {
+    const pipeCell = el("div", "ws-12 ws-col");
+    pipeCell.appendChild(pipelineBoardCard(data.pipeline));
+    ws.appendChild(pipeCell);
+  }
+
   // Season-long development accounting belongs at the bottom of the
   // Development view. Deltas come from persisted server-side snapshots.
   if (!overview && data.is_user_team && data.development_report) {
@@ -2823,6 +2954,120 @@ async function roster(v, opts = {}) {
     reportCell.appendChild(developmentReportCard(data.development_report));
     ws.appendChild(reportCell);
   }
+}
+
+// F1 — the "Future of the Org" digest. Reads server-built lists (risers,
+// milestones, academy standouts, prospect updates); renders nothing the
+// server didn't compute. Signed attribute deltas arrive pre-formatted or as
+// numbers; we only choose the tone class.
+function devDigestCard(digest) {
+  const card = el("div", "card dev-digest");
+  const signed = (v) => (v > 0 ? "+" : "") + Number(v).toFixed(1);
+  card.innerHTML = `<div class="dev-digest-head">
+      <h2>Future of the Org</h2>
+      <p class="muted">${esc(digest.subtitle || "Where the roster is trending — risers, milestones and the prospects behind them.")}</p>
+    </div>`;
+
+  const grid = el("div", "dev-digest-grid");
+
+  const risers = digest.risers || [];
+  const riserCol = el("div", "dev-digest-col");
+  riserCol.innerHTML = `<h3 class="dev-digest-col-h">Risers</h3>`;
+  if (!risers.length) {
+    riserCol.appendChild(el("p", "muted", "No standout climbers this window."));
+  } else {
+    for (const r of risers) {
+      const spark = sparkline(r.ca_series || r.series);
+      riserCol.appendChild(el("div", "dev-digest-row",
+        `<span class="dev-digest-name">${plink(r.id, r.handle)}` +
+        `${r.age != null ? ` <span class="muted">${r.age}</span>` : ""}</span>` +
+        `<span class="es-spark-wrap">${spark}</span>` +
+        `<span class="chip ${(r.delta ?? 0) >= 0 ? "tone-good" : "tone-bad"}" ` +
+        `title="ability change over the tracked window">CA ${signed(r.delta ?? 0)}</span>`));
+    }
+  }
+  grid.appendChild(riserCol);
+
+  const milestones = digest.milestones || [];
+  const mCol = el("div", "dev-digest-col");
+  mCol.innerHTML = `<h3 class="dev-digest-col-h">Milestones</h3>`;
+  if (!milestones.length) {
+    mCol.appendChild(el("p", "muted", "No milestones crossed."));
+  } else {
+    for (const m of milestones) {
+      mCol.appendChild(el("div", "newsline",
+        `${m.player_id ? plink(m.player_id, m.handle || m.player_id) + " · " : ""}${esc(m.text || m.label || "")}`));
+    }
+  }
+  grid.appendChild(mCol);
+
+  const acad = digest.academy_standouts || [];
+  const aCol = el("div", "dev-digest-col");
+  aCol.innerHTML = `<h3 class="dev-digest-col-h">Academy standouts</h3>`;
+  if (!acad.length) {
+    aCol.appendChild(el("p", "muted", "Quiet week in the academy."));
+  } else {
+    for (const a of acad) {
+      aCol.appendChild(el("div", "dev-digest-row",
+        `<span class="dev-digest-name">${plink(a.id, a.handle)}</span>` +
+        `<span class="es-spark-wrap">${sparkline(a.ca_series || a.series)}</span>` +
+        `<span class="chip">${a.note ? esc(a.note) : "CA " + Math.round(a.ca ?? 0)}</span>`));
+    }
+  }
+  grid.appendChild(aCol);
+
+  const prospects = digest.prospect_updates || [];
+  const pCol = el("div", "dev-digest-col");
+  pCol.innerHTML = `<h3 class="dev-digest-col-h">Prospect updates</h3>`;
+  if (!prospects.length) {
+    pCol.appendChild(el("p", "muted", "No new scouting movement."));
+  } else {
+    for (const pr of prospects) {
+      pCol.appendChild(el("div", "newsline",
+        `${pr.id ? plink(pr.id, pr.handle || pr.id) + " · " : ""}${esc(pr.text || pr.note || "")}`));
+    }
+  }
+  grid.appendChild(pCol);
+
+  card.appendChild(grid);
+  return card;
+}
+
+// F1 — the talent pipeline board: four columns youth -> academy -> bench ->
+// starters, each entry carrying a CA sparkline so a manager can see the
+// trajectory at a glance. Column contents are server-supplied lists.
+function pipelineBoardCard(pipeline) {
+  const card = el("div", "card pipeline-board");
+  card.innerHTML = `<h2>Talent pipeline</h2>
+    <p class="muted">The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.</p>`;
+  const cols = [
+    ["youth", "Youth intake"],
+    ["academy", "Academy"],
+    ["bench", "Bench"],
+    ["starters", "Starters"],
+  ];
+  const grid = el("div", "pipeline-grid");
+  for (const [key, label] of cols) {
+    const list = pipeline[key] || [];
+    const col = el("div", "pipeline-col");
+    col.innerHTML = `<h3 class="pipeline-col-h">${label} <span class="pill">${list.length}</span></h3>`;
+    if (!list.length) {
+      col.appendChild(el("p", "muted", "Empty"));
+    } else {
+      for (const p of list) {
+        const stars = p.potential_stars != null
+          ? `<span class="pipeline-stars">${starsRange([p.potential_stars, p.potential_stars])}</span>` : "";
+        col.appendChild(el("div", "pipeline-card-row",
+          `<div class="pipeline-row-top"><span class="dev-digest-name">${plink(p.id, p.handle)}</span>` +
+          `${p.age != null ? `<span class="muted pipeline-age">${p.age}</span>` : ""}</div>` +
+          `<div class="pipeline-row-bot"><span class="es-spark-wrap">${sparkline(p.ca_series || p.series)}</span>` +
+          `<span class="pipeline-ca mono" title="current ability">${Math.round(p.ability ?? 0)}</span>${stars}</div>`));
+      }
+    }
+    grid.appendChild(col);
+  }
+  card.appendChild(grid);
+  return card;
 }
 
 function developmentReportCard(report) {
@@ -3084,8 +3329,42 @@ async function tacticsPrep(ws) {
     };
     pc.append(form, book);
   }
+  // F7 — the coach proposes a concrete scrim plan for the next fixture, one
+  // click to accept. The whole proposal (map/partner/objective) is
+  // server-computed (preparation.propose); we render and POST accept=true.
+  if (pr.proposal) {
+    const prop = pr.proposal;
+    const propBox = el("div", "prep-proposal");
+    propBox.innerHTML = `<div class="prep-proposal-head"><span class="chip tone-accent">Coach proposal</span>` +
+      `<b>${humanize(prop.objective || "scrim")} on ${humanize(prop.map_id || "")}</b></div>` +
+      `<p class="muted">${esc(prop.rationale || `Recommended against ${prop.partner_name || "a sparring partner"} to prep the next fixture.`)}` +
+      `${prop.partner_name ? ` Partner: <b>${esc(prop.partner_name)}</b>.` : ""}` +
+      `${prop.expected_edge != null ? ` Expected +${Number(prop.expected_edge).toFixed(1)} prep edge.` : ""}</p>`;
+    const acceptBtn = el("button", "btn btn-sm btn-primary", "Accept coach plan");
+    acceptBtn.onclick = async () => {
+      const r = await api("/api/actions/preparation", { accept: true });
+      toast(r.message); refresh();
+    };
+    propBox.appendChild(acceptBtn);
+    pc.appendChild(propBox);
+  }
   if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${pr.current.intensity}).`));
-  if (pr.last) pc.appendChild(el("div", "newsline", `<b>Last report:</b> ${esc(pr.last.finding)} <span class="muted">Knowledge +${pr.last.knowledge_gain}; stamina −${pr.last.stamina_cost}.</span>`));
+  if (pr.last) {
+    // F7 — surface the named artifact the last session produced (not just the
+    // prose finding), so scrims read as consequential.
+    const artifact = pr.last.artifact_label
+      ? `<b>Prep artifact:</b> ${esc(pr.last.artifact_label)}` +
+        (pr.last.prep_edge_contribution != null ? ` <span class="chip tone-good">+${Number(pr.last.prep_edge_contribution).toFixed(1)} edge</span>` : "")
+      : `<b>Last report:</b> ${esc(pr.last.finding)}`;
+    pc.appendChild(el("div", "newsline", `${artifact} <span class="muted">Knowledge +${pr.last.knowledge_gain}; stamina −${pr.last.stamina_cost}.</span>`));
+    if (pr.last.artifact_label && pr.last.finding) {
+      pc.appendChild(el("p", "muted prep-finding", esc(pr.last.finding)));
+    }
+    if (pr.last.dev_suggestion) {
+      pc.appendChild(el("div", "newsline prep-dev-hint",
+        `<b>Dev note:</b> ${pr.last.dev_suggestion_player_id ? plink(pr.last.dev_suggestion_player_id, pr.last.dev_suggestion_handle || pr.last.dev_suggestion_player_id) + " — " : ""}${esc(pr.last.dev_suggestion)}`));
+    }
+  }
   ws.appendChild(pc);
 
   // Tournament roster registration.
@@ -3320,9 +3599,15 @@ function lineupCard(v, lineup) {
     `Lock the agent each player runs this week. You won't know the map when it's
      played, so it's one agent per player — pick for comfort. <b>Auto</b> fields
      their best-mastery agent. Off-role picks work but low mastery hurts duels.`));
+  // F6 — the mastery-derived duel edge per pick is server-computed
+  // (development.agent_pick_edge, matching the engine's (mastery-50)/25 read).
+  // We only show whichever field the server attaches; if edge is absent the
+  // column silently degrades to "—".
+  const hasEdge = lineup.players.some((p) => (p.options || []).some((o) => o.edge != null));
+  const edgeTh = hasEdge ? `<th class="num" title="duel points this agent's mastery adds or costs at match time">Edge</th>` : "";
   const t = el("table");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th>Agent</th>
-    <th class="num">Mastery</th></tr></thead>`;
+    <th class="num">Mastery</th>${edgeTh}</tr></thead>`;
   const tb = el("tbody");
   const pending = {}; // pid -> agent_id ("" = auto)
   for (const p of lineup.players) {
@@ -3337,11 +3622,22 @@ function lineupCard(v, lineup) {
     }
     sel.value = p.assigned ?? "";
     const mCell = el("td", "num");
+    const eCell = hasEdge ? el("td", "num edge-cell") : null;
+    const fmtEdge = (v) => (v > 0 ? "+" : "") + Number(v).toFixed(1);
     const paintM = () => {
       const id = sel.value || p.auto_id;
       const o = p.options.find((x) => x.id === id);
       mCell.textContent = o ? o.mastery : "—";
       mCell.className = "num" + (o && o.mastery < 40 ? " bad" : "");
+      if (eCell) {
+        if (o && o.edge != null) {
+          eCell.textContent = fmtEdge(o.edge);
+          eCell.className = "num edge-cell " + (o.edge > 0.05 ? "good" : o.edge < -0.05 ? "bad" : "muted");
+        } else {
+          eCell.textContent = "—";
+          eCell.className = "num edge-cell muted";
+        }
+      }
     };
     const tr = el("tr");
     tr.appendChild(el("td", "", `<b>${plink(p.id, p.handle)}</b>`));
@@ -3350,6 +3646,7 @@ function lineupCard(v, lineup) {
     aCell.appendChild(sel);
     tr.appendChild(aCell);
     tr.appendChild(mCell);
+    if (eCell) tr.appendChild(eCell);
     tb.appendChild(tr);
     paintM();
     sel.onchange = () => { pending[p.id] = sel.value; paintM(); };
@@ -3442,12 +3739,37 @@ async function gameplanPanel(v) {
 
   // Prep meter: setting a plan brings the baseline edge; scouting raises it.
   const pct = Math.round(gp.scout_knowledge * 100);
+  // F7 — the prep edge is now a {scout, book, coach, total, cap} breakdown
+  // (preparation.prep_edge_breakdown) so the manager sees where the edge comes
+  // from. Fall back to the legacy scalar if the server hasn't shipped it.
+  const bd = (gp.prep_edge_breakdown && typeof gp.prep_edge_breakdown === "object")
+    ? gp.prep_edge_breakdown
+    : (gp.prep_edge && typeof gp.prep_edge === "object") ? gp.prep_edge : null;
   const prep = el("div", "gp-prep");
-  prep.innerHTML = `<span class="gp-prep-lab">Prep edge</span>
-    <span class="gp-prep-val mono">+${gp.prep_edge.toFixed(1)}</span>
-    <span class="gp-prep-sub">duel points while a plan is set. ${opp.name} is
-    ${pct}% scouted — deeper scouting raises this (max +${gp.prep_edge_max.toFixed(1)}).</span>`;
+  if (bd) {
+    const num = (v) => (v > 0 ? "+" : "") + Number(v || 0).toFixed(1);
+    const part = (lab, v) => `<span class="gp-prep-part" title="${lab}"><span class="muted">${lab}</span> <b class="mono">${num(v)}</b></span>`;
+    prep.innerHTML = `<span class="gp-prep-lab">Prep edge</span>
+      <span class="gp-prep-val mono">${num(bd.total)}</span>
+      <span class="gp-prep-parts">${part("scout", bd.scout)}${part("book", bd.book)}${part("coach", bd.coach)}</span>
+      <span class="gp-prep-sub">duel points while a plan is set — from scouting, your
+      map book and your coach. ${esc(opp.name)} is ${pct}% scouted${bd.cap != null ? ` · capped at +${Number(bd.cap).toFixed(1)}` : ""}.</span>`;
+  } else {
+    prep.innerHTML = `<span class="gp-prep-lab">Prep edge</span>
+      <span class="gp-prep-val mono">+${Number(gp.prep_edge || 0).toFixed(1)}</span>
+      <span class="gp-prep-sub">duel points while a plan is set. ${esc(opp.name)} is
+      ${pct}% scouted — deeper scouting raises this (max +${Number(gp.prep_edge_max || 0).toFixed(1)}).</span>`;
+  }
   card.appendChild(prep);
+  // F7 — last named prep artifact, if the coach's most recent session produced
+  // one. Server supplies the label + edge contribution.
+  if (gp.last_artifact && (gp.last_artifact.artifact_label || gp.last_artifact.label)) {
+    const la = gp.last_artifact;
+    const contrib = la.prep_edge_contribution ?? la.contribution;
+    card.appendChild(el("div", "newsline gp-artifact",
+      `<b>Prep artifact:</b> ${esc(la.artifact_label || la.label)}` +
+      (contrib != null ? ` <span class="chip tone-good">+${Number(contrib).toFixed(1)} edge</span>` : "")));
+  }
 
   // Matchup-aware counter read. The server owns the formula and withholds the
   // opponent-specific number behind scouting; public map-meta is always safe.
@@ -5504,6 +5826,150 @@ function scoutTier(p) {
   return "first looks";
 }
 
+// F4/F5 — the two-lane standing-directive desk. Both lanes run in parallel
+// every week with no re-pick: the pro lane scouts upcoming opponents (fast
+// team-identity reads that decay on meta patches) or runs a continuous market
+// sweep for a roster gap; the amateur lane tracks the academy and youth
+// intake. Directive options, the auto-rotated opponent, progress and any
+// role/caliber choices are all server-supplied; this only renders + POSTs.
+function scoutLanesCard(lanes) {
+  const card = el("div", "card scout-lanes");
+  card.appendChild(el("h2", "", "Scouting lanes"));
+  card.appendChild(el("p", "muted",
+    "Two standing directives run in parallel — set them once and the department " +
+    "works them every week. No weekly re-picks."));
+
+  const post = async (body) => {
+    const r = await api("/api/actions/scout-directive", body);
+    toast(r.message); renderApp();
+  };
+
+  const grid = el("div", "scout-lanes-grid");
+
+  // -- Pro lane --------------------------------------------------------------
+  const pro = lanes.pro || {};
+  const proTile = el("div", "tile scout-lane");
+  proTile.appendChild(el("div", "scout-lane-head",
+    `<span class="chip tone-accent">Pro</span><b>Opponents & market</b>`));
+  const proOpts = pro.options && pro.options.length ? pro.options : [
+    { value: "scout_opponents", label: "Scout upcoming opponents" },
+    { value: "fill_gap", label: "Find a player to fill a gap" },
+  ];
+  const proBase = String(pro.directive || "").split(":")[0] || "";
+  const proSel = el("select", "select");
+  proSel.appendChild(el("option", "", "— no standing directive —"));
+  for (const o of proOpts) {
+    const opt = el("option", "", o.label || humanize(o.value));
+    opt.value = o.value;
+    if (o.value === proBase) opt.selected = true;
+    proSel.appendChild(opt);
+  }
+  proTile.appendChild(proSel);
+
+  // fill_gap needs a role + caliber; only shown when that directive is picked.
+  const gapWrap = el("div", "scout-gap-row");
+  const roleOpts = pro.role_options && pro.role_options.length ? pro.role_options
+    : ["duelist", "controller", "initiator", "sentinel", "flex"];
+  const calOpts = pro.caliber_options && pro.caliber_options.length ? pro.caliber_options
+    : ["star", "tier1", "starter", "tier2"];
+  const parts = String(pro.directive || "").split(":");
+  const roleSel = el("select", "sel-sm");
+  for (const x of roleOpts) { const o = el("option", "", humanize(x)); o.value = x; if (x === parts[1]) o.selected = true; roleSel.appendChild(o); }
+  const calSel = el("select", "sel-sm");
+  for (const x of calOpts) { const o = el("option", "", humanize(x)); o.value = x; if (x === parts[2]) o.selected = true; calSel.appendChild(o); }
+  gapWrap.append(el("span", "muted", "gap:"), roleSel, calSel);
+  const syncGap = () => { gapWrap.style.display = proSel.value === "fill_gap" ? "" : "none"; };
+  syncGap();
+  proTile.appendChild(gapWrap);
+
+  const proSave = el("button", "btn btn-sm btn-primary", "Set pro lane");
+  proSave.onclick = () => {
+    if (!proSel.value) return post({ lane: "pro", directive: null });
+    if (proSel.value === "fill_gap") {
+      return post({ lane: "pro", directive: "fill_gap", role: roleSel.value, caliber: calSel.value });
+    }
+    return post({ lane: "pro", directive: proSel.value });
+  };
+  proSel.onchange = syncGap;
+  proTile.appendChild(proSave);
+
+  // Current standing + auto-rotated opponent.
+  if (pro.opponent) {
+    proTile.appendChild(el("div", "newsline",
+      `<b>This week:</b> ${tlink(pro.opponent.id, pro.opponent.name)}` +
+      `${pro.opponent.week != null ? ` <span class="muted">(W${pro.opponent.week})</span>` : ""}` +
+      `${pro.progress != null ? ` <span class="chip">${Math.round(pro.progress * 100)}%</span>` : ""}`));
+  } else if (pro.status_label) {
+    proTile.appendChild(el("p", "muted", esc(pro.status_label)));
+  }
+  grid.appendChild(proTile);
+
+  // -- Amateur lane ----------------------------------------------------------
+  const am = lanes.amateur || {};
+  const amTile = el("div", "tile scout-lane");
+  amTile.appendChild(el("div", "scout-lane-head",
+    `<span class="chip">Amateur</span><b>Academy & youth</b>`));
+  const amOpts = am.options && am.options.length ? am.options : [
+    { value: "track_academy", label: "Track our academy & youth intake" },
+  ];
+  const amSel = el("select", "select");
+  amSel.appendChild(el("option", "", "— no standing directive —"));
+  for (const o of amOpts) {
+    const opt = el("option", "", o.label || humanize(o.value));
+    opt.value = o.value;
+    if (o.value === (am.directive || "")) opt.selected = true;
+    amSel.appendChild(opt);
+  }
+  amTile.appendChild(amSel);
+  const amSave = el("button", "btn btn-sm btn-primary", "Set amateur lane");
+  amSave.onclick = () => post({ lane: "amateur", directive: amSel.value || null });
+  amTile.appendChild(amSave);
+  const focus = am.focus || am.tracked || [];
+  if (focus.length) {
+    amTile.appendChild(el("p", "microlabel", "Tracking"));
+    for (const f of focus) {
+      amTile.appendChild(el("div", "newsline",
+        `${plink(f.id, f.handle)}${f.note ? ` <span class="muted">${esc(f.note)}</span>` : ""}` +
+        `${f.progress != null ? ` <span class="chip">${Math.round(f.progress * 100)}%</span>` : ""}`));
+    }
+  } else if (am.status_label) {
+    amTile.appendChild(el("p", "muted", esc(am.status_label)));
+  }
+  grid.appendChild(amTile);
+
+  card.appendChild(grid);
+  return card;
+}
+
+// F4 — the continuous market-sweep shortlist the pro "fill_gap" directive
+// produces. Recommendations only; no re-pick. Each row deep-links the player
+// profile and offers a one-click deep-dive assignment.
+function scoutShortlistCard(shortlist, proLane) {
+  const card = el("div", "card scout-shortlist");
+  const gap = proLane && proLane.directive && proLane.directive.startsWith("fill_gap")
+    ? proLane.directive.split(":").slice(1).map(humanize).filter(Boolean).join(" · ")
+    : "";
+  card.innerHTML = `<h2>Shortlist${gap ? ` <span class="muted" style="font-weight:400">— ${esc(gap)}</span>` : ""}</h2>` +
+    `<p class="muted">Continuous market sweep — the department keeps this list fresh.</p>`;
+  for (const p of shortlist) {
+    const row = el("div", "entity");
+    const band = (p.uncertainty_low != null && p.uncertainty_high != null)
+      ? ` <span class="muted" title="scout-precision uncertainty band">±${starsRange([p.uncertainty_low, p.uncertainty_high])}</span>`
+      : "";
+    row.innerHTML = `<span class="entity-name">${plink(p.player_id, p.handle)}</span>` +
+      `<span class="entity-meta">${esc(p.role || "")}${p.team_name ? " · " + esc(p.team_name) : " · free agent"}` +
+      `${p.ca_stars ? " · " + starsRange(p.ca_stars) : ""}${band}</span>`;
+    const b = el("button", "btn btn-sm", "Deep-dive");
+    b.onclick = async () => {
+      const r = await api("/api/actions/scout", { player_id: p.player_id });
+      toast(r.message); renderApp();
+    };
+    row.appendChild(b);
+    card.appendChild(row);
+  }
+  return card;
+}
+
 // Scouting desk body. Only reachable as the Market tab's Scouting sub-tab
 // (the old standalone Scouting screen was removed; TAB_ALIASES routes the
 // old tab id to market/scouting). MarketTab renders the Market head with
@@ -5525,18 +5991,35 @@ async function scouting(v) {
   ws.appendChild(main);
   ws.appendChild(rail);
 
+  // F4/F5 — parallel standing-directive lanes replace the single-slot picker.
+  // The department advances both the pro and amateur lanes every week with no
+  // re-pick; the pro lane auto-rotates onto the next opponent or runs a
+  // continuous market sweep that produces a shortlist. Rendered only when the
+  // server ships lanes; otherwise the legacy single-slot desk below stands in.
+  const lanes = data.lanes;
+  if (lanes) {
+    main.appendChild(scoutLanesCard(lanes));
+    const shortlist = data.shortlist || [];
+    if (shortlist.length) main.appendChild(scoutShortlistCard(shortlist, lanes.pro));
+  }
+
   /* -- main ws-7: the scout desk (assignment + active job) ------------------ */
   const card = el("div", "card scout-desk");
-  card.appendChild(el("h2", "", "Scout desk"));
-  card.appendChild(el("p", "muted",
-    `One scout, one assignment: survey a team or the market (broad read, capped ` +
-    `at ${surveyPct}%), attend a match (behavioral intel up to ${matchPct}%), or build the book on ` +
-    `one player (${deepPct}% information depth — still not own-roster certainty): comfort picks, ` +
-    "how they play, their mentality, the full verdict)."));
-  card.appendChild(el("div", "scout-one-note",
-    `<span class="chip tone-accent">One active job</span>` +
-    `<b>Choose one of the three assignments below.</b> ` +
-    `<span class="muted">Starting another immediately replaces the current job.</span>`));
+  card.appendChild(el("h2", "", lanes ? "Deep-dive desk" : "Scout desk"));
+  card.appendChild(el("p", "muted", lanes
+    ? `Your standing lanes run continuously above. Use the desk for a one-off ` +
+      `deep assignment: attend a specific match, or build the book on one player ` +
+      `(${deepPct}% depth — comfort picks, how they play, their mentality, the full verdict).`
+    : `One scout, one assignment: survey a team or the market (broad read, capped ` +
+      `at ${surveyPct}%), attend a match (behavioral intel up to ${matchPct}%), or build the book on ` +
+      `one player (${deepPct}% information depth — still not own-roster certainty): comfort picks, ` +
+      "how they play, their mentality, the full verdict)."));
+  if (!lanes) {
+    card.appendChild(el("div", "scout-one-note",
+      `<span class="chip tone-accent">One active job</span>` +
+      `<b>Choose one of the three assignments below.</b> ` +
+      `<span class="muted">Starting another immediately replaces the current job.</span>`));
+  }
 
   // Current assignment: the team name LINKS when covering a team (id in scope).
   if (data.target) {
@@ -5584,12 +6067,14 @@ async function scouting(v) {
     renderApp();
   };
   coverageChoice.appendChild(sel);
-  choices.appendChild(coverageChoice);
+  // The single-slot "cover a beat" survey is exactly what the standing pro
+  // lane replaces, so hide it once lanes are live.
+  if (!lanes) choices.appendChild(coverageChoice);
 
   // Attend a match (next two weeks, not your own games).
   const matchChoice = el("div", "tile scout-choice");
   matchChoice.appendChild(el("div", "scout-choice-head",
-    `<span class="chip">2</span><b>Attend a match</b>`));
+    `<span class="chip">${lanes ? 1 : 2}</span><b>Attend a match</b>`));
   matchChoice.appendChild(el("span", "muted scout-choice-copy", `One-shot behavioral intel on both teams, up to ${matchPct}%.`));
   const fsel = el("select", "select");
   fsel.appendChild(el("option", "", (data.upcoming ?? []).length
@@ -5615,7 +6100,7 @@ async function scouting(v) {
   // Deep-dive a player: search league-wide, click to assign.
   const playerChoice = el("div", "tile scout-choice");
   playerChoice.appendChild(el("div", "scout-choice-head",
-    `<span class="chip">3</span><b>Deep-dive a player</b>`));
+    `<span class="chip">${lanes ? 2 : 3}</span><b>Deep-dive a player</b>`));
   playerChoice.appendChild(el("span", "muted scout-choice-copy", "External full books stay uncertain; own-player books add weekly training guidance."));
   const pin = el("input", "field mono");
   pin.placeholder = "deep-dive a player: search by name…";
@@ -5783,6 +6268,29 @@ async function scouting(v) {
       `<span class="entity-num ${reached ? "trend-up" : "muted"}">${Math.round(thr * 100)}%</span>`));
   }
   rail.appendChild(ladder);
+
+  // F4/F5 — the department's recommended deep-dives: targeted assignments the
+  // scouting staff surfaces (roster gaps, promising prospects). One click
+  // points the deep-dive desk at the recommended player.
+  const recs = data.deep_dive_recommendations || [];
+  if (recs.length) {
+    const rc = el("div", "card");
+    rc.appendChild(el("h2", "", "Recommended deep-dives"));
+    rc.appendChild(el("p", "muted", "The department flags these for a closer look — click to build the book."));
+    for (const rec of recs) {
+      const row = el("div", "entity");
+      row.innerHTML = `<span class="entity-name">${plink(rec.id, rec.handle)}</span>` +
+        `<span class="entity-meta">${esc(rec.reason || rec.note || "flagged by scouting")}</span>`;
+      const b = el("button", "btn btn-sm", "Assign");
+      b.onclick = async () => {
+        const r = await api("/api/actions/scout", { player_id: rec.id });
+        toast(r.message); renderApp();
+      };
+      row.appendChild(b);
+      rc.appendChild(row);
+    }
+    rail.appendChild(rc);
+  }
 
   // Quick assign: point the scout at the next opponent or the market in a click.
   const qa = el("div", "card");

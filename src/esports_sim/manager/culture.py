@@ -350,6 +350,17 @@ def culture_snapshot(gs: "GameState", team_id: str) -> dict[str, object]:
     ):
         flags.append("broken_role_promises")
 
+    committed = gs.culture_committed_since_by.get(team_id) is not None
+    violations = recent_violations(gs, team_id, limit=3)
+    last_violation = gs.culture_last_violation_by.get(team_id)
+    identity_betrayed = bool(
+        committed
+        and last_violation is not None
+        and _week_stamp(gs) - last_violation < VIOLATION_MEMORY_WEEKS
+    )
+    if identity_betrayed:
+        flags.append("identity_betrayed")
+
     return {
         "team_id": team_id,
         "captain_id": captain_id,
@@ -361,7 +372,294 @@ def culture_snapshot(gs: "GameState", team_id: str) -> dict[str, object]:
         "principle_fit": fit,
         "overall": overall,
         "flags": flags,
+        "commitment": {
+            "principle": principle,
+            "conviction": conviction(gs, team_id),
+            "committed": committed,
+        },
+        "recent_violations": violations,
+        "identity_betrayed": identity_betrayed,
     }
+
+
+# ---------------------------------------------------------------------------
+# F8 — culture principles as an IDENTITY COMMITMENT.
+#
+# A committed principle stops being a passive flavour dial and becomes a public
+# promise the room can watch you keep or break. The media/flavor event streams
+# already surface week-to-week choices; principle_alignment scores each resolved
+# choice against the committed identity, and register_choice turns a betrayal
+# into bounded trust/chemistry/morale damage plus a chronicle entry.
+#
+# Everything here is gate-safe by construction: only commit_principle (a human
+# action) writes culture_committed_since_by, and register_choice returns None
+# with NO mutation for any team that lacks that stamp. AI/uncommitted teams are
+# therefore inert, so the snowball/dynasty/golden sims stay byte-identical.
+
+# Baseline conviction stamped when a principle becomes a stated commitment.
+_COMMIT_CONVICTION = 60.0
+# How recently a violation still flags the identity as "betrayed" (weeks).
+VIOLATION_MEMORY_WEEKS = 6
+
+# Static alignment map in [-1, +1]: how a resolved public choice reads against
+# each non-neutral principle. Positive honors the identity, negative violates
+# it; anything absent (and everything under "balanced") is 0/neutral. Authored
+# beside media_events._EFFECTS and flavor_events._TEMPLATES — the single source
+# of truth for BOTH seams so the two can never drift.
+_ALIGNMENT: dict[tuple[str, str, str], dict[str, float]] = {
+    # -- media_events ------------------------------------------------------
+    ("media", "defend_player", "defend_publicly"): {
+        "player_led": 1.0, "development": 0.5, "accountability": -0.5,
+    },
+    ("media", "defend_player", "demand_response"): {
+        "accountability": 1.0, "player_led": -1.0, "development": -0.5,
+    },
+    ("media", "defend_player", "keep_internal"): {"player_led": 0.3},
+    ("media", "protect_rookie", "take_responsibility"): {
+        "development": 1.0, "player_led": 1.0, "accountability": -0.5,
+    },
+    ("media", "protect_rookie", "standards_apply"): {
+        "accountability": 1.0, "development": -1.0, "player_led": -1.0,
+    },
+    ("media", "protect_rookie", "redirect_to_team"): {
+        "player_led": 0.3, "development": 0.3,
+    },
+    ("media", "roster_rumor", "deny_and_back"): {
+        "player_led": 1.0, "development": 0.3,
+    },
+    ("media", "roster_rumor", "acknowledge_market"): {
+        "player_led": -1.0, "development": -0.3,
+    },
+    ("media", "roster_rumor", "no_comment"): {"player_led": -0.3},
+    ("media", "derby_expectations", "set_high_bar"): {
+        "accountability": 0.5, "player_led": -0.3,
+    },
+    ("media", "derby_expectations", "respect_rival"): {"player_led": 0.5},
+    ("media", "derby_expectations", "shield_group"): {
+        "player_led": 0.5, "accountability": -0.5,
+    },
+    # -- flavor_events -----------------------------------------------------
+    ("flavor", "press_scrum", "team_first"): {"player_led": 0.5},
+    ("flavor", "press_scrum", "swing_big"): {
+        "accountability": 0.5, "player_led": -0.3, "development": -0.3,
+    },
+    ("flavor", "press_scrum", "keep_private"): {
+        "player_led": 0.3, "development": 0.3,
+    },
+    ("flavor", "behind_the_scenes", "film_grind"): {"development": 0.5},
+    ("flavor", "behind_the_scenes", "let_loose"): {
+        "player_led": 0.3, "development": -0.3,
+    },
+    ("flavor", "community_clinic", "full_roster"): {
+        "player_led": 0.3, "development": 0.3,
+    },
+    ("flavor", "community_clinic", "decline"): {
+        "player_led": -0.3, "development": -0.3,
+    },
+    ("flavor", "brand_shoot", "take_shoot"): {"development": -0.3},
+    ("flavor", "brand_shoot", "pass"): {"development": 0.3},
+    ("flavor", "rival_quote", "measured"): {"player_led": 0.2},
+    ("flavor", "rival_quote", "fire_back"): {
+        "player_led": -0.3, "accountability": -0.2,
+    },
+    ("flavor", "rival_quote", "no_comment"): {"player_led": 0.2},
+}
+
+
+def principle_alignment(
+    source: str, type_id: str, choice_id: str, principle: str
+) -> float:
+    """Score a resolved public choice against a committed principle in
+    [-1, +1]. Positive honors the identity, negative betrays it, 0 is neutral
+    (or principle=='balanced'). Pure static lookup — the single source of truth
+    shared by the media and flavor seams."""
+    if principle == "balanced" or principle not in PRINCIPLES:
+        return 0.0
+    return _ALIGNMENT.get((source, type_id, choice_id), {}).get(principle, 0.0)
+
+
+def conviction(gs: "GameState", team_id: str) -> float:
+    """Read the team's 0-100 conviction in its committed principle. Absent
+    reads as 50 (uncommitted / no stated identity yet)."""
+    return float(gs.culture_conviction_by.get(team_id, 50.0))
+
+
+def commit_principle(
+    gs: "GameState", team_id: str, principle: str
+) -> tuple[bool, str]:
+    """Promote a principle to a STATED identity commitment.
+
+    This is what arms the whole F8 loop: it stamps culture_committed_since_by
+    (the gate register_choice checks) and seeds a conviction baseline. Manager
+    action only, rng-free, and it chronicles the commitment. 'balanced' is not
+    a commitment — it stays inert so uncommitted teams never trip the gates.
+    """
+    if team_id not in gs.teams:
+        return False, "unknown team"
+    if principle not in PRINCIPLES:
+        return False, "unknown culture principle"
+    if principle == "balanced":
+        return False, "a balanced culture is not a stated commitment"
+
+    ensure_leadership(gs)
+    team = gs.teams[team_id]
+    old_principle = gs.culture_principles.get(team_id, "balanced")
+    gs.culture_principles[team_id] = principle
+    already = gs.culture_committed_since_by.get(team_id)
+    if already is not None and old_principle == principle:
+        return True, f"{team.name} remains committed to a {principle.replace('_', ' ')} identity"
+
+    gs.culture_committed_since_by[team_id] = _week_stamp(gs)
+    gs.culture_conviction_by[team_id] = _COMMIT_CONVICTION
+
+    from esports_sim.manager import chronicle
+
+    chronicle.record(
+        gs,
+        "culture_commitment",
+        f"{team.name} publicly commits to a {principle.replace('_', ' ')} identity.",
+        team_id=team_id,
+        data={"principle": principle},
+    )
+    return True, f"{team.name} commits to a {principle.replace('_', ' ')} identity"
+
+
+def register_choice(
+    gs: "GameState",
+    team_id: str,
+    source: str,
+    type_id: str,
+    choice_id: str,
+    player_id: str,
+) -> dict | None:
+    """Score one resolved public choice against the committed identity.
+
+    Returns None immediately — with NO mutation and NO rng — for any team that
+    is not committed (no culture_committed_since_by stamp). This is the property
+    that keeps AI and gate sims byte-identical, because register_choice fires
+    for AI teams too via media/flavor queue_weekly_events.
+
+    On a violation: bounded chemistry/trust/relationship/morale hits weighted by
+    per-player principle fit, a conviction drop, and a chronicle 'culture_
+    violation'. On an honor: a small conviction bump. Fully deterministic with
+    sorted roster iteration.
+    """
+    if gs.culture_committed_since_by.get(team_id) is None:
+        return None
+    if team_id not in gs.teams:
+        return None
+    principle = gs.culture_principles.get(team_id, "balanced")
+    if principle == "balanced" or principle not in PRINCIPLES:
+        return None
+    align = principle_alignment(source, type_id, choice_id, principle)
+    if align == 0.0:
+        return None
+    roster = _roster_ids(gs, team_id)
+    if not roster:
+        return None
+
+    team = gs.teams[team_id]
+    conv_before = conviction(gs, team_id)
+
+    if align > 0.0:
+        # Honoring the identity firms up conviction — a bounded, cheap reward.
+        bump = round(min(6.0, 2.0 + 4.0 * align), 1)
+        gs.culture_conviction_by[team_id] = round(_clamp(conv_before + bump), 1)
+        return {
+            "outcome": "honored",
+            "principle": principle,
+            "source": source,
+            "type_id": type_id,
+            "choice_id": choice_id,
+            "conviction_delta": round(gs.culture_conviction_by[team_id] - conv_before, 1),
+        }
+
+    # Violation. Severity in (0, 1]; players who BELIEVE in the principle feel
+    # the betrayal more (their fit is positive), indifferent ones barely notice.
+    severity = -align
+    trust_book = gs.manager_player_trust_by.setdefault(team_id, {})
+    morale_shift = 0.0
+    trust_shift = 0.0
+    for pid in sorted(roster):
+        p = gs.players[pid]
+        fit = _principle_morale_delta(p, principle, 1.0)  # [-1, +1]
+        weight = max(0.3, min(1.6, 1.0 + fit))
+        morale_hit = round(min(1.6, 1.1 * severity * weight), 2)
+        trust_hit = round(min(3.5, 2.2 * severity * weight), 2)
+        p.morale = round(_clamp(p.morale - morale_hit), 1)
+        trust_book[pid] = round(_clamp(trust_book.get(pid, 50.0) - trust_hit), 1)
+        morale_shift -= morale_hit
+        trust_shift -= trust_hit
+
+    chem_hit = round(min(1.5, 1.2 * severity), 2)
+    team.chemistry = round(_clamp(team.chemistry - chem_hit), 1)
+
+    # A betrayal that singled out one player strains their standing in the room.
+    if player_id and player_id in roster:
+        for pid in sorted(roster):
+            if pid == player_id:
+                continue
+            relationships.nudge(gs, player_id, pid, max(-0.6, -0.5 * severity))
+
+    conv_drop = round(min(22.0, 8.0 * severity + 10.0 * severity * severity), 1)
+    gs.culture_conviction_by[team_id] = round(_clamp(conv_before - conv_drop), 1)
+    gs.culture_last_violation_by[team_id] = _week_stamp(gs)
+
+    from esports_sim.manager import chronicle
+
+    label = principle.replace("_", " ")
+    chronicle.record(
+        gs,
+        "culture_violation",
+        f"{team.name} broke from its {label} identity ({source}: {type_id}/{choice_id}).",
+        team_id=team_id,
+        player_id=player_id or "",
+        data={
+            "principle": principle,
+            "source": source,
+            "type_id": type_id,
+            "choice_id": choice_id,
+            "severity": f"{severity:.2f}",
+        },
+    )
+    return {
+        "outcome": "violated",
+        "principle": principle,
+        "source": source,
+        "type_id": type_id,
+        "choice_id": choice_id,
+        "severity": round(severity, 2),
+        "morale": round(morale_shift, 1),
+        "trust": round(trust_shift, 1),
+        "chemistry": round(-chem_hit, 1),
+        "conviction_delta": round(gs.culture_conviction_by[team_id] - conv_before, 1),
+    }
+
+
+def recent_violations(
+    gs: "GameState", team_id: str, limit: int = 5
+) -> list[dict[str, object]]:
+    """The team's most recent identity betrayals (newest first) read from the
+    append-only chronicle — no parallel mutable state."""
+    from esports_sim.manager import chronicle
+
+    out: list[dict[str, object]] = []
+    for entry in reversed(chronicle.of_kinds(gs, {"culture_violation"})):
+        if entry.team_id != team_id:
+            continue
+        out.append({
+            "season": entry.season,
+            "week": entry.week,
+            "text": entry.text,
+            "principle": entry.data.get("principle", ""),
+            "source": entry.data.get("source", ""),
+            "type_id": entry.data.get("type_id", ""),
+            "choice_id": entry.data.get("choice_id", ""),
+            "severity": float(entry.data.get("severity", 0.0) or 0.0),
+        })
+        if len(out) >= limit:
+            break
+    return out
 
 
 def ai_manage(gs: "GameState") -> None:
@@ -492,6 +790,19 @@ def weekly_tick(
                     ),
                 )
                 relationships.nudge(gs, mentor, protege, 0.3)
+
+        # F8: conviction in a STATED identity drifts with how well the roster
+        # fits it and how healthy the room is. Committed teams only, so this is
+        # a no-op for AI/uncommitted rosters (gate-safe). rng-free, bounded.
+        if gs.culture_committed_since_by.get(team_id) is not None:
+            conv = conviction(gs, team_id)
+            fit = float(snapshot["principle_fit"])
+            target = _clamp(40.0 + (fit - 50.0) * 0.8 + (overall - 50.0) * 0.4)
+            if "identity_betrayed" in snapshot["flags"]:
+                # A fresh betrayal keeps the wound open — no healing this week.
+                target = min(target, conv)
+            step = max(-1.0, min(1.0, (target - conv) * 0.15))
+            gs.culture_conviction_by[team_id] = round(_clamp(conv + step), 1)
 
 
 def _week_stamp(gs: "GameState") -> int:

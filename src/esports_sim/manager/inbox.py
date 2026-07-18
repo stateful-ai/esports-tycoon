@@ -98,6 +98,7 @@ LEVERAGE = {
     "sponsor_demand": 40.0,   # bounded reward/penalty wager (+ stake)
     "academy": 38.0,          # promotion/send-down: development minutes
     "sponsor_offer": 30.0,    # new income line (+ weekly value)
+    "bench_minutes": 24.0,    # benched starter grudge -> a play-time promise
     "talk": 22.0,             # 1:1 morale maintenance (+ crisis boost)
     "rotation": 18.0,         # gassed starter with a fresh bench body
 }
@@ -122,9 +123,37 @@ _LEV_CONTRACT_URGENCY = 1.5   # per week under the earliest reminder milestone
 # so they only qualify as calls in the newest week of the feed — stale nudges
 # never crowd out real decisions. Offer/contract kinds verify live instead
 # and qualify at any age: an unanswered bid from last week is still a call.
-_SOFT_KINDS = frozenset({"talk", "rotation", "retire_seat", "media", "academy"})
+_SOFT_KINDS = frozenset(
+    {"talk", "rotation", "retire_seat", "media", "academy", "bench_minutes"}
+)
 
 _URGENT_TALK_TITLES = ("Transfer request:", "Urgent meeting:")
+
+# Board/talk-category items that are pure notices (already-resolved acts): they
+# borrow those categories for their UI home but must NOT enter the work queue or
+# rank as pending calls. Detected by title prefix (see is_actionable/leverage_for).
+_INFO_TITLE_PREFIXES = ("Promise made:", "Identity betrayed:")
+
+# Human-readable labels for the F3 promise doorways and F7 prep objectives.
+_PROMISE_TYPE_LABEL = {
+    "play_time": "regular playing time",
+    "make_captain": "the captaincy",
+    "renew_contract": "a contract renewal",
+}
+_PROMISE_SOURCE_LABEL = {
+    "negotiation": "It came out of the contract table.",
+    "transfer_request": "It settled their transfer request.",
+    "bench_demand": "They had been stuck on the bench.",
+    "leadership": "A leadership commitment.",
+    "talk": "",
+    "llm": "",
+}
+_PREP_OBJ_LABEL = {
+    "anti_exec": "anti-execute",
+    "retakes": "retake",
+    "lineup_test": "lineup-test",
+    "mental_reset": "mental-reset",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -723,6 +752,230 @@ def _department_items(gs: "GameState", season: int, week: int):
 
 
 # ---------------------------------------------------------------------------
+# F1/F3/F4/F7/F8 detectors — new campaign features surfaced live from state.
+# Each reads the artifacts the subsystems already produced this tick (dev
+# snapshots, created promises, the scout shortlist, resolved prep reports +
+# a coach proposal, culture-violation chronicle entries) and NEVER mutates.
+# Same blake2 _hash_id + sorted iteration + no rng as the older detectors, so
+# a seed replays a byte-identical inbox.
+
+
+def _dev_digest_items(gs: "GameState", season: int, week: int):
+    """F1: the fortnightly "Future of the Org" development digest — season-to-
+    date CA risers on THIS manager's roster, read straight off gs.dev_history.
+    Cadence is even weeks only; the full pipeline board lives on the Club>
+    Development tab (this is the teaser that points there)."""
+    if week % 2 != 0:
+        return []
+    team = gs.teams.get(gs.acting_team_id)
+    if team is None:
+        return []
+    risers: list[tuple[float, str, float]] = []
+    for pid in sorted(team.player_ids):
+        snaps = [s for s in gs.dev_history.get(pid, []) if s.season == season]
+        if len(snaps) < 2:
+            continue
+        snaps.sort(key=lambda s: s.week)
+        delta = snaps[-1].ca - snaps[0].ca
+        if delta < 0.3:
+            continue
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        risers.append((delta, p.handle, snaps[-1].ca))
+    if not risers:
+        return []
+    risers.sort(key=lambda r: (-r[0], r[1]))
+    top = risers[:4]
+    lines = ["Season-to-date development on your roster:"]
+    lines += [f"- {handle}: +{delta:.1f} CA (now {ca:.0f})." for delta, handle, ca in top]
+    if len(risers) > len(top):
+        lines.append(f"...and {len(risers) - len(top)} more trending up.")
+    lines.append("Full pipeline board on the Development tab.")
+    return [(
+        _P_DEV,
+        _make(season, week, "development", f"devdigest|{season}|{week}",
+              "Future of the Org: dev digest", "\n".join(lines), "roster"),
+    )]
+
+
+def _promise_items(gs: "GameState", season: int, week: int):
+    """F3: a promise CREATED this tick for the acting manager (from any
+    doorway — contract table, transfer-request reset, captaincy, bench demand,
+    or a 1:1). Informational: the commitment already exists; this just lands it
+    in the feed + Locker Room so it is never invisible again."""
+    uid = gs.acting_team_id
+    out = []
+    for pr in sorted(gs.promises, key=lambda p: (p.player_id, p.promise_type)):
+        if pr.team_id != uid:
+            continue
+        if pr.created_season != season or pr.created_week != week:
+            continue
+        p = gs.players.get(pr.player_id)
+        handle = p.handle if p is not None else pr.player_id
+        label = _PROMISE_TYPE_LABEL.get(pr.promise_type, pr.promise_type)
+        body_lines = [f"You promised {handle} {label}."]
+        src_txt = _PROMISE_SOURCE_LABEL.get(getattr(pr, "source", "talk"), "")
+        if src_txt:
+            body_lines.append(src_txt)
+        body_lines.append(
+            "Deliver on it or morale and trust take a hit. Track it in the Locker Room."
+        )
+        out.append((
+            _P_DEV,  # a notice, not a decision — sits below actionable board items
+            _make(season, week, "board", f"promise|{pr.id}",
+                  f"Promise made: {handle}", "\n".join(body_lines), "roster"),
+        ))
+    return out[: _CAT_CAP["board"]]
+
+
+def _bench_offer_items(gs: "GameState", season: int, week: int):
+    """F3: a benched starter-quality regular whose grudge has crossed the arc
+    threshold and who has no active play-time promise — a decision waiting on a
+    minutes commitment. Actionable (POST /api/actions/promise); the underlying
+    grudge is re-derived live so a resolved one carries no button next serve."""
+    from esports_sim.manager import arcs
+
+    uid = gs.acting_team_id
+    team = gs.teams.get(uid)
+    if team is None:
+        return []
+    active_playtime = {
+        pr.player_id for pr in gs.promises
+        if pr.team_id == uid and pr.promise_type == "play_time" and pr.status == "active"
+    }
+    out = []
+    for pid in sorted(team.player_ids):
+        if pid in active_playtime:
+            continue
+        weeks_benched = arcs.bench_grudge_weeks(gs, uid, pid)
+        if weeks_benched < arcs.BENCH_ARC_WEEKS:
+            continue
+        p = gs.players.get(pid)
+        handle = p.handle if p is not None else pid
+        body = (
+            f"{handle} has sat {weeks_benched} straight matchweek(s) despite belonging "
+            f"in your best five.\n"
+            f"Promise them playing time to steady morale, or keep benching them and "
+            f"risk a transfer request."
+        )
+        out.append((
+            _P_BOARD,
+            _make(season, week, "board", f"bench|{pid}",
+                  f"{handle} wants minutes", body, "roster"),
+        ))
+    return out[: _CAT_CAP["board"]]
+
+
+def _scouting_directive_items(gs: "GameState", season: int, week: int):
+    """F4: the pro lane's 'fill_gap' standing directive produced a market
+    shortlist this tick (gs.scout_shortlist_by). A recommendation, not a
+    re-pick — the department did the sweep; the manager just reviews it."""
+    uid = gs.acting_team_id
+    pids = list((getattr(gs, "scout_shortlist_by", {}) or {}).get(uid) or [])
+    if not pids:
+        return []
+    directive = ((getattr(gs, "scout_lanes_by", {}) or {}).get(uid) or {}).get("pro") or ""
+    if not directive.startswith("fill_gap"):
+        return []
+    bits = directive.split(":")
+    role = bits[1] if len(bits) > 1 else "player"
+    caliber = bits[2] if len(bits) > 2 else ""
+    want = " ".join(w for w in (caliber, role) if w) or "player"
+    names = [(gs.players.get(pid).handle if gs.players.get(pid) else pid) for pid in pids[:5]]
+    lines = [f"Your scouts swept the market for a {want} and flagged:"]
+    lines += [f"- {n}" for n in names]
+    lines.append("Open a deep dive from the Scouting desk.")
+    return [(
+        _P_SCOUTING,
+        _make(season, week, "scouting", f"shortlist|{directive}",
+              f"Shortlist ready: {role}", "\n".join(lines), "scouting"),
+    )]
+
+
+def _prep_artifact_items(gs: "GameState", season: int, week: int):
+    """F7: the week's scrim artifacts. Emits (a) the named artifact from a prep
+    report that resolved this tick (informational), and (b) the coach's scrim
+    proposal for the next unplayed fixture (actionable — one-click accept via
+    POST /api/actions/preparation). Both read-only; no rng, no mutation."""
+    from esports_sim.manager import preparation
+
+    uid = gs.acting_team_id
+    out = []
+    rep = gs.preparation_reports_by.get(uid)
+    if (
+        rep is not None
+        and rep.season == season
+        and rep.week == week
+        and rep.status == "completed"
+    ):
+        label = getattr(rep, "artifact_label", "") or rep.finding or "prep complete"
+        opp = gs.teams.get(rep.opponent_id)
+        opp_name = opp.name if opp is not None else rep.opponent_id
+        lines = [f"Scrim block resolved: {label}."]
+        contrib = getattr(rep, "prep_edge_contribution", 0.0)
+        if contrib:
+            lines.append(f"Prep edge vs {opp_name}: +{contrib:.1f}.")
+        dev_pid = getattr(rep, "dev_suggestion_player_id", "")
+        dev_txt = getattr(rep, "dev_suggestion", "")
+        if dev_pid and dev_txt:
+            dp = gs.players.get(dev_pid)
+            lines.append(f"Note on {dp.handle if dp is not None else dev_pid}: {dev_txt}")
+        out.append((
+            _P_DEV,
+            _make(season, week, "development", f"prep_report|{rep.plan_id}",
+                  f"Prep report: {label}", "\n".join(lines), "tactics"),
+        ))
+    propose = getattr(preparation, "propose", None)
+    plan = propose(gs, uid) if propose is not None else None
+    if plan is not None:
+        opp = gs.teams.get(plan.opponent_id)
+        partner = gs.teams.get(plan.partner_id)
+        opp_name = opp.name if opp is not None else plan.opponent_id
+        partner_name = partner.name if partner is not None else plan.partner_id
+        obj = _PREP_OBJ_LABEL.get(plan.objective, plan.objective)
+        body = (
+            f"Coach recommends a {obj} scrim on {plan.map_id} before {opp_name}, "
+            f"partnering with {partner_name}.\n"
+            f"Accept to book it in one click."
+        )
+        out.append((
+            _P_DEV,
+            _make(season, week, "development", f"scrim_propose|{plan.fixture_id}",
+                  f"Coach proposes a scrim on {plan.map_id}", body, "tactics"),
+        ))
+    return out
+
+
+def _culture_items(gs: "GameState", season: int, week: int):
+    """F8: a committed identity was violated by a media/flavor choice this tick
+    (chronicle kind 'culture_violation', stamped for THIS manager). A notice to
+    acknowledge; the trust/chemistry hits already landed in culture.register_
+    choice. Uncommitted/AI teams write no such entry, so this is silent there."""
+    uid = gs.acting_team_id
+    entries = [
+        e for e in gs.chronicle
+        if e.kind == "culture_violation"
+        and e.season == season and e.week == week
+        and e.team_id == uid
+    ]
+    if not entries:
+        return []
+    entry = sorted(entries, key=lambda e: e.id)[0]
+    principle = entry.data.get("principle", "your stated identity")
+    body = (
+        entry.text
+        + "\nThis cuts against your committed identity — trust and chemistry take a "
+        + "hit. Review it in Operations."
+    )
+    return [(
+        _P_TALK,
+        _make(season, week, "talk", f"culture_violation|{entry.id}",
+              f"Identity betrayed: {principle}", body, "roster"),
+    )]
+
+
+# ---------------------------------------------------------------------------
 # Generation + rolling cap
 
 
@@ -770,10 +1023,18 @@ def generate_inbox(gs: "GameState", report: "WeekReport") -> list["InboxItem"]:
         candidates += _ledger_items(gs, season, week)
         candidates += _arc_items(gs, season, week)
         candidates += _department_items(gs, season, week)
+        candidates += _dev_digest_items(gs, season, week)      # F1
+        candidates += _bench_offer_items(gs, season, week)     # F3
+        candidates += _scouting_directive_items(gs, season, week)  # F4
+        candidates += _prep_artifact_items(gs, season, week)   # F7
     # Careers and storylines fire in every phase (including the offseason).
     candidates += _development_items(gs, season, week)
     candidates += _relationship_items(gs, season, week)
     candidates += _news_items(gs, season, week)
+    # Promises (F3) and culture violations (F8) can be minted by doorways and
+    # media/flavor events that fire in the offseason too, so run every phase.
+    candidates += _promise_items(gs, season, week)
+    candidates += _culture_items(gs, season, week)
 
     # Dedupe by id (against the batch and the existing feed), then keep the
     # highest-priority PER_WEEK_CAP. Stable sort preserves detector order
@@ -845,6 +1106,47 @@ def _live_sponsor_offer(gs: "GameState", it: "InboxItem"):
     return None
 
 
+def _live_bench_player(gs: "GameState", it: "InboxItem"):
+    """The still-benched player a bench-minutes offer was written about, or None
+    (rotated back in, promised, sold). Reconstructs the item id from the current
+    roster + live grudge, like the offer matchers — resolved grudges drop out."""
+    from esports_sim.manager import arcs
+
+    uid = gs.acting_team_id
+    team = gs.teams.get(uid)
+    if team is None:
+        return None
+    active_playtime = {
+        pr.player_id for pr in gs.promises
+        if pr.team_id == uid and pr.promise_type == "play_time" and pr.status == "active"
+    }
+    for pid in sorted(team.player_ids):
+        if pid in active_playtime:
+            continue
+        if _hash_id(it.season, it.week, "board", f"bench|{pid}") != it.id:
+            continue
+        if arcs.bench_grudge_weeks(gs, uid, pid) >= arcs.BENCH_ARC_WEEKS:
+            return pid
+        return None
+    return None
+
+
+def _live_scrim_proposal(gs: "GameState", it: "InboxItem"):
+    """The coach's live scrim proposal an item was written about, or None (the
+    fixture changed, or the plan was already booked). Reconstructs the item id
+    from preparation.propose so a stale proposal carries no Accept button."""
+    from esports_sim.manager import preparation
+
+    propose = getattr(preparation, "propose", None)
+    plan = propose(gs, gs.acting_team_id) if propose is not None else None
+    if plan is None:
+        return None
+    subject = f"scrim_propose|{plan.fixture_id}"
+    if _hash_id(it.season, it.week, "development", subject) == it.id:
+        return plan
+    return None
+
+
 def _transfer_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
     o = _live_transfer_offer(gs, it)
     if o is None:
@@ -889,14 +1191,41 @@ def _sponsor_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
     ]
 
 
+def _bench_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    pid = _live_bench_player(gs, it)
+    if pid is None:
+        return []
+    return [
+        {"id": "promise", "label": "Promise minutes",
+         "endpoint": "/api/actions/promise",
+         "payload": {"kind": "bench_minutes", "player_id": pid}},
+    ]
+
+
+def _prep_actions(gs: "GameState", it: "InboxItem") -> list[dict]:
+    plan = _live_scrim_proposal(gs, it)
+    if plan is None:
+        return []
+    return [
+        {"id": "accept", "label": "Book scrim",
+         "endpoint": "/api/actions/preparation",
+         "payload": {"accept": True}},
+    ]
+
+
 def actions_for(gs: "GameState", it: "InboxItem") -> list[dict]:
-    """Accept/Decline actions for an item whose underlying offer is still live.
-    Only transfer-offer and sponsor-offer items ever carry actions; every other
-    category (and any item whose offer has expired/resolved) returns []."""
+    """Accept/Decline (and now Promise-minutes / Book-scrim) actions for an item
+    whose underlying decision is still live. Transfer/sponsor offers, the F3
+    bench-minutes offer, and the F7 coach scrim proposal carry actions; every
+    other item (and any whose decision has expired/resolved) returns []."""
     if it.category == "transfer":
         return _transfer_actions(gs, it)
     if it.category == "sponsor":
         return _sponsor_actions(gs, it)
+    if it.category == "board":
+        return _bench_actions(gs, it)
+    if it.category == "development":
+        return _prep_actions(gs, it)
     return []
 
 
@@ -905,10 +1234,14 @@ def is_actionable(gs: "GameState", it: "InboxItem") -> bool:
 
     Offer buttons are derived live, so resolved or expired offers naturally
     fall back to the League Feed. Contract and talk reminders always need a
-    manager response, as do the two urgent roster-development notices.
+    manager response, as do the two urgent roster-development notices. The F3
+    promise-made and F8 identity-betrayed items borrow the board/talk categories
+    for their UI home but are pure notices, so they stay off the work queue.
     """
     if actions_for(gs, it):
         return True
+    if it.title.startswith(_INFO_TITLE_PREFIXES):
+        return False
     if it.category in ("board", "talk"):
         return True
     return it.title.startswith((
@@ -990,10 +1323,20 @@ def leverage_for(gs: "GameState", it: "InboxItem") -> tuple[str, float] | None:
                 + urgency
                 + development.stars(development.overall(p)) * _LEV_QUALITY_SCALE
             )
+        if it.title.startswith("Promise made:"):
+            return None  # a notice, not a pending decision
+        if it.title.endswith("wants minutes"):
+            # F3 bench-minutes offer: a live play-time call. Re-derives the
+            # grudge, so a rotated-back-in / promised player stops ranking.
+            if _live_bench_player(gs, it) is None:
+                return None
+            return "bench_minutes", LEVERAGE["bench_minutes"]
         # Any other board notice is the board itself talking (dismissal,
         # ultimatums) — the highest-stakes call on the desk.
         return "board_warning", LEVERAGE["board_warning"]
     if it.category == "talk":
+        if it.title.startswith("Identity betrayed:"):
+            return None  # F8 culture notice, not a pending call
         score = LEVERAGE["talk"]
         if it.title.startswith(_URGENT_TALK_TITLES):
             score += _LEV_URGENT_TALK
