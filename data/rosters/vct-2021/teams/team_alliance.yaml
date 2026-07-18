@@ -11,11 +11,14 @@ chemistry: 58.6
 players:
 - id: team_alliance_fearoth
   handle: Fearoth
-  real_name: ''
+  real_name: Enzo Mestari
   region: emea
-  country: ''
-  languages: []
+  country: FR
+  languages:
+  - lang: de
+    level: 100.0
   age: 25
+  birth_year: 1996
   role: initiator
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 79.0
 - id: team_alliance_hype
   handle: hype
-  real_name: ''
+  real_name: Tautvydas Paldavicius
   region: emea
   country: ''
-  languages: []
-  age: 24
+  languages:
+  - lang: fr
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: controller
   playstyle: lurker
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 77.0
 - id: team_alliance_kadavra
   handle: kAdavra
-  real_name: ''
+  real_name: Thomas Johner
   region: emea
-  country: ''
-  languages: []
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -309,11 +318,12 @@ players:
   potential: 82.0
 - id: team_alliance_luckerrr
   handle: luckeRRR
-  real_name: ''
+  real_name: Niels Jasiek
   region: emea
-  country: ''
+  country: DE
   languages: []
   age: 25
+  birth_year: 1996
   role: duelist
   playstyle: awper
   attributes:
@@ -408,11 +418,12 @@ players:
   potential: 78.0
 - id: team_alliance_xms
   handle: xms
-  real_name: ''
+  real_name: Alexandre Forté
   region: emea
-  country: ''
+  country: FR
   languages: []
   age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:

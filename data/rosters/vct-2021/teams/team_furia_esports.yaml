@@ -11,11 +11,14 @@ chemistry: 59.3
 players:
 - id: team_furia_esports_xand
   handle: xand
-  real_name: ''
+  real_name: Alexandre Zizi
   region: americas
-  country: ''
-  languages: []
+  country: BR
+  languages:
+  - lang: pt
+    level: 100.0
   age: 26
+  birth_year: 1995
   role: duelist
   playstyle: entry
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 74.4
 - id: team_furia_esports_qck
   handle: qck
-  real_name: ''
+  real_name: Gabriel Bertoni Lima
   region: americas
-  country: ''
-  languages: []
+  country: BR
+  languages:
+  - lang: pt
+    level: 100.0
   age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -211,11 +217,14 @@ players:
   potential: 91.7
 - id: team_furia_esports_khalil
   handle: Khalil
-  real_name: ''
+  real_name: Khalil Schmidt Faour Auad
   region: americas
-  country: ''
-  languages: []
+  country: BR
+  languages:
+  - lang: pt
+    level: 100.0
   age: 17
+  birth_year: 2004
   role: flex
   playstyle: lurker
   attributes:
@@ -312,11 +321,12 @@ players:
   potential: 86.2
 - id: team_furia_esports_mazin
   handle: mazin
-  real_name: ''
+  real_name: Matheus Araújo
   region: americas
-  country: ''
+  country: BR
   languages: []
-  age: 24
+  age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:
@@ -412,11 +422,12 @@ players:
   potential: 74.3
 - id: team_furia_esports_nozwerr
   handle: Nozwerr
-  real_name: ''
+  real_name: Agustin Ibarra
   region: americas
   country: ''
   languages: []
   age: 23
+  birth_year: 1998
   role: initiator
   playstyle: support
   attributes:

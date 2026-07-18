@@ -18,6 +18,7 @@ players:
   - lang: en
     level: 100.0
   age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -113,13 +114,14 @@ players:
   potential: 72.2
 - id: team_version1_zellsis
   handle: Zellsis
-  real_name: ''
+  real_name: Jordan Montemurro
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
-  age: 23
+  age: 18
+  birth_year: 2003
   role: flex
   playstyle: lurker
   attributes:
@@ -216,13 +218,14 @@ players:
   potential: 86.0
 - id: team_version1_effys
   handle: effys
-  real_name: ''
+  real_name: Loic Sauvageau
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -318,7 +321,7 @@ players:
   potential: 79.5
 - id: team_version1_wippie
   handle: wippie
-  real_name: ''
+  real_name: Maxim Shepelev
   region: americas
   country: RU
   languages:
@@ -327,6 +330,7 @@ players:
   - lang: en
     level: 75.0
   age: 22
+  birth_year: 1999
   role: sentinel
   playstyle: anchor
   attributes:
@@ -422,13 +426,14 @@ players:
   potential: 82.7
 - id: team_version1_penny
   handle: penny
-  real_name: ''
+  real_name: Erik Penny
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: awper
   attributes:

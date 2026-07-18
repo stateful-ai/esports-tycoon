@@ -11,11 +11,14 @@ chemistry: 72.6
 players:
 - id: team_tnl_esports_ts
   handle: TS
-  real_name: ''
+  real_name: Yu Tae-seok
   region: pacific
-  country: ''
-  languages: []
-  age: 23
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 26
+  birth_year: 1995
   role: duelist
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 71.2
 - id: team_tnl_esports_ryzzi
   handle: RyZzi
-  real_name: ''
+  real_name: Jung Gi-jin
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: controller
   playstyle: support
   attributes:
@@ -209,11 +215,14 @@ players:
   potential: 84.5
 - id: team_tnl_esports_eko
   handle: eKo
-  real_name: ''
+  real_name: Yeom Wang-ryong
   region: pacific
-  country: ''
-  languages: []
-  age: 22
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
+  age: 18
+  birth_year: 2003
   role: flex
   playstyle: lurker
   attributes:
@@ -308,11 +317,12 @@ players:
   potential: 75.7
 - id: team_tnl_esports_exy
   handle: exy
-  real_name: ''
+  real_name: Park Geun-cheol
   region: pacific
-  country: ''
+  country: KR
   languages: []
-  age: 21
+  age: 23
+  birth_year: 1998
   role: duelist
   playstyle: entry
   attributes:
@@ -408,11 +418,12 @@ players:
   potential: 81.8
 - id: team_tnl_esports_godlike
   handle: GODLIKE
-  real_name: ''
+  real_name: Lee Seo-ha
   region: pacific
   country: ''
   languages: []
-  age: 22
+  age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:

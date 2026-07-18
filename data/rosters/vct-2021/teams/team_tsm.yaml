@@ -11,11 +11,14 @@ chemistry: 62.1
 players:
 - id: team_tsm_hazed
   handle: hazed
-  real_name: ''
+  real_name: James Cobb
   region: americas
-  country: ''
-  languages: []
-  age: 25
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 32
+  birth_year: 1989
   role: sentinel
   playstyle: igl
   attributes:
@@ -109,11 +112,14 @@ players:
   potential: 74.1
 - id: team_tsm_wardell
   handle: Wardell
-  real_name: ''
+  real_name: Matthew Bowman Yu
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: awper
   attributes:
@@ -208,11 +214,14 @@ players:
   potential: 87.0
 - id: team_tsm_subroza
   handle: Subroza
-  real_name: ''
+  real_name: Yassine Taoufik
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:
@@ -307,11 +316,14 @@ players:
   potential: 77.4
 - id: team_tsm_leviathanag
   handle: LeviathanAG
-  real_name: ''
+  real_name: Aleko Gabuniya
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -407,11 +419,12 @@ players:
   potential: 90.1
 - id: team_tsm_bang
   handle: bang
-  real_name: ''
+  real_name: Sean Christian Bezerra
   region: americas
-  country: ''
+  country: US
   languages: []
-  age: 18
+  age: 17
+  birth_year: 2004
   role: controller
   playstyle: lurker
   attributes:

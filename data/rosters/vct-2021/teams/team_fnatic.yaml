@@ -11,13 +11,14 @@ chemistry: 81.7
 players:
 - id: team_fnatic_boaster
   handle: Boaster
-  real_name: ''
+  real_name: Jake Howlett
   region: emea
   country: GB
   languages:
   - lang: en
     level: 100.0
   age: 26
+  birth_year: 1995
   role: controller
   playstyle: igl
   attributes:
@@ -120,7 +121,7 @@ players:
   potential: 82.0
 - id: team_fnatic_derke
   handle: Derke
-  real_name: ''
+  real_name: Nikita Sirmitev
   region: emea
   country: FI
   languages:
@@ -129,6 +130,7 @@ players:
   - lang: en
     level: 90.0
   age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -229,7 +231,7 @@ players:
   potential: 95.0
 - id: team_fnatic_doma
   handle: Doma
-  real_name: ''
+  real_name: Domagoj Fancev
   region: emea
   country: HR
   languages:
@@ -238,6 +240,7 @@ players:
   - lang: en
     level: 85.0
   age: 18
+  birth_year: 2003
   role: initiator
   playstyle: support
   attributes:
@@ -333,13 +336,14 @@ players:
   potential: 86.0
 - id: team_fnatic_mistic
   handle: Mistic
-  real_name: ''
+  real_name: James Orfila
   region: emea
   country: GB
   languages:
   - lang: en
     level: 100.0
   age: 20
+  birth_year: 2001
   role: flex
   playstyle: lurker
   attributes:
@@ -435,7 +439,7 @@ players:
   potential: 84.0
 - id: team_fnatic_magnum
   handle: Magnum
-  real_name: ''
+  real_name: Martin Peňkov
   region: emea
   country: CZ
   languages:
@@ -444,6 +448,7 @@ players:
   - lang: en
     level: 85.0
   age: 20
+  birth_year: 2001
   role: sentinel
   playstyle: anchor
   attributes:

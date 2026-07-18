@@ -11,13 +11,14 @@ chemistry: 65.3
 players:
 - id: team_sentinels_shahzam
   handle: ShahZaM
-  real_name: ''
+  real_name: Shahzeeb Khan
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
-  age: 27
+  age: 28
+  birth_year: 1993
   role: flex
   playstyle: igl
   attributes:
@@ -112,13 +113,14 @@ players:
   potential: 81.7
 - id: team_sentinels_sick
   handle: SicK
-  real_name: ''
+  real_name: Hunter Mims
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
   age: 23
+  birth_year: 1998
   role: flex
   playstyle: lurker
   attributes:
@@ -214,13 +216,14 @@ players:
   potential: 80.9
 - id: team_sentinels_zombs
   handle: zombs
-  real_name: ''
+  real_name: Jared Gitlin
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 23
+  birth_year: 1998
   role: controller
   playstyle: anchor
   attributes:
@@ -316,13 +319,14 @@ players:
   potential: 82.8
 - id: team_sentinels_dapr
   handle: dapr
-  real_name: ''
+  real_name: Michael Gulino
   region: americas
   country: US
   languages:
   - lang: en
     level: 100.0
-  age: 24
+  age: 22
+  birth_year: 1999
   role: sentinel
   playstyle: anchor
   attributes:
@@ -417,13 +421,14 @@ players:
   potential: 78.9
 - id: team_sentinels_tenz
   handle: TenZ
-  real_name: ''
+  real_name: Tyson Van Ngo
   region: americas
   country: CA
   languages:
   - lang: en
     level: 100.0
   age: 20
+  birth_year: 2001
   role: duelist
   playstyle: entry
   attributes:

@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: he
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,12 @@ players:
   potential: 76.0
 - id: team_team_finest_alive
   handle: ALIVE
-  real_name: ''
+  real_name: Gilad Hakim
   region: emea
-  country: ''
+  country: IL
   languages: []
-  age: 23
+  age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -215,6 +219,7 @@ players:
   country: ''
   languages: []
   age: 22
+  birth_year: 1999
   role: flex
   playstyle: lurker
   attributes:
@@ -315,6 +320,7 @@ players:
   country: ''
   languages: []
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -414,6 +420,7 @@ players:
   country: ''
   languages: []
   age: 22
+  birth_year: 1999
   role: sentinel
   playstyle: anchor
   attributes:

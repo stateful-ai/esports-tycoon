@@ -11,7 +11,7 @@ chemistry: 79.9
 players:
 - id: team_vision_strikers_mako
   handle: MaKo
-  real_name: ''
+  real_name: Kim Myeong-kwan
   region: pacific
   country: KR
   languages:
@@ -20,6 +20,7 @@ players:
   - lang: en
     level: 45.0
   age: 19
+  birth_year: 2002
   role: controller
   playstyle: support
   attributes:
@@ -118,7 +119,7 @@ players:
   potential: 91.0
 - id: team_vision_strikers_stax
   handle: stax
-  real_name: ''
+  real_name: Kim Gu-taek
   region: pacific
   country: KR
   languages:
@@ -127,6 +128,7 @@ players:
   - lang: en
     level: 45.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: igl
   attributes:
@@ -222,7 +224,7 @@ players:
   potential: 87.0
 - id: team_vision_strikers_rb
   handle: Rb
-  real_name: ''
+  real_name: Goo Sang-min
   region: pacific
   country: KR
   languages:
@@ -231,6 +233,7 @@ players:
   - lang: en
     level: 45.0
   age: 20
+  birth_year: 2001
   role: flex
   playstyle: lurker
   attributes:
@@ -325,7 +328,7 @@ players:
   potential: 95.0
 - id: team_vision_strikers_buzz
   handle: BuZz
-  real_name: ''
+  real_name: Yu Byung-chul
   region: pacific
   country: KR
   languages:
@@ -334,6 +337,7 @@ players:
   - lang: en
     level: 45.0
   age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -430,7 +434,7 @@ players:
   potential: 89.0
 - id: team_vision_strikers_lakia
   handle: Lakia
-  real_name: ''
+  real_name: Kim Jong-min
   region: pacific
   country: KR
   languages:
@@ -439,6 +443,7 @@ players:
   - lang: en
     level: 45.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:

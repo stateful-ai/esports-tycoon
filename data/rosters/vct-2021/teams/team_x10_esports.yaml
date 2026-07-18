@@ -11,7 +11,7 @@ chemistry: 74.6
 players:
 - id: team_x10_esports_sscary
   handle: sScary
-  real_name: ''
+  real_name: Natchaphon Matarat
   region: pacific
   country: TH
   languages:
@@ -19,7 +19,8 @@ players:
     level: 100.0
   - lang: en
     level: 75.0
-  age: 24
+  age: 22
+  birth_year: 1999
   role: controller
   playstyle: igl
   attributes:
@@ -115,7 +116,7 @@ players:
   potential: 83.3
 - id: team_x10_esports_patiphan
   handle: Patiphan
-  real_name: ''
+  real_name: Patiphan Chaiwong
   region: pacific
   country: TH
   languages:
@@ -124,6 +125,7 @@ players:
   - lang: en
     level: 75.0
   age: 18
+  birth_year: 2003
   role: duelist
   playstyle: entry
   attributes:
@@ -219,7 +221,7 @@ players:
   potential: 91.8
 - id: team_x10_esports_foxz
   handle: foxz
-  real_name: ''
+  real_name: Itthirit Ngamsaard
   region: pacific
   country: TH
   languages:
@@ -227,7 +229,8 @@ players:
     level: 100.0
   - lang: en
     level: 75.0
-  age: 25
+  age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:
@@ -322,7 +325,7 @@ players:
   potential: 74.6
 - id: team_x10_esports_crws
   handle: crws
-  real_name: ''
+  real_name: Thanamethk Mahatthananuyut
   region: pacific
   country: TH
   languages:
@@ -331,6 +334,7 @@ players:
   - lang: en
     level: 75.0
   age: 25
+  birth_year: 1996
   role: flex
   playstyle: lurker
   attributes:
@@ -434,6 +438,7 @@ players:
   - lang: en
     level: 75.0
   age: 22
+  birth_year: 1999
   role: sentinel
   playstyle: anchor
   attributes:

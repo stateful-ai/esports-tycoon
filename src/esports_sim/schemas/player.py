@@ -84,6 +84,7 @@ class Player(BaseModel):
     real_name: str = ""
     region: Region = Region.AMERICAS
     age: int = 20
+    birth_year: int | None = Field(default=None, description="Calendar year of birth (e.g. 1998). Derived from age as 2021-age for historical packs.")
     # Nationality + spoken languages (up to 3, with fluency). "" / empty on
     # older saves — gen.assign_identity backfills deterministically.
     country: str = ""

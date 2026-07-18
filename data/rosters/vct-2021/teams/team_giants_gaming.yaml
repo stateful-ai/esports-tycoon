@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: es
+    level: 100.0
   age: 27
+  birth_year: 1994
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 78.0
 - id: team_giants_gaming_fit1nho
   handle: Fit1nho
-  real_name: ''
+  real_name: Adolfo Gallego
   region: emea
-  country: ''
-  languages: []
-  age: 21
+  country: ES
+  languages:
+  - lang: fi
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: duelist
   playstyle: entry
   attributes:
@@ -209,11 +215,14 @@ players:
   potential: 85.0
 - id: team_giants_gaming_hoody
   handle: hoody
-  real_name: ''
+  real_name: Aaro Peltokangas
   region: emea
-  country: ''
-  languages: []
+  country: FI
+  languages:
+  - lang: sv
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: flex
   playstyle: lurker
   attributes:
@@ -307,11 +316,14 @@ players:
   potential: 81.0
 - id: team_giants_gaming_meddo
   handle: Meddo
-  real_name: ''
+  real_name: Johan Renbjörk Lundborg
   region: emea
-  country: ''
-  languages: []
+  country: SE
+  languages:
+  - lang: cs
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -406,11 +418,12 @@ players:
   potential: 84.0
 - id: team_giants_gaming_ambi
   handle: Ambi
-  real_name: ''
+  real_name: Štěpán Beránek
   region: emea
-  country: ''
+  country: CZ
   languages: []
-  age: 20
+  age: 21
+  birth_year: 2000
   role: sentinel
   playstyle: anchor
   attributes:

@@ -14,8 +14,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: fr
+    level: 100.0
   age: 31
+  birth_year: 1990
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 74.0
 - id: team_ninjas_in_pyjamas_crea
   handle: CREA
-  real_name: ''
+  real_name: Charles Beauvois
   region: emea
-  country: ''
-  languages: []
-  age: 23
+  country: FR
+  languages:
+  - lang: ru
+    level: 100.0
+  age: 24
+  birth_year: 1997
   role: duelist
   playstyle: entry
   attributes:
@@ -215,6 +221,7 @@ players:
   country: ''
   languages: []
   age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:
@@ -315,6 +322,7 @@ players:
   country: ''
   languages: []
   age: 24
+  birth_year: 1997
   role: duelist
   playstyle: entry
   attributes:
@@ -410,11 +418,12 @@ players:
   potential: 78.0
 - id: team_ninjas_in_pyjamas_jady
   handle: Jady
-  real_name: ''
+  real_name: Yaroslav Nikolaev
   region: emea
-  country: ''
+  country: RU
   languages: []
   age: 18
+  birth_year: 2003
   role: sentinel
   playstyle: anchor
   attributes:

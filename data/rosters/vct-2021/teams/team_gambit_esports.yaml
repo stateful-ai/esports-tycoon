@@ -11,7 +11,7 @@ chemistry: 61.4
 players:
 - id: team_gambit_esports_redgar
   handle: Redgar
-  real_name: ''
+  real_name: Igor Vlasov
   region: emea
   country: RU
   languages:
@@ -20,6 +20,7 @@ players:
   - lang: en
     level: 70.0
   age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -115,7 +116,7 @@ players:
   potential: 85.0
 - id: team_gambit_esports_nats
   handle: nAts
-  real_name: ''
+  real_name: Ayaz Akhmetshin
   region: emea
   country: RU
   languages:
@@ -124,6 +125,7 @@ players:
   - lang: en
     level: 70.0
   age: 19
+  birth_year: 2002
   role: sentinel
   playstyle: anchor
   attributes:
@@ -223,7 +225,7 @@ players:
   potential: 94.0
 - id: team_gambit_esports_chronicle
   handle: Chronicle
-  real_name: ''
+  real_name: Timofey Khromov
   region: emea
   country: RU
   languages:
@@ -232,6 +234,7 @@ players:
   - lang: en
     level: 70.0
   age: 19
+  birth_year: 2002
   role: flex
   playstyle: lurker
   attributes:
@@ -332,7 +335,7 @@ players:
   potential: 93.0
 - id: team_gambit_esports_d3ffo
   handle: d3ffo
-  real_name: ''
+  real_name: Nikita Sudakov
   region: emea
   country: RU
   languages:
@@ -341,6 +344,7 @@ players:
   - lang: en
     level: 70.0
   age: 20
+  birth_year: 2001
   role: duelist
   playstyle: entry
   attributes:
@@ -435,7 +439,7 @@ players:
   potential: 89.0
 - id: team_gambit_esports_sheydos
   handle: Sheydos
-  real_name: ''
+  real_name: Bogdan Naumov
   region: emea
   country: RU
   languages:
@@ -444,6 +448,7 @@ players:
   - lang: en
     level: 70.0
   age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:

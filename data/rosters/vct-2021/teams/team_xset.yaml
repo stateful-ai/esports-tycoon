@@ -11,11 +11,14 @@ chemistry: 59.3
 players:
 - id: team_xset_dephh
   handle: dephh
-  real_name: ''
+  real_name: Rory Jackson
   region: americas
-  country: ''
-  languages: []
-  age: 29
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 30
+  birth_year: 1991
   role: controller
   playstyle: igl
   attributes:
@@ -112,11 +115,14 @@ players:
   potential: 72.7
 - id: team_xset_zekken
   handle: zekken
-  real_name: ''
+  real_name: Zachary Jude Patrone
   region: americas
-  country: ''
-  languages: []
-  age: 17
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
+  age: 16
+  birth_year: 2005
   role: duelist
   playstyle: entry
   attributes:
@@ -217,11 +223,14 @@ players:
   potential: 95.0
 - id: team_xset_bcj
   handle: BcJ
-  real_name: ''
+  real_name: Brendan Jensen
   region: americas
-  country: ''
-  languages: []
+  country: US
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
+  birth_year: 2000
   role: initiator
   playstyle: support
   attributes:
@@ -317,11 +326,12 @@ players:
   potential: 87.0
 - id: team_xset_ayrin
   handle: AYRIN
-  real_name: ''
+  real_name: Jordan He
   region: americas
-  country: ''
+  country: CA
   languages: []
-  age: 24
+  age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: anchor
   attributes:
@@ -417,11 +427,12 @@ players:
   potential: 74.1
 - id: team_xset_purer
   handle: PureR
-  real_name: ''
+  real_name: Bryce Lovell
   region: americas
-  country: ''
+  country: US
   languages: []
-  age: 22
+  age: 21
+  birth_year: 2000
   role: duelist
   playstyle: awper
   attributes:

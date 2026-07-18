@@ -11,11 +11,14 @@ chemistry: 65.1
 players:
 - id: team_paper_rex_benkai
   handle: Benkai
-  real_name: ''
+  real_name: Benedict Tan Tze Yang
   region: pacific
-  country: ''
-  languages: []
-  age: 23
+  country: SG
+  languages:
+  - lang: en
+    level: 100.0
+  age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: igl
   attributes:
@@ -111,11 +114,14 @@ players:
   potential: 81.8
 - id: team_paper_rex_f0rsaken
   handle: f0rsakeN
-  real_name: ''
+  real_name: Jason Susanto
   region: pacific
-  country: ''
-  languages: []
+  country: ID
+  languages:
+  - lang: id
+    level: 100.0
   age: 17
+  birth_year: 2004
   role: duelist
   playstyle: entry
   attributes:
@@ -215,11 +221,14 @@ players:
   potential: 97.0
 - id: team_paper_rex_d4v41
   handle: d4v41
-  real_name: ''
+  real_name: Ahmad Khalish Rusyaidee bin Nordin
   region: pacific
-  country: ''
-  languages: []
+  country: MY
+  languages:
+  - lang: ms
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: flex
   playstyle: lurker
   attributes:
@@ -318,11 +327,14 @@ players:
   potential: 88.0
 - id: team_paper_rex_mindfreak
   handle: mindfreak
-  real_name: ''
+  real_name: Alessandro Aaron Leonhart
   region: pacific
-  country: ''
-  languages: []
-  age: 21
+  country: ID
+  languages:
+  - lang: id
+    level: 100.0
+  age: 22
+  birth_year: 1999
   role: controller
   playstyle: support
   attributes:
@@ -420,11 +432,12 @@ players:
   potential: 87.0
 - id: team_paper_rex_shiba
   handle: shiba
-  real_name: ''
+  real_name: Zhan Teng Toh
   region: pacific
-  country: ''
+  country: SG
   languages: []
   age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:

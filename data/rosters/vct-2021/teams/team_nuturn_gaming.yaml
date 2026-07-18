@@ -11,7 +11,7 @@ chemistry: 79.8
 players:
 - id: team_nuturn_gaming_solo
   handle: solo
-  real_name: ''
+  real_name: Kang Keun-chul
   region: pacific
   country: KR
   languages:
@@ -19,7 +19,8 @@ players:
     level: 100.0
   - lang: en
     level: 40.0
-  age: 32
+  age: 33
+  birth_year: 1988
   role: sentinel
   playstyle: igl
   attributes:
@@ -114,7 +115,7 @@ players:
   potential: 74.0
 - id: team_nuturn_gaming_suggest
   handle: Suggest
-  real_name: ''
+  real_name: Seo Jae-young
   region: pacific
   country: KR
   languages:
@@ -123,6 +124,7 @@ players:
   - lang: en
     level: 40.0
   age: 19
+  birth_year: 2002
   role: initiator
   playstyle: support
   attributes:
@@ -217,7 +219,7 @@ players:
   potential: 83.3
 - id: team_nuturn_gaming_peri
   handle: peri
-  real_name: ''
+  real_name: Jung Beom-gi
   region: pacific
   country: KR
   languages:
@@ -226,6 +228,7 @@ players:
   - lang: en
     level: 40.0
   age: 22
+  birth_year: 1999
   role: controller
   playstyle: awper
   attributes:
@@ -319,7 +322,7 @@ players:
   potential: 83.3
 - id: team_nuturn_gaming_allow
   handle: allow
-  real_name: ''
+  real_name: Park Sang-wook
   region: pacific
   country: KR
   languages:
@@ -327,7 +330,8 @@ players:
     level: 100.0
   - lang: en
     level: 40.0
-  age: 23
+  age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:
@@ -423,7 +427,7 @@ players:
   potential: 76.4
 - id: team_nuturn_gaming_hyeoni
   handle: Hyeoni
-  real_name: ''
+  real_name: Yoon Hyun-seok
   region: pacific
   country: KR
   languages:
@@ -431,7 +435,8 @@ players:
     level: 100.0
   - lang: en
     level: 40.0
-  age: 21
+  age: 19
+  birth_year: 2002
   role: initiator
   playstyle: support
   attributes:

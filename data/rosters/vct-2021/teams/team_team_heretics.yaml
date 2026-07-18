@@ -11,11 +11,14 @@ chemistry: 73.8
 players:
 - id: team_team_heretics_paura
   handle: pAura
-  real_name: ''
+  real_name: Melih Karaduran
   region: emea
-  country: ''
-  languages: []
+  country: TR
+  languages:
+  - lang: tr
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -110,11 +113,14 @@ players:
   potential: 81.0
 - id: team_team_heretics_nukkye
   handle: nukkye
-  real_name: ''
+  real_name: Žygimantas Chmieliauskas
   region: emea
-  country: ''
-  languages: []
+  country: LT
+  languages:
+  - lang: lt
+    level: 100.0
   age: 24
+  birth_year: 1997
   role: duelist
   playstyle: entry
   attributes:
@@ -210,11 +216,14 @@ players:
   potential: 85.0
 - id: team_team_heretics_avova
   handle: AvovA
-  real_name: ''
+  real_name: Auni Chahade
   region: emea
-  country: ''
-  languages: []
+  country: DK
+  languages:
+  - lang: da
+    level: 100.0
   age: 23
+  birth_year: 1998
   role: controller
   playstyle: lurker
   attributes:
@@ -313,8 +322,11 @@ players:
   real_name: ''
   region: emea
   country: ''
-  languages: []
+  languages:
+  - lang: es
+    level: 100.0
   age: 28
+  birth_year: 1993
   role: initiator
   playstyle: support
   attributes:
@@ -409,11 +421,12 @@ players:
   potential: 78.0
 - id: team_team_heretics_lowel
   handle: lowel
-  real_name: ''
+  real_name: Christian García
   region: emea
-  country: ''
+  country: ES
   languages: []
   age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: anchor
   attributes:

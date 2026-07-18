@@ -11,7 +11,7 @@ chemistry: 73.3
 players:
 - id: team_acend_bonecold
   handle: Bonecold
-  real_name: ''
+  real_name: Santeri Heikki Juhani Sassi
   region: emea
   country: FI
   languages:
@@ -19,7 +19,8 @@ players:
     level: 100.0
   - lang: en
     level: 90.0
-  age: 23
+  age: 24
+  birth_year: 1997
   role: controller
   playstyle: igl
   attributes:
@@ -114,7 +115,7 @@ players:
   potential: 83.0
 - id: team_acend_cned
   handle: cNed
-  real_name: ''
+  real_name: Mehmet Yağız İpek
   region: emea
   country: TR
   languages:
@@ -123,6 +124,7 @@ players:
   - lang: en
     level: 75.0
   age: 19
+  birth_year: 2002
   role: duelist
   playstyle: awper
   attributes:
@@ -223,7 +225,7 @@ players:
   potential: 95.0
 - id: team_acend_zeek
   handle: zeek
-  real_name: ''
+  real_name: Aleksander Zygmunt
   region: emea
   country: PL
   languages:
@@ -232,6 +234,7 @@ players:
   - lang: en
     level: 80.0
   age: 20
+  birth_year: 2001
   role: flex
   playstyle: lurker
   attributes:
@@ -329,7 +332,7 @@ players:
   potential: 91.0
 - id: team_acend_starxo
   handle: starxo
-  real_name: ''
+  real_name: Patryk Kopczyński
   region: emea
   country: SE
   languages:
@@ -338,6 +341,7 @@ players:
   - lang: en
     level: 90.0
   age: 20
+  birth_year: 2001
   role: initiator
   playstyle: support
   attributes:
@@ -433,7 +437,7 @@ players:
   potential: 91.0
 - id: team_acend_kiles
   handle: Kiles
-  real_name: ''
+  real_name: Vladyslav Shvets
   region: emea
   country: ES
   languages:
@@ -442,6 +446,7 @@ players:
   - lang: en
     level: 80.0
   age: 23
+  birth_year: 1998
   role: sentinel
   playstyle: anchor
   attributes:

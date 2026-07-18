@@ -11,7 +11,7 @@ chemistry: 60.0
 players:
 - id: team_crazy_raccoon_munchkin
   handle: Munchkin
-  real_name: ''
+  real_name: Byeon Sang-beom
   region: pacific
   country: KR
   languages:
@@ -20,6 +20,7 @@ players:
   - lang: en
     level: 55.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: igl
   attributes:
@@ -115,7 +116,7 @@ players:
   potential: 82.5
 - id: team_crazy_raccoon_bazzi
   handle: Bazzi
-  real_name: ''
+  real_name: Park Jun-ki
   region: pacific
   country: KR
   languages:
@@ -123,7 +124,8 @@ players:
     level: 100.0
   - lang: en
     level: 55.0
-  age: 21
+  age: 22
+  birth_year: 1999
   role: initiator
   playstyle: support
   attributes:
@@ -218,7 +220,7 @@ players:
   potential: 82.6
 - id: team_crazy_raccoon_medusa
   handle: Medusa
-  real_name: ''
+  real_name: An Min-cheol
   region: pacific
   country: KR
   languages:
@@ -226,7 +228,8 @@ players:
     level: 100.0
   - lang: en
     level: 55.0
-  age: 23
+  age: 24
+  birth_year: 1997
   role: flex
   playstyle: lurker
   attributes:
@@ -320,7 +323,7 @@ players:
   potential: 75.2
 - id: team_crazy_raccoon_fisker
   handle: Fisker
-  real_name: ''
+  real_name: Hideki Sasaki
   region: pacific
   country: KR
   languages:
@@ -329,6 +332,7 @@ players:
   - lang: en
     level: 55.0
   age: 23
+  birth_year: 1998
   role: duelist
   playstyle: entry
   attributes:
@@ -424,7 +428,7 @@ players:
   potential: 74.4
 - id: team_crazy_raccoon_neth
   handle: neth
-  real_name: ''
+  real_name: Yusuke Matsuda
   region: pacific
   country: JP
   languages:
@@ -433,6 +437,7 @@ players:
   - lang: en
     level: 50.0
   age: 25
+  birth_year: 1996
   role: sentinel
   playstyle: anchor
   attributes:

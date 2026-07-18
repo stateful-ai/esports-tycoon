@@ -2,11 +2,14 @@ future_prospects:
 - player:
     id: future_alfajer
     handle: Alfajer
-    real_name: ''
+    real_name: Emir Ali Beder
     region: emea
-    country: ''
-    languages: []
+    country: TR
+    languages:
+    - lang: tr
+      level: 100.0
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -110,11 +113,14 @@ future_prospects:
 - player:
     id: future_wo0t
     handle: wo0t
-    real_name: ''
+    real_name: Mert Alkan
     region: emea
-    country: ''
-    languages: []
+    country: TR
+    languages:
+    - lang: tr
+      level: 100.0
     age: 15
+    birth_year: 2006
     role: initiator
     playstyle: support
     attributes:
@@ -212,11 +218,14 @@ future_prospects:
 - player:
     id: future_oxy
     handle: OXY
-    real_name: ''
+    real_name: Francis Hoang
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -315,11 +324,14 @@ future_prospects:
 - player:
     id: future_monyet
     handle: monyet
-    real_name: ''
+    real_name: I Made Adhi Cahya Nugraha
     region: pacific
-    country: ''
-    languages: []
+    country: ID
+    languages:
+    - lang: id
+      level: 100.0
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -418,11 +430,14 @@ future_prospects:
 - player:
     id: future_flashback
     handle: Flashback
-    real_name: ''
+    real_name: Cho Min-hyuk
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -524,8 +539,11 @@ future_prospects:
     real_name: ''
     region: pacific
     country: ''
-    languages: []
+    languages:
+    - lang: pt
+      level: 100.0
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -627,8 +645,11 @@ future_prospects:
     real_name: ''
     region: china
     country: ''
-    languages: []
+    languages:
+    - lang: pt
+      level: 100.0
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -730,8 +751,11 @@ future_prospects:
     real_name: ''
     region: pacific
     country: ''
-    languages: []
-    age: 14
+    languages:
+    - lang: en
+      level: 100.0
+    age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -835,6 +859,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -938,6 +963,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -1040,6 +1066,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -1142,6 +1169,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -1244,6 +1272,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -1347,6 +1376,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -1449,6 +1479,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -1552,6 +1583,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -1655,6 +1687,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -1757,6 +1790,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -1860,6 +1894,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -1963,6 +1998,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -2066,6 +2102,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -2168,6 +2205,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -2270,6 +2308,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -2373,6 +2412,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -2476,6 +2516,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -2579,6 +2620,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -2682,6 +2724,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -2784,6 +2827,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -2886,6 +2930,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -2989,6 +3034,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: sentinel
     playstyle: anchor
     attributes:
@@ -3092,6 +3138,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -3195,6 +3242,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -3297,6 +3345,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -3400,6 +3449,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -3501,6 +3551,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -3604,6 +3655,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -3707,6 +3759,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -3810,6 +3863,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -3913,6 +3967,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -4016,6 +4071,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -4119,6 +4175,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -4222,6 +4279,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -4325,6 +4383,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -4422,11 +4481,12 @@ future_prospects:
 - player:
     id: future_cauanzin
     handle: Cauanzin
-    real_name: ''
+    real_name: Cauan Pereira
     region: americas
-    country: ''
+    country: BR
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: support
     attributes:
@@ -4529,6 +4589,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -4631,6 +4692,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -4734,6 +4796,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -4837,6 +4900,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -4939,6 +5003,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -5041,6 +5106,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -5144,6 +5210,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -5246,6 +5313,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -5349,6 +5417,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -5452,6 +5521,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -5554,6 +5624,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -5657,6 +5728,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -5760,6 +5832,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -5862,6 +5935,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -5964,6 +6038,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -6067,6 +6142,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -6170,6 +6246,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -6272,6 +6349,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -6374,6 +6452,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -6477,6 +6556,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -6579,6 +6659,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -6682,6 +6763,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -6785,6 +6867,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -6887,6 +6970,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -6990,6 +7074,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -7093,6 +7178,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -7195,6 +7281,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -7298,6 +7385,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -7401,6 +7489,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -7504,6 +7593,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -7606,6 +7696,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -7709,6 +7800,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -7812,6 +7904,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -7915,6 +8008,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -8018,6 +8112,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -8119,6 +8214,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -8221,6 +8317,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -8323,6 +8420,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -8426,6 +8524,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -8529,6 +8628,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -8632,6 +8732,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -8735,6 +8836,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -8838,6 +8940,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -8940,6 +9043,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -9043,6 +9147,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -9145,6 +9250,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -9248,6 +9354,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -9351,6 +9458,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -9453,6 +9561,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -9556,6 +9665,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -9659,6 +9769,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: sentinel
     playstyle: anchor
     attributes:
@@ -9762,6 +9873,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -9865,6 +9977,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -9968,6 +10081,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -10070,6 +10184,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -10173,6 +10288,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -10275,6 +10391,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -10378,6 +10495,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -10481,6 +10599,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -10584,6 +10703,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -10686,6 +10806,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -10789,6 +10910,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -10892,6 +11014,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -10994,6 +11117,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -11097,6 +11221,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -11200,6 +11325,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -11303,6 +11429,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -11406,6 +11533,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -11509,6 +11637,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -11612,6 +11741,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -11715,6 +11845,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -11817,6 +11948,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -11920,6 +12052,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -12023,6 +12156,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -12126,6 +12260,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -12229,6 +12364,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -12331,6 +12467,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -12434,6 +12571,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -12537,6 +12675,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -12639,6 +12778,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -12742,6 +12882,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -12845,6 +12986,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -12948,6 +13090,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -13051,6 +13194,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -13154,6 +13298,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -13257,6 +13402,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -13359,6 +13505,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -13462,6 +13609,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -13563,6 +13711,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -13661,11 +13810,12 @@ future_prospects:
 - player:
     id: future_less
     handle: Less
-    real_name: ''
+    real_name: Felipe de Loyola Basso
     region: americas
-    country: ''
+    country: BR
     languages: []
     age: 16
+    birth_year: 2005
     role: controller
     playstyle: anchor
     attributes:
@@ -13772,6 +13922,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -13875,6 +14026,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -13977,6 +14129,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -14080,6 +14233,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -14183,6 +14337,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -14286,6 +14441,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -14389,6 +14545,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -14492,6 +14649,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -14595,6 +14753,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -14697,6 +14856,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -14800,6 +14960,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -14902,6 +15063,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -15005,6 +15167,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -15108,6 +15271,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -15211,6 +15375,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -15314,6 +15479,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -15417,6 +15583,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -15523,6 +15690,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -15625,6 +15793,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -15727,6 +15896,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -15830,6 +16000,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -15933,6 +16104,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -16036,6 +16208,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -16139,6 +16312,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -16241,6 +16415,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -16344,6 +16519,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -16441,11 +16617,14 @@ future_prospects:
 - player:
     id: future_n4rrate
     handle: N4RRATE
-    real_name: ''
+    real_name: Marshall Massey
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
+    birth_year: 2002  # real: born 2002 (19 in 2021), sim treats as prospect
     role: initiator
     playstyle: support
     attributes:
@@ -16549,6 +16728,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -16651,6 +16831,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -16754,6 +16935,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -16857,6 +17039,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -16959,6 +17142,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -17062,6 +17246,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -17164,6 +17349,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -17266,6 +17452,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -17369,6 +17556,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -17471,6 +17659,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -17573,6 +17762,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -17676,6 +17866,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -17779,6 +17970,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -17882,6 +18074,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -17984,6 +18177,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -18087,6 +18281,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -18190,6 +18385,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -18293,6 +18489,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -18396,6 +18593,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -18498,6 +18696,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -18600,6 +18799,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -18702,6 +18902,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -18805,6 +19006,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -18908,6 +19110,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -19011,6 +19214,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -19114,6 +19318,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -19217,6 +19422,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -19319,6 +19525,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -19422,6 +19629,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -19525,6 +19733,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -19628,6 +19837,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -19730,6 +19940,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -19832,6 +20043,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -19934,6 +20146,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -20036,6 +20249,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: sentinel
     playstyle: anchor
     attributes:
@@ -20139,6 +20353,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -20242,6 +20457,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -20345,6 +20561,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -20448,6 +20665,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -20551,6 +20769,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -20654,6 +20873,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -20757,6 +20977,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -20860,6 +21081,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -20962,6 +21184,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -21065,6 +21288,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -21168,6 +21392,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -21271,6 +21496,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -21373,6 +21599,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -21476,6 +21703,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -21579,6 +21807,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -21681,6 +21910,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -21784,6 +22014,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -21887,6 +22118,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -21989,6 +22221,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -22092,6 +22325,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -22194,6 +22428,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -22297,6 +22532,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -22400,6 +22636,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -22503,6 +22740,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -22606,6 +22844,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -22708,6 +22947,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -22811,6 +23051,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -22914,6 +23155,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -23017,6 +23259,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -23119,6 +23362,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -23222,6 +23466,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -23325,6 +23570,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -23427,6 +23673,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -23529,6 +23776,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -23632,6 +23880,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -23735,6 +23984,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -23838,6 +24088,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -23941,6 +24192,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -24044,6 +24296,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -24146,6 +24399,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -24249,6 +24503,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -24351,6 +24606,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -24453,6 +24709,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -24555,6 +24812,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -24658,6 +24916,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -24760,6 +25019,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -24863,6 +25123,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -24966,6 +25227,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -25068,6 +25330,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -25170,6 +25433,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -25272,6 +25536,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -25375,6 +25640,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -25478,6 +25744,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -25581,6 +25848,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -25684,6 +25952,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -25787,6 +26056,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -25890,6 +26160,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -25992,6 +26263,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -26095,6 +26367,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -26197,6 +26470,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -26299,6 +26573,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -26401,6 +26676,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -26504,6 +26780,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -26607,6 +26884,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -26710,6 +26988,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -26813,6 +27092,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -26915,6 +27195,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -27017,6 +27298,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -27120,6 +27402,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -27222,6 +27505,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -27325,6 +27609,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -27428,6 +27713,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -27530,6 +27816,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -27633,6 +27920,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -27736,6 +28024,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -27839,6 +28128,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -27942,6 +28232,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -28044,6 +28335,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -28146,6 +28438,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -28249,6 +28542,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -28352,6 +28646,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -28454,6 +28749,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -28557,6 +28853,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: controller
     playstyle: anchor
     attributes:
@@ -28660,6 +28957,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -28763,6 +29061,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -28866,6 +29165,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: initiator
     playstyle: support
     attributes:
@@ -28969,6 +29269,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -29071,6 +29372,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: initiator
     playstyle: support
     attributes:
@@ -29174,6 +29476,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -29277,6 +29580,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -29380,6 +29684,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -29483,6 +29788,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -29585,6 +29891,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -29688,6 +29995,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -29790,6 +30098,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -29892,6 +30201,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -29995,6 +30305,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -30098,6 +30409,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: anchor
     attributes:
@@ -30201,6 +30513,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -30304,6 +30617,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -30406,6 +30720,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: controller
     playstyle: anchor
     attributes:
@@ -30509,6 +30824,7 @@ future_prospects:
     country: ''
     languages: []
     age: 12
+    birth_year: 2009
     role: duelist
     playstyle: entry
     attributes:
@@ -30612,6 +30928,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: controller
     playstyle: support
     attributes:
@@ -30715,6 +31032,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -30818,6 +31136,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -30920,6 +31239,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -31023,6 +31343,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: igl
     attributes:
@@ -31125,6 +31446,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: sentinel
     playstyle: anchor
     attributes:
@@ -31226,6 +31548,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: sentinel
     playstyle: anchor
     attributes:
@@ -31329,6 +31652,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -31432,6 +31756,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: support
     attributes:
@@ -31535,6 +31860,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: initiator
     playstyle: support
     attributes:
@@ -31637,6 +31963,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -31739,6 +32066,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: controller
     playstyle: support
     attributes:
@@ -31842,6 +32170,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: controller
     playstyle: support
     attributes:
@@ -31945,6 +32274,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -32047,6 +32377,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -32149,6 +32480,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -32252,6 +32584,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: flex
     playstyle: entry
     attributes:
@@ -32354,6 +32687,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -32457,6 +32791,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -32560,6 +32895,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: initiator
     playstyle: support
     attributes:
@@ -32663,6 +32999,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: igl
     attributes:
@@ -32766,6 +33103,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: sentinel
     playstyle: anchor
     attributes:
@@ -32869,6 +33207,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -32972,6 +33311,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: controller
     playstyle: support
     attributes:
@@ -33075,6 +33415,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: duelist
     playstyle: entry
     attributes:
@@ -33178,6 +33519,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: flex
     playstyle: awper
     attributes:
@@ -33281,6 +33623,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -33383,6 +33726,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: flex
     playstyle: support
     attributes:
@@ -33486,6 +33830,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -33589,6 +33934,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: controller
     playstyle: support
     attributes:
@@ -33692,6 +34038,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -33795,6 +34142,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: support
     attributes:
@@ -33898,6 +34246,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -34001,6 +34350,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: support
     attributes:
@@ -34103,6 +34453,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -34206,6 +34557,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: flex
     playstyle: support
     attributes:
@@ -34308,6 +34660,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: controller
     playstyle: support
     attributes:
@@ -34406,11 +34759,14 @@ future_prospects:
 - player:
     id: future_sayonara
     handle: Sayonara
-    real_name: ''
+    real_name: Ștefan Mîtcu
     region: emea
-    country: ''
-    languages: []
-    age: 14
+    country: RO
+    languages:
+    - lang: ro
+      level: 100.0
+    age: 13
+    birth_year: 2008
     role: flex
     playstyle: lurker
     attributes:
@@ -34513,6 +34869,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -34616,6 +34973,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -34718,6 +35076,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -34820,6 +35179,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: sentinel
     playstyle: anchor
     attributes:
@@ -34923,6 +35283,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: sentinel
     playstyle: anchor
     attributes:
@@ -35026,6 +35387,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -35129,6 +35491,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: initiator
     playstyle: igl
     attributes:
@@ -35232,6 +35595,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -35335,6 +35699,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -35437,6 +35802,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -35539,6 +35905,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -35642,6 +36009,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -35745,6 +36113,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: controller
     playstyle: support
     attributes:
@@ -35848,6 +36217,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: initiator
     playstyle: support
     attributes:
@@ -35950,6 +36320,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: duelist
     playstyle: entry
     attributes:
@@ -36053,6 +36424,7 @@ future_prospects:
     country: ''
     languages: []
     age: 14
+    birth_year: 2007
     role: flex
     playstyle: support
     attributes:
@@ -36155,6 +36527,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: entry
     attributes:
@@ -36257,6 +36630,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: flex
     playstyle: support
     attributes:
@@ -36359,6 +36733,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: sentinel
     playstyle: awper
     attributes:
@@ -36462,6 +36837,7 @@ future_prospects:
     country: ''
     languages: []
     age: 13
+    birth_year: 2008
     role: duelist
     playstyle: entry
     attributes:
@@ -36564,6 +36940,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -36667,6 +37044,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: sentinel
     playstyle: anchor
     attributes:
@@ -36770,6 +37148,7 @@ future_prospects:
     country: ''
     languages: []
     age: 16
+    birth_year: 2005
     role: duelist
     playstyle: entry
     attributes:
@@ -36873,6 +37252,7 @@ future_prospects:
     country: ''
     languages: []
     age: 15
+    birth_year: 2006
     role: flex
     playstyle: lurker
     attributes:
