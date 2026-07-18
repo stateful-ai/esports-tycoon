@@ -739,20 +739,23 @@ const PlayerProfile = ({ data }) => {
           <div class="pf-tile-label">Confidence</div>
           <div class="pf-tile-sub">drives duels & nerve</div>
         </div>
+        ${(xdAct != null || xdExp != null) && html`
         <div class="pf-tile" data-tooltip="<h4>xDuel (Expected Duel Wins)</h4><div class='tooltip-desc'>The player's actual round duel wins compared to their expected wins based on statistical matchups.</div>">
           <div class="pf-tile-val mono">${xdActStr} / ${xdExpStr}</div>
           <div class="pf-tile-label">xDuel</div>
           <div class="pf-tile-sub">actual / expected wins</div>
-        </div>
+        </div>`}
+        ${xdEdge != null && html`
         <div class="pf-tile" data-tooltip="<h4>xDE (Expected Duel Edge)</h4><div class='tooltip-desc'>Calculated as actual duel wins minus expected duel wins. A positive edge indicates that the player outperforms statistical expectations.</div>">
           <div class="pf-tile-val mono">${xdEdgeStr}</div>
           <div class="pf-tile-label">xDE</div>
           <div class="pf-tile-sub">expected duel edge</div>
-        </div>
+        </div>`}
+        ${ov.market_value != null && html`
         <div class="pf-tile" data-tooltip="<h4>Market Value</h4><div class='tooltip-desc'>Estimated valuation on the transfer market. Unsigned free agents have no valuation. Rival teams will demand more or less than this based on their stance.</div>">
-          <div class="pf-tile-val mono">${ov.market_value != null ? money(ov.market_value) : "—"}</div>
+          <div class="pf-tile-val mono">${money(ov.market_value)}</div>
           <div class="pf-tile-label">Value</div>
-        </div>
+        </div>`}
       </div>
 
       ${p.is_user_team && html`
@@ -940,17 +943,18 @@ const PlayerProfile = ({ data }) => {
           ${season.matches != null && html`
             <div>
               <div class="pf-tiles pf-tiles-sm">
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.rating, 2)}</div><div class="pf-tile-label">Rating</div></div>
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.kd, 2)}</div><div class="pf-tile-label">K/D</div></div>
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.acs)}</div><div class="pf-tile-label">ACS</div></div>
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.kast_pct)}</div><div class="pf-tile-label">KAST%</div></div>
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.hs_pct)}</div><div class="pf-tile-label">HS%</div></div>
+                ${season.rating != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.rating, 2)}</div><div class="pf-tile-label">Rating</div></div>`}
+                ${season.kd != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.kd, 2)}</div><div class="pf-tile-label">K/D</div></div>`}
+                ${season.acs != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.acs)}</div><div class="pf-tile-label">ACS</div></div>`}
+                ${season.kast_pct != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.kast_pct)}</div><div class="pf-tile-label">KAST%</div></div>`}
+                ${season.hs_pct != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.hs_pct)}</div><div class="pf-tile-label">HS%</div></div>`}
+                ${season.first_kills != null && html`
                 <div class="pf-tile">
                   <div class="pf-tile-val mono">${season.first_deaths != null ? `${pfNum(season.first_kills)} : ${pfNum(season.first_deaths)}` : pfNum(season.first_kills)}</div>
                   <div class="pf-tile-label">FK : FD</div>
                   ${season.fk_fd != null && html`<div class="pf-tile-sub">ratio ${pfNum(season.fk_fd, 2)}</div>`}
-                </div>
-                <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.clutches)}</div><div class="pf-tile-label">Clutches</div></div>
+                </div>`}
+                ${season.clutches != null && html`<div class="pf-tile"><div class="pf-tile-val mono">${pfNum(season.clutches)}</div><div class="pf-tile-label">Clutches</div></div>`}
               </div>
               
               ${season.clutch_1v1 != null && html`
@@ -1120,7 +1124,7 @@ const PlayerProfile = ({ data }) => {
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.seasons)}</div><div class="pf-tile-label">Seasons</div></div>
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.maps)}</div><div class="pf-tile-label">Maps</div></div>
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.kills)}</div><div class="pf-tile-label">Kills</div></div>
-              <div class="pf-tile"><div class="pf-tile-val mono">${ct.kd.toFixed(2)}</div><div class="pf-tile-label">K/D</div></div>
+              <div class="pf-tile"><div class="pf-tile-val mono">${ct.kd != null ? Number(ct.kd).toFixed(2) : "—"}</div><div class="pf-tile-label">K/D</div></div>
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.honours)}</div><div class="pf-tile-label">Honours</div></div>
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.mvps)}</div><div class="pf-tile-label">MVPs</div></div>
               <div class="pf-tile"><div class="pf-tile-val mono">${pfNum(ct.all_stars)}</div><div class="pf-tile-label">All-Star</div></div>

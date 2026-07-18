@@ -35,7 +35,7 @@
     <button id="simahead-btn" class="btn" title="Sim up to 4 weeks under your delegation settings — stops the moment something needs you">Sim ahead ▸▸</button>
   <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
     <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
-    <button class="btn" onclick="document.getElementById('help').classList.remove('hidden')" title="how to play">?</button>
+    <button id="help-open" class="btn" title="how to play" aria-label="How to play">?</button>
   </header>
 
   <!-- Two visual clusters: the weekly loop vs. the org you're building.
@@ -75,7 +75,7 @@
     <div class="newsline"><b>Company</b> — use Finances for sponsorships, cash flow and costs; use Brand for reach, fanbase mood and the social feed.</div>
     <div class="newsline"><b>Advance Week ▸</b> — matches play out; hit ▶ on your result to watch the replay. Top 4 make the BO3 playoffs (map veto applies).</div>
     <p class="muted" style="margin-top:10px">The same setup and decisions will always produce the same season.</p>
-    <button class="btn btn-primary" onclick="document.getElementById('help').classList.add('hidden')">Got it</button>
+    <button id="help-close" class="btn btn-primary">Got it</button>
   </div>
 </div>
 
@@ -161,7 +161,7 @@
   <div class="panel">
     <h1 id="report-title"></h1>
     <div id="report-body"></div>
-    <button class="btn btn-primary" onclick="closeReport()">Continue</button>
+    <button id="report-close" class="btn btn-primary">Continue</button>
   </div>
 </div>
 
@@ -179,7 +179,7 @@
       </div>
     </div>
     
-    <button class="btn" onclick="closeTalk()">Close</button>
+    <button id="talk-close" class="btn">Close</button>
   </div>
 </div>
 
@@ -192,7 +192,7 @@
       <button class="btn active" id="v-cones" title="Show or hide player sight lines" aria-pressed="true">Vision</button>
       <button class="btn" id="v-view" title="toggle isometric / top-down">2D</button>
       <button class="btn" id="v-sound" title="Match sound: muted" aria-pressed="false">🔇</button>
-      <button class="btn" onclick="closeViewer()">✕ Close</button>
+      <button id="viewer-close" class="btn">✕ Close</button>
     </div>
     <div class="viewer-main">
       <svg id="v-map" viewBox="-6 -6 112 112" preserveAspectRatio="xMidYMid meet"></svg>
@@ -230,5 +230,16 @@
 <script type="module" src="/profile.js"></script>
 <script src="/audio.js"></script>
 <script src="/inbox.js"></script>
+<script>
+/* Chrome-control wiring (was inline onclick). closeReport/closeTalk/closeViewer
+   are defined by the loaded scripts above; help open/close toggles the class. */
+document.getElementById("help-open").addEventListener("click", () =>
+  document.getElementById("help").classList.remove("hidden"));
+document.getElementById("help-close").addEventListener("click", () =>
+  document.getElementById("help").classList.add("hidden"));
+document.getElementById("report-close").addEventListener("click", () => window.closeReport && window.closeReport());
+document.getElementById("talk-close").addEventListener("click", () => window.closeTalk && window.closeTalk());
+document.getElementById("viewer-close").addEventListener("click", () => window.closeViewer && window.closeViewer());
+</script>
 </body>
 </html>

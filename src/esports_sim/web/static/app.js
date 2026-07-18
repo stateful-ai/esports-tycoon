@@ -2750,13 +2750,13 @@ async function roster(v, opts = {}) {
         ${playerCell}
         <td>${stylePill(p)}</td>
         <td>${p.planned_agent
-          ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick"}">${esc(p.planned_agent)}${p.planned_locked ? "" : " ?"}</span>`
+          ? `<span class="pill" title="${p.planned_locked ? "locked by their coach" : "likely auto-pick — not locked by the coach"}">${esc(p.planned_agent)}${p.planned_locked ? "" : " ?"}</span>`
           : '<span class="muted">scout</span>'}</td>
         <td class="num">${p.age}</td>
         <td class="num" title="${fogged ? "estimate ±" + p.fog : "exact"}">${ovr}</td>
         ${ceilingCell}
-        <td>${bar(p.form)}${tArrow(ct.form)}</td><td>${bar(p.morale)}</td><td>${bar(p.stamina)}</td>
-        <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
+        <td><div class="statcell">${bar(p.form)}${p.form != null ? `<span class="statcell-num mono">${Math.round(p.form)}</span>` : ""}${tArrow(ct.form)}</div></td><td><div class="statcell">${bar(p.morale)}${p.morale != null ? `<span class="statcell-num mono">${Math.round(p.morale)}</span>` : ""}</div></td><td><div class="statcell">${bar(p.stamina)}${p.stamina != null ? `<span class="statcell-num mono">${Math.round(p.stamina)}</span>` : ""}</div></td>
+        <td title="Confidence shapes duels, peeks, and clutch nerve."><div class="statcell">${bar(p.confidence)}${p.confidence != null ? `<span class="statcell-num mono">${Math.round(p.confidence)}</span>` : ""}${tArrow(ct.confidence)}</div></td>
         <td class="num">${money(p.salary)}/wk</td>
         <td class="num">${p.contract_weeks_left}w</td>
         <td><div class="roster-actions">${actions}</div>${askBreakdown(p.ask_breakdown)}</td>`;
@@ -3577,8 +3577,13 @@ function tacticsStrategy(main, rail, data) {
     // Fit line: which players suit each pole + a live per-dial duel term.
     const foot = el("div", "tac-foot");
     if (d.econ) {
-      foot.innerHTML = `<span class="tac-fit-lab">Economy call — no duel effect, but a
-        greedy force can snowball or bankrupt you.</span>`;
+      // No roster fit for the economy lever — keep the same .tac-foot >
+      // .tac-fit row so the card bottom aligns with the other dials.
+      foot.innerHTML = `
+        <div class="tac-fit tac-fit-econ">
+          <span class="tac-fit-lab">Economy call — no duel effect, but a
+            greedy force can snowball or bankrupt you.</span>
+        </div>`;
     } else if (fit) {
       const loWho = poleChips(fit, d.low.styles);
       const hiWho = poleChips(fit, d.high.styles);
@@ -3586,7 +3591,7 @@ function tacticsStrategy(main, rail, data) {
         <div class="tac-fit">
           <span class="tac-fit-lab">Roster fit
             <span class="muted">(${fit.attrs.join(" · ")})</span></span>
-          ${bar(fit.fit)}
+          <span class="tac-fitbar">${bar(fit.fit)}<span class="tac-fitbar-cap">fit</span></span>
           <span class="mono tac-fit-num">${Math.round(fit.fit)}</span>
         </div>
         <div class="tac-who-row">
@@ -6476,7 +6481,7 @@ async function stats(v) {
     b.onclick = () => { App.statsTier = tval; renderApp(); };
     tierSeg.appendChild(b);
   };
-  mkTier("Tier 1", 1);
+  mkTier("Top flight", 1);
   mkTier("Challengers", 2);
   right.push(tierSeg);
   if (data.split_keys) {
@@ -6502,7 +6507,7 @@ async function stats(v) {
   }
 
   v.appendChild(screenHead("Stats", {
-    sub: `Season ${App.state.season} · analytics tier ${tier}`,
+    sub: `Season ${App.state.season} · analytics dept ${tier}/3`,
     subtabs: STATS_TABS,
     active: sub,
     onPick: (id) => { App.statsTab = id; renderApp(); },
@@ -7127,17 +7132,20 @@ const StatTile = ({ label, value, tone, sub, tooltip, onClick }) => {
 const CashProjectionSparkline = ({ projection }) => {
   if (!projection || projection.length < 2) return null;
   const W = 220, H = 46;
-  const bals = projection.map((p) => p.balance);
-  const lo = Math.min(...bals), hi = Math.max(...bals), span = (hi - lo) || 1;
-  const pts = projection.map((p, i) => {
-    const x = (i / (projection.length - 1)) * (W - 4) + 2;
-    const y = H - 4 - ((p.balance - lo) / span) * (H - 8);
+  const base = projection[0].balance;
+  const deltas = projection.map((p) => p.balance - base);
+  const lo = Math.min(...deltas), hi = Math.max(...deltas), span = (hi - lo) || 1;
+  const pts = deltas.map((d, i) => {
+    const x = (i / (deltas.length - 1)) * (W - 4) + 2;
+    const y = H - 4 - ((d - lo) / span) * (H - 8);
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(" ");
+  const zeroY = H - 4 - ((0 - lo) / span) * (H - 8);
 
   return html`
     <div class="es-spark">
       <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="projected balance">
+        <line x1="0" y1=${zeroY.toFixed(1)} x2=${W} y2=${zeroY.toFixed(1)} stroke="var(--es-color-border-secondary)" stroke-width="1" />
         <polyline points=${pts} fill="none" class="es-spark-line" />
       </svg>
       <span class="muted">${money(projection[projection.length - 1].balance)} in ${projection.length}w</span>

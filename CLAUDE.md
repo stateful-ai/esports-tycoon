@@ -255,8 +255,10 @@ Published at github.com/stateful-ai/esports-tycoon.
   all match preparation.
 - Replays are captured at sim time and kept for the latest week only —
   rosters mutate immediately after, so stored seeds don't reproduce logs.
-- Browser screenshots via the preview tools wedge chronically on this
-  machine — verify UI with `preview_snapshot`/`preview_eval`/
+- Browser screenshots via `preview_screenshot` (preview tools) wedge chronically
+  on this machine — but standalone Playwright works: `.venv-win\Scripts\python.exe
+  scripts/ui_review.py` captures real UI screenshots for review/regression
+  (`runs/ui-review/`). Otherwise verify UI with `preview_snapshot`/`preview_eval`/
   `preview_inspect`, and use the offline compositors
   (`render_sprite_office.py`, `render_map_guide.py`) for pixel checks.
 - Viewer/guide transform contract: guides rasterize geometry at the exact
