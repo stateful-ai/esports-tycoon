@@ -111,6 +111,7 @@ players:
   personality_tags:
   - analytical
   - quiet
+  career_volatility: 50
   potential: 82.5
 - id: team_crazy_raccoon_bazzi
   handle: Bazzi
@@ -213,6 +214,7 @@ players:
   form: 55.0
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 82.6
 - id: team_crazy_raccoon_medusa
   handle: Medusa
@@ -314,6 +316,7 @@ players:
   stamina: 99.0
   form: 45.1
   personality_tags: []
+  career_volatility: 50
   potential: 75.2
 - id: team_crazy_raccoon_fisker
   handle: Fisker
@@ -417,6 +420,7 @@ players:
   personality_tags:
   - analytical
   - flashy
+  career_volatility: 50
   potential: 74.4
 - id: team_crazy_raccoon_neth
   handle: neth
@@ -520,4 +524,5 @@ players:
   personality_tags:
   - grinder
   - perfectionist
+  career_volatility: 50
   potential: 77.2

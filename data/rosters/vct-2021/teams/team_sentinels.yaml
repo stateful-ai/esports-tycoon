@@ -108,6 +108,7 @@ players:
   form: 52.6
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 81.7
 - id: team_sentinels_sick
   handle: SicK
@@ -209,6 +210,7 @@ players:
   personality_tags:
   - perfectionist
   - slow_starter
+  career_volatility: 50
   potential: 80.9
 - id: team_sentinels_zombs
   handle: zombs
@@ -310,6 +312,7 @@ players:
   personality_tags:
   - independent
   - streamer
+  career_volatility: 50
   potential: 82.8
 - id: team_sentinels_dapr
   handle: dapr
@@ -410,6 +413,7 @@ players:
   form: 53.7
   personality_tags:
   - slow_starter
+  career_volatility: 50
   potential: 78.9
 - id: team_sentinels_tenz
   handle: TenZ
@@ -512,4 +516,10 @@ players:
   - grinder
   - prodigy
   - slow_starter
+  career_volatility: 10
+  development_archetype: early
+  development_decline_age: 30
+  development_peak_age: 20
+  development_peak_years: 6
+  development_realization: 0.98
   potential: 94.0

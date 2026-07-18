@@ -107,6 +107,7 @@ players:
   personality_tags:
   - independent
   - streamer
+  career_volatility: 50
   potential: 74.4
 - id: team_luminosity_gaming_tigg
   handle: TiGG
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - clutch_gene
   - perfectionist
+  career_volatility: 50
   potential: 87.9
 - id: team_luminosity_gaming_aproto
   handle: aproto
@@ -304,6 +306,7 @@ players:
   form: 53.9
   personality_tags:
   - independent
+  career_volatility: 50
   potential: 79.6
 - id: team_luminosity_gaming_moose
   handle: moose
@@ -403,6 +406,7 @@ players:
   personality_tags:
   - perfectionist
   - slow_starter
+  career_volatility: 50
   potential: 70.6
 - id: team_luminosity_gaming_dazzle
   handle: dazzLe
@@ -502,4 +506,5 @@ players:
   personality_tags:
   - fan_favorite
   - quiet
+  career_volatility: 50
   potential: 71.7

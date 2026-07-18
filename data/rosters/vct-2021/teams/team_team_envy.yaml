@@ -109,6 +109,7 @@ players:
   personality_tags:
   - team_player
   - veteran
+  career_volatility: 50
   potential: 77.0
 - id: team_team_envy_crashies
   handle: crashies
@@ -210,7 +211,9 @@ players:
   personality_tags:
   - grinder
   - perfectionist
-  potential: 85.2
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 88.0
 - id: team_team_envy_victor
   handle: Victor
   real_name: ''
@@ -311,7 +314,9 @@ players:
   personality_tags:
   - clutch_gene
   - streamer
-  potential: 78.5
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 87.0
 - id: team_team_envy_yay
   handle: yay
   real_name: ''
@@ -412,6 +417,12 @@ players:
   personality_tags:
   - clutch_gene
   - perfectionist
+  career_volatility: 62
+  development_archetype: flash
+  development_decline_age: 29
+  development_peak_age: 24
+  development_peak_years: 2
+  development_realization: 0.9
   potential: 95.0
 - id: team_team_envy_marved
   handle: Marved
@@ -513,4 +524,8 @@ players:
   personality_tags:
   - clutch_gene
   - flashy
-  potential: 84.0
+  career_volatility: 62
+  development_decline_age: 30
+  development_peak_years: 4
+  development_realization: 0.9
+  potential: 89.0

@@ -106,6 +106,12 @@ players:
   form: 57.5
   personality_tags:
   - veteran
+  career_volatility: 16
+  development_archetype: late
+  development_decline_age: 39
+  development_peak_age: 30
+  development_peak_years: 7
+  development_realization: 0.93
   potential: 79.0
 - id: team_funplus_phoenix_ardiis
   handle: ardiis
@@ -205,6 +211,10 @@ players:
   personality_tags:
   - hot_head
   - perfectionist
+  career_volatility: 62
+  development_decline_age: 30
+  development_peak_years: 3
+  development_realization: 0.9
   potential: 86.0
 - id: team_funplus_phoenix_shao
   handle: Shao
@@ -303,6 +313,8 @@ players:
   form: 56.6
   personality_tags:
   - rookie
+  career_volatility: 28
+  development_realization: 0.94
   potential: 88.0
 - id: team_funplus_phoenix_zyppan
   handle: Zyppan
@@ -401,6 +413,7 @@ players:
   form: 54.3
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 89.0
 - id: team_funplus_phoenix_shadow
   handle: ShadoW
@@ -500,4 +513,5 @@ players:
   personality_tags:
   - analytical
   - independent
+  career_volatility: 50
   potential: 82.0

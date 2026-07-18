@@ -111,6 +111,12 @@ players:
   - streamer
   - team_player
   - veteran
+  career_volatility: 8
+  development_archetype: steady
+  development_decline_age: 36
+  development_peak_age: 27
+  development_peak_years: 8
+  development_realization: 0.98
   potential: 82.0
 - id: team_fnatic_derke
   handle: Derke
@@ -214,6 +220,12 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 8
+  development_archetype: early
+  development_decline_age: 33
+  development_peak_age: 20
+  development_peak_years: 9
+  development_realization: 0.98
   potential: 95.0
 - id: team_fnatic_doma
   handle: Doma
@@ -316,6 +328,8 @@ players:
   form: 57.2
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_realization: 0.93
   potential: 86.0
 - id: team_fnatic_mistic
   handle: Mistic
@@ -416,6 +430,8 @@ players:
   form: 55.7
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_realization: 0.93
   potential: 84.0
 - id: team_fnatic_magnum
   handle: Magnum
@@ -518,4 +534,6 @@ players:
   form: 55.0
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_realization: 0.93
   potential: 86.0

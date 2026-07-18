@@ -108,6 +108,7 @@ players:
   - flashy
   - perfectionist
   - veteran
+  career_volatility: 50
   potential: 70.4
 - id: team_nrg_esports_s0m
   handle: s0m
@@ -207,6 +208,7 @@ players:
   personality_tags:
   - clutch_gene
   - streamer
+  career_volatility: 50
   potential: 87.9
 - id: team_nrg_esports_eeiu
   handle: eeiu
@@ -306,6 +308,7 @@ players:
   personality_tags:
   - analytical
   - perfectionist
+  career_volatility: 50
   potential: 86.9
 - id: team_nrg_esports_tex
   handle: tex
@@ -404,6 +407,7 @@ players:
   form: 56.9
   personality_tags:
   - perfectionist
+  career_volatility: 50
   potential: 80.8
 - id: team_nrg_esports_android
   handle: ANDROID
@@ -502,4 +506,5 @@ players:
   form: 49.1
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 70.4

@@ -108,6 +108,7 @@ players:
   - slow_starter
   - team_player
   - veteran
+  career_volatility: 50
   potential: 72.7
 - id: team_xset_zekken
   handle: zekken
@@ -207,6 +208,12 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 22
+  development_archetype: early
+  development_decline_age: 33
+  development_peak_age: 21
+  development_peak_years: 9
+  development_realization: 0.95
   potential: 95.0
 - id: team_xset_bcj
   handle: BcJ
@@ -306,6 +313,7 @@ players:
   personality_tags:
   - independent
   - streamer
+  career_volatility: 50
   potential: 87.0
 - id: team_xset_ayrin
   handle: AYRIN
@@ -405,6 +413,7 @@ players:
   personality_tags:
   - perfectionist
   - streamer
+  career_volatility: 50
   potential: 74.1
 - id: team_xset_purer
   handle: PureR
@@ -504,4 +513,5 @@ players:
   personality_tags:
   - slow_starter
   - streamer
+  career_volatility: 50
   potential: 77.9

@@ -110,6 +110,7 @@ players:
   form: 49.2
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 83.0
 - id: team_acend_cned
   handle: cNed
@@ -213,6 +214,12 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 48
+  development_archetype: flash
+  development_decline_age: 28
+  development_peak_age: 20
+  development_peak_years: 3
+  development_realization: 0.9
   potential: 95.0
 - id: team_acend_zeek
   handle: zeek
@@ -315,6 +322,10 @@ players:
   form: 52.2
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_decline_age: 28
+  development_peak_years: 3
+  development_realization: 0.93
   potential: 91.0
 - id: team_acend_starxo
   handle: starxo
@@ -417,6 +428,8 @@ players:
   form: 55.3
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_realization: 0.93
   potential: 91.0
 - id: team_acend_kiles
   handle: Kiles
@@ -519,4 +532,6 @@ players:
   form: 50.2
   personality_tags:
   - team_player
+  career_volatility: 34
+  development_realization: 0.93
   potential: 81.0

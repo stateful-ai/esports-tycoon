@@ -107,6 +107,7 @@ players:
   personality_tags:
   - hot_head
   - quiet
+  career_volatility: 50
   potential: 71.6
 - id: team_f4q_bunny
   handle: Bunny
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - pure_aimer
   - rookie
+  career_volatility: 50
   potential: 87.8
 - id: team_f4q_fivek
   handle: FiveK
@@ -304,6 +306,7 @@ players:
   form: 55.9
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.2
 - id: team_f4q_esperanza
   handle: Esperanza
@@ -403,6 +406,7 @@ players:
   personality_tags:
   - fan_favorite
   - quiet
+  career_volatility: 50
   potential: 71.7
 - id: team_f4q_efina
   handle: efina
@@ -501,4 +505,5 @@ players:
   form: 58.2
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 80.9

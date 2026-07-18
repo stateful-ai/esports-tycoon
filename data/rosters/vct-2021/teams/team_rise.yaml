@@ -107,6 +107,7 @@ players:
   personality_tags:
   - clutch_gene
   - slow_starter
+  career_volatility: 50
   potential: 82.5
 - id: team_rise_shanks
   handle: Shanks
@@ -205,6 +206,7 @@ players:
   form: 45.3
   personality_tags:
   - fan_favorite
+  career_volatility: 50
   potential: 77.2
 - id: team_rise_derrek
   handle: Derrek
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - clutch_gene
   - streamer
+  career_volatility: 50
   potential: 77.8
 - id: team_rise_supamen
   handle: supamen
@@ -403,6 +406,7 @@ players:
   personality_tags:
   - slow_starter
   - streamer
+  career_volatility: 50
   potential: 86.6
 - id: team_rise_neptune
   handle: neptune
@@ -502,4 +506,5 @@ players:
   personality_tags:
   - flashy
   - streamer
+  career_volatility: 50
   potential: 77.5

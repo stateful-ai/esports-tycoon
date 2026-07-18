@@ -107,6 +107,7 @@ players:
   personality_tags:
   - pure_aimer
   - veteran
+  career_volatility: 50
   potential: 85.1
 - id: team_zeta_division_takej
   handle: takej
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - perfectionist
   - quiet
+  career_volatility: 50
   potential: 82.7
 - id: team_zeta_division_crow
   handle: crow
@@ -304,6 +306,7 @@ players:
   form: 59.6
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 80.5
 - id: team_zeta_division_reita
   handle: Reita
@@ -403,6 +406,7 @@ players:
   personality_tags:
   - perfectionist
   - slow_starter
+  career_volatility: 50
   potential: 78.0
 - id: team_zeta_division_barce
   handle: barce
@@ -502,4 +506,5 @@ players:
   personality_tags:
   - flashy
   - hot_head
+  career_volatility: 50
   potential: 74.5

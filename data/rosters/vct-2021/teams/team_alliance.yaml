@@ -106,6 +106,7 @@ players:
   form: 55.7
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 79.0
 - id: team_alliance_hype
   handle: hype
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - flashy
   - team_player
+  career_volatility: 50
   potential: 77.0
 - id: team_alliance_kadavra
   handle: kAdavra
@@ -303,6 +305,7 @@ players:
   form: 50.9
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 82.0
 - id: team_alliance_luckerrr
   handle: luckeRRR
@@ -401,6 +404,7 @@ players:
   form: 58.3
   personality_tags:
   - hot_head
+  career_volatility: 50
   potential: 78.0
 - id: team_alliance_xms
   handle: xms
@@ -500,4 +504,5 @@ players:
   personality_tags:
   - grinder
   - slow_starter
+  career_volatility: 50
   potential: 79.0

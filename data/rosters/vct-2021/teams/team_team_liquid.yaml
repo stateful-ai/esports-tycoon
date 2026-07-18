@@ -108,6 +108,8 @@ players:
   form: 53.0
   personality_tags:
   - team_player
+  career_volatility: 34
+  development_realization: 0.93
   potential: 84.0
 - id: team_team_liquid_scream
   handle: ScreaM
@@ -211,6 +213,10 @@ players:
   personality_tags:
   - pure_aimer
   - veteran
+  career_volatility: 34
+  development_decline_age: 32
+  development_peak_years: 5
+  development_realization: 0.93
   potential: 86.0
 - id: team_team_liquid_jamppi
   handle: Jamppi
@@ -314,6 +320,10 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 34
+  development_decline_age: 32
+  development_peak_years: 6
+  development_realization: 0.93
   potential: 91.0
 - id: team_team_liquid_soulcas
   handle: soulcas
@@ -414,6 +424,7 @@ players:
   form: 56.3
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 85.0
 - id: team_team_liquid_nivera
   handle: Nivera
@@ -517,4 +528,5 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 50
   potential: 88.0

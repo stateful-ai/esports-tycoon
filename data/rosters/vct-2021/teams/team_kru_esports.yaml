@@ -106,6 +106,7 @@ players:
   form: 54.6
   personality_tags:
   - analytical
+  career_volatility: 50
   potential: 76.9
 - id: team_kru_esports_keznit
   handle: keznit
@@ -205,7 +206,9 @@ players:
   personality_tags:
   - analytical
   - grinder
-  potential: 86.2
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 88.0
 - id: team_kru_esports_nagz
   handle: NagZ
   real_name: ''
@@ -304,6 +307,7 @@ players:
   personality_tags:
   - grinder
   - streamer
+  career_volatility: 50
   potential: 78.5
 - id: team_kru_esports_mazino
   handle: Mazino
@@ -403,7 +407,9 @@ players:
   personality_tags:
   - analytical
   - hot_head
-  potential: 83.4
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 86.0
 - id: team_kru_esports_delz1k
   handle: delz1k
   real_name: ''
@@ -501,4 +507,5 @@ players:
   form: 57.0
   personality_tags:
   - quiet
+  career_volatility: 50
   potential: 81.1

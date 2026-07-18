@@ -106,6 +106,7 @@ players:
   form: 55.3
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 73.8
 - id: team_faze_clan_babybay
   handle: babybay
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - pure_aimer
   - veteran
+  career_volatility: 50
   potential: 80.5
 - id: team_faze_clan_corey
   handle: corey
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - fan_favorite
   - hot_head
+  career_volatility: 50
   potential: 88.3
 - id: team_faze_clan_babyj
   handle: BabyJ
@@ -402,6 +405,7 @@ players:
   form: 57.1
   personality_tags:
   - clutch_gene
+  career_volatility: 50
   potential: 74.3
 - id: team_faze_clan_zachareee
   handle: ZachaREEE
@@ -500,4 +504,5 @@ players:
   form: 45.2
   personality_tags:
   - hot_head
+  career_volatility: 50
   potential: 85.4

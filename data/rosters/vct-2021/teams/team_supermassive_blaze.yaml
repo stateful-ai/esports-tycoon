@@ -106,6 +106,7 @@ players:
   form: 57.8
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 81.0
 - id: team_supermassive_blaze_brave
   handle: Brave
@@ -203,6 +204,7 @@ players:
   stamina: 89.8
   form: 48.0
   personality_tags: []
+  career_volatility: 50
   potential: 83.0
 - id: team_supermassive_blaze_izzy
   handle: Izzy
@@ -301,6 +303,7 @@ players:
   form: 54.6
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.0
 - id: team_supermassive_blaze_aimdll
   handle: AimDLL
@@ -400,6 +403,7 @@ players:
   personality_tags:
   - perfectionist
   - quiet
+  career_volatility: 50
   potential: 81.0
 - id: team_supermassive_blaze_russ
   handle: russ
@@ -498,4 +502,5 @@ players:
   form: 49.8
   personality_tags:
   - fan_favorite
+  career_volatility: 50
   potential: 78.0

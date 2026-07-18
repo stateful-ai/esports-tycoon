@@ -111,6 +111,7 @@ players:
   personality_tags:
   - grinder
   - streamer
+  career_volatility: 50
   potential: 83.3
 - id: team_x10_esports_patiphan
   handle: Patiphan
@@ -214,6 +215,7 @@ players:
   personality_tags:
   - pure_aimer
   - rookie
+  career_volatility: 50
   potential: 91.8
 - id: team_x10_esports_foxz
   handle: foxz
@@ -316,6 +318,7 @@ players:
   form: 47.0
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 74.6
 - id: team_x10_esports_crws
   handle: crws
@@ -418,6 +421,7 @@ players:
   form: 57.4
   personality_tags:
   - grinder
+  career_volatility: 50
   potential: 80.1
 - id: team_x10_esports_sushiboys
   handle: sushiboys
@@ -521,4 +525,5 @@ players:
   personality_tags:
   - flashy
   - team_player
+  career_volatility: 50
   potential: 77.9

@@ -1,0 +1,176 @@
+# Hidden career expectations for the 2021 start. Opening quality remains in the
+# regional/free-agent sheets; this file only centers future development. Every
+# player gets a moderate variance envelope, with named cohorts and overrides
+# reflecting the career level and consistency demonstrated after 2021.
+defaults:
+  career_volatility: 50
+
+cohorts:
+  consistent_goats:
+    career_volatility: 10
+    development_realization: 0.98
+    players: [TenZ, Derke, Boaster, f0rsakeN, Chronicle, Aspas]
+
+  durable_elite:
+    career_volatility: 16
+    development_realization: 0.96
+    players: [nAts, MaKo, Sacy, Saadhak, d4v41, mindfreak]
+
+  high_ceiling_stars:
+    career_volatility: 22
+    development_realization: 0.95
+    players: [Less, Alfajer, Leo, zekken, ZmjjKK, Jinggg, Something, t3xture]
+
+  reliable_champions:
+    career_volatility: 28
+    development_realization: 0.94
+    players:
+      - crashies
+      - Victor
+      - Shao
+      - Ethan
+      - leaf
+      - stax
+      - BuZz
+      - kiNgg
+      - Mazino
+      - keznit
+      - mwzera
+      - SUYGETSU
+      - valyn
+      - Trent
+      - heat
+      - Zellsis
+      - Xeppaa
+
+  late_breakouts:
+    career_volatility: 42
+    development_realization: 0.93
+    development_archetype: late
+    players: [Johnqt, Meiy, Meteor, Dep, SugarZ3ro]
+
+  boom_bust_peaks:
+    career_volatility: 62
+    development_realization: 0.90
+    players: [yay, cNed, Demon1, Jawgemo, Boostio, C0M, ardiis, Marved]
+
+  established_2021_names:
+    career_volatility: 34
+    development_realization: 0.93
+    players:
+      - ScreaM
+      - Jamppi
+      - Redgar
+      - Sheydos
+      - starxo
+      - zeek
+      - Kiles
+      - Doma
+      - Magnum
+      - Mistic
+      - L1NK
+      - ANGE1
+
+overrides:
+  TenZ:
+    potential: 94
+    development_archetype: early
+    development_peak_age: 20
+    development_peak_years: 6
+    development_decline_age: 30
+  Derke:
+    potential: 96
+    career_volatility: 8
+    development_archetype: early
+    development_peak_age: 20
+    development_peak_years: 9
+    development_decline_age: 33
+  Boaster:
+    potential: 88
+    career_volatility: 8
+    development_archetype: steady
+    development_peak_age: 27
+    development_peak_years: 8
+    development_decline_age: 36
+  f0rsakeN:
+    potential: 97
+    career_volatility: 8
+    development_archetype: steady
+    development_peak_age: 21
+    development_peak_years: 10
+    development_decline_age: 34
+  Chronicle:
+    potential: 96
+    development_archetype: steady
+    development_peak_age: 22
+    development_peak_years: 9
+    development_decline_age: 34
+  Aspas:
+    potential: 97
+    career_volatility: 8
+    development_archetype: early
+    development_peak_age: 22
+    development_peak_years: 9
+    development_decline_age: 33
+  nAts: {potential: 94, development_peak_age: 21, development_peak_years: 8, development_decline_age: 32}
+  MaKo: {potential: 91, development_peak_age: 23, development_peak_years: 8, development_decline_age: 33}
+  Sacy: {potential: 89, development_peak_age: 25, development_peak_years: 5, development_decline_age: 33}
+  Saadhak: {potential: 90, development_archetype: late, development_peak_age: 27, development_peak_years: 7, development_decline_age: 36}
+  d4v41: {potential: 88, development_peak_years: 7, development_decline_age: 33}
+  mindfreak: {potential: 87, development_peak_years: 7, development_decline_age: 33}
+
+  Less: {potential: 94, development_peak_age: 22, development_peak_years: 8, development_decline_age: 32}
+  Alfajer: {potential: 94, development_archetype: early, development_peak_age: 21, development_peak_years: 9, development_decline_age: 33}
+  Leo: {potential: 94, career_volatility: 34, development_peak_age: 22, development_peak_years: 7, development_decline_age: 31}
+  zekken: {potential: 94, development_archetype: early, development_peak_age: 21, development_peak_years: 9, development_decline_age: 33}
+  ZmjjKK: {potential: 95, development_archetype: early, development_peak_age: 22, development_peak_years: 9, development_decline_age: 33}
+  Jinggg: {potential: 93, development_peak_age: 22, development_peak_years: 8, development_decline_age: 32}
+  Something: {potential: 92, career_volatility: 28, development_peak_age: 23, development_peak_years: 7, development_decline_age: 32}
+  t3xture: {potential: 92, career_volatility: 30, development_peak_age: 24, development_peak_years: 7, development_decline_age: 33}
+
+  crashies: {potential: 88}
+  Victor: {potential: 87}
+  Shao: {potential: 89}
+  Ethan: {potential: 89}
+  leaf: {potential: 89}
+  stax: {potential: 87}
+  BuZz: {potential: 89}
+  kiNgg: {potential: 88}
+  Mazino: {potential: 86}
+  keznit: {potential: 88}
+  mwzera: {potential: 89}
+  SUYGETSU: {potential: 89}
+  valyn: {potential: 89, development_archetype: steady, development_peak_age: 24}
+  Trent: {potential: 89, development_peak_age: 22}
+  heat: {potential: 87}
+  Zellsis: {potential: 86, development_peak_years: 7}
+  Xeppaa: {potential: 87}
+
+  Johnqt: {potential: 88, development_peak_age: 25, development_peak_years: 7, development_decline_age: 34}
+  Meiy: {potential: 88, development_peak_age: 24}
+  Meteor: {potential: 87, development_peak_age: 24}
+  Dep: {potential: 85, development_peak_age: 24}
+  SugarZ3ro: {potential: 87, development_peak_age: 24}
+
+  yay: {potential: 94, development_archetype: flash, development_peak_age: 24, development_peak_years: 2, development_decline_age: 29}
+  cNed: {potential: 92, career_volatility: 48, development_archetype: flash, development_peak_age: 20, development_peak_years: 3, development_decline_age: 28}
+  Demon1: {potential: 92, career_volatility: 72, development_archetype: flash, development_peak_age: 21, development_peak_years: 2, development_decline_age: 28}
+  Jawgemo: {potential: 89, development_peak_age: 24}
+  Boostio: {potential: 87, development_peak_age: 25}
+  C0M: {potential: 85, development_peak_age: 24}
+  ardiis: {potential: 88, development_peak_years: 3, development_decline_age: 30}
+  Marved: {potential: 89, development_peak_years: 4, development_decline_age: 30}
+
+  ScreaM: {potential: 90, development_peak_years: 5, development_decline_age: 32}
+  Jamppi: {potential: 88, development_peak_years: 6, development_decline_age: 32}
+  Redgar: {potential: 84}
+  Sheydos: {potential: 86}
+  starxo: {potential: 85}
+  zeek: {potential: 86, development_peak_years: 3, development_decline_age: 28}
+  Kiles: {potential: 80}
+  Doma: {potential: 81}
+  Magnum: {potential: 82}
+  Mistic: {potential: 82}
+  L1NK: {potential: 82}
+  ANGE1: {potential: 84, career_volatility: 16, development_archetype: late, development_peak_age: 30, development_peak_years: 7, development_decline_age: 39}
+

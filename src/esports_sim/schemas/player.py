@@ -4,6 +4,8 @@ adding a new attribute is a config change, not a schema migration.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from esports_sim.schemas.common import Playstyle, Region, Role
@@ -118,6 +120,17 @@ class Player(BaseModel):
     # WRITE specific entries here to raise the forecast on chosen skills — the
     # only mutable per-skill state a scalar `potential` couldn't carry.
     skill_potential: dict[str, float] = Field(default_factory=dict)
+
+    # Hidden authored career expectation. Historical roster packs can pin the
+    # center of a real player's trajectory; new campaigns realize an outcome
+    # within this volatility envelope without changing opening attributes.
+    career_volatility: float | None = Field(default=None, ge=0.0, le=100.0)
+    development_archetype: Literal["flash", "early", "steady", "late"] | None = None
+    development_peak_age: int | None = Field(default=None, ge=15, le=40)
+    development_peak_years: int | None = Field(default=None, ge=1, le=15)
+    development_decline_age: int | None = Field(default=None, ge=20, le=45)
+    development_realization: float | None = Field(default=None, ge=0.5, le=1.0)
+    development_variance: float | None = Field(default=None, ge=0.65, le=1.35)
 
     # Badges the player currently holds (manager/badges.py) — rolled at career
     # moments, decaying, with reversible CA edges + permanent ceiling revisions.

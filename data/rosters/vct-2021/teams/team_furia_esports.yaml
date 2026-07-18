@@ -106,6 +106,7 @@ players:
   form: 52.7
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 74.4
 - id: team_furia_esports_qck
   handle: qck
@@ -206,6 +207,7 @@ players:
   - hot_head
   - perfectionist
   - rookie
+  career_volatility: 50
   potential: 91.7
 - id: team_furia_esports_khalil
   handle: Khalil
@@ -306,6 +308,7 @@ players:
   - flashy
   - rookie
   - streamer
+  career_volatility: 50
   potential: 86.2
 - id: team_furia_esports_mazin
   handle: mazin
@@ -405,6 +408,7 @@ players:
   personality_tags:
   - independent
   - team_player
+  career_volatility: 50
   potential: 74.3
 - id: team_furia_esports_nozwerr
   handle: Nozwerr
@@ -504,4 +508,5 @@ players:
   personality_tags:
   - analytical
   - streamer
+  career_volatility: 50
   potential: 77.1

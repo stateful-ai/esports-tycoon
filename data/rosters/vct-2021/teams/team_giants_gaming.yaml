@@ -106,6 +106,7 @@ players:
   form: 54.1
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 78.0
 - id: team_giants_gaming_fit1nho
   handle: Fit1nho
@@ -204,6 +205,7 @@ players:
   form: 48.5
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 85.0
 - id: team_giants_gaming_hoody
   handle: hoody
@@ -301,6 +303,7 @@ players:
   stamina: 85.8
   form: 59.6
   personality_tags: []
+  career_volatility: 50
   potential: 81.0
 - id: team_giants_gaming_meddo
   handle: Meddo
@@ -399,6 +402,7 @@ players:
   form: 50.0
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.0
 - id: team_giants_gaming_ambi
   handle: Ambi
@@ -497,4 +501,5 @@ players:
   form: 55.8
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 82.0

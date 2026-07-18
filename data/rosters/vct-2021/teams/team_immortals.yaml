@@ -107,6 +107,7 @@ players:
   personality_tags:
   - hot_head
   - quiet
+  career_volatility: 50
   potential: 79.7
 - id: team_immortals_shot_up
   handle: ShoT_UP
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - fan_favorite
   - flashy
+  career_volatility: 50
   potential: 73.4
 - id: team_immortals_kehmicals
   handle: Kehmicals
@@ -303,6 +305,7 @@ players:
   stamina: 98.3
   form: 58.0
   personality_tags: []
+  career_volatility: 50
   potential: 73.8
 - id: team_immortals_genghsta
   handle: Genghsta
@@ -402,6 +405,7 @@ players:
   personality_tags:
   - independent
   - quiet
+  career_volatility: 50
   potential: 73.4
 - id: team_immortals_nature
   handle: NaturE
@@ -501,4 +505,5 @@ players:
   personality_tags:
   - quiet
   - team_player
+  career_volatility: 50
   potential: 76.5

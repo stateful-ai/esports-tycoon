@@ -107,6 +107,7 @@ players:
   personality_tags:
   - quiet
   - team_player
+  career_volatility: 50
   potential: 81.8
 - id: team_paper_rex_f0rsaken
   handle: f0rsakeN
@@ -205,7 +206,13 @@ players:
   form: 51.4
   personality_tags:
   - rookie
-  potential: 90.8
+  career_volatility: 8
+  development_archetype: steady
+  development_decline_age: 34
+  development_peak_age: 21
+  development_peak_years: 10
+  development_realization: 0.98
+  potential: 97.0
 - id: team_paper_rex_d4v41
   handle: d4v41
   real_name: ''
@@ -304,7 +311,11 @@ players:
   personality_tags:
   - quiet
   - slow_starter
-  potential: 80.6
+  career_volatility: 16
+  development_decline_age: 33
+  development_peak_years: 7
+  development_realization: 0.96
+  potential: 88.0
 - id: team_paper_rex_mindfreak
   handle: mindfreak
   real_name: ''
@@ -402,7 +413,11 @@ players:
   form: 47.4
   personality_tags:
   - rookie
-  potential: 85.2
+  career_volatility: 16
+  development_decline_age: 33
+  development_peak_years: 7
+  development_realization: 0.96
+  potential: 87.0
 - id: team_paper_rex_shiba
   handle: shiba
   real_name: ''
@@ -501,4 +516,5 @@ players:
   personality_tags:
   - analytical
   - quiet
+  career_volatility: 50
   potential: 74.9

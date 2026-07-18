@@ -110,6 +110,8 @@ players:
   form: 47.2
   personality_tags:
   - team_player
+  career_volatility: 34
+  development_realization: 0.93
   potential: 85.0
 - id: team_gambit_esports_nats
   handle: nAts
@@ -213,6 +215,11 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 16
+  development_decline_age: 32
+  development_peak_age: 21
+  development_peak_years: 8
+  development_realization: 0.96
   potential: 94.0
 - id: team_gambit_esports_chronicle
   handle: Chronicle
@@ -316,6 +323,12 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 10
+  development_archetype: steady
+  development_decline_age: 34
+  development_peak_age: 22
+  development_peak_years: 9
+  development_realization: 0.98
   potential: 93.0
 - id: team_gambit_esports_d3ffo
   handle: d3ffo
@@ -418,6 +431,7 @@ players:
   form: 48.3
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 89.0
 - id: team_gambit_esports_sheydos
   handle: Sheydos
@@ -520,4 +534,6 @@ players:
   form: 50.9
   personality_tags:
   - rookie
+  career_volatility: 34
+  development_realization: 0.93
   potential: 90.0

@@ -106,6 +106,7 @@ players:
   form: 57.2
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 76.0
 - id: team_honk_shonp
   handle: ShonP
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - clutch_gene
   - quiet
+  career_volatility: 50
   potential: 75.0
 - id: team_honk_trexx
   handle: trexx
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 50
   potential: 90.0
 - id: team_honk_dreamas
   handle: Dreamas
@@ -403,6 +406,7 @@ players:
   personality_tags:
   - quiet
   - streamer
+  career_volatility: 50
   potential: 74.0
 - id: team_honk_synsi
   handle: synsi
@@ -501,4 +505,5 @@ players:
   form: 59.7
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 80.0
