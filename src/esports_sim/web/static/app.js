@@ -31,6 +31,42 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+const tooltipMarkup = (title, description, sub = "") =>
+  `${title ? `<h4>${esc(title)}</h4>` : ""}` +
+  `<div class='tooltip-desc'>${esc(description)}</div>` +
+  (sub ? `<div class='tooltip-sub'>${esc(sub)}</div>` : "");
+
+const TOOLTIP_LIBRARY = Object.freeze({
+  ovr: ["Overall rating", "A quick summary of the player's current attributes. Role comfort can move their match-day level away from this headline number."],
+  ability: ["Current ability", "The player's present playing level. This is what they can deliver now, before form, confidence, role comfort, and tactical fit shape a match."],
+  ceiling: ["Projected ceiling", "A scouting forecast of the player's likely peak, not a hard cap. Better scouting narrows the range; development and environment can still change the outcome."],
+  form: ["Form", "Recent match performance. Good form supports confidence and development; poor form can make a player less stable week to week."],
+  morale: ["Morale", "How happy the player is with their situation. It affects development, tilt risk, contract talks, and whether squad issues escalate."],
+  condition: ["Condition", "Current physical readiness. Matches and hard training drain it; rest and recovery staff restore it."],
+  confidence: ["Confidence", "Belief under pressure. It shapes duels, peeks, and clutch nerve, then gradually moves back toward neutral."],
+  salary: ["Weekly salary", "The player's wage paid every week. Long contracts protect the roster but keep this cost on the books."],
+  contract: ["Contract weeks", "Weeks remaining on the current deal. Expiring players can leave unless you renew them in time."],
+  languages: ["Languages", "Shared languages improve communication and chemistry. Proficiency matters, not just whether a language appears on the profile."],
+  scouting: ["Scouting read", "A summary of what your staff currently knows. More coverage sharpens ability ranges and unlocks deeper development and character reads."],
+  market_value: ["Asking price", "The opening cost of a deal. Contract protection, club stance, player interest, and your offer structure can move the final price."],
+  staff_ovr: ["Staff overall", "A role-weighted summary of the attributes that matter for this staff job. Specialty and system fit can matter as much as the headline number."],
+});
+
+const badgeTooltip = (bd) => tooltipMarkup(
+  bd.name || "Player badge",
+  bd.blurb || "A public career marker earned from match or development events.",
+  [bd.impact, bd.decay, bd.season ? `Earned in season ${bd.season}.` : ""].filter(Boolean).join(" "),
+);
+
+const badgeIconMarkup = (bd) => {
+  const label = `${bd.name || "Player badge"}: ${bd.blurb || "career marker"}`;
+  const icon = bd.art
+    ? `<img class="pf-badge-art" src="${esc(bd.art)}" alt="">`
+    : esc(bd.emoji || "•");
+  return `<span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" ` +
+    `data-tooltip="${badgeTooltip(bd)}" tabindex="0" role="img" aria-label="${esc(label)}">${icon}</span>`;
+};
+
 /* Entity links. profile.js turns any [data-pid]/[data-tid]/[data-sid] into a
    profile-overlay link via one delegated listener — these helpers are the ONE
    way to render a linked name, so coverage and affordance can't drift. */
@@ -57,6 +93,17 @@ function screenHead(title, opts = {}) {
     head.appendChild(seg);
   }
   head.appendChild(el("span", "spacer"));
+  const guideKey = App?.tab === "tactics" ? "tactics" : App?.tab;
+  if (TAB_GUIDES[guideKey]) {
+    const guide = el("button", "btn btn-sm screen-guide-btn", "Guide");
+    guide.setAttribute("data-tooltip", tooltipMarkup(
+      `${TAB_GUIDES[guideKey].label} guide`,
+      TAB_GUIDES[guideKey].goal,
+      "Opens the manager handbook without leaving the campaign.",
+    ));
+    guide.onclick = () => openHelp("screens", guideKey);
+    head.appendChild(guide);
+  }
   for (const node of opts.right || []) head.appendChild(node);
   return head;
 }
@@ -82,6 +129,181 @@ async function api(path, body) {
 
 const App = { tab: "dashboard", state: null, mp: null };
 
+const TAB_GUIDES = Object.freeze({
+  dashboard: {
+    label: "Dashboard",
+    goal: "See what changed, what needs a decision, and what the next fixture demands.",
+    start: "Begin with Needs You, then scan the next fixture and recent form.",
+    watch: "A red or amber item usually deserves attention before advancing the week.",
+  },
+  inbox: {
+    label: "Inbox",
+    goal: "Work through decisions and deadlines without losing them in league news.",
+    start: "Handle Actionable Items first; League Feed is context, not a to-do list.",
+    watch: "Buttons are based on the current campaign state, so an old message cannot trigger an expired offer.",
+  },
+  tactics: {
+    label: "Match",
+    goal: "Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.",
+    start: "Check the opponent report, then adjust only the dials or lineup you have a reason to change.",
+    watch: "Extreme tactics create real trade-offs. Neutral settings are safe while you learn the roster.",
+  },
+  club: {
+    label: "Club",
+    goal: "Manage the squad, weekly development, locker room, academy, and staff delegation.",
+    start: "Name a default five, check condition and confidence, then set team and player training plans.",
+    watch: "Bench players still develop, but slower, and established players eventually expect minutes.",
+  },
+  facilities: {
+    label: "Facilities",
+    goal: "Invest in permanent departments that support training, preparation, recovery, and wellbeing.",
+    start: "Compare the next-level benefit with both the build cost and weekly upkeep.",
+    watch: "Upgrades are long-term commitments; do not spend the wage budget needed to keep the roster legal.",
+  },
+  season: {
+    label: "Season",
+    goal: "Track the table, schedule, playoff cut, records, and the rest of the league.",
+    start: "Use Fixtures for timing and League for the playoff race; team names open full profiles.",
+    watch: "Round difference and head-to-head results can matter when records are tied.",
+  },
+  market: {
+    label: "Market",
+    goal: "Find players and staff who improve the club without breaking its finances or chemistry.",
+    start: "Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.",
+    watch: "A higher overall is not automatically a better fit for your lineup, system, or budget.",
+  },
+  stats: {
+    label: "Stats",
+    goal: "Separate repeatable performance from short streaks and identify league-wide strengths.",
+    start: "Begin with Leaders, then use team and map splits to test the story behind the headline numbers.",
+    watch: "Your analytics department controls how much detail is available; locked columns are a staff/facility problem.",
+  },
+  company: {
+    label: "Company",
+    goal: "Keep the club solvent while growing sponsors, supporters, reach, and public sentiment.",
+    start: "Check weekly net cash flow before accepting costs, then review sponsor demands and brand momentum.",
+    watch: "Results, player reach, and public decisions affect the commercial side of the club over time.",
+  },
+});
+
+const FIRST_WEEK_STEPS = Object.freeze([
+  ["inbox", "Clear urgent work", "Open Actionable Items and resolve anything with a deadline."],
+  ["club", "Check the squad", "Confirm five starters, inspect condition and confidence, and set training."],
+  ["tactics", "Prepare the fixture", "Read the opponent report and make a simple game plan."],
+  ["market", "Know your options", "Scout one realistic target; you do not need to sign anyone immediately."],
+  ["dashboard", "Advance when ready", "Return to the Dashboard, check Needs You, then advance the week."],
+]);
+
+const HELP_GLOSSARY = Object.freeze([
+  ["OVR / current ability", "What the player can deliver now. Role comfort, confidence, form, and tactics still shape match performance."],
+  ["Ceiling / potential", "A forecast of a player's likely peak, not a guaranteed maximum or hard cap."],
+  ["Form", "Recent performance. Useful, but noisier than attributes and a longer run of match data."],
+  ["Confidence", "Belief under pressure; it affects duels and clutch nerve and moves back toward neutral over time."],
+  ["Condition", "Physical readiness. Matches and hard training drain it; rest and recovery support restore it."],
+  ["Fog / scouting range", "Uncertainty in an external read. More scouting narrows the band but never reveals private state perfectly."],
+  ["Role comfort", "Familiarity with the current role and playstyle assignment. A reassignment starts low and settles with time."],
+  ["Badge", "A public career marker earned from match or development events. Hover it to see its exact effect and how it can fade."],
+  ["xDuel / xDE", "Actual duel wins compared with expected duel wins. It helps distinguish strong results from favorable matchups."],
+]);
+
+function helpSeenKey() {
+  const world = App.mp?.code || App.state?.user_team?.id || "local";
+  return `esports-sim:first-week-guide:${world}`;
+}
+
+function helpFirstWeekMarkup() {
+  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span></div>` +
+    `<ol class="help-steps">${FIRST_WEEK_STEPS.map(([tab, title, body], i) =>
+      `<li><span class="help-step-num">${i + 1}</span><div><b>${esc(title)}</b><p>${esc(body)}</p></div>` +
+      `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`
+    ).join("")}</ol>` +
+    `<div class="help-note"><b>A safe learning setup</b><span>Keep tactics near 50, use normal training intensity, scout before buying, and leave cash for several weeks of wages.</span></div>`;
+}
+
+function helpScreensMarkup(selected = App.tab) {
+  const current = selected === "tactics" ? "tactics" : selected;
+  return `<div class="help-screen-grid">${Object.entries(TAB_GUIDES).map(([tab, guide]) =>
+    `<article class="help-screen-card${tab === current ? " current" : ""}">` +
+      `<div class="help-screen-head"><b>${esc(guide.label)}</b>${tab === current ? '<span class="pill">current</span>' : ""}</div>` +
+      `<p>${esc(guide.goal)}</p><div><span class="microlabel">Start here</span>${esc(guide.start)}</div>` +
+      `<div><span class="microlabel">Watch for</span>${esc(guide.watch)}</div>` +
+      `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(guide.label)}</button></article>`
+  ).join("")}</div>`;
+}
+
+function helpGlossaryMarkup() {
+  return `<div class="help-glossary">${HELP_GLOSSARY.map(([term, desc]) =>
+    `<div><b>${esc(term)}</b><span>${esc(desc)}</span></div>`
+  ).join("")}</div><div class="help-note"><b>Hover for detail</b><span>Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.</span></div>`;
+}
+
+function renderHelp(section = "first-week", selected = App.tab) {
+  const body = document.getElementById("help-body");
+  if (!body) return;
+  document.querySelectorAll("[data-help-section]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.helpSection === section);
+  });
+  body.innerHTML = section === "screens"
+    ? helpScreensMarkup(selected)
+    : section === "glossary" ? helpGlossaryMarkup() : helpFirstWeekMarkup();
+}
+
+function openHelp(section = "first-week", selected = App.tab, automatic = false) {
+  const overlay = document.getElementById("help");
+  if (!overlay) return;
+  overlay.dataset.automatic = automatic ? "true" : "false";
+  renderHelp(section, selected);
+  overlay.classList.remove("hidden");
+  overlay.setAttribute("aria-hidden", "false");
+  overlay.querySelector("[data-help-section].active")?.focus();
+}
+
+function closeHelp() {
+  const overlay = document.getElementById("help");
+  if (!overlay) return;
+  overlay.classList.add("hidden");
+  overlay.setAttribute("aria-hidden", "true");
+  if (overlay.dataset.automatic === "true") {
+    try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {}
+  }
+}
+
+function maybeShowFirstWeekHelp(state) {
+  if (App.onboardingShown || state.season !== 1 || state.week > 1) return;
+  let seen = false;
+  try { seen = localStorage.getItem(helpSeenKey()) === "1"; } catch (_e) {}
+  if (seen) return;
+  App.onboardingShown = true;
+  openHelp("first-week", App.tab, true);
+}
+
+function initHelpSystem() {
+  document.getElementById("help-open")?.addEventListener("click", () => openHelp("first-week"));
+  document.getElementById("help-close")?.addEventListener("click", closeHelp);
+  document.getElementById("help")?.addEventListener("click", (event) => {
+    const section = event.target.closest("[data-help-section]");
+    if (section) return renderHelp(section.dataset.helpSection, App.tab);
+    const destination = event.target.closest("[data-help-tab]");
+    if (destination) {
+      closeHelp();
+      dashGoTab(destination.dataset.helpTab);
+    } else if (event.target.id === "help") {
+      closeHelp();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !document.getElementById("help")?.classList.contains("hidden")) closeHelp();
+  });
+  document.querySelectorAll("#tabs [data-tab]").forEach((button) => {
+    const guide = TAB_GUIDES[button.dataset.tab];
+    if (guide) button.setAttribute("data-tooltip", tooltipMarkup(guide.label, guide.goal, guide.start));
+  });
+}
+
+window.openHelp = openHelp;
+window.closeHelp = closeHelp;
+initHelpSystem();
+
 window.askBreakdown = askBreakdown;
 window.humanize = humanize;
 window.esc = esc;
@@ -99,6 +321,8 @@ window.dashGoTab = dashGoTab;
 window.openNegotiation = (...args) => openNegotiation(...args);
 window.openOffer = (...args) => openOffer(...args);
 window.attrDetail = (...args) => attrDetail(...args);
+window.tooltipMarkup = tooltipMarkup;
+window.badgeTooltip = badgeTooltip;
 window.advanceWeek = async () => {
   const btn = document.getElementById("advance-btn");
   if (btn) btn.click();
@@ -668,6 +892,7 @@ async function refresh() {
   updateSaveControls(s.save);
   refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
+  maybeShowFirstWeekHelp(s);
 }
 
 // Topbar save controls: the explicit Save button (dot = unsaved changes)
@@ -1629,8 +1854,7 @@ async function dashboard(v) {
   };
 
   const oppName = fix ? (fix.team_a === myId ? fix.team_b_name : fix.team_a_name) : "";
-  const badgeStrip = (bs) => (bs || []).map((bd) =>
-    ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
+  const badgeStrip = (bs) => (bs || []).map((bd) => ` ${badgeIconMarkup(bd)}`).join("");
 
   // The manager-career overlay's entry point rides the screen head (the old
   // "Manager career" card is gone — the profile overlay owns that detail).
@@ -2692,15 +2916,17 @@ async function roster(v, opts = {}) {
       "Tip: a 6-man roster is advised for tournaments (register a bench)."));
   }
 
-  const starTh = hasBench && overview ? "<th>★</th>" : "";
+  const starTh = hasBench && overview
+    ? `<th data-tooltip="${tooltipMarkup("Default five", "Choose the five players who dress by default. Map-specific lineups can override this selection.")}">★</th>`
+    : "";
   const t = el("table", "roster-table");
   t.innerHTML = overview
     ? `<thead><tr>${starTh}<th>Player</th><th>Role</th><th>Agent</th>
-       <th class="num">Age</th><th class="num">OVR</th><th>Ceiling</th>
-       <th>Form</th><th>Morale</th><th class="num">Sta</th><th>Conf</th>
-       <th class="num">Salary</th><th class="num">Wks</th><th></th></tr></thead>`
-    : `<thead><tr>${starTh}<th>Player</th><th class="num">Age</th><th class="num">OVR</th>
-       <th>Ceiling</th><th>Form</th><th>Conf</th>
+       <th class="num">Age</th><th class="num" data-tooltip-key="ovr">OVR</th><th data-tooltip-key="ceiling">Ceiling</th>
+       <th data-tooltip-key="form">Form</th><th data-tooltip-key="morale">Morale</th><th class="num" data-tooltip-key="condition">Condition</th><th data-tooltip-key="confidence">Confidence</th>
+       <th class="num" data-tooltip-key="salary">Salary</th><th class="num" data-tooltip-key="contract">Wks</th><th></th></tr></thead>`
+    : `<thead><tr>${starTh}<th>Player</th><th class="num">Age</th><th class="num" data-tooltip-key="ovr">OVR</th>
+       <th data-tooltip-key="ceiling">Ceiling</th><th data-tooltip-key="form">Form</th><th data-tooltip-key="confidence">Confidence</th>
        <th>Dev focus</th><th>Language</th><th>Intensity</th><th>Mentor</th></tr></thead>`;
   // Detail-row colspan must match the ACTUAL current column count.
   const ncols = t.querySelector("thead tr").children.length;
@@ -2718,17 +2944,16 @@ async function roster(v, opts = {}) {
     const benchPill = overview && hasBench && !lineup.has(p.id) ? ' <span class="pill">bench</span>' : "";
     // Heavy-streamer chip: streaming slows this player's development.
     const streamChip = p.stream_heavy
-      ? ' <span class="chip" title="heavy streaming slows this player\'s development">📺</span>'
+      ? ' <span class="chip info-btn" tabindex="0" aria-label="Heavy streaming" title="Heavy streaming slows this player\'s development.">📺</span>'
       : "";
     const requestChip = p.transfer_request
       ? ' <span class="chip tone-bad" title="This player has submitted a transfer request">TRANSFER REQUEST</span>'
       : "";
-    const badges = (p.badges || []).map((bd) =>
-      ` <span class="roster-badge ${bd.polarity < 0 ? "badge-neg" : "badge-pos"}" title="${esc(bd.name)}: ${esc(bd.blurb)}">${bd.emoji}</span>`).join("");
+    const badges = (p.badges || []).map((bd) => ` ${badgeIconMarkup(bd)}`).join("");
     const starCell = hasBench && overview
       ? `<td><button class="btn btn-sm starter-toggle ${lineup.has(p.id) ? "active" : ""}" data-act="star" title="starter / bench">${lineup.has(p.id) ? "★" : "☆"}</button></td>`
       : "";
-    const playerCell = `<td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill" title="under a mentor\'s wing">🎓</span>' : ""}${badges}${benchPill}${streamChip}</td>`;
+    const playerCell = `<td><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b>${p.id === data.team.captain_id ? ' <span class="pill">IGL</span>' : ""}${p.mentor_id ? ' <span class="pill mentor-pill info-btn" tabindex="0" aria-label="Mentored player" title="This player is developing under a veteran mentor\'s wing.">🎓</span>' : ""}${badges}${benchPill}${streamChip}</td>`;
     const ceilingCell = `<td>${p.potential_stars != null ? starsRange([p.potential_stars, p.potential_stars]) : '<span class="muted">scout</span>'}</td>`;
 
     let rowHtml;
@@ -4814,9 +5039,9 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
                 <th>Player</th>
                 <th>Role</th>
                 <th class="num">Age</th>
-                <th class="num">OVR</th>
+                <th class="num" data-tooltip-key="ovr">OVR</th>
                 <th>Club</th>
-                <th class="num">Price</th>
+                <th class="num" data-tooltip-key="market_value">Price</th>
                 <th></th>
               </tr>
             </thead>
@@ -5071,12 +5296,12 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
           <th>Player</th>
           <th>Role</th>
           <th class="num">Age</th>
-          <th class="num">OVR</th>
-          <th>Ability</th>
-          <th>Ceiling</th>
-          <th>Languages</th>
+          <th class="num" data-tooltip-key="ovr">OVR</th>
+          <th data-tooltip-key="ability">Ability</th>
+          <th data-tooltip-key="ceiling">Ceiling</th>
+          <th data-tooltip-key="languages">Languages</th>
           <th class="num">Stream revenue</th>
-          <th class="num">Asking</th>
+          <th class="num" data-tooltip-key="market_value">Asking</th>
           <th></th>
           <th>Swap out</th>
         </tr>
@@ -5499,9 +5724,9 @@ const BackroomStaff = ({ data, triggerRefresh }) => {
                       <th>Region</th>
                       <th>Specialty</th>
                         <th>Identity / strengths</th>
-                        <th>OVR</th>
-                      <th class="num">Salary</th>
-                      <th class="num">Exp</th>
+                        <th data-tooltip-key="staff_ovr">OVR</th>
+                      <th class="num" data-tooltip-key="salary">Salary</th>
+                      <th class="num" data-tooltip=${window.tooltipMarkup("Experience", "Completed seasons in professional staff roles. Experience supports career badges and gives context to the attributes.")}>Exp</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -8035,6 +8260,8 @@ window.render = render;
     tooltipEl.id = "es-tooltip";
     document.body.appendChild(tooltipEl);
   }
+  tooltipEl.setAttribute("role", "tooltip");
+  tooltipEl.setAttribute("aria-hidden", "true");
 
   let activeTooltipTarget = null;
 
@@ -8043,6 +8270,8 @@ window.render = render;
     activeTooltipTarget = target;
     tooltipEl.innerHTML = html;
     tooltipEl.classList.add("active");
+    tooltipEl.setAttribute("aria-hidden", "false");
+    target.setAttribute("aria-describedby", "es-tooltip");
     positionTooltip(target);
   }
 
@@ -8050,7 +8279,28 @@ window.render = render;
     if (activeTooltipTarget === target) {
       activeTooltipTarget = null;
       tooltipEl.classList.remove("active");
+      tooltipEl.setAttribute("aria-hidden", "true");
+      target.removeAttribute("aria-describedby");
     }
+  }
+
+  function resolveTooltip(target) {
+    let html = target.getAttribute("data-tooltip");
+    const key = target.getAttribute("data-tooltip-key");
+    if (!html && key && TOOLTIP_LIBRARY[key]) {
+      html = tooltipMarkup(...TOOLTIP_LIBRARY[key]);
+      target.setAttribute("data-tooltip", html);
+    }
+    if (!html && target.hasAttribute("title")) {
+      const titleVal = target.getAttribute("title");
+      if (titleVal && titleVal.trim()) {
+        const heading = (target.getAttribute("aria-label") || target.textContent || "").trim();
+        html = tooltipMarkup(heading && heading !== titleVal ? heading : "More information", titleVal);
+        target.setAttribute("data-tooltip", html);
+      }
+      target.removeAttribute("title");
+    }
+    return html;
   }
 
   function positionTooltip(target) {
@@ -8085,34 +8335,38 @@ window.render = render;
 
   // Event Delegation for mouse hover
   document.addEventListener("mouseover", (e) => {
-    const target = e.target.closest("[data-tooltip], [title]");
+    const target = e.target.closest("[data-tooltip], [data-tooltip-key], [title]");
     if (!target) return;
-
-    let html = target.getAttribute("data-tooltip");
-    
-    // Auto-intercept standard browser title and elevate to custom tooltip styling
-    if (!html && target.hasAttribute("title")) {
-      const titleVal = target.getAttribute("title");
-      if (titleVal && titleVal.trim()) {
-        html = `<div class="tooltip-desc">${esc(titleVal)}</div>`;
-        target.setAttribute("data-tooltip", html);
-      }
-      target.removeAttribute("title"); // remove native tooltip
-    }
-
+    const html = resolveTooltip(target);
     if (html) {
       showTooltip(target, html);
     }
   });
 
   document.addEventListener("mouseout", (e) => {
-    const target = e.target.closest("[data-tooltip]");
+    const target = e.target.closest("[data-tooltip], [data-tooltip-key]");
     if (!target) return;
     
     // Ensure we are genuinely leaving the target boundary
     if (!e.relatedTarget || !target.contains(e.relatedTarget)) {
       hideTooltip(target);
     }
+  });
+
+  document.addEventListener("focusin", (e) => {
+    const target = e.target.closest("[data-tooltip], [data-tooltip-key], [title]");
+    if (!target) return;
+    const html = resolveTooltip(target);
+    if (html) showTooltip(target, html);
+  });
+
+  document.addEventListener("focusout", (e) => {
+    const target = e.target.closest("[data-tooltip], [data-tooltip-key]");
+    if (target) hideTooltip(target);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && activeTooltipTarget) hideTooltip(activeTooltipTarget);
   });
 
   // Keep positioning accurate during viewport actions

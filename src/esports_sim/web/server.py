@@ -788,9 +788,28 @@ def _badge_views(p: Player) -> list[dict]:
         if not b:
             continue
         bid = pb.id
+        ability_parts = [
+            f"{float(delta):+g} {attr.replace('_', ' ')}"
+            for attr, delta in sorted((b.get("ca") or {}).items())
+        ]
+        impact = (
+            "While held: " + ", ".join(ability_parts) + "."
+            if ability_parts else "This badge has no temporary attribute effect."
+        )
+        if float(b.get("pa", 0.0)) > 0:
+            impact += f" Earning it permanently raised potential by {float(b['pa']):g}."
+        decay_seasons = int(b.get("decay_seasons", 0))
+        decay = (
+            f"It can fade after {decay_seasons} season"
+            f"{'s' if decay_seasons != 1 else ''} without re-qualifying."
+            if decay_seasons else "It does not expire on a fixed timer."
+        )
         out.append({
             "id": bid, "name": b["name"], "emoji": b["emoji"],
             "polarity": b["polarity"], "blurb": b["blurb"],
+            "kind": "positive" if b["polarity"] > 0 else "negative",
+            "impact": impact,
+            "decay": decay,
             "art": (f"/assets/badges/{bid}.webp" if bid in _badge_art_ids() else None),
             "season": pb.season,
         })

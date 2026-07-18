@@ -816,7 +816,9 @@ const PlayerProfile = ({ data }) => {
                 ? html`<img class="pf-badge-art" src=${bd.art} alt="" />`
                 : html`<span class="pf-badge-emoji">${bd.emoji}</span>`;
               return html`
-                <span key=${i} class=${`pf-chip pf-badge ${bd.polarity < 0 ? 'pf-badge-neg' : 'pf-badge-pos'}`} title=${bd.blurb + (bd.season ? ` — earned S${bd.season}` : "")}>
+                <span key=${i} class=${`pf-chip pf-badge ${bd.polarity < 0 ? 'pf-badge-neg' : 'pf-badge-pos'}`}
+                      data-tooltip=${window.badgeTooltip(bd)} tabIndex="0"
+                      aria-label=${`${bd.name}: ${bd.blurb}`}>
                   ${icon} ${bd.name}
                 </span>
               `;
@@ -1701,7 +1703,9 @@ const StaffProfile = ({ data }) => {
           <h3 class="pf-section-title">Badges</h3>
           <div class="pf-chips">
             ${badges.map((b, i) => html`
-              <span key=${i} class="pf-chip"><b>${b.label}</b><span class="muted">${b.desc}</span></span>
+              <span key=${i} class="pf-chip" data-tooltip=${window.tooltipMarkup(b.label, b.desc, "Staff career badge.")} tabIndex="0">
+                <b>${b.label}</b><span class="muted">${b.desc}</span>
+              </span>
             `)}
           </div>
         </div>

@@ -34,7 +34,9 @@ from esports_sim.manager.state import (
 )
 from esports_sim.registry import GameData
 from esports_sim.schemas import FutureProspect, Player, Team
+from esports_sim.schemas.badges import BADGES as PLAYER_BADGES
 from esports_sim.schemas.common import Playstyle, Role
+from esports_sim.schemas.player import PlayerBadge
 
 SEED = 2026
 WEEKS = 3  # enough to populate stats, fixtures, and relationships
@@ -294,6 +296,24 @@ def test_user_player_profile(env) -> None:
     assert prof["season"]["assists"] is None
     assert prof["season"]["clutches"] is None
     assert prof["career"] == []  # no per-season archive exists
+
+
+def test_every_player_badge_view_has_complete_tooltip_copy(env) -> None:
+    gs, _gd, h = env
+    player = gs.players[h.user_pid].model_copy(deep=True)
+    player.badges = [
+        PlayerBadge(id=badge_id, season=2, week=3, last_qualified=2)
+        for badge_id in PLAYER_BADGES
+    ]
+
+    views = server_mod._badge_views(player)
+    assert {view["id"] for view in views} == set(PLAYER_BADGES)
+    for view in views:
+        assert view["name"] and view["blurb"]
+        assert view["kind"] in {"positive", "negative"}
+        assert view["impact"]
+        assert view["decay"]
+        assert view["season"] == 2
 
 
 def test_rival_player_profile_fog(env) -> None:
