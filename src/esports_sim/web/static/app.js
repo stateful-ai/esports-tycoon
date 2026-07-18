@@ -23,8 +23,18 @@ const askBreakdown = (parts) => !parts?.length ? "" :
   parts.map((p) => `<div class="rowbar"><span>${esc(p.label)}</span>` +
     `<span class="rowbar-val mono">${p.delta >= 0 ? "+" : "−"}${money(Math.abs(p.delta))}</span></div>`).join("") +
   `</details>`;
-// Prettify a snake_case tag/trait id ("team_player" -> "Team Player") for display.
-const humanize = (s) => (s || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+// Prettify an internal identifier for display. Keep this tolerant because API
+// fallbacks can contain either snake_case, kebab-case, or an already readable label.
+const DISPLAY_TOKENS = Object.freeze({
+  acs: "ACS", bo1: "BO1", bo3: "BO3", fa: "FA", igl: "IGL",
+  kayo: "KAY/O", "kay/o": "KAY/O", kd: "K/D", kda: "K/D/A",
+  mvp: "MVP", vod: "VOD", xp: "XP",
+});
+const humanize = (value) => {
+  const text = String(value ?? "").trim().replace(/[_-]+/g, " ").replace(/\s+/g, " ");
+  if (!text) return "";
+  return text.split(" ").map((word) => DISPLAY_TOKENS[word.toLowerCase()] || `${word[0].toUpperCase()}${word.slice(1)}`).join(" ");
+};
 
 // HTML-escape untrusted text destined for an innerHTML string.
 const esc = (s) =>
@@ -533,7 +543,7 @@ function renderTeamGrid(grid, teams, onPick) {
 function renderOfferGrid(grid, offers, onPick) {
   grid.innerHTML = "";
   for (const o of offers) {
-    const arch = (o.archetype || "").replace(/_/g, " ");
+    const arch = humanize(o.archetype || "");
     const btn = el(
       "button",
       "team-pick",
@@ -886,7 +896,7 @@ async function refresh() {
   $("#tabs").classList.remove("hidden");
   if (typeof stopDraftPolling === "function") stopDraftPolling();
   $("#context").textContent =
-    `Season ${s.season} · Week ${s.week} · ${s.phase}  —  ${s.user_team.name}`;
+    `Season ${s.season} · Week ${s.week} · ${humanize(s.phase)}  —  ${s.user_team.name}`;
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
@@ -1008,7 +1018,7 @@ function bar(value, opts = {}) {
 }
 
 function stylePill(p) {
-  return `<span class="pill-pair"><span class="pill">${p.role}</span> <span class="pill">${p.playstyle}</span></span>`;
+  return `<span class="pill-pair"><span class="pill">${esc(humanize(p.role))}</span> <span class="pill">${esc(humanize(p.playstyle))}</span></span>`;
 }
 
 // Tiny inline trajectory sparkline from a numeric series (e.g. a player's CA
@@ -1045,7 +1055,7 @@ function sparkline(points, opts = {}) {
 // list of {lang, level}; a missing/empty list degrades to "".
 function langChips(langs) {
   return (langs || [])
-    .map((l) => `<span class="chip" title="${esc(l.lang)} — proficiency ${esc(l.level)}">${esc(l.lang)}</span>`)
+    .map((l) => `<span class="chip" title="${esc(humanize(l.lang))} — proficiency ${esc(l.level)}">${esc(humanize(l.lang))}</span>`)
     .join(" ");
 }
 
@@ -1138,7 +1148,7 @@ async function clubOps(v, sub) {
   const academyRows = el("div", "card-scroll");
   for (const p of a.roster || []) {
     const row = el("div", "entity");
-    row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(p.role)} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
+    row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
     const b = el("button", "btn btn-sm", "Promote");
     b.disabled = !p.owned;
     b.title = p.owned ? "Promote to the first team" : "Another parent organization holds this pathway";
@@ -1151,7 +1161,7 @@ async function clubOps(v, sub) {
     ac.appendChild(el("p", "microlabel", "First team pathways"));
     for (const p of eligibleDown) {
       const row = el("div", "entity");
-      row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(p.role)}</span>`;
+      row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))}</span>`;
       const b = el("button", "btn btn-sm", "Send down");
       b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "send_down" }); toast(r.message); refresh(); };
       row.appendChild(b); ac.appendChild(row);
@@ -1426,7 +1436,7 @@ async function clubOps(v, sub) {
       for (const prom of active) {
         const duration = prom.initial_duration || 1;
         const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
-        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: prom.player_id };
+        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
         
         let progressInfo = "";
         if (prom.promise_type === "play_time") {
@@ -1437,7 +1447,7 @@ async function clubOps(v, sub) {
         card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
         card.innerHTML = `<div>` +
           `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
-          `<span style="text-transform:uppercase; font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${prom.promise_type.replace(/_/g, " ")}</span>` +
+          `<span style="font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${esc(humanize(prom.promise_type))}</span>` +
         `</div>` +
         `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
         `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
@@ -1460,13 +1470,13 @@ async function clubOps(v, sub) {
     } else {
       const histList = el("div", "card-scroll", null);
       for (const prom of history) {
-        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: prom.player_id };
+        const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
         const isKept = prom.status === "kept";
         const badgeClass = isKept ? "win" : "loss";
         const color = isKept ? "#28a745" : "var(--es-color-danger, #ff4655)";
         
         const row = el("div", "entity", null);
-        row.innerHTML = `<span class="entity-name">${plink(pPlayer.id, pPlayer.handle)} &middot; ${prom.promise_type.replace(/_/g, " ")}</span>` +
+        row.innerHTML = `<span class="entity-name">${plink(pPlayer.id, pPlayer.handle)} &middot; ${esc(humanize(prom.promise_type))}</span>` +
           `<span class="pill ${badgeClass}" style="background:${color}; color:#fff; text-transform:uppercase;">${prom.status}</span>`;
         histList.appendChild(row);
       }
@@ -1603,7 +1613,7 @@ async function openMatchday() {
     for (const d of rows) {
       box.appendChild(el("span", "es-star",
         plink(d.player_id, d.handle) +
-        `<span class="pill">${esc(d.role)}</span>` +
+        `<span class="pill">${esc(humanize(d.role))}</span>` +
         `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} maps</span>`));
     }
     return box;
@@ -1865,7 +1875,7 @@ async function dashboard(v) {
     headRight.push(careerBtn);
   }
   v.appendChild(screenHead("Dashboard", {
-    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+    sub: `S${s.season} · W${s.week} · ${humanize(s.phase || "")}`,
     right: headRight,
   }));
   const ws = el("div", "ws");
@@ -1903,8 +1913,8 @@ async function dashboard(v) {
       : "final season";
     tiles.appendChild(statTile("Board", cap(b.band), {
       tone,
-      sub: `${b.goal} · ${(b.goal_state || "").replace(/_/g, " ")} · ${term}`,
-      tooltip: `<h4>Board confidence</h4><div class='tooltip-desc'>The board's current patience: <b>${b.band}</b>. Target: <b>${b.goal}</b> (${b.goal_state}). If it runs out, you may be dismissed.</div>`
+      sub: `${humanize(b.goal)} · ${humanize(b.goal_state || "")} · ${term}`,
+      tooltip: `<h4>Board confidence</h4><div class='tooltip-desc'>The board's current patience: <b>${esc(humanize(b.band))}</b>. Target: <b>${esc(humanize(b.goal))}</b> (${esc(humanize(b.goal_state))}). If it runs out, you may be dismissed.</div>`
     }));
   } else {
     const streak = streakOf(myId);
@@ -2134,7 +2144,7 @@ async function dashboard(v) {
         for (const p of stars) {
           names.appendChild(el("span", "es-star",
             plink(p.id, p.handle) +
-              `<span class="pill">${esc(p.role)}</span>` +
+              `<span class="pill">${esc(humanize(p.role))}</span>` +
               `<span class="mono muted">${fog ? "~" : ""}${Math.round(p.overall)}</span>`));
         }
         col.appendChild(names);
@@ -2641,14 +2651,14 @@ function computeNeedsYou(data) {
   if (s.board && !(s.board.band === "secure" || s.board.band === "stable")) {
     items.push({ tab: "standings", kind: "board", action: "Review", needs_action: false,
       label: `Board ${esc(s.board.band)} — goal: ${esc(s.board.goal || "")}`,
-      detail: esc((s.board.goal_state || "").replace(/_/g, " ")) });
+      detail: esc(humanize(s.board.goal_state || "")) });
   }
   for (const o of (s.objectives_hub ?? []).slice(0, 6)) {
     const ok = o.state === "achieved" || o.state === "on_track" || o.state === "leading";
     if (ok) continue;
     items.push({ tab: "standings", kind: "objective", action: "Chase", needs_action: false,
       label: esc(o.label),
-      detail: `${esc(o.kind)} · ${esc((o.state || "").replace(/_/g, " "))}${o.detail ? " · " + esc(o.detail) : ""}` });
+      detail: `${esc(humanize(o.kind))} · ${esc(humanize(o.state || ""))}${o.detail ? " · " + esc(o.detail) : ""}` });
   }
   return items;
 }
@@ -3191,11 +3201,11 @@ async function roster(v, opts = {}) {
       if (cpi.duos.length || cpi.feuds.length) {
         for (const [a, b] of cpi.duos) {
           c.appendChild(el("div", "entity",
-            `<span>🤝 ${plink(a, handleOf[a] || a)} <span class="muted">+</span> ${plink(b, handleOf[b] || b)}</span>`));
+            `<span>🤝 ${plink(a, handleOf[a] || humanize(a))} <span class="muted">+</span> ${plink(b, handleOf[b] || humanize(b))}</span>`));
         }
         for (const [a, b] of cpi.feuds) {
           c.appendChild(el("div", "entity",
-            `<span>⚡ ${plink(a, handleOf[a] || a)} <span class="muted">vs</span> ${plink(b, handleOf[b] || b)}</span>`));
+            `<span>⚡ ${plink(a, handleOf[a] || humanize(a))} <span class="muted">vs</span> ${plink(b, handleOf[b] || humanize(b))}</span>`));
         }
       } else if (data.is_user_team) {
         c.appendChild(el("p", "muted", "No standout duos or feuds."));
@@ -3220,10 +3230,10 @@ async function roster(v, opts = {}) {
       `vs ${up.opponent_id ? tlink(up.opponent_id, up.opponent) : esc(up.opponent)} · Bo${up.best_of}`));
     for (const m of up.maps) {
       c.appendChild(el("div", "row",
-        `<span class="microlabel">${esc(m.map_id)}</span> ` +
+        `<span class="microlabel">${esc(humanize(m.map_id))}</span> ` +
         `<span class="chip ${m.has_override ? "tone-accent" : ""}" title="${m.has_override ? "custom five" : "uses your default five"}">${m.has_override ? "custom" : "default"}</span>`));
       c.appendChild(el("div", "muted",
-        (m.dressed || []).map((id) => plink(id, handleOf[id] || id)).join(" · ")));
+        (m.dressed || []).map((id) => plink(id, handleOf[id] || humanize(id))).join(" · ")));
     }
     const edit = el("button", "btn btn-sm", "Edit ▸");
     edit.onclick = () => {
@@ -3305,7 +3315,7 @@ function devDigestCard(digest) {
   } else {
     for (const m of milestones) {
       mCol.appendChild(el("div", "newsline",
-        `${m.player_id ? plink(m.player_id, m.handle || m.player_id) + " · " : ""}${esc(m.text || m.label || "")}`));
+        `${m.player_id ? plink(m.player_id, m.handle || humanize(m.player_id)) + " · " : ""}${esc(m.text || m.label || "")}`));
     }
   }
   grid.appendChild(mCol);
@@ -3333,7 +3343,7 @@ function devDigestCard(digest) {
   } else {
     for (const pr of prospects) {
       pCol.appendChild(el("div", "newsline",
-        `${pr.id ? plink(pr.id, pr.handle || pr.id) + " · " : ""}${esc(pr.text || pr.note || "")}`));
+        `${pr.id ? plink(pr.id, pr.handle || humanize(pr.id)) + " · " : ""}${esc(pr.text || pr.note || "")}`));
     }
   }
   grid.appendChild(pCol);
@@ -3481,7 +3491,7 @@ function mapLineupCard(data) {
   // Per-map overrides.
   for (const m of up.maps) {
     const box = el("div", "lineup-block");
-    box.appendChild(el("h3", "", `${m.map_id}${m.has_override ? " · custom" : " · default"}`));
+    box.appendChild(el("h3", "", `${humanize(m.map_id)}${m.has_override ? " · custom" : " · default"}`));
     box.appendChild(chipRow(m.dressed, async (ids) => {
       if (ids.length !== 5) { toast("dress exactly 5 for a map"); return; }
       const r = await api("/api/actions/lineup", { fixture_id: up.fixture_id, map_id: m.map_id, player_ids: ids });
@@ -3494,7 +3504,7 @@ function mapLineupCard(data) {
 
 function attrDetail(p) {
   const rows = Object.entries(p.attributes)
-    .map(([k, val]) => `<tr><td>${k.replaceAll("_", " ")}</td><td>${bar(val)}</td><td class="num">${Math.round(val)}</td></tr>`)
+    .map(([k, val]) => `<tr><td>${esc(humanize(k))}</td><td>${bar(val)}</td><td class="num">${Math.round(val)}</td></tr>`)
     .join("");
   // Every player now carries a baseline on the whole cast — show the top
   // comfort picks, not all 13.
@@ -3573,7 +3583,7 @@ async function tactics(v) {
   const s = App.state;
   const sub = App.tacticsTab ?? "strategy";
   v.appendChild(screenHead("Match", {
-    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+    sub: `S${s.season} · W${s.week} · ${humanize(s.phase || "")}`,
     subtabs: [
       { id: "strategy", label: "Strategy" },
       { id: "gameplan", label: "Game plan" },
@@ -3657,7 +3667,7 @@ async function tacticsPrep(ws) {
     propBox.appendChild(acceptBtn);
     pc.appendChild(propBox);
   }
-  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${pr.current.intensity}).`));
+  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${humanize(pr.current.intensity)}).`));
   if (pr.last) {
     // F7 — surface the named artifact the last session produced (not just the
     // prose finding), so scrims read as consequential.
@@ -3671,7 +3681,7 @@ async function tacticsPrep(ws) {
     }
     if (pr.last.dev_suggestion) {
       pc.appendChild(el("div", "newsline prep-dev-hint",
-        `<b>Dev note:</b> ${pr.last.dev_suggestion_player_id ? plink(pr.last.dev_suggestion_player_id, pr.last.dev_suggestion_handle || pr.last.dev_suggestion_player_id) + " — " : ""}${esc(pr.last.dev_suggestion)}`));
+        `<b>Dev note:</b> ${pr.last.dev_suggestion_player_id ? plink(pr.last.dev_suggestion_player_id, pr.last.dev_suggestion_handle || humanize(pr.last.dev_suggestion_player_id)) + " — " : ""}${esc(pr.last.dev_suggestion)}`));
     }
   }
   ws.appendChild(pc);
@@ -3684,7 +3694,7 @@ async function tacticsPrep(ws) {
     const lab = el("label", "entity");
     const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
     cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${p.role}`)); rc.appendChild(lab);
+    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${humanize(p.role)}`)); rc.appendChild(lab);
   }
   if (!d.registration.locked) {
     const save = el("button", "btn btn-primary", "Submit roster");
@@ -4128,7 +4138,7 @@ async function gameplanPanel(v) {
     const tr = el("tr", "", `
       <td><input type="radio" name="gp-tgt" ${state.focus_target === r.player_id ? "checked" : ""}></td>
       <td><b>${plink(r.player_id, r.handle)}</b>${sug}</td>
-      <td>${esc(r.role)}</td><td>${esc(r.playstyle)}</td>
+      <td>${esc(humanize(r.role))}</td><td>${esc(humanize(r.playstyle))}</td>
       <td class="num mono">${fogp}${Math.round(r.overall)}</td>
       <td class="num mono">${fogp}${Math.round(r.form)}</td><td></td>`);
     tr.querySelector("input").onchange = () => { state.focus_target = r.player_id; paintGpDirty(); };
@@ -4220,7 +4230,7 @@ async function gameplanPanel(v) {
     };
     for (const r of gp.own_roster) {
       const chip = el("button", "gp-chip", `
-        <b>${r.handle}</b> <span class="muted">${r.playstyle}</span>
+        <b>${r.handle}</b> <span class="muted">${humanize(r.playstyle)}</span>
         <span class="mono">${Math.round(r.overall)}</span>
         <span class="mono ${r.stamina < 30 ? "bad" : ""}">${Math.round(r.stamina)} sta</span>
         ${r.is_starter ? '<span class="pill">starter</span>' : ""}`);
@@ -4356,7 +4366,7 @@ async function season(v) {
   const s = App.state;
   const sub = App.seasonTab ?? "league";
   v.appendChild(screenHead("Season", {
-    sub: `S${s.season} · W${s.week} · ${cap(String(s.phase || "").replace(/_/g, " "))}`,
+    sub: `S${s.season} · W${s.week} · ${humanize(s.phase || "")}`,
     subtabs: SEASON_TABS,
     active: sub,
     onPick: (id) => { App.seasonTab = id; renderApp(); },
@@ -4457,7 +4467,7 @@ function seasonLeague(ws, data, league, power) {
     const list = el("div", "es-totw");
     for (const p of totw.players) {
       list.appendChild(el("div", "es-totw-row",
-        `<span class="pill">${esc(p.role)}</span>` +
+        `<span class="pill">${esc(humanize(p.role))}</span>` +
         plink(p.id, p.handle) +
         `<span class="muted es-totw-team">${p.team_id ? tlink(p.team_id, p.team) : esc(p.team)}</span>` +
         `<b class="mono">${p.rating.toFixed(2)}</b>`));
@@ -4593,13 +4603,13 @@ function seasonFixtures(ws, sched, table) {
       const r = f.results[i];
       if (r.has_replay) {
         const b = el("button", "btn btn-sm",
-          `${mapThumb(r.map_id, "sm")}${esc(r.map_id)} ${r.score_a}–${r.score_b} ▶`);
+          `${mapThumb(r.map_id, "sm")}${esc(humanize(r.map_id))} ${r.score_a}–${r.score_b} ▶`);
         b.title = "watch replay";
         b.onclick = () => openReplay(f.id, i);
         line.appendChild(b);
       } else {
         line.appendChild(el("span", "pill",
-          `${mapThumb(r.map_id, "sm")}${esc(r.map_id)} ${r.score_a}–${r.score_b}`));
+          `${mapThumb(r.map_id, "sm")}${esc(humanize(r.map_id))} ${r.score_a}–${r.score_b}`));
       }
     }
     // Player of the Match — the series' standout box-score line (server
@@ -4956,14 +4966,14 @@ const MarketHeader = ({ activeTab, onPick, head, windowData }) => {
 
 const StylePill = ({ player }) => html`
   <span class="pill-pair">
-    <span class="pill">${player.role}</span>
-    <span class="pill">${player.playstyle}</span>
+    <span class="pill">${humanize(player.role)}</span>
+    <span class="pill">${humanize(player.playstyle)}</span>
   </span>
 `;
 
 const LangChips = ({ langs }) => html`
   ${(langs || []).map((l, idx) => html`
-    <span class="chip" title="${l.lang} — proficiency ${l.level}" key=${idx}>${l.lang}</span>
+    <span class="chip" title="${humanize(l.lang)} — proficiency ${l.level}" key=${idx}>${humanize(l.lang)}</span>
   `)}
 `;
 
@@ -5452,7 +5462,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             </div>
             ${needs.weakest_role && html`
               <p class="muted">
-                Weakest: ${needs.weakest_role.role} (${needs.weakest_role.quality})
+                Weakest: ${humanize(needs.weakest_role.role)} (${needs.weakest_role.quality})
               </p>
             `}
           </div>
@@ -5481,7 +5491,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             ${targets.map(tgt => html`
               <div class="entity" key=${tgt.id}>
                 <span class="entity-name"><b class="plink" data-pid=${tgt.id}>${tgt.handle}</b></span>
-                <span class="entity-meta">${tgt.role}</span>
+                <span class="entity-meta">${humanize(tgt.role)}</span>
                 <b class="entity-num">
                   ${tgt.quality}
                   ${!tgt.affordable && html` <span class="muted" title="over budget">✗</span>`}
@@ -5497,7 +5507,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             ${(cw.expiring_own || []).map(p => html`
               <div class="entity" key=${p.id}>
                 <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
-                <span class="entity-meta">yours · ${p.role}</span>
+                <span class="entity-meta">yours · ${humanize(p.role)}</span>
                 <b class="entity-num trend-down">${p.weeks_left}w</b>
               </div>
             `)}
@@ -5505,7 +5515,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
               <div class="entity" key=${p.id}>
                 <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
                 <span class="entity-meta">
-                  <span class="tlink" data-tid=${p.team_id}>${p.team}</span> · ${p.role}
+                  <span class="tlink" data-tid=${p.team_id}>${p.team}</span> · ${humanize(p.role)}
                 </span>
                 <b class="entity-num">${p.weeks_left}w</b>
               </div>
@@ -5520,7 +5530,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
               <div class="entity" key=${p.id}>
                 <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
                 <span class="entity-meta">
-                  ${p.age}y · ${p.role} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
+                  ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
                 <b class="entity-num stars">${"★".repeat(Math.round(p.potential_stars))}</b>
               </div>
@@ -5535,7 +5545,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
               <div class="entity" key=${p.id}>
                 <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
                 <span class="entity-meta">
-                  ${p.age}y · ${p.role} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
+                  ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
                 <b class="entity-num">${p.rating.toFixed(2)}</b>
               </div>
@@ -5966,7 +5976,7 @@ async function openOffer(target) {
   panel.appendChild(summary);
   let previewSeq = 0;
   const assetCard = (p) => `<article class="trade-asset">
-    <div class="trade-asset-head"><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b><span class="pill">${esc(p.role)}</span></div>
+    <div class="trade-asset-head"><img class="portrait" src="${p.portrait}" alt=""><b>${plink(p.id, p.handle)}</b><span class="pill">${esc(humanize(p.role))}</span></div>
     <div class="trade-stats"><span>OVR <b>${p.overall_estimated ? "~" : ""}${p.overall}</b></span><span>POT <b>${p.potential.low}-${p.potential.high}</b></span>
     <span>Contract <b>${money(p.contract.salary)}/wk · ${p.contract.weeks_left}w</b></span><span>Stream <b>${money(p.stream_revenue)}/wk</b></span></div>
     <div class="trade-value">Staff value <b>${money(p.value.consensus)}</b></div></article>`;
@@ -6037,7 +6047,7 @@ async function openNegotiation(target) {
       ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w ·
         ${neg.current_terms.stream_share}% streams · ${money(neg.current_terms.release_fee)} release ·
         ${neg.current_terms.buyout ? money(neg.current_terms.buyout) + " buyout" : "no buyout"} ·
-        ${esc(neg.current_terms.role)}${neg.current_terms.no_transfer ? " · no-transfer clause" : ""}.</p>`
+        ${esc(humanize(neg.current_terms.role))}${neg.current_terms.no_transfer ? " · no-transfer clause" : ""}.</p>`
       : "");
   if (neg.locker_room_fit) {
     const fit = neg.locker_room_fit;
@@ -6484,7 +6494,7 @@ async function scouting(v) {
     const proj = (r.pa_projection ?? []).length === 2
       ? ` <span class="muted" title="A ceiling is a projection, never an exact read — and it keeps moving.">(proj. ${r.pa_projection[0]}–${r.pa_projection[1]})</span>`
       : "";
-    lines.push(`<div><span class="pill">${esc(r.role)}</span> <span class="pill">${esc(r.playstyle)}</span>
+    lines.push(`<div><span class="pill">${esc(humanize(r.role))}</span> <span class="pill">${esc(humanize(r.playstyle))}</span>
       <span class="muted">age ${r.age}</span> · ability ${starsRange(r.ca_stars)} · ceiling ${starsRange(r.pa_stars)}${proj}</div>`);
     if ((r.agent_comfort ?? []).length) {
       lines.push(`<div><b>Comfort picks:</b> ` + r.agent_comfort
@@ -6514,8 +6524,8 @@ async function scouting(v) {
         (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden} unknown</span>` : "") + `</div>`);
     }
     if ((r.strengths ?? []).length) {
-      lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` +
-        ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` : "") + `</span></div>`);
+      lines.push(`<div><b>Read:</b> <span class="muted">+${r.strengths.map((s) => esc(humanize(s))).join(", ")}` +
+        ((r.weaknesses ?? []).length ? ` · −${r.weaknesses.map((s) => esc(humanize(s))).join(", ")}` : "") + `</span></div>`);
     }
     if ((r.ceiling_reads ?? []).length) {
       lines.push(`<div><b>Ceilings:</b> ` + r.ceiling_reads
@@ -6543,13 +6553,13 @@ async function scouting(v) {
         .join(" ") +
         (r.traits_hidden ? ` <span class="muted">+${r.traits_hidden}?</span>` : "");
       const read = r.strengths.length
-        ? `<span class="muted">+${r.strengths.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` +
-          (r.weaknesses.length ? ` · −${r.weaknesses.map((s) => esc(s.replaceAll("_", " "))).join(", ")}` : "") +
+        ? `<span class="muted">+${r.strengths.map((s) => esc(humanize(s))).join(", ")}` +
+          (r.weaknesses.length ? ` · −${r.weaknesses.map((s) => esc(humanize(s))).join(", ")}` : "") +
           `</span>`
         : `<span class="muted">needs more time</span>`;
       tb.appendChild(el("tr", "", `
         <td><b>${plink(r.player_id, r.handle)}</b></td>
-        <td><span class="pill">${esc(r.role)}</span> <span class="pill">${esc(r.playstyle)}</span></td>
+        <td><span class="pill">${esc(humanize(r.role))}</span> <span class="pill">${esc(humanize(r.playstyle))}</span></td>
         <td class="num">${r.age}</td>
         <td>${starsRange(r.ca_stars)}</td>
         <td>${starsRange(r.pa_stars)}</td>
@@ -6753,7 +6763,7 @@ async function stats(v) {
    to plain text when absent). */
 function statsLeaders(ws, data, tier, split, lgTier) {
   const lead = el("div", "card ws-12");
-  const splitLabel = split ? ` — ${split.kind}: ${esc(split.key)}` : "";
+  const splitLabel = split ? ` — ${humanize(split.kind)}: ${esc(split.key)}` : "";
   lead.innerHTML = `<h2>${lgTier === 2 ? "Challengers leaders" : "League leaders"} — season ${App.state.season}${splitLabel}</h2>`;
   if (!data.players.length) {
     lead.appendChild(el("p", "muted", "No maps played yet."));
@@ -6924,7 +6934,7 @@ function statsMeta(ws, data, metaResp, tier) {
         `<span class="es-map-meta-dial"><b>${esc(dialLabels[t.key] || t.key)}</b> ${t.average}</span>`
       ).join("");
       grid.appendChild(el("div", "es-map-meta", `
-        <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(trend.map_id)}</b>
+        <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(humanize(trend.map_id))}</b>
           <span class="mono muted">${trend.team_maps} team maps</span></div>
         <div><span class="muted">Top agents</span> ${agents}</div>
         <div class="es-map-meta-dials">${tactics}</div>
@@ -6957,7 +6967,7 @@ function statsMeta(ws, data, metaResp, tier) {
           // so a stale reference means "recreate", not "collapse".
           if (detail && detail.isConnected) { detail.remove(); detail = null; return; }
           const rows = r.maps_detail
-            .map((m) => `<tr><td>${mapThumb(m.map_id, "sm")}${esc(m.map_id)}</td>
+            .map((m) => `<tr><td>${mapThumb(m.map_id, "sm")}${esc(humanize(m.map_id))}</td>
               <td class="num">${m.maps}</td><td class="num">${m.wins}</td>
               <td class="num">${m.win_pct}%</td><td class="num">${m.atk_pct}%</td>
               <td class="num">${m.def_pct}%</td></tr>`)
@@ -7324,7 +7334,7 @@ const ObjectiveChip = ({ obj }) => {
     const st = obj.status.state;
     cls = st === "achieved" || st === "on_track" ? "good"
       : st === "missed" ? "bad" : "warn";
-    prog = ` · ${st.replace("_", " ")}`;
+    prog = ` · ${humanize(st)}`;
   }
   const tip = obj.status?.detail || money(obj.bonus);
   return html`
@@ -7468,7 +7478,7 @@ const FinancesTab = ({ onOpenBrand }) => {
                       <div class="row">
                         <span class=${`chip ${tone}`}>${d.status}</span>
                         <b>${d.brand}</b>
-                        <span class="chip">${SLOT_LABELS[d.slot] || d.slot}</span>
+                        <span class="chip">${SLOT_LABELS[d.slot] || humanize(d.slot)}</span>
                         <span class="muted">week ${d.deadline_week}</span>
                       </div>
                       <div>
@@ -7511,7 +7521,7 @@ const FinancesTab = ({ onOpenBrand }) => {
               let stateChip, brand, rowClass = "slot-row";
               if (s.deal) {
                 stateChip = html`<span class="chip tone-good">active</span>`;
-                brand = html`<b>${s.deal.name}</b> <span class="chip">${s.deal.kind}</span>`;
+                brand = html`<b>${s.deal.name}</b> <span class="chip">${humanize(s.deal.kind)}</span>`;
                 rowClass = "slot-row active-deal";
               } else if (!s.unlocked) {
                 stateChip = html`<span class="chip">locked</span>`;
@@ -7525,7 +7535,7 @@ const FinancesTab = ({ onOpenBrand }) => {
                 <div key=${slot} class=${rowClass}>
                   <div class="row">
                     ${stateChip}
-                    <span class="microlabel">${SLOT_LABELS[slot] || slot}</span>
+                    <span class="microlabel">${SLOT_LABELS[slot] || humanize(slot)}</span>
                     ${brand}
                   </div>
                   ${s.deal && html`
@@ -7542,7 +7552,7 @@ const FinancesTab = ({ onOpenBrand }) => {
                         <div class="row">
                           <span class="chip tone-info">offer</span>
                           <b>${s.offer.name}</b> 
-                          <span class="chip">${s.offer.kind}</span> 
+                          <span class="chip">${humanize(s.offer.kind)}</span>
                           <span class="muted">${dealLine(s.offer)} — expires if unanswered this week</span>
                         </div>
                         <div class="row offer-row">
@@ -8125,7 +8135,7 @@ function startWeekReveal(rep) {
     const mine = mineIsA ? r.score_a : r.score_b;
     const theirs = mineIsA ? r.score_b : r.score_a;
     const row = el("div", "wr-map",
-      `<span>${esc(r.map_id)}</span>` +
+      `<span>${esc(humanize(r.map_id))}</span>` +
       `<span class="mono"><b class="wr-n1">0</b>–<b class="wr-n2">0</b></span>`);
     maps.appendChild(row);
     rows.push({ row, mine, theirs });
@@ -8230,7 +8240,7 @@ function showReport(rep) {
     for (let i = 0; i < f.results.length; i++) {
       const r = f.results[i];
       if (r.has_replay) {
-        const b = el("button", "btn btn-sm", `▶ ${r.map_id}`);
+        const b = el("button", "btn btn-sm", `▶ ${humanize(r.map_id)}`);
         b.onclick = () => openReplay(f.id, i);
         row.appendChild(b);
       }

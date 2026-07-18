@@ -13,6 +13,8 @@ defaults ("auto"/"normal"), so the plans are a purely human lever.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_phrase
+
 import numpy as np
 
 from esports_sim.manager import development
@@ -72,7 +74,7 @@ def scouting_guidance(p: Player) -> dict[str, str | float]:
         )
         scored.append((score, focus, lead))
     score, focus, lead = max(scored, key=lambda row: (row[0], row[1]))
-    lead_label = lead.replace("_", " ")
+    lead_label = humanize_phrase(lead)
     if score <= 1.0:
         reason = (
             f"The current path is nearly mature; {focus} work, especially "

@@ -8,6 +8,8 @@ user decisions are identical.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_identifier
+
 from dataclasses import dataclass, field
 
 import hashlib
@@ -1827,7 +1829,7 @@ def _book_ai_fixture_plans(gs: GameState, fixtures: list[Fixture], tree: RngTree
             )
             details = []
             if counter is not None:
-                details.append(f"counter-plan on {counter[0].replace('_', ' ')}")
+                details.append(f"counter-plan on {humanize_identifier(counter[0])}")
             if target is not None:
                 details.append(f"targeting {gs.players[target].handle}")
             if starters:

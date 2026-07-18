@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager.state import (
     PRIZE_CHAMPION,
     PRIZE_FINAL_LOSER,
@@ -196,10 +197,10 @@ def upgrade_facility(gs: GameState, name: str) -> tuple[bool, str]:
     team.balance -= cost
     gs.facilities[name] = level + 1
     gs.push_news(
-        f"{team.name} upgrade {name.replace('_', ' ')} to "
+        f"{team.name} upgrade {humanize_identifier(name)} to "
         f"level {level + 1} ({cost:,} cr)."
     )
-    return True, f"{name.replace('_', ' ')} upgraded to level {level + 1}"
+    return True, f"{humanize_identifier(name)} upgraded to level {level + 1}"
 
 
 def facility_weekly_upkeep(facilities: dict[str, int]) -> int:

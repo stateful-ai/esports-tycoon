@@ -42,6 +42,8 @@ the new org-level signals — no double reporting.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_phrase
+
 from typing import TYPE_CHECKING
 
 from esports_sim.manager import relationships
@@ -208,7 +210,7 @@ def culture_betrayal_arcs(gs: "GameState", team_id: str) -> list[dict]:
             continue
         if now - (entry.season * 100 + entry.week) >= CULTURE_ARC_WEEKS:
             break  # the chronicle is chronological; older ones only get older
-        principle = str(entry.data.get("principle", "identity")).replace("_", " ")
+        principle = humanize_phrase(entry.data.get("principle", "identity"))
         pid = entry.player_id
         if pid and pid in gs.players and pid in team.player_ids:
             if pid in seen:

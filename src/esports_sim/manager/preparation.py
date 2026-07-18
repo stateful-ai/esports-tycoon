@@ -12,6 +12,8 @@ without creating a cycle.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_identifier
+
 import hashlib
 from typing import TYPE_CHECKING, Literal
 
@@ -634,7 +636,7 @@ def weekly_tick(
         reports.append(report)
         if gs.is_human(team_id):
             gs.push_private_news(
-                f"Preparation report ({plan.map_id}, {plan.objective.replace('_', ' ')}): "
+                f"Preparation report ({humanize_identifier(plan.map_id)}, {humanize_identifier(plan.objective)}): "
                 f"{report.finding}",
                 owner=team_id,
             )

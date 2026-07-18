@@ -33,6 +33,8 @@ module, so it is an exact no-op for them.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_identifier
+
 from typing import TYPE_CHECKING, Callable, NamedTuple, Sequence
 
 from esports_sim.manager import (
@@ -168,7 +170,7 @@ _LABELS["roster_short"] = "the roster is under five players"
 
 def label_for(slug: str | None) -> str | None:
     """Toast-ready ASCII text for a stop-reason slug (None passes through)."""
-    return None if slug is None else _LABELS.get(slug, slug)
+    return None if slug is None else _LABELS.get(slug, humanize_identifier(slug))
 
 
 def stop_reason(

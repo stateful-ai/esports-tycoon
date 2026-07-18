@@ -27,6 +27,7 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager import (
     academy,
     analytics,
@@ -789,7 +790,7 @@ def _badge_views(p: Player) -> list[dict]:
             continue
         bid = pb.id
         ability_parts = [
-            f"{float(delta):+g} {attr.replace('_', ' ')}"
+            f"{float(delta):+g} {humanize_identifier(attr)}"
             for attr, delta in sorted((b.get("ca") or {}).items())
         ]
         impact = (
@@ -865,6 +866,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
     hierarchy_role = locker_room.get_hierarchy_role(gs, p.id, team_id) if team_id else "core"
     mentor_id = gs.mentorships.get(p.id) if hasattr(gs, "mentorships") else None
     mentor_progress = gs.mentorship_progress.get(p.id) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
+    mentor = gs.players.get(mentor_id) if mentor_id else None
     player_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
 
     attrs = {
@@ -941,6 +943,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "badges": _badge_views(p),
         "hierarchy_role": hierarchy_role,
         "mentor_id": mentor_id,
+        "mentor_handle": mentor.handle if mentor is not None else (humanize_identifier(mentor_id) if mentor_id else None),
         "mentor_progress": mentor_progress,
         "promises": player_promises,
         "transfer_request": transfer_requests.active(gs, p.id, team_id),
@@ -1250,7 +1253,7 @@ def _review_your_calls(gs: GameState, review, tier: int) -> dict | None:
         dial_rows.append(
             {
                 "key": key,
-                "label": match_review_mod.DIAL_LABELS.get(key, key),
+                "label": match_review_mod.DIAL_LABELS.get(key, humanize_identifier(key)),
                 "planned": round(planned),
                 "base": round(base),
                 "impact_delta": impact,
@@ -1269,13 +1272,13 @@ def _review_your_calls(gs: GameState, review, tier: int) -> dict | None:
     if calls.team_talk:
         talk = {
             "approach": calls.team_talk,
-            "label": _TALK_LABELS.get(calls.team_talk, calls.team_talk),
+            "label": _TALK_LABELS.get(calls.team_talk, humanize_identifier(calls.team_talk)),
             "avg_delta": calls.talk_avg_delta,
         }
 
     def _prow(pid: str) -> dict:
         p = gs.players.get(pid)
-        return {"player_id": pid, "handle": p.handle if p is not None else pid}
+        return {"player_id": pid, "handle": p.handle if p is not None else humanize_identifier(pid)}
 
     lineup = None
     if calls.picked or calls.benched or calls.lineup_override:
@@ -1822,7 +1825,7 @@ def _offer_view(gs: GameState, o) -> dict:
         "region": str(t.region),
         "archetype": o.archetype,
         "seasons": o.seasons,
-        "goal": career.GOAL_LABELS.get(o.goal, o.goal),
+        "goal": career.GOAL_LABELS.get(o.goal, humanize_identifier(o.goal)),
         "patience": o.patience,
         "blurb": o.blurb,
     }
@@ -1956,7 +1959,7 @@ def _career_state(gs: GameState) -> dict:
         },
         "contract": (
             {
-                "goal": career.GOAL_LABELS.get(c.goal, c.goal),
+                "goal": career.GOAL_LABELS.get(c.goal, humanize_identifier(c.goal)),
                 "patience": round(c.patience, 1),
                 "seasons": c.seasons,
                 "start_season": c.start_season,
@@ -3493,7 +3496,7 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             definition = attr_defs.get(aid)
             changes.append({
                 "id": aid,
-                "name": definition.display_name if definition else aid.replace("_", " ").title(),
+                "name": definition.display_name if definition else humanize_identifier(aid),
                 "category": str(definition.category) if definition else None,
                 "start": first.attributes[aid],
                 "current": last.attributes[aid],
@@ -3575,7 +3578,7 @@ def _dev_digest(gs: GameState, tid: str) -> dict:
             milestones.append({
                 "id": pid, "handle": p.handle,
                 "attribute": adef.display_name if adef
-                else best_attr.replace("_", " ").title(),
+                else humanize_identifier(best_attr),
                 "delta": round(best_change, 1),
             })
     risers.sort(key=lambda r: (-r["delta"], r["handle"].lower(), r["id"]))
@@ -3696,7 +3699,7 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
         st = career.objective_status(gs, tid, seat.contract.goal)
         out.append({
             "kind": "board",
-            "label": career.GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
+            "label": career.GOAL_LABELS.get(seat.contract.goal, humanize_identifier(seat.contract.goal)),
             "state": st["state"], "detail": st["detail"],
         })
     for slot, deal in sorted(gs.sponsor_slots.items()):
@@ -3707,7 +3710,7 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
                 st = career.objective_status(gs, tid, ob.kind)
                 out.append({
                     "kind": "sponsor",
-                    "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                    "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, humanize_identifier(ob.kind)),
                     "state": st["state"], "detail": st["detail"],
                 })
     own = set(gs.teams[tid].player_ids)
@@ -4848,7 +4851,7 @@ def finances() -> dict:
                             {
                                 "kind": ob.kind,
                                 "bonus": ob.bonus,
-                                "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                                "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, humanize_identifier(ob.kind)),
                             }
                             for ob in o.objectives
                         ],
@@ -4869,7 +4872,7 @@ def finances() -> dict:
                         "kind": ob.kind,
                         "bonus": ob.bonus,
                         "met": ob.met,
-                        "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, ob.kind),
+                        "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, humanize_identifier(ob.kind)),
                         # Live in-season progress toward this bonus (read-only).
                         "status": career.objective_status(
                             gs, gs.acting_team_id, ob.kind
@@ -5076,7 +5079,7 @@ def _staff_member_view(gs: GameState, m, employer_id: str | None = None) -> dict
             "preferences": [
                 {
                     "dial": dial,
-                    "label": dial.replace("_", " ").title(),
+                    "label": humanize_identifier(dial),
                     "preferred": preferred,
                     "current": float(getattr(tactics, dial)),
                 }
@@ -7785,7 +7788,7 @@ def _profile_attributes(gs: GameState, p: Player, fog: float) -> list[dict]:
     out = []
     for key in sorted(p.attributes):
         true_val = p.attributes[key]
-        label = reg[key].display_name if key in reg else key
+        label = reg[key].display_name if key in reg else humanize_identifier(key)
         desc = reg[key].description if key in reg else ""
         if fogged:
             shown = _fogged(gs, p.id, key, true_val, fog)
@@ -8056,6 +8059,7 @@ def player_profile(pid: str) -> dict:
         hierarchy_role = locker_room.get_hierarchy_role(gs, pid, team_id) if team_id else "core"
         mentor_id = gs.mentorships.get(pid) if hasattr(gs, "mentorships") else None
         mentor_progress = gs.mentorship_progress.get(pid) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
+        mentor = gs.players.get(mentor_id) if mentor_id else None
         active_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
 
         st = gs.player_stats.get(pid)
@@ -8087,6 +8091,7 @@ def player_profile(pid: str) -> dict:
                 "can_talk": can_talk_val,
                 "hierarchy_role": hierarchy_role,
                 "mentor_id": mentor_id,
+                "mentor_handle": mentor.handle if mentor is not None else (humanize_identifier(mentor_id) if mentor_id else None),
                 "mentor_progress": mentor_progress,
                 "promises": active_promises,
                 # Weeks at the current club (the loyalty clock; 0 for a free
@@ -8387,7 +8392,7 @@ def _board_standing(gs: GameState) -> dict | None:
     )
     status = career.objective_status(gs, seat.team_id, c.goal)
     return {
-        "goal": career.GOAL_LABELS.get(c.goal, c.goal),
+        "goal": career.GOAL_LABELS.get(c.goal, humanize_identifier(c.goal)),
         "patience": round(pat, 1),
         "band": band,
         "seasons_left": max(0, c.start_season + c.seasons - 1 - gs.season),

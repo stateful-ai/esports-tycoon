@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager import (
     academy,
     career,
@@ -885,7 +886,7 @@ class HeadlessManagerEnv:
                 if target not in legal:
                     raise InvalidManagerAction(f"illegal scouting target {target!r}")
                 self.gs.scout_target = target
-                message = f"scout assigned to {target}"
+                message = f"Scout assigned to {humanize_identifier(target)}"
             elif kind in ("sign", "release", "renew"):
                 pid = str(params.get("player_id", ""))
                 fn = {

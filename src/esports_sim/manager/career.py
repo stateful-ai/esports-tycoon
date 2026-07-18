@@ -21,6 +21,7 @@ import hashlib
 
 import numpy as np
 
+from esports_sim.labels import humanize_identifier
 from esports_sim.manager import chronicle
 from esports_sim.manager.state import (
     CareerOffer,
@@ -384,7 +385,7 @@ def review_boards(gs: GameState) -> list[str]:
                 100.0,
             )
         )
-        label = GOAL_LABELS.get(c.goal, c.goal)
+        label = GOAL_LABELS.get(c.goal, humanize_identifier(c.goal))
         if met:
             gs.push_private_news(
                 f"Board review: goal met ({label}). The board is pleased "
@@ -479,8 +480,8 @@ def accept_offer(gs: GameState, mid: str, team_id: str) -> tuple[bool, str]:
         gs.user_team_id = team_id
     team = gs.teams[team_id]
     gs.push_private_news(
-        f"You take over at {team.name} ({offer.archetype.replace('_', ' ')}; "
-        f"goal: {GOAL_LABELS.get(offer.goal, offer.goal)}).",
+        f"You take over at {team.name} ({humanize_identifier(offer.archetype)}; "
+        f"goal: {GOAL_LABELS.get(offer.goal, humanize_identifier(offer.goal))}).",
         owner=team_id,
     )
     chronicle.record(
@@ -706,7 +707,7 @@ def career_summary(gs: GameState, mid: str) -> dict:
             {
                 "seasons": seat.contract.seasons,
                 "start_season": seat.contract.start_season,
-                "goal": GOAL_LABELS.get(seat.contract.goal, seat.contract.goal),
+                "goal": GOAL_LABELS.get(seat.contract.goal, humanize_identifier(seat.contract.goal)),
                 "patience": round(seat.contract.patience, 1),
                 # How the season goal is tracking right now (read-only aid).
                 "goal_status": (

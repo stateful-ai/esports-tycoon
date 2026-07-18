@@ -6,6 +6,7 @@ const $ = (selector) => document.querySelector(selector);
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 }[char]));
+const humanize = (value) => String(value ?? "").trim().replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
 const Editor = {
@@ -634,7 +635,7 @@ function bindCanvasEvents() {
         const surface = surfaceAt(labelPos);
         Editor.doc.semantic_zones.push({
           id: zid,
-          display_name: zid.replaceAll("_", " "),
+          display_name: humanize(zid),
           kind: "callout",
           polygon: Editor.drawingPoints,
           surface_ids: surface ? [surface.id] : [],
@@ -1202,7 +1203,7 @@ function updateInspector() {
           <select onchange="updateSelectedField('legacy_zone', this.value || null)">
             <option value="" ${!zone.legacy_zone ? "selected" : ""}>Select tactical zone...</option>
             ${["attacker_spawn", "defender_spawn", "attacker_side", "defender_side", "mid", "site"].map(value =>
-              `<option value="${value}" ${zone.legacy_zone === value ? "selected" : ""}>${value.replaceAll("_", " ")}</option>`
+              `<option value="${value}" ${zone.legacy_zone === value ? "selected" : ""}>${humanize(value)}</option>`
             ).join("")}
           </select>
         </label>

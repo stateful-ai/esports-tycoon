@@ -5,8 +5,9 @@ the reasoning behind it; this file is the *inventory* — the loop, the features
 and every system currently on the weekly tick, with the module that owns each.
 
 Keep this file honest: if a system lands in `src/esports_sim/manager/` and runs
-on the tick, it belongs here. Last synced against `campaign.advance_week` and
-`web/server.py` on 2026-07-14.
+on the tick, it belongs here. Last synced against `campaign.advance_week`,
+`web/server.py`, the current manager module set, and the content registries on
+2026-07-18.
 
 ---
 
@@ -57,7 +58,21 @@ map veto) → Masters (cross-region) → Champions → offseason (aging, retirem
 rookie class, awards, FA refresh, AI roster repair, meta era recorded) → next
 season. A Challengers circuit runs underneath every region and feeds the
 academy. Above all of it, **Legacy Mode** runs a career across decades: manager
-seats, board patience, dismissal, and a job market.
+seats, board patience, dismissal, and a job market. Sandbox also supports four
+deterministic scenario starts and an optional interview-led Fantasy Draft;
+these reshape the starting state without changing the weekly contract.
+
+### The attention loop
+
+The campaign is not designed as a checklist of disconnected buttons. Human
+decisions are surfaced as **Actionable Items** in the inbox and as matching
+Dashboard "Needs you" badges; lower-priority league news stays in a separate
+feed. Recent decisions settle later in a grounded decision ledger as paid off,
+neutral, or backfired. Match Review attributes the calls that could have
+changed the result (lineup, tactics, site focus, talk, and preparation) to the
+manager. **Sim Ahead** may resolve up to four weeks under delegation policy,
+then stops before a hard decision point. This is the player-facing bridge from
+choice to consequence.
 
 ---
 
@@ -157,6 +172,14 @@ inbox). Isometric replay viewer over AI-painted map backdrops with full playback
 control. Player/team/staff profile overlays from any name in the app. A rich CLI
 that doubles as the regression harness.
 
+Implementation note (2026-07-18): the compact presentation sentence above is
+historical. The current navigation is nine top-level workspaces: Dashboard,
+Inbox, Match, Club, Facilities, Season, Market, Stats, and Company. Match owns
+tactics, game plans, opponent prep, tournament sixes, and series instructions;
+Club owns Squad, Development, Locker Room, and Operations; Market owns
+Players, Scouting, and Staff; Company owns Finances and Brand. Social and
+Finance deep links route into Company rather than creating duplicate screens.
+
 ---
 
 ## 4. Additional systems
@@ -203,9 +226,15 @@ attribution problem.
 | Flavor events | `flavor_events` | LLM-copy campaign events. |
 | Social | `social` | Follower counts, deterministic weekly feed, per-team community sentiment that chases results and feeds back into confidence/morale and sponsor pressure. |
 | Badges | `badges` | Grounded milestone/feat badges from real box scores. |
+| Relationship arcs | `arcs`, `relationships` | Scarce grudge, friction, and mentor-bond arcs derived from real roster history; bounded effects, never a hidden replacement for the relationship graph. |
+| Decision ledger | `decision_ledger` | Settles recent human calls against subsequent state and records grounded paid-off, neutral, or backfired outcomes. |
+| Match review | `match_review` | Attributes relevant manager calls to a played match and explains the observed result from event-log and campaign facts. |
+| Sim Ahead | `sim_ahead` | Advances through delegated weeks until a hard decision point, preserving the same deterministic tick contract. |
 | Market history | `market_history` | Transfer record. |
 | GM personalities | `gm_personalities` | AI org decision-making flavor. |
+| Rival managers | `rival_managers` | Named, persistent AI tier-one managers with region-flavored identities, tenure, board reviews, movement history, and no hidden match modifiers. |
 | xDuel | `xduel` | Expected-duel analytics. |
+| LLM playtest | `llm_playtest`, `llm_talk`, `flavor_events` | Grounded external-manager playtesting and optional serve-time copy; deterministic facts remain in the save and the model cannot invent events. |
 
 ### Substrate (not player-facing)
 
@@ -218,7 +247,32 @@ attribution problem.
 
 ---
 
-## 5. Invariants any new system must respect
+## 5. Player-facing design traceability
+
+This is the compact audit map for keeping the design record attached to the
+game rather than to a speculative feature list.
+
+| Design area | What the player can do or observe | Authoritative implementation |
+|---|---|---|
+| Start a career | Choose a club in Sandbox, choose one of four deterministic scenarios, complete the Fantasy Draft interview and snake draft, or accept a Legacy offer | `manager/scenarios.py`, `manager/fantasy_draft.py`, `manager/career.py`, `web/server.py` |
+| Build a roster | Carry up to ten, dress five per map, set IGL and agents, register a tournament six, promote/send down academy players, sign/release/renew/buy out | `manager/market.py`, `manager/academy.py`, `sim/lineup.py`, `manager/series_management.py` |
+| Develop people | Set team and player training, intensity, focus, mentorship, rest, scrim reps, language support, and facility investment; read forecasts rather than exact ceilings | `manager/training.py`, `manager/development.py`, `manager/mentorship.py`, `manager/facilities.py` |
+| Run the organization | Hire staff, assign or delegate renewals/scouting/training, manage contracts, sponsors, finances, facilities, preparation, and media commitments | `manager/staff.py`, `manager/delegation.py`, `manager/economy.py`, `manager/sponsors.py`, `manager/preparation.py`, `manager/media_events.py` |
+| Manage the humans | Talk to players, give pep talks and shouts, set captain/council/principle, honor promises, respond to transfer requests, and navigate bounded relationship arcs | `manager/talk.py`, `manager/pep_talk.py`, `manager/shouts.py`, `manager/culture.py`, `manager/promises.py`, `manager/transfer_requests.py`, `manager/arcs.py` |
+| Prepare matches | Set five neutral-safe coaching dials, site focus, game plans, opponent prep, lineup, tournament six, conditional map responses, and timeouts | `src/esports_sim/schemas/team.py`, `src/esports_sim/sim/tactics_fit.py`, `src/esports_sim/manager/preparation.py`, `src/esports_sim/manager/series_management.py`, `src/esports_sim/sim/engine.py` |
+| Watch matches | Read the canonical event log as a floor-plan replay with continuous movement, cover, elevation, sightlines, utility, gimmicks, economy, retakes, saves, camera controls, and audio cues | `sim/engine.py`, `schemas/events.py`, `web/static/viewer.js`, `data/maps/geometry/` |
+| Live in a world | Follow standings, stats, awards, social feed, sponsors, patches, meta eras, Chronicle, rivalries, Hall of Fame, staff coaching tree, named rival managers, and career history | `manager/analytics.py`, `manager/social.py`, `manager/meta.py`, `manager/chronicle.py`, `manager/rivalries.py`, `manager/hof.py`, `manager/staff.py`, `manager/rival_managers.py` |
+| Understand consequences | See inbox priorities, Dashboard needs-you prompts, decision-ledger verdicts, match-review attribution, player/team/staff profiles, and server-computed scouting/privacy gates | `manager/inbox.py`, `manager/decision_ledger.py`, `manager/match_review.py`, `web/server.py`, `web/static/profile.js` |
+
+The following are design constraints, not implementation suggestions: campaign
+state and match logs are deterministic for a seed; match-gate tactics are
+neutral-safe at 50; the event log is the only match truth; the web client does
+not mirror simulation formulas; and public/rival information is filtered by
+the server before it reaches the UI.
+
+---
+
+## 6. Invariants any new system must respect
 
 1. **Determinism** — same seed → byte-identical log *and* `GameState`. Labelled
    RNG streams only; never `hash()`, never wall-clock, always sorted iteration.

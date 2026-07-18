@@ -8,6 +8,8 @@ attribute profile is the source of truth for every new effect.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_identifier
+
 from typing import Any
 
 import numpy as np
@@ -235,13 +237,13 @@ def role_effect_score(member: Any) -> float:
 
 def trait_views(member: Any) -> list[dict[str, str]]:
     return [
-        {"id": trait, **TRAITS.get(trait, {"label": trait.replace("_", " ").title(), "desc": ""})}
+        {"id": trait, **TRAITS.get(trait, {"label": humanize_identifier(trait), "desc": ""})}
         for trait in sorted(getattr(member, "traits", []) or [])
     ]
 
 
 def badge_views(member: Any) -> list[dict[str, str]]:
     return [
-        {"id": badge, **BADGES.get(badge, {"label": badge.replace("_", " ").title(), "desc": ""})}
+        {"id": badge, **BADGES.get(badge, {"label": humanize_identifier(badge), "desc": ""})}
         for badge in sorted(getattr(member, "badges", []) or [])
     ]

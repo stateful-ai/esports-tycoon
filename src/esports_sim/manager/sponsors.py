@@ -21,6 +21,8 @@ cleanly, so old saves land softly.
 
 from __future__ import annotations
 
+from esports_sim.labels import humanize_identifier
+
 import hashlib
 
 import numpy as np
@@ -623,7 +625,7 @@ def demand_view(gs: GameState, demand: SponsorDemand, team_id: str | None = None
         )
     return {
         **demand.model_dump(mode="json"),
-        "label": DEMAND_LABELS.get(demand.kind, demand.kind),
+        "label": DEMAND_LABELS.get(demand.kind, humanize_identifier(demand.kind)),
         "requirement": requirement,
         "detail": detail,
         "opponent_name": opponent_name,
@@ -657,7 +659,7 @@ def _describe(deal: SponsorDeal) -> str:
         parts.append(
             "objectives: "
             + "; ".join(
-                f"{OBJECTIVE_LABELS.get(o.kind, o.kind)} → {o.bonus:,}"
+                f"{OBJECTIVE_LABELS.get(o.kind, humanize_identifier(o.kind))} → {o.bonus:,}"
                 for o in deal.objectives
             )
         )
@@ -720,13 +722,13 @@ def _eval_objective(gs: GameState, obj: SponsorObjective, brand: str) -> int:
         # Private to this manager's sponsor book (runs in their acting context).
         gs.push_private_news(
             f"Objective met — {brand} pay {obj.bonus:,} cr "
-            f"({OBJECTIVE_LABELS.get(obj.kind, obj.kind)})."
+            f"({OBJECTIVE_LABELS.get(obj.kind, humanize_identifier(obj.kind))})."
         )
         return obj.bonus
     _bump_relation(gs, brand, -6.0)
     gs.push_private_news(
         f"{brand} note the missed objective "
-        f"({OBJECTIVE_LABELS.get(obj.kind, obj.kind)}). Relations cool."
+        f"({OBJECTIVE_LABELS.get(obj.kind, humanize_identifier(obj.kind))}). Relations cool."
     )
     return 0
 
