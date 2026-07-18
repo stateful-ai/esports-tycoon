@@ -257,6 +257,20 @@ def new_campaign(
             pid: prospect.model_copy(deep=True)
             for pid, prospect in sorted(pack.future_prospects.items())
         }
+
+    # Historical packs may author an expected career plus a player-specific
+    # volatility envelope. Realize it on an independent stream so adding one
+    # player cannot shift another player's future, while opening skill remains
+    # exactly as authored.
+    for pid, p in sorted(players.items()):
+        development.seed_career_outcome(
+            p, RngTree(seed).derive("campaign", "career-outcome", pid)
+        )
+    for pid, prospect in sorted(future_prospects.items()):
+        development.seed_career_outcome(
+            prospect.player,
+            RngTree(seed).derive("campaign", "career-outcome", pid),
+        )
     fas = generate_free_agents(rng, gd, n=max(4, 18 - len(pack_fas)))
     for p in fas:
         players[p.id] = p

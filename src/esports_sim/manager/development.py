@@ -118,13 +118,29 @@ def development_curve(p: Player) -> DevelopmentCurve:
         archetype, peak, peak_years = "flash", min(peak, 20), min(peak_years, 2)
     elif "late_bloomer" in p.personality_tags:
         archetype, peak, peak_years = "late", max(peak, 24), max(peak_years, 4)
+    if p.development_archetype is not None:
+        archetype = p.development_archetype
+        width = {"flash": 2.0, "early": 2.8, "steady": 3.7, "late": 4.6}[archetype]
+    if p.development_peak_age is not None:
+        peak = p.development_peak_age
+    if p.development_peak_years is not None:
+        peak_years = p.development_peak_years
     decline = int(tagged_turn) if tagged_turn else max(24, peak + 4 + peak_years)
+    if p.development_decline_age is not None:
+        decline = p.development_decline_age
 
     # Skew toward plausible success while leaving a meaningful population of
     # high-upside players who never realise the headline number.
     realization_roll = _unit(p.id, "devcurve", "realization")
     realization = 0.62 + 0.38 * math.sqrt(realization_roll)
-    volatility = 0.78 + 0.48 * _unit(p.id, "devcurve", "volatility")
+    if p.development_realization is not None:
+        realization = p.development_realization
+    if p.development_variance is not None:
+        volatility = p.development_variance
+    elif p.career_volatility is not None:
+        volatility = 1.0
+    else:
+        volatility = 0.78 + 0.48 * _unit(p.id, "devcurve", "volatility")
 
     if "pure_aimer" in p.personality_tags:
         archetype = "flash"
@@ -146,6 +162,19 @@ def development_curve(p: Player) -> DevelopmentCurve:
 
 def initialize_player_seed_variance(p: Player, campaign_seed: int) -> None:
     """Initialize deterministic potential variance and hidden curve based on campaign seed."""
+    if p.career_volatility is not None:
+        curve = development_curve(p)
+        p.dev_seed = _h(campaign_seed, p.id, "curve")
+        p.development_curve = DevelopmentCurveModel(
+            archetype=curve.archetype,
+            growth_peak_age=curve.growth_peak_age,
+            growth_width=curve.growth_width,
+            peak_years=curve.peak_years,
+            decline_age=curve.decline_age,
+            realization=curve.realization,
+            volatility=curve.volatility,
+        )
+        return
     base_pa = p.potential if p.potential > 0.0 else potential_of(p)
 
     if p.age <= 21 or "prodigy" in p.personality_tags or "rookie" in p.personality_tags:
@@ -288,8 +317,26 @@ def curve_growth_multiplier(p: Player) -> float:
         shape = 0.30 + 0.78 * bell
     else:
         shape = 0.08
-    pulse = 0.78 + 0.44 * _unit(p.id, "devcurve", "year", p.age)
+    pulse_spread = 0.44 if p.career_volatility is None else 0.44 * (p.career_volatility / 100.0)
+    pulse = 1.0 + pulse_spread * (_unit(p.id, "devcurve", "year", p.age) - 0.5)
     return round(float(np.clip(shape * pulse * curve.volatility, 0.08, 1.65)), 3)
+
+
+def seed_career_outcome(p: Player, rng: np.random.Generator) -> None:
+    """Realize an authored career expectation without changing current skill."""
+    if p.career_volatility is None:
+        return
+
+    scale = p.career_volatility / 100.0
+    curve = development_curve(p)
+    ca = overall(p)
+    p.potential = round(float(np.clip(potential_of(p) + rng.normal(0.0, 9.0 * scale), ca, 99.0)), 1)
+    p.development_archetype = curve.archetype
+    p.development_peak_age = int(np.clip(curve.growth_peak_age + np.rint(rng.normal(0.0, 2.6 * scale)), 16, 36))
+    p.development_peak_years = int(np.clip(curve.peak_years + np.rint(rng.normal(0.0, 2.8 * scale)), 1, 15))
+    p.development_decline_age = int(np.clip(max(p.development_peak_age + 2, curve.decline_age + np.rint(rng.normal(0.0, 3.2 * scale))), 20, 45))
+    p.development_realization = round(float(np.clip(curve.realization + rng.normal(0.0, 0.11 * scale), 0.5, 1.0)), 3)
+    p.development_variance = round(float(np.clip(1.0 + rng.normal(0.0, 0.22 * scale), 0.65, 1.35)), 3)
 
 
 def curve_decline_multiplier(p: Player) -> float:

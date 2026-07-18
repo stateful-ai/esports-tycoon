@@ -68,6 +68,13 @@ class DraftPlayer(BaseModel):
     quality: float = Field(default=60, ge=1, le=99)
     agents: list[str] = Field(default_factory=list, max_length=3)
     attr_overrides: dict[str, float] = Field(default_factory=dict)
+    potential: float | None = Field(default=None, ge=1, le=99)
+    career_volatility: float | None = Field(default=None, ge=0, le=100)
+    development_archetype: str | None = Field(default=None, pattern=r"^(flash|early|steady|late)$")
+    development_peak_age: int | None = Field(default=None, ge=15, le=40)
+    development_peak_years: int | None = Field(default=None, ge=1, le=15)
+    development_decline_age: int | None = Field(default=None, ge=20, le=45)
+    development_realization: float | None = Field(default=None, ge=0.5, le=1.0)
 
     @field_validator("handle", "real_name", "country")
     @classmethod
@@ -507,6 +514,13 @@ def example_document() -> dict[str, Any]:
                     "quality": 70,
                     "agents": agents,
                     "attr_overrides": {},
+                    "potential": None,
+                    "career_volatility": None,
+                    "development_archetype": None,
+                    "development_peak_age": None,
+                    "development_peak_years": None,
+                    "development_decline_age": None,
+                    "development_realization": None,
                 }
                 for handle, role, style, igl, agents in players
             ],

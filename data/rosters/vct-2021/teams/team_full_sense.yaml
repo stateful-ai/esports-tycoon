@@ -107,6 +107,7 @@ players:
   personality_tags:
   - fan_favorite
   - independent
+  career_volatility: 50
   potential: 76.1
 - id: team_full_sense_johnolsen
   handle: JohnOlsen
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - analytical
   - fan_favorite
+  career_volatility: 50
   potential: 78.2
 - id: team_full_sense_chalalala
   handle: ChAlalala
@@ -304,6 +306,7 @@ players:
   form: 50.7
   personality_tags:
   - streamer
+  career_volatility: 50
   potential: 77.8
 - id: team_full_sense_lammysnax
   handle: LAMMYSNAX
@@ -402,6 +405,7 @@ players:
   form: 56.1
   personality_tags:
   - grinder
+  career_volatility: 50
   potential: 84.0
 - id: team_full_sense_superbuss
   handle: SuperBusS
@@ -501,4 +505,5 @@ players:
   personality_tags:
   - clutch_gene
   - streamer
+  career_volatility: 50
   potential: 82.6

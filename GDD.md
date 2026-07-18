@@ -1,7 +1,7 @@
 Game Design Document --- ESports Simulator
-Working title: ESports Simulator (repo: esports-tycoon) Genre: Esports management sim / tycoon, tick-level tactical shooter sim underneath Reference point: Esports Manager 2026 (Steam #2749950), Valorant (setting/flavor), Football Manager (management-depth ambition) Status: Playable, multi-season, browser + terminal. Actively in development. Last updated: 2026-07-14
+Working title: ESports Simulator (repo: esports-tycoon) Genre: Esports management sim / tycoon, tick-level tactical shooter sim underneath Reference point: Esports Manager 2026 (Steam #2749950), Valorant (setting/flavor), Football Manager (management-depth ambition) Status: Playable, multi-season, browser + terminal. Actively in development. Last updated: 2026-07-18
 
-This document holds design intent and the reasoning behind it. For the shipped inventory --- the ordered weekly tick, every campaign system, and the module that owns each --- see docs/game-systems.md, which is kept in sync with campaign.advance_week rather than with the design narrative.
+This document holds design intent and the reasoning behind it. It describes shipped player-facing systems as of the date above; planned work belongs in ROADMAP.md. For the ordered weekly tick, every campaign system, and the module that owns each, see docs/game-systems.md, which is kept in sync with campaign.advance_week rather than with the design narrative.
 
 1. Vision
 You run a professional Valorant-flavored esports organization. You don't aim, peek, or spray --- your players do that, and how well they do it is a function of who you signed, how you trained them, how tired and happy they are, what utility they popped, and where they were standing when the fight started. Your job is everything around the ten minutes of a round: scouting and signing talent, building a training program, managing morale and burnout, calling in a coach, negotiating contracts, chasing sponsors, picking (and banning) maps, and reading the story the season tells through its results.
@@ -40,9 +40,11 @@ Everything is data until proven otherwise. Agents, weapons, maps, and their floo
               Offseason: aging, awards, roster churn, restart
 Above this loop sits the season loop (regular season → playoffs → offseason → next season, indefinitely) and beneath it sits the match loop, which the manager mostly watches rather than plays --- an entire tactical shooter's worth of simulation resolves in milliseconds, then gets replayed at whatever pace the manager wants.
 
+New careers have three deliberately distinct starts. Classic sandbox begins with authored or generated squads. Sandbox scenario starts reshape only the human club into an Insolvent Giant, Youth Project, Crisis Club, or Superteam Headache; each is deterministic and preserves the rest of the world. The optional sandbox Fantasy Draft begins with a short interview about manager identity, play style, region, comms, and preferred org life, then offers four contrasting jobs. After the player chooses, every tier-one team snake-drafts a ten-player squad from one shared pool before week 1. The interview gives the player's board preference real drafting teeth; it is not a cosmetic quiz. Legacy Mode is a separate career start governed by board offers rather than scenarios or the fantasy draft.
+
 3. The management layer
 3.1 Your organization
-You pick one team from the league to manage (two hand-authored "starter" orgs exist --- Team Nexus and Team Vanguard --- plus generated league teams). Your org has a roster (5 active players), a balance sheet, reputation, fan count, world rank, and team chemistry.
+You pick one team from the league to manage. A club may carry up to ten players, while only a dressed five plays a map; the default lineup can be overridden per fixture/map and tournament registration can name a five- or six-player pool. Non-dressed players still scrim, develop more slowly, and eventually care about playing time. Your org also has a balance sheet, reputation, fan count, world rank, academy affiliation, facilities, staff, and team chemistry.
 
 3.2 Players
 Every player is a bundle of ten numeric attributes across five categories, scaled 1--99 (Football-Manager-style, not a 0--1 float, because humans read that scale better):
@@ -56,17 +58,18 @@ Attributes are a registry (data/attributes.yaml), not a hardcoded struct --- add
 Role (Duelist / Controller / Initiator / Sentinel / Flex) and Playstyle (IGL, Entry, Anchor, Lurker, AWPer, Support) --- orthogonal axes that drive both squad-building decisions and in-match behavior.
 Agent pool & map pool --- per-agent and per-map mastery, so a player's third-best agent is meaningfully worse than their main.
 Career state --- salary, contract length, morale, stamina, form, age, and free-form personality tags (hot_head, veteran, rookie, star_player, volatile, ...) that modulate how they respond to talks, tilt, and pressure.
-Condition --- morale/stamina/form move week to week from training, match results, and rest, and they feed back into match performance (a burnt-out star plays worse than their attributes suggest).
+Condition --- morale, stamina, form, and confidence move week to week from training, match results, rest, sentiment, and staff support, and they feed back into match performance (a burnt-out star plays worse than their attributes suggest).
 Relationships --- teammates carry a pairwise chemistry graph that drifts toward trait-driven affinities (kindred tags bond, clashing tags grate), is pushed by shared wins and losses, and outlives roster moves. Two players chasing the same spotlight role (two would-be entries/AWPers/IGLs) develop friction. Team chemistry chases the roster's mean relationship and feeds back into how well the team executes a coordinated system (§3.11).
-Identity flavour --- generated players carry region-appropriate names (an EMEA player no longer reads as "Minho Nakamura") and role-shaped attribute archetypes (entries out-aim, IGLs out-think).
+Identity flavour --- generated players carry region-appropriate names (an EMEA player no longer reads as "Minho Nakamura"), languages, role-shaped attribute archetypes (entries out-aim, IGLs out-think), and deterministic personality axes behind the visible tags.
+Development visibility --- public reports show current trend, outcome bands, role-fit projections, agent/map mastery growth, and meaningful milestones without exposing the hidden career curve or a false precise ceiling.
 3.3 Training
-Each week you set one focus --- mechanical, tactical, mental, team, or rest --- for your whole roster (the AI picks independently for its own teams, weighting the choice by roster youth and its own tactical identity). Growth follows age curves (young players improve faster, veterans decay), and rest recovers stamina at the cost of growth. A hired coach multiplies training gains. System fit matters too: a player whose playstyle suits the coach's tactics (see 3.11) gets more meaningful reps and develops faster; a mismatch develops slower.
+Each week you set one focus --- mechanical, tactical, mental, team, or rest --- for the team and can set player development plans for the details. You can delegate the weekly choice to the coach. AI clubs use the same roster-aware picker. Growth follows age curves (young players improve faster, veterans decay), and rest recovers stamina at the cost of growth. A hired coach multiplies training gains. System fit matters too: a player whose playstyle suits the coach's tactics (see 3.11) gets more meaningful reps and develops faster; a mismatch develops slower. Match XP, bench scrims, mentorship, facilities, scouting guidance, language fit, and the wider environment feed this same development picture rather than creating disconnected upgrade systems.
 
 3.4 Transfer market & contracts
-A pool of free agents (deterministically generated, refreshed every offseason) is available to sign. Players ask for salaries scaled to their quality; signing, releasing (with a severance cost), and renewing are all manager actions. Contracts run down week by week; a player inside ~8 weeks of free agency with good form will press you for a renewal conversation --- ignore it and morale suffers. AI teams work the same market against you --- and a premium free agent is contested: a rival org with a matching need may sign the best available FA out from under you, so a marquee grab isn't guaranteed.
+A pool of free agents (deterministically generated, refreshed every offseason) is available to sign. Players ask for salaries scaled to their quality; signing, releasing (with a severance cost), renewing, bids, and buyouts are manager actions. Opening and mid-split transfer windows, roster locks, negotiation leverage, and deadlines make timing matter. Contracts run down week by week; a player inside ~8 weeks of free agency with good form will press you for a renewal conversation --- ignore it and morale suffers. AI teams work the same market against you --- and a premium free agent is contested: a rival org with a matching need may sign the best available FA out from under you, so a marquee grab isn't guaranteed.
 
 3.5 Scouting
-Rival rosters aren't shown at full fidelity --- attributes render with a noise band (visibility/scouting_uncertainty, reserved from day one for exactly this). Assign your scout to a target team; the fog shrinks over roughly three weeks of dedicated scouting, faster with a hired analyst --- who also improves the accuracy of the read, not just its speed (an elite analyst's bands hug the truth tighter at the same progress). The report resets every offseason as rosters change.
+Rival rosters aren't shown at full fidelity --- attributes render with a noise band. Scouting is two persistent lanes rather than a single disposable assignment: the pro lane either auto-scouts the next opponent for match preparation or continually searches the market for a role/caliber gap; the amateur lane follows the academy/youth pool. Team playbook reads come quickly but decay when a balance patch changes the meta. Player reads deepen more slowly into tighter ranges and, at the highest analyst-supported tier, role-fit projections. The report resets or decays when its underlying world has changed.
 
 3.6 Staff
 Backroom staff are people rather than flat multipliers. Every member carries seven 1--99 attributes (expertise, tactical knowledge, analysis, teaching, people management, motivation, adaptability), a role-weighted overall, one or two mechanical traits, grounded career statistics, history, titles, and milestone badges. Badges are evidence of real accomplishments rather than another power stack. The shared deterministic market covers coaches, analysts, physios, psychologists, performance coaches, and language coaches; hiring replaces the incumbent in that chair and the outgoing member returns to the market.
@@ -77,13 +80,13 @@ Every tier-one club employs a concrete head coach. Coaches carry a preferred tac
 Once a week you can sit down with one of your players. The topic isn't picked by the manager --- it's read off that player's actual state, in priority order: low morale → expiring contract → low stamina → poor form → a generic check-in if nothing's actually wrong. You pick one of three approaches (reassure / challenge / listen, or the topic-appropriate equivalent), and the outcome is modulated by that player's personality tags with a deterministic roll --- a hot_head bristles at being challenged more often than a calm veteran does. Effects are small on purpose: a talk is a nudge, not a lever you crank.
 
 3.8 Finances
-Weekly income (sponsorships scaled by reputation and fan count, plus prize money) against weekly expenses (payroll, facilities). Sponsorship deals arrive as time-limited offers --- upfront, steady, or performance-scaled payout structures, some carrying achievement objectives that reward results or squad-building (e.g. "field an under-21 talent") --- that you accept or decline. Insolvency now bites: an org running a negative balance takes escalating reputation and squad-morale penalties and a board warning, with a harsher one past a debt floor. The finances tab projects a runway --- weeks until the balance would cross that floor at the current run rate.
+Weekly income (sponsorships scaled by reputation and fan count, plus prize money) sits against weekly expenses (payroll, staff, and facilities). Sponsorship deals arrive as time-limited offers --- upfront, steady, or performance-scaled payout structures --- and some carry live demands such as results, reach, or squad-building objectives. Those demands can be accepted, refused, or answered when they mature, so a deal is a management obligation rather than passive income. Insolvency bites: an org running a negative balance takes escalating reputation and squad-morale penalties and a board warning, with a harsher one past a debt floor. The Finances workspace projects a runway --- weeks until the balance would cross that floor at the current run rate.
 
 3.9 Season structure
 Three regional leagues of 8 (Americas / EMEA / Pacific) each run a double round-robin regular season (14 weeks), then a 4-team BO3 playoff bracket (1v4, 2v3) with map veto (mastery-driven ban/pick over the 5-map pool) down to a regional champion; the top teams advance to Masters (cross-region) and then Champions. The world shape is data, not code: a roster pack (§6) can reshape it to 3 or 4 regions of 4--16 teams --- with 4 regions, Masters becomes a full 8-side quarterfinal bracket (instead of 6 sides with two byes) and Champions fields the Masters eight. A per-region Challengers circuit develops prospects underneath. Standings break ties by wins → round differential → head-to-head (regular-season meetings only, so a playoff rematch never reorders the table) → rounds won → id. Then an offseason (aging, retirements, rookie classes, awards, free-agent refresh) before the next season. Campaigns run indefinitely --- there is no scripted ending.
 
 3.10 Analytics & storylines
-Season-long stat aggregation (K/D/A, an HLTV-flavored rating, first kills/first deaths, trade kills, headshot %, plants/defuses, plus highlight stats --- clutches (1vX round wins), multikills, and aces --- per player; attack/defense round-win % and pistol conversion per team) feeds a league-leaders board, a team-tendencies view, and season awards (MVP, Top Fragger, Opening King, Rookie, and a team-level Best Defensive Team) handed out at season end. Every highlight stat is derived purely from the match event log, so richer stats never alter the match itself.
+Season-long stat aggregation (K/D/A, an HLTV-flavored rating, first kills/first deaths, trade kills, headshot %, plants/defuses, plus highlight stats --- clutches (1vX round wins), multikills, and aces --- per player; attack/defense round-win % and pistol conversion per team) feeds league leaders, award races, team tendencies, map/agent meta, and season awards (MVP, Top Fragger, Opening King, Rookie, and a team-level Best Defensive Team). Analytics depth is intentionally gated by the analytics department, so investment expands what can be known without changing what happened. Every highlight stat is derived purely from the match event log, so richer stats never alter the match itself.
 
 News isn't generic --- recaps are templated and grounded: every fact in a recap sentence resolves to a real event in that match's log (a head_to_head helper tracks in-season streaks, revenge results, and "beat the reigning champions" storylines, and cites them only when genuinely notable --- silence beats invented drama). A recap also names the winner's tactical identity when a coaching dial is genuinely extreme ("on the back of relentless aggression"). Phrasing is seeded per event so the same result always reads the same way, but different results read differently, in a dry, understated, no-hype voice (see docs/salvage/tone_and_cast_lock.md for the style bible this follows).
 
@@ -108,7 +111,7 @@ The load-bearing design rule: every numeric dial's effect is an exact no-op at t
 3.12 Squad, people, and the locker room
 The Talk module (§3.7) is the oldest of a family of people systems that now surround it, all of them bounded nudges rather than levers:
 
-Culture --- a captain and a leadership council, team principles, and bounded relationship arcs. Culture sessions are a manager action; AI orgs manage their own.
+Culture --- a captain and leadership council, an explicit team principle, and bounded relationship arcs. Culture sessions are a manager action; AI orgs manage their own. A public culture choice can become an identity-betrayal arc if repeated decisions contradict it.
 Mentorship --- a manager-set mentor/protege pair raises the protege's ceiling on the mentor's best skills (a great aimer lifts a young player's aim ceiling), gated by the mentor's hidden mentor_skill. It moves the forecast, not the current ability.
 Promises --- commitments made to a player (minutes, a signing, a role) that settle against what actually happened. Breaking one costs trust durably.
 Transfer requests --- a benched player good enough to start elsewhere will ask out. Bench treatment is keyed off who actually dressed, so a per-map rotation counts as minutes.
@@ -121,13 +124,13 @@ Player development is a forecast, not a cap: hidden deterministic career curves 
 Facilities --- six upgrade tracks (Training Centre, VOD Review Room, Media Department, Recovery Suite, Strategy Lab, Team House), each a menu-based card showing its staff operator, current benefit, next-level gain, build cost, and upkeep. Wellbeing benefits only pull players toward a neutral 50; they never inflate an already-healthy squad.
 Preparation --- scrim and bootcamp plans that resolve before kickoff into grounded reports and organizational knowledge, paid for in physical load.
 Series management --- tournament sixes and conditional between-map responses inside a BO3.
-Delegation --- human staff policies over the existing renewal, scouting, and training capacity. This is the deliberate pressure valve on a weekly action surface that has grown past forty distinct decisions: the manager chooses how much of it they personally own.
+Delegation --- human staff policies over renewal, scouting, and training capacity. This is the deliberate pressure valve on a weekly action surface with many meaningful options: the manager chooses how much of it they personally own.
 Media events --- rare contextual choices with persistent trust, sponsor, and sentiment consequences.
 Social --- follower counts and a deterministic weekly feed; roster reach feeds sponsor marketability, and a per-team community sentiment chases weekly results and feeds back into confidence, morale, and sponsor pressure.
 Badges --- grounded milestone and feat badges rolled from real box scores and development events, for players and staff alike. Evidence of accomplishment, not another power stack.
 
-3.14 The weekly attention problem (known, open)
-The systems above are each individually correct in restraining their effect size --- a talk is a nudge, wellbeing pulls only toward neutral, mentorship moves a ceiling slowly. In aggregate they create a real design tension: the manager is offered roughly forty decisions a week and can perceive the consequence of only a few of them, because every effect is bounded and the feedback arrives a week later underneath match variance and day form. The depth is not the problem; the feedback bandwidth is. Three defences are in place or planned --- delegation (choose your surface), the match review card (why you won or lost), and the inbox digest --- but the inbox currently reports events rather than ranking the week's decisions by leverage, and the match review explains the team's result in engine terms rather than attributing it to the manager's decisions. Closing that attribution loop is the highest-value open design work on the management layer.
+3.14 The weekly attention loop
+The systems above are intentionally bounded --- a talk is a nudge, wellbeing pulls only toward neutral, mentorship moves a ceiling slowly. The design challenge is therefore not adding louder levers; it is making consequential calls visible, legible, and optional to own. The game now closes that loop with four connected surfaces: a leverage-ranked Actionable Items inbox distinct from lower-priority League Feed; Dashboard "Needs you" prompts and matching navigation badges; a decision ledger that settles recent human calls as paid off, neutral, or backfired from the actual subsequent state; and match review "Your calls" attribution for lineup, tactics, focus, talk, and preparation. Sim Ahead can advance up to four weeks under the manager's delegation settings and stops before a hard decision point. The aim is a campaign in which a manager can understand what mattered without turning every minor adjustment into a dashboard alarm.
 
 4. The match simulation
 This is the part of the game the manager mostly watches, but it's where almost all of the engineering lives, because it's the thing that has to convincingly justify every result the management layer reports.
@@ -184,17 +187,18 @@ Every kill, plant, defuse, buy, utility use, movement, round-start, and match-en
 
 5. Presentation
 5.1 The web app
-A FastAPI backend (web/server.py) exposes the same GameState the terminal CLI drives, as JSON views (dashboard, roster, tactics, standings, schedule, scouting, market, stats, finances, inbox, facilities) and typed actions (train, sign, release, renew, talk, scout, sponsor respond, hire/release staff, set tactics, advance week). The frontend is a no-build-step vanilla-JS app on a custom design system (ui/design-system/ --- dark-first navy, information-dense, a Rajdhani display face, a Valorant-red accent used sparingly with teal/amber support colors).
+A FastAPI backend (web/server.py) exposes the same GameState the terminal CLI drives, as JSON views and typed, validated actions. The frontend is a no-build-step vanilla-JS app on a custom dark-first design system: navy surfaces, information-dense hierarchy, Rajdhani display type, and restrained red/teal/amber accents. It is a pure GameState/event-log consumer; calculations and privacy gates stay server-side.
 
 Notable screens beyond the table-stakes tabs:
 
-Dashboard hub --- next-match spotlight, stat tiles, recent-form squares, and "danger men" scouting callouts, so the week's decisions start from one screen.
-Inbox --- a weekly digest of the most important events (results, transfer and sponsorship offers, player-conversation prompts, news), with unread tracking and inline actions: offers can be accepted or declined right from the message, and the action list is derived live from the current game state so a stale message can't fire a dead offer.
+Navigation --- the top level is Dashboard, Inbox, Match, Club, Facilities, Season, Market, Stats, and Company. Match is the single home for tactics, game plans, opponent prep, tournament sixes, and series instructions. Club groups Squad, Development, Locker Room, and Operations; Season groups league, fixtures, playoffs, and records; Market groups Players, Scouting, and Staff; Company groups Finances and Brand. Legacy deep links route into the appropriate workspace rather than creating duplicate screens.
+Dashboard hub --- a tightly limited weekly read: next-match spotlight, core stat tiles, form, headlines, and only the highest-leverage "Needs you" calls. A staged advance reveal and match-day briefing make the immediate decision context clear without making the dashboard a second management screen.
+Inbox --- a weekly digest split into Actionable Items and League Feed, with unread tracking and inline actions. Offers can be accepted or declined right from the message, and the action list is derived live from the current game state so a stale message cannot fire a dead offer. The primary badge tracks actionable work, not generic results.
 Player & team profiles --- click any player or team name anywhere in the app to open a profile overlay: attribute bars (scouting-fogged for rivals), weekly form sparklines, season stat charts, contract and chemistry context. Served by dedicated profile endpoints; the weekly series derive from stored fixture lines.
-Tactics --- the coaching dials as bipolar two-tone sliders (named poles, neutral notch at 50, live descriptor that reads "Neutral" inside the engine's actual neutral band), roster chips showing which players suit each pole, a per-dial "±X.X duel" impact readout, and an execution edge banner --- all fed by server-computed fit (§3.11), never by formulas mirrored in JS.
+Tactics --- the Match workspace presents coaching dials as bipolar two-tone sliders (named poles, neutral notch at 50, live descriptor that reads "Neutral" inside the engine's actual neutral band), roster chips showing which players suit each pole, a per-dial impact readout, and an execution edge banner --- all fed by server-computed fit (§3.11), never by formulas mirrored in JS.
 Facilities --- a menu-based infrastructure screen with six upgrade tracks: Training Centre, VOD Review Room, Media Department, Recovery Suite, Strategy Lab, and Team House. Each department card shows its assigned staff member, current benefits, next-level gains, build cost, and weekly upkeep, and lets the manager fund the upgrade in place. The tracks affect distinct parts of the management loop: player development, Analyst scouting and reporting, sponsor value and access, weekly condition recovery, preparation learning and physical load, and bounded confidence/morale recovery. Wellbeing benefits only pull players toward a neutral 50 rather than inflating an already healthy squad. The painted isometric office remains parked for a later interaction pass rather than being used as the upgrade interface.
 5.2 The match viewer
-Any played match can be replayed from a floor-plan isometric view (with a 2D top-down toggle): real rooms, extruded walls, tinted sites, corridor walkways, players walking their actual paths with motion trails, kill markers, utility markers (color- and shape-coded by ability type --- smoke, flash, damage, info, ultimate), gimmick markers with tooltips (teleporter links, door states), a live agent-forward kill/utility feed and lineup panel, the round clock (with a post-plant amber state), and full playback control --- 1×/4×/16×/instant speed, pause, scrub, round-skip. The isometric floor is an AI-painted backdrop per map (see §5.3), pinned under the vector overlay at an exact shared transform so hit positions, walkways, and paint never drift apart; each map gets a tight per-map viewBox (crop-to-content) and the viewer shell scales up to fill large monitors, so the map reads big relative to the player icons. The viewer is a pure consumer of the event log; it holds no simulation state of its own, and a legacy-log fallback keeps older replays (pre-geometry, pre-continuous-movement) playable. Replays are captured at sim time and kept for the latest week only --- rosters mutate immediately after a week resolves, so an old seed wouldn't reproduce its log.
+Any played match can be replayed from a floor-plan isometric view (with a 2D top-down toggle): real rooms, extruded walls, tinted sites, corridor walkways, players walking their actual paths with motion trails, kill markers, utility markers (color- and shape-coded by ability type --- smoke, flash, damage, info, ultimate), gimmick markers with tooltips (teleporter links, door states), a live agent-forward kill/utility feed and lineup panel, the round clock (with a post-plant amber state), and full playback control --- 1×/4×/16×/instant speed, pause, scrub, round-skip. The viewer also has a spectator camera: mouse pan/zoom, player follow, and an optional event-follow action camera, plus synthesized event cues that sit beside the separate ambient music. The isometric floor is an AI-painted backdrop per map (see §5.3), pinned under the vector overlay at an exact shared transform so hit positions, walkways, and paint never drift apart; each map gets a tight per-map viewBox (crop-to-content) and the viewer shell scales up to fill large monitors, so the map reads big relative to the player icons. The viewer is a pure consumer of the event log; it holds no simulation state of its own, and a legacy-log fallback keeps older replays (pre-geometry, pre-continuous-movement) playable. Replays are captured at sim time and kept for the latest week only --- rosters mutate immediately after a week resolves, so an old seed wouldn't reproduce its log.
 
 5.3 Art
 All art is AI-generated through a documented, gated pipeline (docs/art-pipeline.md), committed once rather than generated on demand. The core doctrine is blockout→beautify: structure comes from a flat guide image rasterized from the actual plan/geometry data, appearance comes from text prompts, and every generated scene is gated against its guide with a footprint-IoU structure check before acceptance --- so the art can never quietly disagree with the gameplay data underneath it.
@@ -220,10 +224,10 @@ Maps 5 Haven, Ascent, Bind, Lotus, Split --- each with an authored floor-plan ge
 
 Attributes 10 Registry-driven; adding an 11th is a data change
 
-Teams 2 starter + generated Team Nexus, Team league Vanguard, plus a deterministically generated league fill
+Teams Fictional default world plus deterministic league fill; roster packs can replace the world shape and clubs
 All of the above are YAML under data/. The shipped default world is original fictional content in a Valorant-flavored idiom --- no Riot Games assets, no real player likenesses.
 
-Roster packs (data/rosters/<id>/) --- importable league worlds. A pack is a pack.yaml (name + world shape: which regions, how many teams per league) plus team files in the exact starter-team bundle format; at new-game it replaces the fictional starters, and generation only fills any shortfall. Packs are built from compact hand-editable research sheets by scripts/build_roster_pack.py, which expands each player (handle, role, playstyle, quality, signature agents) into full attributes deterministically (blake2-jittered per player id) --- so a pack player has the same sheet in every campaign at any seed. One pack ships: VCT 2026 --- the real four-region VCT (48 partner orgs, real mid-2026 starting fives, notable Challengers orgs underneath), researched from vlr.gg/Liquipedia. Since this game is private (see §9), real names here are a personal-use convenience, not published content.
+Roster packs (data/rosters/<id>/) --- importable league worlds. A pack is a pack.yaml (name + world shape: which regions, how many teams per league) plus team files in the exact starter-team bundle format; at new-game it replaces the fictional starters, and generation only fills any shortfall. Packs are built from compact hand-editable research sheets by scripts/build_roster_pack.py, which expands each player (handle, role, playstyle, quality, signature agents) into full attributes deterministically (blake2-jittered per player id) --- so a pack player has the same sheet in every campaign at any seed. Two historical packs ship: VCT 2021 and VCT 2026. Since this game is private (see §9), real names are a personal-use convenience, attributes remain original estimates rather than scraped statistics, and no Riot assets are included.
 
 7. Design history worth knowing
 A few hard-won lessons are encoded in the current tuning and worth preserving so future work doesn't relearn them the expensive way:
@@ -234,28 +238,22 @@ Geometry choices are gameplay choices, not art choices. Moving a room's center t
 Multi-season play reveals different failure modes than one match does. A league-balance overhaul (tracked via scripts/snowball_report.py) was needed after headless multi-season runs showed condition (form/ morale) snowballing into repeated 13--0/13--1 blowouts that single-match testing never surfaced.
 An average can hide a broken roster. The first roster-fit model for the coaching dials scored the roster mean against a baseline, which made every above-average squad's optimum "crank a dial to a pole" --- a free bonus, not an identity choice. Scoring per player and amplifying below-baseline misfits (so they drag harder than stars lift) restored the intended trade-off; league-wide the mean edge at full crank moved from +0.16 to ~0.00 duel points.
 Paint and geometry drift apart silently. Players "walking on the background" traced to floor plates that never physically touched --- the sim pathed through gaps the paint never covered. The fix was a contract (plates touch, callouts on-plate, paths on the plate union) enforced by a permanent audit gate, plus the lesson that a footprint-IoU check alone can't detect stale paint after a localized geometry fix --- only a per-seam overlay read catches it.
-8. Roadmap (see ROADMAP.md for the living version)
-North-star bets the whole project is aimed at:
+8. Research direction (see ROADMAP.md for the living roadmap)
+The three north-star bets remain: matches should create varied but legible stories; an external manager should be able to operate a full season through the same public decision contract; and eventually a model should be able to generate plausible campaign history from the resulting data.
 
-Matches feel alive --- different seeds, same rosters, visibly different legible stories. (Substantially proven out; ongoing tuning.)
-An LLM can competently play a full season through the headless state/action API --- the same contract the web UI and any future RL agent use. (API shape exists; a dedicated playtest harness is next.)
-A world model can sample a plausible season from event-sequence data --- the research capstone, gated on the first two bets holding up over real logged play.
-Shipped so far (see ROADMAP.md changelog for exact commits): the full match engine with the fallback/retake model; the full management loop across multiple seasons (multi-region VCT, Challengers, Masters, Champions); the web app with inbox, profiles, dashboard hub, and menu-based facility upgrades; the isometric viewer over painted map backdrops; floor geometry with props, elevation, continuous movement, and the floor-connection contract; map gimmicks authored onto Ascent, Bind, and Lotus; micro-combat (peeks, flanks, footwork); rotation pacing tuned to a real-feel ~30s rule; the neutral-safe coaching-dial system with per-player roster fit; season analytics and grounded narrative; scouting fog, map veto, staff, sponsorships, relationships, and the Talk module; the art pipeline with a trained style LoRA.
+The enabling substrate is shipped. Every human decision is recorded in an append-only action log; seed plus that log reproduces a career. Weekly manager-visible feature snapshots and shared reward components export into RL episodes, while a pinned match-token vocabulary can dump training corpora. The deterministic headless manager environment exposes only manager-visible observations and legal-action masks. It supports a masked heuristic manager baseline, generated policy profiles, reproducible rollouts, a dependency-light learned imitation checkpoint, and champion/challenger online improvement guarded by disjoint seeds, legality, reward, balance, wins, and profile-distinctness checks. Player policies use the same discipline: fog-safe typed observations and engine-supplied legal actions.
 
-Next candidates (unscheduled, in rough order of how they were left): a headless LLM-playtest harness (north-star bet #2); camera follow/zoom in the viewer; Scenario-API sampling of the trained LoRA (currently web-UI only); development-milestone inbox items (needs prior-week state tracking); animated office characters; an RL env wrapper over the same headless contract (Track B); deepening personality/relationship systems beyond the current tag-based model (Track A); and, eventually, the event-sequence world-model research arm (Track C). None of this is committed scope until it lands on the roadmap's Now/Next list --- this section is a map of the terrain, not a promise.
+The LLM manager playtest harness is also shipped: it gives an LLM the state and legal choices, advances the campaign through the shared environment, and writes a grounded season critique. The remaining research work is quality and scale rather than an absent API: evaluate how well external managers handle the growing campaign surface, refine the promotion gates, and then attempt season-level tokenization and conditional world-model experiments. Separate presentation work (for example, richer generated art or animated office life) is deliberately not allowed to change deterministic save state.
 
 9. Explicit non-goals
 Real Valorant pro names or real statistical profiles Amended 2026-07-09 (owner call): the game is private --- for personal play with friends, not publication --- so an optional real-roster import now exists (the VCT 2026 roster pack, §6). The shipped default world remains fully fictional, attributes in packs are original estimates rather than scraped statistical profiles, and Riot Games assets stay excluded entirely. If this project were ever to be published, the packs go.
 True 3D rendering --- the isometric floor-plan viewer is the intentional ceiling; it gets most of the tactical legibility of 3D without the engine-building cost.
-Multiplayer/network play, a mobile port, a commercial Steam release, real-time voice comms, betting/fantasy mechanics, or scraping real Valorant API/Riot data. None of these serve the north-star bets above.
-10. Legacy Mode (Proposed)
-Vision
-The campaign is not about winning a single tournament---it is about building a career that leaves a permanent mark on the esport. The player is managing a coach, organization, and long-term legacy rather than simply optimizing a roster.
-
-Legacy Mode sits above the existing season loop and transforms the simulation into a decades-long narrative.
+Multiplayer/network play, a mobile port, a commercial Steam release, real-time voice comms, esports betting, or scraping real Valorant API/Riot data. The optional Fantasy Draft is an internal campaign start, not a betting or spectator-fantasy product. None of these serve the north-star bets above.
+10. Legacy Mode
+Legacy Mode is shipped. It sits above the season loop and turns a club save into a long-running manager career: the manager has a seat, contract, board goal, patience, dismissal risk, and a job market. Sandbox remains the classic pick-any-club experience; its manager seat does not carry a contract or dismissal risk. Legacy careers begin from deterministic board offers rather than the sandbox scenario or Fantasy Draft starts.
 
 Career Offers
-Rather than selecting any organization freely, each new save begins with several coaching offers that differ in:
+Each Legacy save begins with several coaching offers that differ in:
 
 Budget
 Facilities
@@ -265,18 +263,16 @@ Academy strength
 Board expectations
 Job security
 Regional reputation
-Example archetypes include:
+The active offer archetypes are:
 
 Dynasty -- Immediate championship expectations.
 Rebuilder -- Limited resources but patience.
 Academy Specialist -- Strong development infrastructure.
 Sleeping Giant -- Historic organization needing revival.
-Different starts should create fundamentally different stories rather than simply different difficulty levels.
+The offers create different careers rather than simple difficulty settings. Board reviews use the contract goal and club situation; a dismissed manager must accept a new job before the world can advance.
 
 Manager Reputation
-Managers accumulate reputation based on historical decisions rather than experience points.
-
-Possible dimensions include:
+Manager reputation is derived from the append-only Chronicle rather than awarded as experience points. The public career profile summarizes actual historical behavior across dimensions including:
 
 Player Development
 Tactical Innovation
@@ -284,11 +280,13 @@ Team Culture
 Analytics
 International Success
 Pressure Handling
-Organizations recruit based on these reputations.
+Organizations recruit against those Chronicle-derived reads. The game never stores a loose reputation number that could drift from the events that earned it.
 
 Player Potential and Career Curves
 
-Potential is a forecast of upside, not a hard attribute cap. Young players
+Potential is a forecast of upside, not a hard attribute cap. Historical roster packs can author the expected center of a real player's career plus a 0-100 volatility envelope. A new campaign samples future potential and curve shape inside that envelope while leaving opening skill intact: proven greats stay relatively consistent across saves, while uncertain or boom-bust players can take wider alternate careers.
+
+Young players
 carry hidden, deterministic career curves which vary in arrival time,
 development volatility, peak duration, decline timing, and how much of their
 upside they naturally realize. This keeps a broad population of plausible
@@ -301,162 +299,14 @@ In exceptional cases Current Ability can exceed the original potential
 forecast, recording an outlier career rather than silently raising the old
 forecast to match it.
 
-Career Profile
-Rather than displaying only trophies, the game builds a complete coaching biography.
+Career profile and memory
+The Chronicle is the long-term history of the save: titles, awards, moves, debuts, milestones, manager changes, and meta eras are append-only career events. Career profile, manager reputation, philosophies, living-history callbacks, and "Known For" reads are derived from that record instead of being a parallel narrative database. Player and board memories add bounded loyalty and reunion/board-posture nudges; they do not override the event history that explains them.
 
-Example career statistics:
+Legacy world systems
+Retiring players can deterministically enter the staff market, creating a coaching tree. The Hall of Fame records retirement induction as the one stored historical view. Rivalries grow out of playoff meetings and poaches, then cool in the offseason. Named rival managers give AI-run tier-one clubs persistent human faces, tenure, board reviews, and Chronicle-visible career moves without granting hidden match modifiers.
 
-Career Record
-Championships
-International Titles
-Players Developed
-Academy Promotions
-Hall of Famers Coached
-The game also generates "Known For" summaries from actual historical behavior.
+Organizational knowledge and meta
+Organizations accumulate playbooks, anti-strats, and methodology. Knowledge can feed preparation only through a set game plan, leaks with staff moves, and dates when a balance patch changes the relevant landscape; this prevents it from becoming an invisible permanent combat bonus. Twice each season, usage-driven agent buffs and nerfs create a save-specific patch history. Rival teams adapt their tactical identities, struggling clubs can copy a successful meta, and season-end meta eras are chronicled. The dynasty gate remains the guardrail: accumulated history may create an advantage, but never an unbreakable league.
 
-Persistent Memory
-Player Memories
-Players remember important events:
-
-First professional opportunity
-Public support
-Benching
-Championship runs
-Contract disputes
-Memories influence negotiations, morale, loyalty, and future reunions.
-
-Organization Memories
-Organizations remember previous eras.
-
-Examples include:
-
-First international championship
-Academy system built
-Historic roster
-Manager departure
-Returning to a previous organization should feel meaningfully different.
-
-Coaching Tree
-Former players may become:
-
-Assistant Coaches
-Head Coaches
-Analysts
-Scouts
-General Managers
-Coaching philosophies propagate across generations, allowing the player to indirectly shape the esport.
-
-Philosophy System
-Separate from tactical sliders, managers develop philosophical identities.
-
-Examples:
-
-Trust Rookies
-Veteran Leadership
-Heavy Analytics
-Creative Freedom
-Strict Structure
-Long Practice Weeks
-Mental Wellness
-Players and organizations respond to these identities.
-
-Living History
-The simulation should remember historical events.
-
-Examples:
-
-Passing on a future superstar
-Historic playoff collapses
-Revenge matches
-Redemption arcs
-Historical callbacks appear naturally in media, commentary, and player interactions years later.
-
-Social Media & Media Ecosystem
-Replace isolated news stories with a persistent ecosystem containing:
-
-News outlets
-Social media
-Podcasts
-Rumors
-Community discussion
-Narratives evolve over many seasons instead of resetting every week.
-
-Hall of Fame
-Track:
-
-Managers
-Players
-Organizations
-Dynasties
-Rivalries
-Historic Matches
-Greatest Upsets
-Greatest Teams
-The Hall of Fame becomes the long-term history of the save.
-
-Rivalries
-Persistent rivalries emerge automatically between:
-
-Managers
-Organizations
-Players
-Regions
-Academies
-Repeated encounters strengthen rivalries and influence fan engagement, media attention, sponsorship value, and player motivation.
-
-Organizational Knowledge
-Organizations accumulate institutional knowledge instead of only accumulating player talent.
-
-Knowledge includes:
-
-Playbooks
-Anti-strats
-Utility combinations
-Practice methodologies
-Development systems
-Analytical discoveries
-Knowledge can be created, shared, transferred, forgotten, stolen through staff departures, and become obsolete after balance patches.
-
-This becomes one of the primary reasons dynasties emerge.
-
-Expanded Analytics Department
-Expand the current Analyst role into an entire competitive intelligence department including:
-
-Replay Analysts
-Data Scientists
-Performance Coaches
-Sports Psychologists
-AI Systems Engineers
-Departments generate actionable reports, identify weaknesses, discover opponent tendencies, and improve organizational learning.
-
-Dynamic Meta
-Strategies spread organically throughout the esport.
-
-Successful approaches are copied.
-
-Counter-strategies emerge.
-
-Balance patches disrupt the ecosystem.
-
-Every long-running save develops its own unique tactical history.
-
-Suggested Roadmap
-Track A --- Living World
-Legacy Mode
-Memories
-Reputation
-Rivalries
-Hall of Fame
-Social Media
-Track B --- Organizational Simulation
-Organizational Knowledge
-Expanded Staff
-Analytics Department
-Academy Development
-Ownership Personalities
-Track C --- Competitive Evolution
-Dynamic Meta
-Strategy Diffusion
-AI Coach Adaptation
-Balance Patch Evolution
-Long-term Esports History
+Media and history
+The weekly social feed, grounded recaps, Chronicle, profiles, badges, and career movement feed form the persistent media layer. Serve-time LLM rewrites may improve social, 1:1, or flavor copy, but the deterministic fact record remains in the save and the model is not permitted to invent events. The result is a world that remembers a player, manager, club, or strategy because the simulation recorded what they did.

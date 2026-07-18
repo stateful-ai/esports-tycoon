@@ -107,6 +107,7 @@ players:
   personality_tags:
   - streamer
   - veteran
+  career_volatility: 50
   potential: 73.4
 - id: team_t1_autimatic
   handle: autimatic
@@ -205,6 +206,7 @@ players:
   form: 56.6
   personality_tags:
   - perfectionist
+  career_volatility: 50
   potential: 77.4
 - id: team_t1_curry
   handle: curry
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - grinder
   - perfectionist
+  career_volatility: 50
   potential: 72.8
 - id: team_t1_brax
   handle: brax
@@ -402,6 +405,7 @@ players:
   form: 49.7
   personality_tags:
   - clutch_gene
+  career_volatility: 50
   potential: 74.6
 - id: team_t1_thwifo
   handle: thwifo
@@ -500,4 +504,5 @@ players:
   form: 47.6
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 69.9

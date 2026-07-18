@@ -106,6 +106,7 @@ players:
   form: 49.4
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 77.0
 - id: team_wave_esports_nico
   handle: nico
@@ -204,6 +205,7 @@ players:
   form: 57.4
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 81.0
 - id: team_wave_esports_carcass
   handle: Carcass
@@ -302,6 +304,7 @@ players:
   form: 45.6
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 80.0
 - id: team_wave_esports_murii
   handle: murii
@@ -401,6 +404,7 @@ players:
   personality_tags:
   - streamer
   - team_player
+  career_volatility: 50
   potential: 77.0
 - id: team_wave_esports_xtribune
   handle: xTribune
@@ -499,4 +503,5 @@ players:
   form: 57.4
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 79.0

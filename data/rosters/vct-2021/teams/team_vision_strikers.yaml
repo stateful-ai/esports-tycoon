@@ -110,7 +110,12 @@ players:
   form: 52.1
   personality_tags:
   - rookie
-  potential: 91.1
+  career_volatility: 16
+  development_decline_age: 33
+  development_peak_age: 23
+  development_peak_years: 8
+  development_realization: 0.96
+  potential: 91.0
 - id: team_vision_strikers_stax
   handle: stax
   real_name: ''
@@ -212,7 +217,9 @@ players:
   form: 53.7
   personality_tags:
   - rookie
-  potential: 83.7
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 87.0
 - id: team_vision_strikers_rb
   handle: Rb
   real_name: ''
@@ -314,6 +321,7 @@ players:
   form: 57.1
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 95.0
 - id: team_vision_strikers_buzz
   handle: BuZz
@@ -417,7 +425,9 @@ players:
   personality_tags:
   - pure_aimer
   - rookie
-  potential: 95.0
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 89.0
 - id: team_vision_strikers_lakia
   handle: Lakia
   real_name: ''
@@ -519,4 +529,5 @@ players:
   form: 50.2
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.2

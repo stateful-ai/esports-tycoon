@@ -106,6 +106,7 @@ players:
   form: 51.7
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 76.0
 - id: team_guild_esports_yacine
   handle: Yacine
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - analytical
   - slow_starter
+  career_volatility: 50
   potential: 83.0
 - id: team_guild_esports_draken
   handle: draken
@@ -303,6 +305,7 @@ players:
   form: 51.5
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 80.0
 - id: team_guild_esports_leo
   handle: Leo
@@ -402,6 +405,11 @@ players:
   personality_tags:
   - prodigy
   - rookie
+  career_volatility: 34
+  development_decline_age: 31
+  development_peak_age: 22
+  development_peak_years: 7
+  development_realization: 0.95
   potential: 92.0
 - id: team_guild_esports_sayf
   handle: Sayf
@@ -500,4 +508,5 @@ players:
   form: 56.8
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 89.0

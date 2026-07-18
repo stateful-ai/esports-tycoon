@@ -107,6 +107,7 @@ players:
   personality_tags:
   - grinder
   - perfectionist
+  career_volatility: 50
   potential: 75.8
 - id: team_damwon_gaming_t3xture
   handle: t3xture
@@ -206,7 +207,12 @@ players:
   personality_tags:
   - pure_aimer
   - rookie
-  potential: 78.9
+  career_volatility: 30
+  development_decline_age: 33
+  development_peak_age: 24
+  development_peak_years: 7
+  development_realization: 0.95
+  potential: 92.0
 - id: team_damwon_gaming_jeong_hi
   handle: Jeong Hi
   real_name: ''
@@ -304,6 +310,7 @@ players:
   form: 56.1
   personality_tags:
   - pure_aimer
+  career_volatility: 50
   potential: 70.4
 - id: team_damwon_gaming_intro
   handle: iNTRO
@@ -402,6 +409,7 @@ players:
   form: 48.5
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.7
 - id: team_damwon_gaming_secret
   handle: Secret
@@ -500,4 +508,5 @@ players:
   form: 50.5
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 82.2

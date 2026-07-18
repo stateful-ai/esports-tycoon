@@ -52,6 +52,40 @@ def test_hidden_curves_are_deterministic_and_diverse() -> None:
     assert development.development_curve(players[0]) == curves[0]
 
 
+def test_authored_curve_is_the_center_before_campaign_variance() -> None:
+    p = _full(20, 70.0, potential=92.0, pid="authored_curve")
+    p.career_volatility = 12
+    p.development_archetype = "steady"
+    p.development_peak_age = 23
+    p.development_peak_years = 8
+    p.development_decline_age = 34
+    p.development_realization = 0.97
+    curve = development.development_curve(p)
+    assert (curve.archetype, curve.growth_peak_age, curve.peak_years) == ("steady", 23, 8)
+    assert (curve.decline_age, curve.realization, curve.volatility) == (34, 0.97, 1.0)
+
+
+def test_career_volatility_scales_hidden_outcomes_not_current_skill() -> None:
+    low = _full(20, 70.0, potential=90.0, pid="same_player")
+    low.career_volatility = 8
+    low.development_peak_age = 22
+    low.development_peak_years = 7
+    low.development_decline_age = 33
+    low.development_realization = 0.95
+    high = low.model_copy(deep=True)
+    high.career_volatility = 72
+    opening = dict(low.attributes)
+    low_outcomes, high_outcomes = [], []
+    for seed in range(200):
+        steady, volatile = low.model_copy(deep=True), high.model_copy(deep=True)
+        development.seed_career_outcome(steady, np.random.default_rng(seed))
+        development.seed_career_outcome(volatile, np.random.default_rng(seed))
+        low_outcomes.append(steady.potential)
+        high_outcomes.append(volatile.potential)
+        assert steady.attributes == volatile.attributes == opening
+    assert np.std(high_outcomes) > np.std(low_outcomes) * 5
+
+
 def test_high_potential_does_not_guarantee_the_same_maximum() -> None:
     players = [
         _full(18, 50.0, potential=90.0, pid=f"realise_{i}")

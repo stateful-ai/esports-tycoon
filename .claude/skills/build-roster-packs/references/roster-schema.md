@@ -59,6 +59,10 @@ Player fields:
 - Required identity/shape: `handle`, `role`, `playstyle`, `quality`.
 - Common authored fields: `real_name`, `age`, `country`, `languages`, `igl`,
   `agents`, and `attr_overrides`.
+- Optional hidden career fields: `potential`, `career_volatility` (0-100),
+  `development_archetype`, `development_peak_age`, `development_peak_years`,
+  `development_decline_age`, and `development_realization`. These center
+  future development and do not change opening `quality` or attributes.
 - Free agents additionally require `region`.
 - `languages` is at most three `{lang, level}` objects.
 - `agents` is at most three unique signature agent ids.

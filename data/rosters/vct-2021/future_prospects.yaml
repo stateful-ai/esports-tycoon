@@ -99,7 +99,13 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
-    potential: 78.1
+    career_volatility: 22
+    development_archetype: early
+    development_decline_age: 33
+    development_peak_age: 21
+    development_peak_years: 9
+    development_realization: 0.95
+    potential: 94.0
   debut_year: 2022
 - player:
     id: future_wo0t
@@ -200,6 +206,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 92.6
   debut_year: 2023
 - player:
@@ -302,6 +309,7 @@ future_prospects:
     - hot_head
     - rookie
     - team_player
+    career_volatility: 50
     potential: 81.0
   debut_year: 2022
 - player:
@@ -404,6 +412,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 77.5
   debut_year: 2022
 - player:
@@ -506,6 +515,7 @@ future_prospects:
     - grinder
     - independent
     - rookie
+    career_volatility: 50
     potential: 81.8
   debut_year: 2022
 - player:
@@ -608,6 +618,7 @@ future_prospects:
     - hot_head
     - quiet
     - rookie
+    career_volatility: 50
     potential: 83.7
   debut_year: 2023
 - player:
@@ -710,6 +721,7 @@ future_prospects:
     - hot_head
     - independent
     - rookie
+    career_volatility: 50
     potential: 85.7
   debut_year: 2025
 - player:
@@ -812,6 +824,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 91.2
   debut_year: 2024
 - player:
@@ -914,6 +927,7 @@ future_prospects:
     - flashy
     - grinder
     - rookie
+    career_volatility: 50
     potential: 86.6
   debut_year: 2024
 - player:
@@ -1015,6 +1029,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -1116,6 +1131,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 93.5
   debut_year: 2026
 - player:
@@ -1217,6 +1233,7 @@ future_prospects:
     personality_tags:
     - analytical
     - rookie
+    career_volatility: 50
     potential: 92.7
   debut_year: 2024
 - player:
@@ -1319,6 +1336,7 @@ future_prospects:
     - perfectionist
     - quiet
     - rookie
+    career_volatility: 50
     potential: 85.7
   debut_year: 2025
 - player:
@@ -1420,6 +1438,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 92.3
   debut_year: 2025
 - player:
@@ -1522,6 +1541,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 93.0
   debut_year: 2024
 - player:
@@ -1624,6 +1644,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 88.0
   debut_year: 2024
 - player:
@@ -1725,6 +1746,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 82.4
   debut_year: 2025
 - player:
@@ -1827,6 +1849,7 @@ future_prospects:
     - perfectionist
     - quiet
     - rookie
+    career_volatility: 50
     potential: 82.8
   debut_year: 2025
 - player:
@@ -1929,6 +1952,7 @@ future_prospects:
     - independent
     - rookie
     - team_player
+    career_volatility: 50
     potential: 89.0
   debut_year: 2026
 - player:
@@ -2031,6 +2055,7 @@ future_prospects:
     - clutch_gene
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 92.4
   debut_year: 2024
 - player:
@@ -2132,6 +2157,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 91.1
   debut_year: 2024
 - player:
@@ -2233,6 +2259,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 93.5
   debut_year: 2025
 - player:
@@ -2335,6 +2362,7 @@ future_prospects:
     - analytical
     - independent
     - rookie
+    career_volatility: 50
     potential: 87.0
   debut_year: 2025
 - player:
@@ -2437,6 +2465,7 @@ future_prospects:
     - quiet
     - rookie
     - team_player
+    career_volatility: 50
     potential: 92.8
   debut_year: 2026
 - player:
@@ -2539,6 +2568,7 @@ future_prospects:
     - clutch_gene
     - independent
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -2641,6 +2671,7 @@ future_prospects:
     - flashy
     - rookie
     - streamer
+    career_volatility: 50
     potential: 84.7
   debut_year: 2025
 - player:
@@ -2742,6 +2773,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 83.7
   debut_year: 2024
 - player:
@@ -2843,6 +2875,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 84.8
   debut_year: 2026
 - player:
@@ -2945,6 +2978,7 @@ future_prospects:
     - grinder
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 87.7
   debut_year: 2025
 - player:
@@ -3047,6 +3081,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -3149,6 +3184,7 @@ future_prospects:
     - hot_head
     - independent
     - rookie
+    career_volatility: 50
     potential: 94.9
   debut_year: 2025
 - player:
@@ -3250,6 +3286,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 91.4
   debut_year: 2026
 - player:
@@ -3352,6 +3389,7 @@ future_prospects:
     - hot_head
     - rookie
     - streamer
+    career_volatility: 50
     potential: 87.3
   debut_year: 2024
 - player:
@@ -3452,6 +3490,7 @@ future_prospects:
     form: 47.2
     personality_tags:
     - rookie
+    career_volatility: 50
     potential: 94.7
   debut_year: 2024
 - player:
@@ -3554,6 +3593,7 @@ future_prospects:
     - analytical
     - rookie
     - team_player
+    career_volatility: 50
     potential: 87.6
   debut_year: 2024
 - player:
@@ -3656,6 +3696,7 @@ future_prospects:
     - independent
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 78.5
   debut_year: 2024
 - player:
@@ -3758,6 +3799,7 @@ future_prospects:
     - fan_favorite
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.5
   debut_year: 2024
 - player:
@@ -3860,6 +3902,7 @@ future_prospects:
     - fan_favorite
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 90.6
   debut_year: 2024
 - player:
@@ -3962,6 +4005,7 @@ future_prospects:
     - clutch_gene
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 91.7
   debut_year: 2026
 - player:
@@ -4064,6 +4108,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - streamer
+    career_volatility: 50
     potential: 87.5
   debut_year: 2026
 - player:
@@ -4166,6 +4211,7 @@ future_prospects:
     - perfectionist
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.0
   debut_year: 2024
 - player:
@@ -4268,6 +4314,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - team_player
+    career_volatility: 50
     potential: 82.0
   debut_year: 2025
 - player:
@@ -4369,6 +4416,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 85.3
   debut_year: 2025
 - player:
@@ -4470,6 +4518,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2022
 - player:
@@ -4571,6 +4620,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 84.6
   debut_year: 2024
 - player:
@@ -4673,6 +4723,7 @@ future_prospects:
     - flashy
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.4
   debut_year: 2024
 - player:
@@ -4775,6 +4826,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.8
   debut_year: 2024
 - player:
@@ -4876,6 +4928,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 83.4
   debut_year: 2024
 - player:
@@ -4977,6 +5030,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 83.3
   debut_year: 2024
 - player:
@@ -5079,6 +5133,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 91.9
   debut_year: 2024
 - player:
@@ -5180,6 +5235,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 77.2
   debut_year: 2024
 - player:
@@ -5282,6 +5338,7 @@ future_prospects:
     - analytical
     - rookie
     - streamer
+    career_volatility: 50
     potential: 90.4
   debut_year: 2024
 - player:
@@ -5384,6 +5441,7 @@ future_prospects:
     - hot_head
     - quiet
     - rookie
+    career_volatility: 50
     potential: 86.2
   debut_year: 2024
 - player:
@@ -5485,6 +5543,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 85.5
   debut_year: 2024
 - player:
@@ -5587,6 +5646,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 88.0
   debut_year: 2025
 - player:
@@ -5689,6 +5749,7 @@ future_prospects:
     - analytical
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -5790,6 +5851,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 85.1
   debut_year: 2024
 - player:
@@ -5891,6 +5953,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 82.2
   debut_year: 2025
 - player:
@@ -5993,6 +6056,7 @@ future_prospects:
     - quiet
     - rookie
     - streamer
+    career_volatility: 50
     potential: 89.4
   debut_year: 2026
 - player:
@@ -6095,6 +6159,7 @@ future_prospects:
     - rookie
     - streamer
     - team_player
+    career_volatility: 50
     potential: 89.7
   debut_year: 2024
 - player:
@@ -6196,6 +6261,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 83.0
   debut_year: 2024
 - player:
@@ -6297,6 +6363,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 82.4
   debut_year: 2024
 - player:
@@ -6399,6 +6466,7 @@ future_prospects:
     - clutch_gene
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 86.3
   debut_year: 2024
 - player:
@@ -6500,6 +6568,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 85.0
   debut_year: 2025
 - player:
@@ -6602,6 +6671,7 @@ future_prospects:
     - quiet
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.4
   debut_year: 2024
 - player:
@@ -6704,6 +6774,7 @@ future_prospects:
     - hot_head
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 83.6
   debut_year: 2024
 - player:
@@ -6805,6 +6876,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 90.6
   debut_year: 2026
 - player:
@@ -6907,6 +6979,7 @@ future_prospects:
     - perfectionist
     - quiet
     - rookie
+    career_volatility: 50
     potential: 87.0
   debut_year: 2025
 - player:
@@ -7009,6 +7082,7 @@ future_prospects:
     - quiet
     - rookie
     - team_player
+    career_volatility: 50
     potential: 85.0
   debut_year: 2025
 - player:
@@ -7110,6 +7184,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 83.3
   debut_year: 2024
 - player:
@@ -7212,6 +7287,7 @@ future_prospects:
     - fan_favorite
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.6
   debut_year: 2024
 - player:
@@ -7314,6 +7390,7 @@ future_prospects:
     - grinder
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 83.1
   debut_year: 2024
 - player:
@@ -7416,6 +7493,7 @@ future_prospects:
     - perfectionist
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -7517,6 +7595,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 87.4
   debut_year: 2024
 - player:
@@ -7619,6 +7698,7 @@ future_prospects:
     - hot_head
     - quiet
     - rookie
+    career_volatility: 50
     potential: 93.1
   debut_year: 2025
 - player:
@@ -7721,6 +7801,7 @@ future_prospects:
     - fan_favorite
     - quiet
     - rookie
+    career_volatility: 50
     potential: 86.7
   debut_year: 2025
 - player:
@@ -7823,6 +7904,7 @@ future_prospects:
     - fan_favorite
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 94.1
   debut_year: 2026
 - player:
@@ -7925,6 +8007,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.4
   debut_year: 2024
 - player:
@@ -8025,6 +8108,7 @@ future_prospects:
     form: 55.1
     personality_tags:
     - rookie
+    career_volatility: 50
     potential: 90.7
   debut_year: 2024
 - player:
@@ -8126,6 +8210,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 93.5
   debut_year: 2025
 - player:
@@ -8227,6 +8312,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 75.7
   debut_year: 2024
 - player:
@@ -8329,6 +8415,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 93.4
   debut_year: 2024
 - player:
@@ -8431,6 +8518,7 @@ future_prospects:
     - fan_favorite
     - flashy
     - rookie
+    career_volatility: 50
     potential: 85.9
   debut_year: 2024
 - player:
@@ -8533,6 +8621,7 @@ future_prospects:
     - flashy
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -8635,6 +8724,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 80.3
   debut_year: 2024
 - player:
@@ -8737,6 +8827,7 @@ future_prospects:
     - independent
     - rookie
     - team_player
+    career_volatility: 50
     potential: 90.3
   debut_year: 2025
 - player:
@@ -8838,6 +8929,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 89.4
   debut_year: 2024
 - player:
@@ -8940,6 +9032,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -9041,6 +9134,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 83.8
   debut_year: 2024
 - player:
@@ -9143,6 +9237,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 87.5
   debut_year: 2025
 - player:
@@ -9245,6 +9340,7 @@ future_prospects:
     - clutch_gene
     - independent
     - rookie
+    career_volatility: 50
     potential: 94.2
   debut_year: 2024
 - player:
@@ -9346,6 +9442,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 78.6
   debut_year: 2025
 - player:
@@ -9448,6 +9545,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - streamer
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -9550,6 +9648,7 @@ future_prospects:
     - fan_favorite
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -9652,6 +9751,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 92.9
   debut_year: 2026
 - player:
@@ -9754,6 +9854,7 @@ future_prospects:
     - quiet
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 76.3
   debut_year: 2024
 - player:
@@ -9856,6 +9957,7 @@ future_prospects:
     - flashy
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -9957,6 +10059,7 @@ future_prospects:
     personality_tags:
     - analytical
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -10059,6 +10162,7 @@ future_prospects:
     - hot_head
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 93.0
   debut_year: 2024
 - player:
@@ -10160,6 +10264,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.3
   debut_year: 2024
 - player:
@@ -10262,6 +10367,7 @@ future_prospects:
     - grinder
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -10364,6 +10470,7 @@ future_prospects:
     - perfectionist
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -10466,6 +10573,7 @@ future_prospects:
     - flashy
     - independent
     - rookie
+    career_volatility: 50
     potential: 85.6
   debut_year: 2025
 - player:
@@ -10567,6 +10675,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 83.0
   debut_year: 2024
 - player:
@@ -10669,6 +10778,7 @@ future_prospects:
     - independent
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 88.3
   debut_year: 2024
 - player:
@@ -10771,6 +10881,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 82.3
   debut_year: 2024
 - player:
@@ -10872,6 +10983,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 86.1
   debut_year: 2024
 - player:
@@ -10974,6 +11086,7 @@ future_prospects:
     - hot_head
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 87.5
   debut_year: 2026
 - player:
@@ -11076,6 +11189,7 @@ future_prospects:
     - hot_head
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 92.5
   debut_year: 2024
 - player:
@@ -11178,6 +11292,7 @@ future_prospects:
     - rookie
     - streamer
     - team_player
+    career_volatility: 50
     potential: 92.7
   debut_year: 2024
 - player:
@@ -11280,6 +11395,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 85.3
   debut_year: 2024
 - player:
@@ -11382,6 +11498,7 @@ future_prospects:
     - analytical
     - grinder
     - rookie
+    career_volatility: 50
     potential: 84.1
   debut_year: 2025
 - player:
@@ -11484,6 +11601,7 @@ future_prospects:
     - grinder
     - rookie
     - streamer
+    career_volatility: 50
     potential: 94.6
   debut_year: 2025
 - player:
@@ -11586,6 +11704,7 @@ future_prospects:
     - quiet
     - rookie
     - streamer
+    career_volatility: 50
     potential: 84.6
   debut_year: 2024
 - player:
@@ -11687,6 +11806,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 93.3
   debut_year: 2024
 - player:
@@ -11789,6 +11909,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -11891,6 +12012,7 @@ future_prospects:
     - hot_head
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 91.4
   debut_year: 2025
 - player:
@@ -11993,6 +12115,7 @@ future_prospects:
     - clutch_gene
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 91.0
   debut_year: 2024
 - player:
@@ -12095,6 +12218,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 87.9
   debut_year: 2025
 - player:
@@ -12196,6 +12320,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.0
   debut_year: 2026
 - player:
@@ -12298,6 +12423,7 @@ future_prospects:
     - analytical
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.3
   debut_year: 2025
 - player:
@@ -12400,6 +12526,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -12501,6 +12628,7 @@ future_prospects:
     personality_tags:
     - analytical
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -12603,6 +12731,7 @@ future_prospects:
     - fan_favorite
     - quiet
     - rookie
+    career_volatility: 50
     potential: 84.8
   debut_year: 2024
 - player:
@@ -12705,6 +12834,7 @@ future_prospects:
     - perfectionist
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 88.2
   debut_year: 2024
 - player:
@@ -12807,6 +12937,7 @@ future_prospects:
     - flashy
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -12909,6 +13040,7 @@ future_prospects:
     - analytical
     - rookie
     - streamer
+    career_volatility: 50
     potential: 93.5
   debut_year: 2024
 - player:
@@ -13011,6 +13143,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 82.7
   debut_year: 2024
 - player:
@@ -13113,6 +13246,7 @@ future_prospects:
     - rookie
     - slow_starter
     - streamer
+    career_volatility: 50
     potential: 90.9
   debut_year: 2024
 - player:
@@ -13214,6 +13348,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 93.4
   debut_year: 2025
 - player:
@@ -13316,6 +13451,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 94.7
   debut_year: 2026
 - player:
@@ -13416,6 +13552,7 @@ future_prospects:
     form: 59.4
     personality_tags:
     - rookie
+    career_volatility: 50
     potential: 84.4
   debut_year: 2026
 - player:
@@ -13518,6 +13655,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 90.1
   debut_year: 2024
 - player:
@@ -13619,7 +13757,12 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
-    potential: 94.5
+    career_volatility: 22
+    development_decline_age: 32
+    development_peak_age: 22
+    development_peak_years: 8
+    development_realization: 0.95
+    potential: 94.0
   debut_year: 2022
 - player:
     id: future_levius
@@ -13721,6 +13864,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 77.6
   debut_year: 2024
 - player:
@@ -13822,6 +13966,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 89.0
   debut_year: 2025
 - player:
@@ -13924,6 +14069,7 @@ future_prospects:
     - clutch_gene
     - independent
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -14026,6 +14172,7 @@ future_prospects:
     - clutch_gene
     - independent
     - rookie
+    career_volatility: 50
     potential: 90.8
   debut_year: 2024
 - player:
@@ -14128,6 +14275,7 @@ future_prospects:
     - hot_head
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -14230,6 +14378,7 @@ future_prospects:
     - fan_favorite
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -14332,6 +14481,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - team_player
+    career_volatility: 50
     potential: 82.3
   debut_year: 2025
 - player:
@@ -14434,6 +14584,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -14535,6 +14686,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.7
   debut_year: 2024
 - player:
@@ -14637,6 +14789,7 @@ future_prospects:
     - rookie
     - streamer
     - team_player
+    career_volatility: 50
     potential: 86.1
   debut_year: 2024
 - player:
@@ -14738,6 +14891,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 83.3
   debut_year: 2024
 - player:
@@ -14840,6 +14994,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 89.8
   debut_year: 2024
 - player:
@@ -14942,6 +15097,7 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 85.9
   debut_year: 2024
 - player:
@@ -15044,6 +15200,7 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -15146,6 +15303,7 @@ future_prospects:
     - clutch_gene
     - independent
     - rookie
+    career_volatility: 50
     potential: 86.5
   debut_year: 2024
 - player:
@@ -15248,6 +15406,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -15350,7 +15509,11 @@ future_prospects:
     - grinder
     - perfectionist
     - rookie
-    potential: 95.0
+    career_volatility: 42
+    development_archetype: late
+    development_peak_age: 24
+    development_realization: 0.93
+    potential: 88.0
   debut_year: 2024
 - player:
     id: future_mephisto05
@@ -15451,6 +15614,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -15552,6 +15716,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -15654,6 +15819,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 84.3
   debut_year: 2024
 - player:
@@ -15756,6 +15922,7 @@ future_prospects:
     - flashy
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.4
   debut_year: 2024
 - player:
@@ -15858,6 +16025,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 85.2
   debut_year: 2024
 - player:
@@ -15960,6 +16128,7 @@ future_prospects:
     - quiet
     - rookie
     - team_player
+    career_volatility: 50
     potential: 93.9
   debut_year: 2025
 - player:
@@ -16061,6 +16230,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 88.6
   debut_year: 2025
 - player:
@@ -16163,6 +16333,7 @@ future_prospects:
     - fan_favorite
     - flashy
     - rookie
+    career_volatility: 50
     potential: 88.3
   debut_year: 2024
 - player:
@@ -16264,6 +16435,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 92.6
   debut_year: 2024
 - player:
@@ -16366,6 +16538,7 @@ future_prospects:
     - fan_favorite
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2022
 - player:
@@ -16467,6 +16640,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 94.0
   debut_year: 2025
 - player:
@@ -16569,6 +16743,7 @@ future_prospects:
     - fan_favorite
     - flashy
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -16671,6 +16846,7 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -16772,6 +16948,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -16874,6 +17051,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 90.5
   debut_year: 2024
 - player:
@@ -16975,6 +17153,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 90.3
   debut_year: 2024
 - player:
@@ -17076,6 +17255,7 @@ future_prospects:
     personality_tags:
     - analytical
     - rookie
+    career_volatility: 50
     potential: 89.9
   debut_year: 2025
 - player:
@@ -17178,6 +17358,7 @@ future_prospects:
     - rookie
     - streamer
     - team_player
+    career_volatility: 50
     potential: 90.8
   debut_year: 2026
 - player:
@@ -17279,6 +17460,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -17380,6 +17562,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 93.7
   debut_year: 2024
 - player:
@@ -17482,6 +17665,7 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 85.0
   debut_year: 2024
 - player:
@@ -17584,6 +17768,7 @@ future_prospects:
     - fan_favorite
     - independent
     - rookie
+    career_volatility: 50
     potential: 86.5
   debut_year: 2026
 - player:
@@ -17686,6 +17871,7 @@ future_prospects:
     - fan_favorite
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 86.2
   debut_year: 2025
 - player:
@@ -17787,6 +17973,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -17889,6 +18076,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -17991,6 +18179,7 @@ future_prospects:
     - flashy
     - independent
     - rookie
+    career_volatility: 50
     potential: 87.4
   debut_year: 2025
 - player:
@@ -18093,6 +18282,7 @@ future_prospects:
     - hot_head
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 87.1
   debut_year: 2024
 - player:
@@ -18195,6 +18385,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 88.4
   debut_year: 2024
 - player:
@@ -18296,6 +18487,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 94.8
   debut_year: 2024
 - player:
@@ -18397,6 +18589,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 85.1
   debut_year: 2024
 - player:
@@ -18498,6 +18691,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 92.8
   debut_year: 2025
 - player:
@@ -18600,6 +18794,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - streamer
+    career_volatility: 50
     potential: 90.2
   debut_year: 2025
 - player:
@@ -18702,6 +18897,7 @@ future_prospects:
     - clutch_gene
     - flashy
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -18804,6 +19000,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 80.5
   debut_year: 2024
 - player:
@@ -18906,6 +19103,7 @@ future_prospects:
     - grinder
     - independent
     - rookie
+    career_volatility: 50
     potential: 79.9
   debut_year: 2025
 - player:
@@ -19008,6 +19206,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - streamer
+    career_volatility: 50
     potential: 88.0
   debut_year: 2024
 - player:
@@ -19109,6 +19308,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 94.8
   debut_year: 2024
 - player:
@@ -19211,6 +19411,7 @@ future_prospects:
     - clutch_gene
     - flashy
     - rookie
+    career_volatility: 50
     potential: 82.8
   debut_year: 2024
 - player:
@@ -19313,6 +19514,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 89.8
   debut_year: 2024
 - player:
@@ -19415,6 +19617,7 @@ future_prospects:
     - flashy
     - grinder
     - rookie
+    career_volatility: 50
     potential: 90.7
   debut_year: 2024
 - player:
@@ -19516,6 +19719,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -19617,6 +19821,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 92.8
   debut_year: 2024
 - player:
@@ -19718,6 +19923,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 84.3
   debut_year: 2025
 - player:
@@ -19819,6 +20025,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -19921,6 +20128,7 @@ future_prospects:
     - perfectionist
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -20023,6 +20231,7 @@ future_prospects:
     - grinder
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -20125,6 +20334,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 94.9
   debut_year: 2024
 - player:
@@ -20227,6 +20437,7 @@ future_prospects:
     - flashy
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 91.5
   debut_year: 2025
 - player:
@@ -20329,6 +20540,7 @@ future_prospects:
     - analytical
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 90.1
   debut_year: 2024
 - player:
@@ -20431,6 +20643,7 @@ future_prospects:
     - analytical
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 88.4
   debut_year: 2026
 - player:
@@ -20533,6 +20746,7 @@ future_prospects:
     - grinder
     - rookie
     - streamer
+    career_volatility: 50
     potential: 93.1
   debut_year: 2024
 - player:
@@ -20635,6 +20849,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -20736,6 +20951,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -20838,6 +21054,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 87.7
   debut_year: 2024
 - player:
@@ -20940,6 +21157,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.1
   debut_year: 2024
 - player:
@@ -21042,6 +21260,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 90.5
   debut_year: 2024
 - player:
@@ -21143,6 +21362,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 93.4
   debut_year: 2024
 - player:
@@ -21245,6 +21465,7 @@ future_prospects:
     - analytical
     - flashy
     - rookie
+    career_volatility: 50
     potential: 84.0
   debut_year: 2024
 - player:
@@ -21347,6 +21568,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - streamer
+    career_volatility: 50
     potential: 87.5
   debut_year: 2024
 - player:
@@ -21448,6 +21670,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 88.0
   debut_year: 2025
 - player:
@@ -21550,6 +21773,7 @@ future_prospects:
     - perfectionist
     - rookie
     - streamer
+    career_volatility: 50
     potential: 85.0
   debut_year: 2025
 - player:
@@ -21652,6 +21876,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 92.5
   debut_year: 2025
 - player:
@@ -21753,6 +21978,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 87.2
   debut_year: 2024
 - player:
@@ -21855,6 +22081,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 94.2
   debut_year: 2025
 - player:
@@ -21956,6 +22183,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 84.6
   debut_year: 2024
 - player:
@@ -22058,6 +22286,7 @@ future_prospects:
     - grinder
     - independent
     - rookie
+    career_volatility: 50
     potential: 88.1
   debut_year: 2025
 - player:
@@ -22160,6 +22389,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 91.6
   debut_year: 2024
 - player:
@@ -22262,6 +22492,7 @@ future_prospects:
     - perfectionist
     - rookie
     - team_player
+    career_volatility: 50
     potential: 92.2
   debut_year: 2024
 - player:
@@ -22364,6 +22595,7 @@ future_prospects:
     - clutch_gene
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 85.4
   debut_year: 2025
 - player:
@@ -22465,6 +22697,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 93.8
   debut_year: 2025
 - player:
@@ -22567,6 +22800,7 @@ future_prospects:
     - perfectionist
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -22669,6 +22903,7 @@ future_prospects:
     - fan_favorite
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 89.0
   debut_year: 2024
 - player:
@@ -22771,6 +23006,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.6
   debut_year: 2024
 - player:
@@ -22872,6 +23108,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -22974,6 +23211,7 @@ future_prospects:
     - hot_head
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -23076,6 +23314,7 @@ future_prospects:
     - independent
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 82.2
   debut_year: 2024
 - player:
@@ -23177,6 +23416,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 84.5
   debut_year: 2024
 - player:
@@ -23278,6 +23518,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 89.8
   debut_year: 2024
 - player:
@@ -23380,6 +23621,7 @@ future_prospects:
     - clutch_gene
     - flashy
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -23482,6 +23724,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 92.0
   debut_year: 2024
 - player:
@@ -23584,6 +23827,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -23686,6 +23930,7 @@ future_prospects:
     - fan_favorite
     - quiet
     - rookie
+    career_volatility: 50
     potential: 87.3
   debut_year: 2024
 - player:
@@ -23788,6 +24033,7 @@ future_prospects:
     - quiet
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.0
   debut_year: 2025
 - player:
@@ -23889,6 +24135,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 94.8
   debut_year: 2024
 - player:
@@ -23991,6 +24238,7 @@ future_prospects:
     - independent
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 90.1
   debut_year: 2026
 - player:
@@ -24092,6 +24340,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 93.2
   debut_year: 2024
 - player:
@@ -24193,6 +24442,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 84.3
   debut_year: 2024
 - player:
@@ -24294,6 +24544,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 88.9
   debut_year: 2024
 - player:
@@ -24396,6 +24647,7 @@ future_prospects:
     - flashy
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 91.3
   debut_year: 2024
 - player:
@@ -24497,6 +24749,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 78.7
   debut_year: 2025
 - player:
@@ -24599,6 +24852,7 @@ future_prospects:
     - independent
     - rookie
     - team_player
+    career_volatility: 50
     potential: 90.2
   debut_year: 2026
 - player:
@@ -24701,6 +24955,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 93.0
   debut_year: 2024
 - player:
@@ -24802,6 +25057,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 84.7
   debut_year: 2024
 - player:
@@ -24903,6 +25159,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 92.2
   debut_year: 2024
 - player:
@@ -25004,6 +25261,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 76.8
   debut_year: 2024
 - player:
@@ -25106,6 +25364,7 @@ future_prospects:
     - independent
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 93.0
   debut_year: 2024
 - player:
@@ -25208,6 +25467,7 @@ future_prospects:
     - grinder
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 87.0
   debut_year: 2026
 - player:
@@ -25310,6 +25570,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 83.9
   debut_year: 2024
 - player:
@@ -25412,6 +25673,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 80.0
   debut_year: 2024
 - player:
@@ -25514,6 +25776,7 @@ future_prospects:
     - clutch_gene
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 90.7
   debut_year: 2025
 - player:
@@ -25616,6 +25879,7 @@ future_prospects:
     - analytical
     - independent
     - rookie
+    career_volatility: 50
     potential: 84.0
   debut_year: 2025
 - player:
@@ -25717,6 +25981,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 88.8
   debut_year: 2025
 - player:
@@ -25819,6 +26084,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - team_player
+    career_volatility: 50
     potential: 89.9
   debut_year: 2025
 - player:
@@ -25920,6 +26186,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 87.0
   debut_year: 2024
 - player:
@@ -26021,6 +26288,7 @@ future_prospects:
     personality_tags:
     - analytical
     - rookie
+    career_volatility: 50
     potential: 93.3
   debut_year: 2024
 - player:
@@ -26122,6 +26390,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 86.4
   debut_year: 2024
 - player:
@@ -26224,6 +26493,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 92.1
   debut_year: 2024
 - player:
@@ -26326,6 +26596,7 @@ future_prospects:
     - clutch_gene
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -26428,6 +26699,7 @@ future_prospects:
     - analytical
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 93.7
   debut_year: 2025
 - player:
@@ -26530,6 +26802,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - streamer
+    career_volatility: 50
     potential: 89.8
   debut_year: 2024
 - player:
@@ -26631,6 +26904,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -26732,6 +27006,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 90.3
   debut_year: 2025
 - player:
@@ -26834,6 +27109,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -26935,6 +27211,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 94.8
   debut_year: 2025
 - player:
@@ -27037,6 +27314,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.4
   debut_year: 2024
 - player:
@@ -27139,6 +27417,7 @@ future_prospects:
     - grinder
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 91.7
   debut_year: 2024
 - player:
@@ -27240,6 +27519,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -27342,6 +27622,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 82.4
   debut_year: 2025
 - player:
@@ -27444,6 +27725,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - team_player
+    career_volatility: 50
     potential: 85.5
   debut_year: 2024
 - player:
@@ -27546,6 +27828,7 @@ future_prospects:
     - fan_favorite
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 87.7
   debut_year: 2024
 - player:
@@ -27648,6 +27931,7 @@ future_prospects:
     - analytical
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 91.0
   debut_year: 2024
 - player:
@@ -27749,6 +28033,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 90.0
   debut_year: 2024
 - player:
@@ -27850,6 +28135,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -27952,6 +28238,7 @@ future_prospects:
     - flashy
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 86.1
   debut_year: 2024
 - player:
@@ -28054,6 +28341,7 @@ future_prospects:
     - quiet
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 92.9
   debut_year: 2025
 - player:
@@ -28155,6 +28443,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 86.0
   debut_year: 2024
 - player:
@@ -28257,6 +28546,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 94.2
   debut_year: 2026
 - player:
@@ -28359,6 +28649,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 85.5
   debut_year: 2026
 - player:
@@ -28461,6 +28752,7 @@ future_prospects:
     - perfectionist
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2025
 - player:
@@ -28563,6 +28855,7 @@ future_prospects:
     - clutch_gene
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 75.6
   debut_year: 2025
 - player:
@@ -28665,6 +28958,7 @@ future_prospects:
     - hot_head
     - independent
     - rookie
+    career_volatility: 50
     potential: 90.0
   debut_year: 2025
 - player:
@@ -28766,6 +29060,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2026
 - player:
@@ -28868,6 +29163,7 @@ future_prospects:
     - grinder
     - rookie
     - streamer
+    career_volatility: 50
     potential: 81.7
   debut_year: 2026
 - player:
@@ -28970,6 +29266,7 @@ future_prospects:
     - analytical
     - independent
     - rookie
+    career_volatility: 50
     potential: 86.8
   debut_year: 2024
 - player:
@@ -29072,6 +29369,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 91.7
   debut_year: 2024
 - player:
@@ -29174,6 +29472,7 @@ future_prospects:
     - perfectionist
     - rookie
     - team_player
+    career_volatility: 50
     potential: 83.0
   debut_year: 2024
 - player:
@@ -29275,6 +29574,7 @@ future_prospects:
     personality_tags:
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 91.5
   debut_year: 2024
 - player:
@@ -29377,6 +29677,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 90.0
   debut_year: 2025
 - player:
@@ -29478,6 +29779,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 90.5
   debut_year: 2024
 - player:
@@ -29579,6 +29881,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 87.1
   debut_year: 2024
 - player:
@@ -29681,6 +29984,7 @@ future_prospects:
     - grinder
     - independent
     - rookie
+    career_volatility: 50
     potential: 94.3
   debut_year: 2025
 - player:
@@ -29783,6 +30087,7 @@ future_prospects:
     - hot_head
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 81.3
   debut_year: 2024
 - player:
@@ -29885,6 +30190,7 @@ future_prospects:
     - fan_favorite
     - independent
     - rookie
+    career_volatility: 50
     potential: 88.7
   debut_year: 2024
 - player:
@@ -29987,6 +30293,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 88.2
   debut_year: 2026
 - player:
@@ -30088,6 +30395,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 79.6
   debut_year: 2026
 - player:
@@ -30190,6 +30498,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 84.5
   debut_year: 2025
 - player:
@@ -30292,6 +30601,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 94.3
   debut_year: 2026
 - player:
@@ -30394,6 +30704,7 @@ future_prospects:
     - fan_favorite
     - flashy
     - rookie
+    career_volatility: 50
     potential: 69.8
   debut_year: 2023
 - player:
@@ -30496,6 +30807,7 @@ future_prospects:
     - flashy
     - grinder
     - rookie
+    career_volatility: 50
     potential: 69.4
   debut_year: 2023
 - player:
@@ -30597,6 +30909,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 82.8
   debut_year: 2022
 - player:
@@ -30699,6 +31012,7 @@ future_prospects:
     - independent
     - rookie
     - team_player
+    career_volatility: 50
     potential: 87.8
   debut_year: 2022
 - player:
@@ -30800,6 +31114,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 95.0
   debut_year: 2022
 - player:
@@ -30900,6 +31215,7 @@ future_prospects:
     form: 46.8
     personality_tags:
     - rookie
+    career_volatility: 50
     potential: 70.7
   debut_year: 2025
 - player:
@@ -31002,6 +31318,7 @@ future_prospects:
     - analytical
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 81.3
   debut_year: 2023
 - player:
@@ -31104,6 +31421,7 @@ future_prospects:
     - flashy
     - rookie
     - team_player
+    career_volatility: 50
     potential: 71.9
   debut_year: 2024
 - player:
@@ -31206,6 +31524,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 85.0
   debut_year: 2022
 - player:
@@ -31307,6 +31626,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 62.8
   debut_year: 2024
 - player:
@@ -31408,6 +31728,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 69.7
   debut_year: 2023
 - player:
@@ -31510,6 +31831,7 @@ future_prospects:
     - perfectionist
     - rookie
     - team_player
+    career_volatility: 50
     potential: 64.9
   debut_year: 2022
 - player:
@@ -31612,6 +31934,7 @@ future_prospects:
     - clutch_gene
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 55.2
   debut_year: 2022
 - player:
@@ -31713,6 +32036,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 88.1
   debut_year: 2024
 - player:
@@ -31814,6 +32138,7 @@ future_prospects:
     personality_tags:
     - rookie
     - team_player
+    career_volatility: 50
     potential: 86.3
   debut_year: 2023
 - player:
@@ -31916,6 +32241,7 @@ future_prospects:
     - grinder
     - quiet
     - rookie
+    career_volatility: 50
     potential: 81.5
   debut_year: 2024
 - player:
@@ -32017,6 +32343,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 78.4
   debut_year: 2024
 - player:
@@ -32119,6 +32446,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - team_player
+    career_volatility: 50
     potential: 88.4
   debut_year: 2024
 - player:
@@ -32221,6 +32549,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 78.1
   debut_year: 2023
 - player:
@@ -32323,6 +32652,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - team_player
+    career_volatility: 50
     potential: 87.2
   debut_year: 2023
 - player:
@@ -32425,6 +32755,7 @@ future_prospects:
     - rookie
     - slow_starter
     - streamer
+    career_volatility: 50
     potential: 85.9
   debut_year: 2022
 - player:
@@ -32527,6 +32858,7 @@ future_prospects:
     - grinder
     - rookie
     - team_player
+    career_volatility: 50
     potential: 59.8
   debut_year: 2023
 - player:
@@ -32629,6 +32961,7 @@ future_prospects:
     - independent
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 82.8
   debut_year: 2024
 - player:
@@ -32731,6 +33064,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 75.5
   debut_year: 2022
 - player:
@@ -32833,6 +33167,7 @@ future_prospects:
     - fan_favorite
     - rookie
     - streamer
+    career_volatility: 50
     potential: 78.4
   debut_year: 2024
 - player:
@@ -32935,6 +33270,7 @@ future_prospects:
     - fan_favorite
     - quiet
     - rookie
+    career_volatility: 50
     potential: 84.5
   debut_year: 2024
 - player:
@@ -33036,6 +33372,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 80.4
   debut_year: 2022
 - player:
@@ -33138,6 +33475,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 58.4
   debut_year: 2023
 - player:
@@ -33240,6 +33578,7 @@ future_prospects:
     - clutch_gene
     - quiet
     - rookie
+    career_volatility: 50
     potential: 81.5
   debut_year: 2022
 - player:
@@ -33342,6 +33681,7 @@ future_prospects:
     - independent
     - quiet
     - rookie
+    career_volatility: 50
     potential: 73.6
   debut_year: 2024
 - player:
@@ -33444,6 +33784,7 @@ future_prospects:
     - quiet
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 85.1
   debut_year: 2023
 - player:
@@ -33546,6 +33887,7 @@ future_prospects:
     - analytical
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 69.8
   debut_year: 2022
 - player:
@@ -33648,6 +33990,7 @@ future_prospects:
     - clutch_gene
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 85.9
   debut_year: 2025
 - player:
@@ -33749,6 +34092,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 63.3
   debut_year: 2022
 - player:
@@ -33851,6 +34195,7 @@ future_prospects:
     - fan_favorite
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 84.1
   debut_year: 2022
 - player:
@@ -33952,6 +34297,7 @@ future_prospects:
     personality_tags:
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 74.2
   debut_year: 2023
 - player:
@@ -34054,6 +34400,7 @@ future_prospects:
     - flashy
     - quiet
     - rookie
+    career_volatility: 50
     potential: 60.2
   debut_year: 2022
 - player:
@@ -34155,6 +34502,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 95.0
   debut_year: 2024
 - player:
@@ -34257,6 +34605,7 @@ future_prospects:
     - grinder
     - quiet
     - rookie
+    career_volatility: 50
     potential: 86.3
   debut_year: 2023
 - player:
@@ -34358,6 +34707,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 61.7
   debut_year: 2022
 - player:
@@ -34459,6 +34809,7 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 74.7
   debut_year: 2022
 - player:
@@ -34561,6 +34912,7 @@ future_prospects:
     - analytical
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 84.7
   debut_year: 2024
 - player:
@@ -34663,6 +35015,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 82.3
   debut_year: 2022
 - player:
@@ -34765,6 +35118,7 @@ future_prospects:
     - rookie
     - slow_starter
     - team_player
+    career_volatility: 50
     potential: 74.6
   debut_year: 2022
 - player:
@@ -34867,6 +35221,7 @@ future_prospects:
     - analytical
     - grinder
     - rookie
+    career_volatility: 50
     potential: 74.2
   debut_year: 2023
 - player:
@@ -34969,6 +35324,7 @@ future_prospects:
     - fan_favorite
     - independent
     - rookie
+    career_volatility: 50
     potential: 73.0
   debut_year: 2022
 - player:
@@ -35070,6 +35426,7 @@ future_prospects:
     personality_tags:
     - rookie
     - streamer
+    career_volatility: 50
     potential: 86.0
   debut_year: 2022
 - player:
@@ -35171,6 +35528,7 @@ future_prospects:
     personality_tags:
     - grinder
     - rookie
+    career_volatility: 50
     potential: 82.7
   debut_year: 2022
 - player:
@@ -35273,6 +35631,7 @@ future_prospects:
     - quiet
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 79.9
   debut_year: 2022
 - player:
@@ -35375,6 +35734,7 @@ future_prospects:
     - fan_favorite
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 71.1
   debut_year: 2023
 - player:
@@ -35477,6 +35837,7 @@ future_prospects:
     - clutch_gene
     - grinder
     - rookie
+    career_volatility: 50
     potential: 77.9
   debut_year: 2023
 - player:
@@ -35578,6 +35939,7 @@ future_prospects:
     personality_tags:
     - flashy
     - rookie
+    career_volatility: 50
     potential: 82.5
   debut_year: 2022
 - player:
@@ -35680,6 +36042,7 @@ future_prospects:
     - clutch_gene
     - rookie
     - slow_starter
+    career_volatility: 50
     potential: 87.9
   debut_year: 2023
 - player:
@@ -35781,6 +36144,7 @@ future_prospects:
     personality_tags:
     - hot_head
     - rookie
+    career_volatility: 50
     potential: 88.2
   debut_year: 2024
 - player:
@@ -35882,6 +36246,7 @@ future_prospects:
     personality_tags:
     - fan_favorite
     - rookie
+    career_volatility: 50
     potential: 91.5
   debut_year: 2022
 - player:
@@ -35983,6 +36348,7 @@ future_prospects:
     personality_tags:
     - clutch_gene
     - rookie
+    career_volatility: 50
     potential: 75.6
   debut_year: 2022
 - player:
@@ -36085,6 +36451,7 @@ future_prospects:
     - perfectionist
     - rookie
     - streamer
+    career_volatility: 50
     potential: 80.2
   debut_year: 2023
 - player:
@@ -36186,6 +36553,7 @@ future_prospects:
     personality_tags:
     - independent
     - rookie
+    career_volatility: 50
     potential: 84.5
   debut_year: 2025
 - player:
@@ -36288,6 +36656,7 @@ future_prospects:
     - grinder
     - perfectionist
     - rookie
+    career_volatility: 50
     potential: 71.7
   debut_year: 2022
 - player:
@@ -36390,6 +36759,7 @@ future_prospects:
     - independent
     - rookie
     - streamer
+    career_volatility: 50
     potential: 64.7
   debut_year: 2022
 - player:
@@ -36492,6 +36862,7 @@ future_prospects:
     - analytical
     - flashy
     - rookie
+    career_volatility: 50
     potential: 75.4
   debut_year: 2022
 - player:
@@ -36593,5 +36964,6 @@ future_prospects:
     personality_tags:
     - quiet
     - rookie
+    career_volatility: 50
     potential: 75.1
   debut_year: 2023

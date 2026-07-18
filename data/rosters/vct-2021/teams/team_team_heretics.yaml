@@ -106,6 +106,7 @@ players:
   form: 52.7
   personality_tags:
   - team_player
+  career_volatility: 50
   potential: 81.0
 - id: team_team_heretics_nukkye
   handle: nukkye
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - perfectionist
   - team_player
+  career_volatility: 50
   potential: 85.0
 - id: team_team_heretics_avova
   handle: AvovA
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - grinder
   - team_player
+  career_volatility: 50
   potential: 83.0
 - id: team_team_heretics_koldamenta
   handle: Koldamenta
@@ -402,6 +405,7 @@ players:
   form: 58.4
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 78.0
 - id: team_team_heretics_lowel
   handle: lowel
@@ -500,4 +504,5 @@ players:
   form: 55.0
   personality_tags:
   - hot_head
+  career_volatility: 50
   potential: 80.0

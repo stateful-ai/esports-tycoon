@@ -107,6 +107,7 @@ players:
   personality_tags:
   - grinder
   - independent
+  career_volatility: 50
   potential: 74.3
 - id: team_prince_lawrence
   handle: Lawrence
@@ -205,6 +206,7 @@ players:
   form: 47.3
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 83.9
 - id: team_prince_slash
   handle: Slash
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - clutch_gene
   - quiet
+  career_volatility: 50
   potential: 80.4
 - id: team_prince_halbae
   handle: Halbae
@@ -402,6 +405,7 @@ players:
   form: 56.2
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 85.0
 - id: team_prince_kobra
   handle: kobra
@@ -501,4 +505,5 @@ players:
   personality_tags:
   - flashy
   - perfectionist
+  career_volatility: 50
   potential: 75.3

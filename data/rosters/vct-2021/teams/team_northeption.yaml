@@ -106,6 +106,7 @@ players:
   form: 54.0
   personality_tags:
   - independent
+  career_volatility: 50
   potential: 72.7
 - id: team_northeption_meteor
   handle: Meteor
@@ -205,7 +206,11 @@ players:
   personality_tags:
   - fan_favorite
   - team_player
-  potential: 83.5
+  career_volatility: 42
+  development_archetype: late
+  development_peak_age: 24
+  development_realization: 0.93
+  potential: 87.0
 - id: team_northeption_jaemin
   handle: Jaemin
   real_name: ''
@@ -303,6 +308,7 @@ players:
   form: 50.6
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 82.4
 - id: team_northeption_seoldam
   handle: Seoldam
@@ -401,6 +407,7 @@ players:
   form: 51.6
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.1
 - id: team_northeption_kr1stal
   handle: Kr1stal
@@ -500,4 +507,5 @@ players:
   personality_tags:
   - analytical
   - hot_head
+  career_volatility: 50
   potential: 72.7

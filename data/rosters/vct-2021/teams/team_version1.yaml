@@ -109,6 +109,7 @@ players:
   personality_tags:
   - hot_head
   - streamer
+  career_volatility: 50
   potential: 72.2
 - id: team_version1_zellsis
   handle: Zellsis
@@ -209,7 +210,10 @@ players:
   form: 59.2
   personality_tags:
   - team_player
-  potential: 79.0
+  career_volatility: 28
+  development_peak_years: 7
+  development_realization: 0.94
+  potential: 86.0
 - id: team_version1_effys
   handle: effys
   real_name: ''
@@ -310,6 +314,7 @@ players:
   personality_tags:
   - clutch_gene
   - flashy
+  career_volatility: 50
   potential: 79.5
 - id: team_version1_wippie
   handle: wippie
@@ -413,6 +418,7 @@ players:
   personality_tags:
   - grinder
   - streamer
+  career_volatility: 50
   potential: 82.7
 - id: team_version1_penny
   handle: penny
@@ -514,4 +520,5 @@ players:
   personality_tags:
   - hot_head
   - slow_starter
+  career_volatility: 50
   potential: 80.5

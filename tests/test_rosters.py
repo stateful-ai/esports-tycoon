@@ -287,6 +287,12 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     }
     assert universe_2026 <= universe_2021
     assert all(len(team.player_ids) == 5 for team in pack.teams.values())
+    all_historical_players = list(pack.players.values()) + list(pack.free_agents.values()) + [prospect.player for prospect in pack.future_prospects.values()]
+    assert all(p.career_volatility is not None for p in all_historical_players)
+    assert pack.players["team_sentinels_tenz"].career_volatility == 10
+    assert pack.players["team_fnatic_derke"].career_volatility == 8
+    assert pack.free_agents["fa_demon1"].career_volatility == 72
+    assert pack.future_prospects["future_alfajer"].player.potential == 94
     assert any(meta.id == "vct-2021" for meta in list_roster_packs())
     sinatraa_source = roster_admin.find_player("vct-2021", "fa_sinatraa")
     assert sinatraa_source is not None and sinatraa_source.is_free_agent
@@ -298,6 +304,7 @@ def test_vct_2021_pack_is_selectable_and_era_seeded():
     assert gs1.calendar_year == 2021
     assert gs1.model_dump_json() == gs2.model_dump_json()
     assert gs1.players["team_sentinels_tenz"].handle == "TenZ"
+    assert gs1.players["team_sentinels_tenz"].attributes == pack.players["team_sentinels_tenz"].attributes
     assert "fa_sinatraa" in gs1.free_agent_ids and "fa_yay" not in gs1.free_agent_ids
     assert "future_alfajer" not in gs1.players
     assert "future_alfajer" in gs1.future_prospects

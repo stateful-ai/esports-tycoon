@@ -106,6 +106,7 @@ players:
   form: 45.8
   personality_tags:
   - independent
+  career_volatility: 50
   potential: 74.7
 - id: team_cloud9_blue_xeta
   handle: xeta
@@ -205,6 +206,7 @@ players:
   personality_tags:
   - flashy
   - quiet
+  career_volatility: 50
   potential: 79.2
 - id: team_cloud9_blue_xeppaa
   handle: Xeppaa
@@ -304,7 +306,9 @@ players:
   personality_tags:
   - independent
   - quiet
-  potential: 88.1
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 87.0
 - id: team_cloud9_blue_leaf
   handle: leaf
   real_name: ''
@@ -404,7 +408,9 @@ players:
   - analytical
   - clutch_gene
   - rookie
-  potential: 92.0
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 89.0
 - id: team_cloud9_blue_floppy
   handle: floppy
   real_name: ''
@@ -503,4 +509,5 @@ players:
   personality_tags:
   - flashy
   - streamer
+  career_volatility: 50
   potential: 77.7

@@ -108,6 +108,7 @@ players:
   form: 57.6
   personality_tags:
   - veteran
+  career_volatility: 50
   potential: 79.2
 - id: team_100_thieves_asuna
   handle: Asuna
@@ -210,6 +211,7 @@ players:
   - perfectionist
   - rookie
   - slow_starter
+  career_volatility: 50
   potential: 92.0
 - id: team_100_thieves_hiko
   handle: Hiko
@@ -312,6 +314,7 @@ players:
   - analytical
   - quiet
   - veteran
+  career_volatility: 50
   potential: 77.0
 - id: team_100_thieves_ethan
   handle: Ethan
@@ -413,7 +416,9 @@ players:
   personality_tags:
   - analytical
   - independent
-  potential: 87.5
+  career_volatility: 28
+  development_realization: 0.94
+  potential: 89.0
 - id: team_100_thieves_b0i
   handle: b0i
   real_name: ''
@@ -514,4 +519,5 @@ players:
   personality_tags:
   - clutch_gene
   - independent
+  career_volatility: 50
   potential: 74.2

@@ -105,6 +105,7 @@ players:
   stamina: 85.7
   form: 59.4
   personality_tags: []
+  career_volatility: 50
   potential: 74.1
 - id: team_tsm_wardell
   handle: Wardell
@@ -203,6 +204,7 @@ players:
   form: 46.0
   personality_tags:
   - pure_aimer
+  career_volatility: 50
   potential: 87.0
 - id: team_tsm_subroza
   handle: Subroza
@@ -301,6 +303,7 @@ players:
   form: 56.5
   personality_tags:
   - perfectionist
+  career_volatility: 50
   potential: 77.4
 - id: team_tsm_leviathanag
   handle: LeviathanAG
@@ -400,6 +403,7 @@ players:
   personality_tags:
   - quiet
   - streamer
+  career_volatility: 50
   potential: 90.1
 - id: team_tsm_bang
   handle: bang
@@ -499,4 +503,5 @@ players:
   personality_tags:
   - flashy
   - rookie
+  career_volatility: 50
   potential: 87.1

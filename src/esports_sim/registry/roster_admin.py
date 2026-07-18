@@ -75,6 +75,7 @@ def _region_specs(pack_dir: Path) -> list[Path]:
         "future_archive_prospects.yaml",
         "future_2026_backfill_free_agents.yaml",
         "future_2026_backfill_prospects.yaml",
+        "career_profiles.yaml",
         "pack.yaml",
     }
     return sorted(

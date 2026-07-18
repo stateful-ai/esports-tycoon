@@ -107,6 +107,7 @@ players:
   personality_tags:
   - flashy
   - perfectionist
+  career_volatility: 50
   potential: 80.4
 - id: team_gen_g_esports_mkael
   handle: MkaeL
@@ -206,6 +207,7 @@ players:
   personality_tags:
   - analytical
   - quiet
+  career_volatility: 50
   potential: 78.1
 - id: team_gen_g_esports_shawn
   handle: Shawn
@@ -305,6 +307,7 @@ players:
   personality_tags:
   - clutch_gene
   - hot_head
+  career_volatility: 50
   potential: 70.1
 - id: team_gen_g_esports_koosta
   handle: koosta
@@ -404,6 +407,7 @@ players:
   personality_tags:
   - fan_favorite
   - perfectionist
+  career_volatility: 50
   potential: 71.3
 - id: team_gen_g_esports_huynh
   handle: huynh
@@ -502,4 +506,5 @@ players:
   form: 55.0
   personality_tags:
   - grinder
+  career_volatility: 50
   potential: 82.1

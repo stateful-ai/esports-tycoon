@@ -68,6 +68,11 @@ _TAG_POOL = [
     "team_player", "perfectionist", "independent", "analytical", "flashy",
     "clutch_gene", "slow_starter", "fan_favorite",
 ]
+_CAREER_PROFILE_FIELDS = {
+    "potential", "career_volatility", "development_archetype",
+    "development_peak_age", "development_peak_years", "development_decline_age",
+    "development_realization",
+}
 # Fill playstyles for topping up partial tier-2 sheets to a full five.
 _FILL_SLOTS = [
     (Playstyle.IGL, Role.CONTROLLER),
@@ -86,6 +91,45 @@ def slugify(name: str) -> str:
 def identity_key(name: str) -> str:
     """Canonical human identity used to keep historical imports deduplicated."""
     return re.sub(r"[^a-z0-9]", "", name.lower())
+
+
+def _load_career_profiles(src_dir: Path) -> tuple[dict, dict[str, dict]]:
+    """Load optional pack-wide defaults and named career-profile overrides."""
+    path = src_dir / "career_profiles.yaml"
+    if not path.is_file():
+        return {}, {}
+    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    defaults = dict(raw.get("defaults", {}))
+    unknown_defaults = sorted(set(defaults) - _CAREER_PROFILE_FIELDS)
+    if unknown_defaults:
+        raise SystemExit(f"career profile defaults: unknown fields {unknown_defaults}")
+    profiles: dict[str, dict] = {}
+    for cohort_name, cohort in (raw.get("cohorts", {}) or {}).items():
+        cohort = dict(cohort or {})
+        handles = cohort.pop("players", [])
+        unknown = sorted(set(cohort) - _CAREER_PROFILE_FIELDS)
+        if unknown:
+            raise SystemExit(f"career profile cohort {cohort_name!r}: unknown fields {unknown}")
+        for handle in handles:
+            key = identity_key(str(handle))
+            if key in profiles:
+                raise SystemExit(f"career profile duplicates player {handle!r}")
+            profiles[key] = dict(cohort)
+    for handle, override in (raw.get("overrides", {}) or {}).items():
+        key = identity_key(str(handle))
+        override = dict(override or {})
+        unknown = sorted(set(override) - _CAREER_PROFILE_FIELDS)
+        if unknown:
+            raise SystemExit(f"career profile override {handle!r}: unknown fields {unknown}")
+        profiles[key] = {**profiles.get(key, {}), **override}
+    return defaults, profiles
+
+
+def _apply_career_profile(spec: dict, defaults: dict, profiles: dict[str, dict], used_profiles: set[str]) -> dict:
+    key = identity_key(str(spec["handle"]))
+    if key in profiles:
+        used_profiles.add(key)
+    return {**defaults, **profiles.get(key, {}), **spec}
 
 
 def _rng_for(pack_id: str, label: str) -> np.random.Generator:
@@ -228,14 +272,19 @@ def expand_player(
         "form": round(float(rng.uniform(45, 60)), 1),
         "personality_tags": sorted(tags),
     }
+    for field in sorted(_CAREER_PROFILE_FIELDS - {"potential"}):
+        if field in spec and spec[field] is not None:
+            player[field] = spec[field]
     if "potential" in spec:
         player["potential"] = float(spec["potential"])
+    # Hidden ceiling via the same curve world-gen uses (age-aware).
+    from esports_sim.schemas import Player
+    p = Player(**player)
+    if spec.get("potential") is not None:
+        p.potential = round(max(development.overall(p), float(spec["potential"])), 1)
     else:
-        # Hidden ceiling via the same curve world-gen uses (age-aware).
-        from esports_sim.schemas import Player
-        p = Player(**player)
         development.assign_potential(p, rng)
-        player["potential"] = p.potential
+    player["potential"] = p.potential
     return player
 
 
@@ -263,6 +312,8 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
     pack_dir = (data_dir or DEFAULT_DATA_DIR) / "rosters" / pack_id
     src_dir = pack_dir / "src"
     out_dir = pack_dir / "teams"
+    career_defaults, career_profiles = _load_career_profiles(src_dir)
+    used_career_profiles: set[str] = set()
     # Market/prospect intake sheets are not region sheets — handled below.
     specs = sorted(
         f for f in src_dir.glob("*.yaml")
@@ -271,6 +322,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
             "future_archive_free_agents.yaml", "future_archive_prospects.yaml",
             "future_2026_backfill_free_agents.yaml",
             "future_2026_backfill_prospects.yaml",
+            "career_profiles.yaml",
             "pack.yaml",
         }
     )
@@ -327,6 +379,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
             players = []
             captain_id = None
             for p in pspecs:
+                p = _apply_career_profile(p, career_defaults, career_profiles, used_career_profiles)
                 identity = identity_key(str(p["handle"]))
                 if identity in active_identities:
                     raise SystemExit(
@@ -391,6 +444,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
                 raw_fas = yaml.safe_load(source.read_text(encoding="utf-8")) or {}
                 specs_fa.extend(raw_fas.get("free_agents", []))
         for spec in specs_fa:
+            spec = _apply_career_profile(spec, career_defaults, career_profiles, used_career_profiles)
             region = str(Region(spec["region"]))
             pid = "fa_" + slugify(str(spec["handle"]))
             if pid in seen_fa:
@@ -496,6 +550,7 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
                 raw_future = yaml.safe_load(source.read_text(encoding="utf-8")) or {}
                 specs_future.extend(raw_future.get("future_prospects", []))
         for spec in specs_future:
+            spec = _apply_career_profile(spec, career_defaults, career_profiles, used_career_profiles)
             birth_year = int(spec["birth_year"])
             age = start_year - birth_year
             if not 0 <= age < 17:
@@ -513,6 +568,10 @@ def build(pack_id: str, data_dir: Path | None = None) -> str:
         future_yaml = yaml.safe_dump(
             {"future_prospects": future_out}, sort_keys=False, width=88
         )
+
+    unused_profiles = sorted(set(career_profiles) - used_career_profiles)
+    if unused_profiles:
+        raise SystemExit("career profiles reference unknown players: " + ", ".join(unused_profiles))
 
     # Every team expanded and validated cleanly -> commit to disk now.
     out_dir.mkdir(parents=True, exist_ok=True)

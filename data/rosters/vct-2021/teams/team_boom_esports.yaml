@@ -107,6 +107,7 @@ players:
   personality_tags:
   - hot_head
   - team_player
+  career_volatility: 50
   potential: 74.9
 - id: team_boom_esports_blazek1ng
   handle: blaZek1ng
@@ -205,6 +206,7 @@ players:
   form: 51.4
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 86.1
 - id: team_boom_esports_adrnking
   handle: adrnking
@@ -304,6 +306,7 @@ players:
   personality_tags:
   - flashy
   - independent
+  career_volatility: 50
   potential: 76.4
 - id: team_boom_esports_eeyore
   handle: Eeyore
@@ -402,6 +405,7 @@ players:
   form: 50.8
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 85.7
 - id: team_boom_esports_asteriskk
   handle: Asteriskk
@@ -500,4 +504,5 @@ players:
   form: 47.2
   personality_tags:
   - rookie
+  career_volatility: 50
   potential: 84.7
