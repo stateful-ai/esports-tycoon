@@ -64,6 +64,39 @@ def test_motor_pace_and_hold_resolve_distinctly() -> None:
     assert hold_ps.move_eta == 6
 
 
+def test_fast_control_tiebreak_matches_serialized_contract() -> None:
+    """The allocation-cheap tie key preserves the old JSON field ordering."""
+    sim, ps = _moving_sim()
+    policy = next(iter(sim.player_policies.values()))
+    for has_route in (False, True):
+        ps.move_eta = 5 if has_route else -1
+        legal = sim._motor_legal_controls(ps)
+        movement = MotorMovement.ADVANCE if has_route else MotorMovement.HOLD
+        candidates = [
+            control
+            for control in legal
+            if control.movement == movement and control.pace == MovementPace.RUN
+        ]
+        desired_turns = (
+            (-90.0, -45.0, -22.5, 0.0, 22.5, 45.0, 90.0)
+            if has_route
+            else (0.0,)
+        )
+        for desired_turn in desired_turns:
+            expected = min(
+                candidates,
+                key=lambda control: (
+                    abs(desired_turn - control.turn_degrees),
+                    abs(control.turn_degrees),
+                    control.model_dump_json(),
+                ),
+            )
+            actual = policy.control_fast_state(
+                has_route, 0.0, desired_turn if has_route else None, legal, None
+            )
+            assert actual is expected
+
+
 def test_engine_rejects_unoffered_turn_and_exposes_pose_v2() -> None:
     sim, ps = _moving_sim()
     legal = sim._motor_legal_controls(ps)

@@ -1794,7 +1794,15 @@ class _MatchSim:
         seed_path: tuple[str, ...],
     ) -> None:
         """Validate and resolve a single player-issued motor command."""
-        if control not in legal:
+        # Engine-authored policies return one of the exact frozen objects in
+        # ``legal``.  Check identity first so the default hot path avoids up
+        # to seven Pydantic field-by-field equality checks per live player,
+        # per tick.  Structural equality remains the compatibility path for
+        # external/learned policies that construct an equivalent command.
+        if (
+            not any(control is candidate for candidate in legal)
+            and control not in legal
+        ):
             control = self._legacy_motor_control(ps, legal)
 
         route_active = ps.move_eta >= 0
