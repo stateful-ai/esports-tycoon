@@ -13972,100 +13972,102 @@ free_agents:
   handle: Boostio
   real_name: ''
   region: americas
-  country: ''
+  country: US
   languages: []
   age: 18
-  role: duelist
-  playstyle: entry
+  role: sentinel
+  playstyle: igl
   attributes:
-    aim_precision: 78.6
-    aim_reactivity: 83.1
-    movement: 80.9
-    game_sense: 58.4
-    utility_usage: 58.4
+    aim_precision: 60.6
+    aim_reactivity: 63.1
+    movement: 70.9
+    game_sense: 78.4
+    utility_usage: 74.4
     positioning: 65.1
     clutch_factor: 64.5
-    tilt_resistance: 56.1
-    composure: 61.7
-    comms_quality: 67.9
+    tilt_resistance: 60.1
+    composure: 69.7
+    comms_quality: 81.9
   agent_pool:
-  - agent_id: jett
+  - agent_id: killjoy
     mastery: 82.7
-  - agent_id: skye
+  - agent_id: deadlock
     mastery: 73.5
   - agent_id: chamber
     mastery: 66.4
-  - agent_id: iso
-    mastery: 54.5
-  - agent_id: neon
-    mastery: 50.9
-  - agent_id: phoenix
-    mastery: 58.2
-  - agent_id: raze
-    mastery: 68.2
-  - agent_id: reyna
-    mastery: 63.0
-  - agent_id: waylay
-    mastery: 57.0
-  - agent_id: yoru
-    mastery: 56.4
-  - agent_id: astra
-    mastery: 36.4
-  - agent_id: breach
-    mastery: 43.7
-  - agent_id: brimstone
-    mastery: 43.9
-  - agent_id: clove
-    mastery: 49.1
   - agent_id: cypher
-    mastery: 55.9
-  - agent_id: deadlock
-    mastery: 48.9
-  - agent_id: fade
-    mastery: 51.8
-  - agent_id: gekko
-    mastery: 43.2
-  - agent_id: harbor
-    mastery: 37.9
-  - agent_id: kayo
-    mastery: 49.5
-  - agent_id: killjoy
-    mastery: 50.1
-  - agent_id: miks
-    mastery: 4.8
-  - agent_id: omen
-    mastery: 2.5
+    mastery: 54.5
   - agent_id: sage
-    mastery: 51.6
-  - agent_id: sova
-    mastery: 43.3
-  - agent_id: tejo
-    mastery: 46.2
+    mastery: 50.9
   - agent_id: veto
-    mastery: 40.0
-  - agent_id: viper
-    mastery: 35.8
+    mastery: 58.2
   - agent_id: vyse
+    mastery: 68.2
+  - agent_id: astra
+    mastery: 44.8
+  - agent_id: breach
+    mastery: 46.3
+  - agent_id: brimstone
+    mastery: 51.0
+  - agent_id: clove
+    mastery: 51.2
+  - agent_id: fade
+    mastery: 50.6
+  - agent_id: gekko
+    mastery: 47.2
+  - agent_id: harbor
+    mastery: 51.4
+  - agent_id: iso
+    mastery: 45.5
+  - agent_id: jett
+    mastery: 51.5
+  - agent_id: kayo
+    mastery: 47.7
+  - agent_id: miks
+    mastery: 42.3
+  - agent_id: neon
+    mastery: 39.1
+  - agent_id: omen
+    mastery: 46.3
+  - agent_id: phoenix
+    mastery: 49.1
+  - agent_id: raze
+    mastery: 44.8
+  - agent_id: reyna
+    mastery: 53.4
+  - agent_id: skye
+    mastery: 37.8
+  - agent_id: sova
+    mastery: 49.9
+  - agent_id: tejo
+    mastery: 48.4
+  - agent_id: viper
+    mastery: 46.7
+  - agent_id: waylay
     mastery: 40.5
+  - agent_id: yoru
+    mastery: 45.0
   map_pool:
   - map_id: ascent
-    mastery: 74.9
+    mastery: 66.9
   - map_id: bind
-    mastery: 78.4
+    mastery: 82.4
   - map_id: haven
-    mastery: 67.3
+    mastery: 68.6
   - map_id: lotus
-    mastery: 71.6
+    mastery: 75.0
   - map_id: split
-    mastery: 72.8
+    mastery: 70.1
   salary: 4900
   contract_weeks_left: 0
-  morale: 75.3
-  stamina: 95.3
-  form: 46.1
+  morale: 76.5
+  stamina: 90.6
+  form: 58.1
   personality_tags:
+  - grinder
   - rookie
-  potential: 78.7
+  - team_player
+  potential: 83.8
 - id: fa_braveaf
   handle: BraveAF
   real_name: ''

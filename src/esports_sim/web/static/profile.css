@@ -45,9 +45,9 @@
   position: absolute; top: var(--es-space-4, 10px); right: var(--es-space-4, 10px); z-index: 2;
   width: var(--es-space-8, 30px); height: var(--es-space-8, 30px); line-height: 1;
   font: inherit; font-size: 15px; cursor: pointer;
-  color: var(--es-color-text-secondary, #a2aec6);
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, var(--es-color-border-primary));
   border-radius: var(--es-radius-md, 6px);
   transition: color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
     border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
@@ -55,9 +55,9 @@
     transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
 .pf-close:hover {
-  color: var(--es-color-text-primary, #e9edf6);
-  border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, var(--es-color-border-primary, #26324a));
-  background-color: var(--es-color-bg-hover, #1b2536);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
+  border-color: color-mix(in srgb, var(--es-color-brand, var(--es-color-brand)) 55%, var(--es-color-border-primary, var(--es-color-border-primary)));
+  background-color: var(--es-color-bg-hover, var(--es-color-bg-hover));
   transform: scale(1.08);
 }
 /* Back-navigation chip (profile.js back-stack) — mirrors .pf-close, top-left. */
@@ -65,9 +65,9 @@
   position: absolute; top: var(--es-space-4, 10px); left: var(--es-space-4, 10px); z-index: 2;
   height: var(--es-space-8, 30px); padding: 0 var(--es-space-4, 10px); line-height: 1;
   font: inherit; font-size: 12px; cursor: pointer;
-  color: var(--es-color-text-secondary, #a2aec6);
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, var(--es-color-border-primary));
   border-radius: var(--es-radius-md, 6px);
   transition: color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
     border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
@@ -75,9 +75,9 @@
     transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
 .pf-back:hover {
-  color: var(--es-color-text-primary, #e9edf6);
-  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, var(--es-color-border-primary, #26324a));
-  background-color: var(--es-color-bg-hover, #1b2536);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
+  border-color: color-mix(in srgb, var(--es-color-accent, var(--es-color-accent)) 55%, var(--es-color-border-primary, var(--es-color-border-primary)));
+  background-color: var(--es-color-bg-hover, var(--es-color-bg-hover));
   transform: translateX(-2px);
 }
 /* Sub-block label inside merged sections (Career, Playbook & knowledge). */
@@ -85,7 +85,7 @@
   display: block;
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
   letter-spacing: var(--es-tracking-wider, .08em);
-  color: var(--es-color-text-tertiary, #67748f);
+  color: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
   margin: var(--es-space-4, 10px) var(--es-space-0, 0) var(--es-space-2, 4px);
 }
 .pf-body { padding: var(--es-space-7, 20px); }
@@ -94,18 +94,18 @@
 .pf-header {
   display: flex; align-items: center; gap: var(--es-space-6, 16px);
   padding-bottom: var(--es-space-5, 14px); margin-bottom: var(--es-space-6, 16px); padding-right: var(--es-space-9, 34px);
-  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, var(--es-color-border-primary));
 }
 .pf-portrait {
   width: var(--es-space-11, 64px); height: var(--es-space-11, 64px); border-radius: 50%; object-fit: cover; flex: none;
-  border: var(--es-border-thick, 2px) solid var(--es-color-border-primary, #26324a);
-  background: var(--es-color-bg-sunken, #060910);
+  border: var(--es-border-thick, 2px) solid var(--es-color-border-primary, var(--es-color-border-primary));
+  background: var(--es-color-bg-sunken, var(--es-color-bg-sunken));
 }
 .pf-team-badge {
   width: var(--es-space-10, 60px); height: var(--es-space-10, 60px); border-radius: var(--es-radius-lg, 8px);
   object-fit: cover; flex: none;
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
-  background: var(--es-color-bg-sunken, #060910);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, var(--es-color-border-primary));
+  background: var(--es-color-bg-sunken, var(--es-color-bg-sunken));
 }
 .pf-portrait-blank { display: inline-block; }
 .pf-id { min-width: 0; }
@@ -113,13 +113,13 @@
   font-family: var(--es-font-display, inherit);
   font-size: var(--es-text-2xl, 22px); font-weight: 700;
   letter-spacing: .03em; text-transform: uppercase; line-height: 1.05;
-  color: var(--es-color-text-primary, #e9edf6);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
 }
 .pf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--es-space-3, 6px); margin: var(--es-space-3, 6px) var(--es-space-0, 0) var(--es-space-2, 4px); }
-.pf-age { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6); }
+.pf-age { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, var(--es-color-text-secondary)); }
 .pf-team {
   display: inline-flex; align-items: center; gap: var(--es-space-2, 5px);
-  font-size: var(--es-text-sm, 12px); color: var(--es-color-text-secondary, #a2aec6);
+  font-size: var(--es-text-sm, 12px); color: var(--es-color-text-secondary, var(--es-color-text-secondary));
 }
 .pf-team-logo { width: var(--es-space-6, 18px); height: var(--es-space-6, 18px); border-radius: var(--es-radius-sm, 4px); object-fit: cover; }
 .pf-contract { font-size: var(--es-text-xs, 11px); }
@@ -143,15 +143,15 @@
 .pf-admin-box {
   margin: calc(-1 * var(--es-space-2, 4px)) var(--es-space-0, 0) var(--es-space-6, 16px);
   padding: var(--es-space-4, 10px) var(--es-space-5, 12px);
-  border: var(--es-border-normal, 1px) dashed var(--es-color-border-primary, #26324a);
+  border: var(--es-border-normal, 1px) dashed var(--es-color-border-primary, var(--es-color-border-primary));
   border-radius: var(--es-radius-md, 6px);
-  background: var(--es-color-bg-elevated, #161e2e);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
 }
 .pf-admin-title {
   font-family: var(--es-font-display, inherit);
   font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: var(--es-tracking-wider, .08em);
-  color: var(--es-color-text-secondary, #a2aec6); margin-bottom: var(--es-space-2, 4px);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary)); margin-bottom: var(--es-space-2, 4px);
 }
 .pf-admin-note { font-size: var(--es-text-xs, 11px); margin: 0 0 var(--es-space-4, 10px); }
 .pf-admin-form {
@@ -159,13 +159,13 @@
 }
 @media (max-width: 620px) { .pf-admin-form { grid-template-columns: repeat(2, 1fr); } }
 .pf-admin-field { display: flex; flex-direction: column; gap: var(--es-space-1, 3px); font-size: var(--es-text-xs, 11px); }
-.pf-admin-field span { color: var(--es-color-text-secondary, #a2aec6); }
+.pf-admin-field span { color: var(--es-color-text-secondary, var(--es-color-text-secondary)); }
 .pf-admin-field input, .pf-admin-field select {
   font: inherit; padding: var(--es-space-2, 5px) var(--es-space-3, 7px);
-  background: var(--es-color-bg-sunken, #060910);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-bg-sunken, var(--es-color-bg-sunken));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   border-radius: var(--es-radius-sm, 4px);
-  color: var(--es-color-text-primary, #e9edf6);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
 }
 .pf-admin-actions { grid-column: 1 / -1; display: flex; gap: var(--es-space-4, 8px); margin-top: var(--es-space-2, 4px); }
 
@@ -179,8 +179,8 @@
   .pf-tiles-sm { grid-template-columns: repeat(2, 1fr); }
 }
 .pf-tile {
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   border-radius: var(--es-radius-md, 6px);
   padding: var(--es-space-3, 8px) var(--es-space-2, 6px); text-align: center;
   transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
@@ -188,7 +188,7 @@
     border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
 .pf-tile:hover {
-  border-color: var(--es-color-border-primary, #26324a);
+  border-color: var(--es-color-border-primary, var(--es-color-border-primary));
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--es-shadow-md, 0 2px 6px rgba(0,0,0,0.12));
 }
@@ -197,14 +197,14 @@
 }
 .pf-tile-val {
   font-size: var(--es-text-xl, 18px); font-weight: 700; line-height: 1.1;
-  color: var(--es-color-text-primary, #e9edf6);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
 }
 .pf-tile-label {
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
-  letter-spacing: .05em; color: var(--es-color-text-tertiary, #67748f); margin-top: var(--es-space-1, 3px);
+  letter-spacing: .05em; color: var(--es-color-text-tertiary, var(--es-color-text-tertiary)); margin-top: var(--es-space-1, 3px);
 }
 .pf-tile-sub {
-  font-size: var(--es-text-2xs, 10px); color: var(--es-color-accent, #4fd8c0); margin-top: var(--es-space-1, 1px);
+  font-size: var(--es-text-2xs, 10px); color: var(--es-color-accent, var(--es-color-accent)); margin-top: var(--es-space-1, 1px);
 }
 
 /* -- token-styled fill bar ------------------------------------------------- */
@@ -217,7 +217,7 @@
   display: grid; grid-template-columns: 108px 1fr auto; align-items: center; gap: var(--es-space-4, 8px);
 }
 .pf-attr-label {
-  font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6);
+  font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, var(--es-color-text-secondary));
   text-transform: capitalize;
 }
 /* Value + optional ceiling projection (→lo–hi) stay on one line. */
@@ -226,8 +226,8 @@
 .pf-band {
   display: inline-block; padding: var(--es-space-1, 1px) var(--es-space-4, 8px); border-radius: var(--es-radius-full, 99px);
   font-family: var(--es-font-mono, monospace); font-size: var(--es-text-2xs, 10px);
-  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 14%, var(--es-color-bg-elevated, #161e2e));
-  color: var(--es-color-accent, #4fd8c0);
+  background: color-mix(in srgb, var(--es-color-accent, var(--es-color-accent)) 14%, var(--es-color-bg-elevated, var(--es-color-bg-elevated)));
+  color: var(--es-color-accent, var(--es-color-accent));
 }
 
 /* -- traits + agents ------------------------------------------------------- */
@@ -235,23 +235,23 @@
 .pf-chip {
   display: inline-block; padding: var(--es-space-1, 2px) var(--es-space-4, 9px); border-radius: var(--es-radius-full, 99px);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .04em;
-  background: var(--es-color-bg-elevated, #161e2e);
-  color: var(--es-color-text-secondary, #a2aec6);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   cursor: default;
 }
-.pf-chip-locked { color: var(--es-color-text-tertiary, #67748f); font-family: var(--es-font-mono, monospace); }
+.pf-chip-locked { color: var(--es-color-text-tertiary, var(--es-color-text-tertiary)); font-family: var(--es-font-mono, monospace); }
 
 .pf-agents { display: flex; flex-direction: column; gap: var(--es-space-3, 6px); }
 .pf-agent { display: grid; grid-template-columns: var(--es-space-7, 20px) 1fr 70px 26px; align-items: center; gap: var(--es-space-4, 8px); }
 .pf-agent-icon {
   width: var(--es-space-7, 20px); height: var(--es-space-7, 20px); border-radius: 50%; object-fit: cover;
-  background: var(--es-color-bg-sunken, #060910);
+  background: var(--es-color-bg-sunken, var(--es-color-bg-sunken));
 }
 .pf-agent-name {
   font-size: var(--es-text-xs, 11px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.pf-agent-mv { font-size: var(--es-text-xs, 11px); text-align: right; color: var(--es-color-text-secondary, #a2aec6); }
+.pf-agent-mv { font-size: var(--es-text-xs, 11px); text-align: right; color: var(--es-color-text-secondary, var(--es-color-text-secondary)); }
 /* Beyond the top-of-role picks: hidden until "Show all" toggles the list. */
 .pf-agent-extra { display: none; }
 .pf-agents-expanded .pf-agent-extra { display: grid; }
@@ -259,10 +259,10 @@
   margin-top: var(--es-space-4, 8px); padding: 0; font: inherit;
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
   background: none; border: none; cursor: pointer;
-  color: var(--es-color-accent, #4fd8c0);
+  color: var(--es-color-accent, var(--es-color-accent));
   transition: color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
-.pf-agent-toggle:hover { color: var(--es-color-text-primary, #e9edf6); }
+.pf-agent-toggle:hover { color: var(--es-color-text-primary, var(--es-color-text-primary)); }
 
 /* -- season line ----------------------------------------------------------- */
 .pf-season-line { font-size: var(--es-text-xs, 11px); margin: 0 0 var(--es-space-5, 12px); }
@@ -272,41 +272,41 @@
 .pf-chart-cap {
   display: flex; align-items: center; gap: var(--es-space-4, 8px);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
-  color: var(--es-color-text-tertiary, #67748f); margin-bottom: var(--es-space-1, 3px);
+  color: var(--es-color-text-tertiary, var(--es-color-text-tertiary)); margin-bottom: var(--es-space-1, 3px);
 }
 .pf-chart {
   display: block; width: 100%; max-width: 360px; height: auto;
-  background: color-mix(in srgb, var(--es-color-bg-sunken, #060910) 60%, transparent);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: color-mix(in srgb, var(--es-color-bg-sunken, var(--es-color-bg-sunken)) 60%, transparent);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   border-radius: var(--es-radius-md, 6px);
 }
 .pf-spark-line {
-  fill: none; stroke: var(--es-viz-3, #3fb59b); stroke-width: 2;
+  fill: none; stroke: var(--es-viz-3, var(--es-color-role-sentinel)); stroke-width: 2;
   stroke-linejoin: round; stroke-linecap: round;
 }
-.pf-spark-dot { fill: var(--es-viz-3, #3fb59b); opacity: 0; transition: opacity var(--es-duration-quick, 120ms); }
+.pf-spark-dot { fill: var(--es-viz-3, var(--es-color-role-sentinel)); opacity: 0; transition: opacity var(--es-duration-quick, 120ms); }
 .pf-spark:hover .pf-spark-dot { opacity: 1; }
 .pf-axis {
-  fill: var(--es-color-text-tertiary, #67748f);
+  fill: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
   font-family: var(--es-font-mono, monospace); font-size: 8px;
 }
-.pf-bar-k { fill: var(--es-viz-3, #3fb59b); }
-.pf-bar-d { fill: var(--es-viz-2, #d06142); }
-.pf-bar-axis { stroke: var(--es-color-border-primary, #26324a); stroke-width: .75; }
+.pf-bar-k { fill: var(--es-viz-3, var(--es-color-role-sentinel)); }
+.pf-bar-d { fill: var(--es-viz-2, var(--es-color-side-attack)); }
+.pf-bar-axis { stroke: var(--es-color-border-primary, var(--es-color-border-primary)); stroke-width: .75; }
 .pf-legend { display: inline-flex; align-items: center; gap: var(--es-space-1, 3px); margin-left: auto; }
 .pf-sw { display: inline-block; width: var(--es-space-4, 8px); height: var(--es-space-4, 8px); border-radius: var(--es-radius-xs, 2px); margin: 0 var(--es-space-1, 2px) 0 var(--es-space-3, 6px); }
-.pf-sw-k { background: var(--es-viz-3, #3fb59b); }
-.pf-sw-d { background: var(--es-viz-2, #d06142); }
+.pf-sw-k { background: var(--es-viz-3, var(--es-color-role-sentinel)); }
+.pf-sw-d { background: var(--es-viz-2, var(--es-color-side-attack)); }
 
 /* -- tables ---------------------------------------------------------------- */
 .pf-table { width: 100%; border-collapse: collapse; }
 .pf-table th {
   text-align: left; font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
-  letter-spacing: .06em; color: var(--es-color-text-tertiary, #67748f);
-  padding: var(--es-space-2, 4px) var(--es-space-4, 8px); border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  letter-spacing: .06em; color: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
+  padding: var(--es-space-2, 4px) var(--es-space-4, 8px); border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-primary, var(--es-color-border-primary));
 }
 .pf-table td {
-  padding: var(--es-space-2, 5px) var(--es-space-4, 8px); border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  padding: var(--es-space-2, 5px) var(--es-space-4, 8px); border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   font-size: var(--es-text-xs, 11px);
 }
 .pf-table td.num, .pf-table th.num { text-align: right; font-family: var(--es-font-mono, monospace); }
@@ -314,27 +314,27 @@
   cursor: pointer;
   transition: background var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
-.pf-roster tbody tr:hover td { background: color-mix(in srgb, var(--es-color-bg-hover, #1b2536) 65%, transparent); }
+.pf-roster tbody tr:hover td { background: color-mix(in srgb, var(--es-color-bg-hover, var(--es-color-bg-hover)) 65%, transparent); }
 .pf-acs-cell { display: flex; align-items: center; gap: var(--es-space-4, 8px); }
 .pf-acs-cell .pf-hbar { flex: 1; min-width: var(--es-space-9, 40px); }
 .pf-acs-val { flex: none; width: var(--es-space-8, 30px); text-align: right; }
 
 /* -- round-win split (two-segment, centre-anchored) ------------------------ */
 .pf-split { display: flex; align-items: center; gap: var(--es-space-4, 8px); }
-.pf-split-lab { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, #a2aec6); flex: none; }
+.pf-split-lab { font-size: var(--es-text-xs, 11px); color: var(--es-color-text-secondary, var(--es-color-text-secondary)); flex: none; }
 .pf-split-lab b { font-size: var(--es-text-sm, 12px); }
-.pf-split-atk b { color: var(--es-color-side-attack, #d06142); }
-.pf-split-def b { color: var(--es-color-side-defense, #3c7cc9); }
+.pf-split-atk b { color: var(--es-color-side-attack, var(--es-color-side-attack)); }
+.pf-split-def b { color: var(--es-color-side-defense, var(--es-color-side-defense)); }
 .pf-split-bar {
   position: relative; flex: 1; height: 16px; border-radius: var(--es-radius-sm, 4px);
-  background: var(--es-color-stat-track, #223049); overflow: hidden;
+  background: var(--es-color-stat-track, var(--es-color-stat-track)); overflow: hidden;
 }
 .pf-split-fill { position: absolute; top: 0; height: 100%; }
-.pf-split-fill.atk { right: 50%; background: var(--es-color-side-attack, #d06142); border-radius: 4px 0 0 4px; }
-.pf-split-fill.def { left: 50%; background: var(--es-color-side-defense, #3c7cc9); border-radius: 0 4px 4px 0; }
+.pf-split-fill.atk { right: 50%; background: var(--es-color-side-attack, var(--es-color-side-attack)); border-radius: 4px 0 0 4px; }
+.pf-split-fill.def { left: 50%; background: var(--es-color-side-defense, var(--es-color-side-defense)); border-radius: 0 4px 4px 0; }
 .pf-split-mid {
   position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1px;
-  background: var(--es-color-text-primary, #e9edf6); opacity: .5; transform: translateX(-50%);
+  background: var(--es-color-text-primary, var(--es-color-text-primary)); opacity: .5; transform: translateX(-50%);
 }
 
 /* -- map winrate ----------------------------------------------------------- */
@@ -342,7 +342,7 @@
 .pf-map { display: grid; grid-template-columns: 84px 1fr 52px var(--es-space-9, 40px); align-items: center; gap: var(--es-space-4, 8px); }
 .pf-map-name {
   font-size: var(--es-text-xs, 11px); text-transform: capitalize;
-  color: var(--es-color-text-secondary, #a2aec6);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .pf-map-rec { font-size: var(--es-text-2xs, 10px); text-align: right; }
@@ -358,8 +358,8 @@
   display: inline-flex; align-items: center; gap: var(--es-space-3, 6px);
   padding: var(--es-space-2, 3px) var(--es-space-4, 10px); border-radius: var(--es-radius-full, 99px);
   font-size: var(--es-text-xs, 11px);
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
 }
 .pf-rel-chip:hover {
@@ -367,56 +367,56 @@
 }
 .pf-rel-kind {
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .04em;
-  color: var(--es-color-text-tertiary, #67748f);
+  color: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
 }
 .pf-rel-chip.rel-duo {
-  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent);
+  border-color: color-mix(in srgb, var(--es-color-accent, var(--es-color-accent)) 55%, transparent);
 }
-.pf-rel-chip.rel-duo .pf-rel-kind { color: var(--es-color-accent, #4fd8c0); }
+.pf-rel-chip.rel-duo .pf-rel-kind { color: var(--es-color-accent, var(--es-color-accent)); }
 .pf-rel-chip.rel-feud {
-  border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
+  border-color: color-mix(in srgb, var(--es-color-brand, var(--es-color-brand)) 55%, transparent);
 }
-.pf-rel-chip.rel-feud .pf-rel-kind { color: var(--es-color-brand, #ff4655); }
+.pf-rel-chip.rel-feud .pf-rel-kind { color: var(--es-color-brand, var(--es-color-brand)); }
 
 /* -- locker-room arcs (scarce grudge/friction/mentor-bond chips) ------------ */
 .pf-arclines { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
 .pf-arcline {
   display: flex; align-items: baseline; gap: var(--es-space-3, 8px);
   font-size: var(--es-text-sm, 12px);
-  color: var(--es-color-text-secondary, #a2aec6);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
 }
 .pf-arc-pill {
   flex: 0 0 auto;
   padding: var(--es-space-1, 2px) var(--es-space-3, 8px);
   border-radius: var(--es-radius-full, 99px);
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .05em;
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
-  color: var(--es-color-text-tertiary, #67748f);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
+  color: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
 }
 .pf-arc-pill.arck-grudge {
-  border-color: color-mix(in srgb, var(--es-color-brand, #ff4655) 55%, transparent);
-  color: var(--es-color-brand, #ff4655);
+  border-color: color-mix(in srgb, var(--es-color-brand, var(--es-color-brand)) 55%, transparent);
+  color: var(--es-color-brand, var(--es-color-brand));
 }
 .pf-arc-pill.arck-friction {
-  border-color: color-mix(in srgb, var(--es-color-warning, #ffb000) 55%, transparent);
-  color: var(--es-color-warning, #ffb000);
+  border-color: color-mix(in srgb, var(--es-color-warning, var(--es-color-text-warning)) 55%, transparent);
+  color: var(--es-color-warning, var(--es-color-text-warning));
 }
 .pf-arc-pill.arck-mentor_bond {
-  border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent);
-  color: var(--es-color-accent, #4fd8c0);
+  border-color: color-mix(in srgb, var(--es-color-accent, var(--es-color-accent)) 55%, transparent);
+  color: var(--es-color-accent, var(--es-color-accent));
 }
 .pf-arcline-who {
   font-size: var(--es-text-2xs, 10px); text-transform: uppercase; letter-spacing: .04em;
-  color: var(--es-color-text-tertiary, #67748f);
+  color: var(--es-color-text-tertiary, var(--es-color-text-tertiary));
   margin-left: var(--es-space-2, 4px);
 }
 
 /* -- honors ---------------------------------------------------------------- */
 .pf-honor {
   padding: var(--es-space-2, 4px) 0; font-size: var(--es-text-sm, 12px);
-  border-bottom: var(--es-border-thin, 1px) solid var(--es-color-border-tertiary, #1c2536);
-  color: var(--es-color-text-secondary, #a2aec6);
+  border-bottom: var(--es-border-thin, 1px) solid var(--es-color-border-tertiary, var(--es-color-border-secondary));
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
 }
 .pf-honor:last-child { border-bottom: 0; }
 
@@ -429,56 +429,56 @@
 .pf-dev-meta { font-size: var(--es-text-2xs, 10px); }
 .pf-dev-bar {
   height: var(--es-space-3, 6px); border-radius: var(--es-radius-xs, 3px); overflow: hidden;
-  background: var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-border-secondary, var(--es-color-border-secondary));
 }
 .pf-dev-fill {
   display: block; height: 100%;
-  background: var(--es-color-accent, #4fd8c0);
+  background: var(--es-color-accent, var(--es-color-accent));
 }
 /* .trend-flat: deduped — app.css owns the single copy. */
 
 /* -- squad strength profile ------------------------------------------------ */
 .pf-str { display: flex; flex-direction: column; gap: var(--es-space-2, 5px); }
 .pf-str-row { display: grid; grid-template-columns: 110px 1fr 36px; align-items: center; gap: var(--es-space-4, 8px); font-size: var(--es-text-sm, 12px); }
-.pf-str-bar { height: var(--es-space-3, 7px); border-radius: var(--es-radius-sm, 4px); background: var(--es-color-border-secondary, #1c2536); overflow: hidden; }
-.pf-str-fill { display: block; height: 100%; background: var(--es-color-accent, #4fd8c0); }
+.pf-str-bar { height: var(--es-space-3, 7px); border-radius: var(--es-radius-sm, 4px); background: var(--es-color-border-secondary, var(--es-color-border-secondary)); overflow: hidden; }
+.pf-str-fill { display: block; height: 100%; background: var(--es-color-accent, var(--es-color-accent)); }
 
 /* -- agent-pool coverage --------------------------------------------------- */
 .pf-pool-chip {
   font-size: var(--es-text-2xs, 10px); padding: var(--es-space-1, 2px) var(--es-space-3, 7px); border-radius: var(--es-space-4, 10px);
-  background: var(--es-color-bg-elevated, #161e2e);
-  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  background: var(--es-color-bg-elevated, var(--es-color-bg-elevated));
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
 }
 .pf-pool-gaps { margin-top: var(--es-space-3, 6px); font-size: var(--es-text-2xs, 10px); }
 
 /* -- loading / unavailable ------------------------------------------------- */
 .pf-loading { padding: var(--es-space-10, 40px) 0; text-align: center; }
 .pf-unavailable { padding: var(--es-space-10, 44px) var(--es-space-7, 20px); text-align: center; }
-.pf-unavailable-mark { font-size: 34px; color: var(--es-color-text-tertiary, #67748f); margin-bottom: var(--es-space-4, 8px); }
+.pf-unavailable-mark { font-size: 34px; color: var(--es-color-text-tertiary, var(--es-color-text-tertiary)); margin-bottom: var(--es-space-4, 8px); }
 .pf-unavailable-title {
   font-family: var(--es-font-display, inherit); font-size: var(--es-text-lg, 15px);
   font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
-  color: var(--es-color-text-primary, #e9edf6); margin-bottom: var(--es-space-2, 4px);
+  color: var(--es-color-text-primary, var(--es-color-text-primary)); margin-bottom: var(--es-space-2, 4px);
 }
 
 /* -- dev-systems overhaul additions --------------------------------------- */
 /* .slink: deduped — the unified link affordance in app.css covers it. */
 /* Second series (confidence) on the development chart: dashed alt color. */
 .pf-line-alt {
-  stroke: var(--es-color-warn, #e8b34b);
+  stroke: var(--es-color-warn, var(--es-color-text-warning));
   stroke-dasharray: 4 3;
 }
 /* Staff profiles have no portrait art: an initial in the portrait slot. */
 .pf-staff-initial {
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 28px; font-weight: 700;
-  color: var(--es-color-text-secondary, #a2aec6);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
 }
 
 /* Farewell-tour flag next to a veteran on the roster table. */
 .retire-pill {
-  color: var(--es-color-warn, #e8b34b);
-  background: color-mix(in srgb, var(--es-color-warn, #e8b34b) 16%, transparent);
+  color: var(--es-color-warn, var(--es-color-text-warning));
+  background: color-mix(in srgb, var(--es-color-warn, var(--es-color-text-warning)) 16%, transparent);
   font-size: var(--es-text-2xs, 10px);
 }
 
@@ -487,15 +487,15 @@
   display: inline-block; margin: var(--es-space-1, 2px) 0 var(--es-space-1, 1px);
   font-size: var(--es-text-2xs, 10px); font-weight: 700;
   text-transform: uppercase; letter-spacing: var(--es-tracking-wider, .08em);
-  color: var(--es-color-warn, #e8b34b);
+  color: var(--es-color-warn, var(--es-color-text-warning));
 }
 
 /* Player comparison table. */
 .pf-compare-sel { margin-bottom: var(--es-space-4, 8px); }
-.pf-table.cmp th { text-align: center; font-weight: 600; color: var(--es-color-text-secondary, #a2aec6); }
+.pf-table.cmp th { text-align: center; font-weight: 600; color: var(--es-color-text-secondary, var(--es-color-text-secondary)); }
 .pf-table.cmp td.cmp-win {
-  color: var(--es-color-text-success, #4fc6a0); font-weight: 700;
-  background: color-mix(in srgb, var(--es-color-success, #3fb68b) 10%, transparent);
+  color: var(--es-color-text-success, var(--es-color-text-success)); font-weight: 700;
+  background: color-mix(in srgb, var(--es-color-success, var(--es-color-text-success)) 10%, transparent);
 }
 
 /* Career arc — a per-season chronicle timeline on the player profile. */
@@ -503,29 +503,29 @@
 .pf-arc-row { display: flex; gap: var(--es-space-4, 10px); align-items: baseline; }
 .pf-arc-season {
   flex: 0 0 auto; font-weight: 700;
-  color: var(--es-color-text-secondary, #a2aec6);
+  color: var(--es-color-text-secondary, var(--es-color-text-secondary));
 }
 .pf-arc-evs { display: flex; flex-direction: column; gap: var(--es-space-1, 2px); min-width: 0; }
 .pf-arc-ev { font-size: var(--es-text-xs, 11px); }
 .pf-arc-ev.arc-award, .pf-arc-ev.arc-all_star {
-  color: var(--es-color-warn, #e8b34b);
+  color: var(--es-color-warn, var(--es-color-text-warning));
 }
 
 /* Honours — the trophy cabinet: one row per individual season award. */
 .pf-honour {
   display: flex; align-items: baseline; gap: var(--es-space-4, 8px);
   padding: var(--es-space-2, 5px) 0;
-  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #1c2536);
+  border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
 }
 .pf-honour:last-child { border-bottom: 0; }
 .pf-honour-award {
   font-weight: 600; font-size: var(--es-text-sm, 12px);
-  color: var(--es-color-text-primary, #e6ecf5);
+  color: var(--es-color-text-primary, var(--es-color-text-primary));
   flex: 0 0 auto;
 }
 .pf-honour-award::before {
   content: "\2605"; /* filled star */
-  color: var(--es-color-warn, #e8b34b);
+  color: var(--es-color-warn, var(--es-color-text-warning));
   margin-right: var(--es-space-3, 6px);
 }
 .pf-honour-detail {

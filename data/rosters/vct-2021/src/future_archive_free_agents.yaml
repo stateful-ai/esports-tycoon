@@ -1,4005 +1,3011 @@
 free_agents:
-- handle: 2GE
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - skye
-  - viper
-  age: 18
-- handle: 7ssk7
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  age: 18
-- handle: AAAAY
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - gekko
-  age: 17
-- handle: AbleJ
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - sage
-  - skye
-  age: 18
-- handle: Acerola
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  - kayo
-  age: 18
-- handle: Addicted
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - viper
-  age: 18
-- handle: Aduka
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - gekko
-  age: 17
-- handle: Adverso
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - viper
-  age: 18
-- handle: AFoxx
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - cypher
-  - skye
-  age: 18
-- handle: Akashi
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  age: 18
-- handle: ALerT
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Allen
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - viper
-  - brimstone
-  age: 17
-- handle: AloNeFillz
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - raze
-  - sage
-  age: 18
-- handle: Aluba
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - kayo
-  age: 18
-- handle: Alvar
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - neon
-  - raze
-  - jett
-  age: 18
-- handle: Amaterasu
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - brimstone
-  - breach
-  age: 17
-- handle: Anthem
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - killjoy
-  - breach
-  age: 17
-- handle: Antidote
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - killjoy
-  - breach
-  age: 18
-- handle: Apinya
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - sova
-  - viper
-  age: 18
-- handle: Apotheon
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - brimstone
-  - omen
-  age: 18
-- handle: Artn
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  age: 18
-- handle: Artzin
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - sage
-  age: 17
-- handle: Aryu
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - gekko
-  - harbor
-  age: 17
-- handle: Askia
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: AslaN
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - viper
-  - astra
-  age: 18
-- handle: Aspas
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - jett
-  - chamber
-  age: 18
-- handle: Astro
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - harbor
-  - brimstone
-  age: 17
-- handle: ATA KAPTAN
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - brimstone
-  - omen
-  age: 17
-- handle: Autumn
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - chamber
-  age: 17
-- handle: Axeddy
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - viper
-  - harbor
-  age: 17
-- handle: Azys
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - skye
-  - kayo
-  age: 17
-- handle: B4rtiN
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - astra
-  age: 17
-- handle: Babyblue
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  age: 18
-- handle: BaddyG
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - omen
-  - viper
-  age: 18
-- handle: BADlove
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - viper
-  - brimstone
-  age: 17
-- handle: Ban
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - skye
-  - chamber
-  age: 18
-- handle: Bangnan
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - reyna
-  - jett
-  age: 18
-- handle: Bdog
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  - sage
-  age: 18
-- handle: Bea2
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - sage
-  - kayo
-  age: 18
-- handle: BerLIN
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - harbor
-  - raze
-  age: 17
-- handle: Berserx
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - neon
-  - jett
-  - skye
-  age: 18
-- handle: Bezn1
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - cypher
-  - sage
-  - killjoy
-  age: 18
-- handle: Biank
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - skye
-  - fade
-  age: 17
-- handle: BINBON
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - neon
-  age: 17
-- handle: Bipo
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - breach
-  - yoru
-  age: 18
-- handle: Blackhawk
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - brimstone
-  - omen
-  - viper
-  age: 17
-- handle: BlackWiz
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - astra
-  - brimstone
-  age: 18
-- handle: BLD
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - cypher
-  - chamber
-  age: 17
-- handle: BMV
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - skye
-  - cypher
-  age: 18
-- handle: BOOMBURAPA
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  age: 17
-- handle: Boostio
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - skye
-  - chamber
-  age: 18
-- handle: BraveAF
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - sage
-  - breach
-  age: 18
-- handle: Brawk
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - fade
-  age: 18
-- handle: Brinks
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - gekko
-  - breach
-  - raze
-  age: 17
-- handle: BRNWOWZK1
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  age: 18
-- handle: Bucher
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - cypher
-  - viper
-  - killjoy
-  age: 18
-- handle: BULD
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - skye
-  - sage
-  age: 18
-- handle: Bunt
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - harbor
-  - brimstone
-  age: 17
-- handle: C0M
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - fade
-  age: 18
-- handle: Carpe
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - gekko
-  age: 17
-- handle: CeNder
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - killjoy
-  - viper
-  age: 18
-- handle: Chase
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - raze
-  - skye
-  age: 18
-- handle: ChiaWei
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  age: 17
-- handle: CHICHOO
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - omen
-  - astra
-  age: 18
-- handle: Ching
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  - cypher
-  age: 17
-- handle: Chiwa
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - cypher
-  - sage
-  - viper
-  age: 18
-- handle: CigaretteS
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - gekko
-  age: 17
-- handle: Cloud
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - kayo
-  - skye
-  age: 18
-- handle: Coco
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - killjoy
-  - kayo
-  age: 18
-- handle: Cortezia
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - brimstone
-  - omen
-  - astra
-  age: 17
-- handle: CortezZ
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - harbor
-  - kayo
-  - raze
-  age: 17
-- handle: Crazyguy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - sage
-  - brimstone
-  age: 17
-- handle: Cryocells
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  age: 18
-- handle: CTC
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - viper
-  age: 17
-- handle: CyderX
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - skye
-  age: 18
-- handle: D0rf
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - skye
-  age: 18
-- handle: D1srupt
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - astra
-  - viper
-  age: 17
-- handle: Daicute
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - sage
-  age: 18
-- handle: Dani
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - omen
-  age: 18
-- handle: Darker
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - yoru
-  - sage
-  age: 17
-- handle: Daveeys
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - chamber
-  age: 17
-- handle: David
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - astra
-  age: 17
-- handle: DcRulz
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - jett
-  age: 17
-- handle: Deadly10
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - killjoy
-  age: 17
-- handle: DEATHMAKER
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Deigara
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - viper
-  - kayo
-  age: 17
-- handle: DeLb
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - neon
-  - jett
-  age: 18
-- handle: Delend
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - viper
-  - astra
-  age: 18
-- handle: Delta
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - skye
-  - sage
-  age: 18
-- handle: Demon1
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - astra
-  - chamber
-  age: 17
-- handle: Dep
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - neon
-  - omen
-  age: 18
-- handle: Derialy
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - brimstone
-  - neon
-  age: 18
-- handle: Deryeon
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  - chamber
-  age: 18
-- handle: Dgzin
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  - kayo
-  age: 18
-- handle: Disk0
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - kayo
-  - skye
-  age: 18
-- handle: DOXZ3RRR
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - omen
-  - sova
-  age: 17
-- handle: DragoN
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - gekko
-  age: 17
-- handle: Draxiimov
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - breach
-  - skye
-  age: 18
-- handle: Ds
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - sage
-  - breach
-  age: 18
-- handle: DuhT
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - raze
-  age: 17
-- handle: Duno
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - sova
-  age: 18
-- handle: Dzii
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - kayo
-  age: 18
-- handle: Edu
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - fade
-  age: 17
-- handle: EJAY
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Emman
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - kayo
-  age: 17
-- handle: Enzo
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - viper
-  - sova
-  age: 18
-- handle: Epzz
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - fade
-  age: 18
-- handle: Estrella
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - skye
-  - kayo
-  age: 17
-- handle: Excali
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - skye
-  - fade
-  age: 18
-- handle: Ezzy
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - jett
-  age: 17
-- handle: F1cio
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  - neon
-  age: 18
-- handle: Falltw
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  - brimstone
-  age: 18
-- handle: Famouz
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - raze
-  - sova
-  age: 18
-- handle: Fantasy
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - astra
-  age: 18
-- handle: Fatmarino
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - fade
-  - skye
-  - sova
-  age: 17
-- handle: Felix
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - breach
-  - brimstone
-  age: 18
-- handle: Feqew
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - cypher
-  age: 18
-- handle: Fl1pzjder
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - chamber
-  - killjoy
-  age: 18
-- handle: Flabben
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - harbor
-  - omen
-  - brimstone
-  age: 17
-- handle: Flainzz
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - cypher
-  - killjoy
-  - sage
-  age: 18
-- handle: Flash
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  age: 18
-- handle: Floatqq
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - killjoy
-  - kayo
-  age: 18
-- handle: Flyuh
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - sova
-  age: 18
-- handle: FOX
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - kayo
-  - fade
-  age: 17
-- handle: Foxie
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  age: 18
-- handle: Foxy9
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Fr4nky
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - sova
-  age: 18
-- handle: FREY
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - killjoy
-  - cypher
-  age: 18
-- handle: Frostmind
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - sage
-  - brimstone
-  - omen
-  age: 18
-- handle: Frosty
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - astra
-  - cypher
-  age: 18
-- handle: Fung3
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - chamber
-  - breach
-  age: 18
-- handle: Fuzari
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - killjoy
-  - cypher
-  age: 18
-- handle: Fznnn
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - fade
-  age: 17
-- handle: GarnetS
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - neon
-  age: 17
-- handle: Gin
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - killjoy
-  - jett
-  age: 17
-- handle: Glym
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - omen
-  - jett
-  age: 18
-- handle: Gob b
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - sage
-  age: 18
-- handle: Godko
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - sova
-  - skye
-  age: 18
-- handle: Godvexy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - fade
-  - sova
-  age: 17
-- handle: GOLD
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  age: 18
-- handle: GuhRVN
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - astra
-  age: 17
-- handle: Guuih
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  age: 17
-- handle: H1ber
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - jett
-  - chamber
-  age: 18
-- handle: Haodong
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - skye
-  - viper
-  age: 18
-- handle: Harmii
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  age: 17
-- handle: Harshhh
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - kayo
-  age: 17
-- handle: Havoc
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: HearthBeat
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - omen
-  - brimstone
-  age: 18
-- handle: Hellff
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - viper
-  - astra
-  age: 17
-- handle: HellrangeR
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - fade
-  age: 18
-- handle: Hermes
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - astra
-  - sage
-  age: 18
-- handle: Hoax
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - kayo
-  - raze
-  age: 17
-- handle: Huliolio
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - omen
-  - viper
-  age: 18
-- handle: Hvoya
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - reyna
-  - sage
-  age: 17
-- handle: Hyzee
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - sova
-  - astra
-  age: 18
-- handle: Iluri
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - brimstone
-  age: 18
-- handle: Invy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - sage
-  - sova
-  age: 18
-- handle: IZu
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - astra
-  - yoru
-  - skye
-  age: 17
-- handle: JA
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - chamber
-  age: 17
-- handle: Jacobin
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - harbor
-  - viper
-  - breach
-  age: 17
-- handle: Jakee
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - astra
-  age: 17
-- handle: Jawgemo
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - raze
-  - chamber
-  age: 18
-- handle: JEEE
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - omen
-  - kayo
-  age: 17
-- handle: Jemkin
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - reyna
-  age: 17
-- handle: JitboyS
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - chamber
-  - fade
-  age: 18
-- handle: Johnqt
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - sage
-  - fade
-  age: 18
-- handle: JonahP
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sage
-  - omen
-  age: 18
-- handle: Jonn
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - reyna
-  - sage
-  - jett
-  age: 18
-- handle: JoshS
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - skye
-  - breach
-  age: 17
-- handle: Jremy
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - raze
-  - fade
-  age: 18
-- handle: JUGi
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - neon
-  - reyna
-  age: 18
-- handle: Juicy
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - reyna
-  age: 17
-- handle: Jzz
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - raze
-  - sova
-  age: 17
-- handle: Kacpi
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  - kayo
-  age: 18
-- handle: Kadoom
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  - neon
-  age: 18
-- handle: Kaizen
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Kakarot
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - kayo
-  - astra
-  age: 17
-- handle: Kamyk
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - cypher
-  age: 17
-- handle: Kanpeki
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - chamber
-  - skye
-  age: 18
-- handle: KappA
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - sage
-  age: 18
-- handle: Karam1L
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - neon
-  age: 17
-- handle: Kaspe
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - cypher
-  - sage
-  age: 18
-- handle: Kawa
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - fade
-  age: 17
-- handle: Keiko
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  - yoru
-  age: 17
-- handle: KellyS
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - jett
-  age: 18
-- handle: Kibojn
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - breach
-  - kayo
-  age: 17
-- handle: KILLDREAM
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - astra
-  age: 18
-- handle: KillerS
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  age: 17
-- handle: Killua
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - neon
-  - jett
-  age: 18
-- handle: KimGyuTae
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  age: 18
-- handle: KiNgg
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - viper
-  - kayo
-  age: 18
-- handle: Kishi
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - raze
-  - breach
-  age: 18
-- handle: Knight
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - omen
-  - breach
-  age: 17
-- handle: KnightRider
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - killjoy
-  - sage
-  age: 17
-- handle: Koalanoob
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  age: 18
-- handle: Kohliii
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - omen
-  age: 17
-- handle: Kon4n
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - skye
-  - breach
-  age: 18
-- handle: Kongared
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - skye
-  - breach
-  age: 18
-- handle: Kurtesy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  age: 18
-- handle: Kushy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - fade
-  - kayo
-  age: 18
-- handle: LBY
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - kayo
-  - skye
-  - breach
-  age: 17
-- handle: Lenne
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - skye
-  - breach
-  age: 18
-- handle: Leozin
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - neon
-  age: 17
-- handle: Leviathan
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  age: 17
-- handle: LEW
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: LEXY
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - sage
-  - killjoy
-  - breach
-  age: 18
-- handle: Life
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  age: 18
-- handle: Lightningfast
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - kayo
-  age: 18
-- handle: Lime
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  - reyna
-  age: 18
-- handle: Lmemore
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - viper
-  - sova
-  age: 18
-- handle: Lukzera
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - brimstone
-  - omen
-  age: 18
-- handle: Lysoar
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  age: 17
-- handle: Majesty
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - viper
-  - sova
-  age: 18
-- handle: Maniek
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - jett
-  - sova
-  age: 18
-- handle: Maple
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - fade
-  - sova
-  age: 18
-- handle: Markyyy
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - jett
-  age: 18
-- handle: Marzil
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - killjoy
-  - harbor
-  age: 17
-- handle: Matheuzin
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - chamber
-  - killjoy
-  age: 18
-- handle: Maxie
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  - astra
-  age: 18
-- handle: Melser
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - astra
-  - sage
-  age: 18
-- handle: Minimise
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - kayo
-  - harbor
-  age: 17
-- handle: Mited
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - brimstone
-  - omen
-  - killjoy
-  age: 17
-- handle: Mizu
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - chamber
-  - viper
-  age: 17
-- handle: MNdS
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - cypher
-  - viper
-  age: 17
-- handle: Moe40
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - fade
-  age: 18
-- handle: Moh
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - omen
-  - brimstone
-  age: 18
-- handle: Mojer
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - raze
-  - skye
-  age: 17
-- handle: MOLSI
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - raze
-  - skye
-  age: 18
-- handle: Monk
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  age: 17
-- handle: Moves
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - raze
-  age: 18
-- handle: Mowf
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - cypher
-  - fade
-  age: 18
-- handle: MrFaliN
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - kayo
-  - sova
-  age: 18
-- handle: Muj
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sova
-  age: 18
-- handle: Musashi
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - chamber
-  - breach
-  age: 18
-- handle: NakJi
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  age: 18
-- handle: NANZIN
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  age: 18
-- handle: NataNk
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - fade
-  - sage
-  age: 18
-- handle: NaTz
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - sage
-  - fade
-  age: 18
-- handle: Nephh
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - yoru
-  - kayo
-  age: 18
-- handle: NeT
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - killjoy
-  - viper
-  age: 18
-- handle: Newzera
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - skye
-  - viper
-  age: 17
-- handle: Nexi
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - cypher
-  - killjoy
-  age: 18
-- handle: Nhatthong2k
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - raze
-  age: 18
-- handle: NinGDO
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  age: 18
-- handle: NiSMO
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - raze
-  age: 18
-- handle: Nizzy
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - cypher
-  - fade
-  - phoenix
-  age: 17
-- handle: Nobody
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - sova
-  age: 18
-- handle: Nyang
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - sage
-  - omen
-  age: 18
-- handle: Obnoks
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sage
-  - kayo
-  age: 18
-- handle: OuTLaW
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - kayo
-  - viper
-  age: 18
-- handle: P1nA2k4
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  age: 18
-- handle: PANcada
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - brimstone
-  - viper
-  age: 18
-- handle: Pancc
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  - cypher
-  age: 17
-- handle: PapiChulo
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - omen
-  - brimstone
-  age: 17
-- handle: Paradox
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - breach
-  - kayo
-  age: 17
-- handle: Pdr
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sage
-  - kayo
-  age: 18
-- handle: PEPA
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  - omen
-  age: 18
-- handle: Pho
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - sova
-  - breach
-  age: 18
-- handle: POACH
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - sova
-  age: 18
-- handle: Pollo
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - kayo
-  - skye
-  age: 18
-- handle: Psy
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - skye
-  age: 17
-- handle: Purp0
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - raze
-  age: 18
-- handle: QutionerX
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  age: 18
-- handle: Qw1
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  - neon
-  age: 18
-- handle: Raafa
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - kayo
-  - sage
-  - killjoy
-  age: 17
-- handle: Rabbet
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - sage
-  - sova
-  age: 18
-- handle: Rainy
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - sova
-  - sage
-  age: 18
-- handle: Rawfiul
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  age: 18
-- handle: RDeeW
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - killjoy
-  - neon
-  age: 18
-- handle: Redwater877
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - skye
-  - viper
-  age: 18
-- handle: Reformed
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - killjoy
-  - brimstone
-  age: 18
-- handle: Rexy
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - omen
-  - brimstone
-  age: 18
-- handle: RgLM
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - astra
-  age: 18
-- handle: Rin
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - killjoy
-  - brimstone
-  age: 17
-- handle: Rio
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - breach
-  age: 17
-- handle: Ripper
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - brimstone
-  age: 18
-- handle: Rite2ace
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - breach
-  - sova
-  age: 17
-- handle: ROLEX
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  - cypher
-  age: 17
-- handle: Rossy
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - breach
-  - viper
-  age: 18
-- handle: Roxie
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - sova
-  - kayo
-  age: 18
-- handle: Rubkkoide
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - jett
-  age: 17
-- handle: Runi
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - breach
-  - sova
-  age: 17
-- handle: RvK
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - sova
-  - viper
-  age: 18
-- handle: Ryotzz
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sova
-  - breach
-  age: 18
-- handle: Sayaplayer
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  age: 18
-- handle: SEIDER
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - sage
-  age: 18
-- handle: SenyorCarL
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - astra
-  - fade
-  - breach
-  age: 17
-- handle: Seven
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  - raze
-  age: 18
-- handle: SEVERiNE
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - viper
-  - omen
-  age: 18
-- handle: Shi77
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  age: 17
-- handle: Shin
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - gekko
-  - skye
-  - sova
-  age: 17
-- handle: Shiro
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - fade
-  - chamber
-  age: 18
-- handle: Shyy
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - fade
-  - kayo
-  age: 18
-- handle: Siraphop
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - skye
-  - breach
-  age: 17
-- handle: SiuFatBB
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - skye
-  - yoru
-  age: 18
-- handle: SkillZ
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - astra
-  - omen
-  age: 18
-- handle: SkRossi
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  age: 18
-- handle: Skuba
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - astra
-  - omen
-  age: 18
-- handle: Smoggy
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - kayo
-  age: 18
-- handle: Something
-  region: emea
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - gekko
-  - yoru
-  age: 17
-- handle: SouhcNi
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - cypher
-  - killjoy
-  age: 17
-- handle: SpY
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - neon
-  age: 18
-- handle: Stix
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - sova
-  - omen
-  age: 18
-- handle: STYRON
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - fade
-  age: 18
-- handle: SugarZ3ro
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - astra
-  - omen
-  age: 18
-- handle: Suka
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - killjoy
-  age: 18
-- handle: Surf
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - jett
-  age: 18
-- handle: SUYGETSU
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - viper
-  - sage
-  - cypher
-  age: 18
-- handle: Sw
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - astra
-  - brimstone
-  age: 17
-- handle: Swag
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - sage
-  - viper
-  age: 18
-- handle: Sylvan
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - omen
-  - viper
-  age: 18
-- handle: Tacolilla
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - skye
-  age: 18
-- handle: Techno
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - sova
-  - reyna
-  age: 17
-- handle: Teerapong
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - chamber
-  - sage
-  age: 18
-- handle: TENNN
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - killjoy
-  - kayo
-  age: 18
-- handle: Tesseract
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - skye
-  - fade
-  age: 17
-- handle: Texta
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - brimstone
-  - viper
-  age: 18
-- handle: Theory
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - killjoy
-  age: 17
-- handle: Tisora
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Tixx
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - kayo
-  age: 17
-- handle: Tockers
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - kayo
-  - breach
-  age: 17
-- handle: TORANECO
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - viper
-  age: 17
-- handle: Trent
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - skye
-  - breach
-  age: 18
-- handle: Tricky
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - neon
-  age: 17
-- handle: Tryst
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - kayo
-  - brimstone
-  age: 17
-- handle: Tuli
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: Tuyz
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - chamber
-  - reyna
-  age: 18
-- handle: Twisten
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - cypher
-  - raze
-  - jett
-  age: 18
-- handle: Txozin
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  age: 17
-- handle: TZH
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - astra
-  - viper
-  - harbor
-  age: 17
-- handle: V1nNy
-  region: americas
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - sova
-  - skye
-  - viper
-  age: 18
-- handle: Valyn
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - omen
-  - viper
-  age: 18
-- handle: Venka
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  - chamber
-  age: 17
-- handle: Vera
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - cypher
-  age: 17
-- handle: Veroneze
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - sova
-  - skye
-  age: 18
-- handle: Vibhor
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - astra
-  - viper
-  age: 17
-- handle: Viness
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  age: 18
-- handle: Virtyy
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - neon
-  age: 17
-- handle: Vong
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  - skye
-  age: 18
-- handle: Voo
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  age: 17
-- handle: Vow
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - chamber
-  - viper
-  age: 18
-- handle: W1nner
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - kayo
-  - sova
-  - raze
-  age: 18
-- handle: Wannafly
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - killjoy
-  - chamber
-  - viper
-  age: 18
-- handle: WAT
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - astra
-  - viper
-  age: 17
-- handle: We1yan
-  region: pacific
-  role: flex
-  playstyle: lurker
-  igl: false
-  quality: 66
-  agents:
-  - sage
-  age: 18
-- handle: Weber
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - killjoy
-  - breach
-  age: 17
-- handle: Whimp
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  - viper
-  - astra
-  age: 17
-- handle: Whz
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: Wild0reoo
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - chamber
-  - viper
-  age: 18
-- handle: Will
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - chamber
-  - jett
-  age: 18
-- handle: Wolfen
-  region: emea
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - sova
-  - killjoy
-  age: 18
-- handle: WRONSKI
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - jett
-  - raze
-  - chamber
-  age: 18
-- handle: Xenom
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - raze
-  - jett
-  age: 17
-- handle: Xffero
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - omen
-  - viper
-  age: 18
-- handle: Xnfri
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - chamber
-  - kayo
-  age: 18
-- handle: XXiF
-  region: americas
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - sage
-  - raze
-  - kayo
-  age: 18
-- handle: XyuS
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: XZe
-  region: pacific
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - omen
-  - brimstone
-  - astra
-  age: 17
-- handle: YaBoiLewis
-  region: pacific
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 66
-  agents:
-  - raze
-  - kayo
-  age: 18
-- handle: YanLi
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - kayo
-  - breach
-  age: 17
-- handle: YESicaN
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - skye
-  - viper
-  - raze
-  age: 18
-- handle: YHchen
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - breach
-  - kayo
-  age: 17
-- handle: Yosemite
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - killjoy
-  age: 17
-- handle: Yoshiii
-  region: pacific
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - skye
-  - breach
-  - killjoy
-  age: 17
-- handle: YouBreak
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - brimstone
-  - viper
-  - killjoy
-  age: 18
-- handle: YRSelect
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  - brimstone
-  age: 18
-- handle: YTao
-  region: china
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  - omen
-  age: 18
-- handle: Yuicaw
-  region: china
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Yurii
-  region: emea
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 66
-  agents:
-  - breach
-  - skye
-  - sage
-  age: 18
-- handle: Zanatsu
-  region: americas
-  role: duelist
-  playstyle: entry
-  igl: false
-  quality: 65
-  agents:
-  - jett
-  - raze
-  age: 17
-- handle: Zander
-  region: americas
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - astra
-  - viper
-  - brimstone
-  age: 18
-- handle: ZE1SH
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - viper
-  - kayo
-  - breach
-  age: 17
-- handle: Zeddy
-  region: emea
-  role: controller
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - omen
-  - viper
-  - breach
-  age: 18
-- handle: Zey
-  region: pacific
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 65
-  agents:
-  - killjoy
-  age: 17
-- handle: Zjc
-  region: china
-  role: initiator
-  playstyle: support
-  igl: false
-  quality: 65
-  agents:
-  - sova
-  - skye
-  - raze
-  age: 17
-- handle: ZmjjKK
-  region: china
-  role: sentinel
-  playstyle: anchor
-  igl: false
-  quality: 66
-  agents:
-  - chamber
-  - raze
-  age: 18
+  - handle: 2GE
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, skye, viper]
+    age: 18
+  - handle: 7ssk7
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze]
+    age: 18
+  - handle: AAAAY
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, gekko]
+    age: 17
+  - handle: AbleJ
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, sage, skye]
+    age: 18
+  - handle: Acerola
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper, kayo]
+    age: 18
+  - handle: Addicted
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, viper]
+    age: 18
+  - handle: Aduka
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, gekko]
+    age: 17
+  - handle: Adverso
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, viper]
+    age: 18
+  - handle: AFoxx
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, cypher, skye]
+    age: 18
+  - handle: Akashi
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach]
+    age: 18
+  - handle: ALerT
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Allen
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, viper, brimstone]
+    age: 17
+  - handle: AloNeFillz
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, raze, sage]
+    age: 18
+  - handle: Aluba
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, kayo]
+    age: 18
+  - handle: Alvar
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [neon, raze, jett]
+    age: 18
+  - handle: Amaterasu
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, brimstone, breach]
+    age: 17
+  - handle: Anthem
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, killjoy, breach]
+    age: 17
+  - handle: Antidote
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, killjoy, breach]
+    age: 18
+  - handle: Apinya
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, sova, viper]
+    age: 18
+  - handle: Apotheon
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, brimstone, omen]
+    age: 18
+  - handle: Artn
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper]
+    age: 18
+  - handle: Artzin
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, sage]
+    age: 17
+  - handle: Aryu
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, gekko, harbor]
+    age: 17
+  - handle: Askia
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: AslaN
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, viper, astra]
+    age: 18
+  - handle: Aspas
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, jett, chamber]
+    age: 18
+  - handle: Astro
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, harbor, brimstone]
+    age: 17
+  - handle: ATA KAPTAN
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [brimstone, omen]
+    age: 17
+  - handle: Autumn
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, chamber]
+    age: 17
+  - handle: Axeddy
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, viper, harbor]
+    age: 17
+  - handle: Azys
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, skye, kayo]
+    age: 17
+  - handle: B4rtiN
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, astra]
+    age: 17
+  - handle: Babyblue
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze]
+    age: 18
+  - handle: BaddyG
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, omen, viper]
+    age: 18
+  - handle: BADlove
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, viper, brimstone]
+    age: 17
+  - handle: Ban
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, skye, chamber]
+    age: 18
+  - handle: Bangnan
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [reyna, jett]
+    age: 18
+  - handle: Bdog
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber, sage]
+    age: 18
+  - handle: Bea2
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, sage, kayo]
+    age: 18
+  - handle: BerLIN
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, harbor, raze]
+    age: 17
+  - handle: Berserx
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [neon, jett, skye]
+    age: 18
+  - handle: Bezn1
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [cypher, sage, killjoy]
+    age: 18
+  - handle: Biank
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, skye, fade]
+    age: 17
+  - handle: BINBON
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [neon]
+    age: 17
+  - handle: Bipo
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, breach, yoru]
+    age: 18
+  - handle: Blackhawk
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [brimstone, omen, viper]
+    age: 17
+  - handle: BlackWiz
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, astra, brimstone]
+    age: 18
+  - handle: BLD
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, cypher, chamber]
+    age: 17
+  - handle: BMV
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, skye, cypher]
+    age: 18
+  - handle: BOOMBURAPA
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen]
+    age: 17
+  - handle: Boostio
+    region: americas
+    role: sentinel
+    playstyle: igl
+    igl: false
+    quality: 66.0
+    agents: [killjoy, deadlock, chamber]
+    age: 18
+    real_name: ''
+    country: US
+  - handle: BraveAF
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, sage, breach]
+    age: 18
+  - handle: Brawk
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, fade]
+    age: 18
+  - handle: Brinks
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [gekko, breach, raze]
+    age: 17
+  - handle: BRNWOWZK1
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett]
+    age: 18
+  - handle: Bucher
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [cypher, viper, killjoy]
+    age: 18
+  - handle: BULD
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, skye, sage]
+    age: 18
+  - handle: Bunt
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, harbor, brimstone]
+    age: 17
+  - handle: C0M
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, fade]
+    age: 18
+  - handle: Carpe
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, gekko]
+    age: 17
+  - handle: CeNder
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, killjoy, viper]
+    age: 18
+  - handle: Chase
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, raze, skye]
+    age: 18
+  - handle: ChiaWei
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova]
+    age: 17
+  - handle: CHICHOO
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, omen, astra]
+    age: 18
+  - handle: Ching
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper, cypher]
+    age: 17
+  - handle: Chiwa
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [cypher, sage, viper]
+    age: 18
+  - handle: CigaretteS
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [gekko]
+    age: 17
+  - handle: Cloud
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, kayo, skye]
+    age: 18
+  - handle: Coco
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, killjoy, kayo]
+    age: 18
+  - handle: Cortezia
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [brimstone, omen, astra]
+    age: 17
+  - handle: CortezZ
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [harbor, kayo, raze]
+    age: 17
+  - handle: Crazyguy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, sage, brimstone]
+    age: 17
+  - handle: Cryocells
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett]
+    age: 18
+  - handle: CTC
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, viper]
+    age: 17
+  - handle: CyderX
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, skye]
+    age: 18
+  - handle: D0rf
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, skye]
+    age: 18
+  - handle: D1srupt
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, astra, viper]
+    age: 17
+  - handle: Daicute
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, sage]
+    age: 18
+  - handle: Dani
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, omen]
+    age: 18
+  - handle: Darker
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, yoru, sage]
+    age: 17
+  - handle: Daveeys
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, chamber]
+    age: 17
+  - handle: David
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, astra]
+    age: 17
+  - handle: DcRulz
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, jett]
+    age: 17
+  - handle: Deadly10
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, killjoy]
+    age: 17
+  - handle: DEATHMAKER
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Deigara
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, viper, kayo]
+    age: 17
+  - handle: DeLb
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, neon, jett]
+    age: 18
+  - handle: Delend
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, viper, astra]
+    age: 18
+  - handle: Delta
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, skye, sage]
+    age: 18
+  - handle: Demon1
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, astra, chamber]
+    age: 17
+  - handle: Dep
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, neon, omen]
+    age: 18
+  - handle: Derialy
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, brimstone, neon]
+    age: 18
+  - handle: Deryeon
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze, chamber]
+    age: 18
+  - handle: Dgzin
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett, kayo]
+    age: 18
+  - handle: Disk0
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, kayo, skye]
+    age: 18
+  - handle: DOXZ3RRR
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, omen, sova]
+    age: 17
+  - handle: DragoN
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, gekko]
+    age: 17
+  - handle: Draxiimov
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, breach, skye]
+    age: 18
+  - handle: Ds
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, sage, breach]
+    age: 18
+  - handle: DuhT
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, raze]
+    age: 17
+  - handle: Duno
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, sova]
+    age: 18
+  - handle: Dzii
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, kayo]
+    age: 18
+  - handle: Edu
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, fade]
+    age: 17
+  - handle: EJAY
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Emman
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, kayo]
+    age: 17
+  - handle: Enzo
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, viper, sova]
+    age: 18
+  - handle: Epzz
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, fade]
+    age: 18
+  - handle: Estrella
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, skye, kayo]
+    age: 17
+  - handle: Excali
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, skye, fade]
+    age: 18
+  - handle: Ezzy
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, jett]
+    age: 17
+  - handle: F1cio
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett, neon]
+    age: 18
+  - handle: Falltw
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper, brimstone]
+    age: 18
+  - handle: Famouz
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, raze, sova]
+    age: 18
+  - handle: Fantasy
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, astra]
+    age: 18
+  - handle: Fatmarino
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [fade, skye, sova]
+    age: 17
+  - handle: Felix
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, breach, brimstone]
+    age: 18
+  - handle: Feqew
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, cypher]
+    age: 18
+  - handle: Fl1pzjder
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, chamber, killjoy]
+    age: 18
+  - handle: Flabben
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [harbor, omen, brimstone]
+    age: 17
+  - handle: Flainzz
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [cypher, killjoy, sage]
+    age: 18
+  - handle: Flash
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova]
+    age: 18
+  - handle: Floatqq
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, killjoy, kayo]
+    age: 18
+  - handle: Flyuh
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, sova]
+    age: 18
+  - handle: FOX
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, kayo, fade]
+    age: 17
+  - handle: Foxie
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen]
+    age: 18
+  - handle: Foxy9
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Fr4nky
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, sova]
+    age: 18
+  - handle: FREY
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, killjoy, cypher]
+    age: 18
+  - handle: Frostmind
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [sage, brimstone, omen]
+    age: 18
+  - handle: Frosty
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, astra, cypher]
+    age: 18
+  - handle: Fung3
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, chamber, breach]
+    age: 18
+  - handle: Fuzari
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, killjoy, cypher]
+    age: 18
+  - handle: Fznnn
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, fade]
+    age: 17
+  - handle: GarnetS
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, neon]
+    age: 17
+  - handle: Gin
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, killjoy, jett]
+    age: 17
+  - handle: Glym
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, omen, jett]
+    age: 18
+  - handle: Gob b
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, sage]
+    age: 18
+  - handle: Godko
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, sova, skye]
+    age: 18
+  - handle: Godvexy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [fade, sova]
+    age: 17
+  - handle: GOLD
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper]
+    age: 18
+  - handle: GuhRVN
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, astra]
+    age: 17
+  - handle: Guuih
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper]
+    age: 17
+  - handle: H1ber
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, jett, chamber]
+    age: 18
+  - handle: Haodong
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, skye, viper]
+    age: 18
+  - handle: Harmii
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze]
+    age: 17
+  - handle: Harshhh
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, kayo]
+    age: 17
+  - handle: Havoc
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: HearthBeat
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, omen, brimstone]
+    age: 18
+  - handle: Hellff
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, viper, astra]
+    age: 17
+  - handle: HellrangeR
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, fade]
+    age: 18
+  - handle: Hermes
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, astra, sage]
+    age: 18
+  - handle: Hoax
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, kayo, raze]
+    age: 17
+  - handle: Huliolio
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, omen, viper]
+    age: 18
+  - handle: Hvoya
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, reyna, sage]
+    age: 17
+  - handle: Hyzee
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, sova, astra]
+    age: 18
+  - handle: Iluri
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, brimstone]
+    age: 18
+  - handle: Invy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, sage, sova]
+    age: 18
+  - handle: IZu
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [astra, yoru, skye]
+    age: 17
+  - handle: JA
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, chamber]
+    age: 17
+  - handle: Jacobin
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [harbor, viper, breach]
+    age: 17
+  - handle: Jakee
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, astra]
+    age: 17
+  - handle: Jawgemo
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, raze, chamber]
+    age: 18
+  - handle: JEEE
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, omen, kayo]
+    age: 17
+  - handle: Jemkin
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, reyna]
+    age: 17
+  - handle: JitboyS
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, chamber, fade]
+    age: 18
+  - handle: Johnqt
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, sage, fade]
+    age: 18
+  - handle: JonahP
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sage, omen]
+    age: 18
+  - handle: Jonn
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [reyna, sage, jett]
+    age: 18
+  - handle: JoshS
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, skye, breach]
+    age: 17
+  - handle: Jremy
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, raze, fade]
+    age: 18
+  - handle: JUGi
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, neon, reyna]
+    age: 18
+  - handle: Juicy
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, reyna]
+    age: 17
+  - handle: Jzz
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, raze, sova]
+    age: 17
+  - handle: Kacpi
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett, kayo]
+    age: 18
+  - handle: Kadoom
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber, neon]
+    age: 18
+  - handle: Kaizen
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Kakarot
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, kayo, astra]
+    age: 17
+  - handle: Kamyk
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, cypher]
+    age: 17
+  - handle: Kanpeki
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, chamber, skye]
+    age: 18
+  - handle: KappA
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, sage]
+    age: 18
+  - handle: Karam1L
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, neon]
+    age: 17
+  - handle: Kaspe
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, cypher, sage]
+    age: 18
+  - handle: Kawa
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, fade]
+    age: 17
+  - handle: Keiko
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett, yoru]
+    age: 17
+  - handle: KellyS
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, jett]
+    age: 18
+  - handle: Kibojn
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, breach, kayo]
+    age: 17
+  - handle: KILLDREAM
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, astra]
+    age: 18
+  - handle: KillerS
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye]
+    age: 17
+  - handle: Killua
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [neon, jett]
+    age: 18
+  - handle: KimGyuTae
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett]
+    age: 18
+  - handle: KiNgg
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, viper, kayo]
+    age: 18
+  - handle: Kishi
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, raze, breach]
+    age: 18
+  - handle: Knight
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, omen, breach]
+    age: 17
+  - handle: KnightRider
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, killjoy, sage]
+    age: 17
+  - handle: Koalanoob
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett]
+    age: 18
+  - handle: Kohliii
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, omen]
+    age: 17
+  - handle: Kon4n
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, skye, breach]
+    age: 18
+  - handle: Kongared
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, skye, breach]
+    age: 18
+  - handle: Kurtesy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova]
+    age: 18
+  - handle: Kushy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, fade, kayo]
+    age: 18
+  - handle: LBY
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [kayo, skye, breach]
+    age: 17
+  - handle: Lenne
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, skye, breach]
+    age: 18
+  - handle: Leozin
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, neon]
+    age: 17
+  - handle: Leviathan
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone]
+    age: 17
+  - handle: LEW
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: LEXY
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [sage, killjoy, breach]
+    age: 18
+  - handle: Life
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett]
+    age: 18
+  - handle: Lightningfast
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, kayo]
+    age: 18
+  - handle: Lime
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze, reyna]
+    age: 18
+  - handle: Lmemore
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, viper, sova]
+    age: 18
+  - handle: Lukzera
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, brimstone, omen]
+    age: 18
+  - handle: Lysoar
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper]
+    age: 17
+  - handle: Majesty
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, viper, sova]
+    age: 18
+  - handle: Maniek
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, jett, sova]
+    age: 18
+  - handle: Maple
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, fade, sova]
+    age: 18
+  - handle: Markyyy
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, jett]
+    age: 18
+  - handle: Marzil
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, killjoy, harbor]
+    age: 17
+  - handle: Matheuzin
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, chamber, killjoy]
+    age: 18
+  - handle: Maxie
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper, astra]
+    age: 18
+  - handle: Melser
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, astra, sage]
+    age: 18
+  - handle: Minimise
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, kayo, harbor]
+    age: 17
+  - handle: Mited
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [brimstone, omen, killjoy]
+    age: 17
+  - handle: Mizu
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, chamber, viper]
+    age: 17
+  - handle: MNdS
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, cypher, viper]
+    age: 17
+  - handle: Moe40
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, fade]
+    age: 18
+  - handle: Moh
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, omen, brimstone]
+    age: 18
+  - handle: Mojer
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, raze, skye]
+    age: 17
+  - handle: MOLSI
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, raze, skye]
+    age: 18
+  - handle: Monk
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper]
+    age: 17
+  - handle: Moves
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, raze]
+    age: 18
+  - handle: Mowf
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, cypher, fade]
+    age: 18
+  - handle: MrFaliN
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, kayo, sova]
+    age: 18
+  - handle: Muj
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sova]
+    age: 18
+  - handle: Musashi
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, chamber, breach]
+    age: 18
+  - handle: NakJi
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber]
+    age: 18
+  - handle: NANZIN
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova]
+    age: 18
+  - handle: NataNk
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, fade, sage]
+    age: 18
+  - handle: NaTz
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, sage, fade]
+    age: 18
+  - handle: Nephh
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, yoru, kayo]
+    age: 18
+  - handle: NeT
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, killjoy, viper]
+    age: 18
+  - handle: Newzera
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, skye, viper]
+    age: 17
+  - handle: Nexi
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, cypher, killjoy]
+    age: 18
+  - handle: Nhatthong2k
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, raze]
+    age: 18
+  - handle: NinGDO
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper]
+    age: 18
+  - handle: NiSMO
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, raze]
+    age: 18
+  - handle: Nizzy
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [cypher, fade, phoenix]
+    age: 17
+  - handle: Nobody
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, sova]
+    age: 18
+  - handle: Nyang
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, sage, omen]
+    age: 18
+  - handle: Obnoks
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sage, kayo]
+    age: 18
+  - handle: OuTLaW
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, kayo, viper]
+    age: 18
+  - handle: P1nA2k4
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper]
+    age: 18
+  - handle: PANcada
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, brimstone, viper]
+    age: 18
+  - handle: Pancc
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper, cypher]
+    age: 17
+  - handle: PapiChulo
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, omen, brimstone]
+    age: 17
+  - handle: Paradox
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, breach, kayo]
+    age: 17
+  - handle: Pdr
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sage, kayo]
+    age: 18
+  - handle: PEPA
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper, omen]
+    age: 18
+  - handle: Pho
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, sova, breach]
+    age: 18
+  - handle: POACH
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, sova]
+    age: 18
+  - handle: Pollo
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, kayo, skye]
+    age: 18
+  - handle: Psy
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, skye]
+    age: 17
+  - handle: Purp0
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, raze]
+    age: 18
+  - handle: QutionerX
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze]
+    age: 18
+  - handle: Qw1
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber, neon]
+    age: 18
+  - handle: Raafa
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [kayo, sage, killjoy]
+    age: 17
+  - handle: Rabbet
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, sage, sova]
+    age: 18
+  - handle: Rainy
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, sova, sage]
+    age: 18
+  - handle: Rawfiul
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber]
+    age: 18
+  - handle: RDeeW
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, killjoy, neon]
+    age: 18
+  - handle: Redwater877
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, skye, viper]
+    age: 18
+  - handle: Reformed
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, killjoy, brimstone]
+    age: 18
+  - handle: Rexy
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, omen, brimstone]
+    age: 18
+  - handle: RgLM
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, astra]
+    age: 18
+  - handle: Rin
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, killjoy, brimstone]
+    age: 17
+  - handle: Rio
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, breach]
+    age: 17
+  - handle: Ripper
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, brimstone]
+    age: 18
+  - handle: Rite2ace
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, breach, sova]
+    age: 17
+  - handle: ROLEX
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper, cypher]
+    age: 17
+  - handle: Rossy
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, breach, viper]
+    age: 18
+  - handle: Roxie
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, sova, kayo]
+    age: 18
+  - handle: Rubkkoide
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, jett]
+    age: 17
+  - handle: Runi
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, breach, sova]
+    age: 17
+  - handle: RvK
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, sova, viper]
+    age: 18
+  - handle: Ryotzz
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sova, breach]
+    age: 18
+  - handle: Sayaplayer
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze]
+    age: 18
+  - handle: SEIDER
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, sage]
+    age: 18
+  - handle: SenyorCarL
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [astra, fade, breach]
+    age: 17
+  - handle: Seven
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber, raze]
+    age: 18
+  - handle: SEVERiNE
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, viper, omen]
+    age: 18
+  - handle: Shi77
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper]
+    age: 17
+  - handle: Shin
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [gekko, skye, sova]
+    age: 17
+  - handle: Shiro
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, fade, chamber]
+    age: 18
+  - handle: Shyy
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [fade, kayo]
+    age: 18
+  - handle: Siraphop
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, skye, breach]
+    age: 17
+  - handle: SiuFatBB
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, skye, yoru]
+    age: 18
+  - handle: SkillZ
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, astra, omen]
+    age: 18
+  - handle: SkRossi
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber]
+    age: 18
+  - handle: Skuba
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, astra, omen]
+    age: 18
+  - handle: Smoggy
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, kayo]
+    age: 18
+  - handle: Something
+    region: emea
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, gekko, yoru]
+    age: 17
+  - handle: SouhcNi
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, cypher, killjoy]
+    age: 17
+  - handle: SpY
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, neon]
+    age: 18
+  - handle: Stix
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, sova, omen]
+    age: 18
+  - handle: STYRON
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, fade]
+    age: 18
+  - handle: SugarZ3ro
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, astra, omen]
+    age: 18
+  - handle: Suka
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, killjoy]
+    age: 18
+  - handle: Surf
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, jett]
+    age: 18
+  - handle: SUYGETSU
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [viper, sage, cypher]
+    age: 18
+  - handle: Sw
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, astra, brimstone]
+    age: 17
+  - handle: Swag
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, sage, viper]
+    age: 18
+  - handle: Sylvan
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, omen, viper]
+    age: 18
+  - handle: Tacolilla
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, skye]
+    age: 18
+  - handle: Techno
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, sova, reyna]
+    age: 17
+  - handle: Teerapong
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, chamber, sage]
+    age: 18
+  - handle: TENNN
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, killjoy, kayo]
+    age: 18
+  - handle: Tesseract
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, skye, fade]
+    age: 17
+  - handle: Texta
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, brimstone, viper]
+    age: 18
+  - handle: Theory
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, killjoy]
+    age: 17
+  - handle: Tisora
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Tixx
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, kayo]
+    age: 17
+  - handle: Tockers
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, kayo, breach]
+    age: 17
+  - handle: TORANECO
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, viper]
+    age: 17
+  - handle: Trent
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, skye, breach]
+    age: 18
+  - handle: Tricky
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, neon]
+    age: 17
+  - handle: Tryst
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, kayo, brimstone]
+    age: 17
+  - handle: Tuli
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: Tuyz
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, chamber, reyna]
+    age: 18
+  - handle: Twisten
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [cypher, raze, jett]
+    age: 18
+  - handle: Txozin
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy]
+    age: 17
+  - handle: TZH
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [astra, viper, harbor]
+    age: 17
+  - handle: V1nNy
+    region: americas
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [sova, skye, viper]
+    age: 18
+  - handle: Valyn
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, omen, viper]
+    age: 18
+  - handle: Venka
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze, chamber]
+    age: 17
+  - handle: Vera
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, cypher]
+    age: 17
+  - handle: Veroneze
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, sova, skye]
+    age: 18
+  - handle: Vibhor
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, astra, viper]
+    age: 17
+  - handle: Viness
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper]
+    age: 18
+  - handle: Virtyy
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, neon]
+    age: 17
+  - handle: Vong
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper, skye]
+    age: 18
+  - handle: Voo
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy]
+    age: 17
+  - handle: Vow
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, chamber, viper]
+    age: 18
+  - handle: W1nner
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [kayo, sova, raze]
+    age: 18
+  - handle: Wannafly
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [killjoy, chamber, viper]
+    age: 18
+  - handle: WAT
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, astra, viper]
+    age: 17
+  - handle: We1yan
+    region: pacific
+    role: flex
+    playstyle: lurker
+    igl: false
+    quality: 66
+    agents: [sage]
+    age: 18
+  - handle: Weber
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, killjoy, breach]
+    age: 17
+  - handle: Whimp
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy, viper, astra]
+    age: 17
+  - handle: Whz
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: Wild0reoo
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, chamber, viper]
+    age: 18
+  - handle: Will
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, chamber, jett]
+    age: 18
+  - handle: Wolfen
+    region: emea
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, sova, killjoy]
+    age: 18
+  - handle: WRONSKI
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [jett, raze, chamber]
+    age: 18
+  - handle: Xenom
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [raze, jett]
+    age: 17
+  - handle: Xffero
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, omen, viper]
+    age: 18
+  - handle: Xnfri
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, chamber, kayo]
+    age: 18
+  - handle: XXiF
+    region: americas
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [sage, raze, kayo]
+    age: 18
+  - handle: XyuS
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: XZe
+    region: pacific
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [omen, brimstone, astra]
+    age: 17
+  - handle: YaBoiLewis
+    region: pacific
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 66
+    agents: [raze, kayo]
+    age: 18
+  - handle: YanLi
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [kayo, breach]
+    age: 17
+  - handle: YESicaN
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [skye, viper, raze]
+    age: 18
+  - handle: YHchen
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [breach, kayo]
+    age: 17
+  - handle: Yosemite
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, killjoy]
+    age: 17
+  - handle: Yoshiii
+    region: pacific
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [skye, breach, killjoy]
+    age: 17
+  - handle: YouBreak
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [brimstone, viper, killjoy]
+    age: 18
+  - handle: YRSelect
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper, brimstone]
+    age: 18
+  - handle: YTao
+    region: china
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper, omen]
+    age: 18
+  - handle: Yuicaw
+    region: china
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Yurii
+    region: emea
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 66
+    agents: [breach, skye, sage]
+    age: 18
+  - handle: Zanatsu
+    region: americas
+    role: duelist
+    playstyle: entry
+    igl: false
+    quality: 65
+    agents: [jett, raze]
+    age: 17
+  - handle: Zander
+    region: americas
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [astra, viper, brimstone]
+    age: 18
+  - handle: ZE1SH
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [viper, kayo, breach]
+    age: 17
+  - handle: Zeddy
+    region: emea
+    role: controller
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [omen, viper, breach]
+    age: 18
+  - handle: Zey
+    region: pacific
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 65
+    agents: [killjoy]
+    age: 17
+  - handle: Zjc
+    region: china
+    role: initiator
+    playstyle: support
+    igl: false
+    quality: 65
+    agents: [sova, skye, raze]
+    age: 17
+  - handle: ZmjjKK
+    region: china
+    role: sentinel
+    playstyle: anchor
+    igl: false
+    quality: 66
+    agents: [chamber, raze]
+    age: 18

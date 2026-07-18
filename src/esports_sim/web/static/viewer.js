@@ -1672,6 +1672,7 @@ function closeViewer() {
   if (summary) summary.remove();
   document.getElementById("viewer").classList.add("hidden");
 }
+window.closeViewer = closeViewer;
 
 document.getElementById("v-play").onclick = () => {
   if (!V) return;
