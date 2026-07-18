@@ -2452,3 +2452,22 @@ tbody tr {
   flex-wrap: wrap; margin-bottom: var(--es-space-3, 10px); }
 .draft-pool-controls input { min-width: 220px; }
 .draft-pool table td { white-space: nowrap; }
+
+/* Fantasy draft — pre-draft interview + org offers */
+.draft-interview h2 { margin: var(--es-space-2, 8px) 0; }
+.draft-iv-options { display: grid; gap: var(--es-space-3, 10px);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.draft-iv-option { text-align: left; padding: var(--es-space-4, 12px);
+  background: var(--es-color-bg-sunken, #0b1019);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #26324a);
+  border-radius: var(--es-radius-md, 6px); cursor: pointer;
+  color: var(--es-color-text-primary, #e8edf5); font: inherit; }
+.draft-iv-option:hover { border-color: var(--es-color-text-warning, #e5a53a); }
+.draft-offer-grid { display: grid; gap: var(--es-space-3, 10px);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.draft-offer { display: flex; flex-direction: column; gap: var(--es-space-2, 6px); }
+.draft-offer h3 { margin: 0; }
+.draft-offer button { margin-top: auto; }
+.draft-offer-goal { font-style: italic; }
+.draft-mandate { margin-top: var(--es-space-1, 4px); font-size: var(--es-text-sm, 12px); }
+.draft-mandate .pill { margin-right: var(--es-space-1, 4px); }

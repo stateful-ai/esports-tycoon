@@ -38,6 +38,7 @@ ACTION_KINDS = frozenset(
         "sim_ahead",
         "scenario_start",
         "draft_begin",
+        "draft_interview",
         "draft_pick",
         "draft_prefs",
         "set_training",

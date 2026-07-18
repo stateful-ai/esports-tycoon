@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 34
+SCHEMA_VERSION = 35
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -533,6 +533,14 @@ def _migrate_v33_to_v34(data: dict) -> dict:
     return data
 
 
+def _migrate_v34_to_v35(data: dict) -> dict:
+    """v35 adds the pre-draft interview: DraftPrefs grows style/region/
+    identity fields, FantasyDraftState grows `deals_by`. Pure additive
+    pass-through — every new field has a neutral default (empty = the
+    pre-interview behaviour), so a v34 mid-draft save loads unchanged."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -567,6 +575,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     31: _migrate_v31_to_v32,
     32: _migrate_v32_to_v33,
     33: _migrate_v33_to_v34,
+    34: _migrate_v34_to_v35,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1564,12 +1573,36 @@ class DraftPick(BaseModel):
 class DraftPrefs(BaseModel):
     """A manager's draft-board preferences. They steer the recommendation
     panel (and, for AI orgs, the same value function) — never the legality
-    of a pick."""
+    of a pick. The interview fields (identity/styles/attr focus/region)
+    are seeded from the pre-draft interview and stay empty for AI orgs and
+    pre-interview saves, so the base value function is unchanged there."""
 
     model_config = ConfigDict(extra="forbid")
 
     strategy: str = "balanced"  # balanced | win_now | youth
     language_focus: bool = True  # weight shared comms languages
+    # Interview-derived style identity (fantasy_draft.INTERVIEW):
+    identity: str = ""  # ring_hunter | prodigy_whisperer | moneyball
+    preferred_styles: list[str] = Field(default_factory=list)  # playstyles
+    attr_focus: list[str] = Field(default_factory=list)  # attribute ids
+    preferred_region: str = ""  # "" = anywhere
+    # The raw interview answers, kept for provenance/flavor rendering.
+    answers: dict[str, str] = Field(default_factory=dict)
+
+
+class DraftDeal(BaseModel):
+    """The org offer a manager accepted out of the pre-draft interview:
+    flavor identity plus its one concrete effect (the war-chest bonus,
+    applied once at accept time). Sandbox never fires you — the goal is a
+    mandate to chase, not a dismissal clock."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    archetype: str = ""  # believer | blank_check | project | wildcard
+    label: str = ""
+    goal: str = ""
+    blurb: str = ""
+    balance_bonus: int = 0
 
 
 class FantasyDraftState(BaseModel):
@@ -1590,6 +1623,8 @@ class FantasyDraftState(BaseModel):
     pool_ids: list[str] = Field(default_factory=list)  # still available
     picks: list[DraftPick] = Field(default_factory=list)
     prefs_by: dict[str, DraftPrefs] = Field(default_factory=dict)
+    # Accepted interview deals per human org (flavor + applied bonus).
+    deals_by: dict[str, DraftDeal] = Field(default_factory=dict)
 
 
 class GameState(BaseModel):

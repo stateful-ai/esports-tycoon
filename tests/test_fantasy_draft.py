@@ -167,3 +167,118 @@ def test_drafted_world_ticks(game_data):
     week = gs.week
     advance_week(gs, game_data)
     assert gs.week == week + 1
+
+
+# ---------------------------------------------------------------------------
+# Pre-draft interview
+
+_ANSWERS = {
+    "identity": "ring_hunter",
+    "style": "w_key",
+    "region": "emea",
+    "comms": "vibes",
+    "org_life": "big_org",
+}
+
+
+def test_interview_questions_shape(game_data):
+    from esports_sim.manager.campaign import LEAGUE_REGIONS
+
+    qs = fd.interview_questions(LEAGUE_REGIONS)
+    assert [q["id"] for q in qs] == [
+        "identity", "style", "region", "comms", "org_life",
+    ]
+    for q in qs:
+        assert q["prompt"]
+        assert len(q["options"]) >= 2
+        for o in q["options"]:
+            assert o["id"] and o["label"] and o["blurb"]
+    region = next(q for q in qs if q["id"] == "region")
+    assert [o["id"] for o in region["options"]][-1] == "anywhere"
+
+
+def test_prefs_from_answers_mapping_and_fallbacks(game_data):
+    from esports_sim.manager.campaign import LEAGUE_REGIONS
+
+    prefs = fd.prefs_from_answers(_ANSWERS, LEAGUE_REGIONS)
+    assert prefs.strategy == "win_now"
+    assert prefs.preferred_styles == ["entry", "awper"]
+    assert prefs.preferred_region == "emea"
+    assert prefs.language_focus is False
+    assert prefs.identity == "ring_hunter"
+    # Junk in -> neutral out, never a crash.
+    junk = fd.prefs_from_answers({"identity": "xx", "region": "moon"}, LEAGUE_REGIONS)
+    assert junk.strategy == "balanced"
+    assert junk.preferred_region == ""
+
+
+def test_interview_offers_contract(game_data):
+    gs = new_campaign(game_data, seed=99, fantasy_draft=True)
+    offers = fd.interview_offers(
+        gs.teams, gs.seed, _ANSWERS, set(), gs.league_regions
+    )
+    assert [o["archetype"] for o in offers] == [
+        "believer", "blank_check", "project", "wildcard",
+    ]
+    ids = [o["team_id"] for o in offers]
+    assert len(set(ids)) == 4
+    assert all(gs.teams[t].tier == 1 for t in ids)
+    assert offers[0]["region"] == "emea"  # believer honors home region
+    # Deterministic, and taken seats vanish from the slate.
+    assert offers == fd.interview_offers(
+        gs.teams, gs.seed, _ANSWERS, set(), gs.league_regions
+    )
+    without = fd.interview_offers(
+        gs.teams, gs.seed, _ANSWERS, {ids[0]}, gs.league_regions
+    )
+    assert ids[0] not in {o["team_id"] for o in without}
+
+
+def test_apply_interview_deal_and_style_lane(game_data):
+    gs = new_campaign(game_data, seed=99, fantasy_draft=True)
+    offers = fd.interview_offers(
+        gs.teams, gs.seed, _ANSWERS, set(), gs.league_regions
+    )
+    project = next(o for o in offers if o["archetype"] == "project")
+    before = gs.teams[project["team_id"]].balance
+    fd.apply_interview(gs, project["team_id"], _ANSWERS, taken=set())
+    d = gs.fantasy_draft
+    assert gs.teams[project["team_id"]].balance == before + project["balance_bonus"]
+    assert d.deals_by[project["team_id"]].archetype == "project"
+    assert d.prefs_by[project["team_id"]].preferred_styles == ["entry", "awper"]
+    # An org outside the slate gets prefs but no deal/bonus.
+    other = next(t for t in d.order if t not in {o["team_id"] for o in offers})
+    b0 = gs.teams[other].balance
+    fd.apply_interview(gs, other, _ANSWERS, taken=set())
+    assert gs.teams[other].balance == b0
+    assert other not in d.deals_by
+    assert other in d.prefs_by
+
+    # The interview reshapes the style lane vs. the neutral board, and the
+    # BPA lane ignores prefs entirely.
+    gs.user_team_id = project["team_id"]
+    gs.human_team_ids = [project["team_id"]]
+    fd.begin(gs)
+    styled = [r["player_id"] for r in fd.recommendations(gs, project["team_id"], 10)]
+    d.prefs_by[project["team_id"]] = fd.DraftPrefs()
+    neutral = [r["player_id"] for r in fd.recommendations(gs, project["team_id"], 10)]
+    assert styled != neutral
+    bpa = fd.best_available(gs, limit=3)
+    assert len(bpa) == 3
+    scores = [r["score"] for r in bpa]
+    assert scores == sorted(scores, reverse=True)
+
+
+def test_interviewed_autodraft_deterministic(game_data):
+    def build():
+        gs = new_campaign(game_data, seed=414, fantasy_draft=True)
+        offers = fd.interview_offers(
+            gs.teams, gs.seed, _ANSWERS, set(), gs.league_regions
+        )
+        fd.apply_interview(gs, offers[0]["team_id"], _ANSWERS, taken=set())
+        gs.user_team_id = offers[0]["team_id"]
+        gs.human_team_ids = [offers[0]["team_id"]]
+        _autodraft(gs)
+        return gs
+
+    assert build().model_dump_json() == build().model_dump_json()

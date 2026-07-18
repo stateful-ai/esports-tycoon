@@ -78,7 +78,12 @@ Published at github.com/stateful-ai/esports-tycoon.
   and the human recommendation panel share ONE value function, AI leans
   are blake2-derived, and the web layer gates advancing until the last
   pick — after `_complete` the campaign is indistinguishable from a
-  classic start), `development.py` (traits/PA, scout
+  classic start. A pre-draft INTERVIEW (server-owned meme-y copy) seeds
+  DraftPrefs style/region/identity fields and picks four contrasting org
+  offers — believer/blank-check/project/wildcard, pure blake2, enforced
+  like legacy career offers — whose deal applies a war-chest bonus; the
+  draft screen then shows a "fits your style" lane beside a neutral
+  best-player-available lane), `development.py` (traits/PA, scout
   precision, weekly random dev events on a dedicated rng stream),
   `training.py` (system-fit growth, per-player dev_focus/intensity plans,
   match-XP from box-score lines, bench scrim reps), `academy.py` (tier-1
