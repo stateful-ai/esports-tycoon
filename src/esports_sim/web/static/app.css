@@ -2536,9 +2536,6 @@ tbody tr {
  * Dark-first desktop app; below 900px the chrome must stop overflowing.
  * ================================================================== */
 
-/* Body-text floor: nothing meaningful renders under 11px. */
-#view, #view td, #view th, #view .muted { font-size: 11px; }
-
 /* Tables scroll horizontally instead of crushing columns on narrow screens.
    (Cards keep their own padding; only genuine wide grids get the scroll.) */
 .table-scroll, .roster-card { overflow-x: auto; }
