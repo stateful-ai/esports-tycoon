@@ -3061,7 +3061,7 @@ function pipelineBoardCard(pipeline) {
           `<div class="pipeline-row-top"><span class="dev-digest-name">${plink(p.id, p.handle)}</span>` +
           `${p.age != null ? `<span class="muted pipeline-age">${p.age}</span>` : ""}</div>` +
           `<div class="pipeline-row-bot"><span class="es-spark-wrap">${sparkline(p.ca_series || p.series)}</span>` +
-          `<span class="pipeline-ca mono" title="current ability">${Math.round(p.ca ?? 0)}</span>${stars}</div>`));
+          `<span class="pipeline-ca mono" title="current ability">${Math.round(p.ability ?? 0)}</span>${stars}</div>`));
       }
     }
     grid.appendChild(col);
@@ -5869,9 +5869,9 @@ function scoutLanesCard(lanes) {
   // fill_gap needs a role + caliber; only shown when that directive is picked.
   const gapWrap = el("div", "scout-gap-row");
   const roleOpts = pro.role_options && pro.role_options.length ? pro.role_options
-    : ["duelist", "controller", "initiator", "sentinel", "igl"];
+    : ["duelist", "controller", "initiator", "sentinel", "flex"];
   const calOpts = pro.caliber_options && pro.caliber_options.length ? pro.caliber_options
-    : ["tier1", "tier2", "prospect"];
+    : ["star", "tier1", "starter", "tier2"];
   const parts = String(pro.directive || "").split(":");
   const roleSel = el("select", "sel-sm");
   for (const x of roleOpts) { const o = el("option", "", humanize(x)); o.value = x; if (x === parts[1]) o.selected = true; roleSel.appendChild(o); }
@@ -5956,12 +5956,12 @@ function scoutShortlistCard(shortlist, proLane) {
     const band = (p.uncertainty_low != null && p.uncertainty_high != null)
       ? ` <span class="muted" title="scout-precision uncertainty band">±${starsRange([p.uncertainty_low, p.uncertainty_high])}</span>`
       : "";
-    row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span>` +
+    row.innerHTML = `<span class="entity-name">${plink(p.player_id, p.handle)}</span>` +
       `<span class="entity-meta">${esc(p.role || "")}${p.team_name ? " · " + esc(p.team_name) : " · free agent"}` +
       `${p.ca_stars ? " · " + starsRange(p.ca_stars) : ""}${band}</span>`;
     const b = el("button", "btn btn-sm", "Deep-dive");
     b.onclick = async () => {
-      const r = await api("/api/actions/scout", { player_id: p.id });
+      const r = await api("/api/actions/scout", { player_id: p.player_id });
       toast(r.message); renderApp();
     };
     row.appendChild(b);

@@ -504,7 +504,8 @@ def _migrate_v32_to_v33(data: dict) -> dict:
     ):
         data.setdefault(field, {})
     lanes = data["scout_lanes_by"]
-    for tid, value in sorted((data.get("scout_targets") or {}).items()):
+    targets = data.get("scout_targets") or {}
+    for tid, value in sorted(targets.items()):
         if not value or tid in lanes:
             continue
         # 'player:<pid>' or 'market' were amateur/market sweeps; a bare rival
@@ -513,6 +514,14 @@ def _migrate_v32_to_v33(data: dict) -> dict:
             lanes[tid] = {"amateur": value}
         else:
             lanes[tid] = {"pro": value}
+        # Move, don't copy: the value now lives in the standing lane, and
+        # scouting._tick_one advances the lanes AND any leftover
+        # gs.scout_target. Leaving the slot populated would advance the same
+        # assignment twice on the first post-migration tick (inflating scout
+        # progress / match-attend coverage). The RL single-slot path re-sets
+        # its own target as an action, so clearing it here is safe.
+        targets[tid] = None
+    data["scout_targets"] = targets
     return data
 
 

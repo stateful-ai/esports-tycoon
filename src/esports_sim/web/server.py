@@ -6406,7 +6406,18 @@ def scouting_view() -> dict:
             # scoutLanesCard / scoutShortlistCard / the recs block in app.js).
             # Surface them from the desk so the standing-directive UI renders
             # instead of falling back to the legacy single-slot desk only.
-            "lanes": {"pro": desk["pro"], "amateur": desk["amateur"]},
+            "lanes": {
+                # The fill_gap picker must offer only filters the server accepts:
+                # roles are the canonical Role enum (str(p.role) is matched in
+                # _build_shortlist), calibers are the CALIBER_FLOOR keys. Shipped
+                # so the client never falls back to invalid values (igl/prospect).
+                "pro": {
+                    **desk["pro"],
+                    "role_options": [r.value for r in Role],
+                    "caliber_options": sorted(scouting.CALIBER_FLOOR),
+                },
+                "amateur": desk["amateur"],
+            },
             "shortlist": desk["pro"].get("shortlist", []),
             "deep_dive_recommendations": desk["recommended"],
             "target": target,
