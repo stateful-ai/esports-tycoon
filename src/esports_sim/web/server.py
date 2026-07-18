@@ -39,6 +39,7 @@ from esports_sim.manager import (
     development,
     economy,
     facilities as facilities_mod,
+    fantasy_draft as fantasy_draft_mod,
     flavor_events,
     gm_personalities,
     inbox as inbox_mod,
@@ -87,7 +88,12 @@ from esports_sim.manager.campaign import (
     suggested_five,
 )
 from esports_sim import perf
-from esports_sim.manager.state import GamePlan, GameState, PlayerSeasonStats
+from esports_sim.manager.state import (
+    DraftPrefs,
+    GamePlan,
+    GameState,
+    PlayerSeasonStats,
+)
 from esports_sim.manager.training import (
     DEV_FOCUS_OPTIONS,
     FOCUS_OPTIONS,
@@ -351,6 +357,7 @@ class Lobby:
         game_mode: str = "sandbox",
         manager_name: str = "",
         scenario: str | None = None,
+        fantasy_draft: bool = False,
     ) -> _Game:
         with self._lock:
             # Code allocation must not depend on wall-clock/hash() (determinism
@@ -385,6 +392,14 @@ class Lobby:
                 known = set(preview.teams)
             if team_id not in known:
                 raise HTTPException(422, f"unknown team '{team_id}'")
+            if fantasy_draft:
+                src = pack.teams if pack is not None else preview.teams
+                if src[team_id].tier != 1:
+                    raise HTTPException(
+                        422,
+                        "fantasy-draft starts need a tier-1 organisation — "
+                        "Challengers clubs don't enter the draft",
+                    )
             offer = None
             if game_mode == "legacy":
                 # Re-derive the founding seat's offer slate server-side and
@@ -409,7 +424,13 @@ class Lobby:
                 self.gd, seed=seed, user_team_id=team_id, pack=pack,
                 mode=game_mode, manager_name=manager_name,
                 career_offer=offer, scenario=scenario,
+                fantasy_draft=fantasy_draft,
             )
+            if fantasy_draft and not shared:
+                # Solo world: nobody else will claim a seat, so open the
+                # board immediately (AI picks resolve up to the host's first
+                # turn). Shared worlds wait for the host's explicit begin.
+                fantasy_draft_mod.begin(gs)
             if scenario:
                 # The scenario pick is a human decision like any other —
                 # the mutation itself is chronicled inside new_campaign.
@@ -441,6 +462,15 @@ class Lobby:
             gs = game.gs
             if team_id not in gs.teams:
                 return None, "unknown team"
+            if (
+                gs.fantasy_draft is not None
+                and gs.fantasy_draft.active
+                and gs.teams[team_id].tier != 1
+            ):
+                return None, (
+                    "the fantasy draft is running — join a tier-1 "
+                    "organisation so you can make your picks"
+                )
             # A human seat is claimable unless another browser session is
             # CURRENTLY attached to it — so leaving a world and rejoining
             # your old seat (same or different browser) just works.
@@ -1393,8 +1423,11 @@ def _last_match_review(
 
 
 def _team_options(gs: GameState, taken: set[str]) -> list[dict]:
+    # `tier` rides along for the lobby: a fantasy-draft start only makes
+    # sense at a tier-1 org (Challengers clubs don't enter the draft), so
+    # the client filters the pick grid on it.
     return [
-        {**_team_view(t, gs), "taken": t.id in taken}
+        {**_team_view(t, gs), "taken": t.id in taken, "tier": t.tier}
         for t in sorted(gs.teams.values(), key=lambda t: t.id)
     ]
 
@@ -1588,6 +1621,12 @@ def lobby_teams(code: str) -> dict:
             "code": code,
             "mode": game.mode,
             "game_mode": game.gs.game_mode,
+            # While a fantasy draft runs, the join grid steers to tier-1
+            # orgs (the server rejects a Challengers join outright).
+            "fantasy_draft_active": (
+                game.gs.fantasy_draft is not None
+                and game.gs.fantasy_draft.active
+            ),
             "teams": _team_options(game.gs, taken=set(game.gs.human_team_ids)),
         }
 
@@ -1602,6 +1641,9 @@ class NewGameBody(BaseModel):
     # Optional sandbox scenario preset id (manager/scenarios.py);
     # None/"" -> the classic start.
     scenario: str | None = None
+    # Fantasy-draft start (sandbox-only): tier-1 rosters are stripped into a
+    # shared pool and every org snake-drafts its ten before week 1.
+    fantasy_draft: bool = False
 
 
 @app.post("/api/new")
@@ -1614,10 +1656,18 @@ def new_game(body: NewGameBody) -> dict:
             raise HTTPException(422, f"unknown scenario '{scenario}'")
         if body.game_mode != "sandbox":
             raise HTTPException(422, "scenario starts are sandbox-only")
+    if body.fantasy_draft:
+        if body.game_mode != "sandbox":
+            raise HTTPException(422, "fantasy-draft starts are sandbox-only")
+        if scenario is not None:
+            raise HTTPException(
+                422, "a fantasy-draft start can't combine with a scenario"
+            )
     game = _LOBBY.create_game(
         _current_sid(), body.team_id, body.seed, body.shared,
         pack_id=body.pack, game_mode=body.game_mode,
         manager_name=body.manager_name, scenario=scenario,
+        fantasy_draft=body.fantasy_draft,
     )
     return {
         "ok": True,
@@ -1939,6 +1989,41 @@ def _needs_you_flags(gs: GameState, tid: str) -> dict:
 def state() -> dict:
     with S.lock:
         gs = S.require_gs()
+        # A fantasy draft in progress gates the whole app: rosters are mid-
+        # build, so the dashboard's roster-derived blocks aren't meaningful
+        # yet. The client routes `draft_active` to the draft screen (which
+        # reads GET /api/draft) instead of the hub.
+        if gs.fantasy_draft is not None and gs.fantasy_draft.active:
+            me = gs.teams[gs.acting_team_id]
+            return {
+                "season": gs.season,
+                "week": gs.week,
+                "phase": gs.phase,
+                "draft_active": True,
+                "user_team": {
+                    "id": me.id, "name": me.name, "tag": me.tag,
+                    "balance": me.balance,
+                },
+                "multiplayer": {
+                    "mode": S.mode,
+                    "code": S.code,
+                    "humans": [
+                        {
+                            "team_id": tid,
+                            "name": gs.teams[tid].name,
+                            "is_you": tid == gs.acting_team_id,
+                        }
+                        for tid in gs.human_team_ids
+                    ],
+                    "ready": [],
+                    "you_ready": False,
+                },
+                "save": {
+                    "dirty": S.dirty,
+                    "autosave_enabled": gs.autosave_enabled,
+                    "autosave_every_weeks": gs.autosave_every_weeks,
+                },
+            }
         user = gs.teams[gs.acting_team_id]
         order = gs.standings_order(str(user.region))
         next_fixture, _next_opp = _next_fixture_board(gs)
@@ -2087,6 +2172,257 @@ def state() -> dict:
 # the shared staff market already shows every coach's style — while the
 # tactics-derived identity and tendencies keep the same >=0.5 scouting
 # gate the roster screen uses. Pure reads only; the client renders.
+
+
+# ---------------------------------------------------------------------------
+# Fantasy draft (campaign start). Thin serializers over gs.fantasy_draft +
+# manager/fantasy_draft.py: the value function, turn order, and AI picks all
+# live in the manager layer; these endpoints only validate, record the human
+# action, and render.
+
+
+def _draft_player_row(gs: GameState, p: Player) -> dict:
+    """One pool/board row. Skill is the public combine read (mean attribute);
+    the ceiling stays a star BAND (development.potential_projection) so the
+    hidden PA is never exposed exactly."""
+    lo, hi = development.potential_projection(p, own=False)
+    return {
+        "id": p.id,
+        "handle": p.handle,
+        "real_name": p.real_name,
+        "age": p.age,
+        "region": str(p.region),
+        "country": p.country,
+        "role": str(p.role),
+        "playstyle": str(p.playstyle),
+        "is_igl": str(p.playstyle) == "igl",
+        "skill": round(market.player_quality(p)),
+        "potential_stars": [development.stars(lo), development.stars(hi)],
+        "languages": _language_views(p),
+        "asking_salary": market.asking_salary(p),
+    }
+
+
+def _draft_squad_langs(gs: GameState, pick_ids: list[str]) -> list[dict]:
+    """Working-language coverage of the picked squad ({lang, speakers}),
+    strongest first — the comms-cohesion read next to the projected five."""
+    counts: dict[str, int] = {}
+    for pid in pick_ids:
+        for skill in gs.players[pid].languages:
+            if skill.level >= 40:
+                counts[skill.lang] = counts.get(skill.lang, 0) + 1
+    return [
+        {"lang": lang, "speakers": n}
+        for lang, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]
+
+
+def _draft_view(gs: GameState, d) -> dict:
+    me = gs.acting_team_id
+    n = len(d.order)
+    overall = len(d.picks)
+    total = fantasy_draft_mod.total_picks(d)
+    clock = fantasy_draft_mod.on_clock(d)
+    prefs = fantasy_draft_mod.prefs_for(gs, me)
+
+    my_pick_ids = [pk.player_id for pk in d.picks if pk.team_id == me]
+    my_rows = []
+    for pk in d.picks:
+        if pk.team_id != me:
+            continue
+        row = _draft_player_row(gs, gs.players[pk.player_id])
+        row["round"] = pk.round
+        my_rows.append(row)
+    lineup_ids = sorted(
+        my_pick_ids,
+        key=lambda q: (-market.player_quality(gs.players[q]), q),
+    )[: market.ROSTER_SIZE]
+
+    pool_rows = [
+        _draft_player_row(gs, gs.players[pid])
+        for pid in sorted(
+            d.pool_ids,
+            key=lambda q: (-market.player_quality(gs.players[q]), q),
+        )
+    ]
+
+    recs = []
+    if d.active:
+        for r in fantasy_draft_mod.recommendations(gs, me, limit=5):
+            row = _draft_player_row(gs, gs.players[r["player_id"]])
+            row["score"] = r["score"]
+            row["reasons"] = r["reasons"]
+            recs.append(row)
+
+    upcoming = []
+    for k in range(overall, min(overall + 10, total)):
+        tid = fantasy_draft_mod.pick_team(d, k)
+        upcoming.append(
+            {
+                "overall": k,
+                "round": k // n + 1,
+                "team_id": tid,
+                "name": gs.teams[tid].name,
+                "tag": gs.teams[tid].tag,
+                "is_you": tid == me,
+                "human": tid in gs.human_team_ids,
+            }
+        )
+
+    recent = []
+    for pk in reversed(d.picks[-14:]):
+        p = gs.players[pk.player_id]
+        recent.append(
+            {
+                "overall": pk.overall,
+                "round": pk.round,
+                "team_id": pk.team_id,
+                "team_name": gs.teams[pk.team_id].name,
+                "tag": gs.teams[pk.team_id].tag,
+                "is_you": pk.team_id == me,
+                "player_id": p.id,
+                "handle": p.handle,
+                "role": str(p.role),
+                "skill": round(market.player_quality(p)),
+            }
+        )
+
+    return {
+        "active": d.active,
+        "started": d.started,
+        "complete": not d.active,
+        "rounds": d.rounds,
+        "teams": n,
+        "total_picks": total,
+        "overall": overall,
+        "round": min(overall // n + 1, d.rounds) if n else 0,
+        "on_clock": clock,
+        "on_clock_name": gs.teams[clock].name if clock else None,
+        "your_turn": clock == me,
+        "is_host": me == gs.user_team_id,
+        "your_team": {"id": me, "name": gs.teams[me].name, "tag": gs.teams[me].tag},
+        "order": [
+            {
+                "team_id": tid,
+                "name": gs.teams[tid].name,
+                "tag": gs.teams[tid].tag,
+                "is_you": tid == me,
+                "human": tid in gs.human_team_ids,
+            }
+            for tid in d.order
+        ],
+        "upcoming": upcoming,
+        "recent_picks": recent,
+        "your_picks": my_rows,
+        "projected_lineup": lineup_ids,
+        "squad_langs": _draft_squad_langs(gs, my_pick_ids),
+        "pool": pool_rows,
+        "recommendations": recs,
+        "prefs": {
+            "strategy": prefs.strategy,
+            "language_focus": prefs.language_focus,
+        },
+        "strategies": list(fantasy_draft_mod.STRATEGIES),
+        "humans": [
+            {
+                "team_id": tid,
+                "name": gs.teams[tid].name,
+                "is_you": tid == me,
+            }
+            for tid in gs.human_team_ids
+        ],
+    }
+
+
+def _require_draft(gs: GameState):
+    d = gs.fantasy_draft
+    if d is None:
+        raise HTTPException(
+            404, "this world was not created with a fantasy draft"
+        )
+    return d
+
+
+@app.get("/api/draft")
+def draft_state() -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        return _draft_view(gs, _require_draft(gs))
+
+
+@app.post("/api/draft/begin")
+def draft_begin() -> dict:
+    """Host-only: open the board of a shared world once everyone has joined
+    (solo worlds begin at creation). AI picks resolve up to the first human
+    turn."""
+    with S.lock:
+        gs = S.require_gs()
+        d = _require_draft(gs)
+        if not d.active:
+            raise HTTPException(409, "the draft is already complete")
+        if gs.acting_team_id != gs.user_team_id:
+            raise HTTPException(403, "only the host manager can open the draft")
+        if not d.started:
+            fantasy_draft_mod.begin(gs)
+            telemetry.record_action(gs, "draft_begin", {})
+            S.save(force=True)
+        return _draft_view(gs, d)
+
+
+class DraftPickBody(BaseModel):
+    player_id: str
+
+
+@app.post("/api/draft/pick")
+def draft_pick(body: DraftPickBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        d = _require_draft(gs)
+        me = gs.acting_team_id
+        if not d.active:
+            raise HTTPException(409, "the draft is already complete")
+        if not d.started:
+            raise HTTPException(409, "the draft hasn't been opened yet")
+        if fantasy_draft_mod.on_clock(d) != me:
+            raise HTTPException(409, "you're not on the clock")
+        if body.player_id not in d.pool_ids:
+            raise HTTPException(422, "that player isn't in the draft pool")
+        fantasy_draft_mod.make_pick(gs, me, body.player_id)
+        telemetry.record_action(
+            gs, "draft_pick", {"player_id": body.player_id}
+        )
+        # Chain the AI to the next human turn (or through completion).
+        fantasy_draft_mod.run_ai(gs)
+        S.save(force=True)
+        return _draft_view(gs, d)
+
+
+class DraftPrefsBody(BaseModel):
+    strategy: str = "balanced"
+    language_focus: bool = True
+
+
+@app.post("/api/draft/prefs")
+def draft_prefs(body: DraftPrefsBody) -> dict:
+    with S.lock:
+        gs = S.require_gs()
+        d = _require_draft(gs)
+        if body.strategy not in fantasy_draft_mod.STRATEGIES:
+            raise HTTPException(422, f"unknown strategy '{body.strategy}'")
+        me = gs.acting_team_id
+        d.prefs_by[me] = DraftPrefs(
+            strategy=body.strategy, language_focus=body.language_focus
+        )
+        telemetry.record_action(
+            gs,
+            "draft_prefs",
+            {
+                "strategy": body.strategy,
+                "language_focus": body.language_focus,
+            },
+        )
+        S.save()
+        return _draft_view(gs, d)
 
 
 def _danger_men(gs: GameState, tid: str, n: int = 3) -> list[dict]:
@@ -6802,6 +7138,10 @@ def advance() -> dict:
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
+        if gs.fantasy_draft is not None and gs.fantasy_draft.active:
+            raise HTTPException(
+                409, "finish the fantasy draft before the season can start"
+            )
         pending = flavor_events.pending_for(gs, me)
         if pending is not None:
             raise HTTPException(
@@ -6906,6 +7246,10 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
+        if gs.fantasy_draft is not None and gs.fantasy_draft.active:
+            raise HTTPException(
+                409, "finish the fantasy draft before the season can start"
+            )
         if len(gs.human_team_ids) > 1:
             raise HTTPException(
                 409, "sim ahead is solo-only — shared worlds advance by ready-up"

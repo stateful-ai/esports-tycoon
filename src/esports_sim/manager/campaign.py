@@ -53,6 +53,9 @@ from esports_sim.manager.economy import (
     apply_weekly_finance,
     pay_playoff_prizes,
 )
+
+# Aliased: new_campaign's `fantasy_draft` flag would shadow the module name.
+from esports_sim.manager import fantasy_draft as fantasy_draft_mod
 from esports_sim.schemas.common import Region
 from esports_sim.registry.rosters import RosterPack
 from esports_sim.manager.gen import (
@@ -176,6 +179,7 @@ def new_campaign(
     manager_name: str = "",
     career_offer=None,
     scenario: str | None = None,
+    fantasy_draft: bool = False,
 ) -> GameState:
     """Build season 1. With a roster pack, the pack's teams/players replace
     the fictional starters and its world block sets the league shape;
@@ -195,6 +199,11 @@ def new_campaign(
             raise ValueError(f"unknown scenario '{scenario}'")
         if mode != "sandbox":
             raise ValueError("scenario starts are a sandbox-mode feature")
+    if fantasy_draft:
+        if mode != "sandbox":
+            raise ValueError("the fantasy-draft start is a sandbox-mode feature")
+        if scenario is not None:
+            raise ValueError("a fantasy-draft start can't combine with a scenario")
     rng = RngTree(seed).derive("campaign", "gen")
 
     if pack is not None:
@@ -253,6 +262,22 @@ def new_campaign(
         players[p.id] = p
     fas = pack_fas + fas
 
+    # Fantasy-draft start: top the world up with a generated draft class so
+    # the shared pool (stripped tier-1 rosters + free agents + this class)
+    # covers ten picks per org with surplus. Generated HERE, before the
+    # identity/backfill/variance loops below, so draftees flow through the
+    # exact same per-player seeding as everyone else.
+    draft_class_ids: list[str] = []
+    if fantasy_draft:
+        n_t1 = sum(1 for t in teams.values() if t.tier == 1)
+        rostered_t1 = sum(
+            len(t.player_ids) for t in teams.values() if t.tier == 1
+        )
+        need = fantasy_draft_mod.draft_class_size(n_t1, rostered_t1 + len(fas))
+        for p in fantasy_draft_mod.generate_draft_class(rng, gd, regions, need):
+            players[p.id] = p
+            draft_class_ids.append(p.id)
+
     # Authored players (YAML starters / roster packs) carry only their 2-3
     # signature agents — top the sheet up to the full cast so nobody reads
     # as "never played" on the rest of their role, and give everyone a
@@ -267,7 +292,13 @@ def new_campaign(
     # not a league of brand-new signings, so loyalty premiums vary from the
     # start and the AI churn protections don't freeze week-one management.
     # Free agents stay at 0. Hash-based: no rng stream is touched.
+    # (Skipped for a fantasy-draft start: every tier-1 roster is about to be
+    # stripped into the pool, and drafted players join their org fresh.)
     rostered = {pid for t in teams.values() for pid in t.player_ids}
+    if fantasy_draft:
+        rostered = {
+            pid for t in teams.values() if t.tier != 1 for pid in t.player_ids
+        }
     for pid in rostered:
         p = players[pid]
         p.tenure_weeks = 12 + int(
@@ -294,6 +325,12 @@ def new_campaign(
         standings={tid: TeamRecord() for tid in teams},
         training_focus={tid: "tactical" for tid in teams},
     )
+    if fantasy_draft:
+        # Strip every tier-1 roster into the shared pool and stage the
+        # draft. The seeding cascade below tolerates the empty rosters
+        # (contract/leadership/tactics passes all no-op on them) and
+        # fantasy_draft._complete re-runs those passes once squads exist.
+        fantasy_draft_mod.setup(gs, rng, draft_class_ids)
     career.create_seat(gs, user_team_id, manager_name, offer=career_offer)
     gs.push_news(
         f"Season 1 begins — {len(regions)} regional leagues of "

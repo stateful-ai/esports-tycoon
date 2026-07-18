@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 33
+SCHEMA_VERSION = 34
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -525,6 +525,14 @@ def _migrate_v32_to_v33(data: dict) -> dict:
     return data
 
 
+def _migrate_v33_to_v34(data: dict) -> dict:
+    """v34 adds the fantasy-draft campaign start (`fantasy_draft`). Pure
+    additive pass-through: a pre-draft save never ran one, so the field
+    defaults to None (the classic authored-roster start)."""
+    data.setdefault("fantasy_draft", None)
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -558,6 +566,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     30: _migrate_v30_to_v31,
     31: _migrate_v31_to_v32,
     32: _migrate_v32_to_v33,
+    33: _migrate_v33_to_v34,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1541,6 +1550,48 @@ class MediaDecision(BaseModel):
     settlement: str = ""
 
 
+class DraftPick(BaseModel):
+    """One resolved fantasy-draft selection (append-only while drafting)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    overall: int  # 0-based overall pick number
+    round: int  # 1-based round
+    team_id: str
+    player_id: str
+
+
+class DraftPrefs(BaseModel):
+    """A manager's draft-board preferences. They steer the recommendation
+    panel (and, for AI orgs, the same value function) — never the legality
+    of a pick."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    strategy: str = "balanced"  # balanced | win_now | youth
+    language_focus: bool = True  # weight shared comms languages
+
+
+class FantasyDraftState(BaseModel):
+    """Season-1 fantasy draft (manager/fantasy_draft.py): every tier-1 org
+    fills a full ten-man squad — five starters plus bench/academy depth —
+    from one shared pool via a snake draft. Present only on campaigns
+    created with the fantasy-draft start; `active` flips False after the
+    final pick resolves (the board stays in the save as a record)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    active: bool = True
+    # Shared worlds wait for the host to press "begin" so joiners can claim
+    # seats before the AI picks past their team; solo worlds begin at birth.
+    started: bool = False
+    rounds: int = 10
+    order: list[str] = Field(default_factory=list)  # round-1 pick order
+    pool_ids: list[str] = Field(default_factory=list)  # still available
+    picks: list[DraftPick] = Field(default_factory=list)
+    prefs_by: dict[str, DraftPrefs] = Field(default_factory=dict)
+
+
 class GameState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1583,6 +1634,10 @@ class GameState(BaseModel):
     # Under-17 real players who age/develop every offseason but are hidden
     # from every market and roster query until their scheduled debut.
     future_prospects: dict[str, FutureProspect] = Field(default_factory=dict)
+    # Fantasy-draft campaign start (None = classic authored rosters). While
+    # `.active`, the web layer gates the season: no advancing until every
+    # tier-1 org has drafted its ten.
+    fantasy_draft: FantasyDraftState | None = None
 
     promises: list[ManagerPromise] = Field(default_factory=list)
     fixtures: list[Fixture] = Field(default_factory=list)
