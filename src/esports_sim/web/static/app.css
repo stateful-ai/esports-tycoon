@@ -2275,10 +2275,12 @@ tbody tr {
 
 /* Trajectory sparkline (F1) — inline SVG; color follows trend. */
 .es-spark { display: inline-block; vertical-align: middle; }
-.es-spark polyline { stroke: var(--es-color-text-tertiary, #67748f); }
+.es-spark polyline { stroke: var(--es-color-text-tertiary, #67748f); fill: none; }
 .es-spark circle { fill: var(--es-color-text-tertiary, #67748f); }
-.es-spark.up polyline, .es-spark.up circle { stroke: var(--es-color-success, #3fb68b); fill: var(--es-color-success, #3fb68b); }
-.es-spark.down polyline, .es-spark.down circle { stroke: var(--es-color-danger, #ff4655); fill: var(--es-color-danger, #ff4655); }
+.es-spark.up polyline { stroke: var(--es-color-success, #3fb68b); }
+.es-spark.up circle { stroke: var(--es-color-success, #3fb68b); fill: var(--es-color-success, #3fb68b); }
+.es-spark.down polyline { stroke: var(--es-color-danger, #ff4655); }
+.es-spark.down circle { stroke: var(--es-color-danger, #ff4655); fill: var(--es-color-danger, #ff4655); }
 .es-spark-empty { font-size: 12px; }
 .es-spark-wrap { display: inline-flex; align-items: center; min-width: 74px; }
 

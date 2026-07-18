@@ -121,8 +121,8 @@ async function inboxAfterAdvance() {
 // App.seasonTab is set BEFORE the click so the season render picks it up.
 // The alias never depends on the old Standings/Schedule buttons existing.
 // [host tab, App sub-tab field, sub-tab id] — mirrors TAB_ALIASES in app.js.
-// Roster folded into Club (Squad), Scouting into Market, Social into Finances
-// (the Brand section — financesTab is a scroll hint, not a real sub-tab);
+// Roster folded into Club (Squad), Scouting into Market, and the retired
+// Finances / Social screens into Company's real Finances / Brand sub-tabs;
 // "match" is the visible label of the tactics tab (its internal key is
 // unchanged).
 const INBOX_TAB_ALIAS = {
@@ -131,7 +131,8 @@ const INBOX_TAB_ALIAS = {
   roster: ["club", "clubTab", "squad"],
   scouting: ["market", "marketTab", "scouting"],
   match: ["tactics", "tacticsTab", "strategy"],
-  social: ["finances", "financesTab", "brand"],
+  finances: ["company", "companyTab", "finances"],
+  social: ["company", "companyTab", "brand"],
 };
 function inboxGoTab(tab) {
   const alias = INBOX_TAB_ALIAS[tab];

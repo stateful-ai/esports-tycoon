@@ -7537,9 +7537,21 @@ def player_profile(pid: str) -> dict:
     with S.lock:
         gs = S.require_gs()
         p = gs.players.get(pid)
+        is_future_prospect = False
         if p is None:
-            raise HTTPException(404, "unknown player")
-        fog, progress, is_fa = _player_fog(gs, pid)
+            future = gs.future_prospects.get(pid)
+            if future is None:
+                raise HTTPException(404, "unknown player")
+            # Future-prospect cards use the embedded Player id, but prospects
+            # deliberately do not join gs.players until their debut. Treat the
+            # authored prospect record as a known, unattached player so the
+            # normal read-only profile can render instead of returning 404.
+            p = future.player
+            is_future_prospect = True
+        if is_future_prospect:
+            fog, progress, is_fa = 0.0, 1.0, False
+        else:
+            fog, progress, is_fa = _player_fog(gs, pid)
         team_id = None if is_fa else market.team_of(gs, pid)
         team = gs.teams.get(team_id) if team_id else None
         own = team_id == gs.acting_team_id

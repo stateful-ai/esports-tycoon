@@ -663,9 +663,10 @@ const TAB_ALIASES = {
   // "tactics" so old links keep working, and this alias lets new code say
   // dashGoTab("match") without caring about the internal id.
   match: ["tactics", "tacticsTab", "strategy"],
-  // Social folded into Finances as the "Brand" section; App.financesTab is a
-  // scroll hint the FinancesTab component consumes (and clears) on mount.
-  social: ["finances", "financesTab", "brand"],
+  // Company replaces the old top-level Finances screen with real Finances /
+  // Brand sub-tabs. Keep both retired ids working for inbox and stale links.
+  finances: ["company", "companyTab", "finances"],
+  social: ["company", "companyTab", "brand"],
 };
 
 function renderApp() {
@@ -689,7 +690,7 @@ function renderApp() {
   // finishes into a detached node instead of double-appending.
   const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
-  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, finances })[App.tab](container);
+  ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, company })[App.tab](container);
 }
 
 /* -- helpers ------------------------------------------------------------------ */
@@ -712,20 +713,23 @@ function stylePill(p) {
 function sparkline(points, opts = {}) {
   const pts = (points || []).filter((n) => n != null).map(Number);
   if (pts.length < 2) return `<span class="es-spark-empty muted">—</span>`;
-  const w = opts.w ?? 72, hgt = opts.h ?? 20, pad = 2;
+  const w = opts.w ?? 84, hgt = opts.h ?? 24, pad = 3;
   const lo = Math.min(...pts), hi = Math.max(...pts);
-  const span = hi - lo || 1;
+  // Do not turn a tenth-point move into a violent full-height zig-zag. Keep
+  // at least 1.5 CA of visual range, centered around the observed series.
+  const visualSpan = Math.max(1.5, hi - lo);
+  const visualLo = (lo + hi - visualSpan) / 2;
   const dx = (w - pad * 2) / (pts.length - 1);
   const coords = pts.map((v, i) => {
     const x = pad + i * dx;
-    const y = pad + (hgt - pad * 2) * (1 - (v - lo) / span);
+    const y = pad + (hgt - pad * 2) * (1 - (v - visualLo) / visualSpan);
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   });
   const trend = pts[pts.length - 1] - pts[0];
   const cls = Math.abs(trend) < 1e-6 ? "flat" : trend > 0 ? "up" : "down";
   const last = coords[coords.length - 1].split(",");
   return `<svg class="es-spark ${cls}" width="${w}" height="${hgt}" viewBox="0 0 ${w} ${hgt}" ` +
-    `preserveAspectRatio="none" aria-hidden="true">` +
+    `preserveAspectRatio="xMidYMid meet" aria-hidden="true">` +
     `<polyline points="${coords.join(" ")}" fill="none" stroke-width="1.5" ` +
     `stroke-linejoin="round" stroke-linecap="round"/>` +
     `<circle cx="${last[0]}" cy="${last[1]}" r="1.8"/></svg>`;
@@ -5555,17 +5559,10 @@ const MarketTab = () => {
   };
 
   if (marketTab === "scouting") {
-    const containerRef = useRef(null);
-    useEffect(() => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
-        scouting(containerRef.current);
-      }
-    }, []);
     return html`
       <div>
         <${MarketHeader} activeTab="scouting" onPick=${handleTabPick} />
-        <div ref=${containerRef}></div>
+        <${ScoutingPanel} />
       </div>
     `;
   }
@@ -5593,6 +5590,21 @@ const MarketTab = () => {
       <${PlayerRecruitment} data=${data} triggerRefresh=${triggerRefresh} />
     </div>
   `;
+};
+
+// Keep the legacy DOM-built scouting desk behind its own component boundary.
+// MarketTab used to call hooks only inside the scouting branch, so switching
+// Players -> Scouting changed its hook order and left the first render blank.
+const ScoutingPanel = () => {
+  const containerRef = useRef(null);
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    node.innerHTML = "";
+    scouting(node).catch(console.error);
+    return () => { node.innerHTML = ""; };
+  }, []);
+  return html`<div ref=${containerRef}></div>`;
 };
 
 
@@ -6767,13 +6779,13 @@ function statsHistory(ws, data, perf) {
   rail.appendChild(pc);
 }
 
-/* -- brand: the social feed + follower economy, on Finances ----------------- */
+/* -- brand: the social feed + follower economy, in Company ----------------- */
 
 const POST_KIND_ICON = {
   result: "🏁", hype: "🔥", viral: "📈", drama: "⚡", milestone: "🎉", transfer: "✍",
 };
 
-/* The old standalone Social tab folded into Finances as the "Brand" section
+/* The old standalone Social tab is now Company's "Brand" sub-tab
    (TAB_ALIASES routes "social" here). Same /api/social read, ported to compact
    htm components. Link markup (plink/tlink) arrives as HTML strings, so rows
    render via dangerouslySetInnerHTML — the document-level [data-pid]/[data-tid]
@@ -6923,22 +6935,10 @@ const BrandSection = () => {
     api("/api/social").then(setSoc).catch(console.error);
   }, []);
 
-  // Deep links to the retired Social tab land here: the alias sets
-  // App.financesTab = "brand" and this scrolls the section into view once.
-  useEffect(() => {
-    if (soc && App.financesTab === "brand") {
-      App.financesTab = null;
-      document.getElementById("fin-brand")?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [soc]);
-
-  if (!soc) return null;
+  if (!soc) return html`<div class="loading">Loading brand...</div>`;
   return html`
     <div id="fin-brand">
-      <div class="screen-head">
-        <span class="screen-title">Brand</span>
-        <span class="screen-sub">reach ${fmtFollowers(soc.your_reach)} · ${fmtFollowers(soc.fan_count)} fans</span>
-      </div>
+      <p class="screen-sub">Reach ${fmtFollowers(soc.your_reach)} · ${fmtFollowers(soc.fan_count)} fans</p>
       <div class="ws">
         <div class="ws-7 ws-col">
           <div class="card">
@@ -6975,10 +6975,36 @@ const SLOT_LABELS = {
   title: "Title", jersey: "Jersey", peripheral: "Peripheral",
   stream: "Stream", apparel: "Apparel",
 };
-async function finances(v) {
+async function company(v) {
   v.innerHTML = "";
-  render(html`<${FinancesTab} />`, v);
+  render(html`<${CompanyTab} />`, v);
 }
+
+const COMPANY_TABS = [
+  { id: "finances", label: "Finances" },
+  { id: "brand", label: "Brand" },
+];
+
+const CompanyTab = () => {
+  const [active, setActive] = useState(App.companyTab ?? "finances");
+  useEffect(() => { App.companyTab = active; }, [active]);
+  return html`
+    <div>
+      <div class="screen-head">
+        <span class="screen-title">Company</span>
+        <div class="seg">
+          ${COMPANY_TABS.map((tab) => html`
+            <button key=${tab.id} class=${`seg-btn${active === tab.id ? " on" : ""}`}
+              onClick=${() => setActive(tab.id)}>${tab.label}</button>
+          `)}
+        </div>
+      </div>
+      ${active === "brand"
+        ? html`<${BrandSection} />`
+        : html`<${FinancesTab} onOpenBrand=${() => setActive("brand")} />`}
+    </div>
+  `;
+};
 
 const ObjectiveChip = ({ obj }) => {
   const mark = obj.met === true ? "✓ " : obj.met === false ? "✗ " : "";
@@ -7039,7 +7065,7 @@ const CashProjectionSparkline = ({ projection }) => {
   `;
 };
 
-const FinancesTab = () => {
+const FinancesTab = ({ onOpenBrand }) => {
   const [data, setData] = useState(null);
   const [actionInProgress, setActionInProgress] = useState(null);
 
@@ -7105,10 +7131,7 @@ const FinancesTab = () => {
 
   return html`
     <div>
-      <div class="screen-head">
-        <span class="screen-title">Finances</span>
-        <span class="screen-sub">${money(data.balance)} banked · net ${b.net >= 0 ? "+" : ""}${money(b.net)}/wk</span>
-      </div>
+      <p class="screen-sub">${money(data.balance)} banked · net ${b.net >= 0 ? "+" : ""}${money(b.net)}/wk</p>
       
       <div class="ws">
         <div class="ws-7 ws-col">
@@ -7338,7 +7361,7 @@ const FinancesTab = () => {
                 <tr>
                   <td>
                     Streaming
-                    <button class="btn btn-sm" onClick=${() => document.getElementById("fin-brand")?.scrollIntoView({ behavior: "smooth" })}>→ Brand</button>
+                    <button class="btn btn-sm" onClick=${onOpenBrand}>→ Brand</button>
                   </td>
                   <td class="num">${money(b.streaming || 0)}</td>
                 </tr>
@@ -7440,7 +7463,6 @@ const FinancesTab = () => {
         </div>
       </div>
 
-      <${BrandSection} />
     </div>
   `;
 };

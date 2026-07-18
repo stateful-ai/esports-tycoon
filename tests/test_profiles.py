@@ -33,7 +33,7 @@ from esports_sim.manager.state import (
     TeamRecord,
 )
 from esports_sim.registry import GameData
-from esports_sim.schemas import Player, Team
+from esports_sim.schemas import FutureProspect, Player, Team
 from esports_sim.schemas.common import Playstyle, Role
 
 SEED = 2026
@@ -383,6 +383,24 @@ def test_tier2_player_profile(env) -> None:
     # A tier-2 player is a rival -> fogged, banded attributes.
     assert prof["overview"]["fogged"] is True
     assert all(a["value"] is None for a in prof["attributes"])
+
+
+def test_future_prospect_profile(env) -> None:
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    pid = "future_profile_test"
+    prospect = gs.players[h.fa_pid].model_copy(
+        update={"id": pid, "handle": "nextup", "age": 16}
+    )
+    gs.future_prospects[pid] = FutureProspect(player=prospect, debut_year=2028)
+    prof = _player(gs, gd, pid)
+    _assert_player_contract(prof)
+
+    assert prof["player"]["id"] == pid
+    assert prof["player"]["team_id"] is None
+    assert prof["player"]["is_free_agent"] is False
+    assert prof["overview"]["fogged"] is False
+    assert prof["season"]["matches"] == 0
 
 
 # ---------------------------------------------------------------------------
