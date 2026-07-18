@@ -115,7 +115,7 @@ players:
   handle: hype
   real_name: Tautvydas Paldavicius
   region: emea
-  country: ''
+  country: FR
   languages:
   - lang: fr
     level: 100.0
@@ -321,7 +321,9 @@ players:
   real_name: Niels Jasiek
   region: emea
   country: DE
-  languages: []
+  languages:
+  - lang: de
+    level: 100.0
   age: 25
   birth_year: 1996
   role: duelist
@@ -421,7 +423,9 @@ players:
   real_name: Alexandre Forté
   region: emea
   country: FR
-  languages: []
+  languages:
+  - lang: fr
+    level: 100.0
   age: 24
   birth_year: 1997
   role: flex

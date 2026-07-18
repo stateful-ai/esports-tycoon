@@ -13,7 +13,7 @@ players:
   handle: mitch
   real_name: Mitchell Semago
   region: americas
-  country: ''
+  country: US
   languages:
   - lang: en
     level: 100.0
@@ -428,7 +428,9 @@ players:
   real_name: Ricky Kemery
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   birth_year: 1999
   role: controller

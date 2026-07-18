@@ -425,7 +425,9 @@ players:
   real_name: Kim Nak-yeon
   region: pacific
   country: KR
-  languages: []
+  languages:
+  - lang: ko
+    level: 100.0
   age: 20
   birth_year: 2001
   role: sentinel

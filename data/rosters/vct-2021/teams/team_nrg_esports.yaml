@@ -426,7 +426,9 @@ players:
   real_name: Bradley Fodor
   region: americas
   country: CA
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 27
   birth_year: 1994
   role: duelist

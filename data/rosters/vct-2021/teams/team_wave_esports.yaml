@@ -13,7 +13,7 @@ players:
   handle: Zik
   real_name: ''
   region: emea
-  country: ''
+  country: DE
   languages:
   - lang: de
     level: 100.0
@@ -319,8 +319,10 @@ players:
   handle: murii
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: DE
+  languages:
+  - lang: de
+    level: 100.0
   age: 22
   birth_year: 1999
   role: initiator
@@ -421,7 +423,9 @@ players:
   real_name: Gianluca Oehme
   region: emea
   country: DE
-  languages: []
+  languages:
+  - lang: de
+    level: 100.0
   age: 24
   birth_year: 1997
   role: sentinel

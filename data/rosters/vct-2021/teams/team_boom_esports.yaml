@@ -424,7 +424,9 @@ players:
   real_name: Nanda Rizana
   region: pacific
   country: ID
-  languages: []
+  languages:
+  - lang: id
+    level: 100.0
   age: 21
   birth_year: 2000
   role: sentinel

@@ -424,7 +424,9 @@ players:
   real_name: Nicholas Garrison
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   birth_year: 1998
   role: sentinel

@@ -320,7 +320,9 @@ players:
   real_name: Park Geun-cheol
   region: pacific
   country: KR
-  languages: []
+  languages:
+  - lang: ko
+    level: 100.0
   age: 23
   birth_year: 1998
   role: duelist
@@ -420,8 +422,10 @@ players:
   handle: GODLIKE
   real_name: Lee Seo-ha
   region: pacific
-  country: ''
-  languages: []
+  country: KR
+  languages:
+  - lang: ko
+    level: 100.0
   age: 21
   birth_year: 2000
   role: initiator

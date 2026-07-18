@@ -329,7 +329,9 @@ players:
   real_name: Jordan He
   region: americas
   country: CA
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 25
   birth_year: 1996
   role: sentinel
@@ -430,7 +432,9 @@ players:
   real_name: Bryce Lovell
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 21
   birth_year: 2000
   role: duelist

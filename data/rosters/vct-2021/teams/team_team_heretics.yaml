@@ -321,7 +321,7 @@ players:
   handle: Koldamenta
   real_name: ''
   region: emea
-  country: ''
+  country: TR
   languages:
   - lang: es
     level: 100.0
@@ -424,7 +424,9 @@ players:
   real_name: Christian García
   region: emea
   country: ES
-  languages: []
+  languages:
+  - lang: es
+    level: 100.0
   age: 25
   birth_year: 1996
   role: sentinel

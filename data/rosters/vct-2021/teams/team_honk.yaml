@@ -13,7 +13,7 @@ players:
   handle: Destrian
   real_name: Tomas Linikas
   region: emea
-  country: ''
+  country: RU
   languages:
   - lang: ru
     level: 100.0
@@ -115,8 +115,10 @@ players:
   handle: ShonP
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
   age: 22
   birth_year: 1999
   role: duelist
@@ -217,7 +219,9 @@ players:
   real_name: Nikita Cherednichenko
   region: emea
   country: RU
-  languages: []
+  languages:
+  - lang: ru
+    level: 100.0
   age: 17
   birth_year: 2004
   role: initiator
@@ -317,8 +321,10 @@ players:
   handle: Dreamas
   real_name: Aurimas Zablockis
   region: emea
-  country: ''
-  languages: []
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
   age: 23
   birth_year: 1998
   role: sentinel
@@ -418,8 +424,10 @@ players:
   handle: synsi
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: RU
+  languages:
+  - lang: ru
+    level: 100.0
   age: 20
   birth_year: 2001
   role: controller

@@ -13,7 +13,7 @@ players:
   handle: ten
   real_name: ''
   region: pacific
-  country: ''
+  country: KR
   languages:
   - lang: ru
     level: 100.0
@@ -426,7 +426,9 @@ players:
   real_name: Savva Fedorov
   region: pacific
   country: RU
-  languages: []
+  languages:
+  - lang: ru
+    level: 100.0
   age: 18
   birth_year: 2003
   role: sentinel

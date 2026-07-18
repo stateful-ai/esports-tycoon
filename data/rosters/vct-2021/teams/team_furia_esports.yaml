@@ -324,7 +324,9 @@ players:
   real_name: Matheus Araújo
   region: americas
   country: BR
-  languages: []
+  languages:
+  - lang: pt
+    level: 100.0
   age: 22
   birth_year: 1999
   role: initiator
@@ -424,8 +426,10 @@ players:
   handle: Nozwerr
   real_name: Agustin Ibarra
   region: americas
-  country: ''
-  languages: []
+  country: BR
+  languages:
+  - lang: pt
+    level: 100.0
   age: 23
   birth_year: 1998
   role: initiator

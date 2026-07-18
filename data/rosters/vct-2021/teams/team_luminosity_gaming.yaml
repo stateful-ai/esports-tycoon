@@ -322,7 +322,9 @@ players:
   real_name: Kaleb Jayne
   region: americas
   country: CA
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 23
   birth_year: 1998
   role: initiator
@@ -423,7 +425,9 @@ players:
   real_name: Will Loafman
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 26
   birth_year: 1995
   role: flex

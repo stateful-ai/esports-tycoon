@@ -421,8 +421,10 @@ players:
   handle: russ
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: TR
+  languages:
+  - lang: tr
+    level: 100.0
   age: 23
   birth_year: 1998
   role: sentinel
