@@ -6285,6 +6285,13 @@ def scout_directive_action(body: ScoutDirectiveBody) -> dict:
             lanes.pop(body.lane, None)
         else:
             lanes[body.lane] = directive
+        # A stored fill_gap shortlist is only meaningful while the pro lane is
+        # actually running fill_gap. If the pro lane was cleared or switched to a
+        # non-fill_gap directive, drop the stale list so the Scouting desk and
+        # the scout_shortlist_ready needs-you flag stop surfacing it. (A fresh
+        # fill_gap rebuilds scout_shortlist_by on the next tick.)
+        if body.lane == "pro" and not (lanes.get("pro") or "").startswith("fill_gap"):
+            gs.scout_shortlist_by.pop(tid, None)
         telemetry.record_action(
             gs, "set_scout_directive",
             {"lane": body.lane, "directive": directive or ""},
