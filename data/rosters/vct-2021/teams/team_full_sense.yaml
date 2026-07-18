@@ -424,7 +424,9 @@ players:
   real_name: Nattawat Yoosawat
   region: pacific
   country: TH
-  languages: []
+  languages:
+  - lang: th
+    level: 100.0
   age: 23
   birth_year: 1998
   role: sentinel

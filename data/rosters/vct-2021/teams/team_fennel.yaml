@@ -13,7 +13,7 @@ players:
   handle: envy
   real_name: ''
   region: pacific
-  country: ''
+  country: JP
   languages:
   - lang: ja
     level: 100.0
@@ -116,8 +116,10 @@ players:
   handle: 2zzy
   real_name: ''
   region: pacific
-  country: ''
-  languages: []
+  country: JP
+  languages:
+  - lang: ja
+    level: 100.0
   age: 21
   birth_year: 2000
   role: duelist
@@ -216,8 +218,10 @@ players:
   handle: Tonbo
   real_name: ''
   region: pacific
-  country: ''
-  languages: []
+  country: JP
+  languages:
+  - lang: ja
+    level: 100.0
   age: 21
   birth_year: 2000
   role: flex
@@ -317,7 +321,9 @@ players:
   real_name: Hikaru Mizutani
   region: pacific
   country: JP
-  languages: []
+  languages:
+  - lang: ja
+    level: 100.0
   age: 19
   birth_year: 2002
   role: initiator
@@ -416,8 +422,10 @@ players:
   handle: Jinx
   real_name: ''
   region: pacific
-  country: ''
-  languages: []
+  country: JP
+  languages:
+  - lang: ja
+    level: 100.0
   age: 21
   birth_year: 2000
   role: sentinel

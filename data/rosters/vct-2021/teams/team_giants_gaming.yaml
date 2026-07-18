@@ -13,7 +13,7 @@ players:
   handle: Davidp
   real_name: ''
   region: emea
-  country: ''
+  country: ES
   languages:
   - lang: es
     level: 100.0
@@ -421,7 +421,9 @@ players:
   real_name: Štěpán Beránek
   region: emea
   country: CZ
-  languages: []
+  languages:
+  - lang: cs
+    level: 100.0
   age: 21
   birth_year: 2000
   role: sentinel

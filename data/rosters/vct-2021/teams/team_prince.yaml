@@ -424,7 +424,9 @@ players:
   real_name: Ha Suh-yeon
   region: pacific
   country: KR
-  languages: []
+  languages:
+  - lang: ko
+    level: 100.0
   age: 22
   birth_year: 1999
   role: controller

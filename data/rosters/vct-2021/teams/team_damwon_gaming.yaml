@@ -13,7 +13,7 @@ players:
   handle: Eugene
   real_name: Kim Su-yeong
   region: pacific
-  country: ''
+  country: KR
   languages:
   - lang: ko
     level: 100.0
@@ -428,7 +428,9 @@ players:
   real_name: Kim Ha-jin
   region: pacific
   country: KR
-  languages: []
+  languages:
+  - lang: ko
+    level: 100.0
   age: 21
   birth_year: 2000
   role: sentinel

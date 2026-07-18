@@ -116,7 +116,7 @@ players:
   handle: autimatic
   real_name: ''
   region: americas
-  country: ''
+  country: CA
   languages:
   - lang: en
     level: 100.0
@@ -219,7 +219,9 @@ players:
   real_name: Rahul Nemani
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 19
   birth_year: 2002
   role: initiator
@@ -319,8 +321,10 @@ players:
   handle: brax
   real_name: ''
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 25
   birth_year: 1996
   role: sentinel
@@ -419,8 +423,10 @@ players:
   handle: thwifo
   real_name: Zander Kim
   region: americas
-  country: ''
-  languages: []
+  country: CA
+  languages:
+  - lang: en
+    level: 100.0
   age: 19
   birth_year: 2002
   role: sentinel

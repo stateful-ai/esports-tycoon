@@ -13,7 +13,7 @@ players:
   handle: ex6tenz
   real_name: ''
   region: emea
-  country: ''
+  country: FR
   languages:
   - lang: fr
     level: 100.0
@@ -218,8 +218,10 @@ players:
   handle: rhyme
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
   age: 24
   birth_year: 1997
   role: flex
@@ -319,8 +321,10 @@ players:
   handle: chiwawa
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: FR
+  languages:
+  - lang: fr
+    level: 100.0
   age: 24
   birth_year: 1997
   role: duelist
@@ -421,7 +425,9 @@ players:
   real_name: Yaroslav Nikolaev
   region: emea
   country: RU
-  languages: []
+  languages:
+  - lang: ru
+    level: 100.0
   age: 18
   birth_year: 2003
   role: sentinel

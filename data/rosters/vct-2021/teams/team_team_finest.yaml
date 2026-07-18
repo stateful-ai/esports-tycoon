@@ -13,7 +13,7 @@ players:
   handle: RECIDENT
   real_name: ''
   region: emea
-  country: ''
+  country: IL
   languages:
   - lang: he
     level: 100.0
@@ -116,7 +116,9 @@ players:
   real_name: Gilad Hakim
   region: emea
   country: IL
-  languages: []
+  languages:
+  - lang: he
+    level: 100.0
   age: 22
   birth_year: 1999
   role: duelist
@@ -216,8 +218,10 @@ players:
   handle: ponkt
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: IL
+  languages:
+  - lang: he
+    level: 100.0
   age: 22
   birth_year: 1999
   role: flex
@@ -317,8 +321,10 @@ players:
   handle: Jeremy9000
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: IL
+  languages:
+  - lang: he
+    level: 100.0
   age: 21
   birth_year: 2000
   role: initiator
@@ -417,8 +423,10 @@ players:
   handle: mizuN
   real_name: ''
   region: emea
-  country: ''
-  languages: []
+  country: IL
+  languages:
+  - lang: he
+    level: 100.0
   age: 22
   birth_year: 1999
   role: sentinel

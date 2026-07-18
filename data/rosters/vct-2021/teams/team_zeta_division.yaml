@@ -425,7 +425,9 @@ players:
   real_name: Ryo Takebayashi
   region: pacific
   country: JP
-  languages: []
+  languages:
+  - lang: ja
+    level: 100.0
   age: 25
   birth_year: 1996
   role: controller

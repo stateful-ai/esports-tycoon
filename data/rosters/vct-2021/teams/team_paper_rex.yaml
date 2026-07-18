@@ -435,7 +435,9 @@ players:
   real_name: Zhan Teng Toh
   region: pacific
   country: SG
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 22
   birth_year: 1999
   role: initiator

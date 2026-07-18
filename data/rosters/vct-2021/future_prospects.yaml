@@ -538,7 +538,7 @@ future_prospects:
     handle: HYUNMIN
     real_name: ''
     region: pacific
-    country: ''
+    country: KR
     languages:
     - lang: pt
       level: 100.0
@@ -644,7 +644,7 @@ future_prospects:
     handle: 5CM
     real_name: ''
     region: china
-    country: ''
+    country: CN
     languages:
     - lang: pt
       level: 100.0
@@ -750,7 +750,7 @@ future_prospects:
     handle: Aace
     real_name: ''
     region: pacific
-    country: ''
+    country: KR
     languages:
     - lang: en
       level: 100.0
@@ -856,8 +856,10 @@ future_prospects:
     handle: AakRR
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -960,8 +962,10 @@ future_prospects:
     handle: Abo
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -1063,8 +1067,10 @@ future_prospects:
     handle: Absol
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -1166,8 +1172,10 @@ future_prospects:
     handle: AC
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -1269,8 +1277,10 @@ future_prospects:
     handle: Akame
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -1373,8 +1383,10 @@ future_prospects:
     handle: Akeman
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -1476,8 +1488,10 @@ future_prospects:
     handle: Albus
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -1580,8 +1594,10 @@ future_prospects:
     handle: Alexiiik
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -1684,8 +1700,10 @@ future_prospects:
     handle: Ali
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -1787,8 +1805,10 @@ future_prospects:
     handle: Alvinboy
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -1891,8 +1911,10 @@ future_prospects:
     handle: Alym
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -1995,8 +2017,10 @@ future_prospects:
     handle: ANDY
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -2099,8 +2123,10 @@ future_prospects:
     handle: ANguiSt
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -2202,8 +2228,10 @@ future_prospects:
     handle: Ara
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -2305,8 +2333,10 @@ future_prospects:
     handle: Ash
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -2409,8 +2439,10 @@ future_prospects:
     handle: Au1
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -2513,8 +2545,10 @@ future_prospects:
     handle: Audaz
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -2617,8 +2651,10 @@ future_prospects:
     handle: Avez
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -2721,8 +2757,10 @@ future_prospects:
     handle: B3Ar
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -2824,8 +2862,10 @@ future_prospects:
     handle: Baha
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -2927,8 +2967,10 @@ future_prospects:
     handle: Bai
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -3031,8 +3073,10 @@ future_prospects:
     handle: Bao
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: sentinel
@@ -3135,8 +3179,10 @@ future_prospects:
     handle: Batujnax
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -3239,8 +3285,10 @@ future_prospects:
     handle: BenG
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -3342,8 +3390,10 @@ future_prospects:
     handle: Benjyfishy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -3446,8 +3496,10 @@ future_prospects:
     handle: BennY
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -3548,8 +3600,10 @@ future_prospects:
     handle: BeyAz
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -3652,8 +3706,10 @@ future_prospects:
     handle: BeYN
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -3756,8 +3812,10 @@ future_prospects:
     handle: Blowz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -3860,8 +3918,10 @@ future_prospects:
     handle: Brk
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -3964,8 +4024,10 @@ future_prospects:
     handle: Bud
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -4068,8 +4130,10 @@ future_prospects:
     handle: C1ndeR
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -4172,8 +4236,10 @@ future_prospects:
     handle: Caedye
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -4276,8 +4342,10 @@ future_prospects:
     handle: Canezerra
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -4380,8 +4448,10 @@ future_prospects:
     handle: Cangshu
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -4484,7 +4554,9 @@ future_prospects:
     real_name: Cauan Pereira
     region: americas
     country: BR
-    languages: []
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -4586,8 +4658,10 @@ future_prospects:
     handle: CaydeN
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -4689,8 +4763,10 @@ future_prospects:
     handle: Cb
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -4793,8 +4869,10 @@ future_prospects:
     handle: Cebando
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -4897,8 +4975,10 @@ future_prospects:
     handle: Celasun
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -5000,8 +5080,10 @@ future_prospects:
     handle: Chak
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -5103,8 +5185,10 @@ future_prospects:
     handle: CHIMEI
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -5207,8 +5291,10 @@ future_prospects:
     handle: CidZzZ
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -5310,8 +5396,10 @@ future_prospects:
     handle: Coconut
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -5414,8 +5502,10 @@ future_prospects:
     handle: COLDFISH
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -5518,8 +5608,10 @@ future_prospects:
     handle: ComeBack
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -5621,8 +5713,10 @@ future_prospects:
     handle: Creamydreamy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -5725,8 +5819,10 @@ future_prospects:
     handle: Crewen
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -5829,8 +5925,10 @@ future_prospects:
     handle: Cunha20
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -5932,8 +6030,10 @@ future_prospects:
     handle: CyvOph
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -6035,8 +6135,10 @@ future_prospects:
     handle: D3mur
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -6139,8 +6241,10 @@ future_prospects:
     handle: DaFt
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -6243,8 +6347,10 @@ future_prospects:
     handle: Dambi
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -6346,8 +6452,10 @@ future_prospects:
     handle: Dantedeu5
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -6449,8 +6557,10 @@ future_prospects:
     handle: DaviH
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -6553,8 +6663,10 @@ future_prospects:
     handle: DH
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -6656,8 +6768,10 @@ future_prospects:
     handle: Dos9
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -6760,8 +6874,10 @@ future_prospects:
     handle: DrakoNz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -6864,8 +6980,10 @@ future_prospects:
     handle: Dynamite
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -6967,8 +7085,10 @@ future_prospects:
     handle: Echo
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -7071,8 +7191,10 @@ future_prospects:
     handle: Eggsterr
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -7175,8 +7297,10 @@ future_prospects:
     handle: Elite
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -7278,8 +7402,10 @@ future_prospects:
     handle: Elllement
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -7382,8 +7508,10 @@ future_prospects:
     handle: Eren
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -7486,8 +7614,10 @@ future_prospects:
     handle: Erv
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -7590,8 +7720,10 @@ future_prospects:
     handle: Evilkyk
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -7693,8 +7825,10 @@ future_prospects:
     handle: ExiT
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -7797,8 +7931,10 @@ future_prospects:
     handle: Ezeir
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -7901,8 +8037,10 @@ future_prospects:
     handle: F4ngeer
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -8005,8 +8143,10 @@ future_prospects:
     handle: Fame
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -8109,8 +8249,10 @@ future_prospects:
     handle: Famsii
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -8211,8 +8353,10 @@ future_prospects:
     handle: Favian
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -8314,8 +8458,10 @@ future_prospects:
     handle: FengF
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -8417,8 +8563,10 @@ future_prospects:
     handle: Fighter
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -8521,8 +8669,10 @@ future_prospects:
     handle: Filu
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -8625,8 +8775,10 @@ future_prospects:
     handle: Fizzy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -8729,8 +8881,10 @@ future_prospects:
     handle: Flex1n
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -8833,8 +8987,10 @@ future_prospects:
     handle: Flickless
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -8937,8 +9093,10 @@ future_prospects:
     handle: Forbanz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -9040,8 +9198,10 @@ future_prospects:
     handle: Fragger
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -9144,8 +9304,10 @@ future_prospects:
     handle: Francis
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -9247,8 +9409,10 @@ future_prospects:
     handle: Freeing
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -9351,8 +9515,10 @@ future_prospects:
     handle: Fzkk
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -9455,8 +9621,10 @@ future_prospects:
     handle: GLYPH
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -9558,8 +9726,10 @@ future_prospects:
     handle: Gobera
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -9662,8 +9832,10 @@ future_prospects:
     handle: Governor
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -9766,8 +9938,10 @@ future_prospects:
     handle: Green
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: sentinel
@@ -9870,8 +10044,10 @@ future_prospects:
     handle: GrTw
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -9974,8 +10150,10 @@ future_prospects:
     handle: GRUBINHO
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -10078,8 +10256,10 @@ future_prospects:
     handle: Grumble
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -10181,8 +10361,10 @@ future_prospects:
     handle: GuanG
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -10285,8 +10467,10 @@ future_prospects:
     handle: Guardy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -10388,8 +10572,10 @@ future_prospects:
     handle: Gyen
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -10492,8 +10678,10 @@ future_prospects:
     handle: Hanche
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -10596,8 +10784,10 @@ future_prospects:
     handle: Happywei
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -10700,8 +10890,10 @@ future_prospects:
     handle: HeiB
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -10803,8 +10995,10 @@ future_prospects:
     handle: Hide
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -10907,8 +11101,10 @@ future_prospects:
     handle: Hiro
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -11011,8 +11207,10 @@ future_prospects:
     handle: Hiroronn
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -11114,8 +11312,10 @@ future_prospects:
     handle: Iamgrq
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -11218,8 +11418,10 @@ future_prospects:
     handle: ICEKING
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -11322,8 +11524,10 @@ future_prospects:
     handle: Icy
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -11426,8 +11630,10 @@ future_prospects:
     handle: IKANA
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -11530,8 +11736,10 @@ future_prospects:
     handle: Infiltrator
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -11634,8 +11842,10 @@ future_prospects:
     handle: Ion2x
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -11738,8 +11948,10 @@ future_prospects:
     handle: Ivy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -11842,8 +12054,10 @@ future_prospects:
     handle: Jas
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -11945,8 +12159,10 @@ future_prospects:
     handle: Jesse
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -12049,8 +12265,10 @@ future_prospects:
     handle: Jieni7
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -12153,8 +12371,10 @@ future_prospects:
     handle: Jkuro
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -12257,8 +12477,10 @@ future_prospects:
     handle: Jow
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -12361,8 +12583,10 @@ future_prospects:
     handle: Jowa
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -12464,8 +12688,10 @@ future_prospects:
     handle: K1ra
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -12568,8 +12794,10 @@ future_prospects:
     handle: Kaajak
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -12672,8 +12900,10 @@ future_prospects:
     handle: Kai
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -12775,8 +13005,10 @@ future_prospects:
     handle: Kamo
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -12879,8 +13111,10 @@ future_prospects:
     handle: Karon
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -12983,8 +13217,10 @@ future_prospects:
     handle: Kenkayyy
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -13087,8 +13323,10 @@ future_prospects:
     handle: KHaaLiD
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -13191,8 +13429,10 @@ future_prospects:
     handle: Kicks
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -13295,8 +13535,10 @@ future_prospects:
     handle: Kiss
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -13399,8 +13641,10 @@ future_prospects:
     handle: KovaQ
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -13502,8 +13746,10 @@ future_prospects:
     handle: KROSTALY
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -13606,8 +13852,10 @@ future_prospects:
     handle: Kyu
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -13708,8 +13956,10 @@ future_prospects:
     handle: Lar0k
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -13813,7 +14063,9 @@ future_prospects:
     real_name: Felipe de Loyola Basso
     region: americas
     country: BR
-    languages: []
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: controller
@@ -13919,8 +14171,10 @@ future_prospects:
     handle: Levius
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -14023,8 +14277,10 @@ future_prospects:
     handle: LewN
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -14126,8 +14382,10 @@ future_prospects:
     handle: LockM
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -14230,8 +14488,10 @@ future_prospects:
     handle: Loita
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -14334,8 +14594,10 @@ future_prospects:
     handle: Long
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -14438,8 +14700,10 @@ future_prospects:
     handle: Lovers rock
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -14542,8 +14806,10 @@ future_prospects:
     handle: Lsn
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -14646,8 +14912,10 @@ future_prospects:
     handle: Lucas
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -14750,8 +15018,10 @@ future_prospects:
     handle: Lukxo
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -14853,8 +15123,10 @@ future_prospects:
     handle: LuoK1ng
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -14957,8 +15229,10 @@ future_prospects:
     handle: Lz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -15060,8 +15334,10 @@ future_prospects:
     handle: Maestr0
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -15164,8 +15440,10 @@ future_prospects:
     handle: MAGiK
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -15268,8 +15546,10 @@ future_prospects:
     handle: Margaret
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -15372,8 +15652,10 @@ future_prospects:
     handle: MarT1n
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -15476,8 +15758,10 @@ future_prospects:
     handle: Marteen
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -15580,8 +15864,10 @@ future_prospects:
     handle: Meiy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -15687,8 +15973,10 @@ future_prospects:
     handle: Mephisto05
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -15790,8 +16078,10 @@ future_prospects:
     handle: Midi
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -15893,8 +16183,10 @@ future_prospects:
     handle: Mikee
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -15997,8 +16289,10 @@ future_prospects:
     handle: MiniBoo
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -16101,8 +16395,10 @@ future_prospects:
     handle: Minny
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -16205,8 +16501,10 @@ future_prospects:
     handle: Moobs
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -16309,8 +16607,10 @@ future_prospects:
     handle: MrCANI
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -16412,8 +16712,10 @@ future_prospects:
     handle: Mta
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -16516,8 +16818,10 @@ future_prospects:
     handle: MURZA
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -16725,8 +17029,10 @@ future_prospects:
     handle: Nekky
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -16828,8 +17134,10 @@ future_prospects:
     handle: Neon
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -16932,8 +17240,10 @@ future_prospects:
     handle: Nerve
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -17036,8 +17346,10 @@ future_prospects:
     handle: Nicc
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -17139,8 +17451,10 @@ future_prospects:
     handle: Nicksz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -17243,8 +17557,10 @@ future_prospects:
     handle: NicoMachine
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -17346,8 +17662,10 @@ future_prospects:
     handle: Ninebody
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -17449,8 +17767,10 @@ future_prospects:
     handle: NINJA
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -17553,8 +17873,10 @@ future_prospects:
     handle: NoMan
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -17656,8 +17978,10 @@ future_prospects:
     handle: O0o0o
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -17759,8 +18083,10 @@ future_prospects:
     handle: OBONE
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -17863,8 +18189,10 @@ future_prospects:
     handle: Okeanos
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -17967,8 +18295,10 @@ future_prospects:
     handle: OLIZERA
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -18071,8 +18401,10 @@ future_prospects:
     handle: Oonzmlp
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -18174,8 +18506,10 @@ future_prospects:
     handle: OtaQ
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -18278,8 +18612,10 @@ future_prospects:
     handle: P0PPIN
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -18382,8 +18718,10 @@ future_prospects:
     handle: Pa1nt
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -18486,8 +18824,10 @@ future_prospects:
     handle: Palla
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -18590,8 +18930,10 @@ future_prospects:
     handle: PangH
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -18693,8 +19035,10 @@ future_prospects:
     handle: Panique
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -18796,8 +19140,10 @@ future_prospects:
     handle: PatMen
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -18899,8 +19245,10 @@ future_prospects:
     handle: Peloncito
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -19003,8 +19351,10 @@ future_prospects:
     handle: Persia
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -19107,8 +19457,10 @@ future_prospects:
     handle: Pl1xx
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -19211,8 +19563,10 @@ future_prospects:
     handle: Player
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -19315,8 +19669,10 @@ future_prospects:
     handle: Polvi
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -19419,8 +19775,10 @@ future_prospects:
     handle: Pr0digy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -19522,8 +19880,10 @@ future_prospects:
     handle: Primmie
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -19626,8 +19986,10 @@ future_prospects:
     handle: Prince
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -19730,8 +20092,10 @@ future_prospects:
     handle: PROFEK
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -19834,8 +20198,10 @@ future_prospects:
     handle: Proxh
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -19937,8 +20303,10 @@ future_prospects:
     handle: Pryze
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -20040,8 +20408,10 @@ future_prospects:
     handle: PxS
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -20143,8 +20513,10 @@ future_prospects:
     handle: Pyrolll
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -20246,8 +20618,10 @@ future_prospects:
     handle: QiutiaN
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: sentinel
@@ -20350,8 +20724,10 @@ future_prospects:
     handle: Qpert
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -20454,8 +20830,10 @@ future_prospects:
     handle: RAMEN
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -20558,8 +20936,10 @@ future_prospects:
     handle: Rarga
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -20662,8 +21042,10 @@ future_prospects:
     handle: Reazy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -20766,8 +21148,10 @@ future_prospects:
     handle: Reduxx
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -20870,8 +21254,10 @@ future_prospects:
     handle: Retla
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -20974,8 +21360,10 @@ future_prospects:
     handle: Rich
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -21078,8 +21466,10 @@ future_prospects:
     handle: RieNs
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -21181,8 +21571,10 @@ future_prospects:
     handle: Riyabtw
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -21285,8 +21677,10 @@ future_prospects:
     handle: RND
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -21389,8 +21783,10 @@ future_prospects:
     handle: RobbieBk
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -21493,8 +21889,10 @@ future_prospects:
     handle: Rood
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -21596,8 +21994,10 @@ future_prospects:
     handle: Rose
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -21700,8 +22100,10 @@ future_prospects:
     handle: RunneR
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -21804,8 +22206,10 @@ future_prospects:
     handle: Rushia
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -21907,8 +22311,10 @@ future_prospects:
     handle: Ruxic
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -22011,8 +22417,10 @@ future_prospects:
     handle: S0pp
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -22115,8 +22523,10 @@ future_prospects:
     handle: S1Mon
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -22218,8 +22628,10 @@ future_prospects:
     handle: Sabortzz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -22322,8 +22734,10 @@ future_prospects:
     handle: Saiz
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -22425,8 +22839,10 @@ future_prospects:
     handle: Samed
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -22529,8 +22945,10 @@ future_prospects:
     handle: Sand
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -22633,8 +23051,10 @@ future_prospects:
     handle: Sato
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -22737,8 +23157,10 @@ future_prospects:
     handle: Scales
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -22841,8 +23263,10 @@ future_prospects:
     handle: SerialKiller
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -22944,8 +23368,10 @@ future_prospects:
     handle: Setrod
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -23048,8 +23474,10 @@ future_prospects:
     handle: ShelbyN
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -23152,8 +23580,10 @@ future_prospects:
     handle: Shion7
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -23256,8 +23686,10 @@ future_prospects:
     handle: Shr1mp
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -23359,8 +23791,10 @@ future_prospects:
     handle: Sickrey
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -23463,8 +23897,10 @@ future_prospects:
     handle: Siduzord
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -23567,8 +24003,10 @@ future_prospects:
     handle: Silentzz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -23670,8 +24108,10 @@ future_prospects:
     handle: Skz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -23773,8 +24213,10 @@ future_prospects:
     handle: Slowly
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -23877,8 +24319,10 @@ future_prospects:
     handle: Snw
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -23981,8 +24425,10 @@ future_prospects:
     handle: SociablEE
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -24085,8 +24531,10 @@ future_prospects:
     handle: SpikeziN
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -24189,8 +24637,10 @@ future_prospects:
     handle: SpiritZ1
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -24293,8 +24743,10 @@ future_prospects:
     handle: Spitfires
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -24396,8 +24848,10 @@ future_prospects:
     handle: Splash
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -24500,8 +24954,10 @@ future_prospects:
     handle: Spring
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -24603,8 +25059,10 @@ future_prospects:
     handle: SSeeS
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -24706,8 +25164,10 @@ future_prospects:
     handle: Starki
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -24809,8 +25269,10 @@ future_prospects:
     handle: Stew
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -24913,8 +25375,10 @@ future_prospects:
     handle: Stonezy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -25016,8 +25480,10 @@ future_prospects:
     handle: SturNN
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -25120,8 +25586,10 @@ future_prospects:
     handle: Sultan
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -25224,8 +25692,10 @@ future_prospects:
     handle: SUTHER
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -25327,8 +25797,10 @@ future_prospects:
     handle: Swerl
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -25430,8 +25902,10 @@ future_prospects:
     handle: Sword9
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -25533,8 +26007,10 @@ future_prospects:
     handle: Sym
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -25637,8 +26113,10 @@ future_prospects:
     handle: SyouTa
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -25741,8 +26219,10 @@ future_prospects:
     handle: Sztwo
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -25845,8 +26325,10 @@ future_prospects:
     handle: Tag
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -25949,8 +26431,10 @@ future_prospects:
     handle: TenTen
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -26053,8 +26537,10 @@ future_prospects:
     handle: Thyy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -26157,8 +26643,10 @@ future_prospects:
     handle: Ticey
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -26260,8 +26748,10 @@ future_prospects:
     handle: Timotino
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -26364,8 +26854,10 @@ future_prospects:
     handle: Tinchoff
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -26467,8 +26959,10 @@ future_prospects:
     handle: Tomaszy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -26570,8 +27064,10 @@ future_prospects:
     handle: TRIPCIEW
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -26673,8 +27169,10 @@ future_prospects:
     handle: TvirusLuke
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -26777,8 +27275,10 @@ future_prospects:
     handle: UdoTan
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -26881,8 +27381,10 @@ future_prospects:
     handle: UNFAKE
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -26985,8 +27487,10 @@ future_prospects:
     handle: Urango
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -27089,8 +27593,10 @@ future_prospects:
     handle: V1c
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -27192,8 +27698,10 @@ future_prospects:
     handle: VaiZ
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -27295,8 +27803,10 @@ future_prospects:
     handle: Veqaj
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -27399,8 +27909,10 @@ future_prospects:
     handle: Verno
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -27502,8 +28014,10 @@ future_prospects:
     handle: Vince
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -27606,8 +28120,10 @@ future_prospects:
     handle: Viva
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -27710,8 +28226,10 @@ future_prospects:
     handle: Vo0kashu
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -27813,8 +28331,10 @@ future_prospects:
     handle: Vora
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -27917,8 +28437,10 @@ future_prospects:
     handle: Vorwenn
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -28021,8 +28543,10 @@ future_prospects:
     handle: WACKIE
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -28125,8 +28649,10 @@ future_prospects:
     handle: Waddle
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -28229,8 +28755,10 @@ future_prospects:
     handle: Wailers
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -28332,8 +28860,10 @@ future_prospects:
     handle: Waituu
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -28435,8 +28965,10 @@ future_prospects:
     handle: Wayne
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -28539,8 +29071,10 @@ future_prospects:
     handle: Westside
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -28643,8 +29177,10 @@ future_prospects:
     handle: Woddy
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -28746,8 +29282,10 @@ future_prospects:
     handle: WsLeo
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -28850,8 +29388,10 @@ future_prospects:
     handle: Xavi8k
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: controller
@@ -28954,8 +29494,10 @@ future_prospects:
     handle: Xdll
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -29058,8 +29600,10 @@ future_prospects:
     handle: Xeus
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -29162,8 +29706,10 @@ future_prospects:
     handle: XII
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: initiator
@@ -29266,8 +29812,10 @@ future_prospects:
     handle: Xross
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -29369,8 +29917,10 @@ future_prospects:
     handle: XuNa
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: initiator
@@ -29473,8 +30023,10 @@ future_prospects:
     handle: Xuss
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -29577,8 +30129,10 @@ future_prospects:
     handle: Yatsuka
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -29681,8 +30235,10 @@ future_prospects:
     handle: Yetujey
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -29785,8 +30341,10 @@ future_prospects:
     handle: YiHao
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -29888,8 +30446,10 @@ future_prospects:
     handle: Yoman
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -29992,8 +30552,10 @@ future_prospects:
     handle: YoU
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -30095,8 +30657,10 @@ future_prospects:
     handle: Yuran
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -30198,8 +30762,10 @@ future_prospects:
     handle: Z1Yan
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -30302,8 +30868,10 @@ future_prospects:
     handle: Zap
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -30406,8 +30974,10 @@ future_prospects:
     handle: ZesBeeW
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -30510,8 +31080,10 @@ future_prospects:
     handle: Zexy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -30614,8 +31186,10 @@ future_prospects:
     handle: Zhe
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -30717,8 +31291,10 @@ future_prospects:
     handle: Zimo
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: controller
@@ -30821,8 +31397,10 @@ future_prospects:
     handle: ZynX
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 12
     birth_year: 2009
     role: duelist
@@ -30925,8 +31503,10 @@ future_prospects:
     handle: avey
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: controller
@@ -31029,8 +31609,10 @@ future_prospects:
     handle: B1SK
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -31133,8 +31715,10 @@ future_prospects:
     handle: basic
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -31236,8 +31820,10 @@ future_prospects:
     handle: Ben1Ley
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -31340,8 +31926,10 @@ future_prospects:
     handle: chloric
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -31443,8 +32031,10 @@ future_prospects:
     handle: chubizin
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 13
     birth_year: 2008
     role: sentinel
@@ -31545,8 +32135,10 @@ future_prospects:
     handle: Cloudy
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: sentinel
@@ -31649,8 +32241,10 @@ future_prospects:
     handle: crownfisher
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -31753,8 +32347,10 @@ future_prospects:
     handle: dannyy
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -31857,8 +32453,10 @@ future_prospects:
     handle: Darxcioo
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: initiator
@@ -31960,8 +32558,10 @@ future_prospects:
     handle: deviceHP
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -32063,8 +32663,10 @@ future_prospects:
     handle: ecco
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: controller
@@ -32167,8 +32769,10 @@ future_prospects:
     handle: endoist
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: controller
@@ -32271,8 +32875,10 @@ future_prospects:
     handle: FireBallOps
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -32374,8 +32980,10 @@ future_prospects:
     handle: Flicker
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -32477,8 +33085,10 @@ future_prospects:
     handle: florescent
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -32581,8 +33191,10 @@ future_prospects:
     handle: free1ng
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: flex
@@ -32684,8 +33296,10 @@ future_prospects:
     handle: FT
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -32788,8 +33402,10 @@ future_prospects:
     handle: glacier
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -32892,8 +33508,10 @@ future_prospects:
     handle: Jackk
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: initiator
@@ -32996,8 +33614,10 @@ future_prospects:
     handle: Javelin
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -33100,8 +33720,10 @@ future_prospects:
     handle: JaXe
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: sentinel
@@ -33204,8 +33826,10 @@ future_prospects:
     handle: Jerrwin
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -33308,8 +33932,10 @@ future_prospects:
     handle: Kally
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: controller
@@ -33412,8 +34038,10 @@ future_prospects:
     handle: Kolosha
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: duelist
@@ -33516,8 +34144,10 @@ future_prospects:
     handle: koshmaras
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: flex
@@ -33620,8 +34250,10 @@ future_prospects:
     handle: kozzy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -33723,8 +34355,10 @@ future_prospects:
     handle: Nakya
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: flex
@@ -33827,8 +34461,10 @@ future_prospects:
     handle: NIZ
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -33931,8 +34567,10 @@ future_prospects:
     handle: Notexxd
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: controller
@@ -34035,8 +34673,10 @@ future_prospects:
     handle: oroni
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -34139,8 +34779,10 @@ future_prospects:
     handle: Pa1ze
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -34243,8 +34885,10 @@ future_prospects:
     handle: RaxcaL
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -34347,8 +34991,10 @@ future_prospects:
     handle: Ray
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -34450,8 +35096,10 @@ future_prospects:
     handle: Rimuru
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -34554,8 +35202,10 @@ future_prospects:
     handle: Satellite
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: flex
@@ -34657,8 +35307,10 @@ future_prospects:
     handle: Satoshi
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: controller
@@ -34866,8 +35518,10 @@ future_prospects:
     handle: Serial
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -34970,8 +35624,10 @@ future_prospects:
     handle: sibeastw0w
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -35073,8 +35729,10 @@ future_prospects:
     handle: SimonD4rk
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -35176,8 +35834,10 @@ future_prospects:
     handle: sizo
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 14
     birth_year: 2007
     role: sentinel
@@ -35280,8 +35940,10 @@ future_prospects:
     handle: Smoke
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: sentinel
@@ -35384,8 +36046,10 @@ future_prospects:
     handle: sonofcar
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -35488,8 +36152,10 @@ future_prospects:
     handle: Sota
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: initiator
@@ -35592,8 +36258,10 @@ future_prospects:
     handle: spaz
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -35696,8 +36364,10 @@ future_prospects:
     handle: stunna
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -35799,8 +36469,10 @@ future_prospects:
     handle: swagzor
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -35902,8 +36574,10 @@ future_prospects:
     handle: teasohot
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -36006,8 +36680,10 @@ future_prospects:
     handle: TITOUNE
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -36110,8 +36786,10 @@ future_prospects:
     handle: Verse
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 15
     birth_year: 2006
     role: controller
@@ -36214,8 +36892,10 @@ future_prospects:
     handle: wezzy
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: initiator
@@ -36317,8 +36997,10 @@ future_prospects:
     handle: whzy
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 15
     birth_year: 2006
     role: duelist
@@ -36421,8 +37103,10 @@ future_prospects:
     handle: xan
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 14
     birth_year: 2007
     role: flex
@@ -36524,8 +37208,10 @@ future_prospects:
     handle: Xiesta
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -36627,8 +37313,10 @@ future_prospects:
     handle: Xlele
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 16
     birth_year: 2005
     role: flex
@@ -36730,8 +37418,10 @@ future_prospects:
     handle: Yong
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 15
     birth_year: 2006
     role: sentinel
@@ -36834,8 +37524,10 @@ future_prospects:
     handle: Youze
     real_name: ''
     region: china
-    country: ''
-    languages: []
+    country: CN
+    languages:
+    - lang: zh
+      level: 100.0
     age: 13
     birth_year: 2008
     role: duelist
@@ -36937,8 +37629,10 @@ future_prospects:
     handle: Yowamu
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -37041,8 +37735,10 @@ future_prospects:
     handle: yutaro
     real_name: ''
     region: pacific
-    country: ''
-    languages: []
+    country: KR
+    languages:
+    - lang: ko
+      level: 100.0
     age: 16
     birth_year: 2005
     role: sentinel
@@ -37145,8 +37841,10 @@ future_prospects:
     handle: zenox
     real_name: ''
     region: emea
-    country: ''
-    languages: []
+    country: GB
+    languages:
+    - lang: en
+      level: 100.0
     age: 16
     birth_year: 2005
     role: duelist
@@ -37249,8 +37947,10 @@ future_prospects:
     handle: zerona
     real_name: ''
     region: americas
-    country: ''
-    languages: []
+    country: US
+    languages:
+    - lang: en
+      level: 100.0
     age: 15
     birth_year: 2006
     role: flex

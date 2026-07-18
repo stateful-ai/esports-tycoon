@@ -13,7 +13,7 @@ players:
   handle: bonkar
   real_name: Malkolm Rench
   region: emea
-  country: ''
+  country: SE
   languages:
   - lang: sv
     level: 100.0
@@ -428,7 +428,9 @@ players:
   real_name: Saif Jibraeel
   region: emea
   country: SE
-  languages: []
+  languages:
+  - lang: sv
+    level: 100.0
   age: 20
   birth_year: 2001
   role: sentinel

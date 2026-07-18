@@ -13,7 +13,7 @@ players:
   handle: Klaus
   real_name: Nicolás Martin Ferrari
   region: americas
-  country: ''
+  country: CL
   languages:
   - lang: es
     level: 100.0
@@ -427,7 +427,9 @@ players:
   real_name: Joaquín Ignacio Espinoza Soto
   region: americas
   country: CL
-  languages: []
+  languages:
+  - lang: es
+    level: 100.0
   age: 21
   birth_year: 2000
   role: controller

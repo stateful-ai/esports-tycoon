@@ -422,7 +422,9 @@ players:
   real_name: Sean Christian Bezerra
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 17
   birth_year: 2004
   role: controller

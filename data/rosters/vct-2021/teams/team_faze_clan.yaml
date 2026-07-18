@@ -424,7 +424,9 @@ players:
   real_name: Zachary Lombardo
   region: americas
   country: US
-  languages: []
+  languages:
+  - lang: en
+    level: 100.0
   age: 20
   birth_year: 2001
   role: sentinel
