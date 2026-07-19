@@ -360,10 +360,20 @@ FALLBACK_GRACE_TICKS = 8  # covers the retreat hop out of the crossfire
 # Aggression also shapes refrag spacing: aggressive teams stack tighter and
 # hunt the trade, passive teams give up some refrags for safer spacing.
 # Scales the trade probability by +/- this fraction across the full dial.
-AGGRO_TRADE_SPAN = 0.30
+AGGRO_TRADE_GAIN_SPAN = 0.12
+AGGRO_TRADE_COST_SPAN = 0.18
 # Both aggressive teams take more live fights; two passive teams let more
 # contact fizzle or wait. Neutral aggression remains an exact no-op.
 AGGRO_ENGAGE_SPAN = 0.18
+# A passive system converts positioning/sense/composure into stronger holds.
+# An aggressive peeker pays an overextension cost, mitigated by the pole's
+# mechanical fit. Together these are the explicit price of extra initiative.
+AGGRO_PASSIVE_HOLD_SPAN = 4.0
+AGGRO_OVEREXTENSION_SPAN = 12.0
+AGGRO_OVEREXTENSION_MIN_FACTOR = 0.20
+# Taking space without an explicit PEEK is less exposed, but still pays part
+# of the same aggression risk when the player has surrendered holder status.
+AGGRO_COMMITTED_RISK_FACTOR = 1.0
 
 # Utility discipline shapes flash-for-peek: a disciplined player keeps a
 # flash in the pocket to pop on a swing instead of dumping it on the group
@@ -372,6 +382,11 @@ DISC_PEEK_FLASH_SPAN = 0.50
 # Good utility books turn difficult lineups into fewer whiffs. The sign is
 # deliberately centered at 50 so neutral tactic fixtures stay unchanged.
 UTIL_DISCIPLINE_FAIL_SPAN = 0.05
+# Low discipline layers more power into the initial hit; high discipline
+# realizes its saved charges during stalls and retakes. Each applies only in
+# its own phase, making conservation an allocation rather than a free buff.
+UTIL_DUMP_POWER_SPAN = 0.20
+UTIL_RETAIN_POWER_SPAN = 0.20
 
 # Pace shapes commitment on a floundering hit: fast books ram the entry
 # through, slow books pull out and re-default. Shifts the abort threshold
@@ -381,6 +396,10 @@ PACE_ABORT_SPAN = 1
 # Pace shifts the actual call time in addition to choosing execute vs default.
 # At the poles this creates a 10s early/late separation; 50 is exact no-op.
 PACE_GO_TICK_SPAN = 10
+# Both pace poles can create a clean entry window: slow teams through setup,
+# fast teams through surprise. Pole-specific roster quality scales the bonus;
+# the existing clock/rotation and abort behavior supplies each side's cost.
+PACE_ENTRY_BONUS_SPAN = 6.0
 
 # Map control (attack default): stack tight onto one entry and hit as five,
 # or spread wide for map presence and peel a lurker onto a flank. Neutral
@@ -392,17 +411,18 @@ LURK_MAX_PROB = 0.55  # lurk chance at map_control=100
 # after the main hit commits — a late second wave onto defenders who have
 # collapsed on the entry or are mid-rotation.
 LURK_STRIKE_DELAY = 18
+# A roster with the sense/positioning/comms for a spread system synchronizes
+# its lurker sooner. At the high pole an elite fit can cut most of this span.
+LURK_STRIKE_ACCEL_SPAN = 8
 # Below neutral, collapse the staging onto fewer entry callouts (a hard
 # stack). At control 0 the whole team funnels through a single entry.
 STACK_MIN_CONTROL = 50.0
 
-# Execution fit: running an extreme system rewards a roster suited to it
-# and punishes one that isn't. A per-team duel modifier, ZERO when every
-# dial is neutral (each term scales by the dial's deviation from 50), so it
-# cannot move the golden/balance gates. Fit is scored PER PLAYER (see
-# sim/tactics_fit.py) and centered on EXEC_FIT_BASELINE — above helps, below
-# hurts — divided so a fully-cranked dial with an elite (or terrible) roster
-# is about +/-1 duel point per dial.
+# Execution fit: every dial pole is a distinct system. Its edge is the
+# roster's per-player fit for that pole relative to the opposite pole, plus an
+# absolute readiness tax below EXEC_FIT_BASELINE. The term is ZERO when every
+# dial is neutral, so it cannot move the golden/balance gates. See the shared
+# engine/UI implementation in sim/tactics_fit.py.
 EXEC_FIT_BASELINE = 55.0
 EXEC_FIT_DIV = 30.0
 # Players who fall BELOW the fit baseline are amplified by this factor before
@@ -412,6 +432,10 @@ EXEC_FIT_DIV = 30.0
 # a high-variance roster nets NEGATIVE at an extreme. 1.0 = the old
 # roster-average behaviour (no extra penalty).
 EXEC_MISFIT_PENALTY = 2.5
+# A player's authored match identity is composition evidence in addition to
+# raw attributes. Aligned entries/awpers, anchors/supports, IGLs, and lurkers
+# add this many points to that pole's per-player fit before comparison.
+EXEC_PLAYSTYLE_FIT_BONUS = 10.0
 # Chemistry: coordination-heavy systems (spread/lurk map control,
 # disciplined grouped retakes) lean on team cohesion. Complexity counts
 # only the ABOVE-neutral deviation of those two dials — the low side

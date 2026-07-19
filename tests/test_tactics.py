@@ -17,6 +17,7 @@ from __future__ import annotations
 import hashlib
 
 from esports_sim.registry import load_all
+from esports_sim.schemas.common import Playstyle
 from esports_sim.schemas.team import TeamTactics
 from esports_sim.sim import simulate_match
 from esports_sim.sim import constants as C
@@ -202,6 +203,44 @@ def test_misfit_players_drag_execution_fit() -> None:
     # Better rosters still earn a positive edge (we didn't kill the upside),
     # and a strictly stronger roster fits strictly better.
     assert tf.fit_edge([70.0] * 5) > tf.fit_edge([60.0] * 5) > 0.0
+
+
+def test_each_dial_pole_has_distinct_roster_fit() -> None:
+    """The same roster cannot receive the same fit reward at both poles."""
+    gd = load_all()
+    roster = [gd.players[pid] for pid in gd.teams[A].player_ids]
+    poles = tactics_fit.DIAL_POLE_FIT_ATTRS["aggression"]
+
+    for player in roster:
+        for attr in poles["low"]:
+            player.attributes[attr] = 60.0
+        for attr in poles["high"]:
+            player.attributes[attr] = 90.0
+
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "high") > 0.0
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "low") < 0.0
+    assert tactics_fit.dial_execution_impact(
+        roster, "aggression", 50.0, chemistry=100.0
+    ) == 0.0
+
+    for player in roster:
+        for attr in poles["low"]:
+            player.attributes[attr] = 90.0
+        for attr in poles["high"]:
+            player.attributes[attr] = 60.0
+
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "low") > 0.0
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "high") < 0.0
+
+    # With attributes held flat, authored composition still differentiates
+    # the systems: a five-entry roster belongs on the high-aggression side.
+    for player in roster:
+        for attrs in poles.values():
+            for attr in attrs:
+                player.attributes[attr] = 75.0
+        player.playstyle = Playstyle.ENTRY
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "high") > 0.0
+    assert tactics_fit.dial_pole_edge(roster, "aggression", "low") < 0.0
 
 
 def test_aggression_increases_refrags() -> None:

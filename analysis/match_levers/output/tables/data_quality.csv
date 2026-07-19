@@ -1,0 +1,5 @@
+source,rows,cells,contexts,factors,maps,seed_blocks,duplicate_pairing_rows
+primary,103500,3450,2,32,5,3,0
+supplement,45000,1500,2,7,5,3,0
+equal_core,33750,2250,1,20,5,3,0
+equal_mechanisms,7200,480,1,4,5,3,0

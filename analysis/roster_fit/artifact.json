@@ -1,0 +1,2007 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "title": "Does the Game Plan Fit the Roster?",
+    "surface": "report",
+    "description": "Paired roster-plan interaction analysis across 24,000 deterministic map simulations.",
+    "generatedAt": "2026-07-19T04:38:34.880230+00:00",
+    "sources": [
+      {
+        "id": "series",
+        "label": "Paired roster-fit series outcomes",
+        "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+          "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+          "tables_used": [
+            "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+          ],
+          "filters": [
+            "Complete validated paired rows only"
+          ],
+          "metric_definitions": [
+            "Series win lift is paired treatment win minus neutral-control win.",
+            "Rounds won added is treatment score minus control score on the same maps.",
+            "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+          ]
+        }
+      },
+      {
+        "id": "maps",
+        "label": "Paired roster-fit map outcomes",
+        "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Audit control and treatment map scores under identical map ids and seeds.",
+          "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv')",
+          "tables_used": [
+            "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv"
+          ],
+          "filters": [
+            "Complete validated paired rows only"
+          ],
+          "metric_definitions": [
+            "Series win lift is paired treatment win minus neutral-control win.",
+            "Rounds won added is treatment score minus control score on the same maps.",
+            "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+          ]
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "decomposition-chart",
+        "title": "Global setting versus roster-specific variation",
+        "dataset": "decomposition",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "comparison_component",
+            "title": "Outcome and component"
+          },
+          "y": {
+            "field": "share_pct",
+            "title": "Variation share (%)"
+          }
+        },
+        "source": {
+          "id": "series",
+          "label": "Paired roster-fit series outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      },
+      {
+        "id": "interaction-chart",
+        "title": "Aligned versus mismatched BO3 treatment lift",
+        "dataset": "bo3_interactions",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "comparison",
+            "title": "One-dial treatment"
+          },
+          "y": {
+            "field": "fit_interaction_win_pp",
+            "title": "Aligned minus mismatched win lift (pp)"
+          }
+        },
+        "source": {
+          "id": "series",
+          "label": "Paired roster-fit series outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      },
+      {
+        "id": "effect-chart",
+        "title": "BO3 win lift by roster and one-dial treatment",
+        "dataset": "bo3_effects_primary",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "comparison",
+            "title": "Treatment and roster"
+          },
+          "y": {
+            "field": "series_win_lift_pp",
+            "title": "Win-rate lift (pp)"
+          }
+        },
+        "source": {
+          "id": "series",
+          "label": "Paired roster-fit series outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      },
+      {
+        "id": "fit-response-chart",
+        "title": "Declared roster fit and rounds added",
+        "dataset": "fit_response",
+        "type": "scatter",
+        "encodings": {
+          "x": {
+            "field": "expected_fit_edge",
+            "title": "Roster-fit edge"
+          },
+          "y": {
+            "field": "round_margin_added_per_map",
+            "title": "Round-margin lift per map"
+          }
+        },
+        "source": {
+          "id": "maps",
+          "label": "Paired roster-fit map outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Audit control and treatment map scores under identical map ids and seeds.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "effects-table",
+        "title": "BO3 control and treatment outcomes",
+        "dataset": "bo3_effects",
+        "columns": [
+          {
+            "field": "dial_label",
+            "label": "Dial"
+          },
+          {
+            "field": "roster_label",
+            "label": "Roster"
+          },
+          {
+            "field": "treatment_value",
+            "label": "Treatment",
+            "format": "number"
+          },
+          {
+            "field": "series_win_lift_pp",
+            "label": "Win lift (pp)",
+            "format": "number",
+            "movement": true
+          },
+          {
+            "field": "rounds_won_added_per_map",
+            "label": "Rounds added/map",
+            "format": "number",
+            "movement": true
+          }
+        ],
+        "source": {
+          "id": "series",
+          "label": "Paired roster-fit series outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      },
+      {
+        "id": "interactions-table",
+        "title": "Roster-fit interactions by format",
+        "dataset": "interactions",
+        "columns": [
+          {
+            "field": "dial_label",
+            "label": "Dial"
+          },
+          {
+            "field": "treatment_value",
+            "label": "Treatment",
+            "format": "number"
+          },
+          {
+            "field": "format",
+            "label": "Format"
+          },
+          {
+            "field": "aligned_label",
+            "label": "Aligned roster"
+          },
+          {
+            "field": "fit_interaction_win_pp",
+            "label": "Fit interaction (pp)",
+            "format": "number",
+            "movement": true
+          },
+          {
+            "field": "fit_interaction_rounds_per_map",
+            "label": "Fit rounds/map",
+            "format": "number",
+            "movement": true
+          }
+        ],
+        "source": {
+          "id": "series",
+          "label": "Paired roster-fit series outcomes",
+          "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+            "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+            "tables_used": [
+              "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+            ],
+            "filters": [
+              "Complete validated paired rows only"
+            ],
+            "metric_definitions": [
+              "Series win lift is paired treatment win minus neutral-control win.",
+              "Rounds won added is treatment score minus control score on the same maps.",
+              "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+            ]
+          }
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Does the Game Plan Fit the Roster?"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "sourceId": "series",
+        "body": "## Executive Summary\n- **Partly: roster fit changes outcomes, but global dial direction still dominates.** Global dial and pole choice explains 91.4% of BO3 round-margin variation across treatment cells, versus 8.6% for roster-specific differences.\n- **Fit is nevertheless a real within-treatment signal.** After controlling for dial, pole, and format, the declared roster-fit edge correlates 0.85 with residual round-margin lift. The average absolute BO3 win interaction is 7.6 percentage points, but only 1 of 8 cells excludes zero at the 95% interval.\n- **The strongest observed fit contrast is pace at 0.** Its aligned roster gains +21.0 percentage points more BO3 win lift than the mismatched roster.\n- **Interpret the interaction, not the raw winning pole.** A setting that wins for both rosters may still reward fit if the aligned roster benefits materially more; a setting that helps every roster equally is a global dial effect, not roster adaptation."
+      },
+      {
+        "id": "global-dominance-finding",
+        "type": "markdown",
+        "sourceId": "series",
+        "body": "## The Engine Still Has Generally Good and Bad Dial Directions\nAcross roster profiles, global dial and pole choice explains 91.4% of BO3 round-margin differences between treatment cells. Roster-specific residual variation explains 8.6%. This means composition modifies the result, but managers can currently gain more by learning broadly strong directions than by deeply tailoring the system to their players. For example, aggression 100 averages +22.0 BO3 win points across profiles while aggression 0 averages -11.8; pace 100 averages -11.2 and utility discipline 100 averages -10.8."
+      },
+      {
+        "id": "decomposition-chart-block",
+        "type": "chart",
+        "chartId": "decomposition-chart"
+      },
+      {
+        "id": "fit-finding",
+        "type": "markdown",
+        "sourceId": "series",
+        "body": "## The Same Plan Is Worth Different Amounts to Different Rosters\nThe fit interaction compares two fully paired causal effects: the one-dial treatment lift for the aligned roster minus the same lift for the mismatched roster on identical series seeds. Positive values mean that adapting the plan to player strengths produces more wins than merely moving the dial."
+      },
+      {
+        "id": "interaction-chart-block",
+        "type": "chart",
+        "chartId": "interaction-chart"
+      },
+      {
+        "id": "interaction-table-block",
+        "type": "table",
+        "tableId": "interactions-table"
+      },
+      {
+        "id": "raw-effect-finding",
+        "type": "markdown",
+        "sourceId": "series",
+        "body": "## Raw Treatment Effects Still Matter, but They Are Not the Question\nEach row below changes exactly one dial from the neutral control. Both teams otherwise use the same mechanically mirrored roster at 75 overall. Comparing frag-heavy, tactical, balanced, and mixed columns shows whether a treatment is broadly strong or specifically amplified by roster fit."
+      },
+      {
+        "id": "effect-chart-block",
+        "type": "chart",
+        "chartId": "effect-chart"
+      },
+      {
+        "id": "effects-table-block",
+        "type": "table",
+        "tableId": "effects-table"
+      },
+      {
+        "id": "round-finding",
+        "type": "markdown",
+        "sourceId": "maps",
+        "body": "## Fit Appears in Round Control Before It Appears in Every Series Result\nRounds are the more sensitive outcome because a series win is binary. The paired round-margin measure uses the same scheduled BO3 or BO5 maps for control and treatment, so it can detect direction even when a plan does not flip the final series winner."
+      },
+      {
+        "id": "fit-response-chart-block",
+        "type": "chart",
+        "chartId": "fit-response-chart"
+      },
+      {
+        "id": "recommendations",
+        "type": "markdown",
+        "body": "## Recommended Next Steps\n1. Use aligned-minus-mismatched series lift as the balance KPI for roster-fit mechanics; do not optimize the largest raw dial effect.\n2. Repeat the strongest and weakest interactions with less polarized, authored-style rosters to find the practical live-game magnitude.\n3. Add opponent identities next: the same roster-plan pair should face aggressive, disciplined, and balanced opponents so fit is not confused with a universal counter.\n4. Keep BO3 as the primary decision format and BO5 as the determinism stress test."
+      },
+      {
+        "id": "further-questions",
+        "type": "markdown",
+        "body": "## Further Questions\n- Do moderate 60-to-80 player profiles preserve the same interaction ranking?\n- Does agent selection strengthen or weaken the roster-plan interaction?\n- Does explicit opponent counter-stratting create a three-way roster x plan x opponent effect?\n- How much of the interaction survives between-map adaptation and veto decisions?"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Caveats and Assumptions\nThese are synthetic, deliberately polarized 75-overall rosters. The experiment establishes engine causality, not the frequency or magnitude of these roster shapes in authored packs. BO3 and BO5 use the same fixed five-map schedule and do not model vetoes, substitutions, fatigue, or between-map adaptation. Confidence intervals use paired seed-level differences and do not adjust for selecting the strongest cell for descriptive emphasis."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-07-19T04:38:34.880230+00:00",
+    "datasets": {
+      "decomposition": [
+        {
+          "comparison_component": "BO3 wins global",
+          "comparison": "BO3 win lift",
+          "component": "Global dial/pole",
+          "share_pct": 81.27788773258989
+        },
+        {
+          "comparison_component": "BO3 margin global",
+          "comparison": "BO3 round margin",
+          "component": "Global dial/pole",
+          "share_pct": 91.43660516421436
+        },
+        {
+          "comparison_component": "BO5 wins global",
+          "comparison": "BO5 win lift",
+          "component": "Global dial/pole",
+          "share_pct": 91.71744997484129
+        },
+        {
+          "comparison_component": "BO5 margin global",
+          "comparison": "BO5 round margin",
+          "component": "Global dial/pole",
+          "share_pct": 93.48188388678784
+        },
+        {
+          "comparison_component": "BO3 wins roster",
+          "comparison": "BO3 win lift",
+          "component": "Roster-specific",
+          "share_pct": 18.7221122674101
+        },
+        {
+          "comparison_component": "BO3 margin roster",
+          "comparison": "BO3 round margin",
+          "component": "Roster-specific",
+          "share_pct": 8.56339483578564
+        },
+        {
+          "comparison_component": "BO5 wins roster",
+          "comparison": "BO5 win lift",
+          "component": "Roster-specific",
+          "share_pct": 8.2825500251587
+        },
+        {
+          "comparison_component": "BO5 margin roster",
+          "comparison": "BO5 round margin",
+          "component": "Roster-specific",
+          "share_pct": 6.518116113212161
+        }
+      ],
+      "bo3_interactions": [
+        {
+          "comparison": "Agg 0",
+          "dial": "aggression",
+          "treatment_value": 0.0,
+          "fit_interaction_win_pp": 4.0,
+          "fit_interaction_win_ci_low": -10.981407467156403,
+          "fit_interaction_win_ci_high": 18.981407467156405
+        },
+        {
+          "comparison": "Agg 100",
+          "dial": "aggression",
+          "treatment_value": 100.0,
+          "fit_interaction_win_pp": 9.0,
+          "fit_interaction_win_ci_low": -4.955553689763756,
+          "fit_interaction_win_ci_high": 22.955553689763757
+        },
+        {
+          "comparison": "Control 0",
+          "dial": "map_control",
+          "treatment_value": 0.0,
+          "fit_interaction_win_pp": 0.0,
+          "fit_interaction_win_ci_low": -13.929113468566548,
+          "fit_interaction_win_ci_high": 13.929113468566548
+        },
+        {
+          "comparison": "Control 100",
+          "dial": "map_control",
+          "treatment_value": 100.0,
+          "fit_interaction_win_pp": 11.0,
+          "fit_interaction_win_ci_low": -2.8998315519187905,
+          "fit_interaction_win_ci_high": 24.89983155191879
+        },
+        {
+          "comparison": "Pace 0",
+          "dial": "pace",
+          "treatment_value": 0.0,
+          "fit_interaction_win_pp": 21.0,
+          "fit_interaction_win_ci_low": 6.714677165536351,
+          "fit_interaction_win_ci_high": 35.28532283446365
+        },
+        {
+          "comparison": "Pace 100",
+          "dial": "pace",
+          "treatment_value": 100.0,
+          "fit_interaction_win_pp": 8.0,
+          "fit_interaction_win_ci_low": -6.389522563169344,
+          "fit_interaction_win_ci_high": 22.389522563169344
+        },
+        {
+          "comparison": "Util 0",
+          "dial": "util_discipline",
+          "treatment_value": 0.0,
+          "fit_interaction_win_pp": 5.0,
+          "fit_interaction_win_ci_low": -2.5654451023029434,
+          "fit_interaction_win_ci_high": 12.565445102302943
+        },
+        {
+          "comparison": "Util 100",
+          "dial": "util_discipline",
+          "treatment_value": 100.0,
+          "fit_interaction_win_pp": -3.0,
+          "fit_interaction_win_ci_low": -18.624218962297547,
+          "fit_interaction_win_ci_high": 12.624218962297546
+        }
+      ],
+      "bo3_effects_primary": [
+        {
+          "comparison": "Agg 0 | Frag",
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": -6.0
+        },
+        {
+          "comparison": "Agg 100 | Frag",
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": 31.0
+        },
+        {
+          "comparison": "Agg 0 | Tac",
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": -10.0
+        },
+        {
+          "comparison": "Agg 100 | Tac",
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": 22.0
+        },
+        {
+          "comparison": "Control 0 | Frag",
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": 7.000000000000001
+        },
+        {
+          "comparison": "Control 100 | Frag",
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": -8.0
+        },
+        {
+          "comparison": "Control 0 | Tac",
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": 7.000000000000001
+        },
+        {
+          "comparison": "Control 100 | Tac",
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": 3.0
+        },
+        {
+          "comparison": "Pace 0 | Frag",
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": 12.0
+        },
+        {
+          "comparison": "Pace 100 | Frag",
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": -4.0
+        },
+        {
+          "comparison": "Pace 0 | Tac",
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": -9.0
+        },
+        {
+          "comparison": "Pace 100 | Tac",
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": -12.0
+        },
+        {
+          "comparison": "Util 0 | Frag",
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": 0.0
+        },
+        {
+          "comparison": "Util 100 | Frag",
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": -9.0
+        },
+        {
+          "comparison": "Util 0 | Tac",
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "series_win_lift_pp": 5.0
+        },
+        {
+          "comparison": "Util 100 | Tac",
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "series_win_lift_pp": -12.0
+        }
+      ],
+      "fit_response": [
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.4800000000000001
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.51
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 3.3433333333333333
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 3.054
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.9133333333333332
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -1.258
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": 2.2333333333333334
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": 2.096
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": 0.0766666666666666
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": 0.036
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.5633333333333334
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.636
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.6
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.412
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.48
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.198
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.78
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.482
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.2033333333333332
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.2239999999999999
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.0866666666666666
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.2259999999999999
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.9333333333333332
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.906
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.07
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -0.118
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -1.1666666666666667
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": -0.4166666666666667,
+          "round_margin_added_per_map": -1.176
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.6533333333333334
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": 0.504
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.74
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "expected_fit_edge": 1.1666666666666667,
+          "round_margin_added_per_map": -0.858
+        }
+      ],
+      "bo3_effects": [
+        {
+          "dial": "aggression",
+          "roster_profile": "balanced",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.34,
+          "series_win_lift_pp": -20.0,
+          "series_win_lift_ci_low": -32.45857783280907,
+          "series_win_lift_ci_high": -7.541422167190927,
+          "rounds_won_added_per_map": -0.77,
+          "rounds_won_added_ci_low": -1.2296086832116009,
+          "rounds_won_added_ci_high": -0.3103913167883991,
+          "round_margin_added_per_map": -1.16,
+          "round_margin_added_ci_low": -1.9463875206379095,
+          "round_margin_added_ci_high": -0.3736124793620901,
+          "comparison": "Agg 0 | Bal",
+          "dial_label": "Aggression",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 34.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "balanced",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.76,
+          "series_win_lift_pp": 22.0,
+          "series_win_lift_ci_low": 10.656535009980503,
+          "series_win_lift_ci_high": 33.3434649900195,
+          "rounds_won_added_per_map": 1.3266666666666669,
+          "rounds_won_added_ci_low": 0.9160813854749112,
+          "rounds_won_added_ci_high": 1.7372519478584223,
+          "round_margin_added_per_map": 3.13,
+          "round_margin_added_ci_low": 2.417152602154543,
+          "round_margin_added_ci_high": 3.842847397845457,
+          "comparison": "Agg 100 | Bal",
+          "dial_label": "Aggression",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 76.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.42,
+          "series_win_lift_pp": -6.0,
+          "series_win_lift_ci_low": -18.40238751860367,
+          "series_win_lift_ci_high": 6.402387518603671,
+          "rounds_won_added_per_map": -0.4,
+          "rounds_won_added_ci_low": -0.874408509982098,
+          "rounds_won_added_ci_high": 0.0744085099820979,
+          "round_margin_added_per_map": -0.4800000000000001,
+          "round_margin_added_ci_low": -1.229203897899969,
+          "round_margin_added_ci_high": 0.269203897899969,
+          "comparison": "Agg 0 | Frag",
+          "dial_label": "Aggression",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 42.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.79,
+          "series_win_lift_pp": 31.0,
+          "series_win_lift_ci_low": 18.63678378610504,
+          "series_win_lift_ci_high": 43.36321621389496,
+          "rounds_won_added_per_map": 1.2566666666666666,
+          "rounds_won_added_ci_low": 0.8455697799894621,
+          "rounds_won_added_ci_high": 1.667763553343871,
+          "round_margin_added_per_map": 3.3433333333333333,
+          "round_margin_added_ci_low": 2.6596577201490903,
+          "round_margin_added_ci_high": 4.027008946517577,
+          "comparison": "Agg 100 | Frag",
+          "dial_label": "Aggression",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 79.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "mixed",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.2166666666666666,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.43,
+          "series_win_lift_pp": -11.0,
+          "series_win_lift_ci_low": -23.73428776369078,
+          "series_win_lift_ci_high": 1.734287763690782,
+          "rounds_won_added_per_map": -0.4766666666666666,
+          "rounds_won_added_ci_low": -0.921357719663058,
+          "rounds_won_added_ci_high": -0.0319756136702753,
+          "round_margin_added_per_map": -1.0433333333333334,
+          "round_margin_added_ci_low": -1.785153914313587,
+          "round_margin_added_ci_high": -0.3015127523530798,
+          "comparison": "Agg 0 | Mixed",
+          "dial_label": "Aggression",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 43.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "mixed",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.2166666666666666,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.67,
+          "series_win_lift_pp": 13.0,
+          "series_win_lift_ci_low": 1.2945710601163078,
+          "series_win_lift_ci_high": 24.70542893988369,
+          "rounds_won_added_per_map": 0.7366666666666667,
+          "rounds_won_added_ci_low": 0.3461769723190505,
+          "rounds_won_added_ci_high": 1.1271563610142827,
+          "round_margin_added_per_map": 2.1733333333333333,
+          "round_margin_added_ci_low": 1.4728357072950309,
+          "round_margin_added_ci_high": 2.873830959371636,
+          "comparison": "Agg 100 | Mixed",
+          "dial_label": "Aggression",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 67.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.41,
+          "series_win_lift_pp": -10.0,
+          "series_win_lift_ci_low": -20.235766170195035,
+          "series_win_lift_ci_high": 0.2357661701950331,
+          "rounds_won_added_per_map": -0.5700000000000001,
+          "rounds_won_added_ci_low": -0.9912947301498992,
+          "rounds_won_added_ci_high": -0.1487052698501009,
+          "round_margin_added_per_map": -0.9133333333333332,
+          "round_margin_added_ci_low": -1.599034412988113,
+          "round_margin_added_ci_high": -0.2276322536785535,
+          "comparison": "Agg 0 | Tac",
+          "dial_label": "Aggression",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 41.0
+        },
+        {
+          "dial": "aggression",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.73,
+          "series_win_lift_pp": 22.0,
+          "series_win_lift_ci_low": 11.733950431769106,
+          "series_win_lift_ci_high": 32.2660495682309,
+          "rounds_won_added_per_map": 1.096666666666667,
+          "rounds_won_added_ci_low": 0.6809350647844049,
+          "rounds_won_added_ci_high": 1.5123982685489286,
+          "round_margin_added_per_map": 2.2333333333333334,
+          "round_margin_added_ci_low": 1.5659299558786377,
+          "round_margin_added_ci_high": 2.900736710788029,
+          "comparison": "Agg 100 | Tac",
+          "dial_label": "Aggression",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 73.0
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "balanced",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.56,
+          "series_win_lift_pp": 2.0,
+          "series_win_lift_ci_low": -8.41614597486503,
+          "series_win_lift_ci_high": 12.41614597486503,
+          "rounds_won_added_per_map": 0.2133333333333333,
+          "rounds_won_added_ci_low": -0.0962594708821356,
+          "rounds_won_added_ci_high": 0.5229261375488023,
+          "round_margin_added_per_map": 0.4266666666666667,
+          "round_margin_added_ci_low": -0.0644499868968297,
+          "round_margin_added_ci_high": 0.9177833202301632,
+          "comparison": "Control 0 | Bal",
+          "dial_label": "Map Control",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 56.00000000000001
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "balanced",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.45,
+          "series_win_lift_pp": -9.0,
+          "series_win_lift_ci_low": -19.0810605502686,
+          "series_win_lift_ci_high": 1.0810605502685977,
+          "rounds_won_added_per_map": 0.01,
+          "rounds_won_added_ci_low": -0.2886675357731461,
+          "rounds_won_added_ci_high": 0.3086675357731462,
+          "round_margin_added_per_map": -0.0866666666666666,
+          "round_margin_added_ci_low": -0.5838508228078746,
+          "round_margin_added_ci_high": 0.4105174894745413,
+          "comparison": "Control 100 | Bal",
+          "dial_label": "Map Control",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 45.0
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.55,
+          "series_win_lift_pp": 7.000000000000001,
+          "series_win_lift_ci_low": -3.518094846117294,
+          "series_win_lift_ci_high": 17.518094846117297,
+          "rounds_won_added_per_map": -0.1466666666666666,
+          "rounds_won_added_ci_low": -0.4487597061995748,
+          "rounds_won_added_ci_high": 0.1554263728662414,
+          "round_margin_added_per_map": 0.0766666666666666,
+          "round_margin_added_ci_low": -0.3307429039183465,
+          "round_margin_added_ci_high": 0.4840762372516798,
+          "comparison": "Control 0 | Frag",
+          "dial_label": "Map Control",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 55.00000000000001
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.4,
+          "series_win_lift_pp": -8.0,
+          "series_win_lift_ci_low": -18.673737050642696,
+          "series_win_lift_ci_high": 2.6737370506426963,
+          "rounds_won_added_per_map": -0.4933333333333333,
+          "rounds_won_added_ci_low": -0.8349650148139094,
+          "rounds_won_added_ci_high": -0.1517016518527572,
+          "round_margin_added_per_map": -0.5633333333333334,
+          "round_margin_added_ci_low": -1.066300571747596,
+          "round_margin_added_ci_high": -0.0603660949190708,
+          "comparison": "Control 100 | Frag",
+          "dial_label": "Map Control",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 40.0
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "mixed",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.5333333333333333,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.53,
+          "series_win_lift_pp": -1.0,
+          "series_win_lift_ci_low": -11.966025771085947,
+          "series_win_lift_ci_high": 9.966025771085947,
+          "rounds_won_added_per_map": 0.1833333333333333,
+          "rounds_won_added_ci_low": -0.1673774152625656,
+          "rounds_won_added_ci_high": 0.5340440819292323,
+          "round_margin_added_per_map": 0.3866666666666667,
+          "round_margin_added_ci_low": -0.1536616608379424,
+          "round_margin_added_ci_high": 0.9269949941712758,
+          "comparison": "Control 0 | Mixed",
+          "dial_label": "Map Control",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 53.0
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "mixed",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.5333333333333333,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.48,
+          "series_win_lift_pp": -6.0,
+          "series_win_lift_ci_low": -15.163620650940512,
+          "series_win_lift_ci_high": 3.163620650940512,
+          "rounds_won_added_per_map": -0.17,
+          "rounds_won_added_ci_low": -0.5170179259027804,
+          "rounds_won_added_ci_high": 0.1770179259027803,
+          "round_margin_added_per_map": -0.0066666666666666,
+          "round_margin_added_ci_low": -0.5354008424931104,
+          "round_margin_added_ci_high": 0.5220675091597772,
+          "comparison": "Control 100 | Mixed",
+          "dial_label": "Map Control",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 48.0
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.58,
+          "series_win_lift_pp": 7.000000000000001,
+          "series_win_lift_ci_low": -2.346009573582456,
+          "series_win_lift_ci_high": 16.346009573582457,
+          "rounds_won_added_per_map": 0.3699999999999999,
+          "rounds_won_added_ci_low": 0.0769518438580753,
+          "rounds_won_added_ci_high": 0.6630481561419246,
+          "round_margin_added_per_map": 0.6,
+          "round_margin_added_ci_low": 0.1668267169437156,
+          "round_margin_added_ci_high": 1.0331732830562843,
+          "comparison": "Control 0 | Tac",
+          "dial_label": "Map Control",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 57.99999999999999
+        },
+        {
+          "dial": "map_control",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.54,
+          "series_win_lift_pp": 3.0,
+          "series_win_lift_ci_low": -6.8316257377132015,
+          "series_win_lift_ci_high": 12.8316257377132,
+          "rounds_won_added_per_map": 0.21,
+          "rounds_won_added_ci_low": -0.140990934809922,
+          "rounds_won_added_ci_high": 0.5609909348099222,
+          "round_margin_added_per_map": 0.48,
+          "round_margin_added_ci_low": -0.0294087528556716,
+          "round_margin_added_ci_high": 0.9894087528556716,
+          "comparison": "Control 100 | Tac",
+          "dial_label": "Map Control",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 54.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "balanced",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.58,
+          "series_win_lift_pp": 4.0,
+          "series_win_lift_ci_low": -6.760634580063416,
+          "series_win_lift_ci_high": 14.760634580063416,
+          "rounds_won_added_per_map": 0.31,
+          "rounds_won_added_ci_low": -0.1016628459316419,
+          "rounds_won_added_ci_high": 0.7216628459316419,
+          "round_margin_added_per_map": 0.6633333333333333,
+          "round_margin_added_ci_low": 0.0120162357064899,
+          "round_margin_added_ci_high": 1.3146504309601768,
+          "comparison": "Pace 0 | Bal",
+          "dial_label": "Pace",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 57.99999999999999
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "balanced",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.4,
+          "series_win_lift_pp": -14.000000000000002,
+          "series_win_lift_ci_low": -27.366143872493744,
+          "series_win_lift_ci_high": -0.6338561275062613,
+          "rounds_won_added_per_map": -0.1366666666666666,
+          "rounds_won_added_ci_low": -0.5802743676965507,
+          "rounds_won_added_ci_high": 0.3069410343632175,
+          "round_margin_added_per_map": -0.4233333333333333,
+          "round_margin_added_ci_low": -1.09999807546458,
+          "round_margin_added_ci_high": 0.2533314087979133,
+          "comparison": "Pace 100 | Bal",
+          "dial_label": "Pace",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 40.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.6,
+          "series_win_lift_pp": 12.0,
+          "series_win_lift_ci_low": 0.759628317730968,
+          "series_win_lift_ci_high": 23.240371682269032,
+          "rounds_won_added_per_map": 0.2366666666666666,
+          "rounds_won_added_ci_low": -0.1311949818005514,
+          "rounds_won_added_ci_high": 0.6045283151338847,
+          "round_margin_added_per_map": 0.78,
+          "round_margin_added_ci_low": 0.2522256639771978,
+          "round_margin_added_ci_high": 1.3077743360228022,
+          "comparison": "Pace 0 | Frag",
+          "dial_label": "Pace",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 60.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.44,
+          "series_win_lift_pp": -4.0,
+          "series_win_lift_ci_low": -14.760634580063416,
+          "series_win_lift_ci_high": 6.760634580063416,
+          "rounds_won_added_per_map": -0.2466666666666667,
+          "rounds_won_added_ci_low": -0.6349778852968129,
+          "rounds_won_added_ci_high": 0.1416445519634794,
+          "round_margin_added_per_map": -0.2033333333333332,
+          "round_margin_added_ci_low": -0.796545333033359,
+          "round_margin_added_ci_high": 0.3898786663666924,
+          "comparison": "Pace 100 | Frag",
+          "dial_label": "Pace",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 44.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "mixed",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.2166666666666666,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.46,
+          "series_win_lift_pp": -8.0,
+          "series_win_lift_ci_low": -20.040427523534824,
+          "series_win_lift_ci_high": 4.040427523534824,
+          "rounds_won_added_per_map": -0.0733333333333333,
+          "rounds_won_added_ci_low": -0.4166143181300561,
+          "rounds_won_added_ci_high": 0.2699476514633895,
+          "round_margin_added_per_map": -0.0033333333333333,
+          "round_margin_added_ci_low": -0.5727064698787174,
+          "round_margin_added_ci_high": 0.5660398032120508,
+          "comparison": "Pace 0 | Mixed",
+          "dial_label": "Pace",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 46.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "mixed",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.2166666666666666,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.39,
+          "series_win_lift_pp": -15.0,
+          "series_win_lift_ci_low": -26.612236666725337,
+          "series_win_lift_ci_high": -3.3877633332746626,
+          "rounds_won_added_per_map": -0.8066666666666668,
+          "rounds_won_added_ci_low": -1.297528660433554,
+          "rounds_won_added_ci_high": -0.3158046728997796,
+          "round_margin_added_per_map": -0.9733333333333332,
+          "round_margin_added_ci_low": -1.7328457690593368,
+          "round_margin_added_ci_high": -0.2138208976073298,
+          "comparison": "Pace 100 | Mixed",
+          "dial_label": "Pace",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 39.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.42,
+          "series_win_lift_pp": -9.0,
+          "series_win_lift_ci_low": -19.0810605502686,
+          "series_win_lift_ci_high": 1.0810605502685977,
+          "rounds_won_added_per_map": -0.08,
+          "rounds_won_added_ci_low": -0.4491282231999315,
+          "rounds_won_added_ci_high": 0.2891282231999315,
+          "round_margin_added_per_map": -0.0866666666666666,
+          "round_margin_added_ci_low": -0.6686317766779822,
+          "round_margin_added_ci_high": 0.4952984433446489,
+          "comparison": "Pace 0 | Tac",
+          "dial_label": "Pace",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 42.0
+        },
+        {
+          "dial": "pace",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.39,
+          "series_win_lift_pp": -12.0,
+          "series_win_lift_ci_low": -22.88968077928584,
+          "series_win_lift_ci_high": -1.1103192207141603,
+          "rounds_won_added_per_map": -0.4899999999999999,
+          "rounds_won_added_ci_low": -0.9311086310898912,
+          "rounds_won_added_ci_high": -0.0488913689101087,
+          "round_margin_added_per_map": -0.9333333333333332,
+          "round_margin_added_ci_low": -1.57434165798937,
+          "round_margin_added_ci_high": -0.2923250086772966,
+          "comparison": "Pace 100 | Tac",
+          "dial_label": "Pace",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 39.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "balanced",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.6,
+          "series_win_lift_pp": 6.0,
+          "series_win_lift_ci_low": -0.1161339872091531,
+          "series_win_lift_ci_high": 12.116133987209151,
+          "rounds_won_added_per_map": 0.2833333333333332,
+          "rounds_won_added_ci_low": 0.1272899568204695,
+          "rounds_won_added_ci_high": 0.439376709846197,
+          "round_margin_added_per_map": 0.3933333333333333,
+          "round_margin_added_ci_low": 0.1534396509337778,
+          "round_margin_added_ci_high": 0.633227015732889,
+          "comparison": "Util 0 | Bal",
+          "dial_label": "Util Discipline",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 60.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "balanced",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.6666666666666665,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.43,
+          "series_win_lift_pp": -11.0,
+          "series_win_lift_ci_low": -22.78472149039003,
+          "series_win_lift_ci_high": 0.7847214903900301,
+          "rounds_won_added_per_map": -0.4033333333333332,
+          "rounds_won_added_ci_low": -0.8153144513123836,
+          "rounds_won_added_ci_high": 0.008647784645717,
+          "round_margin_added_per_map": -0.7333333333333333,
+          "round_margin_added_ci_low": -1.399087321391264,
+          "round_margin_added_ci_high": -0.0675793452754026,
+          "comparison": "Util 100 | Bal",
+          "dial_label": "Util Discipline",
+          "roster_label": "Balanced",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 43.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.48,
+          "series_win_lift_pp": 0.0,
+          "series_win_lift_ci_low": -6.823844113463355,
+          "series_win_lift_ci_high": 6.823844113463355,
+          "rounds_won_added_per_map": -0.0266666666666666,
+          "rounds_won_added_ci_low": -0.2308927846101867,
+          "rounds_won_added_ci_high": 0.1775594512768535,
+          "round_margin_added_per_map": -0.07,
+          "round_margin_added_ci_low": -0.3506323656031463,
+          "round_margin_added_ci_high": 0.2106323656031463,
+          "comparison": "Util 0 | Frag",
+          "dial_label": "Util Discipline",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 48.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "fraggers",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": -0.4166666666666667,
+          "control_win_rate": 0.48,
+          "treatment_win_rate": 0.39,
+          "series_win_lift_pp": -9.0,
+          "series_win_lift_ci_low": -21.48813190128285,
+          "series_win_lift_ci_high": 3.4881319012828484,
+          "rounds_won_added_per_map": -0.8466666666666667,
+          "rounds_won_added_ci_low": -1.262618594304344,
+          "rounds_won_added_ci_high": -0.4307147390289894,
+          "round_margin_added_per_map": -1.1666666666666667,
+          "round_margin_added_ci_low": -1.7621713380945914,
+          "round_margin_added_ci_high": -0.5711619952387422,
+          "comparison": "Util 100 | Frag",
+          "dial_label": "Util Discipline",
+          "roster_label": "Fraggers",
+          "control_win_pct": 48.0,
+          "treatment_win_pct": 39.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "mixed",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.5333333333333333,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.53,
+          "series_win_lift_pp": -1.0,
+          "series_win_lift_ci_low": -6.208072987432515,
+          "series_win_lift_ci_high": 4.208072987432515,
+          "rounds_won_added_per_map": 0.0466666666666666,
+          "rounds_won_added_ci_low": -0.1114749562047316,
+          "rounds_won_added_ci_high": 0.2048082895380649,
+          "round_margin_added_per_map": 0.0633333333333333,
+          "round_margin_added_ci_low": -0.1883681409246829,
+          "round_margin_added_ci_high": 0.3150348075913496,
+          "comparison": "Util 0 | Mixed",
+          "dial_label": "Util Discipline",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 53.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "mixed",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 0.5333333333333333,
+          "control_win_rate": 0.54,
+          "treatment_win_rate": 0.43,
+          "series_win_lift_pp": -11.0,
+          "series_win_lift_ci_low": -22.450714061806472,
+          "series_win_lift_ci_high": 0.4507140618064724,
+          "rounds_won_added_per_map": -0.5466666666666667,
+          "rounds_won_added_ci_low": -0.917356757247424,
+          "rounds_won_added_ci_high": -0.1759765760859096,
+          "round_margin_added_per_map": -0.7399999999999999,
+          "round_margin_added_ci_low": -1.4260128842785562,
+          "round_margin_added_ci_high": -0.0539871157214434,
+          "comparison": "Util 100 | Mixed",
+          "dial_label": "Util Discipline",
+          "roster_label": "Mixed",
+          "control_win_pct": 54.0,
+          "treatment_win_pct": 43.0
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.56,
+          "series_win_lift_pp": 5.0,
+          "series_win_lift_ci_low": -0.1178830850975165,
+          "series_win_lift_ci_high": 10.117883085097516,
+          "rounds_won_added_per_map": 0.3233333333333333,
+          "rounds_won_added_ci_low": 0.1056634812882285,
+          "rounds_won_added_ci_high": 0.5410031853784381,
+          "round_margin_added_per_map": 0.6533333333333334,
+          "round_margin_added_ci_low": 0.4055638506620208,
+          "round_margin_added_ci_high": 0.901102816004646,
+          "comparison": "Util 0 | Tac",
+          "dial_label": "Util Discipline",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 56.00000000000001
+        },
+        {
+          "dial": "util_discipline",
+          "roster_profile": "tacticians",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "series": 100,
+          "expected_fit_edge": 1.1666666666666667,
+          "control_win_rate": 0.51,
+          "treatment_win_rate": 0.39,
+          "series_win_lift_pp": -12.0,
+          "series_win_lift_ci_low": -20.486477419394863,
+          "series_win_lift_ci_high": -3.513522580605132,
+          "rounds_won_added_per_map": -0.4833333333333333,
+          "rounds_won_added_ci_low": -0.9123434957029282,
+          "rounds_won_added_ci_high": -0.0543231709637385,
+          "round_margin_added_per_map": -0.74,
+          "round_margin_added_ci_low": -1.3460599794744237,
+          "round_margin_added_ci_high": -0.1339400205255764,
+          "comparison": "Util 100 | Tac",
+          "dial_label": "Util Discipline",
+          "roster_label": "Tacticians",
+          "control_win_pct": 51.0,
+          "treatment_win_pct": 39.0
+        }
+      ],
+      "interactions": [
+        {
+          "dial": "aggression",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 4.0,
+          "fit_interaction_win_ci_low": -10.981407467156403,
+          "fit_interaction_win_ci_high": 18.981407467156405,
+          "fit_interaction_rounds_per_map": 0.17,
+          "fit_interaction_rounds_ci_low": -0.4615552142109839,
+          "fit_interaction_rounds_ci_high": 0.801555214210984,
+          "dial_label": "Aggression",
+          "format": "BO3",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "aggression",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 13.0,
+          "fit_interaction_win_ci_low": -1.912610621737416,
+          "fit_interaction_win_ci_high": 27.91261062173741,
+          "fit_interaction_rounds_per_map": 0.28,
+          "fit_interaction_rounds_ci_low": -0.1863237527986778,
+          "fit_interaction_rounds_ci_high": 0.7463237527986779,
+          "dial_label": "Aggression",
+          "format": "BO5",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "aggression",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 9.0,
+          "fit_interaction_win_ci_low": -4.955553689763756,
+          "fit_interaction_win_ci_high": 22.955553689763757,
+          "fit_interaction_rounds_per_map": 0.1599999999999999,
+          "fit_interaction_rounds_ci_low": -0.4064110330109208,
+          "fit_interaction_rounds_ci_high": 0.7264110330109208,
+          "dial_label": "Aggression",
+          "format": "BO3",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "aggression",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 15.0,
+          "fit_interaction_win_ci_low": -0.3536492552925505,
+          "fit_interaction_win_ci_high": 30.353649255292552,
+          "fit_interaction_rounds_per_map": 0.0999999999999999,
+          "fit_interaction_rounds_ci_low": -0.3292879554411803,
+          "fit_interaction_rounds_ci_high": 0.5292879554411801,
+          "dial_label": "Aggression",
+          "format": "BO5",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "map_control",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 0.0,
+          "fit_interaction_win_ci_low": -13.929113468566548,
+          "fit_interaction_win_ci_high": 13.929113468566548,
+          "fit_interaction_rounds_per_map": 0.5166666666666666,
+          "fit_interaction_rounds_ci_low": 0.1016533597795522,
+          "fit_interaction_rounds_ci_high": 0.931679973553781,
+          "dial_label": "Map Control",
+          "format": "BO3",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "map_control",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 0.0,
+          "fit_interaction_win_ci_low": -14.20496427665378,
+          "fit_interaction_win_ci_high": 14.20496427665378,
+          "fit_interaction_rounds_per_map": 0.382,
+          "fit_interaction_rounds_ci_low": 0.0757066811243203,
+          "fit_interaction_rounds_ci_high": 0.6882933188756797,
+          "dial_label": "Map Control",
+          "format": "BO5",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "map_control",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 11.0,
+          "fit_interaction_win_ci_low": -2.8998315519187905,
+          "fit_interaction_win_ci_high": 24.89983155191879,
+          "fit_interaction_rounds_per_map": 0.7033333333333335,
+          "fit_interaction_rounds_ci_low": 0.2250422904463185,
+          "fit_interaction_rounds_ci_high": 1.1816243762203484,
+          "dial_label": "Map Control",
+          "format": "BO3",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "map_control",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 3.0,
+          "fit_interaction_win_ci_low": -11.86047758113426,
+          "fit_interaction_win_ci_high": 17.860477581134262,
+          "fit_interaction_rounds_per_map": 0.6140000000000001,
+          "fit_interaction_rounds_ci_low": 0.2523467768676461,
+          "fit_interaction_rounds_ci_high": 0.975653223132354,
+          "dial_label": "Map Control",
+          "format": "BO5",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "pace",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 21.0,
+          "fit_interaction_win_ci_low": 6.714677165536351,
+          "fit_interaction_win_ci_high": 35.28532283446365,
+          "fit_interaction_rounds_per_map": 0.3166666666666666,
+          "fit_interaction_rounds_ci_low": -0.1491552286531771,
+          "fit_interaction_rounds_ci_high": 0.7824885619865104,
+          "dial_label": "Pace",
+          "format": "BO3",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "pace",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 9.0,
+          "fit_interaction_win_ci_low": -6.026666666666669,
+          "fit_interaction_win_ci_high": 24.02666666666667,
+          "fit_interaction_rounds_per_map": 0.2699999999999998,
+          "fit_interaction_rounds_ci_low": -0.1406561568903105,
+          "fit_interaction_rounds_ci_high": 0.6806561568903101,
+          "dial_label": "Pace",
+          "format": "BO5",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "pace",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 8.0,
+          "fit_interaction_win_ci_low": -6.389522563169344,
+          "fit_interaction_win_ci_high": 22.389522563169344,
+          "fit_interaction_rounds_per_map": 0.2433333333333331,
+          "fit_interaction_rounds_ci_low": -0.2948470270402195,
+          "fit_interaction_rounds_ci_high": 0.7815136937068858,
+          "dial_label": "Pace",
+          "format": "BO3",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "pace",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "aligned_profile": "fraggers",
+          "mismatched_profile": "tacticians",
+          "series": 100,
+          "fit_interaction_win_pp": 6.0,
+          "fit_interaction_win_ci_low": -9.465707389269497,
+          "fit_interaction_win_ci_high": 21.465707389269497,
+          "fit_interaction_rounds_per_map": 0.2519999999999999,
+          "fit_interaction_rounds_ci_low": -0.1330333506950726,
+          "fit_interaction_rounds_ci_high": 0.6370333506950725,
+          "dial_label": "Pace",
+          "format": "BO5",
+          "aligned_label": "Fraggers",
+          "mismatched_label": "Tacticians"
+        },
+        {
+          "dial": "util_discipline",
+          "treatment_value": 0.0,
+          "best_of": 3,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 5.0,
+          "fit_interaction_win_ci_low": -2.5654451023029434,
+          "fit_interaction_win_ci_high": 12.565445102302943,
+          "fit_interaction_rounds_per_map": 0.3499999999999999,
+          "fit_interaction_rounds_ci_low": 0.0608800069687839,
+          "fit_interaction_rounds_ci_high": 0.6391199930312159,
+          "dial_label": "Util Discipline",
+          "format": "BO3",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "util_discipline",
+          "treatment_value": 0.0,
+          "best_of": 5,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": 7.000000000000001,
+          "fit_interaction_win_ci_low": -0.5036432901799515,
+          "fit_interaction_win_ci_high": 14.503643290179951,
+          "fit_interaction_rounds_per_map": 0.3120000000000001,
+          "fit_interaction_rounds_ci_low": 0.0956852179219956,
+          "fit_interaction_rounds_ci_high": 0.5283147820780045,
+          "dial_label": "Util Discipline",
+          "format": "BO5",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "util_discipline",
+          "treatment_value": 100.0,
+          "best_of": 3,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": -3.0,
+          "fit_interaction_win_ci_low": -18.624218962297547,
+          "fit_interaction_win_ci_high": 12.624218962297546,
+          "fit_interaction_rounds_per_map": 0.3633333333333333,
+          "fit_interaction_rounds_ci_low": -0.2398396340252748,
+          "fit_interaction_rounds_ci_high": 0.9665063006919414,
+          "dial_label": "Util Discipline",
+          "format": "BO3",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        },
+        {
+          "dial": "util_discipline",
+          "treatment_value": 100.0,
+          "best_of": 5,
+          "aligned_profile": "tacticians",
+          "mismatched_profile": "fraggers",
+          "series": 100,
+          "fit_interaction_win_pp": -1.0,
+          "fit_interaction_win_ci_low": -17.59728540539937,
+          "fit_interaction_win_ci_high": 15.597285405399369,
+          "fit_interaction_rounds_per_map": 0.3200000000000001,
+          "fit_interaction_rounds_ci_low": -0.143586342954295,
+          "fit_interaction_rounds_ci_high": 0.7835863429542953,
+          "dial_label": "Util Discipline",
+          "format": "BO5",
+          "aligned_label": "Tacticians",
+          "mismatched_label": "Fraggers"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "series",
+      "label": "Paired roster-fit series outcomes",
+      "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Read one neutral-control versus one-dial-treatment result per seed and format.",
+        "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv')",
+        "tables_used": [
+          "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series.csv"
+        ],
+        "filters": [
+          "Complete validated paired rows only"
+        ],
+        "metric_definitions": [
+          "Series win lift is paired treatment win minus neutral-control win.",
+          "Rounds won added is treatment score minus control score on the same maps.",
+          "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+        ]
+      }
+    },
+    {
+      "id": "maps",
+      "label": "Paired roster-fit map outcomes",
+      "path": "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Audit control and treatment map scores under identical map ids and seeds.",
+        "sql": "SELECT * FROM read_csv_auto('runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv')",
+        "tables_used": [
+          "runs/mcp-experiments/20260719T042507Z-roster-fit-bo3-bo5-100-mirrored/series_maps.csv"
+        ],
+        "filters": [
+          "Complete validated paired rows only"
+        ],
+        "metric_definitions": [
+          "Series win lift is paired treatment win minus neutral-control win.",
+          "Rounds won added is treatment score minus control score on the same maps.",
+          "Fit interaction is aligned-roster lift minus mismatched-roster lift."
+        ]
+      }
+    }
+  ]
+}

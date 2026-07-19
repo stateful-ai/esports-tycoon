@@ -1,0 +1,11 @@
+dataset,component,component_label,fair_share_pct,direct_main_pct,total_effect_pct
+Broad 65-vs-85 lever sweep,version_id,Treatment configuration,24.21700735594899,15.332963217927555,43.71771973234966
+Broad 65-vs-85 lever sweep,map_id,Map,24.36039273531555,0.8401138963159732,67.07905337793268
+Broad 65-vs-85 lever sweep,identity_swap,Stable identity / orientation,19.67119472677591,2.184461261113419,54.05212408023542
+Broad 65-vs-85 lever sweep,seed,Seed randomness,31.751405181959555,3.112754528652883,80.59236038427362
+Equal-player management sweep,version_id,Treatment configuration,10.807964921039316,2.97197614143853,27.881084664532832
+Equal-player management sweep,map_id,Map,25.63722157910055,0.0017266469314751016,79.11271745975736
+Equal-player management sweep,identity_swap,Stable identity / orientation,30.222877588125915,0.5724534009778354,85.84983811943962
+Equal-player management sweep,seed,Seed randomness,33.33193591173421,0.05533811060374989,95.29756691957809
+Identical 75-vs-75 baseline,map_id,Map,37.81690018212631,1.8158454029900337,73.81795496126259
+Identical 75-vs-75 baseline,seed,Seed randomness,62.18309981787371,26.18204503873743,98.18415459701

@@ -1,0 +1,156 @@
+{
+  "method": "BO3 and BO5 use the same series seed, deterministic map order, and per-map outcomes; historical matchup intervals cluster identity orientations by seed",
+  "favorite_win_rates": [
+    {
+      "matchup": "65 vs 85",
+      "format": "BO1",
+      "team_role": "favorite",
+      "win_rate": 0.9922222222222222,
+      "ci_low": 0.9865813824353712,
+      "ci_high": 0.9978630620090733,
+      "underdog_win_rate": 0.007777777777777778,
+      "series_rows": 900,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "65 vs 85",
+      "format": "BO3",
+      "team_role": "favorite",
+      "win_rate": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "underdog_win_rate": 0.0,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "65 vs 85",
+      "format": "BO5",
+      "team_role": "favorite",
+      "win_rate": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "underdog_win_rate": 0.0,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 85",
+      "format": "BO1",
+      "team_role": "favorite",
+      "win_rate": 0.8977777777777778,
+      "ci_low": 0.8817750893369963,
+      "ci_high": 0.9137804662185592,
+      "underdog_win_rate": 0.10222222222222221,
+      "series_rows": 900,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 85",
+      "format": "BO3",
+      "team_role": "favorite",
+      "win_rate": 0.9833333333333333,
+      "ci_low": 0.9644296707555982,
+      "ci_high": 1.0,
+      "underdog_win_rate": 0.016666666666666666,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 85",
+      "format": "BO5",
+      "team_role": "favorite",
+      "win_rate": 0.9944444444444445,
+      "ci_low": 0.9834056738916318,
+      "ci_high": 1.0,
+      "underdog_win_rate": 0.005555555555555556,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "80 vs 85",
+      "format": "BO1",
+      "team_role": "favorite",
+      "win_rate": 0.721111111111111,
+      "ci_low": 0.6947496548801242,
+      "ci_high": 0.7474725673420981,
+      "underdog_win_rate": 0.2788888888888889,
+      "series_rows": 900,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "80 vs 85",
+      "format": "BO3",
+      "team_role": "favorite",
+      "win_rate": 0.7888888888888889,
+      "ci_low": 0.7323350458338646,
+      "ci_high": 0.8454427319439133,
+      "underdog_win_rate": 0.2111111111111111,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "80 vs 85",
+      "format": "BO5",
+      "team_role": "favorite",
+      "win_rate": 0.8555555555555556,
+      "ci_low": 0.805309015554408,
+      "ci_high": 0.9058020955567031,
+      "underdog_win_rate": 0.14444444444444443,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 80",
+      "format": "BO1",
+      "team_role": "favorite",
+      "win_rate": 0.7322222222222222,
+      "ci_low": 0.7059857123754802,
+      "ci_high": 0.7584587320689642,
+      "underdog_win_rate": 0.2677777777777778,
+      "series_rows": 900,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 80",
+      "format": "BO3",
+      "team_role": "favorite",
+      "win_rate": 0.8333333333333334,
+      "ci_low": 0.7812668436972752,
+      "ci_high": 0.8853998229693915,
+      "underdog_win_rate": 0.16666666666666666,
+      "series_rows": 180,
+      "seed_clusters": 90
+    },
+    {
+      "matchup": "75 vs 80",
+      "format": "BO5",
+      "team_role": "favorite",
+      "win_rate": 0.8888888888888888,
+      "ci_low": 0.8451074812289924,
+      "ci_high": 0.9326702965487854,
+      "underdog_win_rate": 0.1111111111111111,
+      "series_rows": 180,
+      "seed_clusters": 90
+    }
+  ],
+  "identical_team_series": [
+    {
+      "format": "BO3",
+      "series": 300,
+      "wins": 148,
+      "win_rate": 0.49333333333333335,
+      "average_maps_played": 2.52,
+      "decider_rate": 0.52
+    },
+    {
+      "format": "BO5",
+      "series": 300,
+      "wins": 147,
+      "win_rate": 0.49,
+      "average_maps_played": 4.13,
+      "decider_rate": 0.35
+    }
+  ],
+  "identical_bo3_bo5_winner_flip_rate": 0.19
+}

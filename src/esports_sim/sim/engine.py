@@ -1133,7 +1133,18 @@ class _MatchSim:
                 for i, q in enumerate(pushers):
                     self._order(q, f"goto:{site_cs[i % len(site_cs)]}")
                 if self._lurkers:
-                    lurk_strike = tick + C.LURK_STRIKE_DELAY
+                    map_dev = max(0.0, (tac.map_control - 50.0) / 50.0)
+                    lurk_players = [self._player(q) for q in self._lurkers]
+                    lurk_fits = tactics_fit.dial_pole_player_fits(
+                        lurk_players, "map_control", "high"
+                    )
+                    lurk_quality = sum(lurk_fits) / len(lurk_fits)
+                    acceleration = round(
+                        map_dev
+                        * C.LURK_STRIKE_ACCEL_SPAN
+                        * max(0.0, min(1.0, lurk_quality / 100.0))
+                    )
+                    lurk_strike = tick + max(1, C.LURK_STRIKE_DELAY - acceleration)
 
             # -- lurk strike -------------------------------------------------------------
             # The bait is set; now the lurker flanks the site from its off
@@ -2311,12 +2322,25 @@ class _MatchSim:
         smoked = False
         flash_owner: str | None = None
         target_callout = self._utility_target_callout(target_site)
-        if pids:
+        if pids and intent == "execute":
             # Neutral (50) throws everything, like the engine always did;
             # only genuinely disciplined books hold charges back.
             disc = self._tactics(self.p[pids[0]].team_id).util_discipline
             n_throw = max(1, round(len(pids) * (1.0 - max(0.0, disc - 50.0) / 125.0)))
             pids = list(pids)[:n_throw]
+        disc = (
+            self._tactics(self.p[pids[0]].team_id).util_discipline
+            if pids else 50.0
+        )
+        util_power_mult = 1.0
+        if intent == "execute" and disc < 50.0:
+            util_power_mult += (
+                (50.0 - disc) / 50.0 * C.UTIL_DUMP_POWER_SPAN
+            )
+        elif intent in {"retake", "stall"} and disc > 50.0:
+            util_power_mult += (
+                (disc - 50.0) / 50.0 * C.UTIL_RETAIN_POWER_SPAN
+            )
         best_contrib: tuple[float, str] | None = None  # (power, pid)
         for pid in pids:
             ps = self.p[pid]
@@ -2340,8 +2364,10 @@ class _MatchSim:
                 failed = rng is not None and rng.random() < fail_p
                 if not failed:
                     effects = self._utility_effects(ab)
-                    contrib = self._ability_power(ab) * (
-                        pl.attr("utility_usage") / 100.0
+                    contrib = (
+                        self._ability_power(ab)
+                        * (pl.attr("utility_usage") / 100.0)
+                        * util_power_mult
                     )
                     power += contrib
                     if best_contrib is None or contrib > best_contrib[0]:
@@ -2371,8 +2397,10 @@ class _MatchSim:
             if ult is not None and ult.ult_points and ps.ult_points >= ult.ult_points:
                 ps.ult_points = 0
                 effects = self._utility_effects(ult)
-                power += max(C.UTIL_POWER_ULT, self._ability_power(ult)) * (
-                    pl.attr("utility_usage") / 100.0
+                power += (
+                    max(C.UTIL_POWER_ULT, self._ability_power(ult))
+                    * (pl.attr("utility_usage") / 100.0)
+                    * util_power_mult
                 )
                 smoked = smoked or AbilityEffect.SMOKE in effects
                 if AbilityEffect.FLASH in effects and flash_owner is None:
@@ -2387,6 +2415,21 @@ class _MatchSim:
                     )
                 )
         bonus = min(C.ENTRY_BONUS_MAX, 2.0 * power)
+        if intent == "execute" and pids:
+            pace = self._tactics(self.p[pids[0]].team_id).pace
+            pace_dev = (pace - 50.0) / 50.0
+            if pace_dev != 0.0:
+                pole: tactics_fit.Pole = "high" if pace_dev > 0.0 else "low"
+                pace_players = [self._player(pid) for pid in pids]
+                pace_fits = tactics_fit.dial_pole_player_fits(
+                    pace_players, "pace", pole
+                )
+                pace_quality = sum(pace_fits) / len(pace_fits)
+                bonus += (
+                    abs(pace_dev)
+                    * C.PACE_ENTRY_BONUS_SPAN
+                    * max(0.0, min(1.0, pace_quality / 100.0))
+                )
         for pid in pids:
             ps = self.p[pid]
             ps.bonus = bonus
@@ -2609,23 +2652,13 @@ class _MatchSim:
         tac = self._tactics(tid)
 
         total = 0.0
-        for dial_key, attrs in tactics_fit.DIAL_FIT_ATTRS.items():
-            dev = abs(getattr(tac, dial_key) - 50.0) / 50.0  # 0 at neutral
-            edge = tactics_fit.fit_edge(
-                tactics_fit.player_fit(pl.attr(a) for a in attrs) for pl in roster
-            )
-            total += dev * edge
-        # Only the HIGH side of these dials is a coordination-heavy system —
-        # spread/lurk map control and held-for-retake discipline lean on
-        # cohesion. The low side (stacking tight, dumping utility on the hit)
-        # is the SIMPLER read and shouldn't be chemistry-gated, so count only
-        # the above-neutral deviation.
-        complexity = (
-            max(0.0, tac.map_control - 50.0)
-            + max(0.0, tac.util_discipline - 50.0)
-        ) / 50.0
         chem = self.gd.teams[tid].chemistry
-        total += complexity * tactics_fit.chem_edge(chem)
+        # Each pole has distinct roster demands. The shared helper also adds
+        # chemistry only to the HIGH side of coordination-heavy systems.
+        for dial_key in tactics_fit.DIAL_POLE_FIT_ATTRS:
+            total += tactics_fit.dial_execution_impact(
+                roster, dial_key, getattr(tac, dial_key), chem
+            )
         return float(np.clip(total, -C.EXEC_MOD_CAP, C.EXEC_MOD_CAP))
 
     def _apply_halftime_talk(self, team_id: str, talk: str, round_num: int, seed_path: tuple[str, ...]) -> None:
@@ -2857,7 +2890,38 @@ class _MatchSim:
             elif facing <= C.FLANK_FACING_COS:
                 preaim_term = -C.FLANK_MALUS
         peek_term = C.PEEK_INITIATIVE if peeking else 0.0
-        pos_total = pos_attr_term + hold_adv_term + preaim_term + peek_term
+        posture_term = 0.0
+        aggression_dev = (
+            self._tactics(ps.team_id).aggression - 50.0
+        ) / 50.0
+        if holder and aggression_dev < 0.0:
+            passive_fit = tactics_fit.player_fit(
+                pl.attr(attr)
+                for attr in tactics_fit.DIAL_POLE_FIT_ATTRS["aggression"]["low"]
+            )
+            posture_term = (
+                -aggression_dev
+                * C.AGGRO_PASSIVE_HOLD_SPAN
+                * max(0.0, min(1.0, passive_fit / 100.0))
+            )
+        elif not holder and aggression_dev > 0.0:
+            aggressive_fit = tactics_fit.player_fit(
+                pl.attr(attr)
+                for attr in tactics_fit.DIAL_POLE_FIT_ATTRS["aggression"]["high"]
+            )
+            risk_factor = max(
+                C.AGGRO_OVEREXTENSION_MIN_FACTOR,
+                (100.0 - aggressive_fit) / 50.0,
+            )
+            posture_term = (
+                -aggression_dev
+                * C.AGGRO_OVEREXTENSION_SPAN
+                * risk_factor
+                * (1.0 if peeking else C.AGGRO_COMMITTED_RISK_FACTOR)
+            )
+        pos_total = (
+            pos_attr_term + hold_adv_term + preaim_term + peek_term + posture_term
+        )
 
         # 3. Cover
         cover_total = C.COVER_BONUS if in_cover else 0.0
@@ -2970,6 +3034,7 @@ class _MatchSim:
                 s -= C.FLANK_MALUS
         if peeking:
             s += C.PEEK_INITIATIVE
+        s += posture_term
         if ps.flash_until >= tick:
             s -= C.FLASH_DEBUFF
         if ps.bonus_until >= tick:
@@ -3306,7 +3371,13 @@ class _MatchSim:
         # Coaching identity: aggressive teams stack tight and hunt the
         # refrag, passive teams give some trades up for safer spacing.
         aggr = self._tactics(self.p[trader].team_id).aggression
-        p_trade *= 1.0 + (aggr - 50.0) / 50.0 * C.AGGRO_TRADE_SPAN
+        aggr_dev = (aggr - 50.0) / 50.0
+        trade_span = (
+            C.AGGRO_TRADE_GAIN_SPAN
+            if aggr_dev >= 0.0
+            else C.AGGRO_TRADE_COST_SPAN
+        )
+        p_trade *= 1.0 + aggr_dev * trade_span
         p_trade = min(0.95, max(0.0, p_trade))
         if rng.random() < p_trade:
             self._kill(

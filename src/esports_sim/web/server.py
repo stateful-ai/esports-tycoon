@@ -1232,23 +1232,20 @@ def _review_your_calls(gs: GameState, review, tier: int) -> dict | None:
         if team is not None
         else []
     )
-    chem = tactics_fit.chem_edge(team.chemistry) if team is not None else 0.0
     for key in sorted(calls.dials):
         planned = calls.dials[key]
         base = calls.base_dials.get(
             key, getattr(team.tactics, key) if team is not None else 50.0
         )
         impact = None
-        attr_ids = tactics_fit.DIAL_FIT_ATTRS.get(key)
+        attr_ids = tactics_fit.DIAL_POLE_FIT_ATTRS.get(key)
         if tier >= 1 and attr_ids and roster:
-            pfits = [
-                tactics_fit.player_fit(p.attr(a) for a in attr_ids)
-                for p in roster
-            ]
-            edge = tactics_fit.fit_edge(pfits)
-            hi = edge + (chem if key in tactics_fit.CHEM_GATED else 0.0)
-            imp_planned = (hi if planned > 50.0 else edge) * abs(planned - 50.0) / 50.0
-            imp_base = (hi if base > 50.0 else edge) * abs(base - 50.0) / 50.0
+            imp_planned = tactics_fit.dial_execution_impact(
+                roster, key, planned, team.chemistry
+            )
+            imp_base = tactics_fit.dial_execution_impact(
+                roster, key, base, team.chemistry
+            )
             impact = round(imp_planned - imp_base, 4)
         dial_rows.append(
             {
@@ -6111,29 +6108,47 @@ def _tactics_fit(gs: GameState, team: Team) -> dict:
     reg = S.gd.attributes.definitions
     chem_edge = tactics_fit.chem_edge(team.chemistry)
     dials = []
-    for key, attr_ids in tactics_fit.DIAL_FIT_ATTRS.items():
-        names = [reg[a].display_name if a in reg else a for a in attr_ids]
-        pfits = [tactics_fit.player_fit(p.attr(a) for a in attr_ids) for p in roster]
-        scored = [
+    for key, pole_attrs in tactics_fit.DIAL_POLE_FIT_ATTRS.items():
+        attrs_lo = pole_attrs["low"]
+        attrs_hi = pole_attrs["high"]
+        names_lo = [reg[a].display_name if a in reg else a for a in attrs_lo]
+        names_hi = [reg[a].display_name if a in reg else a for a in attrs_hi]
+        pfits_lo = tactics_fit.dial_pole_player_fits(roster, key, "low")
+        pfits_hi = tactics_fit.dial_pole_player_fits(roster, key, "high")
+        scored_lo = [
             {"id": p.id, "handle": p.handle, "playstyle": str(p.playstyle),
              "score": round(pf)}
-            for p, pf in zip(roster, pfits)
+            for p, pf in zip(roster, pfits_lo)
         ]
-        scored.sort(key=lambda s: -s["score"])
-        fit = sum(pfits) / len(pfits) if pfits else 50.0
-        # Fit term is symmetric about 50; the chemistry term rides only the
-        # HIGH side of the coordination-heavy dials — so the two poles differ.
-        edge = tactics_fit.fit_edge(pfits)
+        scored_hi = [
+            {"id": p.id, "handle": p.handle, "playstyle": str(p.playstyle),
+             "score": round(pf)}
+            for p, pf in zip(roster, pfits_hi)
+        ]
+        scored_lo.sort(key=lambda s: -s["score"])
+        scored_hi.sort(key=lambda s: -s["score"])
+        fit_lo = sum(pfits_lo) / len(pfits_lo) if pfits_lo else 50.0
+        fit_hi = sum(pfits_hi) / len(pfits_hi) if pfits_hi else 50.0
+        # Each endpoint has its own roster fit; chemistry additionally rides
+        # only the HIGH side of coordination-heavy systems.
+        edge_lo = tactics_fit.dial_pole_edge(roster, key, "low")
+        edge_hi = tactics_fit.dial_pole_edge(roster, key, "high")
         gated = key in tactics_fit.CHEM_GATED
         dials.append(
             {
                 "key": key,
-                "attrs": names,
-                "fit": round(fit, 1),
-                "impact_lo": round(edge, 4),
-                "impact_hi": round(edge + (chem_edge if gated else 0.0), 4),
+                "attrs": list(dict.fromkeys(names_lo + names_hi)),
+                "attrs_lo": names_lo,
+                "attrs_hi": names_hi,
+                "fit": round((fit_lo + fit_hi) / 2.0, 1),
+                "fit_lo": round(fit_lo, 1),
+                "fit_hi": round(fit_hi, 1),
+                "impact_lo": round(edge_lo, 4),
+                "impact_hi": round(edge_hi + (chem_edge if gated else 0.0), 4),
                 "chem_gated": gated,
-                "players": scored,
+                "players": scored_hi,
+                "players_lo": scored_lo,
+                "players_hi": scored_hi,
             }
         )
     return {
