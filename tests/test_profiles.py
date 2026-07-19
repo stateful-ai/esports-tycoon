@@ -1057,6 +1057,11 @@ def test_tactics_fit_chips_carry_player_ids(env):
         for chip in dial["players"]:
             assert set(chip) == {"id", "handle", "playstyle", "score"}
             assert chip["id"] in roster_ids
+        assert dial["attrs_lo"] and dial["attrs_hi"]
+        assert isinstance(dial["fit_lo"], float)
+        assert isinstance(dial["fit_hi"], float)
+        assert {chip["id"] for chip in dial["players_lo"]} == roster_ids
+        assert {chip["id"] for chip in dial["players_hi"]} == roster_ids
 
 
 def test_market_rows_carry_languages(env):

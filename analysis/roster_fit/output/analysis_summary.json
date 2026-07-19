@@ -1,0 +1,28 @@
+{
+  "run_dir": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\mcp-experiments\\20260719T042507Z-roster-fit-bo3-bo5-100-mirrored",
+  "effects_rows": 64,
+  "interaction_rows": 16,
+  "series_rows": 6400,
+  "fit_round_margin_raw_correlation": 0.22089069023080243,
+  "fit_round_margin_within_treatment_correlation": 0.8543242026418764,
+  "fit_round_margin_within_treatment_slope": 0.4589156422983965,
+  "bo3_round_global_dial_pole_share": 0.9143660516421435,
+  "bo3_round_roster_specific_share": 0.08563394835785647,
+  "bo3_interaction_min_pp": -3.0,
+  "bo3_interaction_max_pp": 21.0,
+  "control_win_rate_min": 0.42,
+  "control_win_rate_max": 0.54,
+  "tables": {
+    "effects": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\tables\\roster_fit_effects.csv",
+    "interactions": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\tables\\roster_fit_interactions.csv",
+    "profiles": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\tables\\roster_profile_attributes.csv",
+    "control": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\tables\\control_symmetry.csv",
+    "decomposition": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\tables\\global_vs_roster_decomposition.csv"
+  },
+  "figures": {
+    "heatmap": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\figures\\bo3_roster_plan_heatmap.png",
+    "interactions": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\figures\\bo3_fit_interactions.png",
+    "fit_response": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\figures\\fit_response_round_margin.png",
+    "decomposition": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\analysis\\roster_fit\\output\\figures\\global_vs_roster_decomposition.png"
+  }
+}

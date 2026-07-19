@@ -1,0 +1,156 @@
+{
+  "method": "balanced functional ANOVA with interaction sums of squares split equally among participating factors (Shapley fair-share attribution)",
+  "metadata": {
+    "primary": {
+      "rows": 103500,
+      "versions": 115,
+      "maps": 5,
+      "seeds": 90,
+      "grand_mean_round_margin": -9.387797101449275,
+      "round_margin_variance": 10.570589253518168
+    },
+    "equal_core": {
+      "rows": 33750,
+      "versions": 75,
+      "maps": 5,
+      "seeds": 45,
+      "grand_mean_round_margin": -0.11656296296296297,
+      "round_margin_variance": 39.23073900159122
+    },
+    "symmetry_baseline": {
+      "rows": 300,
+      "unique_map_seed_pairs": 300,
+      "maps": 5,
+      "seeds": 60,
+      "team_a_mean_round_margin": -0.6366666666666667,
+      "round_margin_variance": 40.19798888888888,
+      "map_seed_interaction_pct": 72.00210955827255
+    }
+  },
+  "components": [
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "component": "version_id",
+      "component_label": "Treatment configuration",
+      "fair_share_pct": 24.21700735594899,
+      "direct_main_pct": 15.332963217927555,
+      "total_effect_pct": 43.71771973234966
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "component": "map_id",
+      "component_label": "Map",
+      "fair_share_pct": 24.36039273531555,
+      "direct_main_pct": 0.8401138963159732,
+      "total_effect_pct": 67.07905337793268
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "component": "identity_swap",
+      "component_label": "Stable identity / orientation",
+      "fair_share_pct": 19.67119472677591,
+      "direct_main_pct": 2.184461261113419,
+      "total_effect_pct": 54.05212408023542
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "component": "seed",
+      "component_label": "Seed randomness",
+      "fair_share_pct": 31.751405181959555,
+      "direct_main_pct": 3.112754528652883,
+      "total_effect_pct": 80.59236038427362
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "component": "version_id",
+      "component_label": "Treatment configuration",
+      "fair_share_pct": 10.807964921039316,
+      "direct_main_pct": 2.97197614143853,
+      "total_effect_pct": 27.881084664532832
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "component": "map_id",
+      "component_label": "Map",
+      "fair_share_pct": 25.63722157910055,
+      "direct_main_pct": 0.0017266469314751016,
+      "total_effect_pct": 79.11271745975736
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "component": "identity_swap",
+      "component_label": "Stable identity / orientation",
+      "fair_share_pct": 30.222877588125915,
+      "direct_main_pct": 0.5724534009778354,
+      "total_effect_pct": 85.84983811943962
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "component": "seed",
+      "component_label": "Seed randomness",
+      "fair_share_pct": 33.33193591173421,
+      "direct_main_pct": 0.05533811060374989,
+      "total_effect_pct": 95.29756691957809
+    },
+    {
+      "dataset": "Identical 75-vs-75 baseline",
+      "component": "map_id",
+      "component_label": "Map",
+      "fair_share_pct": 37.81690018212631,
+      "direct_main_pct": 1.8158454029900337,
+      "total_effect_pct": 73.81795496126259
+    },
+    {
+      "dataset": "Identical 75-vs-75 baseline",
+      "component": "seed",
+      "component_label": "Seed randomness",
+      "fair_share_pct": 62.18309981787371,
+      "direct_main_pct": 26.18204503873743,
+      "total_effect_pct": 98.18415459701
+    }
+  ],
+  "treatment_families": [
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "family": "Overall talent",
+      "versions": 7,
+      "share_of_direct_treatment_pct": 81.51903247656684,
+      "share_of_total_variance_pct": 12.499283265242411
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "family": "Player mechanics / role",
+      "versions": 33,
+      "share_of_direct_treatment_pct": 9.09969104453658,
+      "share_of_total_variance_pct": 1.3952522808038417
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "family": "Readiness / mastery",
+      "versions": 20,
+      "share_of_direct_treatment_pct": 2.5004410663835865,
+      "share_of_total_variance_pct": 0.38339170899455083
+    },
+    {
+      "dataset": "Broad 65-vs-85 lever sweep",
+      "family": "Strategy / management",
+      "versions": 55,
+      "share_of_direct_treatment_pct": 6.880835412513005,
+      "share_of_total_variance_pct": 1.055035962886753
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "family": "Readiness / mastery",
+      "versions": 20,
+      "share_of_direct_treatment_pct": 32.469396057078114,
+      "share_of_total_variance_pct": 0.9649827040855443
+    },
+    {
+      "dataset": "Equal-player management sweep",
+      "family": "Strategy / management",
+      "versions": 55,
+      "share_of_direct_treatment_pct": 67.53060394292191,
+      "share_of_total_variance_pct": 2.0069934373529863
+    }
+  ]
+}

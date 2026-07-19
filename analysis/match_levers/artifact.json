@@ -1,0 +1,1101 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "title": "What Drives Match Outcomes?",
+    "surface": "report",
+    "description": "Causal lever, variance, and series-format analysis across 191,745 deterministic map simulations.",
+    "generatedAt": "2026-07-19T05:00:00Z",
+    "sources": [
+      {
+        "id": "primary",
+        "label": "Broad causal match sweep",
+        "path": "runs/causal-match-20260718-main-e1d9db2/matches.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Aggregate normalized overall treatments.",
+          "sql": "SELECT level_numeric AS weak_overall, AVG(weak_win) AS win_rate, AVG(weak_round_margin) AS mean_round_margin, COUNT(*) AS matches, SUM(weak_win) AS wins FROM read_csv_auto('runs/causal-match-20260718-main-e1d9db2/matches.csv') WHERE factor = 'weak_overall' GROUP BY level_numeric ORDER BY level_numeric",
+          "tables_used": [
+            "runs/causal-match-20260718-main-e1d9db2/matches.csv"
+          ],
+          "filters": [
+            "Validated complete paired cells only"
+          ],
+          "metric_definitions": [
+            "Effects pair the same map, identity swap, and seed.",
+            "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+            "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+            "95% intervals cluster paired differences by seed."
+          ]
+        }
+      },
+      {
+        "id": "analysis",
+        "label": "Paired causal analysis notebook",
+        "path": "analysis/match_levers/output/tables/baseline_rounds_added.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Read paired, seed-clustered causal effects produced by the notebook.",
+          "sql": "SELECT context, factor, baseline_level, treatment_level, rounds_won_added, opponent_rounds_denied, weak_round_margin_effect, weak_win_effect_pp FROM read_csv_auto('analysis/match_levers/output/tables/baseline_rounds_added.csv') ORDER BY ABS(rounds_won_added) DESC",
+          "tables_used": [
+            "analysis/match_levers/output/tables/baseline_rounds_added.csv"
+          ],
+          "filters": [
+            "Validated complete paired cells only"
+          ],
+          "metric_definitions": [
+            "Effects pair the same map, identity swap, and seed.",
+            "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+            "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+            "95% intervals cluster paired differences by seed."
+          ]
+        }
+      },
+      {
+        "id": "variance",
+        "label": "Balanced match variance decomposition",
+        "path": "analysis/match_levers/output/tables/variance_decomposition.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Read functional-ANOVA variance shares with interactions allocated equally.",
+          "sql": "SELECT dataset, component_label, fair_share_pct, direct_main_pct, total_effect_pct FROM read_csv_auto('analysis/match_levers/output/tables/variance_decomposition.csv')",
+          "tables_used": [
+            "analysis/match_levers/output/tables/variance_decomposition.csv"
+          ],
+          "filters": [
+            "Validated complete paired cells only"
+          ],
+          "metric_definitions": [
+            "Effects pair the same map, identity swap, and seed.",
+            "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+            "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+            "95% intervals cluster paired differences by seed."
+          ]
+        }
+      },
+      {
+        "id": "series",
+        "label": "Best-of-one, best-of-three, and best-of-five outcomes",
+        "path": "analysis/match_levers/output/tables/series_format_win_rates.csv",
+        "query": {
+          "language": "sql",
+          "engine": "duckdb",
+          "description": "Read paired series outcomes by normalized overall matchup and format.",
+          "sql": "SELECT matchup, format, win_rate, ci_low, ci_high, underdog_win_rate, series_rows, seed_clusters FROM read_csv_auto('analysis/match_levers/output/tables/series_format_win_rates.csv') WHERE team_role = 'favorite' ORDER BY matchup, format",
+          "tables_used": [
+            "analysis/match_levers/output/tables/series_format_win_rates.csv"
+          ],
+          "filters": [
+            "Favorite rows for normalized unequal-team matchups"
+          ],
+          "metric_definitions": [
+            "BO1 is the map-level favorite win rate.",
+            "BO3 is the favorite winning at least two of the first three maps in deterministic map order.",
+            "BO5 is the favorite winning at least three of five maps.",
+            "Intervals cluster the two identity orientations by seed."
+          ]
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "overall-chart",
+        "title": "Underdog win rate against an 85-overall team",
+        "dataset": "overall_curve",
+        "type": "line",
+        "encodings": {
+          "x": {
+            "field": "weak_overall",
+            "title": "Underdog overall"
+          },
+          "y": {
+            "field": "win_rate",
+            "title": "Win rate",
+            "format": "percent"
+          }
+        },
+        "source": {
+          "id": "primary",
+          "label": "Broad causal match sweep",
+          "path": "runs/causal-match-20260718-main-e1d9db2/matches.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Aggregate normalized overall treatments.",
+            "sql": "SELECT level_numeric AS weak_overall, AVG(weak_win) AS win_rate, AVG(weak_round_margin) AS mean_round_margin, COUNT(*) AS matches, SUM(weak_win) AS wins FROM read_csv_auto('runs/causal-match-20260718-main-e1d9db2/matches.csv') WHERE factor = 'weak_overall' GROUP BY level_numeric ORDER BY level_numeric",
+            "tables_used": [
+              "runs/causal-match-20260718-main-e1d9db2/matches.csv"
+            ],
+            "filters": [
+              "Validated complete paired cells only"
+            ],
+            "metric_definitions": [
+              "Effects pair the same map, identity swap, and seed.",
+              "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+              "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+              "95% intervals cluster paired differences by seed."
+            ]
+          }
+        }
+      },
+      {
+        "id": "levers-chart",
+        "title": "Additional rounds won in a close 75-vs-80 matchup",
+        "dataset": "requested_levers",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "lever",
+            "title": "Lever"
+          },
+          "y": {
+            "field": "rounds_won_added",
+            "title": "Rounds won above baseline"
+          }
+        },
+        "source": {
+          "id": "analysis",
+          "label": "Paired causal analysis notebook",
+          "path": "analysis/match_levers/output/tables/baseline_rounds_added.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read paired, seed-clustered causal effects produced by the notebook.",
+            "sql": "SELECT context, factor, baseline_level, treatment_level, rounds_won_added, opponent_rounds_denied, weak_round_margin_effect, weak_win_effect_pp FROM read_csv_auto('analysis/match_levers/output/tables/baseline_rounds_added.csv') ORDER BY ABS(rounds_won_added) DESC",
+            "tables_used": [
+              "analysis/match_levers/output/tables/baseline_rounds_added.csv"
+            ],
+            "filters": [
+              "Validated complete paired cells only"
+            ],
+            "metric_definitions": [
+              "Effects pair the same map, identity swap, and seed.",
+              "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+              "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+              "95% intervals cluster paired differences by seed."
+            ]
+          }
+        }
+      },
+      {
+        "id": "variance-chart",
+        "title": "Fair-share attribution of round-margin variance",
+        "dataset": "variance_components",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "comparison_label",
+            "title": "Experiment and component"
+          },
+          "y": {
+            "field": "fair_share_pct",
+            "title": "Variance share (%)"
+          }
+        },
+        "source": {
+          "id": "variance",
+          "label": "Balanced match variance decomposition",
+          "path": "analysis/match_levers/output/tables/variance_decomposition.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read functional-ANOVA variance shares with interactions allocated equally.",
+            "sql": "SELECT dataset, component_label, fair_share_pct, direct_main_pct, total_effect_pct FROM read_csv_auto('analysis/match_levers/output/tables/variance_decomposition.csv')",
+            "tables_used": [
+              "analysis/match_levers/output/tables/variance_decomposition.csv"
+            ],
+            "filters": [
+              "Validated complete paired cells only"
+            ],
+            "metric_definitions": [
+              "Effects pair the same map, identity swap, and seed.",
+              "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+              "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+              "95% intervals cluster paired differences by seed."
+            ]
+          }
+        }
+      },
+      {
+        "id": "series-chart",
+        "title": "Longer series increasingly protect the favorite",
+        "dataset": "series_favorite_rates",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "comparison",
+            "title": "Matchup and format"
+          },
+          "y": {
+            "field": "win_rate",
+            "title": "Favorite win rate",
+            "format": "percent"
+          }
+        },
+        "source": {
+          "id": "series",
+          "label": "Best-of-one, best-of-three, and best-of-five outcomes",
+          "path": "analysis/match_levers/output/tables/series_format_win_rates.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read paired series outcomes by normalized overall matchup and format.",
+            "sql": "SELECT matchup, format, win_rate, ci_low, ci_high, underdog_win_rate, series_rows, seed_clusters FROM read_csv_auto('analysis/match_levers/output/tables/series_format_win_rates.csv') WHERE team_role = 'favorite' ORDER BY matchup, format",
+            "tables_used": [
+              "analysis/match_levers/output/tables/series_format_win_rates.csv"
+            ],
+            "filters": [
+              "Favorite rows for normalized unequal-team matchups"
+            ],
+            "metric_definitions": [
+              "BO1 is the map-level favorite win rate.",
+              "BO3 is the favorite winning at least two of the first three maps in deterministic map order.",
+              "BO5 is the favorite winning at least three of five maps.",
+              "Intervals cluster the two identity orientations by seed."
+            ]
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "management-table",
+        "title": "Largest equal-player baseline-relative effects",
+        "dataset": "equal_management",
+        "columns": [
+          {
+            "field": "factor",
+            "label": "Factor"
+          },
+          {
+            "field": "comparison",
+            "label": "Baseline to treatment"
+          },
+          {
+            "field": "rounds_won_added",
+            "label": "Rounds added",
+            "format": "number",
+            "movement": true
+          },
+          {
+            "field": "opponent_rounds_denied",
+            "label": "Opponent rounds denied",
+            "format": "number",
+            "movement": true
+          }
+        ],
+        "defaultSort": {
+          "field": "rounds_won_added",
+          "direction": "desc"
+        },
+        "source": {
+          "id": "analysis",
+          "label": "Paired causal analysis notebook",
+          "path": "analysis/match_levers/output/tables/baseline_rounds_added.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read paired, seed-clustered causal effects produced by the notebook.",
+            "sql": "SELECT context, factor, baseline_level, treatment_level, rounds_won_added, opponent_rounds_denied, weak_round_margin_effect, weak_win_effect_pp FROM read_csv_auto('analysis/match_levers/output/tables/baseline_rounds_added.csv') ORDER BY ABS(rounds_won_added) DESC",
+            "tables_used": [
+              "analysis/match_levers/output/tables/baseline_rounds_added.csv"
+            ],
+            "filters": [
+              "Validated complete paired cells only"
+            ],
+            "metric_definitions": [
+              "Effects pair the same map, identity swap, and seed.",
+              "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+              "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+              "95% intervals cluster paired differences by seed."
+            ]
+          }
+        }
+      },
+      {
+        "id": "treatment-family-table",
+        "title": "Direct treatment signal in the broad lever sweep",
+        "dataset": "treatment_families",
+        "columns": [
+          {
+            "field": "family",
+            "label": "Lever family"
+          },
+          {
+            "field": "versions",
+            "label": "Authored versions",
+            "format": "number"
+          },
+          {
+            "field": "share_of_direct_treatment_pct",
+            "label": "Share of treatment signal (%)",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "share_of_direct_treatment_pct",
+          "direction": "desc"
+        },
+        "source": {
+          "id": "variance",
+          "label": "Balanced match variance decomposition",
+          "path": "analysis/match_levers/output/tables/variance_decomposition.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read functional-ANOVA variance shares with interactions allocated equally.",
+            "sql": "SELECT dataset, component_label, fair_share_pct, direct_main_pct, total_effect_pct FROM read_csv_auto('analysis/match_levers/output/tables/variance_decomposition.csv')",
+            "tables_used": [
+              "analysis/match_levers/output/tables/variance_decomposition.csv"
+            ],
+            "filters": [
+              "Validated complete paired cells only"
+            ],
+            "metric_definitions": [
+              "Effects pair the same map, identity swap, and seed.",
+              "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+              "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+              "95% intervals cluster paired differences by seed."
+            ]
+          }
+        }
+      },
+      {
+        "id": "series-table",
+        "title": "Favorite and upset rates by series format",
+        "dataset": "series_favorite_rates",
+        "columns": [
+          {
+            "field": "matchup",
+            "label": "Overall matchup"
+          },
+          {
+            "field": "format",
+            "label": "Format"
+          },
+          {
+            "field": "favorite_win_pct",
+            "label": "Favorite win (%)",
+            "format": "number"
+          },
+          {
+            "field": "underdog_win_pct",
+            "label": "Upset rate (%)",
+            "format": "number"
+          },
+          {
+            "field": "seed_clusters",
+            "label": "Seed clusters",
+            "format": "number"
+          }
+        ],
+        "source": {
+          "id": "series",
+          "label": "Best-of-one, best-of-three, and best-of-five outcomes",
+          "path": "analysis/match_levers/output/tables/series_format_win_rates.csv",
+          "query": {
+            "language": "sql",
+            "engine": "duckdb",
+            "description": "Read paired series outcomes by normalized overall matchup and format.",
+            "sql": "SELECT matchup, format, win_rate, ci_low, ci_high, underdog_win_rate, series_rows, seed_clusters FROM read_csv_auto('analysis/match_levers/output/tables/series_format_win_rates.csv') WHERE team_role = 'favorite' ORDER BY matchup, format",
+            "tables_used": [
+              "analysis/match_levers/output/tables/series_format_win_rates.csv"
+            ],
+            "filters": [
+              "Favorite rows for normalized unequal-team matchups"
+            ],
+            "metric_definitions": [
+              "BO1 is the map-level favorite win rate.",
+              "BO3 is the favorite winning at least two of the first three maps in deterministic map order.",
+              "BO5 is the favorite winning at least three of five maps.",
+              "Intervals cluster the two identity orientations by seed."
+            ]
+          }
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# What Drives Match Outcomes?"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n- **Longer series filter upsets without creating an equal-team bias.** Identical 75 teams finished at 49.3% in BO3 and 49.0% in BO5. For an 80-vs-85 matchup, favorite win probability rose from 72.1% in BO1 to 78.9% in BO3 and 85.6% in BO5.\n- **Seed randomness is meaningful, but contextual.** It receives 62.2% of variance in the exact identical-team baseline and about one-third in both larger sweeps. Most of that influence appears through interactions with map and identity rather than universally favorable seed numbers.\n- **Talent dominates the controllable signal.** Treatment configuration receives 24.2% of fair-share variance in the broad sweep, and overall talent accounts for 81.5% of the direct treatment-configuration signal.\n- **Management matters, but single matches are noisy.** With identical players, management treatment receives 10.8% of fair-share variance, compared with 33.3% seed, 25.6% map, and 30.2% identity/orientation. Paired multi-seed experiments are therefore essential for balancing decisions.\n- **The favorite does not need a blanket buff.** A normalized 65 team still beat an 85 team only 7 times in 900 maps (0.78%) and won every reconstructed BO3 and BO5."
+      },
+      {
+        "id": "variance-section",
+        "type": "markdown",
+        "body": "## Randomness Is Large, but It Is Not a Universal Seed Bonus\nThe identical 75-vs-75 baseline is the cleanest measure of inherent match volatility: seed receives 62.2% of the fair-share round-margin variance and map receives 37.8%. In the broad 65-vs-85 lever sweep, the split is seed 31.8%, map 24.4%, treatment configuration 24.2%, and stable identity/orientation 19.7%. The large seed share means an individual match can be decided by its stochastic trajectory. It does not mean certain numerical seeds are always strong: 72.0% of baseline variance is specifically map-by-seed interaction."
+      },
+      {
+        "id": "variance-chart-block",
+        "type": "chart",
+        "chartId": "variance-chart"
+      },
+      {
+        "id": "series-section",
+        "type": "markdown",
+        "body": "## Series Length Converts Map Skill Into Match Certainty\nThe format effect is material even for close teams. An 85 favorite against an 80 team rises from 72.1% in BO1 to 78.9% in BO3 and 85.6% in BO5. An 80 favorite against a 75 team rises from 73.2% to 83.3% to 88.9%. A ten-point 85-vs-75 advantage is already 89.8% on one map, then 98.3% in BO3 and 99.4% in BO5. Identical teams remain statistically centered at 50% in both formats, although the BO3 and BO5 winner differs on 19.0% of paired series seeds because BO5 exposes the teams to additional maps. BO3 therefore filters a meaningful portion of single-map volatility while retaining more upset potential than BO5."
+      },
+      {
+        "id": "series-chart-block",
+        "type": "chart",
+        "chartId": "series-chart"
+      },
+      {
+        "id": "series-table-block",
+        "type": "table",
+        "tableId": "series-table"
+      },
+      {
+        "id": "treatment-family-section",
+        "type": "markdown",
+        "body": "## Overall Talent Dominates the Controllable Signal\nWithin the direct treatment-configuration component of the broad sweep, the authored overall curve contributes 81.5%; individual player mechanics and role treatments contribute 9.1%; strategy and management contribute 6.9%; and readiness or mastery contributes 2.5%. These shares describe the ranges and weighting in this experiment catalog, not the frequency of situations in a live campaign. The practical implication is that player quality should remain the strongest long-run edge, while strategy is most visible in close matchups and over repeated maps."
+      },
+      {
+        "id": "treatment-family-table-block",
+        "type": "table",
+        "tableId": "treatment-family-table"
+      },
+      {
+        "id": "overall-section",
+        "type": "markdown",
+        "body": "## Overall Talent\nThe controlled 65-vs-85 upset rate is already below 1%, so the evidence does not support a blanket buff to favorites. The response is nonlinear: probability opens quickly between 75 and 85. For interventions, rounds won above baseline remains readable even when win rate is near zero."
+      },
+      {
+        "id": "overall-chart-block",
+        "type": "chart",
+        "chartId": "overall-chart"
+      },
+      {
+        "id": "player-section",
+        "type": "markdown",
+        "body": "## Player-Level Levers\nIn the broad 65-vs-85 sweep, raising aim precision from 65 to 85 won 2.47 extra rounds per match (95% CI 2.27 to 2.66); aim reactivity added 2.07, while movement added 0.46. In the close 75-vs-80 matchup, the 65-to-85 micro bundle added 5.73 rounds won and denied the opponent 3.19 more, for an 8.92-round margin improvement. Restoring role comfort from 40 to 100 added 1.40 rounds. Aligning roles instead of the neutral rotated assignment added 2.83 rounds and denied 3.16, for a 6.00-round margin improvement."
+      },
+      {
+        "id": "levers-chart-block",
+        "type": "chart",
+        "chartId": "levers-chart"
+      },
+      {
+        "id": "management-section",
+        "type": "markdown",
+        "body": "## Management With Identical Players\nThe equal-75-vs-75 design isolates choices around the roster using predeclared neutral baselines. Aggression 100 versus 50 won 1.52 extra rounds and denied 1.94; reassure versus no halftime talk added 0.84 and denied 1.13. Counter edge +3 versus 0 added 0.80 rounds, complex-system chemistry 100 versus 65 added 0.84, and maximum prep versus zero added 0.16. These are direct treatment effects, not sample-selected best-to-worst spans."
+      },
+      {
+        "id": "management-table-block",
+        "type": "table",
+        "tableId": "management-table"
+      },
+      {
+        "id": "recommendations",
+        "type": "markdown",
+        "body": "## Recommended Next Steps\n1. Use BO3 as the primary balance target for standard competitive play. It dampens single-map variance while preserving materially more upset potential than BO5.\n2. Set an explicit target for five-point-gap series. The current 79% to 83% BO3 favorite range may be appropriate; the 86% to 89% BO5 range is considerably more deterministic.\n3. Preserve the current equal-team randomness unless playtesting says individual maps feel illegible. It remains fair over repeated trials and series length already performs useful filtering.\n4. Investigate the stable identity/orientation component before tuning randomness. Its 19.7% broad-sweep and 30.2% equal-player shares may contain starting-side, team-id tie-break, or identity-specific interactions.\n5. Continue using paired seeds for every lever decision; unpaired single-match comparisons are too noisy to isolate management effects.\n6. Do not globally increase favorite strength yet; compare normalized results with authored-roster and production-save telemetry."
+      },
+      {
+        "id": "further-questions",
+        "type": "markdown",
+        "body": "## Further Questions\n- Does stable identity/orientation remain large when actual side assignment and team ids are crossed independently?\n- Do between-map adaptation, fatigue, substitutions, and map vetoes materially alter the reconstructed series curves?\n- Does the same decomposition hold for authored roster packs rather than normalized teams?\n- Which stochastic engine mechanisms - day form, duel resolution, tactical calls, or economy sequencing - contribute most to the seed component?"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Metric Definition and Caveats\nThe decomposition uses balanced functional ANOVA on round margin. Interaction variance is split equally among participating factors, producing fair-share attributions that sum to 100%. Total-effect percentages are also saved for sensitivity analysis but overlap and should not be added together. Stable identity/orientation includes team-id, treatment orientation, starting-side, and their interactions; it is not evidence that authored players differ in the symmetry baseline. Unequal-team BO3 and BO5 results reconstruct series from five map outcomes using a deterministic map order; they do not model between-map fatigue, adaptation, substitutions, or veto decisions. The fresh identical-team series use actual early stopping but likewise reset match state between maps. Treatment-family shares depend on the levels and number of versions authored in these experiments and are not forecasts of live campaign frequencies. Rounds-added estimates remain paired on map, identity, and seed."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-07-19T05:00:00Z",
+    "datasets": {
+      "overall_curve": [
+        {
+          "weak_overall": 45.0,
+          "win_rate": 0.0,
+          "mean_round_margin": -12.274444444444445,
+          "matches": 900,
+          "wins": 0
+        },
+        {
+          "weak_overall": 55.0,
+          "win_rate": 0.0,
+          "mean_round_margin": -11.34,
+          "matches": 900,
+          "wins": 0
+        },
+        {
+          "weak_overall": 65.0,
+          "win_rate": 0.0077777777777777,
+          "mean_round_margin": -9.543333333333331,
+          "matches": 900,
+          "wins": 7
+        },
+        {
+          "weak_overall": 70.0,
+          "win_rate": 0.0188888888888888,
+          "mean_round_margin": -8.135555555555555,
+          "matches": 900,
+          "wins": 17
+        },
+        {
+          "weak_overall": 75.0,
+          "win_rate": 0.1022222222222222,
+          "mean_round_margin": -5.998888888888889,
+          "matches": 900,
+          "wins": 92
+        },
+        {
+          "weak_overall": 80.0,
+          "win_rate": 0.2788888888888889,
+          "mean_round_margin": -3.1755555555555555,
+          "matches": 900,
+          "wins": 251
+        },
+        {
+          "weak_overall": 85.0,
+          "win_rate": 0.5,
+          "mean_round_margin": 0.0,
+          "matches": 900,
+          "wins": 450
+        }
+      ],
+      "requested_levers": [
+        {
+          "lever": "Micro 65 to 85",
+          "rounds_won_added": 5.727777777777778,
+          "opponent_rounds_denied": 3.1877777777777783,
+          "round_margin_effect": 8.915555555555557,
+          "win_effect_pp": 55.77777777777778,
+          "context": "75 vs 80",
+          "ci_low": 5.444070298855063,
+          "ci_high": 6.011485256700492
+        },
+        {
+          "lever": "Comfort 40 to 100",
+          "rounds_won_added": 1.3988888888888888,
+          "opponent_rounds_denied": 0.5466666666666667,
+          "round_margin_effect": 1.9455555555555557,
+          "win_effect_pp": 10.666666666666668,
+          "context": "75 vs 80",
+          "ci_low": 1.1936627357407326,
+          "ci_high": 1.6041150420370451
+        },
+        {
+          "lever": "Aligned roles",
+          "rounds_won_added": 2.8311111111111105,
+          "opponent_rounds_denied": 3.1644444444444444,
+          "round_margin_effect": 5.995555555555556,
+          "win_effect_pp": 43.11111111111112,
+          "context": "75 vs 80",
+          "ci_low": 2.5864410231244284,
+          "ci_high": 3.075781199097793
+        },
+        {
+          "lever": "Language 50 to 100",
+          "rounds_won_added": 0.0,
+          "opponent_rounds_denied": -0.0,
+          "round_margin_effect": 0.0,
+          "win_effect_pp": 0.0,
+          "context": "75 vs 80",
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        {
+          "lever": "IGL 40 to 100",
+          "rounds_won_added": -0.0544444444444444,
+          "opponent_rounds_denied": 0.0211111111111111,
+          "round_margin_effect": -0.0333333333333333,
+          "win_effect_pp": -0.2222222222222222,
+          "context": "75 vs 80",
+          "ci_low": -0.1038052252307348,
+          "ci_high": -0.005083663658154
+        },
+        {
+          "lever": "Tactical 65 to 85",
+          "rounds_won_added": 1.6400000000000003,
+          "opponent_rounds_denied": 0.7911111111111111,
+          "round_margin_effect": 2.431111111111111,
+          "win_effect_pp": 16.22222222222222,
+          "context": "75 vs 80",
+          "ci_low": 1.3951656712940428,
+          "ci_high": 1.884834328705958
+        },
+        {
+          "lever": "Mental 65 to 85",
+          "rounds_won_added": 0.1855555555555555,
+          "opponent_rounds_denied": -0.0333333333333333,
+          "round_margin_effect": 0.1522222222222222,
+          "win_effect_pp": 0.6666666666666667,
+          "context": "75 vs 80",
+          "ci_low": 0.0827295478322879,
+          "ci_high": 0.2883815632788231
+        }
+      ],
+      "equal_management": [
+        {
+          "factor": "Stamina",
+          "comparison": "100 to 40",
+          "rounds_won_added": -1.7155555555555555,
+          "opponent_rounds_denied": -1.2177777777777776,
+          "round_margin_effect": -2.9333333333333327,
+          "win_effect_pp": -19.33333333333333,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Halftime Talk",
+          "comparison": "none to demand_more",
+          "rounds_won_added": -1.6777777777777778,
+          "opponent_rounds_denied": -1.1422222222222222,
+          "round_margin_effect": -2.8200000000000003,
+          "win_effect_pp": -17.777777777777775,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Tactic Aggression",
+          "comparison": "50 to 100",
+          "rounds_won_added": 1.5155555555555555,
+          "opponent_rounds_denied": 1.9444444444444444,
+          "round_margin_effect": 3.46,
+          "win_effect_pp": 23.33333333333333,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Role Assignment",
+          "comparison": "rotated to aligned",
+          "rounds_won_added": 1.5133333333333334,
+          "opponent_rounds_denied": 3.333333333333333,
+          "round_margin_effect": 4.846666666666667,
+          "win_effect_pp": 29.33333333333333,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Chemistry Complex System",
+          "comparison": "65 to 20",
+          "rounds_won_added": -1.153333333333333,
+          "opponent_rounds_denied": -0.8244444444444444,
+          "round_margin_effect": -1.9777777777777776,
+          "win_effect_pp": -13.999999999999998,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Role Comfort",
+          "comparison": "100 to 40",
+          "rounds_won_added": -1.0955555555555554,
+          "opponent_rounds_denied": -1.0022222222222223,
+          "round_margin_effect": -2.0977777777777784,
+          "win_effect_pp": -16.444444444444446,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Form",
+          "comparison": "50 to 80",
+          "rounds_won_added": 1.0333333333333334,
+          "opponent_rounds_denied": 0.9533333333333336,
+          "round_margin_effect": 1.9866666666666668,
+          "win_effect_pp": 14.888888888888893,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Role Assignment",
+          "comparison": "rotated to worst_fit",
+          "rounds_won_added": -1.0044444444444445,
+          "opponent_rounds_denied": -1.3733333333333333,
+          "round_margin_effect": -2.377777777777778,
+          "win_effect_pp": -17.77777777777778,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Form",
+          "comparison": "50 to 20",
+          "rounds_won_added": -0.9533333333333336,
+          "opponent_rounds_denied": -1.0333333333333334,
+          "round_margin_effect": -1.9866666666666668,
+          "win_effect_pp": -14.888888888888893,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Tactic Aggression",
+          "comparison": "50 to 75",
+          "rounds_won_added": 0.8644444444444445,
+          "opponent_rounds_denied": 1.211111111111111,
+          "round_margin_effect": 2.075555555555556,
+          "win_effect_pp": 13.777777777777777,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Halftime Talk",
+          "comparison": "none to reassure",
+          "rounds_won_added": 0.8444444444444444,
+          "opponent_rounds_denied": 1.1333333333333333,
+          "round_margin_effect": 1.9777777777777776,
+          "win_effect_pp": 14.22222222222222,
+          "seed_sign_agreement": 1.0
+        },
+        {
+          "factor": "Chemistry Complex System",
+          "comparison": "65 to 100",
+          "rounds_won_added": 0.842222222222222,
+          "opponent_rounds_denied": 0.8666666666666667,
+          "round_margin_effect": 1.708888888888889,
+          "win_effect_pp": 11.555555555555554,
+          "seed_sign_agreement": 1.0
+        }
+      ],
+      "variance_components": [
+        {
+          "dataset_short": "Broad lever sweep",
+          "comparison_label": "Broad: Treatment configuration",
+          "component_label": "Treatment configuration",
+          "fair_share_pct": 24.21700735594899,
+          "direct_main_pct": 15.332963217927556,
+          "total_effect_pct": 43.71771973234966
+        },
+        {
+          "dataset_short": "Broad lever sweep",
+          "comparison_label": "Broad: Map",
+          "component_label": "Map",
+          "fair_share_pct": 24.36039273531555,
+          "direct_main_pct": 0.8401138963159732,
+          "total_effect_pct": 67.07905337793268
+        },
+        {
+          "dataset_short": "Broad lever sweep",
+          "comparison_label": "Broad: Stable identity / orientation",
+          "component_label": "Stable identity / orientation",
+          "fair_share_pct": 19.67119472677591,
+          "direct_main_pct": 2.184461261113419,
+          "total_effect_pct": 54.05212408023542
+        },
+        {
+          "dataset_short": "Broad lever sweep",
+          "comparison_label": "Broad: Seed randomness",
+          "component_label": "Seed randomness",
+          "fair_share_pct": 31.751405181959555,
+          "direct_main_pct": 3.112754528652883,
+          "total_effect_pct": 80.59236038427362
+        },
+        {
+          "dataset_short": "Equal-player management",
+          "comparison_label": "Equal: Treatment configuration",
+          "component_label": "Treatment configuration",
+          "fair_share_pct": 10.807964921039316,
+          "direct_main_pct": 2.97197614143853,
+          "total_effect_pct": 27.881084664532832
+        },
+        {
+          "dataset_short": "Equal-player management",
+          "comparison_label": "Equal: Map",
+          "component_label": "Map",
+          "fair_share_pct": 25.63722157910055,
+          "direct_main_pct": 0.0017266469314751,
+          "total_effect_pct": 79.11271745975736
+        },
+        {
+          "dataset_short": "Equal-player management",
+          "comparison_label": "Equal: Stable identity / orientation",
+          "component_label": "Stable identity / orientation",
+          "fair_share_pct": 30.222877588125915,
+          "direct_main_pct": 0.5724534009778354,
+          "total_effect_pct": 85.84983811943962
+        },
+        {
+          "dataset_short": "Equal-player management",
+          "comparison_label": "Equal: Seed randomness",
+          "component_label": "Seed randomness",
+          "fair_share_pct": 33.33193591173421,
+          "direct_main_pct": 0.0553381106037498,
+          "total_effect_pct": 95.29756691957807
+        },
+        {
+          "dataset_short": "Identical baseline",
+          "comparison_label": "Baseline: Map",
+          "component_label": "Map",
+          "fair_share_pct": 37.81690018212631,
+          "direct_main_pct": 1.8158454029900335,
+          "total_effect_pct": 73.81795496126259
+        },
+        {
+          "dataset_short": "Identical baseline",
+          "comparison_label": "Baseline: Seed randomness",
+          "component_label": "Seed randomness",
+          "fair_share_pct": 62.18309981787371,
+          "direct_main_pct": 26.18204503873743,
+          "total_effect_pct": 98.18415459701
+        }
+      ],
+      "treatment_families": [
+        {
+          "family": "Overall talent",
+          "versions": 7,
+          "share_of_direct_treatment_pct": 81.51903247656684,
+          "share_of_total_variance_pct": 12.499283265242411
+        },
+        {
+          "family": "Player mechanics / role",
+          "versions": 33,
+          "share_of_direct_treatment_pct": 9.09969104453658,
+          "share_of_total_variance_pct": 1.3952522808038417
+        },
+        {
+          "family": "Strategy / management",
+          "versions": 55,
+          "share_of_direct_treatment_pct": 6.880835412513005,
+          "share_of_total_variance_pct": 1.055035962886753
+        },
+        {
+          "family": "Readiness / mastery",
+          "versions": 20,
+          "share_of_direct_treatment_pct": 2.5004410663835865,
+          "share_of_total_variance_pct": 0.3833917089945508
+        }
+      ],
+      "series_favorite_rates": [
+        {
+          "matchup": "65 vs 85",
+          "format": "BO1",
+          "comparison": "65 vs 85 BO1",
+          "win_rate": 0.9922222222222222,
+          "favorite_win_pct": 99.22222222222223,
+          "underdog_win_pct": 0.77777777777777,
+          "ci_low": 0.9865813824353712,
+          "ci_high": 0.9978630620090732,
+          "series_rows": 900,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "65 vs 85",
+          "format": "BO3",
+          "comparison": "65 vs 85 BO3",
+          "win_rate": 1.0,
+          "favorite_win_pct": 100.0,
+          "underdog_win_pct": 0.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "65 vs 85",
+          "format": "BO5",
+          "comparison": "65 vs 85 BO5",
+          "win_rate": 1.0,
+          "favorite_win_pct": 100.0,
+          "underdog_win_pct": 0.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 85",
+          "format": "BO1",
+          "comparison": "75 vs 85 BO1",
+          "win_rate": 0.8977777777777778,
+          "favorite_win_pct": 89.77777777777777,
+          "underdog_win_pct": 10.22222222222222,
+          "ci_low": 0.8817750893369963,
+          "ci_high": 0.9137804662185592,
+          "series_rows": 900,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 85",
+          "format": "BO3",
+          "comparison": "75 vs 85 BO3",
+          "win_rate": 0.9833333333333332,
+          "favorite_win_pct": 98.33333333333331,
+          "underdog_win_pct": 1.66666666666666,
+          "ci_low": 0.9644296707555982,
+          "ci_high": 1.0,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 85",
+          "format": "BO5",
+          "comparison": "75 vs 85 BO5",
+          "win_rate": 0.9944444444444444,
+          "favorite_win_pct": 99.44444444444443,
+          "underdog_win_pct": 0.55555555555555,
+          "ci_low": 0.9834056738916318,
+          "ci_high": 1.0,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "80 vs 85",
+          "format": "BO1",
+          "comparison": "80 vs 85 BO1",
+          "win_rate": 0.721111111111111,
+          "favorite_win_pct": 72.1111111111111,
+          "underdog_win_pct": 27.88888888888889,
+          "ci_low": 0.6947496548801242,
+          "ci_high": 0.7474725673420981,
+          "series_rows": 900,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "80 vs 85",
+          "format": "BO3",
+          "comparison": "80 vs 85 BO3",
+          "win_rate": 0.7888888888888889,
+          "favorite_win_pct": 78.88888888888889,
+          "underdog_win_pct": 21.11111111111111,
+          "ci_low": 0.7323350458338646,
+          "ci_high": 0.8454427319439133,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "80 vs 85",
+          "format": "BO5",
+          "comparison": "80 vs 85 BO5",
+          "win_rate": 0.8555555555555556,
+          "favorite_win_pct": 85.55555555555556,
+          "underdog_win_pct": 14.444444444444441,
+          "ci_low": 0.805309015554408,
+          "ci_high": 0.9058020955567032,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 80",
+          "format": "BO1",
+          "comparison": "75 vs 80 BO1",
+          "win_rate": 0.7322222222222222,
+          "favorite_win_pct": 73.22222222222223,
+          "underdog_win_pct": 26.77777777777778,
+          "ci_low": 0.7059857123754802,
+          "ci_high": 0.7584587320689642,
+          "series_rows": 900,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 80",
+          "format": "BO3",
+          "comparison": "75 vs 80 BO3",
+          "win_rate": 0.8333333333333334,
+          "favorite_win_pct": 83.33333333333334,
+          "underdog_win_pct": 16.66666666666666,
+          "ci_low": 0.7812668436972752,
+          "ci_high": 0.8853998229693915,
+          "series_rows": 180,
+          "seed_clusters": 90
+        },
+        {
+          "matchup": "75 vs 80",
+          "format": "BO5",
+          "comparison": "75 vs 80 BO5",
+          "win_rate": 0.8888888888888888,
+          "favorite_win_pct": 88.88888888888889,
+          "underdog_win_pct": 11.11111111111111,
+          "ci_low": 0.8451074812289924,
+          "ci_high": 0.9326702965487854,
+          "series_rows": 180,
+          "seed_clusters": 90
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "primary",
+      "label": "Broad causal match sweep",
+      "path": "runs/causal-match-20260718-main-e1d9db2/matches.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Aggregate normalized overall treatments.",
+        "sql": "SELECT level_numeric AS weak_overall, AVG(weak_win) AS win_rate, AVG(weak_round_margin) AS mean_round_margin, COUNT(*) AS matches, SUM(weak_win) AS wins FROM read_csv_auto('runs/causal-match-20260718-main-e1d9db2/matches.csv') WHERE factor = 'weak_overall' GROUP BY level_numeric ORDER BY level_numeric",
+        "tables_used": [
+          "runs/causal-match-20260718-main-e1d9db2/matches.csv"
+        ],
+        "filters": [
+          "Validated complete paired cells only"
+        ],
+        "metric_definitions": [
+          "Effects pair the same map, identity swap, and seed.",
+          "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+          "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+          "95% intervals cluster paired differences by seed."
+        ]
+      }
+    },
+    {
+      "id": "analysis",
+      "label": "Paired causal analysis notebook",
+      "path": "analysis/match_levers/output/tables/baseline_rounds_added.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Read paired, seed-clustered causal effects produced by the notebook.",
+        "sql": "SELECT context, factor, baseline_level, treatment_level, rounds_won_added, opponent_rounds_denied, weak_round_margin_effect, weak_win_effect_pp FROM read_csv_auto('analysis/match_levers/output/tables/baseline_rounds_added.csv') ORDER BY ABS(rounds_won_added) DESC",
+        "tables_used": [
+          "analysis/match_levers/output/tables/baseline_rounds_added.csv"
+        ],
+        "filters": [
+          "Validated complete paired cells only"
+        ],
+        "metric_definitions": [
+          "Effects pair the same map, identity swap, and seed.",
+          "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+          "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+          "95% intervals cluster paired differences by seed."
+        ]
+      }
+    },
+    {
+      "id": "variance",
+      "label": "Balanced match variance decomposition",
+      "path": "analysis/match_levers/output/tables/variance_decomposition.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Read functional-ANOVA variance shares with interactions allocated equally.",
+        "sql": "SELECT dataset, component_label, fair_share_pct, direct_main_pct, total_effect_pct FROM read_csv_auto('analysis/match_levers/output/tables/variance_decomposition.csv')",
+        "tables_used": [
+          "analysis/match_levers/output/tables/variance_decomposition.csv"
+        ],
+        "filters": [
+          "Validated complete paired cells only"
+        ],
+        "metric_definitions": [
+          "Effects pair the same map, identity swap, and seed.",
+          "Rounds won above baseline equals treatment weak_score minus baseline weak_score.",
+          "Opponent rounds denied equals baseline strong_score minus treatment strong_score.",
+          "95% intervals cluster paired differences by seed."
+        ]
+      }
+    },
+    {
+      "id": "series",
+      "label": "Best-of-one, best-of-three, and best-of-five outcomes",
+      "path": "analysis/match_levers/output/tables/series_format_win_rates.csv",
+      "query": {
+        "language": "sql",
+        "engine": "duckdb",
+        "description": "Read paired series outcomes by normalized overall matchup and format.",
+        "sql": "SELECT matchup, format, win_rate, ci_low, ci_high, underdog_win_rate, series_rows, seed_clusters FROM read_csv_auto('analysis/match_levers/output/tables/series_format_win_rates.csv') WHERE team_role = 'favorite' ORDER BY matchup, format",
+        "tables_used": [
+          "analysis/match_levers/output/tables/series_format_win_rates.csv"
+        ],
+        "filters": [
+          "Favorite rows for normalized unequal-team matchups"
+        ],
+        "metric_definitions": [
+          "BO1 is the map-level favorite win rate.",
+          "BO3 is the favorite winning at least two of the first three maps in deterministic map order.",
+          "BO5 is the favorite winning at least three of five maps.",
+          "Intervals cluster the two identity orientations by seed."
+        ]
+      }
+    }
+  ]
+}

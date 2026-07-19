@@ -275,7 +275,7 @@ def expand_player(
     for field in sorted(_CAREER_PROFILE_FIELDS - {"potential"}):
         if field in spec and spec[field] is not None:
             player[field] = spec[field]
-    if "potential" in spec:
+    if "potential" in spec and spec["potential"] is not None:
         player["potential"] = float(spec["potential"])
     # Hidden ceiling via the same curve world-gen uses (age-aware).
     from esports_sim.schemas import Player

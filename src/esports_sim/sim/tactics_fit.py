@@ -12,17 +12,56 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from collections.abc import Mapping
+from typing import Any, Literal
 
 from esports_sim.schemas.team import TeamTactics
 from esports_sim.sim import constants as C
 
-# Each attribute-fit dial → the roster attributes that make it work. eco_greed
-# is absent on purpose: it is a pure economy lever with no roster-attribute fit.
+# Each pole has distinct execution demands. The edge compares a roster's fit
+# for the selected system against its fit for the opposite system. eco_greed
+# is absent on purpose: it is a pure economy lever with no roster fit.
+Pole = Literal["low", "high"]
+DIAL_POLE_FIT_ATTRS: dict[str, dict[Pole, tuple[str, ...]]] = {
+    "aggression": {
+        "low": ("positioning", "game_sense", "composure"),
+        "high": ("aim_reactivity", "aim_precision", "movement"),
+    },
+    "pace": {
+        "low": ("game_sense", "utility_usage", "comms_quality"),
+        "high": ("movement", "aim_reactivity", "comms_quality"),
+    },
+    "util_discipline": {
+        "low": ("utility_usage", "movement", "aim_reactivity"),
+        "high": ("game_sense", "utility_usage", "comms_quality"),
+    },
+    "map_control": {
+        "low": ("aim_precision", "aim_reactivity", "utility_usage"),
+        "high": ("game_sense", "positioning", "comms_quality"),
+    },
+}
+DIAL_POLE_PLAYSTYLES: dict[str, dict[Pole, frozenset[str]]] = {
+    "aggression": {
+        "low": frozenset({"anchor", "support", "igl"}),
+        "high": frozenset({"entry", "awper"}),
+    },
+    "pace": {
+        "low": frozenset({"igl", "support", "lurker"}),
+        "high": frozenset({"entry", "awper"}),
+    },
+    "util_discipline": {
+        "low": frozenset({"entry", "support"}),
+        "high": frozenset({"igl", "anchor", "support"}),
+    },
+    "map_control": {
+        "low": frozenset({"entry", "support"}),
+        "high": frozenset({"lurker", "igl", "anchor"}),
+    },
+}
+# Compatibility/catalog view: every attribute relevant to either pole. Engine
+# and serializer calculations use DIAL_POLE_FIT_ATTRS / dial_pole_edge.
 DIAL_FIT_ATTRS: dict[str, tuple[str, ...]] = {
-    "aggression": ("aim_reactivity", "aim_precision"),
-    "pace": ("aim_reactivity", "movement"),
-    "util_discipline": ("game_sense", "utility_usage"),
-    "map_control": ("game_sense", "comms_quality"),
+    dial: tuple(dict.fromkeys(poles["low"] + poles["high"]))
+    for dial, poles in DIAL_POLE_FIT_ATTRS.items()
 }
 # The HIGH side of these two is the coordination-heavy read, so the engine
 # additionally gates it on team chemistry (see ``_execution_mod``).
@@ -60,6 +99,66 @@ def fit_edge(player_fits: Iterable[float]) -> float:
             contrib *= C.EXEC_MISFIT_PENALTY
         total += contrib
     return (total / len(fits)) / C.EXEC_FIT_DIV
+
+
+def dial_pole_player_fits(
+    roster: Iterable[Any], dial: str, pole: Pole
+) -> list[float]:
+    """Per-player raw fit scores for one side of a tactics dial."""
+    attrs = DIAL_POLE_FIT_ATTRS[dial][pole]
+    aligned = DIAL_POLE_PLAYSTYLES[dial][pole]
+    return [
+        player_fit(player.attr(attr) for attr in attrs)
+        + (
+            C.EXEC_PLAYSTYLE_FIT_BONUS
+            if str(player.playstyle) in aligned
+            else 0.0
+        )
+        for player in roster
+    ]
+
+
+def dial_pole_edge(roster: Iterable[Any], dial: str, pole: Pole) -> float:
+    """Roster execution edge for one pole, before chemistry.
+
+    The primary signal is comparative: how much better each player fits this
+    pole than the opposite system. That prevents raw overall quality from
+    making both directions of every dial free upside. A player below the
+    absolute execution baseline also adds a readiness tax, preserving the
+    rule that a system can fail because one member cannot run it.
+    """
+    players = list(roster)
+    if not players:
+        return 0.0
+    opposite: Pole = "high" if pole == "low" else "low"
+    preferred = dial_pole_player_fits(players, dial, pole)
+    alternatives = dial_pole_player_fits(players, dial, opposite)
+    total = 0.0
+    for fit, alternative in zip(preferred, alternatives):
+        readiness_tax = max(0.0, C.EXEC_FIT_BASELINE - fit) * (
+            C.EXEC_MISFIT_PENALTY - 1.0
+        )
+        total += fit - alternative - readiness_tax
+    return (total / len(players)) / C.EXEC_FIT_DIV
+
+
+def dial_execution_impact(
+    roster: Iterable[Any], dial: str, value: float, chemistry: float
+) -> float:
+    """Exact engine/UI execution modifier for one dial value.
+
+    This remains piecewise-linear with a hard zero at 50, so the existing
+    impact_lo/impact_hi API contract stays valid and neutral matches remain
+    byte-identical.
+    """
+    deviation = (float(value) - 50.0) / 50.0
+    if deviation == 0.0:
+        return 0.0
+    pole: Pole = "high" if deviation > 0.0 else "low"
+    edge = dial_pole_edge(roster, dial, pole)
+    if pole == "high" and dial in CHEM_GATED:
+        edge += chem_edge(chemistry)
+    return abs(deviation) * edge
 
 
 def chem_edge(chemistry: float) -> float:

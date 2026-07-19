@@ -3570,11 +3570,14 @@ function dialImpact(fit, value) {
     : fit.impact_hi * (value - 50) / 50;
 }
 
-function poleChips(fit, styles) {
+function poleChips(fit, styles, pole) {
   // Roster members whose playstyle suits this pole, each a profile link. The
   // fit payload now carries the player id, so the chip routes to the overlay.
   const set = new Set(styles);
-  const hits = (fit?.players ?? []).filter((p) => set.has(p.playstyle));
+  const players = pole === "low"
+    ? (fit?.players_lo ?? fit?.players ?? [])
+    : (fit?.players_hi ?? fit?.players ?? []);
+  const hits = players.filter((p) => set.has(p.playstyle));
   if (!hits.length) return "";
   return hits.map((p) => plink(p.id, p.handle, "tac-who")).join("");
 }
@@ -3820,14 +3823,15 @@ function tacticsStrategy(main, rail, data) {
             greedy force can snowball or bankrupt you.</span>
         </div>`;
     } else if (fit) {
-      const loWho = poleChips(fit, d.low.styles);
-      const hiWho = poleChips(fit, d.high.styles);
+      const loWho = poleChips(fit, d.low.styles, "low");
+      const hiWho = poleChips(fit, d.high.styles, "high");
       foot.innerHTML = `
         <div class="tac-fit">
-          <span class="tac-fit-lab">Roster fit
-            <span class="muted">(${fit.attrs.join(" · ")})</span></span>
-          <span class="tac-fitbar">${bar(fit.fit)}<span class="tac-fitbar-cap">fit</span></span>
-          <span class="mono tac-fit-num">${Math.round(fit.fit)}</span>
+          <span class="tac-fit-lab">Roster fit by system</span>
+          <span class="muted">↓ ${Math.round(fit.fit_lo ?? fit.fit)}
+            (${(fit.attrs_lo ?? fit.attrs).join(" · ")})</span>
+          <span class="muted">↑ ${Math.round(fit.fit_hi ?? fit.fit)}
+            (${(fit.attrs_hi ?? fit.attrs).join(" · ")})</span>
         </div>
         <div class="tac-who-row">
           <span class="tac-who-side lo">${loWho || '<span class="muted">—</span>'}</span>
