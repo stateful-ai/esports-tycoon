@@ -52,6 +52,13 @@ testpaths = ["tests"]
 addopts = "-ra -n auto --dist loadgroup"
 markers = [
   "slow: whole-season / multi-seed soak tests. Skipped by `-m 'not slow'` for a fast pre-merge loop; always run in CI and before a real push.",
+  "engine: match-engine tests (sim/, events/, rng/). Fast; runs on every engine change.",
+  "campaign: manager-layer tests (manager/). Medium; runs on campaign/data changes.",
+  "web: web UI / API tests (web/). Fast; runs on UI/API changes.",
+  "golden: golden gate + determinism tests. Must always pass; runs on any engine/data change.",
+  "policy: learned policy / RL tests (policy/). Medium; runs on policy changes.",
+  "mcp: MCP server tests (mcp/). Fast; runs on MCP protocol changes.",
+  "registry: data/registry validation tests. Fast; runs on schema/data changes.",
 ]
 filterwarnings = [
   "error",

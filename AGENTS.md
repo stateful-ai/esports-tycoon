@@ -9,7 +9,10 @@ Quick orientation for any agent:
 
 - Windows repo. Python via `.venv-win\Scripts\python.exe` (NOT `.venv/`).
 - Test: `.venv-win\Scripts\python.exe -m pytest -q` — must be green before
-  any commit. Engine/data changes additionally require the balance +
+  any commit. Use domain markers for fast targeted runs: `-m "golden or engine"`
+  (sim/ changes, ~10s), `-m "campaign"` (manager/ changes, ~2min),
+  `-m "web"` (web/ changes), `-m "not slow"` (skip whole-season soaks).
+  Engine/data changes additionally require the balance +
   pacing gates; map geometry changes also the floor-audit gate
   (`scripts\map_floor_audit.py`); and (if the match log changed on
   purpose) a golden re-bless. All commands are tabulated in CLAUDE.md.
