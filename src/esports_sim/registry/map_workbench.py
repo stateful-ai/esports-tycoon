@@ -23,7 +23,7 @@ from pydantic import ValidationError
 from esports_sim.registry.loader import DEFAULT_DATA_DIR, GameData
 from esports_sim.registry.map_audit import audit_map, audit_continuous
 from esports_sim.registry.map_guide_renderer import render_legacy_guide
-from esports_sim.schemas.geometry import MapGeometry, Region as GeoRegion, Corridor as GeoCorridor, Prop as GeoProp
+from esports_sim.schemas.geometry import MapGeometry, Region as GeoRegion, Corridor as GeoCorridor, Prop as GeoProp, Opening as GeoOpening
 from esports_sim.schemas.map import Map, Callout, Site, CalloutZone, SightLine, Gimmick, GimmickType
 from esports_sim.schemas.studio import (
     MapStudioDocumentV1,
@@ -333,6 +333,7 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
     legacy = LegacyCompilationConfig(
         adjacency_overrides=map_raw.get("adjacency", {}),
         sightline_overrides=map_raw.get("sightlines", []),
+        opening_overrides=geo_raw.get("openings", []) if geo_raw else [],
         prop_support_exemptions=prop_support_exemptions,
     )
     
@@ -756,8 +757,9 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
         regions=regions,
         corridors=corridors,
         props=props,
+        openings=[GeoOpening(**o) for o in doc.legacy.opening_overrides],
     )
-    
+
     return map_obj, geo_obj
 
 

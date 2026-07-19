@@ -61,6 +61,23 @@ class Corridor(BaseModel):
     via: list[tuple[float, float]] = Field(default_factory=list)
 
 
+class Opening(BaseModel):
+    """Doorway span on the seam between two adjacent regions.
+
+    A seam without a declared opening is treated as fully open (plaza
+    edges); declaring one says "this boundary is wall except for the
+    doorway between span[0] and span[1]". The span runs along the seam's
+    long axis (the axis on which the two rects overlap); the portal
+    moves to the doorway's center, and the free-roam layer will derive
+    wall segments from the rest of the seam.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    between: tuple[str, str]
+    span: tuple[float, float]  # (lo, hi) along the seam's long axis
+
+
 class Prop(BaseModel):
     """A box/crate/wall segment inside a room.
 
@@ -87,12 +104,20 @@ class MapGeometry(BaseModel):
     regions: dict[str, Region]
     corridors: list[Corridor] = Field(default_factory=list)
     props: list[Prop] = Field(default_factory=list)
+    openings: list[Opening] = Field(default_factory=list)
 
     # -- portals -------------------------------------------------------------
 
+    def opening_for(self, a: str, b: str) -> Opening | None:
+        return next(
+            (o for o in self.openings if set(o.between) == {a, b}), None
+        )
+
     def portal(self, a: str, b: str) -> tuple[float, float] | None:
-        """Midpoint of the shared boundary between two regions, or None
-        if they don't (nearly) touch."""
+        """Crossing point on the shared boundary between two regions, or
+        None if they don't (nearly) touch. With a declared doorway
+        (`openings`) the portal sits at the doorway's center; otherwise
+        at the midpoint of the shared span."""
         ra, rb = self.regions.get(a), self.regions.get(b)
         if ra is None or rb is None:
             return None
@@ -104,6 +129,15 @@ class MapGeometry(BaseModel):
         # Portal sits at the middle of the overlapping span, on the seam.
         px = (max(ra.x, rb.x) + min(ra.x + ra.w, rb.x + rb.w)) / 2.0
         py = (max(ra.y, rb.y) + min(ra.y + ra.h, rb.y + rb.h)) / 2.0
+        opening = self.opening_for(a, b)
+        if opening is not None:
+            mid = (opening.span[0] + opening.span[1]) / 2.0
+            # The doorway runs along the seam's long axis: the axis with
+            # the larger overlap between the two rects.
+            if ox >= oy:
+                px = mid
+            else:
+                py = mid
         return (px, py)
 
     def path(self, a: str, b: str) -> list[tuple[float, float]]:

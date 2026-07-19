@@ -132,8 +132,15 @@ PRIVATE_ENEMY_FORGET_CONFIDENCE = 0.08
 # Map gimmicks (rotating doors, teleporters, breakable doors)
 
 TELEPORT_TICKS = 3  # in-transit time; no fighting mid-teleport
-ROTATING_DOOR_DELAY = 2  # extra ticks to swing through
+ROTATING_DOOR_DELAY = 2  # extra ticks to swing a shut door through
 DOOR_BREAK_TICKS = 8  # shooting a shut door open (4 s, very loud)
+# Doors are switch-operated: breakables start OPEN and get shut by a
+# nearby player mid-round (the per-door setup inclination lives in map
+# data as `start_closed_prob`); rotating stone doors reset shut every
+# round. Post-plant, whichever side holds the site may slam an adjacent
+# door to cut the retake/entry path.
+DOOR_SETUP_CLOSE_TICKS = 24  # defender setup window for shutting doors (12 s)
+DOOR_POSTPLANT_CLOSE_PROB = 0.6  # site holders cutting a path post-plant
 # Every gimmick use is loud. Enemies inside the noise radius snap their
 # watch toward it, and pre-plant defenders treat sound near a site as a
 # rotation trigger — which is also exactly why fakes work.

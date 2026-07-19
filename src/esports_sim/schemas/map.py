@@ -84,6 +84,7 @@ class Gimmick(BaseModel):
     between: tuple[str, str]  # must also be an adjacency edge
     noise_radius: float = 25.0
     # breakable_door only: chance the defense starts the round with it shut.
+    # Breakable door only: chance defenders switch it shut during setup.
     start_closed_prob: float = 0.7
 
 

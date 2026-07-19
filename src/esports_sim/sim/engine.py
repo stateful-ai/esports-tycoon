@@ -454,6 +454,16 @@ class _MatchSim:
         self._gimmicks = {
             frozenset(g.between): g for g in self.map.gimmicks
         }
+        # Switch-operated doors, in stable id order for deterministic
+        # per-round rolls and per-tick switch decisions.
+        self._door_gimmicks = sorted(
+            (
+                g
+                for g in self.map.gimmicks
+                if g.type in (GimmickType.BREAKABLE_DOOR, GimmickType.ROTATING_DOOR)
+            ),
+            key=lambda g: g.id,
+        )
 
         # Round-scoped scratch, reset in _play_round.
         self._pending_flashes: list[_PendingFlash] = []
@@ -466,6 +476,9 @@ class _MatchSim:
         self._retake_popped = False
         self._info_rotate_used = False
         self._doors_closed: set[str] = set()
+        self._doors_broken: set[str] = set()
+        self._door_setup_close: dict[str, bool] = {}
+        self._door_postplant_close: dict[str, bool] = {}
         # (gimmick, mover_team, dest_room, x, y) — resolved in the tick loop.
         self._pending_sounds: list[tuple] = []
         # Attackers peeled off the main hit to lurk a flank this round.
@@ -865,12 +878,25 @@ class _MatchSim:
         # between rounds, before the two team policies form fresh plans.
         self._maybe_call_timeouts(round_num, atk, dfn, seed_path)
 
-        # Defense setup: shut breakable doors (usually).
+        # Door reset: rotating stone doors swing shut between rounds;
+        # breakable doors start OPEN — shutting one is an in-round switch
+        # press by a nearby player, and once shut it reopens only by
+        # damage. Roll each door's switch intents now (stable id order)
+        # so the per-tick decisions stay draw-free.
         self._doors_closed = {
             g.id
-            for g in sorted(self.map.gimmicks, key=lambda g: g.id)
+            for g in self._door_gimmicks
+            if g.type == GimmickType.ROTATING_DOOR
+        }
+        self._doors_broken = set()
+        self._door_setup_close = {
+            g.id: rng.random() < g.start_closed_prob
+            for g in self._door_gimmicks
             if g.type == GimmickType.BREAKABLE_DOOR
-            and rng.random() < g.start_closed_prob
+        }
+        self._door_postplant_close = {
+            g.id: rng.random() < C.DOOR_POSTPLANT_CLOSE_PROB
+            for g in self._door_gimmicks
         }
 
         self._emit(
@@ -1039,6 +1065,11 @@ class _MatchSim:
             if not alive_dfn:
                 winner, reason = atk, "elim"
                 break
+
+            # Mechanical doors: setup shuts and post-plant path cuts.
+            self._door_switches(
+                tick, alive_atk, alive_dfn, spike_planted, planted_at, seed_path
+            )
 
             # -- defensive lean ---------------------------------------------------
             # Five bodies staging at one site's entries is loud. The best
@@ -1659,15 +1690,25 @@ class _MatchSim:
                 pts = [pts[0], pts[-1]]  # the box takes you; no corridor
                 ps.no_engage_until = tick + ticks  # can't fight in transit
                 self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "used")
-            elif gimmick.type == GimmickType.ROTATING_DOOR:
+            elif (
+                gimmick.type == GimmickType.ROTATING_DOOR
+                and gimmick.id in self._doors_closed
+            ):
+                # Swinging a shut door open; it stays open until someone
+                # presses the switch again. An open doorway is free and
+                # silent.
                 ticks += C.ROTATING_DOOR_DELAY
+                self._doors_closed.discard(gimmick.id)
                 self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "used")
             elif (
                 gimmick.type == GimmickType.BREAKABLE_DOOR
                 and gimmick.id in self._doors_closed
             ):
+                # Damaging a shut door down; it is gone for the round
+                # and can't be switched shut again.
                 ticks += C.DOOR_BREAK_TICKS
-                self._doors_closed.discard(gimmick.id)  # open for the round
+                self._doors_closed.discard(gimmick.id)
+                self._doors_broken.add(gimmick.id)
                 self._gimmick_noise(gimmick, ps, dest, tick, seed_path, "broken")
 
         if ps.mobility_until >= tick and (
@@ -1691,6 +1732,60 @@ class _MatchSim:
                 arrive_tick=ps.move_eta,
             )
         )
+
+    def _door_switches(
+        self,
+        tick: int,
+        alive_atk: list[str],
+        alive_dfn: list[str],
+        spike_planted: bool,
+        planted_at: str | None,
+        seed_path: tuple[str, ...],
+    ) -> None:
+        """Switch presses on the map's mechanical doors.
+
+        Two deliberate moments, mirroring how the doors are really
+        played: defenders shut a breakable door while setting up (the
+        per-door inclination is map data), and post-plant whichever
+        side holds the site slams an adjacent door to cut the retake
+        or re-entry path. The presser must be a settled body in one of
+        the door's two rooms; pressing is LOUD (same noise channel as
+        every other gimmick use)."""
+        for g in self._door_gimmicks:
+            if g.id in self._doors_closed or g.id in self._doors_broken:
+                continue
+            if (
+                not spike_planted
+                and tick <= C.DOOR_SETUP_CLOSE_TICKS
+                and self._door_setup_close.get(g.id)
+            ):
+                pool = alive_dfn
+            elif (
+                spike_planted
+                and planted_at in g.between
+                and self._door_postplant_close.get(g.id)
+            ):
+                pool = alive_atk
+            else:
+                continue
+            presser = min(
+                (
+                    q
+                    for q in pool
+                    if self.p[q].alive
+                    and self.p[q].callout in g.between
+                    and self.p[q].move_eta < tick
+                ),
+                default=None,
+            )
+            if presser is None:
+                continue
+            ps = self.p[presser]
+            other = g.between[1] if ps.callout == g.between[0] else g.between[0]
+            self._doors_closed.add(g.id)
+            self._door_setup_close[g.id] = False
+            self._door_postplant_close[g.id] = False
+            self._gimmick_noise(g, ps, other, tick, seed_path, "closed")
 
     def _gimmick_noise(
         self, gimmick: Gimmick, ps: _PState, dest: str,
@@ -3034,11 +3129,13 @@ class _MatchSim:
                 # contact — neither side gets the duel.
                 if pa.no_engage_until >= tick or pd.no_engage_until >= tick:
                     continue
-                # A shut door between the two rooms blocks everything.
+                # A shut door between the two rooms blocks everything —
+                # breakable or rotating, a closed door is a wall.
                 door = self._gimmicks.get(frozenset((pa.callout, pd.callout)))
                 if (
                     door is not None
-                    and door.type == GimmickType.BREAKABLE_DOOR
+                    and door.type
+                    in (GimmickType.BREAKABLE_DOOR, GimmickType.ROTATING_DOOR)
                     and door.id in self._doors_closed
                 ):
                     continue

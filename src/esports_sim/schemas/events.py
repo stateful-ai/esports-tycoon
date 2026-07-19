@@ -64,7 +64,9 @@ class RoundStartEvent(Event):
     round_num: int
     attacking_team_id: str
     defending_team_id: str
-    # Breakable doors the defense shut during setup (gimmick ids).
+    # Doors shut at the opening tick (gimmick ids): rotating stone doors
+    # reset shut each round; breakable doors start open and only close
+    # via an in-round switch press (a "closed" gimmick event).
     closed_doors: list[str] = Field(default_factory=list)
 
 
@@ -169,14 +171,15 @@ class CommsEvent(Event):
 
 
 class GimmickUsedEvent(Event):
-    """A map mechanic fired: a rotating door swung, a teleporter took
-    someone, a shut door got shot open. Loud by design — the viewer pings
-    it and nearby enemies react in-engine."""
+    """A map mechanic fired: a rotating door swung open, a teleporter
+    took someone, a switch slammed a door shut, a shut door got shot
+    down. Loud by design — the viewer pings it and nearby enemies react
+    in-engine."""
 
     type: Literal["round.gimmick"] = "round.gimmick"
     gimmick_id: str
     kind: str  # rotating_door | teleporter | breakable_door
-    action: str  # "used" | "broken"
+    action: str  # "used" | "broken" | "closed"
     player_id: str
     x: float | None = None
     y: float | None = None
