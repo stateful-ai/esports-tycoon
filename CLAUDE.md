@@ -19,9 +19,16 @@ Published at github.com/stateful-ai/esports-tycoon.
 
 | What | Command |
 |---|---|
-| Tests (full, parallel by default) | `.venv-win\Scripts\python.exe -m pytest -q` |
+| Tests (full, parallel by default) | `.venv-win\\Scripts\\python.exe -m pytest -q` |
 | Tests (fast pre-merge loop, skips whole-season soak) | `... -m pytest -q -m "not slow"` |
 | Tests (serial, for `-x`/`--pdb` on one test) | `... -m pytest -q -n0 <path>::<test>` |
+| Engine-only gate (after `sim/` or `data/` changes) | `... -m pytest -q -m "golden or engine"` |
+| Campaign-only gate (after `manager/` changes) | `... -m pytest -q -m "campaign"` |
+| Web-only gate (after `web/` changes) | `... -m pytest -q -m "web"` |
+| Policy-only gate (after `policy/` changes) | `... -m pytest -q -m "policy"` |
+| Registry-only gate (after `data/` or schema changes) | `... -m pytest -q -m "registry"` |
+| MCP-only gate (after `mcp/` changes) | `... -m pytest -q -m "mcp"` |
+| All domain markers (auto-tagged, see conftest.py) | `... -m pytest -q --markers` |
 | Balance gate (45–65% attack band) | `... scripts\balance_report.py 300` (exit 1 = fail) |
 | Rotation pacing gate (25–35s via spawn, 8–18s spawn→entry) | `... scripts\pacing_report.py` (exit 1 = fail) |
 | Multi-season snowball gate (blowout/close band) | `... scripts\snowball_report.py` (exit 1 = fail) |

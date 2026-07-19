@@ -17,6 +17,7 @@ build/
 .mypy_cache/
 .coverage
 htmlcov/
+.testmondata*
 
 # Secrets / machine-local
 .env
