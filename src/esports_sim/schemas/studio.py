@@ -75,7 +75,9 @@ class TraversalLink(BaseModel):
     path_mode: Literal["corridor", "portal"] = "corridor"
     include_endpoints_in_path: bool = True
     noise_radius: float = Field(default=25.0, ge=0.0)
-    start_closed_prob: float = Field(default=0.7, ge=0.0, le=1.0)  # breakable door only
+    # Breakable door only: chance defenders switch it shut during setup
+    # (doors start open; a shut one reopens only by damage).
+    start_closed_prob: float = Field(default=0.7, ge=0.0, le=1.0)
 
 
 class LegacyCompilationConfig(BaseModel):
@@ -83,6 +85,10 @@ class LegacyCompilationConfig(BaseModel):
 
     adjacency_overrides: dict[str, list[str]] = Field(default_factory=dict)
     sightline_overrides: list[dict] = Field(default_factory=list)
+    # Doorway spans on region seams (schemas.geometry.Opening shape).
+    # Carried through the Studio round trip so publishing a doc that was
+    # synthesized from legacy files never drops authored doorways.
+    opening_overrides: list[dict] = Field(default_factory=list)
     # Synthesized legacy maps may contain deliberately overhanging blockers.
     # New Studio props remain subject to strict surface containment.
     prop_support_exemptions: list[str] = Field(default_factory=list)

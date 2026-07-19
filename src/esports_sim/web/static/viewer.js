@@ -569,12 +569,16 @@ function drawGimmicks(round, t) {
       V.dyn.appendChild(outer);
       V.dyn.appendChild(inner);
     } else {
-      const closed =
-        g.type === "breakable_door" &&
-        round.closedDoors.has(g.id) &&
-        !round.gimmicks.some(
-          (e) => e.gimmick_id === g.id && e.action === "broken" && e.tick <= t
-        );
+      // Fold the round's door events up to tick t: switches shut doors
+      // ("closed"), damage breaks them open ("broken"), swinging a
+      // rotating door through opens it ("used"). Events arrive in tick
+      // order, so the last one wins.
+      let closed = round.closedDoors.has(g.id);
+      for (const e of round.gimmicks) {
+        if (e.gimmick_id !== g.id || e.tick > t) continue;
+        if (e.action === "closed") closed = true;
+        else if (e.action === "broken" || e.action === "used") closed = false;
+      }
       const door = svgEl("rect", {
         x: x - S(1.8), y: y - S(0.55),
         width: S(3.6), height: S(1.1),
@@ -582,7 +586,7 @@ function drawGimmicks(round, t) {
       });
       const tip = svgEl("title", {});
       tip.textContent =
-        (g.type === "breakable_door" ? "Breakable door" : "Door") +
+        (g.type === "breakable_door" ? "Breakable door" : "Rotating door") +
         (closed ? " (closed)" : "") + `: ${g.between.join(" <-> ")}`;
       door.appendChild(tip);
       V.dyn.appendChild(door);
@@ -1071,6 +1075,7 @@ function drawFrame() {
       .map((e) => {
         const verb =
           e.action === "broken" ? "broke a door open"
+          : e.action === "closed" ? "slammed a door shut"
           : e.kind === "teleporter" ? "took the teleporter"
           : "swung the rotating door";
         return {

@@ -60,6 +60,42 @@ def audit_map(m: Any, geo: Any) -> list[str]:
         elif not inside((c.x, c.y), [r]):
             findings.append(f"callout {cid}: anchor off own plate")
 
+    adjacent_pairs = {
+        frozenset((a, b)) for a, nbrs in m.adjacency.items() for b in nbrs
+    }
+    seen_openings: set[frozenset] = set()
+    for o in getattr(geo, "openings", []):
+        a, b = o.between
+        pair = frozenset((a, b))
+        label = f"{a} <-> {b}"
+        if pair in seen_openings:
+            findings.append(f"duplicate opening: {label}")
+            continue
+        seen_openings.add(pair)
+        ra, rb = regions.get(a), regions.get(b)
+        if ra is None or rb is None:
+            findings.append(f"opening references missing region: {label}")
+            continue
+        if pair not in adjacent_pairs:
+            findings.append(f"opening for non-adjacent pair: {label}")
+        lo, hi = o.span
+        if not lo < hi:
+            findings.append(f"opening span inverted: {label} ({lo}, {hi})")
+            continue
+        # The span must lie on the seam's long axis inside the shared
+        # interval — a doorway can't hang past the rooms it joins.
+        ox = min(ra.x + ra.w, rb.x + rb.w) - max(ra.x, rb.x)
+        oy = min(ra.y + ra.h, rb.y + rb.h) - max(ra.y, rb.y)
+        if ox >= oy:
+            share_lo, share_hi = max(ra.x, rb.x), min(ra.x + ra.w, rb.x + rb.w)
+        else:
+            share_lo, share_hi = max(ra.y, rb.y), min(ra.y + ra.h, rb.y + rb.h)
+        if lo < share_lo - EPS or hi > share_hi + EPS:
+            findings.append(
+                f"opening off the shared seam: {label} "
+                f"span ({lo}, {hi}) vs shared ({share_lo}, {share_hi})"
+            )
+
     seen: set[tuple[str, str]] = set()
     for a, nbrs in sorted(m.adjacency.items()):
         for b in sorted(nbrs):

@@ -1271,7 +1271,7 @@ function updateInspector() {
         </label>
         <label class="field"><span>Via points (x,y; x,y)</span><input type="text" value="${esc(via)}" onchange="updateLinkVia(this.value)"></label>
         <label class="field"><span>Noise Radius</span><input type="number" min="0" step="1" value="${link.noise_radius || 0}" onchange="updateSelectedField('noise_radius', parseFloat(this.value))"></label>
-        <label class="field"><span>Starts Closed Probability</span><input type="number" min="0" max="1" step="0.05" value="${link.start_closed_prob || 0}" onchange="updateSelectedField('start_closed_prob', parseFloat(this.value))"></label>
+        <label class="field"><span>Setup-Close Probability (breakable: defenders switch it shut)</span><input type="number" min="0" max="1" step="0.05" value="${link.start_closed_prob || 0}" onchange="updateSelectedField('start_closed_prob', parseFloat(this.value))"></label>
         <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Link</button>
       </div>
     `;

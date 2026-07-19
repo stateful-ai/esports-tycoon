@@ -15,14 +15,14 @@ callouts:
     site: none
     zone: attacker_spawn
     x: 50
-    y: 8
+    y: 21
   defender_spawn:
     id: defender_spawn
     display_name: Defender Spawn
     site: none
     zone: defender_spawn
-    x: 50
-    y: 92
+    x: 43
+    y: 90
 
   # -- A side -------------------------------------------------------------
   a_lobby:
@@ -30,36 +30,36 @@ callouts:
     display_name: A Lobby
     site: a
     zone: attacker_side
-    x: 22
-    y: 22
+    x: 27
+    y: 32
   a_main:
     id: a_main
     display_name: A Main
     site: a
     zone: attacker_side
-    x: 16
-    y: 38
+    x: 14
+    y: 51
   a_site:
     id: a_site
     display_name: A Site
     site: a
     zone: site
-    x: 20
-    y: 60
+    x: 12
+    y: 65
   a_heaven:
     id: a_heaven
     display_name: A Heaven
     site: a
     zone: defender_side
-    x: 24
-    y: 74
+    x: 31
+    y: 76
   a_garden:
     id: a_garden
     display_name: A Garden
     site: a
     zone: defender_side
-    x: 34
-    y: 68
+    x: 28
+    y: 59
 
   # -- Mid ----------------------------------------------------------------
   catwalk:
@@ -67,22 +67,22 @@ callouts:
     display_name: Catwalk
     site: mid
     zone: mid
-    x: 38
-    y: 42
+    x: 42
+    y: 44
   mid_courtyard:
     id: mid_courtyard
     display_name: Mid Courtyard
     site: mid
     zone: mid
-    x: 50
-    y: 46
+    x: 51
+    y: 48
   mid_market:
     id: mid_market
     display_name: Market
     site: mid
     zone: defender_side
-    x: 62
-    y: 58
+    x: 57
+    y: 69
 
   # -- B side ---------------------------------------------------------------
   b_lobby:
@@ -90,29 +90,29 @@ callouts:
     display_name: B Lobby
     site: b
     zone: attacker_side
-    x: 80
-    y: 22
+    x: 66
+    y: 32
   b_main:
     id: b_main
     display_name: B Main
     site: b
     zone: attacker_side
-    x: 78
-    y: 40
+    x: 67
+    y: 45
   b_site:
     id: b_site
     display_name: B Site
     site: b
     zone: site
-    x: 78
-    y: 62
+    x: 75
+    y: 68
   b_back:
     id: b_back
     display_name: B Back
     site: b
     zone: defender_side
-    x: 74
-    y: 76
+    x: 64
+    y: 85
 
 # Catwalk no longer walks straight into A Site: the mid rush now has to
 # cut through A Garden (and its door — see gimmicks below), the same way
@@ -125,7 +125,7 @@ adjacency:
   a_main: [a_lobby, a_site]
   a_site: [a_main, a_heaven, a_garden]
   a_heaven: [a_site, a_garden, defender_spawn]
-  a_garden: [a_site, a_heaven, catwalk, defender_spawn]
+  a_garden: [a_site, a_heaven, catwalk]
   catwalk: [a_lobby, mid_courtyard, a_garden]
   mid_courtyard: [attacker_spawn, catwalk, mid_market, b_main]
   mid_market: [mid_courtyard, b_site, defender_spawn]
@@ -133,7 +133,7 @@ adjacency:
   b_main: [b_lobby, b_site, mid_courtyard]
   b_site: [b_main, b_back, mid_market]
   b_back: [b_site, defender_spawn]
-  defender_spawn: [a_heaven, a_garden, mid_market, b_back]
+  defender_spawn: [a_heaven, mid_market, b_back]
 
 # Open mid (Courtyard/Catwalk/Market) is Ascent's real defining feature —
 # and in the real map it leans defense: Market watches down the length of

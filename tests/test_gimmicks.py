@@ -23,8 +23,19 @@ def test_lotus_rotating_doors_fire_and_are_loud(game_data: GameData) -> None:
     assert doors, "a full Lotus match should swing a rotating door at least once"
     for e in doors:
         assert e.kind == "rotating_door"
-        assert e.action == "used"
+        assert e.action in ("used", "closed")
         assert e.x is not None and e.y is not None
+    # Rotating doors reset shut every round, so the opening tick lists them.
+    starts = [e for e in events if e.type == "round.start"]
+    door_ids = {
+        g.id
+        for g in game_data.maps["lotus"].gimmicks
+        if g.type == "rotating_door"
+    }
+    assert all(set(e.closed_doors) == door_ids for e in starts)
+    assert any(e.action == "used" for e in doors), (
+        "somebody should swing a shut door open over a full match"
+    )
 
 
 def test_bind_teleporters_get_used(game_data: GameData) -> None:
@@ -53,10 +64,18 @@ def test_ascent_doors_close_and_break(game_data: GameData) -> None:
         g.type == "breakable_door" for g in gd.maps["ascent"].gimmicks
     ), "Ascent must declare its mechanical site doors"
     events = _events(gd, "ascent", 13)
+    # Breakable doors start OPEN every round — closing is an in-round
+    # switch press, never a spawn state.
     starts = [e for e in events if e.type == "round.start"]
-    assert any(e.closed_doors for e in starts), (
-        "with start_closed_prob defaults, some rounds should start with a "
-        "door shut"
+    assert all(not e.closed_doors for e in starts)
+    closed = [
+        e
+        for e in events
+        if e.type == "round.gimmick" and e.action == "closed"
+    ]
+    assert closed, (
+        "with start_closed_prob defaults, defenders should switch a door "
+        "shut during setup in some rounds"
     )
     # Over a full match, somebody should have shot one open.
     broken = [

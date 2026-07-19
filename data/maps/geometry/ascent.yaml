@@ -1,86 +1,131 @@
-# Hand-tuned geometry — Ascent's two sites flanking an open mid. A Site
-# and B Site are the biggest rooms; Catwalk/Mid Courtyard/Market form the
-# open mid lane that both sides fight over.
+# Geometry traced from the real Ascent minimap (wiki image, rotated 90
+# degrees CCW into our canonical frame: attackers at low y, defenders at
+# high y, A site left, B site right). Rects follow the walkable floor of
+# the source image on the same 0-100 grid; where a room's silhouette is
+# L-shaped, the rect covers the bounding span and a full-height "mask"
+# prop stands in for the solid building block inside it, so the viewer
+# reads the true outline. Mask placement is sightline-checked: no mask
+# crosses a declared sightline's center-to-center segment.
 map_id: ascent
 regions:
-  # -- Spawns. Defender spawn is the deep back plaza — its floor reaches
-  # the Heaven, Garden, Market and B Back doorways.
-  attacker_spawn: { x: 30.0, y: 0.0, w: 40.0, h: 16.0 }
-  defender_spawn: { x: 30.0, y: 66.0, w: 40.0, h: 34.0 }
+  # -- Spawns. Attacker spawn is the east plaza (top band); defender
+  # spawn is the south courtyard behind mid, reaching the CT band that
+  # feeds Heaven, Market and B Lane.
+  attacker_spawn: { x: 28.5, y: 16.0, w: 43.5, h: 10.5 }
+  defender_spawn: { x: 33.5, y: 80.5, w: 19.0, h: 18.0 }
 
   # -- A side -------------------------------------------------------------
-  a_lobby: { x: 12.0, y: 14.0, w: 19.5, h: 19.5 }
-  a_main: { x: 6.0, y: 30.0, w: 18.0, h: 16.0 }
-  a_site: { x: 10.0, y: 46.0, w: 20.0, h: 20.0 }
-  a_heaven: { x: 16.0, y: 66.0, w: 16.0, h: 15.0, z: 5.0 }
-  a_garden: { x: 27.0, y: 60.0, w: 15.0, h: 15.0 }
+  # Lobby is the shelf under spawn plus the ramp mouth; Main is the long
+  # doglegged hall that wraps the site's north wall and drops in from
+  # above; the site square holds the plant zone at x 5.5-20, y 63.5-72.
+  a_lobby: { x: 20.0, y: 26.5, w: 15.0, h: 12.0 }
+  a_main: { x: 1.0, y: 38.5, w: 26.5, h: 16.5 }
+  a_site: { x: 4.5, y: 55.0, w: 16.5, h: 24.5 }
+  # Heaven is the elevated window column east of the site plus the stair
+  # link down to the CT band — one tall strip at z 5. Garden is the tree
+  # courtyard between Catwalk's foot and the site door.
+  a_heaven: { x: 20.5, y: 63.5, w: 13.0, h: 25.0, z: 5.0 }
+  a_garden: { x: 21.0, y: 55.5, w: 14.0, h: 8.0 }
 
-  # -- Mid. Courtyard is the full mid strip — a long open run from the
-  # spawn seam down to Market, which is Ascent's defining lane.
-  catwalk: { x: 31.0, y: 33.0, w: 15.0, h: 27.5 }
-  mid_courtyard: { x: 44.0, y: 15.5, w: 14.0, h: 36.5 }
-  mid_market: { x: 56.0, y: 50.0, w: 16.0, h: 16.0 }
+  # -- Mid. Catwalk is the raised lane hugging the A side of mid;
+  # Courtyard runs the full top-mid -> bottom-mid strip; Market is the
+  # shop room plus its lane down to the CT band.
+  catwalk: { x: 35.0, y: 26.5, w: 9.5, h: 29.5 }
+  mid_courtyard: { x: 44.5, y: 26.5, w: 13.0, h: 37.0 }
+  mid_market: { x: 51.5, y: 63.5, w: 11.0, h: 17.0 }
 
   # -- B side ---------------------------------------------------------------
-  b_lobby: { x: 70.0, y: 14.0, w: 18.0, h: 18.5 }
-  b_main: { x: 57.5, y: 32.0, w: 30.5, h: 22.5 }
-  b_site: { x: 70.0, y: 54.0, w: 18.0, h: 18.0 }
-  b_back: { x: 66.0, y: 68.0, w: 15.0, h: 15.0 }
+  # B Site spans the apron room, the boxes strip and the plant zone
+  # (x 69.5-84, y 65.5-80.5). B Back is the defender lane running from
+  # the CT band up under the site's south edge.
+  b_lobby: { x: 60.5, y: 26.5, w: 11.5, h: 11.5 }
+  b_main: { x: 57.5, y: 38.0, w: 19.5, h: 15.0 }
+  b_site: { x: 62.5, y: 53.0, w: 22.0, h: 27.5 }
+  b_back: { x: 52.5, y: 80.5, w: 24.0, h: 8.0 }
+
+# Doorway spans (P0 of the free-roam wall/door work): a seam with no
+# opening is fully open plaza edge; a declared opening pins the portal
+# to the real doorway and marks the rest of that seam as wall for the
+# future free-roam layer. Spans read straight off the wiki minimap.
+openings:
+  - { between: [attacker_spawn, mid_courtyard], span: [47.0, 51.5] }  # top-mid gate
+  - { between: [a_lobby, catwalk], span: [27.0, 33.0] }               # lobby shelf
+  - { between: [catwalk, mid_courtyard], span: [28.5, 33.5] }         # top-mid shared shelf
+  - { between: [mid_courtyard, mid_market], span: [52.0, 56.0] }      # lane mouth
+  - { between: [mid_market, b_site], span: [66.5, 70.0] }             # market door (gimmick)
+  - { between: [a_garden, a_site], span: [58.5, 62.5] }               # garden door (gimmick)
+  - { between: [a_site, a_heaven], span: [66.0, 70.0] }               # heaven window drop
+  - { between: [a_heaven, defender_spawn], span: [82.5, 86.5] }       # stair foot into CT band
+  - { between: [b_lobby, b_main], span: [61.0, 66.0] }                # lobby mouth
+  - { between: [b_site, b_back], span: [72.5, 76.5] }                 # B lane neck
 
 corridors:
-  # A Lobby is a doglegged hallway off spawn — the loop swings through the
-  # spawn floor before the door.
+  # Spawn-side walks trace the real plaza lanes (the plaza is wide and
+  # both exits sit at its far corners), which is also what keeps the
+  # attacker site-to-site rotate inside the 25-35s pacing band — the
+  # straight center-to-portal shortcut would be ~40% too fast.
   - between: [attacker_spawn, a_lobby]
-    via: [[56.0, 12.0], [31.0, 15.0]]
-  # Mid Courtyard is a long open run down from spawn, with a jog at the top.
-  - between: [attacker_spawn, mid_courtyard]
-    via: [[40.0, 11.0], [51.0, 24.0]]
-  # Garden loops around the back of A Site to reach Catwalk and spawn.
-  - between: [a_garden, catwalk]
-    via: [[36.0, 55.0]]
-  - between: [a_garden, defender_spawn]
-    via: [[38.0, 80.0]]
-  # Courtyard peeks across the open mid into B Main via a wide dogleg that
-  # swings low through the strip before crossing the seam.
+    via: [[66.0, 21.0], [31.0, 21.0], [26.5, 28.5]]
+  - between: [attacker_spawn, b_lobby]
+    via: [[38.0, 21.0], [66.25, 26.5]]
+  # Lobby drops into the Main hall down the west column, then the hall
+  # walk runs its full length before turning south into the site.
+  - between: [a_lobby, a_main]
+    via: [[23.75, 36.0], [23.75, 44.0]]
+  - between: [a_main, a_site]
+    via: [[9.0, 51.0], [8.5, 56.0]]
+  # B Main funnels through the real neck at x ~70.5 before opening onto
+  # the site apron.
+  - between: [b_main, b_site]
+    via: [[70.5, 44.0], [70.5, 55.0]]
+  # Courtyard reaches B Main around the mid box and through the link
+  # room's doorway, not on the straight center line.
   - between: [mid_courtyard, b_main]
-    via: [[50.0, 49.0], [68.0, 50.0]]
-  # Market runs down the back wall into defender spawn.
-  - between: [mid_market, defender_spawn]
-    via: [[64.0, 78.0]]
+    via: [[57.0, 41.0], [58.5, 46.5]]
+  # Garden -> Heaven walks the window column, not the portal midpoint
+  # (which would clip the masked void beside the site).
+  - between: [a_heaven, a_garden]
+    via: [[31.0, 66.0], [31.0, 61.0]]
+  # (Garden reaches CT through Heaven's stair column — the direct
+  # garden<->CT edge is gone because that walk is literally the same
+  # plan-view strip Heaven occupies.)
 
-# Detail layer: plant-cover crates in each site plus one in each main lane
-# room, a full-height "mid box" (Ascent's signature crate stack), and A
-# Heaven as the elevated perch over A Site.
-#
-# The mid box sits toward the Market-facing side of Mid Courtyard. That
-# pairing (mid_courtyard -> mid_market) is now a defense-advantaged
-# sightline — Market watches down Courtyard in the real map — and the box
-# still denies the FULL easy diagonal hold from one spot, so the angle is
-# real but has to be worked for. It does NOT cross the mid_courtyard ->
-# catwalk line, which stays the neutral open contest.
+# Detail layer. Half-height props are the real map's cover pieces
+# (generator, site boxes, market counter); full-height props are either
+# the signature mid box or "mask" blocks standing in for solid building
+# volumes inside an L-shaped room's bounding rect.
 props:
-  # -- A site cover -------------------------------------------------------
-  - { region: a_site, x: 13.0, y: 48.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 22.0, y: 50.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 15.0, y: 58.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 25.0, y: 60.0, w: 3.0, h: 3.0, height: half }
-  # -- B site cover -------------------------------------------------------
-  - { region: b_site, x: 73.0, y: 56.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 82.0, y: 58.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 75.0, y: 64.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 80.0, y: 68.0, w: 3.0, h: 3.0, height: half }
-  # -- Main lane cover ------------------------------------------------------
-  - { region: a_main, x: 12.0, y: 36.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_main, x: 76.0, y: 38.0, w: 3.0, h: 3.0, height: half }
-  # -- Holder-spot cover: a body posted at the garden/market doors gets a
-  # crate to anchor behind once the door's open, instead of standing flat
-  # in the frame. Heaven and Back get one too — with the doors shut half
-  # the time, these are the reads that hold every round, so they carry
-  # more of the defensive weight now.
-  - { region: a_garden, x: 30.0, y: 65.0, w: 3.0, h: 3.0, height: half }
-  - { region: mid_market, x: 60.0, y: 54.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_heaven, x: 20.0, y: 70.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_back, x: 70.0, y: 72.0, w: 3.0, h: 3.0, height: half }
-  # -- Mid box (sight blocker) — sits on the Courtyard->Market center line
-  # so the long Market read still has to be worked around the crate.
-  - { region: mid_courtyard, x: 56.0, y: 46.0, w: 4.0, h: 4.0, height: full }
+  # -- A site cover: left barrel, generator, entry-side boxes, south boxes.
+  - { region: a_site, x: 6.5, y: 65.0, w: 2.5, h: 2.5, height: half }
+  - { region: a_site, x: 11.5, y: 66.0, w: 3.0, h: 3.5, height: half }
+  - { region: a_site, x: 15.5, y: 56.5, w: 2.5, h: 2.5, height: half }
+  - { region: a_site, x: 9.5, y: 74.5, w: 3.0, h: 2.5, height: half }
+  # -- B site cover: tall box strip, NE crates, SE plant-zone boxes, apron.
+  - { region: b_site, x: 66.5, y: 68.5, w: 2.0, h: 6.0, height: half }
+  - { region: b_site, x: 71.0, y: 65.5, w: 3.0, h: 2.5, height: half }
+  - { region: b_site, x: 78.0, y: 74.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 65.5, y: 57.0, w: 2.5, h: 2.5, height: half }
+  # -- Lane cover ------------------------------------------------------------
+  - { region: a_main, x: 2.5, y: 48.5, w: 3.0, h: 3.0, height: half }
+  - { region: b_main, x: 70.0, y: 39.5, w: 2.5, h: 2.5, height: half }
+  # -- Holder-spot cover at the door reads (see the pre-trace layout's
+  # rationale: these anchor the holds that carry rounds while the
+  # mechanical doors are shut).
+  - { region: a_garden, x: 27.0, y: 58.5, w: 3.0, h: 3.0, height: half }
+  - { region: mid_market, x: 55.5, y: 65.5, w: 2.5, h: 2.5, height: half }
+  - { region: a_heaven, x: 29.5, y: 66.0, w: 2.0, h: 2.5, height: half }
+  - { region: b_back, x: 60.5, y: 82.5, w: 2.5, h: 2.5, height: half }
+  # -- Mid box (sight blocker) — bottom-center of Courtyard on the
+  # Courtyard->Market center line (the long Market read has to be worked
+  # around it); clear of the Courtyard->Catwalk line, which stays the
+  # neutral open contest.
+  - { region: mid_courtyard, x: 50.0, y: 54.0, w: 4.5, h: 4.5, height: full }
+  # -- Mask blocks: solid building volumes inside bounding rects.
+  - { region: a_lobby, x: 27.5, y: 33.5, w: 7.5, h: 5.0, height: full }
+  - { region: a_main, x: 1.0, y: 38.5, w: 12.0, h: 8.0, height: full }
+  - { region: a_heaven, x: 24.5, y: 64.0, w: 3.5, h: 5.5, height: full }
+  - { region: mid_courtyard, x: 51.5, y: 27.0, w: 6.0, h: 13.5, height: full }
+  - { region: b_lobby, x: 60.5, y: 26.5, w: 5.5, h: 4.0, height: full }
+  - { region: b_site, x: 73.0, y: 53.0, w: 11.5, h: 10.0, height: full }
+  - { region: b_site, x: 62.5, y: 53.0, w: 6.0, h: 3.0, height: full }
+  - { region: defender_spawn, x: 33.5, y: 88.5, w: 4.5, h: 10.0, height: full }

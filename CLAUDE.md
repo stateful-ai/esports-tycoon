@@ -208,7 +208,8 @@ Published at github.com/stateful-ai/esports-tycoon.
   (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
   (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index
   of skills/agents). Skills: `/ship`, `/tactics`, `/art-pass`, `/maps`,
-  `/map-studio-authoring`, `/web-screen`, `/campaign`, `/build-roster-packs`.
+  `/map-studio-authoring`, `/trace-map`, `/web-screen`, `/campaign`,
+  `/build-roster-packs`.
 
 ## Non-negotiable invariants
 
