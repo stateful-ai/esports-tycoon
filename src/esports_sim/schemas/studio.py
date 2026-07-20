@@ -110,6 +110,7 @@ class MapStudioDocumentV1(BaseModel):
     schema_version: Literal[1] = 1
     id: str
     display_name: str
+    movement_model: Literal["routed", "free"] = "routed"
     sites: list[str] = Field(default_factory=list)
     attacker_spawn: str = "attacker_spawn"
     defender_spawn: str = "defender_spawn"

@@ -29,7 +29,7 @@ from esports_sim.schemas import CommunicationAction, PlayerObservation
 from esports_sim.schemas.communication import ClaimKind, ClaimValue
 
 
-POLICY_VERSION = "learned-player-v3"
+POLICY_VERSION = "learned-player-v4"
 ENCODER_VERSION = 3
 OBSERVATION_VERSION = 2
 ACTION_VOCAB = tuple(sorted(ActionType, key=str))

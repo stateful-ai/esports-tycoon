@@ -26,6 +26,10 @@ MIN_MOVE_TICKS = 2
 # pass; keeping it explicit now avoids encoding pace in raw coordinate deltas.
 MOTOR_WALK_SPEED_MULT = 0.55
 MOTOR_TURN_CANDIDATES = (-45.0, -15.0, -5.0, 0.0, 5.0, 15.0, 45.0)
+# Free-roam collision uses a small player hull and sub-steps so a fast player
+# cannot tunnel through a narrow traced doorway or prop between ticks.
+FREE_MOVE_PLAYER_RADIUS = 0.35
+FREE_MOVE_COLLISION_STEP = 0.20
 # Running advertises a coarse location to nearby enemy observations; walking
 # deliberately produces no footstep readout in this first motor pass.
 RUN_FOOTSTEP_RADIUS = 24.0

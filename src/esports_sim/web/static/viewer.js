@@ -278,7 +278,7 @@ function motorSample(round, pid, t) {
     heading_degrees: heading,
     backX,
     backY,
-    advancing: current.movement === "advance" || next?.movement === "advance",
+    advancing: current.movement !== "hold" || (next && next.movement !== "hold"),
   };
 }
 
@@ -305,7 +305,7 @@ function playerMoveInfo(round, pid, t) {
     const displaced = Math.hypot(p[0] - back[0], p[1] - back[1]) > 0.02;
     return {
       pos: p,
-      moving: !!motor.route_active && motor.advancing && displaced,
+      moving: !!motor.advancing && displaced,
       from: back,
       f: 1,
     };

@@ -160,6 +160,13 @@ The floor contract: paint, movement, and geometry are held to one walkability ru
 4.3 Continuous movement
 Players are not graph tokens --- every player holds a real (x, y) position every tick. At round start, they don't stack on a room's center; they take a tactical slot: a spot behind a specific crate (cover), just inside a doorway (portal, for holding an angle out), or one of several interior spread points, chosen deterministically (hash-spread per player+room, so five teammates never pile onto the same box). Movement between rooms follows a real path --- slot → corridor/portal → slot --- at a speed scaled by the player's Movement attribute, so a fast player's rotate is genuinely faster, not just flavor text.
 
+Ascent is the first full free-movement map. Its traced floor, physical props,
+doorway openings, and switch-door state now resolve heading-relative
+forward/back/strafe controls and point-to-point visibility directly. Callouts
+remain the language for team plans and communication, while `advance` remains
+a compatibility autopilot as policies migrate from callout routes to physical
+steering. Other maps stay routed until their doorway traces are complete.
+
 Pacing is a designed, measured constant, not an emergent accident: an attacker rotating from one site's approach to another's, through their own spawn, takes roughly 30 seconds --- matching real Valorant's rhythm. A defender's equivalent rotate, through their own interior lines, is always meaningfully faster than the attacker's version of the same trip --- that speed gap is the defense's structural advantage for having to guess which of several sites gets hit. Every map is measured against this rule by an automated pacing report and re-tuned when it drifts.
 
 4.4 Duels

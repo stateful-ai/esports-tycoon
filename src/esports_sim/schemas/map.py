@@ -7,6 +7,8 @@ A map is a directed graph of named callouts with:
 
 This is coarse by design — the spatial unit is the callout, not pixels.
 Decisions ("hold A short", "smoke mid", "lurk garage") are first-class.
+On maps that opt into free movement, the graph stays as tactical vocabulary
+while geometry becomes the authority for bodies and visibility.
 """
 
 from __future__ import annotations
@@ -71,6 +73,17 @@ class GimmickType(StrEnum):
     BREAKABLE_DOOR = "breakable_door"  # Ascent: can start shut; shoot through
 
 
+class MovementModel(StrEnum):
+    """How player motor controls resolve on this map.
+
+    Routed maps keep the compatibility callout autopilot.  Free maps also
+    expose heading-relative movement resolved against authored geometry.
+    """
+
+    ROUTED = "routed"
+    FREE = "free"
+
+
 class Gimmick(BaseModel):
     """A mechanical feature on an edge. All uses are loud: enemies within
     `noise_radius` of the sound learn something real (watch snaps toward
@@ -93,6 +106,7 @@ class Map(BaseModel):
 
     id: str
     display_name: str
+    movement_model: MovementModel = MovementModel.ROUTED
     sites: list[Site] = Field(default_factory=lambda: [Site.A, Site.B])
     callouts: dict[str, Callout]
     # Directed adjacency: from_id -> list of callouts you can walk into.
