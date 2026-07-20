@@ -6,7 +6,7 @@ left, B site right), and overlays authored geometry back onto the source
 for one-for-one verification. Used by the /trace-map skill.
 
 Subcommands (all paths positional):
-  grid <in.png> <out.png> [--rotate ccw|cw|none]
+  grid <in.png> <out.png> [--rotate ccw|cw|180|flipv|transpose|none]
       Crop to the walkable floor, rotate into the canonical frame, and
       draw a 0-100 unit grid (5u minor / 10u major, labeled). Also
       writes <out>_clean.png (the ungridded canonical crop) plus a
@@ -42,8 +42,11 @@ def _font(size: int = 20):
 
 def _is_floor(r: int, g: int, b: int) -> bool:
     """Floor pixels are grey/olive; background is near-black, UI is
-    saturated red."""
+    saturated red, and gimmick indicators (teleporter paths, door arcs)
+    are saturated teal/green lines that can sweep far off the floor."""
     if r > 180 and g < 90 and b < 90:
+        return False
+    if g > r + 80:  # teal/green overlay lines; grey and olive keep g ~ r
         return False
     return (r + g + b) > 180
 
@@ -70,6 +73,20 @@ def cmd_grid(args: argparse.Namespace) -> None:
         crop = crop.rotate(90, expand=True)
     elif args.rotate == "cw":
         crop = crop.rotate(-90, expand=True)
+    elif args.rotate == "180":
+        crop = crop.rotate(180)
+    elif args.rotate == "flipv":
+        # Vertical mirror: for sources already in broadcast orientation
+        # (attackers at the bottom, A left) — flipping y lands attackers
+        # at low y while keeping A on the left. Shapes stay true; the
+        # map's chirality mirrors, which the viewer never exposes.
+        crop = crop.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+    elif args.rotate == "transpose":
+        # Main-diagonal reflection (x<->y swap): for sources with the
+        # attacker spawn WEST and the A-most site NORTH — lands
+        # attackers at low y with that site on the left. Mirrors
+        # chirality like flipv.
+        crop = crop.transpose(Image.Transpose.TRANSPOSE)
     cw, ch = crop.size
     upp = 100.0 / max(cw, ch)
     out = Path(args.out)
@@ -199,7 +216,11 @@ def main() -> None:
     g = sub.add_parser("grid")
     g.add_argument("src")
     g.add_argument("out")
-    g.add_argument("--rotate", choices=["ccw", "cw", "none"], default="ccw")
+    g.add_argument(
+        "--rotate",
+        choices=["ccw", "cw", "180", "flipv", "transpose", "none"],
+        default="ccw",
+    )
     g.set_defaults(fn=cmd_grid)
     zp = sub.add_parser("zoom")
     zp.add_argument("gridded")

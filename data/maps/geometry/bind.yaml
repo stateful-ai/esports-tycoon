@@ -1,102 +1,143 @@
-# Hand-tuned geometry — Bind's two domes with no mid; A and B are mirrored
-# lanes that each end in a wide site and a defender-side hall back to spawn.
+# Traced from the real Bind minimap (wiki), canonical frame: attackers at
+# low y, A site west, B site east, defender courtyard south. Bind has no
+# mid: the A-frame attacker spawn forks into the two lane streets, and the
+# defender-side CT strip runs the map's bottom edge from Lamps to Hall.
+#
+# L-shaped rooms are bounding rects with full-height "mask" props over
+# their solid building volumes (see the trace-map skill): the A-frame
+# spawn masks its interior void triangle and outer corners, B Long masks
+# the block between its street leg and the teleporter pocket.
 map_id: bind
 regions:
-  # -- Spawns. Attacker spawn reaches the B Long door; defender spawn is
-  # the wide back street — its floor runs under the U-Hall, Lamps, Elbow
-  # and Hall doorways spread across the map's bottom edge.
-  attacker_spawn: { x: 30.0, y: 0.0, w: 46.5, h: 16.0 }
-  defender_spawn: { x: 21.5, y: 81.5, w: 69.5, h: 18.5 }
+  # -- Spawns. Attacker spawn is the whole A-frame: peak + both diagonal
+  # arms; its floor overlaps the A Lobby / Fountain / B Long street tops,
+  # so those portals flow through real shared floor. Defender spawn is
+  # the CT strip along the bottom (the cosmetic spawn vase below it is
+  # paint only).
+  attacker_spawn: { x: 38.0, y: 0.0, w: 20.0, h: 16.0 }
+  # CT strip along the bottom edge PLUS the spawn vase hanging south of
+  # it — retakes muster from the vase, not the strip, which is what keeps
+  # defender rotates honest. The void flanking the vase is masked.
+  defender_spawn: { x: 27.0, y: 72.5, w: 45.0, h: 24.5 }
 
   # -- A side --------------------------------------------------------------
-  a_lobby: { x: 14.0, y: 12.0, w: 20.0, h: 17.0 }
-  a_showers: { x: 4.0, y: 28.5, w: 18.0, h: 19.5 }
-  # A Short is the long lane of the A dome — it runs from the lobby seam
-  # down past the site's east wall to the Lamps doorway.
-  a_short: { x: 26.0, y: 28.5, w: 16.0, h: 38.0 }
-  a_site: { x: 12.0, y: 48.0, w: 20.0, h: 20.0 }
-  a_lamps: { x: 24.0, y: 66.0, w: 16.0, h: 16.0 }
-  a_uhall: { x: 6.0, y: 68.0, w: 16.0, h: 16.0 }
+  # A Lobby owns the west spawn arm + the west street + the lobby room;
+  # the void wedges either side of the diagonal arm are masked.
+  a_lobby: { x: 13.0, y: 16.0, w: 31.0, h: 28.0 }
+  a_showers: { x: 3.0, y: 44.0, w: 13.0, h: 16.0 }
+  # A Short: the stair hall off the lobby's east end plus the teleporter
+  # lobes in map center (our tp_short_window pad lives here). Reaches the
+  # site's NE corner at (30, 60-62); the void strip that extension
+  # crosses is masked below.
+  a_short: { x: 30.0, y: 44.0, w: 18.0, h: 18.0 }
+  a_site: { x: 10.0, y: 60.0, w: 20.0, h: 12.5 }
+  a_lamps: { x: 27.0, y: 60.0, w: 7.0, h: 12.5 }
+  # U-Hall: the sunken back hall under the site's south edge, running
+  # east to the CT strip.
+  a_uhall: { x: 10.0, y: 72.5, w: 17.0, h: 7.5 }
 
   # -- B side -----------------------------------------------------------------
-  b_fountain: { x: 66.0, y: 12.0, w: 20.0, h: 17.0 }
-  b_window: { x: 58.0, y: 28.5, w: 16.0, h: 20.0 }
-  # B Long is the outside-wall hallway — spawn seam down to the Elbow turn.
-  b_long: { x: 76.0, y: 15.5, w: 18.0, h: 45.0 }
-  b_site: { x: 66.0, y: 48.0, w: 20.0, h: 20.0 }
-  b_elbow: { x: 60.0, y: 60.0, w: 16.0, h: 24.0 }
-  b_hall: { x: 76.0, y: 68.0, w: 16.0, h: 16.0 }
+  # Fountain owns the east spawn arm + the east street courtyard; B Long
+  # doors off it (not off spawn) like the real street.
+  b_fountain: { x: 44.0, y: 12.0, w: 19.0, h: 30.0 }
+  # Hookah: elevated room overlooking B Site through the window drop.
+  b_window: { x: 49.0, y: 42.0, w: 11.0, h: 10.0, z: 3.0 }
+  # B Long: street leg east, the down-leg into site NE, and the
+  # teleporter pocket bulge on the outside wall.
+  b_long: { x: 60.0, y: 30.0, w: 25.0, h: 23.0 }
+  b_site: { x: 54.5, y: 52.0, w: 14.5, h: 19.0 }
+  b_elbow: { x: 47.0, y: 55.0, w: 9.0, h: 18.0 }
+  b_hall: { x: 68.5, y: 56.0, w: 7.5, h: 16.0 }
 
 corridors:
-  # A Lobby is a doglegged hallway off spawn — the loop swings through the
-  # spawn floor before the door.
+  # The A-frame arms are switchback walks, not straight lines — the
+  # portal-direct hop would cut the masked void triangle. These pace the
+  # real street distance (same technique as the old spawn-loop doglegs).
   - between: [attacker_spawn, a_lobby]
-    via: [[58.0, 11.0], [34.0, 13.5]]
-  # B Long is its own hallway off spawn, looping wide across the spawn
-  # floor before it doors into the room.
-  - between: [attacker_spawn, b_long]
-    via: [[40.0, 8.0], [74.0, 12.0]]
-  # A Short cuts across to Lamps behind the back of A Site.
-  - between: [a_short, a_lamps]
-    via: [[28.0, 58.0]]
-  # U-Hall is the defender-side corridor back to spawn.
-  - between: [a_uhall, defender_spawn]
-    via: [[20.0, 80.0], [24.0, 82.5]]
-  # B Long runs down the outside wall and turns into Elbow.
-  - between: [b_long, b_elbow]
-    via: [[78.0, 58.0], [74.0, 63.0]]
-  # B Hall mirrors U-Hall on the defender side.
-  - between: [b_hall, defender_spawn]
-    via: [[80.0, 80.0]]
+    via: [[44.0, 13.0], [34.0, 26.0], [22.0, 34.0]]
+  - between: [attacker_spawn, b_fountain]
+    via: [[53.0, 13.0], [60.0, 22.0], [59.0, 30.0]]
+  # Fountain courtyard heart to the B Long door.
+  - between: [b_fountain, b_long]
+    via: [[57.0, 33.0], [61.5, 35.25]]
+  # Short's stairs meet the street before it runs west to the lobby room.
+  - between: [a_short, a_lobby]
+    via: [[36.0, 45.0], [30.0, 38.0]]
   # Teleporter shafts — not walked (the gimmick beams players straight
   # from center to center), but geometry still needs a nominal path for
   # the viewer to draw the shaft along.
   - between: [a_short, b_window]
-    via: [[50.0, 38.0]]
+    via: [[49.0, 50.0]]
   - between: [b_long, a_uhall]
-    via: [[50.0, 56.0]]
+    via: [[50.0, 60.0]]
 
-# Detail layer: Bind has no verticality in the real map (no mid, no heaven
-# boxes — its gimmick is the teleporters), so no room gets elevation here.
-# Plant-cover crates sit in each site plus the primary long lane per side
-# (A Short, B Long). Each site also gets its signature pillar: a
-# full-height column that blocks the longest sightline into that site,
-# mirroring Bind's real A Site and B Site pillars.
-#
-# a_site pillar breaks a_short -> a_site (the long diagonal from Short).
-# b_site pillar breaks b_long -> b_site (the long diagonal from B Long).
-# Both were `advantaged_side: defense`; breaking them removes defense's
-# ranged pick from those angles and forces a closer, angle-less fight —
-# faithful to how the pillars are used to deny long holds in the real map.
-# The pillars were trimmed from 4x4 to 3x3 in this pass: still enough
-# footprint to deny the free full-diagonal hold (faithful to the real
-# map), but small enough that the site anchor's defense-advantaged read
-# on Short/Long (see sightlines) isn't cancelled by angle_broken on most
-# of the room's width — the holder has to work the crate, not lose the
-# angle outright.
+# Doorway openings (trace-map P0): declared spans pin each portal to the
+# real doorway; the rest of that seam is wall for the free-roam layer.
+# Undeclared seams (street-level plate overlaps) are fully open.
+openings:
+  - { between: [attacker_spawn, a_lobby], span: [39.0, 43.0] }    # west arm mouth
+  - { between: [attacker_spawn, b_fountain], span: [50.0, 56.0] } # east arm mouth
+  - { between: [b_fountain, b_long], span: [33.0, 37.5] }         # long door
+  - { between: [a_lobby, a_showers], span: [13.2, 15.8] }         # showers door
+  - { between: [a_lobby, a_short], span: [32.5, 36.0] }           # short stairs
+  - { between: [a_showers, a_site], span: [11.0, 15.0] }          # showers exit
+  - { between: [a_site, a_lamps], span: [61.0, 64.0] }            # lamps door
+  - { between: [a_site, a_uhall], span: [11.0, 15.0] }            # u-hall drop
+  - { between: [a_lamps, defender_spawn], span: [28.0, 33.0] }    # lamps foot
+  - { between: [a_uhall, defender_spawn], span: [74.0, 79.0] }    # u-hall mouth
+  - { between: [b_fountain, b_window], span: [52.0, 56.0] }       # hookah door
+  - { between: [b_window, b_site], span: [55.0, 59.0] }           # window drop
+  - { between: [b_long, b_site], span: [66.0, 69.0] }             # long door
+  - { between: [b_site, b_elbow], span: [58.0, 62.0] }            # elbow door
+  - { between: [b_site, b_hall], span: [57.0, 60.5] }             # hall door
+  - { between: [b_elbow, defender_spawn], span: [52.5, 56.0] }    # elbow exit
+  - { between: [b_hall, defender_spawn], span: [69.0, 72.0] }     # hall foot
+
+# Detail layer. Full-height masks first (solid building volume inside
+# bounding rects), then Bind's signature site pillars, then plant cover.
+# Pillar placement is sightline-surgical: a_site's breaks the long
+# a_short diagonal, b_site's breaks the b_long diagonal, and both are
+# checked to leave every other declared sightline clear.
 props:
-  # -- A site cover + pillar ------------------------------------------------
-  - { region: a_site, x: 14.0, y: 50.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 15.0, y: 60.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 26.0, y: 62.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 20.0, y: 58.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 27.0, y: 52.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 24.0, y: 50.0, w: 3.0, h: 3.0, height: full }
-  # -- B site cover + pillar ------------------------------------------------
-  - { region: b_site, x: 68.0, y: 50.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 69.0, y: 60.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 80.0, y: 62.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 74.0, y: 58.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 72.0, y: 65.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 78.0, y: 49.0, w: 3.0, h: 3.0, height: full }
-  # -- Long lane cover removed: it was propping up whoever camps Short/Long
-  # pre-commit and post-plant, which in practice is almost always the
-  # attackers (staging, then holding it as a post-plant crossfire spot) —
-  # a straight buff to the side we're trying to pull back down.
-  # -- Holder-spot cover: every holder room (Lamps/U-Hall on A, Elbow/Hall
-  # on B) gets a crate to anchor its read into the site instead of
-  # standing flat in the doorway.
-  - { region: a_lamps, x: 26.0, y: 68.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_uhall, x: 20.0, y: 72.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_elbow, x: 62.0, y: 70.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_hall, x: 80.0, y: 72.0, w: 3.0, h: 3.0, height: half }
+  # -- A-frame arm masks: void wedges either side of the west arm (in
+  # A Lobby) and the east arm (in Fountain), plus the interior triangle.
+  - { region: a_lobby, x: 13.0, y: 16.0, w: 15.0, h: 11.5, height: full }
+  - { region: a_lobby, x: 40.0, y: 18.0, w: 4.0, h: 10.0, height: full }
+  - { region: a_lobby, x: 36.0, y: 40.0, w: 8.0, h: 4.0, height: full }
+  - { region: b_fountain, x: 44.0, y: 12.0, w: 5.0, h: 15.0, height: full }
+  - { region: b_fountain, x: 49.0, y: 18.0, w: 7.0, h: 10.0, height: full }
+  # -- A Lobby's cut corner -------------------------------------------------
+  - { region: a_lobby, x: 13.0, y: 28.0, w: 6.0, h: 3.5, height: full }
+  # -- A Short's upper-east void block + the west void strip its site
+  # extension crosses -------------------------------------------------------
+  - { region: a_short, x: 40.5, y: 44.0, w: 7.5, h: 6.5, height: full }
+  - { region: a_short, x: 30.0, y: 46.0, w: 2.5, h: 12.0, height: full }
+  # -- B Long masks: block between street leg and site leg, TP pocket rim --
+  - { region: b_long, x: 60.5, y: 42.5, w: 5.5, h: 10.5, height: full }
+  - { region: b_long, x: 75.5, y: 30.0, w: 9.5, h: 10.5, height: full }
+  - { region: b_long, x: 75.5, y: 50.0, w: 9.5, h: 3.0, height: full }
+  # -- Elbow's south-west void ----------------------------------------------
+  - { region: b_elbow, x: 47.0, y: 67.0, w: 5.5, h: 6.0, height: full }
+  # -- Void flanking the defender-spawn vase --------------------------------
+  - { region: defender_spawn, x: 27.0, y: 80.5, w: 9.0, h: 16.5, height: full }
+  - { region: defender_spawn, x: 51.0, y: 80.5, w: 21.0, h: 16.5, height: full }
+  # -- Site pillars ---------------------------------------------------------
+  - { region: a_site, x: 22.0, y: 62.5, w: 3.0, h: 3.0, height: full }
+  - { region: b_site, x: 64.5, y: 53.5, w: 3.0, h: 3.0, height: full }
+  # -- A site plant cover ---------------------------------------------------
+  - { region: a_site, x: 12.0, y: 62.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 16.5, y: 65.5, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 25.5, y: 67.5, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 13.0, y: 68.5, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 26.0, y: 61.0, w: 3.0, h: 3.0, height: half }
+  # -- B site plant cover ---------------------------------------------------
+  - { region: b_site, x: 56.0, y: 55.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 60.0, y: 59.5, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 65.0, y: 63.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 57.0, y: 66.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 62.0, y: 67.5, w: 3.0, h: 3.0, height: half }
+  # -- Holder-spot cover: Lamps/U-Hall on A, Elbow/Hall on B ---------------
+  - { region: a_lamps, x: 28.0, y: 68.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_uhall, x: 12.0, y: 74.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_elbow, x: 48.5, y: 59.5, w: 3.0, h: 3.0, height: half }
+  - { region: b_hall, x: 70.0, y: 67.5, w: 3.0, h: 3.0, height: half }
