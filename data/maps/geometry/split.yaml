@@ -1,65 +1,120 @@
-# Hand-tuned geometry — Split's two sites flanking a tall, narrow mid.
-# Mid Top is the vertical spine forking into Vent (feeds A Ramps) and
-# Sewer (feeds B Garden); A and B are near-mirror images of each other.
+# Traced from the real Split minimap (wiki), ccw into the canonical
+# frame: attacker street across the top, A site west, B site
+# center-east, the tall mid complex splitting them, and the defender
+# shaft dropping south of mid bottom. Both heaven perches (A Tower and
+# B Rafters) are elevated columns over their sites.
+#
+# L-shaped and diagonal rooms are bounding rects with full-height
+# "mask" props over their solid volumes (trace-map skill); mask shapes
+# are notched where declared sightlines need a clear center-to-center
+# line (checked hop-by-hop).
 map_id: split
 regions:
-  # -- Spawns. Attacker spawn reaches both mains; defender spawn is the
-  # full back plaza — it puts floor under the Heaven and Elbow doorways on
-  # both wings and holds its own anchor point.
-  attacker_spawn: { x: 27.0, y: 0.0, w: 46.0, h: 16.0 }
-  defender_spawn: { x: 20.0, y: 72.0, w: 60.0, h: 21.0 }
+  # -- Spawns. Attacker spawn is the north stub; its street continues in
+  # A Main (west) and B Main (east). Defender spawn is mid bottom plus
+  # the south shaft, void flanks masked.
+  attacker_spawn: { x: 44.0, y: 0.0, w: 16.0, h: 18.0 }
+  defender_spawn: { x: 30.0, y: 62.0, w: 23.0, h: 30.0 }
 
-  # -- A site -------------------------------------------------------------
-  a_main: { x: 12.0, y: 14.0, w: 16.0, h: 32.0 }
-  a_ramps: { x: 24.0, y: 29.0, w: 14.0, h: 16.5 }
-  a_site: { x: 8.0, y: 45.0, w: 20.0, h: 20.0 }
-  a_heaven: { x: 7.0, y: 61.0, w: 14.0, h: 14.0, z: 5.0 }
-  a_screens: { x: 17.0, y: 63.0, w: 14.0, h: 18.0 }
+  # -- A side --------------------------------------------------------------
+  # A Main: the west street + the lobby run down to the site door.
+  a_main: { x: 12.0, y: 16.0, w: 24.0, h: 28.0 }
+  # Ramps: the ramen room between the lobby run and the vent screen.
+  a_ramps: { x: 14.0, y: 38.0, w: 16.0, h: 12.0 }
+  a_site: { x: 3.0, y: 44.0, w: 17.0, h: 28.0 }
+  # A Tower (heaven): the elevated column + its stairs down the back.
+  a_heaven: { x: 20.0, y: 50.0, w: 8.0, h: 20.0, z: 4.0 }
+  a_screens: { x: 3.0, y: 70.0, w: 27.0, h: 8.0 }
 
-  # -- Mid (tall, narrow spine) -----------------------------------------------
-  mid_top: { x: 44.0, y: 16.0, w: 12.0, h: 26.0 }
-  mid_vent: { x: 33.0, y: 37.0, w: 14.0, h: 14.0 }
-  mid_sewer: { x: 53.0, y: 37.0, w: 14.0, h: 14.0 }
+  # -- Mid -----------------------------------------------------------------
+  # Mid Top: the center street segment + upper mid.
+  mid_top: { x: 36.0, y: 18.0, w: 24.0, h: 20.0 }
+  mid_vent: { x: 30.0, y: 34.0, w: 10.0, h: 18.0 }
+  # Sewer: the mail room + the east passage toward Garden.
+  mid_sewer: { x: 40.0, y: 38.0, w: 18.0, h: 20.0 }
 
-  # -- B site ---------------------------------------------------------------
-  b_main: { x: 72.0, y: 14.0, w: 16.0, h: 32.0 }
-  b_garden: { x: 62.0, y: 29.0, w: 14.0, h: 16.5 }
-  b_site: { x: 72.0, y: 45.0, w: 20.0, h: 20.0 }
-  b_elbow: { x: 79.0, y: 61.0, w: 14.0, h: 14.0 }
-  b_rafters: { x: 69.0, y: 63.0, w: 14.0, h: 18.0, z: 5.0 }
+  # -- B side --------------------------------------------------------------
+  # B Main: the east street + the long ramp wrapping down to the site.
+  b_main: { x: 60.0, y: 16.0, w: 35.0, h: 34.0 }
+  b_garden: { x: 58.0, y: 40.0, w: 17.0, h: 12.0 }
+  b_site: { x: 52.0, y: 50.0, w: 28.0, h: 20.0 }
+  # B Rafters (heaven): elevated over the site's east edge + stairs.
+  b_rafters: { x: 78.0, y: 50.0, w: 12.0, h: 16.0, z: 4.0 }
+  b_elbow: { x: 53.0, y: 66.0, w: 27.0, h: 8.0 }
 
 corridors:
-  # A Main is a doglegged hallway off spawn — the dogleg runs down the
-  # Mid Top spine and cuts across Vent/Ramps floor, never off-plate.
-  - between: [attacker_spawn, a_main]
-    via: [[53.2, 41.5]]
-  # Mid Top loops wide inside spawn before it doors down into the spine.
+  # Street walks dogleg like the real lanes.
   - between: [attacker_spawn, mid_top]
-    via: [[62.0, 12.0], [53.0, 17.0]]
-  # Sewer doglegs into Garden — the loop stays inside the sewer room.
+    via: [[50.0, 14.0], [46.0, 20.0]]
+  - between: [mid_top, a_main]
+    via: [[54.0, 24.0], [46.0, 18.0], [40.0, 24.0], [35.0, 21.0], [30.0, 25.0]]
+  - between: [attacker_spawn, b_main]
+    via: [[57.0, 13.0], [64.0, 18.0], [72.0, 20.0]]
+  # B Main's ramp wraps the outside wall down to the site door.
+  - between: [b_main, b_site]
+    via: [[82.0, 30.0], [87.0, 38.0], [84.0, 46.0], [80.0, 50.0]]
+  # A Main's lobby run bends at the site door.
+  - between: [a_main, a_site]
+    via: [[15.0, 32.0], [13.0, 40.0]]
+  # Sewer's east passage bends into Garden.
   - between: [mid_sewer, b_garden]
-    via: [[66.0, 49.0], [65.0, 38.0]]
-  # Heaven and Elbow touch the widened defender plaza directly now; the
-  # auto-portals are the short interior lines back to spawn.
+    via: [[52.0, 50.0], [56.0, 46.0]]
+  # B Main's garden door is off the ramp's inner wall.
+  - between: [b_main, b_garden]
+    via: [[80.0, 38.0], [74.0, 42.0], [68.0, 40.0]]
 
-# Detail layer: plant-cover crates in each site plus one in each main lane
-# room. A Heaven and B Rafters are Split's two heaven-style perches over
-# the plants. A Screens gets a full-height "screen" prop — the room is
-# named for the tarp/mesh structure that obscures vision into A Site in
-# the real map — which intentionally breaks the (defense-advantaged)
-# a_screens -> a_site sightline; it does not cross the a_main, a_ramps, or
-# a_heaven lines into site, which stay open.
+# Doorway openings (trace-map P0): declared spans pin portals to real
+# doorways; the rest of that seam is wall for the free-roam layer.
+openings:
+  - { between: [attacker_spawn, mid_top], span: [46.0, 56.0] }  # street mouth
+  - { between: [a_main, a_site], span: [13.0, 20.0] }           # A main door
+  - { between: [a_ramps, a_site], span: [15.0, 19.0] }          # ramps door
+  - { between: [a_ramps, mid_vent], span: [42.0, 46.0] }        # the vent screen
+  - { between: [a_site, a_heaven], span: [52.0, 57.0] }         # tower window
+  - { between: [a_site, a_screens], span: [6.0, 12.0] }         # screens door
+  - { between: [a_heaven, a_screens], span: [22.0, 26.0] }      # tower stairs
+  - { between: [a_screens, defender_spawn], span: [71.0, 76.0] }
+  - { between: [mid_top, mid_sewer], span: [42.0, 47.0] }       # mail doors
+  - { between: [mid_sewer, b_garden], span: [45.0, 50.0] }      # sewer exit
+  - { between: [b_main, b_garden], span: [62.0, 68.0] }         # garden door
+  - { between: [b_main, b_site], span: [74.0, 80.0] }           # B main door
+  - { between: [b_garden, b_site], span: [60.0, 66.0] }         # garden drop
+  - { between: [b_site, b_rafters], span: [56.0, 62.0] }        # rafters window
+  - { between: [b_site, b_elbow], span: [64.0, 72.0] }          # back door
+  - { between: [b_elbow, defender_spawn], span: [67.0, 72.0] }  # CT east mouth
+
+# Detail layer: masks first (notched around declared sightlines), then
+# site furniture and holder crates.
 props:
-  # -- A site cover -------------------------------------------------------
-  - { region: a_site, x: 10.0, y: 47.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 18.0, y: 49.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 12.0, y: 57.0, w: 3.0, h: 3.0, height: half }
-  # -- B site cover -------------------------------------------------------
-  - { region: b_site, x: 74.0, y: 47.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 82.0, y: 49.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 76.0, y: 57.0, w: 3.0, h: 3.0, height: half }
-  # -- Main lane cover ------------------------------------------------------
-  - { region: a_main, x: 14.0, y: 25.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_main, x: 76.0, y: 25.0, w: 3.0, h: 3.0, height: half }
-  # -- Screens (sight blocker) -----------------------------------------------
-  - { region: a_screens, x: 21.0, y: 68.0, w: 4.0, h: 4.0, height: full }
+  # -- A Main void block (notched so the a_main->a_site read stays live) ----
+  - { region: a_main, x: 12.0, y: 16.0, w: 6.0, h: 4.0, height: full }
+  - { region: a_main, x: 24.5, y: 30.0, w: 11.5, h: 7.0, height: full }
+  - { region: a_main, x: 21.5, y: 37.0, w: 14.5, h: 7.0, height: full }
+  # -- Ramps' vent-wall stub (passage below it is the vent opening) ---------
+  - { region: a_ramps, x: 26.0, y: 38.0, w: 4.0, h: 4.0, height: full }
+  # -- B Main masks (NE street strip, void between street and garden) -------
+  - { region: b_main, x: 75.0, y: 16.0, w: 20.0, h: 4.0, height: full }
+  - { region: b_main, x: 60.0, y: 33.0, w: 14.0, h: 6.5, height: full }
+  # -- Sewer's north-east void ---------------------------------------------
+  - { region: mid_sewer, x: 52.0, y: 38.0, w: 6.0, h: 6.0, height: full }
+  # -- Defender shaft void flanks ------------------------------------------
+  - { region: defender_spawn, x: 40.0, y: 72.0, w: 4.0, h: 8.0, height: full }
+  - { region: defender_spawn, x: 30.0, y: 80.0, w: 14.0, h: 12.0, height: full }
+  # -- A Site furniture: the tall south box (kept clear of the screens
+  # and heaven reads) + plant cover -----------------------------------------
+  - { region: a_site, x: 8.0, y: 64.0, w: 5.0, h: 5.5, height: full }
+  - { region: a_site, x: 5.0, y: 55.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 15.0, y: 57.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 9.0, y: 60.0, w: 3.0, h: 3.0, height: half }
+  # -- B Site furniture: the north box + plant cover ------------------------
+  - { region: b_site, x: 57.0, y: 51.0, w: 9.0, h: 4.0, height: full }
+  - { region: b_site, x: 60.0, y: 60.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 70.0, y: 57.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 74.0, y: 62.0, w: 3.0, h: 3.0, height: half }
+  # -- Holder-spot cover ----------------------------------------------------
+  - { region: a_heaven, x: 22.0, y: 54.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_screens, x: 8.0, y: 74.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_rafters, x: 82.0, y: 54.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_elbow, x: 60.0, y: 68.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_garden, x: 62.0, y: 44.0, w: 3.0, h: 3.0, height: half }
+  - { region: mid_vent, x: 32.0, y: 42.0, w: 3.0, h: 3.0, height: half }
