@@ -272,18 +272,21 @@ WEAPON_DAMAGE_SCORE = 1.0
 WEAPON_DAMAGE_CAP = 12.0
 
 # Range model (needs map floor geometry; neutral without it). Duels are
-# fought at the straight-line distance between the two rooms' centers
-# (same room = point blank). Snipers want long, SMGs/pistols want close,
-# rifles are flat. Additive duel-score terms, capped small — range colors
-# a duel, it doesn't decide it.
+# fought at the straight-line distance between the two players. Snipers
+# want long, SMGs/pistols want close, rifles are flat. Additive
+# duel-score terms, capped small — range colors a duel, it doesn't
+# decide it. Pivots are calibrated to the wiki-traced maps' duel
+# distances (p25/p50/p75 roughly 7-11 / 13-18 / 17-26): pistols must pay
+# for mid-range fights or gun-diff rounds stop converting for the
+# rifle side.
 RANGE_POINT_BLANK = 4.0  # assumed distance for same-room fights
-RANGE_SNIPER_PIVOT = 18.0  # ops break even here, gain beyond, lose inside
+RANGE_SNIPER_PIVOT = 14.0  # ops break even here, gain beyond, lose inside
 RANGE_SNIPER_SLOPE = 0.35
 RANGE_SNIPER_CAP = 7.0
-RANGE_PISTOL_PIVOT = 12.0
-RANGE_PISTOL_SLOPE = 0.33
-RANGE_PISTOL_CAP = 5.0
-RANGE_SMG_PIVOT = 16.0
+RANGE_PISTOL_PIVOT = 4.0
+RANGE_PISTOL_SLOPE = 0.55
+RANGE_PISTOL_CAP = 6.0
+RANGE_SMG_PIVOT = 13.0
 RANGE_SMG_SLOPE = 0.25
 RANGE_SMG_CAP = 4.0
 RANGE_SHOTGUN_PIVOT = 10.0
@@ -314,6 +317,10 @@ SIGHT_BLOCK_ENGAGE_FACTOR = 0.45
 
 # Trade window: teammates nearby can punish the killer.
 TRADE_BASE_PROB = 0.35
+# A refrag is still a gunfight: the trader's weapon range curve scales the
+# trade chance (probability per range-mod point). Pistols trading across a
+# site pay their long-range penalty; rifles trade flat.
+TRADE_RANGE_PROB_SCALE = 0.02
 
 # Headshot chance: base + precision-scaled.
 HEADSHOT_BASE = 0.15
