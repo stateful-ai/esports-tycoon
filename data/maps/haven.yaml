@@ -7,6 +7,7 @@
 
 id: haven
 display_name: Haven
+movement_model: free
 sites:
   - a
   - b
@@ -21,15 +22,15 @@ callouts:
     display_name: Attacker Spawn
     site: none
     zone: attacker_spawn
-    x: 50
-    y: 10
+    x: 53
+    y: 9
   defender_spawn:
     id: defender_spawn
     display_name: Defender Spawn
     site: none
     zone: defender_spawn
-    x: 50
-    y: 90
+    x: 40
+    y: 74
 
   # -- A site -----------------------------------------------------------
   a_long:
@@ -37,43 +38,43 @@ callouts:
     display_name: A Long
     site: a
     zone: attacker_side
-    x: 15
-    y: 25
+    x: 18
+    y: 41
   a_short:
     id: a_short
     display_name: A Short
     site: a
     zone: attacker_side
-    x: 20
-    y: 35
+    x: 16
+    y: 51
   a_lobby:
     id: a_lobby
     display_name: A Lobby
     site: a
     zone: attacker_side
-    x: 18
-    y: 18
+    x: 32
+    y: 26
   a_site:
     id: a_site
     display_name: A Site
     site: a
     zone: site
-    x: 20
-    y: 55
+    x: 11
+    y: 63
   a_heaven:
     id: a_heaven
     display_name: A Heaven
     site: a
     zone: defender_side
     x: 22
-    y: 65
+    y: 61
   a_sewer:
     id: a_sewer
     display_name: A Sewer
     site: a
     zone: defender_side
-    x: 25
-    y: 62
+    x: 29
+    y: 53
 
   # -- B site -----------------------------------------------------------
   b_main:
@@ -81,29 +82,29 @@ callouts:
     display_name: B Main
     site: b
     zone: attacker_side
-    x: 50
-    y: 30
+    x: 49
+    y: 22
   b_garage:
     id: b_garage
     display_name: Garage
     site: b
     zone: attacker_side
     x: 48
-    y: 45
+    y: 29
   b_site:
     id: b_site
     display_name: B Site
     site: b
     zone: site
-    x: 50
-    y: 58
+    x: 46
+    y: 60
   b_back:
     id: b_back
     display_name: B Back
     site: b
     zone: defender_side
-    x: 52
-    y: 68
+    x: 56
+    y: 62
 
   # -- C site -----------------------------------------------------------
   c_long:
@@ -111,36 +112,36 @@ callouts:
     display_name: C Long
     site: c
     zone: attacker_side
-    x: 85
-    y: 25
+    x: 82
+    y: 36
   c_lobby:
     id: c_lobby
     display_name: C Lobby
     site: c
     zone: attacker_side
-    x: 80
-    y: 20
+    x: 70
+    y: 23
   c_site:
     id: c_site
     display_name: C Site
     site: c
     zone: site
     x: 80
-    y: 55
+    y: 60
   c_cubby:
     id: c_cubby
     display_name: C Cubby
     site: c
     zone: site
-    x: 78
-    y: 50
+    x: 67
+    y: 56
   c_link:
     id: c_link
     display_name: C Link
     site: c
     zone: defender_side
-    x: 72
-    y: 60
+    x: 60
+    y: 67
 
   # -- Mid --------------------------------------------------------------
   mid_courtyard:
@@ -148,49 +149,53 @@ callouts:
     display_name: Mid Courtyard
     site: mid
     zone: mid
-    x: 50
-    y: 50
+    x: 36
+    y: 33
   mid_window:
     id: mid_window
     display_name: Mid Window
     site: mid
     zone: mid
-    x: 55
-    y: 55
+    x: 36
+    y: 37
   mid_doors:
     id: mid_doors
     display_name: Mid Doors
     site: mid
     zone: mid
-    x: 45
-    y: 48
+    x: 42
+    y: 43
 
 # Directed adjacency. Symmetric by default (both sides can traverse).
+# Rewired with the trace: spawn's three mouths are Lobby, B Main and
+# C Lobby (Long lanes branch off the lobbies like the real map); the
+# window room hangs off the courtyard; Garage feeds B Site down the
+# mid-doors lane; Sewer meets CT through Heaven's stairs.
 adjacency:
-  attacker_spawn: [a_lobby, a_long, b_main, c_lobby, c_long]
-  defender_spawn: [a_heaven, a_sewer, b_back, c_link]
+  attacker_spawn: [a_lobby, b_main, c_lobby]
+  defender_spawn: [a_heaven, b_back, c_link]
 
-  a_lobby: [attacker_spawn, a_short, a_long]
-  a_long: [attacker_spawn, a_lobby, a_site]
-  a_short: [a_lobby, a_site, mid_doors]
+  a_lobby: [attacker_spawn, a_long]
+  a_long: [a_lobby, a_site, a_short]
+  a_short: [a_long, a_site]
   a_site: [a_long, a_short, a_heaven, a_sewer]
   a_heaven: [defender_spawn, a_site, a_sewer]
-  a_sewer: [defender_spawn, a_site, a_heaven, mid_doors]
+  a_sewer: [a_site, a_heaven, mid_doors]
 
-  b_main: [attacker_spawn, b_garage, mid_window]
-  b_garage: [b_main, b_site, mid_courtyard]
-  b_site: [b_garage, b_back, c_link]
+  b_main: [attacker_spawn, b_garage, mid_courtyard]
+  b_garage: [b_main, mid_courtyard, mid_doors]
+  b_site: [mid_doors, b_back, c_link]
   b_back: [defender_spawn, b_site, c_link]
 
   c_lobby: [attacker_spawn, c_long]
-  c_long: [attacker_spawn, c_lobby, c_site]
+  c_long: [c_lobby, c_site]
   c_site: [c_long, c_cubby, c_link]
   c_cubby: [c_site, c_link]
   c_link: [defender_spawn, c_site, c_cubby, b_site, b_back]
 
-  mid_courtyard: [b_garage, mid_window, mid_doors]
-  mid_window: [b_main, mid_courtyard]
-  mid_doors: [a_short, a_sewer, mid_courtyard]
+  mid_courtyard: [b_main, b_garage, mid_window, mid_doors]
+  mid_window: [mid_courtyard]
+  mid_doors: [a_sewer, mid_courtyard, b_garage, b_site]
 
 # Sightlines — which callouts can see into which. advantaged_side is a
 # *default*; smokes/utility can flip it in-round.

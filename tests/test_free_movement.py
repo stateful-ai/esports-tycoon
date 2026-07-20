@@ -148,6 +148,14 @@ def test_ascent_exposes_and_replays_free_motor_controls() -> None:
         if control.movement == MotorMovement.FORWARD
         and control.pace == MovementPace.RUN
     )
+    # Routed counterexample: force the flag off rather than relying on
+    # any particular live map staying routed (they are migrating one by
+    # one as their traces land).
+    routed_data = load_all()
+    routed_map = routed_data.maps["ascent"].model_copy(
+        update={"movement_model": MovementModel.ROUTED}
+    )
+    routed_data.maps["ascent"] = routed_map
     assert all(
         control.movement not in {
             MotorMovement.FORWARD,
@@ -156,7 +164,7 @@ def test_ascent_exposes_and_replays_free_motor_controls() -> None:
             MotorMovement.STRAFE_RIGHT,
         }
         for control in _MatchSim(
-            load_all(), "team_nexus", "team_vanguard", "haven", seed=131
+            routed_data, "team_nexus", "team_vanguard", "ascent", seed=131
         )._motor_legal_controls(player)
     )
 

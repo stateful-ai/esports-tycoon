@@ -63,11 +63,15 @@ def cmd_grid(args: argparse.Namespace) -> None:
         # Ignore wiki UI chrome hugging the right edge.
         and not (x > w - 90 and (y < 90 or y > h - 220))
     ]
-    xs = [p[0] for p in pts]
-    ys = [p[1] for p in pts]
+    xs = sorted(p[0] for p in pts)
+    ys = sorted(p[1] for p in pts)
+    # Percentile bounds: a stray bright speck (compression noise, wiki
+    # watermark dot) must not drag the crop box off the map body.
+    lo = len(xs) // 500
     pad = 12
-    x0, y0 = max(0, min(xs) - pad), max(0, min(ys) - pad)
-    x1, y1 = min(w - 1, max(xs) + pad), min(h - 1, max(ys) + pad)
+    x0, y0 = max(0, xs[lo] - pad), max(0, ys[lo] - pad)
+    x1 = min(w - 1, xs[-1 - lo] + pad)
+    y1 = min(h - 1, ys[-1 - lo] + pad)
     crop = im.crop((x0, y0, x1 + 1, y1 + 1))
     if args.rotate == "ccw":
         crop = crop.rotate(90, expand=True)
