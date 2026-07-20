@@ -1,89 +1,142 @@
-# Hand-tuned geometry — Lotus's three sites. B sits close under spawn
-# (Main/Diamond fork), A and C are long lanes on the flanks, and a
-# compact Mid (Tree/Center/Alley) forks off toward both A Link and C.
+# Traced from the real Lotus minimap (wiki), 180-rotated into the
+# canonical frame: attackers north off the big courtyard, A site deep
+# west, B site center with its round pillar, C site east, and the CT
+# band running the south edge. The two rotating stone doors sit on the
+# a_link->a_site and c_alley->c_site seams (their openings below).
+#
+# L-shaped and diagonal rooms are bounding rects with full-height
+# "mask" props over their solid volumes (trace-map skill).
 map_id: lotus
 regions:
-  # -- Spawns. Attacker spawn is the wide top band — it feeds five doors
-  # (A Main, Mid, B Main, Diamond, C Main), so its floor runs door to
-  # door. Defender spawn reaches Tree on the west and Tunnel on the east.
-  attacker_spawn: { x: 14.0, y: 0.0, w: 68.0, h: 16.0 }
-  defender_spawn: { x: 21.5, y: 76.0, w: 50.0, h: 16.5 }
+  # -- Spawns. Attacker spawn is the north stub + courtyard; defender
+  # spawn is the south plaza with its angled corners masked.
+  attacker_spawn: { x: 40.0, y: 0.0, w: 32.0, h: 20.0 }
+  defender_spawn: { x: 20.0, y: 70.0, w: 30.0, h: 14.0 }
 
-  # -- A site -----------------------------------------------------------
-  # A Main is the wide west lane-and-lobby — spawn seam straight down
-  # into the raised site mouth (kept wide so the A stage fits the band).
-  a_main: { x: 8.0, y: 15.5, w: 16.0, h: 32.5 }
-  a_link: { x: 20.0, y: 31.0, w: 14.0, h: 17.0 }
-  a_site: { x: 8.0, y: 40.0, w: 20.0, h: 24.0 }
-  a_tree: { x: 8.0, y: 62.0, w: 14.0, h: 14.0 }
-  a_dock: { x: 16.0, y: 63.5, w: 14.0, h: 17.5 }
+  # -- A side --------------------------------------------------------------
+  # A Main: west arm off the courtyard, the down-turn, and the crate
+  # room; reaches the site's open Root area at y 42.
+  a_main: { x: 10.0, y: 14.0, w: 32.0, h: 28.0 }
+  # A Site includes the Root approach; the wall fins, the site box and
+  # the link-side column are props below.
+  a_site: { x: 3.0, y: 42.0, w: 27.0, h: 30.0 }
+  # A Link: the hall behind the site column; the rotating stone door
+  # sits on its site seam.
+  a_link: { x: 25.0, y: 50.0, w: 7.0, h: 22.0 }
+  a_tree: { x: 3.0, y: 72.0, w: 17.0, h: 7.0 }
+  a_dock: { x: 20.0, y: 72.0, w: 15.0, h: 7.0 }
 
-  # -- Mid. Center is the tall strip beside the B Main lane — it doors
-  # off the spawn seam and runs down to the Tree/Alley forks.
-  mid_tree: { x: 25.0, y: 33.0, w: 14.0, h: 14.0 }
-  mid_center: { x: 36.0, y: 15.5, w: 14.0, h: 37.5 }
-  alley: { x: 50.0, y: 35.0, w: 24.0, h: 14.0 }
+  # -- Mid -----------------------------------------------------------------
+  # Tree lane: drops from A Main's turn down the west mid wall.
+  mid_tree: { x: 31.0, y: 30.0, w: 9.0, h: 13.0 }
+  mid_center: { x: 55.0, y: 18.0, w: 15.0, h: 15.0 }
+  # Alley: the east mid lane from center down toward the C complex.
+  alley: { x: 63.0, y: 20.0, w: 7.0, h: 23.0 }
 
-  # -- B site -----------------------------------------------------------
-  b_main: { x: 45.0, y: 16.0, w: 10.0, h: 34.0 }
-  # Diamond is the east flank column — spawn seam down the outside of
-  # B Main to the back corner of the site.
-  b_diamond: { x: 52.0, y: 15.5, w: 14.0, h: 35.0 }
-  b_site: { x: 40.0, y: 50.0, w: 20.0, h: 20.0 }
-  b_link: { x: 40.0, y: 65.0, w: 14.0, h: 16.0 }
-  b_tower: { x: 48.0, y: 67.0, w: 14.0, h: 14.0, z: 5.0 }
+  # -- B side --------------------------------------------------------------
+  b_main: { x: 52.0, y: 20.0, w: 11.0, h: 24.0 }
+  # Diamond: the west hall segment feeding the site's west door.
+  b_diamond: { x: 31.0, y: 43.0, w: 9.0, h: 7.0 }
+  b_site: { x: 40.0, y: 43.0, w: 18.0, h: 15.0 }
+  b_link: { x: 34.0, y: 58.0, w: 10.0, h: 12.0 }
+  b_tower: { x: 44.0, y: 58.0, w: 12.0, h: 12.0 }
 
-  # -- C site -----------------------------------------------------------
-  c_main: { x: 81.5, y: 16.0, w: 12.5, h: 30.0 }
-  c_alley: { x: 66.0, y: 31.0, w: 14.0, h: 14.0 }
-  c_site: { x: 72.0, y: 44.0, w: 20.0, h: 20.0 }
-  c_tunnel: { x: 71.0, y: 63.0, w: 14.0, h: 18.0 }
-  c_dock: { x: 70.0, y: 63.5, w: 14.0, h: 17.5 }
+  # -- C side --------------------------------------------------------------
+  # C Main: courtyard diagonal down through the mound to the site mouth.
+  c_main: { x: 70.0, y: 8.0, w: 25.0, h: 35.0 }
+  c_alley: { x: 60.0, y: 43.0, w: 15.0, h: 15.0 }
+  c_site: { x: 75.0, y: 40.0, w: 20.0, h: 18.0 }
+  c_dock: { x: 74.0, y: 58.0, w: 14.0, h: 12.0 }
+  # C Tunnel: the east CT band running back to the spawn plaza.
+  c_tunnel: { x: 50.0, y: 70.0, w: 26.0, h: 8.0 }
 
 corridors:
-  # A Main doors off the far-west end of the spawn band — the portal walk
-  # is already the dogleg, so no extra waypoints are needed here.
-  - between: [attacker_spawn, c_main]
-    via: [[80.0, 12.5]]
-  # Mid Center weaves down the strip off the spawn seam — the jogs keep
-  # the mid connection from collapsing to the straight-line minimum.
+  # The courtyard's west arm doglegs before the A Main turn.
+  - between: [attacker_spawn, a_main]
+    via: [[38.0, 15.0], [27.0, 21.0], [26.0, 26.0]]
+  # Courtyard to mid center swings around the planter.
   - between: [attacker_spawn, mid_center]
-    via: [[44.0, 12.0], [38.5, 20.0], [46.0, 28.0]]
-  # Tree fork doubles back low through the strip before the doorway.
-  - between: [mid_center, mid_tree]
-    via: [[38.0, 48.0], [32.0, 44.0]]
-  # Alley forks off Mid toward C, swinging low through the strip.
+    via: [[58.0, 12.0], [64.0, 15.0], [60.0, 19.0]]
+  # Mid center bends into the alley mouth.
   - between: [mid_center, alley]
-    via: [[54.0, 48.0]]
-  # Diamond loops wide across the spawn floor before doubling back into
-  # its column, instead of a straight shot in.
-  - between: [attacker_spawn, b_diamond]
-    via: [[78.0, 6.0], [62.0, 13.0]]
-  # Diamond runs down its column and hooks into the back of site.
-  - between: [b_diamond, b_site]
-    via: [[58.0, 42.0]]
-  # Tree touches the widened defender plaza directly; the auto-portal is
-  # the short flank line back to spawn.
+    via: [[60.0, 29.0], [65.0, 27.0]]
+  # A Main's turn spills onto the tree lane shelf.
+  - between: [a_main, mid_tree]
+    via: [[37.0, 34.0], [38.0, 38.0]]
+  # Tree lane switchbacks down into the Diamond hall.
+  - between: [mid_tree, b_diamond]
+    via: [[39.0, 39.0], [37.0, 42.0], [32.0, 44.0], [35.0, 46.0]]
+  # A Main's crate room walks down into Root before the site opens.
+  - between: [a_main, a_site]
+    via: [[15.0, 33.0], [13.0, 39.0], [16.0, 45.0]]
+  # The courtyard runs east along the diagonal into C Main's mound.
+  - between: [attacker_spawn, c_main]
+    via: [[62.0, 12.0], [72.0, 16.0], [78.0, 22.0]]
+  # C Main swings around the mound into the site mouth.
+  - between: [c_main, c_site]
+    via: [[80.0, 34.0], [86.0, 38.0], [82.0, 42.0]]
+  # Mid center down the alley lane bends at the C complex.
+  - between: [alley, c_alley]
+    via: [[65.0, 36.0], [69.0, 40.0], [63.0, 46.0]]
+  # B Main drops from the courtyard seam down the east mid rooms.
+  - between: [attacker_spawn, b_main]
+    via: [[56.0, 16.0], [59.0, 24.0], [56.0, 30.0]]
 
-# Detail layer: plant-cover crates in each site plus one in each main lane
-# room. B Tower is Lotus's one elevated perch, overlooking B Site — its
-# real-map equivalent is a raised platform rather than a box, so no
-# full-height sight blocker is placed on this map: the moving-door gimmick
-# it's known for doesn't have a faithful static-prop analog.
+# Doorway openings. The two rotating stone doors are the headline: shut
+# they block sight and passage until swung (engine door mechanic).
+openings:
+  - { between: [a_link, a_site], span: [58.0, 62.0] }        # rotating door A
+  - { between: [c_alley, c_site], span: [44.0, 49.0] }       # rotating door C
+  - { between: [attacker_spawn, a_main], span: [15.0, 19.0] }
+  - { between: [attacker_spawn, mid_center], span: [57.0, 66.0] }
+  - { between: [b_diamond, b_site], span: [44.0, 50.0] }     # site W door
+  - { between: [b_site, b_link], span: [41.0, 44.0] }
+  - { between: [b_site, b_tower], span: [46.0, 52.0] }
+  - { between: [c_site, c_dock], span: [76.0, 82.0] }
+  - { between: [c_tunnel, defender_spawn], span: [71.0, 76.0] }
+
+# Detail layer: masks (solid volume inside bounding rects), the B pillar,
+# site furniture, holder crates.
 props:
-  # -- A site cover -------------------------------------------------------
-  - { region: a_site, x: 10.0, y: 46.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 18.0, y: 48.0, w: 3.0, h: 3.0, height: half }
-  - { region: a_site, x: 12.0, y: 56.0, w: 3.0, h: 3.0, height: half }
-  # -- B site cover -------------------------------------------------------
-  - { region: b_site, x: 42.0, y: 52.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 50.0, y: 54.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_site, x: 44.0, y: 62.0, w: 3.0, h: 3.0, height: half }
-  # -- C site cover -------------------------------------------------------
-  - { region: c_site, x: 74.0, y: 46.0, w: 3.0, h: 3.0, height: half }
-  - { region: c_site, x: 82.0, y: 48.0, w: 3.0, h: 3.0, height: half }
-  - { region: c_site, x: 76.0, y: 56.0, w: 3.0, h: 3.0, height: half }
-  # -- Main lane cover ------------------------------------------------------
-  - { region: a_main, x: 8.0, y: 25.0, w: 3.0, h: 3.0, height: half }
-  - { region: b_main, x: 47.0, y: 25.0, w: 3.0, h: 3.0, height: half }
-  - { region: c_main, x: 87.0, y: 25.0, w: 3.0, h: 3.0, height: half }
+  # -- Attacker courtyard masks --------------------------------------------
+  - { region: attacker_spawn, x: 60.0, y: 0.0, w: 12.0, h: 8.0, height: full }
+  - { region: attacker_spawn, x: 40.0, y: 8.0, w: 2.0, h: 12.0, height: full }
+  # -- A Main void wedges (west of arm, east of the down-turn) --------------
+  - { region: a_main, x: 10.0, y: 14.0, w: 13.0, h: 14.0, height: full }
+  - { region: a_main, x: 30.0, y: 22.0, w: 12.0, h: 8.0, height: full }
+  - { region: a_main, x: 30.0, y: 30.0, w: 6.0, h: 12.0, height: full }
+  - { region: a_main, x: 40.0, y: 30.0, w: 2.0, h: 12.0, height: full }
+  # -- A Site walls: the two fins, the site box, the link column ------------
+  - { region: a_site, x: 13.0, y: 46.0, w: 9.0, h: 1.5, height: full }
+  - { region: a_site, x: 8.0, y: 50.5, w: 12.0, h: 1.5, height: full }
+  - { region: a_site, x: 10.0, y: 58.0, w: 7.0, h: 5.0, height: half }
+  - { region: a_site, x: 20.0, y: 55.0, w: 5.0, h: 15.0, height: full }
+  # -- Mid tree lane's west wall -------------------------------------------
+  - { region: mid_tree, x: 31.0, y: 30.0, w: 5.0, h: 13.0, height: full }
+  # -- B Site's round pillar ------------------------------------------------
+  - { region: b_site, x: 45.0, y: 44.5, w: 6.0, h: 5.5, height: full }
+  # -- C Main masks (east of the diagonal, west rim) ------------------------
+  - { region: c_main, x: 86.0, y: 8.0, w: 9.0, h: 10.0, height: full }
+  - { region: c_main, x: 70.0, y: 8.0, w: 4.0, h: 16.0, height: full }
+  # -- Defender plaza corner cuts ------------------------------------------
+  - { region: defender_spawn, x: 20.0, y: 80.0, w: 5.0, h: 4.0, height: full }
+  - { region: defender_spawn, x: 45.0, y: 80.0, w: 5.0, h: 4.0, height: full }
+  # -- B tower interior block ----------------------------------------------
+  - { region: b_tower, x: 50.0, y: 60.0, w: 6.0, h: 6.0, height: full }
+  # -- Site plant cover -----------------------------------------------------
+  - { region: a_site, x: 5.0, y: 60.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 6.0, y: 66.5, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 43.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_site, x: 51.0, y: 53.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 88.0, y: 45.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 85.0, y: 52.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_site, x: 78.0, y: 47.0, w: 3.0, h: 3.0, height: half }
+  # -- Holder-spot cover ----------------------------------------------------
+  - { region: a_tree, x: 6.0, y: 74.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_dock, x: 24.0, y: 74.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_link, x: 36.0, y: 61.0, w: 3.0, h: 3.0, height: half }
+  - { region: b_tower, x: 45.5, y: 64.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_dock, x: 78.0, y: 61.0, w: 3.0, h: 3.0, height: half }
+  - { region: c_tunnel, x: 62.0, y: 72.5, w: 3.0, h: 3.0, height: half }
+  - { region: a_main, x: 12.0, y: 31.0, w: 4.0, h: 3.0, height: half }
+  - { region: c_main, x: 78.0, y: 28.0, w: 5.0, h: 4.0, height: half }
