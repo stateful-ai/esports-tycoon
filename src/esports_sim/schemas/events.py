@@ -215,7 +215,14 @@ class MotorControlEvent(Event):
 
     type: Literal["round.control"] = "round.control"
     player_id: str
-    movement: Literal["hold", "advance"]
+    movement: Literal[
+        "hold",
+        "advance",
+        "forward",
+        "backward",
+        "strafe_left",
+        "strafe_right",
+    ]
     pace: Literal["walk", "run"]
     turn_degrees: float = 0.0
     heading_degrees: float = 0.0

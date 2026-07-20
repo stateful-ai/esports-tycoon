@@ -75,11 +75,12 @@ from esports_sim.schemas import (
 )
 from esports_sim.rng.tree import RngTree
 from esports_sim.schemas import CommsEvent, WhiffEvent
-from esports_sim.schemas.map import CalloutZone, Site
+from esports_sim.schemas.map import CalloutZone, MovementModel, Site
 from esports_sim.schemas.team import TeamTactics, HalftimeTalk, TouchlineShout, ShoutTrigger
 from esports_sim.schemas.traits import trait_value
 from esports_sim.sim import constants as C
 from esports_sim.sim.comms import TeamWhiteboard
+from esports_sim.sim.free_movement import FreeMovementResolver
 from esports_sim.sim import tactics_fit
 
 
@@ -179,6 +180,7 @@ class _PState:
     heading_degrees: float = 0.0
     movement_pace: MovementPace = MovementPace.RUN
     motor_movement: MotorMovement = MotorMovement.HOLD
+    last_motor_moved: bool = False
     last_motor_signature: tuple[str, str, float] | None = None
     has_spike: bool = False
     charges: dict[str, int] = field(default_factory=dict)
@@ -236,6 +238,20 @@ _MOVING_MOTOR_CONTROLS = _STATIONARY_MOTOR_CONTROLS + tuple(
     MotorControl.model_construct(movement=MotorMovement.ADVANCE, pace=pace, turn_degrees=turn)
     for pace in (MovementPace.WALK, MovementPace.RUN)
     for turn in C.MOTOR_TURN_CANDIDATES
+)
+_FREE_TRANSLATION_CONTROLS = tuple(
+    MotorControl.model_construct(
+        movement=movement,
+        pace=pace,
+        turn_degrees=0.0,
+    )
+    for movement in (
+        MotorMovement.FORWARD,
+        MotorMovement.BACKWARD,
+        MotorMovement.STRAFE_LEFT,
+        MotorMovement.STRAFE_RIGHT,
+    )
+    for pace in (MovementPace.WALK, MovementPace.RUN)
 )
 
 
@@ -394,6 +410,17 @@ class _MatchSim:
         # it, positions collapse to the callout anchors and everything
         # still runs (straight-line paths, no cover/height/blocking).
         self._geo = load_geometry(map_id)
+        self._free_movement = (
+            FreeMovementResolver(
+                self.map,
+                self._geo,
+                player_radius=C.FREE_MOVE_PLAYER_RADIUS,
+                collision_step=C.FREE_MOVE_COLLISION_STEP,
+            )
+            if self._geo is not None
+            and self.map.movement_model == MovementModel.FREE
+            else None
+        )
         self._z: dict[str, float] = {}
         self._slots: dict[str, list[tuple[float, float, str]]] = {}
         if self._geo is not None:
@@ -939,6 +966,7 @@ class _MatchSim:
             ps.watch = None
             ps.movement_pace = MovementPace.RUN
             ps.motor_movement = MotorMovement.HOLD
+            ps.last_motor_moved = False
             ps.last_motor_signature = None
             ps.has_spike = False
 
@@ -1855,10 +1883,12 @@ class _MatchSim:
         """Advance one player while preserving the legacy RUN cadence."""
         if ps.move_eta < 0 or not ps.path:
             return
+        before = (ps.x, ps.y)
         remaining_ticks = ps.move_eta - tick
         if remaining_ticks <= 0:
             ps.x, ps.y = ps.path[-1]
             ps.path = []
+            ps.last_motor_moved = (ps.x, ps.y) != before
             return
         remaining_distance = self._poly_len([(ps.x, ps.y), *ps.path])
         step = remaining_distance / (remaining_ticks + 1)
@@ -1873,9 +1903,57 @@ class _MatchSim:
             )
             ps.move_eta = max(ps.move_eta, tick + revised_ticks)
         self._step_path(ps, step)
+        ps.last_motor_moved = (ps.x, ps.y) != before
+
+    def _closed_door_edges(self) -> frozenset[frozenset[str]]:
+        return frozenset(
+            frozenset(gimmick.between)
+            for gimmick in self._door_gimmicks
+            if gimmick.id in self._doors_closed
+        )
+
+    def _advance_free(self, ps: _PState, movement: MotorMovement) -> None:
+        """Resolve one heading-relative movement command against the map."""
+        if self._free_movement is None:
+            return
+        offset = {
+            MotorMovement.FORWARD: 0.0,
+            MotorMovement.BACKWARD: 180.0,
+            MotorMovement.STRAFE_LEFT: -90.0,
+            MotorMovement.STRAFE_RIGHT: 90.0,
+        }.get(movement)
+        if offset is None:
+            return
+        radians = math.radians(ps.heading_degrees + offset)
+        pace_multiplier = (
+            C.MOTOR_WALK_SPEED_MULT
+            if ps.movement_pace == MovementPace.WALK
+            else 1.0
+        )
+        step = self._speed(ps.pid) * pace_multiplier
+        result = self._free_movement.resolve_step(
+            ps.x,
+            ps.y,
+            math.cos(radians) * step,
+            math.sin(radians) * step,
+            ps.callout,
+            self._closed_door_edges(),
+        )
+        ps.last_motor_moved = (result.x, result.y) != (ps.x, ps.y)
+        ps.x, ps.y = result.x, result.y
+        ps.callout = result.callout_id
 
     def _motor_legal_controls(self, ps: _PState) -> tuple[MotorControl, ...]:
-        return _MOVING_MOTOR_CONTROLS if ps.move_eta >= 0 else _STATIONARY_MOTOR_CONTROLS
+        if ps.planting_until >= 0 or ps.defusing_until >= 0:
+            return _STATIONARY_MOTOR_CONTROLS
+        routed = (
+            _MOVING_MOTOR_CONTROLS
+            if ps.move_eta >= 0
+            else _STATIONARY_MOTOR_CONTROLS
+        )
+        if self._free_movement is None:
+            return routed
+        return routed + _FREE_TRANSLATION_CONTROLS
 
     @staticmethod
     def _legacy_motor_control(
@@ -1913,17 +1991,31 @@ class _MatchSim:
 
         route_active = ps.move_eta >= 0
         path_head = ps.path[0] if ps.path else None
+        ps.last_motor_moved = False
+        free_translation = control.movement in (
+            MotorMovement.FORWARD,
+            MotorMovement.BACKWARD,
+            MotorMovement.STRAFE_LEFT,
+            MotorMovement.STRAFE_RIGHT,
+        )
 
         if control.turn_degrees:
             self._set_heading(ps, ps.heading_degrees + control.turn_degrees)
 
-        if ps.move_eta >= 0:
-            if control.movement == MotorMovement.ADVANCE:
+        if control.movement == MotorMovement.ADVANCE:
+            if ps.move_eta >= 0:
                 ps.movement_pace = control.pace
                 self._advance_mover(ps, tick, control.pace)
-            else:
-                # Pausing a route must also pause its authoritative ETA.
+        elif free_translation:
+            ps.movement_pace = control.pace
+            # Manual steering does not silently consume compatibility-route
+            # time; a policy can return to the same tactical goal afterward.
+            if ps.move_eta >= 0:
                 ps.move_eta += 1
+            self._advance_free(ps, control.movement)
+        elif ps.move_eta >= 0:
+            # Pausing a route must also pause its authoritative ETA.
+            ps.move_eta += 1
         ps.motor_movement = control.movement
 
         signature = (
@@ -1939,6 +2031,7 @@ class _MatchSim:
             and (
                 signature != ps.last_motor_signature
                 or crossed_waypoint
+                or (free_translation and ps.last_motor_moved)
             )
         ):
             self._emit(
@@ -2233,7 +2326,7 @@ class _MatchSim:
                 continue
             visible = bool(observer.callout and enemy.callout)
             if visible:
-                visible, _ = self._sightline(observer.callout, enemy.callout)
+                visible, _ = self._position_sightline(observer, enemy)
             visible = (
                 visible
                 and observer.flash_until < tick
@@ -2257,7 +2350,7 @@ class _MatchSim:
                     source="seen",
                 )
             elif (
-                enemy.motor_movement == MotorMovement.ADVANCE
+                enemy.motor_movement != MotorMovement.HOLD
                 and enemy.movement_pace == MovementPace.RUN
             ):
                 distance = math.hypot(enemy.x - observer.x, enemy.y - observer.y)
@@ -2333,7 +2426,10 @@ class _MatchSim:
             heading_degrees=ps.heading_degrees,
             has_active_route=ps.move_eta >= 0,
             is_moving=(
-                ps.move_eta >= 0 and ps.motor_movement == MotorMovement.ADVANCE
+                ps.last_motor_moved
+                if self._free_movement is not None
+                else ps.move_eta >= 0
+                and ps.motor_movement == MotorMovement.ADVANCE
             ),
             movement_pace=str(ps.movement_pace),
             ability_charges=dict(sorted(ps.charges.items())),
@@ -2928,6 +3024,27 @@ class _MatchSim:
             return True, self._sight[key]
         return False, None
 
+    def _position_sightline(
+        self, first: _PState, second: _PState
+    ) -> tuple[bool, str | None]:
+        """Visibility from physical geometry on free maps, graph elsewhere."""
+        key = frozenset((first.callout, second.callout))
+        advantage = self._sight.get(key)
+        if self._free_movement is None:
+            return self._sightline(first.callout, second.callout)
+        return (
+            self._free_movement.has_line_of_sight(
+                first.x,
+                first.y,
+                first.callout,
+                second.x,
+                second.y,
+                second.callout,
+                self._closed_door_edges(),
+            ),
+            advantage,
+        )
+
     def _range_mod(self, weapon, dist: float) -> float:
         """Additive duel-score term from engagement range."""
         wc = str(weapon.weapon_class)
@@ -3204,7 +3321,7 @@ class _MatchSim:
                     and door.id in self._doors_closed
                 ):
                     continue
-                visible, adv = self._sightline(pa.callout, pd.callout)
+                visible, adv = self._position_sightline(pa, pd)
                 if not visible:
                     continue
                 same = pa.callout == pd.callout
@@ -3217,8 +3334,10 @@ class _MatchSim:
                 # Positional line of sight: a full-height box between the
                 # two ACTUAL positions breaks the angle — even inside one
                 # room (dancing around the mid box).
-                angle_broken = self._geo is not None and self._geo.los_blocked_at(
-                    pa.x, pa.y, pd.x, pd.y
+                angle_broken = (
+                    self._free_movement is None
+                    and self._geo is not None
+                    and self._geo.los_blocked_at(pa.x, pa.y, pd.x, pd.y)
                 )
                 if angle_broken:
                     p_engage *= C.SIGHT_BLOCK_ENGAGE_FACTOR

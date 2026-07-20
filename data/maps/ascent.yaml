@@ -2,6 +2,7 @@
 
 id: ascent
 display_name: Ascent
+movement_model: free
 sites:
   - a
   - b

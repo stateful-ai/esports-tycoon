@@ -340,6 +340,7 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
     return MapStudioDocumentV1(
         id=map_id,
         display_name=map_raw.get("display_name", map_id),
+        movement_model=map_raw.get("movement_model", "routed"),
         sites=map_raw.get("sites", []),
         walkable_surfaces=surfaces,
         props=props,
@@ -743,6 +744,7 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
     map_obj = Map(
         id=doc.id,
         display_name=doc.display_name,
+        movement_model=doc.movement_model,
         sites=[Site(site) for site in runtime_sites if site in {s.value for s in Site}],
         callouts=callouts,
         adjacency=adjacency,

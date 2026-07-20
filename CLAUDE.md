@@ -72,6 +72,11 @@ Published at github.com/stateful-ai/esports-tycoon.
   preview can't drift from what the engine applies. `sim/stats.py` derives
   the box score (incl. clutches/multikills/aces/first-deaths) from the
   event log only; never emits events, so it can't drift the golden.
+  `sim/free_movement.py` is the deterministic physical resolver for maps
+  declaring `movement_model: free`: policies receive engine-authored
+  forward/back/strafe candidates while floor plates, props, doorway spans,
+  and closed doors resolve collision and point LOS. `advance` remains the
+  compatibility callout-route autopilot during the map-by-map migration.
 - `src/esports_sim/manager/` — campaign: `campaign.py` (weekly tick, VCT
   phases, in-season AI tactic adaptation, per-map/per-agent stat splits +
   weekly history snapshots), `gen.py` (region-flavoured names),

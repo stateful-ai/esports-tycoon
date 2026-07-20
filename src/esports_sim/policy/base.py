@@ -66,7 +66,13 @@ class MotorMovement(StrEnum):
     """Per-tick translation intent supplied separately from tactical actions."""
 
     HOLD = "hold"
+    # Compatibility autopilot: follow the engine-authored tactical route.
     ADVANCE = "advance"
+    # Free-roam controls are relative to the player's current heading.
+    FORWARD = "forward"
+    BACKWARD = "backward"
+    STRAFE_LEFT = "strafe_left"
+    STRAFE_RIGHT = "strafe_right"
 
 
 class MovementPace(StrEnum):
@@ -79,10 +85,10 @@ class MovementPace(StrEnum):
 class MotorControl(BaseModel):
     """One engine-authored, policy-ranked motor command for a live tick.
 
-    A tactical action can start a route; this control decides whether the
-    player advances on it and how far they rotate this tick.  The engine
-    supplies the legal candidates, so learned policies never invent speeds or
-    arbitrary turn rates.
+    A tactical action can start a compatibility route; on a free-movement map
+    the same channel can instead translate relative to the player's heading.
+    The engine supplies the legal candidates and resolves collision, so
+    learned policies never invent speeds, directions, or arbitrary turn rates.
     """
 
     model_config = ConfigDict(extra="forbid", frozen=True)
