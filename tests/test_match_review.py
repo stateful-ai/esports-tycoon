@@ -87,7 +87,10 @@ def test_serializer_respects_tier(game_data: GameData) -> None:
 def test_levers_gated_by_coach(game_data: GameData) -> None:
     from esports_sim.web import server
 
-    gs = _play(game_data, seed=123)
+    # Seed 124: produces slider-type levers on the traced maps (seed 123
+    # yields only mechanical/team levers there — probed 123-128, 5/6
+    # seeds carry sliders, so this pins a representative one).
+    gs = _play(game_data, seed=124)
     uid = gs.user_team_id
     gs.set_acting(uid)
     gs.staff["analyst"] = StaffMember(

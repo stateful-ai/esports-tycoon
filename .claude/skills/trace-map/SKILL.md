@@ -7,9 +7,14 @@ description: Trace a real-map wiki minimap into esports-sim geometry one-for-one
 
 Rebuild `data/maps/geometry/<id>.yaml` (and the callout anchors in
 `data/maps/<id>.yaml`) so the plates copy a real minimap screenshot
-one-for-one. Proven on Ascent (see that file's comments for the house
-style). Source images live wherever the user dropped them (e.g.
-`~/Downloads/maps/<id>.png`).
+one-for-one. Proven on all five live maps (ascent/bind/haven/lotus/
+split — see those files' comments for the house style). Source images
+live wherever the user dropped them (e.g. `~/Downloads/maps/<id>.png`).
+
+Rotations that worked: ascent/haven/split `ccw` (game compass:
+attackers east, A north), bind `flipv` (already broadcast-oriented),
+lotus `180` (attackers south, A east). `transpose` exists for
+attackers-west sources but hasn't been needed yet.
 
 ## Workflow
 
@@ -25,11 +30,13 @@ style). Source images live wherever the user dropped them (e.g.
    "aside,0,40,45,90" "mid,25,25,65,95" ...` (name,x0,y0,x1,y1 in map
    units). Identify every existing callout's floor mass and note exact
    unit coordinates for room edges, plant zones, necks, and signature
-   props. Keep the existing callout set and adjacency where possible —
-   graph edits change gameplay and sightline design, so only touch
-   them when the real layout demands it (Ascent lost
-   `a_garden<->defender_spawn` because that walk shares Heaven's
-   plan-view strip).
+   props. Keep the existing callout SET, but expect to rewire several
+   adjacency edges per map: every adjacency pair's plates must
+   physically touch (corridors don't exempt), so an edge whose real
+   walk crosses a third room's floor gets rerouted through that room
+   (haven: spawn's Long edges via the lobbies, garage->site via mid
+   doors; lotus: Diamond off the Tree lane; split: the west street off
+   Mid Top). When an edge dies, kill or reassign its sightlines too.
 3. **Author the geometry.** One axis-aligned rect per callout tracing
    its floor mass, on these rules (all enforced by gates or the
    engine):
@@ -79,7 +86,18 @@ style). Source images live wherever the user dropped them (e.g.
      rects off the floor. Defender rotate must stay strictly faster.
      Note the BFS in the report picks fewest-hops routes in adjacency
      order: check WHICH route carries each stage before lengthening.
-   - `scripts\balance_report.py 300` (45-65% attack, aim 52-60).
+   - Flip `movement_model: free` in `data/maps/<id>.yaml` before the
+     balance run — a traced map with openings qualifies for the
+     free-movement resolver (docs/free-movement-engine.md), and the
+     balance number must be measured under the flag that ships.
+   - `scripts\balance_report.py 300 --maps <id>` (45-65% attack, aim
+     52-60). Traced maps land defense-leaning (~45-53%) until the
+     weapon-range retune lands — real-scale rooms compress duel
+     ranges. Working levers, in order tried: kill physically-false
+     defense-advantaged sightlines; deepen the defender-spawn rect so
+     retakes muster further back (bind's vase); soften heaven `z` to
+     ~4-5 (z 6 made split's retake angles oppressive); widen site-door
+     openings to their real spans. Don't distort plate positions.
    - `scripts\regen_golden.py` — intentional drift, re-bless both
      fixtures in the same commit.
    - `scripts\render_map_guide.py --map <id>`, then
@@ -89,7 +107,7 @@ style). Source images live wherever the user dropped them (e.g.
    repaint via `/art-pass` (then `render_map_thumbs.py`), or say so in
    the handoff if the repaint is batched for later.
 
-## Traps hit on Ascent
+## Traps hit across the five traces
 
 - The rotation is about where the SITES and spawn masses are, not
   compass labels; verify with the plant-zone pins before tracing.
@@ -99,4 +117,24 @@ style). Source images live wherever the user dropped them (e.g.
   its documents from compiled files), but never hand-edit while a Map
   Studio UI session is open on the same map.
 - Do NOT edit these YAMLs with PowerShell string tools (mojibake +
-  BOM); use the Edit tool.
+  BOM); use the Edit tool. (`[System.IO.File]::ReadAllText/WriteAllText`
+  with regex anchor rewrites is the one proven exception.)
+- ALWAYS set `$env:PYTHONPATH=(Resolve-Path 'src').Path` in EVERY
+  shell call when working from a worktree: without it the primary
+  checkout's editable install silently supplies BOTH code and data
+  (`DEFAULT_DATA_DIR` is package-relative), and every gate runs
+  against the wrong tree. This poisoned a whole gate cycle + golden
+  bless once — pytest (worktree-rooted) disagreeing with the scripts
+  is the tell.
+- Region centers land inside masks on big L-rooms (bind's spawn,
+  split's a_main). Sight_distance and hop paths use centers, so
+  notch the masks around any declared sightline's center-to-center
+  segment instead of accepting a dead read; leaving small void
+  slivers unmasked is fine (paint hides them).
+- The pacing gate's entry per site is the FIRST SORTED attacker/mid
+  neighbor of the site room, and defenders may legally route through
+  teleporters (bind's def rotate rides the Hookah TP). Check which
+  rooms actually carry each measured number before tuning.
+- A stray bright pixel can hijack the crop box — the grid command
+  uses percentile bounds now; if a crop looks half-void, that fix
+  regressed.

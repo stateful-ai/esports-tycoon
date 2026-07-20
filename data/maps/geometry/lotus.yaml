@@ -28,7 +28,7 @@ regions:
 
   # -- Mid -----------------------------------------------------------------
   # Tree lane: drops from A Main's turn down the west mid wall.
-  mid_tree: { x: 31.0, y: 30.0, w: 9.0, h: 13.0 }
+  mid_tree: { x: 36.0, y: 30.0, w: 4.0, h: 13.0 }
   mid_center: { x: 55.0, y: 18.0, w: 15.0, h: 15.0 }
   # Alley: the east mid lane from center down toward the C complex.
   alley: { x: 63.0, y: 20.0, w: 7.0, h: 23.0 }
@@ -111,8 +111,6 @@ props:
   - { region: a_site, x: 8.0, y: 50.5, w: 12.0, h: 1.5, height: full }
   - { region: a_site, x: 10.0, y: 58.0, w: 7.0, h: 5.0, height: half }
   - { region: a_site, x: 20.0, y: 55.0, w: 5.0, h: 15.0, height: full }
-  # -- Mid tree lane's west wall -------------------------------------------
-  - { region: mid_tree, x: 31.0, y: 30.0, w: 5.0, h: 13.0, height: full }
   # -- B Site's round pillar ------------------------------------------------
   - { region: b_site, x: 45.0, y: 44.5, w: 6.0, h: 5.5, height: full }
   # -- C Main masks (east of the diagonal, west rim) ------------------------
