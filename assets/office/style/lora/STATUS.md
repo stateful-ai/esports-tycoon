@@ -6,20 +6,20 @@ train call was accepted immediately and the job completed:
 (FLUX.2 Dev base, 16-image captioned corpus, trigger phrase
 `esports-sim-diorama`, concept scale 0.8).
 
-**Open item — API sampling.** Every generation attempt against the
-trained model returns a bare 500 from Scenario
-(`POST /v1/models/<id>/inferences` with `{"parameters": {"type":
-"txt2img", ...}}`, and `POST /v1/generate/txt2img` — both exist, both
-500; retried for ~15 minutes post-training, so not deployment lag).
-The legacy inference path likely does not serve `flux.2-dev-lora` on
-this plan/API generation. The model itself is healthy and can be used
-from the Scenario web UI (app.scenario.com -> esports-sim-diorama ->
-Generate, prefix prompts with the trigger phrase). The agreed
-validation prompt: "esports-sim-diorama style, isometric esports team
-office lounge with couches and trophy shelf, dark navy background" —
-save a good result to `assets/office/style/lora/sample.png`. Finding
-the correct current-generation API route is a small research task for
-a future session.
+**API sampling — SOLVED (2026-07-20).** Direct generation against the
+LoRA still 500s (`modelId: model_5Zu...` on `/v1/generate/txt2img` or
+`img2img`, and `/v1/models/<id>/inferences`). The working route is
+LoRA COMPOSITION: `POST /v1/generate/img2img` (or txt2img) with
+`{"modelId": "flux.1-dev", "loras": [{"modelId":
+"model_5ZuAoQQnRSMSeykEwaHjBKwm", "weight": 0.8}], ...}` — accepted
+and runs to success, even across the base-family mismatch. Caveats
+from the bind/haven map-repaint run: prompts cap at 2048 chars; the
+cross-family diorama stack applies the style only weakly, and the
+family-matched public LoRA `model_eJg6GZwd59vg4ycufRLyKsxL`
+("Blockout to Render - Kontext") at strength ~0.75 was the better
+img2img engine for guide repaints (high roll variance — generate
+several, gate on footprint IoU). Full recipe:
+`scenario_paint*.py` in session c3389955's scratchpad.
 
 ---
 
