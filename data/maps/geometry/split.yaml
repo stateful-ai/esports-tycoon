@@ -102,12 +102,20 @@ props:
   - { region: defender_spawn, x: 30.0, y: 80.0, w: 14.0, h: 12.0, height: full }
   # -- A Site furniture: the tall south box (kept clear of the screens
   # and heaven reads) + plant cover -----------------------------------------
-  - { region: a_site, x: 8.0, y: 64.0, w: 5.0, h: 5.5, height: full }
+  # Half-height box stack, not a wall: full interior blockers let the
+  # defuser hide from every post-plant angle (both sites converted
+  # under 50% — site probe). Shootable-over keeps the spike watchable
+  # and the stack still reads as the real site boxes.
+  - { region: a_site, x: 8.0, y: 64.0, w: 5.0, h: 5.5, height: half }
+  # North-plant cover against the Heaven window: both A entries land in
+  # the site's north, so plants happen under the perch — this is the
+  # real site's mid-floor box.
+  - { region: a_site, x: 11.0, y: 51.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 5.0, y: 55.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 15.0, y: 57.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 9.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   # -- B Site furniture: the north box + plant cover ------------------------
-  - { region: b_site, x: 57.0, y: 51.0, w: 9.0, h: 4.0, height: full }
+  - { region: b_site, x: 57.0, y: 51.0, w: 9.0, h: 4.0, height: half }
   - { region: b_site, x: 60.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 70.0, y: 57.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 74.0, y: 62.0, w: 3.0, h: 3.0, height: half }

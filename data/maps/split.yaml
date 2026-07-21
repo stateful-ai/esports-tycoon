@@ -153,10 +153,14 @@ sightlines:
   - { from_callout: a_main, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_ramps, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_heaven, to_callout: a_site, advantaged_side: defense }
-  - { from_callout: a_screens, to_callout: a_site, advantaged_side: defense }
+  # Screens is the back room, Heaven the perch — one pre-aimed retake
+  # angle per site, not two. Both sites converted under 50% post-plant
+  # with double perches (site probe, 100 seeds).
+  - { from_callout: a_screens, to_callout: a_site }
   - { from_callout: b_main, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_garden, to_callout: b_site, advantaged_side: defense }
-  - { from_callout: b_elbow, to_callout: b_site, advantaged_side: defense }
+  # Elbow is the close corner off spawn; Rafters keeps the perch.
+  - { from_callout: b_elbow, to_callout: b_site }
   - { from_callout: b_rafters, to_callout: b_site, advantaged_side: defense }
   - { from_callout: mid_vent, to_callout: a_ramps }
   - { from_callout: mid_sewer, to_callout: b_garden }

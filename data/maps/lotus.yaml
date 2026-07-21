@@ -212,7 +212,11 @@ sightlines:
   - { from_callout: a_main, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_link, to_callout: a_site, advantaged_side: defense }
   - { from_callout: a_tree, to_callout: a_site, advantaged_side: defense }
-  - { from_callout: a_dock, to_callout: a_site, advantaged_side: defense }
+  # Dock is the rope flank, not a pre-aimed hold — neutral keeps the eye
+  # without the anchor bonus. With four defensive angles ringing A, post-
+  # plant retakes ran 74% (site probe, 100 seeds); Tree keeps the iconic
+  # overlook and Dock becomes contestable ground.
+  - { from_callout: a_dock, to_callout: a_site }
   - { from_callout: b_main, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_diamond, to_callout: b_site, advantaged_side: defense }
   - { from_callout: b_link, to_callout: b_site, advantaged_side: defense }

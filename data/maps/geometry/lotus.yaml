@@ -107,10 +107,15 @@ props:
   - { region: a_main, x: 30.0, y: 30.0, w: 6.0, h: 12.0, height: full }
   - { region: a_main, x: 40.0, y: 30.0, w: 2.0, h: 12.0, height: full }
   # -- A Site walls: the two fins, the site box, the link column ------------
+  # One fin, not three: with free-movement LOS, interior full walls
+  # shield a defuser from the post-plant holders — A converted 26% vs
+  # C's 60% (site probe) with zero engine difference. The north fin
+  # stays (it breaks the Main->deep-site angle); the middle fin is gone
+  # and the east wall stops at y64 so the south half — where Tree/Dock
+  # retakes land and plants happen — stays watchable.
   - { region: a_site, x: 13.0, y: 46.0, w: 9.0, h: 1.5, height: full }
-  - { region: a_site, x: 8.0, y: 50.5, w: 12.0, h: 1.5, height: full }
   - { region: a_site, x: 10.0, y: 58.0, w: 7.0, h: 5.0, height: half }
-  - { region: a_site, x: 20.0, y: 55.0, w: 5.0, h: 15.0, height: full }
+  - { region: a_site, x: 20.0, y: 55.0, w: 5.0, h: 9.0, height: full }
   # -- B Site's round pillar ------------------------------------------------
   - { region: b_site, x: 45.0, y: 44.5, w: 6.0, h: 5.5, height: full }
   # -- C Main masks (east of the diagonal, west rim) ------------------------
@@ -124,6 +129,11 @@ props:
   # -- Site plant cover -----------------------------------------------------
   - { region: a_site, x: 5.0, y: 60.0, w: 3.0, h: 3.0, height: half }
   - { region: a_site, x: 6.0, y: 66.5, w: 3.0, h: 3.0, height: half }
+  # Post-plant anchors on the retake half: both original crates hug the
+  # far-west corner, so holders had nothing between them and the Tree/
+  # Dock/Link approaches — A-site post-plants ran 26% (site probe).
+  - { region: a_site, x: 12.0, y: 63.0, w: 3.0, h: 3.0, height: half }
+  - { region: a_site, x: 15.0, y: 68.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 43.0, y: 52.0, w: 3.0, h: 3.0, height: half }
   - { region: b_site, x: 51.0, y: 53.0, w: 3.0, h: 3.0, height: half }
   - { region: c_site, x: 88.0, y: 45.0, w: 3.0, h: 3.0, height: half }
