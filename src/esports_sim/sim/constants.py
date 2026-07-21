@@ -244,7 +244,7 @@ DUEL_GAME_SENSE_WEIGHT = 0.19
 # Flat bonus for holding a defense-advantaged sightline (negated by smokes).
 # Sized against DUEL_ELO_SCALE: at scale 90 this is ~57% for the holder —
 # the angle matters, structure beats raw aim, but it's not a free kill.
-HOLD_ADVANTAGE = 14.0
+HOLD_ADVANTAGE = 16.0
 # A stationary player duelling someone mid-move is pre-aimed. Applies both
 # ways (defenders on sites pre-plant, attackers in post-plant positions),
 # is not negated by smokes, and stacks with HOLD_ADVANTAGE.
@@ -358,7 +358,7 @@ POST_PLANT_DENIAL_PROB = 0.12
 # Max ticks a site's defensive utility can delay incoming attackers when a
 # hit commits (scaled by util power). Stalls buy rotation time — the main
 # lever against the 5-versus-few numbers math on executes.
-STALL_TICKS_MAX = 10
+STALL_TICKS_MAX = 14
 
 # Defender fallback: outnumbered site defenders break contact instead of
 # dying in place — the asymmetric piece the attack/defense balance needs
@@ -366,7 +366,7 @@ STALL_TICKS_MAX = 10
 # short no-engage grace (off-angle repositioning), defenders rally toward
 # spawn, and the existing post-plant grouped retake arrives with numbers.
 FALLBACK_OUTNUMBER = 2  # attackers minus on-site defenders to trigger rolls
-FALLBACK_BASE_PROB = 0.45  # + game_sense scaling; heroes sometimes stay
+FALLBACK_BASE_PROB = 0.48  # + game_sense scaling; heroes sometimes stay
 FALLBACK_GRACE_TICKS = 8  # covers the retreat hop out of the crossfire
 
 # ---------------------------------------------------------------------------
