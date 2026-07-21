@@ -10,7 +10,7 @@ from __future__ import annotations
 # Timing (ticks; 1 tick = 0.5 s)
 
 ROUND_TICKS = 200  # 100 s round timer
-SPIKE_TICKS = 90  # 45 s from plant to detonation
+SPIKE_TICKS = 85  # 42.5 s from plant to detonation
 PLANT_TICKS = 8  # 4 s plant channel
 DEFUSE_TICKS = 14  # 7 s full defuse
 HALF_DEFUSE_TICKS = 7  # progress checkpoint
@@ -222,11 +222,11 @@ MAX_ROUNDS = 40  # OT safety cap; ties broken by kills, then coin flip
 
 # Per-tick chance that two players with an open mutual sightline actually
 # commit to a duel (they might be jiggling, repositioning, waiting).
-ENGAGE_PROB = 0.28
+ENGAGE_PROB = 0.30
 # Same-callout contact always engages.
 ENGAGE_PROB_SAME_CALLOUT = 1.0
 # Chance a duel resolves with no kill (both disengage).
-DUEL_FIZZLE_PROB = 0.10
+DUEL_FIZZLE_PROB = 0.06
 # Elo-style scale: a 90-point effective-skill gap ≈ 72% duel win. Duels
 # must stay close to coin flips even between mismatched teams — man
 # advantage, trades, and economy already compound every small edge over
@@ -251,7 +251,7 @@ HOLD_ADVANTAGE = 16.0
 HOLDER_BONUS = 6.0
 # Attacker bonus when entering behind good utility (scaled by util power).
 # Short window: utility opens the door, it doesn't win the whole fight.
-ENTRY_BONUS_MAX = 8.0
+ENTRY_BONUS_MAX = 10.0
 ENTRY_BONUS_TICKS = 14
 # Flash debuff on the defender caught by an entry flash.
 FLASH_DEBUFF = 15.0
@@ -316,7 +316,7 @@ COVER_CAP = 4.5
 SIGHT_BLOCK_ENGAGE_FACTOR = 0.45
 
 # Trade window: teammates nearby can punish the killer.
-TRADE_BASE_PROB = 0.35
+TRADE_BASE_PROB = 0.42
 # A refrag is still a gunfight: the trader's weapon range curve scales the
 # trade chance (probability per range-mod point). Pistols trading across a
 # site pay their long-range penalty; rifles trade flat.
@@ -519,7 +519,7 @@ ECO_EXECUTE_SPAN = 0.30
 # Neutral teams save until they are just short of a full rifle buy instead of
 # chaining Spectre forces after ordinary losses.  Eco-greedy teams still open
 # a meaningful force window; disciplined teams bank for the next rifle round.
-ECO_FORCE_BASE_MULT = 1.55
+ECO_FORCE_BASE_MULT = 1.32
 ECO_FORCE_MULT_SPAN = 0.20
 
 # Pace also has a defensive dimension — tempo, not appetite. A fast book
