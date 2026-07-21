@@ -3584,6 +3584,14 @@ class _MatchSim:
             + (pl.attr("game_sense") - 50.0) / 300.0
             + trait_value(pl, "trade_bonus", 0.0)  # glue players refrag
         )
+        # A refrag is still a gunfight: the trader's weapon must reach the
+        # killer from where they stand.
+        tp = self.p[trader]
+        trade_dist = max(2.0, ((tp.x - kp.x) ** 2 + (tp.y - kp.y) ** 2) ** 0.5)
+        p_trade += (
+            self._range_mod(self.gd.weapons[tp.weapon], trade_dist)
+            * C.TRADE_RANGE_PROB_SCALE
+        )
         # Coaching identity: aggressive teams stack tight and hunt the
         # refrag, passive teams give some trades up for safer spacing.
         aggr = self._tactics(self.p[trader].team_id).aggression

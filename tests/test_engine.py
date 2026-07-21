@@ -118,13 +118,12 @@ def test_saved_rifle_buys_beat_pistols_and_lead_kill_counts(
             top_weapon_classes[kills.most_common(1)[0][0]] += 1
 
     assert gun_diff_rounds >= 20
-    # Bar recalibrated 0.70 -> 0.66 with the minimap-traced geometry:
-    # real-scale rooms compress duel ranges on every traced map (ascent
-    # 0.702 / bind 0.690 / haven 0.680 over 48 seeds), so the old bar sat
-    # exactly on the noise floor. Gun advantage still converts decisively.
-    # Follow-up: retune weapon range curves to the traced distance
-    # distribution once all five maps are traced, then raise this back.
-    assert rifle_wins / gun_diff_rounds >= 0.66
+    # Bar restored to 0.70 after the range curves were recalibrated to the
+    # traced-map duel distances (pistol pivot at true point-blank scale,
+    # range-aware trades): conversion runs 0.72+ per traced map over 48
+    # seeds, so 0.70 sits below the working level with margin for the
+    # 12-seed sample here.
+    assert rifle_wins / gun_diff_rounds >= 0.70
     assert top_weapon_classes["rifle"] + top_weapon_classes["sniper"] > (
         top_weapon_classes["smg"] + top_weapon_classes["pistol"]
     )
