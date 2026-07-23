@@ -184,6 +184,26 @@ def test_openai_client_raises_after_exhausting_retries():
     assert client.attempts == 2
 
 
+class PaymentRequiredClient(OpenAICompatibleClient):
+    def __init__(self):
+        self.attempts = 0
+        super().__init__("http://unit.test/v1", "fake-model", sleeper=lambda s: None)
+
+    def _transport(self, payload, headers):
+        self.attempts += 1
+        raise error.HTTPError("http://unit.test", 402, "Payment Required", {}, None)
+
+
+def test_openai_client_fails_fast_on_non_transient_http_errors():
+    """A 402/401 is not transient — retrying just burns wall-clock (a real
+    out-of-credits run retried its way through three attempts)."""
+    client = PaymentRequiredClient()
+
+    with pytest.raises(RuntimeError, match="HTTP 402"):
+        client.complete(system="s", user="u")
+    assert client.attempts == 1
+
+
 def test_llm_playtest_streams_traces_to_sink(game_data):
     streamed: list[dict] = []
     result = run_llm_playtest(

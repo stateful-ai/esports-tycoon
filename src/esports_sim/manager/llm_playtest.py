@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass, field
 from http.client import HTTPException
 from pathlib import Path
 from typing import Any, Callable, Protocol
-from urllib import request
+from urllib import error, request
 
 from esports_sim.manager import analytics
 from esports_sim.manager.campaign import new_campaign
@@ -83,6 +83,16 @@ class OpenAICompatibleClient:
             # raw ssl.SSLError escapes urllib's URLError wrapping when the
             # failure happens while READING the response, not opening it.
             except (OSError, HTTPException, json.JSONDecodeError) as exc:
+                # Client errors other than rate limits are not transient:
+                # retrying a 402 (out of credits) or 401 just burns time.
+                if (
+                    isinstance(exc, error.HTTPError)
+                    and exc.code < 500
+                    and exc.code != 429
+                ):
+                    raise RuntimeError(
+                        f"LLM request rejected (HTTP {exc.code}): {exc}"
+                    ) from exc
                 last_exc = exc
                 if attempt == self.retries:
                     raise RuntimeError(f"LLM request failed after {attempt} attempts: {exc}") from exc
