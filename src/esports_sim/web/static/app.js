@@ -3815,6 +3815,7 @@ function tacticsStrategy(main, rail, data) {
     const slider = el("input");
     slider.type = "range"; slider.min = 0; slider.max = 100; slider.step = 1;
     slider.value = values[d.key];
+    slider.setAttribute("aria-label", `${d.label} dial — 50 is neutral`);
     track.appendChild(el("span", "tac-notch"));
     track.appendChild(slider);
     block.appendChild(track);
