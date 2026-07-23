@@ -40,14 +40,35 @@ mentorship ceiling-step multiplier — so hands-off sims are byte-identical.
 Arcs surface as chips on own-club player/team profiles plus a rare inbox
 talk item when an org grudge forms or cools.
 
-## Sponsor lifecycle
+## Shipped: sponsor lifecycle
 
-Add a Finances commitments timeline for accepted demands: deadline fixture,
-reward/risk, outcome, and the resulting brand-relation change. Show known
-commitments only; do not reveal hidden demand-generation odds.
+The Finances commitments timeline (2026-07-23) lists accepted demands with
+deadline fixture, reward/risk, outcome, and the resulting brand-relation
+change. The relation deltas are single-sourced in `sponsors.RELATION_DELTAS`
+— the resolver (`settle_demands`/`respond_demand`) and the view
+(`commitment_views`) read the same table, so the timeline cannot drift from
+what actually settled. Hidden demand-generation odds stay unserialized.
 
-## Maintenance: roadmap reconciliation
+## Done: roadmap reconciliation
 
-Development milestones already have Chronicle detection and Inbox surfacing.
-Remove that stale open item from the roadmap, then keep this document aligned
-as the remaining polish work ships.
+Reconciled 2026-07-23. The original slate is complete — new polish work now
+comes from LLM-playtest evidence (`scripts/run_llm_playtest.py` critiques).
+
+## Next evidence batch (2026-07-23 LLM playtest critique, seed 7001)
+
+Shipped from this batch already: no-change feedback on repeated setters
+(training/tactics/preparation/negotiation), blocker reasons that name the
+unblocking action, and a prep-booking message that says when the payoff
+lands. Still open, in critique order:
+
+- **Development-plan progress feedback**: `set_dev_plan` gives no follow-up
+  signal in the env observation or step messages; the web Development report
+  has it, the headless contract does not. Surface a per-player growth line
+  (last-window CA delta) in the roster observation.
+- **Flavor-event outcome clarity**: several choices resolved to "the deal
+  fades" with no mechanism named. Choices should carry coarse outcome hints
+  (risk/safe framing) without leaking exact odds, mirroring the media-event
+  copy standard.
+- **Preparation impact attribution**: after a prepared fixture resolves, the
+  week report/decision ledger should say what the prep edge contributed —
+  the artifact exists server-side; the settle-side line is missing.

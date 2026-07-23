@@ -3327,10 +3327,17 @@ function devDigestCard(digest) {
     aCol.appendChild(el("p", "muted", "Quiet week in the academy."));
   } else {
     for (const a of acad) {
+      // Academy rows carry ability + potential_band (no dev-history series —
+      // affiliates aren't snapshot-tracked), so fall back to the scouted band.
+      const series = a.ca_series || a.series;
+      const mid = series && series.length > 1
+        ? `<span class="es-spark-wrap">${sparkline(series)}</span>`
+        : `<span class="muted">${a.potential_band ? "pot " + Math.round(a.potential_band[0]) + "–" + Math.round(a.potential_band[1]) : ""}</span>`;
       aCol.appendChild(el("div", "dev-digest-row",
-        `<span class="dev-digest-name">${plink(a.id, a.handle)}</span>` +
-        `<span class="es-spark-wrap">${sparkline(a.ca_series || a.series)}</span>` +
-        `<span class="chip">${a.note ? esc(a.note) : "CA " + Math.round(a.ca ?? 0)}</span>`));
+        `<span class="dev-digest-name">${plink(a.id, a.handle)}` +
+        `${a.age != null ? ` <span class="muted">${a.age}</span>` : ""}</span>` +
+        mid +
+        `<span class="chip">${a.note ? esc(a.note) : "CA " + Math.round(a.ability ?? a.ca ?? 0)}</span>`));
     }
   }
   grid.appendChild(aCol);
@@ -3934,6 +3941,9 @@ function lineupCard(v, lineup) {
   const hasEdge = lineup.players.some((p) => (p.options || []).some((o) => o.edge != null));
   const edgeTh = hasEdge ? `<th class="num" title="duel points this agent's mastery adds or costs at match time">Edge</th>` : "";
   const t = el("table");
+  // The fixed column widths below assume four columns; flag the five-column
+  // variant so the CSS can rebalance instead of clipping Edge off the card.
+  if (hasEdge) t.classList.add("has-edge");
   t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th>Agent</th>
     <th class="num">Mastery</th>${edgeTh}</tr></thead>`;
   const tb = el("tbody");
@@ -7516,6 +7526,40 @@ const FinancesTab = ({ onOpenBrand }) => {
                     </div>
                   `;
                 })}
+              </div>
+            `}
+            ${data.commitments && data.commitments.length > 0 && html`
+              <div class="slot-row" style=${{ borderLeftColor: "var(--es-color-accent)" }}>
+                <div class="row">
+                  <span class="microlabel">Commitments</span>
+                  <span class="muted">accepted sponsor obligations and how they landed</span>
+                </div>
+                <div class="es-obj" style=${{ marginTop: "6px" }}>
+                  ${data.commitments.map(c => {
+                    const pill = c.status === "met" ? html`<span class="pill obj good">honored</span>`
+                      : c.status === "missed" ? html`<span class="pill obj bad">missed</span>`
+                      : c.status === "expired" ? html`<span class="pill obj bad">expired</span>`
+                      : html`<span class="pill obj">due wk ${c.deadline_week}</span>`;
+                    return html`
+                      <div class="es-obj-row" key=${c.id}>
+                        ${pill}${" "}
+                        <b>${c.brand}</b>${" "}
+                        <span class="chip">${SLOT_LABELS[c.slot] || humanize(c.slot)}</span>${" "}
+                        <span>${c.requirement}</span>${" "}
+                        <span class="chip tone-good">reward ${money(c.reward)}</span>${" "}
+                        <span class="chip tone-bad">risk -${money(c.penalty)}</span>
+                        ${c.relation_delta != null && html`${" "}
+                          <span class=${`chip ${c.relation_delta >= 0 ? "tone-good" : "tone-bad"}`}>
+                            ${c.relation_delta >= 0 ? "+" : ""}${c.relation_delta.toFixed(1)} relation
+                          </span>
+                        `}
+                        ${c.status !== "accepted" && c.resolved_week != null && html`${" "}
+                          <span class="muted">settled wk ${c.resolved_week}</span>
+                        `}
+                      </div>
+                    `;
+                  })}
+                </div>
               </div>
             `}
             ${["title", "jersey", "peripheral", "stream", "apparel"].map(slot => {

@@ -210,6 +210,81 @@ def test_v29_migration_and_round_trip(game_data, tmp_path):
     assert migrated.sponsor_demands == []
 
 
+def test_relation_deltas_are_the_single_source_for_settlement(game_data):
+    gs = new_campaign(game_data, seed=4310)
+    tid = gs.user_team_id
+    target = gs.teams[tid].player_ids[0]
+    demand = _demand(gs, player_id=target)
+    gs.sponsor_demands.append(demand)
+    assert sponsors.respond_demand(gs, demand.id, True)[0]
+    fixture = _future_fixture(gs)
+    fixture.played = True
+    fixture.winner_id = fixture.team_b
+    gs.week = fixture.week
+    sponsors.settle_demands(gs, {tid: {target}})
+    assert demand.status == "met"
+    # The resolver applied exactly the delta the commitments view reports.
+    assert sponsors.relation(gs, demand.brand) == (
+        50.0 + sponsors.RELATION_DELTAS["met"]
+    )
+    row = sponsors.commitment_views(gs, tid)[0]
+    assert row["id"] == demand.id
+    assert row["relation_delta"] == sponsors.RELATION_DELTAS["met"]
+    # The refactor must not have changed any settled value.
+    assert sponsors.RELATION_DELTAS == {
+        "met": 5.0, "missed": -8.0, "expired": -2.0, "declined": -3.0,
+    }
+
+
+def test_commitment_views_show_known_commitments_only(game_data):
+    gs = new_campaign(game_data, seed=4311)
+    tid = gs.user_team_id
+    target = gs.teams[tid].player_ids[0]
+
+    def make(demand_id, status, resolved_week=None):
+        demand = _demand(gs, player_id=target)
+        demand.id = demand_id
+        demand.status = status
+        if resolved_week is not None:
+            demand.resolved_season = gs.season
+            demand.resolved_week = resolved_week
+        gs.sponsor_demands.append(demand)
+        return demand
+
+    make("c-pending", "pending")
+    make("c-declined", "declined", resolved_week=gs.week)
+    make("c-accepted", "accepted")
+    make("c-met", "met", resolved_week=gs.week)
+    make("c-missed", "missed", resolved_week=gs.week + 1)
+    make("c-expired", "expired", resolved_week=gs.week)
+
+    rows = sponsors.commitment_views(gs, tid)
+    ids = [row["id"] for row in rows]
+    # Declined never was a commitment; pending is still actionable — both out.
+    assert "c-pending" not in ids and "c-declined" not in ids
+    # Open commitments first, then resolved newest-first (index breaks ties).
+    assert ids == ["c-accepted", "c-missed", "c-expired", "c-met"]
+
+    by_id = {row["id"]: row for row in rows}
+    assert by_id["c-accepted"]["relation_delta"] is None
+    assert by_id["c-met"]["relation_delta"] == sponsors.RELATION_DELTAS["met"]
+    assert by_id["c-missed"]["relation_delta"] == sponsors.RELATION_DELTAS["missed"]
+    assert by_id["c-expired"]["relation_delta"] == sponsors.RELATION_DELTAS["expired"]
+
+    # Frozen row shape: known facts only, never demand-generation odds.
+    for row in rows:
+        assert set(row) == {
+            "id", "brand", "slot", "label", "requirement", "detail",
+            "deadline_week", "opponent_name", "reward", "penalty",
+            "status", "resolved_season", "resolved_week", "relation_delta",
+        }
+        for key in row:
+            lowered = key.lower()
+            assert "chance" not in lowered
+            assert "odds" not in lowered
+            assert "prob" not in lowered
+
+
 def test_demand_schema_rejects_unknown_fields(game_data):
     gs = new_campaign(game_data, seed=4309)
     payload = _demand(

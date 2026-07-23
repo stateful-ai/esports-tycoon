@@ -4908,6 +4908,9 @@ def finances() -> dict:
             else None,
             "slots": slots,
             "demands": sponsors.demand_views(gs, gs.acting_team_id),
+            # Accepted obligations + their outcomes (single-source relation
+            # deltas from sponsors.RELATION_DELTAS; generation odds stay hidden).
+            "commitments": sponsors.commitment_views(gs, gs.acting_team_id),
             "facilities": facilities,
             "breakdown": economy.weekly_breakdown(gs, staff_cost=staff_cost),
             "projection": economy.cash_projection(gs, staff_cost=staff_cost),

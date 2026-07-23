@@ -2087,6 +2087,12 @@ p.good, .good { color: var(--es-color-text-success, var(--es-color-text-success)
 .lineup-card th:nth-child(2) { width: 30%; }
 .lineup-card th:nth-child(3) { width: 42%; }
 .lineup-card th:nth-child(4) { width: 8%; }
+/* Five-column variant (F6 mastery Edge) — rebalance so Edge isn't clipped. */
+.lineup-card table.has-edge th:nth-child(1) { width: 18%; }
+.lineup-card table.has-edge th:nth-child(2) { width: 26%; }
+.lineup-card table.has-edge th:nth-child(3) { width: 34%; }
+.lineup-card table.has-edge th:nth-child(4) { width: 11%; }
+.lineup-card table.has-edge th:nth-child(5) { width: 11%; }
 .lineup-card th, .lineup-card td { padding-left: 5px; padding-right: 5px; }
 .lineup-card .lineup-sel { width: 100%; min-width: 0; padding: 3px 6px; }
 

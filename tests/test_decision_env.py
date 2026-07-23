@@ -35,6 +35,60 @@ def test_observation_is_json_safe_visible_and_restores_acting_team(game_data):
     assert "potential" not in obs["free_agents"][0]
 
 
+def test_no_change_actions_say_so_instead_of_succeeding_silently(game_data):
+    """LLM-playtest finding: a model repeated set_training 14x and
+    negotiate_open 7x because identical no-op actions returned success with
+    no feedback. The env must name the no-op and, for a live negotiation,
+    point at the next step in the chain."""
+    gs = new_campaign(game_data, seed=703)
+    env = HeadlessManagerEnv(gs, game_data)
+
+    current = gs.training_focus.get(gs.user_team_id)
+    focus = "mental" if current != "mental" else "mechanical"
+    first = env.step({"kind": "set_training", "params": {"focus": focus}})
+    again = env.step({"kind": "set_training", "params": {"focus": focus}})
+    assert first.message == f"training focus set to {focus}"
+    assert "no change" in again.message
+
+    tac = env.step({"kind": "set_tactics", "params": {"pace": 60.0}})
+    tac_again = env.step({"kind": "set_tactics", "params": {"pace": 60.0}})
+    assert tac.message == "tactics updated"
+    assert "unchanged" in tac_again.message
+
+    negotiable = env.observe()["legal_actions"]["negotiate_open"]["player_ids"]
+    if negotiable:
+        pid = negotiable[0]
+        env.step({"kind": "negotiate_open", "params": {"player_id": pid}})
+        reopen = env.step({"kind": "negotiate_open", "params": {"player_id": pid}})
+        assert "already open" in reopen.message
+        assert "negotiate_offer" in reopen.message
+
+    prep = env.observe()["legal_actions"]["set_preparation"]
+    if prep["enabled"]:
+        params = {
+            "fixture_id": prep["fixture_id"], "partner_id": prep["partner_ids"][0],
+            "map_id": prep["map_ids"][0], "objective": prep["objectives"][0],
+            "intensity": prep["intensities"][0],
+        }
+        booked = env.step({"kind": "set_preparation", "params": params})
+        rebooked = env.step({"kind": "set_preparation", "params": params})
+        # The booking message names what was bought and when it pays off.
+        assert booked.message.startswith("preparation booked:")
+        assert "when the week advances" in booked.message
+        assert "already booked" in rebooked.message
+
+
+def test_short_roster_advance_reason_names_the_sign_action(game_data):
+    gs = new_campaign(game_data, seed=704)
+    tid = gs.user_team_id
+    team = gs.teams[tid]
+    dropped = sorted(team.player_ids)[0]
+    team.player_ids.remove(dropped)
+
+    reason = HeadlessManagerEnv(gs, game_data).observe()["legal_actions"]["advance"]["reason"]
+    assert "sign 1 more" in reason and "sign action" in reason
+
+
 def test_legal_masks_match_domain_rules(game_data):
     gs = new_campaign(game_data, seed=702)
     env = HeadlessManagerEnv(gs, game_data)

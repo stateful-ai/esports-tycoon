@@ -598,8 +598,11 @@ class HeadlessManagerEnv:
                 focus = str(params.get("focus", ""))
                 if focus not in training.FOCUS_OPTIONS:
                     raise InvalidManagerAction(f"unknown training focus {focus!r}")
-                self.gs.training_focus[self.team_id] = focus
-                message = f"training focus set to {focus}"
+                if self.gs.training_focus.get(self.team_id) == focus:
+                    message = f"training focus already {focus} — no change"
+                else:
+                    self.gs.training_focus[self.team_id] = focus
+                    message = f"training focus set to {focus}"
             elif kind == "set_tactics":
                 tac = self.gs.teams[self.team_id].tactics
                 updates: dict[str, float] = {}
@@ -614,12 +617,18 @@ class HeadlessManagerEnv:
                     site = str(params["site_focus"])
                     if site not in ("balanced", "a", "b", "c"):
                         raise InvalidManagerAction("site_focus must be balanced/a/b/c")
+                changed = any(
+                    getattr(tac, dial) != value for dial, value in updates.items()
+                ) or (site is not None and tac.site_focus != site)
                 for dial, value in updates.items():
                     setattr(tac, dial, value)
                 if site is not None:
                     tac.site_focus = site
                 params = tac.model_dump()
-                message = "tactics updated"
+                message = (
+                    "tactics updated" if changed
+                    else "tactics unchanged — those values were already set"
+                )
             elif kind == "set_lineup":
                 picks = list(params.get("player_ids", []))
                 roster = set(self.gs.teams[self.team_id].player_ids)
@@ -831,14 +840,33 @@ class HeadlessManagerEnv:
                 map_id = str(params.get("map_id", ""))
                 objective = str(params.get("objective", ""))
                 intensity = str(params.get("intensity", ""))
+                if not partner_id:
+                    raise InvalidManagerAction(
+                        "partner_id is required — pick one of the partner_ids "
+                        "in the set_preparation contract"
+                    )
+                prior = self.gs.preparation_plans_by.get(self.team_id)
                 try:
-                    preparation.schedule(
+                    plan = preparation.schedule(
                         self.gs, self.team_id, fixture_id, partner_id,
                         map_id, objective, intensity,
                     )
                 except ValueError as exc:
                     raise InvalidManagerAction(str(exc)) from exc
-                message = "preparation session booked"
+                # schedule() replaces the pending plan; identical inputs give
+                # the same stable id, i.e. a pure no-op worth naming. On a
+                # real booking, say what was bought and when it pays off —
+                # the first LLM playtest called silent bookings "fire and
+                # forget".
+                message = (
+                    "that preparation session is already booked — no change"
+                    if prior is not None and prior.id == plan.id
+                    else (
+                        f"preparation booked: {objective} on {map_id} vs "
+                        f"{partner_id} ({intensity}) — the scrim report and "
+                        f"prep edge land when the week advances"
+                    )
+                )
             elif kind == "tournament_registration":
                 picks = list(params.get("player_ids", []))
                 ok, message = series_management.register_roster(
