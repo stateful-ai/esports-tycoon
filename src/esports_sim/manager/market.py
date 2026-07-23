@@ -124,7 +124,7 @@ def roster_ready(gs: GameState, team_id: str) -> tuple[bool, str]:
         short = ROSTER_MIN - n
         return False, (
             f"you need {ROSTER_MIN} players to advance — "
-            f"sign {short} more"
+            f"sign {short} more (the sign action lists free agents)"
         )
     return True, ""
 
@@ -1318,7 +1318,12 @@ def open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, "object"]:
         if live.deadline_week and gs.week > live.deadline_week:
             del gs.negotiations[pid]
             return False, f"{p.handle}'s deadline passed; their agent closed talks", None
-        return True, "", live
+        # Re-opening a live table is a no-op; say so and point at the next
+        # step, or an agent (human or LLM) can loop here without noticing.
+        return True, (
+            f"talks with {p.handle} are already open — submit an offer "
+            f"(negotiate_offer) or cancel"
+        ), live
     terms = contract_term_demands(gs, pid, kind)
     leverage, interest, competing, reasons = _negotiation_leverage(gs, pid, kind)
     neg = Negotiation(
