@@ -92,12 +92,27 @@ def test_sponsor_demand_finances_and_action_contract(test_env) -> None:
     data = server_mod.finances()
     assert data["demands"][0]["id"] == demand.id
     assert data["demands"][0]["can_respond"] is True
+    # A pending demand is not yet a commitment.
+    assert "commitments" in data
+    assert all(row["id"] != demand.id for row in data["commitments"])
     result = server_mod.sponsor_demand_action(
         server_mod.SponsorDemandBody(demand_id=demand.id, accept=True)
     )
     assert result["ok"] is True
     assert demand.status == "accepted"
     assert gs.action_log[-1].kind == "sponsor_demand_respond"
+
+    # Once accepted it shows on the commitments timeline: known facts only,
+    # relation_delta still None while the obligation is open.
+    data = server_mod.finances()
+    row = next(c for c in data["commitments"] if c["id"] == demand.id)
+    assert row["status"] == "accepted"
+    assert row["relation_delta"] is None
+    assert set(row) == {
+        "id", "brand", "slot", "label", "requirement", "detail",
+        "deadline_week", "opponent_name", "reward", "penalty",
+        "status", "resolved_season", "resolved_week", "relation_delta",
+    }
 
 
 def test_player_profile_endpoint_contract(test_env) -> None:

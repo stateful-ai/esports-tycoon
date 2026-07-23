@@ -47,6 +47,17 @@ DEMAND_HISTORY_CAP = 24
 ROOKIE_MAX_AGE = 21
 ROOKIE_MAX_CAREER_MAPS = 10
 
+# Brand-relation change per demand outcome. The SINGLE source shared by the
+# resolvers (settle_demands / respond_demand) and the finances commitments
+# timeline, so the view can never drift from what actually gets applied
+# (the tactics_fit pattern).
+RELATION_DELTAS: dict[str, float] = {
+    "met": 5.0,
+    "missed": -8.0,
+    "expired": -2.0,
+    "declined": -3.0,
+}
+
 # Money component ranges, scaled by slot mult × marketability × relation.
 _BASE_UPFRONT_BONUS = (120, 240)  # * scale, * 1000
 _BASE_UPFRONT_WEEKLY = (15, 30)  # * scale, * 100
@@ -531,7 +542,7 @@ def respond_demand(gs: GameState, demand_id: str, accept: bool) -> tuple[bool, s
         demand.status = "declined"
         demand.resolved_season = gs.season
         demand.resolved_week = gs.week
-        _bump_relation(gs, demand.brand, -3.0)
+        _bump_relation(gs, demand.brand, RELATION_DELTAS["declined"])
         message = f"declined {demand.brand}'s demand; relations cooled"
     gs.push_private_news(message[0].upper() + message[1:] + ".")
     return True, message
@@ -561,7 +572,7 @@ def settle_demands(gs: GameState, week_dressed: dict[str, set[str]]) -> int:
             was_pending = demand.status == "pending"
             demand.status = "expired"
             if was_pending:
-                _bump_relation(gs, demand.brand, -2.0)
+                _bump_relation(gs, demand.brand, RELATION_DELTAS["expired"])
             gs.push_private_news(
                 f"Sponsor demand expired — {demand.brand}'s named fixture passed "
                 "without a result."
@@ -573,7 +584,7 @@ def settle_demands(gs: GameState, week_dressed: dict[str, set[str]]) -> int:
         demand.resolved_week = gs.week
         if demand.status == "pending":
             demand.status = "expired"
-            _bump_relation(gs, demand.brand, -2.0)
+            _bump_relation(gs, demand.brand, RELATION_DELTAS["expired"])
             gs.push_private_news(
                 f"Sponsor demand expired — {demand.brand}'s request went unanswered. "
                 "Relations cooled."
@@ -588,7 +599,7 @@ def settle_demands(gs: GameState, week_dressed: dict[str, set[str]]) -> int:
             demand.status = "met"
             total += demand.reward
             gs.teams[tid].balance += demand.reward
-            _bump_relation(gs, demand.brand, +5.0)
+            _bump_relation(gs, demand.brand, RELATION_DELTAS["met"])
             gs.push_private_news(
                 f"Sponsor demand met — {demand.brand} pay {demand.reward:,} cr."
             )
@@ -596,7 +607,7 @@ def settle_demands(gs: GameState, week_dressed: dict[str, set[str]]) -> int:
             demand.status = "missed"
             total -= demand.penalty
             gs.teams[tid].balance -= demand.penalty
-            _bump_relation(gs, demand.brand, -8.0)
+            _bump_relation(gs, demand.brand, RELATION_DELTAS["missed"])
             gs.push_private_news(
                 f"Sponsor demand missed — {demand.brand} charge {demand.penalty:,} cr. "
                 "Relations deteriorated."
@@ -645,6 +656,43 @@ def demand_views(gs: GameState, team_id: str | None = None) -> list[dict]:
     tid = team_id or gs.acting_team_id
     demands = gs.sponsor_demands_by.get(tid, [])
     return [demand_view(gs, demand, tid) for demand in reversed(demands[-8:])]
+
+
+# The known facts a commitment row exposes — a strict subset of demand_view.
+# Never anything about demand-generation odds (DEMAND_CHANCE stays hidden).
+_COMMITMENT_KEYS = (
+    "id", "brand", "slot", "label", "requirement", "detail",
+    "deadline_week", "opponent_name", "reward", "penalty",
+    "status", "resolved_season", "resolved_week",
+)
+
+
+def commitment_views(gs: GameState, team_id: str | None = None) -> list[dict]:
+    """Finances commitments timeline: the demands the org actually took on
+    (accepted) plus their outcomes (met/missed/expired). Declined never
+    became a commitment and pending is still actionable in the demands
+    block, so both stay out. Rows reuse demand_view (single-source labels)
+    and read their relation change from RELATION_DELTAS — the same dict the
+    resolvers apply — so the timeline cannot drift. Pure read."""
+    tid = team_id or gs.acting_team_id
+    open_rows: list[dict] = []
+    resolved_rows: list[tuple[int, dict]] = []
+    for idx, demand in enumerate(gs.sponsor_demands_by.get(tid, [])):
+        if demand.status not in ("accepted", "met", "missed", "expired"):
+            continue
+        view = demand_view(gs, demand, tid)
+        row = {key: view[key] for key in _COMMITMENT_KEYS}
+        # None while the commitment is still open (no relation change yet).
+        row["relation_delta"] = RELATION_DELTAS.get(demand.status)
+        if demand.status == "accepted":
+            open_rows.append(row)
+        else:
+            resolved_rows.append((idx, row))
+    open_rows.sort(key=lambda r: r["deadline_week"])
+    resolved_rows.sort(key=lambda t: (
+        -(t[1]["resolved_season"] or 0), -(t[1]["resolved_week"] or 0), -t[0]
+    ))
+    return open_rows + [row for _, row in resolved_rows]
 
 
 def _describe(deal: SponsorDeal) -> str:
