@@ -2,7 +2,7 @@
 
 **Project:** esports-sim — Valorant-inspired tycoon + RL substrate + world-model research target
 **Format:** Now / Next / Later. Avoids false precision for a solo long-horizon project.
-**Last updated:** 2026-07-16
+**Last updated:** 2026-07-23
 
 ---
 
@@ -18,11 +18,14 @@ Three outcomes the whole project is aiming at. Everything on the roadmap should 
 
 ## Now (active, 0-2 weeks)
 
-**→ Headless LLM-playtest harness (north-star bet #2).** The state-view +
-action API already drives the CLI, web UI, and `--auto` runs; the missing
-piece is a harness that hands an LLM the state + legal actions each week
-and collects a season-long narrative critique. This is the next
-committed item — everything below it in "Next" shipped.
+**→ Evidence-driven polish from LLM playtests (north-star bet #2).** The
+harness shipped (`manager/llm_playtest.py` + `scripts/run_llm_playtest.py`:
+weekly observation → one JSON action → per-season report + narrative
+critique, OpenRouter/local provider auto-resolution, streamed traces,
+bounded recovery). The first real-model season immediately produced
+actionable findings (silent no-op setters, an uncompletable negotiation
+chain, blocker reasons that don't name the unblocking action) — the
+committed loop is now: run seasons, mine the critiques, fix, re-run.
 
 Also open, smaller: Scenario-API sampling of the trained `esports-sim-diorama`
 LoRA (works from the Scenario web UI; the legacy inference endpoints 500 —
@@ -142,10 +145,14 @@ grounded badges. Every tier-one club now has a concrete coach whose tactical
 identity and system fit shape training, preparation, timeouts, AI adaptation,
 and offseason coaching changes; the market and profiles explain those effects
 without duplicating formulas in the browser.
-Still open:
 
-- AI orgs setting game plans / carrying benches (documented parity choice)
-- Memories/relationship arcs beyond loyalty (grudges, mentor bonds)
+Both former "still open" items shipped: AI organization planning parity
+(bounded game plans + freshness rotations through the human seams,
+2026-07-16) and relationship arcs beyond loyalty (`manager/arcs.py`
+grudge/friction/mentor-bond arcs, 2026-07-16). The sponsor lifecycle
+commitments timeline (2026-07-23) closed the deferred polish slate in
+[docs/feature-polish-plan.md](docs/feature-polish-plan.md). New Track A work
+should now come from playtest evidence, not a backlog.
 
 ### Track B — RL research arm
 
@@ -153,12 +160,17 @@ Shipped (2026-07-10): the data substrate — every human decision recorded
 as a typed `action_log` on GameState, weekly per-seat state feature
 snapshots, shared reward shaping (`manager/telemetry.py`), and
 `scripts/export_telemetry.py` emitting (state, actions, reward, next
-state) JSONL episodes from any save. Still open:
+state) JSONL episodes from any save. Since then: the framework-agnostic
+headless env (`manager/decision_env.py` — the "gym wrapper" in all but
+name: observation, legal-action masks, step/reward), generated manager
+profiles + batch rollouts + heuristic baseline (`manager_policy.py`,
+`rollout.py`), imitation-trained manager checkpoints
+(`learned_manager_policy.py`), an online fine-tuning loop with a
+promotion gate (`online_manager_learning.py`), and version-pinned
+learned player policies (`policy/learned.py`). Still open:
 
-- Gym-style `env` wrapper over the headless API (obs/reward now exist —
-  the wrapper should consume `telemetry.state_features` and
-  `reward_components`, never re-derive its own)
-- Baseline single-agent PPO on the tycoon role (proves the wrapper)
+- Baseline single-agent PPO on the tycoon role (the env contract is
+  ready; PPO would be the first gradient-through-simulation proof)
 - Per-player RL policies — multi-agent; distinct "thinking" per player archetype
 - Population-based self-play across organisations (not just players)
 - Distilling policy archetypes ("aggressive entry", "passive anchor", "tilt-prone clutch hero") into named personalities
@@ -169,10 +181,13 @@ Shipped (2026-07-10): the match-level tokenizer —
 `scripts/dump_season_tokens.py` turns deterministic match corpora into
 side-attributed token streams (75-token pinned vocab v1: round flow,
 buy tiers, kills by weapon class/headshot/trade, utility, spike,
-gimmicks). Still open:
+gimmicks). Shipped (2026-07-23): the season-level tokenizer —
+`scripts/dump_campaign_tokens.py` emits one anonymous token stream per
+(tier-1 team, season): weekly results, chronicle beats, phase
+transitions, and a win-rate strength bucket (38-token pinned vocab v1,
+`CHRON_OTHER` catch-all for open-ended chronicle kinds). Still open:
 
-- Season-level event tokenizer (campaign events as token streams)
-- Transformer pretraining on agent-played seasons
+- Transformer pretraining on agent-played seasons (both corpora exist)
 - Conditional generation (dream a season given a roster)
 - Counterfactual play ("what if we'd hired X instead of Y")
 - Decision: symbolic-state WM vs. pixel-space WM (the fork we deferred in design)
@@ -208,6 +223,21 @@ Explicit non-goals. Calling these out so we don't drift.
 ---
 
 ## Changelog
+
+- **2026-07-23 (four-phase pass: verify, harness, evidence, tokenizer)** —
+  live-browser verification of every PR #315 surface (fixed two
+  parallel-build seams it caught: the dev-digest academy rows read
+  `ca`/`series` keys the server never sent, and the lineup rail's fixed
+  4-column widths clipped the new Edge column) plus new wire-shape tests
+  pinning the #315 serializer keys; the sponsor commitments timeline on
+  Finances (single-source `RELATION_DELTAS` shared by resolver and view);
+  LLM-playtest harness hardening (provider auto-resolution with dead-local
+  fallback, transient-retry client, streamed traces, per-season critiques,
+  bounded recovery grace) and the first real-model acceptance runs, whose
+  evidence drove decision-legibility fixes (no-op setters now say "no
+  change", re-opening a live negotiation points at negotiate_offer,
+  short-roster advance reasons name the sign action); and the Track C
+  season-level campaign tokenizer with a pinned 38-token vocab.
 
 - **2026-07-16 (core-loop attribution + polish/depth batch)** — closed the
   GDD 3.14 decide-simulate-see-the-consequence loop and shipped the
