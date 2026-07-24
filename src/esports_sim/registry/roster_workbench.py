@@ -8,6 +8,7 @@ and web UI both call this module so they cannot disagree about a pack.
 
 from __future__ import annotations
 
+import re
 import shutil
 import tempfile
 import threading
@@ -30,7 +31,10 @@ from esports_sim.registry.roster_pack_builder import build, slugify
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 from esports_sim.schemas.common import Playstyle, Region, Role
 
-SCHEMA_VERSION = 1
+# v2: DraftPlayer grew optional `tags` (canonical personality tags the
+# pack builder already consumed from src sheets — vct-2021 uses them).
+# v1 documents remain valid; they simply carry no tags.
+SCHEMA_VERSION = 2
 _INSTALL_LOCK = threading.Lock()
 _ATTR_IDS = {
     "aim_precision", "aim_reactivity", "movement", "game_sense",
@@ -75,6 +79,12 @@ class DraftPlayer(BaseModel):
     development_peak_years: int | None = Field(default=None, ge=1, le=15)
     development_decline_age: int | None = Field(default=None, ge=20, le=45)
     development_realization: float | None = Field(default=None, ge=0.5, le=1.0)
+    # Personality tags: optional authored identity ("rookie", "veteran",
+    # ...). The pack builder has always consumed these from src sheets;
+    # untagged players get deterministic tags rolled at build time. The
+    # vocabulary is deliberately OPEN — personality.py no-ops tags it
+    # doesn't know — so only the format is validated here.
+    tags: list[str] = Field(default_factory=list, max_length=6)
 
     @field_validator("handle", "real_name", "country")
     @classmethod
@@ -86,6 +96,18 @@ class DraftPlayer(BaseModel):
     def agent_ids_are_unique(cls, value: list[str]) -> list[str]:
         if len(set(value)) != len(value):
             raise ValueError("agent ids must be unique")
+        return value
+
+    @field_validator("tags")
+    @classmethod
+    def tags_are_slugs_and_unique(cls, value: list[str]) -> list[str]:
+        for tag in value:
+            if not re.fullmatch(r"[a-z0-9_]{2,32}", tag):
+                raise ValueError(
+                    f"tag '{tag}' must be a lowercase slug (a-z, 0-9, _)"
+                )
+        if len(set(value)) != len(value):
+            raise ValueError("personality tags must be unique")
         return value
 
     @field_validator("attr_overrides")
@@ -478,11 +500,11 @@ def library_revision(data_dir: Path | None = None) -> tuple[tuple[str, int], ...
 def example_document() -> dict[str, Any]:
     """A small valid document agents can copy and mutate."""
     players = [
-        ("caller", "controller", "igl", True, ["omen", "viper"]),
-        ("entry", "duelist", "entry", False, ["jett", "raze"]),
-        ("support", "initiator", "support", False, ["sova", "breach"]),
-        ("anchor", "sentinel", "anchor", False, ["killjoy", "cypher"]),
-        ("flex", "flex", "lurker", False, ["viper", "omen"]),
+        ("caller", "controller", "igl", True, ["omen", "viper"], ["veteran"]),
+        ("entry", "duelist", "entry", False, ["jett", "raze"], ["rookie"]),
+        ("support", "initiator", "support", False, ["sova", "breach"], []),
+        ("anchor", "sentinel", "anchor", False, ["killjoy", "cypher"], []),
+        ("flex", "flex", "lurker", False, ["viper", "omen"], []),
     ]
     return {
         "schema_version": SCHEMA_VERSION,
@@ -521,8 +543,9 @@ def example_document() -> dict[str, Any]:
                     "development_peak_years": None,
                     "development_decline_age": None,
                     "development_realization": None,
+                    "tags": tags,
                 }
-                for handle, role, style, igl, agents in players
+                for handle, role, style, igl, agents, tags in players
             ],
         }],
         "free_agents": [],
