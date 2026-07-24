@@ -1352,7 +1352,7 @@ async function clubOps(v, sub) {
           
           const item = el("div", "", `
             <div style="font-weight:600; font-size:14px; margin-bottom:4px;">${plink(p.id, p.handle)}</div>
-            <div><span class="pill ${toneClass}" style="font-size:10px; padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
+            <div><span class="pill ${toneClass}" style="padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
           `);
           listContainer.appendChild(item);
         }
@@ -1386,7 +1386,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill win" style="font-size:10px; margin-left:auto;">Friendship Bond</span>` +
+          `<span class="pill win" style="margin-left:auto;">Friendship Bond</span>` +
           `</div>`;
       }
       duosCard.appendChild(list);
@@ -1405,7 +1405,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill loss" style="font-size:10px; margin-left:auto;">Grave Friction</span>` +
+          `<span class="pill loss" style="margin-left:auto;">Grave Friction</span>` +
           `</div>`;
       }
       feudsCard.appendChild(list);
@@ -2481,6 +2481,13 @@ async function dashboard(v) {
     const card = el("div", "card");
     card.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
     if (rows && rows.length) {
+      // Zero-state: before the first fixture every row is 0-0-0, which reads
+      // as a broken/empty table. Show a friendly pre-season note instead.
+      const anyPlayed = rows.some((r) => (r.wins || 0) + (r.losses || 0) > 0);
+      if (!anyPlayed) {
+        card.appendChild(el("p", "muted es-preseason",
+          `Season not started — the ${cap(regionOf[myId] || me.region || "")} table takes shape after week 1.`));
+      } else {
       const t = el("table");
       t.dataset.nosort = "1";
       t.innerHTML =
@@ -2506,6 +2513,7 @@ async function dashboard(v) {
       }
       t.appendChild(tb);
       card.appendChild(t);
+      }
     }
     // Last result folded in (the old Recent results card is gone — Season
     // owns the full list).

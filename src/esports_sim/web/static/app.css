@@ -848,7 +848,7 @@ svg.iso .plabel { font-size: 2.4px; }
 .u.dim { opacity: .55; }
 .u-chip.u-comms { background: var(--es-color-info, var(--es-color-text-link)); }
 
-.pill.obj { font-size: 10px; opacity: .9; }
+.pill.obj { font-size: 11px; opacity: .9; }
 .pill.obj.good { color: var(--es-color-success, var(--es-color-text-success)); }
 .pill.obj.bad { color: var(--es-color-danger, var(--es-color-brand)); }
 .offer-row { flex-wrap: wrap; gap: var(--es-space-3, 6px); }
@@ -979,6 +979,11 @@ svg.iso .plabel { font-size: 2.4px; }
 }
 .inbox-goto { margin-top: var(--es-space-1, 2px); }
 .inbox-empty { padding: var(--es-space-6, 18px) var(--es-space-2, 4px); }
+/* Actionable empty state: a short confirmation plus next-step links. */
+.inbox-empty-guide { display: flex; flex-direction: column; gap: var(--es-space-2, 6px); }
+.inbox-empty-guide .inbox-empty-title { font-weight: var(--es-weight-semibold, 600); color: var(--es-color-text-primary); margin: 0; }
+.inbox-empty-guide p.muted { margin: 0; }
+.inbox-empty-links { display: flex; flex-wrap: wrap; gap: var(--es-space-2, 6px); margin-top: var(--es-space-2, 6px); }
 
 /* Category chips — distinct but muted; each carries its own accent via --c.
    Tint the background lightly and use the accent for the label text. */
