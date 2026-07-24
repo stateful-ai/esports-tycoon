@@ -5071,9 +5071,10 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
     <div class="card">
       <h2>Find a player</h2>
       <div class="row">
-        <input 
-          class="field mono player-search-input" 
-          placeholder="search by handle or real name…" 
+        <input
+          class="field mono player-search-input"
+          placeholder="search by handle or real name…"
+          aria-label="Search players by handle or real name"
           value=${query}
           onInput=${(e) => setQuery(e.target.value)}
           onKeyDown=${handleKeyDown}
