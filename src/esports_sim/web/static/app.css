@@ -440,7 +440,16 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
 .help-glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--es-space-3, 6px) var(--es-space-7, 20px); }
 .help-glossary > div { display: grid; gap: var(--es-space-1, 3px); padding: var(--es-space-4, 10px) 0; border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39); }
 .help-glossary span { color: var(--es-color-text-secondary, #aab2c3); }
-.help-footer { margin: var(--es-space-6, 16px) 0 0; }
+.help-footer { margin: var(--es-space-6, 16px) 0 0; display: flex; align-items: center; justify-content: space-between; gap: var(--es-space-6, 16px); flex-wrap: wrap; }
+.help-footer-tip { margin: 0; }
+.help-footer-tip kbd {
+  font-family: var(--es-font-mono, monospace); font-size: var(--es-text-xs, 11px);
+  padding: 0 var(--es-space-2, 5px); border: var(--es-border-normal, 1px) solid var(--es-color-border-primary);
+  border-bottom-width: var(--es-border-thick, 2px); border-radius: var(--es-radius-sm, 4px);
+  background: var(--es-color-bg-sunken); color: var(--es-color-text-primary);
+}
+.help-footer-skip { display: inline-flex; align-items: center; gap: var(--es-space-2, 6px); cursor: pointer; white-space: nowrap; }
+.help-footer-skip input { accent-color: var(--es-color-accent); cursor: pointer; }
 .screen-guide-btn { margin-left: var(--es-space-3, 6px); }
 
 @media (max-width: 720px) {

@@ -262,6 +262,10 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
   const overlay = document.getElementById("help");
   if (!overlay) return;
   overlay.dataset.automatic = automatic ? "true" : "false";
+  // The "don't open automatically again" box only makes sense for the
+  // first-week auto-open; a manual open is always intentional.
+  const skipWrap = document.getElementById("help-skip-wrap");
+  if (skipWrap) skipWrap.hidden = !automatic;
   renderHelp(section, selected);
   overlay.classList.remove("hidden");
   overlay.setAttribute("aria-hidden", "false");
@@ -274,8 +278,11 @@ function closeHelp() {
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
+    // Auto-open marks seen on ANY close so it never blocks nav twice; the
+    // checkbox is redundant but harmless (also sets the same key).
     try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {}
   }
+  overlay.dataset.automatic = "false";
 }
 
 function maybeShowFirstWeekHelp(state) {
@@ -290,6 +297,12 @@ function maybeShowFirstWeekHelp(state) {
 function initHelpSystem() {
   document.getElementById("help-open")?.addEventListener("click", () => openHelp("first-week"));
   document.getElementById("help-close")?.addEventListener("click", closeHelp);
+  // Persist the "don't open automatically again" choice the moment it changes,
+  // so it holds even if the user dismisses the overlay some other way.
+  document.getElementById("help-skip")?.addEventListener("change", (event) => {
+    if (event.target.checked) { try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {} }
+    else { try { localStorage.removeItem(helpSeenKey()); } catch (_e) {} }
+  });
   document.getElementById("help")?.addEventListener("click", (event) => {
     const section = event.target.closest("[data-help-section]");
     if (section) return renderHelp(section.dataset.helpSection, App.tab);
