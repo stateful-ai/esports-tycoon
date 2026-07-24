@@ -222,7 +222,8 @@ function helpSeenKey() {
 }
 
 function helpFirstWeekMarkup() {
-  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span></div>` +
+  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span>` +
+    `<button class="btn btn-sm btn-primary help-tour-btn" data-tour-start>▶ Take the 1-minute tour</button></div>` +
     `<ol class="help-steps">${FIRST_WEEK_STEPS.map(([tab, title, body], i) =>
       `<li><span class="help-step-num">${i + 1}</span><div><b>${esc(title)}</b><p>${esc(body)}</p></div>` +
       `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`
@@ -304,6 +305,11 @@ function initHelpSystem() {
     else { try { localStorage.removeItem(helpSeenKey()); } catch (_e) {} }
   });
   document.getElementById("help")?.addEventListener("click", (event) => {
+    if (event.target.closest("[data-tour-start]")) {
+      closeHelp();
+      if (window.startTour) window.startTour();
+      return;
+    }
     const section = event.target.closest("[data-help-section]");
     if (section) return renderHelp(section.dataset.helpSection, App.tab);
     const destination = event.target.closest("[data-help-tab]");
