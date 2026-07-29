@@ -60,6 +60,7 @@ from esports_sim.manager.decision_env import (
 from esports_sim.manager.state import GameState
 from esports_sim.registry import GameData, load_all
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
+from esports_sim.schemas.common import Role
 
 SAVE_DIR = Path("saves")
 # Exactly five characters, because the browser lobby's join field is a strict
@@ -71,6 +72,10 @@ CODE_RE = re.compile(rf"^[A-Z0-9]{{{CODE_LENGTH}}}$")
 # Unambiguous alphabet (no O/0, I/1), matching the web lobby's join codes.
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 POLICY_VERSION = "play-mcp-v1"
+# Roles a fill_gap sweep can name. scouting._build_shortlist compares these
+# exactly against Player.role, so the vocabulary has to be published and
+# enforced rather than passed through.
+SCOUT_ROLES = frozenset(str(role) for role in Role)
 
 # Observation sections an agent can ask for by name. "legal_actions" is served
 # by get_legal_actions (enabled-only by default) because the full contract
@@ -115,6 +120,9 @@ class _Session:
     gs: GameState
     env: HeadlessManagerEnv
     path: Path
+    # (mtime_ns, size) of the save as this process last left it. A world is
+    # now browser-joinable, so another process can write it between our calls.
+    stamp: tuple[int, int] | None = None
 
 
 _SESSIONS: dict[str, _Session] = {}
@@ -163,12 +171,30 @@ def _new_code(seed: int) -> str:
     raise PlayError("could not allocate a world code — pass one explicitly")
 
 
+def _stamp(path: Path) -> tuple[int, int] | None:
+    try:
+        stat = path.stat()
+    except OSError:
+        return None
+    return (stat.st_mtime_ns, stat.st_size)
+
+
 def _session(code: str) -> _Session:
-    """Return a live session, lazily loading its save from disk."""
+    """Return a live session, reloading if another process moved the world.
+
+    Worlds are browser-joinable, so the web server can be holding the same
+    save. Neither process can lock the other, but serving a cached GameState
+    that disk has since moved past is the case that silently destroys work:
+    the next write here would stamp a stale world over the browser's. Cheap
+    guard — re-read when the file is not as this process left it, so the MCP
+    always acts on the newest world rather than clobbering it.
+    """
     code = _normalize_code(code)
     session = _SESSIONS.get(code)
     if session is not None:
-        return session
+        if _stamp(session.path) == session.stamp:
+            return session
+        del _SESSIONS[code]
     path = save_path_for(code)
     if not path.exists():
         raise PlayError(
@@ -176,7 +202,10 @@ def _session(code: str) -> _Session:
             "or new_game to start one"
         )
     gs = GameState.load(path)
-    session = _bind(code, gs, path, gs.user_team_id)
+    previous = session.env.team_id if session is not None else gs.user_team_id
+    team_id = previous if previous in gs.teams else gs.user_team_id
+    session = _bind(code, gs, path, team_id)
+    session.stamp = _stamp(path)
     _SESSIONS[code] = session
     return session
 
@@ -221,6 +250,9 @@ def _write(session: _Session) -> None:
         # human seat whenever no browser session is attached to it — so
         # joining with the same team id is a hand-off, not a conflict.
         meta.write_text(json.dumps({"mode": "shared"}), encoding="utf-8")
+    # Remember the world exactly as we left it, so the next call can tell our
+    # own write apart from another process's.
+    session.stamp = _stamp(session.path)
 
 
 # ---------------------------------------------------------------------------
@@ -1094,10 +1126,13 @@ def get_tactics(code: str) -> dict[str, Any]:
     at the neutral 50, so ``impact_lo`` (value 0) and ``impact_hi`` (value 100)
     bracket everything in between; at 50 the impact is exactly zero.
 
-    Fit is measured over the five who will actually DRESS for the next
-    fixture, not the whole roster: past a squad of five the engine only ever
-    sees ``campaign.dressed_for``'s five, so a bench-inclusive average would
-    quietly describe a team that never takes the server.
+    Fit is measured over the five who will actually DRESS, not the whole
+    roster: past a squad of five the engine only ever sees
+    ``campaign.dressed_for``'s five, so a bench-inclusive average would
+    quietly describe a team that never takes the server. A series resolves
+    that five per MAP, so when per-map lineups make the maps disagree this
+    also returns a ``per_map`` preview rather than passing the first map's
+    numbers off as the series'.
     """
     from esports_sim.manager.campaign import dressed_for
     from esports_sim.sim import constants as sim_constants
@@ -1108,11 +1143,14 @@ def get_tactics(code: str) -> dict[str, Any]:
     with _acting(session) as gs:
         team = gs.teams[session.env.team_id]
         fixture = gs.team_fixture(session.env.team_id)
+        per_map: dict[str, list[str]] = {}
         if fixture is not None and not fixture.played and fixture.maps:
-            dressed = dressed_for(
-                gs, session.env.team_id, fixture, fixture.maps[0]
-            )
-            dressed_from = f"the five dressing for {fixture.id}"
+            per_map = {
+                map_id: dressed_for(gs, session.env.team_id, fixture, map_id)
+                for map_id in fixture.maps
+            }
+            dressed = per_map[fixture.maps[0]]
+            dressed_from = f"the five dressing on {fixture.maps[0]} ({fixture.id})"
         else:
             # No fixture to resolve against: the default lineup is the best
             # available statement of intent, topped up in roster order.
@@ -1122,7 +1160,6 @@ def get_tactics(code: str) -> dict[str, Any]:
             picked += [pid for pid in team.player_ids if pid not in picked]
             dressed = picked[:market.ROSTER_SIZE]
             dressed_from = "your default lineup (no fixture to resolve against)"
-        roster = [gs.players[pid] for pid in dressed if pid in gs.players]
         definitions = _gamedata().attributes.definitions
         chem_edge = tactics_fit.chem_edge(team.chemistry)
 
@@ -1132,44 +1169,62 @@ def get_tactics(code: str) -> dict[str, Any]:
                 for a in attrs
             ]
 
-        def scored(pole: str) -> list[dict[str, Any]]:
-            fits = tactics_fit.dial_pole_player_fits(roster, dial, pole)
-            return sorted(
-                (
-                    {"handle": p.handle, "playstyle": str(p.playstyle),
-                     "score": round(fit)}
-                    for p, fit in zip(roster, fits)
-                ),
-                key=lambda s: -s["score"],
-            )
+        def dials_for(five: list[str]) -> list[dict[str, Any]]:
+            """Every dial's fit and both pole impacts for one dressed five."""
+            roster = [gs.players[pid] for pid in five if pid in gs.players]
 
-        dials = []
-        for dial, poles in tactics_fit.DIAL_POLE_FIT_ATTRS.items():
-            fits_lo = tactics_fit.dial_pole_player_fits(roster, dial, "low")
-            fits_hi = tactics_fit.dial_pole_player_fits(roster, dial, "high")
-            gated = dial in tactics_fit.CHEM_GATED
-            dials.append({
-                "dial": dial,
-                "value": getattr(team.tactics, dial),
-                "low_means": named(poles["low"]),
-                "high_means": named(poles["high"]),
-                "fit_low": round(
-                    sum(fits_lo) / len(fits_lo) if fits_lo else 50.0, 1
-                ),
-                "fit_high": round(
-                    sum(fits_hi) / len(fits_hi) if fits_hi else 50.0, 1
-                ),
-                "impact_at_0": round(
-                    tactics_fit.dial_pole_edge(roster, dial, "low"), 4
-                ),
-                "impact_at_100": round(
-                    tactics_fit.dial_pole_edge(roster, dial, "high")
-                    + (chem_edge if gated else 0.0), 4
-                ),
-                "chemistry_gated": gated,
-                "best_at_low": scored("low")[:3],
-                "best_at_high": scored("high")[:3],
-            })
+            def scored(dial: str, pole: str) -> list[dict[str, Any]]:
+                fits = tactics_fit.dial_pole_player_fits(roster, dial, pole)
+                return sorted(
+                    (
+                        {"handle": p.handle, "playstyle": str(p.playstyle),
+                         "score": round(fit)}
+                        for p, fit in zip(roster, fits)
+                    ),
+                    key=lambda s: -s["score"],
+                )
+
+            out = []
+            for dial, poles in tactics_fit.DIAL_POLE_FIT_ATTRS.items():
+                fits_lo = tactics_fit.dial_pole_player_fits(roster, dial, "low")
+                fits_hi = tactics_fit.dial_pole_player_fits(roster, dial, "high")
+                gated = dial in tactics_fit.CHEM_GATED
+                out.append({
+                    "dial": dial,
+                    "value": getattr(team.tactics, dial),
+                    "low_means": named(poles["low"]),
+                    "high_means": named(poles["high"]),
+                    "fit_low": round(
+                        sum(fits_lo) / len(fits_lo) if fits_lo else 50.0, 1
+                    ),
+                    "fit_high": round(
+                        sum(fits_hi) / len(fits_hi) if fits_hi else 50.0, 1
+                    ),
+                    "impact_at_0": round(
+                        tactics_fit.dial_pole_edge(roster, dial, "low"), 4
+                    ),
+                    "impact_at_100": round(
+                        tactics_fit.dial_pole_edge(roster, dial, "high")
+                        + (chem_edge if gated else 0.0), 4
+                    ),
+                    "chemistry_gated": gated,
+                    "best_at_low": scored(dial, "low")[:3],
+                    "best_at_high": scored(dial, "high")[:3],
+                })
+            return out
+
+        dials = dials_for(dressed)
+        # Only worth the extra payload when the maps actually disagree.
+        map_previews = None
+        if len({tuple(sorted(five)) for five in per_map.values()}) > 1:
+            map_previews = [
+                {
+                    "map_id": map_id,
+                    "player_ids": list(five),
+                    "dials": dials_for(five),
+                }
+                for map_id, five in per_map.items()
+            ]
 
         agents = _gamedata().agents
         lineup = []
@@ -1221,6 +1276,9 @@ def get_tactics(code: str) -> dict[str, Any]:
                 ],
             },
             "dials": dials,
+            # Present only when per-map lineups make the maps of this series
+            # dress different fives; `dials` above is then the first map's.
+            "per_map": map_previews,
             "lineup": lineup,
             "note": (
                 "Every dial is an exact no-op at 50. A dial your roster does "
@@ -1270,7 +1328,14 @@ def get_scouting(code: str) -> dict[str, Any]:
     """The scout desk: who you're watching and what the intel has bought you."""
     session = _session(code)
     with _acting(session) as gs:
-        return scouting.scout_desk_view(gs, session.env.team_id)
+        view = scouting.scout_desk_view(gs, session.env.team_id)
+        # The desk publishes directives and calibers but not the roles a
+        # fill_gap sweep can name, which leaves a contract-driven client
+        # guessing at a value the weekly consumer matches exactly.
+        view["directives"] = dict(view.get("directives", {}))
+        view["directives"]["roles"] = sorted(SCOUT_ROLES)
+        view["directives"]["role_wildcard"] = "any"
+        return view
 
 
 def set_scout_directive(
@@ -1302,12 +1367,20 @@ def set_scout_directive(
                             f"{sorted(scouting.CALIBER_FLOOR)}"
                         )
                     # The weekly consumer matches a non-empty role EXACTLY
-                    # (scouting._build_shortlist), so the wildcard has to be
-                    # the empty string. Storing the literal "any" reads as a
-                    # role no player has and sweeps up nobody, week after
-                    # week, while still reporting success.
-                    wildcard = (role or "").strip().lower() in ("", "any")
-                    stored = f"fill_gap:{'' if wildcard else role.strip()}:{caliber}"
+                    # (scouting._build_shortlist), so anything it cannot match
+                    # sweeps up nobody, week after week, while still reporting
+                    # success. The wildcard has to be the empty string, and a
+                    # named role has to be canonical and lower-case — "any",
+                    # "Duelist" and a typo all fail the same silent way.
+                    wanted = (role or "").strip().lower()
+                    if wanted in ("", "any"):
+                        wanted = ""
+                    elif wanted not in SCOUT_ROLES:
+                        raise PlayError(
+                            f"unknown role {role!r} — choose from "
+                            f"{sorted(SCOUT_ROLES)}, or 'any' for every role"
+                        )
+                    stored = f"fill_gap:{wanted}:{caliber}"
                 elif stored not in scouting.PRO_DIRECTIVES:
                     raise PlayError(
                         f"unknown pro directive {stored!r} — choose from "

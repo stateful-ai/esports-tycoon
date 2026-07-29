@@ -327,6 +327,78 @@ def test_fill_gap_without_a_role_actually_sweeps_the_market(world: str) -> None:
     assert listed and all(row["role"] == "duelist" for row in listed)
 
 
+def test_a_world_moved_by_another_process_is_reloaded(world: str) -> None:
+    """Worlds are browser-joinable now, so this process is not the only writer.
+
+    Serving a cached GameState that disk has moved past is the case that
+    destroys work: the next write here would stamp a stale world over the
+    other process's decisions.
+    """
+    from esports_sim.manager.state import GameState
+
+    path = ops.save_path_for(world)
+    assert ops.get_state(world)["team"]["balance"] > 0
+    # Another process (the browser) opens, changes and saves the same world.
+    theirs = GameState.load(path)
+    theirs.teams["team_nexus"].tactics.aggression = 33.0
+    theirs.save(path)
+
+    reloaded = ops.get_observation(world, ["tactics"])["tactics"]
+    assert reloaded["aggression"] == 33.0, "MCP served a stale world"
+    # And our next decision builds on theirs instead of overwriting it.
+    ops.act(world, "set_tactics", {"pace": 44.0})
+    disk = GameState.load(path)
+    assert disk.teams["team_nexus"].tactics.aggression == 33.0
+    assert disk.teams["team_nexus"].tactics.pace == 44.0
+
+
+def test_fill_gap_rejects_a_role_the_sweep_could_never_match(world: str) -> None:
+    """Same silent-empty failure as "any" — reject or normalise, never pass through."""
+    desk = ops.get_scouting(world)["directives"]
+    assert set(desk["roles"]) == {
+        "duelist", "controller", "initiator", "sentinel", "flex"
+    }
+    assert desk["role_wildcard"] == "any"
+    for bad in ("Duelist ", "DUELIST"):  # canonical roles are lower-case
+        ops.set_scout_directive(world, "pro", "fill_gap", role=bad)
+        assert ops.get_scouting(world)["pro"]["directive"] == "fill_gap:duelist:any"
+    for bad in ("awper", "igl", "striker"):
+        with pytest.raises(ops.PlayError, match="unknown role"):
+            ops.set_scout_directive(world, "pro", "fill_gap", role=bad)
+
+
+def test_series_preview_does_not_pass_map_one_off_as_the_series(
+    world: str
+) -> None:
+    """A BO3 resolves its dressed five per map, so one preview can be a lie."""
+    session = ops._session(world)
+    signable = ops.get_legal_actions(world, ["sign"])["actions"]["sign"]
+    ops.act(world, "sign", {"player_id": signable["player_ids"][0]})
+    five = [
+        pid for pid in session.gs.teams["team_nexus"].player_ids
+        if pid != signable["player_ids"][0]
+    ]
+    ops.act(world, "set_lineup", {"player_ids": five})
+
+    fixture = session.gs.team_fixture("team_nexus")
+    assert fixture is not None
+    single = ops.get_tactics(world)
+    assert single["per_map"] is None, "one map cannot disagree with itself"
+
+    # Give the series a second map and dress a different five on it.
+    fixture.maps = list(fixture.maps) + ["ascent"]
+    fixture.best_of = 3
+    session.gs.map_lineups[f"team_nexus|{fixture.id}|ascent"] = (
+        five[:-1] + [signable["player_ids"][0]]
+    )
+    view = ops.get_tactics(world)
+    assert view["per_map"] is not None, "diverging maps must be surfaced"
+    assert [m["map_id"] for m in view["per_map"]] == list(fixture.maps)
+    assert view["per_map"][0]["dials"] == view["dials"]
+    assert view["per_map"][1]["dials"] != view["dials"]
+    assert fixture.maps[0] in view["measured_over"]["source"]
+
+
 def test_every_decision_survives_a_dropped_client(world: str) -> None:
     """No mutation may live only in memory.
 
