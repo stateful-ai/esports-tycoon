@@ -539,9 +539,11 @@ def list_playable_teams(
     of the seed, so this previews the world at the SAME seed you will pass to
     ``new_game`` — a listing from another seed describes a different league.
     """
-    gd = _gamedata()
     pack = load_roster_pack(pack_id) if pack_id else None
-    gs = new_campaign(gd, seed=int(seed), pack=pack)
+    # Through _preview_world, because a pack replaces the fictional starters:
+    # new_campaign's "team_nexus" default does not exist in a pack world, so
+    # building the preview directly made the documented pack path raise.
+    gs = _preview_world(seed, pack)
     teams = [
         {
             "team_id": t.id,
@@ -836,28 +838,60 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
     with _acting(session) as gs:
         team_id = session.env.team_id
         window = market.market_window_status(gs)
-        incoming = [
-            {
-                "player_id": o.player_id,
-                "handle": gs.players[o.player_id].handle,
-                "from_team": o.to_team,
-                "from_team_name": gs.teams[o.to_team].name
-                if o.to_team in gs.teams else o.to_team,
-                "fee": o.fee,
-                "expires_week": o.expires_week,
-            }
-            for o in gs.transfer_offers if o.from_team == team_id
-        ]
-        buyout_targets = []
-        for pid, player in sorted(gs.players.items()):
-            owner = market.team_of(gs, pid)
-            if owner is None or owner == team_id:
+        incoming = []
+        for offer in gs.transfer_offers:
+            if offer.from_team != team_id:
                 continue
-            fee = market.buyout_fee(gs, pid)
-            if fee is not None and gs.teams[team_id].balance >= fee:
-                buyout_targets.append(
-                    {"player_id": pid, "handle": player.handle, "fee": fee}
-                )
+            view = {
+                "player_id": offer.player_id,
+                "handle": gs.players[offer.player_id].handle,
+                "from_team": offer.to_team,
+                "from_team_name": gs.teams[offer.to_team].name
+                if offer.to_team in gs.teams else offer.to_team,
+                "fee": offer.fee,
+                "expires_week": offer.expires_week,
+                "kind": "package" if offer.offer_player_ids else "cash",
+            }
+            if offer.offer_player_ids:
+                # transfer_respond is irreversible, so the whole consideration
+                # has to be visible before it: a package's value is the
+                # players and the direction of the cash, not the headline fee.
+                view["offered_players"] = [
+                    {
+                        "player_id": pid,
+                        "handle": gs.players[pid].handle,
+                        "perceived_quality": round(
+                            market.perceived_quality(gs, team_id, gs.players[pid]), 3
+                        ),
+                    }
+                    for pid in offer.offer_player_ids if pid in gs.players
+                ]
+                view["cash_to_seller"] = offer.cash_to_seller
+                view["cash_to_buyer"] = offer.cash_to_buyer
+            incoming.append(view)
+
+        team = gs.teams[team_id]
+        # Buyout clauses are a tier-1 privilege (market.buy_out_player), and
+        # the buyer must cover the clause AND a wage reserve. Advertising the
+        # action without both makes every target a guaranteed rejection.
+        can_buy_out = team.tier == 1
+        buyout_targets = []
+        if can_buy_out:
+            for pid, player in sorted(gs.players.items()):
+                owner = market.team_of(gs, pid)
+                if owner is None or owner == team_id:
+                    continue
+                fee = market.buyout_fee(gs, pid)
+                if fee is None:
+                    continue
+                reserve = market.asking_salary(player) * 8
+                if team.balance >= fee + reserve:
+                    buyout_targets.append({
+                        "player_id": pid,
+                        "handle": player.handle,
+                        "fee": fee,
+                        "wage_reserve": reserve,
+                    })
         return {
             "transfer_bid": {
                 "enabled": bool(window["open"]),
@@ -872,6 +906,10 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
             },
             "transfer_buyout": {
                 "enabled": bool(window["open"]) and bool(buyout_targets),
+                "reason": (
+                    "" if can_buy_out
+                    else "only a tier-1 org can trigger a buyout clause"
+                ),
                 # Deep worlds have hundreds of players; the full list is noise.
                 "sample_targets": buyout_targets[:20],
                 "target_count": len(buyout_targets),
@@ -1163,7 +1201,17 @@ def get_player(code: str, player_id: str) -> dict[str, Any]:
             observation["roster"] if owner == team_id
             else observation["free_agents"]
         )
-        view = next((p for p in pool if p.get("id") == player_id), None)
+        # The two pools key their id differently — an own player is "id", a
+        # scouting report is "player_id" — so matching only one silently drops
+        # every free agent into the rival fallback, losing the asking salary
+        # and season stats a signing decision actually turns on.
+        view = next(
+            (
+                p for p in pool
+                if player_id in (p.get("id"), p.get("player_id"))
+            ),
+            None,
+        )
         if view is None:
             # A rival's player: the same scouted read the market screens use.
             player = gs.players[player_id]

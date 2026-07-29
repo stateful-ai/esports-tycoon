@@ -66,6 +66,94 @@ def test_playable_team_preview_follows_the_seed(
     assert ops.get_state("SEEDA")["team"]["tier"] == 1
 
 
+def test_roster_pack_worlds_can_be_previewed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A pack replaces the fictional starters, so "team_nexus" is not there.
+
+    Building the preview on that default raised KeyError, which broke the
+    documented first step for every authored league.
+    """
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    pack_id = ops.list_packs()["packs"][0]["pack_id"]
+    listed = ops.list_playable_teams(seed=3, pack_id=pack_id)
+    assert listed["teams"], "an authored pack listed no playable clubs"
+    assert all(t["tier"] == 1 for t in listed["teams"])
+    assert not any(t["team_id"] == "team_nexus" for t in listed["teams"])
+    # And the previewed club actually starts.
+    ops.new_game(
+        team_id=listed["teams"][0]["team_id"], seed=3,
+        code="PACKW", pack_id=pack_id,
+    )
+    assert ops.get_state("PACKW")["team"]["id"] == listed["teams"][0]["team_id"]
+
+
+def test_free_agent_profiles_keep_their_signing_numbers(world: str) -> None:
+    """The two pools key their id differently — matching one loses the pool."""
+    free_agents = ops.get_observation(world, ["free_agents"])["free_agents"]
+    assert free_agents and "player_id" in free_agents[0]
+    view = ops.get_player(world, free_agents[0]["player_id"])
+    assert view["is_yours"] is False
+    # Exactly the fields a signing decision turns on.
+    assert view["asking_salary"] > 0
+    assert "stats" in view and "perceived_quality" in view
+
+
+def test_buyouts_are_not_advertised_to_clubs_that_cannot_make_them(
+    world: str
+) -> None:
+    """Only a tier-1 org may trigger a clause, and it must cover the wages."""
+    session = ops._session(world)
+    tier1 = ops.get_legal_actions(world)["extra_actions"]["transfer_buyout"]
+    assert tier1["reason"] == ""
+    assert all(
+        target["fee"] > 0 and target["wage_reserve"] > 0
+        for target in tier1["sample_targets"]
+    )
+    balance = session.gs.teams["team_nexus"].balance
+    assert all(
+        target["fee"] + target["wage_reserve"] <= balance
+        for target in tier1["sample_targets"]
+    ), "advertised a clause the club cannot actually cover"
+
+    session.gs.teams["team_nexus"].tier = 2
+    tier2 = ops.get_legal_actions(world)["extra_actions"]["transfer_buyout"]
+    assert tier2["enabled"] is False
+    assert "tier-1" in tier2["reason"]
+    assert tier2["sample_targets"] == []
+
+
+def test_package_offers_show_what_is_being_offered(world: str) -> None:
+    """transfer_respond is irreversible, so the consideration must be visible."""
+    from esports_sim.manager.state import TransferOffer
+
+    session = ops._session(world)
+    buyer = next(
+        tid for tid in sorted(session.gs.teams)
+        if tid != "team_nexus" and len(session.gs.teams[tid].player_ids) >= 2
+    )
+    wanted = sorted(session.gs.teams["team_nexus"].player_ids)[0]
+    offered = sorted(session.gs.teams[buyer].player_ids)[:2]
+    session.gs.transfer_offers.append(
+        TransferOffer(
+            player_id=wanted, from_team="team_nexus", to_team=buyer,
+            fee=50_000, expires_week=session.gs.week + 2,
+            offer_player_ids=offered, cash_to_seller=50_000,
+            cash_to_buyer=10_000,
+        )
+    )
+    view = ops.get_legal_actions(world)["extra_actions"]["transfer_respond"]
+    assert view["enabled"] is True
+    deal = view["offers"][0]
+    assert deal["kind"] == "package"
+    assert [p["player_id"] for p in deal["offered_players"]] == offered
+    assert all(p["perceived_quality"] > 0 for p in deal["offered_players"])
+    assert deal["cash_to_seller"] == 50_000 and deal["cash_to_buyer"] == 10_000
+    # The same view backs the market screen.
+    assert ops.get_market(world)["incoming_offers"][0]["kind"] == "package"
+
+
 def test_legal_actions_are_the_only_contract_needed(world: str) -> None:
     legal = ops.get_legal_actions(world)["actions"]
     assert legal["set_training"]["enabled"] is True
