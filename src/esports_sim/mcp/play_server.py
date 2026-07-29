@@ -88,6 +88,17 @@ def list_playable_teams(
 
 
 @mcp.tool()
+def list_career_offers(seed: int = 1, pack_id: str | None = None) -> dict[str, Any]:
+    """The clubs offering you a legacy career on this seed, and their briefs.
+
+    A legacy start is a choice between board offers, not a free pick: the
+    archetype sets the contract's goal and patience. Call this before
+    new_game(mode="legacy") and pass one of these team ids with the same seed.
+    """
+    return ops.list_career_offers(seed, pack_id)
+
+
+@mcp.tool()
 def new_game(
     team_id: str,
     seed: int = 1,

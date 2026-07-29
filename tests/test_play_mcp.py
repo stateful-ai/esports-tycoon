@@ -623,6 +623,86 @@ def test_browser_can_actually_open_an_mcp_world(
     assert "team_nexus" in game.gs.human_team_ids
 
 
+def test_legacy_careers_start_from_the_board_slate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The offer IS the brief: archetype sets the contract goal and patience.
+
+    Without it career.create_seat fabricates a sleeping_giant contract, so an
+    offered dynasty or rebuilder club silently gets the wrong goal — and any
+    club at all can be picked, which the browser refuses.
+    """
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    slate = ops.list_career_offers(seed=21)["offers"]
+    assert slate and {o["archetype"] for o in slate} > {"sleeping_giant"}
+    assert all(o["team_name"] for o in slate)
+
+    offered = next(o for o in slate if o["archetype"] != "sleeping_giant")
+    ops.new_game(
+        team_id=offered["team_id"], seed=21, code="LEGCY", mode="legacy"
+    )
+    seat = ops.get_career("LEGCY")["seat"]
+    assert seat["archetype"] == offered["archetype"]
+    assert seat["contract"]["goal"] == offered["goal"]
+    assert seat["contract"]["patience"] == offered["patience"]
+
+    unoffered = next(
+        tid for tid in sorted(ops._session("LEGCY").gs.teams)
+        if tid not in {o["team_id"] for o in slate}
+    )
+    with pytest.raises(ops.PlayError, match="not offering you a job"):
+        ops.new_game(
+            team_id=unoffered, seed=21, code="NOJOB", mode="legacy"
+        )
+    # Sandbox is still a free pick: a seat, but no contract to be fired from.
+    ops.new_game(team_id=unoffered, seed=21, code="SANDB")
+    sandbox_seat = ops.get_career("SANDB")["seat"]
+    assert sandbox_seat["team_id"] == unoffered
+    assert sandbox_seat["contract"] is None
+
+
+def test_a_browser_taking_the_seat_stops_mcp_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The disk stamp cannot see a browser that has not saved yet.
+
+    The web layer defers its writes, so a browser can be several decisions
+    ahead with the save file untouched. Once it has claimed the seat, this
+    module must stop writing rather than race it.
+    """
+    from esports_sim.web import server as web
+
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(ops, "SAVE_DIR", saves)
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    monkeypatch.setattr(web, "SAVE_DIR", saves)
+    monkeypatch.setattr(web, "_SESSIONS_PATH", saves / "sessions.json")
+    lobby = web.Lobby()
+    monkeypatch.setattr(lobby, "gd", ops._gamedata(), raising=False)
+
+    code = ops.new_game(team_id="team_nexus", seed=9)["code"]
+    ops.act(code, "set_tactics", {"aggression": 61.0})
+
+    game, error = lobby.join_game("0" * 32, code, "team_nexus")
+    assert error is None and game is not None
+
+    # Reads keep working — the browser is playing, not deleting.
+    assert ops.get_state(code)["team"]["id"] == "team_nexus"
+    assert ops.get_standings(code)["regions"]
+    for mutate in (
+        lambda: ops.act(code, "set_tactics", {"aggression": 20.0}),
+        lambda: ops.advance_week(code),
+        lambda: ops.set_scout_directive(code, "amateur", "track_academy"),
+        lambda: ops.save_game(code),
+    ):
+        with pytest.raises(ops.PlayError, match="taken over"):
+            mutate()
+    # Leaving hands the seat back.
+    lobby.leave("0" * 32)
+    assert ops.act(code, "set_tactics", {"aggression": 20.0})["ok"] is True
+
+
 def test_generated_codes_come_from_stable_hashed_inputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

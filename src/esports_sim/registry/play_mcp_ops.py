@@ -179,34 +179,69 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
-def _session(code: str) -> _Session:
+def _browser_seat_holder(code: str, team_id: str) -> str | None:
+    """The browser session, if any, currently attached to (world, team).
+
+    The lobby persists this at join time (``saves/sessions.json``), which is
+    what makes a one-sided handoff possible at all.
+    """
+    try:
+        raw = json.loads(
+            (SAVE_DIR / "sessions.json").read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError):
+        return None
+    for sid, seat in sorted((raw.get("sessions") or {}).items()):
+        if list(seat) == [code, team_id]:
+            return sid
+    return None
+
+
+def _session(code: str, *, mutating: bool = False) -> _Session:
     """Return a live session, reloading if another process moved the world.
 
     Worlds are browser-joinable, so the web server can be holding the same
-    save. Neither process can lock the other, but serving a cached GameState
-    that disk has since moved past is the case that silently destroys work:
-    the next write here would stamp a stale world over the browser's. Cheap
-    guard — re-read when the file is not as this process left it, so the MCP
-    always acts on the newest world rather than clobbering it.
+    save. Two guards, because neither is sufficient alone:
+
+    * **the disk stamp** catches a world the browser has written, so this
+      process reads the newest state instead of stamping a stale one over it;
+    * **the seat claim** catches what the stamp cannot. The web layer defers
+      its writes — an ordinary browser action only marks its ``_Game`` dirty —
+      so a browser can be several decisions ahead with the file untouched. No
+      amount of disk watching sees that.
+
+    So once a browser has claimed the seat this module plays, this module
+    stops writing and says so. That is a real handoff rather than a race: the
+    reader stays available, and the last writer is whoever the human is
+    actually sitting in front of.
     """
     code = _normalize_code(code)
     session = _SESSIONS.get(code)
-    if session is not None:
-        if _stamp(session.path) == session.stamp:
-            return session
-        del _SESSIONS[code]
-    path = save_path_for(code)
-    if not path.exists():
-        raise PlayError(
-            f"no world {code!r} — call list_games to see saved worlds, "
-            "or new_game to start one"
+    if session is None or _stamp(session.path) != session.stamp:
+        path = save_path_for(code)
+        if not path.exists():
+            raise PlayError(
+                f"no world {code!r} — call list_games to see saved worlds, "
+                "or new_game to start one"
+            )
+        gs = GameState.load(path)
+        previous = (
+            session.env.team_id if session is not None else gs.user_team_id
         )
-    gs = GameState.load(path)
-    previous = session.env.team_id if session is not None else gs.user_team_id
-    team_id = previous if previous in gs.teams else gs.user_team_id
-    session = _bind(code, gs, path, team_id)
-    session.stamp = _stamp(path)
-    _SESSIONS[code] = session
+        team_id = previous if previous in gs.teams else gs.user_team_id
+        session = _bind(code, gs, path, team_id)
+        session.stamp = _stamp(path)
+        _SESSIONS[code] = session
+    if mutating:
+        holder = _browser_seat_holder(code, session.env.team_id)
+        if holder is not None:
+            raise PlayError(
+                f"a browser has taken over {session.env.team_id} in world "
+                f"{code} — this seat is now played there, and writing from "
+                "here would overwrite decisions the web layer has not saved "
+                "yet. Reads still work; leave the world in the browser to "
+                "hand the seat back."
+            )
     return session
 
 
@@ -445,6 +480,56 @@ def list_packs() -> dict[str, Any]:
     }
 
 
+def _preview_world(seed: int, pack) -> GameState:
+    """A throwaway world on this seed, for previews and offer slates.
+
+    Roster packs replace the fictional starters, so ``team_nexus`` is not a
+    safe default there — mirror the lobby and take the pack's first tier-1
+    club.
+    """
+    user = (
+        sorted(t.id for t in pack.teams.values() if t.tier == 1)[0]
+        if pack is not None else "team_nexus"
+    )
+    return new_campaign(
+        _gamedata(), seed=int(seed), pack=pack, mode="sandbox",
+        user_team_id=user,
+    )
+
+
+def _career_offer_slate(seed: int, pack) -> list[Any]:
+    """The founding seat's job offers, derived exactly as the lobby does."""
+    return career.new_game_offers(_preview_world(seed, pack), 0)
+
+
+def list_career_offers(seed: int = 1, pack_id: str | None = None) -> dict[str, Any]:
+    """The clubs that would offer you a legacy career on this seed.
+
+    A legacy start is a choice between board offers, not a free pick of any
+    club: each archetype sets the contract's goal and patience, so the offer
+    IS the difficulty and the brief. Pass one of these team ids, and the same
+    seed, to new_game(mode="legacy").
+    """
+    pack = load_roster_pack(pack_id) if pack_id else None
+    world = _preview_world(seed, pack)
+    return {
+        "seed": int(seed),
+        "pack_id": pack_id,
+        "offers": [
+            {
+                **offer.model_dump(mode="json"),
+                "team_name": world.teams[offer.team_id].name
+                if offer.team_id in world.teams else offer.team_id,
+            }
+            for offer in career.new_game_offers(world, 0)
+        ],
+        "note": (
+            "Sandbox mode ignores this — any tier-1 club is playable there, "
+            "and you are never dismissed."
+        ),
+    }
+
+
 def list_playable_teams(
     seed: int = 1, pack_id: str | None = None, tier: int = 1
 ) -> dict[str, Any]:
@@ -510,6 +595,22 @@ def new_game(
     if path.exists() or code in _SESSIONS:
         raise PlayError(f"world {code!r} already exists — load_game it instead")
     pack = load_roster_pack(pack_id) if pack_id else None
+    offer = None
+    if mode == "legacy":
+        # A legacy career starts from a board OFFER, not a free pick of any
+        # club: the archetype carries the contract's goal and patience. Derive
+        # the founding seat's slate from a preview world on the same seed —
+        # exactly what the browser lobby shows and validates against — so a
+        # career started here gets the same contract it would there, instead
+        # of the fabricated sleeping_giant fallback in career.create_seat.
+        offers = _career_offer_slate(int(seed), pack)
+        offer = next((o for o in offers if o.team_id == team_id), None)
+        if offer is None:
+            raise PlayError(
+                f"{team_id!r} is not offering you a job — a legacy career "
+                "starts from the board's slate. Offered: "
+                + ", ".join(f"{o.team_id} ({o.archetype})" for o in offers)
+            )
     try:
         gs = new_campaign(
             _gamedata(),
@@ -518,6 +619,7 @@ def new_game(
             pack=pack,
             mode=mode,
             manager_name=manager_name,
+            career_offer=offer,
             scenario=scenario,
         )
     except (KeyError, ValueError) as exc:
@@ -604,7 +706,7 @@ def load_game(code: str) -> dict[str, Any]:
 
 def save_game(code: str) -> dict[str, Any]:
     """Force a write of the world to disk."""
-    session = _session(code)
+    session = _session(code, mutating=True)
     _write(session)
     return {"code": session.code, "saved_to": str(session.path)}
 
@@ -787,7 +889,7 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
     # rollover.
     if kind == "advance":
         return advance_week(code)
-    session = _session(code)
+    session = _session(code, mutating=True)
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
@@ -803,7 +905,7 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
 
 def advance_week(code: str) -> dict[str, Any]:
     """Tick the world one week and report what actually happened."""
-    session = _session(code)
+    session = _session(code, mutating=True)
     with _acting(session) as gs:
         team_id = session.env.team_id
         before = {
@@ -877,7 +979,7 @@ def sim_ahead_weeks(code: str, max_weeks: int = 6) -> dict[str, Any]:
     check is the only thing between a fast-forward and a week that silently
     expires the very offer the caller was promised a stop for.
     """
-    session = _session(code)
+    session = _session(code, mutating=True)
     if max_weeks < 1:
         raise PlayError("max_weeks must be positive")
     digests: list[dict[str, Any]] = []
@@ -927,7 +1029,7 @@ def get_inbox(
 
 def mark_inbox_read(code: str, item_id: str = "") -> dict[str, Any]:
     """Mark one item read, or the whole feed when no id is given."""
-    session = _session(code)
+    session = _session(code, mutating=True)
     with _acting(session) as gs:
         n = (
             inbox_mod.mark_read(gs, item_id) if item_id
@@ -1344,7 +1446,7 @@ def set_agent_lock(
     """Lock one starter onto an agent, or clear the lock back to the auto pick."""
     from esports_sim.manager import telemetry
 
-    session = _session(code)
+    session = _session(code, mutating=True)
     with _acting(session) as gs:
         team = gs.teams[session.env.team_id]
         if player_id not in team.player_ids:
@@ -1403,7 +1505,7 @@ def set_scout_directive(
     """
     from esports_sim.manager import telemetry
 
-    session = _session(code)
+    session = _session(code, mutating=True)
     if lane not in ("pro", "amateur"):
         raise PlayError("lane must be 'pro' or 'amateur'")
     with _acting(session) as gs:
@@ -1550,13 +1652,17 @@ def get_career(code: str) -> dict[str, Any]:
     with _acting(session) as gs:
         seat = gs.seat_for_session(session.env.team_id)
         if seat is None:
-            return {
-                "seat": None,
-                "note": "sandbox mode — no manager seat, you are never fired",
-            }
+            return {"seat": None, "note": "no manager seat controls this club"}
         offers = gs.career_offers_by.get(seat.id, [])
         return {
             "seat": seat.model_dump(mode="json"),
+            # A sandbox seat exists and carries the career history; what it
+            # lacks is a contract, which is what makes dismissal possible.
+            "note": (
+                "sandbox seat — no contract, so you are never dismissed"
+                if seat.contract is None else
+                f"legacy seat — the board wants {seat.contract.goal}"
+            ),
             "offers": [o.model_dump(mode="json") for o in offers],
             "chronicle": [
                 e.model_dump(mode="json")
@@ -1634,7 +1740,7 @@ def _market_action(code: str, kind: str, params: dict[str, Any], fn) -> dict[str
     """Apply a web-layer market action and record it like any human decision."""
     from esports_sim.manager import telemetry
 
-    session = _session(code)
+    session = _session(code, mutating=True)
     with _acting(session) as gs:
         result = fn(gs)
         ok, message = result[0], result[1]
