@@ -185,10 +185,90 @@ def test_fog_holds_for_rivals_and_lifts_for_your_own(world: str) -> None:
 
 def test_sim_ahead_stops_when_something_needs_you(world: str) -> None:
     run = ops.sim_ahead_weeks(world, max_weeks=4)
-    assert 1 <= run["weeks_advanced"] <= 4
+    assert 0 <= run["weeks_advanced"] <= 4
     assert run["state"]["week"] == 1 + run["weeks_advanced"]
+    assert run["stopped_because"]
     if run["weeks_advanced"] < 4:
-        assert run["state"]["needs_you"] or not run["state"]["can_advance"]
+        assert run["state"]["deadlines"] or not run["state"]["can_advance"]
+
+
+def test_standing_advisories_do_not_halt_a_fast_forward(world: str) -> None:
+    """A deadline stops the tick; a nudge that is true for weeks must not.
+
+    "A contract expires within six weeks" holds for six consecutive weeks, so
+    halting on it would make sim_ahead a permanent no-op — a worse failure
+    than the burnt week it was meant to prevent.
+    """
+    state = ops.get_state(world)
+    advisory = [call for call in state["needs_you"] if call not in state["deadlines"]]
+    assert advisory and "within 6 weeks" in advisory[0]
+    assert state["deadlines"] == []
+    run = ops.sim_ahead_weeks(world, max_weeks=3)
+    assert run["weeks_advanced"] >= 1, "an advisory froze the fast-forward"
+
+
+def test_a_contract_in_its_last_week_is_a_deadline(world: str) -> None:
+    session = ops._session(world)
+    doomed = sorted(session.gs.teams["team_nexus"].player_ids)[0]
+    session.gs.players[doomed].contract_weeks_left = ops.URGENT_CONTRACT_WEEKS
+    state = ops.get_state(world)
+    expiring = [call for call in state["deadlines"] if "expire this week" in call]
+    assert expiring and session.gs.players[doomed].handle in expiring[0]
+    assert ops.sim_ahead_weeks(world, max_weeks=3)["weeks_advanced"] == 0
+
+
+def test_sim_ahead_will_not_burn_the_week_it_should_stop_for(
+    world: str
+) -> None:
+    """Entry check, not just the post-tick one.
+
+    A pending bid or a contract in its last week sets needs_you without
+    blocking the advance, so checking only can_advance would consume the week
+    the caller was promised a stop for — and expire the thing it stopped for.
+    """
+    session = ops._session(world)
+    seller = next(
+        tid for tid in sorted(session.gs.teams)
+        if tid != "team_nexus" and session.gs.teams[tid].player_ids
+    )
+    from esports_sim.manager.state import TransferOffer
+
+    session.gs.transfer_offers.append(
+        TransferOffer(
+            player_id=sorted(session.gs.teams["team_nexus"].player_ids)[0],
+            from_team="team_nexus", to_team=seller,
+            fee=100_000, expires_week=session.gs.week + 1,
+        )
+    )
+    state = ops.get_state(world)
+    assert state["can_advance"], "the bid must not block the tick by itself"
+    assert any("bid" in call for call in state["needs_you"])
+
+    run = ops.sim_ahead_weeks(world, max_weeks=4)
+    assert run["weeks_advanced"] == 0, "fast-forward burned the pending bid"
+    assert "needs you" in run["stopped_because"]
+    assert ops.get_state(world)["week"] == state["week"]
+
+
+def test_scenario_starts_are_in_the_replay_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """seed + action_log is meant to determine a career; a pick left out breaks that."""
+    from esports_sim.manager import scenarios
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    chosen = sorted(scenarios.SCENARIOS)[0]
+    ops.new_game(
+        team_id="team_nexus", seed=6, code="SCENA", scenario=chosen
+    )
+    log = ops._session("SCENA").gs.action_log
+    assert [row.kind for row in log] == ["scenario_start"]
+    assert log[0].params == {"scenario": chosen}
+    assert log[0].team_id == "team_nexus"
+
+    ops.new_game(team_id="team_nexus", seed=6, code="PLAIN")
+    assert ops._session("PLAIN").gs.action_log == []
 
 
 def test_dashboard_answers_a_blind_decision(world: str) -> None:

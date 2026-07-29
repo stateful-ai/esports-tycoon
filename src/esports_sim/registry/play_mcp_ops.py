@@ -356,40 +356,65 @@ def _pending_events(gs: GameState, team_id: str) -> list[dict[str, Any]]:
     return events
 
 
-def _needs_you(gs: GameState, team_id: str, legal: dict[str, Any]) -> list[str]:
-    """The short list of things actually waiting on this manager."""
+# A contract this close to running out is a deadline, not a nudge: one more
+# tick and the player can walk.
+URGENT_CONTRACT_WEEKS = 1
+
+
+def _needs_you(
+    gs: GameState, team_id: str, legal: dict[str, Any]
+) -> tuple[list[str], list[str]]:
+    """What is waiting on this manager, split by whether it can wait.
+
+    Returns (every call, the subset with a deadline). The distinction matters
+    because a fast-forward has to stop for anything that expires — a bid, a
+    pending event, a contract in its last week — but must NOT stop for a
+    standing advisory. "A contract expires within six weeks" is true for six
+    consecutive weeks, so halting on it would make sim_ahead a permanent
+    no-op, which is a worse failure than the one it prevents.
+    """
     calls: list[str] = []
+    urgent: list[str] = []
+
+    def add(text: str, deadline: bool = True) -> None:
+        calls.append(text)
+        if deadline:
+            urgent.append(text)
+
     if legal["resolve_flavor"]["enabled"]:
-        calls.append("a squad event is waiting on your choice (resolve_flavor)")
+        add("a squad event is waiting on your choice (resolve_flavor)")
     if legal["resolve_media"]["enabled"]:
-        calls.append("a media decision is waiting on you (resolve_media)")
+        add("a media decision is waiting on you (resolve_media)")
     if legal["accept_job"]["enabled"]:
-        calls.append("you have a job offer to answer (accept_job)")
+        add("you have a job offer to answer (accept_job)")
     if legal["sponsor_respond"]["enabled"]:
-        calls.append("sponsor offers are on the table (sponsor_respond)")
+        add("sponsor offers are on the table (sponsor_respond)")
     if legal["sponsor_demand_respond"]["enabled"]:
-        calls.append("a sponsor has made a demand (sponsor_demand_respond)")
+        add("a sponsor has made a demand (sponsor_demand_respond)")
     if legal["negotiate_offer"]["enabled"]:
-        calls.append("contract talks are open (negotiate_offer)")
+        add("contract talks are open (negotiate_offer)")
     if not legal["advance"]["enabled"]:
-        calls.append(f"advance is blocked: {legal['advance']['reason']}")
-    incoming = [
-        o for o in gs.transfer_offers if o.from_team == team_id
-    ]
+        add(f"advance is blocked: {legal['advance']['reason']}")
+    incoming = [o for o in gs.transfer_offers if o.from_team == team_id]
     if incoming:
-        calls.append(
+        add(
             f"{len(incoming)} bid(s) for your players await an answer "
             "(transfer_respond)"
         )
-    expiring = [
-        p for p in (gs.players[pid] for pid in gs.teams[team_id].player_ids)
-        if p.contract_weeks_left <= 6
-    ]
-    if expiring:
-        calls.append(
-            f"{len(expiring)} contract(s) expiring within 6 weeks (renew)"
+    roster = [gs.players[pid] for pid in gs.teams[team_id].player_ids]
+    last_call = [p for p in roster if p.contract_weeks_left <= URGENT_CONTRACT_WEEKS]
+    if last_call:
+        add(
+            f"{len(last_call)} contract(s) expire this week — "
+            f"{', '.join(sorted(p.handle for p in last_call))} (renew)"
         )
-    return calls
+    soon = [
+        p for p in roster
+        if URGENT_CONTRACT_WEEKS < p.contract_weeks_left <= 6
+    ]
+    if soon:
+        add(f"{len(soon)} contract(s) expiring within 6 weeks (renew)", False)
+    return calls, urgent
 
 
 # ---------------------------------------------------------------------------
@@ -502,6 +527,18 @@ def new_game(
             f"unknown team {team_id!r} — call list_playable_teams first"
         )
     session = _bind(code, gs, path, team_id)
+    if scenario:
+        # Picking a scenario is a human decision like any other, and the
+        # action log is the replay record — seed plus action_log is meant to
+        # determine a whole career. The mutation itself is chronicled inside
+        # new_campaign; recording the pick is the caller's job (see
+        # manager/scenarios.py), which the web lobby also does.
+        from esports_sim.manager import telemetry
+
+        telemetry.record_action(
+            gs, "scenario_start", {"scenario": scenario},
+            team_id=team_id, source="agent",
+        )
     warnings = []
     if gs.teams[team_id].tier != 1:
         warnings.append(
@@ -584,6 +621,7 @@ def get_state(code: str) -> dict[str, Any]:
         team_id = session.env.team_id
         team = gs.teams[team_id]
         legal = manager_observation(gs, _gamedata(), team_id)["legal_actions"]
+        calls, urgent = _needs_you(gs, team_id, legal)
         fixture = gs.team_fixture(team_id)
         unread = sum(1 for it in gs.inbox if it.unread)
         seat = gs.seat_for_session(team_id)
@@ -628,7 +666,10 @@ def get_state(code: str) -> dict[str, Any]:
             "pending_events": _pending_events(gs, team_id),
             "can_advance": legal["advance"]["enabled"],
             "advance_blocked_by": legal["advance"]["reason"],
-            "needs_you": _needs_you(gs, team_id, legal),
+            "needs_you": calls,
+            # The subset that expires if you tick past it — what sim_ahead
+            # halts for, and what to answer before advancing by hand.
+            "deadlines": urgent,
             "enabled_actions": sorted(
                 kind for kind, c in legal.items() if c.get("enabled")
             ),
@@ -828,27 +869,36 @@ def _week_digest(
 
 
 def sim_ahead_weeks(code: str, max_weeks: int = 6) -> dict[str, Any]:
-    """Advance until something needs you, or the cap — the fast-forward button."""
+    """Advance until something needs you, or the cap — the fast-forward button.
+
+    The stop condition is checked BEFORE the first tick as well as after each
+    one. Plenty of things make ``needs_you`` non-empty without blocking the
+    advance — an incoming bid, a contract in its last week — so the entry
+    check is the only thing between a fast-forward and a week that silently
+    expires the very offer the caller was promised a stop for.
+    """
     session = _session(code)
     if max_weeks < 1:
         raise PlayError("max_weeks must be positive")
     digests: list[dict[str, Any]] = []
+    reason = f"reached the requested cap of {max_weeks} week(s)"
     for _ in range(int(max_weeks)):
         state = get_state(session.code)
+        if state["deadlines"]:
+            reason = f"something needs you: {state['deadlines'][0]}"
+            break
         if not state["can_advance"]:
+            reason = f"cannot advance: {state['advance_blocked_by']}"
             break
         digests.append(advance_week(session.code))
         if digests[-1].get("done"):
-            break
-        after = get_state(session.code)
-        if after["needs_you"]:
+            reason = "your seat ended"
             break
     return {
         "weeks_advanced": len(digests),
-        "stopped_because": (
-            "something needs you" if get_state(session.code)["needs_you"]
-            else "reached the requested week cap"
-        ),
+        # Reported by the loop that stopped, not re-derived afterwards: a
+        # recomputed reason cannot tell "your seat ended" from "the cap".
+        "stopped_because": reason,
         "weeks": digests,
         "state": get_state(session.code),
     }
