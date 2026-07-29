@@ -154,7 +154,17 @@ def test_package_offers_show_what_is_being_offered(world: str) -> None:
     assert ops.get_market(world)["incoming_offers"][0]["kind"] == "package"
 
 
-def test_every_shipped_market_tool_appears_in_the_contract(world: str) -> None:
+#: Every mutating op that does NOT go through act(). Kept as a literal so a
+#: new one has to be added here consciously — the contract test below then
+#: forces it to be published, which is how three separate "shipped surface
+#: nobody can discover" defects got in.
+DIRECT_MUTATION_OPS = frozenset({
+    "transfer_bid", "transfer_buyout", "transfer_respond", "transfer_package",
+    "set_agent_lock", "set_map_lineup", "set_scout_directive",
+})
+
+
+def test_every_direct_mutation_tool_appears_in_the_contract(world: str) -> None:
     """how_to_play promises the mask names every action; a tool it omits can
     only be reached by guessing.
 
@@ -163,18 +173,80 @@ def test_every_shipped_market_tool_appears_in_the_contract(world: str) -> None:
     only the protocol test needs — the rest of this file must run without it.
     """
     contract = ops.get_legal_actions(world)["extra_actions"]
-    shipped = {
+    # The roster is the source of truth for what exists...
+    live = {
         name for name in dir(ops)
-        if name.startswith("transfer_") and callable(getattr(ops, name))
+        if callable(getattr(ops, name))
+        and (name.startswith("transfer_") or name.startswith("set_"))
+        and not name.startswith("_")
     }
-    assert shipped, "found no transfer ops to check the contract against"
-    assert shipped <= set(contract), f"undeclared tools: {shipped - set(contract)}"
+    assert DIRECT_MUTATION_OPS <= live, (
+        f"the roster names ops that no longer exist: "
+        f"{DIRECT_MUTATION_OPS - live}"
+    )
+    # ...and every one of them has to be discoverable.
+    missing = DIRECT_MUTATION_OPS - set(contract)
+    assert not missing, f"undeclared tools: {sorted(missing)}"
+    # Each entry must carry a real parameter vocabulary, not just a flag.
+    for name in sorted(DIRECT_MUTATION_OPS):
+        entry = contract[name]
+        assert "enabled" in entry, name
+        assert len(entry) > 1, f"{name} publishes no parameters"
+
     package = contract["transfer_package"]
     assert package["enabled"] is True
     assert set(package["offerable_player_ids"]) == set(
         ops._session(world).gs.teams["team_nexus"].player_ids
     )
     assert "cash_to_seller" in package["note"]
+    lock = contract["set_agent_lock"]
+    assert set(lock["player_ids"]) == set(package["offerable_player_ids"])
+    per_map = contract["set_map_lineup"]
+    assert per_map["enabled"] is True and per_map["count"] == 5
+    assert all(
+        slot["fixture_id"] and slot["map_id"] for slot in per_map["slots"]
+    )
+
+
+def test_direct_tools_can_be_asked_for_by_name(world: str) -> None:
+    """Filtering by kind spans both halves of the contract.
+
+    The direct tools live in extras, so validating names against the headless
+    contract alone rejected every one of them as unknown.
+    """
+    picked = ops.get_legal_actions(
+        world, kinds=["set_scout_directive", "advance"]
+    )
+    assert set(picked["actions"]) == {"advance"}
+    assert set(picked["extra_actions"]) == {"set_scout_directive"}
+    directive = picked["extra_actions"]["set_scout_directive"]
+    assert "fill_gap" in directive["pro_directives"]
+    assert "duelist" in directive["roles"]
+    with pytest.raises(ops.PlayError, match="unknown action kind"):
+        ops.get_legal_actions(world, kinds=["set_telepathy"])
+
+
+def test_scenario_ids_are_published_and_enforced(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An accepted parameter with no published vocabulary is a guessing game."""
+    from esports_sim.manager import scenarios
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    listed = ops.list_scenarios()["scenarios"]
+    assert {s["id"] for s in listed} == set(scenarios.SCENARIOS)
+    assert all(s["name"] and s["blurb"] for s in listed)
+
+    with pytest.raises(ops.PlayError, match="unknown scenario"):
+        ops.new_game(
+            team_id="team_nexus", seed=8, code="BADSC", scenario="get_rich"
+        )
+    ops.new_game(
+        team_id="team_nexus", seed=8, code="GOODS",
+        scenario=listed[0]["id"],
+    )
+    assert ops.get_state("GOODS")["season"] == 1
 
 
 def test_a_refused_market_action_still_persists_its_history(world: str) -> None:

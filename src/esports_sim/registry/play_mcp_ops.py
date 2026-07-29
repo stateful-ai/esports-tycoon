@@ -598,6 +598,25 @@ def list_career_offers(seed: int = 1, pack_id: str | None = None) -> dict[str, A
     }
 
 
+def list_scenarios() -> dict[str, Any]:
+    """The sandbox opening presets new_game(scenario=...) accepts.
+
+    Each one reshapes the user's own org before week 1 — a wage bill it cannot
+    afford, a squad of teenagers — and nothing else in the world. Published
+    because the parameter is otherwise an invitation to guess at internal ids.
+    """
+    from esports_sim.manager import scenarios
+
+    return {
+        "scenarios": scenarios.options(),
+        "note": (
+            "Sandbox only: a legacy career starts from the board's offer "
+            "slate instead (list_career_offers). Omit scenario for the "
+            "classic start."
+        ),
+    }
+
+
 def list_playable_teams(
     seed: int = 1, pack_id: str | None = None, tier: int = 1
 ) -> dict[str, Any]:
@@ -660,6 +679,14 @@ def new_game(
     """
     if mode not in ("sandbox", "legacy"):
         raise PlayError("mode must be 'sandbox' or 'legacy'")
+    if scenario:
+        from esports_sim.manager import scenarios
+
+        if scenario not in scenarios.SCENARIOS:
+            raise PlayError(
+                f"unknown scenario {scenario!r} — choose from "
+                f"{sorted(scenarios.SCENARIOS)} (see list_scenarios)"
+            )
     code = _normalize_code(code) if code else _new_code(seed)
     path = save_path_for(code)
     if path.exists() or code in _SESSIONS:
@@ -902,17 +929,21 @@ def get_legal_actions(
             )
             for kind, contract in legal.items()
         }
+    extra = _extra_action_contract(session)
     if kinds:
-        unknown = [k for k in kinds if k not in legal]
+        # Filter across BOTH halves. The direct tools live in extras, so
+        # validating names against the headless contract alone rejected every
+        # one of them as unknown — the client could not even ask.
+        unknown = [k for k in kinds if k not in legal and k not in extra]
         if unknown:
             raise PlayError(
                 f"unknown action kind(s) {unknown} — "
-                f"choose from {sorted(legal)}"
+                f"choose from {sorted(set(legal) | set(extra))}"
             )
-        legal = {k: legal[k] for k in kinds}
+        legal = {k: v for k, v in legal.items() if k in kinds}
+        extra = {k: v for k, v in extra.items() if k in kinds}
     elif enabled_only:
         legal = {k: v for k, v in legal.items() if v.get("enabled")}
-    extra = _extra_action_contract(session)
     if seat is not None:
         # The market tools bypass `act`, so masking only the headless contract
         # would still advertise spending a former employer's money.
@@ -984,6 +1015,14 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
             incoming.append(view)
 
         team = gs.teams[team_id]
+        # Per-map overrides only mean anything for a fixture that has not been
+        # played, so publish the (fixture, map) pairs that can take one.
+        map_lineup_slots = [
+            {"fixture_id": f.id, "map_id": map_id, "week": f.week}
+            for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
+            if not f.played and team_id in (f.team_a, f.team_b)
+            for map_id in f.maps
+        ][:12]
         # Buyout clauses are a tier-1 privilege (market.buy_out_player), and
         # the buyer must cover the clause AND a wage reserve. Advertising the
         # action without both makes every target a guaranteed rejection.
@@ -1047,6 +1086,43 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                 "target_count": len(buyout_targets),
             },
             "market_window": window,
+            # The direct tools. They bypass `act`, so without an entry here a
+            # client following get_legal_actions cannot see that they exist,
+            # let alone whether they are usable right now.
+            "set_agent_lock": {
+                "enabled": bool(team.player_ids),
+                "player_ids": sorted(team.player_ids),
+                "note": (
+                    "Lock one starter to an agent; omit agent_id to restore "
+                    "the auto pick. Every agent is legal — get_tactics().lineup "
+                    "ranks each player's options by mastery and duel edge."
+                ),
+            },
+            "set_map_lineup": {
+                "enabled": bool(map_lineup_slots),
+                "slots": map_lineup_slots,
+                "count": market.ROSTER_SIZE,
+                "player_ids": sorted(team.player_ids),
+                "note": (
+                    "Dress a specific five for one map of one fixture; it "
+                    "overrides the default lineup. Pass no player_ids to "
+                    "clear the override."
+                ),
+            },
+            "set_scout_directive": {
+                "enabled": True,
+                "lanes": ["pro", "amateur"],
+                "pro_directives": list(scouting.PRO_DIRECTIVES),
+                "amateur_directives": list(scouting.AMATEUR_DIRECTIVES),
+                "roles": sorted(SCOUT_ROLES),
+                "role_wildcard": "any",
+                "calibers": sorted(scouting.CALIBER_FLOOR),
+                "note": (
+                    "A standing directive replaces re-picking a scout target "
+                    "every week. Pass an empty directive to clear the lane and "
+                    "fall back to the single act(kind='set_scout') slot."
+                ),
+            },
         }
 
 

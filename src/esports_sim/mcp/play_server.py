@@ -88,6 +88,12 @@ def list_playable_teams(
 
 
 @mcp.tool()
+def list_scenarios() -> dict[str, Any]:
+    """The sandbox opening presets new_game(scenario=...) accepts, with blurbs."""
+    return ops.list_scenarios()
+
+
+@mcp.tool()
 def list_career_offers(seed: int = 1, pack_id: str | None = None) -> dict[str, Any]:
     """The clubs offering you a legacy career on this seed, and their briefs.
 
