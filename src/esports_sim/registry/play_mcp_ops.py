@@ -213,7 +213,14 @@ def _write(session: _Session) -> None:
     session.gs.save(session.path)
     meta = session.path.with_suffix(".meta.json")
     if not meta.exists():
-        meta.write_text(json.dumps({"mode": "solo"}), encoding="utf-8")
+        # "shared", not "solo", is what actually makes the browser-compat
+        # claim true. The lobby only lets a browser back into a SOLO world
+        # through its own per-browser history, which an MCP-created world can
+        # never be in; a shared world is reachable by typing the code. The
+        # seat this module plays is left claimable — the lobby releases a
+        # human seat whenever no browser session is attached to it — so
+        # joining with the same team id is a hand-off, not a conflict.
+        meta.write_text(json.dumps({"mode": "shared"}), encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -1086,7 +1093,13 @@ def get_tactics(code: str) -> dict[str, Any]:
     actually applies. Each dial is piecewise linear in its value with the knot
     at the neutral 50, so ``impact_lo`` (value 0) and ``impact_hi`` (value 100)
     bracket everything in between; at 50 the impact is exactly zero.
+
+    Fit is measured over the five who will actually DRESS for the next
+    fixture, not the whole roster: past a squad of five the engine only ever
+    sees ``campaign.dressed_for``'s five, so a bench-inclusive average would
+    quietly describe a team that never takes the server.
     """
+    from esports_sim.manager.campaign import dressed_for
     from esports_sim.sim import constants as sim_constants
     from esports_sim.sim import lineup as lineup_resolve
     from esports_sim.sim import tactics_fit
@@ -1094,7 +1107,22 @@ def get_tactics(code: str) -> dict[str, Any]:
     session = _session(code)
     with _acting(session) as gs:
         team = gs.teams[session.env.team_id]
-        roster = [gs.players[pid] for pid in team.player_ids if pid in gs.players]
+        fixture = gs.team_fixture(session.env.team_id)
+        if fixture is not None and not fixture.played and fixture.maps:
+            dressed = dressed_for(
+                gs, session.env.team_id, fixture, fixture.maps[0]
+            )
+            dressed_from = f"the five dressing for {fixture.id}"
+        else:
+            # No fixture to resolve against: the default lineup is the best
+            # available statement of intent, topped up in roster order.
+            picked = [
+                pid for pid in team.lineup_ids if pid in team.player_ids
+            ]
+            picked += [pid for pid in team.player_ids if pid not in picked]
+            dressed = picked[:market.ROSTER_SIZE]
+            dressed_from = "your default lineup (no fixture to resolve against)"
+        roster = [gs.players[pid] for pid in dressed if pid in gs.players]
         definitions = _gamedata().attributes.definitions
         chem_edge = tactics_fit.chem_edge(team.chemistry)
 
@@ -1168,6 +1196,7 @@ def get_tactics(code: str) -> dict[str, Any]:
             lineup.append({
                 "player_id": pid,
                 "handle": player.handle,
+                "dressing": pid in dressed,
                 "role": str(player.role),
                 "playstyle": str(player.playstyle),
                 "locked_agent": locked,
@@ -1180,6 +1209,17 @@ def get_tactics(code: str) -> dict[str, Any]:
             "tactics": team.tactics.model_dump(),
             "chemistry": round(team.chemistry, 1),
             "impact_cap": sim_constants.EXEC_MOD_CAP,
+            # Name the five the numbers describe: with a bench, changing the
+            # lineup changes every fit figure on this screen.
+            "measured_over": {
+                "player_ids": list(dressed),
+                "source": dressed_from,
+                "benched": [
+                    gs.players[pid].handle
+                    for pid in team.player_ids
+                    if pid not in dressed and pid in gs.players
+                ],
+            },
             "dials": dials,
             "lineup": lineup,
             "note": (

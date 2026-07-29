@@ -232,6 +232,46 @@ def test_tactics_view_prices_every_dial_against_the_roster(world: str) -> None:
     starter = view["lineup"][0]
     assert starter["resolved_agent"] == starter["auto_agent"]
     assert starter["top_agents"][0]["mastery"] >= starter["top_agents"][-1]["mastery"]
+    assert len(view["measured_over"]["player_ids"]) == 5
+    assert view["measured_over"]["benched"] == []
+
+
+def test_tactics_fit_measures_the_dressed_five_not_the_bench(world: str) -> None:
+    """Past five players the engine only ever sees campaign.dressed_for's five.
+
+    A bench-inclusive average would describe a team that never takes the
+    server, so signing a sixth player must not move the fit numbers until that
+    player is actually dressed.
+    """
+    from esports_sim.manager import market
+
+    session = ops._session(world)
+    signable = ops.get_legal_actions(world, ["sign"])["actions"]["sign"]
+    assert signable["enabled"], "need a free agent to bench"
+    before = ops.get_tactics(world)
+    five = list(session.gs.teams["team_nexus"].player_ids)
+
+    ops.act(world, "sign", {"player_id": signable["player_ids"][0]})
+    assert len(session.gs.teams["team_nexus"].player_ids) == 6
+    ops.act(world, "set_lineup", {"player_ids": five})
+
+    benched = ops.get_tactics(world)
+    assert set(benched["measured_over"]["player_ids"]) == set(five)
+    assert len(benched["measured_over"]["benched"]) == 1
+    assert benched["dials"] == before["dials"], (
+        "a benched player must not move the fit the engine will apply"
+    )
+    # The signing is still offered an agent menu — it just is not dressing.
+    assert len(benched["lineup"]) == 6
+    assert sum(1 for row in benched["lineup"] if row["dressing"]) == market.ROSTER_SIZE
+
+    swapped = five[:-1] + [signable["player_ids"][0]]
+    ops.act(world, "set_lineup", {"player_ids": swapped})
+    after = ops.get_tactics(world)
+    assert set(after["measured_over"]["player_ids"]) == set(swapped)
+    assert after["dials"] != before["dials"], (
+        "dressing a different five must move the fit"
+    )
 
 
 def test_agent_lock_overrides_and_clears(world: str) -> None:
@@ -397,6 +437,38 @@ def test_world_codes_match_the_browser_join_field(
     monkeypatch.setattr(web, "SAVE_DIR", tmp_path / "saves")
     assert web._save_path_for(code) == ops.save_path_for(code)
     assert ops.save_path_for(code).exists()
+
+
+def test_browser_can_actually_open_an_mcp_world(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Drive the real lobby, because the compat claim is otherwise untested.
+
+    A "solo" world is reachable only through the per-browser history in
+    sessions.json, which an MCP-created world can never be in, so marking it
+    solo made the claim false. Shared worlds are reachable by code, and the
+    lobby releases a human seat whenever no browser is attached to it.
+    """
+    from esports_sim.web import server as web
+
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(ops, "SAVE_DIR", saves)
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    monkeypatch.setattr(web, "SAVE_DIR", saves)
+    monkeypatch.setattr(web, "_SESSIONS_PATH", saves / "sessions.json")
+    lobby = web.Lobby()
+    monkeypatch.setattr(lobby, "gd", ops._gamedata(), raising=False)
+
+    created = ops.new_game(team_id="team_nexus", seed=9)
+    code = created["code"]
+    ops.act(code, "set_tactics", {"aggression": 61.0})
+
+    game, error = lobby.join_game("0" * 32, code, "team_nexus")
+    assert error is None, f"browser could not open the MCP world: {error}"
+    assert game is not None and game.gs is not None
+    # Same world, not a fresh one: the decision made over MCP is there.
+    assert game.gs.teams["team_nexus"].tactics.aggression == 61.0
+    assert "team_nexus" in game.gs.human_team_ids
 
 
 def test_generated_codes_come_from_stable_hashed_inputs(
