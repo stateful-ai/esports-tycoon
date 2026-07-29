@@ -1015,6 +1015,11 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
             incoming.append(view)
 
         team = gs.teams[team_id]
+        # Every cash acquisition ends in market.execute_transfer, which refuses
+        # a human buyer with no roster space. Without this the contract offers
+        # bids and a list of clause targets that are all guaranteed refusals.
+        cap = market.roster_cap(gs, team_id)
+        has_room = len(team.player_ids) < cap
         # Per-map overrides only mean anything for a fixture that has not been
         # played, so publish the (fixture, map) pairs that can take one.
         map_lineup_slots = [
@@ -1026,7 +1031,7 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
         # Buyout clauses are a tier-1 privilege (market.buy_out_player), and
         # the buyer must cover the clause AND a wage reserve. Advertising the
         # action without both makes every target a guaranteed rejection.
-        can_buy_out = team.tier == 1
+        can_buy_out = team.tier == 1 and has_room
         buyout_targets = []
         if can_buy_out:
             for pid, player in sorted(gs.players.items()):
@@ -1046,7 +1051,12 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                     })
         return {
             "transfer_bid": {
-                "enabled": bool(window["open"]),
+                "enabled": bool(window["open"]) and has_room,
+                "roster_space": cap - len(team.player_ids),
+                "reason": (
+                    "" if has_room
+                    else f"roster is full ({cap}) — release or sell first"
+                ),
                 "note": (
                     "Cash bid at the seller's ask. Use get_transfer_target for "
                     "the fee and the selling club's stance first."
@@ -1080,6 +1090,8 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                 "reason": (
                     "" if can_buy_out
                     else "only a tier-1 org can trigger a buyout clause"
+                    if team.tier != 1
+                    else f"roster is full ({cap}) — release or sell first"
                 ),
                 # Deep worlds have hundreds of players; the full list is noise.
                 "sample_targets": buyout_targets[:20],

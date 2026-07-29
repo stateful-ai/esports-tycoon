@@ -124,6 +124,42 @@ def test_buyouts_are_not_advertised_to_clubs_that_cannot_make_them(
     assert tier2["sample_targets"] == []
 
 
+def test_a_full_roster_disables_cash_acquisitions(world: str) -> None:
+    """Every cash buy ends in execute_transfer, which refuses a full roster.
+
+    Advertising bids and a list of clause targets that are all guaranteed
+    refusals is the same defect as the tier check, one predicate over.
+    """
+    from esports_sim.manager import market
+
+    session = ops._session(world)
+    team = session.gs.teams["team_nexus"]
+    cap = market.roster_cap(session.gs, "team_nexus")
+
+    with_room = ops.get_legal_actions(world)["extra_actions"]
+    assert with_room["transfer_bid"]["enabled"] is True
+    assert with_room["transfer_bid"]["roster_space"] == cap - len(team.player_ids)
+    assert with_room["transfer_buyout"]["enabled"] is True
+
+    # Fill the bench to the cap.
+    spare = [
+        pid for pid in ops.get_legal_actions(world, ["sign"])["actions"]["sign"]
+        ["player_ids"]
+    ]
+    while len(team.player_ids) < cap and spare:
+        team.player_ids.append(spare.pop())
+
+    full = ops.get_legal_actions(world)["extra_actions"]
+    assert full["transfer_bid"]["enabled"] is False
+    assert "roster is full" in full["transfer_bid"]["reason"]
+    assert full["transfer_bid"]["roster_space"] == 0
+    assert full["transfer_buyout"]["enabled"] is False
+    assert "roster is full" in full["transfer_buyout"]["reason"]
+    assert full["transfer_buyout"]["sample_targets"] == []
+    # A package is still legal — it sends players the other way.
+    assert full["transfer_package"]["enabled"] is True
+
+
 def test_package_offers_show_what_is_being_offered(world: str) -> None:
     """transfer_respond is irreversible, so the consideration must be visible."""
     from esports_sim.manager.state import TransferOffer
