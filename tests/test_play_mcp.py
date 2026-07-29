@@ -154,6 +154,58 @@ def test_package_offers_show_what_is_being_offered(world: str) -> None:
     assert ops.get_market(world)["incoming_offers"][0]["kind"] == "package"
 
 
+def test_every_shipped_market_tool_appears_in_the_contract(world: str) -> None:
+    """how_to_play promises the mask names every action; a tool it omits can
+    only be reached by guessing."""
+    from esports_sim.mcp import play_server
+
+    contract = ops.get_legal_actions(world)["extra_actions"]
+    shipped = {
+        tool for tool in dir(play_server)
+        if tool.startswith("transfer_")
+    }
+    assert shipped <= set(contract), f"undeclared tools: {shipped - set(contract)}"
+    package = contract["transfer_package"]
+    assert package["enabled"] is True
+    assert set(package["offerable_player_ids"]) == set(
+        ops._session(world).gs.teams["team_nexus"].player_ids
+    )
+    assert "cash_to_seller" in package["note"]
+
+
+def test_a_refused_market_action_still_persists_its_history(world: str) -> None:
+    """A refusal is not a no-op: helpers write real state before returning False.
+
+    Left unwritten it lived only in memory — saved later by an unrelated
+    action, or lost entirely if the process exited first.
+    """
+    from esports_sim.manager import market_history
+    from esports_sim.manager.state import GameState
+
+    session = ops._session(world)
+    icon = sorted(session.gs.teams["team_vanguard"].player_ids)[0]
+
+    def refuse_after_recording(gs):
+        """Stands in for market.user_bid's not-for-sale path, which appends to
+        market_decisions and only then returns False."""
+        market_history.record(
+            gs, "bid", "rejected", icon, actor_team_id="team_vanguard",
+            counterparty_team_id="team_nexus", context="sell",
+            reason="cash bid refused for an organisational icon",
+        )
+        return False, "they see them as a pillar of the organisation"
+
+    before = len(session.gs.market_decisions)
+    with pytest.raises(ops.PlayError, match="illegal action"):
+        ops._market_action(world, "bid", {"player_id": icon}, refuse_after_recording)
+    assert len(session.gs.market_decisions) == before + 1
+
+    # And it is on disk, not just in this process.
+    on_disk = GameState.load(ops.save_path_for(world))
+    assert len(on_disk.market_decisions) == before + 1
+    assert on_disk.market_decisions[-1].outcome == "rejected"
+
+
 def test_a_cash_back_offer_is_not_shown_as_a_plain_cash_bid(
     world: str
 ) -> None:
@@ -666,7 +718,13 @@ def test_market_actions_log_under_the_canonical_action_kinds(world: str) -> None
     session = ops._session(world)
     starter = ops.get_tactics(world)["lineup"][0]
     ops.set_agent_lock(world, starter["player_id"], starter["top_agents"][1]["agent_id"])
-    assert session.gs.action_log[-1].kind == "set_assignment"
+    # An agent lock is a lineup change, not a role/playstyle reassignment —
+    # "set_assignment" is the web's kind for the latter, and recording it here
+    # would hand replay an action whose params do not belong to it.
+    logged = session.gs.action_log[-1]
+    assert logged.kind == "set_lineup"
+    assert logged.params["agents"] == "True"
+    assert logged.params["agent_id"] == starter["top_agents"][1]["agent_id"]
 
 
 def test_save_and_reload_preserves_the_world(world: str) -> None:

@@ -942,6 +942,20 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                     "bid sorts first, not the one you read."
                 ),
             },
+            "transfer_package": {
+                # Published because how_to_play promises every action and its
+                # parameters come from the contract; a tool the mask never
+                # mentions can only be reached by guessing.
+                "enabled": bool(window["open"]) and len(team.player_ids) > 1,
+                "offerable_player_ids": sorted(team.player_ids),
+                "note": (
+                    "Players plus cash for one target. cash_to_seller is what "
+                    "you pay, cash_to_buyer what you ask back. Find targets "
+                    "with get_scouting/get_market and price them with "
+                    "get_transfer_target — a package still has to clear the "
+                    "selling club's valuation."
+                ),
+            },
             "transfer_buyout": {
                 "enabled": bool(window["open"]) and bool(buyout_targets),
                 "reason": (
@@ -1553,9 +1567,21 @@ def set_agent_lock(
                 f"{gs.players[player_id].handle} back to the automatic pick"
             )
         if gs.is_human(session.env.team_id):
+            # "set_assignment" is the web's kind for changing a player's
+            # ROLE/PLAYSTYLE; agent locks ride the lineup endpoint and record
+            # "set_lineup". Recording the wrong kind hands replay consumers an
+            # action whose params do not belong to it, and skews the
+            # feature-usage report. Same shape the web writes, plus the lock
+            # itself, which the web leaves in the lineup payload.
             telemetry.record_action(
-                gs, "set_assignment",
-                {"player_id": player_id, "agent_id": agent_id},
+                gs, "set_lineup",
+                {
+                    "agents": True,
+                    "default_five": False,
+                    "per_map": False,
+                    "player_id": player_id,
+                    "agent_id": agent_id,
+                },
                 team_id=session.env.team_id, source="agent",
             )
     _write(session)
@@ -1827,21 +1853,24 @@ def _market_action(code: str, kind: str, params: dict[str, Any], fn) -> dict[str
     from esports_sim.manager import telemetry
 
     session = _session(code, mutating=True)
-    with _acting(session) as gs:
-        result = fn(gs)
-        ok, message = result[0], result[1]
-        if not ok:
-            raise PlayError(f"illegal action: {message}")
-        # A transfer has already moved a player by this point. Anything that
-        # goes wrong while RECORDING it must not cost the caller the move, so
-        # the write is unconditional from here on.
-        try:
+    # A refusal is not a no-op here: several market helpers write real state
+    # before returning False — a rejected bid is appended to market_history,
+    # a stale package can drop the pending offer before settlement fails. So
+    # the write is unconditional, exactly as the browser endpoints save on
+    # these paths. Leaving it out meant a refusal lived only in memory: saved
+    # later by an unrelated action, or lost if the process exited first.
+    try:
+        with _acting(session) as gs:
+            result = fn(gs)
+            ok, message = result[0], result[1]
+            if not ok:
+                raise PlayError(f"illegal action: {message}")
             if gs.is_human(session.env.team_id):
                 telemetry.record_action(
                     gs, kind, params, team_id=session.env.team_id, source="agent"
                 )
-        finally:
-            _write(session)
+    finally:
+        _write(session)
     return {
         "ok": True,
         "kind": kind,
