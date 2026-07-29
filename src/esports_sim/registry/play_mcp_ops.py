@@ -266,6 +266,19 @@ def _session(
                 "back under AI control and is no longer yours to run. Accept "
                 "one of the jobs in get_career().offers first (accept_job)."
             )
+        # A half-finished draft is not a campaign yet, and nothing here can
+        # finish one. Blocking only the tick was not enough: releasing a
+        # drafted player puts them in free_agent_ids, which
+        # fantasy_draft._complete then REPLACES with the remaining pool, so
+        # the player evaporates and the club ends up short of its ten. A
+        # transfer invalidates the pick ledger the same way.
+        if _draft_blocker(session.gs) is not None:
+            raise PlayError(
+                "the fantasy draft is still running, and a world mid-draft "
+                "cannot be changed from here at all — this server has no "
+                "draft actions. Finish the draft in the browser, then resume "
+                "over MCP."
+            )
         held = _other_managers(session)
         if held:
             raise PlayError(
@@ -1166,11 +1179,10 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
 
 def advance_week(code: str) -> dict[str, Any]:
     """Tick the world one week and report what actually happened."""
+    # The draft gate lives in _session(mutating=True) now — one source of
+    # truth for every write, not a check per route.
     session = _session(code, mutating=True)
     with _acting(session) as gs:
-        blocker = _draft_blocker(gs)
-        if blocker is not None:
-            raise PlayError(f"cannot advance: {blocker}")
         team_id = session.env.team_id
         before = {
             "week": gs.week,

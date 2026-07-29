@@ -666,7 +666,38 @@ def test_an_unfinished_fantasy_draft_blocks_the_season(world: str) -> None:
         ops.advance_week(world)
     with pytest.raises(ops.PlayError, match="fantasy draft"):
         ops.act(world, "advance", {})
-    assert ops.sim_ahead_weeks(world, max_weeks=3)["weeks_advanced"] == 0
+    # Refused up front rather than returning zero weeks: the gate is uniform
+    # across every write route, and special-casing the fast-forward is exactly
+    # how the guard grew holes the first two times.
+    with pytest.raises(ops.PlayError, match="fantasy draft"):
+        ops.sim_ahead_weeks(world, max_weeks=3)
+
+    # Blocking only the tick is not enough. Releasing a drafted player puts
+    # them in free_agent_ids, which fantasy_draft._complete then REPLACES with
+    # the remaining pool — the player evaporates and the club ends up short of
+    # its ten. A transfer corrupts the pick ledger the same way.
+    mine = sorted(session.gs.teams["team_nexus"].player_ids)[0]
+    for label, call in (
+        ("release", lambda: ops.act(world, "release", {"player_id": mine})),
+        ("set_tactics",
+         lambda: ops.act(world, "set_tactics", {"aggression": 80.0})),
+        ("transfer_bid", lambda: ops.transfer_bid(world, "whoever")),
+        ("transfer_buyout", lambda: ops.transfer_buyout(world, "whoever")),
+        ("transfer_package",
+         lambda: ops.transfer_package(world, "whoever", [])),
+        ("set_agent_lock",
+         lambda: ops.set_agent_lock(world, mine, "omen")),
+        ("set_scout_directive",
+         lambda: ops.set_scout_directive(world, "amateur", "track_academy")),
+        ("set_map_lineup", lambda: ops.set_map_lineup(world, "f", "m", [])),
+        ("mark_inbox_read", lambda: ops.mark_inbox_read(world)),
+        ("save_game", lambda: ops.save_game(world)),
+    ):
+        with pytest.raises(ops.PlayError, match="fantasy draft"):
+            call()
+    assert mine in session.gs.teams["team_nexus"].player_ids, label
+    # Reads stay open — you can still study the world mid-draft.
+    assert ops.get_standings(world)["regions"]
 
     # Draft over: the season starts normally again.
     session.gs.fantasy_draft.active = False
