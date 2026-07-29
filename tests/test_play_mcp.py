@@ -478,6 +478,17 @@ def test_per_map_lineups_are_settable_not_just_visible(world: str) -> None:
     assert cleared["measured_over"]["map_overrides"] == {}
     assert benched not in cleared["measured_over"]["player_ids"]
 
+    # Every per-map decision has to be distinguishable in the replay record:
+    # the dressed five changes results, so "set these five" and "clear" must
+    # not log identically.
+    log = [row for row in session.gs.action_log if row.kind == "set_lineup"]
+    per_map = [row for row in log if row.params.get("per_map") == "True"]
+    assert len(per_map) == 2
+    assert per_map[0].params["player_ids"] != per_map[1].params["player_ids"]
+    assert benched in per_map[0].params["player_ids"]
+    assert per_map[1].params["player_ids"] == "[]", "a clear must record as one"
+    assert all(row.params["map_id"] == map_id for row in per_map)
+
     with pytest.raises(ops.PlayError, match="exactly 5"):
         ops.set_map_lineup(world, fixture.id, map_id, roster[:3])
     with pytest.raises(ops.PlayError, match="not on your roster"):

@@ -1645,6 +1645,7 @@ def set_map_lineup(
                 f"{map_id!r} is not on that fixture — maps are {list(fixture.maps)}"
             )
         key = f"{team_id}|{fixture_id}|{map_id}"
+        picks: list[str] = []
         if not player_ids:
             gs.map_lineups.pop(key, None)
             message = f"{map_id} back to your default lineup"
@@ -1669,6 +1670,11 @@ def set_map_lineup(
                     "per_map": True,
                     "fixture_id": fixture_id,
                     "map_id": map_id,
+                    # The five itself, empty when clearing. Without it every
+                    # per-map decision on one map records identically, so a
+                    # replay of seed + action_log cannot tell which players
+                    # were dressed — and the dressed five changes results.
+                    "player_ids": picks,
                 },
                 team_id=team_id, source="agent",
             )
