@@ -12,13 +12,34 @@ import pytest
 from esports_sim.registry import play_mcp_ops as ops
 
 
+def clear_blockers(code: str) -> None:
+    """Answer whatever is gating the tick, the same way every run.
+
+    Narrative events and sponsor demands block the advance, so any test that
+    needs to reach a later week has to resolve them first — deterministically,
+    so the world stays reproducible.
+    """
+    for kind in ("resolve_flavor", "resolve_media"):
+        contract = ops.get_legal_actions(code, [kind])["actions"][kind]
+        if contract["enabled"]:
+            ops.act(code, kind, {
+                "event_id": contract["event_id"],
+                "choice_id": contract["choice_ids"][0],
+            })
+    demands = ops.get_legal_actions(code, ["sponsor_demand_respond"])
+    contract = demands["actions"]["sponsor_demand_respond"]
+    if contract["enabled"]:
+        option = contract["options"][0]
+        ops.act(code, "sponsor_demand_respond", option)
+
+
 @pytest.fixture
 def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> str:
     """A fresh campaign in an isolated save directory."""
     monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
     monkeypatch.setattr(ops, "_SESSIONS", {})
-    ops.new_game(team_id="team_nexus", seed=11, code="TEST")
-    return "TEST"
+    ops.new_game(team_id="team_nexus", seed=11, code="TESTA")
+    return "TESTA"
 
 
 def test_new_game_opens_a_playable_dashboard(world: str) -> None:
@@ -41,8 +62,8 @@ def test_playable_team_preview_follows_the_seed(
     listed = ops.list_playable_teams(seed=11)
     assert listed["seed"] == 11
     assert listed["teams"] and all(t["tier"] == 1 for t in listed["teams"])
-    ops.new_game(team_id=listed["teams"][0]["team_id"], seed=11, code="SEEDED")
-    assert ops.get_state("SEEDED")["team"]["tier"] == 1
+    ops.new_game(team_id=listed["teams"][0]["team_id"], seed=11, code="SEEDA")
+    assert ops.get_state("SEEDA")["team"]["tier"] == 1
 
 
 def test_legal_actions_are_the_only_contract_needed(world: str) -> None:
@@ -87,6 +108,25 @@ def test_advance_returns_what_actually_happened(world: str) -> None:
     assert {f["fixture_id"] for f in again["your_matches"]}.isdisjoint(
         {f["fixture_id"] for f in digest["your_matches"]}
     )
+
+
+def test_advance_through_act_is_the_same_tick_as_advance_week(world: str) -> None:
+    """"advance" is in the action contract, so act() must not be a lesser path.
+
+    Without the pre-tick snapshot the digest loses the cash swing and the table
+    move, calls every inbox item new, and mislabels the week after a rollover.
+    """
+    ops.advance_week(world)
+    ops.mark_inbox_read(world)
+    digest = ops.act(world, "advance", {})
+    assert digest["advanced"] is True
+    assert digest["played"] == {"season": 1, "week": 2}
+    assert "cash_change" in digest
+    stale = {item["id"] for item in ops.get_inbox(world)["items"]}
+    assert {item["id"] for item in digest["inbox"]} < stale or not stale, (
+        "the digest must report only the mail this tick generated"
+    )
+    assert digest["state"]["week"] == 3
 
 
 def test_week_digest_carries_the_mail_the_tick_generated(world: str) -> None:
@@ -225,6 +265,28 @@ def test_standing_scout_directive_replaces_the_weekly_slot(world: str) -> None:
         ops.set_scout_directive(world, "pro", "read_minds")
 
 
+def test_fill_gap_without_a_role_actually_sweeps_the_market(world: str) -> None:
+    """The default must be a wildcard, not a role no player has.
+
+    scouting._build_shortlist matches a non-empty role EXACTLY, so storing the
+    literal "any" would return an empty shortlist forever while reporting
+    success — the worst kind of failure, a silent one.
+    """
+    ops.set_scout_directive(world, "pro", "fill_gap")
+    assert ops.get_scouting(world)["pro"]["directive"] == "fill_gap::any"
+    for _ in range(2):
+        clear_blockers(world)
+        ops.advance_week(world)
+    assert ops.get_scouting(world)["pro"]["shortlist"], "wildcard swept nobody"
+
+    ops.set_scout_directive(world, "pro", "fill_gap", role="duelist")
+    assert ops.get_scouting(world)["pro"]["directive"] == "fill_gap:duelist:any"
+    clear_blockers(world)
+    ops.advance_week(world)
+    listed = ops.get_scouting(world)["pro"]["shortlist"]
+    assert listed and all(row["role"] == "duelist" for row in listed)
+
+
 def test_every_decision_survives_a_dropped_client(world: str) -> None:
     """No mutation may live only in memory.
 
@@ -272,16 +334,6 @@ def test_replaying_the_same_actions_reproduces_the_campaign(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Determinism: seed + action sequence still fixes the whole world."""
-    def clear_blockers(code: str) -> None:
-        """Answer any pending event the same way every run — a first choice."""
-        for kind in ("resolve_flavor", "resolve_media"):
-            contract = ops.get_legal_actions(code, [kind])["actions"][kind]
-            if contract["enabled"]:
-                ops.act(code, kind, {
-                    "event_id": contract["event_id"],
-                    "choice_id": contract["choice_ids"][0],
-                })
-
     def play(code: str) -> str:
         ops.new_game(team_id="team_nexus", seed=5, code=code)
         ops.act(code, "set_tactics", {"aggression": 58.0, "pace": 44.0})
@@ -293,8 +345,8 @@ def test_replaying_the_same_actions_reproduces_the_campaign(
 
     monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
     monkeypatch.setattr(ops, "_SESSIONS", {})
-    first = play("RUNA")
-    second = play("RUNB")
+    first = play("RUNAA")
+    second = play("RUNBB")
     # Only the world code differs between the two saves, and that is not
     # campaign state — the serialized GameState must match exactly.
     assert first == second
@@ -322,9 +374,44 @@ def test_unknown_world_is_a_clear_error(
     monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
     monkeypatch.setattr(ops, "_SESSIONS", {})
     with pytest.raises(ops.PlayError, match="no world"):
-        ops.get_state("NOPE")
+        ops.get_state("NOPEE")
     with pytest.raises(ops.PlayError, match="invalid world code"):
         ops.get_state("not a code")
+
+
+def test_world_codes_match_the_browser_join_field(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A world the browser cannot join defeats sharing the save convention."""
+    from esports_sim.web import server as web
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    for bad in ("ABC", "ABCD", "ABCDEF", "ABCDEFGH"):
+        with pytest.raises(ops.PlayError, match="invalid world code"):
+            ops.new_game(team_id="team_nexus", seed=3, code=bad)
+    created = ops.new_game(team_id="team_nexus", seed=3)
+    code = created["code"]
+    assert web._CODE_RE.match(code), "generated codes must pass the lobby regex"
+    # Same save path on both sides, so the browser opens the same world.
+    monkeypatch.setattr(web, "SAVE_DIR", tmp_path / "saves")
+    assert web._save_path_for(code) == ops.save_path_for(code)
+    assert ops.save_path_for(code).exists()
+
+
+def test_generated_codes_come_from_stable_hashed_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No process-local RNG: the same seed names the same world every time."""
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    first = ops._new_code(77)
+    assert ops._new_code(77) == first
+    assert ops._new_code(78) != first
+    assert set(first) <= set(ops.CODE_ALPHABET)
+    # A taken code advances the attempt index rather than a draw count.
+    ops.new_game(team_id="team_nexus", seed=77, code=first)
+    assert ops._new_code(77) != first
 
 
 def test_stdio_mcp_plays_a_week_end_to_end(tmp_path: Path) -> None:

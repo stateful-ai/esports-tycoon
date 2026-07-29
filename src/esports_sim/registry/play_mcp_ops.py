@@ -29,7 +29,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import random
 import re
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -63,7 +62,12 @@ from esports_sim.registry import GameData, load_all
 from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
 
 SAVE_DIR = Path("saves")
-CODE_RE = re.compile(r"^[A-Z0-9]{3,8}$")
+# Exactly five characters, because the browser lobby's join field is a strict
+# five-character match: a world this module creates under any other length
+# exists on disk but can never be opened in the browser, which is the whole
+# point of sharing the save convention.
+CODE_LENGTH = 5
+CODE_RE = re.compile(rf"^[A-Z0-9]{{{CODE_LENGTH}}}$")
 # Unambiguous alphabet (no O/0, I/1), matching the web lobby's join codes.
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 POLICY_VERSION = "play-mcp-v1"
@@ -135,15 +139,25 @@ def _normalize_code(code: str) -> str:
     code = str(code or "").strip().upper()
     if not CODE_RE.match(code):
         raise PlayError(
-            f"invalid world code {code!r} — use 3-8 characters, A-Z and 0-9"
+            f"invalid world code {code!r} — use exactly {CODE_LENGTH} "
+            "characters, A-Z and 0-9, so the world also opens in the browser"
         )
     return code
 
 
 def _new_code(seed: int) -> str:
-    rng = random.Random(seed)
-    for _ in range(200):
-        code = "".join(rng.choice(CODE_ALPHABET) for _ in range(5))
+    """Derive a free world code from stable inputs.
+
+    blake2 of (seed, attempt) rather than an RNG stream: the repo's rule is
+    that anything stochastic comes from ``RngTree`` or a blake2 of stable ids,
+    and a labelled hash is also the honest shape here — the attempt index, not
+    a draw count, is what varies when a code is already taken.
+    """
+    for attempt in range(200):
+        digest = hashlib.blake2b(
+            f"play-mcp-world:{seed}:{attempt}".encode(), digest_size=CODE_LENGTH
+        ).digest()
+        code = "".join(CODE_ALPHABET[b % len(CODE_ALPHABET)] for b in digest)
         if code not in _SESSIONS and not save_path_for(code).exists():
             return code
     raise PlayError("could not allocate a world code — pass one explicitly")
@@ -686,14 +700,19 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
 
 def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
     """Apply one manager action through the shared headless action contract."""
+    # "advance" is in the action contract, so a client following the contract
+    # will reach the tick through here. Send it down the one path that snapshots
+    # the pre-tick world, or the digest it gets back has no cash swing, no table
+    # move, every inbox item marked new, and a mislabelled week after a season
+    # rollover.
+    if kind == "advance":
+        return advance_week(code)
     session = _session(code)
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
         raise PlayError(f"illegal action: {exc}") from exc
     _write(session)
-    if step.advanced:  # `act(kind="advance")` — route it through the digest
-        return _week_digest(session, step)
     return {
         "ok": True,
         "kind": kind,
@@ -1242,7 +1261,13 @@ def set_scout_directive(
                             f"unknown caliber {caliber!r} — choose from "
                             f"{sorted(scouting.CALIBER_FLOOR)}"
                         )
-                    stored = f"fill_gap:{(role or 'any').strip() or 'any'}:{caliber}"
+                    # The weekly consumer matches a non-empty role EXACTLY
+                    # (scouting._build_shortlist), so the wildcard has to be
+                    # the empty string. Storing the literal "any" reads as a
+                    # role no player has and sweeps up nobody, week after
+                    # week, while still reporting success.
+                    wildcard = (role or "").strip().lower() in ("", "any")
+                    stored = f"fill_gap:{'' if wildcard else role.strip()}:{caliber}"
                 elif stored not in scouting.PRO_DIRECTIVES:
                     raise PlayError(
                         f"unknown pro directive {stored!r} — choose from "
