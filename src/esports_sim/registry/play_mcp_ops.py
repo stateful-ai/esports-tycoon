@@ -1,0 +1,1538 @@
+"""Operations behind the play MCP — the whole campaign as an agent-playable API.
+
+The manager-facing game already has a headless contract: ``decision_env``
+publishes one manager's observation plus explicit legal-action masks, and
+applies actions through the same manager-domain functions the web layer calls.
+This module adds what a *playing* agent needs on top of that contract and
+nothing more:
+
+* **worlds** — create / load / list / save campaigns on the same
+  ``saves/campaign_<digest>.json`` convention the web lobby uses, so a world
+  started over MCP can be resumed in the browser and vice versa;
+* **compact reads** — the raw observation is thousands of tokens; an agent
+  playing turn by turn wants a dashboard, then the one section it cares about;
+* **the week digest** — ``advance`` in the raw env returns only "week
+  advanced". Here it returns what actually happened: results, standings
+  movement, cash swing, and the inbox the tick generated;
+* **the read screens the observation omits** — standings, schedule, results,
+  season report, profiles, chronicle, finances, records;
+* **the market actions that live in the web layer** — cash bids, buyouts,
+  package proposals, and answering bids for your own players.
+
+Everything mutating routes through ``HeadlessManagerEnv`` where the action
+contract already covers it, so telemetry, reward, and the legality guards stay
+identical to every other headless caller. Campaign determinism is unchanged:
+same seed plus same action sequence still gives a byte-identical ``GameState``.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import random
+import re
+from contextlib import contextmanager
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Iterator
+
+from esports_sim.manager import (
+    analytics,
+    career,
+    chronicle,
+    development,
+    economy,
+    facilities,
+    flavor_events,
+    inbox as inbox_mod,
+    market,
+    match_review,
+    media_events,
+    scouting,
+    sponsors,
+    staff_effects,
+)
+from esports_sim.manager.campaign import new_campaign
+from esports_sim.manager.decision_env import (
+    HeadlessManagerEnv,
+    InvalidManagerAction,
+    manager_observation,
+)
+from esports_sim.manager.state import GameState
+from esports_sim.registry import GameData, load_all
+from esports_sim.registry.rosters import list_roster_packs, load_roster_pack
+
+SAVE_DIR = Path("saves")
+CODE_RE = re.compile(r"^[A-Z0-9]{3,8}$")
+# Unambiguous alphabet (no O/0, I/1), matching the web lobby's join codes.
+CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+POLICY_VERSION = "play-mcp-v1"
+
+# Observation sections an agent can ask for by name. "legal_actions" is served
+# by get_legal_actions (enabled-only by default) because the full contract
+# enumerates every signable free agent and every scouting target.
+OBSERVATION_SECTIONS = (
+    "features",
+    "tactics",
+    "training_focus",
+    "lineup_ids",
+    "club",
+    "staff",
+    "staff_candidates",
+    "facilities",
+    "sponsor_market",
+    "negotiations",
+    "game_plan",
+    "career_offers",
+    "roster",
+    "free_agents",
+    "upcoming_fixture",
+    "opponent",
+    "scout_target",
+    "map_ids",
+    "legal_actions",
+)
+
+
+class PlayError(RuntimeError):
+    """A play request that is malformed or impossible in the current world."""
+
+
+# ---------------------------------------------------------------------------
+# Sessions
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class _Session:
+    """One live campaign world plus the env bound to the managed seat."""
+
+    code: str
+    gs: GameState
+    env: HeadlessManagerEnv
+    path: Path
+
+
+_SESSIONS: dict[str, _Session] = {}
+_GAMEDATA: GameData | None = None
+
+
+def _gamedata() -> GameData:
+    """The immutable YAML registries, loaded once per server process."""
+    global _GAMEDATA
+    if _GAMEDATA is None:
+        _GAMEDATA = load_all()
+    return _GAMEDATA
+
+
+def save_path_for(code: str) -> Path:
+    """The web lobby's save convention, so both front ends see one world."""
+    digest = hashlib.blake2b(code.encode(), digest_size=8).hexdigest()
+    return SAVE_DIR / f"campaign_{digest}.json"
+
+
+def _normalize_code(code: str) -> str:
+    code = str(code or "").strip().upper()
+    if not CODE_RE.match(code):
+        raise PlayError(
+            f"invalid world code {code!r} — use 3-8 characters, A-Z and 0-9"
+        )
+    return code
+
+
+def _new_code(seed: int) -> str:
+    rng = random.Random(seed)
+    for _ in range(200):
+        code = "".join(rng.choice(CODE_ALPHABET) for _ in range(5))
+        if code not in _SESSIONS and not save_path_for(code).exists():
+            return code
+    raise PlayError("could not allocate a world code — pass one explicitly")
+
+
+def _session(code: str) -> _Session:
+    """Return a live session, lazily loading its save from disk."""
+    code = _normalize_code(code)
+    session = _SESSIONS.get(code)
+    if session is not None:
+        return session
+    path = save_path_for(code)
+    if not path.exists():
+        raise PlayError(
+            f"no world {code!r} — call list_games to see saved worlds, "
+            "or new_game to start one"
+        )
+    gs = GameState.load(path)
+    session = _bind(code, gs, path, gs.user_team_id)
+    _SESSIONS[code] = session
+    return session
+
+
+def _bind(code: str, gs: GameState, path: Path, team_id: str) -> _Session:
+    env = HeadlessManagerEnv(
+        gs, _gamedata(), team_id, policy_version=POLICY_VERSION
+    )
+    return _Session(code=code, gs=gs, env=env, path=path)
+
+
+@contextmanager
+def _acting(session: _Session) -> Iterator[GameState]:
+    """Bind private state (inbox, staff, facilities, ...) to the played seat."""
+    gs = session.gs
+    previous = gs.acting_team_id
+    gs.set_acting(session.env.team_id)
+    try:
+        yield gs
+    finally:
+        gs.set_acting(previous)
+
+
+def _write(session: _Session) -> None:
+    """Persist the world.
+
+    Every mutating operation writes. The web layer can afford to defer saves
+    because it is one long-lived process with explicit save points; an MCP
+    client is a separate process that may disconnect after any single tool
+    call, and silently losing a decision the caller was told had landed is
+    worse than the write.
+    """
+    session.path.parent.mkdir(parents=True, exist_ok=True)
+    session.gs.save(session.path)
+    meta = session.path.with_suffix(".meta.json")
+    if not meta.exists():
+        meta.write_text(json.dumps({"mode": "solo"}), encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# Small shared views
+# ---------------------------------------------------------------------------
+
+
+def _record(gs: GameState, team_id: str) -> dict[str, Any]:
+    rec = gs.standings.get(team_id)
+    if rec is None:
+        return {"wins": 0, "losses": 0, "round_diff": 0}
+    return {"wins": rec.wins, "losses": rec.losses, "round_diff": rec.diff}
+
+
+def _position(gs: GameState, team_id: str) -> dict[str, Any]:
+    region = str(gs.teams[team_id].region)
+    order = gs.standings_order(region, tier=gs.teams[team_id].tier)
+    return {
+        "region": region,
+        "place": order.index(team_id) + 1 if team_id in order else None,
+        "of": len(order),
+    }
+
+
+def _fixture_view(gs: GameState, f, team_id: str | None = None) -> dict[str, Any]:
+    a, b = gs.teams.get(f.team_a), gs.teams.get(f.team_b)
+    view: dict[str, Any] = {
+        "fixture_id": f.id,
+        "week": f.week,
+        "stage": f.stage,
+        "bracket": f.bracket,
+        "tier": f.tier,
+        "best_of": f.best_of,
+        "team_a": {"id": f.team_a, "name": a.name if a else f.team_a},
+        "team_b": {"id": f.team_b, "name": b.name if b else f.team_b},
+        "maps": list(f.maps),
+        "played": f.played,
+    }
+    if f.played:
+        score_a, score_b = f.map_score
+        view["map_score"] = [score_a, score_b]
+        view["winner_id"] = f.winner_id
+        view["results"] = [
+            {
+                "map_id": r.map_id,
+                "score_a": r.score_a,
+                "score_b": r.score_b,
+                "winner_id": r.winner_id,
+            }
+            for r in f.results
+        ]
+        if f.series_notes:
+            view["series_notes"] = list(f.series_notes)
+    if team_id is not None and team_id in (f.team_a, f.team_b):
+        opponent = f.team_b if f.team_a == team_id else f.team_a
+        view["opponent"] = {
+            "id": opponent,
+            "name": gs.teams[opponent].name if opponent in gs.teams else opponent,
+        }
+        if f.played:
+            view["result"] = (
+                "win" if f.winner_id == team_id
+                else "loss" if f.winner_id else "draw"
+            )
+    return view
+
+
+def _inbox_view(gs: GameState, item) -> dict[str, Any]:
+    view = inbox_mod.to_api(item, gs)
+    actions = inbox_mod.actions_for(gs, item)
+    if actions:
+        view["actions"] = actions
+    return view
+
+
+def _pending_events(gs: GameState, team_id: str) -> list[dict[str, Any]]:
+    """Blocking events WITH their copy.
+
+    The action contract publishes only the choice ids, which asks a manager to
+    decide blind; these are narrative choices whose whole content is the text.
+    """
+    events: list[dict[str, Any]] = []
+    flavor = flavor_events.pending_for(gs, team_id)
+    if flavor is not None:
+        events.append({
+            "action": "resolve_flavor",
+            "event": flavor_events.to_api(flavor),
+        })
+    media = media_events.pending_for(gs, team_id)
+    if media is not None:
+        events.append({
+            "action": "resolve_media",
+            "event": media_events.to_api(gs, media),
+        })
+    for demand in sponsors.demand_views(gs, team_id):
+        if demand.get("status") == "pending":
+            events.append({
+                "action": "sponsor_demand_respond",
+                "event": demand,
+            })
+    return events
+
+
+def _needs_you(gs: GameState, team_id: str, legal: dict[str, Any]) -> list[str]:
+    """The short list of things actually waiting on this manager."""
+    calls: list[str] = []
+    if legal["resolve_flavor"]["enabled"]:
+        calls.append("a squad event is waiting on your choice (resolve_flavor)")
+    if legal["resolve_media"]["enabled"]:
+        calls.append("a media decision is waiting on you (resolve_media)")
+    if legal["accept_job"]["enabled"]:
+        calls.append("you have a job offer to answer (accept_job)")
+    if legal["sponsor_respond"]["enabled"]:
+        calls.append("sponsor offers are on the table (sponsor_respond)")
+    if legal["sponsor_demand_respond"]["enabled"]:
+        calls.append("a sponsor has made a demand (sponsor_demand_respond)")
+    if legal["negotiate_offer"]["enabled"]:
+        calls.append("contract talks are open (negotiate_offer)")
+    if not legal["advance"]["enabled"]:
+        calls.append(f"advance is blocked: {legal['advance']['reason']}")
+    incoming = [
+        o for o in gs.transfer_offers if o.from_team == team_id
+    ]
+    if incoming:
+        calls.append(
+            f"{len(incoming)} bid(s) for your players await an answer "
+            "(transfer_respond)"
+        )
+    expiring = [
+        p for p in (gs.players[pid] for pid in gs.teams[team_id].player_ids)
+        if p.contract_weeks_left <= 6
+    ]
+    if expiring:
+        calls.append(
+            f"{len(expiring)} contract(s) expiring within 6 weeks (renew)"
+        )
+    return calls
+
+
+# ---------------------------------------------------------------------------
+# Lobby — worlds
+# ---------------------------------------------------------------------------
+
+
+def list_packs() -> dict[str, Any]:
+    """Roster packs (importable worlds) installed alongside the fictional one."""
+    packs = [
+        {
+            "pack_id": meta.id,
+            "name": meta.name,
+            "description": meta.description,
+            "start_year": meta.start_year,
+            "regions": list(meta.world.league_regions),
+            "teams_per_region": meta.world.teams_per_region,
+        }
+        for meta in list_roster_packs()
+    ]
+    return {
+        "packs": packs,
+        "default": None,
+        "note": (
+            "Pass pack_id=null to new_game for the generated fictional world, "
+            "or a pack id to play an authored league."
+        ),
+    }
+
+
+def list_playable_teams(
+    seed: int = 1, pack_id: str | None = None, tier: int = 1
+) -> dict[str, Any]:
+    """Teams you can manage in the world this seed builds.
+
+    Squad quality, balance, and even which clubs sit in tier 1 are functions
+    of the seed, so this previews the world at the SAME seed you will pass to
+    ``new_game`` — a listing from another seed describes a different league.
+    """
+    gd = _gamedata()
+    pack = load_roster_pack(pack_id) if pack_id else None
+    gs = new_campaign(gd, seed=int(seed), pack=pack)
+    teams = [
+        {
+            "team_id": t.id,
+            "name": t.name,
+            "tag": t.tag,
+            "region": str(t.region),
+            "tier": t.tier,
+            "reputation": round(float(t.reputation), 1),
+            "balance": t.balance,
+            "roster_size": len(t.player_ids),
+            "squad_quality": round(
+                sum(market.player_quality(gs.players[pid]) for pid in t.player_ids)
+                / max(1, len(t.player_ids)),
+                1,
+            ),
+        }
+        for t in sorted(gs.teams.values(), key=lambda t: (t.tier, str(t.region), t.name))
+        if tier == 0 or t.tier == tier
+    ]
+    return {
+        "seed": int(seed),
+        "pack_id": pack_id,
+        "tier": tier,
+        "teams": teams,
+        "note": (
+            "Pass this same seed to new_game — team tiers and squad quality "
+            "are seed-dependent. Tier 1 is the franchised league; tier 2 is "
+            "Challengers."
+        ),
+    }
+
+
+def new_game(
+    team_id: str,
+    seed: int = 1,
+    code: str | None = None,
+    pack_id: str | None = None,
+    mode: str = "sandbox",
+    manager_name: str = "",
+    scenario: str | None = None,
+) -> dict[str, Any]:
+    """Start a campaign and return the world code plus the opening dashboard.
+
+    ``mode`` is "sandbox" (never fired) or "legacy" (board goals, contracts,
+    dismissal). ``scenario`` applies one sandbox-only opening preset.
+    """
+    if mode not in ("sandbox", "legacy"):
+        raise PlayError("mode must be 'sandbox' or 'legacy'")
+    code = _normalize_code(code) if code else _new_code(seed)
+    path = save_path_for(code)
+    if path.exists() or code in _SESSIONS:
+        raise PlayError(f"world {code!r} already exists — load_game it instead")
+    pack = load_roster_pack(pack_id) if pack_id else None
+    try:
+        gs = new_campaign(
+            _gamedata(),
+            seed=int(seed),
+            user_team_id=team_id,
+            pack=pack,
+            mode=mode,
+            manager_name=manager_name,
+            scenario=scenario,
+        )
+    except (KeyError, ValueError) as exc:
+        raise PlayError(f"could not start that campaign: {exc}") from exc
+    if team_id not in gs.teams:
+        raise PlayError(
+            f"unknown team {team_id!r} — call list_playable_teams first"
+        )
+    session = _bind(code, gs, path, team_id)
+    warnings = []
+    if gs.teams[team_id].tier != 1:
+        warnings.append(
+            f"{gs.teams[team_id].name} is a tier-{gs.teams[team_id].tier} "
+            "(Challengers) club at this seed — playable, but it sits outside "
+            "the franchised league. list_playable_teams(seed) shows tiers."
+        )
+    _SESSIONS[code] = session
+    _write(session)
+    return {
+        "code": code,
+        "seed": int(seed),
+        "mode": mode,
+        "pack_id": pack_id,
+        "warnings": warnings,
+        "state": get_state(code),
+        "note": (
+            "Play loop: get_state -> get_legal_actions -> act(...) -> "
+            "advance_week. Every decision is saved as it lands."
+        ),
+    }
+
+
+def list_games() -> dict[str, Any]:
+    """Saved worlds this server can load, newest save first."""
+    worlds = []
+    for path in sorted(SAVE_DIR.glob("campaign_*.json")):
+        if path.name.endswith(".meta.json"):
+            continue
+        code = next(
+            (c for c, s in _SESSIONS.items() if s.path == path), None
+        )
+        entry: dict[str, Any] = {
+            "file": path.name,
+            "code": code,
+            "loaded": code is not None,
+            "modified_bytes": path.stat().st_size,
+        }
+        if code is not None:
+            session = _SESSIONS[code]
+            entry.update(
+                season=session.gs.season,
+                week=session.gs.week,
+                team_id=session.env.team_id,
+                team_name=session.gs.teams[session.env.team_id].name,
+            )
+        worlds.append(entry)
+    return {
+        "worlds": worlds,
+        "note": (
+            "Save files are keyed by a hash of the world code, so a code is "
+            "needed to load one. Codes from this process are shown; for others "
+            "pass the code you created the world with."
+        ),
+    }
+
+
+def load_game(code: str) -> dict[str, Any]:
+    """Load a saved world and return its dashboard."""
+    session = _session(code)
+    return {"code": session.code, "state": get_state(session.code)}
+
+
+def save_game(code: str) -> dict[str, Any]:
+    """Force a write of the world to disk."""
+    session = _session(code)
+    _write(session)
+    return {"code": session.code, "saved_to": str(session.path)}
+
+
+# ---------------------------------------------------------------------------
+# Core loop
+# ---------------------------------------------------------------------------
+
+
+def get_state(code: str) -> dict[str, Any]:
+    """The compact dashboard: where the season is and what needs you now."""
+    session = _session(code)
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        team = gs.teams[team_id]
+        legal = manager_observation(gs, _gamedata(), team_id)["legal_actions"]
+        fixture = gs.team_fixture(team_id)
+        unread = sum(1 for it in gs.inbox if it.unread)
+        seat = gs.seat_for_session(team_id)
+        return {
+            "code": session.code,
+            "season": gs.season,
+            "week": gs.week,
+            "phase": gs.phase,
+            "game_mode": gs.game_mode,
+            "team": {
+                "id": team_id,
+                "name": team.name,
+                "tag": team.tag,
+                "region": str(team.region),
+                "tier": team.tier,
+                "balance": team.balance,
+                "reputation": round(float(team.reputation), 1),
+                "roster_size": len(team.player_ids),
+            },
+            "manager": (
+                {
+                    "name": seat.name,
+                    "reputation": career.reputation(gs, seat.id),
+                    "contract": (
+                        seat.contract.model_dump(mode="json")
+                        if seat.contract is not None else None
+                    ),
+                }
+                if seat is not None else None
+            ),
+            "record": _record(gs, team_id),
+            "position": _position(gs, team_id),
+            "next_fixture": (
+                _fixture_view(gs, fixture, team_id)
+                if fixture is not None and not fixture.played else None
+            ),
+            "unread_inbox": unread,
+            # On the dashboard because it silently gates every market plan:
+            # a closed window makes bids, buyouts and releases impossible and
+            # nothing else on this screen would say so.
+            "market_window": market.market_window_status(gs),
+            "pending_events": _pending_events(gs, team_id),
+            "can_advance": legal["advance"]["enabled"],
+            "advance_blocked_by": legal["advance"]["reason"],
+            "needs_you": _needs_you(gs, team_id, legal),
+            "enabled_actions": sorted(
+                kind for kind, c in legal.items() if c.get("enabled")
+            ),
+        }
+
+
+def get_observation(
+    code: str, sections: list[str] | None = None
+) -> dict[str, Any]:
+    """The raw manager observation, optionally narrowed to named sections.
+
+    With no sections this returns the full decision-time contract — large, but
+    exactly what the headless env and every learned policy see.
+    """
+    session = _session(code)
+    observation = manager_observation(
+        session.gs, _gamedata(), session.env.team_id
+    )
+    if not sections:
+        return observation
+    unknown = [s for s in sections if s not in OBSERVATION_SECTIONS]
+    if unknown:
+        raise PlayError(
+            f"unknown observation section(s) {unknown} — "
+            f"choose from {list(OBSERVATION_SECTIONS)}"
+        )
+    keep = {"observation_version", "team_id", "season", "week", "phase"}
+    return {
+        key: value for key, value in observation.items()
+        if key in keep or key in sections
+    }
+
+
+def get_legal_actions(
+    code: str, kinds: list[str] | None = None, enabled_only: bool = True
+) -> dict[str, Any]:
+    """The action contract: every legal action kind and its legal parameters."""
+    session = _session(code)
+    legal = manager_observation(
+        session.gs, _gamedata(), session.env.team_id
+    )["legal_actions"]
+    if kinds:
+        unknown = [k for k in kinds if k not in legal]
+        if unknown:
+            raise PlayError(
+                f"unknown action kind(s) {unknown} — "
+                f"choose from {sorted(legal)}"
+            )
+        legal = {k: legal[k] for k in kinds}
+    elif enabled_only:
+        legal = {k: v for k, v in legal.items() if v.get("enabled")}
+    return {
+        "season": session.gs.season,
+        "week": session.gs.week,
+        "actions": legal,
+        "extra_actions": _extra_action_contract(session),
+    }
+
+
+def _extra_action_contract(session: _Session) -> dict[str, Any]:
+    """Market actions that live in the web layer, not the headless contract."""
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        window = market.market_window_status(gs)
+        incoming = [
+            {
+                "player_id": o.player_id,
+                "handle": gs.players[o.player_id].handle,
+                "from_team": o.to_team,
+                "from_team_name": gs.teams[o.to_team].name
+                if o.to_team in gs.teams else o.to_team,
+                "fee": o.fee,
+                "expires_week": o.expires_week,
+            }
+            for o in gs.transfer_offers if o.from_team == team_id
+        ]
+        buyout_targets = []
+        for pid, player in sorted(gs.players.items()):
+            owner = market.team_of(gs, pid)
+            if owner is None or owner == team_id:
+                continue
+            fee = market.buyout_fee(gs, pid)
+            if fee is not None and gs.teams[team_id].balance >= fee:
+                buyout_targets.append(
+                    {"player_id": pid, "handle": player.handle, "fee": fee}
+                )
+        return {
+            "transfer_bid": {
+                "enabled": bool(window["open"]),
+                "note": (
+                    "Cash bid at the seller's ask. Use get_transfer_target for "
+                    "the fee and the selling club's stance first."
+                ),
+            },
+            "transfer_respond": {
+                "enabled": bool(incoming),
+                "offers": incoming,
+            },
+            "transfer_buyout": {
+                "enabled": bool(window["open"]) and bool(buyout_targets),
+                # Deep worlds have hundreds of players; the full list is noise.
+                "sample_targets": buyout_targets[:20],
+                "target_count": len(buyout_targets),
+            },
+            "market_window": window,
+        }
+
+
+def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Apply one manager action through the shared headless action contract."""
+    session = _session(code)
+    try:
+        step = session.env.step({"kind": kind, "params": dict(params or {})})
+    except InvalidManagerAction as exc:
+        raise PlayError(f"illegal action: {exc}") from exc
+    _write(session)
+    if step.advanced:  # `act(kind="advance")` — route it through the digest
+        return _week_digest(session, step)
+    return {
+        "ok": True,
+        "kind": kind,
+        "message": step.message,
+        "state": get_state(session.code),
+    }
+
+
+def advance_week(code: str) -> dict[str, Any]:
+    """Tick the world one week and report what actually happened."""
+    session = _session(code)
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        before = {
+            "week": gs.week,
+            "season": gs.season,
+            "balance": gs.teams[team_id].balance,
+            "position": _position(gs, team_id),
+            "inbox_ids": {it.id for it in gs.inbox},
+        }
+    try:
+        step = session.env.step({"kind": "advance", "params": {}})
+    except InvalidManagerAction as exc:
+        raise PlayError(
+            f"cannot advance: {exc} — check get_state().needs_you"
+        ) from exc
+    return _week_digest(session, step, before)
+
+
+def _week_digest(
+    session: _Session, step, before: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """What the tick did: results, table movement, cash swing, new mail."""
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        played_week = before["week"] if before else gs.week - 1
+        played_season = before["season"] if before else gs.season
+        # Scope the digest to the week that just resolved. A "fixtures I have
+        # not shown yet" set would live only in this process, so a client that
+        # reconnects between weeks would be re-told about old matches.
+        fresh = [f for f in gs.fixtures if f.played and f.week == played_week]
+        ours = [f for f in fresh if team_id in (f.team_a, f.team_b)]
+        new_mail = [
+            it for it in gs.inbox
+            if before is None or it.id not in before["inbox_ids"]
+        ]
+        digest: dict[str, Any] = {
+            "ok": True,
+            "advanced": True,
+            "played": {"season": played_season, "week": played_week},
+            "your_matches": [_fixture_view(gs, f, team_id) for f in ours],
+            "other_results": [
+                _fixture_view(gs, f) for f in fresh if f not in ours
+            ][:12],
+            "inbox": [_inbox_view(gs, it) for it in new_mail],
+            "reward": round(step.reward, 4),
+            "reward_components": step.reward_components,
+            "season_rolled": played_season != gs.season,
+            "state": get_state(session.code),
+        }
+        if before is not None:
+            digest["cash_change"] = gs.teams[team_id].balance - before["balance"]
+            after = _position(gs, team_id)
+            if after["place"] != before["position"]["place"]:
+                digest["table_move"] = {
+                    "from": before["position"]["place"],
+                    "to": after["place"],
+                }
+        if step.done:
+            digest["done"] = True
+            digest["note"] = "your seat ended — check get_career for offers"
+    _write(session)
+    return digest
+
+
+def sim_ahead_weeks(code: str, max_weeks: int = 6) -> dict[str, Any]:
+    """Advance until something needs you, or the cap — the fast-forward button."""
+    session = _session(code)
+    if max_weeks < 1:
+        raise PlayError("max_weeks must be positive")
+    digests: list[dict[str, Any]] = []
+    for _ in range(int(max_weeks)):
+        state = get_state(session.code)
+        if not state["can_advance"]:
+            break
+        digests.append(advance_week(session.code))
+        if digests[-1].get("done"):
+            break
+        after = get_state(session.code)
+        if after["needs_you"]:
+            break
+    return {
+        "weeks_advanced": len(digests),
+        "stopped_because": (
+            "something needs you" if get_state(session.code)["needs_you"]
+            else "reached the requested week cap"
+        ),
+        "weeks": digests,
+        "state": get_state(session.code),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Read screens
+# ---------------------------------------------------------------------------
+
+
+def get_inbox(
+    code: str, unread_only: bool = False, limit: int = 20
+) -> dict[str, Any]:
+    """This manager's weekly feed, newest first."""
+    session = _session(code)
+    with _acting(session) as gs:
+        items = list(reversed(inbox_mod.sorted_items(gs)))
+        if unread_only:
+            items = [it for it in items if it.unread]
+        return {
+            "unread": inbox_mod.unread_count(gs),
+            "by_category": inbox_mod.unread_counts(gs),
+            "items": [_inbox_view(gs, it) for it in items[: max(1, limit)]],
+        }
+
+
+def mark_inbox_read(code: str, item_id: str = "") -> dict[str, Any]:
+    """Mark one item read, or the whole feed when no id is given."""
+    session = _session(code)
+    with _acting(session) as gs:
+        n = (
+            inbox_mod.mark_read(gs, item_id) if item_id
+            else inbox_mod.mark_all_read(gs)
+        )
+        _write(session)
+        return {"marked_read": n, "unread": inbox_mod.unread_count(gs)}
+
+
+def get_standings(code: str, region: str | None = None) -> dict[str, Any]:
+    """League tables — your region first unless one is named."""
+    session = _session(code)
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        user_region = str(gs.teams[team_id].region)
+        regions = (
+            [region] if region
+            else sorted(gs.regions(), key=lambda r: (r != user_region, r))
+        )
+
+        def rows(reg: str, tier: int) -> list[dict[str, Any]]:
+            return [
+                {
+                    "place": i + 1,
+                    "team_id": tid,
+                    "name": gs.teams[tid].name,
+                    "is_you": tid == team_id,
+                    **_record(gs, tid),
+                }
+                for i, tid in enumerate(gs.standings_order(reg, tier=tier))
+            ]
+
+        return {
+            "phase": gs.phase,
+            "week": gs.week,
+            "regions": [
+                {
+                    "region": reg,
+                    "is_yours": reg == user_region,
+                    "tier1": rows(reg, 1),
+                    "tier2": rows(reg, 2),
+                }
+                for reg in regions
+            ],
+        }
+
+
+def get_schedule(code: str, weeks: int = 4, all_teams: bool = False) -> dict[str, Any]:
+    """Upcoming fixtures — yours by default, or the whole league."""
+    session = _session(code)
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        upcoming = [
+            f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+            if not f.played
+            and f.week < gs.week + max(1, weeks)
+            and (all_teams or team_id in (f.team_a, f.team_b))
+        ]
+        return {
+            "from_week": gs.week,
+            "fixtures": [_fixture_view(gs, f, team_id) for f in upcoming],
+        }
+
+
+def get_results(
+    code: str, team_id: str | None = None, limit: int = 10
+) -> dict[str, Any]:
+    """Played fixtures, most recent first."""
+    session = _session(code)
+    with _acting(session) as gs:
+        target = team_id or session.env.team_id
+        played = [
+            f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id), reverse=True)
+            if f.played and (target == "*" or target in (f.team_a, f.team_b))
+        ]
+        return {
+            "team_id": None if target == "*" else target,
+            "results": [
+                _fixture_view(gs, f, None if target == "*" else target)
+                for f in played[: max(1, limit)]
+            ],
+        }
+
+
+def get_match(code: str, fixture_id: str) -> dict[str, Any]:
+    """One fixture in full: per-map scores and the player lines that survived."""
+    session = _session(code)
+    with _acting(session) as gs:
+        fixture = next((f for f in gs.fixtures if f.id == fixture_id), None)
+        if fixture is None:
+            raise PlayError(f"no fixture {fixture_id!r} in this world")
+        view = _fixture_view(gs, fixture, session.env.team_id)
+        view["maps_detail"] = [
+            {
+                "map_id": r.map_id,
+                "score_a": r.score_a,
+                "score_b": r.score_b,
+                "winner_id": r.winner_id,
+                "lines": [
+                    {
+                        "player_id": line.player_id,
+                        "handle": gs.players[line.player_id].handle
+                        if line.player_id in gs.players else line.player_id,
+                        **line.model_dump(exclude={"player_id"}),
+                    }
+                    for line in r.lines
+                ],
+            }
+            for r in fixture.results
+        ]
+        return view
+
+
+def get_season_report(code: str, season: int | None = None) -> dict[str, Any]:
+    """Champions, awards, and the season's headline numbers."""
+    session = _session(code)
+    with _acting(session) as gs:
+        return analytics.season_report(gs, season)
+
+
+def get_player(code: str, player_id: str) -> dict[str, Any]:
+    """One player, fogged exactly as the scouting system allows."""
+    session = _session(code)
+    with _acting(session) as gs:
+        if player_id not in gs.players:
+            raise PlayError(f"no player {player_id!r} in this world")
+        team_id = session.env.team_id
+        owner = market.team_of(gs, player_id)
+        observation = manager_observation(gs, _gamedata(), team_id)
+        pool = (
+            observation["roster"] if owner == team_id
+            else observation["free_agents"]
+        )
+        view = next((p for p in pool if p.get("id") == player_id), None)
+        if view is None:
+            # A rival's player: the same scouted read the market screens use.
+            player = gs.players[player_id]
+            progress = max(
+                gs.scout_progress.get(owner or "market", 0.0),
+                gs.scout_progress.get(f"player:{player_id}", 0.0),
+            )
+            view = development.scout_report(gs, player, progress)
+            view["perceived_quality"] = round(
+                market.perceived_quality(gs, team_id, player), 3
+            )
+        view["owner"] = (
+            {"team_id": owner, "name": gs.teams[owner].name}
+            if owner in gs.teams else None
+        )
+        view["is_yours"] = owner == team_id
+        view["chronicle"] = [
+            e.model_dump(mode="json")
+            for e in chronicle.entries_for_player(gs, player_id)[-10:]
+        ]
+        return view
+
+
+def get_team(code: str, team_id: str) -> dict[str, Any]:
+    """One club: record, roster (scout-fogged for rivals), and honours."""
+    session = _session(code)
+    with _acting(session) as gs:
+        if team_id not in gs.teams:
+            raise PlayError(f"no team {team_id!r} in this world")
+        team = gs.teams[team_id]
+        yours = team_id == session.env.team_id
+        return {
+            "team_id": team_id,
+            "name": team.name,
+            "tag": team.tag,
+            "region": str(team.region),
+            "tier": team.tier,
+            "reputation": round(float(team.reputation), 1),
+            "is_yours": yours,
+            "balance": team.balance if yours else None,
+            "record": _record(gs, team_id),
+            "position": _position(gs, team_id),
+            "tactics": team.tactics.model_dump() if yours else None,
+            "roster": [
+                get_player(session.code, pid) for pid in sorted(team.player_ids)
+            ],
+            "chronicle": [
+                e.model_dump(mode="json")
+                for e in chronicle.entries_for_team(gs, team_id)[-10:]
+            ],
+        }
+
+
+def get_market(code: str, limit: int = 25) -> dict[str, Any]:
+    """The free-agent pool plus the live contract talks on your desk."""
+    session = _session(code)
+    observation = manager_observation(
+        session.gs, _gamedata(), session.env.team_id
+    )
+    with _acting(session) as gs:
+        free_agents = sorted(
+            observation["free_agents"],
+            key=lambda p: -float(p.get("perceived_quality", 0.0)),
+        )
+        return {
+            "window": market.market_window_status(gs),
+            "roster_cap": market.roster_cap(gs, session.env.team_id),
+            "balance": gs.teams[session.env.team_id].balance,
+            "free_agents": free_agents[: max(1, limit)],
+            "free_agent_count": len(free_agents),
+            "negotiations": observation["negotiations"],
+            "incoming_offers": _extra_action_contract(session)[
+                "transfer_respond"
+            ]["offers"],
+        }
+
+
+def get_transfer_target(code: str, player_id: str) -> dict[str, Any]:
+    """What a contracted rival player would actually cost, and whether they sell."""
+    session = _session(code)
+    with _acting(session) as gs:
+        if player_id not in gs.players:
+            raise PlayError(f"no player {player_id!r} in this world")
+        owner = market.team_of(gs, player_id)
+        if owner is None:
+            raise PlayError(
+                f"{gs.players[player_id].handle} is a free agent — "
+                "use act(kind='sign') or negotiate_open"
+            )
+        if owner == session.env.team_id:
+            raise PlayError("that is your own player")
+        fee = market.transfer_ask(gs, player_id)
+        stance = market.org_player_valuation(gs, owner, player_id, "sell")
+        return {
+            "player": get_player(session.code, player_id),
+            "owner": {"team_id": owner, "name": gs.teams[owner].name},
+            "transfer_ask": fee,
+            "ask_breakdown": market.transfer_ask_breakdown(gs, player_id),
+            "buyout_fee": market.buyout_fee(gs, player_id),
+            "seller_stance": stance,
+            "your_balance": gs.teams[session.env.team_id].balance,
+            "wage_reserve_needed": market.asking_salary(gs.players[player_id]) * 8,
+        }
+
+
+def get_tactics(code: str) -> dict[str, Any]:
+    """The dials with their roster fit, and the agent menu for every starter.
+
+    Dial impact is computed here from ``sim/tactics_fit.py`` — the same code
+    the match engine runs — so this preview cannot drift from what a match
+    actually applies. Each dial is piecewise linear in its value with the knot
+    at the neutral 50, so ``impact_lo`` (value 0) and ``impact_hi`` (value 100)
+    bracket everything in between; at 50 the impact is exactly zero.
+    """
+    from esports_sim.sim import constants as sim_constants
+    from esports_sim.sim import lineup as lineup_resolve
+    from esports_sim.sim import tactics_fit
+
+    session = _session(code)
+    with _acting(session) as gs:
+        team = gs.teams[session.env.team_id]
+        roster = [gs.players[pid] for pid in team.player_ids if pid in gs.players]
+        definitions = _gamedata().attributes.definitions
+        chem_edge = tactics_fit.chem_edge(team.chemistry)
+
+        def named(attrs) -> list[str]:
+            return [
+                definitions[a].display_name if a in definitions else a
+                for a in attrs
+            ]
+
+        def scored(pole: str) -> list[dict[str, Any]]:
+            fits = tactics_fit.dial_pole_player_fits(roster, dial, pole)
+            return sorted(
+                (
+                    {"handle": p.handle, "playstyle": str(p.playstyle),
+                     "score": round(fit)}
+                    for p, fit in zip(roster, fits)
+                ),
+                key=lambda s: -s["score"],
+            )
+
+        dials = []
+        for dial, poles in tactics_fit.DIAL_POLE_FIT_ATTRS.items():
+            fits_lo = tactics_fit.dial_pole_player_fits(roster, dial, "low")
+            fits_hi = tactics_fit.dial_pole_player_fits(roster, dial, "high")
+            gated = dial in tactics_fit.CHEM_GATED
+            dials.append({
+                "dial": dial,
+                "value": getattr(team.tactics, dial),
+                "low_means": named(poles["low"]),
+                "high_means": named(poles["high"]),
+                "fit_low": round(
+                    sum(fits_lo) / len(fits_lo) if fits_lo else 50.0, 1
+                ),
+                "fit_high": round(
+                    sum(fits_hi) / len(fits_hi) if fits_hi else 50.0, 1
+                ),
+                "impact_at_0": round(
+                    tactics_fit.dial_pole_edge(roster, dial, "low"), 4
+                ),
+                "impact_at_100": round(
+                    tactics_fit.dial_pole_edge(roster, dial, "high")
+                    + (chem_edge if gated else 0.0), 4
+                ),
+                "chemistry_gated": gated,
+                "best_at_low": scored("low")[:3],
+                "best_at_high": scored("high")[:3],
+            })
+
+        agents = _gamedata().agents
+        lineup = []
+        for pid in team.player_ids:
+            if pid not in gs.players:
+                continue
+            player = gs.players[pid]
+            auto = lineup_resolve.auto_pick_agent(player, agents)
+            locked = team.lineup.agents.get(pid)
+            locked = locked if locked in agents else None
+            options = sorted(
+                (
+                    {
+                        "agent_id": a.id,
+                        "name": a.display_name,
+                        "role": str(a.role),
+                        "mastery": round(player.agent_mastery(a.id, 0.0)),
+                        "duel_edge": development.agent_pick_edge(player, a.id),
+                    }
+                    for a in agents.values()
+                ),
+                key=lambda o: (-o["mastery"], o["name"]),
+            )
+            lineup.append({
+                "player_id": pid,
+                "handle": player.handle,
+                "role": str(player.role),
+                "playstyle": str(player.playstyle),
+                "locked_agent": locked,
+                "auto_agent": auto,
+                "resolved_agent": locked or auto,
+                "top_agents": options[:6],
+            })
+
+        return {
+            "tactics": team.tactics.model_dump(),
+            "chemistry": round(team.chemistry, 1),
+            "impact_cap": sim_constants.EXEC_MOD_CAP,
+            "dials": dials,
+            "lineup": lineup,
+            "note": (
+                "Every dial is an exact no-op at 50. A dial your roster does "
+                "not fit still moves the match — against you. Set dials with "
+                "act(kind='set_tactics'); lock an agent with set_agent_lock."
+            ),
+        }
+
+
+def set_agent_lock(
+    code: str, player_id: str, agent_id: str = ""
+) -> dict[str, Any]:
+    """Lock one starter onto an agent, or clear the lock back to the auto pick."""
+    from esports_sim.manager import telemetry
+
+    session = _session(code)
+    with _acting(session) as gs:
+        team = gs.teams[session.env.team_id]
+        if player_id not in team.player_ids:
+            raise PlayError(f"{player_id!r} is not on your roster")
+        if agent_id and agent_id not in _gamedata().agents:
+            raise PlayError(
+                f"unknown agent {agent_id!r} — see get_tactics().lineup"
+            )
+        if agent_id:
+            team.lineup.agents[player_id] = agent_id
+            message = (
+                f"{gs.players[player_id].handle} locked to "
+                f"{_gamedata().agents[agent_id].display_name}"
+            )
+        else:
+            team.lineup.agents.pop(player_id, None)
+            message = (
+                f"{gs.players[player_id].handle} back to the automatic pick"
+            )
+        if gs.is_human(session.env.team_id):
+            telemetry.record_action(
+                gs, "set_assignment",
+                {"player_id": player_id, "agent_id": agent_id},
+                team_id=session.env.team_id, source="agent",
+            )
+    _write(session)
+    return {"ok": True, "kind": "set_agent_lock", "message": message}
+
+
+def get_scouting(code: str) -> dict[str, Any]:
+    """The scout desk: who you're watching and what the intel has bought you."""
+    session = _session(code)
+    with _acting(session) as gs:
+        return scouting.scout_desk_view(gs, session.env.team_id)
+
+
+def set_scout_directive(
+    code: str,
+    lane: str,
+    directive: str = "",
+    role: str = "any",
+    caliber: str = "any",
+) -> dict[str, Any]:
+    """Give a scouting lane a STANDING directive instead of a weekly re-pick.
+
+    ``lane`` is "pro" or "amateur". An empty ``directive`` clears the lane and
+    the department falls back to the single ``set_scout`` slot. ``role`` and
+    ``caliber`` only apply to the pro lane's "fill_gap" directive.
+    """
+    from esports_sim.manager import telemetry
+
+    session = _session(code)
+    if lane not in ("pro", "amateur"):
+        raise PlayError("lane must be 'pro' or 'amateur'")
+    with _acting(session) as gs:
+        stored: str | None = directive or None
+        if stored is not None:
+            if lane == "pro":
+                if stored == "fill_gap":
+                    if caliber not in scouting.CALIBER_FLOOR:
+                        raise PlayError(
+                            f"unknown caliber {caliber!r} — choose from "
+                            f"{sorted(scouting.CALIBER_FLOOR)}"
+                        )
+                    stored = f"fill_gap:{(role or 'any').strip() or 'any'}:{caliber}"
+                elif stored not in scouting.PRO_DIRECTIVES:
+                    raise PlayError(
+                        f"unknown pro directive {stored!r} — choose from "
+                        f"{list(scouting.PRO_DIRECTIVES)}"
+                    )
+            elif stored not in scouting.AMATEUR_DIRECTIVES:
+                raise PlayError(
+                    f"unknown amateur directive {stored!r} — choose from "
+                    f"{list(scouting.AMATEUR_DIRECTIVES)}"
+                )
+        team_id = session.env.team_id
+        lanes = gs.scout_lanes_by.setdefault(team_id, {})
+        if stored is None:
+            lanes.pop(lane, None)
+        else:
+            lanes[lane] = stored
+        # A stored fill_gap shortlist only means anything while the pro lane is
+        # actually running fill_gap; drop it otherwise so the desk stops
+        # surfacing a stale list.
+        if lane == "pro" and not (lanes.get("pro") or "").startswith("fill_gap"):
+            gs.scout_shortlist_by.pop(team_id, None)
+        if gs.is_human(team_id):
+            telemetry.record_action(
+                gs, "set_scout_directive",
+                {"lane": lane, "directive": stored or ""},
+                team_id=team_id, source="agent",
+            )
+    _write(session)
+    return {
+        "ok": True,
+        "kind": "set_scout_directive",
+        "message": f"{lane} scouting directive: {stored or 'cleared'}",
+    }
+
+
+def get_finances(code: str) -> dict[str, Any]:
+    """Weekly income/expenses, cash projection, and sponsor state."""
+    session = _session(code)
+    with _acting(session) as gs:
+        staff_cost = sum(m.salary for m in gs.staff.values())
+        return {
+            "balance": gs.teams[session.env.team_id].balance,
+            "weekly": economy.weekly_breakdown(gs, staff_cost),
+            "projection": economy.cash_projection(gs, staff_cost),
+        }
+
+
+def get_club(code: str) -> dict[str, Any]:
+    """Staff, facilities, academy, culture — the org behind the five players."""
+    session = _session(code)
+    observation = manager_observation(
+        session.gs, _gamedata(), session.env.team_id
+    )
+    with _acting(session) as gs:
+        return {
+            "staff": {
+                role: {
+                    "id": m.id,
+                    "name": m.name,
+                    "role": m.role,
+                    "salary": m.salary,
+                    "overall": staff_effects.overall(m),
+                }
+                for role, m in sorted(gs.staff.items())
+            },
+            "facilities": facilities.menu_view(gs),
+            "academy": observation["club"]["academy"],
+            "culture": observation["club"]["culture"],
+            "preparation": observation["club"]["preparation"],
+            "delegation": observation["club"]["delegation"],
+        }
+
+
+def get_analyst_digest(code: str) -> dict[str, Any]:
+    """The coaching read on your last series — why you won or lost."""
+    session = _session(code)
+    with _acting(session) as gs:
+        digest = match_review.analyst_digest(gs, session.env.team_id)
+        if digest is None:
+            return {
+                "digest": None,
+                "note": "no reviewed series yet — play a match first",
+            }
+        return {"digest": digest}
+
+
+def get_chronicle(code: str, limit: int = 25, kinds: list[str] | None = None) -> dict[str, Any]:
+    """The append-only career history every legacy system reads."""
+    session = _session(code)
+    with _acting(session) as gs:
+        entries = (
+            chronicle.of_kinds(gs, kinds) if kinds else list(gs.chronicle)
+        )
+        return {
+            "entries": [
+                e.model_dump(mode="json") for e in entries[-max(1, limit):]
+            ],
+            "total": len(gs.chronicle),
+        }
+
+
+def get_league(code: str) -> dict[str, Any]:
+    """Power rankings, award races, and all-time records in one call."""
+    session = _session(code)
+    with _acting(session) as gs:
+        return {
+            "power_rankings": analytics.power_rankings(gs),
+            "award_races": analytics.award_races(gs),
+            "records": analytics.all_time_records(gs),
+            "parity": analytics.parity(gs),
+        }
+
+
+def get_career(code: str) -> dict[str, Any]:
+    """Your seat: contract, board patience, reputation, and job offers."""
+    session = _session(code)
+    with _acting(session) as gs:
+        seat = gs.seat_for_session(session.env.team_id)
+        if seat is None:
+            return {
+                "seat": None,
+                "note": "sandbox mode — no manager seat, you are never fired",
+            }
+        offers = gs.career_offers_by.get(seat.id, [])
+        return {
+            "seat": seat.model_dump(mode="json"),
+            "offers": [o.model_dump(mode="json") for o in offers],
+            "chronicle": [
+                e.model_dump(mode="json")
+                for e in chronicle.entries_for_manager(gs, seat.id)[-10:]
+            ],
+        }
+
+
+def get_playtest_summary(code: str) -> dict[str, Any]:
+    """The designer's-eye read of this campaign — what the systems produced."""
+    session = _session(code)
+    with _acting(session) as gs:
+        return {
+            "summary": analytics.playtest_summary(gs),
+            "legibility": analytics.decision_legibility(gs),
+        }
+
+
+# ---------------------------------------------------------------------------
+# Market actions the headless contract does not carry
+# ---------------------------------------------------------------------------
+
+
+def transfer_bid(code: str, player_id: str) -> dict[str, Any]:
+    """Bid the asking fee for a contracted player at another club."""
+    return _market_action(
+        code, "bid", {"player_id": player_id},
+        lambda gs: market.user_bid(gs, player_id),
+    )
+
+
+def transfer_buyout(code: str, player_id: str) -> dict[str, Any]:
+    """Trigger a release clause — instant, no negotiation, premium price."""
+    return _market_action(
+        code, "buyout", {"player_id": player_id},
+        lambda gs: market.buy_out_player(gs, gs.acting_team_id, player_id),
+    )
+
+
+def transfer_respond(
+    code: str, player_id: str, accept: bool, to_team: str | None = None
+) -> dict[str, Any]:
+    """Answer a bid another manager has made for one of your players."""
+    return _market_action(
+        code, "respond_offer",
+        {"player_id": player_id, "accept": accept, "to_team": to_team},
+        lambda gs: market.respond_offer(gs, player_id, accept, to_team),
+    )
+
+
+def transfer_package(
+    code: str,
+    player_id: str,
+    offer_player_ids: list[str] | None = None,
+    cash_to_seller: int = 0,
+    cash_to_buyer: int = 0,
+) -> dict[str, Any]:
+    """Offer players plus cash for a target instead of a straight fee."""
+    return _market_action(
+        code, "propose_package",
+        {
+            "player_id": player_id,
+            "offer_player_ids": list(offer_player_ids or []),
+            "cash_to_seller": int(cash_to_seller),
+            "cash_to_buyer": int(cash_to_buyer),
+        },
+        lambda gs: market.propose_package(
+            gs, player_id, list(offer_player_ids or []),
+            int(cash_to_seller), int(cash_to_buyer),
+        ),
+    )
+
+
+def _market_action(code: str, kind: str, params: dict[str, Any], fn) -> dict[str, Any]:
+    """Apply a web-layer market action and record it like any human decision."""
+    from esports_sim.manager import telemetry
+
+    session = _session(code)
+    with _acting(session) as gs:
+        result = fn(gs)
+        ok, message = result[0], result[1]
+        if not ok:
+            raise PlayError(f"illegal action: {message}")
+        # A transfer has already moved a player by this point. Anything that
+        # goes wrong while RECORDING it must not cost the caller the move, so
+        # the write is unconditional from here on.
+        try:
+            if gs.is_human(session.env.team_id):
+                telemetry.record_action(
+                    gs, kind, params, team_id=session.env.team_id, source="agent"
+                )
+        finally:
+            _write(session)
+    return {
+        "ok": True,
+        "kind": kind,
+        "message": message,
+        "state": get_state(session.code),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Reference
+# ---------------------------------------------------------------------------
+
+
+def how_to_play() -> dict[str, Any]:
+    """The rules of the game as an agent needs them, in one call."""
+    return {
+        "goal": (
+            "Manage an esports org through a multi-region season: win your "
+            "region, reach the playoffs and internationals, develop players, "
+            "and stay solvent. In legacy mode the board can also fire you."
+        ),
+        "loop": [
+            "get_state — where the season is and what needs you",
+            "get_legal_actions — the exact legal parameters for every action",
+            "act — one decision at a time (tactics, lineup, market, staff...)",
+            "advance_week — tick the world and read the digest it returns",
+        ],
+        "week_rhythm": [
+            "Match weeks: set a game plan and lineup, book preparation, then advance.",
+            "The advance gate blocks on roster legality and pending events; "
+            "get_state().advance_blocked_by names the blocker.",
+            "Development, finances, scouting and morale all resolve on the tick, "
+            "so decisions made after an advance apply to the NEXT week.",
+        ],
+        "key_systems": {
+            "tactics": (
+                "Five 0-100 dials plus site focus. 50 is exactly neutral; the "
+                "further from 50, the stronger the effect and the more it "
+                "depends on whether your roster fits it."
+            ),
+            "game_plan": (
+                "A per-match override of tactics, a focus target on the "
+                "opponent, a one-match lineup, and a team talk. Consumed at "
+                "sim time — set it before you advance."
+            ),
+            "development": (
+                "set_dev_plan per player (focus + intensity), mentorships, and "
+                "the training focus for the squad. Growth is slow and "
+                "compounding; potential is a scouted range, not a number."
+            ),
+            "market": (
+                "Free agents are signed directly; contracted players need a "
+                "cash bid, a buyout, or a package. Windows close in playoffs."
+            ),
+            "scouting": (
+                "set_scout aims one scout at the market, a rival club, one "
+                "player, or one upcoming match. Progress narrows the fog on "
+                "attributes and potential — you cannot buy well while blind."
+            ),
+            "economy": (
+                "Sponsors, merch, and stream income fund wages, staff, and "
+                "facility upgrades. Insolvency is real; check get_finances."
+            ),
+        },
+        "gotchas": [
+            "Actions are legal-or-rejected: read get_legal_actions rather than "
+            "guessing ids. Every id in the contract is exactly what act wants.",
+            "A no-op action (setting a dial to its current value) returns a "
+            "message saying so — it is not an error, but it wastes a decision.",
+            "Every decision is written to disk as it lands, so a dropped "
+            "connection never loses work; save_game is only there if you want "
+            "to force a write.",
+        ],
+    }
