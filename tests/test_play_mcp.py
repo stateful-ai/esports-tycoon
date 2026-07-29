@@ -156,14 +156,18 @@ def test_package_offers_show_what_is_being_offered(world: str) -> None:
 
 def test_every_shipped_market_tool_appears_in_the_contract(world: str) -> None:
     """how_to_play promises the mask names every action; a tool it omits can
-    only be reached by guessing."""
-    from esports_sim.mcp import play_server
+    only be reached by guessing.
 
+    Enumerated from the ops module, not the server: play_server is a 1:1 thin
+    wrapper, and importing it would drag in the optional `mcp` package that
+    only the protocol test needs — the rest of this file must run without it.
+    """
     contract = ops.get_legal_actions(world)["extra_actions"]
     shipped = {
-        tool for tool in dir(play_server)
-        if tool.startswith("transfer_")
+        name for name in dir(ops)
+        if name.startswith("transfer_") and callable(getattr(ops, name))
     }
+    assert shipped, "found no transfer ops to check the contract against"
     assert shipped <= set(contract), f"undeclared tools: {shipped - set(contract)}"
     package = contract["transfer_package"]
     assert package["enabled"] is True
@@ -204,6 +208,13 @@ def test_a_refused_market_action_still_persists_its_history(world: str) -> None:
     on_disk = GameState.load(ops.save_path_for(world))
     assert len(on_disk.market_decisions) == before + 1
     assert on_disk.market_decisions[-1].outcome == "rejected"
+
+    # Persisting the side effect while logging nothing would leave a save the
+    # action log cannot rebuild, so the refused call is recorded too.
+    logged = on_disk.action_log[-1]
+    assert logged.kind == "bid"
+    assert logged.params["outcome"] == "rejected"
+    assert logged.params["player_id"] == icon
 
 
 def test_a_cash_back_offer_is_not_shown_as_a_plain_cash_bid(
@@ -430,9 +441,14 @@ def test_a_dismissed_manager_cannot_keep_running_the_old_club(
     state = ops.get_state("FIRED")
     assert state["dismissed"] is True
     assert any("job offer" in call for call in state["needs_you"])
-    # The contract must not advertise running a club the AI now owns.
-    enabled = ops.get_legal_actions("FIRED")["actions"]
-    assert set(enabled) == {"accept_job"}
+    # The contract must not advertise running a club the AI now owns —
+    # including the market tools, which bypass act() entirely.
+    contract = ops.get_legal_actions("FIRED")
+    assert set(contract["actions"]) == {"accept_job"}
+    assert not [
+        name for name, entry in contract["extra_actions"].items()
+        if isinstance(entry, dict) and entry.get("enabled")
+    ]
     for kind, params in (
         ("set_tactics", {"aggression": 90.0}),
         ("hire_staff", {"candidate_id": "whoever"}),
@@ -440,6 +456,29 @@ def test_a_dismissed_manager_cannot_keep_running_the_old_club(
     ):
         with pytest.raises(ops.PlayError, match="dismissed"):
             ops.act("FIRED", kind, params)
+    # Every direct mutation route, not just the ones that go through act().
+    for label, call in (
+        ("transfer_bid", lambda: ops.transfer_bid("FIRED", "whoever")),
+        ("transfer_buyout", lambda: ops.transfer_buyout("FIRED", "whoever")),
+        ("transfer_respond",
+         lambda: ops.transfer_respond("FIRED", "whoever", True)),
+        ("transfer_package",
+         lambda: ops.transfer_package("FIRED", "whoever", [])),
+        ("set_agent_lock",
+         lambda: ops.set_agent_lock("FIRED", "whoever", "omen")),
+        ("set_scout_directive",
+         lambda: ops.set_scout_directive("FIRED", "amateur", "track_academy")),
+        ("set_map_lineup",
+         lambda: ops.set_map_lineup("FIRED", "f", "m", [])),
+        ("mark_inbox_read", lambda: ops.mark_inbox_read("FIRED")),
+        ("sim_ahead", lambda: ops.sim_ahead_weeks("FIRED", 2)),
+        ("save_game", lambda: ops.save_game("FIRED")),
+        ("advance_week", lambda: ops.advance_week("FIRED")),
+    ):
+        with pytest.raises(ops.PlayError, match="dismissed"):
+            call()
+    # Reads stay open — you can still study the job market.
+    assert ops.get_standings("FIRED")["regions"]
 
     # Taking a new job puts the manager back to work.
     offers = ops.get_career("FIRED")["offers"]

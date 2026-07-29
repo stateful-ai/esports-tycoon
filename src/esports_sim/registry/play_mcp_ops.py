@@ -216,7 +216,9 @@ def _other_managers(session: _Session) -> list[str]:
     return sorted(others)
 
 
-def _session(code: str, *, mutating: bool = False) -> _Session:
+def _session(
+    code: str, *, mutating: bool = False, between_jobs_ok: bool = False
+) -> _Session:
     """Return a live session, reloading if another process moved the world.
 
     Worlds are browser-joinable, so the web server can be holding the same
@@ -252,6 +254,18 @@ def _session(code: str, *, mutating: bool = False) -> _Session:
         session.stamp = _stamp(path)
         _SESSIONS[code] = session
     if mutating:
+        # Here, not at each call site: the market tools, the agent lock and
+        # the scouting directive all bypass `act`, so a per-route guard is a
+        # guard with holes. Everything that writes passes through this
+        # function — gate it once and the only way to miss it is not to
+        # mutate at all.
+        seat = _dismissed_seat(session.gs, session.env.team_id)
+        if seat is not None and not between_jobs_ok:
+            raise PlayError(
+                f"you were dismissed by {seat.last_team_id} — that club is "
+                "back under AI control and is no longer yours to run. Accept "
+                "one of the jobs in get_career().offers first (accept_job)."
+            )
         held = _other_managers(session)
         if held:
             raise PlayError(
@@ -898,11 +912,23 @@ def get_legal_actions(
         legal = {k: legal[k] for k in kinds}
     elif enabled_only:
         legal = {k: v for k, v in legal.items() if v.get("enabled")}
+    extra = _extra_action_contract(session)
+    if seat is not None:
+        # The market tools bypass `act`, so masking only the headless contract
+        # would still advertise spending a former employer's money.
+        extra = {
+            name: (
+                contract if not isinstance(contract, dict)
+                else {**contract, "enabled": False,
+                      "reason": "you are between jobs — accept a post first"}
+            )
+            for name, contract in extra.items()
+        }
     return {
         "season": session.gs.season,
         "week": session.gs.week,
         "actions": legal,
-        "extra_actions": _extra_action_contract(session),
+        "extra_actions": extra,
     }
 
 
@@ -1033,14 +1059,10 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
     # rollover.
     if kind == "advance":
         return advance_week(code)
-    session = _session(code, mutating=True)
-    seat = _dismissed_seat(session.gs, session.env.team_id)
-    if seat is not None and kind != "accept_job":
-        raise PlayError(
-            f"you were dismissed by {seat.last_team_id} — that club is back "
-            "under AI control and is no longer yours to run. Accept one of "
-            "the jobs in get_career().offers first (accept_job)."
-        )
+    # Taking a new post is the one move a dismissed manager still has.
+    session = _session(
+        code, mutating=True, between_jobs_ok=(kind == "accept_job")
+    )
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
@@ -1628,11 +1650,6 @@ def set_map_lineup(
     from esports_sim.manager import telemetry
 
     session = _session(code, mutating=True)
-    seat = _dismissed_seat(session.gs, session.env.team_id)
-    if seat is not None:
-        raise PlayError(
-            "you are between jobs — accept a post before naming a lineup"
-        )
     with _acting(session) as gs:
         team_id = session.env.team_id
         fixture = next((f for f in gs.fixtures if f.id == fixture_id), None)
@@ -2005,12 +2022,20 @@ def _market_action(code: str, kind: str, params: dict[str, Any], fn) -> dict[str
         with _acting(session) as gs:
             result = fn(gs)
             ok, message = result[0], result[1]
-            if not ok:
-                raise PlayError(f"illegal action: {message}")
+            # Record the call whether or not it succeeded. A refusal can still
+            # write state (a rejected bid appends to market_decisions), and
+            # persisting that while logging nothing leaves a save the action
+            # log cannot rebuild — the two halves of the replay contract have
+            # to agree. Replaying a rejected call is safe: same state in, same
+            # refusal and same side effects out.
             if gs.is_human(session.env.team_id):
                 telemetry.record_action(
-                    gs, kind, params, team_id=session.env.team_id, source="agent"
+                    gs, kind,
+                    {**params, "outcome": "accepted" if ok else "rejected"},
+                    team_id=session.env.team_id, source="agent",
                 )
+            if not ok:
+                raise PlayError(f"illegal action: {message}")
     finally:
         _write(session)
     return {
