@@ -179,32 +179,41 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
-def _browser_holders(code: str) -> list[str]:
-    """Teams in this world currently held by a browser session.
-
-    ANY browser attached to the world is a conflict, not just one sitting in
-    our seat: a joined browser holds its own copy of the entire ``GameState``
-    with deferred writes, so a write from here overwrites its unsaved
-    decisions whichever team it plays. Advancing is worse still — a shared
-    world only ticks when every human has readied up, and ticking from here
-    would sim their matches out from under them.
-
-    The lobby persists the claim at join time (``saves/sessions.json``), which
-    is what makes a one-sided handoff possible at all.
-    """
+def _attached_browsers(code: str) -> set[str]:
+    """Teams a browser session is attached to right now, per the lobby sidecar."""
     try:
         raw = json.loads(
             (SAVE_DIR / "sessions.json").read_text(encoding="utf-8")
         )
     except (OSError, ValueError):
-        return []
-    return sorted(
-        {
-            seat[1]
-            for seat in (raw.get("sessions") or {}).values()
-            if len(seat) == 2 and seat[0] == code
-        }
-    )
+        return set()
+    return {
+        seat[1]
+        for seat in (raw.get("sessions") or {}).values()
+        if len(seat) == 2 and seat[0] == code
+    }
+
+
+def _other_managers(session: _Session) -> list[str]:
+    """Teams in this world that belong to someone other than this module.
+
+    Two signals, and the durable one leads. ``gs.human_team_ids`` is written
+    into the save when a browser claims a club and is NEVER removed —
+    ``Lobby.leave`` only detaches the session — so a club stays human-managed
+    long after the browser walks away. That is the signal that matters,
+    because the danger is not the browser being *open*: it is that advancing
+    from here bypasses the shared world's ready-up protocol and sims a human
+    club's week without its manager, while the AI leaves that club alone.
+
+    The session sidecar adds the one case the save cannot show: a browser
+    sitting in OUR seat, holding a copy of the world with unsaved decisions.
+    """
+    gs = session.gs
+    ours = session.env.team_id
+    others = {tid for tid in gs.human_team_ids if tid != ours}
+    if ours in _attached_browsers(session.code):
+        others.add(ours)
+    return sorted(others)
 
 
 def _session(code: str, *, mutating: bool = False) -> _Session:
@@ -243,14 +252,14 @@ def _session(code: str, *, mutating: bool = False) -> _Session:
         session.stamp = _stamp(path)
         _SESSIONS[code] = session
     if mutating:
-        held = _browser_holders(code)
+        held = _other_managers(session)
         if held:
             raise PlayError(
-                f"world {code} is open in a browser ({', '.join(held)}) — "
-                "writing from here would overwrite decisions the web layer "
-                "has not saved yet, and advancing would tick the week before "
-                "those managers have readied up. Reads still work; leave the "
-                "world in the browser to hand it back."
+                f"world {code} has other human managers ({', '.join(held)}) "
+                "— writing from here could overwrite decisions the web layer "
+                "has not saved, and advancing would tick the week without "
+                "those managers, whose clubs the AI will not play either. "
+                "Reads still work. Play this world in the browser."
             )
     return session
 
@@ -865,9 +874,18 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                 if offer.to_team in gs.teams else offer.to_team,
                 "fee": offer.fee,
                 "expires_week": offer.expires_week,
-                "kind": "package" if offer.offer_player_ids else "cash",
+                # Exactly market.respond_offer's own predicate. Checking only
+                # the players called a cash-BACK offer (no players, cash owed
+                # to the buyer) a plain cash bid and showed fee 0 — so the
+                # seller could accept, lose the player AND pay, having been
+                # shown nothing at all.
+                "kind": (
+                    "package"
+                    if offer.offer_player_ids or offer.cash_to_buyer
+                    else "cash"
+                ),
             }
-            if offer.offer_player_ids:
+            if view["kind"] == "package":
                 # transfer_respond is irreversible, so the whole consideration
                 # has to be visible before it: a package's value is the
                 # players and the direction of the cash, not the headline fee.

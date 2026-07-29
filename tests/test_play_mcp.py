@@ -154,6 +154,37 @@ def test_package_offers_show_what_is_being_offered(world: str) -> None:
     assert ops.get_market(world)["incoming_offers"][0]["kind"] == "package"
 
 
+def test_a_cash_back_offer_is_not_shown_as_a_plain_cash_bid(
+    world: str
+) -> None:
+    """No players but cash owed to the BUYER is still a package.
+
+    market.respond_offer treats cash_to_buyer alone as one. Classifying it on
+    the player list showed fee 0 and no cash fields, so a seller could accept,
+    lose the player AND pay, having been shown nothing.
+    """
+    from esports_sim.manager.state import TransferOffer
+
+    session = ops._session(world)
+    buyer = next(
+        tid for tid in sorted(session.gs.teams)
+        if tid != "team_nexus" and session.gs.teams[tid].player_ids
+    )
+    session.gs.transfer_offers.append(
+        TransferOffer(
+            player_id=sorted(session.gs.teams["team_nexus"].player_ids)[0],
+            from_team="team_nexus", to_team=buyer, fee=0,
+            expires_week=session.gs.week + 2,
+            offer_player_ids=[], cash_to_seller=0, cash_to_buyer=75_000,
+        )
+    )
+    deal = ops.get_market(world)["incoming_offers"][0]
+    assert deal["kind"] == "package", "a cash-back offer read as a cash bid"
+    assert deal["offered_players"] == []
+    assert deal["cash_to_buyer"] == 75_000
+    assert deal["cash_to_seller"] == 0
+
+
 def test_each_bid_names_the_buyer_under_the_answer_parameter(
     world: str
 ) -> None:
@@ -814,20 +845,6 @@ def test_a_browser_taking_the_seat_stops_mcp_writes(
     code = ops.new_game(team_id="team_nexus", seed=9)["code"]
     ops.act(code, "set_tactics", {"aggression": 61.0})
 
-    # ANY browser in the world is a conflict, not just one in our seat: it
-    # holds its own copy of the whole GameState, and a shared world only ticks
-    # once every human has readied up.
-    other = next(
-        tid for tid in sorted(ops._session(code).gs.teams)
-        if tid != "team_nexus" and ops._session(code).gs.teams[tid].tier == 1
-    )
-    game, error = lobby.join_game("1" * 32, code, other)
-    assert error is None and game is not None
-    with pytest.raises(ops.PlayError, match="open in a browser"):
-        ops.advance_week(code)
-    lobby.leave("1" * 32)
-    assert ops.act(code, "set_tactics", {"pace": 55.0})["ok"] is True
-
     game, error = lobby.join_game("0" * 32, code, "team_nexus")
     assert error is None and game is not None
 
@@ -840,11 +857,51 @@ def test_a_browser_taking_the_seat_stops_mcp_writes(
         lambda: ops.set_scout_directive(code, "amateur", "track_academy"),
         lambda: ops.save_game(code),
     ):
-        with pytest.raises(ops.PlayError, match="open in a browser"):
+        with pytest.raises(ops.PlayError, match="other human managers"):
             mutate()
-    # Leaving hands the seat back.
+    # Leaving our own seat hands it back — that club is still ours.
     lobby.leave("0" * 32)
     assert ops.act(code, "set_tactics", {"aggression": 20.0})["ok"] is True
+
+
+def test_a_second_human_club_keeps_the_world_read_only_for_good(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Leaving detaches the session but never gives the club back to the AI.
+
+    Lobby.leave pops sessions.json; gs.human_team_ids keeps the club forever.
+    Advancing from here would then tick a human club's week with no manager
+    at all — the browser is gone and the AI skips human teams — so the
+    durable signal has to be the save, not the sidecar.
+    """
+    from esports_sim.web import server as web
+
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(ops, "SAVE_DIR", saves)
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    monkeypatch.setattr(web, "SAVE_DIR", saves)
+    monkeypatch.setattr(web, "_SESSIONS_PATH", saves / "sessions.json")
+    lobby = web.Lobby()
+    monkeypatch.setattr(lobby, "gd", ops._gamedata(), raising=False)
+
+    code = ops.new_game(team_id="team_nexus", seed=9)["code"]
+    assert ops.advance_week(code)["advanced"] is True
+
+    rival = next(
+        tid for tid in sorted(ops._session(code).gs.teams)
+        if tid != "team_nexus" and ops._session(code).gs.teams[tid].tier == 1
+    )
+    game, error = lobby.join_game("1" * 32, code, rival)
+    assert error is None and game is not None
+    with pytest.raises(ops.PlayError, match="other human managers"):
+        ops.advance_week(code)
+
+    lobby.leave("1" * 32)
+    assert not ops._attached_browsers(code), "the sidecar entry is gone"
+    assert rival in ops._session(code).gs.human_team_ids, "but the club is not"
+    with pytest.raises(ops.PlayError, match="other human managers"):
+        ops.advance_week(code)
+    assert ops.get_standings(code)["regions"], "reads must still work"
 
 
 def test_generated_codes_come_from_stable_hashed_inputs(
