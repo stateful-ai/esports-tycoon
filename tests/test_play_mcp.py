@@ -154,6 +154,48 @@ def test_package_offers_show_what_is_being_offered(world: str) -> None:
     assert ops.get_market(world)["incoming_offers"][0]["kind"] == "package"
 
 
+def test_each_bid_names_the_buyer_under_the_answer_parameter(
+    world: str
+) -> None:
+    """Two clubs can bid for one player; the wrong one must not be answerable.
+
+    market.respond_offer falls back to the lexicographically first bidder
+    when the buyer is unnamed, so publishing the buyer under any key other
+    than transfer_respond's own parameter invites answering a deal the
+    manager never read.
+    """
+    from esports_sim.manager.state import TransferOffer
+
+    session = ops._session(world)
+    wanted = sorted(session.gs.teams["team_nexus"].player_ids)[0]
+    rivals = [
+        tid for tid in sorted(session.gs.teams)
+        if tid != "team_nexus" and session.gs.teams[tid].player_ids
+    ][:2]
+    for index, buyer in enumerate(rivals):
+        session.gs.transfer_offers.append(
+            TransferOffer(
+                player_id=wanted, from_team="team_nexus", to_team=buyer,
+                fee=100_000 * (index + 1),
+                expires_week=session.gs.week + 2,
+            )
+        )
+    contract = ops.get_legal_actions(world)["extra_actions"]["transfer_respond"]
+    assert "to_team" in contract["note"]
+    offers = {o["to_team"]: o for o in contract["offers"]}
+    assert set(offers) == set(rivals)
+    assert all(o["buyer_name"] for o in offers.values())
+
+    # Answering the SECOND bid must resolve that one, not the first by sort.
+    richer = rivals[1]
+    ops.transfer_respond(world, wanted, accept=False, to_team=richer)
+    left = {
+        o.to_team for o in ops._session(world).gs.transfer_offers
+        if o.player_id == wanted
+    }
+    assert left == {rivals[0]}
+
+
 def test_legal_actions_are_the_only_contract_needed(world: str) -> None:
     legal = ops.get_legal_actions(world)["actions"]
     assert legal["set_training"]["enabled"] is True
@@ -772,6 +814,20 @@ def test_a_browser_taking_the_seat_stops_mcp_writes(
     code = ops.new_game(team_id="team_nexus", seed=9)["code"]
     ops.act(code, "set_tactics", {"aggression": 61.0})
 
+    # ANY browser in the world is a conflict, not just one in our seat: it
+    # holds its own copy of the whole GameState, and a shared world only ticks
+    # once every human has readied up.
+    other = next(
+        tid for tid in sorted(ops._session(code).gs.teams)
+        if tid != "team_nexus" and ops._session(code).gs.teams[tid].tier == 1
+    )
+    game, error = lobby.join_game("1" * 32, code, other)
+    assert error is None and game is not None
+    with pytest.raises(ops.PlayError, match="open in a browser"):
+        ops.advance_week(code)
+    lobby.leave("1" * 32)
+    assert ops.act(code, "set_tactics", {"pace": 55.0})["ok"] is True
+
     game, error = lobby.join_game("0" * 32, code, "team_nexus")
     assert error is None and game is not None
 
@@ -784,7 +840,7 @@ def test_a_browser_taking_the_seat_stops_mcp_writes(
         lambda: ops.set_scout_directive(code, "amateur", "track_academy"),
         lambda: ops.save_game(code),
     ):
-        with pytest.raises(ops.PlayError, match="taken over"):
+        with pytest.raises(ops.PlayError, match="open in a browser"):
             mutate()
     # Leaving hands the seat back.
     lobby.leave("0" * 32)

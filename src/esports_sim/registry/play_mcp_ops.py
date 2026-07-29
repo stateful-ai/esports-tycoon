@@ -179,22 +179,32 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
-def _browser_seat_holder(code: str, team_id: str) -> str | None:
-    """The browser session, if any, currently attached to (world, team).
+def _browser_holders(code: str) -> list[str]:
+    """Teams in this world currently held by a browser session.
 
-    The lobby persists this at join time (``saves/sessions.json``), which is
-    what makes a one-sided handoff possible at all.
+    ANY browser attached to the world is a conflict, not just one sitting in
+    our seat: a joined browser holds its own copy of the entire ``GameState``
+    with deferred writes, so a write from here overwrites its unsaved
+    decisions whichever team it plays. Advancing is worse still — a shared
+    world only ticks when every human has readied up, and ticking from here
+    would sim their matches out from under them.
+
+    The lobby persists the claim at join time (``saves/sessions.json``), which
+    is what makes a one-sided handoff possible at all.
     """
     try:
         raw = json.loads(
             (SAVE_DIR / "sessions.json").read_text(encoding="utf-8")
         )
     except (OSError, ValueError):
-        return None
-    for sid, seat in sorted((raw.get("sessions") or {}).items()):
-        if list(seat) == [code, team_id]:
-            return sid
-    return None
+        return []
+    return sorted(
+        {
+            seat[1]
+            for seat in (raw.get("sessions") or {}).values()
+            if len(seat) == 2 and seat[0] == code
+        }
+    )
 
 
 def _session(code: str, *, mutating: bool = False) -> _Session:
@@ -233,14 +243,14 @@ def _session(code: str, *, mutating: bool = False) -> _Session:
         session.stamp = _stamp(path)
         _SESSIONS[code] = session
     if mutating:
-        holder = _browser_seat_holder(code, session.env.team_id)
-        if holder is not None:
+        held = _browser_holders(code)
+        if held:
             raise PlayError(
-                f"a browser has taken over {session.env.team_id} in world "
-                f"{code} — this seat is now played there, and writing from "
-                "here would overwrite decisions the web layer has not saved "
-                "yet. Reads still work; leave the world in the browser to "
-                "hand the seat back."
+                f"world {code} is open in a browser ({', '.join(held)}) — "
+                "writing from here would overwrite decisions the web layer "
+                "has not saved yet, and advancing would tick the week before "
+                "those managers have readied up. Reads still work; leave the "
+                "world in the browser to hand it back."
             )
     return session
 
@@ -845,8 +855,13 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
             view = {
                 "player_id": offer.player_id,
                 "handle": gs.players[offer.player_id].handle,
-                "from_team": offer.to_team,
-                "from_team_name": gs.teams[offer.to_team].name
+                # Named for the transfer_respond parameter it feeds. Two clubs
+                # can bid for the same player, and respond_offer falls back to
+                # the lexicographically first bidder when the buyer is not
+                # named — so publishing this under any other key invites
+                # answering a deal the manager never looked at.
+                "to_team": offer.to_team,
+                "buyer_name": gs.teams[offer.to_team].name
                 if offer.to_team in gs.teams else offer.to_team,
                 "fee": offer.fee,
                 "expires_week": offer.expires_week,
@@ -903,6 +918,11 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
             "transfer_respond": {
                 "enabled": bool(incoming),
                 "offers": incoming,
+                "note": (
+                    "Pass to_team from the offer you mean. Several clubs can "
+                    "bid for one player, and omitting it answers whichever "
+                    "bid sorts first, not the one you read."
+                ),
             },
             "transfer_buyout": {
                 "enabled": bool(window["open"]) and bool(buyout_targets),
