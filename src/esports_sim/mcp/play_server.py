@@ -276,6 +276,19 @@ def set_agent_lock(code: str, player_id: str, agent_id: str = "") -> dict[str, A
 
 
 @mcp.tool()
+def set_map_lineup(
+    code: str, fixture_id: str, map_id: str, player_ids: list[str] | None = None
+) -> dict[str, Any]:
+    """Dress a specific five for one map of a fixture, or clear the override.
+
+    A per-map override outranks the default lineup, so leaving a stale one in
+    place silently overrides act(kind="set_lineup"). Pass no player_ids to
+    clear it. get_tactics().measured_over.map_overrides lists the ones in force.
+    """
+    return ops.set_map_lineup(code, fixture_id, map_id, player_ids)
+
+
+@mcp.tool()
 def get_scouting(code: str) -> dict[str, Any]:
     """The scout desk: current assignment, progress, and what the intel bought."""
     return ops.get_scouting(code)

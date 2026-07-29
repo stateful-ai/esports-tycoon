@@ -415,6 +415,21 @@ def _pending_events(gs: GameState, team_id: str) -> list[dict[str, Any]]:
 URGENT_CONTRACT_WEEKS = 1
 
 
+def _dismissed_seat(gs: GameState, team_id: str):
+    """The seat this env plays if it has been fired, else None.
+
+    ``career.apply_dismissals`` clears the seat's team and hands the club back
+    to the AI, but the env stays bound to that club until ``accept_job``. So
+    without this check a dismissed manager keeps running an org that is no
+    longer theirs — setting its tactics, releasing its players, spending its
+    money.
+    """
+    seat = gs.seat_for_session(team_id)
+    if seat is not None and not seat.team_id:
+        return seat
+    return None
+
+
 def _draft_blocker(gs: GameState) -> str | None:
     """Why the season cannot start yet, if a fantasy draft is still running.
 
@@ -763,7 +778,8 @@ def get_state(code: str) -> dict[str, Any]:
     with _acting(session) as gs:
         team_id = session.env.team_id
         team = gs.teams[team_id]
-        legal = manager_observation(gs, _gamedata(), team_id)["legal_actions"]
+        legal = get_legal_actions(session.code, enabled_only=False)["actions"]
+        dismissed = _dismissed_seat(gs, team_id)
         calls, urgent = _needs_you(gs, team_id, legal)
         fixture = gs.team_fixture(team_id)
         unread = sum(1 for it in gs.inbox if it.unread)
@@ -784,6 +800,8 @@ def get_state(code: str) -> dict[str, Any]:
                 "reputation": round(float(team.reputation), 1),
                 "roster_size": len(team.player_ids),
             },
+            # Between jobs the club above is a former employer, not yours.
+            "dismissed": dismissed is not None,
             "manager": (
                 {
                     "name": seat.name,
@@ -858,6 +876,18 @@ def get_legal_actions(
     legal = manager_observation(
         session.gs, _gamedata(), session.env.team_id
     )["legal_actions"]
+    seat = _dismissed_seat(session.gs, session.env.team_id)
+    if seat is not None:
+        # Between jobs there is exactly one legal move. Leaving the club's
+        # actions enabled would advertise running an org the AI now owns.
+        legal = {
+            kind: (
+                contract if kind == "accept_job"
+                else {**contract, "enabled": False,
+                      "reason": "you are between jobs — accept a post first"}
+            )
+            for kind, contract in legal.items()
+        }
     if kinds:
         unknown = [k for k in kinds if k not in legal]
         if unknown:
@@ -1004,6 +1034,13 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
     if kind == "advance":
         return advance_week(code)
     session = _session(code, mutating=True)
+    seat = _dismissed_seat(session.gs, session.env.team_id)
+    if seat is not None and kind != "accept_job":
+        raise PlayError(
+            f"you were dismissed by {seat.last_team_id} — that club is back "
+            "under AI control and is no longer yours to run. Accept one of "
+            "the jobs in get_career().offers first (accept_job)."
+        )
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
@@ -1553,6 +1590,12 @@ def get_tactics(code: str) -> dict[str, Any]:
             "measured_over": {
                 "player_ids": list(dressed),
                 "source": dressed_from,
+                # Overrides beat the default five, so name the ones in force —
+                # otherwise a stale one silently outranks every lineup change.
+                "map_overrides": {
+                    map_id: list(five) for map_id, five in per_map.items()
+                    if f"{team.id}|{fixture.id}|{map_id}" in gs.map_lineups
+                } if fixture is not None else {},
                 "benched": [
                     gs.players[pid].handle
                     for pid in team.player_ids
@@ -1570,6 +1613,67 @@ def get_tactics(code: str) -> dict[str, Any]:
                 "act(kind='set_tactics'); lock an agent with set_agent_lock."
             ),
         }
+
+
+def set_map_lineup(
+    code: str, fixture_id: str, map_id: str, player_ids: list[str] | None = None
+) -> dict[str, Any]:
+    """Dress a specific five for one map of one fixture, or clear the override.
+
+    ``campaign.dressed_for`` reads these per-map overrides BEFORE the team's
+    default lineup, so an override left in place silently wins over any
+    default five set here — including one a browser left behind. Passing no
+    player_ids clears it and hands the map back to the default.
+    """
+    from esports_sim.manager import telemetry
+
+    session = _session(code, mutating=True)
+    seat = _dismissed_seat(session.gs, session.env.team_id)
+    if seat is not None:
+        raise PlayError(
+            "you are between jobs — accept a post before naming a lineup"
+        )
+    with _acting(session) as gs:
+        team_id = session.env.team_id
+        fixture = next((f for f in gs.fixtures if f.id == fixture_id), None)
+        if fixture is None or team_id not in (fixture.team_a, fixture.team_b):
+            raise PlayError(f"no fixture {fixture_id!r} of yours in this world")
+        if fixture.played:
+            raise PlayError("that fixture has already been played")
+        if map_id not in fixture.maps:
+            raise PlayError(
+                f"{map_id!r} is not on that fixture — maps are {list(fixture.maps)}"
+            )
+        key = f"{team_id}|{fixture_id}|{map_id}"
+        if not player_ids:
+            gs.map_lineups.pop(key, None)
+            message = f"{map_id} back to your default lineup"
+        else:
+            picks = list(player_ids)
+            roster = set(gs.teams[team_id].player_ids)
+            if len(picks) != market.ROSTER_SIZE or len(set(picks)) != len(picks):
+                raise PlayError(
+                    f"dress exactly {market.ROSTER_SIZE} different players"
+                )
+            outside = [pid for pid in picks if pid not in roster]
+            if outside:
+                raise PlayError(f"not on your roster: {outside}")
+            gs.map_lineups[key] = picks
+            message = f"{map_id} lineup set for {fixture_id}"
+        if gs.is_human(team_id):
+            telemetry.record_action(
+                gs, "set_lineup",
+                {
+                    "agents": False,
+                    "default_five": False,
+                    "per_map": True,
+                    "fixture_id": fixture_id,
+                    "map_id": map_id,
+                },
+                team_id=team_id, source="agent",
+            )
+    _write(session)
+    return {"ok": True, "kind": "set_map_lineup", "message": message}
 
 
 def set_agent_lock(

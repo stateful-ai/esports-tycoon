@@ -405,6 +405,89 @@ def test_sim_ahead_stops_when_something_needs_you(world: str) -> None:
         assert run["state"]["deadlines"] or not run["state"]["can_advance"]
 
 
+def test_a_dismissed_manager_cannot_keep_running_the_old_club(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Being fired hands the club to the AI; the env stays bound to it anyway.
+
+    career.apply_dismissals clears the seat's team and drops the club from
+    human_team_ids, but nothing rebinds the environment, so an unguarded
+    layer keeps setting tactics and spending money at a club that is no
+    longer yours.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    slate = ops.list_career_offers(seed=21)["offers"]
+    ops.new_game(
+        team_id=slate[0]["team_id"], seed=21, code="FIRED", mode="legacy"
+    )
+    session = ops._session("FIRED")
+    seat = session.gs.seat_for_session(session.env.team_id)
+    career.apply_dismissals(session.gs, [seat.id])
+
+    state = ops.get_state("FIRED")
+    assert state["dismissed"] is True
+    assert any("job offer" in call for call in state["needs_you"])
+    # The contract must not advertise running a club the AI now owns.
+    enabled = ops.get_legal_actions("FIRED")["actions"]
+    assert set(enabled) == {"accept_job"}
+    for kind, params in (
+        ("set_tactics", {"aggression": 90.0}),
+        ("hire_staff", {"candidate_id": "whoever"}),
+        ("release", {"player_id": "whoever"}),
+    ):
+        with pytest.raises(ops.PlayError, match="dismissed"):
+            ops.act("FIRED", kind, params)
+
+    # Taking a new job puts the manager back to work.
+    offers = ops.get_career("FIRED")["offers"]
+    assert offers, "a dismissed seat must be given a job market"
+    ops.act("FIRED", "accept_job", {"team_id": offers[0]["team_id"]})
+    assert ops.get_state("FIRED")["dismissed"] is False
+    assert ops.act("FIRED", "set_tactics", {"aggression": 55.0})["ok"] is True
+
+
+def test_per_map_lineups_are_settable_not_just_visible(world: str) -> None:
+    """An override outranks the default five, so it has to be reachable.
+
+    campaign.dressed_for reads gs.map_lineups first; with no way to change
+    one, a browser-left override silently beats every set_lineup made here.
+    """
+    session = ops._session(world)
+    fixture = session.gs.team_fixture("team_nexus")
+    map_id = fixture.maps[0]
+    roster = sorted(session.gs.teams["team_nexus"].player_ids)
+
+    signable = ops.get_legal_actions(world, ["sign"])["actions"]["sign"]
+    ops.act(world, "sign", {"player_id": signable["player_ids"][0]})
+    benched = signable["player_ids"][0]
+    ops.act(world, "set_lineup", {"player_ids": roster})
+
+    # A stale override wins over the default five until it is cleared.
+    ops.set_map_lineup(
+        world, fixture.id, map_id, roster[:-1] + [benched]
+    )
+    view = ops.get_tactics(world)
+    assert view["measured_over"]["map_overrides"][map_id][-1] == benched
+    assert benched in view["measured_over"]["player_ids"]
+
+    ops.set_map_lineup(world, fixture.id, map_id)
+    cleared = ops.get_tactics(world)
+    assert cleared["measured_over"]["map_overrides"] == {}
+    assert benched not in cleared["measured_over"]["player_ids"]
+
+    with pytest.raises(ops.PlayError, match="exactly 5"):
+        ops.set_map_lineup(world, fixture.id, map_id, roster[:3])
+    with pytest.raises(ops.PlayError, match="not on your roster"):
+        ops.set_map_lineup(world, fixture.id, map_id, roster[:4] + ["nobody"])
+    with pytest.raises(ops.PlayError, match="not on that fixture"):
+        ops.set_map_lineup(world, fixture.id, "not-a-map", roster)
+    with pytest.raises(ops.PlayError, match="no fixture"):
+        ops.set_map_lineup(world, "not-a-fixture", map_id, roster)
+
+
 def test_an_unfinished_fantasy_draft_blocks_the_season(world: str) -> None:
     """The headless env cannot see the draft, so this layer has to.
 
