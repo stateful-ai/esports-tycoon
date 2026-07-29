@@ -405,6 +405,34 @@ def test_sim_ahead_stops_when_something_needs_you(world: str) -> None:
         assert run["state"]["deadlines"] or not run["state"]["can_advance"]
 
 
+def test_an_unfinished_fantasy_draft_blocks_the_season(world: str) -> None:
+    """The headless env cannot see the draft, so this layer has to.
+
+    Five picks in, a squad is ROSTER_SIZE and reads as ready — advancing
+    would start the season half-drafted and forfeit every club's remaining
+    picks. The browser refuses the same state.
+    """
+    from esports_sim.manager.state import FantasyDraftState
+
+    session = ops._session(world)
+    session.gs.fantasy_draft = FantasyDraftState(active=True, started=True)
+
+    state = ops.get_state(world)
+    assert state["can_advance"] is False
+    assert "fantasy draft" in state["advance_blocked_by"]
+    assert any("fantasy draft" in call for call in state["deadlines"])
+    with pytest.raises(ops.PlayError, match="fantasy draft"):
+        ops.advance_week(world)
+    with pytest.raises(ops.PlayError, match="fantasy draft"):
+        ops.act(world, "advance", {})
+    assert ops.sim_ahead_weeks(world, max_weeks=3)["weeks_advanced"] == 0
+
+    # Draft over: the season starts normally again.
+    session.gs.fantasy_draft.active = False
+    assert ops.get_state(world)["can_advance"] is True
+    assert ops.advance_week(world)["advanced"] is True
+
+
 def test_standing_advisories_do_not_halt_a_fast_forward(world: str) -> None:
     """A deadline stops the tick; a nudge that is true for weeks must not.
 
@@ -524,7 +552,10 @@ def test_tactics_view_prices_every_dial_against_the_roster(world: str) -> None:
         assert dial["best_at_low"] and dial["best_at_high"]
     starter = view["lineup"][0]
     assert starter["resolved_agent"] == starter["auto_agent"]
-    assert starter["top_agents"][0]["mastery"] >= starter["top_agents"][-1]["mastery"]
+    assert starter["agents"][0]["mastery"] >= starter["agents"][-1]["mastery"]
+    # Every agent is a legal lock, so every agent has to be named — an option
+    # the contract omits can only be reached by guessing an id.
+    assert {a["agent_id"] for a in starter["agents"]} == set(ops._gamedata().agents)
     assert len(view["measured_over"]["player_ids"]) == 5
     assert view["measured_over"]["benched"] == []
 
@@ -569,8 +600,10 @@ def test_tactics_fit_measures_the_dressed_five_not_the_bench(world: str) -> None
 
 def test_agent_lock_overrides_and_clears(world: str) -> None:
     starter = ops.get_tactics(world)["lineup"][0]
+    # Deliberately the WORST pick, not the runner-up: a low-mastery agent is
+    # still a legal lock, and it is the one a truncated menu would have hidden.
     other = next(
-        option["agent_id"] for option in starter["top_agents"]
+        option["agent_id"] for option in reversed(starter["agents"])
         if option["agent_id"] != starter["auto_agent"]
     )
     ops.set_agent_lock(world, starter["player_id"], other)
@@ -701,7 +734,7 @@ def test_every_decision_survives_a_dropped_client(world: str) -> None:
     ops.act(world, "set_tactics", {"util_discipline": 77.0})
     ops.set_scout_directive(world, "amateur", "track_academy")
     starter = ops.get_tactics(world)["lineup"][0]
-    ops.set_agent_lock(world, starter["player_id"], starter["top_agents"][1]["agent_id"])
+    ops.set_agent_lock(world, starter["player_id"], starter["agents"][1]["agent_id"])
     ops._SESSIONS.clear()  # the client went away without calling save_game
     assert ops.get_observation(world, ["tactics"])["tactics"]["util_discipline"] == 77.0
     assert ops.get_scouting(world)["amateur"]["directive"] == "track_academy"
@@ -717,14 +750,14 @@ def test_market_actions_log_under_the_canonical_action_kinds(world: str) -> None
         assert kind in telemetry.ACTION_KINDS
     session = ops._session(world)
     starter = ops.get_tactics(world)["lineup"][0]
-    ops.set_agent_lock(world, starter["player_id"], starter["top_agents"][1]["agent_id"])
+    ops.set_agent_lock(world, starter["player_id"], starter["agents"][1]["agent_id"])
     # An agent lock is a lineup change, not a role/playstyle reassignment —
     # "set_assignment" is the web's kind for the latter, and recording it here
     # would hand replay an action whose params do not belong to it.
     logged = session.gs.action_log[-1]
     assert logged.kind == "set_lineup"
     assert logged.params["agents"] == "True"
-    assert logged.params["agent_id"] == starter["top_agents"][1]["agent_id"]
+    assert logged.params["agent_id"] == starter["agents"][1]["agent_id"]
 
 
 def test_save_and_reload_preserves_the_world(world: str) -> None:

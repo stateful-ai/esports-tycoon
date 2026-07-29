@@ -415,6 +415,24 @@ def _pending_events(gs: GameState, team_id: str) -> list[dict[str, Any]]:
 URGENT_CONTRACT_WEEKS = 1
 
 
+def _draft_blocker(gs: GameState) -> str | None:
+    """Why the season cannot start yet, if a fantasy draft is still running.
+
+    The headless env has no notion of the draft: five picks in, a squad is
+    ``ROSTER_SIZE`` and reads as ready, so advancing would start the season
+    with a half-built roster and forfeit the rest of the picks for every club.
+    The browser refuses the same state. Drafting itself is not exposed here,
+    so this points at the surface that can finish it.
+    """
+    draft = gs.fantasy_draft
+    if draft is None or not draft.active:
+        return None
+    return (
+        "the fantasy draft is still running — finish it in the browser "
+        "before the season can start"
+    )
+
+
 def _needs_you(
     gs: GameState, team_id: str, legal: dict[str, Any]
 ) -> tuple[list[str], list[str]]:
@@ -447,7 +465,9 @@ def _needs_you(
         add("a sponsor has made a demand (sponsor_demand_respond)")
     if legal["negotiate_offer"]["enabled"]:
         add("contract talks are open (negotiate_offer)")
-    if not legal["advance"]["enabled"]:
+    if _draft_blocker(gs) is not None:
+        add(f"advance is blocked: {_draft_blocker(gs)}")
+    elif not legal["advance"]["enabled"]:
         add(f"advance is blocked: {legal['advance']['reason']}")
     incoming = [o for o in gs.transfer_offers if o.from_team == team_id]
     if incoming:
@@ -787,8 +807,12 @@ def get_state(code: str) -> dict[str, Any]:
             # nothing else on this screen would say so.
             "market_window": market.market_window_status(gs),
             "pending_events": _pending_events(gs, team_id),
-            "can_advance": legal["advance"]["enabled"],
-            "advance_blocked_by": legal["advance"]["reason"],
+            "can_advance": (
+                legal["advance"]["enabled"] and _draft_blocker(gs) is None
+            ),
+            "advance_blocked_by": (
+                _draft_blocker(gs) or legal["advance"]["reason"]
+            ),
             "needs_you": calls,
             # The subset that expires if you tick past it — what sim_ahead
             # halts for, and what to answer before advancing by hand.
@@ -997,6 +1021,9 @@ def advance_week(code: str) -> dict[str, Any]:
     """Tick the world one week and report what actually happened."""
     session = _session(code, mutating=True)
     with _acting(session) as gs:
+        blocker = _draft_blocker(gs)
+        if blocker is not None:
+            raise PlayError(f"cannot advance: {blocker}")
         team_id = session.env.team_id
         before = {
             "week": gs.week,
@@ -1509,7 +1536,12 @@ def get_tactics(code: str) -> dict[str, Any]:
                 "locked_agent": locked,
                 "auto_agent": auto,
                 "resolved_agent": locked or auto,
-                "top_agents": options[:6],
+                # Every agent, mastery-ordered — not a top-N slice. Any of
+                # them is a legal lock, and an option the contract never names
+                # can only be reached by guessing an id. Mastery 0 off-pool is
+                # the honest cost cue, which is why the web publishes the full
+                # menu too rather than hiding the bad picks.
+                "agents": options,
             })
 
         return {
