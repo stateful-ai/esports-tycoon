@@ -109,19 +109,24 @@ def test_buyouts_are_not_advertised_to_clubs_that_cannot_make_them(
     assert tier1["reason"] == ""
     assert all(
         target["fee"] > 0 and target["wage_reserve"] > 0
-        for target in tier1["sample_targets"]
+        for target in tier1["targets"]
     )
     balance = session.gs.teams["team_nexus"].balance
     assert all(
         target["fee"] + target["wage_reserve"] <= balance
-        for target in tier1["sample_targets"]
+        for target in tier1["targets"]
     ), "advertised a clause the club cannot actually cover"
+    # Every affordable clause, not a page of them: transfer_buyout accepts any
+    # of these, so counting targets it will not name forces the client to
+    # source ids from outside the contract.
+    assert len(tier1["targets"]) == tier1["target_count"]
+    assert tier1["target_count"] > 20, "the old cap has to be exceeded to matter"
 
     session.gs.teams["team_nexus"].tier = 2
     tier2 = ops.get_legal_actions(world)["extra_actions"]["transfer_buyout"]
     assert tier2["enabled"] is False
     assert "tier-1" in tier2["reason"]
-    assert tier2["sample_targets"] == []
+    assert tier2["targets"] == []
 
 
 def test_a_full_roster_disables_cash_acquisitions(world: str) -> None:
@@ -155,7 +160,7 @@ def test_a_full_roster_disables_cash_acquisitions(world: str) -> None:
     assert full["transfer_bid"]["roster_space"] == 0
     assert full["transfer_buyout"]["enabled"] is False
     assert "roster is full" in full["transfer_buyout"]["reason"]
-    assert full["transfer_buyout"]["sample_targets"] == []
+    assert full["transfer_buyout"]["targets"] == []
     # A package is still legal — it sends players the other way.
     assert full["transfer_package"]["enabled"] is True
 
@@ -812,6 +817,73 @@ def test_a_reloaded_session_follows_the_manager_to_a_new_club(
     assert ops.get_state("MOVED")["team"]["id"] == new
     # And the career is playable again, not frozen behind an ownership check.
     assert ops.act("MOVED", "set_tactics", {"aggression": 55.0})["ok"] is True
+
+
+def test_the_dismissal_gate_survives_a_reoccupied_old_club(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The between-jobs gate must follow the seat id too.
+
+    seat_for_session answers with whoever is EMPLOYED at a club, so once
+    somebody else moves into the club we were fired from it stopped reporting
+    our dismissal — the gate opened and writes would land on the new
+    manager's org.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    old = ops.list_career_offers(seed=21)["offers"][0]["team_id"]
+    ops.new_game(team_id=old, seed=21, code="FIRED", mode="legacy")
+
+    session = ops._session("FIRED")
+    mine = session.manager_id
+    career.apply_dismissals(session.gs, [mine])
+    # Another manager takes the club we were fired from.
+    career.create_seat(session.gs, old)
+    session.gs.human_team_ids.append(old)
+    assert session.gs.manager_for(old).id != mine
+
+    with pytest.raises(ops.PlayError, match="dismissed"):
+        ops.act("FIRED", "set_tactics", {"aggression": 90.0})
+    assert ops.get_state("FIRED")["enabled_actions"] == []
+    # Our own offers are still reachable — that is the point of staying bound.
+    assert ops.get_career("FIRED")["seat"]["id"] == mine
+    assert ops.get_career("FIRED")["offers"]
+
+
+def test_browser_created_worlds_are_selectable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The cross-surface resume path runs in both directions.
+
+    The browser writes a mode-only sidecar, so the code this module records is
+    absent — which left exactly the browser-created worlds unselectable. The
+    lobby's own resumable history has the code, and a code hashes back to its
+    filename.
+    """
+    from esports_sim.web import server as web
+
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(ops, "SAVE_DIR", saves)
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    monkeypatch.setattr(web, "SAVE_DIR", saves)
+    monkeypatch.setattr(web, "_SESSIONS_PATH", saves / "sessions.json")
+    lobby = web.Lobby()
+    monkeypatch.setattr(lobby, "gd", ops._gamedata(), raising=False)
+
+    game = lobby.create_game(
+        "a" * 32, seed=5, team_id="team_nexus", shared=False,
+        game_mode="sandbox",
+    )
+    assert game is not None
+    monkeypatch.setattr(ops, "_SESSIONS", {})  # a fresh MCP process
+
+    listed = ops.list_games()["worlds"]
+    assert len(listed) == 1
+    code = listed[0]["code"]
+    assert code, "a browser-created world came back unselectable"
+    assert ops.load_game(code)["state"]["team"]["id"] == "team_nexus"
 
 
 def test_identity_survives_someone_else_taking_the_old_club(

@@ -213,6 +213,19 @@ def _follow_manager(gs: GameState, previous: str, manager_id: str = "") -> str:
     return previous if previous in gs.teams else gs.user_team_id
 
 
+def _played_seat(session: _Session):
+    """The seat this session plays, by recorded identity.
+
+    Every seat lookup in this module has to go through here. Resolving by club
+    returns whoever is employed there, which is a different person the moment
+    a career moves — the dismissal gate, the dashboard and the career screen
+    each broke on that in turn.
+    """
+    gs = session.gs
+    seat = gs.managers.get(session.manager_id) if session.manager_id else None
+    return seat if seat is not None else gs.seat_for_session(session.env.team_id)
+
+
 def _read_only_reason(
     session: _Session, *, between_jobs_ok: bool = False
 ) -> str | None:
@@ -225,7 +238,7 @@ def _read_only_reason(
     a narrow mask, so they now read the same function.
     """
     gs = session.gs
-    seat = _dismissed_seat(gs, session.env.team_id)
+    seat = _dismissed_seat(gs, session.env.team_id, session.manager_id)
     if seat is not None and not between_jobs_ok:
         return (
             f"you were dismissed by {seat.last_team_id} — that club is back "
@@ -281,6 +294,37 @@ def _masked(
         )
         for name, entry in contract.items()
     }
+
+
+def _codes_from_lobby() -> dict[str, str]:
+    """save filename -> world code, recovered from the browser's own history.
+
+    A world the BROWSER created gets a mode-only sidecar, so the code this
+    module records is absent — and the filename is a one-way hash, which would
+    leave exactly the cross-surface worlds unselectable in list_games. The
+    lobby's sessions.json keeps its resumable history (rows of
+    [code, team_id, team_name, mode]), and a code hashes back to its filename,
+    so the mapping is recoverable without the web layer changing anything.
+    """
+    try:
+        raw = json.loads(
+            (SAVE_DIR / "sessions.json").read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError):
+        return {}
+    codes: set[str] = set()
+    for rows in (raw.get("history") or {}).values():
+        for row in rows or []:
+            if isinstance(row, (list, tuple)) and row:
+                codes.add(str(row[0]))
+    for seat in (raw.get("sessions") or {}).values():
+        if len(seat) == 2:
+            codes.add(str(seat[0]))
+    found: dict[str, str] = {}
+    for code in sorted(codes):
+        if CODE_RE.match(code):
+            found[save_path_for(code).name] = code
+    return found
 
 
 def _read_meta(save_path: Path) -> dict[str, Any]:
@@ -548,7 +592,7 @@ def _pending_events(gs: GameState, team_id: str) -> list[dict[str, Any]]:
 URGENT_CONTRACT_WEEKS = 1
 
 
-def _dismissed_seat(gs: GameState, team_id: str):
+def _dismissed_seat(gs: GameState, team_id: str, manager_id: str = ""):
     """The seat this env plays if it has been fired, else None.
 
     ``career.apply_dismissals`` clears the seat's team and hands the club back
@@ -556,11 +600,17 @@ def _dismissed_seat(gs: GameState, team_id: str):
     without this check a dismissed manager keeps running an org that is no
     longer theirs — setting its tactics, releasing its players, spending its
     money.
+
+    Resolved through the recorded seat id, for the same reason the reload is:
+    ``seat_for_session`` answers with whoever is employed at the club, so once
+    somebody else moves into the club we were fired from, it stops reporting
+    OUR dismissal — the gate opens and the writes land on the new manager's
+    org instead.
     """
-    seat = gs.seat_for_session(team_id)
-    if seat is not None and not seat.team_id:
-        return seat
-    return None
+    seat = gs.managers.get(manager_id) if manager_id else None
+    if seat is None:
+        seat = gs.seat_for_session(team_id)
+    return seat if seat is not None and not seat.team_id else None
 
 
 def _draft_blocker(gs: GameState) -> str | None:
@@ -883,6 +933,7 @@ def new_game(
 def list_games() -> dict[str, Any]:
     """Saved worlds this server can load, newest save first."""
     worlds = []
+    from_lobby = _codes_from_lobby()
     for path in sorted(SAVE_DIR.glob("campaign_*.json")):
         if path.name.endswith(".meta.json"):
             continue
@@ -892,7 +943,11 @@ def list_games() -> dict[str, Any]:
         # The sidecar is the durable source: a fresh stdio process has an empty
         # session cache, and the filename hash cannot be reversed, so without
         # it every world here would come back uncodeable and unloadable.
-        code = loaded or _read_meta(path).get("code")
+        code = (
+            loaded
+            or _read_meta(path).get("code")
+            or from_lobby.get(path.name)
+        )
         entry: dict[str, Any] = {
             "file": path.name,
             "code": code,
@@ -915,10 +970,11 @@ def list_games() -> dict[str, Any]:
     return {
         "worlds": worlds,
         "note": (
-            "Pass a world's code to load_game. A world whose code is null was "
-            "created before codes were recorded, or by another tool — its save "
-            "filename is a one-way hash, so it can only be opened by someone "
-            "who still knows the code."
+            "Pass a world's code to load_game. Codes come from this server's "
+            "own record and, for browser-created worlds, from the lobby's "
+            "resumable history. A null code means neither knows it: the save "
+            "filename is a one-way hash, so only someone who still has the "
+            "code can open that world."
         ),
     }
 
@@ -948,11 +1004,11 @@ def get_state(code: str) -> dict[str, Any]:
         team_id = session.env.team_id
         team = gs.teams[team_id]
         legal = get_legal_actions(session.code, enabled_only=False)["actions"]
-        dismissed = _dismissed_seat(gs, team_id)
+        dismissed = _dismissed_seat(gs, team_id, session.manager_id)
         calls, urgent = _needs_you(gs, team_id, legal)
         fixture = gs.team_fixture(team_id)
         unread = sum(1 for it in gs.inbox if it.unread)
-        seat = gs.seat_for_session(team_id)
+        seat = _played_seat(session)
         return {
             "code": session.code,
             "season": gs.season,
@@ -1212,8 +1268,12 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
                     if team.tier != 1
                     else f"roster is full ({cap}) — release or sell first"
                 ),
-                # Deep worlds have hundreds of players; the full list is noise.
-                "sample_targets": buyout_targets[:20],
+                # Every affordable clause, uncapped. transfer_buyout accepts
+                # any of them, and a contract that counts targets it will not
+                # name forces the client to source ids from outside it. The
+                # list is bounded by who actually has a clause this club can
+                # cover.
+                "targets": buyout_targets,
                 "target_count": len(buyout_targets),
             },
             "market_window": window,
@@ -2158,7 +2218,7 @@ def get_career(code: str) -> dict[str, Any]:
     """Your seat: contract, board patience, reputation, and job offers."""
     session = _session(code)
     with _acting(session) as gs:
-        seat = gs.seat_for_session(session.env.team_id)
+        seat = _played_seat(session)
         if seat is None:
             return {"seat": None, "note": "no manager seat controls this club"}
         offers = gs.career_offers_by.get(seat.id, [])
