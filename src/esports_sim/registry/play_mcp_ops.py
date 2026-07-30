@@ -120,6 +120,10 @@ class _Session:
     gs: GameState
     env: HeadlessManagerEnv
     path: Path
+    # The seat id of the manager being played. Seat ids follow the PERSON
+    # across dismissals and new posts, so this — not the club — is the durable
+    # identity to re-find after another process moves the career.
+    manager_id: str = ""
     # (mtime_ns, size) of the save as this process last left it. A world is
     # now browser-joinable, so another process can write it between our calls.
     stamp: tuple[int, int] | None = None
@@ -179,23 +183,29 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
-def _follow_manager(gs: GameState, previous: str) -> str:
+def _follow_manager(gs: GameState, previous: str, manager_id: str = "") -> str:
     """The club this env should be bound to after reloading from disk.
 
-    Bind to the MANAGER, not the club. A seat id follows the person across a
-    dismissal and a new post, so checking only "does the old club still exist"
-    strands the session at a former employer: reads would show the wrong org,
-    and the manager's real club would look like somebody else's human seat,
-    making the career permanently unresumable from here.
+    Follow the MANAGER's seat id, which is the only stable handle: it follows
+    the person across a dismissal and a new post. Resolving by club instead
+    strands the session — either at a former employer, or (once someone else
+    occupies that club) inside a stranger's org, where the ownership mask then
+    makes the real career unresumable from here.
     """
+    seat = gs.managers.get(manager_id) if manager_id else None
+    if seat is not None:
+        # Employed somewhere: go there. Between jobs: stay on the club we were
+        # last bound to, so accept_job still has a seat to act on.
+        if seat.team_id in gs.teams:
+            return seat.team_id
+        return previous if previous in gs.teams else gs.user_team_id
     if not previous:
         return gs.user_team_id
-    seat = gs.seat_for_session(previous)
-    if seat is not None:
-        # Employed here, or fired from here and still between jobs — in which
-        # case the old club stays the binding so accept_job has a seat to use.
-        return seat.team_id or previous
-    # The seat took a new post: find it by the club it left.
+    # No recorded identity (a world this process did not open): fall back to
+    # resolving through the club, newest occupant last.
+    by_club = gs.seat_for_session(previous)
+    if by_club is not None and by_club.team_id in gs.teams:
+        return by_club.team_id
     for mid in sorted(gs.managers):
         moved = gs.managers[mid]
         if moved.last_team_id == previous and moved.team_id in gs.teams:
@@ -354,7 +364,11 @@ def _session(
         previous = (
             session.env.team_id if session is not None else gs.user_team_id
         )
-        session = _bind(code, gs, path, _follow_manager(gs, previous))
+        manager_id = session.manager_id if session is not None else ""
+        session = _bind(
+            code, gs, path,
+            _follow_manager(gs, previous, manager_id), manager_id,
+        )
         session.stamp = _stamp(path)
         _SESSIONS[code] = session
     if mutating:
@@ -366,11 +380,18 @@ def _session(
     return session
 
 
-def _bind(code: str, gs: GameState, path: Path, team_id: str) -> _Session:
+def _bind(
+    code: str, gs: GameState, path: Path, team_id: str, manager_id: str = ""
+) -> _Session:
     env = HeadlessManagerEnv(
         gs, _gamedata(), team_id, policy_version=POLICY_VERSION
     )
-    return _Session(code=code, gs=gs, env=env, path=path)
+    if not manager_id:
+        seat = gs.seat_for_session(team_id)
+        manager_id = seat.id if seat is not None else ""
+    return _Session(
+        code=code, gs=gs, env=env, path=path, manager_id=manager_id
+    )
 
 
 @contextmanager
@@ -1116,12 +1137,16 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
         has_room = len(team.player_ids) < cap
         # Per-map overrides only mean anything for a fixture that has not been
         # played, so publish the (fixture, map) pairs that can take one.
+        # Every unplayed pair, uncapped: set_map_lineup accepts any of them, so
+        # a truncated list is a contract that hides legal parameters — the
+        # client would have to invent ids until earlier fixtures fell off. The
+        # size is bounded by what remains of this team's own schedule.
         map_lineup_slots = [
             {"fixture_id": f.id, "map_id": map_id, "week": f.week}
             for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
             if not f.played and team_id in (f.team_a, f.team_b)
             for map_id in f.maps
-        ][:12]
+        ]
         # Buyout clauses are a tier-1 privilege (market.buy_out_player), and
         # the buyer must cover the clause AND a wage reserve. Advertising the
         # action without both makes every target a guaranteed rejection.

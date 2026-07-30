@@ -242,6 +242,20 @@ def test_every_direct_mutation_tool_appears_in_the_contract(world: str) -> None:
     assert all(
         slot["fixture_id"] and slot["map_id"] for slot in per_map["slots"]
     )
+    # EVERY legal pair, not a page of them: set_map_lineup accepts any unplayed
+    # fixture, so a truncated list hides legal parameters and a client would
+    # have to invent ids until earlier fixtures fell off.
+    gs = ops._session(world).gs
+    legal_pairs = {
+        (f.id, map_id)
+        for f in gs.fixtures
+        if not f.played and "team_nexus" in (f.team_a, f.team_b)
+        for map_id in f.maps
+    }
+    assert {
+        (slot["fixture_id"], slot["map_id"]) for slot in per_map["slots"]
+    } == legal_pairs
+    assert len(legal_pairs) > 12, "the old cap has to be exceeded to matter"
 
 
 def test_direct_tools_can_be_asked_for_by_name(world: str) -> None:
@@ -798,6 +812,43 @@ def test_a_reloaded_session_follows_the_manager_to_a_new_club(
     assert ops.get_state("MOVED")["team"]["id"] == new
     # And the career is playable again, not frozen behind an ownership check.
     assert ops.act("MOVED", "set_tactics", {"aggression": 55.0})["ok"] is True
+
+
+def test_identity_survives_someone_else_taking_the_old_club(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Follow the seat id, not the club.
+
+    Resolving by club worked while the old employer sat empty, but once
+    another manager occupies it the club lookup returns THEIR seat — so the
+    session binds inside a stranger's org and the ownership mask then makes
+    the real career unresumable.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    old = ops.list_career_offers(seed=21)["offers"][0]["team_id"]
+    ops.new_game(team_id=old, seed=21, code="REOCC", mode="legacy")
+
+    session = ops._session("REOCC")
+    mine = session.manager_id
+    assert mine, "the played seat has to be recorded to be followed"
+
+    career.apply_dismissals(session.gs, [mine])
+    new = session.gs.career_offers_by[mine][0].team_id
+    assert career.accept_offer(session.gs, mine, new)[0]
+    # A different manager moves into the club we left.
+    career.create_seat(session.gs, old)
+    session.gs.human_team_ids.append(old)
+    assert session.gs.manager_for(old).id != mine
+    session.gs.save(session.path)
+
+    session.stamp = None  # force the reload path, as a foreign write would
+    state = ops.get_state("REOCC")
+    assert state["team"]["id"] == new, "bound to the stranger's club"
+    assert ops._session("REOCC").manager_id == mine
+    assert ops.get_career("REOCC")["seat"]["id"] == mine
 
 
 def test_browser_ownership_is_masked_in_the_contract(
