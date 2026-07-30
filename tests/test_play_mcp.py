@@ -705,6 +705,82 @@ def test_an_unfinished_fantasy_draft_blocks_the_season(world: str) -> None:
     assert ops.advance_week(world)["advanced"] is True
 
 
+def test_a_saved_world_is_resumable_after_a_server_restart(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The advertised resume flow has to survive a fresh stdio process.
+
+    A new client gets a new server with an empty session cache, and the save
+    filename is a one-way hash of the code — so the code has to be recorded
+    somewhere durable or every world comes back uncodeable and unloadable.
+    """
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    code = ops.new_game(team_id="team_nexus", seed=9)["code"]
+    ops.advance_week(code)
+
+    monkeypatch.setattr(ops, "_SESSIONS", {})  # the process restarted
+    listed = ops.list_games()["worlds"]
+    assert len(listed) == 1
+    entry = listed[0]
+    assert entry["code"] == code and entry["loaded"] is False
+    # And the row is informative, not just a filename.
+    assert entry["season"] == 1 and entry["week"] == 2
+    assert entry["team_name"]
+    assert ops.load_game(entry["code"])["state"]["week"] == 2
+
+
+def test_the_contract_is_masked_while_the_draft_runs(world: str) -> None:
+    """A mask that disagrees with the gate is worse than a narrow mask."""
+    from esports_sim.manager.state import FantasyDraftState
+
+    session = ops._session(world)
+    session.gs.fantasy_draft = FantasyDraftState(active=True, started=True)
+
+    contract = ops.get_legal_actions(world, enabled_only=False)
+    assert not [
+        kind for kind, entry in contract["actions"].items()
+        if entry.get("enabled")
+    ], "the manager mask still invites actions the gate refuses"
+    assert not [
+        name for name, entry in contract["extra_actions"].items()
+        if isinstance(entry, dict) and entry.get("enabled")
+    ], "the direct tools still advertise as usable"
+    assert "fantasy draft" in contract["actions"]["set_tactics"]["reason"]
+
+    session.gs.fantasy_draft.active = False
+    assert ops.get_legal_actions(world)["actions"]["set_tactics"]["enabled"]
+
+
+def test_finances_show_the_deals_already_signed(world: str) -> None:
+    """Unsigned offers alone cannot answer "can I afford this?".
+
+    The deal is planted rather than signed through the market, so this tests
+    the serializer every time instead of skipping whenever the week-1 sponsor
+    market happens to be empty.
+    """
+    from esports_sim.manager import sponsors
+    from esports_sim.manager.state import SponsorDeal, SponsorObjective
+
+    session = ops._session(world)
+    slot = sponsors.SLOT_ORDER[0]
+    before = ops.get_finances(world)["sponsors"]
+    assert slot in before["open_slots"] and slot not in before["signed"]
+
+    session.gs.sponsor_slots[slot] = SponsorDeal(
+        name="Helios Financial", kind="steady", weekly=15_700, weeks_left=30,
+        objectives=[SponsorObjective(kind="make_playoffs", bonus=153_000)],
+    )
+    view = ops.get_finances(world)["sponsors"]
+    deal = view["signed"][slot]
+    assert deal["name"] == "Helios Financial"
+    assert deal["weekly"] == 15_700 and deal["weeks_left"] == 30
+    # The objective bonus is exactly the sort of thing a wage decision hinges on.
+    assert deal["objectives"][0]["bonus"] == 153_000
+    assert slot not in view["open_slots"]
+    assert view["marketability"]
+
+
 def test_standing_advisories_do_not_halt_a_fast_forward(world: str) -> None:
     """A deadline stops the tick; a nudge that is true for weeks must not.
 

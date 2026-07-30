@@ -179,6 +179,17 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
+def _read_meta(save_path: Path) -> dict[str, Any]:
+    """The world's sidecar, or an empty dict when there isn't a readable one."""
+    try:
+        data = json.loads(
+            save_path.with_suffix(".meta.json").read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def _attached_browsers(code: str) -> set[str]:
     """Teams a browser session is attached to right now, per the lobby sidecar."""
     try:
@@ -322,7 +333,17 @@ def _write(session: _Session) -> None:
     session.path.parent.mkdir(parents=True, exist_ok=True)
     session.gs.save(session.path)
     meta = session.path.with_suffix(".meta.json")
-    if not meta.exists():
+    if _read_meta(session.path).get("code") != session.code:
+        # The save filename is a one-way hash of the code, so without this the
+        # code is unrecoverable once this process exits — and list_games could
+        # not offer the resume flow it advertises. The web lobby reads only
+        # "mode" from this sidecar, so the extra key is inert there.
+        meta.write_text(
+            json.dumps({"mode": _read_meta(session.path).get("mode", "shared"),
+                        "code": session.code}),
+            encoding="utf-8",
+        )
+    elif not meta.exists():
         # "shared", not "solo", is what actually makes the browser-compat
         # claim true. The lobby only lets a browser back into a SOLO world
         # through its own per-browser history, which an MCP-created world can
@@ -780,30 +801,39 @@ def list_games() -> dict[str, Any]:
     for path in sorted(SAVE_DIR.glob("campaign_*.json")):
         if path.name.endswith(".meta.json"):
             continue
-        code = next(
+        loaded = next(
             (c for c, s in _SESSIONS.items() if s.path == path), None
         )
+        # The sidecar is the durable source: a fresh stdio process has an empty
+        # session cache, and the filename hash cannot be reversed, so without
+        # it every world here would come back uncodeable and unloadable.
+        code = loaded or _read_meta(path).get("code")
         entry: dict[str, Any] = {
             "file": path.name,
             "code": code,
-            "loaded": code is not None,
+            "loaded": loaded is not None,
             "modified_bytes": path.stat().st_size,
         }
         if code is not None:
-            session = _SESSIONS[code]
-            entry.update(
-                season=session.gs.season,
-                week=session.gs.week,
-                team_id=session.env.team_id,
-                team_name=session.gs.teams[session.env.team_id].name,
-            )
+            try:
+                view = _session(code)
+            except PlayError:
+                view = None
+            if view is not None:
+                entry.update(
+                    season=view.gs.season,
+                    week=view.gs.week,
+                    team_id=view.env.team_id,
+                    team_name=view.gs.teams[view.env.team_id].name,
+                )
         worlds.append(entry)
     return {
         "worlds": worlds,
         "note": (
-            "Save files are keyed by a hash of the world code, so a code is "
-            "needed to load one. Codes from this process are shown; for others "
-            "pass the code you created the world with."
+            "Pass a world's code to load_game. A world whose code is null was "
+            "created before codes were recorded, or by another tool — its save "
+            "filename is a one-way hash, so it can only be opened by someone "
+            "who still knows the code."
         ),
     }
 
@@ -943,6 +973,23 @@ def get_legal_actions(
             for kind, contract in legal.items()
         }
     extra = _extra_action_contract(session)
+    # _session(mutating=True) now refuses every write mid-draft, so leaving the
+    # mask untouched would instruct a contract-driven client to attempt actions
+    # that cannot succeed. A mask that disagrees with the gate is worse than a
+    # narrow mask.
+    if _draft_blocker(session.gs) is not None:
+        frozen = "the fantasy draft is still running — finish it in the browser"
+        legal = {
+            kind: {**contract, "enabled": False, "reason": frozen}
+            for kind, contract in legal.items()
+        }
+        extra = {
+            name: (
+                contract if not isinstance(contract, dict)
+                else {**contract, "enabled": False, "reason": frozen}
+            )
+            for name, contract in extra.items()
+        }
     if kinds:
         # Filter across BOTH halves. The direct tools live in extras, so
         # validating names against the headless contract alone rejected every
@@ -1940,14 +1987,35 @@ def set_scout_directive(
 
 
 def get_finances(code: str) -> dict[str, Any]:
-    """Weekly income/expenses, cash projection, and sponsor state."""
+    """Weekly income/expenses, cash projection, and live sponsor deals.
+
+    The signed deals matter as much as the totals: an objective bonus or an
+    expiring slot is what makes a wage or transfer decision affordable. The
+    raw observation only carries UNSIGNED market offers, so without this an
+    agent can see what it might sign and never what it already has.
+    """
     session = _session(code)
     with _acting(session) as gs:
+        team_id = session.env.team_id
         staff_cost = sum(m.salary for m in gs.staff.values())
         return {
-            "balance": gs.teams[session.env.team_id].balance,
+            "balance": gs.teams[team_id].balance,
             "weekly": economy.weekly_breakdown(gs, staff_cost),
             "projection": economy.cash_projection(gs, staff_cost),
+            "sponsors": {
+                "signed": {
+                    slot: gs.sponsor_slots[slot].model_dump(mode="json")
+                    for slot in sponsors.SLOT_ORDER
+                    if slot in gs.sponsor_slots
+                },
+                "open_slots": [
+                    slot for slot in sponsors.SLOT_ORDER
+                    if slot not in gs.sponsor_slots
+                ],
+                "commitments": sponsors.commitment_views(gs, team_id),
+                "demands": sponsors.demand_views(gs, team_id),
+                "marketability": sponsors.marketability_breakdown(gs),
+            },
         }
 
 
