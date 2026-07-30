@@ -179,6 +179,67 @@ def _stamp(path: Path) -> tuple[int, int] | None:
     return (stat.st_mtime_ns, stat.st_size)
 
 
+def _follow_manager(gs: GameState, previous: str) -> str:
+    """The club this env should be bound to after reloading from disk.
+
+    Bind to the MANAGER, not the club. A seat id follows the person across a
+    dismissal and a new post, so checking only "does the old club still exist"
+    strands the session at a former employer: reads would show the wrong org,
+    and the manager's real club would look like somebody else's human seat,
+    making the career permanently unresumable from here.
+    """
+    if not previous:
+        return gs.user_team_id
+    seat = gs.seat_for_session(previous)
+    if seat is not None:
+        # Employed here, or fired from here and still between jobs — in which
+        # case the old club stays the binding so accept_job has a seat to use.
+        return seat.team_id or previous
+    # The seat took a new post: find it by the club it left.
+    for mid in sorted(gs.managers):
+        moved = gs.managers[mid]
+        if moved.last_team_id == previous and moved.team_id in gs.teams:
+            return moved.team_id
+    return previous if previous in gs.teams else gs.user_team_id
+
+
+def _read_only_reason(
+    session: _Session, *, between_jobs_ok: bool = False
+) -> str | None:
+    """Why this world cannot be written from here, or None if it can.
+
+    The single source of truth for both the write gate and the published
+    action mask. Keeping them apart is what let the mask go on advertising
+    actions the gate refuses — first after a dismissal, then mid-draft, then
+    under browser ownership. A mask that disagrees with the gate is worse than
+    a narrow mask, so they now read the same function.
+    """
+    gs = session.gs
+    seat = _dismissed_seat(gs, session.env.team_id)
+    if seat is not None and not between_jobs_ok:
+        return (
+            f"you were dismissed by {seat.last_team_id} — that club is back "
+            "under AI control and is no longer yours to run. Accept one of "
+            "the jobs in get_career().offers first (accept_job)."
+        )
+    if _draft_blocker(gs) is not None:
+        return (
+            "the fantasy draft is still running, and a world mid-draft cannot "
+            "be changed from here at all — this server has no draft actions. "
+            "Finish the draft in the browser, then resume over MCP."
+        )
+    held = _other_managers(session)
+    if held:
+        return (
+            f"world {session.code} has other human managers "
+            f"({', '.join(held)}) — writing from here could overwrite "
+            "decisions the web layer has not saved, and advancing would tick "
+            "the week without those managers, whose clubs the AI will not "
+            "play either. Reads still work. Play this world in the browser."
+        )
+    return None
+
+
 def _read_meta(save_path: Path) -> dict[str, Any]:
     """The world's sidecar, or an empty dict when there isn't a readable one."""
     try:
@@ -260,45 +321,15 @@ def _session(
         previous = (
             session.env.team_id if session is not None else gs.user_team_id
         )
-        team_id = previous if previous in gs.teams else gs.user_team_id
-        session = _bind(code, gs, path, team_id)
+        session = _bind(code, gs, path, _follow_manager(gs, previous))
         session.stamp = _stamp(path)
         _SESSIONS[code] = session
     if mutating:
-        # Here, not at each call site: the market tools, the agent lock and
-        # the scouting directive all bypass `act`, so a per-route guard is a
-        # guard with holes. Everything that writes passes through this
-        # function — gate it once and the only way to miss it is not to
-        # mutate at all.
-        seat = _dismissed_seat(session.gs, session.env.team_id)
-        if seat is not None and not between_jobs_ok:
-            raise PlayError(
-                f"you were dismissed by {seat.last_team_id} — that club is "
-                "back under AI control and is no longer yours to run. Accept "
-                "one of the jobs in get_career().offers first (accept_job)."
-            )
-        # A half-finished draft is not a campaign yet, and nothing here can
-        # finish one. Blocking only the tick was not enough: releasing a
-        # drafted player puts them in free_agent_ids, which
-        # fantasy_draft._complete then REPLACES with the remaining pool, so
-        # the player evaporates and the club ends up short of its ten. A
-        # transfer invalidates the pick ledger the same way.
-        if _draft_blocker(session.gs) is not None:
-            raise PlayError(
-                "the fantasy draft is still running, and a world mid-draft "
-                "cannot be changed from here at all — this server has no "
-                "draft actions. Finish the draft in the browser, then resume "
-                "over MCP."
-            )
-        held = _other_managers(session)
-        if held:
-            raise PlayError(
-                f"world {code} has other human managers ({', '.join(held)}) "
-                "— writing from here could overwrite decisions the web layer "
-                "has not saved, and advancing would tick the week without "
-                "those managers, whose clubs the AI will not play either. "
-                "Reads still work. Play this world in the browser."
-            )
+        # One check, at the one place every write funnels through. Per-route
+        # guards grew holes three separate times in this module's history.
+        frozen = _read_only_reason(session, between_jobs_ok=between_jobs_ok)
+        if frozen is not None:
+            raise PlayError(frozen)
     return session
 
 
@@ -960,27 +991,22 @@ def get_legal_actions(
     legal = manager_observation(
         session.gs, _gamedata(), session.env.team_id
     )["legal_actions"]
-    seat = _dismissed_seat(session.gs, session.env.team_id)
-    if seat is not None:
-        # Between jobs there is exactly one legal move. Leaving the club's
-        # actions enabled would advertise running an org the AI now owns.
+    extra = _extra_action_contract(session)
+    # The mask is derived from the SAME predicate the write gate uses, so it
+    # cannot drift out of agreement with it again. accept_job survives a
+    # dismissal because that is the one write still permitted then.
+    frozen = _read_only_reason(session)
+    if frozen is not None:
+        still_legal = (
+            {"accept_job"}
+            if _read_only_reason(session, between_jobs_ok=True) is None
+            else set()
+        )
         legal = {
             kind: (
-                contract if kind == "accept_job"
-                else {**contract, "enabled": False,
-                      "reason": "you are between jobs — accept a post first"}
+                contract if kind in still_legal
+                else {**contract, "enabled": False, "reason": frozen}
             )
-            for kind, contract in legal.items()
-        }
-    extra = _extra_action_contract(session)
-    # _session(mutating=True) now refuses every write mid-draft, so leaving the
-    # mask untouched would instruct a contract-driven client to attempt actions
-    # that cannot succeed. A mask that disagrees with the gate is worse than a
-    # narrow mask.
-    if _draft_blocker(session.gs) is not None:
-        frozen = "the fantasy draft is still running — finish it in the browser"
-        legal = {
-            kind: {**contract, "enabled": False, "reason": frozen}
             for kind, contract in legal.items()
         }
         extra = {
@@ -1004,17 +1030,6 @@ def get_legal_actions(
         extra = {k: v for k, v in extra.items() if k in kinds}
     elif enabled_only:
         legal = {k: v for k, v in legal.items() if v.get("enabled")}
-    if seat is not None:
-        # The market tools bypass `act`, so masking only the headless contract
-        # would still advertise spending a former employer's money.
-        extra = {
-            name: (
-                contract if not isinstance(contract, dict)
-                else {**contract, "enabled": False,
-                      "reason": "you are between jobs — accept a post first"}
-            )
-            for name, contract in extra.items()
-        }
     return {
         "season": session.gs.season,
         "week": session.gs.week,

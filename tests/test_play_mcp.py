@@ -730,6 +730,80 @@ def test_a_saved_world_is_resumable_after_a_server_restart(
     assert ops.load_game(entry["code"])["state"]["week"] == 2
 
 
+def test_a_reloaded_session_follows_the_manager_to_a_new_club(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Bind to the manager, not the club.
+
+    A seat id follows the person across a dismissal and a new post. Checking
+    only "does the old club still exist" stranded the session at the former
+    employer, where the manager's real club then looked like somebody else's
+    human seat — making the career permanently unresumable from here.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    old = ops.list_career_offers(seed=21)["offers"][0]["team_id"]
+    ops.new_game(team_id=old, seed=21, code="MOVED", mode="legacy")
+
+    session = ops._session("MOVED")
+    seat_id = session.gs.seat_for_session(old).id
+    career.apply_dismissals(session.gs, [seat_id])
+    # Between jobs the binding stays put, so accept_job has a seat to use.
+    assert ops.get_state("MOVED")["team"]["id"] == old
+
+    new = session.gs.career_offers_by[seat_id][0].team_id
+    assert new != old
+    accepted, _ = career.accept_offer(session.gs, seat_id, new)
+    assert accepted
+    session.gs.save(session.path)
+
+    monkeypatch.setattr(ops, "_SESSIONS", {})  # the process restarted
+    assert ops.get_state("MOVED")["team"]["id"] == new
+    # And the career is playable again, not frozen behind an ownership check.
+    assert ops.act("MOVED", "set_tactics", {"aggression": 55.0})["ok"] is True
+
+
+def test_browser_ownership_is_masked_in_the_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The mask must agree with the gate for every read-only condition.
+
+    Dismissal and the draft were masked one at a time; browser ownership was
+    not, so the contract went on advertising writes the gate rejects. Both now
+    read the same predicate.
+    """
+    from esports_sim.web import server as web
+
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(ops, "SAVE_DIR", saves)
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    monkeypatch.setattr(web, "SAVE_DIR", saves)
+    monkeypatch.setattr(web, "_SESSIONS_PATH", saves / "sessions.json")
+    lobby = web.Lobby()
+    monkeypatch.setattr(lobby, "gd", ops._gamedata(), raising=False)
+
+    code = ops.new_game(team_id="team_nexus", seed=9)["code"]
+    assert ops.get_state(code)["enabled_actions"], "should start playable"
+
+    game, error = lobby.join_game("0" * 32, code, "team_nexus")
+    assert error is None and game is not None
+
+    contract = ops.get_legal_actions(code, enabled_only=False)
+    assert not [
+        kind for kind, entry in contract["actions"].items()
+        if entry.get("enabled")
+    ]
+    assert not [
+        name for name, entry in contract["extra_actions"].items()
+        if isinstance(entry, dict) and entry.get("enabled")
+    ]
+    assert "browser" in contract["actions"]["set_tactics"]["reason"]
+    # get_state derives its list from the same mask.
+    assert ops.get_state(code)["enabled_actions"] == []
+
+
 def test_the_contract_is_masked_while_the_draft_runs(world: str) -> None:
     """A mask that disagrees with the gate is worse than a narrow mask."""
     from esports_sim.manager.state import FantasyDraftState
