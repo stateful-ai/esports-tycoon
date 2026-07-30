@@ -45,8 +45,11 @@
     Consolas, "Liberation Mono", monospace;
   --es-font-display: "Rajdhani", var(--es-font-sans);
 
-  /* Scale — 1.125 ratio, floor at 10px (badges, kill feed, stat labels). */
-  --es-text-2xs: 10px;   /* labels on stat bars, kill-feed meta */
+  /* Scale — 1.125 ratio. Floor raised to 11px for readability: text under
+     11px fails the a11y review gate (tinyTextUnder11px) and is hard to read
+     against the dark navy. 2xs and xs now share 11px; the distinction is
+     carried by weight/case/letter-spacing, not size. */
+  --es-text-2xs: 11px;   /* labels on stat bars, kill-feed meta */
   --es-text-xs: 11px;    /* secondary / meta */
   --es-text-sm: 12px;    /* body-small, KPI values */
   --es-text-md: 13px;    /* body default */

@@ -222,7 +222,8 @@ function helpSeenKey() {
 }
 
 function helpFirstWeekMarkup() {
-  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span></div>` +
+  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span>` +
+    `<button class="btn btn-sm btn-primary help-tour-btn" data-tour-start>▶ Take the 1-minute tour</button></div>` +
     `<ol class="help-steps">${FIRST_WEEK_STEPS.map(([tab, title, body], i) =>
       `<li><span class="help-step-num">${i + 1}</span><div><b>${esc(title)}</b><p>${esc(body)}</p></div>` +
       `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`
@@ -262,6 +263,10 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
   const overlay = document.getElementById("help");
   if (!overlay) return;
   overlay.dataset.automatic = automatic ? "true" : "false";
+  // The "don't open automatically again" box only makes sense for the
+  // first-week auto-open; a manual open is always intentional.
+  const skipWrap = document.getElementById("help-skip-wrap");
+  if (skipWrap) skipWrap.hidden = !automatic;
   renderHelp(section, selected);
   overlay.classList.remove("hidden");
   overlay.setAttribute("aria-hidden", "false");
@@ -274,8 +279,11 @@ function closeHelp() {
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
+    // Auto-open marks seen on ANY close so it never blocks nav twice; the
+    // checkbox is redundant but harmless (also sets the same key).
     try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {}
   }
+  overlay.dataset.automatic = "false";
 }
 
 function maybeShowFirstWeekHelp(state) {
@@ -290,7 +298,18 @@ function maybeShowFirstWeekHelp(state) {
 function initHelpSystem() {
   document.getElementById("help-open")?.addEventListener("click", () => openHelp("first-week"));
   document.getElementById("help-close")?.addEventListener("click", closeHelp);
+  // Persist the "don't open automatically again" choice the moment it changes,
+  // so it holds even if the user dismisses the overlay some other way.
+  document.getElementById("help-skip")?.addEventListener("change", (event) => {
+    if (event.target.checked) { try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {} }
+    else { try { localStorage.removeItem(helpSeenKey()); } catch (_e) {} }
+  });
   document.getElementById("help")?.addEventListener("click", (event) => {
+    if (event.target.closest("[data-tour-start]")) {
+      closeHelp();
+      if (window.startTour) window.startTour();
+      return;
+    }
     const section = event.target.closest("[data-help-section]");
     if (section) return renderHelp(section.dataset.helpSection, App.tab);
     const destination = event.target.closest("[data-help-tab]");
@@ -1352,7 +1371,7 @@ async function clubOps(v, sub) {
           
           const item = el("div", "", `
             <div style="font-weight:600; font-size:14px; margin-bottom:4px;">${plink(p.id, p.handle)}</div>
-            <div><span class="pill ${toneClass}" style="font-size:10px; padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
+            <div><span class="pill ${toneClass}" style="padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
           `);
           listContainer.appendChild(item);
         }
@@ -1386,7 +1405,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill win" style="font-size:10px; margin-left:auto;">Friendship Bond</span>` +
+          `<span class="pill win" style="margin-left:auto;">Friendship Bond</span>` +
           `</div>`;
       }
       duosCard.appendChild(list);
@@ -1405,7 +1424,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill loss" style="font-size:10px; margin-left:auto;">Grave Friction</span>` +
+          `<span class="pill loss" style="margin-left:auto;">Grave Friction</span>` +
           `</div>`;
       }
       feudsCard.appendChild(list);
@@ -2481,6 +2500,13 @@ async function dashboard(v) {
     const card = el("div", "card");
     card.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
     if (rows && rows.length) {
+      // Zero-state: before the first fixture every row is 0-0-0, which reads
+      // as a broken/empty table. Show a friendly pre-season note instead.
+      const anyPlayed = rows.some((r) => (r.wins || 0) + (r.losses || 0) > 0);
+      if (!anyPlayed) {
+        card.appendChild(el("p", "muted es-preseason",
+          `Season not started — the ${cap(regionOf[myId] || me.region || "")} table takes shape after week 1.`));
+      } else {
       const t = el("table");
       t.dataset.nosort = "1";
       t.innerHTML =
@@ -2506,6 +2532,7 @@ async function dashboard(v) {
       }
       t.appendChild(tb);
       card.appendChild(t);
+      }
     }
     // Last result folded in (the old Recent results card is gone — Season
     // owns the full list).
@@ -3815,6 +3842,7 @@ function tacticsStrategy(main, rail, data) {
     const slider = el("input");
     slider.type = "range"; slider.min = 0; slider.max = 100; slider.step = 1;
     slider.value = values[d.key];
+    slider.setAttribute("aria-label", `${d.label} dial — 50 is neutral`);
     track.appendChild(el("span", "tac-notch"));
     track.appendChild(slider);
     block.appendChild(track);
@@ -5043,9 +5071,10 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
     <div class="card">
       <h2>Find a player</h2>
       <div class="row">
-        <input 
-          class="field mono player-search-input" 
-          placeholder="search by handle or real name…" 
+        <input
+          class="field mono player-search-input"
+          placeholder="search by handle or real name…"
+          aria-label="Search players by handle or real name"
           value=${query}
           onInput=${(e) => setQuery(e.target.value)}
           onKeyDown=${handleKeyDown}

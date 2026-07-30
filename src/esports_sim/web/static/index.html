@@ -79,7 +79,12 @@
       <button class="seg-btn" data-help-section="glossary" role="tab">Key terms</button>
     </div>
     <div id="help-body" class="help-body"></div>
-    <p class="muted help-footer">Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.</p>
+    <div class="help-footer">
+      <p class="muted help-footer-tip">Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus. Press <kbd>Esc</kbd> or click outside to close.</p>
+      <label class="help-footer-skip muted" id="help-skip-wrap" hidden>
+        <input type="checkbox" id="help-skip" aria-label="Don't open this automatically again"> Don't open this automatically again
+      </label>
+    </div>
   </div>
 </div>
 
@@ -105,7 +110,7 @@
     <div id="lobby-create" class="hidden">
       <p class="muted" id="lobby-create-hint">Pick your organisation. Seed controls the generated league.</p>
       <div class="row" style="gap:12px;flex-wrap:wrap;align-items:center">
-        <label>Seed <input id="ng-seed" class="mono" type="number" value="2026"></label>
+        <label>Seed <input id="ng-seed" class="mono" type="number" value="2026" aria-label="League seed"></label>
         <span id="ng-worlds" class="row" style="gap:6px;flex-wrap:wrap"></span>
       </div>
       <div class="row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
@@ -131,7 +136,7 @@
     <div id="lobby-join" class="hidden">
       <p class="muted">Enter the 5-character code your host shared, then pick a free team.</p>
       <div class="row" style="gap:8px">
-        <label>Code <input id="join-code" class="mono" maxlength="5" style="text-transform:uppercase;width:8em"></label>
+        <label>Code <input id="join-code" class="mono" maxlength="5" style="text-transform:uppercase;width:8em" aria-label="Join code"></label>
         <button id="join-load" class="btn">Show teams ▸</button>
       </div>
       <div id="join-teams" class="team-grid"></div>
@@ -218,7 +223,7 @@
       </div>
       <button class="btn" id="v-evfollow" title="Action cam: auto-center briefly on kills and spike plants" aria-pressed="false">Action cam</button>
       <button class="btn" id="v-reframe" title="Reset zoom and framing (releases player follow)">Reframe</button>
-      <input id="v-scrub" type="range" min="0" max="200" value="0">
+      <input id="v-scrub" type="range" min="0" max="200" value="0" aria-label="Replay scrubber">
       <span id="v-clock" class="mono"></span>
     </div>
   </div>
@@ -230,6 +235,7 @@
 <script src="/viewer.js"></script>
 <script src="/facilities.js"></script>
 <script src="/draft.js"></script>
+<script src="/tour.js"></script>
 <script type="module" src="/app.js"></script>
 <script type="module" src="/profile.js"></script>
 <script src="/audio.js"></script>

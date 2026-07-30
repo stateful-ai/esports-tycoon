@@ -413,6 +413,8 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
 }
 .help-note { margin-top: var(--es-space-5, 12px); border-left-color: var(--es-color-accent-warm, #ffb547); }
 .help-intro span, .help-note span { color: var(--es-color-text-secondary, #aab2c3); }
+.help-intro { display: flex; align-items: center; justify-content: space-between; gap: var(--es-space-4, 12px); flex-wrap: wrap; }
+.help-tour-btn { flex-shrink: 0; }
 .help-steps { list-style: none; margin: var(--es-space-5, 12px) 0 0; padding: 0; display: grid; gap: var(--es-space-3, 6px); }
 .help-steps li {
   display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center;
@@ -440,8 +442,52 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
 .help-glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--es-space-3, 6px) var(--es-space-7, 20px); }
 .help-glossary > div { display: grid; gap: var(--es-space-1, 3px); padding: var(--es-space-4, 10px) 0; border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39); }
 .help-glossary span { color: var(--es-color-text-secondary, #aab2c3); }
-.help-footer { margin: var(--es-space-6, 16px) 0 0; }
+.help-footer { margin: var(--es-space-6, 16px) 0 0; display: flex; align-items: center; justify-content: space-between; gap: var(--es-space-6, 16px); flex-wrap: wrap; }
+.help-footer-tip { margin: 0; }
+.help-footer-tip kbd {
+  font-family: var(--es-font-mono, monospace); font-size: var(--es-text-xs, 11px);
+  padding: 0 var(--es-space-2, 5px); border: var(--es-border-normal, 1px) solid var(--es-color-border-primary);
+  border-bottom-width: var(--es-border-thick, 2px); border-radius: var(--es-radius-sm, 4px);
+  background: var(--es-color-bg-sunken); color: var(--es-color-text-primary);
+}
+.help-footer-skip { display: inline-flex; align-items: center; gap: var(--es-space-2, 6px); cursor: pointer; white-space: nowrap; }
+.help-footer-skip input { accent-color: var(--es-color-accent); cursor: pointer; }
 .screen-guide-btn { margin-left: var(--es-space-3, 6px); }
+
+/* -- Guided tour ------------------------------------------------------------
+   A spotlight walkthrough of the weekly loop. A translucent backdrop dims
+   everything except the highlighted target (a positioned "hole"), and a step
+   card anchors to that hole. Presentation only: it navigates with dashGoTab
+   and never touches game state. */
+#tour-backdrop {
+  position: fixed; inset: 0; z-index: calc(var(--es-z-modal, 1000) + 40);
+  background: rgba(4, 8, 16, 0.72); opacity: 0; transition: opacity .18s ease;
+}
+#tour-backdrop.on { opacity: 1; }
+#tour-spot {
+  position: fixed; z-index: calc(var(--es-z-modal, 1000) + 41); pointer-events: none;
+  border-radius: var(--es-radius-md, 8px);
+  box-shadow: 0 0 0 9999px rgba(4, 8, 16, 0.72), 0 0 0 2px var(--es-color-accent), 0 0 24px rgba(79, 216, 192, 0.35);
+  transition: top .22s ease, left .22s ease, width .22s ease, height .22s ease;
+}
+#tour-card {
+  position: fixed; z-index: calc(var(--es-z-modal, 1000) + 42); width: min(340px, calc(100vw - 32px));
+  background: var(--es-color-bg-elevated); border: var(--es-border-normal, 1px) solid var(--es-color-border-primary);
+  border-radius: var(--es-radius-md, 8px); box-shadow: var(--es-shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.5));
+  padding: var(--es-space-5, 14px); transition: top .22s ease, left .22s ease;
+}
+#tour-card .tour-kicker { display: flex; align-items: center; justify-content: space-between; gap: var(--es-space-3, 8px); margin-bottom: var(--es-space-2, 6px); }
+#tour-card .tour-step-of { font-family: var(--es-font-mono, monospace); font-size: var(--es-text-xs, 11px); color: var(--es-color-text-tertiary); }
+#tour-card h3 { margin: 0 0 var(--es-space-2, 6px); font-size: var(--es-text-lg, 15px); }
+#tour-card p { margin: 0 0 var(--es-space-4, 12px); color: var(--es-color-text-secondary); font-size: var(--es-text-md, 13px); line-height: 1.5; }
+#tour-card .tour-actions { display: flex; align-items: center; gap: var(--es-space-2, 6px); }
+#tour-card .tour-actions .spacer { flex: 1; }
+#tour-card .tour-dots { display: flex; gap: 5px; }
+#tour-card .tour-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--es-color-border-primary); }
+#tour-card .tour-dots i.on { background: var(--es-color-accent); }
+@media (max-width: 720px) {
+  #tour-card { width: calc(100vw - 24px); left: 12px !important; }
+}
 
 @media (max-width: 720px) {
   .help-screen-grid, .help-glossary { grid-template-columns: 1fr; }
@@ -848,7 +894,7 @@ svg.iso .plabel { font-size: 2.4px; }
 .u.dim { opacity: .55; }
 .u-chip.u-comms { background: var(--es-color-info, var(--es-color-text-link)); }
 
-.pill.obj { font-size: 10px; opacity: .9; }
+.pill.obj { font-size: 11px; opacity: .9; }
 .pill.obj.good { color: var(--es-color-success, var(--es-color-text-success)); }
 .pill.obj.bad { color: var(--es-color-danger, var(--es-color-brand)); }
 .offer-row { flex-wrap: wrap; gap: var(--es-space-3, 6px); }
@@ -979,6 +1025,11 @@ svg.iso .plabel { font-size: 2.4px; }
 }
 .inbox-goto { margin-top: var(--es-space-1, 2px); }
 .inbox-empty { padding: var(--es-space-6, 18px) var(--es-space-2, 4px); }
+/* Actionable empty state: a short confirmation plus next-step links. */
+.inbox-empty-guide { display: flex; flex-direction: column; gap: var(--es-space-2, 6px); }
+.inbox-empty-guide .inbox-empty-title { font-weight: var(--es-weight-semibold, 600); color: var(--es-color-text-primary); margin: 0; }
+.inbox-empty-guide p.muted { margin: 0; }
+.inbox-empty-links { display: flex; flex-wrap: wrap; gap: var(--es-space-2, 6px); margin-top: var(--es-space-2, 6px); }
 
 /* Category chips — distinct but muted; each carries its own accent via --c.
    Tint the background lightly and use the accent for the label text. */

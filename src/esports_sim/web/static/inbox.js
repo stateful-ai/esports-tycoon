@@ -296,12 +296,30 @@ async function inbox(v) {
     const all = selectedItems();
     const items = all.filter((it) => inboxFilter === "all" || it.category === inboxFilter);
     if (!items.length) {
-      const msg = all.length
-        ? "Nothing in this category."
-        : inboxSection === "actionable"
-          ? "Nothing needs your attention. New offers, contracts, and urgent talks will appear here."
-          : "No league updates yet. Advance the week to continue.";
-      listWrap.appendChild(el("p", "inbox-empty muted", msg));
+      if (all.length) {
+        listWrap.appendChild(el("p", "inbox-empty muted", "Nothing in this category."));
+      } else if (inboxSection === "actionable") {
+        // Actionable empty state: confirm the queue is clear, then point the
+        // manager at the next thing worth doing rather than a dead end.
+        const empty = el("div", "inbox-empty inbox-empty-guide");
+        empty.appendChild(el("p", "inbox-empty-title", "All clear — nothing needs a decision."));
+        empty.appendChild(el("p", "muted",
+          "New offers, contracts, and urgent talks will appear here. Meanwhile:"));
+        const next = el("div", "inbox-empty-links");
+        const mk = (label, fn) => {
+          const b = el("button", "btn btn-sm", label + " ▸");
+          b.onclick = fn;
+          next.appendChild(b);
+        };
+        mk("Prep this week's match", () => { App.tacticsTab = "gameplan"; inboxGoTab("tactics"); });
+        mk("Check the squad", () => { App.clubTab = "squad"; inboxGoTab("club"); });
+        mk("Scout a target", () => inboxGoTab("scouting"));
+        empty.appendChild(next);
+        listWrap.appendChild(empty);
+      } else {
+        listWrap.appendChild(el("p", "inbox-empty muted",
+          "No league updates yet. Advance the week to continue."));
+      }
       return;
     }
     // Items arrive newest-first; emit an "S1 - W6" header whenever the
