@@ -94,6 +94,7 @@ STEM_DOMAINS: dict[str, frozenset[str]] = {
     "test_map_mcp": frozenset({"mcp"}),
     "test_roster_mcp": frozenset({"mcp"}),
     "test_experiment_mcp": frozenset({"mcp"}),
+    "test_play_mcp": frozenset({"mcp"}),
 }
 
 # ── Cache ────────────────────────────────────────────────────────────────

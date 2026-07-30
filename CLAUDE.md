@@ -45,6 +45,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Map floor gate (plates touch; callouts/paths on-floor) | `... scripts\map_floor_audit.py` (exit 1 = fail) |
 | Re-bless golden after INTENTIONAL engine change | `... scripts\regen_golden.py` |
 | Rebuild a roster pack from its src/ sheets | `... scripts\build_roster_pack.py <pack-id>` |
+| Play MCP (stdio) — play the whole campaign as an agent | `... -m esports_sim.mcp.play_server` |
 | Roster-pack MCP (stdio) | `... -m esports_sim.mcp.roster_server` |
 | Map Studio MCP (stdio) | `... -m esports_sim.mcp.map_server` |
 | Map guide rasterizer (viewer-transform-exact) | `... scripts\render_map_guide.py [--map <id>]` |
@@ -200,6 +201,14 @@ Published at github.com/stateful-ai/esports-tycoon.
   The office UI (`office.js`/`office.css`) was removed; `office_plan.json`
   and `office_sprites.json` stay for the offline render scripts
   (`render_office_guide.py`, `render_sprite_office.py`).
+- `src/esports_sim/mcp/` — stdio MCP servers. `play_server.py` makes the WHOLE
+  campaign agent-playable (start/resume a world, the full decision contract,
+  every read screen, the transfer market); its ops live in
+  `registry/play_mcp_ops.py` and route mutations through the same
+  `manager/decision_env.py` contract the web layer uses, so playing over MCP
+  is the real game and its saves open in the browser. `roster_server.py` and
+  `map_server.py` are the authoring surfaces; `experiment_server.py` runs
+  causal match experiments.
 - `data/` — YAML registries (agents/weapons/maps/geometry/teams). Strict
   pydantic (`extra="forbid"`): typos fail loudly. `data/rosters/<id>/` =
   roster packs (importable worlds, e.g. the real VCT 2026): `pack.yaml`
@@ -268,6 +277,14 @@ Published at github.com/stateful-ai/esports-tycoon.
   all match preparation.
 - Replays are captured at sim time and kept for the latest week only —
   rosters mutate immediately after, so stored seeds don't reproduce logs.
+- Playing the game as an agent: use the `esports-play` MCP, wrapped in the
+  Agora playtest agent (`docs/agents/esports-playtest.md` in the agora repo,
+  flywheel domain `esports-playtest`, registered here as the `flywheel` MCP).
+  The loop is non-negotiable in both directions: `search`/`recent` the domain
+  BEFORE playing so a run inherits what earlier runs learned, and `record`
+  after (>=2 learnings, >=1 pain-point) so it does not evaporate. Play findings
+  belong in the flywheel; only defects in the play surface itself get fixed in
+  this repo during a play run.
 - Browser screenshots via `preview_screenshot` (preview tools) wedge chronically
   on this machine — but standalone Playwright works: `.venv-win\Scripts\python.exe
   scripts/ui_review.py` captures real UI screenshots for review/regression
