@@ -50,6 +50,7 @@ from esports_sim.manager import (
     scouting,
     sponsors,
     staff_effects,
+    transfer_requests,
 )
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.decision_env import (
@@ -408,7 +409,12 @@ def _session(
         previous = (
             session.env.team_id if session is not None else gs.user_team_id
         )
-        manager_id = session.manager_id if session is not None else ""
+        # A cold load has no cached identity, so take the one recorded on disk
+        # rather than re-deriving it from gs.user_team_id.
+        manager_id = (
+            session.manager_id if session is not None
+            else str(_read_meta(path).get("manager_id") or "")
+        )
         session = _bind(
             code, gs, path,
             _follow_manager(gs, previous, manager_id), manager_id,
@@ -462,14 +468,26 @@ def _write(session: _Session) -> None:
     session.path.parent.mkdir(parents=True, exist_ok=True)
     session.gs.save(session.path)
     meta = session.path.with_suffix(".meta.json")
-    if _read_meta(session.path).get("code") != session.code:
+    stored = _read_meta(session.path)
+    if (
+        stored.get("code") != session.code
+        or stored.get("manager_id") != session.manager_id
+    ):
         # The save filename is a one-way hash of the code, so without this the
         # code is unrecoverable once this process exits — and list_games could
         # not offer the resume flow it advertises. The web lobby reads only
         # "mode" from this sidecar, so the extra key is inert there.
         meta.write_text(
-            json.dumps({"mode": _read_meta(session.path).get("mode", "shared"),
-                        "code": session.code}),
+            json.dumps({
+                "mode": stored.get("mode", "shared"),
+                "code": session.code,
+                # The played seat, not just the world code. Without it a cold
+                # load rebuilds identity from gs.user_team_id — which still
+                # points at a club we may have been dismissed from — and would
+                # adopt whoever occupies it now as this session's manager,
+                # opening the ownership guard onto a stranger's org.
+                "manager_id": session.manager_id,
+            }),
             encoding="utf-8",
         )
     elif not meta.exists():
@@ -1207,34 +1225,63 @@ def _extra_action_contract(session: _Session) -> dict[str, Any]:
         # the buyer must cover the clause AND a wage reserve. Advertising the
         # action without both makes every target a guaranteed rejection.
         can_buy_out = team.tier == 1 and has_room
-        buyout_targets = []
-        if can_buy_out:
+        buyout_targets: list[dict[str, Any]] = []
+        bid_targets: list[dict[str, Any]] = []
+        if has_room:
             for pid, player in sorted(gs.players.items()):
                 owner = market.team_of(gs, pid)
                 if owner is None or owner == team_id:
                     continue
-                fee = market.buyout_fee(gs, pid)
-                if fee is None:
-                    continue
                 reserve = market.asking_salary(player) * 8
-                if team.balance >= fee + reserve:
-                    buyout_targets.append({
-                        "player_id": pid,
-                        "handle": player.handle,
-                        "fee": fee,
-                        "wage_reserve": reserve,
-                    })
+                if can_buy_out:
+                    fee = market.buyout_fee(gs, pid)
+                    if fee is not None and team.balance >= fee + reserve:
+                        buyout_targets.append({
+                            "player_id": pid,
+                            "handle": player.handle,
+                            "fee": fee,
+                            "wage_reserve": reserve,
+                        })
+                # Mirror market.user_bid's own refusals so a published target
+                # is one a bid can actually clear: the fee plus the wage
+                # reserve, no no-transfer clause, and a club willing to sell.
+                # All three are cheap to evaluate over the whole player pool.
+                ask = market.transfer_ask(gs, pid)
+                if team.balance < ask + reserve:
+                    continue
+                requested = transfer_requests.active(gs, pid, owner)
+                if player.no_transfer_clause and not requested:
+                    continue
+                stance = str(
+                    market.org_player_valuation(gs, owner, pid, "sell")["stance"]
+                )
+                if stance == "not for sale" and not requested:
+                    continue
+                bid_targets.append({
+                    "player_id": pid,
+                    "handle": player.handle,
+                    "owner": owner,
+                    "ask": ask,
+                    "wage_reserve": reserve,
+                    "stance": stance,
+                })
         return {
             "transfer_bid": {
-                "enabled": bool(window["open"]) and has_room,
+                "enabled": bool(window["open"]) and bool(bid_targets),
                 "roster_space": cap - len(team.player_ids),
                 "reason": (
-                    "" if has_room
+                    ""
+                    if bid_targets
                     else f"roster is full ({cap}) — release or sell first"
+                    if not has_room
+                    else "no rival player is both affordable and for sale"
                 ),
+                "targets": bid_targets,
+                "target_count": len(bid_targets),
                 "note": (
-                    "Cash bid at the seller's ask. Use get_transfer_target for "
-                    "the fee and the selling club's stance first."
+                    "Cash bid at the seller's ask. Every target listed clears "
+                    "the fee, the wage reserve and the selling club's "
+                    "willingness; get_transfer_target breaks down one price."
                 ),
             },
             "transfer_respond": {
@@ -1330,6 +1377,8 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
     session = _session(
         code, mutating=True, between_jobs_ok=(kind == "accept_job")
     )
+    if kind == "accept_job":
+        return _accept_job(session, str((params or {}).get("team_id", "")))
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
@@ -1349,6 +1398,41 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
         "ok": True,
         "kind": kind,
         "message": step.message,
+        "state": get_state(session.code),
+    }
+
+
+def _accept_job(session: _Session, team_id: str) -> dict[str, Any]:
+    """Take a new post, resolving the seat by recorded identity.
+
+    Not through ``HeadlessManagerEnv``: its handler resolves the seat with
+    ``seat_for_session(self.team_id)``, which answers with whoever occupies the
+    club we were dismissed from. With that club reoccupied, the env would
+    accept against the OCCUPANT's offer list — so our own offers stay visible
+    in get_career while every attempt to take one fails, and the career is
+    stuck for good.
+    """
+    from esports_sim.manager import telemetry
+
+    with _acting(session) as gs:
+        seat = _played_seat(session)
+        if seat is None:
+            raise PlayError("no manager seat controls this world")
+        ok, message = career.accept_offer(gs, seat.id, team_id)
+        if not ok:
+            raise PlayError(f"illegal action: {message}")
+        # Follow the person: the env and the recorded identity both move.
+        session.env.team_id = seat.team_id or team_id
+        session.manager_id = seat.id
+        telemetry.record_action(
+            gs, "accept_job", {"team_id": team_id},
+            team_id=session.env.team_id, source="agent",
+        )
+    _write(session)
+    return {
+        "ok": True,
+        "kind": "accept_job",
+        "message": message,
         "state": get_state(session.code),
     }
 

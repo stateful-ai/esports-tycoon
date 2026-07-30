@@ -852,6 +852,109 @@ def test_the_dismissal_gate_survives_a_reoccupied_old_club(
     assert ops.get_career("FIRED")["offers"]
 
 
+def test_the_played_identity_survives_a_cold_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The seat id has to be durable, not just cached.
+
+    On a cold load with an empty session cache, identity was re-derived from
+    gs.user_team_id — which still points at the club we were dismissed from —
+    so a reoccupied club would be adopted as this session's own manager,
+    opening the write gate onto a stranger's org. And accepting a job has to
+    resolve OUR seat: the env resolves by club and would answer with the
+    occupant, leaving our offers visible but unacceptable.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    old = ops.list_career_offers(seed=21)["offers"][0]["team_id"]
+    ops.new_game(team_id=old, seed=21, code="COLDX", mode="legacy")
+
+    session = ops._session("COLDX")
+    mine = session.manager_id
+    assert ops._read_meta(session.path)["manager_id"] == mine
+
+    career.apply_dismissals(session.gs, [mine])
+    target = session.gs.career_offers_by[mine][0].team_id
+    session.gs.save(session.path)  # as the browser would
+
+    monkeypatch.setattr(ops, "_SESSIONS", {})  # cold process
+    assert ops._session("COLDX").manager_id == mine
+    with pytest.raises(ops.PlayError, match="dismissed"):
+        ops.act("COLDX", "set_tactics", {"aggression": 90.0})
+    assert ops.get_career("COLDX")["seat"]["id"] == mine
+
+    # Accepting has to resolve OUR seat: the env resolves by club, so with the
+    # old club reoccupied it would answer with the occupant and our offers
+    # would stay visible but unacceptable.
+    moved = ops.act("COLDX", "accept_job", {"team_id": target})
+    assert moved["ok"] is True
+    assert moved["state"]["team"]["id"] == target
+    assert ops._session("COLDX").manager_id == mine
+    assert ops.act("COLDX", "set_tactics", {"aggression": 55.0})["ok"] is True
+
+
+def test_a_cold_process_does_not_adopt_the_new_occupant(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The P1: identity re-derived from the club adopts whoever holds it now.
+
+    Kept separate from the accept_job path because a second human manager
+    makes the whole world read-only over MCP — correctly, since the shared
+    world's ready-up protocol belongs to the browser.
+    """
+    from esports_sim.manager import career
+
+    monkeypatch.setattr(ops, "SAVE_DIR", tmp_path / "saves")
+    monkeypatch.setattr(ops, "_SESSIONS", {})
+    old = ops.list_career_offers(seed=21)["offers"][0]["team_id"]
+    ops.new_game(team_id=old, seed=21, code="ADOPT", mode="legacy")
+
+    session = ops._session("ADOPT")
+    mine = session.manager_id
+    career.apply_dismissals(session.gs, [mine])
+    career.create_seat(session.gs, old)
+    session.gs.human_team_ids.append(old)
+    occupant = session.gs.manager_for(old).id
+    assert occupant != mine
+    session.gs.save(session.path)
+
+    monkeypatch.setattr(ops, "_SESSIONS", {})  # cold process
+    reloaded = ops._session("ADOPT")
+    assert reloaded.manager_id == mine, "adopted the occupant's seat"
+    # Reads answer for US, not the occupant.
+    assert ops.get_career("ADOPT")["seat"]["id"] == mine
+    assert ops.get_career("ADOPT")["offers"]
+    # And nothing may be written to a world someone else now manages.
+    with pytest.raises(ops.PlayError):
+        ops.act("ADOPT", "set_tactics", {"aggression": 90.0})
+
+
+def test_bids_are_only_offered_when_something_is_buyable(world: str) -> None:
+    """An action whose every parameter fails is not an available action.
+
+    market.user_bid refuses on the fee plus the wage reserve, a no-transfer
+    clause, and a club that will not sell — so the mask has to derive from a
+    target that clears all three, exactly as the buyout contract does.
+    """
+    session = ops._session(world)
+    rich = ops.get_legal_actions(world)["extra_actions"]["transfer_bid"]
+    assert rich["enabled"] is True and rich["target_count"] > 0
+    assert len(rich["targets"]) == rich["target_count"]
+    balance = session.gs.teams["team_nexus"].balance
+    for target in rich["targets"]:
+        assert target["ask"] + target["wage_reserve"] <= balance
+        assert target["stance"] != "not for sale"
+        assert target["owner"] != "team_nexus"
+
+    session.gs.teams["team_nexus"].balance = 1_000
+    broke = ops.get_legal_actions(world)["extra_actions"]["transfer_bid"]
+    assert broke["enabled"] is False
+    assert broke["targets"] == [] and broke["target_count"] == 0
+    assert "affordable" in broke["reason"]
+
+
 def test_browser_created_worlds_are_selectable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
