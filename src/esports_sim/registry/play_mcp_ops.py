@@ -240,6 +240,39 @@ def _read_only_reason(
     return None
 
 
+def _masked(
+    session: _Session, contract: dict[str, Any]
+) -> dict[str, Any]:
+    """Disable everything the write gate would refuse, with the reason.
+
+    Used by every surface that publishes an action mask — the observation
+    carries its own copy alongside get_legal_actions — so a mask can never
+    drift out of agreement with ``_read_only_reason`` again.
+    """
+    frozen = _read_only_reason(session)
+    if frozen is None:
+        return contract
+    # accept_job is the one write a dismissed manager still has.
+    still_legal = (
+        {"accept_job"}
+        if _read_only_reason(session, between_jobs_ok=True) is None
+        else set()
+    )
+    return {
+        name: (
+            # Only entries that declare legality are actions; a contract also
+            # carries informational blocks (the market window) that must not
+            # be stamped with an "enabled" they never had.
+            {**entry, "enabled": False, "reason": frozen}
+            if isinstance(entry, dict)
+            and "enabled" in entry
+            and name not in still_legal
+            else entry
+        )
+        for name, entry in contract.items()
+    }
+
+
 def _read_meta(save_path: Path) -> dict[str, Any]:
     """The world's sidecar, or an empty dict when there isn't a readable one."""
     try:
@@ -968,6 +1001,13 @@ def get_observation(
     observation = manager_observation(
         session.gs, _gamedata(), session.env.team_id
     )
+    # The observation carries its own legal_actions, so it is a second copy of
+    # the mask and has to agree with the gate for the same reasons
+    # get_legal_actions does — a learned policy consuming this contract would
+    # otherwise be handed impossible moves.
+    observation["legal_actions"] = _masked(
+        session, observation["legal_actions"]
+    )
     if not sections:
         return observation
     unknown = [s for s in sections if s not in OBSERVATION_SECTIONS]
@@ -991,31 +1031,10 @@ def get_legal_actions(
     legal = manager_observation(
         session.gs, _gamedata(), session.env.team_id
     )["legal_actions"]
-    extra = _extra_action_contract(session)
-    # The mask is derived from the SAME predicate the write gate uses, so it
-    # cannot drift out of agreement with it again. accept_job survives a
-    # dismissal because that is the one write still permitted then.
-    frozen = _read_only_reason(session)
-    if frozen is not None:
-        still_legal = (
-            {"accept_job"}
-            if _read_only_reason(session, between_jobs_ok=True) is None
-            else set()
-        )
-        legal = {
-            kind: (
-                contract if kind in still_legal
-                else {**contract, "enabled": False, "reason": frozen}
-            )
-            for kind, contract in legal.items()
-        }
-        extra = {
-            name: (
-                contract if not isinstance(contract, dict)
-                else {**contract, "enabled": False, "reason": frozen}
-            )
-            for name, contract in extra.items()
-        }
+    # Both halves through the same overlay the observation uses, which reads
+    # the same predicate as the write gate.
+    legal = _masked(session, legal)
+    extra = _masked(session, _extra_action_contract(session))
     if kinds:
         # Filter across BOTH halves. The direct tools live in extras, so
         # validating names against the headless contract alone rejected every
@@ -1229,6 +1248,16 @@ def act(code: str, kind: str, params: dict[str, Any] | None = None) -> dict[str,
     try:
         step = session.env.step({"kind": kind, "params": dict(params or {})})
     except InvalidManagerAction as exc:
+        # A rejected action must leave no trace. Some manager helpers mutate
+        # before reporting failure — negotiate_offer deletes a negotiation the
+        # roster has moved out from under before returning "error" — and that
+        # residue would otherwise be persisted by the next successful action
+        # with no action-log entry to explain it, or lost on process exit.
+        # Every accepted mutation is already on disk, so dropping the cached
+        # world rolls back to exactly the last accepted action. This differs
+        # from a market REFUSAL, which the game records deliberately as
+        # history (see _market_action) rather than incidentally.
+        _SESSIONS.pop(session.code, None)
         raise PlayError(f"illegal action: {exc}") from exc
     _write(session)
     return {

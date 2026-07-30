@@ -408,6 +408,41 @@ def test_legal_actions_are_the_only_contract_needed(world: str) -> None:
     assert set(legal["set_tactics"]["dials"]) >= {"aggression", "pace"}
 
 
+def test_a_rejected_action_leaves_no_trace(world: str) -> None:
+    """Some manager helpers mutate before reporting failure.
+
+    negotiate_offer deletes a negotiation whose player the roster has moved
+    out from under it, then returns "error". Left in memory, that residue is
+    persisted by the next successful action with no action-log entry to
+    explain it — or lost on process exit. Either way replay breaks.
+    """
+    from esports_sim.manager.state import GameState
+
+    session = ops._session(world)
+    pid = sorted(session.gs.teams["team_nexus"].player_ids)[0]
+    ops.act(world, "negotiate_open", {"player_id": pid})
+    assert list(session.gs.negotiations) == [pid.split("_")[-1]] or session.gs.negotiations
+    opened = dict(session.gs.negotiations)
+    assert opened, "the negotiation must exist before we invalidate it"
+
+    # Make the negotiation stale, then submit an offer against it.
+    session.gs.teams["team_nexus"].player_ids.remove(pid)
+    with pytest.raises(ops.PlayError, match="illegal action"):
+        ops.act(
+            world, "negotiate_offer",
+            {"player_id": pid, "salary": 5000, "weeks": 40},
+        )
+
+    # Rolled back to the last ACCEPTED action, not left half-mutated.
+    after = ops._session(world)
+    assert dict(after.gs.negotiations) == opened
+    assert pid in after.gs.teams["team_nexus"].player_ids
+    # And the next accepted action persists that clean world.
+    ops.act(world, "set_tactics", {"aggression": 60.0})
+    on_disk = GameState.load(ops.save_path_for(world))
+    assert dict(on_disk.negotiations) == opened
+
+
 def test_illegal_actions_are_rejected_with_a_reason(world: str) -> None:
     with pytest.raises(ops.PlayError, match="illegal action"):
         ops.act(world, "set_training", {"focus": "not-a-focus"})
@@ -802,6 +837,15 @@ def test_browser_ownership_is_masked_in_the_contract(
     assert "browser" in contract["actions"]["set_tactics"]["reason"]
     # get_state derives its list from the same mask.
     assert ops.get_state(code)["enabled_actions"] == []
+    # The observation carries a SECOND copy of the mask, which a learned
+    # policy consumes directly — it has to agree with the gate too.
+    observed = ops.get_observation(code)["legal_actions"]
+    assert not [k for k, v in observed.items() if v.get("enabled")]
+    narrowed = ops.get_observation(code, ["legal_actions"])["legal_actions"]
+    assert not [k for k, v in narrowed.items() if v.get("enabled")]
+    # Informational blocks are not actions and must not be stamped as such.
+    window = contract["extra_actions"]["market_window"]
+    assert "enabled" not in window and "kind" in window
 
 
 def test_the_contract_is_masked_while_the_draft_runs(world: str) -> None:
