@@ -58,13 +58,15 @@ not the browser's per-screen endpoints:
   now and the exact ids/options/ranges it accepts. **Never invent ids or
   parameters — pick them from `legal_actions`.**
 - One action at a time: `POST /api/agent/act {"kind": ..., "params": {...}}`
-  (or `AgentWorld.act(team_id, action)`). The ~30 kinds cover training,
+  (or `AgentWorld.act(team_id, action)`). The ~40 kinds cover training,
   tactics dials, lineups, per-fixture game plans, scouting, free-agent
-  signings/swaps/releases, contract negotiations, staff, facilities,
-  sponsors, academy moves, scrim preparation, tournament registration,
-  series directives, leadership/culture, player talks, development plans,
-  mentorships, and event resolutions. `sync.advance_blocker` / the 422
-  detail always name what is wrong in plain words.
+  signings/swaps/releases, the transfer market (`bid`, `buyout`,
+  `transfer_offer`), role/playstyle `assignment` and the `igl` call,
+  contract negotiations, staff, facilities, sponsors, academy moves, scrim
+  preparation, tournament registration, series directives,
+  leadership/culture, player talks, development plans, mentorships, and
+  event resolutions. `sync.advance_blocker` / the 422 detail always name
+  what is wrong in plain words.
 - Rejected actions are **422** with the reason in `detail` (HTTP) or an
   `InvalidManagerAction` exception (in-process) — feed the text back to the
   model and retry.
@@ -181,10 +183,21 @@ seat's own sequence.
   create surfaces do not build legacy worlds.
 - **Fantasy-draft worlds refuse agent joins** until the draft completes: the
   decision contract has no draft-pick action yet.
-- Not in the decision contract (browser-only for now): cash bids/buyouts on
-  rostered rivals, package trades, responding to incoming transfer bids,
-  role/IGL assignment, promises, in-match pep talks/shouts. Agent-to-agent
-  player movement flows through releases, free agency, and negotiations.
+- **The transfer market is in the contract.** `bid` places a cash bid at the
+  seller's ask on a rostered rival (instant against an AI org; against
+  another human/agent seat it parks on that seller's desk as a live offer).
+  `buyout` triggers a tier-2 buyout clause (tier-1 buyers only; the seller
+  cannot refuse). `transfer_offer` answers an incoming bid on YOUR player
+  (accept/decline; `to_team` disambiguates when several buyers bid) —
+  offers are seller-scoped, so in a shared world no seat can answer a bid
+  that isn't on its own desk. `assignment` (role/playstyle) and `igl`
+  manage role fit and the shot-caller. Every legal option (ask/clause fee,
+  seller humanity, offer details) is enumerated in `legal_actions`, and
+  agent-to-agent player movement now includes direct bids between seats on
+  top of releases, free agency, and negotiations.
+- Not in the decision contract (browser-only for now): package trades
+  (multi-player + cash constructions), promises, in-match pep
+  talks/shouts.
 - `ready` votes, `tick_seq`, and `last_tick` digests are session memory: a
   server restart clears them (the world itself persists via its normal
   save). After a restart, seats re-vote.
