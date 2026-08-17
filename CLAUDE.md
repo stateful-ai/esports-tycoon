@@ -35,6 +35,7 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Dynasty gate (title concentration over N seasons) | `... scripts\dynasty_report.py [seasons] [seed]` (exit 1 = fail) |
 | RL episode export (save -> transitions/actions/chronicle JSONL) | `... scripts\export_telemetry.py <save-or-dir> [stem]` |
 | Manager policy rollouts (traces/runs/evaluation) | `... scripts\run_manager_rollouts.py [seeds] [profiles] [weeks] [stem]` |
+| Multi-agent shared world demo (scripted seats) | `... scripts\agent_play_demo.py [--agents 3 --weeks 4]` |
 | Train learned manager policy (seed-split imitation) | `... scripts\train_manager_policy.py [train-seeds] [val-seeds] [profiles] [weeks] [checkpoint]` |
 | Generate/train learned player policy (cross-map seed split) | `... scripts\train_player_policy.py <checkpoint> [--map all --seeds N --validation-seeds N --dataset runs\...jsonl]` |
 | Improve manager policy (online simulation + promotion gate) | `... scripts\online_train_manager_policy.py <checkpoint> [--train-seeds N --eval-seeds N --profiles N --weeks N]` |
@@ -144,7 +145,13 @@ Published at github.com/stateful-ai/esports-tycoon.
   `rollout.py` provide generated manager profiles, a masked heuristic baseline,
   decision traces, batch evaluation, and training-data exports;
   `learned_manager_policy.py` adds the NumPy set encoder, profile-conditioned
-  imitation heads, JSON checkpoints, and deterministic learned-policy replay. Player
+  imitation heads, JSON checkpoints, and deterministic learned-policy replay;
+  `agent_play.py` is multi-agent multiplayer over that same contract — N
+  externally controlled seats in one GameState, advance as a ready VOTE
+  (the world ticks once when the last seat votes, mirroring the web
+  barrier), per-seat tick digests, and the championship-objective/league
+  serializers (`objective_view`/`league_view`); the web `/api/agent/*`
+  endpoints and the in-process `AgentWorld` both ride it (docs/agent-play.md). Player
   `confidence` moves on results/ratings/dev events/sentiment, regresses
   weekly, and is read NEUTRAL-SAFE by the engine (exact no-op at 50);
   tilt spirals/heaters roll on the dedicated "tilt" rng stream. Game

@@ -27,6 +27,7 @@ from esports_sim.manager import (
     market,
     media_events,
     preparation,
+    role_fit,
     series_management,
     sponsors,
     staff,
@@ -39,7 +40,13 @@ from esports_sim.manager import (
 from esports_sim.manager.campaign import TEAM_TALK_APPROACHES, advance_week
 from esports_sim.manager.state import GamePlan, GameState
 from esports_sim.registry import GameData
+from esports_sim.schemas import Playstyle, Role
 
+# Additive growth (a NEW key in ``legal_actions``, a NEW action kind, or a
+# NEW field on an existing entry) deliberately does NOT bump the version:
+# every consumer reads known keys only, and learned-policy checkpoints carry
+# their own action vocabulary (see ``learned_manager_policy``). Bump only
+# when an EXISTING key changes meaning, moves, or disappears.
 OBSERVATION_VERSION = 8
 TRACE_VERSION = 1
 SUPPORTED_ACTIONS = frozenset(
@@ -78,6 +85,11 @@ SUPPORTED_ACTIONS = frozenset(
         "culture_session",
         "set_delegation",
         "resolve_media",
+        "bid",
+        "buyout",
+        "transfer_offer",
+        "assignment",
+        "igl",
     }
 )
 _TACTIC_DIALS = (
@@ -87,6 +99,14 @@ _TACTIC_DIALS = (
     "eco_greed",
     "map_control",
 )
+# Env action kinds whose telemetry name differs: the action_log vocabulary is
+# closed and shared with the web layer, so the same physical decision logs
+# under the same kind regardless of which surface applied it.
+_TELEMETRY_KINDS = {
+    "transfer_offer": "respond_offer",
+    "assignment": "set_assignment",
+    "igl": "set_igl",
+}
 
 
 class InvalidManagerAction(ValueError):
@@ -124,6 +144,7 @@ def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
         "age": p.age,
         "role": str(p.role),
         "playstyle": str(p.playstyle),
+        "assignment_comfort": round(role_fit.assignment_comfort(p), 1),
         "attributes": {k: float(v) for k, v in sorted(p.attributes.items())},
         "ca": round(development.overall(p), 3),
         "pa_projection": list(development.potential_projection(
@@ -279,6 +300,68 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         can_open, _why, _kind = market.can_open_negotiation(gs, pid)
         if can_open:
             negotiable.append(pid)
+    # Transfer market on rostered rivals: cash bids at the seller's ask and
+    # tier-2 buyout clauses, plus incoming bids on this club's players that
+    # await the seller's answer. Options mirror what the web market screens
+    # show (ask, clause fee, seller humanity) and what the POST endpoints
+    # accept, and every listed option passes the same domain checks the
+    # step() delegate re-runs.
+    team_balance = gs.teams[team_id].balance
+    has_space = len(roster) < market.roster_cap(gs, team_id)
+    bid_options: list[dict[str, Any]] = []
+    buyout_options: list[dict[str, Any]] = []
+    if market_open and has_space:
+        is_tier1 = gs.teams[team_id].tier == 1
+        for tid in sorted(gs.teams):
+            if tid == team_id:
+                continue
+            for pid in sorted(gs.teams[tid].player_ids):
+                p = gs.players[pid]
+                requested = bool(transfer_requests.active(gs, pid, tid))
+                if p.no_transfer_clause and not requested:
+                    continue
+                wages = market.asking_salary(p) * 8
+                seller_human = gs.is_human(tid)
+                # An AI org refuses cash for an organisational pillar; a
+                # human seller always gets the offer on their desk instead.
+                sellable = seller_human or requested or str(
+                    market.org_player_valuation(gs, tid, pid, "sell")["stance"]
+                ) != "not for sale"
+                if sellable and not any(
+                    o.player_id == pid and o.to_team == team_id
+                    for o in gs.transfer_offers
+                ):
+                    ask = market.transfer_ask(gs, pid)
+                    if team_balance >= ask + wages:
+                        bid_options.append({
+                            "player_id": pid,
+                            "team_id": tid,
+                            "ask": ask,
+                            "seller_human": seller_human,
+                        })
+                if is_tier1:
+                    fee = market.buyout_fee(gs, pid)
+                    if fee is not None and team_balance >= fee + wages:
+                        buyout_options.append(
+                            {"player_id": pid, "team_id": tid, "fee": fee}
+                        )
+    incoming_offers = [
+        {
+            "player_id": o.player_id,
+            "handle": gs.players[o.player_id].handle,
+            "to_team": o.to_team,
+            "fee": o.fee,
+            "expires_week": o.expires_week,
+            "offer_player_ids": list(o.offer_player_ids),
+            "cash_to_seller": o.cash_to_seller,
+            "cash_to_buyer": o.cash_to_buyer,
+            "can_accept": market.market_move_allowed(gs, o.to_team)[0],
+        }
+        for o in gs.transfer_offers
+        if o.from_team == team_id
+        and o.player_id in gs.players
+        and o.to_team in gs.teams
+    ]
     talk_options = []
     rein_targets = []
     for pid in roster:
@@ -434,6 +517,27 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "roles": list(delegation.view(gs, team_id)["roles"]),
             "alert_levels": list(delegation.ALERT_LEVELS),
         },
+        "bid": {"enabled": bool(bid_options), "options": bid_options},
+        "buyout": {"enabled": bool(buyout_options), "options": buyout_options},
+        "transfer_offer": {
+            "enabled": bool(incoming_offers),
+            "offers": incoming_offers,
+        },
+        "assignment": {
+            "enabled": bool(roster),
+            "player_ids": roster,
+            "roles": [str(r) for r in Role],
+            "playstyles": [str(s) for s in Playstyle],
+        },
+        "igl": {
+            "enabled": bool(roster),
+            "player_ids": roster,
+            "current_igl": gs.teams[team_id].captain_id or "",
+            "experience": {
+                pid: round(role_fit.igl_experience(gs.teams[team_id], pid), 1)
+                for pid in roster
+            },
+        },
     }
 
 
@@ -574,7 +678,13 @@ class HeadlessManagerEnv:
 
     def _record(self, kind: str, params: dict[str, Any]) -> None:
         if self.record_actions and self.gs.is_human(self.team_id):
-            telemetry.record_action(self.gs, kind, params, team_id=self.team_id, source="agent")
+            telemetry.record_action(
+                self.gs,
+                _TELEMETRY_KINDS.get(kind, kind),
+                params,
+                team_id=self.team_id,
+                source="agent",
+            )
 
     def step(self, action: dict[str, Any]) -> StepResult:
         decision_observation = self.observe()
@@ -931,6 +1041,71 @@ class HeadlessManagerEnv:
                 ok, message = market.swap_player(self.gs, self.team_id, sign_id, drop_id)
                 if not ok:
                     raise InvalidManagerAction(message)
+            elif kind == "bid":
+                pid = str(params.get("player_id", ""))
+                if pid not in self.gs.players:
+                    raise InvalidManagerAction("unknown player")
+                ok, message = market.user_bid(self.gs, pid)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                params = {"player_id": pid}
+            elif kind == "buyout":
+                pid = str(params.get("player_id", ""))
+                if pid not in self.gs.players:
+                    raise InvalidManagerAction("unknown player")
+                ok, message = market.buy_out_player(self.gs, self.team_id, pid)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                params = {"player_id": pid}
+            elif kind == "transfer_offer":
+                pid = str(params.get("player_id", ""))
+                accept = bool(params.get("accept", False))
+                to_team = str(params.get("to_team", "")) or None
+                ok, message = market.respond_offer(self.gs, pid, accept, to_team)
+                if not ok:
+                    raise InvalidManagerAction(message)
+                params = {"player_id": pid, "accept": accept, "to_team": to_team or ""}
+            elif kind == "assignment":
+                pid = str(params.get("player_id", ""))
+                if pid not in self.gs.teams[self.team_id].player_ids:
+                    raise InvalidManagerAction("player is not on the roster")
+                role_raw = str(params.get("role", ""))
+                style_raw = str(params.get("playstyle", ""))
+                roles = {str(r): r for r in Role}
+                styles = {str(s): s for s in Playstyle}
+                if role_raw not in roles:
+                    raise InvalidManagerAction(f"role must be one of {sorted(roles)}")
+                if style_raw not in styles:
+                    raise InvalidManagerAction(
+                        f"playstyle must be one of {sorted(styles)}"
+                    )
+                p = self.gs.players[pid]
+                if str(p.role) == role_raw and str(p.playstyle) == style_raw:
+                    message = f"{p.handle} is already in that assignment — no change"
+                else:
+                    role_fit.change_assignment(p, roles[role_raw], styles[style_raw])
+                    message = (
+                        f"{p.handle} moved to {role_raw}/{style_raw}; comfort "
+                        f"starts at {role_fit.assignment_comfort(p):.0f} and "
+                        "rebuilds weekly"
+                    )
+                params = {"player_id": pid, "role": role_raw, "playstyle": style_raw}
+            elif kind == "igl":
+                pid = str(params.get("player_id", ""))
+                team = self.gs.teams[self.team_id]
+                if pid not in team.player_ids:
+                    raise InvalidManagerAction("player is not on the roster")
+                handle = self.gs.players[pid].handle
+                if team.captain_id == pid:
+                    message = f"{handle} is already the IGL — no change"
+                else:
+                    role_fit.assign_igl(team, pid)
+                    message = (
+                        f"{handle} is now the IGL; calling experience starts "
+                        f"at {role_fit.igl_experience(team, pid):.0f} and "
+                        "builds in matches"
+                    )
+                params = {"player_id": pid}
             else:  # advance
                 if career.blocked_seats(self.gs):
                     raise InvalidManagerAction("a manager must accept a job before advancing")

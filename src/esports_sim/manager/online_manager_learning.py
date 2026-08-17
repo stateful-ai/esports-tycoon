@@ -16,7 +16,6 @@ from typing import Any, Iterable
 import numpy as np
 
 from esports_sim.manager.learned_manager_policy import (
-    ACTION_VOCAB,
     LearnedManagerModel,
     LearnedManagerPolicy,
 )
@@ -86,9 +85,12 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
         obs, x, mask, probs = self._action_distribution(
             obs, temperature=self.temperature
         )
+        # Mask/probability rows are ordered by the CHECKPOINT's vocabulary
+        # (an older checkpoint has fewer rows than the live contract).
+        vocab = self.vocab
         week = (int(obs["season"]), int(obs["week"]))
         count = self._decision_counts.get(week, 0)
-        advance_index = ACTION_VOCAB.index("advance")
+        advance_index = vocab.index("advance")
         forced_action = count >= self.max_actions_per_week - 1
         forced_advance = forced_action and bool(mask[advance_index])
         forced_recovery = False
@@ -101,9 +103,9 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
             # unrelated actions until the rollout's decision budget expires.
             recovery = next(
                 (
-                    ACTION_VOCAB.index(kind)
+                    vocab.index(kind)
                     for kind in ("accept_job", "sign")
-                    if mask[ACTION_VOCAB.index(kind)]
+                    if kind in vocab and mask[vocab.index(kind)]
                 ),
                 None,
             )
@@ -112,8 +114,8 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
             selected_index = recovery
             forced_recovery = True
         else:
-            selected_index = int(self.rng.choice(len(ACTION_VOCAB), p=probs))
-        kind = ACTION_VOCAB[selected_index]
+            selected_index = int(self.rng.choice(len(vocab), p=probs))
+        kind = vocab[selected_index]
         self._decision_counts[week] = count + 1
         self._used.setdefault(week, set()).add(kind)
         action = self._build_action(obs, kind, x)
@@ -126,7 +128,7 @@ class ExploringLearnedManagerPolicy(LearnedManagerPolicy):
             )
         )
         probabilities = {
-            name: round(float(probs[i]), 6) for i, name in enumerate(ACTION_VOCAB)
+            name: round(float(probs[i]), 6) for i, name in enumerate(vocab)
         }
         self.last_decision = {
             "selected": kind,

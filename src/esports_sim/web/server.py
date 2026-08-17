@@ -25,11 +25,12 @@ from types import SimpleNamespace
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from esports_sim.labels import humanize_identifier
 from esports_sim.manager import (
     academy,
+    agent_play,
     analytics,
     arcs as arcs_mod,
     career,
@@ -88,6 +89,11 @@ from esports_sim.manager.campaign import (
     dressed_for,
     new_campaign,
     suggested_five,
+)
+from esports_sim.manager.decision_env import (
+    HeadlessManagerEnv,
+    InvalidManagerAction,
+    manager_observation,
 )
 from esports_sim import perf
 from esports_sim.manager.state import (
@@ -182,6 +188,12 @@ class _Game:
         # only, like last_report: after a restart the reveal simply omits
         # the "from" position.
         self.prev_positions: dict[str, dict | None] = {}
+        # Per-seat digest of the most recently resolved week (agent_play
+        # tick summaries) + a monotonic tick counter, so agent seats polling
+        # /api/agent/state learn what a tick did to THEM no matter whose
+        # ready-up triggered it. Session memory only, like last_report.
+        self.agent_last_tick: dict[str, dict] = {}
+        self.tick_seq = 0
         # Save policy runtime: actions only MARK the world dirty (the full
         # GameState serializing on every click was the biggest per-action
         # cost — see /api/perf save.write); disk writes happen on the
@@ -7366,11 +7378,10 @@ def advance() -> dict:
                 f"can't advance — {names} need {market.ROSTER_MIN} players "
                 "(re-ready once fixed)",
             )
-        # Everyone's in — advance the shared world exactly once. Each
-        # seat's ready-up is its own recorded decision (the advance is
-        # the RL episode's step boundary).
-        for t in sorted(game.ready):
-            telemetry.record_action(gs, "advance", team_id=t)
+        # Everyone's in — advance the shared world exactly once, through the
+        # shared agent_play tick (which records each seat's ready-up as its
+        # own decision — the advance is the RL episode's step boundary — and
+        # builds the per-seat digest agent seats poll for).
         # Capture every human seat's pre-tick league position so the report's
         # week_reveal can show the standings movement across this tick
         # (session memory only, alongside last_report).
@@ -7378,8 +7389,26 @@ def advance() -> dict:
             t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
         }
         game.event_logs.clear()  # replays are for the freshly played week
-        report = advance_week(gs, S.gd, events_out=game.event_logs)
+        try:
+            tick = agent_play.tick_shared_week(
+                gs, S.gd, game.ready, events_out=game.event_logs, source="web"
+            )
+        except agent_play.ShortRosters as exc:
+            # Unreachable in practice (the revalidation above runs under the
+            # same lock), kept as a defensive mirror of that 409.
+            for t in exc.team_ids:
+                game.ready.discard(t)
+            game.save()
+            names = ", ".join(gs.teams[t].name for t in exc.team_ids)
+            raise HTTPException(
+                409,
+                f"can't advance — {names} need {market.ROSTER_MIN} players "
+                "(re-ready once fixed)",
+            ) from exc
+        report = tick.report
         game.last_report = report
+        game.agent_last_tick = tick.summaries
+        game.tick_seq += 1
         game.ready.clear()
         # Append this week's fresh match reviews to the durable on-disk corpus
         # (serving-layer side effect, off the deterministic tick — see
@@ -7585,6 +7614,262 @@ def last_week_report() -> dict:
         if report is None:
             return {"report": None}
         return {"report": _report_view(report, gs, gs.acting_team_id)}
+
+
+# ---------------------------------------------------------------------------
+# Agent play — the machine-facing multiplayer surface (docs/agent-play.md).
+#
+# Agents are ordinary shared-world seats: they identify themselves with a
+# self-minted 32-hex session id (the `X-Esports-Sid` header), join by the
+# same lobby codes humans type, and share the same ready-up week barrier —
+# so a world can mix browser humans and agents freely. Decisions flow
+# through the decision_env contract (observation + legal_actions + one
+# {kind, params} action at a time), the exact interface the headless LLM
+# playtests exercise, rather than the browser's per-screen endpoints.
+#
+# Error contract: 409 = state says no (no world joined, advance blocked,
+# lobby refusals); 422 = the action itself is malformed or illegal (the
+# detail string names the reason, suitable to feed straight back to a
+# model). Reads are safe to poll.
+
+
+class AgentCreateBody(BaseModel):
+    team_id: str
+    seed: int = 2026
+    pack: str | None = None
+    manager_name: str = ""
+
+
+class AgentJoinBody(BaseModel):
+    code: str
+    team_id: str
+
+
+class AgentActBody(BaseModel):
+    kind: str
+    params: dict = Field(default_factory=dict)
+
+
+@app.get("/api/agent/help")
+def agent_help() -> dict:
+    """Self-describing protocol card — the one endpoint an agent (or the
+    harness wiring one) can read before it has joined anything."""
+    return {
+        "agent_play_version": agent_play.AGENT_PLAY_VERSION,
+        "identity": (
+            "Mint a random 32-hex session id once and send it as the "
+            "X-Esports-Sid header on every request. The id IS your seat "
+            "binding; losing it means resuming via a browser cookie flow."
+        ),
+        "loop": [
+            "POST /api/agent/create {team_id, seed?, pack?} once — or "
+            "POST /api/agent/join {code, team_id} to enter a friend's world "
+            "(GET /api/lobby/teams?code=X lists free seats).",
+            "GET /api/agent/state — your observation: legal_actions names "
+            "every action you may take right now with its exact parameters; "
+            "sync shows whose votes the week is waiting on; objective is "
+            "your championship scoreboard.",
+            "POST /api/agent/act {kind, params} — one decision at a time. "
+            "422 means the action was rejected; the detail says why.",
+            "POST /api/agent/act {kind: 'advance'} when done deciding — a "
+            "ready vote. The week resolves once EVERY seat has voted; poll "
+            "GET /api/agent/state until sync.last_tick reports the outcome.",
+            "GET /api/agent/league for the whole league: tables, playoff "
+            "bracket, titles timeline, and which teams are agent/human "
+            "seats.",
+        ],
+        "objective": (
+            "Win championships. Champions (the season-capping world final) "
+            "is the top prize, then Masters, then the regional split. "
+            "objective.titles counts yours; objective.rival_seats shows the "
+            "competition's."
+        ),
+        "actions": sorted(agent_play.SUPPORTED_ACTIONS),
+        "docs": "docs/agent-play.md",
+    }
+
+
+@app.post("/api/agent/create")
+def agent_create(body: AgentCreateBody) -> dict:
+    """Create a shared sandbox world with this agent in its first seat.
+    Other agents (or humans) join by the returned code. Always shared: a
+    single-seat world just advances instantly on your own vote."""
+    game = _LOBBY.create_game(
+        _current_sid(),
+        body.team_id,
+        body.seed,
+        shared=True,
+        pack_id=body.pack,
+        game_mode="sandbox",
+        manager_name=body.manager_name,
+    )
+    return {
+        "ok": True,
+        "code": game.code,
+        "team_id": body.team_id,
+        "mode": game.mode,
+        "sid": _current_sid(),
+    }
+
+
+@app.post("/api/agent/join")
+def agent_join(body: AgentJoinBody) -> dict:
+    """Claim a free team in an existing shared world, as an agent seat."""
+    with _LOBBY._lock:
+        probe = _LOBBY._get_game(body.code.upper())
+        if (
+            probe is not None
+            and probe.gs is not None
+            and probe.gs.fantasy_draft is not None
+            and probe.gs.fantasy_draft.active
+        ):
+            raise HTTPException(
+                409,
+                "this world has an unfinished fantasy draft — agent seats "
+                "can't make draft picks; join after the draft completes",
+            )
+    game, err = _LOBBY.join_game(_current_sid(), body.code.upper(), body.team_id)
+    if err is not None:
+        raise HTTPException(409, err)
+    return {
+        "ok": True,
+        "code": game.code,
+        "team_id": body.team_id,
+        "mode": game.mode,
+        "sid": _current_sid(),
+    }
+
+
+@app.get("/api/agent/state")
+def agent_state() -> dict:
+    """This seat's full turn context: the decision_env observation (with
+    legal_actions), the multiplayer sync block (votes, waiting_on, last
+    tick digest), and the championship objective."""
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        obs = manager_observation(gs, S.gd, me)
+        obs["sync"] = agent_play.sync_view(
+            gs,
+            S.ready,
+            me,
+            tick_seq=S.tick_seq,
+            last_tick=S.agent_last_tick.get(me),
+        )
+        obs["objective"] = agent_play.objective_view(gs, me)
+        obs["world"] = {"code": S.code, "mode": S.mode}
+        return obs
+
+
+@app.get("/api/agent/sync")
+def agent_sync() -> dict:
+    """The multiplayer heartbeat alone — the cheap poll for a seat waiting
+    on other votes. Watch tick_seq (or last_tick) to spot a resolved week
+    without paying for the full observation."""
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        return agent_play.sync_view(
+            gs,
+            S.ready,
+            me,
+            tick_seq=S.tick_seq,
+            last_tick=S.agent_last_tick.get(me),
+        )
+
+
+@app.get("/api/agent/objective")
+def agent_objective() -> dict:
+    """The championship scoreboard alone — cheap to poll between turns."""
+    with S.lock:
+        gs = S.require_gs()
+        return agent_play.objective_view(gs, gs.acting_team_id)
+
+
+@app.get("/api/agent/league")
+def agent_league() -> dict:
+    """League-wide context: region tables, postseason bracket, titles
+    timeline, champions history, and which teams are externally managed."""
+    with S.lock:
+        gs = S.require_gs()
+        return agent_play.league_view(gs)
+
+
+@app.post("/api/agent/act")
+def agent_act(body: AgentActBody) -> dict:
+    """Apply one decision_env action for this seat.
+
+    `advance` is a ready vote sharing the human endpoint's barrier — the
+    week resolves once every seat in the world has voted, and this seat's
+    digest of the resolved week comes back (and stays available under
+    sync.last_tick). Every other kind resolves immediately."""
+    if body.kind == "advance":
+        result = advance()  # the human ready-up endpoint: one shared barrier
+        with S.lock:
+            gs = S.require_gs()
+            me = gs.acting_team_id
+            if not result.get("advanced"):
+                # The human endpoint reports display names; agents get team
+                # ids, consistent with sync.waiting_on.
+                return {
+                    "ok": True,
+                    "kind": "advance",
+                    "message": "ready — waiting on the other seats",
+                    "advanced": False,
+                    "waiting_on": [
+                        t for t in sorted(gs.human_team_ids)
+                        if t not in S.ready
+                    ],
+                    "ready": result.get("ready", []),
+                    "seq": len(gs.action_log),
+                }
+            return {
+                "ok": True,
+                "kind": "advance",
+                "message": "week advanced",
+                "advanced": True,
+                "tick": S.agent_last_tick.get(me),
+                "seq": len(gs.action_log),
+            }
+    with S.lock:
+        gs = S.require_gs()
+        me = gs.acting_team_id
+        env = HeadlessManagerEnv(
+            gs, S.gd, me, policy_version="http-agent-v1"
+        )
+        try:
+            step = env.step({"kind": body.kind, "params": body.params})
+        except InvalidManagerAction as exc:
+            raise HTTPException(422, str(exc)) from exc
+        moved_to = env.team_id if env.team_id != me else None
+        if moved_to is not None:
+            # accept_job: the seat moved clubs — mirror the human endpoint's
+            # session rebinding (ready flag + acting pointer now).
+            S.ready.discard(me)
+            gs.set_acting(moved_to)
+            game = _ctx.get().game
+            game.save(force=True)  # a career move must survive a restart
+        else:
+            S.save()
+        out = {
+            "ok": True,
+            "kind": body.kind,
+            "message": step.message,
+            "advanced": False,
+            "team_id": env.team_id,
+            "seq": len(gs.action_log),
+        }
+    if moved_to is not None:
+        # Rebind the lobby session to the new club (outside the game lock;
+        # the lobby has its own).
+        with _LOBBY._lock:
+            _LOBBY.sessions[_current_sid()] = (S.code, moved_to)
+            _LOBBY._remember(
+                _current_sid(), S.code, moved_to,
+                S.gs.teams[moved_to].name, S.mode,
+            )
+            _LOBBY._save_sessions()
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -9000,6 +9285,19 @@ def _cookie_sid(scope) -> str | None:
     return None
 
 
+def _scope_sid(scope) -> str | None:
+    """The requester's session id: the `X-Esports-Sid` header (agent clients
+    mint their own 32-hex id and send it on every call — no cookie jar
+    needed) falling back to the browser cookie. Same 32-hex format either
+    way; an ill-formed header is ignored rather than trusted."""
+    for name, value in scope.get("headers", []):
+        if name == b"x-esports-sid":
+            v = value.decode("latin-1").strip()
+            if _SID_RE.match(v):
+                return v
+    return _cookie_sid(scope)
+
+
 _NO_CACHE_SUFFIXES = (".js", ".css", ".html")
 
 
@@ -9024,7 +9322,7 @@ class SessionMiddleware:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
-        sid = _cookie_sid(scope)
+        sid = _scope_sid(scope)
         fresh = sid is None
         if fresh:
             sid = secrets.token_hex(16)  # 128-bit opaque id; not a sim draw

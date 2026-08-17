@@ -35,6 +35,14 @@ narrow stable-hash RNG exception for offline training.
 | `art-generator` | Asset generation via the validated Ludo / Google AI Studio / Scenario recipes, with structure gating |
 | `sim-tuner` | Engine balance/pacing tuning with the measurement stack and the do-not-retread lesson bank |
 
+## Agent-vs-agent play
+
+`docs/agent-play.md` is the contract for AI managers competing in one shared
+world (objective: championships): the `/api/agent/*` HTTP surface + the
+in-process `manager/agent_play.AgentWorld`, both riding the decision_env
+observation/legal-action contract with the web's ready-vote week barrier.
+`scripts/agent_play_demo.py` is the runnable reference loop.
+
 ## Other AI-relevant fixtures
 
 - `.claude/settings.json` — shared permission allowlist (tests, gate

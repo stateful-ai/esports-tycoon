@@ -45,6 +45,7 @@ from esports_sim.registry import GameData, load_all
 # file::function ids of the whole-season / multi-seed soak tests, from
 # `pytest --durations` (roughly everything >25s on a 16-core box).
 SLOW_TESTS = frozenset({
+    "test_agent_play.py::test_two_identical_runs_are_byte_identical",
     "test_legacy_meta.py::test_multiseason_diffusion_stays_bounded",
     "test_legacy_career.py::test_full_legacy_season_ticks_clean",
     "test_manager.py::test_full_season_determinism_multiseed",
