@@ -60,6 +60,8 @@ ACTION_KINDS = frozenset(
         "sponsor_respond",
         "sponsor_demand_respond",
         "facility_upgrade",
+        "recovery",
+        "book_recovery",
         "hire_staff",
         "release_staff",
         "set_tactics",

@@ -2603,6 +2603,19 @@ function computeNeedsYou(data) {
       label: `${tlink(o.to_team, o.to_team_name)} offer ${gets} for <b>${plink(o.player_id, o.handle)}</b>`,
       detail: `expires W${o.expires_week}` });
   }
+  // A tired squad is the thing the dashboard most needs to say out loud:
+  // playtesters advanced past condition 87 -> 0 while this rail stayed quiet.
+  if (s.recovery?.needs_a_break) {
+    const r = s.recovery;
+    const worst = r.worst
+      ? ` — worst ${plink(r.worst.id, r.worst.handle)} at <b class="mono">${r.worst.condition}</b>`
+      : "";
+    items.push({ tab: "club", subtab: "squad", kind: "condition", action: "Rest", needs_action: true,
+      label: `Squad condition <b class="mono">${r.average_condition}</b>${worst}`,
+      detail: r.exhausted_count
+        ? `${r.exhausted_count} player${r.exhausted_count === 1 ? "" : "s"} close to burnout`
+        : "Rest a player or book recovery" });
+  }
   for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
     items.push({ tab: "club", subtab: "squad", kind: "contract", action: "Renew", needs_action: true,
       label: `${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
@@ -2895,6 +2908,51 @@ async function roster(v, opts = {}) {
     }));
   }
 
+  // Condition panel, above the table that shows the problem. Rest is free and
+  // costs a week of development; a booking costs money and nothing else. Both
+  // are stated here because a playtester who could not find either ran the
+  // squad to zero and read it as a dead end.
+  if (clubHost && data.is_user_team) {
+    const rec = App.state.recovery;
+    const card = el("div", `card ${rec?.needs_a_break ? "alert" : ""} recovery-card`);
+    const avg = rec?.average_condition ?? 0;
+    card.innerHTML =
+      `<h3>Squad condition <b class="mono">${avg}</b>` +
+      (rec?.needs_a_break ? ' <span class="chip tone-bad">NEEDS A BREAK</span>' : "") +
+      `</h3><p class="muted">Matches and training drain condition; tired players play worse and learn less. ` +
+      `Set a player to <b>Rest</b> below to recover them for free (they train nothing that week), or buy the whole squad a break.</p>`;
+    const row = el("div", "row recovery-options");
+    card.appendChild(row);
+    v.appendChild(card);
+    // Options and prices are server-computed (see manager/recovery.py); this
+    // only renders what /api/club sends.
+    api("/api/club").then((club) => {
+      const r = club.recovery;
+      if (!r) return;
+      if (r.booked_this_week) {
+        row.appendChild(el("span", "muted", "Recovery already booked this week."));
+        return;
+      }
+      for (const o of r.options) {
+        const b = el("button", "btn btn-sm", `${o.label} · ${money(o.cost)}`);
+        b.title = o.enabled
+          ? `${o.blurb} +${o.condition_gain} condition for every player.`
+          : o.blocked_reason;
+        b.disabled = !o.enabled;
+        b.onclick = async () => {
+          b.disabled = true;
+          try {
+            const res = await api("/api/actions/recovery", { tier: o.id });
+            toast(res.message);
+            await refresh();
+            renderApp();
+          } catch { b.disabled = false; }
+        };
+        row.appendChild(b);
+      }
+    });
+  }
+
   const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
   // The roster table is wide (13 columns) — give it the full content width so
@@ -2969,7 +3027,12 @@ async function roster(v, opts = {}) {
     let rowHtml;
     if (overview) {
       const actions = data.is_user_team
-        ? `${requestChip}<button class="btn btn-sm" data-act="talk">Talk</button>
+        // Rest sits FIRST and on this screen on purpose. Condition is shown
+        // in this table, and until now the only way to act on it was a
+        // dropdown on another sub-tab — three playtesters ran a squad to
+        // zero without ever finding it.
+        ? `${requestChip}<button class="btn btn-sm ${p.dev_focus === "rest" ? "active" : ""}" data-act="rest" title="${p.dev_focus === "rest" ? "Resting: recovers condition instead of training. Click to resume training." : "Rest this player: recovers condition this week instead of training."}">${p.dev_focus === "rest" ? "Resting" : "Rest"}</button>
+           <button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
            <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
         : p.buyout != null
@@ -3112,6 +3175,13 @@ async function roster(v, opts = {}) {
       };
     }
     if (overview && data.is_user_team) {
+      tr.querySelector('[data-act="rest"]').onclick = async (e) => {
+        e.stopPropagation();
+        // Toggle: resting -> back to the team focus, anything else -> rest.
+        const next = p.dev_focus === "rest" ? "auto" : "rest";
+        const r = await api("/api/actions/dev_plan", { player_id: p.id, dev_focus: next });
+        toast(r.message); await refresh(); renderApp();
+      };
       tr.querySelector('[data-act="talk"]').onclick = (e) => {
         e.stopPropagation();
         openTalk(p);

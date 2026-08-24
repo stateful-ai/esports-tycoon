@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 35
+SCHEMA_VERSION = 36
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -1678,6 +1678,9 @@ class GameState(BaseModel):
     fixtures: list[Fixture] = Field(default_factory=list)
     standings: dict[str, TeamRecord] = Field(default_factory=dict)
     training_focus: dict[str, str] = Field(default_factory=dict)
+    # team_id -> the week that club last bought a recovery block. One booking
+    # per club per week; absent means never booked. See manager/recovery.py.
+    recovery_booked_by: dict[str, int] = Field(default_factory=dict)
 
     news: list[str] = Field(default_factory=list)
     # Per-manager PRIVATE news: subsystem events that belong to one manager

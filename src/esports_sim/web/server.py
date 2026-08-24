@@ -53,6 +53,7 @@ from esports_sim.manager import (
     meta as meta_mod,
     narrative,
     preparation,
+    recovery,
     relationships,
     rival_managers as rival_managers_mod,
     role_fit,
@@ -2224,6 +2225,11 @@ def state() -> dict:
             # Season form trendline + squad age/contract profile.
             "form_trend": _form_trend(gs, gs.acting_team_id),
             "squad_profile": _squad_profile(gs, gs.acting_team_id),
+            # Condition summary lives on /api/state so the dashboard's
+            # "Needs you" rail can raise a tired squad. Three playtesters ran
+            # a roster to zero because nothing outside the Club tab ever
+            # mentioned condition.
+            "recovery": _recovery_summary(gs, gs.acting_team_id),
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
@@ -2728,6 +2734,7 @@ def _club_view(gs: GameState) -> dict:
         "culture_sessions": culture.session_status(gs, tid),
         "delegation": delegation.view(gs, tid),
         "media": media_events.view(gs, tid),
+        "recovery": recovery.view(gs, tid),
     }
 
 
@@ -4076,6 +4083,22 @@ def _form_trend(gs: GameState, tid: str) -> list[dict]:
     return trend
 
 
+def _recovery_summary(gs: GameState, tid: str) -> dict:
+    """Compact condition read for the dashboard rail (full panel is /api/club)."""
+    roster = sorted(gs.roster(tid), key=lambda p: (p.stamina, p.id))
+    worst = roster[0] if roster else None
+    return {
+        "average_condition": recovery.average_condition(gs, tid),
+        "needs_a_break": recovery.squad_needs_a_break(gs, tid),
+        "booked_this_week": recovery.already_booked(gs, tid),
+        "worst": (
+            {"id": worst.id, "handle": worst.handle, "condition": round(worst.stamina, 1)}
+            if worst is not None else None
+        ),
+        "exhausted_count": sum(1 for p in roster if p.stamina < 25.0),
+    }
+
+
 def _squad_profile(gs: GameState, tid: str) -> dict:
     """Own roster age mix + contract-expiry timeline. Pure read."""
     buckets = {"youth": 0, "prime": 0, "veteran": 0}
@@ -4991,6 +5014,35 @@ def sponsor_demand_action(body: SponsorDemandBody) -> dict:
         )
         S.save()
         return {"ok": True, "message": message}
+
+
+class RecoveryBody(BaseModel):
+    tier: str
+
+
+@app.post("/api/actions/recovery")
+def book_recovery(body: RecoveryBody) -> dict:
+    """Buy the squad's condition back. All maths server-side (see recovery.py)."""
+    with S.lock:
+        gs = S.require_gs()
+        if body.tier not in recovery.TIER_IDS:
+            raise HTTPException(
+                422, f"tier must be one of {list(recovery.TIER_IDS)}"
+            )
+        tid = gs.acting_team_id
+        cost = recovery.tier_cost(gs, tid, body.tier)
+        ok, message = recovery.book(gs, tid, body.tier)
+        if not ok:
+            raise HTTPException(409, message)
+        telemetry.record_action(
+            gs, "recovery", {"tier": body.tier, "cost": cost},
+        )
+        S.save()
+        return {
+            "ok": True,
+            "message": message,
+            "recovery": recovery.view(gs, tid),
+        }
 
 
 class FacilityBody(BaseModel):

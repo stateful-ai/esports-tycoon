@@ -37,6 +37,7 @@ from esports_sim.manager import (
     meta,
     narrative,
     preparation,
+    recovery,
     relationships,
     rival_managers,
     role_fit,
@@ -781,6 +782,11 @@ def advance_week(
     # and form recovery are pulls toward 50, never boosts past it.
     _apply_backroom_effects(gs)
     staff.record_week(gs, report)
+
+    # 2b". AI clubs buy condition back, so paid recovery is not a player-only
+    # lever. Fixed position in the tick and rng-free (see recovery.py), so
+    # adding it moves no downstream draw for a club that never qualifies.
+    recovery.ai_weekly_booking(gs)
 
     # 2b'. Bench minutes: players who did NOT dress a single map this week
     # (while the team played) scrim instead — a fraction of real reps,
