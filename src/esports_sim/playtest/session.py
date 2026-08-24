@@ -146,21 +146,53 @@ class GameServer:
             stderr=subprocess.STDOUT,
         )
         deadline = time.monotonic() + timeout
+        # Two phases, because "listening" and "ready" are different states and
+        # conflating them is what made this loop livelock.
+        #
+        # Phase 1 polls a static file: uvicorn binds its socket almost at once,
+        # so this only proves the process is up and serving.
+        #
+        # Phase 2 asks the API exactly once, with a long patience. /api/lobby
+        # builds a whole preview world on its first call and can take the best
+        # part of a minute on a loaded box. Polling it on a short per-request
+        # timeout meant every probe abandoned its own request and started a
+        # fresh one, so the server re-did the expensive work continuously and
+        # the client never saw an answer -- a boot that finishes in 50s failed
+        # a 180s deadline. Ask once and wait.
         while time.monotonic() < deadline:
-            if self.proc.poll() is not None:
-                returncode = self.proc.returncode
-                tail = ""
-                if log_path is not None and log_path.exists():
-                    tail = log_path.read_text(encoding="utf-8", errors="replace")[-2000:]
-                self.stop()
-                raise RuntimeError(f"game server exited early (code {returncode})\n{tail}")
+            self._raise_if_dead(log_path)
             try:
-                with urlopen(f"{self.url}/api/lobby", timeout=2):  # noqa: S310 - localhost
-                    return self
+                with urlopen(f"{self.url}/", timeout=5):  # noqa: S310 - localhost
+                    break
             except (URLError, OSError, TimeoutError):
                 time.sleep(0.4)
+        else:
+            self.stop()
+            raise TimeoutError(f"game server never started serving within {timeout}s")
+
+        self._raise_if_dead(log_path)
+        remaining = max(5.0, deadline - time.monotonic())
+        try:
+            with urlopen(f"{self.url}/api/lobby", timeout=remaining):  # noqa: S310 - localhost
+                return self
+        except (URLError, OSError, TimeoutError) as exc:
+            self._raise_if_dead(log_path)
+            self.stop()
+            raise TimeoutError(
+                f"game server served static files but /api/lobby did not answer "
+                f"within {timeout}s ({type(exc).__name__}: {exc})"
+            ) from exc
+
+    def _raise_if_dead(self, log_path: Path | None) -> None:
+        """Fail with the server's own output rather than a bare timeout."""
+        if self.proc is None or self.proc.poll() is None:
+            return
+        returncode = self.proc.returncode
+        tail = ""
+        if log_path is not None and log_path.exists():
+            tail = log_path.read_text(encoding="utf-8", errors="replace")[-2000:]
         self.stop()
-        raise TimeoutError(f"game server did not come up within {timeout}s")
+        raise RuntimeError(f"game server exited early (code {returncode})\n{tail}")
 
     def stop(self) -> None:
         if self.proc is not None:
