@@ -238,3 +238,32 @@ def test_booking_never_pushes_a_player_over_full_condition(
     assert recovery.book(gs, TEAM, "retreat")[0]
     assert all(p.stamina == 100.0 for p in gs.roster(TEAM))
     assert all(p.morale <= 100.0 for p in gs.roster(TEAM))
+
+@pytest.mark.campaign
+def test_the_exhaustion_threshold_matches_the_training_systems(
+    game_data: GameData,
+) -> None:
+    """One threshold, not two.
+
+    A playtester found the dashboard reporting zero exhausted players while a
+    player carried the training system's TOO EXHAUSTED TO TRAIN badge: this
+    module hardcoded 25 while training flagged at 35. A player between the two
+    was exhausted by one system and invisible to the other.
+    """
+    assert recovery.EXHAUSTED_STAMINA == training.EXHAUSTED_STAMINA
+
+
+@pytest.mark.campaign
+def test_a_player_too_exhausted_to_train_raises_the_break_flag(
+    game_data: GameData,
+) -> None:
+    """The gap case: one player below the training threshold, squad fine."""
+    gs = new_campaign(game_data, seed=2026, user_team_id=TEAM)
+    for player in gs.roster(TEAM):
+        player.stamina = 100.0
+    # Squarely between the old hardcoded 25 and the real 35.
+    sorted(gs.roster(TEAM), key=lambda p: p.id)[0].stamina = 30.0
+    assert recovery.squad_needs_a_break(gs, TEAM), (
+        "a player the training system calls too exhausted to train must count"
+    )
+

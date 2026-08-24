@@ -4095,7 +4095,9 @@ def _recovery_summary(gs: GameState, tid: str) -> dict:
             {"id": worst.id, "handle": worst.handle, "condition": round(worst.stamina, 1)}
             if worst is not None else None
         ),
-        "exhausted_count": sum(1 for p in roster if p.stamina < 25.0),
+        # Same threshold the training system flags "too exhausted to train" at;
+        # a playtester found this counting 0 while a player carried that badge.
+        "exhausted_count": sum(1 for p in roster if p.stamina < training.EXHAUSTED_STAMINA),
     }
 
 

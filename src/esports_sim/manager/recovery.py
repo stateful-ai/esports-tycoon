@@ -35,6 +35,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from esports_sim.manager.training import EXHAUSTED_STAMINA
+
 # Tiers, cheapest first. `stamina` and `morale` are added to every rostered
 # player and clamped at 100; `cost_per_player` is multiplied by the squad size
 # so a ten-man roster genuinely costs more to look after than a five-man one.
@@ -103,7 +105,7 @@ def squad_needs_a_break(gs, team_id: str) -> bool:
         return False
     return (
         average_condition(gs, team_id) < TIRED_THRESHOLD
-        or any(p.stamina < 25.0 for p in roster)
+        or any(p.stamina < EXHAUSTED_STAMINA for p in roster)
     )
 
 
