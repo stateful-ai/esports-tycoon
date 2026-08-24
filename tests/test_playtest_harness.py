@@ -339,3 +339,40 @@ def test_every_persona_brief_is_playable(subject):
 def test_unknown_persona_names_the_valid_ids():
     with pytest.raises(KeyError, match="first-timer"):
         persona("nobody")
+
+# ── toasts: the channel the harness was blind to ────────────────────────
+
+
+def test_the_digest_reports_a_toast() -> None:
+    """A refused action explains itself in a toast and nowhere else.
+
+    Two rounds of synthetic players filed "it failed silently" against actions
+    that had in fact answered -- the digest simply never carried the toast, and
+    a toast removes itself after about four seconds, so the screenshot often
+    missed it too. Reproduced directly in a browser: the 409 on Advance Week
+    DOES render a visible toast at z-index 2000 with no page error. The bug was
+    in the harness, not the game.
+    """
+    text = render_digest({"screenTitle": "Dashboard", "toasts": ["nope, not yet"]})
+    assert "MESSAGE: nope, not yet" in text
+
+
+def test_several_toasts_all_survive_into_the_digest() -> None:
+    text = render_digest({"screenTitle": "Club", "toasts": ["first", "second"]})
+    assert "MESSAGE: first" in text
+    assert "MESSAGE: second" in text
+
+
+def test_blank_toasts_are_dropped() -> None:
+    text = render_digest({"screenTitle": "Club", "toasts": ["", "   ", "real"]})
+    assert text.count("MESSAGE:") == 1
+    assert "MESSAGE: real" in text
+
+
+def test_a_screen_with_no_toast_says_nothing_about_messages() -> None:
+    assert "MESSAGE:" not in render_digest({"screenTitle": "Club"})
+
+
+def test_the_snapshot_script_collects_toasts() -> None:
+    """The injected script must actually read the toast container."""
+    assert "#toast .t" in SCREEN_SCRIPT

@@ -2933,11 +2933,27 @@ async function roster(v, opts = {}) {
         row.appendChild(el("span", "muted", "Recovery already booked this week."));
         return;
       }
+      // The cap decides WHICH option to buy, so it has to be readable before
+      // you spend, not after. Two playtesters bought blind and only then found
+      // out they had used the week.
+      row.appendChild(el("span", "muted", "One booking per week — choose one:"));
       for (const o of r.options) {
-        const b = el("button", "btn btn-sm", `${o.label} · ${money(o.cost)}`);
+        // Effect on the face of the button, not just the tooltip. The server
+        // already sends condition_gain; both round-two personas reported the
+        // price was stated and the effect was not, and one of them measured
+        // it by hand across twelve weeks to find out.
+        const b = el(
+          "button", "btn btn-sm",
+          `${o.label} · +${o.condition_gain} condition · ${money(o.cost)}`,
+        );
         b.title = o.enabled
-          ? `${o.blurb} +${o.condition_gain} condition for every player.`
+          ? `${o.blurb} +${o.condition_gain} condition and +${o.morale_gain} morale for every player on the roster. One booking per week.`
           : o.blocked_reason;
+        // A disabled control must say why — the Facilities screen one tab over
+        // already does this and it was cited as the right pattern.
+        if (!o.enabled && o.blocked_reason) {
+          b.setAttribute("aria-label", `${o.label}: ${o.blocked_reason}`);
+        }
         b.disabled = !o.enabled;
         b.onclick = async () => {
           b.disabled = true;
@@ -2949,6 +2965,9 @@ async function roster(v, opts = {}) {
           } catch { b.disabled = false; }
         };
         row.appendChild(b);
+        if (!o.enabled && o.blocked_reason) {
+          row.appendChild(el("span", "muted", o.blocked_reason));
+        }
       }
     });
   }
@@ -3031,7 +3050,10 @@ async function roster(v, opts = {}) {
         // in this table, and until now the only way to act on it was a
         // dropdown on another sub-tab — three playtesters ran a squad to
         // zero without ever finding it.
-        ? `${requestChip}<button class="btn btn-sm ${p.dev_focus === "rest" ? "active" : ""}" data-act="rest" title="${p.dev_focus === "rest" ? "Resting: recovers condition instead of training. Click to resume training." : "Rest this player: recovers condition this week instead of training."}">${p.dev_focus === "rest" ? "Resting" : "Rest"}</button>
+        // Rest on a full-condition player burns their development week for
+        // nothing, and used to do it without saying so. Still clickable (you
+        // may want it before a heavy run), but it now warns first.
+        ? `${requestChip}<button class="btn btn-sm ${p.dev_focus === "rest" ? "active" : ""}" data-act="rest" title="${p.dev_focus === "rest" ? "Resting: recovers condition instead of training. Click to resume training." : (p.stamina != null && p.stamina >= 97 ? "Already at full condition — resting costs a week of development and recovers nothing." : "Rest this player: recovers condition this week instead of training.")}">${p.dev_focus === "rest" ? "Resting" : "Rest"}</button>
            <button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
            <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
@@ -3179,6 +3201,10 @@ async function roster(v, opts = {}) {
         e.stopPropagation();
         // Toggle: resting -> back to the team focus, anything else -> rest.
         const next = p.dev_focus === "rest" ? "auto" : "rest";
+        if (next === "rest" && p.stamina != null && p.stamina >= 97) {
+          toast(`${p.handle} is already at full condition — resting spends a development week for nothing.`);
+          return;
+        }
         const r = await api("/api/actions/dev_plan", { player_id: p.id, dev_focus: next });
         toast(r.message); await refresh(); renderApp();
       };

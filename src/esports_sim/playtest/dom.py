@@ -139,7 +139,19 @@ SCREEN_SCRIPT = """
   // raw text of the root is the floor beneath every convention.
   const bodyText = txt(root).slice(0, 4000);
 
+  // Toasts are the game's primary transient feedback: a refused action says
+  // why here and nowhere else, then removes itself after ~4s. Three separate
+  // persona reports of "it failed silently" turned out to be this channel
+  // being invisible to the digest -- the game HAD answered. Captured every
+  // step so a refusal is never mistaken for silence.
+  const toasts = [];
+  for (const node of document.querySelectorAll('#toast .t')) {
+    const text = txt(node);
+    if (text) toasts.push(text);
+  }
+
   return {
+    toasts,
     url: location.pathname + location.search,
     title: document.title,
     bodyText,
@@ -193,6 +205,12 @@ def render_digest(snapshot: dict[str, Any], *, screenshot: str | None = None) ->
         out.append(f"CONTEXT: {_clip(snapshot['context'], 120)}")
     if snapshot.get("balance"):
         out.append(f"BALANCE: {_clip(snapshot['balance'], 40)}")
+
+    # Directly under the header: a toast is the answer to what you just did,
+    # and it is gone in four seconds.
+    toasts = [t for t in snapshot.get("toasts", []) if str(t).strip()]
+    for message in toasts:
+        out.append(f"MESSAGE: {_clip(str(message), 200)}")
 
     overlays = [o for o in snapshot.get("overlays", []) if o.get("id") or o.get("title")]
     if overlays:
