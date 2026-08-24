@@ -7324,13 +7324,13 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "a decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
             raise HTTPException(
                 409,
-                "resolve the pending media decision in Action required before advancing",
+                "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         # Legacy mode: a dismissed manager must take a job before anyone
         # advances — the world doesn't move while a seat is empty.
@@ -7435,12 +7435,12 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "a decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending media decision in Action required before advancing",
+                "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         blocked = career.blocked_seats(gs)
         if blocked:

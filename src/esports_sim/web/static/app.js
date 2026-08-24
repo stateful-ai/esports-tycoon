@@ -8039,6 +8039,11 @@ $("#advance-btn").onclick = async () => {
     if (!startWeekReveal(rep)) showReport(rep);
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // api() has already toasted the reason (a 409 for a decision still
+    // waiting is a normal answer here, not a fault). Swallow it: an
+    // unhandled rejection surfaces as a pageerror, which turns "you have
+    // one thing left to do" into what looks like a crashed game.
   } finally {
     hideWeekLoading();
     if (!mpPolling) $("#advance-btn").disabled = false;
@@ -8068,6 +8073,9 @@ $("#simahead-btn").onclick = async () => {
       if (!startWeekReveal(res.report)) showReport(res.report);
     }
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // Same as Advance Week: sim_ahead reuses the manual advance's 409
+    // guards, so a refusal is expected and already toasted.
   } finally {
     hideWeekLoading();
     btn.disabled = false;
