@@ -81,8 +81,14 @@ def test_web_state_hides_outcomes_and_advance_requires_resolution(campaign, game
     assert view is not None and view["id"] == event.id
     assert "outcomes" not in json.dumps(view)
     assert "effects" not in json.dumps(view)
-    with pytest.raises(HTTPException, match="flavor event"):
+    # The refusal is player-facing: it must name a screen they can open, and
+    # must not leak "flavor event", which is our word for what a player
+    # experiences as a decision. A synthetic player hit this message and could
+    # not act on it -- it named a section the UI had already deleted.
+    with pytest.raises(HTTPException, match="Needs You") as refusal:
         server_mod.advance()
+    assert refusal.value.status_code == 409
+    assert "flavor" not in str(refusal.value.detail).lower()
 
     result = server_mod.resolve_flavor_event(server_mod.FlavorEventChoiceBody(
         event_id=event.id, choice_id=event.choices[0].id,
