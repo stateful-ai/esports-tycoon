@@ -223,6 +223,11 @@ def new_campaign(
     players = {pid: p.model_copy(deep=True) for pid, p in base_players.items()}
 
     used_names: set[str] = {t.name for t in teams.values()}
+    # One registry for the whole world, seeded with whatever a roster pack
+    # already brought, so generated players cannot collide with each other or
+    # with authored ones. 24 x 24 parts against 228 players makes duplicates
+    # the norm without it, not the exception.
+    taken_handles: set[str] = {p.handle for p in players.values()}
     for region in regions:
         have = sum(
             1 for t in teams.values() if t.region == region and t.tier == 1
@@ -232,11 +237,12 @@ def new_campaign(
         )
         gen_teams, gen_players = generate_league_teams(
             rng, gd, n_teams=teams_per_region - have,
-            region=region, used_names=used_names,
+            region=region, used_names=used_names, taken_handles=taken_handles,
         )
         t2_teams, t2_players = generate_league_teams(
             rng, gd, n_teams=tier2_per_region - have2,
             region=region, used_names=used_names, tier=2,
+            taken_handles=taken_handles,
         )
         for t in gen_teams + t2_teams:
             teams[t.id] = t
@@ -273,7 +279,9 @@ def new_campaign(
             prospect.player,
             RngTree(seed).derive("campaign", "career-outcome", pid),
         )
-    fas = generate_free_agents(rng, gd, n=max(4, 18 - len(pack_fas)))
+    fas = generate_free_agents(
+        rng, gd, n=max(4, 18 - len(pack_fas)), taken_handles=taken_handles
+    )
     for p in fas:
         players[p.id] = p
     fas = pack_fas + fas
