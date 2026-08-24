@@ -1,8 +1,8 @@
 /* Campaign hub. Pure API consumer — all state lives server-side. */
 
-import { h, render } from 'https://esm.sh/preact@10.19.2';
-import { useState, useEffect, useMemo, useRef } from 'https://esm.sh/preact@10.19.2/hooks';
-import htm from 'https://esm.sh/htm@3.1.1';
+import { h, render } from './vendor/preact.mjs';
+import { useState, useEffect, useMemo, useRef } from './vendor/preact-hooks.mjs';
+import htm from './vendor/htm.mjs';
 const html = htm.bind(h);
 
 const $ = (s) => document.querySelector(s);

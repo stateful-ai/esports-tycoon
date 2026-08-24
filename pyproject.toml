@@ -59,6 +59,7 @@ markers = [
   "policy: learned policy / RL tests (policy/). Medium; runs on policy changes.",
   "mcp: MCP server tests (mcp/). Fast; runs on MCP protocol changes.",
   "registry: data/registry validation tests. Fast; runs on schema/data changes.",
+  "playtest: synthetic-player browser tests. Need Chromium + a real server boot; skipped automatically when either is missing.",
 ]
 filterwarnings = [
   "error",

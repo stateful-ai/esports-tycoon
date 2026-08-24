@@ -16,6 +16,7 @@ import hashlib
 import ipaddress
 import json
 import math
+import os
 import random
 import re
 import secrets
@@ -122,7 +123,10 @@ from esports_sim.sim import tactics_fit
 from esports_sim.web import llm_flavor, llm_social, review_history, llm_talk
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-SAVE_DIR = Path("saves")
+# Saves default to ./saves next to the checkout. $ESPORTS_SIM_SAVE_DIR moves
+# them, so a playtest or a test run gets its own world and cannot trample a
+# player's campaigns or race another run over sessions.json.
+SAVE_DIR = Path(os.environ.get("ESPORTS_SIM_SAVE_DIR") or "saves")
 STATIC_DIR = Path(__file__).parent / "static"
 DS_DIR = _REPO_ROOT / "ui" / "design-system"
 
