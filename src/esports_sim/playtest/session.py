@@ -105,7 +105,13 @@ class GameServer:
     def url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
 
-    def start(self, *, timeout: float = 90.0, log_path: Path | None = None) -> "GameServer":
+    #: Seconds to wait for the server to answer. Generous on purpose: the
+    #: box may be running a full test suite, and a shared CI runner can take
+    #: half a minute just to import and bind. Override with
+    #: $ESPORTS_SIM_BOOT_TIMEOUT when a machine needs longer still.
+    BOOT_TIMEOUT = float(os.environ.get("ESPORTS_SIM_BOOT_TIMEOUT", "180"))
+
+    def start(self, *, timeout: float | None = None, log_path: Path | None = None) -> "GameServer":
         env = dict(os.environ)
         env["PYTHONPATH"] = os.pathsep.join(
             filter(None, [str(REPO_ROOT / "src"), env.get("PYTHONPATH", "")])
@@ -117,7 +123,12 @@ class GameServer:
         # it would make two runs of the same seed disagree for reasons that
         # have nothing to do with the build under test.
         env["SOCIAL_LLM"] = "off"
+        # Unbuffered: the server's own stdout is the only diagnosis available
+        # when a boot times out, and block-buffered output means the log file
+        # is empty at exactly the moment it matters.
+        env["PYTHONUNBUFFERED"] = "1"
 
+        timeout = self.BOOT_TIMEOUT if timeout is None else timeout
         self.log_path = log_path
         # Kept on the instance so stop() can close it. A leaked file object is
         # collected non-deterministically, which surfaces as an unraisable
