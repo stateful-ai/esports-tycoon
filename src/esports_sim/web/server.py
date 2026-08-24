@@ -4272,14 +4272,20 @@ def compare(a: str, b: str) -> dict:
 def schedule() -> dict:
     with S.lock:
         gs = S.require_gs()
+        me = gs.acting_team_id
+        # Tier 2 plays but isn't broadcast — its results live in standings,
+        # stats, and scout reports, not the fixture list. That holds for
+        # OTHER clubs. Applied to your own it meant a tier-2 manager opened
+        # Fixtures to "No fixtures match this filter" for a whole season:
+        # the screen whose entire job is "when do I play and who" was the
+        # one screen that never mentioned them. Your own games are always
+        # yours to see.
         return {
             "current_week": gs.week,
-            # Tier 2 plays but isn't broadcast — its results live in
-            # standings, stats, and scout reports, not the fixture list.
             "fixtures": [
                 _fixture_view(f, gs)
                 for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
-                if f.tier == 1
+                if f.tier == 1 or me in (f.team_a, f.team_b)
             ],
         }
 
