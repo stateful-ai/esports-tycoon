@@ -198,6 +198,16 @@ def pytest_collection_modifyitems(
         elif "season" in fixtures or "season_copy" in fixtures:
             item.add_marker(pytest.mark.xdist_group("inbox_season"))
 
+        # --- browser lane: one worker, one server, one browser ---
+        # Every `playtest` test shares a module-scoped game server and a
+        # Chromium. Spread across xdist workers they each boot their own
+        # pair, and N servers + N browsers competing for a few cores push
+        # server startup past its timeout -- the whole lane then fails with
+        # "game server did not come up", which reads like an app bug and is
+        # not one. Pinning them to one group keeps it to a single pair.
+        if item.get_closest_marker("playtest") is not None:
+            item.add_marker(pytest.mark.xdist_group("playtest_browser"))
+
 
 # ── Fixtures ─────────────────────────────────────────────────────────────
 

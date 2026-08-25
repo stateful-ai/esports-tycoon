@@ -16,6 +16,7 @@ import hashlib
 import ipaddress
 import json
 import math
+import os
 import random
 import re
 import secrets
@@ -52,6 +53,7 @@ from esports_sim.manager import (
     meta as meta_mod,
     narrative,
     preparation,
+    recovery,
     relationships,
     rival_managers as rival_managers_mod,
     role_fit,
@@ -122,7 +124,10 @@ from esports_sim.sim import tactics_fit
 from esports_sim.web import llm_flavor, llm_social, review_history, llm_talk
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-SAVE_DIR = Path("saves")
+# Saves default to ./saves next to the checkout. $ESPORTS_SIM_SAVE_DIR moves
+# them, so a playtest or a test run gets its own world and cannot trample a
+# player's campaigns or race another run over sessions.json.
+SAVE_DIR = Path(os.environ.get("ESPORTS_SIM_SAVE_DIR") or "saves")
 STATIC_DIR = Path(__file__).parent / "static"
 DS_DIR = _REPO_ROOT / "ui" / "design-system"
 
@@ -2220,6 +2225,11 @@ def state() -> dict:
             # Season form trendline + squad age/contract profile.
             "form_trend": _form_trend(gs, gs.acting_team_id),
             "squad_profile": _squad_profile(gs, gs.acting_team_id),
+            # Condition summary lives on /api/state so the dashboard's
+            # "Needs you" rail can raise a tired squad. Three playtesters ran
+            # a roster to zero because nothing outside the Club tab ever
+            # mentioned condition.
+            "recovery": _recovery_summary(gs, gs.acting_team_id),
             "objectives_hub": _objectives_hub(gs, gs.acting_team_id),
             "rotation": _rotation_usage(gs, gs.acting_team_id),
             "training_focus": gs.training_focus.get(gs.acting_team_id, "tactical"),
@@ -2724,6 +2734,7 @@ def _club_view(gs: GameState) -> dict:
         "culture_sessions": culture.session_status(gs, tid),
         "delegation": delegation.view(gs, tid),
         "media": media_events.view(gs, tid),
+        "recovery": recovery.view(gs, tid),
     }
 
 
@@ -4072,6 +4083,24 @@ def _form_trend(gs: GameState, tid: str) -> list[dict]:
     return trend
 
 
+def _recovery_summary(gs: GameState, tid: str) -> dict:
+    """Compact condition read for the dashboard rail (full panel is /api/club)."""
+    roster = sorted(gs.roster(tid), key=lambda p: (p.stamina, p.id))
+    worst = roster[0] if roster else None
+    return {
+        "average_condition": recovery.average_condition(gs, tid),
+        "needs_a_break": recovery.squad_needs_a_break(gs, tid),
+        "booked_this_week": recovery.already_booked(gs, tid),
+        "worst": (
+            {"id": worst.id, "handle": worst.handle, "condition": round(worst.stamina, 1)}
+            if worst is not None else None
+        ),
+        # Same threshold the training system flags "too exhausted to train" at;
+        # a playtester found this counting 0 while a player carried that badge.
+        "exhausted_count": sum(1 for p in roster if p.stamina < training.EXHAUSTED_STAMINA),
+    }
+
+
 def _squad_profile(gs: GameState, tid: str) -> dict:
     """Own roster age mix + contract-expiry timeline. Pure read."""
     buckets = {"youth": 0, "prime": 0, "veteran": 0}
@@ -4268,14 +4297,20 @@ def compare(a: str, b: str) -> dict:
 def schedule() -> dict:
     with S.lock:
         gs = S.require_gs()
+        me = gs.acting_team_id
+        # Tier 2 plays but isn't broadcast — its results live in standings,
+        # stats, and scout reports, not the fixture list. That holds for
+        # OTHER clubs. Applied to your own it meant a tier-2 manager opened
+        # Fixtures to "No fixtures match this filter" for a whole season:
+        # the screen whose entire job is "when do I play and who" was the
+        # one screen that never mentioned them. Your own games are always
+        # yours to see.
         return {
             "current_week": gs.week,
-            # Tier 2 plays but isn't broadcast — its results live in
-            # standings, stats, and scout reports, not the fixture list.
             "fixtures": [
                 _fixture_view(f, gs)
                 for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
-                if f.tier == 1
+                if f.tier == 1 or me in (f.team_a, f.team_b)
             ],
         }
 
@@ -4981,6 +5016,35 @@ def sponsor_demand_action(body: SponsorDemandBody) -> dict:
         )
         S.save()
         return {"ok": True, "message": message}
+
+
+class RecoveryBody(BaseModel):
+    tier: str
+
+
+@app.post("/api/actions/recovery")
+def book_recovery(body: RecoveryBody) -> dict:
+    """Buy the squad's condition back. All maths server-side (see recovery.py)."""
+    with S.lock:
+        gs = S.require_gs()
+        if body.tier not in recovery.TIER_IDS:
+            raise HTTPException(
+                422, f"tier must be one of {list(recovery.TIER_IDS)}"
+            )
+        tid = gs.acting_team_id
+        cost = recovery.tier_cost(gs, tid, body.tier)
+        ok, message = recovery.book(gs, tid, body.tier)
+        if not ok:
+            raise HTTPException(409, message)
+        telemetry.record_action(
+            gs, "recovery", {"tier": body.tier, "cost": cost},
+        )
+        S.save()
+        return {
+            "ok": True,
+            "message": message,
+            "recovery": recovery.view(gs, tid),
+        }
 
 
 class FacilityBody(BaseModel):
@@ -7320,13 +7384,13 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "a decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
             raise HTTPException(
                 409,
-                "resolve the pending media decision in Action required before advancing",
+                "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         # Legacy mode: a dismissed manager must take a job before anyone
         # advances — the world doesn't move while a seat is empty.
@@ -7431,12 +7495,12 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "a decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending media decision in Action required before advancing",
+                "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
             )
         blocked = career.blocked_seats(gs)
         if blocked:

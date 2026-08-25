@@ -149,7 +149,7 @@ def _insolvency_risk(gs: "GameState", tid: str) -> bool:
 # (things a manual advance would refuse or the manager must not sim past)
 # outrank the advisories.
 TRIGGERS: tuple[Trigger, ...] = (
-    Trigger("decision_pending", "a decision is waiting in Action required", _decision_pending, hard=True),
+    Trigger("decision_pending", "a decision is waiting in Needs You on the Dashboard", _decision_pending, hard=True),
     Trigger("job_market", "a manager must accept a job offer first", _job_market, hard=True),
     Trigger("season_rollover", "the season has reached the offseason", _season_rollover, hard=True),
     Trigger("big_match", "a playoff-stage match is up this week", _big_match, hard=True),

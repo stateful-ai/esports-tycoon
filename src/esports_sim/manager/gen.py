@@ -298,6 +298,44 @@ def _clamp(v: float, lo: float = 1.0, hi: float = 99.0) -> float:
     return float(min(hi, max(lo, v)))
 
 
+def _free_handle(handle: str, taken: set[str]) -> str:
+    """`handle` if nobody has it, else the next unused one, deterministically.
+
+    The parts tables make 24 x 24 = 576 handles, and a world generates 228
+    players from them. Drawing each independently, the birthday paradox puts
+    roughly 30 collisions in EVERY world -- two synthetic players, in two
+    different worlds, each opened Club > Squad and found two starters on their
+    own five-man roster called Falconrush. It reaches the narrative too: one
+    Match Review named the same handle as both "Standout" and "Off-colour".
+
+    On a collision we walk the A x B product from where the draw landed and
+    take the first free slot. That is a pure function of the drawn handle and
+    the set of handles already issued -- no rng -- so the caller's stream is
+    untouched and a seed still reproduces its world byte for byte. Past 576
+    players there is nothing left to hand out, so a numeric suffix keeps the
+    guarantee rather than silently returning a duplicate.
+    """
+    if handle not in taken:
+        return handle
+    first = next(
+        (i for i, a in enumerate(_HANDLE_PARTS_A) if handle.startswith(a)), 0
+    )
+    second = next(
+        (i for i, b in enumerate(_HANDLE_PARTS_B) if handle.endswith(b.lower())), 0
+    )
+    total = len(_HANDLE_PARTS_A) * len(_HANDLE_PARTS_B)
+    start = first * len(_HANDLE_PARTS_B) + second
+    for step in range(1, total):
+        a, b = divmod((start + step) % total, len(_HANDLE_PARTS_B))
+        candidate = _HANDLE_PARTS_A[a] + _HANDLE_PARTS_B[b].lower()
+        if candidate not in taken:
+            return candidate
+    suffix = 2
+    while f"{handle}{suffix}" in taken:
+        suffix += 1
+    return f"{handle}{suffix}"
+
+
 def generate_player(
     rng: np.random.Generator,
     pid: str,
@@ -308,13 +346,22 @@ def generate_player(
     region: Region = Region.AMERICAS,
     age_lo: int = 17,
     age_hi: int = 29,
+    taken_handles: set[str] | None = None,
 ) -> Player:
     """One player around a base `quality` (roughly 40-85), shaped by their
-    playstyle archetype."""
+    playstyle archetype.
+
+    Pass `taken_handles` to keep handles unique across a world; it is updated
+    in place. The two rng draws happen either way, so a world generated with
+    it differs from one without ONLY where a duplicate would have been.
+    """
     handle = (
         str(rng.choice(_HANDLE_PARTS_A))
         + str(rng.choice(_HANDLE_PARTS_B)).lower()
     )
+    if taken_handles is not None:
+        handle = _free_handle(handle, taken_handles)
+        taken_handles.add(handle)
     firsts = _REGION_FIRST_NAMES.get(region, _FIRST_NAMES)
     lasts = _REGION_LAST_NAMES.get(region, _LAST_NAMES)
     real_name = f"{rng.choice(firsts)} {rng.choice(lasts)}"
@@ -414,10 +461,12 @@ def generate_league_teams(
     region: Region = Region.AMERICAS,
     used_names: set[str] | None = None,
     tier: int = 1,
+    taken_handles: set[str] | None = None,
 ) -> tuple[list[Team], list[Player]]:
     """Generate `n_teams` orgs with full rosters, spread across a quality
     ladder so the league has a top, a middle, and a bottom. `used_names`
-    keeps org names unique across multi-region generation.
+    keeps org names unique across multi-region generation, and
+    `taken_handles` does the same for player handles.
 
     Tier 2 (Challengers) orgs are younger, rawer, and poorer: lower CA
     on a lower ladder, teenage-heavy rosters with big CA→PA gaps — a
@@ -454,6 +503,7 @@ def generate_league_teams(
             p = generate_player(
                 rng, pid, style, role, quality, gd,
                 region=region, age_lo=age_lo, age_hi=age_hi,
+                taken_handles=taken_handles,
             )
             players.append(p)
             roster_ids.append(pid)
@@ -478,9 +528,15 @@ def generate_league_teams(
 
 
 def generate_free_agents(
-    rng: np.random.Generator, gd: GameData, n: int = 18
+    rng: np.random.Generator,
+    gd: GameData,
+    n: int = 18,
+    taken_handles: set[str] | None = None,
 ) -> list[Player]:
-    """Signable pool: mostly journeymen, a few gems, a few washed veterans."""
+    """Signable pool: mostly journeymen, a few gems, a few washed veterans.
+
+    Shares the world's `taken_handles` registry so a free agent cannot arrive
+    wearing a rostered player's handle."""
     out: list[Player] = []
     for i in range(n):
         style, role = _FA_SLOTS[i % len(_FA_SLOTS)]
@@ -491,7 +547,9 @@ def generate_free_agents(
             quality = float(rng.uniform(38, 50))  # project / washed
         else:
             quality = float(rng.uniform(50, 66))  # journeyman
-        p = generate_player(rng, f"fa_{i}", style, role, quality, gd)
+        p = generate_player(
+            rng, f"fa_{i}", style, role, quality, gd, taken_handles=taken_handles
+        )
         p.contract_weeks_left = 0
         out.append(p)
     return out

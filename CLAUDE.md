@@ -54,6 +54,11 @@ Published at github.com/stateful-ai/esports-tycoon.
 | Sprite-office offline preview (no browser) | `... scripts\render_sprite_office.py [out.png]` |
 | Painted-art drift fix | `... scripts\align_painted.py [--apply]` |
 | JS sanity | `node --check src\esports_sim\web\static\<file>.js` |
+| Vendored frontend deps drift check | `... scripts\vendor_frontend_deps.py --check` (exit 1 = drift) |
+| Synthetic-player session (agent plays + sees the UI) | `... scripts\run_synthetic_players.py --persona <id> --start` |
+| Synthetic-player commands | `... scripts\play.py --persona <id> <look\|tab\|click\|advance\|note\|stop>` |
+| Merge playtest findings | `... scripts\playtest_report.py [--gate blocker]` |
+| Browser gate (every tab renders, no JS errors) | `... -m pytest -q -m "playtest"` (needs Chromium) |
 
 ## Architecture (one line each)
 
@@ -218,6 +223,17 @@ Published at github.com/stateful-ai/esports-tycoon.
   `new_campaign(pack=...)` seeds from it and generates only shortfall).
   World shape lives on GameState (`league_regions`/`teams_per_region`),
   NOT the module constants — those are just the defaults.
+- `src/esports_sim/playtest/` — SYNTHETIC PLAYERS: an LLM with a browser, a
+  persona and a notebook. `session.py` boots the real server and drives the
+  shipped UI in Chromium (never the API — a finding is only real if it is
+  reachable by clicking), screenshotting every step; `dom.py` turns the screen
+  into a readable digest (pure, so it is unit-tested without a browser, and its
+  `VISIBLE_JS` is the SINGLE visibility rule every injected script shares);
+  `findings.py` is the append-only ledger with a fixed severity/area vocabulary
+  (never deduped at write time — corroboration between personas is the signal);
+  `control.py` keeps one live browser alive across many short CLI commands.
+  Drive it with `scripts/run_synthetic_players.py` + `scripts/play.py`, merge
+  with `scripts/playtest_report.py`. See `docs/synthetic-players.md`.
 - Docs: `GDD.md` (systems + design), `docs/art-pipeline.md`
   (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
   (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index
@@ -291,6 +307,12 @@ Published at github.com/stateful-ai/esports-tycoon.
   (`runs/ui-review/`). Otherwise verify UI with `preview_snapshot`/`preview_eval`/
   `preview_inspect`, and use the offline compositors
   (`render_sprite_office.py`, `render_map_guide.py`) for pixel checks.
+- The web UI must not depend on the open internet. `app.js`/`profile.js` load
+  preact+htm from `web/static/vendor/` (npm ESM builds, refreshed by
+  `scripts/vendor_frontend_deps.py`); importing them from a CDN made the whole
+  UI render as an empty shell offline while every API test still passed.
+  `tests/test_web_assets.py` fails on any external host or bare specifier in
+  `web/static/`.
 - Viewer/guide transform contract: guides rasterize geometry at the exact
   transform the viewer uses (`render_map_guide.py` prints it), and the
   painted backdrop `<image>` is pinned at those same viewBox coords —

@@ -27,6 +27,7 @@ from esports_sim.manager import (
     market,
     media_events,
     preparation,
+    recovery,
     series_management,
     sponsors,
     staff,
@@ -58,6 +59,7 @@ SUPPORTED_ACTIONS = frozenset(
         "hire_staff",
         "release_staff",
         "facility_upgrade",
+        "book_recovery",
         "sponsor_respond",
         "sponsor_demand_respond",
         "set_game_plan",
@@ -232,6 +234,15 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         cost = economy.facility_upgrade_cost(level)
         if cost is not None and gs.teams[team_id].balance >= cost:
             facility_options.append({"facility": name, "next_level": level + 1, "cost": cost})
+    recovery_options = [
+        {
+            "tier": tier,
+            "cost": recovery.tier_cost(gs, team_id, tier),
+            "condition_gain": recovery.RECOVERY_TIERS[tier]["stamina"],
+        }
+        for tier in recovery.TIER_IDS
+        if recovery.can_book(gs, team_id, tier)[0]
+    ]
     sponsor_options = []
     for slot in sponsors.SLOT_ORDER:
         for offer in sorted(gs.sponsor_market.get(slot, []), key=lambda o: o.brand):
@@ -359,6 +370,12 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "hire_staff": {"enabled": bool(hireable), "candidate_ids": hireable},
         "release_staff": {"enabled": bool(gs.staff), "roles": sorted(gs.staff)},
         "facility_upgrade": {"enabled": bool(facility_options), "options": facility_options},
+        "book_recovery": {
+            "enabled": bool(recovery_options),
+            "options": recovery_options,
+            "average_condition": recovery.average_condition(gs, team_id),
+            "needs_a_break": recovery.squad_needs_a_break(gs, team_id),
+        },
         "sponsor_respond": {"enabled": bool(sponsor_options), "options": sponsor_options},
         "sponsor_demand_respond": {
             "enabled": bool(demand_options), "options": demand_options,
@@ -697,6 +714,11 @@ class HeadlessManagerEnv:
                     "facility": facility,
                     "level": self.gs.facilities[facility],
                 }
+            elif kind == "book_recovery":
+                tier = str(params.get("tier", ""))
+                ok, message = recovery.book(self.gs, self.team_id, tier)
+                if not ok:
+                    raise InvalidManagerAction(message)
             elif kind == "sponsor_respond":
                 slot = str(params.get("slot", ""))
                 brand = str(params.get("brand", ""))

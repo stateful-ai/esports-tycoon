@@ -168,7 +168,12 @@ MENTOR_GROWTH_MULT = 1.15
 # coach (or the player already fluent) no longer trains literally nothing.
 _LANGUAGE_ATTR_FRACTION = 0.6
 # Below this stamina a player barely absorbs practice (see fatigue_mult).
-_EXHAUSTED_STAMINA = 35.0
+#: Below this a player is "too exhausted to train". Public because the
+#: recovery layer must agree with it — they disagreed once (35 here, a
+#: hardcoded 25 there), so a player could be flagged exhausted by training
+#: while the dashboard's exhausted count still read zero.
+EXHAUSTED_STAMINA = 35.0
+_EXHAUSTED_STAMINA = EXHAUSTED_STAMINA  # back-compat for existing callers
 # Headroom under this (ceiling - current) reads as "at ceiling" for the UI.
 _CEILING_EPS = 0.5
 
