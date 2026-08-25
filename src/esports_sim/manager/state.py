@@ -541,6 +541,21 @@ def _migrate_v34_to_v35(data: dict) -> dict:
     return data
 
 
+def _migrate_v35_to_v36(data: dict) -> dict:
+    """v36 adds `recovery_booked_by`: team_id -> the week that club last
+    bought a recovery block (manager/recovery.py). Pure additive
+    pass-through — the field defaults to empty, which reads as "nobody has
+    ever booked", exactly the state a v35 save was in.
+
+    The pass-through is still REQUIRED. `load` walks `_MIGRATIONS[version]`
+    once per step from the save's version up to SCHEMA_VERSION, so a bump
+    with no entry raises KeyError and NO old save loads at all. Adding a
+    field needs no migration *logic*; bumping the version needs a migration
+    *entry*. CI caught this as 16 simultaneous failures.
+    """
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -576,6 +591,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     32: _migrate_v32_to_v33,
     33: _migrate_v33_to_v34,
     34: _migrate_v34_to_v35,
+    35: _migrate_v35_to_v36,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
