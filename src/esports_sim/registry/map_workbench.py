@@ -212,6 +212,7 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
             id=surf_id,
             polygon=[(rx, ry), (rx + rw, ry), (rx + rw, ry + rh), (rx, ry + rh)],
             elevation=z,
+            floor_extensions=r.get("floor_extensions", []),
         ))
         
         # Create matching semantic zone
@@ -325,6 +326,7 @@ def synthesize_document(map_id: str, data_dir: Path | None = None) -> MapStudioD
             surface_id=f"surf_{reg}",
             footprint=[(px, py), (px + pw, py), (px + pw, py + ph), (px, py + ph)],
             height=p.get("height", "half"),
+            role=p.get("role", "cover"),
             collision=True,
             destructible=False,
         ))
@@ -518,6 +520,7 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
     regions: dict[str, GeoRegion] = {}
     corridors: list[GeoCorridor] = []
     props: list[GeoProp] = []
+    openings = [GeoOpening(**o) for o in doc.legacy.opening_overrides]
     
     # 1. Compile Walkable Surfaces -> Regions. Plant polygons are semantic
     # overlays on a navigational site surface; they must never overwrite the
@@ -559,6 +562,7 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
             w=max_x - min_x,
             h=max_y - min_y,
             z=surf.elevation,
+            floor_extensions=surf.floor_extensions,
         )
 
     # 2. Compile Semantic Zones -> Callouts
@@ -594,6 +598,8 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
 
     # 3. Compile Traversal Links -> Gimmicks & Corridors
     for link in doc.traversal_links:
+        if not link.runtime_enabled:
+            continue
         fx, fy, fsid = link.from_pos
         tx, ty, tsid = link.to_pos
         zone_f = surf_to_zone.get(fsid)
@@ -603,6 +609,11 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
                 f"Traversal link '{link.id}' endpoint is not mapped to a "
                 "navigational zone"
             )
+        if link.opening_span is not None or link.override_opening:
+            pair = {zone_f, zone_t}
+            openings = [o for o in openings if set(o.between) != pair]
+            if link.opening_span is not None:
+                openings.append(GeoOpening(between=(zone_f, zone_t), span=link.opening_span))
             
         # Compile as breakable door or teleporter gimmicks
         if link.kind == "door":
@@ -661,6 +672,7 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
             w=max_x - min_x,
             h=max_y - min_y,
             height=prop.height,
+            role=prop.role,
         ))
 
     # 5. Compile axis-aligned Studio walls into full-height runtime blockers.
@@ -710,14 +722,30 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
                     w=rw,
                     h=rh,
                     height="full",
+                    role="wall",
                 )
             )
 
-    # Apply legacy overrides
-    adjacency = doc.legacy.adjacency_overrides.copy()
+    # Preserve legacy neighbor order without mutating the source's lists.
+    # Fully materialized imports use those lists as ordering hints only:
+    # deleting a visible link must also remove the physical connection.
+    linked_pairs = {
+        frozenset((surf_to_zone.get(link.from_pos[2]), surf_to_zone.get(link.to_pos[2])))
+        for link in doc.traversal_links
+        if link.runtime_enabled
+    }
+    adjacency = {
+        zone: [neighbor for neighbor in neighbors
+               if not doc.links_define_adjacency or frozenset((zone, neighbor)) in linked_pairs]
+        for zone, neighbors in doc.legacy.adjacency_overrides.items()
+    }
+    if doc.links_define_adjacency:
+        openings = [opening for opening in openings if frozenset(opening.between) in linked_pairs]
     
     # Auto-generate adjacency from traversal links
     for link in doc.traversal_links:
+        if not link.runtime_enabled:
+            continue
         zf = surf_to_zone.get(link.from_pos[2])
         zt = surf_to_zone.get(link.to_pos[2])
         if zf and zt:
@@ -759,7 +787,7 @@ def compile_document(doc: MapStudioDocumentV1) -> tuple[Map, MapGeometry]:
         regions=regions,
         corridors=corridors,
         props=props,
-        openings=[GeoOpening(**o) for o in doc.legacy.opening_overrides],
+        openings=openings,
     )
 
     return map_obj, geo_obj

@@ -167,6 +167,10 @@ def render_legacy_guide(m: Map, geo: MapGeometry) -> tuple[Image.Image, dict[str
         zone = co.zone if co else None
         site = co.site if co else None
         d.polygon(corners, fill=floor_fill(idx, zone, site, z))
+        for extension in r.floor_extensions:
+            extra_corners = region_corners(extension, z)
+            content.extend(extra_corners)
+            d.polygon(extra_corners, fill=floor_fill(idx, zone, site, z))
 
     # Props back-to-front
     def prop_key(p: Any) -> float:
@@ -245,6 +249,10 @@ def render_continuous_preview(doc: MapStudioDocumentV1) -> tuple[Image.Image, di
                 break
         
         d.polygon(corners, fill=floor_fill(idx, zone_kind, site_id, surf.elevation))
+        for extension in surf.floor_extensions:
+            extra_corners = region_corners(extension, surf.elevation)
+            content.extend(extra_corners)
+            d.polygon(extra_corners, fill=floor_fill(idx, zone_kind, site_id, surf.elevation))
 
     # Draw continuous props
     def prop_key_cont(p: Any) -> float:

@@ -1,0 +1,2952 @@
+schema_version: 1
+id: sunset-layout-v2
+display_name: Sunset - Layout v2
+reference:
+  image_path: /assets/maps/references/sunset.png
+  description: Sunset - extracted game minimap/callouts, retrieved 2026-10-04; floor
+    excludes white wall marks
+  source_sha256: 1188642e2f94f4fbb17d6c61feb9071d349dec21c9749349db710afbc1bbb228
+  rotation: '180'
+  floor_color_max: 200
+  x: 0.0
+  y: 0.0
+  width: 100.0
+  height: 100.0
+links_define_adjacency: true
+movement_model: free
+sites:
+- a
+- b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+walkable_surfaces:
+- id: surf_b_boba
+  polygon:
+  - - 79.0
+    - 65.0
+  - - 95.5
+    - 65.0
+  - - 95.5
+    - 65.5
+  - - 79.0
+    - 65.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 87.5
+    y: 52.5
+    w: 2.0
+    h: 0.5
+  - x: 89.0
+    y: 53.0
+    w: 1.0
+    h: 0.5
+  - x: 89.0
+    y: 53.5
+    w: 1.5
+    h: 0.5
+  - x: 87.5
+    y: 53.0
+    w: 0.5
+    h: 1.5
+  - x: 89.0
+    y: 54.0
+    w: 2.0
+    h: 0.5
+  - x: 89.0
+    y: 54.5
+    w: 2.5
+    h: 0.5
+  - x: 89.0
+    y: 55.0
+    w: 3.0
+    h: 1.0
+  - x: 76.5
+    y: 56.5
+    w: 6.5
+    h: 3.0
+  - x: 89.0
+    y: 56.0
+    w: 6.5
+    h: 3.5
+  - x: 76.5
+    y: 59.5
+    w: 19.0
+    h: 5.5
+  - x: 76.5
+    y: 65.0
+    w: 2.5
+    h: 0.5
+  - x: 72.0
+    y: 63.5
+    w: 3.0
+    h: 3.5
+  - x: 80.5
+    y: 65.5
+    w: 4.5
+    h: 1.5
+  - x: 72.0
+    y: 67.0
+    w: 15.5
+    h: 1.0
+  - x: 72.5
+    y: 68.0
+    w: 15.0
+    h: 0.5
+  - x: 73.0
+    y: 68.5
+    w: 14.5
+    h: 0.5
+  - x: 73.5
+    y: 69.0
+    w: 14.0
+    h: 0.5
+  - x: 74.0
+    y: 69.5
+    w: 13.5
+    h: 0.5
+  - x: 74.5
+    y: 70.0
+    w: 13.0
+    h: 0.5
+  - x: 75.0
+    y: 70.5
+    w: 12.5
+    h: 0.5
+  - x: 75.5
+    y: 71.0
+    w: 12.0
+    h: 0.5
+  - x: 76.0
+    y: 71.5
+    w: 11.5
+    h: 0.5
+  - x: 76.5
+    y: 72.0
+    w: 11.0
+    h: 1.0
+  - x: 76.5
+    y: 73.0
+    w: 10.5
+    h: 1.0
+  - x: 76.5
+    y: 74.0
+    w: 10.0
+    h: 0.5
+  - x: 76.5
+    y: 74.5
+    w: 9.0
+    h: 0.5
+- id: surf_mid_tiles
+  polygon:
+  - - 40.0
+    - 34.5
+  - - 53.5
+    - 34.5
+  - - 53.5
+    - 35.0
+  - - 40.0
+    - 35.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 53.5
+    y: 34.5
+    w: 2.5
+    h: 0.5
+  - x: 39.5
+    y: 35.0
+    w: 16.5
+    h: 0.5
+  - x: 39.0
+    y: 35.5
+    w: 17.0
+    h: 0.5
+  - x: 38.5
+    y: 36.0
+    w: 17.5
+    h: 0.5
+  - x: 38.0
+    y: 36.5
+    w: 18.0
+    h: 0.5
+  - x: 37.5
+    y: 37.0
+    w: 18.5
+    h: 1.0
+  - x: 38.0
+    y: 38.0
+    w: 18.0
+    h: 0.5
+  - x: 38.5
+    y: 38.5
+    w: 5.0
+    h: 0.5
+  - x: 39.0
+    y: 39.0
+    w: 4.5
+    h: 0.5
+  - x: 47.0
+    y: 38.5
+    w: 9.0
+    h: 1.0
+  - x: 39.5
+    y: 39.5
+    w: 4.0
+    h: 0.5
+  - x: 47.0
+    y: 39.5
+    w: 5.5
+    h: 0.5
+  - x: 40.0
+    y: 40.0
+    w: 3.5
+    h: 0.5
+  - x: 47.0
+    y: 40.0
+    w: 5.0
+    h: 0.5
+  - x: 47.0
+    y: 40.5
+    w: 4.5
+    h: 0.5
+  - x: 47.0
+    y: 41.0
+    w: 4.0
+    h: 0.5
+  - x: 47.0
+    y: 41.5
+    w: 3.5
+    h: 0.5
+  - x: 47.0
+    y: 42.0
+    w: 3.0
+    h: 0.5
+  - x: 47.0
+    y: 42.5
+    w: 2.5
+    h: 0.5
+  - x: 47.0
+    y: 43.0
+    w: 2.0
+    h: 0.5
+  - x: 40.5
+    y: 40.5
+    w: 5.0
+    h: 6.5
+  - x: 39.0
+    y: 47.0
+    w: 6.5
+    h: 3.0
+  - x: 39.0
+    y: 50.0
+    w: 4.5
+    h: 2.5
+  - x: 47.0
+    y: 43.5
+    w: 1.5
+    h: 9.0
+  - x: 39.0
+    y: 52.5
+    w: 9.5
+    h: 3.5
+  - x: 47.0
+    y: 56.0
+    w: 1.5
+    h: 0.5
+  - x: 45.0
+    y: 56.5
+    w: 3.5
+    h: 0.5
+  - x: 45.5
+    y: 57.0
+    w: 3.0
+    h: 0.5
+  - x: 46.0
+    y: 57.5
+    w: 2.5
+    h: 0.5
+  - x: 46.5
+    y: 58.0
+    w: 1.5
+    h: 0.5
+  - x: 47.0
+    y: 58.5
+    w: 0.5
+    h: 0.5
+- id: surf_b_market
+  polygon:
+  - - 73.5
+    - 47.0
+  - - 80.0
+    - 47.0
+  - - 80.0
+    - 47.5
+  - - 73.5
+    - 47.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 83.0
+    y: 44.0
+    w: 0.5
+    h: 0.5
+  - x: 83.0
+    y: 44.5
+    w: 1.0
+    h: 0.5
+  - x: 83.0
+    y: 45.0
+    w: 1.5
+    h: 0.5
+  - x: 82.5
+    y: 45.5
+    w: 2.5
+    h: 0.5
+  - x: 83.0
+    y: 46.0
+    w: 2.5
+    h: 0.5
+  - x: 83.0
+    y: 46.5
+    w: 3.0
+    h: 0.5
+  - x: 64.0
+    y: 47.0
+    w: 9.5
+    h: 0.5
+  - x: 82.5
+    y: 47.0
+    w: 4.0
+    h: 0.5
+  - x: 64.0
+    y: 47.5
+    w: 16.0
+    h: 0.5
+  - x: 81.5
+    y: 47.5
+    w: 5.5
+    h: 0.5
+  - x: 64.0
+    y: 48.0
+    w: 23.5
+    h: 1.5
+  - x: 64.0
+    y: 49.5
+    w: 4.5
+    h: 0.5
+  - x: 69.0
+    y: 49.5
+    w: 18.5
+    h: 0.5
+  - x: 64.0
+    y: 50.0
+    w: 6.0
+    h: 1.0
+  - x: 70.5
+    y: 50.0
+    w: 17.0
+    h: 1.0
+  - x: 64.5
+    y: 51.0
+    w: 5.5
+    h: 0.5
+  - x: 65.0
+    y: 51.5
+    w: 5.0
+    h: 0.5
+  - x: 65.5
+    y: 52.0
+    w: 4.5
+    h: 0.5
+  - x: 66.0
+    y: 52.5
+    w: 4.0
+    h: 0.5
+  - x: 76.5
+    y: 51.0
+    w: 11.0
+    h: 2.0
+  - x: 66.5
+    y: 53.0
+    w: 3.5
+    h: 0.5
+  - x: 70.5
+    y: 51.0
+    w: 4.5
+    h: 2.5
+  - x: 76.5
+    y: 53.0
+    w: 6.5
+    h: 1.5
+  - x: 83.5
+    y: 53.0
+    w: 4.0
+    h: 1.5
+  - x: 66.5
+    y: 53.5
+    w: 8.5
+    h: 2.5
+  - x: 76.5
+    y: 54.5
+    w: 4.5
+    h: 1.5
+  - x: 69.0
+    y: 56.0
+    w: 6.0
+    h: 0.5
+  - x: 69.5
+    y: 56.5
+    w: 5.5
+    h: 0.5
+  - x: 70.0
+    y: 57.0
+    w: 5.0
+    h: 0.5
+  - x: 70.5
+    y: 57.5
+    w: 4.5
+    h: 0.5
+  - x: 71.0
+    y: 58.0
+    w: 4.0
+    h: 0.5
+  - x: 71.5
+    y: 58.5
+    w: 3.5
+    h: 0.5
+  - x: 72.0
+    y: 59.0
+    w: 3.0
+    h: 4.5
+- id: surf_b_site
+  polygon:
+  - - 95.0
+    - 43.5
+  - - 95.5
+    - 43.5
+  - - 95.5
+    - 44.0
+  - - 95.0
+    - 44.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 76.0
+    y: 39.5
+    w: 15.5
+    h: 0.5
+  - x: 75.5
+    y: 40.0
+    w: 16.5
+    h: 0.5
+  - x: 86.5
+    y: 40.5
+    w: 5.0
+    h: 3.0
+  - x: 83.0
+    y: 43.5
+    w: 12.0
+    h: 0.5
+  - x: 83.5
+    y: 44.0
+    w: 12.0
+    h: 0.5
+  - x: 84.0
+    y: 44.5
+    w: 11.5
+    h: 0.5
+  - x: 84.5
+    y: 45.0
+    w: 11.0
+    h: 0.5
+  - x: 85.0
+    y: 45.5
+    w: 10.5
+    h: 0.5
+  - x: 85.5
+    y: 46.0
+    w: 10.0
+    h: 0.5
+  - x: 86.0
+    y: 46.5
+    w: 9.5
+    h: 0.5
+  - x: 86.5
+    y: 47.0
+    w: 9.0
+    h: 0.5
+  - x: 87.0
+    y: 47.5
+    w: 8.5
+    h: 0.5
+  - x: 87.5
+    y: 48.0
+    w: 8.0
+    h: 2.0
+  - x: 87.5
+    y: 50.0
+    w: 4.5
+    h: 2.5
+  - x: 89.5
+    y: 52.5
+    w: 2.5
+    h: 0.5
+  - x: 90.0
+    y: 53.0
+    w: 2.0
+    h: 0.5
+  - x: 90.5
+    y: 53.5
+    w: 1.5
+    h: 0.5
+  - x: 91.0
+    y: 54.0
+    w: 1.0
+    h: 0.5
+  - x: 91.5
+    y: 54.5
+    w: 0.5
+    h: 0.5
+- id: surf_b_main
+  polygon:
+  - - 93.5
+    - 33.0
+  - - 94.0
+    - 33.0
+  - - 94.0
+    - 33.5
+  - - 93.5
+    - 33.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 79.5
+    y: 33.0
+    w: 14.0
+    h: 0.5
+  - x: 79.5
+    y: 33.5
+    w: 14.5
+    h: 2.5
+  - x: 76.5
+    y: 36.0
+    w: 17.5
+    h: 3.5
+  - x: 91.5
+    y: 39.5
+    w: 2.5
+    h: 0.5
+  - x: 92.0
+    y: 40.0
+    w: 2.0
+    h: 0.5
+- id: surf_b_lobby
+  polygon:
+  - - 69.0
+    - 22.5
+  - - 69.5
+    - 22.5
+  - - 69.5
+    - 23.0
+  - - 69.0
+    - 23.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 47.0
+    y: 20.5
+    w: 6.0
+    h: 1.5
+  - x: 65.5
+    y: 21.5
+    w: 3.0
+    h: 0.5
+  - x: 47.0
+    y: 22.0
+    w: 22.0
+    h: 1.0
+  - x: 47.0
+    y: 23.0
+    w: 23.0
+    h: 0.5
+  - x: 47.0
+    y: 23.5
+    w: 23.5
+    h: 3.0
+  - x: 65.5
+    y: 26.5
+    w: 4.5
+    h: 0.5
+  - x: 66.0
+    y: 27.0
+    w: 3.5
+    h: 0.5
+  - x: 66.5
+    y: 27.5
+    w: 3.0
+    h: 0.5
+  - x: 67.0
+    y: 28.0
+    w: 3.0
+    h: 0.5
+  - x: 70.5
+    y: 28.0
+    w: 6.0
+    h: 0.5
+  - x: 67.5
+    y: 28.5
+    w: 9.0
+    h: 0.5
+  - x: 68.0
+    y: 29.0
+    w: 8.5
+    h: 0.5
+  - x: 68.5
+    y: 29.5
+    w: 8.0
+    h: 0.5
+  - x: 69.0
+    y: 30.0
+    w: 7.5
+    h: 9.5
+  - x: 69.0
+    y: 39.5
+    w: 7.0
+    h: 0.5
+  - x: 69.0
+    y: 40.0
+    w: 6.5
+    h: 0.5
+- id: surf_mid_bottom
+  polygon:
+  - - 65.0
+    - 28.0
+  - - 65.5
+    - 28.0
+  - - 65.5
+    - 40.5
+  - - 65.0
+    - 40.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 47.0
+    y: 26.5
+    w: 18.5
+    h: 0.5
+  - x: 47.0
+    y: 27.0
+    w: 19.0
+    h: 0.5
+  - x: 47.0
+    y: 27.5
+    w: 19.5
+    h: 0.5
+  - x: 65.5
+    y: 28.0
+    w: 1.5
+    h: 0.5
+  - x: 65.5
+    y: 28.5
+    w: 2.0
+    h: 0.5
+  - x: 65.5
+    y: 29.0
+    w: 2.5
+    h: 0.5
+  - x: 65.5
+    y: 29.5
+    w: 3.0
+    h: 0.5
+  - x: 65.5
+    y: 30.0
+    w: 3.5
+    h: 0.5
+  - x: 65.5
+    y: 30.5
+    w: 0.5
+    h: 0.5
+  - x: 67.0
+    y: 30.5
+    w: 2.0
+    h: 0.5
+  - x: 67.5
+    y: 31.0
+    w: 1.5
+    h: 0.5
+  - x: 59.5
+    y: 28.0
+    w: 5.5
+    h: 6.5
+  - x: 56.5
+    y: 34.5
+    w: 8.5
+    h: 1.5
+  - x: 56.0
+    y: 36.0
+    w: 9.0
+    h: 3.5
+  - x: 56.5
+    y: 39.5
+    w: 8.5
+    h: 0.5
+  - x: 57.0
+    y: 40.0
+    w: 8.0
+    h: 0.5
+  - x: 67.0
+    y: 31.5
+    w: 2.0
+    h: 9.0
+- id: surf_mid_courtyard
+  polygon:
+  - - 59.0
+    - 43.5
+  - - 59.5
+    - 43.5
+  - - 59.5
+    - 44.0
+  - - 59.0
+    - 44.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 52.5
+    y: 39.5
+    w: 4.0
+    h: 0.5
+  - x: 52.0
+    y: 40.0
+    w: 5.0
+    h: 0.5
+  - x: 51.5
+    y: 40.5
+    w: 1.5
+    h: 0.5
+  - x: 51.0
+    y: 41.0
+    w: 2.0
+    h: 0.5
+  - x: 50.5
+    y: 41.5
+    w: 2.5
+    h: 0.5
+  - x: 50.0
+    y: 42.0
+    w: 3.0
+    h: 0.5
+  - x: 49.5
+    y: 42.5
+    w: 3.5
+    h: 0.5
+  - x: 49.0
+    y: 43.0
+    w: 4.0
+    h: 0.5
+  - x: 48.5
+    y: 43.5
+    w: 10.5
+    h: 0.5
+  - x: 48.5
+    y: 44.0
+    w: 11.0
+    h: 1.0
+  - x: 48.5
+    y: 45.0
+    w: 7.0
+    h: 0.5
+  - x: 57.0
+    y: 45.0
+    w: 2.5
+    h: 0.5
+  - x: 64.0
+    y: 51.0
+    w: 0.5
+    h: 0.5
+  - x: 48.5
+    y: 45.5
+    w: 11.0
+    h: 6.5
+  - x: 64.0
+    y: 51.5
+    w: 1.0
+    h: 0.5
+  - x: 48.5
+    y: 52.0
+    w: 6.0
+    h: 0.5
+  - x: 55.0
+    y: 52.0
+    w: 4.5
+    h: 0.5
+  - x: 64.0
+    y: 52.0
+    w: 1.5
+    h: 0.5
+  - x: 48.5
+    y: 52.5
+    w: 5.5
+    h: 0.5
+  - x: 54.5
+    y: 52.5
+    w: 5.0
+    h: 0.5
+  - x: 64.0
+    y: 52.5
+    w: 2.0
+    h: 0.5
+  - x: 48.5
+    y: 53.0
+    w: 5.0
+    h: 0.5
+  - x: 54.0
+    y: 53.0
+    w: 12.5
+    h: 0.5
+  - x: 48.5
+    y: 53.5
+    w: 3.5
+    h: 0.5
+  - x: 52.5
+    y: 53.5
+    w: 0.5
+    h: 0.5
+  - x: 53.5
+    y: 53.5
+    w: 13.0
+    h: 0.5
+  - x: 48.5
+    y: 54.0
+    w: 4.0
+    h: 0.5
+  - x: 53.0
+    y: 54.0
+    w: 13.5
+    h: 0.5
+  - x: 48.5
+    y: 54.5
+    w: 18.0
+    h: 1.5
+  - x: 48.5
+    y: 56.0
+    w: 10.5
+    h: 1.0
+  - x: 48.5
+    y: 57.0
+    w: 11.0
+    h: 1.0
+  - x: 52.5
+    y: 58.0
+    w: 7.0
+    h: 0.5
+  - x: 53.0
+    y: 58.5
+    w: 6.5
+    h: 0.5
+  - x: 53.5
+    y: 59.0
+    w: 6.0
+    h: 0.5
+  - x: 54.0
+    y: 59.5
+    w: 5.5
+    h: 0.5
+  - x: 54.5
+    y: 60.0
+    w: 5.0
+    h: 0.5
+  - x: 55.0
+    y: 60.5
+    w: 4.5
+    h: 0.5
+  - x: 55.5
+    y: 61.0
+    w: 4.0
+    h: 0.5
+  - x: 56.0
+    y: 61.5
+    w: 3.5
+    h: 0.5
+  - x: 56.5
+    y: 62.0
+    w: 3.0
+    h: 0.5
+- id: surf_a_lobby
+  polygon:
+  - - 34.0
+    - 24.5
+  - - 34.5
+    - 24.5
+  - - 34.5
+    - 44.0
+  - - 34.0
+    - 44.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 36.5
+    y: 11.5
+    w: 0.5
+    h: 0.5
+  - x: 36.0
+    y: 12.0
+    w: 1.5
+    h: 0.5
+  - x: 35.5
+    y: 12.5
+    w: 2.5
+    h: 0.5
+  - x: 35.0
+    y: 13.0
+    w: 3.5
+    h: 0.5
+  - x: 34.5
+    y: 13.5
+    w: 4.5
+    h: 0.5
+  - x: 34.0
+    y: 14.0
+    w: 5.5
+    h: 0.5
+  - x: 33.5
+    y: 14.5
+    w: 6.5
+    h: 0.5
+  - x: 33.0
+    y: 15.0
+    w: 7.5
+    h: 0.5
+  - x: 32.5
+    y: 15.5
+    w: 8.5
+    h: 0.5
+  - x: 32.0
+    y: 16.0
+    w: 9.5
+    h: 0.5
+  - x: 31.5
+    y: 16.5
+    w: 10.5
+    h: 0.5
+  - x: 31.0
+    y: 17.0
+    w: 8.0
+    h: 0.5
+  - x: 30.5
+    y: 17.5
+    w: 8.0
+    h: 0.5
+  - x: 30.0
+    y: 18.0
+    w: 8.0
+    h: 0.5
+  - x: 29.5
+    y: 18.5
+    w: 8.0
+    h: 0.5
+  - x: 29.0
+    y: 19.0
+    w: 8.0
+    h: 0.5
+  - x: 28.5
+    y: 19.5
+    w: 8.0
+    h: 0.5
+  - x: 28.0
+    y: 20.0
+    w: 8.0
+    h: 0.5
+  - x: 27.5
+    y: 20.5
+    w: 8.0
+    h: 0.5
+  - x: 27.0
+    y: 21.0
+    w: 8.0
+    h: 0.5
+  - x: 26.5
+    y: 21.5
+    w: 8.0
+    h: 3.0
+  - x: 26.5
+    y: 24.5
+    w: 7.5
+    h: 3.5
+  - x: 29.5
+    y: 28.0
+    w: 4.5
+    h: 6.5
+  - x: 18.5
+    y: 34.5
+    w: 15.5
+    h: 0.5
+  - x: 19.0
+    y: 35.0
+    w: 15.0
+    h: 0.5
+  - x: 19.5
+    y: 35.5
+    w: 14.5
+    h: 0.5
+  - x: 20.0
+    y: 36.0
+    w: 14.0
+    h: 0.5
+  - x: 20.5
+    y: 36.5
+    w: 13.5
+    h: 0.5
+  - x: 21.0
+    y: 37.0
+    w: 13.0
+    h: 0.5
+  - x: 21.5
+    y: 37.5
+    w: 12.5
+    h: 0.5
+  - x: 22.0
+    y: 38.0
+    w: 12.0
+    h: 0.5
+  - x: 37.5
+    y: 38.0
+    w: 0.5
+    h: 0.5
+  - x: 22.5
+    y: 38.5
+    w: 11.5
+    h: 0.5
+  - x: 37.5
+    y: 38.5
+    w: 1.0
+    h: 0.5
+  - x: 23.0
+    y: 39.0
+    w: 11.0
+    h: 0.5
+  - x: 37.5
+    y: 39.0
+    w: 1.5
+    h: 0.5
+  - x: 23.5
+    y: 39.5
+    w: 10.5
+    h: 0.5
+  - x: 37.5
+    y: 39.5
+    w: 2.0
+    h: 0.5
+  - x: 24.0
+    y: 40.0
+    w: 10.0
+    h: 0.5
+  - x: 37.5
+    y: 40.0
+    w: 2.5
+    h: 0.5
+  - x: 34.5
+    y: 40.5
+    w: 6.0
+    h: 3.0
+  - x: 26.5
+    y: 40.5
+    w: 7.5
+    h: 3.5
+- id: surf_a_main
+  polygon:
+  - - 32.5
+    - 46.5
+  - - 33.0
+    - 46.5
+  - - 33.0
+    - 47.0
+  - - 32.5
+    - 47.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 26.5
+    y: 46.5
+    w: 6.0
+    h: 0.5
+  - x: 24.0
+    y: 47.0
+    w: 9.0
+    h: 0.5
+  - x: 24.5
+    y: 47.5
+    w: 8.5
+    h: 0.5
+  - x: 25.0
+    y: 48.0
+    w: 8.0
+    h: 0.5
+  - x: 25.5
+    y: 48.5
+    w: 7.5
+    h: 0.5
+  - x: 26.0
+    y: 49.0
+    w: 7.0
+    h: 0.5
+  - x: 26.5
+    y: 49.5
+    w: 6.5
+    h: 1.5
+  - x: 28.5
+    y: 51.0
+    w: 4.5
+    h: 0.5
+  - x: 29.0
+    y: 51.5
+    w: 4.0
+    h: 0.5
+  - x: 29.5
+    y: 52.0
+    w: 3.5
+    h: 0.5
+  - x: 30.0
+    y: 52.5
+    w: 3.0
+    h: 0.5
+  - x: 30.5
+    y: 53.0
+    w: 2.5
+    h: 0.5
+  - x: 31.0
+    y: 53.5
+    w: 2.0
+    h: 0.5
+  - x: 31.5
+    y: 54.0
+    w: 1.5
+    h: 0.5
+  - x: 32.0
+    y: 54.5
+    w: 1.0
+    h: 0.5
+  - x: 32.5
+    y: 55.0
+    w: 0.5
+    h: 0.5
+- id: surf_a_link
+  polygon:
+  - - 26.5
+    - 64.5
+  - - 27.0
+    - 64.5
+  - - 27.0
+    - 65.0
+  - - 26.5
+    - 65.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 26.5
+    y: 60.0
+    w: 4.5
+    h: 0.5
+  - x: 24.5
+    y: 60.5
+    w: 6.5
+    h: 0.5
+  - x: 24.0
+    y: 61.0
+    w: 7.0
+    h: 0.5
+  - x: 14.5
+    y: 61.5
+    w: 0.5
+    h: 0.5
+  - x: 15.5
+    y: 61.5
+    w: 15.5
+    h: 0.5
+  - x: 12.5
+    y: 62.0
+    w: 3.0
+    h: 0.5
+  - x: 16.0
+    y: 62.0
+    w: 15.0
+    h: 0.5
+  - x: 26.5
+    y: 62.5
+    w: 4.5
+    h: 2.0
+  - x: 12.5
+    y: 62.5
+    w: 11.0
+    h: 2.5
+  - x: 27.0
+    y: 64.5
+    w: 4.0
+    h: 0.5
+  - x: 22.0
+    y: 65.0
+    w: 1.5
+    h: 0.5
+  - x: 28.0
+    y: 65.0
+    w: 3.0
+    h: 0.5
+  - x: 31.5
+    y: 61.0
+    w: 1.5
+    h: 4.5
+  - x: 22.5
+    y: 65.5
+    w: 1.0
+    h: 0.5
+  - x: 23.0
+    y: 66.0
+    w: 0.5
+    h: 0.5
+  - x: 28.0
+    y: 65.5
+    w: 5.0
+    h: 1.0
+  - x: 26.5
+    y: 66.5
+    w: 6.5
+    h: 2.0
+  - x: 26.5
+    y: 68.5
+    w: 19.0
+    h: 3.5
+  - x: 27.0
+    y: 72.0
+    w: 18.5
+    h: 0.5
+  - x: 27.5
+    y: 72.5
+    w: 18.0
+    h: 0.5
+  - x: 28.0
+    y: 73.0
+    w: 17.5
+    h: 0.5
+  - x: 28.5
+    y: 73.5
+    w: 12.0
+    h: 0.5
+  - x: 29.0
+    y: 74.0
+    w: 11.5
+    h: 0.5
+  - x: 29.5
+    y: 74.5
+    w: 11.0
+    h: 0.5
+  - x: 36.5
+    y: 75.0
+    w: 4.0
+    h: 1.5
+- id: surf_a_site
+  polygon:
+  - - 17.5
+    - 56.0
+  - - 33.0
+    - 56.0
+  - - 33.0
+    - 56.5
+  - - 17.5
+    - 56.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 26.0
+    y: 51.0
+    w: 2.5
+    h: 0.5
+  - x: 25.5
+    y: 51.5
+    w: 3.5
+    h: 0.5
+  - x: 25.5
+    y: 52.0
+    w: 2.0
+    h: 0.5
+  - x: 28.0
+    y: 52.0
+    w: 1.5
+    h: 0.5
+  - x: 25.5
+    y: 52.5
+    w: 1.5
+    h: 0.5
+  - x: 27.5
+    y: 52.5
+    w: 2.5
+    h: 0.5
+  - x: 27.5
+    y: 53.0
+    w: 3.0
+    h: 0.5
+  - x: 28.0
+    y: 53.5
+    w: 3.0
+    h: 0.5
+  - x: 28.0
+    y: 54.0
+    w: 3.5
+    h: 0.5
+  - x: 28.0
+    y: 54.5
+    w: 4.0
+    h: 0.5
+  - x: 28.0
+    y: 55.0
+    w: 4.5
+    h: 0.5
+  - x: 28.0
+    y: 55.5
+    w: 5.0
+    h: 0.5
+  - x: 12.5
+    y: 56.0
+    w: 5.0
+    h: 0.5
+  - x: 12.5
+    y: 56.5
+    w: 20.5
+    h: 1.0
+  - x: 12.5
+    y: 57.5
+    w: 11.5
+    h: 0.5
+  - x: 26.0
+    y: 57.5
+    w: 7.0
+    h: 0.5
+  - x: 12.5
+    y: 58.0
+    w: 20.5
+    h: 0.5
+  - x: 12.5
+    y: 58.5
+    w: 4.5
+    h: 0.5
+  - x: 17.5
+    y: 58.5
+    w: 15.5
+    h: 0.5
+  - x: 12.5
+    y: 59.0
+    w: 4.0
+    h: 0.5
+  - x: 17.0
+    y: 59.0
+    w: 16.0
+    h: 0.5
+  - x: 12.5
+    y: 59.5
+    w: 3.5
+    h: 0.5
+  - x: 16.5
+    y: 59.5
+    w: 14.5
+    h: 0.5
+  - x: 12.5
+    y: 60.0
+    w: 3.0
+    h: 0.5
+  - x: 16.0
+    y: 60.0
+    w: 10.5
+    h: 0.5
+  - x: 12.5
+    y: 60.5
+    w: 12.0
+    h: 0.5
+  - x: 31.5
+    y: 59.5
+    w: 1.5
+    h: 1.5
+  - x: 15.0
+    y: 61.0
+    w: 9.0
+    h: 0.5
+  - x: 12.5
+    y: 61.0
+    w: 2.0
+    h: 1.0
+- id: surf_a_elbow
+  polygon:
+  - - 17.0
+    - 46.5
+  - - 17.5
+    - 46.5
+  - - 17.5
+    - 53.0
+  - - 17.0
+    - 53.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 17.0
+    y: 34.5
+    w: 1.5
+    h: 0.5
+  - x: 17.0
+    y: 35.0
+    w: 2.0
+    h: 0.5
+  - x: 17.0
+    y: 35.5
+    w: 2.5
+    h: 0.5
+  - x: 17.0
+    y: 36.0
+    w: 3.0
+    h: 0.5
+  - x: 17.0
+    y: 36.5
+    w: 3.5
+    h: 0.5
+  - x: 17.0
+    y: 37.0
+    w: 4.0
+    h: 0.5
+  - x: 17.0
+    y: 37.5
+    w: 4.5
+    h: 0.5
+  - x: 17.0
+    y: 38.0
+    w: 5.0
+    h: 0.5
+  - x: 17.0
+    y: 38.5
+    w: 5.5
+    h: 0.5
+  - x: 17.0
+    y: 39.0
+    w: 6.0
+    h: 0.5
+  - x: 17.0
+    y: 39.5
+    w: 6.5
+    h: 0.5
+  - x: 17.0
+    y: 40.0
+    w: 7.0
+    h: 0.5
+  - x: 17.0
+    y: 40.5
+    w: 6.5
+    h: 6.0
+  - x: 17.5
+    y: 46.5
+    w: 6.0
+    h: 0.5
+  - x: 3.0
+    y: 47.0
+    w: 10.0
+    h: 0.5
+  - x: 17.5
+    y: 47.0
+    w: 6.5
+    h: 0.5
+  - x: 3.0
+    y: 47.5
+    w: 10.5
+    h: 0.5
+  - x: 17.5
+    y: 47.5
+    w: 7.0
+    h: 0.5
+  - x: 17.5
+    y: 48.0
+    w: 7.5
+    h: 0.5
+  - x: 17.5
+    y: 48.5
+    w: 8.0
+    h: 0.5
+  - x: 17.5
+    y: 49.0
+    w: 8.5
+    h: 0.5
+  - x: 3.0
+    y: 48.0
+    w: 11.0
+    h: 2.0
+  - x: 17.5
+    y: 49.5
+    w: 9.0
+    h: 1.5
+  - x: 17.5
+    y: 51.0
+    w: 8.5
+    h: 0.5
+  - x: 3.0
+    y: 50.0
+    w: 14.0
+    h: 3.0
+  - x: 17.5
+    y: 51.5
+    w: 8.0
+    h: 1.5
+  - x: 3.0
+    y: 53.0
+    w: 6.5
+    h: 6.5
+  - x: 6.0
+    y: 59.5
+    w: 3.5
+    h: 3.0
+  - x: 3.0
+    y: 62.5
+    w: 6.5
+    h: 2.0
+- id: surf_a_alley
+  polygon:
+  - - 21.5
+    - 74.5
+  - - 22.0
+    - 74.5
+  - - 22.0
+    - 75.0
+  - - 21.5
+    - 75.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 12.5
+    y: 65.0
+    w: 9.5
+    h: 0.5
+  - x: 3.0
+    y: 64.5
+    w: 6.5
+    h: 1.5
+  - x: 12.5
+    y: 65.5
+    w: 10.0
+    h: 0.5
+  - x: 3.0
+    y: 66.0
+    w: 20.0
+    h: 0.5
+  - x: 3.0
+    y: 66.5
+    w: 20.5
+    h: 2.0
+  - x: 3.0
+    y: 68.5
+    w: 19.0
+    h: 3.0
+  - x: 3.0
+    y: 71.5
+    w: 6.5
+    h: 0.5
+  - x: 12.5
+    y: 71.5
+    w: 9.5
+    h: 1.0
+  - x: 13.0
+    y: 72.5
+    w: 9.0
+    h: 0.5
+  - x: 13.5
+    y: 73.0
+    w: 8.5
+    h: 0.5
+  - x: 14.0
+    y: 73.5
+    w: 8.0
+    h: 0.5
+  - x: 14.5
+    y: 74.0
+    w: 7.5
+    h: 0.5
+  - x: 15.0
+    y: 74.5
+    w: 6.5
+    h: 0.5
+  - x: 16.0
+    y: 75.0
+    w: 5.5
+    h: 3.0
+  - x: 36.5
+    y: 76.5
+    w: 4.0
+    h: 1.5
+  - x: 12.5
+    y: 78.0
+    w: 28.0
+    h: 4.5
+  - x: 13.0
+    y: 82.5
+    w: 27.5
+    h: 1.0
+  - x: 13.5
+    y: 83.5
+    w: 27.0
+    h: 0.5
+  - x: 14.5
+    y: 84.0
+    w: 26.0
+    h: 0.5
+  - x: 34.0
+    y: 84.5
+    w: 6.5
+    h: 1.0
+  - x: 34.5
+    y: 85.5
+    w: 6.0
+    h: 11.0
+- id: surf_defender_spawn
+  polygon:
+  - - 65.0
+    - 79.5
+  - - 65.5
+    - 79.5
+  - - 65.5
+    - 80.0
+  - - 65.0
+    - 80.0
+  elevation: 0.01
+  floor_extensions:
+  - x: 59.5
+    y: 73.0
+    w: 3.0
+    h: 0.5
+  - x: 59.5
+    y: 73.5
+    w: 3.5
+    h: 0.5
+  - x: 59.5
+    y: 74.0
+    w: 4.0
+    h: 0.5
+  - x: 59.5
+    y: 74.5
+    w: 4.5
+    h: 0.5
+  - x: 59.5
+    y: 75.0
+    w: 3.0
+    h: 4.5
+  - x: 59.5
+    y: 79.5
+    w: 5.5
+    h: 0.5
+  - x: 43.5
+    y: 83.0
+    w: 12.5
+    h: 3.0
+  - x: 59.5
+    y: 80.0
+    w: 6.0
+    h: 6.0
+  - x: 40.5
+    y: 86.0
+    w: 25.0
+    h: 5.0
+  - x: 40.5
+    y: 91.0
+    w: 24.5
+    h: 1.5
+  - x: 40.5
+    y: 92.5
+    w: 24.0
+    h: 1.0
+  - x: 40.5
+    y: 93.5
+    w: 23.0
+    h: 0.5
+  - x: 40.5
+    y: 94.0
+    w: 22.5
+    h: 0.5
+  - x: 40.5
+    y: 94.5
+    w: 22.0
+    h: 0.5
+  - x: 40.5
+    y: 95.0
+    w: 21.5
+    h: 0.5
+  - x: 40.5
+    y: 95.5
+    w: 21.0
+    h: 0.5
+  - x: 40.5
+    y: 96.0
+    w: 20.5
+    h: 0.5
+  - x: 43.5
+    y: 96.5
+    w: 17.5
+    h: 0.5
+  - x: 45.5
+    y: 97.0
+    w: 15.0
+    h: 0.5
+  - x: 48.0
+    y: 97.5
+    w: 10.0
+    h: 0.5
+  - x: 49.5
+    y: 98.0
+    w: 5.0
+    h: 0.5
+  - x: 51.5
+    y: 98.5
+    w: 2.5
+    h: 0.5
+- id: surf_mid_top
+  polygon:
+  - - 65.0
+    - 65.5
+  - - 65.5
+    - 65.5
+  - - 65.5
+    - 66.0
+  - - 65.0
+    - 66.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 48.0
+    y: 58.0
+    w: 4.5
+    h: 0.5
+  - x: 47.5
+    y: 58.5
+    w: 5.5
+    h: 0.5
+  - x: 47.0
+    y: 59.0
+    w: 6.5
+    h: 0.5
+  - x: 47.0
+    y: 59.5
+    w: 7.0
+    h: 0.5
+  - x: 47.0
+    y: 60.0
+    w: 7.5
+    h: 0.5
+  - x: 47.0
+    y: 60.5
+    w: 8.0
+    h: 0.5
+  - x: 47.0
+    y: 61.0
+    w: 8.5
+    h: 0.5
+  - x: 47.0
+    y: 61.5
+    w: 9.0
+    h: 0.5
+  - x: 47.0
+    y: 62.0
+    w: 9.5
+    h: 0.5
+  - x: 47.5
+    y: 62.5
+    w: 5.0
+    h: 3.0
+  - x: 47.0
+    y: 65.5
+    w: 18.0
+    h: 0.5
+  - x: 47.0
+    y: 66.0
+    w: 18.5
+    h: 2.5
+  - x: 72.0
+    y: 68.0
+    w: 0.5
+    h: 0.5
+  - x: 45.5
+    y: 68.5
+    w: 12.5
+    h: 0.5
+  - x: 59.5
+    y: 68.5
+    w: 6.0
+    h: 0.5
+  - x: 72.0
+    y: 68.5
+    w: 1.0
+    h: 0.5
+  - x: 72.0
+    y: 69.0
+    w: 1.5
+    h: 0.5
+  - x: 72.0
+    y: 69.5
+    w: 2.0
+    h: 0.5
+  - x: 72.0
+    y: 70.0
+    w: 2.5
+    h: 0.5
+  - x: 72.0
+    y: 70.5
+    w: 3.0
+    h: 0.5
+  - x: 72.0
+    y: 71.0
+    w: 3.5
+    h: 0.5
+  - x: 45.5
+    y: 69.0
+    w: 20.0
+    h: 3.0
+  - x: 72.0
+    y: 71.5
+    w: 4.0
+    h: 0.5
+  - x: 59.5
+    y: 72.0
+    w: 17.0
+    h: 1.0
+  - x: 45.5
+    y: 72.0
+    w: 10.5
+    h: 1.5
+  - x: 62.5
+    y: 73.0
+    w: 14.0
+    h: 0.5
+  - x: 63.0
+    y: 73.5
+    w: 13.5
+    h: 0.5
+  - x: 63.5
+    y: 74.0
+    w: 13.0
+    h: 0.5
+  - x: 64.0
+    y: 74.5
+    w: 12.5
+    h: 0.5
+- id: surf_attacker_spawn
+  polygon:
+  - - 52.5
+    - 1.5
+  - - 53.0
+    - 1.5
+  - - 53.0
+    - 2.0
+  - - 52.5
+    - 2.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 39.0
+    y: 1.5
+    w: 0.5
+    h: 0.5
+  - x: 40.0
+    y: 1.5
+    w: 9.0
+    h: 0.5
+  - x: 49.5
+    y: 1.5
+    w: 2.5
+    h: 0.5
+  - x: 39.0
+    y: 2.0
+    w: 14.0
+    h: 7.5
+  - x: 38.5
+    y: 9.5
+    w: 14.5
+    h: 0.5
+  - x: 38.0
+    y: 10.0
+    w: 15.0
+    h: 0.5
+  - x: 37.5
+    y: 10.5
+    w: 15.5
+    h: 0.5
+  - x: 37.0
+    y: 11.0
+    w: 16.0
+    h: 1.0
+  - x: 37.5
+    y: 12.0
+    w: 15.5
+    h: 0.5
+  - x: 38.0
+    y: 12.5
+    w: 15.0
+    h: 0.5
+  - x: 38.5
+    y: 13.0
+    w: 14.5
+    h: 0.5
+  - x: 39.0
+    y: 13.5
+    w: 14.0
+    h: 0.5
+  - x: 39.5
+    y: 14.0
+    w: 13.5
+    h: 0.5
+  - x: 40.0
+    y: 14.5
+    w: 13.0
+    h: 0.5
+  - x: 40.5
+    y: 15.0
+    w: 12.5
+    h: 0.5
+  - x: 41.0
+    y: 15.5
+    w: 12.0
+    h: 0.5
+  - x: 41.5
+    y: 16.0
+    w: 3.5
+    h: 0.5
+  - x: 42.0
+    y: 16.5
+    w: 3.0
+    h: 0.5
+  - x: 47.0
+    y: 16.0
+    w: 6.0
+    h: 4.5
+walls: []
+props: []
+semantic_zones:
+- id: b_boba
+  display_name: B Boba
+  kind: callout
+  polygon:
+  - - 79.0
+    - 65.0
+  - - 95.5
+    - 65.0
+  - - 95.5
+    - 65.5
+  - - 79.0
+    - 65.5
+  surface_ids:
+  - surf_b_boba
+  label_position:
+  - 87.25
+  - 65.25
+  site_id: b
+  legacy_zone: defender_side
+- id: mid_tiles
+  display_name: Mid Tiles
+  kind: callout
+  polygon:
+  - - 40.0
+    - 34.5
+  - - 53.5
+    - 34.5
+  - - 53.5
+    - 35.0
+  - - 40.0
+    - 35.0
+  surface_ids:
+  - surf_mid_tiles
+  label_position:
+  - 46.75
+  - 34.75
+  site_id: mid
+  legacy_zone: mid
+- id: b_market
+  display_name: B Market
+  kind: callout
+  polygon:
+  - - 73.5
+    - 47.0
+  - - 80.0
+    - 47.0
+  - - 80.0
+    - 47.5
+  - - 73.5
+    - 47.5
+  surface_ids:
+  - surf_b_market
+  label_position:
+  - 76.75
+  - 47.25
+  site_id: b
+  legacy_zone: defender_side
+- id: b_site
+  display_name: B Site
+  kind: site
+  polygon:
+  - - 75.49
+    - 39.49
+  - - 95.51
+    - 39.49
+  - - 95.51
+    - 62.51
+  - - 75.49
+    - 62.51
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 95.25
+  - 43.75
+  site_id: b
+  legacy_zone: site
+- id: b_main
+  display_name: B Main
+  kind: callout
+  polygon:
+  - - 93.5
+    - 33.0
+  - - 94.0
+    - 33.0
+  - - 94.0
+    - 33.5
+  - - 93.5
+    - 33.5
+  surface_ids:
+  - surf_b_main
+  label_position:
+  - 93.75
+  - 33.25
+  site_id: b
+  legacy_zone: attacker_side
+- id: b_lobby
+  display_name: B Lobby
+  kind: callout
+  polygon:
+  - - 69.0
+    - 22.5
+  - - 69.5
+    - 22.5
+  - - 69.5
+    - 23.0
+  - - 69.0
+    - 23.0
+  surface_ids:
+  - surf_b_lobby
+  label_position:
+  - 69.25
+  - 22.75
+  site_id: b
+  legacy_zone: attacker_side
+- id: mid_bottom
+  display_name: Mid Bottom
+  kind: callout
+  polygon:
+  - - 65.0
+    - 28.0
+  - - 65.5
+    - 28.0
+  - - 65.5
+    - 40.5
+  - - 65.0
+    - 40.5
+  surface_ids:
+  - surf_mid_bottom
+  label_position:
+  - 65.25
+  - 34.25
+  site_id: mid
+  legacy_zone: mid
+- id: mid_courtyard
+  display_name: Mid Courtyard
+  kind: callout
+  polygon:
+  - - 59.0
+    - 43.5
+  - - 59.5
+    - 43.5
+  - - 59.5
+    - 44.0
+  - - 59.0
+    - 44.0
+  surface_ids:
+  - surf_mid_courtyard
+  label_position:
+  - 59.25
+  - 43.75
+  site_id: mid
+  legacy_zone: mid
+- id: a_lobby
+  display_name: A Lobby
+  kind: callout
+  polygon:
+  - - 34.0
+    - 24.5
+  - - 34.5
+    - 24.5
+  - - 34.5
+    - 44.0
+  - - 34.0
+    - 44.0
+  surface_ids:
+  - surf_a_lobby
+  label_position:
+  - 34.25
+  - 34.25
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_main
+  display_name: A Main
+  kind: callout
+  polygon:
+  - - 32.5
+    - 46.5
+  - - 33.0
+    - 46.5
+  - - 33.0
+    - 47.0
+  - - 32.5
+    - 47.0
+  surface_ids:
+  - surf_a_main
+  label_position:
+  - 32.75
+  - 46.75
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_link
+  display_name: A Link
+  kind: callout
+  polygon:
+  - - 26.5
+    - 64.5
+  - - 27.0
+    - 64.5
+  - - 27.0
+    - 65.0
+  - - 26.5
+    - 65.0
+  surface_ids:
+  - surf_a_link
+  label_position:
+  - 26.75
+  - 64.75
+  site_id: a
+  legacy_zone: defender_side
+- id: a_site
+  display_name: A Site
+  kind: site
+  polygon:
+  - - 12.49
+    - 50.99
+  - - 33.01
+    - 50.99
+  - - 33.01
+    - 68.51
+  - - 12.49
+    - 68.51
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 25.25
+  - 56.25
+  site_id: a
+  legacy_zone: site
+- id: a_elbow
+  display_name: A Elbow
+  kind: callout
+  polygon:
+  - - 17.0
+    - 46.5
+  - - 17.5
+    - 46.5
+  - - 17.5
+    - 53.0
+  - - 17.0
+    - 53.0
+  surface_ids:
+  - surf_a_elbow
+  label_position:
+  - 17.25
+  - 49.75
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_alley
+  display_name: A Alley
+  kind: callout
+  polygon:
+  - - 21.5
+    - 74.5
+  - - 22.0
+    - 74.5
+  - - 22.0
+    - 75.0
+  - - 21.5
+    - 75.0
+  surface_ids:
+  - surf_a_alley
+  label_position:
+  - 21.75
+  - 74.75
+  site_id: a
+  legacy_zone: defender_side
+- id: defender_spawn
+  display_name: Defender Side Spawn
+  kind: spawn
+  polygon:
+  - - 65.0
+    - 79.5
+  - - 65.5
+    - 79.5
+  - - 65.5
+    - 80.0
+  - - 65.0
+    - 80.0
+  surface_ids:
+  - surf_defender_spawn
+  label_position:
+  - 65.25
+  - 79.75
+  site_id: none
+  legacy_zone: defender_spawn
+- id: mid_top
+  display_name: Mid Top
+  kind: callout
+  polygon:
+  - - 65.0
+    - 65.5
+  - - 65.5
+    - 65.5
+  - - 65.5
+    - 66.0
+  - - 65.0
+    - 66.0
+  surface_ids:
+  - surf_mid_top
+  label_position:
+  - 65.25
+  - 65.75
+  site_id: mid
+  legacy_zone: mid
+- id: attacker_spawn
+  display_name: Attacker Side Spawn
+  kind: spawn
+  polygon:
+  - - 52.5
+    - 1.5
+  - - 53.0
+    - 1.5
+  - - 53.0
+    - 2.0
+  - - 52.5
+    - 2.0
+  surface_ids:
+  - surf_attacker_spawn
+  label_position:
+  - 52.75
+  - 1.75
+  site_id: none
+  legacy_zone: attacker_spawn
+- id: b_plant_1
+  display_name: B Plant 1
+  kind: plant
+  polygon:
+  - - 79.5
+    - 56.5
+  - - 83.0
+    - 56.5
+  - - 83.0
+    - 59.5
+  - - 89.0
+    - 59.5
+  - - 89.0
+    - 56.0
+  - - 95.5
+    - 56.0
+  - - 95.5
+    - 62.5
+  - - 79.5
+    - 62.5
+  surface_ids:
+  - surf_b_boba
+  label_position:
+  - 87.25
+  - 60.75
+  site_id: b
+  legacy_zone: null
+- id: b_plant_2
+  display_name: B Plant 2
+  kind: plant
+  polygon:
+  - - 79.5
+    - 51.5
+  - - 86.0
+    - 51.5
+  - - 86.0
+    - 54.5
+  - - 83.5
+    - 54.5
+  - - 83.5
+    - 53.0
+  - - 83.0
+    - 53.0
+  - - 83.0
+    - 54.5
+  - - 81.0
+    - 54.5
+  - - 81.0
+    - 55.5
+  - - 80.5
+    - 55.5
+  - - 80.5
+    - 56.0
+  - - 79.5
+    - 56.0
+  surface_ids:
+  - surf_b_market
+  label_position:
+  - 81.25
+  - 52.75
+  site_id: b
+  legacy_zone: null
+- id: a_plant_1
+  display_name: A Plant 1
+  kind: plant
+  polygon:
+  - - 12.5
+    - 56.0
+  - - 23.5
+    - 56.0
+  - - 23.5
+    - 68.0
+  - - 18.5
+    - 68.0
+  - - 18.5
+    - 68.5
+  - - 12.5
+    - 68.5
+  surface_ids:
+  - surf_a_link
+  - surf_a_site
+  - surf_a_alley
+  label_position:
+  - 17.75
+  - 65.25
+  site_id: a
+  legacy_zone: null
+traversal_links:
+- id: route_a_alley_defender_spawn
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 21.75
+  - 74.75
+  - surf_a_alley
+  to_pos:
+  - 65.25
+  - 79.75
+  - surf_defender_spawn
+  via:
+  - - 21.25
+    - 75.25
+  - - 21.25
+    - 78.25
+  - - 40.75
+    - 86.25
+  - - 59.75
+    - 86.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_link_a_alley
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 26.75
+  - 64.75
+  - surf_a_link
+  to_pos:
+  - 21.75
+  - 74.75
+  - surf_a_alley
+  via:
+  - - 26.75
+    - 62.25
+  - - 21.75
+    - 62.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_link_a_site
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 26.75
+  - 64.75
+  - surf_a_link
+  to_pos:
+  - 25.25
+  - 56.25
+  - surf_a_site
+  via:
+  - - 26.25
+    - 56.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_link_mid_top
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 26.75
+  - 64.75
+  - surf_a_link
+  to_pos:
+  - 65.25
+  - 65.75
+  - surf_mid_top
+  via:
+  - - 32.25
+    - 65.75
+  - - 32.75
+    - 68.75
+  - - 47.25
+    - 68.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_lobby_a_elbow
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 34.25
+  - 34.25
+  - surf_a_lobby
+  to_pos:
+  - 17.25
+  - 49.75
+  - surf_a_elbow
+  via:
+  - - 17.25
+    - 43.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_lobby_attacker_spawn
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 34.25
+  - 34.25
+  - surf_a_lobby
+  to_pos:
+  - 52.75
+  - 1.75
+  - surf_attacker_spawn
+  via:
+  - - 34.25
+    - 14.25
+  - - 52.75
+    - 2.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_main_a_elbow
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 32.75
+  - 46.75
+  - surf_a_main
+  to_pos:
+  - 17.25
+  - 49.75
+  - surf_a_elbow
+  via: []
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_main_a_site
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 32.75
+  - 46.75
+  - surf_a_main
+  to_pos:
+  - 25.25
+  - 56.25
+  - surf_a_site
+  via:
+  - - 28.25
+    - 56.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_site_a_elbow
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 25.25
+  - 56.25
+  - surf_a_site
+  to_pos:
+  - 17.25
+  - 49.75
+  - surf_a_elbow
+  via:
+  - - 28.25
+    - 56.25
+  - - 28.25
+    - 51.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_boba_b_site
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 87.25
+  - 65.25
+  - surf_b_boba
+  to_pos:
+  - 95.25
+  - 43.75
+  - surf_b_site
+  via:
+  - - 89.25
+    - 58.75
+  - - 93.75
+    - 43.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_lobby_attacker_spawn
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 69.25
+  - 22.75
+  - surf_b_lobby
+  to_pos:
+  - 52.75
+  - 1.75
+  - surf_attacker_spawn
+  via:
+  - - 52.75
+    - 22.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_lobby_mid_bottom
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 69.25
+  - 22.75
+  - surf_b_lobby
+  to_pos:
+  - 65.25
+  - 34.25
+  - surf_mid_bottom
+  via:
+  - - 65.25
+    - 31.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_market_b_site
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 76.75
+  - 47.25
+  - surf_b_market
+  to_pos:
+  - 95.25
+  - 43.75
+  - surf_b_site
+  via:
+  - - 80.75
+    - 48.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_market_mid_courtyard
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 76.75
+  - 47.25
+  - surf_b_market
+  to_pos:
+  - 59.25
+  - 43.75
+  - surf_mid_courtyard
+  via:
+  - - 64.25
+    - 52.25
+  - - 64.25
+    - 53.25
+  - - 59.25
+    - 53.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_site_b_lobby
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 95.25
+  - 43.75
+  - surf_b_site
+  to_pos:
+  - 69.25
+  - 22.75
+  - surf_b_lobby
+  via:
+  - - 91.25
+    - 43.75
+  - - 85.75
+    - 39.75
+  - - 76.25
+    - 39.75
+  - - 69.25
+    - 27.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_site_b_main
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 95.25
+  - 43.75
+  - surf_b_site
+  to_pos:
+  - 93.75
+  - 33.25
+  - surf_b_main
+  via:
+  - - 91.25
+    - 43.75
+  - - 91.75
+    - 33.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_defender_spawn_mid_top
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 65.25
+  - 79.75
+  - surf_defender_spawn
+  to_pos:
+  - 65.25
+  - 65.75
+  - surf_mid_top
+  via:
+  - - 62.25
+    - 79.75
+  - - 62.75
+    - 65.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_courtyard_mid_top
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 59.25
+  - 43.75
+  - surf_mid_courtyard
+  to_pos:
+  - 65.25
+  - 65.75
+  - surf_mid_top
+  via:
+  - - 52.25
+    - 62.75
+  - - 52.25
+    - 65.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_tiles_a_lobby
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 46.75
+  - 34.75
+  - surf_mid_tiles
+  to_pos:
+  - 34.25
+  - 34.25
+  - surf_a_lobby
+  via:
+  - - 37.25
+    - 40.75
+  - - 34.25
+    - 40.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_tiles_mid_bottom
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 46.75
+  - 34.75
+  - surf_mid_tiles
+  to_pos:
+  - 65.25
+  - 34.25
+  - surf_mid_bottom
+  via:
+  - - 56.75
+    - 36.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_tiles_mid_courtyard
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 46.75
+  - 34.75
+  - surf_mid_tiles
+  to_pos:
+  - 59.25
+  - 43.75
+  - surf_mid_courtyard
+  via:
+  - - 52.75
+    - 43.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_tiles_mid_top
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 46.75
+  - 34.75
+  - surf_mid_tiles
+  to_pos:
+  - 65.25
+  - 65.75
+  - surf_mid_top
+  via:
+  - - 48.25
+    - 57.25
+  - - 48.25
+    - 58.25
+  - - 52.25
+    - 65.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_elbow_a_alley
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 17.25
+  - 49.75
+  - surf_a_elbow
+  to_pos:
+  - 21.75
+  - 74.75
+  - surf_a_alley
+  via:
+  - - 14.25
+    - 52.75
+  - - 9.25
+    - 52.75
+  - - 9.25
+    - 66.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_boba_b_market
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 87.25
+  - 65.25
+  - surf_b_boba
+  to_pos:
+  - 76.75
+  - 47.25
+  - surf_b_market
+  via:
+  - - 89.25
+    - 58.75
+  - - 89.25
+    - 52.75
+  - - 87.25
+    - 52.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_boba_mid_top
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 87.25
+  - 65.25
+  - surf_b_boba
+  to_pos:
+  - 65.25
+  - 65.75
+  - surf_mid_top
+  via:
+  - - 80.75
+    - 65.75
+  - - 80.75
+    - 67.25
+  - - 71.75
+    - 72.25
+  - - 65.25
+    - 72.25
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_b_main_b_lobby
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 93.75
+  - 33.25
+  - surf_b_main
+  to_pos:
+  - 69.25
+  - 22.75
+  - surf_b_lobby
+  via:
+  - - 78.25
+    - 36.25
+  - - 76.25
+    - 36.25
+  - - 69.25
+    - 27.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_mid_bottom_mid_courtyard
+  runtime_enabled: true
+  description: ''
+  kind: ramp
+  from_pos:
+  - 65.25
+  - 34.25
+  - surf_mid_bottom
+  to_pos:
+  - 59.25
+  - 43.75
+  - surf_mid_courtyard
+  via:
+  - - 54.75
+    - 40.25
+  - - 52.75
+    - 40.25
+  - - 52.75
+    - 43.75
+  path_mode: corridor
+  include_endpoints_in_path: true
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+legacy:
+  adjacency_overrides: {}
+  sightline_overrides: []
+  opening_overrides: []
+  prop_support_exemptions: []
+editor_state:
+  test_players: []
+  viewport: {}
+  selected_tool: ''
