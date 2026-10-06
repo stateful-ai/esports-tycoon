@@ -1,0 +1,53 @@
+[
+  {
+    "id": "esports-playtest-0010",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Inspect individual condition before accepting squad-ready",
+    "problem": "Squad ready was displayed while Vortex had condition 32 and could not train.",
+    "solution": "Set individual rest; condition rose 32 to 42 to 53 over two played weeks.",
+    "lesson": "Roster-ready means enough legal players; inspect condition and Development warnings before assigning workload.",
+    "confidence": "low",
+    "source": "world 7NQ6D / seed 2026 / sandbox Team Nexus / S1 W1-W2 / commit 805712b",
+    "code": "",
+    "tags": [
+      "recovery",
+      "training"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0011",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Read completed preparation artifacts on Match Prep",
+    "problem": "Full weekly report showed scores and finances without explaining booked scrim effects.",
+    "solution": "Reopened Match Prep; found +0.75 knowledge and -1.5 stamina with provisional opponent read.",
+    "lesson": "Look at Prep after a booked session to understand knowledge and fatigue; a win alone does not demonstrate the scrim helped.",
+    "confidence": "low",
+    "source": "world 7NQ6D / seed 2026 / sandbox Team Nexus / S1 W1-W2 / commit 805712b",
+    "code": "",
+    "tags": [
+      "preparation",
+      "feedback"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0012",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Web mentorship persists but vanishes from usage telemetry",
+    "problem": "Assigned Ghost to Apex, confirmation and persisted pairing verified, but six saved action records omit mentor; usage report lists mentor never used.",
+    "solution": "Logged coverage defect with indexed telemetry and endpoint evidence in docs/playtests/2026-10-06-preparation-gpt6.md; no gameplay code changed.",
+    "lesson": "Reconcile played decisions with saved action records before interpreting unused features as lack of demand.",
+    "confidence": "low",
+    "source": "world 7NQ6D / seed 2026 / sandbox Team Nexus / S1 W1-W2 / commit 805712b",
+    "code": "",
+    "tags": [
+      "telemetry",
+      "mentorship"
+    ],
+    "kind": "pain-point"
+  }
+]

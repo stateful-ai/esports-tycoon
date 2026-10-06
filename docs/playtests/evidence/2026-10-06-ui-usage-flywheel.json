@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0017",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "UI usage and decision evidence agree on training",
+    "problem": "Usage funnels need comparison with authoritative gameplay decisions",
+    "solution": "Verified Mechanical UI readback, usage training request14 pair, and saved action_log[0] set_training focus mechanical",
+    "lesson": "One successful training request matched the persisted decision; API success alone still is not proof of player intent achievement",
+    "confidence": "medium",
+    "source": "2026-10-06-ui-usage; world63BFF seed2037 sandbox Team Nexus S1W1; dirty0aabb0d; browser + local HTTP save; runs/playtests/ui-usage/analytics.json",
+    "code": "63BFF",
+    "tags": [
+      "ui-usage",
+      "telemetry",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0018",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Campaign creation usage preserves membership boundary",
+    "problem": "Queued lobby events could otherwise be attributed to the newly created world",
+    "solution": "Browser create request3 attempt resolved to lobby and matching result to63BFF after bounded pre-mutation drain",
+    "lesson": "Request pairing can cross server-resolved membership boundaries without trusting client world codes",
+    "confidence": "medium",
+    "source": "2026-10-06-ui-usage; world63BFF seed2037 sandbox Team Nexus S1W1; dirty0aabb0d; browser + local HTTP save; runs/playtests/ui-usage/analytics.json",
+    "code": "63BFF",
+    "tags": [
+      "ui-usage",
+      "telemetry",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0019",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Native release confirm blocks IAB input",
+    "problem": "Release Phantom click timed out; getJsDialog reported none and later tab input had no effect",
+    "solution": "Logged blocked release and navigation attempts, recovered dashboard screenshot, saved accepted training through separate HTTP surface",
+    "lesson": "Browser failure/replay/omitted-subtab verification remains incomplete despite passing contracts; do not claim blocked clicks produced gameplay or telemetry requests",
+    "confidence": "medium",
+    "source": "2026-10-06-ui-usage; world63BFF seed2037 sandbox Team Nexus S1W1; dirty0aabb0d; browser + local HTTP save; runs/playtests/ui-usage/analytics.json",
+    "code": "63BFF",
+    "tags": [
+      "ui-usage",
+      "telemetry",
+      "browser"
+    ],
+    "kind": "pain-point"
+  }
+]
