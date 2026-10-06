@@ -97,7 +97,7 @@ function screenHead(title, opts = {}) {
     const seg = el("div", "seg");
     for (const t of opts.subtabs) {
       const b = el("button", "seg-btn" + (t.id === opts.active ? " on" : ""), esc(t.label));
-      b.onclick = () => opts.onPick && opts.onPick(t.id);
+      b.onclick = () => { window.Usage?.view(`${App.tab}/${t.id}`); opts.onPick && opts.onPick(t.id); };
       seg.appendChild(b);
     }
     head.appendChild(seg);
@@ -128,13 +128,24 @@ async function api(path, body) {
   const opts = body
     ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
     : undefined;
-  const r = await fetch(path, opts);
-  if (!r.ok) {
-    const e = await r.json().catch(() => ({ detail: r.statusText }));
-    toast(e.detail || "request failed");
-    throw new Error(e.detail);
+  const token = window.Usage?.request(path, !!body);
+  if (body && ["/api/new", "/api/join", "/api/leave", "/api/resume", "/api/actions/accept_job"].includes(path)) await window.Usage?.boundary();
+  let r, data;
+  try {
+    r = await fetch(path, opts);
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({ detail: r.statusText }));
+      window.Usage?.result(token, "http_error", r.status);
+      toast(e.detail || "request failed");
+      throw new Error(e.detail);
+    }
+    data = await r.json();
+  } catch (error) {
+    if (!r || r.ok) window.Usage?.result(token, "transport_error", r?.status);
+    throw error;
   }
-  return r.json();
+  window.Usage?.result(token, data?.ok === false ? "rejected" : "success", r.status);
+  return data;
 }
 
 const App = { tab: "dashboard", state: null, mp: null };
@@ -557,6 +568,7 @@ function renderOfferGrid(grid, offers, onPick) {
 }
 
 function setupLobby(lob) {
+  window.Usage?.view("lobby");
   const create = $("#lobby-create");
   const join = $("#lobby-join");
   const packs = lob.packs || [];
@@ -985,7 +997,7 @@ const TAB_ALIASES = {
 
 function renderApp() {
   if (!App.state) return;
-  if (App.state.draft_active) return renderDraftScreen();
+  if (App.state.draft_active) { window.Usage?.view("draft"); return renderDraftScreen(); }
   // Merged-tab alias: a stale App.tab from before a screen merge lands on its
   // host tab with the right sub-tab preselected (and the nav highlight
   // follows, since no button carries the old id anymore). "roster" is
@@ -1001,6 +1013,9 @@ function renderApp() {
       b.classList.add("active");
     }
   }
+  const defaultSub = {club: "squad", tactics: "strategy", season: "league", market: "players", stats: "leaders", company: "finances", roster: "overview"};
+  const sub = (App.tab === "roster" ? App.rosterCols : App[`${App.tab}Tab`]) ?? defaultSub[App.tab];
+  window.Usage?.view(App.tab + (sub ? `/${sub}` : ""));
   // Each render gets a fresh container; a slower, superseded async render
   // finishes into a detached node instead of double-appending.
   const container = el("div", "tab-panel-active");
@@ -5884,6 +5899,7 @@ const MarketTab = () => {
 
   useEffect(() => {
     App.marketTab = marketTab;
+    window.Usage?.view(`market/${marketTab}`);
   }, [marketTab]);
 
   useEffect(() => {
@@ -7337,7 +7353,7 @@ const COMPANY_TABS = [
 
 const CompanyTab = () => {
   const [active, setActive] = useState(App.companyTab ?? "finances");
-  useEffect(() => { App.companyTab = active; }, [active]);
+  useEffect(() => { App.companyTab = active; window.Usage?.view(`company/${active}`); }, [active]);
   return html`
     <div>
       <div class="screen-head">

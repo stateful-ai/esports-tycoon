@@ -23,6 +23,7 @@ esports-map-mcp = "esports_sim.mcp.map_server:main"
 dev = [
   "pytest>=8.0",
   "pytest-xdist>=3.5",
+  "httpx>=0.28,<0.29",  # ASGI endpoint contract tests; no running server required
   "pillow>=10.0",  # office guide rasterizer (scripts/render_office_guide.py)
 ]
 web = [
