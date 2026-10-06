@@ -17,7 +17,7 @@ from esports_sim.labels import humanize_phrase
 
 import numpy as np
 
-from esports_sim.manager import development
+from esports_sim.manager import development, development_path
 from esports_sim.schemas import LanguageSkill, Player, Team
 from esports_sim.schemas.attributes import AttributeCategory
 
@@ -140,6 +140,7 @@ def _player_rate(p: Player, support_bonus: float = 0.0) -> float:
         base
         * development.curve_growth_multiplier(p)
         * development.dev_multiplier(p, support_bonus)
+        * development.career_response(p)
     )
 
 
@@ -229,6 +230,30 @@ def not_developing_reason(p: Player, language_rate: float) -> str | None:
     return None
 
 
+def plan_read(p: Player, team_focus: str) -> dict:
+    """Current decision feedback; no hidden career disposition or ceilings."""
+    focus = "rest" if team_focus == "rest" or p.dev_focus == "rest" else (
+        p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else team_focus
+    )
+    attrs = [] if focus == "rest" else _CATEGORY_ATTRS.get(focus, _CATEGORY_ATTRS["tactical"])
+    return {
+        "focus": "language" if p.dev_focus == "language" and focus != "rest" else focus,
+        "skills": list(attrs),
+        "condition_cost": 0.0 if focus == "rest" else _INTENSITY_DRAIN.get(p.training_intensity, 6.0),
+        "advice": (
+            "Recovery pauses practice and restores condition; match learning still counts."
+            if focus == "rest" else
+            "Fatigue is reducing learning. A lighter plan or recovery week can help."
+            if p.stamina < 65 else
+            "Strong match performances are helping this player absorb practice."
+            if p.development_progress.momentum >= 0.2 else
+            "Recent performances are slowing learning. Review focus, support and playing time."
+            if p.development_progress.momentum <= -0.2 else
+            "Consistent practice and useful match minutes build development momentum."
+        ),
+    }
+
+
 def apply_training(
     team: Team,
     roster: list[Player],
@@ -253,16 +278,27 @@ def apply_training(
 
     if focus == "rest":
         for p in roster:
+            week = p.development_progress.latest
+            if week is not None:
+                week.focus, week.intensity = "rest", p.training_intensity
+                week.factors = ["Team recovery week: practice paused, match experience retained"]
             p.stamina = min(100.0, p.stamina + 18.0)
             p.morale = min(100.0, p.morale + 1.5)
         return
 
     for p in roster:
+        before = dict(p.attributes)
+        week = p.development_progress.latest
+        if week is not None:
+            week.intensity = p.training_intensity
         # Individual rest overrides the team's training category. It uses the
         # same recovery as a team rest week, but only for the opted-out player.
         # This gives a manager a deterministic way to nurse a tweaked wrist or
         # a drained starter without shelving the rest of the roster's practice.
         if p.dev_focus == "rest":
+            if week is not None:
+                week.focus = "rest"
+                week.factors = ["Individual recovery: practice paused, match experience retained"]
             p.stamina = min(100.0, p.stamina + 18.0)
             p.morale = min(100.0, p.morale + 1.5)
             continue
@@ -278,6 +314,17 @@ def apply_training(
         if p.dev_focus == "language":
             attr_fraction = apply_language_study(p, language_rate)
         attrs = _CATEGORY_ATTRS.get(p_focus, _CATEGORY_ATTRS["tactical"])
+        feedback_mult, factors = development_path.practice_feedback(p, p_focus, attrs)
+        if week is not None:
+            week.focus = "language" if p.dev_focus == "language" else p_focus
+            week.practice_skills = list(attrs)
+            week.factors = factors
+            if mentor_mults and mentor_mults.get(p.id, 1.0) > 1.0:
+                week.factors.append("Mentorship is accelerating practice")
+            if growth_mult > 1.0:
+                week.factors.append("Coaching and club support are improving practice")
+            if p.dev_focus == "language":
+                week.factors.append("Language study leaves less time for game skills")
         intensity = _INTENSITY_GROWTH.get(p.training_intensity, 1.0)
         # Mentorship boost — exactly 1.0 (a no-op) unless the manager set one.
         mentor = mentor_mults.get(p.id, 1.0) if mentor_mults else 1.0
@@ -294,11 +341,10 @@ def apply_training(
         if scout_guidance and scout_guidance.get(p.id) == p_focus:
             rate *= SCOUT_GUIDANCE_MULT
         # Tired players learn worse; below 35 stamina they barely absorb.
-        fatigue_mult = 0.4 if p.stamina < 35 else 1.0
         # Train the weakest attribute in the category hardest.
         by_value = sorted(attrs, key=lambda a: p.attr(a))
         for i, attr_id in enumerate(by_value):
-            gain = rate * fatigue_mult * growth_mult * (1.0 if i == 0 else 0.5)
+            gain = rate * feedback_mult * growth_mult * (1.0 if i == 0 else 0.5)
             gain *= float(rng.uniform(0.6, 1.4))
             cur = p.attr(attr_id)
             ceil = development.development_ceiling(p, attr_id, support)
@@ -314,6 +360,11 @@ def apply_training(
         p.stamina = max(
             0.0, p.stamina - _INTENSITY_DRAIN.get(p.training_intensity, 6.0)
         )
+        development_path.record_gains(p, "practice_gains", before)
+        if (week is not None and not week.practice_gains
+                and max((development.development_ceiling(p, a, support) - p.attr(a)
+                         for a in attrs), default=0.0) <= _CEILING_EPS):
+            week.factors.append("This focus has little reachable headroom; try another skill area")
 
     if focus == "team":
         team.chemistry = min(100.0, team.chemistry + 1.2)
@@ -338,7 +389,8 @@ _MATCH_XP_PER_REP = 0.03
 
 
 def apply_match_experience(
-    p: Player, line, n_rounds: int, support_bonus: float | None = None
+    p: Player, line, n_rounds: int, support_bonus: float | None = None,
+    opponent_quality: float | None = None,
 ) -> None:
     """Turn one map's box-score line into attribute reps: what a player
     actually DID on the server is what improves. Deterministic — derived
@@ -346,9 +398,18 @@ def apply_match_experience(
     as training, so a prospect grows from minutes and a veteran at their
     ceiling mostly just logs them. Bench players get none of this (see
     apply_scrim_reps): playing time is a real development decision."""
+    if n_rounds <= 0 or not (line.kills or line.deaths or line.assists or line.survived
+                             or line.plants or line.defuses):
+        return
+    before = dict(p.attributes)
+    score = development_path.performance_score(
+        p, line, n_rounds,
+        development.overall(p) if opponent_quality is None else opponent_quality,
+    )
+    development_path.observe_match(p, score, n_rounds)
     if support_bonus is None:
         support_bonus = development.contextual_ceiling_bonus(p)
-    rate = _player_rate(p, support_bonus) * stream_practice_mult(p)
+    rate = _player_rate(p, support_bonus) * stream_practice_mult(p) * (1.0 + 0.25 * score)
     clutch_n = line.clutch_1v1 + line.clutch_1v2 + line.clutch_1v3
     reps = {
         "aim_precision": line.kills * 0.5 + line.headshots * 0.5,
@@ -357,7 +418,8 @@ def apply_match_experience(
         "utility_usage": line.assists * 0.7 + (line.plants + line.defuses) * 0.5,
         "clutch_factor": clutch_n * 2.0,
         "composure": line.survived * 0.08 + clutch_n,
-        "positioning": line.first_deaths * 0.4,  # dying first teaches spacing
+        "positioning": line.traded_deaths * 0.25 + line.survived * 0.05,
+        "comms_quality": line.assists * 0.35 + line.trade_kills * 0.4 + line.traded_deaths * 0.3,
     }
     for attr_id in sorted(reps):
         r = reps[attr_id]
@@ -369,12 +431,14 @@ def apply_match_experience(
         gain = min(_MATCH_XP_CAP, _MATCH_XP_PER_REP * r) * rate * headroom
         if gain > 0:
             p.attributes[attr_id] = round(min(cur + gain, max(cur, ceil)), 2)
+    development_path.record_gains(p, "match_gains", before)
 
 
 def apply_scrim_reps(p: Player, support_bonus: float = 0.0) -> None:
     """A benched player's week: scrims and VOD, a fraction of real minutes.
     Keeps prospects on the bench from flat-lining without making the bench
     a substitute for playing."""
+    before = dict(p.attributes)
     rate = _player_rate(p, support_bonus) * 0.35
     for attr_id in sorted(("game_sense", "positioning")):
         cur = p.attr(attr_id)
@@ -383,6 +447,7 @@ def apply_scrim_reps(p: Player, support_bonus: float = 0.0) -> None:
         p.attributes[attr_id] = round(
             min(cur + 0.05 * rate * headroom, max(cur, ceil)), 2
         )
+    development_path.record_gains(p, "scrim_gains", before)
 
 
 def ai_pick_focus(

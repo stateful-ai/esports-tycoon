@@ -2068,7 +2068,9 @@ p.good, .good { color: var(--es-color-text-success, var(--es-color-text-success)
 .dev-report-head h2, .dev-report-head p { margin-bottom: 2px; }
 .dev-report-summary { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .dev-report-table { min-width: 850px; }
-.dev-report-table th:last-child, .dev-report-table td:last-child { width: 44%; }
+.dev-report-table th:nth-child(6), .dev-report-table td:nth-child(6) { min-width: 200px; }
+.dev-week-feedback { min-width: 280px; max-width: 420px; line-height: 1.5; }
+.dev-plan-read { margin-top: 4px; max-width: 190px; font-size: 12px; line-height: 1.4; }
 .dev-change-list { display: flex; gap: 4px; flex-wrap: wrap; }
 .chip.dev-gain {
   color: var(--es-color-text-success, var(--es-color-text-success));

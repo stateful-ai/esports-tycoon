@@ -71,11 +71,43 @@ class DevelopmentCurveModel(BaseModel):
     volatility: float
 
 
+class DevelopmentWeek(BaseModel):
+    """Measured sources of the latest week's progress, never forecasts."""
+
+    model_config = ConfigDict(extra="forbid")
+    season: int
+    week: int
+    focus: str = "auto"
+    intensity: str = "normal"
+    maps: int = 0
+    rounds: int = 0
+    performance_total: float = 0.0
+    practice_gains: dict[str, float] = Field(default_factory=dict)
+    practice_skills: list[str] = Field(default_factory=list)
+    match_gains: dict[str, float] = Field(default_factory=dict)
+    scrim_gains: dict[str, float] = Field(default_factory=dict)
+    event_gains: dict[str, float] = Field(default_factory=dict)
+    factors: list[str] = Field(default_factory=list)
+    career_event: str | None = None
+
+
+class DevelopmentProgress(BaseModel):
+    """Persistent career response; hidden headroom is not a scouting view."""
+
+    model_config = ConfigDict(extra="forbid")
+    momentum: float = Field(default=0.0, ge=-1.0, le=1.0)
+    performance_weeks: int = Field(default=0, ge=0)
+    ceiling_shift: float = Field(default=0.0, ge=-6.0, le=6.0)
+    event_cooldown: int = Field(default=0, ge=0)
+    latest: DevelopmentWeek | None = None
+
+
 class Player(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     dev_seed: int = Field(default=0)
     development_curve: DevelopmentCurveModel | None = Field(default=None)
+    development_progress: DevelopmentProgress = Field(default_factory=DevelopmentProgress)
 
 
     # Identity

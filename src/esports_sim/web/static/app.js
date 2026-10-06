@@ -3011,13 +3011,13 @@ async function roster(v, opts = {}) {
            </select>`
         : '<span class="muted">—</span>';
       const languageSel = data.is_user_team
-        ? `<select data-act="language" data-tooltip="<h4>Language Training</h4><div class='tooltip-desc'>Choose a language to learn. Requires a language coach. Replaces game-skill training but builds chemistry for multinational rosters.</div>" ${data.has_language_coach ? "" : "disabled"}>
+        ? `<select data-act="language" data-tooltip="<h4>Language Training</h4><div class='tooltip-desc'>Choose a language to learn. Requires a language coach. Leaves less time for game skills while building communication for multinational rosters.</div>" ${data.has_language_coach ? "" : "disabled"}>
              <option value="">choose language</option>
              ${(data.language_options ?? []).map((o) => `<option value="${o}" ${o === p.learning_language ? "selected" : ""}>${o.toUpperCase()}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
       const intSel = data.is_user_team
-        ? `<select data-act="intensity" data-tooltip="<h4>Training Intensity</h4><div class='tooltip-desc'><b>light</b>: slows growth, spares legs (recovers condition).<br><b>normal</b>: default growth.<br><b>intense</b>: accelerates growth, but drains condition and risks burnout.</div>">
+        ? `<select data-act="intensity" data-tooltip="<h4>Training Intensity</h4><div class='tooltip-desc'><b>light</b>: slower growth, less condition spent.<br><b>normal</b>: balanced practice.<br><b>intense</b>: more reps, more fatigue and burnout risk. Tired players absorb less, so pushing harder can produce less growth.</div>">
              ${(data.intensity_options ?? []).map((o) => `<option value="${o}" ${o === p.training_intensity ? "selected" : ""}>${o}</option>`).join("")}
            </select>`
         : '<span class="muted">—</span>';
@@ -3041,6 +3041,8 @@ async function roster(v, opts = {}) {
       const notDevChip = ndReason
         ? ` <span class="chip tone-bad dev-warn-chip" title="This week's plan isn't building attributes: ${esc(NOT_DEV_LABEL[ndReason] || ndReason)}.">⚠ ${esc(NOT_DEV_LABEL[ndReason] || humanize(ndReason))}</span>`
         : "";
+      const plan = p.development_plan;
+      const planRead = plan ? `<div class="dev-plan-read muted" title="${esc(plan.advice)}">${plan.skills.length ? esc(plan.skills.map(humanize).join(", ")) : "Recovery"}</div>` : "";
       rowHtml = `
         ${starCell}
         ${playerCell}
@@ -3049,7 +3051,7 @@ async function roster(v, opts = {}) {
         ${ceilingCell}
         <td>${bar(p.form)}${tArrow(ct.form)}</td>
         <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
-        <td class="dev-plan">${focusSel}${notDevChip}</td>
+        <td class="dev-plan">${focusSel}${notDevChip}${planRead}</td>
         <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
         <td class="dev-plan">${mentorSel}${progressBar}</td>`;
@@ -3418,9 +3420,23 @@ function developmentReportCard(report) {
   }
 
   const table = el("table", "dev-report-table");
-  table.innerHTML = `<thead><tr><th>Player</th><th>Tracked</th><th class="num">Start</th><th class="num">Now</th><th class="num">Change</th><th>Skills changed</th></tr></thead>`;
+  table.innerHTML = `<thead><tr><th>Player</th><th>Tracked</th><th class="num">Start</th><th class="num">Now</th><th class="num">Change</th><th>Skills changed</th><th>Latest week: why it changed</th></tr></thead>`;
   const body = el("tbody");
   for (const p of report.players) {
+    const week = p.latest_week;
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    const sourceText = week ? Object.entries(week.sources || {})
+      .filter(([, source]) => Object.values(source.skills || {}).some((gain) => gain !== 0))
+      .map(([key, source]) => {
+        const skills = Object.entries(source.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${gain > 0 ? "+" : ""}${Number(gain).toFixed(2)}`).join("; ");
+        const amount = source.overall_gain === 0 ? "under 0.01 OVR" : `${source.overall_gain > 0 ? "+" : ""}${Number(source.overall_gain).toFixed(2)} OVR`;
+        return `<span class="chip" title="${esc(skills)}">${esc(sourceLabels[key] || humanize(key))} ${amount}</span>`;
+      }).join(" ") : "";
+    const feedback = week ? `<div class="dev-change-list">${sourceText || '<span class="muted">No measured skill gains</span>'}</div>
+      <div class="muted">S${week.season} W${week.week} · ${esc(humanize(week.focus))} / ${esc(week.intensity)} · ${week.maps} maps · ${esc(humanize(week.trend))}</div>
+      ${(week.factors || []).map((text) => `<div class="muted">${esc(text)}</div>`).join("")}
+      ${week.career_event ? `<div class="chip">${esc(week.career_event)}</div>` : ""}`
+      : '<span class="muted">Advance a week to see practice and match feedback</span>';
     const tone = p.status === "grown" ? "trend-up" : p.status === "regressed" ? "trend-down" : "muted";
     let changes = (p.changes || []).map((change) => {
       const cls = change.delta > 0 ? "dev-gain" : "dev-loss";
@@ -3429,14 +3445,14 @@ function developmentReportCard(report) {
     if (!p.attribute_tracking) {
       changes = '<span class="muted">Skill tracking starts with the next snapshot</span>';
     } else if (!changes) {
-      changes = '<span class="muted">No skill movement yet</span>';
+      changes = '<span class="muted">No skill changes of 0.1 or more</span>';
     }
     body.appendChild(el("tr", "", `<td><b>${plink(p.id, p.handle)}</b></td>
       <td class="muted">W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts</td>
       <td class="num">${Number(p.overall_start).toFixed(1)}</td>
       <td class="num">${Number(p.overall_current).toFixed(1)}</td>
       <td class="num"><span class="${tone}">${signed(p.overall_delta)}</span></td>
-      <td><div class="dev-change-list">${changes}</div></td>`));
+      <td><div class="dev-change-list">${changes}</div></td><td class="dev-week-feedback">${feedback}</td>`));
   }
   table.appendChild(body);
   const scroll = el("div", "table-scroll");
