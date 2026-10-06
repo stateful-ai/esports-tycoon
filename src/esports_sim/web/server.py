@@ -3238,6 +3238,9 @@ def roster(team_id: str) -> dict:
                 v["mentor_id"] = gs.mentorships.get(v["id"])
                 pv = gs.players.get(v["id"])
                 if pv is not None:
+                    v["development_plan"] = training.plan_read(
+                        pv, gs.training_focus.get(team_id, "tactical")
+                    )
                     # F2: why this player is barely growing this week (language
                     # study with no coach, exhausted, or at their ceiling) — the
                     # UI renders it as a warn chip; the reason is computed here.
@@ -3474,6 +3477,8 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
     save begin tracking cleanly without pretending its current values were the
     season-opening baseline.
     """
+    from esports_sim.manager.development_path import report_view
+
     rows = []
     for pid in gs.teams[tid].player_ids:
         p = gs.players.get(pid)
@@ -3512,6 +3517,7 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "status": status,
             "attribute_tracking": bool(first.attributes and last.attributes),
             "changes": changes,
+            "latest_week": report_view(p),
         })
     rows.sort(key=lambda row: (-row["overall_delta"], row["handle"].lower(), row["id"]))
     deltas = [row["overall_delta"] for row in rows]

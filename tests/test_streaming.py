@@ -97,7 +97,9 @@ def test_stream_practice_mult_endpoints() -> None:
 
 def test_heavy_streamer_develops_slower_but_still_grows() -> None:
     grinder = _player("grind", 50.0, load=0.0, age=18, potential=90.0)
-    streamer = _player("stream", 50.0, load=90.0, age=18, potential=90.0)
+    # Same-player counterfactual: hidden career response and growth curves must
+    # match too, otherwise a bust and an exceptional learner confound the test.
+    streamer = grinder.model_copy(deep=True, update={"stream_load": 90.0})
     team = _team()
     # Identical draw streams so the ONLY difference is the streaming penalty.
     rg, rs = np.random.default_rng(3), np.random.default_rng(3)
