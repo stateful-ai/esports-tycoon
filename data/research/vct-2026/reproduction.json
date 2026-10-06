@@ -1,0 +1,67 @@
+{
+  "method": "Full collector rerun offline from SHA-256-verified cached HTML into a separate directory; compare parsed CSV records including provenance and identities. CSV column ordering ignored.",
+  "reviewed_at_utc": "2026-10-06T20:06:00+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "file": "events.csv",
+      "rows": 50,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "612264173d194c7b42b768914401a2d8ed0601246f3f93179951a4d3776a6248"
+    },
+    {
+      "file": "player_event_stats.csv",
+      "rows": 3816,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "5cba7fd05c26dd2c2f1b03f4ee1eb35ea324b50478aded41dce4f5e4acc40286"
+    },
+    {
+      "file": "map_outcomes.csv",
+      "rows": 1567,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "719a6f0b6b105291bf82826d8145092948778f065242ab445424df95358a1045"
+    },
+    {
+      "file": "player_map_stats.csv",
+      "rows": 15157,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "9c369afe5bc2df66462965f20b3718b1fe88a1aa89db7295833cb19b9b61d22f"
+    },
+    {
+      "file": "sources.csv",
+      "rows": 1136,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "9de0819b97203764541abdd685228710f7f5238f39e0518014d627b27b8a1d63"
+    },
+    {
+      "file": "collection_issues.csv",
+      "rows": 6,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "fbe9b7444cad615cb17b890729c82c13068956bfad64c7e0a5960ad6654a751a"
+    },
+    {
+      "file": "player_profiles.csv",
+      "rows": 441,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "3aaab66f7eafc0b174508fe8103afaa1c1376b41ec1098df5760ab4b20820819"
+    },
+    {
+      "file": "roster_crosswalk.csv",
+      "rows": 435,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "5dd3ca0aa0d8e6083f1e46ba631e59b0adf5752f6301e8c02649a0bd820e8f7a"
+    },
+    {
+      "file": "free_agent_review.csv",
+      "rows": 88,
+      "matches_offline_rebuild": true,
+      "snapshot_sha256": "a152df6effc40e3aef0a78980db9c3cc8c82a673fb7aa487858f0f2737cfa9e5"
+    }
+  ],
+  "completed_map_filter_recheck": {
+    "cached_matches": 623,
+    "map_outcomes": 1567,
+    "player_map_rows": 15157,
+    "passed": true
+  }
+}

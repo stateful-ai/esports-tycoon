@@ -20,6 +20,10 @@ esports-roster-mcp = "esports_sim.mcp.roster_server:main"
 esports-map-mcp = "esports_sim.mcp.map_server:main"
 
 [project.optional-dependencies]
+research = [
+  "beautifulsoup4>=4.12,<5",  # optional, offline-capable VLR research pipeline
+  "lxml>=5,<7",  # fast parsing of large match pages during cached rebuilds
+]
 dev = [
   "pytest>=8.0",
   "pytest-xdist>=3.5",

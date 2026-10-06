@@ -1,0 +1,513 @@
+{
+  "schema_version": 1,
+  "season": 2026,
+  "as_of_date": "2026-10-06",
+  "pack_snapshot_date": "2026-07-09",
+  "discovery_urls": [
+    "https://www.vlr.gg/events/?tier=60",
+    "https://www.vlr.gg/events/?tier=61"
+  ],
+  "scope_note": "All discovered 2026 VCT and international events on tier-1 first page; selected main Challengers circuits on tier-2 first page. Event stats are broad; full map collection is explicitly limited to collect_maps=true. Not a claim of complete worldwide coverage.",
+  "events": [
+    {
+      "event_id": "2682",
+      "name": "VCT 2026: Americas Kickoff",
+      "competition_tier": 1,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jan 15\u2014Feb 16",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2682/vct-2026-americas-kickoff"
+    },
+    {
+      "event_id": "2683",
+      "name": "VCT 2026: Pacific Kickoff",
+      "competition_tier": 1,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Jan 22\u2014Feb 15",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2683/vct-2026-pacific-kickoff"
+    },
+    {
+      "event_id": "2684",
+      "name": "VCT 2026: EMEA Kickoff",
+      "competition_tier": 1,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Jan 20\u2014Feb 15",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2684/vct-2026-emea-kickoff"
+    },
+    {
+      "event_id": "2685",
+      "name": "VCT 2026: China Kickoff",
+      "competition_tier": 1,
+      "region": "china",
+      "status_at_collection": "completed",
+      "date_label": "Jan 21\u2014Feb 9",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2685/vct-2026-china-kickoff"
+    },
+    {
+      "event_id": "2766",
+      "name": "Valorant Champions 2026",
+      "competition_tier": 1,
+      "region": "international",
+      "status_at_collection": "ongoing",
+      "date_label": "Sep 24\u2014Oct 18",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2766/valorant-champions-2026"
+    },
+    {
+      "event_id": "2776",
+      "name": "VCT 2026: Pacific Stage 2",
+      "competition_tier": 1,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Jul 15\u2014Sep 6",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2776/vct-2026-pacific-stage-2"
+    },
+    {
+      "event_id": "2777",
+      "name": "Challengers 2026: LATAM North ACE Stage 1",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jan 26\u2014Mar 30",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2777/challengers-2026-latam-north-ace-stage-1"
+    },
+    {
+      "event_id": "2778",
+      "name": "Challengers 2026: LATAM South ACE Stage 1",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jan 26\u2014Mar 29",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2778/challengers-2026-latam-south-ace-stage-1"
+    },
+    {
+      "event_id": "2779",
+      "name": "Challengers 2026: LATAM North ACE Stage 2",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "May 18\u2014Jul 13",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2779/challengers-2026-latam-north-ace-stage-2"
+    },
+    {
+      "event_id": "2780",
+      "name": "Challengers 2026: LATAM South ACE Stage 2",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "May 18\u2014Jul 12",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2780/challengers-2026-latam-south-ace-stage-2"
+    },
+    {
+      "event_id": "2787",
+      "name": "Challengers 2026: Brazil Gamers Club Stage 1",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jan 28\u2014Apr 10",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2787/challengers-2026-brazil-gamers-club-stage-1"
+    },
+    {
+      "event_id": "2823",
+      "name": "Challengers 2026: Southeast Asia Split 1",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Feb 10\u2014Mar 29",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2823/challengers-2026-southeast-asia-split-1"
+    },
+    {
+      "event_id": "2825",
+      "name": "Challengers 2026: Southeast Asia Split 2",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "May 15\u2014Jul 5",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2825/challengers-2026-southeast-asia-split-2"
+    },
+    {
+      "event_id": "2830",
+      "name": "Challengers 2026: Korea WDG Split 1",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Jan 31\u2014Apr 16",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2830/challengers-2026-korea-wdg-split-1"
+    },
+    {
+      "event_id": "2842",
+      "name": "Challengers 2026: France Revolution Stage 2",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 4\u2014May 12",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2842/challengers-2026-france-revolution-stage-2"
+    },
+    {
+      "event_id": "2847",
+      "name": "Challengers 2026: Japan Split 1",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Feb 1\u2014Apr 16",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2847/challengers-2026-japan-split-1"
+    },
+    {
+      "event_id": "2880",
+      "name": "Challengers 2026: South Asia Split 1",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Mar 7\u2014Apr 9",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2880/challengers-2026-south-asia-split-1"
+    },
+    {
+      "event_id": "2884",
+      "name": "Challengers 2026: NORTH//EAST Stage 2",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Mar 21\u2014May 14",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2884/challengers-2026-north-east-stage-2"
+    },
+    {
+      "event_id": "2907",
+      "name": "Challengers 2026: T\u00fcrkiye Birlik Stage 2",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 4\u2014May 10",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2907/challengers-2026-t-rkiye-birlik-stage-2"
+    },
+    {
+      "event_id": "2908",
+      "name": "Challengers 2026: DACH Evolution Stage 2",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 4\u2014May 10",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2908/challengers-2026-dach-evolution-stage-2"
+    },
+    {
+      "event_id": "2919",
+      "name": "Challengers 2026: LATAM North ACE Masters",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Apr 8\u2014May 1",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2919/challengers-2026-latam-north-ace-masters"
+    },
+    {
+      "event_id": "2920",
+      "name": "Challengers 2026: LATAM South ACE Masters",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Apr 9\u201430",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2920/challengers-2026-latam-south-ace-masters"
+    },
+    {
+      "event_id": "2921",
+      "name": "Challengers 2026: Spain Rising Stage 3",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 5\u2014May 12",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2921/challengers-2026-spain-rising-stage-3"
+    },
+    {
+      "event_id": "2922",
+      "name": "Challengers 2026: MENA Resilience Pulse Stage - Middle East",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 4\u2014May 13",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2922/challengers-2026-mena-resilience-pulse-stage-middle-east"
+    },
+    {
+      "event_id": "2923",
+      "name": "Challengers 2026: MENA Resilience Pulse Stage - North Africa",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 5\u2014May 13",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2923/challengers-2026-mena-resilience-pulse-stage-north-africa"
+    },
+    {
+      "event_id": "2968",
+      "name": "Challengers 2026: South Asia Split 2",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "May 4\u2014Jun 28",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2968/challengers-2026-south-asia-split-2"
+    },
+    {
+      "event_id": "2973",
+      "name": "Challengers 2026: Korea WDG Split 2",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "May 7\u2014Jul 15",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2973/challengers-2026-korea-wdg-split-2"
+    },
+    {
+      "event_id": "2974",
+      "name": "Challengers 2026: Japan Split 2",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "May 10\u2014Jul 26",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2974/challengers-2026-japan-split-2"
+    },
+    {
+      "event_id": "2976",
+      "name": "VCT 2026: EMEA Stage 2",
+      "competition_tier": 1,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Jul 15\u2014Aug 30",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2976/vct-2026-emea-stage-2"
+    },
+    {
+      "event_id": "2977",
+      "name": "VCT 2026: Americas Stage 2",
+      "competition_tier": 1,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jul 16\u2014Sep 6",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2977/vct-2026-americas-stage-2"
+    },
+    {
+      "event_id": "2978",
+      "name": "VCT 2026: China Stage 2",
+      "competition_tier": 1,
+      "region": "china",
+      "status_at_collection": "completed",
+      "date_label": "Jul 8\u2014Aug 23",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/2978/vct-2026-china-stage-2"
+    },
+    {
+      "event_id": "3018",
+      "name": "Challengers 2026: EMEA Last Chance Qualifier",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Jun 4\u2014Jul 12",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/3018/challengers-2026-emea-last-chance-qualifier"
+    },
+    {
+      "event_id": "3062",
+      "name": "VCL 26: Latin America Finals",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jul 27\u201428",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/3062/vcl-26-latin-america-finals"
+    },
+    {
+      "event_id": "3063",
+      "name": "VCL 26: Americas Last Chance Qualifier",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jul 28\u201430",
+      "collect_maps": false,
+      "event_url": "https://www.vlr.gg/event/3063/vcl-26-americas-last-chance-qualifier"
+    },
+    {
+      "event_id": "2760",
+      "name": "Valorant Masters Santiago 2026",
+      "competition_tier": 1,
+      "region": "international",
+      "status_at_collection": "completed",
+      "date_label": "Feb 28\u2014Mar 15",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2760/valorant-masters-santiago-2026"
+    },
+    {
+      "event_id": "2765",
+      "name": "Valorant Masters London 2026",
+      "competition_tier": 1,
+      "region": "international",
+      "status_at_collection": "completed",
+      "date_label": "Jun 5\u201421",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2765/valorant-masters-london-2026"
+    },
+    {
+      "event_id": "2775",
+      "name": "VCT 2026: Pacific Stage 1",
+      "competition_tier": 1,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Apr 2\u2014May 17",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2775/vct-2026-pacific-stage-1"
+    },
+    {
+      "event_id": "2782",
+      "name": "Challengers 2026: EMEA Stage 1",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Mar 19\u201429",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2782/challengers-2026-emea-stage-1"
+    },
+    {
+      "event_id": "2783",
+      "name": "Challengers 2026: North America ACE Stage 1",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Jan 19\u2014Mar 12",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2783/challengers-2026-north-america-ace-stage-1"
+    },
+    {
+      "event_id": "2857",
+      "name": "Challengers 2026: North America ACE Stage 2",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Mar 23\u2014May 13",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2857/challengers-2026-north-america-ace-stage-2"
+    },
+    {
+      "event_id": "2858",
+      "name": "Challengers 2026: North America ACE Stage 3",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "May 25\u2014Jul 13",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2858/challengers-2026-north-america-ace-stage-3"
+    },
+    {
+      "event_id": "2860",
+      "name": "VCT 2026: Americas Stage 1",
+      "competition_tier": 1,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "Apr 10\u2014May 25",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2860/vct-2026-americas-stage-1"
+    },
+    {
+      "event_id": "2863",
+      "name": "VCT 2026: EMEA Stage 1",
+      "competition_tier": 1,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Apr 1\u2014May 17",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2863/vct-2026-emea-stage-1"
+    },
+    {
+      "event_id": "2864",
+      "name": "VCT 2026: China Stage 1",
+      "competition_tier": 1,
+      "region": "china",
+      "status_at_collection": "completed",
+      "date_label": "Mar 31\u2014May 10",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2864/vct-2026-china-stage-1"
+    },
+    {
+      "event_id": "2925",
+      "name": "Challengers 2026: EMEA Stage 2",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "May 18\u201428",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2925/challengers-2026-emea-stage-2"
+    },
+    {
+      "event_id": "2934",
+      "name": "China National Tournament 2026 Split Alpha: Pro Division",
+      "competition_tier": 2,
+      "region": "china",
+      "status_at_collection": "completed",
+      "date_label": "Mar 31\u2014May 4",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2934/china-national-tournament-2026-split-alpha-pro-division"
+    },
+    {
+      "event_id": "2962",
+      "name": "Challengers 2026: Brazil Gamers Club Stage 2",
+      "competition_tier": 2,
+      "region": "americas",
+      "status_at_collection": "completed",
+      "date_label": "May 5\u2014Jul 13",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2962/challengers-2026-brazil-gamers-club-stage-2"
+    },
+    {
+      "event_id": "2991",
+      "name": "Challengers 2026: Japan Season Finals",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Jul 4\u201426",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/2991/challengers-2026-japan-season-finals"
+    },
+    {
+      "event_id": "3016",
+      "name": "Challengers 2026: EMEA Stage 3",
+      "competition_tier": 2,
+      "region": "emea",
+      "status_at_collection": "completed",
+      "date_label": "Jun 21\u2014Jul 5",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/3016/challengers-2026-emea-stage-3"
+    },
+    {
+      "event_id": "3039",
+      "name": "Challengers 2026: Pacific Last Chance Qualifier",
+      "competition_tier": 2,
+      "region": "pacific",
+      "status_at_collection": "completed",
+      "date_label": "Jul 7\u201410",
+      "collect_maps": true,
+      "event_url": "https://www.vlr.gg/event/3039/challengers-2026-pacific-last-chance-qualifier"
+    }
+  ]
+}

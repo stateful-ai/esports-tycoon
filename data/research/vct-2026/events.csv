@@ -1,0 +1,51 @@
+event_id,name,competition_tier,region,status_at_collection,date_label,collect_maps,event_url,stats_rows,matches_listed,matches_parsed,map_rows
+2682,VCT 2026: Americas Kickoff,1,americas,completed,Jan 15—Feb 16,False,https://www.vlr.gg/event/2682/vct-2026-americas-kickoff,62,0,0,0
+2683,VCT 2026: Pacific Kickoff,1,pacific,completed,Jan 22—Feb 15,False,https://www.vlr.gg/event/2683/vct-2026-pacific-kickoff,60,0,0,0
+2684,VCT 2026: EMEA Kickoff,1,emea,completed,Jan 20—Feb 15,False,https://www.vlr.gg/event/2684/vct-2026-emea-kickoff,61,0,0,0
+2685,VCT 2026: China Kickoff,1,china,completed,Jan 21—Feb 9,False,https://www.vlr.gg/event/2685/vct-2026-china-kickoff,61,0,0,0
+2766,Valorant Champions 2026,1,international,ongoing,Sep 24—Oct 18,False,https://www.vlr.gg/event/2766/valorant-champions-2026,80,0,0,0
+2776,VCT 2026: Pacific Stage 2,1,pacific,completed,Jul 15—Sep 6,False,https://www.vlr.gg/event/2776/vct-2026-pacific-stage-2,85,0,0,0
+2777,Challengers 2026: LATAM North ACE Stage 1,2,americas,completed,Jan 26—Mar 30,False,https://www.vlr.gg/event/2777/challengers-2026-latam-north-ace-stage-1,56,0,0,0
+2778,Challengers 2026: LATAM South ACE Stage 1,2,americas,completed,Jan 26—Mar 29,False,https://www.vlr.gg/event/2778/challengers-2026-latam-south-ace-stage-1,60,0,0,0
+2779,Challengers 2026: LATAM North ACE Stage 2,2,americas,completed,May 18—Jul 13,False,https://www.vlr.gg/event/2779/challengers-2026-latam-north-ace-stage-2,54,0,0,0
+2780,Challengers 2026: LATAM South ACE Stage 2,2,americas,completed,May 18—Jul 12,False,https://www.vlr.gg/event/2780/challengers-2026-latam-south-ace-stage-2,45,0,0,0
+2787,Challengers 2026: Brazil Gamers Club Stage 1,2,americas,completed,Jan 28—Apr 10,False,https://www.vlr.gg/event/2787/challengers-2026-brazil-gamers-club-stage-1,97,0,0,0
+2823,Challengers 2026: Southeast Asia Split 1,2,pacific,completed,Feb 10—Mar 29,False,https://www.vlr.gg/event/2823/challengers-2026-southeast-asia-split-1,82,0,0,0
+2825,Challengers 2026: Southeast Asia Split 2,2,pacific,completed,May 15—Jul 5,False,https://www.vlr.gg/event/2825/challengers-2026-southeast-asia-split-2,93,0,0,0
+2830,Challengers 2026: Korea WDG Split 1,2,pacific,completed,Jan 31—Apr 16,False,https://www.vlr.gg/event/2830/challengers-2026-korea-wdg-split-1,120,0,0,0
+2842,Challengers 2026: France Revolution Stage 2,2,emea,completed,Apr 4—May 12,False,https://www.vlr.gg/event/2842/challengers-2026-france-revolution-stage-2,41,0,0,0
+2847,Challengers 2026: Japan Split 1,2,pacific,completed,Feb 1—Apr 16,False,https://www.vlr.gg/event/2847/challengers-2026-japan-split-1,97,0,0,0
+2880,Challengers 2026: South Asia Split 1,2,pacific,completed,Mar 7—Apr 9,False,https://www.vlr.gg/event/2880/challengers-2026-south-asia-split-1,354,0,0,0
+2884,Challengers 2026: NORTH//EAST Stage 2,2,emea,completed,Mar 21—May 14,False,https://www.vlr.gg/event/2884/challengers-2026-north-east-stage-2,221,0,0,0
+2907,Challengers 2026: Türkiye Birlik Stage 2,2,emea,completed,Apr 4—May 10,False,https://www.vlr.gg/event/2907/challengers-2026-t-rkiye-birlik-stage-2,51,0,0,0
+2908,Challengers 2026: DACH Evolution Stage 2,2,emea,completed,Apr 4—May 10,False,https://www.vlr.gg/event/2908/challengers-2026-dach-evolution-stage-2,47,0,0,0
+2919,Challengers 2026: LATAM North ACE Masters,2,americas,completed,Apr 8—May 1,False,https://www.vlr.gg/event/2919/challengers-2026-latam-north-ace-masters,44,0,0,0
+2920,Challengers 2026: LATAM South ACE Masters,2,americas,completed,Apr 9—30,False,https://www.vlr.gg/event/2920/challengers-2026-latam-south-ace-masters,43,0,0,0
+2921,Challengers 2026: Spain Rising Stage 3,2,emea,completed,Apr 5—May 12,False,https://www.vlr.gg/event/2921/challengers-2026-spain-rising-stage-3,54,0,0,0
+2922,Challengers 2026: MENA Resilience Pulse Stage - Middle East,2,emea,completed,Apr 4—May 13,False,https://www.vlr.gg/event/2922/challengers-2026-mena-resilience-pulse-stage-middle-east,45,0,0,0
+2923,Challengers 2026: MENA Resilience Pulse Stage - North Africa,2,emea,completed,Apr 5—May 13,False,https://www.vlr.gg/event/2923/challengers-2026-mena-resilience-pulse-stage-north-africa,44,0,0,0
+2968,Challengers 2026: South Asia Split 2,2,pacific,completed,May 4—Jun 28,False,https://www.vlr.gg/event/2968/challengers-2026-south-asia-split-2,127,0,0,0
+2973,Challengers 2026: Korea WDG Split 2,2,pacific,completed,May 7—Jul 15,False,https://www.vlr.gg/event/2973/challengers-2026-korea-wdg-split-2,54,0,0,0
+2974,Challengers 2026: Japan Split 2,2,pacific,completed,May 10—Jul 26,False,https://www.vlr.gg/event/2974/challengers-2026-japan-split-2,82,0,0,0
+2976,VCT 2026: EMEA Stage 2,1,emea,completed,Jul 15—Aug 30,False,https://www.vlr.gg/event/2976/vct-2026-emea-stage-2,84,0,0,0
+2977,VCT 2026: Americas Stage 2,1,americas,completed,Jul 16—Sep 6,False,https://www.vlr.gg/event/2977/vct-2026-americas-stage-2,82,0,0,0
+2978,VCT 2026: China Stage 2,1,china,completed,Jul 8—Aug 23,False,https://www.vlr.gg/event/2978/vct-2026-china-stage-2,72,0,0,0
+3018,Challengers 2026: EMEA Last Chance Qualifier,2,emea,completed,Jun 4—Jul 12,False,https://www.vlr.gg/event/3018/challengers-2026-emea-last-chance-qualifier,232,0,0,0
+3062,VCL 26: Latin America Finals,2,americas,completed,Jul 27—28,False,https://www.vlr.gg/event/3062/vcl-26-latin-america-finals,10,0,0,0
+3063,VCL 26: Americas Last Chance Qualifier,2,americas,completed,Jul 28—30,False,https://www.vlr.gg/event/3063/vcl-26-americas-last-chance-qualifier,15,0,0,0
+2760,Valorant Masters Santiago 2026,1,international,completed,Feb 28—Mar 15,True,https://www.vlr.gg/event/2760/valorant-masters-santiago-2026,60,24,24,59
+2765,Valorant Masters London 2026,1,international,completed,Jun 5—21,True,https://www.vlr.gg/event/2765/valorant-masters-london-2026,60,24,24,65
+2775,VCT 2026: Pacific Stage 1,1,pacific,completed,Apr 2—May 17,True,https://www.vlr.gg/event/2775/vct-2026-pacific-stage-1,64,42,42,106
+2782,Challengers 2026: EMEA Stage 1,2,emea,completed,Mar 19—29,True,https://www.vlr.gg/event/2782/challengers-2026-emea-stage-1,65,24,21,54
+2783,Challengers 2026: North America ACE Stage 1,2,americas,completed,Jan 19—Mar 12,True,https://www.vlr.gg/event/2783/challengers-2026-north-america-ace-stage-1,96,65,65,163
+2857,Challengers 2026: North America ACE Stage 2,2,americas,completed,Mar 23—May 13,True,https://www.vlr.gg/event/2857/challengers-2026-north-america-ace-stage-2,94,66,66,164
+2858,Challengers 2026: North America ACE Stage 3,2,americas,completed,May 25—Jul 13,True,https://www.vlr.gg/event/2858/challengers-2026-north-america-ace-stage-3,91,60,60,150
+2860,VCT 2026: Americas Stage 1,1,americas,completed,Apr 10—May 25,True,https://www.vlr.gg/event/2860/vct-2026-americas-stage-1,66,42,42,105
+2863,VCT 2026: EMEA Stage 1,1,emea,completed,Apr 1—May 17,True,https://www.vlr.gg/event/2863/vct-2026-emea-stage-1,63,42,42,109
+2864,VCT 2026: China Stage 1,1,china,completed,Mar 31—May 10,True,https://www.vlr.gg/event/2864/vct-2026-china-stage-1,62,48,48,122
+2925,Challengers 2026: EMEA Stage 2,2,emea,completed,May 18—28,True,https://www.vlr.gg/event/2925/challengers-2026-emea-stage-2,71,24,24,58
+2934,China National Tournament 2026 Split Alpha: Pro Division,2,china,completed,Mar 31—May 4,True,https://www.vlr.gg/event/2934/china-national-tournament-2026-split-alpha-pro-division,0,56,55,134
+2962,Challengers 2026: Brazil Gamers Club Stage 2,2,americas,completed,May 5—Jul 13,True,https://www.vlr.gg/event/2962/challengers-2026-brazil-gamers-club-stage-2,76,66,65,156
+2991,Challengers 2026: Japan Season Finals,2,pacific,completed,Jul 4—26,True,https://www.vlr.gg/event/2991/challengers-2026-japan-season-finals,30,5,5,15
+3016,Challengers 2026: EMEA Stage 3,2,emea,completed,Jun 21—Jul 5,True,https://www.vlr.gg/event/3016/challengers-2026-emea-stage-3,83,34,34,90
+3039,Challengers 2026: Pacific Last Chance Qualifier,2,pacific,completed,Jul 7—10,True,https://www.vlr.gg/event/3039/challengers-2026-pacific-last-chance-qualifier,20,6,6,17
