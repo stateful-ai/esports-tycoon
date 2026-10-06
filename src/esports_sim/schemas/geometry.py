@@ -18,10 +18,29 @@ fall back to the plain graph view.
 
 from __future__ import annotations
 
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 # Rects within this gap still derive a portal (small door gaps are fine).
 PORTAL_GAP_TOLERANCE = 4.0
+
+
+class FloorRect(BaseModel):
+    """An axis-aligned piece of a room's physical floor."""
+    model_config = ConfigDict(frozen=True, extra="forbid", allow_inf_nan=False)
+    x: float
+    y: float
+    w: float = Field(gt=0)
+    h: float = Field(gt=0)
+
+    @property
+    def polygon(self) -> list[tuple[float, float]]:
+        return [(self.x, self.y), (self.x+self.w, self.y),
+                (self.x+self.w, self.y+self.h), (self.x, self.y+self.h)]
+
+    def contains(self, px: float, py: float, pad: float = 0.0) -> bool:
+        return (self.x-pad <= px <= self.x+self.w+pad
+                and self.y-pad <= py <= self.y+self.h+pad)
 
 
 class Region(BaseModel):
@@ -36,6 +55,7 @@ class Region(BaseModel):
     w: float
     h: float
     z: float = 0.0
+    floor_extensions: list[FloorRect] = Field(default_factory=list)
 
     @property
     def cx(self) -> float:
@@ -46,7 +66,7 @@ class Region(BaseModel):
         return self.y + self.h / 2.0
 
     def contains(self, px: float, py: float, pad: float = 0.0) -> bool:
-        return (
+        return any(r.contains(px, py, pad) for r in self.floor_extensions) or (
             self.x - pad <= px <= self.x + self.w + pad
             and self.y - pad <= py <= self.y + self.h + pad
         )
@@ -95,6 +115,7 @@ class Prop(BaseModel):
     w: float
     h: float
     height: str = "half"  # half | full
+    role: Literal["cover", "wall"] = "cover"
 
 
 class MapGeometry(BaseModel):
@@ -250,7 +271,7 @@ class MapGeometry(BaseModel):
                 return True
         return False
 
-    def room_slots(self, region_id: str) -> list[tuple[float, float, str]]:
+    def room_slots(self, region_id: str, player_radius: float = 0.0) -> list[tuple[float, float, str]]:
         """Deterministic tactical spots inside a room: one behind each
         prop ("cover"), one just inside each doorway ("portal"), and four
         interior spread points ("spread"). Players stand at slots instead
@@ -259,8 +280,11 @@ class MapGeometry(BaseModel):
         if r is None:
             return []
         margin = 1.5
-        lo_x, hi_x = r.x + margin, r.x + r.w - margin
-        lo_y, hi_y = r.y + margin, r.y + r.h - margin
+        # Narrow measured bridges/doorways still need interior holding slots.
+        # A reversed clamp interval used to push portal slots off their floor.
+        margin_x, margin_y = min(margin, r.w/2), min(margin, r.h/2)
+        lo_x, hi_x = r.x + margin_x, r.x + r.w - margin_x
+        lo_y, hi_y = r.y + margin_y, r.y + r.h - margin_y
 
         def clamp(px: float, py: float) -> tuple[float, float]:
             return (min(max(px, lo_x), hi_x), min(max(py, lo_y), hi_y))
@@ -268,7 +292,7 @@ class MapGeometry(BaseModel):
         slots: list[tuple[float, float, str]] = []
         # Cover slots: on the room-center side of each prop in the room.
         for p in sorted(
-            (p for p in self.props if p.region == region_id),
+            (p for p in self.props if p.region == region_id and p.role == "cover"),
             key=lambda p: (p.x, p.y),
         ):
             pcx, pcy = p.x + p.w / 2.0, p.y + p.h / 2.0
@@ -294,7 +318,14 @@ class MapGeometry(BaseModel):
             slots.append(
                 (round(r.x + r.w * fx, 2), round(r.y + r.h * fy, 2), "spread")
             )
-        return slots
+        # Solid wall volumes shape the room; they are not crates to hold
+        # beside. Remove spread/portal positions swallowed by those volumes.
+        walls = [p for p in self.props if p.role == "wall"]
+        return [slot for slot in slots if not any(
+            _segment_hits_rect(r.cx, r.cy, slot[0], slot[1],
+                              p.x-player_radius, p.y-player_radius,
+                              p.w+2*player_radius, p.h+2*player_radius)
+            for p in walls)]
 
     def path_between_points(
         self,
@@ -302,16 +333,29 @@ class MapGeometry(BaseModel):
         to_room: str,
         from_pt: tuple[float, float],
         to_pt: tuple[float, float],
+        player_radius: float = 0.0,
     ) -> list[tuple[float, float]]:
         """Waypoint polyline from an actual position in one room to an
         actual position in an adjacent room: through the corridor/portal,
         never through walls. Same room → straight line."""
         if from_room == to_room:
-            return [from_pt, to_pt]
-        mid = self.path(from_room, to_room)
-        # Replace the room-center endpoints with the real positions.
-        core = mid[1:-1] if len(mid) > 2 else []
-        return [from_pt, *core, to_pt]
+            direct = [from_pt, to_pt]
+            region = self.regions.get(from_room)
+            routed = [from_pt, (region.cx, region.cy), to_pt] if region else direct
+        else:
+            mid = self.path(from_room, to_room)
+            # Keep shortcuts when clear; route through the room centers
+            # when new wall volumes make the rectangle non-convex.
+            core = mid[1:-1] if len(mid) > 2 else []
+            direct = [from_pt, *core, to_pt]
+            routed = [from_pt, *mid, to_pt]
+        walls = [p for p in self.props if p.role == "wall"]
+        if any(_segment_hits_rect(*a, *b, p.x-player_radius, p.y-player_radius,
+                                  p.w+2*player_radius, p.h+2*player_radius)
+               for a,b in zip(direct,direct[1:]) for p in walls):
+            # Deduplicate identical slot/center endpoints deterministically.
+            return [p for i,p in enumerate(routed) if i == 0 or p != routed[i-1]]
+        return direct
 
 
 def _segment_hits_rect(
@@ -319,6 +363,8 @@ def _segment_hits_rect(
     rx: float, ry: float, rw: float, rh: float,
 ) -> bool:
     """Liang-Barsky segment/AABB intersection (pure, deterministic)."""
+    if max(x1,x2) < rx or min(x1,x2) > rx+rw or max(y1,y2) < ry or min(y1,y2) > ry+rh:
+        return False
     dx, dy = x2 - x1, y2 - y1
     t0, t1 = 0.0, 1.0
     for p, q in (

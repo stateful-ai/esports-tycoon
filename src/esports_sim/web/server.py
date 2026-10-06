@@ -8807,7 +8807,8 @@ def map_geometry(map_id: str) -> dict:
                 paths[f"{a}|{b}"] = [[round(px, 2), round(py, 2)] for px, py in geo.path(a, b)]
         floor = {
             "regions": {
-                rid: {"x": r.x, "y": r.y, "w": r.w, "h": r.h, "z": r.z}
+                rid: {"x": r.x, "y": r.y, "w": r.w, "h": r.h, "z": r.z,
+                      **({"floor_extensions": [e.model_dump() for e in r.floor_extensions]} if r.floor_extensions else {})}
                 for rid, r in geo.regions.items()
             },
             "paths": paths,
@@ -9224,6 +9225,57 @@ def map_studio_probe(body: dict) -> dict:
         res = map_probe.probe_map(doc, tuple(from_pos), tuple(to_pos) if to_pos else None, radius)
         return res
     except Exception as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+
+@app.post("/api/map-studio/compare-floor")
+def map_studio_compare_floor(body: dict) -> dict:
+    """Compare the submitted floor to its calibrated local tracing reference."""
+    from esports_sim.registry.map_reference import compare_reference
+    from esports_sim.schemas.studio import MapStudioDocumentV1
+
+    _require_local_admin()
+    try:
+        # Check at a finer resolution than the 0.5u authoring trace; using
+        # its exact sample grid would hide quantization error as 100% overlap.
+        return compare_reference(MapStudioDocumentV1.model_validate(body), grid_step=.25)
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+
+@app.post("/api/map-studio/preview")
+def map_studio_preview(body: dict) -> dict:
+    """Replay one deterministic test round on the submitted draft, without publishing."""
+    from esports_sim.registry import load_all, map_workbench
+    from esports_sim.schemas.studio import MapStudioDocumentV1
+    from esports_sim.sim import simulate_match_result
+
+    _require_local_admin()
+    try:
+        seed = body.get("seed", 11)
+        if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed <= 2147483647:
+            raise ValueError("Round seed must be a whole number from 0 to 2147483647")
+        doc = MapStudioDocumentV1.model_validate(body.get("doc", body))
+        map_obj, geometry, errors = map_workbench.validate_document(doc)
+        if errors:
+            raise ValueError(errors[0]["message"])
+        assert map_obj is not None and geometry is not None
+        gd = load_all()
+        gd.maps[doc.id] = map_obj
+        result = simulate_match_result(gd, "team_nexus", "team_vanguard", doc.id, seed, geometry=geometry)
+        events = []
+        active = False
+        for event in result.events:
+            if event.type == "round.start":
+                active = True
+            if active:
+                events.append(event.model_dump(mode="json"))
+            if active and event.type == "round.end":
+                break
+        return {"map_id": doc.id, "seed": seed, "events": events,
+                "players": {pid: {"handle": gd.players[pid].handle, "team_id": team.id}
+                            for team in gd.teams.values() for pid in team.player_ids}}
+    except (ValueError, KeyError) as exc:
         raise HTTPException(422, str(exc)) from exc
 
 

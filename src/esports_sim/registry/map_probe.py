@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections import deque
 from typing import Any
 from esports_sim.schemas.studio import MapStudioDocumentV1, WalkableSurface, SemanticZone, Prop
-from esports_sim.registry.map_audit import segments_intersect, is_point_in_polygon
+from esports_sim.registry.map_audit import segments_intersect, is_point_in_polygon, surface_contains, surface_boundary_segments
 
 def point_to_segment_dist(p: tuple[float, float], s1: tuple[float, float], s2: tuple[float, float]) -> tuple[float, tuple[float, float]]:
     dx = s2[0] - s1[0]
@@ -37,7 +37,7 @@ def probe_map(
     curr_zone_id = None
     
     for surf in doc.walkable_surfaces:
-        if is_point_in_polygon((px, py), surf.polygon):
+        if surface_contains(surf, (px, py)):
             curr_surface_id = surf.id
             break
             
@@ -71,10 +71,8 @@ def probe_map(
     # Add walkable surface boundaries as virtual boundaries if outside
     if curr_surface_id:
         surf = next(s for s in doc.walkable_surfaces if s.id == curr_surface_id)
-        foot = surf.polygon
-        n = len(foot)
-        for i in range(n):
-            blocking_segments.append((foot[i], foot[(i+1)%n], f"surf_bound_{surf.id}", "boundary"))
+        for start, end in surface_boundary_segments(surf):
+            blocking_segments.append((start, end, f"surf_bound_{surf.id}", "boundary"))
 
     # Compute clearance from (px, py)
     for s1, s2, bid, btype in blocking_segments:
@@ -231,6 +229,8 @@ def probe_map(
                 surf_to_zone[sid] = zone.id
 
         for link in doc.traversal_links:
+            if not link.runtime_enabled:
+                continue
             from_z = surf_to_zone.get(link.from_pos[2])
             to_z = surf_to_zone.get(link.to_pos[2])
             if from_z and to_z and from_z != to_z:

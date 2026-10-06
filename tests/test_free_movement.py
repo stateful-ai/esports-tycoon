@@ -6,10 +6,62 @@ import pytest
 
 from esports_sim.policy.base import MotorMovement, MovementPace
 from esports_sim.registry import load_all
+from esports_sim.registry import map_workbench
 from esports_sim.schemas.geometry import MapGeometry, Opening, Prop, Region
 from esports_sim.schemas.map import Callout, CalloutZone, Map, MovementModel, Site
 from esports_sim.sim.engine import _MatchSim
 from esports_sim.sim.free_movement import FreeMovementResolver
+
+
+@pytest.mark.parametrize('name',['ascent','pearl','fracture','corrode','abyss','breeze','sunset'])
+def test_floor_index_is_equivalent_to_exact_unindexed_queries(name):
+    import random
+    d,_=map_workbench.load_document(name+'-layout-v2')
+    m,g=map_workbench.compile_document(d)
+    fast=FreeMovementResolver(m,g,player_radius=.35,collision_step=.2)
+    reference=FreeMovementResolver(m,g,player_radius=.35,collision_step=.2)
+    reference._floor_buckets=None
+    rng=random.Random(1167)
+    points=[(rng.uniform(-2,102),rng.uniform(-2,102)) for _ in range(150)]
+    # Include exact bucket seams, shared rectangle corners, and tolerance edges.
+    for r in g.regions.values():
+        for part in [r,*r.floor_extensions[:3]]:
+            points.extend([(part.x,part.y),(part.x+part.w,part.y+part.h),(part.x-1e-8,part.y+part.h/2)])
+    for x,y in points:
+        assert fast.regions_at(x,y)==reference.regions_at(x,y)
+    occupied=[p for p in points if fast.callout_at(*p)]
+    for a,b in zip(occupied[:60],occupied[-60:]):
+        ca,cb=fast.callout_at(*a),fast.callout_at(*b)
+        assert fast.has_line_of_sight(*a,ca,*b,cb)==reference.has_line_of_sight(*a,ca,*b,cb)
+
+
+def test_narrow_room_portal_slots_remain_on_floor():
+    geo=MapGeometry(map_id='narrow',regions={'bridge':Region(x=0,y=0,w=.5,h=1), 'site':Region(x=0,y=1,w=10,h=10)})
+    assert all(geo.regions['bridge'].contains(*s[:2]) for s in geo.room_slots('bridge',.35))
+
+
+def test_visibility_cache_respects_changed_door_state():
+    resolver=_resolver()
+    args=(9.,5.,'left',11.,5.,'right')
+    assert resolver.has_line_of_sight(*args)
+    closed=frozenset({frozenset(('left','right'))})
+    assert not resolver.has_line_of_sight(*args,closed)
+    assert resolver.has_line_of_sight(*args)
+
+
+def test_visibility_cache_preserves_a_complete_draft_match(monkeypatch):
+    from esports_sim.sim import simulate_match_result
+    d,_=map_workbench.load_document('pearl-layout-v2')
+    m,g=map_workbench.compile_document(d);gd=load_all();gd.maps[d.id]=m
+    cached=simulate_match_result(gd,'team_nexus','team_vanguard',d.id,1167,geometry=g,capture_control_events=False)
+    original=FreeMovementResolver.__init__
+    def no_cache(self,*args,**kwargs):
+        original(self,*args,**kwargs)
+        self.has_line_of_sight=self.has_line_of_sight.__wrapped__
+    monkeypatch.setattr(FreeMovementResolver,'__init__',no_cache)
+    uncached=simulate_match_result(gd,'team_nexus','team_vanguard',d.id,1167,geometry=g,capture_control_events=False)
+    assert cached.events==uncached.events
+    assert (cached.score_a,cached.score_b)==(uncached.score_a,uncached.score_b)
 
 
 def _callout(callout_id: str, x: float, y: float) -> Callout:

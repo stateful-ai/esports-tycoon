@@ -40,6 +40,7 @@ from esports_sim.policy.base import (
     TimeoutDirective,
 )
 from esports_sim.registry.loader import GameData, load_geometry
+from esports_sim.schemas.geometry import MapGeometry
 from esports_sim.sim import lineup as lineup_resolve
 from esports_sim.schemas import (
     Ability,
@@ -267,6 +268,7 @@ class _MatchSim:
         plans: dict[str, TeamMatchPlan] | None = None,
         policies: MatchPolicies | None = None,
         capture_control_events: bool = True,
+        geometry: MapGeometry | None = None,
     ):
         self.gd = gd
         self.map: Map = gd.maps[map_id]
@@ -409,7 +411,7 @@ class _MatchSim:
         # through corridors, and duels are fought point-to-point. Without
         # it, positions collapse to the callout anchors and everything
         # still runs (straight-line paths, no cover/height/blocking).
-        self._geo = load_geometry(map_id)
+        self._geo = geometry if geometry is not None else load_geometry(map_id)
         self._free_movement = (
             FreeMovementResolver(
                 self.map,
@@ -426,7 +428,7 @@ class _MatchSim:
         if self._geo is not None:
             for rid, region in self._geo.regions.items():
                 self._z[rid] = region.z
-                self._slots[rid] = self._geo.room_slots(rid)
+                self._slots[rid] = self._geo.room_slots(rid, C.FREE_MOVE_PLAYER_RADIUS)
         for cid, c in self.map.callouts.items():
             if not self._slots.get(cid):
                 self._slots[cid] = [(c.x, c.y, "spread")]
@@ -1702,7 +1704,7 @@ class _MatchSim:
         from_pt: tuple[float, float], to_pt: tuple[float, float],
     ) -> list[tuple[float, float]]:
         if self._geo is not None:
-            return self._geo.path_between_points(from_room, to_room, from_pt, to_pt)
+            return self._geo.path_between_points(from_room, to_room, from_pt, to_pt, C.FREE_MOVE_PLAYER_RADIUS)
         return [from_pt, to_pt]
 
     @staticmethod
@@ -3812,10 +3814,12 @@ def simulate_match_result(
     plans: dict[str, TeamMatchPlan] | None = None,
     policies: MatchPolicies | None = None,
     capture_control_events: bool = True,
+    geometry: MapGeometry | None = None,
 ) -> MatchResult:
     """`plans` carries per-match coaching overrides (game plans) from the
     campaign layer; None — the only thing the match gates ever pass — is
-    exactly the pre-plan engine."""
+    exactly the pre-plan engine. `geometry` supplies an isolated compiled
+    draft; None resolves the map's normal on-disk geometry."""
     sim = _MatchSim(
         gd,
         team_a,
@@ -3826,6 +3830,7 @@ def simulate_match_result(
         plans=plans,
         policies=policies,
         capture_control_events=capture_control_events,
+        geometry=geometry,
     )
     return sim.run()
 

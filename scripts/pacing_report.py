@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 from collections import deque
+from pathlib import Path
 
 from esports_sim.registry import load_all
 from esports_sim.registry.loader import load_geometry
@@ -74,16 +75,17 @@ def parse_args() -> argparse.Namespace:
         metavar="MAP_ID",
         help="check specific published map ids instead of the live rotation",
     )
+    parser.add_argument("--data-dir", type=Path, help="isolated compiled draft data directory")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    gd = load_all(map_ids=args.maps)
+    gd = load_all(data_dir=args.data_dir, map_ids=args.maps)
     any_fail = False
     for mid in sorted(gd.maps):
         m = gd.maps[mid]
-        geo = load_geometry(mid)
+        geo = load_geometry(mid, data_dir=args.data_dir)
         if geo is None:
             print(f"{mid:8s} no geometry")
             continue

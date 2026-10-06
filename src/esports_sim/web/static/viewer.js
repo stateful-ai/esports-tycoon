@@ -181,9 +181,9 @@ const pos = (cid) => {
 
 // Projected floor rect corners for a region (grid coords, y-flip applied,
 // elevation shift included), ordered around the parallelogram.
-function regionCorners(rid) {
-  const r = V.floor.regions[rid];
-  const z = V.iso ? (r.z || 0) : 0;
+function regionCorners(rid, floorRect = null) {
+  const r = floorRect || V.floor.regions[rid];
+  const z = V.iso ? (V.floor.regions[rid].z || 0) : 0;
   const g = [
     [r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h],
   ];
@@ -674,6 +674,12 @@ function drawFloor(svg) {
       points: corners.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
       class: "floor" + (isSite ? " floor-site" : "") + (z > 0 ? " floor-raised" : ""),
     }));
+    for (const rect of V.floor.regions[rid].floor_extensions || []) {
+      svg.appendChild(svgEl("polygon", {
+        points: regionCorners(rid, rect).map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
+        class: "floor" + (isSite ? " floor-site" : "") + (z > 0 ? " floor-raised" : ""),
+      }));
+    }
     if (c) {
       const [lx, ly] = pos(rid);
       const label = svgEl("text", { x: lx, y: ly + S(1.2), class: "callout-label" });
@@ -778,7 +784,8 @@ function isoContentViewBox() {
   if (!V.floor) return ISO_VIEWBOX;
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const rid of Object.keys(V.floor.regions)) {
-    for (const [x, y] of regionCorners(rid)) {
+    const parts = [null, ...(V.floor.regions[rid].floor_extensions || [])];
+    for (const [x, y] of parts.flatMap(rect => regionCorners(rid, rect))) {
       if (x < minX) minX = x;
       if (x > maxX) maxX = x;
       if (y < minY) minY = y;
