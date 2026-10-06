@@ -1,5 +1,10 @@
 {
   "mcpServers": {
+    "esports-play": {
+      "type": "stdio",
+      "command": ".venv-win/Scripts/python.exe",
+      "args": ["-m", "esports_sim.mcp.play_server"]
+    },
     "esports-rosters": {
       "type": "stdio",
       "command": ".venv-win/Scripts/python.exe",
@@ -9,6 +14,11 @@
       "type": "stdio",
       "command": ".venv-win/Scripts/python.exe",
       "args": ["-m", "esports_sim.mcp.map_server"]
+    },
+    "flywheel": {
+      "type": "stdio",
+      "command": ".venv-win/Scripts/python.exe",
+      "args": ["${AGORA_REPO:-../../agora}/flywheel/mcp_server.py"]
     }
   }
 }
