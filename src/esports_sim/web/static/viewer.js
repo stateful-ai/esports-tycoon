@@ -1418,6 +1418,7 @@ function buildTimeline() {
     .join("");
   el.querySelectorAll(".v-tl-round").forEach((b) => {
     b.onclick = () => {
+      window.Usage?.replay("round");
       setRound(Number(b.dataset.round));
       V.playing = false;
       updatePlayBtn();
@@ -1666,6 +1667,7 @@ async function openReplay(fixtureId, mapIndex) {
   drawStatic();
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
+  window.Usage?.replay("open");
   updatePlayBtn();
   paintEvBtn();
   paintSfxBtn();
@@ -1676,6 +1678,7 @@ async function openReplay(fixtureId, mapIndex) {
 }
 
 function closeViewer() {
+  if (V) window.Usage?.replay("close");
   if (V) V.playing = false;
   V = null;
   const lineup = document.getElementById("v-lineup");
@@ -1693,6 +1696,7 @@ window.closeViewer = closeViewer;
 document.getElementById("v-play").onclick = () => {
   if (!V) return;
   V.playing = !V.playing;
+  window.Usage?.replay(V.playing ? "play" : "pause");
   V.lastTs = null;
   updatePlayBtn();
   if (V.playing) requestAnimationFrame(loop);
@@ -1716,16 +1720,19 @@ document.getElementById("v-cones").onclick = () => {
   b.setAttribute("aria-pressed", V.cones ? "true" : "false");
   drawFrame();
 };
-document.getElementById("v-prev").onclick = () => V && setRound(V.roundIdx - 1);
-document.getElementById("v-next").onclick = () => V && setRound(V.roundIdx + 1);
+document.getElementById("v-prev").onclick = () => { if (V) { window.Usage?.replay("round"); setRound(V.roundIdx - 1); } };
+document.getElementById("v-next").onclick = () => { if (V) { window.Usage?.replay("round"); setRound(V.roundIdx + 1); } };
 document.getElementById("v-scrub").oninput = (e) => {
   if (!V) return;
   V.tick = parseFloat(e.target.value);
   drawFrame();
 };
+document.getElementById("v-scrub").addEventListener("change", () => { if (V) window.Usage?.replay("seek"); });
+
 document.querySelectorAll(".speed").forEach((b) => {
   b.onclick = () => {
     if (!V) return;
+    window.Usage?.replay(`speed_${b.dataset.speed}`);
     document.querySelectorAll(".speed").forEach((x) => x.classList.remove("active"));
     b.classList.add("active");
     if (b.dataset.speed === "inst") {

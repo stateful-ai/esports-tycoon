@@ -27,6 +27,7 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from esports_sim.web.usage_telemetry import install_usage_routes
 from esports_sim.labels import humanize_identifier
 from esports_sim.manager import (
     academy,
@@ -9291,6 +9292,17 @@ def map_studio_preview(body: dict) -> dict:
         raise HTTPException(422, str(exc)) from exc
 
 
+def _usage_context() -> dict:
+    ctx = _ctx.get()
+    result = {"sid": _current_sid(), "world": None, "team": None,
+              "season": None, "week": None}
+    if ctx.game is not None:
+        result.update(world=ctx.game.code, team=ctx.team_id,
+                      season=ctx.game.gs.season, week=ctx.game.gs.week)
+    return result
+
+
+install_usage_routes(app, SAVE_DIR, _usage_context, _require_local_admin)
 app.add_middleware(SessionMiddleware, lobby=_LOBBY)
 
 
