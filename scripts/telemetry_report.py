@@ -27,6 +27,35 @@ from esports_sim.manager import telemetry
 from esports_sim.manager.state import GameState
 
 
+_PLAN_DIALS = (
+    "aggression", "pace", "util_discipline", "eco_greed", "map_control",
+)
+
+
+def game_plan_dial_count(params: dict[str, str]) -> int:
+    """Read canonical MCP dial payloads or legacy web count summaries.
+
+    Explicit fields take precedence, even when all are unset: a stale
+    summary must not turn placeholders into overrides. Neutral 50 still
+    counts because it explicitly overrides the team's tactics book.
+    """
+    if any(dial in params for dial in _PLAN_DIALS):
+        count = 0
+        for dial in _PLAN_DIALS:
+            try:
+                value = float(params.get(dial, ""))
+            except (TypeError, ValueError):
+                continue
+            if 0.0 <= value <= 100.0:
+                count += 1
+        return count
+    try:
+        count = int(params.get("n_dials", "0"))
+    except (TypeError, ValueError):
+        return 0
+    return count if 0 <= count <= len(_PLAN_DIALS) else 0
+
+
 def main() -> int:
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("saves")
     saves = sorted(
@@ -76,7 +105,7 @@ def main() -> int:
             elif a.kind == "talk":
                 talk_options[a.params.get("option_id", "?")] += 1
             elif a.kind == "set_game_plan":
-                plan_dials[int(a.params.get("n_dials", "0"))] += 1
+                plan_dials[game_plan_dial_count(a.params)] += 1
         kinds_per_save[p.stem] = seen
 
     total = sum(kind_counts.values())
