@@ -5464,6 +5464,9 @@ def mentor_action(body: MentorBody) -> dict:
             gs.mentorships.pop(body.protege_id, None)
             if hasattr(gs, "mentorship_progress"):
                 gs.mentorship_progress.pop(body.protege_id, None)
+            telemetry.record_action(
+                gs, "mentor", {"protege_id": body.protege_id, "mentor_id": ""}
+            )
             S.save()
             return {"ok": True, "message": "Mentorship assignment cleared."}
             
@@ -5473,6 +5476,9 @@ def mentor_action(body: MentorBody) -> dict:
         success = mentorship.pair_mentorship(gs, body.protege_id, body.mentor_id)
         if not success:
             raise HTTPException(409, "Invalid mentorship pairing constraints")
+        telemetry.record_action(
+            gs, "mentor", {"protege_id": body.protege_id, "mentor_id": body.mentor_id}
+        )
         S.save()
         return {"ok": True, "message": "Mentorship assignment confirmed."}
 
