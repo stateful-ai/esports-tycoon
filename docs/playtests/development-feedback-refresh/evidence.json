@@ -1,0 +1,222 @@
+{
+  "world": "NHVUT",
+  "save": "runs\\playtests\\development-refresh\\saves\\campaign_d4f33307579fd6ed.json",
+  "actions": [
+    [
+      0,
+      {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "set_dev_plan",
+        "params": {
+          "dev_focus": "rest",
+          "intensity": "normal",
+          "learning_language": "",
+          "player_id": "vortex"
+        },
+        "source": "web"
+      }
+    ],
+    [
+      1,
+      {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "set_dev_plan",
+        "params": {
+          "dev_focus": "rest",
+          "intensity": "light",
+          "learning_language": "",
+          "player_id": "vortex"
+        },
+        "source": "web"
+      }
+    ]
+  ],
+  "telemetry_snap_count": 0,
+  "usage": [
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:48.503520+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/new",
+      "request_id": 5,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 216
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 220
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 182
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "view",
+      "target": "club/squad"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "club/squad",
+      "duration_ms": 283
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "view",
+      "target": "club/development"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/dev_plan",
+      "request_id": 16
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.114778+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/dev_plan",
+      "request_id": 16,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 4
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.242560+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/dev_plan",
+      "request_id": 18
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.242560+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/dev_plan",
+      "request_id": 18,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 2
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.266037+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "club/development",
+      "duration_ms": 295
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.281001+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 21
+    },
+    {
+      "schema_version": 1,
+      "session_id": "ecfd8519f466f190818db766560e4477",
+      "received_at": "2026-10-08T15:43:49.281001+00:00",
+      "world": "NHVUT",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 21,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 12
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "code": "NHVUT",
+  "before": "Vortex\t22\t74.5\t\u2605\u2605\u2605\t\n\t\n\t\nauto\nmechanical\ntactical\nmental\nteam\nlanguage\nrest\n\u26a0 TOO EXHAUSTED TO TRAIN\nGame Sense, Utility Usage, Positioning\n\t\nchoose language\nAR\nDE\nEN\nES\nFR\nID\nJA\nKO\nMS\nPT\nRU\nTH\nTL\nTR\nVI\nZH\n\t\nlight\nnormal\nintense\n\t\u2014",
+  "after": "Vortex\t22\t74.5\t\u2605\u2605\u2605\t\n\t\n\t\nauto\nmechanical\ntactical\nmental\nteam\nlanguage\nrest\nRecovery\n\t\nchoose language\nAR\nDE\nEN\nES\nFR\nID\nJA\nKO\nMS\nPT\nRU\nTH\nTL\nTR\nVI\nZH\n\t\nlight\nnormal\nintense\n\t\u2014",
+  "player": {
+    "id": "vortex",
+    "handle": "Vortex",
+    "real_name": "Ji-hoon Park",
+    "age": 22,
+    "role": "duelist",
+    "playstyle": "awper",
+    "is_igl": false,
+    "region": "americas",
+    "salary": 7000,
+    "contract_weeks_left": 8,
+    "morale": 55,
+    "stamina": 32,
+    "form": 78,
+    "confidence": 50,
+    "followers": 354978,
+    "stream_load": 54.2,
+    "stream_status": "balanced",
+    "stream_heavy": false,
+    "stream_income": 1673,
+    "stream_growth_mult": 0.81,
+    "dev_focus": "rest",
+    "training_intensity": "light",
+    "learning_language": "",
+    "attributes": {
+      "aim_precision": 95,
+      "aim_reactivity": 92,
+      "clutch_factor": 89,
+      "comms_quality": 55,
+      "composure": 70,
+      "game_sense": 72,
+      "movement": 87,
+      "positioning": 78,
+      "tilt_resistance": 48,
+      "utility_usage": 59
+    },
+    "overall": 74.5,
+    "fog": 0,
+    "agents": [
+      {
+        "agent_id": "jett",
+        "mastery": 94
+      },
+      {
+        "agent_id": "yoru",
+        "mastery": 68.4
+      },
+      {
+        "agent_id": "phoenix",
+        "mastery": 68
+      },
+      {
+        "agent_id": "iso",
+        "mastery": 67.1
+      },
+      {
+        "agent_id": "neon",
+        "mastery": 65.5
+      },
+      {
+        "agent_id": "reyna",
+        "mastery": 62.5
+      },
+      {
+        "agent_id": "waylay",
+        "mastery": 62.1
+      },
+      {
+        "agent_id": "raze",
+        "mastery": 62
+      },
+      {
+        "agent_id": "brimstone",
+        "mastery": 60
+      },
+      {
+        "agent_id": "gekko",
+        "mastery": 60
+      },
+      {
+        "agent_id": "miks",
+        "mastery": 60
+      },
+      {
+        "agent_id": "tejo",
+        "mastery": 60
+      },
+      {
+        "agent_id": "veto",
+        "mastery": 60
+      },
+      {
+        "agent_id": "sova",
+        "mastery": 59.5
+      },
+      {
+        "agent_id": "chamber",
+        "mastery": 58.5
+      },
+      {
+        "agent_id": "astra",
+        "mastery": 57.7
+      },
+      {
+        "agent_id": "vyse",
+        "mastery": 57.5
+      },
+      {
+        "agent_id": "skye",
+        "mastery": 55.7
+      },
+      {
+        "agent_id": "deadlock",
+        "mastery": 55.2
+      },
+      {
+        "agent_id": "breach",
+        "mastery": 52.3
+      },
+      {
+        "agent_id": "killjoy",
+        "mastery": 52
+      },
+      {
+        "agent_id": "sage",
+        "mastery": 51.5
+      },
+      {
+        "agent_id": "harbor",
+        "mastery": 50.6
+      },
+      {
+        "agent_id": "kayo",
+        "mastery": 50.5
+      },
+      {
+        "agent_id": "viper",
+        "mastery": 50.4
+      },
+      {
+        "agent_id": "cypher",
+        "mastery": 49.3
+      },
+      {
+        "agent_id": "fade",
+        "mastery": 49
+      },
+      {
+        "agent_id": "clove",
+        "mastery": 48
+      },
+      {
+        "agent_id": "omen",
+        "mastery": 0.7
+      }
+    ],
+    "personality": [
+      {
+        "id": "star_player",
+        "blurb": "the poster"
+      },
+      {
+        "id": "volatile",
+        "blurb": "week to week, a different player"
+      },
+      {
+        "id": "perfectionist",
+        "blurb": "own worst critic"
+      }
+    ],
+    "potential_stars": 3,
+    "ca_stars": 3,
+    "is_free_agent": false,
+    "asking_salary": 5900,
+    "portrait": "/assets/portraits/duelist_0.webp",
+    "badges": [],
+    "hierarchy_role": "core",
+    "mentor_id": null,
+    "mentor_handle": null,
+    "mentor_progress": null,
+    "promises": [],
+    "transfer_request": false,
+    "planned_agent": "Jett",
+    "planned_agent_id": "jett",
+    "planned_locked": false,
+    "planned_agent_edge": 1.76,
+    "condition_trend": null,
+    "development_plan": {
+      "focus": "rest",
+      "skills": [],
+      "condition_cost": 0,
+      "advice": "Recovery pauses practice and restores condition; match learning still counts."
+    },
+    "not_developing": null,
+    "mentor_skill": 25,
+    "starter": true
+  },
+  "errors": []
+}

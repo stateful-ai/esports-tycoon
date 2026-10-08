@@ -1,0 +1,44 @@
+{
+  "attempts": 4,
+  "events": {
+    "attempt:/api/actions/dev_plan": 2,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/new": 1,
+    "result:/api/actions/dev_plan": 2,
+    "result:/api/actions/save": 1,
+    "result:/api/new": 1,
+    "session_start:": 1,
+    "view:club/development": 1,
+    "view:club/squad": 1,
+    "view:dashboard": 1,
+    "view:lobby": 1,
+    "visible_time:club/development": 1,
+    "visible_time:club/squad": 1,
+    "visible_time:dashboard": 1,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "ecfd8519f466f190818db766560e4477": 994
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/dev_plan:success": 2,
+    "/api/actions/save:success": 1,
+    "/api/new:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 295,
+    "club/squad": 283,
+    "dashboard": 182,
+    "lobby": 1968
+  },
+  "world_events": {
+    "NHVUT": 14,
+    "lobby": 4
+  }
+}
