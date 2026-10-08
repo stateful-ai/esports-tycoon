@@ -1,0 +1,19 @@
+{
+  "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "reviewed_patch_sha256_normalized": "de94708622870112cb923f571dda25dee7e0844e3cefc94375a8060cbd70cbc1",
+  "staged_source_test_patch_sha256_normalized": "de94708622870112cb923f571dda25dee7e0844e3cefc94375a8060cbd70cbc1",
+  "existing_artifact_sha256": {
+    "actions.csv": "b09aff96d7f6aca5ed085ec899f5ecb9e03f5f7a817f185b7265dbe443f81b04",
+    "decision-evidence.json": "6f5aee5d0cb7937b15edbf4e0ceeba2d1aca2b1876d9d1747339b8135c667891",
+    "flywheel.json": "3f572e5b85303abc28f3dd6937059fa97e2e44beee78d8ed48a016649b7b02db",
+    "rejection.json": "a197f1592e78719db0c544c6a3294dee6711bbd31ad26d70b22ff5050fd3e4ed",
+    "report.md": "a76b346fc301a04562f9f6ca6f1787a3d825cd286213f53eba2d0a8d63217988",
+    "telemetry-report.txt": "60079230d214a83d5662ce29d3ff7cc84e6ed788ebf3ca79351df015ad1508a6",
+    "usage-baseline.json": "d51b9d37f19306fe3d4be01742dccf5e37443950030e82bc8319352ce0398d94",
+    "usage-end.json": "e6ffe21f4307ad63342033f6211b4a2d7cf1767463edde548e3e90879c847fe1",
+    "usage-evidence.json": "3529db3419f43d68a2c2fad3cbc764f7716dcc05cc5a0dae95341effa87695b4",
+    "usage-report.json": "69bdb3089e0401fa19cd630880058045096297861c7a517427e5ef85ff1d47d2"
+  },
+  "report_append_only": true,
+  "full_gate_exit_code": 0
+}
