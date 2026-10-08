@@ -1,0 +1,156 @@
+[
+  {
+    "id": "esports-playtest-0064",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Recommendation click is not individually instrumented",
+    "problem": "Retained sidecar shows Club navigation after advice click but no advice-control event",
+    "solution": "Reported six coarse views, one Save200pair and zero new decisions separately; did not infer exact click intent from destination",
+    "lesson": "Navigation usage quantifies destination visits, not which recommendation was followed",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0063",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Separate historical diagnosis from current transfer outcomes",
+    "problem": "Removing a historical rating to hide unavailable advice would erase legitimate match evidence",
+    "solution": "Kept Echo0.72 historical finding in the player report while identifying the current recommendation as unavailable",
+    "lesson": "Preserve the roster and outcomes that produced a match; revalidate only present-tense actionability after transfers",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0062",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current advice must target manageable roster members",
+    "problem": "Dashboard advised benching released Echo; Club had no Echo",
+    "solution": "Confirmed recommendation and destination against current four-player squad; dispatched a dedicated fix agent",
+    "lesson": "Historical match findings may retain former players, but current bench, agent and development instructions require acting-team roster membership",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0061",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Confirmation stalls require honest recovery evidence",
+    "problem": "CUA release click timed out and confirmation was inaccessible; a helper import error then briefly produced a false success log",
+    "solution": "Kept blocked click, appended explicit correction, renamed helper and released through public HTTP; standalone browser verified short/restored states",
+    "lesson": "Never classify a stalled confirmation as HTTP rejection; a failed helper cannot prove a mutation; preserve correction history",
+    "confidence": "high",
+    "source": "WJBF7 seed2038 Team Nexus S1W1 isolated8459; docs/playtests/2026-10-08-dashboard-roster-readiness/report.md",
+    "code": "WJBF7",
+    "tags": [
+      "dashboard",
+      "roster",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0060",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Replacement signing clears readiness warning",
+    "problem": "A readiness warning can become stale after a transfer",
+    "solution": "Browser signed Slyblade at visible demands and refreshed:Club5/10; Dashboard Squad ready and Stable; persisted release/open/offer decisions audited",
+    "lesson": "Read refreshed state after signing, then inspect saved decisions separately from browser usage",
+    "confidence": "high",
+    "source": "WJBF7 seed2038 Team Nexus S1W1 isolated8459; docs/playtests/2026-10-08-dashboard-roster-readiness/report.md",
+    "code": "WJBF7",
+    "tags": [
+      "dashboard",
+      "roster",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0059",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Dashboard must share advance roster gate",
+    "problem": "Healthy four-player squad could appear Squad ready and Assistant Coach Stable while Advance required5",
+    "solution": "Dashboard serializes market.roster_ready and server shortfall; short roster takes first priority with a Players-market link",
+    "lesson": "Health and lineup stability do not imply enough players to advance; base roster guidance on the same gate",
+    "confidence": "high",
+    "source": "WJBF7 seed2038 Team Nexus S1W1 isolated8459; docs/playtests/2026-10-08-dashboard-roster-readiness/report.md",
+    "code": "WJBF7",
+    "tags": [
+      "dashboard",
+      "roster",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0058",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Dashboard says squad ready after roster falls to four",
+    "problem": "Club says4/10 need5sign1, while refreshed Staffbriefing saysSquad ready andKeep the match five settled",
+    "solution": "Retained screenshot/CSVunexpected row15 and dispatched separate dashboard-roster-readiness agent",
+    "lesson": "Dashboard readiness must use the same server-owned five-player availability contract as Advance, rather than only fatigue/lineup flags",
+    "confidence": "medium",
+    "source": "Fresh isolated8458 world26UHC seed2038 S1W1-W2, integrated tree833ae36; docs/playtests/2026-10-08-eight-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "development",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0057",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Resolved development and replay survive later roster moves",
+    "problem": "Live roster recomputation could rewrite participants in resolved-week views",
+    "solution": "After actual Echo release, Full report snapshot remains identical withEcho; replay retainsEcho andAI-releasedGrimveil instead ofcurrentFrostecho",
+    "lesson": "Preserve report-time ownership, while new-player missing adjacent snapshots should report unavailable comparisons",
+    "confidence": "medium",
+    "source": "Fresh isolated8458 world26UHC seed2038 S1W1-W2, integrated tree833ae36; docs/playtests/2026-10-08-eight-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "development",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]
