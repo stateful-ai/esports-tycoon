@@ -1,0 +1,101 @@
+{
+  "search": [],
+  "recent": [
+    {
+      "id": "esports-playtest-0085",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Default five displays conflicting saved and resolved counts",
+      "problem": "Clubheader5of5 versus detailedDefaultfive3of5 afterrosterchurn",
+      "solution": "Saved public raw three and resolved five plus screenshot retained; a valid manual five resolves displays, underlying gap15queued",
+      "lesson": "Explain automatic completion or render consistent server-derived effective selection",
+      "confidence": "medium",
+      "source": "Browser8467 world26UHC seed2038 S1W5-W6 docs/playtests/2026-10-08-bench-rotation/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "rotation",
+        "recovery",
+        "lineup",
+        "telemetry"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0084",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Action type capture does not capture exact lineup choices",
+      "problem": "Two set_lineup rows record only agents/defaultfive flags",
+      "solution": "Seven new ledger decisions match nine browser pairs, but exact five andHarbor rely on retained public receipts",
+      "lesson": "Report parameter omissions explicitly; coarse usage counts cannot quantify selected lineup or agent preferences",
+      "confidence": "medium",
+      "source": "Browser8467 world26UHC seed2038 S1W5-W6 docs/playtests/2026-10-08-bench-rotation/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "rotation",
+        "recovery",
+        "lineup",
+        "telemetry"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0083",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Bench rotation produces independently visible recovery",
+      "problem": "Saved lineup and agent locks need actual participant verification",
+      "solution": "Apex benchRestLight maps stayed4 and condition31.5to55.5; replay fielded HollowlockHarbor with0.53rating despite13-2win",
+      "lesson": "Read actual participants, match performance and recovery independently; a team win does not imply every choice worked",
+      "confidence": "medium",
+      "source": "Browser8467 world26UHC seed2038 S1W5-W6 docs/playtests/2026-10-08-bench-rotation/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "rotation",
+        "recovery",
+        "lineup",
+        "telemetry"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0082",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Stale Dashboard guidance after a scouting mutation",
+      "problem": "Browser rows4 and6 failed rendered-copy assertions while server state was already correct",
+      "solution": "Preserve partial and unexpected results, correct refresh, then recheck rows7 and8",
+      "lesson": "Do not count an HTTP200 as visual acceptance",
+      "confidence": "medium",
+      "source": "Gap14 browser8466 own copied26UHC seed2038 S1W5 docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "scouting",
+        "gap14"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0081",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Refresh derived state after changing standing directives",
+      "problem": "Returning immediately to Dashboard showed prior guidance after successful directive change",
+      "solution": "Await existing refresh after scout-directive POST and verify actual rendered text",
+      "lesson": "A persisted setting readback and a destination-screen readback catch different defects",
+      "confidence": "medium",
+      "source": "Gap14 browser8466 own copied26UHC seed2038 S1W5 docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "scouting",
+        "gap14"
+      ],
+      "kind": "learning"
+    }
+  ]
+}

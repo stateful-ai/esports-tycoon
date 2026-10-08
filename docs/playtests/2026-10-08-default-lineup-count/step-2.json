@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "negotiation": {
+    "player_id": "fa_0",
+    "handle": "Hollowlock",
+    "kind": "sign",
+    "demand_salary": 4000,
+    "demand_weeks": 58,
+    "demand_stream_share": 70,
+    "demand_release_fee": 28000,
+    "demand_buyout": 126000,
+    "demand_no_transfer": false,
+    "demand_role": "bench",
+    "role_goal": "A real rotation path, useful minutes, and fair security.",
+    "opening_line": "I see myself as a bench. A real rotation path, useful minutes, and fair security. I want to keep 70% of my streaming revenue.",
+    "rounds_used": 0,
+    "rounds_left": 3,
+    "leverage": 68,
+    "interest": 58,
+    "competing_clubs": 3,
+    "deadline_week": 8,
+    "leverage_reasons": [
+      "3 credible alternatives",
+      "regional fit"
+    ],
+    "current_salary": null,
+    "contract_weeks_left": null,
+    "locker_room_fit": {
+      "score": 50,
+      "duos": 0,
+      "feuds": 0
+    },
+    "current_terms": null
+  }
+}

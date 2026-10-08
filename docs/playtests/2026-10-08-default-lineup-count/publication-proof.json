@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-08T21:26:19.909980+00:00",
+  "head": "26b9281357e74de1bdc7beffe5d5660fe05e47b4",
+  "original_sha256": "7eb29cc91de8e3df6b3d616dcd2357006ccd5e1f7d076153579e4193ff8a2140",
+  "shadow_sha256": "1219bff1339bc230d5560955749af0f255cfa24b5f8787f69b623efae5500c0c",
+  "session_sha256": "fad71176aba20a88b59dcf43f37337a74bc7f6b77d443970e1e2cccf869f2528",
+  "prior_bytes_preserved": true,
+  "session_rows_byte_identical": true,
+  "original_rows": 350,
+  "new_rows": 7,
+  "backup": "C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\runs\\playtests\\2026-10-08-default-lineup-count\\shadow-canonical.csv",
+  "action": "Restore only owned worktree canonical to verified HEAD after exact seven-row extraction for concurrent per-session publication; primary untouched"
+}
