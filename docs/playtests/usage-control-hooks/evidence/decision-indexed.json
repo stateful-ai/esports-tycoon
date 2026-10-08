@@ -1,0 +1,70 @@
+{
+  "world": "M74LG",
+  "seed": 2040,
+  "season": 1,
+  "week": 2,
+  "action_log": [
+    {
+      "index": 0,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_baltic_meridian",
+      "team_id": "team_baltic_meridian",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "telemetry_snaps": {
+    "mgr_team_baltic_meridian": [
+      {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "team_id": "team_baltic_meridian",
+        "features": {
+          "balance": 257409.0,
+          "board_patience": -1.0,
+          "chemistry": 71.4,
+          "contract_weeks_min": 19.0,
+          "facility_analytics_suite": 0.0,
+          "facility_marketing_office": 0.0,
+          "facility_recovery_suite": 0.0,
+          "facility_strategy_lab": 0.0,
+          "facility_team_house": 0.0,
+          "facility_training_center": 0.0,
+          "fan_count": 31860.0,
+          "league_position": 3.0,
+          "losses": 0.0,
+          "n": 5.0,
+          "phase": 0.0,
+          "reputation": 42.1,
+          "roster_age": 19.2,
+          "roster_ca": 43.787,
+          "roster_confidence": 52.48,
+          "roster_form": 55.6,
+          "roster_morale": 70.3,
+          "roster_size": 5.0,
+          "roster_stamina": 77.9,
+          "round_diff": 3.0,
+          "scout_progress": 0.0,
+          "season": 1.0,
+          "sentiment": 52.7,
+          "sponsor_deals": 0.0,
+          "staff_analyst": 0.0,
+          "staff_coach": 0.0,
+          "staff_language_coach": 0.0,
+          "staff_performance_coach": 0.0,
+          "staff_physio": 0.0,
+          "staff_psychologist": 0.0,
+          "week": 1.0,
+          "weekly_payroll": 13300.0,
+          "wins": 1.0,
+          "world_rank": 21.0
+        }
+      }
+    ]
+  },
+  "save_sha256": "cb2beeefa0a4f15b2a017097c367f3021d598e90dea3d3238f253da253c9dfdb"
+}

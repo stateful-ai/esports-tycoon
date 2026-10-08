@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0038",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Coarse control hooks capture previously invisible seed and full-report use",
+    "problem": "Lobby seed edits and explicit report opening were absent from retained browser usage",
+    "solution": "Exercise actual Seed change and Full report controls; reconcile one event each with isolated sidecar",
+    "lesson": "Interaction counts can record control use without seed values or report contents; they do not establish accepted decisions or attention",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0039",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Browser recovery must retain blocked attempts separately from requests",
+    "problem": "Guide intercepted Advance and report intercepted Save without an emitted request",
+    "solution": "Keep blocked rows, resume same world, use Close Guide and Save, reconcile one accepted advance and one snapshot",
+    "lesson": "A timed-out browser click is not an HTTP rejection; preserve its gap and the subsequent successful action as separate observations",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0040",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Classic report does not close with Escape",
+    "problem": "After Full report, Escape left the overlay covering Save and the driver click was blocked",
+    "solution": "Use the visible Continue control or reopen the same test world before saving; no production change in this analytics patch",
+    "lesson": "Results overlay currently requires its visible Continue control; Escape cannot be assumed to dismiss it",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

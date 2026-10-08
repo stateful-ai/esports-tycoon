@@ -74,6 +74,31 @@ def test_bounded_payload(client):
     assert client.post("/api/usage/events", json=payload(*[{"kind": "session_start"}] * 33)).status_code == 422
 
 
+def test_control_interactions_are_counts_only(client):
+    events = [{"kind": "interaction", "target": target} for target in
+              ("lobby/seed_change", "week/full_report_open", "week/full_report_open")]
+    assert client.post("/api/usage/events", json=payload(*events)).json()["accepted"]
+    report = client.get("/api/usage/report").json()
+    assert report["events"] == {"interaction:lobby/seed_change": 1,
+                                "interaction:week/full_report_open": 2}
+    assert report["attempts"] == report["paired_results"] == 0
+    assert report["visible_ms"] == report["outcomes"] == {}
+
+
+@pytest.mark.parametrize("event", [
+    {"kind": "interaction", "target": "lobby/seed_change/2039"},
+    {"kind": "interaction", "target": "week/report_text"},
+    {"kind": "interaction", "target": "lobby/seed_change", "seed": 2039},
+    {"kind": "interaction", "target": "week/full_report_open", "label": "secret"},
+    {"kind": "interaction", "target": "lobby/seed_change", "request_id": 1},
+    {"kind": "interaction", "target": "week/full_report_open", "duration_ms": 10},
+    {"kind": "interaction", "target": "week/full_report_open", "outcome": "success"},
+    {"kind": "interaction", "target": "week/full_report_open", "status": 200},
+])
+def test_rejects_interaction_values_and_request_semantics(client, event):
+    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
+
+
 def test_reordered_concurrent_funnels_and_visible_time(client):
     rows = [
         {"kind": "result", "target": "/api/actions/train", "request_id": 2, "outcome": "rejected", "status": 200},

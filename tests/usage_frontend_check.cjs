@@ -17,6 +17,13 @@ vm.createContext(context);
 vm.runInContext(fs.readFileSync('src/esports_sim/web/static/usage.js', 'utf8'), context);
 (async () => {
   const usage = context.window.Usage;
+  usage.interaction('lobby/seed_change');
+  usage.interaction('week/full_report_open');
+  usage.interaction('lobby/seed_change/SECRET');
+  await usage.flush();
+  const interactions = requests.flatMap(r => r.events).filter(e => e.kind === 'interaction');
+  assert.deepEqual(interactions.map(e => e.target), ['lobby/seed_change', 'week/full_report_open']);
+  assert(interactions.every(e => Object.keys(e).sort().join(',') === 'kind,target'));
   now = 1000; usage.view('club/squad');
   now = 2000; document.hidden = true; listeners.visibilitychange();
   await usage.flush();
