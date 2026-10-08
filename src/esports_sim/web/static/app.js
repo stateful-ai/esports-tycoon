@@ -1979,6 +1979,7 @@ async function dashboard(v) {
     const stageTxt =
       fix.stage === "regular" ? `${region} League` : stageLabel(fix.stage).toUpperCase();
     const burnoutWatch = (s.rotation || []).filter((r) => r.burnout);
+    const rosterShort = s.roster_readiness?.ready === false;
     const scoutOnOpponent = s.scout && s.scout.target === oppId;
     const scoutPct = scoutOnOpponent ? Math.round((s.scout.progress || 0) * 100) : 0;
     const planSet = !!(gameplan && gameplan.plan);
@@ -1991,7 +1992,7 @@ async function dashboard(v) {
     const readiness = el("div", "es-readiness",
       `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
       `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
-      `<span class="pill ${burnoutWatch.length ? "warn" : "good"}">${burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
+      `<span class="pill ${rosterShort || burnoutWatch.length ? "warn" : "good"}">${rosterShort ? "Squad short" : burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
     const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
     mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
     mdBtn.onclick = openMatchday;
@@ -2042,17 +2043,24 @@ async function dashboard(v) {
     };
 
     const lineupIns = (sug?.players || []).filter((p) => !p.dressed);
-    const rosterTitle = sug?.changed ? "Review the suggested five"
+    const rosterTitle = rosterShort ? "Complete the match squad"
+      : sug?.changed ? "Review the suggested five"
       : burnoutWatch.length ? `Protect ${esc(burnoutWatch[0].handle)}'s legs`
       : "Keep the match five settled";
-    const rosterCopy = sug?.changed
+    const rosterCopy = rosterShort
+      ? `You have ${s.roster_readiness.count} of the ${s.roster_readiness.minimum} players needed to advance. Sign ${s.roster_readiness.shortfall} more in Market → Players, then check the five in Club → Squad.`
+      : sug?.changed
       ? `${lineupIns.map((p) => plink(p.id, p.handle)).join(" and ")} rate among your best available options. Confirm the five and any map overrides.`
       : burnoutWatch.length
         ? `${plink(burnoutWatch[0].id, burnoutWatch[0].handle)} is carrying a heavy map load. Check the rotation before locking the lineup.`
         : "No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.";
-    prepCard("Assistant coach", rosterTitle, rosterCopy, sug?.changed || burnoutWatch.length ? "Review" : "Stable",
-      sug?.changed || burnoutWatch.length ? "urgent" : "ready", "Open roster", () => {
-        App.clubTab = "squad"; dashGoTab("club");
+    prepCard("Assistant coach", rosterTitle, rosterCopy, rosterShort ? "Blocked" : sug?.changed || burnoutWatch.length ? "Review" : "Stable",
+      rosterShort || sug?.changed || burnoutWatch.length ? "urgent" : "ready", rosterShort ? "Find players" : "Open roster", () => {
+        if (rosterShort) {
+          App.marketTab = "players"; dashGoTab("market");
+        } else {
+          App.clubTab = "squad"; dashGoTab("club");
+        }
       });
 
     prepCard("Head coach", planSet ? "Pressure-test the game plan" : "Turn the brief into a game plan",
