@@ -277,6 +277,11 @@ def _remove_from_lineup(team, player_id: str) -> None:
     team.lineup.agents.pop(player_id, None)
 
 
+def release_cost(player: Player) -> int:
+    """Severance charged on release, including the legacy salary fallback."""
+    return player.release_fee or player.salary * SEVERANCE_WEEKS
+
+
 def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, str]:
     allowed, why = market_move_allowed(gs, team_id)
     if not allowed:
@@ -288,7 +293,7 @@ def release_player(gs: GameState, team_id: str, player_id: str) -> tuple[bool, s
     effects = _departure_consequences(gs, team_id, player_id)
     _record_value_decision(gs, "release", "completed", player_id, team_id,
                            reason="roster release", effects=effects)
-    severance = p.release_fee or p.salary * SEVERANCE_WEEKS
+    severance = release_cost(p)
     team.balance -= severance
     relationships.on_departure(gs, player_id, team_id)
     team.player_ids.remove(player_id)

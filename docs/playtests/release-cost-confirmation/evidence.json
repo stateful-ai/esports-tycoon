@@ -1,0 +1,32 @@
+{
+  "code": "ASQB4",
+  "player": "Phantom",
+  "salary": 6500,
+  "serialized_cost": 78000,
+  "dialogs": [
+    "Release Phantom? Severance = 78,000 cr."
+  ],
+  "result": {
+    "ok": true,
+    "message": "released Phantom, severance 78,000 cr"
+  },
+  "before": 487320,
+  "after": 409320,
+  "roster_count_before": 5,
+  "roster_count_after": 4,
+  "decision_telemetry": [
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "release",
+      "params": {
+        "player_id": "phantom"
+      },
+      "source": "web"
+    }
+  ],
+  "telemetry_snap_count": 0
+}

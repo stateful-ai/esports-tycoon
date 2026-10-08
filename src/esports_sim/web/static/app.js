@@ -3141,7 +3141,7 @@ async function roster(v, opts = {}) {
       releaseBtn.onclick = async (e) => {
         e.stopPropagation();
         if (!canRelease) return;
-        if (!confirm(`Release ${p.handle}? Severance = 6 weeks salary.`)) return;
+        if (!confirm(`Release ${p.handle}? Severance = ${money(p.release_cost)}.`)) return;
         const r = await api("/api/actions/release", { player_id: p.id });
         toast(r.message); refresh(); renderApp();
       };

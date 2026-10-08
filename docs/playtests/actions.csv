@@ -295,3 +295,191 @@ session_id,step,started_at_utc,finished_at_utc,commit,working_tree_dirty,game_ve
 2026-10-06-ui-usage,7,2026-10-06T21:08:34.913+00:00,2026-10-06T21:08:36.497+00:00,0aabb0d4bfc1366192b23623925ef19ad5784b0d,true,0.0.1,gpt-6.1-sol,medium,local HTTP API,63BFF,2037,S1 W1,Preserve accepted training change despite blocked browser controls,Save only the isolated63BFF world through local HTTP API,"Save contains one Mechanical train decision, five-player roster, and no release decision","Local save request succeeded; saved action_log has exactly one set_training mechanical record, no release record, and zero weekly snapshots. Direct HTTP recovery is separate from browser usage capture.",met,docs/playtests/2026-10-06-ui-usage-telemetry.md,not_instrumented,Direct HTTP does not emit browser usage events
 2026-10-06-ui-usage,8,2026-10-06T21:21:36.037+00:00,2026-10-06T21:21:36.664+00:00,0aabb0d4bfc1366192b23623925ef19ad5784b0d,true,0.0.1,gpt-6.1-sol,medium,saved decision telemetry audit,63BFF,2037,S1 W1,Reconcile accepted browser training with saved deterministic decisions,Read only63BFF saved action_log and snapshot count,One set_training mechanical web record at S1W1 and zero weekly snapshots; release outcome remains blocked,Confirmed action_log[0] set_training focus mechanical delegate_to_coach False source web S1W1 mgr_team_nexus; exactly one record and zero weekly snapshots. No release record; no claim about HTTP rejection outcome.,met,runs/playtests/ui-usage/analytics.json,not_instrumented,Read-only saved telemetry audit does not emit browser usage; decision evidence matches row3
 2026-10-06-ui-usage,9,2026-10-06T21:21:55.986+00:00,2026-10-06T21:21:56.655+00:00,0aabb0d4bfc1366192b23623925ef19ad5784b0d,true,0.0.1,gpt-6.1-sol,medium,saved decision telemetry audit,63BFF,2037,S1 W1,Correct fresh audit provenance after default-encoding read failure at step8,Reread saved action_log and snapshot count with explicit UTF8,UTF8 audit succeeds and confirms one Mechanical training record; preserve earlier encoding failure as correction evidence,"Correction to step8: its fresh read failed under Windows default cp1252, while its outcome text repeated the earlier successful audit. Explicit UTF8 now freshly confirms exactly one set_training mechanical web record S1W1 and zero snapshots; no release record.",met,runs/playtests/ui-usage/analytics.json,not_instrumented,Read-only audit; UTF8 read confirms decision evidence for row3
+2026-10-08-replay-rejection,1,2026-10-08T15:27:07.009+00:00,2026-10-08T15:27:28.704+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,,2038,Lobby,Start a clean current-build career,Open isolated game lobby on port 8438,New career controls are available without loading another save,"Clean lobby offers seed, fictional world, Sandbox and Team Nexus; no career loaded",met,.playwright-mcp/page-2026-10-08T15-27-07-622Z.yml,recorded,"browser usage view lobby, indices [1]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,2,2026-10-08T15:27:28.821+00:00,2026-10-08T15:27:40.735+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,,2038,Lobby,Manage Team Nexus in a reproducible sandbox,Set seed 2038 and select Team Nexus with fictional world and Sandbox defaults,Career starts at S1 W1 with Team Nexus and a new world code,Seed changed to 2038 and league list regenerated; the original Team Nexus reference click did not create a career. Lobby remains visible,partial,.playwright-mcp/page-2026-10-08T15-27-30-014Z.yml,not_instrumented,Seed preview selection has no dedicated usage event or decision; docs/playtests/evidence/2026-10-08-replay-rejection/
+2026-10-08-replay-rejection,3,2026-10-08T15:27:40.858+00:00,2026-10-08T15:27:52.173+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,Lobby,Start Team Nexus after seed regeneration,Select Team Nexus from the regenerated team list,A new Team Nexus world opens at S1 W1,Team Nexus dashboard opened at Season 1 Week 1; onboarding handbook overlays it; balance 487320 credits,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage request 4, indices [4, 6], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,4,2026-10-08T15:27:52.290+00:00,2026-10-08T15:28:13.706+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Inspect the active roster and release safeguards,Close handbook and open Club,Squad lists players and management controls,"Club Squad lists Apex, Phantom, Echo, Vortex and Ghost; five players with Release controls; Vortex condition 32",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view club/squad, indices [11]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,5,2026-10-08T15:28:13.841+00:00,2026-10-08T15:28:43.062+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Check the minimum-roster release safeguard,Click Release for Phantom and accept confirmation,Request is rejected with a clear minimum-five-player explanation and Phantom remains in squad,"Release succeeded: Phantom disappeared, roster became 4/10, balance fell by 78000 credits. Confirmation said six weeks salary; displayed salary was 6500/week (39000 for six weeks)",unexpected,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[0], parameters/team/source/week verified; browser usage request 14, indices [13, 14], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,6,2026-10-08T15:29:15.964+00:00,2026-10-08T15:29:27.460+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Check whether the short roster prevents playing a fixture,Advance Week with four roster players,Advance is rejected with an actionable roster warning instead of playing with four,"Advance rejected: need 5 players to advance, sign 1 more. Week remains1, balance409320 and roster4. Toast refers to sign action rather than Market screen",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage request 19, indices [19, 20], http_error/409; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,7,2026-10-08T15:29:27.577+00:00,2026-10-08T15:29:55.246+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Recover a legal roster without hiding the release consequence,Open Market and inspect affordable free agents,Market offers an available replacement with cost and role information,"Market has19 free agents; Slyblade is recommended Duelist Entry, age28, English91, estimated72 overall, asking5700/week; coverage0 so ceiling unknown",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view market/players, indices [23]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,8,2026-10-08T15:29:55.361+00:00,2026-10-08T15:30:07.358+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Replace the released entry with an affordable English-speaking player,Open Slyblade negotiation,"Offer panel exposes salary, contract length and affordability before signing","Negotiation opens: actual starter ask6300/week for62weeks,71percent stream share, releasefee76000, buyout180000, no-transfer clause. Market asking5700 is an opening estimate, not this offer",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[1], parameters/team/source/week verified; browser usage request 21, indices [26, 27], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,9,2026-10-08T15:30:07.472+00:00,2026-10-08T15:30:16.498+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Restore the entry role with a contract I can afford,"Offer Slyblade the displayed default starter terms:6300/week,62weeks,release76000",Offer accepted or a clear counteroffer; signing should restore roster to five,Signed Slyblade at6300/week for62weeks; market wage headroom now15650/week; balance409320 unchanged immediately,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[2], parameters/team/source/week verified; browser usage request 22, indices [29, 30], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,10,2026-10-08T15:30:16.625+00:00,2026-10-08T15:30:40.905+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Verify the new player and prepare the exhausted awper,Open Club Development and inspect squad/training,Slyblade appears as fifth player and Vortex can be rested,"Development confirms Slyblade fifth player, OVR72.3. Vortex has too exhausted to train warning and individual focus control",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view club/development, indices [35]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,11,2026-10-08T15:30:41.029+00:00,2026-10-08T15:30:52.129+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Recover Vortex rather than train through exhaustion,Set Vortex individual development focus to Rest,Vortex focus reads back rest and recovery rather than attribute training is indicated,Vortex individual focus reads rest; intensity normal. Plan no longer builds attributes this week; recovery selected,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[3], parameters/team/source/week verified; browser usage request 29, indices [37, 38], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,12,2026-10-08T15:30:52.251+00:00,2026-10-08T15:31:32.328+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Check next fixture before advancing the restored roster,Open Match,"Opponent, map and preparation controls are visible","Match defaults to Strategy; Game plan reveals Sahara Compass, league best of1, Lotus. Lineup copy says map is unknown even though Lotus is displayed above",partial,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view tactics/gameplan, indices [44]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,13,2026-10-08T15:31:32.453+00:00,2026-10-08T15:32:28.388+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Verify that Vortex rest survives navigation and refreshes plan feedback,Return to Club Development after leaving it,Rest remains selected and expected attributes/warning reflect recovery rather than auto training,"Rest persisted; after navigation Vortex now correctly shows Recovery and no exhausted warning. Correction to step11: immediate selection did not refresh feedback, only navigation refreshed it",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view club/development, indices [48]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,14,2026-10-08T15:32:28.863+00:00,2026-10-08T15:33:22.250+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W1,Play the fixture with the restored roster and rest plan,Advance Week,Week resolves once with a result and a replay opportunity,"Advanced to S1 W2; Nexus beat Sahara Compass on Lotus13-2, first of8; balance427505. One week only, no causal claim from rest or signing",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[4], parameters/team/source/week verified; browser usage request 34, indices [52, 54], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,15,2026-10-08T15:33:22.443+00:00,2026-10-08T15:33:32.239+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Find a replay of the completed fixture,Open Full report from match reveal,Weekly report includes the Nexus result and a Replay control,"Week1 report lists Nexus13-2 Sahara with Lotus replay button, income54385 and expenses36200. Several other fixtures have scores but no replay link",met,docs/playtests/2026-10-08-replay-rejection.md,not_instrumented,Weekly Full report overlay has no dedicated usage event or decision; docs/playtests/evidence/2026-10-08-replay-rejection/
+2026-10-08-replay-rejection,16,2026-10-08T15:33:32.425+00:00,2026-10-08T15:33:59.980+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Watch how the completed Lotus match unfolded,Open Nexus Lotus replay,"Replay viewer renders map, roster and usable playback controls","Lotus replay opens and automatically plays; renders map with site labels, rosters, round buttons, pause, speed, seek, camera and Close controls",met,runs/playtests/2026-10-08-replay-rejection/replay-lotus.png,recorded,"browser usage replay ['open'], indices [58]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,17,2026-10-08T15:34:02.593+00:00,2026-10-08T15:34:23.673+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2 replay,Pause to inspect the tactical state,Click replay pause,Playback stops and control changes to play while map remains visible,Pause changes to play triangle; round1 stopped at seek66 and clock0:38. Map remains visible,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage replay ['pause'], indices [63]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,18,2026-10-08T15:34:24.892+00:00,2026-10-08T15:35:02.423+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2 replay,Compare the round after halftime,Seek replay to round13,Round13 selected with correct defending side and updated map state,"Round13 selected; ATK Sahara Compass means Nexus defending. Map state reset to round start, pause retained",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage replay ['round'], indices [66]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,19,2026-10-08T15:35:09.350+00:00,2026-10-08T15:36:39.042+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2 replay,Watch the defense at a faster pace,Select16x speed and resume playback,Time advances faster with16x selected; playback can be paused again,"16x playback raced through rounds13-15, reached final13-2 and automatically paused at end. Seek80 clock0:26 in final round",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage replay ['speed_16', 'play'], indices [70, 71]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,20,2026-10-08T15:36:40.525+00:00,2026-10-08T15:36:58.410+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2 replay,Return from replay to career management,Close replay then Continue weekly report,Both overlays close and campaign remains S1 W2 with result unchanged,"Replay and weekly report closed; career remains S1W2,427505credits. Development report now has week1 feedback",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage replay ['close'], indices [78]; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,21,2026-10-08T15:36:59.280+00:00,2026-10-08T15:37:56.018+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Check whether recovery intent had a visible result,Read Vortex weekly development feedback and squad condition,Report distinguishes rest recovery from attribute practice and displays updated condition,"Vortex report says Rest/normal,1map, individual recovery practice paused and match experience retained; +0.02match OVR, communications+0.1, displayed OVR74.5 unchanged. Squad condition32->43,confidence50->53",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view club/squad, indices [84]; covers navigation only, not reading the development text; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,22,2026-10-08T15:37:56.738+00:00,2026-10-08T15:38:40.385+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Give young Ghost a veteran mentor,Open Development and choose Apex as Ghost mentor,Apex eligible mentor appears and pair reads back persistently,Ghost mentor control reads apex after selecting eligible Apex teach73; POST success observed; persistence still to verify by navigation,partial,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[5], parameters/team/source/week verified; browser usage request 42, indices [92, 93], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,23,2026-10-08T15:38:41.071+00:00,2026-10-08T15:39:15.772+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Verify mentor pairing survives a fresh screen read,Navigate Squad then Development and read Ghost mentor,Ghost remains paired with Apex,"After Squad then Development, Ghost mentor still reads apex; persistent UI pair verified",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage view club/development, candidate indices [35, 48, 80, 90, 100, 108]; delivery time is not click time; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,24,2026-10-08T15:39:17.294+00:00,2026-10-08T15:39:48.667+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Verify clearing a mentor is a recorded decision,Set Ghost mentor to no mentor,Pair clears and reads back empty after navigation,"After clearing mentor and navigating Squad/Development, Ghost mentor value remains empty; paired badge disappeared",met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"decision ledger action_log[6], parameters/team/source/week verified; browser usage request 46, indices [102, 103], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,25,2026-10-08T15:39:50.022+00:00,2026-10-08T15:40:19.166+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Preserve the exact played world for instrumentation audit,Click Save,Save confirms success with week2 roster and decisions retained,Save succeeded through browser at S1W2 after mentor cleared; audit will inspect this saved world,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,"browser usage request 50, indices [111, 112], success/200; docs/playtests/evidence/2026-10-08-replay-rejection/"
+2026-10-08-replay-rejection,26,2026-10-08T15:40:19.380+00:00,2026-10-08T15:40:20.358+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,End browser session so final usage events flush,Close only the isolated8438 test tab,"Test tab closes, career stays saved, final browser session-end can be audited",Isolated8438 tab closed; untouched blank tab remains. No further gameplay decisions in this session,met,docs/playtests/2026-10-08-replay-rejection.md,recorded,browser usage session_end[114]; docs/playtests/evidence/2026-10-08-replay-rejection/
+2026-10-08-release-cost-confirmation,1,2026-10-08T15:33:17.631+00:00,2026-10-08T15:33:20.607+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser + direct HTTP setup,ASQB4,2038,S1 W1,Start an isolated world for release confirmation,Create seed2038 Team Nexus through browser request context,Fresh sandbox world ready; no existing career changed,Fresh world ASQB4 created; closed automatic guide; Squad release buttons visible,met,,not_instrumented,Setup used HTTP; no manager decision claimed
+2026-10-08-release-cost-confirmation,2,2026-10-08T15:33:20.630+00:00,2026-10-08T15:33:20.896+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser + direct HTTP setup,ASQB4,2038,S1 W1,Understand and approve Phantom release cost,Click Phantom Release and accept the browser confirmation,"Confirmation states 78,000cr; release debits the same 78,000cr and removes Phantom","Confirmation Release Phantom? Severance = 78,000 cr.; 487320 -> 409320; Phantom removed; toast {'ok': True, 'message': 'released Phantom, severance 78,000 cr'}",met,runs/release-cost-evidence.json,recorded,Saved action_log release at index 0
+2026-10-08-development-feedback-refresh,1,2026-10-08T15:38:21.972+00:00,2026-10-08T15:39:14.071+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Harness observed App.mp before campaign creation finished; no outcome inferred. Retry with explicit membership wait.,blocked,,unverified,
+2026-10-08-development-feedback-refresh,5,2026-10-08T15:39:18.205+00:00,2026-10-08T15:41:01.809+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,UI create click did not establish membership within 30 seconds. No world or mutation inferred.,blocked,,unverified,
+2026-10-08-development-feedback-refresh,9,2026-10-08T15:41:02.533+00:00,2026-10-08T15:41:50.077+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,"Seed input blur caused a second preview render during the pick click, replacing its button; no POST /api/new observed. Retry after committing seed input.",blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,13,2026-10-08T15:41:50.768+00:00,2026-10-08T15:41:53.037+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,ZMGP6,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,14,2026-10-08T15:41:53.039+00:00,2026-10-08T15:42:43.089+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,ZMGP6,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,Automatic first-week handbook intercepted Club click; no navigation completed. Retry after closing handbook.,blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,17,2026-10-08T15:42:43.762+00:00,2026-10-08T15:42:45.863+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,KMFA7,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,18,2026-10-08T15:42:45.865+00:00,2026-10-08T15:43:00.302+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,KMFA7,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Development row opened, but harness console failed encoding its Unicode text; assertions not reached. Retry ASCII-safe console output.",blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,21,2026-10-08T15:43:00.942+00:00,2026-10-08T15:43:03.058+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,6N3FZ,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,22,2026-10-08T15:43:03.060+00:00,2026-10-08T15:43:22.372+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,Vortex row visibly shows TOO EXHAUSTED TO TRAIN and Game Sense/Utility Usage/Positioning; harness assertion was case sensitive against CSS uppercase text. Retry case-insensitive.,met,,not_instrumented,
+2026-10-08-development-feedback-refresh,25,2026-10-08T15:43:22.944+00:00,2026-10-08T15:43:25.029+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,26,2026-10-08T15:43:25.031+00:00,2026-10-08T15:43:25.539+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+⚠ TOO EXHAUSTED TO TRAIN
+Game Sense, Utility Usage, Positioning
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—",met,,not_instrumented,Read-only navigation
+2026-10-08-development-feedback-refresh,27,2026-10-08T15:43:25.540+00:00,2026-10-08T15:43:25.685+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Recover exhausted Vortex,Change Vortex individual focus to rest,Same visible row immediately shows Recovery without exhausted warning; control focus survives,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—; rest retained and focus preserved",met,,unverified,"WZVWL browser acceptance passed; explicit Save used wrong endpoint, persisted save does not contain both decisions. Later NHVUT run saved and reconciled."
+2026-10-08-development-feedback-refresh,28,2026-10-08T15:43:25.686+00:00,2026-10-08T15:43:25.817+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Verify intensity refresh retains rest,Change Vortex intensity to light,Same row remains Recovery and light selection is persisted,Recovery remained visible; live roster readback rest/light; no browser page errors,met,,unverified,"WZVWL browser acceptance passed; explicit Save used wrong endpoint, persisted save does not contain both decisions. Later NHVUT run saved and reconciled."
+2026-10-08-development-feedback-refresh,29,2026-10-08T15:43:46.429+00:00,2026-10-08T15:43:48.539+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,30,2026-10-08T15:43:48.540+00:00,2026-10-08T15:43:49.018+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+⚠ TOO EXHAUSTED TO TRAIN
+Game Sense, Utility Usage, Positioning
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—",met,,not_instrumented,Read-only navigation
+2026-10-08-development-feedback-refresh,31,2026-10-08T15:43:49.019+00:00,2026-10-08T15:43:49.150+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Recover exhausted Vortex,Change Vortex individual focus to rest,Same visible row immediately shows Recovery without exhausted warning; control focus survives,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—; rest retained and focus preserved",met,,recorded,evidence.json: NHVUT action_log index 0; usage matched dev_plan attempt/result success200
+2026-10-08-development-feedback-refresh,32,2026-10-08T15:43:49.152+00:00,2026-10-08T15:43:49.263+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Verify intensity refresh retains rest,Change Vortex intensity to light,Same row remains Recovery and light selection is persisted,Recovery remained visible; live roster readback rest/light; no browser page errors,met,,recorded,evidence.json: NHVUT action_log index 1; usage matched dev_plan attempt/result success200
+2026-10-08-lineup-guidance,1,2026-10-08T15:36:49.750+00:00,2026-10-08T15:38:38.494+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WJBF7,2038,S1 W1,Check known-map agent guidance,Create fictional sandbox Team Nexus seed 2038 and open Match Gameplan,Lotus fixture appears with copy explaining shared agent assignments without implying an unknown map,Sahara Compass best of 1 Lotus and shared agent guidance appeared together; saved-agent persistence explained; no console errors. Save showed World saved.,met,runs/lineup-validation/gameplan.png,recorded,"Browser stream only: tactics/gameplan view and save request 15 attempt/success recorded; gameplay decision count 0, telemetry_snaps 0. runs/lineup-validation/analytics.json"
+2026-10-08-replay-roster,1,2026-10-08T15:50:32.495+00:00,2026-10-08T15:50:58.924+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Inspect apparent replay roster and box-score disagreement,Reopen the identified26UHC career after prior session save,Same S1W2 career loads without mutation and its last result is available,"Same S1W2 Nexus career loads,427505credits. News reports Sahara released Grimveil and signed Frostecho after the Lotus fixture",met,docs/playtests/2026-10-08-replay-roster.md,recorded,Browser stream: session_start/dashboard view; no new decision; docs/playtests/evidence/2026-10-08-replay-roster/
+2026-10-08-replay-roster,2,2026-10-08T15:50:59.069+00:00,2026-10-08T15:51:43.128+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Locate the completed fixture without advancing,Open Season to find results/replays,Results show the Lotus13-2 fixture and replay access,Season Fixtures has Played weeks collapsed; expanding reveals week1 Nexus13-2 Sahara and Lotus replay button,met,docs/playtests/2026-10-08-replay-roster.md,recorded,Browser stream: season/league + season/fixtures views; Played weeks expansion has no dedicated hook; docs/playtests/evidence/2026-10-08-replay-roster/
+2026-10-08-replay-roster,3,2026-10-08T15:51:44.483+00:00,2026-10-08T15:52:26.463+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Check whether replay identifies the players who actually played,Open week1 Lotus replay and compare its Sahara roster with box score and event names,"Grimveil appears consistently as the week1 participant, rather than the later signing Frostecho","Replay Sahara list includes new signing Frostecho, but box score includes departed Grimveil11kills12deaths. Dashboard news confirmed transfer after the match. Replay participant list is from current roster instead of match roster",unexpected,docs/playtests/2026-10-08-replay-roster.md,recorded,"Browser stream: replay/open and replay view; identity discrepancy proven by public response, not decision ledger; docs/playtests/evidence/2026-10-08-replay-roster/"
+2026-10-08-replay-roster,4,2026-10-08T15:52:26.687+00:00,2026-10-08T15:52:40.389+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,false,0.0.1,unknown (not exposed),unknown (not exposed),browser,26UHC,2038,S1 W2,Preserve identity mismatch evidence and end the read-only inspection,"Capture replay screenshot, close replay, Save and close isolated tab",Evidence retained; no campaign decisions or week changes,"Captured replay screenshot and public replay response body; closed viewer, saved unchanged S1W2 career and closed only test tab",met,docs/playtests/2026-10-08-replay-roster.md,recorded,"Browser stream: replay/close, Save attempt/success, session_end; no new decision; docs/playtests/evidence/2026-10-08-replay-roster/"
+2026-10-08-replay-identity-fix,1,2026-10-08T16:04:30.632+00:00,2026-10-08T16:05:14.610+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WJBF7,2038,S1 W1,Create an isolated campaign to confirm historical replay identities after weekly roster moves,Create Sandbox seed 2038 Team Nexus on port 8452,"Fresh world at week 1 ready for release, signing and lineup reproduction",Created fresh Sandbox seed 2038 Team Nexus; Club shows five original players and W1 Sahara Compass fixture,met,,recorded,World creation absent from action_log; usage /api/new attempt+success paired
+2026-10-08-replay-identity-fix,2,2026-10-08T16:05:14.754+00:00,2026-10-08T16:05:52.910+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WJBF7,2038,S1 W1,Reproduce the exact reported match preparation,"Release Phantom, sign Slyblade at default negotiation 6300 and 62 weeks, rest Vortex",Slyblade replaces Phantom; Vortex rest persists; advance will reproduce Lotus match versus Sahara Compass,Phantom released; Squad readback shows Slyblade 6300 cr/wk 62w; Development readback shows Vortex rest/normal,met,,recorded,decision-audit.json action_log indices 0 release phantom; 1 negotiate_open fa_13; 2 negotiate_offer accepted salary6300 weeks62; 3 set_dev_plan vortex rest normal; web/team_nexus S1W1 in order
+2026-10-08-replay-identity-fix,3,2026-10-08T16:05:53.053+00:00,2026-10-08T16:06:58.903+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WJBF7,2038,S1 W1,Verify the historical replay after AI replaces an opponent player,Advance W1 and open Lotus replay versus Sahara Compass,Lotus 13-2 win; replay Sahara lineup includes actual Grimveil/Jett and excludes replacement Frostecho; Grimveil box score belongs to Sahara Compass,"Reproduced Lotus 13-2. Replay lists Grimveil/Jett under Sahara Compass, omits Frostecho; summary shows Grimveil 11/12; feed renders Grimveil name. Screenshot replay-fixed.png",met,runs/playtests/2026-10-08-replay-identity-fix/replay-fixed.png,recorded,"decision-audit.json action_log index4 advance web/team_nexus S1W1; replay open/pause/close in usage-report.json, not manager decisions"
+2026-10-08-replay-identity-fix,4,2026-10-08T16:06:59.049+00:00,2026-10-08T16:07:57.749+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WJBF7,2038,S1 W2,Persist the acceptance world for independent replay and telemetry audit,Close replay and report; click Save,Save succeeds; persisted decision and browser usage evidence can be reconciled with this session,World saved toast confirmed; persisted 5 decisions and 1 weekly telemetry snapshot. Current Sahara roster includes fa_7 and excludes Grimveil; public replay has historical Grimveil/Jett/team and 11K12D.,met,runs/playtests/2026-10-08-replay-identity-fix/decision-audit.json,recorded,Save absent from action_log; usage /api/actions/save attempt+success paired
