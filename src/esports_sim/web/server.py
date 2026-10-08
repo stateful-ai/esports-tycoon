@@ -169,6 +169,10 @@ class _Game:
             gs = GameState.load(self.save_path)
         self.gs: GameState | None = gs
         self.last_report: WeekReport | None = None
+        # Resolved-week readbacks use the roster that entered the tick, not
+        # whatever transfers the manager makes before reopening the report.
+        # Presentation-only session memory, with the same lifetime as last_report.
+        self.last_report_development: dict[str, dict] = {}
         # A human's team id, marked when they've hit "advance"; the week only
         # ticks once every human is ready.
         self.ready: set[str] = set()
@@ -7391,8 +7395,15 @@ def advance() -> dict:
             t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
         }
         game.event_logs.clear()  # replays are for the freshly played week
+        development_rosters = {
+            t: list(gs.teams[t].player_ids) for t in sorted(gs.human_team_ids)
+        }
         report = advance_week(gs, S.gd, events_out=game.event_logs)
         game.last_report = report
+        game.last_report_development = {
+            t: _weekly_development_report(gs, t, report.season, report.week, pids)
+            for t, pids in development_rosters.items()
+        }
         game.ready.clear()
         # Append this week's fresh match reviews to the durable on-disk corpus
         # (serving-layer side effect, off the deterministic tick — see
@@ -7410,7 +7421,7 @@ def advance() -> dict:
         # Persistence follows the world's autosave policy (every Nth tick,
         # or never — the explicit Save button always works).
         game.autosave_tick()
-        return _report_view(report, gs, me)
+        return _report_view(report, gs, me, game.last_report_development.get(me))
 
 
 class SimAheadBody(BaseModel):
@@ -7461,8 +7472,13 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if not ok:
             raise HTTPException(409, why)
         game = _ctx.get().game
+        development_rosters = {}
 
         def _before(gs_: GameState) -> None:
+            nonlocal development_rosters
+            development_rosters = {
+                t: list(gs_.teams[t].player_ids) for t in sorted(gs_.human_team_ids)
+            }
             # Pre-tick standings, refreshed every week: after the batch this
             # holds the "from" position across the LAST tick — exactly what
             # the reveal's standings stage wants (session memory only, like
@@ -7471,6 +7487,10 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
 
         def _after(report) -> None:
             game.last_report = report
+            game.last_report_development = {
+                t: _weekly_development_report(gs, t, report.season, report.week, pids)
+                for t, pids in development_rosters.items()
+            }
             # Same serving-layer side effects as a manual advance, per week:
             # the durable review corpus (never fatal) and the autosave policy.
             try:
@@ -7502,7 +7522,7 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
             "stop_reason": reason,
             "stop_label": sim_ahead_mod.label_for(reason),
             "report": (
-                _report_view(game.last_report, gs, me)
+                _report_view(game.last_report, gs, me, game.last_report_development.get(me))
                 if weeks > 0 and game.last_report is not None
                 else None
             ),
@@ -7566,7 +7586,43 @@ def _week_reveal(report, gs: GameState, me: str) -> dict:
     return {"fixture_id": fixture_id, "standings": standings}
 
 
-def _report_view(report, gs: GameState, me: str) -> dict:
+def _weekly_development_report(
+    gs: GameState, tid: str, season: int, week: int, player_ids: list[str] | None = None,
+) -> dict:
+    """Read the resolved week's measured attribution, never a newer plan.
+
+    Detailed attribution is retained for one week only. Older reports must
+    honestly omit it rather than attaching the player's latest development.
+    Snapshot comparisons require adjacent points in this same season; gaps
+    and season-opening snapshots cannot masquerade as a weekly change.
+    """
+    from esports_sim.manager.development_path import report_view
+
+    rows = []
+    team = gs.teams.get(tid)
+    roster = player_ids if player_ids is not None else team.player_ids if team else []
+    for pid in roster:
+        p = gs.players.get(pid)
+        if p is None:
+            continue
+        attribution = report_view(p)
+        if attribution is None or (attribution["season"], attribution["week"]) != (season, week):
+            continue
+        snaps = {s.week: s for s in gs.dev_history.get(pid, []) if s.season == season}
+        before, after = snaps.get(week - 1), snaps.get(week)
+        measured = None
+        if before is not None and after is not None:
+            measured = {
+                "overall_start": before.ca,
+                "overall_current": after.ca,
+                "overall_delta": round(after.ca - before.ca, 1),
+            }
+        rows.append({"id": pid, "handle": p.handle, "attribution": attribution,
+                     "measured": measured})
+    return {"season": season, "week": week, "players": rows}
+
+
+def _report_view(report, gs: GameState, me: str, development_report: dict | None = None) -> dict:
     """The week-report payload — shared by the advance response and
     /api/report so a waiting shared-world manager sees the same report
     (incl. replay buttons) as the manager whose ready-up ticked the week."""
@@ -7579,6 +7635,12 @@ def _report_view(report, gs: GameState, me: str) -> dict:
         "user_income": report.income_by.get(me, 0),
         "user_expenses": report.expenses_by.get(me, 0),
         "notes": report.notes,
+        "development": (
+            development_report
+            if development_report is not None
+            and (development_report["season"], development_report["week"]) == (report.season, report.week)
+            else {"season": report.season, "week": report.week, "players": []}
+        ),
         # Data for the client's staged advance beat (own result -> standings
         # movement -> decisions settled) — presentation only, skippable.
         "week_reveal": _week_reveal(report, gs, me),
@@ -7597,7 +7659,8 @@ def last_week_report() -> dict:
         report = S.last_report
         if report is None:
             return {"report": None}
-        return {"report": _report_view(report, gs, gs.acting_team_id)}
+        return {"report": _report_view(report, gs, gs.acting_team_id,
+                                     S.last_report_development.get(gs.acting_team_id))}
 
 
 # ---------------------------------------------------------------------------

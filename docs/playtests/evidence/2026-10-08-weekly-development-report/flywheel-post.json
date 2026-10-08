@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0053",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Read attributed sources even when displayed OVR is unchanged",
+    "problem": "Vortex first recovery week displayed74.5before and after, masking small measured match learning",
+    "solution": "Full report now reads stored practice/match/scrim/event gains and exact-week feedback; Vortex W1had Matches+0.02OVR and recovery practice-paused explanation",
+    "lesson": "A one-decimal OVR can stay unchanged while measured skills grow; inspect server-attributed gains instead of treating the unchanged rating as no learning",
+    "confidence": "medium",
+    "source": "FWXCK seed2038 Team Nexus S1W1-W3 isolated8456; docs/playtests/2026-10-08-weekly-development-report/report.md",
+    "code": "FWXCK",
+    "tags": [
+      "browser",
+      "development",
+      "weekly-report",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0054",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Freeze resolved report ownership before later transfers",
+    "problem": "Reopening a report from current roster risks dropping released players and misattributing recruited rival learning",
+    "solution": "Web presentation snapshots now retain pre-tick user-team membership and exact resolved-week attributions for manual advance and sim-ahead; focused counterexample removes a participant and recruits a same-week rival",
+    "lesson": "Report evidence belongs to the roster and week that produced it; later transfer actions must not rewrite historical preparation readbacks",
+    "confidence": "medium",
+    "source": "FWXCK seed2038 Team Nexus S1W1-W3 isolated8456; docs/playtests/2026-10-08-weekly-development-report/report.md",
+    "code": "FWXCK",
+    "tags": [
+      "browser",
+      "development",
+      "weekly-report",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0055",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Full report weekly learning sits beneath all league fixtures",
+    "problem": "The report contains many league results before the squad development section; weekly attribution requires scrolling",
+    "solution": "Captured readable five-player development card and viewport after scrolling; concise source lines separate practice, matches and career events",
+    "lesson": "Use Full report to inspect the resolved squad consequences; expect scrolling past league fixtures. Dedicated Full report control telemetry remains a separate pending change on this base",
+    "confidence": "medium",
+    "source": "FWXCK seed2038 Team Nexus S1W1-W3 isolated8456; docs/playtests/2026-10-08-weekly-development-report/report.md",
+    "code": "FWXCK",
+    "tags": [
+      "browser",
+      "development",
+      "weekly-report",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

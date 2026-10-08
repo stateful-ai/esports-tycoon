@@ -8332,6 +8332,37 @@ function showReport(rep) {
   }
   body.appendChild(el("p", "muted",
     `income ${money(rep.user_income)} · expenses ${money(rep.user_expenses)}`));
+  const development = rep.development;
+  if (development && development.season === rep.season && development.week === rep.week) {
+    const card = el("section", "card weekly-development");
+    card.appendChild(el("h2", "", `Squad development · Season ${development.season} · Week ${development.week}`));
+    card.appendChild(el("p", "muted", "Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision."));
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    for (const p of development.players || []) {
+      const week = p.attribution;
+      const measured = p.measured;
+      const signedGain = (gain, precision) => `${gain > 0 ? "+" : ""}${Number(gain).toFixed(precision)}`;
+      const sources = Object.entries(week.sources || {})
+        .filter(([, source]) => Object.values(source.skills || {}).some((gain) => gain !== 0))
+        .map(([key, source]) => {
+          const amount = source.overall_gain === 0 ? "under 0.01 OVR" : `${signedGain(source.overall_gain, 2)} OVR`;
+          const skills = Object.entries(source.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${signedGain(gain, 2)}`).join(" · ");
+          return `<div><b>${esc(sourceLabels[key] || humanize(key))} ${esc(amount)}</b><span class="muted"> · ${esc(skills)}</span></div>`;
+        }).join("");
+      const rating = measured
+        ? `OVR ${Number(measured.overall_start).toFixed(1)} → ${Number(measured.overall_current).toFixed(1)} (${signedGain(measured.overall_delta, 1)})`
+        : "Weekly OVR comparison unavailable";
+      card.appendChild(el("div", "newsline", `<b>${plink(p.id, p.handle)}</b> <span class="muted">${esc(rating)}</span>
+        <div>${esc(humanize(week.focus))} / ${esc(humanize(week.intensity))} · ${week.maps} ${week.maps === 1 ? "map" : "maps"}</div>
+        ${sources || '<div class="muted">No measured skill gains</div>'}
+        ${(week.factors || []).map((text) => `<div class="muted">${esc(text)}</div>`).join("")}
+        ${week.career_event ? `<div>${esc(week.career_event)}</div>` : ""}`));
+    }
+    if (!(development.players || []).length) {
+      card.appendChild(el("p", "muted", "No weekly development attribution retained for this report."));
+    }
+    body.appendChild(card);
+  }
   $("#report").classList.remove("hidden");
 }
 

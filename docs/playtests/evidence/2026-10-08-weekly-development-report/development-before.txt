@@ -1,0 +1,328 @@
+CLUB
+Team Nexus · 5/10
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+TEAM TRAINING FOCUS
+
+The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+
+Mechanical
+Tactical
+Mental
+Team
+Rest
+Delegate to Coach
+Keep choosing the weekly focus yourself
+
+Tip: a 6-man roster is advised for tournaments (register a bench).
+
+PLAYER	AGE	OVR	CEILING	FORM	CONFIDENCE	DEV FOCUS	LANGUAGE	INTENSITY	MENTOR
+Apex IGL	26	78.3	★★★½
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Phantom	20	65.1	★★★★½
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+
+no mentor
+🎓 Apex (teach 73)
+
+Echo	23	75.5	★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Vortex	22	74.5	★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+ ⚠ TOO EXHAUSTED TO TRAIN
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Ghost	19	75.5	★★★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+
+no mentor
+🎓 Apex (teach 73)
+SQUAD PROFILE
+
+Average age 22
+
+Youth ≤21
+2
+Prime 22–26
+3
+Veteran 27+
+0
+SCOUTING BOOK
+
+Balanced
+
+LOCKER ROOM
+
+No standout duos or feuds.
+
+COMMS 56 shared languages feed chemistry.
+
+FUTURE OF THE ORG
+
+Where the roster is trending — risers, milestones and the prospects behind them.
+
+RISERS
+
+No standout climbers this window.
+
+MILESTONES
+
+No milestones crossed.
+
+ACADEMY STANDOUTS
+Nightsurge 17
+pot 65–99
+CA 47
+Grimpulse 20
+pot 63–92
+CA 43
+Pyroecho 17
+pot 53–85
+CA 40
+Nightecho 19
+pot 57–83
+CA 45
+Voltflare 22
+pot 56–76
+CA 48
+PROSPECT UPDATES
+
+No new scouting movement.
+
+TALENT PIPELINE
+
+The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+
+YOUTH INTAKE 0
+
+Empty
+
+ACADEMY 5
+Nightsurge
+17
+—
+47
+Grimpulse
+20
+—
+43
+Pyroecho
+17
+—
+40
+Nightecho
+19
+—
+45
+Voltflare
+22
+—
+48
+BENCH 0
+
+Empty
+
+STARTERS 5
+Apex
+26
+—
+78
+Phantom
+20
+—
+65
+Echo
+23
+—
+76
+Vortex
+22
+—
+75
+Ghost
+19
+—
+76
+DEVELOPMENT REPORT
+
+Season 1 · Week 0 to Week 0
+
+SQUAD OVR 0.0
+0 GROWN
+0 REGRESSED
+5 STEADY
+PLAYER	TRACKED	START	NOW	CHANGE	SKILLS CHANGED	LATEST WEEK: WHY IT CHANGED
+Apex	W0–W0 · 1 pts	78.3	78.3	0.0
+No skill changes of 0.1 or more
+	Advance a week to see practice and match feedback
+Echo	W0–W0 · 1 pts	75.5	75.5	0.0
+No skill changes of 0.1 or more
+	Advance a week to see practice and match feedback
+Ghost	W0–W0 · 1 pts	75.5	75.5	0.0
+No skill changes of 0.1 or more
+	Advance a week to see practice and match feedback
+Phantom	W0–W0 · 1 pts	65.1	65.1	0.0
+No skill changes of 0.1 or more
+	Advance a week to see practice and match feedback
+Vortex	W0–W0 · 1 pts	74.5	74.5	0.0
+No skill changes of 0.1 or more
+	Advance a week to see practice and match feedback
