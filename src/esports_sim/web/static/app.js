@@ -2832,6 +2832,65 @@ function squadFormFitnessCard(s) {
 //   - hosted in Club (opts.host === "club"): always your own squad; the head
 //     is the shared Club workspace head and the Squad/Development split rides
 //     the Club sub-tabs, so no second segment is drawn.
+function developmentPlanFeedback(p) {
+  const labels = {
+    no_language_coach: "language study, no coach",
+    exhausted: "too exhausted to train",
+    at_ceiling: "at skill ceiling",
+  };
+  const reason = p.not_developing;
+  const warning = reason
+    ? ` <span class="chip tone-bad dev-warn-chip" title="This week's plan isn't building attributes: ${esc(labels[reason] || reason)}.">⚠ ${esc(labels[reason] || humanize(reason))}</span>`
+    : "";
+  const plan = p.development_plan;
+  const read = plan ? `<div class="dev-plan-read muted" title="${esc(plan.advice)}">${plan.skills.length ? esc(plan.skills.map(humanize).join(", ")) : "Recovery"}</div>` : "";
+  return warning + read;
+}
+
+function bindDevelopmentPlanControls(tr, p, teamId) {
+  const fields = { focus: "dev_focus", language: "learning_language", intensity: "training_intensity" };
+  const controls = Object.entries(fields).map(([action, field]) => ({
+    control: tr.querySelector(`[data-act="${action}"]`), field,
+  })).filter(({ control }) => control);
+  // Keep the same controls in the DOM so readback does not steal keyboard focus.
+  for (const { control, field } of controls) {
+    control.onclick = (e) => e.stopPropagation();
+    control.onchange = async () => {
+      const value = control.value;
+      const focused = document.activeElement;
+      const disabled = controls.map(({ control }) => control.disabled);
+      controls.forEach(({ control }) => { control.disabled = true; });
+      let saved = false;
+      try {
+        const result = await api("/api/actions/dev_plan", { player_id: p.id, [field]: value });
+        toast(result.message);
+        if (result.ok === false) return;
+        saved = true;
+        const roster = await api(`/api/roster/${teamId}`);
+        const updated = roster.players.find((player) => player.id === p.id);
+        if (!updated) throw new Error("player no longer on roster");
+        Object.assign(p, updated);
+        tr.querySelector(".dev-feedback").innerHTML = developmentPlanFeedback(updated);
+      } catch (error) {
+        if (saved) {
+          // The plan was accepted; do not falsely revert its value if readback fails.
+          p[field] = value;
+          toast("Plan saved, but feedback could not refresh. Reopen Development to retry.");
+        }
+        // api already displays rejected request details; restore the last saved values.
+      } finally {
+        controls.forEach(({ control, field }, index) => {
+          control.value = p[field] ?? "";
+          control.disabled = disabled[index];
+        });
+        if (controls.some(({ control }) => control === focused) && tr.isConnected && document.activeElement === document.body) {
+          focused.focus({ preventScroll: true });
+        }
+      }
+    };
+  }
+}
+
 async function roster(v, opts = {}) {
   const clubHost = opts.host === "club";
   const teamId = clubHost ? App.state.user_team.id : (App.rosterTeam ?? App.state.user_team.id);
@@ -3044,20 +3103,6 @@ async function roster(v, opts = {}) {
         : '<span class="muted">—</span>';
       const progressPercent = p.mentor_progress != null ? Math.round(p.mentor_progress) : 0;
       const progressBar = p.mentor_id ? `<div class="pf-hbar" style="height:4px; margin-top:4px; background:var(--es-color-bg, #05070a);"><i style="display:block; height:100%; width:${progressPercent}%; background:var(--es-color-accent, #00f0ff);"></i></div><span style="font-size:0.75em; display:block;" class="muted">${progressPercent}% complete</span>` : "";
-      // F2 — "not developing this week" warning. The server decides the reason
-      // (language plan with no coach, exhausted legs, or already at ceiling);
-      // we only translate it to a chip so a silently-stalled plan is visible.
-      const NOT_DEV_LABEL = {
-        no_language_coach: "language study, no coach",
-        exhausted: "too exhausted to train",
-        at_ceiling: "at skill ceiling",
-      };
-      const ndReason = p.not_developing;
-      const notDevChip = ndReason
-        ? ` <span class="chip tone-bad dev-warn-chip" title="This week's plan isn't building attributes: ${esc(NOT_DEV_LABEL[ndReason] || ndReason)}.">⚠ ${esc(NOT_DEV_LABEL[ndReason] || humanize(ndReason))}</span>`
-        : "";
-      const plan = p.development_plan;
-      const planRead = plan ? `<div class="dev-plan-read muted" title="${esc(plan.advice)}">${plan.skills.length ? esc(plan.skills.map(humanize).join(", ")) : "Recovery"}</div>` : "";
       rowHtml = `
         ${starCell}
         ${playerCell}
@@ -3066,7 +3111,7 @@ async function roster(v, opts = {}) {
         ${ceilingCell}
         <td>${bar(p.form)}${tArrow(ct.form)}</td>
         <td title="Confidence shapes duels, peeks, and clutch nerve.">${bar(p.confidence)}${tArrow(ct.confidence)}</td>
-        <td class="dev-plan">${focusSel}${notDevChip}${planRead}</td>
+        <td class="dev-plan">${focusSel}<div class="dev-feedback">${developmentPlanFeedback(p)}</div></td>
         <td class="dev-plan">${languageSel}</td>
         <td class="dev-plan">${intSel}</td>
         <td class="dev-plan">${mentorSel}${progressBar}</td>`;
@@ -3085,16 +3130,7 @@ async function roster(v, opts = {}) {
       };
     }
     if (!overview && data.is_user_team) {
-      const post = async (field, value) => {
-        const r = await api("/api/actions/dev_plan", { player_id: p.id, [field]: value });
-        toast(r.message);
-      };
-      const fSel = tr.querySelector('[data-act="focus"]');
-      if (fSel) { fSel.onclick = (e) => e.stopPropagation(); fSel.onchange = () => post("dev_focus", fSel.value); }
-      const lSel = tr.querySelector('[data-act="language"]');
-      if (lSel) { lSel.onclick = (e) => e.stopPropagation(); lSel.onchange = () => post("learning_language", lSel.value); }
-      const iSel = tr.querySelector('[data-act="intensity"]');
-      if (iSel) { iSel.onclick = (e) => e.stopPropagation(); iSel.onchange = () => post("training_intensity", iSel.value); }
+      bindDevelopmentPlanControls(tr, p, teamId);
       const mSel = tr.querySelector('[data-act="mentor"]');
       if (mSel) {
         mSel.onclick = (e) => e.stopPropagation();
