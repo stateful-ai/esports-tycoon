@@ -1,0 +1,62 @@
+{
+  "pre_read": "not completed; MCP unavailable and direct recorder fallback identified after play",
+  "post_play_entries": [
+    {
+      "id": "esports-playtest-0035",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Read replay participants from the played map",
+      "problem": "Weekly AI released Grimveil and signed Frostecho before replay was opened",
+      "solution": "Use match.start agents and complete opening placements rather than the current roster and locks",
+      "lesson": "The patched replay retains Grimveil/Jett/Sahara and 11K12D even though current Sahara roster contains Frostecho",
+      "confidence": "medium",
+      "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+      "code": "WJBF7",
+      "tags": [
+        "browser",
+        "replay",
+        "historical-identity",
+        "telemetry"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0036",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Keep match participation separate from training recovery",
+      "problem": "Vortex rest focus could be mistaken for a bench instruction",
+      "solution": "Read the actual played lineup and development report after advancing",
+      "lesson": "Vortex rest pauses practice but retains match experience; he still appeared on the actual Lotus13-2 map",
+      "confidence": "medium",
+      "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+      "code": "WJBF7",
+      "tags": [
+        "browser",
+        "replay",
+        "historical-identity",
+        "telemetry"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0037",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Current roster rewrote historical replay identities",
+      "problem": "Original replay showed Frostecho/Reyna who never played, omitted Grimveil/Jett and lost his team in the box score",
+      "solution": "Pure serializer preserves match-time participant, agent and team evidence; focused tests cover release, transfer, lock edits and substitutes",
+      "lesson": "A replay must not consult mutable current rosters or agent locks to label historical events",
+      "confidence": "medium",
+      "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+      "code": "WJBF7",
+      "tags": [
+        "browser",
+        "replay",
+        "historical-identity",
+        "telemetry"
+      ],
+      "kind": "pain-point"
+    }
+  ]
+}

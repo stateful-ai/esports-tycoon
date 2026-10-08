@@ -8886,6 +8886,63 @@ def perf_view() -> dict:
     return perf.snapshot()
 
 
+def _replay_players(gs: GameState, fixture, events, result) -> dict:
+    """Read the played lineup from the log, before any weekly roster moves.
+
+    Opening placements put attackers at their spawn and defenders at their
+    tactical slots. Together with round.start they preserve team membership
+    without changing the event schema or consulting today's agent locks.
+    """
+    agents = {}
+    team_of = {}
+    placements = {}
+    attack = defense = None
+    attacker_spawn = S.gd.maps[result.map_id].attacker_spawn
+
+    def read_placements():
+        # Only accept a complete opening lineup, never isolated movements or
+        # partial legacy logs. The engine fields five on each side, placing
+        # attackers at spawn and defenders at their defensive tactical slots.
+        attackers = {pid for pid, callout in placements.items()
+                     if callout == attacker_spawn}
+        defenders = set(placements) - attackers
+        if len(attackers) == len(defenders) == 5:
+            for pid in attackers:
+                team_of.setdefault(pid, attack)
+            for pid in defenders:
+                team_of.setdefault(pid, defense)
+
+    for event in events:
+        if event.type == "match.start":
+            agents.update(event.agents)
+        elif event.type == "round.start":
+            read_placements()
+            placements = {}
+            attack, defense = event.attacking_team_id, event.defending_team_id
+        elif event.type == "round.move" and event.from_callout is None and attack:
+            placements[event.player_id] = event.to_callout
+        elif event.type == "round.comms":
+            team_of[event.player_id] = event.team_id
+    read_placements()
+
+    # Older logs may lack match.start agents or geometry placements. Keep
+    # only evidenced participants; never include today's newly signed bench.
+    participants = set(agents) | set(team_of)
+    participants.update(ln.player_id for ln in result.lines)
+    players = {}
+    for pid in sorted(participants):
+        player = gs.players.get(pid)
+        tid = team_of.get(pid)
+        agent_id = agents.get(pid)
+        players[pid] = {
+            "handle": player.handle if player else pid,
+            "team_id": tid,
+            "agent_id": agent_id,
+            "agent_icon": _agent_icon_url(agent_id) if agent_id else None,
+        }
+    return players
+
+
 @app.get("/api/replay/{fixture_id}/{map_index}")
 def replay(fixture_id: str, map_index: int) -> dict:
     with S.lock:
@@ -8900,22 +8957,7 @@ def replay(fixture_id: str, map_index: int) -> dict:
         fixture = next(f for f in gs.fixtures if f.id == fixture_id)
         events = logs[map_index]
         map_id = fixture.results[map_index].map_id
-        players = {}
-        for tid in (fixture.team_a, fixture.team_b):
-            for pid in gs.teams[tid].player_ids:
-                p = gs.players.get(pid)
-                if p:
-                    # Honour the coach's agent lock so a replay's icon matches
-                    # the agent the engine actually fielded (shared resolver).
-                    agent_id = lineup_resolve.resolve_agent(
-                        gs.teams[tid], p, S.gd.agents
-                    )
-                    players[pid] = {
-                        "handle": p.handle,
-                        "team_id": tid,
-                        "agent_id": agent_id,
-                        "agent_icon": _agent_icon_url(agent_id),
-                    }
+        players = _replay_players(gs, fixture, events, fixture.results[map_index])
         # Ability flags so the viewer can render utility (smoke vs flash…).
         abilities = {
             ab.id: {
