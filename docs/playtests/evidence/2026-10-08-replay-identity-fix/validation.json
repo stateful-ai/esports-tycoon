@@ -1,0 +1,10 @@
+{
+  "command": "python -m pytest -q -n2",
+  "exit_code": 0,
+  "summary": "..                                     [100%]\r\n1188 passed in 4537.95s (1:15:37)",
+  "focused_command": "python -m pytest -q -n2 tests/test_web_replay_identity.py",
+  "focused_summary": "7 passed in 1.94s",
+  "tested_base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "pythonpath": "C:\\Users\\aidan\\.codex\\worktrees\\two-season-playtest\\ESports Simulator\\src",
+  "conditional_gates": "No sim, gameplay data, map geometry, or JavaScript changes; balance, pacing, snowball, floor and JS gates not triggered"
+}
