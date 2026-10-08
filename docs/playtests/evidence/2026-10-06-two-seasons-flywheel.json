@@ -1,0 +1,74 @@
+[
+  {
+    "id": "esports-playtest-0013",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Read back development-plan fields",
+    "problem": "MCP act accepted intensity=light but applied training_intensity=normal.",
+    "solution": "Use training_intensity and verify the visible player profile; steps 71/72 corrected prior attempts.",
+    "lesson": "A successful response can ignore unknown parameters. Inspect legal field names and persisted visible values before marking the intended outcome met.",
+    "confidence": "high",
+    "source": "2026-10-06-two-seasons-main; commit 0aabb0d; seed 2026; docs/playtests/evidence/2026-10-06-two-seasons-steps.jsonl",
+    "code": "NEW26",
+    "tags": [
+      "two-season",
+      "mcp",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0014",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Academy placement does not guarantee minutes",
+    "problem": "Emberblade was sent down for match experience but had zero appearances at the S2 W16 checkpoint.",
+    "solution": "Check affiliate rotation and appearances after placement rather than assuming send_down means selection.",
+    "lesson": "Separate roster assignment from match participation; log delayed readbacks as partial when development intent is unmet.",
+    "confidence": "high",
+    "source": "2026-10-06-two-seasons-main; commit 0aabb0d; seed 2026; docs/playtests/evidence/2026-10-06-two-seasons-steps.jsonl",
+    "code": "NEW26",
+    "tags": [
+      "two-season",
+      "mcp",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0015",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Repeated occupied-slot sponsor offers stop sim ahead",
+    "problem": "Offers regenerated for an already occupied peripheral slot, allowing only decline and repeatedly stopping sim ahead.",
+    "solution": "Used advance_week after resolving blocking flavor events; retained the signed deal.",
+    "lesson": "Optional sponsor advisories can create repeated fast-forward friction even when no replacement can be signed.",
+    "confidence": "high",
+    "source": "2026-10-06-two-seasons-main; commit 0aabb0d; seed 2026; docs/playtests/evidence/2026-10-06-two-seasons-steps.jsonl",
+    "code": "NEW26",
+    "tags": [
+      "two-season",
+      "mcp",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0016",
+    "ts": "2026-10-06",
+    "domain": "esports-playtest",
+    "topic": "Usage report drops MCP game-plan override adoption",
+    "problem": "telemetry_report says 0 of 10 game plans had dial overrides; four recorded payloads contain non-None dials.",
+    "solution": "Audit the recorded dial fields directly and report 4 of 10; preserve the original script output as evidence.",
+    "lesson": "The report expects n_dials but MCP stores actual dials without that summary field. Quantitative usage needs a cross-surface schema check.",
+    "confidence": "high",
+    "source": "2026-10-06-two-seasons-main; commit 0aabb0d; seed 2026; docs/playtests/evidence/2026-10-06-two-seasons-steps.jsonl",
+    "code": "NEW26",
+    "tags": [
+      "two-season",
+      "mcp",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  }
+]
