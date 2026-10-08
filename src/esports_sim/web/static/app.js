@@ -3998,8 +3998,8 @@ function tacticsStrategy(main, rail, data) {
 function lineupCard(v, lineup) {
   const card = el("div", "card lineup-card", `<h2>This week's lineup</h2>`);
   card.appendChild(el("p", "muted",
-    `Lock the agent each player runs this week. You won't know the map when it's
-     played, so it's one agent per player — pick for comfort. <b>Auto</b> fields
+    `Choose one agent per player for every map they play. When a fixture is
+     listed, use its maps to plan; otherwise, pick for comfort. <b>Auto</b> fields
      their best-mastery agent. Off-role picks work but low mastery hurts duels.`));
   // F6 — the mastery-derived duel edge per pick is server-computed
   // (development.agent_pick_edge, matching the engine's (mastery-50)/25 read).
@@ -4080,7 +4080,7 @@ function lineupCard(v, lineup) {
   };
   barRow.appendChild(save);
   barRow.appendChild(el("span", "muted",
-    "Committed before map pick — rivals need 50%+ scouting to read it."));
+    "Saved agents stay in place until changed — rivals need 50%+ scouting to read them."));
   card.appendChild(barRow);
   v.appendChild(card);
 }
