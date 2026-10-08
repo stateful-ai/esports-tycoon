@@ -1,0 +1,209 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "build": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "fixture": {
+    "id": "s1w1m2am",
+    "week": 1,
+    "stage": "regular",
+    "best_of": 1,
+    "team_a": "team_nexus",
+    "team_b": "team_sahara_compass",
+    "team_a_name": "Team Nexus",
+    "team_b_name": "Sahara Compass",
+    "rivalry": null,
+    "potm": {
+      "player_id": "vortex",
+      "handle": "Vortex",
+      "rating": 1.88,
+      "kills": 21,
+      "on_winner": true
+    },
+    "maps": [
+      "lotus"
+    ],
+    "map_thumbs": {
+      "lotus": "/assets/maps/lotus.webp"
+    },
+    "veto": [],
+    "series_notes": [],
+    "played": true,
+    "winner_id": "team_nexus",
+    "map_score": [
+      1,
+      0
+    ],
+    "results": [
+      {
+        "map_id": "lotus",
+        "map_thumb": "/assets/maps/lotus.webp",
+        "score_a": 13,
+        "score_b": 2,
+        "winner_id": "team_nexus",
+        "has_replay": true,
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 21,
+            "deaths": 9,
+            "rating": 1.87
+          },
+          {
+            "player_id": "echo",
+            "kills": 7,
+            "deaths": 10,
+            "rating": 0.72
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 9,
+            "deaths": 8,
+            "rating": 0.82
+          },
+          {
+            "player_id": "ghost",
+            "kills": 12,
+            "deaths": 6,
+            "rating": 1.17
+          },
+          {
+            "player_id": "team_sahara_compass_p0",
+            "kills": 7,
+            "deaths": 14,
+            "rating": 0.54
+          },
+          {
+            "player_id": "team_sahara_compass_p1",
+            "kills": 11,
+            "deaths": 12,
+            "rating": 0.87
+          },
+          {
+            "player_id": "team_sahara_compass_p2",
+            "kills": 11,
+            "deaths": 15,
+            "rating": 0.85
+          },
+          {
+            "player_id": "team_sahara_compass_p3",
+            "kills": 7,
+            "deaths": 14,
+            "rating": 0.62
+          },
+          {
+            "player_id": "team_sahara_compass_p4",
+            "kills": 2,
+            "deaths": 15,
+            "rating": 0.14
+          },
+          {
+            "player_id": "vortex",
+            "kills": 21,
+            "deaths": 5,
+            "rating": 1.88
+          }
+        ]
+      }
+    ]
+  },
+  "match_start": {
+    "type": "match.start",
+    "tick": 0,
+    "seed_path": [],
+    "match_id": "team_nexus_vs_team_sahara_compass_lotus_11041450231299453917",
+    "map_id": "lotus",
+    "team_a_id": "team_nexus",
+    "team_b_id": "team_sahara_compass",
+    "seed": 11041450231299453917,
+    "agents": {
+      "apex": "omen",
+      "echo": "killjoy",
+      "fa_13": "yoru",
+      "ghost": "sova",
+      "team_sahara_compass_p0": "astra",
+      "team_sahara_compass_p1": "jett",
+      "team_sahara_compass_p2": "deadlock",
+      "team_sahara_compass_p3": "sova",
+      "team_sahara_compass_p4": "veto",
+      "vortex": "jett"
+    }
+  },
+  "rendered_players": {
+    "apex": {
+      "handle": "Apex",
+      "team_id": "team_nexus",
+      "agent_id": "omen",
+      "agent_icon": "/assets/agents/omen.webp"
+    },
+    "echo": {
+      "handle": "Echo",
+      "team_id": "team_nexus",
+      "agent_id": "killjoy",
+      "agent_icon": "/assets/agents/killjoy.webp"
+    },
+    "vortex": {
+      "handle": "Vortex",
+      "team_id": "team_nexus",
+      "agent_id": "jett",
+      "agent_icon": "/assets/agents/jett.webp"
+    },
+    "ghost": {
+      "handle": "Ghost",
+      "team_id": "team_nexus",
+      "agent_id": "sova",
+      "agent_icon": "/assets/agents/sova.webp"
+    },
+    "fa_13": {
+      "handle": "Slyblade",
+      "team_id": "team_nexus",
+      "agent_id": "yoru",
+      "agent_icon": "/assets/agents/yoru.webp"
+    },
+    "team_sahara_compass_p0": {
+      "handle": "Cipherlock",
+      "team_id": "team_sahara_compass",
+      "agent_id": "astra",
+      "agent_icon": "/assets/agents/astra.webp"
+    },
+    "team_sahara_compass_p2": {
+      "handle": "Cipherpulse",
+      "team_id": "team_sahara_compass",
+      "agent_id": "deadlock",
+      "agent_icon": "/assets/agents/deadlock.webp"
+    },
+    "team_sahara_compass_p3": {
+      "handle": "Crimzero",
+      "team_id": "team_sahara_compass",
+      "agent_id": "sova",
+      "agent_icon": "/assets/agents/sova.webp"
+    },
+    "team_sahara_compass_p4": {
+      "handle": "Voltwing",
+      "team_id": "team_sahara_compass",
+      "agent_id": "veto",
+      "agent_icon": "/assets/agents/veto.webp"
+    },
+    "fa_7": {
+      "handle": "Frostecho",
+      "team_id": "team_sahara_compass",
+      "agent_id": "reyna",
+      "agent_icon": "/assets/agents/reyna.webp"
+    }
+  },
+  "departed_box_line": {
+    "player_id": "team_sahara_compass_p1",
+    "handle": "Grimveil",
+    "team_id": null,
+    "kills": 11,
+    "deaths": 12,
+    "rating": 0.87,
+    "xduel_expected_wins": 0.0,
+    "xduel_actual_wins": 0,
+    "xde": 0.0
+  },
+  "save_sha256": "07314f9148fb3047d60d9d4119d0c00785ad9afa8a95d260613558526b4f7976",
+  "accepted_decision_delta": 0,
+  "weekly_snapshot_delta": 0,
+  "browser_event_count": 26,
+  "browser_session_id": "281b7df2d885415a4ca8174ed27c2cff"
+}

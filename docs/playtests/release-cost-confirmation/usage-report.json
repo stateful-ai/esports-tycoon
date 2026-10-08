@@ -1,0 +1,34 @@
+{
+  "attempts": 1,
+  "events": {
+    "attempt:/api/actions/release": 1,
+    "result:/api/actions/release": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:club/squad": 1,
+    "view:dashboard": 1,
+    "view:lobby": 2,
+    "visible_time:dashboard": 1,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "4dbdbf4ee4871b339409ed57b8812374": 0,
+    "d5a0f55fae7fee551e579221351968cc": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/release:success": 1
+  },
+  "paired_results": 1,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 687,
+    "lobby": 908
+  },
+  "world_events": {
+    "ASQB4": 12
+  }
+}

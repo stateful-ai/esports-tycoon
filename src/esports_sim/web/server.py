@@ -893,6 +893,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
         "is_igl": str(p.playstyle) == "igl",
         "region": str(p.region),
         "salary": p.salary,
+        "release_cost": market.release_cost(p),
         "contract_weeks_left": p.contract_weeks_left,
         "morale": _fogged(gs, p.id, "morale", p.morale, fog),
         "stamina": _fogged(gs, p.id, "stamina", p.stamina, fog),
