@@ -2188,11 +2188,20 @@ def state() -> dict:
         elif scout_target and scout_target.startswith("match:"):
             scout_label = "Match assignment"
             scout_cap = SCOUT_MATCH_CAP
+        roster_ready, roster_reason = market.roster_ready(gs, gs.acting_team_id)
+        roster_count = len(user.player_ids)
         return {
             "season": gs.season,
             "week": gs.week,
             "phase": gs.phase,
             "window": market.market_window_status(gs),
+            "roster_readiness": {
+                "ready": roster_ready,
+                "reason": roster_reason,
+                "count": roster_count,
+                "minimum": market.ROSTER_MIN,
+                "shortfall": max(0, market.ROSTER_MIN - roster_count),
+            },
             "user_team": _team_view(user, gs),
             "next_fixture": next_fixture,
             # Dashboard hub extras: this season's rating leaders (league-wide)
