@@ -1,0 +1,66 @@
+{
+  "errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/lobby"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inbox"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gameplan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_nexus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_kathmandu_apex"
+    },
+    {
+      "method": "GET",
+      "path": "/api/career"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gameplan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/matchday"
+    },
+    {
+      "method": "POST",
+      "path": "/api/actions/save"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events"
+    }
+  ],
+  "campaign_unchanged": true,
+  "before_action_count": 9,
+  "after_action_count": 9,
+  "before_snapshot_count": 1,
+  "after_snapshot_count": 1
+}

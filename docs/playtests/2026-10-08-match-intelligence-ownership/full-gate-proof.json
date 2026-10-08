@@ -1,0 +1,17 @@
+{
+  "command": "pytest -q -n2 (full unfiltered suite)",
+  "result": {
+    "returncode": 0,
+    "finished": 1791495656.11099
+  },
+  "summary": "1189 passed in 5746.09s (1:35:46)",
+  "base": "43b04482f01f441385e8dec02ab78a7d778faf18",
+  "source_freeze_matches": true,
+  "source_sha256": {
+    "src/esports_sim/manager/narrative.py": "8a390c7a44c5787e3b1c487aef51e3425f377451d61cf11062bed78fb1f20cc3",
+    "src/esports_sim/web/server.py": "a4e2f4d003e214d7d57c4a88adec4554e52d4b7788e02bb8d0d8f11f5e3e3007",
+    "src/esports_sim/web/static/app.js": "3271f5ced755ad91fa237d29290468cd466a628210d15ed705f5377108b5e12f",
+    "tests/test_profiles.py": "aede53c909f68cb1dfe42b36b8f5d467bb4b90d86c74bff79b7994ae816fe6f5",
+    "tests/test_narrative.py": "51e00ed1b7174cead11d2ac6e027fad9710a74aa93fcc51fa4e7ab5a6b7a0cce"
+  }
+}

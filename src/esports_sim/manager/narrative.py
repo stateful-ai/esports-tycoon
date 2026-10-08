@@ -171,7 +171,9 @@ def head_to_head(gs: GameState, team_a: str, team_b: str) -> dict:
 _PLAYOFF_CUT = 4
 
 
-def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[str]:
+def match_preview(
+    gs: GameState, fixture, team_id: str | None = None, *, named_subject: bool = False,
+) -> list[str]:
     """Grounded pre-match preview clauses from `team_id`'s perspective (the
     acting team by default): recent form, the season head-to-head, the
     stakes, and the opponent's danger man. Prose, not chips — each clause
@@ -181,6 +183,11 @@ def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[st
     if opp not in gs.teams:
         return []
     opp_name = gs.teams[opp].name
+    # Web briefings mix both teams. Name the acting side without changing
+    # the default narrative used by other consumers or any persisted state.
+    subject = gs.teams[team_id].name if named_subject else "They"
+    possessive = subject + "'s" if named_subject else "their"
+    objective = subject if named_subject else "them"
     bits: list[str] = []
 
     def _streak(tid: str) -> str | None:
@@ -206,19 +213,20 @@ def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[st
 
     st = _streak(team_id)
     if st:
-        bits.append(f"They arrive on {st}.")
+        bits.append(f"{subject} arrive on {st}.")
 
     h = head_to_head(gs, team_id, opp)
     if h["meetings"] == 1:
         won = h["last_winner_id"] == team_id
-        bits.append(f"{'They won' if won else opp_name + ' won'} the season's only prior meeting.")
+        bits.append(f"{subject + ' won' if won else opp_name + ' won'} the season's only prior meeting.")
     elif h["meetings"] >= 2:
         if h["wins_a"] == h["meetings"]:
-            bits.append(f"They've won all {h['meetings']} meetings this season.")
+            bits.append(f"{subject} have won all {h['meetings']} meetings this season." if named_subject
+                        else f"They've won all {h['meetings']} meetings this season.")
         elif h["wins_b"] == h["meetings"]:
             bits.append(f"{opp_name} have taken all {h['meetings']} this season.")
         else:
-            holder = "their" if h["wins_a"] >= h["wins_b"] else opp_name + "'s"
+            holder = possessive if h["wins_a"] >= h["wins_b"] else opp_name + "'s"
             bits.append(
                 f"The season series stands {h['wins_a']}-{h['wins_b']} in {holder} favour."
             )
@@ -228,9 +236,9 @@ def match_preview(gs: GameState, fixture, team_id: str | None = None) -> list[st
     if team_id in order and opp in order and gs.phase == "regular":
         pos = order.index(team_id) + 1
         if pos > _PLAYOFF_CUT:
-            bits.append("A win would haul them back toward the playoff places.")
+            bits.append(f"A win would haul {objective} back toward the playoff places.")
         elif pos <= _PLAYOFF_CUT:
-            bits.append("Three points here tighten their grip on a top-four berth.")
+            bits.append(f"Three points here tighten {possessive} grip on a top-four berth.")
 
     # Opponent danger man: their top-rated player this season (min a few maps).
     opp_ids = set(gs.teams[opp].player_ids)

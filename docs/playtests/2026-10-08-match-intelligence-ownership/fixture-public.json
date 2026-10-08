@@ -1,0 +1,60 @@
+{
+  "id": "s1w3m3am",
+  "week": 3,
+  "stage": "regular",
+  "best_of": 1,
+  "team_a": "team_kathmandu_apex",
+  "team_b": "team_nexus",
+  "team_a_name": "Kathmandu Apex",
+  "team_b_name": "Team Nexus",
+  "rivalry": null,
+  "potm": null,
+  "maps": [
+    "bind"
+  ],
+  "map_thumbs": {
+    "bind": "/assets/maps/bind.webp"
+  },
+  "veto": [],
+  "series_notes": [],
+  "played": false,
+  "winner_id": null,
+  "map_score": [
+    0,
+    0
+  ],
+  "results": [],
+  "preview": [
+    "Team Nexus arrive on a 2-match winning run.",
+    "Three points here tighten Team Nexus's grip on a top-four berth."
+  ],
+  "map_pool": {
+    "team_id": "team_nexus",
+    "team_name": "Team Nexus",
+    "maps": [
+      {
+        "map": "Ascent",
+        "map_id": "ascent",
+        "played": 1,
+        "wins": 1,
+        "win_rate": 100
+      },
+      {
+        "map": "Lotus",
+        "map_id": "lotus",
+        "played": 1,
+        "wins": 1,
+        "win_rate": 100
+      }
+    ],
+    "veto": {
+      "opponent": "Kathmandu Apex",
+      "ban": null,
+      "pick": null
+    }
+  },
+  "opp_manager": {
+    "name": "Victor Costa",
+    "identity": "Recluse"
+  }
+}
